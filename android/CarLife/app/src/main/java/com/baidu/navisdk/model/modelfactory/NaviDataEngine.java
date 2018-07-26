@@ -1,77 +1,60 @@
 package com.baidu.navisdk.model.modelfactory;
 
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NaviDataEngine
-{
-  private static Map<String, BaseModel> mModelList = new HashMap();
-  private static volatile NaviDataEngine me = null;
-  
-  public NaviDataEngine()
-  {
-    mModelList.clear();
-  }
-  
-  private void createModel(String paramString)
-  {
-    BaseModel localBaseModel = instanceModel(paramString);
-    mModelList.put(paramString, localBaseModel);
-  }
-  
-  public static NaviDataEngine getInstance()
-  {
-    if (me == null) {}
-    try
-    {
-      if (me == null) {
-        me = new NaviDataEngine();
-      }
-      return me;
+public class NaviDataEngine {
+    private static Map<String, BaseModel> mModelList = new HashMap();
+    private static volatile NaviDataEngine me = null;
+
+    public NaviDataEngine() {
+        mModelList.clear();
     }
-    finally {}
-  }
-  
-  private BaseModel instanceModel(String paramString)
-  {
-    OfflineDataModel localOfflineDataModel = null;
-    if ("OfflineDataModel".equals(paramString)) {
-      localOfflineDataModel = new OfflineDataModel();
+
+    public static NaviDataEngine getInstance() {
+        if (me == null) {
+            synchronized (NaviDataEngine.class) {
+                if (me == null) {
+                    me = new NaviDataEngine();
+                }
+            }
+        }
+        return me;
     }
-    do
-    {
-      return localOfflineDataModel;
-      if ("PoiSearchModel".equals(paramString)) {
-        return new PoiSearchModel();
-      }
-    } while (!"RoutePlanModel".equals(paramString));
-    return new RoutePlanModel();
-  }
-  
-  public BaseModel getModel(String paramString)
-  {
-    if (mModelList == null) {
-      mModelList = new HashMap();
+
+    private BaseModel instanceModel(String modelName) {
+        if (ModelName.OFFLINE_DATA.equals(modelName)) {
+            return new OfflineDataModel();
+        }
+        if (ModelName.POI_SEARCH.equals(modelName)) {
+            return new PoiSearchModel();
+        }
+        if (ModelName.ROUTE_PLAN.equals(modelName)) {
+            return new RoutePlanModel();
+        }
+        return null;
     }
-    BaseModel localBaseModel = (BaseModel)mModelList.get(paramString);
-    if (localBaseModel == null)
-    {
-      createModel(paramString);
-      return (BaseModel)mModelList.get(paramString);
+
+    private void createModel(String modelName) {
+        mModelList.put(modelName, instanceModel(modelName));
     }
-    return localBaseModel;
-  }
-  
-  public void removeModel(String paramString)
-  {
-    if ((mModelList != null) && (mModelList.get(paramString) != null)) {
-      mModelList.remove(paramString);
+
+    public void removeModel(String ModelName) {
+        if (mModelList != null && mModelList.get(ModelName) != null) {
+            mModelList.remove(ModelName);
+        }
     }
-  }
+
+    public BaseModel getModel(String modelName) {
+        if (mModelList == null) {
+            mModelList = new HashMap();
+        }
+        BaseModel model = (BaseModel) mModelList.get(modelName);
+        if (model != null) {
+            return model;
+        }
+        createModel(modelName);
+        return (BaseModel) mModelList.get(modelName);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/model/modelfactory/NaviDataEngine.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

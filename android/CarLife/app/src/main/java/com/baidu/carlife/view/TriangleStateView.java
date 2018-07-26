@@ -1,62 +1,52 @@
 package com.baidu.carlife.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import com.baidu.carlife.C0965R;
 
-public class TriangleStateView
-  extends ImageView
-{
-  private int a;
-  private Paint b;
-  private int c;
-  
-  public TriangleStateView(Context paramContext)
-  {
-    this(paramContext, null, 0);
-  }
-  
-  public TriangleStateView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public TriangleStateView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    this.c = paramContext.getResources().getDimensionPixelSize(2131361843);
-    this.a = paramContext.getResources().getColor(2131558610);
-    this.b = new Paint();
-  }
-  
-  public void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    this.b.setStyle(Paint.Style.FILL);
-    this.b.setColor(this.a);
-    this.b.setAntiAlias(true);
-    Path localPath = new Path();
-    localPath.moveTo(this.c, 0.0F);
-    localPath.lineTo(this.c, this.c);
-    localPath.lineTo(0.0F, this.c);
-    localPath.close();
-    paramCanvas.drawPath(localPath, this.b);
-  }
-  
-  public void setBgColor(int paramInt)
-  {
-    this.a = paramInt;
-    invalidate();
-  }
+public class TriangleStateView extends ImageView {
+    /* renamed from: a */
+    private int f7300a;
+    /* renamed from: b */
+    private Paint f7301b;
+    /* renamed from: c */
+    private int f7302c;
+
+    public TriangleStateView(Context context) {
+        this(context, null, 0);
+    }
+
+    public TriangleStateView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public TriangleStateView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.f7302c = context.getResources().getDimensionPixelSize(C0965R.dimen.common_icon_small);
+        this.f7300a = context.getResources().getColor(C0965R.color.cl_btn_b_tab_select);
+        this.f7301b = new Paint();
+    }
+
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        this.f7301b.setStyle(Style.FILL);
+        this.f7301b.setColor(this.f7300a);
+        this.f7301b.setAntiAlias(true);
+        Path path = new Path();
+        path.moveTo((float) this.f7302c, 0.0f);
+        path.lineTo((float) this.f7302c, (float) this.f7302c);
+        path.lineTo(0.0f, (float) this.f7302c);
+        path.close();
+        canvas.drawPath(path, this.f7301b);
+    }
+
+    public void setBgColor(int color) {
+        this.f7300a = color;
+        invalidate();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/TriangleStateView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

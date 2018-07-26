@@ -1,90 +1,72 @@
 package com.google.protobuf;
 
+import com.google.protobuf.GeneratedMessageLite.GeneratedExtension;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExtensionRegistryLite
-{
-  private static final ExtensionRegistryLite EMPTY = new ExtensionRegistryLite(true);
-  private final Map<ObjectIntPair, GeneratedMessageLite.GeneratedExtension<?, ?>> extensionsByNumber;
-  
-  ExtensionRegistryLite()
-  {
-    this.extensionsByNumber = new HashMap();
-  }
-  
-  ExtensionRegistryLite(ExtensionRegistryLite paramExtensionRegistryLite)
-  {
-    if (paramExtensionRegistryLite == EMPTY)
-    {
-      this.extensionsByNumber = Collections.emptyMap();
-      return;
+public class ExtensionRegistryLite {
+    private static final ExtensionRegistryLite EMPTY = new ExtensionRegistryLite(true);
+    private final Map<ObjectIntPair, GeneratedExtension<?, ?>> extensionsByNumber;
+
+    private static final class ObjectIntPair {
+        private final int number;
+        private final Object object;
+
+        ObjectIntPair(Object object, int number) {
+            this.object = object;
+            this.number = number;
+        }
+
+        public int hashCode() {
+            return (System.identityHashCode(this.object) * 65535) + this.number;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof ObjectIntPair)) {
+                return false;
+            }
+            ObjectIntPair other = (ObjectIntPair) obj;
+            if (this.object == other.object && this.number == other.number) {
+                return true;
+            }
+            return false;
+        }
     }
-    this.extensionsByNumber = Collections.unmodifiableMap(paramExtensionRegistryLite.extensionsByNumber);
-  }
-  
-  private ExtensionRegistryLite(boolean paramBoolean)
-  {
-    this.extensionsByNumber = Collections.emptyMap();
-  }
-  
-  public static ExtensionRegistryLite getEmptyRegistry()
-  {
-    return EMPTY;
-  }
-  
-  public static ExtensionRegistryLite newInstance()
-  {
-    return new ExtensionRegistryLite();
-  }
-  
-  public final void add(GeneratedMessageLite.GeneratedExtension<?, ?> paramGeneratedExtension)
-  {
-    this.extensionsByNumber.put(new ObjectIntPair(paramGeneratedExtension.getContainingTypeDefaultInstance(), paramGeneratedExtension.getNumber()), paramGeneratedExtension);
-  }
-  
-  public <ContainingType extends MessageLite> GeneratedMessageLite.GeneratedExtension<ContainingType, ?> findLiteExtensionByNumber(ContainingType paramContainingType, int paramInt)
-  {
-    return (GeneratedMessageLite.GeneratedExtension)this.extensionsByNumber.get(new ObjectIntPair(paramContainingType, paramInt));
-  }
-  
-  public ExtensionRegistryLite getUnmodifiable()
-  {
-    return new ExtensionRegistryLite(this);
-  }
-  
-  private static final class ObjectIntPair
-  {
-    private final int number;
-    private final Object object;
-    
-    ObjectIntPair(Object paramObject, int paramInt)
-    {
-      this.object = paramObject;
-      this.number = paramInt;
+
+    public static ExtensionRegistryLite newInstance() {
+        return new ExtensionRegistryLite();
     }
-    
-    public boolean equals(Object paramObject)
-    {
-      if (!(paramObject instanceof ObjectIntPair)) {}
-      do
-      {
-        return false;
-        paramObject = (ObjectIntPair)paramObject;
-      } while ((this.object != ((ObjectIntPair)paramObject).object) || (this.number != ((ObjectIntPair)paramObject).number));
-      return true;
+
+    public static ExtensionRegistryLite getEmptyRegistry() {
+        return EMPTY;
     }
-    
-    public int hashCode()
-    {
-      return System.identityHashCode(this.object) * 65535 + this.number;
+
+    public ExtensionRegistryLite getUnmodifiable() {
+        return new ExtensionRegistryLite(this);
     }
-  }
+
+    public <ContainingType extends MessageLite> GeneratedExtension<ContainingType, ?> findLiteExtensionByNumber(ContainingType containingTypeDefaultInstance, int fieldNumber) {
+        return (GeneratedExtension) this.extensionsByNumber.get(new ObjectIntPair(containingTypeDefaultInstance, fieldNumber));
+    }
+
+    public final void add(GeneratedExtension<?, ?> extension) {
+        this.extensionsByNumber.put(new ObjectIntPair(extension.getContainingTypeDefaultInstance(), extension.getNumber()), extension);
+    }
+
+    ExtensionRegistryLite() {
+        this.extensionsByNumber = new HashMap();
+    }
+
+    ExtensionRegistryLite(ExtensionRegistryLite other) {
+        if (other == EMPTY) {
+            this.extensionsByNumber = Collections.emptyMap();
+        } else {
+            this.extensionsByNumber = Collections.unmodifiableMap(other.extensionsByNumber);
+        }
+    }
+
+    private ExtensionRegistryLite(boolean empty) {
+        this.extensionsByNumber = Collections.emptyMap();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/ExtensionRegistryLite.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

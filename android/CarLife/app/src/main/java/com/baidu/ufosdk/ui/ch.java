@@ -3,25 +3,27 @@ package com.baidu.ufosdk.ui;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.PopupWindow;
 
-final class ch
-  implements View.OnClickListener
-{
-  ch(FeedbackListActivity paramFeedbackListActivity, Context paramContext, String paramString) {}
-  
-  public final void onClick(View paramView)
-  {
-    FeedbackListActivity.j(this.a).setVisibility(0);
-    new Thread(new ci(this, this.b, this.c)).start();
-    if (FeedbackListActivity.n(this.a).isShowing()) {
-      FeedbackListActivity.n(this.a).dismiss();
+/* compiled from: FeedbackListActivity */
+final class ch implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackListActivity f21616a;
+    /* renamed from: b */
+    private final /* synthetic */ Context f21617b;
+    /* renamed from: c */
+    private final /* synthetic */ String f21618c;
+
+    ch(FeedbackListActivity feedbackListActivity, Context context, String str) {
+        this.f21616a = feedbackListActivity;
+        this.f21617b = context;
+        this.f21618c = str;
     }
-  }
+
+    public final void onClick(View view) {
+        this.f21616a.f21534x.setVisibility(0);
+        new Thread(new ci(this, this.f21617b, this.f21618c)).start();
+        if (this.f21616a.f21508A.isShowing()) {
+            this.f21616a.f21508A.dismiss();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ch.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

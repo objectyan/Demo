@@ -4,89 +4,86 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public final class ay
-  implements Parcelable
-{
-  public static final Parcelable.Creator<ay> CREATOR = new Parcelable.Creator() {};
-  final int a;
-  private final List<aw> b;
-  
-  protected ay(Parcel paramParcel)
-  {
-    int j = paramParcel.readInt();
-    ArrayList localArrayList = new ArrayList();
-    int i = 0;
-    while (i < j)
-    {
-      localArrayList.add((aw)paramParcel.readParcelable(cd.class.getClassLoader()));
-      i += 1;
+public final class ay implements Parcelable {
+    public static final Creator<ay> CREATOR = new C57761();
+    /* renamed from: a */
+    final int f23028a;
+    /* renamed from: b */
+    private final List<aw> f23029b;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ay$1 */
+    static class C57761 implements Creator<ay> {
+        C57761() {
+        }
+
+        public final /* bridge */ /* synthetic */ Object[] newArray(int i) {
+            return new ay[i];
+        }
+
+        public final /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return new ay(parcel);
+        }
     }
-    this.b = localArrayList;
-    this.a = paramParcel.readInt();
-  }
-  
-  public final List<aw> a()
-  {
-    ArrayList localArrayList = new ArrayList();
-    localArrayList.addAll(this.b);
-    return localArrayList;
-  }
-  
-  public final int describeContents()
-  {
-    return 0;
-  }
-  
-  public final boolean equals(Object paramObject)
-  {
-    if (this == paramObject) {
-      return true;
+
+    protected ay(Parcel parcel) {
+        int readInt = parcel.readInt();
+        List arrayList = new ArrayList();
+        for (int i = 0; i < readInt; i++) {
+            arrayList.add((aw) parcel.readParcelable(cd.class.getClassLoader()));
+        }
+        this.f23029b = arrayList;
+        this.f23028a = parcel.readInt();
     }
-    if ((paramObject == null) || (getClass() != paramObject.getClass())) {
-      return false;
+
+    /* renamed from: a */
+    public final List<aw> m19894a() {
+        List<aw> arrayList = new ArrayList();
+        arrayList.addAll(this.f23029b);
+        return arrayList;
     }
-    paramObject = (ay)paramObject;
-    if (this.a != ((ay)paramObject).a) {
-      return false;
+
+    public final int describeContents() {
+        return 0;
     }
-    if (this.b.size() != ((ay)paramObject).b.size()) {
-      return false;
+
+    public final void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.f23029b.size());
+        for (aw awVar : this.f23029b) {
+            dest.writeParcelable((cd) awVar, flags);
+        }
+        dest.writeInt(this.f23028a);
     }
-    int j = this.b.size();
-    int i = 0;
-    while (i < j)
-    {
-      if (!((aw)this.b.get(i)).equals(((ay)paramObject).b.get(i))) {
-        return false;
-      }
-      i += 1;
+
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ay ayVar = (ay) o;
+        if (this.f23028a != ayVar.f23028a) {
+            return false;
+        }
+        if (this.f23029b.size() != ayVar.f23029b.size()) {
+            return false;
+        }
+        int size = this.f23029b.size();
+        for (int i = 0; i < size; i++) {
+            if (!((aw) this.f23029b.get(i)).equals(ayVar.f23029b.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
-    return true;
-  }
-  
-  public final int hashCode()
-  {
-    Iterator localIterator = this.b.iterator();
-    for (int i = 1; localIterator.hasNext(); i = ((aw)localIterator.next()).hashCode() + i * 37) {}
-    return i * 37 + this.a;
-  }
-  
-  public final void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeInt(this.b.size());
-    Iterator localIterator = this.b.iterator();
-    while (localIterator.hasNext()) {
-      paramParcel.writeParcelable((cd)localIterator.next(), paramInt);
+
+    public final int hashCode() {
+        int i = 1;
+        for (aw hashCode : this.f23029b) {
+            i = hashCode.hashCode() + (i * 37);
+        }
+        return (i * 37) + this.f23028a;
     }
-    paramParcel.writeInt(this.a);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

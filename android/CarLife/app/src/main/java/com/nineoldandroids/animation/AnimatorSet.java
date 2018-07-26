@@ -1,835 +1,639 @@
 package com.nineoldandroids.animation;
 
 import android.view.animation.Interpolator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public final class AnimatorSet
-  extends Animator
-{
-  private ValueAnimator mDelayAnim = null;
-  private long mDuration = -1L;
-  private boolean mNeedsSort = true;
-  private HashMap<Animator, Node> mNodeMap = new HashMap();
-  private ArrayList<Node> mNodes = new ArrayList();
-  private ArrayList<Animator> mPlayingSet = new ArrayList();
-  private AnimatorSetListener mSetListener = null;
-  private ArrayList<Node> mSortedNodes = new ArrayList();
-  private long mStartDelay = 0L;
-  private boolean mStarted = false;
-  boolean mTerminated = false;
-  
-  private void sortNodes()
-  {
-    Object localObject1;
-    int j;
-    int i;
-    Object localObject2;
-    int k;
-    int m;
-    if (this.mNeedsSort)
-    {
-      this.mSortedNodes.clear();
-      localObject1 = new ArrayList();
-      j = this.mNodes.size();
-      i = 0;
-      while (i < j)
-      {
-        localObject2 = (Node)this.mNodes.get(i);
-        if ((((Node)localObject2).dependencies == null) || (((Node)localObject2).dependencies.size() == 0)) {
-          ((ArrayList)localObject1).add(localObject2);
+public final class AnimatorSet extends Animator {
+    private ValueAnimator mDelayAnim = null;
+    private long mDuration = -1;
+    private boolean mNeedsSort = true;
+    private HashMap<Animator, Node> mNodeMap = new HashMap();
+    private ArrayList<Node> mNodes = new ArrayList();
+    private ArrayList<Animator> mPlayingSet = new ArrayList();
+    private AnimatorSetListener mSetListener = null;
+    private ArrayList<Node> mSortedNodes = new ArrayList();
+    private long mStartDelay = 0;
+    private boolean mStarted = false;
+    boolean mTerminated = false;
+
+    private class AnimatorSetListener implements AnimatorListener {
+        private AnimatorSet mAnimatorSet;
+
+        AnimatorSetListener(AnimatorSet animatorSet) {
+            this.mAnimatorSet = animatorSet;
         }
-        i += 1;
-      }
-      localObject2 = new ArrayList();
-      while (((ArrayList)localObject1).size() > 0)
-      {
-        k = ((ArrayList)localObject1).size();
-        i = 0;
-        while (i < k)
-        {
-          Node localNode1 = (Node)((ArrayList)localObject1).get(i);
-          this.mSortedNodes.add(localNode1);
-          if (localNode1.nodeDependents != null)
-          {
-            m = localNode1.nodeDependents.size();
-            j = 0;
-            while (j < m)
-            {
-              Node localNode2 = (Node)localNode1.nodeDependents.get(j);
-              localNode2.nodeDependencies.remove(localNode1);
-              if (localNode2.nodeDependencies.size() == 0) {
-                ((ArrayList)localObject2).add(localNode2);
-              }
-              j += 1;
+
+        public void onAnimationCancel(Animator animation) {
+            if (!AnimatorSet.this.mTerminated && AnimatorSet.this.mPlayingSet.size() == 0 && AnimatorSet.this.mListeners != null) {
+                int numListeners = AnimatorSet.this.mListeners.size();
+                for (int i = 0; i < numListeners; i++) {
+                    ((AnimatorListener) AnimatorSet.this.mListeners.get(i)).onAnimationCancel(this.mAnimatorSet);
+                }
             }
-          }
-          i += 1;
         }
-        ((ArrayList)localObject1).clear();
-        ((ArrayList)localObject1).addAll((Collection)localObject2);
-        ((ArrayList)localObject2).clear();
-      }
-      this.mNeedsSort = false;
-      if (this.mSortedNodes.size() != this.mNodes.size()) {
-        throw new IllegalStateException("Circular dependencies cannot exist in AnimatorSet");
-      }
-    }
-    else
-    {
-      k = this.mNodes.size();
-      i = 0;
-      while (i < k)
-      {
-        localObject1 = (Node)this.mNodes.get(i);
-        if ((((Node)localObject1).dependencies != null) && (((Node)localObject1).dependencies.size() > 0))
-        {
-          m = ((Node)localObject1).dependencies.size();
-          j = 0;
-          while (j < m)
-          {
-            localObject2 = (Dependency)((Node)localObject1).dependencies.get(j);
-            if (((Node)localObject1).nodeDependencies == null) {
-              ((Node)localObject1).nodeDependencies = new ArrayList();
+
+        public void onAnimationEnd(Animator animation) {
+            animation.removeListener(this);
+            AnimatorSet.this.mPlayingSet.remove(animation);
+            ((Node) this.mAnimatorSet.mNodeMap.get(animation)).done = true;
+            if (!AnimatorSet.this.mTerminated) {
+                int i;
+                ArrayList<Node> sortedNodes = this.mAnimatorSet.mSortedNodes;
+                boolean allDone = true;
+                int numSortedNodes = sortedNodes.size();
+                for (i = 0; i < numSortedNodes; i++) {
+                    if (!((Node) sortedNodes.get(i)).done) {
+                        allDone = false;
+                        break;
+                    }
+                }
+                if (allDone) {
+                    if (AnimatorSet.this.mListeners != null) {
+                        ArrayList<AnimatorListener> tmpListeners = (ArrayList) AnimatorSet.this.mListeners.clone();
+                        int numListeners = tmpListeners.size();
+                        for (i = 0; i < numListeners; i++) {
+                            ((AnimatorListener) tmpListeners.get(i)).onAnimationEnd(this.mAnimatorSet);
+                        }
+                    }
+                    this.mAnimatorSet.mStarted = false;
+                }
             }
-            if (!((Node)localObject1).nodeDependencies.contains(((Dependency)localObject2).node)) {
-              ((Node)localObject1).nodeDependencies.add(((Dependency)localObject2).node);
+        }
+
+        public void onAnimationRepeat(Animator animation) {
+        }
+
+        public void onAnimationStart(Animator animation) {
+        }
+    }
+
+    public class Builder {
+        private Node mCurrentNode;
+
+        Builder(Animator anim) {
+            this.mCurrentNode = (Node) AnimatorSet.this.mNodeMap.get(anim);
+            if (this.mCurrentNode == null) {
+                this.mCurrentNode = new Node(anim);
+                AnimatorSet.this.mNodeMap.put(anim, this.mCurrentNode);
+                AnimatorSet.this.mNodes.add(this.mCurrentNode);
             }
-            j += 1;
-          }
         }
-        ((Node)localObject1).done = false;
-        i += 1;
-      }
-    }
-  }
-  
-  public void cancel()
-  {
-    this.mTerminated = true;
-    if (isStarted())
-    {
-      Object localObject1 = null;
-      Object localObject2;
-      if (this.mListeners != null)
-      {
-        localObject2 = (ArrayList)this.mListeners.clone();
-        Iterator localIterator = ((ArrayList)localObject2).iterator();
-        for (;;)
-        {
-          localObject1 = localObject2;
-          if (!localIterator.hasNext()) {
-            break;
-          }
-          ((Animator.AnimatorListener)localIterator.next()).onAnimationCancel(this);
-        }
-      }
-      if ((this.mDelayAnim != null) && (this.mDelayAnim.isRunning())) {
-        this.mDelayAnim.cancel();
-      }
-      while (localObject1 != null)
-      {
-        localObject1 = ((ArrayList)localObject1).iterator();
-        while (((Iterator)localObject1).hasNext()) {
-          ((Animator.AnimatorListener)((Iterator)localObject1).next()).onAnimationEnd(this);
-        }
-        if (this.mSortedNodes.size() > 0)
-        {
-          localObject2 = this.mSortedNodes.iterator();
-          while (((Iterator)localObject2).hasNext()) {
-            ((Node)((Iterator)localObject2).next()).animation.cancel();
-          }
-        }
-      }
-      this.mStarted = false;
-    }
-  }
-  
-  public AnimatorSet clone()
-  {
-    AnimatorSet localAnimatorSet = (AnimatorSet)super.clone();
-    localAnimatorSet.mNeedsSort = true;
-    localAnimatorSet.mTerminated = false;
-    localAnimatorSet.mStarted = false;
-    localAnimatorSet.mPlayingSet = new ArrayList();
-    localAnimatorSet.mNodeMap = new HashMap();
-    localAnimatorSet.mNodes = new ArrayList();
-    localAnimatorSet.mSortedNodes = new ArrayList();
-    HashMap localHashMap = new HashMap();
-    Object localObject3 = this.mNodes.iterator();
-    Object localObject2;
-    Object localObject4;
-    while (((Iterator)localObject3).hasNext())
-    {
-      localObject1 = (Node)((Iterator)localObject3).next();
-      localObject2 = ((Node)localObject1).clone();
-      localHashMap.put(localObject1, localObject2);
-      localAnimatorSet.mNodes.add(localObject2);
-      localAnimatorSet.mNodeMap.put(((Node)localObject2).animation, localObject2);
-      ((Node)localObject2).dependencies = null;
-      ((Node)localObject2).tmpDependencies = null;
-      ((Node)localObject2).nodeDependents = null;
-      ((Node)localObject2).nodeDependencies = null;
-      localObject4 = ((Node)localObject2).animation.getListeners();
-      if (localObject4 != null)
-      {
-        localObject1 = null;
-        Iterator localIterator = ((ArrayList)localObject4).iterator();
-        while (localIterator.hasNext())
-        {
-          Animator.AnimatorListener localAnimatorListener = (Animator.AnimatorListener)localIterator.next();
-          if ((localAnimatorListener instanceof AnimatorSetListener))
-          {
-            localObject2 = localObject1;
-            if (localObject1 == null) {
-              localObject2 = new ArrayList();
+
+        public Builder with(Animator anim) {
+            Node node = (Node) AnimatorSet.this.mNodeMap.get(anim);
+            if (node == null) {
+                node = new Node(anim);
+                AnimatorSet.this.mNodeMap.put(anim, node);
+                AnimatorSet.this.mNodes.add(node);
             }
-            ((ArrayList)localObject2).add(localAnimatorListener);
-            localObject1 = localObject2;
-          }
+            node.addDependency(new Dependency(this.mCurrentNode, 0));
+            return this;
         }
-        if (localObject1 != null)
-        {
-          localObject1 = ((ArrayList)localObject1).iterator();
-          while (((Iterator)localObject1).hasNext()) {
-            ((ArrayList)localObject4).remove((Animator.AnimatorListener)((Iterator)localObject1).next());
-          }
+
+        public Builder before(Animator anim) {
+            Node node = (Node) AnimatorSet.this.mNodeMap.get(anim);
+            if (node == null) {
+                node = new Node(anim);
+                AnimatorSet.this.mNodeMap.put(anim, node);
+                AnimatorSet.this.mNodes.add(node);
+            }
+            node.addDependency(new Dependency(this.mCurrentNode, 1));
+            return this;
         }
-      }
+
+        public Builder after(Animator anim) {
+            Node node = (Node) AnimatorSet.this.mNodeMap.get(anim);
+            if (node == null) {
+                node = new Node(anim);
+                AnimatorSet.this.mNodeMap.put(anim, node);
+                AnimatorSet.this.mNodes.add(node);
+            }
+            this.mCurrentNode.addDependency(new Dependency(node, 1));
+            return this;
+        }
+
+        public Builder after(long delay) {
+            Animator anim = ValueAnimator.ofFloat(0.0f, 1.0f);
+            anim.setDuration(delay);
+            after(anim);
+            return this;
+        }
     }
-    Object localObject1 = this.mNodes.iterator();
-    while (((Iterator)localObject1).hasNext())
-    {
-      localObject3 = (Node)((Iterator)localObject1).next();
-      localObject2 = (Node)localHashMap.get(localObject3);
-      if (((Node)localObject3).dependencies != null)
-      {
-        localObject3 = ((Node)localObject3).dependencies.iterator();
-        while (((Iterator)localObject3).hasNext())
-        {
-          localObject4 = (Dependency)((Iterator)localObject3).next();
-          ((Node)localObject2).addDependency(new Dependency((Node)localHashMap.get(((Dependency)localObject4).node), ((Dependency)localObject4).rule));
+
+    private static class Dependency {
+        static final int AFTER = 1;
+        static final int WITH = 0;
+        public Node node;
+        public int rule;
+
+        public Dependency(Node node, int rule) {
+            this.node = node;
+            this.rule = rule;
         }
-      }
     }
-    return localAnimatorSet;
-  }
-  
-  public void end()
-  {
-    this.mTerminated = true;
-    if (isStarted())
-    {
-      Iterator localIterator;
-      if (this.mSortedNodes.size() != this.mNodes.size())
-      {
+
+    private static class DependencyListener implements AnimatorListener {
+        private AnimatorSet mAnimatorSet;
+        private Node mNode;
+        private int mRule;
+
+        public DependencyListener(AnimatorSet animatorSet, Node node, int rule) {
+            this.mAnimatorSet = animatorSet;
+            this.mNode = node;
+            this.mRule = rule;
+        }
+
+        public void onAnimationCancel(Animator animation) {
+        }
+
+        public void onAnimationEnd(Animator animation) {
+            if (this.mRule == 1) {
+                startIfReady(animation);
+            }
+        }
+
+        public void onAnimationRepeat(Animator animation) {
+        }
+
+        public void onAnimationStart(Animator animation) {
+            if (this.mRule == 0) {
+                startIfReady(animation);
+            }
+        }
+
+        private void startIfReady(Animator dependencyAnimation) {
+            if (!this.mAnimatorSet.mTerminated) {
+                Dependency dependencyToRemove = null;
+                int numDependencies = this.mNode.tmpDependencies.size();
+                for (int i = 0; i < numDependencies; i++) {
+                    Dependency dependency = (Dependency) this.mNode.tmpDependencies.get(i);
+                    if (dependency.rule == this.mRule && dependency.node.animation == dependencyAnimation) {
+                        dependencyToRemove = dependency;
+                        dependencyAnimation.removeListener(this);
+                        break;
+                    }
+                }
+                this.mNode.tmpDependencies.remove(dependencyToRemove);
+                if (this.mNode.tmpDependencies.size() == 0) {
+                    this.mNode.animation.start();
+                    this.mAnimatorSet.mPlayingSet.add(this.mNode.animation);
+                }
+            }
+        }
+    }
+
+    private static class Node implements Cloneable {
+        public Animator animation;
+        public ArrayList<Dependency> dependencies = null;
+        public boolean done = false;
+        public ArrayList<Node> nodeDependencies = null;
+        public ArrayList<Node> nodeDependents = null;
+        public ArrayList<Dependency> tmpDependencies = null;
+
+        public Node(Animator animation) {
+            this.animation = animation;
+        }
+
+        public void addDependency(Dependency dependency) {
+            if (this.dependencies == null) {
+                this.dependencies = new ArrayList();
+                this.nodeDependencies = new ArrayList();
+            }
+            this.dependencies.add(dependency);
+            if (!this.nodeDependencies.contains(dependency.node)) {
+                this.nodeDependencies.add(dependency.node);
+            }
+            Node dependencyNode = dependency.node;
+            if (dependencyNode.nodeDependents == null) {
+                dependencyNode.nodeDependents = new ArrayList();
+            }
+            dependencyNode.nodeDependents.add(this);
+        }
+
+        public Node clone() {
+            try {
+                Node node = (Node) super.clone();
+                node.animation = this.animation.clone();
+                return node;
+            } catch (CloneNotSupportedException e) {
+                throw new AssertionError();
+            }
+        }
+    }
+
+    public void playTogether(Animator... items) {
+        if (items != null) {
+            this.mNeedsSort = true;
+            Builder builder = play(items[0]);
+            for (int i = 1; i < items.length; i++) {
+                builder.with(items[i]);
+            }
+        }
+    }
+
+    public void playTogether(Collection<Animator> items) {
+        if (items != null && items.size() > 0) {
+            this.mNeedsSort = true;
+            Builder builder = null;
+            for (Animator anim : items) {
+                if (builder == null) {
+                    builder = play(anim);
+                } else {
+                    builder.with(anim);
+                }
+            }
+        }
+    }
+
+    public void playSequentially(Animator... items) {
+        if (items != null) {
+            this.mNeedsSort = true;
+            if (items.length == 1) {
+                play(items[0]);
+                return;
+            }
+            for (int i = 0; i < items.length - 1; i++) {
+                play(items[i]).before(items[i + 1]);
+            }
+        }
+    }
+
+    public void playSequentially(List<Animator> items) {
+        if (items != null && items.size() > 0) {
+            this.mNeedsSort = true;
+            if (items.size() == 1) {
+                play((Animator) items.get(0));
+                return;
+            }
+            for (int i = 0; i < items.size() - 1; i++) {
+                play((Animator) items.get(i)).before((Animator) items.get(i + 1));
+            }
+        }
+    }
+
+    public ArrayList<Animator> getChildAnimations() {
+        ArrayList<Animator> childList = new ArrayList();
+        Iterator i$ = this.mNodes.iterator();
+        while (i$.hasNext()) {
+            childList.add(((Node) i$.next()).animation);
+        }
+        return childList;
+    }
+
+    public void setTarget(Object target) {
+        Iterator i$ = this.mNodes.iterator();
+        while (i$.hasNext()) {
+            Animator animation = ((Node) i$.next()).animation;
+            if (animation instanceof AnimatorSet) {
+                ((AnimatorSet) animation).setTarget(target);
+            } else if (animation instanceof ObjectAnimator) {
+                ((ObjectAnimator) animation).setTarget(target);
+            }
+        }
+    }
+
+    public void setInterpolator(Interpolator interpolator) {
+        Iterator i$ = this.mNodes.iterator();
+        while (i$.hasNext()) {
+            ((Node) i$.next()).animation.setInterpolator(interpolator);
+        }
+    }
+
+    public Builder play(Animator anim) {
+        if (anim == null) {
+            return null;
+        }
+        this.mNeedsSort = true;
+        return new Builder(anim);
+    }
+
+    public void cancel() {
+        this.mTerminated = true;
+        if (isStarted()) {
+            Iterator i$;
+            ArrayList<AnimatorListener> tmpListeners = null;
+            if (this.mListeners != null) {
+                tmpListeners = (ArrayList) this.mListeners.clone();
+                i$ = tmpListeners.iterator();
+                while (i$.hasNext()) {
+                    ((AnimatorListener) i$.next()).onAnimationCancel(this);
+                }
+            }
+            if (this.mDelayAnim != null && this.mDelayAnim.isRunning()) {
+                this.mDelayAnim.cancel();
+            } else if (this.mSortedNodes.size() > 0) {
+                i$ = this.mSortedNodes.iterator();
+                while (i$.hasNext()) {
+                    ((Node) i$.next()).animation.cancel();
+                }
+            }
+            if (tmpListeners != null) {
+                i$ = tmpListeners.iterator();
+                while (i$.hasNext()) {
+                    ((AnimatorListener) i$.next()).onAnimationEnd(this);
+                }
+            }
+            this.mStarted = false;
+        }
+    }
+
+    public void end() {
+        this.mTerminated = true;
+        if (isStarted()) {
+            Iterator i$;
+            if (this.mSortedNodes.size() != this.mNodes.size()) {
+                sortNodes();
+                i$ = this.mSortedNodes.iterator();
+                while (i$.hasNext()) {
+                    Node node = (Node) i$.next();
+                    if (this.mSetListener == null) {
+                        this.mSetListener = new AnimatorSetListener(this);
+                    }
+                    node.animation.addListener(this.mSetListener);
+                }
+            }
+            if (this.mDelayAnim != null) {
+                this.mDelayAnim.cancel();
+            }
+            if (this.mSortedNodes.size() > 0) {
+                i$ = this.mSortedNodes.iterator();
+                while (i$.hasNext()) {
+                    ((Node) i$.next()).animation.end();
+                }
+            }
+            if (this.mListeners != null) {
+                i$ = ((ArrayList) this.mListeners.clone()).iterator();
+                while (i$.hasNext()) {
+                    ((AnimatorListener) i$.next()).onAnimationEnd(this);
+                }
+            }
+            this.mStarted = false;
+        }
+    }
+
+    public boolean isRunning() {
+        Iterator i$ = this.mNodes.iterator();
+        while (i$.hasNext()) {
+            if (((Node) i$.next()).animation.isRunning()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isStarted() {
+        return this.mStarted;
+    }
+
+    public long getStartDelay() {
+        return this.mStartDelay;
+    }
+
+    public void setStartDelay(long startDelay) {
+        this.mStartDelay = startDelay;
+    }
+
+    public long getDuration() {
+        return this.mDuration;
+    }
+
+    public AnimatorSet setDuration(long duration) {
+        if (duration < 0) {
+            throw new IllegalArgumentException("duration must be a value of zero or greater");
+        }
+        Iterator i$ = this.mNodes.iterator();
+        while (i$.hasNext()) {
+            ((Node) i$.next()).animation.setDuration(duration);
+        }
+        this.mDuration = duration;
+        return this;
+    }
+
+    public void setupStartValues() {
+        Iterator i$ = this.mNodes.iterator();
+        while (i$.hasNext()) {
+            ((Node) i$.next()).animation.setupStartValues();
+        }
+    }
+
+    public void setupEndValues() {
+        Iterator i$ = this.mNodes.iterator();
+        while (i$.hasNext()) {
+            ((Node) i$.next()).animation.setupEndValues();
+        }
+    }
+
+    public void start() {
+        int i;
+        ArrayList<AnimatorListener> tmpListeners;
+        int numListeners;
+        this.mTerminated = false;
+        this.mStarted = true;
         sortNodes();
-        localIterator = this.mSortedNodes.iterator();
-        while (localIterator.hasNext())
-        {
-          Node localNode = (Node)localIterator.next();
-          if (this.mSetListener == null) {
-            this.mSetListener = new AnimatorSetListener(this);
-          }
-          localNode.animation.addListener(this.mSetListener);
+        int numSortedNodes = this.mSortedNodes.size();
+        for (i = 0; i < numSortedNodes; i++) {
+            Iterator i$;
+            Node node = (Node) this.mSortedNodes.get(i);
+            ArrayList<AnimatorListener> oldListeners = node.animation.getListeners();
+            if (oldListeners != null && oldListeners.size() > 0) {
+                i$ = new ArrayList(oldListeners).iterator();
+                while (i$.hasNext()) {
+                    AnimatorListener listener = (AnimatorListener) i$.next();
+                    if ((listener instanceof DependencyListener) || (listener instanceof AnimatorSetListener)) {
+                        node.animation.removeListener(listener);
+                    }
+                }
+            }
         }
-      }
-      if (this.mDelayAnim != null) {
-        this.mDelayAnim.cancel();
-      }
-      if (this.mSortedNodes.size() > 0)
-      {
-        localIterator = this.mSortedNodes.iterator();
-        while (localIterator.hasNext()) {
-          ((Node)localIterator.next()).animation.end();
+        final ArrayList<Node> nodesToStart = new ArrayList();
+        for (i = 0; i < numSortedNodes; i++) {
+            node = (Node) this.mSortedNodes.get(i);
+            if (this.mSetListener == null) {
+                this.mSetListener = new AnimatorSetListener(this);
+            }
+            if (node.dependencies == null || node.dependencies.size() == 0) {
+                nodesToStart.add(node);
+            } else {
+                int numDependencies = node.dependencies.size();
+                for (int j = 0; j < numDependencies; j++) {
+                    Dependency dependency = (Dependency) node.dependencies.get(j);
+                    dependency.node.animation.addListener(new DependencyListener(this, node, dependency.rule));
+                }
+                node.tmpDependencies = (ArrayList) node.dependencies.clone();
+            }
+            node.animation.addListener(this.mSetListener);
         }
-      }
-      if (this.mListeners != null)
-      {
-        localIterator = ((ArrayList)this.mListeners.clone()).iterator();
-        while (localIterator.hasNext()) {
-          ((Animator.AnimatorListener)localIterator.next()).onAnimationEnd(this);
-        }
-      }
-      this.mStarted = false;
-    }
-  }
-  
-  public ArrayList<Animator> getChildAnimations()
-  {
-    ArrayList localArrayList = new ArrayList();
-    Iterator localIterator = this.mNodes.iterator();
-    while (localIterator.hasNext()) {
-      localArrayList.add(((Node)localIterator.next()).animation);
-    }
-    return localArrayList;
-  }
-  
-  public long getDuration()
-  {
-    return this.mDuration;
-  }
-  
-  public long getStartDelay()
-  {
-    return this.mStartDelay;
-  }
-  
-  public boolean isRunning()
-  {
-    Iterator localIterator = this.mNodes.iterator();
-    while (localIterator.hasNext()) {
-      if (((Node)localIterator.next()).animation.isRunning()) {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  public boolean isStarted()
-  {
-    return this.mStarted;
-  }
-  
-  public Builder play(Animator paramAnimator)
-  {
-    if (paramAnimator != null)
-    {
-      this.mNeedsSort = true;
-      return new Builder(paramAnimator);
-    }
-    return null;
-  }
-  
-  public void playSequentially(List<Animator> paramList)
-  {
-    if ((paramList != null) && (paramList.size() > 0))
-    {
-      this.mNeedsSort = true;
-      if (paramList.size() != 1) {
-        break label44;
-      }
-      play((Animator)paramList.get(0));
-    }
-    for (;;)
-    {
-      return;
-      label44:
-      int i = 0;
-      while (i < paramList.size() - 1)
-      {
-        play((Animator)paramList.get(i)).before((Animator)paramList.get(i + 1));
-        i += 1;
-      }
-    }
-  }
-  
-  public void playSequentially(Animator... paramVarArgs)
-  {
-    if (paramVarArgs != null)
-    {
-      this.mNeedsSort = true;
-      if (paramVarArgs.length != 1) {
-        break label24;
-      }
-      play(paramVarArgs[0]);
-    }
-    for (;;)
-    {
-      return;
-      label24:
-      int i = 0;
-      while (i < paramVarArgs.length - 1)
-      {
-        play(paramVarArgs[i]).before(paramVarArgs[(i + 1)]);
-        i += 1;
-      }
-    }
-  }
-  
-  public void playTogether(Collection<Animator> paramCollection)
-  {
-    if ((paramCollection != null) && (paramCollection.size() > 0))
-    {
-      this.mNeedsSort = true;
-      Animator localAnimator = null;
-      Iterator localIterator = paramCollection.iterator();
-      paramCollection = localAnimator;
-      while (localIterator.hasNext())
-      {
-        localAnimator = (Animator)localIterator.next();
-        if (paramCollection == null) {
-          paramCollection = play(localAnimator);
+        if (this.mStartDelay <= 0) {
+            i$ = nodesToStart.iterator();
+            while (i$.hasNext()) {
+                node = (Node) i$.next();
+                node.animation.start();
+                this.mPlayingSet.add(node.animation);
+            }
         } else {
-          paramCollection.with(localAnimator);
+            float[] fArr = new float[2];
+            this.mDelayAnim = ValueAnimator.ofFloat(0.0f, 1.0f);
+            this.mDelayAnim.setDuration(this.mStartDelay);
+            this.mDelayAnim.addListener(new AnimatorListenerAdapter() {
+                boolean canceled = false;
+
+                public void onAnimationCancel(Animator anim) {
+                    this.canceled = true;
+                }
+
+                public void onAnimationEnd(Animator anim) {
+                    if (!this.canceled) {
+                        int numNodes = nodesToStart.size();
+                        for (int i = 0; i < numNodes; i++) {
+                            Node node = (Node) nodesToStart.get(i);
+                            node.animation.start();
+                            AnimatorSet.this.mPlayingSet.add(node.animation);
+                        }
+                    }
+                }
+            });
+            this.mDelayAnim.start();
         }
-      }
-    }
-  }
-  
-  public void playTogether(Animator... paramVarArgs)
-  {
-    if (paramVarArgs != null)
-    {
-      this.mNeedsSort = true;
-      Builder localBuilder = play(paramVarArgs[0]);
-      int i = 1;
-      while (i < paramVarArgs.length)
-      {
-        localBuilder.with(paramVarArgs[i]);
-        i += 1;
-      }
-    }
-  }
-  
-  public AnimatorSet setDuration(long paramLong)
-  {
-    if (paramLong < 0L) {
-      throw new IllegalArgumentException("duration must be a value of zero or greater");
-    }
-    Iterator localIterator = this.mNodes.iterator();
-    while (localIterator.hasNext()) {
-      ((Node)localIterator.next()).animation.setDuration(paramLong);
-    }
-    this.mDuration = paramLong;
-    return this;
-  }
-  
-  public void setInterpolator(Interpolator paramInterpolator)
-  {
-    Iterator localIterator = this.mNodes.iterator();
-    while (localIterator.hasNext()) {
-      ((Node)localIterator.next()).animation.setInterpolator(paramInterpolator);
-    }
-  }
-  
-  public void setStartDelay(long paramLong)
-  {
-    this.mStartDelay = paramLong;
-  }
-  
-  public void setTarget(Object paramObject)
-  {
-    Iterator localIterator = this.mNodes.iterator();
-    while (localIterator.hasNext())
-    {
-      Animator localAnimator = ((Node)localIterator.next()).animation;
-      if ((localAnimator instanceof AnimatorSet)) {
-        ((AnimatorSet)localAnimator).setTarget(paramObject);
-      } else if ((localAnimator instanceof ObjectAnimator)) {
-        ((ObjectAnimator)localAnimator).setTarget(paramObject);
-      }
-    }
-  }
-  
-  public void setupEndValues()
-  {
-    Iterator localIterator = this.mNodes.iterator();
-    while (localIterator.hasNext()) {
-      ((Node)localIterator.next()).animation.setupEndValues();
-    }
-  }
-  
-  public void setupStartValues()
-  {
-    Iterator localIterator = this.mNodes.iterator();
-    while (localIterator.hasNext()) {
-      ((Node)localIterator.next()).animation.setupStartValues();
-    }
-  }
-  
-  public void start()
-  {
-    this.mTerminated = false;
-    this.mStarted = true;
-    sortNodes();
-    int k = this.mSortedNodes.size();
-    int i = 0;
-    Object localObject2;
-    Object localObject3;
-    while (i < k)
-    {
-      localObject1 = (Node)this.mSortedNodes.get(i);
-      localObject2 = ((Node)localObject1).animation.getListeners();
-      if ((localObject2 != null) && (((ArrayList)localObject2).size() > 0))
-      {
-        localObject2 = new ArrayList((Collection)localObject2).iterator();
-        while (((Iterator)localObject2).hasNext())
-        {
-          localObject3 = (Animator.AnimatorListener)((Iterator)localObject2).next();
-          if (((localObject3 instanceof DependencyListener)) || ((localObject3 instanceof AnimatorSetListener))) {
-            ((Node)localObject1).animation.removeListener((Animator.AnimatorListener)localObject3);
-          }
-        }
-      }
-      i += 1;
-    }
-    final Object localObject1 = new ArrayList();
-    i = 0;
-    int j;
-    if (i < k)
-    {
-      localObject2 = (Node)this.mSortedNodes.get(i);
-      if (this.mSetListener == null) {
-        this.mSetListener = new AnimatorSetListener(this);
-      }
-      if ((((Node)localObject2).dependencies == null) || (((Node)localObject2).dependencies.size() == 0)) {
-        ((ArrayList)localObject1).add(localObject2);
-      }
-      for (;;)
-      {
-        ((Node)localObject2).animation.addListener(this.mSetListener);
-        i += 1;
-        break;
-        int m = ((Node)localObject2).dependencies.size();
-        j = 0;
-        while (j < m)
-        {
-          localObject3 = (Dependency)((Node)localObject2).dependencies.get(j);
-          ((Dependency)localObject3).node.animation.addListener(new DependencyListener(this, (Node)localObject2, ((Dependency)localObject3).rule));
-          j += 1;
-        }
-        ((Node)localObject2).tmpDependencies = ((ArrayList)((Node)localObject2).dependencies.clone());
-      }
-    }
-    if (this.mStartDelay <= 0L)
-    {
-      localObject1 = ((ArrayList)localObject1).iterator();
-      while (((Iterator)localObject1).hasNext())
-      {
-        localObject2 = (Node)((Iterator)localObject1).next();
-        ((Node)localObject2).animation.start();
-        this.mPlayingSet.add(((Node)localObject2).animation);
-      }
-    }
-    this.mDelayAnim = ValueAnimator.ofFloat(new float[] { 0.0F, 1.0F });
-    this.mDelayAnim.setDuration(this.mStartDelay);
-    this.mDelayAnim.addListener(new AnimatorListenerAdapter()
-    {
-      boolean canceled = false;
-      
-      public void onAnimationCancel(Animator paramAnonymousAnimator)
-      {
-        this.canceled = true;
-      }
-      
-      public void onAnimationEnd(Animator paramAnonymousAnimator)
-      {
-        if (!this.canceled)
-        {
-          int j = localObject1.size();
-          int i = 0;
-          while (i < j)
-          {
-            paramAnonymousAnimator = (AnimatorSet.Node)localObject1.get(i);
-            paramAnonymousAnimator.animation.start();
-            AnimatorSet.this.mPlayingSet.add(paramAnonymousAnimator.animation);
-            i += 1;
-          }
-        }
-      }
-    });
-    this.mDelayAnim.start();
-    if (this.mListeners != null)
-    {
-      localObject1 = (ArrayList)this.mListeners.clone();
-      j = ((ArrayList)localObject1).size();
-      i = 0;
-      while (i < j)
-      {
-        ((Animator.AnimatorListener)((ArrayList)localObject1).get(i)).onAnimationStart(this);
-        i += 1;
-      }
-    }
-    if ((this.mNodes.size() == 0) && (this.mStartDelay == 0L))
-    {
-      this.mStarted = false;
-      if (this.mListeners != null)
-      {
-        localObject1 = (ArrayList)this.mListeners.clone();
-        j = ((ArrayList)localObject1).size();
-        i = 0;
-        while (i < j)
-        {
-          ((Animator.AnimatorListener)((ArrayList)localObject1).get(i)).onAnimationEnd(this);
-          i += 1;
-        }
-      }
-    }
-  }
-  
-  private class AnimatorSetListener
-    implements Animator.AnimatorListener
-  {
-    private AnimatorSet mAnimatorSet;
-    
-    AnimatorSetListener(AnimatorSet paramAnimatorSet)
-    {
-      this.mAnimatorSet = paramAnimatorSet;
-    }
-    
-    public void onAnimationCancel(Animator paramAnimator)
-    {
-      if ((!AnimatorSet.this.mTerminated) && (AnimatorSet.this.mPlayingSet.size() == 0) && (AnimatorSet.this.mListeners != null))
-      {
-        int j = AnimatorSet.this.mListeners.size();
-        int i = 0;
-        while (i < j)
-        {
-          ((Animator.AnimatorListener)AnimatorSet.this.mListeners.get(i)).onAnimationCancel(this.mAnimatorSet);
-          i += 1;
-        }
-      }
-    }
-    
-    public void onAnimationEnd(Animator paramAnimator)
-    {
-      paramAnimator.removeListener(this);
-      AnimatorSet.this.mPlayingSet.remove(paramAnimator);
-      ((AnimatorSet.Node)this.mAnimatorSet.mNodeMap.get(paramAnimator)).done = true;
-      if (!AnimatorSet.this.mTerminated)
-      {
-        paramAnimator = this.mAnimatorSet.mSortedNodes;
-        int k = 1;
-        int m = paramAnimator.size();
-        int i = 0;
-        for (;;)
-        {
-          int j = k;
-          if (i < m)
-          {
-            if (!((AnimatorSet.Node)paramAnimator.get(i)).done) {
-              j = 0;
+        if (this.mListeners != null) {
+            tmpListeners = (ArrayList) this.mListeners.clone();
+            numListeners = tmpListeners.size();
+            for (i = 0; i < numListeners; i++) {
+                ((AnimatorListener) tmpListeners.get(i)).onAnimationStart(this);
             }
-          }
-          else
-          {
-            if (j == 0) {
-              return;
-            }
-            if (AnimatorSet.this.mListeners == null) {
-              break;
-            }
-            paramAnimator = (ArrayList)AnimatorSet.this.mListeners.clone();
-            j = paramAnimator.size();
-            i = 0;
-            while (i < j)
-            {
-              ((Animator.AnimatorListener)paramAnimator.get(i)).onAnimationEnd(this.mAnimatorSet);
-              i += 1;
-            }
-          }
-          i += 1;
         }
-        AnimatorSet.access$302(this.mAnimatorSet, false);
-      }
-    }
-    
-    public void onAnimationRepeat(Animator paramAnimator) {}
-    
-    public void onAnimationStart(Animator paramAnimator) {}
-  }
-  
-  public class Builder
-  {
-    private AnimatorSet.Node mCurrentNode;
-    
-    Builder(Animator paramAnimator)
-    {
-      this.mCurrentNode = ((AnimatorSet.Node)AnimatorSet.this.mNodeMap.get(paramAnimator));
-      if (this.mCurrentNode == null)
-      {
-        this.mCurrentNode = new AnimatorSet.Node(paramAnimator);
-        AnimatorSet.this.mNodeMap.put(paramAnimator, this.mCurrentNode);
-        AnimatorSet.this.mNodes.add(this.mCurrentNode);
-      }
-    }
-    
-    public Builder after(long paramLong)
-    {
-      ValueAnimator localValueAnimator = ValueAnimator.ofFloat(new float[] { 0.0F, 1.0F });
-      localValueAnimator.setDuration(paramLong);
-      after(localValueAnimator);
-      return this;
-    }
-    
-    public Builder after(Animator paramAnimator)
-    {
-      AnimatorSet.Node localNode2 = (AnimatorSet.Node)AnimatorSet.this.mNodeMap.get(paramAnimator);
-      AnimatorSet.Node localNode1 = localNode2;
-      if (localNode2 == null)
-      {
-        localNode1 = new AnimatorSet.Node(paramAnimator);
-        AnimatorSet.this.mNodeMap.put(paramAnimator, localNode1);
-        AnimatorSet.this.mNodes.add(localNode1);
-      }
-      paramAnimator = new AnimatorSet.Dependency(localNode1, 1);
-      this.mCurrentNode.addDependency(paramAnimator);
-      return this;
-    }
-    
-    public Builder before(Animator paramAnimator)
-    {
-      AnimatorSet.Node localNode2 = (AnimatorSet.Node)AnimatorSet.this.mNodeMap.get(paramAnimator);
-      AnimatorSet.Node localNode1 = localNode2;
-      if (localNode2 == null)
-      {
-        localNode1 = new AnimatorSet.Node(paramAnimator);
-        AnimatorSet.this.mNodeMap.put(paramAnimator, localNode1);
-        AnimatorSet.this.mNodes.add(localNode1);
-      }
-      localNode1.addDependency(new AnimatorSet.Dependency(this.mCurrentNode, 1));
-      return this;
-    }
-    
-    public Builder with(Animator paramAnimator)
-    {
-      AnimatorSet.Node localNode2 = (AnimatorSet.Node)AnimatorSet.this.mNodeMap.get(paramAnimator);
-      AnimatorSet.Node localNode1 = localNode2;
-      if (localNode2 == null)
-      {
-        localNode1 = new AnimatorSet.Node(paramAnimator);
-        AnimatorSet.this.mNodeMap.put(paramAnimator, localNode1);
-        AnimatorSet.this.mNodes.add(localNode1);
-      }
-      localNode1.addDependency(new AnimatorSet.Dependency(this.mCurrentNode, 0));
-      return this;
-    }
-  }
-  
-  private static class Dependency
-  {
-    static final int AFTER = 1;
-    static final int WITH = 0;
-    public AnimatorSet.Node node;
-    public int rule;
-    
-    public Dependency(AnimatorSet.Node paramNode, int paramInt)
-    {
-      this.node = paramNode;
-      this.rule = paramInt;
-    }
-  }
-  
-  private static class DependencyListener
-    implements Animator.AnimatorListener
-  {
-    private AnimatorSet mAnimatorSet;
-    private AnimatorSet.Node mNode;
-    private int mRule;
-    
-    public DependencyListener(AnimatorSet paramAnimatorSet, AnimatorSet.Node paramNode, int paramInt)
-    {
-      this.mAnimatorSet = paramAnimatorSet;
-      this.mNode = paramNode;
-      this.mRule = paramInt;
-    }
-    
-    private void startIfReady(Animator paramAnimator)
-    {
-      if (this.mAnimatorSet.mTerminated) {
-        return;
-      }
-      Object localObject2 = null;
-      int j = this.mNode.tmpDependencies.size();
-      int i = 0;
-      for (;;)
-      {
-        Object localObject1 = localObject2;
-        if (i < j)
-        {
-          localObject1 = (AnimatorSet.Dependency)this.mNode.tmpDependencies.get(i);
-          if ((((AnimatorSet.Dependency)localObject1).rule == this.mRule) && (((AnimatorSet.Dependency)localObject1).node.animation == paramAnimator)) {
-            paramAnimator.removeListener(this);
-          }
+        if (this.mNodes.size() == 0 && this.mStartDelay == 0) {
+            this.mStarted = false;
+            if (this.mListeners != null) {
+                tmpListeners = (ArrayList) this.mListeners.clone();
+                numListeners = tmpListeners.size();
+                for (i = 0; i < numListeners; i++) {
+                    ((AnimatorListener) tmpListeners.get(i)).onAnimationEnd(this);
+                }
+            }
         }
-        else
-        {
-          this.mNode.tmpDependencies.remove(localObject1);
-          if (this.mNode.tmpDependencies.size() != 0) {
-            break;
-          }
-          this.mNode.animation.start();
-          this.mAnimatorSet.mPlayingSet.add(this.mNode.animation);
-          return;
+    }
+
+    public AnimatorSet clone() {
+        Iterator i$;
+        AnimatorSet anim = (AnimatorSet) super.clone();
+        anim.mNeedsSort = true;
+        anim.mTerminated = false;
+        anim.mStarted = false;
+        anim.mPlayingSet = new ArrayList();
+        anim.mNodeMap = new HashMap();
+        anim.mNodes = new ArrayList();
+        anim.mSortedNodes = new ArrayList();
+        HashMap<Node, Node> nodeCloneMap = new HashMap();
+        Iterator it = this.mNodes.iterator();
+        while (it.hasNext()) {
+            Node node = (Node) it.next();
+            Node nodeClone = node.clone();
+            nodeCloneMap.put(node, nodeClone);
+            anim.mNodes.add(nodeClone);
+            anim.mNodeMap.put(nodeClone.animation, nodeClone);
+            nodeClone.dependencies = null;
+            nodeClone.tmpDependencies = null;
+            nodeClone.nodeDependents = null;
+            nodeClone.nodeDependencies = null;
+            ArrayList<AnimatorListener> cloneListeners = nodeClone.animation.getListeners();
+            if (cloneListeners != null) {
+                ArrayList<AnimatorListener> listenersToRemove = null;
+                i$ = cloneListeners.iterator();
+                while (i$.hasNext()) {
+                    AnimatorListener listener = (AnimatorListener) i$.next();
+                    if (listener instanceof AnimatorSetListener) {
+                        if (listenersToRemove == null) {
+                            listenersToRemove = new ArrayList();
+                        }
+                        listenersToRemove.add(listener);
+                    }
+                }
+                if (listenersToRemove != null) {
+                    i$ = listenersToRemove.iterator();
+                    while (i$.hasNext()) {
+                        cloneListeners.remove((AnimatorListener) i$.next());
+                    }
+                }
+            }
         }
-        i += 1;
-      }
+        it = this.mNodes.iterator();
+        while (it.hasNext()) {
+            node = (Node) it.next();
+            nodeClone = (Node) nodeCloneMap.get(node);
+            if (node.dependencies != null) {
+                i$ = node.dependencies.iterator();
+                while (i$.hasNext()) {
+                    Dependency dependency = (Dependency) i$.next();
+                    nodeClone.addDependency(new Dependency((Node) nodeCloneMap.get(dependency.node), dependency.rule));
+                }
+            }
+        }
+        return anim;
     }
-    
-    public void onAnimationCancel(Animator paramAnimator) {}
-    
-    public void onAnimationEnd(Animator paramAnimator)
-    {
-      if (this.mRule == 1) {
-        startIfReady(paramAnimator);
-      }
+
+    private void sortNodes() {
+        int numNodes;
+        int i;
+        Node node;
+        int j;
+        if (this.mNeedsSort) {
+            this.mSortedNodes.clear();
+            ArrayList<Node> roots = new ArrayList();
+            numNodes = this.mNodes.size();
+            for (i = 0; i < numNodes; i++) {
+                node = (Node) this.mNodes.get(i);
+                if (node.dependencies == null || node.dependencies.size() == 0) {
+                    roots.add(node);
+                }
+            }
+            ArrayList<Node> tmpRoots = new ArrayList();
+            while (roots.size() > 0) {
+                int numRoots = roots.size();
+                for (i = 0; i < numRoots; i++) {
+                    Node root = (Node) roots.get(i);
+                    this.mSortedNodes.add(root);
+                    if (root.nodeDependents != null) {
+                        int numDependents = root.nodeDependents.size();
+                        for (j = 0; j < numDependents; j++) {
+                            node = (Node) root.nodeDependents.get(j);
+                            node.nodeDependencies.remove(root);
+                            if (node.nodeDependencies.size() == 0) {
+                                tmpRoots.add(node);
+                            }
+                        }
+                    }
+                }
+                roots.clear();
+                roots.addAll(tmpRoots);
+                tmpRoots.clear();
+            }
+            this.mNeedsSort = false;
+            if (this.mSortedNodes.size() != this.mNodes.size()) {
+                throw new IllegalStateException("Circular dependencies cannot exist in AnimatorSet");
+            }
+            return;
+        }
+        numNodes = this.mNodes.size();
+        for (i = 0; i < numNodes; i++) {
+            node = (Node) this.mNodes.get(i);
+            if (node.dependencies != null && node.dependencies.size() > 0) {
+                int numDependencies = node.dependencies.size();
+                for (j = 0; j < numDependencies; j++) {
+                    Dependency dependency = (Dependency) node.dependencies.get(j);
+                    if (node.nodeDependencies == null) {
+                        node.nodeDependencies = new ArrayList();
+                    }
+                    if (!node.nodeDependencies.contains(dependency.node)) {
+                        node.nodeDependencies.add(dependency.node);
+                    }
+                }
+            }
+            node.done = false;
+        }
     }
-    
-    public void onAnimationRepeat(Animator paramAnimator) {}
-    
-    public void onAnimationStart(Animator paramAnimator)
-    {
-      if (this.mRule == 0) {
-        startIfReady(paramAnimator);
-      }
-    }
-  }
-  
-  private static class Node
-    implements Cloneable
-  {
-    public Animator animation;
-    public ArrayList<AnimatorSet.Dependency> dependencies = null;
-    public boolean done = false;
-    public ArrayList<Node> nodeDependencies = null;
-    public ArrayList<Node> nodeDependents = null;
-    public ArrayList<AnimatorSet.Dependency> tmpDependencies = null;
-    
-    public Node(Animator paramAnimator)
-    {
-      this.animation = paramAnimator;
-    }
-    
-    public void addDependency(AnimatorSet.Dependency paramDependency)
-    {
-      if (this.dependencies == null)
-      {
-        this.dependencies = new ArrayList();
-        this.nodeDependencies = new ArrayList();
-      }
-      this.dependencies.add(paramDependency);
-      if (!this.nodeDependencies.contains(paramDependency.node)) {
-        this.nodeDependencies.add(paramDependency.node);
-      }
-      paramDependency = paramDependency.node;
-      if (paramDependency.nodeDependents == null) {
-        paramDependency.nodeDependents = new ArrayList();
-      }
-      paramDependency.nodeDependents.add(this);
-    }
-    
-    public Node clone()
-    {
-      try
-      {
-        Node localNode = (Node)super.clone();
-        localNode.animation = this.animation.clone();
-        return localNode;
-      }
-      catch (CloneNotSupportedException localCloneNotSupportedException)
-      {
-        throw new AssertionError();
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/animation/AnimatorSet.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,7 +2,6 @@ package com.baidu.che.codriver.vr;
 
 import android.app.Notification;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -10,16 +9,21 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-import com.baidu.che.codriver.i.c;
-import com.baidu.che.codriver.util.h;
-import com.baidu.che.codriver.util.l;
+import com.baidu.che.codriver.p123i.C2546c;
+import com.baidu.che.codriver.p123i.C2547d;
+import com.baidu.che.codriver.util.C2725h;
+import com.baidu.che.codriver.util.C2731l;
+import com.baidu.che.codriver.util.C2736p;
+import com.baidu.che.codriver.vr.C2835k.C2831k;
+import com.baidu.che.codriver.vr.record.C1749d;
 import com.baidu.che.codriver.vr.record.aec.RecordHelper;
-import com.baidu.che.codriver.vr.record.aec.RecordHelper.a;
-import com.baidu.che.codriver.vr.record.aec.RecordHelper.b;
-import com.baidu.che.codriver.vr.record.aec.RecordHelper.c;
+import com.baidu.che.codriver.vr.record.aec.RecordHelper.C2740c;
+import com.baidu.che.codriver.vr.record.aec.RecordHelper.C2855a;
+import com.baidu.che.codriver.vr.record.aec.RecordHelper.C2856b;
 import com.baidu.speech.EventListener;
 import com.baidu.speech.EventManager;
 import com.baidu.speech.EventManagerFactory;
+import com.baidu.speech.asr.SpeechConstant;
 import com.baidu.speech.utils.LogUtil;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -30,1022 +34,920 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class VoiceService
-  extends Service
-{
-  private static final String a = "CoDriverVoice-Service";
-  private static String b;
-  private EventListener c = null;
-  private EventManager d = null;
-  private EventManager e = null;
-  private EventManager f = null;
-  private String g = null;
-  private String h = null;
-  private String i = null;
-  private HashMap<String, Object> j = null;
-  private HashMap<String, Object> k = null;
-  private RecordHelper l = null;
-  private boolean m = false;
-  private boolean n = false;
-  private boolean o = true;
-  private boolean p = false;
-  private boolean q = false;
-  private boolean r = true;
-  private boolean s = false;
-  private boolean t = false;
-  private String[] u = null;
-  private String v;
-  private int w = 811;
-  private String x = "com.baidu.carlife";
-  private b y = new b();
-  
-  private int a(int paramInt)
-  {
-    if (m() == -1) {
-      return -1;
-    }
-    return b(paramInt);
-  }
-  
-  private int a(String paramString, int paramInt)
-  {
-    paramString = this.j.get(paramString);
-    if (paramString == null) {}
-    while (!(paramString instanceof Integer)) {
-      return paramInt;
-    }
-    return ((Integer)paramString).intValue();
-  }
-  
-  private void a()
-  {
-    this.f = EventManagerFactory.create(getApplicationContext(), "slot");
-    this.f.registerListener(new EventListener()
-    {
-      public void onEvent(String paramAnonymousString1, String paramAnonymousString2, byte[] paramAnonymousArrayOfByte, int paramAnonymousInt1, int paramAnonymousInt2)
-      {
-        h.b("CoDriverVoice-Service", "event:" + paramAnonymousString1 + ", param:" + paramAnonymousString2);
-      }
-    });
-  }
-  
-  @Deprecated
-  private void a(String paramString)
-  {
-    if (this.j == null) {
-      return;
-    }
-    for (;;)
-    {
-      int i6;
-      int i2;
-      int i5;
-      Object localObject2;
-      try
-      {
-        localObject1 = (JSONObject)this.j.get("slot-data");
-        if (((JSONObject)localObject1).isNull("words")) {
-          ((JSONObject)localObject1).put("words", new JSONArray());
+public class VoiceService extends Service {
+    /* renamed from: a */
+    private static final String f9003a = "CoDriverVoice-Service";
+    /* renamed from: b */
+    private static String f9004b;
+    /* renamed from: c */
+    private EventListener f9005c = null;
+    /* renamed from: d */
+    private EventManager f9006d = null;
+    /* renamed from: e */
+    private EventManager f9007e = null;
+    /* renamed from: f */
+    private EventManager f9008f = null;
+    /* renamed from: g */
+    private String f9009g = null;
+    /* renamed from: h */
+    private String f9010h = null;
+    /* renamed from: i */
+    private String f9011i = null;
+    /* renamed from: j */
+    private HashMap<String, Object> f9012j = null;
+    /* renamed from: k */
+    private HashMap<String, Object> f9013k = null;
+    /* renamed from: l */
+    private RecordHelper f9014l = null;
+    /* renamed from: m */
+    private boolean f9015m = false;
+    /* renamed from: n */
+    private boolean f9016n = false;
+    /* renamed from: o */
+    private boolean f9017o = true;
+    /* renamed from: p */
+    private boolean f9018p = false;
+    /* renamed from: q */
+    private boolean f9019q = false;
+    /* renamed from: r */
+    private boolean f9020r = true;
+    /* renamed from: s */
+    private boolean f9021s = false;
+    /* renamed from: t */
+    private boolean f9022t = false;
+    /* renamed from: u */
+    private String[] f9023u = null;
+    /* renamed from: v */
+    private String f9024v;
+    /* renamed from: w */
+    private int f9025w = C2546c.f8444n;
+    /* renamed from: x */
+    private String f9026x = "com.baidu.carlife";
+    /* renamed from: y */
+    private C2745b f9027y = new C2745b(this);
+
+    /* renamed from: com.baidu.che.codriver.vr.VoiceService$1 */
+    class C27391 implements EventListener {
+        /* renamed from: a */
+        final /* synthetic */ VoiceService f8997a;
+
+        C27391(VoiceService this$0) {
+            this.f8997a = this$0;
         }
-        localObject1 = ((JSONObject)localObject1).getJSONArray("words");
-        i1 = 0;
-        paramString = paramString.split(",");
-        i6 = paramString.length;
-        i2 = 0;
-      }
-      catch (JSONException paramString)
-      {
-        Object localObject1;
-        int i1;
-        int i3;
-        paramString.printStackTrace();
-        return;
-      }
-      i3 = i5;
-      int i4;
-      if (i4 < ((JSONArray)localObject1).length())
-      {
-        if (((String)localObject2).equals(((JSONArray)localObject1).getString(i4))) {
-          i3 = 0;
+
+        public void onEvent(String event, String param, byte[] arg2, int arg3, int arg4) {
+            C2725h.m10207b(VoiceService.f9003a, "event:" + event + ", param:" + param);
         }
-      }
-      else
-      {
-        if (i3 != 0)
-        {
-          ((JSONArray)localObject1).put(localObject2);
-          i1 = 1;
-          break label193;
-          if (i1 != 0)
-          {
-            t();
-            s();
-          }
-          h.b("CoDriverVoice-Service", "------------regCustomCmd:" + this.j.toString());
-          return;
+    }
+
+    /* renamed from: com.baidu.che.codriver.vr.VoiceService$2 */
+    class C27412 implements C2740c {
+        /* renamed from: a */
+        final /* synthetic */ VoiceService f8998a;
+
+        C27412(VoiceService this$0) {
+            this.f8998a = this$0;
         }
-        for (;;)
-        {
-          if (i2 >= i6) {
-            break label198;
-          }
-          localObject2 = paramString[i2];
-          i5 = 1;
-          i4 = 0;
-          break;
-          label193:
-          i2 += 1;
+
+        /* renamed from: a */
+        public void mo1951a(int newVolume) {
+            Map config = new HashMap();
+            config.put(C2546c.aC, Integer.valueOf(newVolume));
+            this.f8998a.f9007e.send(C2546c.an, new JSONObject(config).toString(), null, 0, 0);
+            C2725h.m10207b(VoiceService.f9003a, "---kwd.config----");
         }
-        label198:
-        continue;
-      }
-      i4 += 1;
     }
-  }
-  
-  @Deprecated
-  private void a(String paramString1, String paramString2)
-  {
-    this.h = paramString1;
-    this.i = paramString2;
-    paramString1 = new HashMap();
-    paramString1.put("name", "songs");
-    paramString1.put("words", this.i);
-    this.f.send("slot.start", new JSONObject(paramString1).toString(), null, 0, 0);
-    q();
-  }
-  
-  private void a(JSONArray paramJSONArray)
-  {
-    HashMap localHashMap = new HashMap();
-    localHashMap.put("name", "contacts");
-    localHashMap.put("pid", "809");
-    localHashMap.put("url", "http://upl.baidu.com/words/add");
-    localHashMap.put("words", paramJSONArray);
-    h.b("CoDriverVoice-Service", "upload contacts : contact = " + paramJSONArray.toString());
-    this.f.send("uploader.start", new JSONObject(localHashMap).toString(), null, 0, 0);
-  }
-  
-  private int b(int paramInt)
-  {
-    h.b("CoDriverVoice-Service", "command:openSceneCmdInWaking type = " + paramInt);
-    if (this.e == null)
-    {
-      h.b("CoDriverVoice-Service", "command:openSceneCmdInWaking wakeupManager is null");
-      return -1;
+
+    /* renamed from: com.baidu.che.codriver.vr.VoiceService$a */
+    public interface C2743a {
+        /* renamed from: a */
+        void mo1977a();
     }
-    if (!this.r)
-    {
-      h.b("CoDriverVoice-Service", "command:openSceneCmdInWaking sceneCmdFlag is false");
-      return -1;
-    }
-    if ((paramInt & 0x3) == 0)
-    {
-      h.b("CoDriverVoice-Service", "command:openSceneCmdInWaking. unknown type " + paramInt);
-      return -1;
-    }
-    HashMap localHashMap = new HashMap();
-    localHashMap.put("kwd.enable-all-keywords", Integer.valueOf(0));
-    JSONArray localJSONArray = new JSONArray();
-    b(localJSONArray);
-    String[] arrayOfString;
-    int i2;
-    int i1;
-    if ((paramInt & 0x1) != 0)
-    {
-      arrayOfString = c.bn;
-      i2 = arrayOfString.length;
-      i1 = 0;
-      while (i1 < i2)
-      {
-        localJSONArray.put(arrayOfString[i1]);
-        i1 += 1;
-      }
-    }
-    if ((paramInt & 0x2) != 0)
-    {
-      arrayOfString = c.bo;
-      i2 = arrayOfString.length;
-      i1 = 0;
-      while (i1 < i2)
-      {
-        localJSONArray.put(arrayOfString[i1]);
-        i1 += 1;
-      }
-    }
-    Log.i("CoDriverVoice-Service", "command:openSceneCmdInWaking type = " + paramInt + " , kwd array : " + localJSONArray.toString());
-    localHashMap.put("kwd.enable-keyword", localJSONArray);
-    this.e.send("kwd.config", new JSONObject(localHashMap).toString(), null, 0, 0);
-    return 0;
-  }
-  
-  private void b()
-  {
-    if (this.l != null) {
-      return;
-    }
-    this.l = new RecordHelper();
-    this.l.init(this, new RecordHelper.c()
-    {
-      public void a(int paramAnonymousInt)
-      {
-        HashMap localHashMap = new HashMap();
-        localHashMap.put("kwd.volume", Integer.valueOf(paramAnonymousInt));
-        VoiceService.h(VoiceService.this).send("kwd.config", new JSONObject(localHashMap).toString(), null, 0, 0);
-        h.b("CoDriverVoice-Service", "---kwd.config----");
-      }
-    });
-  }
-  
-  private void b(JSONArray paramJSONArray)
-  {
-    paramJSONArray.put("小度小度");
-    if (this.u != null)
-    {
-      int i1 = 0;
-      while (i1 < this.u.length)
-      {
-        paramJSONArray.put(this.u[i1]);
-        i1 += 1;
-      }
-    }
-  }
-  
-  private void c()
-  {
-    h.b("CoDriverVoice-Service", "---RESOURCES---START COPY-----");
-    com.baidu.che.codriver.i.d.a(b + "libbaidu_asr_licence_carlife.dat.so");
-    com.baidu.che.codriver.i.d.a(getApplicationContext(), "libbaidu_asr_licence_carlife.dat.so", b + "libbaidu_asr_licence_carlife.dat.so");
-    com.baidu.che.codriver.i.d.a(b + "libbaidu_offline_cmd_grammar.bsg.so");
-    com.baidu.che.codriver.i.d.a(getApplicationContext(), "libbaidu_offline_cmd_grammar.bsg.so", b + "libbaidu_offline_cmd_grammar.bsg.so");
-    com.baidu.che.codriver.i.d.a(b + "libbd_easr_s1_kws_codriver_20170913.dat.so");
-    com.baidu.che.codriver.i.d.a(getApplicationContext(), "libbd_easr_s1_kws_codriver_20170913.dat.so", b + "libbd_easr_s1_kws_codriver_20170913.dat.so");
-    com.baidu.che.codriver.i.d.a(b + "esis_codriver_20180119.pkg");
-    com.baidu.che.codriver.i.d.a(getApplicationContext(), "esis_codriver_20180119.pkg", b + "esis_codriver_20180119.pkg");
-    com.baidu.che.codriver.i.d.a(b + "WakeUp_Xiaodu.bin");
-    com.baidu.che.codriver.i.d.a(getApplicationContext(), "WakeUp_Xiaodu.bin", b + "WakeUp_Xiaodu.bin");
-    com.baidu.che.codriver.i.d.a(b + "libvad.dnn.so");
-    com.baidu.che.codriver.i.d.a(getApplicationContext(), "libvad.dnn.so", b + "libvad.dnn.so");
-    h.b("CoDriverVoice-Service", "---RESOURCES---END COPY-----");
-  }
-  
-  private void d()
-  {
-    this.v = l.a(getApplicationContext(), "save_pcm_data_key", r());
-    if (TextUtils.isEmpty(this.v)) {
-      this.v = r();
-    }
-    h.b("CoDriverVoice-Service", "initSaveDataParams mSavePcmDataPath = " + this.v);
-  }
-  
-  private void e()
-  {
-    if (this.e == null) {
-      this.e = EventManagerFactory.create(getApplicationContext(), "wp");
-    }
-    if (this.k == null) {
-      this.k = new HashMap();
-    }
-    this.n = l.a(getApplication(), "save_wake_up_rdata", false);
-    this.r = l.a(getApplication(), "scene_command_key", true);
-    this.k.put("sample", Integer.valueOf(16000));
-    this.k.put("license", b + "libbaidu_asr_licence_carlife.dat.so");
-    this.k.put("res-file", b + "esis_codriver_20180119.pkg");
-    this.k.put("kws-file", b + "WakeUp_Xiaodu.bin");
-    this.k.put("accept-audio-volume", Boolean.valueOf(false));
-    this.k.put("wp.mode", Integer.valueOf(3));
-    this.k.put("wp.kwd_enable", Boolean.valueOf(true));
-    this.k.put("vad.res-file", b + "libvad.dnn.so");
-    this.o = l.a(getApplication(), "wake_up", true);
-    h.b("CoDriverVoice-Service", "initWakeUpConfig mIsWakeUpEnable = " + this.o);
-  }
-  
-  private void f()
-  {
-    if (this.d == null) {
-      this.d = EventManagerFactory.create(getApplicationContext(), "asr");
-    }
-    HashMap localHashMap;
-    if (this.j == null)
-    {
-      this.j = new HashMap();
-      this.j.put("slot-data", new JSONObject());
-      this.m = l.a(getApplication(), "save_asr_rdata", false);
-      this.q = l.a(getApplicationContext(), "support_full_bargin", false);
-      this.s = l.a(getApplicationContext(), "decoder-server.ptc", false);
-      this.j.put("pid", Integer.valueOf(this.w));
-      this.j.put("key", this.x);
-      this.j.put("url", "http://vse.baidu.com/v2");
-      this.j.put("decoder-server.fix-app", "com.baidu.che.codriver");
-      this.j.put("nlu", "enable");
-      localHashMap = this.j;
-      if (!this.s) {
-        break label494;
-      }
-    }
-    label494:
-    for (int i1 = 306;; i1 = 0)
-    {
-      localHashMap.put("decoder-server.ptc", Integer.valueOf(i1));
-      this.j.put("vad", "dnn");
-      this.j.put("license", b + "libbaidu_asr_licence_carlife.dat.so");
-      this.j.put("sound_success", Integer.valueOf(k.k.bdspeech_recognition_success));
-      this.j.put("accept-audio-volume", Boolean.valueOf(false));
-      this.j.put("vad.speech-threshold", Float.valueOf(0.25F));
-      this.j.put("vad.min-speech-duration", Integer.valueOf(40));
-      g();
-      this.j.put("decoder", Integer.valueOf(2));
-      this.j.put("vad.sil-threshold", Float.valueOf(0.15F));
-      this.j.put("vad.head-sil-duration", Integer.valueOf(400));
-      this.j.put("enable-early-return", Boolean.valueOf(true));
-      this.j.put("vad.res-file", b + "libvad.dnn.so");
-      this.j.put("dec-type", Integer.valueOf(1));
-      this.j.put("decoder-server-fun.contact", Boolean.valueOf(true));
-      this.j.put("sample", Integer.valueOf(16000));
-      this.j.put("auth", Boolean.valueOf(false));
-      h();
-      return;
-      this.j.clear();
-      break;
-    }
-  }
-  
-  private void g()
-  {
-    if (this.q)
-    {
-      this.j.put("vad.endpoint-timeout", Integer.valueOf(0));
-      this.j.put("decoder", Integer.valueOf(0));
-      return;
-    }
-    this.j.put("vad.endpoint-timeout", Integer.valueOf(490));
-    this.j.put("vad.max-wait-duration", Integer.valueOf(50));
-    this.j.put("decoder", Integer.valueOf(2));
-  }
-  
-  private void h()
-  {
-    this.j.put("asr-base-file-path", b + "libbd_easr_s1_kws_codriver_20170913.dat.so");
-    this.j.put("grammar", b + "libbaidu_offline_cmd_grammar.bsg.so");
-    this.j.put("decoder-server.auth", Boolean.valueOf(false));
-  }
-  
-  private void i()
-  {
-    if (this.j == null) {}
-    for (;;)
-    {
-      return;
-      try
-      {
-        JSONObject localJSONObject = (JSONObject)this.j.get("slot-data");
-        if (localJSONObject != null)
-        {
-          localJSONObject.put("words", new JSONArray());
-          return;
+
+    /* renamed from: com.baidu.che.codriver.vr.VoiceService$b */
+    public class C2745b extends Binder {
+        /* renamed from: a */
+        final /* synthetic */ VoiceService f9002a;
+
+        public C2745b(VoiceService this$0) {
+            this.f9002a = this$0;
         }
-      }
-      catch (JSONException localJSONException)
-      {
-        localJSONException.printStackTrace();
-      }
-    }
-  }
-  
-  private int j()
-  {
-    h.b("CoDriverVoice-Service", "----startVrEngine-------mIsOneshotEnable = " + this.p);
-    if (!this.t) {
-      return -1;
-    }
-    if ((this.l == null) || (TextUtils.isEmpty(this.l.getInfile())))
-    {
-      this.j.remove("infile");
-      if (!this.m) {
-        break label352;
-      }
-      h.b("CoDriverVoice-Service", "startAsr mSavePcmDataPath = " + this.v);
-      if (!TextUtils.isEmpty(this.v)) {
-        break label284;
-      }
-      Toast.makeText(getApplicationContext(), "无法生成保存路径", 0).show();
-    }
-    for (;;)
-    {
-      this.j.put("accept-audio-data", Boolean.valueOf(this.m));
-      long l1 = SystemClock.elapsedRealtime();
-      this.d.send("asr.start", new JSONObject(this.j).toString(), null, 0, 0);
-      h.b("CoDriverVoice-Service", "command:asr.start-The Time of loading VR DB :" + (SystemClock.elapsedRealtime() - l1) + "ms");
-      h.b("CoDriverVoice-Service", "asr.start--config:" + this.j.toString());
-      return 0;
-      this.j.put("infile", this.l.getInfile());
-      this.l.reset();
-      this.l.setState(RecordHelper.b.c);
-      break;
-      label284:
-      SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-      this.j.put("outfile", this.v + "/" + localSimpleDateFormat.format(new Date()) + "#recog.pcm");
-      continue;
-      label352:
-      this.j.remove("outfile");
-    }
-  }
-  
-  private int k()
-  {
-    if (this.d == null) {
-      return -1;
-    }
-    this.d.send("asr.stop", null, null, 0, 0);
-    h.b("CoDriverVoice-Service", "command:asr.stop");
-    return 0;
-  }
-  
-  private int l()
-  {
-    if (this.d == null) {
-      return -1;
-    }
-    this.d.send("asr.cancel", null, null, 0, 0);
-    h.b("CoDriverVoice-Service", "command:asr.cancel");
-    return 0;
-  }
-  
-  private int m()
-  {
-    if ((!this.o) || (!this.t))
-    {
-      h.e("CoDriverVoice-Service", "startWp wakeUpFlag = " + this.o + " , initFlag = " + this.t);
-      return -1;
-    }
-    if ((this.l == null) || (TextUtils.isEmpty(this.l.getInfile())))
-    {
-      this.k.remove("infile");
-      if (!this.n) {
-        break label340;
-      }
-      h.b("CoDriverVoice-Service", "startWp mSavePcmDataPath = " + this.v);
-      if (!TextUtils.isEmpty(this.v)) {
-        break label272;
-      }
-      Toast.makeText(getApplicationContext(), "无法生成保存路径", 0).show();
-    }
-    for (;;)
-    {
-      this.k.put("accept-audio-data", Boolean.valueOf(this.n));
-      this.e.send("wp.start", new JSONObject(this.k).toString(), null, 0, 0);
-      h.b("CoDriverVoice-Service", "command:wp.start--config:" + this.k.toString());
-      return 0;
-      this.k.put("infile", this.l.getInfile());
-      this.l.reset();
-      this.l.setState(RecordHelper.b.a);
-      this.l.startRecord();
-      break;
-      label272:
-      SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-      this.k.put("outfile", this.v + "/" + localSimpleDateFormat.format(new Date()) + "#wakeup.pcm");
-      continue;
-      label340:
-      this.k.remove("outfile");
-    }
-  }
-  
-  private int n()
-  {
-    if (this.e == null) {
-      return -1;
-    }
-    this.e.send("wp.stop", null, null, 0, 0);
-    h.b("CoDriverVoice-Service", "command:wp.stop");
-    return 0;
-  }
-  
-  private int o()
-  {
-    h.b("CoDriverVoice-Service", "command:closeSceneCmd");
-    if (this.e == null)
-    {
-      h.b("CoDriverVoice-Service", "command:closeSceneCmd wakeupManager is null");
-      return -1;
-    }
-    HashMap localHashMap = new HashMap();
-    localHashMap.put("kwd.enable-all-keywords", Integer.valueOf(0));
-    JSONArray localJSONArray = new JSONArray();
-    b(localJSONArray);
-    localHashMap.put("kwd.enable-keyword", localJSONArray);
-    this.e.send("kwd.config", new JSONObject(localHashMap).toString(), null, 0, 0);
-    return 1;
-  }
-  
-  private void p()
-  {
-    if (this.l != null)
-    {
-      this.l.release();
-      this.l = null;
-    }
-    this.t = false;
-  }
-  
-  private void q()
-  {
-    int i2 = 0;
-    if (this.j == null) {}
-    for (;;)
-    {
-      return;
-      Object localObject2 = this.g + " ";
-      Object localObject1 = this.h + " ";
-      Object localObject3 = this.h + " ";
-      JSONArray localJSONArray = new JSONArray();
-      localObject2 = ((String)localObject2).split(",");
-      int i3 = localObject2.length;
-      int i1 = 0;
-      while (i1 < i3)
-      {
-        localJSONArray.put(localObject2[i1].trim());
-        i1 += 1;
-      }
-      localObject2 = new JSONArray();
-      localObject3 = ((String)localObject3).split(",");
-      i3 = localObject3.length;
-      i1 = 0;
-      while (i1 < i3)
-      {
-        ((JSONArray)localObject2).put(localObject3[i1].trim());
-        i1 += 1;
-      }
-      localObject3 = new JSONArray();
-      localObject1 = ((String)localObject1).split(",");
-      i3 = localObject1.length;
-      i1 = i2;
-      while (i1 < i3)
-      {
-        ((JSONArray)localObject3).put(localObject1[i1].trim());
-        i1 += 1;
-      }
-      try
-      {
-        localObject1 = (JSONObject)this.j.get("slot-data");
-        if (localObject1 != null)
-        {
-          ((JSONObject)localObject1).put("name", localJSONArray).put("song", localObject3).put("singer", localObject2);
-          return;
+
+        /* renamed from: a */
+        public void m10274a(final C2743a listener) {
+            new Thread(new Runnable(this) {
+                /* renamed from: b */
+                final /* synthetic */ C2745b f9001b;
+
+                public void run() {
+                    this.f9001b.f9002a.m10341c();
+                    this.f9001b.f9002a.m10347e();
+                    this.f9001b.f9002a.m10350f();
+                    this.f9001b.f9002a.m10324a();
+                    this.f9001b.f9002a.m10379s();
+                    this.f9001b.f9002a.m10344d();
+                    this.f9001b.f9002a.f9022t = true;
+                    listener.mo1977a();
+                }
+            }).start();
         }
-      }
-      catch (JSONException localJSONException)
-      {
-        localJSONException.printStackTrace();
-      }
+
+        /* renamed from: a */
+        public int m10268a(EventListener listener) {
+            if (this.f9002a.f9006d == null || this.f9002a.f9007e == null) {
+                return -1;
+            }
+            this.f9002a.f9006d.registerListener(listener);
+            this.f9002a.f9007e.registerListener(listener);
+            this.f9002a.f9005c = listener;
+            return 0;
+        }
+
+        /* renamed from: b */
+        public int m10281b(EventListener listener) {
+            this.f9002a.f9006d.unregisterListener(listener);
+            return 0;
+        }
+
+        /* renamed from: a */
+        public int m10266a() {
+            return this.f9002a.m10361j();
+        }
+
+        /* renamed from: b */
+        public int m10279b() {
+            return this.f9002a.m10363k();
+        }
+
+        /* renamed from: c */
+        public int m10285c() {
+            return this.f9002a.m10365l();
+        }
+
+        /* renamed from: d */
+        public int m10289d() {
+            return this.f9002a.m10367m();
+        }
+
+        /* renamed from: e */
+        public int m10293e() {
+            return this.f9002a.m10369n();
+        }
+
+        /* renamed from: f */
+        public void m10296f() {
+            this.f9002a.m10373p();
+        }
+
+        @Deprecated
+        /* renamed from: a */
+        public int m10270a(String kwsFilePath, String resFilePath) {
+            return -1;
+        }
+
+        /* renamed from: a */
+        public int m10269a(String wakeupWord) {
+            if (wakeupWord == null || (!wakeupWord.equals(C2546c.f8452v) && !wakeupWord.equals(C2546c.f8453w) && !wakeupWord.equals(C2546c.f8454x))) {
+                return -1;
+            }
+            this.f9002a.f9023u = new String[1];
+            this.f9002a.f9023u[0] = wakeupWord;
+            return 0;
+        }
+
+        /* renamed from: a */
+        public int m10271a(String[] wakeupWord) {
+            if (wakeupWord == null || wakeupWord.length == 0 || wakeupWord.length > 3) {
+                return -1;
+            }
+            int i = 0;
+            while (i < wakeupWord.length) {
+                if (!wakeupWord[i].equals(C2546c.f8452v) && !wakeupWord[i].equals(C2546c.f8453w) && !wakeupWord[i].equals(C2546c.f8454x)) {
+                    return -1;
+                }
+                i++;
+            }
+            this.f9002a.f9023u = wakeupWord;
+            return 0;
+        }
+
+        /* renamed from: g */
+        public String m10298g() {
+            String wpWords = "" + "小度小度";
+            if (this.f9002a.f9023u != null) {
+                for (String str : this.f9002a.f9023u) {
+                    wpWords = wpWords + "," + str;
+                }
+            }
+            return wpWords;
+        }
+
+        /* renamed from: a */
+        public void m10276a(boolean useNLU) {
+            this.f9002a.f9021s = useNLU;
+            C2731l.m10231b(this.f9002a, C2546c.aB, useNLU);
+            if (this.f9002a.f9022t) {
+                this.f9002a.f9012j.put(C2546c.aB, Integer.valueOf(this.f9002a.f9021s ? 306 : 0));
+            } else {
+                this.f9002a.m10350f();
+            }
+        }
+
+        /* renamed from: b */
+        public void m10284b(boolean isOpen) {
+            if (this.f9002a.f9017o != isOpen) {
+                this.f9002a.f9017o = isOpen;
+                C2731l.m10231b(this.f9002a, "wake_up", isOpen);
+                C2725h.m10207b(VoiceService.f9003a, "command:setWakeUpFlag-isOpen:" + isOpen);
+            }
+        }
+
+        /* renamed from: a */
+        public void m10275a(JSONArray contact) {
+            this.f9002a.m10330a(contact);
+        }
+
+        /* renamed from: b */
+        public void m10283b(String singers, String songs) {
+            this.f9002a.m10329a(singers, songs);
+        }
+
+        /* renamed from: c */
+        public void m10288c(boolean flag) {
+            m10292d(flag);
+            m10295e(flag);
+        }
+
+        /* renamed from: d */
+        public void m10292d(boolean flag) {
+            this.f9002a.f9016n = flag;
+            C2731l.m10231b(this.f9002a, C2546c.f8436f, flag);
+        }
+
+        /* renamed from: e */
+        public void m10295e(boolean flag) {
+            this.f9002a.f9015m = flag;
+            C2731l.m10231b(this.f9002a, C2546c.f8437g, flag);
+        }
+
+        /* renamed from: b */
+        public void m10282b(String path) {
+            this.f9002a.f9024v = path;
+            C2725h.m10207b(VoiceService.f9003a, "setPcmDataPath mSavePcmDataPath = " + this.f9002a.f9024v);
+            C2731l.m10230b(this.f9002a, C2546c.f8438h, this.f9002a.m10377r());
+        }
+
+        @Deprecated
+        /* renamed from: c */
+        public void m10287c(String words) {
+        }
+
+        @Deprecated
+        /* renamed from: h */
+        public void m10300h() {
+        }
+
+        /* renamed from: a */
+        public void m10272a(int scene) {
+            this.f9002a.m10333b(scene);
+        }
+
+        /* renamed from: i */
+        public void m10302i() {
+            this.f9002a.m10371o();
+        }
+
+        /* renamed from: b */
+        public int m10280b(int scene) {
+            return this.f9002a.m10319a(scene);
+        }
+
+        /* renamed from: a */
+        public int m10267a(C2855a type, C1749d tool) {
+            switch (type) {
+                case INSIDE_AEC_MIC_LEFT:
+                case INSIDE_AEC_MIC_RIGHT:
+                case INSIDE_RAW:
+                case INSIDE_DSP_RAW:
+                case OUTSIDE_RAW:
+                case OUTSIDE_AEC_MIC_LEFT:
+                case OUTSIDE_AEC_MIC_RIGHT:
+                    this.f9002a.m10336b();
+                    this.f9002a.f9014l.setRecordType(type, tool);
+                    return 0;
+                default:
+                    return -1;
+            }
+        }
+
+        /* renamed from: a */
+        public void m10278a(byte[] micData, byte[] spkData) {
+            if (this.f9002a.f9014l != null) {
+                this.f9002a.f9014l.feedAudioBuffer(micData, spkData);
+            }
+        }
+
+        /* renamed from: a */
+        public void m10277a(byte[] rawData) {
+            if (this.f9002a.f9014l != null) {
+                this.f9002a.f9014l.feedAudioBuffer(rawData);
+            }
+        }
+
+        /* renamed from: j */
+        public void m10304j() {
+            if (this.f9002a.f9014l != null) {
+                this.f9002a.f9014l.startRecord();
+            }
+        }
+
+        /* renamed from: c */
+        public void m10286c(int type) {
+            if (!this.f9002a.f9022t) {
+                this.f9002a.m10350f();
+            }
+            this.f9002a.f9012j.put("audio.stream-type", Integer.valueOf(type));
+        }
+
+        /* renamed from: f */
+        public void m10297f(boolean isSupport) {
+            C2725h.m10207b(VoiceService.f9003a, "setSupportFullBargin : " + isSupport);
+            this.f9002a.f9019q = isSupport;
+            C2731l.m10231b(this.f9002a, "support_full_bargin", isSupport);
+            if (this.f9002a.f9022t) {
+                this.f9002a.m10354g();
+            } else {
+                this.f9002a.m10350f();
+            }
+        }
+
+        /* renamed from: g */
+        public void m10299g(boolean isEnable) {
+            this.f9002a.f9018p = isEnable;
+            Map oneshotMap = new HashMap();
+            oneshotMap.put(SpeechConstant.WP_ONESHOT_ENABLE, Boolean.valueOf(isEnable));
+            C2725h.m10207b(VoiceService.f9003a, "new setOneshotEnable mIsOneshotEnable = " + this.f9002a.f9018p);
+            this.f9002a.f9007e.send(C2546c.an, new JSONObject(oneshotMap).toString(), null, 0, 0);
+        }
+
+        /* renamed from: h */
+        public void m10301h(boolean isEnable) {
+            this.f9002a.f9020r = isEnable;
+            C2731l.m10231b(this.f9002a, "scene_command_key", isEnable);
+            C2725h.m10207b(VoiceService.f9003a, "setSceneCmdEnable sceneCmdFlag = " + this.f9002a.f9020r);
+        }
+
+        /* renamed from: a */
+        public void m10273a(long wakeupTime, String wpWords, int isOneShot, int wpBacktrackFrameLen) {
+            C2725h.m10210c(VoiceService.f9003a, "isOneShot = " + isOneShot + ", wpBacktrackFrameLen=" + wpBacktrackFrameLen);
+            if (isOneShot == 1) {
+                this.f9002a.f9012j.put(SpeechConstant.ASR_PARAM_WAKEUP_STATUS, Integer.valueOf(1));
+                this.f9002a.f9012j.put(SpeechConstant.ASR_PARAM_WAKEUP_WORDS, wpWords);
+                this.f9002a.f9012j.put(SpeechConstant.ASR_PARAM_IS_ONESHOT, Integer.valueOf(isOneShot));
+                this.f9002a.f9012j.put(SpeechConstant.ASR_PARAM_WAKEUP_BACKTRACKTIME, Integer.valueOf(wpBacktrackFrameLen));
+                long backMillis = ((((wakeupTime - ((long) (wpBacktrackFrameLen * 10))) - 300) - 150) - 100) - 100;
+                if (backMillis > 0) {
+                    this.f9002a.f9012j.put("audio.mills", Long.valueOf(backMillis));
+                }
+            } else if (isOneShot == 0) {
+                this.f9002a.f9012j.remove("audio.mills");
+                this.f9002a.f9012j.put(SpeechConstant.ASR_PARAM_IS_ONESHOT, Integer.valueOf(0));
+                this.f9002a.f9012j.put(SpeechConstant.ASR_PARAM_WAKEUP_STATUS, Integer.valueOf(0));
+            }
+        }
+
+        /* renamed from: k */
+        public void m10305k() {
+            this.f9002a.f9012j.remove("audio.mills");
+            this.f9002a.f9012j.put(SpeechConstant.ASR_PARAM_IS_ONESHOT, Integer.valueOf(0));
+            this.f9002a.f9012j.put(SpeechConstant.ASR_PARAM_WAKEUP_STATUS, Integer.valueOf(0));
+        }
+
+        /* renamed from: l */
+        public boolean m10306l() {
+            return this.f9002a.f9017o;
+        }
+
+        /* renamed from: m */
+        public boolean m10307m() {
+            return this.f9002a.f9018p;
+        }
+
+        /* renamed from: n */
+        public boolean m10308n() {
+            return this.f9002a.f9015m;
+        }
+
+        /* renamed from: o */
+        public boolean m10309o() {
+            return this.f9002a.f9019q;
+        }
+
+        /* renamed from: p */
+        public boolean m10310p() {
+            return this.f9002a.f9016n;
+        }
+
+        /* renamed from: q */
+        public boolean m10311q() {
+            return this.f9002a.f9022t;
+        }
+
+        /* renamed from: r */
+        public boolean m10312r() {
+            return this.f9002a.f9020r;
+        }
+
+        /* renamed from: d */
+        public void m10290d(int echoEnergy) {
+            if (this.f9002a.f9014l != null) {
+                this.f9002a.f9014l.setDspEchoEnergy(echoEnergy);
+            }
+        }
+
+        /* renamed from: i */
+        public void m10303i(boolean flag) {
+            if (flag) {
+                this.f9002a.f9012j.put(SpeechConstant.LOG_LEVEL, Integer.valueOf(6));
+                LogUtil.setLogLevel(0);
+                return;
+            }
+            this.f9002a.f9012j.put(SpeechConstant.LOG_LEVEL, Integer.valueOf(0));
+            LogUtil.setLogLevel(7);
+        }
+
+        /* renamed from: e */
+        public void m10294e(int pid) {
+            this.f9002a.f9025w = pid;
+            this.f9002a.f9012j.put("pid", Integer.valueOf(this.f9002a.f9025w));
+        }
+
+        /* renamed from: d */
+        public void m10291d(String onlineKey) {
+            this.f9002a.f9026x = onlineKey;
+            this.f9002a.f9012j.put("key", this.f9002a.f9026x);
+        }
     }
-  }
-  
-  private String r()
-  {
-    File localFile = getExternalFilesDir("RecordData");
-    if (localFile == null) {
-      return null;
+
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        C2725h.m10207b(f9003a, "-----onStartCommand-----");
+        return 2;
     }
-    return localFile.getPath();
-  }
-  
-  private void s()
-  {
-    if (u() > 0)
-    {
-      h.b("CoDriverVoice-Service", "--asr.kws.load-----start");
-      this.d.send("asr.kws.load", new JSONObject(this.j).toString(), null, 0, 0);
-      h.b("CoDriverVoice-Service", "--asr.kws.load-----end");
-      h.b("CoDriverVoice-Service", "--asr.kws.load-----config:" + this.j.toString());
+
+    public void onCreate() {
+        super.onCreate();
+        C2725h.m10207b(f9003a, "-----onCreate-----");
+        startForeground(8888, new Notification());
+        f9004b = getApplicationContext().getFilesDir().getAbsolutePath() + "/";
+        C2725h.m10207b(f9003a, "mResDir : " + f9004b);
     }
-  }
-  
-  private void t()
-  {
-    if (u() > 0)
-    {
-      h.b("CoDriverVoice-Service", "--asr.kws.unload-----start");
-      this.d.send("asr.kws.unload", null, null, 0, 0);
-      h.b("CoDriverVoice-Service", "--asr.kws.unload-----end");
+
+    public IBinder onBind(Intent intent) {
+        C2725h.m10214e(f9003a, "-----onBind------");
+        return this.f9027y;
     }
-  }
-  
-  private int u()
-  {
-    return a("basic.decoder", a("decoder", -1));
-  }
-  
-  public IBinder onBind(Intent paramIntent)
-  {
-    h.e("CoDriverVoice-Service", "-----onBind------");
-    return this.y;
-  }
-  
-  public void onCreate()
-  {
-    super.onCreate();
-    h.b("CoDriverVoice-Service", "-----onCreate-----");
-    startForeground(8888, new Notification());
-    b = getApplicationContext().getFilesDir().getAbsolutePath() + "/";
-    h.b("CoDriverVoice-Service", "mResDir : " + b);
-  }
-  
-  public void onDestroy()
-  {
-    super.onDestroy();
-    h.b("CoDriverVoice-Service", "-----onDestroy------");
-  }
-  
-  public int onStartCommand(Intent paramIntent, int paramInt1, int paramInt2)
-  {
-    h.b("CoDriverVoice-Service", "-----onStartCommand-----");
-    return 2;
-  }
-  
-  public static abstract interface a
-  {
-    public abstract void a();
-  }
-  
-  public class b
-    extends Binder
-  {
-    public b() {}
-    
-    public int a()
-    {
-      return VoiceService.i(VoiceService.this);
+
+    public void onDestroy() {
+        super.onDestroy();
+        C2725h.m10207b(f9003a, "-----onDestroy------");
     }
-    
-    public int a(RecordHelper.a parama, com.baidu.che.codriver.vr.record.d paramd)
-    {
-      switch (VoiceService.3.a[parama.ordinal()])
-      {
-      default: 
-        return -1;
-      }
-      VoiceService.w(VoiceService.this);
-      VoiceService.x(VoiceService.this).setRecordType(parama, paramd);
-      return 0;
+
+    /* renamed from: a */
+    private void m10324a() {
+        this.f9008f = EventManagerFactory.create(getApplicationContext(), C2546c.al);
+        this.f9008f.registerListener(new C27391(this));
     }
-    
-    public int a(EventListener paramEventListener)
-    {
-      if ((VoiceService.g(VoiceService.this) == null) || (VoiceService.h(VoiceService.this) == null)) {
-        return -1;
-      }
-      VoiceService.g(VoiceService.this).registerListener(paramEventListener);
-      VoiceService.h(VoiceService.this).registerListener(paramEventListener);
-      VoiceService.a(VoiceService.this, paramEventListener);
-      return 0;
+
+    /* renamed from: b */
+    private void m10336b() {
+        if (this.f9014l == null) {
+            this.f9014l = new RecordHelper();
+            this.f9014l.init(this, new C27412(this));
+        }
     }
-    
-    public int a(String paramString)
-    {
-      if ((paramString == null) || ((!paramString.equals("你好现代")) && (!paramString.equals("你好起亚")) && (!paramString.equals("你好北京现代")))) {
-        return -1;
-      }
-      VoiceService.a(VoiceService.this, new String[1]);
-      VoiceService.o(VoiceService.this)[0] = paramString;
-      return 0;
+
+    /* renamed from: c */
+    private void m10341c() {
+        C2725h.m10207b(f9003a, "---RESOURCES---START COPY-----");
+        String sourceFileName = C2546c.f8424T;
+        C2547d.m9652a(f9004b + sourceFileName);
+        C2547d.m9650a(getApplicationContext(), sourceFileName, f9004b + sourceFileName);
+        sourceFileName = C2546c.f8426V;
+        C2547d.m9652a(f9004b + sourceFileName);
+        C2547d.m9650a(getApplicationContext(), sourceFileName, f9004b + sourceFileName);
+        sourceFileName = C2546c.f8427W;
+        C2547d.m9652a(f9004b + sourceFileName);
+        C2547d.m9650a(getApplicationContext(), sourceFileName, f9004b + sourceFileName);
+        sourceFileName = C2546c.f8428X;
+        C2547d.m9652a(f9004b + sourceFileName);
+        C2547d.m9650a(getApplicationContext(), sourceFileName, f9004b + sourceFileName);
+        sourceFileName = "WakeUp_Xiaodu.bin";
+        C2547d.m9652a(f9004b + sourceFileName);
+        C2547d.m9650a(getApplicationContext(), sourceFileName, f9004b + sourceFileName);
+        sourceFileName = C2546c.f8429Y;
+        C2547d.m9652a(f9004b + sourceFileName);
+        C2547d.m9650a(getApplicationContext(), sourceFileName, f9004b + sourceFileName);
+        C2725h.m10207b(f9003a, "---RESOURCES---END COPY-----");
     }
-    
+
+    /* renamed from: d */
+    private void m10344d() {
+        this.f9024v = C2731l.m10227a(getApplicationContext(), C2546c.f8438h, m10377r());
+        if (TextUtils.isEmpty(this.f9024v)) {
+            this.f9024v = m10377r();
+        }
+        C2725h.m10207b(f9003a, "initSaveDataParams mSavePcmDataPath = " + this.f9024v);
+    }
+
+    /* renamed from: e */
+    private void m10347e() {
+        if (this.f9007e == null) {
+            this.f9007e = EventManagerFactory.create(getApplicationContext(), C2546c.am);
+        }
+        if (this.f9013k == null) {
+            this.f9013k = new HashMap();
+        }
+        this.f9016n = C2731l.m10228a(getApplication(), C2546c.f8436f, false);
+        this.f9020r = C2731l.m10228a(getApplication(), "scene_command_key", true);
+        this.f9013k.put(SpeechConstant.SAMPLE_RATE, Integer.valueOf(16000));
+        this.f9013k.put(C2546c.au, f9004b + C2546c.f8424T);
+        this.f9013k.put(C2546c.av, f9004b + C2546c.f8428X);
+        this.f9013k.put(SpeechConstant.WP_WORDS_FILE, f9004b + "WakeUp_Xiaodu.bin");
+        this.f9013k.put(SpeechConstant.ACCEPT_AUDIO_VOLUME, Boolean.valueOf(false));
+        this.f9013k.put(C2546c.aw, Integer.valueOf(3));
+        this.f9013k.put(SpeechConstant.WP_KWD_ENABLE, Boolean.valueOf(true));
+        this.f9013k.put(SpeechConstant.ASR_VAD_RES_FILE_PATH, f9004b + C2546c.f8429Y);
+        this.f9017o = C2731l.m10228a(getApplication(), "wake_up", true);
+        C2725h.m10207b(f9003a, "initWakeUpConfig mIsWakeUpEnable = " + this.f9017o);
+    }
+
+    /* renamed from: f */
+    private void m10350f() {
+        if (this.f9006d == null) {
+            this.f9006d = EventManagerFactory.create(getApplicationContext(), C2546c.ak);
+        }
+        if (this.f9012j == null) {
+            this.f9012j = new HashMap();
+        } else {
+            this.f9012j.clear();
+        }
+        this.f9012j.put(SpeechConstant.SLOT_DATA, new JSONObject());
+        this.f9015m = C2731l.m10228a(getApplication(), C2546c.f8437g, false);
+        this.f9019q = C2731l.m10228a(getApplicationContext(), "support_full_bargin", false);
+        this.f9021s = C2731l.m10228a(getApplicationContext(), C2546c.aB, false);
+        this.f9012j.put("pid", Integer.valueOf(this.f9025w));
+        this.f9012j.put("key", this.f9026x);
+        this.f9012j.put("url", C2546c.f8449s);
+        this.f9012j.put(C2546c.ax, C2546c.f8445o);
+        this.f9012j.put(SpeechConstant.NLU, "enable");
+        this.f9012j.put(C2546c.aB, Integer.valueOf(this.f9021s ? 306 : 0));
+        this.f9012j.put(SpeechConstant.VAD, "dnn");
+        this.f9012j.put(C2546c.au, f9004b + C2546c.f8424T);
+        this.f9012j.put(SpeechConstant.SOUND_SUCCESS, Integer.valueOf(C2831k.bdspeech_recognition_success));
+        this.f9012j.put(SpeechConstant.ACCEPT_AUDIO_VOLUME, Boolean.valueOf(false));
+        this.f9012j.put(SpeechConstant.VAD_SPEECH_THRESHOLD, Float.valueOf(0.25f));
+        this.f9012j.put(SpeechConstant.VAD_MIN_SPEECH_THRESHOLD, Integer.valueOf(40));
+        m10354g();
+        this.f9012j.put(SpeechConstant.DECODER, Integer.valueOf(2));
+        this.f9012j.put(SpeechConstant.VAD_SIL_THRESHOLD, Float.valueOf(0.15f));
+        this.f9012j.put(C2546c.aG, Integer.valueOf(400));
+        this.f9012j.put(SpeechConstant.ENABLE_EARLY_RETURN, Boolean.valueOf(true));
+        this.f9012j.put(SpeechConstant.ASR_VAD_RES_FILE_PATH, f9004b + C2546c.f8429Y);
+        this.f9012j.put(SpeechConstant.DEC_TYPE, Integer.valueOf(1));
+        this.f9012j.put(C2546c.az, Boolean.valueOf(true));
+        this.f9012j.put(SpeechConstant.SAMPLE_RATE, Integer.valueOf(16000));
+        this.f9012j.put(C2546c.as, Boolean.valueOf(false));
+        m10357h();
+    }
+
+    /* renamed from: g */
+    private void m10354g() {
+        if (this.f9019q) {
+            this.f9012j.put(SpeechConstant.VAD_ENDPOINT_TIMEOUT, Integer.valueOf(0));
+            this.f9012j.put(SpeechConstant.DECODER, Integer.valueOf(0));
+            return;
+        }
+        this.f9012j.put(SpeechConstant.VAD_ENDPOINT_TIMEOUT, Integer.valueOf(C2546c.f8411G));
+        this.f9012j.put(C2546c.aF, Integer.valueOf(50));
+        this.f9012j.put(SpeechConstant.DECODER, Integer.valueOf(2));
+    }
+
+    /* renamed from: h */
+    private void m10357h() {
+        this.f9012j.put(SpeechConstant.ASR_OFFLINE_ENGINE_DAT_FILE_PATH, f9004b + C2546c.f8427W);
+        this.f9012j.put(SpeechConstant.ASR_OFFLINE_ENGINE_GRAMMER_FILE_PATH, f9004b + C2546c.f8426V);
+        this.f9012j.put(C2546c.aJ, Boolean.valueOf(false));
+    }
+
+    /* renamed from: i */
+    private void m10360i() {
+        if (this.f9012j != null) {
+            try {
+                JSONObject jsonObject = (JSONObject) this.f9012j.get(SpeechConstant.SLOT_DATA);
+                if (jsonObject != null) {
+                    jsonObject.put("words", new JSONArray());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Deprecated
-    public int a(String paramString1, String paramString2)
-    {
-      return -1;
-    }
-    
-    public int a(String[] paramArrayOfString)
-    {
-      if ((paramArrayOfString == null) || (paramArrayOfString.length == 0) || (paramArrayOfString.length > 3)) {
-        return -1;
-      }
-      int i = 0;
-      for (;;)
-      {
-        if (i >= paramArrayOfString.length) {
-          break label65;
+    /* renamed from: a */
+    private void m10328a(String words) {
+        if (this.f9012j != null) {
+            try {
+                JSONObject jsonObject = (JSONObject) this.f9012j.get(SpeechConstant.SLOT_DATA);
+                if (jsonObject.isNull("words")) {
+                    jsonObject.put("words", new JSONArray());
+                }
+                JSONArray wordArray = jsonObject.getJSONArray("words");
+                boolean isChanged = false;
+                for (String tmp : words.split(",")) {
+                    boolean isNeedAdd = true;
+                    for (int i = 0; i < wordArray.length(); i++) {
+                        if (tmp.equals(wordArray.getString(i))) {
+                            isNeedAdd = false;
+                            break;
+                        }
+                    }
+                    if (isNeedAdd) {
+                        wordArray.put(tmp);
+                        isChanged = true;
+                    }
+                }
+                if (isChanged) {
+                    m10382t();
+                    m10379s();
+                }
+                C2725h.m10207b(f9003a, "------------regCustomCmd:" + this.f9012j.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        if ((!paramArrayOfString[i].equals("你好现代")) && (!paramArrayOfString[i].equals("你好起亚")) && (!paramArrayOfString[i].equals("你好北京现代"))) {
-          break;
-        }
-        i += 1;
-      }
-      label65:
-      VoiceService.a(VoiceService.this, paramArrayOfString);
-      return 0;
     }
-    
-    public void a(int paramInt)
-    {
-      VoiceService.a(VoiceService.this, paramInt);
+
+    /* renamed from: a */
+    private void m10330a(JSONArray contact) {
+        HashMap map = new HashMap();
+        map.put("name", C2736p.f8992v);
+        map.put("pid", "809");
+        map.put("url", "http://upl.baidu.com/words/add");
+        map.put("words", contact);
+        C2725h.m10207b(f9003a, "upload contacts : contact = " + contact.toString());
+        this.f9008f.send(SpeechConstant.UPLOADER_START, new JSONObject(map).toString(), null, 0, 0);
     }
-    
-    public void a(long paramLong, String paramString, int paramInt1, int paramInt2)
-    {
-      h.c("CoDriverVoice-Service", "isOneShot = " + paramInt1 + ", wpBacktrackFrameLen=" + paramInt2);
-      if (paramInt1 == 1)
-      {
-        VoiceService.r(VoiceService.this).put("wakeup-status", Integer.valueOf(1));
-        VoiceService.r(VoiceService.this).put("wakeup-words", paramString);
-        VoiceService.r(VoiceService.this).put("isoneshot", Integer.valueOf(paramInt1));
-        VoiceService.r(VoiceService.this).put("backtrack-time", Integer.valueOf(paramInt2));
-        paramLong = paramLong - paramInt2 * 10 - 300L - 150L - 100L - 100L;
-        if (paramLong > 0L) {
-          VoiceService.r(VoiceService.this).put("audio.mills", Long.valueOf(paramLong));
-        }
-      }
-      while (paramInt1 != 0) {
-        return;
-      }
-      VoiceService.r(VoiceService.this).remove("audio.mills");
-      VoiceService.r(VoiceService.this).put("isoneshot", Integer.valueOf(0));
-      VoiceService.r(VoiceService.this).put("wakeup-status", Integer.valueOf(0));
-    }
-    
-    public void a(final VoiceService.a parama)
-    {
-      new Thread(new Runnable()
-      {
-        public void run()
-        {
-          VoiceService.a(VoiceService.this);
-          VoiceService.b(VoiceService.this);
-          VoiceService.c(VoiceService.this);
-          VoiceService.d(VoiceService.this);
-          VoiceService.e(VoiceService.this);
-          VoiceService.f(VoiceService.this);
-          VoiceService.a(VoiceService.this, true);
-          parama.a();
-        }
-      }).start();
-    }
-    
-    public void a(JSONArray paramJSONArray)
-    {
-      VoiceService.a(VoiceService.this, paramJSONArray);
-    }
-    
-    public void a(boolean paramBoolean)
-    {
-      VoiceService.b(VoiceService.this, paramBoolean);
-      l.b(VoiceService.this, "decoder-server.ptc", paramBoolean);
-      if (VoiceService.p(VoiceService.this))
-      {
-        HashMap localHashMap = VoiceService.r(VoiceService.this);
-        if (VoiceService.q(VoiceService.this)) {}
-        for (int i = 306;; i = 0)
-        {
-          localHashMap.put("decoder-server.ptc", Integer.valueOf(i));
-          return;
-        }
-      }
-      VoiceService.c(VoiceService.this);
-    }
-    
-    public void a(byte[] paramArrayOfByte)
-    {
-      if (VoiceService.x(VoiceService.this) != null) {
-        VoiceService.x(VoiceService.this).feedAudioBuffer(paramArrayOfByte);
-      }
-    }
-    
-    public void a(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
-    {
-      if (VoiceService.x(VoiceService.this) != null) {
-        VoiceService.x(VoiceService.this).feedAudioBuffer(paramArrayOfByte1, paramArrayOfByte2);
-      }
-    }
-    
-    public int b()
-    {
-      return VoiceService.j(VoiceService.this);
-    }
-    
-    public int b(int paramInt)
-    {
-      return VoiceService.b(VoiceService.this, paramInt);
-    }
-    
-    public int b(EventListener paramEventListener)
-    {
-      VoiceService.g(VoiceService.this).unregisterListener(paramEventListener);
-      return 0;
-    }
-    
-    public void b(String paramString)
-    {
-      VoiceService.a(VoiceService.this, paramString);
-      h.b("CoDriverVoice-Service", "setPcmDataPath mSavePcmDataPath = " + VoiceService.t(VoiceService.this));
-      l.b(VoiceService.this, "save_pcm_data_key", VoiceService.u(VoiceService.this));
-    }
-    
-    public void b(String paramString1, String paramString2)
-    {
-      VoiceService.a(VoiceService.this, paramString1, paramString2);
-    }
-    
-    public void b(boolean paramBoolean)
-    {
-      if (VoiceService.s(VoiceService.this) == paramBoolean) {
-        return;
-      }
-      VoiceService.c(VoiceService.this, paramBoolean);
-      l.b(VoiceService.this, "wake_up", paramBoolean);
-      h.b("CoDriverVoice-Service", "command:setWakeUpFlag-isOpen:" + paramBoolean);
-    }
-    
-    public int c()
-    {
-      return VoiceService.k(VoiceService.this);
-    }
-    
-    public void c(int paramInt)
-    {
-      if (!VoiceService.p(VoiceService.this)) {
-        VoiceService.c(VoiceService.this);
-      }
-      VoiceService.r(VoiceService.this).put("audio.stream-type", Integer.valueOf(paramInt));
-    }
-    
+
     @Deprecated
-    public void c(String paramString) {}
-    
-    public void c(boolean paramBoolean)
-    {
-      d(paramBoolean);
-      e(paramBoolean);
+    /* renamed from: a */
+    private void m10329a(String singers, String songs) {
+        this.f9010h = singers;
+        this.f9011i = songs;
+        HashMap<String, String> map = new HashMap();
+        map.put("name", "songs");
+        map.put("words", this.f9011i);
+        this.f9008f.send(C2546c.ao, new JSONObject(map).toString(), null, 0, 0);
+        m10375q();
     }
-    
-    public int d()
-    {
-      return VoiceService.l(VoiceService.this);
+
+    /* renamed from: j */
+    private int m10361j() {
+        C2725h.m10207b(f9003a, "----startVrEngine-------mIsOneshotEnable = " + this.f9018p);
+        if (!this.f9022t) {
+            return -1;
+        }
+        if (this.f9014l == null || TextUtils.isEmpty(this.f9014l.getInfile())) {
+            this.f9012j.remove(SpeechConstant.IN_FILE);
+        } else {
+            this.f9012j.put(SpeechConstant.IN_FILE, this.f9014l.getInfile());
+            this.f9014l.reset();
+            this.f9014l.setState(C2856b.STATE_BUSY_NORMAL);
+        }
+        if (this.f9015m) {
+            C2725h.m10207b(f9003a, "startAsr mSavePcmDataPath = " + this.f9024v);
+            if (TextUtils.isEmpty(this.f9024v)) {
+                Toast.makeText(getApplicationContext(), "无法生成保存路径", 0).show();
+            } else {
+                this.f9012j.put(SpeechConstant.OUT_FILE, this.f9024v + "/" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "#recog.pcm");
+            }
+        } else {
+            this.f9012j.remove(SpeechConstant.OUT_FILE);
+        }
+        this.f9012j.put(SpeechConstant.ACCEPT_AUDIO_DATA, Boolean.valueOf(this.f9015m));
+        long start = SystemClock.elapsedRealtime();
+        this.f9006d.send(SpeechConstant.ASR_START, new JSONObject(this.f9012j).toString(), null, 0, 0);
+        C2725h.m10207b(f9003a, "command:asr.start-The Time of loading VR DB :" + (SystemClock.elapsedRealtime() - start) + "ms");
+        C2725h.m10207b(f9003a, "asr.start--config:" + this.f9012j.toString());
+        return 0;
     }
-    
-    public void d(int paramInt)
-    {
-      if (VoiceService.x(VoiceService.this) != null) {
-        VoiceService.x(VoiceService.this).setDspEchoEnergy(paramInt);
-      }
+
+    /* renamed from: k */
+    private int m10363k() {
+        if (this.f9006d == null) {
+            return -1;
+        }
+        this.f9006d.send(SpeechConstant.ASR_STOP, null, null, 0, 0);
+        C2725h.m10207b(f9003a, "command:asr.stop");
+        return 0;
     }
-    
-    public void d(String paramString)
-    {
-      VoiceService.b(VoiceService.this, paramString);
-      VoiceService.r(VoiceService.this).put("key", VoiceService.F(VoiceService.this));
+
+    /* renamed from: l */
+    private int m10365l() {
+        if (this.f9006d == null) {
+            return -1;
+        }
+        this.f9006d.send("asr.cancel", null, null, 0, 0);
+        C2725h.m10207b(f9003a, "command:asr.cancel");
+        return 0;
     }
-    
-    public void d(boolean paramBoolean)
-    {
-      VoiceService.d(VoiceService.this, paramBoolean);
-      l.b(VoiceService.this, "save_wake_up_rdata", paramBoolean);
+
+    /* renamed from: m */
+    private int m10367m() {
+        if (this.f9017o && this.f9022t) {
+            if (this.f9014l == null || TextUtils.isEmpty(this.f9014l.getInfile())) {
+                this.f9013k.remove(SpeechConstant.IN_FILE);
+            } else {
+                this.f9013k.put(SpeechConstant.IN_FILE, this.f9014l.getInfile());
+                this.f9014l.reset();
+                this.f9014l.setState(C2856b.STATE_BUSY_WAKEUP);
+                this.f9014l.startRecord();
+            }
+            if (this.f9016n) {
+                C2725h.m10207b(f9003a, "startWp mSavePcmDataPath = " + this.f9024v);
+                if (TextUtils.isEmpty(this.f9024v)) {
+                    Toast.makeText(getApplicationContext(), "无法生成保存路径", 0).show();
+                } else {
+                    this.f9013k.put(SpeechConstant.OUT_FILE, this.f9024v + "/" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + "#wakeup.pcm");
+                }
+            } else {
+                this.f9013k.remove(SpeechConstant.OUT_FILE);
+            }
+            this.f9013k.put(SpeechConstant.ACCEPT_AUDIO_DATA, Boolean.valueOf(this.f9016n));
+            this.f9007e.send(SpeechConstant.WAKEUP_START, new JSONObject(this.f9013k).toString(), null, 0, 0);
+            C2725h.m10207b(f9003a, "command:wp.start--config:" + this.f9013k.toString());
+            return 0;
+        }
+        C2725h.m10214e(f9003a, "startWp wakeUpFlag = " + this.f9017o + " , initFlag = " + this.f9022t);
+        return -1;
     }
-    
-    public int e()
-    {
-      return VoiceService.m(VoiceService.this);
+
+    /* renamed from: a */
+    private int m10319a(int sceneCmdType) {
+        if (m10367m() == -1) {
+            return -1;
+        }
+        return m10333b(sceneCmdType);
     }
-    
-    public void e(int paramInt)
-    {
-      VoiceService.c(VoiceService.this, paramInt);
-      VoiceService.r(VoiceService.this).put("pid", Integer.valueOf(VoiceService.E(VoiceService.this)));
+
+    /* renamed from: n */
+    private int m10369n() {
+        if (this.f9007e == null) {
+            return -1;
+        }
+        this.f9007e.send(SpeechConstant.WAKEUP_STOP, null, null, 0, 0);
+        C2725h.m10207b(f9003a, "command:wp.stop");
+        return 0;
     }
-    
-    public void e(boolean paramBoolean)
-    {
-      VoiceService.e(VoiceService.this, paramBoolean);
-      l.b(VoiceService.this, "save_asr_rdata", paramBoolean);
+
+    /* renamed from: b */
+    private int m10333b(int scene) {
+        C2725h.m10207b(f9003a, "command:openSceneCmdInWaking type = " + scene);
+        if (this.f9007e == null) {
+            C2725h.m10207b(f9003a, "command:openSceneCmdInWaking wakeupManager is null");
+            return -1;
+        } else if (!this.f9020r) {
+            C2725h.m10207b(f9003a, "command:openSceneCmdInWaking sceneCmdFlag is false");
+            return -1;
+        } else if ((scene & 3) == 0) {
+            C2725h.m10207b(f9003a, "command:openSceneCmdInWaking. unknown type " + scene);
+            return -1;
+        } else {
+            Map kwdMap = new HashMap();
+            kwdMap.put(C2546c.aD, Integer.valueOf(0));
+            JSONArray enableJsonArray = new JSONArray();
+            m10338b(enableJsonArray);
+            if ((scene & 1) != 0) {
+                for (String cmd : C2546c.bn) {
+                    enableJsonArray.put(cmd);
+                }
+            }
+            if ((scene & 2) != 0) {
+                for (String cmd2 : C2546c.bo) {
+                    enableJsonArray.put(cmd2);
+                }
+            }
+            Log.i(f9003a, "command:openSceneCmdInWaking type = " + scene + " , kwd array : " + enableJsonArray.toString());
+            kwdMap.put(C2546c.aE, enableJsonArray);
+            this.f9007e.send(C2546c.an, new JSONObject(kwdMap).toString(), null, 0, 0);
+            return 0;
+        }
     }
-    
-    public void f()
-    {
-      VoiceService.n(VoiceService.this);
+
+    /* renamed from: o */
+    private int m10371o() {
+        C2725h.m10207b(f9003a, "command:closeSceneCmd");
+        if (this.f9007e == null) {
+            C2725h.m10207b(f9003a, "command:closeSceneCmd wakeupManager is null");
+            return -1;
+        }
+        Map kwdMap = new HashMap();
+        kwdMap.put(C2546c.aD, Integer.valueOf(0));
+        JSONArray enableJsonArray = new JSONArray();
+        m10338b(enableJsonArray);
+        kwdMap.put(C2546c.aE, enableJsonArray);
+        this.f9007e.send(C2546c.an, new JSONObject(kwdMap).toString(), null, 0, 0);
+        return 1;
     }
-    
-    public void f(boolean paramBoolean)
-    {
-      h.b("CoDriverVoice-Service", "setSupportFullBargin : " + paramBoolean);
-      VoiceService.f(VoiceService.this, paramBoolean);
-      l.b(VoiceService.this, "support_full_bargin", paramBoolean);
-      if (VoiceService.p(VoiceService.this))
-      {
-        VoiceService.y(VoiceService.this);
-        return;
-      }
-      VoiceService.c(VoiceService.this);
+
+    /* renamed from: b */
+    private void m10338b(JSONArray enableJsonArray) {
+        enableJsonArray.put("小度小度");
+        if (this.f9023u != null) {
+            for (Object put : this.f9023u) {
+                enableJsonArray.put(put);
+            }
+        }
     }
-    
-    public String g()
-    {
-      String str1 = "" + "小度小度";
-      String str2 = str1;
-      if (VoiceService.o(VoiceService.this) != null)
-      {
+
+    /* renamed from: p */
+    private void m10373p() {
+        if (this.f9014l != null) {
+            this.f9014l.release();
+            this.f9014l = null;
+        }
+        this.f9022t = false;
+    }
+
+    /* renamed from: q */
+    private void m10375q() {
         int i = 0;
-        for (;;)
-        {
-          str2 = str1;
-          if (i >= VoiceService.o(VoiceService.this).length) {
-            break;
-          }
-          str1 = str1 + "," + VoiceService.o(VoiceService.this)[i];
-          i += 1;
+        if (this.f9012j != null) {
+            String strNames = this.f9009g + " ";
+            String strSongs = this.f9010h + " ";
+            String strSingers = this.f9010h + " ";
+            JSONArray names = new JSONArray();
+            for (String s : strNames.split(",")) {
+                names.put(s.trim());
+            }
+            JSONArray singer = new JSONArray();
+            for (String s2 : strSingers.split(",")) {
+                singer.put(s2.trim());
+            }
+            JSONArray songs = new JSONArray();
+            String[] split = strSongs.split(",");
+            int length = split.length;
+            while (i < length) {
+                songs.put(split[i].trim());
+                i++;
+            }
+            try {
+                JSONObject jsonObject = (JSONObject) this.f9012j.get(SpeechConstant.SLOT_DATA);
+                if (jsonObject != null) {
+                    jsonObject.put("name", names).put("song", songs).put("singer", singer);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-      }
-      return str2;
     }
-    
-    public void g(boolean paramBoolean)
-    {
-      VoiceService.g(VoiceService.this, paramBoolean);
-      HashMap localHashMap = new HashMap();
-      localHashMap.put("wp.enable-oneshot", Boolean.valueOf(paramBoolean));
-      h.b("CoDriverVoice-Service", "new setOneshotEnable mIsOneshotEnable = " + VoiceService.z(VoiceService.this));
-      VoiceService.h(VoiceService.this).send("kwd.config", new JSONObject(localHashMap).toString(), null, 0, 0);
+
+    /* renamed from: r */
+    private String m10377r() {
+        File file = getExternalFilesDir("RecordData");
+        if (file == null) {
+            return null;
+        }
+        return file.getPath();
     }
-    
-    @Deprecated
-    public void h() {}
-    
-    public void h(boolean paramBoolean)
-    {
-      VoiceService.h(VoiceService.this, paramBoolean);
-      l.b(VoiceService.this, "scene_command_key", paramBoolean);
-      h.b("CoDriverVoice-Service", "setSceneCmdEnable sceneCmdFlag = " + VoiceService.A(VoiceService.this));
+
+    /* renamed from: s */
+    private void m10379s() {
+        if (m10383u() > 0) {
+            C2725h.m10207b(f9003a, "--asr.kws.load-----start");
+            this.f9006d.send(SpeechConstant.ASR_KWS_LOAD_ENGINE, new JSONObject(this.f9012j).toString(), null, 0, 0);
+            C2725h.m10207b(f9003a, "--asr.kws.load-----end");
+            C2725h.m10207b(f9003a, "--asr.kws.load-----config:" + this.f9012j.toString());
+        }
     }
-    
-    public void i()
-    {
-      VoiceService.v(VoiceService.this);
+
+    /* renamed from: t */
+    private void m10382t() {
+        if (m10383u() > 0) {
+            C2725h.m10207b(f9003a, "--asr.kws.unload-----start");
+            this.f9006d.send(SpeechConstant.ASR_KWS_UNLOAD_ENGINE, null, null, 0, 0);
+            C2725h.m10207b(f9003a, "--asr.kws.unload-----end");
+        }
     }
-    
-    public void i(boolean paramBoolean)
-    {
-      if (paramBoolean)
-      {
-        VoiceService.r(VoiceService.this).put("log_level", Integer.valueOf(6));
-        LogUtil.setLogLevel(0);
-        return;
-      }
-      VoiceService.r(VoiceService.this).put("log_level", Integer.valueOf(0));
-      LogUtil.setLogLevel(7);
+
+    /* renamed from: u */
+    private int m10383u() {
+        return m10321a(C2546c.ay, m10321a(SpeechConstant.DECODER, -1));
     }
-    
-    public void j()
-    {
-      if (VoiceService.x(VoiceService.this) != null) {
-        VoiceService.x(VoiceService.this).startRecord();
-      }
+
+    /* renamed from: a */
+    private int m10321a(String name, int defaultValue) {
+        Object value = this.f9012j.get(name);
+        return (value != null && (value instanceof Integer)) ? ((Integer) value).intValue() : defaultValue;
     }
-    
-    public void k()
-    {
-      VoiceService.r(VoiceService.this).remove("audio.mills");
-      VoiceService.r(VoiceService.this).put("isoneshot", Integer.valueOf(0));
-      VoiceService.r(VoiceService.this).put("wakeup-status", Integer.valueOf(0));
-    }
-    
-    public boolean l()
-    {
-      return VoiceService.s(VoiceService.this);
-    }
-    
-    public boolean m()
-    {
-      return VoiceService.z(VoiceService.this);
-    }
-    
-    public boolean n()
-    {
-      return VoiceService.B(VoiceService.this);
-    }
-    
-    public boolean o()
-    {
-      return VoiceService.C(VoiceService.this);
-    }
-    
-    public boolean p()
-    {
-      return VoiceService.D(VoiceService.this);
-    }
-    
-    public boolean q()
-    {
-      return VoiceService.p(VoiceService.this);
-    }
-    
-    public boolean r()
-    {
-      return VoiceService.A(VoiceService.this);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/vr/VoiceService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

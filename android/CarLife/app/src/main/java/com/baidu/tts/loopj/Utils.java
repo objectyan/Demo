@@ -1,25 +1,19 @@
 package com.baidu.tts.loopj;
 
-class Utils
-{
-  public static void asserts(boolean paramBoolean, String paramString)
-  {
-    if (!paramBoolean) {
-      throw new AssertionError(paramString);
+class Utils {
+    private Utils() {
     }
-  }
-  
-  public static <T> T notNull(T paramT, String paramString)
-  {
-    if (paramT == null) {
-      throw new IllegalArgumentException(paramString + " should not be null!");
+
+    public static void asserts(boolean expression, String failedMessage) {
+        if (!expression) {
+            throw new AssertionError(failedMessage);
+        }
     }
-    return paramT;
-  }
+
+    public static <T> T notNull(T argument, String name) {
+        if (argument != null) {
+            return argument;
+        }
+        throw new IllegalArgumentException(name + " should not be null!");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/loopj/Utils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

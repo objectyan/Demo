@@ -4,22 +4,19 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-final class bl
-  implements TextView.OnEditorActionListener
-{
-  bl(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final boolean onEditorAction(TextView paramTextView, int paramInt, KeyEvent paramKeyEvent)
-  {
-    if (paramInt == 4) {
-      FeedbackInputActivity.J(this.a);
+/* compiled from: FeedbackInputActivity */
+final class bl implements OnEditorActionListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21580a;
+
+    bl(FeedbackInputActivity feedbackInputActivity) {
+        this.f21580a = feedbackInputActivity;
     }
-    return false;
-  }
+
+    public final boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        if (i == 4) {
+            FeedbackInputActivity.m17630J(this.f21580a);
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -11,216 +11,227 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import com.baidu.carlife.R.p;
-import com.baidu.carlife.core.i;
+import android.widget.ImageView.ScaleType;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
 
-public class CircularImageView
-  extends ImageView
-{
-  private int a = 0;
-  private Context b;
-  private int c = 17170445;
-  
-  public CircularImageView(Context paramContext)
-  {
-    super(paramContext);
-    this.b = paramContext;
-  }
-  
-  public CircularImageView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    this.b = paramContext;
-    setCustomAttributes(paramAttributeSet);
-  }
-  
-  public CircularImageView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    this.b = paramContext;
-    setCustomAttributes(paramAttributeSet);
-  }
-  
-  private Bitmap a(Bitmap paramBitmap, int paramInt)
-  {
-    int m = paramBitmap.getWidth();
-    int k = paramBitmap.getHeight();
-    int i = getWidth();
-    int n = getHeight();
-    int j = i;
-    if (i <= 0) {
-      j = m;
-    }
-    i = n;
-    if (n <= 0) {
-      i = k;
-    }
-    Object localObject = getScaleType();
-    if (localObject == null) {
-      return paramBitmap;
-    }
-    Rect localRect;
-    switch (1.a[localObject.ordinal()])
-    {
-    case 2: 
-    case 3: 
-    case 4: 
-    default: 
-      if (j / i > m / k)
-      {
-        n = (int)(m / (k / i));
-        j = i;
-        i = n;
-        localObject = new Rect(0, 0, m, k);
-        localRect = new Rect(0, 0, i, j);
-      }
-      break;
-    }
-    for (;;)
-    {
-      try
-      {
-        localObject = a(paramBitmap, paramInt, (Rect)localObject, localRect, i, j);
-        paramBitmap = (Bitmap)localObject;
-      }
-      catch (OutOfMemoryError localOutOfMemoryError)
-      {
-        int i1;
-        int i2;
-        int i3;
-        i.e("CircularImageView", localOutOfMemoryError.toString());
-        continue;
-      }
-      catch (Exception localException)
-      {
-        i.e("CircularImageView", localException.toString());
-        continue;
-      }
-      return paramBitmap;
-      if (j / i > m / k)
-      {
-        n = Math.min(i, k);
-        i1 = (int)(m / (k / n));
-        i2 = (j - i1) / 2;
-        i3 = (i - n) / 2;
-        localObject = new Rect(0, 0, m, k);
-        localRect = new Rect(i2, i3, i2 + i1, i3 + n);
-        k = i;
-        i = j;
-        j = k;
-      }
-      else
-      {
-        i1 = Math.min(j, m);
-        n = (int)(k / (m / i1));
-        continue;
-        i = j;
-        j = (int)(k / (m / j));
-        break;
-        if (j / i > m / k)
-        {
-          i2 = m;
-          i3 = (int)(i * (m / j));
-          n = 0;
-          i1 = (k - i3) / 2;
-          m = i2;
-          k = i3;
-          i2 = i;
-          localObject = new Rect(n, i1, n + m, i1 + k);
-          localRect = new Rect(0, 0, j, i2);
-          i = j;
-          j = i2;
+public class CircularImageView extends ImageView {
+    /* renamed from: a */
+    private int f7084a = 0;
+    /* renamed from: b */
+    private Context f7085b;
+    /* renamed from: c */
+    private int f7086c = 17170445;
+
+    /* renamed from: com.baidu.carlife.view.CircularImageView$1 */
+    static /* synthetic */ class C22071 {
+        /* renamed from: a */
+        static final /* synthetic */ int[] f7083a = new int[ScaleType.values().length];
+
+        static {
+            try {
+                f7083a[ScaleType.CENTER_INSIDE.ordinal()] = 1;
+            } catch (NoSuchFieldError e) {
+            }
+            try {
+                f7083a[ScaleType.FIT_CENTER.ordinal()] = 2;
+            } catch (NoSuchFieldError e2) {
+            }
+            try {
+                f7083a[ScaleType.FIT_START.ordinal()] = 3;
+            } catch (NoSuchFieldError e3) {
+            }
+            try {
+                f7083a[ScaleType.FIT_END.ordinal()] = 4;
+            } catch (NoSuchFieldError e4) {
+            }
+            try {
+                f7083a[ScaleType.CENTER_CROP.ordinal()] = 5;
+            } catch (NoSuchFieldError e5) {
+            }
+            try {
+                f7083a[ScaleType.FIT_XY.ordinal()] = 6;
+            } catch (NoSuchFieldError e6) {
+            }
+            try {
+                f7083a[ScaleType.CENTER.ordinal()] = 7;
+            } catch (NoSuchFieldError e7) {
+            }
+            try {
+                f7083a[ScaleType.MATRIX.ordinal()] = 8;
+            } catch (NoSuchFieldError e8) {
+            }
         }
-        else
-        {
-          n = (int)(j * (k / i));
-          i2 = (m - n) / 2;
-          i1 = 0;
-          m = n;
-          n = i2;
-          continue;
-          n = i;
-          localObject = new Rect(0, 0, m, k);
-          localRect = new Rect(0, 0, j, n);
-          i = j;
-          j = n;
-          continue;
-          j = Math.min(j, m);
-          n = Math.min(i, k);
-          i = (m - j) / 2;
-          k = (k - n) / 2;
-          localObject = new Rect(i, k, i + j, k + n);
-          localRect = new Rect(0, 0, j, n);
-          i = j;
-          j = n;
+    }
+
+    public CircularImageView(Context context) {
+        super(context);
+        this.f7085b = context;
+    }
+
+    public CircularImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.f7085b = context;
+        setCustomAttributes(attrs);
+    }
+
+    public CircularImageView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.f7085b = context;
+        setCustomAttributes(attrs);
+    }
+
+    private void setCustomAttributes(AttributeSet attrs) {
+        if (attrs != null) {
+            TypedArray a = this.f7085b.obtainStyledAttributes(attrs, C0965R.C0963p.circularimageview);
+            this.f7084a = a.getDimensionPixelSize(0, 0);
+            this.f7086c = a.getColor(1, this.f7086c);
+            a.recycle();
         }
-      }
     }
-  }
-  
-  private Bitmap a(Bitmap paramBitmap, int paramInt1, Rect paramRect1, Rect paramRect2, int paramInt2, int paramInt3)
-  {
-    Bitmap localBitmap = Bitmap.createBitmap(paramInt2, paramInt3, Bitmap.Config.ARGB_8888);
-    Canvas localCanvas = new Canvas(localBitmap);
-    Paint localPaint = new Paint();
-    paramRect2 = new RectF(paramRect2);
-    localPaint.setAntiAlias(true);
-    localCanvas.drawARGB(0, 0, 0, 0);
-    localPaint.setColor(-16777216);
-    localCanvas.drawRoundRect(paramRect2, paramInt1, paramInt1, localPaint);
-    localPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-    localCanvas.drawBitmap(paramBitmap, paramRect1, paramRect2, localPaint);
-    return localBitmap;
-  }
-  
-  private void setCustomAttributes(AttributeSet paramAttributeSet)
-  {
-    if (paramAttributeSet == null) {
-      return;
+
+    protected void onDraw(Canvas canvas) {
+        Drawable drawable = getDrawable();
+        if (drawable != null && getWidth() != 0 && getHeight() != 0) {
+            measure(0, 0);
+            if (drawable.getClass() != NinePatchDrawable.class) {
+                int i;
+                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                int w = getWidth();
+                int h = getHeight();
+                if (w < h) {
+                    i = w;
+                } else {
+                    i = h;
+                }
+                int radius = (i / 2) - this.f7084a;
+                Bitmap roundBitmap = m8391a(bitmap, radius);
+                Paint paint = new Paint();
+                paint.setAntiAlias(true);
+                paint.setFilterBitmap(true);
+                paint.setDither(true);
+                paint.setColor(this.f7086c);
+                canvas.drawCircle((float) (w / 2), (float) (h / 2), (float) (this.f7084a + radius), paint);
+                canvas.drawBitmap(roundBitmap, (float) ((w / 2) - radius), (float) ((h / 2) - radius), null);
+            }
+        }
     }
-    paramAttributeSet = this.b.obtainStyledAttributes(paramAttributeSet, R.p.circularimageview);
-    this.a = paramAttributeSet.getDimensionPixelSize(0, 0);
-    this.c = paramAttributeSet.getColor(1, this.c);
-    paramAttributeSet.recycle();
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    Object localObject = getDrawable();
-    if (localObject == null) {}
-    do
-    {
-      do
-      {
-        return;
-      } while ((getWidth() == 0) || (getHeight() == 0));
-      measure(0, 0);
-    } while (localObject.getClass() == NinePatchDrawable.class);
-    localObject = ((BitmapDrawable)localObject).getBitmap();
-    int j = getWidth();
-    int k = getHeight();
-    if (j < k) {}
-    for (int i = j;; i = k)
-    {
-      i = i / 2 - this.a;
-      localObject = a((Bitmap)localObject, i);
-      Paint localPaint = new Paint();
-      localPaint.setAntiAlias(true);
-      localPaint.setFilterBitmap(true);
-      localPaint.setDither(true);
-      localPaint.setColor(this.c);
-      paramCanvas.drawCircle(j / 2, k / 2, this.a + i, localPaint);
-      paramCanvas.drawBitmap((Bitmap)localObject, j / 2 - i, k / 2 - i, null);
-      return;
+
+    /* renamed from: a */
+    private Bitmap m8391a(Bitmap bitmap, int roundPixels) {
+        int bw = bitmap.getWidth();
+        int bh = bitmap.getHeight();
+        int vw = getWidth();
+        int vh = getHeight();
+        if (vw <= 0) {
+            vw = bw;
+        }
+        if (vh <= 0) {
+            vh = bh;
+        }
+        ScaleType scaleType = getScaleType();
+        if (scaleType == null) {
+            return bitmap;
+        }
+        Rect srcRect;
+        Rect destRect;
+        int width;
+        int height;
+        Bitmap roundBitmap;
+        int x;
+        int y;
+        switch (C22071.f7083a[scaleType.ordinal()]) {
+            case 1:
+                int destHeight;
+                int destWidth;
+                if (((float) vw) / ((float) vh) > ((float) bw) / ((float) bh)) {
+                    destHeight = Math.min(vh, bh);
+                    destWidth = (int) (((float) bw) / (((float) bh) / ((float) destHeight)));
+                } else {
+                    destWidth = Math.min(vw, bw);
+                    destHeight = (int) (((float) bh) / (((float) bw) / ((float) destWidth)));
+                }
+                x = (vw - destWidth) / 2;
+                y = (vh - destHeight) / 2;
+                srcRect = new Rect(0, 0, bw, bh);
+                destRect = new Rect(x, y, x + destWidth, y + destHeight);
+                width = vw;
+                height = vh;
+                break;
+            case 5:
+                int srcWidth;
+                int srcHeight;
+                if (((float) vw) / ((float) vh) > ((float) bw) / ((float) bh)) {
+                    srcWidth = bw;
+                    srcHeight = (int) (((float) vh) * (((float) bw) / ((float) vw)));
+                    x = 0;
+                    y = (bh - srcHeight) / 2;
+                } else {
+                    srcWidth = (int) (((float) vw) * (((float) bh) / ((float) vh)));
+                    srcHeight = bh;
+                    x = (bw - srcWidth) / 2;
+                    y = 0;
+                }
+                width = vw;
+                height = vh;
+                srcRect = new Rect(x, y, x + srcWidth, y + srcHeight);
+                destRect = new Rect(0, 0, width, height);
+                break;
+            case 6:
+                width = vw;
+                height = vh;
+                srcRect = new Rect(0, 0, bw, bh);
+                destRect = new Rect(0, 0, width, height);
+                break;
+            case 7:
+            case 8:
+                width = Math.min(vw, bw);
+                height = Math.min(vh, bh);
+                x = (bw - width) / 2;
+                y = (bh - height) / 2;
+                srcRect = new Rect(x, y, x + width, y + height);
+                destRect = new Rect(0, 0, width, height);
+                break;
+            default:
+                if (((float) vw) / ((float) vh) > ((float) bw) / ((float) bh)) {
+                    width = (int) (((float) bw) / (((float) bh) / ((float) vh)));
+                    height = vh;
+                } else {
+                    width = vw;
+                    height = (int) (((float) bh) / (((float) bw) / ((float) vw)));
+                }
+                srcRect = new Rect(0, 0, bw, bh);
+                destRect = new Rect(0, 0, width, height);
+                break;
+        }
+        try {
+            roundBitmap = m8392a(bitmap, roundPixels, srcRect, destRect, width, height);
+        } catch (OutOfMemoryError e) {
+            C1260i.m4445e("CircularImageView", e.toString());
+            roundBitmap = bitmap;
+        } catch (Exception e2) {
+            C1260i.m4445e("CircularImageView", e2.toString());
+            roundBitmap = bitmap;
+        }
+        return roundBitmap;
     }
-  }
+
+    /* renamed from: a */
+    private Bitmap m8392a(Bitmap bitmap, int roundPixels, Rect srcRect, Rect destRect, int width, int height) {
+        Bitmap output = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        Paint paint = new Paint();
+        RectF destRectF = new RectF(destRect);
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(-16777216);
+        canvas.drawRoundRect(destRectF, (float) roundPixels, (float) roundPixels, paint);
+        paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, srcRect, destRectF, paint);
+        return output;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/CircularImageView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

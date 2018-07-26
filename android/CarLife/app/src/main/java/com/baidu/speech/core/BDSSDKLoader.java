@@ -1,126 +1,88 @@
 package com.baidu.speech.core;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.text.TextUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class BDSSDKLoader
-{
-  public static native void SetLogLevel(int paramInt);
-  
-  public static native int getEngineVersion();
-  
-  public static BDSSDKInterface getSDKObjectForSDKType(String paramString, Context paramContext)
-  {
-    String str2 = paramContext.getApplicationInfo().nativeLibraryDir;
-    String str1 = str2;
-    if (!str2.endsWith("/"))
-    {
-      str1 = str2;
-      if (str2.length() > 0) {
-        str1 = str2 + "/";
-      }
+public class BDSSDKLoader {
+
+    public interface BDSCoreEventListener {
+        void receiveCoreEvent(BDSMessage bDSMessage, BDSSDKInterface bDSSDKInterface);
     }
-    setLibrarySearchPath(str1);
-    setJavaContext(paramContext);
-    str1 = paramContext.getCacheDir().getAbsolutePath() + "/";
-    paramContext = paramContext.getFilesDir().getAbsolutePath() + "/";
-    makeDir(paramContext);
-    setWriteableTempPath(str1);
-    setWriteableLibraryDataPath(paramContext);
-    setWriteableUserDataPath(paramContext);
-    return BDSCoreJniInterface.getNewSDK(paramString);
-  }
-  
-  public static void loadLibraries()
-    throws Exception
-  {
-    try
-    {
-      System.loadLibrary("bdEASRAndroid");
+
+    public interface BDSSDKInterface {
+        void EchoMessage(BDSMessage bDSMessage);
+
+        boolean instanceInitialized();
+
+        int postMessage(BDSMessage bDSMessage);
+
+        void release();
+
+        void setListener(BDSCoreEventListener bDSCoreEventListener);
     }
-    catch (Throwable localThrowable1)
-    {
-      try
-      {
-        for (;;)
-        {
-          System.loadLibrary("bdSpilWakeup");
-          try
-          {
+
+    public static native void SetLogLevel(int i);
+
+    public static native int getEngineVersion();
+
+    public static BDSSDKInterface getSDKObjectForSDKType(String str, Context context) {
+        String str2 = context.getApplicationInfo().nativeLibraryDir;
+        if (!str2.endsWith("/") && str2.length() > 0) {
+            str2 = str2 + "/";
+        }
+        setLibrarySearchPath(str2);
+        setJavaContext(context);
+        str2 = context.getCacheDir().getAbsolutePath() + "/";
+        String str3 = context.getFilesDir().getAbsolutePath() + "/";
+        makeDir(str3);
+        setWriteableTempPath(str2);
+        setWriteableLibraryDataPath(str3);
+        setWriteableUserDataPath(str3);
+        return BDSCoreJniInterface.getNewSDK(str);
+    }
+
+    public static void loadLibraries() throws Exception {
+        try {
+            System.loadLibrary("bdEASRAndroid");
+        } catch (Throwable th) {
+            th.printStackTrace();
+        }
+        try {
+            System.loadLibrary("bdSpilWakeup");
+        } catch (Throwable th2) {
+            th2.printStackTrace();
+        }
+        try {
             System.loadLibrary("BaiduSpeechSDK");
-            return;
-          }
-          catch (Throwable localThrowable3)
-          {
-            localThrowable3.printStackTrace();
-            throw new IOException("Can not load BaiduSpeechSDK library");
-          }
-          localThrowable1 = localThrowable1;
-          localThrowable1.printStackTrace();
+        } catch (Throwable th22) {
+            th22.printStackTrace();
+            IOException iOException = new IOException("Can not load BaiduSpeechSDK library");
         }
-      }
-      catch (Throwable localThrowable2)
-      {
-        for (;;)
-        {
-          localThrowable2.printStackTrace();
-        }
-      }
     }
-  }
-  
-  public static boolean makeDir(String paramString)
-  {
-    if (!TextUtils.isEmpty(paramString))
-    {
-      paramString = new File(paramString);
-      if (paramString.exists())
-      {
-        if ((!paramString.isDirectory()) || (!paramString.canWrite())) {}
-      }
-      else {
-        while (paramString.mkdirs()) {
-          return true;
+
+    public static boolean makeDir(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            File file = new File(str);
+            if (file.exists()) {
+                if (file.isDirectory() && file.canWrite()) {
+                    return true;
+                }
+            } else if (file.mkdirs()) {
+                return true;
+            }
         }
-      }
+        return false;
     }
-    return false;
-  }
-  
-  public static native void setJavaContext(Context paramContext);
-  
-  private static native void setLibrarySearchPath(String paramString);
-  
-  public static native void setWriteableLibraryDataPath(String paramString);
-  
-  public static native void setWriteableTempPath(String paramString);
-  
-  public static native void setWriteableUserDataPath(String paramString);
-  
-  public static abstract interface BDSCoreEventListener
-  {
-    public abstract void receiveCoreEvent(BDSMessage paramBDSMessage, BDSSDKLoader.BDSSDKInterface paramBDSSDKInterface);
-  }
-  
-  public static abstract interface BDSSDKInterface
-  {
-    public abstract void EchoMessage(BDSMessage paramBDSMessage);
-    
-    public abstract boolean instanceInitialized();
-    
-    public abstract int postMessage(BDSMessage paramBDSMessage);
-    
-    public abstract void release();
-    
-    public abstract void setListener(BDSSDKLoader.BDSCoreEventListener paramBDSCoreEventListener);
-  }
+
+    public static native void setJavaContext(Context context);
+
+    private static native void setLibrarySearchPath(String str);
+
+    public static native void setWriteableLibraryDataPath(String str);
+
+    public static native void setWriteableTempPath(String str);
+
+    public static native void setWriteableUserDataPath(String str);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/speech/core/BDSSDKLoader.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -4,73 +4,52 @@ import android.os.Bundle;
 import com.baidu.entity.pb.PoiResult;
 import com.baidu.platform.comapi.map.provider.RoutePoiListProvider;
 import com.baidu.platform.comapi.search.convert.ResultCache;
-import com.baidu.platform.comapi.search.convert.ResultCache.Item;
+import com.baidu.platform.comapi.search.convert.ResultCache$Item;
 import com.baidu.platform.comjni.map.basemap.AppBaseMap;
 import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 
-public class RoutePoiOverlay
-  extends InnerOverlay
-{
-  byte[] pbData = null;
-  
-  public RoutePoiOverlay()
-  {
-    super(38);
-  }
-  
-  public RoutePoiOverlay(AppBaseMap paramAppBaseMap)
-  {
-    super(38, paramAppBaseMap);
-  }
-  
-  private String handlePBResult(PoiResult paramPoiResult)
-  {
-    return new RoutePoiListProvider(paramPoiResult).getRenderData();
-  }
-  
-  public String getData()
-  {
-    if (this.pbData != null) {
-      localObject = null;
+public class RoutePoiOverlay extends InnerOverlay {
+    byte[] pbData = null;
+
+    public RoutePoiOverlay() {
+        super(38);
     }
-    try
-    {
-      PoiResult localPoiResult = PoiResult.parseFrom(this.pbData);
-      localObject = localPoiResult;
+
+    public RoutePoiOverlay(AppBaseMap baseMap) {
+        super(38, baseMap);
     }
-    catch (InvalidProtocolBufferMicroException localInvalidProtocolBufferMicroException)
-    {
-      for (;;) {}
+
+    public void setPbData(byte[] pb) {
+        this.pbData = pb;
     }
-    if (localObject != null)
-    {
-      setType(-1);
-      return handlePBResult((PoiResult)localObject);
+
+    public Bundle getParam() {
+        return null;
     }
-    return null;
-    Object localObject = ResultCache.getInstance().get(this.strJsonData);
-    if ((localObject != null) && ((((ResultCache.Item)localObject).messageLite instanceof PoiResult)))
-    {
-      setType(-1);
-      return handlePBResult((PoiResult)((ResultCache.Item)localObject).messageLite);
+
+    public String getData() {
+        if (this.pbData != null) {
+            PoiResult poiResult = null;
+            try {
+                poiResult = PoiResult.parseFrom(this.pbData);
+            } catch (InvalidProtocolBufferMicroException e) {
+            }
+            if (poiResult == null) {
+                return null;
+            }
+            setType(-1);
+            return handlePBResult(poiResult);
+        }
+        ResultCache$Item item = ResultCache.getInstance().get(this.strJsonData);
+        if (item == null || !(item.messageLite instanceof PoiResult)) {
+            setType(38);
+            return this.strJsonData;
+        }
+        setType(-1);
+        return handlePBResult((PoiResult) item.messageLite);
     }
-    setType(38);
-    return this.strJsonData;
-  }
-  
-  public Bundle getParam()
-  {
-    return null;
-  }
-  
-  public void setPbData(byte[] paramArrayOfByte)
-  {
-    this.pbData = paramArrayOfByte;
-  }
+
+    private String handlePBResult(PoiResult protoMessage) {
+        return new RoutePoiListProvider(protoMessage).getRenderData();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/RoutePoiOverlay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

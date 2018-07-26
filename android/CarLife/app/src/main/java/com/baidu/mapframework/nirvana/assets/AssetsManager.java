@@ -1,115 +1,74 @@
 package com.baidu.mapframework.nirvana.assets;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import com.baidu.mapframework.nirvana.b;
-import com.baidu.mapframework.nirvana.b.a;
-import com.baidu.mapframework.nirvana.b.c;
-import com.baidu.mapframework.nirvana.e;
+import com.baidu.mapframework.nirvana.C3480g;
+import com.baidu.mapframework.nirvana.C3534b;
+import com.baidu.mapframework.nirvana.C3541e;
+import com.baidu.mapframework.nirvana.C3560n;
 import com.baidu.mapframework.nirvana.module.Module;
-import com.baidu.mapframework.nirvana.n;
+import com.baidu.mapframework.nirvana.p205b.C3533c;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
 import java.io.IOException;
 import java.io.InputStream;
 import org.jetbrains.annotations.NotNull;
 
-public class AssetsManager
-{
-  private static void b(@NotNull AssetsTask paramAssetsTask)
-  {
-    e.b().b(paramAssetsTask);
-  }
-  
-  public static void open(@NotNull Module paramModule, @NotNull final AssetsTask paramAssetsTask, @NotNull ScheduleConfig paramScheduleConfig)
-  {
-    if (!n.a(paramModule, paramAssetsTask, paramScheduleConfig)) {
-      return;
+public class AssetsManager {
+    public static void open(@NotNull Module module, @NotNull final AssetsTask task, @NotNull ScheduleConfig config) {
+        if (C3560n.m15213a(module, (C3480g) task, config)) {
+            C3541e.m15174b().m15142a(C3533c.ASSETS, task, module, config);
+            C3541e.m15174b().m15143a((Object) task);
+            try {
+                final InputStream in = task.m15133c().getAssets().open(task.m15130a(), task.m15132b());
+                task.m15131a(new InputStream() {
+                    public int available() throws IOException {
+                        return in.available();
+                    }
+
+                    public void close() throws IOException {
+                        AssetsManager.m15129b(task);
+                        in.close();
+                    }
+
+                    public void mark(int readlimit) {
+                        in.mark(readlimit);
+                    }
+
+                    public boolean markSupported() {
+                        return in.markSupported();
+                    }
+
+                    public int read(byte[] buffer) throws IOException {
+                        return in.read(buffer);
+                    }
+
+                    public int read(byte[] buffer, int byteOffset, int byteCount) throws IOException {
+                        return in.read(buffer, byteOffset, byteCount);
+                    }
+
+                    public synchronized void reset() throws IOException {
+                        in.reset();
+                    }
+
+                    public long skip(long byteCount) throws IOException {
+                        return in.skip(byteCount);
+                    }
+
+                    public int read() throws IOException {
+                        return in.read();
+                    }
+                });
+            } catch (Exception e) {
+                C3534b callback = task.getExceptionCallback();
+                if (callback != null) {
+                    callback.m15158a(e);
+                } else {
+                    C3541e.m15171a("AssetsManager", e);
+                }
+            }
+        }
     }
-    e.b().a(c.a, paramAssetsTask, paramModule, paramScheduleConfig);
-    e.b().a(paramAssetsTask);
-    try
-    {
-      paramAssetsTask.a(new InputStream()
-      {
-        public int available()
-          throws IOException
-        {
-          return this.a.available();
-        }
-        
-        public void close()
-          throws IOException
-        {
-          AssetsManager.a(paramAssetsTask);
-          this.a.close();
-        }
-        
-        public void mark(int paramAnonymousInt)
-        {
-          this.a.mark(paramAnonymousInt);
-        }
-        
-        public boolean markSupported()
-        {
-          return this.a.markSupported();
-        }
-        
-        public int read()
-          throws IOException
-        {
-          return this.a.read();
-        }
-        
-        public int read(byte[] paramAnonymousArrayOfByte)
-          throws IOException
-        {
-          return this.a.read(paramAnonymousArrayOfByte);
-        }
-        
-        public int read(byte[] paramAnonymousArrayOfByte, int paramAnonymousInt1, int paramAnonymousInt2)
-          throws IOException
-        {
-          return this.a.read(paramAnonymousArrayOfByte, paramAnonymousInt1, paramAnonymousInt2);
-        }
-        
-        public void reset()
-          throws IOException
-        {
-          try
-          {
-            this.a.reset();
-            return;
-          }
-          finally
-          {
-            localObject = finally;
-            throw ((Throwable)localObject);
-          }
-        }
-        
-        public long skip(long paramAnonymousLong)
-          throws IOException
-        {
-          return this.a.skip(paramAnonymousLong);
-        }
-      });
-      return;
+
+    /* renamed from: b */
+    private static void m15129b(@NotNull AssetsTask task) {
+        C3541e.m15174b().m15146b((Object) task);
     }
-    catch (Exception paramModule)
-    {
-      paramAssetsTask = paramAssetsTask.getExceptionCallback();
-      if (paramAssetsTask != null)
-      {
-        paramAssetsTask.a(paramModule);
-        return;
-      }
-      e.a("AssetsManager", paramModule);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/assets/AssetsManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

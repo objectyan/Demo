@@ -17,241 +17,252 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
-public abstract class bo
-{
-  protected Messenger c = new Messenger(this.d);
-  protected Handler d = new b(this);
-  protected String e = UUID.randomUUID().toString();
-  
-  static <T> T a(Message paramMessage, String paramString)
-  {
-    paramMessage = paramMessage.getData();
-    paramMessage.setClassLoader(bo.class.getClassLoader());
-    return paramMessage.getParcelable(paramString);
-  }
-  
-  public static String e(Message paramMessage)
-  {
-    return paramMessage.getData().getString("_uuid");
-  }
-  
-  public final IBinder a()
-  {
-    return this.c.getBinder();
-  }
-  
-  public final Message a(int paramInt)
-  {
-    Message localMessage = Message.obtain(null, paramInt);
-    String str = this.e;
-    localMessage.getData().putString("_uuid", str);
-    return localMessage;
-  }
-  
-  public final Message a(int paramInt, Object paramObject)
-  {
-    Message localMessage = a(paramInt);
-    localMessage.obj = paramObject;
-    return localMessage;
-  }
-  
-  public final Handler b()
-  {
-    return this.d;
-  }
-  
-  public void c(Message paramMessage)
-  {
-    int i = paramMessage.what;
-  }
-  
-  protected abstract void d(Message paramMessage);
-  
-  public static abstract class a
-    extends bo
-  {
-    private Messenger a;
-    private final Queue<Message> b = new LinkedList();
-    
-    protected void a(Bundle paramBundle) {}
-    
-    public final void a(Message paramMessage)
-      throws RemoteException
-    {
-      if (this.a == null)
-      {
-        i = paramMessage.what;
-        localObject = paramMessage.obj;
-        this.b.offer(paramMessage);
-        return;
-      }
-      int i = paramMessage.what;
-      Object localObject = paramMessage.obj;
-      this.a.send(paramMessage);
+public abstract class bo {
+    /* renamed from: c */
+    protected Messenger f22889c = new Messenger(this.f22890d);
+    /* renamed from: d */
+    protected Handler f22890d = new C5822b(this);
+    /* renamed from: e */
+    protected String f22891e = UUID.randomUUID().toString();
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bo$c */
+    public static abstract class C5753c extends bo {
+        /* renamed from: a */
+        public abstract void mo4573a(PendingIntent pendingIntent);
+
+        /* renamed from: a */
+        public abstract void mo4574a(Message message);
+
+        /* renamed from: a */
+        public abstract void mo4575a(Message message, Messenger messenger);
+
+        /* renamed from: a */
+        public abstract void mo4576a(Message message, IALocationRequest iALocationRequest);
+
+        /* renamed from: a */
+        public abstract void mo4577a(IALocation iALocation);
+
+        /* renamed from: a */
+        public abstract void mo4578a(IALocationRequest iALocationRequest, PendingIntent pendingIntent);
+
+        /* renamed from: a */
+        public abstract void mo4579a(IAOrientationRequest iAOrientationRequest);
+
+        /* renamed from: a */
+        public abstract void mo4580a(ay ayVar);
+
+        /* renamed from: a */
+        public abstract void mo4581a(ArrayList<String> arrayList);
+
+        /* renamed from: b */
+        public abstract void mo4582b(PendingIntent pendingIntent);
+
+        /* renamed from: b */
+        public abstract void mo4583b(Message message);
+
+        /* renamed from: c */
+        public abstract void mo4584c(PendingIntent pendingIntent);
+
+        /* renamed from: d */
+        protected final void mo4572d(Message message) {
+            switch (message.what) {
+                case 1:
+                    mo4575a(message, message.replyTo);
+                    return;
+                case 2:
+                    mo4574a(message);
+                    return;
+                case 3:
+                    mo4576a(message, (IALocationRequest) bo.m19698a(message, "request"));
+                    return;
+                case 4:
+                    mo4583b(message);
+                    return;
+                case 5:
+                    mo4577a((IALocation) bo.m19698a(message, "location"));
+                    return;
+                case 6:
+                    mo4579a((IAOrientationRequest) bo.m19698a(message, "request"));
+                    return;
+                case 7:
+                    mo4578a((IALocationRequest) bo.m19698a(message, "request"), (PendingIntent) bo.m19698a(message, "pendingIntent"));
+                    return;
+                case 8:
+                    mo4573a((PendingIntent) bo.m19698a(message, "pendingIntent"));
+                    return;
+                case 14:
+                    mo4580a((ay) bo.m19698a(message, "request"));
+                    return;
+                case 15:
+                    mo4581a(message.getData().getStringArrayList("requestIds"));
+                    return;
+                case 16:
+                    mo4582b((PendingIntent) bo.m19698a(message, "pendingIntent"));
+                    return;
+                case 17:
+                    mo4584c((PendingIntent) bo.m19698a(message, "pendingIntent"));
+                    return;
+                default:
+                    mo4585c(message);
+                    return;
+            }
+        }
     }
-    
-    public final void a(@NonNull Messenger paramMessenger, @Nullable Bundle paramBundle)
-      throws RemoteException
-    {
-      if (this.a != null) {
-        throw new AssertionError("register called when mService already set");
-      }
-      this.a = paramMessenger;
-      Object localObject = a(1);
-      ((Message)localObject).replyTo = this.c;
-      if (paramBundle != null) {
-        ((Message)localObject).getData().putParcelable("_extras", paramBundle);
-      }
-      paramMessenger.send((Message)localObject);
-      while (!this.b.isEmpty())
-      {
-        paramBundle = (Message)this.b.poll();
-        int i = paramBundle.what;
-        localObject = paramBundle.obj;
-        paramMessenger.send(paramBundle);
-      }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bo$a */
+    public static abstract class C5778a extends bo {
+        /* renamed from: a */
+        private Messenger f23033a;
+        /* renamed from: b */
+        private final Queue<Message> f23034b = new LinkedList();
+
+        /* renamed from: c */
+        public final void m19904c() {
+            this.f23034b.clear();
+            this.f23033a = null;
+        }
+
+        /* renamed from: a */
+        public final void m19898a(@NonNull Messenger messenger, @Nullable Bundle bundle) throws RemoteException {
+            if (this.f23033a != null) {
+                throw new AssertionError("register called when mService already set");
+            }
+            this.f23033a = messenger;
+            Message a = m19701a(1);
+            a.replyTo = this.c;
+            if (bundle != null) {
+                a.getData().putParcelable("_extras", bundle);
+            }
+            messenger.send(a);
+            while (!this.f23034b.isEmpty()) {
+                Object[] objArr = new Object[]{Integer.valueOf(a.what), ((Message) this.f23034b.poll()).obj};
+                messenger.send((Message) this.f23034b.poll());
+            }
+        }
+
+        /* renamed from: a */
+        public final void m19900a(IAOrientationRequest iAOrientationRequest) throws RemoteException {
+            Message a = m19701a(6);
+            a.getData().putParcelable("request", iAOrientationRequest);
+            m19897a(a);
+        }
+
+        /* renamed from: d */
+        protected final void mo4572d(Message message) {
+            Object[] objArr = new Object[]{Integer.valueOf(message.what), message.obj};
+            switch (message.what) {
+                case 21:
+                    mo4605a((bp) bo.m19698a(message, "state"));
+                    return;
+                case 22:
+                    mo4602a((Bundle) message.obj);
+                    return;
+                case 25:
+                    mo4606b((Bundle) message.obj);
+                    return;
+                case 101:
+                    int i = message.arg1;
+                    return;
+                case 103:
+                    mo4603a((IALocation) message.obj);
+                    return;
+                case 106:
+                    mo4604a((ax) message.obj);
+                    return;
+                default:
+                    mo4585c(message);
+                    return;
+            }
+        }
+
+        /* renamed from: a */
+        protected void mo4603a(IALocation iALocation) {
+        }
+
+        /* renamed from: a */
+        protected void mo4605a(bp bpVar) {
+        }
+
+        /* renamed from: b */
+        protected void mo4606b(Bundle bundle) {
+        }
+
+        /* renamed from: a */
+        protected void mo4602a(Bundle bundle) {
+        }
+
+        /* renamed from: a */
+        protected void mo4604a(ax axVar) {
+        }
+
+        /* renamed from: a */
+        public final void m19897a(Message message) throws RemoteException {
+            if (this.f23033a == null) {
+                Object[] objArr = new Object[]{Integer.valueOf(message.what), message.obj};
+                this.f23034b.offer(message);
+                return;
+            }
+            objArr = new Object[]{Integer.valueOf(message.what), message.obj};
+            this.f23033a.send(message);
+        }
     }
-    
-    protected void a(IALocation paramIALocation) {}
-    
-    public final void a(IAOrientationRequest paramIAOrientationRequest)
-      throws RemoteException
-    {
-      Message localMessage = a(6);
-      localMessage.getData().putParcelable("request", paramIAOrientationRequest);
-      a(localMessage);
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bo$b */
+    static class C5822b extends ek<bo> {
+        /* renamed from: a */
+        protected final /* synthetic */ void mo4629a(Object obj, Message message) {
+            ((bo) obj).mo4572d(message);
+        }
+
+        C5822b(bo boVar) {
+            super(boVar);
+        }
     }
-    
-    protected void a(ax paramax) {}
-    
-    protected void a(bp parambp) {}
-    
-    protected void b(Bundle paramBundle) {}
-    
-    public final void c()
-    {
-      this.b.clear();
-      this.a = null;
+
+    /* renamed from: d */
+    protected abstract void mo4572d(Message message);
+
+    protected bo() {
     }
-    
-    protected final void d(Message paramMessage)
-    {
-      int i = paramMessage.what;
-      Object localObject = paramMessage.obj;
-      switch (paramMessage.what)
-      {
-      default: 
-        c(paramMessage);
-        return;
-      case 103: 
-        a((IALocation)paramMessage.obj);
-        return;
-      case 21: 
-        a((bp)a(paramMessage, "state"));
-        return;
-      case 22: 
-        a((Bundle)paramMessage.obj);
-        return;
-      case 25: 
-        b((Bundle)paramMessage.obj);
-        return;
-      case 101: 
-        i = paramMessage.arg1;
-        return;
-      }
-      a((ax)paramMessage.obj);
+
+    /* renamed from: a */
+    public final IBinder m19700a() {
+        return this.f22889c.getBinder();
     }
-  }
-  
-  static final class b
-    extends ek<bo>
-  {
-    b(bo parambo)
-    {
-      super();
+
+    /* renamed from: b */
+    public final Handler m19703b() {
+        return this.f22890d;
     }
-  }
-  
-  public static abstract class c
-    extends bo
-  {
-    public abstract void a(PendingIntent paramPendingIntent);
-    
-    public abstract void a(Message paramMessage);
-    
-    public abstract void a(Message paramMessage, Messenger paramMessenger);
-    
-    public abstract void a(Message paramMessage, IALocationRequest paramIALocationRequest);
-    
-    public abstract void a(IALocation paramIALocation);
-    
-    public abstract void a(IALocationRequest paramIALocationRequest, PendingIntent paramPendingIntent);
-    
-    public abstract void a(IAOrientationRequest paramIAOrientationRequest);
-    
-    public abstract void a(ay paramay);
-    
-    public abstract void a(ArrayList<String> paramArrayList);
-    
-    public abstract void b(PendingIntent paramPendingIntent);
-    
-    public abstract void b(Message paramMessage);
-    
-    public abstract void c(PendingIntent paramPendingIntent);
-    
-    protected final void d(Message paramMessage)
-    {
-      switch (paramMessage.what)
-      {
-      case 9: 
-      case 10: 
-      case 11: 
-      case 12: 
-      case 13: 
-      default: 
-        c(paramMessage);
-        return;
-      case 1: 
-        a(paramMessage, paramMessage.replyTo);
-        return;
-      case 2: 
-        a(paramMessage);
-        return;
-      case 3: 
-        a(paramMessage, (IALocationRequest)a(paramMessage, "request"));
-        return;
-      case 7: 
-        a((IALocationRequest)a(paramMessage, "request"), (PendingIntent)a(paramMessage, "pendingIntent"));
-        return;
-      case 4: 
-        b(paramMessage);
-        return;
-      case 8: 
-        a((PendingIntent)a(paramMessage, "pendingIntent"));
-        return;
-      case 5: 
-        a((IALocation)a(paramMessage, "location"));
-        return;
-      case 6: 
-        a((IAOrientationRequest)a(paramMessage, "request"));
-        return;
-      case 14: 
-        a((ay)a(paramMessage, "request"));
-        return;
-      case 15: 
-        a(paramMessage.getData().getStringArrayList("requestIds"));
-        return;
-      case 16: 
-        b((PendingIntent)a(paramMessage, "pendingIntent"));
-        return;
-      }
-      c((PendingIntent)a(paramMessage, "pendingIntent"));
+
+    /* renamed from: c */
+    public void mo4585c(Message message) {
+        new Object[1][0] = Integer.valueOf(message.what);
     }
-  }
+
+    /* renamed from: a */
+    static <T> T m19698a(Message message, String str) {
+        Bundle data = message.getData();
+        data.setClassLoader(bo.class.getClassLoader());
+        return data.getParcelable(str);
+    }
+
+    /* renamed from: a */
+    public final Message m19701a(int i) {
+        Message obtain = Message.obtain(null, i);
+        obtain.getData().putString("_uuid", this.f22891e);
+        return obtain;
+    }
+
+    /* renamed from: a */
+    public final Message m19702a(int i, Object obj) {
+        Message a = m19701a(i);
+        a.obj = obj;
+        return a;
+    }
+
+    /* renamed from: e */
+    public static String m19699e(Message message) {
+        return message.getData().getString("_uuid");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/bo.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,63 +3,51 @@ package com.indooratlas.android.sdk._internal;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public final class it
-  extends je
-{
-  public je a;
-  
-  public it(je paramje)
-  {
-    if (paramje == null) {
-      throw new IllegalArgumentException("delegate == null");
+public final class it extends je {
+    /* renamed from: a */
+    public je f24402a;
+
+    public it(je jeVar) {
+        if (jeVar == null) {
+            throw new IllegalArgumentException("delegate == null");
+        }
+        this.f24402a = jeVar;
     }
-    this.a = paramje;
-  }
-  
-  public final je a(long paramLong)
-  {
-    return this.a.a(paramLong);
-  }
-  
-  public final je a(long paramLong, TimeUnit paramTimeUnit)
-  {
-    return this.a.a(paramLong, paramTimeUnit);
-  }
-  
-  public final long c()
-  {
-    return this.a.c();
-  }
-  
-  public final long c_()
-  {
-    return this.a.c_();
-  }
-  
-  public final je d()
-  {
-    return this.a.d();
-  }
-  
-  public final boolean d_()
-  {
-    return this.a.d_();
-  }
-  
-  public final je e_()
-  {
-    return this.a.e_();
-  }
-  
-  public final void f()
-    throws IOException
-  {
-    this.a.f();
-  }
+
+    /* renamed from: a */
+    public final je mo4767a(long j, TimeUnit timeUnit) {
+        return this.f24402a.mo4767a(j, timeUnit);
+    }
+
+    public final long c_() {
+        return this.f24402a.c_();
+    }
+
+    public final boolean d_() {
+        return this.f24402a.d_();
+    }
+
+    /* renamed from: c */
+    public final long mo4768c() {
+        return this.f24402a.mo4768c();
+    }
+
+    /* renamed from: a */
+    public final je mo4766a(long j) {
+        return this.f24402a.mo4766a(j);
+    }
+
+    /* renamed from: d */
+    public final je mo4770d() {
+        return this.f24402a.mo4770d();
+    }
+
+    public final je e_() {
+        return this.f24402a.e_();
+    }
+
+    /* renamed from: f */
+    public final void mo4773f() throws IOException {
+        this.f24402a.mo4773f();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/it.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

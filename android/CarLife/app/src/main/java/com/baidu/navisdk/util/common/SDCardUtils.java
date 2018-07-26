@@ -5,211 +5,129 @@ import android.os.StatFs;
 import java.io.File;
 import java.io.IOException;
 
-public class SDCardUtils
-{
-  public static final int MIN_CACHE_FREE_SIZE = 20971520;
-  public static final int MIN_FREE_SIZE = 15728640;
-  private static final double MIN_FREE_SPACE = 10.0D;
-  public static final int SDCARD_ERROR = 2;
-  public static final int SDCARD_FULL = 1;
-  public static final int SDCARD_NORMAL = 0;
-  public static final int SDCARD_NOTFOUND = 3;
-  public static final String TAG = "StorageCheck";
-  
-  private static int checkOfflinePathAvailable()
-  {
-    File localFile = new File(SysOSAPI.getInstance().getOfflineDataPath());
-    if ((localFile.exists()) && (localFile.canRead()) && (localFile.canWrite())) {
-      return 0;
+public class SDCardUtils {
+    public static final int MIN_CACHE_FREE_SIZE = 20971520;
+    public static final int MIN_FREE_SIZE = 15728640;
+    private static final double MIN_FREE_SPACE = 10.0d;
+    public static final int SDCARD_ERROR = 2;
+    public static final int SDCARD_FULL = 1;
+    public static final int SDCARD_NORMAL = 0;
+    public static final int SDCARD_NOTFOUND = 3;
+    public static final String TAG = "StorageCheck";
+
+    public static File getExternalStorageFile() {
+        return new File(SysOSAPI.getInstance().getSDcardRootPath());
     }
-    return 3;
-  }
-  
-  public static File getExternalStorageFile()
-  {
-    return new File(SysOSAPI.getInstance().getSDcardRootPath());
-  }
-  
-  public static String getExternalStoragePath()
-  {
-    return SysOSAPI.getInstance().getSDcardRootPath();
-  }
-  
-  private static StatFs getOfflinePathSize()
-  {
-    return new StatFs(SysOSAPI.getInstance().getOfflineDataPath());
-  }
-  
-  private static StatFs getSdcardSize()
-  {
-    if (StringUtils.isEmpty(SysOSAPI.getInstance().getSDcardRootPath())) {
-      return new StatFs(Environment.getExternalStorageDirectory().getPath());
+
+    public static String getExternalStoragePath() {
+        return SysOSAPI.getInstance().getSDcardRootPath();
     }
-    try
-    {
-      StatFs localStatFs = new StatFs(SysOSAPI.getInstance().getSDcardRootPath());
-      return localStatFs;
-    }
-    catch (Exception localException) {}
-    return new StatFs(Environment.getExternalStorageDirectory().getPath());
-  }
-  
-  public static long getSdcardSpace()
-  {
-    localLong2 = Long.valueOf(0L);
-    Object localObject = localLong2;
-    try
-    {
-      if (getSdcardState() == 0)
-      {
-        localObject = getSdcardSize();
-        long l1 = ((StatFs)localObject).getBlockSize();
-        long l2 = ((StatFs)localObject).getFreeBlocks();
-        localObject = Long.valueOf(l1 * l2);
-      }
-    }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        Long localLong1 = localLong2;
-      }
-    }
-    return ((Long)localObject).longValue();
-  }
-  
-  public static int getSdcardState()
-  {
-    int j = 0;
-    String str = Environment.getExternalStorageState();
-    int i;
-    if ((str == null) || ("bad_removal".equals(str))) {
-      i = 2;
-    }
-    do
-    {
-      do
-      {
-        do
-        {
-          return i;
-          i = j;
-        } while ("checking".equals(str));
-        i = j;
-      } while ("mounted".equals(str));
-      if ("mounted_ro".equals(str)) {
-        return 2;
-      }
-      if ("nofs".equals(str)) {
-        return 2;
-      }
-      if ("removed".equals(str)) {
-        return 3;
-      }
-      if ("shared".equals(str)) {
-        return 3;
-      }
-      if ("unmountable".equals(str)) {
-        return 2;
-      }
-      i = j;
-    } while (!"unmounted".equals(str));
-    return 3;
-  }
-  
-  public static int handleOfflinePathError(long paramLong, boolean paramBoolean)
-  {
-    int k = checkOfflinePathAvailable();
-    int j = k;
-    long l1;
-    long l2;
-    if (k == 0)
-    {
-      StatFs localStatFs = getOfflinePathSize();
-      l1 = localStatFs.getBlockSize();
-      l2 = localStatFs.getFreeBlocks();
-      if (!paramBoolean) {
-        break label65;
-      }
-    }
-    label65:
-    for (int i = 15728640;; i = 0)
-    {
-      j = k;
-      if (l1 * l2 < i + paramLong) {
-        j = 1;
-      }
-      return j;
-    }
-  }
-  
-  public static int handleSdcardError(long paramLong, boolean paramBoolean)
-  {
-    int i = 0;
-    try
-    {
-      int j = getSdcardState();
-      int k = j;
-      if (j == 0)
-      {
-        i = j;
-        StatFs localStatFs = getSdcardSize();
-        i = j;
-        long l1 = localStatFs.getBlockSize();
-        i = j;
-        k = localStatFs.getFreeBlocks();
-        long l2 = k;
-        if (paramBoolean) {}
-        for (i = 15728640;; i = 0)
-        {
-          k = j;
-          if (l1 * l2 >= i + paramLong) {
-            break;
-          }
-          return 1;
+
+    public static boolean writeTestFileToSdcard(String path) {
+        boolean flag = false;
+        try {
+            File testFile = new File(path + "/test.0");
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+            flag = testFile.createNewFile();
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+        } catch (IOException e) {
+            LogUtil.m15791e("", e.toString());
         }
-      }
-      return k;
+        return flag;
     }
-    catch (Exception localException)
-    {
-      k = i;
+
+    public static int handleSdcardError(long sizeInByte, boolean bBuffer) {
+        int state = 0;
+        try {
+            state = getSdcardState();
+            if (state == 0) {
+                StatFs sfs = getSdcardSize();
+                if (((long) sfs.getBlockSize()) * ((long) sfs.getFreeBlocks()) < ((long) (bBuffer ? 15728640 : 0)) + sizeInByte) {
+                    return 1;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return state;
     }
-  }
-  
-  public static boolean writeTestFileToSdcard(String paramString)
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    try
-    {
-      paramString = new File(paramString + "/test.0");
-      bool1 = bool2;
-      if (paramString.exists())
-      {
-        bool1 = bool2;
-        paramString.delete();
-      }
-      bool1 = bool2;
-      bool2 = paramString.createNewFile();
-      bool1 = bool2;
-      if (paramString.exists())
-      {
-        bool1 = bool2;
-        paramString.delete();
-      }
-      return bool2;
+
+    public static int getSdcardState() {
+        String status = Environment.getExternalStorageState();
+        if (status == null || "bad_removal".equals(status)) {
+            return 2;
+        }
+        if ("checking".equals(status) || "mounted".equals(status)) {
+            return 0;
+        }
+        if ("mounted_ro".equals(status)) {
+            return 2;
+        }
+        if ("nofs".equals(status)) {
+            return 2;
+        }
+        if ("removed".equals(status)) {
+            return 3;
+        }
+        if ("shared".equals(status)) {
+            return 3;
+        }
+        if ("unmountable".equals(status)) {
+            return 2;
+        }
+        if ("unmounted".equals(status)) {
+            return 3;
+        }
+        return 0;
     }
-    catch (IOException paramString)
-    {
-      LogUtil.e("", paramString.toString());
+
+    private static StatFs getSdcardSize() {
+        if (StringUtils.isEmpty(SysOSAPI.getInstance().getSDcardRootPath())) {
+            return new StatFs(Environment.getExternalStorageDirectory().getPath());
+        }
+        try {
+            return new StatFs(SysOSAPI.getInstance().getSDcardRootPath());
+        } catch (Exception e) {
+            return new StatFs(Environment.getExternalStorageDirectory().getPath());
+        }
     }
-    return bool1;
-  }
+
+    private static StatFs getOfflinePathSize() {
+        return new StatFs(SysOSAPI.getInstance().getOfflineDataPath());
+    }
+
+    public static long getSdcardSpace() {
+        Long diskSpace = Long.valueOf(0);
+        try {
+            if (getSdcardState() == 0) {
+                StatFs sfs = getSdcardSize();
+                diskSpace = Long.valueOf(((long) sfs.getBlockSize()) * ((long) sfs.getFreeBlocks()));
+            }
+        } catch (Exception e) {
+        }
+        return diskSpace.longValue();
+    }
+
+    private static int checkOfflinePathAvailable() {
+        File file = new File(SysOSAPI.getInstance().getOfflineDataPath());
+        if (file.exists() && file.canRead() && file.canWrite()) {
+            return 0;
+        }
+        return 3;
+    }
+
+    public static int handleOfflinePathError(long sizeInByte, boolean bBuffer) {
+        int state = checkOfflinePathAvailable();
+        if (state != 0) {
+            return state;
+        }
+        StatFs sfs = getOfflinePathSize();
+        if (((long) sfs.getBlockSize()) * ((long) sfs.getFreeBlocks()) < ((long) (bBuffer ? 15728640 : 0)) + sizeInByte) {
+            return 1;
+        }
+        return state;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/common/SDCardUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,93 +1,51 @@
 package com.baidu.mobstat;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class be
-{
-  public boolean a = false;
-  public String b = "";
-  public boolean c = false;
-  
-  public be() {}
-  
-  public be(JSONObject paramJSONObject)
-  {
-    try
-    {
-      this.a = paramJSONObject.getBoolean("SDK_BPLUS_SERVICE");
-    }
-    catch (Exception localException1)
-    {
-      try
-      {
-        for (;;)
-        {
-          this.b = paramJSONObject.getString("SDK_PRODUCT_LY");
-          try
-          {
-            this.c = paramJSONObject.getBoolean("SDK_LOCAL_SERVER");
-            return;
-          }
-          catch (Exception paramJSONObject)
-          {
-            bd.b(paramJSONObject);
-          }
-          localException1 = localException1;
-          bd.b(localException1);
+public class be {
+    /* renamed from: a */
+    public boolean f19439a = false;
+    /* renamed from: b */
+    public String f19440b = "";
+    /* renamed from: c */
+    public boolean f19441c = false;
+
+    public be(JSONObject jSONObject) {
+        try {
+            this.f19439a = jSONObject.getBoolean("SDK_BPLUS_SERVICE");
+        } catch (Throwable e) {
+            bd.m15432b(e);
         }
-      }
-      catch (Exception localException2)
-      {
-        for (;;)
-        {
-          bd.b(localException2);
+        try {
+            this.f19440b = jSONObject.getString("SDK_PRODUCT_LY");
+        } catch (Throwable e2) {
+            bd.m15432b(e2);
         }
-      }
-    }
-  }
-  
-  public JSONObject a()
-  {
-    JSONObject localJSONObject = new JSONObject();
-    try
-    {
-      localJSONObject.put("SDK_BPLUS_SERVICE", this.a);
-    }
-    catch (JSONException localJSONException1)
-    {
-      try
-      {
-        for (;;)
-        {
-          localJSONObject.put("SDK_PRODUCT_LY", this.b);
-          try
-          {
-            localJSONObject.put("SDK_LOCAL_SERVER", this.c);
-            return localJSONObject;
-          }
-          catch (JSONException localJSONException3)
-          {
-            bd.b(localJSONException3);
-          }
-          localJSONException1 = localJSONException1;
-          bd.b(localJSONException1);
+        try {
+            this.f19441c = jSONObject.getBoolean("SDK_LOCAL_SERVER");
+        } catch (Throwable e22) {
+            bd.m15432b(e22);
         }
-      }
-      catch (JSONException localJSONException2)
-      {
-        for (;;)
-        {
-          bd.b(localJSONException2);
-        }
-      }
     }
-    return localJSONObject;
-  }
+
+    /* renamed from: a */
+    public JSONObject m15436a() {
+        JSONObject jSONObject = new JSONObject();
+        try {
+            jSONObject.put("SDK_BPLUS_SERVICE", this.f19439a);
+        } catch (Throwable e) {
+            bd.m15432b(e);
+        }
+        try {
+            jSONObject.put("SDK_PRODUCT_LY", this.f19440b);
+        } catch (Throwable e2) {
+            bd.m15432b(e2);
+        }
+        try {
+            jSONObject.put("SDK_LOCAL_SERVER", this.f19441c);
+        } catch (Throwable e22) {
+            bd.m15432b(e22);
+        }
+        return jSONObject;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/be.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

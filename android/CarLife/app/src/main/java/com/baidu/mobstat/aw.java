@@ -1,121 +1,89 @@
 package com.baidu.mobstat;
 
 import android.content.Context;
-import java.lang.reflect.Method;
 import org.json.JSONObject;
 
-class aw
-  implements l
-{
-  private ba a = ba.a;
-  private Object b;
-  private Class<?> c;
-  
-  public aw(Object paramObject)
-  {
-    if (paramObject == null) {
-      throw new IllegalArgumentException("proxy is null.");
+class aw implements C3587l {
+    /* renamed from: a */
+    private ba f19404a = ba.f19429a;
+    /* renamed from: b */
+    private Object f19405b;
+    /* renamed from: c */
+    private Class<?> f19406c;
+
+    public aw(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("proxy is null.");
+        } else if ("com.baidu.bottom.remote.BPStretegyController2".equals(obj.getClass().getName())) {
+            this.f19405b = obj;
+            this.f19406c = obj.getClass();
+        } else {
+            throw new IllegalArgumentException("class isn't com.baidu.bottom.remote.BPStretegyController2");
+        }
     }
-    if (!"com.baidu.bottom.remote.BPStretegyController2".equals(paramObject.getClass().getName())) {
-      throw new IllegalArgumentException("class isn't com.baidu.bottom.remote.BPStretegyController2");
+
+    /* renamed from: a */
+    public void mo2728a(Context context, JSONObject jSONObject) {
+        try {
+            m15368a(new Object[]{context, jSONObject}, "startDataAnynalyze", new Class[]{Context.class, JSONObject.class});
+        } catch (Throwable e) {
+            bd.m15432b(e);
+            this.f19404a.m15422a(context, jSONObject);
+        }
     }
-    this.b = paramObject;
-    this.c = paramObject.getClass();
-  }
-  
-  private <T> T a(Object[] paramArrayOfObject, String paramString, Class<?>[] paramArrayOfClass)
-  {
-    return (T)this.c.getMethod(paramString, paramArrayOfClass).invoke(this.b, paramArrayOfObject);
-  }
-  
-  public void a(Context paramContext, long paramLong)
-  {
-    Class localClass = Long.TYPE;
-    try
-    {
-      a(new Object[] { paramContext, Long.valueOf(paramLong) }, "setLastUpdateTime", new Class[] { Context.class, localClass });
-      return;
+
+    /* renamed from: a */
+    public void mo2727a(Context context, String str) {
+        try {
+            m15368a(new Object[]{context, str}, "saveRemoteConfig2", new Class[]{Context.class, String.class});
+        } catch (Throwable e) {
+            bd.m15432b(e);
+            this.f19404a.m15421a(context, str);
+        }
     }
-    catch (Exception localException)
-    {
-      bd.b(localException);
-      this.a.a(paramContext, paramLong);
+
+    /* renamed from: b */
+    public void mo2730b(Context context, String str) {
+        try {
+            m15368a(new Object[]{context, str}, "saveRemoteSign", new Class[]{Context.class, String.class});
+        } catch (Throwable e) {
+            bd.m15432b(e);
+            this.f19404a.m15424b(context, str);
+        }
     }
-  }
-  
-  public void a(Context paramContext, String paramString)
-  {
-    try
-    {
-      a(new Object[] { paramContext, paramString }, "saveRemoteConfig2", new Class[] { Context.class, String.class });
-      return;
+
+    /* renamed from: a */
+    public void mo2726a(Context context, long j) {
+        try {
+            m15368a(new Object[]{context, Long.valueOf(j)}, "setLastUpdateTime", new Class[]{Context.class, Long.TYPE});
+        } catch (Throwable e) {
+            bd.m15432b(e);
+            this.f19404a.m15420a(context, j);
+        }
     }
-    catch (Exception localException)
-    {
-      bd.b(localException);
-      this.a.a(paramContext, paramString);
+
+    /* renamed from: a */
+    public boolean mo2729a(Context context) {
+        try {
+            return ((Boolean) m15368a(new Object[]{context}, "needUpdate", new Class[]{Context.class})).booleanValue();
+        } catch (Throwable e) {
+            bd.m15432b(e);
+            return this.f19404a.m15423a(context);
+        }
     }
-  }
-  
-  public void a(Context paramContext, JSONObject paramJSONObject)
-  {
-    try
-    {
-      a(new Object[] { paramContext, paramJSONObject }, "startDataAnynalyze", new Class[] { Context.class, JSONObject.class });
-      return;
+
+    /* renamed from: b */
+    public boolean mo2731b(Context context) {
+        try {
+            return ((Boolean) m15368a(new Object[]{context}, "canStartService", new Class[]{Context.class})).booleanValue();
+        } catch (Throwable e) {
+            bd.m15432b(e);
+            return this.f19404a.m15425b(context);
+        }
     }
-    catch (Exception localException)
-    {
-      bd.b(localException);
-      this.a.a(paramContext, paramJSONObject);
+
+    /* renamed from: a */
+    private <T> T m15368a(Object[] objArr, String str, Class<?>[] clsArr) {
+        return this.f19406c.getMethod(str, clsArr).invoke(this.f19405b, objArr);
     }
-  }
-  
-  public boolean a(Context paramContext)
-  {
-    try
-    {
-      boolean bool = ((Boolean)a(new Object[] { paramContext }, "needUpdate", new Class[] { Context.class })).booleanValue();
-      return bool;
-    }
-    catch (Exception localException)
-    {
-      bd.b(localException);
-    }
-    return this.a.a(paramContext);
-  }
-  
-  public void b(Context paramContext, String paramString)
-  {
-    try
-    {
-      a(new Object[] { paramContext, paramString }, "saveRemoteSign", new Class[] { Context.class, String.class });
-      return;
-    }
-    catch (Exception localException)
-    {
-      bd.b(localException);
-      this.a.b(paramContext, paramString);
-    }
-  }
-  
-  public boolean b(Context paramContext)
-  {
-    try
-    {
-      boolean bool = ((Boolean)a(new Object[] { paramContext }, "canStartService", new Class[] { Context.class })).booleanValue();
-      return bool;
-    }
-    catch (Exception localException)
-    {
-      bd.b(localException);
-    }
-    return this.a.b(paramContext);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/aw.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

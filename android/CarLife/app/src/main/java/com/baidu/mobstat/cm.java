@@ -1,20 +1,16 @@
 package com.baidu.mobstat;
 
-class cm
-{
-  String a;
-  boolean b;
-  long c;
-  long d;
-  
-  public cm(String paramString)
-  {
-    this.a = paramString;
-  }
+class cm {
+    /* renamed from: a */
+    String f19592a;
+    /* renamed from: b */
+    boolean f19593b;
+    /* renamed from: c */
+    long f19594c;
+    /* renamed from: d */
+    long f19595d;
+
+    public cm(String str) {
+        this.f19592a = str;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cm.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

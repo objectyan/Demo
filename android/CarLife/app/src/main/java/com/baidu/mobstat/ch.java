@@ -5,473 +5,450 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import org.json.JSONObject;
 
-class ch
-{
-  private static final ch a = new ch();
-  private static HashMap<String, cm> o = new HashMap();
-  private cn b = new cn();
-  private cn c = new cn();
-  private cn d = new cn();
-  private cn e = new cn();
-  private long f = 0L;
-  private boolean g = true;
-  private boolean h;
-  private cf i = new cf();
-  private int j = -1;
-  private volatile int k;
-  private volatile long l;
-  private Handler m;
-  private Runnable n = null;
-  
-  private ch()
-  {
-    HandlerThread localHandlerThread = new HandlerThread("SessionAnalysisThread");
-    localHandlerThread.start();
-    localHandlerThread.setPriority(10);
-    this.m = new Handler(localHandlerThread.getLooper());
-  }
-  
-  static Context a(Object paramObject)
-  {
-    try
-    {
-      paramObject = (Context)paramObject.getClass().getMethod("getActivity", new Class[0]).invoke(paramObject, new Object[0]);
-      return (Context)paramObject;
+class ch {
+    /* renamed from: a */
+    private static final ch f19569a = new ch();
+    /* renamed from: o */
+    private static HashMap<String, cm> f19570o = new HashMap();
+    /* renamed from: b */
+    private cn f19571b = new cn();
+    /* renamed from: c */
+    private cn f19572c = new cn();
+    /* renamed from: d */
+    private cn f19573d = new cn();
+    /* renamed from: e */
+    private cn f19574e = new cn();
+    /* renamed from: f */
+    private long f19575f = 0;
+    /* renamed from: g */
+    private boolean f19576g = true;
+    /* renamed from: h */
+    private boolean f19577h;
+    /* renamed from: i */
+    private cf f19578i = new cf();
+    /* renamed from: j */
+    private int f19579j = -1;
+    /* renamed from: k */
+    private volatile int f19580k;
+    /* renamed from: l */
+    private volatile long f19581l;
+    /* renamed from: m */
+    private Handler f19582m;
+    /* renamed from: n */
+    private Runnable f19583n = null;
+
+    /* renamed from: a */
+    public static ch m15571a() {
+        return f19569a;
     }
-    catch (Throwable paramObject)
-    {
-      db.a(((Throwable)paramObject).getMessage());
+
+    private ch() {
+        HandlerThread handlerThread = new HandlerThread("SessionAnalysisThread");
+        handlerThread.start();
+        handlerThread.setPriority(10);
+        this.f19582m = new Handler(handlerThread.getLooper());
     }
-    return null;
-  }
-  
-  public static ch a()
-  {
-    return a;
-  }
-  
-  private void a(Context paramContext, boolean paramBoolean)
-  {
-    if (this.i.c() > 0L)
-    {
-      String str = this.i.d().toString();
-      db.a("new session: " + str);
-      DataCore.instance().putSession(str);
-      DataCore.instance().flush(paramContext);
-      this.i.d(0L);
+
+    /* renamed from: b */
+    public int m15594b() {
+        return this.f19580k;
     }
-    if (paramBoolean) {
-      d();
-    }
-    DataCore.instance().saveLogDataToSend(paramContext, paramBoolean, false);
-    by.a().a(paramContext);
-    b(paramContext);
-  }
-  
-  private void a(String paramString)
-  {
-    localHashMap = o;
-    if (paramString == null) {}
-    try
-    {
-      db.c("page Object is null");
-      return;
-    }
-    finally {}
-    cm localcm = new cm(paramString);
-    if (!o.containsKey(paramString)) {
-      o.put(paramString, localcm);
-    }
-  }
-  
-  private void a(boolean paramBoolean)
-  {
-    this.g = paramBoolean;
-  }
-  
-  private cm b(String paramString)
-  {
-    synchronized (o)
-    {
-      if (!o.containsKey(paramString)) {
-        a(paramString);
-      }
-      paramString = (cm)o.get(paramString);
-      return paramString;
-    }
-  }
-  
-  private void c(Context paramContext)
-  {
-    String str1 = this.i.d().toString();
-    this.k = str1.getBytes().length;
-    db.a("cacheString = " + str1);
-    String str2 = de.q(paramContext);
-    cu.a(paramContext, str2 + "__local_last_session.json", str1, false);
-  }
-  
-  private void c(String paramString)
-  {
-    localHashMap = o;
-    if (paramString == null) {}
-    try
-    {
-      db.c("pageName is null");
-      return;
-    }
-    finally {}
-    if (o.containsKey(paramString)) {
-      o.remove(paramString);
-    }
-  }
-  
-  private boolean g()
-  {
-    return this.g;
-  }
-  
-  private int h()
-  {
-    try
-    {
-      Class localClass1 = Class.forName("android.app.Fragment");
-    }
-    catch (ClassNotFoundException localClassNotFoundException1)
-    {
-      try
-      {
-        for (;;)
-        {
-          Class localClass2 = Class.forName("android.support.v4.app.Fragment");
-          StackTraceElement[] arrayOfStackTraceElement = Thread.currentThread().getStackTrace();
-          int i1 = 0;
-          for (;;)
-          {
-            if (i1 >= arrayOfStackTraceElement.length) {
-              break label156;
-            }
-            localObject3 = arrayOfStackTraceElement[i1].getClassName();
-            String str = arrayOfStackTraceElement[i1].getMethodName();
-            if ((!TextUtils.isEmpty((CharSequence)localObject3)) && (!TextUtils.isEmpty(str)) && (str.equals("onResume"))) {
-              break;
-            }
-            i1 += 1;
-          }
-          localClassNotFoundException1 = localClassNotFoundException1;
-          localObject1 = null;
+
+    /* renamed from: c */
+    public int m15601c() {
+        if (this.f19579j == -1) {
+            this.f19579j = 30000;
         }
-      }
-      catch (ClassNotFoundException localClassNotFoundException2)
-      {
-        Object localObject2;
-        Class localClass3;
-        do
-        {
-          for (;;)
-          {
-            Object localObject3;
-            Object localObject1;
-            localObject2 = null;
-            continue;
-            try
-            {
-              localObject3 = Class.forName((String)localObject3);
-              if (localObject3 != null) {
-                if (Activity.class.isAssignableFrom((Class)localObject3)) {
-                  return 1;
+        return this.f19579j;
+    }
+
+    /* renamed from: a */
+    public void m15584a(int i) {
+        this.f19579j = i * 1000;
+    }
+
+    /* renamed from: d */
+    public void m15602d() {
+        this.f19578i.m15550a();
+    }
+
+    /* renamed from: a */
+    public void m15585a(long j) {
+        this.f19578i.m15552a(j);
+    }
+
+    /* renamed from: b */
+    public void m15596b(long j) {
+        this.f19578i.m15555b(j);
+    }
+
+    /* renamed from: b */
+    public void m15595b(int i) {
+        this.f19578i.m15551a(i);
+    }
+
+    /* renamed from: e */
+    public long m15603e() {
+        return this.f19578i.m15554b();
+    }
+
+    /* renamed from: g */
+    private boolean m15581g() {
+        return this.f19576g;
+    }
+
+    /* renamed from: a */
+    private void m15576a(boolean z) {
+        this.f19576g = z;
+    }
+
+    /* renamed from: a */
+    public void m15588a(Context context, long j) {
+        if (this.f19581l == 0) {
+            this.f19582m.post(new ci(this, j));
+        }
+        this.f19581l = j;
+    }
+
+    /* renamed from: b */
+    public void m15599b(Context context, long j) {
+        this.f19582m.post(new cj(this, j, context));
+    }
+
+    /* renamed from: a */
+    public void m15589a(Context context, long j, String str) {
+        db.m15657a("AnalysisPageStart");
+        if (TextUtils.isEmpty(str)) {
+            db.m15663c("自定义页面 pageName 为 null");
+            return;
+        }
+        cm b = m15578b(str);
+        if (b == null) {
+            db.m15663c("get page info, PageInfo null");
+            return;
+        }
+        if (b.f19593b) {
+            db.m15663c("遗漏StatService.onPageEnd() || missing StatService.onPageEnd()");
+        }
+        b.f19593b = true;
+        b.f19594c = j;
+        m15583i();
+        if (!this.f19577h) {
+            this.f19582m.post(new cp(this, this.f19575f, j, this.f19581l, context, null, null, m15582h(), 1));
+            this.f19577h = true;
+        }
+        this.f19571b.f19597b = new WeakReference(context);
+        this.f19571b.f19596a = j;
+    }
+
+    /* renamed from: h */
+    private int m15582h() {
+        Class cls;
+        Class cls2;
+        try {
+            cls = Class.forName("android.app.Fragment");
+        } catch (ClassNotFoundException e) {
+            cls = null;
+        }
+        try {
+            cls2 = Class.forName("android.support.v4.app.Fragment");
+        } catch (ClassNotFoundException e2) {
+            cls2 = null;
+        }
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (int i = 0; i < stackTrace.length; i++) {
+            Object className = stackTrace[i].getClassName();
+            Object methodName = stackTrace[i].getMethodName();
+            if (!(TextUtils.isEmpty(className) || TextUtils.isEmpty(methodName) || !methodName.equals("onResume"))) {
+                Class cls3;
+                try {
+                    cls3 = Class.forName(className);
+                } catch (Throwable th) {
+                    cls3 = null;
                 }
-              }
+                if (cls3 == null) {
+                    continue;
+                } else if (Activity.class.isAssignableFrom(cls3)) {
+                    return 1;
+                } else {
+                    if (cls != null && cls.isAssignableFrom(cls3)) {
+                        return 2;
+                    }
+                    if (cls2 != null && cls2.isAssignableFrom(cls3)) {
+                        return 2;
+                    }
+                }
             }
-            catch (Throwable localThrowable)
-            {
-              for (;;)
-              {
-                localClass3 = null;
-              }
-              if ((localObject1 != null) && (((Class)localObject1).isAssignableFrom(localClass3))) {
-                return 2;
-              }
+        }
+        return 3;
+    }
+
+    /* renamed from: a */
+    public void m15590a(Context context, long j, String str, String str2, ExtraInfo extraInfo) {
+        db.m15657a("post pause job");
+        this.f19577h = false;
+        if (TextUtils.isEmpty(str2)) {
+            db.m15663c("自定义页面 pageName 无效值");
+            return;
+        }
+        cm b = m15578b(str2);
+        if (b == null) {
+            db.m15663c("get page info, PageInfo null");
+        } else if (b.f19593b) {
+            b.f19593b = false;
+            b.f19595d = j;
+            this.f19582m.post(new co(this, j, context, null, b.f19594c, (Context) this.f19571b.f19597b.get(), null, 1, str2, null, null, str, false, extraInfo, b));
+            m15580c(str2);
+            this.f19575f = j;
+        } else {
+            db.m15663c("Please check (1)遗漏StatService.onPageStart() || missing StatService.onPageStart()");
+        }
+    }
+
+    /* renamed from: a */
+    public void m15593a(Fragment fragment, long j) {
+        db.m15657a("post resume job");
+        if (this.f19572c.f19598c) {
+            db.m15663c("遗漏StatService.onPause() || missing StatService.onPause()");
+        }
+        this.f19572c.f19598c = true;
+        m15583i();
+        this.f19582m.post(new cp(this, this.f19575f, j, this.f19581l, null, fragment, null, 2, 2));
+        this.f19572c.f19597b = new WeakReference(fragment);
+        this.f19572c.f19596a = j;
+    }
+
+    @TargetApi(11)
+    /* renamed from: a */
+    public void m15586a(android.app.Fragment fragment, long j) {
+        db.m15657a("post resume job");
+        if (this.f19573d.f19598c) {
+            db.m15663c("遗漏StatService.onPause() || missing StatService.onPause()");
+        }
+        this.f19573d.f19598c = true;
+        m15583i();
+        this.f19582m.post(new cp(this, this.f19575f, j, this.f19581l, null, null, fragment, 2, 3));
+        this.f19573d.f19597b = new WeakReference(fragment);
+        this.f19573d.f19596a = j;
+    }
+
+    /* renamed from: a */
+    public void m15591a(Context context, long j, boolean z) {
+        if (z) {
+            this.f19574e.f19598c = true;
+            this.f19574e.f19597b = new WeakReference(context);
+            this.f19574e.f19596a = j;
+        }
+        db.m15657a("AnalysisResume job");
+        if (!z && this.f19571b.f19598c) {
+            db.m15663c("遗漏StatService.onPause() || missing StatService.onPause()");
+        }
+        if (!z) {
+            this.f19571b.f19598c = true;
+        }
+        m15583i();
+        if (!this.f19577h) {
+            this.f19582m.post(new cp(this, this.f19575f, j, this.f19581l, context, null, null, 1, 1));
+            this.f19577h = true;
+        }
+        this.f19571b.f19597b = new WeakReference(context);
+        this.f19571b.f19596a = j;
+    }
+
+    /* renamed from: i */
+    private void m15583i() {
+        boolean g = m15581g();
+        db.m15657a("isFirstResume:" + g);
+        if (g) {
+            m15576a(false);
+            this.f19582m.post(new ck(this));
+        }
+    }
+
+    /* renamed from: a */
+    public void m15592a(Context context, long j, boolean z, ExtraInfo extraInfo) {
+        db.m15657a("post pause job");
+        this.f19577h = false;
+        if (z) {
+            this.f19574e.f19598c = false;
+            this.f19582m.post(new co(this, j, context, null, this.f19574e.f19596a, (Context) this.f19574e.f19597b.get(), null, 1, null, null, null, null, z, extraInfo, null));
+            this.f19575f = j;
+        } else if (this.f19571b.f19598c) {
+            this.f19571b.f19598c = false;
+            this.f19582m.post(new co(this, j, context, null, this.f19571b.f19596a, (Context) this.f19571b.f19597b.get(), null, 1, null, null, null, null, z, extraInfo, null));
+            this.f19575f = j;
+        } else {
+            db.m15663c("遗漏StatService.onResume() || missing StatService.onResume()");
+        }
+    }
+
+    /* renamed from: b */
+    public void m15600b(Fragment fragment, long j) {
+        db.m15657a("post pause job");
+        if (this.f19572c.f19598c) {
+            this.f19572c.f19598c = false;
+            this.f19582m.post(new co(this, j, null, fragment, this.f19572c.f19596a, null, (Fragment) this.f19572c.f19597b.get(), 2, null, null, null, null, false, null, null));
+            this.f19575f = j;
+            return;
+        }
+        db.m15663c("遗漏android.support.v4.app.Fragment StatService.onResume() || android.support.v4.app.Fragment missing StatService.onResume()");
+    }
+
+    @TargetApi(11)
+    /* renamed from: b */
+    public void m15597b(android.app.Fragment fragment, long j) {
+        db.m15657a("post pause job");
+        if (this.f19573d.f19598c) {
+            this.f19573d.f19598c = false;
+            this.f19582m.post(new co(this, j, null, null, this.f19573d.f19596a, null, null, 3, null, this.f19573d.f19597b.get(), fragment, null, false, null, null));
+            this.f19575f = j;
+            return;
+        }
+        db.m15663c("遗漏android.app.Fragment StatService.onResume() || android.app.Fragment missing StatService.onResume()");
+    }
+
+    /* renamed from: a */
+    public void m15587a(Context context) {
+        this.f19583n = new cl(this, context);
+        this.f19582m.postDelayed(this.f19583n, (long) m15601c());
+    }
+
+    /* renamed from: f */
+    public void m15604f() {
+        Runnable runnable = this.f19583n;
+        this.f19583n = null;
+        if (runnable != null) {
+            this.f19582m.removeCallbacks(runnable);
+        }
+    }
+
+    /* renamed from: a */
+    private void m15572a(Context context, boolean z) {
+        if (this.f19578i.m15556c() > 0) {
+            String jSONObject = this.f19578i.m15558d().toString();
+            db.m15657a("new session: " + jSONObject);
+            DataCore.instance().putSession(jSONObject);
+            DataCore.instance().flush(context);
+            this.f19578i.m15559d(0);
+        }
+        if (z) {
+            m15602d();
+        }
+        DataCore.instance().saveLogDataToSend(context, z, false);
+        by.m15524a().m15541a(context);
+        m15598b(context);
+    }
+
+    /* renamed from: c */
+    private void m15579c(Context context) {
+        String jSONObject = this.f19578i.m15558d().toString();
+        this.f19580k = jSONObject.getBytes().length;
+        db.m15657a("cacheString = " + jSONObject);
+        cu.m15630a(context, de.m15706q(context) + Config.LAST_SESSION_FILE_NAME, jSONObject, false);
+    }
+
+    /* renamed from: b */
+    public void m15598b(Context context) {
+        if (context == null) {
+            db.m15657a("clearLastSession context is null, invalid");
+            return;
+        }
+        cu.m15630a(context, de.m15706q(context) + Config.LAST_SESSION_FILE_NAME, new JSONObject().toString(), false);
+    }
+
+    /* renamed from: a */
+    static Context m15569a(Object obj) {
+        try {
+            return (Context) obj.getClass().getMethod("getActivity", new Class[0]).invoke(obj, new Object[0]);
+        } catch (Throwable th) {
+            db.m15657a(th.getMessage());
+            return null;
+        }
+    }
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* renamed from: a */
+    private void m15575a(java.lang.String r4) {
+        /*
+        r3 = this;
+        r1 = f19570o;
+        monitor-enter(r1);
+        if (r4 != 0) goto L_0x000d;
+    L_0x0005:
+        r0 = "page Object is null";
+        com.baidu.mobstat.db.m15663c(r0);	 Catch:{ all -> 0x0021 }
+        monitor-exit(r1);	 Catch:{ all -> 0x0021 }
+    L_0x000c:
+        return;
+    L_0x000d:
+        r0 = new com.baidu.mobstat.cm;	 Catch:{ all -> 0x0021 }
+        r0.<init>(r4);	 Catch:{ all -> 0x0021 }
+        r2 = f19570o;	 Catch:{ all -> 0x0021 }
+        r2 = r2.containsKey(r4);	 Catch:{ all -> 0x0021 }
+        if (r2 != 0) goto L_0x001f;
+    L_0x001a:
+        r2 = f19570o;	 Catch:{ all -> 0x0021 }
+        r2.put(r4, r0);	 Catch:{ all -> 0x0021 }
+    L_0x001f:
+        monitor-exit(r1);	 Catch:{ all -> 0x0021 }
+        goto L_0x000c;
+    L_0x0021:
+        r0 = move-exception;
+        monitor-exit(r1);	 Catch:{ all -> 0x0021 }
+        throw r0;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.mobstat.ch.a(java.lang.String):void");
+    }
+
+    /* renamed from: b */
+    private cm m15578b(String str) {
+        cm cmVar;
+        synchronized (f19570o) {
+            if (!f19570o.containsKey(str)) {
+                m15575a(str);
             }
-          }
-        } while ((localObject2 == null) || (!((Class)localObject2).isAssignableFrom(localClass3)));
-        return 2;
-      }
+            cmVar = (cm) f19570o.get(str);
+        }
+        return cmVar;
     }
-    label156:
-    return 3;
-  }
-  
-  private void i()
-  {
-    boolean bool = g();
-    db.a("isFirstResume:" + bool);
-    if (bool)
-    {
-      a(false);
-      this.m.post(new ck(this));
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* renamed from: c */
+    private void m15580c(java.lang.String r3) {
+        /*
+        r2 = this;
+        r1 = f19570o;
+        monitor-enter(r1);
+        if (r3 != 0) goto L_0x000d;
+    L_0x0005:
+        r0 = "pageName is null";
+        com.baidu.mobstat.db.m15663c(r0);	 Catch:{ all -> 0x001c }
+        monitor-exit(r1);	 Catch:{ all -> 0x001c }
+    L_0x000c:
+        return;
+    L_0x000d:
+        r0 = f19570o;	 Catch:{ all -> 0x001c }
+        r0 = r0.containsKey(r3);	 Catch:{ all -> 0x001c }
+        if (r0 == 0) goto L_0x001a;
+    L_0x0015:
+        r0 = f19570o;	 Catch:{ all -> 0x001c }
+        r0.remove(r3);	 Catch:{ all -> 0x001c }
+    L_0x001a:
+        monitor-exit(r1);	 Catch:{ all -> 0x001c }
+        goto L_0x000c;
+    L_0x001c:
+        r0 = move-exception;
+        monitor-exit(r1);	 Catch:{ all -> 0x001c }
+        throw r0;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.mobstat.ch.c(java.lang.String):void");
     }
-  }
-  
-  public void a(int paramInt)
-  {
-    this.j = (paramInt * 1000);
-  }
-  
-  public void a(long paramLong)
-  {
-    this.i.a(paramLong);
-  }
-  
-  @TargetApi(11)
-  public void a(android.app.Fragment paramFragment, long paramLong)
-  {
-    db.a("post resume job");
-    if (this.d.c) {
-      db.c("遗漏StatService.onPause() || missing StatService.onPause()");
-    }
-    this.d.c = true;
-    i();
-    cp localcp = new cp(this, this.f, paramLong, this.l, null, null, paramFragment, 2, 3);
-    this.m.post(localcp);
-    this.d.b = new WeakReference(paramFragment);
-    this.d.a = paramLong;
-  }
-  
-  public void a(Context paramContext)
-  {
-    this.n = new cl(this, paramContext);
-    this.m.postDelayed(this.n, c());
-  }
-  
-  public void a(Context paramContext, long paramLong)
-  {
-    if (this.l == 0L)
-    {
-      paramContext = new ci(this, paramLong);
-      this.m.post(paramContext);
-    }
-    this.l = paramLong;
-  }
-  
-  public void a(Context paramContext, long paramLong, String paramString)
-  {
-    db.a("AnalysisPageStart");
-    if (TextUtils.isEmpty(paramString))
-    {
-      db.c("自定义页面 pageName 为 null");
-      return;
-    }
-    paramString = b(paramString);
-    if (paramString == null)
-    {
-      db.c("get page info, PageInfo null");
-      return;
-    }
-    if (paramString.b) {
-      db.c("遗漏StatService.onPageEnd() || missing StatService.onPageEnd()");
-    }
-    paramString.b = true;
-    paramString.c = paramLong;
-    i();
-    if (!this.h)
-    {
-      paramString = new cp(this, this.f, paramLong, this.l, paramContext, null, null, h(), 1);
-      this.m.post(paramString);
-      this.h = true;
-    }
-    this.b.b = new WeakReference(paramContext);
-    this.b.a = paramLong;
-  }
-  
-  public void a(Context paramContext, long paramLong, String paramString1, String paramString2, ExtraInfo paramExtraInfo)
-  {
-    db.a("post pause job");
-    this.h = false;
-    if (TextUtils.isEmpty(paramString2))
-    {
-      db.c("自定义页面 pageName 无效值");
-      return;
-    }
-    cm localcm = b(paramString2);
-    if (localcm == null)
-    {
-      db.c("get page info, PageInfo null");
-      return;
-    }
-    if (!localcm.b)
-    {
-      db.c("Please check (1)遗漏StatService.onPageStart() || missing StatService.onPageStart()");
-      return;
-    }
-    localcm.b = false;
-    localcm.d = paramLong;
-    paramContext = new co(this, paramLong, paramContext, null, localcm.c, (Context)this.b.b.get(), null, 1, paramString2, null, null, paramString1, false, paramExtraInfo, localcm);
-    this.m.post(paramContext);
-    c(paramString2);
-    this.f = paramLong;
-  }
-  
-  public void a(Context paramContext, long paramLong, boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      this.e.c = true;
-      this.e.b = new WeakReference(paramContext);
-      this.e.a = paramLong;
-    }
-    db.a("AnalysisResume job");
-    if ((!paramBoolean) && (this.b.c)) {
-      db.c("遗漏StatService.onPause() || missing StatService.onPause()");
-    }
-    if (!paramBoolean) {
-      this.b.c = true;
-    }
-    i();
-    if (!this.h)
-    {
-      cp localcp = new cp(this, this.f, paramLong, this.l, paramContext, null, null, 1, 1);
-      this.m.post(localcp);
-      this.h = true;
-    }
-    this.b.b = new WeakReference(paramContext);
-    this.b.a = paramLong;
-  }
-  
-  public void a(Context paramContext, long paramLong, boolean paramBoolean, ExtraInfo paramExtraInfo)
-  {
-    db.a("post pause job");
-    this.h = false;
-    if (paramBoolean)
-    {
-      this.e.c = false;
-      paramContext = new co(this, paramLong, paramContext, null, this.e.a, (Context)this.e.b.get(), null, 1, null, null, null, null, paramBoolean, paramExtraInfo, null);
-      this.m.post(paramContext);
-      this.f = paramLong;
-      return;
-    }
-    if (!this.b.c)
-    {
-      db.c("遗漏StatService.onResume() || missing StatService.onResume()");
-      return;
-    }
-    this.b.c = false;
-    paramContext = new co(this, paramLong, paramContext, null, this.b.a, (Context)this.b.b.get(), null, 1, null, null, null, null, paramBoolean, paramExtraInfo, null);
-    this.m.post(paramContext);
-    this.f = paramLong;
-  }
-  
-  public void a(android.support.v4.app.Fragment paramFragment, long paramLong)
-  {
-    db.a("post resume job");
-    if (this.c.c) {
-      db.c("遗漏StatService.onPause() || missing StatService.onPause()");
-    }
-    this.c.c = true;
-    i();
-    cp localcp = new cp(this, this.f, paramLong, this.l, null, paramFragment, null, 2, 2);
-    this.m.post(localcp);
-    this.c.b = new WeakReference(paramFragment);
-    this.c.a = paramLong;
-  }
-  
-  public int b()
-  {
-    return this.k;
-  }
-  
-  public void b(int paramInt)
-  {
-    this.i.a(paramInt);
-  }
-  
-  public void b(long paramLong)
-  {
-    this.i.b(paramLong);
-  }
-  
-  @TargetApi(11)
-  public void b(android.app.Fragment paramFragment, long paramLong)
-  {
-    db.a("post pause job");
-    if (!this.d.c)
-    {
-      db.c("遗漏android.app.Fragment StatService.onResume() || android.app.Fragment missing StatService.onResume()");
-      return;
-    }
-    this.d.c = false;
-    paramFragment = new co(this, paramLong, null, null, this.d.a, null, null, 3, null, this.d.b.get(), paramFragment, null, false, null, null);
-    this.m.post(paramFragment);
-    this.f = paramLong;
-  }
-  
-  public void b(Context paramContext)
-  {
-    if (paramContext == null)
-    {
-      db.a("clearLastSession context is null, invalid");
-      return;
-    }
-    String str1 = new JSONObject().toString();
-    String str2 = de.q(paramContext);
-    cu.a(paramContext, str2 + "__local_last_session.json", str1, false);
-  }
-  
-  public void b(Context paramContext, long paramLong)
-  {
-    paramContext = new cj(this, paramLong, paramContext);
-    this.m.post(paramContext);
-  }
-  
-  public void b(android.support.v4.app.Fragment paramFragment, long paramLong)
-  {
-    db.a("post pause job");
-    if (!this.c.c)
-    {
-      db.c("遗漏android.support.v4.app.Fragment StatService.onResume() || android.support.v4.app.Fragment missing StatService.onResume()");
-      return;
-    }
-    this.c.c = false;
-    paramFragment = new co(this, paramLong, null, paramFragment, this.c.a, null, (android.support.v4.app.Fragment)this.c.b.get(), 2, null, null, null, null, false, null, null);
-    this.m.post(paramFragment);
-    this.f = paramLong;
-  }
-  
-  public int c()
-  {
-    if (this.j == -1) {
-      this.j = 30000;
-    }
-    return this.j;
-  }
-  
-  public void d()
-  {
-    this.i.a();
-  }
-  
-  public long e()
-  {
-    return this.i.b();
-  }
-  
-  public void f()
-  {
-    Runnable localRunnable = this.n;
-    this.n = null;
-    if (localRunnable != null) {
-      this.m.removeCallbacks(localRunnable);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ch.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

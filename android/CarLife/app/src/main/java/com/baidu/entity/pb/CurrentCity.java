@@ -7,396 +7,343 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class CurrentCity
-  extends MessageMicro
-{
-  public static final int CODE_FIELD_NUMBER = 1;
-  public static final int GEO_FIELD_NUMBER = 2;
-  public static final int LEVEL_FIELD_NUMBER = 3;
-  public static final int NAME_FIELD_NUMBER = 4;
-  public static final int SGEO_FIELD_NUMBER = 8;
-  public static final int SUP_LUKUANG_FIELD_NUMBER = 6;
-  public static final int SUP_SUBWAY_FIELD_NUMBER = 5;
-  public static final int UID_FIELD_NUMBER = 7;
-  private boolean a;
-  private int b = 0;
-  private boolean c;
-  private String d = "";
-  private boolean e;
-  private int f = 0;
-  private boolean g;
-  private String h = "";
-  private boolean i;
-  private boolean j = false;
-  private boolean k;
-  private boolean l = false;
-  private boolean m;
-  private String n = "";
-  private List<Integer> o = Collections.emptyList();
-  private int p = -1;
-  
-  public static CurrentCity parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new CurrentCity().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static CurrentCity parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (CurrentCity)new CurrentCity().mergeFrom(paramArrayOfByte);
-  }
-  
-  public CurrentCity addSgeo(int paramInt)
-  {
-    if (this.o.isEmpty()) {
-      this.o = new ArrayList();
+public final class CurrentCity extends MessageMicro {
+    public static final int CODE_FIELD_NUMBER = 1;
+    public static final int GEO_FIELD_NUMBER = 2;
+    public static final int LEVEL_FIELD_NUMBER = 3;
+    public static final int NAME_FIELD_NUMBER = 4;
+    public static final int SGEO_FIELD_NUMBER = 8;
+    public static final int SUP_LUKUANG_FIELD_NUMBER = 6;
+    public static final int SUP_SUBWAY_FIELD_NUMBER = 5;
+    public static final int UID_FIELD_NUMBER = 7;
+    /* renamed from: a */
+    private boolean f11057a;
+    /* renamed from: b */
+    private int f11058b = 0;
+    /* renamed from: c */
+    private boolean f11059c;
+    /* renamed from: d */
+    private String f11060d = "";
+    /* renamed from: e */
+    private boolean f11061e;
+    /* renamed from: f */
+    private int f11062f = 0;
+    /* renamed from: g */
+    private boolean f11063g;
+    /* renamed from: h */
+    private String f11064h = "";
+    /* renamed from: i */
+    private boolean f11065i;
+    /* renamed from: j */
+    private boolean f11066j = false;
+    /* renamed from: k */
+    private boolean f11067k;
+    /* renamed from: l */
+    private boolean f11068l = false;
+    /* renamed from: m */
+    private boolean f11069m;
+    /* renamed from: n */
+    private String f11070n = "";
+    /* renamed from: o */
+    private List<Integer> f11071o = Collections.emptyList();
+    /* renamed from: p */
+    private int f11072p = -1;
+
+    public static CurrentCity parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new CurrentCity().mergeFrom(codedInputStreamMicro);
     }
-    this.o.add(Integer.valueOf(paramInt));
-    return this;
-  }
-  
-  public final CurrentCity clear()
-  {
-    clearCode();
-    clearGeo();
-    clearLevel();
-    clearName();
-    clearSupSubway();
-    clearSupLukuang();
-    clearUid();
-    clearSgeo();
-    this.p = -1;
-    return this;
-  }
-  
-  public CurrentCity clearCode()
-  {
-    this.a = false;
-    this.b = 0;
-    return this;
-  }
-  
-  public CurrentCity clearGeo()
-  {
-    this.c = false;
-    this.d = "";
-    return this;
-  }
-  
-  public CurrentCity clearLevel()
-  {
-    this.e = false;
-    this.f = 0;
-    return this;
-  }
-  
-  public CurrentCity clearName()
-  {
-    this.g = false;
-    this.h = "";
-    return this;
-  }
-  
-  public CurrentCity clearSgeo()
-  {
-    this.o = Collections.emptyList();
-    return this;
-  }
-  
-  public CurrentCity clearSupLukuang()
-  {
-    this.k = false;
-    this.l = false;
-    return this;
-  }
-  
-  public CurrentCity clearSupSubway()
-  {
-    this.i = false;
-    this.j = false;
-    return this;
-  }
-  
-  public CurrentCity clearUid()
-  {
-    this.m = false;
-    this.n = "";
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.p < 0) {
-      getSerializedSize();
+
+    public static CurrentCity parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (CurrentCity) new CurrentCity().mergeFrom(bArr);
     }
-    return this.p;
-  }
-  
-  public int getCode()
-  {
-    return this.b;
-  }
-  
-  public String getGeo()
-  {
-    return this.d;
-  }
-  
-  public int getLevel()
-  {
-    return this.f;
-  }
-  
-  public String getName()
-  {
-    return this.h;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i3 = 0;
-    if (hasCode()) {}
-    for (int i2 = CodedOutputStreamMicro.computeInt32Size(1, getCode()) + 0;; i2 = 0)
-    {
-      int i1 = i2;
-      if (hasGeo()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getGeo());
-      }
-      i2 = i1;
-      if (hasLevel()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getLevel());
-      }
-      i1 = i2;
-      if (hasName()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getName());
-      }
-      i2 = i1;
-      if (hasSupSubway()) {
-        i2 = i1 + CodedOutputStreamMicro.computeBoolSize(5, getSupSubway());
-      }
-      i1 = i2;
-      if (hasSupLukuang()) {
-        i1 = i2 + CodedOutputStreamMicro.computeBoolSize(6, getSupLukuang());
-      }
-      if (hasUid()) {
-        i1 += CodedOutputStreamMicro.computeStringSize(7, getUid());
-      }
-      for (;;)
-      {
-        Iterator localIterator = getSgeoList().iterator();
-        i2 = i3;
-        while (localIterator.hasNext()) {
-          i2 += CodedOutputStreamMicro.computeSInt32SizeNoTag(((Integer)localIterator.next()).intValue());
+
+    public CurrentCity addSgeo(int i) {
+        if (this.f11071o.isEmpty()) {
+            this.f11071o = new ArrayList();
         }
-        i1 = i1 + i2 + getSgeoList().size() * 1;
-        this.p = i1;
-        return i1;
-      }
-    }
-  }
-  
-  public int getSgeo(int paramInt)
-  {
-    return ((Integer)this.o.get(paramInt)).intValue();
-  }
-  
-  public int getSgeoCount()
-  {
-    return this.o.size();
-  }
-  
-  public List<Integer> getSgeoList()
-  {
-    return this.o;
-  }
-  
-  public boolean getSupLukuang()
-  {
-    return this.l;
-  }
-  
-  public boolean getSupSubway()
-  {
-    return this.j;
-  }
-  
-  public String getUid()
-  {
-    return this.n;
-  }
-  
-  public boolean hasCode()
-  {
-    return this.a;
-  }
-  
-  public boolean hasGeo()
-  {
-    return this.c;
-  }
-  
-  public boolean hasLevel()
-  {
-    return this.e;
-  }
-  
-  public boolean hasName()
-  {
-    return this.g;
-  }
-  
-  public boolean hasSupLukuang()
-  {
-    return this.k;
-  }
-  
-  public boolean hasSupSubway()
-  {
-    return this.i;
-  }
-  
-  public boolean hasUid()
-  {
-    return this.m;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public CurrentCity mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
+        this.f11071o.add(Integer.valueOf(i));
         return this;
-      case 8: 
-        setCode(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 18: 
-        setGeo(paramCodedInputStreamMicro.readString());
-        break;
-      case 24: 
-        setLevel(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 34: 
-        setName(paramCodedInputStreamMicro.readString());
-        break;
-      case 40: 
-        setSupSubway(paramCodedInputStreamMicro.readBool());
-        break;
-      case 48: 
-        setSupLukuang(paramCodedInputStreamMicro.readBool());
-        break;
-      case 58: 
-        setUid(paramCodedInputStreamMicro.readString());
-        break;
-      case 64: 
-        addSgeo(paramCodedInputStreamMicro.readSInt32());
-      }
     }
-  }
-  
-  public CurrentCity setCode(int paramInt)
-  {
-    this.a = true;
-    this.b = paramInt;
-    return this;
-  }
-  
-  public CurrentCity setGeo(String paramString)
-  {
-    this.c = true;
-    this.d = paramString;
-    return this;
-  }
-  
-  public CurrentCity setLevel(int paramInt)
-  {
-    this.e = true;
-    this.f = paramInt;
-    return this;
-  }
-  
-  public CurrentCity setName(String paramString)
-  {
-    this.g = true;
-    this.h = paramString;
-    return this;
-  }
-  
-  public CurrentCity setSgeo(int paramInt1, int paramInt2)
-  {
-    this.o.set(paramInt1, Integer.valueOf(paramInt2));
-    return this;
-  }
-  
-  public CurrentCity setSupLukuang(boolean paramBoolean)
-  {
-    this.k = true;
-    this.l = paramBoolean;
-    return this;
-  }
-  
-  public CurrentCity setSupSubway(boolean paramBoolean)
-  {
-    this.i = true;
-    this.j = paramBoolean;
-    return this;
-  }
-  
-  public CurrentCity setUid(String paramString)
-  {
-    this.m = true;
-    this.n = paramString;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasCode()) {
-      paramCodedOutputStreamMicro.writeInt32(1, getCode());
+
+    public final CurrentCity clear() {
+        clearCode();
+        clearGeo();
+        clearLevel();
+        clearName();
+        clearSupSubway();
+        clearSupLukuang();
+        clearUid();
+        clearSgeo();
+        this.f11072p = -1;
+        return this;
     }
-    if (hasGeo()) {
-      paramCodedOutputStreamMicro.writeString(2, getGeo());
+
+    public CurrentCity clearCode() {
+        this.f11057a = false;
+        this.f11058b = 0;
+        return this;
     }
-    if (hasLevel()) {
-      paramCodedOutputStreamMicro.writeInt32(3, getLevel());
+
+    public CurrentCity clearGeo() {
+        this.f11059c = false;
+        this.f11060d = "";
+        return this;
     }
-    if (hasName()) {
-      paramCodedOutputStreamMicro.writeString(4, getName());
+
+    public CurrentCity clearLevel() {
+        this.f11061e = false;
+        this.f11062f = 0;
+        return this;
     }
-    if (hasSupSubway()) {
-      paramCodedOutputStreamMicro.writeBool(5, getSupSubway());
+
+    public CurrentCity clearName() {
+        this.f11063g = false;
+        this.f11064h = "";
+        return this;
     }
-    if (hasSupLukuang()) {
-      paramCodedOutputStreamMicro.writeBool(6, getSupLukuang());
+
+    public CurrentCity clearSgeo() {
+        this.f11071o = Collections.emptyList();
+        return this;
     }
-    if (hasUid()) {
-      paramCodedOutputStreamMicro.writeString(7, getUid());
+
+    public CurrentCity clearSupLukuang() {
+        this.f11067k = false;
+        this.f11068l = false;
+        return this;
     }
-    Iterator localIterator = getSgeoList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeSInt32(8, ((Integer)localIterator.next()).intValue());
+
+    public CurrentCity clearSupSubway() {
+        this.f11065i = false;
+        this.f11066j = false;
+        return this;
     }
-  }
+
+    public CurrentCity clearUid() {
+        this.f11069m = false;
+        this.f11070n = "";
+        return this;
+    }
+
+    public int getCachedSize() {
+        if (this.f11072p < 0) {
+            getSerializedSize();
+        }
+        return this.f11072p;
+    }
+
+    public int getCode() {
+        return this.f11058b;
+    }
+
+    public String getGeo() {
+        return this.f11060d;
+    }
+
+    public int getLevel() {
+        return this.f11062f;
+    }
+
+    public String getName() {
+        return this.f11064h;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        int computeInt32Size = hasCode() ? CodedOutputStreamMicro.computeInt32Size(1, getCode()) + 0 : 0;
+        if (hasGeo()) {
+            computeInt32Size += CodedOutputStreamMicro.computeStringSize(2, getGeo());
+        }
+        if (hasLevel()) {
+            computeInt32Size += CodedOutputStreamMicro.computeInt32Size(3, getLevel());
+        }
+        if (hasName()) {
+            computeInt32Size += CodedOutputStreamMicro.computeStringSize(4, getName());
+        }
+        if (hasSupSubway()) {
+            computeInt32Size += CodedOutputStreamMicro.computeBoolSize(5, getSupSubway());
+        }
+        if (hasSupLukuang()) {
+            computeInt32Size += CodedOutputStreamMicro.computeBoolSize(6, getSupLukuang());
+        }
+        int computeStringSize = hasUid() ? computeInt32Size + CodedOutputStreamMicro.computeStringSize(7, getUid()) : computeInt32Size;
+        for (Integer intValue : getSgeoList()) {
+            i += CodedOutputStreamMicro.computeSInt32SizeNoTag(intValue.intValue());
+        }
+        computeInt32Size = (computeStringSize + i) + (getSgeoList().size() * 1);
+        this.f11072p = computeInt32Size;
+        return computeInt32Size;
+    }
+
+    public int getSgeo(int i) {
+        return ((Integer) this.f11071o.get(i)).intValue();
+    }
+
+    public int getSgeoCount() {
+        return this.f11071o.size();
+    }
+
+    public List<Integer> getSgeoList() {
+        return this.f11071o;
+    }
+
+    public boolean getSupLukuang() {
+        return this.f11068l;
+    }
+
+    public boolean getSupSubway() {
+        return this.f11066j;
+    }
+
+    public String getUid() {
+        return this.f11070n;
+    }
+
+    public boolean hasCode() {
+        return this.f11057a;
+    }
+
+    public boolean hasGeo() {
+        return this.f11059c;
+    }
+
+    public boolean hasLevel() {
+        return this.f11061e;
+    }
+
+    public boolean hasName() {
+        return this.f11063g;
+    }
+
+    public boolean hasSupLukuang() {
+        return this.f11067k;
+    }
+
+    public boolean hasSupSubway() {
+        return this.f11065i;
+    }
+
+    public boolean hasUid() {
+        return this.f11069m;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public CurrentCity mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 8:
+                    setCode(codedInputStreamMicro.readInt32());
+                    continue;
+                case 18:
+                    setGeo(codedInputStreamMicro.readString());
+                    continue;
+                case 24:
+                    setLevel(codedInputStreamMicro.readInt32());
+                    continue;
+                case 34:
+                    setName(codedInputStreamMicro.readString());
+                    continue;
+                case 40:
+                    setSupSubway(codedInputStreamMicro.readBool());
+                    continue;
+                case 48:
+                    setSupLukuang(codedInputStreamMicro.readBool());
+                    continue;
+                case 58:
+                    setUid(codedInputStreamMicro.readString());
+                    continue;
+                case 64:
+                    addSgeo(codedInputStreamMicro.readSInt32());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public CurrentCity setCode(int i) {
+        this.f11057a = true;
+        this.f11058b = i;
+        return this;
+    }
+
+    public CurrentCity setGeo(String str) {
+        this.f11059c = true;
+        this.f11060d = str;
+        return this;
+    }
+
+    public CurrentCity setLevel(int i) {
+        this.f11061e = true;
+        this.f11062f = i;
+        return this;
+    }
+
+    public CurrentCity setName(String str) {
+        this.f11063g = true;
+        this.f11064h = str;
+        return this;
+    }
+
+    public CurrentCity setSgeo(int i, int i2) {
+        this.f11071o.set(i, Integer.valueOf(i2));
+        return this;
+    }
+
+    public CurrentCity setSupLukuang(boolean z) {
+        this.f11067k = true;
+        this.f11068l = z;
+        return this;
+    }
+
+    public CurrentCity setSupSubway(boolean z) {
+        this.f11065i = true;
+        this.f11066j = z;
+        return this;
+    }
+
+    public CurrentCity setUid(String str) {
+        this.f11069m = true;
+        this.f11070n = str;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasCode()) {
+            codedOutputStreamMicro.writeInt32(1, getCode());
+        }
+        if (hasGeo()) {
+            codedOutputStreamMicro.writeString(2, getGeo());
+        }
+        if (hasLevel()) {
+            codedOutputStreamMicro.writeInt32(3, getLevel());
+        }
+        if (hasName()) {
+            codedOutputStreamMicro.writeString(4, getName());
+        }
+        if (hasSupSubway()) {
+            codedOutputStreamMicro.writeBool(5, getSupSubway());
+        }
+        if (hasSupLukuang()) {
+            codedOutputStreamMicro.writeBool(6, getSupLukuang());
+        }
+        if (hasUid()) {
+            codedOutputStreamMicro.writeString(7, getUid());
+        }
+        for (Integer intValue : getSgeoList()) {
+            codedOutputStreamMicro.writeSInt32(8, intValue.intValue());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/CurrentCity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

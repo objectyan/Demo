@@ -10,140 +10,109 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.util.Log;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.k;
+import com.baidu.baidumaps.common.network.NetworkListener;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
 
-public class WifiDirectBroadReceiver
-  extends BroadcastReceiver
-{
-  private static final String b = "[WifiDirect]";
-  private static boolean e = false;
-  Activity a = null;
-  private WifiP2pManager c;
-  private WifiP2pManager.Channel d;
-  private h f = null;
-  
-  public WifiDirectBroadReceiver(WifiP2pManager paramWifiP2pManager, WifiP2pManager.Channel paramChannel, Activity paramActivity)
-  {
-    this.c = paramWifiP2pManager;
-    this.d = paramChannel;
-    this.a = paramActivity;
-  }
-  
-  public WifiDirectBroadReceiver(WifiP2pManager paramWifiP2pManager, WifiP2pManager.Channel paramChannel, h paramh)
-  {
-    this.c = paramWifiP2pManager;
-    this.d = paramChannel;
-    this.f = paramh;
-  }
-  
-  public void a(Context paramContext, Intent paramIntent)
-  {
-    switch (paramIntent.getIntExtra("wifi_state", 0))
-    {
-    case 2: 
-    default: 
-      return;
-    case 3: 
-      i.b("[WifiDirect]", "Wifi State: Enabled");
-      k.a(1071, 1000);
-      return;
+public class WifiDirectBroadReceiver extends BroadcastReceiver {
+    /* renamed from: b */
+    private static final String f3200b = "[WifiDirect]";
+    /* renamed from: e */
+    private static boolean f3201e = false;
+    /* renamed from: a */
+    Activity f3202a = null;
+    /* renamed from: c */
+    private WifiP2pManager f3203c;
+    /* renamed from: d */
+    private Channel f3204d;
+    /* renamed from: f */
+    private C1237h f3205f = null;
+
+    public WifiDirectBroadReceiver(WifiP2pManager manager, Channel channel, C1237h uWifiDirectManager) {
+        this.f3203c = manager;
+        this.f3204d = channel;
+        this.f3205f = uWifiDirectManager;
     }
-    i.b("[WifiDirect]", "Wifi State: Disabled");
-  }
-  
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    String str = paramIntent.getAction();
-    i.b("[WifiDirect]", "BroadReceiver: -------------- : " + str);
-    if ("android.net.wifi.WIFI_STATE_CHANGED".equals(str)) {
-      a(paramContext, paramIntent);
+
+    public WifiDirectBroadReceiver(WifiP2pManager manager, Channel channel, Activity activity) {
+        this.f3203c = manager;
+        this.f3204d = channel;
+        this.f3202a = activity;
     }
-    int i;
-    label184:
-    label340:
-    label369:
-    label395:
-    for (;;)
-    {
-      return;
-      if ("android.net.wifi.p2p.STATE_CHANGED".equals(str))
-      {
-        i = paramIntent.getIntExtra("wifi_p2p_state", -1);
-        if (i == 2) {
-          i.b("[WifiDirect]", "BroadReceiver: state WIFI_P2P_STATE_ENABLED :" + i);
+
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        C1260i.m4435b(f3200b, "BroadReceiver: -------------- : " + action);
+        if (NetworkListener.f2258e.equals(action)) {
+            m4105a(context, intent);
+            return;
         }
-      }
-      else
-      {
-        if (("android.net.wifi.p2p.PEERS_CHANGED".equals(str)) && (this.c != null)) {
-          i.b("[WifiDirect]", "BroadReceiver: PEERS_CHANGED ");
-        }
-        if ("android.net.wifi.p2p.THIS_DEVICE_CHANGED".equals(str))
-        {
-          paramContext = (WifiP2pDevice)paramIntent.getParcelableExtra("wifiP2pDevice");
-          i.b("[WifiDirect]", "BroadReceiver: Device status : " + paramContext.status);
-          if (paramContext.status != 0) {
-            break label340;
-          }
-          i.b("[WifiDirect]", "BroadReceiver: --------------------- peer connected");
-          e = true;
-        }
-        if ("android.net.wifi.p2p.CONNECTION_STATE_CHANGE".equals(str))
-        {
-          i.b("[WifiDirect]", "BroadReceiver: WIFI_P2P_CONNECTION_CHANGED_ACTION : ");
-          if (this.c == null) {
-            continue;
-          }
-          paramContext = (NetworkInfo)paramIntent.getParcelableExtra("networkInfo");
-          i.b("[WifiDirect]", "BroadReceiver: NetworkInfo Connect state : " + paramContext.isConnected());
-          if (paramContext.isConnected())
-          {
-            i.b("[WifiDirect]", "BroadReceiver: Connected to p2p network. Requesting network details");
-            if (this.f == null) {
-              break label369;
+        int state;
+        if ("android.net.wifi.p2p.STATE_CHANGED".equals(action)) {
+            state = intent.getIntExtra("wifi_p2p_state", -1);
+            if (state == 2) {
+                C1260i.m4435b(f3200b, "BroadReceiver: state WIFI_P2P_STATE_ENABLED :" + state);
+            } else {
+                C1260i.m4435b(f3200b, "BroadReceiver: state WIFI_P2P_STATE_DISABLED :" + state);
             }
-            this.c.requestConnectionInfo(this.d, this.f);
-          }
         }
-      }
-      for (;;)
-      {
-        if (!"android.net.wifi.p2p.DISCOVERY_STATE_CHANGE".equals(str)) {
-          break label395;
+        if ("android.net.wifi.p2p.PEERS_CHANGED".equals(action) && this.f3203c != null) {
+            C1260i.m4435b(f3200b, "BroadReceiver: PEERS_CHANGED ");
         }
-        i = paramIntent.getIntExtra("discoveryState", -1);
-        if (2 != i) {
-          break label397;
+        if ("android.net.wifi.p2p.THIS_DEVICE_CHANGED".equals(action)) {
+            WifiP2pDevice device = (WifiP2pDevice) intent.getParcelableExtra("wifiP2pDevice");
+            C1260i.m4435b(f3200b, "BroadReceiver: Device status : " + device.status);
+            if (device.status == 0) {
+                C1260i.m4435b(f3200b, "BroadReceiver: --------------------- peer connected");
+                f3201e = true;
+            } else if (f3201e) {
+                C1260i.m4435b(f3200b, "BroadReceiver: --------------------- peer disconnected reset discover");
+                f3201e = false;
+                C1261k.m4453a((int) C1253f.fp, 2000);
+            }
         }
-        Log.d("[WifiDirect]", "BroadReceiver: -------- WIFI_P2P_DISCOVERY_STARTED");
-        return;
-        i.b("[WifiDirect]", "BroadReceiver: state WIFI_P2P_STATE_DISABLED :" + i);
-        break;
-        if (!e) {
-          break label184;
+        if ("android.net.wifi.p2p.CONNECTION_STATE_CHANGE".equals(action)) {
+            C1260i.m4435b(f3200b, "BroadReceiver: WIFI_P2P_CONNECTION_CHANGED_ACTION : ");
+            if (this.f3203c != null) {
+                NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra("networkInfo");
+                C1260i.m4435b(f3200b, "BroadReceiver: NetworkInfo Connect state : " + networkInfo.isConnected());
+                if (networkInfo.isConnected()) {
+                    C1260i.m4435b(f3200b, "BroadReceiver: Connected to p2p network. Requesting network details");
+                    if (this.f3205f != null) {
+                        this.f3203c.requestConnectionInfo(this.f3204d, this.f3205f);
+                    } else if (this.f3202a != null) {
+                        this.f3203c.requestConnectionInfo(this.f3204d, (ConnectionInfoListener) this.f3202a);
+                    }
+                }
+            } else {
+                return;
+            }
         }
-        i.b("[WifiDirect]", "BroadReceiver: --------------------- peer disconnected reset discover");
-        e = false;
-        k.a(1070, 2000);
-        break label184;
-        if (this.a != null) {
-          this.c.requestConnectionInfo(this.d, (WifiP2pManager.ConnectionInfoListener)this.a);
+        if ("android.net.wifi.p2p.DISCOVERY_STATE_CHANGE".equals(action)) {
+            state = intent.getIntExtra("discoveryState", -1);
+            if (2 == state) {
+                Log.d(f3200b, "BroadReceiver: -------- WIFI_P2P_DISCOVERY_STARTED");
+            } else if (1 == state) {
+                Log.d(f3200b, "BroadReceiver: -------- WIFI_P2P_DISCOVERY_STOPPED");
+            } else {
+                Log.d(f3200b, "BroadReceiver: -------- Unknown state !");
+            }
         }
-      }
     }
-    label397:
-    if (1 == i)
-    {
-      Log.d("[WifiDirect]", "BroadReceiver: -------- WIFI_P2P_DISCOVERY_STOPPED");
-      return;
+
+    /* renamed from: a */
+    public void m4105a(Context context, Intent intent) {
+        switch (intent.getIntExtra("wifi_state", 0)) {
+            case 1:
+                C1260i.m4435b(f3200b, "Wifi State: Disabled");
+                return;
+            case 3:
+                C1260i.m4435b(f3200b, "Wifi State: Enabled");
+                C1261k.m4453a((int) C1253f.fq, 1000);
+                return;
+            default:
+                return;
+        }
     }
-    Log.d("[WifiDirect]", "BroadReceiver: -------- Unknown state !");
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/core/connect/WifiDirectBroadReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

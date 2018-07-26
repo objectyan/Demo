@@ -1,422 +1,330 @@
 package com.baidu.mapframework.commonlib.date;
 
-final class DateTimeInterval
-{
-  private static final int a = 0;
-  private static final int b = 9999;
-  private static final int c = 0;
-  private static final int d = 999999999;
-  private static final boolean e = true;
-  private static final boolean f = false;
-  private final DateTime g;
-  private boolean h;
-  private DateTime.DayOverflow i;
-  private int j;
-  private int k;
-  private int l;
-  private int m;
-  private int n;
-  private int o;
-  private int p;
-  private Integer q;
-  private Integer r;
-  private Integer s;
-  private Integer t;
-  private Integer u;
-  private Integer v;
-  private Integer w;
-  
-  DateTimeInterval(DateTime paramDateTime, DateTime.DayOverflow paramDayOverflow)
-  {
-    this.g = paramDateTime;
-    a();
-    if (this.g.getYear() == null)
-    {
-      i1 = 1;
-      this.q = Integer.valueOf(i1);
-      if (this.g.getMonth() != null) {
-        break label181;
-      }
-      i1 = 1;
-      label51:
-      this.r = Integer.valueOf(i1);
-      if (this.g.getDay() != null) {
-        break label195;
-      }
-      i1 = i3;
-      label72:
-      this.s = Integer.valueOf(i1);
-      if (this.g.getHour() != null) {
-        break label209;
-      }
-      i1 = 0;
-      label92:
-      this.t = Integer.valueOf(i1);
-      if (this.g.getMinute() != null) {
-        break label223;
-      }
-      i1 = 0;
-      label112:
-      this.u = Integer.valueOf(i1);
-      if (this.g.getSecond() != null) {
-        break label237;
-      }
-      i1 = 0;
-      label132:
-      this.v = Integer.valueOf(i1);
-      if (this.g.getNanoseconds() != null) {
-        break label251;
-      }
-    }
-    label181:
-    label195:
-    label209:
-    label223:
-    label237:
-    label251:
-    for (int i1 = i2;; i1 = this.g.getNanoseconds().intValue())
-    {
-      this.w = Integer.valueOf(i1);
-      this.i = paramDayOverflow;
-      return;
-      i1 = this.g.getYear().intValue();
-      break;
-      i1 = this.g.getMonth().intValue();
-      break label51;
-      i1 = this.g.getDay().intValue();
-      break label72;
-      i1 = this.g.getHour().intValue();
-      break label92;
-      i1 = this.g.getMinute().intValue();
-      break label112;
-      i1 = this.g.getSecond().intValue();
-      break label132;
-    }
-  }
-  
-  private DateTime a(boolean paramBoolean, Integer paramInteger1, Integer paramInteger2, Integer paramInteger3, Integer paramInteger4, Integer paramInteger5, Integer paramInteger6, Integer paramInteger7)
-  {
-    this.h = paramBoolean;
-    this.j = paramInteger1.intValue();
-    this.k = paramInteger2.intValue();
-    this.l = paramInteger3.intValue();
-    this.m = paramInteger4.intValue();
-    this.n = paramInteger5.intValue();
-    this.o = paramInteger6.intValue();
-    this.p = paramInteger7.intValue();
-    a(Integer.valueOf(this.j), "Year");
-    a(Integer.valueOf(this.k), "Month");
-    a(Integer.valueOf(this.l), "Day");
-    a(Integer.valueOf(this.m), "Hour");
-    a(Integer.valueOf(this.n), "Minute");
-    a(Integer.valueOf(this.o), "Second");
-    a(Integer.valueOf(this.p));
-    b();
-    c();
-    q();
-    d();
-    e();
-    f();
-    g();
-    h();
-    return new DateTime(this.q, this.r, this.s, this.t, this.u, this.v, this.w);
-  }
-  
-  private void a()
-  {
-    int i1;
-    if (this.g.unitsAllPresent(new DateTime.Unit[] { DateTime.Unit.YEAR, DateTime.Unit.MONTH, DateTime.Unit.DAY, DateTime.Unit.HOUR, DateTime.Unit.MINUTE, DateTime.Unit.SECOND })) {
-      i1 = 1;
-    }
-    while (i1 == 0)
-    {
-      throw new IllegalArgumentException("For interval calculations, DateTime must have year-month-day, or hour-minute-second, or both.");
-      if (this.g.unitsAllPresent(new DateTime.Unit[] { DateTime.Unit.YEAR, DateTime.Unit.MONTH, DateTime.Unit.DAY })) {
-        if (this.g.unitsAllAbsent(new DateTime.Unit[] { DateTime.Unit.HOUR, DateTime.Unit.MINUTE, DateTime.Unit.SECOND }))
-        {
-          i1 = 1;
-          continue;
+import com.baidu.mapframework.commonlib.date.DateTime.DayOverflow;
+import com.baidu.mapframework.commonlib.date.DateTime.Unit;
+
+final class DateTimeInterval {
+    /* renamed from: a */
+    private static final int f18985a = 0;
+    /* renamed from: b */
+    private static final int f18986b = 9999;
+    /* renamed from: c */
+    private static final int f18987c = 0;
+    /* renamed from: d */
+    private static final int f18988d = 999999999;
+    /* renamed from: e */
+    private static final boolean f18989e = true;
+    /* renamed from: f */
+    private static final boolean f18990f = false;
+    /* renamed from: g */
+    private final DateTime f18991g;
+    /* renamed from: h */
+    private boolean f18992h;
+    /* renamed from: i */
+    private DayOverflow f18993i;
+    /* renamed from: j */
+    private int f18994j;
+    /* renamed from: k */
+    private int f18995k;
+    /* renamed from: l */
+    private int f18996l;
+    /* renamed from: m */
+    private int f18997m;
+    /* renamed from: n */
+    private int f18998n;
+    /* renamed from: o */
+    private int f18999o;
+    /* renamed from: p */
+    private int f19000p;
+    /* renamed from: q */
+    private Integer f19001q;
+    /* renamed from: r */
+    private Integer f19002r;
+    /* renamed from: s */
+    private Integer f19003s;
+    /* renamed from: t */
+    private Integer f19004t;
+    /* renamed from: u */
+    private Integer f19005u;
+    /* renamed from: v */
+    private Integer f19006v;
+    /* renamed from: w */
+    private Integer f19007w;
+
+    DateTimeInterval(DateTime aFrom, DayOverflow aMonthOverflow) {
+        int i = 1;
+        int i2 = 0;
+        this.f18991g = aFrom;
+        m15028a();
+        this.f19001q = Integer.valueOf(this.f18991g.getYear() == null ? 1 : this.f18991g.getYear().intValue());
+        this.f19002r = Integer.valueOf(this.f18991g.getMonth() == null ? 1 : this.f18991g.getMonth().intValue());
+        if (this.f18991g.getDay() != null) {
+            i = this.f18991g.getDay().intValue();
         }
-      }
-      if (this.g.unitsAllAbsent(new DateTime.Unit[] { DateTime.Unit.YEAR, DateTime.Unit.MONTH, DateTime.Unit.DAY })) {
-        if (!this.g.unitsAllPresent(new DateTime.Unit[] { DateTime.Unit.HOUR, DateTime.Unit.MINUTE, DateTime.Unit.SECOND })) {}
-      }
-      for (i1 = 1;; i1 = 0) {
-        break;
-      }
+        this.f19003s = Integer.valueOf(i);
+        this.f19004t = Integer.valueOf(this.f18991g.getHour() == null ? 0 : this.f18991g.getHour().intValue());
+        this.f19005u = Integer.valueOf(this.f18991g.getMinute() == null ? 0 : this.f18991g.getMinute().intValue());
+        this.f19006v = Integer.valueOf(this.f18991g.getSecond() == null ? 0 : this.f18991g.getSecond().intValue());
+        if (this.f18991g.getNanoseconds() != null) {
+            i2 = this.f18991g.getNanoseconds().intValue();
+        }
+        this.f19007w = Integer.valueOf(i2);
+        this.f18993i = aMonthOverflow;
     }
-  }
-  
-  private void a(Integer paramInteger)
-  {
-    if ((paramInteger.intValue() < 0) || (paramInteger.intValue() > 999999999)) {
-      throw new IllegalArgumentException("Nanosecond interval is not in the range 0..999999999");
+
+    /* renamed from: a */
+    DateTime m15047a(int aYear, int aMonth, int aDay, int aHour, int aMinute, int aSecond, int aNanosecond) {
+        return m15027a(true, Integer.valueOf(aYear), Integer.valueOf(aMonth), Integer.valueOf(aDay), Integer.valueOf(aHour), Integer.valueOf(aMinute), Integer.valueOf(aSecond), Integer.valueOf(aNanosecond));
     }
-  }
-  
-  private void a(Integer paramInteger, String paramString)
-  {
-    if ((paramInteger.intValue() < 0) || (paramInteger.intValue() > 9999)) {
-      throw new IllegalArgumentException(paramString + " is not in the range " + 0 + ".." + 9999);
+
+    /* renamed from: b */
+    DateTime m15048b(int aYear, int aMonth, int aDay, int aHour, int aMinute, int aSecond, int aNanosecond) {
+        return m15027a(false, Integer.valueOf(aYear), Integer.valueOf(aMonth), Integer.valueOf(aDay), Integer.valueOf(aHour), Integer.valueOf(aMinute), Integer.valueOf(aSecond), Integer.valueOf(aNanosecond));
     }
-  }
-  
-  private void b()
-  {
-    if (this.h)
-    {
-      this.q = Integer.valueOf(this.q.intValue() + this.j);
-      return;
+
+    /* renamed from: a */
+    private void m15028a() {
+        boolean success;
+        if (this.f18991g.unitsAllPresent(Unit.YEAR, Unit.MONTH, Unit.DAY, Unit.HOUR, Unit.MINUTE, Unit.SECOND)) {
+            success = true;
+        } else {
+            if (this.f18991g.unitsAllPresent(Unit.YEAR, Unit.MONTH, Unit.DAY)) {
+                if (this.f18991g.unitsAllAbsent(Unit.HOUR, Unit.MINUTE, Unit.SECOND)) {
+                    success = true;
+                }
+            }
+            if (this.f18991g.unitsAllAbsent(Unit.YEAR, Unit.MONTH, Unit.DAY)) {
+                if (this.f18991g.unitsAllPresent(Unit.HOUR, Unit.MINUTE, Unit.SECOND)) {
+                    success = true;
+                }
+            }
+            success = false;
+        }
+        if (!success) {
+            throw new IllegalArgumentException("For interval calculations, DateTime must have year-month-day, or hour-minute-second, or both.");
+        }
     }
-    this.q = Integer.valueOf(this.g.getYear().intValue() - this.j);
-  }
-  
-  private void c()
-  {
-    int i1 = 0;
-    while (i1 < this.k)
-    {
-      j();
-      i1 += 1;
+
+    /* renamed from: a */
+    private DateTime m15027a(boolean aIsPlus, Integer aYear, Integer aMonth, Integer aDay, Integer aHour, Integer aMinute, Integer aSecond, Integer aNanosecond) {
+        this.f18992h = aIsPlus;
+        this.f18994j = aYear.intValue();
+        this.f18995k = aMonth.intValue();
+        this.f18996l = aDay.intValue();
+        this.f18997m = aHour.intValue();
+        this.f18998n = aMinute.intValue();
+        this.f18999o = aSecond.intValue();
+        this.f19000p = aNanosecond.intValue();
+        m15030a(Integer.valueOf(this.f18994j), "Year");
+        m15030a(Integer.valueOf(this.f18995k), "Month");
+        m15030a(Integer.valueOf(this.f18996l), "Day");
+        m15030a(Integer.valueOf(this.f18997m), "Hour");
+        m15030a(Integer.valueOf(this.f18998n), "Minute");
+        m15030a(Integer.valueOf(this.f18999o), "Second");
+        m15029a(Integer.valueOf(this.f19000p));
+        m15031b();
+        m15032c();
+        m15046q();
+        m15033d();
+        m15034e();
+        m15035f();
+        m15036g();
+        m15037h();
+        return new DateTime(this.f19001q, this.f19002r, this.f19003s, this.f19004t, this.f19005u, this.f19006v, this.f19007w);
     }
-  }
-  
-  private void d()
-  {
-    int i1 = 0;
-    while (i1 < this.l)
-    {
-      k();
-      i1 += 1;
+
+    /* renamed from: a */
+    private void m15030a(Integer aValue, String aName) {
+        if (aValue.intValue() < 0 || aValue.intValue() > f18986b) {
+            throw new IllegalArgumentException(aName + " is not in the range " + 0 + ".." + f18986b);
+        }
     }
-  }
-  
-  private void e()
-  {
-    int i1 = 0;
-    while (i1 < this.m)
-    {
-      n();
-      i1 += 1;
+
+    /* renamed from: a */
+    private void m15029a(Integer aValue) {
+        if (aValue.intValue() < 0 || aValue.intValue() > f18988d) {
+            throw new IllegalArgumentException("Nanosecond interval is not in the range 0..999999999");
+        }
     }
-  }
-  
-  private void f()
-  {
-    int i1 = 0;
-    while (i1 < this.n)
-    {
-      o();
-      i1 += 1;
+
+    /* renamed from: b */
+    private void m15031b() {
+        if (this.f18992h) {
+            this.f19001q = Integer.valueOf(this.f19001q.intValue() + this.f18994j);
+        } else {
+            this.f19001q = Integer.valueOf(this.f18991g.getYear().intValue() - this.f18994j);
+        }
     }
-  }
-  
-  private void g()
-  {
-    int i1 = 0;
-    while (i1 < this.o)
-    {
-      p();
-      i1 += 1;
+
+    /* renamed from: c */
+    private void m15032c() {
+        for (int count = 0; count < this.f18995k; count++) {
+            m15039j();
+        }
     }
-  }
-  
-  private void h()
-  {
-    if (this.h)
-    {
-      this.w = Integer.valueOf(this.w.intValue() + this.p);
-      if (this.w.intValue() <= 999999999) {
-        break label84;
-      }
-      p();
-      this.w = Integer.valueOf(this.w.intValue() - 999999999 - 1);
+
+    /* renamed from: d */
+    private void m15033d() {
+        for (int count = 0; count < this.f18996l; count++) {
+            m15040k();
+        }
     }
-    label84:
-    while (this.w.intValue() >= 0)
-    {
-      return;
-      this.w = Integer.valueOf(this.w.intValue() - this.p);
-      break;
+
+    /* renamed from: e */
+    private void m15034e() {
+        for (int count = 0; count < this.f18997m; count++) {
+            m15043n();
+        }
     }
-    p();
-    this.w = Integer.valueOf(this.w.intValue() + 999999999 + 1);
-  }
-  
-  private void i()
-  {
-    if (this.h)
-    {
-      this.q = Integer.valueOf(this.q.intValue() + 1);
-      return;
+
+    /* renamed from: f */
+    private void m15035f() {
+        for (int count = 0; count < this.f18998n; count++) {
+            m15044o();
+        }
     }
-    this.q = Integer.valueOf(this.q.intValue() - 1);
-  }
-  
-  private void j()
-  {
-    if (this.h)
-    {
-      this.r = Integer.valueOf(this.r.intValue() + 1);
-      if (this.r.intValue() <= 12) {
-        break label67;
-      }
-      this.r = Integer.valueOf(1);
-      i();
+
+    /* renamed from: g */
+    private void m15036g() {
+        for (int count = 0; count < this.f18999o; count++) {
+            m15045p();
+        }
     }
-    label67:
-    while (this.r.intValue() >= 1)
-    {
-      return;
-      this.r = Integer.valueOf(this.r.intValue() - 1);
-      break;
+
+    /* renamed from: h */
+    private void m15037h() {
+        if (this.f18992h) {
+            this.f19007w = Integer.valueOf(this.f19007w.intValue() + this.f19000p);
+        } else {
+            this.f19007w = Integer.valueOf(this.f19007w.intValue() - this.f19000p);
+        }
+        if (this.f19007w.intValue() > f18988d) {
+            m15045p();
+            this.f19007w = Integer.valueOf((this.f19007w.intValue() - f18988d) - 1);
+        } else if (this.f19007w.intValue() < 0) {
+            m15045p();
+            this.f19007w = Integer.valueOf((this.f19007w.intValue() + f18988d) + 1);
+        }
     }
-    this.r = Integer.valueOf(12);
-    i();
-  }
-  
-  private void k()
-  {
-    if (this.h)
-    {
-      this.s = Integer.valueOf(this.s.intValue() + 1);
-      if (this.s.intValue() <= l()) {
-        break label69;
-      }
-      this.s = Integer.valueOf(1);
-      j();
+
+    /* renamed from: i */
+    private void m15038i() {
+        if (this.f18992h) {
+            this.f19001q = Integer.valueOf(this.f19001q.intValue() + 1);
+        } else {
+            this.f19001q = Integer.valueOf(this.f19001q.intValue() - 1);
+        }
     }
-    label69:
-    while (this.s.intValue() >= 1)
-    {
-      return;
-      this.s = Integer.valueOf(this.s.intValue() - 1);
-      break;
+
+    /* renamed from: j */
+    private void m15039j() {
+        if (this.f18992h) {
+            this.f19002r = Integer.valueOf(this.f19002r.intValue() + 1);
+        } else {
+            this.f19002r = Integer.valueOf(this.f19002r.intValue() - 1);
+        }
+        if (this.f19002r.intValue() > 12) {
+            this.f19002r = Integer.valueOf(1);
+            m15038i();
+        } else if (this.f19002r.intValue() < 1) {
+            this.f19002r = Integer.valueOf(12);
+            m15038i();
+        }
     }
-    this.s = Integer.valueOf(m());
-    j();
-  }
-  
-  private int l()
-  {
-    return DateTime.a(this.q, this.r).intValue();
-  }
-  
-  private int m()
-  {
-    if (this.r.intValue() > 1) {
-      return DateTime.a(this.q, Integer.valueOf(this.r.intValue() - 1)).intValue();
+
+    /* renamed from: k */
+    private void m15040k() {
+        if (this.f18992h) {
+            this.f19003s = Integer.valueOf(this.f19003s.intValue() + 1);
+        } else {
+            this.f19003s = Integer.valueOf(this.f19003s.intValue() - 1);
+        }
+        if (this.f19003s.intValue() > m15041l()) {
+            this.f19003s = Integer.valueOf(1);
+            m15039j();
+        } else if (this.f19003s.intValue() < 1) {
+            this.f19003s = Integer.valueOf(m15042m());
+            m15039j();
+        }
     }
-    return DateTime.a(Integer.valueOf(this.q.intValue() - 1), Integer.valueOf(12)).intValue();
-  }
-  
-  private void n()
-  {
-    if (this.h)
-    {
-      this.t = Integer.valueOf(this.t.intValue() + 1);
-      if (this.t.intValue() <= 23) {
-        break label67;
-      }
-      this.t = Integer.valueOf(0);
-      k();
+
+    /* renamed from: l */
+    private int m15041l() {
+        return DateTime.m14983a(this.f19001q, this.f19002r).intValue();
     }
-    label67:
-    while (this.t.intValue() >= 0)
-    {
-      return;
-      this.t = Integer.valueOf(this.t.intValue() - 1);
-      break;
+
+    /* renamed from: m */
+    private int m15042m() {
+        if (this.f19002r.intValue() > 1) {
+            return DateTime.m14983a(this.f19001q, Integer.valueOf(this.f19002r.intValue() - 1)).intValue();
+        }
+        return DateTime.m14983a(Integer.valueOf(this.f19001q.intValue() - 1), Integer.valueOf(12)).intValue();
     }
-    this.t = Integer.valueOf(23);
-    k();
-  }
-  
-  private void o()
-  {
-    if (this.h)
-    {
-      this.u = Integer.valueOf(this.u.intValue() + 1);
-      if (this.u.intValue() <= 59) {
-        break label67;
-      }
-      this.u = Integer.valueOf(0);
-      n();
+
+    /* renamed from: n */
+    private void m15043n() {
+        if (this.f18992h) {
+            this.f19004t = Integer.valueOf(this.f19004t.intValue() + 1);
+        } else {
+            this.f19004t = Integer.valueOf(this.f19004t.intValue() - 1);
+        }
+        if (this.f19004t.intValue() > 23) {
+            this.f19004t = Integer.valueOf(0);
+            m15040k();
+        } else if (this.f19004t.intValue() < 0) {
+            this.f19004t = Integer.valueOf(23);
+            m15040k();
+        }
     }
-    label67:
-    while (this.u.intValue() >= 0)
-    {
-      return;
-      this.u = Integer.valueOf(this.u.intValue() - 1);
-      break;
+
+    /* renamed from: o */
+    private void m15044o() {
+        if (this.f18992h) {
+            this.f19005u = Integer.valueOf(this.f19005u.intValue() + 1);
+        } else {
+            this.f19005u = Integer.valueOf(this.f19005u.intValue() - 1);
+        }
+        if (this.f19005u.intValue() > 59) {
+            this.f19005u = Integer.valueOf(0);
+            m15043n();
+        } else if (this.f19005u.intValue() < 0) {
+            this.f19005u = Integer.valueOf(59);
+            m15043n();
+        }
     }
-    this.u = Integer.valueOf(59);
-    n();
-  }
-  
-  private void p()
-  {
-    if (this.h)
-    {
-      this.v = Integer.valueOf(this.v.intValue() + 1);
-      if (this.v.intValue() <= 59) {
-        break label67;
-      }
-      this.v = Integer.valueOf(0);
-      o();
+
+    /* renamed from: p */
+    private void m15045p() {
+        if (this.f18992h) {
+            this.f19006v = Integer.valueOf(this.f19006v.intValue() + 1);
+        } else {
+            this.f19006v = Integer.valueOf(this.f19006v.intValue() - 1);
+        }
+        if (this.f19006v.intValue() > 59) {
+            this.f19006v = Integer.valueOf(0);
+            m15044o();
+        } else if (this.f19006v.intValue() < 0) {
+            this.f19006v = Integer.valueOf(59);
+            m15044o();
+        }
     }
-    label67:
-    while (this.v.intValue() >= 0)
-    {
-      return;
-      this.v = Integer.valueOf(this.v.intValue() - 1);
-      break;
+
+    /* renamed from: q */
+    private void m15046q() {
+        int daysInMonth = m15041l();
+        if (this.f19003s.intValue() <= daysInMonth) {
+            return;
+        }
+        if (DayOverflow.Abort == this.f18993i) {
+            throw new RuntimeException("Day Overflow: Year:" + this.f19001q + " Month:" + this.f19002r + " has " + daysInMonth + " days, but day has value:" + this.f19003s + " To avoid these exceptions, please specify a different DayOverflow policy.");
+        } else if (DayOverflow.FirstDay == this.f18993i) {
+            this.f19003s = Integer.valueOf(1);
+            m15039j();
+        } else if (DayOverflow.LastDay == this.f18993i) {
+            this.f19003s = Integer.valueOf(daysInMonth);
+        } else if (DayOverflow.Spillover == this.f18993i) {
+            this.f19003s = Integer.valueOf(this.f19003s.intValue() - daysInMonth);
+            m15039j();
+        }
     }
-    this.v = Integer.valueOf(59);
-    o();
-  }
-  
-  private void q()
-  {
-    int i1 = l();
-    if (this.s.intValue() > i1)
-    {
-      if (DateTime.DayOverflow.Abort == this.i) {
-        throw new RuntimeException("Day Overflow: Year:" + this.q + " Month:" + this.r + " has " + i1 + " days, but day has value:" + this.s + " To avoid these exceptions, please specify a different DayOverflow policy.");
-      }
-      if (DateTime.DayOverflow.FirstDay != this.i) {
-        break label117;
-      }
-      this.s = Integer.valueOf(1);
-      j();
-    }
-    label117:
-    do
-    {
-      return;
-      if (DateTime.DayOverflow.LastDay == this.i)
-      {
-        this.s = Integer.valueOf(i1);
-        return;
-      }
-    } while (DateTime.DayOverflow.Spillover != this.i);
-    this.s = Integer.valueOf(this.s.intValue() - i1);
-    j();
-  }
-  
-  DateTime a(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, int paramInt6, int paramInt7)
-  {
-    return a(true, Integer.valueOf(paramInt1), Integer.valueOf(paramInt2), Integer.valueOf(paramInt3), Integer.valueOf(paramInt4), Integer.valueOf(paramInt5), Integer.valueOf(paramInt6), Integer.valueOf(paramInt7));
-  }
-  
-  DateTime b(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, int paramInt6, int paramInt7)
-  {
-    return a(false, Integer.valueOf(paramInt1), Integer.valueOf(paramInt2), Integer.valueOf(paramInt3), Integer.valueOf(paramInt4), Integer.valueOf(paramInt5), Integer.valueOf(paramInt6), Integer.valueOf(paramInt7));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/date/DateTimeInterval.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

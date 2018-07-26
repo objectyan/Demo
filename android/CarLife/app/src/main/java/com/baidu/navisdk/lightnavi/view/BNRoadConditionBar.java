@@ -6,169 +6,127 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class BNRoadConditionBar
-  extends View
-{
-  private int mDistance;
-  private Paint mPaint;
-  private ArrayList<RoadCondRect> mRoadCondRect;
-  private int[] mRoadCondTypeArray = null;
-  private int[] mRoadShapeArray = null;
-  private int mRouteConTypeNum;
-  private int mViewHeight;
-  private int mViewWidth;
-  private float mViewX;
-  private float mViewY;
-  
-  public BNRoadConditionBar(Context paramContext)
-  {
-    super(paramContext);
-    init();
-  }
-  
-  public BNRoadConditionBar(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    init();
-  }
-  
-  public BNRoadConditionBar(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    init();
-  }
-  
-  private void init()
-  {
-    this.mRoadCondRect = new ArrayList();
-    this.mPaint = new Paint();
-    this.mPaint.setStyle(Paint.Style.FILL);
-    this.mRouteConTypeNum = 0;
-    this.mDistance = 0;
-  }
-  
-  public int getColorByRoadCondType(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      return BNStyleManager.getColor(1711800734);
-    case 0: 
-      return BNStyleManager.getColor(1711800734);
-    case 1: 
-      return BNStyleManager.getColor(1711800733);
-    case 2: 
-      return BNStyleManager.getColor(1711800732);
-    case 3: 
-      return BNStyleManager.getColor(1711800731);
+public class BNRoadConditionBar extends View {
+    private int mDistance;
+    private Paint mPaint;
+    private ArrayList<RoadCondRect> mRoadCondRect;
+    private int[] mRoadCondTypeArray = null;
+    private int[] mRoadShapeArray = null;
+    private int mRouteConTypeNum;
+    private int mViewHeight;
+    private int mViewWidth;
+    private float mViewX;
+    private float mViewY;
+
+    public class RoadCondRect {
+        public float endX;
+        public float endY;
+        public float startX;
+        public float startY;
+        public int type;
     }
-    return BNStyleManager.getColor(1711800730);
-  }
-  
-  public void getRoadCondRectLocation(int paramInt1, int[] paramArrayOfInt1, int[] paramArrayOfInt2, int paramInt2)
-  {
-    if ((paramArrayOfInt1 == null) || (paramArrayOfInt2 == null)) {}
-    while (paramInt1 == 0) {
-      return;
+
+    public BNRoadConditionBar(Context context) {
+        super(context);
+        init();
     }
-    label27:
-    float f3;
-    float f4;
-    float f5;
-    int i;
-    label49:
-    RoadCondRect localRoadCondRect;
-    float f2;
-    if (this.mRoadCondRect != null)
-    {
-      this.mRoadCondRect.clear();
-      f3 = this.mViewY;
-      f4 = this.mViewY;
-      f5 = this.mViewHeight;
-      i = 0;
-      if (i < paramInt2)
-      {
-        localRoadCondRect = new RoadCondRect();
-        if (i != 0) {
-          break label167;
+
+    public BNRoadConditionBar(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public BNRoadConditionBar(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init() {
+        this.mRoadCondRect = new ArrayList();
+        this.mPaint = new Paint();
+        this.mPaint.setStyle(Style.FILL);
+        this.mRouteConTypeNum = 0;
+        this.mDistance = 0;
+    }
+
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        this.mViewX = 0.0f;
+        this.mViewY = 0.0f;
+        this.mViewWidth = getWidth();
+        this.mViewHeight = getHeight();
+        getRoadCondRectLocation(this.mDistance, this.mRoadShapeArray, this.mRoadCondTypeArray, this.mRouteConTypeNum);
+        if (this.mRoadCondRect != null) {
+            Iterator<RoadCondRect> iterator = this.mRoadCondRect.iterator();
+            while (iterator.hasNext()) {
+                RoadCondRect rect = (RoadCondRect) iterator.next();
+                this.mPaint.setColor(getColorByRoadCondType(rect.type));
+                canvas.drawRect(rect.startX, rect.startY, rect.endX, rect.endY, this.mPaint);
+            }
         }
-        f2 = this.mViewWidth * paramArrayOfInt1[i] / paramInt1;
-      }
     }
-    for (float f1 = this.mViewX;; f1 = ((RoadCondRect)this.mRoadCondRect.get(i - 1)).endX)
-    {
-      localRoadCondRect.startX = f1;
-      localRoadCondRect.startY = f3;
-      localRoadCondRect.endX = (f1 + f2);
-      localRoadCondRect.endY = (f4 + f5);
-      localRoadCondRect.type = paramArrayOfInt2[i];
-      this.mRoadCondRect.add(localRoadCondRect);
-      i += 1;
-      break label49;
-      break;
-      this.mRoadCondRect = new ArrayList();
-      break label27;
-      label167:
-      f2 = this.mViewWidth * (paramArrayOfInt1[i] - paramArrayOfInt1[(i - 1)]) / paramInt1;
+
+    public void setRouteConditionInfo(int distance, int num, int[] roadShapeIndexArray, int[] routeCondTypeArray) {
+        this.mRouteConTypeNum = num;
+        this.mDistance = distance;
+        this.mRoadShapeArray = new int[this.mRouteConTypeNum];
+        this.mRoadCondTypeArray = new int[this.mRouteConTypeNum];
+        for (int i = 0; i < this.mRouteConTypeNum; i++) {
+            this.mRoadShapeArray[i] = roadShapeIndexArray[i];
+            this.mRoadCondTypeArray[i] = routeCondTypeArray[i];
+        }
     }
-  }
-  
-  public void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    this.mViewX = 0.0F;
-    this.mViewY = 0.0F;
-    this.mViewWidth = getWidth();
-    this.mViewHeight = getHeight();
-    getRoadCondRectLocation(this.mDistance, this.mRoadShapeArray, this.mRoadCondTypeArray, this.mRouteConTypeNum);
-    if (this.mRoadCondRect == null) {}
-    for (;;)
-    {
-      return;
-      Iterator localIterator = this.mRoadCondRect.iterator();
-      while (localIterator.hasNext())
-      {
-        RoadCondRect localRoadCondRect = (RoadCondRect)localIterator.next();
-        int i = getColorByRoadCondType(localRoadCondRect.type);
-        this.mPaint.setColor(i);
-        paramCanvas.drawRect(localRoadCondRect.startX, localRoadCondRect.startY, localRoadCondRect.endX, localRoadCondRect.endY, this.mPaint);
-      }
+
+    public int getColorByRoadCondType(int type) {
+        switch (type) {
+            case 0:
+                return BNStyleManager.getColor(C4048R.color.nsdk_ipo_road_condition_invalid);
+            case 1:
+                return BNStyleManager.getColor(C4048R.color.nsdk_ipo_road_condition_good);
+            case 2:
+                return BNStyleManager.getColor(C4048R.color.nsdk_ipo_road_condition_bad);
+            case 3:
+                return BNStyleManager.getColor(C4048R.color.nsdk_ipo_road_condition_worse);
+            case 4:
+                return BNStyleManager.getColor(C4048R.color.nsdk_ipo_road_condition_worst);
+            default:
+                return BNStyleManager.getColor(C4048R.color.nsdk_ipo_road_condition_invalid);
+        }
     }
-  }
-  
-  public void setRouteConditionInfo(int paramInt1, int paramInt2, int[] paramArrayOfInt1, int[] paramArrayOfInt2)
-  {
-    this.mRouteConTypeNum = paramInt2;
-    this.mDistance = paramInt1;
-    this.mRoadShapeArray = new int[this.mRouteConTypeNum];
-    this.mRoadCondTypeArray = new int[this.mRouteConTypeNum];
-    paramInt1 = 0;
-    while (paramInt1 < this.mRouteConTypeNum)
-    {
-      this.mRoadShapeArray[paramInt1] = paramArrayOfInt1[paramInt1];
-      this.mRoadCondTypeArray[paramInt1] = paramArrayOfInt2[paramInt1];
-      paramInt1 += 1;
+
+    public void getRoadCondRectLocation(int distance, int[] roadShapeIndexArray, int[] routeCondTypeArray, int size) {
+        if (roadShapeIndexArray != null && routeCondTypeArray != null && distance != 0) {
+            if (this.mRoadCondRect != null) {
+                this.mRoadCondRect.clear();
+            } else {
+                this.mRoadCondRect = new ArrayList();
+            }
+            float startY = this.mViewY;
+            float endY = this.mViewY + ((float) this.mViewHeight);
+            for (int i = 0; i < size; i++) {
+                float width;
+                float startX;
+                RoadCondRect rect = new RoadCondRect();
+                if (i == 0) {
+                    width = (float) ((this.mViewWidth * roadShapeIndexArray[i]) / distance);
+                    startX = this.mViewX;
+                } else {
+                    width = (float) ((this.mViewWidth * (roadShapeIndexArray[i] - roadShapeIndexArray[i - 1])) / distance);
+                    startX = ((RoadCondRect) this.mRoadCondRect.get(i - 1)).endX;
+                }
+                float endX = startX + width;
+                rect.startX = startX;
+                rect.startY = startY;
+                rect.endX = endX;
+                rect.endY = endY;
+                rect.type = routeCondTypeArray[i];
+                this.mRoadCondRect.add(rect);
+            }
+        }
     }
-  }
-  
-  public class RoadCondRect
-  {
-    public float endX;
-    public float endY;
-    public float startX;
-    public float startY;
-    public int type;
-    
-    public RoadCondRect() {}
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/lightnavi/view/BNRoadConditionBar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,77 +1,56 @@
 package com.baidu.speech.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 
-final class PreferenceSetting
-{
-  private static final String FILE_NAME = "bdvrsetting";
-  private static final String FILE_NAME_MD5 = Util.toMd5("bdvrsetting".getBytes(), false);
-  private static final String VTLN_KEY = "vtln";
-  private static final int VTLN_LIMIT = 255;
-  private static final String VTLN_SECRET_KEY = "BDVRVtln*!Secret";
-  
-  public static boolean getBoolean(Context paramContext, String paramString, boolean paramBoolean)
-  {
-    return paramContext.getSharedPreferences(FILE_NAME_MD5, 0).getBoolean(paramString, paramBoolean);
-  }
-  
-  public static String getString(Context paramContext, String paramString1, String paramString2)
-  {
-    return paramContext.getSharedPreferences(FILE_NAME_MD5, 0).getString(paramString1, paramString2);
-  }
-  
-  public static int getVtlnWithCheckSum(Context paramContext)
-  {
-    int j = -1;
-    paramContext = getString(paramContext, "vtln", "");
-    int i = j;
-    if (paramContext.indexOf("||") != -1)
-    {
-      Object localObject = paramContext.split("\\|\\|");
-      i = j;
-      if (localObject.length >= 2)
-      {
-        paramContext = localObject[1];
-        localObject = localObject[0];
-        i = j;
-        if (Util.toMd5(((String)localObject + "BDVRVtln*!Secret").getBytes(), false).equals(paramContext)) {
-          i = Integer.parseInt((String)localObject);
+final class PreferenceSetting {
+    private static final String FILE_NAME = "bdvrsetting";
+    private static final String FILE_NAME_MD5 = Util.toMd5(FILE_NAME.getBytes(), false);
+    private static final String VTLN_KEY = "vtln";
+    private static final int VTLN_LIMIT = 255;
+    private static final String VTLN_SECRET_KEY = "BDVRVtln*!Secret";
+
+    private PreferenceSetting() {
+    }
+
+    public static boolean getBoolean(Context context, String str, boolean z) {
+        return context.getSharedPreferences(FILE_NAME_MD5, 0).getBoolean(str, z);
+    }
+
+    public static String getString(Context context, String str, String str2) {
+        return context.getSharedPreferences(FILE_NAME_MD5, 0).getString(str, str2);
+    }
+
+    public static int getVtlnWithCheckSum(Context context) {
+        String string = getString(context, VTLN_KEY, "");
+        if (string.indexOf("||") == -1) {
+            return -1;
         }
-      }
+        String[] split = string.split("\\|\\|");
+        if (split.length < 2) {
+            return -1;
+        }
+        Object obj = split[1];
+        string = split[0];
+        return Util.toMd5(new StringBuilder().append(string).append(VTLN_SECRET_KEY).toString().getBytes(), false).equals(obj) ? Integer.parseInt(string) : -1;
     }
-    return i;
-  }
-  
-  public static void removeString(Context paramContext, String paramString)
-  {
-    paramContext.getSharedPreferences(FILE_NAME_MD5, 0).edit().remove(paramString).commit();
-  }
-  
-  public static void setBoolean(Context paramContext, String paramString, boolean paramBoolean)
-  {
-    paramContext.getSharedPreferences(FILE_NAME_MD5, 0).edit().putBoolean(paramString, paramBoolean).commit();
-  }
-  
-  public static void setString(Context paramContext, String paramString1, String paramString2)
-  {
-    paramContext.getSharedPreferences(FILE_NAME_MD5, 0).edit().putString(paramString1, paramString2).commit();
-  }
-  
-  public static boolean setVtlnWithCheckSum(Context paramContext, int paramInt)
-  {
-    if ((paramInt < 0) || (paramInt > 255)) {
-      return false;
+
+    public static void removeString(Context context, String str) {
+        context.getSharedPreferences(FILE_NAME_MD5, 0).edit().remove(str).commit();
     }
-    String str = Util.toMd5((paramInt + "BDVRVtln*!Secret").getBytes(), false);
-    setString(paramContext, "vtln", paramInt + "||" + str);
-    return true;
-  }
+
+    public static void setBoolean(Context context, String str, boolean z) {
+        context.getSharedPreferences(FILE_NAME_MD5, 0).edit().putBoolean(str, z).commit();
+    }
+
+    public static void setString(Context context, String str, String str2) {
+        context.getSharedPreferences(FILE_NAME_MD5, 0).edit().putString(str, str2).commit();
+    }
+
+    public static boolean setVtlnWithCheckSum(Context context, int i) {
+        if (i < 0 || i > 255) {
+            return false;
+        }
+        setString(context, VTLN_KEY, i + "||" + Util.toMd5((i + VTLN_SECRET_KEY).getBytes(), false));
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/speech/utils/PreferenceSetting.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

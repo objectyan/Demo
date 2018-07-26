@@ -4,109 +4,86 @@ import com.baidu.navisdk.BNaviModuleManager;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.util.common.LogUtil;
 
-public class RGCarPreferSettingController
-{
-  private static final String TAG = RGCarPreferSettingController.class.getSimpleName();
-  private static RGCarPreferSettingController sInstance = null;
-  public static boolean sIsSupportNoHighway = true;
-  private static Object sObj = new Object();
-  public boolean mIsSelectPlate = false;
-  public int mLastRPPreferSetting = -1;
-  
-  public static RGCarPreferSettingController getInstance()
-  {
-    if (sInstance == null) {}
-    synchronized (sObj)
-    {
-      if (sInstance == null) {
-        sInstance = new RGCarPreferSettingController();
-      }
-      return sInstance;
+public class RGCarPreferSettingController {
+    private static final String TAG = RGCarPreferSettingController.class.getSimpleName();
+    private static RGCarPreferSettingController sInstance = null;
+    public static boolean sIsSupportNoHighway = true;
+    private static Object sObj = new Object();
+    public boolean mIsSelectPlate = false;
+    public int mLastRPPreferSetting = -1;
+
+    public static RGCarPreferSettingController getInstance() {
+        if (sInstance == null) {
+            synchronized (sObj) {
+                if (sInstance == null) {
+                    sInstance = new RGCarPreferSettingController();
+                }
+            }
+        }
+        return sInstance;
     }
-  }
-  
-  public int calcPreferenceValue(int paramInt1, int paramInt2, boolean paramBoolean)
-  {
-    if ((!paramBoolean) && ((paramInt1 & paramInt2) == 0)) {
-      return paramInt1;
+
+    public void reset() {
+        this.mIsSelectPlate = false;
+        this.mLastRPPreferSetting = -1;
     }
-    if (paramInt1 == 1)
-    {
-      paramInt1 = 0;
-      if (!paramBoolean) {
-        break label63;
-      }
+
+    public void setLastRPPreferSettingValue(int value) {
+        this.mLastRPPreferSetting = value;
     }
-    label63:
-    for (paramInt2 = paramInt1 | paramInt2;; paramInt2 = paramInt1 ^ paramInt2)
-    {
-      paramInt1 = paramInt2;
-      if (paramInt2 == 32) {
-        paramInt1 = 33;
-      }
-      paramInt2 = paramInt1;
-      if (paramInt1 == 0) {
-        paramInt2 = 1;
-      }
-      return paramInt2;
-      if (paramInt1 == 33)
-      {
-        paramInt1 = 32;
-        break;
-      }
-      break;
+
+    public boolean isRPPreferSettingValueChange(int RPPreferValue) {
+        if (this.mLastRPPreferSetting == -1 || this.mLastRPPreferSetting == RPPreferValue) {
+            return false;
+        }
+        return true;
     }
-  }
-  
-  public boolean isCarLimitOpen()
-  {
-    return isOpenPrefer(32);
-  }
-  
-  public boolean isOpenPrefer(int paramInt)
-  {
-    return (BNaviModuleManager.getLastPreferValue() & paramInt) != 0;
-  }
-  
-  public boolean isRPPreferSettingValueChange(int paramInt)
-  {
-    if (this.mLastRPPreferSetting == -1) {}
-    while (this.mLastRPPreferSetting == paramInt) {
-      return false;
+
+    public int calcPreferenceValue(int lastPreferValue, int changePrefer, boolean isPreferOpen) {
+        if (!isPreferOpen && (lastPreferValue & changePrefer) == 0) {
+            return lastPreferValue;
+        }
+        int value;
+        if (lastPreferValue == 1) {
+            value = 0;
+        } else if (lastPreferValue == 33) {
+            value = 32;
+        } else {
+            value = lastPreferValue;
+        }
+        if (isPreferOpen) {
+            value |= changePrefer;
+        } else {
+            value ^= changePrefer;
+        }
+        if (value == 32) {
+            value = 33;
+        }
+        if (value == 0) {
+            value = 1;
+        }
+        return value;
     }
-    return true;
-  }
-  
-  public void reset()
-  {
-    this.mIsSelectPlate = false;
-    this.mLastRPPreferSetting = -1;
-  }
-  
-  public void setCarLimitOpen(boolean paramBoolean)
-  {
-    BNaviModuleManager.resetPlateLimitCounter(paramBoolean);
-    updatePreferValue(32, paramBoolean);
-  }
-  
-  public void setLastRPPreferSettingValue(int paramInt)
-  {
-    this.mLastRPPreferSetting = paramInt;
-  }
-  
-  public void updatePreferValue(int paramInt, boolean paramBoolean)
-  {
-    int i = BNaviModuleManager.getLastPreferValue();
-    int j = calcPreferenceValue(i, paramInt, paramBoolean);
-    BNaviModuleManager.setLastPreferValue(j);
-    RGRouteSortController.getInstance().setPreferValue(j);
-    BNRoutePlaner.getInstance().setCalcPrference(j);
-    LogUtil.e(TAG, "updatePreferValue lastPreferValue = " + i + ", updatedPreferValue = " + j + ", changePrefer = " + paramInt + ", isPreferOpen = " + paramBoolean);
-  }
+
+    public void updatePreferValue(int changePrefer, boolean isPreferOpen) {
+        int lastPreferValue = BNaviModuleManager.getLastPreferValue();
+        int updatedPreferValue = calcPreferenceValue(lastPreferValue, changePrefer, isPreferOpen);
+        BNaviModuleManager.setLastPreferValue(updatedPreferValue);
+        RGRouteSortController.getInstance().setPreferValue(updatedPreferValue);
+        BNRoutePlaner.getInstance().setCalcPrference(updatedPreferValue);
+        LogUtil.m15791e(TAG, "updatePreferValue lastPreferValue = " + lastPreferValue + ", updatedPreferValue = " + updatedPreferValue + ", changePrefer = " + changePrefer + ", isPreferOpen = " + isPreferOpen);
+    }
+
+    public boolean isOpenPrefer(int preferValue) {
+        return (BNaviModuleManager.getLastPreferValue() & preferValue) != 0;
+    }
+
+    public boolean isCarLimitOpen() {
+        return isOpenPrefer(32);
+    }
+
+    public void setCarLimitOpen(boolean open) {
+        BNaviModuleManager.resetPlateLimitCounter(open);
+        updatePreferValue(32, open);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/control/RGCarPreferSettingController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

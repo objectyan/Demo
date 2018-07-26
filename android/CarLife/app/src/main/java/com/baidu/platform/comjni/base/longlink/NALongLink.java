@@ -3,136 +3,112 @@ package com.baidu.platform.comjni.base.longlink;
 import com.baidu.platform.comapi.longlink.ELongLinkStatus;
 import com.baidu.platform.comapi.longlink.LongLinkDataCallback;
 import com.baidu.platform.comapi.longlink.LongLinkFileData;
-import com.baidu.platform.comapi.util.f;
-import com.baidu.platform.comjni.a;
+import com.baidu.platform.comapi.util.C2911f;
+import com.baidu.platform.comjni.C2912a;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NALongLink
-  extends a
-{
-  private static Map<Integer, LinkedList<Object>> a = new ConcurrentHashMap();
-  
-  public static int create()
-  {
-    return nativeCreate();
-  }
-  
-  public static boolean init(int paramInt, String paramString1, String paramString2)
-  {
-    return nativeInit(paramInt, paramString1, paramString2);
-  }
-  
-  private static native int nativeCreate();
-  
-  private static native boolean nativeInit(int paramInt, String paramString1, String paramString2);
-  
-  private static native boolean nativeRegister(int paramInt1, int paramInt2);
-  
-  private static native int nativeRelease(int paramInt);
-  
-  private static native int nativeSendData(int paramInt1, int paramInt2, int paramInt3, byte[] paramArrayOfByte);
-  
-  private static native int nativeSendFileData(int paramInt1, int paramInt2, int paramInt3, String paramString, ArrayList<LongLinkFileData> paramArrayList);
-  
-  private static native boolean nativeStart(int paramInt);
-  
-  private static native boolean nativeStop(int paramInt);
-  
-  private static native boolean nativeUnRegister(int paramInt1, int paramInt2);
-  
-  public static boolean onJNILongLinkDataCallback(int paramInt1, int paramInt2, int paramInt3, byte[] paramArrayOfByte, boolean paramBoolean)
-  {
-    f.e("JNILongLink", "onJNILongLinkDataCallback:" + paramInt1 + " status:" + paramInt2 + " reqId:" + paramInt3 + " isPush:" + paramBoolean);
-    byte[] arrayOfByte = paramArrayOfByte;
-    if ((paramArrayOfByte == null) || (paramArrayOfByte.length <= 0)) {
-      arrayOfByte = new byte[0];
+public class NALongLink extends C2912a {
+    /* renamed from: a */
+    private static Map<Integer, LinkedList<Object>> f19997a = new ConcurrentHashMap();
+
+    private static native int nativeCreate();
+
+    private static native boolean nativeInit(int i, String str, String str2);
+
+    private static native boolean nativeRegister(int i, int i2);
+
+    private static native int nativeRelease(int i);
+
+    private static native int nativeSendData(int i, int i2, int i3, byte[] bArr);
+
+    private static native int nativeSendFileData(int i, int i2, int i3, String str, ArrayList<LongLinkFileData> arrayList);
+
+    private static native boolean nativeStart(int i);
+
+    private static native boolean nativeStop(int i);
+
+    private static native boolean nativeUnRegister(int i, int i2);
+
+    public static int create() {
+        return nativeCreate();
     }
-    paramArrayOfByte = (LinkedList)a.get(Integer.valueOf(paramInt1));
-    if (paramArrayOfByte != null)
-    {
-      paramArrayOfByte = new LinkedList(paramArrayOfByte).iterator();
-      while (paramArrayOfByte.hasNext())
-      {
-        Object localObject = paramArrayOfByte.next();
-        if ((localObject instanceof LongLinkDataCallback))
-        {
-          ELongLinkStatus localELongLinkStatus = ELongLinkStatus.values()[paramInt2];
-          localELongLinkStatus.setRequestId(paramInt3);
-          ((LongLinkDataCallback)localObject).onReceiveData(localELongLinkStatus, paramInt3, arrayOfByte, paramBoolean);
+
+    public static int release(int addr) {
+        return nativeRelease(addr);
+    }
+
+    public static boolean init(int addr, String domain, String params) {
+        return nativeInit(addr, domain, params);
+    }
+
+    public static boolean register(int addr, int moduleId, Object callback) {
+        LinkedList<Object> list = (LinkedList) f19997a.get(Integer.valueOf(moduleId));
+        if (list == null) {
+            list = new LinkedList();
+            list.add(callback);
+            f19997a.put(Integer.valueOf(moduleId), list);
+            return nativeRegister(addr, moduleId);
         }
-      }
+        if (!list.contains(callback)) {
+            list.add(callback);
+            f19997a.put(Integer.valueOf(moduleId), list);
+        }
+        return true;
     }
-    return true;
-  }
-  
-  public static boolean register(int paramInt1, int paramInt2, Object paramObject)
-  {
-    LinkedList localLinkedList = (LinkedList)a.get(Integer.valueOf(paramInt2));
-    if (localLinkedList == null)
-    {
-      localLinkedList = new LinkedList();
-      localLinkedList.add(paramObject);
-      a.put(Integer.valueOf(paramInt2), localLinkedList);
-      return nativeRegister(paramInt1, paramInt2);
+
+    public static boolean unRegister(int addr, int moduleId, Object callback) {
+        LinkedList<Object> list = (LinkedList) f19997a.get(Integer.valueOf(moduleId));
+        if (list == null) {
+            return false;
+        }
+        if (callback != null) {
+            list.remove(callback);
+        }
+        if (!list.isEmpty()) {
+            return true;
+        }
+        f19997a.remove(Integer.valueOf(moduleId));
+        return nativeUnRegister(addr, moduleId);
     }
-    if (!localLinkedList.contains(paramObject))
-    {
-      localLinkedList.add(paramObject);
-      a.put(Integer.valueOf(paramInt2), localLinkedList);
+
+    public static int sendData(int addr, int moduleId, int reqId, byte[] dataBuffer) {
+        return nativeSendData(addr, moduleId, reqId, dataBuffer);
     }
-    return true;
-  }
-  
-  public static int release(int paramInt)
-  {
-    return nativeRelease(paramInt);
-  }
-  
-  public static int sendData(int paramInt1, int paramInt2, int paramInt3, byte[] paramArrayOfByte)
-  {
-    return nativeSendData(paramInt1, paramInt2, paramInt3, paramArrayOfByte);
-  }
-  
-  public static int sendFileData(int paramInt1, int paramInt2, int paramInt3, String paramString, ArrayList<LongLinkFileData> paramArrayList)
-  {
-    return nativeSendFileData(paramInt1, paramInt2, paramInt3, paramString, paramArrayList);
-  }
-  
-  public static boolean start(int paramInt)
-  {
-    return nativeStart(paramInt);
-  }
-  
-  public static boolean stop(int paramInt)
-  {
-    return nativeStop(paramInt);
-  }
-  
-  public static boolean unRegister(int paramInt1, int paramInt2, Object paramObject)
-  {
-    LinkedList localLinkedList = (LinkedList)a.get(Integer.valueOf(paramInt2));
-    if (localLinkedList != null)
-    {
-      if (paramObject != null) {
-        localLinkedList.remove(paramObject);
-      }
-      if (localLinkedList.isEmpty())
-      {
-        a.remove(Integer.valueOf(paramInt2));
-        return nativeUnRegister(paramInt1, paramInt2);
-      }
-      return true;
+
+    public static int sendFileData(int addr, int moduleId, int reqId, String fileNameParams, ArrayList<LongLinkFileData> fileData) {
+        return nativeSendFileData(addr, moduleId, reqId, fileNameParams, fileData);
     }
-    return false;
-  }
+
+    public static boolean start(int addr) {
+        return nativeStart(addr);
+    }
+
+    public static boolean stop(int addr) {
+        return nativeStop(addr);
+    }
+
+    public static boolean onJNILongLinkDataCallback(int moduleId, int status, int reqId, byte[] dataBuffer, boolean isPush) {
+        C2911f.e("JNILongLink", "onJNILongLinkDataCallback:" + moduleId + " status:" + status + " reqId:" + reqId + " isPush:" + isPush);
+        byte[] dataParam = dataBuffer;
+        if (dataBuffer == null || dataBuffer.length <= 0) {
+            dataParam = new byte[0];
+        }
+        LinkedList<Object> callbacks = (LinkedList) f19997a.get(Integer.valueOf(moduleId));
+        if (callbacks != null) {
+            Iterator it = new LinkedList(callbacks).iterator();
+            while (it.hasNext()) {
+                Object o = it.next();
+                if (o instanceof LongLinkDataCallback) {
+                    ELongLinkStatus retStatus = ELongLinkStatus.values()[status];
+                    retStatus.setRequestId(reqId);
+                    ((LongLinkDataCallback) o).onReceiveData(retStatus, reqId, dataParam, isPush);
+                }
+            }
+        }
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comjni/base/longlink/NALongLink.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

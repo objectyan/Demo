@@ -9,98 +9,94 @@ import android.os.Handler;
 import android.os.Message;
 import java.util.List;
 
-public class VCompass
-{
-  private static final int MSG_INIT_COMPASS = 1;
-  private static final int MSG_UNINIT_COMPASS = 2;
-  private static final Handler mHandler = new Handler()
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      VCompass localVCompass = (VCompass)paramAnonymousMessage.obj;
-      if (localVCompass == null) {}
-      do
-      {
-        return;
-        switch (paramAnonymousMessage.what)
-        {
-        default: 
-          return;
-        case 1: 
-          paramAnonymousMessage = VIContext.getContext();
-          if (VCompass.a(localVCompass) == null) {
-            VCompass.a(localVCompass, (SensorManager)paramAnonymousMessage.getSystemService("sensor"));
-          }
-          paramAnonymousMessage = VCompass.a(localVCompass).getSensorList(3);
+public class VCompass {
+    private static final int MSG_INIT_COMPASS = 1;
+    private static final int MSG_UNINIT_COMPASS = 2;
+    private static final Handler mHandler = new C52341();
+    private SensorEventListener mEventListener = new C52352(this);
+    private int mJniData = 0;
+    private SensorManager mSensorManager = null;
+    private float myBarrier = 2.0f;
+    private float oldV;
+
+    /* renamed from: com.baidu.vi.VCompass$1 */
+    static class C52341 extends Handler {
+        C52341() {
         }
-      } while (paramAnonymousMessage.size() <= 0);
-      paramAnonymousMessage = (Sensor)paramAnonymousMessage.get(0);
-      VCompass.a(localVCompass).registerListener(VCompass.b(localVCompass), paramAnonymousMessage, 1);
-      return;
-      VCompass.a(localVCompass).unregisterListener(VCompass.b(localVCompass));
+
+        public void handleMessage(Message msg) {
+            VCompass compass = msg.obj;
+            if (compass != null) {
+                switch (msg.what) {
+                    case 1:
+                        Context context = VIContext.getContext();
+                        if (compass.mSensorManager == null) {
+                            compass.mSensorManager = (SensorManager) context.getSystemService("sensor");
+                        }
+                        List<Sensor> sensors = compass.mSensorManager.getSensorList(3);
+                        if (sensors.size() > 0) {
+                            compass.mSensorManager.registerListener(compass.mEventListener, (Sensor) sensors.get(0), 1);
+                            return;
+                        }
+                        return;
+                    case 2:
+                        compass.mSensorManager.unregisterListener(compass.mEventListener);
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
     }
-  };
-  private SensorEventListener mEventListener = new SensorEventListener()
-  {
-    public void onAccuracyChanged(Sensor paramAnonymousSensor, int paramAnonymousInt) {}
-    
-    public void onSensorChanged(SensorEvent paramAnonymousSensorEvent)
-    {
-      switch (paramAnonymousSensorEvent.sensor.getType())
-      {
-      default: 
-        return;
-      }
-      int i = (int)VCompass.a(VCompass.this, paramAnonymousSensorEvent.values[0]);
-      VCompass.a(VCompass.this, i);
+
+    /* renamed from: com.baidu.vi.VCompass$2 */
+    class C52352 implements SensorEventListener {
+        /* renamed from: a */
+        final /* synthetic */ VCompass f21732a;
+
+        C52352(VCompass this$0) {
+            this.f21732a = this$0;
+        }
+
+        public void onSensorChanged(SensorEvent event) {
+            switch (event.sensor.getType()) {
+                case 3:
+                    this.f21732a.updateCompass((int) this.f21732a.execute(event.values[0]));
+                    return;
+                default:
+                    return;
+            }
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
     }
-  };
-  private int mJniData = 0;
-  private SensorManager mSensorManager = null;
-  private float myBarrier = 2.0F;
-  private float oldV;
-  
-  private float checkAndCalc(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    float f2 = paramFloat1 - paramFloat2;
-    float f1;
-    if ((f2 > 180.0F) || (f2 < -180.0F)) {
-      f1 = paramFloat2;
+
+    private native void updateCompass(int i);
+
+    private float execute(float v) {
+        this.oldV = checkAndCalc(this.oldV, v, this.myBarrier);
+        return this.oldV;
     }
-    do
-    {
-      return f1;
-      if (f2 < -paramFloat3) {
-        break;
-      }
-      f1 = paramFloat1;
-    } while (paramFloat3 >= f2);
-    return (paramFloat1 + paramFloat2) / 2.0F;
-  }
-  
-  private float execute(float paramFloat)
-  {
-    this.oldV = checkAndCalc(this.oldV, paramFloat, this.myBarrier);
-    return this.oldV;
-  }
-  
-  private void init()
-  {
-    mHandler.removeMessages(1);
-    mHandler.sendMessage(mHandler.obtainMessage(1, this));
-  }
-  
-  private void unInit()
-  {
-    mHandler.removeMessages(2);
-    mHandler.sendMessage(mHandler.obtainMessage(2, this));
-  }
-  
-  private native void updateCompass(int paramInt);
+
+    private float checkAndCalc(float oldV, float newV, float barrier) {
+        float delta = oldV - newV;
+        if (delta > 180.0f || delta < -180.0f) {
+            return newV;
+        }
+        if (delta < (-barrier) || barrier < delta) {
+            return (oldV + newV) / 2.0f;
+        }
+        return oldV;
+    }
+
+    private void init() {
+        mHandler.removeMessages(1);
+        mHandler.sendMessage(mHandler.obtainMessage(1, this));
+    }
+
+    private void unInit() {
+        mHandler.removeMessages(2);
+        mHandler.sendMessage(mHandler.obtainMessage(2, this));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/vi/VCompass.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -4,53 +4,40 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 
-public class PullToRefreshRecyclerViewUtil
-{
-  public int findFirstCompletelyVisibleItemPosition(RecyclerView.LayoutManager paramLayoutManager)
-  {
-    if (paramLayoutManager != null)
-    {
-      if ((paramLayoutManager instanceof LinearLayoutManager)) {
-        return ((LinearLayoutManager)paramLayoutManager).findFirstCompletelyVisibleItemPosition();
-      }
-      if ((paramLayoutManager instanceof GridLayoutManager)) {
-        return ((GridLayoutManager)paramLayoutManager).findFirstCompletelyVisibleItemPosition();
-      }
+public class PullToRefreshRecyclerViewUtil {
+    public int findLastVisibleItemPosition(LayoutManager layoutManager) {
+        if (layoutManager != null) {
+            if (layoutManager instanceof LinearLayoutManager) {
+                return ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            }
+            if (layoutManager instanceof GridLayoutManager) {
+                return ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
+            }
+        }
+        return -1;
     }
-    return -1;
-  }
-  
-  public int findFirstVisibleItemPosition(RecyclerView.LayoutManager paramLayoutManager)
-  {
-    if (paramLayoutManager != null)
-    {
-      if ((paramLayoutManager instanceof LinearLayoutManager)) {
-        return ((LinearLayoutManager)paramLayoutManager).findFirstVisibleItemPosition();
-      }
-      if ((paramLayoutManager instanceof GridLayoutManager)) {
-        return ((GridLayoutManager)paramLayoutManager).findFirstVisibleItemPosition();
-      }
+
+    public int findFirstCompletelyVisibleItemPosition(LayoutManager layoutManager) {
+        if (layoutManager != null) {
+            if (layoutManager instanceof LinearLayoutManager) {
+                return ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
+            }
+            if (layoutManager instanceof GridLayoutManager) {
+                return ((GridLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition();
+            }
+        }
+        return -1;
     }
-    return -1;
-  }
-  
-  public int findLastVisibleItemPosition(RecyclerView.LayoutManager paramLayoutManager)
-  {
-    if (paramLayoutManager != null)
-    {
-      if ((paramLayoutManager instanceof LinearLayoutManager)) {
-        return ((LinearLayoutManager)paramLayoutManager).findLastVisibleItemPosition();
-      }
-      if ((paramLayoutManager instanceof GridLayoutManager)) {
-        return ((GridLayoutManager)paramLayoutManager).findLastVisibleItemPosition();
-      }
+
+    public int findFirstVisibleItemPosition(LayoutManager layoutManager) {
+        if (layoutManager != null) {
+            if (layoutManager instanceof LinearLayoutManager) {
+                return ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            }
+            if (layoutManager instanceof GridLayoutManager) {
+                return ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            }
+        }
+        return -1;
     }
-    return -1;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/widget/ptrrecyclerview/util/PullToRefreshRecyclerViewUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

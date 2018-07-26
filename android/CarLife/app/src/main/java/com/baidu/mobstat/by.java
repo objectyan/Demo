@@ -14,233 +14,196 @@ import java.util.Timer;
 import java.util.zip.GZIPOutputStream;
 import org.json.JSONObject;
 
-class by
-{
-  private static by a = new by();
-  private boolean b = false;
-  private int c = 0;
-  private int d = 1;
-  private SendStrategyEnum e = SendStrategyEnum.APP_START;
-  private Timer f;
-  private Handler g;
-  
-  private by()
-  {
-    HandlerThread localHandlerThread = new HandlerThread("LogSenderThread");
-    localHandlerThread.start();
-    this.g = new Handler(localHandlerThread.getLooper());
-  }
-  
-  public static by a()
-  {
-    return a;
-  }
-  
-  private static void b(Context paramContext, String paramString1, String paramString2)
-  {
-    JSONObject localJSONObject = null;
-    try
-    {
-      paramString2 = new JSONObject(paramString2);
-      if (paramString2 == null) {
-        return;
-      }
-      try
-      {
-        localJSONObject = (JSONObject)paramString2.get("trace");
-        localJSONObject.put("failed_cnt", localJSONObject.getLong("failed_cnt") + 1L);
-        cu.a(paramContext, paramString1, paramString2.toString(), false);
-        return;
-      }
-      catch (Exception localException)
-      {
-        for (;;) {}
-      }
+class by {
+    /* renamed from: a */
+    private static by f19539a = new by();
+    /* renamed from: b */
+    private boolean f19540b = false;
+    /* renamed from: c */
+    private int f19541c = 0;
+    /* renamed from: d */
+    private int f19542d = 1;
+    /* renamed from: e */
+    private SendStrategyEnum f19543e = SendStrategyEnum.APP_START;
+    /* renamed from: f */
+    private Timer f19544f;
+    /* renamed from: g */
+    private Handler f19545g;
+
+    /* renamed from: a */
+    public static by m15524a() {
+        return f19539a;
     }
-    catch (Exception paramString2)
-    {
-      for (;;)
-      {
-        paramString2 = localException;
-      }
+
+    private by() {
+        HandlerThread handlerThread = new HandlerThread("LogSenderThread");
+        handlerThread.start();
+        this.f19545g = new Handler(handlerThread.getLooper());
     }
-  }
-  
-  private boolean b(Context paramContext, String paramString)
-  {
-    boolean bool = false;
-    if ((this.b) && (!de.n(paramContext))) {
-      return false;
+
+    /* renamed from: a */
+    public void m15540a(int i) {
+        if (i >= 0 && i <= 30) {
+            this.f19541c = i;
+        }
     }
-    try
-    {
-      c(paramContext, Config.LOG_SEND_URL, paramString);
-      bool = true;
+
+    /* renamed from: a */
+    public void m15542a(Context context, SendStrategyEnum sendStrategyEnum, int i, boolean z) {
+        if (!sendStrategyEnum.equals(SendStrategyEnum.SET_TIME_INTERVAL)) {
+            this.f19543e = sendStrategyEnum;
+            bj.m15464a().m15466a(context, this.f19543e.ordinal());
+            if (sendStrategyEnum.equals(SendStrategyEnum.ONCE_A_DAY)) {
+                bj.m15464a().m15470b(context, 24);
+            }
+        } else if (i <= 0 || i > 24) {
+            db.m15663c("timeInterval is invalid, new strategy does not work");
+        } else {
+            this.f19542d = i;
+            this.f19543e = SendStrategyEnum.SET_TIME_INTERVAL;
+            bj.m15464a().m15466a(context, this.f19543e.ordinal());
+            bj.m15464a().m15470b(context, this.f19542d);
+        }
+        this.f19540b = z;
+        bj.m15464a().m15468a(context, this.f19540b);
+        db.m15657a("sstype is:" + this.f19543e.name() + " And timeInterval is:" + this.f19542d + " And mOnlyWifi:" + this.f19540b);
     }
-    catch (Exception paramContext)
-    {
-      for (;;)
-      {
-        db.c(paramContext);
-      }
+
+    /* renamed from: a */
+    public void m15541a(Context context) {
+        if (context != null) {
+            context = context.getApplicationContext();
+        }
+        if (context != null) {
+            this.f19545g.post(new bz(this, context));
+        }
     }
-    db.a("send log data over. result = " + bool + "; data = " + paramString);
-    return bool;
-  }
-  
-  private String c(Context paramContext, String paramString1, String paramString2)
-  {
-    if (!paramString1.startsWith("https://")) {
-      return e(paramContext, paramString1, paramString2);
+
+    /* renamed from: b */
+    public void m15544b(Context context) {
+        Context applicationContext = context.getApplicationContext();
+        long j = (long) (this.f19542d * 3600000);
+        this.f19544f = new Timer();
+        this.f19544f.schedule(new cb(this, applicationContext), j, j);
     }
-    return d(paramContext, paramString1, paramString2);
-  }
-  
-  private void c(Context paramContext)
-  {
-    if ((this.b) && (!de.n(paramContext))) {
-      return;
+
+    /* renamed from: c */
+    private void m15536c(Context context) {
+        if (!this.f19540b || de.m15703n(context)) {
+            this.f19545g.post(new cc(this, context));
+        }
     }
-    this.g.post(new cc(this, paramContext));
-  }
-  
-  private String d(Context paramContext, String paramString1, String paramString2)
-  {
-    paramString1 = cu.d(paramContext, paramString1);
-    paramString1.setDoOutput(true);
-    paramString1.setInstanceFollowRedirects(false);
-    paramString1.setUseCaches(false);
-    paramString1.setRequestProperty("Content-Type", "gzip");
-    paramString1.connect();
-    db.a("AdUtil.httpPost connected");
-    StringBuilder localStringBuilder;
-    try
-    {
-      paramContext = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(paramString1.getOutputStream())));
-      paramContext.write(paramString2);
-      paramContext.flush();
-      paramContext.close();
-      paramString2 = new BufferedReader(new InputStreamReader(paramString1.getInputStream()));
-      localStringBuilder = new StringBuilder();
-      for (paramContext = paramString2.readLine(); paramContext != null; paramContext = paramString2.readLine()) {
-        localStringBuilder.append(paramContext);
-      }
-      int i = paramString1.getContentLength();
-      if ((paramString1.getResponseCode() != 200) || (i != 0)) {
-        throw new IOException("http code = " + paramString1.getResponseCode() + "; contentResponse = " + localStringBuilder);
-      }
+
+    /* renamed from: b */
+    private static void m15532b(Context context, String str, String str2) {
+        JSONObject jSONObject = null;
+        try {
+            jSONObject = new JSONObject(str2);
+        } catch (Exception e) {
+        }
+        if (jSONObject != null) {
+            try {
+                JSONObject jSONObject2 = (JSONObject) jSONObject.get(Config.TRACE_PART);
+                jSONObject2.put(Config.TRACE_FAILED_CNT, jSONObject2.getLong(Config.TRACE_FAILED_CNT) + 1);
+            } catch (Exception e2) {
+            }
+            cu.m15630a(context, str, jSONObject.toString(), false);
+        }
     }
-    finally
-    {
-      paramString1.disconnect();
+
+    /* renamed from: a */
+    public void m15543a(Context context, String str) {
+        cu.m15630a(context, Config.PREFIX_SEND_DATA + System.currentTimeMillis(), str, false);
     }
-    paramContext = localStringBuilder.toString();
-    paramString1.disconnect();
-    return paramContext;
-  }
-  
-  private String e(Context paramContext, String paramString1, String paramString2)
-  {
-    db.a("httpPostEncrypt");
-    paramString1 = cu.d(paramContext, paramString1);
-    paramString1.setDoOutput(true);
-    paramString1.setInstanceFollowRedirects(false);
-    paramString1.setUseCaches(false);
-    paramString1.setRequestProperty("Content-Type", "gzip");
-    paramContext = cs.a();
-    Object localObject = cs.b();
-    paramString1.setRequestProperty("key", dc.a(paramContext));
-    paramString1.setRequestProperty("iv", dc.a((byte[])localObject));
-    paramContext = cs.a(paramContext, (byte[])localObject, paramString2.getBytes("utf-8"));
-    paramString1.connect();
-    db.a("AdUtil.httpPost connected");
-    try
-    {
-      paramString2 = new GZIPOutputStream(paramString1.getOutputStream());
-      paramString2.write(paramContext);
-      paramString2.flush();
-      paramString2.close();
-      paramString2 = new BufferedReader(new InputStreamReader(paramString1.getInputStream()));
-      localObject = new StringBuilder();
-      for (paramContext = paramString2.readLine(); paramContext != null; paramContext = paramString2.readLine()) {
-        ((StringBuilder)localObject).append(paramContext);
-      }
-      int i = paramString1.getContentLength();
-      if ((paramString1.getResponseCode() != 200) || (i != 0)) {
-        throw new IOException("http code = " + paramString1.getResponseCode() + "; contentResponse = " + localObject);
-      }
+
+    /* renamed from: b */
+    private boolean m15533b(Context context, String str) {
+        boolean z = false;
+        if (!this.f19540b || de.m15703n(context)) {
+            try {
+                m15535c(context, Config.LOG_SEND_URL, str);
+                z = true;
+            } catch (Throwable e) {
+                db.m15664c(e);
+            }
+            db.m15657a("send log data over. result = " + z + "; data = " + str);
+        }
+        return z;
     }
-    finally
-    {
-      paramString1.disconnect();
+
+    /* renamed from: c */
+    private String m15535c(Context context, String str, String str2) {
+        if (str.startsWith("https://")) {
+            return m15538d(context, str, str2);
+        }
+        return m15539e(context, str, str2);
     }
-    paramContext = ((StringBuilder)localObject).toString();
-    paramString1.disconnect();
-    return paramContext;
-  }
-  
-  public void a(int paramInt)
-  {
-    if ((paramInt >= 0) && (paramInt <= 30)) {
-      this.c = paramInt;
+
+    /* renamed from: d */
+    private String m15538d(Context context, String str, String str2) {
+        HttpURLConnection d = cu.m15637d(context, str);
+        d.setDoOutput(true);
+        d.setInstanceFollowRedirects(false);
+        d.setUseCaches(false);
+        d.setRequestProperty("Content-Type", "gzip");
+        d.connect();
+        db.m15657a("AdUtil.httpPost connected");
+        try {
+            String readLine;
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new GZIPOutputStream(d.getOutputStream())));
+            bufferedWriter.write(str2);
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(d.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+            for (readLine = bufferedReader.readLine(); readLine != null; readLine = bufferedReader.readLine()) {
+                stringBuilder.append(readLine);
+            }
+            int contentLength = d.getContentLength();
+            if (d.getResponseCode() == 200 && contentLength == 0) {
+                readLine = stringBuilder.toString();
+                return readLine;
+            }
+            throw new IOException("http code = " + d.getResponseCode() + "; contentResponse = " + stringBuilder);
+        } finally {
+            d.disconnect();
+        }
     }
-  }
-  
-  public void a(Context paramContext)
-  {
-    Context localContext = paramContext;
-    if (paramContext != null) {
-      localContext = paramContext.getApplicationContext();
+
+    /* renamed from: e */
+    private String m15539e(Context context, String str, String str2) {
+        db.m15657a("httpPostEncrypt");
+        HttpURLConnection d = cu.m15637d(context, str);
+        d.setDoOutput(true);
+        d.setInstanceFollowRedirects(false);
+        d.setUseCaches(false);
+        d.setRequestProperty("Content-Type", "gzip");
+        byte[] a = cs.m15618a();
+        byte[] b = cs.m15621b();
+        d.setRequestProperty("key", dc.m15666a(a));
+        d.setRequestProperty("iv", dc.m15666a(b));
+        a = cs.m15619a(a, b, str2.getBytes("utf-8"));
+        d.connect();
+        db.m15657a("AdUtil.httpPost connected");
+        try {
+            String readLine;
+            OutputStream gZIPOutputStream = new GZIPOutputStream(d.getOutputStream());
+            gZIPOutputStream.write(a);
+            gZIPOutputStream.flush();
+            gZIPOutputStream.close();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(d.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+            for (readLine = bufferedReader.readLine(); readLine != null; readLine = bufferedReader.readLine()) {
+                stringBuilder.append(readLine);
+            }
+            int contentLength = d.getContentLength();
+            if (d.getResponseCode() == 200 && contentLength == 0) {
+                readLine = stringBuilder.toString();
+                return readLine;
+            }
+            throw new IOException("http code = " + d.getResponseCode() + "; contentResponse = " + stringBuilder);
+        } finally {
+            d.disconnect();
+        }
     }
-    if (localContext == null) {
-      return;
-    }
-    this.g.post(new bz(this, localContext));
-  }
-  
-  public void a(Context paramContext, SendStrategyEnum paramSendStrategyEnum, int paramInt, boolean paramBoolean)
-  {
-    if (paramSendStrategyEnum.equals(SendStrategyEnum.SET_TIME_INTERVAL)) {
-      if ((paramInt > 0) && (paramInt <= 24))
-      {
-        this.d = paramInt;
-        this.e = SendStrategyEnum.SET_TIME_INTERVAL;
-        bj.a().a(paramContext, this.e.ordinal());
-        bj.a().b(paramContext, this.d);
-      }
-    }
-    for (;;)
-    {
-      this.b = paramBoolean;
-      bj.a().a(paramContext, this.b);
-      db.a("sstype is:" + this.e.name() + " And timeInterval is:" + this.d + " And mOnlyWifi:" + this.b);
-      return;
-      db.c("timeInterval is invalid, new strategy does not work");
-      continue;
-      this.e = paramSendStrategyEnum;
-      bj.a().a(paramContext, this.e.ordinal());
-      if (paramSendStrategyEnum.equals(SendStrategyEnum.ONCE_A_DAY)) {
-        bj.a().b(paramContext, 24);
-      }
-    }
-  }
-  
-  public void a(Context paramContext, String paramString)
-  {
-    cu.a(paramContext, "__send_data_" + System.currentTimeMillis(), paramString, false);
-  }
-  
-  public void b(Context paramContext)
-  {
-    paramContext = paramContext.getApplicationContext();
-    long l = this.d * 3600000;
-    this.f = new Timer();
-    this.f.schedule(new cb(this, paramContext), l, l);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/by.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

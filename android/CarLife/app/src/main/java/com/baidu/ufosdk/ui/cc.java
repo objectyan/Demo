@@ -4,16 +4,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-final class cc
-{
-  public TextView a;
-  public ImageView b;
-  public ImageView c;
-  public RelativeLayout d;
+/* compiled from: FeedbackInputActivity */
+final class cc {
+    /* renamed from: a */
+    public TextView f21599a;
+    /* renamed from: b */
+    public ImageView f21600b;
+    /* renamed from: c */
+    public ImageView f21601c;
+    /* renamed from: d */
+    public RelativeLayout f21602d;
+
+    cc() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/cc.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

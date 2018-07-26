@@ -6,9 +6,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import com.baidu.mapframework.common.beans.map.MapAnimationFinishEvent;
 import com.baidu.mapframework.common.beans.map.NetworkStatusEvent;
+import com.baidu.mapframework.common.mapview.BaiduMapItemizedOverlay.OnTapListener;
 import com.baidu.mapframework.util.acd.Stateful;
+import com.baidu.platform.comapi.C2907c;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
-import com.baidu.platform.comapi.c;
 import com.baidu.platform.comapi.map.EngineMsgListener;
 import com.baidu.platform.comapi.map.IndoorMapInfo;
 import com.baidu.platform.comapi.map.ItemizedOverlay;
@@ -21,203 +22,183 @@ import com.baidu.platform.comapi.map.OnLongPressListener;
 import com.baidu.platform.comapi.map.Overlay;
 import com.baidu.platform.comapi.util.BMEventBus;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public abstract class BaseMapViewListener
-  implements BaiduMapItemizedOverlay.OnTapListener, Stateful, EngineMsgListener, MapViewListener, OnLongPressListener
-{
-  protected boolean isCreated;
-  protected boolean isDestroyed;
-  protected Context mContext = c.f();
-  protected MapController mMapController;
-  protected MapGLSurfaceView mMapView;
-  
-  protected BaseMapViewListener() {}
-  
-  protected BaseMapViewListener(Context paramContext)
-  {
-    this();
-  }
-  
-  public void onClickStreetArrow(MapObj paramMapObj) {}
-  
-  public void onClickStreetSurface(MapObj paramMapObj) {}
-  
-  public void onClickedBackground(int paramInt1, int paramInt2) {}
-  
-  public void onClickedItem(int paramInt1, int paramInt2, GeoPoint paramGeoPoint, int paramInt3)
-  {
-    if (this.mMapView == null) {
-      this.mMapView = MapViewFactory.getInstance().getMapView();
+public abstract class BaseMapViewListener implements OnTapListener, Stateful, EngineMsgListener, MapViewListener, OnLongPressListener {
+    protected boolean isCreated;
+    protected boolean isDestroyed;
+    protected Context mContext;
+    protected MapController mMapController;
+    protected MapGLSurfaceView mMapView;
+
+    protected abstract void onCompassClick(MapObj mapObj);
+
+    protected abstract void onFavouritePoiClick(MapObj mapObj);
+
+    protected abstract void onLocationPointClick(MapObj mapObj);
+
+    protected abstract void onPoiMarkerClick(MapObj mapObj);
+
+    protected BaseMapViewListener() {
+        this.mContext = C2907c.f();
     }
-    Object localObject = new ArrayList(this.mMapView.getOverlays());
-    if ((localObject == null) || (((List)localObject).isEmpty())) {}
-    for (;;)
-    {
-      return;
-      localObject = ((List)localObject).iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        Overlay localOverlay = (Overlay)((Iterator)localObject).next();
-        if ((localOverlay.mType == 27) && (paramGeoPoint != null) && ((localOverlay instanceof ItemizedOverlay)) && (!((ItemizedOverlay)localOverlay).onTap(paramGeoPoint, this.mMapView)) && (paramInt1 != -1) && (paramInt2 != -1) && (paramInt3 == localOverlay.mLayerID)) {
-          ((ItemizedOverlay)localOverlay).onTap(paramInt1, paramInt2, paramGeoPoint);
+
+    protected BaseMapViewListener(Context context) {
+        this();
+        this.mContext = context;
+    }
+
+    public final void onClickedMapObj(List<MapObj> mapObjs) {
+        if (mapObjs != null && mapObjs.size() != 0) {
+            MapObj obj = (MapObj) mapObjs.get(0);
+            Log.d("BaseMapViewListener", "onClickedMapObj " + mapObjs.toString());
+            if (obj.nType != 17 || !TextUtils.isEmpty(obj.strText)) {
+                switch (obj.nType) {
+                    case 6:
+                        onFavouritePoiClick(obj);
+                        return;
+                    case 18:
+                        onLocationPointClick(obj);
+                        return;
+                    case 19:
+                        onCompassClick(obj);
+                        return;
+                    default:
+                        onPoiMarkerClick(obj);
+                        return;
+                }
+            }
         }
-      }
     }
-  }
-  
-  public void onClickedItem(int paramInt1, GeoPoint paramGeoPoint, int paramInt2)
-  {
-    if (this.mMapView == null) {
-      this.mMapView = MapViewFactory.getInstance().getMapView();
+
+    public void onClickedPoiObj(List<MapObj> list) {
     }
-    Object localObject = new ArrayList(this.mMapView.getOverlays());
-    if ((localObject == null) || (((List)localObject).isEmpty())) {}
-    for (;;)
-    {
-      return;
-      localObject = ((List)localObject).iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        Overlay localOverlay = (Overlay)((Iterator)localObject).next();
-        if ((localOverlay.mType == 27) && (paramGeoPoint != null) && ((localOverlay instanceof ItemizedOverlay)) && (!((ItemizedOverlay)localOverlay).onTap(paramGeoPoint, this.mMapView)) && (paramInt1 != -1) && (paramInt2 == localOverlay.mLayerID)) {
-          ((ItemizedOverlay)localOverlay).onTap(paramInt1);
+
+    public void onClickedRouteObj(List<MapObj> list) {
+    }
+
+    public void onClickedItsMapObj(List<ItsMapObj> list) {
+    }
+
+    public void onMapAnimationFinish() {
+        BMEventBus.getInstance().post(new MapAnimationFinishEvent());
+    }
+
+    public void onClickedItem(int index, GeoPoint geoPoint, int layerID) {
+        if (this.mMapView == null) {
+            this.mMapView = MapViewFactory.getInstance().getMapView();
         }
-      }
+        List<Overlay> overlays = new ArrayList(this.mMapView.getOverlays());
+        if (overlays != null && !overlays.isEmpty()) {
+            for (Overlay overlay : overlays) {
+                if (overlay.mType == 27 && geoPoint != null && (overlay instanceof ItemizedOverlay) && !((ItemizedOverlay) overlay).onTap(geoPoint, this.mMapView) && index != -1 && layerID == overlay.mLayerID) {
+                    ((ItemizedOverlay) overlay).onTap(index);
+                }
+            }
+        }
     }
-  }
-  
-  public void onClickedItsMapObj(List<ItsMapObj> paramList) {}
-  
-  public final void onClickedMapObj(List<MapObj> paramList)
-  {
-    if ((paramList == null) || (paramList.size() == 0)) {}
-    MapObj localMapObj;
-    do
-    {
-      return;
-      localMapObj = (MapObj)paramList.get(0);
-      Log.d("BaseMapViewListener", "onClickedMapObj " + paramList.toString());
-    } while ((localMapObj.nType == 17) && (TextUtils.isEmpty(localMapObj.strText)));
-    switch (localMapObj.nType)
-    {
-    default: 
-      onPoiMarkerClick(localMapObj);
-      return;
-    case 18: 
-      onLocationPointClick(localMapObj);
-      return;
-    case 19: 
-      onCompassClick(localMapObj);
-      return;
+
+    public void onClickedItem(int index, int clickIndex, GeoPoint geoPoint, int layerID) {
+        if (this.mMapView == null) {
+            this.mMapView = MapViewFactory.getInstance().getMapView();
+        }
+        List<Overlay> overlays = new ArrayList(this.mMapView.getOverlays());
+        if (overlays != null && !overlays.isEmpty()) {
+            for (Overlay overlay : overlays) {
+                if (!(overlay.mType != 27 || geoPoint == null || !(overlay instanceof ItemizedOverlay) || ((ItemizedOverlay) overlay).onTap(geoPoint, this.mMapView) || index == -1 || clickIndex == -1 || layerID != overlay.mLayerID)) {
+                    ((ItemizedOverlay) overlay).onTap(index, clickIndex, geoPoint);
+                }
+            }
+        }
     }
-    onFavouritePoiClick(localMapObj);
-  }
-  
-  public void onClickedOPPoiEventMapObj(MapObj paramMapObj) {}
-  
-  public void onClickedParticleEventMapObj(List<MapObj> paramList) {}
-  
-  public void onClickedPoiObj(List<MapObj> paramList) {}
-  
-  public void onClickedPopup(int paramInt) {}
-  
-  public void onClickedRouteLabelObj(List<MapObj> paramList) {}
-  
-  public void onClickedRouteObj(List<MapObj> paramList) {}
-  
-  public void onClickedStreetIndoorPoi(MapObj paramMapObj) {}
-  
-  public void onClickedStreetPopup(String paramString) {}
-  
-  public void onClickedTrafficUgcEventMapObj(MapObj paramMapObj, boolean paramBoolean) {}
-  
-  protected abstract void onCompassClick(MapObj paramMapObj);
-  
-  public void onEnterIndoorMapMode(IndoorMapInfo paramIndoorMapInfo) {}
-  
-  public void onExitIndoorMapMode() {}
-  
-  protected abstract void onFavouritePoiClick(MapObj paramMapObj);
-  
-  protected abstract void onLocationPointClick(MapObj paramMapObj);
-  
-  public void onLongLinkConnect()
-  {
-    BMEventBus.getInstance().post(new NetworkStatusEvent());
-  }
-  
-  public void onLongLinkDisConnect()
-  {
-    BMEventBus.getInstance().post(new NetworkStatusEvent());
-  }
-  
-  public void onLongPress(MotionEvent paramMotionEvent) {}
-  
-  public void onMapAnimationFinish()
-  {
-    BMEventBus.getInstance().post(new MapAnimationFinishEvent());
-  }
-  
-  protected abstract void onPoiMarkerClick(MapObj paramMapObj);
-  
-  public void onStateCreate()
-  {
-    if (!this.isCreated)
-    {
-      this.isCreated = true;
-      this.isDestroyed = false;
-      this.mMapView = MapViewFactory.getInstance().getMapView();
-      if ((this.mMapController == null) && (this.mMapView != null)) {
-        this.mMapController = this.mMapView.getController();
-      }
-      if (this.mMapController != null) {}
+
+    public void onClickedPopup(int i) {
     }
-    else
-    {
-      return;
+
+    public void onClickedStreetPopup(String s) {
     }
-    this.mMapController.setMapViewListener(this);
-    this.mMapController.setEngineMsgListener(this);
-    this.mMapController.setDoubleClickZoom(true);
-    this.mMapController.setMapClickEnable(true);
-    this.mMapView.setOnLongPressListener(this);
-  }
-  
-  public void onStateDestroy()
-  {
-    if ((this.isCreated) && (!this.isDestroyed))
-    {
-      this.isCreated = false;
-      this.isDestroyed = true;
-      if ((this.mMapController != null) && (this.mMapController.getMapViewListener() == this)) {
-        this.mMapController.setMapViewListener(null);
-      }
-      if (this.mMapView.getOnLongPressListener() == this) {
-        this.mMapView.setOnLongPressListener(null);
-      }
+
+    public void onClickedBackground(int i, int i2) {
     }
-  }
-  
-  public boolean onTap(int paramInt)
-  {
-    return false;
-  }
-  
-  public boolean onTap(int paramInt1, int paramInt2, GeoPoint paramGeoPoint)
-  {
-    return false;
-  }
-  
-  public boolean onTap(GeoPoint paramGeoPoint, MapGLSurfaceView paramMapGLSurfaceView)
-  {
-    return false;
-  }
+
+    public void onClickedStreetIndoorPoi(MapObj mapObj) {
+    }
+
+    public void onClickStreetArrow(MapObj mapObj) {
+    }
+
+    public void onClickStreetSurface(MapObj mapObj) {
+    }
+
+    public void onLongPress(MotionEvent motionEvent) {
+    }
+
+    public boolean onTap(int index) {
+        return false;
+    }
+
+    public boolean onTap(GeoPoint p, MapGLSurfaceView mapView) {
+        return false;
+    }
+
+    public boolean onTap(int index, int clickIndex, GeoPoint geoPoint) {
+        return false;
+    }
+
+    public void onStateCreate() {
+        if (!this.isCreated) {
+            this.isCreated = true;
+            this.isDestroyed = false;
+            this.mMapView = MapViewFactory.getInstance().getMapView();
+            if (this.mMapController == null && this.mMapView != null) {
+                this.mMapController = this.mMapView.getController();
+            }
+            if (this.mMapController != null) {
+                this.mMapController.setMapViewListener(this);
+                this.mMapController.setEngineMsgListener(this);
+                this.mMapController.setDoubleClickZoom(true);
+                this.mMapController.setMapClickEnable(true);
+                this.mMapView.setOnLongPressListener(this);
+            }
+        }
+    }
+
+    public void onStateDestroy() {
+        if (this.isCreated && !this.isDestroyed) {
+            this.isCreated = false;
+            this.isDestroyed = true;
+            if (this.mMapController != null && this.mMapController.getMapViewListener() == this) {
+                this.mMapController.setMapViewListener(null);
+            }
+            if (this.mMapView.getOnLongPressListener() == this) {
+                this.mMapView.setOnLongPressListener(null);
+            }
+        }
+    }
+
+    public void onClickedRouteLabelObj(List<MapObj> list) {
+    }
+
+    public void onEnterIndoorMapMode(IndoorMapInfo indoorMapInfo) {
+    }
+
+    public void onExitIndoorMapMode() {
+    }
+
+    public void onClickedOPPoiEventMapObj(MapObj mapObj) {
+    }
+
+    public void onLongLinkConnect() {
+        BMEventBus.getInstance().post(new NetworkStatusEvent());
+    }
+
+    public void onLongLinkDisConnect() {
+        BMEventBus.getInstance().post(new NetworkStatusEvent());
+    }
+
+    public void onClickedParticleEventMapObj(List<MapObj> list) {
+    }
+
+    public void onClickedTrafficUgcEventMapObj(MapObj mapObj, boolean bchecked) {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/common/mapview/BaseMapViewListener.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,25 +1,20 @@
 package com.baidu.ufosdk.ui;
 
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class al
-  implements Runnable
-{
-  al(aj paramaj) {}
-  
-  public final void run()
-  {
-    try
-    {
-      a.b(aj.a(this.a), FeedbackInputActivity.g(aj.a(this.a)));
-      return;
+/* compiled from: FeedbackInputActivity */
+final class al implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ aj f21549a;
+
+    al(aj ajVar) {
+        this.f21549a = ajVar;
     }
-    catch (Exception localException) {}
-  }
+
+    public final void run() {
+        try {
+            C5180a.m17573b(this.f21549a.f21546a, this.f21549a.f21546a.f21469M);
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/al.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,64 +3,48 @@ package com.baidu.platform.comapi.search.convert;
 import com.baidu.platform.comapi.basestruct.Point;
 import com.baidu.platform.comapi.location.CoordinateUtil;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class PBConvertUtil
-{
-  public static Point decryptPoint(String paramString)
-  {
-    return CoordinateUtil.geoStringToPoint(paramString);
-  }
-  
-  public static Point decryptPointFromArray(List<? extends Number> paramList)
-  {
-    if ((paramList != null) && (paramList.size() >= 2)) {
-      return new Point(((Number)paramList.get(0)).doubleValue(), ((Number)paramList.get(1)).doubleValue());
+public class PBConvertUtil {
+    public static boolean stringToBool(String str) {
+        return str != null && str.equals("1");
     }
-    return new Point();
-  }
-  
-  public static List<Integer> encodePoint(Point paramPoint)
-  {
-    ArrayList localArrayList = new ArrayList();
-    if (paramPoint != null)
-    {
-      localArrayList.add(Integer.valueOf(paramPoint.getIntX()));
-      localArrayList.add(Integer.valueOf(paramPoint.getIntY()));
-      return localArrayList;
+
+    public static boolean intToBool(int i) {
+        return i == 1;
     }
-    localArrayList.add(Integer.valueOf(0));
-    localArrayList.add(Integer.valueOf(0));
-    return localArrayList;
-  }
-  
-  public static boolean intToBool(int paramInt)
-  {
-    return paramInt == 1;
-  }
-  
-  public static boolean stringToBool(String paramString)
-  {
-    return (paramString != null) && (paramString.equals("1"));
-  }
-  
-  public static int[] toIntArray(List<Integer> paramList)
-  {
-    int[] arrayOfInt = new int[paramList.size()];
-    int i = 0;
-    paramList = paramList.iterator();
-    while (paramList.hasNext())
-    {
-      arrayOfInt[i] = ((Integer)paramList.next()).intValue();
-      i += 1;
+
+    public static List<Integer> encodePoint(Point point) {
+        ArrayList<Integer> array = new ArrayList();
+        if (point != null) {
+            array.add(Integer.valueOf(point.getIntX()));
+            array.add(Integer.valueOf(point.getIntY()));
+        } else {
+            array.add(Integer.valueOf(0));
+            array.add(Integer.valueOf(0));
+        }
+        return array;
     }
-    return arrayOfInt;
-  }
+
+    public static Point decryptPointFromArray(List<? extends Number> list) {
+        if (list == null || list.size() < 2) {
+            return new Point();
+        }
+        return new Point(((Number) list.get(0)).doubleValue(), ((Number) list.get(1)).doubleValue());
+    }
+
+    public static Point decryptPoint(String geo) {
+        return CoordinateUtil.geoStringToPoint(geo);
+    }
+
+    public static int[] toIntArray(List<Integer> list) {
+        int[] ret = new int[list.size()];
+        int i = 0;
+        for (Integer e : list) {
+            int i2 = i + 1;
+            ret[i] = e.intValue();
+            i = i2;
+        }
+        return ret;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/search/convert/PBConvertUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

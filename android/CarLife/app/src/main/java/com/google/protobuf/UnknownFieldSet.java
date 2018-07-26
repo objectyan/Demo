@@ -6,811 +6,637 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
-public final class UnknownFieldSet
-  implements MessageLite
-{
-  private static final UnknownFieldSet defaultInstance = new UnknownFieldSet(Collections.emptyMap());
-  private Map<Integer, Field> fields;
-  
-  private UnknownFieldSet() {}
-  
-  private UnknownFieldSet(Map<Integer, Field> paramMap)
-  {
-    this.fields = paramMap;
-  }
-  
-  public static UnknownFieldSet getDefaultInstance()
-  {
-    return defaultInstance;
-  }
-  
-  public static Builder newBuilder()
-  {
-    return Builder.access$000();
-  }
-  
-  public static Builder newBuilder(UnknownFieldSet paramUnknownFieldSet)
-  {
-    return newBuilder().mergeFrom(paramUnknownFieldSet);
-  }
-  
-  public static UnknownFieldSet parseFrom(ByteString paramByteString)
-    throws InvalidProtocolBufferException
-  {
-    return newBuilder().mergeFrom(paramByteString).build();
-  }
-  
-  public static UnknownFieldSet parseFrom(CodedInputStream paramCodedInputStream)
-    throws IOException
-  {
-    return newBuilder().mergeFrom(paramCodedInputStream).build();
-  }
-  
-  public static UnknownFieldSet parseFrom(InputStream paramInputStream)
-    throws IOException
-  {
-    return newBuilder().mergeFrom(paramInputStream).build();
-  }
-  
-  public static UnknownFieldSet parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferException
-  {
-    return newBuilder().mergeFrom(paramArrayOfByte).build();
-  }
-  
-  public Map<Integer, Field> asMap()
-  {
-    return this.fields;
-  }
-  
-  public boolean equals(Object paramObject)
-  {
-    if (this == paramObject) {}
-    while (((paramObject instanceof UnknownFieldSet)) && (this.fields.equals(((UnknownFieldSet)paramObject).fields))) {
-      return true;
-    }
-    return false;
-  }
-  
-  public UnknownFieldSet getDefaultInstanceForType()
-  {
-    return defaultInstance;
-  }
-  
-  public Field getField(int paramInt)
-  {
-    Field localField2 = (Field)this.fields.get(Integer.valueOf(paramInt));
-    Field localField1 = localField2;
-    if (localField2 == null) {
-      localField1 = Field.getDefaultInstance();
-    }
-    return localField1;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      i += ((Field)localEntry.getValue()).getSerializedSize(((Integer)localEntry.getKey()).intValue());
-    }
-    return i;
-  }
-  
-  public int getSerializedSizeAsMessageSet()
-  {
-    int i = 0;
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      i += ((Field)localEntry.getValue()).getSerializedSizeAsMessageSetExtension(((Integer)localEntry.getKey()).intValue());
-    }
-    return i;
-  }
-  
-  public boolean hasField(int paramInt)
-  {
-    return this.fields.containsKey(Integer.valueOf(paramInt));
-  }
-  
-  public int hashCode()
-  {
-    return this.fields.hashCode();
-  }
-  
-  public boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Builder newBuilderForType()
-  {
-    return newBuilder();
-  }
-  
-  public Builder toBuilder()
-  {
-    return newBuilder().mergeFrom(this);
-  }
-  
-  public byte[] toByteArray()
-  {
-    try
-    {
-      byte[] arrayOfByte = new byte[getSerializedSize()];
-      CodedOutputStream localCodedOutputStream = CodedOutputStream.newInstance(arrayOfByte);
-      writeTo(localCodedOutputStream);
-      localCodedOutputStream.checkNoSpaceLeft();
-      return arrayOfByte;
-    }
-    catch (IOException localIOException)
-    {
-      throw new RuntimeException("Serializing to a byte array threw an IOException (should never happen).", localIOException);
-    }
-  }
-  
-  public ByteString toByteString()
-  {
-    try
-    {
-      Object localObject = ByteString.newCodedBuilder(getSerializedSize());
-      writeTo(((ByteString.CodedBuilder)localObject).getCodedOutput());
-      localObject = ((ByteString.CodedBuilder)localObject).build();
-      return (ByteString)localObject;
-    }
-    catch (IOException localIOException)
-    {
-      throw new RuntimeException("Serializing to a ByteString threw an IOException (should never happen).", localIOException);
-    }
-  }
-  
-  public String toString()
-  {
-    return TextFormat.printToString(this);
-  }
-  
-  public void writeAsMessageSetTo(CodedOutputStream paramCodedOutputStream)
-    throws IOException
-  {
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      ((Field)localEntry.getValue()).writeAsMessageSetExtensionTo(((Integer)localEntry.getKey()).intValue(), paramCodedOutputStream);
-    }
-  }
-  
-  public void writeDelimitedTo(OutputStream paramOutputStream)
-    throws IOException
-  {
-    paramOutputStream = CodedOutputStream.newInstance(paramOutputStream);
-    paramOutputStream.writeRawVarint32(getSerializedSize());
-    writeTo(paramOutputStream);
-    paramOutputStream.flush();
-  }
-  
-  public void writeTo(CodedOutputStream paramCodedOutputStream)
-    throws IOException
-  {
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      ((Field)localEntry.getValue()).writeTo(((Integer)localEntry.getKey()).intValue(), paramCodedOutputStream);
-    }
-  }
-  
-  public void writeTo(OutputStream paramOutputStream)
-    throws IOException
-  {
-    paramOutputStream = CodedOutputStream.newInstance(paramOutputStream);
-    writeTo(paramOutputStream);
-    paramOutputStream.flush();
-  }
-  
-  public static final class Builder
-    implements MessageLite.Builder
-  {
-    private Map<Integer, UnknownFieldSet.Field> fields;
-    private UnknownFieldSet.Field.Builder lastField;
-    private int lastFieldNumber;
-    
-    private static Builder create()
-    {
-      Builder localBuilder = new Builder();
-      localBuilder.reinitialize();
-      return localBuilder;
-    }
-    
-    private UnknownFieldSet.Field.Builder getFieldBuilder(int paramInt)
-    {
-      if (this.lastField != null)
-      {
-        if (paramInt == this.lastFieldNumber) {
-          return this.lastField;
+public final class UnknownFieldSet implements MessageLite {
+    private static final UnknownFieldSet defaultInstance = new UnknownFieldSet(Collections.emptyMap());
+    private Map<Integer, Field> fields;
+
+    public static final class Builder implements com.google.protobuf.MessageLite.Builder {
+        private Map<Integer, Field> fields;
+        private Builder lastField;
+        private int lastFieldNumber;
+
+        private Builder() {
         }
-        addField(this.lastFieldNumber, this.lastField.build());
-      }
-      if (paramInt == 0) {
-        return null;
-      }
-      UnknownFieldSet.Field localField = (UnknownFieldSet.Field)this.fields.get(Integer.valueOf(paramInt));
-      this.lastFieldNumber = paramInt;
-      this.lastField = UnknownFieldSet.Field.newBuilder();
-      if (localField != null) {
-        this.lastField.mergeFrom(localField);
-      }
-      return this.lastField;
+
+        private static Builder create() {
+            Builder builder = new Builder();
+            builder.reinitialize();
+            return builder;
+        }
+
+        private Builder getFieldBuilder(int number) {
+            if (this.lastField != null) {
+                if (number == this.lastFieldNumber) {
+                    return this.lastField;
+                }
+                addField(this.lastFieldNumber, this.lastField.build());
+            }
+            if (number == 0) {
+                return null;
+            }
+            Field existing = (Field) this.fields.get(Integer.valueOf(number));
+            this.lastFieldNumber = number;
+            this.lastField = Field.newBuilder();
+            if (existing != null) {
+                this.lastField.mergeFrom(existing);
+            }
+            return this.lastField;
+        }
+
+        public UnknownFieldSet build() {
+            UnknownFieldSet result;
+            getFieldBuilder(0);
+            if (this.fields.isEmpty()) {
+                result = UnknownFieldSet.getDefaultInstance();
+            } else {
+                result = new UnknownFieldSet(Collections.unmodifiableMap(this.fields));
+            }
+            this.fields = null;
+            return result;
+        }
+
+        public UnknownFieldSet buildPartial() {
+            return build();
+        }
+
+        public Builder clone() {
+            getFieldBuilder(0);
+            return UnknownFieldSet.newBuilder().mergeFrom(new UnknownFieldSet(this.fields));
+        }
+
+        public UnknownFieldSet getDefaultInstanceForType() {
+            return UnknownFieldSet.getDefaultInstance();
+        }
+
+        private void reinitialize() {
+            this.fields = Collections.emptyMap();
+            this.lastFieldNumber = 0;
+            this.lastField = null;
+        }
+
+        public Builder clear() {
+            reinitialize();
+            return this;
+        }
+
+        public Builder mergeFrom(UnknownFieldSet other) {
+            if (other != UnknownFieldSet.getDefaultInstance()) {
+                for (Entry<Integer, Field> entry : other.fields.entrySet()) {
+                    mergeField(((Integer) entry.getKey()).intValue(), (Field) entry.getValue());
+                }
+            }
+            return this;
+        }
+
+        public Builder mergeField(int number, Field field) {
+            if (number == 0) {
+                throw new IllegalArgumentException("Zero is not a valid field number.");
+            }
+            if (hasField(number)) {
+                getFieldBuilder(number).mergeFrom(field);
+            } else {
+                addField(number, field);
+            }
+            return this;
+        }
+
+        public Builder mergeVarintField(int number, int value) {
+            if (number == 0) {
+                throw new IllegalArgumentException("Zero is not a valid field number.");
+            }
+            getFieldBuilder(number).addVarint((long) value);
+            return this;
+        }
+
+        public boolean hasField(int number) {
+            if (number != 0) {
+                return number == this.lastFieldNumber || this.fields.containsKey(Integer.valueOf(number));
+            } else {
+                throw new IllegalArgumentException("Zero is not a valid field number.");
+            }
+        }
+
+        public Builder addField(int number, Field field) {
+            if (number == 0) {
+                throw new IllegalArgumentException("Zero is not a valid field number.");
+            }
+            if (this.lastField != null && this.lastFieldNumber == number) {
+                this.lastField = null;
+                this.lastFieldNumber = 0;
+            }
+            if (this.fields.isEmpty()) {
+                this.fields = new TreeMap();
+            }
+            this.fields.put(Integer.valueOf(number), field);
+            return this;
+        }
+
+        public Map<Integer, Field> asMap() {
+            getFieldBuilder(0);
+            return Collections.unmodifiableMap(this.fields);
+        }
+
+        public Builder mergeFrom(CodedInputStream input) throws IOException {
+            int tag;
+            do {
+                tag = input.readTag();
+                if (tag == 0) {
+                    break;
+                }
+            } while (mergeFieldFrom(tag, input));
+            return this;
+        }
+
+        public boolean mergeFieldFrom(int tag, CodedInputStream input) throws IOException {
+            int number = WireFormat.getTagFieldNumber(tag);
+            switch (WireFormat.getTagWireType(tag)) {
+                case 0:
+                    getFieldBuilder(number).addVarint(input.readInt64());
+                    return true;
+                case 1:
+                    getFieldBuilder(number).addFixed64(input.readFixed64());
+                    return true;
+                case 2:
+                    getFieldBuilder(number).addLengthDelimited(input.readBytes());
+                    return true;
+                case 3:
+                    Builder subBuilder = UnknownFieldSet.newBuilder();
+                    input.readGroup(number, subBuilder, ExtensionRegistry.getEmptyRegistry());
+                    getFieldBuilder(number).addGroup(subBuilder.build());
+                    return true;
+                case 4:
+                    return false;
+                case 5:
+                    getFieldBuilder(number).addFixed32(input.readFixed32());
+                    return true;
+                default:
+                    throw InvalidProtocolBufferException.invalidWireType();
+            }
+        }
+
+        public Builder mergeFrom(ByteString data) throws InvalidProtocolBufferException {
+            try {
+                CodedInputStream input = data.newCodedInput();
+                mergeFrom(input);
+                input.checkLastTagWas(0);
+                return this;
+            } catch (InvalidProtocolBufferException e) {
+                throw e;
+            } catch (IOException e2) {
+                throw new RuntimeException("Reading from a ByteString threw an IOException (should never happen).", e2);
+            }
+        }
+
+        public Builder mergeFrom(byte[] data) throws InvalidProtocolBufferException {
+            try {
+                CodedInputStream input = CodedInputStream.newInstance(data);
+                mergeFrom(input);
+                input.checkLastTagWas(0);
+                return this;
+            } catch (InvalidProtocolBufferException e) {
+                throw e;
+            } catch (IOException e2) {
+                throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).", e2);
+            }
+        }
+
+        public Builder mergeFrom(InputStream input) throws IOException {
+            CodedInputStream codedInput = CodedInputStream.newInstance(input);
+            mergeFrom(codedInput);
+            codedInput.checkLastTagWas(0);
+            return this;
+        }
+
+        public Builder mergeDelimitedFrom(InputStream input) throws IOException {
+            return mergeFrom(new LimitedInputStream(input, CodedInputStream.readRawVarint32(input)), null);
+        }
+
+        public Builder mergeDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return mergeFrom(input);
+        }
+
+        public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return mergeFrom(input);
+        }
+
+        public Builder mergeFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return mergeFrom(data);
+        }
+
+        public Builder mergeFrom(byte[] data, int off, int len) throws InvalidProtocolBufferException {
+            try {
+                CodedInputStream input = CodedInputStream.newInstance(data, off, len);
+                mergeFrom(input);
+                input.checkLastTagWas(0);
+                return this;
+            } catch (InvalidProtocolBufferException e) {
+                throw e;
+            } catch (IOException e2) {
+                throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).", e2);
+            }
+        }
+
+        public Builder mergeFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return mergeFrom(data);
+        }
+
+        public Builder mergeFrom(byte[] data, int off, int len, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return mergeFrom(data, off, len);
+        }
+
+        public Builder mergeFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return mergeFrom(input);
+        }
+
+        public boolean isInitialized() {
+            return true;
+        }
     }
-    
-    private void reinitialize()
-    {
-      this.fields = Collections.emptyMap();
-      this.lastFieldNumber = 0;
-      this.lastField = null;
+
+    public static final class Field {
+        private static final Field fieldDefaultInstance = newBuilder().build();
+        private List<Integer> fixed32;
+        private List<Long> fixed64;
+        private List<UnknownFieldSet> group;
+        private List<ByteString> lengthDelimited;
+        private List<Long> varint;
+
+        public static final class Builder {
+            private Field result;
+
+            private Builder() {
+            }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new Field();
+                return builder;
+            }
+
+            public Field build() {
+                if (this.result.varint == null) {
+                    this.result.varint = Collections.emptyList();
+                } else {
+                    this.result.varint = Collections.unmodifiableList(this.result.varint);
+                }
+                if (this.result.fixed32 == null) {
+                    this.result.fixed32 = Collections.emptyList();
+                } else {
+                    this.result.fixed32 = Collections.unmodifiableList(this.result.fixed32);
+                }
+                if (this.result.fixed64 == null) {
+                    this.result.fixed64 = Collections.emptyList();
+                } else {
+                    this.result.fixed64 = Collections.unmodifiableList(this.result.fixed64);
+                }
+                if (this.result.lengthDelimited == null) {
+                    this.result.lengthDelimited = Collections.emptyList();
+                } else {
+                    this.result.lengthDelimited = Collections.unmodifiableList(this.result.lengthDelimited);
+                }
+                if (this.result.group == null) {
+                    this.result.group = Collections.emptyList();
+                } else {
+                    this.result.group = Collections.unmodifiableList(this.result.group);
+                }
+                Field returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder clear() {
+                this.result = new Field();
+                return this;
+            }
+
+            public Builder mergeFrom(Field other) {
+                if (!other.varint.isEmpty()) {
+                    if (this.result.varint == null) {
+                        this.result.varint = new ArrayList();
+                    }
+                    this.result.varint.addAll(other.varint);
+                }
+                if (!other.fixed32.isEmpty()) {
+                    if (this.result.fixed32 == null) {
+                        this.result.fixed32 = new ArrayList();
+                    }
+                    this.result.fixed32.addAll(other.fixed32);
+                }
+                if (!other.fixed64.isEmpty()) {
+                    if (this.result.fixed64 == null) {
+                        this.result.fixed64 = new ArrayList();
+                    }
+                    this.result.fixed64.addAll(other.fixed64);
+                }
+                if (!other.lengthDelimited.isEmpty()) {
+                    if (this.result.lengthDelimited == null) {
+                        this.result.lengthDelimited = new ArrayList();
+                    }
+                    this.result.lengthDelimited.addAll(other.lengthDelimited);
+                }
+                if (!other.group.isEmpty()) {
+                    if (this.result.group == null) {
+                        this.result.group = new ArrayList();
+                    }
+                    this.result.group.addAll(other.group);
+                }
+                return this;
+            }
+
+            public Builder addVarint(long value) {
+                if (this.result.varint == null) {
+                    this.result.varint = new ArrayList();
+                }
+                this.result.varint.add(Long.valueOf(value));
+                return this;
+            }
+
+            public Builder addFixed32(int value) {
+                if (this.result.fixed32 == null) {
+                    this.result.fixed32 = new ArrayList();
+                }
+                this.result.fixed32.add(Integer.valueOf(value));
+                return this;
+            }
+
+            public Builder addFixed64(long value) {
+                if (this.result.fixed64 == null) {
+                    this.result.fixed64 = new ArrayList();
+                }
+                this.result.fixed64.add(Long.valueOf(value));
+                return this;
+            }
+
+            public Builder addLengthDelimited(ByteString value) {
+                if (this.result.lengthDelimited == null) {
+                    this.result.lengthDelimited = new ArrayList();
+                }
+                this.result.lengthDelimited.add(value);
+                return this;
+            }
+
+            public Builder addGroup(UnknownFieldSet value) {
+                if (this.result.group == null) {
+                    this.result.group = new ArrayList();
+                }
+                this.result.group.add(value);
+                return this;
+            }
+        }
+
+        private Field() {
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public static Builder newBuilder(Field copyFrom) {
+            return newBuilder().mergeFrom(copyFrom);
+        }
+
+        public static Field getDefaultInstance() {
+            return fieldDefaultInstance;
+        }
+
+        public List<Long> getVarintList() {
+            return this.varint;
+        }
+
+        public List<Integer> getFixed32List() {
+            return this.fixed32;
+        }
+
+        public List<Long> getFixed64List() {
+            return this.fixed64;
+        }
+
+        public List<ByteString> getLengthDelimitedList() {
+            return this.lengthDelimited;
+        }
+
+        public List<UnknownFieldSet> getGroupList() {
+            return this.group;
+        }
+
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+            if (other instanceof Field) {
+                return Arrays.equals(getIdentityArray(), ((Field) other).getIdentityArray());
+            }
+            return false;
+        }
+
+        public int hashCode() {
+            return Arrays.hashCode(getIdentityArray());
+        }
+
+        private Object[] getIdentityArray() {
+            return new Object[]{this.varint, this.fixed32, this.fixed64, this.lengthDelimited, this.group};
+        }
+
+        public void writeTo(int fieldNumber, CodedOutputStream output) throws IOException {
+            for (Long longValue : this.varint) {
+                output.writeUInt64(fieldNumber, longValue.longValue());
+            }
+            for (Integer intValue : this.fixed32) {
+                output.writeFixed32(fieldNumber, intValue.intValue());
+            }
+            for (Long longValue2 : this.fixed64) {
+                output.writeFixed64(fieldNumber, longValue2.longValue());
+            }
+            for (ByteString value : this.lengthDelimited) {
+                output.writeBytes(fieldNumber, value);
+            }
+            for (UnknownFieldSet value2 : this.group) {
+                output.writeGroup(fieldNumber, value2);
+            }
+        }
+
+        public int getSerializedSize(int fieldNumber) {
+            int result = 0;
+            for (Long longValue : this.varint) {
+                result += CodedOutputStream.computeUInt64Size(fieldNumber, longValue.longValue());
+            }
+            for (Integer intValue : this.fixed32) {
+                result += CodedOutputStream.computeFixed32Size(fieldNumber, intValue.intValue());
+            }
+            for (Long longValue2 : this.fixed64) {
+                result += CodedOutputStream.computeFixed64Size(fieldNumber, longValue2.longValue());
+            }
+            for (ByteString value : this.lengthDelimited) {
+                result += CodedOutputStream.computeBytesSize(fieldNumber, value);
+            }
+            for (UnknownFieldSet value2 : this.group) {
+                result += CodedOutputStream.computeGroupSize(fieldNumber, value2);
+            }
+            return result;
+        }
+
+        public void writeAsMessageSetExtensionTo(int fieldNumber, CodedOutputStream output) throws IOException {
+            for (ByteString value : this.lengthDelimited) {
+                output.writeRawMessageSetExtension(fieldNumber, value);
+            }
+        }
+
+        public int getSerializedSizeAsMessageSetExtension(int fieldNumber) {
+            int result = 0;
+            for (ByteString value : this.lengthDelimited) {
+                result += CodedOutputStream.computeRawMessageSetExtensionSize(fieldNumber, value);
+            }
+            return result;
+        }
     }
-    
-    public Builder addField(int paramInt, UnknownFieldSet.Field paramField)
-    {
-      if (paramInt == 0) {
-        throw new IllegalArgumentException("Zero is not a valid field number.");
-      }
-      if ((this.lastField != null) && (this.lastFieldNumber == paramInt))
-      {
-        this.lastField = null;
-        this.lastFieldNumber = 0;
-      }
-      if (this.fields.isEmpty()) {
-        this.fields = new TreeMap();
-      }
-      this.fields.put(Integer.valueOf(paramInt), paramField);
-      return this;
+
+    private UnknownFieldSet() {
     }
-    
-    public Map<Integer, UnknownFieldSet.Field> asMap()
-    {
-      getFieldBuilder(0);
-      return Collections.unmodifiableMap(this.fields);
+
+    public static Builder newBuilder() {
+        return Builder.create();
     }
-    
-    public UnknownFieldSet build()
-    {
-      getFieldBuilder(0);
-      if (this.fields.isEmpty()) {}
-      for (UnknownFieldSet localUnknownFieldSet = UnknownFieldSet.getDefaultInstance();; localUnknownFieldSet = new UnknownFieldSet(Collections.unmodifiableMap(this.fields), null))
-      {
-        this.fields = null;
-        return localUnknownFieldSet;
-      }
+
+    public static Builder newBuilder(UnknownFieldSet copyFrom) {
+        return newBuilder().mergeFrom(copyFrom);
     }
-    
-    public UnknownFieldSet buildPartial()
-    {
-      return build();
+
+    public static UnknownFieldSet getDefaultInstance() {
+        return defaultInstance;
     }
-    
-    public Builder clear()
-    {
-      reinitialize();
-      return this;
+
+    public UnknownFieldSet getDefaultInstanceForType() {
+        return defaultInstance;
     }
-    
-    public Builder clone()
-    {
-      getFieldBuilder(0);
-      return UnknownFieldSet.newBuilder().mergeFrom(new UnknownFieldSet(this.fields, null));
+
+    private UnknownFieldSet(Map<Integer, Field> fields) {
+        this.fields = fields;
     }
-    
-    public UnknownFieldSet getDefaultInstanceForType()
-    {
-      return UnknownFieldSet.getDefaultInstance();
-    }
-    
-    public boolean hasField(int paramInt)
-    {
-      if (paramInt == 0) {
-        throw new IllegalArgumentException("Zero is not a valid field number.");
-      }
-      return (paramInt == this.lastFieldNumber) || (this.fields.containsKey(Integer.valueOf(paramInt)));
-    }
-    
-    public boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Builder mergeDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return mergeFrom(new AbstractMessageLite.Builder.LimitedInputStream(paramInputStream, CodedInputStream.readRawVarint32(paramInputStream)), null);
-    }
-    
-    public Builder mergeDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return mergeFrom(paramInputStream);
-    }
-    
-    public Builder mergeField(int paramInt, UnknownFieldSet.Field paramField)
-    {
-      if (paramInt == 0) {
-        throw new IllegalArgumentException("Zero is not a valid field number.");
-      }
-      if (hasField(paramInt))
-      {
-        getFieldBuilder(paramInt).mergeFrom(paramField);
-        return this;
-      }
-      addField(paramInt, paramField);
-      return this;
-    }
-    
-    public boolean mergeFieldFrom(int paramInt, CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      int i = WireFormat.getTagFieldNumber(paramInt);
-      switch (WireFormat.getTagWireType(paramInt))
-      {
-      default: 
-        throw InvalidProtocolBufferException.invalidWireType();
-      case 0: 
-        getFieldBuilder(i).addVarint(paramCodedInputStream.readInt64());
-        return true;
-      case 1: 
-        getFieldBuilder(i).addFixed64(paramCodedInputStream.readFixed64());
-        return true;
-      case 2: 
-        getFieldBuilder(i).addLengthDelimited(paramCodedInputStream.readBytes());
-        return true;
-      case 3: 
-        Builder localBuilder = UnknownFieldSet.newBuilder();
-        paramCodedInputStream.readGroup(i, localBuilder, ExtensionRegistry.getEmptyRegistry());
-        getFieldBuilder(i).addGroup(localBuilder.build());
-        return true;
-      case 4: 
+
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if ((other instanceof UnknownFieldSet) && this.fields.equals(((UnknownFieldSet) other).fields)) {
+            return true;
+        }
         return false;
-      }
-      getFieldBuilder(i).addFixed32(paramCodedInputStream.readFixed32());
-      return true;
     }
-    
-    public Builder mergeFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      try
-      {
-        paramByteString = paramByteString.newCodedInput();
-        mergeFrom(paramByteString);
-        paramByteString.checkLastTagWas(0);
-        return this;
-      }
-      catch (InvalidProtocolBufferException paramByteString)
-      {
-        throw paramByteString;
-      }
-      catch (IOException paramByteString)
-      {
-        throw new RuntimeException("Reading from a ByteString threw an IOException (should never happen).", paramByteString);
-      }
+
+    public int hashCode() {
+        return this.fields.hashCode();
     }
-    
-    public Builder mergeFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return mergeFrom(paramByteString);
+
+    public Map<Integer, Field> asMap() {
+        return this.fields;
     }
-    
-    public Builder mergeFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      int i;
-      do
-      {
-        i = paramCodedInputStream.readTag();
-      } while ((i != 0) && (mergeFieldFrom(i, paramCodedInputStream)));
-      return this;
+
+    public boolean hasField(int number) {
+        return this.fields.containsKey(Integer.valueOf(number));
     }
-    
-    public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return mergeFrom(paramCodedInputStream);
+
+    public Field getField(int number) {
+        Field result = (Field) this.fields.get(Integer.valueOf(number));
+        return result == null ? Field.getDefaultInstance() : result;
     }
-    
-    public Builder mergeFrom(UnknownFieldSet paramUnknownFieldSet)
-    {
-      if (paramUnknownFieldSet != UnknownFieldSet.getDefaultInstance())
-      {
-        paramUnknownFieldSet = paramUnknownFieldSet.fields.entrySet().iterator();
-        while (paramUnknownFieldSet.hasNext())
-        {
-          Map.Entry localEntry = (Map.Entry)paramUnknownFieldSet.next();
-          mergeField(((Integer)localEntry.getKey()).intValue(), (UnknownFieldSet.Field)localEntry.getValue());
+
+    public void writeTo(CodedOutputStream output) throws IOException {
+        for (Entry<Integer, Field> entry : this.fields.entrySet()) {
+            ((Field) entry.getValue()).writeTo(((Integer) entry.getKey()).intValue(), output);
         }
-      }
-      return this;
     }
-    
-    public Builder mergeFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      paramInputStream = CodedInputStream.newInstance(paramInputStream);
-      mergeFrom(paramInputStream);
-      paramInputStream.checkLastTagWas(0);
-      return this;
+
+    public String toString() {
+        return TextFormat.printToString(this);
     }
-    
-    public Builder mergeFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return mergeFrom(paramInputStream);
+
+    public ByteString toByteString() {
+        try {
+            CodedBuilder out = ByteString.newCodedBuilder(getSerializedSize());
+            writeTo(out.getCodedOutput());
+            return out.build();
+        } catch (IOException e) {
+            throw new RuntimeException("Serializing to a ByteString threw an IOException (should never happen).", e);
+        }
     }
-    
-    public Builder mergeFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      try
-      {
-        paramArrayOfByte = CodedInputStream.newInstance(paramArrayOfByte);
-        mergeFrom(paramArrayOfByte);
-        paramArrayOfByte.checkLastTagWas(0);
-        return this;
-      }
-      catch (InvalidProtocolBufferException paramArrayOfByte)
-      {
-        throw paramArrayOfByte;
-      }
-      catch (IOException paramArrayOfByte)
-      {
-        throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).", paramArrayOfByte);
-      }
+
+    public byte[] toByteArray() {
+        try {
+            byte[] result = new byte[getSerializedSize()];
+            CodedOutputStream output = CodedOutputStream.newInstance(result);
+            writeTo(output);
+            output.checkNoSpaceLeft();
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException("Serializing to a byte array threw an IOException (should never happen).", e);
+        }
     }
-    
-    public Builder mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-      throws InvalidProtocolBufferException
-    {
-      try
-      {
-        paramArrayOfByte = CodedInputStream.newInstance(paramArrayOfByte, paramInt1, paramInt2);
-        mergeFrom(paramArrayOfByte);
-        paramArrayOfByte.checkLastTagWas(0);
-        return this;
-      }
-      catch (InvalidProtocolBufferException paramArrayOfByte)
-      {
-        throw paramArrayOfByte;
-      }
-      catch (IOException paramArrayOfByte)
-      {
-        throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).", paramArrayOfByte);
-      }
+
+    public void writeTo(OutputStream output) throws IOException {
+        CodedOutputStream codedOutput = CodedOutputStream.newInstance(output);
+        writeTo(codedOutput);
+        codedOutput.flush();
     }
-    
-    public Builder mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return mergeFrom(paramArrayOfByte, paramInt1, paramInt2);
+
+    public void writeDelimitedTo(OutputStream output) throws IOException {
+        CodedOutputStream codedOutput = CodedOutputStream.newInstance(output);
+        codedOutput.writeRawVarint32(getSerializedSize());
+        writeTo(codedOutput);
+        codedOutput.flush();
     }
-    
-    public Builder mergeFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return mergeFrom(paramArrayOfByte);
+
+    public int getSerializedSize() {
+        int result = 0;
+        for (Entry<Integer, Field> entry : this.fields.entrySet()) {
+            result += ((Field) entry.getValue()).getSerializedSize(((Integer) entry.getKey()).intValue());
+        }
+        return result;
     }
-    
-    public Builder mergeVarintField(int paramInt1, int paramInt2)
-    {
-      if (paramInt1 == 0) {
-        throw new IllegalArgumentException("Zero is not a valid field number.");
-      }
-      getFieldBuilder(paramInt1).addVarint(paramInt2);
-      return this;
+
+    public void writeAsMessageSetTo(CodedOutputStream output) throws IOException {
+        for (Entry<Integer, Field> entry : this.fields.entrySet()) {
+            ((Field) entry.getValue()).writeAsMessageSetExtensionTo(((Integer) entry.getKey()).intValue(), output);
+        }
     }
-  }
-  
-  public static final class Field
-  {
-    private static final Field fieldDefaultInstance = newBuilder().build();
-    private List<Integer> fixed32;
-    private List<Long> fixed64;
-    private List<UnknownFieldSet> group;
-    private List<ByteString> lengthDelimited;
-    private List<Long> varint;
-    
-    public static Field getDefaultInstance()
-    {
-      return fieldDefaultInstance;
+
+    public int getSerializedSizeAsMessageSet() {
+        int result = 0;
+        for (Entry<Integer, Field> entry : this.fields.entrySet()) {
+            result += ((Field) entry.getValue()).getSerializedSizeAsMessageSetExtension(((Integer) entry.getKey()).intValue());
+        }
+        return result;
     }
-    
-    private Object[] getIdentityArray()
-    {
-      return new Object[] { this.varint, this.fixed32, this.fixed64, this.lengthDelimited, this.group };
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(Field paramField)
-    {
-      return newBuilder().mergeFrom(paramField);
-    }
-    
-    public boolean equals(Object paramObject)
-    {
-      if (this == paramObject) {
+
+    public boolean isInitialized() {
         return true;
-      }
-      if (!(paramObject instanceof Field)) {
-        return false;
-      }
-      return Arrays.equals(getIdentityArray(), ((Field)paramObject).getIdentityArray());
     }
-    
-    public List<Integer> getFixed32List()
-    {
-      return this.fixed32;
+
+    public static UnknownFieldSet parseFrom(CodedInputStream input) throws IOException {
+        return newBuilder().mergeFrom(input).build();
     }
-    
-    public List<Long> getFixed64List()
-    {
-      return this.fixed64;
+
+    public static UnknownFieldSet parseFrom(ByteString data) throws InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data).build();
     }
-    
-    public List<UnknownFieldSet> getGroupList()
-    {
-      return this.group;
+
+    public static UnknownFieldSet parseFrom(byte[] data) throws InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data).build();
     }
-    
-    public List<ByteString> getLengthDelimitedList()
-    {
-      return this.lengthDelimited;
+
+    public static UnknownFieldSet parseFrom(InputStream input) throws IOException {
+        return newBuilder().mergeFrom(input).build();
     }
-    
-    public int getSerializedSize(int paramInt)
-    {
-      int i = 0;
-      Iterator localIterator = this.varint.iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStream.computeUInt64Size(paramInt, ((Long)localIterator.next()).longValue());
-      }
-      localIterator = this.fixed32.iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStream.computeFixed32Size(paramInt, ((Integer)localIterator.next()).intValue());
-      }
-      localIterator = this.fixed64.iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStream.computeFixed64Size(paramInt, ((Long)localIterator.next()).longValue());
-      }
-      localIterator = this.lengthDelimited.iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStream.computeBytesSize(paramInt, (ByteString)localIterator.next());
-      }
-      localIterator = this.group.iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStream.computeGroupSize(paramInt, (UnknownFieldSet)localIterator.next());
-      }
-      return i;
+
+    public Builder newBuilderForType() {
+        return newBuilder();
     }
-    
-    public int getSerializedSizeAsMessageSetExtension(int paramInt)
-    {
-      int i = 0;
-      Iterator localIterator = this.lengthDelimited.iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStream.computeRawMessageSetExtensionSize(paramInt, (ByteString)localIterator.next());
-      }
-      return i;
+
+    public Builder toBuilder() {
+        return newBuilder().mergeFrom(this);
     }
-    
-    public List<Long> getVarintList()
-    {
-      return this.varint;
-    }
-    
-    public int hashCode()
-    {
-      return Arrays.hashCode(getIdentityArray());
-    }
-    
-    public void writeAsMessageSetExtensionTo(int paramInt, CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      Iterator localIterator = this.lengthDelimited.iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStream.writeRawMessageSetExtension(paramInt, (ByteString)localIterator.next());
-      }
-    }
-    
-    public void writeTo(int paramInt, CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      Iterator localIterator = this.varint.iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStream.writeUInt64(paramInt, ((Long)localIterator.next()).longValue());
-      }
-      localIterator = this.fixed32.iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStream.writeFixed32(paramInt, ((Integer)localIterator.next()).intValue());
-      }
-      localIterator = this.fixed64.iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStream.writeFixed64(paramInt, ((Long)localIterator.next()).longValue());
-      }
-      localIterator = this.lengthDelimited.iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStream.writeBytes(paramInt, (ByteString)localIterator.next());
-      }
-      localIterator = this.group.iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStream.writeGroup(paramInt, (UnknownFieldSet)localIterator.next());
-      }
-    }
-    
-    public static final class Builder
-    {
-      private UnknownFieldSet.Field result;
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new UnknownFieldSet.Field(null);
-        return localBuilder;
-      }
-      
-      public Builder addFixed32(int paramInt)
-      {
-        if (this.result.fixed32 == null) {
-          UnknownFieldSet.Field.access$602(this.result, new ArrayList());
-        }
-        this.result.fixed32.add(Integer.valueOf(paramInt));
-        return this;
-      }
-      
-      public Builder addFixed64(long paramLong)
-      {
-        if (this.result.fixed64 == null) {
-          UnknownFieldSet.Field.access$702(this.result, new ArrayList());
-        }
-        this.result.fixed64.add(Long.valueOf(paramLong));
-        return this;
-      }
-      
-      public Builder addGroup(UnknownFieldSet paramUnknownFieldSet)
-      {
-        if (this.result.group == null) {
-          UnknownFieldSet.Field.access$902(this.result, new ArrayList());
-        }
-        this.result.group.add(paramUnknownFieldSet);
-        return this;
-      }
-      
-      public Builder addLengthDelimited(ByteString paramByteString)
-      {
-        if (this.result.lengthDelimited == null) {
-          UnknownFieldSet.Field.access$802(this.result, new ArrayList());
-        }
-        this.result.lengthDelimited.add(paramByteString);
-        return this;
-      }
-      
-      public Builder addVarint(long paramLong)
-      {
-        if (this.result.varint == null) {
-          UnknownFieldSet.Field.access$502(this.result, new ArrayList());
-        }
-        this.result.varint.add(Long.valueOf(paramLong));
-        return this;
-      }
-      
-      public UnknownFieldSet.Field build()
-      {
-        if (this.result.varint == null)
-        {
-          UnknownFieldSet.Field.access$502(this.result, Collections.emptyList());
-          if (this.result.fixed32 != null) {
-            break label138;
-          }
-          UnknownFieldSet.Field.access$602(this.result, Collections.emptyList());
-          label42:
-          if (this.result.fixed64 != null) {
-            break label159;
-          }
-          UnknownFieldSet.Field.access$702(this.result, Collections.emptyList());
-          label63:
-          if (this.result.lengthDelimited != null) {
-            break label180;
-          }
-          UnknownFieldSet.Field.access$802(this.result, Collections.emptyList());
-          label84:
-          if (this.result.group != null) {
-            break label201;
-          }
-          UnknownFieldSet.Field.access$902(this.result, Collections.emptyList());
-        }
-        for (;;)
-        {
-          UnknownFieldSet.Field localField = this.result;
-          this.result = null;
-          return localField;
-          UnknownFieldSet.Field.access$502(this.result, Collections.unmodifiableList(this.result.varint));
-          break;
-          label138:
-          UnknownFieldSet.Field.access$602(this.result, Collections.unmodifiableList(this.result.fixed32));
-          break label42;
-          label159:
-          UnknownFieldSet.Field.access$702(this.result, Collections.unmodifiableList(this.result.fixed64));
-          break label63;
-          label180:
-          UnknownFieldSet.Field.access$802(this.result, Collections.unmodifiableList(this.result.lengthDelimited));
-          break label84;
-          label201:
-          UnknownFieldSet.Field.access$902(this.result, Collections.unmodifiableList(this.result.group));
-        }
-      }
-      
-      public Builder clear()
-      {
-        this.result = new UnknownFieldSet.Field(null);
-        return this;
-      }
-      
-      public Builder mergeFrom(UnknownFieldSet.Field paramField)
-      {
-        if (!paramField.varint.isEmpty())
-        {
-          if (this.result.varint == null) {
-            UnknownFieldSet.Field.access$502(this.result, new ArrayList());
-          }
-          this.result.varint.addAll(paramField.varint);
-        }
-        if (!paramField.fixed32.isEmpty())
-        {
-          if (this.result.fixed32 == null) {
-            UnknownFieldSet.Field.access$602(this.result, new ArrayList());
-          }
-          this.result.fixed32.addAll(paramField.fixed32);
-        }
-        if (!paramField.fixed64.isEmpty())
-        {
-          if (this.result.fixed64 == null) {
-            UnknownFieldSet.Field.access$702(this.result, new ArrayList());
-          }
-          this.result.fixed64.addAll(paramField.fixed64);
-        }
-        if (!paramField.lengthDelimited.isEmpty())
-        {
-          if (this.result.lengthDelimited == null) {
-            UnknownFieldSet.Field.access$802(this.result, new ArrayList());
-          }
-          this.result.lengthDelimited.addAll(paramField.lengthDelimited);
-        }
-        if (!paramField.group.isEmpty())
-        {
-          if (this.result.group == null) {
-            UnknownFieldSet.Field.access$902(this.result, new ArrayList());
-          }
-          this.result.group.addAll(paramField.group);
-        }
-        return this;
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/UnknownFieldSet.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,9 +1,8 @@
 package com.baidu.android.pushservice.message;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
@@ -12,564 +11,382 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
 import android.text.TextUtils;
-import com.baidu.android.pushservice.b.f;
-import com.baidu.android.pushservice.h;
-import com.baidu.android.pushservice.h.k;
-import com.baidu.android.pushservice.h.q;
-import com.baidu.android.pushservice.i.c;
-import com.baidu.android.pushservice.i.d;
-import com.baidu.android.pushservice.j.p;
-import com.baidu.android.pushservice.message.a.l;
+import com.baidu.android.pushservice.C0554h;
+import com.baidu.android.pushservice.C0580j;
+import com.baidu.android.pushservice.message.p033a.C0612l;
+import com.baidu.android.pushservice.p022i.C0420c;
+import com.baidu.android.pushservice.p022i.C0559d;
+import com.baidu.android.pushservice.p023b.C0432b;
+import com.baidu.android.pushservice.p023b.C0437f;
+import com.baidu.android.pushservice.p026e.C0486b;
+import com.baidu.android.pushservice.p027f.C0521b;
+import com.baidu.android.pushservice.p028g.C0527a;
+import com.baidu.android.pushservice.p029h.C0544j;
+import com.baidu.android.pushservice.p029h.C0545k;
+import com.baidu.android.pushservice.p029h.C0553q;
+import com.baidu.android.pushservice.p029h.p030a.C0532b;
+import com.baidu.android.pushservice.p031j.C0578p;
+import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PublicMsg
-  implements Parcelable
-{
-  public static final Parcelable.Creator<PublicMsg> CREATOR = new Parcelable.Creator()
-  {
-    public PublicMsg a(Parcel paramAnonymousParcel)
-    {
-      return new PublicMsg(paramAnonymousParcel);
-    }
-    
-    public PublicMsg[] a(int paramAnonymousInt)
-    {
-      return new PublicMsg[paramAnonymousInt];
-    }
-  };
-  public static final int FLAG_NEED_CLEAR = 1;
-  public static final int FLAG_NEED_SOUND = 4;
-  public static final int FLAG_NEED_VIBRATE = 2;
-  private static final String TAG = "PublicMsg";
-  public String mAdvertiseBigPictureClickUrl;
-  public String mAdvertiseBigPictureContent;
-  public String mAdvertiseBigPictureTitle;
-  public String mAdvertiseBigPictureUrl;
-  public String mAdvertiseClickUrl;
-  public String mAdvertiseDetailClickUrl;
-  public String mAdvertiseDownloadClickUrl;
-  public String mAdvertiseLargeIconUrl;
-  public String mAdvertiseSmallIconUrl;
-  public int mAdvertiseStyle;
-  public String mAppId;
-  public String mCustomContent;
-  public String mDescription;
-  public boolean mIsSupportApp = true;
-  public String mMsgId;
-  public int mNetType = 0;
-  public int mNotificationBasicStyle = 7;
-  public int mNotificationBuilder = 0;
-  public int mOpenType = 0;
-  public String mPkgContent;
-  public String mPkgName;
-  public int mPkgVercode = 0;
-  public String mSupportAppname;
-  public String mTitle;
-  public String mUrl;
-  public int mUserConfirm = 0;
-  
-  public PublicMsg() {}
-  
-  PublicMsg(Parcel paramParcel)
-  {
-    this.mMsgId = paramParcel.readString();
-    this.mAppId = paramParcel.readString();
-    this.mTitle = paramParcel.readString();
-    this.mDescription = paramParcel.readString();
-    this.mUrl = paramParcel.readString();
-    this.mPkgName = paramParcel.readString();
-    this.mPkgVercode = paramParcel.readInt();
-    this.mNotificationBuilder = paramParcel.readInt();
-    this.mNotificationBasicStyle = paramParcel.readInt();
-    this.mOpenType = paramParcel.readInt();
-    this.mUserConfirm = paramParcel.readInt();
-    this.mCustomContent = paramParcel.readString();
-    this.mPkgContent = paramParcel.readString();
-    this.mAdvertiseStyle = paramParcel.readInt();
-    this.mAdvertiseSmallIconUrl = paramParcel.readString();
-    this.mAdvertiseLargeIconUrl = paramParcel.readString();
-    this.mAdvertiseClickUrl = paramParcel.readString();
-    this.mAdvertiseBigPictureUrl = paramParcel.readString();
-    this.mAdvertiseBigPictureClickUrl = paramParcel.readString();
-    this.mAdvertiseDownloadClickUrl = paramParcel.readString();
-    this.mAdvertiseDetailClickUrl = paramParcel.readString();
-    this.mAdvertiseBigPictureTitle = paramParcel.readString();
-    this.mAdvertiseBigPictureContent = paramParcel.readString();
-  }
-  
-  private void addCustomContentToIntent(Intent paramIntent)
-  {
-    if (this.mCustomContent != null) {
-      try
-      {
-        JSONObject localJSONObject = new JSONObject(this.mCustomContent);
-        Iterator localIterator = localJSONObject.keys();
-        while (localIterator.hasNext())
-        {
-          String str = (String)localIterator.next();
-          paramIntent.putExtra(str, localJSONObject.getString(str));
+public class PublicMsg implements Parcelable {
+    public static final Creator<PublicMsg> CREATOR = new C05942();
+    public static final int FLAG_NEED_CLEAR = 1;
+    public static final int FLAG_NEED_SOUND = 4;
+    public static final int FLAG_NEED_VIBRATE = 2;
+    private static final String TAG = "PublicMsg";
+    public String mAdvertiseBigPictureClickUrl;
+    public String mAdvertiseBigPictureContent;
+    public String mAdvertiseBigPictureTitle;
+    public String mAdvertiseBigPictureUrl;
+    public String mAdvertiseClickUrl;
+    public String mAdvertiseDetailClickUrl;
+    public String mAdvertiseDownloadClickUrl;
+    public String mAdvertiseLargeIconUrl;
+    public String mAdvertiseSmallIconUrl;
+    public int mAdvertiseStyle;
+    public String mAppId;
+    public String mCustomContent;
+    public String mDescription;
+    public boolean mIsSupportApp = true;
+    public String mMsgId;
+    public int mNetType = 0;
+    public int mNotificationBasicStyle = 7;
+    public int mNotificationBuilder = 0;
+    public int mOpenType = 0;
+    public String mPkgContent;
+    public String mPkgName;
+    public int mPkgVercode = 0;
+    public String mSupportAppname;
+    public String mTitle;
+    public String mUrl;
+    public int mUserConfirm = 0;
+
+    /* renamed from: com.baidu.android.pushservice.message.PublicMsg$2 */
+    static class C05942 implements Creator<PublicMsg> {
+        C05942() {
         }
-        paramIntent.putExtra("extra_extra_custom_content", this.mCustomContent);
-        return;
-      }
-      catch (JSONException paramIntent) {}
+
+        /* renamed from: a */
+        public PublicMsg m2677a(Parcel parcel) {
+            return new PublicMsg(parcel);
+        }
+
+        /* renamed from: a */
+        public PublicMsg[] m2678a(int i) {
+            return new PublicMsg[i];
+        }
+
+        public /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return m2677a(parcel);
+        }
+
+        public /* synthetic */ Object[] newArray(int i) {
+            return m2678a(i);
+        }
     }
-  }
-  
-  private void insertBehavior(Context paramContext, f paramf, k paramk, com.baidu.android.pushservice.h.j paramj)
-  {
-    if (paramf != null)
-    {
-      paramj.b(paramf.c());
-      paramj = p.a(paramj, paramContext, paramf.c());
-      paramk.j = paramf.c();
+
+    PublicMsg(Parcel parcel) {
+        this.mMsgId = parcel.readString();
+        this.mAppId = parcel.readString();
+        this.mTitle = parcel.readString();
+        this.mDescription = parcel.readString();
+        this.mUrl = parcel.readString();
+        this.mPkgName = parcel.readString();
+        this.mPkgVercode = parcel.readInt();
+        this.mNotificationBuilder = parcel.readInt();
+        this.mNotificationBasicStyle = parcel.readInt();
+        this.mOpenType = parcel.readInt();
+        this.mUserConfirm = parcel.readInt();
+        this.mCustomContent = parcel.readString();
+        this.mPkgContent = parcel.readString();
+        this.mAdvertiseStyle = parcel.readInt();
+        this.mAdvertiseSmallIconUrl = parcel.readString();
+        this.mAdvertiseLargeIconUrl = parcel.readString();
+        this.mAdvertiseClickUrl = parcel.readString();
+        this.mAdvertiseBigPictureUrl = parcel.readString();
+        this.mAdvertiseBigPictureClickUrl = parcel.readString();
+        this.mAdvertiseDownloadClickUrl = parcel.readString();
+        this.mAdvertiseDetailClickUrl = parcel.readString();
+        this.mAdvertiseBigPictureTitle = parcel.readString();
+        this.mAdvertiseBigPictureContent = parcel.readString();
     }
-    try
-    {
-      q.a(paramContext, paramk);
-      q.a(paramContext, paramj);
-      return;
-    }
-    catch (Exception paramContext) {}
-  }
-  
-  private void insertNotiBehavior(Context paramContext, String paramString1, String paramString2, String paramString3)
-  {
-    k localk = new k();
-    localk.d = paramString3;
-    localk.a = paramString1;
-    localk.e = System.currentTimeMillis();
-    localk.f = com.baidu.android.pushservice.h.a.b.b(paramContext);
-    localk.c = l.f.a();
-    localk.h = paramString2;
-    paramString1 = com.baidu.android.pushservice.b.b.a(paramContext).d(paramString2);
-    if (paramString1 != null) {
-      insertBehavior(paramContext, paramString1, localk, new com.baidu.android.pushservice.h.j(paramString2));
-    }
-  }
-  
-  private void sendResult(final Context paramContext, final String paramString, int paramInt)
-  {
-    final String str1 = com.baidu.android.pushservice.j.a(paramContext).a();
-    final String str2 = com.baidu.android.pushservice.j.a(paramContext).b();
-    if ((TextUtils.isEmpty(str1)) || (TextUtils.isEmpty(str2)))
-    {
-      com.baidu.android.pushservice.g.a.b("PublicMsg", "Fail Send Public msg result. Token invalid!", paramContext.getApplicationContext());
-      return;
-    }
-    com.baidu.android.pushservice.g.a.a("PublicMsg", "Send Linkhit, msgId = " + paramString + ", resultCode = " + paramInt, paramContext.getApplicationContext());
-    JSONObject localJSONObject = new JSONObject();
-    try
-    {
-      localJSONObject.put("msgid", paramString);
-      localJSONObject.put("result_code", paramInt);
-      paramString = localJSONObject.toString();
-      d.a().a(new c("PushService-linkhit", (short)90)
-      {
-        public void a()
-        {
-          try
-          {
-            HashMap localHashMap = new HashMap();
-            com.baidu.android.pushservice.e.b.a(localHashMap);
-            localHashMap.put("method", "linkhit");
-            localHashMap.put("channel_token", str2);
-            localHashMap.put("data", paramString);
-            if (com.baidu.android.pushservice.f.b.a(h.e() + str1, "POST", localHashMap).b() == 200) {
-              com.baidu.android.pushservice.g.a.c("PublicMsg", "<<< public msg send result return OK!", paramContext.getApplicationContext());
+
+    private void addCustomContentToIntent(Intent intent) {
+        if (this.mCustomContent != null) {
+            try {
+                JSONObject jSONObject = new JSONObject(this.mCustomContent);
+                Iterator keys = jSONObject.keys();
+                while (keys.hasNext()) {
+                    String str = (String) keys.next();
+                    intent.putExtra(str, jSONObject.getString(str));
+                }
+                intent.putExtra("extra_extra_custom_content", this.mCustomContent);
+            } catch (JSONException e) {
             }
+        }
+    }
+
+    private void insertBehavior(Context context, C0437f c0437f, C0545k c0545k, C0544j c0544j) {
+        if (c0437f != null) {
+            c0544j.m2269b(c0437f.m1867c());
+            C0544j a = C0578p.m2517a(c0544j, context, c0437f.m1867c());
+            c0545k.j = c0437f.m1867c();
+            try {
+                C0553q.m2356a(context, c0545k);
+                C0553q.m2355a(context, a);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private void insertNotiBehavior(Context context, String str, String str2, String str3) {
+        C0545k c0545k = new C0545k();
+        c0545k.d = str3;
+        c0545k.f1803a = str;
+        c0545k.e = System.currentTimeMillis();
+        c0545k.f = C0532b.m2255b(context);
+        c0545k.f1805c = C0612l.MSG_TYPE_MULTI_PRIVATE_NOTIFICATION.m2706a();
+        c0545k.h = str2;
+        C0437f d = C0432b.m1870a(context).m1886d(str2);
+        if (d != null) {
+            insertBehavior(context, d, c0545k, new C0544j(str2));
+        }
+    }
+
+    private void sendResult(Context context, String str, int i) {
+        final Object a = C0580j.m2614a(context).m2615a();
+        final Object b = C0580j.m2614a(context).m2618b();
+        if (TextUtils.isEmpty(a) || TextUtils.isEmpty(b)) {
+            C0527a.m2218b(TAG, "Fail Send Public msg result. Token invalid!", context.getApplicationContext());
             return;
-          }
-          catch (Exception localException)
-          {
-            com.baidu.android.pushservice.g.a.b("PublicMsg", "error : " + localException.getMessage(), paramContext.getApplicationContext());
-          }
         }
-      });
-      return;
-    }
-    catch (JSONException paramString)
-    {
-      for (;;)
-      {
-        com.baidu.android.pushservice.g.a.b("PublicMsg", paramString.getMessage(), paramContext.getApplicationContext());
-      }
-    }
-  }
-  
-  private void startApplicationLauncher(Context paramContext, String paramString1, String paramString2)
-  {
-    try
-    {
-      if (this.mPkgContent != null) {}
-      for (Intent localIntent = Intent.parseUri(this.mPkgContent, 0);; localIntent = new Intent())
-      {
-        String str = getLauncherActivityName(paramContext, paramString1);
-        if (str == null) {
-          break;
+        C0527a.m2216a(TAG, "Send Linkhit, msgId = " + str + ", resultCode = " + i, context.getApplicationContext());
+        JSONObject jSONObject = new JSONObject();
+        try {
+            jSONObject.put("msgid", str);
+            jSONObject.put("result_code", i);
+        } catch (JSONException e) {
+            C0527a.m2218b(TAG, e.getMessage(), context.getApplicationContext());
         }
-        localIntent.setClassName(paramString1, str);
-        localIntent.setFlags(localIntent.getFlags() | 0x10000000);
-        localIntent.putExtra("open_type", 1);
-        localIntent.putExtra("msgid", paramString2);
-        paramContext.startActivity(localIntent);
-        return;
-      }
-      return;
-    }
-    catch (URISyntaxException paramString1)
-    {
-      com.baidu.android.pushservice.g.a.b("PublicMsg", "error " + paramString1.getMessage(), paramContext.getApplicationContext());
-    }
-  }
-  
-  public int describeContents()
-  {
-    return 0;
-  }
-  
-  public String getLauncherActivityName(Context paramContext, String paramString)
-  {
-    Intent localIntent = new Intent();
-    localIntent.setAction("android.intent.action.MAIN");
-    localIntent.addCategory("android.intent.category.LAUNCHER");
-    localIntent.setPackage(paramString);
-    paramContext = paramContext.getPackageManager().queryIntentActivities(localIntent, 0).iterator();
-    while (paramContext.hasNext())
-    {
-      paramString = (ResolveInfo)paramContext.next();
-      if (paramString.activityInfo != null) {
-        return paramString.activityInfo.name;
-      }
-    }
-    return null;
-  }
-  
-  /* Error */
-  public void handle(Context paramContext, String paramString1, String paramString2)
-  {
-    // Byte code:
-    //   0: iconst_1
-    //   1: istore 4
-    //   3: iconst_0
-    //   4: istore 5
-    //   6: ldc 24
-    //   8: ldc_w 400
-    //   11: aload_1
-    //   12: invokevirtual 265	android/content/Context:getApplicationContext	()Landroid/content/Context;
-    //   15: invokestatic 289	com/baidu/android/pushservice/g/a:a	(Ljava/lang/String;Ljava/lang/String;Landroid/content/Context;)V
-    //   18: ldc_w 402
-    //   21: aload_2
-    //   22: invokevirtual 406	java/lang/String:equals	(Ljava/lang/Object;)Z
-    //   25: ifeq +23 -> 48
-    //   28: ldc 24
-    //   30: ldc_w 408
-    //   33: aload_1
-    //   34: invokevirtual 265	android/content/Context:getApplicationContext	()Landroid/content/Context;
-    //   37: invokestatic 289	com/baidu/android/pushservice/g/a:a	(Ljava/lang/String;Ljava/lang/String;Landroid/content/Context;)V
-    //   40: aload_0
-    //   41: aload_1
-    //   42: aload_3
-    //   43: iconst_2
-    //   44: invokespecial 410	com/baidu/android/pushservice/message/PublicMsg:sendResult	(Landroid/content/Context;Ljava/lang/String;I)V
-    //   47: return
-    //   48: aload_1
-    //   49: invokevirtual 371	android/content/Context:getPackageManager	()Landroid/content/pm/PackageManager;
-    //   52: astore_2
-    //   53: aload_2
-    //   54: aload_0
-    //   55: getfield 93	com/baidu/android/pushservice/message/PublicMsg:mPkgName	Ljava/lang/String;
-    //   58: iconst_0
-    //   59: invokevirtual 414	android/content/pm/PackageManager:getPackageInfo	(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;
-    //   62: getfield 419	android/content/pm/PackageInfo:versionCode	I
-    //   65: aload_0
-    //   66: getfield 62	com/baidu/android/pushservice/message/PublicMsg:mPkgVercode	I
-    //   69: if_icmplt +271 -> 340
-    //   72: aload_0
-    //   73: getfield 101	com/baidu/android/pushservice/message/PublicMsg:mPkgContent	Ljava/lang/String;
-    //   76: iconst_0
-    //   77: invokestatic 326	android/content/Intent:parseUri	(Ljava/lang/String;I)Landroid/content/Intent;
-    //   80: astore 6
-    //   82: aload 6
-    //   84: aload_0
-    //   85: getfield 93	com/baidu/android/pushservice/message/PublicMsg:mPkgName	Ljava/lang/String;
-    //   88: invokevirtual 367	android/content/Intent:setPackage	(Ljava/lang/String;)Landroid/content/Intent;
-    //   91: pop
-    //   92: aload_2
-    //   93: aload 6
-    //   95: iconst_0
-    //   96: invokevirtual 422	android/content/pm/PackageManager:queryBroadcastReceivers	(Landroid/content/Intent;I)Ljava/util/List;
-    //   99: invokeinterface 425 1 0
-    //   104: ifle +59 -> 163
-    //   107: aload_1
-    //   108: aload 6
-    //   110: invokevirtual 428	android/content/Context:sendBroadcast	(Landroid/content/Intent;)V
-    //   113: iload 4
-    //   115: ifne +39 -> 154
-    //   118: new 152	android/content/Intent
-    //   121: dup
-    //   122: ldc_w 430
-    //   125: invokespecial 431	android/content/Intent:<init>	(Ljava/lang/String;)V
-    //   128: astore_2
-    //   129: aload_2
-    //   130: aload_0
-    //   131: getfield 91	com/baidu/android/pushservice/message/PublicMsg:mUrl	Ljava/lang/String;
-    //   134: invokestatic 437	android/net/Uri:parse	(Ljava/lang/String;)Landroid/net/Uri;
-    //   137: invokevirtual 441	android/content/Intent:setData	(Landroid/net/Uri;)Landroid/content/Intent;
-    //   140: pop
-    //   141: aload_2
-    //   142: ldc_w 337
-    //   145: invokevirtual 444	android/content/Intent:addFlags	(I)Landroid/content/Intent;
-    //   148: pop
-    //   149: aload_1
-    //   150: aload_2
-    //   151: invokevirtual 348	android/content/Context:startActivity	(Landroid/content/Intent;)V
-    //   154: aload_0
-    //   155: aload_1
-    //   156: aload_3
-    //   157: iload 4
-    //   159: invokespecial 410	com/baidu/android/pushservice/message/PublicMsg:sendResult	(Landroid/content/Context;Ljava/lang/String;I)V
-    //   162: return
-    //   163: aload_2
-    //   164: aload 6
-    //   166: iconst_0
-    //   167: invokevirtual 377	android/content/pm/PackageManager:queryIntentActivities	(Landroid/content/Intent;I)Ljava/util/List;
-    //   170: invokeinterface 425 1 0
-    //   175: ifle +165 -> 340
-    //   178: aload 6
-    //   180: ldc_w 337
-    //   183: invokevirtual 444	android/content/Intent:addFlags	(I)Landroid/content/Intent;
-    //   186: pop
-    //   187: aload_1
-    //   188: aload 6
-    //   190: invokevirtual 348	android/content/Context:startActivity	(Landroid/content/Intent;)V
-    //   193: goto -80 -> 113
-    //   196: astore_2
-    //   197: ldc 24
-    //   199: new 272	java/lang/StringBuilder
-    //   202: dup
-    //   203: invokespecial 273	java/lang/StringBuilder:<init>	()V
-    //   206: ldc_w 446
-    //   209: invokevirtual 279	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   212: aload_2
-    //   213: invokevirtual 447	android/content/pm/PackageManager$NameNotFoundException:getMessage	()Ljava/lang/String;
-    //   216: invokevirtual 279	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   219: invokevirtual 287	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   222: aload_1
-    //   223: invokestatic 270	com/baidu/android/pushservice/g/a:b	(Ljava/lang/String;Ljava/lang/String;Landroid/content/Context;)V
-    //   226: iload 5
-    //   228: istore 4
-    //   230: goto -117 -> 113
-    //   233: astore_2
-    //   234: ldc 24
-    //   236: new 272	java/lang/StringBuilder
-    //   239: dup
-    //   240: invokespecial 273	java/lang/StringBuilder:<init>	()V
-    //   243: ldc_w 449
-    //   246: invokevirtual 279	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   249: aload_2
-    //   250: invokevirtual 352	java/net/URISyntaxException:getMessage	()Ljava/lang/String;
-    //   253: invokevirtual 279	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   256: invokevirtual 287	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   259: aload_1
-    //   260: invokestatic 270	com/baidu/android/pushservice/g/a:b	(Ljava/lang/String;Ljava/lang/String;Landroid/content/Context;)V
-    //   263: iload 5
-    //   265: istore 4
-    //   267: goto -154 -> 113
-    //   270: astore_2
-    //   271: ldc 24
-    //   273: new 272	java/lang/StringBuilder
-    //   276: dup
-    //   277: invokespecial 273	java/lang/StringBuilder:<init>	()V
-    //   280: ldc_w 451
-    //   283: invokevirtual 279	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   286: aload_2
-    //   287: invokevirtual 452	java/lang/Exception:getMessage	()Ljava/lang/String;
-    //   290: invokevirtual 279	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   293: invokevirtual 287	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   296: aload_1
-    //   297: invokestatic 270	com/baidu/android/pushservice/g/a:b	(Ljava/lang/String;Ljava/lang/String;Landroid/content/Context;)V
-    //   300: iload 5
-    //   302: istore 4
-    //   304: goto -191 -> 113
-    //   307: astore_2
-    //   308: ldc 24
-    //   310: new 272	java/lang/StringBuilder
-    //   313: dup
-    //   314: invokespecial 273	java/lang/StringBuilder:<init>	()V
-    //   317: ldc_w 454
-    //   320: invokevirtual 279	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   323: aload_2
-    //   324: invokevirtual 455	android/content/ActivityNotFoundException:getMessage	()Ljava/lang/String;
-    //   327: invokevirtual 279	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   330: invokevirtual 287	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   333: aload_1
-    //   334: invokestatic 270	com/baidu/android/pushservice/g/a:b	(Ljava/lang/String;Ljava/lang/String;Landroid/content/Context;)V
-    //   337: goto -183 -> 154
-    //   340: iconst_0
-    //   341: istore 4
-    //   343: goto -230 -> 113
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	346	0	this	PublicMsg
-    //   0	346	1	paramContext	Context
-    //   0	346	2	paramString1	String
-    //   0	346	3	paramString2	String
-    //   1	341	4	i	int
-    //   4	297	5	j	int
-    //   80	109	6	localIntent	Intent
-    // Exception table:
-    //   from	to	target	type
-    //   53	113	196	android/content/pm/PackageManager$NameNotFoundException
-    //   163	193	196	android/content/pm/PackageManager$NameNotFoundException
-    //   53	113	233	java/net/URISyntaxException
-    //   163	193	233	java/net/URISyntaxException
-    //   53	113	270	java/lang/Exception
-    //   163	193	270	java/lang/Exception
-    //   149	154	307	android/content/ActivityNotFoundException
-  }
-  
-  public void handleAlarmMessage(Context paramContext, String paramString1, String paramString2, String paramString3)
-  {
-    insertNotiBehavior(paramContext, paramString2, paramString3, paramString1);
-  }
-  
-  public void handlePrivateNotification(Context paramContext, String paramString1, String paramString2, String paramString3, byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
-  {
-    com.baidu.android.pushservice.g.a.a("PublicMsg", "=== Handle private notification: " + paramString1, paramContext);
-    if ("com.baidu.android.pushservice.action.privatenotification.DELETE".equals(paramString1)) {
-      insertNotiBehavior(paramContext, paramString2, paramString3, "010202");
-    }
-    do
-    {
-      for (;;)
-      {
-        return;
-        paramString1 = paramContext.getPackageManager();
-        try
-        {
-          if (paramString1.getPackageInfo(this.mPkgName, 0).versionCode >= this.mPkgVercode)
-          {
-            Intent localIntent = new Intent();
-            localIntent.putExtra("msgid", paramString2);
-            localIntent.putExtra("notification_title", this.mTitle);
-            localIntent.putExtra("notification_content", this.mDescription);
-            localIntent.putExtra("com.baidu.pushservice.app_id", paramString3);
-            localIntent.putExtra("baidu_message_secur_info", paramArrayOfByte1);
-            localIntent.putExtra("baidu_message_body", paramArrayOfByte2);
-            addCustomContentToIntent(localIntent);
-            p.b(paramContext, localIntent, "com.baidu.android.pushservice.action.notification.CLICK", this.mPkgName);
-            insertNotiBehavior(paramContext, paramString2, paramString3, "010201");
-            if ((this.mOpenType == 1) && (this.mUrl != null))
-            {
-              paramString1 = new Intent();
-              paramString1.setAction("android.intent.action.VIEW");
-              paramString1.setData(Uri.parse(this.mUrl));
-              paramString1.addFlags(268435456);
-              paramContext.startActivity(paramString1);
-              return;
+        final String jSONObject2 = jSONObject.toString();
+        final Context context2 = context;
+        C0559d.m2387a().m2388a(new C0420c(this, "PushService-linkhit", (short) 90) {
+            /* renamed from: e */
+            final /* synthetic */ PublicMsg f1900e;
+
+            /* renamed from: a */
+            public void mo1272a() {
+                try {
+                    HashMap hashMap = new HashMap();
+                    C0486b.m2078a(hashMap);
+                    hashMap.put("method", "linkhit");
+                    hashMap.put("channel_token", b);
+                    hashMap.put("data", jSONObject2);
+                    if (C0521b.m2163a(C0554h.m2382e() + a, "POST", hashMap).m2162b() == 200) {
+                        C0527a.m2219c(PublicMsg.TAG, "<<< public msg send result return OK!", context2.getApplicationContext());
+                    }
+                } catch (Exception e) {
+                    C0527a.m2218b(PublicMsg.TAG, "error : " + e.getMessage(), context2.getApplicationContext());
+                }
             }
-          }
-        }
-        catch (PackageManager.NameNotFoundException paramString1)
-        {
-          com.baidu.android.pushservice.g.a.b("PublicMsg", "package not exist \r\n" + paramString1.getMessage(), paramContext);
-          return;
-          if (this.mOpenType == 2)
-          {
-            if (TextUtils.isEmpty(this.mPkgContent)) {
-              break label410;
-            }
-            paramString3 = Intent.parseUri(this.mPkgContent, 0);
-            paramString3.setPackage(this.mPkgName);
-            if (paramString1.queryBroadcastReceivers(paramString3, 0).size() > 0)
-            {
-              paramContext.sendBroadcast(paramString3);
-              return;
-            }
-          }
-        }
-        catch (URISyntaxException paramString1)
-        {
-          com.baidu.android.pushservice.g.a.b("PublicMsg", "uri to intent fail \r\n" + paramString1.getMessage(), paramContext);
-          return;
-        }
-      }
-    } while (paramString1.queryIntentActivities(paramString3, 0).size() <= 0);
-    paramString3.addFlags(268435456);
-    paramString3.putExtra("open_type", 1);
-    paramString3.putExtra("msgid", paramString2);
-    paramContext.startActivity(paramString3);
-    return;
-    label410:
-    startApplicationLauncher(paramContext, this.mPkgName, paramString2);
-  }
-  
-  public void handleRichMediaNotification(Context paramContext, String paramString1, String paramString2)
-  {
-    com.baidu.android.pushservice.g.a.a("PublicMsg", "Handle rich media notification", paramContext);
-    k localk = new k();
-    if ("com.baidu.android.pushservice.action.media.DELETE".equals(paramString1)) {}
-    for (localk.d = "010402";; localk.d = "010401")
-    {
-      localk.a = this.mMsgId;
-      localk.c = l.h.a();
-      localk.e = System.currentTimeMillis();
-      localk.g = 0;
-      localk.f = com.baidu.android.pushservice.h.a.b.b(paramContext);
-      localk.h = paramString2;
-      paramString1 = com.baidu.android.pushservice.b.b.a(paramContext).d(paramString2);
-      if (paramString1 != null) {
-        insertBehavior(paramContext, paramString1, localk, new com.baidu.android.pushservice.h.j(paramString2));
-      }
-      return;
-      paramString1 = new Intent("com.baidu.android.pushservice.action.media.CLICK");
-      paramString1.setPackage(this.mPkgName);
-      paramString1.putExtra("public_msg", this);
-      paramContext.sendBroadcast(paramString1);
+        });
     }
-  }
-  
-  public String toString()
-  {
-    return "\r\n mMsgId = " + this.mMsgId + "\r\n mAppId = " + this.mAppId + "\r\n mTitle = " + this.mTitle + "\r\n mDescription = " + this.mDescription + "\r\n mUrl = " + this.mUrl + "\r\n mNetType = " + this.mNetType + "\r\n mSupportAppname = " + this.mSupportAppname + "\r\n mIsSupportApp = " + this.mIsSupportApp + "\r\n mPkgName = " + this.mPkgName + "\r\n mPlgVercode = " + this.mPkgVercode + "\r\n mNotificationBuilder = " + this.mNotificationBuilder + "\r\n mNotificationBasicStyle = " + this.mNotificationBasicStyle + "\r\n mOpenType = " + this.mOpenType + "\r\n mCustomContent = " + this.mCustomContent + "\r\n mIntent = " + this.mPkgContent + "\r\n";
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeString(this.mMsgId);
-    paramParcel.writeString(this.mAppId);
-    paramParcel.writeString(this.mTitle);
-    paramParcel.writeString(this.mDescription);
-    paramParcel.writeString(this.mUrl);
-    paramParcel.writeString(this.mPkgName);
-    paramParcel.writeInt(this.mPkgVercode);
-    paramParcel.writeInt(this.mNotificationBuilder);
-    paramParcel.writeInt(this.mNotificationBasicStyle);
-    paramParcel.writeInt(this.mOpenType);
-    paramParcel.writeInt(this.mUserConfirm);
-    paramParcel.writeString(this.mCustomContent);
-    paramParcel.writeString(this.mPkgContent);
-    paramParcel.writeInt(this.mAdvertiseStyle);
-    paramParcel.writeString(this.mAdvertiseSmallIconUrl);
-    paramParcel.writeString(this.mAdvertiseLargeIconUrl);
-    paramParcel.writeString(this.mAdvertiseClickUrl);
-    paramParcel.writeString(this.mAdvertiseBigPictureUrl);
-    paramParcel.writeString(this.mAdvertiseBigPictureClickUrl);
-    paramParcel.writeString(this.mAdvertiseDownloadClickUrl);
-    paramParcel.writeString(this.mAdvertiseDetailClickUrl);
-    paramParcel.writeString(this.mAdvertiseBigPictureTitle);
-    paramParcel.writeString(this.mAdvertiseBigPictureContent);
-  }
+
+    private void startApplicationLauncher(Context context, String str, String str2) {
+        try {
+            Intent parseUri = this.mPkgContent != null ? Intent.parseUri(this.mPkgContent, 0) : new Intent();
+            String launcherActivityName = getLauncherActivityName(context, str);
+            if (launcherActivityName != null) {
+                parseUri.setClassName(str, launcherActivityName);
+                parseUri.setFlags(parseUri.getFlags() | RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                parseUri.putExtra("open_type", 1);
+                parseUri.putExtra("msgid", str2);
+                context.startActivity(parseUri);
+            }
+        } catch (URISyntaxException e) {
+            C0527a.m2218b(TAG, "error " + e.getMessage(), context.getApplicationContext());
+        }
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public String getLauncherActivityName(Context context, String str) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.LAUNCHER");
+        intent.setPackage(str);
+        for (ResolveInfo resolveInfo : context.getPackageManager().queryIntentActivities(intent, 0)) {
+            if (resolveInfo.activityInfo != null) {
+                return resolveInfo.activityInfo.name;
+            }
+        }
+        return null;
+    }
+
+    public void handle(Context context, String str, String str2) {
+        int i = 1;
+        int i2 = 0;
+        C0527a.m2216a(TAG, "--handle--", context.getApplicationContext());
+        if ("com.baidu.pushservice.action.publicmsg.DELETE_V2".equals(str)) {
+            C0527a.m2216a(TAG, "Public msg deleted by user", context.getApplicationContext());
+            sendResult(context, str2, 2);
+            return;
+        }
+        Intent intent;
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            if (packageManager.getPackageInfo(this.mPkgName, 0).versionCode >= this.mPkgVercode) {
+                Intent parseUri = Intent.parseUri(this.mPkgContent, 0);
+                parseUri.setPackage(this.mPkgName);
+                if (packageManager.queryBroadcastReceivers(parseUri, 0).size() > 0) {
+                    context.sendBroadcast(parseUri);
+                } else if (packageManager.queryIntentActivities(parseUri, 0).size() > 0) {
+                    parseUri.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                    context.startActivity(parseUri);
+                }
+                i2 = i;
+                if (i2 == 0) {
+                    intent = new Intent("android.intent.action.VIEW");
+                    intent.setData(Uri.parse(this.mUrl));
+                    intent.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                    try {
+                        context.startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                        C0527a.m2218b(TAG, ">>> Url cann't be deal! \r\n" + e.getMessage(), context);
+                    }
+                }
+                sendResult(context, str2, i2);
+            }
+            i = 0;
+            i2 = i;
+        } catch (NameNotFoundException e2) {
+            C0527a.m2218b(TAG, "package not exist \r\n" + e2.getMessage(), context);
+        } catch (URISyntaxException e3) {
+            C0527a.m2218b(TAG, "uri to intent fail \r\n" + e3.getMessage(), context);
+        } catch (Exception e4) {
+            C0527a.m2218b(TAG, "parse customize action error\r\n" + e4.getMessage(), context);
+        }
+        if (i2 == 0) {
+            intent = new Intent("android.intent.action.VIEW");
+            intent.setData(Uri.parse(this.mUrl));
+            intent.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+            context.startActivity(intent);
+        }
+        sendResult(context, str2, i2);
+    }
+
+    public void handleAlarmMessage(Context context, String str, String str2, String str3) {
+        insertNotiBehavior(context, str2, str3, str);
+    }
+
+    public void handlePrivateNotification(Context context, String str, String str2, String str3, byte[] bArr, byte[] bArr2) {
+        C0527a.m2216a(TAG, "=== Handle private notification: " + str, context);
+        if ("com.baidu.android.pushservice.action.privatenotification.DELETE".equals(str)) {
+            insertNotiBehavior(context, str2, str3, "010202");
+            return;
+        }
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            if (packageManager.getPackageInfo(this.mPkgName, 0).versionCode >= this.mPkgVercode) {
+                Intent intent = new Intent();
+                intent.putExtra("msgid", str2);
+                intent.putExtra("notification_title", this.mTitle);
+                intent.putExtra("notification_content", this.mDescription);
+                intent.putExtra("com.baidu.pushservice.app_id", str3);
+                intent.putExtra("baidu_message_secur_info", bArr);
+                intent.putExtra("baidu_message_body", bArr2);
+                addCustomContentToIntent(intent);
+                C0578p.m2545b(context, intent, "com.baidu.android.pushservice.action.notification.CLICK", this.mPkgName);
+                insertNotiBehavior(context, str2, str3, "010201");
+                if (this.mOpenType == 1 && this.mUrl != null) {
+                    Intent intent2 = new Intent();
+                    intent2.setAction("android.intent.action.VIEW");
+                    intent2.setData(Uri.parse(this.mUrl));
+                    intent2.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                    context.startActivity(intent2);
+                } else if (this.mOpenType != 2) {
+                } else {
+                    if (TextUtils.isEmpty(this.mPkgContent)) {
+                        startApplicationLauncher(context, this.mPkgName, str2);
+                        return;
+                    }
+                    intent = Intent.parseUri(this.mPkgContent, 0);
+                    intent.setPackage(this.mPkgName);
+                    if (packageManager.queryBroadcastReceivers(intent, 0).size() > 0) {
+                        context.sendBroadcast(intent);
+                    } else if (packageManager.queryIntentActivities(intent, 0).size() > 0) {
+                        intent.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                        intent.putExtra("open_type", 1);
+                        intent.putExtra("msgid", str2);
+                        context.startActivity(intent);
+                    }
+                }
+            }
+        } catch (NameNotFoundException e) {
+            C0527a.m2218b(TAG, "package not exist \r\n" + e.getMessage(), context);
+        } catch (URISyntaxException e2) {
+            C0527a.m2218b(TAG, "uri to intent fail \r\n" + e2.getMessage(), context);
+        }
+    }
+
+    public void handleRichMediaNotification(Context context, String str, String str2) {
+        C0527a.m2216a(TAG, "Handle rich media notification", context);
+        C0545k c0545k = new C0545k();
+        if ("com.baidu.android.pushservice.action.media.DELETE".equals(str)) {
+            c0545k.d = "010402";
+        } else {
+            Intent intent = new Intent("com.baidu.android.pushservice.action.media.CLICK");
+            intent.setPackage(this.mPkgName);
+            intent.putExtra("public_msg", this);
+            context.sendBroadcast(intent);
+            c0545k.d = "010401";
+        }
+        c0545k.f1803a = this.mMsgId;
+        c0545k.f1805c = C0612l.MSG_TYPE_RICH_MEDIA.m2706a();
+        c0545k.e = System.currentTimeMillis();
+        c0545k.g = 0;
+        c0545k.f = C0532b.m2255b(context);
+        c0545k.h = str2;
+        C0437f d = C0432b.m1870a(context).m1886d(str2);
+        if (d != null) {
+            insertBehavior(context, d, c0545k, new C0544j(str2));
+        }
+    }
+
+    public String toString() {
+        return "\r\n mMsgId = " + this.mMsgId + "\r\n mAppId = " + this.mAppId + "\r\n mTitle = " + this.mTitle + "\r\n mDescription = " + this.mDescription + "\r\n mUrl = " + this.mUrl + "\r\n mNetType = " + this.mNetType + "\r\n mSupportAppname = " + this.mSupportAppname + "\r\n mIsSupportApp = " + this.mIsSupportApp + "\r\n mPkgName = " + this.mPkgName + "\r\n mPlgVercode = " + this.mPkgVercode + "\r\n mNotificationBuilder = " + this.mNotificationBuilder + "\r\n mNotificationBasicStyle = " + this.mNotificationBasicStyle + "\r\n mOpenType = " + this.mOpenType + "\r\n mCustomContent = " + this.mCustomContent + "\r\n mIntent = " + this.mPkgContent + "\r\n";
+    }
+
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.mMsgId);
+        parcel.writeString(this.mAppId);
+        parcel.writeString(this.mTitle);
+        parcel.writeString(this.mDescription);
+        parcel.writeString(this.mUrl);
+        parcel.writeString(this.mPkgName);
+        parcel.writeInt(this.mPkgVercode);
+        parcel.writeInt(this.mNotificationBuilder);
+        parcel.writeInt(this.mNotificationBasicStyle);
+        parcel.writeInt(this.mOpenType);
+        parcel.writeInt(this.mUserConfirm);
+        parcel.writeString(this.mCustomContent);
+        parcel.writeString(this.mPkgContent);
+        parcel.writeInt(this.mAdvertiseStyle);
+        parcel.writeString(this.mAdvertiseSmallIconUrl);
+        parcel.writeString(this.mAdvertiseLargeIconUrl);
+        parcel.writeString(this.mAdvertiseClickUrl);
+        parcel.writeString(this.mAdvertiseBigPictureUrl);
+        parcel.writeString(this.mAdvertiseBigPictureClickUrl);
+        parcel.writeString(this.mAdvertiseDownloadClickUrl);
+        parcel.writeString(this.mAdvertiseDetailClickUrl);
+        parcel.writeString(this.mAdvertiseBigPictureTitle);
+        parcel.writeString(this.mAdvertiseBigPictureContent);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/message/PublicMsg.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

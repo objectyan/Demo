@@ -7,80 +7,63 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ShowDebugTextManager
-{
-  private static final int MaxNum = 20;
-  private static Object mSyncObj = new Object();
-  private static ShowDebugTextManager sInstance = null;
-  private LinearLayout mDebugLayout = null;
-  private ArrayList<String> mDebugText = new ArrayList();
-  private TextView mDebugTextView = null;
-  private SimpleDateFormat mLiteSDF = null;
-  private SimpleDateFormat mSDF = null;
-  
-  public static ShowDebugTextManager getInstance()
-  {
-    if (sInstance == null) {}
-    synchronized (mSyncObj)
-    {
-      if (sInstance == null) {
-        sInstance = new ShowDebugTextManager();
-      }
-      return sInstance;
+public class ShowDebugTextManager {
+    private static final int MaxNum = 20;
+    private static Object mSyncObj = new Object();
+    private static ShowDebugTextManager sInstance = null;
+    private LinearLayout mDebugLayout;
+    private ArrayList<String> mDebugText;
+    private TextView mDebugTextView;
+    private SimpleDateFormat mLiteSDF;
+    private SimpleDateFormat mSDF;
+
+    private ShowDebugTextManager() {
+        this.mDebugLayout = null;
+        this.mDebugTextView = null;
+        this.mDebugText = new ArrayList();
+        this.mSDF = null;
+        this.mLiteSDF = null;
+        this.mSDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.mLiteSDF = new SimpleDateFormat("HH:mm:ss");
     }
-  }
-  
-  private void printText(String paramString)
-  {
-    this.mDebugLayout = RGMapModeViewController.getInstance().getDebugLinearLayout();
-    this.mDebugTextView = RGMapModeViewController.getInstance().getDebugText();
-    if ((this.mDebugLayout == null) || (this.mDebugTextView == null)) {
-      return;
-    }
-    if ((this.mDebugText != null) && (this.mDebugText.size() < 20)) {
-      this.mDebugText.add(0, paramString);
-    }
-    String str;
-    for (;;)
-    {
-      paramString = "";
-      str = paramString;
-      if (this.mDebugText == null) {
-        break;
-      }
-      int i = 0;
-      for (;;)
-      {
-        str = paramString;
-        if (i >= this.mDebugText.size()) {
-          break;
+
+    public static ShowDebugTextManager getInstance() {
+        if (sInstance == null) {
+            synchronized (mSyncObj) {
+                if (sInstance == null) {
+                    sInstance = new ShowDebugTextManager();
+                }
+            }
         }
-        paramString = paramString + "\n" + (String)this.mDebugText.get(i);
-        i += 1;
-      }
-      if ((this.mDebugText != null) && (this.mDebugText.size() >= 20))
-      {
-        this.mDebugText.remove(this.mDebugText.size() - 1);
-        this.mDebugText.add(0, paramString);
-      }
+        return sInstance;
     }
-    this.mDebugLayout.setVisibility(0);
-    this.mDebugTextView.setText(str);
-  }
-  
-  public void addDebugText(String paramString)
-  {
-    printText(this.mSDF.format(new Date()) + " ### " + paramString);
-  }
-  
-  public void addLiteDebugText(String paramString)
-  {
-    printText(this.mLiteSDF.format(new Date()) + " # " + paramString);
-  }
+
+    public void addLiteDebugText(String debugText) {
+        printText(this.mLiteSDF.format(new Date()) + " # " + debugText);
+    }
+
+    public void addDebugText(String debugText) {
+        printText(this.mSDF.format(new Date()) + " ### " + debugText);
+    }
+
+    private void printText(String printText) {
+        this.mDebugLayout = RGMapModeViewController.getInstance().getDebugLinearLayout();
+        this.mDebugTextView = RGMapModeViewController.getInstance().getDebugText();
+        if (this.mDebugLayout != null && this.mDebugTextView != null) {
+            if (this.mDebugText != null && this.mDebugText.size() < 20) {
+                this.mDebugText.add(0, printText);
+            } else if (this.mDebugText != null && this.mDebugText.size() >= 20) {
+                this.mDebugText.remove(this.mDebugText.size() - 1);
+                this.mDebugText.add(0, printText);
+            }
+            String text = "";
+            if (this.mDebugText != null) {
+                for (int i = 0; i < this.mDebugText.size(); i++) {
+                    text = text + "\n" + ((String) this.mDebugText.get(i));
+                }
+            }
+            this.mDebugLayout.setVisibility(0);
+            this.mDebugTextView.setText(text);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/util/ShowDebugTextManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

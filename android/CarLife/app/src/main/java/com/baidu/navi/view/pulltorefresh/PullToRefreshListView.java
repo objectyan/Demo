@@ -12,278 +12,232 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.AnimationStyle;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Mode;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Orientation;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.State;
 import com.baidu.navi.view.pulltorefresh.internal.EmptyViewMethodAccessor;
 import com.baidu.navi.view.pulltorefresh.internal.LoadingLayout;
 
-public class PullToRefreshListView
-  extends PullToRefreshAdapterViewBase<ListView>
-{
-  private LoadingLayout mFooterLoadingView;
-  private LoadingLayout mHeaderLoadingView;
-  private boolean mListViewExtrasEnabled;
-  private FrameLayout mLvFooterLoadingFrame;
-  
-  public PullToRefreshListView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public PullToRefreshListView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public PullToRefreshListView(Context paramContext, PullToRefreshBase.Mode paramMode)
-  {
-    super(paramContext, paramMode);
-  }
-  
-  public PullToRefreshListView(Context paramContext, PullToRefreshBase.Mode paramMode, PullToRefreshBase.AnimationStyle paramAnimationStyle)
-  {
-    super(paramContext, paramMode, paramAnimationStyle);
-  }
-  
-  protected ListView createListView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    if (Build.VERSION.SDK_INT >= 9) {
-      return new InternalListViewSDK9(paramContext, paramAttributeSet);
-    }
-    return new InternalListView(paramContext, paramAttributeSet);
-  }
-  
-  protected LoadingLayoutProxy createLoadingLayoutProxy(boolean paramBoolean1, boolean paramBoolean2)
-  {
-    LoadingLayoutProxy localLoadingLayoutProxy = super.createLoadingLayoutProxy(paramBoolean1, paramBoolean2);
-    if (this.mListViewExtrasEnabled)
-    {
-      PullToRefreshBase.Mode localMode = getMode();
-      if ((paramBoolean1) && (localMode.showHeaderLoadingLayout())) {
-        localLoadingLayoutProxy.addLayout(this.mHeaderLoadingView);
-      }
-      if ((paramBoolean2) && (localMode.showFooterLoadingLayout())) {
-        localLoadingLayoutProxy.addLayout(this.mFooterLoadingView);
-      }
-    }
-    return localLoadingLayoutProxy;
-  }
-  
-  protected ListView createRefreshableView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    paramContext = createListView(paramContext, paramAttributeSet);
-    paramContext.setId(16908298);
-    return paramContext;
-  }
-  
-  public ListAdapter getAdapter()
-  {
-    return ((ListView)this.mRefreshableView).getAdapter();
-  }
-  
-  public final PullToRefreshBase.Orientation getPullToRefreshScrollDirection()
-  {
-    return PullToRefreshBase.Orientation.VERTICAL;
-  }
-  
-  protected void handleStyledAttributes(TypedArray paramTypedArray)
-  {
-    super.handleStyledAttributes(paramTypedArray);
-    this.mListViewExtrasEnabled = paramTypedArray.getBoolean(16, true);
-    if (this.mListViewExtrasEnabled)
-    {
-      FrameLayout.LayoutParams localLayoutParams = new FrameLayout.LayoutParams(-1, -2, 1);
-      FrameLayout localFrameLayout = new FrameLayout(getContext());
-      this.mHeaderLoadingView = createLoadingLayout(getContext(), PullToRefreshBase.Mode.PULL_FROM_START, paramTypedArray);
-      this.mHeaderLoadingView.setVisibility(8);
-      localFrameLayout.addView(this.mHeaderLoadingView, localLayoutParams);
-      ((ListView)this.mRefreshableView).addHeaderView(localFrameLayout, null, false);
-      this.mLvFooterLoadingFrame = new FrameLayout(getContext());
-      this.mFooterLoadingView = createLoadingLayout(getContext(), PullToRefreshBase.Mode.PULL_FROM_END, paramTypedArray);
-      this.mFooterLoadingView.setVisibility(8);
-      this.mLvFooterLoadingFrame.addView(this.mFooterLoadingView, localLayoutParams);
-      if (!paramTypedArray.hasValue(15)) {
-        setScrollingWhileRefreshingEnabled(true);
-      }
-    }
-  }
-  
-  public void hideLayoutViews()
-  {
-    getHeaderLayout().hideAllViews();
-    getFooterLayout().hideAllViews();
-    this.mLvFooterLoadingFrame.setVisibility(8);
-  }
-  
-  protected void onRefreshing(boolean paramBoolean)
-  {
-    Object localObject = ((ListView)this.mRefreshableView).getAdapter();
-    if ((!this.mListViewExtrasEnabled) || (!getShowViewWhileRefreshing()) || (localObject == null) || (((ListAdapter)localObject).isEmpty()))
-    {
-      super.onRefreshing(paramBoolean);
-      return;
-    }
-    super.onRefreshing(false);
-    LoadingLayout localLoadingLayout2;
-    LoadingLayout localLoadingLayout1;
-    int j;
-    switch (getCurrentMode())
-    {
-    default: 
-      localLoadingLayout2 = getHeaderLayout();
-      localObject = this.mHeaderLoadingView;
-      localLoadingLayout1 = this.mFooterLoadingView;
-      j = 0;
-    }
-    for (int i = getScrollY() + getHeaderSize();; i = getScrollY() - getFooterSize())
-    {
-      localLoadingLayout2.reset();
-      localLoadingLayout2.hideAllViews();
-      localLoadingLayout1.setVisibility(8);
-      ((LoadingLayout)localObject).setVisibility(0);
-      ((LoadingLayout)localObject).refreshing();
-      if (!paramBoolean) {
-        break;
-      }
-      disableLoadingLayoutVisibilityChanges();
-      setHeaderScroll(i);
-      ((ListView)this.mRefreshableView).setSelection(j);
-      smoothScrollTo(0);
-      return;
-      localLoadingLayout2 = getFooterLayout();
-      localObject = this.mFooterLoadingView;
-      localLoadingLayout1 = this.mHeaderLoadingView;
-      j = ((ListView)this.mRefreshableView).getCount() - 1;
-    }
-  }
-  
-  protected void onReset()
-  {
-    int m = 1;
-    int i = 1;
-    if (!this.mListViewExtrasEnabled)
-    {
-      super.onReset();
-      return;
-    }
-    LoadingLayout localLoadingLayout2;
-    LoadingLayout localLoadingLayout1;
-    int j;
-    int k;
-    switch (getCurrentMode())
-    {
-    default: 
-      localLoadingLayout2 = getHeaderLayout();
-      localLoadingLayout1 = this.mHeaderLoadingView;
-      j = -getHeaderSize();
-      k = 0;
-      if (Math.abs(((ListView)this.mRefreshableView).getFirstVisiblePosition() - 0) > 1) {
-        break;
-      }
-    }
-    for (;;)
-    {
-      if (localLoadingLayout1.getVisibility() == 0)
-      {
-        localLoadingLayout2.showInvisibleViews();
-        localLoadingLayout1.setVisibility(8);
-        if ((i != 0) && (getState() != PullToRefreshBase.State.MANUAL_REFRESHING))
-        {
-          ((ListView)this.mRefreshableView).setSelection(k);
-          setHeaderScroll(j);
+public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
+    private LoadingLayout mFooterLoadingView;
+    private LoadingLayout mHeaderLoadingView;
+    private boolean mListViewExtrasEnabled;
+    private FrameLayout mLvFooterLoadingFrame;
+
+    protected class InternalListView extends ListView implements EmptyViewMethodAccessor {
+        private boolean mAddedLvFooter = false;
+
+        public InternalListView(Context context, AttributeSet attrs) {
+            super(context, attrs);
         }
-      }
-      super.onReset();
-      return;
-      localLoadingLayout2 = getFooterLayout();
-      localLoadingLayout1 = this.mFooterLoadingView;
-      k = ((ListView)this.mRefreshableView).getCount() - 1;
-      j = getFooterSize();
-      if (Math.abs(((ListView)this.mRefreshableView).getLastVisiblePosition() - k) <= 1) {}
-      for (i = m;; i = 0) {
-        break;
-      }
-      i = 0;
+
+        protected void dispatchDraw(Canvas canvas) {
+            try {
+                super.dispatchDraw(canvas);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public boolean dispatchTouchEvent(MotionEvent ev) {
+            try {
+                return super.dispatchTouchEvent(ev);
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        public void setAdapter(ListAdapter adapter) {
+            if (!(PullToRefreshListView.this.mLvFooterLoadingFrame == null || this.mAddedLvFooter)) {
+                addFooterView(PullToRefreshListView.this.mLvFooterLoadingFrame, null, false);
+                this.mAddedLvFooter = true;
+            }
+            super.setAdapter(adapter);
+        }
+
+        public void setEmptyView(View emptyView) {
+            PullToRefreshListView.this.setEmptyView(emptyView);
+        }
+
+        public void setEmptyViewInternal(View emptyView) {
+            super.setEmptyView(emptyView);
+        }
     }
-  }
-  
-  protected class InternalListView
-    extends ListView
-    implements EmptyViewMethodAccessor
-  {
-    private boolean mAddedLvFooter = false;
-    
-    public InternalListView(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramAttributeSet);
+
+    @TargetApi(9)
+    final class InternalListViewSDK9 extends InternalListView {
+        public InternalListViewSDK9(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+            boolean returnValue = super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+            OverscrollHelper.overScrollBy(PullToRefreshListView.this, deltaX, scrollX, deltaY, scrollY, isTouchEvent);
+            return returnValue;
+        }
     }
-    
-    protected void dispatchDraw(Canvas paramCanvas)
-    {
-      try
-      {
-        super.dispatchDraw(paramCanvas);
-        return;
-      }
-      catch (IndexOutOfBoundsException paramCanvas)
-      {
-        paramCanvas.printStackTrace();
-      }
+
+    public PullToRefreshListView(Context context) {
+        super(context);
     }
-    
-    public boolean dispatchTouchEvent(MotionEvent paramMotionEvent)
-    {
-      try
-      {
-        boolean bool = super.dispatchTouchEvent(paramMotionEvent);
-        return bool;
-      }
-      catch (IndexOutOfBoundsException paramMotionEvent)
-      {
-        paramMotionEvent.printStackTrace();
-      }
-      return false;
+
+    public PullToRefreshListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-    
-    public void setAdapter(ListAdapter paramListAdapter)
-    {
-      if ((PullToRefreshListView.this.mLvFooterLoadingFrame != null) && (!this.mAddedLvFooter))
-      {
-        addFooterView(PullToRefreshListView.this.mLvFooterLoadingFrame, null, false);
-        this.mAddedLvFooter = true;
-      }
-      super.setAdapter(paramListAdapter);
+
+    public PullToRefreshListView(Context context, Mode mode) {
+        super(context, mode);
     }
-    
-    public void setEmptyView(View paramView)
-    {
-      PullToRefreshListView.this.setEmptyView(paramView);
+
+    public PullToRefreshListView(Context context, Mode mode, AnimationStyle style) {
+        super(context, mode, style);
     }
-    
-    public void setEmptyViewInternal(View paramView)
-    {
-      super.setEmptyView(paramView);
+
+    public final Orientation getPullToRefreshScrollDirection() {
+        return Orientation.VERTICAL;
     }
-  }
-  
-  @TargetApi(9)
-  final class InternalListViewSDK9
-    extends PullToRefreshListView.InternalListView
-  {
-    public InternalListViewSDK9(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramContext, paramAttributeSet);
+
+    protected void onRefreshing(boolean doScroll) {
+        ListAdapter adapter = ((ListView) this.mRefreshableView).getAdapter();
+        if (!this.mListViewExtrasEnabled || !getShowViewWhileRefreshing() || adapter == null || adapter.isEmpty()) {
+            super.onRefreshing(doScroll);
+            return;
+        }
+        LoadingLayout origLoadingView;
+        LoadingLayout listViewLoadingView;
+        LoadingLayout oppositeListViewLoadingView;
+        int selection;
+        int scrollToY;
+        super.onRefreshing(false);
+        switch (getCurrentMode()) {
+            case MANUAL_REFRESH_ONLY:
+            case PULL_FROM_END:
+                origLoadingView = getFooterLayout();
+                listViewLoadingView = this.mFooterLoadingView;
+                oppositeListViewLoadingView = this.mHeaderLoadingView;
+                selection = ((ListView) this.mRefreshableView).getCount() - 1;
+                scrollToY = getScrollY() - getFooterSize();
+                break;
+            default:
+                origLoadingView = getHeaderLayout();
+                listViewLoadingView = this.mHeaderLoadingView;
+                oppositeListViewLoadingView = this.mFooterLoadingView;
+                selection = 0;
+                scrollToY = getScrollY() + getHeaderSize();
+                break;
+        }
+        origLoadingView.reset();
+        origLoadingView.hideAllViews();
+        oppositeListViewLoadingView.setVisibility(8);
+        listViewLoadingView.setVisibility(0);
+        listViewLoadingView.refreshing();
+        if (doScroll) {
+            disableLoadingLayoutVisibilityChanges();
+            setHeaderScroll(scrollToY);
+            ((ListView) this.mRefreshableView).setSelection(selection);
+            smoothScrollTo(0);
+        }
     }
-    
-    protected boolean overScrollBy(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, int paramInt6, int paramInt7, int paramInt8, boolean paramBoolean)
-    {
-      boolean bool = super.overScrollBy(paramInt1, paramInt2, paramInt3, paramInt4, paramInt5, paramInt6, paramInt7, paramInt8, paramBoolean);
-      OverscrollHelper.overScrollBy(PullToRefreshListView.this, paramInt1, paramInt3, paramInt2, paramInt4, paramBoolean);
-      return bool;
+
+    protected void onReset() {
+        boolean scrollLvToEdge = true;
+        if (this.mListViewExtrasEnabled) {
+            LoadingLayout originalLoadingLayout;
+            LoadingLayout listViewLoadingLayout;
+            int selection;
+            int scrollToHeight;
+            switch (getCurrentMode()) {
+                case MANUAL_REFRESH_ONLY:
+                case PULL_FROM_END:
+                    originalLoadingLayout = getFooterLayout();
+                    listViewLoadingLayout = this.mFooterLoadingView;
+                    selection = ((ListView) this.mRefreshableView).getCount() - 1;
+                    scrollToHeight = getFooterSize();
+                    if (Math.abs(((ListView) this.mRefreshableView).getLastVisiblePosition() - selection) > 1) {
+                        scrollLvToEdge = false;
+                    }
+                    break;
+                default:
+                    originalLoadingLayout = getHeaderLayout();
+                    listViewLoadingLayout = this.mHeaderLoadingView;
+                    scrollToHeight = -getHeaderSize();
+                    selection = 0;
+                    if (Math.abs(((ListView) this.mRefreshableView).getFirstVisiblePosition() - 0) > 1) {
+                        scrollLvToEdge = false;
+                        break;
+                    }
+                    break;
+            }
+            if (listViewLoadingLayout.getVisibility() == 0) {
+                originalLoadingLayout.showInvisibleViews();
+                listViewLoadingLayout.setVisibility(8);
+                if (scrollLvToEdge && getState() != State.MANUAL_REFRESHING) {
+                    ((ListView) this.mRefreshableView).setSelection(selection);
+                    setHeaderScroll(scrollToHeight);
+                }
+            }
+            super.onReset();
+            return;
+        }
+        super.onReset();
     }
-  }
+
+    protected LoadingLayoutProxy createLoadingLayoutProxy(boolean includeStart, boolean includeEnd) {
+        LoadingLayoutProxy proxy = super.createLoadingLayoutProxy(includeStart, includeEnd);
+        if (this.mListViewExtrasEnabled) {
+            Mode mode = getMode();
+            if (includeStart && mode.showHeaderLoadingLayout()) {
+                proxy.addLayout(this.mHeaderLoadingView);
+            }
+            if (includeEnd && mode.showFooterLoadingLayout()) {
+                proxy.addLayout(this.mFooterLoadingView);
+            }
+        }
+        return proxy;
+    }
+
+    protected ListView createListView(Context context, AttributeSet attrs) {
+        if (VERSION.SDK_INT >= 9) {
+            return new InternalListViewSDK9(context, attrs);
+        }
+        return new InternalListView(context, attrs);
+    }
+
+    protected ListView createRefreshableView(Context context, AttributeSet attrs) {
+        ListView lv = createListView(context, attrs);
+        lv.setId(16908298);
+        return lv;
+    }
+
+    protected void handleStyledAttributes(TypedArray a) {
+        super.handleStyledAttributes(a);
+        this.mListViewExtrasEnabled = a.getBoolean(16, true);
+        if (this.mListViewExtrasEnabled) {
+            LayoutParams lp = new LayoutParams(-1, -2, 1);
+            FrameLayout frame = new FrameLayout(getContext());
+            this.mHeaderLoadingView = createLoadingLayout(getContext(), Mode.PULL_FROM_START, a);
+            this.mHeaderLoadingView.setVisibility(8);
+            frame.addView(this.mHeaderLoadingView, lp);
+            ((ListView) this.mRefreshableView).addHeaderView(frame, null, false);
+            this.mLvFooterLoadingFrame = new FrameLayout(getContext());
+            this.mFooterLoadingView = createLoadingLayout(getContext(), Mode.PULL_FROM_END, a);
+            this.mFooterLoadingView.setVisibility(8);
+            this.mLvFooterLoadingFrame.addView(this.mFooterLoadingView, lp);
+            if (!a.hasValue(15)) {
+                setScrollingWhileRefreshingEnabled(true);
+            }
+        }
+    }
+
+    public void hideLayoutViews() {
+        getHeaderLayout().hideAllViews();
+        getFooterLayout().hideAllViews();
+        this.mLvFooterLoadingFrame.setVisibility(8);
+    }
+
+    public ListAdapter getAdapter() {
+        return ((ListView) this.mRefreshableView).getAdapter();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/pulltorefresh/PullToRefreshListView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

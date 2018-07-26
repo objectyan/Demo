@@ -2,14 +2,6 @@ package com.google.gson;
 
 import java.lang.reflect.Type;
 
-public abstract interface JsonDeserializationContext
-{
-  public abstract <T> T deserialize(JsonElement paramJsonElement, Type paramType)
-    throws JsonParseException;
+public interface JsonDeserializationContext {
+    <T> T deserialize(JsonElement jsonElement, Type type) throws JsonParseException;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/JsonDeserializationContext.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -6,148 +6,126 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class OfflineVersion
-  extends MessageMicro
-{
-  public static final int OFFLINE_MAP_FIELD_NUMBER = 1;
-  public static final int OFFLINE_SEARCH_FIELD_NUMBER = 2;
-  private boolean a;
-  private String b = "";
-  private boolean c;
-  private String d = "";
-  private int e = -1;
-  
-  public static OfflineVersion parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new OfflineVersion().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static OfflineVersion parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (OfflineVersion)new OfflineVersion().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final OfflineVersion clear()
-  {
-    clearOfflineMap();
-    clearOfflineSearch();
-    this.e = -1;
-    return this;
-  }
-  
-  public OfflineVersion clearOfflineMap()
-  {
-    this.a = false;
-    this.b = "";
-    return this;
-  }
-  
-  public OfflineVersion clearOfflineSearch()
-  {
-    this.c = false;
-    this.d = "";
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.e < 0) {
-      getSerializedSize();
+public final class OfflineVersion extends MessageMicro {
+    public static final int OFFLINE_MAP_FIELD_NUMBER = 1;
+    public static final int OFFLINE_SEARCH_FIELD_NUMBER = 2;
+    /* renamed from: a */
+    private boolean f12218a;
+    /* renamed from: b */
+    private String f12219b = "";
+    /* renamed from: c */
+    private boolean f12220c;
+    /* renamed from: d */
+    private String f12221d = "";
+    /* renamed from: e */
+    private int f12222e = -1;
+
+    public static OfflineVersion parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new OfflineVersion().mergeFrom(codedInputStreamMicro);
     }
-    return this.e;
-  }
-  
-  public String getOfflineMap()
-  {
-    return this.b;
-  }
-  
-  public String getOfflineSearch()
-  {
-    return this.d;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasOfflineMap()) {
-      i = 0 + CodedOutputStreamMicro.computeStringSize(1, getOfflineMap());
+
+    public static OfflineVersion parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (OfflineVersion) new OfflineVersion().mergeFrom(bArr);
     }
-    int j = i;
-    if (hasOfflineSearch()) {
-      j = i + CodedOutputStreamMicro.computeStringSize(2, getOfflineSearch());
-    }
-    this.e = j;
-    return j;
-  }
-  
-  public boolean hasOfflineMap()
-  {
-    return this.a;
-  }
-  
-  public boolean hasOfflineSearch()
-  {
-    return this.c;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public OfflineVersion mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public final OfflineVersion clear() {
+        clearOfflineMap();
+        clearOfflineSearch();
+        this.f12222e = -1;
         return this;
-      case 10: 
-        setOfflineMap(paramCodedInputStreamMicro.readString());
-        break;
-      case 18: 
-        setOfflineSearch(paramCodedInputStreamMicro.readString());
-      }
     }
-  }
-  
-  public OfflineVersion setOfflineMap(String paramString)
-  {
-    this.a = true;
-    this.b = paramString;
-    return this;
-  }
-  
-  public OfflineVersion setOfflineSearch(String paramString)
-  {
-    this.c = true;
-    this.d = paramString;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasOfflineMap()) {
-      paramCodedOutputStreamMicro.writeString(1, getOfflineMap());
+
+    public OfflineVersion clearOfflineMap() {
+        this.f12218a = false;
+        this.f12219b = "";
+        return this;
     }
-    if (hasOfflineSearch()) {
-      paramCodedOutputStreamMicro.writeString(2, getOfflineSearch());
+
+    public OfflineVersion clearOfflineSearch() {
+        this.f12220c = false;
+        this.f12221d = "";
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f12222e < 0) {
+            getSerializedSize();
+        }
+        return this.f12222e;
+    }
+
+    public String getOfflineMap() {
+        return this.f12219b;
+    }
+
+    public String getOfflineSearch() {
+        return this.f12221d;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasOfflineMap()) {
+            i = 0 + CodedOutputStreamMicro.computeStringSize(1, getOfflineMap());
+        }
+        if (hasOfflineSearch()) {
+            i += CodedOutputStreamMicro.computeStringSize(2, getOfflineSearch());
+        }
+        this.f12222e = i;
+        return i;
+    }
+
+    public boolean hasOfflineMap() {
+        return this.f12218a;
+    }
+
+    public boolean hasOfflineSearch() {
+        return this.f12220c;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public OfflineVersion mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    setOfflineMap(codedInputStreamMicro.readString());
+                    continue;
+                case 18:
+                    setOfflineSearch(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public OfflineVersion setOfflineMap(String str) {
+        this.f12218a = true;
+        this.f12219b = str;
+        return this;
+    }
+
+    public OfflineVersion setOfflineSearch(String str) {
+        this.f12220c = true;
+        this.f12221d = str;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasOfflineMap()) {
+            codedOutputStreamMicro.writeString(1, getOfflineMap());
+        }
+        if (hasOfflineSearch()) {
+            codedOutputStreamMicro.writeString(2, getOfflineSearch());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/OfflineVersion.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

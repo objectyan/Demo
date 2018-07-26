@@ -7,37 +7,29 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
 
-public final class af
-{
-  public static final String a = ee.a("BackendWire");
-  
-  public static String a()
-  {
-    Date localDate = v.d().b();
-    return b().format(localDate);
-  }
-  
-  public static Date a(String paramString)
-    throws ParseException
-  {
-    return b().parse(paramString);
-  }
-  
-  public static boolean a(CharSequence paramCharSequence)
-  {
-    return (paramCharSequence == null) || (paramCharSequence.toString().trim().equals(""));
-  }
-  
-  private static DateFormat b()
-  {
-    SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
-    localSimpleDateFormat.setTimeZone(new SimpleTimeZone(2, "UTC"));
-    return localSimpleDateFormat;
-  }
+public final class af {
+    /* renamed from: a */
+    public static final String f22931a = ee.m20407a("BackendWire");
+
+    /* renamed from: a */
+    public static boolean m19798a(CharSequence charSequence) {
+        return charSequence == null || charSequence.toString().trim().equals("");
+    }
+
+    /* renamed from: a */
+    public static Date m19797a(String str) throws ParseException {
+        return m19799b().parse(str);
+    }
+
+    /* renamed from: a */
+    public static String m19796a() {
+        return m19799b().format(C6010v.d().b());
+    }
+
+    /* renamed from: b */
+    private static DateFormat m19799b() {
+        DateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
+        simpleDateFormat.setTimeZone(new SimpleTimeZone(2, "UTC"));
+        return simpleDateFormat;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/af.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

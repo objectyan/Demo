@@ -1,31 +1,21 @@
 package com.tencent.mm.sdk.openapi;
 
 import android.content.Context;
-import com.tencent.mm.sdk.b.b;
+import com.tencent.mm.sdk.p287b.C6094b;
 
-public class WXAPIFactory
-{
-  private static final String TAG = "MicroMsg.PaySdk.WXFactory";
-  
-  private WXAPIFactory()
-  {
-    throw new RuntimeException(getClass().getSimpleName() + " should not be instantiated");
-  }
-  
-  public static IWXAPI createWXAPI(Context paramContext, String paramString)
-  {
-    return createWXAPI(paramContext, paramString, false);
-  }
-  
-  public static IWXAPI createWXAPI(Context paramContext, String paramString, boolean paramBoolean)
-  {
-    b.e("MicroMsg.PaySdk.WXFactory", "createWXAPI, appId = " + paramString + ", checkSignature = " + paramBoolean);
-    return new WXApiImplV10(paramContext, paramString, paramBoolean);
-  }
+public class WXAPIFactory {
+    private static final String TAG = "MicroMsg.PaySdk.WXFactory";
+
+    private WXAPIFactory() {
+        throw new RuntimeException(getClass().getSimpleName() + " should not be instantiated");
+    }
+
+    public static IWXAPI createWXAPI(Context context, String str) {
+        return createWXAPI(context, str, false);
+    }
+
+    public static IWXAPI createWXAPI(Context context, String str, boolean z) {
+        C6094b.m21685e(TAG, "createWXAPI, appId = " + str + ", checkSignature = " + z);
+        return new WXApiImplV10(context, str, z);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/mm/sdk/openapi/WXAPIFactory.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,246 +5,195 @@ import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 import java.util.List;
 
-class AccessibilityNodeInfoCompatIcs
-{
-  public static void addAction(Object paramObject, int paramInt)
-  {
-    ((AccessibilityNodeInfo)paramObject).addAction(paramInt);
-  }
-  
-  public static void addChild(Object paramObject, View paramView)
-  {
-    ((AccessibilityNodeInfo)paramObject).addChild(paramView);
-  }
-  
-  public static List<Object> findAccessibilityNodeInfosByText(Object paramObject, String paramString)
-  {
-    return (List)((AccessibilityNodeInfo)paramObject).findAccessibilityNodeInfosByText(paramString);
-  }
-  
-  public static int getActions(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getActions();
-  }
-  
-  public static void getBoundsInParent(Object paramObject, Rect paramRect)
-  {
-    ((AccessibilityNodeInfo)paramObject).getBoundsInParent(paramRect);
-  }
-  
-  public static void getBoundsInScreen(Object paramObject, Rect paramRect)
-  {
-    ((AccessibilityNodeInfo)paramObject).getBoundsInScreen(paramRect);
-  }
-  
-  public static Object getChild(Object paramObject, int paramInt)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getChild(paramInt);
-  }
-  
-  public static int getChildCount(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getChildCount();
-  }
-  
-  public static CharSequence getClassName(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getClassName();
-  }
-  
-  public static CharSequence getContentDescription(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getContentDescription();
-  }
-  
-  public static CharSequence getPackageName(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getPackageName();
-  }
-  
-  public static Object getParent(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getParent();
-  }
-  
-  public static CharSequence getText(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getText();
-  }
-  
-  public static int getWindowId(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getWindowId();
-  }
-  
-  public static boolean isCheckable(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isCheckable();
-  }
-  
-  public static boolean isChecked(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isChecked();
-  }
-  
-  public static boolean isClickable(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isClickable();
-  }
-  
-  public static boolean isEnabled(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isEnabled();
-  }
-  
-  public static boolean isFocusable(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isFocusable();
-  }
-  
-  public static boolean isFocused(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isFocused();
-  }
-  
-  public static boolean isLongClickable(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isLongClickable();
-  }
-  
-  public static boolean isPassword(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isPassword();
-  }
-  
-  public static boolean isScrollable(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isScrollable();
-  }
-  
-  public static boolean isSelected(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isSelected();
-  }
-  
-  public static Object obtain()
-  {
-    return AccessibilityNodeInfo.obtain();
-  }
-  
-  public static Object obtain(View paramView)
-  {
-    return AccessibilityNodeInfo.obtain(paramView);
-  }
-  
-  public static Object obtain(Object paramObject)
-  {
-    return AccessibilityNodeInfo.obtain((AccessibilityNodeInfo)paramObject);
-  }
-  
-  public static boolean performAction(Object paramObject, int paramInt)
-  {
-    return ((AccessibilityNodeInfo)paramObject).performAction(paramInt);
-  }
-  
-  public static void recycle(Object paramObject)
-  {
-    ((AccessibilityNodeInfo)paramObject).recycle();
-  }
-  
-  public static void setBoundsInParent(Object paramObject, Rect paramRect)
-  {
-    ((AccessibilityNodeInfo)paramObject).setBoundsInParent(paramRect);
-  }
-  
-  public static void setBoundsInScreen(Object paramObject, Rect paramRect)
-  {
-    ((AccessibilityNodeInfo)paramObject).setBoundsInScreen(paramRect);
-  }
-  
-  public static void setCheckable(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setCheckable(paramBoolean);
-  }
-  
-  public static void setChecked(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setChecked(paramBoolean);
-  }
-  
-  public static void setClassName(Object paramObject, CharSequence paramCharSequence)
-  {
-    ((AccessibilityNodeInfo)paramObject).setClassName(paramCharSequence);
-  }
-  
-  public static void setClickable(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setClickable(paramBoolean);
-  }
-  
-  public static void setContentDescription(Object paramObject, CharSequence paramCharSequence)
-  {
-    ((AccessibilityNodeInfo)paramObject).setContentDescription(paramCharSequence);
-  }
-  
-  public static void setEnabled(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setEnabled(paramBoolean);
-  }
-  
-  public static void setFocusable(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setFocusable(paramBoolean);
-  }
-  
-  public static void setFocused(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setFocused(paramBoolean);
-  }
-  
-  public static void setLongClickable(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setLongClickable(paramBoolean);
-  }
-  
-  public static void setPackageName(Object paramObject, CharSequence paramCharSequence)
-  {
-    ((AccessibilityNodeInfo)paramObject).setPackageName(paramCharSequence);
-  }
-  
-  public static void setParent(Object paramObject, View paramView)
-  {
-    ((AccessibilityNodeInfo)paramObject).setParent(paramView);
-  }
-  
-  public static void setPassword(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setPassword(paramBoolean);
-  }
-  
-  public static void setScrollable(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setScrollable(paramBoolean);
-  }
-  
-  public static void setSelected(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setSelected(paramBoolean);
-  }
-  
-  public static void setSource(Object paramObject, View paramView)
-  {
-    ((AccessibilityNodeInfo)paramObject).setSource(paramView);
-  }
-  
-  public static void setText(Object paramObject, CharSequence paramCharSequence)
-  {
-    ((AccessibilityNodeInfo)paramObject).setText(paramCharSequence);
-  }
+class AccessibilityNodeInfoCompatIcs {
+    AccessibilityNodeInfoCompatIcs() {
+    }
+
+    public static Object obtain() {
+        return AccessibilityNodeInfo.obtain();
+    }
+
+    public static Object obtain(View source) {
+        return AccessibilityNodeInfo.obtain(source);
+    }
+
+    public static Object obtain(Object info) {
+        return AccessibilityNodeInfo.obtain((AccessibilityNodeInfo) info);
+    }
+
+    public static void addAction(Object info, int action) {
+        ((AccessibilityNodeInfo) info).addAction(action);
+    }
+
+    public static void addChild(Object info, View child) {
+        ((AccessibilityNodeInfo) info).addChild(child);
+    }
+
+    public static List<Object> findAccessibilityNodeInfosByText(Object info, String text) {
+        return ((AccessibilityNodeInfo) info).findAccessibilityNodeInfosByText(text);
+    }
+
+    public static int getActions(Object info) {
+        return ((AccessibilityNodeInfo) info).getActions();
+    }
+
+    public static void getBoundsInParent(Object info, Rect outBounds) {
+        ((AccessibilityNodeInfo) info).getBoundsInParent(outBounds);
+    }
+
+    public static void getBoundsInScreen(Object info, Rect outBounds) {
+        ((AccessibilityNodeInfo) info).getBoundsInScreen(outBounds);
+    }
+
+    public static Object getChild(Object info, int index) {
+        return ((AccessibilityNodeInfo) info).getChild(index);
+    }
+
+    public static int getChildCount(Object info) {
+        return ((AccessibilityNodeInfo) info).getChildCount();
+    }
+
+    public static CharSequence getClassName(Object info) {
+        return ((AccessibilityNodeInfo) info).getClassName();
+    }
+
+    public static CharSequence getContentDescription(Object info) {
+        return ((AccessibilityNodeInfo) info).getContentDescription();
+    }
+
+    public static CharSequence getPackageName(Object info) {
+        return ((AccessibilityNodeInfo) info).getPackageName();
+    }
+
+    public static Object getParent(Object info) {
+        return ((AccessibilityNodeInfo) info).getParent();
+    }
+
+    public static CharSequence getText(Object info) {
+        return ((AccessibilityNodeInfo) info).getText();
+    }
+
+    public static int getWindowId(Object info) {
+        return ((AccessibilityNodeInfo) info).getWindowId();
+    }
+
+    public static boolean isCheckable(Object info) {
+        return ((AccessibilityNodeInfo) info).isCheckable();
+    }
+
+    public static boolean isChecked(Object info) {
+        return ((AccessibilityNodeInfo) info).isChecked();
+    }
+
+    public static boolean isClickable(Object info) {
+        return ((AccessibilityNodeInfo) info).isClickable();
+    }
+
+    public static boolean isEnabled(Object info) {
+        return ((AccessibilityNodeInfo) info).isEnabled();
+    }
+
+    public static boolean isFocusable(Object info) {
+        return ((AccessibilityNodeInfo) info).isFocusable();
+    }
+
+    public static boolean isFocused(Object info) {
+        return ((AccessibilityNodeInfo) info).isFocused();
+    }
+
+    public static boolean isLongClickable(Object info) {
+        return ((AccessibilityNodeInfo) info).isLongClickable();
+    }
+
+    public static boolean isPassword(Object info) {
+        return ((AccessibilityNodeInfo) info).isPassword();
+    }
+
+    public static boolean isScrollable(Object info) {
+        return ((AccessibilityNodeInfo) info).isScrollable();
+    }
+
+    public static boolean isSelected(Object info) {
+        return ((AccessibilityNodeInfo) info).isSelected();
+    }
+
+    public static boolean performAction(Object info, int action) {
+        return ((AccessibilityNodeInfo) info).performAction(action);
+    }
+
+    public static void setBoundsInParent(Object info, Rect bounds) {
+        ((AccessibilityNodeInfo) info).setBoundsInParent(bounds);
+    }
+
+    public static void setBoundsInScreen(Object info, Rect bounds) {
+        ((AccessibilityNodeInfo) info).setBoundsInScreen(bounds);
+    }
+
+    public static void setCheckable(Object info, boolean checkable) {
+        ((AccessibilityNodeInfo) info).setCheckable(checkable);
+    }
+
+    public static void setChecked(Object info, boolean checked) {
+        ((AccessibilityNodeInfo) info).setChecked(checked);
+    }
+
+    public static void setClassName(Object info, CharSequence className) {
+        ((AccessibilityNodeInfo) info).setClassName(className);
+    }
+
+    public static void setClickable(Object info, boolean clickable) {
+        ((AccessibilityNodeInfo) info).setClickable(clickable);
+    }
+
+    public static void setContentDescription(Object info, CharSequence contentDescription) {
+        ((AccessibilityNodeInfo) info).setContentDescription(contentDescription);
+    }
+
+    public static void setEnabled(Object info, boolean enabled) {
+        ((AccessibilityNodeInfo) info).setEnabled(enabled);
+    }
+
+    public static void setFocusable(Object info, boolean focusable) {
+        ((AccessibilityNodeInfo) info).setFocusable(focusable);
+    }
+
+    public static void setFocused(Object info, boolean focused) {
+        ((AccessibilityNodeInfo) info).setFocused(focused);
+    }
+
+    public static void setLongClickable(Object info, boolean longClickable) {
+        ((AccessibilityNodeInfo) info).setLongClickable(longClickable);
+    }
+
+    public static void setPackageName(Object info, CharSequence packageName) {
+        ((AccessibilityNodeInfo) info).setPackageName(packageName);
+    }
+
+    public static void setParent(Object info, View parent) {
+        ((AccessibilityNodeInfo) info).setParent(parent);
+    }
+
+    public static void setPassword(Object info, boolean password) {
+        ((AccessibilityNodeInfo) info).setPassword(password);
+    }
+
+    public static void setScrollable(Object info, boolean scrollable) {
+        ((AccessibilityNodeInfo) info).setScrollable(scrollable);
+    }
+
+    public static void setSelected(Object info, boolean selected) {
+        ((AccessibilityNodeInfo) info).setSelected(selected);
+    }
+
+    public static void setSource(Object info, View source) {
+        ((AccessibilityNodeInfo) info).setSource(source);
+    }
+
+    public static void setText(Object info, CharSequence text) {
+        ((AccessibilityNodeInfo) info).setText(text);
+    }
+
+    public static void recycle(Object info) {
+        ((AccessibilityNodeInfo) info).recycle();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/accessibility/AccessibilityNodeInfoCompatIcs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

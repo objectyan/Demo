@@ -1,6 +1,6 @@
 package com.baidu.tts.client.model;
 
-import com.baidu.tts.f.g;
+import com.baidu.tts.p233f.C5089g;
 import com.baidu.tts.tools.DataTool;
 import com.baidu.tts.tools.JsonTool;
 import com.baidu.tts.tools.StringTool;
@@ -10,231 +10,189 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Conditions
-{
-  private Set<String> a;
-  private String b;
-  private Set<String> c;
-  private Set<String> d;
-  private Set<String> e;
-  private Set<String> f;
-  private Set<String> g;
-  
-  public void appendDomain(String paramString)
-  {
-    if (StringTool.isEmpty(paramString)) {
-      return;
+public class Conditions {
+    /* renamed from: a */
+    private Set<String> f20843a;
+    /* renamed from: b */
+    private String f20844b;
+    /* renamed from: c */
+    private Set<String> f20845c;
+    /* renamed from: d */
+    private Set<String> f20846d;
+    /* renamed from: e */
+    private Set<String> f20847e;
+    /* renamed from: f */
+    private Set<String> f20848f;
+    /* renamed from: g */
+    private Set<String> f20849g;
+
+    public Set<String> getModelIds() {
+        return this.f20843a;
     }
-    if (this.f == null) {
-      this.f = new HashSet();
+
+    public void setModelIds(Set<String> modelIds) {
+        this.f20843a = modelIds;
     }
-    this.f.add(paramString);
-  }
-  
-  public void appendGender(String paramString)
-  {
-    if (StringTool.isEmpty(paramString)) {
-      return;
+
+    public Set<String> getLanguages() {
+        return this.f20845c;
     }
-    if (this.d == null) {
-      this.d = new HashSet();
+
+    public void setLanguages(Set<String> languages) {
+        this.f20845c = languages;
     }
-    this.d.add(paramString);
-  }
-  
-  public void appendId(String paramString)
-  {
-    if (StringTool.isEmpty(paramString)) {
-      return;
+
+    public Set<String> getGenders() {
+        return this.f20846d;
     }
-    if (this.a == null) {
-      this.a = new HashSet();
+
+    public void setGenders(Set<String> genders) {
+        this.f20846d = genders;
     }
-    this.a.add(paramString);
-  }
-  
-  public void appendLanguage(String paramString)
-  {
-    if (StringTool.isEmpty(paramString)) {
-      return;
+
+    public Set<String> getSpeakers() {
+        return this.f20847e;
     }
-    if (this.c == null) {
-      this.c = new HashSet();
+
+    public void setSpeakers(Set<String> speakers) {
+        this.f20847e = speakers;
     }
-    this.c.add(paramString);
-  }
-  
-  public void appendQuality(String paramString)
-  {
-    if (StringTool.isEmpty(paramString)) {
-      return;
+
+    public Set<String> getDomains() {
+        return this.f20848f;
     }
-    if (this.g == null) {
-      this.g = new HashSet();
+
+    public void setDomains(Set<String> domains) {
+        this.f20848f = domains;
     }
-    this.g.add(paramString);
-  }
-  
-  public void appendSpeaker(String paramString)
-  {
-    if (StringTool.isEmpty(paramString)) {
-      return;
+
+    public Set<String> getQualitys() {
+        return this.f20849g;
     }
-    if (this.e == null) {
-      this.e = new HashSet();
+
+    public void setQualitys(Set<String> qualitys) {
+        this.f20849g = qualitys;
     }
-    this.e.add(paramString);
-  }
-  
-  public String[] getDomainArray()
-  {
-    return DataTool.fromSetToArray(this.f);
-  }
-  
-  public Set<String> getDomains()
-  {
-    return this.f;
-  }
-  
-  public String[] getGenderArray()
-  {
-    return DataTool.fromSetToArray(this.d);
-  }
-  
-  public JSONArray getGenderJA()
-  {
-    return JsonTool.fromSetToJson(this.d);
-  }
-  
-  public Set<String> getGenders()
-  {
-    return this.d;
-  }
-  
-  public JSONObject getJSONConditions()
-  {
-    JSONObject localJSONObject = new JSONObject();
-    try
-    {
-      localJSONObject.put(g.i.b(), JsonTool.fromSetToJson(this.a));
-      localJSONObject.put(g.aa.b(), this.b);
-      localJSONObject.put(g.F.b(), JsonTool.fromSetToJson(this.c));
-      localJSONObject.put(g.j.b(), JsonTool.fromSetToJson(this.d));
-      localJSONObject.put(g.K.b(), JsonTool.fromSetToJson(this.e));
-      localJSONObject.put(g.k.b(), JsonTool.fromSetToJson(this.f));
-      localJSONObject.put(g.l.b(), JsonTool.fromSetToJson(this.g));
-      return localJSONObject;
+
+    public void appendId(String id) {
+        if (!StringTool.isEmpty(id)) {
+            if (this.f20843a == null) {
+                this.f20843a = new HashSet();
+            }
+            this.f20843a.add(id);
+        }
     }
-    catch (JSONException localJSONException)
-    {
-      localJSONException.printStackTrace();
+
+    public void appendLanguage(String language) {
+        if (!StringTool.isEmpty(language)) {
+            if (this.f20845c == null) {
+                this.f20845c = new HashSet();
+            }
+            this.f20845c.add(language);
+        }
     }
-    return localJSONObject;
-  }
-  
-  public String[] getLanguageArray()
-  {
-    return DataTool.fromSetToArray(this.c);
-  }
-  
-  public Set<String> getLanguages()
-  {
-    return this.c;
-  }
-  
-  public Set<String> getModelIds()
-  {
-    return this.a;
-  }
-  
-  public String[] getModelIdsArray()
-  {
-    return DataTool.fromSetToArray(this.a);
-  }
-  
-  public String[] getQualityArray()
-  {
-    return DataTool.fromSetToArray(this.g);
-  }
-  
-  public Set<String> getQualitys()
-  {
-    return this.g;
-  }
-  
-  public String[] getSpeakerArray()
-  {
-    return DataTool.fromSetToArray(this.e);
-  }
-  
-  public JSONArray getSpeakerJA()
-  {
-    return JsonTool.fromSetToJson(this.e);
-  }
-  
-  public Set<String> getSpeakers()
-  {
-    return this.e;
-  }
-  
-  public String getVersion()
-  {
-    return this.b;
-  }
-  
-  public void setDomains(Set<String> paramSet)
-  {
-    this.f = paramSet;
-  }
-  
-  public void setDomains(String[] paramArrayOfString)
-  {
-    this.f = DataTool.fromArrayToSet(paramArrayOfString);
-  }
-  
-  public void setGenders(Set<String> paramSet)
-  {
-    this.d = paramSet;
-  }
-  
-  public void setLanguages(Set<String> paramSet)
-  {
-    this.c = paramSet;
-  }
-  
-  public void setLanguages(String[] paramArrayOfString)
-  {
-    this.c = DataTool.fromArrayToSet(paramArrayOfString);
-  }
-  
-  public void setModelIds(Set<String> paramSet)
-  {
-    this.a = paramSet;
-  }
-  
-  public void setQualitys(Set<String> paramSet)
-  {
-    this.g = paramSet;
-  }
-  
-  public void setQualitys(String[] paramArrayOfString)
-  {
-    this.g = DataTool.fromArrayToSet(paramArrayOfString);
-  }
-  
-  public void setSpeakers(Set<String> paramSet)
-  {
-    this.e = paramSet;
-  }
-  
-  public void setVersion(String paramString)
-  {
-    this.b = paramString;
-  }
+
+    public void appendGender(String gender) {
+        if (!StringTool.isEmpty(gender)) {
+            if (this.f20846d == null) {
+                this.f20846d = new HashSet();
+            }
+            this.f20846d.add(gender);
+        }
+    }
+
+    public void appendSpeaker(String speaker) {
+        if (!StringTool.isEmpty(speaker)) {
+            if (this.f20847e == null) {
+                this.f20847e = new HashSet();
+            }
+            this.f20847e.add(speaker);
+        }
+    }
+
+    public void appendDomain(String domain) {
+        if (!StringTool.isEmpty(domain)) {
+            if (this.f20848f == null) {
+                this.f20848f = new HashSet();
+            }
+            this.f20848f.add(domain);
+        }
+    }
+
+    public void appendQuality(String quality) {
+        if (!StringTool.isEmpty(quality)) {
+            if (this.f20849g == null) {
+                this.f20849g = new HashSet();
+            }
+            this.f20849g.add(quality);
+        }
+    }
+
+    public JSONArray getSpeakerJA() {
+        return JsonTool.fromSetToJson(this.f20847e);
+    }
+
+    public JSONArray getGenderJA() {
+        return JsonTool.fromSetToJson(this.f20846d);
+    }
+
+    public void setDomains(String[] domains) {
+        this.f20848f = DataTool.fromArrayToSet(domains);
+    }
+
+    public void setLanguages(String[] languages) {
+        this.f20845c = DataTool.fromArrayToSet(languages);
+    }
+
+    public void setQualitys(String[] qualities) {
+        this.f20849g = DataTool.fromArrayToSet(qualities);
+    }
+
+    public String[] getModelIdsArray() {
+        return DataTool.fromSetToArray(this.f20843a);
+    }
+
+    public String[] getDomainArray() {
+        return DataTool.fromSetToArray(this.f20848f);
+    }
+
+    public String[] getLanguageArray() {
+        return DataTool.fromSetToArray(this.f20845c);
+    }
+
+    public String[] getQualityArray() {
+        return DataTool.fromSetToArray(this.f20849g);
+    }
+
+    public String[] getGenderArray() {
+        return DataTool.fromSetToArray(this.f20846d);
+    }
+
+    public String[] getSpeakerArray() {
+        return DataTool.fromSetToArray(this.f20847e);
+    }
+
+    public String getVersion() {
+        return this.f20844b;
+    }
+
+    public void setVersion(String version) {
+        this.f20844b = version;
+    }
+
+    public JSONObject getJSONConditions() {
+        JSONObject jSONObject = new JSONObject();
+        try {
+            jSONObject.put(C5089g.ID.m17274b(), JsonTool.fromSetToJson(this.f20843a));
+            jSONObject.put(C5089g.VERSION.m17274b(), this.f20844b);
+            jSONObject.put(C5089g.LANGUAGE.m17274b(), JsonTool.fromSetToJson(this.f20845c));
+            jSONObject.put(C5089g.GENDER.m17274b(), JsonTool.fromSetToJson(this.f20846d));
+            jSONObject.put(C5089g.SPEAKER.m17274b(), JsonTool.fromSetToJson(this.f20847e));
+            jSONObject.put(C5089g.DOMAIN.m17274b(), JsonTool.fromSetToJson(this.f20848f));
+            jSONObject.put(C5089g.QUALITY.m17274b(), JsonTool.fromSetToJson(this.f20849g));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jSONObject;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/client/model/Conditions.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

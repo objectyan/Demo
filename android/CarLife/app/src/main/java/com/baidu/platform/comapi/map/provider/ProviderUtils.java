@@ -1,153 +1,105 @@
 package com.baidu.platform.comapi.map.provider;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.util.DisplayMetrics;
+import com.baidu.platform.comapi.C2907c;
 import com.baidu.platform.comapi.basestruct.ComplexPt;
 import com.baidu.platform.comapi.basestruct.Point;
-import com.baidu.platform.comapi.c;
 import com.baidu.platform.comapi.util.JsonBuilder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ProviderUtils
-{
-  static List<Integer> connectPath(List<Integer> paramList1, List<Integer> paramList2)
-  {
-    Object localObject = paramList2;
-    if (paramList1 != null)
-    {
-      ComplexPt localComplexPt = ComplexPt.createComplexPt(paramList1);
-      paramList1 = ComplexPt.createComplexPt(paramList2);
-      localObject = paramList2;
-      if (localComplexPt != null)
-      {
-        localObject = paramList2;
-        if (!localComplexPt.isEmpty())
-        {
-          localObject = paramList2;
-          if (paramList1 != null)
-          {
-            localObject = paramList2;
-            if (!paramList1.isEmpty())
-            {
-              paramList2 = (ArrayList)localComplexPt.mGeoPt.get(localComplexPt.mGeoPt.size() - 1);
-              paramList2 = (Point)paramList2.get(paramList2.size() - 1);
-              ((ArrayList)paramList1.mGeoPt.get(0)).add(0, paramList2);
-              localObject = paramList1.toIntArray();
+public class ProviderUtils {
+
+    public enum RouteState {
+        ENTIRE(1),
+        SEGMENT(2);
+        
+        private int nativeValue;
+
+        private RouteState(int aValue) {
+            this.nativeValue = aValue;
+        }
+
+        public int getNativeValue() {
+            return this.nativeValue;
+        }
+    }
+
+    static String pathToJson(List<? extends Number> list) {
+        JsonBuilder builder = new JsonBuilder();
+        builder.arrayValue();
+        for (Object i : list) {
+            builder.value(i);
+        }
+        builder.endArrayValue();
+        return builder.getJson();
+    }
+
+    static List<Integer> connectPath(List<Integer> pre, List<Integer> cur) {
+        if (pre == null) {
+            return cur;
+        }
+        ComplexPt preComplexPt = ComplexPt.createComplexPt(pre);
+        ComplexPt curComplexPt = ComplexPt.createComplexPt(cur);
+        if (preComplexPt == null || preComplexPt.isEmpty() || curComplexPt == null || curComplexPt.isEmpty()) {
+            return cur;
+        }
+        ArrayList<Point> lastPart = (ArrayList) preComplexPt.mGeoPt.get(preComplexPt.mGeoPt.size() - 1);
+        ((ArrayList) curComplexPt.mGeoPt.get(0)).add(0, (Point) lastPart.get(lastPart.size() - 1));
+        return curComplexPt.toIntArray();
+    }
+
+    static List<List<Integer>> splitPath(List<Integer> path, List<Integer> parts) {
+        ComplexPt cp = ComplexPt.createComplexPt(path);
+        if (cp == null || cp.isEmpty()) {
+            return new ArrayList();
+        }
+        ArrayList<Point> points = new ArrayList();
+        Iterator it = cp.mGeoPt.iterator();
+        while (it.hasNext()) {
+            for (Point p : (List) it.next()) {
+                points.add(p);
             }
-          }
         }
-      }
-    }
-    return (List<Integer>)localObject;
-  }
-  
-  public static int dip2px(int paramInt)
-  {
-    return (int)(0.5F + c.f().getResources().getDisplayMetrics().density * paramInt);
-  }
-  
-  static String escapeString(String paramString)
-  {
-    return paramString.replace("\"", "'");
-  }
-  
-  static String pathToJson(List<? extends Number> paramList)
-  {
-    JsonBuilder localJsonBuilder = new JsonBuilder();
-    localJsonBuilder.arrayValue();
-    paramList = paramList.iterator();
-    while (paramList.hasNext()) {
-      localJsonBuilder.value((Number)paramList.next());
-    }
-    localJsonBuilder.endArrayValue();
-    return localJsonBuilder.getJson();
-  }
-  
-  public static int px2dip(int paramInt)
-  {
-    return (int)(0.5F + paramInt / c.f().getResources().getDisplayMetrics().density);
-  }
-  
-  static List<List<Integer>> splitPath(List<Integer> paramList1, List<Integer> paramList2)
-  {
-    ComplexPt localComplexPt = ComplexPt.createComplexPt(paramList1);
-    if ((localComplexPt == null) || (localComplexPt.isEmpty()))
-    {
-      paramList2 = new ArrayList();
-      return paramList2;
-    }
-    ArrayList localArrayList1 = new ArrayList();
-    paramList1 = localComplexPt.mGeoPt.iterator();
-    while (paramList1.hasNext())
-    {
-      localObject = ((List)paramList1.next()).iterator();
-      while (((Iterator)localObject).hasNext()) {
-        localArrayList1.add((Point)((Iterator)localObject).next());
-      }
-    }
-    Object localObject = new ArrayList();
-    paramList1 = null;
-    int i = 0;
-    Iterator localIterator = paramList2.iterator();
-    for (;;)
-    {
-      paramList2 = (List<Integer>)localObject;
-      if (!localIterator.hasNext()) {
-        break;
-      }
-      paramList2 = (Integer)localIterator.next();
-      if (localArrayList1.size() > paramList2.intValue() + i)
-      {
-        localComplexPt.mGeoPt = new ArrayList();
-        ArrayList localArrayList2 = subArrayList(localArrayList1, i, paramList2.intValue() + i);
-        if (paramList1 != null) {
-          localArrayList2.add(0, paramList1);
+        List<List<Integer>> pathList = new ArrayList();
+        Point lastPoint = null;
+        int pos = 0;
+        for (Integer i : parts) {
+            if (points.size() > i.intValue() + pos) {
+                cp.mGeoPt = new ArrayList();
+                ArrayList<Point> list = subArrayList(points, pos, i.intValue() + pos);
+                if (lastPoint != null) {
+                    list.add(0, lastPoint);
+                }
+                lastPoint = (Point) list.get(list.size() - 1);
+                cp.mGeoPt.add(list);
+                pathList.add(cp.toIntArray());
+                pos += i.intValue();
+            }
         }
-        paramList1 = (Point)localArrayList2.get(localArrayList2.size() - 1);
-        localComplexPt.mGeoPt.add(localArrayList2);
-        ((List)localObject).add(localComplexPt.toIntArray());
-        i += paramList2.intValue();
-      }
+        return pathList;
     }
-  }
-  
-  private static <T> ArrayList<T> subArrayList(ArrayList<T> paramArrayList, int paramInt1, int paramInt2)
-  {
-    if (paramInt2 == 0) {
-      return paramArrayList;
+
+    private static <T> ArrayList<T> subArrayList(ArrayList<T> list, int start, int end) {
+        if (end == 0) {
+            return list;
+        }
+        ArrayList<T> subList = new ArrayList();
+        for (int i = start; i <= end; i++) {
+            subList.add(list.get(i));
+        }
+        return subList;
     }
-    ArrayList localArrayList = new ArrayList();
-    while (paramInt1 <= paramInt2)
-    {
-      localArrayList.add(paramArrayList.get(paramInt1));
-      paramInt1 += 1;
+
+    static String escapeString(String str) {
+        return str.replace("\"", "'");
     }
-    return localArrayList;
-  }
-  
-  public static enum RouteState
-  {
-    ENTIRE(1),  SEGMENT(2);
-    
-    private int nativeValue;
-    
-    private RouteState(int paramInt)
-    {
-      this.nativeValue = paramInt;
+
+    public static int dip2px(int dip) {
+        return (int) (0.5f + (C2907c.f().getResources().getDisplayMetrics().density * ((float) dip)));
     }
-    
-    public int getNativeValue()
-    {
-      return this.nativeValue;
+
+    public static int px2dip(int px) {
+        return (int) (0.5f + (((float) px) / C2907c.f().getResources().getDisplayMetrics().density));
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/provider/ProviderUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

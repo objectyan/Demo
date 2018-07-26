@@ -2,634 +2,364 @@ package com.baidu.navi.favorite.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.baidu.carlife.core.i;
-import java.util.Iterator;
+import com.baidu.carlife.core.C1260i;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-public class FavoriteDao
-{
-  public static final String TAG = FavoriteDao.class.getSimpleName();
-  private SQLiteDatabase mDatabase;
-  
-  public FavoriteDao(SQLiteDatabase paramSQLiteDatabase)
-  {
-    this.mDatabase = paramSQLiteDatabase;
-  }
-  
-  private boolean addToDB(String paramString1, String paramString2)
-  {
-    try
-    {
-      this.mDatabase.execSQL("INSERT OR REPLACE INTO [Fvorite_Poi] (key, value) values (?, ?);", new String[] { paramString1, paramString2 });
-      return true;
+public class FavoriteDao {
+    public static final String TAG = FavoriteDao.class.getSimpleName();
+    private SQLiteDatabase mDatabase;
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean isExist(java.lang.String r9) {
+        /* JADX: method processing error */
+/*
+Error: jadx.core.utils.exceptions.JadxRuntimeException: Can't find block by offset: 0x0006 in list [B:18:0x0053]
+	at jadx.core.utils.BlockUtils.getBlockByOffset(BlockUtils.java:43)
+	at jadx.core.dex.instructions.IfNode.initBlocks(IfNode.java:60)
+	at jadx.core.dex.visitors.blocksmaker.BlockFinish.initBlocksInIfNodes(BlockFinish.java:48)
+	at jadx.core.dex.visitors.blocksmaker.BlockFinish.visit(BlockFinish.java:33)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:31)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:17)
+	at jadx.core.ProcessClass.process(ProcessClass.java:34)
+	at jadx.api.JadxDecompiler.processClass(JadxDecompiler.java:282)
+	at jadx.api.JavaClass.decompile(JavaClass.java:62)
+	at jadx.api.JadxDecompiler.lambda$appendSourcesSave$0(JadxDecompiler.java:200)
+*/
+        /*
+        r8 = this;
+        r4 = 1;
+        r3 = 0;
+        r5 = r8.mDatabase;
+        if (r5 != 0) goto L_0x0007;
+    L_0x0006:
+        return r3;
+    L_0x0007:
+        r0 = 0;
+        r5 = "SELECT key FROM Fvorite_Poi WHERE key='%s'";
+        r6 = new java.lang.Object[r4];
+        r6[r3] = r9;
+        r2 = java.lang.String.format(r5, r6);
+        r5 = TAG;
+        r6 = new java.lang.StringBuilder;
+        r6.<init>();
+        r7 = "isExist: ";
+        r6 = r6.append(r7);
+        r6 = r6.append(r2);
+        r6 = r6.toString();
+        com.baidu.carlife.core.C1260i.b(r5, r6);
+        r5 = r8.mDatabase;	 Catch:{ Exception -> 0x0048, all -> 0x0057 }
+        r6 = 0;	 Catch:{ Exception -> 0x0048, all -> 0x0057 }
+        r0 = r5.rawQuery(r2, r6);	 Catch:{ Exception -> 0x0048, all -> 0x0057 }
+        if (r0 == 0) goto L_0x0042;	 Catch:{ Exception -> 0x0048, all -> 0x0057 }
+    L_0x0035:
+        r5 = r0.getCount();	 Catch:{ Exception -> 0x0048, all -> 0x0057 }
+        if (r5 <= 0) goto L_0x0042;
+    L_0x003b:
+        if (r0 == 0) goto L_0x0040;
+    L_0x003d:
+        r0.close();
+    L_0x0040:
+        r3 = r4;
+        goto L_0x0006;
+    L_0x0042:
+        if (r0 == 0) goto L_0x0006;
+    L_0x0044:
+        r0.close();
+        goto L_0x0006;
+    L_0x0048:
+        r1 = move-exception;
+        r4 = TAG;	 Catch:{ Exception -> 0x0048, all -> 0x0057 }
+        r5 = "isExist DB Exception";	 Catch:{ Exception -> 0x0048, all -> 0x0057 }
+        com.baidu.carlife.core.C1260i.b(r4, r5);	 Catch:{ Exception -> 0x0048, all -> 0x0057 }
+        if (r0 == 0) goto L_0x0006;
+    L_0x0053:
+        r0.close();
+        goto L_0x0006;
+    L_0x0057:
+        r3 = move-exception;
+        if (r0 == 0) goto L_0x005d;
+    L_0x005a:
+        r0.close();
+    L_0x005d:
+        throw r3;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.navi.favorite.database.FavoriteDao.isExist(java.lang.String):boolean");
     }
-    catch (Exception paramString1) {}
-    return false;
-  }
-  
-  private boolean updateToDB(String paramString1, String paramString2)
-  {
-    try
-    {
-      this.mDatabase.execSQL("REPLACE INTO [Fvorite_Poi] (key, value)values (?, ?)", new String[] { paramString1, paramString2 });
-      return true;
+
+    public FavoriteDao(SQLiteDatabase database) {
+        this.mDatabase = database;
     }
-    catch (Exception paramString1) {}
-    return false;
-  }
-  
-  public boolean add(String paramString1, String paramString2)
-  {
-    boolean bool2 = false;
-    if (this.mDatabase == null) {
-      return false;
-    }
-    boolean bool1 = bool2;
-    for (;;)
-    {
-      try
-      {
-        this.mDatabase.beginTransaction();
-        bool1 = bool2;
-        bool2 = addToDB(paramString1, paramString2);
-        bool1 = bool2;
-        this.mDatabase.setTransactionSuccessful();
-      }
-      catch (Exception paramString1)
-      {
-        try
-        {
-          this.mDatabase.endTransaction();
+
+    public boolean add(String key, String value) {
+        boolean z = false;
+        if (this.mDatabase == null) {
+            return 0;
         }
-        catch (Exception paramString1)
-        {
-          return false;
-        }
-      }
-      finally
-      {
-        try
-        {
-          this.mDatabase.endTransaction();
-          throw paramString1;
-        }
-        catch (Exception paramString1) {}
-      }
-      try
-      {
-        this.mDatabase.endTransaction();
-        bool1 = bool2;
-        return bool1;
-      }
-      catch (Exception paramString1)
-      {
-        return false;
-      }
-    }
-    return false;
-  }
-  
-  public boolean addAll(Map<String, String> paramMap)
-  {
-    boolean bool = false;
-    if (paramMap == null) {
-      return false;
-    }
-    if (this.mDatabase == null) {
-      return false;
-    }
-    try
-    {
-      this.mDatabase.beginTransaction();
-      paramMap = paramMap.entrySet().iterator();
-      while (paramMap.hasNext())
-      {
-        Map.Entry localEntry = (Map.Entry)paramMap.next();
-        addToDB((String)localEntry.getKey(), (String)localEntry.getValue());
-      }
-      return false;
-    }
-    catch (Exception paramMap)
-    {
-      for (;;)
-      {
-        try
-        {
-          this.mDatabase.endTransaction();
-          return bool;
-        }
-        catch (Exception paramMap)
-        {
-          return false;
-        }
-        this.mDatabase.setTransactionSuccessful();
-        bool = true;
-        try
-        {
-          this.mDatabase.endTransaction();
-        }
-        catch (Exception paramMap)
-        {
-          return false;
-        }
-      }
-    }
-    finally
-    {
-      try
-      {
-        this.mDatabase.endTransaction();
-        throw paramMap;
-      }
-      catch (Exception paramMap) {}
-    }
-  }
-  
-  public boolean clear()
-  {
-    return true;
-  }
-  
-  /* Error */
-  public List<String> getAllKey()
-  {
-    // Byte code:
-    //   0: aconst_null
-    //   1: astore 6
-    //   3: aconst_null
-    //   4: astore 5
-    //   6: aload_0
-    //   7: getfield 25	com/baidu/navi/favorite/database/FavoriteDao:mDatabase	Landroid/database/sqlite/SQLiteDatabase;
-    //   10: ifnonnull +5 -> 15
-    //   13: aconst_null
-    //   14: areturn
-    //   15: aconst_null
-    //   16: astore_3
-    //   17: aconst_null
-    //   18: astore_2
-    //   19: aload_0
-    //   20: getfield 25	com/baidu/navi/favorite/database/FavoriteDao:mDatabase	Landroid/database/sqlite/SQLiteDatabase;
-    //   23: ldc 93
-    //   25: aconst_null
-    //   26: invokevirtual 97	android/database/sqlite/SQLiteDatabase:rawQuery	(Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
-    //   29: astore_1
-    //   30: aload_1
-    //   31: astore_2
-    //   32: aload_1
-    //   33: astore_3
-    //   34: getstatic 18	com/baidu/navi/favorite/database/FavoriteDao:TAG	Ljava/lang/String;
-    //   37: ldc 99
-    //   39: invokestatic 105	com/baidu/carlife/core/i:b	(Ljava/lang/String;Ljava/lang/String;)V
-    //   42: aload 6
-    //   44: astore 4
-    //   46: aload_1
-    //   47: ifnull +95 -> 142
-    //   50: aload 6
-    //   52: astore 4
-    //   54: aload_1
-    //   55: astore_2
-    //   56: aload_1
-    //   57: astore_3
-    //   58: aload_1
-    //   59: invokeinterface 111 1 0
-    //   64: ifle +78 -> 142
-    //   67: aload_1
-    //   68: astore_2
-    //   69: aload_1
-    //   70: astore_3
-    //   71: new 113	java/util/ArrayList
-    //   74: dup
-    //   75: invokespecial 114	java/util/ArrayList:<init>	()V
-    //   78: astore 4
-    //   80: aload_1
-    //   81: invokeinterface 117 1 0
-    //   86: ifeq +56 -> 142
-    //   89: aload 4
-    //   91: aload_1
-    //   92: aload_1
-    //   93: ldc 119
-    //   95: invokeinterface 123 2 0
-    //   100: invokeinterface 127 2 0
-    //   105: invokevirtual 130	java/util/ArrayList:add	(Ljava/lang/Object;)Z
-    //   108: pop
-    //   109: goto -29 -> 80
-    //   112: astore_2
-    //   113: aload 4
-    //   115: astore_3
-    //   116: aload_1
-    //   117: astore_2
-    //   118: getstatic 18	com/baidu/navi/favorite/database/FavoriteDao:TAG	Ljava/lang/String;
-    //   121: ldc -124
-    //   123: invokestatic 105	com/baidu/carlife/core/i:b	(Ljava/lang/String;Ljava/lang/String;)V
-    //   126: aload_3
-    //   127: astore_2
-    //   128: aload_1
-    //   129: ifnull +11 -> 140
-    //   132: aload_1
-    //   133: invokeinterface 135 1 0
-    //   138: aload_3
-    //   139: astore_2
-    //   140: aload_2
-    //   141: areturn
-    //   142: aload 4
-    //   144: astore_2
-    //   145: aload_1
-    //   146: ifnull -6 -> 140
-    //   149: aload_1
-    //   150: invokeinterface 135 1 0
-    //   155: aload 4
-    //   157: astore_2
-    //   158: goto -18 -> 140
-    //   161: astore_3
-    //   162: aload_2
-    //   163: astore_1
-    //   164: aload_1
-    //   165: ifnull +9 -> 174
-    //   168: aload_1
-    //   169: invokeinterface 135 1 0
-    //   174: aload_3
-    //   175: athrow
-    //   176: astore_3
-    //   177: goto -13 -> 164
-    //   180: astore_1
-    //   181: aload_3
-    //   182: astore_1
-    //   183: aload 5
-    //   185: astore_3
-    //   186: goto -70 -> 116
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	189	0	this	FavoriteDao
-    //   29	140	1	localObject1	Object
-    //   180	1	1	localException1	Exception
-    //   182	1	1	localObject2	Object
-    //   18	51	2	localObject3	Object
-    //   112	1	2	localException2	Exception
-    //   117	46	2	localObject4	Object
-    //   16	123	3	localObject5	Object
-    //   161	14	3	localObject6	Object
-    //   176	6	3	localObject7	Object
-    //   185	1	3	localObject8	Object
-    //   44	112	4	localObject9	Object
-    //   4	180	5	localObject10	Object
-    //   1	50	6	localObject11	Object
-    // Exception table:
-    //   from	to	target	type
-    //   80	109	112	java/lang/Exception
-    //   19	30	161	finally
-    //   34	42	161	finally
-    //   58	67	161	finally
-    //   71	80	161	finally
-    //   118	126	161	finally
-    //   80	109	176	finally
-    //   19	30	180	java/lang/Exception
-    //   34	42	180	java/lang/Exception
-    //   58	67	180	java/lang/Exception
-    //   71	80	180	java/lang/Exception
-  }
-  
-  public String getValue(String paramString)
-  {
-    Object localObject3 = null;
-    Object localObject1;
-    if (this.mDatabase == null) {
-      localObject1 = localObject3;
-    }
-    for (;;)
-    {
-      return (String)localObject1;
-      localObject1 = null;
-      Cursor localCursor = null;
-      String str = String.format("SELECT * FROM Fvorite_Poi WHERE key='%s'", new Object[] { paramString });
-      i.b(TAG, "getValue: " + str);
-      paramString = localCursor;
-      try
-      {
-        localCursor = this.mDatabase.rawQuery(str, null);
-        if (localCursor != null)
-        {
-          paramString = localCursor;
-          localObject1 = localCursor;
-          if (localCursor.getCount() > 0)
-          {
-            paramString = localCursor;
-            localObject1 = localCursor;
-            if (localCursor.moveToFirst())
-            {
-              paramString = localCursor;
-              localObject1 = localCursor;
-              str = localCursor.getString(localCursor.getColumnIndex("value"));
-              paramString = str;
-              localObject1 = paramString;
-              if (localCursor == null) {
-                continue;
-              }
-              localCursor.close();
-              return paramString;
+        try {
+            this.mDatabase.beginTransaction();
+            z = addToDB(key, value);
+            this.mDatabase.setTransactionSuccessful();
+        } catch (Exception e) {
+            return z;
+        } finally {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e2) {
+                return false;
             }
-          }
         }
-        localObject1 = localObject3;
-        if (localCursor == null) {
-          continue;
-        }
-        localCursor.close();
-        return null;
-      }
-      catch (Exception localException)
-      {
-        localObject2 = paramString;
-        i.b(TAG, "getValue DB Exception");
-        localObject2 = localObject3;
-        if (paramString == null) {
-          continue;
-        }
-        paramString.close();
-        return null;
-      }
-      finally
-      {
-        Object localObject2;
-        if (localObject2 != null) {
-          ((Cursor)localObject2).close();
-        }
-      }
+        return z;
     }
-  }
-  
-  public boolean isExist(String paramString)
-  {
-    if (this.mDatabase == null) {}
-    for (;;)
-    {
-      return false;
-      Object localObject = null;
-      Cursor localCursor = null;
-      String str2 = String.format("SELECT key FROM Fvorite_Poi WHERE key='%s'", new Object[] { paramString });
-      i.b(TAG, "isExist: " + str2);
-      paramString = localCursor;
-      try
-      {
-        localCursor = this.mDatabase.rawQuery(str2, null);
-        if (localCursor != null)
-        {
-          paramString = localCursor;
-          localObject = localCursor;
-          int i = localCursor.getCount();
-          if (i > 0) {
+
+    public boolean addAll(Map<String, String> map) {
+        boolean ret = false;
+        if (map == null) {
+            return 0;
+        }
+        if (this.mDatabase == null) {
+            return 0;
+        }
+        try {
+            this.mDatabase.beginTransaction();
+            for (Entry<String, String> entry : map.entrySet()) {
+                addToDB((String) entry.getKey(), (String) entry.getValue());
+            }
+            this.mDatabase.setTransactionSuccessful();
+            ret = true;
+        } catch (Exception e) {
+        } finally {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e2) {
+                return false;
+            }
+        }
+        return ret;
+    }
+
+    private boolean addToDB(String key, String value) {
+        try {
+            this.mDatabase.execSQL(FavoriteDataBaseConstants.INSERT_OR_REPLACE_FAVORITE_POI, new String[]{key, value});
             return true;
-          }
+        } catch (Exception e) {
+            return false;
         }
-        return false;
-      }
-      catch (Exception localException)
-      {
-        str1 = paramString;
-        i.b(TAG, "isExist DB Exception");
-        return false;
-      }
-      finally
-      {
-        String str1;
-        if (str1 != null) {
-          str1.close();
+    }
+
+    public boolean remove(String key) {
+        boolean ret = false;
+        if (this.mDatabase == null) {
+            return 0;
         }
-      }
-    }
-  }
-  
-  public boolean remove(String paramString)
-  {
-    boolean bool1 = false;
-    if (this.mDatabase == null) {
-      return false;
-    }
-    boolean bool2 = bool1;
-    for (;;)
-    {
-      try
-      {
-        this.mDatabase.beginTransaction();
-        bool2 = bool1;
-        paramString = paramString + "";
-        bool2 = bool1;
-        if (this.mDatabase.delete("Fvorite_Poi", "key=?", new String[] { paramString }) > 0)
-        {
-          bool1 = true;
-          bool2 = bool1;
-          this.mDatabase.setTransactionSuccessful();
+        try {
+            this.mDatabase.beginTransaction();
+            String[] whereArgs = new String[]{key + ""};
+            if (this.mDatabase.delete(FavoriteDataBaseConstants.FAVORITE_POI_TABLE, "key=?", whereArgs) > 0) {
+                ret = true;
+            } else {
+                ret = false;
+            }
+            this.mDatabase.setTransactionSuccessful();
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e) {
+                ret = false;
+            }
+        } catch (Exception e2) {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e3) {
+                ret = false;
+            }
+        } catch (Throwable th) {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e4) {
+            }
+            throw th;
         }
-      }
-      catch (Exception paramString)
-      {
-        paramString = paramString;
-        try
-        {
-          this.mDatabase.endTransaction();
-          bool1 = bool2;
+        return ret;
+    }
+
+    public boolean removeAll(List<String> keys) {
+        boolean ret = false;
+        if (this.mDatabase == null) {
+            return 0;
         }
-        catch (Exception paramString)
-        {
-          bool1 = false;
+        try {
+            this.mDatabase.beginTransaction();
+            String whereClause = "key=?";
+            for (String key : keys) {
+                this.mDatabase.delete(FavoriteDataBaseConstants.FAVORITE_POI_TABLE, whereClause, new String[]{key + ""});
+            }
+            this.mDatabase.setTransactionSuccessful();
+            ret = true;
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e) {
+                ret = false;
+            }
+        } catch (Exception e2) {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e3) {
+                ret = false;
+            }
+        } catch (Throwable th) {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e4) {
+            }
+            throw th;
         }
-        continue;
-      }
-      finally {}
-      try
-      {
-        this.mDatabase.endTransaction();
-        return bool1;
-        bool1 = false;
-      }
-      catch (Exception paramString)
-      {
-        bool1 = false;
-      }
+        return ret;
     }
-    try
-    {
-      this.mDatabase.endTransaction();
-      throw paramString;
-    }
-    catch (Exception localException)
-    {
-      for (;;) {}
-    }
-  }
-  
-  public boolean removeAll(List<String> paramList)
-  {
-    boolean bool = false;
-    if (this.mDatabase == null) {
-      return false;
-    }
-    try
-    {
-      this.mDatabase.beginTransaction();
-      paramList = paramList.iterator();
-      while (paramList.hasNext())
-      {
-        String str = (String)paramList.next();
-        str = str + "";
-        this.mDatabase.delete("Fvorite_Poi", "key=?", new String[] { str });
-      }
-      try
-      {
-        this.mDatabase.endTransaction();
-        throw paramList;
-      }
-      catch (Exception localException)
-      {
-        for (;;) {}
-      }
-    }
-    catch (Exception paramList)
-    {
-      paramList = paramList;
-      try
-      {
-        this.mDatabase.endTransaction();
-        for (;;)
-        {
-          return bool;
-          this.mDatabase.setTransactionSuccessful();
-          bool = true;
-          try
-          {
-            this.mDatabase.endTransaction();
-          }
-          catch (Exception paramList)
-          {
-            bool = false;
-          }
+
+    public boolean update(String key, String value) {
+        boolean z = false;
+        if (this.mDatabase == null) {
+            return 0;
         }
-      }
-      catch (Exception paramList)
-      {
-        for (;;)
-        {
-          bool = false;
+        try {
+            this.mDatabase.beginTransaction();
+            z = updateToDB(key, value);
+            this.mDatabase.setTransactionSuccessful();
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e) {
+                z = false;
+            }
+        } catch (Exception e2) {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e3) {
+                z = false;
+            }
+        } catch (Throwable th) {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e4) {
+            }
+            throw th;
         }
-      }
+        return z;
     }
-    finally {}
-  }
-  
-  public boolean update(String paramString1, String paramString2)
-  {
-    boolean bool2 = false;
-    if (this.mDatabase == null) {
-      return false;
-    }
-    boolean bool1 = bool2;
-    for (;;)
-    {
-      try
-      {
-        this.mDatabase.beginTransaction();
-        bool1 = bool2;
-        bool2 = updateToDB(paramString1, paramString2);
-        bool1 = bool2;
-        this.mDatabase.setTransactionSuccessful();
-      }
-      catch (Exception paramString1)
-      {
-        paramString1 = paramString1;
-        try
-        {
-          this.mDatabase.endTransaction();
+
+    public boolean updateAll(Map<String, String> map) {
+        boolean ret = false;
+        if (map == null) {
+            return 0;
         }
-        catch (Exception paramString1)
-        {
-          bool1 = false;
+        if (this.mDatabase == null) {
+            return 0;
         }
-        continue;
-      }
-      finally {}
-      try
-      {
-        this.mDatabase.endTransaction();
-        bool1 = bool2;
-      }
-      catch (Exception paramString1)
-      {
-        bool1 = false;
-      }
-    }
-    return bool1;
-    try
-    {
-      this.mDatabase.endTransaction();
-      throw paramString1;
-    }
-    catch (Exception paramString2)
-    {
-      for (;;) {}
-    }
-  }
-  
-  public boolean updateAll(Map<String, String> paramMap)
-  {
-    boolean bool = false;
-    if (paramMap == null) {
-      return false;
-    }
-    if (this.mDatabase == null) {
-      return false;
-    }
-    try
-    {
-      this.mDatabase.beginTransaction();
-      paramMap = paramMap.entrySet().iterator();
-      while (paramMap.hasNext())
-      {
-        Map.Entry localEntry = (Map.Entry)paramMap.next();
-        updateToDB((String)localEntry.getKey(), (String)localEntry.getValue());
-      }
-      return false;
-    }
-    catch (Exception paramMap)
-    {
-      for (;;)
-      {
-        try
-        {
-          this.mDatabase.endTransaction();
-          return bool;
+        try {
+            this.mDatabase.beginTransaction();
+            for (Entry<String, String> entry : map.entrySet()) {
+                updateToDB((String) entry.getKey(), (String) entry.getValue());
+            }
+            this.mDatabase.setTransactionSuccessful();
+            ret = true;
+        } catch (Exception e) {
+        } finally {
+            try {
+                this.mDatabase.endTransaction();
+            } catch (Exception e2) {
+                return false;
+            }
         }
-        catch (Exception paramMap)
-        {
-          return false;
-        }
-        this.mDatabase.setTransactionSuccessful();
-        bool = true;
-        try
-        {
-          this.mDatabase.endTransaction();
-        }
-        catch (Exception paramMap)
-        {
-          return false;
-        }
-      }
+        return ret;
     }
-    finally
-    {
-      try
-      {
-        this.mDatabase.endTransaction();
-        throw paramMap;
-      }
-      catch (Exception paramMap) {}
+
+    private boolean updateToDB(String key, String value) {
+        try {
+            this.mDatabase.execSQL(FavoriteDataBaseConstants.UPDATE_FAVORITE_POI, new String[]{key, value});
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
-  }
+
+    public String getValue(String key) {
+        String str = null;
+        if (this.mDatabase != null) {
+            Cursor cursor = null;
+            String selectQuery = String.format(FavoriteDataBaseConstants.SELECT_VALUE_BY_KEY, new Object[]{key});
+            C1260i.b(TAG, "getValue: " + selectQuery);
+            try {
+                cursor = this.mDatabase.rawQuery(selectQuery, null);
+                if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
+                    str = cursor.getString(cursor.getColumnIndex("value"));
+                    if (cursor != null) {
+                        cursor.close();
+                    }
+                } else if (cursor != null) {
+                    cursor.close();
+                }
+            } catch (Exception e) {
+                C1260i.b(TAG, "getValue DB Exception");
+                if (cursor != null) {
+                    cursor.close();
+                }
+            } catch (Throwable th) {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+        return str;
+    }
+
+    public List<String> getAllKey() {
+        Throwable th;
+        ArrayList<String> arrayList = null;
+        if (this.mDatabase == null) {
+            return null;
+        }
+        Cursor cursor = null;
+        try {
+            cursor = this.mDatabase.rawQuery(FavoriteDataBaseConstants.SELECT_ALL_KEY, null);
+            C1260i.b(TAG, "getAllKey: SELECT key FROM Fvorite_Poi ORDER BY key DESC");
+            if (cursor != null && cursor.getCount() > 0) {
+                ArrayList<String> list = new ArrayList();
+                while (cursor.moveToNext()) {
+                    try {
+                        list.add(cursor.getString(cursor.getColumnIndex("key")));
+                    } catch (Exception e) {
+                        arrayList = list;
+                    } catch (Throwable th2) {
+                        th = th2;
+                        arrayList = list;
+                    }
+                }
+                arrayList = list;
+            }
+            if (cursor != null) {
+                cursor.close();
+            }
+        } catch (Exception e2) {
+            try {
+                C1260i.b(TAG, "getAllKey DB Exception");
+                if (cursor != null) {
+                    cursor.close();
+                }
+                return arrayList;
+            } catch (Throwable th3) {
+                th = th3;
+                if (cursor != null) {
+                    cursor.close();
+                }
+                throw th;
+            }
+        }
+        return arrayList;
+    }
+
+    public boolean clear() {
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/favorite/database/FavoriteDao.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

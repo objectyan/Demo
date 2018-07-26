@@ -6,255 +6,183 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.json.JSONException;
+import java.util.List;
 import org.json.JSONObject;
 
-public final class cd
-  implements aw
-{
-  public static final Parcelable.Creator<cd> CREATOR = new Parcelable.Creator() {};
-  @NonNull
-  public final em a;
-  private final String b;
-  private final int c;
-  private final JSONObject d;
-  @Nullable
-  private final Long e;
-  @Nullable
-  private final Long f;
-  
-  protected cd(Parcel paramParcel)
-    throws IllegalArgumentException
-  {
-    int j = paramParcel.readInt();
-    ArrayList localArrayList = new ArrayList();
-    int i = 0;
-    Object localObject;
-    while (i < j)
-    {
-      localObject = new double[2];
-      paramParcel.readDoubleArray((double[])localObject);
-      localArrayList.add(localObject);
-      i += 1;
+public final class cd implements aw {
+    public static final Creator<cd> CREATOR = new C58351();
+    @NonNull
+    /* renamed from: a */
+    public final em f23298a;
+    /* renamed from: b */
+    private final String f23299b;
+    /* renamed from: c */
+    private final int f23300c;
+    /* renamed from: d */
+    private final JSONObject f23301d;
+    @Nullable
+    /* renamed from: e */
+    private final Long f23302e;
+    @Nullable
+    /* renamed from: f */
+    private final Long f23303f;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.cd$1 */
+    static class C58351 implements Creator<cd> {
+        C58351() {
+        }
+
+        public final /* bridge */ /* synthetic */ Object[] newArray(int i) {
+            return new cd[i];
+        }
+
+        public final /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return new cd(parcel);
+        }
     }
-    this.b = paramParcel.readString();
-    try
-    {
-      this.d = new JSONObject(paramParcel.readString());
-      localObject = (Integer)paramParcel.readValue(Integer.class.getClassLoader());
-      this.e = ((Long)paramParcel.readValue(Long.class.getClassLoader()));
-      this.f = ((Long)paramParcel.readValue(Long.class.getClassLoader()));
-      this.c = paramParcel.readInt();
-      this.a = new em(localArrayList, (Integer)localObject);
-      return;
+
+    protected cd(Parcel parcel) throws IllegalArgumentException {
+        int readInt = parcel.readInt();
+        List arrayList = new ArrayList();
+        for (int i = 0; i < readInt; i++) {
+            Object obj = new double[2];
+            parcel.readDoubleArray(obj);
+            arrayList.add(obj);
+        }
+        this.f23299b = parcel.readString();
+        try {
+            this.f23301d = new JSONObject(parcel.readString());
+            Integer num = (Integer) parcel.readValue(Integer.class.getClassLoader());
+            this.f23302e = (Long) parcel.readValue(Long.class.getClassLoader());
+            this.f23303f = (Long) parcel.readValue(Long.class.getClassLoader());
+            this.f23300c = parcel.readInt();
+            this.f23298a = new em(arrayList, num);
+        } catch (Throwable e) {
+            throw new IllegalArgumentException(e);
+        }
     }
-    catch (JSONException paramParcel)
-    {
-      throw new IllegalArgumentException(paramParcel);
+
+    /* renamed from: a */
+    public final boolean mo4648a(double d, double d2, Integer num) {
+        return this.f23298a.m20423a(new ep(d, d2, num));
     }
-  }
-  
-  public final String a()
-  {
-    return this.b;
-  }
-  
-  public final boolean a(double paramDouble1, double paramDouble2, Integer paramInteger)
-  {
-    return this.a.a(new ep(paramDouble1, paramDouble2, paramInteger));
-  }
-  
-  public final int b()
-  {
-    return this.c;
-  }
-  
-  public final Long c()
-  {
-    return this.e;
-  }
-  
-  public final boolean d()
-  {
-    return this.e != null;
-  }
-  
-  public final int describeContents()
-  {
-    return 0;
-  }
-  
-  public final boolean e()
-  {
-    return this.f != null;
-  }
-  
-  public final boolean equals(Object paramObject)
-  {
-    if (this == paramObject) {}
-    do
-    {
-      return true;
-      if ((paramObject == null) || (getClass() != paramObject.getClass())) {
-        return false;
-      }
-      paramObject = (cd)paramObject;
-      if (!this.a.equals(((cd)paramObject).a)) {
-        return false;
-      }
-      if (!this.b.equals(((cd)paramObject).b)) {
-        return false;
-      }
-      if (!this.d.toString().equals(((cd)paramObject).d.toString())) {
-        return false;
-      }
-      if ((this.e != null) && (((cd)paramObject).e != null) && (!this.e.equals(((cd)paramObject).e))) {
-        return false;
-      }
-      if ((this.e != null) && (((cd)paramObject).e == null)) {
-        return false;
-      }
-      if ((this.e == null) && (((cd)paramObject).e != null)) {
-        return false;
-      }
-      if ((this.f != null) && (((cd)paramObject).f != null) && (!this.f.equals(((cd)paramObject).f))) {
-        return false;
-      }
-      if ((this.f != null) && (((cd)paramObject).f == null)) {
-        return false;
-      }
-      if ((this.f == null) && (((cd)paramObject).f != null)) {
-        return false;
-      }
-    } while (this.c == ((cd)paramObject).c);
-    return false;
-  }
-  
-  public final Long f()
-  {
-    return this.f;
-  }
-  
-  public final int hashCode()
-  {
-    int k = 0;
-    int i = this.a.hashCode() + 37;
-    char[] arrayOfChar = this.b.toCharArray();
-    int m = arrayOfChar.length;
-    int j = 0;
-    while (j < m)
-    {
-      int n = arrayOfChar[j];
-      j += 1;
-      i = n + i * 37;
+
+    /* renamed from: a */
+    public final String mo4647a() {
+        return this.f23299b;
     }
-    arrayOfChar = this.d.toString().toCharArray();
-    m = arrayOfChar.length;
-    j = 0;
-    while (j < m)
-    {
-      i = i * 37 + arrayOfChar[j];
-      j += 1;
+
+    /* renamed from: b */
+    public final int mo4649b() {
+        return this.f23300c;
     }
-    if (this.e == null)
-    {
-      j = 0;
-      if (this.f != null) {
-        break label157;
-      }
+
+    /* renamed from: c */
+    public final Long mo4650c() {
+        return this.f23302e;
     }
-    for (;;)
-    {
-      return ((j + i * 37) * 37 + k) * 37 + this.c;
-      j = (int)(this.e.longValue() ^ this.e.longValue() >>> 32);
-      break;
-      label157:
-      k = (int)(this.f.longValue() ^ this.f.longValue() >>> 32);
+
+    /* renamed from: d */
+    public final boolean mo4651d() {
+        return this.f23302e != null;
     }
-  }
-  
-  public final String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder(105).append("IAGeofence{id=").append(this.b).append(",edges=").append(this.a.a.toString()).append(",transitionTypes=");
-    if ((this.c & 0x1) > 0)
-    {
-      str = "ENTER ";
-      localStringBuilder = localStringBuilder.append(str);
-      if ((this.c & 0x10) <= 0) {
-        break label215;
-      }
-      str = "EXIT ";
-      label76:
-      localStringBuilder = localStringBuilder.append(str);
-      if ((this.c & 0x100) <= 0) {
-        break label221;
-      }
-      str = "DWELL";
-      label96:
-      localStringBuilder = localStringBuilder.append(str).append(",payload=").append(this.d.toString()).append(",floor=");
-      if (this.a.b == null) {
-        break label227;
-      }
-      str = this.a.b.toString();
-      label143:
-      localStringBuilder = localStringBuilder.append(str).append(",loiteringDelay=");
-      if (this.e == null) {
-        break label233;
-      }
-      str = this.e.toString();
-      label169:
-      localStringBuilder = localStringBuilder.append(str).append(",expirationTime=");
-      if (this.f == null) {
-        break label239;
-      }
+
+    /* renamed from: e */
+    public final boolean mo4652e() {
+        return this.f23303f != null;
     }
-    label215:
-    label221:
-    label227:
-    label233:
-    label239:
-    for (String str = this.f.toString();; str = "null")
-    {
-      return str + '}';
-      str = "";
-      break;
-      str = "";
-      break label76;
-      str = "";
-      break label96;
-      str = "null";
-      break label143;
-      str = "null";
-      break label169;
+
+    /* renamed from: f */
+    public final Long mo4653f() {
+        return this.f23303f;
     }
-  }
-  
-  public final void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    Object localObject = this.a.a;
-    ArrayList localArrayList = new ArrayList();
-    paramInt = 0;
-    while (paramInt < ((eq)localObject).a.size() - 1)
-    {
-      localArrayList.add(((eq)localObject).a.get(paramInt));
-      paramInt += 1;
+
+    public final int describeContents() {
+        return 0;
     }
-    paramParcel.writeInt(localArrayList.size());
-    localObject = localArrayList.iterator();
-    while (((Iterator)localObject).hasNext()) {
-      paramParcel.writeDoubleArray((double[])((Iterator)localObject).next());
+
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        cd cdVar = (cd) o;
+        if (!this.f23298a.equals(cdVar.f23298a)) {
+            return false;
+        }
+        if (!this.f23299b.equals(cdVar.f23299b)) {
+            return false;
+        }
+        if (!this.f23301d.toString().equals(cdVar.f23301d.toString())) {
+            return false;
+        }
+        if (this.f23302e != null && cdVar.f23302e != null && !this.f23302e.equals(cdVar.f23302e)) {
+            return false;
+        }
+        if (this.f23302e != null && cdVar.f23302e == null) {
+            return false;
+        }
+        if (this.f23302e == null && cdVar.f23302e != null) {
+            return false;
+        }
+        if (this.f23303f != null && cdVar.f23303f != null && !this.f23303f.equals(cdVar.f23303f)) {
+            return false;
+        }
+        if (this.f23303f != null && cdVar.f23303f == null) {
+            return false;
+        }
+        if (this.f23303f == null && cdVar.f23303f != null) {
+            return false;
+        }
+        if (this.f23300c != cdVar.f23300c) {
+            return false;
+        }
+        return true;
     }
-    paramParcel.writeString(this.b);
-    paramParcel.writeString(this.d.toString());
-    paramParcel.writeValue(this.a.b);
-    paramParcel.writeValue(this.e);
-    paramParcel.writeValue(this.f);
-    paramParcel.writeInt(this.c);
-  }
+
+    public final int hashCode() {
+        int i = 0;
+        int hashCode = this.f23298a.hashCode() + 37;
+        char[] toCharArray = this.f23299b.toCharArray();
+        int i2 = 0;
+        while (i2 < toCharArray.length) {
+            int i3 = toCharArray[i2] + (hashCode * 37);
+            i2++;
+            hashCode = i3;
+        }
+        i2 = hashCode;
+        for (char c : this.f23301d.toString().toCharArray()) {
+            i2 = (i2 * 37) + c;
+        }
+        hashCode = (this.f23302e == null ? 0 : (int) (this.f23302e.longValue() ^ (this.f23302e.longValue() >>> 32))) + (i2 * 37);
+        if (this.f23303f != null) {
+            i = (int) (this.f23303f.longValue() ^ (this.f23303f.longValue() >>> 32));
+        }
+        return (((hashCode * 37) + i) * 37) + this.f23300c;
+    }
+
+    public final String toString() {
+        return "IAGeofence{id=" + this.f23299b + ",edges=" + this.f23298a.f23518a.toString() + ",transitionTypes=" + ((this.f23300c & 1) > 0 ? "ENTER " : "") + ((this.f23300c & 16) > 0 ? "EXIT " : "") + ((this.f23300c & 256) > 0 ? "DWELL" : "") + ",payload=" + this.f23301d.toString() + ",floor=" + (this.f23298a.f23519b != null ? this.f23298a.f23519b.toString() : "null") + ",loiteringDelay=" + (this.f23302e != null ? this.f23302e.toString() : "null") + ",expirationTime=" + (this.f23303f != null ? this.f23303f.toString() : "null") + '}';
+    }
+
+    public final void writeToParcel(Parcel dest, int i) {
+        eq eqVar = this.f23298a.f23518a;
+        ArrayList arrayList = new ArrayList();
+        for (int i2 = 0; i2 < eqVar.f23528a.size() - 1; i2++) {
+            arrayList.add(eqVar.f23528a.get(i2));
+        }
+        dest.writeInt(arrayList.size());
+        Iterator it = arrayList.iterator();
+        while (it.hasNext()) {
+            dest.writeDoubleArray((double[]) it.next());
+        }
+        dest.writeString(this.f23299b);
+        dest.writeString(this.f23301d.toString());
+        dest.writeValue(this.f23298a.f23519b);
+        dest.writeValue(this.f23302e);
+        dest.writeValue(this.f23303f);
+        dest.writeInt(this.f23300c);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/cd.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

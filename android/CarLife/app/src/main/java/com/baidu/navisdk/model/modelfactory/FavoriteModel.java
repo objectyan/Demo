@@ -11,168 +11,115 @@ import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import com.baidu.nplatform.comapi.basestruct.Point;
 import java.util.ArrayList;
 
-public class FavoriteModel
-  extends BaseModel
-{
-  private static final String TAG = "Favorite";
-  private int mFavCount = 0;
-  private ArrayList<FavoritePoiInfo> mFavDataList = new ArrayList();
-  private SearchPoi mFavSearchPoi = null;
-  
-  public static FavoriteModel getInstance()
-  {
-    return LayerHolder.mInstance;
-  }
-  
-  public void addNewFavPoiToMemList(FavoritePoiInfo paramFavoritePoiInfo)
-  {
-    if (this.mFavDataList == null) {
-      this.mFavDataList = new ArrayList();
-    }
-    this.mFavDataList.add(paramFavoritePoiInfo);
-    if (this.mFavCount == 0)
-    {
-      this.mFavCount = FavoriteControlBundle.getInstance().getPOICnt();
-      return;
-    }
-    this.mFavCount += 1;
-  }
-  
-  public void clearFavDataList()
-  {
-    if (this.mFavDataList != null) {
-      this.mFavDataList.clear();
-    }
-  }
-  
-  public int getFavCount()
-  {
-    return this.mFavCount;
-  }
-  
-  public ArrayList<FavoritePoiInfo> getFavDataList()
-  {
-    return this.mFavDataList;
-  }
-  
-  public FavoritePoiInfo getFavPoiInfoFromMemListByKey(String paramString)
-  {
-    Object localObject;
-    if (StringUtils.isEmpty(paramString))
-    {
-      localObject = null;
-      return (FavoritePoiInfo)localObject;
-    }
-    int i = 0;
-    for (;;)
-    {
-      if (i >= this.mFavDataList.size()) {
-        break label59;
-      }
-      FavoritePoiInfo localFavoritePoiInfo = (FavoritePoiInfo)this.mFavDataList.get(i);
-      localObject = localFavoritePoiInfo;
-      if (paramString.equals(localFavoritePoiInfo.mFavKey)) {
-        break;
-      }
-      i += 1;
-    }
-    label59:
-    return null;
-  }
-  
-  public SearchPoi getFavoriteSearchPoi()
-  {
-    return this.mFavSearchPoi;
-  }
-  
-  public boolean isPoiExistInMemListByGeoPoint(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return false;
-    }
-    int i = 0;
-    label15:
-    Object localObject;
-    if (i < this.mFavDataList.size())
-    {
-      localObject = (FavoritePoiInfo)this.mFavDataList.get(i);
-      if (localObject != null) {
-        break label49;
-      }
-    }
-    label49:
-    do
-    {
-      i += 1;
-      break label15;
-      break;
-      localObject = ((FavoritePoiInfo)localObject).mViewPoint;
-      localObject = CoordinateTransformUtil.MC2LLE6(((Point)localObject).x, ((Point)localObject).y);
-      localObject = new GeoPoint(((Bundle)localObject).getInt("LLx"), ((Bundle)localObject).getInt("LLy"));
-    } while ((Math.abs(((GeoPoint)localObject).getLatitudeE6() - paramGeoPoint.getLatitudeE6()) > 5) || (Math.abs(((GeoPoint)localObject).getLongitudeE6() - paramGeoPoint.getLongitudeE6()) > 5));
-    LogUtil.e("Favorite", "坐标相等");
-    return true;
-  }
-  
-  public void removeFavPoiFromMemList(String paramString)
-  {
-    if (StringUtils.isEmpty(paramString)) {
-      return;
-    }
-    int i = 0;
-    for (;;)
-    {
-      if (i < this.mFavDataList.size())
-      {
-        if (paramString.equals(((FavoritePoiInfo)this.mFavDataList.get(i)).mFavKey)) {
-          this.mFavDataList.remove(i);
+public class FavoriteModel extends BaseModel {
+    private static final String TAG = "Favorite";
+    private int mFavCount;
+    private ArrayList<FavoritePoiInfo> mFavDataList;
+    private SearchPoi mFavSearchPoi;
+
+    private static class LayerHolder {
+        private static final FavoriteModel mInstance = new FavoriteModel();
+
+        private LayerHolder() {
         }
-      }
-      else
-      {
-        if (this.mFavCount <= 0) {
-          break;
+    }
+
+    private FavoriteModel() {
+        this.mFavDataList = new ArrayList();
+        this.mFavCount = 0;
+        this.mFavSearchPoi = null;
+    }
+
+    public static FavoriteModel getInstance() {
+        return LayerHolder.mInstance;
+    }
+
+    public SearchPoi getFavoriteSearchPoi() {
+        return this.mFavSearchPoi;
+    }
+
+    public void setFavoriteSearchPoi(SearchPoi poi) {
+        this.mFavSearchPoi = poi;
+    }
+
+    public ArrayList<FavoritePoiInfo> getFavDataList() {
+        return this.mFavDataList;
+    }
+
+    public synchronized void setFavDataList(ArrayList<FavoritePoiInfo> dataList) {
+        clearFavDataList();
+        this.mFavDataList.addAll(dataList);
+    }
+
+    public int getFavCount() {
+        return this.mFavCount;
+    }
+
+    public void setFavCount(int count) {
+        this.mFavCount = count;
+    }
+
+    public void clearFavDataList() {
+        if (this.mFavDataList != null) {
+            this.mFavDataList.clear();
         }
-        this.mFavCount -= 1;
-        return;
-      }
-      i += 1;
     }
-  }
-  
-  public void setFavCount(int paramInt)
-  {
-    this.mFavCount = paramInt;
-  }
-  
-  public void setFavDataList(ArrayList<FavoritePoiInfo> paramArrayList)
-  {
-    try
-    {
-      clearFavDataList();
-      this.mFavDataList.addAll(paramArrayList);
-      return;
+
+    public void addNewFavPoiToMemList(FavoritePoiInfo favPoiInfo) {
+        if (this.mFavDataList == null) {
+            this.mFavDataList = new ArrayList();
+        }
+        this.mFavDataList.add(favPoiInfo);
+        if (this.mFavCount == 0) {
+            this.mFavCount = FavoriteControlBundle.getInstance().getPOICnt();
+        } else {
+            this.mFavCount++;
+        }
     }
-    finally
-    {
-      paramArrayList = finally;
-      throw paramArrayList;
+
+    public void removeFavPoiFromMemList(String key) {
+        if (!StringUtils.isEmpty(key)) {
+            for (int i = 0; i < this.mFavDataList.size(); i++) {
+                if (key.equals(((FavoritePoiInfo) this.mFavDataList.get(i)).mFavKey)) {
+                    this.mFavDataList.remove(i);
+                    break;
+                }
+            }
+            if (this.mFavCount > 0) {
+                this.mFavCount--;
+            }
+        }
     }
-  }
-  
-  public void setFavoriteSearchPoi(SearchPoi paramSearchPoi)
-  {
-    this.mFavSearchPoi = paramSearchPoi;
-  }
-  
-  private static class LayerHolder
-  {
-    private static final FavoriteModel mInstance = new FavoriteModel(null);
-  }
+
+    public boolean isPoiExistInMemListByGeoPoint(GeoPoint point) {
+        if (point == null || !point.isValid()) {
+            return false;
+        }
+        for (int i = 0; i < this.mFavDataList.size(); i++) {
+            FavoritePoiInfo data = (FavoritePoiInfo) this.mFavDataList.get(i);
+            if (data != null) {
+                Point mcViewPoint = data.mViewPoint;
+                Bundle mcBundle = CoordinateTransformUtil.MC2LLE6(mcViewPoint.f19727x, mcViewPoint.f19728y);
+                GeoPoint tempPoint = new GeoPoint(mcBundle.getInt("LLx"), mcBundle.getInt("LLy"));
+                if (Math.abs(tempPoint.getLatitudeE6() - point.getLatitudeE6()) <= 5 && Math.abs(tempPoint.getLongitudeE6() - point.getLongitudeE6()) <= 5) {
+                    LogUtil.m15791e("Favorite", "坐标相等");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public FavoritePoiInfo getFavPoiInfoFromMemListByKey(String key) {
+        if (StringUtils.isEmpty(key)) {
+            return null;
+        }
+        for (int i = 0; i < this.mFavDataList.size(); i++) {
+            FavoritePoiInfo data = (FavoritePoiInfo) this.mFavDataList.get(i);
+            if (key.equals(data.mFavKey)) {
+                return data;
+            }
+        }
+        return null;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/model/modelfactory/FavoriteModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

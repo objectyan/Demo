@@ -1,52 +1,45 @@
 package com.baidu.platform.comapi.util;
 
-import com.baidu.platform.comjni.a;
+import com.baidu.platform.comjni.C2912a;
 
-public final class URLEncodeUtils
-  extends a
-{
-  public static String generateSign(int paramInt, String paramString)
-  {
-    if (paramInt == 1) {
-      return nativeMD5Sign(paramString);
+public final class URLEncodeUtils extends C2912a {
+
+    /* renamed from: com.baidu.platform.comapi.util.URLEncodeUtils$a */
+    public static class C4791a {
+        /* renamed from: a */
+        public static final int f19875a = 1;
+        /* renamed from: b */
+        public static final int f19876b = 2;
+        /* renamed from: c */
+        public static final int f19877c = 3;
     }
-    if (paramInt == 2) {
-      return nativeWebSign(paramString);
+
+    private static native String nativeMD5Sign(String str);
+
+    private static native String nativeOperSign(String str);
+
+    private static native String nativeUrlEncode(String str);
+
+    private static native String nativeWebSign(String str);
+
+    public static String urlEncode(String str) {
+        return nativeUrlEncode(str);
     }
-    if (paramInt == 3) {
-      return nativeOperSign(paramString);
+
+    public static String generateSign(int type, String str) {
+        if (type == 1) {
+            return nativeMD5Sign(str);
+        }
+        if (type == 2) {
+            return nativeWebSign(str);
+        }
+        if (type == 3) {
+            return nativeOperSign(str);
+        }
+        return "";
     }
-    return "";
-  }
-  
-  public static String getMD5String(String paramString)
-  {
-    return MD5.getMD5String(paramString);
-  }
-  
-  private static native String nativeMD5Sign(String paramString);
-  
-  private static native String nativeOperSign(String paramString);
-  
-  private static native String nativeUrlEncode(String paramString);
-  
-  private static native String nativeWebSign(String paramString);
-  
-  public static String urlEncode(String paramString)
-  {
-    return nativeUrlEncode(paramString);
-  }
-  
-  public static class a
-  {
-    public static final int a = 1;
-    public static final int b = 2;
-    public static final int c = 3;
-  }
+
+    public static String getMD5String(String param) {
+        return MD5.getMD5String(param);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/util/URLEncodeUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

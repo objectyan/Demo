@@ -10,107 +10,104 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.carlife.R.p;
-import com.baidu.carlife.view.a.b;
-import com.baidu.carlife.view.f;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.view.C2322f;
+import com.baidu.carlife.view.p104a.C2251b;
 
-public class SoftInputPhoneKey
-  extends RelativeLayout
-{
-  private TextView a;
-  private TextView b;
-  private f c;
-  private String d;
-  
-  public SoftInputPhoneKey(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public SoftInputPhoneKey(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public SoftInputPhoneKey(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    ((LayoutInflater)paramContext.getSystemService("layout_inflater")).inflate(2130969018, this, true);
-    this.a = ((TextView)findViewById(2131624906));
-    this.b = ((TextView)findViewById(2131626080));
-    if (paramAttributeSet == null) {}
-    do
-    {
-      return;
-      paramContext = paramContext.obtainStyledAttributes(paramAttributeSet, R.p.SoftInputPhoneKey);
-      this.d = paramContext.getString(0);
-      paramAttributeSet = paramContext.getString(1);
-      paramContext.recycle();
-      if (!TextUtils.isEmpty(this.d))
-      {
-        this.a.setText(this.d);
-        this.a.setOnClickListener(new View.OnClickListener()
-        {
-          public void onClick(View paramAnonymousView)
-          {
-            if (SoftInputPhoneKey.a(SoftInputPhoneKey.this) != null) {
-              SoftInputPhoneKey.a(SoftInputPhoneKey.this).a(SoftInputPhoneKey.b(SoftInputPhoneKey.this));
+public class SoftInputPhoneKey extends RelativeLayout {
+    /* renamed from: a */
+    private TextView f7801a;
+    /* renamed from: b */
+    private TextView f7802b;
+    /* renamed from: c */
+    private C2322f f7803c;
+    /* renamed from: d */
+    private String f7804d;
+
+    /* renamed from: com.baidu.carlife.view.softinputphonekey.SoftInputPhoneKey$1 */
+    class C23551 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ SoftInputPhoneKey f7799a;
+
+        C23551(SoftInputPhoneKey this$0) {
+            this.f7799a = this$0;
+        }
+
+        public void onClick(View v) {
+            if (this.f7799a.f7803c != null) {
+                this.f7799a.f7803c.mo1822a(this.f7799a.f7804d);
             }
-          }
-        });
-        this.a.setOnLongClickListener(new View.OnLongClickListener()
-        {
-          public boolean onLongClick(View paramAnonymousView)
-          {
-            if (SoftInputPhoneKey.a(SoftInputPhoneKey.this) != null)
-            {
-              if (!SoftInputPhoneKey.b(SoftInputPhoneKey.this).equals("0")) {
-                break label41;
-              }
-              SoftInputPhoneKey.a(SoftInputPhoneKey.this).a("+");
-            }
-            for (;;)
-            {
-              return true;
-              label41:
-              SoftInputPhoneKey.a(SoftInputPhoneKey.this).a(SoftInputPhoneKey.b(SoftInputPhoneKey.this));
-            }
-          }
-        });
-        this.a.setBackground(b.c(getContext()));
-      }
-    } while (TextUtils.isEmpty(paramAttributeSet));
-    this.b.setText(paramAttributeSet);
-  }
-  
-  public View getFocusView()
-  {
-    return this.a;
-  }
-  
-  public String getName()
-  {
-    return this.a.getText().toString();
-  }
-  
-  public void setDesc(String paramString)
-  {
-    if (TextUtils.isEmpty(paramString))
-    {
-      this.b.setText("");
-      return;
+        }
     }
-    this.b.setText(paramString);
-  }
-  
-  public void setSoftInputKeyListener(f paramf)
-  {
-    this.c = paramf;
-  }
+
+    /* renamed from: com.baidu.carlife.view.softinputphonekey.SoftInputPhoneKey$2 */
+    class C23562 implements OnLongClickListener {
+        /* renamed from: a */
+        final /* synthetic */ SoftInputPhoneKey f7800a;
+
+        C23562(SoftInputPhoneKey this$0) {
+            this.f7800a = this$0;
+        }
+
+        public boolean onLongClick(View v) {
+            if (this.f7800a.f7803c != null) {
+                if (this.f7800a.f7804d.equals("0")) {
+                    this.f7800a.f7803c.mo1822a("+");
+                } else {
+                    this.f7800a.f7803c.mo1822a(this.f7800a.f7804d);
+                }
+            }
+            return true;
+        }
+    }
+
+    public void setSoftInputKeyListener(C2322f softInputKeyListener) {
+        this.f7803c = softInputKeyListener;
+    }
+
+    public SoftInputPhoneKey(Context context) {
+        this(context, null);
+    }
+
+    public SoftInputPhoneKey(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public SoftInputPhoneKey(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(C0965R.layout.soft_input_phone_key, this, true);
+        this.f7801a = (TextView) findViewById(C0965R.id.tv_name);
+        this.f7802b = (TextView) findViewById(C0965R.id.tv_desc);
+        if (attrs != null) {
+            TypedArray a = context.obtainStyledAttributes(attrs, C0965R.C0963p.SoftInputPhoneKey);
+            this.f7804d = a.getString(0);
+            String desc = a.getString(1);
+            a.recycle();
+            if (!TextUtils.isEmpty(this.f7804d)) {
+                this.f7801a.setText(this.f7804d);
+                this.f7801a.setOnClickListener(new C23551(this));
+                this.f7801a.setOnLongClickListener(new C23562(this));
+                this.f7801a.setBackground(C2251b.m8529c(getContext()));
+            }
+            if (!TextUtils.isEmpty(desc)) {
+                this.f7802b.setText(desc);
+            }
+        }
+    }
+
+    public String getName() {
+        return this.f7801a.getText().toString();
+    }
+
+    public void setDesc(String desc) {
+        if (TextUtils.isEmpty(desc)) {
+            this.f7802b.setText("");
+        } else {
+            this.f7802b.setText(desc);
+        }
+    }
+
+    public View getFocusView() {
+        return this.f7801a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/softinputphonekey/SoftInputPhoneKey.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

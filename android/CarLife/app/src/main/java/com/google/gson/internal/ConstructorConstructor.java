@@ -21,206 +21,179 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public final class ConstructorConstructor
-{
-  private final Map<Type, InstanceCreator<?>> instanceCreators;
-  
-  public ConstructorConstructor(Map<Type, InstanceCreator<?>> paramMap)
-  {
-    this.instanceCreators = paramMap;
-  }
-  
-  private <T> ObjectConstructor<T> newDefaultConstructor(final Class<? super T> paramClass)
-  {
-    try
-    {
-      paramClass = paramClass.getDeclaredConstructor(new Class[0]);
-      if (!paramClass.isAccessible()) {
-        paramClass.setAccessible(true);
-      }
-      paramClass = new ObjectConstructor()
-      {
-        public T construct()
-        {
-          try
-          {
-            Object localObject = paramClass.newInstance(null);
-            return (T)localObject;
-          }
-          catch (InstantiationException localInstantiationException)
-          {
-            throw new RuntimeException("Failed to invoke " + paramClass + " with no args", localInstantiationException);
-          }
-          catch (InvocationTargetException localInvocationTargetException)
-          {
-            throw new RuntimeException("Failed to invoke " + paramClass + " with no args", localInvocationTargetException.getTargetException());
-          }
-          catch (IllegalAccessException localIllegalAccessException)
-          {
-            throw new AssertionError(localIllegalAccessException);
-          }
+public final class ConstructorConstructor {
+    private final Map<Type, InstanceCreator<?>> instanceCreators;
+
+    /* renamed from: com.google.gson.internal.ConstructorConstructor$4 */
+    class C56924 implements ObjectConstructor<T> {
+        C56924() {
         }
-      };
-      return paramClass;
-    }
-    catch (NoSuchMethodException paramClass) {}
-    return null;
-  }
-  
-  private <T> ObjectConstructor<T> newDefaultImplementationConstructor(final Type paramType, Class<? super T> paramClass)
-  {
-    if (Collection.class.isAssignableFrom(paramClass))
-    {
-      if (SortedSet.class.isAssignableFrom(paramClass)) {
-        new ObjectConstructor()
-        {
-          public T construct()
-          {
+
+        public T construct() {
             return new TreeSet();
-          }
-        };
-      }
-      if (EnumSet.class.isAssignableFrom(paramClass)) {
-        new ObjectConstructor()
-        {
-          public T construct()
-          {
-            if ((paramType instanceof ParameterizedType))
-            {
-              Type localType = ((ParameterizedType)paramType).getActualTypeArguments()[0];
-              if ((localType instanceof Class)) {
-                return EnumSet.noneOf((Class)localType);
-              }
-              throw new JsonIOException("Invalid EnumSet type: " + paramType.toString());
-            }
-            throw new JsonIOException("Invalid EnumSet type: " + paramType.toString());
-          }
-        };
-      }
-      if (Set.class.isAssignableFrom(paramClass)) {
-        new ObjectConstructor()
-        {
-          public T construct()
-          {
+        }
+    }
+
+    /* renamed from: com.google.gson.internal.ConstructorConstructor$6 */
+    class C56946 implements ObjectConstructor<T> {
+        C56946() {
+        }
+
+        public T construct() {
             return new LinkedHashSet();
-          }
-        };
-      }
-      if (Queue.class.isAssignableFrom(paramClass)) {
-        new ObjectConstructor()
-        {
-          public T construct()
-          {
+        }
+    }
+
+    /* renamed from: com.google.gson.internal.ConstructorConstructor$7 */
+    class C56957 implements ObjectConstructor<T> {
+        C56957() {
+        }
+
+        public T construct() {
             return new LinkedList();
-          }
-        };
-      }
-      new ObjectConstructor()
-      {
-        public T construct()
-        {
-          return new ArrayList();
         }
-      };
     }
-    if (Map.class.isAssignableFrom(paramClass))
-    {
-      if (SortedMap.class.isAssignableFrom(paramClass)) {
-        new ObjectConstructor()
-        {
-          public T construct()
-          {
+
+    /* renamed from: com.google.gson.internal.ConstructorConstructor$8 */
+    class C56968 implements ObjectConstructor<T> {
+        C56968() {
+        }
+
+        public T construct() {
+            return new ArrayList();
+        }
+    }
+
+    /* renamed from: com.google.gson.internal.ConstructorConstructor$9 */
+    class C56979 implements ObjectConstructor<T> {
+        C56979() {
+        }
+
+        public T construct() {
             return new TreeMap();
-          }
-        };
-      }
-      if (((paramType instanceof ParameterizedType)) && (!String.class.isAssignableFrom(TypeToken.get(((ParameterizedType)paramType).getActualTypeArguments()[0]).getRawType()))) {
-        new ObjectConstructor()
-        {
-          public T construct()
-          {
-            return new LinkedHashMap();
-          }
-        };
-      }
-      new ObjectConstructor()
-      {
-        public T construct()
-        {
-          return new LinkedTreeMap();
         }
-      };
     }
-    return null;
-  }
-  
-  private <T> ObjectConstructor<T> newUnsafeAllocator(final Type paramType, final Class<? super T> paramClass)
-  {
-    new ObjectConstructor()
-    {
-      private final UnsafeAllocator unsafeAllocator = UnsafeAllocator.create();
-      
-      public T construct()
-      {
-        try
-        {
-          Object localObject = this.unsafeAllocator.newInstance(paramClass);
-          return (T)localObject;
-        }
-        catch (Exception localException)
-        {
-          throw new RuntimeException("Unable to invoke no-args constructor for " + paramType + ". " + "Register an InstanceCreator with Gson for this type may fix this problem.", localException);
-        }
-      }
-    };
-  }
-  
-  public <T> ObjectConstructor<T> get(final TypeToken<T> paramTypeToken)
-  {
-    final Type localType = paramTypeToken.getType();
-    Class localClass = paramTypeToken.getRawType();
-    paramTypeToken = (InstanceCreator)this.instanceCreators.get(localType);
-    if (paramTypeToken != null) {
-      paramTypeToken = new ObjectConstructor()
-      {
-        public T construct()
-        {
-          return (T)paramTypeToken.createInstance(localType);
-        }
-      };
+
+    public ConstructorConstructor(Map<Type, InstanceCreator<?>> instanceCreators) {
+        this.instanceCreators = instanceCreators;
     }
-    ObjectConstructor localObjectConstructor;
-    do
-    {
-      return paramTypeToken;
-      paramTypeToken = (InstanceCreator)this.instanceCreators.get(localClass);
-      if (paramTypeToken != null) {
-        new ObjectConstructor()
-        {
-          public T construct()
-          {
-            return (T)paramTypeToken.createInstance(localType);
-          }
+
+    public <T> ObjectConstructor<T> get(TypeToken<T> typeToken) {
+        final Type type = typeToken.getType();
+        Class<? super T> rawType = typeToken.getRawType();
+        final InstanceCreator<T> typeCreator = (InstanceCreator) this.instanceCreators.get(type);
+        if (typeCreator != null) {
+            return new ObjectConstructor<T>() {
+                public T construct() {
+                    return typeCreator.createInstance(type);
+                }
+            };
+        }
+        final InstanceCreator<T> rawTypeCreator = (InstanceCreator) this.instanceCreators.get(rawType);
+        if (rawTypeCreator != null) {
+            return new ObjectConstructor<T>() {
+                public T construct() {
+                    return rawTypeCreator.createInstance(type);
+                }
+            };
+        }
+        ObjectConstructor<T> defaultConstructor = newDefaultConstructor(rawType);
+        if (defaultConstructor != null) {
+            return defaultConstructor;
+        }
+        ObjectConstructor<T> defaultImplementation = newDefaultImplementationConstructor(type, rawType);
+        if (defaultImplementation != null) {
+            return defaultImplementation;
+        }
+        return newUnsafeAllocator(type, rawType);
+    }
+
+    private <T> ObjectConstructor<T> newDefaultConstructor(Class<? super T> rawType) {
+        try {
+            final Constructor<? super T> constructor = rawType.getDeclaredConstructor(new Class[0]);
+            if (!constructor.isAccessible()) {
+                constructor.setAccessible(true);
+            }
+            return new ObjectConstructor<T>() {
+                public T construct() {
+                    try {
+                        return constructor.newInstance(null);
+                    } catch (InstantiationException e) {
+                        throw new RuntimeException("Failed to invoke " + constructor + " with no args", e);
+                    } catch (InvocationTargetException e2) {
+                        throw new RuntimeException("Failed to invoke " + constructor + " with no args", e2.getTargetException());
+                    } catch (IllegalAccessException e3) {
+                        throw new AssertionError(e3);
+                    }
+                }
+            };
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    private <T> ObjectConstructor<T> newDefaultImplementationConstructor(final Type type, Class<? super T> rawType) {
+        if (Collection.class.isAssignableFrom(rawType)) {
+            if (SortedSet.class.isAssignableFrom(rawType)) {
+                return new C56924();
+            }
+            if (EnumSet.class.isAssignableFrom(rawType)) {
+                return new ObjectConstructor<T>() {
+                    public T construct() {
+                        if (type instanceof ParameterizedType) {
+                            Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
+                            if (elementType instanceof Class) {
+                                return EnumSet.noneOf((Class) elementType);
+                            }
+                            throw new JsonIOException("Invalid EnumSet type: " + type.toString());
+                        }
+                        throw new JsonIOException("Invalid EnumSet type: " + type.toString());
+                    }
+                };
+            }
+            if (Set.class.isAssignableFrom(rawType)) {
+                return new C56946();
+            }
+            if (Queue.class.isAssignableFrom(rawType)) {
+                return new C56957();
+            }
+            return new C56968();
+        } else if (!Map.class.isAssignableFrom(rawType)) {
+            return null;
+        } else {
+            if (SortedMap.class.isAssignableFrom(rawType)) {
+                return new C56979();
+            }
+            if (!(type instanceof ParameterizedType) || String.class.isAssignableFrom(TypeToken.get(((ParameterizedType) type).getActualTypeArguments()[0]).getRawType())) {
+                return new ObjectConstructor<T>() {
+                    public T construct() {
+                        return new LinkedTreeMap();
+                    }
+                };
+            }
+            return new ObjectConstructor<T>() {
+                public T construct() {
+                    return new LinkedHashMap();
+                }
+            };
+        }
+    }
+
+    private <T> ObjectConstructor<T> newUnsafeAllocator(final Type type, final Class<? super T> rawType) {
+        return new ObjectConstructor<T>() {
+            private final UnsafeAllocator unsafeAllocator = UnsafeAllocator.create();
+
+            public T construct() {
+                try {
+                    return this.unsafeAllocator.newInstance(rawType);
+                } catch (Exception e) {
+                    throw new RuntimeException("Unable to invoke no-args constructor for " + type + ". " + "Register an InstanceCreator with Gson for this type may fix this problem.", e);
+                }
+            }
         };
-      }
-      localObjectConstructor = newDefaultConstructor(localClass);
-      paramTypeToken = localObjectConstructor;
-    } while (localObjectConstructor != null);
-    paramTypeToken = newDefaultImplementationConstructor(localType, localClass);
-    if (paramTypeToken != null) {
-      return paramTypeToken;
     }
-    return newUnsafeAllocator(localType, localClass);
-  }
-  
-  public String toString()
-  {
-    return this.instanceCreators.toString();
-  }
+
+    public String toString() {
+        return this.instanceCreators.toString();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/ConstructorConstructor.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

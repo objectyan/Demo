@@ -1,7 +1,6 @@
 package com.baidu.ufosdk.ui;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -10,71 +9,65 @@ import android.graphics.Path;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
-public final class db
-  extends ImageView
-{
-  private Paint a;
-  private int b = 5;
-  private int c = 5;
-  private Paint d;
-  
-  public db(Context paramContext)
-  {
-    super(paramContext);
-    float f = paramContext.getResources().getDisplayMetrics().density;
-    this.b = ((int)(this.b * f));
-    this.c = ((int)(f * this.c));
-    this.a = new Paint();
-    this.a.setColor(-1);
-    this.a.setAntiAlias(true);
-    this.a.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-    this.d = new Paint();
-    this.d.setXfermode(null);
-  }
-  
-  public final void draw(Canvas paramCanvas)
-  {
-    Bitmap localBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.RGB_565);
-    Canvas localCanvas = new Canvas(localBitmap);
-    super.draw(localCanvas);
-    Path localPath = new Path();
-    localPath.moveTo(0.0F, this.c);
-    localPath.lineTo(0.0F, 0.0F);
-    localPath.lineTo(this.b, 0.0F);
-    localPath.arcTo(new RectF(0.0F, 0.0F, this.b * 2, this.c * 2), -90.0F, -90.0F);
-    localPath.close();
-    localCanvas.drawPath(localPath, this.a);
-    localPath = new Path();
-    localPath.moveTo(getWidth(), this.c);
-    localPath.lineTo(getWidth(), 0.0F);
-    localPath.lineTo(getWidth() - this.b, 0.0F);
-    localPath.arcTo(new RectF(getWidth() - this.b * 2, 0.0F, getWidth(), this.c * 2 + 0), -90.0F, 90.0F);
-    localPath.close();
-    localCanvas.drawPath(localPath, this.a);
-    localPath = new Path();
-    localPath.moveTo(0.0F, getHeight() - this.c);
-    localPath.lineTo(0.0F, getHeight());
-    localPath.lineTo(this.b, getHeight());
-    localPath.arcTo(new RectF(0.0F, getHeight() - this.c * 2, this.b * 2 + 0, getHeight()), 90.0F, 90.0F);
-    localPath.close();
-    localCanvas.drawPath(localPath, this.a);
-    localPath = new Path();
-    localPath.moveTo(getWidth() - this.b, getHeight());
-    localPath.lineTo(getWidth(), getHeight());
-    localPath.lineTo(getWidth(), getHeight() - this.c);
-    localPath.arcTo(new RectF(getWidth() - this.b * 2, getHeight() - this.c * 2, getWidth(), getHeight()), 0.0F, 90.0F);
-    localPath.close();
-    localCanvas.drawPath(localPath, this.a);
-    paramCanvas.drawBitmap(localBitmap, 0.0F, 0.0F, this.d);
-    localBitmap.recycle();
-  }
+/* compiled from: RoundAngleImageView */
+public final class db extends ImageView {
+    /* renamed from: a */
+    private Paint f21656a;
+    /* renamed from: b */
+    private int f21657b = 5;
+    /* renamed from: c */
+    private int f21658c = 5;
+    /* renamed from: d */
+    private Paint f21659d;
+
+    public db(Context context) {
+        super(context);
+        float f = context.getResources().getDisplayMetrics().density;
+        this.f21657b = (int) (((float) this.f21657b) * f);
+        this.f21658c = (int) (f * ((float) this.f21658c));
+        this.f21656a = new Paint();
+        this.f21656a.setColor(-1);
+        this.f21656a.setAntiAlias(true);
+        this.f21656a.setXfermode(new PorterDuffXfermode(Mode.DST_OUT));
+        this.f21659d = new Paint();
+        this.f21659d.setXfermode(null);
+    }
+
+    public final void draw(Canvas canvas) {
+        Bitmap createBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Config.RGB_565);
+        Canvas canvas2 = new Canvas(createBitmap);
+        super.draw(canvas2);
+        Path path = new Path();
+        path.moveTo(0.0f, (float) this.f21658c);
+        path.lineTo(0.0f, 0.0f);
+        path.lineTo((float) this.f21657b, 0.0f);
+        path.arcTo(new RectF(0.0f, 0.0f, (float) (this.f21657b * 2), (float) (this.f21658c * 2)), -90.0f, -90.0f);
+        path.close();
+        canvas2.drawPath(path, this.f21656a);
+        path = new Path();
+        path.moveTo((float) getWidth(), (float) this.f21658c);
+        path.lineTo((float) getWidth(), 0.0f);
+        path.lineTo((float) (getWidth() - this.f21657b), 0.0f);
+        path.arcTo(new RectF((float) (getWidth() - (this.f21657b * 2)), 0.0f, (float) getWidth(), (float) ((this.f21658c * 2) + 0)), -90.0f, 90.0f);
+        path.close();
+        canvas2.drawPath(path, this.f21656a);
+        path = new Path();
+        path.moveTo(0.0f, (float) (getHeight() - this.f21658c));
+        path.lineTo(0.0f, (float) getHeight());
+        path.lineTo((float) this.f21657b, (float) getHeight());
+        path.arcTo(new RectF(0.0f, (float) (getHeight() - (this.f21658c * 2)), (float) ((this.f21657b * 2) + 0), (float) getHeight()), 90.0f, 90.0f);
+        path.close();
+        canvas2.drawPath(path, this.f21656a);
+        path = new Path();
+        path.moveTo((float) (getWidth() - this.f21657b), (float) getHeight());
+        path.lineTo((float) getWidth(), (float) getHeight());
+        path.lineTo((float) getWidth(), (float) (getHeight() - this.f21658c));
+        path.arcTo(new RectF((float) (getWidth() - (this.f21657b * 2)), (float) (getHeight() - (this.f21658c * 2)), (float) getWidth(), (float) getHeight()), 0.0f, 90.0f);
+        path.close();
+        canvas2.drawPath(path, this.f21656a);
+        canvas.drawBitmap(createBitmap, 0.0f, 0.0f, this.f21659d);
+        createBitmap.recycle();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/db.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.routeguide.BNRouteGuider;
 import com.baidu.navisdk.comapi.routeguide.RouteGuideParams;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
@@ -17,233 +18,148 @@ import com.baidu.navisdk.util.common.CoordinateTransformUtil;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.PackageUtil;
 
-public class BNExtGPSLocationManager
-  extends BNLocationManager
-{
-  private static final String TAG = BNExtGPSLocationManager.class.getSimpleName();
-  private static BNExtGPSLocationManager mInstance = null;
-  private Context mContext;
-  private int mDebugIndex = 1;
-  private boolean mIsGpsEnabled = false;
-  private LocationManager mSysLocManager;
-  
-  public static void destory()
-  {
-    try
-    {
-      if (mInstance != null) {
-        mInstance.unInit();
-      }
-      mInstance = null;
-      return;
+public class BNExtGPSLocationManager extends BNLocationManager {
+    private static final String TAG = BNExtGPSLocationManager.class.getSimpleName();
+    private static BNExtGPSLocationManager mInstance = null;
+    private Context mContext;
+    private int mDebugIndex = 1;
+    private boolean mIsGpsEnabled = false;
+    private LocationManager mSysLocManager;
+
+    private BNExtGPSLocationManager() {
     }
-    finally {}
-  }
-  
-  public static BNExtGPSLocationManager getInstance()
-  {
-    try
-    {
-      if (mInstance == null) {
-        mInstance = new BNExtGPSLocationManager();
-      }
-      BNExtGPSLocationManager localBNExtGPSLocationManager = mInstance;
-      return localBNExtGPSLocationManager;
-    }
-    finally {}
-  }
-  
-  public boolean hasGPSPermission(Context paramContext)
-  {
-    boolean bool2 = true;
-    boolean bool1 = bool2;
-    if (paramContext != null) {}
-    try
-    {
-      PackageManager localPackageManager = paramContext.getPackageManager();
-      bool1 = bool2;
-      if (localPackageManager != null)
-      {
-        bool1 = bool2;
-        if (-1 == localPackageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", PackageUtil.getPackageName()))
-        {
-          TipTool.onCreateToastDialog(paramContext, BNStyleManager.getString(1711669363));
-          bool1 = false;
+
+    public static synchronized BNExtGPSLocationManager getInstance() {
+        BNExtGPSLocationManager bNExtGPSLocationManager;
+        synchronized (BNExtGPSLocationManager.class) {
+            if (mInstance == null) {
+                mInstance = new BNExtGPSLocationManager();
+            }
+            bNExtGPSLocationManager = mInstance;
         }
-      }
-      return bool1;
+        return bNExtGPSLocationManager;
     }
-    catch (Exception paramContext) {}
-    return true;
-  }
-  
-  public void init(Context paramContext)
-  {
-    try
-    {
-      this.mContext = paramContext;
-      LogUtil.e(TAG, "init");
-      return;
-    }
-    finally
-    {
-      paramContext = finally;
-      throw paramContext;
-    }
-  }
-  
-  public boolean isGpsAvailable()
-  {
-    return getCurLocation() != null;
-  }
-  
-  public boolean isGpsEnabled()
-  {
-    if (RouteGuideParams.getRouteGuideMode() == 2) {
-      try
-      {
-        if ((this.mSysLocManager == null) && (this.mContext != null) && (hasGPSPermission(BNaviModuleManager.getContext()))) {
-          this.mSysLocManager = ((LocationManager)this.mContext.getSystemService("location"));
+
+    public static synchronized void destory() {
+        synchronized (BNExtGPSLocationManager.class) {
+            if (mInstance != null) {
+                mInstance.unInit();
+            }
+            mInstance = null;
         }
-        boolean bool = this.mSysLocManager.isProviderEnabled("gps");
-        return bool;
-      }
-      catch (Exception localException)
-      {
-        return false;
-      }
     }
-    return this.mIsGpsEnabled;
-  }
-  
-  public void notifyLocationChangedForEngine(LocData paramLocData)
-  {
-    if (BNavigator.getInstance().isNaviBegin()) {}
-    while (paramLocData == null) {
-      return;
+
+    public synchronized void init(Context context) {
+        this.mContext = context;
+        LogUtil.m15791e(TAG, "init");
     }
-    Bundle localBundle = CoordinateTransformUtil.transferGCJ02ToWGS84(paramLocData.longitude, paramLocData.latitude);
-    double d1 = localBundle.getDouble("LLx");
-    double d2 = localBundle.getDouble("LLy");
-    double d3 = paramLocData.altitude;
-    float f1 = paramLocData.speed;
-    float f2 = paramLocData.direction;
-    float f3 = paramLocData.accuracy;
-    int j = paramLocData.getStartPointUpStreamLocType();
-    int i;
-    if (paramLocData.indoorState == 1) {
-      i = 1;
+
+    public synchronized void unInit() {
+        this.mContext = null;
+        this.mSysLocManager = null;
+        LogUtil.m15791e(TAG, " unInit");
     }
-    for (;;)
-    {
-      if (this.mDebugIndex >= 10)
-      {
-        this.mDebugIndex = 1;
-        LogUtil.e("triggerStartLocationData:", "call");
-      }
-      this.mDebugIndex += 1;
-      BNRouteGuider.getInstance().triggerStartLocationData((int)(100000.0D * d1), (int)(100000.0D * d2), (float)d3, f1, f2, f3, j, i);
-      return;
-      if (paramLocData.indoorState == 0) {
-        i = 2;
-      } else {
-        i = 0;
-      }
+
+    public boolean isGpsEnabled() {
+        if (RouteGuideParams.getRouteGuideMode() != 2) {
+            return this.mIsGpsEnabled;
+        }
+        try {
+            if (this.mSysLocManager == null && this.mContext != null && hasGPSPermission(BNaviModuleManager.getContext())) {
+                this.mSysLocManager = (LocationManager) this.mContext.getSystemService("location");
+            }
+            return this.mSysLocManager.isProviderEnabled("gps");
+        } catch (Exception e) {
+            return false;
+        }
     }
-  }
-  
-  public void triggerGPSDataChangeForAllLocType(LocData paramLocData)
-  {
-    if (LogUtil.LOGGABLE) {
-      LogUtil.e(TAG, "triggerGPSDataChangeForAllLocType   longitude:" + paramLocData.longitude + ", latitude:" + paramLocData.latitude + ", locType:" + paramLocData.type + ", satellitesNum:" + paramLocData.satellitesNum);
+
+    public boolean isGpsAvailable() {
+        return getCurLocation() != null;
     }
-    BNRouteGuider localBNRouteGuider;
-    int j;
-    int k;
-    float f1;
-    float f2;
-    float f3;
-    float f4;
-    int m;
-    if (paramLocData != null)
-    {
-      Bundle localBundle = CoordinateTransformUtil.transferGCJ02ToWGS84(paramLocData.longitude, paramLocData.latitude);
-      localBNRouteGuider = BNRouteGuider.getInstance();
-      j = (int)(localBundle.getDouble("LLx") * 100000.0D);
-      k = (int)(localBundle.getDouble("LLy") * 100000.0D);
-      f1 = paramLocData.speed;
-      f2 = paramLocData.direction;
-      f3 = paramLocData.accuracy;
-      f4 = (float)paramLocData.altitude;
-      m = paramLocData.satellitesNum;
-      if (paramLocData.type != 61) {
-        break label182;
-      }
+
+    public void updateGpsStatus(boolean enabled) {
+        LogUtil.m15791e(TAG, "updateGpsStatus: enabled " + enabled);
+        this.mIsGpsEnabled = enabled;
+        notifyGpsStatusChanged(enabled, true);
     }
-    label182:
-    for (int i = 0;; i = 1)
-    {
-      localBNRouteGuider.triggerGPSDataChange(j, k, f1, f2, f3, f4, m, i);
-      return;
+
+    public void updateLocation(LocData locData) {
+        if (locData != null) {
+            notifyLocationChanged(locData);
+        }
     }
-  }
-  
-  public void triggerGPSDataChangeForDriving(LocData paramLocData)
-  {
-    LogUtil.e(TAG, "triggerGPSDataChangeForDriving   longitude:" + paramLocData.longitude + ", latitude:" + paramLocData.latitude + ", locType:" + paramLocData.type + ", satellitesNum:" + paramLocData.satellitesNum);
-    if (paramLocData.type == 61)
-    {
-      Bundle localBundle = CoordinateTransformUtil.transferGCJ02ToWGS84(paramLocData.longitude, paramLocData.latitude);
-      paramLocData.locType = 0;
-      if (BNSettingManager.isShowJavaLog()) {
-        SDKDebugFileUtil.get("sysloc_debug").add("Driving sysloc=long:" + (int)(localBundle.getDouble("LLx") * 100000.0D) + ", lati:" + (int)(localBundle.getDouble("LLy") * 100000.0D) + ", speed:" + paramLocData.speed + ", direction:" + paramLocData.direction + ", accuracy:" + paramLocData.accuracy + ", locType:" + paramLocData.locType + ", satellitesNum:" + paramLocData.satellitesNum);
-      }
-      BNRouteGuider.getInstance().triggerGPSDataChange((int)(localBundle.getDouble("LLx") * 100000.0D), (int)(localBundle.getDouble("LLy") * 100000.0D), paramLocData.speed, paramLocData.direction, paramLocData.accuracy, (float)paramLocData.altitude, paramLocData.satellitesNum, paramLocData.locType);
-      return;
+
+    public void updateWGS84Location(LocData locData, LocData gcjLocData) {
+        if (locData != null) {
+            notifyWGS84LocationChanged(locData, gcjLocData);
+        }
     }
-    triggerGPSDataChangeForAllLocType(paramLocData);
-  }
-  
-  public void unInit()
-  {
-    try
-    {
-      this.mContext = null;
-      this.mSysLocManager = null;
-      LogUtil.e(TAG, " unInit");
-      return;
+
+    public void triggerGPSDataChangeForDriving(LocData locData) {
+        LogUtil.m15791e(TAG, "triggerGPSDataChangeForDriving   longitude:" + locData.longitude + ", latitude:" + locData.latitude + ", locType:" + locData.type + ", satellitesNum:" + locData.satellitesNum);
+        if (locData.type == 61) {
+            Bundle wgs84Bundle = CoordinateTransformUtil.transferGCJ02ToWGS84(locData.longitude, locData.latitude);
+            locData.locType = 0;
+            if (BNSettingManager.isShowJavaLog()) {
+                SDKDebugFileUtil.get(SDKDebugFileUtil.SYSLOC_FILENAME).add("Driving sysloc=long:" + ((int) (wgs84Bundle.getDouble("LLx") * 100000.0d)) + ", lati:" + ((int) (wgs84Bundle.getDouble("LLy") * 100000.0d)) + ", speed:" + locData.speed + ", direction:" + locData.direction + ", accuracy:" + locData.accuracy + ", locType:" + locData.locType + ", satellitesNum:" + locData.satellitesNum);
+            }
+            BNRouteGuider.getInstance().triggerGPSDataChange((int) (wgs84Bundle.getDouble("LLx") * 100000.0d), (int) (wgs84Bundle.getDouble("LLy") * 100000.0d), locData.speed, locData.direction, locData.accuracy, (float) locData.altitude, locData.satellitesNum, locData.locType);
+            return;
+        }
+        triggerGPSDataChangeForAllLocType(locData);
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public void triggerGPSDataChangeForAllLocType(LocData locData) {
+        if (LogUtil.LOGGABLE) {
+            LogUtil.m15791e(TAG, "triggerGPSDataChangeForAllLocType   longitude:" + locData.longitude + ", latitude:" + locData.latitude + ", locType:" + locData.type + ", satellitesNum:" + locData.satellitesNum);
+        }
+        if (locData != null) {
+            Bundle wgs84Bundle = CoordinateTransformUtil.transferGCJ02ToWGS84(locData.longitude, locData.latitude);
+            BNRouteGuider.getInstance().triggerGPSDataChange((int) (wgs84Bundle.getDouble("LLx") * 100000.0d), (int) (wgs84Bundle.getDouble("LLy") * 100000.0d), locData.speed, locData.direction, locData.accuracy, (float) locData.altitude, locData.satellitesNum, locData.type == 61 ? 0 : 1);
+        }
     }
-  }
-  
-  public void updateGpsStatus(boolean paramBoolean)
-  {
-    LogUtil.e(TAG, "updateGpsStatus: enabled " + paramBoolean);
-    this.mIsGpsEnabled = paramBoolean;
-    notifyGpsStatusChanged(paramBoolean, true);
-  }
-  
-  public void updateLocation(LocData paramLocData)
-  {
-    if (paramLocData != null) {
-      notifyLocationChanged(paramLocData);
+
+    public void notifyLocationChangedForEngine(LocData locData) {
+        if (!BNavigator.getInstance().isNaviBegin() && locData != null) {
+            int indoorState;
+            Bundle wgs84Bundle = CoordinateTransformUtil.transferGCJ02ToWGS84(locData.longitude, locData.latitude);
+            double longtitude = wgs84Bundle.getDouble("LLx");
+            double latitude = wgs84Bundle.getDouble("LLy");
+            double altitude = locData.altitude;
+            float speed = locData.speed;
+            float bearing = locData.direction;
+            float accuracy = locData.accuracy;
+            int locType = locData.getStartPointUpStreamLocType();
+            if (locData.indoorState == 1) {
+                indoorState = 1;
+            } else if (locData.indoorState == 0) {
+                indoorState = 2;
+            } else {
+                indoorState = 0;
+            }
+            if (this.mDebugIndex >= 10) {
+                this.mDebugIndex = 1;
+                LogUtil.m15791e("triggerStartLocationData:", "call");
+            }
+            this.mDebugIndex++;
+            BNRouteGuider.getInstance().triggerStartLocationData((int) (100000.0d * longtitude), (int) (100000.0d * latitude), (float) altitude, speed, bearing, accuracy, locType, indoorState);
+        }
     }
-  }
-  
-  public void updateWGS84Location(LocData paramLocData1, LocData paramLocData2)
-  {
-    if (paramLocData1 != null) {
-      notifyWGS84LocationChanged(paramLocData1, paramLocData2);
+
+    public boolean hasGPSPermission(Context context) {
+        if (context == null) {
+            return true;
+        }
+        try {
+            PackageManager pm = context.getPackageManager();
+            if (pm == null || -1 != pm.checkPermission("android.permission.ACCESS_FINE_LOCATION", PackageUtil.getPackageName())) {
+                return true;
+            }
+            TipTool.onCreateToastDialog(context, BNStyleManager.getString(C4048R.string.nsdk_string_error_gps_permission_fail));
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/logic/BNExtGPSLocationManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

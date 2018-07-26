@@ -1,292 +1,185 @@
 package com.baidu.mobstat;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.Build.VERSION;
 import android.text.TextUtils;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
+import java.io.Closeable;
+import java.net.HttpURLConnection;
 
-class ay
-  extends Thread
-{
-  private Context a;
-  private l b;
-  
-  public ay(Context paramContext, l paraml)
-  {
-    this.a = paramContext;
-    this.b = paraml;
-  }
-  
-  /* Error */
-  private void a()
-  {
-    // Byte code:
-    //   0: aconst_null
-    //   1: astore 4
-    //   3: aconst_null
-    //   4: astore_3
-    //   5: aload_0
-    //   6: monitorenter
-    //   7: ldc 22
-    //   9: invokestatic 27	com/baidu/mobstat/bd:a	(Ljava/lang/String;)V
-    //   12: aload_0
-    //   13: getfield 15	com/baidu/mobstat/ay:a	Landroid/content/Context;
-    //   16: astore 7
-    //   18: aload_0
-    //   19: getfield 17	com/baidu/mobstat/ay:b	Lcom/baidu/mobstat/l;
-    //   22: astore 8
-    //   24: aload_0
-    //   25: aload 7
-    //   27: invokespecial 30	com/baidu/mobstat/ay:b	(Landroid/content/Context;)Ljava/lang/String;
-    //   30: astore 5
-    //   32: new 32	java/lang/StringBuilder
-    //   35: dup
-    //   36: invokespecial 33	java/lang/StringBuilder:<init>	()V
-    //   39: ldc 35
-    //   41: invokevirtual 39	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   44: aload 5
-    //   46: invokevirtual 39	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   49: invokevirtual 43	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   52: invokestatic 46	com/baidu/mobstat/bd:c	(Ljava/lang/String;)V
-    //   55: aload 7
-    //   57: aload 5
-    //   59: invokestatic 52	com/baidu/mobstat/cu:d	(Landroid/content/Context;Ljava/lang/String;)Ljava/net/HttpURLConnection;
-    //   62: astore 6
-    //   64: aload 6
-    //   66: invokevirtual 57	java/net/HttpURLConnection:connect	()V
-    //   69: aload 6
-    //   71: ldc 59
-    //   73: invokevirtual 63	java/net/HttpURLConnection:getHeaderField	(Ljava/lang/String;)Ljava/lang/String;
-    //   76: astore 9
-    //   78: new 32	java/lang/StringBuilder
-    //   81: dup
-    //   82: invokespecial 33	java/lang/StringBuilder:<init>	()V
-    //   85: ldc 65
-    //   87: invokevirtual 39	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   90: aload 9
-    //   92: invokevirtual 39	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   95: invokevirtual 43	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   98: invokestatic 27	com/baidu/mobstat/bd:a	(Ljava/lang/String;)V
-    //   101: aload 6
-    //   103: ldc 67
-    //   105: invokevirtual 63	java/net/HttpURLConnection:getHeaderField	(Ljava/lang/String;)Ljava/lang/String;
-    //   108: astore 10
-    //   110: new 32	java/lang/StringBuilder
-    //   113: dup
-    //   114: invokespecial 33	java/lang/StringBuilder:<init>	()V
-    //   117: ldc 69
-    //   119: invokevirtual 39	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   122: aload 10
-    //   124: invokevirtual 39	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   127: invokevirtual 43	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   130: invokestatic 27	com/baidu/mobstat/bd:a	(Ljava/lang/String;)V
-    //   133: aload 6
-    //   135: invokevirtual 73	java/net/HttpURLConnection:getResponseCode	()I
-    //   138: istore_1
-    //   139: new 32	java/lang/StringBuilder
-    //   142: dup
-    //   143: invokespecial 33	java/lang/StringBuilder:<init>	()V
-    //   146: ldc 75
-    //   148: invokevirtual 39	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   151: iload_1
-    //   152: invokevirtual 78	java/lang/StringBuilder:append	(I)Ljava/lang/StringBuilder;
-    //   155: invokevirtual 43	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   158: invokestatic 27	com/baidu/mobstat/bd:a	(Ljava/lang/String;)V
-    //   161: aload 6
-    //   163: invokevirtual 81	java/net/HttpURLConnection:getContentLength	()I
-    //   166: istore_2
-    //   167: new 32	java/lang/StringBuilder
-    //   170: dup
-    //   171: invokespecial 33	java/lang/StringBuilder:<init>	()V
-    //   174: ldc 83
-    //   176: invokevirtual 39	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   179: iload_2
-    //   180: invokevirtual 78	java/lang/StringBuilder:append	(I)Ljava/lang/StringBuilder;
-    //   183: invokevirtual 43	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   186: invokestatic 27	com/baidu/mobstat/bd:a	(Ljava/lang/String;)V
-    //   189: iload_1
-    //   190: sipush 200
-    //   193: if_icmpne +54 -> 247
-    //   196: iload_2
-    //   197: ifle +50 -> 247
-    //   200: aload 7
-    //   202: ldc 85
-    //   204: iconst_0
-    //   205: invokevirtual 91	android/content/Context:openFileOutput	(Ljava/lang/String;I)Ljava/io/FileOutputStream;
-    //   208: astore 5
-    //   210: aload 5
-    //   212: astore_3
-    //   213: aload 5
-    //   215: astore 4
-    //   217: aload 6
-    //   219: invokevirtual 95	java/net/HttpURLConnection:getInputStream	()Ljava/io/InputStream;
-    //   222: aload 5
-    //   224: invokestatic 100	com/baidu/mobstat/da:a	(Ljava/io/InputStream;Ljava/io/OutputStream;)Z
-    //   227: ifeq +15 -> 242
-    //   230: aload 5
-    //   232: astore_3
-    //   233: aload 5
-    //   235: astore 4
-    //   237: ldc 102
-    //   239: invokestatic 27	com/baidu/mobstat/bd:a	(Ljava/lang/String;)V
-    //   242: aload 5
-    //   244: invokestatic 105	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   247: aconst_null
-    //   248: invokestatic 110	com/baidu/mobstat/ax:a	(Ldalvik/system/DexClassLoader;)Ldalvik/system/DexClassLoader;
-    //   251: pop
-    //   252: invokestatic 114	com/baidu/mobstat/au:a	()V
-    //   255: aload 9
-    //   257: invokestatic 120	android/text/TextUtils:isEmpty	(Ljava/lang/CharSequence;)Z
-    //   260: ifne +14 -> 274
-    //   263: aload 8
-    //   265: aload 7
-    //   267: aload 9
-    //   269: invokeinterface 125 3 0
-    //   274: aload 10
-    //   276: invokestatic 120	android/text/TextUtils:isEmpty	(Ljava/lang/CharSequence;)Z
-    //   279: ifne +14 -> 293
-    //   282: aload 8
-    //   284: aload 7
-    //   286: aload 10
-    //   288: invokeinterface 127 3 0
-    //   293: aload 6
-    //   295: invokevirtual 130	java/net/HttpURLConnection:disconnect	()V
-    //   298: ldc -124
-    //   300: invokestatic 27	com/baidu/mobstat/bd:a	(Ljava/lang/String;)V
-    //   303: aload_0
-    //   304: monitorexit
-    //   305: return
-    //   306: astore 5
-    //   308: aload_3
-    //   309: astore 4
-    //   311: aload 5
-    //   313: invokestatic 135	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   316: aload_3
-    //   317: invokestatic 105	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   320: goto -73 -> 247
-    //   323: astore_3
-    //   324: aload 6
-    //   326: invokevirtual 130	java/net/HttpURLConnection:disconnect	()V
-    //   329: aload_3
-    //   330: athrow
-    //   331: astore_3
-    //   332: aload_0
-    //   333: monitorexit
-    //   334: aload_3
-    //   335: athrow
-    //   336: astore_3
-    //   337: aload 4
-    //   339: invokestatic 105	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   342: aload_3
-    //   343: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	344	0	this	ay
-    //   138	56	1	i	int
-    //   166	31	2	j	int
-    //   4	313	3	localObject1	Object
-    //   323	7	3	localObject2	Object
-    //   331	4	3	localObject3	Object
-    //   336	7	3	localObject4	Object
-    //   1	337	4	localObject5	Object
-    //   30	213	5	localObject6	Object
-    //   306	6	5	localIOException	java.io.IOException
-    //   62	263	6	localHttpURLConnection	java.net.HttpURLConnection
-    //   16	269	7	localContext	Context
-    //   22	261	8	locall	l
-    //   76	192	9	str1	String
-    //   108	179	10	str2	String
-    // Exception table:
-    //   from	to	target	type
-    //   200	210	306	java/io/IOException
-    //   217	230	306	java/io/IOException
-    //   237	242	306	java/io/IOException
-    //   64	189	323	finally
-    //   242	247	323	finally
-    //   247	274	323	finally
-    //   274	293	323	finally
-    //   316	320	323	finally
-    //   337	344	323	finally
-    //   7	64	331	finally
-    //   293	303	331	finally
-    //   324	331	331	finally
-    //   200	210	336	finally
-    //   217	230	336	finally
-    //   237	242	336	finally
-    //   311	316	336	finally
-  }
-  
-  private void a(Context paramContext)
-  {
-    this.b.a(paramContext, System.currentTimeMillis());
-  }
-  
-  private String b(Context paramContext)
-  {
-    Object localObject = paramContext.getFileStreamPath(".remote.jar");
-    if ((localObject != null) && (((File)localObject).exists()))
-    {
-      localObject = paramContext.getFileStreamPath(".remote.jar");
-      if (localObject != null)
-      {
-        localObject = ax.a(((File)localObject).getAbsolutePath());
-        bd.a("startDownload remote jar file version = " + (String)localObject);
-        if (TextUtils.isEmpty((CharSequence)localObject)) {}
-      }
+class ay extends Thread {
+    /* renamed from: a */
+    private Context f19409a;
+    /* renamed from: b */
+    private C3587l f19410b;
+
+    public ay(Context context, C3587l c3587l) {
+        this.f19409a = context;
+        this.f19410b = c3587l;
     }
-    for (;;)
-    {
-      ArrayList localArrayList = new ArrayList();
-      localArrayList.add(new BasicNameValuePair("dynamicVersion", "" + (String)localObject));
-      localArrayList.add(new BasicNameValuePair("packageName", de.p(paramContext)));
-      localArrayList.add(new BasicNameValuePair("appVersion", de.f(paramContext)));
-      localArrayList.add(new BasicNameValuePair("cuid", de.a(paramContext)));
-      localArrayList.add(new BasicNameValuePair("platform", "Android"));
-      localArrayList.add(new BasicNameValuePair("m", Build.MODEL));
-      localArrayList.add(new BasicNameValuePair("s", Build.VERSION.SDK_INT + ""));
-      localArrayList.add(new BasicNameValuePair("o", Build.VERSION.RELEASE));
-      localArrayList.add(new BasicNameValuePair("i", "14"));
-      paramContext = URLEncodedUtils.format(localArrayList, "utf-8");
-      return bb.c + "?" + paramContext;
-      localObject = "14";
-    }
-  }
-  
-  public void run()
-  {
-    for (;;)
-    {
-      try
-      {
-        if (!bb.a) {
-          continue;
+
+    public void run() {
+        try {
+            int i = bb.f19430a ? 3 : 10;
+            bd.m15428a("start version check in " + i + "s");
+            sleep((long) (i * 1000));
+            m15385a();
+            m15386a(this.f19409a);
+        } catch (Throwable e) {
+            bd.m15429a(e);
         }
-        i = 3;
-        bd.a("start version check in " + i + "s");
-        sleep(i * 1000);
-        a();
-        a(this.a);
-      }
-      catch (Exception localException)
-      {
-        int i;
-        bd.a(localException);
-        continue;
-      }
-      ax.a(false);
-      return;
-      i = 10;
+        ax.f19408b = false;
     }
-  }
+
+    /* renamed from: a */
+    private void m15386a(Context context) {
+        this.f19410b.mo2726a(context, System.currentTimeMillis());
+    }
+
+    /* renamed from: a */
+    private synchronized void m15385a() {
+        bd.m15428a("start get config and download jar");
+        Context context = this.f19409a;
+        C3587l c3587l = this.f19410b;
+        String b = m15387b(context);
+        bd.m15433c("update req url is:" + b);
+        HttpURLConnection d = cu.m15637d(context, b);
+        try {
+            d.connect();
+            String headerField = d.getHeaderField("X-CONFIG");
+            bd.m15428a("config is: " + headerField);
+            Object headerField2 = d.getHeaderField("X-SIGN");
+            bd.m15428a("sign is: " + headerField2);
+            int responseCode = d.getResponseCode();
+            bd.m15428a("update response code is: " + responseCode);
+            int contentLength = d.getContentLength();
+            bd.m15428a("update response content length is: " + contentLength);
+            if (responseCode == 200 && contentLength > 0) {
+                Closeable openFileOutput = context.openFileOutput(".remote.jar", 0);
+                if (da.m15654a(d.getInputStream(), openFileOutput)) {
+                    bd.m15428a("save remote jar success");
+                }
+                da.m15653a(openFileOutput);
+            }
+        } catch (Throwable e) {
+            bd.m15432b(e);
+            da.m15653a(null);
+        } catch (Throwable th) {
+            d.disconnect();
+        }
+        ax.f19407a = null;
+        au.m15355a();
+        if (!TextUtils.isEmpty(headerField)) {
+            c3587l.mo2727a(context, headerField);
+        }
+        if (!TextUtils.isEmpty(headerField2)) {
+            c3587l.mo2730b(context, headerField2);
+        }
+        d.disconnect();
+        bd.m15428a("finish get config and download jar");
+    }
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* renamed from: b */
+    private java.lang.String m15387b(android.content.Context r7) {
+        /*
+        r6 = this;
+        r0 = ".remote.jar";
+        r0 = r7.getFileStreamPath(r0);
+        r1 = "14";
+        if (r0 == 0) goto L_0x010a;
+    L_0x000c:
+        r0 = r0.exists();
+        if (r0 == 0) goto L_0x010a;
+    L_0x0012:
+        r0 = ".remote.jar";
+        r0 = r7.getFileStreamPath(r0);
+        if (r0 == 0) goto L_0x010a;
+    L_0x001b:
+        r0 = r0.getAbsolutePath();
+        r0 = com.baidu.mobstat.ax.m15381b(r0);
+        r2 = new java.lang.StringBuilder;
+        r2.<init>();
+        r3 = "startDownload remote jar file version = ";
+        r2 = r2.append(r3);
+        r2 = r2.append(r0);
+        r2 = r2.toString();
+        com.baidu.mobstat.bd.m15428a(r2);
+        r2 = android.text.TextUtils.isEmpty(r0);
+        if (r2 != 0) goto L_0x010a;
+    L_0x0040:
+        r1 = new java.util.ArrayList;
+        r1.<init>();
+        r2 = new org.apache.http.message.BasicNameValuePair;
+        r3 = "dynamicVersion";
+        r4 = new java.lang.StringBuilder;
+        r4.<init>();
+        r5 = "";
+        r4 = r4.append(r5);
+        r0 = r4.append(r0);
+        r0 = r0.toString();
+        r2.<init>(r3, r0);
+        r1.add(r2);
+        r0 = new org.apache.http.message.BasicNameValuePair;
+        r2 = "packageName";
+        r3 = com.baidu.mobstat.de.m15705p(r7);
+        r0.<init>(r2, r3);
+        r1.add(r0);
+        r0 = new org.apache.http.message.BasicNameValuePair;
+        r2 = "appVersion";
+        r3 = com.baidu.mobstat.de.m15693f(r7);
+        r0.<init>(r2, r3);
+        r1.add(r0);
+        r0 = new org.apache.http.message.BasicNameValuePair;
+        r2 = "cuid";
+        r3 = com.baidu.mobstat.de.m15676a(r7);
+        r0.<init>(r2, r3);
+        r1.add(r0);
+        r0 = new org.apache.http.message.BasicNameValuePair;
+        r2 = "platform";
+        r3 = "Android";
+        r0.<init>(r2, r3);
+        r1.add(r0);
+        r0 = new org.apache.http.message.BasicNameValuePair;
+        r2 = "m";
+        r3 = android.os.Build.MODEL;
+        r0.<init>(r2, r3);
+        r1.add(r0);
+        r0 = new org.apache.http.message.BasicNameValuePair;
+        r2 = "s";
+        r3 = new java.lang.StringBuilder;
+        r3.<init>();
+        r4 = android.os.Build.VERSION.SDK_INT;
+        r3 = r3.append(r4);
+        r4 = "";
+        r3 = r3.append(r4);
+        r3 = r3.toString();
+        r0.<init>(r2, r3);
+        r1.add(r0);
+        r0 = new org.apache.http.message.BasicNameValuePair;
+        r2 = "o";
+        r3 = android.os.Build.VERSION.RELEASE;
+        r0.<init>(r2, r3);
+        r1.add(r0);
+        r0 = new org.apache.http.message.BasicNameValuePair;
+        r2 = "i";
+        r3 = "14";
+        r0.<init>(r2, r3);
+        r1.add(r0);
+        r0 = "utf-8";
+        r0 = org.apache.http.client.utils.URLEncodedUtils.format(r1, r0);
+        r1 = new java.lang.StringBuilder;
+        r1.<init>();
+        r2 = com.baidu.mobstat.bb.f19432c;
+        r1 = r1.append(r2);
+        r2 = "?";
+        r1 = r1.append(r2);
+        r0 = r1.append(r0);
+        r0 = r0.toString();
+        return r0;
+    L_0x010a:
+        r0 = r1;
+        goto L_0x0040;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.mobstat.ay.b(android.content.Context):java.lang.String");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

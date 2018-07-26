@@ -9,256 +9,194 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 
-public class EnvDrawText
-{
-  public static boolean bBmpChange;
-  public static Bitmap bmp;
-  public static int[] buffer = null;
-  public static Canvas canvasTemp;
-  public static int iWordHightMax;
-  public static int iWordWidthMax;
-  public static Paint pt = null;
-  
-  static
-  {
-    iWordWidthMax = 0;
-    iWordHightMax = 0;
-    bBmpChange = false;
-    bmp = null;
-    canvasTemp = null;
-  }
-  
-  public static int[] drawText(String paramString, int paramInt1, int paramInt2, int[] paramArrayOfInt, int paramInt3, int paramInt4, int paramInt5, int paramInt6)
-  {
-    if (pt == null) {
-      pt = new Paint();
+public class EnvDrawText {
+    public static boolean bBmpChange = false;
+    public static Bitmap bmp = null;
+    public static int[] buffer = null;
+    public static Canvas canvasTemp = null;
+    public static int iWordHightMax = 0;
+    public static int iWordWidthMax = 0;
+    public static Paint pt = null;
+
+    public static int[] drawText(String mstr, int iFontSize, int iFontStyle, int[] iParam, int txtrgb, int srgb, int colorbg, int iHaloWidth) {
+        if (pt == null) {
+            pt = new Paint();
+        } else {
+            pt.reset();
+        }
+        pt.setSubpixelText(true);
+        pt.setAntiAlias(true);
+        pt.setTextSize((float) iFontSize);
+        int iPos = mstr.indexOf(92, 0);
+        FontMetrics fm;
+        int iWordWidth;
+        int iWordHight;
+        if (iPos == -1) {
+            fm = pt.getFontMetrics();
+            iWordWidth = (int) pt.measureText(mstr);
+            iWordHight = (int) Math.ceil((double) (fm.descent - fm.ascent));
+            iParam[0] = iWordWidth;
+            iParam[1] = iWordHight;
+            double d = Math.log(2.0d);
+            if (d > 1.0E-7d || d < -1.0E-7d) {
+                iWordWidth = (int) Math.pow(2.0d, (double) ((int) Math.ceil(Math.log((double) iWordWidth) / d)));
+                iWordHight = (int) Math.pow(2.0d, (double) ((int) Math.ceil(Math.log((double) iWordHight) / d)));
+            }
+            if (iWordWidthMax < iWordWidth || iWordHightMax < iWordHight) {
+                bBmpChange = true;
+                iWordWidthMax = iWordWidth;
+                iWordHightMax = iWordHight;
+            }
+            iParam[2] = iWordWidthMax;
+            iParam[3] = iWordHightMax;
+            if (!bBmpChange) {
+                bmp.eraseColor(0);
+            } else if (iWordWidthMax <= 0 || iWordHightMax <= 0) {
+                bBmpChange = false;
+                return null;
+            } else {
+                bmp = Bitmap.createBitmap(iWordWidthMax, iWordHightMax, Config.ARGB_8888);
+                canvasTemp = new Canvas(bmp);
+            }
+            if ((-16777216 & colorbg) == 0) {
+                canvasTemp.drawColor(33554431);
+            } else {
+                canvasTemp.drawColor(colorbg);
+            }
+            if (iHaloWidth != 0) {
+                pt.setStrokeWidth((float) iHaloWidth);
+                pt.setStrokeCap(Cap.ROUND);
+                pt.setStrokeJoin(Join.ROUND);
+                pt.setStyle(Style.STROKE);
+                pt.setColor(srgb);
+                canvasTemp.drawText(mstr, 0.0f, 0.0f - fm.ascent, pt);
+            }
+            pt.setStyle(Style.FILL);
+            pt.setColor(txtrgb);
+            canvasTemp.drawText(mstr, 0.0f, 0.0f - fm.ascent, pt);
+        } else {
+            int iMaxTmp;
+            String strTxt;
+            int iPosTmp = iPos + 1;
+            int iRow = 2;
+            int iMax = (int) pt.measureText(mstr.substring(0, iPos));
+            while (true) {
+                iPos = mstr.indexOf(92, iPosTmp);
+                if (iPos <= 0) {
+                    break;
+                }
+                iMaxTmp = (int) pt.measureText(mstr.substring(iPosTmp, iPos));
+                if (iMaxTmp > iMax) {
+                    iMax = iMaxTmp;
+                }
+                iPosTmp = iPos + 1;
+                iRow++;
+            }
+            if (iPosTmp != mstr.length()) {
+                iMaxTmp = (int) pt.measureText(mstr.substring(iPosTmp, mstr.length()));
+                if (iMaxTmp > iMax) {
+                    iMax = iMaxTmp;
+                }
+            }
+            fm = pt.getFontMetrics();
+            int iRowHeight = (int) Math.ceil((double) (fm.descent - fm.ascent));
+            iWordWidth = iMax;
+            iWordHight = iRowHeight * iRow;
+            iParam[0] = iWordWidth;
+            iParam[1] = iWordHight;
+            iWordWidth = (int) Math.pow(2.0d, (double) ((int) Math.ceil(Math.log((double) iWordWidth) / Math.log(2.0d))));
+            iWordHight = (int) Math.pow(2.0d, (double) ((int) Math.ceil(Math.log((double) iWordHight) / Math.log(2.0d))));
+            if (iWordWidthMax < iWordWidth || iWordHightMax < iWordHight) {
+                if (iWordWidthMax <= 0 || iWordHightMax <= 0) {
+                    bBmpChange = false;
+                    return null;
+                }
+                bBmpChange = true;
+                iWordWidthMax = iWordWidth;
+                iWordHightMax = iWordHight;
+            }
+            iParam[2] = iWordWidthMax;
+            iParam[3] = iWordHightMax;
+            if (bBmpChange) {
+                try {
+                    bmp = Bitmap.createBitmap(iWordWidthMax, iWordHightMax, Config.ARGB_8888);
+                } catch (OutOfMemoryError e) {
+                    bmp = null;
+                }
+                canvasTemp = new Canvas(bmp);
+            } else {
+                bmp.eraseColor(0);
+            }
+            if ((-16777216 & colorbg) == 0) {
+                canvasTemp.drawColor(33554431);
+            } else {
+                canvasTemp.drawColor(colorbg);
+            }
+            iPosTmp = 0;
+            iRow = 0;
+            while (true) {
+                iPos = mstr.indexOf(92, iPosTmp);
+                if (iPos <= 0) {
+                    break;
+                }
+                strTxt = mstr.substring(iPosTmp, iPos);
+                iMax = (int) pt.measureText(strTxt);
+                iPosTmp = iPos + 1;
+                if (iHaloWidth != 0) {
+                    pt.setStrokeWidth((float) iHaloWidth);
+                    pt.setStrokeCap(Cap.ROUND);
+                    pt.setStrokeJoin(Join.ROUND);
+                    pt.setStyle(Style.STROKE);
+                    pt.setColor(srgb);
+                    canvasTemp.drawText(strTxt, (float) ((iParam[0] - iMax) / 2), ((float) (iRow * iRowHeight)) - fm.ascent, pt);
+                }
+                pt.setStyle(Style.FILL);
+                pt.setColor(txtrgb);
+                canvasTemp.drawText(strTxt, (float) ((iParam[0] - iMax) / 2), ((float) (iRow * iRowHeight)) - fm.ascent, pt);
+                iRow++;
+            }
+            if (iPosTmp != mstr.length()) {
+                strTxt = mstr.substring(iPosTmp, mstr.length());
+                iMax = (int) pt.measureText(strTxt);
+                if (iHaloWidth != 0) {
+                    pt.setStrokeWidth((float) iHaloWidth);
+                    pt.setStrokeCap(Cap.ROUND);
+                    pt.setStrokeJoin(Join.ROUND);
+                    pt.setStyle(Style.STROKE);
+                    pt.setColor(srgb);
+                    canvasTemp.drawText(strTxt, (float) ((iParam[0] - iMax) / 2), ((float) (iRow * iRowHeight)) - fm.ascent, pt);
+                }
+                pt.setStyle(Style.FILL);
+                pt.setColor(txtrgb);
+                canvasTemp.drawText(strTxt, (float) ((iParam[0] - iMax) / 2), ((float) (iRow * iRowHeight)) - fm.ascent, pt);
+            }
+        }
+        int iSizedata = iWordWidthMax * iWordHightMax;
+        if (bBmpChange) {
+            buffer = new int[iSizedata];
+        }
+        bmp.getPixels(buffer, 0, iWordWidthMax, 0, 0, iWordWidthMax, iWordHightMax);
+        bBmpChange = false;
+        return buffer;
     }
-    Paint.FontMetrics localFontMetrics;
-    int j;
-    int i;
-    for (;;)
-    {
-      pt.setSubpixelText(true);
-      pt.setAntiAlias(true);
-      pt.setTextSize(paramInt1);
-      paramInt1 = paramString.indexOf('\\', 0);
-      if (paramInt1 != -1) {
-        break label464;
-      }
-      localFontMetrics = pt.getFontMetrics();
-      j = (int)pt.measureText(paramString);
-      i = (int)Math.ceil(localFontMetrics.descent - localFontMetrics.ascent);
-      paramArrayOfInt[0] = j;
-      paramArrayOfInt[1] = i;
-      double d = Math.log(2.0D);
-      if (d <= 1.0E-7D)
-      {
-        paramInt2 = i;
-        paramInt1 = j;
-        if (d >= -1.0E-7D) {}
-      }
-      else
-      {
-        paramInt1 = (int)Math.pow(2.0D, (int)Math.ceil(Math.log(j) / d));
-        paramInt2 = (int)Math.pow(2.0D, (int)Math.ceil(Math.log(i) / d));
-      }
-      if ((iWordWidthMax < paramInt1) || (iWordHightMax < paramInt2))
-      {
-        bBmpChange = true;
-        iWordWidthMax = paramInt1;
-        iWordHightMax = paramInt2;
-      }
-      paramArrayOfInt[2] = iWordWidthMax;
-      paramArrayOfInt[3] = iWordHightMax;
-      if (bBmpChange != true) {
-        break label443;
-      }
-      if ((iWordWidthMax > 0) && (iWordHightMax > 0)) {
-        break;
-      }
-      bBmpChange = false;
-      return null;
-      pt.reset();
+
+    public static short[] getTextSize(String mstr, int iFontSize) {
+        int iLen = mstr.length();
+        if (iLen == 0) {
+            return null;
+        }
+        Paint pt = new Paint();
+        pt.setSubpixelText(true);
+        pt.setAntiAlias(true);
+        pt.setTextSize((float) iFontSize);
+        short[] buffer = new short[iLen];
+        int i = 0;
+        while (i < iLen) {
+            if (iLen > 0 && i + 1 <= iLen) {
+                buffer[i] = (short) ((int) pt.measureText(mstr.substring(0, i + 1)));
+            }
+            i++;
+        }
+        return buffer;
     }
-    bmp = Bitmap.createBitmap(iWordWidthMax, iWordHightMax, Bitmap.Config.ARGB_8888);
-    canvasTemp = new Canvas(bmp);
-    if ((0xFF000000 & paramInt5) == 0)
-    {
-      canvasTemp.drawColor(33554431);
-      label289:
-      if (paramInt6 != 0)
-      {
-        pt.setStrokeWidth(paramInt6);
-        pt.setStrokeCap(Paint.Cap.ROUND);
-        pt.setStrokeJoin(Paint.Join.ROUND);
-        pt.setStyle(Paint.Style.STROKE);
-        pt.setColor(paramInt4);
-        canvasTemp.drawText(paramString, 0.0F, 0.0F - localFontMetrics.ascent, pt);
-      }
-      pt.setStyle(Paint.Style.FILL);
-      pt.setColor(paramInt3);
-      canvasTemp.drawText(paramString, 0.0F, 0.0F - localFontMetrics.ascent, pt);
-    }
-    for (;;)
-    {
-      paramInt1 = iWordWidthMax;
-      paramInt2 = iWordHightMax;
-      if (bBmpChange == true) {
-        buffer = new int[paramInt1 * paramInt2];
-      }
-      bmp.getPixels(buffer, 0, iWordWidthMax, 0, 0, iWordWidthMax, iWordHightMax);
-      bBmpChange = false;
-      return buffer;
-      label443:
-      bmp.eraseColor(0);
-      break;
-      canvasTemp.drawColor(paramInt5);
-      break label289;
-      label464:
-      i = paramInt1 + 1;
-      paramInt2 = 2;
-      paramInt1 = (int)pt.measureText(paramString.substring(0, paramInt1));
-      for (;;)
-      {
-        int k = paramString.indexOf('\\', i);
-        if (k <= 0) {
-          break;
-        }
-        j = (int)pt.measureText(paramString.substring(i, k));
-        i = paramInt1;
-        if (j > paramInt1) {
-          i = j;
-        }
-        j = k + 1;
-        paramInt2 += 1;
-        paramInt1 = i;
-        i = j;
-      }
-      j = paramInt1;
-      if (i != paramString.length())
-      {
-        i = (int)pt.measureText(paramString.substring(i, paramString.length()));
-        j = paramInt1;
-        if (i > paramInt1) {
-          j = i;
-        }
-      }
-      localFontMetrics = pt.getFontMetrics();
-      i = (int)Math.ceil(localFontMetrics.descent - localFontMetrics.ascent);
-      paramInt1 = i * paramInt2;
-      paramArrayOfInt[0] = j;
-      paramArrayOfInt[1] = paramInt1;
-      paramInt2 = (int)Math.pow(2.0D, (int)Math.ceil(Math.log(j) / Math.log(2.0D)));
-      paramInt1 = (int)Math.pow(2.0D, (int)Math.ceil(Math.log(paramInt1) / Math.log(2.0D)));
-      if ((iWordWidthMax < paramInt2) || (iWordHightMax < paramInt1))
-      {
-        if ((iWordWidthMax <= 0) || (iWordHightMax <= 0))
-        {
-          bBmpChange = false;
-          return null;
-        }
-        bBmpChange = true;
-        iWordWidthMax = paramInt2;
-        iWordHightMax = paramInt1;
-      }
-      paramArrayOfInt[2] = iWordWidthMax;
-      paramArrayOfInt[3] = iWordHightMax;
-      if (bBmpChange == true) {}
-      for (;;)
-      {
-        try
-        {
-          bmp = Bitmap.createBitmap(iWordWidthMax, iWordHightMax, Bitmap.Config.ARGB_8888);
-          canvasTemp = new Canvas(bmp);
-          if ((0xFF000000 & paramInt5) != 0) {
-            break label989;
-          }
-          canvasTemp.drawColor(33554431);
-          paramInt2 = 0;
-          paramInt1 = 0;
-          paramInt5 = paramString.indexOf('\\', paramInt2);
-          if (paramInt5 <= 0) {
-            break;
-          }
-          String str = paramString.substring(paramInt2, paramInt5);
-          j = (int)pt.measureText(str);
-          paramInt2 = paramInt5 + 1;
-          if (paramInt6 != 0)
-          {
-            pt.setStrokeWidth(paramInt6);
-            pt.setStrokeCap(Paint.Cap.ROUND);
-            pt.setStrokeJoin(Paint.Join.ROUND);
-            pt.setStyle(Paint.Style.STROKE);
-            pt.setColor(paramInt4);
-            canvasTemp.drawText(str, (paramArrayOfInt[0] - j) / 2, paramInt1 * i - localFontMetrics.ascent, pt);
-          }
-          pt.setStyle(Paint.Style.FILL);
-          pt.setColor(paramInt3);
-          canvasTemp.drawText(str, (paramArrayOfInt[0] - j) / 2, paramInt1 * i - localFontMetrics.ascent, pt);
-          paramInt1 += 1;
-          continue;
-        }
-        catch (OutOfMemoryError localOutOfMemoryError)
-        {
-          bmp = null;
-          continue;
-        }
-        bmp.eraseColor(0);
-        continue;
-        label989:
-        canvasTemp.drawColor(paramInt5);
-      }
-      if (paramInt2 != paramString.length())
-      {
-        paramString = paramString.substring(paramInt2, paramString.length());
-        paramInt2 = (int)pt.measureText(paramString);
-        if (paramInt6 != 0)
-        {
-          pt.setStrokeWidth(paramInt6);
-          pt.setStrokeCap(Paint.Cap.ROUND);
-          pt.setStrokeJoin(Paint.Join.ROUND);
-          pt.setStyle(Paint.Style.STROKE);
-          pt.setColor(paramInt4);
-          canvasTemp.drawText(paramString, (paramArrayOfInt[0] - paramInt2) / 2, paramInt1 * i - localFontMetrics.ascent, pt);
-        }
-        pt.setStyle(Paint.Style.FILL);
-        pt.setColor(paramInt3);
-        canvasTemp.drawText(paramString, (paramArrayOfInt[0] - paramInt2) / 2, paramInt1 * i - localFontMetrics.ascent, pt);
-      }
-    }
-  }
-  
-  public static short[] getTextSize(String paramString, int paramInt)
-  {
-    int i = paramString.length();
-    Object localObject;
-    if (i == 0)
-    {
-      localObject = null;
-      return (short[])localObject;
-    }
-    Paint localPaint = new Paint();
-    localPaint.setSubpixelText(true);
-    localPaint.setAntiAlias(true);
-    localPaint.setTextSize(paramInt);
-    short[] arrayOfShort = new short[i];
-    paramInt = 0;
-    for (;;)
-    {
-      localObject = arrayOfShort;
-      if (paramInt >= i) {
-        break;
-      }
-      if ((i > 0) && (paramInt + 1 <= i)) {
-        arrayOfShort[paramInt] = ((short)(int)localPaint.measureText(paramString.substring(0, paramInt + 1)));
-      }
-      paramInt += 1;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/vi/EnvDrawText.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

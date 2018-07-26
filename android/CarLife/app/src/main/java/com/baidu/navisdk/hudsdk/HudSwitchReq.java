@@ -2,7 +2,10 @@ package com.baidu.navisdk.hudsdk;
 
 import android.os.Bundle;
 import android.os.Handler;
+import com.baidu.navi.fragment.NaviFragmentManager;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
 import com.baidu.navisdk.logic.CommandCenter;
+import com.baidu.navisdk.logic.CommandConstants;
 import com.baidu.navisdk.logic.ReqData;
 import com.baidu.navisdk.logic.commandparser.CmdGeneralHttpRequestFunc;
 import com.baidu.navisdk.logic.commandparser.CmdGeneralHttpRequestFunc.Callback;
@@ -19,84 +22,68 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-public class HudSwitchReq
-{
-  public static void asyncHudAuth(int paramInt, Bundle paramBundle, Handler paramHandler)
-  {
-    paramHandler = new ReqData("cmd.general.httprequest.func", 7, paramHandler, paramInt, 10000);
-    CmdGeneralHttpRequestFunc.addFunc(paramHandler, new CmdGeneralHttpRequestFunc.Callback()
-    {
-      public List<NameValuePair> getRequestParams()
-      {
-        ArrayList localArrayList = new ArrayList();
-        StringBuffer localStringBuffer = new StringBuffer();
-        try
-        {
-          int i = HudSwitchReq.access$000();
-          localArrayList.add(new BasicNameValuePair("city_id", String.valueOf(i)));
-          localStringBuffer.append("city_id=");
-          localStringBuffer.append(URLEncoder.encode(String.valueOf(i), "utf-8"));
-          localArrayList.add(new BasicNameValuePair("cuid", PackageUtil.getCuid()));
-          localStringBuffer.append("&cuid=");
-          localStringBuffer.append(URLEncoder.encode(PackageUtil.getCuid(), "utf-8"));
-          localArrayList.add(new BasicNameValuePair("os", String.valueOf(0)));
-          localStringBuffer.append("&os=");
-          localStringBuffer.append(URLEncoder.encode(String.valueOf(0), "utf-8"));
-          if (this.val$bundle != null)
-          {
-            String str1 = this.val$bundle.getString("hudAppPkg");
-            String str2 = this.val$bundle.getString("hudVer");
-            localArrayList.add(new BasicNameValuePair("pcn", str1));
-            localStringBuffer.append("&pcn=");
-            localStringBuffer.append(URLEncoder.encode(str1, "utf-8"));
-            localArrayList.add(new BasicNameValuePair("sdk_sv", str2));
-            localStringBuffer.append("&sdk_sv=");
-            localStringBuffer.append(URLEncoder.encode(str2, "utf-8"));
-          }
-          localArrayList.add(new BasicNameValuePair("sv", PackageUtil.getVersionName()));
-          localStringBuffer.append("&sv=");
-          localStringBuffer.append(URLEncoder.encode(PackageUtil.getVersionName(), "utf-8"));
-          localArrayList.add(new BasicNameValuePair("sign", MD5.toMD5("hud" + localStringBuffer.toString() + "1d51214e51fe24490ae78dc8ed8b5114").toLowerCase()));
-          LogUtil.e("BNRemote", "asynPullRoadList getRequestParams= " + localArrayList.toString());
-          return localArrayList;
-        }
-        catch (UnsupportedEncodingException localUnsupportedEncodingException) {}
-        return null;
-      }
-      
-      public int getRequestType()
-      {
-        return 1;
-      }
-      
-      public String getUrl()
-      {
-        return BNRemoteConstants.HUDSDK_SWITCH_URL_ONLINE;
-      }
-      
-      public boolean parseResponseJSON(JSONObject paramAnonymousJSONObject)
-      {
-        return false;
-      }
-      
-      public void responseImage(byte[] paramAnonymousArrayOfByte) {}
-    });
-    CommandCenter.getInstance().sendRequest(paramHandler);
-  }
-  
-  private static int getCityID()
-  {
-    int i = 131;
-    DistrictInfo localDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
-    if (localDistrictInfo != null) {
-      i = localDistrictInfo.mId;
+public class HudSwitchReq {
+    public static void asyncHudAuth(int type, final Bundle bundle, Handler handler) {
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_GENERAL_HTTPREQUEST_FUNC, 7, handler, type, 10000);
+        CmdGeneralHttpRequestFunc.addFunc(reqdata, new Callback() {
+            public void responseImage(byte[] img) {
+            }
+
+            public boolean parseResponseJSON(JSONObject jsonObj) {
+                return false;
+            }
+
+            public String getUrl() {
+                return BNRemoteConstants.HUDSDK_SWITCH_URL_ONLINE;
+            }
+
+            public int getRequestType() {
+                return 1;
+            }
+
+            public List<NameValuePair> getRequestParams() {
+                List<NameValuePair> valuePairs = new ArrayList();
+                StringBuffer sb = new StringBuffer();
+                try {
+                    int cityId = HudSwitchReq.getCityID();
+                    valuePairs.add(new BasicNameValuePair("city_id", String.valueOf(cityId)));
+                    sb.append("city_id=");
+                    sb.append(URLEncoder.encode(String.valueOf(cityId), "utf-8"));
+                    valuePairs.add(new BasicNameValuePair("cuid", PackageUtil.getCuid()));
+                    sb.append("&cuid=");
+                    sb.append(URLEncoder.encode(PackageUtil.getCuid(), "utf-8"));
+                    valuePairs.add(new BasicNameValuePair("os", String.valueOf(0)));
+                    sb.append("&os=");
+                    sb.append(URLEncoder.encode(String.valueOf(0), "utf-8"));
+                    if (bundle != null) {
+                        String hudAppPkg = bundle.getString("hudAppPkg");
+                        String hudAppVer = bundle.getString("hudVer");
+                        valuePairs.add(new BasicNameValuePair("pcn", hudAppPkg));
+                        sb.append("&pcn=");
+                        sb.append(URLEncoder.encode(hudAppPkg, "utf-8"));
+                        valuePairs.add(new BasicNameValuePair("sdk_sv", hudAppVer));
+                        sb.append("&sdk_sv=");
+                        sb.append(URLEncoder.encode(hudAppVer, "utf-8"));
+                    }
+                    valuePairs.add(new BasicNameValuePair("sv", PackageUtil.getVersionName()));
+                    sb.append("&sv=");
+                    sb.append(URLEncoder.encode(PackageUtil.getVersionName(), "utf-8"));
+                    valuePairs.add(new BasicNameValuePair("sign", MD5.toMD5(NaviStatConstants.K_NSC_KEY_HUDSDK + sb.toString() + "1d51214e51fe24490ae78dc8ed8b5114").toLowerCase()));
+                    LogUtil.m15791e(BNRemoteConstants.MODULE_TAG, "asynPullRoadList getRequestParams= " + valuePairs.toString());
+                    return valuePairs;
+                } catch (UnsupportedEncodingException e) {
+                    return null;
+                }
+            }
+        });
+        CommandCenter.getInstance().sendRequest(reqdata);
     }
-    return i;
-  }
+
+    private static int getCityID() {
+        DistrictInfo district = GeoLocateModel.getInstance().getCurrentDistrict();
+        if (district != null) {
+            return district.mId;
+        }
+        return NaviFragmentManager.TYPE_CAR_DRV_LIST;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/hudsdk/HudSwitchReq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

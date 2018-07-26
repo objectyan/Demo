@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +16,7 @@ import com.baidu.baidunavis.control.NavDayNightController;
 import com.baidu.baidunavis.control.NavDayNightController.OnDayNightChangedListener;
 import com.baidu.baidunavis.model.NavCommonFuncModel;
 import com.baidu.baidunavis.ui.widget.NavTipTool;
+import com.baidu.carlife.C0965R;
 import com.baidu.carlife.CarlifeActivity;
 import com.baidu.navi.fragment.ContentFragment;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
@@ -24,155 +24,146 @@ import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager.ImportNaviMapDa
 import com.baidu.navisdk.ui.download.BNDownloadNotifyManager;
 import com.baidu.navisdk.ui.download.BNDownloadUIManager;
 
-public class BNDownloadPage
-  extends ContentFragment
-{
-  public static final String KEY_FROM_CRUISER = "KEY_FROM_CRUISER";
-  public static final String NAVIGATE_PAGE_NAME = "target_page_name";
-  private static final String TAG = BNDownloadPage.class.getSimpleName();
-  private boolean mIsFromCruiser = false;
-  private NavDayNightController.OnDayNightChangedListener mOnDayNightChangedListener = new NavDayNightController.OnDayNightChangedListener()
-  {
-    public void onDayNightChanged(boolean paramAnonymousBoolean)
-    {
-      if (BNDownloadPage.this.mUIManager != null) {
-        BNDownloadPage.this.mUIManager.updateStyle(paramAnonymousBoolean);
-      }
+public class BNDownloadPage extends ContentFragment {
+    public static final String KEY_FROM_CRUISER = "KEY_FROM_CRUISER";
+    public static final String NAVIGATE_PAGE_NAME = "target_page_name";
+    private static final String TAG = BNDownloadPage.class.getSimpleName();
+    private boolean mIsFromCruiser = false;
+    private OnDayNightChangedListener mOnDayNightChangedListener = new C08893();
+    private BNDownloadUIManager mUIManager;
+
+    /* renamed from: com.baidu.baidunavis.ui.BNDownloadPage$1 */
+    class C08861 implements OnClickListener {
+        C08861() {
+        }
+
+        public void onClick(View v) {
+            BNDownloadPage.this.back();
+        }
     }
-  };
-  private BNDownloadUIManager mUIManager;
-  
-  private boolean initDownloadUIManager(final Activity paramActivity)
-  {
-    if ((this.mUIManager == null) || (!this.mUIManager.isViewCreated()))
-    {
-      this.mUIManager = BNDownloadUIManager.getInstance(paramActivity);
-      if (this.mUIManager == null) {
-        return false;
-      }
-      this.mUIManager.createView(paramActivity);
-      this.mUIManager.setBackBtnOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNDownloadPage.this.back();
+
+    /* renamed from: com.baidu.baidunavis.ui.BNDownloadPage$3 */
+    class C08893 implements OnDayNightChangedListener {
+        C08893() {
         }
-      });
-      BNOfflineDataManager.getInstance().setImportNaviMapDataListener(new BNOfflineDataManager.ImportNaviMapDataListener()
-      {
-        @Deprecated
-        public boolean checkDataExitByProvinceId(int paramAnonymousInt)
-        {
-          return false;
+
+        public void onDayNightChanged(boolean isDay) {
+            if (BNDownloadPage.this.mUIManager != null) {
+                BNDownloadPage.this.mUIManager.updateStyle(isDay);
+            }
         }
-        
-        public void onImportNaviMapData()
-        {
-          Activity localActivity = paramActivity;
-          if (localActivity != null) {
-            localActivity.runOnUiThread(new Runnable()
-            {
-              public void run()
-              {
-                NavMapAdapter.getInstance().importMap();
-              }
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle mShowBundle = getArguments();
+        if (mShowBundle != null && mShowBundle.containsKey(KEY_FROM_CRUISER)) {
+            this.mIsFromCruiser = mShowBundle.getBoolean(KEY_FROM_CRUISER, false);
+        }
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        if (BaiduNaviManager.sIsBaseEngineInitialized && initDownloadUIManager(getActivity())) {
+            if (this.mUIManager != null) {
+                this.mUIManager.remmoveParentView();
+                View view = this.mUIManager.getView();
+                if (view != null) {
+                    return view;
+                }
+            }
+            back();
+            return null;
+        }
+        NavTipTool.onCreateToastDialog(NavCommonFuncModel.getInstance().getActivity(), (int) C0965R.string.nav_engine_is_not_initialized);
+        back();
+        return null;
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        return null;
+    }
+
+    protected void onInitView() {
+    }
+
+    public void onResume() {
+        super.onResume();
+        getActivity().setRequestedOrientation(1);
+        initNotification(getActivity());
+        this.mOnDayNightChangedListener.onDayNightChanged(NavDayNightController.getInstance().isDay());
+        NavDayNightController.getInstance().registerDayNightListener(this.mOnDayNightChangedListener);
+    }
+
+    private boolean initDownloadUIManager(final Activity bnDownloadActivity) {
+        if (this.mUIManager == null || !this.mUIManager.isViewCreated()) {
+            this.mUIManager = BNDownloadUIManager.getInstance(bnDownloadActivity);
+            if (this.mUIManager == null) {
+                return false;
+            }
+            this.mUIManager.createView(bnDownloadActivity);
+            this.mUIManager.setBackBtnOnClickListener(new C08861());
+            BNOfflineDataManager.getInstance().setImportNaviMapDataListener(new ImportNaviMapDataListener() {
+
+                /* renamed from: com.baidu.baidunavis.ui.BNDownloadPage$2$1 */
+                class C08871 implements Runnable {
+                    C08871() {
+                    }
+
+                    public void run() {
+                        NavMapAdapter.getInstance().importMap();
+                    }
+                }
+
+                public void onImportNaviMapData() {
+                    Activity activity = bnDownloadActivity;
+                    if (activity != null) {
+                        activity.runOnUiThread(new C08871());
+                    }
+                }
+
+                @Deprecated
+                public boolean checkDataExitByProvinceId(int provinceId) {
+                    return false;
+                }
+
+                public void startDownLoadDataByProvinceId(int provinceId) {
+                }
             });
-          }
         }
-        
-        public void startDownLoadDataByProvinceId(int paramAnonymousInt) {}
-      });
+        return true;
     }
-    return true;
-  }
-  
-  private void initNotification(Activity paramActivity)
-  {
-    paramActivity = getActivity();
-    Intent localIntent = new Intent(paramActivity, CarlifeActivity.class);
-    localIntent.putExtra("target_page_name", getClass().getName());
-    RemoteViews localRemoteViews = new RemoteViews(paramActivity.getPackageName(), 2130969022);
-    BNDownloadNotifyManager.getInstance().init(paramActivity, localIntent, 2130838698, localRemoteViews, 2131625346, 2131626083, 2131626086);
-  }
-  
-  public void onConfigurationChanged(Configuration paramConfiguration)
-  {
-    super.onConfigurationChanged(paramConfiguration);
-    if (this.mUIManager != null) {
-      this.mUIManager.onConfigurationChanged(paramConfiguration);
+
+    private void initNotification(Activity bnDownloadActivity) {
+        Context context = getActivity();
+        Intent intent = new Intent(context, CarlifeActivity.class);
+        intent.putExtra(NAVIGATE_PAGE_NAME, getClass().getName());
+        BNDownloadNotifyManager.getInstance().init(context, intent, C0965R.drawable.ic_launcher, new RemoteViews(context.getPackageName(), C0965R.layout.status_bar_progress), C0965R.id.title, C0965R.id.progress_bar, C0965R.id.progress_text);
     }
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    paramBundle = getArguments();
-    if ((paramBundle != null) && (paramBundle.containsKey("KEY_FROM_CRUISER"))) {
-      this.mIsFromCruiser = paramBundle.getBoolean("KEY_FROM_CRUISER", false);
+
+    public void onDestroy() {
+        super.onDestroy();
+        NavDayNightController.getInstance().unregisterDayNightListener(this.mOnDayNightChangedListener);
+        if (this.mUIManager != null) {
+            this.mUIManager.destroyView();
+        }
     }
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    return null;
-  }
-  
-  public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle)
-  {
-    super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-    if ((!BaiduNaviManager.sIsBaseEngineInitialized) || (!initDownloadUIManager(getActivity())))
-    {
-      NavTipTool.onCreateToastDialog(NavCommonFuncModel.getInstance().getActivity(), 2131296660);
-      back();
-      paramLayoutInflater = null;
+
+    protected void onUpdateOrientation(int orientation) {
     }
-    do
-    {
-      return paramLayoutInflater;
-      if (this.mUIManager == null) {
-        break;
-      }
-      this.mUIManager.remmoveParentView();
-      paramViewGroup = this.mUIManager.getView();
-      paramLayoutInflater = paramViewGroup;
-    } while (paramViewGroup != null);
-    back();
-    return null;
-  }
-  
-  public void onDestroy()
-  {
-    super.onDestroy();
-    NavDayNightController.getInstance().unregisterDayNightListener(this.mOnDayNightChangedListener);
-    if (this.mUIManager != null) {
-      this.mUIManager.destroyView();
+
+    protected void onUpdateStyle(boolean dayStyle) {
     }
-  }
-  
-  protected void onInitView() {}
-  
-  public void onPause()
-  {
-    super.onPause();
-    getActivity().setRequestedOrientation(2);
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    getActivity().setRequestedOrientation(1);
-    initNotification(getActivity());
-    this.mOnDayNightChangedListener.onDayNightChanged(NavDayNightController.getInstance().isDay());
-    NavDayNightController.getInstance().registerDayNightListener(this.mOnDayNightChangedListener);
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
+
+    public void onPause() {
+        super.onPause();
+        getActivity().setRequestedOrientation(2);
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (this.mUIManager != null) {
+            this.mUIManager.onConfigurationChanged(newConfig);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/ui/BNDownloadPage.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

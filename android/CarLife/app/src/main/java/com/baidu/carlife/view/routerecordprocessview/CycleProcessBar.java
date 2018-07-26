@@ -1,7 +1,6 @@
 package com.baidu.carlife.view.routerecordprocessview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
@@ -9,91 +8,89 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
+import com.baidu.carlife.C0965R;
 
-public class CycleProcessBar
-  extends View
-{
-  private final int a = 3;
-  private final int b = ContextCompat.getColor(getContext(), 2131558625);
-  private final int c = ContextCompat.getColor(getContext(), 2131558646);
-  private final float d = 135.0F;
-  private final float e = 270.0F;
-  private Context f;
-  private Paint g;
-  private Paint h;
-  private float i;
-  private RectF j;
-  private float k = 0.5F;
-  
-  public CycleProcessBar(Context paramContext)
-  {
-    super(paramContext, null);
-  }
-  
-  public CycleProcessBar(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    this.f = paramContext;
-    a();
-  }
-  
-  private int a(float paramFloat)
-  {
-    return (int)(0.5F + this.f.getResources().getDisplayMetrics().density * paramFloat);
-  }
-  
-  private void a()
-  {
-    this.i = a(3.0F);
-    this.g = new Paint();
-    this.g.setColor(this.b);
-    this.g.setStrokeWidth(this.i);
-    this.g.setAntiAlias(true);
-    this.g.setFlags(1);
-    this.g.setStyle(Paint.Style.STROKE);
-    this.g.setStrokeCap(Paint.Cap.ROUND);
-    this.h = new Paint();
-    this.h.setColor(this.c);
-    this.h.setStrokeWidth(this.i);
-    this.h.setAntiAlias(true);
-    this.h.setFlags(1);
-    this.h.setStyle(Paint.Style.STROKE);
-    this.h.setStrokeCap(Paint.Cap.ROUND);
-    this.j = new RectF();
-  }
-  
-  private void a(Canvas paramCanvas)
-  {
-    paramCanvas.drawArc(this.j, 135.0F, 270.0F, false, this.g);
-  }
-  
-  private void b(Canvas paramCanvas)
-  {
-    paramCanvas.drawArc(this.j, 135.0F, this.k * 270.0F, false, this.h);
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    int m = getWidth() / 2;
-    if (m == 0) {
-      return;
+public class CycleProcessBar extends View {
+    /* renamed from: a */
+    private final int f7788a = 3;
+    /* renamed from: b */
+    private final int f7789b = ContextCompat.getColor(getContext(), C0965R.color.cl_line_a2_progress);
+    /* renamed from: c */
+    private final int f7790c = ContextCompat.getColor(getContext(), C0965R.color.cl_other_c);
+    /* renamed from: d */
+    private final float f7791d = 135.0f;
+    /* renamed from: e */
+    private final float f7792e = 270.0f;
+    /* renamed from: f */
+    private Context f7793f;
+    /* renamed from: g */
+    private Paint f7794g;
+    /* renamed from: h */
+    private Paint f7795h;
+    /* renamed from: i */
+    private float f7796i;
+    /* renamed from: j */
+    private RectF f7797j;
+    /* renamed from: k */
+    private float f7798k = 0.5f;
+
+    public CycleProcessBar(Context context) {
+        super(context, null);
     }
-    this.j.set(this.i / 2.0F, this.i / 2.0F, m * 2 - this.i / 2.0F, m * 2 - this.i / 2.0F);
-    a(paramCanvas);
-    b(paramCanvas);
-  }
-  
-  public void setmPercent(float paramFloat)
-  {
-    this.k = paramFloat;
-    invalidate();
-  }
+
+    public CycleProcessBar(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.f7793f = context;
+        m8954a();
+    }
+
+    public void setmPercent(float percent) {
+        this.f7798k = percent;
+        invalidate();
+    }
+
+    /* renamed from: a */
+    private void m8954a() {
+        this.f7796i = (float) m8953a(3.0f);
+        this.f7794g = new Paint();
+        this.f7794g.setColor(this.f7789b);
+        this.f7794g.setStrokeWidth(this.f7796i);
+        this.f7794g.setAntiAlias(true);
+        this.f7794g.setFlags(1);
+        this.f7794g.setStyle(Style.STROKE);
+        this.f7794g.setStrokeCap(Cap.ROUND);
+        this.f7795h = new Paint();
+        this.f7795h.setColor(this.f7790c);
+        this.f7795h.setStrokeWidth(this.f7796i);
+        this.f7795h.setAntiAlias(true);
+        this.f7795h.setFlags(1);
+        this.f7795h.setStyle(Style.STROKE);
+        this.f7795h.setStrokeCap(Cap.ROUND);
+        this.f7797j = new RectF();
+    }
+
+    protected void onDraw(Canvas canvas) {
+        int center = getWidth() / 2;
+        if (center != 0) {
+            this.f7797j.set(this.f7796i / 2.0f, this.f7796i / 2.0f, ((float) (center * 2)) - (this.f7796i / 2.0f), ((float) (center * 2)) - (this.f7796i / 2.0f));
+            m8955a(canvas);
+            m8956b(canvas);
+        }
+    }
+
+    /* renamed from: a */
+    private void m8955a(Canvas canvas) {
+        canvas.drawArc(this.f7797j, 135.0f, 270.0f, false, this.f7794g);
+    }
+
+    /* renamed from: b */
+    private void m8956b(Canvas canvas) {
+        canvas.drawArc(this.f7797j, 135.0f, this.f7798k * 270.0f, false, this.f7795h);
+    }
+
+    /* renamed from: a */
+    private int m8953a(float dip) {
+        return (int) (0.5f + (this.f7793f.getResources().getDisplayMetrics().density * dip));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/routerecordprocessview/CycleProcessBar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

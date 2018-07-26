@@ -1,20 +1,17 @@
 package com.baidu.ufosdk.ui;
 
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class ct
-  implements Runnable
-{
-  ct(FeedbackListActivity paramFeedbackListActivity) {}
-  
-  public final void run()
-  {
-    a.a(this.a.getApplicationContext());
-  }
+/* compiled from: FeedbackListActivity */
+final class ct implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackListActivity f21632a;
+
+    ct(FeedbackListActivity feedbackListActivity) {
+        this.f21632a = feedbackListActivity;
+    }
+
+    public final void run() {
+        C5180a.m17569a(this.f21632a.getApplicationContext());
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ct.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

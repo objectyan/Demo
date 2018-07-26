@@ -7,148 +7,126 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class RouteItem
-  extends MessageMicro
-{
-  public static final int IDX_FIELD_NUMBER = 1;
-  public static final int RECOMDATA_FIELD_NUMBER = 2;
-  private boolean a;
-  private int b = 0;
-  private boolean c;
-  private ByteStringMicro d = ByteStringMicro.EMPTY;
-  private int e = -1;
-  
-  public static RouteItem parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new RouteItem().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static RouteItem parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (RouteItem)new RouteItem().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final RouteItem clear()
-  {
-    clearIdx();
-    clearRecomdata();
-    this.e = -1;
-    return this;
-  }
-  
-  public RouteItem clearIdx()
-  {
-    this.a = false;
-    this.b = 0;
-    return this;
-  }
-  
-  public RouteItem clearRecomdata()
-  {
-    this.c = false;
-    this.d = ByteStringMicro.EMPTY;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.e < 0) {
-      getSerializedSize();
+public final class RouteItem extends MessageMicro {
+    public static final int IDX_FIELD_NUMBER = 1;
+    public static final int RECOMDATA_FIELD_NUMBER = 2;
+    /* renamed from: a */
+    private boolean f14273a;
+    /* renamed from: b */
+    private int f14274b = 0;
+    /* renamed from: c */
+    private boolean f14275c;
+    /* renamed from: d */
+    private ByteStringMicro f14276d = ByteStringMicro.EMPTY;
+    /* renamed from: e */
+    private int f14277e = -1;
+
+    public static RouteItem parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new RouteItem().mergeFrom(codedInputStreamMicro);
     }
-    return this.e;
-  }
-  
-  public int getIdx()
-  {
-    return this.b;
-  }
-  
-  public ByteStringMicro getRecomdata()
-  {
-    return this.d;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasIdx()) {
-      i = 0 + CodedOutputStreamMicro.computeUInt32Size(1, getIdx());
+
+    public static RouteItem parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (RouteItem) new RouteItem().mergeFrom(bArr);
     }
-    int j = i;
-    if (hasRecomdata()) {
-      j = i + CodedOutputStreamMicro.computeBytesSize(2, getRecomdata());
-    }
-    this.e = j;
-    return j;
-  }
-  
-  public boolean hasIdx()
-  {
-    return this.a;
-  }
-  
-  public boolean hasRecomdata()
-  {
-    return this.c;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public RouteItem mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public final RouteItem clear() {
+        clearIdx();
+        clearRecomdata();
+        this.f14277e = -1;
         return this;
-      case 8: 
-        setIdx(paramCodedInputStreamMicro.readUInt32());
-        break;
-      case 18: 
-        setRecomdata(paramCodedInputStreamMicro.readBytes());
-      }
     }
-  }
-  
-  public RouteItem setIdx(int paramInt)
-  {
-    this.a = true;
-    this.b = paramInt;
-    return this;
-  }
-  
-  public RouteItem setRecomdata(ByteStringMicro paramByteStringMicro)
-  {
-    this.c = true;
-    this.d = paramByteStringMicro;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasIdx()) {
-      paramCodedOutputStreamMicro.writeUInt32(1, getIdx());
+
+    public RouteItem clearIdx() {
+        this.f14273a = false;
+        this.f14274b = 0;
+        return this;
     }
-    if (hasRecomdata()) {
-      paramCodedOutputStreamMicro.writeBytes(2, getRecomdata());
+
+    public RouteItem clearRecomdata() {
+        this.f14275c = false;
+        this.f14276d = ByteStringMicro.EMPTY;
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f14277e < 0) {
+            getSerializedSize();
+        }
+        return this.f14277e;
+    }
+
+    public int getIdx() {
+        return this.f14274b;
+    }
+
+    public ByteStringMicro getRecomdata() {
+        return this.f14276d;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasIdx()) {
+            i = 0 + CodedOutputStreamMicro.computeUInt32Size(1, getIdx());
+        }
+        if (hasRecomdata()) {
+            i += CodedOutputStreamMicro.computeBytesSize(2, getRecomdata());
+        }
+        this.f14277e = i;
+        return i;
+    }
+
+    public boolean hasIdx() {
+        return this.f14273a;
+    }
+
+    public boolean hasRecomdata() {
+        return this.f14275c;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public RouteItem mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 8:
+                    setIdx(codedInputStreamMicro.readUInt32());
+                    continue;
+                case 18:
+                    setRecomdata(codedInputStreamMicro.readBytes());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public RouteItem setIdx(int i) {
+        this.f14273a = true;
+        this.f14274b = i;
+        return this;
+    }
+
+    public RouteItem setRecomdata(ByteStringMicro byteStringMicro) {
+        this.f14275c = true;
+        this.f14276d = byteStringMicro;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasIdx()) {
+            codedOutputStreamMicro.writeUInt32(1, getIdx());
+        }
+        if (hasRecomdata()) {
+            codedOutputStreamMicro.writeBytes(2, getRecomdata());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/RouteItem.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

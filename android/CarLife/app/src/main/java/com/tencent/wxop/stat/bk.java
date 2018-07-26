@@ -1,46 +1,39 @@
 package com.tencent.wxop.stat;
 
 import android.content.Context;
-import com.tencent.wxop.stat.b.b;
-import java.util.Map;
 
-final class bk
-  implements Runnable
-{
-  bk(String paramString, Context paramContext, k paramk) {}
-  
-  public final void run()
-  {
-    try
-    {
-      synchronized ()
-      {
-        if (j.i().size() >= f.n())
-        {
-          j.g().g("The number of page events exceeds the maximum value " + Integer.toString(f.n()));
-          return;
-        }
-        j.c(this.a);
-        if (j.i().containsKey(j.j()))
-        {
-          j.g().h("Duplicate PageID : " + j.j() + ", onResume() repeated?");
-          return;
-        }
-      }
-      j.i().put(j.j(), Long.valueOf(System.currentTimeMillis()));
+final class bk implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ String f24989a;
+    /* renamed from: b */
+    final /* synthetic */ Context f24990b;
+    /* renamed from: c */
+    final /* synthetic */ C6161k f24991c;
+
+    bk(String str, Context context, C6161k c6161k) {
+        this.f24989a = str;
+        this.f24990b = context;
+        this.f24991c = c6161k;
     }
-    catch (Throwable localThrowable)
-    {
-      j.g().b(localThrowable);
-      j.a(this.b, localThrowable);
-      return;
+
+    public final void run() {
+        try {
+            synchronized (C6160j.f25102o) {
+                if (C6160j.f25102o.size() >= C6156f.m22036n()) {
+                    C6160j.f25104q.m21831g("The number of page events exceeds the maximum value " + Integer.toString(C6156f.m22036n()));
+                    return;
+                }
+                C6160j.f25100m = this.f24989a;
+                if (C6160j.f25102o.containsKey(C6160j.f25100m)) {
+                    C6160j.f25104q.m21832h("Duplicate PageID : " + C6160j.f25100m + ", onResume() repeated?");
+                    return;
+                }
+                C6160j.f25102o.put(C6160j.f25100m, Long.valueOf(System.currentTimeMillis()));
+                C6160j.m22090a(this.f24990b, true, this.f24991c);
+            }
+        } catch (Throwable th) {
+            C6160j.f25104q.m21826b(th);
+            C6160j.m22104a(this.f24990b, th);
+        }
     }
-    j.a(this.b, true, this.c);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/bk.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

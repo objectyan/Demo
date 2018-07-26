@@ -12,93 +12,84 @@ import android.bluetooth.le.ScanSettings.Builder;
 import java.util.List;
 
 @TargetApi(21)
-final class dj
-  extends df
-{
-  private ScanCallback c = new ScanCallback()
-  {
-    public final void onBatchScanResults(List<ScanResult> paramAnonymousList)
-    {
-      super.onBatchScanResults(paramAnonymousList);
-    }
-    
-    public final void onScanFailed(int paramAnonymousInt)
-    {
-      super.onScanFailed(paramAnonymousInt);
-    }
-    
-    public final void onScanResult(int paramAnonymousInt, ScanResult paramAnonymousScanResult)
-    {
-      super.onScanResult(paramAnonymousInt, paramAnonymousScanResult);
-      ScanRecord localScanRecord = paramAnonymousScanResult.getScanRecord();
-      BluetoothDevice localBluetoothDevice = paramAnonymousScanResult.getDevice();
-      if (localBluetoothDevice != null) {}
-      for (Object localObject = localBluetoothDevice.getAddress();; localObject = null)
-      {
-        if ((localScanRecord != null) && (localObject != null))
-        {
-          localObject = new dh((String)localObject, localBluetoothDevice.getName(), paramAnonymousScanResult.getTimestampNanos() / 1000L, paramAnonymousScanResult.getRssi(), localScanRecord.getServiceUuids(), localScanRecord.getManufacturerSpecificData(), localScanRecord.getServiceData(), localScanRecord.getAdvertiseFlags(), localScanRecord.getTxPowerLevel(), localScanRecord.getDeviceName());
-          paramAnonymousScanResult = dl.a(localScanRecord.getBytes(), paramAnonymousScanResult.getRssi());
-          if (paramAnonymousScanResult != null)
-          {
-            ((dh)localObject).h = paramAnonymousScanResult.e;
-            ((dh)localObject).k = paramAnonymousScanResult;
-          }
-          dj.this.a((dh)localObject);
+final class dj extends df {
+    /* renamed from: c */
+    private ScanCallback f23412c = new C58491(this);
+
+    /* renamed from: com.indooratlas.android.sdk._internal.dj$1 */
+    class C58491 extends ScanCallback {
+        /* renamed from: a */
+        final /* synthetic */ dj f23411a;
+
+        C58491(dj djVar) {
+            this.f23411a = djVar;
         }
-        return;
-      }
+
+        public final void onScanResult(int callbackType, ScanResult result) {
+            super.onScanResult(callbackType, result);
+            ScanRecord scanRecord = result.getScanRecord();
+            BluetoothDevice device = result.getDevice();
+            String address = device != null ? device.getAddress() : null;
+            if (scanRecord != null && address != null) {
+                dh dhVar = new dh(address, device.getName(), result.getTimestampNanos() / 1000, result.getRssi(), scanRecord.getServiceUuids(), scanRecord.getManufacturerSpecificData(), scanRecord.getServiceData(), scanRecord.getAdvertiseFlags(), scanRecord.getTxPowerLevel(), scanRecord.getDeviceName());
+                di a = dl.m20331a(scanRecord.getBytes(), result.getRssi());
+                if (a != null) {
+                    dhVar.f23401h = a.f23409e;
+                    dhVar.f23404k = a;
+                }
+                this.f23411a.m20307a(dhVar);
+            }
+        }
+
+        public final void onBatchScanResults(List<ScanResult> results) {
+            super.onBatchScanResults(results);
+        }
+
+        public final void onScanFailed(int errorCode) {
+            super.onScanFailed(errorCode);
+        }
     }
-  };
-  
-  dj(BluetoothManager paramBluetoothManager, dg paramdg)
-  {
-    super(paramBluetoothManager, paramdg);
-  }
-  
-  private BluetoothLeScanner c()
-  {
-    BluetoothAdapter localBluetoothAdapter = this.b.getAdapter();
-    if ((localBluetoothAdapter != null) && ((localBluetoothAdapter.getState() == 12) || (localBluetoothAdapter.getState() == 11))) {
-      return localBluetoothAdapter.getBluetoothLeScanner();
+
+    dj(BluetoothManager bluetoothManager, dg dgVar) {
+        super(bluetoothManager, dgVar);
     }
-    return null;
-  }
-  
-  final boolean a()
-  {
-    if (this.a) {
-      return false;
+
+    /* renamed from: a */
+    final boolean mo4666a() {
+        if (this.a) {
+            return false;
+        }
+        BluetoothLeScanner c = m20323c();
+        if (c != null) {
+            c.startScan(null, new Builder().setScanMode(2).build(), this.f23412c);
+            this.a = true;
+            c.flushPendingScanResults(this.f23412c);
+        }
+        String str = cz.f23362a;
+        new StringBuilder("BLE scan started: ").append(this.a);
+        return this.a;
     }
-    Object localObject = c();
-    if (localObject != null)
-    {
-      ((BluetoothLeScanner)localObject).startScan(null, new ScanSettings.Builder().setScanMode(2).build(), this.c);
-      this.a = true;
-      ((BluetoothLeScanner)localObject).flushPendingScanResults(this.c);
+
+    /* renamed from: b */
+    final boolean mo4667b() {
+        if (!this.a) {
+            return false;
+        }
+        BluetoothLeScanner c = m20323c();
+        if (c != null) {
+            c.stopScan(this.f23412c);
+        }
+        this.a = false;
+        String str = cz.f23362a;
+        return true;
     }
-    localObject = cz.a;
-    new StringBuilder("BLE scan started: ").append(this.a);
-    return this.a;
-  }
-  
-  final boolean b()
-  {
-    if (!this.a) {
-      return false;
+
+    /* renamed from: c */
+    private BluetoothLeScanner m20323c() {
+        BluetoothAdapter adapter = this.b.getAdapter();
+        if (adapter == null || (adapter.getState() != 12 && adapter.getState() != 11)) {
+            return null;
+        }
+        return adapter.getBluetoothLeScanner();
     }
-    Object localObject = c();
-    if (localObject != null) {
-      ((BluetoothLeScanner)localObject).stopScan(this.c);
-    }
-    this.a = false;
-    localObject = cz.a;
-    return true;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dj.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

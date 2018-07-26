@@ -1,48 +1,62 @@
 package com.baidu.platform.comapi.util;
 
-public class CLog
-{
-  public static final boolean DEBUG = false;
-  private static CLog a = null;
-  
-  public static CLog getInstance()
-  {
-    try
-    {
-      if ((a == null) && (a == null)) {
-        a = new CLog();
-      }
-      CLog localCLog = a;
-      return localCLog;
+public class CLog {
+    public static final boolean DEBUG = false;
+    /* renamed from: a */
+    private static CLog f19869a = null;
+
+    public static synchronized CLog getInstance() {
+        CLog cLog;
+        synchronized (CLog.class) {
+            if (f19869a == null && f19869a == null) {
+                f19869a = new CLog();
+            }
+            cLog = f19869a;
+        }
+        return cLog;
     }
-    finally {}
-  }
-  
-  public void d(String paramString1, String paramString2) {}
-  
-  public void d(String paramString1, String paramString2, Throwable paramThrowable) {}
-  
-  public void e(String paramString1, String paramString2) {}
-  
-  public void e(String paramString1, String paramString2, Throwable paramThrowable) {}
-  
-  public void i(String paramString1, String paramString2) {}
-  
-  public void i(String paramString1, String paramString2, Throwable paramThrowable) {}
-  
-  public void v(String paramString1, String paramString2) {}
-  
-  public void v(String paramString1, String paramString2, Throwable paramThrowable) {}
-  
-  public void w(String paramString1, String paramString2) {}
-  
-  public void w(String paramString1, String paramString2, Throwable paramThrowable) {}
-  
-  public void w(String paramString, Throwable paramThrowable) {}
+
+    /* renamed from: v */
+    public void m15871v(String tag, String msg) {
+    }
+
+    /* renamed from: v */
+    public void m15872v(String tag, String msg, Throwable tr) {
+    }
+
+    /* renamed from: d */
+    public void m15865d(String tag, String msg) {
+    }
+
+    /* renamed from: d */
+    public void m15866d(String tag, String msg, Throwable tr) {
+    }
+
+    /* renamed from: i */
+    public void m15869i(String tag, String msg) {
+    }
+
+    /* renamed from: i */
+    public void m15870i(String tag, String msg, Throwable tr) {
+    }
+
+    /* renamed from: w */
+    public void m15873w(String tag, String msg) {
+    }
+
+    /* renamed from: w */
+    public void m15874w(String tag, String msg, Throwable tr) {
+    }
+
+    /* renamed from: w */
+    public void m15875w(String tag, Throwable tr) {
+    }
+
+    /* renamed from: e */
+    public void m15867e(String tag, String msg) {
+    }
+
+    /* renamed from: e */
+    public void m15868e(String tag, String msg, Throwable tr) {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/util/CLog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,246 +1,205 @@
 package com.indooratlas.android.sdk._internal;
 
+import android.support.v4.media.session.PlaybackStateCompat;
 import java.io.EOFException;
 import java.io.IOException;
 
-final class iz
-  implements ip
-{
-  public final in a;
-  public final jd b;
-  private boolean c;
-  
-  public iz(jd paramjd)
-  {
-    this(paramjd, new in());
-  }
-  
-  private iz(jd paramjd, in paramin)
-  {
-    if (paramjd == null) {
-      throw new IllegalArgumentException("source == null");
-    }
-    this.a = paramin;
-    this.b = paramjd;
-  }
-  
-  private boolean b(long paramLong)
-    throws IOException
-  {
-    if (paramLong < 0L) {
-      throw new IllegalArgumentException("byteCount < 0: " + paramLong);
-    }
-    if (this.c) {
-      throw new IllegalStateException("closed");
-    }
-    while (this.a.b < paramLong) {
-      if (this.b.a(this.a, 2048L) == -1L) {
-        return false;
-      }
-    }
-    return true;
-  }
-  
-  public final long a(byte paramByte)
-    throws IOException
-  {
-    long l2 = 0L;
-    if (this.c) {
-      throw new IllegalStateException("closed");
-    }
-    do
-    {
-      l1 = l2;
-      if (0L < this.a.b) {
-        break;
-      }
-    } while (this.b.a(this.a, 2048L) != -1L);
-    long l1 = -1L;
-    return l1;
-    do
-    {
-      l2 = this.a.a(paramByte, l1);
-      l1 = l2;
-      if (l2 != -1L) {
-        break;
-      }
-      l1 = this.a.b;
-    } while (this.b.a(this.a, 2048L) != -1L);
-    return -1L;
-  }
-  
-  public final long a(in paramin, long paramLong)
-    throws IOException
-  {
-    if (paramin == null) {
-      throw new IllegalArgumentException("sink == null");
-    }
-    if (paramLong < 0L) {
-      throw new IllegalArgumentException("byteCount < 0: " + paramLong);
-    }
-    if (this.c) {
-      throw new IllegalStateException("closed");
-    }
-    if ((this.a.b == 0L) && (this.b.a(this.a, 2048L) == -1L)) {
-      return -1L;
-    }
-    paramLong = Math.min(paramLong, this.a.b);
-    return this.a.a(paramin, paramLong);
-  }
-  
-  public final je a()
-  {
-    return this.b.a();
-  }
-  
-  public final void a(long paramLong)
-    throws IOException
-  {
-    if (!b(paramLong)) {
-      throw new EOFException();
-    }
-  }
-  
-  public final in b()
-  {
-    return this.a;
-  }
-  
-  public final iq c(long paramLong)
-    throws IOException
-  {
-    a(paramLong);
-    return this.a.c(paramLong);
-  }
-  
-  public final void close()
-    throws IOException
-  {
-    if (this.c) {
-      return;
-    }
-    this.c = true;
-    this.b.close();
-    this.a.o();
-  }
-  
-  public final boolean d()
-    throws IOException
-  {
-    if (this.c) {
-      throw new IllegalStateException("closed");
-    }
-    return (this.a.d()) && (this.b.a(this.a, 2048L) == -1L);
-  }
-  
-  public final byte e()
-    throws IOException
-  {
-    a(1L);
-    return this.a.e();
-  }
-  
-  public final byte[] e(long paramLong)
-    throws IOException
-  {
-    a(paramLong);
-    return this.a.e(paramLong);
-  }
-  
-  public final short f()
-    throws IOException
-  {
-    a(2L);
-    return this.a.f();
-  }
-  
-  public final void f(long paramLong)
-    throws IOException
-  {
-    if (this.c) {
-      throw new IllegalStateException("closed");
-    }
-    do
-    {
-      long l = Math.min(paramLong, this.a.b);
-      this.a.f(l);
-      paramLong -= l;
-      if (paramLong <= 0L) {
-        break;
-      }
-    } while ((this.a.b != 0L) || (this.b.a(this.a, 2048L) != -1L));
-    throw new EOFException();
-  }
-  
-  public final int g()
-    throws IOException
-  {
-    a(4L);
-    return this.a.g();
-  }
-  
-  public final short h()
-    throws IOException
-  {
-    a(2L);
-    return jf.a(this.a.f());
-  }
-  
-  public final int i()
-    throws IOException
-  {
-    a(4L);
-    return jf.a(this.a.g());
-  }
-  
-  public final long j()
-    throws IOException
-  {
-    a(1L);
-    int i = 0;
-    while (b(i + 1))
-    {
-      byte b1 = this.a.b(i);
-      if (((b1 < 48) || (b1 > 57)) && ((b1 < 97) || (b1 > 102)) && ((b1 < 65) || (b1 > 70)))
-      {
-        if (i != 0) {
-          break;
+final class iz implements ip {
+    /* renamed from: a */
+    public final in f24426a;
+    /* renamed from: b */
+    public final jd f24427b;
+    /* renamed from: c */
+    private boolean f24428c;
+
+    private iz(jd jdVar, in inVar) {
+        if (jdVar == null) {
+            throw new IllegalArgumentException("source == null");
         }
-        throw new NumberFormatException(String.format("Expected leading [0-9a-fA-F] character but was %#x", new Object[] { Byte.valueOf(b1) }));
-      }
-      i += 1;
+        this.f24426a = inVar;
+        this.f24427b = jdVar;
     }
-    return this.a.j();
-  }
-  
-  public final String m()
-    throws IOException
-  {
-    long l = a((byte)10);
-    if (l == -1L)
-    {
-      in localin = new in();
-      this.a.a(localin, 0L, Math.min(32L, this.a.b));
-      throw new EOFException("\\n not found: size=" + this.a.b + " content=" + localin.k().b() + "...");
+
+    public iz(jd jdVar) {
+        this(jdVar, new in());
     }
-    return this.a.d(l);
-  }
-  
-  public final byte[] n()
-    throws IOException
-  {
-    this.a.a(this.b);
-    return this.a.n();
-  }
-  
-  public final String toString()
-  {
-    return "buffer(" + this.b + ")";
-  }
+
+    /* renamed from: b */
+    public final in mo4741b() {
+        return this.f24426a;
+    }
+
+    /* renamed from: a */
+    public final long mo4730a(in inVar, long j) throws IOException {
+        if (inVar == null) {
+            throw new IllegalArgumentException("sink == null");
+        } else if (j < 0) {
+            throw new IllegalArgumentException("byteCount < 0: " + j);
+        } else if (this.f24428c) {
+            throw new IllegalStateException("closed");
+        } else if (this.f24426a.f24392b == 0 && this.f24427b.mo4730a(this.f24426a, PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH) == -1) {
+            return -1;
+        } else {
+            return this.f24426a.mo4730a(inVar, Math.min(j, this.f24426a.f24392b));
+        }
+    }
+
+    /* renamed from: d */
+    public final boolean mo4748d() throws IOException {
+        if (!this.f24428c) {
+            return this.f24426a.mo4748d() && this.f24427b.mo4730a(this.f24426a, PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH) == -1;
+        } else {
+            throw new IllegalStateException("closed");
+        }
+    }
+
+    /* renamed from: a */
+    public final void mo4740a(long j) throws IOException {
+        if (!m21279b(j)) {
+            throw new EOFException();
+        }
+    }
+
+    /* renamed from: b */
+    private boolean m21279b(long j) throws IOException {
+        if (j < 0) {
+            throw new IllegalArgumentException("byteCount < 0: " + j);
+        } else if (this.f24428c) {
+            throw new IllegalStateException("closed");
+        } else {
+            while (this.f24426a.f24392b < j) {
+                if (this.f24427b.mo4730a(this.f24426a, PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH) == -1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    /* renamed from: e */
+    public final byte mo4749e() throws IOException {
+        mo4740a(1);
+        return this.f24426a.mo4749e();
+    }
+
+    /* renamed from: c */
+    public final iq mo4747c(long j) throws IOException {
+        mo4740a(j);
+        return this.f24426a.mo4747c(j);
+    }
+
+    /* renamed from: n */
+    public final byte[] mo4764n() throws IOException {
+        this.f24426a.mo4739a(this.f24427b);
+        return this.f24426a.mo4764n();
+    }
+
+    /* renamed from: e */
+    public final byte[] mo4750e(long j) throws IOException {
+        mo4740a(j);
+        return this.f24426a.mo4750e(j);
+    }
+
+    /* renamed from: m */
+    public final String mo4763m() throws IOException {
+        long a = mo4738a((byte) 10);
+        if (a != -1) {
+            return this.f24426a.m21200d(a);
+        }
+        in inVar = new in();
+        this.f24426a.m21181a(inVar, 0, Math.min(32, this.f24426a.f24392b));
+        throw new EOFException("\\n not found: size=" + this.f24426a.f24392b + " content=" + inVar.m21220k().m21230b() + "...");
+    }
+
+    /* renamed from: f */
+    public final short mo4751f() throws IOException {
+        mo4740a(2);
+        return this.f24426a.mo4751f();
+    }
+
+    /* renamed from: h */
+    public final short mo4756h() throws IOException {
+        mo4740a(2);
+        return jf.m21313a(this.f24426a.mo4751f());
+    }
+
+    /* renamed from: g */
+    public final int mo4753g() throws IOException {
+        mo4740a(4);
+        return this.f24426a.mo4753g();
+    }
+
+    /* renamed from: i */
+    public final int mo4757i() throws IOException {
+        mo4740a(4);
+        return jf.m21312a(this.f24426a.mo4753g());
+    }
+
+    /* renamed from: j */
+    public final long mo4760j() throws IOException {
+        mo4740a(1);
+        for (int i = 0; m21279b((long) (i + 1)); i++) {
+            byte b = this.f24426a.m21189b((long) i);
+            if ((b < (byte) 48 || b > (byte) 57) && ((b < (byte) 97 || b > (byte) 102) && (b < (byte) 65 || b > (byte) 70))) {
+                if (i == 0) {
+                    throw new NumberFormatException(String.format("Expected leading [0-9a-fA-F] character but was %#x", new Object[]{Byte.valueOf(b)}));
+                }
+                return this.f24426a.mo4760j();
+            }
+        }
+        return this.f24426a.mo4760j();
+    }
+
+    /* renamed from: f */
+    public final void mo4752f(long j) throws IOException {
+        if (this.f24428c) {
+            throw new IllegalStateException("closed");
+        }
+        while (j > 0) {
+            if (this.f24426a.f24392b == 0 && this.f24427b.mo4730a(this.f24426a, PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH) == -1) {
+                throw new EOFException();
+            }
+            long min = Math.min(j, this.f24426a.f24392b);
+            this.f24426a.mo4752f(min);
+            j -= min;
+        }
+    }
+
+    /* renamed from: a */
+    public final long mo4738a(byte b) throws IOException {
+        long j = 0;
+        if (this.f24428c) {
+            throw new IllegalStateException("closed");
+        }
+        while (0 >= this.f24426a.f24392b) {
+            if (this.f24427b.mo4730a(this.f24426a, PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH) == -1) {
+                return -1;
+            }
+        }
+        do {
+            j = this.f24426a.m21177a(b, j);
+            if (j != -1) {
+                return j;
+            }
+            j = this.f24426a.f24392b;
+        } while (this.f24427b.mo4730a(this.f24426a, PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH) != -1);
+        return -1;
+    }
+
+    public final void close() throws IOException {
+        if (!this.f24428c) {
+            this.f24428c = true;
+            this.f24427b.close();
+            this.f24426a.m21224o();
+        }
+    }
+
+    /* renamed from: a */
+    public final je mo4731a() {
+        return this.f24427b.mo4731a();
+    }
+
+    public final String toString() {
+        return "buffer(" + this.f24427b + ")";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/iz.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

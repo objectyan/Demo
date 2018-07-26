@@ -1,71 +1,53 @@
 package com.google.gson;
 
-import com.google.gson.internal..Gson.Preconditions;
+import com.google.gson.internal.C$Gson$Preconditions;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 
-public final class FieldAttributes
-{
-  private final Field field;
-  
-  public FieldAttributes(Field paramField)
-  {
-    .Gson.Preconditions.checkNotNull(paramField);
-    this.field = paramField;
-  }
-  
-  Object get(Object paramObject)
-    throws IllegalAccessException
-  {
-    return this.field.get(paramObject);
-  }
-  
-  public <T extends Annotation> T getAnnotation(Class<T> paramClass)
-  {
-    return this.field.getAnnotation(paramClass);
-  }
-  
-  public Collection<Annotation> getAnnotations()
-  {
-    return Arrays.asList(this.field.getAnnotations());
-  }
-  
-  public Class<?> getDeclaredClass()
-  {
-    return this.field.getType();
-  }
-  
-  public Type getDeclaredType()
-  {
-    return this.field.getGenericType();
-  }
-  
-  public Class<?> getDeclaringClass()
-  {
-    return this.field.getDeclaringClass();
-  }
-  
-  public String getName()
-  {
-    return this.field.getName();
-  }
-  
-  public boolean hasModifier(int paramInt)
-  {
-    return (this.field.getModifiers() & paramInt) != 0;
-  }
-  
-  boolean isSynthetic()
-  {
-    return this.field.isSynthetic();
-  }
+public final class FieldAttributes {
+    private final Field field;
+
+    public FieldAttributes(Field f) {
+        C$Gson$Preconditions.checkNotNull(f);
+        this.field = f;
+    }
+
+    public Class<?> getDeclaringClass() {
+        return this.field.getDeclaringClass();
+    }
+
+    public String getName() {
+        return this.field.getName();
+    }
+
+    public Type getDeclaredType() {
+        return this.field.getGenericType();
+    }
+
+    public Class<?> getDeclaredClass() {
+        return this.field.getType();
+    }
+
+    public <T extends Annotation> T getAnnotation(Class<T> annotation) {
+        return this.field.getAnnotation(annotation);
+    }
+
+    public Collection<Annotation> getAnnotations() {
+        return Arrays.asList(this.field.getAnnotations());
+    }
+
+    public boolean hasModifier(int modifier) {
+        return (this.field.getModifiers() & modifier) != 0;
+    }
+
+    Object get(Object instance) throws IllegalAccessException {
+        return this.field.get(instance);
+    }
+
+    boolean isSynthetic() {
+        return this.field.isSynthetic();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/FieldAttributes.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

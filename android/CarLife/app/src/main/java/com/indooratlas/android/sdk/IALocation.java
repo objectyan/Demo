@@ -10,415 +10,372 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.indooratlas.android.sdk._internal.ee;
 
-public class IALocation
-  implements Parcelable
-{
-  public static final Parcelable.Creator<IALocation> CREATOR = new Parcelable.Creator() {};
-  public static final String EXTRA_FLOOR_CERTAINTY = "com.indooratlas.android.sdk.extra.floorCertainty";
-  public static final String EXTRA_FLOOR_LEVEL = "com.indooratlas.android.sdk.extra.floorLevel";
-  public static final String EXTRA_REGION = "com.indooratlas.android.sdk.extra.region";
-  @NonNull
-  private final Location a;
-  @Nullable
-  private IARegion b;
-  
-  protected IALocation(Parcel paramParcel)
-  {
-    Location localLocation = (Location)paramParcel.readParcelable(Location.class.getClassLoader());
-    if (localLocation != null) {}
-    for (this.a = localLocation;; this.a = new Location(null))
-    {
-      this.b = ((IARegion)paramParcel.readParcelable(IARegion.class.getClassLoader()));
-      return;
-    }
-  }
-  
-  private IALocation(Builder paramBuilder)
-  {
-    if (Builder.a(paramBuilder) != null)
-    {
-      localObject = Builder.a(paramBuilder);
-      if (Builder.b(paramBuilder) == null) {
-        break label315;
-      }
-      localObject = new Location(Builder.b(paramBuilder));
-      label35:
-      this.a = ((Location)localObject);
-      if (Builder.c(paramBuilder) == null) {
-        break label327;
-      }
-    }
-    label315:
-    label327:
-    for (Object localObject = new Bundle(Builder.c(paramBuilder));; localObject = new Bundle())
-    {
-      if (this.a.getExtras() != null) {
-        ((Bundle)localObject).putAll(this.a.getExtras());
-      }
-      if (Builder.d(paramBuilder) != null) {
-        this.a.setLatitude(Builder.d(paramBuilder).doubleValue());
-      }
-      if (Builder.e(paramBuilder) != null) {
-        this.a.setLongitude(Builder.e(paramBuilder).doubleValue());
-      }
-      if (Builder.f(paramBuilder) != null) {
-        this.a.setAccuracy(Builder.f(paramBuilder).floatValue());
-      }
-      if (Builder.g(paramBuilder) != null) {
-        this.a.setBearing(Builder.g(paramBuilder).floatValue());
-      }
-      if (Builder.h(paramBuilder) != null) {
-        this.a.setTime(Builder.h(paramBuilder).longValue());
-      }
-      if (Builder.f(paramBuilder) != null) {
-        this.a.setAccuracy(Builder.f(paramBuilder).floatValue());
-      }
-      if (Builder.i(paramBuilder) != null) {
-        this.a.setAltitude(Builder.i(paramBuilder).doubleValue());
-      }
-      if (Builder.j(paramBuilder) != null) {
-        ((Bundle)localObject).putInt("com.indooratlas.android.sdk.extra.floorLevel", Builder.j(paramBuilder).intValue());
-      }
-      if (Builder.k(paramBuilder) != null) {
-        ((Bundle)localObject).putFloat("com.indooratlas.android.sdk.extra.floorCertainty", Builder.k(paramBuilder).floatValue());
-      }
-      if (Builder.l(paramBuilder) != null)
-      {
-        this.b = Builder.l(paramBuilder);
-        ((Bundle)localObject).setClassLoader(IARegion.class.getClassLoader());
-        ((Bundle)localObject).putParcelable("com.indooratlas.android.sdk.extra.region", this.b);
-      }
-      this.a.setExtras((Bundle)localObject);
-      return;
-      localObject = null;
-      break;
-      localObject = new Location((String)localObject);
-      break label35;
-    }
-  }
-  
-  private boolean a(String paramString)
-  {
-    Bundle localBundle = this.a.getExtras();
-    if (localBundle == null) {
-      return false;
-    }
-    localBundle.setClassLoader(IARegion.class.getClassLoader());
-    return localBundle.containsKey(paramString);
-  }
-  
-  public static IALocation from(Intent paramIntent)
-  {
-    if (paramIntent == null) {
-      return null;
-    }
-    try
-    {
-      Object localObject = paramIntent.getByteArrayExtra("com.indooratlas.android.sdk.intent.extras.location");
-      if (localObject == null) {
-        return null;
-      }
-      paramIntent = Parcel.obtain();
-      paramIntent.unmarshall((byte[])localObject, 0, localObject.length);
-      paramIntent.setDataPosition(0);
-      localObject = (IALocation)CREATOR.createFromParcel(paramIntent);
-      paramIntent.recycle();
-      return (IALocation)localObject;
-    }
-    catch (Exception paramIntent)
-    {
-      ee.a("IASDK", "IALocation in Intent corrupted", new Object[] { paramIntent });
-    }
-    return null;
-  }
-  
-  public static IALocation from(Location paramLocation)
-  {
-    return new Builder().withLocation(paramLocation).build();
-  }
-  
-  public static IALocation from(IARegion paramIARegion)
-  {
-    return new Builder().withRegion(paramIARegion).build();
-  }
-  
-  public int describeContents()
-  {
-    return 0;
-  }
-  
-  public boolean equals(Object paramObject)
-  {
-    if (this == paramObject) {}
-    do
-    {
-      return true;
-      if ((paramObject == null) || (getClass() != paramObject.getClass())) {
-        return false;
-      }
-      paramObject = (IALocation)paramObject;
-      if (getLatitude() != ((IALocation)paramObject).getLatitude()) {
-        return false;
-      }
-      if (getLongitude() != ((IALocation)paramObject).getLongitude()) {
-        return false;
-      }
-      if (getAccuracy() != ((IALocation)paramObject).getAccuracy()) {
-        return false;
-      }
-      if (getBearing() != ((IALocation)paramObject).getBearing()) {
-        return false;
-      }
-      if (getTime() != ((IALocation)paramObject).getTime()) {
-        return false;
-      }
-      if ((hasFloorLevel() != ((IALocation)paramObject).hasFloorLevel()) || (getFloorLevel() != ((IALocation)paramObject).getFloorLevel())) {
-        return false;
-      }
-      if ((hasFloorCertainty() != ((IALocation)paramObject).hasFloorCertainty()) || (getFloorCertainty() != ((IALocation)paramObject).getFloorCertainty())) {
-        return false;
-      }
-      if (this.b == null) {
-        break;
-      }
-    } while (this.b.equals(((IALocation)paramObject).b));
-    while (((IALocation)paramObject).b != null) {
-      return false;
-    }
-    return true;
-  }
-  
-  public float getAccuracy()
-  {
-    return this.a.getAccuracy();
-  }
-  
-  public double getAltitude()
-  {
-    return this.a.getAltitude();
-  }
-  
-  public float getBearing()
-  {
-    return this.a.getBearing();
-  }
-  
-  public float getFloorCertainty()
-  {
-    Bundle localBundle = this.a.getExtras();
-    if (localBundle == null) {
-      return 0.0F;
-    }
-    localBundle.setClassLoader(IARegion.class.getClassLoader());
-    return localBundle.getFloat("com.indooratlas.android.sdk.extra.floorCertainty", 0.0F);
-  }
-  
-  public int getFloorLevel()
-  {
-    Bundle localBundle = this.a.getExtras();
-    if (localBundle == null) {
-      return 0;
-    }
-    localBundle.setClassLoader(IARegion.class.getClassLoader());
-    return localBundle.getInt("com.indooratlas.android.sdk.extra.floorLevel", 0);
-  }
-  
-  public double getLatitude()
-  {
-    return this.a.getLatitude();
-  }
-  
-  public double getLongitude()
-  {
-    return this.a.getLongitude();
-  }
-  
-  public IARegion getRegion()
-  {
-    return this.b;
-  }
-  
-  public long getTime()
-  {
-    return this.a.getTime();
-  }
-  
-  public boolean hasFloorCertainty()
-  {
-    return a("com.indooratlas.android.sdk.extra.floorCertainty");
-  }
-  
-  public boolean hasFloorLevel()
-  {
-    return a("com.indooratlas.android.sdk.extra.floorLevel");
-  }
-  
-  public int hashCode()
-  {
-    int j = 0;
-    if (this.a != null) {}
-    for (int i = this.a.hashCode();; i = 0)
-    {
-      if (this.b != null) {
-        j = this.b.hashCode();
-      }
-      return i * 31 + j;
-    }
-  }
-  
-  public Builder newBuilder()
-  {
-    return new Builder(this);
-  }
-  
-  public Location toLocation()
-  {
-    return new Location(this.a);
-  }
-  
-  public String toString()
-  {
-    return "IALocation{latitude=" + getLatitude() + ",longitude=" + getLongitude() + ",accuracy=" + getAccuracy() + ",bearing=" + getBearing() + ",floorLevel=" + getFloorLevel() + ",floorCertainty=" + getFloorCertainty() + ",time=" + getTime() + ",region=" + this.b + '}';
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeParcelable(this.a, paramInt);
-    paramParcel.writeParcelable(this.b, paramInt);
-  }
-  
-  public static class Builder
-  {
-    private Location a;
-    private Double b;
-    private Double c;
-    private Long d;
-    private Float e;
-    private Float f;
-    private Integer g;
-    private Float h;
-    private IARegion i;
-    private Double j;
-    private Bundle k;
+public class IALocation implements Parcelable {
+    public static final Creator<IALocation> CREATOR = new C57481();
+    public static final String EXTRA_FLOOR_CERTAINTY = "com.indooratlas.android.sdk.extra.floorCertainty";
+    public static final String EXTRA_FLOOR_LEVEL = "com.indooratlas.android.sdk.extra.floorLevel";
+    public static final String EXTRA_REGION = "com.indooratlas.android.sdk.extra.region";
+    @NonNull
+    /* renamed from: a */
+    private final Location f22877a;
     @Nullable
-    private final String l;
-    
-    public Builder()
-    {
-      this(null);
+    /* renamed from: b */
+    private IARegion f22878b;
+
+    /* renamed from: com.indooratlas.android.sdk.IALocation$1 */
+    static class C57481 implements Creator<IALocation> {
+        C57481() {
+        }
+
+        public final /* bridge */ /* synthetic */ Object[] newArray(int i) {
+            return new IALocation[i];
+        }
+
+        public final /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return new IALocation(parcel);
+        }
     }
-    
-    Builder(IALocation paramIALocation)
-    {
-      this.l = IALocation.a(paramIALocation).getProvider();
-      this.a = IALocation.a(paramIALocation);
-      this.i = IALocation.b(paramIALocation);
-      if (paramIALocation.hasFloorLevel()) {
-        this.g = Integer.valueOf(paramIALocation.getFloorLevel());
-      }
-      if (paramIALocation.hasFloorCertainty()) {
-        this.h = Float.valueOf(paramIALocation.getFloorCertainty());
-      }
+
+    public static class Builder {
+        /* renamed from: a */
+        private Location f22865a;
+        /* renamed from: b */
+        private Double f22866b;
+        /* renamed from: c */
+        private Double f22867c;
+        /* renamed from: d */
+        private Long f22868d;
+        /* renamed from: e */
+        private Float f22869e;
+        /* renamed from: f */
+        private Float f22870f;
+        /* renamed from: g */
+        private Integer f22871g;
+        /* renamed from: h */
+        private Float f22872h;
+        /* renamed from: i */
+        private IARegion f22873i;
+        /* renamed from: j */
+        private Double f22874j;
+        /* renamed from: k */
+        private Bundle f22875k;
+        @Nullable
+        /* renamed from: l */
+        private final String f22876l;
+
+        public Builder(String provider) {
+            this.f22876l = provider;
+        }
+
+        Builder(IALocation location) {
+            this.f22876l = location.f22877a.getProvider();
+            this.f22865a = location.f22877a;
+            this.f22873i = location.f22878b;
+            if (location.hasFloorLevel()) {
+                this.f22871g = Integer.valueOf(location.getFloorLevel());
+            }
+            if (location.hasFloorCertainty()) {
+                this.f22872h = Float.valueOf(location.getFloorCertainty());
+            }
+        }
+
+        public Builder() {
+            this(null);
+        }
+
+        public Builder withLocation(Location location) {
+            this.f22865a = location;
+            return this;
+        }
+
+        public Builder withRegion(IARegion region) {
+            this.f22873i = region;
+            return this;
+        }
+
+        public Builder withLatitude(double latitude) {
+            this.f22866b = Double.valueOf(latitude);
+            return this;
+        }
+
+        public Builder withTime(long millis) {
+            this.f22868d = Long.valueOf(millis);
+            return this;
+        }
+
+        public Builder withLongitude(double longitude) {
+            this.f22867c = Double.valueOf(longitude);
+            return this;
+        }
+
+        public Builder withBearing(float bearing) {
+            this.f22869e = Float.valueOf(bearing);
+            return this;
+        }
+
+        public Builder withAccuracy(float accuracy) {
+            this.f22870f = Float.valueOf(accuracy);
+            return this;
+        }
+
+        public Builder withFloorLevel(int level) {
+            this.f22871g = Integer.valueOf(level);
+            return this;
+        }
+
+        public Builder withFloorCertainty(float certainty) {
+            this.f22872h = Float.valueOf(certainty);
+            return this;
+        }
+
+        public Builder withAltitude(double altitude) {
+            this.f22874j = Double.valueOf(altitude);
+            return this;
+        }
+
+        public Builder withExtras(Bundle extras) {
+            this.f22875k = extras;
+            return this;
+        }
+
+        public Builder withLongExtra(String key, long value) {
+            if (this.f22875k == null) {
+                this.f22875k = new Bundle(1);
+            }
+            this.f22875k.putLong(key, value);
+            return this;
+        }
+
+        public Builder withIntExtra(String key, int value) {
+            if (this.f22875k == null) {
+                this.f22875k = new Bundle(1);
+            }
+            this.f22875k.putInt(key, value);
+            return this;
+        }
+
+        public IALocation build() {
+            return new IALocation();
+        }
     }
-    
-    public Builder(String paramString)
-    {
-      this.l = paramString;
+
+    private IALocation(Builder builder) {
+        this.f22877a = builder.f22865a != null ? new Location(builder.f22865a) : new Location(builder.f22876l != null ? builder.f22876l : null);
+        Bundle bundle = builder.f22875k != null ? new Bundle(builder.f22875k) : new Bundle();
+        if (this.f22877a.getExtras() != null) {
+            bundle.putAll(this.f22877a.getExtras());
+        }
+        if (builder.f22866b != null) {
+            this.f22877a.setLatitude(builder.f22866b.doubleValue());
+        }
+        if (builder.f22867c != null) {
+            this.f22877a.setLongitude(builder.f22867c.doubleValue());
+        }
+        if (builder.f22870f != null) {
+            this.f22877a.setAccuracy(builder.f22870f.floatValue());
+        }
+        if (builder.f22869e != null) {
+            this.f22877a.setBearing(builder.f22869e.floatValue());
+        }
+        if (builder.f22868d != null) {
+            this.f22877a.setTime(builder.f22868d.longValue());
+        }
+        if (builder.f22870f != null) {
+            this.f22877a.setAccuracy(builder.f22870f.floatValue());
+        }
+        if (builder.f22874j != null) {
+            this.f22877a.setAltitude(builder.f22874j.doubleValue());
+        }
+        if (builder.f22871g != null) {
+            bundle.putInt(EXTRA_FLOOR_LEVEL, builder.f22871g.intValue());
+        }
+        if (builder.f22872h != null) {
+            bundle.putFloat(EXTRA_FLOOR_CERTAINTY, builder.f22872h.floatValue());
+        }
+        if (builder.f22873i != null) {
+            this.f22878b = builder.f22873i;
+            bundle.setClassLoader(IARegion.class.getClassLoader());
+            bundle.putParcelable(EXTRA_REGION, this.f22878b);
+        }
+        this.f22877a.setExtras(bundle);
     }
-    
-    public IALocation build()
-    {
-      return new IALocation(this, (byte)0);
+
+    public Builder newBuilder() {
+        return new Builder(this);
     }
-    
-    public Builder withAccuracy(float paramFloat)
-    {
-      this.f = Float.valueOf(paramFloat);
-      return this;
+
+    protected IALocation(Parcel in) {
+        Location location = (Location) in.readParcelable(Location.class.getClassLoader());
+        if (location != null) {
+            this.f22877a = location;
+        } else {
+            this.f22877a = new Location(null);
+        }
+        this.f22878b = (IARegion) in.readParcelable(IARegion.class.getClassLoader());
     }
-    
-    public Builder withAltitude(double paramDouble)
-    {
-      this.j = Double.valueOf(paramDouble);
-      return this;
+
+    public static IALocation from(Location location) {
+        return new Builder().withLocation(location).build();
     }
-    
-    public Builder withBearing(float paramFloat)
-    {
-      this.e = Float.valueOf(paramFloat);
-      return this;
+
+    public static IALocation from(IARegion region) {
+        return new Builder().withRegion(region).build();
     }
-    
-    public Builder withExtras(Bundle paramBundle)
-    {
-      this.k = paramBundle;
-      return this;
+
+    public static IALocation from(Intent intent) {
+        if (intent == null) {
+            return null;
+        }
+        try {
+            byte[] byteArrayExtra = intent.getByteArrayExtra(IALocationManager.EXTRA_LOCATION);
+            if (byteArrayExtra == null) {
+                return null;
+            }
+            Parcel obtain = Parcel.obtain();
+            obtain.unmarshall(byteArrayExtra, 0, byteArrayExtra.length);
+            obtain.setDataPosition(0);
+            IALocation iALocation = (IALocation) CREATOR.createFromParcel(obtain);
+            obtain.recycle();
+            return iALocation;
+        } catch (Exception e) {
+            Object[] objArr = new Object[]{e};
+            ee.m20409a("IASDK", "IALocation in Intent corrupted", objArr);
+            return null;
+        }
     }
-    
-    public Builder withFloorCertainty(float paramFloat)
-    {
-      this.h = Float.valueOf(paramFloat);
-      return this;
+
+    public Location toLocation() {
+        return new Location(this.f22877a);
     }
-    
-    public Builder withFloorLevel(int paramInt)
-    {
-      this.g = Integer.valueOf(paramInt);
-      return this;
+
+    public double getLatitude() {
+        return this.f22877a.getLatitude();
     }
-    
-    public Builder withIntExtra(String paramString, int paramInt)
-    {
-      if (this.k == null) {
-        this.k = new Bundle(1);
-      }
-      this.k.putInt(paramString, paramInt);
-      return this;
+
+    public double getLongitude() {
+        return this.f22877a.getLongitude();
     }
-    
-    public Builder withLatitude(double paramDouble)
-    {
-      this.b = Double.valueOf(paramDouble);
-      return this;
+
+    public float getBearing() {
+        return this.f22877a.getBearing();
     }
-    
-    public Builder withLocation(Location paramLocation)
-    {
-      this.a = paramLocation;
-      return this;
+
+    public float getAccuracy() {
+        return this.f22877a.getAccuracy();
     }
-    
-    public Builder withLongExtra(String paramString, long paramLong)
-    {
-      if (this.k == null) {
-        this.k = new Bundle(1);
-      }
-      this.k.putLong(paramString, paramLong);
-      return this;
+
+    public long getTime() {
+        return this.f22877a.getTime();
     }
-    
-    public Builder withLongitude(double paramDouble)
-    {
-      this.c = Double.valueOf(paramDouble);
-      return this;
+
+    public double getAltitude() {
+        return this.f22877a.getAltitude();
     }
-    
-    public Builder withRegion(IARegion paramIARegion)
-    {
-      this.i = paramIARegion;
-      return this;
+
+    public boolean hasFloorLevel() {
+        return m19659a(EXTRA_FLOOR_LEVEL);
     }
-    
-    public Builder withTime(long paramLong)
-    {
-      this.d = Long.valueOf(paramLong);
-      return this;
+
+    public int getFloorLevel() {
+        Bundle extras = this.f22877a.getExtras();
+        if (extras == null) {
+            return 0;
+        }
+        extras.setClassLoader(IARegion.class.getClassLoader());
+        return extras.getInt(EXTRA_FLOOR_LEVEL, 0);
     }
-  }
+
+    public boolean hasFloorCertainty() {
+        return m19659a(EXTRA_FLOOR_CERTAINTY);
+    }
+
+    public float getFloorCertainty() {
+        Bundle extras = this.f22877a.getExtras();
+        if (extras == null) {
+            return 0.0f;
+        }
+        extras.setClassLoader(IARegion.class.getClassLoader());
+        return extras.getFloat(EXTRA_FLOOR_CERTAINTY, 0.0f);
+    }
+
+    public IARegion getRegion() {
+        return this.f22878b;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        IALocation iALocation = (IALocation) o;
+        if (getLatitude() != iALocation.getLatitude()) {
+            return false;
+        }
+        if (getLongitude() != iALocation.getLongitude()) {
+            return false;
+        }
+        if (getAccuracy() != iALocation.getAccuracy()) {
+            return false;
+        }
+        if (getBearing() != iALocation.getBearing()) {
+            return false;
+        }
+        if (getTime() != iALocation.getTime()) {
+            return false;
+        }
+        if (hasFloorLevel() != iALocation.hasFloorLevel() || getFloorLevel() != iALocation.getFloorLevel()) {
+            return false;
+        }
+        if (hasFloorCertainty() != iALocation.hasFloorCertainty() || getFloorCertainty() != iALocation.getFloorCertainty()) {
+            return false;
+        }
+        if (this.f22878b != null) {
+            if (this.f22878b.equals(iALocation.f22878b)) {
+                return true;
+            }
+        } else if (iALocation.f22878b == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public int hashCode() {
+        int hashCode;
+        int i = 0;
+        if (this.f22877a != null) {
+            hashCode = this.f22877a.hashCode();
+        } else {
+            hashCode = 0;
+        }
+        hashCode *= 31;
+        if (this.f22878b != null) {
+            i = this.f22878b.hashCode();
+        }
+        return hashCode + i;
+    }
+
+    public String toString() {
+        return "IALocation{latitude=" + getLatitude() + ",longitude=" + getLongitude() + ",accuracy=" + getAccuracy() + ",bearing=" + getBearing() + ",floorLevel=" + getFloorLevel() + ",floorCertainty=" + getFloorCertainty() + ",time=" + getTime() + ",region=" + this.f22878b + '}';
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.f22877a, flags);
+        dest.writeParcelable(this.f22878b, flags);
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    /* renamed from: a */
+    private boolean m19659a(String str) {
+        Bundle extras = this.f22877a.getExtras();
+        if (extras == null) {
+            return false;
+        }
+        extras.setClassLoader(IARegion.class.getClassLoader());
+        return extras.containsKey(str);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/IALocation.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -11,6 +11,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.ui.routeguide.subview.OnRGSubViewListener;
 import com.baidu.navisdk.ui.util.BNStyleManager;
@@ -18,161 +19,115 @@ import com.baidu.navisdk.ui.widget.BNBaseView;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class RGMMRPPreferView
-  extends BNBaseView
-{
-  private static String TAG = RGMMRPPreferView.class.getName();
-  private final String[] TIPS_TEXT_CONTENT = { "躲避拥堵/", "高速优先/", "不走高速/", "少收费/" };
-  private final String TIPS_TEXT_DEFAULT = "推荐";
-  private final String TIPS_TEXT_PREFIX = "正在使用";
-  private final String TIPS_TEXT_SUFFIX = "方案";
-  private ViewGroup mRPPreferContainer = null;
-  private TextView mRPPreferTV = null;
-  private View mRPPreferView = null;
-  
-  public RGMMRPPreferView(Context paramContext, ViewGroup paramViewGroup, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext, paramViewGroup, paramOnRGSubViewListener);
-    initViews();
-    updateStyle(BNStyleManager.getDayStyle());
-    initListener();
-  }
-  
-  private String getTipsText()
-  {
-    StringBuilder localStringBuilder2 = new StringBuilder("正在使用");
-    localObject2 = localStringBuilder2;
-    for (;;)
-    {
-      try
-      {
-        int i = BNRoutePlaner.getInstance().getCalcPreference();
-        localObject2 = localStringBuilder2;
-        if ((isOnLineNetMode()) && ((i & 0x10) != 0))
-        {
-          localObject2 = localStringBuilder2;
-          localStringBuilder2.append(this.TIPS_TEXT_CONTENT[0]);
+public class RGMMRPPreferView extends BNBaseView {
+    private static String TAG = RGMMRPPreferView.class.getName();
+    private final String[] TIPS_TEXT_CONTENT = new String[]{"躲避拥堵/", "高速优先/", "不走高速/", "少收费/"};
+    private final String TIPS_TEXT_DEFAULT = "推荐";
+    private final String TIPS_TEXT_PREFIX = "正在使用";
+    private final String TIPS_TEXT_SUFFIX = "方案";
+    private ViewGroup mRPPreferContainer = null;
+    private TextView mRPPreferTV = null;
+    private View mRPPreferView = null;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMRPPreferView$1 */
+    class C44181 implements OnTouchListener {
+        C44181() {
         }
-        if ((i & 0x2) != 0)
-        {
-          localObject2 = localStringBuilder2;
-          localStringBuilder2.append(this.TIPS_TEXT_CONTENT[1]);
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return true;
         }
-        if ((i & 0x4) != 0)
-        {
-          localObject2 = localStringBuilder2;
-          localStringBuilder2.append(this.TIPS_TEXT_CONTENT[2]);
+    }
+
+    public RGMMRPPreferView(Context c, ViewGroup p, OnRGSubViewListener lis) {
+        super(c, p, lis);
+        initViews();
+        updateStyle(BNStyleManager.getDayStyle());
+        initListener();
+    }
+
+    public void orientationChanged(ViewGroup p, int orien) {
+        if (this.mCurOrientation != orien) {
+            super.orientationChanged(p, orien);
         }
-        if ((i & 0x8) != 0)
-        {
-          localObject2 = localStringBuilder2;
-          localStringBuilder2.append(this.TIPS_TEXT_CONTENT[3]);
+    }
+
+    private void initViews() {
+        if (this.mRootViewGroup != null && this.mRPPreferContainer != null) {
+            this.mRPPreferContainer.removeAllViews();
+            this.mRPPreferView = JarUtils.inflate((Activity) this.mContext, C4048R.layout.nsdk_layout_rg_mapmode_common_card, null);
+            if (this.mRPPreferView != null) {
+                this.mRPPreferTV = (TextView) this.mRPPreferView.findViewById(C4048R.id.common_card_text);
+                this.mRPPreferContainer.addView(this.mRPPreferView, new LayoutParams(-1, -2));
+            }
         }
-        localObject2 = localStringBuilder2;
-        if (!localStringBuilder2.toString().equals("正在使用")) {
-          continue;
+    }
+
+    private void initListener() {
+        if (this.mRPPreferContainer != null) {
+            this.mRPPreferContainer.setOnTouchListener(new C44181());
         }
-        localObject2 = localStringBuilder2;
-        localStringBuilder2.append("推荐");
-        localStringBuilder1 = localStringBuilder2;
-        localObject2 = localStringBuilder1;
-        localStringBuilder1.append("方案");
-      }
-      catch (Exception localException)
-      {
-        StringBuilder localStringBuilder1;
-        Object localObject1 = localObject2;
-        continue;
-      }
-      return localStringBuilder1.toString();
-      localStringBuilder1 = localStringBuilder2;
-      localObject2 = localStringBuilder2;
-      if (localStringBuilder2.toString().length() >= 1)
-      {
-        localObject2 = localStringBuilder2;
-        localStringBuilder1 = new StringBuilder(localStringBuilder2.substring(0, localStringBuilder2.toString().length() - 1));
-      }
     }
-  }
-  
-  private void initListener()
-  {
-    if (this.mRPPreferContainer != null) {
-      this.mRPPreferContainer.setOnTouchListener(new View.OnTouchListener()
-      {
-        public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-        {
-          return true;
+
+    public void show() {
+        super.show();
+        LogUtil.m15791e(TAG, "show()");
+        if (this.mRPPreferContainer != null) {
+            this.mRPPreferContainer.setVisibility(0);
         }
-      });
+        if (this.mRPPreferTV != null) {
+            String tips = getTipsText();
+            SpannableStringBuilder ssb = new SpannableStringBuilder(tips);
+            ssb.setSpan(new ForegroundColorSpan(-1), "正在使用".length(), tips.length() - "方案".length(), 33);
+            ssb.setSpan(new RelativeSizeSpan(1.05f), "正在使用".length(), tips.length() - "方案".length(), 33);
+            this.mRPPreferTV.setText(ssb);
+        }
     }
-  }
-  
-  private void initViews()
-  {
-    if (this.mRootViewGroup == null) {}
-    do
-    {
-      do
-      {
-        return;
-      } while (this.mRPPreferContainer == null);
-      this.mRPPreferContainer.removeAllViews();
-      this.mRPPreferView = JarUtils.inflate((Activity)this.mContext, 1711472707, null);
-    } while (this.mRPPreferView == null);
-    this.mRPPreferTV = ((TextView)this.mRPPreferView.findViewById(1711866462));
-    FrameLayout.LayoutParams localLayoutParams = new FrameLayout.LayoutParams(-1, -2);
-    this.mRPPreferContainer.addView(this.mRPPreferView, localLayoutParams);
-  }
-  
-  private boolean isOnLineNetMode()
-  {
-    int i = BNRoutePlaner.getInstance().getEngineCalcRouteNetMode();
-    return (i == 3) || (i == 1);
-  }
-  
-  public void hide()
-  {
-    super.hide();
-    LogUtil.e(TAG, "hide()");
-    if (this.mRPPreferContainer != null) {
-      this.mRPPreferContainer.setVisibility(8);
+
+    public void hide() {
+        super.hide();
+        LogUtil.m15791e(TAG, "hide()");
+        if (this.mRPPreferContainer != null) {
+            this.mRPPreferContainer.setVisibility(8);
+        }
     }
-  }
-  
-  public void orientationChanged(ViewGroup paramViewGroup, int paramInt)
-  {
-    if (this.mCurOrientation == paramInt) {
-      return;
+
+    public void updateStyle(boolean day) {
+        super.updateStyle(day);
     }
-    super.orientationChanged(paramViewGroup, paramInt);
-  }
-  
-  public void show()
-  {
-    super.show();
-    LogUtil.e(TAG, "show()");
-    if (this.mRPPreferContainer != null) {
-      this.mRPPreferContainer.setVisibility(0);
+
+    private String getTipsText() {
+        StringBuilder tips = new StringBuilder("正在使用");
+        try {
+            int preferValue = BNRoutePlaner.getInstance().getCalcPreference();
+            if (isOnLineNetMode() && (preferValue & 16) != 0) {
+                tips.append(this.TIPS_TEXT_CONTENT[0]);
+            }
+            if ((preferValue & 2) != 0) {
+                tips.append(this.TIPS_TEXT_CONTENT[1]);
+            }
+            if ((preferValue & 4) != 0) {
+                tips.append(this.TIPS_TEXT_CONTENT[2]);
+            }
+            if ((preferValue & 8) != 0) {
+                tips.append(this.TIPS_TEXT_CONTENT[3]);
+            }
+            if (tips.toString().equals("正在使用")) {
+                tips.append("推荐");
+            } else if (tips.toString().length() >= 1) {
+                tips = new StringBuilder(tips.substring(0, tips.toString().length() - 1));
+            }
+            tips.append("方案");
+        } catch (Exception e) {
+        }
+        return tips.toString();
     }
-    if (this.mRPPreferTV != null)
-    {
-      String str = getTipsText();
-      SpannableStringBuilder localSpannableStringBuilder = new SpannableStringBuilder(str);
-      localSpannableStringBuilder.setSpan(new ForegroundColorSpan(-1), "正在使用".length(), str.length() - "方案".length(), 33);
-      localSpannableStringBuilder.setSpan(new RelativeSizeSpan(1.05F), "正在使用".length(), str.length() - "方案".length(), 33);
-      this.mRPPreferTV.setText(localSpannableStringBuilder);
+
+    private boolean isOnLineNetMode() {
+        int netMode = BNRoutePlaner.getInstance().getEngineCalcRouteNetMode();
+        if (netMode == 3 || netMode == 1) {
+            return true;
+        }
+        return false;
     }
-  }
-  
-  public void updateStyle(boolean paramBoolean)
-  {
-    super.updateStyle(paramBoolean);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMRPPreferView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

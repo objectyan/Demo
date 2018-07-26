@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
@@ -26,576 +25,512 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 import com.baidu.platform.comapi.util.SysOSAPIv2;
 
-public class BMAlertDialog
-  extends Dialog
-  implements DialogInterface, View.OnClickListener
-{
-  private static final int a = 14;
-  private static final int b = 1;
-  private LinearLayout c;
-  private ImageView d;
-  private TextView e;
-  private LinearLayout f;
-  private TextView g;
-  private RelativeLayout h;
-  private LinearLayout i;
-  private Button j;
-  private Button k;
-  private Builder l;
-  private LinearLayout m;
-  
-  private BMAlertDialog(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public BMAlertDialog(Builder paramBuilder, int paramInt)
-  {
-    super(paramBuilder.getContext(), paramInt);
-    this.l = paramBuilder;
-    if (Builder.a()) {}
-    for (this.c = ((LinearLayout)a(paramBuilder, 2130968593));; this.c = ((LinearLayout)a(paramBuilder, 2130968592)))
-    {
-      if (this.c != null)
-      {
-        this.c.setMinimumWidth(SysOSAPIv2.getInstance().getScreenWidth());
-        this.d = ((ImageView)this.c.findViewById(2131624032));
-        this.e = ((TextView)this.c.findViewById(2131624033));
-        this.f = ((LinearLayout)this.c.findViewById(2131624034));
-        this.g = ((TextView)this.c.findViewById(2131624036));
-        this.h = ((RelativeLayout)this.c.findViewById(2131624037));
-        this.i = ((LinearLayout)this.c.findViewById(2131624038));
-        this.j = ((Button)this.c.findViewById(2131624039));
-        this.k = ((Button)this.c.findViewById(2131624040));
-        this.m = ((LinearLayout)this.c.findViewById(2131624031));
-      }
-      return;
-    }
-  }
-  
-  private View a(Builder paramBuilder, int paramInt)
-  {
-    try
-    {
-      View localView = LayoutInflater.from(paramBuilder.getContext()).inflate(paramInt, null);
-      return localView;
-    }
-    catch (Exception localException)
-    {
-      try
-      {
-        paramBuilder = LayoutInflater.from(paramBuilder.getContext()).inflate(paramInt, null);
-        return paramBuilder;
-      }
-      catch (Exception paramBuilder) {}
-    }
-    return null;
-  }
-  
-  private boolean a(Context paramContext)
-  {
-    return (paramContext != null) && (!((Activity)paramContext).isFinishing());
-  }
-  
-  public View getButton(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      return null;
-    case -1: 
-      return this.j;
-    }
-    return this.k;
-  }
-  
-  public void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    default: 
-      return;
-    case 2131624039: 
-      if (Builder.f(this.l) != null) {
-        Builder.f(this.l).onClick(this, -1);
-      }
-      dismiss();
-      return;
-    }
-    if (Builder.g(this.l) != null) {
-      Builder.g(this.l).onClick(this, -2);
-    }
-    dismiss();
-  }
-  
-  public void show()
-  {
-    if ((this.c != null) && (a(this.l.getContext())))
-    {
-      setContentView(this.c, new ViewGroup.LayoutParams(-1, -2));
-      super.show();
-    }
-  }
-  
-  public void updateMessage(CharSequence paramCharSequence)
-  {
-    if ((this.g != null) && (paramCharSequence != null)) {
-      this.g.setText(paramCharSequence);
-    }
-  }
-  
-  public static class Builder
-  {
-    public static final int HILIGHTED_TEXT_COLOR = -15564033;
-    private int a;
-    private CharSequence b;
-    private CharSequence c;
-    private int d;
-    private CharSequence e;
-    private CharSequence f;
-    private String[] g;
-    private ListAdapter h;
-    private boolean[] i;
-    private boolean j = false;
-    private boolean k = true;
-    private boolean l = false;
-    private boolean m = false;
-    private DialogInterface.OnClickListener n;
-    private DialogInterface.OnClickListener o;
-    private DialogInterface.OnDismissListener p;
-    private DialogInterface.OnCancelListener q;
-    private DialogInterface.OnKeyListener r;
-    private DialogInterface.OnMultiChoiceClickListener s;
-    private DialogInterface.OnClickListener t;
-    private View u;
-    private Context v;
-    private boolean w = false;
-    
-    public Builder(Context paramContext)
-    {
-      this.v = paramContext;
-    }
-    
-    private void a(View paramView, int paramInt)
-    {
-      if (paramView == null) {
-        return;
-      }
-      try
-      {
-        paramView.setBackgroundResource(paramInt);
-        return;
-      }
-      catch (Exception localException)
-      {
-        paramView.setBackgroundResource(0);
-      }
-    }
-    
-    private static boolean b()
-    {
-      return Build.VERSION.SDK_INT >= 14;
-    }
-    
-    public BMAlertDialog create()
-    {
-      final BMAlertDialog localBMAlertDialog = new BMAlertDialog(this, 2131427331);
-      if (this.b != null)
-      {
-        BMAlertDialog.a(localBMAlertDialog).setText(this.b);
-        BMAlertDialog.a(localBMAlertDialog).setVisibility(0);
-        BMAlertDialog.b(localBMAlertDialog).setVisibility(0);
-        if (this.a <= 0) {
-          break label340;
-        }
-        BMAlertDialog.c(localBMAlertDialog).setImageResource(this.a);
-        BMAlertDialog.c(localBMAlertDialog).setVisibility(0);
-        label71:
-        if (this.c == null) {
-          break label352;
-        }
-        BMAlertDialog.d(localBMAlertDialog).setText(this.c);
-        if (this.d > 0) {
-          BMAlertDialog.d(localBMAlertDialog).setGravity(this.d);
-        }
-        BMAlertDialog.e(localBMAlertDialog).setVisibility(0);
-        BMAlertDialog.f(localBMAlertDialog).setVisibility(8);
-        label124:
-        localBMAlertDialog.setOnCancelListener(this.q);
-        localBMAlertDialog.setOnDismissListener(this.p);
-        if (this.r != null) {
-          localBMAlertDialog.setOnKeyListener(this.r);
-        }
-        if (this.e == null) {
-          break label695;
-        }
-        BMAlertDialog.g(localBMAlertDialog).setText(this.e);
-        BMAlertDialog.g(localBMAlertDialog).setOnClickListener(localBMAlertDialog);
-        BMAlertDialog.g(localBMAlertDialog).setVisibility(0);
-        if (this.l) {
-          BMAlertDialog.g(localBMAlertDialog).setTextColor(-15564033);
-        }
-        label205:
-        if (this.f == null) {
-          break label707;
-        }
-        BMAlertDialog.h(localBMAlertDialog).setText(this.f);
-        BMAlertDialog.h(localBMAlertDialog).setOnClickListener(localBMAlertDialog);
-        BMAlertDialog.h(localBMAlertDialog).setVisibility(0);
-        if (this.m) {
-          BMAlertDialog.h(localBMAlertDialog).setTextColor(-15564033);
-        }
-        label255:
-        if ((BMAlertDialog.g(localBMAlertDialog).getVisibility() != 0) || (BMAlertDialog.h(localBMAlertDialog).getVisibility() != 0)) {
-          break label742;
-        }
-        BMAlertDialog.i(localBMAlertDialog).setVisibility(0);
-        if (!b()) {
-          break label719;
-        }
-        a(BMAlertDialog.g(localBMAlertDialog), 2130837513);
-        a(BMAlertDialog.h(localBMAlertDialog), 2130837505);
-      }
-      for (;;)
-      {
-        localBMAlertDialog.setCancelable(this.k);
-        return localBMAlertDialog;
-        BMAlertDialog.a(localBMAlertDialog).setVisibility(8);
-        BMAlertDialog.b(localBMAlertDialog).setVisibility(8);
-        break;
-        label340:
-        BMAlertDialog.c(localBMAlertDialog).setVisibility(8);
-        break label71;
-        label352:
-        ListView localListView;
-        if ((this.g != null) && (this.g.length > 0))
-        {
-          localListView = (ListView)View.inflate(this.v, 2130968587, null);
-          if (this.j)
-          {
-            localListView.setAdapter(new MultiChoiceAdapter(null));
-            if (this.s != null) {
-              localListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-              {
-                public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-                {
-                  paramAnonymousAdapterView = (ImageView)paramAnonymousView.findViewById(2131624020);
-                  boolean bool;
-                  if (!((Boolean)paramAnonymousAdapterView.getTag()).booleanValue())
-                  {
-                    bool = true;
-                    BMAlertDialog.Builder.a(BMAlertDialog.Builder.this)[paramAnonymousInt] = bool;
-                    if (!bool) {
-                      break label82;
-                    }
-                    paramAnonymousAdapterView.setImageResource(2130838532);
-                    paramAnonymousAdapterView.setTag(Boolean.valueOf(true));
-                  }
-                  for (;;)
-                  {
-                    BMAlertDialog.Builder.b(BMAlertDialog.Builder.this).onClick(localBMAlertDialog, paramAnonymousInt, bool);
-                    return;
-                    bool = false;
-                    break;
-                    label82:
-                    paramAnonymousAdapterView.setImageResource(2130838531);
-                    paramAnonymousAdapterView.setTag(Boolean.valueOf(false));
-                  }
+public class BMAlertDialog extends Dialog implements DialogInterface, OnClickListener {
+    /* renamed from: a */
+    private static final int f19315a = 14;
+    /* renamed from: b */
+    private static final int f19316b = 1;
+    /* renamed from: c */
+    private LinearLayout f19317c;
+    /* renamed from: d */
+    private ImageView f19318d;
+    /* renamed from: e */
+    private TextView f19319e;
+    /* renamed from: f */
+    private LinearLayout f19320f;
+    /* renamed from: g */
+    private TextView f19321g;
+    /* renamed from: h */
+    private RelativeLayout f19322h;
+    /* renamed from: i */
+    private LinearLayout f19323i;
+    /* renamed from: j */
+    private Button f19324j;
+    /* renamed from: k */
+    private Button f19325k;
+    /* renamed from: l */
+    private Builder f19326l;
+    /* renamed from: m */
+    private LinearLayout f19327m;
+
+    public static class Builder {
+        public static final int HILIGHTED_TEXT_COLOR = -15564033;
+        /* renamed from: a */
+        private int f19292a;
+        /* renamed from: b */
+        private CharSequence f19293b;
+        /* renamed from: c */
+        private CharSequence f19294c;
+        /* renamed from: d */
+        private int f19295d;
+        /* renamed from: e */
+        private CharSequence f19296e;
+        /* renamed from: f */
+        private CharSequence f19297f;
+        /* renamed from: g */
+        private String[] f19298g;
+        /* renamed from: h */
+        private ListAdapter f19299h;
+        /* renamed from: i */
+        private boolean[] f19300i;
+        /* renamed from: j */
+        private boolean f19301j = false;
+        /* renamed from: k */
+        private boolean f19302k = true;
+        /* renamed from: l */
+        private boolean f19303l = false;
+        /* renamed from: m */
+        private boolean f19304m = false;
+        /* renamed from: n */
+        private DialogInterface.OnClickListener f19305n;
+        /* renamed from: o */
+        private DialogInterface.OnClickListener f19306o;
+        /* renamed from: p */
+        private OnDismissListener f19307p;
+        /* renamed from: q */
+        private OnCancelListener f19308q;
+        /* renamed from: r */
+        private OnKeyListener f19309r;
+        /* renamed from: s */
+        private OnMultiChoiceClickListener f19310s;
+        /* renamed from: t */
+        private DialogInterface.OnClickListener f19311t;
+        /* renamed from: u */
+        private View f19312u;
+        /* renamed from: v */
+        private Context f19313v;
+        /* renamed from: w */
+        private boolean f19314w = false;
+
+        private class MultiChoiceAdapter extends BaseAdapter {
+            /* renamed from: a */
+            final /* synthetic */ Builder f19291a;
+
+            private MultiChoiceAdapter(Builder builder) {
+                this.f19291a = builder;
+            }
+
+            public int getCount() {
+                if (this.f19291a.f19298g != null) {
+                    return this.f19291a.f19298g.length;
                 }
-              });
+                return 0;
             }
-            BMAlertDialog.f(localBMAlertDialog).removeAllViews();
-            BMAlertDialog.f(localBMAlertDialog).addView(localListView, new ViewGroup.LayoutParams(-1, -2));
-            BMAlertDialog.f(localBMAlertDialog).setVisibility(0);
-            BMAlertDialog.e(localBMAlertDialog).setVisibility(8);
-            break label124;
-          }
-          if (this.w) {}
-          for (int i1 = 2130968589;; i1 = 2130968588)
-          {
-            localListView.setAdapter(new ArrayAdapter(this.v, i1, this.g));
-            if (this.t == null) {
-              break;
+
+            public Object getItem(int position) {
+                if (this.f19291a.f19298g == null || this.f19291a.f19298g.length <= position) {
+                    return null;
+                }
+                return this.f19291a.f19298g[position];
             }
-            localListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-              public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-              {
-                BMAlertDialog.Builder.c(BMAlertDialog.Builder.this).onClick(localBMAlertDialog, paramAnonymousInt);
-                localBMAlertDialog.dismiss();
-              }
-            });
-            break;
-          }
+
+            public long getItemId(int position) {
+                return (long) position;
+            }
+
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = View.inflate(this.f19291a.f19313v, C0965R.layout.alertdialog_checkbox, null);
+                }
+                TextView tv = (TextView) convertView.findViewById(C0965R.id.checkbox_content);
+                ImageView iv = (ImageView) convertView.findViewById(C0965R.id.checkbox_image);
+                if (this.f19291a.f19298g != null && this.f19291a.f19298g.length > position) {
+                    tv.setText(this.f19291a.f19298g[position]);
+                }
+                if (this.f19291a.f19300i != null && this.f19291a.f19300i.length > position) {
+                    if (this.f19291a.f19300i[position]) {
+                        iv.setImageResource(C0965R.drawable.gps_wifi_hint_checkbox_selected);
+                        iv.setTag(Boolean.valueOf(true));
+                    } else {
+                        iv.setImageResource(C0965R.drawable.gps_wifi_hint_checkbox_normal);
+                        iv.setTag(Boolean.valueOf(false));
+                    }
+                }
+                return convertView;
+            }
         }
-        if (this.h != null)
-        {
-          localListView = (ListView)View.inflate(this.v, 2130968587, null);
-          localListView.setAdapter(this.h);
-          if (this.t != null) {
-            localListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-            {
-              public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-              {
-                BMAlertDialog.Builder.c(BMAlertDialog.Builder.this).onClick(localBMAlertDialog, paramAnonymousInt);
-                localBMAlertDialog.dismiss();
-              }
-            });
-          }
-          BMAlertDialog.f(localBMAlertDialog).removeAllViews();
-          BMAlertDialog.f(localBMAlertDialog).addView(localListView, new ViewGroup.LayoutParams(-1, -2));
-          BMAlertDialog.f(localBMAlertDialog).setVisibility(0);
-          BMAlertDialog.e(localBMAlertDialog).setVisibility(8);
-          break label124;
+
+        public Builder(Context context) {
+            this.f19313v = context;
         }
-        if (this.u != null)
-        {
-          BMAlertDialog.f(localBMAlertDialog).removeAllViews();
-          BMAlertDialog.f(localBMAlertDialog).addView(this.u, new ViewGroup.LayoutParams(-1, -2));
-          BMAlertDialog.f(localBMAlertDialog).setVisibility(0);
-          BMAlertDialog.e(localBMAlertDialog).setVisibility(8);
-          break label124;
+
+        public Context getContext() {
+            return this.f19313v;
         }
-        BMAlertDialog.e(localBMAlertDialog).setVisibility(8);
-        BMAlertDialog.f(localBMAlertDialog).setVisibility(8);
-        break label124;
-        label695:
-        BMAlertDialog.g(localBMAlertDialog).setVisibility(8);
-        break label205;
-        label707:
-        BMAlertDialog.h(localBMAlertDialog).setVisibility(8);
-        break label255;
-        label719:
-        a(BMAlertDialog.g(localBMAlertDialog), 2130837505);
-        a(BMAlertDialog.h(localBMAlertDialog), 2130837513);
-        continue;
-        label742:
-        if ((BMAlertDialog.g(localBMAlertDialog).getVisibility() == 0) || (BMAlertDialog.h(localBMAlertDialog).getVisibility() == 0))
-        {
-          BMAlertDialog.i(localBMAlertDialog).setVisibility(0);
-          a(BMAlertDialog.g(localBMAlertDialog), 2130837510);
-          a(BMAlertDialog.h(localBMAlertDialog), 2130837510);
+
+        public Builder setIcon(int resource) {
+            this.f19292a = resource;
+            return this;
         }
-        else
-        {
-          BMAlertDialog.i(localBMAlertDialog).setVisibility(8);
-          a(BMAlertDialog.e(localBMAlertDialog), 2130837509);
-          a(BMAlertDialog.f(localBMAlertDialog), 2130837509);
+
+        public Builder setTitle(int titleId) {
+            this.f19293b = this.f19313v.getText(titleId);
+            return this;
         }
-      }
-    }
-    
-    public Context getContext()
-    {
-      return this.v;
-    }
-    
-    public Builder setAdapter(ListAdapter paramListAdapter, DialogInterface.OnClickListener paramOnClickListener)
-    {
-      this.h = paramListAdapter;
-      this.t = paramOnClickListener;
-      return this;
-    }
-    
-    public Builder setCancelable(boolean paramBoolean)
-    {
-      this.k = paramBoolean;
-      return this;
-    }
-    
-    public Builder setContentCenter(boolean paramBoolean)
-    {
-      this.w = paramBoolean;
-      return this;
-    }
-    
-    public Builder setIcon(int paramInt)
-    {
-      this.a = paramInt;
-      return this;
-    }
-    
-    public Builder setItems(String[] paramArrayOfString, DialogInterface.OnClickListener paramOnClickListener)
-    {
-      if (paramArrayOfString != null) {
-        this.g = ((String[])paramArrayOfString.clone());
-      }
-      this.t = paramOnClickListener;
-      return this;
-    }
-    
-    public Builder setMessage(int paramInt)
-    {
-      this.c = this.v.getText(paramInt);
-      return this;
-    }
-    
-    public Builder setMessage(CharSequence paramCharSequence)
-    {
-      this.c = paramCharSequence;
-      return this;
-    }
-    
-    public Builder setMessageGravity(int paramInt)
-    {
-      this.d = paramInt;
-      return this;
-    }
-    
-    public Builder setMultiChoiceItems(String[] paramArrayOfString, boolean[] paramArrayOfBoolean, DialogInterface.OnMultiChoiceClickListener paramOnMultiChoiceClickListener)
-    {
-      this.g = ((String[])paramArrayOfString.clone());
-      this.i = ((boolean[])paramArrayOfBoolean.clone());
-      this.s = paramOnMultiChoiceClickListener;
-      this.j = true;
-      return this;
-    }
-    
-    public Builder setNegativeButton(int paramInt, DialogInterface.OnClickListener paramOnClickListener)
-    {
-      this.f = this.v.getText(paramInt);
-      this.o = paramOnClickListener;
-      return this;
-    }
-    
-    public Builder setNegativeButton(CharSequence paramCharSequence, DialogInterface.OnClickListener paramOnClickListener)
-    {
-      this.f = paramCharSequence;
-      this.o = paramOnClickListener;
-      return this;
-    }
-    
-    public Builder setNegativeHilighted(boolean paramBoolean)
-    {
-      this.m = paramBoolean;
-      return this;
-    }
-    
-    public Builder setOnCancelListener(DialogInterface.OnCancelListener paramOnCancelListener)
-    {
-      this.q = paramOnCancelListener;
-      return this;
-    }
-    
-    public Builder setOnDismissListener(DialogInterface.OnDismissListener paramOnDismissListener)
-    {
-      this.p = paramOnDismissListener;
-      return this;
-    }
-    
-    public Builder setOnKeyListener(DialogInterface.OnKeyListener paramOnKeyListener)
-    {
-      this.r = paramOnKeyListener;
-      return this;
-    }
-    
-    public Builder setPositiveButton(int paramInt, DialogInterface.OnClickListener paramOnClickListener)
-    {
-      this.e = this.v.getText(paramInt);
-      this.n = paramOnClickListener;
-      return this;
-    }
-    
-    public Builder setPositiveButton(CharSequence paramCharSequence, DialogInterface.OnClickListener paramOnClickListener)
-    {
-      this.e = paramCharSequence;
-      this.n = paramOnClickListener;
-      return this;
-    }
-    
-    public Builder setPositiveHilighted(boolean paramBoolean)
-    {
-      this.l = paramBoolean;
-      return this;
-    }
-    
-    public Builder setTitle(int paramInt)
-    {
-      this.b = this.v.getText(paramInt);
-      return this;
-    }
-    
-    public Builder setTitle(CharSequence paramCharSequence)
-    {
-      this.b = paramCharSequence;
-      return this;
-    }
-    
-    public Builder setView(View paramView)
-    {
-      if (paramView != null) {
-        this.u = paramView;
-      }
-      return this;
-    }
-    
-    public BMAlertDialog show()
-    {
-      BMAlertDialog localBMAlertDialog = create();
-      localBMAlertDialog.show();
-      return localBMAlertDialog;
-    }
-    
-    private class MultiChoiceAdapter
-      extends BaseAdapter
-    {
-      private MultiChoiceAdapter() {}
-      
-      public int getCount()
-      {
-        if (BMAlertDialog.Builder.d(BMAlertDialog.Builder.this) != null) {
-          return BMAlertDialog.Builder.d(BMAlertDialog.Builder.this).length;
+
+        public Builder setTitle(CharSequence title) {
+            this.f19293b = title;
+            return this;
         }
-        return 0;
-      }
-      
-      public Object getItem(int paramInt)
-      {
-        if ((BMAlertDialog.Builder.d(BMAlertDialog.Builder.this) != null) && (BMAlertDialog.Builder.d(BMAlertDialog.Builder.this).length > paramInt)) {
-          return BMAlertDialog.Builder.d(BMAlertDialog.Builder.this)[paramInt];
+
+        public Builder setContentCenter(boolean center) {
+            this.f19314w = center;
+            return this;
         }
-        return null;
-      }
-      
-      public long getItemId(int paramInt)
-      {
-        return paramInt;
-      }
-      
-      public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-      {
-        paramViewGroup = paramView;
-        if (paramView == null) {
-          paramViewGroup = View.inflate(BMAlertDialog.Builder.e(BMAlertDialog.Builder.this), 2130968586, null);
+
+        public Builder setMessage(int messageId) {
+            this.f19294c = this.f19313v.getText(messageId);
+            return this;
         }
-        paramView = (TextView)paramViewGroup.findViewById(2131624019);
-        ImageView localImageView = (ImageView)paramViewGroup.findViewById(2131624020);
-        if ((BMAlertDialog.Builder.d(BMAlertDialog.Builder.this) != null) && (BMAlertDialog.Builder.d(BMAlertDialog.Builder.this).length > paramInt)) {
-          paramView.setText(BMAlertDialog.Builder.d(BMAlertDialog.Builder.this)[paramInt]);
+
+        public Builder setMessage(CharSequence message) {
+            this.f19294c = message;
+            return this;
         }
-        if ((BMAlertDialog.Builder.a(BMAlertDialog.Builder.this) != null) && (BMAlertDialog.Builder.a(BMAlertDialog.Builder.this).length > paramInt))
-        {
-          if (BMAlertDialog.Builder.a(BMAlertDialog.Builder.this)[paramInt] != 0)
-          {
-            localImageView.setImageResource(2130838532);
-            localImageView.setTag(Boolean.valueOf(true));
-          }
+
+        public Builder setMessageGravity(int gravity) {
+            this.f19295d = gravity;
+            return this;
         }
-        else {
-          return paramViewGroup;
+
+        public Builder setPositiveButton(int textId, DialogInterface.OnClickListener listener) {
+            this.f19296e = this.f19313v.getText(textId);
+            this.f19305n = listener;
+            return this;
         }
-        localImageView.setImageResource(2130838531);
-        localImageView.setTag(Boolean.valueOf(false));
-        return paramViewGroup;
-      }
+
+        public Builder setPositiveButton(CharSequence text, DialogInterface.OnClickListener listener) {
+            this.f19296e = text;
+            this.f19305n = listener;
+            return this;
+        }
+
+        public Builder setNegativeButton(int textId, DialogInterface.OnClickListener listener) {
+            this.f19297f = this.f19313v.getText(textId);
+            this.f19306o = listener;
+            return this;
+        }
+
+        public Builder setNegativeButton(CharSequence text, DialogInterface.OnClickListener listener) {
+            this.f19297f = text;
+            this.f19306o = listener;
+            return this;
+        }
+
+        public Builder setCancelable(boolean cancelable) {
+            this.f19302k = cancelable;
+            return this;
+        }
+
+        public Builder setOnCancelListener(OnCancelListener onCancelListener) {
+            this.f19308q = onCancelListener;
+            return this;
+        }
+
+        public Builder setOnDismissListener(OnDismissListener onDismissListener) {
+            this.f19307p = onDismissListener;
+            return this;
+        }
+
+        public Builder setOnKeyListener(OnKeyListener onKeyListener) {
+            this.f19309r = onKeyListener;
+            return this;
+        }
+
+        public Builder setView(View view) {
+            if (view != null) {
+                this.f19312u = view;
+            }
+            return this;
+        }
+
+        public Builder setItems(String[] array, DialogInterface.OnClickListener listener) {
+            if (array != null) {
+                this.f19298g = (String[]) array.clone();
+            }
+            this.f19311t = listener;
+            return this;
+        }
+
+        public Builder setAdapter(ListAdapter adapter, DialogInterface.OnClickListener listener) {
+            this.f19299h = adapter;
+            this.f19311t = listener;
+            return this;
+        }
+
+        public Builder setMultiChoiceItems(String[] array, boolean[] checks, OnMultiChoiceClickListener onMultiChoiceClickListener) {
+            this.f19298g = (String[]) array.clone();
+            this.f19300i = (boolean[]) checks.clone();
+            this.f19310s = onMultiChoiceClickListener;
+            this.f19301j = true;
+            return this;
+        }
+
+        public Builder setPositiveHilighted(boolean hilight) {
+            this.f19303l = hilight;
+            return this;
+        }
+
+        public Builder setNegativeHilighted(boolean hilight) {
+            this.f19304m = hilight;
+            return this;
+        }
+
+        public BMAlertDialog show() {
+            BMAlertDialog dialog = create();
+            dialog.show();
+            return dialog;
+        }
+
+        public BMAlertDialog create() {
+            final BMAlertDialog dialog = new BMAlertDialog(this, C0965R.style.BMDialog);
+            if (this.f19293b != null) {
+                dialog.f19319e.setText(this.f19293b);
+                dialog.f19319e.setVisibility(0);
+                dialog.f19327m.setVisibility(0);
+            } else {
+                dialog.f19319e.setVisibility(8);
+                dialog.f19327m.setVisibility(8);
+            }
+            if (this.f19292a > 0) {
+                dialog.f19318d.setImageResource(this.f19292a);
+                dialog.f19318d.setVisibility(0);
+            } else {
+                dialog.f19318d.setVisibility(8);
+            }
+            if (this.f19294c != null) {
+                dialog.f19321g.setText(this.f19294c);
+                if (this.f19295d > 0) {
+                    dialog.f19321g.setGravity(this.f19295d);
+                }
+                dialog.f19320f.setVisibility(0);
+                dialog.f19322h.setVisibility(8);
+            } else if (this.f19298g != null && this.f19298g.length > 0) {
+                listView = (ListView) View.inflate(this.f19313v, C0965R.layout.alertdialog_listview, null);
+                if (this.f19301j) {
+                    listView.setAdapter(new MultiChoiceAdapter());
+                    if (this.f19310s != null) {
+                        listView.setOnItemClickListener(new OnItemClickListener(this) {
+                            /* renamed from: b */
+                            final /* synthetic */ Builder f19286b;
+
+                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                                boolean isChecked;
+                                ImageView iv = (ImageView) view.findViewById(C0965R.id.checkbox_image);
+                                if (((Boolean) iv.getTag()).booleanValue()) {
+                                    isChecked = false;
+                                } else {
+                                    isChecked = true;
+                                }
+                                this.f19286b.f19300i[position] = isChecked;
+                                if (isChecked) {
+                                    iv.setImageResource(C0965R.drawable.gps_wifi_hint_checkbox_selected);
+                                    iv.setTag(Boolean.valueOf(true));
+                                } else {
+                                    iv.setImageResource(C0965R.drawable.gps_wifi_hint_checkbox_normal);
+                                    iv.setTag(Boolean.valueOf(false));
+                                }
+                                this.f19286b.f19310s.onClick(dialog, position, isChecked);
+                            }
+                        });
+                    }
+                } else {
+                    listView.setAdapter(new ArrayAdapter(this.f19313v, this.f19314w ? C0965R.layout.alertdialog_textview_center : C0965R.layout.alertdialog_textview, this.f19298g));
+                    if (this.f19311t != null) {
+                        listView.setOnItemClickListener(new OnItemClickListener(this) {
+                            /* renamed from: b */
+                            final /* synthetic */ Builder f19288b;
+
+                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                                this.f19288b.f19311t.onClick(dialog, position);
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+                }
+                dialog.f19322h.removeAllViews();
+                dialog.f19322h.addView(listView, new LayoutParams(-1, -2));
+                dialog.f19322h.setVisibility(0);
+                dialog.f19320f.setVisibility(8);
+            } else if (this.f19299h != null) {
+                listView = (ListView) View.inflate(this.f19313v, C0965R.layout.alertdialog_listview, null);
+                listView.setAdapter(this.f19299h);
+                if (this.f19311t != null) {
+                    listView.setOnItemClickListener(new OnItemClickListener(this) {
+                        /* renamed from: b */
+                        final /* synthetic */ Builder f19290b;
+
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                            this.f19290b.f19311t.onClick(dialog, position);
+                            dialog.dismiss();
+                        }
+                    });
+                }
+                dialog.f19322h.removeAllViews();
+                dialog.f19322h.addView(listView, new LayoutParams(-1, -2));
+                dialog.f19322h.setVisibility(0);
+                dialog.f19320f.setVisibility(8);
+            } else if (this.f19312u != null) {
+                dialog.f19322h.removeAllViews();
+                dialog.f19322h.addView(this.f19312u, new LayoutParams(-1, -2));
+                dialog.f19322h.setVisibility(0);
+                dialog.f19320f.setVisibility(8);
+            } else {
+                dialog.f19320f.setVisibility(8);
+                dialog.f19322h.setVisibility(8);
+            }
+            dialog.setOnCancelListener(this.f19308q);
+            dialog.setOnDismissListener(this.f19307p);
+            if (this.f19309r != null) {
+                dialog.setOnKeyListener(this.f19309r);
+            }
+            if (this.f19296e != null) {
+                dialog.f19324j.setText(this.f19296e);
+                dialog.f19324j.setOnClickListener(dialog);
+                dialog.f19324j.setVisibility(0);
+                if (this.f19303l) {
+                    dialog.f19324j.setTextColor(HILIGHTED_TEXT_COLOR);
+                }
+            } else {
+                dialog.f19324j.setVisibility(8);
+            }
+            if (this.f19297f != null) {
+                dialog.f19325k.setText(this.f19297f);
+                dialog.f19325k.setOnClickListener(dialog);
+                dialog.f19325k.setVisibility(0);
+                if (this.f19304m) {
+                    dialog.f19325k.setTextColor(HILIGHTED_TEXT_COLOR);
+                }
+            } else {
+                dialog.f19325k.setVisibility(8);
+            }
+            if (dialog.f19324j.getVisibility() == 0 && dialog.f19325k.getVisibility() == 0) {
+                dialog.f19323i.setVisibility(0);
+                if (m15239b()) {
+                    m15235a(dialog.f19324j, C0965R.drawable.alert_dialog_rightbutton);
+                    m15235a(dialog.f19325k, C0965R.drawable.alert_dialog_leftbutton);
+                } else {
+                    m15235a(dialog.f19324j, C0965R.drawable.alert_dialog_leftbutton);
+                    m15235a(dialog.f19325k, C0965R.drawable.alert_dialog_rightbutton);
+                }
+            } else if (dialog.f19324j.getVisibility() == 0 || dialog.f19325k.getVisibility() == 0) {
+                dialog.f19323i.setVisibility(0);
+                m15235a(dialog.f19324j, C0965R.drawable.alert_dialog_midbutton);
+                m15235a(dialog.f19325k, C0965R.drawable.alert_dialog_midbutton);
+            } else {
+                dialog.f19323i.setVisibility(8);
+                m15235a(dialog.f19320f, C0965R.drawable.alert_dialog_message_bg2);
+                m15235a(dialog.f19322h, C0965R.drawable.alert_dialog_message_bg2);
+            }
+            dialog.setCancelable(this.f19302k);
+            return dialog;
+        }
+
+        /* renamed from: a */
+        private void m15235a(View button, int resource) {
+            if (button != null) {
+                try {
+                    button.setBackgroundResource(resource);
+                } catch (Exception e) {
+                    button.setBackgroundResource(0);
+                }
+            }
+        }
+
+        /* renamed from: b */
+        private static boolean m15239b() {
+            return VERSION.SDK_INT >= 14;
+        }
     }
-  }
+
+    private BMAlertDialog(Context context) {
+        super(context);
+    }
+
+    public BMAlertDialog(Builder builder, int theme) {
+        super(builder.getContext(), theme);
+        this.f19326l = builder;
+        if (Builder.m15239b()) {
+            this.f19317c = (LinearLayout) m15245a(builder, C0965R.layout.bm_alert_dialog2);
+        } else {
+            this.f19317c = (LinearLayout) m15245a(builder, C0965R.layout.bm_alert_dialog);
+        }
+        if (this.f19317c != null) {
+            this.f19317c.setMinimumWidth(SysOSAPIv2.getInstance().getScreenWidth());
+            this.f19318d = (ImageView) this.f19317c.findViewById(C0965R.id.alertIcon);
+            this.f19319e = (TextView) this.f19317c.findViewById(C0965R.id.alertTitle);
+            this.f19320f = (LinearLayout) this.f19317c.findViewById(C0965R.id.contentPanel);
+            this.f19321g = (TextView) this.f19317c.findViewById(C0965R.id.message);
+            this.f19322h = (RelativeLayout) this.f19317c.findViewById(C0965R.id.customPanel);
+            this.f19323i = (LinearLayout) this.f19317c.findViewById(C0965R.id.buttonPanel);
+            this.f19324j = (Button) this.f19317c.findViewById(C0965R.id.positiveButton);
+            this.f19325k = (Button) this.f19317c.findViewById(C0965R.id.negativeButton);
+            this.f19327m = (LinearLayout) this.f19317c.findViewById(C0965R.id.topPanel);
+        }
+    }
+
+    /* renamed from: a */
+    private View m15245a(Builder builder, int layout) {
+        View view = null;
+        try {
+            view = LayoutInflater.from(builder.getContext()).inflate(layout, null);
+        } catch (Exception e) {
+            try {
+                view = LayoutInflater.from(builder.getContext()).inflate(layout, null);
+            } catch (Exception e2) {
+            }
+        }
+        return view;
+    }
+
+    public void show() {
+        if (this.f19317c != null && m15247a(this.f19326l.getContext())) {
+            setContentView(this.f19317c, new LayoutParams(-1, -2));
+            super.show();
+        }
+    }
+
+    public void updateMessage(CharSequence message) {
+        if (this.f19321g != null && message != null) {
+            this.f19321g.setText(message);
+        }
+    }
+
+    /* renamed from: a */
+    private boolean m15247a(Context activity) {
+        return (activity == null || ((Activity) activity).isFinishing()) ? false : true;
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case C0965R.id.positiveButton:
+                if (this.f19326l.f19305n != null) {
+                    this.f19326l.f19305n.onClick(this, -1);
+                }
+                dismiss();
+                return;
+            case C0965R.id.negativeButton:
+                if (this.f19326l.f19306o != null) {
+                    this.f19326l.f19306o.onClick(this, -2);
+                }
+                dismiss();
+                return;
+            default:
+                return;
+        }
+    }
+
+    public View getButton(int button) {
+        switch (button) {
+            case -2:
+                return this.f19325k;
+            case -1:
+                return this.f19324j;
+            default:
+                return null;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/widget/BMAlertDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

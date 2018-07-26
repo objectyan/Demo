@@ -8,43 +8,65 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import com.baidu.baidumaps.base.localmap.C0692f;
 import com.baidu.baidunavis.NavMapAdapter;
 import com.baidu.carlife.BaiduNaviApplication;
-import com.baidu.carlife.CarlifeActivity;
+import com.baidu.carlife.C0965R;
 import com.baidu.carlife.KeyboardService;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.screen.BaseDialog;
-import com.baidu.carlife.logic.o;
-import com.baidu.carlife.logic.t;
-import com.baidu.carlife.logic.t.b;
-import com.baidu.carlife.logic.voice.n;
+import com.baidu.carlife.bluetooth.C1043a;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1192c;
+import com.baidu.carlife.core.C1251e;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.p056a.C1268a;
+import com.baidu.carlife.logic.C1710a;
+import com.baidu.carlife.logic.C1856o;
+import com.baidu.carlife.logic.C1868q;
+import com.baidu.carlife.logic.C1872t;
+import com.baidu.carlife.logic.C1872t.C1318b;
+import com.baidu.carlife.logic.music.C1818h;
+import com.baidu.carlife.logic.voice.C1912n;
+import com.baidu.carlife.p052m.C1917b;
 import com.baidu.carlife.service.PhoneStateService;
-import com.baidu.carlife.util.p;
-import com.baidu.carlife.util.w;
-import com.baidu.carlife.view.dialog.q.a;
-import com.baidu.carlife.view.g;
+import com.baidu.carlife.util.C2177h;
+import com.baidu.carlife.util.C2186p;
+import com.baidu.carlife.util.C2201w;
+import com.baidu.carlife.view.C2256c;
+import com.baidu.carlife.view.C2342g;
+import com.baidu.carlife.view.dialog.C1953c;
+import com.baidu.carlife.view.dialog.C2278e;
+import com.baidu.carlife.view.dialog.C2308q;
+import com.baidu.carlife.view.dialog.C2308q.C1518a;
+import com.baidu.che.codriver.sdk.p081a.C2602k.C1981b;
 import com.baidu.navi.ActivityStack;
+import com.baidu.navi.adapter.DistrictAdapter;
 import com.baidu.navi.common.util.StorageInformation;
 import com.baidu.navi.common.util.StorageSettings;
 import com.baidu.navi.controller.HomeController;
 import com.baidu.navi.fragment.ContentFragment;
+import com.baidu.navi.fragment.NaviFragmentManager;
+import com.baidu.navi.fragment.carmode.CarModeOfflineDataFragment;
 import com.baidu.navi.location.LocationManager;
 import com.baidu.navi.logic.model.UIModel;
 import com.baidu.navi.track.datashop.TrackDataShop;
 import com.baidu.navi.util.NaviAccountUtils;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.navi.voice.NaviState;
+import com.baidu.navisdk.CommonParams.Key;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandController;
 import com.baidu.navisdk.model.GeoLocateModel;
+import com.baidu.navisdk.ui.ugc.model.BNRCEventDetailsModel;
 import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.util.common.AudioUtils;
 import com.baidu.navisdk.util.common.FileUtils;
+import com.baidu.navisdk.util.common.PackageUtil;
 import com.baidu.navisdk.util.common.PreferenceHelper;
 import com.baidu.navisdk.util.common.SDCardUtils;
 import com.baidu.navisdk.util.db.DBManager;
@@ -53,490 +75,469 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-public class LaunchFragment
-  extends ContentFragment
-{
-  public static String a = LaunchFragment.class.getSimpleName();
-  protected static final int b = 9002;
-  private static final int c = 2;
-  private static final int d = 9007;
-  private static final int e = 9005;
-  private static final int f = 9004;
-  private static final int g = 9003;
-  private static final int h = 9001;
-  private com.baidu.carlife.view.dialog.e i;
-  private String j = null;
-  private int[] k = new int[36];
-  private int[] l = new int[1];
-  private Handler m = null;
-  private ViewGroup n = null;
-  private boolean o;
-  private volatile int p = 0;
-  private t.b q = new b(null);
-  
-  private String a(long paramLong)
-  {
-    long l1 = paramLong;
-    if (paramLong < 0L) {
-      l1 = 0L;
-    }
-    if (l1 < 1048576L) {
-      return String.format(Locale.getDefault(), "%.1fK", new Object[] { Double.valueOf(l1 / 1024.0D) });
-    }
-    if (l1 < 1073741824L) {
-      return String.format(Locale.getDefault(), "%.1fM", new Object[] { Double.valueOf(l1 / 1024.0D / 1024.0D) });
-    }
-    return String.format(Locale.getDefault(), "%.1fG", new Object[] { Double.valueOf(l1 / 1024.0D / 1024.0D / 1024.0D) });
-  }
-  
-  private void a()
-  {
-    if (this.p >= 2)
-    {
-      this.m.sendEmptyMessage(9004);
-      this.p = 0;
-    }
-  }
-  
-  private void a(final String paramString)
-  {
-    if (p.a().a("needDeleteOldMapData", true))
-    {
-      new Thread(new Runnable()
-      {
-        public void run()
-        {
-          try
-          {
-            File localFile = new File(paramString + File.separator + com.baidu.carlife.core.f.hM + File.separator + "tmp");
-            i.b("LaunchFragmet", "file : " + localFile.getAbsolutePath());
-            if (localFile.exists()) {
-              com.baidu.carlife.util.h.a(localFile);
+public class LaunchFragment extends ContentFragment {
+    /* renamed from: a */
+    public static String f4526a = LaunchFragment.class.getSimpleName();
+    /* renamed from: b */
+    protected static final int f4527b = 9002;
+    /* renamed from: c */
+    private static final int f4528c = 2;
+    /* renamed from: d */
+    private static final int f4529d = 9007;
+    /* renamed from: e */
+    private static final int f4530e = 9005;
+    /* renamed from: f */
+    private static final int f4531f = 9004;
+    /* renamed from: g */
+    private static final int f4532g = 9003;
+    /* renamed from: h */
+    private static final int f4533h = 9001;
+    /* renamed from: i */
+    private C2278e f4534i;
+    /* renamed from: j */
+    private String f4535j = null;
+    /* renamed from: k */
+    private int[] f4536k = new int[36];
+    /* renamed from: l */
+    private int[] f4537l = new int[1];
+    /* renamed from: m */
+    private Handler f4538m = null;
+    /* renamed from: n */
+    private ViewGroup f4539n = null;
+    /* renamed from: o */
+    private boolean f4540o;
+    /* renamed from: p */
+    private volatile int f4541p = 0;
+    /* renamed from: q */
+    private C1318b f4542q = new C1523b();
+
+    /* renamed from: com.baidu.carlife.fragment.LaunchFragment$1 */
+    class C15141 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ LaunchFragment f4510a;
+
+        C15141(LaunchFragment this$0) {
+            this.f4510a = this$0;
+        }
+
+        public void run() {
+            try {
+                TrackDataShop.getInstance().clearBeforSixMonthGPSFile(NaviAccountUtils.getInstance().getUid());
+            } catch (Exception e) {
+                C1260i.m4435b(LaunchFragment.f4526a, "SapiAccountManager have not been initialized");
             }
-            p.a().c("needDeleteOldMapData", false);
-            LaunchFragment.f(LaunchFragment.this).sendEmptyMessage(9001);
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.LaunchFragment$2 */
+    class C15152 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ LaunchFragment f4511a;
+
+        C15152(LaunchFragment this$0) {
+            this.f4511a = this$0;
+        }
+
+        public void onClick() {
+            ActivityStack.exitApp(false);
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.LaunchFragment$3 */
+    class C15163 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ LaunchFragment f4512a;
+
+        C15163(LaunchFragment this$0) {
+            this.f4512a = this$0;
+        }
+
+        public void onClick() {
+            ActivityStack.exitApp(false);
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.LaunchFragment$4 */
+    class C15174 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ LaunchFragment f4513a;
+
+        C15174(LaunchFragment this$0) {
+            this.f4513a = this$0;
+        }
+
+        public void onClick() {
+            ActivityStack.exitApp(false);
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.LaunchFragment$a */
+    private static class C1522a extends Handler {
+        /* renamed from: a */
+        private final WeakReference<LaunchFragment> f4524a;
+
+        public C1522a(LaunchFragment launchFragment) {
+            this.f4524a = new WeakReference(launchFragment);
+        }
+
+        public void handleMessage(Message msg) {
+            LaunchFragment launchFragment = (LaunchFragment) this.f4524a.get();
+            if (launchFragment != null) {
+                switch (msg.what) {
+                    case 1301:
+                        if (msg.arg1 == 0) {
+                            launchFragment.f4541p = launchFragment.f4541p + 1;
+                            C1260i.m4434b("initEngine");
+                            launchFragment.m5535a();
+                            return;
+                        }
+                        launchFragment.f4538m.sendMessage(launchFragment.f4538m.obtainMessage(9002));
+                        return;
+                    case 9001:
+                        launchFragment.m5537a(launchFragment.f4535j);
+                        return;
+                    case 9002:
+                        C1192c.m4069a().m4077c(false);
+                        launchFragment.m5552i();
+                        return;
+                    case 9004:
+                        C1192c.m4069a().m4077c(true);
+                        launchFragment.m5541c();
+                        return;
+                    case 9005:
+                        C2201w.m8373a("请等待导航初始化成功", 0);
+                        return;
+                    case 9007:
+                        launchFragment.m5551h();
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.LaunchFragment$b */
+    private class C1523b implements C1318b {
+        /* renamed from: a */
+        final /* synthetic */ LaunchFragment f4525a;
+
+        private C1523b(LaunchFragment launchFragment) {
+            this.f4525a = launchFragment;
+        }
+
+        /* renamed from: b */
+        public void mo1481b(boolean isSuccess) {
+            this.f4525a.f4541p = this.f4525a.f4541p + 1;
+            this.f4525a.m5535a();
+        }
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        C1260i.m4428a(f4526a + " show");
+        this.f4538m = new C1522a(this);
+    }
+
+    /* renamed from: a */
+    private void m5535a() {
+        if (this.f4541p >= 2) {
+            this.f4538m.sendEmptyMessage(9004);
+            this.f4541p = 0;
+        }
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.f4539n = (ViewGroup) inflater.inflate(C0965R.layout.frag_launch, null);
+        return this.f4539n;
+    }
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        m5539b();
+        C1260i.m4428a("initEngine");
+        m5553j();
+    }
+
+    public void onResume() {
+        super.onResume();
+        C1260i.m4434b(f4526a);
+    }
+
+    public boolean onBackPressed() {
+        return true;
+    }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        C1872t.m7136a().m7158b(this.f4542q);
+        if (VERSION.SDK_INT <= 16) {
+            removeAllFragmentByType(514);
+            mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        } else if (mActivity != null && !mActivity.isDestroyed()) {
+            removeAllFragmentByType(514);
+            mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+    }
+
+    public void onDetach() {
+        C1260i.m4434b(f4526a + " show");
+        super.onDetach();
+    }
+
+    /* renamed from: b */
+    private void m5539b() {
+        KeyboardService.getInstance().init(mActivity, mActivity.m3125u());
+        C1260i.m4428a(C1872t.f5804a);
+        C1872t.m7136a().m7150a(mActivity);
+        C1872t.m7136a().m7151a(this.f4542q);
+        C1868q.m7089f().m7121g();
+        PhoneStateService.m8212a(mActivity);
+        C1251e.m4385w();
+        PackageUtil.strChannel = C1253f.jt;
+        StatisticManager.setAppChannel(C1253f.jt);
+        C1268a.m4481b().m4484a();
+        C1043a.m3360a().m3375a(mActivity);
+        push(createFragment(NaviFragmentManager.TYPE_HOME));
+        push(createFragment(519));
+        push(createFragment(NaviFragmentManager.TYPE_MUSIC_PLAYER));
+        C1912n.m7270a().m7294a(mActivity);
+        C1818h.m6730b().m6782a();
+    }
+
+    /* renamed from: c */
+    private void m5541c() {
+        C1260i.m4428a("after initEngine");
+        m5543d();
+        C2342g.m8864e().m8885a();
+        DBManager.init(BaiduNaviApplication.getInstance());
+        C1856o.m7042a().m7046c();
+        NaviState.getInstance().registerCustomCmd();
+        m5554k();
+        BNSettingManager.setPowerSaveMode(2);
+        BNSettingManager.setPushMode(false);
+        BNSettingManager.setUgcShow(false);
+        AudioUtils.init();
+        GeoLocateModel.getInstance().asyncGetCurrentDistricts();
+        mActivity.m3111g();
+        C2256c.m8570a().m8572a(mActivity, mActivity.m3125u());
+        C1710a.m6207a().m6253a(mActivity, mActivity.m3125u());
+        C1710a.m6207a().m6255a(true);
+        m5545e();
+        BNVoiceCommandController.getInstance().init();
+        UIModel.syncAddressToCoDriverForAppStart();
+        if (m5555l()) {
+            m5550g();
+        } else if (C1192c.m4069a().m4078c()) {
+            m5551h();
+        } else {
+            showFragment(515, null);
+        }
+        C1192c.m4069a().m4079d(true);
+        m5548f();
+        C1260i.m4434b("after initEngine");
+    }
+
+    /* renamed from: d */
+    private void m5543d() {
+        FileUtils.copyAssetsFile(C1157a.m3876a().getAssets(), "cfg/a/mode_17/map.rs", SysOSAPIv2.getInstance().getOutputDirPath() + File.separator + "cfg/a/mode_17", "map.rs");
+        FileUtils.copyAssetsFile(C1157a.m3876a().getAssets(), "cfg/a/mode_17/map.sty", SysOSAPIv2.getInstance().getOutputDirPath() + File.separator + "cfg/a/mode_17", "map.sty");
+    }
+
+    /* renamed from: e */
+    private void m5545e() {
+        new HomeController(mActivity, mActivity.m3125u()).checkNewVerDataAndUpgrade();
+    }
+
+    /* renamed from: f */
+    private void m5548f() {
+        if (this.f4538m != null) {
+            this.f4538m.postDelayed(new C15141(this), 3000);
+        }
+    }
+
+    /* renamed from: g */
+    private void m5550g() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("firstEnter", true);
+        showFragment(516, bundle);
+    }
+
+    /* renamed from: h */
+    private void m5551h() {
+        C1260i.m4428a(HomeFragment.f4452a);
+        showFragment(NaviFragmentManager.TYPE_HOME, null);
+    }
+
+    /* renamed from: i */
+    private void m5552i() {
+        C1953c commonDialog = new C1953c(getContext()).m7442b((int) C0965R.string.alert_notification).m7435a((int) C0965R.string.alert_engine_init_failed).m7447c((int) C0965R.string.alert_confirm).m7458q();
+        commonDialog.m7438a(new C15152(this));
+        showDialog(commonDialog);
+    }
+
+    /* renamed from: j */
+    private void m5553j() {
+        final StorageInformation currentStorage = StorageSettings.getInstance().getCurrentStorage();
+        final List<StorageInformation> allStorages = StorageSettings.getInstance().getAllStorages();
+        final ArrayList<HashMap<String, Object>> choiceData = new ArrayList();
+        C1953c commonDialog;
+        if (allStorages.size() == 0) {
+            commonDialog = new C1953c(getContext()).m7442b((int) C0965R.string.alert_notification).m7435a((int) C0965R.string.alert_no_sdcard).m7447c((int) C0965R.string.quit).m7457g(17).m7458q();
+            commonDialog.m7438a((C0672b) new C15163(this));
+            showDialog(commonDialog);
+        } else if (allStorages.size() < 2) {
+            this.f4535j = currentStorage.getRootPath();
+            if (SDCardUtils.writeTestFileToSdcard(this.f4535j)) {
+                m5537a(this.f4535j);
+                return;
+            }
+            commonDialog = new C1953c(getContext()).m7442b((int) C0965R.string.alert_notification).m7435a((int) C0965R.string.alert_no_sdcard).m7447c((int) C0965R.string.quit).m7457g(17).m7458q();
+            commonDialog.m7438a((C0672b) new C15174(this));
+            showDialog(commonDialog);
+        } else {
+            String choosePath = PreferenceHelper.getInstance(getContext()).getString(Key.SP_COMMON_CHOOSED_SDCARD_PATH, "null");
+            if (!choosePath.equals("null") && choosePath.equals(currentStorage.getRootPath())) {
+                this.f4535j = choosePath;
+                if (SDCardUtils.writeTestFileToSdcard(this.f4535j)) {
+                    m5537a(this.f4535j);
+                    return;
+                }
+            }
+            for (StorageInformation storage : allStorages) {
+                HashMap<String, Object> data = new HashMap();
+                if (storage.getAvailableBytes() == -1) {
+                    data.put(C1981b.f6362b, storage.getRootPath() + " 剩余空间:未知");
+                } else {
+                    data.put(C1981b.f6362b, storage.getRootPath() + " 剩余空间:" + m5534a(storage.getAvailableBytes()));
+                }
+                data.put(BNRCEventDetailsModel.BN_RC_KEY_LABEL, storage.getLabel());
+                data.put(DistrictAdapter.CURRENT_LOCATION, storage.equals(currentStorage) ? "(当前使用)" : "");
+                data.put("check", SysOSAPIv2.getInstance().checkExistsOfflineData(storage.getRootPath()).booleanValue() ? Boolean.TRUE : Boolean.FALSE);
+                choiceData.add(data);
+            }
+            final C2308q chooseSDcardDialog = new C2308q(getContext(), choiceData);
+            showDialog(chooseSDcardDialog);
+            final ListView mListView = chooseSDcardDialog.getListView();
+            chooseSDcardDialog.m8784a((C1518a) new C1518a(this) {
+                /* renamed from: d */
+                final /* synthetic */ LaunchFragment f4517d;
+
+                /* renamed from: a */
+                public void mo1574a() {
+                    int pos = chooseSDcardDialog.getmCheckedPosition();
+                    if (pos < 0 || pos >= allStorages.size()) {
+                        TipTool.onCreateToastDialog(this.f4517d.getContext(), C0965R.string.alert_sdcard_no_choose);
+                        return;
+                    }
+                    StorageInformation newStorage = (StorageInformation) allStorages.get(pos);
+                    this.f4517d.f4535j = newStorage.getRootPath();
+                    if (this.f4517d.f4535j == null || !SDCardUtils.writeTestFileToSdcard(this.f4517d.f4535j)) {
+                        TipTool.onCreateToastDialog(this.f4517d.getContext(), C0965R.string.alert_sdcard_cannot_use);
+                        return;
+                    }
+                    if (!currentStorage.getRootPath().equals(newStorage.getRootPath())) {
+                        StorageSettings.getInstance().setPreferredStorage(C1157a.m3876a(), newStorage);
+                        StorageSettings.getInstance().reInitialize(C1157a.m3876a());
+                    }
+                    this.f4517d.f4535j = StorageSettings.getInstance().getCurrentStorage().getRootPath();
+                    PreferenceHelper.getInstance(this.f4517d.getContext()).putString(Key.SP_COMMON_CHOOSED_SDCARD_PATH, this.f4517d.f4535j);
+                    this.f4517d.m5537a(this.f4517d.f4535j);
+                    this.f4517d.dismissDialog(chooseSDcardDialog);
+                }
+            });
+            mListView.setOnItemClickListener(new OnItemClickListener(this) {
+                /* renamed from: d */
+                final /* synthetic */ LaunchFragment f4521d;
+
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                    for (int i = 0; i < choiceData.size(); i++) {
+                        if (i == position) {
+                            ((HashMap) choiceData.get(i)).put("check", Boolean.TRUE);
+                        } else {
+                            ((HashMap) choiceData.get(i)).put("check", Boolean.FALSE);
+                        }
+                    }
+                    chooseSDcardDialog.setmCheckedPosition(position);
+                    ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    /* renamed from: a */
+    private String m5534a(long size) {
+        if (size < 0) {
+            size = 0;
+        }
+        if (size < 1048576) {
+            return String.format(Locale.getDefault(), "%.1fK", new Object[]{Double.valueOf(((double) size) / 1024.0d)});
+        } else if (size < 1073741824) {
+            return String.format(Locale.getDefault(), "%.1fM", new Object[]{Double.valueOf((((double) size) / 1024.0d) / 1024.0d)});
+        } else {
+            return String.format(Locale.getDefault(), "%.1fG", new Object[]{Double.valueOf(((((double) size) / 1024.0d) / 1024.0d) / 1024.0d)});
+        }
+    }
+
+    /* renamed from: a */
+    private void m5537a(final String sdcardPath) {
+        if (C2186p.m8304a().m8312a(CarModeOfflineDataFragment.NEED_DELETE_DATA, true)) {
+            new Thread(new Runnable(this) {
+                /* renamed from: b */
+                final /* synthetic */ LaunchFragment f4523b;
+
+                public void run() {
+                    try {
+                        File file = new File(sdcardPath + File.separator + C1253f.hM + File.separator + "tmp");
+                        C1260i.m4435b("LaunchFragmet", "file : " + file.getAbsolutePath());
+                        if (file.exists()) {
+                            C2177h.m8270a(file);
+                        }
+                    } catch (Exception e) {
+                    }
+                    C2186p.m8304a().m8323c(CarModeOfflineDataFragment.NEED_DELETE_DATA, false);
+                    this.f4523b.f4538m.sendEmptyMessage(9001);
+                }
+            }).start();
             return;
-          }
-          catch (Exception localException)
-          {
-            for (;;) {}
-          }
         }
-      }).start();
-      return;
+        C1917b.m7339a();
+        NaviAccountUtils.getInstance().initAccount(BaiduNaviApplication.getInstance());
+        LocationManager.getInstance().init(BaiduNaviApplication.getInstance());
+        LocationManager.getInstance().onResume();
+        mActivity.m3118n();
+        NavMapAdapter.getInstance().initNaviEngine(mActivity, this.f4538m);
+        C0692f.m2894a().m2928b();
+        C0692f.m2894a().m2948n();
     }
-    com.baidu.carlife.m.b.a();
-    NaviAccountUtils.getInstance().initAccount(BaiduNaviApplication.getInstance());
-    LocationManager.getInstance().init(BaiduNaviApplication.getInstance());
-    LocationManager.getInstance().onResume();
-    mActivity.n();
-    NavMapAdapter.getInstance().initNaviEngine(mActivity, this.m);
-    com.baidu.baidumaps.base.localmap.f.a().b();
-    com.baidu.baidumaps.base.localmap.f.a().n();
-  }
-  
-  private void b()
-  {
-    KeyboardService.getInstance().init(mActivity, mActivity.u());
-    i.a(t.a);
-    t.a().a(mActivity);
-    t.a().a(this.q);
-    com.baidu.carlife.logic.q.f().g();
-    PhoneStateService.a(mActivity);
-    com.baidu.carlife.core.e.w();
-    com.baidu.navisdk.util.common.PackageUtil.strChannel = com.baidu.carlife.core.f.jt;
-    StatisticManager.setAppChannel(com.baidu.carlife.core.f.jt);
-    com.baidu.carlife.core.screen.a.a.b().a();
-    com.baidu.carlife.bluetooth.a.a().a(mActivity);
-    push(createFragment(531));
-    push(createFragment(519));
-    push(createFragment(737));
-    n.a().a(mActivity);
-    com.baidu.carlife.logic.music.h.b().a();
-  }
-  
-  private void c()
-  {
-    i.a("after initEngine");
-    d();
-    g.e().a();
-    DBManager.init(BaiduNaviApplication.getInstance());
-    o.a().c();
-    NaviState.getInstance().registerCustomCmd();
-    k();
-    BNSettingManager.setPowerSaveMode(2);
-    BNSettingManager.setPushMode(false);
-    BNSettingManager.setUgcShow(false);
-    AudioUtils.init();
-    GeoLocateModel.getInstance().asyncGetCurrentDistricts();
-    mActivity.g();
-    com.baidu.carlife.view.c.a().a(mActivity, mActivity.u());
-    com.baidu.carlife.logic.a.a().a(mActivity, mActivity.u());
-    com.baidu.carlife.logic.a.a().a(true);
-    e();
-    BNVoiceCommandController.getInstance().init();
-    UIModel.syncAddressToCoDriverForAppStart();
-    if (l()) {
-      g();
-    }
-    for (;;)
-    {
-      com.baidu.carlife.core.c.a().d(true);
-      f();
-      i.b("after initEngine");
-      return;
-      if (com.baidu.carlife.core.c.a().c()) {
-        h();
-      } else {
-        showFragment(515, null);
-      }
-    }
-  }
-  
-  private void d()
-  {
-    FileUtils.copyAssetsFile(com.baidu.carlife.core.a.a().getAssets(), "cfg/a/mode_17/map.rs", SysOSAPIv2.getInstance().getOutputDirPath() + File.separator + "cfg/a/mode_17", "map.rs");
-    FileUtils.copyAssetsFile(com.baidu.carlife.core.a.a().getAssets(), "cfg/a/mode_17/map.sty", SysOSAPIv2.getInstance().getOutputDirPath() + File.separator + "cfg/a/mode_17", "map.sty");
-  }
-  
-  private void e()
-  {
-    new HomeController(mActivity, mActivity.u()).checkNewVerDataAndUpgrade();
-  }
-  
-  private void f()
-  {
-    if (this.m != null) {
-      this.m.postDelayed(new Runnable()
-      {
-        public void run()
-        {
-          try
-          {
-            TrackDataShop.getInstance().clearBeforSixMonthGPSFile(NaviAccountUtils.getInstance().getUid());
-            return;
-          }
-          catch (Exception localException)
-          {
-            i.b(LaunchFragment.a, "SapiAccountManager have not been initialized");
-          }
+
+    /* renamed from: k */
+    private void m5554k() {
+        BNSettingManager.setDefaultLaunchMode(1);
+        int launchMode = BNSettingManager.getDefaultLaunchMode();
+        if (launchMode == 0) {
+            BNSettingManager.setCurrentUsingMode(1);
+        } else if (1 == launchMode) {
+            BNSettingManager.setCurrentUsingMode(1);
+        } else {
+            BNSettingManager.setCurrentUsingMode(2);
         }
-      }, 3000L);
     }
-  }
-  
-  private void g()
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putBoolean("firstEnter", true);
-    showFragment(516, localBundle);
-  }
-  
-  private void h()
-  {
-    i.a(HomeFragment.a);
-    showFragment(531, null);
-  }
-  
-  private void i()
-  {
-    com.baidu.carlife.view.dialog.c localc = new com.baidu.carlife.view.dialog.c(getContext()).b(2131296284).a(2131296274).c(2131296264).q();
-    localc.a(new com.baidu.carlife.core.screen.b()
-    {
-      public void onClick()
-      {
-        ActivityStack.exitApp(false);
-      }
-    });
-    showDialog(localc);
-  }
-  
-  private void j()
-  {
-    final StorageInformation localStorageInformation1 = StorageSettings.getInstance().getCurrentStorage();
-    final List localList = StorageSettings.getInstance().getAllStorages();
-    final ArrayList localArrayList = new ArrayList();
-    if (localList.size() == 0)
-    {
-      localObject1 = new com.baidu.carlife.view.dialog.c(getContext()).b(2131296284).a(2131296282).c(2131296869).g(17).q();
-      ((com.baidu.carlife.view.dialog.c)localObject1).a(new com.baidu.carlife.core.screen.b()
-      {
-        public void onClick()
-        {
-          ActivityStack.exitApp(false);
-        }
-      });
-      showDialog((BaseDialog)localObject1);
-      return;
+
+    /* renamed from: l */
+    private boolean m5555l() {
+        return C1192c.m4069a().m4076b();
     }
-    if (localList.size() < 2)
-    {
-      this.j = localStorageInformation1.getRootPath();
-      if (SDCardUtils.writeTestFileToSdcard(this.j))
-      {
-        a(this.j);
-        return;
-      }
-      localObject1 = new com.baidu.carlife.view.dialog.c(getContext()).b(2131296284).a(2131296282).c(2131296869).g(17).q();
-      ((com.baidu.carlife.view.dialog.c)localObject1).a(new com.baidu.carlife.core.screen.b()
-      {
-        public void onClick()
-        {
-          ActivityStack.exitApp(false);
-        }
-      });
-      showDialog((BaseDialog)localObject1);
-      return;
-    }
-    final Object localObject1 = PreferenceHelper.getInstance(getContext()).getString("SP_COMMON_CHOOSED_SDCARD_PATH", "null");
-    if ((!((String)localObject1).equals("null")) && (((String)localObject1).equals(localStorageInformation1.getRootPath())))
-    {
-      this.j = ((String)localObject1);
-      if (SDCardUtils.writeTestFileToSdcard(this.j))
-      {
-        a(this.j);
-        return;
-      }
-    }
-    final Object localObject2 = localList.iterator();
-    if (((Iterator)localObject2).hasNext())
-    {
-      StorageInformation localStorageInformation2 = (StorageInformation)((Iterator)localObject2).next();
-      HashMap localHashMap = new HashMap();
-      if (localStorageInformation2.getAvailableBytes() == -1L)
-      {
-        localHashMap.put("volume", localStorageInformation2.getRootPath() + " 剩余空间:未知");
-        label329:
-        localHashMap.put("label", localStorageInformation2.getLabel());
-        if (!localStorageInformation2.equals(localStorageInformation1)) {
-          break label456;
-        }
-        localObject1 = "(当前使用)";
-        label356:
-        localHashMap.put("current", localObject1);
-        if (!SysOSAPIv2.getInstance().checkExistsOfflineData(localStorageInformation2.getRootPath()).booleanValue()) {
-          break label463;
-        }
-      }
-      label456:
-      label463:
-      for (localObject1 = Boolean.TRUE;; localObject1 = Boolean.FALSE)
-      {
-        localHashMap.put("check", localObject1);
-        localArrayList.add(localHashMap);
-        break;
-        localHashMap.put("volume", localStorageInformation2.getRootPath() + " 剩余空间:" + a(localStorageInformation2.getAvailableBytes()));
-        break label329;
-        localObject1 = "";
-        break label356;
-      }
-    }
-    localObject1 = new com.baidu.carlife.view.dialog.q(getContext(), localArrayList);
-    showDialog((BaseDialog)localObject1);
-    localObject2 = ((com.baidu.carlife.view.dialog.q)localObject1).getListView();
-    ((com.baidu.carlife.view.dialog.q)localObject1).a(new q.a()
-    {
-      public void a()
-      {
-        int i = localObject1.getmCheckedPosition();
-        if ((i < 0) || (i >= localList.size()))
-        {
-          TipTool.onCreateToastDialog(LaunchFragment.this.getContext(), 2131296290);
-          return;
-        }
-        StorageInformation localStorageInformation = (StorageInformation)localList.get(i);
-        LaunchFragment.b(LaunchFragment.this, localStorageInformation.getRootPath());
-        if ((LaunchFragment.g(LaunchFragment.this) != null) && (SDCardUtils.writeTestFileToSdcard(LaunchFragment.g(LaunchFragment.this))))
-        {
-          if (!localStorageInformation1.getRootPath().equals(localStorageInformation.getRootPath()))
-          {
-            StorageSettings.getInstance().setPreferredStorage(com.baidu.carlife.core.a.a(), localStorageInformation);
-            StorageSettings.getInstance().reInitialize(com.baidu.carlife.core.a.a());
-          }
-          LaunchFragment.b(LaunchFragment.this, StorageSettings.getInstance().getCurrentStorage().getRootPath());
-          PreferenceHelper.getInstance(LaunchFragment.this.getContext()).putString("SP_COMMON_CHOOSED_SDCARD_PATH", LaunchFragment.g(LaunchFragment.this));
-          LaunchFragment.a(LaunchFragment.this, LaunchFragment.g(LaunchFragment.this));
-          LaunchFragment.this.dismissDialog(localObject1);
-          return;
-        }
-        TipTool.onCreateToastDialog(LaunchFragment.this.getContext(), 2131296289);
-      }
-    });
-    ((ListView)localObject2).setOnItemClickListener(new AdapterView.OnItemClickListener()
-    {
-      public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-      {
-        int i = 0;
-        if (i < localArrayList.size())
-        {
-          if (i == paramAnonymousInt) {
-            ((HashMap)localArrayList.get(i)).put("check", Boolean.TRUE);
-          }
-          for (;;)
-          {
-            i += 1;
-            break;
-            ((HashMap)localArrayList.get(i)).put("check", Boolean.FALSE);
-          }
-        }
-        localObject1.setmCheckedPosition(paramAnonymousInt);
-        ((BaseAdapter)localObject2.getAdapter()).notifyDataSetChanged();
-      }
-    });
-  }
-  
-  private void k()
-  {
-    BNSettingManager.setDefaultLaunchMode(1);
-    int i1 = BNSettingManager.getDefaultLaunchMode();
-    if (i1 == 0)
-    {
-      BNSettingManager.setCurrentUsingMode(1);
-      return;
-    }
-    if (1 == i1)
-    {
-      BNSettingManager.setCurrentUsingMode(1);
-      return;
-    }
-    BNSettingManager.setCurrentUsingMode(2);
-  }
-  
-  private boolean l()
-  {
-    return com.baidu.carlife.core.c.a().b();
-  }
-  
-  public void onActivityCreated(Bundle paramBundle)
-  {
-    super.onActivityCreated(paramBundle);
-    b();
-    i.a("initEngine");
-    j();
-  }
-  
-  public boolean onBackPressed()
-  {
-    return true;
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    i.a(a + " show");
-    this.m = new a(this);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.n = ((ViewGroup)paramLayoutInflater.inflate(2130968773, null));
-    return this.n;
-  }
-  
-  public void onDestroyView()
-  {
-    super.onDestroyView();
-    t.a().b(this.q);
-    if (Build.VERSION.SDK_INT > 16)
-    {
-      if ((mActivity != null) && (!mActivity.isDestroyed()))
-      {
-        removeAllFragmentByType(514);
-        mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-      }
-      return;
-    }
-    removeAllFragmentByType(514);
-    mActivity.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-  }
-  
-  public void onDetach()
-  {
-    i.b(a + " show");
-    super.onDetach();
-  }
-  
-  protected void onInitView() {}
-  
-  public void onResume()
-  {
-    super.onResume();
-    i.b(a);
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  private static class a
-    extends Handler
-  {
-    private final WeakReference<LaunchFragment> a;
-    
-    public a(LaunchFragment paramLaunchFragment)
-    {
-      this.a = new WeakReference(paramLaunchFragment);
-    }
-    
-    public void handleMessage(Message paramMessage)
-    {
-      LaunchFragment localLaunchFragment = (LaunchFragment)this.a.get();
-      if (localLaunchFragment == null) {
-        return;
-      }
-      switch (paramMessage.what)
-      {
-      default: 
-        return;
-      case 1301: 
-        if (paramMessage.arg1 == 0)
-        {
-          LaunchFragment.a(localLaunchFragment);
-          i.b("initEngine");
-          LaunchFragment.b(localLaunchFragment);
-          return;
-        }
-      case 9007: 
-        LaunchFragment.c(localLaunchFragment);
-        return;
-      case 9005: 
-        w.a("请等待导航初始化成功", 0);
-        return;
-      case 9002: 
-        com.baidu.carlife.core.c.a().c(false);
-        LaunchFragment.d(localLaunchFragment);
-        return;
-      case 9004: 
-        com.baidu.carlife.core.c.a().c(true);
-        LaunchFragment.e(localLaunchFragment);
-        return;
-        paramMessage = LaunchFragment.f(localLaunchFragment).obtainMessage(9002);
-        LaunchFragment.f(localLaunchFragment).sendMessage(paramMessage);
-        return;
-      }
-      LaunchFragment.a(localLaunchFragment, LaunchFragment.g(localLaunchFragment));
-    }
-  }
-  
-  private class b
-    implements t.b
-  {
-    private b() {}
-    
-    public void b(boolean paramBoolean)
-    {
-      LaunchFragment.a(LaunchFragment.this);
-      LaunchFragment.b(LaunchFragment.this);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/LaunchFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

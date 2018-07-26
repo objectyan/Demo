@@ -3,34 +3,23 @@ package com.google.android.support.v4.os;
 import android.os.Parcel;
 import android.os.Parcelable.ClassLoaderCreator;
 
-class ParcelableCompatCreatorHoneycombMR2<T>
-  implements Parcelable.ClassLoaderCreator<T>
-{
-  private final ParcelableCompatCreatorCallbacks<T> mCallbacks;
-  
-  public ParcelableCompatCreatorHoneycombMR2(ParcelableCompatCreatorCallbacks<T> paramParcelableCompatCreatorCallbacks)
-  {
-    this.mCallbacks = paramParcelableCompatCreatorCallbacks;
-  }
-  
-  public T createFromParcel(Parcel paramParcel)
-  {
-    return (T)this.mCallbacks.createFromParcel(paramParcel, null);
-  }
-  
-  public T createFromParcel(Parcel paramParcel, ClassLoader paramClassLoader)
-  {
-    return (T)this.mCallbacks.createFromParcel(paramParcel, paramClassLoader);
-  }
-  
-  public T[] newArray(int paramInt)
-  {
-    return this.mCallbacks.newArray(paramInt);
-  }
+/* compiled from: ParcelableCompatHoneycombMR2 */
+class ParcelableCompatCreatorHoneycombMR2<T> implements ClassLoaderCreator<T> {
+    private final ParcelableCompatCreatorCallbacks<T> mCallbacks;
+
+    public ParcelableCompatCreatorHoneycombMR2(ParcelableCompatCreatorCallbacks<T> callbacks) {
+        this.mCallbacks = callbacks;
+    }
+
+    public T createFromParcel(Parcel in) {
+        return this.mCallbacks.createFromParcel(in, null);
+    }
+
+    public T createFromParcel(Parcel in, ClassLoader loader) {
+        return this.mCallbacks.createFromParcel(in, loader);
+    }
+
+    public T[] newArray(int size) {
+        return this.mCallbacks.newArray(size);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/os/ParcelableCompatCreatorHoneycombMR2.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

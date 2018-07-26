@@ -10,383 +10,323 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.g;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
 import com.baidu.carlife.view.StatusButton;
-import com.baidu.carlife.view.StatusButton.a;
-import com.baidu.carlife.view.StatusButton.b;
+import com.baidu.carlife.view.StatusButton.C1550a;
+import com.baidu.carlife.view.StatusButton.C2237b;
 import com.baidu.navi.BaiduNaviSDKManager;
 import com.baidu.navi.fragment.ContentFragment;
-import com.baidu.navi.fragment.NaviFragmentManager;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 
-public class NaviSettingFragment
-  extends ContentFragment
-{
-  private ViewGroup a;
-  private StatusButton b;
-  private StatusButton c;
-  private StatusButton d;
-  private StatusButton e;
-  private CheckBox f;
-  private CheckBox g;
-  private CheckBox h;
-  private CheckBox i;
-  private CheckBox j;
-  private TextView k;
-  private ImageButton l;
-  private TextView m;
-  private Boolean n = Boolean.valueOf(false);
-  private CompoundButton.OnCheckedChangeListener o = new CompoundButton.OnCheckedChangeListener()
-  {
-    public void onCheckedChanged(CompoundButton paramAnonymousCompoundButton, boolean paramAnonymousBoolean)
-    {
-      if (BNSettingManager.getVoiceMode() == 2) {
-        return;
-      }
-      if (paramAnonymousCompoundButton == NaviSettingFragment.a(NaviSettingFragment.this))
-      {
-        BNSettingManager.setElecCameraSpeakEnable(paramAnonymousBoolean);
-        StatisticManager.onEvent("1054", "播报内容-电子眼_" + paramAnonymousBoolean);
-      }
-      for (;;)
-      {
-        BaiduNaviSDKManager.getInstance().updateRGEngineSpeekStatus();
-        return;
-        if (paramAnonymousCompoundButton == NaviSettingFragment.b(NaviSettingFragment.this))
-        {
-          BNSettingManager.setSpeedCameraSpeakEnable(paramAnonymousBoolean);
-          StatisticManager.onEvent("1054", "播报内容-限速提醒_" + paramAnonymousBoolean);
+public class NaviSettingFragment extends ContentFragment {
+    /* renamed from: a */
+    private ViewGroup f4641a;
+    /* renamed from: b */
+    private StatusButton f4642b;
+    /* renamed from: c */
+    private StatusButton f4643c;
+    /* renamed from: d */
+    private StatusButton f4644d;
+    /* renamed from: e */
+    private StatusButton f4645e;
+    /* renamed from: f */
+    private CheckBox f4646f;
+    /* renamed from: g */
+    private CheckBox f4647g;
+    /* renamed from: h */
+    private CheckBox f4648h;
+    /* renamed from: i */
+    private CheckBox f4649i;
+    /* renamed from: j */
+    private CheckBox f4650j;
+    /* renamed from: k */
+    private TextView f4651k;
+    /* renamed from: l */
+    private ImageButton f4652l;
+    /* renamed from: m */
+    private TextView f4653m;
+    /* renamed from: n */
+    private Boolean f4654n = Boolean.valueOf(false);
+    /* renamed from: o */
+    private OnCheckedChangeListener f4655o = new C15491(this);
+    /* renamed from: p */
+    private C1550a f4656p = new C15512(this);
+    /* renamed from: q */
+    private C1443g f4657q;
+    /* renamed from: r */
+    private C1443g f4658r;
+
+    /* renamed from: com.baidu.carlife.fragment.NaviSettingFragment$1 */
+    class C15491 implements OnCheckedChangeListener {
+        /* renamed from: a */
+        final /* synthetic */ NaviSettingFragment f4639a;
+
+        C15491(NaviSettingFragment this$0) {
+            this.f4639a = this$0;
         }
-        else if (paramAnonymousCompoundButton == NaviSettingFragment.c(NaviSettingFragment.this))
-        {
-          BNSettingManager.setSaftyDriveSpeakEnable(paramAnonymousBoolean);
-          StatisticManager.onEvent("1054", "播报内容-安全驾驶_" + paramAnonymousBoolean);
-        }
-        else if (paramAnonymousCompoundButton == NaviSettingFragment.d(NaviSettingFragment.this))
-        {
-          BNSettingManager.setRoadConditionpeakEnable(paramAnonymousBoolean);
-          StatisticManager.onEvent("1054", "播报内容-前方路况_" + paramAnonymousBoolean);
-        }
-        else if (paramAnonymousCompoundButton == NaviSettingFragment.e(NaviSettingFragment.this))
-        {
-          BNSettingManager.setStraightDirectSpeakEnable(paramAnonymousBoolean);
-          StatisticManager.onEvent("1054", "播报内容-直行顺行提醒_" + paramAnonymousBoolean);
-        }
-      }
-    }
-  };
-  private StatusButton.a p = new StatusButton.a()
-  {
-    public void a(StatusButton paramAnonymousStatusButton, StatusButton.b paramAnonymousb)
-    {
-      if (paramAnonymousStatusButton == NaviSettingFragment.f(NaviSettingFragment.this)) {
-        if (paramAnonymousb == StatusButton.b.a) {
-          BNSettingManager.setNaviDayAndNightMode(2);
-        }
-      }
-      for (;;)
-      {
-        BaiduNaviSDKManager.getInstance().updateRGEngineSpeekStatus();
-        return;
-        if (paramAnonymousb == StatusButton.b.b)
-        {
-          BNSettingManager.setNaviDayAndNightMode(3);
-        }
-        else
-        {
-          BNSettingManager.setNaviDayAndNightMode(1);
-          continue;
-          if (paramAnonymousStatusButton == NaviSettingFragment.g(NaviSettingFragment.this))
-          {
-            if (paramAnonymousb == StatusButton.b.a)
-            {
-              BNSettingManager.setVoiceMode(0);
-              BNSettingManager.resetVoiceModeParams(0);
-              StatisticManager.onEvent("1054", "播报模式-新手");
+
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (BNSettingManager.getVoiceMode() != 2) {
+                if (buttonView == this.f4639a.f4646f) {
+                    BNSettingManager.setElecCameraSpeakEnable(isChecked);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, "播报内容-电子眼_" + isChecked);
+                } else if (buttonView == this.f4639a.f4647g) {
+                    BNSettingManager.setSpeedCameraSpeakEnable(isChecked);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, "播报内容-限速提醒_" + isChecked);
+                } else if (buttonView == this.f4639a.f4648h) {
+                    BNSettingManager.setSaftyDriveSpeakEnable(isChecked);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, "播报内容-安全驾驶_" + isChecked);
+                } else if (buttonView == this.f4639a.f4649i) {
+                    BNSettingManager.setRoadConditionpeakEnable(isChecked);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, "播报内容-前方路况_" + isChecked);
+                } else if (buttonView == this.f4639a.f4650j) {
+                    BNSettingManager.setStraightDirectSpeakEnable(isChecked);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, "播报内容-直行顺行提醒_" + isChecked);
+                }
+                BaiduNaviSDKManager.getInstance().updateRGEngineSpeekStatus();
             }
-            for (;;)
-            {
-              NaviSettingFragment.a(NaviSettingFragment.this, BNSettingManager.getVoiceMode());
-              break;
-              if (paramAnonymousb == StatusButton.b.b)
-              {
-                BNSettingManager.setVoiceMode(1);
-                BNSettingManager.resetVoiceModeParams(1);
-                StatisticManager.onEvent("1054", "播报模式-专家");
-              }
-              else
-              {
-                BNSettingManager.setVoiceMode(2);
-                StatisticManager.onEvent("1054", "播报模式-静音");
-              }
-            }
-          }
-          if (paramAnonymousStatusButton == NaviSettingFragment.h(NaviSettingFragment.this))
-          {
-            if (paramAnonymousb == StatusButton.b.a)
-            {
-              BNSettingManager.setPrefRoutePlanMode(2);
-              StatisticManager.onEvent("1054", "算路方式-离线");
-            }
-            else if (paramAnonymousb == StatusButton.b.c)
-            {
-              BNSettingManager.setPrefRoutePlanMode(3);
-              StatisticManager.onEvent("1054", "算路方式-在线");
-            }
-          }
-          else if (paramAnonymousStatusButton == NaviSettingFragment.i(NaviSettingFragment.this)) {
-            if (paramAnonymousb == StatusButton.b.a)
-            {
-              BNSettingManager.setPrefSearchMode(2);
-              StatisticManager.onEvent("1054", "搜索方式-离线");
-            }
-            else if (paramAnonymousb == StatusButton.b.c)
-            {
-              BNSettingManager.setPrefSearchMode(3);
-              StatisticManager.onEvent("1054", "搜索方式-在线");
-            }
-          }
         }
-      }
     }
-  };
-  private g q;
-  private g r;
-  
-  private void a()
-  {
-    this.b = ((StatusButton)this.a.findViewById(2131624475));
-    this.c = ((StatusButton)this.a.findViewById(2131624496));
-    this.k = ((TextView)this.a.findViewById(2131624498));
-    this.d = ((StatusButton)this.a.findViewById(2131624499));
-    this.e = ((StatusButton)this.a.findViewById(2131624461));
-    LinearLayout localLinearLayout = (LinearLayout)this.a.findViewById(2131624481);
-    this.g = ((CheckBox)localLinearLayout.findViewById(2131624482));
-    this.j = ((CheckBox)localLinearLayout.findViewById(2131624483));
-    localLinearLayout = (LinearLayout)this.a.findViewById(2131624478);
-    this.i = ((CheckBox)localLinearLayout.findViewById(2131624480));
-    this.f = ((CheckBox)localLinearLayout.findViewById(2131624479));
-    this.h = ((CheckBox)((LinearLayout)this.a.findViewById(2131624484)).findViewById(2131624485));
-    this.f.setId(2147483632);
-    this.g.setId(2147483633);
-    this.h.setId(2147483634);
-    this.i.setId(2147483635);
-    this.j.setId(2147483636);
-  }
-  
-  private void a(int paramInt)
-  {
-    if ((paramInt == 0) || (paramInt == 1))
-    {
-      bool = BNSettingManager.isElecCameraSpeakEnable();
-      this.f.setEnabled(true);
-      this.f.setChecked(bool);
-      bool = BNSettingManager.isSpeedCameraSpeakEnable();
-      this.g.setEnabled(true);
-      this.g.setChecked(bool);
-      bool = BNSettingManager.isSaftyDriveSpeakEnable();
-      this.h.setEnabled(true);
-      this.h.setChecked(bool);
-      bool = BNSettingManager.isRoadConditionSpeakEnable();
-      this.i.setEnabled(true);
-      this.i.setChecked(bool);
-      bool = BNSettingManager.isStraightDirectSpeakEnable();
-      this.j.setEnabled(true);
-      this.j.setChecked(bool);
+
+    /* renamed from: com.baidu.carlife.fragment.NaviSettingFragment$2 */
+    class C15512 implements C1550a {
+        /* renamed from: a */
+        final /* synthetic */ NaviSettingFragment f4640a;
+
+        C15512(NaviSettingFragment this$0) {
+            this.f4640a = this$0;
+        }
+
+        /* renamed from: a */
+        public void mo1592a(StatusButton sButton, C2237b child) {
+            if (sButton == this.f4640a.f4645e) {
+                if (child == C2237b.LEFT) {
+                    BNSettingManager.setNaviDayAndNightMode(2);
+                } else if (child == C2237b.MID) {
+                    BNSettingManager.setNaviDayAndNightMode(3);
+                } else {
+                    BNSettingManager.setNaviDayAndNightMode(1);
+                }
+            } else if (sButton == this.f4640a.f4642b) {
+                if (child == C2237b.LEFT) {
+                    BNSettingManager.setVoiceMode(0);
+                    BNSettingManager.resetVoiceModeParams(0);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, StatisticConstants.HOME_MY_SETTING_STATUS_TTS_NEW);
+                } else if (child == C2237b.MID) {
+                    BNSettingManager.setVoiceMode(1);
+                    BNSettingManager.resetVoiceModeParams(1);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, StatisticConstants.HOME_MY_SETTING_STATUS_TTS_EXPERT);
+                } else {
+                    BNSettingManager.setVoiceMode(2);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, StatisticConstants.HOME_MY_SETTING_STATUS_TTS_MUTE);
+                }
+                this.f4640a.m5690a(BNSettingManager.getVoiceMode());
+            } else if (sButton == this.f4640a.f4643c) {
+                if (child == C2237b.LEFT) {
+                    BNSettingManager.setPrefRoutePlanMode(2);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, StatisticConstants.HOME_MY_SETTING_STATUS_ROUTE_OFFLINE);
+                } else if (child == C2237b.RIGHT) {
+                    BNSettingManager.setPrefRoutePlanMode(3);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, StatisticConstants.HOME_MY_SETTING_STATUS_ROUTE_ONLINE);
+                }
+            } else if (sButton == this.f4640a.f4644d) {
+                if (child == C2237b.LEFT) {
+                    BNSettingManager.setPrefSearchMode(2);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, StatisticConstants.HOME_MY_SETTING_STATUS_SEARCH_OFFLINE);
+                } else if (child == C2237b.RIGHT) {
+                    BNSettingManager.setPrefSearchMode(3);
+                    StatisticManager.onEvent(StatisticConstants.HOME_MY_SETTING_STATUS, StatisticConstants.HOME_MY_SETTING_STATUS_SEARCH_ONLINE);
+                }
+            }
+            BaiduNaviSDKManager.getInstance().updateRGEngineSpeekStatus();
+        }
     }
-    while (2 != paramInt)
-    {
-      boolean bool;
-      return;
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.f4641a = (ViewGroup) inflater.inflate(C0965R.layout.navi_setting, null);
+        setCommonTitleBar(this.f4641a, getString(C0965R.string.navi_setting));
+        m5689a();
+        return this.f4641a;
     }
-    this.f.setChecked(false);
-    this.f.setEnabled(false);
-    this.g.setChecked(false);
-    this.g.setEnabled(false);
-    this.h.setChecked(false);
-    this.h.setEnabled(false);
-    this.i.setChecked(false);
-    this.i.setEnabled(false);
-    this.j.setChecked(false);
-    this.j.setEnabled(false);
-  }
-  
-  private void b()
-  {
-    int i1 = BNSettingManager.getNaviDayAndNightMode();
-    if (i1 == 2)
-    {
-      this.e.a();
-      i1 = BNSettingManager.getVoiceMode();
-      if (i1 != 0) {
-        break label101;
-      }
-      this.b.a();
-      label33:
-      a(i1);
-      if (BNSettingManager.getPrefRoutPlanMode() != 2) {
-        break label133;
-      }
-      this.c.a();
+
+    protected void onUpdateSkin() {
+        super.onUpdateSkin();
+        updateCommonSkin();
     }
-    for (;;)
-    {
-      if (BNSettingManager.getPrefSearchMode() != 2) {
-        break label144;
-      }
-      this.d.a();
-      return;
-      if (i1 == 3)
-      {
-        this.e.b();
-        break;
-      }
-      if (i1 != 1) {
-        break;
-      }
-      this.e.c();
-      break;
-      label101:
-      if (i1 == 1)
-      {
-        this.b.b();
-        break label33;
-      }
-      if (i1 != 2) {
-        break label33;
-      }
-      this.b.c();
-      break label33;
-      label133:
-      this.c.c();
+
+    /* renamed from: a */
+    private void m5689a() {
+        this.f4642b = (StatusButton) this.f4641a.findViewById(C0965R.id.bt_speak_mode);
+        this.f4643c = (StatusButton) this.f4641a.findViewById(C0965R.id.bt_routplan_mode);
+        this.f4651k = (TextView) this.f4641a.findViewById(C0965R.id.tv_search_mode);
+        this.f4644d = (StatusButton) this.f4641a.findViewById(C0965R.id.bt_search_mode);
+        this.f4645e = (StatusButton) this.f4641a.findViewById(C0965R.id.bt_day_night_mode);
+        LinearLayout bobao = (LinearLayout) this.f4641a.findViewById(C0965R.id.ll_bobao_setting);
+        this.f4647g = (CheckBox) bobao.findViewById(C0965R.id.cb_over_speed);
+        this.f4650j = (CheckBox) bobao.findViewById(C0965R.id.cb_straight);
+        LinearLayout condition = (LinearLayout) this.f4641a.findViewById(C0965R.id.ll_road_condition);
+        this.f4649i = (CheckBox) condition.findViewById(C0965R.id.cb_road_condition);
+        this.f4646f = (CheckBox) condition.findViewById(C0965R.id.cb_elec_eye);
+        this.f4648h = (CheckBox) ((LinearLayout) this.f4641a.findViewById(C0965R.id.ll_safe_setting)).findViewById(C0965R.id.cb_safe_drive);
+        this.f4646f.setId(2147483632);
+        this.f4647g.setId(2147483633);
+        this.f4648h.setId(2147483634);
+        this.f4649i.setId(2147483635);
+        this.f4650j.setId(2147483636);
     }
-    label144:
-    this.d.c();
-  }
-  
-  private void c()
-  {
-    this.e.a(2131296409, 2131296719, 2131296300);
-    this.e.a(this.p);
-    this.b.a(2131297150, 2131297154, 2131297157);
-    this.b.a(this.p);
-    this.c.a(2131296854, 2131296855);
-    this.c.a(this.p);
-    this.d.a(2131296854, 2131296855);
-    this.d.a(this.p);
-    this.f.setOnCheckedChangeListener(this.o);
-    this.i.setOnCheckedChangeListener(this.o);
-    this.g.setOnCheckedChangeListener(this.o);
-    this.j.setOnCheckedChangeListener(this.o);
-    this.h.setOnCheckedChangeListener(this.o);
-  }
-  
-  public void driving()
-  {
-    i.b("yftech", "NaviSettingFragment driving");
-    getNaviFragmentManager().back();
-    getNaviFragmentManager().back();
-    com.baidu.carlife.custom.a.a().d();
-  }
-  
-  public void onActivityCreated(Bundle paramBundle)
-  {
-    super.onActivityCreated(paramBundle);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.a = ((ViewGroup)paramLayoutInflater.inflate(2130968961, null));
-    setCommonTitleBar(this.a, getString(2131296695));
-    a();
-    return this.a;
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    super.onHiddenChanged(paramBoolean);
-    int i1;
-    if (!paramBoolean)
-    {
-      i1 = BNSettingManager.getVoiceMode();
-      if (i1 != 0) {
-        break label31;
-      }
-      this.b.a();
+
+    /* renamed from: b */
+    private void m5693b() {
+        int dayNightMode = BNSettingManager.getNaviDayAndNightMode();
+        if (dayNightMode == 2) {
+            this.f4645e.m8489a();
+        } else if (dayNightMode == 3) {
+            this.f4645e.m8499b();
+        } else if (dayNightMode == 1) {
+            this.f4645e.m8503c();
+        }
+        int voiceMode = BNSettingManager.getVoiceMode();
+        if (voiceMode == 0) {
+            this.f4642b.m8489a();
+        } else if (voiceMode == 1) {
+            this.f4642b.m8499b();
+        } else if (voiceMode == 2) {
+            this.f4642b.m8503c();
+        }
+        m5690a(voiceMode);
+        if (BNSettingManager.getPrefRoutPlanMode() == 2) {
+            this.f4643c.m8489a();
+        } else {
+            this.f4643c.m8503c();
+        }
+        if (BNSettingManager.getPrefSearchMode() == 2) {
+            this.f4644d.m8489a();
+        } else {
+            this.f4644d.m8503c();
+        }
     }
-    for (;;)
-    {
-      a(i1);
-      return;
-      label31:
-      if (i1 == 1) {
-        this.b.b();
-      } else if (i1 == 2) {
-        this.b.c();
-      }
+
+    protected void onInitView() {
     }
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.fragmentType != getCurrentFragmentType()) {
-      return;
+
+    /* renamed from: c */
+    private void m5695c() {
+        this.f4645e.m8492a((int) C0965R.string.day_mode, (int) C0965R.string.nighg_mode, (int) C0965R.string.auto_mode);
+        this.f4645e.m8494a(this.f4656p);
+        this.f4642b.m8492a((int) C0965R.string.speak_fresher, (int) C0965R.string.speak_professor, (int) C0965R.string.speak_silent);
+        this.f4642b.m8494a(this.f4656p);
+        this.f4643c.m8491a((int) C0965R.string.pref_offline, (int) C0965R.string.pref_online);
+        this.f4643c.m8494a(this.f4656p);
+        this.f4644d.m8491a((int) C0965R.string.pref_offline, (int) C0965R.string.pref_online);
+        this.f4644d.m8494a(this.f4656p);
+        this.f4646f.setOnCheckedChangeListener(this.f4655o);
+        this.f4649i.setOnCheckedChangeListener(this.f4655o);
+        this.f4647g.setOnCheckedChangeListener(this.f4655o);
+        this.f4650j.setOnCheckedChangeListener(this.f4655o);
+        this.f4648h.setOnCheckedChangeListener(this.f4655o);
     }
-    if (this.q == null)
-    {
-      this.q = new g(this.mContentView.findViewById(2131624260), 2);
-      this.q.d(this.mContentView.findViewById(2131624258));
+
+    /* renamed from: a */
+    private void m5690a(int voiceMode) {
+        if (voiceMode == 0 || voiceMode == 1) {
+            boolean otherCameraSpeak = BNSettingManager.isElecCameraSpeakEnable();
+            this.f4646f.setEnabled(true);
+            this.f4646f.setChecked(otherCameraSpeak);
+            boolean overSpeedSpeak = BNSettingManager.isSpeedCameraSpeakEnable();
+            this.f4647g.setEnabled(true);
+            this.f4647g.setChecked(overSpeedSpeak);
+            boolean safeDriveSpeak = BNSettingManager.isSaftyDriveSpeakEnable();
+            this.f4648h.setEnabled(true);
+            this.f4648h.setChecked(safeDriveSpeak);
+            boolean roadCondSpeak = BNSettingManager.isRoadConditionSpeakEnable();
+            this.f4649i.setEnabled(true);
+            this.f4649i.setChecked(roadCondSpeak);
+            boolean straightSpeak = BNSettingManager.isStraightDirectSpeakEnable();
+            this.f4650j.setEnabled(true);
+            this.f4650j.setChecked(straightSpeak);
+        } else if (2 == voiceMode) {
+            this.f4646f.setChecked(false);
+            this.f4646f.setEnabled(false);
+            this.f4647g.setChecked(false);
+            this.f4647g.setEnabled(false);
+            this.f4648h.setChecked(false);
+            this.f4648h.setEnabled(false);
+            this.f4649i.setChecked(false);
+            this.f4649i.setEnabled(false);
+            this.f4650j.setChecked(false);
+            this.f4650j.setEnabled(false);
+        }
     }
-    d.a().b(new com.baidu.carlife.f.a[] { this.q });
-    d.a().h(this.q);
-  }
-  
-  protected void onInitView() {}
-  
-  public void onPause()
-  {
-    super.onPause();
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    b();
-    c();
-  }
-  
-  public void onSaveInstanceState(Bundle paramBundle)
-  {
-    super.onSaveInstanceState(paramBundle);
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    super.onUpdateSkin();
-    updateCommonSkin();
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean)
-  {
-    if ((this.b == null) || (this.e == null) || (this.c == null) || (this.d == null)) {
-      return;
+
+    protected void onUpdateOrientation(int orientation) {
     }
-    this.b.d();
-    this.e.d();
-    this.d.d();
-    this.c.d();
-  }
-  
-  public void stopDriving() {}
+
+    protected void onUpdateStyle(boolean dayStyle) {
+        if (this.f4642b != null && this.f4645e != null && this.f4643c != null && this.f4644d != null) {
+            this.f4642b.m8507d();
+            this.f4645e.m8507d();
+            this.f4644d.m8507d();
+            this.f4643c.m8507d();
+        }
+    }
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    public void onPause() {
+        super.onPause();
+    }
+
+    public void onResume() {
+        super.onResume();
+        m5693b();
+        m5695c();
+    }
+
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            int voiceMode = BNSettingManager.getVoiceMode();
+            if (voiceMode == 0) {
+                this.f4642b.m8489a();
+            } else if (voiceMode == 1) {
+                this.f4642b.m8499b();
+            } else if (voiceMode == 2) {
+                this.f4642b.m8503c();
+            }
+            m5690a(voiceMode);
+        }
+    }
+
+    public void onInitFocusAreas() {
+        if (this.fragmentType == getCurrentFragmentType()) {
+            if (this.f4657q == null) {
+                this.f4657q = new C1443g(this.mContentView.findViewById(C0965R.id.common_top_title), 2);
+                this.f4657q.m5300d(this.mContentView.findViewById(C0965R.id.ib_left));
+            }
+            C1440d.m5251a().m5256b(this.f4657q);
+            C1440d.m5251a().m5268h(this.f4657q);
+        }
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "NaviSettingFragment driving");
+        getNaviFragmentManager().back();
+        getNaviFragmentManager().back();
+        C1342a.m4926a().m4931d();
+    }
+
+    public void stopDriving() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/NaviSettingFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

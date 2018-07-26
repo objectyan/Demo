@@ -4,117 +4,84 @@ import android.content.Context;
 import android.util.Log;
 import java.io.File;
 
-public final class NativeCrashHandler
-{
-  private static boolean a = false;
-  private static Context b;
-  
-  static
-  {
-    try
-    {
-      System.loadLibrary("crash_analysis");
-      a = true;
-      return;
+public final class NativeCrashHandler {
+    /* renamed from: a */
+    private static boolean f19372a;
+    /* renamed from: b */
+    private static Context f19373b;
+
+    private static native void nativeException();
+
+    private static native void nativeInit(String str);
+
+    private static native void nativeProcess(String str);
+
+    private static native void nativeUnint();
+
+    static {
+        f19372a = false;
+        try {
+            System.loadLibrary("crash_analysis");
+            f19372a = true;
+        } catch (Throwable th) {
+            Log.w("NativeCrashHandler", "Load library failed.");
+        }
     }
-    catch (Throwable localThrowable)
-    {
-      Log.w("NativeCrashHandler", "Load library failed.");
+
+    private NativeCrashHandler() {
     }
-  }
-  
-  public static void doNativeCrash()
-  {
-    if (a) {}
-    try
-    {
-      nativeException();
-      return;
+
+    public static void doNativeCrash() {
+        if (f19372a) {
+            try {
+                nativeException();
+            } catch (Throwable th) {
+                Log.w("NativeCrashHandler", "Invoke method nativeException failed.");
+            }
+        }
     }
-    catch (Throwable localThrowable)
-    {
-      Log.w("NativeCrashHandler", "Invoke method nativeException failed.");
+
+    public static void init(Context context) {
+        if (context != null) {
+            f19373b = context.getApplicationContext();
+            if (f19372a) {
+                File cacheDir = context.getCacheDir();
+                if (cacheDir.exists() && cacheDir.isDirectory()) {
+                    try {
+                        nativeInit(cacheDir.getAbsolutePath());
+                    } catch (Throwable th) {
+                        Log.w("NativeCrashHandler", "Invoke method nativeInit failed.");
+                    }
+                }
+            }
+        }
     }
-  }
-  
-  public static void init(Context paramContext)
-  {
-    if (paramContext == null) {}
-    do
-    {
-      do
-      {
-        return;
-        b = paramContext.getApplicationContext();
-      } while (!a);
-      paramContext = paramContext.getCacheDir();
-    } while ((!paramContext.exists()) || (!paramContext.isDirectory()));
-    try
-    {
-      nativeInit(paramContext.getAbsolutePath());
-      return;
+
+    public static void uninit() {
+        if (f19372a) {
+            try {
+                nativeUnint();
+            } catch (Throwable th) {
+                Log.w("NativeCrashHandler", "Invoke method nativeUnint failed.");
+            }
+        }
     }
-    catch (Throwable paramContext)
-    {
-      Log.w("NativeCrashHandler", "Invoke method nativeInit failed.");
+
+    public static void process(String str) {
+        if (str != null && str.length() != 0 && f19372a) {
+            File file = new File(str);
+            if (file.exists() && file.isFile()) {
+                try {
+                    nativeProcess(str);
+                } catch (Throwable th) {
+                    Log.w("NativeCrashHandler", "Invoke method nativeProcess failed.");
+                }
+            }
+        }
     }
-  }
-  
-  private static native void nativeException();
-  
-  private static native void nativeInit(String paramString);
-  
-  private static native void nativeProcess(String paramString);
-  
-  private static native void nativeUnint();
-  
-  public static void onCrashCallbackFromNative(String paramString)
-  {
-    Log.w("NativeCrashHandler", "crash: " + paramString);
-    long l = System.currentTimeMillis();
-    bl.a().a(l, paramString, "NativeException", 1);
-  }
-  
-  public static void process(String paramString)
-  {
-    if ((paramString == null) || (paramString.length() == 0)) {}
-    File localFile;
-    do
-    {
-      do
-      {
-        return;
-      } while (!a);
-      localFile = new File(paramString);
-    } while ((!localFile.exists()) || (!localFile.isFile()));
-    try
-    {
-      nativeProcess(paramString);
-      return;
+
+    public static void onCrashCallbackFromNative(String str) {
+        Log.w("NativeCrashHandler", "crash: " + str);
+        bl.m15490a().m15493a(System.currentTimeMillis(), str, "NativeException", 1);
     }
-    catch (Throwable paramString)
-    {
-      Log.w("NativeCrashHandler", "Invoke method nativeProcess failed.");
-    }
-  }
-  
-  public static void uninit()
-  {
-    if (a) {}
-    try
-    {
-      nativeUnint();
-      return;
-    }
-    catch (Throwable localThrowable)
-    {
-      Log.w("NativeCrashHandler", "Invoke method nativeUnint failed.");
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/NativeCrashHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

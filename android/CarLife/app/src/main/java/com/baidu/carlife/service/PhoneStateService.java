@@ -10,141 +10,128 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.k;
-import com.baidu.carlife.logic.q;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.carlife.logic.C1868q;
 
-public class PhoneStateService
-  extends Service
-{
-  static final String a = "PhoneStateService";
-  private TelephonyManager b;
-  private a c = null;
-  private final IBinder d = new b(null);
-  
-  public static void a(Context paramContext)
-  {
-    if (Build.VERSION.SDK_INT < 24) {
-      return;
+public class PhoneStateService extends Service {
+    /* renamed from: a */
+    static final String f6911a = "PhoneStateService";
+    /* renamed from: b */
+    private TelephonyManager f6912b;
+    /* renamed from: c */
+    private C2167a f6913c = null;
+    /* renamed from: d */
+    private final IBinder f6914d = new C2168b();
+
+    /* renamed from: com.baidu.carlife.service.PhoneStateService$a */
+    private class C2167a extends PhoneStateListener {
+        /* renamed from: a */
+        final /* synthetic */ PhoneStateService f6909a;
+
+        private C2167a(PhoneStateService phoneStateService) {
+            this.f6909a = phoneStateService;
+        }
+
+        public void onCallStateChanged(int state, String incomingNumber) {
+            super.onCallStateChanged(state, incomingNumber);
+            C1260i.m4435b(PhoneStateService.f6911a, "============== PhoneState Changed :" + state + " :: " + incomingNumber);
+            C1261k.m4458a((int) C1253f.fW, state, (Object) incomingNumber);
+            C1868q.m7089f().m7105a(state, incomingNumber);
+            switch (state) {
+                case 0:
+                    C1260i.m4435b(PhoneStateService.f6911a, "============== CALL_STATE_IDLE:");
+                    return;
+                case 1:
+                    C1260i.m4435b(PhoneStateService.f6911a, "============== CALL_STATE_RINGING: ");
+                    if (TextUtils.isEmpty(incomingNumber)) {
+                        Log.d(PhoneStateService.f6911a, "Cann't Get Phone Number");
+                        return;
+                    }
+                    return;
+                case 2:
+                    C1260i.m4435b(PhoneStateService.f6911a, "============== CALL_STATE_OFFHOOK:" + incomingNumber);
+                    return;
+                default:
+                    return;
+            }
+        }
     }
-    try
-    {
-      i.b("PhoneStateService", "============== PhoneStateService start");
-      paramContext.startService(new Intent(paramContext, PhoneStateService.class));
-      return;
+
+    /* renamed from: com.baidu.carlife.service.PhoneStateService$b */
+    public class C2168b extends Binder {
+        /* renamed from: a */
+        final /* synthetic */ PhoneStateService f6910a;
+
+        private C2168b(PhoneStateService this$0) {
+            this.f6910a = this$0;
+        }
     }
-    catch (Exception paramContext)
-    {
-      i.a(paramContext);
+
+    /* renamed from: a */
+    public static void m8212a(Context context) {
+        if (VERSION.SDK_INT >= 24) {
+            try {
+                C1260i.m4435b(f6911a, "============== PhoneStateService start");
+                context.startService(new Intent(context, PhoneStateService.class));
+            } catch (Throwable e) {
+                C1260i.m4433a(e);
+            }
+        }
     }
-  }
-  
-  public static void b(Context paramContext)
-  {
-    if (Build.VERSION.SDK_INT < 24) {
-      return;
+
+    /* renamed from: b */
+    public static void m8213b(Context context) {
+        if (VERSION.SDK_INT >= 24) {
+            try {
+                C1260i.m4435b(f6911a, "============== PhoneStateService stop");
+                context.stopService(new Intent(context, PhoneStateService.class));
+            } catch (Throwable e) {
+                C1260i.m4433a(e);
+            }
+        }
     }
-    try
-    {
-      i.b("PhoneStateService", "============== PhoneStateService stop");
-      paramContext.stopService(new Intent(paramContext, PhoneStateService.class));
-      return;
+
+    public void onCreate() {
+        super.onCreate();
+        C1260i.m4435b(f6911a, "============== PhoneStateService onCreate()");
+        this.f6912b = (TelephonyManager) getSystemService("phone");
+        this.f6912b.listen(new C2167a(), 32);
     }
-    catch (Exception paramContext)
-    {
-      i.a(paramContext);
+
+    public IBinder onBind(Intent intent) {
+        C1260i.m4435b(f6911a, "PhoneStateService onBind()");
+        return this.f6914d;
     }
-  }
-  
-  public IBinder onBind(Intent paramIntent)
-  {
-    i.b("PhoneStateService", "PhoneStateService onBind()");
-    return this.d;
-  }
-  
-  public void onCreate()
-  {
-    super.onCreate();
-    i.b("PhoneStateService", "============== PhoneStateService onCreate()");
-    this.b = ((TelephonyManager)getSystemService("phone"));
-    this.b.listen(new a(null), 32);
-  }
-  
-  public void onDestroy()
-  {
-    i.b("PhoneStateService", "PhoneStateService onDestroy()");
-    super.onDestroy();
-  }
-  
-  public void onRebind(Intent paramIntent)
-  {
-    i.b("PhoneStateService", "PhoneStateService onRebind()");
-    super.onRebind(paramIntent);
-  }
-  
-  public void onStart(Intent paramIntent, int paramInt)
-  {
-    i.b("PhoneStateService", "PhoneStateService onStart(), startId = " + paramInt);
-  }
-  
-  public int onStartCommand(Intent paramIntent, int paramInt1, int paramInt2)
-  {
-    i.b("PhoneStateService", "PhoneStateService onStartCommand");
-    if (this.c == null)
-    {
-      Log.e("PhoneStateService", "============== Service onStartCommand");
-      this.b = ((TelephonyManager)getApplicationContext().getSystemService("phone"));
-      this.c = new a(null);
-      this.b.listen(this.c, 32);
+
+    public boolean onUnbind(Intent intent) {
+        C1260i.m4435b(f6911a, "PhoneStateService onUnbind()");
+        return super.onUnbind(intent);
     }
-    return super.onStartCommand(paramIntent, paramInt1, paramInt2);
-  }
-  
-  public boolean onUnbind(Intent paramIntent)
-  {
-    i.b("PhoneStateService", "PhoneStateService onUnbind()");
-    return super.onUnbind(paramIntent);
-  }
-  
-  private class a
-    extends PhoneStateListener
-  {
-    private a() {}
-    
-    public void onCallStateChanged(int paramInt, String paramString)
-    {
-      super.onCallStateChanged(paramInt, paramString);
-      i.b("PhoneStateService", "============== PhoneState Changed :" + paramInt + " :: " + paramString);
-      k.a(2030, paramInt, paramString);
-      q.f().a(paramInt, paramString);
-      switch (paramInt)
-      {
-      default: 
-      case 0: 
-      case 1: 
-        do
-        {
-          return;
-          i.b("PhoneStateService", "============== CALL_STATE_IDLE:");
-          return;
-          i.b("PhoneStateService", "============== CALL_STATE_RINGING: ");
-        } while (!TextUtils.isEmpty(paramString));
-        Log.d("PhoneStateService", "Cann't Get Phone Number");
-        return;
-      }
-      i.b("PhoneStateService", "============== CALL_STATE_OFFHOOK:" + paramString);
+
+    public void onRebind(Intent intent) {
+        C1260i.m4435b(f6911a, "PhoneStateService onRebind()");
+        super.onRebind(intent);
     }
-  }
-  
-  public class b
-    extends Binder
-  {
-    private b() {}
-  }
+
+    public void onStart(Intent intent, int startId) {
+        C1260i.m4435b(f6911a, "PhoneStateService onStart(), startId = " + startId);
+    }
+
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        C1260i.m4435b(f6911a, "PhoneStateService onStartCommand");
+        if (this.f6913c == null) {
+            Log.e(f6911a, "============== Service onStartCommand");
+            this.f6912b = (TelephonyManager) getApplicationContext().getSystemService("phone");
+            this.f6913c = new C2167a();
+            this.f6912b.listen(this.f6913c, 32);
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void onDestroy() {
+        C1260i.m4435b(f6911a, "PhoneStateService onDestroy()");
+        super.onDestroy();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/service/PhoneStateService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

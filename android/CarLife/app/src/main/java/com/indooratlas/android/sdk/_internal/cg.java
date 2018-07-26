@@ -3,49 +3,39 @@ package com.indooratlas.android.sdk._internal;
 import com.indooratlas.android.sdk.IALocation;
 import com.indooratlas.android.sdk.IALocation.Builder;
 
-public class cg
-  extends ds
-{
-  cr b;
-  
-  public cg(cr paramcr)
-  {
-    this.b = paramcr;
-  }
-  
-  public final void a(cx paramcx, dd paramdd)
-  {
-    if (paramcx.b()) {
-      if (!paramcx.b()) {
-        break label106;
-      }
+public class cg extends ds {
+    /* renamed from: b */
+    cr f23101b;
+
+    public cg(cr crVar) {
+        this.f23101b = crVar;
     }
-    label106:
-    for (dq localdq = (dq)paramcx.c;; localdq = null)
-    {
-      if (localdq != null)
-      {
-        Object localObject = ct.a(paramcx);
-        if (localObject != null)
-        {
-          localObject = ((IALocation)localObject).newBuilder();
-          ((IALocation.Builder)localObject).withLongExtra("com.indooratlas.android.sdk.intent.extras.clientTime", this.b.a());
-          if (localdq.j != null) {
-            ((IALocation.Builder)localObject).withIntExtra("com.indooratlas.android.sdk.intent.extras.satelliteCount", localdq.j.intValue());
-          }
-          a(new IALocation[] { ((IALocation.Builder)localObject).build() });
+
+    /* renamed from: a */
+    public final void mo4616a(cx cxVar, dd ddVar) {
+        if (cxVar.m20277b()) {
+            dq dqVar;
+            if (cxVar.m20277b()) {
+                dqVar = (dq) cxVar.f23360c;
+            } else {
+                dqVar = null;
+            }
+            if (dqVar != null) {
+                IALocation a = ct.m20252a(cxVar);
+                if (a != null) {
+                    Builder newBuilder = a.newBuilder();
+                    newBuilder.withLongExtra("com.indooratlas.android.sdk.intent.extras.clientTime", this.f23101b.mo4654a());
+                    if (dqVar.f23441j != null) {
+                        newBuilder.withIntExtra("com.indooratlas.android.sdk.intent.extras.satelliteCount", dqVar.f23441j.intValue());
+                    }
+                    mo4620a(newBuilder.build());
+                }
+            }
         }
-      }
-      super.a(paramcx, paramdd);
-      return;
+        super.mo4616a(cxVar, ddVar);
     }
-  }
-  
-  public void a(IALocation... paramVarArgs) {}
+
+    /* renamed from: a */
+    public void mo4620a(IALocation... iALocationArr) {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/cg.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

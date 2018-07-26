@@ -1,5 +1,7 @@
 package com.baidu.entity.pb;
 
+import com.baidu.baidunavis.model.NavCarInfo;
+import com.baidu.carlife.core.C1253f;
 import com.google.protobuf.micro.CodedInputStreamMicro;
 import com.google.protobuf.micro.CodedOutputStreamMicro;
 import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
@@ -7,7980 +9,7156 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class Template
-  extends MessageMicro
-{
-  public static final int BTABLE_FIELD_NUMBER = 7;
-  public static final int IMAGE_FIELD_NUMBER = 2;
-  public static final int LTABLE_FIELD_NUMBER = 9;
-  public static final int MAPSEARCHALADDINNORMAL_FIELD_NUMBER = 5;
-  public static final int MAPSEARCHALADDINPANEL_FIELD_NUMBER = 4;
-  public static final int NORMAL_FIELD_NUMBER = 1;
-  public static final int PANEL_FIELD_NUMBER = 3;
-  public static final int SINGLECARD_FIELD_NUMBER = 8;
-  public static final int VTABLE_FIELD_NUMBER = 6;
-  private boolean a;
-  private NormalTemplate b = null;
-  private boolean c;
-  private ImageTemplate d = null;
-  private boolean e;
-  private PanelTemplate f = null;
-  private boolean g;
-  private MapSearchaladdinPanelTemplate h = null;
-  private boolean i;
-  private MapSearchaladdinNormalTemplate j = null;
-  private boolean k;
-  private VtableTemplate l = null;
-  private boolean m;
-  private BtableTemplate n = null;
-  private boolean o;
-  private SingleCardTemplate p = null;
-  private boolean q;
-  private LtableTemplate r = null;
-  private int s = -1;
-  
-  public static Template parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new Template().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static Template parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (Template)new Template().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final Template clear()
-  {
-    clearNormal();
-    clearImage();
-    clearPanel();
-    clearMapsearchaladdinpanel();
-    clearMapsearchaladdinnormal();
-    clearVtable();
-    clearBtable();
-    clearSinglecard();
-    clearLtable();
-    this.s = -1;
-    return this;
-  }
-  
-  public Template clearBtable()
-  {
-    this.m = false;
-    this.n = null;
-    return this;
-  }
-  
-  public Template clearImage()
-  {
-    this.c = false;
-    this.d = null;
-    return this;
-  }
-  
-  public Template clearLtable()
-  {
-    this.q = false;
-    this.r = null;
-    return this;
-  }
-  
-  public Template clearMapsearchaladdinnormal()
-  {
-    this.i = false;
-    this.j = null;
-    return this;
-  }
-  
-  public Template clearMapsearchaladdinpanel()
-  {
-    this.g = false;
-    this.h = null;
-    return this;
-  }
-  
-  public Template clearNormal()
-  {
-    this.a = false;
-    this.b = null;
-    return this;
-  }
-  
-  public Template clearPanel()
-  {
-    this.e = false;
-    this.f = null;
-    return this;
-  }
-  
-  public Template clearSinglecard()
-  {
-    this.o = false;
-    this.p = null;
-    return this;
-  }
-  
-  public Template clearVtable()
-  {
-    this.k = false;
-    this.l = null;
-    return this;
-  }
-  
-  public BtableTemplate getBtable()
-  {
-    return this.n;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.s < 0) {
-      getSerializedSize();
+public final class Template extends MessageMicro {
+    public static final int BTABLE_FIELD_NUMBER = 7;
+    public static final int IMAGE_FIELD_NUMBER = 2;
+    public static final int LTABLE_FIELD_NUMBER = 9;
+    public static final int MAPSEARCHALADDINNORMAL_FIELD_NUMBER = 5;
+    public static final int MAPSEARCHALADDINPANEL_FIELD_NUMBER = 4;
+    public static final int NORMAL_FIELD_NUMBER = 1;
+    public static final int PANEL_FIELD_NUMBER = 3;
+    public static final int SINGLECARD_FIELD_NUMBER = 8;
+    public static final int VTABLE_FIELD_NUMBER = 6;
+    /* renamed from: a */
+    private boolean f16217a;
+    /* renamed from: b */
+    private NormalTemplate f16218b = null;
+    /* renamed from: c */
+    private boolean f16219c;
+    /* renamed from: d */
+    private ImageTemplate f16220d = null;
+    /* renamed from: e */
+    private boolean f16221e;
+    /* renamed from: f */
+    private PanelTemplate f16222f = null;
+    /* renamed from: g */
+    private boolean f16223g;
+    /* renamed from: h */
+    private MapSearchaladdinPanelTemplate f16224h = null;
+    /* renamed from: i */
+    private boolean f16225i;
+    /* renamed from: j */
+    private MapSearchaladdinNormalTemplate f16226j = null;
+    /* renamed from: k */
+    private boolean f16227k;
+    /* renamed from: l */
+    private VtableTemplate f16228l = null;
+    /* renamed from: m */
+    private boolean f16229m;
+    /* renamed from: n */
+    private BtableTemplate f16230n = null;
+    /* renamed from: o */
+    private boolean f16231o;
+    /* renamed from: p */
+    private SingleCardTemplate f16232p = null;
+    /* renamed from: q */
+    private boolean f16233q;
+    /* renamed from: r */
+    private LtableTemplate f16234r = null;
+    /* renamed from: s */
+    private int f16235s = -1;
+
+    public static final class BtableTemplate extends MessageMicro {
+        public static final int R1C1_FIELD_NUMBER = 1;
+        public static final int R1C2_FIELD_NUMBER = 2;
+        public static final int R1C4_FIELD_NUMBER = 3;
+        public static final int R2C1_FIELD_NUMBER = 4;
+        public static final int R2C2_FIELD_NUMBER = 5;
+        public static final int R3C1_FIELD_NUMBER = 6;
+        public static final int R3C2_FIELD_NUMBER = 7;
+        public static final int R4C1_FIELD_NUMBER = 8;
+        public static final int R5C1_FIELD_NUMBER = 9;
+        public static final int R6C1_FIELD_NUMBER = 10;
+        public static final int R7C1_FIELD_NUMBER = 11;
+        /* renamed from: a */
+        private boolean f15950a;
+        /* renamed from: b */
+        private RichText f15951b = null;
+        /* renamed from: c */
+        private boolean f15952c;
+        /* renamed from: d */
+        private RichText f15953d = null;
+        /* renamed from: e */
+        private List<Button> f15954e = Collections.emptyList();
+        /* renamed from: f */
+        private boolean f15955f;
+        /* renamed from: g */
+        private Score f15956g = null;
+        /* renamed from: h */
+        private boolean f15957h;
+        /* renamed from: i */
+        private RichText f15958i = null;
+        /* renamed from: j */
+        private boolean f15959j;
+        /* renamed from: k */
+        private RichText f15960k = null;
+        /* renamed from: l */
+        private boolean f15961l;
+        /* renamed from: m */
+        private RichText f15962m = null;
+        /* renamed from: n */
+        private List<RichText> f15963n = Collections.emptyList();
+        /* renamed from: o */
+        private boolean f15964o;
+        /* renamed from: p */
+        private ComboBox f15965p = null;
+        /* renamed from: q */
+        private boolean f15966q;
+        /* renamed from: r */
+        private Fatherson f15967r = null;
+        /* renamed from: s */
+        private boolean f15968s;
+        /* renamed from: t */
+        private Composit f15969t = null;
+        /* renamed from: u */
+        private int f15970u = -1;
+
+        public static BtableTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new BtableTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static BtableTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (BtableTemplate) new BtableTemplate().mergeFrom(bArr);
+        }
+
+        public BtableTemplate addR1C4(Button button) {
+            if (button != null) {
+                if (this.f15954e.isEmpty()) {
+                    this.f15954e = new ArrayList();
+                }
+                this.f15954e.add(button);
+            }
+            return this;
+        }
+
+        public BtableTemplate addR4C1(RichText richText) {
+            if (richText != null) {
+                if (this.f15963n.isEmpty()) {
+                    this.f15963n = new ArrayList();
+                }
+                this.f15963n.add(richText);
+            }
+            return this;
+        }
+
+        public final BtableTemplate clear() {
+            clearR1C1();
+            clearR1C2();
+            clearR1C4();
+            clearR2C1();
+            clearR2C2();
+            clearR3C1();
+            clearR3C2();
+            clearR4C1();
+            clearR5C1();
+            clearR6C1();
+            clearR7C1();
+            this.f15970u = -1;
+            return this;
+        }
+
+        public BtableTemplate clearR1C1() {
+            this.f15950a = false;
+            this.f15951b = null;
+            return this;
+        }
+
+        public BtableTemplate clearR1C2() {
+            this.f15952c = false;
+            this.f15953d = null;
+            return this;
+        }
+
+        public BtableTemplate clearR1C4() {
+            this.f15954e = Collections.emptyList();
+            return this;
+        }
+
+        public BtableTemplate clearR2C1() {
+            this.f15955f = false;
+            this.f15956g = null;
+            return this;
+        }
+
+        public BtableTemplate clearR2C2() {
+            this.f15957h = false;
+            this.f15958i = null;
+            return this;
+        }
+
+        public BtableTemplate clearR3C1() {
+            this.f15959j = false;
+            this.f15960k = null;
+            return this;
+        }
+
+        public BtableTemplate clearR3C2() {
+            this.f15961l = false;
+            this.f15962m = null;
+            return this;
+        }
+
+        public BtableTemplate clearR4C1() {
+            this.f15963n = Collections.emptyList();
+            return this;
+        }
+
+        public BtableTemplate clearR5C1() {
+            this.f15964o = false;
+            this.f15965p = null;
+            return this;
+        }
+
+        public BtableTemplate clearR6C1() {
+            this.f15966q = false;
+            this.f15967r = null;
+            return this;
+        }
+
+        public BtableTemplate clearR7C1() {
+            this.f15968s = false;
+            this.f15969t = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f15970u < 0) {
+                getSerializedSize();
+            }
+            return this.f15970u;
+        }
+
+        public RichText getR1C1() {
+            return this.f15951b;
+        }
+
+        public RichText getR1C2() {
+            return this.f15953d;
+        }
+
+        public Button getR1C4(int i) {
+            return (Button) this.f15954e.get(i);
+        }
+
+        public int getR1C4Count() {
+            return this.f15954e.size();
+        }
+
+        public List<Button> getR1C4List() {
+            return this.f15954e;
+        }
+
+        public Score getR2C1() {
+            return this.f15956g;
+        }
+
+        public RichText getR2C2() {
+            return this.f15958i;
+        }
+
+        public RichText getR3C1() {
+            return this.f15960k;
+        }
+
+        public RichText getR3C2() {
+            return this.f15962m;
+        }
+
+        public RichText getR4C1(int i) {
+            return (RichText) this.f15963n.get(i);
+        }
+
+        public int getR4C1Count() {
+            return this.f15963n.size();
+        }
+
+        public List<RichText> getR4C1List() {
+            return this.f15963n;
+        }
+
+        public ComboBox getR5C1() {
+            return this.f15965p;
+        }
+
+        public Fatherson getR6C1() {
+            return this.f15967r;
+        }
+
+        public Composit getR7C1() {
+            return this.f15969t;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasR1C1()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getR1C1());
+            }
+            if (hasR1C2()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getR1C2());
+            }
+            int i2 = i;
+            for (Button computeMessageSize : getR1C4List()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(3, computeMessageSize) + i2;
+            }
+            if (hasR2C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(4, getR2C1());
+            }
+            if (hasR2C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(5, getR2C2());
+            }
+            if (hasR3C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(6, getR3C1());
+            }
+            if (hasR3C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(7, getR3C2());
+            }
+            for (RichText computeMessageSize2 : getR4C1List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(8, computeMessageSize2);
+            }
+            if (hasR5C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(9, getR5C1());
+            }
+            if (hasR6C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(10, getR6C1());
+            }
+            if (hasR7C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(11, getR7C1());
+            }
+            this.f15970u = i2;
+            return i2;
+        }
+
+        public boolean hasR1C1() {
+            return this.f15950a;
+        }
+
+        public boolean hasR1C2() {
+            return this.f15952c;
+        }
+
+        public boolean hasR2C1() {
+            return this.f15955f;
+        }
+
+        public boolean hasR2C2() {
+            return this.f15957h;
+        }
+
+        public boolean hasR3C1() {
+            return this.f15959j;
+        }
+
+        public boolean hasR3C2() {
+            return this.f15961l;
+        }
+
+        public boolean hasR5C1() {
+            return this.f15964o;
+        }
+
+        public boolean hasR6C1() {
+            return this.f15966q;
+        }
+
+        public boolean hasR7C1() {
+            return this.f15968s;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public BtableTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro richText;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR1C1(richText);
+                        continue;
+                    case 18:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR1C2(richText);
+                        continue;
+                    case 26:
+                        richText = new Button();
+                        codedInputStreamMicro.readMessage(richText);
+                        addR1C4(richText);
+                        continue;
+                    case 34:
+                        richText = new Score();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR2C1(richText);
+                        continue;
+                    case 42:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR2C2(richText);
+                        continue;
+                    case 50:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR3C1(richText);
+                        continue;
+                    case 58:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR3C2(richText);
+                        continue;
+                    case 66:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        addR4C1(richText);
+                        continue;
+                    case 74:
+                        richText = new ComboBox();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR5C1(richText);
+                        continue;
+                    case 82:
+                        richText = new Fatherson();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR6C1(richText);
+                        continue;
+                    case 90:
+                        richText = new Composit();
+                        codedInputStreamMicro.readMessage(richText);
+                        setR7C1(richText);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public BtableTemplate setR1C1(RichText richText) {
+            if (richText == null) {
+                return clearR1C1();
+            }
+            this.f15950a = true;
+            this.f15951b = richText;
+            return this;
+        }
+
+        public BtableTemplate setR1C2(RichText richText) {
+            if (richText == null) {
+                return clearR1C2();
+            }
+            this.f15952c = true;
+            this.f15953d = richText;
+            return this;
+        }
+
+        public BtableTemplate setR1C4(int i, Button button) {
+            if (button != null) {
+                this.f15954e.set(i, button);
+            }
+            return this;
+        }
+
+        public BtableTemplate setR2C1(Score score) {
+            if (score == null) {
+                return clearR2C1();
+            }
+            this.f15955f = true;
+            this.f15956g = score;
+            return this;
+        }
+
+        public BtableTemplate setR2C2(RichText richText) {
+            if (richText == null) {
+                return clearR2C2();
+            }
+            this.f15957h = true;
+            this.f15958i = richText;
+            return this;
+        }
+
+        public BtableTemplate setR3C1(RichText richText) {
+            if (richText == null) {
+                return clearR3C1();
+            }
+            this.f15959j = true;
+            this.f15960k = richText;
+            return this;
+        }
+
+        public BtableTemplate setR3C2(RichText richText) {
+            if (richText == null) {
+                return clearR3C2();
+            }
+            this.f15961l = true;
+            this.f15962m = richText;
+            return this;
+        }
+
+        public BtableTemplate setR4C1(int i, RichText richText) {
+            if (richText != null) {
+                this.f15963n.set(i, richText);
+            }
+            return this;
+        }
+
+        public BtableTemplate setR5C1(ComboBox comboBox) {
+            if (comboBox == null) {
+                return clearR5C1();
+            }
+            this.f15964o = true;
+            this.f15965p = comboBox;
+            return this;
+        }
+
+        public BtableTemplate setR6C1(Fatherson fatherson) {
+            if (fatherson == null) {
+                return clearR6C1();
+            }
+            this.f15966q = true;
+            this.f15967r = fatherson;
+            return this;
+        }
+
+        public BtableTemplate setR7C1(Composit composit) {
+            if (composit == null) {
+                return clearR7C1();
+            }
+            this.f15968s = true;
+            this.f15969t = composit;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasR1C1()) {
+                codedOutputStreamMicro.writeMessage(1, getR1C1());
+            }
+            if (hasR1C2()) {
+                codedOutputStreamMicro.writeMessage(2, getR1C2());
+            }
+            for (Button writeMessage : getR1C4List()) {
+                codedOutputStreamMicro.writeMessage(3, writeMessage);
+            }
+            if (hasR2C1()) {
+                codedOutputStreamMicro.writeMessage(4, getR2C1());
+            }
+            if (hasR2C2()) {
+                codedOutputStreamMicro.writeMessage(5, getR2C2());
+            }
+            if (hasR3C1()) {
+                codedOutputStreamMicro.writeMessage(6, getR3C1());
+            }
+            if (hasR3C2()) {
+                codedOutputStreamMicro.writeMessage(7, getR3C2());
+            }
+            for (RichText writeMessage2 : getR4C1List()) {
+                codedOutputStreamMicro.writeMessage(8, writeMessage2);
+            }
+            if (hasR5C1()) {
+                codedOutputStreamMicro.writeMessage(9, getR5C1());
+            }
+            if (hasR6C1()) {
+                codedOutputStreamMicro.writeMessage(10, getR6C1());
+            }
+            if (hasR7C1()) {
+                codedOutputStreamMicro.writeMessage(11, getR7C1());
+            }
+        }
     }
-    return this.s;
-  }
-  
-  public ImageTemplate getImage()
-  {
-    return this.d;
-  }
-  
-  public LtableTemplate getLtable()
-  {
-    return this.r;
-  }
-  
-  public MapSearchaladdinNormalTemplate getMapsearchaladdinnormal()
-  {
-    return this.j;
-  }
-  
-  public MapSearchaladdinPanelTemplate getMapsearchaladdinpanel()
-  {
-    return this.h;
-  }
-  
-  public NormalTemplate getNormal()
-  {
-    return this.b;
-  }
-  
-  public PanelTemplate getPanel()
-  {
-    return this.f;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i2 = 0;
-    if (hasNormal()) {
-      i2 = 0 + CodedOutputStreamMicro.computeMessageSize(1, getNormal());
+
+    public static final class Button extends MessageMicro {
+        public static final int ACTION_ID_FIELD_NUMBER = 3;
+        public static final int ACTION_OPENAPI_FIELD_NUMBER = 4;
+        public static final int ICON_ID_FIELD_NUMBER = 1;
+        public static final int ICON_URL_FIELD_NUMBER = 2;
+        public static final int TEXT_FIELD_NUMBER = 5;
+        /* renamed from: a */
+        private boolean f15971a;
+        /* renamed from: b */
+        private int f15972b = 0;
+        /* renamed from: c */
+        private boolean f15973c;
+        /* renamed from: d */
+        private String f15974d = "";
+        /* renamed from: e */
+        private boolean f15975e;
+        /* renamed from: f */
+        private int f15976f = 0;
+        /* renamed from: g */
+        private boolean f15977g;
+        /* renamed from: h */
+        private String f15978h = "";
+        /* renamed from: i */
+        private boolean f15979i;
+        /* renamed from: j */
+        private RichText f15980j = null;
+        /* renamed from: k */
+        private int f15981k = -1;
+
+        public static Button parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Button().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Button parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Button) new Button().mergeFrom(bArr);
+        }
+
+        public final Button clear() {
+            clearIconId();
+            clearIconUrl();
+            clearActionId();
+            clearActionOpenapi();
+            clearText();
+            this.f15981k = -1;
+            return this;
+        }
+
+        public Button clearActionId() {
+            this.f15975e = false;
+            this.f15976f = 0;
+            return this;
+        }
+
+        public Button clearActionOpenapi() {
+            this.f15977g = false;
+            this.f15978h = "";
+            return this;
+        }
+
+        public Button clearIconId() {
+            this.f15971a = false;
+            this.f15972b = 0;
+            return this;
+        }
+
+        public Button clearIconUrl() {
+            this.f15973c = false;
+            this.f15974d = "";
+            return this;
+        }
+
+        public Button clearText() {
+            this.f15979i = false;
+            this.f15980j = null;
+            return this;
+        }
+
+        public int getActionId() {
+            return this.f15976f;
+        }
+
+        public String getActionOpenapi() {
+            return this.f15978h;
+        }
+
+        public int getCachedSize() {
+            if (this.f15981k < 0) {
+                getSerializedSize();
+            }
+            return this.f15981k;
+        }
+
+        public int getIconId() {
+            return this.f15972b;
+        }
+
+        public String getIconUrl() {
+            return this.f15974d;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasIconId()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIconId());
+            }
+            if (hasIconUrl()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getIconUrl());
+            }
+            if (hasActionId()) {
+                i += CodedOutputStreamMicro.computeInt32Size(3, getActionId());
+            }
+            if (hasActionOpenapi()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getActionOpenapi());
+            }
+            if (hasText()) {
+                i += CodedOutputStreamMicro.computeMessageSize(5, getText());
+            }
+            this.f15981k = i;
+            return i;
+        }
+
+        public RichText getText() {
+            return this.f15980j;
+        }
+
+        public boolean hasActionId() {
+            return this.f15975e;
+        }
+
+        public boolean hasActionOpenapi() {
+            return this.f15977g;
+        }
+
+        public boolean hasIconId() {
+            return this.f15971a;
+        }
+
+        public boolean hasIconUrl() {
+            return this.f15973c;
+        }
+
+        public boolean hasText() {
+            return this.f15979i;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Button mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setIconId(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setIconUrl(codedInputStreamMicro.readString());
+                        continue;
+                    case 24:
+                        setActionId(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 34:
+                        setActionOpenapi(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        MessageMicro richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setText(richText);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Button setActionId(int i) {
+            this.f15975e = true;
+            this.f15976f = i;
+            return this;
+        }
+
+        public Button setActionOpenapi(String str) {
+            this.f15977g = true;
+            this.f15978h = str;
+            return this;
+        }
+
+        public Button setIconId(int i) {
+            this.f15971a = true;
+            this.f15972b = i;
+            return this;
+        }
+
+        public Button setIconUrl(String str) {
+            this.f15973c = true;
+            this.f15974d = str;
+            return this;
+        }
+
+        public Button setText(RichText richText) {
+            if (richText == null) {
+                return clearText();
+            }
+            this.f15979i = true;
+            this.f15980j = richText;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasIconId()) {
+                codedOutputStreamMicro.writeInt32(1, getIconId());
+            }
+            if (hasIconUrl()) {
+                codedOutputStreamMicro.writeString(2, getIconUrl());
+            }
+            if (hasActionId()) {
+                codedOutputStreamMicro.writeInt32(3, getActionId());
+            }
+            if (hasActionOpenapi()) {
+                codedOutputStreamMicro.writeString(4, getActionOpenapi());
+            }
+            if (hasText()) {
+                codedOutputStreamMicro.writeMessage(5, getText());
+            }
+        }
     }
-    int i1 = i2;
-    if (hasImage()) {
-      i1 = i2 + CodedOutputStreamMicro.computeMessageSize(2, getImage());
+
+    public static final class ChildrenBtn extends MessageMicro {
+        public static final int TITLE_FIELD_NUMBER = 2;
+        public static final int UID_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f15982a;
+        /* renamed from: b */
+        private String f15983b = "";
+        /* renamed from: c */
+        private boolean f15984c;
+        /* renamed from: d */
+        private String f15985d = "";
+        /* renamed from: e */
+        private int f15986e = -1;
+
+        public static ChildrenBtn parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new ChildrenBtn().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static ChildrenBtn parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (ChildrenBtn) new ChildrenBtn().mergeFrom(bArr);
+        }
+
+        public final ChildrenBtn clear() {
+            clearUid();
+            clearTitle();
+            this.f15986e = -1;
+            return this;
+        }
+
+        public ChildrenBtn clearTitle() {
+            this.f15984c = false;
+            this.f15985d = "";
+            return this;
+        }
+
+        public ChildrenBtn clearUid() {
+            this.f15982a = false;
+            this.f15983b = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f15986e < 0) {
+                getSerializedSize();
+            }
+            return this.f15986e;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasUid()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getUid());
+            }
+            if (hasTitle()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getTitle());
+            }
+            this.f15986e = i;
+            return i;
+        }
+
+        public String getTitle() {
+            return this.f15985d;
+        }
+
+        public String getUid() {
+            return this.f15983b;
+        }
+
+        public boolean hasTitle() {
+            return this.f15984c;
+        }
+
+        public boolean hasUid() {
+            return this.f15982a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public ChildrenBtn mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setUid(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        setTitle(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public ChildrenBtn setTitle(String str) {
+            this.f15984c = true;
+            this.f15985d = str;
+            return this;
+        }
+
+        public ChildrenBtn setUid(String str) {
+            this.f15982a = true;
+            this.f15983b = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasUid()) {
+                codedOutputStreamMicro.writeString(1, getUid());
+            }
+            if (hasTitle()) {
+                codedOutputStreamMicro.writeString(2, getTitle());
+            }
+        }
     }
-    i2 = i1;
-    if (hasPanel()) {
-      i2 = i1 + CodedOutputStreamMicro.computeMessageSize(3, getPanel());
+
+    public static final class ComboBox extends MessageMicro {
+        public static final int ICON_ID_FIELD_NUMBER = 2;
+        public static final int ICON_URL_FIELD_NUMBER = 3;
+        public static final int TEXT_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f15987a;
+        /* renamed from: b */
+        private RichText f15988b = null;
+        /* renamed from: c */
+        private boolean f15989c;
+        /* renamed from: d */
+        private int f15990d = 0;
+        /* renamed from: e */
+        private boolean f15991e;
+        /* renamed from: f */
+        private String f15992f = "";
+        /* renamed from: g */
+        private int f15993g = -1;
+
+        public static ComboBox parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new ComboBox().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static ComboBox parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (ComboBox) new ComboBox().mergeFrom(bArr);
+        }
+
+        public final ComboBox clear() {
+            clearText();
+            clearIconId();
+            clearIconUrl();
+            this.f15993g = -1;
+            return this;
+        }
+
+        public ComboBox clearIconId() {
+            this.f15989c = false;
+            this.f15990d = 0;
+            return this;
+        }
+
+        public ComboBox clearIconUrl() {
+            this.f15991e = false;
+            this.f15992f = "";
+            return this;
+        }
+
+        public ComboBox clearText() {
+            this.f15987a = false;
+            this.f15988b = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f15993g < 0) {
+                getSerializedSize();
+            }
+            return this.f15993g;
+        }
+
+        public int getIconId() {
+            return this.f15990d;
+        }
+
+        public String getIconUrl() {
+            return this.f15992f;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasText()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getText());
+            }
+            if (hasIconId()) {
+                i += CodedOutputStreamMicro.computeInt32Size(2, getIconId());
+            }
+            if (hasIconUrl()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getIconUrl());
+            }
+            this.f15993g = i;
+            return i;
+        }
+
+        public RichText getText() {
+            return this.f15988b;
+        }
+
+        public boolean hasIconId() {
+            return this.f15989c;
+        }
+
+        public boolean hasIconUrl() {
+            return this.f15991e;
+        }
+
+        public boolean hasText() {
+            return this.f15987a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public ComboBox mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        MessageMicro richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setText(richText);
+                        continue;
+                    case 16:
+                        setIconId(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 26:
+                        setIconUrl(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public ComboBox setIconId(int i) {
+            this.f15989c = true;
+            this.f15990d = i;
+            return this;
+        }
+
+        public ComboBox setIconUrl(String str) {
+            this.f15991e = true;
+            this.f15992f = str;
+            return this;
+        }
+
+        public ComboBox setText(RichText richText) {
+            if (richText == null) {
+                return clearText();
+            }
+            this.f15987a = true;
+            this.f15988b = richText;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasText()) {
+                codedOutputStreamMicro.writeMessage(1, getText());
+            }
+            if (hasIconId()) {
+                codedOutputStreamMicro.writeInt32(2, getIconId());
+            }
+            if (hasIconUrl()) {
+                codedOutputStreamMicro.writeString(3, getIconUrl());
+            }
+        }
     }
-    i1 = i2;
-    if (hasMapsearchaladdinpanel()) {
-      i1 = i2 + CodedOutputStreamMicro.computeMessageSize(4, getMapsearchaladdinpanel());
+
+    public static final class Composit extends MessageMicro {
+        public static final int ICON_ID_FIELD_NUMBER = 1;
+        public static final int TAB_ID_FIELD_NUMBER = 3;
+        public static final int TITLE_FIELD_NUMBER = 2;
+        public static final int VALUE_FIELD_NUMBER = 4;
+        /* renamed from: a */
+        private boolean f15994a;
+        /* renamed from: b */
+        private int f15995b = 0;
+        /* renamed from: c */
+        private boolean f15996c;
+        /* renamed from: d */
+        private String f15997d = "";
+        /* renamed from: e */
+        private boolean f15998e;
+        /* renamed from: f */
+        private int f15999f = 0;
+        /* renamed from: g */
+        private List<String> f16000g = Collections.emptyList();
+        /* renamed from: h */
+        private int f16001h = -1;
+
+        public static Composit parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Composit().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Composit parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Composit) new Composit().mergeFrom(bArr);
+        }
+
+        public Composit addValue(String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            if (this.f16000g.isEmpty()) {
+                this.f16000g = new ArrayList();
+            }
+            this.f16000g.add(str);
+            return this;
+        }
+
+        public final Composit clear() {
+            clearIconId();
+            clearTitle();
+            clearTabId();
+            clearValue();
+            this.f16001h = -1;
+            return this;
+        }
+
+        public Composit clearIconId() {
+            this.f15994a = false;
+            this.f15995b = 0;
+            return this;
+        }
+
+        public Composit clearTabId() {
+            this.f15998e = false;
+            this.f15999f = 0;
+            return this;
+        }
+
+        public Composit clearTitle() {
+            this.f15996c = false;
+            this.f15997d = "";
+            return this;
+        }
+
+        public Composit clearValue() {
+            this.f16000g = Collections.emptyList();
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16001h < 0) {
+                getSerializedSize();
+            }
+            return this.f16001h;
+        }
+
+        public int getIconId() {
+            return this.f15995b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            int computeInt32Size = hasIconId() ? CodedOutputStreamMicro.computeInt32Size(1, getIconId()) + 0 : 0;
+            if (hasTitle()) {
+                computeInt32Size += CodedOutputStreamMicro.computeStringSize(2, getTitle());
+            }
+            int computeInt32Size2 = hasTabId() ? computeInt32Size + CodedOutputStreamMicro.computeInt32Size(3, getTabId()) : computeInt32Size;
+            for (String computeStringSizeNoTag : getValueList()) {
+                i += CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag);
+            }
+            computeInt32Size = (computeInt32Size2 + i) + (getValueList().size() * 1);
+            this.f16001h = computeInt32Size;
+            return computeInt32Size;
+        }
+
+        public int getTabId() {
+            return this.f15999f;
+        }
+
+        public String getTitle() {
+            return this.f15997d;
+        }
+
+        public String getValue(int i) {
+            return (String) this.f16000g.get(i);
+        }
+
+        public int getValueCount() {
+            return this.f16000g.size();
+        }
+
+        public List<String> getValueList() {
+            return this.f16000g;
+        }
+
+        public boolean hasIconId() {
+            return this.f15994a;
+        }
+
+        public boolean hasTabId() {
+            return this.f15998e;
+        }
+
+        public boolean hasTitle() {
+            return this.f15996c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Composit mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setIconId(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setTitle(codedInputStreamMicro.readString());
+                        continue;
+                    case 24:
+                        setTabId(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 34:
+                        addValue(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Composit setIconId(int i) {
+            this.f15994a = true;
+            this.f15995b = i;
+            return this;
+        }
+
+        public Composit setTabId(int i) {
+            this.f15998e = true;
+            this.f15999f = i;
+            return this;
+        }
+
+        public Composit setTitle(String str) {
+            this.f15996c = true;
+            this.f15997d = str;
+            return this;
+        }
+
+        public Composit setValue(int i, String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            this.f16000g.set(i, str);
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasIconId()) {
+                codedOutputStreamMicro.writeInt32(1, getIconId());
+            }
+            if (hasTitle()) {
+                codedOutputStreamMicro.writeString(2, getTitle());
+            }
+            if (hasTabId()) {
+                codedOutputStreamMicro.writeInt32(3, getTabId());
+            }
+            for (String writeString : getValueList()) {
+                codedOutputStreamMicro.writeString(4, writeString);
+            }
+        }
     }
-    i2 = i1;
-    if (hasMapsearchaladdinnormal()) {
-      i2 = i1 + CodedOutputStreamMicro.computeMessageSize(5, getMapsearchaladdinnormal());
+
+    public static final class Fatherson extends MessageMicro {
+        public static final int ACT_FIELD_NUMBER = 1;
+        public static final int CHILDREN_BTN_FIELD_NUMBER = 3;
+        public static final int TITLE_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f16002a;
+        /* renamed from: b */
+        private int f16003b = 0;
+        /* renamed from: c */
+        private boolean f16004c;
+        /* renamed from: d */
+        private String f16005d = "";
+        /* renamed from: e */
+        private List<ChildrenBtn> f16006e = Collections.emptyList();
+        /* renamed from: f */
+        private int f16007f = -1;
+
+        public static Fatherson parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Fatherson().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Fatherson parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Fatherson) new Fatherson().mergeFrom(bArr);
+        }
+
+        public Fatherson addChildrenBtn(ChildrenBtn childrenBtn) {
+            if (childrenBtn != null) {
+                if (this.f16006e.isEmpty()) {
+                    this.f16006e = new ArrayList();
+                }
+                this.f16006e.add(childrenBtn);
+            }
+            return this;
+        }
+
+        public final Fatherson clear() {
+            clearAct();
+            clearTitle();
+            clearChildrenBtn();
+            this.f16007f = -1;
+            return this;
+        }
+
+        public Fatherson clearAct() {
+            this.f16002a = false;
+            this.f16003b = 0;
+            return this;
+        }
+
+        public Fatherson clearChildrenBtn() {
+            this.f16006e = Collections.emptyList();
+            return this;
+        }
+
+        public Fatherson clearTitle() {
+            this.f16004c = false;
+            this.f16005d = "";
+            return this;
+        }
+
+        public int getAct() {
+            return this.f16003b;
+        }
+
+        public int getCachedSize() {
+            if (this.f16007f < 0) {
+                getSerializedSize();
+            }
+            return this.f16007f;
+        }
+
+        public ChildrenBtn getChildrenBtn(int i) {
+            return (ChildrenBtn) this.f16006e.get(i);
+        }
+
+        public int getChildrenBtnCount() {
+            return this.f16006e.size();
+        }
+
+        public List<ChildrenBtn> getChildrenBtnList() {
+            return this.f16006e;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasAct()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getAct());
+            }
+            if (hasTitle()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getTitle());
+            }
+            int i2 = i;
+            for (ChildrenBtn computeMessageSize : getChildrenBtnList()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(3, computeMessageSize) + i2;
+            }
+            this.f16007f = i2;
+            return i2;
+        }
+
+        public String getTitle() {
+            return this.f16005d;
+        }
+
+        public boolean hasAct() {
+            return this.f16002a;
+        }
+
+        public boolean hasTitle() {
+            return this.f16004c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Fatherson mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setAct(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setTitle(codedInputStreamMicro.readString());
+                        continue;
+                    case 26:
+                        MessageMicro childrenBtn = new ChildrenBtn();
+                        codedInputStreamMicro.readMessage(childrenBtn);
+                        addChildrenBtn(childrenBtn);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Fatherson setAct(int i) {
+            this.f16002a = true;
+            this.f16003b = i;
+            return this;
+        }
+
+        public Fatherson setChildrenBtn(int i, ChildrenBtn childrenBtn) {
+            if (childrenBtn != null) {
+                this.f16006e.set(i, childrenBtn);
+            }
+            return this;
+        }
+
+        public Fatherson setTitle(String str) {
+            this.f16004c = true;
+            this.f16005d = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasAct()) {
+                codedOutputStreamMicro.writeInt32(1, getAct());
+            }
+            if (hasTitle()) {
+                codedOutputStreamMicro.writeString(2, getTitle());
+            }
+            for (ChildrenBtn writeMessage : getChildrenBtnList()) {
+                codedOutputStreamMicro.writeMessage(3, writeMessage);
+            }
+        }
     }
-    i1 = i2;
-    if (hasVtable()) {
-      i1 = i2 + CodedOutputStreamMicro.computeMessageSize(6, getVtable());
+
+    public static final class Image extends MessageMicro {
+        public static final int ICON_ID_FIELD_NUMBER = 3;
+        public static final int LINK_FIELD_NUMBER = 2;
+        public static final int ORI_VALUE_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f16008a;
+        /* renamed from: b */
+        private int f16009b = 0;
+        /* renamed from: c */
+        private boolean f16010c;
+        /* renamed from: d */
+        private String f16011d = "";
+        /* renamed from: e */
+        private boolean f16012e;
+        /* renamed from: f */
+        private int f16013f = 0;
+        /* renamed from: g */
+        private int f16014g = -1;
+
+        public static Image parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Image().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Image parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Image) new Image().mergeFrom(bArr);
+        }
+
+        public final Image clear() {
+            clearOriValue();
+            clearLink();
+            clearIconId();
+            this.f16014g = -1;
+            return this;
+        }
+
+        public Image clearIconId() {
+            this.f16012e = false;
+            this.f16013f = 0;
+            return this;
+        }
+
+        public Image clearLink() {
+            this.f16010c = false;
+            this.f16011d = "";
+            return this;
+        }
+
+        public Image clearOriValue() {
+            this.f16008a = false;
+            this.f16009b = 0;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16014g < 0) {
+                getSerializedSize();
+            }
+            return this.f16014g;
+        }
+
+        public int getIconId() {
+            return this.f16013f;
+        }
+
+        public String getLink() {
+            return this.f16011d;
+        }
+
+        public int getOriValue() {
+            return this.f16009b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasOriValue()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getOriValue());
+            }
+            if (hasLink()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getLink());
+            }
+            if (hasIconId()) {
+                i += CodedOutputStreamMicro.computeInt32Size(3, getIconId());
+            }
+            this.f16014g = i;
+            return i;
+        }
+
+        public boolean hasIconId() {
+            return this.f16012e;
+        }
+
+        public boolean hasLink() {
+            return this.f16010c;
+        }
+
+        public boolean hasOriValue() {
+            return this.f16008a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Image mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setOriValue(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setLink(codedInputStreamMicro.readString());
+                        continue;
+                    case 24:
+                        setIconId(codedInputStreamMicro.readInt32());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Image setIconId(int i) {
+            this.f16012e = true;
+            this.f16013f = i;
+            return this;
+        }
+
+        public Image setLink(String str) {
+            this.f16010c = true;
+            this.f16011d = str;
+            return this;
+        }
+
+        public Image setOriValue(int i) {
+            this.f16008a = true;
+            this.f16009b = i;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasOriValue()) {
+                codedOutputStreamMicro.writeInt32(1, getOriValue());
+            }
+            if (hasLink()) {
+                codedOutputStreamMicro.writeString(2, getLink());
+            }
+            if (hasIconId()) {
+                codedOutputStreamMicro.writeInt32(3, getIconId());
+            }
+        }
     }
-    i2 = i1;
-    if (hasBtable()) {
-      i2 = i1 + CodedOutputStreamMicro.computeMessageSize(7, getBtable());
+
+    public static final class ImageTemplate extends MessageMicro {
+        public static final int FAIMAGEL5_FIELD_NUMBER = 13;
+        public static final int IMAGEL1C1_FIELD_NUMBER = 1;
+        public static final int IMAGEL1C2_FIELD_NUMBER = 2;
+        public static final int IMAGEL1C3_FIELD_NUMBER = 3;
+        public static final int IMAGEL2C1_FIELD_NUMBER = 4;
+        public static final int IMAGEL2C2_FIELD_NUMBER = 5;
+        public static final int IMAGEL2C3_FIELD_NUMBER = 6;
+        public static final int IMAGEL3C1_FIELD_NUMBER = 7;
+        public static final int IMAGEL3C2_FIELD_NUMBER = 8;
+        public static final int IMAGEL4LAB_FIELD_NUMBER = 14;
+        public static final int IMAGEL4_FIELD_NUMBER = 9;
+        public static final int IMAGEL5_FIELD_NUMBER = 10;
+        public static final int IMAGEL6_FIELD_NUMBER = 11;
+        public static final int UPPERLEFTCORNER_FIELD_NUMBER = 12;
+        /* renamed from: A */
+        private int f16015A = -1;
+        /* renamed from: a */
+        private boolean f16016a;
+        /* renamed from: b */
+        private Image f16017b = null;
+        /* renamed from: c */
+        private boolean f16018c;
+        /* renamed from: d */
+        private RichText f16019d = null;
+        /* renamed from: e */
+        private List<Resource> f16020e = Collections.emptyList();
+        /* renamed from: f */
+        private boolean f16021f;
+        /* renamed from: g */
+        private String f16022g = "";
+        /* renamed from: h */
+        private boolean f16023h;
+        /* renamed from: i */
+        private RichText f16024i = null;
+        /* renamed from: j */
+        private boolean f16025j;
+        /* renamed from: k */
+        private RichText f16026k = null;
+        /* renamed from: l */
+        private boolean f16027l;
+        /* renamed from: m */
+        private RichText f16028m = null;
+        /* renamed from: n */
+        private boolean f16029n;
+        /* renamed from: o */
+        private RichText f16030o = null;
+        /* renamed from: p */
+        private boolean f16031p;
+        /* renamed from: q */
+        private RichText f16032q = null;
+        /* renamed from: r */
+        private boolean f16033r;
+        /* renamed from: s */
+        private int f16034s = 0;
+        /* renamed from: t */
+        private boolean f16035t;
+        /* renamed from: u */
+        private Composit f16036u = null;
+        /* renamed from: v */
+        private boolean f16037v;
+        /* renamed from: w */
+        private Resource f16038w = null;
+        /* renamed from: x */
+        private boolean f16039x;
+        /* renamed from: y */
+        private Fatherson f16040y = null;
+        /* renamed from: z */
+        private List<String> f16041z = Collections.emptyList();
+
+        public static ImageTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new ImageTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static ImageTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (ImageTemplate) new ImageTemplate().mergeFrom(bArr);
+        }
+
+        public ImageTemplate addImagel1C3(Resource resource) {
+            if (resource != null) {
+                if (this.f16020e.isEmpty()) {
+                    this.f16020e = new ArrayList();
+                }
+                this.f16020e.add(resource);
+            }
+            return this;
+        }
+
+        public ImageTemplate addImagel4Lab(String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            if (this.f16041z.isEmpty()) {
+                this.f16041z = new ArrayList();
+            }
+            this.f16041z.add(str);
+            return this;
+        }
+
+        public final ImageTemplate clear() {
+            clearImagel1C1();
+            clearImagel1C2();
+            clearImagel1C3();
+            clearImagel2C1();
+            clearImagel2C2();
+            clearImagel2C3();
+            clearImagel3C1();
+            clearImagel3C2();
+            clearImagel4();
+            clearImagel5();
+            clearImagel6();
+            clearUpperleftcorner();
+            clearFaimagel5();
+            clearImagel4Lab();
+            this.f16015A = -1;
+            return this;
+        }
+
+        public ImageTemplate clearFaimagel5() {
+            this.f16039x = false;
+            this.f16040y = null;
+            return this;
+        }
+
+        public ImageTemplate clearImagel1C1() {
+            this.f16016a = false;
+            this.f16017b = null;
+            return this;
+        }
+
+        public ImageTemplate clearImagel1C2() {
+            this.f16018c = false;
+            this.f16019d = null;
+            return this;
+        }
+
+        public ImageTemplate clearImagel1C3() {
+            this.f16020e = Collections.emptyList();
+            return this;
+        }
+
+        public ImageTemplate clearImagel2C1() {
+            this.f16021f = false;
+            this.f16022g = "";
+            return this;
+        }
+
+        public ImageTemplate clearImagel2C2() {
+            this.f16023h = false;
+            this.f16024i = null;
+            return this;
+        }
+
+        public ImageTemplate clearImagel2C3() {
+            this.f16025j = false;
+            this.f16026k = null;
+            return this;
+        }
+
+        public ImageTemplate clearImagel3C1() {
+            this.f16027l = false;
+            this.f16028m = null;
+            return this;
+        }
+
+        public ImageTemplate clearImagel3C2() {
+            this.f16029n = false;
+            this.f16030o = null;
+            return this;
+        }
+
+        public ImageTemplate clearImagel4() {
+            this.f16031p = false;
+            this.f16032q = null;
+            return this;
+        }
+
+        public ImageTemplate clearImagel4Lab() {
+            this.f16041z = Collections.emptyList();
+            return this;
+        }
+
+        public ImageTemplate clearImagel5() {
+            this.f16033r = false;
+            this.f16034s = 0;
+            return this;
+        }
+
+        public ImageTemplate clearImagel6() {
+            this.f16035t = false;
+            this.f16036u = null;
+            return this;
+        }
+
+        public ImageTemplate clearUpperleftcorner() {
+            this.f16037v = false;
+            this.f16038w = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16015A < 0) {
+                getSerializedSize();
+            }
+            return this.f16015A;
+        }
+
+        public Fatherson getFaimagel5() {
+            return this.f16040y;
+        }
+
+        public Image getImagel1C1() {
+            return this.f16017b;
+        }
+
+        public RichText getImagel1C2() {
+            return this.f16019d;
+        }
+
+        public Resource getImagel1C3(int i) {
+            return (Resource) this.f16020e.get(i);
+        }
+
+        public int getImagel1C3Count() {
+            return this.f16020e.size();
+        }
+
+        public List<Resource> getImagel1C3List() {
+            return this.f16020e;
+        }
+
+        public String getImagel2C1() {
+            return this.f16022g;
+        }
+
+        public RichText getImagel2C2() {
+            return this.f16024i;
+        }
+
+        public RichText getImagel2C3() {
+            return this.f16026k;
+        }
+
+        public RichText getImagel3C1() {
+            return this.f16028m;
+        }
+
+        public RichText getImagel3C2() {
+            return this.f16030o;
+        }
+
+        public RichText getImagel4() {
+            return this.f16032q;
+        }
+
+        public String getImagel4Lab(int i) {
+            return (String) this.f16041z.get(i);
+        }
+
+        public int getImagel4LabCount() {
+            return this.f16041z.size();
+        }
+
+        public List<String> getImagel4LabList() {
+            return this.f16041z;
+        }
+
+        public int getImagel5() {
+            return this.f16034s;
+        }
+
+        public Composit getImagel6() {
+            return this.f16036u;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            int computeMessageSize = hasImagel1C1() ? CodedOutputStreamMicro.computeMessageSize(1, getImagel1C1()) + 0 : 0;
+            if (hasImagel1C2()) {
+                computeMessageSize += CodedOutputStreamMicro.computeMessageSize(2, getImagel1C2());
+            }
+            int i2 = computeMessageSize;
+            for (Resource computeMessageSize2 : getImagel1C3List()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(3, computeMessageSize2) + i2;
+            }
+            if (hasImagel2C1()) {
+                i2 += CodedOutputStreamMicro.computeStringSize(4, getImagel2C1());
+            }
+            if (hasImagel2C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(5, getImagel2C2());
+            }
+            if (hasImagel2C3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(6, getImagel2C3());
+            }
+            if (hasImagel3C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(7, getImagel3C1());
+            }
+            if (hasImagel3C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(8, getImagel3C2());
+            }
+            if (hasImagel4()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(9, getImagel4());
+            }
+            if (hasImagel5()) {
+                i2 += CodedOutputStreamMicro.computeInt32Size(10, getImagel5());
+            }
+            if (hasImagel6()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(11, getImagel6());
+            }
+            if (hasUpperleftcorner()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(12, getUpperleftcorner());
+            }
+            if (hasFaimagel5()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(13, getFaimagel5());
+            }
+            for (String computeStringSizeNoTag : getImagel4LabList()) {
+                i += CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag);
+            }
+            computeMessageSize = (i2 + i) + (getImagel4LabList().size() * 1);
+            this.f16015A = computeMessageSize;
+            return computeMessageSize;
+        }
+
+        public Resource getUpperleftcorner() {
+            return this.f16038w;
+        }
+
+        public boolean hasFaimagel5() {
+            return this.f16039x;
+        }
+
+        public boolean hasImagel1C1() {
+            return this.f16016a;
+        }
+
+        public boolean hasImagel1C2() {
+            return this.f16018c;
+        }
+
+        public boolean hasImagel2C1() {
+            return this.f16021f;
+        }
+
+        public boolean hasImagel2C2() {
+            return this.f16023h;
+        }
+
+        public boolean hasImagel2C3() {
+            return this.f16025j;
+        }
+
+        public boolean hasImagel3C1() {
+            return this.f16027l;
+        }
+
+        public boolean hasImagel3C2() {
+            return this.f16029n;
+        }
+
+        public boolean hasImagel4() {
+            return this.f16031p;
+        }
+
+        public boolean hasImagel5() {
+            return this.f16033r;
+        }
+
+        public boolean hasImagel6() {
+            return this.f16035t;
+        }
+
+        public boolean hasUpperleftcorner() {
+            return this.f16037v;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public ImageTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro image;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        image = new Image();
+                        codedInputStreamMicro.readMessage(image);
+                        setImagel1C1(image);
+                        continue;
+                    case 18:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setImagel1C2(image);
+                        continue;
+                    case 26:
+                        image = new Resource();
+                        codedInputStreamMicro.readMessage(image);
+                        addImagel1C3(image);
+                        continue;
+                    case 34:
+                        setImagel2C1(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setImagel2C2(image);
+                        continue;
+                    case 50:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setImagel2C3(image);
+                        continue;
+                    case 58:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setImagel3C1(image);
+                        continue;
+                    case 66:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setImagel3C2(image);
+                        continue;
+                    case 74:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setImagel4(image);
+                        continue;
+                    case 80:
+                        setImagel5(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 90:
+                        image = new Composit();
+                        codedInputStreamMicro.readMessage(image);
+                        setImagel6(image);
+                        continue;
+                    case 98:
+                        image = new Resource();
+                        codedInputStreamMicro.readMessage(image);
+                        setUpperleftcorner(image);
+                        continue;
+                    case 106:
+                        image = new Fatherson();
+                        codedInputStreamMicro.readMessage(image);
+                        setFaimagel5(image);
+                        continue;
+                    case 114:
+                        addImagel4Lab(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public ImageTemplate setFaimagel5(Fatherson fatherson) {
+            if (fatherson == null) {
+                return clearFaimagel5();
+            }
+            this.f16039x = true;
+            this.f16040y = fatherson;
+            return this;
+        }
+
+        public ImageTemplate setImagel1C1(Image image) {
+            if (image == null) {
+                return clearImagel1C1();
+            }
+            this.f16016a = true;
+            this.f16017b = image;
+            return this;
+        }
+
+        public ImageTemplate setImagel1C2(RichText richText) {
+            if (richText == null) {
+                return clearImagel1C2();
+            }
+            this.f16018c = true;
+            this.f16019d = richText;
+            return this;
+        }
+
+        public ImageTemplate setImagel1C3(int i, Resource resource) {
+            if (resource != null) {
+                this.f16020e.set(i, resource);
+            }
+            return this;
+        }
+
+        public ImageTemplate setImagel2C1(String str) {
+            this.f16021f = true;
+            this.f16022g = str;
+            return this;
+        }
+
+        public ImageTemplate setImagel2C2(RichText richText) {
+            if (richText == null) {
+                return clearImagel2C2();
+            }
+            this.f16023h = true;
+            this.f16024i = richText;
+            return this;
+        }
+
+        public ImageTemplate setImagel2C3(RichText richText) {
+            if (richText == null) {
+                return clearImagel2C3();
+            }
+            this.f16025j = true;
+            this.f16026k = richText;
+            return this;
+        }
+
+        public ImageTemplate setImagel3C1(RichText richText) {
+            if (richText == null) {
+                return clearImagel3C1();
+            }
+            this.f16027l = true;
+            this.f16028m = richText;
+            return this;
+        }
+
+        public ImageTemplate setImagel3C2(RichText richText) {
+            if (richText == null) {
+                return clearImagel3C2();
+            }
+            this.f16029n = true;
+            this.f16030o = richText;
+            return this;
+        }
+
+        public ImageTemplate setImagel4(RichText richText) {
+            if (richText == null) {
+                return clearImagel4();
+            }
+            this.f16031p = true;
+            this.f16032q = richText;
+            return this;
+        }
+
+        public ImageTemplate setImagel4Lab(int i, String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            this.f16041z.set(i, str);
+            return this;
+        }
+
+        public ImageTemplate setImagel5(int i) {
+            this.f16033r = true;
+            this.f16034s = i;
+            return this;
+        }
+
+        public ImageTemplate setImagel6(Composit composit) {
+            if (composit == null) {
+                return clearImagel6();
+            }
+            this.f16035t = true;
+            this.f16036u = composit;
+            return this;
+        }
+
+        public ImageTemplate setUpperleftcorner(Resource resource) {
+            if (resource == null) {
+                return clearUpperleftcorner();
+            }
+            this.f16037v = true;
+            this.f16038w = resource;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasImagel1C1()) {
+                codedOutputStreamMicro.writeMessage(1, getImagel1C1());
+            }
+            if (hasImagel1C2()) {
+                codedOutputStreamMicro.writeMessage(2, getImagel1C2());
+            }
+            for (Resource writeMessage : getImagel1C3List()) {
+                codedOutputStreamMicro.writeMessage(3, writeMessage);
+            }
+            if (hasImagel2C1()) {
+                codedOutputStreamMicro.writeString(4, getImagel2C1());
+            }
+            if (hasImagel2C2()) {
+                codedOutputStreamMicro.writeMessage(5, getImagel2C2());
+            }
+            if (hasImagel2C3()) {
+                codedOutputStreamMicro.writeMessage(6, getImagel2C3());
+            }
+            if (hasImagel3C1()) {
+                codedOutputStreamMicro.writeMessage(7, getImagel3C1());
+            }
+            if (hasImagel3C2()) {
+                codedOutputStreamMicro.writeMessage(8, getImagel3C2());
+            }
+            if (hasImagel4()) {
+                codedOutputStreamMicro.writeMessage(9, getImagel4());
+            }
+            if (hasImagel5()) {
+                codedOutputStreamMicro.writeInt32(10, getImagel5());
+            }
+            if (hasImagel6()) {
+                codedOutputStreamMicro.writeMessage(11, getImagel6());
+            }
+            if (hasUpperleftcorner()) {
+                codedOutputStreamMicro.writeMessage(12, getUpperleftcorner());
+            }
+            if (hasFaimagel5()) {
+                codedOutputStreamMicro.writeMessage(13, getFaimagel5());
+            }
+            for (String writeString : getImagel4LabList()) {
+                codedOutputStreamMicro.writeString(14, writeString);
+            }
+        }
     }
-    i1 = i2;
-    if (hasSinglecard()) {
-      i1 = i2 + CodedOutputStreamMicro.computeMessageSize(8, getSinglecard());
+
+    public static final class LtableTemplate extends MessageMicro {
+        public static final int BUTTON = 3;
+        public static final int INTERNATION_FIELD_NUMBER = 6;
+        public static final int LONG_IMAGE = 2;
+        public static final int LONG_IMAGE_BUTTON = 4;
+        public static final int R1C1_FIELD_NUMBER = 2;
+        public static final int R1C2_FIELD_NUMBER = 3;
+        public static final int R1C3_FIELD_NUMBER = 4;
+        public static final int R1C4_FIELD_NUMBER = 5;
+        public static final int R2C1_FIELD_NUMBER = 7;
+        public static final int R2C2_FIELD_NUMBER = 8;
+        public static final int R3C1_FIELD_NUMBER = 9;
+        public static final int R3C2_FIELD_NUMBER = 10;
+        public static final int R3C3_FIELD_NUMBER = 11;
+        public static final int R4C1_FIELD_NUMBER = 12;
+        public static final int R4C2_FIELD_NUMBER = 13;
+        public static final int R4C3_FIELD_NUMBER = 14;
+        public static final int R5C1_FIELD_NUMBER = 15;
+        public static final int R5C2_FIELD_NUMBER = 16;
+        public static final int R5C3_FIELD_NUMBER = 17;
+        public static final int R6C1_FIELD_NUMBER = 18;
+        public static final int R7C1_FIELD_NUMBER = 19;
+        public static final int SHORT_IMAGE = 1;
+        public static final int TYPE_FIELD_NUMBER = 1;
+        /* renamed from: A */
+        private boolean f16042A;
+        /* renamed from: B */
+        private Fatherson f16043B = null;
+        /* renamed from: C */
+        private boolean f16044C;
+        /* renamed from: D */
+        private Composit f16045D = null;
+        /* renamed from: E */
+        private int f16046E = -1;
+        /* renamed from: a */
+        private boolean f16047a;
+        /* renamed from: b */
+        private int f16048b = 1;
+        /* renamed from: c */
+        private boolean f16049c;
+        /* renamed from: d */
+        private Image f16050d = null;
+        /* renamed from: e */
+        private boolean f16051e;
+        /* renamed from: f */
+        private RichText f16052f = null;
+        /* renamed from: g */
+        private boolean f16053g;
+        /* renamed from: h */
+        private RichText f16054h = null;
+        /* renamed from: i */
+        private List<Button> f16055i = Collections.emptyList();
+        /* renamed from: j */
+        private boolean f16056j;
+        /* renamed from: k */
+        private RichText f16057k = null;
+        /* renamed from: l */
+        private boolean f16058l;
+        /* renamed from: m */
+        private RichText f16059m = null;
+        /* renamed from: n */
+        private List<ScatterStyle> f16060n = Collections.emptyList();
+        /* renamed from: o */
+        private boolean f16061o;
+        /* renamed from: p */
+        private Score f16062p = null;
+        /* renamed from: q */
+        private List<ComboBox> f16063q = Collections.emptyList();
+        /* renamed from: r */
+        private List<ScatterStyle> f16064r = Collections.emptyList();
+        /* renamed from: s */
+        private boolean f16065s;
+        /* renamed from: t */
+        private Score f16066t = null;
+        /* renamed from: u */
+        private List<ComboBox> f16067u = Collections.emptyList();
+        /* renamed from: v */
+        private List<ScatterStyle> f16068v = Collections.emptyList();
+        /* renamed from: w */
+        private boolean f16069w;
+        /* renamed from: x */
+        private Score f16070x = null;
+        /* renamed from: y */
+        private List<ComboBox> f16071y = Collections.emptyList();
+        /* renamed from: z */
+        private List<ScatterStyle> f16072z = Collections.emptyList();
+
+        public static LtableTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new LtableTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static LtableTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (LtableTemplate) new LtableTemplate().mergeFrom(bArr);
+        }
+
+        public LtableTemplate addR1C4(Button button) {
+            if (button != null) {
+                if (this.f16055i.isEmpty()) {
+                    this.f16055i = new ArrayList();
+                }
+                this.f16055i.add(button);
+            }
+            return this;
+        }
+
+        public LtableTemplate addR2C2(ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                if (this.f16060n.isEmpty()) {
+                    this.f16060n = new ArrayList();
+                }
+                this.f16060n.add(scatterStyle);
+            }
+            return this;
+        }
+
+        public LtableTemplate addR3C2(ComboBox comboBox) {
+            if (comboBox != null) {
+                if (this.f16063q.isEmpty()) {
+                    this.f16063q = new ArrayList();
+                }
+                this.f16063q.add(comboBox);
+            }
+            return this;
+        }
+
+        public LtableTemplate addR3C3(ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                if (this.f16064r.isEmpty()) {
+                    this.f16064r = new ArrayList();
+                }
+                this.f16064r.add(scatterStyle);
+            }
+            return this;
+        }
+
+        public LtableTemplate addR4C2(ComboBox comboBox) {
+            if (comboBox != null) {
+                if (this.f16067u.isEmpty()) {
+                    this.f16067u = new ArrayList();
+                }
+                this.f16067u.add(comboBox);
+            }
+            return this;
+        }
+
+        public LtableTemplate addR4C3(ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                if (this.f16068v.isEmpty()) {
+                    this.f16068v = new ArrayList();
+                }
+                this.f16068v.add(scatterStyle);
+            }
+            return this;
+        }
+
+        public LtableTemplate addR5C2(ComboBox comboBox) {
+            if (comboBox != null) {
+                if (this.f16071y.isEmpty()) {
+                    this.f16071y = new ArrayList();
+                }
+                this.f16071y.add(comboBox);
+            }
+            return this;
+        }
+
+        public LtableTemplate addR5C3(ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                if (this.f16072z.isEmpty()) {
+                    this.f16072z = new ArrayList();
+                }
+                this.f16072z.add(scatterStyle);
+            }
+            return this;
+        }
+
+        public final LtableTemplate clear() {
+            clearType();
+            clearR1C1();
+            clearR1C2();
+            clearR1C3();
+            clearR1C4();
+            clearInternation();
+            clearR2C1();
+            clearR2C2();
+            clearR3C1();
+            clearR3C2();
+            clearR3C3();
+            clearR4C1();
+            clearR4C2();
+            clearR4C3();
+            clearR5C1();
+            clearR5C2();
+            clearR5C3();
+            clearR6C1();
+            clearR7C1();
+            this.f16046E = -1;
+            return this;
+        }
+
+        public LtableTemplate clearInternation() {
+            this.f16056j = false;
+            this.f16057k = null;
+            return this;
+        }
+
+        public LtableTemplate clearR1C1() {
+            this.f16049c = false;
+            this.f16050d = null;
+            return this;
+        }
+
+        public LtableTemplate clearR1C2() {
+            this.f16051e = false;
+            this.f16052f = null;
+            return this;
+        }
+
+        public LtableTemplate clearR1C3() {
+            this.f16053g = false;
+            this.f16054h = null;
+            return this;
+        }
+
+        public LtableTemplate clearR1C4() {
+            this.f16055i = Collections.emptyList();
+            return this;
+        }
+
+        public LtableTemplate clearR2C1() {
+            this.f16058l = false;
+            this.f16059m = null;
+            return this;
+        }
+
+        public LtableTemplate clearR2C2() {
+            this.f16060n = Collections.emptyList();
+            return this;
+        }
+
+        public LtableTemplate clearR3C1() {
+            this.f16061o = false;
+            this.f16062p = null;
+            return this;
+        }
+
+        public LtableTemplate clearR3C2() {
+            this.f16063q = Collections.emptyList();
+            return this;
+        }
+
+        public LtableTemplate clearR3C3() {
+            this.f16064r = Collections.emptyList();
+            return this;
+        }
+
+        public LtableTemplate clearR4C1() {
+            this.f16065s = false;
+            this.f16066t = null;
+            return this;
+        }
+
+        public LtableTemplate clearR4C2() {
+            this.f16067u = Collections.emptyList();
+            return this;
+        }
+
+        public LtableTemplate clearR4C3() {
+            this.f16068v = Collections.emptyList();
+            return this;
+        }
+
+        public LtableTemplate clearR5C1() {
+            this.f16069w = false;
+            this.f16070x = null;
+            return this;
+        }
+
+        public LtableTemplate clearR5C2() {
+            this.f16071y = Collections.emptyList();
+            return this;
+        }
+
+        public LtableTemplate clearR5C3() {
+            this.f16072z = Collections.emptyList();
+            return this;
+        }
+
+        public LtableTemplate clearR6C1() {
+            this.f16042A = false;
+            this.f16043B = null;
+            return this;
+        }
+
+        public LtableTemplate clearR7C1() {
+            this.f16044C = false;
+            this.f16045D = null;
+            return this;
+        }
+
+        public LtableTemplate clearType() {
+            this.f16047a = false;
+            this.f16048b = 1;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16046E < 0) {
+                getSerializedSize();
+            }
+            return this.f16046E;
+        }
+
+        public RichText getInternation() {
+            return this.f16057k;
+        }
+
+        public Image getR1C1() {
+            return this.f16050d;
+        }
+
+        public RichText getR1C2() {
+            return this.f16052f;
+        }
+
+        public RichText getR1C3() {
+            return this.f16054h;
+        }
+
+        public Button getR1C4(int i) {
+            return (Button) this.f16055i.get(i);
+        }
+
+        public int getR1C4Count() {
+            return this.f16055i.size();
+        }
+
+        public List<Button> getR1C4List() {
+            return this.f16055i;
+        }
+
+        public RichText getR2C1() {
+            return this.f16059m;
+        }
+
+        public ScatterStyle getR2C2(int i) {
+            return (ScatterStyle) this.f16060n.get(i);
+        }
+
+        public int getR2C2Count() {
+            return this.f16060n.size();
+        }
+
+        public List<ScatterStyle> getR2C2List() {
+            return this.f16060n;
+        }
+
+        public Score getR3C1() {
+            return this.f16062p;
+        }
+
+        public ComboBox getR3C2(int i) {
+            return (ComboBox) this.f16063q.get(i);
+        }
+
+        public int getR3C2Count() {
+            return this.f16063q.size();
+        }
+
+        public List<ComboBox> getR3C2List() {
+            return this.f16063q;
+        }
+
+        public ScatterStyle getR3C3(int i) {
+            return (ScatterStyle) this.f16064r.get(i);
+        }
+
+        public int getR3C3Count() {
+            return this.f16064r.size();
+        }
+
+        public List<ScatterStyle> getR3C3List() {
+            return this.f16064r;
+        }
+
+        public Score getR4C1() {
+            return this.f16066t;
+        }
+
+        public ComboBox getR4C2(int i) {
+            return (ComboBox) this.f16067u.get(i);
+        }
+
+        public int getR4C2Count() {
+            return this.f16067u.size();
+        }
+
+        public List<ComboBox> getR4C2List() {
+            return this.f16067u;
+        }
+
+        public ScatterStyle getR4C3(int i) {
+            return (ScatterStyle) this.f16068v.get(i);
+        }
+
+        public int getR4C3Count() {
+            return this.f16068v.size();
+        }
+
+        public List<ScatterStyle> getR4C3List() {
+            return this.f16068v;
+        }
+
+        public Score getR5C1() {
+            return this.f16070x;
+        }
+
+        public ComboBox getR5C2(int i) {
+            return (ComboBox) this.f16071y.get(i);
+        }
+
+        public int getR5C2Count() {
+            return this.f16071y.size();
+        }
+
+        public List<ComboBox> getR5C2List() {
+            return this.f16071y;
+        }
+
+        public ScatterStyle getR5C3(int i) {
+            return (ScatterStyle) this.f16072z.get(i);
+        }
+
+        public int getR5C3Count() {
+            return this.f16072z.size();
+        }
+
+        public List<ScatterStyle> getR5C3List() {
+            return this.f16072z;
+        }
+
+        public Fatherson getR6C1() {
+            return this.f16043B;
+        }
+
+        public Composit getR7C1() {
+            return this.f16045D;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasType()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getType());
+            }
+            if (hasR1C1()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getR1C1());
+            }
+            if (hasR1C2()) {
+                i += CodedOutputStreamMicro.computeMessageSize(3, getR1C2());
+            }
+            if (hasR1C3()) {
+                i += CodedOutputStreamMicro.computeMessageSize(4, getR1C3());
+            }
+            int i2 = i;
+            for (Button computeMessageSize : getR1C4List()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(5, computeMessageSize) + i2;
+            }
+            if (hasInternation()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(6, getInternation());
+            }
+            if (hasR2C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(7, getR2C1());
+            }
+            for (ScatterStyle computeMessageSize2 : getR2C2List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(8, computeMessageSize2);
+            }
+            if (hasR3C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(9, getR3C1());
+            }
+            for (ComboBox computeMessageSize3 : getR3C2List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(10, computeMessageSize3);
+            }
+            for (ScatterStyle computeMessageSize22 : getR3C3List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(11, computeMessageSize22);
+            }
+            if (hasR4C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(12, getR4C1());
+            }
+            for (ComboBox computeMessageSize32 : getR4C2List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(13, computeMessageSize32);
+            }
+            for (ScatterStyle computeMessageSize222 : getR4C3List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(14, computeMessageSize222);
+            }
+            if (hasR5C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(15, getR5C1());
+            }
+            for (ComboBox computeMessageSize322 : getR5C2List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(16, computeMessageSize322);
+            }
+            for (ScatterStyle computeMessageSize2222 : getR5C3List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(17, computeMessageSize2222);
+            }
+            if (hasR6C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(18, getR6C1());
+            }
+            if (hasR7C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(19, getR7C1());
+            }
+            this.f16046E = i2;
+            return i2;
+        }
+
+        public int getType() {
+            return this.f16048b;
+        }
+
+        public boolean hasInternation() {
+            return this.f16056j;
+        }
+
+        public boolean hasR1C1() {
+            return this.f16049c;
+        }
+
+        public boolean hasR1C2() {
+            return this.f16051e;
+        }
+
+        public boolean hasR1C3() {
+            return this.f16053g;
+        }
+
+        public boolean hasR2C1() {
+            return this.f16058l;
+        }
+
+        public boolean hasR3C1() {
+            return this.f16061o;
+        }
+
+        public boolean hasR4C1() {
+            return this.f16065s;
+        }
+
+        public boolean hasR5C1() {
+            return this.f16069w;
+        }
+
+        public boolean hasR6C1() {
+            return this.f16042A;
+        }
+
+        public boolean hasR7C1() {
+            return this.f16044C;
+        }
+
+        public boolean hasType() {
+            return this.f16047a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public LtableTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro image;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setType(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        image = new Image();
+                        codedInputStreamMicro.readMessage(image);
+                        setR1C1(image);
+                        continue;
+                    case 26:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setR1C2(image);
+                        continue;
+                    case 34:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setR1C3(image);
+                        continue;
+                    case 42:
+                        image = new Button();
+                        codedInputStreamMicro.readMessage(image);
+                        addR1C4(image);
+                        continue;
+                    case 50:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setInternation(image);
+                        continue;
+                    case 58:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setR2C1(image);
+                        continue;
+                    case 66:
+                        image = new ScatterStyle();
+                        codedInputStreamMicro.readMessage(image);
+                        addR2C2(image);
+                        continue;
+                    case 74:
+                        image = new Score();
+                        codedInputStreamMicro.readMessage(image);
+                        setR3C1(image);
+                        continue;
+                    case 82:
+                        image = new ComboBox();
+                        codedInputStreamMicro.readMessage(image);
+                        addR3C2(image);
+                        continue;
+                    case 90:
+                        image = new ScatterStyle();
+                        codedInputStreamMicro.readMessage(image);
+                        addR3C3(image);
+                        continue;
+                    case 98:
+                        image = new Score();
+                        codedInputStreamMicro.readMessage(image);
+                        setR4C1(image);
+                        continue;
+                    case 106:
+                        image = new ComboBox();
+                        codedInputStreamMicro.readMessage(image);
+                        addR4C2(image);
+                        continue;
+                    case 114:
+                        image = new ScatterStyle();
+                        codedInputStreamMicro.readMessage(image);
+                        addR4C3(image);
+                        continue;
+                    case C1253f.df /*122*/:
+                        image = new Score();
+                        codedInputStreamMicro.readMessage(image);
+                        setR5C1(image);
+                        continue;
+                    case 130:
+                        image = new ComboBox();
+                        codedInputStreamMicro.readMessage(image);
+                        addR5C2(image);
+                        continue;
+                    case 138:
+                        image = new ScatterStyle();
+                        codedInputStreamMicro.readMessage(image);
+                        addR5C3(image);
+                        continue;
+                    case 146:
+                        image = new Fatherson();
+                        codedInputStreamMicro.readMessage(image);
+                        setR6C1(image);
+                        continue;
+                    case 154:
+                        image = new Composit();
+                        codedInputStreamMicro.readMessage(image);
+                        setR7C1(image);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public LtableTemplate setInternation(RichText richText) {
+            if (richText == null) {
+                return clearInternation();
+            }
+            this.f16056j = true;
+            this.f16057k = richText;
+            return this;
+        }
+
+        public LtableTemplate setR1C1(Image image) {
+            if (image == null) {
+                return clearR1C1();
+            }
+            this.f16049c = true;
+            this.f16050d = image;
+            return this;
+        }
+
+        public LtableTemplate setR1C2(RichText richText) {
+            if (richText == null) {
+                return clearR1C2();
+            }
+            this.f16051e = true;
+            this.f16052f = richText;
+            return this;
+        }
+
+        public LtableTemplate setR1C3(RichText richText) {
+            if (richText == null) {
+                return clearR1C3();
+            }
+            this.f16053g = true;
+            this.f16054h = richText;
+            return this;
+        }
+
+        public LtableTemplate setR1C4(int i, Button button) {
+            if (button != null) {
+                this.f16055i.set(i, button);
+            }
+            return this;
+        }
+
+        public LtableTemplate setR2C1(RichText richText) {
+            if (richText == null) {
+                return clearR2C1();
+            }
+            this.f16058l = true;
+            this.f16059m = richText;
+            return this;
+        }
+
+        public LtableTemplate setR2C2(int i, ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                this.f16060n.set(i, scatterStyle);
+            }
+            return this;
+        }
+
+        public LtableTemplate setR3C1(Score score) {
+            if (score == null) {
+                return clearR3C1();
+            }
+            this.f16061o = true;
+            this.f16062p = score;
+            return this;
+        }
+
+        public LtableTemplate setR3C2(int i, ComboBox comboBox) {
+            if (comboBox != null) {
+                this.f16063q.set(i, comboBox);
+            }
+            return this;
+        }
+
+        public LtableTemplate setR3C3(int i, ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                this.f16064r.set(i, scatterStyle);
+            }
+            return this;
+        }
+
+        public LtableTemplate setR4C1(Score score) {
+            if (score == null) {
+                return clearR4C1();
+            }
+            this.f16065s = true;
+            this.f16066t = score;
+            return this;
+        }
+
+        public LtableTemplate setR4C2(int i, ComboBox comboBox) {
+            if (comboBox != null) {
+                this.f16067u.set(i, comboBox);
+            }
+            return this;
+        }
+
+        public LtableTemplate setR4C3(int i, ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                this.f16068v.set(i, scatterStyle);
+            }
+            return this;
+        }
+
+        public LtableTemplate setR5C1(Score score) {
+            if (score == null) {
+                return clearR5C1();
+            }
+            this.f16069w = true;
+            this.f16070x = score;
+            return this;
+        }
+
+        public LtableTemplate setR5C2(int i, ComboBox comboBox) {
+            if (comboBox != null) {
+                this.f16071y.set(i, comboBox);
+            }
+            return this;
+        }
+
+        public LtableTemplate setR5C3(int i, ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                this.f16072z.set(i, scatterStyle);
+            }
+            return this;
+        }
+
+        public LtableTemplate setR6C1(Fatherson fatherson) {
+            if (fatherson == null) {
+                return clearR6C1();
+            }
+            this.f16042A = true;
+            this.f16043B = fatherson;
+            return this;
+        }
+
+        public LtableTemplate setR7C1(Composit composit) {
+            if (composit == null) {
+                return clearR7C1();
+            }
+            this.f16044C = true;
+            this.f16045D = composit;
+            return this;
+        }
+
+        public LtableTemplate setType(int i) {
+            this.f16047a = true;
+            this.f16048b = i;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasType()) {
+                codedOutputStreamMicro.writeInt32(1, getType());
+            }
+            if (hasR1C1()) {
+                codedOutputStreamMicro.writeMessage(2, getR1C1());
+            }
+            if (hasR1C2()) {
+                codedOutputStreamMicro.writeMessage(3, getR1C2());
+            }
+            if (hasR1C3()) {
+                codedOutputStreamMicro.writeMessage(4, getR1C3());
+            }
+            for (Button writeMessage : getR1C4List()) {
+                codedOutputStreamMicro.writeMessage(5, writeMessage);
+            }
+            if (hasInternation()) {
+                codedOutputStreamMicro.writeMessage(6, getInternation());
+            }
+            if (hasR2C1()) {
+                codedOutputStreamMicro.writeMessage(7, getR2C1());
+            }
+            for (ScatterStyle writeMessage2 : getR2C2List()) {
+                codedOutputStreamMicro.writeMessage(8, writeMessage2);
+            }
+            if (hasR3C1()) {
+                codedOutputStreamMicro.writeMessage(9, getR3C1());
+            }
+            for (ComboBox writeMessage3 : getR3C2List()) {
+                codedOutputStreamMicro.writeMessage(10, writeMessage3);
+            }
+            for (ScatterStyle writeMessage22 : getR3C3List()) {
+                codedOutputStreamMicro.writeMessage(11, writeMessage22);
+            }
+            if (hasR4C1()) {
+                codedOutputStreamMicro.writeMessage(12, getR4C1());
+            }
+            for (ComboBox writeMessage32 : getR4C2List()) {
+                codedOutputStreamMicro.writeMessage(13, writeMessage32);
+            }
+            for (ScatterStyle writeMessage222 : getR4C3List()) {
+                codedOutputStreamMicro.writeMessage(14, writeMessage222);
+            }
+            if (hasR5C1()) {
+                codedOutputStreamMicro.writeMessage(15, getR5C1());
+            }
+            for (ComboBox writeMessage322 : getR5C2List()) {
+                codedOutputStreamMicro.writeMessage(16, writeMessage322);
+            }
+            for (ScatterStyle writeMessage2222 : getR5C3List()) {
+                codedOutputStreamMicro.writeMessage(17, writeMessage2222);
+            }
+            if (hasR6C1()) {
+                codedOutputStreamMicro.writeMessage(18, getR6C1());
+            }
+            if (hasR7C1()) {
+                codedOutputStreamMicro.writeMessage(19, getR7C1());
+            }
+        }
     }
-    i2 = i1;
-    if (hasLtable()) {
-      i2 = i1 + CodedOutputStreamMicro.computeMessageSize(9, getLtable());
+
+    public static final class MapSearchaladdinNormalTemplate extends MessageMicro {
+        public static final int ALADDINNORMALL1_FIELD_NUMBER = 1;
+        public static final int ALADDINNORMALL2_FIELD_NUMBER = 2;
+        public static final int ALADDINNORMALL3_FIELD_NUMBER = 3;
+        /* renamed from: a */
+        private boolean f16073a;
+        /* renamed from: b */
+        private RichText f16074b = null;
+        /* renamed from: c */
+        private boolean f16075c;
+        /* renamed from: d */
+        private RichText f16076d = null;
+        /* renamed from: e */
+        private boolean f16077e;
+        /* renamed from: f */
+        private RichText f16078f = null;
+        /* renamed from: g */
+        private int f16079g = -1;
+
+        public static MapSearchaladdinNormalTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new MapSearchaladdinNormalTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static MapSearchaladdinNormalTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (MapSearchaladdinNormalTemplate) new MapSearchaladdinNormalTemplate().mergeFrom(bArr);
+        }
+
+        public final MapSearchaladdinNormalTemplate clear() {
+            clearAladdinnormall1();
+            clearAladdinnormall2();
+            clearAladdinnormall3();
+            this.f16079g = -1;
+            return this;
+        }
+
+        public MapSearchaladdinNormalTemplate clearAladdinnormall1() {
+            this.f16073a = false;
+            this.f16074b = null;
+            return this;
+        }
+
+        public MapSearchaladdinNormalTemplate clearAladdinnormall2() {
+            this.f16075c = false;
+            this.f16076d = null;
+            return this;
+        }
+
+        public MapSearchaladdinNormalTemplate clearAladdinnormall3() {
+            this.f16077e = false;
+            this.f16078f = null;
+            return this;
+        }
+
+        public RichText getAladdinnormall1() {
+            return this.f16074b;
+        }
+
+        public RichText getAladdinnormall2() {
+            return this.f16076d;
+        }
+
+        public RichText getAladdinnormall3() {
+            return this.f16078f;
+        }
+
+        public int getCachedSize() {
+            if (this.f16079g < 0) {
+                getSerializedSize();
+            }
+            return this.f16079g;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasAladdinnormall1()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getAladdinnormall1());
+            }
+            if (hasAladdinnormall2()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getAladdinnormall2());
+            }
+            if (hasAladdinnormall3()) {
+                i += CodedOutputStreamMicro.computeMessageSize(3, getAladdinnormall3());
+            }
+            this.f16079g = i;
+            return i;
+        }
+
+        public boolean hasAladdinnormall1() {
+            return this.f16073a;
+        }
+
+        public boolean hasAladdinnormall2() {
+            return this.f16075c;
+        }
+
+        public boolean hasAladdinnormall3() {
+            return this.f16077e;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public MapSearchaladdinNormalTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro richText;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinnormall1(richText);
+                        continue;
+                    case 18:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinnormall2(richText);
+                        continue;
+                    case 26:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinnormall3(richText);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public MapSearchaladdinNormalTemplate setAladdinnormall1(RichText richText) {
+            if (richText == null) {
+                return clearAladdinnormall1();
+            }
+            this.f16073a = true;
+            this.f16074b = richText;
+            return this;
+        }
+
+        public MapSearchaladdinNormalTemplate setAladdinnormall2(RichText richText) {
+            if (richText == null) {
+                return clearAladdinnormall2();
+            }
+            this.f16075c = true;
+            this.f16076d = richText;
+            return this;
+        }
+
+        public MapSearchaladdinNormalTemplate setAladdinnormall3(RichText richText) {
+            if (richText == null) {
+                return clearAladdinnormall3();
+            }
+            this.f16077e = true;
+            this.f16078f = richText;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasAladdinnormall1()) {
+                codedOutputStreamMicro.writeMessage(1, getAladdinnormall1());
+            }
+            if (hasAladdinnormall2()) {
+                codedOutputStreamMicro.writeMessage(2, getAladdinnormall2());
+            }
+            if (hasAladdinnormall3()) {
+                codedOutputStreamMicro.writeMessage(3, getAladdinnormall3());
+            }
+        }
     }
-    this.s = i2;
-    return i2;
-  }
-  
-  public SingleCardTemplate getSinglecard()
-  {
-    return this.p;
-  }
-  
-  public VtableTemplate getVtable()
-  {
-    return this.l;
-  }
-  
-  public boolean hasBtable()
-  {
-    return this.m;
-  }
-  
-  public boolean hasImage()
-  {
-    return this.c;
-  }
-  
-  public boolean hasLtable()
-  {
-    return this.q;
-  }
-  
-  public boolean hasMapsearchaladdinnormal()
-  {
-    return this.i;
-  }
-  
-  public boolean hasMapsearchaladdinpanel()
-  {
-    return this.g;
-  }
-  
-  public boolean hasNormal()
-  {
-    return this.a;
-  }
-  
-  public boolean hasPanel()
-  {
-    return this.e;
-  }
-  
-  public boolean hasSinglecard()
-  {
-    return this.o;
-  }
-  
-  public boolean hasVtable()
-  {
-    return this.k;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Template mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      Object localObject;
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
+
+    public static final class MapSearchaladdinPanelTemplate extends MessageMicro {
+        public static final int ALADDINPANELL1C1_FIELD_NUMBER = 1;
+        public static final int ALADDINPANELL1C2_FIELD_NUMBER = 2;
+        public static final int ALADDINPANELL2C1_FIELD_NUMBER = 3;
+        public static final int ALADDINPANELL2C2_FIELD_NUMBER = 4;
+        public static final int ALADDINPANELL2C3_FIELD_NUMBER = 5;
+        public static final int ALADDINPANELL3_FIELD_NUMBER = 6;
+        public static final int ALADDINPANELL4_FIELD_NUMBER = 7;
+        public static final int ALADDINPANELL5_FIELD_NUMBER = 8;
+        public static final int ALADDINPANELL6_FIELD_NUMBER = 9;
+        public static final int UPPERLEFTCORNER_FIELD_NUMBER = 10;
+        /* renamed from: a */
+        private boolean f16080a;
+        /* renamed from: b */
+        private RichText f16081b = null;
+        /* renamed from: c */
+        private List<Resource> f16082c = Collections.emptyList();
+        /* renamed from: d */
+        private boolean f16083d;
+        /* renamed from: e */
+        private String f16084e = "";
+        /* renamed from: f */
+        private boolean f16085f;
+        /* renamed from: g */
+        private RichText f16086g = null;
+        /* renamed from: h */
+        private boolean f16087h;
+        /* renamed from: i */
+        private RichText f16088i = null;
+        /* renamed from: j */
+        private boolean f16089j;
+        /* renamed from: k */
+        private RichText f16090k = null;
+        /* renamed from: l */
+        private boolean f16091l;
+        /* renamed from: m */
+        private RichText f16092m = null;
+        /* renamed from: n */
+        private List<ChildrenBtn> f16093n = Collections.emptyList();
+        /* renamed from: o */
+        private boolean f16094o;
+        /* renamed from: p */
+        private RichText f16095p = null;
+        /* renamed from: q */
+        private boolean f16096q;
+        /* renamed from: r */
+        private Resource f16097r = null;
+        /* renamed from: s */
+        private int f16098s = -1;
+
+        public static MapSearchaladdinPanelTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new MapSearchaladdinPanelTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static MapSearchaladdinPanelTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (MapSearchaladdinPanelTemplate) new MapSearchaladdinPanelTemplate().mergeFrom(bArr);
+        }
+
+        public MapSearchaladdinPanelTemplate addAladdinpanell1C2(Resource resource) {
+            if (resource != null) {
+                if (this.f16082c.isEmpty()) {
+                    this.f16082c = new ArrayList();
+                }
+                this.f16082c.add(resource);
+            }
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate addAladdinpanell5(ChildrenBtn childrenBtn) {
+            if (childrenBtn != null) {
+                if (this.f16093n.isEmpty()) {
+                    this.f16093n = new ArrayList();
+                }
+                this.f16093n.add(childrenBtn);
+            }
+            return this;
+        }
+
+        public final MapSearchaladdinPanelTemplate clear() {
+            clearAladdinpanell1C1();
+            clearAladdinpanell1C2();
+            clearAladdinpanell2C1();
+            clearAladdinpanell2C2();
+            clearAladdinpanell2C3();
+            clearAladdinpanell3();
+            clearAladdinpanell4();
+            clearAladdinpanell5();
+            clearAladdinpanell6();
+            clearUpperleftcorner();
+            this.f16098s = -1;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell1C1() {
+            this.f16080a = false;
+            this.f16081b = null;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell1C2() {
+            this.f16082c = Collections.emptyList();
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell2C1() {
+            this.f16083d = false;
+            this.f16084e = "";
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell2C2() {
+            this.f16085f = false;
+            this.f16086g = null;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell2C3() {
+            this.f16087h = false;
+            this.f16088i = null;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell3() {
+            this.f16089j = false;
+            this.f16090k = null;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell4() {
+            this.f16091l = false;
+            this.f16092m = null;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell5() {
+            this.f16093n = Collections.emptyList();
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearAladdinpanell6() {
+            this.f16094o = false;
+            this.f16095p = null;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate clearUpperleftcorner() {
+            this.f16096q = false;
+            this.f16097r = null;
+            return this;
+        }
+
+        public RichText getAladdinpanell1C1() {
+            return this.f16081b;
+        }
+
+        public Resource getAladdinpanell1C2(int i) {
+            return (Resource) this.f16082c.get(i);
+        }
+
+        public int getAladdinpanell1C2Count() {
+            return this.f16082c.size();
+        }
+
+        public List<Resource> getAladdinpanell1C2List() {
+            return this.f16082c;
+        }
+
+        public String getAladdinpanell2C1() {
+            return this.f16084e;
+        }
+
+        public RichText getAladdinpanell2C2() {
+            return this.f16086g;
+        }
+
+        public RichText getAladdinpanell2C3() {
+            return this.f16088i;
+        }
+
+        public RichText getAladdinpanell3() {
+            return this.f16090k;
+        }
+
+        public RichText getAladdinpanell4() {
+            return this.f16092m;
+        }
+
+        public ChildrenBtn getAladdinpanell5(int i) {
+            return (ChildrenBtn) this.f16093n.get(i);
+        }
+
+        public int getAladdinpanell5Count() {
+            return this.f16093n.size();
+        }
+
+        public List<ChildrenBtn> getAladdinpanell5List() {
+            return this.f16093n;
+        }
+
+        public RichText getAladdinpanell6() {
+            return this.f16095p;
+        }
+
+        public int getCachedSize() {
+            if (this.f16098s < 0) {
+                getSerializedSize();
+            }
+            return this.f16098s;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasAladdinpanell1C1()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getAladdinpanell1C1());
+            }
+            int i2 = i;
+            for (Resource computeMessageSize : getAladdinpanell1C2List()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize) + i2;
+            }
+            if (hasAladdinpanell2C1()) {
+                i2 += CodedOutputStreamMicro.computeStringSize(3, getAladdinpanell2C1());
+            }
+            if (hasAladdinpanell2C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(4, getAladdinpanell2C2());
+            }
+            if (hasAladdinpanell2C3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(5, getAladdinpanell2C3());
+            }
+            if (hasAladdinpanell3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(6, getAladdinpanell3());
+            }
+            if (hasAladdinpanell4()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(7, getAladdinpanell4());
+            }
+            for (ChildrenBtn computeMessageSize2 : getAladdinpanell5List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(8, computeMessageSize2);
+            }
+            if (hasAladdinpanell6()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(9, getAladdinpanell6());
+            }
+            if (hasUpperleftcorner()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(10, getUpperleftcorner());
+            }
+            this.f16098s = i2;
+            return i2;
+        }
+
+        public Resource getUpperleftcorner() {
+            return this.f16097r;
+        }
+
+        public boolean hasAladdinpanell1C1() {
+            return this.f16080a;
+        }
+
+        public boolean hasAladdinpanell2C1() {
+            return this.f16083d;
+        }
+
+        public boolean hasAladdinpanell2C2() {
+            return this.f16085f;
+        }
+
+        public boolean hasAladdinpanell2C3() {
+            return this.f16087h;
+        }
+
+        public boolean hasAladdinpanell3() {
+            return this.f16089j;
+        }
+
+        public boolean hasAladdinpanell4() {
+            return this.f16091l;
+        }
+
+        public boolean hasAladdinpanell6() {
+            return this.f16094o;
+        }
+
+        public boolean hasUpperleftcorner() {
+            return this.f16096q;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public MapSearchaladdinPanelTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro richText;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinpanell1C1(richText);
+                        continue;
+                    case 18:
+                        richText = new Resource();
+                        codedInputStreamMicro.readMessage(richText);
+                        addAladdinpanell1C2(richText);
+                        continue;
+                    case 26:
+                        setAladdinpanell2C1(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinpanell2C2(richText);
+                        continue;
+                    case 42:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinpanell2C3(richText);
+                        continue;
+                    case 50:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinpanell3(richText);
+                        continue;
+                    case 58:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinpanell4(richText);
+                        continue;
+                    case 66:
+                        richText = new ChildrenBtn();
+                        codedInputStreamMicro.readMessage(richText);
+                        addAladdinpanell5(richText);
+                        continue;
+                    case 74:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setAladdinpanell6(richText);
+                        continue;
+                    case 82:
+                        richText = new Resource();
+                        codedInputStreamMicro.readMessage(richText);
+                        setUpperleftcorner(richText);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell1C1(RichText richText) {
+            if (richText == null) {
+                return clearAladdinpanell1C1();
+            }
+            this.f16080a = true;
+            this.f16081b = richText;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell1C2(int i, Resource resource) {
+            if (resource != null) {
+                this.f16082c.set(i, resource);
+            }
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell2C1(String str) {
+            this.f16083d = true;
+            this.f16084e = str;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell2C2(RichText richText) {
+            if (richText == null) {
+                return clearAladdinpanell2C2();
+            }
+            this.f16085f = true;
+            this.f16086g = richText;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell2C3(RichText richText) {
+            if (richText == null) {
+                return clearAladdinpanell2C3();
+            }
+            this.f16087h = true;
+            this.f16088i = richText;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell3(RichText richText) {
+            if (richText == null) {
+                return clearAladdinpanell3();
+            }
+            this.f16089j = true;
+            this.f16090k = richText;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell4(RichText richText) {
+            if (richText == null) {
+                return clearAladdinpanell4();
+            }
+            this.f16091l = true;
+            this.f16092m = richText;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell5(int i, ChildrenBtn childrenBtn) {
+            if (childrenBtn != null) {
+                this.f16093n.set(i, childrenBtn);
+            }
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setAladdinpanell6(RichText richText) {
+            if (richText == null) {
+                return clearAladdinpanell6();
+            }
+            this.f16094o = true;
+            this.f16095p = richText;
+            return this;
+        }
+
+        public MapSearchaladdinPanelTemplate setUpperleftcorner(Resource resource) {
+            if (resource == null) {
+                return clearUpperleftcorner();
+            }
+            this.f16096q = true;
+            this.f16097r = resource;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasAladdinpanell1C1()) {
+                codedOutputStreamMicro.writeMessage(1, getAladdinpanell1C1());
+            }
+            for (Resource writeMessage : getAladdinpanell1C2List()) {
+                codedOutputStreamMicro.writeMessage(2, writeMessage);
+            }
+            if (hasAladdinpanell2C1()) {
+                codedOutputStreamMicro.writeString(3, getAladdinpanell2C1());
+            }
+            if (hasAladdinpanell2C2()) {
+                codedOutputStreamMicro.writeMessage(4, getAladdinpanell2C2());
+            }
+            if (hasAladdinpanell2C3()) {
+                codedOutputStreamMicro.writeMessage(5, getAladdinpanell2C3());
+            }
+            if (hasAladdinpanell3()) {
+                codedOutputStreamMicro.writeMessage(6, getAladdinpanell3());
+            }
+            if (hasAladdinpanell4()) {
+                codedOutputStreamMicro.writeMessage(7, getAladdinpanell4());
+            }
+            for (ChildrenBtn writeMessage2 : getAladdinpanell5List()) {
+                codedOutputStreamMicro.writeMessage(8, writeMessage2);
+            }
+            if (hasAladdinpanell6()) {
+                codedOutputStreamMicro.writeMessage(9, getAladdinpanell6());
+            }
+            if (hasUpperleftcorner()) {
+                codedOutputStreamMicro.writeMessage(10, getUpperleftcorner());
+            }
+        }
+    }
+
+    public static final class NormalTemplate extends MessageMicro {
+        public static final int FANORMALL5_FIELD_NUMBER = 13;
+        public static final int FLAG_FIELD_NUMBER = 12;
+        public static final int NORMALL1C1_FIELD_NUMBER = 1;
+        public static final int NORMALL1C2_FIELD_NUMBER = 2;
+        public static final int NORMALL1C3_FIELD_NUMBER = 3;
+        public static final int NORMALL2C1_FIELD_NUMBER = 4;
+        public static final int NORMALL2C2_FIELD_NUMBER = 5;
+        public static final int NORMALL2C3_FIELD_NUMBER = 6;
+        public static final int NORMALL3_FIELD_NUMBER = 7;
+        public static final int NORMALL4LAB_FIELD_NUMBER = 14;
+        public static final int NORMALL4_FIELD_NUMBER = 8;
+        public static final int NORMALL5_FIELD_NUMBER = 9;
+        public static final int NORMALL6_FIELD_NUMBER = 10;
+        public static final int UPPERLEFTCORNER_FIELD_NUMBER = 11;
+        /* renamed from: a */
+        private boolean f16099a;
+        /* renamed from: b */
+        private RichText f16100b = null;
+        /* renamed from: c */
+        private List<Resource> f16101c = Collections.emptyList();
+        /* renamed from: d */
+        private boolean f16102d;
+        /* renamed from: e */
+        private RichText f16103e = null;
+        /* renamed from: f */
+        private boolean f16104f;
+        /* renamed from: g */
+        private String f16105g = "";
+        /* renamed from: h */
+        private boolean f16106h;
+        /* renamed from: i */
+        private RichText f16107i = null;
+        /* renamed from: j */
+        private boolean f16108j;
+        /* renamed from: k */
+        private RichText f16109k = null;
+        /* renamed from: l */
+        private boolean f16110l;
+        /* renamed from: m */
+        private RichText f16111m = null;
+        /* renamed from: n */
+        private boolean f16112n;
+        /* renamed from: o */
+        private RichText f16113o = null;
+        /* renamed from: p */
+        private boolean f16114p;
+        /* renamed from: q */
+        private int f16115q = 0;
+        /* renamed from: r */
+        private boolean f16116r;
+        /* renamed from: s */
+        private Composit f16117s = null;
+        /* renamed from: t */
+        private boolean f16118t;
+        /* renamed from: u */
+        private Resource f16119u = null;
+        /* renamed from: v */
+        private List<String> f16120v = Collections.emptyList();
+        /* renamed from: w */
+        private boolean f16121w;
+        /* renamed from: x */
+        private Fatherson f16122x = null;
+        /* renamed from: y */
+        private List<String> f16123y = Collections.emptyList();
+        /* renamed from: z */
+        private int f16124z = -1;
+
+        public static NormalTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new NormalTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static NormalTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (NormalTemplate) new NormalTemplate().mergeFrom(bArr);
+        }
+
+        public NormalTemplate addFlag(String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            if (this.f16120v.isEmpty()) {
+                this.f16120v = new ArrayList();
+            }
+            this.f16120v.add(str);
+            return this;
+        }
+
+        public NormalTemplate addNormall1C2(Resource resource) {
+            if (resource != null) {
+                if (this.f16101c.isEmpty()) {
+                    this.f16101c = new ArrayList();
+                }
+                this.f16101c.add(resource);
+            }
+            return this;
+        }
+
+        public NormalTemplate addNormall4Lab(String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            if (this.f16123y.isEmpty()) {
+                this.f16123y = new ArrayList();
+            }
+            this.f16123y.add(str);
+            return this;
+        }
+
+        public final NormalTemplate clear() {
+            clearNormall1C1();
+            clearNormall1C2();
+            clearNormall1C3();
+            clearNormall2C1();
+            clearNormall2C2();
+            clearNormall2C3();
+            clearNormall3();
+            clearNormall4();
+            clearNormall5();
+            clearNormall6();
+            clearUpperleftcorner();
+            clearFlag();
+            clearFanormall5();
+            clearNormall4Lab();
+            this.f16124z = -1;
+            return this;
+        }
+
+        public NormalTemplate clearFanormall5() {
+            this.f16121w = false;
+            this.f16122x = null;
+            return this;
+        }
+
+        public NormalTemplate clearFlag() {
+            this.f16120v = Collections.emptyList();
+            return this;
+        }
+
+        public NormalTemplate clearNormall1C1() {
+            this.f16099a = false;
+            this.f16100b = null;
+            return this;
+        }
+
+        public NormalTemplate clearNormall1C2() {
+            this.f16101c = Collections.emptyList();
+            return this;
+        }
+
+        public NormalTemplate clearNormall1C3() {
+            this.f16102d = false;
+            this.f16103e = null;
+            return this;
+        }
+
+        public NormalTemplate clearNormall2C1() {
+            this.f16104f = false;
+            this.f16105g = "";
+            return this;
+        }
+
+        public NormalTemplate clearNormall2C2() {
+            this.f16106h = false;
+            this.f16107i = null;
+            return this;
+        }
+
+        public NormalTemplate clearNormall2C3() {
+            this.f16108j = false;
+            this.f16109k = null;
+            return this;
+        }
+
+        public NormalTemplate clearNormall3() {
+            this.f16110l = false;
+            this.f16111m = null;
+            return this;
+        }
+
+        public NormalTemplate clearNormall4() {
+            this.f16112n = false;
+            this.f16113o = null;
+            return this;
+        }
+
+        public NormalTemplate clearNormall4Lab() {
+            this.f16123y = Collections.emptyList();
+            return this;
+        }
+
+        public NormalTemplate clearNormall5() {
+            this.f16114p = false;
+            this.f16115q = 0;
+            return this;
+        }
+
+        public NormalTemplate clearNormall6() {
+            this.f16116r = false;
+            this.f16117s = null;
+            return this;
+        }
+
+        public NormalTemplate clearUpperleftcorner() {
+            this.f16118t = false;
+            this.f16119u = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16124z < 0) {
+                getSerializedSize();
+            }
+            return this.f16124z;
+        }
+
+        public Fatherson getFanormall5() {
+            return this.f16122x;
+        }
+
+        public String getFlag(int i) {
+            return (String) this.f16120v.get(i);
+        }
+
+        public int getFlagCount() {
+            return this.f16120v.size();
+        }
+
+        public List<String> getFlagList() {
+            return this.f16120v;
+        }
+
+        public RichText getNormall1C1() {
+            return this.f16100b;
+        }
+
+        public Resource getNormall1C2(int i) {
+            return (Resource) this.f16101c.get(i);
+        }
+
+        public int getNormall1C2Count() {
+            return this.f16101c.size();
+        }
+
+        public List<Resource> getNormall1C2List() {
+            return this.f16101c;
+        }
+
+        public RichText getNormall1C3() {
+            return this.f16103e;
+        }
+
+        public String getNormall2C1() {
+            return this.f16105g;
+        }
+
+        public RichText getNormall2C2() {
+            return this.f16107i;
+        }
+
+        public RichText getNormall2C3() {
+            return this.f16109k;
+        }
+
+        public RichText getNormall3() {
+            return this.f16111m;
+        }
+
+        public RichText getNormall4() {
+            return this.f16113o;
+        }
+
+        public String getNormall4Lab(int i) {
+            return (String) this.f16123y.get(i);
+        }
+
+        public int getNormall4LabCount() {
+            return this.f16123y.size();
+        }
+
+        public List<String> getNormall4LabList() {
+            return this.f16123y;
+        }
+
+        public int getNormall5() {
+            return this.f16115q;
+        }
+
+        public Composit getNormall6() {
+            return this.f16117s;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            int computeMessageSize = hasNormall1C1() ? CodedOutputStreamMicro.computeMessageSize(1, getNormall1C1()) + 0 : 0;
+            int i2 = computeMessageSize;
+            for (Resource computeMessageSize2 : getNormall1C2List()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize2) + i2;
+            }
+            if (hasNormall1C3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(3, getNormall1C3());
+            }
+            if (hasNormall2C1()) {
+                i2 += CodedOutputStreamMicro.computeStringSize(4, getNormall2C1());
+            }
+            if (hasNormall2C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(5, getNormall2C2());
+            }
+            if (hasNormall2C3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(6, getNormall2C3());
+            }
+            if (hasNormall3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(7, getNormall3());
+            }
+            if (hasNormall4()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(8, getNormall4());
+            }
+            if (hasNormall5()) {
+                i2 += CodedOutputStreamMicro.computeInt32Size(9, getNormall5());
+            }
+            if (hasNormall6()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(10, getNormall6());
+            }
+            if (hasUpperleftcorner()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(11, getUpperleftcorner());
+            }
+            int i3 = 0;
+            for (String computeStringSizeNoTag : getFlagList()) {
+                i3 = CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag) + i3;
+            }
+            computeMessageSize = (i2 + i3) + (getFlagList().size() * 1);
+            i2 = hasFanormall5() ? computeMessageSize + CodedOutputStreamMicro.computeMessageSize(13, getFanormall5()) : computeMessageSize;
+            for (String computeStringSizeNoTag2 : getNormall4LabList()) {
+                i += CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag2);
+            }
+            computeMessageSize = (i2 + i) + (getNormall4LabList().size() * 1);
+            this.f16124z = computeMessageSize;
+            return computeMessageSize;
+        }
+
+        public Resource getUpperleftcorner() {
+            return this.f16119u;
+        }
+
+        public boolean hasFanormall5() {
+            return this.f16121w;
+        }
+
+        public boolean hasNormall1C1() {
+            return this.f16099a;
+        }
+
+        public boolean hasNormall1C3() {
+            return this.f16102d;
+        }
+
+        public boolean hasNormall2C1() {
+            return this.f16104f;
+        }
+
+        public boolean hasNormall2C2() {
+            return this.f16106h;
+        }
+
+        public boolean hasNormall2C3() {
+            return this.f16108j;
+        }
+
+        public boolean hasNormall3() {
+            return this.f16110l;
+        }
+
+        public boolean hasNormall4() {
+            return this.f16112n;
+        }
+
+        public boolean hasNormall5() {
+            return this.f16114p;
+        }
+
+        public boolean hasNormall6() {
+            return this.f16116r;
+        }
+
+        public boolean hasUpperleftcorner() {
+            return this.f16118t;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public NormalTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro richText;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setNormall1C1(richText);
+                        continue;
+                    case 18:
+                        richText = new Resource();
+                        codedInputStreamMicro.readMessage(richText);
+                        addNormall1C2(richText);
+                        continue;
+                    case 26:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setNormall1C3(richText);
+                        continue;
+                    case 34:
+                        setNormall2C1(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setNormall2C2(richText);
+                        continue;
+                    case 50:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setNormall2C3(richText);
+                        continue;
+                    case 58:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setNormall3(richText);
+                        continue;
+                    case 66:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setNormall4(richText);
+                        continue;
+                    case NavCarInfo.CarType_57L /*72*/:
+                        setNormall5(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 82:
+                        richText = new Composit();
+                        codedInputStreamMicro.readMessage(richText);
+                        setNormall6(richText);
+                        continue;
+                    case 90:
+                        richText = new Resource();
+                        codedInputStreamMicro.readMessage(richText);
+                        setUpperleftcorner(richText);
+                        continue;
+                    case 98:
+                        addFlag(codedInputStreamMicro.readString());
+                        continue;
+                    case 106:
+                        richText = new Fatherson();
+                        codedInputStreamMicro.readMessage(richText);
+                        setFanormall5(richText);
+                        continue;
+                    case 114:
+                        addNormall4Lab(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public NormalTemplate setFanormall5(Fatherson fatherson) {
+            if (fatherson == null) {
+                return clearFanormall5();
+            }
+            this.f16121w = true;
+            this.f16122x = fatherson;
+            return this;
+        }
+
+        public NormalTemplate setFlag(int i, String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            this.f16120v.set(i, str);
+            return this;
+        }
+
+        public NormalTemplate setNormall1C1(RichText richText) {
+            if (richText == null) {
+                return clearNormall1C1();
+            }
+            this.f16099a = true;
+            this.f16100b = richText;
+            return this;
+        }
+
+        public NormalTemplate setNormall1C2(int i, Resource resource) {
+            if (resource != null) {
+                this.f16101c.set(i, resource);
+            }
+            return this;
+        }
+
+        public NormalTemplate setNormall1C3(RichText richText) {
+            if (richText == null) {
+                return clearNormall1C3();
+            }
+            this.f16102d = true;
+            this.f16103e = richText;
+            return this;
+        }
+
+        public NormalTemplate setNormall2C1(String str) {
+            this.f16104f = true;
+            this.f16105g = str;
+            return this;
+        }
+
+        public NormalTemplate setNormall2C2(RichText richText) {
+            if (richText == null) {
+                return clearNormall2C2();
+            }
+            this.f16106h = true;
+            this.f16107i = richText;
+            return this;
+        }
+
+        public NormalTemplate setNormall2C3(RichText richText) {
+            if (richText == null) {
+                return clearNormall2C3();
+            }
+            this.f16108j = true;
+            this.f16109k = richText;
+            return this;
+        }
+
+        public NormalTemplate setNormall3(RichText richText) {
+            if (richText == null) {
+                return clearNormall3();
+            }
+            this.f16110l = true;
+            this.f16111m = richText;
+            return this;
+        }
+
+        public NormalTemplate setNormall4(RichText richText) {
+            if (richText == null) {
+                return clearNormall4();
+            }
+            this.f16112n = true;
+            this.f16113o = richText;
+            return this;
+        }
+
+        public NormalTemplate setNormall4Lab(int i, String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            this.f16123y.set(i, str);
+            return this;
+        }
+
+        public NormalTemplate setNormall5(int i) {
+            this.f16114p = true;
+            this.f16115q = i;
+            return this;
+        }
+
+        public NormalTemplate setNormall6(Composit composit) {
+            if (composit == null) {
+                return clearNormall6();
+            }
+            this.f16116r = true;
+            this.f16117s = composit;
+            return this;
+        }
+
+        public NormalTemplate setUpperleftcorner(Resource resource) {
+            if (resource == null) {
+                return clearUpperleftcorner();
+            }
+            this.f16118t = true;
+            this.f16119u = resource;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasNormall1C1()) {
+                codedOutputStreamMicro.writeMessage(1, getNormall1C1());
+            }
+            for (Resource writeMessage : getNormall1C2List()) {
+                codedOutputStreamMicro.writeMessage(2, writeMessage);
+            }
+            if (hasNormall1C3()) {
+                codedOutputStreamMicro.writeMessage(3, getNormall1C3());
+            }
+            if (hasNormall2C1()) {
+                codedOutputStreamMicro.writeString(4, getNormall2C1());
+            }
+            if (hasNormall2C2()) {
+                codedOutputStreamMicro.writeMessage(5, getNormall2C2());
+            }
+            if (hasNormall2C3()) {
+                codedOutputStreamMicro.writeMessage(6, getNormall2C3());
+            }
+            if (hasNormall3()) {
+                codedOutputStreamMicro.writeMessage(7, getNormall3());
+            }
+            if (hasNormall4()) {
+                codedOutputStreamMicro.writeMessage(8, getNormall4());
+            }
+            if (hasNormall5()) {
+                codedOutputStreamMicro.writeInt32(9, getNormall5());
+            }
+            if (hasNormall6()) {
+                codedOutputStreamMicro.writeMessage(10, getNormall6());
+            }
+            if (hasUpperleftcorner()) {
+                codedOutputStreamMicro.writeMessage(11, getUpperleftcorner());
+            }
+            for (String writeString : getFlagList()) {
+                codedOutputStreamMicro.writeString(12, writeString);
+            }
+            if (hasFanormall5()) {
+                codedOutputStreamMicro.writeMessage(13, getFanormall5());
+            }
+            for (String writeString2 : getNormall4LabList()) {
+                codedOutputStreamMicro.writeString(14, writeString2);
+            }
+        }
+    }
+
+    public static final class PanelTemplate extends MessageMicro {
+        public static final int PANELL1C1_FIELD_NUMBER = 1;
+        public static final int PANELL1C2_FIELD_NUMBER = 2;
+        public static final int PANELL2C1_FIELD_NUMBER = 3;
+        public static final int PANELL2C2_FIELD_NUMBER = 4;
+        public static final int PANELL2C3_FIELD_NUMBER = 5;
+        public static final int PANELL3_FIELD_NUMBER = 6;
+        public static final int UPPERLEFTCORNER_FIELD_NUMBER = 7;
+        /* renamed from: a */
+        private boolean f16125a;
+        /* renamed from: b */
+        private RichText f16126b = null;
+        /* renamed from: c */
+        private List<Resource> f16127c = Collections.emptyList();
+        /* renamed from: d */
+        private boolean f16128d;
+        /* renamed from: e */
+        private String f16129e = "";
+        /* renamed from: f */
+        private boolean f16130f;
+        /* renamed from: g */
+        private RichText f16131g = null;
+        /* renamed from: h */
+        private boolean f16132h;
+        /* renamed from: i */
+        private RichText f16133i = null;
+        /* renamed from: j */
+        private boolean f16134j;
+        /* renamed from: k */
+        private RichText f16135k = null;
+        /* renamed from: l */
+        private boolean f16136l;
+        /* renamed from: m */
+        private Resource f16137m = null;
+        /* renamed from: n */
+        private int f16138n = -1;
+
+        public static PanelTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new PanelTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static PanelTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (PanelTemplate) new PanelTemplate().mergeFrom(bArr);
+        }
+
+        public PanelTemplate addPanell1C2(Resource resource) {
+            if (resource != null) {
+                if (this.f16127c.isEmpty()) {
+                    this.f16127c = new ArrayList();
+                }
+                this.f16127c.add(resource);
+            }
+            return this;
+        }
+
+        public final PanelTemplate clear() {
+            clearPanell1C1();
+            clearPanell1C2();
+            clearPanell2C1();
+            clearPanell2C2();
+            clearPanell2C3();
+            clearPanell3();
+            clearUpperleftcorner();
+            this.f16138n = -1;
+            return this;
+        }
+
+        public PanelTemplate clearPanell1C1() {
+            this.f16125a = false;
+            this.f16126b = null;
+            return this;
+        }
+
+        public PanelTemplate clearPanell1C2() {
+            this.f16127c = Collections.emptyList();
+            return this;
+        }
+
+        public PanelTemplate clearPanell2C1() {
+            this.f16128d = false;
+            this.f16129e = "";
+            return this;
+        }
+
+        public PanelTemplate clearPanell2C2() {
+            this.f16130f = false;
+            this.f16131g = null;
+            return this;
+        }
+
+        public PanelTemplate clearPanell2C3() {
+            this.f16132h = false;
+            this.f16133i = null;
+            return this;
+        }
+
+        public PanelTemplate clearPanell3() {
+            this.f16134j = false;
+            this.f16135k = null;
+            return this;
+        }
+
+        public PanelTemplate clearUpperleftcorner() {
+            this.f16136l = false;
+            this.f16137m = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16138n < 0) {
+                getSerializedSize();
+            }
+            return this.f16138n;
+        }
+
+        public RichText getPanell1C1() {
+            return this.f16126b;
+        }
+
+        public Resource getPanell1C2(int i) {
+            return (Resource) this.f16127c.get(i);
+        }
+
+        public int getPanell1C2Count() {
+            return this.f16127c.size();
+        }
+
+        public List<Resource> getPanell1C2List() {
+            return this.f16127c;
+        }
+
+        public String getPanell2C1() {
+            return this.f16129e;
+        }
+
+        public RichText getPanell2C2() {
+            return this.f16131g;
+        }
+
+        public RichText getPanell2C3() {
+            return this.f16133i;
+        }
+
+        public RichText getPanell3() {
+            return this.f16135k;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasPanell1C1()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getPanell1C1());
+            }
+            int i2 = i;
+            for (Resource computeMessageSize : getPanell1C2List()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize) + i2;
+            }
+            if (hasPanell2C1()) {
+                i2 += CodedOutputStreamMicro.computeStringSize(3, getPanell2C1());
+            }
+            if (hasPanell2C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(4, getPanell2C2());
+            }
+            if (hasPanell2C3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(5, getPanell2C3());
+            }
+            if (hasPanell3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(6, getPanell3());
+            }
+            if (hasUpperleftcorner()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(7, getUpperleftcorner());
+            }
+            this.f16138n = i2;
+            return i2;
+        }
+
+        public Resource getUpperleftcorner() {
+            return this.f16137m;
+        }
+
+        public boolean hasPanell1C1() {
+            return this.f16125a;
+        }
+
+        public boolean hasPanell2C1() {
+            return this.f16128d;
+        }
+
+        public boolean hasPanell2C2() {
+            return this.f16130f;
+        }
+
+        public boolean hasPanell2C3() {
+            return this.f16132h;
+        }
+
+        public boolean hasPanell3() {
+            return this.f16134j;
+        }
+
+        public boolean hasUpperleftcorner() {
+            return this.f16136l;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public PanelTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro richText;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setPanell1C1(richText);
+                        continue;
+                    case 18:
+                        richText = new Resource();
+                        codedInputStreamMicro.readMessage(richText);
+                        addPanell1C2(richText);
+                        continue;
+                    case 26:
+                        setPanell2C1(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setPanell2C2(richText);
+                        continue;
+                    case 42:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setPanell2C3(richText);
+                        continue;
+                    case 50:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setPanell3(richText);
+                        continue;
+                    case 58:
+                        richText = new Resource();
+                        codedInputStreamMicro.readMessage(richText);
+                        setUpperleftcorner(richText);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public PanelTemplate setPanell1C1(RichText richText) {
+            if (richText == null) {
+                return clearPanell1C1();
+            }
+            this.f16125a = true;
+            this.f16126b = richText;
+            return this;
+        }
+
+        public PanelTemplate setPanell1C2(int i, Resource resource) {
+            if (resource != null) {
+                this.f16127c.set(i, resource);
+            }
+            return this;
+        }
+
+        public PanelTemplate setPanell2C1(String str) {
+            this.f16128d = true;
+            this.f16129e = str;
+            return this;
+        }
+
+        public PanelTemplate setPanell2C2(RichText richText) {
+            if (richText == null) {
+                return clearPanell2C2();
+            }
+            this.f16130f = true;
+            this.f16131g = richText;
+            return this;
+        }
+
+        public PanelTemplate setPanell2C3(RichText richText) {
+            if (richText == null) {
+                return clearPanell2C3();
+            }
+            this.f16132h = true;
+            this.f16133i = richText;
+            return this;
+        }
+
+        public PanelTemplate setPanell3(RichText richText) {
+            if (richText == null) {
+                return clearPanell3();
+            }
+            this.f16134j = true;
+            this.f16135k = richText;
+            return this;
+        }
+
+        public PanelTemplate setUpperleftcorner(Resource resource) {
+            if (resource == null) {
+                return clearUpperleftcorner();
+            }
+            this.f16136l = true;
+            this.f16137m = resource;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasPanell1C1()) {
+                codedOutputStreamMicro.writeMessage(1, getPanell1C1());
+            }
+            for (Resource writeMessage : getPanell1C2List()) {
+                codedOutputStreamMicro.writeMessage(2, writeMessage);
+            }
+            if (hasPanell2C1()) {
+                codedOutputStreamMicro.writeString(3, getPanell2C1());
+            }
+            if (hasPanell2C2()) {
+                codedOutputStreamMicro.writeMessage(4, getPanell2C2());
+            }
+            if (hasPanell2C3()) {
+                codedOutputStreamMicro.writeMessage(5, getPanell2C3());
+            }
+            if (hasPanell3()) {
+                codedOutputStreamMicro.writeMessage(6, getPanell3());
+            }
+            if (hasUpperleftcorner()) {
+                codedOutputStreamMicro.writeMessage(7, getUpperleftcorner());
+            }
+        }
+    }
+
+    public static final class Resource extends MessageMicro {
+        public static final int RESOURCE_ID_FIELD_NUMBER = 1;
+        public static final int RESOURCE_URL_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f16139a;
+        /* renamed from: b */
+        private int f16140b = 0;
+        /* renamed from: c */
+        private boolean f16141c;
+        /* renamed from: d */
+        private String f16142d = "";
+        /* renamed from: e */
+        private int f16143e = -1;
+
+        public static Resource parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Resource().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Resource parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Resource) new Resource().mergeFrom(bArr);
+        }
+
+        public final Resource clear() {
+            clearResourceId();
+            clearResourceUrl();
+            this.f16143e = -1;
+            return this;
+        }
+
+        public Resource clearResourceId() {
+            this.f16139a = false;
+            this.f16140b = 0;
+            return this;
+        }
+
+        public Resource clearResourceUrl() {
+            this.f16141c = false;
+            this.f16142d = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16143e < 0) {
+                getSerializedSize();
+            }
+            return this.f16143e;
+        }
+
+        public int getResourceId() {
+            return this.f16140b;
+        }
+
+        public String getResourceUrl() {
+            return this.f16142d;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasResourceId()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getResourceId());
+            }
+            if (hasResourceUrl()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getResourceUrl());
+            }
+            this.f16143e = i;
+            return i;
+        }
+
+        public boolean hasResourceId() {
+            return this.f16139a;
+        }
+
+        public boolean hasResourceUrl() {
+            return this.f16141c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Resource mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setResourceId(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setResourceUrl(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Resource setResourceId(int i) {
+            this.f16139a = true;
+            this.f16140b = i;
+            return this;
+        }
+
+        public Resource setResourceUrl(String str) {
+            this.f16141c = true;
+            this.f16142d = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasResourceId()) {
+                codedOutputStreamMicro.writeInt32(1, getResourceId());
+            }
+            if (hasResourceUrl()) {
+                codedOutputStreamMicro.writeString(2, getResourceUrl());
+            }
+        }
+    }
+
+    public static final class RichText extends MessageMicro {
+        public static final int ORI_VALUE_FIELD_NUMBER = 1;
+        public static final int VALUE_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f16144a;
+        /* renamed from: b */
+        private int f16145b = 0;
+        /* renamed from: c */
+        private boolean f16146c;
+        /* renamed from: d */
+        private String f16147d = "";
+        /* renamed from: e */
+        private int f16148e = -1;
+
+        public static RichText parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new RichText().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static RichText parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (RichText) new RichText().mergeFrom(bArr);
+        }
+
+        public final RichText clear() {
+            clearOriValue();
+            clearValue();
+            this.f16148e = -1;
+            return this;
+        }
+
+        public RichText clearOriValue() {
+            this.f16144a = false;
+            this.f16145b = 0;
+            return this;
+        }
+
+        public RichText clearValue() {
+            this.f16146c = false;
+            this.f16147d = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16148e < 0) {
+                getSerializedSize();
+            }
+            return this.f16148e;
+        }
+
+        public int getOriValue() {
+            return this.f16145b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasOriValue()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getOriValue());
+            }
+            if (hasValue()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getValue());
+            }
+            this.f16148e = i;
+            return i;
+        }
+
+        public String getValue() {
+            return this.f16147d;
+        }
+
+        public boolean hasOriValue() {
+            return this.f16144a;
+        }
+
+        public boolean hasValue() {
+            return this.f16146c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public RichText mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setOriValue(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setValue(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public RichText setOriValue(int i) {
+            this.f16144a = true;
+            this.f16145b = i;
+            return this;
+        }
+
+        public RichText setValue(String str) {
+            this.f16146c = true;
+            this.f16147d = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasOriValue()) {
+                codedOutputStreamMicro.writeInt32(1, getOriValue());
+            }
+            if (hasValue()) {
+                codedOutputStreamMicro.writeString(2, getValue());
+            }
+        }
+    }
+
+    public static final class ScatterStyle extends MessageMicro {
+        public static final int COLOR_VALUE_FIELD_NUMBER = 1;
+        public static final int VALUE_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f16149a;
+        /* renamed from: b */
+        private int f16150b = 0;
+        /* renamed from: c */
+        private boolean f16151c;
+        /* renamed from: d */
+        private String f16152d = "";
+        /* renamed from: e */
+        private int f16153e = -1;
+
+        public static ScatterStyle parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new ScatterStyle().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static ScatterStyle parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (ScatterStyle) new ScatterStyle().mergeFrom(bArr);
+        }
+
+        public final ScatterStyle clear() {
+            clearColorValue();
+            clearValue();
+            this.f16153e = -1;
+            return this;
+        }
+
+        public ScatterStyle clearColorValue() {
+            this.f16149a = false;
+            this.f16150b = 0;
+            return this;
+        }
+
+        public ScatterStyle clearValue() {
+            this.f16151c = false;
+            this.f16152d = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16153e < 0) {
+                getSerializedSize();
+            }
+            return this.f16153e;
+        }
+
+        public int getColorValue() {
+            return this.f16150b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasColorValue()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getColorValue());
+            }
+            if (hasValue()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getValue());
+            }
+            this.f16153e = i;
+            return i;
+        }
+
+        public String getValue() {
+            return this.f16152d;
+        }
+
+        public boolean hasColorValue() {
+            return this.f16149a;
+        }
+
+        public boolean hasValue() {
+            return this.f16151c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public ScatterStyle mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setColorValue(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setValue(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public ScatterStyle setColorValue(int i) {
+            this.f16149a = true;
+            this.f16150b = i;
+            return this;
+        }
+
+        public ScatterStyle setValue(String str) {
+            this.f16151c = true;
+            this.f16152d = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasColorValue()) {
+                codedOutputStreamMicro.writeInt32(1, getColorValue());
+            }
+            if (hasValue()) {
+                codedOutputStreamMicro.writeString(2, getValue());
+            }
+        }
+    }
+
+    public static final class Score extends MessageMicro {
+        public static final int TEXT_FIELD_NUMBER = 2;
+        public static final int VAL_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f16154a;
+        /* renamed from: b */
+        private float f16155b = 0.0f;
+        /* renamed from: c */
+        private boolean f16156c;
+        /* renamed from: d */
+        private RichText f16157d = null;
+        /* renamed from: e */
+        private int f16158e = -1;
+
+        public static Score parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Score().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Score parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Score) new Score().mergeFrom(bArr);
+        }
+
+        public final Score clear() {
+            clearVal();
+            clearText();
+            this.f16158e = -1;
+            return this;
+        }
+
+        public Score clearText() {
+            this.f16156c = false;
+            this.f16157d = null;
+            return this;
+        }
+
+        public Score clearVal() {
+            this.f16154a = false;
+            this.f16155b = 0.0f;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16158e < 0) {
+                getSerializedSize();
+            }
+            return this.f16158e;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasVal()) {
+                i = 0 + CodedOutputStreamMicro.computeFloatSize(1, getVal());
+            }
+            if (hasText()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getText());
+            }
+            this.f16158e = i;
+            return i;
+        }
+
+        public RichText getText() {
+            return this.f16157d;
+        }
+
+        public float getVal() {
+            return this.f16155b;
+        }
+
+        public boolean hasText() {
+            return this.f16156c;
+        }
+
+        public boolean hasVal() {
+            return this.f16154a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Score mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 13:
+                        setVal(codedInputStreamMicro.readFloat());
+                        continue;
+                    case 18:
+                        MessageMicro richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setText(richText);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Score setText(RichText richText) {
+            if (richText == null) {
+                return clearText();
+            }
+            this.f16156c = true;
+            this.f16157d = richText;
+            return this;
+        }
+
+        public Score setVal(float f) {
+            this.f16154a = true;
+            this.f16155b = f;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasVal()) {
+                codedOutputStreamMicro.writeFloat(1, getVal());
+            }
+            if (hasText()) {
+                codedOutputStreamMicro.writeMessage(2, getText());
+            }
+        }
+    }
+
+    public static final class SingleCardTemplate extends MessageMicro {
+        public static final int L1C1_FIELD_NUMBER = 1;
+        public static final int L2C1_FIELD_NUMBER = 2;
+        public static final int L2C2_FIELD_NUMBER = 3;
+        public static final int L3C1_FIELD_NUMBER = 4;
+        public static final int L3C2_FIELD_NUMBER = 5;
+        public static final int L3C3_FIELD_NUMBER = 6;
+        public static final int L4C1_FIELD_NUMBER = 7;
+        public static final int L4C2_FIELD_NUMBER = 8;
+        public static final int L5_FIELD_NUMBER = 9;
+        public static final int L6_FIELD_NUMBER = 10;
+        /* renamed from: a */
+        private boolean f16159a;
+        /* renamed from: b */
+        private RichText f16160b = null;
+        /* renamed from: c */
+        private boolean f16161c;
+        /* renamed from: d */
+        private RichText f16162d = null;
+        /* renamed from: e */
+        private List<ScatterStyle> f16163e = Collections.emptyList();
+        /* renamed from: f */
+        private boolean f16164f;
+        /* renamed from: g */
+        private Score f16165g = null;
+        /* renamed from: h */
+        private boolean f16166h;
+        /* renamed from: i */
+        private RichText f16167i = null;
+        /* renamed from: j */
+        private List<ScatterStyle> f16168j = Collections.emptyList();
+        /* renamed from: k */
+        private boolean f16169k;
+        /* renamed from: l */
+        private RichText f16170l = null;
+        /* renamed from: m */
+        private List<ComboBox> f16171m = Collections.emptyList();
+        /* renamed from: n */
+        private List<ChildrenBtn> f16172n = Collections.emptyList();
+        /* renamed from: o */
+        private boolean f16173o;
+        /* renamed from: p */
+        private ComboBox f16174p = null;
+        /* renamed from: q */
+        private int f16175q = -1;
+
+        public static SingleCardTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new SingleCardTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static SingleCardTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (SingleCardTemplate) new SingleCardTemplate().mergeFrom(bArr);
+        }
+
+        public SingleCardTemplate addL2C2(ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                if (this.f16163e.isEmpty()) {
+                    this.f16163e = new ArrayList();
+                }
+                this.f16163e.add(scatterStyle);
+            }
+            return this;
+        }
+
+        public SingleCardTemplate addL3C3(ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                if (this.f16168j.isEmpty()) {
+                    this.f16168j = new ArrayList();
+                }
+                this.f16168j.add(scatterStyle);
+            }
+            return this;
+        }
+
+        public SingleCardTemplate addL4C2(ComboBox comboBox) {
+            if (comboBox != null) {
+                if (this.f16171m.isEmpty()) {
+                    this.f16171m = new ArrayList();
+                }
+                this.f16171m.add(comboBox);
+            }
+            return this;
+        }
+
+        public SingleCardTemplate addL5(ChildrenBtn childrenBtn) {
+            if (childrenBtn != null) {
+                if (this.f16172n.isEmpty()) {
+                    this.f16172n = new ArrayList();
+                }
+                this.f16172n.add(childrenBtn);
+            }
+            return this;
+        }
+
+        public final SingleCardTemplate clear() {
+            clearL1C1();
+            clearL2C1();
+            clearL2C2();
+            clearL3C1();
+            clearL3C2();
+            clearL3C3();
+            clearL4C1();
+            clearL4C2();
+            clearL5();
+            clearL6();
+            this.f16175q = -1;
+            return this;
+        }
+
+        public SingleCardTemplate clearL1C1() {
+            this.f16159a = false;
+            this.f16160b = null;
+            return this;
+        }
+
+        public SingleCardTemplate clearL2C1() {
+            this.f16161c = false;
+            this.f16162d = null;
+            return this;
+        }
+
+        public SingleCardTemplate clearL2C2() {
+            this.f16163e = Collections.emptyList();
+            return this;
+        }
+
+        public SingleCardTemplate clearL3C1() {
+            this.f16164f = false;
+            this.f16165g = null;
+            return this;
+        }
+
+        public SingleCardTemplate clearL3C2() {
+            this.f16166h = false;
+            this.f16167i = null;
+            return this;
+        }
+
+        public SingleCardTemplate clearL3C3() {
+            this.f16168j = Collections.emptyList();
+            return this;
+        }
+
+        public SingleCardTemplate clearL4C1() {
+            this.f16169k = false;
+            this.f16170l = null;
+            return this;
+        }
+
+        public SingleCardTemplate clearL4C2() {
+            this.f16171m = Collections.emptyList();
+            return this;
+        }
+
+        public SingleCardTemplate clearL5() {
+            this.f16172n = Collections.emptyList();
+            return this;
+        }
+
+        public SingleCardTemplate clearL6() {
+            this.f16173o = false;
+            this.f16174p = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16175q < 0) {
+                getSerializedSize();
+            }
+            return this.f16175q;
+        }
+
+        public RichText getL1C1() {
+            return this.f16160b;
+        }
+
+        public RichText getL2C1() {
+            return this.f16162d;
+        }
+
+        public ScatterStyle getL2C2(int i) {
+            return (ScatterStyle) this.f16163e.get(i);
+        }
+
+        public int getL2C2Count() {
+            return this.f16163e.size();
+        }
+
+        public List<ScatterStyle> getL2C2List() {
+            return this.f16163e;
+        }
+
+        public Score getL3C1() {
+            return this.f16165g;
+        }
+
+        public RichText getL3C2() {
+            return this.f16167i;
+        }
+
+        public ScatterStyle getL3C3(int i) {
+            return (ScatterStyle) this.f16168j.get(i);
+        }
+
+        public int getL3C3Count() {
+            return this.f16168j.size();
+        }
+
+        public List<ScatterStyle> getL3C3List() {
+            return this.f16168j;
+        }
+
+        public RichText getL4C1() {
+            return this.f16170l;
+        }
+
+        public ComboBox getL4C2(int i) {
+            return (ComboBox) this.f16171m.get(i);
+        }
+
+        public int getL4C2Count() {
+            return this.f16171m.size();
+        }
+
+        public List<ComboBox> getL4C2List() {
+            return this.f16171m;
+        }
+
+        public ChildrenBtn getL5(int i) {
+            return (ChildrenBtn) this.f16172n.get(i);
+        }
+
+        public int getL5Count() {
+            return this.f16172n.size();
+        }
+
+        public List<ChildrenBtn> getL5List() {
+            return this.f16172n;
+        }
+
+        public ComboBox getL6() {
+            return this.f16174p;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasL1C1()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getL1C1());
+            }
+            if (hasL2C1()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getL2C1());
+            }
+            int i2 = i;
+            for (ScatterStyle computeMessageSize : getL2C2List()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(3, computeMessageSize) + i2;
+            }
+            if (hasL3C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(4, getL3C1());
+            }
+            if (hasL3C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(5, getL3C2());
+            }
+            for (ScatterStyle computeMessageSize2 : getL3C3List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(6, computeMessageSize2);
+            }
+            if (hasL4C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(7, getL4C1());
+            }
+            for (ComboBox computeMessageSize3 : getL4C2List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(8, computeMessageSize3);
+            }
+            for (ChildrenBtn computeMessageSize4 : getL5List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(9, computeMessageSize4);
+            }
+            if (hasL6()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(10, getL6());
+            }
+            this.f16175q = i2;
+            return i2;
+        }
+
+        public boolean hasL1C1() {
+            return this.f16159a;
+        }
+
+        public boolean hasL2C1() {
+            return this.f16161c;
+        }
+
+        public boolean hasL3C1() {
+            return this.f16164f;
+        }
+
+        public boolean hasL3C2() {
+            return this.f16166h;
+        }
+
+        public boolean hasL4C1() {
+            return this.f16169k;
+        }
+
+        public boolean hasL6() {
+            return this.f16173o;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public SingleCardTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro richText;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setL1C1(richText);
+                        continue;
+                    case 18:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setL2C1(richText);
+                        continue;
+                    case 26:
+                        richText = new ScatterStyle();
+                        codedInputStreamMicro.readMessage(richText);
+                        addL2C2(richText);
+                        continue;
+                    case 34:
+                        richText = new Score();
+                        codedInputStreamMicro.readMessage(richText);
+                        setL3C1(richText);
+                        continue;
+                    case 42:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setL3C2(richText);
+                        continue;
+                    case 50:
+                        richText = new ScatterStyle();
+                        codedInputStreamMicro.readMessage(richText);
+                        addL3C3(richText);
+                        continue;
+                    case 58:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setL4C1(richText);
+                        continue;
+                    case 66:
+                        richText = new ComboBox();
+                        codedInputStreamMicro.readMessage(richText);
+                        addL4C2(richText);
+                        continue;
+                    case 74:
+                        richText = new ChildrenBtn();
+                        codedInputStreamMicro.readMessage(richText);
+                        addL5(richText);
+                        continue;
+                    case 82:
+                        richText = new ComboBox();
+                        codedInputStreamMicro.readMessage(richText);
+                        setL6(richText);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public SingleCardTemplate setL1C1(RichText richText) {
+            if (richText == null) {
+                return clearL1C1();
+            }
+            this.f16159a = true;
+            this.f16160b = richText;
+            return this;
+        }
+
+        public SingleCardTemplate setL2C1(RichText richText) {
+            if (richText == null) {
+                return clearL2C1();
+            }
+            this.f16161c = true;
+            this.f16162d = richText;
+            return this;
+        }
+
+        public SingleCardTemplate setL2C2(int i, ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                this.f16163e.set(i, scatterStyle);
+            }
+            return this;
+        }
+
+        public SingleCardTemplate setL3C1(Score score) {
+            if (score == null) {
+                return clearL3C1();
+            }
+            this.f16164f = true;
+            this.f16165g = score;
+            return this;
+        }
+
+        public SingleCardTemplate setL3C2(RichText richText) {
+            if (richText == null) {
+                return clearL3C2();
+            }
+            this.f16166h = true;
+            this.f16167i = richText;
+            return this;
+        }
+
+        public SingleCardTemplate setL3C3(int i, ScatterStyle scatterStyle) {
+            if (scatterStyle != null) {
+                this.f16168j.set(i, scatterStyle);
+            }
+            return this;
+        }
+
+        public SingleCardTemplate setL4C1(RichText richText) {
+            if (richText == null) {
+                return clearL4C1();
+            }
+            this.f16169k = true;
+            this.f16170l = richText;
+            return this;
+        }
+
+        public SingleCardTemplate setL4C2(int i, ComboBox comboBox) {
+            if (comboBox != null) {
+                this.f16171m.set(i, comboBox);
+            }
+            return this;
+        }
+
+        public SingleCardTemplate setL5(int i, ChildrenBtn childrenBtn) {
+            if (childrenBtn != null) {
+                this.f16172n.set(i, childrenBtn);
+            }
+            return this;
+        }
+
+        public SingleCardTemplate setL6(ComboBox comboBox) {
+            if (comboBox == null) {
+                return clearL6();
+            }
+            this.f16173o = true;
+            this.f16174p = comboBox;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasL1C1()) {
+                codedOutputStreamMicro.writeMessage(1, getL1C1());
+            }
+            if (hasL2C1()) {
+                codedOutputStreamMicro.writeMessage(2, getL2C1());
+            }
+            for (ScatterStyle writeMessage : getL2C2List()) {
+                codedOutputStreamMicro.writeMessage(3, writeMessage);
+            }
+            if (hasL3C1()) {
+                codedOutputStreamMicro.writeMessage(4, getL3C1());
+            }
+            if (hasL3C2()) {
+                codedOutputStreamMicro.writeMessage(5, getL3C2());
+            }
+            for (ScatterStyle writeMessage2 : getL3C3List()) {
+                codedOutputStreamMicro.writeMessage(6, writeMessage2);
+            }
+            if (hasL4C1()) {
+                codedOutputStreamMicro.writeMessage(7, getL4C1());
+            }
+            for (ComboBox writeMessage3 : getL4C2List()) {
+                codedOutputStreamMicro.writeMessage(8, writeMessage3);
+            }
+            for (ChildrenBtn writeMessage4 : getL5List()) {
+                codedOutputStreamMicro.writeMessage(9, writeMessage4);
+            }
+            if (hasL6()) {
+                codedOutputStreamMicro.writeMessage(10, getL6());
+            }
+        }
+    }
+
+    public static final class VcomboText extends MessageMicro {
+        public static final int ORI_FIELD_NUMBER = 1;
+        public static final int VAL_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f16176a;
+        /* renamed from: b */
+        private RichText f16177b = null;
+        /* renamed from: c */
+        private boolean f16178c;
+        /* renamed from: d */
+        private RichText f16179d = null;
+        /* renamed from: e */
+        private int f16180e = -1;
+
+        public static VcomboText parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new VcomboText().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static VcomboText parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (VcomboText) new VcomboText().mergeFrom(bArr);
+        }
+
+        public final VcomboText clear() {
+            clearOri();
+            clearVal();
+            this.f16180e = -1;
+            return this;
+        }
+
+        public VcomboText clearOri() {
+            this.f16176a = false;
+            this.f16177b = null;
+            return this;
+        }
+
+        public VcomboText clearVal() {
+            this.f16178c = false;
+            this.f16179d = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16180e < 0) {
+                getSerializedSize();
+            }
+            return this.f16180e;
+        }
+
+        public RichText getOri() {
+            return this.f16177b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasOri()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getOri());
+            }
+            if (hasVal()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getVal());
+            }
+            this.f16180e = i;
+            return i;
+        }
+
+        public RichText getVal() {
+            return this.f16179d;
+        }
+
+        public boolean hasOri() {
+            return this.f16176a;
+        }
+
+        public boolean hasVal() {
+            return this.f16178c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public VcomboText mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro richText;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setOri(richText);
+                        continue;
+                    case 18:
+                        richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setVal(richText);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public VcomboText setOri(RichText richText) {
+            if (richText == null) {
+                return clearOri();
+            }
+            this.f16176a = true;
+            this.f16177b = richText;
+            return this;
+        }
+
+        public VcomboText setVal(RichText richText) {
+            if (richText == null) {
+                return clearVal();
+            }
+            this.f16178c = true;
+            this.f16179d = richText;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasOri()) {
+                codedOutputStreamMicro.writeMessage(1, getOri());
+            }
+            if (hasVal()) {
+                codedOutputStreamMicro.writeMessage(2, getVal());
+            }
+        }
+    }
+
+    public static final class Vgray extends MessageMicro {
+        public static final int LONG = 2;
+        public static final int SHORT = 1;
+        public static final int STYLE_FIELD_NUMBER = 2;
+        public static final int TEXT_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f16181a;
+        /* renamed from: b */
+        private RichText f16182b = null;
+        /* renamed from: c */
+        private boolean f16183c;
+        /* renamed from: d */
+        private int f16184d = 1;
+        /* renamed from: e */
+        private int f16185e = -1;
+
+        public static Vgray parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Vgray().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Vgray parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Vgray) new Vgray().mergeFrom(bArr);
+        }
+
+        public final Vgray clear() {
+            clearText();
+            clearStyle();
+            this.f16185e = -1;
+            return this;
+        }
+
+        public Vgray clearStyle() {
+            this.f16183c = false;
+            this.f16184d = 1;
+            return this;
+        }
+
+        public Vgray clearText() {
+            this.f16181a = false;
+            this.f16182b = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16185e < 0) {
+                getSerializedSize();
+            }
+            return this.f16185e;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasText()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getText());
+            }
+            if (hasStyle()) {
+                i += CodedOutputStreamMicro.computeInt32Size(2, getStyle());
+            }
+            this.f16185e = i;
+            return i;
+        }
+
+        public int getStyle() {
+            return this.f16184d;
+        }
+
+        public RichText getText() {
+            return this.f16182b;
+        }
+
+        public boolean hasStyle() {
+            return this.f16183c;
+        }
+
+        public boolean hasText() {
+            return this.f16181a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Vgray mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        MessageMicro richText = new RichText();
+                        codedInputStreamMicro.readMessage(richText);
+                        setText(richText);
+                        continue;
+                    case 16:
+                        setStyle(codedInputStreamMicro.readInt32());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Vgray setStyle(int i) {
+            this.f16183c = true;
+            this.f16184d = i;
+            return this;
+        }
+
+        public Vgray setText(RichText richText) {
+            if (richText == null) {
+                return clearText();
+            }
+            this.f16181a = true;
+            this.f16182b = richText;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasText()) {
+                codedOutputStreamMicro.writeMessage(1, getText());
+            }
+            if (hasStyle()) {
+                codedOutputStreamMicro.writeInt32(2, getStyle());
+            }
+        }
+    }
+
+    public static final class Vmagicbox extends MessageMicro {
+        public static final int RES_FIELD_NUMBER = 1;
+        public static final int TEXT_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private List<Resource> f16186a = Collections.emptyList();
+        /* renamed from: b */
+        private boolean f16187b;
+        /* renamed from: c */
+        private RichText f16188c = null;
+        /* renamed from: d */
+        private int f16189d = -1;
+
+        public static Vmagicbox parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Vmagicbox().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Vmagicbox parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Vmagicbox) new Vmagicbox().mergeFrom(bArr);
+        }
+
+        public Vmagicbox addRes(Resource resource) {
+            if (resource != null) {
+                if (this.f16186a.isEmpty()) {
+                    this.f16186a = new ArrayList();
+                }
+                this.f16186a.add(resource);
+            }
+            return this;
+        }
+
+        public final Vmagicbox clear() {
+            clearRes();
+            clearText();
+            this.f16189d = -1;
+            return this;
+        }
+
+        public Vmagicbox clearRes() {
+            this.f16186a = Collections.emptyList();
+            return this;
+        }
+
+        public Vmagicbox clearText() {
+            this.f16187b = false;
+            this.f16188c = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16189d < 0) {
+                getSerializedSize();
+            }
+            return this.f16189d;
+        }
+
+        public Resource getRes(int i) {
+            return (Resource) this.f16186a.get(i);
+        }
+
+        public int getResCount() {
+            return this.f16186a.size();
+        }
+
+        public List<Resource> getResList() {
+            return this.f16186a;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            for (Resource computeMessageSize : getResList()) {
+                i = CodedOutputStreamMicro.computeMessageSize(1, computeMessageSize) + i;
+            }
+            if (hasText()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getText());
+            }
+            this.f16189d = i;
+            return i;
+        }
+
+        public RichText getText() {
+            return this.f16188c;
+        }
+
+        public boolean hasText() {
+            return this.f16187b;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Vmagicbox mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro resource;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        resource = new Resource();
+                        codedInputStreamMicro.readMessage(resource);
+                        addRes(resource);
+                        continue;
+                    case 18:
+                        resource = new RichText();
+                        codedInputStreamMicro.readMessage(resource);
+                        setText(resource);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Vmagicbox setRes(int i, Resource resource) {
+            if (resource != null) {
+                this.f16186a.set(i, resource);
+            }
+            return this;
+        }
+
+        public Vmagicbox setText(RichText richText) {
+            if (richText == null) {
+                return clearText();
+            }
+            this.f16187b = true;
+            this.f16188c = richText;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            for (Resource writeMessage : getResList()) {
+                codedOutputStreamMicro.writeMessage(1, writeMessage);
+            }
+            if (hasText()) {
+                codedOutputStreamMicro.writeMessage(2, getText());
+            }
+        }
+    }
+
+    public static final class VtableTemplate extends MessageMicro {
+        public static final int R1C1_FIELD_NUMBER = 1;
+        public static final int R1C2_FIELD_NUMBER = 2;
+        public static final int R1C3_FIELD_NUMBER = 3;
+        public static final int R2C1_FIELD_NUMBER = 4;
+        public static final int R3C1_FIELD_NUMBER = 5;
+        public static final int R3C2_FIELD_NUMBER = 6;
+        public static final int R3C3_FIELD_NUMBER = 7;
+        public static final int R4C1_FIELD_NUMBER = 8;
+        public static final int R4C2_FIELD_NUMBER = 9;
+        public static final int R5C1_FIELD_NUMBER = 10;
+        public static final int R6C1_FIELD_NUMBER = 11;
+        public static final int R7C1_FIELD_NUMBER = 12;
+        public static final int R8C1_FIELD_NUMBER = 13;
+        public static final int UPPERLEFTCORNER_FIELD_NUMBER = 14;
+        /* renamed from: A */
+        private int f16190A = -1;
+        /* renamed from: a */
+        private boolean f16191a;
+        /* renamed from: b */
+        private Image f16192b = null;
+        /* renamed from: c */
+        private boolean f16193c;
+        /* renamed from: d */
+        private RichText f16194d = null;
+        /* renamed from: e */
+        private List<Resource> f16195e = Collections.emptyList();
+        /* renamed from: f */
+        private boolean f16196f;
+        /* renamed from: g */
+        private RichText f16197g = null;
+        /* renamed from: h */
+        private boolean f16198h;
+        /* renamed from: i */
+        private Score f16199i = null;
+        /* renamed from: j */
+        private boolean f16200j;
+        /* renamed from: k */
+        private Vmagicbox f16201k = null;
+        /* renamed from: l */
+        private boolean f16202l;
+        /* renamed from: m */
+        private VcomboText f16203m = null;
+        /* renamed from: n */
+        private boolean f16204n;
+        /* renamed from: o */
+        private RichText f16205o = null;
+        /* renamed from: p */
+        private boolean f16206p;
+        /* renamed from: q */
+        private RichText f16207q = null;
+        /* renamed from: r */
+        private List<RichText> f16208r = Collections.emptyList();
+        /* renamed from: s */
+        private boolean f16209s;
+        /* renamed from: t */
+        private Vgray f16210t = null;
+        /* renamed from: u */
+        private boolean f16211u;
+        /* renamed from: v */
+        private Fatherson f16212v = null;
+        /* renamed from: w */
+        private boolean f16213w;
+        /* renamed from: x */
+        private Composit f16214x = null;
+        /* renamed from: y */
+        private boolean f16215y;
+        /* renamed from: z */
+        private Resource f16216z = null;
+
+        public static VtableTemplate parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new VtableTemplate().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static VtableTemplate parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (VtableTemplate) new VtableTemplate().mergeFrom(bArr);
+        }
+
+        public VtableTemplate addR1C3(Resource resource) {
+            if (resource != null) {
+                if (this.f16195e.isEmpty()) {
+                    this.f16195e = new ArrayList();
+                }
+                this.f16195e.add(resource);
+            }
+            return this;
+        }
+
+        public VtableTemplate addR5C1(RichText richText) {
+            if (richText != null) {
+                if (this.f16208r.isEmpty()) {
+                    this.f16208r = new ArrayList();
+                }
+                this.f16208r.add(richText);
+            }
+            return this;
+        }
+
+        public final VtableTemplate clear() {
+            clearR1C1();
+            clearR1C2();
+            clearR1C3();
+            clearR2C1();
+            clearR3C1();
+            clearR3C2();
+            clearR3C3();
+            clearR4C1();
+            clearR4C2();
+            clearR5C1();
+            clearR6C1();
+            clearR7C1();
+            clearR8C1();
+            clearUpperleftcorner();
+            this.f16190A = -1;
+            return this;
+        }
+
+        public VtableTemplate clearR1C1() {
+            this.f16191a = false;
+            this.f16192b = null;
+            return this;
+        }
+
+        public VtableTemplate clearR1C2() {
+            this.f16193c = false;
+            this.f16194d = null;
+            return this;
+        }
+
+        public VtableTemplate clearR1C3() {
+            this.f16195e = Collections.emptyList();
+            return this;
+        }
+
+        public VtableTemplate clearR2C1() {
+            this.f16196f = false;
+            this.f16197g = null;
+            return this;
+        }
+
+        public VtableTemplate clearR3C1() {
+            this.f16198h = false;
+            this.f16199i = null;
+            return this;
+        }
+
+        public VtableTemplate clearR3C2() {
+            this.f16200j = false;
+            this.f16201k = null;
+            return this;
+        }
+
+        public VtableTemplate clearR3C3() {
+            this.f16202l = false;
+            this.f16203m = null;
+            return this;
+        }
+
+        public VtableTemplate clearR4C1() {
+            this.f16204n = false;
+            this.f16205o = null;
+            return this;
+        }
+
+        public VtableTemplate clearR4C2() {
+            this.f16206p = false;
+            this.f16207q = null;
+            return this;
+        }
+
+        public VtableTemplate clearR5C1() {
+            this.f16208r = Collections.emptyList();
+            return this;
+        }
+
+        public VtableTemplate clearR6C1() {
+            this.f16209s = false;
+            this.f16210t = null;
+            return this;
+        }
+
+        public VtableTemplate clearR7C1() {
+            this.f16211u = false;
+            this.f16212v = null;
+            return this;
+        }
+
+        public VtableTemplate clearR8C1() {
+            this.f16213w = false;
+            this.f16214x = null;
+            return this;
+        }
+
+        public VtableTemplate clearUpperleftcorner() {
+            this.f16215y = false;
+            this.f16216z = null;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16190A < 0) {
+                getSerializedSize();
+            }
+            return this.f16190A;
+        }
+
+        public Image getR1C1() {
+            return this.f16192b;
+        }
+
+        public RichText getR1C2() {
+            return this.f16194d;
+        }
+
+        public Resource getR1C3(int i) {
+            return (Resource) this.f16195e.get(i);
+        }
+
+        public int getR1C3Count() {
+            return this.f16195e.size();
+        }
+
+        public List<Resource> getR1C3List() {
+            return this.f16195e;
+        }
+
+        public RichText getR2C1() {
+            return this.f16197g;
+        }
+
+        public Score getR3C1() {
+            return this.f16199i;
+        }
+
+        public Vmagicbox getR3C2() {
+            return this.f16201k;
+        }
+
+        public VcomboText getR3C3() {
+            return this.f16203m;
+        }
+
+        public RichText getR4C1() {
+            return this.f16205o;
+        }
+
+        public RichText getR4C2() {
+            return this.f16207q;
+        }
+
+        public RichText getR5C1(int i) {
+            return (RichText) this.f16208r.get(i);
+        }
+
+        public int getR5C1Count() {
+            return this.f16208r.size();
+        }
+
+        public List<RichText> getR5C1List() {
+            return this.f16208r;
+        }
+
+        public Vgray getR6C1() {
+            return this.f16210t;
+        }
+
+        public Fatherson getR7C1() {
+            return this.f16212v;
+        }
+
+        public Composit getR8C1() {
+            return this.f16214x;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasR1C1()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getR1C1());
+            }
+            if (hasR1C2()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getR1C2());
+            }
+            int i2 = i;
+            for (Resource computeMessageSize : getR1C3List()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(3, computeMessageSize) + i2;
+            }
+            if (hasR2C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(4, getR2C1());
+            }
+            if (hasR3C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(5, getR3C1());
+            }
+            if (hasR3C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(6, getR3C2());
+            }
+            if (hasR3C3()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(7, getR3C3());
+            }
+            if (hasR4C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(8, getR4C1());
+            }
+            if (hasR4C2()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(9, getR4C2());
+            }
+            for (RichText computeMessageSize2 : getR5C1List()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(10, computeMessageSize2);
+            }
+            if (hasR6C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(11, getR6C1());
+            }
+            if (hasR7C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(12, getR7C1());
+            }
+            if (hasR8C1()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(13, getR8C1());
+            }
+            if (hasUpperleftcorner()) {
+                i2 += CodedOutputStreamMicro.computeMessageSize(14, getUpperleftcorner());
+            }
+            this.f16190A = i2;
+            return i2;
+        }
+
+        public Resource getUpperleftcorner() {
+            return this.f16216z;
+        }
+
+        public boolean hasR1C1() {
+            return this.f16191a;
+        }
+
+        public boolean hasR1C2() {
+            return this.f16193c;
+        }
+
+        public boolean hasR2C1() {
+            return this.f16196f;
+        }
+
+        public boolean hasR3C1() {
+            return this.f16198h;
+        }
+
+        public boolean hasR3C2() {
+            return this.f16200j;
+        }
+
+        public boolean hasR3C3() {
+            return this.f16202l;
+        }
+
+        public boolean hasR4C1() {
+            return this.f16204n;
+        }
+
+        public boolean hasR4C2() {
+            return this.f16206p;
+        }
+
+        public boolean hasR6C1() {
+            return this.f16209s;
+        }
+
+        public boolean hasR7C1() {
+            return this.f16211u;
+        }
+
+        public boolean hasR8C1() {
+            return this.f16213w;
+        }
+
+        public boolean hasUpperleftcorner() {
+            return this.f16215y;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public VtableTemplate mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro image;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        image = new Image();
+                        codedInputStreamMicro.readMessage(image);
+                        setR1C1(image);
+                        continue;
+                    case 18:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setR1C2(image);
+                        continue;
+                    case 26:
+                        image = new Resource();
+                        codedInputStreamMicro.readMessage(image);
+                        addR1C3(image);
+                        continue;
+                    case 34:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setR2C1(image);
+                        continue;
+                    case 42:
+                        image = new Score();
+                        codedInputStreamMicro.readMessage(image);
+                        setR3C1(image);
+                        continue;
+                    case 50:
+                        image = new Vmagicbox();
+                        codedInputStreamMicro.readMessage(image);
+                        setR3C2(image);
+                        continue;
+                    case 58:
+                        image = new VcomboText();
+                        codedInputStreamMicro.readMessage(image);
+                        setR3C3(image);
+                        continue;
+                    case 66:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setR4C1(image);
+                        continue;
+                    case 74:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        setR4C2(image);
+                        continue;
+                    case 82:
+                        image = new RichText();
+                        codedInputStreamMicro.readMessage(image);
+                        addR5C1(image);
+                        continue;
+                    case 90:
+                        image = new Vgray();
+                        codedInputStreamMicro.readMessage(image);
+                        setR6C1(image);
+                        continue;
+                    case 98:
+                        image = new Fatherson();
+                        codedInputStreamMicro.readMessage(image);
+                        setR7C1(image);
+                        continue;
+                    case 106:
+                        image = new Composit();
+                        codedInputStreamMicro.readMessage(image);
+                        setR8C1(image);
+                        continue;
+                    case 114:
+                        image = new Resource();
+                        codedInputStreamMicro.readMessage(image);
+                        setUpperleftcorner(image);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public VtableTemplate setR1C1(Image image) {
+            if (image == null) {
+                return clearR1C1();
+            }
+            this.f16191a = true;
+            this.f16192b = image;
+            return this;
+        }
+
+        public VtableTemplate setR1C2(RichText richText) {
+            if (richText == null) {
+                return clearR1C2();
+            }
+            this.f16193c = true;
+            this.f16194d = richText;
+            return this;
+        }
+
+        public VtableTemplate setR1C3(int i, Resource resource) {
+            if (resource != null) {
+                this.f16195e.set(i, resource);
+            }
+            return this;
+        }
+
+        public VtableTemplate setR2C1(RichText richText) {
+            if (richText == null) {
+                return clearR2C1();
+            }
+            this.f16196f = true;
+            this.f16197g = richText;
+            return this;
+        }
+
+        public VtableTemplate setR3C1(Score score) {
+            if (score == null) {
+                return clearR3C1();
+            }
+            this.f16198h = true;
+            this.f16199i = score;
+            return this;
+        }
+
+        public VtableTemplate setR3C2(Vmagicbox vmagicbox) {
+            if (vmagicbox == null) {
+                return clearR3C2();
+            }
+            this.f16200j = true;
+            this.f16201k = vmagicbox;
+            return this;
+        }
+
+        public VtableTemplate setR3C3(VcomboText vcomboText) {
+            if (vcomboText == null) {
+                return clearR3C3();
+            }
+            this.f16202l = true;
+            this.f16203m = vcomboText;
+            return this;
+        }
+
+        public VtableTemplate setR4C1(RichText richText) {
+            if (richText == null) {
+                return clearR4C1();
+            }
+            this.f16204n = true;
+            this.f16205o = richText;
+            return this;
+        }
+
+        public VtableTemplate setR4C2(RichText richText) {
+            if (richText == null) {
+                return clearR4C2();
+            }
+            this.f16206p = true;
+            this.f16207q = richText;
+            return this;
+        }
+
+        public VtableTemplate setR5C1(int i, RichText richText) {
+            if (richText != null) {
+                this.f16208r.set(i, richText);
+            }
+            return this;
+        }
+
+        public VtableTemplate setR6C1(Vgray vgray) {
+            if (vgray == null) {
+                return clearR6C1();
+            }
+            this.f16209s = true;
+            this.f16210t = vgray;
+            return this;
+        }
+
+        public VtableTemplate setR7C1(Fatherson fatherson) {
+            if (fatherson == null) {
+                return clearR7C1();
+            }
+            this.f16211u = true;
+            this.f16212v = fatherson;
+            return this;
+        }
+
+        public VtableTemplate setR8C1(Composit composit) {
+            if (composit == null) {
+                return clearR8C1();
+            }
+            this.f16213w = true;
+            this.f16214x = composit;
+            return this;
+        }
+
+        public VtableTemplate setUpperleftcorner(Resource resource) {
+            if (resource == null) {
+                return clearUpperleftcorner();
+            }
+            this.f16215y = true;
+            this.f16216z = resource;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasR1C1()) {
+                codedOutputStreamMicro.writeMessage(1, getR1C1());
+            }
+            if (hasR1C2()) {
+                codedOutputStreamMicro.writeMessage(2, getR1C2());
+            }
+            for (Resource writeMessage : getR1C3List()) {
+                codedOutputStreamMicro.writeMessage(3, writeMessage);
+            }
+            if (hasR2C1()) {
+                codedOutputStreamMicro.writeMessage(4, getR2C1());
+            }
+            if (hasR3C1()) {
+                codedOutputStreamMicro.writeMessage(5, getR3C1());
+            }
+            if (hasR3C2()) {
+                codedOutputStreamMicro.writeMessage(6, getR3C2());
+            }
+            if (hasR3C3()) {
+                codedOutputStreamMicro.writeMessage(7, getR3C3());
+            }
+            if (hasR4C1()) {
+                codedOutputStreamMicro.writeMessage(8, getR4C1());
+            }
+            if (hasR4C2()) {
+                codedOutputStreamMicro.writeMessage(9, getR4C2());
+            }
+            for (RichText writeMessage2 : getR5C1List()) {
+                codedOutputStreamMicro.writeMessage(10, writeMessage2);
+            }
+            if (hasR6C1()) {
+                codedOutputStreamMicro.writeMessage(11, getR6C1());
+            }
+            if (hasR7C1()) {
+                codedOutputStreamMicro.writeMessage(12, getR7C1());
+            }
+            if (hasR8C1()) {
+                codedOutputStreamMicro.writeMessage(13, getR8C1());
+            }
+            if (hasUpperleftcorner()) {
+                codedOutputStreamMicro.writeMessage(14, getUpperleftcorner());
+            }
+        }
+    }
+
+    public static Template parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new Template().mergeFrom(codedInputStreamMicro);
+    }
+
+    public static Template parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (Template) new Template().mergeFrom(bArr);
+    }
+
+    public final Template clear() {
+        clearNormal();
+        clearImage();
+        clearPanel();
+        clearMapsearchaladdinpanel();
+        clearMapsearchaladdinnormal();
+        clearVtable();
+        clearBtable();
+        clearSinglecard();
+        clearLtable();
+        this.f16235s = -1;
         return this;
-      case 10: 
-        localObject = new NormalTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setNormal((NormalTemplate)localObject);
-        break;
-      case 18: 
-        localObject = new ImageTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setImage((ImageTemplate)localObject);
-        break;
-      case 26: 
-        localObject = new PanelTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setPanel((PanelTemplate)localObject);
-        break;
-      case 34: 
-        localObject = new MapSearchaladdinPanelTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setMapsearchaladdinpanel((MapSearchaladdinPanelTemplate)localObject);
-        break;
-      case 42: 
-        localObject = new MapSearchaladdinNormalTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setMapsearchaladdinnormal((MapSearchaladdinNormalTemplate)localObject);
-        break;
-      case 50: 
-        localObject = new VtableTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setVtable((VtableTemplate)localObject);
-        break;
-      case 58: 
-        localObject = new BtableTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setBtable((BtableTemplate)localObject);
-        break;
-      case 66: 
-        localObject = new SingleCardTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setSinglecard((SingleCardTemplate)localObject);
-        break;
-      case 74: 
-        localObject = new LtableTemplate();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setLtable((LtableTemplate)localObject);
-      }
     }
-  }
-  
-  public Template setBtable(BtableTemplate paramBtableTemplate)
-  {
-    if (paramBtableTemplate == null) {
-      return clearBtable();
-    }
-    this.m = true;
-    this.n = paramBtableTemplate;
-    return this;
-  }
-  
-  public Template setImage(ImageTemplate paramImageTemplate)
-  {
-    if (paramImageTemplate == null) {
-      return clearImage();
-    }
-    this.c = true;
-    this.d = paramImageTemplate;
-    return this;
-  }
-  
-  public Template setLtable(LtableTemplate paramLtableTemplate)
-  {
-    if (paramLtableTemplate == null) {
-      return clearLtable();
-    }
-    this.q = true;
-    this.r = paramLtableTemplate;
-    return this;
-  }
-  
-  public Template setMapsearchaladdinnormal(MapSearchaladdinNormalTemplate paramMapSearchaladdinNormalTemplate)
-  {
-    if (paramMapSearchaladdinNormalTemplate == null) {
-      return clearMapsearchaladdinnormal();
-    }
-    this.i = true;
-    this.j = paramMapSearchaladdinNormalTemplate;
-    return this;
-  }
-  
-  public Template setMapsearchaladdinpanel(MapSearchaladdinPanelTemplate paramMapSearchaladdinPanelTemplate)
-  {
-    if (paramMapSearchaladdinPanelTemplate == null) {
-      return clearMapsearchaladdinpanel();
-    }
-    this.g = true;
-    this.h = paramMapSearchaladdinPanelTemplate;
-    return this;
-  }
-  
-  public Template setNormal(NormalTemplate paramNormalTemplate)
-  {
-    if (paramNormalTemplate == null) {
-      return clearNormal();
-    }
-    this.a = true;
-    this.b = paramNormalTemplate;
-    return this;
-  }
-  
-  public Template setPanel(PanelTemplate paramPanelTemplate)
-  {
-    if (paramPanelTemplate == null) {
-      return clearPanel();
-    }
-    this.e = true;
-    this.f = paramPanelTemplate;
-    return this;
-  }
-  
-  public Template setSinglecard(SingleCardTemplate paramSingleCardTemplate)
-  {
-    if (paramSingleCardTemplate == null) {
-      return clearSinglecard();
-    }
-    this.o = true;
-    this.p = paramSingleCardTemplate;
-    return this;
-  }
-  
-  public Template setVtable(VtableTemplate paramVtableTemplate)
-  {
-    if (paramVtableTemplate == null) {
-      return clearVtable();
-    }
-    this.k = true;
-    this.l = paramVtableTemplate;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasNormal()) {
-      paramCodedOutputStreamMicro.writeMessage(1, getNormal());
-    }
-    if (hasImage()) {
-      paramCodedOutputStreamMicro.writeMessage(2, getImage());
-    }
-    if (hasPanel()) {
-      paramCodedOutputStreamMicro.writeMessage(3, getPanel());
-    }
-    if (hasMapsearchaladdinpanel()) {
-      paramCodedOutputStreamMicro.writeMessage(4, getMapsearchaladdinpanel());
-    }
-    if (hasMapsearchaladdinnormal()) {
-      paramCodedOutputStreamMicro.writeMessage(5, getMapsearchaladdinnormal());
-    }
-    if (hasVtable()) {
-      paramCodedOutputStreamMicro.writeMessage(6, getVtable());
-    }
-    if (hasBtable()) {
-      paramCodedOutputStreamMicro.writeMessage(7, getBtable());
-    }
-    if (hasSinglecard()) {
-      paramCodedOutputStreamMicro.writeMessage(8, getSinglecard());
-    }
-    if (hasLtable()) {
-      paramCodedOutputStreamMicro.writeMessage(9, getLtable());
-    }
-  }
-  
-  public static final class BtableTemplate
-    extends MessageMicro
-  {
-    public static final int R1C1_FIELD_NUMBER = 1;
-    public static final int R1C2_FIELD_NUMBER = 2;
-    public static final int R1C4_FIELD_NUMBER = 3;
-    public static final int R2C1_FIELD_NUMBER = 4;
-    public static final int R2C2_FIELD_NUMBER = 5;
-    public static final int R3C1_FIELD_NUMBER = 6;
-    public static final int R3C2_FIELD_NUMBER = 7;
-    public static final int R4C1_FIELD_NUMBER = 8;
-    public static final int R5C1_FIELD_NUMBER = 9;
-    public static final int R6C1_FIELD_NUMBER = 10;
-    public static final int R7C1_FIELD_NUMBER = 11;
-    private boolean a;
-    private Template.RichText b = null;
-    private boolean c;
-    private Template.RichText d = null;
-    private List<Template.Button> e = Collections.emptyList();
-    private boolean f;
-    private Template.Score g = null;
-    private boolean h;
-    private Template.RichText i = null;
-    private boolean j;
-    private Template.RichText k = null;
-    private boolean l;
-    private Template.RichText m = null;
-    private List<Template.RichText> n = Collections.emptyList();
-    private boolean o;
-    private Template.ComboBox p = null;
-    private boolean q;
-    private Template.Fatherson r = null;
-    private boolean s;
-    private Template.Composit t = null;
-    private int u = -1;
-    
-    public static BtableTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new BtableTemplate().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static BtableTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (BtableTemplate)new BtableTemplate().mergeFrom(paramArrayOfByte);
-    }
-    
-    public BtableTemplate addR1C4(Template.Button paramButton)
-    {
-      if (paramButton == null) {
+
+    public Template clearBtable() {
+        this.f16229m = false;
+        this.f16230n = null;
         return this;
-      }
-      if (this.e.isEmpty()) {
-        this.e = new ArrayList();
-      }
-      this.e.add(paramButton);
-      return this;
     }
-    
-    public BtableTemplate addR4C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
+
+    public Template clearImage() {
+        this.f16219c = false;
+        this.f16220d = null;
         return this;
-      }
-      if (this.n.isEmpty()) {
-        this.n = new ArrayList();
-      }
-      this.n.add(paramRichText);
-      return this;
     }
-    
-    public final BtableTemplate clear()
-    {
-      clearR1C1();
-      clearR1C2();
-      clearR1C4();
-      clearR2C1();
-      clearR2C2();
-      clearR3C1();
-      clearR3C2();
-      clearR4C1();
-      clearR5C1();
-      clearR6C1();
-      clearR7C1();
-      this.u = -1;
-      return this;
-    }
-    
-    public BtableTemplate clearR1C1()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public BtableTemplate clearR1C2()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public BtableTemplate clearR1C4()
-    {
-      this.e = Collections.emptyList();
-      return this;
-    }
-    
-    public BtableTemplate clearR2C1()
-    {
-      this.f = false;
-      this.g = null;
-      return this;
-    }
-    
-    public BtableTemplate clearR2C2()
-    {
-      this.h = false;
-      this.i = null;
-      return this;
-    }
-    
-    public BtableTemplate clearR3C1()
-    {
-      this.j = false;
-      this.k = null;
-      return this;
-    }
-    
-    public BtableTemplate clearR3C2()
-    {
-      this.l = false;
-      this.m = null;
-      return this;
-    }
-    
-    public BtableTemplate clearR4C1()
-    {
-      this.n = Collections.emptyList();
-      return this;
-    }
-    
-    public BtableTemplate clearR5C1()
-    {
-      this.o = false;
-      this.p = null;
-      return this;
-    }
-    
-    public BtableTemplate clearR6C1()
-    {
-      this.q = false;
-      this.r = null;
-      return this;
-    }
-    
-    public BtableTemplate clearR7C1()
-    {
-      this.s = false;
-      this.t = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.u < 0) {
-        getSerializedSize();
-      }
-      return this.u;
-    }
-    
-    public Template.RichText getR1C1()
-    {
-      return this.b;
-    }
-    
-    public Template.RichText getR1C2()
-    {
-      return this.d;
-    }
-    
-    public Template.Button getR1C4(int paramInt)
-    {
-      return (Template.Button)this.e.get(paramInt);
-    }
-    
-    public int getR1C4Count()
-    {
-      return this.e.size();
-    }
-    
-    public List<Template.Button> getR1C4List()
-    {
-      return this.e;
-    }
-    
-    public Template.Score getR2C1()
-    {
-      return this.g;
-    }
-    
-    public Template.RichText getR2C2()
-    {
-      return this.i;
-    }
-    
-    public Template.RichText getR3C1()
-    {
-      return this.k;
-    }
-    
-    public Template.RichText getR3C2()
-    {
-      return this.m;
-    }
-    
-    public Template.RichText getR4C1(int paramInt)
-    {
-      return (Template.RichText)this.n.get(paramInt);
-    }
-    
-    public int getR4C1Count()
-    {
-      return this.n.size();
-    }
-    
-    public List<Template.RichText> getR4C1List()
-    {
-      return this.n;
-    }
-    
-    public Template.ComboBox getR5C1()
-    {
-      return this.p;
-    }
-    
-    public Template.Fatherson getR6C1()
-    {
-      return this.r;
-    }
-    
-    public Template.Composit getR7C1()
-    {
-      return this.t;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i1 = 0;
-      if (hasR1C1()) {
-        i1 = 0 + CodedOutputStreamMicro.computeMessageSize(1, getR1C1());
-      }
-      int i2 = i1;
-      if (hasR1C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(2, getR1C2());
-      }
-      Iterator localIterator = getR1C4List().iterator();
-      while (localIterator.hasNext()) {
-        i2 = CodedOutputStreamMicro.computeMessageSize(3, (Template.Button)localIterator.next()) + i2;
-      }
-      i1 = i2;
-      if (hasR2C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(4, getR2C1());
-      }
-      i2 = i1;
-      if (hasR2C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(5, getR2C2());
-      }
-      i1 = i2;
-      if (hasR3C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(6, getR3C1());
-      }
-      i2 = i1;
-      if (hasR3C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(7, getR3C2());
-      }
-      localIterator = getR4C1List().iterator();
-      while (localIterator.hasNext()) {
-        i2 += CodedOutputStreamMicro.computeMessageSize(8, (Template.RichText)localIterator.next());
-      }
-      i1 = i2;
-      if (hasR5C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(9, getR5C1());
-      }
-      i2 = i1;
-      if (hasR6C1()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(10, getR6C1());
-      }
-      i1 = i2;
-      if (hasR7C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(11, getR7C1());
-      }
-      this.u = i1;
-      return i1;
-    }
-    
-    public boolean hasR1C1()
-    {
-      return this.a;
-    }
-    
-    public boolean hasR1C2()
-    {
-      return this.c;
-    }
-    
-    public boolean hasR2C1()
-    {
-      return this.f;
-    }
-    
-    public boolean hasR2C2()
-    {
-      return this.h;
-    }
-    
-    public boolean hasR3C1()
-    {
-      return this.j;
-    }
-    
-    public boolean hasR3C2()
-    {
-      return this.l;
-    }
-    
-    public boolean hasR5C1()
-    {
-      return this.o;
-    }
-    
-    public boolean hasR6C1()
-    {
-      return this.q;
-    }
-    
-    public boolean hasR7C1()
-    {
-      return this.s;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public BtableTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR1C1((Template.RichText)localObject);
-          break;
-        case 18: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR1C2((Template.RichText)localObject);
-          break;
-        case 26: 
-          localObject = new Template.Button();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR1C4((Template.Button)localObject);
-          break;
-        case 34: 
-          localObject = new Template.Score();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR2C1((Template.Score)localObject);
-          break;
-        case 42: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR2C2((Template.RichText)localObject);
-          break;
-        case 50: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR3C1((Template.RichText)localObject);
-          break;
-        case 58: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR3C2((Template.RichText)localObject);
-          break;
-        case 66: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR4C1((Template.RichText)localObject);
-          break;
-        case 74: 
-          localObject = new Template.ComboBox();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR5C1((Template.ComboBox)localObject);
-          break;
-        case 82: 
-          localObject = new Template.Fatherson();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR6C1((Template.Fatherson)localObject);
-          break;
-        case 90: 
-          localObject = new Template.Composit();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR7C1((Template.Composit)localObject);
-        }
-      }
-    }
-    
-    public BtableTemplate setR1C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR1C1();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
-    }
-    
-    public BtableTemplate setR1C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR1C2();
-      }
-      this.c = true;
-      this.d = paramRichText;
-      return this;
-    }
-    
-    public BtableTemplate setR1C4(int paramInt, Template.Button paramButton)
-    {
-      if (paramButton == null) {
+
+    public Template clearLtable() {
+        this.f16233q = false;
+        this.f16234r = null;
         return this;
-      }
-      this.e.set(paramInt, paramButton);
-      return this;
     }
-    
-    public BtableTemplate setR2C1(Template.Score paramScore)
-    {
-      if (paramScore == null) {
-        return clearR2C1();
-      }
-      this.f = true;
-      this.g = paramScore;
-      return this;
-    }
-    
-    public BtableTemplate setR2C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR2C2();
-      }
-      this.h = true;
-      this.i = paramRichText;
-      return this;
-    }
-    
-    public BtableTemplate setR3C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR3C1();
-      }
-      this.j = true;
-      this.k = paramRichText;
-      return this;
-    }
-    
-    public BtableTemplate setR3C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR3C2();
-      }
-      this.l = true;
-      this.m = paramRichText;
-      return this;
-    }
-    
-    public BtableTemplate setR4C1(int paramInt, Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
+
+    public Template clearMapsearchaladdinnormal() {
+        this.f16225i = false;
+        this.f16226j = null;
         return this;
-      }
-      this.n.set(paramInt, paramRichText);
-      return this;
     }
-    
-    public BtableTemplate setR5C1(Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return clearR5C1();
-      }
-      this.o = true;
-      this.p = paramComboBox;
-      return this;
-    }
-    
-    public BtableTemplate setR6C1(Template.Fatherson paramFatherson)
-    {
-      if (paramFatherson == null) {
-        return clearR6C1();
-      }
-      this.q = true;
-      this.r = paramFatherson;
-      return this;
-    }
-    
-    public BtableTemplate setR7C1(Template.Composit paramComposit)
-    {
-      if (paramComposit == null) {
-        return clearR7C1();
-      }
-      this.s = true;
-      this.t = paramComposit;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasR1C1()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getR1C1());
-      }
-      if (hasR1C2()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getR1C2());
-      }
-      Iterator localIterator = getR1C4List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(3, (Template.Button)localIterator.next());
-      }
-      if (hasR2C1()) {
-        paramCodedOutputStreamMicro.writeMessage(4, getR2C1());
-      }
-      if (hasR2C2()) {
-        paramCodedOutputStreamMicro.writeMessage(5, getR2C2());
-      }
-      if (hasR3C1()) {
-        paramCodedOutputStreamMicro.writeMessage(6, getR3C1());
-      }
-      if (hasR3C2()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getR3C2());
-      }
-      localIterator = getR4C1List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(8, (Template.RichText)localIterator.next());
-      }
-      if (hasR5C1()) {
-        paramCodedOutputStreamMicro.writeMessage(9, getR5C1());
-      }
-      if (hasR6C1()) {
-        paramCodedOutputStreamMicro.writeMessage(10, getR6C1());
-      }
-      if (hasR7C1()) {
-        paramCodedOutputStreamMicro.writeMessage(11, getR7C1());
-      }
-    }
-  }
-  
-  public static final class Button
-    extends MessageMicro
-  {
-    public static final int ACTION_ID_FIELD_NUMBER = 3;
-    public static final int ACTION_OPENAPI_FIELD_NUMBER = 4;
-    public static final int ICON_ID_FIELD_NUMBER = 1;
-    public static final int ICON_URL_FIELD_NUMBER = 2;
-    public static final int TEXT_FIELD_NUMBER = 5;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private boolean e;
-    private int f = 0;
-    private boolean g;
-    private String h = "";
-    private boolean i;
-    private Template.RichText j = null;
-    private int k = -1;
-    
-    public static Button parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Button().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Button parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Button)new Button().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Button clear()
-    {
-      clearIconId();
-      clearIconUrl();
-      clearActionId();
-      clearActionOpenapi();
-      clearText();
-      this.k = -1;
-      return this;
-    }
-    
-    public Button clearActionId()
-    {
-      this.e = false;
-      this.f = 0;
-      return this;
-    }
-    
-    public Button clearActionOpenapi()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public Button clearIconId()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public Button clearIconUrl()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public Button clearText()
-    {
-      this.i = false;
-      this.j = null;
-      return this;
-    }
-    
-    public int getActionId()
-    {
-      return this.f;
-    }
-    
-    public String getActionOpenapi()
-    {
-      return this.h;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.k < 0) {
-        getSerializedSize();
-      }
-      return this.k;
-    }
-    
-    public int getIconId()
-    {
-      return this.b;
-    }
-    
-    public String getIconUrl()
-    {
-      return this.d;
-    }
-    
-    public int getSerializedSize()
-    {
-      int n = 0;
-      if (hasIconId()) {
-        n = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIconId());
-      }
-      int m = n;
-      if (hasIconUrl()) {
-        m = n + CodedOutputStreamMicro.computeStringSize(2, getIconUrl());
-      }
-      n = m;
-      if (hasActionId()) {
-        n = m + CodedOutputStreamMicro.computeInt32Size(3, getActionId());
-      }
-      m = n;
-      if (hasActionOpenapi()) {
-        m = n + CodedOutputStreamMicro.computeStringSize(4, getActionOpenapi());
-      }
-      n = m;
-      if (hasText()) {
-        n = m + CodedOutputStreamMicro.computeMessageSize(5, getText());
-      }
-      this.k = n;
-      return n;
-    }
-    
-    public Template.RichText getText()
-    {
-      return this.j;
-    }
-    
-    public boolean hasActionId()
-    {
-      return this.e;
-    }
-    
-    public boolean hasActionOpenapi()
-    {
-      return this.g;
-    }
-    
-    public boolean hasIconId()
-    {
-      return this.a;
-    }
-    
-    public boolean hasIconUrl()
-    {
-      return this.c;
-    }
-    
-    public boolean hasText()
-    {
-      return this.i;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Button mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int m = paramCodedInputStreamMicro.readTag();
-        switch (m)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, m)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setIconId(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setIconUrl(paramCodedInputStreamMicro.readString());
-          break;
-        case 24: 
-          setActionId(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 34: 
-          setActionOpenapi(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          Template.RichText localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setText(localRichText);
-        }
-      }
-    }
-    
-    public Button setActionId(int paramInt)
-    {
-      this.e = true;
-      this.f = paramInt;
-      return this;
-    }
-    
-    public Button setActionOpenapi(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
-    }
-    
-    public Button setIconId(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public Button setIconUrl(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public Button setText(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearText();
-      }
-      this.i = true;
-      this.j = paramRichText;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasIconId()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getIconId());
-      }
-      if (hasIconUrl()) {
-        paramCodedOutputStreamMicro.writeString(2, getIconUrl());
-      }
-      if (hasActionId()) {
-        paramCodedOutputStreamMicro.writeInt32(3, getActionId());
-      }
-      if (hasActionOpenapi()) {
-        paramCodedOutputStreamMicro.writeString(4, getActionOpenapi());
-      }
-      if (hasText()) {
-        paramCodedOutputStreamMicro.writeMessage(5, getText());
-      }
-    }
-  }
-  
-  public static final class ChildrenBtn
-    extends MessageMicro
-  {
-    public static final int TITLE_FIELD_NUMBER = 2;
-    public static final int UID_FIELD_NUMBER = 1;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private String d = "";
-    private int e = -1;
-    
-    public static ChildrenBtn parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new ChildrenBtn().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static ChildrenBtn parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (ChildrenBtn)new ChildrenBtn().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final ChildrenBtn clear()
-    {
-      clearUid();
-      clearTitle();
-      this.e = -1;
-      return this;
-    }
-    
-    public ChildrenBtn clearTitle()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public ChildrenBtn clearUid()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasUid()) {
-        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getUid());
-      }
-      int j = i;
-      if (hasTitle()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getTitle());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public String getTitle()
-    {
-      return this.d;
-    }
-    
-    public String getUid()
-    {
-      return this.b;
-    }
-    
-    public boolean hasTitle()
-    {
-      return this.c;
-    }
-    
-    public boolean hasUid()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public ChildrenBtn mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setUid(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          setTitle(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public ChildrenBtn setTitle(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public ChildrenBtn setUid(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasUid()) {
-        paramCodedOutputStreamMicro.writeString(1, getUid());
-      }
-      if (hasTitle()) {
-        paramCodedOutputStreamMicro.writeString(2, getTitle());
-      }
-    }
-  }
-  
-  public static final class ComboBox
-    extends MessageMicro
-  {
-    public static final int ICON_ID_FIELD_NUMBER = 2;
-    public static final int ICON_URL_FIELD_NUMBER = 3;
-    public static final int TEXT_FIELD_NUMBER = 1;
-    private boolean a;
-    private Template.RichText b = null;
-    private boolean c;
-    private int d = 0;
-    private boolean e;
-    private String f = "";
-    private int g = -1;
-    
-    public static ComboBox parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new ComboBox().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static ComboBox parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (ComboBox)new ComboBox().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final ComboBox clear()
-    {
-      clearText();
-      clearIconId();
-      clearIconUrl();
-      this.g = -1;
-      return this;
-    }
-    
-    public ComboBox clearIconId()
-    {
-      this.c = false;
-      this.d = 0;
-      return this;
-    }
-    
-    public ComboBox clearIconUrl()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public ComboBox clearText()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.g < 0) {
-        getSerializedSize();
-      }
-      return this.g;
-    }
-    
-    public int getIconId()
-    {
-      return this.d;
-    }
-    
-    public String getIconUrl()
-    {
-      return this.f;
-    }
-    
-    public int getSerializedSize()
-    {
-      int j = 0;
-      if (hasText()) {
-        j = 0 + CodedOutputStreamMicro.computeMessageSize(1, getText());
-      }
-      int i = j;
-      if (hasIconId()) {
-        i = j + CodedOutputStreamMicro.computeInt32Size(2, getIconId());
-      }
-      j = i;
-      if (hasIconUrl()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(3, getIconUrl());
-      }
-      this.g = j;
-      return j;
-    }
-    
-    public Template.RichText getText()
-    {
-      return this.b;
-    }
-    
-    public boolean hasIconId()
-    {
-      return this.c;
-    }
-    
-    public boolean hasIconUrl()
-    {
-      return this.e;
-    }
-    
-    public boolean hasText()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public ComboBox mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          Template.RichText localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setText(localRichText);
-          break;
-        case 16: 
-          setIconId(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 26: 
-          setIconUrl(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public ComboBox setIconId(int paramInt)
-    {
-      this.c = true;
-      this.d = paramInt;
-      return this;
-    }
-    
-    public ComboBox setIconUrl(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
-    }
-    
-    public ComboBox setText(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearText();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasText()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getText());
-      }
-      if (hasIconId()) {
-        paramCodedOutputStreamMicro.writeInt32(2, getIconId());
-      }
-      if (hasIconUrl()) {
-        paramCodedOutputStreamMicro.writeString(3, getIconUrl());
-      }
-    }
-  }
-  
-  public static final class Composit
-    extends MessageMicro
-  {
-    public static final int ICON_ID_FIELD_NUMBER = 1;
-    public static final int TAB_ID_FIELD_NUMBER = 3;
-    public static final int TITLE_FIELD_NUMBER = 2;
-    public static final int VALUE_FIELD_NUMBER = 4;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private boolean e;
-    private int f = 0;
-    private List<String> g = Collections.emptyList();
-    private int h = -1;
-    
-    public static Composit parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Composit().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Composit parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Composit)new Composit().mergeFrom(paramArrayOfByte);
-    }
-    
-    public Composit addValue(String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      if (this.g.isEmpty()) {
-        this.g = new ArrayList();
-      }
-      this.g.add(paramString);
-      return this;
-    }
-    
-    public final Composit clear()
-    {
-      clearIconId();
-      clearTitle();
-      clearTabId();
-      clearValue();
-      this.h = -1;
-      return this;
-    }
-    
-    public Composit clearIconId()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public Composit clearTabId()
-    {
-      this.e = false;
-      this.f = 0;
-      return this;
-    }
-    
-    public Composit clearTitle()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public Composit clearValue()
-    {
-      this.g = Collections.emptyList();
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.h < 0) {
-        getSerializedSize();
-      }
-      return this.h;
-    }
-    
-    public int getIconId()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int k = 0;
-      if (hasIconId()) {}
-      for (int i = CodedOutputStreamMicro.computeInt32Size(1, getIconId()) + 0;; i = 0)
-      {
-        int j = i;
-        if (hasTitle()) {
-          j = i + CodedOutputStreamMicro.computeStringSize(2, getTitle());
-        }
-        if (hasTabId()) {}
-        for (i = j + CodedOutputStreamMicro.computeInt32Size(3, getTabId());; i = j)
-        {
-          Iterator localIterator = getValueList().iterator();
-          j = k;
-          while (localIterator.hasNext()) {
-            j += CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next());
-          }
-          i = i + j + getValueList().size() * 1;
-          this.h = i;
-          return i;
-        }
-      }
-    }
-    
-    public int getTabId()
-    {
-      return this.f;
-    }
-    
-    public String getTitle()
-    {
-      return this.d;
-    }
-    
-    public String getValue(int paramInt)
-    {
-      return (String)this.g.get(paramInt);
-    }
-    
-    public int getValueCount()
-    {
-      return this.g.size();
-    }
-    
-    public List<String> getValueList()
-    {
-      return this.g;
-    }
-    
-    public boolean hasIconId()
-    {
-      return this.a;
-    }
-    
-    public boolean hasTabId()
-    {
-      return this.e;
-    }
-    
-    public boolean hasTitle()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Composit mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setIconId(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setTitle(paramCodedInputStreamMicro.readString());
-          break;
-        case 24: 
-          setTabId(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 34: 
-          addValue(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public Composit setIconId(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public Composit setTabId(int paramInt)
-    {
-      this.e = true;
-      this.f = paramInt;
-      return this;
-    }
-    
-    public Composit setTitle(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public Composit setValue(int paramInt, String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      this.g.set(paramInt, paramString);
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasIconId()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getIconId());
-      }
-      if (hasTitle()) {
-        paramCodedOutputStreamMicro.writeString(2, getTitle());
-      }
-      if (hasTabId()) {
-        paramCodedOutputStreamMicro.writeInt32(3, getTabId());
-      }
-      Iterator localIterator = getValueList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeString(4, (String)localIterator.next());
-      }
-    }
-  }
-  
-  public static final class Fatherson
-    extends MessageMicro
-  {
-    public static final int ACT_FIELD_NUMBER = 1;
-    public static final int CHILDREN_BTN_FIELD_NUMBER = 3;
-    public static final int TITLE_FIELD_NUMBER = 2;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private List<Template.ChildrenBtn> e = Collections.emptyList();
-    private int f = -1;
-    
-    public static Fatherson parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Fatherson().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Fatherson parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Fatherson)new Fatherson().mergeFrom(paramArrayOfByte);
-    }
-    
-    public Fatherson addChildrenBtn(Template.ChildrenBtn paramChildrenBtn)
-    {
-      if (paramChildrenBtn == null) {
+
+    public Template clearMapsearchaladdinpanel() {
+        this.f16223g = false;
+        this.f16224h = null;
         return this;
-      }
-      if (this.e.isEmpty()) {
-        this.e = new ArrayList();
-      }
-      this.e.add(paramChildrenBtn);
-      return this;
     }
-    
-    public final Fatherson clear()
-    {
-      clearAct();
-      clearTitle();
-      clearChildrenBtn();
-      this.f = -1;
-      return this;
-    }
-    
-    public Fatherson clearAct()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public Fatherson clearChildrenBtn()
-    {
-      this.e = Collections.emptyList();
-      return this;
-    }
-    
-    public Fatherson clearTitle()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public int getAct()
-    {
-      return this.b;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.f < 0) {
-        getSerializedSize();
-      }
-      return this.f;
-    }
-    
-    public Template.ChildrenBtn getChildrenBtn(int paramInt)
-    {
-      return (Template.ChildrenBtn)this.e.get(paramInt);
-    }
-    
-    public int getChildrenBtnCount()
-    {
-      return this.e.size();
-    }
-    
-    public List<Template.ChildrenBtn> getChildrenBtnList()
-    {
-      return this.e;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasAct()) {
-        i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getAct());
-      }
-      int j = i;
-      if (hasTitle()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getTitle());
-      }
-      Iterator localIterator = getChildrenBtnList().iterator();
-      while (localIterator.hasNext()) {
-        j = CodedOutputStreamMicro.computeMessageSize(3, (Template.ChildrenBtn)localIterator.next()) + j;
-      }
-      this.f = j;
-      return j;
-    }
-    
-    public String getTitle()
-    {
-      return this.d;
-    }
-    
-    public boolean hasAct()
-    {
-      return this.a;
-    }
-    
-    public boolean hasTitle()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Fatherson mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setAct(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setTitle(paramCodedInputStreamMicro.readString());
-          break;
-        case 26: 
-          Template.ChildrenBtn localChildrenBtn = new Template.ChildrenBtn();
-          paramCodedInputStreamMicro.readMessage(localChildrenBtn);
-          addChildrenBtn(localChildrenBtn);
-        }
-      }
-    }
-    
-    public Fatherson setAct(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public Fatherson setChildrenBtn(int paramInt, Template.ChildrenBtn paramChildrenBtn)
-    {
-      if (paramChildrenBtn == null) {
+
+    public Template clearNormal() {
+        this.f16217a = false;
+        this.f16218b = null;
         return this;
-      }
-      this.e.set(paramInt, paramChildrenBtn);
-      return this;
     }
-    
-    public Fatherson setTitle(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasAct()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getAct());
-      }
-      if (hasTitle()) {
-        paramCodedOutputStreamMicro.writeString(2, getTitle());
-      }
-      Iterator localIterator = getChildrenBtnList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(3, (Template.ChildrenBtn)localIterator.next());
-      }
-    }
-  }
-  
-  public static final class Image
-    extends MessageMicro
-  {
-    public static final int ICON_ID_FIELD_NUMBER = 3;
-    public static final int LINK_FIELD_NUMBER = 2;
-    public static final int ORI_VALUE_FIELD_NUMBER = 1;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private boolean e;
-    private int f = 0;
-    private int g = -1;
-    
-    public static Image parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Image().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Image parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Image)new Image().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Image clear()
-    {
-      clearOriValue();
-      clearLink();
-      clearIconId();
-      this.g = -1;
-      return this;
-    }
-    
-    public Image clearIconId()
-    {
-      this.e = false;
-      this.f = 0;
-      return this;
-    }
-    
-    public Image clearLink()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public Image clearOriValue()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.g < 0) {
-        getSerializedSize();
-      }
-      return this.g;
-    }
-    
-    public int getIconId()
-    {
-      return this.f;
-    }
-    
-    public String getLink()
-    {
-      return this.d;
-    }
-    
-    public int getOriValue()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int j = 0;
-      if (hasOriValue()) {
-        j = 0 + CodedOutputStreamMicro.computeInt32Size(1, getOriValue());
-      }
-      int i = j;
-      if (hasLink()) {
-        i = j + CodedOutputStreamMicro.computeStringSize(2, getLink());
-      }
-      j = i;
-      if (hasIconId()) {
-        j = i + CodedOutputStreamMicro.computeInt32Size(3, getIconId());
-      }
-      this.g = j;
-      return j;
-    }
-    
-    public boolean hasIconId()
-    {
-      return this.e;
-    }
-    
-    public boolean hasLink()
-    {
-      return this.c;
-    }
-    
-    public boolean hasOriValue()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Image mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setOriValue(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setLink(paramCodedInputStreamMicro.readString());
-          break;
-        case 24: 
-          setIconId(paramCodedInputStreamMicro.readInt32());
-        }
-      }
-    }
-    
-    public Image setIconId(int paramInt)
-    {
-      this.e = true;
-      this.f = paramInt;
-      return this;
-    }
-    
-    public Image setLink(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public Image setOriValue(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasOriValue()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getOriValue());
-      }
-      if (hasLink()) {
-        paramCodedOutputStreamMicro.writeString(2, getLink());
-      }
-      if (hasIconId()) {
-        paramCodedOutputStreamMicro.writeInt32(3, getIconId());
-      }
-    }
-  }
-  
-  public static final class ImageTemplate
-    extends MessageMicro
-  {
-    public static final int FAIMAGEL5_FIELD_NUMBER = 13;
-    public static final int IMAGEL1C1_FIELD_NUMBER = 1;
-    public static final int IMAGEL1C2_FIELD_NUMBER = 2;
-    public static final int IMAGEL1C3_FIELD_NUMBER = 3;
-    public static final int IMAGEL2C1_FIELD_NUMBER = 4;
-    public static final int IMAGEL2C2_FIELD_NUMBER = 5;
-    public static final int IMAGEL2C3_FIELD_NUMBER = 6;
-    public static final int IMAGEL3C1_FIELD_NUMBER = 7;
-    public static final int IMAGEL3C2_FIELD_NUMBER = 8;
-    public static final int IMAGEL4LAB_FIELD_NUMBER = 14;
-    public static final int IMAGEL4_FIELD_NUMBER = 9;
-    public static final int IMAGEL5_FIELD_NUMBER = 10;
-    public static final int IMAGEL6_FIELD_NUMBER = 11;
-    public static final int UPPERLEFTCORNER_FIELD_NUMBER = 12;
-    private int A = -1;
-    private boolean a;
-    private Template.Image b = null;
-    private boolean c;
-    private Template.RichText d = null;
-    private List<Template.Resource> e = Collections.emptyList();
-    private boolean f;
-    private String g = "";
-    private boolean h;
-    private Template.RichText i = null;
-    private boolean j;
-    private Template.RichText k = null;
-    private boolean l;
-    private Template.RichText m = null;
-    private boolean n;
-    private Template.RichText o = null;
-    private boolean p;
-    private Template.RichText q = null;
-    private boolean r;
-    private int s = 0;
-    private boolean t;
-    private Template.Composit u = null;
-    private boolean v;
-    private Template.Resource w = null;
-    private boolean x;
-    private Template.Fatherson y = null;
-    private List<String> z = Collections.emptyList();
-    
-    public static ImageTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new ImageTemplate().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static ImageTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (ImageTemplate)new ImageTemplate().mergeFrom(paramArrayOfByte);
-    }
-    
-    public ImageTemplate addImagel1C3(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
+
+    public Template clearPanel() {
+        this.f16221e = false;
+        this.f16222f = null;
         return this;
-      }
-      if (this.e.isEmpty()) {
-        this.e = new ArrayList();
-      }
-      this.e.add(paramResource);
-      return this;
     }
-    
-    public ImageTemplate addImagel4Lab(String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      if (this.z.isEmpty()) {
-        this.z = new ArrayList();
-      }
-      this.z.add(paramString);
-      return this;
-    }
-    
-    public final ImageTemplate clear()
-    {
-      clearImagel1C1();
-      clearImagel1C2();
-      clearImagel1C3();
-      clearImagel2C1();
-      clearImagel2C2();
-      clearImagel2C3();
-      clearImagel3C1();
-      clearImagel3C2();
-      clearImagel4();
-      clearImagel5();
-      clearImagel6();
-      clearUpperleftcorner();
-      clearFaimagel5();
-      clearImagel4Lab();
-      this.A = -1;
-      return this;
-    }
-    
-    public ImageTemplate clearFaimagel5()
-    {
-      this.x = false;
-      this.y = null;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel1C1()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel1C2()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel1C3()
-    {
-      this.e = Collections.emptyList();
-      return this;
-    }
-    
-    public ImageTemplate clearImagel2C1()
-    {
-      this.f = false;
-      this.g = "";
-      return this;
-    }
-    
-    public ImageTemplate clearImagel2C2()
-    {
-      this.h = false;
-      this.i = null;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel2C3()
-    {
-      this.j = false;
-      this.k = null;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel3C1()
-    {
-      this.l = false;
-      this.m = null;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel3C2()
-    {
-      this.n = false;
-      this.o = null;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel4()
-    {
-      this.p = false;
-      this.q = null;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel4Lab()
-    {
-      this.z = Collections.emptyList();
-      return this;
-    }
-    
-    public ImageTemplate clearImagel5()
-    {
-      this.r = false;
-      this.s = 0;
-      return this;
-    }
-    
-    public ImageTemplate clearImagel6()
-    {
-      this.t = false;
-      this.u = null;
-      return this;
-    }
-    
-    public ImageTemplate clearUpperleftcorner()
-    {
-      this.v = false;
-      this.w = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.A < 0) {
-        getSerializedSize();
-      }
-      return this.A;
-    }
-    
-    public Template.Fatherson getFaimagel5()
-    {
-      return this.y;
-    }
-    
-    public Template.Image getImagel1C1()
-    {
-      return this.b;
-    }
-    
-    public Template.RichText getImagel1C2()
-    {
-      return this.d;
-    }
-    
-    public Template.Resource getImagel1C3(int paramInt)
-    {
-      return (Template.Resource)this.e.get(paramInt);
-    }
-    
-    public int getImagel1C3Count()
-    {
-      return this.e.size();
-    }
-    
-    public List<Template.Resource> getImagel1C3List()
-    {
-      return this.e;
-    }
-    
-    public String getImagel2C1()
-    {
-      return this.g;
-    }
-    
-    public Template.RichText getImagel2C2()
-    {
-      return this.i;
-    }
-    
-    public Template.RichText getImagel2C3()
-    {
-      return this.k;
-    }
-    
-    public Template.RichText getImagel3C1()
-    {
-      return this.m;
-    }
-    
-    public Template.RichText getImagel3C2()
-    {
-      return this.o;
-    }
-    
-    public Template.RichText getImagel4()
-    {
-      return this.q;
-    }
-    
-    public String getImagel4Lab(int paramInt)
-    {
-      return (String)this.z.get(paramInt);
-    }
-    
-    public int getImagel4LabCount()
-    {
-      return this.z.size();
-    }
-    
-    public List<String> getImagel4LabList()
-    {
-      return this.z;
-    }
-    
-    public int getImagel5()
-    {
-      return this.s;
-    }
-    
-    public Template.Composit getImagel6()
-    {
-      return this.u;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i3 = 0;
-      if (hasImagel1C1()) {}
-      for (int i1 = CodedOutputStreamMicro.computeMessageSize(1, getImagel1C1()) + 0;; i1 = 0)
-      {
-        int i2 = i1;
-        if (hasImagel1C2()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(2, getImagel1C2());
-        }
-        Iterator localIterator = getImagel1C3List().iterator();
-        while (localIterator.hasNext()) {
-          i2 = CodedOutputStreamMicro.computeMessageSize(3, (Template.Resource)localIterator.next()) + i2;
-        }
-        i1 = i2;
-        if (hasImagel2C1()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getImagel2C1());
-        }
-        i2 = i1;
-        if (hasImagel2C2()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(5, getImagel2C2());
-        }
-        i1 = i2;
-        if (hasImagel2C3()) {
-          i1 = i2 + CodedOutputStreamMicro.computeMessageSize(6, getImagel2C3());
-        }
-        i2 = i1;
-        if (hasImagel3C1()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(7, getImagel3C1());
-        }
-        i1 = i2;
-        if (hasImagel3C2()) {
-          i1 = i2 + CodedOutputStreamMicro.computeMessageSize(8, getImagel3C2());
-        }
-        i2 = i1;
-        if (hasImagel4()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(9, getImagel4());
-        }
-        i1 = i2;
-        if (hasImagel5()) {
-          i1 = i2 + CodedOutputStreamMicro.computeInt32Size(10, getImagel5());
-        }
-        i2 = i1;
-        if (hasImagel6()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(11, getImagel6());
-        }
-        i1 = i2;
-        if (hasUpperleftcorner()) {
-          i1 = i2 + CodedOutputStreamMicro.computeMessageSize(12, getUpperleftcorner());
-        }
-        i2 = i1;
-        if (hasFaimagel5()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(13, getFaimagel5());
-        }
-        localIterator = getImagel4LabList().iterator();
-        i1 = i3;
-        while (localIterator.hasNext()) {
-          i1 += CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next());
-        }
-        i1 = i2 + i1 + getImagel4LabList().size() * 1;
-        this.A = i1;
-        return i1;
-      }
-    }
-    
-    public Template.Resource getUpperleftcorner()
-    {
-      return this.w;
-    }
-    
-    public boolean hasFaimagel5()
-    {
-      return this.x;
-    }
-    
-    public boolean hasImagel1C1()
-    {
-      return this.a;
-    }
-    
-    public boolean hasImagel1C2()
-    {
-      return this.c;
-    }
-    
-    public boolean hasImagel2C1()
-    {
-      return this.f;
-    }
-    
-    public boolean hasImagel2C2()
-    {
-      return this.h;
-    }
-    
-    public boolean hasImagel2C3()
-    {
-      return this.j;
-    }
-    
-    public boolean hasImagel3C1()
-    {
-      return this.l;
-    }
-    
-    public boolean hasImagel3C2()
-    {
-      return this.n;
-    }
-    
-    public boolean hasImagel4()
-    {
-      return this.p;
-    }
-    
-    public boolean hasImagel5()
-    {
-      return this.r;
-    }
-    
-    public boolean hasImagel6()
-    {
-      return this.t;
-    }
-    
-    public boolean hasUpperleftcorner()
-    {
-      return this.v;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public ImageTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Template.Image();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setImagel1C1((Template.Image)localObject);
-          break;
-        case 18: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setImagel1C2((Template.RichText)localObject);
-          break;
-        case 26: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addImagel1C3((Template.Resource)localObject);
-          break;
-        case 34: 
-          setImagel2C1(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setImagel2C2((Template.RichText)localObject);
-          break;
-        case 50: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setImagel2C3((Template.RichText)localObject);
-          break;
-        case 58: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setImagel3C1((Template.RichText)localObject);
-          break;
-        case 66: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setImagel3C2((Template.RichText)localObject);
-          break;
-        case 74: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setImagel4((Template.RichText)localObject);
-          break;
-        case 80: 
-          setImagel5(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 90: 
-          localObject = new Template.Composit();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setImagel6((Template.Composit)localObject);
-          break;
-        case 98: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setUpperleftcorner((Template.Resource)localObject);
-          break;
-        case 106: 
-          localObject = new Template.Fatherson();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setFaimagel5((Template.Fatherson)localObject);
-          break;
-        case 114: 
-          addImagel4Lab(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public ImageTemplate setFaimagel5(Template.Fatherson paramFatherson)
-    {
-      if (paramFatherson == null) {
-        return clearFaimagel5();
-      }
-      this.x = true;
-      this.y = paramFatherson;
-      return this;
-    }
-    
-    public ImageTemplate setImagel1C1(Template.Image paramImage)
-    {
-      if (paramImage == null) {
-        return clearImagel1C1();
-      }
-      this.a = true;
-      this.b = paramImage;
-      return this;
-    }
-    
-    public ImageTemplate setImagel1C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearImagel1C2();
-      }
-      this.c = true;
-      this.d = paramRichText;
-      return this;
-    }
-    
-    public ImageTemplate setImagel1C3(int paramInt, Template.Resource paramResource)
-    {
-      if (paramResource == null) {
+
+    public Template clearSinglecard() {
+        this.f16231o = false;
+        this.f16232p = null;
         return this;
-      }
-      this.e.set(paramInt, paramResource);
-      return this;
     }
-    
-    public ImageTemplate setImagel2C1(String paramString)
-    {
-      this.f = true;
-      this.g = paramString;
-      return this;
-    }
-    
-    public ImageTemplate setImagel2C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearImagel2C2();
-      }
-      this.h = true;
-      this.i = paramRichText;
-      return this;
-    }
-    
-    public ImageTemplate setImagel2C3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearImagel2C3();
-      }
-      this.j = true;
-      this.k = paramRichText;
-      return this;
-    }
-    
-    public ImageTemplate setImagel3C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearImagel3C1();
-      }
-      this.l = true;
-      this.m = paramRichText;
-      return this;
-    }
-    
-    public ImageTemplate setImagel3C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearImagel3C2();
-      }
-      this.n = true;
-      this.o = paramRichText;
-      return this;
-    }
-    
-    public ImageTemplate setImagel4(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearImagel4();
-      }
-      this.p = true;
-      this.q = paramRichText;
-      return this;
-    }
-    
-    public ImageTemplate setImagel4Lab(int paramInt, String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      this.z.set(paramInt, paramString);
-      return this;
-    }
-    
-    public ImageTemplate setImagel5(int paramInt)
-    {
-      this.r = true;
-      this.s = paramInt;
-      return this;
-    }
-    
-    public ImageTemplate setImagel6(Template.Composit paramComposit)
-    {
-      if (paramComposit == null) {
-        return clearImagel6();
-      }
-      this.t = true;
-      this.u = paramComposit;
-      return this;
-    }
-    
-    public ImageTemplate setUpperleftcorner(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return clearUpperleftcorner();
-      }
-      this.v = true;
-      this.w = paramResource;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasImagel1C1()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getImagel1C1());
-      }
-      if (hasImagel1C2()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getImagel1C2());
-      }
-      Iterator localIterator = getImagel1C3List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(3, (Template.Resource)localIterator.next());
-      }
-      if (hasImagel2C1()) {
-        paramCodedOutputStreamMicro.writeString(4, getImagel2C1());
-      }
-      if (hasImagel2C2()) {
-        paramCodedOutputStreamMicro.writeMessage(5, getImagel2C2());
-      }
-      if (hasImagel2C3()) {
-        paramCodedOutputStreamMicro.writeMessage(6, getImagel2C3());
-      }
-      if (hasImagel3C1()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getImagel3C1());
-      }
-      if (hasImagel3C2()) {
-        paramCodedOutputStreamMicro.writeMessage(8, getImagel3C2());
-      }
-      if (hasImagel4()) {
-        paramCodedOutputStreamMicro.writeMessage(9, getImagel4());
-      }
-      if (hasImagel5()) {
-        paramCodedOutputStreamMicro.writeInt32(10, getImagel5());
-      }
-      if (hasImagel6()) {
-        paramCodedOutputStreamMicro.writeMessage(11, getImagel6());
-      }
-      if (hasUpperleftcorner()) {
-        paramCodedOutputStreamMicro.writeMessage(12, getUpperleftcorner());
-      }
-      if (hasFaimagel5()) {
-        paramCodedOutputStreamMicro.writeMessage(13, getFaimagel5());
-      }
-      localIterator = getImagel4LabList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeString(14, (String)localIterator.next());
-      }
-    }
-  }
-  
-  public static final class LtableTemplate
-    extends MessageMicro
-  {
-    public static final int BUTTON = 3;
-    public static final int INTERNATION_FIELD_NUMBER = 6;
-    public static final int LONG_IMAGE = 2;
-    public static final int LONG_IMAGE_BUTTON = 4;
-    public static final int R1C1_FIELD_NUMBER = 2;
-    public static final int R1C2_FIELD_NUMBER = 3;
-    public static final int R1C3_FIELD_NUMBER = 4;
-    public static final int R1C4_FIELD_NUMBER = 5;
-    public static final int R2C1_FIELD_NUMBER = 7;
-    public static final int R2C2_FIELD_NUMBER = 8;
-    public static final int R3C1_FIELD_NUMBER = 9;
-    public static final int R3C2_FIELD_NUMBER = 10;
-    public static final int R3C3_FIELD_NUMBER = 11;
-    public static final int R4C1_FIELD_NUMBER = 12;
-    public static final int R4C2_FIELD_NUMBER = 13;
-    public static final int R4C3_FIELD_NUMBER = 14;
-    public static final int R5C1_FIELD_NUMBER = 15;
-    public static final int R5C2_FIELD_NUMBER = 16;
-    public static final int R5C3_FIELD_NUMBER = 17;
-    public static final int R6C1_FIELD_NUMBER = 18;
-    public static final int R7C1_FIELD_NUMBER = 19;
-    public static final int SHORT_IMAGE = 1;
-    public static final int TYPE_FIELD_NUMBER = 1;
-    private boolean A;
-    private Template.Fatherson B = null;
-    private boolean C;
-    private Template.Composit D = null;
-    private int E = -1;
-    private boolean a;
-    private int b = 1;
-    private boolean c;
-    private Template.Image d = null;
-    private boolean e;
-    private Template.RichText f = null;
-    private boolean g;
-    private Template.RichText h = null;
-    private List<Template.Button> i = Collections.emptyList();
-    private boolean j;
-    private Template.RichText k = null;
-    private boolean l;
-    private Template.RichText m = null;
-    private List<Template.ScatterStyle> n = Collections.emptyList();
-    private boolean o;
-    private Template.Score p = null;
-    private List<Template.ComboBox> q = Collections.emptyList();
-    private List<Template.ScatterStyle> r = Collections.emptyList();
-    private boolean s;
-    private Template.Score t = null;
-    private List<Template.ComboBox> u = Collections.emptyList();
-    private List<Template.ScatterStyle> v = Collections.emptyList();
-    private boolean w;
-    private Template.Score x = null;
-    private List<Template.ComboBox> y = Collections.emptyList();
-    private List<Template.ScatterStyle> z = Collections.emptyList();
-    
-    public static LtableTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new LtableTemplate().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static LtableTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (LtableTemplate)new LtableTemplate().mergeFrom(paramArrayOfByte);
-    }
-    
-    public LtableTemplate addR1C4(Template.Button paramButton)
-    {
-      if (paramButton == null) {
+
+    public Template clearVtable() {
+        this.f16227k = false;
+        this.f16228l = null;
         return this;
-      }
-      if (this.i.isEmpty()) {
-        this.i = new ArrayList();
-      }
-      this.i.add(paramButton);
-      return this;
     }
-    
-    public LtableTemplate addR2C2(Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      if (this.n.isEmpty()) {
-        this.n = new ArrayList();
-      }
-      this.n.add(paramScatterStyle);
-      return this;
-    }
-    
-    public LtableTemplate addR3C2(Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return this;
-      }
-      if (this.q.isEmpty()) {
-        this.q = new ArrayList();
-      }
-      this.q.add(paramComboBox);
-      return this;
-    }
-    
-    public LtableTemplate addR3C3(Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      if (this.r.isEmpty()) {
-        this.r = new ArrayList();
-      }
-      this.r.add(paramScatterStyle);
-      return this;
-    }
-    
-    public LtableTemplate addR4C2(Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return this;
-      }
-      if (this.u.isEmpty()) {
-        this.u = new ArrayList();
-      }
-      this.u.add(paramComboBox);
-      return this;
-    }
-    
-    public LtableTemplate addR4C3(Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      if (this.v.isEmpty()) {
-        this.v = new ArrayList();
-      }
-      this.v.add(paramScatterStyle);
-      return this;
-    }
-    
-    public LtableTemplate addR5C2(Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return this;
-      }
-      if (this.y.isEmpty()) {
-        this.y = new ArrayList();
-      }
-      this.y.add(paramComboBox);
-      return this;
-    }
-    
-    public LtableTemplate addR5C3(Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      if (this.z.isEmpty()) {
-        this.z = new ArrayList();
-      }
-      this.z.add(paramScatterStyle);
-      return this;
-    }
-    
-    public final LtableTemplate clear()
-    {
-      clearType();
-      clearR1C1();
-      clearR1C2();
-      clearR1C3();
-      clearR1C4();
-      clearInternation();
-      clearR2C1();
-      clearR2C2();
-      clearR3C1();
-      clearR3C2();
-      clearR3C3();
-      clearR4C1();
-      clearR4C2();
-      clearR4C3();
-      clearR5C1();
-      clearR5C2();
-      clearR5C3();
-      clearR6C1();
-      clearR7C1();
-      this.E = -1;
-      return this;
-    }
-    
-    public LtableTemplate clearInternation()
-    {
-      this.j = false;
-      this.k = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR1C1()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR1C2()
-    {
-      this.e = false;
-      this.f = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR1C3()
-    {
-      this.g = false;
-      this.h = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR1C4()
-    {
-      this.i = Collections.emptyList();
-      return this;
-    }
-    
-    public LtableTemplate clearR2C1()
-    {
-      this.l = false;
-      this.m = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR2C2()
-    {
-      this.n = Collections.emptyList();
-      return this;
-    }
-    
-    public LtableTemplate clearR3C1()
-    {
-      this.o = false;
-      this.p = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR3C2()
-    {
-      this.q = Collections.emptyList();
-      return this;
-    }
-    
-    public LtableTemplate clearR3C3()
-    {
-      this.r = Collections.emptyList();
-      return this;
-    }
-    
-    public LtableTemplate clearR4C1()
-    {
-      this.s = false;
-      this.t = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR4C2()
-    {
-      this.u = Collections.emptyList();
-      return this;
-    }
-    
-    public LtableTemplate clearR4C3()
-    {
-      this.v = Collections.emptyList();
-      return this;
-    }
-    
-    public LtableTemplate clearR5C1()
-    {
-      this.w = false;
-      this.x = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR5C2()
-    {
-      this.y = Collections.emptyList();
-      return this;
-    }
-    
-    public LtableTemplate clearR5C3()
-    {
-      this.z = Collections.emptyList();
-      return this;
-    }
-    
-    public LtableTemplate clearR6C1()
-    {
-      this.A = false;
-      this.B = null;
-      return this;
-    }
-    
-    public LtableTemplate clearR7C1()
-    {
-      this.C = false;
-      this.D = null;
-      return this;
-    }
-    
-    public LtableTemplate clearType()
-    {
-      this.a = false;
-      this.b = 1;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.E < 0) {
-        getSerializedSize();
-      }
-      return this.E;
-    }
-    
-    public Template.RichText getInternation()
-    {
-      return this.k;
-    }
-    
-    public Template.Image getR1C1()
-    {
-      return this.d;
-    }
-    
-    public Template.RichText getR1C2()
-    {
-      return this.f;
-    }
-    
-    public Template.RichText getR1C3()
-    {
-      return this.h;
-    }
-    
-    public Template.Button getR1C4(int paramInt)
-    {
-      return (Template.Button)this.i.get(paramInt);
-    }
-    
-    public int getR1C4Count()
-    {
-      return this.i.size();
-    }
-    
-    public List<Template.Button> getR1C4List()
-    {
-      return this.i;
-    }
-    
-    public Template.RichText getR2C1()
-    {
-      return this.m;
-    }
-    
-    public Template.ScatterStyle getR2C2(int paramInt)
-    {
-      return (Template.ScatterStyle)this.n.get(paramInt);
-    }
-    
-    public int getR2C2Count()
-    {
-      return this.n.size();
-    }
-    
-    public List<Template.ScatterStyle> getR2C2List()
-    {
-      return this.n;
-    }
-    
-    public Template.Score getR3C1()
-    {
-      return this.p;
-    }
-    
-    public Template.ComboBox getR3C2(int paramInt)
-    {
-      return (Template.ComboBox)this.q.get(paramInt);
-    }
-    
-    public int getR3C2Count()
-    {
-      return this.q.size();
-    }
-    
-    public List<Template.ComboBox> getR3C2List()
-    {
-      return this.q;
-    }
-    
-    public Template.ScatterStyle getR3C3(int paramInt)
-    {
-      return (Template.ScatterStyle)this.r.get(paramInt);
-    }
-    
-    public int getR3C3Count()
-    {
-      return this.r.size();
-    }
-    
-    public List<Template.ScatterStyle> getR3C3List()
-    {
-      return this.r;
-    }
-    
-    public Template.Score getR4C1()
-    {
-      return this.t;
-    }
-    
-    public Template.ComboBox getR4C2(int paramInt)
-    {
-      return (Template.ComboBox)this.u.get(paramInt);
-    }
-    
-    public int getR4C2Count()
-    {
-      return this.u.size();
-    }
-    
-    public List<Template.ComboBox> getR4C2List()
-    {
-      return this.u;
-    }
-    
-    public Template.ScatterStyle getR4C3(int paramInt)
-    {
-      return (Template.ScatterStyle)this.v.get(paramInt);
-    }
-    
-    public int getR4C3Count()
-    {
-      return this.v.size();
-    }
-    
-    public List<Template.ScatterStyle> getR4C3List()
-    {
-      return this.v;
-    }
-    
-    public Template.Score getR5C1()
-    {
-      return this.x;
-    }
-    
-    public Template.ComboBox getR5C2(int paramInt)
-    {
-      return (Template.ComboBox)this.y.get(paramInt);
-    }
-    
-    public int getR5C2Count()
-    {
-      return this.y.size();
-    }
-    
-    public List<Template.ComboBox> getR5C2List()
-    {
-      return this.y;
-    }
-    
-    public Template.ScatterStyle getR5C3(int paramInt)
-    {
-      return (Template.ScatterStyle)this.z.get(paramInt);
-    }
-    
-    public int getR5C3Count()
-    {
-      return this.z.size();
-    }
-    
-    public List<Template.ScatterStyle> getR5C3List()
-    {
-      return this.z;
-    }
-    
-    public Template.Fatherson getR6C1()
-    {
-      return this.B;
-    }
-    
-    public Template.Composit getR7C1()
-    {
-      return this.D;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasType()) {
-        i2 = 0 + CodedOutputStreamMicro.computeInt32Size(1, getType());
-      }
-      int i1 = i2;
-      if (hasR1C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(2, getR1C1());
-      }
-      i2 = i1;
-      if (hasR1C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(3, getR1C2());
-      }
-      i1 = i2;
-      if (hasR1C3()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(4, getR1C3());
-      }
-      Iterator localIterator = getR1C4List().iterator();
-      for (i2 = i1; localIterator.hasNext(); i2 = CodedOutputStreamMicro.computeMessageSize(5, (Template.Button)localIterator.next()) + i2) {}
-      i1 = i2;
-      if (hasInternation()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(6, getInternation());
-      }
-      i2 = i1;
-      if (hasR2C1()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(7, getR2C1());
-      }
-      localIterator = getR2C2List().iterator();
-      while (localIterator.hasNext()) {
-        i2 += CodedOutputStreamMicro.computeMessageSize(8, (Template.ScatterStyle)localIterator.next());
-      }
-      i1 = i2;
-      if (hasR3C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(9, getR3C1());
-      }
-      localIterator = getR3C2List().iterator();
-      while (localIterator.hasNext()) {
-        i1 += CodedOutputStreamMicro.computeMessageSize(10, (Template.ComboBox)localIterator.next());
-      }
-      localIterator = getR3C3List().iterator();
-      while (localIterator.hasNext()) {
-        i1 += CodedOutputStreamMicro.computeMessageSize(11, (Template.ScatterStyle)localIterator.next());
-      }
-      i2 = i1;
-      if (hasR4C1()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(12, getR4C1());
-      }
-      localIterator = getR4C2List().iterator();
-      i1 = i2;
-      while (localIterator.hasNext()) {
-        i1 += CodedOutputStreamMicro.computeMessageSize(13, (Template.ComboBox)localIterator.next());
-      }
-      localIterator = getR4C3List().iterator();
-      while (localIterator.hasNext()) {
-        i1 += CodedOutputStreamMicro.computeMessageSize(14, (Template.ScatterStyle)localIterator.next());
-      }
-      i2 = i1;
-      if (hasR5C1()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(15, getR5C1());
-      }
-      localIterator = getR5C2List().iterator();
-      while (localIterator.hasNext()) {
-        i2 += CodedOutputStreamMicro.computeMessageSize(16, (Template.ComboBox)localIterator.next());
-      }
-      localIterator = getR5C3List().iterator();
-      while (localIterator.hasNext()) {
-        i2 += CodedOutputStreamMicro.computeMessageSize(17, (Template.ScatterStyle)localIterator.next());
-      }
-      i1 = i2;
-      if (hasR6C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(18, getR6C1());
-      }
-      i2 = i1;
-      if (hasR7C1()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(19, getR7C1());
-      }
-      this.E = i2;
-      return i2;
-    }
-    
-    public int getType()
-    {
-      return this.b;
-    }
-    
-    public boolean hasInternation()
-    {
-      return this.j;
-    }
-    
-    public boolean hasR1C1()
-    {
-      return this.c;
-    }
-    
-    public boolean hasR1C2()
-    {
-      return this.e;
-    }
-    
-    public boolean hasR1C3()
-    {
-      return this.g;
-    }
-    
-    public boolean hasR2C1()
-    {
-      return this.l;
-    }
-    
-    public boolean hasR3C1()
-    {
-      return this.o;
-    }
-    
-    public boolean hasR4C1()
-    {
-      return this.s;
-    }
-    
-    public boolean hasR5C1()
-    {
-      return this.w;
-    }
-    
-    public boolean hasR6C1()
-    {
-      return this.A;
-    }
-    
-    public boolean hasR7C1()
-    {
-      return this.C;
-    }
-    
-    public boolean hasType()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public LtableTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setType(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          localObject = new Template.Image();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR1C1((Template.Image)localObject);
-          break;
-        case 26: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR1C2((Template.RichText)localObject);
-          break;
-        case 34: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR1C3((Template.RichText)localObject);
-          break;
-        case 42: 
-          localObject = new Template.Button();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR1C4((Template.Button)localObject);
-          break;
-        case 50: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setInternation((Template.RichText)localObject);
-          break;
-        case 58: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR2C1((Template.RichText)localObject);
-          break;
-        case 66: 
-          localObject = new Template.ScatterStyle();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR2C2((Template.ScatterStyle)localObject);
-          break;
-        case 74: 
-          localObject = new Template.Score();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR3C1((Template.Score)localObject);
-          break;
-        case 82: 
-          localObject = new Template.ComboBox();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR3C2((Template.ComboBox)localObject);
-          break;
-        case 90: 
-          localObject = new Template.ScatterStyle();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR3C3((Template.ScatterStyle)localObject);
-          break;
-        case 98: 
-          localObject = new Template.Score();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR4C1((Template.Score)localObject);
-          break;
-        case 106: 
-          localObject = new Template.ComboBox();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR4C2((Template.ComboBox)localObject);
-          break;
-        case 114: 
-          localObject = new Template.ScatterStyle();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR4C3((Template.ScatterStyle)localObject);
-          break;
-        case 122: 
-          localObject = new Template.Score();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR5C1((Template.Score)localObject);
-          break;
-        case 130: 
-          localObject = new Template.ComboBox();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR5C2((Template.ComboBox)localObject);
-          break;
-        case 138: 
-          localObject = new Template.ScatterStyle();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR5C3((Template.ScatterStyle)localObject);
-          break;
-        case 146: 
-          localObject = new Template.Fatherson();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR6C1((Template.Fatherson)localObject);
-          break;
-        case 154: 
-          localObject = new Template.Composit();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR7C1((Template.Composit)localObject);
+
+    public BtableTemplate getBtable() {
+        return this.f16230n;
+    }
+
+    public int getCachedSize() {
+        if (this.f16235s < 0) {
+            getSerializedSize();
         }
-      }
+        return this.f16235s;
     }
-    
-    public LtableTemplate setInternation(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearInternation();
-      }
-      this.j = true;
-      this.k = paramRichText;
-      return this;
+
+    public ImageTemplate getImage() {
+        return this.f16220d;
     }
-    
-    public LtableTemplate setR1C1(Template.Image paramImage)
-    {
-      if (paramImage == null) {
-        return clearR1C1();
-      }
-      this.c = true;
-      this.d = paramImage;
-      return this;
+
+    public LtableTemplate getLtable() {
+        return this.f16234r;
     }
-    
-    public LtableTemplate setR1C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR1C2();
-      }
-      this.e = true;
-      this.f = paramRichText;
-      return this;
+
+    public MapSearchaladdinNormalTemplate getMapsearchaladdinnormal() {
+        return this.f16226j;
     }
-    
-    public LtableTemplate setR1C3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR1C3();
-      }
-      this.g = true;
-      this.h = paramRichText;
-      return this;
+
+    public MapSearchaladdinPanelTemplate getMapsearchaladdinpanel() {
+        return this.f16224h;
     }
-    
-    public LtableTemplate setR1C4(int paramInt, Template.Button paramButton)
-    {
-      if (paramButton == null) {
-        return this;
-      }
-      this.i.set(paramInt, paramButton);
-      return this;
+
+    public NormalTemplate getNormal() {
+        return this.f16218b;
     }
-    
-    public LtableTemplate setR2C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR2C1();
-      }
-      this.l = true;
-      this.m = paramRichText;
-      return this;
+
+    public PanelTemplate getPanel() {
+        return this.f16222f;
     }
-    
-    public LtableTemplate setR2C2(int paramInt, Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      this.n.set(paramInt, paramScatterStyle);
-      return this;
-    }
-    
-    public LtableTemplate setR3C1(Template.Score paramScore)
-    {
-      if (paramScore == null) {
-        return clearR3C1();
-      }
-      this.o = true;
-      this.p = paramScore;
-      return this;
-    }
-    
-    public LtableTemplate setR3C2(int paramInt, Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return this;
-      }
-      this.q.set(paramInt, paramComboBox);
-      return this;
-    }
-    
-    public LtableTemplate setR3C3(int paramInt, Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      this.r.set(paramInt, paramScatterStyle);
-      return this;
-    }
-    
-    public LtableTemplate setR4C1(Template.Score paramScore)
-    {
-      if (paramScore == null) {
-        return clearR4C1();
-      }
-      this.s = true;
-      this.t = paramScore;
-      return this;
-    }
-    
-    public LtableTemplate setR4C2(int paramInt, Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return this;
-      }
-      this.u.set(paramInt, paramComboBox);
-      return this;
-    }
-    
-    public LtableTemplate setR4C3(int paramInt, Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      this.v.set(paramInt, paramScatterStyle);
-      return this;
-    }
-    
-    public LtableTemplate setR5C1(Template.Score paramScore)
-    {
-      if (paramScore == null) {
-        return clearR5C1();
-      }
-      this.w = true;
-      this.x = paramScore;
-      return this;
-    }
-    
-    public LtableTemplate setR5C2(int paramInt, Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return this;
-      }
-      this.y.set(paramInt, paramComboBox);
-      return this;
-    }
-    
-    public LtableTemplate setR5C3(int paramInt, Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      this.z.set(paramInt, paramScatterStyle);
-      return this;
-    }
-    
-    public LtableTemplate setR6C1(Template.Fatherson paramFatherson)
-    {
-      if (paramFatherson == null) {
-        return clearR6C1();
-      }
-      this.A = true;
-      this.B = paramFatherson;
-      return this;
-    }
-    
-    public LtableTemplate setR7C1(Template.Composit paramComposit)
-    {
-      if (paramComposit == null) {
-        return clearR7C1();
-      }
-      this.C = true;
-      this.D = paramComposit;
-      return this;
-    }
-    
-    public LtableTemplate setType(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasType()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getType());
-      }
-      if (hasR1C1()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getR1C1());
-      }
-      if (hasR1C2()) {
-        paramCodedOutputStreamMicro.writeMessage(3, getR1C2());
-      }
-      if (hasR1C3()) {
-        paramCodedOutputStreamMicro.writeMessage(4, getR1C3());
-      }
-      Iterator localIterator = getR1C4List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(5, (Template.Button)localIterator.next());
-      }
-      if (hasInternation()) {
-        paramCodedOutputStreamMicro.writeMessage(6, getInternation());
-      }
-      if (hasR2C1()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getR2C1());
-      }
-      localIterator = getR2C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(8, (Template.ScatterStyle)localIterator.next());
-      }
-      if (hasR3C1()) {
-        paramCodedOutputStreamMicro.writeMessage(9, getR3C1());
-      }
-      localIterator = getR3C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(10, (Template.ComboBox)localIterator.next());
-      }
-      localIterator = getR3C3List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(11, (Template.ScatterStyle)localIterator.next());
-      }
-      if (hasR4C1()) {
-        paramCodedOutputStreamMicro.writeMessage(12, getR4C1());
-      }
-      localIterator = getR4C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(13, (Template.ComboBox)localIterator.next());
-      }
-      localIterator = getR4C3List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(14, (Template.ScatterStyle)localIterator.next());
-      }
-      if (hasR5C1()) {
-        paramCodedOutputStreamMicro.writeMessage(15, getR5C1());
-      }
-      localIterator = getR5C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(16, (Template.ComboBox)localIterator.next());
-      }
-      localIterator = getR5C3List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(17, (Template.ScatterStyle)localIterator.next());
-      }
-      if (hasR6C1()) {
-        paramCodedOutputStreamMicro.writeMessage(18, getR6C1());
-      }
-      if (hasR7C1()) {
-        paramCodedOutputStreamMicro.writeMessage(19, getR7C1());
-      }
-    }
-  }
-  
-  public static final class MapSearchaladdinNormalTemplate
-    extends MessageMicro
-  {
-    public static final int ALADDINNORMALL1_FIELD_NUMBER = 1;
-    public static final int ALADDINNORMALL2_FIELD_NUMBER = 2;
-    public static final int ALADDINNORMALL3_FIELD_NUMBER = 3;
-    private boolean a;
-    private Template.RichText b = null;
-    private boolean c;
-    private Template.RichText d = null;
-    private boolean e;
-    private Template.RichText f = null;
-    private int g = -1;
-    
-    public static MapSearchaladdinNormalTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new MapSearchaladdinNormalTemplate().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static MapSearchaladdinNormalTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (MapSearchaladdinNormalTemplate)new MapSearchaladdinNormalTemplate().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final MapSearchaladdinNormalTemplate clear()
-    {
-      clearAladdinnormall1();
-      clearAladdinnormall2();
-      clearAladdinnormall3();
-      this.g = -1;
-      return this;
-    }
-    
-    public MapSearchaladdinNormalTemplate clearAladdinnormall1()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public MapSearchaladdinNormalTemplate clearAladdinnormall2()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public MapSearchaladdinNormalTemplate clearAladdinnormall3()
-    {
-      this.e = false;
-      this.f = null;
-      return this;
-    }
-    
-    public Template.RichText getAladdinnormall1()
-    {
-      return this.b;
-    }
-    
-    public Template.RichText getAladdinnormall2()
-    {
-      return this.d;
-    }
-    
-    public Template.RichText getAladdinnormall3()
-    {
-      return this.f;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.g < 0) {
-        getSerializedSize();
-      }
-      return this.g;
-    }
-    
-    public int getSerializedSize()
-    {
-      int j = 0;
-      if (hasAladdinnormall1()) {
-        j = 0 + CodedOutputStreamMicro.computeMessageSize(1, getAladdinnormall1());
-      }
-      int i = j;
-      if (hasAladdinnormall2()) {
-        i = j + CodedOutputStreamMicro.computeMessageSize(2, getAladdinnormall2());
-      }
-      j = i;
-      if (hasAladdinnormall3()) {
-        j = i + CodedOutputStreamMicro.computeMessageSize(3, getAladdinnormall3());
-      }
-      this.g = j;
-      return j;
-    }
-    
-    public boolean hasAladdinnormall1()
-    {
-      return this.a;
-    }
-    
-    public boolean hasAladdinnormall2()
-    {
-      return this.c;
-    }
-    
-    public boolean hasAladdinnormall3()
-    {
-      return this.e;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public MapSearchaladdinNormalTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        Template.RichText localRichText;
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setAladdinnormall1(localRichText);
-          break;
-        case 18: 
-          localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setAladdinnormall2(localRichText);
-          break;
-        case 26: 
-          localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setAladdinnormall3(localRichText);
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasNormal()) {
+            i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getNormal());
         }
-      }
+        if (hasImage()) {
+            i += CodedOutputStreamMicro.computeMessageSize(2, getImage());
+        }
+        if (hasPanel()) {
+            i += CodedOutputStreamMicro.computeMessageSize(3, getPanel());
+        }
+        if (hasMapsearchaladdinpanel()) {
+            i += CodedOutputStreamMicro.computeMessageSize(4, getMapsearchaladdinpanel());
+        }
+        if (hasMapsearchaladdinnormal()) {
+            i += CodedOutputStreamMicro.computeMessageSize(5, getMapsearchaladdinnormal());
+        }
+        if (hasVtable()) {
+            i += CodedOutputStreamMicro.computeMessageSize(6, getVtable());
+        }
+        if (hasBtable()) {
+            i += CodedOutputStreamMicro.computeMessageSize(7, getBtable());
+        }
+        if (hasSinglecard()) {
+            i += CodedOutputStreamMicro.computeMessageSize(8, getSinglecard());
+        }
+        if (hasLtable()) {
+            i += CodedOutputStreamMicro.computeMessageSize(9, getLtable());
+        }
+        this.f16235s = i;
+        return i;
     }
-    
-    public MapSearchaladdinNormalTemplate setAladdinnormall1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinnormall1();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
+
+    public SingleCardTemplate getSinglecard() {
+        return this.f16232p;
     }
-    
-    public MapSearchaladdinNormalTemplate setAladdinnormall2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinnormall2();
-      }
-      this.c = true;
-      this.d = paramRichText;
-      return this;
+
+    public VtableTemplate getVtable() {
+        return this.f16228l;
     }
-    
-    public MapSearchaladdinNormalTemplate setAladdinnormall3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinnormall3();
-      }
-      this.e = true;
-      this.f = paramRichText;
-      return this;
+
+    public boolean hasBtable() {
+        return this.f16229m;
     }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasAladdinnormall1()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getAladdinnormall1());
-      }
-      if (hasAladdinnormall2()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getAladdinnormall2());
-      }
-      if (hasAladdinnormall3()) {
-        paramCodedOutputStreamMicro.writeMessage(3, getAladdinnormall3());
-      }
+
+    public boolean hasImage() {
+        return this.f16219c;
     }
-  }
-  
-  public static final class MapSearchaladdinPanelTemplate
-    extends MessageMicro
-  {
-    public static final int ALADDINPANELL1C1_FIELD_NUMBER = 1;
-    public static final int ALADDINPANELL1C2_FIELD_NUMBER = 2;
-    public static final int ALADDINPANELL2C1_FIELD_NUMBER = 3;
-    public static final int ALADDINPANELL2C2_FIELD_NUMBER = 4;
-    public static final int ALADDINPANELL2C3_FIELD_NUMBER = 5;
-    public static final int ALADDINPANELL3_FIELD_NUMBER = 6;
-    public static final int ALADDINPANELL4_FIELD_NUMBER = 7;
-    public static final int ALADDINPANELL5_FIELD_NUMBER = 8;
-    public static final int ALADDINPANELL6_FIELD_NUMBER = 9;
-    public static final int UPPERLEFTCORNER_FIELD_NUMBER = 10;
-    private boolean a;
-    private Template.RichText b = null;
-    private List<Template.Resource> c = Collections.emptyList();
-    private boolean d;
-    private String e = "";
-    private boolean f;
-    private Template.RichText g = null;
-    private boolean h;
-    private Template.RichText i = null;
-    private boolean j;
-    private Template.RichText k = null;
-    private boolean l;
-    private Template.RichText m = null;
-    private List<Template.ChildrenBtn> n = Collections.emptyList();
-    private boolean o;
-    private Template.RichText p = null;
-    private boolean q;
-    private Template.Resource r = null;
-    private int s = -1;
-    
-    public static MapSearchaladdinPanelTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new MapSearchaladdinPanelTemplate().mergeFrom(paramCodedInputStreamMicro);
+
+    public boolean hasLtable() {
+        return this.f16233q;
     }
-    
-    public static MapSearchaladdinPanelTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (MapSearchaladdinPanelTemplate)new MapSearchaladdinPanelTemplate().mergeFrom(paramArrayOfByte);
+
+    public boolean hasMapsearchaladdinnormal() {
+        return this.f16225i;
     }
-    
-    public MapSearchaladdinPanelTemplate addAladdinpanell1C2(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
+
+    public boolean hasMapsearchaladdinpanel() {
+        return this.f16223g;
+    }
+
+    public boolean hasNormal() {
+        return this.f16217a;
+    }
+
+    public boolean hasPanel() {
+        return this.f16221e;
+    }
+
+    public boolean hasSinglecard() {
+        return this.f16231o;
+    }
+
+    public boolean hasVtable() {
+        return this.f16227k;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public Template mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            MessageMicro normalTemplate;
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    normalTemplate = new NormalTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setNormal(normalTemplate);
+                    continue;
+                case 18:
+                    normalTemplate = new ImageTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setImage(normalTemplate);
+                    continue;
+                case 26:
+                    normalTemplate = new PanelTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setPanel(normalTemplate);
+                    continue;
+                case 34:
+                    normalTemplate = new MapSearchaladdinPanelTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setMapsearchaladdinpanel(normalTemplate);
+                    continue;
+                case 42:
+                    normalTemplate = new MapSearchaladdinNormalTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setMapsearchaladdinnormal(normalTemplate);
+                    continue;
+                case 50:
+                    normalTemplate = new VtableTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setVtable(normalTemplate);
+                    continue;
+                case 58:
+                    normalTemplate = new BtableTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setBtable(normalTemplate);
+                    continue;
+                case 66:
+                    normalTemplate = new SingleCardTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setSinglecard(normalTemplate);
+                    continue;
+                case 74:
+                    normalTemplate = new LtableTemplate();
+                    codedInputStreamMicro.readMessage(normalTemplate);
+                    setLtable(normalTemplate);
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public Template setBtable(BtableTemplate btableTemplate) {
+        if (btableTemplate == null) {
+            return clearBtable();
+        }
+        this.f16229m = true;
+        this.f16230n = btableTemplate;
         return this;
-      }
-      if (this.c.isEmpty()) {
-        this.c = new ArrayList();
-      }
-      this.c.add(paramResource);
-      return this;
     }
-    
-    public MapSearchaladdinPanelTemplate addAladdinpanell5(Template.ChildrenBtn paramChildrenBtn)
-    {
-      if (paramChildrenBtn == null) {
+
+    public Template setImage(ImageTemplate imageTemplate) {
+        if (imageTemplate == null) {
+            return clearImage();
+        }
+        this.f16219c = true;
+        this.f16220d = imageTemplate;
         return this;
-      }
-      if (this.n.isEmpty()) {
-        this.n = new ArrayList();
-      }
-      this.n.add(paramChildrenBtn);
-      return this;
     }
-    
-    public final MapSearchaladdinPanelTemplate clear()
-    {
-      clearAladdinpanell1C1();
-      clearAladdinpanell1C2();
-      clearAladdinpanell2C1();
-      clearAladdinpanell2C2();
-      clearAladdinpanell2C3();
-      clearAladdinpanell3();
-      clearAladdinpanell4();
-      clearAladdinpanell5();
-      clearAladdinpanell6();
-      clearUpperleftcorner();
-      this.s = -1;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell1C1()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell1C2()
-    {
-      this.c = Collections.emptyList();
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell2C1()
-    {
-      this.d = false;
-      this.e = "";
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell2C2()
-    {
-      this.f = false;
-      this.g = null;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell2C3()
-    {
-      this.h = false;
-      this.i = null;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell3()
-    {
-      this.j = false;
-      this.k = null;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell4()
-    {
-      this.l = false;
-      this.m = null;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell5()
-    {
-      this.n = Collections.emptyList();
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearAladdinpanell6()
-    {
-      this.o = false;
-      this.p = null;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate clearUpperleftcorner()
-    {
-      this.q = false;
-      this.r = null;
-      return this;
-    }
-    
-    public Template.RichText getAladdinpanell1C1()
-    {
-      return this.b;
-    }
-    
-    public Template.Resource getAladdinpanell1C2(int paramInt)
-    {
-      return (Template.Resource)this.c.get(paramInt);
-    }
-    
-    public int getAladdinpanell1C2Count()
-    {
-      return this.c.size();
-    }
-    
-    public List<Template.Resource> getAladdinpanell1C2List()
-    {
-      return this.c;
-    }
-    
-    public String getAladdinpanell2C1()
-    {
-      return this.e;
-    }
-    
-    public Template.RichText getAladdinpanell2C2()
-    {
-      return this.g;
-    }
-    
-    public Template.RichText getAladdinpanell2C3()
-    {
-      return this.i;
-    }
-    
-    public Template.RichText getAladdinpanell3()
-    {
-      return this.k;
-    }
-    
-    public Template.RichText getAladdinpanell4()
-    {
-      return this.m;
-    }
-    
-    public Template.ChildrenBtn getAladdinpanell5(int paramInt)
-    {
-      return (Template.ChildrenBtn)this.n.get(paramInt);
-    }
-    
-    public int getAladdinpanell5Count()
-    {
-      return this.n.size();
-    }
-    
-    public List<Template.ChildrenBtn> getAladdinpanell5List()
-    {
-      return this.n;
-    }
-    
-    public Template.RichText getAladdinpanell6()
-    {
-      return this.p;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.s < 0) {
-        getSerializedSize();
-      }
-      return this.s;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i1 = 0;
-      if (hasAladdinpanell1C1()) {
-        i1 = 0 + CodedOutputStreamMicro.computeMessageSize(1, getAladdinpanell1C1());
-      }
-      Iterator localIterator = getAladdinpanell1C2List().iterator();
-      for (int i2 = i1; localIterator.hasNext(); i2 = CodedOutputStreamMicro.computeMessageSize(2, (Template.Resource)localIterator.next()) + i2) {}
-      i1 = i2;
-      if (hasAladdinpanell2C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(3, getAladdinpanell2C1());
-      }
-      i2 = i1;
-      if (hasAladdinpanell2C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(4, getAladdinpanell2C2());
-      }
-      i1 = i2;
-      if (hasAladdinpanell2C3()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(5, getAladdinpanell2C3());
-      }
-      i2 = i1;
-      if (hasAladdinpanell3()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(6, getAladdinpanell3());
-      }
-      i1 = i2;
-      if (hasAladdinpanell4()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(7, getAladdinpanell4());
-      }
-      localIterator = getAladdinpanell5List().iterator();
-      i2 = i1;
-      while (localIterator.hasNext()) {
-        i2 += CodedOutputStreamMicro.computeMessageSize(8, (Template.ChildrenBtn)localIterator.next());
-      }
-      i1 = i2;
-      if (hasAladdinpanell6()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(9, getAladdinpanell6());
-      }
-      i2 = i1;
-      if (hasUpperleftcorner()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(10, getUpperleftcorner());
-      }
-      this.s = i2;
-      return i2;
-    }
-    
-    public Template.Resource getUpperleftcorner()
-    {
-      return this.r;
-    }
-    
-    public boolean hasAladdinpanell1C1()
-    {
-      return this.a;
-    }
-    
-    public boolean hasAladdinpanell2C1()
-    {
-      return this.d;
-    }
-    
-    public boolean hasAladdinpanell2C2()
-    {
-      return this.f;
-    }
-    
-    public boolean hasAladdinpanell2C3()
-    {
-      return this.h;
-    }
-    
-    public boolean hasAladdinpanell3()
-    {
-      return this.j;
-    }
-    
-    public boolean hasAladdinpanell4()
-    {
-      return this.l;
-    }
-    
-    public boolean hasAladdinpanell6()
-    {
-      return this.o;
-    }
-    
-    public boolean hasUpperleftcorner()
-    {
-      return this.q;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public MapSearchaladdinPanelTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setAladdinpanell1C1((Template.RichText)localObject);
-          break;
-        case 18: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addAladdinpanell1C2((Template.Resource)localObject);
-          break;
-        case 26: 
-          setAladdinpanell2C1(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setAladdinpanell2C2((Template.RichText)localObject);
-          break;
-        case 42: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setAladdinpanell2C3((Template.RichText)localObject);
-          break;
-        case 50: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setAladdinpanell3((Template.RichText)localObject);
-          break;
-        case 58: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setAladdinpanell4((Template.RichText)localObject);
-          break;
-        case 66: 
-          localObject = new Template.ChildrenBtn();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addAladdinpanell5((Template.ChildrenBtn)localObject);
-          break;
-        case 74: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setAladdinpanell6((Template.RichText)localObject);
-          break;
-        case 82: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setUpperleftcorner((Template.Resource)localObject);
+
+    public Template setLtable(LtableTemplate ltableTemplate) {
+        if (ltableTemplate == null) {
+            return clearLtable();
         }
-      }
-    }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell1C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinpanell1C1();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell1C2(int paramInt, Template.Resource paramResource)
-    {
-      if (paramResource == null) {
+        this.f16233q = true;
+        this.f16234r = ltableTemplate;
         return this;
-      }
-      this.c.set(paramInt, paramResource);
-      return this;
     }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell2C1(String paramString)
-    {
-      this.d = true;
-      this.e = paramString;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell2C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinpanell2C2();
-      }
-      this.f = true;
-      this.g = paramRichText;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell2C3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinpanell2C3();
-      }
-      this.h = true;
-      this.i = paramRichText;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinpanell3();
-      }
-      this.j = true;
-      this.k = paramRichText;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell4(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinpanell4();
-      }
-      this.l = true;
-      this.m = paramRichText;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell5(int paramInt, Template.ChildrenBtn paramChildrenBtn)
-    {
-      if (paramChildrenBtn == null) {
+
+    public Template setMapsearchaladdinnormal(MapSearchaladdinNormalTemplate mapSearchaladdinNormalTemplate) {
+        if (mapSearchaladdinNormalTemplate == null) {
+            return clearMapsearchaladdinnormal();
+        }
+        this.f16225i = true;
+        this.f16226j = mapSearchaladdinNormalTemplate;
         return this;
-      }
-      this.n.set(paramInt, paramChildrenBtn);
-      return this;
     }
-    
-    public MapSearchaladdinPanelTemplate setAladdinpanell6(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearAladdinpanell6();
-      }
-      this.o = true;
-      this.p = paramRichText;
-      return this;
-    }
-    
-    public MapSearchaladdinPanelTemplate setUpperleftcorner(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return clearUpperleftcorner();
-      }
-      this.q = true;
-      this.r = paramResource;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasAladdinpanell1C1()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getAladdinpanell1C1());
-      }
-      Iterator localIterator = getAladdinpanell1C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(2, (Template.Resource)localIterator.next());
-      }
-      if (hasAladdinpanell2C1()) {
-        paramCodedOutputStreamMicro.writeString(3, getAladdinpanell2C1());
-      }
-      if (hasAladdinpanell2C2()) {
-        paramCodedOutputStreamMicro.writeMessage(4, getAladdinpanell2C2());
-      }
-      if (hasAladdinpanell2C3()) {
-        paramCodedOutputStreamMicro.writeMessage(5, getAladdinpanell2C3());
-      }
-      if (hasAladdinpanell3()) {
-        paramCodedOutputStreamMicro.writeMessage(6, getAladdinpanell3());
-      }
-      if (hasAladdinpanell4()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getAladdinpanell4());
-      }
-      localIterator = getAladdinpanell5List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(8, (Template.ChildrenBtn)localIterator.next());
-      }
-      if (hasAladdinpanell6()) {
-        paramCodedOutputStreamMicro.writeMessage(9, getAladdinpanell6());
-      }
-      if (hasUpperleftcorner()) {
-        paramCodedOutputStreamMicro.writeMessage(10, getUpperleftcorner());
-      }
-    }
-  }
-  
-  public static final class NormalTemplate
-    extends MessageMicro
-  {
-    public static final int FANORMALL5_FIELD_NUMBER = 13;
-    public static final int FLAG_FIELD_NUMBER = 12;
-    public static final int NORMALL1C1_FIELD_NUMBER = 1;
-    public static final int NORMALL1C2_FIELD_NUMBER = 2;
-    public static final int NORMALL1C3_FIELD_NUMBER = 3;
-    public static final int NORMALL2C1_FIELD_NUMBER = 4;
-    public static final int NORMALL2C2_FIELD_NUMBER = 5;
-    public static final int NORMALL2C3_FIELD_NUMBER = 6;
-    public static final int NORMALL3_FIELD_NUMBER = 7;
-    public static final int NORMALL4LAB_FIELD_NUMBER = 14;
-    public static final int NORMALL4_FIELD_NUMBER = 8;
-    public static final int NORMALL5_FIELD_NUMBER = 9;
-    public static final int NORMALL6_FIELD_NUMBER = 10;
-    public static final int UPPERLEFTCORNER_FIELD_NUMBER = 11;
-    private boolean a;
-    private Template.RichText b = null;
-    private List<Template.Resource> c = Collections.emptyList();
-    private boolean d;
-    private Template.RichText e = null;
-    private boolean f;
-    private String g = "";
-    private boolean h;
-    private Template.RichText i = null;
-    private boolean j;
-    private Template.RichText k = null;
-    private boolean l;
-    private Template.RichText m = null;
-    private boolean n;
-    private Template.RichText o = null;
-    private boolean p;
-    private int q = 0;
-    private boolean r;
-    private Template.Composit s = null;
-    private boolean t;
-    private Template.Resource u = null;
-    private List<String> v = Collections.emptyList();
-    private boolean w;
-    private Template.Fatherson x = null;
-    private List<String> y = Collections.emptyList();
-    private int z = -1;
-    
-    public static NormalTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new NormalTemplate().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static NormalTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (NormalTemplate)new NormalTemplate().mergeFrom(paramArrayOfByte);
-    }
-    
-    public NormalTemplate addFlag(String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      if (this.v.isEmpty()) {
-        this.v = new ArrayList();
-      }
-      this.v.add(paramString);
-      return this;
-    }
-    
-    public NormalTemplate addNormall1C2(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
+
+    public Template setMapsearchaladdinpanel(MapSearchaladdinPanelTemplate mapSearchaladdinPanelTemplate) {
+        if (mapSearchaladdinPanelTemplate == null) {
+            return clearMapsearchaladdinpanel();
+        }
+        this.f16223g = true;
+        this.f16224h = mapSearchaladdinPanelTemplate;
         return this;
-      }
-      if (this.c.isEmpty()) {
-        this.c = new ArrayList();
-      }
-      this.c.add(paramResource);
-      return this;
     }
-    
-    public NormalTemplate addNormall4Lab(String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      if (this.y.isEmpty()) {
-        this.y = new ArrayList();
-      }
-      this.y.add(paramString);
-      return this;
-    }
-    
-    public final NormalTemplate clear()
-    {
-      clearNormall1C1();
-      clearNormall1C2();
-      clearNormall1C3();
-      clearNormall2C1();
-      clearNormall2C2();
-      clearNormall2C3();
-      clearNormall3();
-      clearNormall4();
-      clearNormall5();
-      clearNormall6();
-      clearUpperleftcorner();
-      clearFlag();
-      clearFanormall5();
-      clearNormall4Lab();
-      this.z = -1;
-      return this;
-    }
-    
-    public NormalTemplate clearFanormall5()
-    {
-      this.w = false;
-      this.x = null;
-      return this;
-    }
-    
-    public NormalTemplate clearFlag()
-    {
-      this.v = Collections.emptyList();
-      return this;
-    }
-    
-    public NormalTemplate clearNormall1C1()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public NormalTemplate clearNormall1C2()
-    {
-      this.c = Collections.emptyList();
-      return this;
-    }
-    
-    public NormalTemplate clearNormall1C3()
-    {
-      this.d = false;
-      this.e = null;
-      return this;
-    }
-    
-    public NormalTemplate clearNormall2C1()
-    {
-      this.f = false;
-      this.g = "";
-      return this;
-    }
-    
-    public NormalTemplate clearNormall2C2()
-    {
-      this.h = false;
-      this.i = null;
-      return this;
-    }
-    
-    public NormalTemplate clearNormall2C3()
-    {
-      this.j = false;
-      this.k = null;
-      return this;
-    }
-    
-    public NormalTemplate clearNormall3()
-    {
-      this.l = false;
-      this.m = null;
-      return this;
-    }
-    
-    public NormalTemplate clearNormall4()
-    {
-      this.n = false;
-      this.o = null;
-      return this;
-    }
-    
-    public NormalTemplate clearNormall4Lab()
-    {
-      this.y = Collections.emptyList();
-      return this;
-    }
-    
-    public NormalTemplate clearNormall5()
-    {
-      this.p = false;
-      this.q = 0;
-      return this;
-    }
-    
-    public NormalTemplate clearNormall6()
-    {
-      this.r = false;
-      this.s = null;
-      return this;
-    }
-    
-    public NormalTemplate clearUpperleftcorner()
-    {
-      this.t = false;
-      this.u = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.z < 0) {
-        getSerializedSize();
-      }
-      return this.z;
-    }
-    
-    public Template.Fatherson getFanormall5()
-    {
-      return this.x;
-    }
-    
-    public String getFlag(int paramInt)
-    {
-      return (String)this.v.get(paramInt);
-    }
-    
-    public int getFlagCount()
-    {
-      return this.v.size();
-    }
-    
-    public List<String> getFlagList()
-    {
-      return this.v;
-    }
-    
-    public Template.RichText getNormall1C1()
-    {
-      return this.b;
-    }
-    
-    public Template.Resource getNormall1C2(int paramInt)
-    {
-      return (Template.Resource)this.c.get(paramInt);
-    }
-    
-    public int getNormall1C2Count()
-    {
-      return this.c.size();
-    }
-    
-    public List<Template.Resource> getNormall1C2List()
-    {
-      return this.c;
-    }
-    
-    public Template.RichText getNormall1C3()
-    {
-      return this.e;
-    }
-    
-    public String getNormall2C1()
-    {
-      return this.g;
-    }
-    
-    public Template.RichText getNormall2C2()
-    {
-      return this.i;
-    }
-    
-    public Template.RichText getNormall2C3()
-    {
-      return this.k;
-    }
-    
-    public Template.RichText getNormall3()
-    {
-      return this.m;
-    }
-    
-    public Template.RichText getNormall4()
-    {
-      return this.o;
-    }
-    
-    public String getNormall4Lab(int paramInt)
-    {
-      return (String)this.y.get(paramInt);
-    }
-    
-    public int getNormall4LabCount()
-    {
-      return this.y.size();
-    }
-    
-    public List<String> getNormall4LabList()
-    {
-      return this.y;
-    }
-    
-    public int getNormall5()
-    {
-      return this.q;
-    }
-    
-    public Template.Composit getNormall6()
-    {
-      return this.s;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i3 = 0;
-      if (hasNormall1C1()) {}
-      for (int i1 = CodedOutputStreamMicro.computeMessageSize(1, getNormall1C1()) + 0;; i1 = 0)
-      {
-        Iterator localIterator = getNormall1C2List().iterator();
-        for (int i2 = i1; localIterator.hasNext(); i2 = CodedOutputStreamMicro.computeMessageSize(2, (Template.Resource)localIterator.next()) + i2) {}
-        i1 = i2;
-        if (hasNormall1C3()) {
-          i1 = i2 + CodedOutputStreamMicro.computeMessageSize(3, getNormall1C3());
+
+    public Template setNormal(NormalTemplate normalTemplate) {
+        if (normalTemplate == null) {
+            return clearNormal();
         }
-        i2 = i1;
-        if (hasNormall2C1()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(4, getNormall2C1());
-        }
-        i1 = i2;
-        if (hasNormall2C2()) {
-          i1 = i2 + CodedOutputStreamMicro.computeMessageSize(5, getNormall2C2());
-        }
-        i2 = i1;
-        if (hasNormall2C3()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(6, getNormall2C3());
-        }
-        i1 = i2;
-        if (hasNormall3()) {
-          i1 = i2 + CodedOutputStreamMicro.computeMessageSize(7, getNormall3());
-        }
-        i2 = i1;
-        if (hasNormall4()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(8, getNormall4());
-        }
-        i1 = i2;
-        if (hasNormall5()) {
-          i1 = i2 + CodedOutputStreamMicro.computeInt32Size(9, getNormall5());
-        }
-        i2 = i1;
-        if (hasNormall6()) {
-          i2 = i1 + CodedOutputStreamMicro.computeMessageSize(10, getNormall6());
-        }
-        i1 = i2;
-        if (hasUpperleftcorner()) {
-          i1 = i2 + CodedOutputStreamMicro.computeMessageSize(11, getUpperleftcorner());
-        }
-        localIterator = getFlagList().iterator();
-        for (i2 = 0; localIterator.hasNext(); i2 = CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next()) + i2) {}
-        i1 = i1 + i2 + getFlagList().size() * 1;
-        if (hasFanormall5()) {
-          i1 += CodedOutputStreamMicro.computeMessageSize(13, getFanormall5());
-        }
-        for (;;)
-        {
-          localIterator = getNormall4LabList().iterator();
-          i2 = i3;
-          while (localIterator.hasNext()) {
-            i2 += CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next());
-          }
-          i1 = i1 + i2 + getNormall4LabList().size() * 1;
-          this.z = i1;
-          return i1;
-        }
-      }
-    }
-    
-    public Template.Resource getUpperleftcorner()
-    {
-      return this.u;
-    }
-    
-    public boolean hasFanormall5()
-    {
-      return this.w;
-    }
-    
-    public boolean hasNormall1C1()
-    {
-      return this.a;
-    }
-    
-    public boolean hasNormall1C3()
-    {
-      return this.d;
-    }
-    
-    public boolean hasNormall2C1()
-    {
-      return this.f;
-    }
-    
-    public boolean hasNormall2C2()
-    {
-      return this.h;
-    }
-    
-    public boolean hasNormall2C3()
-    {
-      return this.j;
-    }
-    
-    public boolean hasNormall3()
-    {
-      return this.l;
-    }
-    
-    public boolean hasNormall4()
-    {
-      return this.n;
-    }
-    
-    public boolean hasNormall5()
-    {
-      return this.p;
-    }
-    
-    public boolean hasNormall6()
-    {
-      return this.r;
-    }
-    
-    public boolean hasUpperleftcorner()
-    {
-      return this.t;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public NormalTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setNormall1C1((Template.RichText)localObject);
-          break;
-        case 18: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addNormall1C2((Template.Resource)localObject);
-          break;
-        case 26: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setNormall1C3((Template.RichText)localObject);
-          break;
-        case 34: 
-          setNormall2C1(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setNormall2C2((Template.RichText)localObject);
-          break;
-        case 50: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setNormall2C3((Template.RichText)localObject);
-          break;
-        case 58: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setNormall3((Template.RichText)localObject);
-          break;
-        case 66: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setNormall4((Template.RichText)localObject);
-          break;
-        case 72: 
-          setNormall5(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 82: 
-          localObject = new Template.Composit();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setNormall6((Template.Composit)localObject);
-          break;
-        case 90: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setUpperleftcorner((Template.Resource)localObject);
-          break;
-        case 98: 
-          addFlag(paramCodedInputStreamMicro.readString());
-          break;
-        case 106: 
-          localObject = new Template.Fatherson();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setFanormall5((Template.Fatherson)localObject);
-          break;
-        case 114: 
-          addNormall4Lab(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public NormalTemplate setFanormall5(Template.Fatherson paramFatherson)
-    {
-      if (paramFatherson == null) {
-        return clearFanormall5();
-      }
-      this.w = true;
-      this.x = paramFatherson;
-      return this;
-    }
-    
-    public NormalTemplate setFlag(int paramInt, String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      this.v.set(paramInt, paramString);
-      return this;
-    }
-    
-    public NormalTemplate setNormall1C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearNormall1C1();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
-    }
-    
-    public NormalTemplate setNormall1C2(int paramInt, Template.Resource paramResource)
-    {
-      if (paramResource == null) {
+        this.f16217a = true;
+        this.f16218b = normalTemplate;
         return this;
-      }
-      this.c.set(paramInt, paramResource);
-      return this;
     }
-    
-    public NormalTemplate setNormall1C3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearNormall1C3();
-      }
-      this.d = true;
-      this.e = paramRichText;
-      return this;
-    }
-    
-    public NormalTemplate setNormall2C1(String paramString)
-    {
-      this.f = true;
-      this.g = paramString;
-      return this;
-    }
-    
-    public NormalTemplate setNormall2C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearNormall2C2();
-      }
-      this.h = true;
-      this.i = paramRichText;
-      return this;
-    }
-    
-    public NormalTemplate setNormall2C3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearNormall2C3();
-      }
-      this.j = true;
-      this.k = paramRichText;
-      return this;
-    }
-    
-    public NormalTemplate setNormall3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearNormall3();
-      }
-      this.l = true;
-      this.m = paramRichText;
-      return this;
-    }
-    
-    public NormalTemplate setNormall4(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearNormall4();
-      }
-      this.n = true;
-      this.o = paramRichText;
-      return this;
-    }
-    
-    public NormalTemplate setNormall4Lab(int paramInt, String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      this.y.set(paramInt, paramString);
-      return this;
-    }
-    
-    public NormalTemplate setNormall5(int paramInt)
-    {
-      this.p = true;
-      this.q = paramInt;
-      return this;
-    }
-    
-    public NormalTemplate setNormall6(Template.Composit paramComposit)
-    {
-      if (paramComposit == null) {
-        return clearNormall6();
-      }
-      this.r = true;
-      this.s = paramComposit;
-      return this;
-    }
-    
-    public NormalTemplate setUpperleftcorner(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return clearUpperleftcorner();
-      }
-      this.t = true;
-      this.u = paramResource;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasNormall1C1()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getNormall1C1());
-      }
-      Iterator localIterator = getNormall1C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(2, (Template.Resource)localIterator.next());
-      }
-      if (hasNormall1C3()) {
-        paramCodedOutputStreamMicro.writeMessage(3, getNormall1C3());
-      }
-      if (hasNormall2C1()) {
-        paramCodedOutputStreamMicro.writeString(4, getNormall2C1());
-      }
-      if (hasNormall2C2()) {
-        paramCodedOutputStreamMicro.writeMessage(5, getNormall2C2());
-      }
-      if (hasNormall2C3()) {
-        paramCodedOutputStreamMicro.writeMessage(6, getNormall2C3());
-      }
-      if (hasNormall3()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getNormall3());
-      }
-      if (hasNormall4()) {
-        paramCodedOutputStreamMicro.writeMessage(8, getNormall4());
-      }
-      if (hasNormall5()) {
-        paramCodedOutputStreamMicro.writeInt32(9, getNormall5());
-      }
-      if (hasNormall6()) {
-        paramCodedOutputStreamMicro.writeMessage(10, getNormall6());
-      }
-      if (hasUpperleftcorner()) {
-        paramCodedOutputStreamMicro.writeMessage(11, getUpperleftcorner());
-      }
-      localIterator = getFlagList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeString(12, (String)localIterator.next());
-      }
-      if (hasFanormall5()) {
-        paramCodedOutputStreamMicro.writeMessage(13, getFanormall5());
-      }
-      localIterator = getNormall4LabList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeString(14, (String)localIterator.next());
-      }
-    }
-  }
-  
-  public static final class PanelTemplate
-    extends MessageMicro
-  {
-    public static final int PANELL1C1_FIELD_NUMBER = 1;
-    public static final int PANELL1C2_FIELD_NUMBER = 2;
-    public static final int PANELL2C1_FIELD_NUMBER = 3;
-    public static final int PANELL2C2_FIELD_NUMBER = 4;
-    public static final int PANELL2C3_FIELD_NUMBER = 5;
-    public static final int PANELL3_FIELD_NUMBER = 6;
-    public static final int UPPERLEFTCORNER_FIELD_NUMBER = 7;
-    private boolean a;
-    private Template.RichText b = null;
-    private List<Template.Resource> c = Collections.emptyList();
-    private boolean d;
-    private String e = "";
-    private boolean f;
-    private Template.RichText g = null;
-    private boolean h;
-    private Template.RichText i = null;
-    private boolean j;
-    private Template.RichText k = null;
-    private boolean l;
-    private Template.Resource m = null;
-    private int n = -1;
-    
-    public static PanelTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new PanelTemplate().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static PanelTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (PanelTemplate)new PanelTemplate().mergeFrom(paramArrayOfByte);
-    }
-    
-    public PanelTemplate addPanell1C2(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return this;
-      }
-      if (this.c.isEmpty()) {
-        this.c = new ArrayList();
-      }
-      this.c.add(paramResource);
-      return this;
-    }
-    
-    public final PanelTemplate clear()
-    {
-      clearPanell1C1();
-      clearPanell1C2();
-      clearPanell2C1();
-      clearPanell2C2();
-      clearPanell2C3();
-      clearPanell3();
-      clearUpperleftcorner();
-      this.n = -1;
-      return this;
-    }
-    
-    public PanelTemplate clearPanell1C1()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public PanelTemplate clearPanell1C2()
-    {
-      this.c = Collections.emptyList();
-      return this;
-    }
-    
-    public PanelTemplate clearPanell2C1()
-    {
-      this.d = false;
-      this.e = "";
-      return this;
-    }
-    
-    public PanelTemplate clearPanell2C2()
-    {
-      this.f = false;
-      this.g = null;
-      return this;
-    }
-    
-    public PanelTemplate clearPanell2C3()
-    {
-      this.h = false;
-      this.i = null;
-      return this;
-    }
-    
-    public PanelTemplate clearPanell3()
-    {
-      this.j = false;
-      this.k = null;
-      return this;
-    }
-    
-    public PanelTemplate clearUpperleftcorner()
-    {
-      this.l = false;
-      this.m = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.n < 0) {
-        getSerializedSize();
-      }
-      return this.n;
-    }
-    
-    public Template.RichText getPanell1C1()
-    {
-      return this.b;
-    }
-    
-    public Template.Resource getPanell1C2(int paramInt)
-    {
-      return (Template.Resource)this.c.get(paramInt);
-    }
-    
-    public int getPanell1C2Count()
-    {
-      return this.c.size();
-    }
-    
-    public List<Template.Resource> getPanell1C2List()
-    {
-      return this.c;
-    }
-    
-    public String getPanell2C1()
-    {
-      return this.e;
-    }
-    
-    public Template.RichText getPanell2C2()
-    {
-      return this.g;
-    }
-    
-    public Template.RichText getPanell2C3()
-    {
-      return this.i;
-    }
-    
-    public Template.RichText getPanell3()
-    {
-      return this.k;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i1 = 0;
-      if (hasPanell1C1()) {
-        i1 = 0 + CodedOutputStreamMicro.computeMessageSize(1, getPanell1C1());
-      }
-      Iterator localIterator = getPanell1C2List().iterator();
-      for (int i2 = i1; localIterator.hasNext(); i2 = CodedOutputStreamMicro.computeMessageSize(2, (Template.Resource)localIterator.next()) + i2) {}
-      i1 = i2;
-      if (hasPanell2C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(3, getPanell2C1());
-      }
-      i2 = i1;
-      if (hasPanell2C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(4, getPanell2C2());
-      }
-      i1 = i2;
-      if (hasPanell2C3()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(5, getPanell2C3());
-      }
-      i2 = i1;
-      if (hasPanell3()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(6, getPanell3());
-      }
-      i1 = i2;
-      if (hasUpperleftcorner()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(7, getUpperleftcorner());
-      }
-      this.n = i1;
-      return i1;
-    }
-    
-    public Template.Resource getUpperleftcorner()
-    {
-      return this.m;
-    }
-    
-    public boolean hasPanell1C1()
-    {
-      return this.a;
-    }
-    
-    public boolean hasPanell2C1()
-    {
-      return this.d;
-    }
-    
-    public boolean hasPanell2C2()
-    {
-      return this.f;
-    }
-    
-    public boolean hasPanell2C3()
-    {
-      return this.h;
-    }
-    
-    public boolean hasPanell3()
-    {
-      return this.j;
-    }
-    
-    public boolean hasUpperleftcorner()
-    {
-      return this.l;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public PanelTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setPanell1C1((Template.RichText)localObject);
-          break;
-        case 18: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addPanell1C2((Template.Resource)localObject);
-          break;
-        case 26: 
-          setPanell2C1(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setPanell2C2((Template.RichText)localObject);
-          break;
-        case 42: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setPanell2C3((Template.RichText)localObject);
-          break;
-        case 50: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setPanell3((Template.RichText)localObject);
-          break;
-        case 58: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setUpperleftcorner((Template.Resource)localObject);
+
+    public Template setPanel(PanelTemplate panelTemplate) {
+        if (panelTemplate == null) {
+            return clearPanel();
         }
-      }
-    }
-    
-    public PanelTemplate setPanell1C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearPanell1C1();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
-    }
-    
-    public PanelTemplate setPanell1C2(int paramInt, Template.Resource paramResource)
-    {
-      if (paramResource == null) {
+        this.f16221e = true;
+        this.f16222f = panelTemplate;
         return this;
-      }
-      this.c.set(paramInt, paramResource);
-      return this;
     }
-    
-    public PanelTemplate setPanell2C1(String paramString)
-    {
-      this.d = true;
-      this.e = paramString;
-      return this;
-    }
-    
-    public PanelTemplate setPanell2C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearPanell2C2();
-      }
-      this.f = true;
-      this.g = paramRichText;
-      return this;
-    }
-    
-    public PanelTemplate setPanell2C3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearPanell2C3();
-      }
-      this.h = true;
-      this.i = paramRichText;
-      return this;
-    }
-    
-    public PanelTemplate setPanell3(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearPanell3();
-      }
-      this.j = true;
-      this.k = paramRichText;
-      return this;
-    }
-    
-    public PanelTemplate setUpperleftcorner(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return clearUpperleftcorner();
-      }
-      this.l = true;
-      this.m = paramResource;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasPanell1C1()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getPanell1C1());
-      }
-      Iterator localIterator = getPanell1C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(2, (Template.Resource)localIterator.next());
-      }
-      if (hasPanell2C1()) {
-        paramCodedOutputStreamMicro.writeString(3, getPanell2C1());
-      }
-      if (hasPanell2C2()) {
-        paramCodedOutputStreamMicro.writeMessage(4, getPanell2C2());
-      }
-      if (hasPanell2C3()) {
-        paramCodedOutputStreamMicro.writeMessage(5, getPanell2C3());
-      }
-      if (hasPanell3()) {
-        paramCodedOutputStreamMicro.writeMessage(6, getPanell3());
-      }
-      if (hasUpperleftcorner()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getUpperleftcorner());
-      }
-    }
-  }
-  
-  public static final class Resource
-    extends MessageMicro
-  {
-    public static final int RESOURCE_ID_FIELD_NUMBER = 1;
-    public static final int RESOURCE_URL_FIELD_NUMBER = 2;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private int e = -1;
-    
-    public static Resource parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Resource().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Resource parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Resource)new Resource().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Resource clear()
-    {
-      clearResourceId();
-      clearResourceUrl();
-      this.e = -1;
-      return this;
-    }
-    
-    public Resource clearResourceId()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public Resource clearResourceUrl()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public int getResourceId()
-    {
-      return this.b;
-    }
-    
-    public String getResourceUrl()
-    {
-      return this.d;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasResourceId()) {
-        i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getResourceId());
-      }
-      int j = i;
-      if (hasResourceUrl()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getResourceUrl());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public boolean hasResourceId()
-    {
-      return this.a;
-    }
-    
-    public boolean hasResourceUrl()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Resource mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setResourceId(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setResourceUrl(paramCodedInputStreamMicro.readString());
+
+    public Template setSinglecard(SingleCardTemplate singleCardTemplate) {
+        if (singleCardTemplate == null) {
+            return clearSinglecard();
         }
-      }
+        this.f16231o = true;
+        this.f16232p = singleCardTemplate;
+        return this;
     }
-    
-    public Resource setResourceId(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public Resource setResourceUrl(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasResourceId()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getResourceId());
-      }
-      if (hasResourceUrl()) {
-        paramCodedOutputStreamMicro.writeString(2, getResourceUrl());
-      }
-    }
-  }
-  
-  public static final class RichText
-    extends MessageMicro
-  {
-    public static final int ORI_VALUE_FIELD_NUMBER = 1;
-    public static final int VALUE_FIELD_NUMBER = 2;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private int e = -1;
-    
-    public static RichText parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new RichText().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static RichText parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (RichText)new RichText().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final RichText clear()
-    {
-      clearOriValue();
-      clearValue();
-      this.e = -1;
-      return this;
-    }
-    
-    public RichText clearOriValue()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public RichText clearValue()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public int getOriValue()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasOriValue()) {
-        i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getOriValue());
-      }
-      int j = i;
-      if (hasValue()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getValue());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public String getValue()
-    {
-      return this.d;
-    }
-    
-    public boolean hasOriValue()
-    {
-      return this.a;
-    }
-    
-    public boolean hasValue()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public RichText mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setOriValue(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setValue(paramCodedInputStreamMicro.readString());
+
+    public Template setVtable(VtableTemplate vtableTemplate) {
+        if (vtableTemplate == null) {
+            return clearVtable();
         }
-      }
+        this.f16227k = true;
+        this.f16228l = vtableTemplate;
+        return this;
     }
-    
-    public RichText setOriValue(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public RichText setValue(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasOriValue()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getOriValue());
-      }
-      if (hasValue()) {
-        paramCodedOutputStreamMicro.writeString(2, getValue());
-      }
-    }
-  }
-  
-  public static final class ScatterStyle
-    extends MessageMicro
-  {
-    public static final int COLOR_VALUE_FIELD_NUMBER = 1;
-    public static final int VALUE_FIELD_NUMBER = 2;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private int e = -1;
-    
-    public static ScatterStyle parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new ScatterStyle().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static ScatterStyle parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (ScatterStyle)new ScatterStyle().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final ScatterStyle clear()
-    {
-      clearColorValue();
-      clearValue();
-      this.e = -1;
-      return this;
-    }
-    
-    public ScatterStyle clearColorValue()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public ScatterStyle clearValue()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public int getColorValue()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasColorValue()) {
-        i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getColorValue());
-      }
-      int j = i;
-      if (hasValue()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getValue());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public String getValue()
-    {
-      return this.d;
-    }
-    
-    public boolean hasColorValue()
-    {
-      return this.a;
-    }
-    
-    public boolean hasValue()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public ScatterStyle mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setColorValue(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setValue(paramCodedInputStreamMicro.readString());
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasNormal()) {
+            codedOutputStreamMicro.writeMessage(1, getNormal());
         }
-      }
-    }
-    
-    public ScatterStyle setColorValue(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public ScatterStyle setValue(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasColorValue()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getColorValue());
-      }
-      if (hasValue()) {
-        paramCodedOutputStreamMicro.writeString(2, getValue());
-      }
-    }
-  }
-  
-  public static final class Score
-    extends MessageMicro
-  {
-    public static final int TEXT_FIELD_NUMBER = 2;
-    public static final int VAL_FIELD_NUMBER = 1;
-    private boolean a;
-    private float b = 0.0F;
-    private boolean c;
-    private Template.RichText d = null;
-    private int e = -1;
-    
-    public static Score parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Score().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Score parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Score)new Score().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Score clear()
-    {
-      clearVal();
-      clearText();
-      this.e = -1;
-      return this;
-    }
-    
-    public Score clearText()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public Score clearVal()
-    {
-      this.a = false;
-      this.b = 0.0F;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasVal()) {
-        i = 0 + CodedOutputStreamMicro.computeFloatSize(1, getVal());
-      }
-      int j = i;
-      if (hasText()) {
-        j = i + CodedOutputStreamMicro.computeMessageSize(2, getText());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public Template.RichText getText()
-    {
-      return this.d;
-    }
-    
-    public float getVal()
-    {
-      return this.b;
-    }
-    
-    public boolean hasText()
-    {
-      return this.c;
-    }
-    
-    public boolean hasVal()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Score mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 13: 
-          setVal(paramCodedInputStreamMicro.readFloat());
-          break;
-        case 18: 
-          Template.RichText localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setText(localRichText);
+        if (hasImage()) {
+            codedOutputStreamMicro.writeMessage(2, getImage());
         }
-      }
-    }
-    
-    public Score setText(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearText();
-      }
-      this.c = true;
-      this.d = paramRichText;
-      return this;
-    }
-    
-    public Score setVal(float paramFloat)
-    {
-      this.a = true;
-      this.b = paramFloat;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasVal()) {
-        paramCodedOutputStreamMicro.writeFloat(1, getVal());
-      }
-      if (hasText()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getText());
-      }
-    }
-  }
-  
-  public static final class SingleCardTemplate
-    extends MessageMicro
-  {
-    public static final int L1C1_FIELD_NUMBER = 1;
-    public static final int L2C1_FIELD_NUMBER = 2;
-    public static final int L2C2_FIELD_NUMBER = 3;
-    public static final int L3C1_FIELD_NUMBER = 4;
-    public static final int L3C2_FIELD_NUMBER = 5;
-    public static final int L3C3_FIELD_NUMBER = 6;
-    public static final int L4C1_FIELD_NUMBER = 7;
-    public static final int L4C2_FIELD_NUMBER = 8;
-    public static final int L5_FIELD_NUMBER = 9;
-    public static final int L6_FIELD_NUMBER = 10;
-    private boolean a;
-    private Template.RichText b = null;
-    private boolean c;
-    private Template.RichText d = null;
-    private List<Template.ScatterStyle> e = Collections.emptyList();
-    private boolean f;
-    private Template.Score g = null;
-    private boolean h;
-    private Template.RichText i = null;
-    private List<Template.ScatterStyle> j = Collections.emptyList();
-    private boolean k;
-    private Template.RichText l = null;
-    private List<Template.ComboBox> m = Collections.emptyList();
-    private List<Template.ChildrenBtn> n = Collections.emptyList();
-    private boolean o;
-    private Template.ComboBox p = null;
-    private int q = -1;
-    
-    public static SingleCardTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new SingleCardTemplate().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static SingleCardTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (SingleCardTemplate)new SingleCardTemplate().mergeFrom(paramArrayOfByte);
-    }
-    
-    public SingleCardTemplate addL2C2(Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      if (this.e.isEmpty()) {
-        this.e = new ArrayList();
-      }
-      this.e.add(paramScatterStyle);
-      return this;
-    }
-    
-    public SingleCardTemplate addL3C3(Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      if (this.j.isEmpty()) {
-        this.j = new ArrayList();
-      }
-      this.j.add(paramScatterStyle);
-      return this;
-    }
-    
-    public SingleCardTemplate addL4C2(Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return this;
-      }
-      if (this.m.isEmpty()) {
-        this.m = new ArrayList();
-      }
-      this.m.add(paramComboBox);
-      return this;
-    }
-    
-    public SingleCardTemplate addL5(Template.ChildrenBtn paramChildrenBtn)
-    {
-      if (paramChildrenBtn == null) {
-        return this;
-      }
-      if (this.n.isEmpty()) {
-        this.n = new ArrayList();
-      }
-      this.n.add(paramChildrenBtn);
-      return this;
-    }
-    
-    public final SingleCardTemplate clear()
-    {
-      clearL1C1();
-      clearL2C1();
-      clearL2C2();
-      clearL3C1();
-      clearL3C2();
-      clearL3C3();
-      clearL4C1();
-      clearL4C2();
-      clearL5();
-      clearL6();
-      this.q = -1;
-      return this;
-    }
-    
-    public SingleCardTemplate clearL1C1()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public SingleCardTemplate clearL2C1()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public SingleCardTemplate clearL2C2()
-    {
-      this.e = Collections.emptyList();
-      return this;
-    }
-    
-    public SingleCardTemplate clearL3C1()
-    {
-      this.f = false;
-      this.g = null;
-      return this;
-    }
-    
-    public SingleCardTemplate clearL3C2()
-    {
-      this.h = false;
-      this.i = null;
-      return this;
-    }
-    
-    public SingleCardTemplate clearL3C3()
-    {
-      this.j = Collections.emptyList();
-      return this;
-    }
-    
-    public SingleCardTemplate clearL4C1()
-    {
-      this.k = false;
-      this.l = null;
-      return this;
-    }
-    
-    public SingleCardTemplate clearL4C2()
-    {
-      this.m = Collections.emptyList();
-      return this;
-    }
-    
-    public SingleCardTemplate clearL5()
-    {
-      this.n = Collections.emptyList();
-      return this;
-    }
-    
-    public SingleCardTemplate clearL6()
-    {
-      this.o = false;
-      this.p = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.q < 0) {
-        getSerializedSize();
-      }
-      return this.q;
-    }
-    
-    public Template.RichText getL1C1()
-    {
-      return this.b;
-    }
-    
-    public Template.RichText getL2C1()
-    {
-      return this.d;
-    }
-    
-    public Template.ScatterStyle getL2C2(int paramInt)
-    {
-      return (Template.ScatterStyle)this.e.get(paramInt);
-    }
-    
-    public int getL2C2Count()
-    {
-      return this.e.size();
-    }
-    
-    public List<Template.ScatterStyle> getL2C2List()
-    {
-      return this.e;
-    }
-    
-    public Template.Score getL3C1()
-    {
-      return this.g;
-    }
-    
-    public Template.RichText getL3C2()
-    {
-      return this.i;
-    }
-    
-    public Template.ScatterStyle getL3C3(int paramInt)
-    {
-      return (Template.ScatterStyle)this.j.get(paramInt);
-    }
-    
-    public int getL3C3Count()
-    {
-      return this.j.size();
-    }
-    
-    public List<Template.ScatterStyle> getL3C3List()
-    {
-      return this.j;
-    }
-    
-    public Template.RichText getL4C1()
-    {
-      return this.l;
-    }
-    
-    public Template.ComboBox getL4C2(int paramInt)
-    {
-      return (Template.ComboBox)this.m.get(paramInt);
-    }
-    
-    public int getL4C2Count()
-    {
-      return this.m.size();
-    }
-    
-    public List<Template.ComboBox> getL4C2List()
-    {
-      return this.m;
-    }
-    
-    public Template.ChildrenBtn getL5(int paramInt)
-    {
-      return (Template.ChildrenBtn)this.n.get(paramInt);
-    }
-    
-    public int getL5Count()
-    {
-      return this.n.size();
-    }
-    
-    public List<Template.ChildrenBtn> getL5List()
-    {
-      return this.n;
-    }
-    
-    public Template.ComboBox getL6()
-    {
-      return this.p;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i1 = 0;
-      if (hasL1C1()) {
-        i1 = 0 + CodedOutputStreamMicro.computeMessageSize(1, getL1C1());
-      }
-      int i2 = i1;
-      if (hasL2C1()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(2, getL2C1());
-      }
-      Iterator localIterator = getL2C2List().iterator();
-      while (localIterator.hasNext()) {
-        i2 = CodedOutputStreamMicro.computeMessageSize(3, (Template.ScatterStyle)localIterator.next()) + i2;
-      }
-      i1 = i2;
-      if (hasL3C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(4, getL3C1());
-      }
-      i2 = i1;
-      if (hasL3C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(5, getL3C2());
-      }
-      localIterator = getL3C3List().iterator();
-      while (localIterator.hasNext()) {
-        i2 += CodedOutputStreamMicro.computeMessageSize(6, (Template.ScatterStyle)localIterator.next());
-      }
-      i1 = i2;
-      if (hasL4C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(7, getL4C1());
-      }
-      localIterator = getL4C2List().iterator();
-      while (localIterator.hasNext()) {
-        i1 += CodedOutputStreamMicro.computeMessageSize(8, (Template.ComboBox)localIterator.next());
-      }
-      localIterator = getL5List().iterator();
-      while (localIterator.hasNext()) {
-        i1 += CodedOutputStreamMicro.computeMessageSize(9, (Template.ChildrenBtn)localIterator.next());
-      }
-      i2 = i1;
-      if (hasL6()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(10, getL6());
-      }
-      this.q = i2;
-      return i2;
-    }
-    
-    public boolean hasL1C1()
-    {
-      return this.a;
-    }
-    
-    public boolean hasL2C1()
-    {
-      return this.c;
-    }
-    
-    public boolean hasL3C1()
-    {
-      return this.f;
-    }
-    
-    public boolean hasL3C2()
-    {
-      return this.h;
-    }
-    
-    public boolean hasL4C1()
-    {
-      return this.k;
-    }
-    
-    public boolean hasL6()
-    {
-      return this.o;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public SingleCardTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setL1C1((Template.RichText)localObject);
-          break;
-        case 18: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setL2C1((Template.RichText)localObject);
-          break;
-        case 26: 
-          localObject = new Template.ScatterStyle();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addL2C2((Template.ScatterStyle)localObject);
-          break;
-        case 34: 
-          localObject = new Template.Score();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setL3C1((Template.Score)localObject);
-          break;
-        case 42: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setL3C2((Template.RichText)localObject);
-          break;
-        case 50: 
-          localObject = new Template.ScatterStyle();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addL3C3((Template.ScatterStyle)localObject);
-          break;
-        case 58: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setL4C1((Template.RichText)localObject);
-          break;
-        case 66: 
-          localObject = new Template.ComboBox();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addL4C2((Template.ComboBox)localObject);
-          break;
-        case 74: 
-          localObject = new Template.ChildrenBtn();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addL5((Template.ChildrenBtn)localObject);
-          break;
-        case 82: 
-          localObject = new Template.ComboBox();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setL6((Template.ComboBox)localObject);
+        if (hasPanel()) {
+            codedOutputStreamMicro.writeMessage(3, getPanel());
         }
-      }
-    }
-    
-    public SingleCardTemplate setL1C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearL1C1();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
-    }
-    
-    public SingleCardTemplate setL2C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearL2C1();
-      }
-      this.c = true;
-      this.d = paramRichText;
-      return this;
-    }
-    
-    public SingleCardTemplate setL2C2(int paramInt, Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      this.e.set(paramInt, paramScatterStyle);
-      return this;
-    }
-    
-    public SingleCardTemplate setL3C1(Template.Score paramScore)
-    {
-      if (paramScore == null) {
-        return clearL3C1();
-      }
-      this.f = true;
-      this.g = paramScore;
-      return this;
-    }
-    
-    public SingleCardTemplate setL3C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearL3C2();
-      }
-      this.h = true;
-      this.i = paramRichText;
-      return this;
-    }
-    
-    public SingleCardTemplate setL3C3(int paramInt, Template.ScatterStyle paramScatterStyle)
-    {
-      if (paramScatterStyle == null) {
-        return this;
-      }
-      this.j.set(paramInt, paramScatterStyle);
-      return this;
-    }
-    
-    public SingleCardTemplate setL4C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearL4C1();
-      }
-      this.k = true;
-      this.l = paramRichText;
-      return this;
-    }
-    
-    public SingleCardTemplate setL4C2(int paramInt, Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return this;
-      }
-      this.m.set(paramInt, paramComboBox);
-      return this;
-    }
-    
-    public SingleCardTemplate setL5(int paramInt, Template.ChildrenBtn paramChildrenBtn)
-    {
-      if (paramChildrenBtn == null) {
-        return this;
-      }
-      this.n.set(paramInt, paramChildrenBtn);
-      return this;
-    }
-    
-    public SingleCardTemplate setL6(Template.ComboBox paramComboBox)
-    {
-      if (paramComboBox == null) {
-        return clearL6();
-      }
-      this.o = true;
-      this.p = paramComboBox;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasL1C1()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getL1C1());
-      }
-      if (hasL2C1()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getL2C1());
-      }
-      Iterator localIterator = getL2C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(3, (Template.ScatterStyle)localIterator.next());
-      }
-      if (hasL3C1()) {
-        paramCodedOutputStreamMicro.writeMessage(4, getL3C1());
-      }
-      if (hasL3C2()) {
-        paramCodedOutputStreamMicro.writeMessage(5, getL3C2());
-      }
-      localIterator = getL3C3List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(6, (Template.ScatterStyle)localIterator.next());
-      }
-      if (hasL4C1()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getL4C1());
-      }
-      localIterator = getL4C2List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(8, (Template.ComboBox)localIterator.next());
-      }
-      localIterator = getL5List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(9, (Template.ChildrenBtn)localIterator.next());
-      }
-      if (hasL6()) {
-        paramCodedOutputStreamMicro.writeMessage(10, getL6());
-      }
-    }
-  }
-  
-  public static final class VcomboText
-    extends MessageMicro
-  {
-    public static final int ORI_FIELD_NUMBER = 1;
-    public static final int VAL_FIELD_NUMBER = 2;
-    private boolean a;
-    private Template.RichText b = null;
-    private boolean c;
-    private Template.RichText d = null;
-    private int e = -1;
-    
-    public static VcomboText parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new VcomboText().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static VcomboText parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (VcomboText)new VcomboText().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final VcomboText clear()
-    {
-      clearOri();
-      clearVal();
-      this.e = -1;
-      return this;
-    }
-    
-    public VcomboText clearOri()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public VcomboText clearVal()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public Template.RichText getOri()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasOri()) {
-        i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getOri());
-      }
-      int j = i;
-      if (hasVal()) {
-        j = i + CodedOutputStreamMicro.computeMessageSize(2, getVal());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public Template.RichText getVal()
-    {
-      return this.d;
-    }
-    
-    public boolean hasOri()
-    {
-      return this.a;
-    }
-    
-    public boolean hasVal()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public VcomboText mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        Template.RichText localRichText;
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setOri(localRichText);
-          break;
-        case 18: 
-          localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setVal(localRichText);
+        if (hasMapsearchaladdinpanel()) {
+            codedOutputStreamMicro.writeMessage(4, getMapsearchaladdinpanel());
         }
-      }
-    }
-    
-    public VcomboText setOri(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearOri();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
-    }
-    
-    public VcomboText setVal(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearVal();
-      }
-      this.c = true;
-      this.d = paramRichText;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasOri()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getOri());
-      }
-      if (hasVal()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getVal());
-      }
-    }
-  }
-  
-  public static final class Vgray
-    extends MessageMicro
-  {
-    public static final int LONG = 2;
-    public static final int SHORT = 1;
-    public static final int STYLE_FIELD_NUMBER = 2;
-    public static final int TEXT_FIELD_NUMBER = 1;
-    private boolean a;
-    private Template.RichText b = null;
-    private boolean c;
-    private int d = 1;
-    private int e = -1;
-    
-    public static Vgray parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Vgray().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Vgray parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Vgray)new Vgray().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Vgray clear()
-    {
-      clearText();
-      clearStyle();
-      this.e = -1;
-      return this;
-    }
-    
-    public Vgray clearStyle()
-    {
-      this.c = false;
-      this.d = 1;
-      return this;
-    }
-    
-    public Vgray clearText()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasText()) {
-        i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getText());
-      }
-      int j = i;
-      if (hasStyle()) {
-        j = i + CodedOutputStreamMicro.computeInt32Size(2, getStyle());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public int getStyle()
-    {
-      return this.d;
-    }
-    
-    public Template.RichText getText()
-    {
-      return this.b;
-    }
-    
-    public boolean hasStyle()
-    {
-      return this.c;
-    }
-    
-    public boolean hasText()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Vgray mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          Template.RichText localRichText = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage(localRichText);
-          setText(localRichText);
-          break;
-        case 16: 
-          setStyle(paramCodedInputStreamMicro.readInt32());
+        if (hasMapsearchaladdinnormal()) {
+            codedOutputStreamMicro.writeMessage(5, getMapsearchaladdinnormal());
         }
-      }
-    }
-    
-    public Vgray setStyle(int paramInt)
-    {
-      this.c = true;
-      this.d = paramInt;
-      return this;
-    }
-    
-    public Vgray setText(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearText();
-      }
-      this.a = true;
-      this.b = paramRichText;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasText()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getText());
-      }
-      if (hasStyle()) {
-        paramCodedOutputStreamMicro.writeInt32(2, getStyle());
-      }
-    }
-  }
-  
-  public static final class Vmagicbox
-    extends MessageMicro
-  {
-    public static final int RES_FIELD_NUMBER = 1;
-    public static final int TEXT_FIELD_NUMBER = 2;
-    private List<Template.Resource> a = Collections.emptyList();
-    private boolean b;
-    private Template.RichText c = null;
-    private int d = -1;
-    
-    public static Vmagicbox parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Vmagicbox().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Vmagicbox parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Vmagicbox)new Vmagicbox().mergeFrom(paramArrayOfByte);
-    }
-    
-    public Vmagicbox addRes(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return this;
-      }
-      if (this.a.isEmpty()) {
-        this.a = new ArrayList();
-      }
-      this.a.add(paramResource);
-      return this;
-    }
-    
-    public final Vmagicbox clear()
-    {
-      clearRes();
-      clearText();
-      this.d = -1;
-      return this;
-    }
-    
-    public Vmagicbox clearRes()
-    {
-      this.a = Collections.emptyList();
-      return this;
-    }
-    
-    public Vmagicbox clearText()
-    {
-      this.b = false;
-      this.c = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.d < 0) {
-        getSerializedSize();
-      }
-      return this.d;
-    }
-    
-    public Template.Resource getRes(int paramInt)
-    {
-      return (Template.Resource)this.a.get(paramInt);
-    }
-    
-    public int getResCount()
-    {
-      return this.a.size();
-    }
-    
-    public List<Template.Resource> getResList()
-    {
-      return this.a;
-    }
-    
-    public int getSerializedSize()
-    {
-      Iterator localIterator = getResList().iterator();
-      for (int i = 0; localIterator.hasNext(); i = CodedOutputStreamMicro.computeMessageSize(1, (Template.Resource)localIterator.next()) + i) {}
-      int j = i;
-      if (hasText()) {
-        j = i + CodedOutputStreamMicro.computeMessageSize(2, getText());
-      }
-      this.d = j;
-      return j;
-    }
-    
-    public Template.RichText getText()
-    {
-      return this.c;
-    }
-    
-    public boolean hasText()
-    {
-      return this.b;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Vmagicbox mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addRes((Template.Resource)localObject);
-          break;
-        case 18: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setText((Template.RichText)localObject);
+        if (hasVtable()) {
+            codedOutputStreamMicro.writeMessage(6, getVtable());
         }
-      }
-    }
-    
-    public Vmagicbox setRes(int paramInt, Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return this;
-      }
-      this.a.set(paramInt, paramResource);
-      return this;
-    }
-    
-    public Vmagicbox setText(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearText();
-      }
-      this.b = true;
-      this.c = paramRichText;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      Iterator localIterator = getResList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(1, (Template.Resource)localIterator.next());
-      }
-      if (hasText()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getText());
-      }
-    }
-  }
-  
-  public static final class VtableTemplate
-    extends MessageMicro
-  {
-    public static final int R1C1_FIELD_NUMBER = 1;
-    public static final int R1C2_FIELD_NUMBER = 2;
-    public static final int R1C3_FIELD_NUMBER = 3;
-    public static final int R2C1_FIELD_NUMBER = 4;
-    public static final int R3C1_FIELD_NUMBER = 5;
-    public static final int R3C2_FIELD_NUMBER = 6;
-    public static final int R3C3_FIELD_NUMBER = 7;
-    public static final int R4C1_FIELD_NUMBER = 8;
-    public static final int R4C2_FIELD_NUMBER = 9;
-    public static final int R5C1_FIELD_NUMBER = 10;
-    public static final int R6C1_FIELD_NUMBER = 11;
-    public static final int R7C1_FIELD_NUMBER = 12;
-    public static final int R8C1_FIELD_NUMBER = 13;
-    public static final int UPPERLEFTCORNER_FIELD_NUMBER = 14;
-    private int A = -1;
-    private boolean a;
-    private Template.Image b = null;
-    private boolean c;
-    private Template.RichText d = null;
-    private List<Template.Resource> e = Collections.emptyList();
-    private boolean f;
-    private Template.RichText g = null;
-    private boolean h;
-    private Template.Score i = null;
-    private boolean j;
-    private Template.Vmagicbox k = null;
-    private boolean l;
-    private Template.VcomboText m = null;
-    private boolean n;
-    private Template.RichText o = null;
-    private boolean p;
-    private Template.RichText q = null;
-    private List<Template.RichText> r = Collections.emptyList();
-    private boolean s;
-    private Template.Vgray t = null;
-    private boolean u;
-    private Template.Fatherson v = null;
-    private boolean w;
-    private Template.Composit x = null;
-    private boolean y;
-    private Template.Resource z = null;
-    
-    public static VtableTemplate parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new VtableTemplate().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static VtableTemplate parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (VtableTemplate)new VtableTemplate().mergeFrom(paramArrayOfByte);
-    }
-    
-    public VtableTemplate addR1C3(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return this;
-      }
-      if (this.e.isEmpty()) {
-        this.e = new ArrayList();
-      }
-      this.e.add(paramResource);
-      return this;
-    }
-    
-    public VtableTemplate addR5C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return this;
-      }
-      if (this.r.isEmpty()) {
-        this.r = new ArrayList();
-      }
-      this.r.add(paramRichText);
-      return this;
-    }
-    
-    public final VtableTemplate clear()
-    {
-      clearR1C1();
-      clearR1C2();
-      clearR1C3();
-      clearR2C1();
-      clearR3C1();
-      clearR3C2();
-      clearR3C3();
-      clearR4C1();
-      clearR4C2();
-      clearR5C1();
-      clearR6C1();
-      clearR7C1();
-      clearR8C1();
-      clearUpperleftcorner();
-      this.A = -1;
-      return this;
-    }
-    
-    public VtableTemplate clearR1C1()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR1C2()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR1C3()
-    {
-      this.e = Collections.emptyList();
-      return this;
-    }
-    
-    public VtableTemplate clearR2C1()
-    {
-      this.f = false;
-      this.g = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR3C1()
-    {
-      this.h = false;
-      this.i = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR3C2()
-    {
-      this.j = false;
-      this.k = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR3C3()
-    {
-      this.l = false;
-      this.m = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR4C1()
-    {
-      this.n = false;
-      this.o = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR4C2()
-    {
-      this.p = false;
-      this.q = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR5C1()
-    {
-      this.r = Collections.emptyList();
-      return this;
-    }
-    
-    public VtableTemplate clearR6C1()
-    {
-      this.s = false;
-      this.t = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR7C1()
-    {
-      this.u = false;
-      this.v = null;
-      return this;
-    }
-    
-    public VtableTemplate clearR8C1()
-    {
-      this.w = false;
-      this.x = null;
-      return this;
-    }
-    
-    public VtableTemplate clearUpperleftcorner()
-    {
-      this.y = false;
-      this.z = null;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.A < 0) {
-        getSerializedSize();
-      }
-      return this.A;
-    }
-    
-    public Template.Image getR1C1()
-    {
-      return this.b;
-    }
-    
-    public Template.RichText getR1C2()
-    {
-      return this.d;
-    }
-    
-    public Template.Resource getR1C3(int paramInt)
-    {
-      return (Template.Resource)this.e.get(paramInt);
-    }
-    
-    public int getR1C3Count()
-    {
-      return this.e.size();
-    }
-    
-    public List<Template.Resource> getR1C3List()
-    {
-      return this.e;
-    }
-    
-    public Template.RichText getR2C1()
-    {
-      return this.g;
-    }
-    
-    public Template.Score getR3C1()
-    {
-      return this.i;
-    }
-    
-    public Template.Vmagicbox getR3C2()
-    {
-      return this.k;
-    }
-    
-    public Template.VcomboText getR3C3()
-    {
-      return this.m;
-    }
-    
-    public Template.RichText getR4C1()
-    {
-      return this.o;
-    }
-    
-    public Template.RichText getR4C2()
-    {
-      return this.q;
-    }
-    
-    public Template.RichText getR5C1(int paramInt)
-    {
-      return (Template.RichText)this.r.get(paramInt);
-    }
-    
-    public int getR5C1Count()
-    {
-      return this.r.size();
-    }
-    
-    public List<Template.RichText> getR5C1List()
-    {
-      return this.r;
-    }
-    
-    public Template.Vgray getR6C1()
-    {
-      return this.t;
-    }
-    
-    public Template.Fatherson getR7C1()
-    {
-      return this.v;
-    }
-    
-    public Template.Composit getR8C1()
-    {
-      return this.x;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i1 = 0;
-      if (hasR1C1()) {
-        i1 = 0 + CodedOutputStreamMicro.computeMessageSize(1, getR1C1());
-      }
-      int i2 = i1;
-      if (hasR1C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(2, getR1C2());
-      }
-      Iterator localIterator = getR1C3List().iterator();
-      while (localIterator.hasNext()) {
-        i2 = CodedOutputStreamMicro.computeMessageSize(3, (Template.Resource)localIterator.next()) + i2;
-      }
-      i1 = i2;
-      if (hasR2C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(4, getR2C1());
-      }
-      i2 = i1;
-      if (hasR3C1()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(5, getR3C1());
-      }
-      i1 = i2;
-      if (hasR3C2()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(6, getR3C2());
-      }
-      i2 = i1;
-      if (hasR3C3()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(7, getR3C3());
-      }
-      i1 = i2;
-      if (hasR4C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(8, getR4C1());
-      }
-      i2 = i1;
-      if (hasR4C2()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(9, getR4C2());
-      }
-      localIterator = getR5C1List().iterator();
-      while (localIterator.hasNext()) {
-        i2 += CodedOutputStreamMicro.computeMessageSize(10, (Template.RichText)localIterator.next());
-      }
-      i1 = i2;
-      if (hasR6C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(11, getR6C1());
-      }
-      i2 = i1;
-      if (hasR7C1()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(12, getR7C1());
-      }
-      i1 = i2;
-      if (hasR8C1()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(13, getR8C1());
-      }
-      i2 = i1;
-      if (hasUpperleftcorner()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(14, getUpperleftcorner());
-      }
-      this.A = i2;
-      return i2;
-    }
-    
-    public Template.Resource getUpperleftcorner()
-    {
-      return this.z;
-    }
-    
-    public boolean hasR1C1()
-    {
-      return this.a;
-    }
-    
-    public boolean hasR1C2()
-    {
-      return this.c;
-    }
-    
-    public boolean hasR2C1()
-    {
-      return this.f;
-    }
-    
-    public boolean hasR3C1()
-    {
-      return this.h;
-    }
-    
-    public boolean hasR3C2()
-    {
-      return this.j;
-    }
-    
-    public boolean hasR3C3()
-    {
-      return this.l;
-    }
-    
-    public boolean hasR4C1()
-    {
-      return this.n;
-    }
-    
-    public boolean hasR4C2()
-    {
-      return this.p;
-    }
-    
-    public boolean hasR6C1()
-    {
-      return this.s;
-    }
-    
-    public boolean hasR7C1()
-    {
-      return this.u;
-    }
-    
-    public boolean hasR8C1()
-    {
-      return this.w;
-    }
-    
-    public boolean hasUpperleftcorner()
-    {
-      return this.y;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public VtableTemplate mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Template.Image();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR1C1((Template.Image)localObject);
-          break;
-        case 18: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR1C2((Template.RichText)localObject);
-          break;
-        case 26: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR1C3((Template.Resource)localObject);
-          break;
-        case 34: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR2C1((Template.RichText)localObject);
-          break;
-        case 42: 
-          localObject = new Template.Score();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR3C1((Template.Score)localObject);
-          break;
-        case 50: 
-          localObject = new Template.Vmagicbox();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR3C2((Template.Vmagicbox)localObject);
-          break;
-        case 58: 
-          localObject = new Template.VcomboText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR3C3((Template.VcomboText)localObject);
-          break;
-        case 66: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR4C1((Template.RichText)localObject);
-          break;
-        case 74: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR4C2((Template.RichText)localObject);
-          break;
-        case 82: 
-          localObject = new Template.RichText();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addR5C1((Template.RichText)localObject);
-          break;
-        case 90: 
-          localObject = new Template.Vgray();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR6C1((Template.Vgray)localObject);
-          break;
-        case 98: 
-          localObject = new Template.Fatherson();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR7C1((Template.Fatherson)localObject);
-          break;
-        case 106: 
-          localObject = new Template.Composit();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setR8C1((Template.Composit)localObject);
-          break;
-        case 114: 
-          localObject = new Template.Resource();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setUpperleftcorner((Template.Resource)localObject);
+        if (hasBtable()) {
+            codedOutputStreamMicro.writeMessage(7, getBtable());
         }
-      }
+        if (hasSinglecard()) {
+            codedOutputStreamMicro.writeMessage(8, getSinglecard());
+        }
+        if (hasLtable()) {
+            codedOutputStreamMicro.writeMessage(9, getLtable());
+        }
     }
-    
-    public VtableTemplate setR1C1(Template.Image paramImage)
-    {
-      if (paramImage == null) {
-        return clearR1C1();
-      }
-      this.a = true;
-      this.b = paramImage;
-      return this;
-    }
-    
-    public VtableTemplate setR1C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR1C2();
-      }
-      this.c = true;
-      this.d = paramRichText;
-      return this;
-    }
-    
-    public VtableTemplate setR1C3(int paramInt, Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return this;
-      }
-      this.e.set(paramInt, paramResource);
-      return this;
-    }
-    
-    public VtableTemplate setR2C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR2C1();
-      }
-      this.f = true;
-      this.g = paramRichText;
-      return this;
-    }
-    
-    public VtableTemplate setR3C1(Template.Score paramScore)
-    {
-      if (paramScore == null) {
-        return clearR3C1();
-      }
-      this.h = true;
-      this.i = paramScore;
-      return this;
-    }
-    
-    public VtableTemplate setR3C2(Template.Vmagicbox paramVmagicbox)
-    {
-      if (paramVmagicbox == null) {
-        return clearR3C2();
-      }
-      this.j = true;
-      this.k = paramVmagicbox;
-      return this;
-    }
-    
-    public VtableTemplate setR3C3(Template.VcomboText paramVcomboText)
-    {
-      if (paramVcomboText == null) {
-        return clearR3C3();
-      }
-      this.l = true;
-      this.m = paramVcomboText;
-      return this;
-    }
-    
-    public VtableTemplate setR4C1(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR4C1();
-      }
-      this.n = true;
-      this.o = paramRichText;
-      return this;
-    }
-    
-    public VtableTemplate setR4C2(Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return clearR4C2();
-      }
-      this.p = true;
-      this.q = paramRichText;
-      return this;
-    }
-    
-    public VtableTemplate setR5C1(int paramInt, Template.RichText paramRichText)
-    {
-      if (paramRichText == null) {
-        return this;
-      }
-      this.r.set(paramInt, paramRichText);
-      return this;
-    }
-    
-    public VtableTemplate setR6C1(Template.Vgray paramVgray)
-    {
-      if (paramVgray == null) {
-        return clearR6C1();
-      }
-      this.s = true;
-      this.t = paramVgray;
-      return this;
-    }
-    
-    public VtableTemplate setR7C1(Template.Fatherson paramFatherson)
-    {
-      if (paramFatherson == null) {
-        return clearR7C1();
-      }
-      this.u = true;
-      this.v = paramFatherson;
-      return this;
-    }
-    
-    public VtableTemplate setR8C1(Template.Composit paramComposit)
-    {
-      if (paramComposit == null) {
-        return clearR8C1();
-      }
-      this.w = true;
-      this.x = paramComposit;
-      return this;
-    }
-    
-    public VtableTemplate setUpperleftcorner(Template.Resource paramResource)
-    {
-      if (paramResource == null) {
-        return clearUpperleftcorner();
-      }
-      this.y = true;
-      this.z = paramResource;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasR1C1()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getR1C1());
-      }
-      if (hasR1C2()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getR1C2());
-      }
-      Iterator localIterator = getR1C3List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(3, (Template.Resource)localIterator.next());
-      }
-      if (hasR2C1()) {
-        paramCodedOutputStreamMicro.writeMessage(4, getR2C1());
-      }
-      if (hasR3C1()) {
-        paramCodedOutputStreamMicro.writeMessage(5, getR3C1());
-      }
-      if (hasR3C2()) {
-        paramCodedOutputStreamMicro.writeMessage(6, getR3C2());
-      }
-      if (hasR3C3()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getR3C3());
-      }
-      if (hasR4C1()) {
-        paramCodedOutputStreamMicro.writeMessage(8, getR4C1());
-      }
-      if (hasR4C2()) {
-        paramCodedOutputStreamMicro.writeMessage(9, getR4C2());
-      }
-      localIterator = getR5C1List().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(10, (Template.RichText)localIterator.next());
-      }
-      if (hasR6C1()) {
-        paramCodedOutputStreamMicro.writeMessage(11, getR6C1());
-      }
-      if (hasR7C1()) {
-        paramCodedOutputStreamMicro.writeMessage(12, getR7C1());
-      }
-      if (hasR8C1()) {
-        paramCodedOutputStreamMicro.writeMessage(13, getR8C1());
-      }
-      if (hasUpperleftcorner()) {
-        paramCodedOutputStreamMicro.writeMessage(14, getUpperleftcorner());
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/Template.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

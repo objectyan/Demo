@@ -3,48 +3,38 @@ package com.baidu.ufosdk.ui;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.View;
 import android.widget.Toast;
-import com.baidu.ufosdk.a.a;
-import com.baidu.ufosdk.util.u;
+import com.baidu.ufosdk.p247a.C5165a;
+import com.baidu.ufosdk.util.C5228u;
 
-final class be
-  extends BroadcastReceiver
-{
-  be(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void onReceive(Context paramContext, Intent paramIntent)
-  {
-    if (paramIntent.getAction().equals("com.baidu.ufosdk.getchat"))
-    {
-      paramContext = paramIntent.getExtras().getParcelableArrayList("msgList");
-      FeedbackInputActivity.H(this.a).obtainMessage(2, paramContext).sendToTarget();
+/* compiled from: FeedbackInputActivity */
+final class be extends BroadcastReceiver {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21571a;
+
+    be(FeedbackInputActivity feedbackInputActivity) {
+        this.f21571a = feedbackInputActivity;
     }
-    if (paramIntent.getAction().equals("com.baidu.ufosdk.getmsgid"))
-    {
-      FeedbackInputActivity.b(this.a, paramIntent.getStringExtra("msgid"));
-      if (FeedbackInputActivity.o(this.a) == null) {
-        FeedbackInputActivity.a(this.a, new a(this.a.getApplicationContext(), FeedbackInputActivity.l(this.a)));
-      }
-      FeedbackInputActivity.o(this.a).b();
-      if (!FeedbackInputActivity.o(this.a).isAlive()) {
-        FeedbackInputActivity.o(this.a).start();
-      }
+
+    public final void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals("com.baidu.ufosdk.getchat")) {
+            this.f21571a.ak.obtainMessage(2, intent.getExtras().getParcelableArrayList("msgList")).sendToTarget();
+        }
+        if (intent.getAction().equals("com.baidu.ufosdk.getmsgid")) {
+            this.f21571a.f21468L = intent.getStringExtra("msgid");
+            if (this.f21571a.f21470N == null) {
+                this.f21571a.f21470N = new C5165a(this.f21571a.getApplicationContext(), this.f21571a.f21468L);
+            }
+            this.f21571a.f21470N.m17552b();
+            if (!this.f21571a.f21470N.isAlive()) {
+                this.f21571a.f21470N.start();
+            }
+        }
+        if (intent.getAction().equals("com.baidu.ufosdk.deletemsg_dialogdismiss")) {
+            this.f21571a.f21474R.setVisibility(8);
+        }
+        if (intent.getAction().equals("com.baidu.ufosdk.reload")) {
+            Toast.makeText(this.f21571a.getApplicationContext(), C5228u.m17794a("18"), 1).show();
+        }
     }
-    if (paramIntent.getAction().equals("com.baidu.ufosdk.deletemsg_dialogdismiss")) {
-      FeedbackInputActivity.E(this.a).setVisibility(8);
-    }
-    if (paramIntent.getAction().equals("com.baidu.ufosdk.reload")) {
-      Toast.makeText(this.a.getApplicationContext(), u.a("18"), 1).show();
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/be.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

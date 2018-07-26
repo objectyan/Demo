@@ -4,59 +4,51 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import com.baidu.carlife.core.a;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1260i;
 import com.baidu.navi.track.database.DataCache;
 import com.baidu.navi.track.database.DataService;
 import com.baidu.navi.track.database.DataService.Action;
 import com.baidu.navi.track.model.TrackDBEvent;
 
-public class TrackClearShop
-{
-  private static final String TAG = "TrackClearShop";
-  private Handler mHandler = new Handler()
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if (paramAnonymousMessage.what != 4) {}
-      TrackDBEvent localTrackDBEvent;
-      do
-      {
-        do
-        {
-          return;
-          i.b("TrackClearShop", "handleMessage msg = " + paramAnonymousMessage);
-          localTrackDBEvent = null;
-          if ((paramAnonymousMessage.obj instanceof TrackDBEvent)) {
-            localTrackDBEvent = (TrackDBEvent)paramAnonymousMessage.obj;
-          }
-        } while (localTrackDBEvent == null);
-        i.b("TrackClearShop", "dbEvent.type = " + localTrackDBEvent.type);
-      } while (localTrackDBEvent.type != 12);
-      i.b("TrackClearShop", "dbEvent.status = " + localTrackDBEvent.status);
+public class TrackClearShop {
+    private static final String TAG = "TrackClearShop";
+    private Handler mHandler = new C39681();
+    private String useId;
+
+    /* renamed from: com.baidu.navi.track.datashop.TrackClearShop$1 */
+    class C39681 extends Handler {
+        C39681() {
+        }
+
+        public void handleMessage(Message msg) {
+            if (msg.what == 4) {
+                C1260i.b(TrackClearShop.TAG, "handleMessage msg = " + msg);
+                TrackDBEvent dbEvent = null;
+                if (msg.obj instanceof TrackDBEvent) {
+                    dbEvent = msg.obj;
+                }
+                if (dbEvent != null) {
+                    C1260i.b(TrackClearShop.TAG, "dbEvent.type = " + dbEvent.type);
+                    if (dbEvent.type == 12) {
+                        C1260i.b(TrackClearShop.TAG, "dbEvent.status = " + dbEvent.status);
+                    }
+                }
+            }
+        }
     }
-  };
-  private String useId;
-  
-  private void cleanTrackRecordsFromDb(String paramString)
-  {
-    a locala = a.a();
-    Intent localIntent = new Intent(locala, DataService.class);
-    localIntent.putExtra("handler", DataCache.getInstance().addCache(this.mHandler));
-    localIntent.putExtra("useid", paramString);
-    localIntent.setAction(DataService.Action.ACTION_CLEAR_TRACK_BY_BDUID.toString());
-    locala.startService(localIntent);
-  }
-  
-  public void clearTrack(String paramString)
-  {
-    this.useId = paramString;
-    cleanTrackRecordsFromDb(paramString);
-  }
+
+    public void clearTrack(String useId) {
+        this.useId = useId;
+        cleanTrackRecordsFromDb(useId);
+    }
+
+    private void cleanTrackRecordsFromDb(String useId) {
+        Context context = C1157a.a();
+        Intent intent = new Intent(context, DataService.class);
+        intent.putExtra(DataService.EXTRA_HANDLER, DataCache.getInstance().addCache(this.mHandler));
+        intent.putExtra("useid", useId);
+        intent.setAction(Action.ACTION_CLEAR_TRACK_BY_BDUID.toString());
+        context.startService(intent);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/track/datashop/TrackClearShop.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,18 +3,12 @@ package com.indooratlas.android.sdk._internal;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import com.baidu.che.codriver.sdk.p081a.C2602k.C1981b;
 
-public final class aq
-{
-  @TargetApi(18)
-  public static BluetoothManager a(Context paramContext)
-  {
-    return (BluetoothManager)paramContext.getSystemService("bluetooth");
-  }
+public final class aq {
+    @TargetApi(18)
+    /* renamed from: a */
+    public static BluetoothManager m19842a(Context context) {
+        return (BluetoothManager) context.getSystemService(C1981b.f6363c);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/aq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

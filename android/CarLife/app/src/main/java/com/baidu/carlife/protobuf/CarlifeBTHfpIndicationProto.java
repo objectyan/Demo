@@ -1,5 +1,6 @@
 package com.baidu.carlife.protobuf;
 
+import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -9,508 +10,438 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeBTHfpIndicationProto
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_com_baidu_carlife_protobuf_CarlifeBTHfpIndication_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_com_baidu_carlife_protobuf_CarlifeBTHfpIndication_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeBTHfpIndicationProto.access$1302(paramAnonymousFileDescriptor);
-        CarlifeBTHfpIndicationProto.access$002((Descriptors.Descriptor)CarlifeBTHfpIndicationProto.getDescriptor().getMessageTypes().get(0));
-        CarlifeBTHfpIndicationProto.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeBTHfpIndicationProto.internal_static_com_baidu_carlife_protobuf_CarlifeBTHfpIndication_descriptor, new String[] { "State", "PhoneNum", "PhoneName", "Address" }, CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.class, CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n!CarlifeBTHfpIndicationProto.proto\022\032com.baidu.carlife.protobuf\"]\n\026CarlifeBTHfpIndication\022\r\n\005state\030\001 \002(\005\022\020\n\bphoneNum\030\002 \001(\t\022\021\n\tphoneName\030\003 \001(\t\022\017\n\007address\030\004 \001(\t" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeBTHfpIndication
-    extends GeneratedMessage
-  {
-    public static final int ADDRESS_FIELD_NUMBER = 4;
-    public static final int PHONENAME_FIELD_NUMBER = 3;
-    public static final int PHONENUM_FIELD_NUMBER = 2;
-    public static final int STATE_FIELD_NUMBER = 1;
-    private static final CarlifeBTHfpIndication defaultInstance = new CarlifeBTHfpIndication();
-    private String address_ = "";
-    private boolean hasAddress;
-    private boolean hasPhoneName;
-    private boolean hasPhoneNum;
-    private boolean hasState;
-    private int memoizedSerializedSize = -1;
-    private String phoneName_ = "";
-    private String phoneNum_ = "";
-    private int state_ = 0;
-    
-    static
-    {
-      CarlifeBTHfpIndicationProto.getDescriptor();
-      CarlifeBTHfpIndicationProto.internalForceInit();
-    }
-    
-    public static CarlifeBTHfpIndication getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeBTHfpIndicationProto.internal_static_com_baidu_carlife_protobuf_CarlifeBTHfpIndication_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeBTHfpIndication paramCarlifeBTHfpIndication)
-    {
-      return newBuilder().mergeFrom(paramCarlifeBTHfpIndication);
-    }
-    
-    public static CarlifeBTHfpIndication parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeBTHfpIndication parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public String getAddress()
-    {
-      return this.address_;
-    }
-    
-    public CarlifeBTHfpIndication getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public String getPhoneName()
-    {
-      return this.phoneName_;
-    }
-    
-    public String getPhoneNum()
-    {
-      return this.phoneNum_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      int j = 0;
-      if (hasState()) {
-        j = 0 + CodedOutputStream.computeInt32Size(1, getState());
-      }
-      i = j;
-      if (hasPhoneNum()) {
-        i = j + CodedOutputStream.computeStringSize(2, getPhoneNum());
-      }
-      j = i;
-      if (hasPhoneName()) {
-        j = i + CodedOutputStream.computeStringSize(3, getPhoneName());
-      }
-      i = j;
-      if (hasAddress()) {
-        i = j + CodedOutputStream.computeStringSize(4, getAddress());
-      }
-      i += getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public int getState()
-    {
-      return this.state_;
-    }
-    
-    public boolean hasAddress()
-    {
-      return this.hasAddress;
-    }
-    
-    public boolean hasPhoneName()
-    {
-      return this.hasPhoneName;
-    }
-    
-    public boolean hasPhoneNum()
-    {
-      return this.hasPhoneNum;
-    }
-    
-    public boolean hasState()
-    {
-      return this.hasState;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeBTHfpIndicationProto.internal_static_com_baidu_carlife_protobuf_CarlifeBTHfpIndication_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return this.hasState;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasState()) {
-        paramCodedOutputStream.writeInt32(1, getState());
-      }
-      if (hasPhoneNum()) {
-        paramCodedOutputStream.writeString(2, getPhoneNum());
-      }
-      if (hasPhoneName()) {
-        paramCodedOutputStream.writeString(3, getPhoneName());
-      }
-      if (hasAddress()) {
-        paramCodedOutputStream.writeString(4, getAddress());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication result;
-      
-      private CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeBTHfpIndicationProto {
+    private static FileDescriptor descriptor;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeBTHfpIndication_descriptor */
+    private static Descriptor f6585x8859cdae;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeBTHfpIndication_fieldAccessorTable */
+    private static FieldAccessorTable f6586xd62f662c;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeBTHfpIndicationProto$1 */
+    static class C20451 implements InternalDescriptorAssigner {
+        C20451() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication(null);
-        return localBuilder;
-      }
-      
-      public CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeBTHfpIndicationProto.descriptor = root;
+            CarlifeBTHfpIndicationProto.f6585x8859cdae = (Descriptor) CarlifeBTHfpIndicationProto.getDescriptor().getMessageTypes().get(0);
+            CarlifeBTHfpIndicationProto.f6586xd62f662c = new FieldAccessorTable(CarlifeBTHfpIndicationProto.f6585x8859cdae, new String[]{"State", "PhoneNum", "PhoneName", JNISearchConst.JNI_ADDRESS}, CarlifeBTHfpIndication.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication localCarlifeBTHfpIndication = this.result;
-        this.result = null;
-        return localCarlifeBTHfpIndication;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication(null);
-        return this;
-      }
-      
-      public Builder clearAddress()
-      {
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$1102(this.result, false);
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$1202(this.result, CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.getDefaultInstance().getAddress());
-        return this;
-      }
-      
-      public Builder clearPhoneName()
-      {
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$902(this.result, false);
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$1002(this.result, CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.getDefaultInstance().getPhoneName());
-        return this;
-      }
-      
-      public Builder clearPhoneNum()
-      {
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$702(this.result, false);
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$802(this.result, CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.getDefaultInstance().getPhoneNum());
-        return this;
-      }
-      
-      public Builder clearState()
-      {
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$502(this.result, false);
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$602(this.result, 0);
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public String getAddress()
-      {
-        return this.result.getAddress();
-      }
-      
-      public CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication getDefaultInstanceForType()
-      {
-        return CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.getDescriptor();
-      }
-      
-      public String getPhoneName()
-      {
-        return this.result.getPhoneName();
-      }
-      
-      public String getPhoneNum()
-      {
-        return this.result.getPhoneNum();
-      }
-      
-      public int getState()
-      {
-        return this.result.getState();
-      }
-      
-      public boolean hasAddress()
-      {
-        return this.result.hasAddress();
-      }
-      
-      public boolean hasPhoneName()
-      {
-        return this.result.hasPhoneName();
-      }
-      
-      public boolean hasPhoneNum()
-      {
-        return this.result.hasPhoneNum();
-      }
-      
-      public boolean hasState()
-      {
-        return this.result.hasState();
-      }
-      
-      protected CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication paramCarlifeBTHfpIndication)
-      {
-        if (paramCarlifeBTHfpIndication == CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeBTHfpIndication.hasState()) {
-          setState(paramCarlifeBTHfpIndication.getState());
-        }
-        if (paramCarlifeBTHfpIndication.hasPhoneNum()) {
-          setPhoneNum(paramCarlifeBTHfpIndication.getPhoneNum());
-        }
-        if (paramCarlifeBTHfpIndication.hasPhoneName()) {
-          setPhoneName(paramCarlifeBTHfpIndication.getPhoneName());
-        }
-        if (paramCarlifeBTHfpIndication.hasAddress()) {
-          setAddress(paramCarlifeBTHfpIndication.getAddress());
-        }
-        mergeUnknownFields(paramCarlifeBTHfpIndication.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeBTHfpIndication extends GeneratedMessage {
+        public static final int ADDRESS_FIELD_NUMBER = 4;
+        public static final int PHONENAME_FIELD_NUMBER = 3;
+        public static final int PHONENUM_FIELD_NUMBER = 2;
+        public static final int STATE_FIELD_NUMBER = 1;
+        private static final CarlifeBTHfpIndication defaultInstance = new CarlifeBTHfpIndication();
+        private String address_;
+        private boolean hasAddress;
+        private boolean hasPhoneName;
+        private boolean hasPhoneNum;
+        private boolean hasState;
+        private int memoizedSerializedSize;
+        private String phoneName_;
+        private String phoneNum_;
+        private int state_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeBTHfpIndication result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setState(paramCodedInputStream.readInt32());
-            break;
-          case 18: 
-            setPhoneNum(paramCodedInputStream.readString());
-            break;
-          case 26: 
-            setPhoneName(paramCodedInputStream.readString());
-            break;
-          case 34: 
-            setAddress(paramCodedInputStream.readString());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeBTHfpIndication();
+                return builder;
+            }
+
+            protected CarlifeBTHfpIndication internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeBTHfpIndication();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeBTHfpIndication.getDescriptor();
+            }
+
+            public CarlifeBTHfpIndication getDefaultInstanceForType() {
+                return CarlifeBTHfpIndication.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeBTHfpIndication build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeBTHfpIndication buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeBTHfpIndication buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeBTHfpIndication returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeBTHfpIndication) {
+                    return mergeFrom((CarlifeBTHfpIndication) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeBTHfpIndication other) {
+                if (other != CarlifeBTHfpIndication.getDefaultInstance()) {
+                    if (other.hasState()) {
+                        setState(other.getState());
+                    }
+                    if (other.hasPhoneNum()) {
+                        setPhoneNum(other.getPhoneNum());
+                    }
+                    if (other.hasPhoneName()) {
+                        setPhoneName(other.getPhoneName());
+                    }
+                    if (other.hasAddress()) {
+                        setAddress(other.getAddress());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setState(input.readInt32());
+                            continue;
+                        case 18:
+                            setPhoneNum(input.readString());
+                            continue;
+                        case 26:
+                            setPhoneName(input.readString());
+                            continue;
+                        case 34:
+                            setAddress(input.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasState() {
+                return this.result.hasState();
+            }
+
+            public int getState() {
+                return this.result.getState();
+            }
+
+            public Builder setState(int value) {
+                this.result.hasState = true;
+                this.result.state_ = value;
+                return this;
+            }
+
+            public Builder clearState() {
+                this.result.hasState = false;
+                this.result.state_ = 0;
+                return this;
+            }
+
+            public boolean hasPhoneNum() {
+                return this.result.hasPhoneNum();
+            }
+
+            public String getPhoneNum() {
+                return this.result.getPhoneNum();
+            }
+
+            public Builder setPhoneNum(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasPhoneNum = true;
+                this.result.phoneNum_ = value;
+                return this;
+            }
+
+            public Builder clearPhoneNum() {
+                this.result.hasPhoneNum = false;
+                this.result.phoneNum_ = CarlifeBTHfpIndication.getDefaultInstance().getPhoneNum();
+                return this;
+            }
+
+            public boolean hasPhoneName() {
+                return this.result.hasPhoneName();
+            }
+
+            public String getPhoneName() {
+                return this.result.getPhoneName();
+            }
+
+            public Builder setPhoneName(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasPhoneName = true;
+                this.result.phoneName_ = value;
+                return this;
+            }
+
+            public Builder clearPhoneName() {
+                this.result.hasPhoneName = false;
+                this.result.phoneName_ = CarlifeBTHfpIndication.getDefaultInstance().getPhoneName();
+                return this;
+            }
+
+            public boolean hasAddress() {
+                return this.result.hasAddress();
+            }
+
+            public String getAddress() {
+                return this.result.getAddress();
+            }
+
+            public Builder setAddress(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasAddress = true;
+                this.result.address_ = value;
+                return this;
+            }
+
+            public Builder clearAddress() {
+                this.result.hasAddress = false;
+                this.result.address_ = CarlifeBTHfpIndication.getDefaultInstance().getAddress();
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication)) {
-          return mergeFrom((CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication)paramMessage);
+
+        private CarlifeBTHfpIndication() {
+            this.state_ = 0;
+            this.phoneNum_ = "";
+            this.phoneName_ = "";
+            this.address_ = "";
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setAddress(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        static {
+            CarlifeBTHfpIndicationProto.getDescriptor();
+            CarlifeBTHfpIndicationProto.internalForceInit();
         }
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$1102(this.result, true);
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$1202(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setPhoneName(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        public static CarlifeBTHfpIndication getDefaultInstance() {
+            return defaultInstance;
         }
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$902(this.result, true);
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$1002(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setPhoneNum(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        public CarlifeBTHfpIndication getDefaultInstanceForType() {
+            return defaultInstance;
         }
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$702(this.result, true);
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$802(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setState(int paramInt)
-      {
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$502(this.result, true);
-        CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication.access$602(this.result, paramInt);
-        return this;
-      }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeBTHfpIndicationProto.f6585x8859cdae;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeBTHfpIndicationProto.f6586xd62f662c;
+        }
+
+        public boolean hasState() {
+            return this.hasState;
+        }
+
+        public int getState() {
+            return this.state_;
+        }
+
+        public boolean hasPhoneNum() {
+            return this.hasPhoneNum;
+        }
+
+        public String getPhoneNum() {
+            return this.phoneNum_;
+        }
+
+        public boolean hasPhoneName() {
+            return this.hasPhoneName;
+        }
+
+        public String getPhoneName() {
+            return this.phoneName_;
+        }
+
+        public boolean hasAddress() {
+            return this.hasAddress;
+        }
+
+        public String getAddress() {
+            return this.address_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasState) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasState()) {
+                output.writeInt32(1, getState());
+            }
+            if (hasPhoneNum()) {
+                output.writeString(2, getPhoneNum());
+            }
+            if (hasPhoneName()) {
+                output.writeString(3, getPhoneName());
+            }
+            if (hasAddress()) {
+                output.writeString(4, getAddress());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasState()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getState());
+            }
+            if (hasPhoneNum()) {
+                size += CodedOutputStream.computeStringSize(2, getPhoneNum());
+            }
+            if (hasPhoneName()) {
+                size += CodedOutputStream.computeStringSize(3, getPhoneName());
+            }
+            if (hasAddress()) {
+                size += CodedOutputStream.computeStringSize(4, getAddress());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeBTHfpIndication parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeBTHfpIndication parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeBTHfpIndication prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeBTHfpIndicationProto() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n!CarlifeBTHfpIndicationProto.proto\u0012\u001acom.baidu.carlife.protobuf\"]\n\u0016CarlifeBTHfpIndication\u0012\r\n\u0005state\u0018\u0001 \u0002(\u0005\u0012\u0010\n\bphoneNum\u0018\u0002 \u0001(\t\u0012\u0011\n\tphoneName\u0018\u0003 \u0001(\t\u0012\u000f\n\u0007address\u0018\u0004 \u0001(\t"}, new FileDescriptor[0], new C20451());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeBTHfpIndicationProto.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

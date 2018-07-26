@@ -1,62 +1,47 @@
 package com.tencent.mm.sdk.modelmsg;
 
 import android.os.Bundle;
-import com.tencent.mm.sdk.b.b;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage.IMediaObject;
+import com.tencent.mm.sdk.p287b.C6094b;
 
-public class WXMusicObject
-  implements WXMediaMessage.IMediaObject
-{
-  private static final int LENGTH_LIMIT = 10240;
-  private static final String TAG = "MicroMsg.SDK.WXMusicObject";
-  public String musicDataUrl;
-  public String musicLowBandDataUrl;
-  public String musicLowBandUrl;
-  public String musicUrl;
-  
-  public boolean checkArgs()
-  {
-    if (((this.musicUrl == null) || (this.musicUrl.length() == 0)) && ((this.musicLowBandUrl == null) || (this.musicLowBandUrl.length() == 0)))
-    {
-      b.b("MicroMsg.SDK.WXMusicObject", "both arguments are null");
-      return false;
+public class WXMusicObject implements IMediaObject {
+    private static final int LENGTH_LIMIT = 10240;
+    private static final String TAG = "MicroMsg.SDK.WXMusicObject";
+    public String musicDataUrl;
+    public String musicLowBandDataUrl;
+    public String musicLowBandUrl;
+    public String musicUrl;
+
+    public boolean checkArgs() {
+        if ((this.musicUrl == null || this.musicUrl.length() == 0) && (this.musicLowBandUrl == null || this.musicLowBandUrl.length() == 0)) {
+            C6094b.m21682b(TAG, "both arguments are null");
+            return false;
+        } else if (this.musicUrl != null && this.musicUrl.length() > 10240) {
+            C6094b.m21682b(TAG, "checkArgs fail, musicUrl is too long");
+            return false;
+        } else if (this.musicLowBandUrl == null || this.musicLowBandUrl.length() <= 10240) {
+            return true;
+        } else {
+            C6094b.m21682b(TAG, "checkArgs fail, musicLowBandUrl is too long");
+            return false;
+        }
     }
-    if ((this.musicUrl != null) && (this.musicUrl.length() > 10240))
-    {
-      b.b("MicroMsg.SDK.WXMusicObject", "checkArgs fail, musicUrl is too long");
-      return false;
+
+    public void serialize(Bundle bundle) {
+        bundle.putString("_wxmusicobject_musicUrl", this.musicUrl);
+        bundle.putString("_wxmusicobject_musicLowBandUrl", this.musicLowBandUrl);
+        bundle.putString("_wxmusicobject_musicDataUrl", this.musicDataUrl);
+        bundle.putString("_wxmusicobject_musicLowBandDataUrl", this.musicLowBandDataUrl);
     }
-    if ((this.musicLowBandUrl != null) && (this.musicLowBandUrl.length() > 10240))
-    {
-      b.b("MicroMsg.SDK.WXMusicObject", "checkArgs fail, musicLowBandUrl is too long");
-      return false;
+
+    public int type() {
+        return 3;
     }
-    return true;
-  }
-  
-  public void serialize(Bundle paramBundle)
-  {
-    paramBundle.putString("_wxmusicobject_musicUrl", this.musicUrl);
-    paramBundle.putString("_wxmusicobject_musicLowBandUrl", this.musicLowBandUrl);
-    paramBundle.putString("_wxmusicobject_musicDataUrl", this.musicDataUrl);
-    paramBundle.putString("_wxmusicobject_musicLowBandDataUrl", this.musicLowBandDataUrl);
-  }
-  
-  public int type()
-  {
-    return 3;
-  }
-  
-  public void unserialize(Bundle paramBundle)
-  {
-    this.musicUrl = paramBundle.getString("_wxmusicobject_musicUrl");
-    this.musicLowBandUrl = paramBundle.getString("_wxmusicobject_musicLowBandUrl");
-    this.musicDataUrl = paramBundle.getString("_wxmusicobject_musicDataUrl");
-    this.musicLowBandDataUrl = paramBundle.getString("_wxmusicobject_musicLowBandDataUrl");
-  }
+
+    public void unserialize(Bundle bundle) {
+        this.musicUrl = bundle.getString("_wxmusicobject_musicUrl");
+        this.musicLowBandUrl = bundle.getString("_wxmusicobject_musicLowBandUrl");
+        this.musicDataUrl = bundle.getString("_wxmusicobject_musicDataUrl");
+        this.musicLowBandDataUrl = bundle.getString("_wxmusicobject_musicLowBandDataUrl");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/mm/sdk/modelmsg/WXMusicObject.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

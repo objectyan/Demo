@@ -1,1218 +1,927 @@
 package com.google.protobuf;
 
+import com.baidu.mobstat.Config;
+import com.baidu.navisdk.hudsdk.BNRemoteConstants.MessageType;
+import com.facebook.common.p262l.C5361b;
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.EnumDescriptor;
+import com.google.protobuf.Descriptors.EnumValueDescriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor.JavaType;
+import com.google.protobuf.Descriptors.FieldDescriptor.Type;
+import com.google.protobuf.ExtensionRegistry.ExtensionInfo;
+import com.google.protobuf.Message.Builder;
+import com.google.protobuf.UnknownFieldSet.Field;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.CharBuffer;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class TextFormat
-{
-  private static final int BUFFER_SIZE = 4096;
-  
-  private static int digitValue(char paramChar)
-  {
-    if (('0' <= paramChar) && (paramChar <= '9')) {
-      return paramChar - '0';
-    }
-    if (('a' <= paramChar) && (paramChar <= 'z')) {
-      return paramChar - 'a' + 10;
-    }
-    return paramChar - 'A' + 10;
-  }
-  
-  static String escapeBytes(ByteString paramByteString)
-  {
-    StringBuilder localStringBuilder = new StringBuilder(paramByteString.size());
-    int i = 0;
-    if (i < paramByteString.size())
-    {
-      int j = paramByteString.byteAt(i);
-      switch (j)
-      {
-      default: 
-        if (j >= 32) {
-          localStringBuilder.append((char)j);
+public final class TextFormat {
+    private static final int BUFFER_SIZE = 4096;
+
+    static class InvalidEscapeSequenceException extends IOException {
+        private static final long serialVersionUID = -8164033650142593304L;
+
+        InvalidEscapeSequenceException(String description) {
+            super(description);
         }
-        break;
-      }
-      for (;;)
-      {
-        i += 1;
-        break;
-        localStringBuilder.append("\\a");
-        continue;
-        localStringBuilder.append("\\b");
-        continue;
-        localStringBuilder.append("\\f");
-        continue;
-        localStringBuilder.append("\\n");
-        continue;
-        localStringBuilder.append("\\r");
-        continue;
-        localStringBuilder.append("\\t");
-        continue;
-        localStringBuilder.append("\\v");
-        continue;
-        localStringBuilder.append("\\\\");
-        continue;
-        localStringBuilder.append("\\'");
-        continue;
-        localStringBuilder.append("\\\"");
-        continue;
-        localStringBuilder.append('\\');
-        localStringBuilder.append((char)((j >>> 6 & 0x3) + 48));
-        localStringBuilder.append((char)((j >>> 3 & 0x7) + 48));
-        localStringBuilder.append((char)((j & 0x7) + 48));
-      }
     }
-    return localStringBuilder.toString();
-  }
-  
-  static String escapeText(String paramString)
-  {
-    return escapeBytes(ByteString.copyFromUtf8(paramString));
-  }
-  
-  private static boolean isHex(char paramChar)
-  {
-    return (('0' <= paramChar) && (paramChar <= '9')) || (('a' <= paramChar) && (paramChar <= 'f')) || (('A' <= paramChar) && (paramChar <= 'F'));
-  }
-  
-  private static boolean isOctal(char paramChar)
-  {
-    return ('0' <= paramChar) && (paramChar <= '7');
-  }
-  
-  public static void merge(CharSequence paramCharSequence, ExtensionRegistry paramExtensionRegistry, Message.Builder paramBuilder)
-    throws TextFormat.ParseException
-  {
-    paramCharSequence = new Tokenizer(paramCharSequence, null);
-    while (!paramCharSequence.atEnd()) {
-      mergeField(paramCharSequence, paramExtensionRegistry, paramBuilder);
+
+    public static class ParseException extends IOException {
+        private static final long serialVersionUID = 3196188060225107702L;
+
+        public ParseException(String message) {
+            super(message);
+        }
     }
-  }
-  
-  public static void merge(CharSequence paramCharSequence, Message.Builder paramBuilder)
-    throws TextFormat.ParseException
-  {
-    merge(paramCharSequence, ExtensionRegistry.getEmptyRegistry(), paramBuilder);
-  }
-  
-  public static void merge(Readable paramReadable, ExtensionRegistry paramExtensionRegistry, Message.Builder paramBuilder)
-    throws IOException
-  {
-    merge(toStringBuilder(paramReadable), paramExtensionRegistry, paramBuilder);
-  }
-  
-  public static void merge(Readable paramReadable, Message.Builder paramBuilder)
-    throws IOException
-  {
-    merge(paramReadable, ExtensionRegistry.getEmptyRegistry(), paramBuilder);
-  }
-  
-  private static void mergeField(Tokenizer paramTokenizer, ExtensionRegistry paramExtensionRegistry, Message.Builder paramBuilder)
-    throws TextFormat.ParseException
-  {
-    Object localObject4 = paramBuilder.getDescriptorForType();
-    Object localObject3 = null;
-    Object localObject1;
-    Object localObject2;
-    if (paramTokenizer.tryConsume("["))
-    {
-      localObject1 = new StringBuilder(paramTokenizer.consumeIdentifier());
-      while (paramTokenizer.tryConsume("."))
-      {
-        ((StringBuilder)localObject1).append('.');
-        ((StringBuilder)localObject1).append(paramTokenizer.consumeIdentifier());
-      }
-      localObject3 = paramExtensionRegistry.findExtensionByName(((StringBuilder)localObject1).toString());
-      if (localObject3 == null) {
-        throw paramTokenizer.parseExceptionPreviousToken("Extension \"" + localObject1 + "\" not found in the ExtensionRegistry.");
-      }
-      if (((ExtensionRegistry.ExtensionInfo)localObject3).descriptor.getContainingType() != localObject4) {
-        throw paramTokenizer.parseExceptionPreviousToken("Extension \"" + localObject1 + "\" does not extend message type \"" + ((Descriptors.Descriptor)localObject4).getFullName() + "\".");
-      }
-      paramTokenizer.consume("]");
-      localObject1 = ((ExtensionRegistry.ExtensionInfo)localObject3).descriptor;
-      localObject2 = null;
-      if (((Descriptors.FieldDescriptor)localObject1).getJavaType() != Descriptors.FieldDescriptor.JavaType.MESSAGE) {
-        break label503;
-      }
-      paramTokenizer.tryConsume(":");
-      if (!paramTokenizer.tryConsume("<")) {
-        break label438;
-      }
-      localObject2 = ">";
-      label212:
-      if (localObject3 != null) {
-        break label451;
-      }
-      localObject3 = paramBuilder.newBuilderForField((Descriptors.FieldDescriptor)localObject1);
-    }
-    for (;;)
-    {
-      if (paramTokenizer.tryConsume((String)localObject2)) {
-        break label476;
-      }
-      if (paramTokenizer.atEnd())
-      {
-        throw paramTokenizer.parseException("Expected \"" + (String)localObject2 + "\".");
-        String str = paramTokenizer.consumeIdentifier();
-        localObject2 = ((Descriptors.Descriptor)localObject4).findFieldByName(str);
-        localObject1 = localObject2;
-        if (localObject2 == null)
-        {
-          localObject2 = ((Descriptors.Descriptor)localObject4).findFieldByName(str.toLowerCase(Locale.US));
-          localObject1 = localObject2;
-          if (localObject2 != null)
-          {
-            localObject1 = localObject2;
-            if (((Descriptors.FieldDescriptor)localObject2).getType() != Descriptors.FieldDescriptor.Type.GROUP) {
-              localObject1 = null;
+
+    private static final class TextGenerator {
+        private boolean atStartOfLine;
+        private final StringBuilder indent;
+        private Appendable output;
+
+        private TextGenerator(Appendable output) {
+            this.atStartOfLine = true;
+            this.indent = new StringBuilder();
+            this.output = output;
+        }
+
+        public void indent() {
+            this.indent.append("  ");
+        }
+
+        public void outdent() {
+            int length = this.indent.length();
+            if (length == 0) {
+                throw new IllegalArgumentException(" Outdent() without matching Indent().");
             }
-          }
+            this.indent.delete(length - 2, length);
         }
-        localObject2 = localObject1;
-        if (localObject1 != null)
-        {
-          localObject2 = localObject1;
-          if (((Descriptors.FieldDescriptor)localObject1).getType() == Descriptors.FieldDescriptor.Type.GROUP)
-          {
-            localObject2 = localObject1;
-            if (!((Descriptors.FieldDescriptor)localObject1).getMessageType().getName().equals(str)) {
-              localObject2 = null;
+
+        public void print(CharSequence text) throws IOException {
+            int size = text.length();
+            int pos = 0;
+            for (int i = 0; i < size; i++) {
+                if (text.charAt(i) == '\n') {
+                    write(text.subSequence(pos, size), (i - pos) + 1);
+                    pos = i + 1;
+                    this.atStartOfLine = true;
+                }
             }
-          }
+            write(text.subSequence(pos, size), size - pos);
         }
-        localObject1 = localObject2;
-        if (localObject2 != null) {
-          break;
-        }
-        throw paramTokenizer.parseExceptionPreviousToken("Message type \"" + ((Descriptors.Descriptor)localObject4).getFullName() + "\" has no field named \"" + str + "\".");
-        label438:
-        paramTokenizer.consume("{");
-        localObject2 = "}";
-        break label212;
-        label451:
-        localObject3 = ((ExtensionRegistry.ExtensionInfo)localObject3).defaultInstance.newBuilderForType();
-        continue;
-      }
-      mergeField(paramTokenizer, paramExtensionRegistry, (Message.Builder)localObject3);
-    }
-    label476:
-    paramExtensionRegistry = ((Message.Builder)localObject3).build();
-    while (((Descriptors.FieldDescriptor)localObject1).isRepeated())
-    {
-      paramBuilder.addRepeatedField((Descriptors.FieldDescriptor)localObject1, paramExtensionRegistry);
-      return;
-      label503:
-      paramTokenizer.consume(":");
-      switch (localObject1.getType())
-      {
-      default: 
-        paramExtensionRegistry = (ExtensionRegistry)localObject2;
-        break;
-      case ???: 
-      case ???: 
-      case ???: 
-        paramExtensionRegistry = Integer.valueOf(paramTokenizer.consumeInt32());
-        break;
-      case ???: 
-      case ???: 
-      case ???: 
-        paramExtensionRegistry = Long.valueOf(paramTokenizer.consumeInt64());
-        break;
-      case ???: 
-      case ???: 
-        paramExtensionRegistry = Integer.valueOf(paramTokenizer.consumeUInt32());
-        break;
-      case ???: 
-      case ???: 
-        paramExtensionRegistry = Long.valueOf(paramTokenizer.consumeUInt64());
-        break;
-      case ???: 
-        paramExtensionRegistry = Float.valueOf(paramTokenizer.consumeFloat());
-        break;
-      case ???: 
-        paramExtensionRegistry = Double.valueOf(paramTokenizer.consumeDouble());
-        break;
-      case ???: 
-        paramExtensionRegistry = Boolean.valueOf(paramTokenizer.consumeBoolean());
-        break;
-      case ???: 
-        paramExtensionRegistry = paramTokenizer.consumeString();
-        break;
-      case ???: 
-        paramExtensionRegistry = paramTokenizer.consumeByteString();
-        break;
-      case ???: 
-        localObject3 = ((Descriptors.FieldDescriptor)localObject1).getEnumType();
-        if (paramTokenizer.lookingAtInteger())
-        {
-          int i = paramTokenizer.consumeInt32();
-          localObject2 = ((Descriptors.EnumDescriptor)localObject3).findValueByNumber(i);
-          paramExtensionRegistry = (ExtensionRegistry)localObject2;
-          if (localObject2 == null) {
-            throw paramTokenizer.parseExceptionPreviousToken("Enum type \"" + ((Descriptors.EnumDescriptor)localObject3).getFullName() + "\" has no value with number " + i + '.');
-          }
-        }
-        else
-        {
-          localObject4 = paramTokenizer.consumeIdentifier();
-          localObject2 = ((Descriptors.EnumDescriptor)localObject3).findValueByName((String)localObject4);
-          paramExtensionRegistry = (ExtensionRegistry)localObject2;
-          if (localObject2 == null) {
-            throw paramTokenizer.parseExceptionPreviousToken("Enum type \"" + ((Descriptors.EnumDescriptor)localObject3).getFullName() + "\" has no value named \"" + (String)localObject4 + "\".");
-          }
-        }
-        break;
-      case ???: 
-      case ???: 
-        throw new RuntimeException("Can't get here.");
-      }
-    }
-    paramBuilder.setField((Descriptors.FieldDescriptor)localObject1, paramExtensionRegistry);
-  }
-  
-  static int parseInt32(String paramString)
-    throws NumberFormatException
-  {
-    return (int)parseInteger(paramString, true, false);
-  }
-  
-  static long parseInt64(String paramString)
-    throws NumberFormatException
-  {
-    return parseInteger(paramString, true, true);
-  }
-  
-  private static long parseInteger(String paramString, boolean paramBoolean1, boolean paramBoolean2)
-    throws NumberFormatException
-  {
-    int i = 0;
-    int k = 0;
-    if (paramString.startsWith("-", 0))
-    {
-      if (!paramBoolean1) {
-        throw new NumberFormatException("Number must be positive: " + paramString);
-      }
-      i = 0 + 1;
-      k = 1;
-    }
-    int j = 10;
-    int m;
-    if (paramString.startsWith("0x", i))
-    {
-      m = i + 2;
-      j = 16;
-    }
-    Object localObject;
-    long l2;
-    long l1;
-    for (;;)
-    {
-      localObject = paramString.substring(m);
-      if (((String)localObject).length() >= 16) {
-        break label254;
-      }
-      l2 = Long.parseLong((String)localObject, j);
-      l1 = l2;
-      if (k != 0) {
-        l1 = -l2;
-      }
-      l2 = l1;
-      if (paramBoolean2) {
-        break label454;
-      }
-      if (!paramBoolean1) {
-        break;
-      }
-      if (l1 <= 2147483647L)
-      {
-        l2 = l1;
-        if (l1 >= -2147483648L) {
-          break label454;
-        }
-      }
-      throw new NumberFormatException("Number out of range for 32-bit signed integer: " + paramString);
-      m = i;
-      if (paramString.startsWith("0", i))
-      {
-        j = 8;
-        m = i;
-      }
-    }
-    if (l1 < 4294967296L)
-    {
-      l2 = l1;
-      if (l1 >= 0L) {}
-    }
-    else
-    {
-      throw new NumberFormatException("Number out of range for 32-bit unsigned integer: " + paramString);
-      label254:
-      BigInteger localBigInteger = new BigInteger((String)localObject, j);
-      localObject = localBigInteger;
-      if (k != 0) {
-        localObject = localBigInteger.negate();
-      }
-      if (!paramBoolean2)
-      {
-        if (paramBoolean1)
-        {
-          if (((BigInteger)localObject).bitLength() > 31) {
-            throw new NumberFormatException("Number out of range for 32-bit signed integer: " + paramString);
-          }
-        }
-        else if (((BigInteger)localObject).bitLength() > 32) {
-          throw new NumberFormatException("Number out of range for 32-bit unsigned integer: " + paramString);
-        }
-      }
-      else if (paramBoolean1)
-      {
-        if (((BigInteger)localObject).bitLength() > 63) {
-          throw new NumberFormatException("Number out of range for 64-bit signed integer: " + paramString);
-        }
-      }
-      else if (((BigInteger)localObject).bitLength() > 64) {
-        throw new NumberFormatException("Number out of range for 64-bit unsigned integer: " + paramString);
-      }
-      l2 = ((BigInteger)localObject).longValue();
-    }
-    label454:
-    return l2;
-  }
-  
-  static int parseUInt32(String paramString)
-    throws NumberFormatException
-  {
-    return (int)parseInteger(paramString, false, false);
-  }
-  
-  static long parseUInt64(String paramString)
-    throws NumberFormatException
-  {
-    return parseInteger(paramString, false, true);
-  }
-  
-  private static void print(Message paramMessage, TextGenerator paramTextGenerator)
-    throws IOException
-  {
-    Iterator localIterator = paramMessage.getAllFields().entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      printField((Descriptors.FieldDescriptor)localEntry.getKey(), localEntry.getValue(), paramTextGenerator);
-    }
-    printUnknownFields(paramMessage.getUnknownFields(), paramTextGenerator);
-  }
-  
-  public static void print(Message paramMessage, Appendable paramAppendable)
-    throws IOException
-  {
-    print(paramMessage, new TextGenerator(paramAppendable, null));
-  }
-  
-  public static void print(UnknownFieldSet paramUnknownFieldSet, Appendable paramAppendable)
-    throws IOException
-  {
-    printUnknownFields(paramUnknownFieldSet, new TextGenerator(paramAppendable, null));
-  }
-  
-  private static void printField(Descriptors.FieldDescriptor paramFieldDescriptor, Object paramObject, TextGenerator paramTextGenerator)
-    throws IOException
-  {
-    if (paramFieldDescriptor.isRepeated())
-    {
-      paramObject = ((List)paramObject).iterator();
-      while (((Iterator)paramObject).hasNext()) {
-        printSingleField(paramFieldDescriptor, ((Iterator)paramObject).next(), paramTextGenerator);
-      }
-    }
-    printSingleField(paramFieldDescriptor, paramObject, paramTextGenerator);
-  }
-  
-  public static void printField(Descriptors.FieldDescriptor paramFieldDescriptor, Object paramObject, Appendable paramAppendable)
-    throws IOException
-  {
-    printField(paramFieldDescriptor, paramObject, new TextGenerator(paramAppendable, null));
-  }
-  
-  public static String printFieldToString(Descriptors.FieldDescriptor paramFieldDescriptor, Object paramObject)
-  {
-    try
-    {
-      StringBuilder localStringBuilder = new StringBuilder();
-      printField(paramFieldDescriptor, paramObject, localStringBuilder);
-      paramFieldDescriptor = localStringBuilder.toString();
-      return paramFieldDescriptor;
-    }
-    catch (IOException paramFieldDescriptor)
-    {
-      throw new RuntimeException("Writing to a StringBuilder threw an IOException (should never happen).", paramFieldDescriptor);
-    }
-  }
-  
-  private static void printFieldValue(Descriptors.FieldDescriptor paramFieldDescriptor, Object paramObject, TextGenerator paramTextGenerator)
-    throws IOException
-  {
-    switch (paramFieldDescriptor.getType())
-    {
-    default: 
-      return;
-    case ???: 
-    case ???: 
-    case ???: 
-    case ???: 
-    case ???: 
-    case ???: 
-    case ???: 
-    case ???: 
-    case ???: 
-      paramTextGenerator.print(paramObject.toString());
-      return;
-    case ???: 
-    case ???: 
-      paramTextGenerator.print(unsignedToString(((Integer)paramObject).intValue()));
-      return;
-    case ???: 
-    case ???: 
-      paramTextGenerator.print(unsignedToString(((Long)paramObject).longValue()));
-      return;
-    case ???: 
-      paramTextGenerator.print("\"");
-      paramTextGenerator.print(escapeText((String)paramObject));
-      paramTextGenerator.print("\"");
-      return;
-    case ???: 
-      paramTextGenerator.print("\"");
-      paramTextGenerator.print(escapeBytes((ByteString)paramObject));
-      paramTextGenerator.print("\"");
-      return;
-    case ???: 
-      paramTextGenerator.print(((Descriptors.EnumValueDescriptor)paramObject).getName());
-      return;
-    }
-    print((Message)paramObject, paramTextGenerator);
-  }
-  
-  private static void printSingleField(Descriptors.FieldDescriptor paramFieldDescriptor, Object paramObject, TextGenerator paramTextGenerator)
-    throws IOException
-  {
-    if (paramFieldDescriptor.isExtension())
-    {
-      paramTextGenerator.print("[");
-      if ((paramFieldDescriptor.getContainingType().getOptions().getMessageSetWireFormat()) && (paramFieldDescriptor.getType() == Descriptors.FieldDescriptor.Type.MESSAGE) && (paramFieldDescriptor.isOptional()) && (paramFieldDescriptor.getExtensionScope() == paramFieldDescriptor.getMessageType()))
-      {
-        paramTextGenerator.print(paramFieldDescriptor.getMessageType().getFullName());
-        paramTextGenerator.print("]");
-        label71:
-        if (paramFieldDescriptor.getJavaType() != Descriptors.FieldDescriptor.JavaType.MESSAGE) {
-          break label172;
-        }
-        paramTextGenerator.print(" {\n");
-        paramTextGenerator.indent();
-      }
-    }
-    for (;;)
-    {
-      printFieldValue(paramFieldDescriptor, paramObject, paramTextGenerator);
-      if (paramFieldDescriptor.getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE)
-      {
-        paramTextGenerator.outdent();
-        paramTextGenerator.print("}");
-      }
-      paramTextGenerator.print("\n");
-      return;
-      paramTextGenerator.print(paramFieldDescriptor.getFullName());
-      break;
-      if (paramFieldDescriptor.getType() == Descriptors.FieldDescriptor.Type.GROUP)
-      {
-        paramTextGenerator.print(paramFieldDescriptor.getMessageType().getName());
-        break label71;
-      }
-      paramTextGenerator.print(paramFieldDescriptor.getName());
-      break label71;
-      label172:
-      paramTextGenerator.print(": ");
-    }
-  }
-  
-  public static String printToString(Message paramMessage)
-  {
-    try
-    {
-      StringBuilder localStringBuilder = new StringBuilder();
-      print(paramMessage, localStringBuilder);
-      paramMessage = localStringBuilder.toString();
-      return paramMessage;
-    }
-    catch (IOException paramMessage)
-    {
-      throw new RuntimeException("Writing to a StringBuilder threw an IOException (should never happen).", paramMessage);
-    }
-  }
-  
-  public static String printToString(UnknownFieldSet paramUnknownFieldSet)
-  {
-    try
-    {
-      StringBuilder localStringBuilder = new StringBuilder();
-      print(paramUnknownFieldSet, localStringBuilder);
-      paramUnknownFieldSet = localStringBuilder.toString();
-      return paramUnknownFieldSet;
-    }
-    catch (IOException paramUnknownFieldSet)
-    {
-      throw new RuntimeException("Writing to a StringBuilder threw an IOException (should never happen).", paramUnknownFieldSet);
-    }
-  }
-  
-  private static void printUnknownFields(UnknownFieldSet paramUnknownFieldSet, TextGenerator paramTextGenerator)
-    throws IOException
-  {
-    paramUnknownFieldSet = paramUnknownFieldSet.asMap().entrySet().iterator();
-    while (paramUnknownFieldSet.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)paramUnknownFieldSet.next();
-      new StringBuilder().append(((Integer)localEntry.getKey()).toString()).append(": ").toString();
-      Object localObject1 = (UnknownFieldSet.Field)localEntry.getValue();
-      Object localObject2 = ((UnknownFieldSet.Field)localObject1).getVarintList().iterator();
-      long l;
-      while (((Iterator)localObject2).hasNext())
-      {
-        l = ((Long)((Iterator)localObject2).next()).longValue();
-        paramTextGenerator.print(((Integer)localEntry.getKey()).toString());
-        paramTextGenerator.print(": ");
-        paramTextGenerator.print(unsignedToString(l));
-        paramTextGenerator.print("\n");
-      }
-      localObject2 = ((UnknownFieldSet.Field)localObject1).getFixed32List().iterator();
-      while (((Iterator)localObject2).hasNext())
-      {
-        int i = ((Integer)((Iterator)localObject2).next()).intValue();
-        paramTextGenerator.print(((Integer)localEntry.getKey()).toString());
-        paramTextGenerator.print(": ");
-        paramTextGenerator.print(String.format((Locale)null, "0x%08x", new Object[] { Integer.valueOf(i) }));
-        paramTextGenerator.print("\n");
-      }
-      localObject2 = ((UnknownFieldSet.Field)localObject1).getFixed64List().iterator();
-      while (((Iterator)localObject2).hasNext())
-      {
-        l = ((Long)((Iterator)localObject2).next()).longValue();
-        paramTextGenerator.print(((Integer)localEntry.getKey()).toString());
-        paramTextGenerator.print(": ");
-        paramTextGenerator.print(String.format((Locale)null, "0x%016x", new Object[] { Long.valueOf(l) }));
-        paramTextGenerator.print("\n");
-      }
-      localObject2 = ((UnknownFieldSet.Field)localObject1).getLengthDelimitedList().iterator();
-      while (((Iterator)localObject2).hasNext())
-      {
-        ByteString localByteString = (ByteString)((Iterator)localObject2).next();
-        paramTextGenerator.print(((Integer)localEntry.getKey()).toString());
-        paramTextGenerator.print(": \"");
-        paramTextGenerator.print(escapeBytes(localByteString));
-        paramTextGenerator.print("\"\n");
-      }
-      localObject1 = ((UnknownFieldSet.Field)localObject1).getGroupList().iterator();
-      while (((Iterator)localObject1).hasNext())
-      {
-        localObject2 = (UnknownFieldSet)((Iterator)localObject1).next();
-        paramTextGenerator.print(((Integer)localEntry.getKey()).toString());
-        paramTextGenerator.print(" {\n");
-        paramTextGenerator.indent();
-        printUnknownFields((UnknownFieldSet)localObject2, paramTextGenerator);
-        paramTextGenerator.outdent();
-        paramTextGenerator.print("}\n");
-      }
-    }
-  }
-  
-  private static StringBuilder toStringBuilder(Readable paramReadable)
-    throws IOException
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    CharBuffer localCharBuffer = CharBuffer.allocate(4096);
-    for (;;)
-    {
-      int i = paramReadable.read(localCharBuffer);
-      if (i == -1) {
-        return localStringBuilder;
-      }
-      localCharBuffer.flip();
-      localStringBuilder.append(localCharBuffer, 0, i);
-    }
-  }
-  
-  static ByteString unescapeBytes(CharSequence paramCharSequence)
-    throws TextFormat.InvalidEscapeSequenceException
-  {
-    byte[] arrayOfByte = new byte[paramCharSequence.length()];
-    int m = 0;
-    int j = 0;
-    if (j < paramCharSequence.length())
-    {
-      int i = paramCharSequence.charAt(j);
-      int k;
-      char c;
-      int n;
-      if (i == 92) {
-        if (j + 1 < paramCharSequence.length())
-        {
-          k = j + 1;
-          c = paramCharSequence.charAt(k);
-          if (isOctal(c))
-          {
-            n = digitValue(c);
-            i = n;
-            j = k;
-            if (k + 1 < paramCharSequence.length())
-            {
-              i = n;
-              j = k;
-              if (isOctal(paramCharSequence.charAt(k + 1)))
-              {
-                j = k + 1;
-                i = n * 8 + digitValue(paramCharSequence.charAt(j));
-              }
+
+        private void write(CharSequence data, int size) throws IOException {
+            if (size != 0) {
+                if (this.atStartOfLine) {
+                    this.atStartOfLine = false;
+                    this.output.append(this.indent);
+                }
+                this.output.append(data);
             }
-            n = i;
-            k = j;
-            if (j + 1 < paramCharSequence.length())
-            {
-              n = i;
-              k = j;
-              if (isOctal(paramCharSequence.charAt(j + 1)))
-              {
-                k = j + 1;
-                n = i * 8 + digitValue(paramCharSequence.charAt(k));
-              }
+        }
+    }
+
+    private static final class Tokenizer {
+        private static final Pattern DOUBLE_INFINITY = Pattern.compile("-?inf(inity)?", 2);
+        private static final Pattern FLOAT_INFINITY = Pattern.compile("-?inf(inity)?f?", 2);
+        private static final Pattern FLOAT_NAN = Pattern.compile("nanf?", 2);
+        private static final Pattern TOKEN = Pattern.compile("[a-zA-Z_][0-9a-zA-Z_+-]*+|[0-9+-][0-9a-zA-Z_.+-]*+|\"([^\"\n\\\\]|\\\\.)*+(\"|\\\\?$)|'([^\"\n\\\\]|\\\\.)*+('|\\\\?$)", 8);
+        private static final Pattern WHITESPACE = Pattern.compile("(\\s|(#.*$))++", 8);
+        private int column;
+        private String currentToken;
+        private int line;
+        private final Matcher matcher;
+        private int pos;
+        private int previousColumn;
+        private int previousLine;
+        private final CharSequence text;
+
+        private Tokenizer(CharSequence text) {
+            this.pos = 0;
+            this.line = 0;
+            this.column = 0;
+            this.previousLine = 0;
+            this.previousColumn = 0;
+            this.text = text;
+            this.matcher = WHITESPACE.matcher(text);
+            skipWhitespace();
+            nextToken();
+        }
+
+        public boolean atEnd() {
+            return this.currentToken.length() == 0;
+        }
+
+        public void nextToken() {
+            this.previousLine = this.line;
+            this.previousColumn = this.column;
+            while (this.pos < this.matcher.regionStart()) {
+                if (this.text.charAt(this.pos) == '\n') {
+                    this.line++;
+                    this.column = 0;
+                } else {
+                    this.column++;
+                }
+                this.pos++;
             }
-            arrayOfByte[m] = ((byte)n);
-            i = m + 1;
-            j = k;
-          }
-        }
-      }
-      for (;;)
-      {
-        j += 1;
-        m = i;
-        break;
-        switch (c)
-        {
-        default: 
-          throw new InvalidEscapeSequenceException("Invalid escape sequence: '\\" + c + '\'');
-        case 'a': 
-          arrayOfByte[m] = 7;
-          i = m + 1;
-          j = k;
-          break;
-        case 'b': 
-          arrayOfByte[m] = 8;
-          i = m + 1;
-          j = k;
-          break;
-        case 'f': 
-          arrayOfByte[m] = 12;
-          i = m + 1;
-          j = k;
-          break;
-        case 'n': 
-          arrayOfByte[m] = 10;
-          i = m + 1;
-          j = k;
-          break;
-        case 'r': 
-          arrayOfByte[m] = 13;
-          i = m + 1;
-          j = k;
-          break;
-        case 't': 
-          arrayOfByte[m] = 9;
-          i = m + 1;
-          j = k;
-          break;
-        case 'v': 
-          arrayOfByte[m] = 11;
-          i = m + 1;
-          j = k;
-          break;
-        case '\\': 
-          arrayOfByte[m] = 92;
-          i = m + 1;
-          j = k;
-          break;
-        case '\'': 
-          arrayOfByte[m] = 39;
-          i = m + 1;
-          j = k;
-          break;
-        case '"': 
-          arrayOfByte[m] = 34;
-          i = m + 1;
-          j = k;
-          break;
-        case 'x': 
-          if ((k + 1 < paramCharSequence.length()) && (isHex(paramCharSequence.charAt(k + 1))))
-          {
-            n = k + 1;
-            k = digitValue(paramCharSequence.charAt(n));
-            i = k;
-            j = n;
-            if (n + 1 < paramCharSequence.length())
-            {
-              i = k;
-              j = n;
-              if (isHex(paramCharSequence.charAt(n + 1)))
-              {
-                j = n + 1;
-                i = k * 16 + digitValue(paramCharSequence.charAt(j));
-              }
+            if (this.matcher.regionStart() == this.matcher.regionEnd()) {
+                this.currentToken = "";
+                return;
             }
-            arrayOfByte[m] = ((byte)i);
-            i = m + 1;
-          }
-          else
-          {
-            throw new InvalidEscapeSequenceException("Invalid escape sequence: '\\x' with no digits");
-            throw new InvalidEscapeSequenceException("Invalid escape sequence: '\\' at end of string.");
-            arrayOfByte[m] = ((byte)i);
-            i = m + 1;
-          }
-          break;
+            this.matcher.usePattern(TOKEN);
+            if (this.matcher.lookingAt()) {
+                this.currentToken = this.matcher.group();
+                this.matcher.region(this.matcher.end(), this.matcher.regionEnd());
+            } else {
+                this.currentToken = String.valueOf(this.text.charAt(this.pos));
+                this.matcher.region(this.pos + 1, this.matcher.regionEnd());
+            }
+            skipWhitespace();
         }
-      }
-    }
-    return ByteString.copyFrom(arrayOfByte, 0, m);
-  }
-  
-  static String unescapeText(String paramString)
-    throws TextFormat.InvalidEscapeSequenceException
-  {
-    return unescapeBytes(paramString).toStringUtf8();
-  }
-  
-  private static String unsignedToString(int paramInt)
-  {
-    if (paramInt >= 0) {
-      return Integer.toString(paramInt);
-    }
-    return Long.toString(paramInt & 0xFFFFFFFF);
-  }
-  
-  private static String unsignedToString(long paramLong)
-  {
-    if (paramLong >= 0L) {
-      return Long.toString(paramLong);
-    }
-    return BigInteger.valueOf(0x7FFFFFFFFFFFFFFF & paramLong).setBit(63).toString();
-  }
-  
-  static class InvalidEscapeSequenceException
-    extends IOException
-  {
-    private static final long serialVersionUID = -8164033650142593304L;
-    
-    InvalidEscapeSequenceException(String paramString)
-    {
-      super();
-    }
-  }
-  
-  public static class ParseException
-    extends IOException
-  {
-    private static final long serialVersionUID = 3196188060225107702L;
-    
-    public ParseException(String paramString)
-    {
-      super();
-    }
-  }
-  
-  private static final class TextGenerator
-  {
-    private boolean atStartOfLine = true;
-    private final StringBuilder indent = new StringBuilder();
-    private Appendable output;
-    
-    private TextGenerator(Appendable paramAppendable)
-    {
-      this.output = paramAppendable;
-    }
-    
-    private void write(CharSequence paramCharSequence, int paramInt)
-      throws IOException
-    {
-      if (paramInt == 0) {
-        return;
-      }
-      if (this.atStartOfLine)
-      {
-        this.atStartOfLine = false;
-        this.output.append(this.indent);
-      }
-      this.output.append(paramCharSequence);
-    }
-    
-    public void indent()
-    {
-      this.indent.append("  ");
-    }
-    
-    public void outdent()
-    {
-      int i = this.indent.length();
-      if (i == 0) {
-        throw new IllegalArgumentException(" Outdent() without matching Indent().");
-      }
-      this.indent.delete(i - 2, i);
-    }
-    
-    public void print(CharSequence paramCharSequence)
-      throws IOException
-    {
-      int m = paramCharSequence.length();
-      int j = 0;
-      int i = 0;
-      while (i < m)
-      {
-        int k = j;
-        if (paramCharSequence.charAt(i) == '\n')
-        {
-          write(paramCharSequence.subSequence(j, m), i - j + 1);
-          k = i + 1;
-          this.atStartOfLine = true;
+
+        private void skipWhitespace() {
+            this.matcher.usePattern(WHITESPACE);
+            if (this.matcher.lookingAt()) {
+                this.matcher.region(this.matcher.end(), this.matcher.regionEnd());
+            }
         }
-        i += 1;
-        j = k;
-      }
-      write(paramCharSequence.subSequence(j, m), m - j);
-    }
-  }
-  
-  private static final class Tokenizer
-  {
-    private static final Pattern DOUBLE_INFINITY = Pattern.compile("-?inf(inity)?", 2);
-    private static final Pattern FLOAT_INFINITY = Pattern.compile("-?inf(inity)?f?", 2);
-    private static final Pattern FLOAT_NAN = Pattern.compile("nanf?", 2);
-    private static final Pattern TOKEN;
-    private static final Pattern WHITESPACE = Pattern.compile("(\\s|(#.*$))++", 8);
-    private int column = 0;
-    private String currentToken;
-    private int line = 0;
-    private final Matcher matcher;
-    private int pos = 0;
-    private int previousColumn = 0;
-    private int previousLine = 0;
-    private final CharSequence text;
-    
-    static
-    {
-      TOKEN = Pattern.compile("[a-zA-Z_][0-9a-zA-Z_+-]*+|[0-9+-][0-9a-zA-Z_.+-]*+|\"([^\"\n\\\\]|\\\\.)*+(\"|\\\\?$)|'([^\"\n\\\\]|\\\\.)*+('|\\\\?$)", 8);
-    }
-    
-    private Tokenizer(CharSequence paramCharSequence)
-    {
-      this.text = paramCharSequence;
-      this.matcher = WHITESPACE.matcher(paramCharSequence);
-      skipWhitespace();
-      nextToken();
-    }
-    
-    private TextFormat.ParseException floatParseException(NumberFormatException paramNumberFormatException)
-    {
-      return parseException("Couldn't parse number: " + paramNumberFormatException.getMessage());
-    }
-    
-    private TextFormat.ParseException integerParseException(NumberFormatException paramNumberFormatException)
-    {
-      return parseException("Couldn't parse integer: " + paramNumberFormatException.getMessage());
-    }
-    
-    private void skipWhitespace()
-    {
-      this.matcher.usePattern(WHITESPACE);
-      if (this.matcher.lookingAt()) {
-        this.matcher.region(this.matcher.end(), this.matcher.regionEnd());
-      }
-    }
-    
-    public boolean atEnd()
-    {
-      return this.currentToken.length() == 0;
-    }
-    
-    public void consume(String paramString)
-      throws TextFormat.ParseException
-    {
-      if (!tryConsume(paramString)) {
-        throw parseException("Expected \"" + paramString + "\".");
-      }
-    }
-    
-    public boolean consumeBoolean()
-      throws TextFormat.ParseException
-    {
-      if (this.currentToken.equals("true"))
-      {
-        nextToken();
-        return true;
-      }
-      if (this.currentToken.equals("false"))
-      {
-        nextToken();
-        return false;
-      }
-      throw parseException("Expected \"true\" or \"false\".");
-    }
-    
-    public ByteString consumeByteString()
-      throws TextFormat.ParseException
-    {
-      int i = 0;
-      if (this.currentToken.length() > 0) {
-        i = this.currentToken.charAt(0);
-      }
-      if ((i != 34) && (i != 39)) {
-        throw parseException("Expected string.");
-      }
-      if ((this.currentToken.length() < 2) || (this.currentToken.charAt(this.currentToken.length() - 1) != i)) {
-        throw parseException("String missing ending quote.");
-      }
-      try
-      {
-        ByteString localByteString = TextFormat.unescapeBytes(this.currentToken.substring(1, this.currentToken.length() - 1));
-        nextToken();
-        return localByteString;
-      }
-      catch (TextFormat.InvalidEscapeSequenceException localInvalidEscapeSequenceException)
-      {
-        throw parseException(localInvalidEscapeSequenceException.getMessage());
-      }
-    }
-    
-    public double consumeDouble()
-      throws TextFormat.ParseException
-    {
-      if (DOUBLE_INFINITY.matcher(this.currentToken).matches())
-      {
-        boolean bool = this.currentToken.startsWith("-");
-        nextToken();
-        if (bool) {
-          return Double.NEGATIVE_INFINITY;
+
+        public boolean tryConsume(String token) {
+            if (!this.currentToken.equals(token)) {
+                return false;
+            }
+            nextToken();
+            return true;
         }
-        return Double.POSITIVE_INFINITY;
-      }
-      if (this.currentToken.equalsIgnoreCase("nan"))
-      {
-        nextToken();
-        return NaN.0D;
-      }
-      try
-      {
-        double d = Double.parseDouble(this.currentToken);
-        nextToken();
-        return d;
-      }
-      catch (NumberFormatException localNumberFormatException)
-      {
-        throw floatParseException(localNumberFormatException);
-      }
-    }
-    
-    public float consumeFloat()
-      throws TextFormat.ParseException
-    {
-      if (FLOAT_INFINITY.matcher(this.currentToken).matches())
-      {
-        boolean bool = this.currentToken.startsWith("-");
-        nextToken();
-        if (bool) {
-          return Float.NEGATIVE_INFINITY;
+
+        public void consume(String token) throws ParseException {
+            if (!tryConsume(token)) {
+                throw parseException("Expected \"" + token + "\".");
+            }
         }
-        return Float.POSITIVE_INFINITY;
-      }
-      if (FLOAT_NAN.matcher(this.currentToken).matches())
-      {
-        nextToken();
-        return NaN.0F;
-      }
-      try
-      {
-        float f = Float.parseFloat(this.currentToken);
-        nextToken();
-        return f;
-      }
-      catch (NumberFormatException localNumberFormatException)
-      {
-        throw floatParseException(localNumberFormatException);
-      }
+
+        public boolean lookingAtInteger() {
+            if (this.currentToken.length() == 0) {
+                return false;
+            }
+            char c = this.currentToken.charAt(0);
+            if (('0' <= c && c <= '9') || c == '-' || c == '+') {
+                return true;
+            }
+            return false;
+        }
+
+        public String consumeIdentifier() throws ParseException {
+            for (int i = 0; i < this.currentToken.length(); i++) {
+                char c = this.currentToken.charAt(i);
+                if (('a' > c || c > 'z') && (('A' > c || c > 'Z') && !(('0' <= c && c <= '9') || c == '_' || c == '.'))) {
+                    throw parseException("Expected identifier.");
+                }
+            }
+            String result = this.currentToken;
+            nextToken();
+            return result;
+        }
+
+        public int consumeInt32() throws ParseException {
+            try {
+                int result = TextFormat.parseInt32(this.currentToken);
+                nextToken();
+                return result;
+            } catch (NumberFormatException e) {
+                throw integerParseException(e);
+            }
+        }
+
+        public int consumeUInt32() throws ParseException {
+            try {
+                int result = TextFormat.parseUInt32(this.currentToken);
+                nextToken();
+                return result;
+            } catch (NumberFormatException e) {
+                throw integerParseException(e);
+            }
+        }
+
+        public long consumeInt64() throws ParseException {
+            try {
+                long result = TextFormat.parseInt64(this.currentToken);
+                nextToken();
+                return result;
+            } catch (NumberFormatException e) {
+                throw integerParseException(e);
+            }
+        }
+
+        public long consumeUInt64() throws ParseException {
+            try {
+                long result = TextFormat.parseUInt64(this.currentToken);
+                nextToken();
+                return result;
+            } catch (NumberFormatException e) {
+                throw integerParseException(e);
+            }
+        }
+
+        public double consumeDouble() throws ParseException {
+            if (DOUBLE_INFINITY.matcher(this.currentToken).matches()) {
+                boolean negative = this.currentToken.startsWith("-");
+                nextToken();
+                return negative ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
+            } else if (this.currentToken.equalsIgnoreCase("nan")) {
+                nextToken();
+                return Double.NaN;
+            } else {
+                try {
+                    double result = Double.parseDouble(this.currentToken);
+                    nextToken();
+                    return result;
+                } catch (NumberFormatException e) {
+                    throw floatParseException(e);
+                }
+            }
+        }
+
+        public float consumeFloat() throws ParseException {
+            if (FLOAT_INFINITY.matcher(this.currentToken).matches()) {
+                boolean negative = this.currentToken.startsWith("-");
+                nextToken();
+                return negative ? Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;
+            } else if (FLOAT_NAN.matcher(this.currentToken).matches()) {
+                nextToken();
+                return Float.NaN;
+            } else {
+                try {
+                    float result = Float.parseFloat(this.currentToken);
+                    nextToken();
+                    return result;
+                } catch (NumberFormatException e) {
+                    throw floatParseException(e);
+                }
+            }
+        }
+
+        public boolean consumeBoolean() throws ParseException {
+            if (this.currentToken.equals("true")) {
+                nextToken();
+                return true;
+            } else if (this.currentToken.equals("false")) {
+                nextToken();
+                return false;
+            } else {
+                throw parseException("Expected \"true\" or \"false\".");
+            }
+        }
+
+        public String consumeString() throws ParseException {
+            return consumeByteString().toStringUtf8();
+        }
+
+        public ByteString consumeByteString() throws ParseException {
+            char quote = '\u0000';
+            if (this.currentToken.length() > 0) {
+                quote = this.currentToken.charAt(0);
+            }
+            if (quote != '\"' && quote != '\'') {
+                throw parseException("Expected string.");
+            } else if (this.currentToken.length() < 2 || this.currentToken.charAt(this.currentToken.length() - 1) != quote) {
+                throw parseException("String missing ending quote.");
+            } else {
+                try {
+                    ByteString result = TextFormat.unescapeBytes(this.currentToken.substring(1, this.currentToken.length() - 1));
+                    nextToken();
+                    return result;
+                } catch (InvalidEscapeSequenceException e) {
+                    throw parseException(e.getMessage());
+                }
+            }
+        }
+
+        public ParseException parseException(String description) {
+            return new ParseException((this.line + 1) + Config.TRACE_TODAY_VISIT_SPLIT + (this.column + 1) + ": " + description);
+        }
+
+        public ParseException parseExceptionPreviousToken(String description) {
+            return new ParseException((this.previousLine + 1) + Config.TRACE_TODAY_VISIT_SPLIT + (this.previousColumn + 1) + ": " + description);
+        }
+
+        private ParseException integerParseException(NumberFormatException e) {
+            return parseException("Couldn't parse integer: " + e.getMessage());
+        }
+
+        private ParseException floatParseException(NumberFormatException e) {
+            return parseException("Couldn't parse number: " + e.getMessage());
+        }
     }
-    
-    public String consumeIdentifier()
-      throws TextFormat.ParseException
-    {
-      int i = 0;
-      while (i < this.currentToken.length())
-      {
-        int j = this.currentToken.charAt(i);
-        if (((97 <= j) && (j <= 122)) || ((65 <= j) && (j <= 90)) || ((48 <= j) && (j <= 57)) || (j == 95) || (j == 46)) {
-          i += 1;
+
+    private TextFormat() {
+    }
+
+    public static void print(Message message, Appendable output) throws IOException {
+        print(message, new TextGenerator(output));
+    }
+
+    public static void print(UnknownFieldSet fields, Appendable output) throws IOException {
+        printUnknownFields(fields, new TextGenerator(output));
+    }
+
+    public static String printToString(Message message) {
+        try {
+            Appendable text = new StringBuilder();
+            print(message, text);
+            return text.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Writing to a StringBuilder threw an IOException (should never happen).", e);
+        }
+    }
+
+    public static String printToString(UnknownFieldSet fields) {
+        try {
+            Appendable text = new StringBuilder();
+            print(fields, text);
+            return text.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Writing to a StringBuilder threw an IOException (should never happen).", e);
+        }
+    }
+
+    private static void print(Message message, TextGenerator generator) throws IOException {
+        for (Entry<FieldDescriptor, Object> field : message.getAllFields().entrySet()) {
+            printField((FieldDescriptor) field.getKey(), field.getValue(), generator);
+        }
+        printUnknownFields(message.getUnknownFields(), generator);
+    }
+
+    public static void printField(FieldDescriptor field, Object value, Appendable output) throws IOException {
+        printField(field, value, new TextGenerator(output));
+    }
+
+    public static String printFieldToString(FieldDescriptor field, Object value) {
+        try {
+            Appendable text = new StringBuilder();
+            printField(field, value, text);
+            return text.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Writing to a StringBuilder threw an IOException (should never happen).", e);
+        }
+    }
+
+    private static void printField(FieldDescriptor field, Object value, TextGenerator generator) throws IOException {
+        if (field.isRepeated()) {
+            for (Object element : (List) value) {
+                printSingleField(field, element, generator);
+            }
+            return;
+        }
+        printSingleField(field, value, generator);
+    }
+
+    private static void printSingleField(FieldDescriptor field, Object value, TextGenerator generator) throws IOException {
+        if (field.isExtension()) {
+            generator.print("[");
+            if (field.getContainingType().getOptions().getMessageSetWireFormat() && field.getType() == Type.MESSAGE && field.isOptional() && field.getExtensionScope() == field.getMessageType()) {
+                generator.print(field.getMessageType().getFullName());
+            } else {
+                generator.print(field.getFullName());
+            }
+            generator.print("]");
+        } else if (field.getType() == Type.GROUP) {
+            generator.print(field.getMessageType().getName());
         } else {
-          throw parseException("Expected identifier.");
+            generator.print(field.getName());
         }
-      }
-      String str = this.currentToken;
-      nextToken();
-      return str;
-    }
-    
-    public int consumeInt32()
-      throws TextFormat.ParseException
-    {
-      try
-      {
-        int i = TextFormat.parseInt32(this.currentToken);
-        nextToken();
-        return i;
-      }
-      catch (NumberFormatException localNumberFormatException)
-      {
-        throw integerParseException(localNumberFormatException);
-      }
-    }
-    
-    public long consumeInt64()
-      throws TextFormat.ParseException
-    {
-      try
-      {
-        long l = TextFormat.parseInt64(this.currentToken);
-        nextToken();
-        return l;
-      }
-      catch (NumberFormatException localNumberFormatException)
-      {
-        throw integerParseException(localNumberFormatException);
-      }
-    }
-    
-    public String consumeString()
-      throws TextFormat.ParseException
-    {
-      return consumeByteString().toStringUtf8();
-    }
-    
-    public int consumeUInt32()
-      throws TextFormat.ParseException
-    {
-      try
-      {
-        int i = TextFormat.parseUInt32(this.currentToken);
-        nextToken();
-        return i;
-      }
-      catch (NumberFormatException localNumberFormatException)
-      {
-        throw integerParseException(localNumberFormatException);
-      }
-    }
-    
-    public long consumeUInt64()
-      throws TextFormat.ParseException
-    {
-      try
-      {
-        long l = TextFormat.parseUInt64(this.currentToken);
-        nextToken();
-        return l;
-      }
-      catch (NumberFormatException localNumberFormatException)
-      {
-        throw integerParseException(localNumberFormatException);
-      }
-    }
-    
-    public boolean lookingAtInteger()
-    {
-      if (this.currentToken.length() == 0) {}
-      int i;
-      do
-      {
-        return false;
-        i = this.currentToken.charAt(0);
-      } while (((48 > i) || (i > 57)) && (i != 45) && (i != 43));
-      return true;
-    }
-    
-    public void nextToken()
-    {
-      this.previousLine = this.line;
-      this.previousColumn = this.column;
-      if (this.pos < this.matcher.regionStart())
-      {
-        if (this.text.charAt(this.pos) == '\n') {
-          this.line += 1;
+        if (field.getJavaType() == JavaType.MESSAGE) {
+            generator.print(" {\n");
+            generator.indent();
+        } else {
+            generator.print(": ");
         }
-        for (this.column = 0;; this.column += 1)
-        {
-          this.pos += 1;
-          break;
+        printFieldValue(field, value, generator);
+        if (field.getJavaType() == JavaType.MESSAGE) {
+            generator.outdent();
+            generator.print("}");
         }
-      }
-      if (this.matcher.regionStart() == this.matcher.regionEnd())
-      {
-        this.currentToken = "";
-        return;
-      }
-      this.matcher.usePattern(TOKEN);
-      if (this.matcher.lookingAt())
-      {
-        this.currentToken = this.matcher.group();
-        this.matcher.region(this.matcher.end(), this.matcher.regionEnd());
-      }
-      for (;;)
-      {
-        skipWhitespace();
-        return;
-        this.currentToken = String.valueOf(this.text.charAt(this.pos));
-        this.matcher.region(this.pos + 1, this.matcher.regionEnd());
-      }
+        generator.print("\n");
     }
-    
-    public TextFormat.ParseException parseException(String paramString)
-    {
-      return new TextFormat.ParseException(this.line + 1 + ":" + (this.column + 1) + ": " + paramString);
+
+    private static void printFieldValue(FieldDescriptor field, Object value, TextGenerator generator) throws IOException {
+        switch (field.getType()) {
+            case INT32:
+            case INT64:
+            case SINT32:
+            case SINT64:
+            case SFIXED32:
+            case SFIXED64:
+            case FLOAT:
+            case DOUBLE:
+            case BOOL:
+                generator.print(value.toString());
+                return;
+            case UINT32:
+            case FIXED32:
+                generator.print(unsignedToString(((Integer) value).intValue()));
+                return;
+            case UINT64:
+            case FIXED64:
+                generator.print(unsignedToString(((Long) value).longValue()));
+                return;
+            case STRING:
+                generator.print("\"");
+                generator.print(escapeText((String) value));
+                generator.print("\"");
+                return;
+            case BYTES:
+                generator.print("\"");
+                generator.print(escapeBytes((ByteString) value));
+                generator.print("\"");
+                return;
+            case ENUM:
+                generator.print(((EnumValueDescriptor) value).getName());
+                return;
+            case MESSAGE:
+            case GROUP:
+                print((Message) value, generator);
+                return;
+            default:
+                return;
+        }
     }
-    
-    public TextFormat.ParseException parseExceptionPreviousToken(String paramString)
-    {
-      return new TextFormat.ParseException(this.previousLine + 1 + ":" + (this.previousColumn + 1) + ": " + paramString);
+
+    private static void printUnknownFields(UnknownFieldSet unknownFields, TextGenerator generator) throws IOException {
+        for (Entry<Integer, Field> entry : unknownFields.asMap().entrySet()) {
+            String prefix = ((Integer) entry.getKey()).toString() + ": ";
+            Field field = (Field) entry.getValue();
+            for (Long longValue : field.getVarintList()) {
+                long value = longValue.longValue();
+                generator.print(((Integer) entry.getKey()).toString());
+                generator.print(": ");
+                generator.print(unsignedToString(value));
+                generator.print("\n");
+            }
+            for (Integer intValue : field.getFixed32List()) {
+                int value2 = intValue.intValue();
+                generator.print(((Integer) entry.getKey()).toString());
+                generator.print(": ");
+                generator.print(String.format((Locale) null, "0x%08x", new Object[]{Integer.valueOf(value2)}));
+                generator.print("\n");
+            }
+            for (Long longValue2 : field.getFixed64List()) {
+                value = longValue2.longValue();
+                generator.print(((Integer) entry.getKey()).toString());
+                generator.print(": ");
+                generator.print(String.format((Locale) null, "0x%016x", new Object[]{Long.valueOf(value)}));
+                generator.print("\n");
+            }
+            for (ByteString value3 : field.getLengthDelimitedList()) {
+                generator.print(((Integer) entry.getKey()).toString());
+                generator.print(": \"");
+                generator.print(escapeBytes(value3));
+                generator.print("\"\n");
+            }
+            for (UnknownFieldSet value4 : field.getGroupList()) {
+                generator.print(((Integer) entry.getKey()).toString());
+                generator.print(" {\n");
+                generator.indent();
+                printUnknownFields(value4, generator);
+                generator.outdent();
+                generator.print("}\n");
+            }
+        }
     }
-    
-    public boolean tryConsume(String paramString)
-    {
-      if (this.currentToken.equals(paramString))
-      {
-        nextToken();
-        return true;
-      }
-      return false;
+
+    private static String unsignedToString(int value) {
+        if (value >= 0) {
+            return Integer.toString(value);
+        }
+        return Long.toString(((long) value) & 4294967295L);
     }
-  }
+
+    private static String unsignedToString(long value) {
+        if (value >= 0) {
+            return Long.toString(value);
+        }
+        return BigInteger.valueOf(C5361b.f21945a & value).setBit(63).toString();
+    }
+
+    public static void merge(Readable input, Builder builder) throws IOException {
+        merge(input, ExtensionRegistry.getEmptyRegistry(), builder);
+    }
+
+    public static void merge(CharSequence input, Builder builder) throws ParseException {
+        merge(input, ExtensionRegistry.getEmptyRegistry(), builder);
+    }
+
+    public static void merge(Readable input, ExtensionRegistry extensionRegistry, Builder builder) throws IOException {
+        merge(toStringBuilder(input), extensionRegistry, builder);
+    }
+
+    private static StringBuilder toStringBuilder(Readable input) throws IOException {
+        StringBuilder text = new StringBuilder();
+        CharBuffer buffer = CharBuffer.allocate(4096);
+        while (true) {
+            int n = input.read(buffer);
+            if (n == -1) {
+                return text;
+            }
+            buffer.flip();
+            text.append(buffer, 0, n);
+        }
+    }
+
+    public static void merge(CharSequence input, ExtensionRegistry extensionRegistry, Builder builder) throws ParseException {
+        Tokenizer tokenizer = new Tokenizer(input);
+        while (!tokenizer.atEnd()) {
+            mergeField(tokenizer, extensionRegistry, builder);
+        }
+    }
+
+    private static void mergeField(Tokenizer tokenizer, ExtensionRegistry extensionRegistry, Builder builder) throws ParseException {
+        FieldDescriptor field;
+        Descriptor type = builder.getDescriptorForType();
+        ExtensionInfo extension = null;
+        if (tokenizer.tryConsume("[")) {
+            StringBuilder name = new StringBuilder(tokenizer.consumeIdentifier());
+            while (true) {
+                if (!tokenizer.tryConsume(".")) {
+                    break;
+                }
+                name.append('.');
+                name.append(tokenizer.consumeIdentifier());
+            }
+            extension = extensionRegistry.findExtensionByName(name.toString());
+            if (extension == null) {
+                throw tokenizer.parseExceptionPreviousToken("Extension \"" + name + "\" not found in the ExtensionRegistry.");
+            } else if (extension.descriptor.getContainingType() != type) {
+                throw tokenizer.parseExceptionPreviousToken("Extension \"" + name + "\" does not extend message type \"" + type.getFullName() + "\".");
+            } else {
+                tokenizer.consume("]");
+                field = extension.descriptor;
+            }
+        } else {
+            String name2 = tokenizer.consumeIdentifier();
+            field = type.findFieldByName(name2);
+            if (field == null) {
+                field = type.findFieldByName(name2.toLowerCase(Locale.US));
+                if (!(field == null || field.getType() == Type.GROUP)) {
+                    field = null;
+                }
+            }
+            if (!(field == null || field.getType() != Type.GROUP || field.getMessageType().getName().equals(name2))) {
+                field = null;
+            }
+            if (field == null) {
+                throw tokenizer.parseExceptionPreviousToken("Message type \"" + type.getFullName() + "\" has no field named \"" + name2 + "\".");
+            }
+        }
+        Object obj = null;
+        if (field.getJavaType() != JavaType.MESSAGE) {
+            tokenizer.consume(Config.TRACE_TODAY_VISIT_SPLIT);
+            switch (field.getType()) {
+                case INT32:
+                case SINT32:
+                case SFIXED32:
+                    obj = Integer.valueOf(tokenizer.consumeInt32());
+                    break;
+                case INT64:
+                case SINT64:
+                case SFIXED64:
+                    obj = Long.valueOf(tokenizer.consumeInt64());
+                    break;
+                case FLOAT:
+                    obj = Float.valueOf(tokenizer.consumeFloat());
+                    break;
+                case DOUBLE:
+                    obj = Double.valueOf(tokenizer.consumeDouble());
+                    break;
+                case BOOL:
+                    obj = Boolean.valueOf(tokenizer.consumeBoolean());
+                    break;
+                case UINT32:
+                case FIXED32:
+                    obj = Integer.valueOf(tokenizer.consumeUInt32());
+                    break;
+                case UINT64:
+                case FIXED64:
+                    obj = Long.valueOf(tokenizer.consumeUInt64());
+                    break;
+                case STRING:
+                    obj = tokenizer.consumeString();
+                    break;
+                case BYTES:
+                    obj = tokenizer.consumeByteString();
+                    break;
+                case ENUM:
+                    EnumDescriptor enumType = field.getEnumType();
+                    if (tokenizer.lookingAtInteger()) {
+                        int number = tokenizer.consumeInt32();
+                        obj = enumType.findValueByNumber(number);
+                        if (obj == null) {
+                            throw tokenizer.parseExceptionPreviousToken("Enum type \"" + enumType.getFullName() + "\" has no value with number " + number + '.');
+                        }
+                    }
+                    String id = tokenizer.consumeIdentifier();
+                    obj = enumType.findValueByName(id);
+                    if (obj == null) {
+                        throw tokenizer.parseExceptionPreviousToken("Enum type \"" + enumType.getFullName() + "\" has no value named \"" + id + "\".");
+                    }
+                    break;
+                case MESSAGE:
+                case GROUP:
+                    throw new RuntimeException("Can't get here.");
+                default:
+                    break;
+            }
+        }
+        String endToken;
+        Builder subBuilder;
+        tokenizer.tryConsume(Config.TRACE_TODAY_VISIT_SPLIT);
+        if (tokenizer.tryConsume("<")) {
+            endToken = ">";
+        } else {
+            tokenizer.consume("{");
+            endToken = "}";
+        }
+        if (extension == null) {
+            subBuilder = builder.newBuilderForField(field);
+        } else {
+            subBuilder = extension.defaultInstance.newBuilderForType();
+        }
+        while (!tokenizer.tryConsume(endToken)) {
+            if (tokenizer.atEnd()) {
+                throw tokenizer.parseException("Expected \"" + endToken + "\".");
+            }
+            mergeField(tokenizer, extensionRegistry, subBuilder);
+        }
+        obj = subBuilder.build();
+        if (field.isRepeated()) {
+            builder.addRepeatedField(field, obj);
+        } else {
+            builder.setField(field, obj);
+        }
+    }
+
+    static String escapeBytes(ByteString input) {
+        StringBuilder builder = new StringBuilder(input.size());
+        for (int i = 0; i < input.size(); i++) {
+            byte b = input.byteAt(i);
+            switch (b) {
+                case (byte) 7:
+                    builder.append("\\a");
+                    break;
+                case (byte) 8:
+                    builder.append("\\b");
+                    break;
+                case (byte) 9:
+                    builder.append("\\t");
+                    break;
+                case (byte) 10:
+                    builder.append("\\n");
+                    break;
+                case (byte) 11:
+                    builder.append("\\v");
+                    break;
+                case (byte) 12:
+                    builder.append("\\f");
+                    break;
+                case (byte) 13:
+                    builder.append("\\r");
+                    break;
+                case (byte) 34:
+                    builder.append("\\\"");
+                    break;
+                case (byte) 39:
+                    builder.append("\\'");
+                    break;
+                case (byte) 92:
+                    builder.append("\\\\");
+                    break;
+                default:
+                    if (b < (byte) 32) {
+                        builder.append('\\');
+                        builder.append((char) (((b >>> 6) & 3) + 48));
+                        builder.append((char) (((b >>> 3) & 7) + 48));
+                        builder.append((char) ((b & 7) + 48));
+                        break;
+                    }
+                    builder.append((char) b);
+                    break;
+            }
+        }
+        return builder.toString();
+    }
+
+    static ByteString unescapeBytes(CharSequence input) throws InvalidEscapeSequenceException {
+        byte[] result = new byte[input.length()];
+        int pos = 0;
+        int i = 0;
+        while (i < input.length()) {
+            char c = input.charAt(i);
+            int pos2;
+            if (c != '\\') {
+                pos2 = pos + 1;
+                result[pos] = (byte) c;
+                pos = pos2;
+            } else if (i + 1 < input.length()) {
+                i++;
+                c = input.charAt(i);
+                int code;
+                if (isOctal(c)) {
+                    code = digitValue(c);
+                    if (i + 1 < input.length() && isOctal(input.charAt(i + 1))) {
+                        i++;
+                        code = (code * 8) + digitValue(input.charAt(i));
+                    }
+                    if (i + 1 < input.length() && isOctal(input.charAt(i + 1))) {
+                        i++;
+                        code = (code * 8) + digitValue(input.charAt(i));
+                    }
+                    pos2 = pos + 1;
+                    result[pos] = (byte) code;
+                    pos = pos2;
+                } else {
+                    switch (c) {
+                        case '\"':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 34;
+                            pos = pos2;
+                            break;
+                        case '\'':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 39;
+                            pos = pos2;
+                            break;
+                        case '\\':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 92;
+                            pos = pos2;
+                            break;
+                        case 'a':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 7;
+                            pos = pos2;
+                            break;
+                        case 'b':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 8;
+                            pos = pos2;
+                            break;
+                        case 'f':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 12;
+                            pos = pos2;
+                            break;
+                        case 'n':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 10;
+                            pos = pos2;
+                            break;
+                        case 'r':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 13;
+                            pos = pos2;
+                            break;
+                        case 't':
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 9;
+                            pos = pos2;
+                            break;
+                        case MessageType.BNMessageTypeTunnelUpdate /*118*/:
+                            pos2 = pos + 1;
+                            result[pos] = (byte) 11;
+                            pos = pos2;
+                            break;
+                        case 'x':
+                            if (i + 1 < input.length() && isHex(input.charAt(i + 1))) {
+                                i++;
+                                code = digitValue(input.charAt(i));
+                                if (i + 1 < input.length() && isHex(input.charAt(i + 1))) {
+                                    i++;
+                                    code = (code * 16) + digitValue(input.charAt(i));
+                                }
+                                pos2 = pos + 1;
+                                result[pos] = (byte) code;
+                                pos = pos2;
+                                break;
+                            }
+                            throw new InvalidEscapeSequenceException("Invalid escape sequence: '\\x' with no digits");
+                            break;
+                        default:
+                            throw new InvalidEscapeSequenceException("Invalid escape sequence: '\\" + c + '\'');
+                    }
+                }
+            } else {
+                throw new InvalidEscapeSequenceException("Invalid escape sequence: '\\' at end of string.");
+            }
+            i++;
+        }
+        return ByteString.copyFrom(result, 0, pos);
+    }
+
+    static String escapeText(String input) {
+        return escapeBytes(ByteString.copyFromUtf8(input));
+    }
+
+    static String unescapeText(String input) throws InvalidEscapeSequenceException {
+        return unescapeBytes(input).toStringUtf8();
+    }
+
+    private static boolean isOctal(char c) {
+        return '0' <= c && c <= '7';
+    }
+
+    private static boolean isHex(char c) {
+        return ('0' <= c && c <= '9') || (('a' <= c && c <= 'f') || ('A' <= c && c <= 'F'));
+    }
+
+    private static int digitValue(char c) {
+        if ('0' <= c && c <= '9') {
+            return c - 48;
+        }
+        if ('a' > c || c > 'z') {
+            return (c - 65) + 10;
+        }
+        return (c - 97) + 10;
+    }
+
+    static int parseInt32(String text) throws NumberFormatException {
+        return (int) parseInteger(text, true, false);
+    }
+
+    static int parseUInt32(String text) throws NumberFormatException {
+        return (int) parseInteger(text, false, false);
+    }
+
+    static long parseInt64(String text) throws NumberFormatException {
+        return parseInteger(text, true, true);
+    }
+
+    static long parseUInt64(String text) throws NumberFormatException {
+        return parseInteger(text, false, true);
+    }
+
+    private static long parseInteger(String text, boolean isSigned, boolean isLong) throws NumberFormatException {
+        int pos = 0;
+        boolean negative = false;
+        if (text.startsWith("-", 0)) {
+            if (isSigned) {
+                pos = 0 + 1;
+                negative = true;
+            } else {
+                throw new NumberFormatException("Number must be positive: " + text);
+            }
+        }
+        int radix = 10;
+        if (text.startsWith("0x", pos)) {
+            pos += 2;
+            radix = 16;
+        } else if (text.startsWith("0", pos)) {
+            radix = 8;
+        }
+        String numberText = text.substring(pos);
+        if (numberText.length() < 16) {
+            long result = Long.parseLong(numberText, radix);
+            if (negative) {
+                result = -result;
+            }
+            if (isLong) {
+                return result;
+            }
+            if (isSigned) {
+                if (result <= 2147483647L && result >= -2147483648L) {
+                    return result;
+                }
+                throw new NumberFormatException("Number out of range for 32-bit signed integer: " + text);
+            } else if (result < 4294967296L && result >= 0) {
+                return result;
+            } else {
+                throw new NumberFormatException("Number out of range for 32-bit unsigned integer: " + text);
+            }
+        }
+        BigInteger bigValue = new BigInteger(numberText, radix);
+        if (negative) {
+            bigValue = bigValue.negate();
+        }
+        if (isLong) {
+            if (isSigned) {
+                if (bigValue.bitLength() > 63) {
+                    throw new NumberFormatException("Number out of range for 64-bit signed integer: " + text);
+                }
+            } else if (bigValue.bitLength() > 64) {
+                throw new NumberFormatException("Number out of range for 64-bit unsigned integer: " + text);
+            }
+        } else if (isSigned) {
+            if (bigValue.bitLength() > 31) {
+                throw new NumberFormatException("Number out of range for 32-bit signed integer: " + text);
+            }
+        } else if (bigValue.bitLength() > 32) {
+            throw new NumberFormatException("Number out of range for 32-bit unsigned integer: " + text);
+        }
+        return bigValue.longValue();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/TextFormat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

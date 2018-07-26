@@ -1,98 +1,84 @@
 package com.baidu.carlife.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.baidu.carlife.d.b.c;
-import com.baidu.carlife.d.b.e;
-import com.baidu.carlife.d.b.f;
-import com.baidu.carlife.d.b.g;
-import com.baidu.carlife.d.b.l;
-import com.baidu.carlife.l.a;
+import com.baidu.carlife.p075d.C1431b.C1421c;
+import com.baidu.carlife.p075d.C1431b.C1423e;
+import com.baidu.carlife.p075d.C1431b.C1424f;
+import com.baidu.carlife.p075d.C1431b.C1425g;
+import com.baidu.carlife.p075d.C1431b.C1430l;
+import com.baidu.carlife.p087l.C1663a;
 
-public class MainTopBarView
-  extends RelativeLayout
-{
-  public static final int a = 0;
-  public static final int b = 1;
-  private int c = 0;
-  
-  public MainTopBarView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public MainTopBarView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    a(paramContext, paramAttributeSet);
-    a(paramContext);
-  }
-  
-  private void a(Context paramContext)
-  {
-    ((LayoutInflater)paramContext.getSystemService("layout_inflater")).inflate(b.g.main_comm_top_bar, this, true);
-    paramContext = (BatteryView)findViewById(b.f.view_battery);
-    TimeTextView localTimeTextView = (TimeTextView)findViewById(b.f.view_time);
-    b(a.a().N());
-    if (this.c == 1)
-    {
-      paramContext.setType(1);
-      localTimeTextView.setTextColor(getResources().getColor(b.c.text_navi_black_title));
-      return;
+public class MainTopBarView extends RelativeLayout {
+    /* renamed from: a */
+    public static final int f7188a = 0;
+    /* renamed from: b */
+    public static final int f7189b = 1;
+    /* renamed from: c */
+    private int f7190c;
+
+    public MainTopBarView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
-    paramContext.setType(0);
-    localTimeTextView.setTextColor(getResources().getColor(b.c.text_def_white_title));
-  }
-  
-  private void a(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    if (paramAttributeSet == null) {
-      return;
+
+    public MainTopBarView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.f7190c = 0;
+        m8461a(context, attrs);
+        m8460a(context);
     }
-    paramContext = paramContext.obtainStyledAttributes(paramAttributeSet, b.l.TopBarView);
-    this.c = paramContext.getInt(b.l.TopBarView_TopBarType, 0);
-    paramContext.recycle();
-  }
-  
-  public void a(boolean paramBoolean)
-  {
-    BatteryView localBatteryView = (BatteryView)findViewById(b.f.view_battery);
-    TimeTextView localTimeTextView = (TimeTextView)findViewById(b.f.view_time);
-    if (paramBoolean)
-    {
-      localBatteryView.setType(1);
-      localTimeTextView.setTextColor(getResources().getColor(b.c.text_navi_black_title));
-      return;
+
+    /* renamed from: a */
+    private void m8461a(Context context, AttributeSet attrs) {
+        if (attrs != null) {
+            TypedArray a = context.obtainStyledAttributes(attrs, C1430l.TopBarView);
+            this.f7190c = a.getInt(C1430l.TopBarView_TopBarType, 0);
+            a.recycle();
+        }
     }
-    localBatteryView.setType(0);
-    localTimeTextView.setTextColor(getResources().getColor(b.c.text_def_white_title));
-  }
-  
-  public void b(boolean paramBoolean)
-  {
-    ImageView localImageView = (ImageView)findViewById(b.f.iv_connect);
-    if (localImageView == null) {
-      return;
+
+    /* renamed from: a */
+    private void m8460a(Context context) {
+        ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(C1425g.main_comm_top_bar, this, true);
+        BatteryView batteryView = (BatteryView) findViewById(C1424f.view_battery);
+        TimeTextView timeView = (TimeTextView) findViewById(C1424f.view_time);
+        m8463b(C1663a.m5979a().m5993N());
+        if (this.f7190c == 1) {
+            batteryView.setType(1);
+            timeView.setTextColor(getResources().getColor(C1421c.text_navi_black_title));
+            return;
+        }
+        batteryView.setType(0);
+        timeView.setTextColor(getResources().getColor(C1421c.text_def_white_title));
     }
-    if (paramBoolean) {
-      localImageView.setImageResource(b.e.statusbaric_ic_connect);
+
+    /* renamed from: a */
+    public void m8462a(boolean dayStyle) {
+        BatteryView batteryView = (BatteryView) findViewById(C1424f.view_battery);
+        TimeTextView timeView = (TimeTextView) findViewById(C1424f.view_time);
+        if (dayStyle) {
+            batteryView.setType(1);
+            timeView.setTextColor(getResources().getColor(C1421c.text_navi_black_title));
+            return;
+        }
+        batteryView.setType(0);
+        timeView.setTextColor(getResources().getColor(C1421c.text_def_white_title));
     }
-    for (;;)
-    {
-      localImageView.setVisibility(0);
-      return;
-      localImageView.setImageResource(b.e.statusbaric_ic_disconnect);
+
+    /* renamed from: b */
+    public void m8463b(boolean isConnected) {
+        ImageView imgView = (ImageView) findViewById(C1424f.iv_connect);
+        if (imgView != null) {
+            if (isConnected) {
+                imgView.setImageResource(C1423e.statusbaric_ic_connect);
+            } else {
+                imgView.setImageResource(C1423e.statusbaric_ic_disconnect);
+            }
+            imgView.setVisibility(0);
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/MainTopBarView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

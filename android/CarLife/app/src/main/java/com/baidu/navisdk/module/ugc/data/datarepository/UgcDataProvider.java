@@ -1,370 +1,291 @@
 package com.baidu.navisdk.module.ugc.data.datarepository;
 
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.module.ugc.data.datarepository.UgcDataRepository.UgcBaseDataModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UgcDataProvider
-{
-  private static Map<Integer, Integer> mDrawableIdCache = null;
-  private static Map<Integer, String> mUrlCache = null;
-  
-  public static int getDrawableIdByType(int paramInt)
-  {
-    if (mDrawableIdCache == null) {
-      initDrawableIdCache();
-    }
-    Integer localInteger = (Integer)mDrawableIdCache.get(Integer.valueOf(paramInt));
-    if (localInteger == null) {
-      return -1;
-    }
-    return localInteger.intValue();
-  }
-  
-  public static String getUrlByType(int paramInt)
-  {
-    if (mUrlCache == null) {
-      initUrlCache();
-    }
-    return (String)mUrlCache.get(Integer.valueOf(paramInt));
-  }
-  
-  private static void initDrawableIdCache()
-  {
-    mDrawableIdCache = new HashMap();
-    mDrawableIdCache.put(Integer.valueOf(4096), Integer.valueOf(1711408145));
-    mDrawableIdCache.put(Integer.valueOf(4098), Integer.valueOf(1711408133));
-    mDrawableIdCache.put(Integer.valueOf(4099), Integer.valueOf(1711408133));
-    mDrawableIdCache.put(Integer.valueOf(4100), Integer.valueOf(1711408136));
-    mDrawableIdCache.put(Integer.valueOf(1), Integer.valueOf(1711408103));
-    mDrawableIdCache.put(Integer.valueOf(2), Integer.valueOf(1711408113));
-    mDrawableIdCache.put(Integer.valueOf(3), Integer.valueOf(1711408097));
-    mDrawableIdCache.put(Integer.valueOf(4), Integer.valueOf(1711408111));
-    mDrawableIdCache.put(Integer.valueOf(5), Integer.valueOf(1711408110));
-    mDrawableIdCache.put(Integer.valueOf(6), Integer.valueOf(1711408105));
-    mDrawableIdCache.put(Integer.valueOf(7), Integer.valueOf(1711408106));
-    mDrawableIdCache.put(Integer.valueOf(61445), Integer.valueOf(1711408119));
-    mDrawableIdCache.put(Integer.valueOf(61444), Integer.valueOf(1711408120));
-    mDrawableIdCache.put(Integer.valueOf(61449), Integer.valueOf(1711408118));
-    mDrawableIdCache.put(Integer.valueOf(61450), Integer.valueOf(1711408115));
-    mDrawableIdCache.put(Integer.valueOf(61446), Integer.valueOf(1711408116));
-    mDrawableIdCache.put(Integer.valueOf(61447), Integer.valueOf(1711408117));
-    mDrawableIdCache.put(Integer.valueOf(8), Integer.valueOf(1711408124));
-    mDrawableIdCache.put(Integer.valueOf(9), Integer.valueOf(1711408107));
-    mDrawableIdCache.put(Integer.valueOf(10), Integer.valueOf(1711408096));
-    mDrawableIdCache.put(Integer.valueOf(15), Integer.valueOf(1711408102));
-    mDrawableIdCache.put(Integer.valueOf(61441), Integer.valueOf(1711408052));
-    mDrawableIdCache.put(Integer.valueOf(61442), Integer.valueOf(1711408050));
-    mDrawableIdCache.put(Integer.valueOf(61443), Integer.valueOf(1711408051));
-  }
-  
-  private static void initUrlCache()
-  {
-    mUrlCache = new HashMap();
-    ArrayList localArrayList = UgcDataRepository.getInstance().obtainNaviUgcDataList();
-    int i;
-    if (localArrayList != null)
-    {
-      i = 0;
-      while (i < localArrayList.size())
-      {
-        if ((localArrayList.get(i) != null) && (((UgcDataRepository.UgcBaseDataModel)localArrayList.get(i)).iconUrl != null)) {
-          mUrlCache.put(Integer.valueOf(((UgcDataRepository.UgcBaseDataModel)localArrayList.get(i)).type), ((UgcDataRepository.UgcBaseDataModel)localArrayList.get(i)).iconUrl);
+public class UgcDataProvider {
+    private static Map<Integer, Integer> mDrawableIdCache = null;
+    private static Map<Integer, String> mUrlCache = null;
+
+    public static class UgcLayout {
+        private ArrayList<UgcBaseDataModel> dynamicMoselList;
+        private int position;
+        private ArrayList<UgcBaseDataModel> ugcMainList;
+        private UgcBaseDataModel ugcSubModel;
+
+        public UgcLayout(ArrayList<UgcBaseDataModel> ugcMainList, UgcBaseDataModel ugcSubModel) {
+            this(ugcMainList, ugcSubModel, -1);
         }
-        i += 1;
-      }
-    }
-    localArrayList = UgcDataRepository.getInstance().obtainMapUgcDataList();
-    if (localArrayList != null)
-    {
-      i = 0;
-      while (i < localArrayList.size())
-      {
-        if ((localArrayList.get(i) != null) && (((UgcDataRepository.UgcBaseDataModel)localArrayList.get(i)).iconUrl != null)) {
-          mUrlCache.put(Integer.valueOf(((UgcDataRepository.UgcBaseDataModel)localArrayList.get(i)).type + 61440), ((UgcDataRepository.UgcBaseDataModel)localArrayList.get(i)).iconUrl);
+
+        public UgcLayout(ArrayList<UgcBaseDataModel> ugcMainList, UgcBaseDataModel ugcSubModel, int position) {
+            this(ugcMainList, null, ugcSubModel, position);
         }
-        i += 1;
-      }
-    }
-    if (UgcDataRepository.getInstance().getActBaseDataModel() != null) {
-      mUrlCache.put(Integer.valueOf(4096), UgcDataRepository.getInstance().getActBaseDataModel().entryIconUrl);
-    }
-  }
-  
-  public static UgcLayout obtainDynamicUgcNaviSubLayout(int paramInt)
-  {
-    ArrayList localArrayList = UgcDataRepository.getInstance().obtainNaviDynamicUgcDataList();
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (localArrayList != null)
-    {
-      localObject1 = localObject2;
-      if (localArrayList.size() > paramInt)
-      {
-        localObject1 = localObject2;
-        if (paramInt >= 0) {
-          localObject1 = (UgcDataRepository.UgcBaseDataModel)localArrayList.get(paramInt);
+
+        public UgcLayout(ArrayList<UgcBaseDataModel> ugcMainList, ArrayList<UgcBaseDataModel> dynamicMoselList, UgcBaseDataModel ugcSubModel, int position) {
+            this.ugcMainList = null;
+            this.ugcSubModel = null;
+            this.dynamicMoselList = null;
+            this.position = -1;
+            this.ugcMainList = ugcMainList;
+            this.ugcSubModel = ugcSubModel;
+            this.position = position;
+            this.dynamicMoselList = dynamicMoselList;
         }
-      }
-    }
-    return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), localArrayList, (UgcDataRepository.UgcBaseDataModel)localObject1, paramInt);
-  }
-  
-  public static UgcLayout obtainDynamicUgcNaviSubLayoutByType(int paramInt)
-  {
-    ArrayList localArrayList = UgcDataRepository.getInstance().obtainNaviDynamicUgcDataList();
-    Object localObject2 = null;
-    int k = -1;
-    int i = 0;
-    Object localObject1;
-    int j;
-    for (;;)
-    {
-      localObject1 = localObject2;
-      j = k;
-      if (i < localArrayList.size())
-      {
-        if (((UgcDataRepository.UgcBaseDataModel)localArrayList.get(i)).type == paramInt)
-        {
-          localObject1 = (UgcDataRepository.UgcBaseDataModel)localArrayList.get(i);
-          j = i;
+
+        public int getSubType() {
+            if (this.ugcSubModel != null) {
+                return this.ugcSubModel.type;
+            }
+            return -1;
         }
-      }
-      else
-      {
-        if (localObject1 != null) {
-          break;
+
+        public UgcBaseDataModel getUgcSubModel() {
+            return this.ugcSubModel;
         }
-        return null;
-      }
-      i += 1;
-    }
-    return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), localArrayList, (UgcDataRepository.UgcBaseDataModel)localObject1, j);
-  }
-  
-  public static UgcLayout obtainUgcMapLayout()
-  {
-    return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), null, -1);
-  }
-  
-  public static UgcLayout obtainUgcMapSubLayout(int paramInt)
-  {
-    ArrayList localArrayList = UgcDataRepository.getInstance().obtainMapUgcDataList();
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (localArrayList != null)
-    {
-      localObject1 = localObject2;
-      if (localArrayList.size() > paramInt)
-      {
-        localObject1 = localObject2;
-        if (paramInt >= 0) {
-          localObject1 = (UgcDataRepository.UgcBaseDataModel)localArrayList.get(paramInt);
+
+        public ArrayList<UgcBaseDataModel> getMainList() {
+            return this.ugcMainList;
         }
-      }
-    }
-    return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), (UgcDataRepository.UgcBaseDataModel)localObject1, paramInt);
-  }
-  
-  public static UgcLayout obtainUgcNaviLayout()
-  {
-    return new UgcLayout(UgcDataRepository.getInstance().obtainNaviUgcDataList(), UgcDataRepository.getInstance().obtainNaviDynamicUgcDataList(), null, -1);
-  }
-  
-  public static UgcLayout obtainUgcNaviSubLayout(int paramInt)
-  {
-    ArrayList localArrayList = UgcDataRepository.getInstance().obtainNaviUgcDataList();
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (localArrayList != null)
-    {
-      localObject1 = localObject2;
-      if (localArrayList.size() > paramInt)
-      {
-        localObject1 = localObject2;
-        if (paramInt >= 0) {
-          localObject1 = (UgcDataRepository.UgcBaseDataModel)localArrayList.get(paramInt);
+
+        public int getDetailSize() {
+            if (this.ugcSubModel == null || this.ugcSubModel.ugcSubDataDetail == null) {
+                return 0;
+            }
+            return this.ugcSubModel.ugcSubDataDetail.size();
         }
-      }
+
+        public int getPositionSize() {
+            if (this.ugcSubModel == null || this.ugcSubModel.ugcSubDataPosition == null) {
+                return 0;
+            }
+            return this.ugcSubModel.ugcSubDataPosition.size();
+        }
+
+        public String getDetailTitle(int index) {
+            if (index < 0 || index >= getDetailSize() || this.ugcSubModel.ugcSubDataDetail.get(index) == null) {
+                return null;
+            }
+            return ((UgcBaseDataModel) this.ugcSubModel.ugcSubDataDetail.get(index)).title;
+        }
+
+        public String getPositionTitle(int index) {
+            if (index < 0 || index >= getPositionSize() || this.ugcSubModel.ugcSubDataPosition.get(index) == null) {
+                return null;
+            }
+            return ((UgcBaseDataModel) this.ugcSubModel.ugcSubDataPosition.get(index)).title;
+        }
+
+        public String getSubTitle() {
+            if (this.ugcSubModel != null) {
+                return this.ugcSubModel.title;
+            }
+            return null;
+        }
+
+        public int getPositionType(int index) {
+            if (index < 0 || index >= getPositionSize() || this.ugcSubModel.ugcSubDataPosition.get(index) == null) {
+                return -1;
+            }
+            return ((UgcBaseDataModel) this.ugcSubModel.ugcSubDataPosition.get(index)).type;
+        }
+
+        public int getDetailType(int index) {
+            if (index < 0 || index >= getDetailSize() || this.ugcSubModel.ugcSubDataDetail.get(index) == null) {
+                return -1;
+            }
+            return ((UgcBaseDataModel) this.ugcSubModel.ugcSubDataDetail.get(index)).type;
+        }
+
+        public int getMainItemsSize() {
+            if (this.ugcMainList != null) {
+                return this.ugcMainList.size();
+            }
+            return 0;
+        }
+
+        public int getMainItemsType(int index) {
+            if (getMainItemsSize() <= index || index < 0 || this.ugcMainList.get(index) == null) {
+                return -1;
+            }
+            return ((UgcBaseDataModel) this.ugcMainList.get(index)).type;
+        }
+
+        public String getMainItemsTitle(int index) {
+            if (getMainItemsSize() <= index || index < 0 || this.ugcMainList.get(index) == null) {
+                return null;
+            }
+            return ((UgcBaseDataModel) this.ugcMainList.get(index)).title;
+        }
+
+        public int getLaneSize() {
+            if (this.ugcSubModel == null || this.ugcSubModel.ugcSubDataLane == null) {
+                return 0;
+            }
+            return this.ugcSubModel.ugcSubDataLane.size();
+        }
+
+        public String getLaneTitle(int index) {
+            if (index < 0 || index >= getLaneSize() || this.ugcSubModel.ugcSubDataLane.get(index) == null) {
+                return null;
+            }
+            return ((UgcBaseDataModel) this.ugcSubModel.ugcSubDataLane.get(index)).title;
+        }
+
+        public int getLaneType(int index) {
+            if (index < 0 || index >= getLaneSize() || this.ugcSubModel.ugcSubDataLane.get(index) == null) {
+                return -1;
+            }
+            return ((UgcBaseDataModel) this.ugcSubModel.ugcSubDataLane.get(index)).type;
+        }
+
+        public int getDynamicItemsSize() {
+            if (this.dynamicMoselList != null) {
+                return this.dynamicMoselList.size();
+            }
+            return 0;
+        }
+
+        public String getDynamicItemsTitle(int index) {
+            if (getDynamicItemsSize() <= index || index < 0 || this.dynamicMoselList.get(index) == null) {
+                return null;
+            }
+            return ((UgcBaseDataModel) this.dynamicMoselList.get(index)).title;
+        }
+
+        public int getDynamicItemsType(int index) {
+            if (getDynamicItemsSize() <= index || index < 0 || this.dynamicMoselList.get(index) == null) {
+                return -1;
+            }
+            return ((UgcBaseDataModel) this.dynamicMoselList.get(index)).type;
+        }
     }
-    return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), (UgcDataRepository.UgcBaseDataModel)localObject1, paramInt);
-  }
-  
-  public static class UgcLayout
-  {
-    private ArrayList<UgcDataRepository.UgcBaseDataModel> dynamicMoselList = null;
-    private int position = -1;
-    private ArrayList<UgcDataRepository.UgcBaseDataModel> ugcMainList = null;
-    private UgcDataRepository.UgcBaseDataModel ugcSubModel = null;
-    
-    public UgcLayout(ArrayList<UgcDataRepository.UgcBaseDataModel> paramArrayList, UgcDataRepository.UgcBaseDataModel paramUgcBaseDataModel)
-    {
-      this(paramArrayList, paramUgcBaseDataModel, -1);
+
+    public static int getDrawableIdByType(int type) {
+        if (mDrawableIdCache == null) {
+            initDrawableIdCache();
+        }
+        Integer object = (Integer) mDrawableIdCache.get(Integer.valueOf(type));
+        if (object == null) {
+            return -1;
+        }
+        return object.intValue();
     }
-    
-    public UgcLayout(ArrayList<UgcDataRepository.UgcBaseDataModel> paramArrayList, UgcDataRepository.UgcBaseDataModel paramUgcBaseDataModel, int paramInt)
-    {
-      this(paramArrayList, null, paramUgcBaseDataModel, paramInt);
+
+    public static String getUrlByType(int type) {
+        if (mUrlCache == null) {
+            initUrlCache();
+        }
+        return (String) mUrlCache.get(Integer.valueOf(type));
     }
-    
-    public UgcLayout(ArrayList<UgcDataRepository.UgcBaseDataModel> paramArrayList1, ArrayList<UgcDataRepository.UgcBaseDataModel> paramArrayList2, UgcDataRepository.UgcBaseDataModel paramUgcBaseDataModel, int paramInt)
-    {
-      this.ugcMainList = paramArrayList1;
-      this.ugcSubModel = paramUgcBaseDataModel;
-      this.position = paramInt;
-      this.dynamicMoselList = paramArrayList2;
+
+    public static UgcLayout obtainUgcNaviLayout() {
+        return new UgcLayout(UgcDataRepository.getInstance().obtainNaviUgcDataList(), UgcDataRepository.getInstance().obtainNaviDynamicUgcDataList(), null, -1);
     }
-    
-    public int getDetailSize()
-    {
-      if ((this.ugcSubModel == null) || (this.ugcSubModel.ugcSubDataDetail == null)) {
-        return 0;
-      }
-      return this.ugcSubModel.ugcSubDataDetail.size();
+
+    public static UgcLayout obtainUgcMapLayout() {
+        return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), null, -1);
     }
-    
-    public String getDetailTitle(int paramInt)
-    {
-      if ((paramInt >= 0) && (paramInt < getDetailSize()) && (this.ugcSubModel.ugcSubDataDetail.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.ugcSubModel.ugcSubDataDetail.get(paramInt)).title;
-      }
-      return null;
+
+    public static UgcLayout obtainUgcMapSubLayout(int position) {
+        ArrayList<UgcBaseDataModel> mMainList = UgcDataRepository.getInstance().obtainMapUgcDataList();
+        UgcBaseDataModel mSubModel = null;
+        if (mMainList != null && mMainList.size() > position && position >= 0) {
+            mSubModel = (UgcBaseDataModel) mMainList.get(position);
+        }
+        return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), mSubModel, position);
     }
-    
-    public int getDetailType(int paramInt)
-    {
-      if ((paramInt >= 0) && (paramInt < getDetailSize()) && (this.ugcSubModel.ugcSubDataDetail.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.ugcSubModel.ugcSubDataDetail.get(paramInt)).type;
-      }
-      return -1;
+
+    public static UgcLayout obtainUgcNaviSubLayout(int position) {
+        ArrayList<UgcBaseDataModel> mMainList = UgcDataRepository.getInstance().obtainNaviUgcDataList();
+        UgcBaseDataModel mSubModel = null;
+        if (mMainList != null && mMainList.size() > position && position >= 0) {
+            mSubModel = (UgcBaseDataModel) mMainList.get(position);
+        }
+        return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), mSubModel, position);
     }
-    
-    public int getDynamicItemsSize()
-    {
-      if (this.dynamicMoselList != null) {
-        return this.dynamicMoselList.size();
-      }
-      return 0;
+
+    public static UgcLayout obtainDynamicUgcNaviSubLayout(int position) {
+        ArrayList<UgcBaseDataModel> mMainList = UgcDataRepository.getInstance().obtainNaviDynamicUgcDataList();
+        UgcBaseDataModel mSubModel = null;
+        if (mMainList != null && mMainList.size() > position && position >= 0) {
+            mSubModel = (UgcBaseDataModel) mMainList.get(position);
+        }
+        return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), mMainList, mSubModel, position);
     }
-    
-    public String getDynamicItemsTitle(int paramInt)
-    {
-      if ((getDynamicItemsSize() > paramInt) && (paramInt >= 0) && (this.dynamicMoselList.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.dynamicMoselList.get(paramInt)).title;
-      }
-      return null;
+
+    public static UgcLayout obtainDynamicUgcNaviSubLayoutByType(int type) {
+        ArrayList<UgcBaseDataModel> mMainList = UgcDataRepository.getInstance().obtainNaviDynamicUgcDataList();
+        UgcBaseDataModel mSubModel = null;
+        int position = -1;
+        for (int i = 0; i < mMainList.size(); i++) {
+            if (((UgcBaseDataModel) mMainList.get(i)).type == type) {
+                mSubModel = (UgcBaseDataModel) mMainList.get(i);
+                position = i;
+                break;
+            }
+        }
+        if (mSubModel == null) {
+            return null;
+        }
+        return new UgcLayout(UgcDataRepository.getInstance().obtainMapUgcDataList(), mMainList, mSubModel, position);
     }
-    
-    public int getDynamicItemsType(int paramInt)
-    {
-      if ((getDynamicItemsSize() > paramInt) && (paramInt >= 0) && (this.dynamicMoselList.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.dynamicMoselList.get(paramInt)).type;
-      }
-      return -1;
+
+    private static void initUrlCache() {
+        int i;
+        mUrlCache = new HashMap();
+        ArrayList<UgcBaseDataModel> mModelList = UgcDataRepository.getInstance().obtainNaviUgcDataList();
+        if (mModelList != null) {
+            i = 0;
+            while (i < mModelList.size()) {
+                if (!(mModelList.get(i) == null || ((UgcBaseDataModel) mModelList.get(i)).iconUrl == null)) {
+                    mUrlCache.put(Integer.valueOf(((UgcBaseDataModel) mModelList.get(i)).type), ((UgcBaseDataModel) mModelList.get(i)).iconUrl);
+                }
+                i++;
+            }
+        }
+        mModelList = UgcDataRepository.getInstance().obtainMapUgcDataList();
+        if (mModelList != null) {
+            i = 0;
+            while (i < mModelList.size()) {
+                if (!(mModelList.get(i) == null || ((UgcBaseDataModel) mModelList.get(i)).iconUrl == null)) {
+                    mUrlCache.put(Integer.valueOf(((UgcBaseDataModel) mModelList.get(i)).type + 61440), ((UgcBaseDataModel) mModelList.get(i)).iconUrl);
+                }
+                i++;
+            }
+        }
+        if (UgcDataRepository.getInstance().getActBaseDataModel() != null) {
+            mUrlCache.put(Integer.valueOf(4096), UgcDataRepository.getInstance().getActBaseDataModel().entryIconUrl);
+        }
     }
-    
-    public int getLaneSize()
-    {
-      if ((this.ugcSubModel == null) || (this.ugcSubModel.ugcSubDataLane == null)) {
-        return 0;
-      }
-      return this.ugcSubModel.ugcSubDataLane.size();
+
+    private static void initDrawableIdCache() {
+        mDrawableIdCache = new HashMap();
+        mDrawableIdCache.put(Integer.valueOf(4096), Integer.valueOf(C4048R.drawable.ugc_upload));
+        mDrawableIdCache.put(Integer.valueOf(4098), Integer.valueOf(C4048R.drawable.ugc_report_camera_icon));
+        mDrawableIdCache.put(Integer.valueOf(4099), Integer.valueOf(C4048R.drawable.ugc_report_camera_icon));
+        mDrawableIdCache.put(Integer.valueOf(4100), Integer.valueOf(C4048R.drawable.ugc_report_map_point_icon));
+        mDrawableIdCache.put(Integer.valueOf(1), Integer.valueOf(C4048R.drawable.type_default_new_road));
+        mDrawableIdCache.put(Integer.valueOf(2), Integer.valueOf(C4048R.drawable.type_default_trafic_rule));
+        mDrawableIdCache.put(Integer.valueOf(3), Integer.valueOf(C4048R.drawable.type_default_electron_eye));
+        mDrawableIdCache.put(Integer.valueOf(4), Integer.valueOf(C4048R.drawable.type_default_trafic_jam));
+        mDrawableIdCache.put(Integer.valueOf(5), Integer.valueOf(C4048R.drawable.type_default_trafic_accident));
+        mDrawableIdCache.put(Integer.valueOf(6), Integer.valueOf(C4048R.drawable.type_default_road_build));
+        mDrawableIdCache.put(Integer.valueOf(7), Integer.valueOf(C4048R.drawable.type_default_road_closed));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_DEFAULT_MAP_MAIN_TRAFIC_ACCIDENT), Integer.valueOf(C4048R.drawable.type_map_default_trafic_accident));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_DEFAULT_MAP_MAIN_TRAFIC_JAM), Integer.valueOf(C4048R.drawable.type_map_default_trafic_jam));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_DEFAULT_MAP_MAIN_POLICE), Integer.valueOf(C4048R.drawable.type_map_default_road_police));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_DEFAULT_MAP_MAIN_DANGEROU), Integer.valueOf(C4048R.drawable.type_map_default_dangerous));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_DEFAULT_MAP_MAIN_ROAD_BUILD), Integer.valueOf(C4048R.drawable.type_map_default_road_build));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_DEFAULT_MAP_MAIN_ROAD_CLOSED), Integer.valueOf(C4048R.drawable.type_map_default_road_closed));
+        mDrawableIdCache.put(Integer.valueOf(8), Integer.valueOf(C4048R.drawable.ugc_default_traffic_regulate));
+        mDrawableIdCache.put(Integer.valueOf(9), Integer.valueOf(C4048R.drawable.type_default_road_police));
+        mDrawableIdCache.put(Integer.valueOf(10), Integer.valueOf(C4048R.drawable.type_default_dangerous));
+        mDrawableIdCache.put(Integer.valueOf(15), Integer.valueOf(C4048R.drawable.type_default_limited_speed));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_UGC_MAP_MAIN_FEEDBACK_ICON_NEW), Integer.valueOf(C4048R.drawable.nsdk_ugc_map_main_new_position));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_UGC_MAP_MAIN_FEEDBACK_ICON_ERR), Integer.valueOf(C4048R.drawable.nsdk_ugc_map_main_err_position));
+        mDrawableIdCache.put(Integer.valueOf(IUgcDataParams.TYPE_UGC_MAP_MAIN_FEEDBACK_ICON_FEEDBACK), Integer.valueOf(C4048R.drawable.nsdk_ugc_map_main_more_feedback));
     }
-    
-    public String getLaneTitle(int paramInt)
-    {
-      if ((paramInt >= 0) && (paramInt < getLaneSize()) && (this.ugcSubModel.ugcSubDataLane.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.ugcSubModel.ugcSubDataLane.get(paramInt)).title;
-      }
-      return null;
-    }
-    
-    public int getLaneType(int paramInt)
-    {
-      if ((paramInt >= 0) && (paramInt < getLaneSize()) && (this.ugcSubModel.ugcSubDataLane.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.ugcSubModel.ugcSubDataLane.get(paramInt)).type;
-      }
-      return -1;
-    }
-    
-    public int getMainItemsSize()
-    {
-      if (this.ugcMainList != null) {
-        return this.ugcMainList.size();
-      }
-      return 0;
-    }
-    
-    public String getMainItemsTitle(int paramInt)
-    {
-      if ((getMainItemsSize() > paramInt) && (paramInt >= 0) && (this.ugcMainList.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.ugcMainList.get(paramInt)).title;
-      }
-      return null;
-    }
-    
-    public int getMainItemsType(int paramInt)
-    {
-      if ((getMainItemsSize() > paramInt) && (paramInt >= 0) && (this.ugcMainList.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.ugcMainList.get(paramInt)).type;
-      }
-      return -1;
-    }
-    
-    public ArrayList<UgcDataRepository.UgcBaseDataModel> getMainList()
-    {
-      return this.ugcMainList;
-    }
-    
-    public int getPositionSize()
-    {
-      if ((this.ugcSubModel == null) || (this.ugcSubModel.ugcSubDataPosition == null)) {
-        return 0;
-      }
-      return this.ugcSubModel.ugcSubDataPosition.size();
-    }
-    
-    public String getPositionTitle(int paramInt)
-    {
-      if ((paramInt >= 0) && (paramInt < getPositionSize()) && (this.ugcSubModel.ugcSubDataPosition.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.ugcSubModel.ugcSubDataPosition.get(paramInt)).title;
-      }
-      return null;
-    }
-    
-    public int getPositionType(int paramInt)
-    {
-      if ((paramInt >= 0) && (paramInt < getPositionSize()) && (this.ugcSubModel.ugcSubDataPosition.get(paramInt) != null)) {
-        return ((UgcDataRepository.UgcBaseDataModel)this.ugcSubModel.ugcSubDataPosition.get(paramInt)).type;
-      }
-      return -1;
-    }
-    
-    public String getSubTitle()
-    {
-      if (this.ugcSubModel != null) {
-        return this.ugcSubModel.title;
-      }
-      return null;
-    }
-    
-    public int getSubType()
-    {
-      if (this.ugcSubModel != null) {
-        return this.ugcSubModel.type;
-      }
-      return -1;
-    }
-    
-    public UgcDataRepository.UgcBaseDataModel getUgcSubModel()
-    {
-      return this.ugcSubModel;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/module/ugc/data/datarepository/UgcDataProvider.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

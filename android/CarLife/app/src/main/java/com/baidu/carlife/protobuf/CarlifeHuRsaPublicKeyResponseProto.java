@@ -9,352 +9,300 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeHuRsaPublicKeyResponseProto
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_com_baidu_carlife_protobuf_CarlifeHuRsaPublicKeyResponse_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_com_baidu_carlife_protobuf_CarlifeHuRsaPublicKeyResponse_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeHuRsaPublicKeyResponseProto.access$702(paramAnonymousFileDescriptor);
-        CarlifeHuRsaPublicKeyResponseProto.access$002((Descriptors.Descriptor)CarlifeHuRsaPublicKeyResponseProto.getDescriptor().getMessageTypes().get(0));
-        CarlifeHuRsaPublicKeyResponseProto.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeHuRsaPublicKeyResponseProto.internal_static_com_baidu_carlife_protobuf_CarlifeHuRsaPublicKeyResponse_descriptor, new String[] { "RsaPublicKey" }, CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.class, CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n(CarlifeHuRsaPublicKeyResponseProto.proto\022\032com.baidu.carlife.protobuf\"5\n\035CarlifeHuRsaPublicKeyResponse\022\024\n\frsaPublicKey\030\001 \002(\t" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeHuRsaPublicKeyResponse
-    extends GeneratedMessage
-  {
-    public static final int RSAPUBLICKEY_FIELD_NUMBER = 1;
-    private static final CarlifeHuRsaPublicKeyResponse defaultInstance = new CarlifeHuRsaPublicKeyResponse();
-    private boolean hasRsaPublicKey;
-    private int memoizedSerializedSize = -1;
-    private String rsaPublicKey_ = "";
-    
-    static
-    {
-      CarlifeHuRsaPublicKeyResponseProto.getDescriptor();
-      CarlifeHuRsaPublicKeyResponseProto.internalForceInit();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeHuRsaPublicKeyResponseProto.internal_static_com_baidu_carlife_protobuf_CarlifeHuRsaPublicKeyResponse_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeHuRsaPublicKeyResponse paramCarlifeHuRsaPublicKeyResponse)
-    {
-      return newBuilder().mergeFrom(paramCarlifeHuRsaPublicKeyResponse);
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeHuRsaPublicKeyResponse parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public CarlifeHuRsaPublicKeyResponse getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public String getRsaPublicKey()
-    {
-      return this.rsaPublicKey_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      i = 0;
-      if (hasRsaPublicKey()) {
-        i = 0 + CodedOutputStream.computeStringSize(1, getRsaPublicKey());
-      }
-      i += getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public boolean hasRsaPublicKey()
-    {
-      return this.hasRsaPublicKey;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeHuRsaPublicKeyResponseProto.internal_static_com_baidu_carlife_protobuf_CarlifeHuRsaPublicKeyResponse_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return this.hasRsaPublicKey;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasRsaPublicKey()) {
-        paramCodedOutputStream.writeString(1, getRsaPublicKey());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse result;
-      
-      private CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeHuRsaPublicKeyResponseProto {
+    private static FileDescriptor descriptor;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeHuRsaPublicKeyResponse_descriptor */
+    private static Descriptor f6623xbf8725ee;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeHuRsaPublicKeyResponse_fieldAccessorTable */
+    private static FieldAccessorTable f6624x27a07e6c;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeHuRsaPublicKeyResponseProto$1 */
+    static class C20661 implements InternalDescriptorAssigner {
+        C20661() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse(null);
-        return localBuilder;
-      }
-      
-      public CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeHuRsaPublicKeyResponseProto.descriptor = root;
+            CarlifeHuRsaPublicKeyResponseProto.f6623xbf8725ee = (Descriptor) CarlifeHuRsaPublicKeyResponseProto.getDescriptor().getMessageTypes().get(0);
+            CarlifeHuRsaPublicKeyResponseProto.f6624x27a07e6c = new FieldAccessorTable(CarlifeHuRsaPublicKeyResponseProto.f6623xbf8725ee, new String[]{"RsaPublicKey"}, CarlifeHuRsaPublicKeyResponse.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse localCarlifeHuRsaPublicKeyResponse = this.result;
-        this.result = null;
-        return localCarlifeHuRsaPublicKeyResponse;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse(null);
-        return this;
-      }
-      
-      public Builder clearRsaPublicKey()
-      {
-        CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.access$502(this.result, false);
-        CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.access$602(this.result, CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.getDefaultInstance().getRsaPublicKey());
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse getDefaultInstanceForType()
-      {
-        return CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.getDescriptor();
-      }
-      
-      public String getRsaPublicKey()
-      {
-        return this.result.getRsaPublicKey();
-      }
-      
-      public boolean hasRsaPublicKey()
-      {
-        return this.result.hasRsaPublicKey();
-      }
-      
-      protected CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse paramCarlifeHuRsaPublicKeyResponse)
-      {
-        if (paramCarlifeHuRsaPublicKeyResponse == CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeHuRsaPublicKeyResponse.hasRsaPublicKey()) {
-          setRsaPublicKey(paramCarlifeHuRsaPublicKeyResponse.getRsaPublicKey());
-        }
-        mergeUnknownFields(paramCarlifeHuRsaPublicKeyResponse.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeHuRsaPublicKeyResponse extends GeneratedMessage {
+        public static final int RSAPUBLICKEY_FIELD_NUMBER = 1;
+        private static final CarlifeHuRsaPublicKeyResponse defaultInstance = new CarlifeHuRsaPublicKeyResponse();
+        private boolean hasRsaPublicKey;
+        private int memoizedSerializedSize;
+        private String rsaPublicKey_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeHuRsaPublicKeyResponse result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 10: 
-            setRsaPublicKey(paramCodedInputStream.readString());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeHuRsaPublicKeyResponse();
+                return builder;
+            }
+
+            protected CarlifeHuRsaPublicKeyResponse internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeHuRsaPublicKeyResponse();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeHuRsaPublicKeyResponse.getDescriptor();
+            }
+
+            public CarlifeHuRsaPublicKeyResponse getDefaultInstanceForType() {
+                return CarlifeHuRsaPublicKeyResponse.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeHuRsaPublicKeyResponse build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeHuRsaPublicKeyResponse buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeHuRsaPublicKeyResponse buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeHuRsaPublicKeyResponse returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeHuRsaPublicKeyResponse) {
+                    return mergeFrom((CarlifeHuRsaPublicKeyResponse) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeHuRsaPublicKeyResponse other) {
+                if (other != CarlifeHuRsaPublicKeyResponse.getDefaultInstance()) {
+                    if (other.hasRsaPublicKey()) {
+                        setRsaPublicKey(other.getRsaPublicKey());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 10:
+                            setRsaPublicKey(input.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasRsaPublicKey() {
+                return this.result.hasRsaPublicKey();
+            }
+
+            public String getRsaPublicKey() {
+                return this.result.getRsaPublicKey();
+            }
+
+            public Builder setRsaPublicKey(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasRsaPublicKey = true;
+                this.result.rsaPublicKey_ = value;
+                return this;
+            }
+
+            public Builder clearRsaPublicKey() {
+                this.result.hasRsaPublicKey = false;
+                this.result.rsaPublicKey_ = CarlifeHuRsaPublicKeyResponse.getDefaultInstance().getRsaPublicKey();
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse)) {
-          return mergeFrom((CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse)paramMessage);
+
+        private CarlifeHuRsaPublicKeyResponse() {
+            this.rsaPublicKey_ = "";
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setRsaPublicKey(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        static {
+            CarlifeHuRsaPublicKeyResponseProto.getDescriptor();
+            CarlifeHuRsaPublicKeyResponseProto.internalForceInit();
         }
-        CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.access$502(this.result, true);
-        CarlifeHuRsaPublicKeyResponseProto.CarlifeHuRsaPublicKeyResponse.access$602(this.result, paramString);
-        return this;
-      }
+
+        public static CarlifeHuRsaPublicKeyResponse getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public CarlifeHuRsaPublicKeyResponse getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeHuRsaPublicKeyResponseProto.f6623xbf8725ee;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeHuRsaPublicKeyResponseProto.f6624x27a07e6c;
+        }
+
+        public boolean hasRsaPublicKey() {
+            return this.hasRsaPublicKey;
+        }
+
+        public String getRsaPublicKey() {
+            return this.rsaPublicKey_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasRsaPublicKey) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasRsaPublicKey()) {
+                output.writeString(1, getRsaPublicKey());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasRsaPublicKey()) {
+                size = 0 + CodedOutputStream.computeStringSize(1, getRsaPublicKey());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeHuRsaPublicKeyResponse parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeHuRsaPublicKeyResponse prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeHuRsaPublicKeyResponseProto() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n(CarlifeHuRsaPublicKeyResponseProto.proto\u0012\u001acom.baidu.carlife.protobuf\"5\n\u001dCarlifeHuRsaPublicKeyResponse\u0012\u0014\n\frsaPublicKey\u0018\u0001 \u0002(\t"}, new FileDescriptor[0], new C20661());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeHuRsaPublicKeyResponseProto.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

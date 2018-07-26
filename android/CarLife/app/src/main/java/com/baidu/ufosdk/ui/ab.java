@@ -2,32 +2,25 @@ package com.baidu.ufosdk.ui;
 
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.LinearLayout;
-import com.baidu.ufosdk.util.i;
+import com.baidu.ufosdk.util.C5216i;
 
-final class ab
-  extends Handler
-{
-  ab(FeedbackHotActivity paramFeedbackHotActivity) {}
-  
-  public final void handleMessage(Message paramMessage)
-  {
-    super.handleMessage(paramMessage);
-    if ((paramMessage.what == 3) && (FeedbackHotActivity.a(this.a).getProgress() < 100))
-    {
-      FeedbackHotActivity.a(this.a).stopLoading();
-      FeedbackHotActivity.b(this.a).setVisibility(8);
-      i.a(this.a.getApplicationContext(), FeedbackHotActivity.c(this.a));
-      FeedbackHotActivity.d(this.a).setVisibility(0);
-      FeedbackHotActivity.a(this.a).setVisibility(8);
+/* compiled from: FeedbackHotActivity */
+final class ab extends Handler {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackHotActivity f21538a;
+
+    ab(FeedbackHotActivity feedbackHotActivity) {
+        this.f21538a = feedbackHotActivity;
     }
-  }
+
+    public final void handleMessage(Message message) {
+        super.handleMessage(message);
+        if (message.what == 3 && this.f21538a.f21444i.getProgress() < 100) {
+            this.f21538a.f21444i.stopLoading();
+            this.f21538a.f21446k.setVisibility(8);
+            C5216i.m17762a(this.f21538a.getApplicationContext(), this.f21538a.f21447l);
+            this.f21538a.f21442g.setVisibility(0);
+            this.f21538a.f21444i.setVisibility(8);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ab.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

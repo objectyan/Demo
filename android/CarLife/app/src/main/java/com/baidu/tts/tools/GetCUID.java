@@ -4,24 +4,18 @@ import android.content.Context;
 import android.text.TextUtils;
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy;
 
-public class GetCUID
-{
-  public static String getCUID(Context paramContext)
-  {
-    String str = SharedPreferencesUtils.getString(paramContext, "CUID", "");
-    if (TextUtils.isEmpty(str))
-    {
-      str = CommonParam.getCUID(paramContext);
-      SharedPreferencesUtils.putString(paramContext, "CUID", str);
-      return str;
+public class GetCUID {
+    private GetCUID() {
     }
-    LoggerProxy.d("Device", "read deviceID:" + str);
-    return str;
-  }
+
+    public static String getCUID(Context context) {
+        String string = SharedPreferencesUtils.getString(context, "CUID", "");
+        if (TextUtils.isEmpty(string)) {
+            string = CommonParam.getCUID(context);
+            SharedPreferencesUtils.putString(context, "CUID", string);
+            return string;
+        }
+        LoggerProxy.m17001d("Device", "read deviceID:" + string);
+        return string;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/tools/GetCUID.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,80 +3,32 @@ package com.baidu.mobstat;
 import android.net.LocalServerSocket;
 import java.io.IOException;
 
-public final class dd
-{
-  private LocalServerSocket a;
-  
-  public final boolean a()
-  {
-    try
-    {
-      if (this.a != null) {
-        break label29;
-      }
-      this.a = new LocalServerSocket("com.baidu.mobstat.bplus");
-      bool = true;
+public final class dd {
+    /* renamed from: a */
+    private LocalServerSocket f19629a;
+
+    /* renamed from: a */
+    public final synchronized boolean m15671a() {
+        boolean z;
+        try {
+            if (this.f19629a == null) {
+                this.f19629a = new LocalServerSocket("com.baidu.mobstat.bplus");
+                z = true;
+            }
+        } catch (IOException e) {
+        }
+        z = false;
+        return z;
     }
-    catch (IOException localIOException)
-    {
-      for (;;)
-      {
-        localIOException = localIOException;
-        label29:
-        boolean bool = false;
-      }
+
+    /* renamed from: b */
+    public final synchronized void m15672b() {
+        if (this.f19629a != null) {
+            try {
+                this.f19629a.close();
+                this.f19629a = null;
+            } catch (IOException e) {
+            }
+        }
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
-    }
-    return bool;
-  }
-  
-  /* Error */
-  public final void b()
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: aload_0
-    //   3: getfield 16	com/baidu/mobstat/dd:a	Landroid/net/LocalServerSocket;
-    //   6: astore_1
-    //   7: aload_1
-    //   8: ifnull +15 -> 23
-    //   11: aload_0
-    //   12: getfield 16	com/baidu/mobstat/dd:a	Landroid/net/LocalServerSocket;
-    //   15: invokevirtual 27	android/net/LocalServerSocket:close	()V
-    //   18: aload_0
-    //   19: aconst_null
-    //   20: putfield 16	com/baidu/mobstat/dd:a	Landroid/net/LocalServerSocket;
-    //   23: aload_0
-    //   24: monitorexit
-    //   25: return
-    //   26: astore_1
-    //   27: aload_0
-    //   28: monitorexit
-    //   29: aload_1
-    //   30: athrow
-    //   31: astore_1
-    //   32: goto -9 -> 23
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	35	0	this	dd
-    //   6	2	1	localLocalServerSocket	LocalServerSocket
-    //   26	4	1	localObject	Object
-    //   31	1	1	localIOException	IOException
-    // Exception table:
-    //   from	to	target	type
-    //   2	7	26	finally
-    //   11	23	26	finally
-    //   11	23	31	java/io/IOException
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/dd.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

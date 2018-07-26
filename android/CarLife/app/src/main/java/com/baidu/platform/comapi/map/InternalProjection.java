@@ -6,90 +6,71 @@ import com.baidu.platform.comjni.map.basemap.AppBaseMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class InternalProjection
-  implements Projection
-{
-  private MapController mMapController = null;
-  
-  public InternalProjection(MapController paramMapController)
-  {
-    this.mMapController = paramMapController;
-  }
-  
-  public GeoPoint fromPixels(int paramInt1, int paramInt2)
-  {
-    Object localObject1 = this.mMapController.getBaseMap();
-    if (localObject1 == null) {
-      return null;
+class InternalProjection implements Projection {
+    private MapController mMapController = null;
+
+    public InternalProjection(MapController mapController) {
+        this.mMapController = mapController;
     }
-    Object localObject2 = ((AppBaseMap)localObject1).ScrPtToGeoPoint(paramInt1, paramInt2);
-    localObject1 = new GeoPoint(0, 0);
-    if (localObject2 != null) {
-      try
-      {
-        localObject2 = new JSONObject((String)localObject2);
-        ((GeoPoint)localObject1).setLongitude(((JSONObject)localObject2).getDouble("geox"));
-        ((GeoPoint)localObject1).setLatitude(((JSONObject)localObject2).getDouble("geoy"));
-        return (GeoPoint)localObject1;
-      }
-      catch (JSONException localJSONException) {}
+
+    public GeoPoint fromPixels(int x, int y) {
+        AppBaseMap baseMap = this.mMapController.getBaseMap();
+        if (baseMap == null) {
+            return null;
+        }
+        String strGeoPt = baseMap.ScrPtToGeoPoint(x, y);
+        GeoPoint geoPoint = new GeoPoint(0, 0);
+        if (strGeoPt != null) {
+            try {
+                JSONObject jsonObj = new JSONObject(strGeoPt);
+                geoPoint.setLongitude(jsonObj.getDouble("geox"));
+                geoPoint.setLatitude(jsonObj.getDouble("geoy"));
+                return geoPoint;
+            } catch (JSONException e) {
+            }
+        }
+        return null;
     }
-    return null;
-  }
-  
-  public float metersToEquatorPixels(float paramFloat)
-  {
-    return (float)(paramFloat / this.mMapController.getZoomUnitsInMeter());
-  }
-  
-  public Point toPixels(GeoPoint paramGeoPoint, Point paramPoint)
-  {
-    Point localPoint = paramPoint;
-    if (paramPoint == null) {
-      localPoint = new Point(0.0D, 0.0D);
+
+    public float metersToEquatorPixels(float meters) {
+        return (float) (((double) meters) / this.mMapController.getZoomUnitsInMeter());
     }
-    paramPoint = this.mMapController.getBaseMap();
-    if (paramPoint == null) {}
-    do
-    {
-      return localPoint;
-      paramGeoPoint = paramPoint.GeoPtToScrPoint((int)paramGeoPoint.getLongitude(), (int)paramGeoPoint.getLatitude());
-    } while (paramGeoPoint == null);
-    try
-    {
-      paramGeoPoint = new JSONObject(paramGeoPoint);
-      localPoint.setIntX(paramGeoPoint.getInt("scrx"));
-      localPoint.setIntY(paramGeoPoint.getInt("scry"));
-      return localPoint;
+
+    public Point toPixels(GeoPoint in, Point out) {
+        if (out == null) {
+            out = new Point(0.0d, 0.0d);
+        }
+        AppBaseMap baseMap = this.mMapController.getBaseMap();
+        if (baseMap != null) {
+            String strScrPt = baseMap.GeoPtToScrPoint((int) in.getLongitude(), (int) in.getLatitude());
+            if (strScrPt != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(strScrPt);
+                    out.setIntX(jsonObj.getInt("scrx"));
+                    out.setIntY(jsonObj.getInt("scry"));
+                } catch (JSONException e) {
+                }
+            }
+        }
+        return out;
     }
-    catch (JSONException paramGeoPoint) {}
-    return localPoint;
-  }
-  
-  public Point world2Screen(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    Point localPoint = new Point(0.0D, 0.0D);
-    Object localObject = this.mMapController.getBaseMap();
-    if (localObject == null) {
-      return localPoint;
+
+    public Point world2Screen(float x, float y, float z) {
+        Point out = new Point(0.0d, 0.0d);
+        AppBaseMap baseMap = this.mMapController.getBaseMap();
+        if (baseMap == null) {
+            return out;
+        }
+        String strScrPt = baseMap.worldPointToScreenPoint(x, y, z);
+        if (strScrPt != null) {
+            try {
+                JSONObject jsonObj = new JSONObject(strScrPt);
+                out.setDoubleX(jsonObj.optDouble("scrx"));
+                out.setDoubleY(jsonObj.optDouble("scry"));
+                return out;
+            } catch (JSONException e) {
+            }
+        }
+        return null;
     }
-    localObject = ((AppBaseMap)localObject).worldPointToScreenPoint(paramFloat1, paramFloat2, paramFloat3);
-    if (localObject != null) {
-      try
-      {
-        localObject = new JSONObject((String)localObject);
-        localPoint.setDoubleX(((JSONObject)localObject).optDouble("scrx"));
-        localPoint.setDoubleY(((JSONObject)localObject).optDouble("scry"));
-        return localPoint;
-      }
-      catch (JSONException localJSONException) {}
-    }
-    return null;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/InternalProjection.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -15,236 +15,201 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-public class PinnedHeaderListView
-  extends ListView
-  implements AbsListView.OnScrollListener
-{
-  private AbsListView.OnScrollListener a;
-  private b b;
-  private View c;
-  private int d = 0;
-  private float e;
-  private boolean f = true;
-  private int g = 0;
-  private int h;
-  private int i;
-  private int j = 0;
-  private int k = 0;
-  
-  public PinnedHeaderListView(Context paramContext)
-  {
-    super(paramContext);
-    super.setOnScrollListener(this);
-  }
-  
-  public PinnedHeaderListView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    super.setOnScrollListener(this);
-  }
-  
-  public PinnedHeaderListView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    super.setOnScrollListener(this);
-  }
-  
-  private View a(int paramInt, View paramView)
-  {
-    if ((paramInt != this.g) || (paramView == null)) {}
-    for (int m = 1;; m = 0)
-    {
-      paramView = this.b.a(paramInt, paramView, this);
-      if (m != 0)
-      {
-        a(paramView);
-        this.g = paramInt;
-      }
-      return paramView;
+public class PinnedHeaderListView extends ListView implements OnScrollListener {
+    /* renamed from: a */
+    private OnScrollListener f7756a;
+    /* renamed from: b */
+    private C1005b f7757b;
+    /* renamed from: c */
+    private View f7758c;
+    /* renamed from: d */
+    private int f7759d = 0;
+    /* renamed from: e */
+    private float f7760e;
+    /* renamed from: f */
+    private boolean f7761f = true;
+    /* renamed from: g */
+    private int f7762g = 0;
+    /* renamed from: h */
+    private int f7763h;
+    /* renamed from: i */
+    private int f7764i;
+    /* renamed from: j */
+    private int f7765j = 0;
+    /* renamed from: k */
+    private int f7766k = 0;
+
+    /* renamed from: com.baidu.carlife.view.pinnedheaderlistview.PinnedHeaderListView$b */
+    public interface C1005b {
+        /* renamed from: a */
+        View mo1366a(int i, View view, ViewGroup viewGroup);
+
+        /* renamed from: c */
+        boolean mo1367c(int i);
+
+        /* renamed from: d */
+        int mo1368d(int i);
+
+        /* renamed from: e */
+        int mo1369e(int i);
+
+        int getCount();
     }
-  }
-  
-  private void a(View paramView)
-  {
-    int n;
-    ViewGroup.LayoutParams localLayoutParams;
-    if (paramView.isLayoutRequested())
-    {
-      n = View.MeasureSpec.makeMeasureSpec(getMeasuredWidth() - this.j - this.k, this.h);
-      localLayoutParams = paramView.getLayoutParams();
-      if ((localLayoutParams == null) || (localLayoutParams.height <= 0)) {
-        break label80;
-      }
-    }
-    label80:
-    for (int m = View.MeasureSpec.makeMeasureSpec(localLayoutParams.height, 1073741824);; m = View.MeasureSpec.makeMeasureSpec(0, 0))
-    {
-      paramView.measure(n, m);
-      paramView.layout(0, 0, paramView.getMeasuredWidth(), paramView.getMeasuredHeight());
-      return;
-    }
-  }
-  
-  protected void dispatchDraw(Canvas paramCanvas)
-  {
-    super.dispatchDraw(paramCanvas);
-    if ((this.b == null) || (!this.f) || (this.c == null)) {
-      return;
-    }
-    int m = paramCanvas.save();
-    paramCanvas.translate(this.j, this.e);
-    paramCanvas.clipRect(0, 0, getWidth(), this.c.getMeasuredHeight());
-    this.c.draw(paramCanvas);
-    paramCanvas.restoreToCount(m);
-  }
-  
-  protected void onMeasure(int paramInt1, int paramInt2)
-  {
-    super.onMeasure(paramInt1, paramInt2);
-    this.h = View.MeasureSpec.getMode(paramInt1);
-    this.i = View.MeasureSpec.getMode(paramInt2);
-  }
-  
-  public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3)
-  {
-    Object localObject = null;
-    if (this.a != null) {
-      this.a.onScroll(paramAbsListView, paramInt1, paramInt2, paramInt3);
-    }
-    if ((this.b == null) || (this.b.getCount() == 0) || (!this.f) || (paramInt1 < getHeaderViewsCount()))
-    {
-      this.c = null;
-      this.e = 0.0F;
-      paramInt3 = paramInt1;
-    }
-    while (paramInt3 < paramInt1 + paramInt2)
-    {
-      paramAbsListView = getChildAt(paramInt3);
-      if (paramAbsListView != null) {
-        paramAbsListView.setVisibility(0);
-      }
-      paramInt3 += 1;
-      continue;
-      paramInt3 = paramInt1 - getHeaderViewsCount();
-      paramInt1 = this.b.d(paramInt3);
-      int m = this.b.e(paramInt1);
-      label180:
-      float f1;
-      if (this.d != m)
-      {
-        paramAbsListView = (AbsListView)localObject;
-        this.c = a(paramInt1, paramAbsListView);
-        a(this.c);
-        this.d = m;
-        this.e = 0.0F;
-        paramInt1 = paramInt3;
-        if (paramInt1 >= paramInt3 + paramInt2) {
-          break label289;
+
+    /* renamed from: com.baidu.carlife.view.pinnedheaderlistview.PinnedHeaderListView$a */
+    public static abstract class C2351a implements OnItemClickListener {
+        /* renamed from: a */
+        public abstract void m8932a(AdapterView<?> adapterView, View view, int i, int i2, long j);
+
+        /* renamed from: a */
+        public abstract void m8933a(AdapterView<?> adapterView, View view, int i, long j);
+
+        public void onItemClick(AdapterView<?> adapterView, View view, int rawPosition, long id) {
+            C1006b adapter;
+            if (adapterView.getAdapter().getClass().equals(HeaderViewListAdapter.class)) {
+                adapter = (C1006b) ((HeaderViewListAdapter) adapterView.getAdapter()).getWrappedAdapter();
+            } else {
+                adapter = (C1006b) adapterView.getAdapter();
+            }
+            int section = adapter.mo1368d(rawPosition);
+            int position = adapter.m3239f(rawPosition);
+            if (position == -1) {
+                m8933a(adapterView, view, section, id);
+            } else {
+                m8932a(adapterView, view, section, position, id);
+            }
         }
-        if (this.b.c(paramInt1))
-        {
-          paramAbsListView = getChildAt(paramInt1 - paramInt3);
-          f1 = paramAbsListView.getTop();
-          float f2 = this.c.getMeasuredHeight();
-          paramAbsListView.setVisibility(0);
-          if ((f2 < f1) || (f1 <= 0.0F)) {
-            break label274;
-          }
-          this.e = (f1 - paramAbsListView.getHeight());
-        }
-      }
-      for (;;)
-      {
-        paramInt1 += 1;
-        break label180;
-        paramAbsListView = this.c;
-        break;
-        label274:
-        if (f1 <= 0.0F) {
-          paramAbsListView.setVisibility(4);
-        }
-      }
-      label289:
-      invalidate();
     }
-  }
-  
-  public void onScrollStateChanged(AbsListView paramAbsListView, int paramInt)
-  {
-    if (this.a != null) {
-      this.a.onScrollStateChanged(paramAbsListView, paramInt);
+
+    public PinnedHeaderListView(Context context) {
+        super(context);
+        super.setOnScrollListener(this);
     }
-  }
-  
-  public void setAdapter(ListAdapter paramListAdapter)
-  {
-    this.c = null;
-    this.b = ((b)paramListAdapter);
-    super.setAdapter(paramListAdapter);
-  }
-  
-  public void setHorizontalMargin(int paramInt1, int paramInt2)
-  {
-    this.j = paramInt1;
-    this.k = paramInt2;
-  }
-  
-  public void setOnItemClickListener(a parama)
-  {
-    super.setOnItemClickListener(parama);
-  }
-  
-  public void setOnScrollListener(AbsListView.OnScrollListener paramOnScrollListener)
-  {
-    this.a = paramOnScrollListener;
-  }
-  
-  public void setPinHeaders(boolean paramBoolean)
-  {
-    this.f = paramBoolean;
-  }
-  
-  public static abstract class a
-    implements AdapterView.OnItemClickListener
-  {
-    public abstract void a(AdapterView<?> paramAdapterView, View paramView, int paramInt1, int paramInt2, long paramLong);
-    
-    public abstract void a(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong);
-    
-    public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong)
-    {
-      if (paramAdapterView.getAdapter().getClass().equals(HeaderViewListAdapter.class)) {}
-      int i;
-      for (b localb = (b)((HeaderViewListAdapter)paramAdapterView.getAdapter()).getWrappedAdapter();; localb = (b)paramAdapterView.getAdapter())
-      {
-        i = localb.d(paramInt);
-        paramInt = localb.f(paramInt);
-        if (paramInt != -1) {
-          break;
+
+    public PinnedHeaderListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        super.setOnScrollListener(this);
+    }
+
+    public PinnedHeaderListView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        super.setOnScrollListener(this);
+    }
+
+    public void setPinHeaders(boolean shouldPin) {
+        this.f7761f = shouldPin;
+    }
+
+    public void setHorizontalMargin(int left, int right) {
+        this.f7765j = left;
+        this.f7766k = right;
+    }
+
+    public void setAdapter(ListAdapter adapter) {
+        this.f7758c = null;
+        this.f7757b = (C1005b) adapter;
+        super.setAdapter(adapter);
+    }
+
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        View view2 = null;
+        if (this.f7756a != null) {
+            this.f7756a.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
         }
-        a(paramAdapterView, paramView, i, paramLong);
-        return;
-      }
-      a(paramAdapterView, paramView, i, paramInt, paramLong);
+        int i;
+        View header;
+        if (this.f7757b == null || this.f7757b.getCount() == 0 || !this.f7761f || firstVisibleItem < getHeaderViewsCount()) {
+            this.f7758c = null;
+            this.f7760e = 0.0f;
+            for (i = firstVisibleItem; i < firstVisibleItem + visibleItemCount; i++) {
+                header = getChildAt(i);
+                if (header != null) {
+                    header.setVisibility(0);
+                }
+            }
+            return;
+        }
+        firstVisibleItem -= getHeaderViewsCount();
+        int section = this.f7757b.mo1368d(firstVisibleItem);
+        int viewType = this.f7757b.mo1369e(section);
+        if (this.f7759d == viewType) {
+            view2 = this.f7758c;
+        }
+        this.f7758c = m8934a(section, view2);
+        m8935a(this.f7758c);
+        this.f7759d = viewType;
+        this.f7760e = 0.0f;
+        for (i = firstVisibleItem; i < firstVisibleItem + visibleItemCount; i++) {
+            if (this.f7757b.mo1367c(i)) {
+                header = getChildAt(i - firstVisibleItem);
+                float headerTop = (float) header.getTop();
+                float pinnedHeaderHeight = (float) this.f7758c.getMeasuredHeight();
+                header.setVisibility(0);
+                if (pinnedHeaderHeight >= headerTop && headerTop > 0.0f) {
+                    this.f7760e = headerTop - ((float) header.getHeight());
+                } else if (headerTop <= 0.0f) {
+                    header.setVisibility(4);
+                }
+            }
+        }
+        invalidate();
     }
-  }
-  
-  public static abstract interface b
-  {
-    public abstract View a(int paramInt, View paramView, ViewGroup paramViewGroup);
-    
-    public abstract boolean c(int paramInt);
-    
-    public abstract int d(int paramInt);
-    
-    public abstract int e(int paramInt);
-    
-    public abstract int getCount();
-  }
+
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (this.f7756a != null) {
+            this.f7756a.onScrollStateChanged(view, scrollState);
+        }
+    }
+
+    /* renamed from: a */
+    private View m8934a(int section, View oldView) {
+        boolean shouldLayout = section != this.f7762g || oldView == null;
+        View view = this.f7757b.mo1366a(section, oldView, this);
+        if (shouldLayout) {
+            m8935a(view);
+            this.f7762g = section;
+        }
+        return view;
+    }
+
+    /* renamed from: a */
+    private void m8935a(View header) {
+        if (header.isLayoutRequested()) {
+            int heightSpec;
+            int widthSpec = MeasureSpec.makeMeasureSpec((getMeasuredWidth() - this.f7765j) - this.f7766k, this.f7763h);
+            LayoutParams layoutParams = header.getLayoutParams();
+            if (layoutParams == null || layoutParams.height <= 0) {
+                heightSpec = MeasureSpec.makeMeasureSpec(0, 0);
+            } else {
+                heightSpec = MeasureSpec.makeMeasureSpec(layoutParams.height, 1073741824);
+            }
+            header.measure(widthSpec, heightSpec);
+            header.layout(0, 0, header.getMeasuredWidth(), header.getMeasuredHeight());
+        }
+    }
+
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        if (this.f7757b != null && this.f7761f && this.f7758c != null) {
+            int saveCount = canvas.save();
+            canvas.translate((float) this.f7765j, this.f7760e);
+            canvas.clipRect(0, 0, getWidth(), this.f7758c.getMeasuredHeight());
+            this.f7758c.draw(canvas);
+            canvas.restoreToCount(saveCount);
+        }
+    }
+
+    public void setOnScrollListener(OnScrollListener l) {
+        this.f7756a = l;
+    }
+
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        this.f7763h = MeasureSpec.getMode(widthMeasureSpec);
+        this.f7764i = MeasureSpec.getMode(heightMeasureSpec);
+    }
+
+    public void setOnItemClickListener(C2351a listener) {
+        super.setOnItemClickListener(listener);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/pinnedheaderlistview/PinnedHeaderListView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

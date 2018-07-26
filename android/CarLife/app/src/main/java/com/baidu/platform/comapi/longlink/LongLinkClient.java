@@ -1,175 +1,121 @@
 package com.baidu.platform.comapi.longlink;
 
-import com.baidu.platform.comapi.a.a;
-import com.baidu.platform.comapi.a.b;
+import com.baidu.platform.comapi.p207a.C4754a;
+import com.baidu.platform.comapi.p207a.C4755b;
 import com.baidu.platform.comjni.base.longlink.NALongLink;
 import java.util.ArrayList;
 
-public class LongLinkClient
-{
-  private int a;
-  private int b;
-  private int c;
-  
-  private LongLinkClient(int paramInt)
-  {
-    this.b = paramInt;
-  }
-  
-  private LongLinkClient(int paramInt1, int paramInt2)
-  {
-    this.b = paramInt1;
-    this.a = paramInt2;
-  }
-  
-  public static LongLinkClient create()
-    throws a
-  {
-    int i = NALongLink.create();
-    if (i != 0) {
-      return new LongLinkClient(i);
+public class LongLinkClient {
+    /* renamed from: a */
+    private int f19845a;
+    /* renamed from: b */
+    private int f19846b;
+    /* renamed from: c */
+    private int f19847c;
+
+    public static LongLinkClient create() throws C4754a {
+        int addr = NALongLink.create();
+        if (addr != 0) {
+            return new LongLinkClient(addr);
+        }
+        throw new C4754a("LongLink Component created failed!");
     }
-    throw new a("LongLink Component created failed!");
-  }
-  
-  public static LongLinkClient create(int paramInt)
-    throws a
-  {
-    int i = NALongLink.create();
-    if (i != 0) {
-      return new LongLinkClient(i, paramInt);
+
+    public static LongLinkClient create(int moduleId) throws C4754a {
+        int addr = NALongLink.create();
+        if (addr != 0) {
+            return new LongLinkClient(addr, moduleId);
+        }
+        throw new C4754a("LongLink Component created failed!");
     }
-    throw new a("LongLink Component created failed!");
-  }
-  
-  public int getRequestId()
-  {
-    try
-    {
-      int i = this.c;
-      return i;
+
+    public boolean init(String domain, String params) throws C4755b {
+        if (isValid()) {
+            return NALongLink.init(this.f19846b, domain, params);
+        }
+        throw new C4755b();
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public int release() {
+        if (isValid() && NALongLink.release(this.f19846b) <= 0) {
+            this.f19846b = 0;
+        }
+        return -1;
     }
-  }
-  
-  public boolean init(String paramString1, String paramString2)
-    throws b
-  {
-    if (isValid()) {
-      return NALongLink.init(this.b, paramString1, paramString2);
+
+    private LongLinkClient(int nativeJniPtr, int longlinkModuleId) {
+        this.f19846b = nativeJniPtr;
+        this.f19845a = longlinkModuleId;
     }
-    throw new b();
-  }
-  
-  public boolean isValid()
-  {
-    return this.b != 0;
-  }
-  
-  public boolean register(LongLinkDataCallback paramLongLinkDataCallback)
-    throws b
-  {
-    try
-    {
-      if (isValid())
-      {
-        boolean bool = NALongLink.register(this.b, this.a, paramLongLinkDataCallback);
-        return bool;
-      }
-      throw new b();
+
+    private LongLinkClient(int nativeJniPtr) {
+        this.f19846b = nativeJniPtr;
     }
-    finally {}
-  }
-  
-  public int release()
-  {
-    if ((isValid()) && (NALongLink.release(this.b) <= 0)) {
-      this.b = 0;
+
+    public void setModuleId(int longlinkModuleId) {
+        this.f19845a = longlinkModuleId;
     }
-    return -1;
-  }
-  
-  public ELongLinkStatus sendData(byte[] paramArrayOfByte)
-    throws b
-  {
-    try
-    {
-      if (isValid())
-      {
-        this.c += 1;
-        paramArrayOfByte = ELongLinkStatus.values()[NALongLink.sendData(this.b, this.a, this.c, paramArrayOfByte)];
-        paramArrayOfByte.setRequestId(this.c);
-        return paramArrayOfByte;
-      }
-      throw new b();
+
+    public boolean isValid() {
+        return this.f19846b != 0;
     }
-    finally {}
-  }
-  
-  public ELongLinkStatus sendFileData(String paramString, ArrayList<LongLinkFileData> paramArrayList)
-    throws b
-  {
-    try
-    {
-      if (isValid())
-      {
-        this.c += 1;
-        paramString = ELongLinkStatus.values()[NALongLink.sendFileData(this.b, this.a, this.c, paramString, paramArrayList)];
-        paramString.setRequestId(this.c);
-        return paramString;
-      }
-      throw new b();
+
+    public synchronized int getRequestId() {
+        return this.f19847c;
     }
-    finally {}
-  }
-  
-  public void setModuleId(int paramInt)
-  {
-    this.a = paramInt;
-  }
-  
-  public boolean start()
-    throws b
-  {
-    if (isValid()) {
-      return NALongLink.start(this.b);
+
+    public synchronized boolean register(LongLinkDataCallback callback) throws C4755b {
+        if (isValid()) {
+        } else {
+            throw new C4755b();
+        }
+        return NALongLink.register(this.f19846b, this.f19845a, callback);
     }
-    throw new b();
-  }
-  
-  public void stop()
-    throws b
-  {
-    if (isValid())
-    {
-      NALongLink.stop(this.b);
-      return;
+
+    public synchronized boolean unRegister(LongLinkDataCallback callback) throws C4755b {
+        if (isValid()) {
+        } else {
+            throw new C4755b();
+        }
+        return NALongLink.unRegister(this.f19846b, this.f19845a, callback);
     }
-    throw new b();
-  }
-  
-  public boolean unRegister(LongLinkDataCallback paramLongLinkDataCallback)
-    throws b
-  {
-    try
-    {
-      if (isValid())
-      {
-        boolean bool = NALongLink.unRegister(this.b, this.a, paramLongLinkDataCallback);
-        return bool;
-      }
-      throw new b();
+
+    public synchronized ELongLinkStatus sendData(byte[] dataBuffer) throws C4755b {
+        ELongLinkStatus status;
+        if (isValid()) {
+            this.f19847c++;
+            status = ELongLinkStatus.values()[NALongLink.sendData(this.f19846b, this.f19845a, this.f19847c, dataBuffer)];
+            status.setRequestId(this.f19847c);
+        } else {
+            throw new C4755b();
+        }
+        return status;
     }
-    finally {}
-  }
+
+    public synchronized ELongLinkStatus sendFileData(String fileParams, ArrayList<LongLinkFileData> fileData) throws C4755b {
+        ELongLinkStatus status;
+        if (isValid()) {
+            this.f19847c++;
+            status = ELongLinkStatus.values()[NALongLink.sendFileData(this.f19846b, this.f19845a, this.f19847c, fileParams, fileData)];
+            status.setRequestId(this.f19847c);
+        } else {
+            throw new C4755b();
+        }
+        return status;
+    }
+
+    public boolean start() throws C4755b {
+        if (isValid()) {
+            return NALongLink.start(this.f19846b);
+        }
+        throw new C4755b();
+    }
+
+    public void stop() throws C4755b {
+        if (isValid()) {
+            NALongLink.stop(this.f19846b);
+            return;
+        }
+        throw new C4755b();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/longlink/LongLinkClient.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,69 +2,56 @@ package com.baidu.mobstat;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import com.baidu.baidunavis.BaiduNaviParams;
 import java.util.ArrayList;
 
-class ak
-  extends x
-{
-  public ak()
-  {
-    super("app_trace3", "Create table if not exists app_trace3(_id Integer primary key AUTOINCREMENT,time VARCHAR(50),content TEXT);");
-  }
-  
-  private ArrayList<w> a(Cursor paramCursor)
-  {
-    ArrayList localArrayList = new ArrayList();
-    if (paramCursor == null) {}
-    for (;;)
-    {
-      return localArrayList;
-      if (paramCursor.getCount() != 0)
-      {
-        int i = paramCursor.getColumnIndex("_id");
-        int j = paramCursor.getColumnIndex("time");
-        int k = paramCursor.getColumnIndex("content");
-        while (paramCursor.moveToNext()) {
-          localArrayList.add(new w(paramCursor.getLong(i), paramCursor.getString(j), paramCursor.getString(k)));
+class ak extends C3586x {
+    public ak() {
+        super("app_trace3", "Create table if not exists app_trace3(_id Integer primary key AUTOINCREMENT,time VARCHAR(50),content TEXT);");
+    }
+
+    /* renamed from: a */
+    public ArrayList<C3608w> mo2723a(int i, int i2) {
+        Cursor a = m15309a(BaiduNaviParams.KEY_TIME, i, i2);
+        ArrayList<C3608w> a2 = m15332a(a);
+        if (a != null) {
+            a.close();
         }
-      }
+        return a2;
     }
-  }
-  
-  public long a(String paramString1, String paramString2)
-  {
-    Object localObject = a("content", paramString2, "time", 1);
-    ArrayList localArrayList = a((Cursor)localObject);
-    if (localObject != null) {
-      ((Cursor)localObject).close();
+
+    /* renamed from: a */
+    public long mo2722a(String str, String str2) {
+        Cursor a = m15310a("content", str2, BaiduNaviParams.KEY_TIME, 1);
+        ArrayList a2 = m15332a(a);
+        if (a != null) {
+            a.close();
+        }
+        if (a2.size() != 0) {
+            return ((C3608w) a2.get(0)).m15784a();
+        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BaiduNaviParams.KEY_TIME, str);
+        contentValues.put("content", str2);
+        return m15307a(contentValues);
     }
-    if (localArrayList.size() != 0) {
-      return ((w)localArrayList.get(0)).a();
+
+    /* renamed from: b */
+    public boolean mo2724b(long j) {
+        return m15313a(j);
     }
-    localObject = new ContentValues();
-    ((ContentValues)localObject).put("time", paramString1);
-    ((ContentValues)localObject).put("content", paramString2);
-    return a((ContentValues)localObject);
-  }
-  
-  public ArrayList<w> a(int paramInt1, int paramInt2)
-  {
-    Cursor localCursor = a("time", paramInt1, paramInt2);
-    ArrayList localArrayList = a(localCursor);
-    if (localCursor != null) {
-      localCursor.close();
+
+    /* renamed from: a */
+    private ArrayList<C3608w> m15332a(Cursor cursor) {
+        ArrayList<C3608w> arrayList = new ArrayList();
+        if (!(cursor == null || cursor.getCount() == 0)) {
+            int columnIndex = cursor.getColumnIndex("_id");
+            int columnIndex2 = cursor.getColumnIndex(BaiduNaviParams.KEY_TIME);
+            int columnIndex3 = cursor.getColumnIndex("content");
+            while (cursor.moveToNext()) {
+                arrayList.add(new C3608w(cursor.getLong(columnIndex), cursor.getString(columnIndex2), cursor.getString(columnIndex3)));
+            }
+        }
+        return arrayList;
     }
-    return localArrayList;
-  }
-  
-  public boolean b(long paramLong)
-  {
-    return a(paramLong);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ak.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

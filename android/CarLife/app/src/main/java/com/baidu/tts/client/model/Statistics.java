@@ -1,38 +1,28 @@
 package com.baidu.tts.client.model;
 
 import android.content.Context;
-import com.baidu.tts.p.b;
+import com.baidu.tts.p245p.C5155b;
 
-public class Statistics
-{
-  public static boolean isStatistics = true;
-  private b a;
-  
-  public Statistics(Context paramContext)
-  {
-    this.a = new b(paramContext);
-  }
-  
-  public static void setEnable(boolean paramBoolean)
-  {
-    isStatistics = paramBoolean;
-  }
-  
-  public int start()
-  {
-    this.a.a();
-    return 0;
-  }
-  
-  public int stop()
-  {
-    this.a.b();
-    return 0;
-  }
+public class Statistics {
+    public static boolean isStatistics = true;
+    /* renamed from: a */
+    private C5155b f20891a;
+
+    public Statistics(Context context) {
+        this.f20891a = new C5155b(context);
+    }
+
+    public static void setEnable(boolean mIsStatistics) {
+        isStatistics = mIsStatistics;
+    }
+
+    public int start() {
+        this.f20891a.m17500a();
+        return 0;
+    }
+
+    public int stop() {
+        this.f20891a.m17501b();
+        return 0;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/client/model/Statistics.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

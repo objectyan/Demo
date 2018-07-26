@@ -1,27 +1,20 @@
 package com.tencent.wxop.stat;
 
+import com.baidu.navisdk.util.common.HttpsClient;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.protocol.HttpContext;
 
-class ax
-  extends DefaultConnectionKeepAliveStrategy
-{
-  ax(aw paramaw) {}
-  
-  public long getKeepAliveDuration(HttpResponse paramHttpResponse, HttpContext paramHttpContext)
-  {
-    long l2 = super.getKeepAliveDuration(paramHttpResponse, paramHttpContext);
-    long l1 = l2;
-    if (l2 == -1L) {
-      l1 = 30000L;
+class ax extends DefaultConnectionKeepAliveStrategy {
+    /* renamed from: a */
+    final /* synthetic */ aw f24868a;
+
+    ax(aw awVar) {
+        this.f24868a = awVar;
     }
-    return l1;
-  }
+
+    public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
+        long keepAliveDuration = super.getKeepAliveDuration(httpResponse, httpContext);
+        return keepAliveDuration == -1 ? HttpsClient.CONN_MGR_TIMEOUT : keepAliveDuration;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/ax.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

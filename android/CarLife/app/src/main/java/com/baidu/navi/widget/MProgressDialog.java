@@ -5,63 +5,57 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.support.v4.app.FragmentActivity;
 
-public class MProgressDialog
-{
-  static final int RUNNING_TASK_SIZE = 1;
-  static BMProgressDialog mBMProgressDialog;
-  
-  public static void dismiss()
-  {
-    if ((mBMProgressDialog != null) && (mBMProgressDialog.getFragmentManager() != null)) {
-      mBMProgressDialog.dismiss();
+public class MProgressDialog {
+    static final int RUNNING_TASK_SIZE = 1;
+    static BMProgressDialog mBMProgressDialog;
+
+    /* renamed from: com.baidu.navi.widget.MProgressDialog$1 */
+    static class C40471 implements OnCancelListener {
+        C40471() {
+        }
+
+        public void onCancel(DialogInterface dialog) {
+        }
     }
-    mBMProgressDialog = null;
-  }
-  
-  private static boolean isActivityRunning(Activity paramActivity)
-  {
-    return (paramActivity != null) && (!paramActivity.isFinishing());
-  }
-  
-  public static void show(FragmentActivity paramFragmentActivity, int paramInt, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    showDialog(paramFragmentActivity, paramInt, null, null, paramOnCancelListener);
-  }
-  
-  public static void show(FragmentActivity paramFragmentActivity, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    showDialog(paramFragmentActivity, 0, null, null, paramOnCancelListener);
-  }
-  
-  public static void show(FragmentActivity paramFragmentActivity, String paramString1, String paramString2)
-  {
-    showDialog(paramFragmentActivity, 0, paramString1, paramString2, new DialogInterface.OnCancelListener()
-    {
-      public void onCancel(DialogInterface paramAnonymousDialogInterface) {}
-    });
-  }
-  
-  public static void show(FragmentActivity paramFragmentActivity, String paramString1, String paramString2, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    showDialog(paramFragmentActivity, 0, paramString1, paramString2, paramOnCancelListener);
-  }
-  
-  private static void showDialog(FragmentActivity paramFragmentActivity, int paramInt, String paramString1, String paramString2, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    
-    if ((isActivityRunning(paramFragmentActivity)) && (paramFragmentActivity.getSupportFragmentManager() != null)) {}
-    try
-    {
-      mBMProgressDialog = BMProgressDialog.newInstance(paramInt, paramOnCancelListener);
-      mBMProgressDialog.show(paramFragmentActivity.getSupportFragmentManager(), "BMProgressDialog");
-      return;
+
+    private static void showDialog(FragmentActivity fragActivity, int layoutResId, String title, String message, OnCancelListener cancelListener) {
+        dismiss();
+        if (isActivityRunning(fragActivity) && fragActivity.getSupportFragmentManager() != null) {
+            try {
+                mBMProgressDialog = BMProgressDialog.newInstance(layoutResId, cancelListener);
+                mBMProgressDialog.show(fragActivity.getSupportFragmentManager(), "BMProgressDialog");
+            } catch (Exception e) {
+            }
+        }
     }
-    catch (Exception paramFragmentActivity) {}
-  }
+
+    public static void show(FragmentActivity fragActivity, String title, String message, OnCancelListener cancelListener) {
+        showDialog(fragActivity, 0, title, message, cancelListener);
+    }
+
+    public static void show(FragmentActivity fragActivity, String title, String message) {
+        showDialog(fragActivity, 0, title, message, new C40471());
+    }
+
+    public static void show(FragmentActivity fragActivity, int layoutResId, OnCancelListener cancelListener) {
+        showDialog(fragActivity, layoutResId, null, null, cancelListener);
+    }
+
+    public static void show(FragmentActivity fragActivity, OnCancelListener cancelListener) {
+        showDialog(fragActivity, 0, null, null, cancelListener);
+    }
+
+    public static void dismiss() {
+        if (!(mBMProgressDialog == null || mBMProgressDialog.getFragmentManager() == null)) {
+            mBMProgressDialog.dismiss();
+        }
+        mBMProgressDialog = null;
+    }
+
+    private static boolean isActivityRunning(Activity activity) {
+        if (activity == null || activity.isFinishing()) {
+            return false;
+        }
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/widget/MProgressDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

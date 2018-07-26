@@ -1,5 +1,7 @@
 package com.baidu.entity.pb;
 
+import com.baidu.baidunavis.model.NavCarInfo;
+import com.baidu.carlife.core.C1253f;
 import com.google.protobuf.micro.CodedInputStreamMicro;
 import com.google.protobuf.micro.CodedOutputStreamMicro;
 import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
@@ -7,2314 +9,2082 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class ShopList
-  extends MessageMicro
-{
-  public static final int DISCOUNT_INFO_FIELD_NUMBER = 5;
-  public static final int EXIST_ACTIVITY_FIELD_NUMBER = 7;
-  public static final int FILTER_FIELD_NUMBER = 4;
-  public static final int INVOICE_INFO_FIELD_NUMBER = 6;
-  public static final int OPTION_FIELD_NUMBER = 1;
-  public static final int SHOP_INFO_FIELD_NUMBER = 2;
-  public static final int TOTAL_FIELD_NUMBER = 3;
-  private boolean a;
-  private Option b = null;
-  private boolean c;
-  private Filter d = null;
-  private boolean e;
-  private DiscountInfo f = null;
-  private boolean g;
-  private InvoiceInfo h = null;
-  private List<ShopInfo> i = Collections.emptyList();
-  private boolean j;
-  private int k = 0;
-  private boolean l;
-  private String m = "";
-  private int n = -1;
-  
-  public static ShopList parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new ShopList().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static ShopList parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (ShopList)new ShopList().mergeFrom(paramArrayOfByte);
-  }
-  
-  public ShopList addShopInfo(ShopInfo paramShopInfo)
-  {
-    if (paramShopInfo == null) {
-      return this;
+public final class ShopList extends MessageMicro {
+    public static final int DISCOUNT_INFO_FIELD_NUMBER = 5;
+    public static final int EXIST_ACTIVITY_FIELD_NUMBER = 7;
+    public static final int FILTER_FIELD_NUMBER = 4;
+    public static final int INVOICE_INFO_FIELD_NUMBER = 6;
+    public static final int OPTION_FIELD_NUMBER = 1;
+    public static final int SHOP_INFO_FIELD_NUMBER = 2;
+    public static final int TOTAL_FIELD_NUMBER = 3;
+    /* renamed from: a */
+    private boolean f14543a;
+    /* renamed from: b */
+    private Option f14544b = null;
+    /* renamed from: c */
+    private boolean f14545c;
+    /* renamed from: d */
+    private Filter f14546d = null;
+    /* renamed from: e */
+    private boolean f14547e;
+    /* renamed from: f */
+    private DiscountInfo f14548f = null;
+    /* renamed from: g */
+    private boolean f14549g;
+    /* renamed from: h */
+    private InvoiceInfo f14550h = null;
+    /* renamed from: i */
+    private List<ShopInfo> f14551i = Collections.emptyList();
+    /* renamed from: j */
+    private boolean f14552j;
+    /* renamed from: k */
+    private int f14553k = 0;
+    /* renamed from: l */
+    private boolean f14554l;
+    /* renamed from: m */
+    private String f14555m = "";
+    /* renamed from: n */
+    private int f14556n = -1;
+
+    public static final class DiscountInfo extends MessageMicro {
+        public static final int DISCOUNT_FIRST_ORDER_SHOW_FIELD_NUMBER = 4;
+        public static final int DISCOUNT_SEND_SHOW_FIELD_NUMBER = 3;
+        public static final int IS_DISCOUNT_FIRST_ORDER_FIELD_NUMBER = 2;
+        public static final int IS_DISCOUNT_SEND_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f14461a;
+        /* renamed from: b */
+        private int f14462b = 0;
+        /* renamed from: c */
+        private boolean f14463c;
+        /* renamed from: d */
+        private int f14464d = 0;
+        /* renamed from: e */
+        private boolean f14465e;
+        /* renamed from: f */
+        private String f14466f = "";
+        /* renamed from: g */
+        private boolean f14467g;
+        /* renamed from: h */
+        private String f14468h = "";
+        /* renamed from: i */
+        private int f14469i = -1;
+
+        public static DiscountInfo parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new DiscountInfo().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static DiscountInfo parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (DiscountInfo) new DiscountInfo().mergeFrom(bArr);
+        }
+
+        public final DiscountInfo clear() {
+            clearIsDiscountSend();
+            clearIsDiscountFirstOrder();
+            clearDiscountSendShow();
+            clearDiscountFirstOrderShow();
+            this.f14469i = -1;
+            return this;
+        }
+
+        public DiscountInfo clearDiscountFirstOrderShow() {
+            this.f14467g = false;
+            this.f14468h = "";
+            return this;
+        }
+
+        public DiscountInfo clearDiscountSendShow() {
+            this.f14465e = false;
+            this.f14466f = "";
+            return this;
+        }
+
+        public DiscountInfo clearIsDiscountFirstOrder() {
+            this.f14463c = false;
+            this.f14464d = 0;
+            return this;
+        }
+
+        public DiscountInfo clearIsDiscountSend() {
+            this.f14461a = false;
+            this.f14462b = 0;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f14469i < 0) {
+                getSerializedSize();
+            }
+            return this.f14469i;
+        }
+
+        public String getDiscountFirstOrderShow() {
+            return this.f14468h;
+        }
+
+        public String getDiscountSendShow() {
+            return this.f14466f;
+        }
+
+        public int getIsDiscountFirstOrder() {
+            return this.f14464d;
+        }
+
+        public int getIsDiscountSend() {
+            return this.f14462b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasIsDiscountSend()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIsDiscountSend());
+            }
+            if (hasIsDiscountFirstOrder()) {
+                i += CodedOutputStreamMicro.computeInt32Size(2, getIsDiscountFirstOrder());
+            }
+            if (hasDiscountSendShow()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getDiscountSendShow());
+            }
+            if (hasDiscountFirstOrderShow()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getDiscountFirstOrderShow());
+            }
+            this.f14469i = i;
+            return i;
+        }
+
+        public boolean hasDiscountFirstOrderShow() {
+            return this.f14467g;
+        }
+
+        public boolean hasDiscountSendShow() {
+            return this.f14465e;
+        }
+
+        public boolean hasIsDiscountFirstOrder() {
+            return this.f14463c;
+        }
+
+        public boolean hasIsDiscountSend() {
+            return this.f14461a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public DiscountInfo mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setIsDiscountSend(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 16:
+                        setIsDiscountFirstOrder(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 26:
+                        setDiscountSendShow(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setDiscountFirstOrderShow(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public DiscountInfo setDiscountFirstOrderShow(String str) {
+            this.f14467g = true;
+            this.f14468h = str;
+            return this;
+        }
+
+        public DiscountInfo setDiscountSendShow(String str) {
+            this.f14465e = true;
+            this.f14466f = str;
+            return this;
+        }
+
+        public DiscountInfo setIsDiscountFirstOrder(int i) {
+            this.f14463c = true;
+            this.f14464d = i;
+            return this;
+        }
+
+        public DiscountInfo setIsDiscountSend(int i) {
+            this.f14461a = true;
+            this.f14462b = i;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasIsDiscountSend()) {
+                codedOutputStreamMicro.writeInt32(1, getIsDiscountSend());
+            }
+            if (hasIsDiscountFirstOrder()) {
+                codedOutputStreamMicro.writeInt32(2, getIsDiscountFirstOrder());
+            }
+            if (hasDiscountSendShow()) {
+                codedOutputStreamMicro.writeString(3, getDiscountSendShow());
+            }
+            if (hasDiscountFirstOrderShow()) {
+                codedOutputStreamMicro.writeString(4, getDiscountFirstOrderShow());
+            }
+        }
     }
-    if (this.i.isEmpty()) {
-      this.i = new ArrayList();
+
+    public static final class Filter extends MessageMicro {
+        public static final int PROMOTION_FIELD_NUMBER = 3;
+        public static final int SORTBY_FIELD_NUMBER = 1;
+        public static final int TASTE_FIELD_NUMBER = 4;
+        public static final int WD_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f14470a;
+        /* renamed from: b */
+        private String f14471b = "";
+        /* renamed from: c */
+        private boolean f14472c;
+        /* renamed from: d */
+        private String f14473d = "";
+        /* renamed from: e */
+        private boolean f14474e;
+        /* renamed from: f */
+        private String f14475f = "";
+        /* renamed from: g */
+        private boolean f14476g;
+        /* renamed from: h */
+        private String f14477h = "";
+        /* renamed from: i */
+        private int f14478i = -1;
+
+        public static Filter parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Filter().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Filter parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Filter) new Filter().mergeFrom(bArr);
+        }
+
+        public final Filter clear() {
+            clearSortby();
+            clearWd();
+            clearPromotion();
+            clearTaste();
+            this.f14478i = -1;
+            return this;
+        }
+
+        public Filter clearPromotion() {
+            this.f14474e = false;
+            this.f14475f = "";
+            return this;
+        }
+
+        public Filter clearSortby() {
+            this.f14470a = false;
+            this.f14471b = "";
+            return this;
+        }
+
+        public Filter clearTaste() {
+            this.f14476g = false;
+            this.f14477h = "";
+            return this;
+        }
+
+        public Filter clearWd() {
+            this.f14472c = false;
+            this.f14473d = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f14478i < 0) {
+                getSerializedSize();
+            }
+            return this.f14478i;
+        }
+
+        public String getPromotion() {
+            return this.f14475f;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasSortby()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getSortby());
+            }
+            if (hasWd()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getWd());
+            }
+            if (hasPromotion()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getPromotion());
+            }
+            if (hasTaste()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getTaste());
+            }
+            this.f14478i = i;
+            return i;
+        }
+
+        public String getSortby() {
+            return this.f14471b;
+        }
+
+        public String getTaste() {
+            return this.f14477h;
+        }
+
+        public String getWd() {
+            return this.f14473d;
+        }
+
+        public boolean hasPromotion() {
+            return this.f14474e;
+        }
+
+        public boolean hasSortby() {
+            return this.f14470a;
+        }
+
+        public boolean hasTaste() {
+            return this.f14476g;
+        }
+
+        public boolean hasWd() {
+            return this.f14472c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Filter mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setSortby(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        setWd(codedInputStreamMicro.readString());
+                        continue;
+                    case 26:
+                        setPromotion(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setTaste(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Filter setPromotion(String str) {
+            this.f14474e = true;
+            this.f14475f = str;
+            return this;
+        }
+
+        public Filter setSortby(String str) {
+            this.f14470a = true;
+            this.f14471b = str;
+            return this;
+        }
+
+        public Filter setTaste(String str) {
+            this.f14476g = true;
+            this.f14477h = str;
+            return this;
+        }
+
+        public Filter setWd(String str) {
+            this.f14472c = true;
+            this.f14473d = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasSortby()) {
+                codedOutputStreamMicro.writeString(1, getSortby());
+            }
+            if (hasWd()) {
+                codedOutputStreamMicro.writeString(2, getWd());
+            }
+            if (hasPromotion()) {
+                codedOutputStreamMicro.writeString(3, getPromotion());
+            }
+            if (hasTaste()) {
+                codedOutputStreamMicro.writeString(4, getTaste());
+            }
+        }
     }
-    this.i.add(paramShopInfo);
-    return this;
-  }
-  
-  public final ShopList clear()
-  {
-    clearOption();
-    clearFilter();
-    clearDiscountInfo();
-    clearInvoiceInfo();
-    clearShopInfo();
-    clearTotal();
-    clearExistActivity();
-    this.n = -1;
-    return this;
-  }
-  
-  public ShopList clearDiscountInfo()
-  {
-    this.e = false;
-    this.f = null;
-    return this;
-  }
-  
-  public ShopList clearExistActivity()
-  {
-    this.l = false;
-    this.m = "";
-    return this;
-  }
-  
-  public ShopList clearFilter()
-  {
-    this.c = false;
-    this.d = null;
-    return this;
-  }
-  
-  public ShopList clearInvoiceInfo()
-  {
-    this.g = false;
-    this.h = null;
-    return this;
-  }
-  
-  public ShopList clearOption()
-  {
-    this.a = false;
-    this.b = null;
-    return this;
-  }
-  
-  public ShopList clearShopInfo()
-  {
-    this.i = Collections.emptyList();
-    return this;
-  }
-  
-  public ShopList clearTotal()
-  {
-    this.j = false;
-    this.k = 0;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.n < 0) {
-      getSerializedSize();
+
+    public static final class InvoiceInfo extends MessageMicro {
+        public static final int IS_SUPPORT_INVOICE_FIELD_NUMBER = 1;
+        public static final int SUPPORT_INVOICE_SHOW_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f14479a;
+        /* renamed from: b */
+        private int f14480b = 0;
+        /* renamed from: c */
+        private boolean f14481c;
+        /* renamed from: d */
+        private String f14482d = "";
+        /* renamed from: e */
+        private int f14483e = -1;
+
+        public static InvoiceInfo parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new InvoiceInfo().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static InvoiceInfo parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (InvoiceInfo) new InvoiceInfo().mergeFrom(bArr);
+        }
+
+        public final InvoiceInfo clear() {
+            clearIsSupportInvoice();
+            clearSupportInvoiceShow();
+            this.f14483e = -1;
+            return this;
+        }
+
+        public InvoiceInfo clearIsSupportInvoice() {
+            this.f14479a = false;
+            this.f14480b = 0;
+            return this;
+        }
+
+        public InvoiceInfo clearSupportInvoiceShow() {
+            this.f14481c = false;
+            this.f14482d = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f14483e < 0) {
+                getSerializedSize();
+            }
+            return this.f14483e;
+        }
+
+        public int getIsSupportInvoice() {
+            return this.f14480b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasIsSupportInvoice()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIsSupportInvoice());
+            }
+            if (hasSupportInvoiceShow()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getSupportInvoiceShow());
+            }
+            this.f14483e = i;
+            return i;
+        }
+
+        public String getSupportInvoiceShow() {
+            return this.f14482d;
+        }
+
+        public boolean hasIsSupportInvoice() {
+            return this.f14479a;
+        }
+
+        public boolean hasSupportInvoiceShow() {
+            return this.f14481c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public InvoiceInfo mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setIsSupportInvoice(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setSupportInvoiceShow(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public InvoiceInfo setIsSupportInvoice(int i) {
+            this.f14479a = true;
+            this.f14480b = i;
+            return this;
+        }
+
+        public InvoiceInfo setSupportInvoiceShow(String str) {
+            this.f14481c = true;
+            this.f14482d = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasIsSupportInvoice()) {
+                codedOutputStreamMicro.writeInt32(1, getIsSupportInvoice());
+            }
+            if (hasSupportInvoiceShow()) {
+                codedOutputStreamMicro.writeString(2, getSupportInvoiceShow());
+            }
+        }
     }
-    return this.n;
-  }
-  
-  public DiscountInfo getDiscountInfo()
-  {
-    return this.f;
-  }
-  
-  public String getExistActivity()
-  {
-    return this.m;
-  }
-  
-  public Filter getFilter()
-  {
-    return this.d;
-  }
-  
-  public InvoiceInfo getInvoiceInfo()
-  {
-    return this.h;
-  }
-  
-  public Option getOption()
-  {
-    return this.b;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i1 = 0;
-    if (hasOption()) {
-      i1 = 0 + CodedOutputStreamMicro.computeMessageSize(1, getOption());
+
+    public static final class Option extends MessageMicro {
+        public static final int ERROR_MSG_FIELD_NUMBER = 2;
+        public static final int ERROR_NO_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f14484a;
+        /* renamed from: b */
+        private int f14485b = 0;
+        /* renamed from: c */
+        private boolean f14486c;
+        /* renamed from: d */
+        private String f14487d = "";
+        /* renamed from: e */
+        private int f14488e = -1;
+
+        public static Option parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Option().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Option parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Option) new Option().mergeFrom(bArr);
+        }
+
+        public final Option clear() {
+            clearErrorNo();
+            clearErrorMsg();
+            this.f14488e = -1;
+            return this;
+        }
+
+        public Option clearErrorMsg() {
+            this.f14486c = false;
+            this.f14487d = "";
+            return this;
+        }
+
+        public Option clearErrorNo() {
+            this.f14484a = false;
+            this.f14485b = 0;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f14488e < 0) {
+                getSerializedSize();
+            }
+            return this.f14488e;
+        }
+
+        public String getErrorMsg() {
+            return this.f14487d;
+        }
+
+        public int getErrorNo() {
+            return this.f14485b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasErrorNo()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getErrorNo());
+            }
+            if (hasErrorMsg()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getErrorMsg());
+            }
+            this.f14488e = i;
+            return i;
+        }
+
+        public boolean hasErrorMsg() {
+            return this.f14486c;
+        }
+
+        public boolean hasErrorNo() {
+            return this.f14484a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Option mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setErrorNo(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 18:
+                        setErrorMsg(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Option setErrorMsg(String str) {
+            this.f14486c = true;
+            this.f14487d = str;
+            return this;
+        }
+
+        public Option setErrorNo(int i) {
+            this.f14484a = true;
+            this.f14485b = i;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasErrorNo()) {
+                codedOutputStreamMicro.writeInt32(1, getErrorNo());
+            }
+            if (hasErrorMsg()) {
+                codedOutputStreamMicro.writeString(2, getErrorMsg());
+            }
+        }
     }
-    Iterator localIterator = getShopInfoList().iterator();
-    for (int i2 = i1; localIterator.hasNext(); i2 = CodedOutputStreamMicro.computeMessageSize(2, (ShopInfo)localIterator.next()) + i2) {}
-    i1 = i2;
-    if (hasTotal()) {
-      i1 = i2 + CodedOutputStreamMicro.computeInt32Size(3, getTotal());
+
+    public static final class ShopInfo extends MessageMicro {
+        public static final int BUSSINESS_STATUS_FIELD_NUMBER = 7;
+        public static final int COUPON_INFO_FIELD_NUMBER = 17;
+        public static final int DELIVERY_REGIONS_FIELD_NUMBER = 15;
+        public static final int DELIVERY_TIME_FIELD_NUMBER = 5;
+        public static final int DISCOUNT_INFO_FIELD_NUMBER = 10;
+        public static final int DISTANCE_FIELD_NUMBER = 13;
+        public static final int END_TIME_FIELD_NUMBER = 11;
+        public static final int INVOICE_INFO_FIELD_NUMBER = 16;
+        public static final int IS_ONLINE_FIELD_NUMBER = 12;
+        public static final int LOGO_URL_FIELD_NUMBER = 2;
+        public static final int RELEASE_ID_FIELD_NUMBER = 8;
+        public static final int SALED_FIELD_NUMBER = 9;
+        public static final int SHOP_ID_FIELD_NUMBER = 14;
+        public static final int SHOP_NAME_FIELD_NUMBER = 1;
+        public static final int START_TIME_FIELD_NUMBER = 6;
+        public static final int TAKEOUT_COST_FIELD_NUMBER = 4;
+        public static final int TAKEOUT_PRICE_FIELD_NUMBER = 3;
+        /* renamed from: A */
+        private boolean f14508A;
+        /* renamed from: B */
+        private int f14509B = 0;
+        /* renamed from: C */
+        private boolean f14510C;
+        /* renamed from: D */
+        private String f14511D = "";
+        /* renamed from: E */
+        private boolean f14512E;
+        /* renamed from: F */
+        private String f14513F = "";
+        /* renamed from: G */
+        private boolean f14514G;
+        /* renamed from: H */
+        private String f14515H = "";
+        /* renamed from: I */
+        private int f14516I = -1;
+        /* renamed from: a */
+        private boolean f14517a;
+        /* renamed from: b */
+        private DiscountInfo f14518b = null;
+        /* renamed from: c */
+        private boolean f14519c;
+        /* renamed from: d */
+        private InvoiceInfo f14520d = null;
+        /* renamed from: e */
+        private boolean f14521e;
+        /* renamed from: f */
+        private CouponInfo f14522f = null;
+        /* renamed from: g */
+        private boolean f14523g;
+        /* renamed from: h */
+        private String f14524h = "";
+        /* renamed from: i */
+        private boolean f14525i;
+        /* renamed from: j */
+        private String f14526j = "";
+        /* renamed from: k */
+        private boolean f14527k;
+        /* renamed from: l */
+        private String f14528l = "";
+        /* renamed from: m */
+        private boolean f14529m;
+        /* renamed from: n */
+        private String f14530n = "";
+        /* renamed from: o */
+        private boolean f14531o;
+        /* renamed from: p */
+        private String f14532p = "";
+        /* renamed from: q */
+        private boolean f14533q;
+        /* renamed from: r */
+        private String f14534r = "";
+        /* renamed from: s */
+        private boolean f14535s;
+        /* renamed from: t */
+        private int f14536t = 0;
+        /* renamed from: u */
+        private boolean f14537u;
+        /* renamed from: v */
+        private String f14538v = "";
+        /* renamed from: w */
+        private boolean f14539w;
+        /* renamed from: x */
+        private int f14540x = 0;
+        /* renamed from: y */
+        private boolean f14541y;
+        /* renamed from: z */
+        private String f14542z = "";
+
+        public static final class CouponInfo extends MessageMicro {
+            public static final int COUPON_MSG_FIELD_NUMBER = 2;
+            public static final int SUPPORT_COUPON_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private boolean f14489a;
+            /* renamed from: b */
+            private int f14490b = 0;
+            /* renamed from: c */
+            private boolean f14491c;
+            /* renamed from: d */
+            private String f14492d = "";
+            /* renamed from: e */
+            private int f14493e = -1;
+
+            public static CouponInfo parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new CouponInfo().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static CouponInfo parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (CouponInfo) new CouponInfo().mergeFrom(bArr);
+            }
+
+            public final CouponInfo clear() {
+                clearSupportCoupon();
+                clearCouponMsg();
+                this.f14493e = -1;
+                return this;
+            }
+
+            public CouponInfo clearCouponMsg() {
+                this.f14491c = false;
+                this.f14492d = "";
+                return this;
+            }
+
+            public CouponInfo clearSupportCoupon() {
+                this.f14489a = false;
+                this.f14490b = 0;
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f14493e < 0) {
+                    getSerializedSize();
+                }
+                return this.f14493e;
+            }
+
+            public String getCouponMsg() {
+                return this.f14492d;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasSupportCoupon()) {
+                    i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getSupportCoupon());
+                }
+                if (hasCouponMsg()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getCouponMsg());
+                }
+                this.f14493e = i;
+                return i;
+            }
+
+            public int getSupportCoupon() {
+                return this.f14490b;
+            }
+
+            public boolean hasCouponMsg() {
+                return this.f14491c;
+            }
+
+            public boolean hasSupportCoupon() {
+                return this.f14489a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public CouponInfo mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 8:
+                            setSupportCoupon(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 18:
+                            setCouponMsg(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public CouponInfo setCouponMsg(String str) {
+                this.f14491c = true;
+                this.f14492d = str;
+                return this;
+            }
+
+            public CouponInfo setSupportCoupon(int i) {
+                this.f14489a = true;
+                this.f14490b = i;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasSupportCoupon()) {
+                    codedOutputStreamMicro.writeInt32(1, getSupportCoupon());
+                }
+                if (hasCouponMsg()) {
+                    codedOutputStreamMicro.writeString(2, getCouponMsg());
+                }
+            }
+        }
+
+        public static final class DiscountInfo extends MessageMicro {
+            public static final int DISCOUNT_FIRST_ORDER_SHOW_FIELD_NUMBER = 4;
+            public static final int DISCOUNT_SEND_SHOW_FIELD_NUMBER = 3;
+            public static final int IS_DISCOUNT_FIRST_ORDER_FIELD_NUMBER = 2;
+            public static final int IS_DISCOUNT_SEND_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private boolean f14494a;
+            /* renamed from: b */
+            private int f14495b = 0;
+            /* renamed from: c */
+            private boolean f14496c;
+            /* renamed from: d */
+            private int f14497d = 0;
+            /* renamed from: e */
+            private boolean f14498e;
+            /* renamed from: f */
+            private String f14499f = "";
+            /* renamed from: g */
+            private boolean f14500g;
+            /* renamed from: h */
+            private String f14501h = "";
+            /* renamed from: i */
+            private int f14502i = -1;
+
+            public static DiscountInfo parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new DiscountInfo().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static DiscountInfo parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (DiscountInfo) new DiscountInfo().mergeFrom(bArr);
+            }
+
+            public final DiscountInfo clear() {
+                clearIsDiscountSend();
+                clearIsDiscountFirstOrder();
+                clearDiscountSendShow();
+                clearDiscountFirstOrderShow();
+                this.f14502i = -1;
+                return this;
+            }
+
+            public DiscountInfo clearDiscountFirstOrderShow() {
+                this.f14500g = false;
+                this.f14501h = "";
+                return this;
+            }
+
+            public DiscountInfo clearDiscountSendShow() {
+                this.f14498e = false;
+                this.f14499f = "";
+                return this;
+            }
+
+            public DiscountInfo clearIsDiscountFirstOrder() {
+                this.f14496c = false;
+                this.f14497d = 0;
+                return this;
+            }
+
+            public DiscountInfo clearIsDiscountSend() {
+                this.f14494a = false;
+                this.f14495b = 0;
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f14502i < 0) {
+                    getSerializedSize();
+                }
+                return this.f14502i;
+            }
+
+            public String getDiscountFirstOrderShow() {
+                return this.f14501h;
+            }
+
+            public String getDiscountSendShow() {
+                return this.f14499f;
+            }
+
+            public int getIsDiscountFirstOrder() {
+                return this.f14497d;
+            }
+
+            public int getIsDiscountSend() {
+                return this.f14495b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasIsDiscountSend()) {
+                    i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIsDiscountSend());
+                }
+                if (hasIsDiscountFirstOrder()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(2, getIsDiscountFirstOrder());
+                }
+                if (hasDiscountSendShow()) {
+                    i += CodedOutputStreamMicro.computeStringSize(3, getDiscountSendShow());
+                }
+                if (hasDiscountFirstOrderShow()) {
+                    i += CodedOutputStreamMicro.computeStringSize(4, getDiscountFirstOrderShow());
+                }
+                this.f14502i = i;
+                return i;
+            }
+
+            public boolean hasDiscountFirstOrderShow() {
+                return this.f14500g;
+            }
+
+            public boolean hasDiscountSendShow() {
+                return this.f14498e;
+            }
+
+            public boolean hasIsDiscountFirstOrder() {
+                return this.f14496c;
+            }
+
+            public boolean hasIsDiscountSend() {
+                return this.f14494a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public DiscountInfo mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 8:
+                            setIsDiscountSend(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 16:
+                            setIsDiscountFirstOrder(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 26:
+                            setDiscountSendShow(codedInputStreamMicro.readString());
+                            continue;
+                        case 34:
+                            setDiscountFirstOrderShow(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public DiscountInfo setDiscountFirstOrderShow(String str) {
+                this.f14500g = true;
+                this.f14501h = str;
+                return this;
+            }
+
+            public DiscountInfo setDiscountSendShow(String str) {
+                this.f14498e = true;
+                this.f14499f = str;
+                return this;
+            }
+
+            public DiscountInfo setIsDiscountFirstOrder(int i) {
+                this.f14496c = true;
+                this.f14497d = i;
+                return this;
+            }
+
+            public DiscountInfo setIsDiscountSend(int i) {
+                this.f14494a = true;
+                this.f14495b = i;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasIsDiscountSend()) {
+                    codedOutputStreamMicro.writeInt32(1, getIsDiscountSend());
+                }
+                if (hasIsDiscountFirstOrder()) {
+                    codedOutputStreamMicro.writeInt32(2, getIsDiscountFirstOrder());
+                }
+                if (hasDiscountSendShow()) {
+                    codedOutputStreamMicro.writeString(3, getDiscountSendShow());
+                }
+                if (hasDiscountFirstOrderShow()) {
+                    codedOutputStreamMicro.writeString(4, getDiscountFirstOrderShow());
+                }
+            }
+        }
+
+        public static final class InvoiceInfo extends MessageMicro {
+            public static final int IS_SUPPORT_INVOICE_FIELD_NUMBER = 1;
+            public static final int SUPPORT_INVOICE_SHOW_FIELD_NUMBER = 2;
+            /* renamed from: a */
+            private boolean f14503a;
+            /* renamed from: b */
+            private int f14504b = 0;
+            /* renamed from: c */
+            private boolean f14505c;
+            /* renamed from: d */
+            private String f14506d = "";
+            /* renamed from: e */
+            private int f14507e = -1;
+
+            public static InvoiceInfo parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new InvoiceInfo().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static InvoiceInfo parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (InvoiceInfo) new InvoiceInfo().mergeFrom(bArr);
+            }
+
+            public final InvoiceInfo clear() {
+                clearIsSupportInvoice();
+                clearSupportInvoiceShow();
+                this.f14507e = -1;
+                return this;
+            }
+
+            public InvoiceInfo clearIsSupportInvoice() {
+                this.f14503a = false;
+                this.f14504b = 0;
+                return this;
+            }
+
+            public InvoiceInfo clearSupportInvoiceShow() {
+                this.f14505c = false;
+                this.f14506d = "";
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f14507e < 0) {
+                    getSerializedSize();
+                }
+                return this.f14507e;
+            }
+
+            public int getIsSupportInvoice() {
+                return this.f14504b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasIsSupportInvoice()) {
+                    i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIsSupportInvoice());
+                }
+                if (hasSupportInvoiceShow()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getSupportInvoiceShow());
+                }
+                this.f14507e = i;
+                return i;
+            }
+
+            public String getSupportInvoiceShow() {
+                return this.f14506d;
+            }
+
+            public boolean hasIsSupportInvoice() {
+                return this.f14503a;
+            }
+
+            public boolean hasSupportInvoiceShow() {
+                return this.f14505c;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public InvoiceInfo mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 8:
+                            setIsSupportInvoice(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 18:
+                            setSupportInvoiceShow(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public InvoiceInfo setIsSupportInvoice(int i) {
+                this.f14503a = true;
+                this.f14504b = i;
+                return this;
+            }
+
+            public InvoiceInfo setSupportInvoiceShow(String str) {
+                this.f14505c = true;
+                this.f14506d = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasIsSupportInvoice()) {
+                    codedOutputStreamMicro.writeInt32(1, getIsSupportInvoice());
+                }
+                if (hasSupportInvoiceShow()) {
+                    codedOutputStreamMicro.writeString(2, getSupportInvoiceShow());
+                }
+            }
+        }
+
+        public static ShopInfo parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new ShopInfo().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static ShopInfo parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (ShopInfo) new ShopInfo().mergeFrom(bArr);
+        }
+
+        public final ShopInfo clear() {
+            clearDiscountInfo();
+            clearInvoiceInfo();
+            clearCouponInfo();
+            clearShopName();
+            clearLogoUrl();
+            clearTakeoutPrice();
+            clearTakeoutCost();
+            clearDeliveryTime();
+            clearStartTime();
+            clearBussinessStatus();
+            clearReleaseId();
+            clearSaled();
+            clearEndTime();
+            clearIsOnline();
+            clearDistance();
+            clearShopId();
+            clearDeliveryRegions();
+            this.f14516I = -1;
+            return this;
+        }
+
+        public ShopInfo clearBussinessStatus() {
+            this.f14535s = false;
+            this.f14536t = 0;
+            return this;
+        }
+
+        public ShopInfo clearCouponInfo() {
+            this.f14521e = false;
+            this.f14522f = null;
+            return this;
+        }
+
+        public ShopInfo clearDeliveryRegions() {
+            this.f14514G = false;
+            this.f14515H = "";
+            return this;
+        }
+
+        public ShopInfo clearDeliveryTime() {
+            this.f14531o = false;
+            this.f14532p = "";
+            return this;
+        }
+
+        public ShopInfo clearDiscountInfo() {
+            this.f14517a = false;
+            this.f14518b = null;
+            return this;
+        }
+
+        public ShopInfo clearDistance() {
+            this.f14510C = false;
+            this.f14511D = "";
+            return this;
+        }
+
+        public ShopInfo clearEndTime() {
+            this.f14541y = false;
+            this.f14542z = "";
+            return this;
+        }
+
+        public ShopInfo clearInvoiceInfo() {
+            this.f14519c = false;
+            this.f14520d = null;
+            return this;
+        }
+
+        public ShopInfo clearIsOnline() {
+            this.f14508A = false;
+            this.f14509B = 0;
+            return this;
+        }
+
+        public ShopInfo clearLogoUrl() {
+            this.f14525i = false;
+            this.f14526j = "";
+            return this;
+        }
+
+        public ShopInfo clearReleaseId() {
+            this.f14537u = false;
+            this.f14538v = "";
+            return this;
+        }
+
+        public ShopInfo clearSaled() {
+            this.f14539w = false;
+            this.f14540x = 0;
+            return this;
+        }
+
+        public ShopInfo clearShopId() {
+            this.f14512E = false;
+            this.f14513F = "";
+            return this;
+        }
+
+        public ShopInfo clearShopName() {
+            this.f14523g = false;
+            this.f14524h = "";
+            return this;
+        }
+
+        public ShopInfo clearStartTime() {
+            this.f14533q = false;
+            this.f14534r = "";
+            return this;
+        }
+
+        public ShopInfo clearTakeoutCost() {
+            this.f14529m = false;
+            this.f14530n = "";
+            return this;
+        }
+
+        public ShopInfo clearTakeoutPrice() {
+            this.f14527k = false;
+            this.f14528l = "";
+            return this;
+        }
+
+        public int getBussinessStatus() {
+            return this.f14536t;
+        }
+
+        public int getCachedSize() {
+            if (this.f14516I < 0) {
+                getSerializedSize();
+            }
+            return this.f14516I;
+        }
+
+        public CouponInfo getCouponInfo() {
+            return this.f14522f;
+        }
+
+        public String getDeliveryRegions() {
+            return this.f14515H;
+        }
+
+        public String getDeliveryTime() {
+            return this.f14532p;
+        }
+
+        public DiscountInfo getDiscountInfo() {
+            return this.f14518b;
+        }
+
+        public String getDistance() {
+            return this.f14511D;
+        }
+
+        public String getEndTime() {
+            return this.f14542z;
+        }
+
+        public InvoiceInfo getInvoiceInfo() {
+            return this.f14520d;
+        }
+
+        public int getIsOnline() {
+            return this.f14509B;
+        }
+
+        public String getLogoUrl() {
+            return this.f14526j;
+        }
+
+        public String getReleaseId() {
+            return this.f14538v;
+        }
+
+        public int getSaled() {
+            return this.f14540x;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasShopName()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getShopName());
+            }
+            if (hasLogoUrl()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getLogoUrl());
+            }
+            if (hasTakeoutPrice()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getTakeoutPrice());
+            }
+            if (hasTakeoutCost()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getTakeoutCost());
+            }
+            if (hasDeliveryTime()) {
+                i += CodedOutputStreamMicro.computeStringSize(5, getDeliveryTime());
+            }
+            if (hasStartTime()) {
+                i += CodedOutputStreamMicro.computeStringSize(6, getStartTime());
+            }
+            if (hasBussinessStatus()) {
+                i += CodedOutputStreamMicro.computeInt32Size(7, getBussinessStatus());
+            }
+            if (hasReleaseId()) {
+                i += CodedOutputStreamMicro.computeStringSize(8, getReleaseId());
+            }
+            if (hasSaled()) {
+                i += CodedOutputStreamMicro.computeInt32Size(9, getSaled());
+            }
+            if (hasDiscountInfo()) {
+                i += CodedOutputStreamMicro.computeMessageSize(10, getDiscountInfo());
+            }
+            if (hasEndTime()) {
+                i += CodedOutputStreamMicro.computeStringSize(11, getEndTime());
+            }
+            if (hasIsOnline()) {
+                i += CodedOutputStreamMicro.computeInt32Size(12, getIsOnline());
+            }
+            if (hasDistance()) {
+                i += CodedOutputStreamMicro.computeStringSize(13, getDistance());
+            }
+            if (hasShopId()) {
+                i += CodedOutputStreamMicro.computeStringSize(14, getShopId());
+            }
+            if (hasDeliveryRegions()) {
+                i += CodedOutputStreamMicro.computeStringSize(15, getDeliveryRegions());
+            }
+            if (hasInvoiceInfo()) {
+                i += CodedOutputStreamMicro.computeMessageSize(16, getInvoiceInfo());
+            }
+            if (hasCouponInfo()) {
+                i += CodedOutputStreamMicro.computeMessageSize(17, getCouponInfo());
+            }
+            this.f14516I = i;
+            return i;
+        }
+
+        public String getShopId() {
+            return this.f14513F;
+        }
+
+        public String getShopName() {
+            return this.f14524h;
+        }
+
+        public String getStartTime() {
+            return this.f14534r;
+        }
+
+        public String getTakeoutCost() {
+            return this.f14530n;
+        }
+
+        public String getTakeoutPrice() {
+            return this.f14528l;
+        }
+
+        public boolean hasBussinessStatus() {
+            return this.f14535s;
+        }
+
+        public boolean hasCouponInfo() {
+            return this.f14521e;
+        }
+
+        public boolean hasDeliveryRegions() {
+            return this.f14514G;
+        }
+
+        public boolean hasDeliveryTime() {
+            return this.f14531o;
+        }
+
+        public boolean hasDiscountInfo() {
+            return this.f14517a;
+        }
+
+        public boolean hasDistance() {
+            return this.f14510C;
+        }
+
+        public boolean hasEndTime() {
+            return this.f14541y;
+        }
+
+        public boolean hasInvoiceInfo() {
+            return this.f14519c;
+        }
+
+        public boolean hasIsOnline() {
+            return this.f14508A;
+        }
+
+        public boolean hasLogoUrl() {
+            return this.f14525i;
+        }
+
+        public boolean hasReleaseId() {
+            return this.f14537u;
+        }
+
+        public boolean hasSaled() {
+            return this.f14539w;
+        }
+
+        public boolean hasShopId() {
+            return this.f14512E;
+        }
+
+        public boolean hasShopName() {
+            return this.f14523g;
+        }
+
+        public boolean hasStartTime() {
+            return this.f14533q;
+        }
+
+        public boolean hasTakeoutCost() {
+            return this.f14529m;
+        }
+
+        public boolean hasTakeoutPrice() {
+            return this.f14527k;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public ShopInfo mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro discountInfo;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setShopName(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        setLogoUrl(codedInputStreamMicro.readString());
+                        continue;
+                    case 26:
+                        setTakeoutPrice(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setTakeoutCost(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        setDeliveryTime(codedInputStreamMicro.readString());
+                        continue;
+                    case 50:
+                        setStartTime(codedInputStreamMicro.readString());
+                        continue;
+                    case 56:
+                        setBussinessStatus(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 66:
+                        setReleaseId(codedInputStreamMicro.readString());
+                        continue;
+                    case NavCarInfo.CarType_57L /*72*/:
+                        setSaled(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 82:
+                        discountInfo = new DiscountInfo();
+                        codedInputStreamMicro.readMessage(discountInfo);
+                        setDiscountInfo(discountInfo);
+                        continue;
+                    case 90:
+                        setEndTime(codedInputStreamMicro.readString());
+                        continue;
+                    case 96:
+                        setIsOnline(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 106:
+                        setDistance(codedInputStreamMicro.readString());
+                        continue;
+                    case 114:
+                        setShopId(codedInputStreamMicro.readString());
+                        continue;
+                    case C1253f.df /*122*/:
+                        setDeliveryRegions(codedInputStreamMicro.readString());
+                        continue;
+                    case 130:
+                        discountInfo = new InvoiceInfo();
+                        codedInputStreamMicro.readMessage(discountInfo);
+                        setInvoiceInfo(discountInfo);
+                        continue;
+                    case 138:
+                        discountInfo = new CouponInfo();
+                        codedInputStreamMicro.readMessage(discountInfo);
+                        setCouponInfo(discountInfo);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public ShopInfo setBussinessStatus(int i) {
+            this.f14535s = true;
+            this.f14536t = i;
+            return this;
+        }
+
+        public ShopInfo setCouponInfo(CouponInfo couponInfo) {
+            if (couponInfo == null) {
+                return clearCouponInfo();
+            }
+            this.f14521e = true;
+            this.f14522f = couponInfo;
+            return this;
+        }
+
+        public ShopInfo setDeliveryRegions(String str) {
+            this.f14514G = true;
+            this.f14515H = str;
+            return this;
+        }
+
+        public ShopInfo setDeliveryTime(String str) {
+            this.f14531o = true;
+            this.f14532p = str;
+            return this;
+        }
+
+        public ShopInfo setDiscountInfo(DiscountInfo discountInfo) {
+            if (discountInfo == null) {
+                return clearDiscountInfo();
+            }
+            this.f14517a = true;
+            this.f14518b = discountInfo;
+            return this;
+        }
+
+        public ShopInfo setDistance(String str) {
+            this.f14510C = true;
+            this.f14511D = str;
+            return this;
+        }
+
+        public ShopInfo setEndTime(String str) {
+            this.f14541y = true;
+            this.f14542z = str;
+            return this;
+        }
+
+        public ShopInfo setInvoiceInfo(InvoiceInfo invoiceInfo) {
+            if (invoiceInfo == null) {
+                return clearInvoiceInfo();
+            }
+            this.f14519c = true;
+            this.f14520d = invoiceInfo;
+            return this;
+        }
+
+        public ShopInfo setIsOnline(int i) {
+            this.f14508A = true;
+            this.f14509B = i;
+            return this;
+        }
+
+        public ShopInfo setLogoUrl(String str) {
+            this.f14525i = true;
+            this.f14526j = str;
+            return this;
+        }
+
+        public ShopInfo setReleaseId(String str) {
+            this.f14537u = true;
+            this.f14538v = str;
+            return this;
+        }
+
+        public ShopInfo setSaled(int i) {
+            this.f14539w = true;
+            this.f14540x = i;
+            return this;
+        }
+
+        public ShopInfo setShopId(String str) {
+            this.f14512E = true;
+            this.f14513F = str;
+            return this;
+        }
+
+        public ShopInfo setShopName(String str) {
+            this.f14523g = true;
+            this.f14524h = str;
+            return this;
+        }
+
+        public ShopInfo setStartTime(String str) {
+            this.f14533q = true;
+            this.f14534r = str;
+            return this;
+        }
+
+        public ShopInfo setTakeoutCost(String str) {
+            this.f14529m = true;
+            this.f14530n = str;
+            return this;
+        }
+
+        public ShopInfo setTakeoutPrice(String str) {
+            this.f14527k = true;
+            this.f14528l = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasShopName()) {
+                codedOutputStreamMicro.writeString(1, getShopName());
+            }
+            if (hasLogoUrl()) {
+                codedOutputStreamMicro.writeString(2, getLogoUrl());
+            }
+            if (hasTakeoutPrice()) {
+                codedOutputStreamMicro.writeString(3, getTakeoutPrice());
+            }
+            if (hasTakeoutCost()) {
+                codedOutputStreamMicro.writeString(4, getTakeoutCost());
+            }
+            if (hasDeliveryTime()) {
+                codedOutputStreamMicro.writeString(5, getDeliveryTime());
+            }
+            if (hasStartTime()) {
+                codedOutputStreamMicro.writeString(6, getStartTime());
+            }
+            if (hasBussinessStatus()) {
+                codedOutputStreamMicro.writeInt32(7, getBussinessStatus());
+            }
+            if (hasReleaseId()) {
+                codedOutputStreamMicro.writeString(8, getReleaseId());
+            }
+            if (hasSaled()) {
+                codedOutputStreamMicro.writeInt32(9, getSaled());
+            }
+            if (hasDiscountInfo()) {
+                codedOutputStreamMicro.writeMessage(10, getDiscountInfo());
+            }
+            if (hasEndTime()) {
+                codedOutputStreamMicro.writeString(11, getEndTime());
+            }
+            if (hasIsOnline()) {
+                codedOutputStreamMicro.writeInt32(12, getIsOnline());
+            }
+            if (hasDistance()) {
+                codedOutputStreamMicro.writeString(13, getDistance());
+            }
+            if (hasShopId()) {
+                codedOutputStreamMicro.writeString(14, getShopId());
+            }
+            if (hasDeliveryRegions()) {
+                codedOutputStreamMicro.writeString(15, getDeliveryRegions());
+            }
+            if (hasInvoiceInfo()) {
+                codedOutputStreamMicro.writeMessage(16, getInvoiceInfo());
+            }
+            if (hasCouponInfo()) {
+                codedOutputStreamMicro.writeMessage(17, getCouponInfo());
+            }
+        }
     }
-    i2 = i1;
-    if (hasFilter()) {
-      i2 = i1 + CodedOutputStreamMicro.computeMessageSize(4, getFilter());
+
+    public static ShopList parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new ShopList().mergeFrom(codedInputStreamMicro);
     }
-    i1 = i2;
-    if (hasDiscountInfo()) {
-      i1 = i2 + CodedOutputStreamMicro.computeMessageSize(5, getDiscountInfo());
+
+    public static ShopList parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (ShopList) new ShopList().mergeFrom(bArr);
     }
-    i2 = i1;
-    if (hasInvoiceInfo()) {
-      i2 = i1 + CodedOutputStreamMicro.computeMessageSize(6, getInvoiceInfo());
-    }
-    i1 = i2;
-    if (hasExistActivity()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(7, getExistActivity());
-    }
-    this.n = i1;
-    return i1;
-  }
-  
-  public ShopInfo getShopInfo(int paramInt)
-  {
-    return (ShopInfo)this.i.get(paramInt);
-  }
-  
-  public int getShopInfoCount()
-  {
-    return this.i.size();
-  }
-  
-  public List<ShopInfo> getShopInfoList()
-  {
-    return this.i;
-  }
-  
-  public int getTotal()
-  {
-    return this.k;
-  }
-  
-  public boolean hasDiscountInfo()
-  {
-    return this.e;
-  }
-  
-  public boolean hasExistActivity()
-  {
-    return this.l;
-  }
-  
-  public boolean hasFilter()
-  {
-    return this.c;
-  }
-  
-  public boolean hasInvoiceInfo()
-  {
-    return this.g;
-  }
-  
-  public boolean hasOption()
-  {
-    return this.a;
-  }
-  
-  public boolean hasTotal()
-  {
-    return this.j;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public ShopList mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      Object localObject;
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
+
+    public ShopList addShopInfo(ShopInfo shopInfo) {
+        if (shopInfo != null) {
+            if (this.f14551i.isEmpty()) {
+                this.f14551i = new ArrayList();
+            }
+            this.f14551i.add(shopInfo);
+        }
         return this;
-      case 10: 
-        localObject = new Option();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setOption((Option)localObject);
-        break;
-      case 18: 
-        localObject = new ShopInfo();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        addShopInfo((ShopInfo)localObject);
-        break;
-      case 24: 
-        setTotal(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 34: 
-        localObject = new Filter();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setFilter((Filter)localObject);
-        break;
-      case 42: 
-        localObject = new DiscountInfo();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setDiscountInfo((DiscountInfo)localObject);
-        break;
-      case 50: 
-        localObject = new InvoiceInfo();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setInvoiceInfo((InvoiceInfo)localObject);
-        break;
-      case 58: 
-        setExistActivity(paramCodedInputStreamMicro.readString());
-      }
     }
-  }
-  
-  public ShopList setDiscountInfo(DiscountInfo paramDiscountInfo)
-  {
-    if (paramDiscountInfo == null) {
-      return clearDiscountInfo();
-    }
-    this.e = true;
-    this.f = paramDiscountInfo;
-    return this;
-  }
-  
-  public ShopList setExistActivity(String paramString)
-  {
-    this.l = true;
-    this.m = paramString;
-    return this;
-  }
-  
-  public ShopList setFilter(Filter paramFilter)
-  {
-    if (paramFilter == null) {
-      return clearFilter();
-    }
-    this.c = true;
-    this.d = paramFilter;
-    return this;
-  }
-  
-  public ShopList setInvoiceInfo(InvoiceInfo paramInvoiceInfo)
-  {
-    if (paramInvoiceInfo == null) {
-      return clearInvoiceInfo();
-    }
-    this.g = true;
-    this.h = paramInvoiceInfo;
-    return this;
-  }
-  
-  public ShopList setOption(Option paramOption)
-  {
-    if (paramOption == null) {
-      return clearOption();
-    }
-    this.a = true;
-    this.b = paramOption;
-    return this;
-  }
-  
-  public ShopList setShopInfo(int paramInt, ShopInfo paramShopInfo)
-  {
-    if (paramShopInfo == null) {
-      return this;
-    }
-    this.i.set(paramInt, paramShopInfo);
-    return this;
-  }
-  
-  public ShopList setTotal(int paramInt)
-  {
-    this.j = true;
-    this.k = paramInt;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasOption()) {
-      paramCodedOutputStreamMicro.writeMessage(1, getOption());
-    }
-    Iterator localIterator = getShopInfoList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(2, (ShopInfo)localIterator.next());
-    }
-    if (hasTotal()) {
-      paramCodedOutputStreamMicro.writeInt32(3, getTotal());
-    }
-    if (hasFilter()) {
-      paramCodedOutputStreamMicro.writeMessage(4, getFilter());
-    }
-    if (hasDiscountInfo()) {
-      paramCodedOutputStreamMicro.writeMessage(5, getDiscountInfo());
-    }
-    if (hasInvoiceInfo()) {
-      paramCodedOutputStreamMicro.writeMessage(6, getInvoiceInfo());
-    }
-    if (hasExistActivity()) {
-      paramCodedOutputStreamMicro.writeString(7, getExistActivity());
-    }
-  }
-  
-  public static final class DiscountInfo
-    extends MessageMicro
-  {
-    public static final int DISCOUNT_FIRST_ORDER_SHOW_FIELD_NUMBER = 4;
-    public static final int DISCOUNT_SEND_SHOW_FIELD_NUMBER = 3;
-    public static final int IS_DISCOUNT_FIRST_ORDER_FIELD_NUMBER = 2;
-    public static final int IS_DISCOUNT_SEND_FIELD_NUMBER = 1;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private int d = 0;
-    private boolean e;
-    private String f = "";
-    private boolean g;
-    private String h = "";
-    private int i = -1;
-    
-    public static DiscountInfo parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new DiscountInfo().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static DiscountInfo parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (DiscountInfo)new DiscountInfo().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final DiscountInfo clear()
-    {
-      clearIsDiscountSend();
-      clearIsDiscountFirstOrder();
-      clearDiscountSendShow();
-      clearDiscountFirstOrderShow();
-      this.i = -1;
-      return this;
-    }
-    
-    public DiscountInfo clearDiscountFirstOrderShow()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public DiscountInfo clearDiscountSendShow()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public DiscountInfo clearIsDiscountFirstOrder()
-    {
-      this.c = false;
-      this.d = 0;
-      return this;
-    }
-    
-    public DiscountInfo clearIsDiscountSend()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.i < 0) {
-        getSerializedSize();
-      }
-      return this.i;
-    }
-    
-    public String getDiscountFirstOrderShow()
-    {
-      return this.h;
-    }
-    
-    public String getDiscountSendShow()
-    {
-      return this.f;
-    }
-    
-    public int getIsDiscountFirstOrder()
-    {
-      return this.d;
-    }
-    
-    public int getIsDiscountSend()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int k = 0;
-      if (hasIsDiscountSend()) {
-        k = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIsDiscountSend());
-      }
-      int j = k;
-      if (hasIsDiscountFirstOrder()) {
-        j = k + CodedOutputStreamMicro.computeInt32Size(2, getIsDiscountFirstOrder());
-      }
-      k = j;
-      if (hasDiscountSendShow()) {
-        k = j + CodedOutputStreamMicro.computeStringSize(3, getDiscountSendShow());
-      }
-      j = k;
-      if (hasDiscountFirstOrderShow()) {
-        j = k + CodedOutputStreamMicro.computeStringSize(4, getDiscountFirstOrderShow());
-      }
-      this.i = j;
-      return j;
-    }
-    
-    public boolean hasDiscountFirstOrderShow()
-    {
-      return this.g;
-    }
-    
-    public boolean hasDiscountSendShow()
-    {
-      return this.e;
-    }
-    
-    public boolean hasIsDiscountFirstOrder()
-    {
-      return this.c;
-    }
-    
-    public boolean hasIsDiscountSend()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public DiscountInfo mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int j = paramCodedInputStreamMicro.readTag();
-        switch (j)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, j)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setIsDiscountSend(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 16: 
-          setIsDiscountFirstOrder(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 26: 
-          setDiscountSendShow(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setDiscountFirstOrderShow(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public DiscountInfo setDiscountFirstOrderShow(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
-    }
-    
-    public DiscountInfo setDiscountSendShow(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
-    }
-    
-    public DiscountInfo setIsDiscountFirstOrder(int paramInt)
-    {
-      this.c = true;
-      this.d = paramInt;
-      return this;
-    }
-    
-    public DiscountInfo setIsDiscountSend(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasIsDiscountSend()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getIsDiscountSend());
-      }
-      if (hasIsDiscountFirstOrder()) {
-        paramCodedOutputStreamMicro.writeInt32(2, getIsDiscountFirstOrder());
-      }
-      if (hasDiscountSendShow()) {
-        paramCodedOutputStreamMicro.writeString(3, getDiscountSendShow());
-      }
-      if (hasDiscountFirstOrderShow()) {
-        paramCodedOutputStreamMicro.writeString(4, getDiscountFirstOrderShow());
-      }
-    }
-  }
-  
-  public static final class Filter
-    extends MessageMicro
-  {
-    public static final int PROMOTION_FIELD_NUMBER = 3;
-    public static final int SORTBY_FIELD_NUMBER = 1;
-    public static final int TASTE_FIELD_NUMBER = 4;
-    public static final int WD_FIELD_NUMBER = 2;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private String d = "";
-    private boolean e;
-    private String f = "";
-    private boolean g;
-    private String h = "";
-    private int i = -1;
-    
-    public static Filter parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Filter().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Filter parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Filter)new Filter().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Filter clear()
-    {
-      clearSortby();
-      clearWd();
-      clearPromotion();
-      clearTaste();
-      this.i = -1;
-      return this;
-    }
-    
-    public Filter clearPromotion()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public Filter clearSortby()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public Filter clearTaste()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public Filter clearWd()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.i < 0) {
-        getSerializedSize();
-      }
-      return this.i;
-    }
-    
-    public String getPromotion()
-    {
-      return this.f;
-    }
-    
-    public int getSerializedSize()
-    {
-      int k = 0;
-      if (hasSortby()) {
-        k = 0 + CodedOutputStreamMicro.computeStringSize(1, getSortby());
-      }
-      int j = k;
-      if (hasWd()) {
-        j = k + CodedOutputStreamMicro.computeStringSize(2, getWd());
-      }
-      k = j;
-      if (hasPromotion()) {
-        k = j + CodedOutputStreamMicro.computeStringSize(3, getPromotion());
-      }
-      j = k;
-      if (hasTaste()) {
-        j = k + CodedOutputStreamMicro.computeStringSize(4, getTaste());
-      }
-      this.i = j;
-      return j;
-    }
-    
-    public String getSortby()
-    {
-      return this.b;
-    }
-    
-    public String getTaste()
-    {
-      return this.h;
-    }
-    
-    public String getWd()
-    {
-      return this.d;
-    }
-    
-    public boolean hasPromotion()
-    {
-      return this.e;
-    }
-    
-    public boolean hasSortby()
-    {
-      return this.a;
-    }
-    
-    public boolean hasTaste()
-    {
-      return this.g;
-    }
-    
-    public boolean hasWd()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Filter mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int j = paramCodedInputStreamMicro.readTag();
-        switch (j)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, j)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setSortby(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          setWd(paramCodedInputStreamMicro.readString());
-          break;
-        case 26: 
-          setPromotion(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setTaste(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public Filter setPromotion(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
-    }
-    
-    public Filter setSortby(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
-    }
-    
-    public Filter setTaste(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
-    }
-    
-    public Filter setWd(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasSortby()) {
-        paramCodedOutputStreamMicro.writeString(1, getSortby());
-      }
-      if (hasWd()) {
-        paramCodedOutputStreamMicro.writeString(2, getWd());
-      }
-      if (hasPromotion()) {
-        paramCodedOutputStreamMicro.writeString(3, getPromotion());
-      }
-      if (hasTaste()) {
-        paramCodedOutputStreamMicro.writeString(4, getTaste());
-      }
-    }
-  }
-  
-  public static final class InvoiceInfo
-    extends MessageMicro
-  {
-    public static final int IS_SUPPORT_INVOICE_FIELD_NUMBER = 1;
-    public static final int SUPPORT_INVOICE_SHOW_FIELD_NUMBER = 2;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private int e = -1;
-    
-    public static InvoiceInfo parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new InvoiceInfo().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static InvoiceInfo parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (InvoiceInfo)new InvoiceInfo().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final InvoiceInfo clear()
-    {
-      clearIsSupportInvoice();
-      clearSupportInvoiceShow();
-      this.e = -1;
-      return this;
-    }
-    
-    public InvoiceInfo clearIsSupportInvoice()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public InvoiceInfo clearSupportInvoiceShow()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public int getIsSupportInvoice()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasIsSupportInvoice()) {
-        i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIsSupportInvoice());
-      }
-      int j = i;
-      if (hasSupportInvoiceShow()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getSupportInvoiceShow());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public String getSupportInvoiceShow()
-    {
-      return this.d;
-    }
-    
-    public boolean hasIsSupportInvoice()
-    {
-      return this.a;
-    }
-    
-    public boolean hasSupportInvoiceShow()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public InvoiceInfo mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setIsSupportInvoice(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setSupportInvoiceShow(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public InvoiceInfo setIsSupportInvoice(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public InvoiceInfo setSupportInvoiceShow(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasIsSupportInvoice()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getIsSupportInvoice());
-      }
-      if (hasSupportInvoiceShow()) {
-        paramCodedOutputStreamMicro.writeString(2, getSupportInvoiceShow());
-      }
-    }
-  }
-  
-  public static final class Option
-    extends MessageMicro
-  {
-    public static final int ERROR_MSG_FIELD_NUMBER = 2;
-    public static final int ERROR_NO_FIELD_NUMBER = 1;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private String d = "";
-    private int e = -1;
-    
-    public static Option parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Option().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Option parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Option)new Option().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Option clear()
-    {
-      clearErrorNo();
-      clearErrorMsg();
-      this.e = -1;
-      return this;
-    }
-    
-    public Option clearErrorMsg()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public Option clearErrorNo()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public String getErrorMsg()
-    {
-      return this.d;
-    }
-    
-    public int getErrorNo()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasErrorNo()) {
-        i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getErrorNo());
-      }
-      int j = i;
-      if (hasErrorMsg()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getErrorMsg());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public boolean hasErrorMsg()
-    {
-      return this.c;
-    }
-    
-    public boolean hasErrorNo()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Option mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setErrorNo(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 18: 
-          setErrorMsg(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public Option setErrorMsg(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public Option setErrorNo(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasErrorNo()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getErrorNo());
-      }
-      if (hasErrorMsg()) {
-        paramCodedOutputStreamMicro.writeString(2, getErrorMsg());
-      }
-    }
-  }
-  
-  public static final class ShopInfo
-    extends MessageMicro
-  {
-    public static final int BUSSINESS_STATUS_FIELD_NUMBER = 7;
-    public static final int COUPON_INFO_FIELD_NUMBER = 17;
-    public static final int DELIVERY_REGIONS_FIELD_NUMBER = 15;
-    public static final int DELIVERY_TIME_FIELD_NUMBER = 5;
-    public static final int DISCOUNT_INFO_FIELD_NUMBER = 10;
-    public static final int DISTANCE_FIELD_NUMBER = 13;
-    public static final int END_TIME_FIELD_NUMBER = 11;
-    public static final int INVOICE_INFO_FIELD_NUMBER = 16;
-    public static final int IS_ONLINE_FIELD_NUMBER = 12;
-    public static final int LOGO_URL_FIELD_NUMBER = 2;
-    public static final int RELEASE_ID_FIELD_NUMBER = 8;
-    public static final int SALED_FIELD_NUMBER = 9;
-    public static final int SHOP_ID_FIELD_NUMBER = 14;
-    public static final int SHOP_NAME_FIELD_NUMBER = 1;
-    public static final int START_TIME_FIELD_NUMBER = 6;
-    public static final int TAKEOUT_COST_FIELD_NUMBER = 4;
-    public static final int TAKEOUT_PRICE_FIELD_NUMBER = 3;
-    private boolean A;
-    private int B = 0;
-    private boolean C;
-    private String D = "";
-    private boolean E;
-    private String F = "";
-    private boolean G;
-    private String H = "";
-    private int I = -1;
-    private boolean a;
-    private DiscountInfo b = null;
-    private boolean c;
-    private InvoiceInfo d = null;
-    private boolean e;
-    private CouponInfo f = null;
-    private boolean g;
-    private String h = "";
-    private boolean i;
-    private String j = "";
-    private boolean k;
-    private String l = "";
-    private boolean m;
-    private String n = "";
-    private boolean o;
-    private String p = "";
-    private boolean q;
-    private String r = "";
-    private boolean s;
-    private int t = 0;
-    private boolean u;
-    private String v = "";
-    private boolean w;
-    private int x = 0;
-    private boolean y;
-    private String z = "";
-    
-    public static ShopInfo parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new ShopInfo().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static ShopInfo parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (ShopInfo)new ShopInfo().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final ShopInfo clear()
-    {
-      clearDiscountInfo();
-      clearInvoiceInfo();
-      clearCouponInfo();
-      clearShopName();
-      clearLogoUrl();
-      clearTakeoutPrice();
-      clearTakeoutCost();
-      clearDeliveryTime();
-      clearStartTime();
-      clearBussinessStatus();
-      clearReleaseId();
-      clearSaled();
-      clearEndTime();
-      clearIsOnline();
-      clearDistance();
-      clearShopId();
-      clearDeliveryRegions();
-      this.I = -1;
-      return this;
-    }
-    
-    public ShopInfo clearBussinessStatus()
-    {
-      this.s = false;
-      this.t = 0;
-      return this;
-    }
-    
-    public ShopInfo clearCouponInfo()
-    {
-      this.e = false;
-      this.f = null;
-      return this;
-    }
-    
-    public ShopInfo clearDeliveryRegions()
-    {
-      this.G = false;
-      this.H = "";
-      return this;
-    }
-    
-    public ShopInfo clearDeliveryTime()
-    {
-      this.o = false;
-      this.p = "";
-      return this;
-    }
-    
-    public ShopInfo clearDiscountInfo()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public ShopInfo clearDistance()
-    {
-      this.C = false;
-      this.D = "";
-      return this;
-    }
-    
-    public ShopInfo clearEndTime()
-    {
-      this.y = false;
-      this.z = "";
-      return this;
-    }
-    
-    public ShopInfo clearInvoiceInfo()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public ShopInfo clearIsOnline()
-    {
-      this.A = false;
-      this.B = 0;
-      return this;
-    }
-    
-    public ShopInfo clearLogoUrl()
-    {
-      this.i = false;
-      this.j = "";
-      return this;
-    }
-    
-    public ShopInfo clearReleaseId()
-    {
-      this.u = false;
-      this.v = "";
-      return this;
-    }
-    
-    public ShopInfo clearSaled()
-    {
-      this.w = false;
-      this.x = 0;
-      return this;
-    }
-    
-    public ShopInfo clearShopId()
-    {
-      this.E = false;
-      this.F = "";
-      return this;
-    }
-    
-    public ShopInfo clearShopName()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public ShopInfo clearStartTime()
-    {
-      this.q = false;
-      this.r = "";
-      return this;
-    }
-    
-    public ShopInfo clearTakeoutCost()
-    {
-      this.m = false;
-      this.n = "";
-      return this;
-    }
-    
-    public ShopInfo clearTakeoutPrice()
-    {
-      this.k = false;
-      this.l = "";
-      return this;
-    }
-    
-    public int getBussinessStatus()
-    {
-      return this.t;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.I < 0) {
-        getSerializedSize();
-      }
-      return this.I;
-    }
-    
-    public CouponInfo getCouponInfo()
-    {
-      return this.f;
-    }
-    
-    public String getDeliveryRegions()
-    {
-      return this.H;
-    }
-    
-    public String getDeliveryTime()
-    {
-      return this.p;
-    }
-    
-    public DiscountInfo getDiscountInfo()
-    {
-      return this.b;
-    }
-    
-    public String getDistance()
-    {
-      return this.D;
-    }
-    
-    public String getEndTime()
-    {
-      return this.z;
-    }
-    
-    public InvoiceInfo getInvoiceInfo()
-    {
-      return this.d;
-    }
-    
-    public int getIsOnline()
-    {
-      return this.B;
-    }
-    
-    public String getLogoUrl()
-    {
-      return this.j;
-    }
-    
-    public String getReleaseId()
-    {
-      return this.v;
-    }
-    
-    public int getSaled()
-    {
-      return this.x;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasShopName()) {
-        i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getShopName());
-      }
-      int i1 = i2;
-      if (hasLogoUrl()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getLogoUrl());
-      }
-      i2 = i1;
-      if (hasTakeoutPrice()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getTakeoutPrice());
-      }
-      i1 = i2;
-      if (hasTakeoutCost()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getTakeoutCost());
-      }
-      i2 = i1;
-      if (hasDeliveryTime()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getDeliveryTime());
-      }
-      i1 = i2;
-      if (hasStartTime()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getStartTime());
-      }
-      i2 = i1;
-      if (hasBussinessStatus()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(7, getBussinessStatus());
-      }
-      i1 = i2;
-      if (hasReleaseId()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getReleaseId());
-      }
-      i2 = i1;
-      if (hasSaled()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(9, getSaled());
-      }
-      i1 = i2;
-      if (hasDiscountInfo()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(10, getDiscountInfo());
-      }
-      i2 = i1;
-      if (hasEndTime()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(11, getEndTime());
-      }
-      i1 = i2;
-      if (hasIsOnline()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(12, getIsOnline());
-      }
-      i2 = i1;
-      if (hasDistance()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(13, getDistance());
-      }
-      i1 = i2;
-      if (hasShopId()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(14, getShopId());
-      }
-      i2 = i1;
-      if (hasDeliveryRegions()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(15, getDeliveryRegions());
-      }
-      i1 = i2;
-      if (hasInvoiceInfo()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(16, getInvoiceInfo());
-      }
-      i2 = i1;
-      if (hasCouponInfo()) {
-        i2 = i1 + CodedOutputStreamMicro.computeMessageSize(17, getCouponInfo());
-      }
-      this.I = i2;
-      return i2;
-    }
-    
-    public String getShopId()
-    {
-      return this.F;
-    }
-    
-    public String getShopName()
-    {
-      return this.h;
-    }
-    
-    public String getStartTime()
-    {
-      return this.r;
-    }
-    
-    public String getTakeoutCost()
-    {
-      return this.n;
-    }
-    
-    public String getTakeoutPrice()
-    {
-      return this.l;
-    }
-    
-    public boolean hasBussinessStatus()
-    {
-      return this.s;
-    }
-    
-    public boolean hasCouponInfo()
-    {
-      return this.e;
-    }
-    
-    public boolean hasDeliveryRegions()
-    {
-      return this.G;
-    }
-    
-    public boolean hasDeliveryTime()
-    {
-      return this.o;
-    }
-    
-    public boolean hasDiscountInfo()
-    {
-      return this.a;
-    }
-    
-    public boolean hasDistance()
-    {
-      return this.C;
-    }
-    
-    public boolean hasEndTime()
-    {
-      return this.y;
-    }
-    
-    public boolean hasInvoiceInfo()
-    {
-      return this.c;
-    }
-    
-    public boolean hasIsOnline()
-    {
-      return this.A;
-    }
-    
-    public boolean hasLogoUrl()
-    {
-      return this.i;
-    }
-    
-    public boolean hasReleaseId()
-    {
-      return this.u;
-    }
-    
-    public boolean hasSaled()
-    {
-      return this.w;
-    }
-    
-    public boolean hasShopId()
-    {
-      return this.E;
-    }
-    
-    public boolean hasShopName()
-    {
-      return this.g;
-    }
-    
-    public boolean hasStartTime()
-    {
-      return this.q;
-    }
-    
-    public boolean hasTakeoutCost()
-    {
-      return this.m;
-    }
-    
-    public boolean hasTakeoutPrice()
-    {
-      return this.k;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public ShopInfo mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setShopName(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          setLogoUrl(paramCodedInputStreamMicro.readString());
-          break;
-        case 26: 
-          setTakeoutPrice(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setTakeoutCost(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          setDeliveryTime(paramCodedInputStreamMicro.readString());
-          break;
-        case 50: 
-          setStartTime(paramCodedInputStreamMicro.readString());
-          break;
-        case 56: 
-          setBussinessStatus(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 66: 
-          setReleaseId(paramCodedInputStreamMicro.readString());
-          break;
-        case 72: 
-          setSaled(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 82: 
-          localObject = new DiscountInfo();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setDiscountInfo((DiscountInfo)localObject);
-          break;
-        case 90: 
-          setEndTime(paramCodedInputStreamMicro.readString());
-          break;
-        case 96: 
-          setIsOnline(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 106: 
-          setDistance(paramCodedInputStreamMicro.readString());
-          break;
-        case 114: 
-          setShopId(paramCodedInputStreamMicro.readString());
-          break;
-        case 122: 
-          setDeliveryRegions(paramCodedInputStreamMicro.readString());
-          break;
-        case 130: 
-          localObject = new InvoiceInfo();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setInvoiceInfo((InvoiceInfo)localObject);
-          break;
-        case 138: 
-          localObject = new CouponInfo();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setCouponInfo((CouponInfo)localObject);
-        }
-      }
-    }
-    
-    public ShopInfo setBussinessStatus(int paramInt)
-    {
-      this.s = true;
-      this.t = paramInt;
-      return this;
-    }
-    
-    public ShopInfo setCouponInfo(CouponInfo paramCouponInfo)
-    {
-      if (paramCouponInfo == null) {
-        return clearCouponInfo();
-      }
-      this.e = true;
-      this.f = paramCouponInfo;
-      return this;
-    }
-    
-    public ShopInfo setDeliveryRegions(String paramString)
-    {
-      this.G = true;
-      this.H = paramString;
-      return this;
-    }
-    
-    public ShopInfo setDeliveryTime(String paramString)
-    {
-      this.o = true;
-      this.p = paramString;
-      return this;
-    }
-    
-    public ShopInfo setDiscountInfo(DiscountInfo paramDiscountInfo)
-    {
-      if (paramDiscountInfo == null) {
-        return clearDiscountInfo();
-      }
-      this.a = true;
-      this.b = paramDiscountInfo;
-      return this;
-    }
-    
-    public ShopInfo setDistance(String paramString)
-    {
-      this.C = true;
-      this.D = paramString;
-      return this;
-    }
-    
-    public ShopInfo setEndTime(String paramString)
-    {
-      this.y = true;
-      this.z = paramString;
-      return this;
-    }
-    
-    public ShopInfo setInvoiceInfo(InvoiceInfo paramInvoiceInfo)
-    {
-      if (paramInvoiceInfo == null) {
-        return clearInvoiceInfo();
-      }
-      this.c = true;
-      this.d = paramInvoiceInfo;
-      return this;
-    }
-    
-    public ShopInfo setIsOnline(int paramInt)
-    {
-      this.A = true;
-      this.B = paramInt;
-      return this;
-    }
-    
-    public ShopInfo setLogoUrl(String paramString)
-    {
-      this.i = true;
-      this.j = paramString;
-      return this;
-    }
-    
-    public ShopInfo setReleaseId(String paramString)
-    {
-      this.u = true;
-      this.v = paramString;
-      return this;
-    }
-    
-    public ShopInfo setSaled(int paramInt)
-    {
-      this.w = true;
-      this.x = paramInt;
-      return this;
-    }
-    
-    public ShopInfo setShopId(String paramString)
-    {
-      this.E = true;
-      this.F = paramString;
-      return this;
-    }
-    
-    public ShopInfo setShopName(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
-    }
-    
-    public ShopInfo setStartTime(String paramString)
-    {
-      this.q = true;
-      this.r = paramString;
-      return this;
-    }
-    
-    public ShopInfo setTakeoutCost(String paramString)
-    {
-      this.m = true;
-      this.n = paramString;
-      return this;
-    }
-    
-    public ShopInfo setTakeoutPrice(String paramString)
-    {
-      this.k = true;
-      this.l = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasShopName()) {
-        paramCodedOutputStreamMicro.writeString(1, getShopName());
-      }
-      if (hasLogoUrl()) {
-        paramCodedOutputStreamMicro.writeString(2, getLogoUrl());
-      }
-      if (hasTakeoutPrice()) {
-        paramCodedOutputStreamMicro.writeString(3, getTakeoutPrice());
-      }
-      if (hasTakeoutCost()) {
-        paramCodedOutputStreamMicro.writeString(4, getTakeoutCost());
-      }
-      if (hasDeliveryTime()) {
-        paramCodedOutputStreamMicro.writeString(5, getDeliveryTime());
-      }
-      if (hasStartTime()) {
-        paramCodedOutputStreamMicro.writeString(6, getStartTime());
-      }
-      if (hasBussinessStatus()) {
-        paramCodedOutputStreamMicro.writeInt32(7, getBussinessStatus());
-      }
-      if (hasReleaseId()) {
-        paramCodedOutputStreamMicro.writeString(8, getReleaseId());
-      }
-      if (hasSaled()) {
-        paramCodedOutputStreamMicro.writeInt32(9, getSaled());
-      }
-      if (hasDiscountInfo()) {
-        paramCodedOutputStreamMicro.writeMessage(10, getDiscountInfo());
-      }
-      if (hasEndTime()) {
-        paramCodedOutputStreamMicro.writeString(11, getEndTime());
-      }
-      if (hasIsOnline()) {
-        paramCodedOutputStreamMicro.writeInt32(12, getIsOnline());
-      }
-      if (hasDistance()) {
-        paramCodedOutputStreamMicro.writeString(13, getDistance());
-      }
-      if (hasShopId()) {
-        paramCodedOutputStreamMicro.writeString(14, getShopId());
-      }
-      if (hasDeliveryRegions()) {
-        paramCodedOutputStreamMicro.writeString(15, getDeliveryRegions());
-      }
-      if (hasInvoiceInfo()) {
-        paramCodedOutputStreamMicro.writeMessage(16, getInvoiceInfo());
-      }
-      if (hasCouponInfo()) {
-        paramCodedOutputStreamMicro.writeMessage(17, getCouponInfo());
-      }
-    }
-    
-    public static final class CouponInfo
-      extends MessageMicro
-    {
-      public static final int COUPON_MSG_FIELD_NUMBER = 2;
-      public static final int SUPPORT_COUPON_FIELD_NUMBER = 1;
-      private boolean a;
-      private int b = 0;
-      private boolean c;
-      private String d = "";
-      private int e = -1;
-      
-      public static CouponInfo parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new CouponInfo().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static CouponInfo parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (CouponInfo)new CouponInfo().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final CouponInfo clear()
-      {
-        clearSupportCoupon();
-        clearCouponMsg();
-        this.e = -1;
+
+    public final ShopList clear() {
+        clearOption();
+        clearFilter();
+        clearDiscountInfo();
+        clearInvoiceInfo();
+        clearShopInfo();
+        clearTotal();
+        clearExistActivity();
+        this.f14556n = -1;
         return this;
-      }
-      
-      public CouponInfo clearCouponMsg()
-      {
-        this.c = false;
-        this.d = "";
+    }
+
+    public ShopList clearDiscountInfo() {
+        this.f14547e = false;
+        this.f14548f = null;
         return this;
-      }
-      
-      public CouponInfo clearSupportCoupon()
-      {
-        this.a = false;
-        this.b = 0;
+    }
+
+    public ShopList clearExistActivity() {
+        this.f14554l = false;
+        this.f14555m = "";
         return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.e < 0) {
-          getSerializedSize();
+    }
+
+    public ShopList clearFilter() {
+        this.f14545c = false;
+        this.f14546d = null;
+        return this;
+    }
+
+    public ShopList clearInvoiceInfo() {
+        this.f14549g = false;
+        this.f14550h = null;
+        return this;
+    }
+
+    public ShopList clearOption() {
+        this.f14543a = false;
+        this.f14544b = null;
+        return this;
+    }
+
+    public ShopList clearShopInfo() {
+        this.f14551i = Collections.emptyList();
+        return this;
+    }
+
+    public ShopList clearTotal() {
+        this.f14552j = false;
+        this.f14553k = 0;
+        return this;
+    }
+
+    public int getCachedSize() {
+        if (this.f14556n < 0) {
+            getSerializedSize();
         }
-        return this.e;
-      }
-      
-      public String getCouponMsg()
-      {
-        return this.d;
-      }
-      
-      public int getSerializedSize()
-      {
+        return this.f14556n;
+    }
+
+    public DiscountInfo getDiscountInfo() {
+        return this.f14548f;
+    }
+
+    public String getExistActivity() {
+        return this.f14555m;
+    }
+
+    public Filter getFilter() {
+        return this.f14546d;
+    }
+
+    public InvoiceInfo getInvoiceInfo() {
+        return this.f14550h;
+    }
+
+    public Option getOption() {
+        return this.f14544b;
+    }
+
+    public int getSerializedSize() {
         int i = 0;
-        if (hasSupportCoupon()) {
-          i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getSupportCoupon());
+        if (hasOption()) {
+            i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getOption());
         }
-        int j = i;
-        if (hasCouponMsg()) {
-          j = i + CodedOutputStreamMicro.computeStringSize(2, getCouponMsg());
+        int i2 = i;
+        for (ShopInfo computeMessageSize : getShopInfoList()) {
+            i2 = CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize) + i2;
         }
-        this.e = j;
-        return j;
-      }
-      
-      public int getSupportCoupon()
-      {
-        return this.b;
-      }
-      
-      public boolean hasCouponMsg()
-      {
-        return this.c;
-      }
-      
-      public boolean hasSupportCoupon()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public CouponInfo mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
-            return this;
-          case 8: 
-            setSupportCoupon(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 18: 
-            setCouponMsg(paramCodedInputStreamMicro.readString());
-          }
+        if (hasTotal()) {
+            i2 += CodedOutputStreamMicro.computeInt32Size(3, getTotal());
         }
-      }
-      
-      public CouponInfo setCouponMsg(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
-        return this;
-      }
-      
-      public CouponInfo setSupportCoupon(int paramInt)
-      {
-        this.a = true;
-        this.b = paramInt;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasSupportCoupon()) {
-          paramCodedOutputStreamMicro.writeInt32(1, getSupportCoupon());
+        if (hasFilter()) {
+            i2 += CodedOutputStreamMicro.computeMessageSize(4, getFilter());
         }
-        if (hasCouponMsg()) {
-          paramCodedOutputStreamMicro.writeString(2, getCouponMsg());
+        if (hasDiscountInfo()) {
+            i2 += CodedOutputStreamMicro.computeMessageSize(5, getDiscountInfo());
         }
-      }
+        if (hasInvoiceInfo()) {
+            i2 += CodedOutputStreamMicro.computeMessageSize(6, getInvoiceInfo());
+        }
+        if (hasExistActivity()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(7, getExistActivity());
+        }
+        this.f14556n = i2;
+        return i2;
     }
-    
-    public static final class DiscountInfo
-      extends MessageMicro
-    {
-      public static final int DISCOUNT_FIRST_ORDER_SHOW_FIELD_NUMBER = 4;
-      public static final int DISCOUNT_SEND_SHOW_FIELD_NUMBER = 3;
-      public static final int IS_DISCOUNT_FIRST_ORDER_FIELD_NUMBER = 2;
-      public static final int IS_DISCOUNT_SEND_FIELD_NUMBER = 1;
-      private boolean a;
-      private int b = 0;
-      private boolean c;
-      private int d = 0;
-      private boolean e;
-      private String f = "";
-      private boolean g;
-      private String h = "";
-      private int i = -1;
-      
-      public static DiscountInfo parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new DiscountInfo().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static DiscountInfo parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (DiscountInfo)new DiscountInfo().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final DiscountInfo clear()
-      {
-        clearIsDiscountSend();
-        clearIsDiscountFirstOrder();
-        clearDiscountSendShow();
-        clearDiscountFirstOrderShow();
-        this.i = -1;
-        return this;
-      }
-      
-      public DiscountInfo clearDiscountFirstOrderShow()
-      {
-        this.g = false;
-        this.h = "";
-        return this;
-      }
-      
-      public DiscountInfo clearDiscountSendShow()
-      {
-        this.e = false;
-        this.f = "";
-        return this;
-      }
-      
-      public DiscountInfo clearIsDiscountFirstOrder()
-      {
-        this.c = false;
-        this.d = 0;
-        return this;
-      }
-      
-      public DiscountInfo clearIsDiscountSend()
-      {
-        this.a = false;
-        this.b = 0;
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.i < 0) {
-          getSerializedSize();
-        }
-        return this.i;
-      }
-      
-      public String getDiscountFirstOrderShow()
-      {
-        return this.h;
-      }
-      
-      public String getDiscountSendShow()
-      {
-        return this.f;
-      }
-      
-      public int getIsDiscountFirstOrder()
-      {
-        return this.d;
-      }
-      
-      public int getIsDiscountSend()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        int k = 0;
-        if (hasIsDiscountSend()) {
-          k = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIsDiscountSend());
-        }
-        int j = k;
-        if (hasIsDiscountFirstOrder()) {
-          j = k + CodedOutputStreamMicro.computeInt32Size(2, getIsDiscountFirstOrder());
-        }
-        k = j;
-        if (hasDiscountSendShow()) {
-          k = j + CodedOutputStreamMicro.computeStringSize(3, getDiscountSendShow());
-        }
-        j = k;
-        if (hasDiscountFirstOrderShow()) {
-          j = k + CodedOutputStreamMicro.computeStringSize(4, getDiscountFirstOrderShow());
-        }
-        this.i = j;
-        return j;
-      }
-      
-      public boolean hasDiscountFirstOrderShow()
-      {
-        return this.g;
-      }
-      
-      public boolean hasDiscountSendShow()
-      {
-        return this.e;
-      }
-      
-      public boolean hasIsDiscountFirstOrder()
-      {
-        return this.c;
-      }
-      
-      public boolean hasIsDiscountSend()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public DiscountInfo mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int j = paramCodedInputStreamMicro.readTag();
-          switch (j)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, j)) {}
-            break;
-          case 0: 
-            return this;
-          case 8: 
-            setIsDiscountSend(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 16: 
-            setIsDiscountFirstOrder(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 26: 
-            setDiscountSendShow(paramCodedInputStreamMicro.readString());
-            break;
-          case 34: 
-            setDiscountFirstOrderShow(paramCodedInputStreamMicro.readString());
-          }
-        }
-      }
-      
-      public DiscountInfo setDiscountFirstOrderShow(String paramString)
-      {
-        this.g = true;
-        this.h = paramString;
-        return this;
-      }
-      
-      public DiscountInfo setDiscountSendShow(String paramString)
-      {
-        this.e = true;
-        this.f = paramString;
-        return this;
-      }
-      
-      public DiscountInfo setIsDiscountFirstOrder(int paramInt)
-      {
-        this.c = true;
-        this.d = paramInt;
-        return this;
-      }
-      
-      public DiscountInfo setIsDiscountSend(int paramInt)
-      {
-        this.a = true;
-        this.b = paramInt;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasIsDiscountSend()) {
-          paramCodedOutputStreamMicro.writeInt32(1, getIsDiscountSend());
-        }
-        if (hasIsDiscountFirstOrder()) {
-          paramCodedOutputStreamMicro.writeInt32(2, getIsDiscountFirstOrder());
-        }
-        if (hasDiscountSendShow()) {
-          paramCodedOutputStreamMicro.writeString(3, getDiscountSendShow());
-        }
-        if (hasDiscountFirstOrderShow()) {
-          paramCodedOutputStreamMicro.writeString(4, getDiscountFirstOrderShow());
-        }
-      }
+
+    public ShopInfo getShopInfo(int i) {
+        return (ShopInfo) this.f14551i.get(i);
     }
-    
-    public static final class InvoiceInfo
-      extends MessageMicro
-    {
-      public static final int IS_SUPPORT_INVOICE_FIELD_NUMBER = 1;
-      public static final int SUPPORT_INVOICE_SHOW_FIELD_NUMBER = 2;
-      private boolean a;
-      private int b = 0;
-      private boolean c;
-      private String d = "";
-      private int e = -1;
-      
-      public static InvoiceInfo parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new InvoiceInfo().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static InvoiceInfo parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (InvoiceInfo)new InvoiceInfo().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final InvoiceInfo clear()
-      {
-        clearIsSupportInvoice();
-        clearSupportInvoiceShow();
-        this.e = -1;
-        return this;
-      }
-      
-      public InvoiceInfo clearIsSupportInvoice()
-      {
-        this.a = false;
-        this.b = 0;
-        return this;
-      }
-      
-      public InvoiceInfo clearSupportInvoiceShow()
-      {
-        this.c = false;
-        this.d = "";
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.e < 0) {
-          getSerializedSize();
-        }
-        return this.e;
-      }
-      
-      public int getIsSupportInvoice()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i = 0;
-        if (hasIsSupportInvoice()) {
-          i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getIsSupportInvoice());
-        }
-        int j = i;
-        if (hasSupportInvoiceShow()) {
-          j = i + CodedOutputStreamMicro.computeStringSize(2, getSupportInvoiceShow());
-        }
-        this.e = j;
-        return j;
-      }
-      
-      public String getSupportInvoiceShow()
-      {
-        return this.d;
-      }
-      
-      public boolean hasIsSupportInvoice()
-      {
-        return this.a;
-      }
-      
-      public boolean hasSupportInvoiceShow()
-      {
-        return this.c;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public InvoiceInfo mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
-            return this;
-          case 8: 
-            setIsSupportInvoice(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 18: 
-            setSupportInvoiceShow(paramCodedInputStreamMicro.readString());
-          }
-        }
-      }
-      
-      public InvoiceInfo setIsSupportInvoice(int paramInt)
-      {
-        this.a = true;
-        this.b = paramInt;
-        return this;
-      }
-      
-      public InvoiceInfo setSupportInvoiceShow(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasIsSupportInvoice()) {
-          paramCodedOutputStreamMicro.writeInt32(1, getIsSupportInvoice());
-        }
-        if (hasSupportInvoiceShow()) {
-          paramCodedOutputStreamMicro.writeString(2, getSupportInvoiceShow());
-        }
-      }
+
+    public int getShopInfoCount() {
+        return this.f14551i.size();
     }
-  }
+
+    public List<ShopInfo> getShopInfoList() {
+        return this.f14551i;
+    }
+
+    public int getTotal() {
+        return this.f14553k;
+    }
+
+    public boolean hasDiscountInfo() {
+        return this.f14547e;
+    }
+
+    public boolean hasExistActivity() {
+        return this.f14554l;
+    }
+
+    public boolean hasFilter() {
+        return this.f14545c;
+    }
+
+    public boolean hasInvoiceInfo() {
+        return this.f14549g;
+    }
+
+    public boolean hasOption() {
+        return this.f14543a;
+    }
+
+    public boolean hasTotal() {
+        return this.f14552j;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public ShopList mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            MessageMicro option;
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    option = new Option();
+                    codedInputStreamMicro.readMessage(option);
+                    setOption(option);
+                    continue;
+                case 18:
+                    option = new ShopInfo();
+                    codedInputStreamMicro.readMessage(option);
+                    addShopInfo(option);
+                    continue;
+                case 24:
+                    setTotal(codedInputStreamMicro.readInt32());
+                    continue;
+                case 34:
+                    option = new Filter();
+                    codedInputStreamMicro.readMessage(option);
+                    setFilter(option);
+                    continue;
+                case 42:
+                    option = new DiscountInfo();
+                    codedInputStreamMicro.readMessage(option);
+                    setDiscountInfo(option);
+                    continue;
+                case 50:
+                    option = new InvoiceInfo();
+                    codedInputStreamMicro.readMessage(option);
+                    setInvoiceInfo(option);
+                    continue;
+                case 58:
+                    setExistActivity(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public ShopList setDiscountInfo(DiscountInfo discountInfo) {
+        if (discountInfo == null) {
+            return clearDiscountInfo();
+        }
+        this.f14547e = true;
+        this.f14548f = discountInfo;
+        return this;
+    }
+
+    public ShopList setExistActivity(String str) {
+        this.f14554l = true;
+        this.f14555m = str;
+        return this;
+    }
+
+    public ShopList setFilter(Filter filter) {
+        if (filter == null) {
+            return clearFilter();
+        }
+        this.f14545c = true;
+        this.f14546d = filter;
+        return this;
+    }
+
+    public ShopList setInvoiceInfo(InvoiceInfo invoiceInfo) {
+        if (invoiceInfo == null) {
+            return clearInvoiceInfo();
+        }
+        this.f14549g = true;
+        this.f14550h = invoiceInfo;
+        return this;
+    }
+
+    public ShopList setOption(Option option) {
+        if (option == null) {
+            return clearOption();
+        }
+        this.f14543a = true;
+        this.f14544b = option;
+        return this;
+    }
+
+    public ShopList setShopInfo(int i, ShopInfo shopInfo) {
+        if (shopInfo != null) {
+            this.f14551i.set(i, shopInfo);
+        }
+        return this;
+    }
+
+    public ShopList setTotal(int i) {
+        this.f14552j = true;
+        this.f14553k = i;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasOption()) {
+            codedOutputStreamMicro.writeMessage(1, getOption());
+        }
+        for (ShopInfo writeMessage : getShopInfoList()) {
+            codedOutputStreamMicro.writeMessage(2, writeMessage);
+        }
+        if (hasTotal()) {
+            codedOutputStreamMicro.writeInt32(3, getTotal());
+        }
+        if (hasFilter()) {
+            codedOutputStreamMicro.writeMessage(4, getFilter());
+        }
+        if (hasDiscountInfo()) {
+            codedOutputStreamMicro.writeMessage(5, getDiscountInfo());
+        }
+        if (hasInvoiceInfo()) {
+            codedOutputStreamMicro.writeMessage(6, getInvoiceInfo());
+        }
+        if (hasExistActivity()) {
+            codedOutputStreamMicro.writeString(7, getExistActivity());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/ShopList.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

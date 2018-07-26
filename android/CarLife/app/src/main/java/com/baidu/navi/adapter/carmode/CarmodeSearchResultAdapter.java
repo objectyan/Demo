@@ -12,14 +12,19 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.baidu.baidunavis.control.NavPoiController;
-import com.baidu.carlife.core.screen.e;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.screen.C1277e;
 import com.baidu.navi.adapter.SearchResultAdapter.OnClickOnlineSearch;
 import com.baidu.navi.controller.FavoriteDestinationController;
 import com.baidu.navi.controller.PoiController;
+import com.baidu.navi.fragment.NameSearchFragment;
 import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.logic.model.UIModel;
 import com.baidu.navi.style.StyleManager;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams.BundleKey;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
@@ -32,537 +37,433 @@ import com.baidu.navisdk.util.common.ScreenUtil;
 import com.baidu.navisdk.util.statistic.SearchStatItem;
 import java.util.List;
 
-public class CarmodeSearchResultAdapter
-  extends BaseAdapter
-{
-  public static final int SEARCH_MODE_NORMAL = 1;
-  public static final int SEARCH_MODE_SETTING = 2;
-  private static int TYPE_BTN;
-  private static int TYPE_FOOT_ITEM_NOME;
-  private static int TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE = 3;
-  private static int TYPE_FOOT_ITEM_ONLINE_SEARCH;
-  private static int TYPE_ITEM = 1;
-  private boolean isNeedAddOnlineBtn = false;
-  private boolean isSetMode;
-  private int[] mChildCnt = new int['È'];
-  private int[] mChildIndex = new int['È'];
-  private View.OnClickListener mClickListener = new View.OnClickListener()
-  {
-    public void onClick(View paramAnonymousView)
-    {
-      if (ForbidDaulClickUtils.isFastDoubleClick()) {}
-      int i;
-      do
-      {
-        do
-        {
-          do
-          {
-            do
-            {
-              return;
-              i = paramAnonymousView.getId();
-              if (i != 2131624190) {
-                break;
-              }
-            } while (CarmodeSearchResultAdapter.this.isSetMode);
-            paramAnonymousView = (Integer)paramAnonymousView.getTag();
-          } while ((paramAnonymousView == null) || (paramAnonymousView.intValue() < 0) || (paramAnonymousView.intValue() >= CarmodeSearchResultAdapter.this.mPoiList.size()));
-          ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).setPoiList(CarmodeSearchResultAdapter.this.mPoiList);
-          Bundle localBundle = new Bundle();
-          localBundle.putInt("incoming_type", 83);
-          if (CarmodeSearchResultAdapter.this.mSearchPoiPager != null) {
-            localBundle.putInt("search_result_mode", CarmodeSearchResultAdapter.this.mSearchPoiPager.getNetMode());
-          }
-          localBundle.putInt("fc_type", 0);
-          localBundle.putInt("current_poi", paramAnonymousView.intValue());
-          localBundle.putInt("current_child_count", CarmodeSearchResultAdapter.this.mChildCnt[paramAnonymousView.intValue()]);
-          localBundle.putInt("child_start_poi", CarmodeSearchResultAdapter.this.mChildIndex[paramAnonymousView.intValue()]);
-          localBundle.putIntArray("child_count_array", CarmodeSearchResultAdapter.this.mChildCnt);
-          localBundle.putIntArray("parent_position_array", CarmodeSearchResultAdapter.this.mParentCnt);
-          localBundle.putIntArray("child_start_array", CarmodeSearchResultAdapter.this.mChildIndex);
-          localBundle.putInt("come_from", CarmodeSearchResultAdapter.this.mShowBundle.getInt("come_from"));
-          if (CarmodeSearchResultAdapter.this.mFragmentManager != null) {
-            CarmodeSearchResultAdapter.this.mFragmentManager.showFragment(33, localBundle);
-          }
-          SearchStatItem.getInstance().setResultIndex(paramAnonymousView.intValue());
-          SearchStatItem.getInstance().onEvent();
-          return;
-          if (i != 2131624193) {
-            break;
-          }
-          if (CarmodeSearchResultAdapter.this.isPoiComfirmPage())
-          {
-            i = CarmodeSearchResultAdapter.this.mShowBundle.getInt("select_point_action");
-            paramAnonymousView = (SearchPoi)paramAnonymousView.getTag(2131624193);
-            if (i == 1) {
-              FavoriteDestinationController.getInstance().addFavoriteDestFromDB(CarmodeSearchResultAdapter.this.createRoutePlanNode(paramAnonymousView), null);
+public class CarmodeSearchResultAdapter extends BaseAdapter {
+    public static final int SEARCH_MODE_NORMAL = 1;
+    public static final int SEARCH_MODE_SETTING = 2;
+    private static int TYPE_BTN = 2;
+    private static int TYPE_FOOT_ITEM_NOME = 1;
+    private static int TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE = 3;
+    private static int TYPE_FOOT_ITEM_ONLINE_SEARCH = 2;
+    private static int TYPE_ITEM = 1;
+    private boolean isNeedAddOnlineBtn;
+    private boolean isSetMode;
+    private int[] mChildCnt;
+    private int[] mChildIndex;
+    private OnClickListener mClickListener;
+    private Context mContext;
+    private int mFootItemType;
+    private NaviFragmentManager mFragmentManager;
+    private LayoutInflater mLayoutInflater;
+    private C1277e mOnDialogListener;
+    private OnClickOnlineSearch mOnlineSearchListener;
+    private int[] mParentCnt;
+    private List<SearchPoi> mPoiList;
+    private SearchPoiPager mSearchPoiPager;
+    private final int mSearchPoiTagKey;
+    private Bundle mShowBundle;
+
+    /* renamed from: com.baidu.navi.adapter.carmode.CarmodeSearchResultAdapter$1 */
+    class C36691 implements OnClickListener {
+        C36691() {
+        }
+
+        public void onClick(View v) {
+            if (!ForbidDaulClickUtils.isFastDoubleClick()) {
+                int id = v.getId();
+                Bundle bundle;
+                if (id == C0965R.id.btn_poi_gonavi) {
+                    if (!CarmodeSearchResultAdapter.this.isSetMode) {
+                        Integer index = (Integer) v.getTag();
+                        if (index != null && index.intValue() >= 0 && index.intValue() < CarmodeSearchResultAdapter.this.mPoiList.size()) {
+                            ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).setPoiList(CarmodeSearchResultAdapter.this.mPoiList);
+                            bundle = new Bundle();
+                            bundle.putInt("incoming_type", 83);
+                            if (CarmodeSearchResultAdapter.this.mSearchPoiPager != null) {
+                                bundle.putInt("search_result_mode", CarmodeSearchResultAdapter.this.mSearchPoiPager.getNetMode());
+                            }
+                            bundle.putInt("fc_type", 0);
+                            bundle.putInt("current_poi", index.intValue());
+                            bundle.putInt("current_child_count", CarmodeSearchResultAdapter.this.mChildCnt[index.intValue()]);
+                            bundle.putInt("child_start_poi", CarmodeSearchResultAdapter.this.mChildIndex[index.intValue()]);
+                            bundle.putIntArray("child_count_array", CarmodeSearchResultAdapter.this.mChildCnt);
+                            bundle.putIntArray("parent_position_array", CarmodeSearchResultAdapter.this.mParentCnt);
+                            bundle.putIntArray("child_start_array", CarmodeSearchResultAdapter.this.mChildIndex);
+                            bundle.putInt(NameSearchFragment.COME_FROM, CarmodeSearchResultAdapter.this.mShowBundle.getInt(NameSearchFragment.COME_FROM));
+                            if (CarmodeSearchResultAdapter.this.mFragmentManager != null) {
+                                CarmodeSearchResultAdapter.this.mFragmentManager.showFragment(33, bundle);
+                            }
+                            SearchStatItem.getInstance().setResultIndex(index.intValue());
+                            SearchStatItem.getInstance().onEvent();
+                        }
+                    }
+                } else if (id == C0965R.id.poi_name_addr_layout) {
+                    SearchPoi searchPoi;
+                    if (CarmodeSearchResultAdapter.this.isPoiComfirmPage()) {
+                        searchPoi = (SearchPoi) v.getTag(C0965R.id.poi_name_addr_layout);
+                        if (CarmodeSearchResultAdapter.this.mShowBundle.getInt(BundleKey.SELECT_POINT_ACTION) == 1) {
+                            FavoriteDestinationController.getInstance().addFavoriteDestFromDB(CarmodeSearchResultAdapter.this.createRoutePlanNode(searchPoi), null);
+                        } else {
+                            bundle = new Bundle();
+                            bundle.putInt(BundleKey.SELECT_POINT_ACTION, CarmodeSearchResultAdapter.this.mShowBundle.getInt(BundleKey.SELECT_POINT_ACTION));
+                            UIModel.settingAddress(searchPoi, CarmodeSearchResultAdapter.this.mContext, bundle);
+                        }
+                        CarmodeSearchResultAdapter.this.mFragmentManager.backTo(CarmodeSearchResultAdapter.this.mShowBundle.getInt(BundleKey.FROM_FRAGMENT), null);
+                        return;
+                    }
+                    searchPoi = (SearchPoi) v.getTag();
+                    if (searchPoi != null && !CarmodeSearchResultAdapter.this.isSetMode) {
+                        if (CarmodeSearchResultAdapter.this.mShowBundle.getInt(NameSearchFragment.COME_FROM) == 8) {
+                            StatisticManager.onEvent(StatisticConstants.DISCOVER_QJY_0002, StatisticConstants.DISCOVER_QJY_0002);
+                        }
+                        NavPoiController.getInstance().startCalcRoute(searchPoi);
+                    }
+                } else if (id == C0965R.id.search_btn) {
+                    CarmodeSearchResultAdapter.this.clickSearchBtn();
+                }
             }
-            for (;;)
-            {
-              CarmodeSearchResultAdapter.this.mFragmentManager.backTo(CarmodeSearchResultAdapter.this.mShowBundle.getInt("from_Fragment"), null);
-              return;
-              localBundle = new Bundle();
-              localBundle.putInt("select_point_action", CarmodeSearchResultAdapter.this.mShowBundle.getInt("select_point_action"));
-              UIModel.settingAddress(paramAnonymousView, CarmodeSearchResultAdapter.this.mContext, localBundle);
+        }
+    }
+
+    protected class ChildGrideListAdapter extends BaseAdapter {
+        private OnClickListener mChildClickListener = new C36701();
+        int mChildCount = 0;
+        int mChildsum = 0;
+        Context mContext;
+        int mParentPosition = 0;
+
+        /* renamed from: com.baidu.navi.adapter.carmode.CarmodeSearchResultAdapter$ChildGrideListAdapter$1 */
+        class C36701 implements OnClickListener {
+            C36701() {
             }
-          }
-          paramAnonymousView = (SearchPoi)paramAnonymousView.getTag();
-        } while ((paramAnonymousView == null) || (CarmodeSearchResultAdapter.this.isSetMode));
-        if (CarmodeSearchResultAdapter.this.mShowBundle.getInt("come_from") == 8) {
-          StatisticManager.onEvent("DISCOVER_QJY_0002", "DISCOVER_QJY_0002");
+
+            public void onClick(View v) {
+                if (!CarmodeSearchResultAdapter.this.isSetMode && !ForbidDaulClickUtils.isFastDoubleClick()) {
+                    Integer poiIndex = (Integer) v.getTag();
+                    if (CarmodeSearchResultAdapter.this.mPoiList != null) {
+                        SearchPoi poi = (SearchPoi) CarmodeSearchResultAdapter.this.mPoiList.get(poiIndex.intValue());
+                        if (poi != null) {
+                            String str = poi.mName;
+                        }
+                    }
+                    if (poiIndex != null && poiIndex.intValue() >= 0 && poiIndex.intValue() < CarmodeSearchResultAdapter.this.mPoiList.size()) {
+                        SearchStatItem.getInstance().searchStatistics(poiIndex.intValue());
+                        ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).setPoiList(CarmodeSearchResultAdapter.this.mSearchPoiPager.getPoiList());
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("fc_type", 1);
+                        bundle.putInt("incoming_type", 83);
+                        bundle.putInt("search_result_mode", CarmodeSearchResultAdapter.this.mSearchPoiPager.getNetMode());
+                        bundle.putInt("current_poi", poiIndex.intValue());
+                        bundle.putInt("child_start_poi", ChildGrideListAdapter.this.mChildsum);
+                        bundle.putInt("current_child_count", ChildGrideListAdapter.this.mChildCount);
+                        bundle.putInt("current_parent_position", ChildGrideListAdapter.this.mParentPosition);
+                        bundle.putIntArray("child_count_array", CarmodeSearchResultAdapter.this.mChildCnt);
+                        bundle.putIntArray("parent_position_array", CarmodeSearchResultAdapter.this.mParentCnt);
+                        bundle.putIntArray("child_start_array", CarmodeSearchResultAdapter.this.mChildIndex);
+                        if (CarmodeSearchResultAdapter.this.mFragmentManager != null) {
+                            CarmodeSearchResultAdapter.this.mFragmentManager.showFragment(33, bundle);
+                        }
+                    }
+                }
+            }
         }
-        NavPoiController.getInstance().startCalcRoute(paramAnonymousView);
-        return;
-      } while (i != 2131624530);
-      CarmodeSearchResultAdapter.this.clickSearchBtn();
-    }
-  };
-  private Context mContext;
-  private int mFootItemType = TYPE_FOOT_ITEM_NOME;
-  private NaviFragmentManager mFragmentManager;
-  private LayoutInflater mLayoutInflater;
-  private e mOnDialogListener;
-  private SearchResultAdapter.OnClickOnlineSearch mOnlineSearchListener;
-  private int[] mParentCnt = new int['È'];
-  private List<SearchPoi> mPoiList;
-  private SearchPoiPager mSearchPoiPager;
-  private final int mSearchPoiTagKey = 2131624193;
-  private Bundle mShowBundle;
-  
-  static
-  {
-    TYPE_BTN = 2;
-    TYPE_FOOT_ITEM_NOME = 1;
-    TYPE_FOOT_ITEM_ONLINE_SEARCH = 2;
-  }
-  
-  public CarmodeSearchResultAdapter(Context paramContext, SearchPoiPager paramSearchPoiPager, NaviFragmentManager paramNaviFragmentManager, boolean paramBoolean, e parame)
-  {
-    this.mPoiList = paramSearchPoiPager.getPoiList();
-    this.mContext = paramContext;
-    this.mLayoutInflater = LayoutInflater.from(this.mContext);
-    this.mSearchPoiPager = paramSearchPoiPager;
-    this.mFragmentManager = paramNaviFragmentManager;
-    this.isSetMode = paramBoolean;
-    setSearchPager(paramSearchPoiPager);
-    this.mChildIndex[0] = paramSearchPoiPager.getCountPerPager();
-    this.mOnDialogListener = parame;
-  }
-  
-  public CarmodeSearchResultAdapter(Context paramContext, List<SearchPoi> paramList, NaviFragmentManager paramNaviFragmentManager, boolean paramBoolean)
-  {
-    if (paramList != null)
-    {
-      this.mPoiList = paramList;
-      this.mContext = paramContext;
-      this.mLayoutInflater = LayoutInflater.from(this.mContext);
-      this.mFragmentManager = paramNaviFragmentManager;
-      this.isSetMode = paramBoolean;
-      this.mFootItemType = TYPE_FOOT_ITEM_NOME;
-      paramContext = this.mChildIndex;
-      if (paramList.size() <= 10) {
-        break label130;
-      }
-    }
-    for (;;)
-    {
-      paramContext[0] = i;
-      return;
-      label130:
-      i = paramList.size();
-    }
-  }
-  
-  private RoutePlanNode createRoutePlanNode(SearchPoi paramSearchPoi)
-  {
-    return new RoutePlanNode(paramSearchPoi.mGuidePoint, paramSearchPoi.mViewPoint, 8, paramSearchPoi.mName, paramSearchPoi.mAddress, paramSearchPoi.mOriginUID);
-  }
-  
-  private boolean isPoiComfirmPage()
-  {
-    int i = this.mShowBundle.getInt("select_point_action");
-    return (i == 1) || (i == 5) || (i == 4);
-  }
-  
-  public void clickSearchBtn()
-  {
-    if (this.mOnlineSearchListener != null)
-    {
-      if (this.mFootItemType != TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE) {
-        break label27;
-      }
-      this.mOnlineSearchListener.onCountrywideOnlineSearch();
-    }
-    label27:
-    while (this.mFootItemType != TYPE_FOOT_ITEM_ONLINE_SEARCH) {
-      return;
-    }
-    this.mOnlineSearchListener.onNormalOnlineSearch();
-  }
-  
-  public int[] getChildCnt()
-  {
-    return this.mChildCnt;
-  }
-  
-  public int[] getChildIndex()
-  {
-    return this.mChildIndex;
-  }
-  
-  public int getCount()
-  {
-    if (this.mPoiList == null)
-    {
-      j = 0;
-      return j;
-    }
-    int j = 10;
-    int i = j;
-    if (this.mChildIndex != null)
-    {
-      i = j;
-      if (this.mChildIndex[0] > 0) {
-        if (this.mPoiList.size() < this.mChildIndex[0]) {
-          break label75;
+
+        protected class ViewHolder {
+            TextView mChildName;
+            ImageView mIcDot;
+
+            protected ViewHolder() {
+            }
         }
-      }
-    }
-    label75:
-    for (i = this.mChildIndex[0];; i = this.mPoiList.size())
-    {
-      j = i;
-      if (this.mFootItemType == TYPE_FOOT_ITEM_NOME) {
-        break;
-      }
-      return i + 1;
-    }
-  }
-  
-  public Object getItem(int paramInt)
-  {
-    return null;
-  }
-  
-  public long getItemId(int paramInt)
-  {
-    return 0L;
-  }
-  
-  public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    int j = 10;
-    int i = j;
-    if (this.mChildIndex != null)
-    {
-      i = j;
-      if (this.mChildIndex[0] > 0)
-      {
-        if (this.mPoiList.size() < this.mChildIndex[0]) {
-          break label122;
+
+        public ChildGrideListAdapter(Context mContext) {
+            this.mContext = mContext;
         }
-        i = this.mChildIndex[0];
-      }
-    }
-    if (paramInt == i)
-    {
-      paramView = this.mLayoutInflater.inflate(2130968668, null);
-      paramViewGroup = (TextView)paramView.findViewById(2131624530);
-      if (this.mFootItemType == TYPE_FOOT_ITEM_ONLINE_SEARCH) {
-        paramViewGroup.setText(StyleManager.getString(2131297133));
-      }
-      for (;;)
-      {
-        paramView.setLayoutParams(new AbsListView.LayoutParams(-1, ScreenUtil.getInstance().dip2px(80)));
-        return paramView;
-        label122:
-        i = this.mPoiList.size();
-        break;
-        paramViewGroup.setText(StyleManager.getString(2131297132));
-      }
-    }
-    paramViewGroup = this.mLayoutInflater.inflate(2130968689, null);
-    ViewHodler localViewHodler = new ViewHodler();
-    localViewHodler.mVerDiverderA = paramViewGroup.findViewById(2131624189);
-    localViewHodler.mBtnStartNavi = paramViewGroup.findViewById(2131624190);
-    localViewHodler.mBtnNameAddr = paramViewGroup.findViewById(2131624193);
-    localViewHodler.mTvName = ((TextView)paramViewGroup.findViewById(2131624196));
-    localViewHodler.mTvAddr = ((TextView)paramViewGroup.findViewById(2131624197));
-    localViewHodler.mTvDistance = ((TextView)paramViewGroup.findViewById(2131624606));
-    localViewHodler.mTvNum = ((TextView)paramViewGroup.findViewById(2131624187));
-    localViewHodler.mHorDeverder = paramViewGroup.findViewById(2131624097);
-    localViewHodler.mChildGrideList = ((GridView)paramViewGroup.findViewById(2131624608));
-    localViewHodler.mIcResult = ((ImageView)paramViewGroup.findViewById(2131624605));
-    localViewHodler.mHorDiverderB = paramViewGroup.findViewById(2131624604);
-    if (isPoiComfirmPage())
-    {
-      localViewHodler.mTvDistance.setVisibility(8);
-      localViewHodler.mBtnStartNavi.setVisibility(8);
-      localViewHodler.mHorDiverderB.setVisibility(8);
-      label356:
-      paramView = (SearchPoi)this.mPoiList.get(paramInt);
-      if (paramView != null)
-      {
-        if (isPoiComfirmPage()) {
-          break label615;
+
+        public int getCount() {
+            return this.mChildCount;
         }
-        localViewHodler.mTvNum.setText(paramInt + 1 + ". ");
-        localViewHodler.mTvName.setText(paramView.mName);
-      }
-    }
-    for (;;)
-    {
-      localViewHodler.mTvAddr.setText(paramView.mAddress);
-      localViewHodler.mTvDistance.setText(PoiController.getInstance().getDistance2CurrentPoint(paramView));
-      localViewHodler.mBtnNameAddr.setTag(paramView);
-      localViewHodler.mBtnNameAddr.setTag(2131624193, paramView);
-      localViewHodler.mBtnStartNavi.setTag(Integer.valueOf(paramInt));
-      localViewHodler.mBtnNameAddr.setOnClickListener(this.mClickListener);
-      localViewHodler.mBtnStartNavi.setOnClickListener(this.mClickListener);
-      this.mChildCnt[paramInt] = paramView.mChildCnt;
-      if (paramInt >= 1) {
-        this.mChildIndex[paramInt] = (this.mChildIndex[(paramInt - 1)] + this.mChildCnt[(paramInt - 1)]);
-      }
-      this.mParentCnt[paramInt] = paramInt;
-      paramView = paramViewGroup;
-      if (this.mChildCnt[paramInt] > 0) {
-        break;
-      }
-      localViewHodler.mIcResult.setVisibility(8);
-      paramViewGroup.setLayoutParams(new AbsListView.LayoutParams(-1, ScreenUtil.getInstance().dip2px(80)));
-      return paramViewGroup;
-      localViewHodler.mTvDistance.setVisibility(0);
-      localViewHodler.mBtnStartNavi.setVisibility(0);
-      break label356;
-      label615:
-      localViewHodler.mTvName.setText(paramView.mName);
-    }
-  }
-  
-  public void interPoidetail()
-  {
-    if (this.isSetMode) {}
-    Integer localInteger;
-    do
-    {
-      return;
-      localInteger = Integer.valueOf(0);
-      if (this.mPoiList != null)
-      {
-        localObject = (SearchPoi)this.mPoiList.get(localInteger.intValue());
-        if (localObject != null) {
-          localObject = ((SearchPoi)localObject).mName;
+
+        public void SetCount(int ChildCount) {
+            this.mChildCount = ChildCount;
         }
-      }
-    } while ((localInteger == null) || (localInteger.intValue() < 0) || (localInteger.intValue() >= this.mPoiList.size()));
-    ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).setPoiList(this.mPoiList);
-    Object localObject = new Bundle();
-    ((Bundle)localObject).putInt("incoming_type", 83);
-    if (this.mSearchPoiPager != null) {
-      ((Bundle)localObject).putInt("search_result_mode", this.mSearchPoiPager.getNetMode());
-    }
-    ((Bundle)localObject).putInt("fc_type", 0);
-    ((Bundle)localObject).putInt("current_poi", localInteger.intValue());
-    ((Bundle)localObject).putInt("current_child_count", this.mChildCnt[localInteger.intValue()]);
-    ((Bundle)localObject).putInt("child_start_poi", this.mChildIndex[localInteger.intValue()]);
-    ((Bundle)localObject).putIntArray("child_count_array", this.mChildCnt);
-    ((Bundle)localObject).putIntArray("parent_position_array", this.mParentCnt);
-    ((Bundle)localObject).putIntArray("child_start_array", this.mChildIndex);
-    if (this.mFragmentManager != null) {
-      this.mFragmentManager.showFragment(33, (Bundle)localObject);
-    }
-    SearchStatItem.getInstance().setResultIndex(localInteger.intValue());
-    SearchStatItem.getInstance().onEvent();
-  }
-  
-  public void setOnlineSearchListener(SearchResultAdapter.OnClickOnlineSearch paramOnClickOnlineSearch)
-  {
-    this.mOnlineSearchListener = paramOnClickOnlineSearch;
-  }
-  
-  public void setSearchPager(SearchPoiPager paramSearchPoiPager)
-  {
-    int i = 0;
-    this.mSearchPoiPager = paramSearchPoiPager;
-    this.mPoiList = paramSearchPoiPager.getPoiList();
-    this.mChildIndex[0] = paramSearchPoiPager.getCountPerPager();
-    int j = this.mSearchPoiPager.getNetMode();
-    int k = this.mSearchPoiPager.getSearchType();
-    if ((k == 1) || (k == 2))
-    {
-      paramSearchPoiPager = this.mSearchPoiPager.getDistrct();
-      if (paramSearchPoiPager == null)
-      {
-        if ((i != 0) && (NetworkUtils.getConnectStatus())) {
-          break label96;
+
+        public void SetParentPosition(int ParentPosition) {
+            this.mParentPosition = ParentPosition;
         }
+
+        public void SetCountSUM(int ChildSUM) {
+            this.mChildsum = ChildSUM;
+        }
+
+        public int GetCountSUM() {
+            return this.mChildsum;
+        }
+
+        public Object getItem(int position) {
+            return null;
+        }
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getItemView(convertView, position);
+        }
+
+        protected View getItemView(View convertView, int position) {
+            ViewHolder holder = new ViewHolder();
+            convertView = CarmodeSearchResultAdapter.this.mLayoutInflater.inflate(C0965R.layout.carmode_search_result_list_child_item, null);
+            holder.mChildName = (TextView) convertView.findViewById(C0965R.id.tv_child_name);
+            holder.mIcDot = (ImageView) convertView.findViewById(C0965R.id.ic_child_dot);
+            convertView.setTag(holder);
+            holder.mChildName.setText(((SearchPoi) CarmodeSearchResultAdapter.this.mPoiList.get(this.mChildsum + position)).mAliasName);
+            convertView.setTag(Integer.valueOf(this.mChildsum + position));
+            convertView.setOnClickListener(this.mChildClickListener);
+            convertView.setLayoutParams(new LayoutParams(-1, ScreenUtil.getInstance().dip2px(32)));
+            return convertView;
+        }
+    }
+
+    static class ViewHodler {
+        View mBtnNameAddr;
+        View mBtnStartNavi;
+        GridView mChildGrideList;
+        View mHorDeverder;
+        View mHorDiverderB;
+        ImageView mIcResult;
+        TextView mTvAddr;
+        TextView mTvDistance;
+        TextView mTvName;
+        TextView mTvNum;
+        View mVerDiverderA;
+
+        ViewHodler() {
+        }
+    }
+
+    public CarmodeSearchResultAdapter(Context context, SearchPoiPager searchPoiPager, NaviFragmentManager fragmentManager, boolean isSetMode, C1277e listener) {
+        this.isNeedAddOnlineBtn = false;
+        this.mChildIndex = new int[200];
+        this.mChildCnt = new int[200];
+        this.mParentCnt = new int[200];
         this.mFootItemType = TYPE_FOOT_ITEM_NOME;
-      }
+        this.mSearchPoiTagKey = C0965R.id.poi_name_addr_layout;
+        this.mClickListener = new C36691();
+        this.mPoiList = searchPoiPager.getPoiList();
+        this.mContext = context;
+        this.mLayoutInflater = LayoutInflater.from(this.mContext);
+        this.mSearchPoiPager = searchPoiPager;
+        this.mFragmentManager = fragmentManager;
+        this.isSetMode = isSetMode;
+        setSearchPager(searchPoiPager);
+        this.mChildIndex[0] = searchPoiPager.getCountPerPager();
+        this.mOnDialogListener = listener;
     }
-    for (;;)
-    {
-      notifyDataSetChanged();
-      return;
-      i = paramSearchPoiPager.mId;
-      break;
-      label96:
-      if (j == 0)
-      {
-        this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_SEARCH;
-      }
-      else if (j == 1)
-      {
-        this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE;
-        continue;
-        if ((j == 0) && (NetworkUtils.getConnectStatus())) {
-          this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_SEARCH;
-        } else {
-          this.mFootItemType = TYPE_FOOT_ITEM_NOME;
-        }
-      }
-    }
-  }
-  
-  public void setShowBundle(Bundle paramBundle)
-  {
-    this.mShowBundle = paramBundle;
-  }
-  
-  protected class ChildGrideListAdapter
-    extends BaseAdapter
-  {
-    private View.OnClickListener mChildClickListener = new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (CarmodeSearchResultAdapter.this.isSetMode) {}
-        Object localObject;
-        do
-        {
-          do
-          {
-            do
-            {
-              return;
-            } while (ForbidDaulClickUtils.isFastDoubleClick());
-            paramAnonymousView = (Integer)paramAnonymousView.getTag();
-            if (CarmodeSearchResultAdapter.this.mPoiList != null)
-            {
-              localObject = (SearchPoi)CarmodeSearchResultAdapter.this.mPoiList.get(paramAnonymousView.intValue());
-              if (localObject != null) {
-                localObject = ((SearchPoi)localObject).mName;
-              }
+
+    public CarmodeSearchResultAdapter(Context context, List<SearchPoi> list, NaviFragmentManager fragmentManager, boolean isSetMode) {
+        int i = 10;
+        this.isNeedAddOnlineBtn = false;
+        this.mChildIndex = new int[200];
+        this.mChildCnt = new int[200];
+        this.mParentCnt = new int[200];
+        this.mFootItemType = TYPE_FOOT_ITEM_NOME;
+        this.mSearchPoiTagKey = C0965R.id.poi_name_addr_layout;
+        this.mClickListener = new C36691();
+        if (list != null) {
+            this.mPoiList = list;
+            this.mContext = context;
+            this.mLayoutInflater = LayoutInflater.from(this.mContext);
+            this.mFragmentManager = fragmentManager;
+            this.isSetMode = isSetMode;
+            this.mFootItemType = TYPE_FOOT_ITEM_NOME;
+            int[] iArr = this.mChildIndex;
+            if (list.size() <= 10) {
+                i = list.size();
             }
-          } while ((paramAnonymousView == null) || (paramAnonymousView.intValue() < 0) || (paramAnonymousView.intValue() >= CarmodeSearchResultAdapter.this.mPoiList.size()));
-          SearchStatItem.getInstance().searchStatistics(paramAnonymousView.intValue());
-          ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).setPoiList(CarmodeSearchResultAdapter.this.mSearchPoiPager.getPoiList());
-          localObject = new Bundle();
-          ((Bundle)localObject).putInt("fc_type", 1);
-          ((Bundle)localObject).putInt("incoming_type", 83);
-          ((Bundle)localObject).putInt("search_result_mode", CarmodeSearchResultAdapter.this.mSearchPoiPager.getNetMode());
-          ((Bundle)localObject).putInt("current_poi", paramAnonymousView.intValue());
-          ((Bundle)localObject).putInt("child_start_poi", CarmodeSearchResultAdapter.ChildGrideListAdapter.this.mChildsum);
-          ((Bundle)localObject).putInt("current_child_count", CarmodeSearchResultAdapter.ChildGrideListAdapter.this.mChildCount);
-          ((Bundle)localObject).putInt("current_parent_position", CarmodeSearchResultAdapter.ChildGrideListAdapter.this.mParentPosition);
-          ((Bundle)localObject).putIntArray("child_count_array", CarmodeSearchResultAdapter.this.mChildCnt);
-          ((Bundle)localObject).putIntArray("parent_position_array", CarmodeSearchResultAdapter.this.mParentCnt);
-          ((Bundle)localObject).putIntArray("child_start_array", CarmodeSearchResultAdapter.this.mChildIndex);
-        } while (CarmodeSearchResultAdapter.this.mFragmentManager == null);
-        CarmodeSearchResultAdapter.this.mFragmentManager.showFragment(33, (Bundle)localObject);
-      }
-    };
-    int mChildCount = 0;
-    int mChildsum = 0;
-    Context mContext;
-    int mParentPosition = 0;
-    
-    public ChildGrideListAdapter(Context paramContext)
-    {
-      this.mContext = paramContext;
+            iArr[0] = i;
+        }
     }
-    
-    public int GetCountSUM()
-    {
-      return this.mChildsum;
+
+    public void setSearchPager(SearchPoiPager searchPoiPager) {
+        int districtId = 0;
+        this.mSearchPoiPager = searchPoiPager;
+        this.mPoiList = searchPoiPager.getPoiList();
+        this.mChildIndex[0] = searchPoiPager.getCountPerPager();
+        int netMode = this.mSearchPoiPager.getNetMode();
+        int searchType = this.mSearchPoiPager.getSearchType();
+        if (searchType == 1 || searchType == 2) {
+            DistrictInfo districtInfo = this.mSearchPoiPager.getDistrct();
+            if (districtInfo != null) {
+                districtId = districtInfo.mId;
+            }
+            if (districtId == 0 || !NetworkUtils.getConnectStatus()) {
+                this.mFootItemType = TYPE_FOOT_ITEM_NOME;
+            } else if (netMode == 0) {
+                this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_SEARCH;
+            } else if (netMode == 1) {
+                this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE;
+            }
+        } else if (netMode == 0 && NetworkUtils.getConnectStatus()) {
+            this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_SEARCH;
+        } else {
+            this.mFootItemType = TYPE_FOOT_ITEM_NOME;
+        }
+        notifyDataSetChanged();
     }
-    
-    public void SetCount(int paramInt)
-    {
-      this.mChildCount = paramInt;
+
+    public int getCount() {
+        if (this.mPoiList == null) {
+            return 0;
+        }
+        int size = 10;
+        if (this.mChildIndex != null && this.mChildIndex[0] > 0) {
+            size = this.mPoiList.size() >= this.mChildIndex[0] ? this.mChildIndex[0] : this.mPoiList.size();
+        }
+        return this.mFootItemType != TYPE_FOOT_ITEM_NOME ? size + 1 : size;
     }
-    
-    public void SetCountSUM(int paramInt)
-    {
-      this.mChildsum = paramInt;
+
+    public Object getItem(int position) {
+        return null;
     }
-    
-    public void SetParentPosition(int paramInt)
-    {
-      this.mParentPosition = paramInt;
+
+    public long getItemId(int position) {
+        return 0;
     }
-    
-    public int getCount()
-    {
-      return this.mChildCount;
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        int size = 10;
+        if (this.mChildIndex != null && this.mChildIndex[0] > 0) {
+            size = this.mPoiList.size() >= this.mChildIndex[0] ? this.mChildIndex[0] : this.mPoiList.size();
+        }
+        if (position == size) {
+            convertView = this.mLayoutInflater.inflate(C0965R.layout.carmode_layout_search_item, null);
+            TextView onlineSearch = (TextView) convertView.findViewById(C0965R.id.search_btn);
+            if (this.mFootItemType == TYPE_FOOT_ITEM_ONLINE_SEARCH) {
+                onlineSearch.setText(StyleManager.getString(C0965R.string.search_online_normal));
+            } else {
+                onlineSearch.setText(StyleManager.getString(C0965R.string.search_online_country));
+            }
+            convertView.setLayoutParams(new LayoutParams(-1, ScreenUtil.getInstance().dip2px(80)));
+        } else {
+            convertView = this.mLayoutInflater.inflate(C0965R.layout.carmode_search_result_list_item, null);
+            ViewHodler viewHodler = new ViewHodler();
+            viewHodler.mVerDiverderA = convertView.findViewById(C0965R.id.line_poi_vertical_a);
+            viewHodler.mBtnStartNavi = convertView.findViewById(C0965R.id.btn_poi_gonavi);
+            viewHodler.mBtnNameAddr = convertView.findViewById(C0965R.id.poi_name_addr_layout);
+            viewHodler.mTvName = (TextView) convertView.findViewById(C0965R.id.tv_poi_title);
+            viewHodler.mTvAddr = (TextView) convertView.findViewById(C0965R.id.tv_poi_addr);
+            viewHodler.mTvDistance = (TextView) convertView.findViewById(C0965R.id.tv_poi_distance_new);
+            viewHodler.mTvNum = (TextView) convertView.findViewById(C0965R.id.tv_num);
+            viewHodler.mHorDeverder = convertView.findViewById(C0965R.id.line_poi_horizontal);
+            viewHodler.mChildGrideList = (GridView) convertView.findViewById(C0965R.id.grideview);
+            viewHodler.mIcResult = (ImageView) convertView.findViewById(C0965R.id.ic_result);
+            viewHodler.mHorDiverderB = convertView.findViewById(C0965R.id.line_poi_horizontal_b);
+            if (isPoiComfirmPage()) {
+                viewHodler.mTvDistance.setVisibility(8);
+                viewHodler.mBtnStartNavi.setVisibility(8);
+                viewHodler.mHorDiverderB.setVisibility(8);
+            } else {
+                viewHodler.mTvDistance.setVisibility(0);
+                viewHodler.mBtnStartNavi.setVisibility(0);
+            }
+            SearchPoi searchPoi = (SearchPoi) this.mPoiList.get(position);
+            if (searchPoi != null) {
+                if (isPoiComfirmPage()) {
+                    viewHodler.mTvName.setText(searchPoi.mName);
+                } else {
+                    viewHodler.mTvNum.setText((position + 1) + ". ");
+                    viewHodler.mTvName.setText(searchPoi.mName);
+                }
+                viewHodler.mTvAddr.setText(searchPoi.mAddress);
+                viewHodler.mTvDistance.setText(PoiController.getInstance().getDistance2CurrentPoint(searchPoi));
+            }
+            viewHodler.mBtnNameAddr.setTag(searchPoi);
+            viewHodler.mBtnNameAddr.setTag(C0965R.id.poi_name_addr_layout, searchPoi);
+            viewHodler.mBtnStartNavi.setTag(Integer.valueOf(position));
+            viewHodler.mBtnNameAddr.setOnClickListener(this.mClickListener);
+            viewHodler.mBtnStartNavi.setOnClickListener(this.mClickListener);
+            this.mChildCnt[position] = searchPoi.mChildCnt;
+            if (position >= 1) {
+                this.mChildIndex[position] = this.mChildIndex[position - 1] + this.mChildCnt[position - 1];
+            }
+            this.mParentCnt[position] = position;
+            if (this.mChildCnt[position] <= 0) {
+                viewHodler.mIcResult.setVisibility(8);
+                convertView.setLayoutParams(new LayoutParams(-1, ScreenUtil.getInstance().dip2px(80)));
+            }
+        }
+        return convertView;
     }
-    
-    public Object getItem(int paramInt)
-    {
-      return null;
+
+    public int[] getChildCnt() {
+        return this.mChildCnt;
     }
-    
-    public long getItemId(int paramInt)
-    {
-      return 0L;
+
+    public int[] getChildIndex() {
+        return this.mChildIndex;
     }
-    
-    protected View getItemView(View paramView, int paramInt)
-    {
-      paramView = new ViewHolder();
-      View localView = CarmodeSearchResultAdapter.this.mLayoutInflater.inflate(2130968688, null);
-      paramView.mChildName = ((TextView)localView.findViewById(2131624602));
-      paramView.mIcDot = ((ImageView)localView.findViewById(2131624601));
-      localView.setTag(paramView);
-      paramView.mChildName.setText(((SearchPoi)CarmodeSearchResultAdapter.this.mPoiList.get(this.mChildsum + paramInt)).mAliasName);
-      localView.setTag(Integer.valueOf(this.mChildsum + paramInt));
-      localView.setOnClickListener(this.mChildClickListener);
-      localView.setLayoutParams(new AbsListView.LayoutParams(-1, ScreenUtil.getInstance().dip2px(32)));
-      return localView;
+
+    public void setOnlineSearchListener(OnClickOnlineSearch listener) {
+        this.mOnlineSearchListener = listener;
     }
-    
-    public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-    {
-      return getItemView(paramView, paramInt);
+
+    private RoutePlanNode createRoutePlanNode(SearchPoi node) {
+        return new RoutePlanNode(node.mGuidePoint, node.mViewPoint, 8, node.mName, node.mAddress, node.mOriginUID);
     }
-    
-    protected class ViewHolder
-    {
-      TextView mChildName;
-      ImageView mIcDot;
-      
-      protected ViewHolder() {}
+
+    public void clickSearchBtn() {
+        if (this.mOnlineSearchListener == null) {
+            return;
+        }
+        if (this.mFootItemType == TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE) {
+            this.mOnlineSearchListener.onCountrywideOnlineSearch();
+        } else if (this.mFootItemType == TYPE_FOOT_ITEM_ONLINE_SEARCH) {
+            this.mOnlineSearchListener.onNormalOnlineSearch();
+        }
     }
-  }
-  
-  static class ViewHodler
-  {
-    View mBtnNameAddr;
-    View mBtnStartNavi;
-    GridView mChildGrideList;
-    View mHorDeverder;
-    View mHorDiverderB;
-    ImageView mIcResult;
-    TextView mTvAddr;
-    TextView mTvDistance;
-    TextView mTvName;
-    TextView mTvNum;
-    View mVerDiverderA;
-  }
+
+    public void interPoidetail() {
+        if (!this.isSetMode) {
+            Integer index = Integer.valueOf(0);
+            if (this.mPoiList != null) {
+                SearchPoi poi = (SearchPoi) this.mPoiList.get(index.intValue());
+                if (poi != null) {
+                    String str = poi.mName;
+                }
+            }
+            if (index != null && index.intValue() >= 0 && index.intValue() < this.mPoiList.size()) {
+                ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).setPoiList(this.mPoiList);
+                Bundle bundle = new Bundle();
+                bundle.putInt("incoming_type", 83);
+                if (this.mSearchPoiPager != null) {
+                    bundle.putInt("search_result_mode", this.mSearchPoiPager.getNetMode());
+                }
+                bundle.putInt("fc_type", 0);
+                bundle.putInt("current_poi", index.intValue());
+                bundle.putInt("current_child_count", this.mChildCnt[index.intValue()]);
+                bundle.putInt("child_start_poi", this.mChildIndex[index.intValue()]);
+                bundle.putIntArray("child_count_array", this.mChildCnt);
+                bundle.putIntArray("parent_position_array", this.mParentCnt);
+                bundle.putIntArray("child_start_array", this.mChildIndex);
+                if (this.mFragmentManager != null) {
+                    this.mFragmentManager.showFragment(33, bundle);
+                }
+                SearchStatItem.getInstance().setResultIndex(index.intValue());
+                SearchStatItem.getInstance().onEvent();
+            }
+        }
+    }
+
+    public void setShowBundle(Bundle bundle) {
+        this.mShowBundle = bundle;
+    }
+
+    private boolean isPoiComfirmPage() {
+        int action = this.mShowBundle.getInt(BundleKey.SELECT_POINT_ACTION);
+        if (action == 1 || action == 5 || action == 4) {
+            return true;
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/adapter/carmode/CarmodeSearchResultAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

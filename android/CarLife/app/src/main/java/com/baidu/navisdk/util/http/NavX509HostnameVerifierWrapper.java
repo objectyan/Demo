@@ -7,48 +7,32 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 
-public class NavX509HostnameVerifierWrapper
-  implements X509HostnameVerifier
-{
-  private final X509HostnameVerifier verifier;
-  
-  public NavX509HostnameVerifierWrapper(X509HostnameVerifier paramX509HostnameVerifier)
-  {
-    this.verifier = paramX509HostnameVerifier;
-  }
-  
-  public void verify(String paramString, X509Certificate paramX509Certificate)
-    throws SSLException
-  {
-    if (this.verifier != null) {
-      this.verifier.verify(paramString, paramX509Certificate);
+public class NavX509HostnameVerifierWrapper implements X509HostnameVerifier {
+    private final X509HostnameVerifier verifier;
+
+    public NavX509HostnameVerifierWrapper(X509HostnameVerifier verifier) {
+        this.verifier = verifier;
     }
-  }
-  
-  public void verify(String paramString, SSLSocket paramSSLSocket)
-    throws IOException
-  {
-    if (this.verifier != null) {
-      this.verifier.verify(paramString, paramSSLSocket);
+
+    public boolean verify(String host, SSLSession session) {
+        return this.verifier != null && this.verifier.verify(host, session);
     }
-  }
-  
-  public void verify(String paramString, String[] paramArrayOfString1, String[] paramArrayOfString2)
-    throws SSLException
-  {
-    if (this.verifier != null) {
-      this.verifier.verify(paramString, paramArrayOfString1, paramArrayOfString2);
+
+    public void verify(String host, SSLSocket ssl) throws IOException {
+        if (this.verifier != null) {
+            this.verifier.verify(host, ssl);
+        }
     }
-  }
-  
-  public boolean verify(String paramString, SSLSession paramSSLSession)
-  {
-    return (this.verifier != null) && (this.verifier.verify(paramString, paramSSLSession));
-  }
+
+    public void verify(String host, X509Certificate cert) throws SSLException {
+        if (this.verifier != null) {
+            this.verifier.verify(host, cert);
+        }
+    }
+
+    public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
+        if (this.verifier != null) {
+            this.verifier.verify(host, cns, subjectAlts);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/http/NavX509HostnameVerifierWrapper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

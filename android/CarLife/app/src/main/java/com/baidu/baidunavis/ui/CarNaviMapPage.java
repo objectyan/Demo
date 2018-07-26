@@ -13,192 +13,159 @@ import com.baidu.baidunavis.BaiduNaviManager;
 import com.baidu.baidunavis.control.NavLogUtils;
 import com.baidu.baidunavis.control.NavMapManager;
 import com.baidu.mapframework.common.config.GlobalConfig;
+import com.baidu.navi.fragment.BaseFragment;
 import com.baidu.navi.fragment.ContentFragment;
 import com.baidu.navisdk.ui.routeguide.BNavigator;
 import com.baidu.navisdk.util.drivertool.BNAttachmentManager;
 import com.baidu.navisdk.util.drivertool.BNTakePhotoManager;
 
-public abstract class CarNaviMapPage
-  extends ContentFragment
-{
-  private static final String TAG = "Framework";
-  
-  private String getClassName()
-  {
-    try
-    {
-      String str = getClass().getName();
-      str = str.substring(str.lastIndexOf(".") + 1);
-      return str;
+public abstract class CarNaviMapPage extends ContentFragment {
+    private static final String TAG = "Framework";
+
+    public abstract String getPageClsName();
+
+    public abstract int getPageType();
+
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onAttach");
     }
-    catch (Throwable localThrowable) {}
-    return "Crash";
-  }
-  
-  public boolean forbidsConfigurationChange()
-  {
-    return true;
-  }
-  
-  public boolean forceResetModeWhenBack()
-  {
-    return false;
-  }
-  
-  public abstract String getPageClsName();
-  
-  public abstract int getPageType();
-  
-  public void goBack()
-  {
-    NavLogUtils.e("Framework", getPageClsName() + ": --> goBack");
-    NavFragmentManager.getInstance().back(null, forceResetModeWhenBack());
-    back();
-  }
-  
-  public boolean is3DGestureEnable()
-  {
-    return false;
-  }
-  
-  public boolean isMapPage()
-  {
-    return true;
-  }
-  
-  public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent)
-  {
-    super.onActivityResult(paramInt1, paramInt2, paramIntent);
-    NavLogUtils.e("Framework", getPageClsName() + ": resultCode --> " + paramInt2);
-    BNavigator.getInstance().onActivityResult(paramInt1, paramInt2, paramIntent);
-    if ((paramInt1 == 256) && (paramInt2 == -1))
-    {
-      paramIntent = (Bitmap)paramIntent.getExtras().get("data");
-      BNTakePhotoManager.getInstance().onPhotoTakeActionFinish(paramIntent, new Object());
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        BaseFragment.mResumeMapView = true;
+        if (BaiduNaviManager.isNaviSoLoadSuccess() && BaiduNaviManager.sIsBaseEngineInitialized) {
+            NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onCreate");
+            if (BNRouteGuideFragment.isStopedByWatch) {
+                if (SystemClock.elapsedRealtime() - BNRouteGuideFragment.sWatchEixtTime <= 1500) {
+                    goBack();
+                    return;
+                }
+                return;
+            }
+            return;
+        }
+        back();
     }
-    while ((paramInt1 != 257) || (paramInt2 != -1)) {
-      return;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onCreateView");
+        NavFragmentManager.getInstance().setLastPageType(getPageType());
+        NavMapManager.getInstance().addNaviMapListener();
+        NavMapManager.getInstance().handleMapThemeAndScene(getPageType());
+        NavMapManager.getInstance().set3DGestureEnable(is3DGestureEnable());
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
-    BNAttachmentManager.getInstance().onSelectPictureFinish(paramIntent);
-  }
-  
-  public void onAttach(Activity paramActivity)
-  {
-    super.onAttach(paramActivity);
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onAttach");
-  }
-  
-  public boolean onBackPressed()
-  {
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onBackPressed");
-    goBack();
-    return true;
-  }
-  
-  public void onConfigurationChanged(Configuration paramConfiguration)
-  {
-    super.onConfigurationChanged(paramConfiguration);
-    if ((!BaiduNaviManager.isNaviSoLoadSuccess()) || (!BaiduNaviManager.sIsBaseEngineInitialized)) {
-      super.onConfigurationChanged(paramConfiguration);
+
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onViewCreated");
     }
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    com.baidu.navi.fragment.BaseFragment.mResumeMapView = true;
-    if ((!BaiduNaviManager.isNaviSoLoadSuccess()) || (!BaiduNaviManager.sIsBaseEngineInitialized)) {
-      back();
+
+    public void onStart() {
+        super.onStart();
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onStart");
     }
-    long l;
-    do
-    {
-      do
-      {
-        return;
-        NavLogUtils.e("Framework", getPageClsName() + ": --> onCreate");
-      } while (!BNRouteGuideFragment.isStopedByWatch);
-      l = BNRouteGuideFragment.sWatchEixtTime;
-    } while (SystemClock.elapsedRealtime() - l > 1500L);
-    goBack();
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    return null;
-  }
-  
-  public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle)
-  {
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onCreateView");
-    NavFragmentManager.getInstance().setLastPageType(getPageType());
-    NavMapManager.getInstance().addNaviMapListener();
-    NavMapManager.getInstance().handleMapThemeAndScene(getPageType());
-    NavMapManager.getInstance().set3DGestureEnable(is3DGestureEnable());
-    return super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-  }
-  
-  public void onDestroy()
-  {
-    super.onDestroy();
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onDestroy");
-  }
-  
-  public void onDestroyView()
-  {
-    super.onDestroyView();
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onDestroyView");
-    NavMapManager.getInstance().removeNaviMapListener();
-    NavMapManager.getInstance().handleMapThemeAndScene(0);
-    NavMapManager.getInstance().set3DGestureEnable(GlobalConfig.getInstance().isOpen3D());
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onDestroyView end");
-  }
-  
-  public void onDetach()
-  {
-    super.onDetach();
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onDetach");
-  }
-  
-  protected void onInitView() {}
-  
-  public void onPause()
-  {
-    super.onPause();
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onPause");
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onResume");
-  }
-  
-  public void onStart()
-  {
-    super.onStart();
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onStart");
-  }
-  
-  public void onStop()
-  {
-    super.onStop();
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onStop");
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public void onViewCreated(View paramView, Bundle paramBundle)
-  {
-    super.onViewCreated(paramView, paramBundle);
-    NavLogUtils.e("Framework", getPageClsName() + ": --> onViewCreated");
-  }
+
+    public void onResume() {
+        super.onResume();
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onResume");
+    }
+
+    public void onPause() {
+        super.onPause();
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onPause");
+    }
+
+    public void onStop() {
+        super.onStop();
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onStop");
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onDestroyView");
+        NavMapManager.getInstance().removeNaviMapListener();
+        NavMapManager.getInstance().handleMapThemeAndScene(0);
+        NavMapManager.getInstance().set3DGestureEnable(GlobalConfig.getInstance().isOpen3D());
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onDestroyView end");
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onDestroy");
+    }
+
+    public void onDetach() {
+        super.onDetach();
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onDetach");
+    }
+
+    public void goBack() {
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> goBack");
+        NavFragmentManager.getInstance().back(null, forceResetModeWhenBack());
+        back();
+    }
+
+    public boolean onBackPressed() {
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": --> onBackPressed");
+        goBack();
+        return true;
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (!BaiduNaviManager.isNaviSoLoadSuccess() || !BaiduNaviManager.sIsBaseEngineInitialized) {
+            super.onConfigurationChanged(newConfig);
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        NavLogUtils.m3003e("Framework", getPageClsName() + ": resultCode --> " + resultCode);
+        BNavigator.getInstance().onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 256 && resultCode == -1) {
+            BNTakePhotoManager.getInstance().onPhotoTakeActionFinish((Bitmap) data.getExtras().get("data"), new Object());
+        } else if (requestCode == 257 && resultCode == -1) {
+            BNAttachmentManager.getInstance().onSelectPictureFinish(data);
+        }
+    }
+
+    private String getClassName() {
+        try {
+            String name = getClass().getName();
+            return name.substring(name.lastIndexOf(".") + 1);
+        } catch (Throwable th) {
+            return "Crash";
+        }
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        return null;
+    }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    public boolean isMapPage() {
+        return true;
+    }
+
+    public boolean forbidsConfigurationChange() {
+        return true;
+    }
+
+    public boolean is3DGestureEnable() {
+        return false;
+    }
+
+    public boolean forceResetModeWhenBack() {
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/ui/CarNaviMapPage.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,19 +2,22 @@ package com.baidu.navisdk.comapi.poisearch;
 
 import android.annotation.SuppressLint;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import com.baidu.navisdk.BNaviEngineManager;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.CommonParams.Const.ModuleName;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.statistics.BNStatisticsManager;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
+import com.baidu.navisdk.debug.NavSDKDebug;
 import com.baidu.navisdk.jni.nativeif.JNIGuidanceControl;
 import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import com.baidu.navisdk.jni.nativeif.JNISearchControl;
 import com.baidu.navisdk.logic.CommandCenter;
 import com.baidu.navisdk.logic.CommandConst;
+import com.baidu.navisdk.logic.CommandConstants;
 import com.baidu.navisdk.logic.ReqData;
 import com.baidu.navisdk.logic.commandparser.CmdRouteSearchForMapPoiResultPB;
 import com.baidu.navisdk.logic.commandparser.CmdSearchAroundPark;
@@ -41,662 +44,561 @@ import com.baidu.navisdk.util.testtts.TTSTestCenter;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class BNPoiSearcher
-  implements JNISearchConst, CommandConst
-{
-  private static final String SEARCH_FACTORY_MODE_SECRET = "最好用的导航";
-  private static final String SEARCH_FACTORY_MODE_TTS = "最好用的tts";
-  private static final String SEARCH_FACTORY_MODE_USER_KEY_LOG = "最好用的百度地图";
-  private static final String TAG = BNPoiSearcher.class.getSimpleName();
-  private static BNPoiSearcher mInstance;
-  
-  public static BNPoiSearcher getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new BNPoiSearcher();
+public class BNPoiSearcher implements JNISearchConst, CommandConst {
+    private static final String SEARCH_FACTORY_MODE_SECRET = "最好用的导航";
+    private static final String SEARCH_FACTORY_MODE_TTS = "最好用的tts";
+    private static final String SEARCH_FACTORY_MODE_USER_KEY_LOG = "最好用的百度地图";
+    private static final String TAG = BNPoiSearcher.class.getSimpleName();
+    private static BNPoiSearcher mInstance;
+
+    private BNPoiSearcher() {
     }
-    return mInstance;
-  }
-  
-  private void quickSortByDistance(ArrayList<Double> paramArrayList, int paramInt1, int paramInt2, ArrayList<SearchPoi> paramArrayList1)
-  {
-    if ((paramInt1 >= paramInt2) || (paramInt1 < 0) || (paramArrayList == null) || (paramArrayList1 == null) || (paramInt2 >= paramArrayList.size()) || (paramInt2 >= paramArrayList1.size())) {
-      return;
+
+    public static BNPoiSearcher getInstance() {
+        if (mInstance == null) {
+            mInstance = new BNPoiSearcher();
+        }
+        return mInstance;
     }
-    int i = paramInt1;
-    int j = paramInt2;
-    double d = ((Double)paramArrayList.get(paramInt1)).doubleValue();
-    SearchPoi localSearchPoi = (SearchPoi)paramArrayList1.get(paramInt1);
-    while (i < j)
-    {
-      while ((i < j) && (((Double)paramArrayList.get(j)).doubleValue() >= d)) {
-        j -= 1;
-      }
-      paramArrayList.set(i, paramArrayList.get(j));
-      paramArrayList1.set(i, paramArrayList1.get(j));
-      while ((i < j) && (((Double)paramArrayList.get(i)).doubleValue() < d)) {
-        i += 1;
-      }
-      paramArrayList.set(j, paramArrayList.get(i));
-      paramArrayList1.set(j, paramArrayList1.get(i));
+
+    public int setNetMode(int netmode) {
+        try {
+            return JNISearchControl.sInstance.SetNetMode(netmode);
+        } catch (Throwable th) {
+            return 0;
+        }
     }
-    paramArrayList.set(i, Double.valueOf(d));
-    paramArrayList1.set(i, localSearchPoi);
-    quickSortByDistance(paramArrayList, paramInt1, i - 1, paramArrayList1);
-    quickSortByDistance(paramArrayList, i + 1, paramInt2, paramArrayList1);
-  }
-  
-  public boolean asynGetDistrictByPoint(GeoPoint paramGeoPoint, int paramInt, Handler paramHandler)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return false;
+
+    public int getNetMode() {
+        return JNISearchControl.sInstance.GetNetMode();
     }
-    if (!BNaviEngineManager.getInstance().isEngineInitSucc())
-    {
-      LogUtil.e("PoiSearch", "engine is not init succ...");
-      return false;
+
+    public int getNetModeOfLastResult() {
+        return JNISearchControl.sInstance.GetNetModeOfLastResult();
     }
-    paramHandler = new ReqData("cmd.search.bypoint", 1, paramHandler, 1003, paramInt);
-    CmdSearchByPoint.packetParams(paramHandler, 2, paramGeoPoint);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynGetInputSug(String paramString, int paramInt1, int paramInt2, Handler paramHandler)
-  {
-    if (paramString == null) {
-      return false;
+
+    public void cancelQuery() {
+        CommandCenter.getInstance().cancelRequestBySubSystem(1);
     }
-    paramString = paramString.trim();
-    if (paramString.length() <= 0) {
-      return false;
+
+    public boolean asynNameSearchByKey(String key, int districtId, int poiCount, int netMode, int timeout, Handler handler) {
+        if (key == null) {
+            return false;
+        }
+        String trimKey = key.trim();
+        if (trimKey.length() <= 0) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_BYKEY, 1, handler, 1001, timeout);
+        CmdSearchByKey.packetParams(reqdata, trimKey, districtId, poiCount, netMode);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    paramHandler = new ReqData("cmd.search.getsug", 1, paramHandler, 1004, paramInt2);
-    CmdSearchGetSug.packetParams(paramHandler, paramString, paramInt1);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynGetPoiByPoint(GeoPoint paramGeoPoint, int paramInt1, int paramInt2, Handler paramHandler)
-  {
-    if (paramGeoPoint == null) {
-      return false;
+
+    public boolean asynSearchWithPager(SearchPoiPager searchPoiPager, int timeout, Handler handler) {
+        if (searchPoiPager == null) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_WITH_PAGER, 1, handler, 1005, timeout);
+        CmdSearchWithPager.packetParams(reqdata, searchPoiPager);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    paramHandler = new ReqData("cmd.search.bypoint", 1, paramHandler, 1003, paramInt2);
-    CmdSearchByPoint.packetParams(paramHandler, 1, paramGeoPoint, paramInt1);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynGetPoiByPoint(GeoPoint paramGeoPoint, int paramInt, Handler paramHandler)
-  {
-    if (paramGeoPoint == null) {
-      return false;
+
+    public boolean asynSearchWithPager(SearchPoiPager searchPoiPager, Handler handler) {
+        if (searchPoiPager == null || checkFactoryMode(searchPoiPager.getSearchKey())) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_WITH_PAGER, 1, handler, 1005);
+        CmdSearchWithPager.packetParams(reqdata, searchPoiPager);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    paramHandler = new ReqData("cmd.search.bypoint", 1, paramHandler, 1003, paramInt);
-    CmdSearchByPoint.packetParams(paramHandler, 1, paramGeoPoint);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynNameSearchByKey(String paramString, int paramInt1, int paramInt2, int paramInt3, int paramInt4, Handler paramHandler)
-  {
-    if (paramString == null) {
-      return false;
+
+    public boolean asynNameSearchByKeyWithPager(String key, int districtId, int poiCount, int netMode, int pagerNum, int timeout, Handler handler) {
+        if (key == null) {
+            return false;
+        }
+        String trimKey = key.trim();
+        if (trimKey.length() <= 0) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_BYKEY, 1, handler, 1001, timeout);
+        CmdSearchByKey.packetParams(reqdata, trimKey, districtId, poiCount, netMode);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    paramString = paramString.trim();
-    if (paramString.length() <= 0) {
-      return false;
+
+    public boolean asynSpaceSearchByKey(String key, int districtId, SearchCircle circle, int poiCount, int netMode, int timeout, Handler handler) {
+        if (key == null || circle == null) {
+            return false;
+        }
+        String trimKey = key.trim();
+        if (trimKey.length() <= 0) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_NEAREST, 1, handler, 1002, timeout);
+        CmdSearchNearest.packetParams(reqdata, trimKey, districtId, circle, poiCount, netMode);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    paramHandler = new ReqData("cmd.search.bykey", 1, paramHandler, 1001, paramInt4);
-    CmdSearchByKey.packetParams(paramHandler, paramString, paramInt1, paramInt2, paramInt3);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynNameSearchByKeyWithPager(String paramString, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, Handler paramHandler)
-  {
-    if (paramString == null) {
-      return false;
+
+    public boolean asynSpaceSearchByKey(String key, SearchCircle circle, int poiCount, int netMode, int timeout, Handler handler) {
+        if (key == null || circle == null) {
+            return false;
+        }
+        String trimKey = key.trim();
+        if (trimKey.length() <= 0) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_NEAREST, 1, handler, 1002, timeout);
+        CmdSearchNearest.packetParams(reqdata, trimKey, circle, poiCount, netMode);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    paramString = paramString.trim();
-    if (paramString.length() <= 0) {
-      return false;
+
+    public boolean asynSpaceSearchByCatalog(int catalogId, int districtId, SearchCircle circle, int poiCount, int netMode, int timeout, Handler handler) {
+        if (circle == null) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_NEAREST, 1, handler, 1002, timeout);
+        CmdSearchNearest.packetParams(reqdata, catalogId, districtId, circle, poiCount, netMode);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    paramHandler = new ReqData("cmd.search.bykey", 1, paramHandler, 1001, paramInt5);
-    CmdSearchByKey.packetParams(paramHandler, paramString, paramInt1, paramInt2, paramInt3);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynRouteSearchForMapPoiResultPB(int paramInt1, String paramString1, int paramInt2, int paramInt3, String paramString2, int paramInt4, int paramInt5, Handler paramHandler)
-  {
-    if (paramString1 == null) {
-      return false;
+
+    public boolean asynSpaceSearchByCatalog(int catalogId, SearchCircle circle, int poiCount, int netMode, int timeout, Handler handler) {
+        if (circle == null) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_NEAREST, 1, handler, 1002, timeout);
+        CmdSearchNearest.packetParams(reqdata, catalogId, circle, poiCount, netMode);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    if (paramString1.trim().length() <= 0) {
-      return false;
+
+    public boolean initInputSug(int provinceId, int netMode) {
+        boolean z = true;
+        if (provinceId < 1 && provinceId > 33) {
+            return false;
+        }
+        int ret = JNISearchControl.sInstance.initSugSubSys(provinceId);
+        LogUtil.m15791e(TAG, "initSugSubSys ret " + ret);
+        if (ret != 0) {
+            z = false;
+        }
+        return z;
     }
-    paramHandler = new ReqData("cmd.search.routesearch.for.mappoiresult.pb", 1, paramHandler, 1010);
-    CmdRouteSearchForMapPoiResultPB.packetParams(paramHandler, paramInt1, paramString1, paramInt2, paramInt3, paramString2, paramInt4, paramInt5);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSearchAroudPark(String paramString, SearchCircle paramSearchCircle, int paramInt1, int paramInt2, int paramInt3, Handler paramHandler)
-  {
-    if (paramSearchCircle == null) {
-      return false;
+
+    public boolean initInputSug(DistrictInfo districtInfo) {
+        int ret = JNISearchControl.sInstance.initSugSubSys(JNISearchControl.sInstance.getCompDistrictId(districtInfo));
+        LogUtil.m15791e(TAG, "initSugSubSys ret " + ret);
+        return ret == 0;
     }
-    String str = paramString;
-    if (TextUtils.isEmpty(paramString)) {
-      str = "";
+
+    public boolean releaseInputSug(int netMode) {
+        return JNISearchControl.sInstance.releaseSugSubSys() == 0;
     }
-    paramString = new ReqData("cmd.search.around.park", 1, paramHandler, 1006, paramInt3);
-    CmdSearchAroundPark.packetParams(paramString, str, paramSearchCircle, paramInt1, paramInt2);
-    CommandCenter.getInstance().sendRequest(paramString);
-    return true;
-  }
-  
-  public boolean asynSearchAroudPark(String paramString, SearchCircle paramSearchCircle, int paramInt1, int paramInt2, Handler paramHandler)
-  {
-    if (paramSearchCircle == null) {
-      return false;
+
+    public boolean asynGetInputSug(String prefix, int netMode, int timeout, Handler handler) {
+        if (prefix == null) {
+            return false;
+        }
+        String trimPrefix = prefix.trim();
+        if (trimPrefix.length() <= 0) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_GETSUG, 1, handler, 1004, timeout);
+        CmdSearchGetSug.packetParams(reqdata, trimPrefix, netMode);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    String str = paramString;
-    if (TextUtils.isEmpty(paramString)) {
-      str = "";
+
+    public DistrictInfo getDistrictByPoint(GeoPoint point, int netMode) {
+        LogUtil.m15791e(ModuleName.POISEARCH, "getDistrictByPoint");
+        return JNISearchControl.sInstance.getDistrictByPoint(point, netMode);
     }
-    paramString = new ReqData("cmd.search.around.park", 1, paramHandler, 1006);
-    CmdSearchAroundPark.packetParams(paramString, str, paramSearchCircle, paramInt1, paramInt2);
-    CommandCenter.getInstance().sendRequest(paramString);
-    return true;
-  }
-  
-  public boolean asynSearchByCircleForMapPoiResultPB(String paramString, int paramInt1, SearchCircle paramSearchCircle, int paramInt2, int paramInt3, Handler paramHandler)
-  {
-    if (TextUtils.isEmpty(paramString)) {
-      return false;
+
+    public boolean asynGetPoiByPoint(GeoPoint point, int netMode, int timeout, Handler handler) {
+        if (point == null) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_BYPOINT, 1, handler, 1003, timeout);
+        CmdSearchByPoint.packetParams(reqdata, 1, point, netMode);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    paramHandler = new ReqData("cmd.search.bycircle.for.mappoiresult.pb", 1, paramHandler, 1009);
-    CmdSearchByCircleForMapPoiResultPB.packetParams(paramHandler, paramString, paramInt1, paramSearchCircle, paramInt2, paramInt3);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSearchByKeyForMapRPNodePoiResultPB(String paramString, int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, int paramInt6, Handler paramHandler)
-  {
-    if (paramString == null) {
-      return false;
+
+    public boolean asynGetPoiByPoint(GeoPoint point, int timeout, Handler handler) {
+        if (point == null) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_BYPOINT, 1, handler, 1003, timeout);
+        CmdSearchByPoint.packetParams(reqdata, 1, point);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
     }
-    String str = paramString.trim();
-    if (str.length() <= 0) {
-      return false;
-    }
-    if (checkFactoryMode(str)) {
-      return false;
-    }
-    paramHandler = new ReqData("cmd.search.bykey.for.maprpnodepoiresult.pb", 1, paramHandler, 1007);
-    CmdSearchByKeyForMapRPNodePoiResultPB.packetParams(paramHandler, paramString, paramInt1, paramInt2, paramInt3, paramInt4, paramInt5, paramInt6);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSearchByNameForMapPoiResultPB(String paramString, int paramInt1, SearchCircle paramSearchCircle, int paramInt2, int paramInt3, Handler paramHandler)
-  {
-    if (TextUtils.isEmpty(paramString)) {
-      return false;
-    }
-    paramHandler = new ReqData("cmd.search.bykey.for.mappoiresult.pb", 1, paramHandler, 1008);
-    CmdSearchByKeyForMapPoiResultPB.packetParams(paramHandler, paramString, paramInt1, paramSearchCircle, paramInt2, paramInt3);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSearchWithPager(SearchPoiPager paramSearchPoiPager, int paramInt, Handler paramHandler)
-  {
-    if (paramSearchPoiPager == null) {
-      return false;
-    }
-    paramHandler = new ReqData("cmd.search.with.pager", 1, paramHandler, 1005, paramInt);
-    CmdSearchWithPager.packetParams(paramHandler, paramSearchPoiPager);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSearchWithPager(SearchPoiPager paramSearchPoiPager, Handler paramHandler)
-  {
-    if (paramSearchPoiPager == null) {}
-    while (checkFactoryMode(paramSearchPoiPager.getSearchKey())) {
-      return false;
-    }
-    paramHandler = new ReqData("cmd.search.with.pager", 1, paramHandler, 1005);
-    CmdSearchWithPager.packetParams(paramHandler, paramSearchPoiPager);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSpaceSearchByCatalog(int paramInt1, int paramInt2, SearchCircle paramSearchCircle, int paramInt3, int paramInt4, int paramInt5, Handler paramHandler)
-  {
-    if (paramSearchCircle == null) {
-      return false;
-    }
-    paramHandler = new ReqData("cmd.search.neareast", 1, paramHandler, 1002, paramInt5);
-    CmdSearchNearest.packetParams(paramHandler, paramInt1, paramInt2, paramSearchCircle, paramInt3, paramInt4);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSpaceSearchByCatalog(int paramInt1, SearchCircle paramSearchCircle, int paramInt2, int paramInt3, int paramInt4, Handler paramHandler)
-  {
-    if (paramSearchCircle == null) {
-      return false;
-    }
-    paramHandler = new ReqData("cmd.search.neareast", 1, paramHandler, 1002, paramInt4);
-    CmdSearchNearest.packetParams(paramHandler, paramInt1, paramSearchCircle, paramInt2, paramInt3);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSpaceSearchByKey(String paramString, int paramInt1, SearchCircle paramSearchCircle, int paramInt2, int paramInt3, int paramInt4, Handler paramHandler)
-  {
-    if ((paramString == null) || (paramSearchCircle == null)) {
-      return false;
-    }
-    paramString = paramString.trim();
-    if (paramString.length() <= 0) {
-      return false;
-    }
-    paramHandler = new ReqData("cmd.search.neareast", 1, paramHandler, 1002, paramInt4);
-    CmdSearchNearest.packetParams(paramHandler, paramString, paramInt1, paramSearchCircle, paramInt2, paramInt3);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public boolean asynSpaceSearchByKey(String paramString, SearchCircle paramSearchCircle, int paramInt1, int paramInt2, int paramInt3, Handler paramHandler)
-  {
-    if ((paramString == null) || (paramSearchCircle == null)) {
-      return false;
-    }
-    paramString = paramString.trim();
-    if (paramString.length() <= 0) {
-      return false;
-    }
-    paramHandler = new ReqData("cmd.search.neareast", 1, paramHandler, 1002, paramInt3);
-    CmdSearchNearest.packetParams(paramHandler, paramString, paramSearchCircle, paramInt1, paramInt2);
-    CommandCenter.getInstance().sendRequest(paramHandler);
-    return true;
-  }
-  
-  public void cancelQuery()
-  {
-    CommandCenter.getInstance().cancelRequestBySubSystem(1);
-  }
-  
-  @SuppressLint({"NewApi"})
-  public boolean checkFactoryMode(final String paramString)
-  {
-    LogUtil.e(TAG, "checkFactoryMode key = " + paramString);
-    if ((paramString != null) && ("最好用的导航".equals(paramString.trim())))
-    {
-      com.baidu.navisdk.debug.NavSDKDebug.sSDKFactoryMode = true;
-      paramString = "CUID:" + PackageUtil.getCuid();
-      ((ClipboardManager)BNaviModuleManager.getContext().getSystemService("clipboard")).setText(paramString);
-      TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "CUID已经复制到粘贴板，进入导航设置中查看工程模式！");
-      paramString = JNIGuidanceControl.getInstance().isRouteGuideCloud();
-      if (!StringUtils.isEmpty(paramString)) {
-        BNWorkerCenter.getInstance().submitMainThreadTaskDelay(new BNWorkerNormalTask("CheckFactoryMode-" + getClass().getSimpleName(), null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), paramString);
+
+    public DistrictInfo getProvinceDistrictByPoint(GeoPoint point) {
+        DistrictInfo[] districts = JNISearchControl.sInstance.getDistrictsByPoint(point);
+        if (districts == null || districts.length <= 1) {
             return null;
-          }
-        }, new BNWorkerConfig(100, 0), 3000L);
-      }
-      paramString = new BNDebugModelDialog(BNaviModuleManager.getContext());
-      BNDrivingToolManager.getInstance().setDebugModeDialog(paramString);
-      paramString.show();
-      return true;
+        }
+        return districts[1];
     }
-    if ((paramString != null) && ("最好用的tts".equals(paramString.trim())))
-    {
-      TTSTestCenter.getInstance().init();
-      TTSTestCenter.getInstance().test();
-      TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "开始进入TTS测试模式");
-      return true;
-    }
-    if ((paramString != null) && ("最好用的百度地图".equals(paramString.trim())))
-    {
-      new BNUserKeyLogDialog(BNaviModuleManager.getContext()).show();
-      return true;
-    }
-    return false;
-  }
-  
-  public boolean clearBkgCache()
-  {
-    return JNISearchControl.sInstance.clearBkgCache() == 0;
-  }
-  
-  public boolean clearFavPoiCache()
-  {
-    return JNISearchControl.sInstance.clearFavPoiCache() == 0;
-  }
-  
-  public boolean clearPoiCache()
-  {
-    return JNISearchControl.sInstance.clearPoiCache() == 0;
-  }
-  
-  public int getChildDistrict(int paramInt, ArrayList<DistrictInfo> paramArrayList)
-  {
-    return JNISearchControl.sInstance.getChildDistrictAndParse(paramInt, paramArrayList);
-  }
-  
-  public DistrictInfo getDistrictById(int paramInt)
-  {
-    return JNISearchControl.sInstance.getDistrictById(paramInt);
-  }
-  
-  public DistrictInfo getDistrictByPoint(GeoPoint paramGeoPoint, int paramInt)
-  {
-    LogUtil.e("PoiSearch", "getDistrictByPoint");
-    return JNISearchControl.sInstance.getDistrictByPoint(paramGeoPoint, paramInt);
-  }
-  
-  public int getNetMode()
-  {
-    return JNISearchControl.sInstance.GetNetMode();
-  }
-  
-  public int getNetModeOfLastResult()
-  {
-    return JNISearchControl.sInstance.GetNetModeOfLastResult();
-  }
-  
-  public DistrictInfo getParentDistrict(int paramInt)
-  {
-    return JNISearchControl.sInstance.getParentDistrict(paramInt);
-  }
-  
-  public DistrictInfo getProvinceDistrictByPoint(GeoPoint paramGeoPoint)
-  {
-    paramGeoPoint = JNISearchControl.sInstance.getDistrictsByPoint(paramGeoPoint);
-    if ((paramGeoPoint != null) && (paramGeoPoint.length > 1)) {
-      return paramGeoPoint[1];
-    }
-    return null;
-  }
-  
-  public int getSearchNetworkMode()
-  {
-    int i = 1;
-    if (BNSettingManager.getPrefSearchMode() == 3) {
-      if ((getInstance().getNetModeOfLastResult() == 2) || (getInstance().getNetModeOfLastResult() == 0)) {
-        i = 3;
-      }
-    }
-    while (BNSettingManager.getPrefSearchMode() != 2) {
-      return i;
-    }
-    if ((getInstance().getNetModeOfLastResult() == 3) || (getInstance().getNetModeOfLastResult() == 1)) {
-      return 4;
-    }
-    return 2;
-  }
-  
-  public DistrictInfo getTopDistrict()
-  {
-    return JNISearchControl.sInstance.getTopDistrict();
-  }
-  
-  public boolean initInputSug(int paramInt1, int paramInt2)
-  {
-    boolean bool = true;
-    if ((paramInt1 < 1) && (paramInt1 > 33)) {
-      return false;
-    }
-    paramInt1 = JNISearchControl.sInstance.initSugSubSys(paramInt1);
-    LogUtil.e(TAG, "initSugSubSys ret " + paramInt1);
-    if (paramInt1 == 0) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
-    }
-  }
-  
-  public boolean initInputSug(DistrictInfo paramDistrictInfo)
-  {
-    int i = JNISearchControl.sInstance.initSugSubSys(JNISearchControl.sInstance.getCompDistrictId(paramDistrictInfo));
-    LogUtil.e(TAG, "initSugSubSys ret " + i);
-    return i == 0;
-  }
-  
-  public boolean inputIndex(String paramString, int paramInt1, int paramInt2)
-  {
-    if ((paramString == null) || (paramInt1 == 0) || (paramInt2 == 0)) {}
-    do
-    {
-      do
-      {
+
+    public boolean asynGetDistrictByPoint(GeoPoint point, int timeout, Handler handler) {
+        if (point == null || !point.isValid()) {
+            return false;
+        }
+        if (BNaviEngineManager.getInstance().isEngineInitSucc()) {
+            ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_BYPOINT, 1, handler, 1003, timeout);
+            CmdSearchByPoint.packetParams(reqdata, 2, point);
+            CommandCenter.getInstance().sendRequest(reqdata);
+            return true;
+        }
+        LogUtil.m15791e(ModuleName.POISEARCH, "engine is not init succ...");
         return false;
-      } while (paramString.length() <= 0);
-      LogUtil.e(TAG, "inputIndex() ditrict ID: " + paramInt1);
-      Bundle localBundle = new Bundle();
-      localBundle.putString("Name", paramString.toUpperCase(Locale.getDefault()));
-      localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramInt1));
-      localBundle.putInt("PoiId", paramInt2);
-      paramInt1 = JNISearchControl.sInstance.inputIndex(localBundle);
-      LogUtil.e(TAG, "inputIndex() ret: " + paramInt1);
-    } while (paramInt1 != 0);
-    return true;
-  }
-  
-  public void mtjStatSearch(int paramInt, boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      switch (paramInt)
-      {
-      default: 
-        return;
-      case 1: 
-        BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410311", "410311");
-        return;
-      case 2: 
-        BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410312", "410312");
-        return;
-      case 3: 
-        BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410314", "410314");
-        return;
-      }
-      BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410313", "410313");
-      return;
     }
-    BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410315", "410315");
-  }
-  
-  public int parseBkgLayerId(String paramString)
-  {
-    if (paramString == null) {
-      return -1;
+
+    public DistrictInfo getTopDistrict() {
+        return JNISearchControl.sInstance.getTopDistrict();
     }
-    paramString = paramString.split("_");
-    if (paramString.length != 3) {
-      return -2;
+
+    public DistrictInfo getParentDistrict(int childDistrictId) {
+        return JNISearchControl.sInstance.getParentDistrict(childDistrictId);
     }
-    try
-    {
-      int i = Integer.parseInt(paramString[0]);
-      return i;
+
+    public int getChildDistrict(int parentDistrictId, ArrayList<DistrictInfo> childDistrict) {
+        return JNISearchControl.sInstance.getChildDistrictAndParse(parentDistrictId, childDistrict);
     }
-    catch (Exception paramString) {}
-    return -1;
-  }
-  
-  public void quickSortByDistance(GeoPoint paramGeoPoint, ArrayList<SearchPoi> paramArrayList)
-  {
-    if ((paramArrayList == null) || (paramArrayList.size() <= 0)) {
-      return;
+
+    public DistrictInfo getDistrictById(int districtId) {
+        return JNISearchControl.sInstance.getDistrictById(districtId);
     }
-    ArrayList localArrayList = new ArrayList();
-    int j = paramArrayList.size();
-    int i = 0;
-    while (i < j)
-    {
-      int k = ((SearchPoi)paramArrayList.get(i)).mViewPoint.getLongitudeE6();
-      int m = ((SearchPoi)paramArrayList.get(i)).mViewPoint.getLatitudeE6();
-      localArrayList.add(Double.valueOf(Math.sqrt((k - paramGeoPoint.getLongitudeE6()) * (k - paramGeoPoint.getLongitudeE6()) + (m - paramGeoPoint.getLatitudeE6()) * (m - paramGeoPoint.getLatitudeE6()))));
-      i += 1;
+
+    public boolean updatePoiCache(GeoPoint point) {
+        return JNISearchControl.sInstance.updatePoiCache(point);
     }
-    quickSortByDistance(localArrayList, 0, j - 1, paramArrayList);
-  }
-  
-  public boolean releaseInputSug(int paramInt)
-  {
-    return JNISearchControl.sInstance.releaseSugSubSys() == 0;
-  }
-  
-  public int searchSubPoi(int paramInt1, int paramInt2, int paramInt3, ArrayList<Integer> paramArrayList, ArrayList<SearchPoi> paramArrayList1)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramInt3));
-    localBundle.putInt("Id", paramInt1);
-    localBundle.putInt("PoiCount", 32);
-    localBundle.putInt("Type", paramInt2);
-    int[] arrayOfInt = new int[8];
-    ArrayList localArrayList = new ArrayList();
-    paramInt1 = JNISearchControl.sInstance.searchByFather(localBundle, arrayOfInt, localArrayList);
-    LogUtil.e(TAG, "searchByFather() ret: " + paramInt1);
-    LogUtil.e(TAG, "outputList count: " + localArrayList.size());
-    if (paramInt1 < 0)
-    {
-      paramInt1 = -2;
-      return paramInt1;
+
+    public boolean updateBkgPoiCache(GeoPoint point, boolean isMadian, int poiIndex) {
+        return JNISearchControl.sInstance.updateBkgPoiCache(point, isMadian, poiIndex);
     }
-    paramInt1 = 0;
-    while (paramInt1 < 8)
-    {
-      paramArrayList.add(Integer.valueOf(arrayOfInt[paramInt1]));
-      paramInt1 += 1;
+
+    public boolean updatePoiCacheWithList(ArrayList<SearchPoi> poiList) {
+        if (poiList == null) {
+            return false;
+        }
+        ArrayList<Bundle> bundleList = new ArrayList();
+        for (int index = 0; index < poiList.size(); index++) {
+            SearchPoi poi = (SearchPoi) poiList.get(index);
+            Bundle bundle = new Bundle();
+            bundle.putInt("Id", 0);
+            bundle.putString("Name", JNISearchConst.LAYER_POI);
+            bundle.putInt(JNISearchConst.JNI_LONGITUDE, poi.mViewPoint.getLongitudeE6());
+            bundle.putInt("Latitude", poi.mViewPoint.getLatitudeE6());
+            bundleList.add(bundle);
+        }
+        LogUtil.m15791e(TAG, "updatePoiCache bundleList size=: " + bundleList.size());
+        if (JNISearchControl.sInstance.updatePoiCacheWithList(bundleList) == 0) {
+            return true;
+        }
+        return false;
     }
-    paramInt3 = localArrayList.size();
-    paramInt2 = 0;
-    for (;;)
-    {
-      paramInt1 = paramInt3;
-      if (paramInt2 >= paramInt3) {
-        break;
-      }
-      paramArrayList = (Bundle)localArrayList.get(paramInt2);
-      paramArrayList1.add(JNISearchControl.sInstance.parsePoiBundle(paramArrayList));
-      paramInt2 += 1;
+
+    public boolean clearPoiCache() {
+        return JNISearchControl.sInstance.clearPoiCache() == 0;
     }
-  }
-  
-  public int setNetMode(int paramInt)
-  {
-    try
-    {
-      paramInt = JNISearchControl.sInstance.SetNetMode(paramInt);
-      return paramInt;
+
+    public boolean updateFavPoiCache(ArrayList<GeoPoint> pointList, ArrayList<String> favNameList, ArrayList<String> favAddressList) {
+        if (pointList == null || favNameList == null || favNameList == null) {
+            return false;
+        }
+        ArrayList<Bundle> inputList = new ArrayList();
+        int count = pointList.size();
+        for (int i = 0; i < count; i++) {
+            GeoPoint point = (GeoPoint) pointList.get(i);
+            Bundle bundle = new Bundle();
+            bundle.putInt("Id", i);
+            bundle.putInt(JNISearchConst.JNI_LONGITUDE, point.getLongitudeE6());
+            bundle.putInt("Latitude", point.getLatitudeE6());
+            bundle.putString("Name", (String) favNameList.get(i));
+            bundle.putString(JNISearchConst.JNI_ADDRESS, (String) favAddressList.get(i));
+            inputList.add(bundle);
+        }
+        return JNISearchControl.sInstance.UpdateFavPoiCache(inputList, count) == 0;
     }
-    catch (Throwable localThrowable) {}
-    return 0;
-  }
-  
-  public boolean updateBkgCache(ArrayList<GeoPoint> paramArrayList, int paramInt)
-  {
-    if (paramArrayList == null) {}
-    ArrayList localArrayList;
-    do
-    {
-      return false;
-      localArrayList = new ArrayList();
-      int j = paramArrayList.size();
-      int i = 0;
-      while (i < j)
-      {
-        GeoPoint localGeoPoint = (GeoPoint)paramArrayList.get(i);
-        Bundle localBundle = new Bundle();
-        localBundle.putInt("Id", i);
-        localBundle.putInt("Longitude", localGeoPoint.getLongitudeE6());
-        localBundle.putInt("Latitude", localGeoPoint.getLatitudeE6());
-        localArrayList.add(localBundle);
-        i += 1;
-      }
-    } while (JNISearchControl.sInstance.updateBkgCache(localArrayList, paramInt) != 0);
-    return true;
-  }
-  
-  public boolean updateBkgPoiCache(GeoPoint paramGeoPoint, boolean paramBoolean, int paramInt)
-  {
-    return JNISearchControl.sInstance.updateBkgPoiCache(paramGeoPoint, paramBoolean, paramInt);
-  }
-  
-  public boolean updateFavPoiCache(ArrayList<GeoPoint> paramArrayList, ArrayList<String> paramArrayList1, ArrayList<String> paramArrayList2)
-  {
-    if ((paramArrayList == null) || (paramArrayList1 == null) || (paramArrayList1 == null)) {
-      return false;
+
+    public boolean clearFavPoiCache() {
+        return JNISearchControl.sInstance.clearFavPoiCache() == 0;
     }
-    ArrayList localArrayList = new ArrayList();
-    int j = paramArrayList.size();
-    int i = 0;
-    while (i < j)
-    {
-      GeoPoint localGeoPoint = (GeoPoint)paramArrayList.get(i);
-      Bundle localBundle = new Bundle();
-      localBundle.putInt("Id", i);
-      localBundle.putInt("Longitude", localGeoPoint.getLongitudeE6());
-      localBundle.putInt("Latitude", localGeoPoint.getLatitudeE6());
-      localBundle.putString("Name", (String)paramArrayList1.get(i));
-      localBundle.putString("Address", (String)paramArrayList2.get(i));
-      localArrayList.add(localBundle);
-      i += 1;
+
+    public boolean updateBkgCache(ArrayList<GeoPoint> pointList, int type) {
+        if (pointList == null) {
+            return false;
+        }
+        ArrayList<Bundle> inputList = new ArrayList();
+        int count = pointList.size();
+        for (int i = 0; i < count; i++) {
+            GeoPoint point = (GeoPoint) pointList.get(i);
+            Bundle bundle = new Bundle();
+            bundle.putInt("Id", i);
+            bundle.putInt(JNISearchConst.JNI_LONGITUDE, point.getLongitudeE6());
+            bundle.putInt("Latitude", point.getLatitudeE6());
+            inputList.add(bundle);
+        }
+        if (JNISearchControl.sInstance.updateBkgCache(inputList, type) == 0) {
+            return true;
+        }
+        return false;
     }
-    return JNISearchControl.sInstance.UpdateFavPoiCache(localArrayList, j) == 0;
-  }
-  
-  public boolean updatePoiCache(GeoPoint paramGeoPoint)
-  {
-    return JNISearchControl.sInstance.updatePoiCache(paramGeoPoint);
-  }
-  
-  public boolean updatePoiCacheWithList(ArrayList<SearchPoi> paramArrayList)
-  {
-    if (paramArrayList == null) {}
-    ArrayList localArrayList;
-    do
-    {
-      return false;
-      localArrayList = new ArrayList();
-      int i = 0;
-      while (i < paramArrayList.size())
-      {
-        SearchPoi localSearchPoi = (SearchPoi)paramArrayList.get(i);
-        Bundle localBundle = new Bundle();
-        localBundle.putInt("Id", 0);
-        localBundle.putString("Name", "Poi");
-        localBundle.putInt("Longitude", localSearchPoi.mViewPoint.getLongitudeE6());
-        localBundle.putInt("Latitude", localSearchPoi.mViewPoint.getLatitudeE6());
-        localArrayList.add(localBundle);
-        i += 1;
-      }
-      LogUtil.e(TAG, "updatePoiCache bundleList size=: " + localArrayList.size());
-    } while (JNISearchControl.sInstance.updatePoiCacheWithList(localArrayList) != 0);
-    return true;
-  }
+
+    public boolean clearBkgCache() {
+        return JNISearchControl.sInstance.clearBkgCache() == 0;
+    }
+
+    public int parseBkgLayerId(String layerId) {
+        if (layerId == null) {
+            return -1;
+        }
+        String[] parts = layerId.split(JNISearchConst.LAYER_ID_DIVIDER);
+        if (parts.length != 3) {
+            return -2;
+        }
+        int ret = -1;
+        try {
+            return Integer.parseInt(parts[0]);
+        } catch (Exception e) {
+            return ret;
+        }
+    }
+
+    public void quickSortByDistance(GeoPoint center, ArrayList<SearchPoi> poiList) {
+        if (poiList != null && poiList.size() > 0) {
+            ArrayList<Double> distanceList = new ArrayList();
+            int size = poiList.size();
+            for (int i = 0; i < size; i++) {
+                int longitude = ((SearchPoi) poiList.get(i)).mViewPoint.getLongitudeE6();
+                int latitude = ((SearchPoi) poiList.get(i)).mViewPoint.getLatitudeE6();
+                distanceList.add(Double.valueOf(Math.sqrt((((double) (longitude - center.getLongitudeE6())) * ((double) (longitude - center.getLongitudeE6()))) + (((double) (latitude - center.getLatitudeE6())) * ((double) (latitude - center.getLatitudeE6()))))));
+            }
+            quickSortByDistance(distanceList, 0, size - 1, poiList);
+        }
+    }
+
+    private void quickSortByDistance(ArrayList<Double> distanceList, int from, int to, ArrayList<SearchPoi> poiList) {
+        if (from < to && from >= 0 && distanceList != null && poiList != null && to < distanceList.size() && to < poiList.size()) {
+            int newFrom = from;
+            int newTo = to;
+            double distance = ((Double) distanceList.get(from)).doubleValue();
+            SearchPoi poi = (SearchPoi) poiList.get(from);
+            while (newFrom < newTo) {
+                while (newFrom < newTo && ((Double) distanceList.get(newTo)).doubleValue() >= distance) {
+                    newTo--;
+                }
+                distanceList.set(newFrom, distanceList.get(newTo));
+                poiList.set(newFrom, poiList.get(newTo));
+                while (newFrom < newTo && ((Double) distanceList.get(newFrom)).doubleValue() < distance) {
+                    newFrom++;
+                }
+                distanceList.set(newTo, distanceList.get(newFrom));
+                poiList.set(newTo, poiList.get(newFrom));
+            }
+            distanceList.set(newFrom, Double.valueOf(distance));
+            poiList.set(newFrom, poi);
+            quickSortByDistance(distanceList, from, newFrom - 1, poiList);
+            quickSortByDistance(distanceList, newFrom + 1, to, poiList);
+        }
+    }
+
+    public int searchSubPoi(int poiId, int type, int districtId, ArrayList<Integer> typeNumList, ArrayList<SearchPoi> poiList) {
+        Bundle input = new Bundle();
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(districtId));
+        input.putInt("Id", poiId);
+        input.putInt("PoiCount", 32);
+        input.putInt("Type", type);
+        int[] typeNum = new int[8];
+        ArrayList<Bundle> outputList = new ArrayList();
+        int ret = JNISearchControl.sInstance.searchByFather(input, typeNum, outputList);
+        LogUtil.m15791e(TAG, "searchByFather() ret: " + ret);
+        LogUtil.m15791e(TAG, "outputList count: " + outputList.size());
+        if (ret < 0) {
+            return -2;
+        }
+        int i;
+        for (i = 0; i < 8; i++) {
+            typeNumList.add(Integer.valueOf(typeNum[i]));
+        }
+        int outputSize = outputList.size();
+        for (i = 0; i < outputSize; i++) {
+            ArrayList<SearchPoi> arrayList = poiList;
+            arrayList.add(JNISearchControl.sInstance.parsePoiBundle((Bundle) outputList.get(i)));
+        }
+        return outputSize;
+    }
+
+    public boolean inputIndex(String key, int districtID, int poiID) {
+        if (key == null || districtID == 0 || poiID == 0 || key.length() <= 0) {
+            return false;
+        }
+        LogUtil.m15791e(TAG, "inputIndex() ditrict ID: " + districtID);
+        Bundle input = new Bundle();
+        input.putString("Name", key.toUpperCase(Locale.getDefault()));
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(districtID));
+        input.putInt(JNISearchConst.JNI_POI_ID, poiID);
+        int ret = JNISearchControl.sInstance.inputIndex(input);
+        LogUtil.m15791e(TAG, "inputIndex() ret: " + ret);
+        if (ret == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean asynSearchAroudPark(String name, SearchCircle circle, int netMode, int poiCount, int timeout, Handler handler) {
+        if (circle == null) {
+            return false;
+        }
+        if (TextUtils.isEmpty(name)) {
+            name = "";
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_AROUND_PARK, 1, handler, 1006, timeout);
+        CmdSearchAroundPark.packetParams(reqdata, name, circle, netMode, poiCount);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
+    }
+
+    public boolean asynSearchAroudPark(String name, SearchCircle circle, int netMode, int poiCount, Handler handler) {
+        if (circle == null) {
+            return false;
+        }
+        if (TextUtils.isEmpty(name)) {
+            name = "";
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_AROUND_PARK, 1, handler, 1006);
+        CmdSearchAroundPark.packetParams(reqdata, name, circle, netMode, poiCount);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
+    }
+
+    public boolean asynSearchByKeyForMapRPNodePoiResultPB(String key, int districtId, int poiCount, int netMode, int rpNodeCount, int searchRouteNodeType, int viaRouteNodeIndex, Handler handler) {
+        if (key == null) {
+            return false;
+        }
+        String trimKey = key.trim();
+        if (trimKey.length() <= 0) {
+            return false;
+        }
+        if (checkFactoryMode(trimKey)) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_BY_KEY_FOR_MAP_RP_NODE_POI_RESULT_PB, 1, handler, 1007);
+        CmdSearchByKeyForMapRPNodePoiResultPB.packetParams(reqdata, key, districtId, poiCount, netMode, rpNodeCount, searchRouteNodeType, viaRouteNodeIndex);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
+    }
+
+    public boolean asynSearchByNameForMapPoiResultPB(String name, int districtID, SearchCircle circle, int poiCount, int pageNumber, Handler handler) {
+        if (TextUtils.isEmpty(name)) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_BY_KEY_FOR_MAP_POI_RESULT_PB, 1, handler, 1008);
+        CmdSearchByKeyForMapPoiResultPB.packetParams(reqdata, name, districtID, circle, poiCount, pageNumber);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
+    }
+
+    public boolean asynSearchByCircleForMapPoiResultPB(String name, int districtID, SearchCircle circle, int poiCount, int pageNumber, Handler handler) {
+        if (TextUtils.isEmpty(name)) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_SEARCH_BY_CIRCLE_FOR_MAP_POI_RESULT_PB, 1, handler, 1009);
+        CmdSearchByCircleForMapPoiResultPB.packetParams(reqdata, name, districtID, circle, poiCount, pageNumber);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
+    }
+
+    public boolean asynRouteSearchForMapPoiResultPB(int routeSearchMode, String searchWord, int searchRange, int sortType, String mrsl, int poiCount, int pageNumber, Handler handler) {
+        if (searchWord == null) {
+            return false;
+        }
+        if (searchWord.trim().length() <= 0) {
+            return false;
+        }
+        ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_ROUTE_SEARCH_FOR_MAP_POI_RESULT_PB, 1, handler, 1010);
+        CmdRouteSearchForMapPoiResultPB.packetParams(reqdata, routeSearchMode, searchWord, searchRange, sortType, mrsl, poiCount, pageNumber);
+        CommandCenter.getInstance().sendRequest(reqdata);
+        return true;
+    }
+
+    @SuppressLint({"NewApi"})
+    public boolean checkFactoryMode(String key) {
+        LogUtil.m15791e(TAG, "checkFactoryMode key = " + key);
+        if (key != null && SEARCH_FACTORY_MODE_SECRET.equals(key.trim())) {
+            NavSDKDebug.sSDKFactoryMode = true;
+            ((ClipboardManager) BNaviModuleManager.getContext().getSystemService("clipboard")).setText("CUID:" + PackageUtil.getCuid());
+            TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "CUID已经复制到粘贴板，进入导航设置中查看工程模式！");
+            final String rgCloudStr = JNIGuidanceControl.getInstance().isRouteGuideCloud();
+            if (!StringUtils.isEmpty(rgCloudStr)) {
+                BNWorkerCenter.getInstance().submitMainThreadTaskDelay(new BNWorkerNormalTask<String, String>("CheckFactoryMode-" + getClass().getSimpleName(), null) {
+                    protected String execute() {
+                        TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), rgCloudStr);
+                        return null;
+                    }
+                }, new BNWorkerConfig(100, 0), 3000);
+            }
+            BNDebugModelDialog debugDialog = new BNDebugModelDialog(BNaviModuleManager.getContext());
+            BNDrivingToolManager.getInstance().setDebugModeDialog(debugDialog);
+            debugDialog.show();
+            return true;
+        } else if (key != null && SEARCH_FACTORY_MODE_TTS.equals(key.trim())) {
+            TTSTestCenter.getInstance().init();
+            TTSTestCenter.getInstance().test();
+            TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "开始进入TTS测试模式");
+            return true;
+        } else if (key == null || !SEARCH_FACTORY_MODE_USER_KEY_LOG.equals(key.trim())) {
+            return false;
+        } else {
+            new BNUserKeyLogDialog(BNaviModuleManager.getContext()).show();
+            return true;
+        }
+    }
+
+    public void mtjStatSearch(int netMode, boolean success) {
+        if (success) {
+            switch (netMode) {
+                case 1:
+                    BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_SRARCH_ONLINE, NaviStatConstants.NAVI_SRARCH_ONLINE);
+                    return;
+                case 2:
+                    BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_SRARCH_OFFLINE, NaviStatConstants.NAVI_SRARCH_OFFLINE);
+                    return;
+                case 3:
+                    BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_SRARCH_OFF_TO_ONLINE, NaviStatConstants.NAVI_SRARCH_OFF_TO_ONLINE);
+                    return;
+                case 4:
+                    BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_SRARCH_ON_TO_OFFLINE, NaviStatConstants.NAVI_SRARCH_ON_TO_OFFLINE);
+                    return;
+                default:
+                    return;
+            }
+        }
+        BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_SRARCH_FAILURE, NaviStatConstants.NAVI_SRARCH_FAILURE);
+    }
+
+    public int getSearchNetworkMode() {
+        if (BNSettingManager.getPrefSearchMode() == 3) {
+            if (getInstance().getNetModeOfLastResult() == 2 || getInstance().getNetModeOfLastResult() == 0) {
+                return 3;
+            }
+            return 1;
+        } else if (BNSettingManager.getPrefSearchMode() == 2) {
+            return (getInstance().getNetModeOfLastResult() == 3 || getInstance().getNetModeOfLastResult() == 1) ? 4 : 2;
+        } else {
+            return 1;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/comapi/poisearch/BNPoiSearcher.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

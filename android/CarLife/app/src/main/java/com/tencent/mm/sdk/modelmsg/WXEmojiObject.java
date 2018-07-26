@@ -1,94 +1,71 @@
 package com.tencent.mm.sdk.modelmsg;
 
 import android.os.Bundle;
-import com.tencent.mm.sdk.b.b;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage.IMediaObject;
+import com.tencent.mm.sdk.p287b.C6094b;
 import java.io.File;
 
-public class WXEmojiObject
-  implements WXMediaMessage.IMediaObject
-{
-  private static final int CONTENT_LENGTH_LIMIT = 10485760;
-  private static final String TAG = "MicroMsg.SDK.WXEmojiObject";
-  public byte[] emojiData;
-  public String emojiPath;
-  
-  public WXEmojiObject()
-  {
-    this.emojiData = null;
-    this.emojiPath = null;
-  }
-  
-  public WXEmojiObject(String paramString)
-  {
-    this.emojiPath = paramString;
-  }
-  
-  public WXEmojiObject(byte[] paramArrayOfByte)
-  {
-    this.emojiData = paramArrayOfByte;
-  }
-  
-  private int getFileSize(String paramString)
-  {
-    if ((paramString == null) || (paramString.length() == 0)) {}
-    do
-    {
-      return 0;
-      paramString = new File(paramString);
-    } while (!paramString.exists());
-    return (int)paramString.length();
-  }
-  
-  public boolean checkArgs()
-  {
-    if (((this.emojiData == null) || (this.emojiData.length == 0)) && ((this.emojiPath == null) || (this.emojiPath.length() == 0)))
-    {
-      b.b("MicroMsg.SDK.WXEmojiObject", "checkArgs fail, both arguments is null");
-      return false;
+public class WXEmojiObject implements IMediaObject {
+    private static final int CONTENT_LENGTH_LIMIT = 10485760;
+    private static final String TAG = "MicroMsg.SDK.WXEmojiObject";
+    public byte[] emojiData;
+    public String emojiPath;
+
+    public WXEmojiObject() {
+        this.emojiData = null;
+        this.emojiPath = null;
     }
-    if ((this.emojiData != null) && (this.emojiData.length > 10485760))
-    {
-      b.b("MicroMsg.SDK.WXEmojiObject", "checkArgs fail, emojiData is too large");
-      return false;
+
+    public WXEmojiObject(String str) {
+        this.emojiPath = str;
     }
-    if ((this.emojiPath != null) && (getFileSize(this.emojiPath) > 10485760))
-    {
-      b.b("MicroMsg.SDK.WXEmojiObject", "checkArgs fail, emojiSize is too large");
-      return false;
+
+    public WXEmojiObject(byte[] bArr) {
+        this.emojiData = bArr;
     }
-    return true;
-  }
-  
-  public void serialize(Bundle paramBundle)
-  {
-    paramBundle.putByteArray("_wxemojiobject_emojiData", this.emojiData);
-    paramBundle.putString("_wxemojiobject_emojiPath", this.emojiPath);
-  }
-  
-  public void setEmojiData(byte[] paramArrayOfByte)
-  {
-    this.emojiData = paramArrayOfByte;
-  }
-  
-  public void setEmojiPath(String paramString)
-  {
-    this.emojiPath = paramString;
-  }
-  
-  public int type()
-  {
-    return 8;
-  }
-  
-  public void unserialize(Bundle paramBundle)
-  {
-    this.emojiData = paramBundle.getByteArray("_wxemojiobject_emojiData");
-    this.emojiPath = paramBundle.getString("_wxemojiobject_emojiPath");
-  }
+
+    private int getFileSize(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        File file = new File(str);
+        return file.exists() ? (int) file.length() : 0;
+    }
+
+    public boolean checkArgs() {
+        if ((this.emojiData == null || this.emojiData.length == 0) && (this.emojiPath == null || this.emojiPath.length() == 0)) {
+            C6094b.m21682b(TAG, "checkArgs fail, both arguments is null");
+            return false;
+        } else if (this.emojiData != null && this.emojiData.length > 10485760) {
+            C6094b.m21682b(TAG, "checkArgs fail, emojiData is too large");
+            return false;
+        } else if (this.emojiPath == null || getFileSize(this.emojiPath) <= 10485760) {
+            return true;
+        } else {
+            C6094b.m21682b(TAG, "checkArgs fail, emojiSize is too large");
+            return false;
+        }
+    }
+
+    public void serialize(Bundle bundle) {
+        bundle.putByteArray("_wxemojiobject_emojiData", this.emojiData);
+        bundle.putString("_wxemojiobject_emojiPath", this.emojiPath);
+    }
+
+    public void setEmojiData(byte[] bArr) {
+        this.emojiData = bArr;
+    }
+
+    public void setEmojiPath(String str) {
+        this.emojiPath = str;
+    }
+
+    public int type() {
+        return 8;
+    }
+
+    public void unserialize(Bundle bundle) {
+        this.emojiData = bundle.getByteArray("_wxemojiobject_emojiData");
+        this.emojiPath = bundle.getString("_wxemojiobject_emojiPath");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/mm/sdk/modelmsg/WXEmojiObject.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

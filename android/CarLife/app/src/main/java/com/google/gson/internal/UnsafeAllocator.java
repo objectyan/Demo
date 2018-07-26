@@ -5,79 +5,58 @@ import java.io.ObjectStreamClass;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public abstract class UnsafeAllocator
-{
-  public static UnsafeAllocator create()
-  {
-    try
-    {
-      Object localObject1 = Class.forName("sun.misc.Unsafe");
-      final Object localObject4 = ((Class)localObject1).getDeclaredField("theUnsafe");
-      ((Field)localObject4).setAccessible(true);
-      localObject4 = ((Field)localObject4).get(null);
-      localObject1 = new UnsafeAllocator()
-      {
-        public <T> T newInstance(Class<T> paramAnonymousClass)
-          throws Exception
-        {
-          return (T)this.val$allocateInstance.invoke(localObject4, new Object[] { paramAnonymousClass });
+public abstract class UnsafeAllocator {
+
+    /* renamed from: com.google.gson.internal.UnsafeAllocator$4 */
+    static class C57064 extends UnsafeAllocator {
+        C57064() {
         }
-      };
-      return (UnsafeAllocator)localObject1;
+
+        public <T> T newInstance(Class<T> c) {
+            throw new UnsupportedOperationException("Cannot allocate " + c);
+        }
     }
-    catch (Exception localException1)
-    {
-      try
-      {
-        Object localObject2 = ObjectInputStream.class.getDeclaredMethod("newInstance", new Class[] { Class.class, Class.class });
-        ((Method)localObject2).setAccessible(true);
-        localObject2 = new UnsafeAllocator()
-        {
-          public <T> T newInstance(Class<T> paramAnonymousClass)
-            throws Exception
-          {
-            return (T)this.val$newInstance.invoke(null, new Object[] { paramAnonymousClass, Object.class });
-          }
-        };
-        return (UnsafeAllocator)localObject2;
-      }
-      catch (Exception localException2)
-      {
-        try
-        {
-          Object localObject3 = ObjectStreamClass.class.getDeclaredMethod("getConstructorId", new Class[] { Class.class });
-          ((Method)localObject3).setAccessible(true);
-          final int i = ((Integer)((Method)localObject3).invoke(null, new Object[] { Object.class })).intValue();
-          localObject3 = ObjectStreamClass.class.getDeclaredMethod("newInstance", new Class[] { Class.class, Integer.TYPE });
-          ((Method)localObject3).setAccessible(true);
-          localObject3 = new UnsafeAllocator()
-          {
-            public <T> T newInstance(Class<T> paramAnonymousClass)
-              throws Exception
-            {
-              return (T)this.val$newInstance.invoke(null, new Object[] { paramAnonymousClass, Integer.valueOf(i) });
+
+    public abstract <T> T newInstance(Class<T> cls) throws Exception;
+
+    public static UnsafeAllocator create() {
+        final Method newInstance;
+        try {
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            Field f = unsafeClass.getDeclaredField("theUnsafe");
+            f.setAccessible(true);
+            final Object unsafe = f.get(null);
+            final Method allocateInstance = unsafeClass.getMethod("allocateInstance", new Class[]{Class.class});
+            return new UnsafeAllocator() {
+                public <T> T newInstance(Class<T> c) throws Exception {
+                    return allocateInstance.invoke(unsafe, new Object[]{c});
+                }
+            };
+        } catch (Exception e) {
+            try {
+                newInstance = ObjectInputStream.class.getDeclaredMethod("newInstance", new Class[]{Class.class, Class.class});
+                newInstance.setAccessible(true);
+                return new UnsafeAllocator() {
+                    public <T> T newInstance(Class<T> c) throws Exception {
+                        return newInstance.invoke(null, new Object[]{c, Object.class});
+                    }
+                };
+            } catch (Exception e2) {
+                try {
+                    Method getConstructorId = ObjectStreamClass.class.getDeclaredMethod("getConstructorId", new Class[]{Class.class});
+                    getConstructorId.setAccessible(true);
+                    final int constructorId = ((Integer) getConstructorId.invoke(null, new Object[]{Object.class})).intValue();
+                    newInstance = ObjectStreamClass.class.getDeclaredMethod("newInstance", new Class[]{Class.class, Integer.TYPE});
+                    newInstance.setAccessible(true);
+                    return new UnsafeAllocator() {
+                        public <T> T newInstance(Class<T> c) throws Exception {
+                            return newInstance.invoke(null, new Object[]{c, Integer.valueOf(constructorId)});
+                        }
+                    };
+                } catch (Exception e3) {
+                    return new C57064();
+                }
             }
-          };
-          return (UnsafeAllocator)localObject3;
         }
-        catch (Exception localException3) {}
-      }
     }
-    new UnsafeAllocator()
-    {
-      public <T> T newInstance(Class<T> paramAnonymousClass)
-      {
-        throw new UnsupportedOperationException("Cannot allocate " + paramAnonymousClass);
-      }
-    };
-  }
-  
-  public abstract <T> T newInstance(Class<T> paramClass)
-    throws Exception;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/UnsafeAllocator.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

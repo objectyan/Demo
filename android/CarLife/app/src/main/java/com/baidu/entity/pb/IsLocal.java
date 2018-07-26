@@ -6,110 +6,91 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class IsLocal
-  extends MessageMicro
-{
-  public static final int IS_LOCAL_FIELD_NUMBER = 1;
-  private boolean a;
-  private boolean b = false;
-  private int c = -1;
-  
-  public static IsLocal parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new IsLocal().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static IsLocal parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (IsLocal)new IsLocal().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final IsLocal clear()
-  {
-    clearIsLocal();
-    this.c = -1;
-    return this;
-  }
-  
-  public IsLocal clearIsLocal()
-  {
-    this.a = false;
-    this.b = false;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.c < 0) {
-      getSerializedSize();
+public final class IsLocal extends MessageMicro {
+    public static final int IS_LOCAL_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private boolean f11842a;
+    /* renamed from: b */
+    private boolean f11843b = false;
+    /* renamed from: c */
+    private int f11844c = -1;
+
+    public static IsLocal parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new IsLocal().mergeFrom(codedInputStreamMicro);
     }
-    return this.c;
-  }
-  
-  public boolean getIsLocal()
-  {
-    return this.b;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasIsLocal()) {
-      i = 0 + CodedOutputStreamMicro.computeBoolSize(1, getIsLocal());
+
+    public static IsLocal parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (IsLocal) new IsLocal().mergeFrom(bArr);
     }
-    this.c = i;
-    return i;
-  }
-  
-  public boolean hasIsLocal()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public IsLocal mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public final IsLocal clear() {
+        clearIsLocal();
+        this.f11844c = -1;
         return this;
-      case 8: 
-        setIsLocal(paramCodedInputStreamMicro.readBool());
-      }
     }
-  }
-  
-  public IsLocal setIsLocal(boolean paramBoolean)
-  {
-    this.a = true;
-    this.b = paramBoolean;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasIsLocal()) {
-      paramCodedOutputStreamMicro.writeBool(1, getIsLocal());
+
+    public IsLocal clearIsLocal() {
+        this.f11842a = false;
+        this.f11843b = false;
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f11844c < 0) {
+            getSerializedSize();
+        }
+        return this.f11844c;
+    }
+
+    public boolean getIsLocal() {
+        return this.f11843b;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasIsLocal()) {
+            i = 0 + CodedOutputStreamMicro.computeBoolSize(1, getIsLocal());
+        }
+        this.f11844c = i;
+        return i;
+    }
+
+    public boolean hasIsLocal() {
+        return this.f11842a;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public IsLocal mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 8:
+                    setIsLocal(codedInputStreamMicro.readBool());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public IsLocal setIsLocal(boolean z) {
+        this.f11842a = true;
+        this.f11843b = z;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasIsLocal()) {
+            codedOutputStreamMicro.writeBool(1, getIsLocal());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/IsLocal.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

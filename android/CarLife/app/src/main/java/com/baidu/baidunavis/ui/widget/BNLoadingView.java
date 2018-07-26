@@ -6,105 +6,86 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
+import com.baidu.carlife.C0965R;
 import com.baidu.mapframework.widget.RouteErrorView;
 
-public class BNLoadingView
-  extends RelativeLayout
-{
-  public static final int LOAD_END = 2;
-  public static final int LOAD_FAIL = 3;
-  public static final int LOAD_START = 1;
-  private RelativeLayout mLoadFailTab = null;
-  private RelativeLayout mLoadStartTab = null;
-  private View mRootView = null;
-  private RouteErrorView mRouteErrorView = null;
-  
-  public BNLoadingView(Context paramContext)
-  {
-    super(paramContext);
-    initView(paramContext);
-    setMapClickable(false);
-  }
-  
-  private void initView(Context paramContext)
-  {
-    this.mRootView = LayoutInflater.from(paramContext).inflate(2130968621, this);
-    if (this.mRootView == null) {
-      return;
+public class BNLoadingView extends RelativeLayout {
+    public static final int LOAD_END = 2;
+    public static final int LOAD_FAIL = 3;
+    public static final int LOAD_START = 1;
+    private RelativeLayout mLoadFailTab = null;
+    private RelativeLayout mLoadStartTab = null;
+    private View mRootView = null;
+    private RouteErrorView mRouteErrorView = null;
+
+    /* renamed from: com.baidu.baidunavis.ui.widget.BNLoadingView$1 */
+    class C09011 implements OnClickListener {
+        C09011() {
+        }
+
+        public void onClick(View v) {
+        }
     }
-    this.mRootView.findViewById(2131624237).setBackgroundColor(0);
-    this.mLoadStartTab = ((RelativeLayout)this.mRootView.findViewById(2131624238));
-    this.mLoadFailTab = ((RelativeLayout)this.mRootView.findViewById(2131624240));
-    this.mRouteErrorView = ((RouteErrorView)this.mRootView.findViewById(2131624241));
-  }
-  
-  private void setMapClickable(boolean paramBoolean)
-  {
-    if (this.mLoadStartTab != null)
-    {
-      if (!paramBoolean) {
-        this.mLoadStartTab.setOnClickListener(new View.OnClickListener()
-        {
-          public void onClick(View paramAnonymousView) {}
-        });
-      }
+
+    public BNLoadingView(Context context) {
+        super(context);
+        initView(context);
+        setMapClickable(false);
     }
-    else {
-      return;
+
+    private void initView(Context context) {
+        this.mRootView = LayoutInflater.from(context).inflate(C0965R.layout.car_navi_card_load, this);
+        if (this.mRootView != null) {
+            this.mRootView.findViewById(C0965R.id.load_root).setBackgroundColor(0);
+            this.mLoadStartTab = (RelativeLayout) this.mRootView.findViewById(C0965R.id.load_plan_start);
+            this.mLoadFailTab = (RelativeLayout) this.mRootView.findViewById(C0965R.id.load_plan_result);
+            this.mRouteErrorView = (RouteErrorView) this.mRootView.findViewById(C0965R.id.route_error_view);
+        }
     }
-    this.mLoadStartTab.setOnClickListener(null);
-  }
-  
-  public void resetBottomLoadtab(int paramInt)
-  {
-    if (paramInt == 1)
-    {
-      setVisibility(0);
-      if (this.mLoadStartTab != null) {
-        this.mLoadStartTab.setVisibility(0);
-      }
-      if (this.mLoadFailTab != null) {
-        this.mLoadFailTab.setVisibility(8);
-      }
+
+    public void setLoadFailAction(String prompt, OnClickListener retryClickListener) {
+        if (!TextUtils.isEmpty(prompt) && this.mRouteErrorView != null) {
+            this.mRouteErrorView.setText(prompt);
+            this.mRouteErrorView.setRepeatButtonListener(retryClickListener);
+        }
     }
-    do
-    {
-      do
-      {
-        do
-        {
-          return;
-          if (paramInt != 3) {
-            break;
-          }
-          setVisibility(0);
-          if (this.mLoadStartTab != null) {
-            this.mLoadStartTab.setVisibility(8);
-          }
-        } while (this.mLoadFailTab == null);
-        this.mLoadFailTab.setVisibility(0);
-        return;
-      } while (paramInt != 2);
-      setVisibility(8);
-      if (this.mLoadStartTab != null) {
-        this.mLoadStartTab.setVisibility(8);
-      }
-    } while (this.mLoadFailTab == null);
-    this.mLoadFailTab.setVisibility(8);
-  }
-  
-  public void setLoadFailAction(String paramString, View.OnClickListener paramOnClickListener)
-  {
-    if ((!TextUtils.isEmpty(paramString)) && (this.mRouteErrorView != null))
-    {
-      this.mRouteErrorView.setText(paramString);
-      this.mRouteErrorView.setRepeatButtonListener(paramOnClickListener);
+
+    public void resetBottomLoadtab(int loadState) {
+        if (loadState == 1) {
+            setVisibility(0);
+            if (this.mLoadStartTab != null) {
+                this.mLoadStartTab.setVisibility(0);
+            }
+            if (this.mLoadFailTab != null) {
+                this.mLoadFailTab.setVisibility(8);
+            }
+        } else if (loadState == 3) {
+            setVisibility(0);
+            if (this.mLoadStartTab != null) {
+                this.mLoadStartTab.setVisibility(8);
+            }
+            if (this.mLoadFailTab != null) {
+                this.mLoadFailTab.setVisibility(0);
+            }
+        } else if (loadState == 2) {
+            setVisibility(8);
+            if (this.mLoadStartTab != null) {
+                this.mLoadStartTab.setVisibility(8);
+            }
+            if (this.mLoadFailTab != null) {
+                this.mLoadFailTab.setVisibility(8);
+            }
+        }
     }
-  }
+
+    private void setMapClickable(boolean clickable) {
+        if (this.mLoadStartTab == null) {
+            return;
+        }
+        if (clickable) {
+            this.mLoadStartTab.setOnClickListener(null);
+        } else {
+            this.mLoadStartTab.setOnClickListener(new C09011());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/ui/widget/BNLoadingView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

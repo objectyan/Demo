@@ -4,342 +4,206 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitMatrix;
 
-public final class WhiteRectangleDetector
-{
-  private static final int CORR = 1;
-  private static final int INIT_SIZE = 30;
-  private final int downInit;
-  private final int height;
-  private final BitMatrix image;
-  private final int leftInit;
-  private final int rightInit;
-  private final int upInit;
-  private final int width;
-  
-  public WhiteRectangleDetector(BitMatrix paramBitMatrix)
-    throws NotFoundException
-  {
-    this.image = paramBitMatrix;
-    this.height = paramBitMatrix.getHeight();
-    this.width = paramBitMatrix.getWidth();
-    this.leftInit = (this.width - 30 >> 1);
-    this.rightInit = (this.width + 30 >> 1);
-    this.upInit = (this.height - 30 >> 1);
-    this.downInit = (this.height + 30 >> 1);
-    if ((this.upInit < 0) || (this.leftInit < 0) || (this.downInit >= this.height) || (this.rightInit >= this.width)) {
-      throw NotFoundException.getNotFoundInstance();
-    }
-  }
-  
-  public WhiteRectangleDetector(BitMatrix paramBitMatrix, int paramInt1, int paramInt2, int paramInt3)
-    throws NotFoundException
-  {
-    this.image = paramBitMatrix;
-    this.height = paramBitMatrix.getHeight();
-    this.width = paramBitMatrix.getWidth();
-    paramInt1 >>= 1;
-    this.leftInit = (paramInt2 - paramInt1);
-    this.rightInit = (paramInt2 + paramInt1);
-    this.upInit = (paramInt3 - paramInt1);
-    this.downInit = (paramInt3 + paramInt1);
-    if ((this.upInit < 0) || (this.leftInit < 0) || (this.downInit >= this.height) || (this.rightInit >= this.width)) {
-      throw NotFoundException.getNotFoundInstance();
-    }
-  }
-  
-  private ResultPoint[] centerEdges(ResultPoint paramResultPoint1, ResultPoint paramResultPoint2, ResultPoint paramResultPoint3, ResultPoint paramResultPoint4)
-  {
-    float f1 = paramResultPoint1.getX();
-    float f2 = paramResultPoint1.getY();
-    float f3 = paramResultPoint2.getX();
-    float f4 = paramResultPoint2.getY();
-    float f5 = paramResultPoint3.getX();
-    float f6 = paramResultPoint3.getY();
-    float f7 = paramResultPoint4.getX();
-    float f8 = paramResultPoint4.getY();
-    if (f1 < this.width / 2) {
-      return new ResultPoint[] { new ResultPoint(f7 - 1.0F, 1.0F + f8), new ResultPoint(1.0F + f3, 1.0F + f4), new ResultPoint(f5 - 1.0F, f6 - 1.0F), new ResultPoint(1.0F + f1, f2 - 1.0F) };
-    }
-    return new ResultPoint[] { new ResultPoint(1.0F + f7, 1.0F + f8), new ResultPoint(1.0F + f3, f4 - 1.0F), new ResultPoint(f5 - 1.0F, 1.0F + f6), new ResultPoint(f1 - 1.0F, f2 - 1.0F) };
-  }
-  
-  private boolean containsBlackPoint(int paramInt1, int paramInt2, int paramInt3, boolean paramBoolean)
-  {
-    if (paramBoolean) {
-      while (paramInt1 <= paramInt2)
-      {
-        if (this.image.get(paramInt1, paramInt3)) {
-          return true;
+public final class WhiteRectangleDetector {
+    private static final int CORR = 1;
+    private static final int INIT_SIZE = 30;
+    private final int downInit;
+    private final int height;
+    private final BitMatrix image;
+    private final int leftInit;
+    private final int rightInit;
+    private final int upInit;
+    private final int width;
+
+    public WhiteRectangleDetector(BitMatrix image) throws NotFoundException {
+        this.image = image;
+        this.height = image.getHeight();
+        this.width = image.getWidth();
+        this.leftInit = (this.width - 30) >> 1;
+        this.rightInit = (this.width + 30) >> 1;
+        this.upInit = (this.height - 30) >> 1;
+        this.downInit = (this.height + 30) >> 1;
+        if (this.upInit < 0 || this.leftInit < 0 || this.downInit >= this.height || this.rightInit >= this.width) {
+            throw NotFoundException.getNotFoundInstance();
         }
-        paramInt1 += 1;
-      }
     }
-    for (;;)
-    {
-      if (paramInt1 > paramInt2) {
-        break label55;
-      }
-      if (this.image.get(paramInt3, paramInt1)) {
-        break;
-      }
-      paramInt1 += 1;
-    }
-    label55:
-    return false;
-  }
-  
-  private static int distanceL2(float paramFloat1, float paramFloat2, float paramFloat3, float paramFloat4)
-  {
-    paramFloat1 -= paramFloat3;
-    paramFloat2 -= paramFloat4;
-    return round((float)Math.sqrt(paramFloat1 * paramFloat1 + paramFloat2 * paramFloat2));
-  }
-  
-  private ResultPoint getBlackPointOnSegment(float paramFloat1, float paramFloat2, float paramFloat3, float paramFloat4)
-  {
-    int j = distanceL2(paramFloat1, paramFloat2, paramFloat3, paramFloat4);
-    paramFloat3 = (paramFloat3 - paramFloat1) / j;
-    paramFloat4 = (paramFloat4 - paramFloat2) / j;
-    int i = 0;
-    while (i < j)
-    {
-      int k = round(i * paramFloat3 + paramFloat1);
-      int m = round(i * paramFloat4 + paramFloat2);
-      if (this.image.get(k, m)) {
-        return new ResultPoint(k, m);
-      }
-      i += 1;
-    }
-    return null;
-  }
-  
-  private static int round(float paramFloat)
-  {
-    return (int)(0.5F + paramFloat);
-  }
-  
-  public ResultPoint[] detect()
-    throws NotFoundException
-  {
-    int m = this.leftInit;
-    int i1 = this.rightInit;
-    int j = this.upInit;
-    int n = this.downInit;
-    int i7 = 0;
-    int i6 = 1;
-    int i5 = 0;
-    int i4 = n;
-    int i2 = m;
-    int k = i1;
-    int i = i7;
-    int i3 = j;
-    int i8;
-    boolean bool;
-    if (i6 != 0)
-    {
-      i = 0;
-      i8 = 1;
-      k = i1;
-      i1 = i;
-      while ((i8 != 0) && (k < this.width))
-      {
-        bool = containsBlackPoint(j, n, k, false);
-        i8 = bool;
-        if (bool)
-        {
-          k += 1;
-          i1 = 1;
-          i8 = bool;
+
+    public WhiteRectangleDetector(BitMatrix image, int initSize, int x, int y) throws NotFoundException {
+        this.image = image;
+        this.height = image.getHeight();
+        this.width = image.getWidth();
+        int halfsize = initSize >> 1;
+        this.leftInit = x - halfsize;
+        this.rightInit = x + halfsize;
+        this.upInit = y - halfsize;
+        this.downInit = y + halfsize;
+        if (this.upInit < 0 || this.leftInit < 0 || this.downInit >= this.height || this.rightInit >= this.width) {
+            throw NotFoundException.getNotFoundInstance();
         }
-      }
-      if (k >= this.width)
-      {
-        i = 1;
-        i3 = j;
-        i2 = m;
-        i4 = n;
-      }
     }
-    else
-    {
-      label133:
-      if ((i != 0) || (i5 == 0)) {
-        break label662;
-      }
-      j = k - i2;
-      localResultPoint1 = null;
-      i = 1;
-    }
-    ResultPoint localResultPoint2;
-    for (;;)
-    {
-      localResultPoint2 = localResultPoint1;
-      if (i < j)
-      {
-        localResultPoint1 = getBlackPointOnSegment(i2, i4 - i, i2 + i, i4);
-        if (localResultPoint1 != null) {
-          localResultPoint2 = localResultPoint1;
+
+    public ResultPoint[] detect() throws NotFoundException {
+        int left = this.leftInit;
+        int right = this.rightInit;
+        int up = this.upInit;
+        int down = this.downInit;
+        boolean sizeExceeded = false;
+        boolean aBlackPointFoundOnBorder = true;
+        boolean atLeastOneBlackPointFoundOnBorder = false;
+        while (aBlackPointFoundOnBorder) {
+            aBlackPointFoundOnBorder = false;
+            boolean rightBorderNotWhite = true;
+            while (rightBorderNotWhite && right < this.width) {
+                rightBorderNotWhite = containsBlackPoint(up, down, right, false);
+                if (rightBorderNotWhite) {
+                    right++;
+                    aBlackPointFoundOnBorder = true;
+                }
+            }
+            if (right >= this.width) {
+                sizeExceeded = true;
+                break;
+            }
+            boolean bottomBorderNotWhite = true;
+            while (bottomBorderNotWhite && down < this.height) {
+                bottomBorderNotWhite = containsBlackPoint(left, right, down, true);
+                if (bottomBorderNotWhite) {
+                    down++;
+                    aBlackPointFoundOnBorder = true;
+                }
+            }
+            if (down >= this.height) {
+                sizeExceeded = true;
+                break;
+            }
+            boolean leftBorderNotWhite = true;
+            while (leftBorderNotWhite && left >= 0) {
+                leftBorderNotWhite = containsBlackPoint(up, down, left, false);
+                if (leftBorderNotWhite) {
+                    left--;
+                    aBlackPointFoundOnBorder = true;
+                }
+            }
+            if (left < 0) {
+                sizeExceeded = true;
+                break;
+            }
+            boolean topBorderNotWhite = true;
+            while (topBorderNotWhite && up >= 0) {
+                topBorderNotWhite = containsBlackPoint(left, right, up, true);
+                if (topBorderNotWhite) {
+                    up--;
+                    aBlackPointFoundOnBorder = true;
+                }
+            }
+            if (up < 0) {
+                sizeExceeded = true;
+                break;
+            } else if (aBlackPointFoundOnBorder) {
+                atLeastOneBlackPointFoundOnBorder = true;
+            }
         }
-      }
-      else
-      {
-        if (localResultPoint2 != null) {
-          break label478;
+        if (sizeExceeded || !atLeastOneBlackPointFoundOnBorder) {
+            throw NotFoundException.getNotFoundInstance();
+        }
+        int i;
+        int maxSize = right - left;
+        ResultPoint z = null;
+        for (i = 1; i < maxSize; i++) {
+            z = getBlackPointOnSegment((float) left, (float) (down - i), (float) (left + i), (float) down);
+            if (z != null) {
+                break;
+            }
+        }
+        if (z == null) {
+            throw NotFoundException.getNotFoundInstance();
+        }
+        ResultPoint t = null;
+        for (i = 1; i < maxSize; i++) {
+            t = getBlackPointOnSegment((float) left, (float) (up + i), (float) (left + i), (float) up);
+            if (t != null) {
+                break;
+            }
+        }
+        if (t == null) {
+            throw NotFoundException.getNotFoundInstance();
+        }
+        ResultPoint x = null;
+        for (i = 1; i < maxSize; i++) {
+            x = getBlackPointOnSegment((float) right, (float) (up + i), (float) (right - i), (float) up);
+            if (x != null) {
+                break;
+            }
+        }
+        if (x == null) {
+            throw NotFoundException.getNotFoundInstance();
+        }
+        ResultPoint y = null;
+        for (i = 1; i < maxSize; i++) {
+            y = getBlackPointOnSegment((float) right, (float) (down - i), (float) (right - i), (float) down);
+            if (y != null) {
+                break;
+            }
+        }
+        if (y != null) {
+            return centerEdges(y, z, x, t);
         }
         throw NotFoundException.getNotFoundInstance();
-        i8 = 1;
-        i = n;
-        while ((i8 != 0) && (i < this.height))
-        {
-          bool = containsBlackPoint(m, k, i, true);
-          i8 = bool;
-          if (bool)
-          {
-            i += 1;
-            i1 = 1;
-            i8 = bool;
-          }
-        }
-        if (i >= this.height)
-        {
-          n = 1;
-          i4 = i;
-          i2 = m;
-          i = n;
-          i3 = j;
-          break label133;
-        }
-        i8 = 1;
-        i2 = m;
-        while ((i8 != 0) && (i2 >= 0))
-        {
-          bool = containsBlackPoint(j, i, i2, false);
-          i8 = bool;
-          if (bool)
-          {
-            i2 -= 1;
-            i1 = 1;
-            i8 = bool;
-          }
-        }
-        if (i2 < 0)
-        {
-          m = 1;
-          i4 = i;
-          i = m;
-          i3 = j;
-          break label133;
-        }
-        i8 = 1;
-        i3 = j;
-        i4 = i1;
-        while ((i8 != 0) && (i3 >= 0))
-        {
-          bool = containsBlackPoint(i2, k, i3, true);
-          i8 = bool;
-          if (bool)
-          {
-            i3 -= 1;
-            i4 = 1;
-            i8 = bool;
-          }
-        }
-        if (i3 < 0)
-        {
-          j = 1;
-          i4 = i;
-          i = j;
-          break label133;
-        }
-        i6 = i4;
-        n = i;
-        m = i2;
-        i1 = k;
-        j = i3;
-        if (i4 == 0) {
-          break;
-        }
-        i5 = 1;
-        i6 = i4;
-        n = i;
-        m = i2;
-        i1 = k;
-        j = i3;
-        break;
-      }
-      i += 1;
     }
-    label478:
-    ResultPoint localResultPoint1 = null;
-    i = 1;
-    ResultPoint localResultPoint3;
-    for (;;)
-    {
-      localResultPoint3 = localResultPoint1;
-      if (i < j)
-      {
-        localResultPoint1 = getBlackPointOnSegment(i2, i3 + i, i2 + i, i3);
-        if (localResultPoint1 != null) {
-          localResultPoint3 = localResultPoint1;
-        }
-      }
-      else
-      {
-        if (localResultPoint3 != null) {
-          break;
-        }
-        throw NotFoundException.getNotFoundInstance();
-      }
-      i += 1;
+
+    private static int round(float d) {
+        return (int) (0.5f + d);
     }
-    localResultPoint1 = null;
-    i = 1;
-    ResultPoint localResultPoint4;
-    for (;;)
-    {
-      localResultPoint4 = localResultPoint1;
-      if (i < j)
-      {
-        localResultPoint1 = getBlackPointOnSegment(k, i3 + i, k - i, i3);
-        if (localResultPoint1 != null) {
-          localResultPoint4 = localResultPoint1;
+
+    private ResultPoint getBlackPointOnSegment(float aX, float aY, float bX, float bY) {
+        int dist = distanceL2(aX, aY, bX, bY);
+        float xStep = (bX - aX) / ((float) dist);
+        float yStep = (bY - aY) / ((float) dist);
+        for (int i = 0; i < dist; i++) {
+            int x = round((((float) i) * xStep) + aX);
+            int y = round((((float) i) * yStep) + aY);
+            if (this.image.get(x, y)) {
+                return new ResultPoint((float) x, (float) y);
+            }
         }
-      }
-      else
-      {
-        if (localResultPoint4 != null) {
-          break;
-        }
-        throw NotFoundException.getNotFoundInstance();
-      }
-      i += 1;
+        return null;
     }
-    localResultPoint1 = null;
-    i = 1;
-    for (;;)
-    {
-      if (i < j)
-      {
-        localResultPoint1 = getBlackPointOnSegment(k, i4 - i, k - i, i4);
-        if (localResultPoint1 == null) {}
-      }
-      else
-      {
-        if (localResultPoint1 != null) {
-          break;
-        }
-        throw NotFoundException.getNotFoundInstance();
-      }
-      i += 1;
+
+    private static int distanceL2(float aX, float aY, float bX, float bY) {
+        float xDiff = aX - bX;
+        float yDiff = aY - bY;
+        return round((float) Math.sqrt((double) ((xDiff * xDiff) + (yDiff * yDiff))));
     }
-    return centerEdges(localResultPoint1, localResultPoint2, localResultPoint4, localResultPoint3);
-    label662:
-    throw NotFoundException.getNotFoundInstance();
-  }
+
+    private ResultPoint[] centerEdges(ResultPoint y, ResultPoint z, ResultPoint x, ResultPoint t) {
+        float yi = y.getX();
+        float yj = y.getY();
+        float zi = z.getX();
+        float zj = z.getY();
+        float xi = x.getX();
+        float xj = x.getY();
+        float ti = t.getX();
+        float tj = t.getY();
+        if (yi < ((float) (this.width / 2))) {
+            return new ResultPoint[]{new ResultPoint(ti - 1.0f, 1.0f + tj), new ResultPoint(1.0f + zi, 1.0f + zj), new ResultPoint(xi - 1.0f, xj - 1.0f), new ResultPoint(1.0f + yi, yj - 1.0f)};
+        }
+        return new ResultPoint[]{new ResultPoint(1.0f + ti, 1.0f + tj), new ResultPoint(1.0f + zi, zj - 1.0f), new ResultPoint(xi - 1.0f, 1.0f + xj), new ResultPoint(yi - 1.0f, yj - 1.0f)};
+    }
+
+    private boolean containsBlackPoint(int a, int b, int fixed, boolean horizontal) {
+        if (horizontal) {
+            for (int x = a; x <= b; x++) {
+                if (this.image.get(x, fixed)) {
+                    return true;
+                }
+            }
+        } else {
+            for (int y = a; y <= b; y++) {
+                if (this.image.get(fixed, y)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/common/detector/WhiteRectangleDetector.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

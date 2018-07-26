@@ -1,15 +1,16 @@
 package com.tencent.wxop.stat;
 
-final class bh
-  implements av
-{
-  public final void a() {}
-  
-  public final void b() {}
+final class bh implements av {
+    bh() {
+    }
+
+    /* renamed from: a */
+    public final void mo5017a() {
+        C6160j.m22129d();
+    }
+
+    /* renamed from: b */
+    public final void mo5018b() {
+        C6160j.m22134e();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/bh.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

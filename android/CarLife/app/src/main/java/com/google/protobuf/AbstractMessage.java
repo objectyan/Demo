@@ -1,530 +1,405 @@
 package com.google.protobuf;
 
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.EnumValueDescriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor.JavaType;
+import com.google.protobuf.Descriptors.FieldDescriptor.Type;
+import com.google.protobuf.ExtensionRegistry.ExtensionInfo;
+import com.google.protobuf.UnknownFieldSet.Field;
+import com.google.protobuf.WireFormat.FieldType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-public abstract class AbstractMessage
-  extends AbstractMessageLite
-  implements Message
-{
-  private int memoizedSize = -1;
-  
-  public boolean equals(Object paramObject)
-  {
-    if (paramObject == this) {}
-    do
-    {
-      return true;
-      if (!(paramObject instanceof Message)) {
-        return false;
-      }
-      paramObject = (Message)paramObject;
-      if (getDescriptorForType() != ((Message)paramObject).getDescriptorForType()) {
-        return false;
-      }
-    } while ((getAllFields().equals(((Message)paramObject).getAllFields())) && (getUnknownFields().equals(((Message)paramObject).getUnknownFields())));
-    return false;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = this.memoizedSize;
-    if (i != -1) {
-      return i;
-    }
-    i = 0;
-    boolean bool = getDescriptorForType().getOptions().getMessageSetWireFormat();
-    Object localObject1 = getAllFields().entrySet().iterator();
-    while (((Iterator)localObject1).hasNext())
-    {
-      Object localObject2 = (Map.Entry)((Iterator)localObject1).next();
-      Descriptors.FieldDescriptor localFieldDescriptor = (Descriptors.FieldDescriptor)((Map.Entry)localObject2).getKey();
-      localObject2 = ((Map.Entry)localObject2).getValue();
-      if ((bool) && (localFieldDescriptor.isExtension()) && (localFieldDescriptor.getType() == Descriptors.FieldDescriptor.Type.MESSAGE) && (!localFieldDescriptor.isRepeated())) {
-        i += CodedOutputStream.computeMessageSetExtensionSize(localFieldDescriptor.getNumber(), (Message)localObject2);
-      } else {
-        i += FieldSet.computeFieldSize(localFieldDescriptor, localObject2);
-      }
-    }
-    localObject1 = getUnknownFields();
-    if (bool) {
-      i += ((UnknownFieldSet)localObject1).getSerializedSizeAsMessageSet();
-    }
-    for (;;)
-    {
-      this.memoizedSize = i;
-      return i;
-      i += ((UnknownFieldSet)localObject1).getSerializedSize();
-    }
-  }
-  
-  public int hashCode()
-  {
-    return ((getDescriptorForType().hashCode() + 779) * 53 + getAllFields().hashCode()) * 29 + getUnknownFields().hashCode();
-  }
-  
-  public boolean isInitialized()
-  {
-    Iterator localIterator = getDescriptorForType().getFields().iterator();
-    Object localObject;
-    while (localIterator.hasNext())
-    {
-      localObject = (Descriptors.FieldDescriptor)localIterator.next();
-      if ((((Descriptors.FieldDescriptor)localObject).isRequired()) && (!hasField((Descriptors.FieldDescriptor)localObject))) {
-        return false;
-      }
-    }
-    localIterator = getAllFields().entrySet().iterator();
-    for (;;)
-    {
-      if (localIterator.hasNext())
-      {
-        localObject = (Map.Entry)localIterator.next();
-        Descriptors.FieldDescriptor localFieldDescriptor = (Descriptors.FieldDescriptor)((Map.Entry)localObject).getKey();
-        if (localFieldDescriptor.getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE)
-        {
-          if (localFieldDescriptor.isRepeated())
-          {
-            localObject = ((List)((Map.Entry)localObject).getValue()).iterator();
-            if (!((Iterator)localObject).hasNext()) {
-              continue;
+public abstract class AbstractMessage extends AbstractMessageLite implements Message {
+    private int memoizedSize = -1;
+
+    public static abstract class Builder<BuilderType extends Builder> extends com.google.protobuf.AbstractMessageLite.Builder<BuilderType> implements com.google.protobuf.Message.Builder {
+        public abstract BuilderType clone();
+
+        public BuilderType clear() {
+            for (Entry<FieldDescriptor, Object> entry : getAllFields().entrySet()) {
+                clearField((FieldDescriptor) entry.getKey());
             }
-            if (((Message)((Iterator)localObject).next()).isInitialized()) {
-              break;
+            return this;
+        }
+
+        public BuilderType mergeFrom(Message other) {
+            if (other.getDescriptorForType() != getDescriptorForType()) {
+                throw new IllegalArgumentException("mergeFrom(Message) can only merge messages of the same type.");
             }
-            return false;
-          }
-          if (!((Message)((Map.Entry)localObject).getValue()).isInitialized()) {
-            return false;
-          }
-        }
-      }
-    }
-    return true;
-  }
-  
-  public final String toString()
-  {
-    return TextFormat.printToString(this);
-  }
-  
-  public void writeTo(CodedOutputStream paramCodedOutputStream)
-    throws IOException
-  {
-    boolean bool = getDescriptorForType().getOptions().getMessageSetWireFormat();
-    Object localObject1 = getAllFields().entrySet().iterator();
-    while (((Iterator)localObject1).hasNext())
-    {
-      Object localObject2 = (Map.Entry)((Iterator)localObject1).next();
-      Descriptors.FieldDescriptor localFieldDescriptor = (Descriptors.FieldDescriptor)((Map.Entry)localObject2).getKey();
-      localObject2 = ((Map.Entry)localObject2).getValue();
-      if ((bool) && (localFieldDescriptor.isExtension()) && (localFieldDescriptor.getType() == Descriptors.FieldDescriptor.Type.MESSAGE) && (!localFieldDescriptor.isRepeated())) {
-        paramCodedOutputStream.writeMessageSetExtension(localFieldDescriptor.getNumber(), (Message)localObject2);
-      } else {
-        FieldSet.writeField(localFieldDescriptor, localObject2, paramCodedOutputStream);
-      }
-    }
-    localObject1 = getUnknownFields();
-    if (bool)
-    {
-      ((UnknownFieldSet)localObject1).writeAsMessageSetTo(paramCodedOutputStream);
-      return;
-    }
-    ((UnknownFieldSet)localObject1).writeTo(paramCodedOutputStream);
-  }
-  
-  public static abstract class Builder<BuilderType extends Builder>
-    extends AbstractMessageLite.Builder<BuilderType>
-    implements Message.Builder
-  {
-    private static List<String> findMissingFields(Message paramMessage)
-    {
-      ArrayList localArrayList = new ArrayList();
-      findMissingFields(paramMessage, "", localArrayList);
-      return localArrayList;
-    }
-    
-    private static void findMissingFields(Message paramMessage, String paramString, List<String> paramList)
-    {
-      Iterator localIterator = paramMessage.getDescriptorForType().getFields().iterator();
-      Descriptors.FieldDescriptor localFieldDescriptor;
-      while (localIterator.hasNext())
-      {
-        localFieldDescriptor = (Descriptors.FieldDescriptor)localIterator.next();
-        if ((localFieldDescriptor.isRequired()) && (!paramMessage.hasField(localFieldDescriptor))) {
-          paramList.add(paramString + localFieldDescriptor.getName());
-        }
-      }
-      localIterator = paramMessage.getAllFields().entrySet().iterator();
-      while (localIterator.hasNext())
-      {
-        Object localObject = (Map.Entry)localIterator.next();
-        localFieldDescriptor = (Descriptors.FieldDescriptor)((Map.Entry)localObject).getKey();
-        localObject = ((Map.Entry)localObject).getValue();
-        if (localFieldDescriptor.getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE) {
-          if (localFieldDescriptor.isRepeated())
-          {
-            int i = 0;
-            localObject = ((List)localObject).iterator();
-            while (((Iterator)localObject).hasNext())
-            {
-              findMissingFields((Message)((Iterator)localObject).next(), subMessagePrefix(paramString, localFieldDescriptor, i), paramList);
-              i += 1;
+            for (Entry<FieldDescriptor, Object> entry : other.getAllFields().entrySet()) {
+                FieldDescriptor field = (FieldDescriptor) entry.getKey();
+                if (field.isRepeated()) {
+                    for (Object element : (List) entry.getValue()) {
+                        addRepeatedField(field, element);
+                    }
+                } else if (field.getJavaType() == JavaType.MESSAGE) {
+                    Message existingValue = (Message) getField(field);
+                    if (existingValue == existingValue.getDefaultInstanceForType()) {
+                        setField(field, entry.getValue());
+                    } else {
+                        setField(field, existingValue.newBuilderForType().mergeFrom(existingValue).mergeFrom((Message) entry.getValue()).build());
+                    }
+                } else {
+                    setField(field, entry.getValue());
+                }
             }
-          }
-          else if (paramMessage.hasField(localFieldDescriptor))
-          {
-            findMissingFields((Message)localObject, subMessagePrefix(paramString, localFieldDescriptor, -1), paramList);
-          }
+            mergeUnknownFields(other.getUnknownFields());
+            return this;
         }
-      }
+
+        public BuilderType mergeFrom(CodedInputStream input) throws IOException {
+            return mergeFrom(input, ExtensionRegistry.getEmptyRegistry());
+        }
+
+        public BuilderType mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+            int tag;
+            do {
+                tag = input.readTag();
+                if (tag == 0) {
+                    break;
+                }
+            } while (mergeFieldFrom(input, unknownFields, extensionRegistry, this, tag));
+            setUnknownFields(unknownFields.build());
+            return this;
+        }
+
+        static boolean mergeFieldFrom(CodedInputStream input, com.google.protobuf.UnknownFieldSet.Builder unknownFields, ExtensionRegistryLite extensionRegistry, com.google.protobuf.Message.Builder builder, int tag) throws IOException {
+            Descriptor type = builder.getDescriptorForType();
+            if (type.getOptions().getMessageSetWireFormat() && tag == WireFormat.MESSAGE_SET_ITEM_TAG) {
+                mergeMessageSetExtensionFromCodedStream(input, unknownFields, extensionRegistry, builder);
+                return true;
+            }
+            FieldDescriptor field;
+            int wireType = WireFormat.getTagWireType(tag);
+            int fieldNumber = WireFormat.getTagFieldNumber(tag);
+            Message defaultInstance = null;
+            if (!type.isExtensionNumber(fieldNumber)) {
+                field = type.findFieldByNumber(fieldNumber);
+            } else if (extensionRegistry instanceof ExtensionRegistry) {
+                ExtensionInfo extension = ((ExtensionRegistry) extensionRegistry).findExtensionByNumber(type, fieldNumber);
+                if (extension == null) {
+                    field = null;
+                } else {
+                    field = extension.descriptor;
+                    defaultInstance = extension.defaultInstance;
+                }
+            } else {
+                field = null;
+            }
+            if (field == null || wireType != FieldSet.getWireFormatForFieldType(field.getLiteType(), field.getOptions().getPacked())) {
+                return unknownFields.mergeFieldFrom(tag, input);
+            }
+            if (field.getOptions().getPacked()) {
+                int limit = input.pushLimit(input.readRawVarint32());
+                if (field.getLiteType() == FieldType.ENUM) {
+                    while (input.getBytesUntilLimit() > 0) {
+                        EnumValueDescriptor value = field.getEnumType().findValueByNumber(input.readEnum());
+                        if (value == null) {
+                            return true;
+                        }
+                        builder.addRepeatedField(field, value);
+                    }
+                } else {
+                    while (input.getBytesUntilLimit() > 0) {
+                        builder.addRepeatedField(field, FieldSet.readPrimitiveField(input, field.getLiteType()));
+                    }
+                }
+                input.popLimit(limit);
+            } else {
+                Object value2;
+                com.google.protobuf.Message.Builder subBuilder;
+                switch (field.getType()) {
+                    case GROUP:
+                        if (defaultInstance != null) {
+                            subBuilder = defaultInstance.newBuilderForType();
+                        } else {
+                            subBuilder = builder.newBuilderForField(field);
+                        }
+                        if (!field.isRepeated()) {
+                            subBuilder.mergeFrom((Message) builder.getField(field));
+                        }
+                        input.readGroup(field.getNumber(), subBuilder, extensionRegistry);
+                        value2 = subBuilder.build();
+                        break;
+                    case MESSAGE:
+                        if (defaultInstance != null) {
+                            subBuilder = defaultInstance.newBuilderForType();
+                        } else {
+                            subBuilder = builder.newBuilderForField(field);
+                        }
+                        if (!field.isRepeated()) {
+                            subBuilder.mergeFrom((Message) builder.getField(field));
+                        }
+                        input.readMessage(subBuilder, extensionRegistry);
+                        value2 = subBuilder.build();
+                        break;
+                    case ENUM:
+                        int rawValue = input.readEnum();
+                        value2 = field.getEnumType().findValueByNumber(rawValue);
+                        if (value2 == null) {
+                            unknownFields.mergeVarintField(fieldNumber, rawValue);
+                            return true;
+                        }
+                        break;
+                    default:
+                        value2 = FieldSet.readPrimitiveField(input, field.getLiteType());
+                        break;
+                }
+                if (field.isRepeated()) {
+                    builder.addRepeatedField(field, value2);
+                } else {
+                    builder.setField(field, value2);
+                }
+            }
+            return true;
+        }
+
+        private static void mergeMessageSetExtensionFromCodedStream(CodedInputStream input, com.google.protobuf.UnknownFieldSet.Builder unknownFields, ExtensionRegistryLite extensionRegistry, com.google.protobuf.Message.Builder builder) throws IOException {
+            Descriptor type = builder.getDescriptorForType();
+            int typeId = 0;
+            ByteString rawBytes = null;
+            com.google.protobuf.Message.Builder subBuilder = null;
+            FieldDescriptor field = null;
+            while (true) {
+                int tag = input.readTag();
+                if (tag == 0) {
+                    break;
+                } else if (tag == WireFormat.MESSAGE_SET_TYPE_ID_TAG) {
+                    typeId = input.readUInt32();
+                    if (typeId != 0) {
+                        ExtensionInfo extension;
+                        if (extensionRegistry instanceof ExtensionRegistry) {
+                            extension = ((ExtensionRegistry) extensionRegistry).findExtensionByNumber(type, typeId);
+                        } else {
+                            extension = null;
+                        }
+                        if (extension != null) {
+                            field = extension.descriptor;
+                            subBuilder = extension.defaultInstance.newBuilderForType();
+                            Message originalMessage = (Message) builder.getField(field);
+                            if (originalMessage != null) {
+                                subBuilder.mergeFrom(originalMessage);
+                            }
+                            if (rawBytes != null) {
+                                subBuilder.mergeFrom(CodedInputStream.newInstance(rawBytes.newInput()));
+                                rawBytes = null;
+                            }
+                        } else if (rawBytes != null) {
+                            unknownFields.mergeField(typeId, Field.newBuilder().addLengthDelimited(rawBytes).build());
+                            rawBytes = null;
+                        }
+                    }
+                } else if (tag == WireFormat.MESSAGE_SET_MESSAGE_TAG) {
+                    if (typeId == 0) {
+                        rawBytes = input.readBytes();
+                    } else if (subBuilder == null) {
+                        unknownFields.mergeField(typeId, Field.newBuilder().addLengthDelimited(input.readBytes()).build());
+                    } else {
+                        input.readMessage(subBuilder, extensionRegistry);
+                    }
+                } else if (!input.skipField(tag)) {
+                    break;
+                }
+            }
+            input.checkLastTagWas(WireFormat.MESSAGE_SET_ITEM_END_TAG);
+            if (subBuilder != null) {
+                builder.setField(field, subBuilder.build());
+            }
+        }
+
+        public BuilderType mergeUnknownFields(UnknownFieldSet unknownFields) {
+            setUnknownFields(UnknownFieldSet.newBuilder(getUnknownFields()).mergeFrom(unknownFields).build());
+            return this;
+        }
+
+        protected static UninitializedMessageException newUninitializedMessageException(Message message) {
+            return new UninitializedMessageException(findMissingFields(message));
+        }
+
+        private static List<String> findMissingFields(Message message) {
+            List<String> results = new ArrayList();
+            findMissingFields(message, "", results);
+            return results;
+        }
+
+        private static void findMissingFields(Message message, String prefix, List<String> results) {
+            FieldDescriptor field;
+            for (FieldDescriptor field2 : message.getDescriptorForType().getFields()) {
+                if (field2.isRequired() && !message.hasField(field2)) {
+                    results.add(prefix + field2.getName());
+                }
+            }
+            for (Entry<FieldDescriptor, Object> entry : message.getAllFields().entrySet()) {
+                field2 = (FieldDescriptor) entry.getKey();
+                Object value = entry.getValue();
+                if (field2.getJavaType() == JavaType.MESSAGE) {
+                    if (field2.isRepeated()) {
+                        int i = 0;
+                        for (Message findMissingFields : (List) value) {
+                            int i2 = i + 1;
+                            findMissingFields(findMissingFields, subMessagePrefix(prefix, field2, i), results);
+                            i = i2;
+                        }
+                    } else if (message.hasField(field2)) {
+                        findMissingFields((Message) value, subMessagePrefix(prefix, field2, -1), results);
+                    }
+                }
+            }
+        }
+
+        private static String subMessagePrefix(String prefix, FieldDescriptor field, int index) {
+            StringBuilder result = new StringBuilder(prefix);
+            if (field.isExtension()) {
+                result.append('(').append(field.getFullName()).append(')');
+            } else {
+                result.append(field.getName());
+            }
+            if (index != -1) {
+                result.append('[').append(index).append(']');
+            }
+            result.append('.');
+            return result.toString();
+        }
+
+        public BuilderType mergeFrom(ByteString data) throws InvalidProtocolBufferException {
+            return (Builder) super.mergeFrom(data);
+        }
+
+        public BuilderType mergeFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return (Builder) super.mergeFrom(data, extensionRegistry);
+        }
+
+        public BuilderType mergeFrom(byte[] data) throws InvalidProtocolBufferException {
+            return (Builder) super.mergeFrom(data);
+        }
+
+        public BuilderType mergeFrom(byte[] data, int off, int len) throws InvalidProtocolBufferException {
+            return (Builder) super.mergeFrom(data, off, len);
+        }
+
+        public BuilderType mergeFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return (Builder) super.mergeFrom(data, extensionRegistry);
+        }
+
+        public BuilderType mergeFrom(byte[] data, int off, int len, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return (Builder) super.mergeFrom(data, off, len, extensionRegistry);
+        }
+
+        public BuilderType mergeFrom(InputStream input) throws IOException {
+            return (Builder) super.mergeFrom(input);
+        }
+
+        public BuilderType mergeFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return (Builder) super.mergeFrom(input, extensionRegistry);
+        }
+
+        public BuilderType mergeDelimitedFrom(InputStream input) throws IOException {
+            return (Builder) super.mergeDelimitedFrom(input);
+        }
+
+        public BuilderType mergeDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return (Builder) super.mergeDelimitedFrom(input, extensionRegistry);
+        }
     }
-    
-    static boolean mergeFieldFrom(CodedInputStream paramCodedInputStream, UnknownFieldSet.Builder paramBuilder, ExtensionRegistryLite paramExtensionRegistryLite, Message.Builder paramBuilder1, int paramInt)
-      throws IOException
-    {
-      Object localObject = paramBuilder1.getDescriptorForType();
-      if ((((Descriptors.Descriptor)localObject).getOptions().getMessageSetWireFormat()) && (paramInt == WireFormat.MESSAGE_SET_ITEM_TAG))
-      {
-        mergeMessageSetExtensionFromCodedStream(paramCodedInputStream, paramBuilder, paramExtensionRegistryLite, paramBuilder1);
+
+    public boolean isInitialized() {
+        FieldDescriptor field;
+        for (FieldDescriptor field2 : getDescriptorForType().getFields()) {
+            if (field2.isRequired() && !hasField(field2)) {
+                return false;
+            }
+        }
+        for (Entry<FieldDescriptor, Object> entry : getAllFields().entrySet()) {
+            field2 = (FieldDescriptor) entry.getKey();
+            if (field2.getJavaType() == JavaType.MESSAGE) {
+                if (field2.isRepeated()) {
+                    for (Message element : (List) entry.getValue()) {
+                        if (!element.isInitialized()) {
+                            return false;
+                        }
+                    }
+                    continue;
+                } else if (!((Message) entry.getValue()).isInitialized()) {
+                    return false;
+                }
+            }
+        }
         return true;
-      }
-      int j = WireFormat.getTagWireType(paramInt);
-      int i = WireFormat.getTagFieldNumber(paramInt);
-      Message localMessage = null;
-      ExtensionRegistry.ExtensionInfo localExtensionInfo;
-      if (((Descriptors.Descriptor)localObject).isExtensionNumber(i)) {
-        if ((paramExtensionRegistryLite instanceof ExtensionRegistry))
-        {
-          localExtensionInfo = ((ExtensionRegistry)paramExtensionRegistryLite).findExtensionByNumber((Descriptors.Descriptor)localObject, i);
-          if (localExtensionInfo == null) {
-            localObject = null;
-          }
-        }
-      }
-      while ((localObject == null) || (j != FieldSet.getWireFormatForFieldType(((Descriptors.FieldDescriptor)localObject).getLiteType(), ((Descriptors.FieldDescriptor)localObject).getOptions().getPacked())))
-      {
-        return paramBuilder.mergeFieldFrom(paramInt, paramCodedInputStream);
-        localObject = localExtensionInfo.descriptor;
-        localMessage = localExtensionInfo.defaultInstance;
-        continue;
-        localObject = null;
-        continue;
-        localObject = ((Descriptors.Descriptor)localObject).findFieldByNumber(i);
-      }
-      if (((Descriptors.FieldDescriptor)localObject).getOptions().getPacked())
-      {
-        paramInt = paramCodedInputStream.pushLimit(paramCodedInputStream.readRawVarint32());
-        if (((Descriptors.FieldDescriptor)localObject).getLiteType() == WireFormat.FieldType.ENUM) {
-          while (paramCodedInputStream.getBytesUntilLimit() > 0)
-          {
-            i = paramCodedInputStream.readEnum();
-            paramBuilder = ((Descriptors.FieldDescriptor)localObject).getEnumType().findValueByNumber(i);
-            if (paramBuilder == null) {
-              return true;
+    }
+
+    public final String toString() {
+        return TextFormat.printToString((Message) this);
+    }
+
+    public void writeTo(CodedOutputStream output) throws IOException {
+        boolean isMessageSet = getDescriptorForType().getOptions().getMessageSetWireFormat();
+        for (Entry<FieldDescriptor, Object> entry : getAllFields().entrySet()) {
+            FieldDescriptor field = (FieldDescriptor) entry.getKey();
+            Object value = entry.getValue();
+            if (isMessageSet && field.isExtension() && field.getType() == Type.MESSAGE && !field.isRepeated()) {
+                output.writeMessageSetExtension(field.getNumber(), (Message) value);
+            } else {
+                FieldSet.writeField(field, value, output);
             }
-            paramBuilder1.addRepeatedField((Descriptors.FieldDescriptor)localObject, paramBuilder);
-          }
         }
-        while (paramCodedInputStream.getBytesUntilLimit() > 0) {
-          paramBuilder1.addRepeatedField((Descriptors.FieldDescriptor)localObject, FieldSet.readPrimitiveField(paramCodedInputStream, ((Descriptors.FieldDescriptor)localObject).getLiteType()));
+        UnknownFieldSet unknownFields = getUnknownFields();
+        if (isMessageSet) {
+            unknownFields.writeAsMessageSetTo(output);
+        } else {
+            unknownFields.writeTo(output);
         }
-        paramCodedInputStream.popLimit(paramInt);
-      }
-      for (;;)
-      {
-        return true;
-        switch (AbstractMessage.1.$SwitchMap$com$google$protobuf$Descriptors$FieldDescriptor$Type[localObject.getType().ordinal()])
-        {
-        default: 
-          paramCodedInputStream = FieldSet.readPrimitiveField(paramCodedInputStream, ((Descriptors.FieldDescriptor)localObject).getLiteType());
+    }
+
+    public int getSerializedSize() {
+        int size = this.memoizedSize;
+        if (size != -1) {
+            return size;
         }
-        for (;;)
-        {
-          if (((Descriptors.FieldDescriptor)localObject).isRepeated())
-          {
-            paramBuilder1.addRepeatedField((Descriptors.FieldDescriptor)localObject, paramCodedInputStream);
-            break;
-            if (localMessage != null) {}
-            for (paramBuilder = localMessage.newBuilderForType();; paramBuilder = paramBuilder1.newBuilderForField((Descriptors.FieldDescriptor)localObject))
-            {
-              if (!((Descriptors.FieldDescriptor)localObject).isRepeated()) {
-                paramBuilder.mergeFrom((Message)paramBuilder1.getField((Descriptors.FieldDescriptor)localObject));
-              }
-              paramCodedInputStream.readGroup(((Descriptors.FieldDescriptor)localObject).getNumber(), paramBuilder, paramExtensionRegistryLite);
-              paramCodedInputStream = paramBuilder.build();
-              break;
+        size = 0;
+        boolean isMessageSet = getDescriptorForType().getOptions().getMessageSetWireFormat();
+        for (Entry<FieldDescriptor, Object> entry : getAllFields().entrySet()) {
+            FieldDescriptor field = (FieldDescriptor) entry.getKey();
+            Object value = entry.getValue();
+            if (isMessageSet && field.isExtension() && field.getType() == Type.MESSAGE && !field.isRepeated()) {
+                size += CodedOutputStream.computeMessageSetExtensionSize(field.getNumber(), (Message) value);
+            } else {
+                size += FieldSet.computeFieldSize(field, value);
             }
-            if (localMessage != null) {}
-            for (paramBuilder = localMessage.newBuilderForType();; paramBuilder = paramBuilder1.newBuilderForField((Descriptors.FieldDescriptor)localObject))
-            {
-              if (!((Descriptors.FieldDescriptor)localObject).isRepeated()) {
-                paramBuilder.mergeFrom((Message)paramBuilder1.getField((Descriptors.FieldDescriptor)localObject));
-              }
-              paramCodedInputStream.readMessage(paramBuilder, paramExtensionRegistryLite);
-              paramCodedInputStream = paramBuilder.build();
-              break;
-            }
-            paramInt = paramCodedInputStream.readEnum();
-            paramExtensionRegistryLite = ((Descriptors.FieldDescriptor)localObject).getEnumType().findValueByNumber(paramInt);
-            paramCodedInputStream = paramExtensionRegistryLite;
-            if (paramExtensionRegistryLite == null)
-            {
-              paramBuilder.mergeVarintField(i, paramInt);
-              return true;
-            }
-          }
         }
-        paramBuilder1.setField((Descriptors.FieldDescriptor)localObject, paramCodedInputStream);
-      }
-    }
-    
-    private static void mergeMessageSetExtensionFromCodedStream(CodedInputStream paramCodedInputStream, UnknownFieldSet.Builder paramBuilder, ExtensionRegistryLite paramExtensionRegistryLite, Message.Builder paramBuilder1)
-      throws IOException
-    {
-      Descriptors.Descriptor localDescriptor = paramBuilder1.getDescriptorForType();
-      int i = 0;
-      ByteString localByteString = null;
-      Object localObject1 = null;
-      Object localObject2 = null;
-      int j = paramCodedInputStream.readTag();
-      if (j == 0) {}
-      for (;;)
-      {
-        paramCodedInputStream.checkLastTagWas(WireFormat.MESSAGE_SET_ITEM_END_TAG);
-        if (localObject1 != null) {
-          paramBuilder1.setField((Descriptors.FieldDescriptor)localObject2, ((Message.Builder)localObject1).build());
+        UnknownFieldSet unknownFields = getUnknownFields();
+        if (isMessageSet) {
+            size += unknownFields.getSerializedSizeAsMessageSet();
+        } else {
+            size += unknownFields.getSerializedSize();
         }
-        return;
-        if (j == WireFormat.MESSAGE_SET_TYPE_ID_TAG)
-        {
-          j = paramCodedInputStream.readUInt32();
-          i = j;
-          if (j == 0) {
-            break;
-          }
-          if ((paramExtensionRegistryLite instanceof ExtensionRegistry)) {}
-          for (Object localObject3 = ((ExtensionRegistry)paramExtensionRegistryLite).findExtensionByNumber(localDescriptor, j);; localObject3 = null)
-          {
-            if (localObject3 == null) {
-              break label212;
-            }
-            Descriptors.FieldDescriptor localFieldDescriptor = ((ExtensionRegistry.ExtensionInfo)localObject3).descriptor;
-            localObject3 = ((ExtensionRegistry.ExtensionInfo)localObject3).defaultInstance.newBuilderForType();
-            localObject1 = (Message)paramBuilder1.getField(localFieldDescriptor);
-            if (localObject1 != null) {
-              ((Message.Builder)localObject3).mergeFrom((Message)localObject1);
-            }
-            localObject2 = localFieldDescriptor;
-            localObject1 = localObject3;
-            i = j;
-            if (localByteString == null) {
-              break;
-            }
-            ((Message.Builder)localObject3).mergeFrom(CodedInputStream.newInstance(localByteString.newInput()));
-            localByteString = null;
-            localObject2 = localFieldDescriptor;
-            localObject1 = localObject3;
-            i = j;
-            break;
-          }
-          label212:
-          i = j;
-          if (localByteString == null) {
-            break;
-          }
-          paramBuilder.mergeField(j, UnknownFieldSet.Field.newBuilder().addLengthDelimited(localByteString).build());
-          localByteString = null;
-          i = j;
-          break;
+        this.memoizedSize = size;
+        return size;
+    }
+
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
         }
-        if (j == WireFormat.MESSAGE_SET_MESSAGE_TAG)
-        {
-          if (i == 0)
-          {
-            localByteString = paramCodedInputStream.readBytes();
-            break;
-          }
-          if (localObject1 == null)
-          {
-            paramBuilder.mergeField(i, UnknownFieldSet.Field.newBuilder().addLengthDelimited(paramCodedInputStream.readBytes()).build());
-            break;
-          }
-          paramCodedInputStream.readMessage((MessageLite.Builder)localObject1, paramExtensionRegistryLite);
-          break;
+        if (!(other instanceof Message)) {
+            return false;
         }
-        if (paramCodedInputStream.skipField(j)) {
-          break;
+        Message otherMessage = (Message) other;
+        if (getDescriptorForType() != otherMessage.getDescriptorForType()) {
+            return false;
         }
-      }
-    }
-    
-    protected static UninitializedMessageException newUninitializedMessageException(Message paramMessage)
-    {
-      return new UninitializedMessageException(findMissingFields(paramMessage));
-    }
-    
-    private static String subMessagePrefix(String paramString, Descriptors.FieldDescriptor paramFieldDescriptor, int paramInt)
-    {
-      paramString = new StringBuilder(paramString);
-      if (paramFieldDescriptor.isExtension()) {
-        paramString.append('(').append(paramFieldDescriptor.getFullName()).append(')');
-      }
-      for (;;)
-      {
-        if (paramInt != -1) {
-          paramString.append('[').append(paramInt).append(']');
+        if (getAllFields().equals(otherMessage.getAllFields()) && getUnknownFields().equals(otherMessage.getUnknownFields())) {
+            return true;
         }
-        paramString.append('.');
-        return paramString.toString();
-        paramString.append(paramFieldDescriptor.getName());
-      }
+        return false;
     }
-    
-    public BuilderType clear()
-    {
-      Iterator localIterator = getAllFields().entrySet().iterator();
-      while (localIterator.hasNext()) {
-        clearField((Descriptors.FieldDescriptor)((Map.Entry)localIterator.next()).getKey());
-      }
-      return this;
+
+    public int hashCode() {
+        return ((((getDescriptorForType().hashCode() + 779) * 53) + getAllFields().hashCode()) * 29) + getUnknownFields().hashCode();
     }
-    
-    public abstract BuilderType clone();
-    
-    public BuilderType mergeDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return (Builder)super.mergeDelimitedFrom(paramInputStream);
-    }
-    
-    public BuilderType mergeDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return (Builder)super.mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite);
-    }
-    
-    public BuilderType mergeFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return (Builder)super.mergeFrom(paramByteString);
-    }
-    
-    public BuilderType mergeFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return (Builder)super.mergeFrom(paramByteString, paramExtensionRegistryLite);
-    }
-    
-    public BuilderType mergeFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return mergeFrom(paramCodedInputStream, ExtensionRegistry.getEmptyRegistry());
-    }
-    
-    public BuilderType mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-      int i = paramCodedInputStream.readTag();
-      if (i == 0) {}
-      for (;;)
-      {
-        setUnknownFields(localBuilder.build());
-        return this;
-        if (mergeFieldFrom(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, this, i)) {
-          break;
-        }
-      }
-    }
-    
-    public BuilderType mergeFrom(Message paramMessage)
-    {
-      if (paramMessage.getDescriptorForType() != getDescriptorForType()) {
-        throw new IllegalArgumentException("mergeFrom(Message) can only merge messages of the same type.");
-      }
-      Iterator localIterator = paramMessage.getAllFields().entrySet().iterator();
-      while (localIterator.hasNext())
-      {
-        Object localObject = (Map.Entry)localIterator.next();
-        Descriptors.FieldDescriptor localFieldDescriptor = (Descriptors.FieldDescriptor)((Map.Entry)localObject).getKey();
-        if (localFieldDescriptor.isRepeated())
-        {
-          localObject = ((List)((Map.Entry)localObject).getValue()).iterator();
-          while (((Iterator)localObject).hasNext()) {
-            addRepeatedField(localFieldDescriptor, ((Iterator)localObject).next());
-          }
-        }
-        else if (localFieldDescriptor.getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE)
-        {
-          Message localMessage = (Message)getField(localFieldDescriptor);
-          if (localMessage == localMessage.getDefaultInstanceForType()) {
-            setField(localFieldDescriptor, ((Map.Entry)localObject).getValue());
-          } else {
-            setField(localFieldDescriptor, localMessage.newBuilderForType().mergeFrom(localMessage).mergeFrom((Message)((Map.Entry)localObject).getValue()).build());
-          }
-        }
-        else
-        {
-          setField(localFieldDescriptor, ((Map.Entry)localObject).getValue());
-        }
-      }
-      mergeUnknownFields(paramMessage.getUnknownFields());
-      return this;
-    }
-    
-    public BuilderType mergeFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return (Builder)super.mergeFrom(paramInputStream);
-    }
-    
-    public BuilderType mergeFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return (Builder)super.mergeFrom(paramInputStream, paramExtensionRegistryLite);
-    }
-    
-    public BuilderType mergeFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return (Builder)super.mergeFrom(paramArrayOfByte);
-    }
-    
-    public BuilderType mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-      throws InvalidProtocolBufferException
-    {
-      return (Builder)super.mergeFrom(paramArrayOfByte, paramInt1, paramInt2);
-    }
-    
-    public BuilderType mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return (Builder)super.mergeFrom(paramArrayOfByte, paramInt1, paramInt2, paramExtensionRegistryLite);
-    }
-    
-    public BuilderType mergeFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return (Builder)super.mergeFrom(paramArrayOfByte, paramExtensionRegistryLite);
-    }
-    
-    public BuilderType mergeUnknownFields(UnknownFieldSet paramUnknownFieldSet)
-    {
-      setUnknownFields(UnknownFieldSet.newBuilder(getUnknownFields()).mergeFrom(paramUnknownFieldSet).build());
-      return this;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/AbstractMessage.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

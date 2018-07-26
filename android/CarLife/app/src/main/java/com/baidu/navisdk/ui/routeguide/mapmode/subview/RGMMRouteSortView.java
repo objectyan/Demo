@@ -2,7 +2,6 @@ package com.baidu.navisdk.ui.routeguide.mapmode.subview;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -13,299 +12,244 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.GridView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.routeguide.adapter.RGRouteSortAdapter;
 import com.baidu.navisdk.ui.routeguide.control.RGRouteSortController;
 import com.baidu.navisdk.ui.routeguide.control.RGViewController;
-import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.ui.widget.BNBaseView;
 import com.baidu.navisdk.util.common.AnimationUtil;
 import com.baidu.navisdk.util.common.AnimationUtil.AnimationType;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 
-public class RGMMRouteSortView
-  extends BNBaseView
-{
-  private static final int[] ROUTE_SORTE_DIVIDER_H = { 1711867021 };
-  private static final String TAG = RGMMRouteSortView.class.getSimpleName();
-  private RGRouteSortAdapter mAdapter = null;
-  private GridView mRouteSortGV = null;
-  private TextView mSettingDefaultTV = null;
-  private TextView mTitleTV = null;
-  private View mView = null;
-  private ViewGroup mViewContainer = null;
-  private View mViewPanel = null;
-  public int sPageFromType = 1;
-  
-  public RGMMRouteSortView(Context paramContext, ViewGroup paramViewGroup, View paramView1, View paramView2, int paramInt)
-  {
-    super(paramContext, paramViewGroup);
-    this.mViewPanel = paramView1;
-    if ((paramView2 != null) && ((paramView2 instanceof ViewGroup))) {
-      this.mViewContainer = ((ViewGroup)paramView2);
-    }
-    this.sPageFromType = paramInt;
-    initViews();
-    initListener();
-    updateStyle(BNStyleManager.getDayStyle());
-  }
-  
-  private void initListener()
-  {
-    if (this.mSettingDefaultTV != null) {
-      this.mSettingDefaultTV.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          UserOPController.getInstance().add("2.i.2", null, null, null);
-          RGRouteSortController.getInstance().mIsShowDefaultSettingBtn = true;
-          if (RGMMRouteSortView.this.mSettingDefaultTV != null) {
-            RGMMRouteSortView.this.mSettingDefaultTV.setVisibility(8);
-          }
-          if (RGMMRouteSortView.this.mTitleTV != null) {}
-          try
-          {
-            RGMMRouteSortView.this.mTitleTV.setText(JarUtils.getResources().getString(1711670351));
-            if (RGMMRouteSortView.this.mAdapter != null) {
-              RGMMRouteSortView.this.mAdapter.notifyDataSetChanged();
+public class RGMMRouteSortView extends BNBaseView {
+    private static final int[] ROUTE_SORTE_DIVIDER_H = new int[]{C4048R.id.nsdk_route_sort_h1};
+    private static final String TAG = RGMMRouteSortView.class.getSimpleName();
+    private RGRouteSortAdapter mAdapter = null;
+    private GridView mRouteSortGV = null;
+    private TextView mSettingDefaultTV = null;
+    private TextView mTitleTV = null;
+    private View mView = null;
+    private ViewGroup mViewContainer = null;
+    private View mViewPanel = null;
+    public int sPageFromType = 1;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMRouteSortView$1 */
+    class C44271 implements OnClickListener {
+        C44271() {
+        }
+
+        public void onClick(View v) {
+            UserOPController.getInstance().add(UserOPParams.ROUTE_2_i_2, null, null, null);
+            RGRouteSortController.getInstance().mIsShowDefaultSettingBtn = true;
+            if (RGMMRouteSortView.this.mSettingDefaultTV != null) {
+                RGMMRouteSortView.this.mSettingDefaultTV.setVisibility(8);
             }
-            return;
-          }
-          catch (Exception paramAnonymousView)
-          {
-            for (;;) {}
-          }
+            if (RGMMRouteSortView.this.mTitleTV != null) {
+                try {
+                    RGMMRouteSortView.this.mTitleTV.setText(JarUtils.getResources().getString(C4048R.string.nsdk_string_route_sort_default_setting_title));
+                } catch (Exception e) {
+                }
+            }
+            if (RGMMRouteSortView.this.mAdapter != null) {
+                RGMMRouteSortView.this.mAdapter.notifyDataSetChanged();
+            }
         }
-      });
     }
-    if (this.mViewPanel != null) {
-      this.mViewPanel.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          RGMMRouteSortView.this.onClickCloseBtnOrMasking();
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMRouteSortView$2 */
+    class C44282 implements OnClickListener {
+        C44282() {
         }
-      });
+
+        public void onClick(View v) {
+            RGMMRouteSortView.this.onClickCloseBtnOrMasking();
+        }
     }
-  }
-  
-  private void initViews()
-  {
-    if ((this.mRootViewGroup == null) || (this.mContext == null)) {}
-    for (;;)
-    {
-      return;
-      if ((this.mViewPanel == null) || (this.mViewContainer == null)) {
-        continue;
-      }
-      try
-      {
-        this.mView = JarUtils.inflate((Activity)this.mContext, 1711472748, null);
-        if (this.mView == null) {
-          continue;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMRouteSortView$3 */
+    class C44293 implements AnimationListener {
+        C44293() {
         }
-        RelativeLayout.LayoutParams localLayoutParams = new RelativeLayout.LayoutParams(-1, -2);
-        if (localLayoutParams == null) {
-          continue;
+
+        public void onAnimationStart(Animation animation) {
         }
-        localLayoutParams.addRule(15);
-        this.mViewContainer.addView(this.mView, localLayoutParams);
-        this.mRouteSortGV = ((GridView)this.mView.findViewById(1711867022));
-        this.mSettingDefaultTV = ((TextView)this.mView.findViewById(1711867020));
-        this.mTitleTV = ((TextView)this.mView.findViewById(1711867019));
-        if (this.mRouteSortGV == null) {
-          continue;
+
+        public void onAnimationEnd(Animation animation) {
+            RGMMRouteSortView.this.onHide();
         }
-        if (this.mAdapter == null)
-        {
-          this.mAdapter = new RGRouteSortAdapter();
-          this.mAdapter.setPageFromType(this.sPageFromType);
+
+        public void onAnimationRepeat(Animation animation) {
         }
-        this.mRouteSortGV.setAdapter(this.mAdapter);
-        return;
-      }
-      catch (Exception localException)
-      {
-        for (;;)
-        {
-          this.mView = null;
-        }
-      }
     }
-  }
-  
-  private void onClickCloseBtnOrMasking()
-  {
-    if (this.sPageFromType == 1) {
-      if (!RGRouteSortController.getInstance().mIsShowDefaultSettingBtn)
-      {
-        UserOPController.getInstance().add("2.i.1", "0", "2", null);
-        RGRouteSortController.getInstance().onCloseAction();
-      }
+
+    public RGMMRouteSortView(Context cxt, ViewGroup parent, View view, View containerView, int fromType) {
+        super(cxt, parent);
+        this.mViewPanel = view;
+        if (containerView != null && (containerView instanceof ViewGroup)) {
+            this.mViewContainer = (ViewGroup) containerView;
+        }
+        this.sPageFromType = fromType;
+        initViews();
+        initListener();
+        updateStyle(BNStyleManager.getDayStyle());
     }
-    while (this.sPageFromType != 2) {
-      for (;;)
-      {
+
+    private void initViews() {
+        if (this.mRootViewGroup != null && this.mContext != null && this.mViewPanel != null && this.mViewContainer != null) {
+            try {
+                this.mView = JarUtils.inflate((Activity) this.mContext, C4048R.layout.nsdk_layout_route_sort_main_view, null);
+            } catch (Exception e) {
+                this.mView = null;
+            }
+            if (this.mView != null) {
+                LayoutParams lp = new LayoutParams(-1, -2);
+                if (lp != null) {
+                    lp.addRule(15);
+                    this.mViewContainer.addView(this.mView, lp);
+                    this.mRouteSortGV = (GridView) this.mView.findViewById(C4048R.id.nsdk_route_sort_gv);
+                    this.mSettingDefaultTV = (TextView) this.mView.findViewById(C4048R.id.nsdk_route_sort_default_setting_tv);
+                    this.mTitleTV = (TextView) this.mView.findViewById(C4048R.id.nsdk_route_sort_title_tv);
+                    if (this.mRouteSortGV != null) {
+                        if (this.mAdapter == null) {
+                            this.mAdapter = new RGRouteSortAdapter();
+                            this.mAdapter.setPageFromType(this.sPageFromType);
+                        }
+                        this.mRouteSortGV.setAdapter(this.mAdapter);
+                    }
+                }
+            }
+        }
+    }
+
+    private void initListener() {
+        if (this.mSettingDefaultTV != null) {
+            this.mSettingDefaultTV.setOnClickListener(new C44271());
+        }
+        if (this.mViewPanel != null) {
+            this.mViewPanel.setOnClickListener(new C44282());
+        }
+    }
+
+    public void show() {
+        super.show();
+        startAutoHide(10000);
+        if (this.mViewPanel != null && this.mViewContainer != null && this.mView != null) {
+            this.mViewPanel.setVisibility(0);
+            this.mViewContainer.setVisibility(0);
+            this.mView.startAnimation(AnimationUtil.getAnimation(AnimationType.ANIM_DOWN_IN, 0, 300));
+            this.mView.setVisibility(0);
+            updateDataByLastest();
+        }
+    }
+
+    protected void hiedByTimeOut() {
+        RGViewController.getInstance().hideRouteSortView();
+    }
+
+    public void hide() {
+        super.hide();
+        cancelAutoHide();
+        if (this.mViewPanel != null && this.mViewContainer != null && this.mView != null) {
+            Animation animOut = AnimationUtil.getAnimation(AnimationType.ANIM_DOWN_OUT, 0, 300);
+            animOut.setFillAfter(true);
+            animOut.setAnimationListener(new C44293());
+            this.mView.startAnimation(animOut);
+        }
+    }
+
+    protected void onHide() {
+        RGRouteSortController.getInstance().mIsShowDefaultSettingBtn = false;
+        this.mViewPanel.setVisibility(8);
+        this.mViewContainer.setVisibility(8);
+        this.mView.setVisibility(8);
         if (this.mAdapter != null) {
-          this.mAdapter.notifyDataSetChanged();
+            this.mAdapter.notifyDataSetChanged();
         }
-        return;
-        UserOPController.getInstance().add("2.i.3", "0", "2", null);
-      }
     }
-    if (!RGRouteSortController.getInstance().mIsShowDefaultSettingBtn) {
-      UserOPController.getInstance().add("2.i.1", "0", "3", null);
+
+    public void updateStyle(boolean day) {
+        super.updateStyle(day);
+        if ((this.sPageFromType != 1 || day) && this.mView != null) {
+            this.mView.setBackgroundColor(getColor(C4048R.color.cl_bg_d));
+            if (this.mTitleTV != null) {
+                this.mTitleTV.setTextColor(getColor(C4048R.color.nsdk_route_sort_title));
+                this.mTitleTV.setCompoundDrawablesWithIntrinsicBounds(getDrawable(C4048R.drawable.nsdk_route_sort_setting_title_icon), null, null, null);
+            }
+            for (int id : ROUTE_SORTE_DIVIDER_H) {
+                View v = this.mView.findViewById(id);
+                if (v != null) {
+                    v.setBackgroundColor(getColor(C4048R.color.cl_bg_d_mm));
+                }
+            }
+            super.updateStyle(day);
+        }
     }
-    for (;;)
-    {
-      RGViewController.getInstance().hideRouteSortView();
-      break;
-      UserOPController.getInstance().add("2.i.3", "0", "3", null);
+
+    protected Drawable getDrawable(int resId) {
+        if (this.sPageFromType == 1) {
+            return BNStyleManager.getDrawable(resId, true);
+        }
+        return super.getDrawable(resId);
     }
-  }
-  
-  private void updateView()
-  {
-    if (this.sPageFromType == 1) {
-      if (this.mSettingDefaultTV != null) {
-        this.mSettingDefaultTV.setVisibility(0);
-      }
+
+    protected int getColor(int resId) {
+        if (this.sPageFromType == 1) {
+            return BNStyleManager.getColor(resId, true);
+        }
+        return super.getColor(resId);
     }
-    for (;;)
-    {
-      if (this.mTitleTV != null) {}
-      try
-      {
-        this.mTitleTV.setText(JarUtils.getResources().getString(1711670350));
-        return;
-      }
-      catch (Exception localException) {}
-      if ((this.sPageFromType == 2) && (this.mSettingDefaultTV != null)) {
-        this.mSettingDefaultTV.setVisibility(8);
-      }
+
+    public void updateData(Bundle b) {
+        updateView();
     }
-  }
-  
-  public void dispose()
-  {
-    if (this.sPageFromType == 2) {
-      super.dispose();
+
+    public void updateDataByLastest() {
+        updateData(null);
     }
-  }
-  
-  protected int getColor(int paramInt)
-  {
-    if (this.sPageFromType == 1) {
-      return BNStyleManager.getColor(paramInt, true);
+
+    public void dispose() {
+        if (this.sPageFromType == 2) {
+            super.dispose();
+        }
     }
-    return super.getColor(paramInt);
-  }
-  
-  protected Drawable getDrawable(int paramInt)
-  {
-    if (this.sPageFromType == 1) {
-      return BNStyleManager.getDrawable(paramInt, true);
+
+    private void updateView() {
+        if (this.sPageFromType == 1) {
+            if (this.mSettingDefaultTV != null) {
+                this.mSettingDefaultTV.setVisibility(0);
+            }
+        } else if (this.sPageFromType == 2 && this.mSettingDefaultTV != null) {
+            this.mSettingDefaultTV.setVisibility(8);
+        }
+        if (this.mTitleTV != null) {
+            try {
+                this.mTitleTV.setText(JarUtils.getResources().getString(C4048R.string.nsdk_string_route_sort_title));
+            } catch (Exception e) {
+            }
+        }
     }
-    return super.getDrawable(paramInt);
-  }
-  
-  public void hide()
-  {
-    super.hide();
-    cancelAutoHide();
-    if ((this.mViewPanel == null) || (this.mViewContainer == null) || (this.mView == null)) {
-      return;
+
+    private void onClickCloseBtnOrMasking() {
+        if (this.sPageFromType == 1) {
+            if (RGRouteSortController.getInstance().mIsShowDefaultSettingBtn) {
+                UserOPController.getInstance().add(UserOPParams.ROUTE_2_i_3, "0", "2", null);
+            } else {
+                UserOPController.getInstance().add(UserOPParams.ROUTE_2_i_1, "0", "2", null);
+            }
+            RGRouteSortController.getInstance().onCloseAction();
+        } else if (this.sPageFromType == 2) {
+            if (RGRouteSortController.getInstance().mIsShowDefaultSettingBtn) {
+                UserOPController.getInstance().add(UserOPParams.ROUTE_2_i_3, "0", "3", null);
+            } else {
+                UserOPController.getInstance().add(UserOPParams.ROUTE_2_i_1, "0", "3", null);
+            }
+            RGViewController.getInstance().hideRouteSortView();
+        }
+        if (this.mAdapter != null) {
+            this.mAdapter.notifyDataSetChanged();
+        }
     }
-    Animation localAnimation = AnimationUtil.getAnimation(AnimationUtil.AnimationType.ANIM_DOWN_OUT, 0L, 300L);
-    localAnimation.setFillAfter(true);
-    localAnimation.setAnimationListener(new Animation.AnimationListener()
-    {
-      public void onAnimationEnd(Animation paramAnonymousAnimation)
-      {
-        RGMMRouteSortView.this.onHide();
-      }
-      
-      public void onAnimationRepeat(Animation paramAnonymousAnimation) {}
-      
-      public void onAnimationStart(Animation paramAnonymousAnimation) {}
-    });
-    this.mView.startAnimation(localAnimation);
-  }
-  
-  protected void hiedByTimeOut()
-  {
-    RGViewController.getInstance().hideRouteSortView();
-  }
-  
-  protected void onHide()
-  {
-    RGRouteSortController.getInstance().mIsShowDefaultSettingBtn = false;
-    this.mViewPanel.setVisibility(8);
-    this.mViewContainer.setVisibility(8);
-    this.mView.setVisibility(8);
-    if (this.mAdapter != null) {
-      this.mAdapter.notifyDataSetChanged();
-    }
-  }
-  
-  public void show()
-  {
-    super.show();
-    startAutoHide(10000);
-    if ((this.mViewPanel == null) || (this.mViewContainer == null) || (this.mView == null)) {
-      return;
-    }
-    this.mViewPanel.setVisibility(0);
-    this.mViewContainer.setVisibility(0);
-    Animation localAnimation = AnimationUtil.getAnimation(AnimationUtil.AnimationType.ANIM_DOWN_IN, 0L, 300L);
-    this.mView.startAnimation(localAnimation);
-    this.mView.setVisibility(0);
-    updateDataByLastest();
-  }
-  
-  public void updateData(Bundle paramBundle)
-  {
-    updateView();
-  }
-  
-  public void updateDataByLastest()
-  {
-    updateData(null);
-  }
-  
-  public void updateStyle(boolean paramBoolean)
-  {
-    super.updateStyle(paramBoolean);
-    if ((this.sPageFromType == 1) && (!paramBoolean)) {}
-    while (this.mView == null) {
-      return;
-    }
-    this.mView.setBackgroundColor(getColor(1711800694));
-    if (this.mTitleTV != null)
-    {
-      this.mTitleTV.setTextColor(getColor(1711800775));
-      localObject = getDrawable(1711408038);
-      this.mTitleTV.setCompoundDrawablesWithIntrinsicBounds((Drawable)localObject, null, null, null);
-    }
-    Object localObject = ROUTE_SORTE_DIVIDER_H;
-    int j = localObject.length;
-    int i = 0;
-    while (i < j)
-    {
-      int k = localObject[i];
-      View localView = this.mView.findViewById(k);
-      if (localView != null) {
-        localView.setBackgroundColor(getColor(1711800789));
-      }
-      i += 1;
-    }
-    super.updateStyle(paramBoolean);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMRouteSortView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

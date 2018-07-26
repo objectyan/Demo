@@ -1,5 +1,6 @@
 package com.baidu.platform.comapi.map;
 
+import com.baidu.platform.comapi.UIMsg.m_AppUI;
 import com.baidu.platform.comjni.engine.MessageProxy;
 import com.baidu.platform.comjni.map.basemap.AppBaseMap;
 import java.util.ArrayList;
@@ -7,227 +8,186 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public final class LocalMapManager
-{
-  private static volatile LocalMapManager instance;
-  private AppBaseMap baseMap = null;
-  private LocalMapHandler handler = null;
-  
-  public static LocalMapManager getInstance()
-  {
-    if (instance == null) {}
-    try
-    {
-      if (instance == null) {
-        instance = new LocalMapManager();
-      }
-      return instance;
+public final class LocalMapManager {
+    private static volatile LocalMapManager instance;
+    private AppBaseMap baseMap = null;
+    private LocalMapHandler handler = null;
+
+    private LocalMapManager() {
     }
-    finally {}
-  }
-  
-  private List<LocalMapResource> toResources(String paramString)
-  {
-    if ((paramString == null) || (paramString.length() == 0)) {
-      paramString = null;
-    }
-    for (;;)
-    {
-      return paramString;
-      try
-      {
-        JSONArray localJSONArray = new JSONObject(paramString).optJSONArray("dataset");
-        ArrayList localArrayList = new ArrayList(localJSONArray.length());
-        int i = 0;
-        for (;;)
-        {
-          paramString = localArrayList;
-          if (i >= localJSONArray.length()) {
-            break;
-          }
-          localArrayList.add(LocalMapResource.fromJson(localJSONArray.getJSONObject(i)));
-          i += 1;
+
+    public static LocalMapManager getInstance() {
+        if (instance == null) {
+            synchronized (LocalMapManager.class) {
+                if (instance == null) {
+                    instance = new LocalMapManager();
+                }
+            }
         }
-        return null;
-      }
-      catch (Exception paramString)
-      {
-        paramString.printStackTrace();
-      }
+        return instance;
     }
-  }
-  
-  public int autoDownloadRoadNetworkViaWifi(int paramInt)
-  {
-    if ((this.baseMap == null) || (paramInt < 0)) {
-      return 0;
+
+    public boolean init(MapController controller) {
+        if (controller == null) {
+            return false;
+        }
+        if (this.handler == null) {
+            this.handler = new LocalMapHandler();
+            MessageProxy.registerMessageHandler(m_AppUI.V_WM_VDATAENGINE, this.handler);
+        }
+        this.baseMap = controller.getBaseMap();
+        if (this.baseMap == null) {
+            return false;
+        }
+        this.baseMap.OnUsrcityMsgInterval(1500);
+        return true;
     }
-    return this.baseMap.OnWifiRecordAdd(paramInt);
-  }
-  
-  public boolean delete(int paramInt)
-  {
-    if ((this.baseMap == null) || (paramInt < 0)) {
-      return false;
+
+    public void destroy() {
+        if (this.handler != null) {
+            MessageProxy.unRegisterMessageHandler(m_AppUI.V_WM_VDATAENGINE, this.handler);
+            this.handler = null;
+        }
     }
-    return this.baseMap.OnRecordRemove(paramInt, false);
-  }
-  
-  public boolean deleteAll()
-  {
-    if (this.baseMap == null) {
-      return false;
+
+    public void registerListener(LocalMapListener listener) {
+        if (this.handler != null) {
+            this.handler.registListener(listener);
+        }
     }
-    return this.baseMap.OnRecordRemove(0, true);
-  }
-  
-  public void destroy()
-  {
-    if (this.handler != null)
-    {
-      MessageProxy.unRegisterMessageHandler(65289, this.handler);
-      this.handler = null;
+
+    public void removeListener(LocalMapListener listener) {
+        if (this.handler != null) {
+            this.handler.removeListener(listener);
+        }
     }
-  }
-  
-  public List<LocalMapResource> getAllCities()
-  {
-    if (this.baseMap == null) {
-      return null;
+
+    public boolean start(int cityId) {
+        if (this.baseMap == null || cityId < 0) {
+            return false;
+        }
+        return this.baseMap.OnRecordAdd(cityId);
     }
-    return toResources(this.baseMap.OnSchcityGet(""));
-  }
-  
-  public List<LocalMapResource> getCitiesByName(String paramString)
-  {
-    if ((this.baseMap == null) || (paramString == null) || (paramString.equals(""))) {
-      return null;
+
+    public boolean resume(int cityId) {
+        if (this.baseMap == null || cityId < 0) {
+            return false;
+        }
+        return this.baseMap.OnRecordStart(cityId, false, 0);
     }
-    return toResources(this.baseMap.OnSchcityGet(paramString));
-  }
-  
-  public LocalMapResource getCityById(int paramInt)
-  {
-    if ((this.baseMap == null) || (paramInt < 0)) {
-      return null;
+
+    public boolean resumeAll(int type) {
+        if (this.baseMap == null) {
+            return false;
+        }
+        return this.baseMap.OnRecordStart(0, true, type);
     }
-    return LocalMapResource.fromJson(this.baseMap.OnRecordGetAt(paramInt));
-  }
-  
-  public List<LocalMapResource> getHotCities()
-  {
-    if (this.baseMap == null) {
-      return null;
+
+    public boolean pause(int cityId) {
+        if (this.baseMap == null || cityId < 0) {
+            return false;
+        }
+        return this.baseMap.OnRecordSuspend(cityId, false, 0);
     }
-    return toResources(this.baseMap.OnHotcityGet());
-  }
-  
-  public List<LocalMapResource> getUserResources()
-  {
-    if (this.baseMap == null) {
-      return null;
+
+    public boolean pauseAll(int type) {
+        if (this.baseMap == null) {
+            return false;
+        }
+        return this.baseMap.OnRecordSuspend(0, true, type);
     }
-    return toResources(this.baseMap.OnRecordGetAll());
-  }
-  
-  public boolean importMap(boolean paramBoolean1, boolean paramBoolean2)
-  {
-    if (this.baseMap == null) {
-      return false;
+
+    public boolean delete(int cityId) {
+        if (this.baseMap == null || cityId < 0) {
+            return false;
+        }
+        return this.baseMap.OnRecordRemove(cityId, false);
     }
-    return this.baseMap.OnRecordImport(paramBoolean1, paramBoolean2);
-  }
-  
-  public boolean init(MapController paramMapController)
-  {
-    if (paramMapController == null) {}
-    do
-    {
-      return false;
-      if (this.handler == null)
-      {
-        this.handler = new LocalMapHandler();
-        MessageProxy.registerMessageHandler(65289, this.handler);
-      }
-      this.baseMap = paramMapController.getBaseMap();
-    } while (this.baseMap == null);
-    this.baseMap.OnUsrcityMsgInterval(1500);
-    return true;
-  }
-  
-  public boolean pause(int paramInt)
-  {
-    if ((this.baseMap == null) || (paramInt < 0)) {
-      return false;
+
+    public boolean deleteAll() {
+        if (this.baseMap == null) {
+            return false;
+        }
+        return this.baseMap.OnRecordRemove(0, true);
     }
-    return this.baseMap.OnRecordSuspend(paramInt, false, 0);
-  }
-  
-  public boolean pauseAll(int paramInt)
-  {
-    if (this.baseMap == null) {
-      return false;
+
+    public boolean importMap(boolean deleteFailed, boolean offImport) {
+        if (this.baseMap == null) {
+            return false;
+        }
+        return this.baseMap.OnRecordImport(deleteFailed, offImport);
     }
-    return this.baseMap.OnRecordSuspend(0, true, paramInt);
-  }
-  
-  public void registerListener(LocalMapListener paramLocalMapListener)
-  {
-    if (this.handler != null) {
-      this.handler.registListener(paramLocalMapListener);
+
+    public boolean update(int cityId) {
+        if (this.baseMap == null || cityId < 0) {
+            return false;
+        }
+        return this.baseMap.OnRecordReload(cityId, false);
     }
-  }
-  
-  public void removeListener(LocalMapListener paramLocalMapListener)
-  {
-    if (this.handler != null) {
-      this.handler.removeListener(paramLocalMapListener);
+
+    public boolean updateAll() {
+        if (this.baseMap == null) {
+            return false;
+        }
+        return this.baseMap.OnRecordReload(0, true);
     }
-  }
-  
-  public boolean resume(int paramInt)
-  {
-    if ((this.baseMap == null) || (paramInt < 0)) {
-      return false;
+
+    public List<LocalMapResource> getHotCities() {
+        if (this.baseMap == null) {
+            return null;
+        }
+        return toResources(this.baseMap.OnHotcityGet());
     }
-    return this.baseMap.OnRecordStart(paramInt, false, 0);
-  }
-  
-  public boolean resumeAll(int paramInt)
-  {
-    if (this.baseMap == null) {
-      return false;
+
+    public List<LocalMapResource> getAllCities() {
+        if (this.baseMap == null) {
+            return null;
+        }
+        return toResources(this.baseMap.OnSchcityGet(""));
     }
-    return this.baseMap.OnRecordStart(0, true, paramInt);
-  }
-  
-  public boolean start(int paramInt)
-  {
-    if ((this.baseMap == null) || (paramInt < 0)) {
-      return false;
+
+    public List<LocalMapResource> getCitiesByName(String key) {
+        if (this.baseMap == null || key == null || key.equals("")) {
+            return null;
+        }
+        return toResources(this.baseMap.OnSchcityGet(key));
     }
-    return this.baseMap.OnRecordAdd(paramInt);
-  }
-  
-  public boolean update(int paramInt)
-  {
-    if ((this.baseMap == null) || (paramInt < 0)) {
-      return false;
+
+    public LocalMapResource getCityById(int cityId) {
+        if (this.baseMap == null || cityId < 0) {
+            return null;
+        }
+        return LocalMapResource.fromJson(this.baseMap.OnRecordGetAt(cityId));
     }
-    return this.baseMap.OnRecordReload(paramInt, false);
-  }
-  
-  public boolean updateAll()
-  {
-    if (this.baseMap == null) {
-      return false;
+
+    public List<LocalMapResource> getUserResources() {
+        if (this.baseMap == null) {
+            return null;
+        }
+        return toResources(this.baseMap.OnRecordGetAll());
     }
-    return this.baseMap.OnRecordReload(0, true);
-  }
+
+    public int autoDownloadRoadNetworkViaWifi(int cityId) {
+        if (this.baseMap == null || cityId < 0) {
+            return 0;
+        }
+        return this.baseMap.OnWifiRecordAdd(cityId);
+    }
+
+    private List<LocalMapResource> toResources(String raw) {
+        if (raw == null || raw.length() == 0) {
+            return null;
+        }
+        try {
+            JSONArray array = new JSONObject(raw).optJSONArray("dataset");
+            List<LocalMapResource> list = new ArrayList(array.length());
+            for (int i = 0; i < array.length(); i++) {
+                list.add(LocalMapResource.fromJson(array.getJSONObject(i)));
+            }
+            return list;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/LocalMapManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

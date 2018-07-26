@@ -15,106 +15,75 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
-public class HttpRequestManager
-{
-  private static volatile HttpRequestManager mInstance;
-  private Map<String, Set<String>> ip2HostsMap = new ConcurrentHashMap();
-  
-  private void doDnsProxy(HttpRequestBase paramHttpRequestBase)
-  {
-    Object localObject = paramHttpRequestBase.getURI();
-    String str1 = ((URI)localObject).toString();
-    String str2 = ((URI)localObject).getHost();
-    String str3 = BNaviEngineManager.getInstance().getIPByHost(str2);
-    localObject = str1;
-    if (!StringUtils.isEmpty(str3))
-    {
-      localObject = new Bundle();
-      ((Bundle)localObject).putString("IP", str3);
-      ((Bundle)localObject).putString("HOST", str2);
-      BNaviModuleManager.putIP2DomainsRecord((Bundle)localObject);
-      localObject = str1.replace(str2, str3);
-      paramHttpRequestBase.setURI(URI.create((String)localObject));
-      paramHttpRequestBase.addHeader("Host", str2);
+public class HttpRequestManager {
+    private static volatile HttpRequestManager mInstance;
+    private Map<String, Set<String>> ip2HostsMap = new ConcurrentHashMap();
+
+    private HttpRequestManager() {
     }
-    LogUtil.e("HttpRequestManager", "  doDnsProxy  url: " + (String)localObject + "    request: " + str3);
-  }
-  
-  public static HttpRequestManager getInstance()
-  {
-    if (mInstance == null) {}
-    try
-    {
-      if (mInstance == null) {
-        mInstance = new HttpRequestManager();
-      }
-      return mInstance;
+
+    public static HttpRequestManager getInstance() {
+        if (mInstance == null) {
+            synchronized (HttpRequestManager.class) {
+                if (mInstance == null) {
+                    mInstance = new HttpRequestManager();
+                }
+            }
+        }
+        return mInstance;
     }
-    finally {}
-  }
-  
-  public void clear()
-  {
-    this.ip2HostsMap.clear();
-  }
-  
-  public Set<String> getDomains(String paramString)
-  {
-    return (Set)this.ip2HostsMap.get(paramString);
-  }
-  
-  public HttpGet getHttpGet(String paramString)
-  {
-    try
-    {
-      paramString = new HttpGet(paramString);
-      doDnsProxy(paramString);
-      return paramString;
+
+    public synchronized HttpGet getHttpGet(String url) {
+        HttpGet httpGet;
+        httpGet = new HttpGet(url);
+        doDnsProxy(httpGet);
+        return httpGet;
     }
-    finally
-    {
-      paramString = finally;
-      throw paramString;
+
+    public synchronized HttpPost getHttpPost(String url) {
+        HttpPost httpPost;
+        httpPost = new HttpPost(url);
+        doDnsProxy(httpPost);
+        return httpPost;
     }
-  }
-  
-  public HttpPost getHttpPost(String paramString)
-  {
-    try
-    {
-      paramString = new HttpPost(paramString);
-      doDnsProxy(paramString);
-      return paramString;
+
+    private void doDnsProxy(HttpRequestBase uriRequest) {
+        URI uri = uriRequest.getURI();
+        String url = uri.toString();
+        String host = uri.getHost();
+        String request = BNaviEngineManager.getInstance().getIPByHost(host);
+        if (!StringUtils.isEmpty(request)) {
+            Bundle bd = new Bundle();
+            bd.putString("IP", request);
+            bd.putString("HOST", host);
+            BNaviModuleManager.putIP2DomainsRecord(bd);
+            url = url.replace(host, request);
+            uriRequest.setURI(URI.create(url));
+            uriRequest.addHeader("Host", host);
+        }
+        LogUtil.m15791e("HttpRequestManager", "  doDnsProxy  url: " + url + "    request: " + request);
     }
-    finally
-    {
-      paramString = finally;
-      throw paramString;
+
+    public void putIP2DomainsRecord(String ip, String domain) {
+        Set<String> hosts = (Set) this.ip2HostsMap.get(ip);
+        if (hosts == null) {
+            hosts = new HashSet();
+            this.ip2HostsMap.put(ip, hosts);
+        }
+        hosts.add(domain);
     }
-  }
-  
-  public SSLSocketFactory getSSLSocketFactory()
-  {
-    SSLSocketFactory localSSLSocketFactory = SSLSocketFactory.getSocketFactory();
-    localSSLSocketFactory.setHostnameVerifier(new NavDNSProxyCompatX509HostnameVerifier(localSSLSocketFactory.getHostnameVerifier()));
-    return localSSLSocketFactory;
-  }
-  
-  public void putIP2DomainsRecord(String paramString1, String paramString2)
-  {
-    Set localSet = (Set)this.ip2HostsMap.get(paramString1);
-    Object localObject = localSet;
-    if (localSet == null)
-    {
-      localObject = new HashSet();
-      this.ip2HostsMap.put(paramString1, localObject);
+
+    public Set<String> getDomains(String ip) {
+        return (Set) this.ip2HostsMap.get(ip);
     }
-    ((Set)localObject).add(paramString2);
-  }
+
+    public void clear() {
+        this.ip2HostsMap.clear();
+    }
+
+    public SSLSocketFactory getSSLSocketFactory() {
+        SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
+        sslSocketFactory.setHostnameVerifier(new NavDNSProxyCompatX509HostnameVerifier(sslSocketFactory.getHostnameVerifier()));
+        return sslSocketFactory;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/http/HttpRequestManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

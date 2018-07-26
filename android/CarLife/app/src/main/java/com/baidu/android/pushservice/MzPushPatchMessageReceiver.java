@@ -2,7 +2,7 @@ package com.baidu.android.pushservice;
 
 import android.content.Context;
 import android.content.Intent;
-import com.baidu.android.pushservice.j.p;
+import com.baidu.android.pushservice.p031j.C0578p;
 import com.meizu.cloud.pushsdk.MzPushMessageReceiver;
 import com.meizu.cloud.pushsdk.platform.message.PushSwitchStatus;
 import com.meizu.cloud.pushsdk.platform.message.RegisterStatus;
@@ -10,60 +10,56 @@ import com.meizu.cloud.pushsdk.platform.message.SubAliasStatus;
 import com.meizu.cloud.pushsdk.platform.message.SubTagsStatus;
 import com.meizu.cloud.pushsdk.platform.message.UnRegisterStatus;
 
-public class MzPushPatchMessageReceiver
-  extends MzPushMessageReceiver
-{
-  public void onMessage(Context paramContext, String paramString) {}
-  
-  public void onNotificationArrived(Context paramContext, String paramString1, String paramString2, String paramString3) {}
-  
-  public void onNotificationClicked(Context paramContext, String paramString1, String paramString2, String paramString3)
-  {
-    try
-    {
-      Intent localIntent = new Intent("com.meizu.mzpush.PUSH_MSG");
-      localIntent.putExtra("mz_notification_title", paramString1);
-      localIntent.putExtra("mz_notification_content", paramString2);
-      localIntent.putExtra("mz_notification_self_define_content", paramString3);
-      localIntent.putExtra("mz_push_msg_type", 3);
-      p.a(localIntent, paramContext.getApplicationContext());
-      return;
+public class MzPushPatchMessageReceiver extends MzPushMessageReceiver {
+    public void onMessage(Context context, String str) {
     }
-    catch (Exception paramContext) {}
-  }
-  
-  public void onNotificationDeleted(Context paramContext, String paramString1, String paramString2, String paramString3) {}
-  
-  public void onPushStatus(Context paramContext, PushSwitchStatus paramPushSwitchStatus) {}
-  
-  public void onRegister(Context paramContext, String paramString) {}
-  
-  public void onRegisterStatus(Context paramContext, RegisterStatus paramRegisterStatus)
-  {
-    if (paramRegisterStatus != null) {}
-    try
-    {
-      String str = paramRegisterStatus.getPushId();
-      Intent localIntent = new Intent("com.meizu.mzpush.REGISTER");
-      localIntent.putExtra("mz_pushid", str);
-      localIntent.putExtra("mz_register_errorcode", paramRegisterStatus.getCode());
-      p.a(localIntent, paramContext.getApplicationContext());
-      return;
+
+    public void onNotificationArrived(Context context, String str, String str2, String str3) {
     }
-    catch (Exception paramContext) {}
-  }
-  
-  public void onSubAliasStatus(Context paramContext, SubAliasStatus paramSubAliasStatus) {}
-  
-  public void onSubTagsStatus(Context paramContext, SubTagsStatus paramSubTagsStatus) {}
-  
-  public void onUnRegister(Context paramContext, boolean paramBoolean) {}
-  
-  public void onUnRegisterStatus(Context paramContext, UnRegisterStatus paramUnRegisterStatus) {}
+
+    public void onNotificationClicked(Context context, String str, String str2, String str3) {
+        try {
+            Intent intent = new Intent("com.meizu.mzpush.PUSH_MSG");
+            intent.putExtra("mz_notification_title", str);
+            intent.putExtra("mz_notification_content", str2);
+            intent.putExtra("mz_notification_self_define_content", str3);
+            intent.putExtra("mz_push_msg_type", 3);
+            C0578p.m2529a(intent, context.getApplicationContext());
+        } catch (Exception e) {
+        }
+    }
+
+    public void onNotificationDeleted(Context context, String str, String str2, String str3) {
+    }
+
+    public void onPushStatus(Context context, PushSwitchStatus pushSwitchStatus) {
+    }
+
+    public void onRegister(Context context, String str) {
+    }
+
+    public void onRegisterStatus(Context context, RegisterStatus registerStatus) {
+        if (registerStatus != null) {
+            try {
+                String pushId = registerStatus.getPushId();
+                Intent intent = new Intent("com.meizu.mzpush.REGISTER");
+                intent.putExtra("mz_pushid", pushId);
+                intent.putExtra("mz_register_errorcode", registerStatus.getCode());
+                C0578p.m2529a(intent, context.getApplicationContext());
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public void onSubAliasStatus(Context context, SubAliasStatus subAliasStatus) {
+    }
+
+    public void onSubTagsStatus(Context context, SubTagsStatus subTagsStatus) {
+    }
+
+    public void onUnRegister(Context context, boolean z) {
+    }
+
+    public void onUnRegisterStatus(Context context, UnRegisterStatus unRegisterStatus) {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/MzPushPatchMessageReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

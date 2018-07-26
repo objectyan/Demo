@@ -1,93 +1,71 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.gf.C5920a;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-class ak
-  implements gf
-{
-  private static final String a = ee.a(ak.class);
-  private volatile long b = -1L;
-  private long c;
-  
-  private static long a(gm paramgm)
-  {
-    paramgm = paramgm.a("Date");
-    if (!af.a(paramgm)) {
-      try
-      {
-        long l = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US).parse(paramgm).getTime();
-        return l;
-      }
-      catch (ParseException paramgm)
-      {
-        ee.a(a, "parsing server date failed, retry conditions not handled", new Object[0]);
-      }
+class ak implements gf {
+    /* renamed from: a */
+    private static final String f22950a = ee.m20406a(ak.class);
+    /* renamed from: b */
+    private volatile long f22951b = -1;
+    /* renamed from: c */
+    private long f22952c;
+
+    ak() {
     }
-    for (;;)
-    {
-      return -1L;
-      ee.a(a, "no date header from server, retry conditions not handled", new Object[0]);
-    }
-  }
-  
-  private gm b(gf.a parama)
-    throws IOException
-  {
-    long l1 = this.b;
-    long l2 = v.d().a();
-    long l3 = this.c;
-    gk localgk1 = parama.a();
-    gk localgk2 = localgk1.e().a("Date", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US).format(new Date(l1 + (l2 - l3)))).a();
-    if (ee.a(a, 2))
-    {
-      localgk1.a("Date");
-      localgk2.a("Date");
-    }
-    return parama.a(localgk2);
-  }
-  
-  public final gm a(gf.a parama)
-    throws IOException
-  {
-    v localv = v.d();
-    if (this.b != -1L) {
-      localObject = b(parama);
-    }
-    long l;
-    do
-    {
-      gm localgm;
-      do
-      {
-        do
-        {
-          return (gm)localObject;
-          localgm = parama.a(parama.a());
-          if (localgm == null) {
+
+    /* renamed from: a */
+    public final gm mo4589a(C5920a c5920a) throws IOException {
+        C6010v d = C6010v.d();
+        if (this.f22951b != -1) {
+            return m19817b(c5920a);
+        }
+        gm a = c5920a.mo4690a(c5920a.mo4689a());
+        if (a == null) {
             return null;
-          }
-          this.b = a(localgm);
-          localObject = localgm;
-        } while (this.b == -1L);
-        this.c = localv.a();
-        l = Math.abs(this.b - localv.c());
-        localObject = localgm;
-      } while (localgm.b() < 400);
-      localObject = localgm;
-    } while (l < 6000000L);
-    Object localObject = an.d;
-    new Date().toString();
-    new Date(this.b).toString();
-    return b(parama);
-  }
+        }
+        this.f22951b = m19816a(a);
+        if (this.f22951b == -1) {
+            return a;
+        }
+        this.f22952c = d.a();
+        long abs = Math.abs(this.f22951b - d.c());
+        if (a.m20730b() < 400 || abs < 6000000) {
+            return a;
+        }
+        String str = an.f22962d;
+        Object[] objArr = new Object[]{new Date().toString(), new Date(this.f22951b).toString(), Long.valueOf(abs)};
+        return m19817b(c5920a);
+    }
+
+    /* renamed from: b */
+    private gm m19817b(C5920a c5920a) throws IOException {
+        long a = this.f22951b + (C6010v.d().a() - this.f22952c);
+        gk a2 = c5920a.mo4689a();
+        gk a3 = a2.m20714e().m20704a("Date", new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US).format(new Date(a))).m20706a();
+        if (ee.m20411a(f22950a, 2)) {
+            String a4 = a2.m20710a("Date");
+            String a5 = a3.m20710a("Date");
+            Object[] objArr = new Object[]{a4, a5};
+        }
+        return c5920a.mo4690a(a3);
+    }
+
+    /* renamed from: a */
+    private static long m19816a(gm gmVar) {
+        CharSequence a = gmVar.m20729a("Date");
+        if (af.m19798a(a)) {
+            ee.m20409a(f22950a, "no date header from server, retry conditions not handled", new Object[0]);
+            return -1;
+        }
+        try {
+            return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US).parse(a).getTime();
+        } catch (ParseException e) {
+            ee.m20409a(f22950a, "parsing server date failed, retry conditions not handled", new Object[0]);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ak.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

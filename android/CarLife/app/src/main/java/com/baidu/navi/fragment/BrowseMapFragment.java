@@ -5,6 +5,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import com.baidu.carlife.C0965R;
 import com.baidu.navi.controller.PoiController;
 import com.baidu.navi.cruise.control.EnterQuitLogicManager;
 import com.baidu.navi.style.StyleManager;
@@ -20,175 +21,158 @@ import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.nplatform.comapi.MapItem;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import com.baidu.nplatform.comapi.map.MapController;
-import com.baidu.nplatform.comapi.map.MapController.MultiTouch;
 
-public class BrowseMapFragment
-  extends MapContentFragment
-  implements View.OnClickListener
-{
-  private static final String TAG = "Map";
-  private boolean isShowUgc = false;
-  private BNMapObserver mBNMapObserver = new BNMapObserver()
-  {
-    public void update(BNSubject paramAnonymousBNSubject, int paramAnonymousInt1, int paramAnonymousInt2, Object paramAnonymousObject)
-    {
-      BrowseMapFragment.this.bnMapObserverUpdate(paramAnonymousBNSubject, paramAnonymousInt1, paramAnonymousInt2, paramAnonymousObject);
-      if (2 == paramAnonymousInt1) {
-        switch (paramAnonymousInt2)
-        {
+public class BrowseMapFragment extends MapContentFragment implements OnClickListener {
+    private static final String TAG = "Map";
+    private boolean isShowUgc = false;
+    private BNMapObserver mBNMapObserver = new C37841();
+    private MapTitleBar mTitleBar;
+    private ViewGroup mViewGroup;
+
+    /* renamed from: com.baidu.navi.fragment.BrowseMapFragment$1 */
+    class C37841 implements BNMapObserver {
+        C37841() {
         }
-      }
-      while (1 != paramAnonymousInt1)
-      {
-        return;
-        paramAnonymousBNSubject = (MotionEvent)paramAnonymousObject;
-        BrowseMapFragment.this.handleLongPress(paramAnonymousBNSubject);
-        return;
-        paramAnonymousBNSubject = (MotionEvent)paramAnonymousObject;
-        BrowseMapFragment.this.handleSingleTap(paramAnonymousBNSubject);
-        return;
-      }
-      switch (paramAnonymousInt2)
-      {
-      default: 
-        return;
-      }
-      for (;;)
-      {
-        PoiController.getInstance().focusItem(true);
-        return;
-        BrowseMapFragment.this.handleClickBasePoiLayer((MapItem)paramAnonymousObject);
-        return;
-        BrowseMapFragment.this.handleClickFavPoiLayer((MapItem)paramAnonymousObject);
-      }
+
+        public void update(BNSubject o, int type, int event, Object arg) {
+            BrowseMapFragment.this.bnMapObserverUpdate(o, type, event, arg);
+            if (2 == type) {
+                switch (event) {
+                    case 514:
+                        BrowseMapFragment.this.handleSingleTap((MotionEvent) arg);
+                        return;
+                    case 517:
+                        BrowseMapFragment.this.handleLongPress((MotionEvent) arg);
+                        return;
+                    default:
+                        return;
+                }
+            } else if (1 == type) {
+                switch (event) {
+                    case 257:
+                        break;
+                    case 264:
+                        BrowseMapFragment.this.handleClickBasePoiLayer((MapItem) arg);
+                        return;
+                    case 276:
+                        BrowseMapFragment.this.handleClickFavPoiLayer((MapItem) arg);
+                        break;
+                    default:
+                        return;
+                }
+                PoiController.getInstance().focusItem(true);
+            }
+        }
     }
-  };
-  private MapTitleBar mTitleBar;
-  private ViewGroup mViewGroup;
-  
-  private boolean disableAnitiGeo()
-  {
-    return false;
-  }
-  
-  private void handleClickBasePoiLayer(MapItem paramMapItem)
-  {
-    if (MapController.mMultiTouch.mTwoTouch) {
-      return;
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mViewGroup = (ViewGroup) LayoutInflater.from(mActivity).inflate(C0965R.layout.frag_browse_map, null);
+        loadMapCtrlPanel(true);
+        this.mbMoveToLocationPoint = true;
+        this.mTitleBar = (MapTitleBar) this.mViewGroup.findViewById(C0965R.id.title_bar);
+        if (this.mTitleBar != null) {
+            this.mTitleBar.setRightButtonBackground(StyleManager.getDrawable(C0965R.drawable.bnav_common_ic_search));
+            this.mTitleBar.setMiddleTextVisible(false);
+            this.mTitleBar.setLeftOnClickedListener(this);
+            this.mTitleBar.setRightOnClickedListener(this);
+        }
+        return this.mViewGroup;
     }
-    initFocusChain(this.mViewGroup);
-    GeoPoint localGeoPoint = new GeoPoint(paramMapItem.mLongitude, paramMapItem.mLatitude);
-    SearchPoi localSearchPoi = new SearchPoi();
-    if (paramMapItem.mTitle != null) {
-      localSearchPoi.mName = paramMapItem.mTitle.replace("\\", "");
+
+    protected void onInitView() {
     }
-    localSearchPoi.mViewPoint = localGeoPoint;
-    localSearchPoi.mGuidePoint = localGeoPoint;
-    localSearchPoi.mOriginUID = paramMapItem.mUid;
-    onShowMapPoi(localSearchPoi);
-  }
-  
-  private void handleClickFavPoiLayer(MapItem paramMapItem)
-  {
-    if (MapController.mMultiTouch.mTwoTouch) {
-      return;
+
+    protected void onInitMap() {
+        LogUtil.m15791e("", "  onInitMap =======MAP_LAYER_MODE_BROWSE_MAP");
+        if (BaseFragment.mResumeMapView) {
+            setMapLayerMode(0);
+        }
+        NMapControlProxy.getInstance().updateLayer(14);
     }
-    initFocusChain(this.mViewGroup);
-    paramMapItem = new GeoPoint(paramMapItem.mLongitude, paramMapItem.mLatitude);
-    FavoritePoiInfo localFavoritePoiInfo = BNFavoriteManager.getInstance().getFavPoiInfoByGeoPoint(paramMapItem);
-    SearchPoi localSearchPoi = new SearchPoi();
-    if (localFavoritePoiInfo != null)
-    {
-      localSearchPoi.mName = localFavoritePoiInfo.mFavName;
-      localSearchPoi.mAddress = localFavoritePoiInfo.mFavAddr;
+
+    protected void onUpdateOrientation(int orientation) {
     }
-    localSearchPoi.mViewPoint = paramMapItem;
-    localSearchPoi.mGuidePoint = paramMapItem;
-    onShowFavPoi(localSearchPoi);
-  }
-  
-  public void bnMapObserverUpdate(BNSubject paramBNSubject, int paramInt1, int paramInt2, Object paramObject) {}
-  
-  protected void handleLongPress(MotionEvent paramMotionEvent)
-  {
-    paramMotionEvent = BNMapController.getInstance().getGeoPosByScreenPos((int)paramMotionEvent.getX(), (int)paramMotionEvent.getY());
-    EnterQuitLogicManager.getmInstance().quitCruiseFollowMode();
-    onShowMapGeoPoint(paramMotionEvent);
-  }
-  
-  protected void handleSingleTap(MotionEvent paramMotionEvent) {}
-  
-  public void onClick(View paramView)
-  {
-    int i = paramView.getId();
-    if (i == 2131624137) {
-      back(null);
+
+    protected void onUpdateStyle(boolean dayStyle) {
+        super.onUpdateStyle(dayStyle);
+        if (this.mTitleBar != null) {
+            this.mTitleBar.onUpdateStyle(dayStyle);
+        }
     }
-    while (i != 2131624188) {
-      return;
+
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == C0965R.id.left_imageview) {
+            back(null);
+        } else if (id == C0965R.id.right_content) {
+            showFragment(49, null);
+        }
     }
-    showFragment(49, null);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mViewGroup = ((ViewGroup)LayoutInflater.from(mActivity).inflate(2130968738, null));
-    loadMapCtrlPanel(true);
-    this.mbMoveToLocationPoint = true;
-    this.mTitleBar = ((MapTitleBar)this.mViewGroup.findViewById(2131624146));
-    if (this.mTitleBar != null)
-    {
-      this.mTitleBar.setRightButtonBackground(StyleManager.getDrawable(2130837804));
-      this.mTitleBar.setMiddleTextVisible(false);
-      this.mTitleBar.setLeftOnClickedListener(this);
-      this.mTitleBar.setRightOnClickedListener(this);
+
+    public void onResume() {
+        BNMapController.getInstance().addObserver(this.mBNMapObserver);
+        super.onResume();
     }
-    return this.mViewGroup;
-  }
-  
-  protected void onInitMap()
-  {
-    LogUtil.e("", "  onInitMap =======MAP_LAYER_MODE_BROWSE_MAP");
-    if (BaseFragment.mResumeMapView) {
-      setMapLayerMode(0);
+
+    public void onPause() {
+        BNMapController.getInstance().deleteObserver(this.mBNMapObserver);
+        PoiController.getInstance().focusItem(false);
+        super.onPause();
     }
-    NMapControlProxy.getInstance().updateLayer(14);
-  }
-  
-  protected void onInitView() {}
-  
-  public void onPause()
-  {
-    BNMapController.getInstance().deleteObserver(this.mBNMapObserver);
-    PoiController.getInstance().focusItem(false);
-    super.onPause();
-  }
-  
-  public void onResume()
-  {
-    BNMapController.getInstance().addObserver(this.mBNMapObserver);
-    super.onResume();
-  }
-  
-  protected void onShowFavPoi(SearchPoi paramSearchPoi) {}
-  
-  protected void onShowMapGeoPoint(GeoPoint paramGeoPoint) {}
-  
-  protected void onShowMapPoi(SearchPoi paramSearchPoi) {}
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateStyle(boolean paramBoolean)
-  {
-    super.onUpdateStyle(paramBoolean);
-    if (this.mTitleBar != null) {
-      this.mTitleBar.onUpdateStyle(paramBoolean);
+
+    public void bnMapObserverUpdate(BNSubject o, int type, int event, Object arg) {
     }
-  }
+
+    protected void handleLongPress(MotionEvent e) {
+        GeoPoint geoPt = BNMapController.getInstance().getGeoPosByScreenPos((int) e.getX(), (int) e.getY());
+        EnterQuitLogicManager.getmInstance().quitCruiseFollowMode();
+        onShowMapGeoPoint(geoPt);
+    }
+
+    protected void handleSingleTap(MotionEvent e) {
+    }
+
+    private void handleClickBasePoiLayer(MapItem item) {
+        if (!MapController.mMultiTouch.mTwoTouch) {
+            initFocusChain(this.mViewGroup);
+            GeoPoint point = new GeoPoint(item.mLongitude, item.mLatitude);
+            SearchPoi poi = new SearchPoi();
+            if (item.mTitle != null) {
+                poi.mName = item.mTitle.replace("\\", "");
+            }
+            poi.mViewPoint = point;
+            poi.mGuidePoint = point;
+            poi.mOriginUID = item.mUid;
+            onShowMapPoi(poi);
+        }
+    }
+
+    private void handleClickFavPoiLayer(MapItem item) {
+        if (!MapController.mMultiTouch.mTwoTouch) {
+            initFocusChain(this.mViewGroup);
+            GeoPoint favGeoPoint = new GeoPoint(item.mLongitude, item.mLatitude);
+            FavoritePoiInfo favData = BNFavoriteManager.getInstance().getFavPoiInfoByGeoPoint(favGeoPoint);
+            SearchPoi poi = new SearchPoi();
+            if (favData != null) {
+                poi.mName = favData.mFavName;
+                poi.mAddress = favData.mFavAddr;
+            }
+            poi.mViewPoint = favGeoPoint;
+            poi.mGuidePoint = favGeoPoint;
+            onShowFavPoi(poi);
+        }
+    }
+
+    protected void onShowFavPoi(SearchPoi poi) {
+    }
+
+    protected void onShowMapPoi(SearchPoi poi) {
+    }
+
+    protected void onShowMapGeoPoint(GeoPoint geoPt) {
+    }
+
+    private boolean disableAnitiGeo() {
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/fragment/BrowseMapFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

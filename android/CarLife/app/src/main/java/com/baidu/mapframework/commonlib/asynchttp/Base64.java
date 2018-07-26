@@ -2,688 +2,777 @@ package com.baidu.mapframework.commonlib.asynchttp;
 
 import java.io.UnsupportedEncodingException;
 
-public class Base64
-{
-  public static final int CRLF = 4;
-  public static final int DEFAULT = 0;
-  public static final int NO_CLOSE = 16;
-  public static final int NO_PADDING = 1;
-  public static final int NO_WRAP = 2;
-  public static final int URL_SAFE = 8;
-  
-  public static byte[] decode(String paramString, int paramInt)
-  {
-    return decode(paramString.getBytes(), paramInt);
-  }
-  
-  public static byte[] decode(byte[] paramArrayOfByte, int paramInt)
-  {
-    return decode(paramArrayOfByte, 0, paramArrayOfByte.length, paramInt);
-  }
-  
-  public static byte[] decode(byte[] paramArrayOfByte, int paramInt1, int paramInt2, int paramInt3)
-  {
-    Decoder localDecoder = new Decoder(paramInt3, new byte[paramInt2 * 3 / 4]);
-    if (!localDecoder.process(paramArrayOfByte, paramInt1, paramInt2, true)) {
-      throw new IllegalArgumentException("bad base-64");
-    }
-    if (localDecoder.op == localDecoder.output.length) {
-      return localDecoder.output;
-    }
-    paramArrayOfByte = new byte[localDecoder.op];
-    System.arraycopy(localDecoder.output, 0, paramArrayOfByte, 0, localDecoder.op);
-    return paramArrayOfByte;
-  }
-  
-  public static byte[] encode(byte[] paramArrayOfByte, int paramInt)
-  {
-    return encode(paramArrayOfByte, 0, paramArrayOfByte.length, paramInt);
-  }
-  
-  public static byte[] encode(byte[] paramArrayOfByte, int paramInt1, int paramInt2, int paramInt3)
-  {
-    Encoder localEncoder = new Encoder(paramInt3, null);
-    int i = paramInt2 / 3 * 4;
-    int j;
-    if (localEncoder.do_padding)
-    {
-      paramInt3 = i;
-      if (paramInt2 % 3 > 0) {
-        paramInt3 = i + 4;
-      }
-      i = paramInt3;
-      if (localEncoder.do_newline)
-      {
-        i = paramInt3;
-        if (paramInt2 > 0)
-        {
-          j = (paramInt2 - 1) / 57;
-          if (!localEncoder.do_cr) {
-            break label166;
-          }
+public class Base64 {
+    public static final int CRLF = 4;
+    public static final int DEFAULT = 0;
+    public static final int NO_CLOSE = 16;
+    public static final int NO_PADDING = 1;
+    public static final int NO_WRAP = 2;
+    public static final int URL_SAFE = 8;
+
+    static abstract class Coder {
+        public int op;
+        public byte[] output;
+
+        public abstract int maxOutputSize(int i);
+
+        public abstract boolean process(byte[] bArr, int i, int i2, boolean z);
+
+        Coder() {
         }
-      }
     }
-    label166:
-    for (i = 2;; i = 1)
-    {
-      i = paramInt3 + i * (j + 1);
-      localEncoder.output = new byte[i];
-      localEncoder.process(paramArrayOfByte, paramInt1, paramInt2, true);
-      return localEncoder.output;
-      paramInt3 = i;
-      switch (paramInt2 % 3)
-      {
-      case 0: 
-      default: 
-        paramInt3 = i;
-        break;
-      case 1: 
-        paramInt3 = i + 2;
-        break;
-      case 2: 
-        paramInt3 = i + 3;
-        break;
-      }
-    }
-  }
-  
-  public static String encodeToString(byte[] paramArrayOfByte, int paramInt)
-  {
-    try
-    {
-      paramArrayOfByte = new String(encode(paramArrayOfByte, paramInt), "US-ASCII");
-      return paramArrayOfByte;
-    }
-    catch (UnsupportedEncodingException paramArrayOfByte)
-    {
-      throw new AssertionError(paramArrayOfByte);
-    }
-  }
-  
-  public static String encodeToString(byte[] paramArrayOfByte, int paramInt1, int paramInt2, int paramInt3)
-  {
-    try
-    {
-      paramArrayOfByte = new String(encode(paramArrayOfByte, paramInt1, paramInt2, paramInt3), "US-ASCII");
-      return paramArrayOfByte;
-    }
-    catch (UnsupportedEncodingException paramArrayOfByte)
-    {
-      throw new AssertionError(paramArrayOfByte);
-    }
-  }
-  
-  static abstract class Coder
-  {
-    public int op;
-    public byte[] output;
-    
-    public abstract int maxOutputSize(int paramInt);
-    
-    public abstract boolean process(byte[] paramArrayOfByte, int paramInt1, int paramInt2, boolean paramBoolean);
-  }
-  
-  static class Decoder
-    extends Base64.Coder
-  {
-    private static final int[] a = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-    private static final int[] b = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-    private static final int c = -1;
-    private static final int d = -2;
-    private final int[] e;
-    private int f;
-    private int g;
-    
-    public Decoder(int paramInt, byte[] paramArrayOfByte)
-    {
-      this.output = paramArrayOfByte;
-      if ((paramInt & 0x8) == 0) {}
-      for (paramArrayOfByte = a;; paramArrayOfByte = b)
-      {
-        this.e = paramArrayOfByte;
-        this.f = 0;
-        this.g = 0;
-        return;
-      }
-    }
-    
-    public int maxOutputSize(int paramInt)
-    {
-      return paramInt * 3 / 4 + 10;
-    }
-    
-    public boolean process(byte[] paramArrayOfByte, int paramInt1, int paramInt2, boolean paramBoolean)
-    {
-      if (this.f == 6) {
-        return false;
-      }
-      int j = paramInt1;
-      int i2 = paramInt2 + paramInt1;
-      int n = this.f;
-      paramInt2 = this.g;
-      int i = 0;
-      byte[] arrayOfByte = this.output;
-      int[] arrayOfInt = this.e;
-      int k;
-      int i1;
-      int m;
-      if (j < i2)
-      {
-        k = i;
-        i1 = j;
-        m = paramInt2;
-        if (n == 0)
-        {
-          for (paramInt1 = paramInt2; j + 4 <= i2; paramInt1 = paramInt2)
-          {
-            paramInt2 = arrayOfInt[(paramArrayOfByte[j] & 0xFF)] << 18 | arrayOfInt[(paramArrayOfByte[(j + 1)] & 0xFF)] << 12 | arrayOfInt[(paramArrayOfByte[(j + 2)] & 0xFF)] << 6 | arrayOfInt[(paramArrayOfByte[(j + 3)] & 0xFF)];
-            paramInt1 = paramInt2;
-            if (paramInt2 < 0) {
-              break;
+
+    static class Decoder extends Coder {
+        /* renamed from: a */
+        private static final int[] f18815a = new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+        /* renamed from: b */
+        private static final int[] f18816b = new int[]{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+        /* renamed from: c */
+        private static final int f18817c = -1;
+        /* renamed from: d */
+        private static final int f18818d = -2;
+        /* renamed from: e */
+        private final int[] f18819e;
+        /* renamed from: f */
+        private int f18820f;
+        /* renamed from: g */
+        private int f18821g;
+
+        public Decoder(int flags, byte[] output) {
+            this.output = output;
+            this.f18819e = (flags & 8) == 0 ? f18815a : f18816b;
+            this.f18820f = 0;
+            this.f18821g = 0;
+        }
+
+        public int maxOutputSize(int len) {
+            return ((len * 3) / 4) + 10;
+        }
+
+        public boolean process(byte[] input, int offset, int len, boolean finish) {
+            if (this.f18820f == 6) {
+                return false;
             }
-            arrayOfByte[(i + 2)] = ((byte)paramInt2);
-            arrayOfByte[(i + 1)] = ((byte)(paramInt2 >> 8));
-            arrayOfByte[i] = ((byte)(paramInt2 >> 16));
-            i += 3;
-            j += 4;
-          }
-          k = i;
-          i1 = j;
-          m = paramInt1;
-          if (j >= i2) {
-            paramInt2 = paramInt1;
-          }
-        }
-      }
-      for (paramInt1 = i;; paramInt1 = i)
-      {
-        if (!paramBoolean)
-        {
-          this.f = n;
-          this.g = paramInt2;
-          this.op = paramInt1;
-          return true;
-          j = arrayOfInt[(paramArrayOfByte[i1] & 0xFF)];
-          switch (n)
-          {
-          default: 
-            paramInt2 = m;
-            paramInt1 = n;
-            i = k;
-          }
-          label639:
-          do
-          {
-            do
-            {
-              for (;;)
-              {
-                j = i1 + 1;
-                n = paramInt1;
-                break;
-                if (j >= 0)
-                {
-                  paramInt2 = j;
-                  paramInt1 = n + 1;
-                  i = k;
-                }
-                else
-                {
-                  i = k;
-                  paramInt1 = n;
-                  paramInt2 = m;
-                  if (j != -1)
-                  {
-                    this.f = 6;
-                    return false;
-                    if (j >= 0)
-                    {
-                      paramInt2 = m << 6 | j;
-                      paramInt1 = n + 1;
-                      i = k;
-                    }
-                    else
-                    {
-                      i = k;
-                      paramInt1 = n;
-                      paramInt2 = m;
-                      if (j != -1)
-                      {
-                        this.f = 6;
-                        return false;
-                        if (j >= 0)
-                        {
-                          paramInt2 = m << 6 | j;
-                          paramInt1 = n + 1;
-                          i = k;
-                        }
-                        else if (j == -2)
-                        {
-                          arrayOfByte[k] = ((byte)(m >> 4));
-                          paramInt1 = 4;
-                          i = k + 1;
-                          paramInt2 = m;
-                        }
-                        else
-                        {
-                          i = k;
-                          paramInt1 = n;
-                          paramInt2 = m;
-                          if (j != -1)
-                          {
-                            this.f = 6;
-                            return false;
-                            if (j >= 0)
-                            {
-                              paramInt2 = m << 6 | j;
-                              arrayOfByte[(k + 2)] = ((byte)paramInt2);
-                              arrayOfByte[(k + 1)] = ((byte)(paramInt2 >> 8));
-                              arrayOfByte[k] = ((byte)(paramInt2 >> 16));
-                              i = k + 3;
-                              paramInt1 = 0;
-                            }
-                            else if (j == -2)
-                            {
-                              arrayOfByte[(k + 1)] = ((byte)(m >> 2));
-                              arrayOfByte[k] = ((byte)(m >> 10));
-                              i = k + 2;
-                              paramInt1 = 5;
-                              paramInt2 = m;
-                            }
-                            else
-                            {
-                              i = k;
-                              paramInt1 = n;
-                              paramInt2 = m;
-                              if (j != -1)
-                              {
-                                this.f = 6;
-                                return false;
-                                if (j != -2) {
-                                  break label639;
+            int op;
+            int p = offset;
+            len += offset;
+            int state = this.f18820f;
+            int value = this.f18821g;
+            int op2 = 0;
+            byte[] output = this.output;
+            int[] alphabet = this.f18819e;
+            while (p < len) {
+                if (state == 0) {
+                    while (p + 4 <= len) {
+                        value = (((alphabet[input[p] & 255] << 18) | (alphabet[input[p + 1] & 255] << 12)) | (alphabet[input[p + 2] & 255] << 6)) | alphabet[input[p + 3] & 255];
+                        if (value >= 0) {
+                            output[op2 + 2] = (byte) value;
+                            output[op2 + 1] = (byte) (value >> 8);
+                            output[op2] = (byte) (value >> 16);
+                            op2 += 3;
+                            p += 4;
+                        } else if (p >= len) {
+                            op = op2;
+                            if (finish) {
+                                switch (state) {
+                                    case 0:
+                                        op2 = op;
+                                        break;
+                                    case 1:
+                                        this.f18820f = 6;
+                                        return false;
+                                    case 2:
+                                        op2 = op + 1;
+                                        output[op] = (byte) (value >> 4);
+                                        break;
+                                    case 3:
+                                        op2 = op + 1;
+                                        output[op] = (byte) (value >> 10);
+                                        op = op2 + 1;
+                                        output[op2] = (byte) (value >> 2);
+                                        op2 = op;
+                                        break;
+                                    case 4:
+                                        this.f18820f = 6;
+                                        return false;
+                                    default:
+                                        op2 = op;
+                                        break;
                                 }
-                                paramInt1 = n + 1;
-                                i = k;
-                                paramInt2 = m;
-                              }
+                                this.f18820f = state;
+                                this.op = op2;
+                                return true;
                             }
-                          }
+                            this.f18820f = state;
+                            this.f18821g = value;
+                            this.op = op;
+                            return true;
                         }
-                      }
                     }
-                  }
+                    if (p >= len) {
+                        op = op2;
+                        if (finish) {
+                            switch (state) {
+                                case 0:
+                                    op2 = op;
+                                    break;
+                                case 1:
+                                    this.f18820f = 6;
+                                    return false;
+                                case 2:
+                                    op2 = op + 1;
+                                    output[op] = (byte) (value >> 4);
+                                    break;
+                                case 3:
+                                    op2 = op + 1;
+                                    output[op] = (byte) (value >> 10);
+                                    op = op2 + 1;
+                                    output[op2] = (byte) (value >> 2);
+                                    op2 = op;
+                                    break;
+                                case 4:
+                                    this.f18820f = 6;
+                                    return false;
+                                default:
+                                    op2 = op;
+                                    break;
+                            }
+                            this.f18820f = state;
+                            this.op = op2;
+                            return true;
+                        }
+                        this.f18820f = state;
+                        this.f18821g = value;
+                        this.op = op;
+                        return true;
+                    }
                 }
-              }
-              i = k;
-              paramInt1 = n;
-              paramInt2 = m;
-            } while (j == -1);
-            this.f = 6;
-            return false;
-            i = k;
-            paramInt1 = n;
-            paramInt2 = m;
-          } while (j == -1);
-          this.f = 6;
-          return false;
-        }
-        switch (n)
-        {
-        default: 
-        case 0: 
-        case 1: 
-        case 2: 
-        case 3: 
-          for (;;)
-          {
-            this.f = n;
-            this.op = paramInt1;
+                int p2 = p + 1;
+                int d = alphabet[input[p] & 255];
+                switch (state) {
+                    case 0:
+                        if (d < 0) {
+                            if (d == -1) {
+                                break;
+                            }
+                            this.f18820f = 6;
+                            return false;
+                        }
+                        value = d;
+                        state++;
+                        break;
+                    case 1:
+                        if (d < 0) {
+                            if (d == -1) {
+                                break;
+                            }
+                            this.f18820f = 6;
+                            return false;
+                        }
+                        value = (value << 6) | d;
+                        state++;
+                        break;
+                    case 2:
+                        if (d < 0) {
+                            if (d != -2) {
+                                if (d == -1) {
+                                    break;
+                                }
+                                this.f18820f = 6;
+                                return false;
+                            }
+                            op = op2 + 1;
+                            output[op2] = (byte) (value >> 4);
+                            state = 4;
+                            op2 = op;
+                            break;
+                        }
+                        value = (value << 6) | d;
+                        state++;
+                        break;
+                    case 3:
+                        if (d < 0) {
+                            if (d != -2) {
+                                if (d == -1) {
+                                    break;
+                                }
+                                this.f18820f = 6;
+                                return false;
+                            }
+                            output[op2 + 1] = (byte) (value >> 2);
+                            output[op2] = (byte) (value >> 10);
+                            op2 += 2;
+                            state = 5;
+                            break;
+                        }
+                        value = (value << 6) | d;
+                        output[op2 + 2] = (byte) value;
+                        output[op2 + 1] = (byte) (value >> 8);
+                        output[op2] = (byte) (value >> 16);
+                        op2 += 3;
+                        state = 0;
+                        break;
+                    case 4:
+                        if (d != -2) {
+                            if (d == -1) {
+                                break;
+                            }
+                            this.f18820f = 6;
+                            return false;
+                        }
+                        state++;
+                        break;
+                    case 5:
+                        if (d == -1) {
+                            break;
+                        }
+                        this.f18820f = 6;
+                        return false;
+                    default:
+                        break;
+                }
+                p = p2;
+            }
+            op = op2;
+            if (finish) {
+                this.f18820f = state;
+                this.f18821g = value;
+                this.op = op;
+                return true;
+            }
+            switch (state) {
+                case 0:
+                    op2 = op;
+                    break;
+                case 1:
+                    this.f18820f = 6;
+                    return false;
+                case 2:
+                    op2 = op + 1;
+                    output[op] = (byte) (value >> 4);
+                    break;
+                case 3:
+                    op2 = op + 1;
+                    output[op] = (byte) (value >> 10);
+                    op = op2 + 1;
+                    output[op2] = (byte) (value >> 2);
+                    op2 = op;
+                    break;
+                case 4:
+                    this.f18820f = 6;
+                    return false;
+                default:
+                    op2 = op;
+                    break;
+            }
+            this.f18820f = state;
+            this.op = op2;
             return true;
-            continue;
-            this.f = 6;
-            return false;
-            i = paramInt1 + 1;
-            arrayOfByte[paramInt1] = ((byte)(paramInt2 >> 4));
-            paramInt1 = i;
-            continue;
-            i = paramInt1 + 1;
-            arrayOfByte[paramInt1] = ((byte)(paramInt2 >> 10));
-            arrayOfByte[i] = ((byte)(paramInt2 >> 2));
-            paramInt1 = i + 1;
-          }
         }
-        this.f = 6;
-        return false;
-      }
     }
-  }
-  
-  static class Encoder
-    extends Base64.Coder
-  {
-    public static final int LINE_GROUPS = 19;
-    private static final byte[] b = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 43, 47 };
-    private static final byte[] c = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 45, 95 };
-    int a;
-    private final byte[] d;
-    public final boolean do_cr;
-    public final boolean do_newline;
-    public final boolean do_padding;
-    private final byte[] e;
-    private int f;
-    
-    public Encoder(int paramInt, byte[] paramArrayOfByte)
-    {
-      this.output = paramArrayOfByte;
-      boolean bool1;
-      if ((paramInt & 0x1) == 0)
-      {
-        bool1 = true;
-        this.do_padding = bool1;
-        if ((paramInt & 0x2) != 0) {
-          break label101;
+
+    static class Encoder extends Coder {
+        public static final int LINE_GROUPS = 19;
+        /* renamed from: b */
+        private static final byte[] f18822b = new byte[]{(byte) 65, (byte) 66, (byte) 67, (byte) 68, (byte) 69, (byte) 70, (byte) 71, (byte) 72, (byte) 73, (byte) 74, (byte) 75, (byte) 76, (byte) 77, (byte) 78, (byte) 79, (byte) 80, (byte) 81, (byte) 82, (byte) 83, (byte) 84, (byte) 85, (byte) 86, (byte) 87, (byte) 88, (byte) 89, (byte) 90, (byte) 97, (byte) 98, (byte) 99, (byte) 100, (byte) 101, (byte) 102, (byte) 103, (byte) 104, (byte) 105, (byte) 106, (byte) 107, (byte) 108, (byte) 109, (byte) 110, (byte) 111, (byte) 112, (byte) 113, (byte) 114, (byte) 115, (byte) 116, (byte) 117, (byte) 118, (byte) 119, (byte) 120, (byte) 121, (byte) 122, (byte) 48, (byte) 49, (byte) 50, (byte) 51, (byte) 52, (byte) 53, (byte) 54, (byte) 55, (byte) 56, (byte) 57, (byte) 43, (byte) 47};
+        /* renamed from: c */
+        private static final byte[] f18823c = new byte[]{(byte) 65, (byte) 66, (byte) 67, (byte) 68, (byte) 69, (byte) 70, (byte) 71, (byte) 72, (byte) 73, (byte) 74, (byte) 75, (byte) 76, (byte) 77, (byte) 78, (byte) 79, (byte) 80, (byte) 81, (byte) 82, (byte) 83, (byte) 84, (byte) 85, (byte) 86, (byte) 87, (byte) 88, (byte) 89, (byte) 90, (byte) 97, (byte) 98, (byte) 99, (byte) 100, (byte) 101, (byte) 102, (byte) 103, (byte) 104, (byte) 105, (byte) 106, (byte) 107, (byte) 108, (byte) 109, (byte) 110, (byte) 111, (byte) 112, (byte) 113, (byte) 114, (byte) 115, (byte) 116, (byte) 117, (byte) 118, (byte) 119, (byte) 120, (byte) 121, (byte) 122, (byte) 48, (byte) 49, (byte) 50, (byte) 51, (byte) 52, (byte) 53, (byte) 54, (byte) 55, (byte) 56, (byte) 57, (byte) 45, (byte) 95};
+        /* renamed from: a */
+        int f18824a;
+        /* renamed from: d */
+        private final byte[] f18825d;
+        public final boolean do_cr;
+        public final boolean do_newline;
+        public final boolean do_padding;
+        /* renamed from: e */
+        private final byte[] f18826e;
+        /* renamed from: f */
+        private int f18827f;
+
+        public Encoder(int flags, byte[] output) {
+            boolean z;
+            boolean z2 = true;
+            this.output = output;
+            this.do_padding = (flags & 1) == 0;
+            if ((flags & 2) == 0) {
+                z = true;
+            } else {
+                z = false;
+            }
+            this.do_newline = z;
+            if ((flags & 4) == 0) {
+                z2 = false;
+            }
+            this.do_cr = z2;
+            this.f18826e = (flags & 8) == 0 ? f18822b : f18823c;
+            this.f18825d = new byte[2];
+            this.f18824a = 0;
+            this.f18827f = this.do_newline ? 19 : -1;
         }
-        bool1 = true;
-        label33:
-        this.do_newline = bool1;
-        if ((paramInt & 0x4) == 0) {
-          break label106;
+
+        public int maxOutputSize(int len) {
+            return ((len * 8) / 5) + 10;
         }
-        bool1 = bool2;
-        label47:
-        this.do_cr = bool1;
-        if ((paramInt & 0x8) != 0) {
-          break label111;
+
+        public boolean process(byte[] r15, int r16, int r17, boolean r18) {
+            /* JADX: method processing error */
+/*
+Error: jadx.core.utils.exceptions.JadxOverflowException: Regions stack size limit reached
+	at jadx.core.utils.ErrorsCounter.addError(ErrorsCounter.java:37)
+	at jadx.core.utils.ErrorsCounter.methodError(ErrorsCounter.java:61)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:33)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:17)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:14)
+	at jadx.core.ProcessClass.process(ProcessClass.java:34)
+	at jadx.api.JadxDecompiler.processClass(JadxDecompiler.java:282)
+	at jadx.api.JavaClass.decompile(JavaClass.java:62)
+	at jadx.api.JadxDecompiler.lambda$appendSourcesSave$0(JadxDecompiler.java:200)
+*/
+            /*
+            r14 = this;
+            r1 = r14.f18826e;
+            r5 = r14.output;
+            r3 = 0;
+            r2 = r14.f18827f;
+            r6 = r16;
+            r17 = r17 + r16;
+            r10 = -1;
+            r11 = r14.f18824a;
+            switch(r11) {
+                case 0: goto L_0x0011;
+                case 1: goto L_0x00b0;
+                case 2: goto L_0x00d5;
+                default: goto L_0x0011;
+            };
+        L_0x0011:
+            r11 = -1;
+            if (r10 == r11) goto L_0x022e;
+        L_0x0014:
+            r4 = r3 + 1;
+            r11 = r10 >> 18;
+            r11 = r11 & 63;
+            r11 = r1[r11];
+            r5[r3] = r11;
+            r3 = r4 + 1;
+            r11 = r10 >> 12;
+            r11 = r11 & 63;
+            r11 = r1[r11];
+            r5[r4] = r11;
+            r4 = r3 + 1;
+            r11 = r10 >> 6;
+            r11 = r11 & 63;
+            r11 = r1[r11];
+            r5[r3] = r11;
+            r3 = r4 + 1;
+            r11 = r10 & 63;
+            r11 = r1[r11];
+            r5[r4] = r11;
+            r2 = r2 + -1;
+            if (r2 != 0) goto L_0x022e;
+        L_0x003e:
+            r11 = r14.do_cr;
+            if (r11 == 0) goto L_0x0049;
+        L_0x0042:
+            r4 = r3 + 1;
+            r11 = 13;
+            r5[r3] = r11;
+            r3 = r4;
+        L_0x0049:
+            r4 = r3 + 1;
+            r11 = 10;
+            r5[r3] = r11;
+            r2 = 19;
+            r7 = r6;
+        L_0x0052:
+            r11 = r7 + 3;
+            r0 = r17;
+            if (r11 > r0) goto L_0x00fc;
+        L_0x0058:
+            r11 = r15[r7];
+            r11 = r11 & 255;
+            r11 = r11 << 16;
+            r12 = r7 + 1;
+            r12 = r15[r12];
+            r12 = r12 & 255;
+            r12 = r12 << 8;
+            r11 = r11 | r12;
+            r12 = r7 + 2;
+            r12 = r15[r12];
+            r12 = r12 & 255;
+            r10 = r11 | r12;
+            r11 = r10 >> 18;
+            r11 = r11 & 63;
+            r11 = r1[r11];
+            r5[r4] = r11;
+            r11 = r4 + 1;
+            r12 = r10 >> 12;
+            r12 = r12 & 63;
+            r12 = r1[r12];
+            r5[r11] = r12;
+            r11 = r4 + 2;
+            r12 = r10 >> 6;
+            r12 = r12 & 63;
+            r12 = r1[r12];
+            r5[r11] = r12;
+            r11 = r4 + 3;
+            r12 = r10 & 63;
+            r12 = r1[r12];
+            r5[r11] = r12;
+            r6 = r7 + 3;
+            r3 = r4 + 4;
+            r2 = r2 + -1;
+            if (r2 != 0) goto L_0x022e;
+        L_0x009b:
+            r11 = r14.do_cr;
+            if (r11 == 0) goto L_0x00a6;
+        L_0x009f:
+            r4 = r3 + 1;
+            r11 = 13;
+            r5[r3] = r11;
+            r3 = r4;
+        L_0x00a6:
+            r4 = r3 + 1;
+            r11 = 10;
+            r5[r3] = r11;
+            r2 = 19;
+            r7 = r6;
+            goto L_0x0052;
+        L_0x00b0:
+            r11 = r6 + 2;
+            r0 = r17;
+            if (r11 > r0) goto L_0x0011;
+        L_0x00b6:
+            r11 = r14.f18825d;
+            r12 = 0;
+            r11 = r11[r12];
+            r11 = r11 & 255;
+            r11 = r11 << 16;
+            r7 = r6 + 1;
+            r12 = r15[r6];
+            r12 = r12 & 255;
+            r12 = r12 << 8;
+            r11 = r11 | r12;
+            r6 = r7 + 1;
+            r12 = r15[r7];
+            r12 = r12 & 255;
+            r10 = r11 | r12;
+            r11 = 0;
+            r14.f18824a = r11;
+            goto L_0x0011;
+        L_0x00d5:
+            r11 = r6 + 1;
+            r0 = r17;
+            if (r11 > r0) goto L_0x0011;
+        L_0x00db:
+            r11 = r14.f18825d;
+            r12 = 0;
+            r11 = r11[r12];
+            r11 = r11 & 255;
+            r11 = r11 << 16;
+            r12 = r14.f18825d;
+            r13 = 1;
+            r12 = r12[r13];
+            r12 = r12 & 255;
+            r12 = r12 << 8;
+            r11 = r11 | r12;
+            r7 = r6 + 1;
+            r12 = r15[r6];
+            r12 = r12 & 255;
+            r10 = r11 | r12;
+            r11 = 0;
+            r14.f18824a = r11;
+            r6 = r7;
+            goto L_0x0011;
+        L_0x00fc:
+            if (r18 == 0) goto L_0x01f6;
+        L_0x00fe:
+            r11 = r14.f18824a;
+            r11 = r7 - r11;
+            r12 = r17 + -1;
+            if (r11 != r12) goto L_0x0160;
+        L_0x0106:
+            r8 = 0;
+            r11 = r14.f18824a;
+            if (r11 <= 0) goto L_0x015b;
+        L_0x010b:
+            r11 = r14.f18825d;
+            r9 = r8 + 1;
+            r11 = r11[r8];
+            r8 = r9;
+            r6 = r7;
+        L_0x0113:
+            r11 = r11 & 255;
+            r10 = r11 << 4;
+            r11 = r14.f18824a;
+            r11 = r11 - r8;
+            r14.f18824a = r11;
+            r3 = r4 + 1;
+            r11 = r10 >> 6;
+            r11 = r11 & 63;
+            r11 = r1[r11];
+            r5[r4] = r11;
+            r4 = r3 + 1;
+            r11 = r10 & 63;
+            r11 = r1[r11];
+            r5[r3] = r11;
+            r11 = r14.do_padding;
+            if (r11 == 0) goto L_0x013e;
+        L_0x0132:
+            r3 = r4 + 1;
+            r11 = 61;
+            r5[r4] = r11;
+            r4 = r3 + 1;
+            r11 = 61;
+            r5[r3] = r11;
+        L_0x013e:
+            r3 = r4;
+            r11 = r14.do_newline;
+            if (r11 == 0) goto L_0x0155;
+        L_0x0143:
+            r11 = r14.do_cr;
+            if (r11 == 0) goto L_0x014e;
+        L_0x0147:
+            r4 = r3 + 1;
+            r11 = 13;
+            r5[r3] = r11;
+            r3 = r4;
+        L_0x014e:
+            r4 = r3 + 1;
+            r11 = 10;
+            r5[r3] = r11;
+        L_0x0154:
+            r3 = r4;
+        L_0x0155:
+            r14.op = r3;
+            r14.f18827f = r2;
+            r11 = 1;
+            return r11;
+        L_0x015b:
+            r6 = r7 + 1;
+            r11 = r15[r7];
+            goto L_0x0113;
+        L_0x0160:
+            r11 = r14.f18824a;
+            r11 = r7 - r11;
+            r12 = r17 + -2;
+            if (r11 != r12) goto L_0x01d8;
+        L_0x0168:
+            r8 = 0;
+            r11 = r14.f18824a;
+            r12 = 1;
+            if (r11 <= r12) goto L_0x01cd;
+        L_0x016e:
+            r11 = r14.f18825d;
+            r9 = r8 + 1;
+            r11 = r11[r8];
+            r8 = r9;
+            r6 = r7;
+        L_0x0176:
+            r11 = r11 & 255;
+            r12 = r11 << 10;
+            r11 = r14.f18824a;
+            if (r11 <= 0) goto L_0x01d2;
+        L_0x017e:
+            r11 = r14.f18825d;
+            r9 = r8 + 1;
+            r11 = r11[r8];
+            r8 = r9;
+        L_0x0185:
+            r11 = r11 & 255;
+            r11 = r11 << 2;
+            r10 = r12 | r11;
+            r11 = r14.f18824a;
+            r11 = r11 - r8;
+            r14.f18824a = r11;
+            r3 = r4 + 1;
+            r11 = r10 >> 12;
+            r11 = r11 & 63;
+            r11 = r1[r11];
+            r5[r4] = r11;
+            r4 = r3 + 1;
+            r11 = r10 >> 6;
+            r11 = r11 & 63;
+            r11 = r1[r11];
+            r5[r3] = r11;
+            r3 = r4 + 1;
+            r11 = r10 & 63;
+            r11 = r1[r11];
+            r5[r4] = r11;
+            r11 = r14.do_padding;
+            if (r11 == 0) goto L_0x01b7;
+        L_0x01b0:
+            r4 = r3 + 1;
+            r11 = 61;
+            r5[r3] = r11;
+            r3 = r4;
+        L_0x01b7:
+            r11 = r14.do_newline;
+            if (r11 == 0) goto L_0x0155;
+        L_0x01bb:
+            r11 = r14.do_cr;
+            if (r11 == 0) goto L_0x01c6;
+        L_0x01bf:
+            r4 = r3 + 1;
+            r11 = 13;
+            r5[r3] = r11;
+            r3 = r4;
+        L_0x01c6:
+            r4 = r3 + 1;
+            r11 = 10;
+            r5[r3] = r11;
+            goto L_0x0154;
+        L_0x01cd:
+            r6 = r7 + 1;
+            r11 = r15[r7];
+            goto L_0x0176;
+        L_0x01d2:
+            r7 = r6 + 1;
+            r11 = r15[r6];
+            r6 = r7;
+            goto L_0x0185;
+        L_0x01d8:
+            r11 = r14.do_newline;
+            if (r11 == 0) goto L_0x0228;
+        L_0x01dc:
+            if (r4 <= 0) goto L_0x0228;
+        L_0x01de:
+            r11 = 19;
+            if (r2 == r11) goto L_0x0228;
+        L_0x01e2:
+            r11 = r14.do_cr;
+            if (r11 == 0) goto L_0x022c;
+        L_0x01e6:
+            r3 = r4 + 1;
+            r11 = 13;
+            r5[r4] = r11;
+        L_0x01ec:
+            r4 = r3 + 1;
+            r11 = 10;
+            r5[r3] = r11;
+            r6 = r7;
+            r3 = r4;
+            goto L_0x0155;
+        L_0x01f6:
+            r11 = r17 + -1;
+            if (r7 != r11) goto L_0x020a;
+        L_0x01fa:
+            r11 = r14.f18825d;
+            r12 = r14.f18824a;
+            r13 = r12 + 1;
+            r14.f18824a = r13;
+            r13 = r15[r7];
+            r11[r12] = r13;
+            r6 = r7;
+            r3 = r4;
+            goto L_0x0155;
+        L_0x020a:
+            r11 = r17 + -2;
+            if (r7 != r11) goto L_0x0228;
+        L_0x020e:
+            r11 = r14.f18825d;
+            r12 = r14.f18824a;
+            r13 = r12 + 1;
+            r14.f18824a = r13;
+            r13 = r15[r7];
+            r11[r12] = r13;
+            r11 = r14.f18825d;
+            r12 = r14.f18824a;
+            r13 = r12 + 1;
+            r14.f18824a = r13;
+            r13 = r7 + 1;
+            r13 = r15[r13];
+            r11[r12] = r13;
+        L_0x0228:
+            r6 = r7;
+            r3 = r4;
+            goto L_0x0155;
+        L_0x022c:
+            r3 = r4;
+            goto L_0x01ec;
+        L_0x022e:
+            r7 = r6;
+            r4 = r3;
+            goto L_0x0052;
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.baidu.mapframework.commonlib.asynchttp.Base64.Encoder.process(byte[], int, int, boolean):boolean");
         }
-        paramArrayOfByte = b;
-        label63:
-        this.e = paramArrayOfByte;
-        this.d = new byte[2];
-        this.a = 0;
-        if (!this.do_newline) {
-          break label118;
-        }
-      }
-      label101:
-      label106:
-      label111:
-      label118:
-      for (paramInt = 19;; paramInt = -1)
-      {
-        this.f = paramInt;
-        return;
-        bool1 = false;
-        break;
-        bool1 = false;
-        break label33;
-        bool1 = false;
-        break label47;
-        paramArrayOfByte = c;
-        break label63;
-      }
     }
-    
-    public int maxOutputSize(int paramInt)
-    {
-      return paramInt * 8 / 5 + 10;
+
+    private Base64() {
     }
-    
-    public boolean process(byte[] paramArrayOfByte, int paramInt1, int paramInt2, boolean paramBoolean)
-    {
-      byte[] arrayOfByte1 = this.e;
-      byte[] arrayOfByte2 = this.output;
-      int k = 0;
-      int n = this.f;
-      int i = paramInt1;
-      int i1 = paramInt2 + paramInt1;
-      paramInt2 = -1;
-      paramInt1 = i;
-      int j = paramInt2;
-      int m;
-      switch (this.a)
-      {
-      default: 
-        j = paramInt2;
-        paramInt1 = i;
-      case 0: 
-        paramInt2 = n;
-        i = k;
-        k = paramInt1;
-        if (j != -1)
-        {
-          i = 0 + 1;
-          arrayOfByte2[0] = arrayOfByte1[(j >> 18 & 0x3F)];
-          paramInt2 = i + 1;
-          arrayOfByte2[i] = arrayOfByte1[(j >> 12 & 0x3F)];
-          i = paramInt2 + 1;
-          arrayOfByte2[paramInt2] = arrayOfByte1[(j >> 6 & 0x3F)];
-          m = i + 1;
-          arrayOfByte2[i] = arrayOfByte1[(j & 0x3F)];
-          j = n - 1;
-          paramInt2 = j;
-          i = m;
-          k = paramInt1;
-          if (j == 0)
-          {
-            paramInt2 = m;
-            if (this.do_cr)
-            {
-              arrayOfByte2[m] = 13;
-              paramInt2 = m + 1;
-            }
-            i = paramInt2 + 1;
-            arrayOfByte2[paramInt2] = 10;
-            j = 19;
-            paramInt2 = paramInt1;
-            paramInt1 = i;
-            i = j;
-          }
-        }
-        break;
-      }
-      for (;;)
-      {
-        if (paramInt2 + 3 <= i1)
-        {
-          j = (paramArrayOfByte[paramInt2] & 0xFF) << 16 | (paramArrayOfByte[(paramInt2 + 1)] & 0xFF) << 8 | paramArrayOfByte[(paramInt2 + 2)] & 0xFF;
-          arrayOfByte2[paramInt1] = arrayOfByte1[(j >> 18 & 0x3F)];
-          arrayOfByte2[(paramInt1 + 1)] = arrayOfByte1[(j >> 12 & 0x3F)];
-          arrayOfByte2[(paramInt1 + 2)] = arrayOfByte1[(j >> 6 & 0x3F)];
-          arrayOfByte2[(paramInt1 + 3)] = arrayOfByte1[(j & 0x3F)];
-          j = paramInt2 + 3;
-          paramInt1 += 4;
-          m = i - 1;
-          paramInt2 = m;
-          i = paramInt1;
-          k = j;
-          if (m != 0) {
-            break label1150;
-          }
-          paramInt2 = paramInt1;
-          if (this.do_cr)
-          {
-            arrayOfByte2[paramInt1] = 13;
-            paramInt2 = paramInt1 + 1;
-          }
-          paramInt1 = paramInt2 + 1;
-          arrayOfByte2[paramInt2] = 10;
-          i = 19;
-          paramInt2 = j;
-          continue;
-          paramInt1 = i;
-          j = paramInt2;
-          if (i + 2 > i1) {
-            break;
-          }
-          paramInt2 = this.d[0];
-          j = i + 1;
-          i = paramArrayOfByte[i];
-          paramInt1 = j + 1;
-          j = (paramInt2 & 0xFF) << 16 | (i & 0xFF) << 8 | paramArrayOfByte[j] & 0xFF;
-          this.a = 0;
-          break;
-          paramInt1 = i;
-          j = paramInt2;
-          if (i + 1 > i1) {
-            break;
-          }
-          j = (this.d[0] & 0xFF) << 16 | (this.d[1] & 0xFF) << 8 | paramArrayOfByte[i] & 0xFF;
-          this.a = 0;
-          paramInt1 = i + 1;
-          break;
-        }
-        if (paramBoolean)
-        {
-          if (paramInt2 - this.a == i1 - 1)
-          {
-            j = 0;
-            if (this.a > 0)
-            {
-              j = this.d[0];
-              paramInt2 = 0 + 1;
-            }
-            for (;;)
-            {
-              j = (j & 0xFF) << 4;
-              this.a -= paramInt2;
-              paramInt2 = paramInt1 + 1;
-              arrayOfByte2[paramInt1] = arrayOfByte1[(j >> 6 & 0x3F)];
-              paramInt1 = paramInt2 + 1;
-              arrayOfByte2[paramInt2] = arrayOfByte1[(j & 0x3F)];
-              paramInt2 = paramInt1;
-              if (this.do_padding)
-              {
-                j = paramInt1 + 1;
-                arrayOfByte2[paramInt1] = 61;
-                paramInt2 = j + 1;
-                arrayOfByte2[j] = 61;
-              }
-              paramInt1 = paramInt2;
-              if (this.do_newline)
-              {
-                paramInt1 = paramInt2;
-                if (this.do_cr)
-                {
-                  arrayOfByte2[paramInt2] = 13;
-                  paramInt1 = paramInt2 + 1;
-                }
-                paramInt2 = paramInt1 + 1;
-                arrayOfByte2[paramInt1] = 10;
-                paramInt1 = paramInt2;
-              }
-              this.op = paramInt1;
-              this.f = i;
-              return true;
-              k = paramArrayOfByte[paramInt2];
-              paramInt2 = j;
-              j = k;
-            }
-          }
-          if (paramInt2 - this.a == i1 - 2)
-          {
-            j = 0;
-            if (this.a > 1)
-            {
-              j = this.d[0];
-              m = 0 + 1;
-              k = paramInt2;
-              paramInt2 = m;
-              label792:
-              if (this.a <= 0) {
-                break label980;
-              }
-              k = this.d[paramInt2];
-              paramInt2 += 1;
-            }
-            for (;;)
-            {
-              j = (j & 0xFF) << 10 | (k & 0xFF) << 2;
-              this.a -= paramInt2;
-              paramInt2 = paramInt1 + 1;
-              arrayOfByte2[paramInt1] = arrayOfByte1[(j >> 12 & 0x3F)];
-              k = paramInt2 + 1;
-              arrayOfByte2[paramInt2] = arrayOfByte1[(j >> 6 & 0x3F)];
-              paramInt1 = k + 1;
-              arrayOfByte2[k] = arrayOfByte1[(j & 0x3F)];
-              paramInt2 = paramInt1;
-              if (this.do_padding)
-              {
-                arrayOfByte2[paramInt1] = 61;
-                paramInt2 = paramInt1 + 1;
-              }
-              paramInt1 = paramInt2;
-              if (!this.do_newline) {
-                break;
-              }
-              paramInt1 = paramInt2;
-              if (this.do_cr)
-              {
-                arrayOfByte2[paramInt2] = 13;
-                paramInt1 = paramInt2 + 1;
-              }
-              paramInt2 = paramInt1 + 1;
-              arrayOfByte2[paramInt1] = 10;
-              paramInt1 = paramInt2;
-              break;
-              k = paramInt2 + 1;
-              m = paramArrayOfByte[paramInt2];
-              paramInt2 = j;
-              j = m;
-              break label792;
-              label980:
-              k = paramArrayOfByte[k];
-            }
-          }
-          if ((!this.do_newline) || (paramInt1 <= 0) || (i == 19)) {
-            break label1144;
-          }
-          if (!this.do_cr) {
-            break label1147;
-          }
-          paramInt2 = paramInt1 + 1;
-          arrayOfByte2[paramInt1] = 13;
-          paramInt1 = paramInt2;
-        }
-        label1144:
-        label1147:
-        for (;;)
-        {
-          arrayOfByte2[paramInt1] = 10;
-          paramInt1 += 1;
-          break;
-          if (paramInt2 == i1 - 1)
-          {
-            arrayOfByte1 = this.d;
-            j = this.a;
-            this.a = (j + 1);
-            arrayOfByte1[j] = paramArrayOfByte[paramInt2];
-            break;
-          }
-          if (paramInt2 == i1 - 2)
-          {
-            arrayOfByte1 = this.d;
-            j = this.a;
-            this.a = (j + 1);
-            arrayOfByte1[j] = paramArrayOfByte[paramInt2];
-            arrayOfByte1 = this.d;
-            j = this.a;
-            this.a = (j + 1);
-            arrayOfByte1[j] = paramArrayOfByte[(paramInt2 + 1)];
-          }
-          break;
-        }
-        label1150:
-        paramInt1 = i;
-        i = paramInt2;
-        paramInt2 = k;
-      }
+
+    public static byte[] decode(String str, int flags) {
+        return decode(str.getBytes(), flags);
     }
-  }
+
+    public static byte[] decode(byte[] input, int flags) {
+        return decode(input, 0, input.length, flags);
+    }
+
+    public static byte[] decode(byte[] input, int offset, int len, int flags) {
+        Decoder decoder = new Decoder(flags, new byte[((len * 3) / 4)]);
+        if (!decoder.process(input, offset, len, true)) {
+            throw new IllegalArgumentException("bad base-64");
+        } else if (decoder.op == decoder.output.length) {
+            return decoder.output;
+        } else {
+            byte[] temp = new byte[decoder.op];
+            System.arraycopy(decoder.output, 0, temp, 0, decoder.op);
+            return temp;
+        }
+    }
+
+    public static String encodeToString(byte[] input, int flags) {
+        try {
+            return new String(encode(input, flags), "US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public static String encodeToString(byte[] input, int offset, int len, int flags) {
+        try {
+            return new String(encode(input, offset, len, flags), "US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public static byte[] encode(byte[] input, int flags) {
+        return encode(input, 0, input.length, flags);
+    }
+
+    public static byte[] encode(byte[] input, int offset, int len, int flags) {
+        Encoder encoder = new Encoder(flags, null);
+        int output_len = (len / 3) * 4;
+        if (!encoder.do_padding) {
+            switch (len % 3) {
+                case 0:
+                    break;
+                case 1:
+                    output_len += 2;
+                    break;
+                case 2:
+                    output_len += 3;
+                    break;
+                default:
+                    break;
+            }
+        } else if (len % 3 > 0) {
+            output_len += 4;
+        }
+        if (encoder.do_newline && len > 0) {
+            int i;
+            int i2 = ((len - 1) / 57) + 1;
+            if (encoder.do_cr) {
+                i = 2;
+            } else {
+                i = 1;
+            }
+            output_len += i * i2;
+        }
+        encoder.output = new byte[output_len];
+        encoder.process(input, offset, len, true);
+        return encoder.output;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/Base64.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

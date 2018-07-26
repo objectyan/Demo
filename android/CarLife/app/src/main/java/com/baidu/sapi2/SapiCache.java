@@ -1,7 +1,6 @@
 package com.baidu.sapi2;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
@@ -11,629 +10,441 @@ import com.baidu.cloudsdk.common.http.AsyncHttpClient;
 import com.baidu.cloudsdk.common.http.HttpResponseHandler;
 import com.baidu.cloudsdk.common.http.JsonHttpResponseHandler;
 import com.baidu.cloudsdk.common.http.RequestParams;
-import com.baidu.sapi2.utils.L;
+import com.baidu.mobstat.Config;
+import com.baidu.sapi2.C4894c.C4893a;
+import com.baidu.sapi2.C4894c.C4893a.C4892a;
+import com.baidu.sapi2.utils.C4913L;
+import com.baidu.sapi2.utils.C4920d;
+import com.baidu.sapi2.utils.C4923f;
 import com.baidu.sapi2.utils.SapiUtils;
-import com.baidu.sapi2.utils.d;
-import com.baidu.sapi2.utils.enums.Domain;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.json.JSONObject;
 
-public final class SapiCache
-{
-  private static final Map<String, SoftReference<String>> a = new ConcurrentHashMap();
-  private static final List<String> b = new ArrayList();
-  private static final List<String> c = new ArrayList();
-  private static Context d;
-  
-  static String a(Context paramContext, String paramString)
-  {
-    return b(paramContext, c(paramString));
-  }
-  
-  static String a(InputStream paramInputStream)
-    throws IOException
-  {
-    try
-    {
-      Object localObject1 = new byte[paramInputStream.available()];
-      paramInputStream.read((byte[])localObject1);
-      localObject1 = new String((byte[])localObject1);
-      return (String)localObject1;
+public final class SapiCache {
+    /* renamed from: a */
+    private static final Map<String, SoftReference<String>> f20034a = new ConcurrentHashMap();
+    /* renamed from: b */
+    private static final List<String> f20035b = new ArrayList();
+    /* renamed from: c */
+    private static final List<String> f20036c = new ArrayList();
+    /* renamed from: d */
+    private static Context f20037d;
+
+    /* renamed from: com.baidu.sapi2.SapiCache$a */
+    interface C4846a {
+        /* renamed from: a */
+        void mo3729a(C4892a c4892a);
+
+        /* renamed from: a */
+        void mo3730a(C4892a c4892a, String str);
     }
-    finally
-    {
-      paramInputStream.close();
-    }
-  }
-  
-  static void a()
-  {
-    Object localObject = b.a(d).j().f();
-    if (((c.a)localObject).a())
-    {
-      Iterator localIterator = ((c.a)localObject).b().iterator();
-      while (localIterator.hasNext())
-      {
-        c.a.a locala = (c.a.a)localIterator.next();
-        b.add(locala.a);
-      }
-      c.addAll(b);
-      localObject = ((c.a)localObject).b().iterator();
-      while (((Iterator)localObject).hasNext()) {
-        a((c.a.a)((Iterator)localObject).next(), new a()
-        {
-          public void a(c.a.a paramAnonymousa)
-          {
-            SapiCache.a(SapiCache.f(), paramAnonymousa);
-          }
-          
-          public void a(c.a.a paramAnonymousa, String paramAnonymousString)
-          {
-            SapiCache.a(paramAnonymousa.a, paramAnonymousString);
-          }
-        });
-      }
-    }
-  }
-  
-  static void a(Context paramContext, c.a.a parama)
-  {
-    String str = c.a.a.a(parama.a);
-    if (new File(paramContext.getFilesDir(), str).exists()) {
-      try
-      {
-        str = e(paramContext, str);
-        a(parama.a, str);
-        return;
-      }
-      catch (Throwable localThrowable)
-      {
-        d(paramContext, parama.a);
-        return;
-      }
-    }
-    d(paramContext, parama.a);
-  }
-  
-  /* Error */
-  static void a(Context paramContext, String paramString, byte[] paramArrayOfByte)
-  {
-    // Byte code:
-    //   0: aconst_null
-    //   1: astore 4
-    //   3: aconst_null
-    //   4: astore_3
-    //   5: aload_0
-    //   6: aload_1
-    //   7: iconst_0
-    //   8: invokevirtual 162	android/content/Context:openFileOutput	(Ljava/lang/String;I)Ljava/io/FileOutputStream;
-    //   11: astore_0
-    //   12: aload_0
-    //   13: astore_3
-    //   14: aload_0
-    //   15: astore 4
-    //   17: aload_0
-    //   18: aload_2
-    //   19: invokevirtual 167	java/io/OutputStream:write	([B)V
-    //   22: aload_0
-    //   23: ifnull +7 -> 30
-    //   26: aload_0
-    //   27: invokevirtual 168	java/io/OutputStream:close	()V
-    //   30: return
-    //   31: astore_0
-    //   32: aload_3
-    //   33: ifnull -3 -> 30
-    //   36: aload_3
-    //   37: invokevirtual 168	java/io/OutputStream:close	()V
-    //   40: return
-    //   41: astore_0
-    //   42: return
-    //   43: astore_0
-    //   44: aload 4
-    //   46: ifnull +8 -> 54
-    //   49: aload 4
-    //   51: invokevirtual 168	java/io/OutputStream:close	()V
-    //   54: aload_0
-    //   55: athrow
-    //   56: astore_0
-    //   57: return
-    //   58: astore_1
-    //   59: goto -5 -> 54
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	62	0	paramContext	Context
-    //   0	62	1	paramString	String
-    //   0	62	2	paramArrayOfByte	byte[]
-    //   4	33	3	localContext1	Context
-    //   1	49	4	localContext2	Context
-    // Exception table:
-    //   from	to	target	type
-    //   5	12	31	java/lang/Throwable
-    //   17	22	31	java/lang/Throwable
-    //   36	40	41	java/lang/Throwable
-    //   5	12	43	finally
-    //   17	22	43	finally
-    //   26	30	56	java/lang/Throwable
-    //   49	54	58	java/lang/Throwable
-  }
-  
-  static void a(c.a.a parama, a parama1)
-  {
-    if (parama1 == null) {
-      throw new IllegalArgumentException(a.class.getName() + "can't be null");
-    }
-    String str = c.a.a.c(parama.a);
-    try
-    {
-      if (("mounted".equals(Environment.getExternalStorageState())) && (new File(Environment.getExternalStorageDirectory(), str).exists()))
-      {
-        str = d(str);
-        if (MD5Util.toMd5(str.getBytes(), false).equals(parama.c))
-        {
-          parama1.a(parama, str);
-          return;
+
+    /* renamed from: com.baidu.sapi2.SapiCache$2 */
+    static class C48482 implements C4846a {
+        C48482() {
         }
-        parama1.a(parama);
-        return;
-      }
+
+        /* renamed from: a */
+        public void mo3730a(C4892a m, String data) {
+            SapiCache.m16082a(m.f20424a, data);
+        }
+
+        /* renamed from: a */
+        public void mo3729a(C4892a m) {
+            SapiCache.m16078a(SapiCache.f20037d, m);
+        }
     }
-    catch (Throwable localThrowable)
-    {
-      parama1.a(parama);
-      return;
+
+    private SapiCache() {
     }
-    parama1.a(parama);
-  }
-  
-  static void a(String paramString)
-  {
-    a.remove(paramString);
-  }
-  
-  static void a(String paramString1, String paramString2)
-  {
-    a.put(paramString1, new SoftReference(paramString2));
-  }
-  
-  /* Error */
-  static void a(String paramString, byte[] paramArrayOfByte)
-  {
-    // Byte code:
-    //   0: aconst_null
-    //   1: astore 4
-    //   3: aconst_null
-    //   4: astore 5
-    //   6: aconst_null
-    //   7: astore_3
-    //   8: aload 5
-    //   10: astore_2
-    //   11: ldc -62
-    //   13: invokestatic 199	android/os/Environment:getExternalStorageState	()Ljava/lang/String;
-    //   16: invokevirtual 202	java/lang/String:equals	(Ljava/lang/Object;)Z
-    //   19: ifeq +79 -> 98
-    //   22: aload 5
-    //   24: astore_2
-    //   25: new 137	java/io/File
-    //   28: dup
-    //   29: invokestatic 205	android/os/Environment:getExternalStorageDirectory	()Ljava/io/File;
-    //   32: aload_0
-    //   33: invokespecial 146	java/io/File:<init>	(Ljava/io/File;Ljava/lang/String;)V
-    //   36: astore_0
-    //   37: aload 5
-    //   39: astore_2
-    //   40: aload_0
-    //   41: invokevirtual 244	java/io/File:getParentFile	()Ljava/io/File;
-    //   44: invokevirtual 149	java/io/File:exists	()Z
-    //   47: ifne +14 -> 61
-    //   50: aload 5
-    //   52: astore_2
-    //   53: aload_0
-    //   54: invokevirtual 244	java/io/File:getParentFile	()Ljava/io/File;
-    //   57: invokevirtual 247	java/io/File:mkdirs	()Z
-    //   60: pop
-    //   61: aload 5
-    //   63: astore_2
-    //   64: aload_0
-    //   65: invokevirtual 149	java/io/File:exists	()Z
-    //   68: ifne +11 -> 79
-    //   71: aload 5
-    //   73: astore_2
-    //   74: aload_0
-    //   75: invokevirtual 250	java/io/File:createNewFile	()Z
-    //   78: pop
-    //   79: aload 5
-    //   81: astore_2
-    //   82: new 252	java/io/FileOutputStream
-    //   85: dup
-    //   86: aload_0
-    //   87: invokespecial 255	java/io/FileOutputStream:<init>	(Ljava/io/File;)V
-    //   90: astore_0
-    //   91: aload_0
-    //   92: aload_1
-    //   93: invokevirtual 167	java/io/OutputStream:write	([B)V
-    //   96: aload_0
-    //   97: astore_3
-    //   98: aload_3
-    //   99: ifnull +7 -> 106
-    //   102: aload_3
-    //   103: invokevirtual 168	java/io/OutputStream:close	()V
-    //   106: return
-    //   107: astore_0
-    //   108: aload_0
-    //   109: invokestatic 260	com/baidu/sapi2/utils/L:e	(Ljava/lang/Throwable;)V
-    //   112: return
-    //   113: astore_1
-    //   114: aload 4
-    //   116: astore_0
-    //   117: aload_0
-    //   118: astore_2
-    //   119: aload_1
-    //   120: invokestatic 260	com/baidu/sapi2/utils/L:e	(Ljava/lang/Throwable;)V
-    //   123: aload_0
-    //   124: ifnull -18 -> 106
-    //   127: aload_0
-    //   128: invokevirtual 168	java/io/OutputStream:close	()V
-    //   131: return
-    //   132: astore_0
-    //   133: aload_0
-    //   134: invokestatic 260	com/baidu/sapi2/utils/L:e	(Ljava/lang/Throwable;)V
-    //   137: return
-    //   138: astore_0
-    //   139: aload_2
-    //   140: ifnull +7 -> 147
-    //   143: aload_2
-    //   144: invokevirtual 168	java/io/OutputStream:close	()V
-    //   147: aload_0
-    //   148: athrow
-    //   149: astore_1
-    //   150: aload_1
-    //   151: invokestatic 260	com/baidu/sapi2/utils/L:e	(Ljava/lang/Throwable;)V
-    //   154: goto -7 -> 147
-    //   157: astore_1
-    //   158: aload_0
-    //   159: astore_2
-    //   160: aload_1
-    //   161: astore_0
-    //   162: goto -23 -> 139
-    //   165: astore_1
-    //   166: goto -49 -> 117
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	169	0	paramString	String
-    //   0	169	1	paramArrayOfByte	byte[]
-    //   10	150	2	localObject1	Object
-    //   7	96	3	str	String
-    //   1	114	4	localObject2	Object
-    //   4	76	5	localObject3	Object
-    // Exception table:
-    //   from	to	target	type
-    //   102	106	107	java/lang/Throwable
-    //   11	22	113	java/lang/Throwable
-    //   25	37	113	java/lang/Throwable
-    //   40	50	113	java/lang/Throwable
-    //   53	61	113	java/lang/Throwable
-    //   64	71	113	java/lang/Throwable
-    //   74	79	113	java/lang/Throwable
-    //   82	91	113	java/lang/Throwable
-    //   127	131	132	java/lang/Throwable
-    //   11	22	138	finally
-    //   25	37	138	finally
-    //   40	50	138	finally
-    //   53	61	138	finally
-    //   64	71	138	finally
-    //   74	79	138	finally
-    //   82	91	138	finally
-    //   119	123	138	finally
-    //   143	147	149	java/lang/Throwable
-    //   91	96	157	finally
-    //   91	96	165	java/lang/Throwable
-  }
-  
-  static boolean a(c.a.a parama1, c.a.a parama2)
-  {
-    return (!TextUtils.isEmpty(parama1.c)) && ((parama2 == null) || (!parama1.c.equals(parama2.c)));
-  }
-  
-  static String b(Context paramContext, String paramString)
-  {
-    
-    if (b.a(paramContext).j().f().a())
-    {
-      Object localObject = b(paramString);
-      if (!TextUtils.isEmpty((CharSequence)localObject)) {
-        return (String)localObject;
-      }
-      localObject = c(paramContext, paramString);
-      if (localObject != null)
-      {
-        a((c.a.a)localObject, new a()
-        {
-          public void a(c.a.a paramAnonymousa)
-          {
-            SapiCache.a(this.a, paramAnonymousa);
-          }
-          
-          public void a(c.a.a paramAnonymousa, String paramAnonymousString)
-          {
-            SapiCache.a(paramAnonymousa.a, paramAnonymousString);
-          }
-        });
-        return b(paramString);
-      }
-      return d(paramContext, paramString);
+
+    /* renamed from: a */
+    static void m16082a(String key, String value) {
+        f20034a.put(key, new SoftReference(value));
     }
-    return null;
-  }
-  
-  static String b(String paramString)
-  {
-    if ((a.containsKey(paramString)) && (a.get(paramString) != null))
-    {
-      paramString = (String)((SoftReference)a.get(paramString)).get();
-      if (!TextUtils.isEmpty(paramString)) {
-        return paramString;
-      }
+
+    /* renamed from: a */
+    static void m16081a(String key) {
+        f20034a.remove(key);
     }
-    return null;
-  }
-  
-  static void b()
-  {
-    if (!SapiUtils.hasActiveNetwork(d)) {
-      return;
+
+    /* renamed from: a */
+    static String m16075a(Context context, String url) {
+        return m16085b(context, m16090c(url));
     }
-    try
-    {
-      RequestParams localRequestParams = c();
-      String str = d.b("/static/appsapi/conf/config.txt");
-      if (!TextUtils.isEmpty(str)) {
-        localRequestParams.put("di", str);
-      }
-      localRequestParams.put("cdnversion", String.valueOf((int)(System.currentTimeMillis() / 300000L)));
-      new AsyncHttpClient().get(d, d(), localRequestParams, new JsonHttpResponseHandler(Looper.getMainLooper())
-      {
-        public void onSuccess(JSONObject paramAnonymousJSONObject)
-        {
-          if (paramAnonymousJSONObject == null) {}
-          for (;;)
-          {
-            return;
-            c localc1 = b.a(SapiCache.f()).j();
-            final c localc2 = c.a(paramAnonymousJSONObject);
-            paramAnonymousJSONObject = localc2.f();
-            b.a(SapiCache.f()).a(localc2);
-            SapiCache.g().clear();
-            if (paramAnonymousJSONObject.a())
-            {
-              Object localObject1 = paramAnonymousJSONObject.b().iterator();
-              while (((Iterator)localObject1).hasNext())
-              {
-                localObject2 = (c.a.a)((Iterator)localObject1).next();
-                SapiCache.g().add(((c.a.a)localObject2).a);
-              }
-              Object localObject2 = paramAnonymousJSONObject.b().iterator();
-              while (((Iterator)localObject2).hasNext())
-              {
-                final c.a.a locala = (c.a.a)((Iterator)localObject2).next();
-                paramAnonymousJSONObject = null;
-                Iterator localIterator = localc1.f().b().iterator();
-                while (localIterator.hasNext())
-                {
-                  localObject1 = (c.a.a)localIterator.next();
-                  if (((c.a.a)localObject1).a.equals(locala.a)) {
-                    paramAnonymousJSONObject = (JSONObject)localObject1;
-                  }
-                }
-                if (SapiCache.a(locala, paramAnonymousJSONObject))
-                {
-                  SapiCache.a(locala, new SapiCache.a()
-                  {
-                    public void a(c.a.a paramAnonymous2a)
-                    {
-                      new AsyncHttpClient().get(SapiCache.f(), locala.b, SapiCache.c(), new HttpResponseHandler(Looper.getMainLooper())
-                      {
-                        public void onFailure(Throwable paramAnonymous3Throwable, String paramAnonymous3String) {}
-                        
-                        public void onSuccess(String paramAnonymous3String)
-                        {
-                          if ((!TextUtils.isEmpty(SapiCache.3.1.this.b.a)) && (!TextUtils.isEmpty(paramAnonymous3String)) && (SapiCache.3.1.this.b.c.equals(MD5Util.toMd5(paramAnonymous3String.getBytes(), false))))
-                          {
-                            b.a(SapiCache.f()).a(SapiCache.3.1.this.a);
-                            SapiCache.a(SapiCache.3.1.this.b.a, paramAnonymous3String);
-                            SapiCache.a(SapiCache.f(), c.a.a.a(SapiCache.3.1.this.b.a), paramAnonymous3String.getBytes());
-                            if (SapiUtils.checkRequestPermission("android.permission.WRITE_EXTERNAL_STORAGE", SapiCache.f())) {
-                              SapiCache.a(c.a.a.c(SapiCache.3.1.this.b.a), paramAnonymous3String.getBytes());
-                            }
-                          }
-                        }
-                      });
-                    }
-                    
-                    public void a(c.a.a paramAnonymous2a, String paramAnonymous2String)
-                    {
-                      b.a(SapiCache.f()).a(localc2);
-                      if ((!TextUtils.isEmpty(locala.a)) && (!TextUtils.isEmpty(paramAnonymous2String)))
-                      {
-                        SapiCache.a(locala.a, paramAnonymous2String);
-                        SapiCache.a(SapiCache.f(), c.a.a.a(locala.a), paramAnonymous2String.getBytes());
-                      }
-                    }
-                  });
-                }
-                else
-                {
-                  b.a(SapiCache.f()).a(localc2);
-                  SapiCache.a(locala, new SapiCache.a()
-                  {
-                    public void a(c.a.a paramAnonymous2a)
-                    {
-                      String str = c.a.a.a(paramAnonymous2a.a);
-                      paramAnonymous2a = c.a.a.c(paramAnonymous2a.a);
-                      if (new File(SapiCache.f().getFilesDir(), str).exists()) {}
-                      try
-                      {
-                        str = SapiCache.e(SapiCache.f(), str);
-                        if (SapiUtils.checkRequestPermission("android.permission.WRITE_EXTERNAL_STORAGE", SapiCache.f())) {
-                          SapiCache.a(paramAnonymous2a, str.getBytes());
-                        }
-                        return;
-                      }
-                      catch (Throwable paramAnonymous2a)
-                      {
-                        L.e(paramAnonymous2a);
-                      }
-                    }
-                    
-                    public void a(c.a.a paramAnonymous2a, String paramAnonymous2String) {}
-                  });
-                }
-              }
+
+    /* renamed from: b */
+    static String m16085b(final Context context, String moduleId) {
+        m16095e();
+        if (!C4891b.m16250a(context).m16288j().m16319f().m16307a()) {
+            return null;
+        }
+        String data = m16086b(moduleId);
+        if (!TextUtils.isEmpty(data)) {
+            return data;
+        }
+        C4892a module = m16089c(context, moduleId);
+        if (module == null) {
+            return m16092d(context, moduleId);
+        }
+        m16080a(module, new C4846a() {
+            /* renamed from: a */
+            public void mo3730a(C4892a m, String data) {
+                SapiCache.m16082a(m.f20424a, data);
             }
-          }
+
+            /* renamed from: a */
+            public void mo3729a(C4892a m) {
+                SapiCache.m16078a(context, m);
+            }
+        });
+        return m16086b(moduleId);
+    }
+
+    /* renamed from: b */
+    static String m16086b(String moduleId) {
+        if (f20034a.containsKey(moduleId) && f20034a.get(moduleId) != null) {
+            String data = (String) ((SoftReference) f20034a.get(moduleId)).get();
+            if (!TextUtils.isEmpty(data)) {
+                return data;
+            }
         }
-      });
-      return;
+        return null;
     }
-    catch (Throwable localThrowable)
-    {
-      L.e(localThrowable);
+
+    /* renamed from: c */
+    static C4892a m16089c(Context context, String moduleId) {
+        for (C4892a module : C4891b.m16250a(context).m16288j().m16319f().m16308b()) {
+            if (module.f20424a.equals(moduleId)) {
+                return module;
+            }
+        }
+        return null;
     }
-  }
-  
-  static RequestParams c()
-  {
-    try
-    {
-      RequestParams localRequestParams = new RequestParams();
-      localRequestParams.put("tpl", SapiAccountManager.getInstance().getSapiConfiguration().tpl);
-      localRequestParams.put("sdk_version", "6.14.5");
-      localRequestParams.put("app_version", SapiUtils.getVersionName(d));
-      return localRequestParams;
+
+    public static void init(Context ctx) {
+        if (ctx == null) {
+            throw new IllegalArgumentException("Context can't be null");
+        }
+        f20037d = ctx.getApplicationContext();
+        m16077a();
+        m16087b();
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    /* renamed from: a */
+    static void m16077a() {
+        C4893a cacheOptions = C4891b.m16250a(f20037d).m16288j().m16319f();
+        if (cacheOptions.m16307a()) {
+            for (C4892a module : cacheOptions.m16308b()) {
+                f20035b.add(module.f20424a);
+            }
+            f20036c.addAll(f20035b);
+            for (C4892a module2 : cacheOptions.m16308b()) {
+                m16080a(module2, new C48482());
+            }
+        }
     }
-  }
-  
-  static c.a.a c(Context paramContext, String paramString)
-  {
-    paramContext = b.a(paramContext).j().f().b().iterator();
-    while (paramContext.hasNext())
-    {
-      c.a.a locala = (c.a.a)paramContext.next();
-      if (locala.a.equals(paramString)) {
-        return locala;
-      }
+
+    /* renamed from: a */
+    static void m16080a(C4892a module, C4846a listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException(C4846a.class.getName() + "can't be null");
+        }
+        String externalFile = C4892a.m16304c(module.f20424a);
+        try {
+            if ("mounted".equals(Environment.getExternalStorageState()) && new File(Environment.getExternalStorageDirectory(), externalFile).exists()) {
+                String data = m16093d(externalFile);
+                if (MD5Util.toMd5(data.getBytes(), false).equals(module.f20426c)) {
+                    listener.mo3730a(module, data);
+                    return;
+                } else {
+                    listener.mo3729a(module);
+                    return;
+                }
+            }
+            listener.mo3729a(module);
+        } catch (Throwable th) {
+            listener.mo3729a(module);
+        }
     }
-    return null;
-  }
-  
-  static String c(String paramString)
-  {
-    Object localObject = Uri.parse(paramString);
-    StringBuilder localStringBuilder = new StringBuilder().append(((Uri)localObject).getHost());
-    if (((Uri)localObject).getPort() == -1) {}
-    for (paramString = "";; paramString = ":" + ((Uri)localObject).getPort())
-    {
-      localObject = paramString + ((Uri)localObject).getPath();
-      paramString = (String)localObject;
-      if (!((String)localObject).endsWith(".html")) {
-        paramString = (String)localObject + ".html";
-      }
-      return paramString;
+
+    /* renamed from: a */
+    static void m16078a(Context context, C4892a module) {
+        String internalFile = C4892a.m16302a(module.f20424a);
+        if (new File(context.getFilesDir(), internalFile).exists()) {
+            try {
+                m16082a(module.f20424a, m16094e(context, internalFile));
+                return;
+            } catch (Throwable th) {
+                m16092d(context, module.f20424a);
+                return;
+            }
+        }
+        m16092d(context, module.f20424a);
     }
-  }
-  
-  static String d()
-  {
-    return SapiAccountManager.getInstance().getSapiConfiguration().environment.getConfigUrl() + "/static/appsapi/conf/config.txt";
-  }
-  
-  static String d(Context paramContext, String paramString)
-  {
-    String str = c.a.a.b(paramString);
-    try
-    {
-      a(paramString, f(paramContext, str));
-      paramContext = b(paramContext, paramString);
-      return paramContext;
+
+    /* renamed from: d */
+    static String m16092d(Context context, String moduleId) {
+        try {
+            m16082a(moduleId, m16097f(context, C4892a.m16303b(moduleId)));
+            return m16085b(context, moduleId);
+        } catch (Throwable th) {
+            return null;
+        }
     }
-    catch (Throwable paramContext) {}
-    return null;
-  }
-  
-  static String d(String paramString)
-    throws IOException
-  {
-    return a(new FileInputStream(new File(Environment.getExternalStorageDirectory(), paramString)));
-  }
-  
-  static String e(Context paramContext, String paramString)
-    throws IOException
-  {
-    return a(paramContext.openFileInput(paramString));
-  }
-  
-  static void e()
-  {
-    Object localObject1 = new ArrayList();
-    Object localObject2 = b.iterator();
-    while (((Iterator)localObject2).hasNext())
-    {
-      String str = (String)((Iterator)localObject2).next();
-      if (!c.contains(str))
-      {
-        ((List)localObject1).add(str);
-        a(str);
-      }
+
+    /* renamed from: c */
+    static String m16090c(String url) {
+        Uri uri = Uri.parse(url);
+        String cacheModuleId = uri.getHost() + (uri.getPort() == -1 ? "" : Config.TRACE_TODAY_VISIT_SPLIT + uri.getPort()) + uri.getPath();
+        if (cacheModuleId.endsWith(".html")) {
+            return cacheModuleId;
+        }
+        return cacheModuleId + ".html";
     }
-    localObject1 = ((List)localObject1).iterator();
-    while (((Iterator)localObject1).hasNext())
-    {
-      localObject2 = (String)((Iterator)localObject1).next();
-      if (b.contains(localObject2)) {
-        b.remove(localObject2);
-      }
+
+    /* renamed from: b */
+    static void m16087b() {
+        if (SapiUtils.hasActiveNetwork(f20037d)) {
+            try {
+                RequestParams params = m16088c();
+                String deviceInfo = C4920d.m16400b(C4923f.f20576A);
+                if (!TextUtils.isEmpty(deviceInfo)) {
+                    params.put("di", deviceInfo);
+                }
+                params.put("cdnversion", String.valueOf((int) (System.currentTimeMillis() / 300000)));
+                new AsyncHttpClient().get(f20037d, m16091d(), params, new JsonHttpResponseHandler(Looper.getMainLooper()) {
+
+                    /* renamed from: com.baidu.sapi2.SapiCache$3$2 */
+                    class C48512 implements C4846a {
+                        /* renamed from: a */
+                        final /* synthetic */ C48523 f20033a;
+
+                        C48512(C48523 c48523) {
+                            this.f20033a = c48523;
+                        }
+
+                        /* renamed from: a */
+                        public void mo3730a(C4892a module, String data) {
+                        }
+
+                        /* renamed from: a */
+                        public void mo3729a(C4892a module) {
+                            String internalFile = C4892a.m16302a(module.f20424a);
+                            String externalFile = C4892a.m16304c(module.f20424a);
+                            if (new File(SapiCache.f20037d.getFilesDir(), internalFile).exists()) {
+                                try {
+                                    String data = SapiCache.m16094e(SapiCache.f20037d, internalFile);
+                                    if (SapiUtils.checkRequestPermission("android.permission.WRITE_EXTERNAL_STORAGE", SapiCache.f20037d)) {
+                                        SapiCache.m16083a(externalFile, data.getBytes());
+                                    }
+                                } catch (Throwable e) {
+                                    C4913L.m16374e(e);
+                                }
+                            }
+                        }
+                    }
+
+                    public void onSuccess(JSONObject response) {
+                        if (response != null) {
+                            C4894c oldOptions = C4891b.m16250a(SapiCache.f20037d).m16288j();
+                            final C4894c newOptions = C4894c.m16310a(response);
+                            C4893a newCache = newOptions.m16319f();
+                            C4891b.m16250a(SapiCache.f20037d).m16266a(newOptions);
+                            SapiCache.f20036c.clear();
+                            if (newCache.m16307a()) {
+                                for (C4892a newModule : newCache.m16308b()) {
+                                    SapiCache.f20036c.add(newModule.f20424a);
+                                }
+                                for (final C4892a newModule2 : newCache.m16308b()) {
+                                    C4892a oldModule = null;
+                                    for (C4892a m : oldOptions.m16319f().m16308b()) {
+                                        if (m.f20424a.equals(newModule2.f20424a)) {
+                                            oldModule = m;
+                                        }
+                                    }
+                                    if (SapiCache.m16084a(newModule2, oldModule)) {
+                                        SapiCache.m16080a(newModule2, new C4846a(this) {
+                                            /* renamed from: c */
+                                            final /* synthetic */ C48523 f20032c;
+
+                                            /* renamed from: a */
+                                            public void mo3730a(C4892a module, String data) {
+                                                C4891b.m16250a(SapiCache.f20037d).m16266a(newOptions);
+                                                if (!TextUtils.isEmpty(newModule2.f20424a) && !TextUtils.isEmpty(data)) {
+                                                    SapiCache.m16082a(newModule2.f20424a, data);
+                                                    SapiCache.m16079a(SapiCache.f20037d, C4892a.m16302a(newModule2.f20424a), data.getBytes());
+                                                }
+                                            }
+
+                                            /* renamed from: a */
+                                            public void mo3729a(C4892a module) {
+                                                new AsyncHttpClient().get(SapiCache.f20037d, newModule2.f20425b, SapiCache.m16088c(), new HttpResponseHandler(this, Looper.getMainLooper()) {
+                                                    /* renamed from: a */
+                                                    final /* synthetic */ C48501 f20029a;
+
+                                                    public void onSuccess(String content) {
+                                                        if (!TextUtils.isEmpty(newModule2.f20424a) && !TextUtils.isEmpty(content) && newModule2.f20426c.equals(MD5Util.toMd5(content.getBytes(), false))) {
+                                                            C4891b.m16250a(SapiCache.f20037d).m16266a(newOptions);
+                                                            SapiCache.m16082a(newModule2.f20424a, content);
+                                                            SapiCache.m16079a(SapiCache.f20037d, C4892a.m16302a(newModule2.f20424a), content.getBytes());
+                                                            if (SapiUtils.checkRequestPermission("android.permission.WRITE_EXTERNAL_STORAGE", SapiCache.f20037d)) {
+                                                                SapiCache.m16083a(C4892a.m16304c(newModule2.f20424a), content.getBytes());
+                                                            }
+                                                        }
+                                                    }
+
+                                                    public void onFailure(Throwable error, String content) {
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        C4891b.m16250a(SapiCache.f20037d).m16266a(newOptions);
+                                        SapiCache.m16080a(newModule2, new C48512(this));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (Throwable e) {
+                C4913L.m16374e(e);
+            }
+        }
     }
-  }
-  
-  static String f(Context paramContext, String paramString)
-    throws IOException
-  {
-    return a(paramContext.getAssets().open(paramString));
-  }
-  
-  public static void init(Context paramContext)
-  {
-    if (paramContext == null) {
-      throw new IllegalArgumentException("Context can't be null");
+
+    /* renamed from: c */
+    static synchronized RequestParams m16088c() {
+        RequestParams params;
+        synchronized (SapiCache.class) {
+            params = new RequestParams();
+            params.put("tpl", SapiAccountManager.getInstance().getSapiConfiguration().tpl);
+            params.put("sdk_version", SapiAccountManager.VERSION_NAME);
+            params.put("app_version", SapiUtils.getVersionName(f20037d));
+        }
+        return params;
     }
-    d = paramContext.getApplicationContext();
-    a();
-    b();
-  }
-  
-  static abstract interface a
-  {
-    public abstract void a(c.a.a parama);
-    
-    public abstract void a(c.a.a parama, String paramString);
-  }
+
+    /* renamed from: a */
+    static boolean m16084a(C4892a newModule, C4892a oldModule) {
+        return !TextUtils.isEmpty(newModule.f20426c) && (oldModule == null || !newModule.f20426c.equals(oldModule.f20426c));
+    }
+
+    /* renamed from: d */
+    static String m16091d() {
+        return SapiAccountManager.getInstance().getSapiConfiguration().environment.getConfigUrl() + C4923f.f20576A;
+    }
+
+    /* renamed from: e */
+    static void m16095e() {
+        List<String> removedModuleIds = new ArrayList();
+        for (String oldModuleId : f20035b) {
+            if (!f20036c.contains(oldModuleId)) {
+                removedModuleIds.add(oldModuleId);
+                m16081a(oldModuleId);
+            }
+        }
+        for (String moduleId : removedModuleIds) {
+            if (f20035b.contains(moduleId)) {
+                f20035b.remove(moduleId);
+            }
+        }
+    }
+
+    /* renamed from: a */
+    static void m16079a(Context context, String fileName, byte[] data) {
+        OutputStream outputStream = null;
+        try {
+            outputStream = context.openFileOutput(fileName, 0);
+            outputStream.write(data);
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (Throwable th) {
+                }
+            }
+        } catch (Throwable th2) {
+        }
+    }
+
+    /* renamed from: a */
+    static void m16083a(String fileName, byte[] data) {
+        Throwable e;
+        Throwable th;
+        OutputStream outputStream = null;
+        try {
+            if ("mounted".equals(Environment.getExternalStorageState())) {
+                File outputFile = new File(Environment.getExternalStorageDirectory(), fileName);
+                if (!outputFile.getParentFile().exists()) {
+                    outputFile.getParentFile().mkdirs();
+                }
+                if (!outputFile.exists()) {
+                    outputFile.createNewFile();
+                }
+                OutputStream outputStream2 = new FileOutputStream(outputFile);
+                try {
+                    outputStream2.write(data);
+                    outputStream = outputStream2;
+                } catch (Throwable th2) {
+                    th = th2;
+                    outputStream = outputStream2;
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                    throw th;
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (Throwable e2) {
+                    C4913L.m16374e(e2);
+                }
+            }
+        } catch (Throwable th3) {
+            e2 = th3;
+            C4913L.m16374e(e2);
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+    }
+
+    /* renamed from: d */
+    static String m16093d(String fileName) throws IOException {
+        return m16076a(new FileInputStream(new File(Environment.getExternalStorageDirectory(), fileName)));
+    }
+
+    /* renamed from: e */
+    static String m16094e(Context context, String fileName) throws IOException {
+        return m16076a(context.openFileInput(fileName));
+    }
+
+    /* renamed from: f */
+    static String m16097f(Context context, String fileName) throws IOException {
+        return m16076a(context.getAssets().open(fileName));
+    }
+
+    /* renamed from: a */
+    static String m16076a(InputStream inputStream) throws IOException {
+        try {
+            byte[] buffer = new byte[inputStream.available()];
+            inputStream.read(buffer);
+            String str = new String(buffer);
+            return str;
+        } finally {
+            inputStream.close();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/sapi2/SapiCache.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

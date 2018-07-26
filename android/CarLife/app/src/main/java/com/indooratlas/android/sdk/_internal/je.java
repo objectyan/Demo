@@ -4,91 +4,88 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.concurrent.TimeUnit;
 
-public class je
-{
-  public static final je b = new je()
-  {
-    public final je a(long paramAnonymousLong)
-    {
-      return this;
+public class je {
+    /* renamed from: b */
+    public static final je f24380b = new C59881();
+    /* renamed from: a */
+    private boolean f24381a;
+    /* renamed from: c */
+    private long f24382c;
+    /* renamed from: d */
+    private long f24383d;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.je$1 */
+    static class C59881 extends je {
+        C59881() {
+        }
+
+        /* renamed from: a */
+        public final je mo4767a(long j, TimeUnit timeUnit) {
+            return this;
+        }
+
+        /* renamed from: a */
+        public final je mo4766a(long j) {
+            return this;
+        }
+
+        /* renamed from: f */
+        public final void mo4773f() throws IOException {
+        }
     }
-    
-    public final je a(long paramAnonymousLong, TimeUnit paramAnonymousTimeUnit)
-    {
-      return this;
+
+    /* renamed from: a */
+    public je mo4767a(long j, TimeUnit timeUnit) {
+        if (j < 0) {
+            throw new IllegalArgumentException("timeout < 0: " + j);
+        } else if (timeUnit == null) {
+            throw new IllegalArgumentException("unit == null");
+        } else {
+            this.f24383d = timeUnit.toNanos(j);
+            return this;
+        }
     }
-    
-    public final void f()
-      throws IOException
-    {}
-  };
-  private boolean a;
-  private long c;
-  private long d;
-  
-  public je a(long paramLong)
-  {
-    this.a = true;
-    this.c = paramLong;
-    return this;
-  }
-  
-  public je a(long paramLong, TimeUnit paramTimeUnit)
-  {
-    if (paramLong < 0L) {
-      throw new IllegalArgumentException("timeout < 0: " + paramLong);
+
+    public long c_() {
+        return this.f24383d;
     }
-    if (paramTimeUnit == null) {
-      throw new IllegalArgumentException("unit == null");
+
+    public boolean d_() {
+        return this.f24381a;
     }
-    this.d = paramTimeUnit.toNanos(paramLong);
-    return this;
-  }
-  
-  public long c()
-  {
-    if (!this.a) {
-      throw new IllegalStateException("No deadline");
+
+    /* renamed from: c */
+    public long mo4768c() {
+        if (this.f24381a) {
+            return this.f24382c;
+        }
+        throw new IllegalStateException("No deadline");
     }
-    return this.c;
-  }
-  
-  public long c_()
-  {
-    return this.d;
-  }
-  
-  public je d()
-  {
-    this.d = 0L;
-    return this;
-  }
-  
-  public boolean d_()
-  {
-    return this.a;
-  }
-  
-  public je e_()
-  {
-    this.a = false;
-    return this;
-  }
-  
-  public void f()
-    throws IOException
-  {
-    if (Thread.interrupted()) {
-      throw new InterruptedIOException("thread interrupted");
+
+    /* renamed from: a */
+    public je mo4766a(long j) {
+        this.f24381a = true;
+        this.f24382c = j;
+        return this;
     }
-    if ((this.a) && (this.c - System.nanoTime() <= 0L)) {
-      throw new InterruptedIOException("deadline reached");
+
+    /* renamed from: d */
+    public je mo4770d() {
+        this.f24383d = 0;
+        return this;
     }
-  }
+
+    public je e_() {
+        this.f24381a = false;
+        return this;
+    }
+
+    /* renamed from: f */
+    public void mo4773f() throws IOException {
+        if (Thread.interrupted()) {
+            throw new InterruptedIOException("thread interrupted");
+        } else if (this.f24381a && this.f24382c - System.nanoTime() <= 0) {
+            throw new InterruptedIOException("deadline reached");
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/je.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

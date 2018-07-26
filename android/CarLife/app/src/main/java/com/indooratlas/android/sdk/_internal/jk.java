@@ -1,48 +1,43 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.kd.C5997a;
 import java.net.InetSocketAddress;
 
-public abstract class jk
-  implements jm
-{
-  public final String a(jj paramjj)
-    throws ju
-  {
-    paramjj = paramjj.c();
-    if (paramjj == null) {
-      throw new jw("socket not bound");
+public abstract class jk implements jm {
+    /* renamed from: g */
+    public final kn mo4783g() throws ju {
+        return new kj();
     }
-    StringBuffer localStringBuffer = new StringBuffer(90);
-    localStringBuffer.append("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"");
-    localStringBuffer.append(paramjj.getPort());
-    localStringBuffer.append("\" /></cross-domain-policy>\000");
-    return localStringBuffer.toString();
-  }
-  
-  public void a(jj paramjj, kd paramkd)
-  {
-    paramkd = new ke(paramkd);
-    paramkd.a(kd.a.e);
-    paramjj.b(paramkd);
-  }
-  
-  public void a(jj paramjj, kf paramkf)
-    throws ju
-  {}
-  
-  public void b(jj paramjj, kd paramkd) {}
-  
-  public void c(kd paramkd) {}
-  
-  public final kn g()
-    throws ju
-  {
-    return new kj();
-  }
+
+    /* renamed from: a */
+    public void mo4780a(jj jjVar, kf kfVar) throws ju {
+    }
+
+    /* renamed from: c */
+    public void mo4782c(kd kdVar) {
+    }
+
+    /* renamed from: a */
+    public void mo4779a(jj jjVar, kd kdVar) {
+        kd keVar = new ke(kdVar);
+        keVar.mo4808a(C5997a.PONG);
+        jjVar.mo4784b(keVar);
+    }
+
+    /* renamed from: b */
+    public void mo4781b(jj jjVar, kd kdVar) {
+    }
+
+    /* renamed from: a */
+    public final String mo4778a(jj jjVar) throws ju {
+        InetSocketAddress c = jjVar.mo4785c();
+        if (c == null) {
+            throw new jw("socket not bound");
+        }
+        StringBuffer stringBuffer = new StringBuffer(90);
+        stringBuffer.append("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"");
+        stringBuffer.append(c.getPort());
+        stringBuffer.append("\" /></cross-domain-policy>\u0000");
+        return stringBuffer.toString();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/jk.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

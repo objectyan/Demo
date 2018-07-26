@@ -7,179 +7,149 @@ import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 
-public class BNEyeSpyPaperController
-{
-  private static final String TAG = "BNUserKeyLogController";
-  private static volatile BNEyeSpyPaperController mInstance = null;
-  private boolean isCloudEnd = false;
-  private boolean isFloatButtonShow = false;
-  private BNEyeSpyPaperFloatButton mLogButton = null;
-  private BNEyeSpyPaperModel mModel = null;
-  private BNWorkerNormalTask mNavInitMonitor = new BNWorkerNormalTask("execute-mNavInitMonitor", null)
-  {
-    protected String execute()
-    {
-      LogUtil.e(TAG, "mNavInitMonitor run");
-      BNEyeSpyPaperController.this.mModel.mUploadSource = 3;
-      BNEyeSpyPaperController.this.navInitResult(false, "导航初始化1分钟超时");
-      return null;
+public class BNEyeSpyPaperController {
+    private static final String TAG = "BNUserKeyLogController";
+    private static volatile BNEyeSpyPaperController mInstance = null;
+    private boolean isCloudEnd;
+    private boolean isFloatButtonShow;
+    private BNEyeSpyPaperFloatButton mLogButton;
+    private BNEyeSpyPaperModel mModel;
+    private BNWorkerNormalTask mNavInitMonitor;
+    private BNWorkerNormalTask mNavRoutePlanMonitor;
+    private BNUserKeyLogDialog mUserKeyLogDialog;
+
+    private BNEyeSpyPaperController() {
+        this.mModel = null;
+        this.mLogButton = null;
+        this.isFloatButtonShow = false;
+        this.isCloudEnd = false;
+        this.mNavInitMonitor = new BNWorkerNormalTask<String, String>("execute-mNavInitMonitor", null) {
+            protected String execute() {
+                LogUtil.m15791e(TAG, "mNavInitMonitor run");
+                BNEyeSpyPaperController.this.mModel.mUploadSource = 3;
+                BNEyeSpyPaperController.this.navInitResult(false, "导航初始化1分钟超时");
+                return null;
+            }
+        };
+        this.mNavRoutePlanMonitor = new BNWorkerNormalTask<String, String>("execute-mNavRoutePlanMonitor", null) {
+            protected String execute() {
+                LogUtil.m15791e(TAG, "mNavRoutePlanMonitor run");
+                BNEyeSpyPaperController.this.mModel.mDespText = "算路时间超过1分钟";
+                BNEyeSpyPaperController.this.mModel.mUploadSource = 5;
+                BNEyeSpyPaperController.this.uploadLog();
+                return null;
+            }
+        };
+        this.mModel = new BNEyeSpyPaperModel();
     }
-  };
-  private BNWorkerNormalTask mNavRoutePlanMonitor = new BNWorkerNormalTask("execute-mNavRoutePlanMonitor", null)
-  {
-    protected String execute()
-    {
-      LogUtil.e(TAG, "mNavRoutePlanMonitor run");
-      BNEyeSpyPaperController.this.mModel.mDespText = "算路时间超过1分钟";
-      BNEyeSpyPaperController.this.mModel.mUploadSource = 5;
-      BNEyeSpyPaperController.this.uploadLog();
-      return null;
+
+    public static BNEyeSpyPaperController getInstance() {
+        if (mInstance == null) {
+            synchronized (BNEyeSpyPaperController.class) {
+                if (mInstance == null) {
+                    mInstance = new BNEyeSpyPaperController();
+                }
+            }
+        }
+        return mInstance;
     }
-  };
-  private BNUserKeyLogDialog mUserKeyLogDialog;
-  
-  public static BNEyeSpyPaperController getInstance()
-  {
-    if (mInstance == null) {}
-    try
-    {
-      if (mInstance == null) {
-        mInstance = new BNEyeSpyPaperController();
-      }
-      return mInstance;
+
+    public BNEyeSpyPaperModel getModel() {
+        return this.mModel;
     }
-    finally {}
-  }
-  
-  private void navInitResult(boolean paramBoolean, String paramString)
-  {
-    BNWorkerCenter.getInstance().cancelTask(this.mNavInitMonitor, false);
-    if (!paramBoolean) {
-      uploadLog();
+
+    public void cloudConfigInitEnd() {
+        this.isCloudEnd = true;
+        this.mModel.initParmsAfterCloud();
+        if (this.isFloatButtonShow) {
+            showButton();
+        }
     }
-  }
-  
-  public void addToTestPlaner(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      this.mModel.addToTestPlaner();
-      showButton();
-      return;
+
+    public void showButton() {
+        this.isFloatButtonShow = true;
+        if (!this.isCloudEnd) {
+            LogUtil.m15791e(TAG, "showButton return isCloudEnd not");
+        } else if (this.mModel.isInTestPlaner()) {
+            if (this.mLogButton == null) {
+                this.mLogButton = new BNEyeSpyPaperFloatButton();
+            }
+            this.mLogButton.show();
+        } else {
+            LogUtil.m15791e(TAG, "showButton return isInTestPlaner false");
+        }
     }
-    this.mModel.removeFormTestPlaner();
-    hideButton();
-  }
-  
-  public void cloudConfigInitEnd()
-  {
-    this.isCloudEnd = true;
-    this.mModel.initParmsAfterCloud();
-    if (this.isFloatButtonShow) {
-      showButton();
+
+    public void hideButton() {
+        this.isFloatButtonShow = false;
+        if (this.mLogButton != null) {
+            this.mLogButton.hide();
+        }
     }
-  }
-  
-  public void endInitMonitor(boolean paramBoolean)
-  {
-    LogUtil.e("BNUserKeyLogController", "endInitMonitor :" + paramBoolean);
-    if (!paramBoolean) {
-      this.mModel.mUploadSource = 4;
+
+    public void showUserKeyLogDialog() {
+        Activity activity = BNaviModuleManager.getActivity();
+        if (this.mUserKeyLogDialog == null) {
+            this.mUserKeyLogDialog = new BNUserKeyLogDialog(activity);
+        }
+        if (!this.mUserKeyLogDialog.isShowing() && !activity.isFinishing()) {
+            this.mUserKeyLogDialog.show();
+        }
     }
-    if (paramBoolean) {}
-    for (String str = "";; str = "导航初始化失败")
-    {
-      navInitResult(paramBoolean, str);
-      return;
+
+    public void onUserKeyLogDialogDismiss() {
+        this.mUserKeyLogDialog = null;
     }
-  }
-  
-  public void endRoutePlanMonitor()
-  {
-    LogUtil.e("BNUserKeyLogController", "endRoutePlanMonitor :");
-    BNWorkerCenter.getInstance().cancelTask(this.mNavRoutePlanMonitor, false);
-  }
-  
-  public BNEyeSpyPaperModel getModel()
-  {
-    return this.mModel;
-  }
-  
-  public void hideButton()
-  {
-    this.isFloatButtonShow = false;
-    if (this.mLogButton != null) {
-      this.mLogButton.hide();
+
+    public void addToTestPlaner(boolean add) {
+        if (add) {
+            this.mModel.addToTestPlaner();
+            showButton();
+            return;
+        }
+        this.mModel.removeFormTestPlaner();
+        hideButton();
     }
-  }
-  
-  public void onUserKeyLogDialogDismiss()
-  {
-    this.mUserKeyLogDialog = null;
-  }
-  
-  public void showButton()
-  {
-    this.isFloatButtonShow = true;
-    if (!this.isCloudEnd)
-    {
-      LogUtil.e("BNUserKeyLogController", "showButton return isCloudEnd not");
-      return;
+
+    public void uploadLog() {
+        BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-" + getClass().getSimpleName() + "2", null) {
+            protected String execute() {
+                BNEyeSpyPaperController.this.mModel.uploadLogFile();
+                return null;
+            }
+        }, new BNWorkerConfig(101, 0));
     }
-    if (!this.mModel.isInTestPlaner())
-    {
-      LogUtil.e("BNUserKeyLogController", "showButton return isInTestPlaner false");
-      return;
+
+    public void startInitMonitor() {
+        LogUtil.m15791e(TAG, "startInitMonitor");
+        BNWorkerCenter.getInstance().cancelTask(this.mNavInitMonitor, false);
+        BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mNavInitMonitor, new BNWorkerConfig(2, 0), 60000);
     }
-    if (this.mLogButton == null) {
-      this.mLogButton = new BNEyeSpyPaperFloatButton();
+
+    public void endInitMonitor(boolean success) {
+        LogUtil.m15791e(TAG, "endInitMonitor :" + success);
+        if (!success) {
+            this.mModel.mUploadSource = 4;
+        }
+        navInitResult(success, success ? "" : "导航初始化失败");
     }
-    this.mLogButton.show();
-  }
-  
-  public void showUserKeyLogDialog()
-  {
-    Activity localActivity = BNaviModuleManager.getActivity();
-    if (this.mUserKeyLogDialog == null) {
-      this.mUserKeyLogDialog = new BNUserKeyLogDialog(localActivity);
+
+    private void navInitResult(boolean success, String desp) {
+        BNWorkerCenter.getInstance().cancelTask(this.mNavInitMonitor, false);
+        if (!success) {
+            uploadLog();
+        }
     }
-    if ((this.mUserKeyLogDialog.isShowing()) || (localActivity.isFinishing())) {
-      return;
+
+    public void startRoutePlanMonitor() {
+        LogUtil.m15791e(TAG, "startRoutePlanMonitor");
+        BNWorkerCenter.getInstance().cancelTask(this.mNavRoutePlanMonitor, false);
+        BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mNavRoutePlanMonitor, new BNWorkerConfig(2, 0), 7000);
     }
-    this.mUserKeyLogDialog.show();
-  }
-  
-  public void startInitMonitor()
-  {
-    LogUtil.e("BNUserKeyLogController", "startInitMonitor");
-    BNWorkerCenter.getInstance().cancelTask(this.mNavInitMonitor, false);
-    BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mNavInitMonitor, new BNWorkerConfig(2, 0), 60000L);
-  }
-  
-  public void startRoutePlanMonitor()
-  {
-    LogUtil.e("BNUserKeyLogController", "startRoutePlanMonitor");
-    BNWorkerCenter.getInstance().cancelTask(this.mNavRoutePlanMonitor, false);
-    BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mNavRoutePlanMonitor, new BNWorkerConfig(2, 0), 7000L);
-  }
-  
-  public void uploadLog()
-  {
-    BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-" + getClass().getSimpleName() + "2", null)new BNWorkerConfig
-    {
-      protected String execute()
-      {
-        BNEyeSpyPaperController.this.mModel.uploadLogFile();
-        return null;
-      }
-    }, new BNWorkerConfig(101, 0));
-  }
+
+    public void endRoutePlanMonitor() {
+        LogUtil.m15791e(TAG, "endRoutePlanMonitor :");
+        BNWorkerCenter.getInstance().cancelTask(this.mNavRoutePlanMonitor, false);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/debug/BNEyeSpyPaperController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

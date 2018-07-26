@@ -2,26 +2,25 @@ package com.indooratlas.android.sdk._internal;
 
 import android.os.Parcelable;
 
-public abstract interface aw
-  extends Parcelable
-{
-  public abstract String a();
-  
-  public abstract boolean a(double paramDouble1, double paramDouble2, Integer paramInteger);
-  
-  public abstract int b();
-  
-  public abstract Long c();
-  
-  public abstract boolean d();
-  
-  public abstract boolean e();
-  
-  public abstract Long f();
+public interface aw extends Parcelable {
+    /* renamed from: a */
+    String mo4647a();
+
+    /* renamed from: a */
+    boolean mo4648a(double d, double d2, Integer num);
+
+    /* renamed from: b */
+    int mo4649b();
+
+    /* renamed from: c */
+    Long mo4650c();
+
+    /* renamed from: d */
+    boolean mo4651d();
+
+    /* renamed from: e */
+    boolean mo4652e();
+
+    /* renamed from: f */
+    Long mo4653f();
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/aw.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,119 +1,86 @@
 package com.baidu.tts.tools;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class DateTool
-{
-  public static String format(long paramLong, String paramString)
-  {
-    return format(new Date(paramLong), paramString);
-  }
-  
-  public static String format(String paramString1, String paramString2, String paramString3)
-  {
-    try
-    {
-      paramString1 = format(new SimpleDateFormat(paramString2, Locale.CHINA).parse(paramString1), paramString3);
-      return paramString1;
+public class DateTool {
+    public static String simpleFormatCurrentDate() {
+        return formatCurrentDate("yyyy年M月d日 HH:mm:ss:SSS");
     }
-    catch (Exception paramString1) {}
-    return null;
-  }
-  
-  public static String format(Calendar paramCalendar, String paramString)
-  {
-    try
-    {
-      paramCalendar = format(paramCalendar.getTime(), paramString);
-      return paramCalendar;
+
+    public static String formatCurrentDate(String template) {
+        return format(new Date(), template);
     }
-    catch (Exception paramCalendar) {}
-    return null;
-  }
-  
-  public static String format(Date paramDate, String paramString)
-  {
-    return new SimpleDateFormat(paramString, Locale.CHINA).format(paramDate);
-  }
-  
-  public static String formatCurrentDate(String paramString)
-  {
-    return format(new Date(), paramString);
-  }
-  
-  public static String formatInChinaDate(long paramLong)
-  {
-    return format(paramLong, "yyyy年M月d日");
-  }
-  
-  public static String formatInHHmm(long paramLong)
-  {
-    return format(paramLong, "HH:mm");
-  }
-  
-  public static String formatInyyyyMMdd(long paramLong)
-  {
-    return format(paramLong, "yyyy.MM.dd");
-  }
-  
-  public static Calendar getCalendar(String paramString1, String paramString2)
-  {
-    try
-    {
-      paramString1 = new SimpleDateFormat(paramString2, Locale.CHINA).parse(paramString1);
-      paramString2 = Calendar.getInstance();
-      paramString2.setTime(paramString1);
-      return paramString2;
+
+    public static String formatInChinaDate(long millisecond) {
+        return format(millisecond, "yyyy年M月d日");
     }
-    catch (Exception paramString1) {}
-    return null;
-  }
-  
-  public static Date getDate(String paramString1, String paramString2)
-  {
-    paramString2 = new SimpleDateFormat(paramString2, Locale.CHINA);
-    try
-    {
-      paramString1 = paramString2.parse(paramString1);
-      return paramString1;
+
+    public static String formatInyyyyMMdd(long millisecond) {
+        return format(millisecond, "yyyy.MM.dd");
     }
-    catch (ParseException paramString1)
-    {
-      paramString1.printStackTrace();
+
+    public static String formatInHHmm(long millisecond) {
+        return format(millisecond, "HH:mm");
     }
-    return null;
-  }
-  
-  public static String[] getDateRange(String paramString1, String paramString2, int paramInt)
-  {
-    paramString1 = getCalendar(paramString1, paramString2);
-    paramString2 = paramString1.getTime();
-    String[] arrayOfString = new String[paramInt];
-    int i = 0;
-    while (i < paramInt)
-    {
-      paramString1.add(5, -(paramInt - i - 1));
-      paramString1.getTime();
-      arrayOfString[i] = String.valueOf(paramString1.get(5));
-      paramString1.setTime(paramString2);
-      i += 1;
+
+    public static String format(long millisecond, String template) {
+        return format(new Date(millisecond), template);
     }
-    return arrayOfString;
-  }
-  
-  public static String simpleFormatCurrentDate()
-  {
-    return formatCurrentDate("yyyy年M月d日 HH:mm:ss:SSS");
-  }
+
+    public static String format(Date date, String template) {
+        return new SimpleDateFormat(template, Locale.CHINA).format(date);
+    }
+
+    public static String format(Calendar calendar, String template) {
+        try {
+            return format(calendar.getTime(), template);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String format(String src, String srcTemplate, String desTemplate) {
+        try {
+            return format(new SimpleDateFormat(srcTemplate, Locale.CHINA).parse(src), desTemplate);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Calendar getCalendar(String date, String template) {
+        try {
+            Date parse = new SimpleDateFormat(template, Locale.CHINA).parse(date);
+            Calendar instance = Calendar.getInstance();
+            instance.setTime(parse);
+            return instance;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String[] getDateRange(String date, String template, int range) {
+        Calendar calendar = getCalendar(date, template);
+        Date time = calendar.getTime();
+        String[] strArr = new String[range];
+        for (int i = 0; i < range; i++) {
+            calendar.add(5, -((range - i) - 1));
+            calendar.getTime();
+            strArr[i] = String.valueOf(calendar.get(5));
+            calendar.setTime(time);
+        }
+        return strArr;
+    }
+
+    public static Date getDate(String date, String pattern) {
+        try {
+            return new SimpleDateFormat(pattern, Locale.CHINA).parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/tools/DateTool.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

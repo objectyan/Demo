@@ -2,102 +2,68 @@ package com.baidu.navi.protocol.pack;
 
 import android.os.Bundle;
 import com.baidu.navi.protocol.model.DataStruct;
-import com.baidu.navi.protocol.model.DataStruct.CommandResult;
 import com.baidu.navi.protocol.model.SearchByTypeDataStruct;
 import com.baidu.navi.protocol.util.PackerUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SearchByTypePacker
-  extends BasePacker
-{
-  public String pack(DataStruct paramDataStruct)
-  {
-    String str = "";
-    Object localObject = str;
-    if (paramDataStruct != null)
-    {
-      paramDataStruct = (SearchByTypeDataStruct)paramDataStruct;
-      localObject = new JSONObject();
+public class SearchByTypePacker extends BasePacker {
+    public String pack(DataStruct ds) {
+        String result = "";
+        if (ds != null) {
+            SearchByTypeDataStruct keywordDS = (SearchByTypeDataStruct) ds;
+            JSONObject extDataObj = new JSONObject();
+            try {
+                extDataObj.put("type", keywordDS.type);
+                JSONObject obj = PackerUtil.createProtocolJSON(keywordDS.mCmd, extDataObj);
+                if (obj != null) {
+                    result = obj.toString();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
-    try
-    {
-      ((JSONObject)localObject).put("type", paramDataStruct.type);
-      paramDataStruct = PackerUtil.createProtocolJSON(paramDataStruct.mCmd, (JSONObject)localObject);
-      localObject = str;
-      if (paramDataStruct != null) {
-        localObject = paramDataStruct.toString();
-      }
-      return (String)localObject;
+
+    public DataStruct unpack(JSONObject obj) {
+        if (obj == null) {
+            return null;
+        }
+        JSONObject extDataObj = PackerUtil.getExtDataObj(obj);
+        if (extDataObj == null) {
+            return null;
+        }
+        SearchByTypeDataStruct ds = new SearchByTypeDataStruct();
+        ds.type = extDataObj.optInt("type", 0);
+        return ds;
     }
-    catch (JSONException paramDataStruct)
-    {
-      paramDataStruct.printStackTrace();
+
+    public String packResult(DataStruct ds) {
+        String result = null;
+        if (ds != null) {
+            JSONObject extDataObj = new JSONObject();
+            prePackResult(extDataObj, ds);
+            Bundle params = ds.commandResult.params;
+            if (params != null) {
+                String strList = (String) params.get("poiList");
+                boolean onlineSearch = params.getBoolean(SearchByTypeDataStruct.KEY_ONLINE_SEARCH, false);
+                try {
+                    extDataObj.put("poiList", new JSONArray(strList));
+                    extDataObj.put(SearchByTypeDataStruct.KEY_ONLINE_SEARCH, onlineSearch);
+                    if (onlineSearch && ds.commandResult.errCode != 0) {
+                        extDataObj.put(SearchByTypeDataStruct.KEY_FIRST_TIME_ONLINE_SEARCH, params.getBoolean(SearchByTypeDataStruct.KEY_FIRST_TIME_ONLINE_SEARCH, false));
+                    }
+                    JSONObject obj = PackerUtil.createResultJSON(extDataObj);
+                    if (obj != null) {
+                        result = obj.toString();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
     }
-    return "";
-  }
-  
-  public String packResult(DataStruct paramDataStruct)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    JSONObject localJSONObject;
-    Bundle localBundle;
-    boolean bool;
-    if (paramDataStruct != null)
-    {
-      localJSONObject = new JSONObject();
-      prePackResult(localJSONObject, paramDataStruct);
-      localBundle = paramDataStruct.commandResult.params;
-      localObject1 = localObject2;
-      if (localBundle != null)
-      {
-        localObject1 = (String)localBundle.get("poiList");
-        bool = localBundle.getBoolean("onlineSearch", false);
-      }
-    }
-    try
-    {
-      localJSONObject.put("poiList", new JSONArray((String)localObject1));
-      localJSONObject.put("onlineSearch", bool);
-      if ((bool) && (paramDataStruct.commandResult.errCode != 0)) {
-        localJSONObject.put("firstTimeOnlineSearch", localBundle.getBoolean("firstTimeOnlineSearch", false));
-      }
-      paramDataStruct = PackerUtil.createResultJSON(localJSONObject);
-      localObject1 = localObject2;
-      if (paramDataStruct != null) {
-        localObject1 = paramDataStruct.toString();
-      }
-      return (String)localObject1;
-    }
-    catch (JSONException paramDataStruct)
-    {
-      paramDataStruct.printStackTrace();
-    }
-    return null;
-  }
-  
-  public DataStruct unpack(JSONObject paramJSONObject)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (paramJSONObject != null)
-    {
-      paramJSONObject = PackerUtil.getExtDataObj(paramJSONObject);
-      localObject1 = localObject2;
-      if (paramJSONObject != null)
-      {
-        localObject1 = new SearchByTypeDataStruct();
-        ((SearchByTypeDataStruct)localObject1).type = paramJSONObject.optInt("type", 0);
-      }
-    }
-    return (DataStruct)localObject1;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/protocol/pack/SearchByTypePacker.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

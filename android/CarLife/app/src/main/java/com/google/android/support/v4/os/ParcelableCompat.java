@@ -4,40 +4,28 @@ import android.os.Build.VERSION;
 import android.os.Parcel;
 import android.os.Parcelable.Creator;
 
-public class ParcelableCompat
-{
-  public static <T> Parcelable.Creator<T> newCreator(ParcelableCompatCreatorCallbacks<T> paramParcelableCompatCreatorCallbacks)
-  {
-    if (Build.VERSION.SDK_INT >= 13) {
-      ParcelableCompatCreatorHoneycombMR2Stub.instantiate(paramParcelableCompatCreatorCallbacks);
+public class ParcelableCompat {
+
+    static class CompatCreator<T> implements Creator<T> {
+        final ParcelableCompatCreatorCallbacks<T> mCallbacks;
+
+        public CompatCreator(ParcelableCompatCreatorCallbacks<T> callbacks) {
+            this.mCallbacks = callbacks;
+        }
+
+        public T createFromParcel(Parcel source) {
+            return this.mCallbacks.createFromParcel(source, null);
+        }
+
+        public T[] newArray(int size) {
+            return this.mCallbacks.newArray(size);
+        }
     }
-    return new CompatCreator(paramParcelableCompatCreatorCallbacks);
-  }
-  
-  static class CompatCreator<T>
-    implements Parcelable.Creator<T>
-  {
-    final ParcelableCompatCreatorCallbacks<T> mCallbacks;
-    
-    public CompatCreator(ParcelableCompatCreatorCallbacks<T> paramParcelableCompatCreatorCallbacks)
-    {
-      this.mCallbacks = paramParcelableCompatCreatorCallbacks;
+
+    public static <T> Creator<T> newCreator(ParcelableCompatCreatorCallbacks<T> callbacks) {
+        if (VERSION.SDK_INT >= 13) {
+            ParcelableCompatCreatorHoneycombMR2Stub.instantiate(callbacks);
+        }
+        return new CompatCreator(callbacks);
     }
-    
-    public T createFromParcel(Parcel paramParcel)
-    {
-      return (T)this.mCallbacks.createFromParcel(paramParcel, null);
-    }
-    
-    public T[] newArray(int paramInt)
-    {
-      return this.mCallbacks.newArray(paramInt);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/os/ParcelableCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

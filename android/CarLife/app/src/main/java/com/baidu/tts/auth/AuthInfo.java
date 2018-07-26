@@ -1,172 +1,129 @@
 package com.baidu.tts.auth;
 
 import com.baidu.tts.aop.tts.TtsError;
+import com.baidu.tts.auth.C4978b.C4976a;
+import com.baidu.tts.auth.C4981c.C4980a;
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy;
-import com.baidu.tts.f.m;
-import com.baidu.tts.f.n;
-import com.baidu.tts.h.a.c;
+import com.baidu.tts.p233f.C5095m;
+import com.baidu.tts.p233f.C5097n;
+import com.baidu.tts.p236h.p237a.C5105c;
 
-public class AuthInfo
-{
-  private m a;
-  private c.a b;
-  private b.a c;
-  private TtsError d;
-  
-  public int getLeftValidDays()
-  {
-    return this.c.a();
-  }
-  
-  public TtsError getMixTtsError()
-  {
-    TtsError localTtsError1 = getOnlineTtsError();
-    TtsError localTtsError2 = getOfflineTtsError();
-    Object localObject2 = null;
-    Object localObject1;
-    if ((localTtsError1 != null) && (localTtsError2 != null)) {
-      localObject1 = c.a().b(n.J);
+public class AuthInfo {
+    /* renamed from: a */
+    private C5095m f20659a;
+    /* renamed from: b */
+    private C4980a f20660b;
+    /* renamed from: c */
+    private C4976a f20661c;
+    /* renamed from: d */
+    private TtsError f20662d;
+
+    public C5095m getTtsEnum() {
+        return this.f20659a;
     }
-    while (localObject1 != null)
-    {
-      return (TtsError)localObject1;
-      if ((localTtsError1 == null) && (localTtsError2 != null))
-      {
-        localObject1 = c.a().b(n.r);
-      }
-      else
-      {
-        localObject1 = localObject2;
-        if (localTtsError1 != null)
-        {
-          localObject1 = localObject2;
-          if (localTtsError2 == null) {
-            localObject1 = c.a().b(n.a);
-          }
+
+    public void setTtsEnum(C5095m ttsEnum) {
+        this.f20659a = ttsEnum;
+    }
+
+    public C4980a getOnlineResult() {
+        return this.f20660b;
+    }
+
+    public void setOnlineResult(C4980a onlineResult) {
+        this.f20660b = onlineResult;
+    }
+
+    public C4976a getOfflineResult() {
+        return this.f20661c;
+    }
+
+    public void setOfflineResult(C4976a offlineResult) {
+        this.f20661c = offlineResult;
+    }
+
+    public TtsError getTtsError() {
+        if (this.f20662d != null) {
+            return this.f20662d;
         }
-      }
+        switch (this.f20659a) {
+            case ONLINE:
+                return this.f20660b.m16598b();
+            case OFFLINE:
+                return this.f20661c.m16581b();
+            case MIX:
+                return getMixTtsError();
+            default:
+                return null;
+        }
     }
-    return this.d;
-  }
-  
-  public String getNotifyMessage()
-  {
-    return this.c.c();
-  }
-  
-  public b.a getOfflineResult()
-  {
-    return this.c;
-  }
-  
-  public TtsError getOfflineTtsError()
-  {
-    if (this.c != null) {
-      return this.c.b();
+
+    public void setTtsError(TtsError ttsError) {
+        this.f20662d = ttsError;
     }
-    return this.d;
-  }
-  
-  public c.a getOnlineResult()
-  {
-    return this.b;
-  }
-  
-  public TtsError getOnlineTtsError()
-  {
-    if (this.b != null) {
-      return this.b.b();
+
+    public String getNotifyMessage() {
+        return this.f20661c.m16583c();
     }
-    return this.d;
-  }
-  
-  public m getTtsEnum()
-  {
-    return this.a;
-  }
-  
-  public TtsError getTtsError()
-  {
-    if (this.d == null)
-    {
-      switch (1.a[this.a.ordinal()])
-      {
-      default: 
-        return null;
-      case 1: 
-        return this.b.b();
-      case 2: 
-        return this.c.b();
-      }
-      return getMixTtsError();
+
+    public int getLeftValidDays() {
+        return this.f20661c.m16577a();
     }
-    return this.d;
-  }
-  
-  public boolean isMixSuccess()
-  {
-    return (isOnlineSuccess()) || (isOfflineSuccess());
-  }
-  
-  public boolean isOfflineSuccess()
-  {
-    if (this.c != null) {
-      return this.c.g();
+
+    public TtsError getOnlineTtsError() {
+        return this.f20660b != null ? this.f20660b.m16598b() : this.f20662d;
     }
-    return false;
-  }
-  
-  public boolean isOnlineSuccess()
-  {
-    if (this.b != null) {
-      return this.b.g();
+
+    public TtsError getOfflineTtsError() {
+        return this.f20661c != null ? this.f20661c.m16581b() : this.f20662d;
     }
-    return false;
-  }
-  
-  public boolean isSuccess()
-  {
-    if (this.d == null)
-    {
-      if (this.a != null) {}
-      switch (1.a[this.a.ordinal()])
-      {
-      default: 
-        return false;
-      case 1: 
-        return isOnlineSuccess();
-      case 2: 
-        return isOfflineSuccess();
-      }
-      return isMixSuccess();
+
+    public TtsError getMixTtsError() {
+        TtsError onlineTtsError = getOnlineTtsError();
+        TtsError offlineTtsError = getOfflineTtsError();
+        TtsError ttsError = null;
+        if (onlineTtsError != null && offlineTtsError != null) {
+            ttsError = C5105c.m17295a().m17302b(C5097n.MIX_ENGINE_AUTH_FAILURE);
+        } else if (onlineTtsError == null && offlineTtsError != null) {
+            ttsError = C5105c.m17295a().m17302b(C5097n.OFFLINE_ENGINE_AUTH_FAILURE);
+        } else if (onlineTtsError != null && offlineTtsError == null) {
+            ttsError = C5105c.m17295a().m17302b(C5097n.ONLINE_ENGINE_AUTH_FAILURE);
+        }
+        if (ttsError != null) {
+            return ttsError;
+        }
+        return this.f20662d;
     }
-    LoggerProxy.d("AuthInfo", "cause=" + this.d.getThrowable().getMessage());
-    return false;
-  }
-  
-  public void setOfflineResult(b.a parama)
-  {
-    this.c = parama;
-  }
-  
-  public void setOnlineResult(c.a parama)
-  {
-    this.b = parama;
-  }
-  
-  public void setTtsEnum(m paramm)
-  {
-    this.a = paramm;
-  }
-  
-  public void setTtsError(TtsError paramTtsError)
-  {
-    this.d = paramTtsError;
-  }
+
+    public boolean isSuccess() {
+        if (this.f20662d != null) {
+            LoggerProxy.m17001d("AuthInfo", "cause=" + this.f20662d.getThrowable().getMessage());
+            return false;
+        } else if (this.f20659a == null) {
+            return false;
+        } else {
+            switch (this.f20659a) {
+                case ONLINE:
+                    return isOnlineSuccess();
+                case OFFLINE:
+                    return isOfflineSuccess();
+                case MIX:
+                    return isMixSuccess();
+                default:
+                    return false;
+            }
+        }
+    }
+
+    public boolean isOnlineSuccess() {
+        return this.f20660b != null ? this.f20660b.mo3801g() : false;
+    }
+
+    public boolean isOfflineSuccess() {
+        return this.f20661c != null ? this.f20661c.mo3801g() : false;
+    }
+
+    public boolean isMixSuccess() {
+        return isOnlineSuccess() || isOfflineSuccess();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/auth/AuthInfo.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

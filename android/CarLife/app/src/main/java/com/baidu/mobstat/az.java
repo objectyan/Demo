@@ -5,468 +5,332 @@ import android.text.TextUtils;
 import java.text.SimpleDateFormat;
 import org.json.JSONObject;
 
-public class az
-{
-  private static az a;
-  private Context b;
-  private JSONObject c = new JSONObject();
-  private long d = 24L;
-  private long e = 0L;
-  private long f = 0L;
-  private long g = 0L;
-  private long h = 5L;
-  private long i = 24L;
-  private long j = 15L;
-  private long k = 15L;
-  private long l = 30L;
-  private long m = 12L;
-  private long n = 1L;
-  private long o = 24L;
-  private String p = "";
-  private String q = "";
-  
-  private az(Context paramContext)
-  {
-    this.b = paramContext;
-    m();
-    j();
-    k();
-  }
-  
-  public static az a(Context paramContext)
-  {
-    if (a == null) {}
-    try
-    {
-      if (a == null) {
-        a = new az(paramContext);
-      }
-      return a;
-    }
-    finally {}
-  }
-  
-  private long b(long paramLong)
-  {
-    long l1 = paramLong;
-    if (paramLong - System.currentTimeMillis() > 0L) {
-      l1 = 0L;
-    }
-    return l1;
-  }
-  
-  private void m()
-  {
-    String str = cu.b("backups/system/.timestamp");
-    try
-    {
-      if (!TextUtils.isEmpty(str)) {
-        this.c = new JSONObject(str);
-      }
-      return;
-    }
-    catch (Exception localException) {}
-  }
-  
-  public long a(u paramu)
-  {
-    l2 = paramu.j;
-    try
-    {
-      paramu = paramu.toString();
-      l1 = l2;
-      if (this.c.has(paramu)) {
-        l1 = this.c.getLong(paramu);
-      }
-    }
-    catch (Exception paramu)
-    {
-      for (;;)
-      {
-        bd.a(paramu);
-        long l1 = l2;
-      }
-    }
-    return b(l1);
-  }
-  
-  public void a(u paramu, long paramLong)
-  {
-    paramu.j = paramLong;
-    try
-    {
-      this.c.put(paramu.toString(), paramLong);
-    }
-    catch (Exception paramu)
-    {
-      for (;;)
-      {
-        try
-        {
-          cu.a("backups/system/.timestamp", this.c.toString(), false);
-          return;
+public class az {
+    /* renamed from: a */
+    private static az f19411a;
+    /* renamed from: b */
+    private Context f19412b;
+    /* renamed from: c */
+    private JSONObject f19413c = new JSONObject();
+    /* renamed from: d */
+    private long f19414d = 24;
+    /* renamed from: e */
+    private long f19415e = 0;
+    /* renamed from: f */
+    private long f19416f = 0;
+    /* renamed from: g */
+    private long f19417g = 0;
+    /* renamed from: h */
+    private long f19418h = 5;
+    /* renamed from: i */
+    private long f19419i = 24;
+    /* renamed from: j */
+    private long f19420j = 15;
+    /* renamed from: k */
+    private long f19421k = 15;
+    /* renamed from: l */
+    private long f19422l = 30;
+    /* renamed from: m */
+    private long f19423m = 12;
+    /* renamed from: n */
+    private long f19424n = 1;
+    /* renamed from: o */
+    private long f19425o = 24;
+    /* renamed from: p */
+    private String f19426p = "";
+    /* renamed from: q */
+    private String f19427q = "";
+
+    /* renamed from: a */
+    public static az m15388a(Context context) {
+        if (f19411a == null) {
+            synchronized (az.class) {
+                if (f19411a == null) {
+                    f19411a = new az(context);
+                }
+            }
         }
-        catch (Exception paramu)
-        {
-          bd.a(paramu);
+        return f19411a;
+    }
+
+    private az(Context context) {
+        this.f19412b = context;
+        m15390m();
+        m15406j();
+        m15407k();
+    }
+
+    /* renamed from: m */
+    private void m15390m() {
+        Object b = cu.m15633b("backups/system/.timestamp");
+        try {
+            if (!TextUtils.isEmpty(b)) {
+                this.f19413c = new JSONObject(b);
+            }
+        } catch (Exception e) {
         }
-        paramu = paramu;
-        bd.a(paramu);
-      }
     }
-  }
-  
-  public void a(String paramString)
-  {
-    cu.a(this.b, ".config2", paramString, false);
-    j();
-  }
-  
-  public boolean a()
-  {
-    return this.e != 0L;
-  }
-  
-  public boolean a(long paramLong)
-  {
-    SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-    return localSimpleDateFormat.format(Long.valueOf(paramLong)).equals(localSimpleDateFormat.format(Long.valueOf(System.currentTimeMillis())));
-  }
-  
-  public void b(String paramString)
-  {
-    cu.a(this.b, ".sign", paramString, false);
-    k();
-  }
-  
-  public boolean b()
-  {
-    return this.f != 0L;
-  }
-  
-  public long c()
-  {
-    return this.d * 60L * 60L * 1000L;
-  }
-  
-  public String c(String paramString)
-  {
-    if ((!TextUtils.isEmpty(this.p)) && (this.p.equals(paramString)) && (!TextUtils.isEmpty(this.q))) {
-      return this.q;
+
+    /* renamed from: a */
+    public boolean m15394a() {
+        return this.f19415e != 0;
     }
-    return "";
-  }
-  
-  public long d()
-  {
-    return this.o * 60L * 60L * 1000L;
-  }
-  
-  public long e()
-  {
-    return this.h * 60L * 1000L;
-  }
-  
-  public long f()
-  {
-    return this.i * 60L * 60L * 1000L;
-  }
-  
-  public long g()
-  {
-    return this.j * 24L * 60L * 60L * 1000L;
-  }
-  
-  public long h()
-  {
-    return this.k * 24L * 60L * 60L * 1000L;
-  }
-  
-  public long i()
-  {
-    return this.m * 60L * 60L * 1000L;
-  }
-  
-  /* Error */
-  public void j()
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: getfield 78	com/baidu/mobstat/az:b	Landroid/content/Context;
-    //   4: ldc -107
-    //   6: invokestatic 186	com/baidu/mobstat/cu:a	(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
-    //   9: astore_1
-    //   10: new 171	java/lang/String
-    //   13: dup
-    //   14: iconst_0
-    //   15: invokestatic 191	com/baidu/mobstat/cw:a	()[B
-    //   18: aload_1
-    //   19: invokevirtual 194	java/lang/String:getBytes	()[B
-    //   22: invokestatic 199	com/baidu/mobstat/cv:a	([B)[B
-    //   25: invokestatic 204	com/baidu/mobstat/dc:b	(Z[B[B)[B
-    //   28: invokespecial 207	java/lang/String:<init>	([B)V
-    //   31: astore_1
-    //   32: aload_1
-    //   33: invokestatic 112	android/text/TextUtils:isEmpty	(Ljava/lang/CharSequence;)Z
-    //   36: ifeq +4 -> 40
-    //   39: return
-    //   40: new 33	org/json/JSONObject
-    //   43: dup
-    //   44: aload_1
-    //   45: invokespecial 115	org/json/JSONObject:<init>	(Ljava/lang/String;)V
-    //   48: astore_1
-    //   49: aload_0
-    //   50: aload_1
-    //   51: ldc -48
-    //   53: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   56: putfield 42	com/baidu/mobstat/az:e	J
-    //   59: aload_0
-    //   60: aload_1
-    //   61: ldc -47
-    //   63: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   66: putfield 50	com/baidu/mobstat/az:h	J
-    //   69: aload_0
-    //   70: aload_1
-    //   71: ldc -46
-    //   73: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   76: putfield 52	com/baidu/mobstat/az:i	J
-    //   79: aload_0
-    //   80: aload_1
-    //   81: ldc -45
-    //   83: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   86: putfield 56	com/baidu/mobstat/az:j	J
-    //   89: aload_0
-    //   90: aload_1
-    //   91: ldc -44
-    //   93: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   96: putfield 40	com/baidu/mobstat/az:d	J
-    //   99: aload_0
-    //   100: aload_1
-    //   101: ldc -42
-    //   103: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   106: putfield 70	com/baidu/mobstat/az:o	J
-    //   109: aload_0
-    //   110: aload_1
-    //   111: ldc -40
-    //   113: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   116: putfield 58	com/baidu/mobstat/az:k	J
-    //   119: aload_0
-    //   120: aload_1
-    //   121: ldc -38
-    //   123: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   126: putfield 62	com/baidu/mobstat/az:l	J
-    //   129: aload_0
-    //   130: aload_1
-    //   131: ldc -36
-    //   133: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   136: putfield 66	com/baidu/mobstat/az:m	J
-    //   139: aload_0
-    //   140: aload_1
-    //   141: ldc -34
-    //   143: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   146: putfield 68	com/baidu/mobstat/az:n	J
-    //   149: aload_0
-    //   150: aload_1
-    //   151: ldc -32
-    //   153: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   156: putfield 44	com/baidu/mobstat/az:f	J
-    //   159: aload_0
-    //   160: aload_1
-    //   161: ldc -30
-    //   163: invokevirtual 131	org/json/JSONObject:getLong	(Ljava/lang/String;)J
-    //   166: putfield 46	com/baidu/mobstat/az:g	J
-    //   169: return
-    //   170: astore_1
-    //   171: aload_1
-    //   172: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   175: return
-    //   176: astore_1
-    //   177: aload_1
-    //   178: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   181: return
-    //   182: astore_2
-    //   183: aload_2
-    //   184: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   187: goto -128 -> 59
-    //   190: astore_2
-    //   191: aload_2
-    //   192: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   195: goto -126 -> 69
-    //   198: astore_2
-    //   199: aload_2
-    //   200: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   203: goto -124 -> 79
-    //   206: astore_2
-    //   207: aload_2
-    //   208: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   211: goto -122 -> 89
-    //   214: astore_2
-    //   215: aload_2
-    //   216: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   219: goto -120 -> 99
-    //   222: astore_2
-    //   223: aload_2
-    //   224: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   227: goto -118 -> 109
-    //   230: astore_2
-    //   231: aload_2
-    //   232: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   235: goto -116 -> 119
-    //   238: astore_2
-    //   239: aload_2
-    //   240: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   243: goto -114 -> 129
-    //   246: astore_2
-    //   247: aload_2
-    //   248: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   251: goto -112 -> 139
-    //   254: astore_2
-    //   255: aload_2
-    //   256: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   259: goto -110 -> 149
-    //   262: astore_2
-    //   263: aload_2
-    //   264: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   267: goto -108 -> 159
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	270	0	this	az
-    //   9	152	1	localObject	Object
-    //   170	2	1	localJSONException1	org.json.JSONException
-    //   176	2	1	localException	Exception
-    //   182	2	2	localJSONException2	org.json.JSONException
-    //   190	2	2	localJSONException3	org.json.JSONException
-    //   198	2	2	localJSONException4	org.json.JSONException
-    //   206	2	2	localJSONException5	org.json.JSONException
-    //   214	2	2	localJSONException6	org.json.JSONException
-    //   222	2	2	localJSONException7	org.json.JSONException
-    //   230	2	2	localJSONException8	org.json.JSONException
-    //   238	2	2	localJSONException9	org.json.JSONException
-    //   246	2	2	localJSONException10	org.json.JSONException
-    //   254	2	2	localJSONException11	org.json.JSONException
-    //   262	2	2	localJSONException12	org.json.JSONException
-    // Exception table:
-    //   from	to	target	type
-    //   159	169	170	org/json/JSONException
-    //   10	39	176	java/lang/Exception
-    //   40	49	176	java/lang/Exception
-    //   49	59	176	java/lang/Exception
-    //   59	69	176	java/lang/Exception
-    //   69	79	176	java/lang/Exception
-    //   79	89	176	java/lang/Exception
-    //   89	99	176	java/lang/Exception
-    //   99	109	176	java/lang/Exception
-    //   109	119	176	java/lang/Exception
-    //   119	129	176	java/lang/Exception
-    //   129	139	176	java/lang/Exception
-    //   139	149	176	java/lang/Exception
-    //   149	159	176	java/lang/Exception
-    //   159	169	176	java/lang/Exception
-    //   171	175	176	java/lang/Exception
-    //   183	187	176	java/lang/Exception
-    //   191	195	176	java/lang/Exception
-    //   199	203	176	java/lang/Exception
-    //   207	211	176	java/lang/Exception
-    //   215	219	176	java/lang/Exception
-    //   223	227	176	java/lang/Exception
-    //   231	235	176	java/lang/Exception
-    //   239	243	176	java/lang/Exception
-    //   247	251	176	java/lang/Exception
-    //   255	259	176	java/lang/Exception
-    //   263	267	176	java/lang/Exception
-    //   49	59	182	org/json/JSONException
-    //   59	69	190	org/json/JSONException
-    //   69	79	198	org/json/JSONException
-    //   79	89	206	org/json/JSONException
-    //   89	99	214	org/json/JSONException
-    //   99	109	222	org/json/JSONException
-    //   109	119	230	org/json/JSONException
-    //   119	129	238	org/json/JSONException
-    //   129	139	246	org/json/JSONException
-    //   139	149	254	org/json/JSONException
-    //   149	159	262	org/json/JSONException
-  }
-  
-  /* Error */
-  public void k()
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: getfield 78	com/baidu/mobstat/az:b	Landroid/content/Context;
-    //   4: ldc -79
-    //   6: invokestatic 186	com/baidu/mobstat/cu:a	(Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
-    //   9: astore_1
-    //   10: new 171	java/lang/String
-    //   13: dup
-    //   14: iconst_0
-    //   15: invokestatic 191	com/baidu/mobstat/cw:a	()[B
-    //   18: aload_1
-    //   19: invokevirtual 194	java/lang/String:getBytes	()[B
-    //   22: invokestatic 199	com/baidu/mobstat/cv:a	([B)[B
-    //   25: invokestatic 204	com/baidu/mobstat/dc:b	(Z[B[B)[B
-    //   28: invokespecial 207	java/lang/String:<init>	([B)V
-    //   31: astore_1
-    //   32: aload_1
-    //   33: invokestatic 112	android/text/TextUtils:isEmpty	(Ljava/lang/CharSequence;)Z
-    //   36: ifeq +4 -> 40
-    //   39: return
-    //   40: new 33	org/json/JSONObject
-    //   43: dup
-    //   44: aload_1
-    //   45: invokespecial 115	org/json/JSONObject:<init>	(Ljava/lang/String;)V
-    //   48: astore_1
-    //   49: aload_0
-    //   50: aload_1
-    //   51: ldc -26
-    //   53: invokevirtual 233	org/json/JSONObject:getString	(Ljava/lang/String;)Ljava/lang/String;
-    //   56: putfield 76	com/baidu/mobstat/az:q	Ljava/lang/String;
-    //   59: aload_0
-    //   60: aload_1
-    //   61: ldc -21
-    //   63: invokevirtual 233	org/json/JSONObject:getString	(Ljava/lang/String;)Ljava/lang/String;
-    //   66: putfield 74	com/baidu/mobstat/az:p	Ljava/lang/String;
-    //   69: return
-    //   70: astore_1
-    //   71: aload_1
-    //   72: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   75: return
-    //   76: astore_1
-    //   77: aload_1
-    //   78: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   81: return
-    //   82: astore_2
-    //   83: aload_2
-    //   84: invokestatic 228	com/baidu/mobstat/bd:b	(Ljava/lang/Throwable;)V
-    //   87: goto -28 -> 59
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	90	0	this	az
-    //   9	52	1	localObject	Object
-    //   70	2	1	localException1	Exception
-    //   76	2	1	localException2	Exception
-    //   82	2	2	localException3	Exception
-    // Exception table:
-    //   from	to	target	type
-    //   59	69	70	java/lang/Exception
-    //   10	39	76	java/lang/Exception
-    //   40	49	76	java/lang/Exception
-    //   71	75	76	java/lang/Exception
-    //   83	87	76	java/lang/Exception
-    //   49	59	82	java/lang/Exception
-  }
-  
-  public boolean l()
-  {
-    long l1 = System.currentTimeMillis();
-    long l2 = a(u.h);
-    long l3 = d();
-    bd.a("canSend now=" + l1 + ";lastSendTime=" + l2 + ";sendLogTimeInterval=" + l3);
-    return (l1 - l2 > l3) || (!a(l2));
-  }
+
+    /* renamed from: b */
+    public boolean m15397b() {
+        return this.f19416f != 0;
+    }
+
+    /* renamed from: c */
+    public long m15398c() {
+        return ((this.f19414d * 60) * 60) * 1000;
+    }
+
+    /* renamed from: d */
+    public long m15400d() {
+        return ((this.f19425o * 60) * 60) * 1000;
+    }
+
+    /* renamed from: e */
+    public long m15401e() {
+        return (this.f19418h * 60) * 1000;
+    }
+
+    /* renamed from: f */
+    public long m15402f() {
+        return ((this.f19419i * 60) * 60) * 1000;
+    }
+
+    /* renamed from: g */
+    public long m15403g() {
+        return (((this.f19420j * 24) * 60) * 60) * 1000;
+    }
+
+    /* renamed from: h */
+    public long m15404h() {
+        return (((this.f19421k * 24) * 60) * 60) * 1000;
+    }
+
+    /* renamed from: i */
+    public long m15405i() {
+        return ((this.f19423m * 60) * 60) * 1000;
+    }
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* renamed from: j */
+    public void m15406j() {
+        /*
+        r4 = this;
+        r0 = r4.f19412b;
+        r1 = ".config2";
+        r0 = com.baidu.mobstat.cu.m15628a(r0, r1);
+        r1 = new java.lang.String;	 Catch:{ Exception -> 0x009d }
+        r2 = 0;
+        r3 = com.baidu.mobstat.cw.m15643a();	 Catch:{ Exception -> 0x009d }
+        r0 = r0.getBytes();	 Catch:{ Exception -> 0x009d }
+        r0 = com.baidu.mobstat.cv.m15640a(r0);	 Catch:{ Exception -> 0x009d }
+        r0 = com.baidu.mobstat.dc.m15670b(r2, r3, r0);	 Catch:{ Exception -> 0x009d }
+        r1.<init>(r0);	 Catch:{ Exception -> 0x009d }
+        r0 = android.text.TextUtils.isEmpty(r1);	 Catch:{ Exception -> 0x009d }
+        if (r0 == 0) goto L_0x0026;
+    L_0x0025:
+        return;
+    L_0x0026:
+        r2 = new org.json.JSONObject;	 Catch:{ Exception -> 0x009d }
+        r2.<init>(r1);	 Catch:{ Exception -> 0x009d }
+        r0 = "c";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00a2 }
+        r4.f19415e = r0;	 Catch:{ JSONException -> 0x00a2 }
+    L_0x0034:
+        r0 = "d";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00a7 }
+        r4.f19418h = r0;	 Catch:{ JSONException -> 0x00a7 }
+    L_0x003d:
+        r0 = "e";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00ac }
+        r4.f19419i = r0;	 Catch:{ JSONException -> 0x00ac }
+    L_0x0046:
+        r0 = "i";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00b1 }
+        r4.f19420j = r0;	 Catch:{ JSONException -> 0x00b1 }
+    L_0x004f:
+        r0 = "f";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00b6 }
+        r4.f19414d = r0;	 Catch:{ JSONException -> 0x00b6 }
+    L_0x0058:
+        r0 = "s";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00bb }
+        r4.f19425o = r0;	 Catch:{ JSONException -> 0x00bb }
+    L_0x0061:
+        r0 = "pk";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00c0 }
+        r4.f19421k = r0;	 Catch:{ JSONException -> 0x00c0 }
+    L_0x006a:
+        r0 = "at";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00c5 }
+        r4.f19422l = r0;	 Catch:{ JSONException -> 0x00c5 }
+    L_0x0073:
+        r0 = "as";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00ca }
+        r4.f19423m = r0;	 Catch:{ JSONException -> 0x00ca }
+    L_0x007c:
+        r0 = "ac";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00cf }
+        r4.f19424n = r0;	 Catch:{ JSONException -> 0x00cf }
+    L_0x0085:
+        r0 = "mc";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x00d4 }
+        r4.f19416f = r0;	 Catch:{ JSONException -> 0x00d4 }
+    L_0x008e:
+        r0 = "lsc";
+        r0 = r2.getLong(r0);	 Catch:{ JSONException -> 0x0098 }
+        r4.f19417g = r0;	 Catch:{ JSONException -> 0x0098 }
+        goto L_0x0025;
+    L_0x0098:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x0025;
+    L_0x009d:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);
+        goto L_0x0025;
+    L_0x00a2:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x0034;
+    L_0x00a7:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x003d;
+    L_0x00ac:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x0046;
+    L_0x00b1:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x004f;
+    L_0x00b6:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x0058;
+    L_0x00bb:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x0061;
+    L_0x00c0:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x006a;
+    L_0x00c5:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x0073;
+    L_0x00ca:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x007c;
+    L_0x00cf:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x0085;
+    L_0x00d4:
+        r0 = move-exception;
+        com.baidu.mobstat.bd.m15432b(r0);	 Catch:{ Exception -> 0x009d }
+        goto L_0x008e;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.mobstat.az.j():void");
+    }
+
+    /* renamed from: k */
+    public void m15407k() {
+        try {
+            Object str = new String(dc.m15670b(false, cw.m15643a(), cv.m15640a(cu.m15628a(this.f19412b, ".sign").getBytes())));
+            if (!TextUtils.isEmpty(str)) {
+                JSONObject jSONObject = new JSONObject(str);
+                try {
+                    this.f19427q = jSONObject.getString("sign");
+                } catch (Throwable e) {
+                    bd.m15432b(e);
+                }
+                try {
+                    this.f19426p = jSONObject.getString("ver");
+                } catch (Throwable e2) {
+                    bd.m15432b(e2);
+                }
+            }
+        } catch (Throwable e22) {
+            bd.m15432b(e22);
+        }
+    }
+
+    /* renamed from: a */
+    public void m15393a(String str) {
+        cu.m15630a(this.f19412b, ".config2", str, false);
+        m15406j();
+    }
+
+    /* renamed from: b */
+    public void m15396b(String str) {
+        cu.m15630a(this.f19412b, ".sign", str, false);
+        m15407k();
+    }
+
+    /* renamed from: c */
+    public String m15399c(String str) {
+        if (TextUtils.isEmpty(this.f19426p) || !this.f19426p.equals(str) || TextUtils.isEmpty(this.f19427q)) {
+            return "";
+        }
+        return this.f19427q;
+    }
+
+    /* renamed from: a */
+    public long m15391a(C3606u c3606u) {
+        long j = c3606u.f19671j;
+        try {
+            String c3606u2 = c3606u.toString();
+            if (this.f19413c.has(c3606u2)) {
+                j = this.f19413c.getLong(c3606u2);
+            }
+        } catch (Throwable e) {
+            bd.m15429a(e);
+        }
+        return m15389b(j);
+    }
+
+    /* renamed from: a */
+    public void m15392a(C3606u c3606u, long j) {
+        c3606u.f19671j = j;
+        try {
+            this.f19413c.put(c3606u.toString(), j);
+        } catch (Throwable e) {
+            bd.m15429a(e);
+        }
+        try {
+            cu.m15631a("backups/system/.timestamp", this.f19413c.toString(), false);
+        } catch (Throwable e2) {
+            bd.m15429a(e2);
+        }
+    }
+
+    /* renamed from: l */
+    public boolean m15408l() {
+        long currentTimeMillis = System.currentTimeMillis();
+        long a = m15391a(C3606u.LAST_SEND);
+        long d = m15400d();
+        bd.m15428a("canSend now=" + currentTimeMillis + ";lastSendTime=" + a + ";sendLogTimeInterval=" + d);
+        return currentTimeMillis - a > d || !m15395a(a);
+    }
+
+    /* renamed from: a */
+    public boolean m15395a(long j) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        return simpleDateFormat.format(Long.valueOf(j)).equals(simpleDateFormat.format(Long.valueOf(System.currentTimeMillis())));
+    }
+
+    /* renamed from: b */
+    private long m15389b(long j) {
+        return j - System.currentTimeMillis() > 0 ? 0 : j;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/az.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

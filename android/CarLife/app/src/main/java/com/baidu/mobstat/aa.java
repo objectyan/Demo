@@ -1,20 +1,12 @@
 package com.baidu.mobstat;
 
- enum aa
-{
-  aa(int paramInt1)
-  {
-    super(paramString, paramInt, paramInt1, null);
-  }
-  
-  public x a()
-  {
-    return new aj();
-  }
+enum aa extends C3585y {
+    aa(String str, int i, int i2) {
+        super(str, i, i2);
+    }
+
+    /* renamed from: a */
+    public C3586x mo2721a() {
+        return new aj();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/aa.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

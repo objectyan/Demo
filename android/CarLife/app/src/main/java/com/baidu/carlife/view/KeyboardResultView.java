@@ -1,7 +1,6 @@
 package com.baidu.carlife.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.os.Handler;
@@ -12,275 +11,237 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
 
-public class KeyboardResultView
-  extends ViewGroup
-{
-  private BaseAdapter a;
-  private c b;
-  private a c;
-  private SparseArray<Integer> d;
-  private int e;
-  private b f;
-  private int g;
-  
-  public KeyboardResultView(Context paramContext)
-  {
-    super(paramContext);
-    a(paramContext, null, 0);
-  }
-  
-  public KeyboardResultView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    a(paramContext, paramAttributeSet, 0);
-  }
-  
-  public KeyboardResultView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    a(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  private void a(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    this.g = paramContext.getResources().getDimensionPixelSize(2131362037);
-  }
-  
-  private void a(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      this.d.clear();
-      if (this.f != null) {
-        this.f.a(false, false, 0);
-      }
-      this.e = 0;
-      this.d.put(0, Integer.valueOf(0));
-    }
-    removeAllViews();
-    int j;
-    if (this.a != null)
-    {
-      j = this.a.getCount();
-      if (j != 0) {}
-    }
-    else
-    {
-      return;
-    }
-    final int i = ((Integer)this.d.get(this.e)).intValue();
-    while (i < j)
-    {
-      final View localView = this.a.getView(i, null, null);
-      localView.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (KeyboardResultView.a(KeyboardResultView.this) != null) {
-            KeyboardResultView.a(KeyboardResultView.this).a(i, localView);
-          }
+public class KeyboardResultView extends ViewGroup {
+    /* renamed from: a */
+    private BaseAdapter f7175a;
+    /* renamed from: b */
+    private C2227c f7176b;
+    /* renamed from: c */
+    private C2225a f7177c;
+    /* renamed from: d */
+    private SparseArray<Integer> f7178d;
+    /* renamed from: e */
+    private int f7179e;
+    /* renamed from: f */
+    private C2226b f7180f;
+    /* renamed from: g */
+    private int f7181g;
+
+    /* renamed from: com.baidu.carlife.view.KeyboardResultView$1 */
+    class C22221 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ KeyboardResultView f7169a;
+
+        C22221(KeyboardResultView this$0) {
+            this.f7169a = this$0;
         }
-      });
-      try
-      {
-        addView(localView);
-        i += 1;
-      }
-      catch (Exception localException)
-      {
-        for (;;)
-        {
-          i.e("KeyboardResultView", localException.toString());
+
+        public void run() {
+            this.f7169a.requestLayout();
         }
-      }
     }
-  }
-  
-  public void a()
-  {
-    if (this.d.get(this.e + 1) != null)
-    {
-      this.e += 1;
-      a(false);
-      new Handler().postDelayed(new Runnable()
-      {
-        public void run()
-        {
-          KeyboardResultView.this.requestLayout();
+
+    /* renamed from: com.baidu.carlife.view.KeyboardResultView$2 */
+    class C22232 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ KeyboardResultView f7170a;
+
+        C22232(KeyboardResultView this$0) {
+            this.f7170a = this$0;
         }
-      }, 0L);
-    }
-  }
-  
-  public void b()
-  {
-    if ((this.e > 0) && (this.d.get(this.e - 1) != null))
-    {
-      this.e -= 1;
-      a(false);
-      new Handler().postDelayed(new Runnable()
-      {
-        public void run()
-        {
-          KeyboardResultView.this.requestLayout();
+
+        public void run() {
+            this.f7170a.requestLayout();
         }
-      }, 0L);
     }
-  }
-  
-  public ViewGroup.LayoutParams generateLayoutParams(AttributeSet paramAttributeSet)
-  {
-    return new ViewGroup.LayoutParams(getContext(), paramAttributeSet);
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-  }
-  
-  protected void onLayout(boolean paramBoolean, int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    int i = getPaddingLeft();
-    int j = getPaddingTop();
-    int k = getPaddingRight();
-    paramInt4 = 0;
-    paramInt2 = 0;
-    View localView;
-    label48:
-    int m;
-    if (paramInt2 < getChildCount())
-    {
-      localView = getChildAt(paramInt2);
-      if (paramInt2 == 0)
-      {
-        localView.setSelected(true);
-        m = localView.getMeasuredWidth();
-        localView.layout(paramInt4, j, paramInt4 + m, j + localView.getMeasuredHeight());
-        if (i + paramInt4 + m + k <= paramInt3 - paramInt1) {
-          break label188;
+
+    /* renamed from: com.baidu.carlife.view.KeyboardResultView$a */
+    class C2225a extends DataSetObserver {
+        /* renamed from: a */
+        final /* synthetic */ KeyboardResultView f7174a;
+
+        C2225a(KeyboardResultView this$0) {
+            this.f7174a = this$0;
         }
-        this.d.put(this.e + 1, Integer.valueOf(((Integer)this.d.get(this.e)).intValue() + paramInt2));
-      }
+
+        public void onChanged() {
+            this.f7174a.m8454a(true);
+        }
+
+        public void onInvalidated() {
+            super.onInvalidated();
+        }
     }
-    else if (this.f != null)
-    {
-      if (this.e <= 0) {
-        break label207;
-      }
-      paramBoolean = true;
-      label146:
-      if (this.d.get(this.e + 1) == null) {
-        break label212;
-      }
+
+    /* renamed from: com.baidu.carlife.view.KeyboardResultView$b */
+    public interface C2226b {
+        /* renamed from: a */
+        void mo1819a(boolean z, boolean z2, int i);
     }
-    label188:
-    label207:
-    label212:
-    for (boolean bool = true;; bool = false)
-    {
-      this.f.a(paramBoolean, bool, paramInt2);
-      return;
-      localView.setSelected(false);
-      break label48;
-      paramInt4 += this.g + m;
-      paramInt2 += 1;
-      break;
-      paramBoolean = false;
-      break label146;
+
+    /* renamed from: com.baidu.carlife.view.KeyboardResultView$c */
+    public interface C2227c {
+        /* renamed from: a */
+        void mo1800a(int i, View view);
     }
-  }
-  
-  protected void onMeasure(int paramInt1, int paramInt2)
-  {
-    super.onMeasure(paramInt1, paramInt2);
-    int m = resolveSize(0, paramInt1);
-    int n = getPaddingLeft();
-    int i1 = getPaddingRight();
-    int i2 = getPaddingTop();
-    int i3 = getPaddingBottom();
-    int k = 0;
-    int i = 0;
-    int j = 0;
-    for (;;)
-    {
-      int i4;
-      if (j < getChildCount())
-      {
-        View localView = getChildAt(j);
-        ViewGroup.LayoutParams localLayoutParams = localView.getLayoutParams();
-        localView.measure(getChildMeasureSpec(paramInt1, 0, localLayoutParams.width), getChildMeasureSpec(paramInt2, 0, localLayoutParams.height));
-        i4 = localView.getMeasuredWidth();
-        i = localView.getMeasuredHeight();
-        if (n + k + i4 + i1 <= m) {}
-      }
-      else
-      {
-        setMeasuredDimension(m, 0 + (i + i2 + i3));
-        return;
-      }
-      k += this.g + i4;
-      j += 1;
+
+    public void setPageCallback(C2226b pageCallback) {
+        this.f7180f = pageCallback;
     }
-  }
-  
-  public void setAdapter(BaseAdapter paramBaseAdapter)
-  {
-    if (this.a == null)
-    {
-      this.a = paramBaseAdapter;
-      if (this.c == null)
-      {
-        this.c = new a();
-        this.a.registerDataSetObserver(this.c);
-      }
-      if (this.d == null) {
-        this.d = new SparseArray();
-      }
-      a(true);
+
+    public KeyboardResultView(Context context) {
+        super(context);
+        m8452a(context, null, 0);
     }
-  }
-  
-  public void setItemClickListener(c paramc)
-  {
-    this.b = paramc;
-  }
-  
-  public void setPageCallback(b paramb)
-  {
-    this.f = paramb;
-  }
-  
-  class a
-    extends DataSetObserver
-  {
-    a() {}
-    
-    public void onChanged()
-    {
-      KeyboardResultView.a(KeyboardResultView.this, true);
+
+    public KeyboardResultView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        m8452a(context, attrs, 0);
     }
-    
-    public void onInvalidated()
-    {
-      super.onInvalidated();
+
+    public KeyboardResultView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        m8452a(context, attrs, defStyle);
     }
-  }
-  
-  public static abstract interface b
-  {
-    public abstract void a(boolean paramBoolean1, boolean paramBoolean2, int paramInt);
-  }
-  
-  public static abstract interface c
-  {
-    public abstract void a(int paramInt, View paramView);
-  }
+
+    /* renamed from: a */
+    private void m8452a(Context context, AttributeSet attrs, int defStyle) {
+        this.f7181g = context.getResources().getDimensionPixelSize(C0965R.dimen.keyboard_result_item_spacing);
+    }
+
+    /* renamed from: a */
+    public void m8455a() {
+        if (this.f7178d.get(this.f7179e + 1) != null) {
+            this.f7179e++;
+            m8454a(false);
+            new Handler().postDelayed(new C22221(this), 0);
+        }
+    }
+
+    /* renamed from: b */
+    public void m8456b() {
+        if (this.f7179e > 0 && this.f7178d.get(this.f7179e - 1) != null) {
+            this.f7179e--;
+            m8454a(false);
+            new Handler().postDelayed(new C22232(this), 0);
+        }
+    }
+
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int wantWidth = resolveSize(0, widthMeasureSpec);
+        int paddingLeft = getPaddingLeft();
+        int paddingRight = getPaddingRight();
+        int paddingTop = getPaddingTop();
+        int paddingBottom = getPaddingBottom();
+        int currentWidth = 0;
+        int childHeight = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            View childView = getChildAt(i);
+            LayoutParams params = childView.getLayoutParams();
+            childView.measure(getChildMeasureSpec(widthMeasureSpec, 0, params.width), getChildMeasureSpec(heightMeasureSpec, 0, params.height));
+            int childWidth = childView.getMeasuredWidth();
+            childHeight = childView.getMeasuredHeight();
+            if (((paddingLeft + currentWidth) + childWidth) + paddingRight > wantWidth) {
+                break;
+            }
+            currentWidth += this.f7181g + childWidth;
+        }
+        setMeasuredDimension(wantWidth, 0 + ((childHeight + paddingTop) + paddingBottom));
+    }
+
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        int width = r - l;
+        int paddingLeft = getPaddingLeft();
+        int paddingTop = getPaddingTop();
+        int paddingRight = getPaddingRight();
+        int currentWidth = 0;
+        int i = 0;
+        while (i < getChildCount()) {
+            View childView = getChildAt(i);
+            if (i == 0) {
+                childView.setSelected(true);
+            } else {
+                childView.setSelected(false);
+            }
+            int childWidth = childView.getMeasuredWidth();
+            childView.layout(currentWidth, paddingTop, currentWidth + childWidth, paddingTop + childView.getMeasuredHeight());
+            if (((paddingLeft + currentWidth) + childWidth) + paddingRight > width) {
+                this.f7178d.put(this.f7179e + 1, Integer.valueOf(((Integer) this.f7178d.get(this.f7179e)).intValue() + i));
+                break;
+            } else {
+                currentWidth += this.f7181g + childWidth;
+                i++;
+            }
+        }
+        if (this.f7180f != null) {
+            this.f7180f.mo1819a(this.f7179e > 0, this.f7178d.get(this.f7179e + 1) != null, i);
+        }
+    }
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+    }
+
+    public void setAdapter(BaseAdapter adapter) {
+        if (this.f7175a == null) {
+            this.f7175a = adapter;
+            if (this.f7177c == null) {
+                this.f7177c = new C2225a(this);
+                this.f7175a.registerDataSetObserver(this.f7177c);
+            }
+            if (this.f7178d == null) {
+                this.f7178d = new SparseArray();
+            }
+            m8454a(true);
+        }
+    }
+
+    /* renamed from: a */
+    private void m8454a(boolean needClear) {
+        if (needClear) {
+            this.f7178d.clear();
+            if (this.f7180f != null) {
+                this.f7180f.mo1819a(false, false, 0);
+            }
+            this.f7179e = 0;
+            this.f7178d.put(0, Integer.valueOf(0));
+        }
+        removeAllViews();
+        if (this.f7175a != null) {
+            int count = this.f7175a.getCount();
+            if (count != 0) {
+                for (int i = ((Integer) this.f7178d.get(this.f7179e)).intValue(); i < count; i++) {
+                    final View view = this.f7175a.getView(i, null, null);
+                    final int position = i;
+                    view.setOnClickListener(new OnClickListener(this) {
+                        /* renamed from: c */
+                        final /* synthetic */ KeyboardResultView f7173c;
+
+                        public void onClick(View v) {
+                            if (this.f7173c.f7176b != null) {
+                                this.f7173c.f7176b.mo1800a(position, view);
+                            }
+                        }
+                    });
+                    try {
+                        addView(view);
+                    } catch (Exception e) {
+                        C1260i.m4445e("KeyboardResultView", e.toString());
+                    }
+                }
+            }
+        }
+    }
+
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new LayoutParams(getContext(), attrs);
+    }
+
+    public void setItemClickListener(C2227c mListener) {
+        this.f7176b = mListener;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/KeyboardResultView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

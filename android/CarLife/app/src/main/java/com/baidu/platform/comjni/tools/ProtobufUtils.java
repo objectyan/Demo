@@ -19,278 +19,213 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProtobufUtils
-{
-  static final String a = ProtobufUtils.class.getSimpleName();
-  private static final boolean b = false;
-  private static Map<String, Method> c = new HashMap();
-  
-  private static Method a(ClassLoader paramClassLoader, String paramString)
-    throws ClassNotFoundException, NoSuchMethodException
-  {
-    String str = paramString + "@" + paramClassLoader.hashCode();
-    Method localMethod = (Method)c.get(str);
-    if (localMethod != null) {
-      return localMethod;
-    }
-    paramClassLoader = Class.forName(paramString, true, paramClassLoader).getDeclaredMethod("parseFrom", new Class[] { byte[].class });
-    if (paramClassLoader != null)
-    {
-      paramClassLoader.setAccessible(true);
-      c.put(str, paramClassLoader);
-    }
-    return paramClassLoader;
-  }
-  
-  private static void a(InputStream paramInputStream, OutputStream paramOutputStream)
-    throws IOException
-  {
-    Object localObject = paramInputStream;
-    if (!(paramInputStream instanceof BufferedInputStream)) {
-      localObject = new BufferedInputStream(paramInputStream);
-    }
-    paramInputStream = paramOutputStream;
-    if (!(paramOutputStream instanceof BufferedOutputStream)) {
-      paramInputStream = new BufferedOutputStream(paramOutputStream);
-    }
-    paramOutputStream = new byte['Ȁ'];
-    try
-    {
-      for (;;)
-      {
-        int i = ((InputStream)localObject).read(paramOutputStream);
-        if (i == -1) {
-          break;
+public class ProtobufUtils {
+    /* renamed from: a */
+    static final String f20007a = ProtobufUtils.class.getSimpleName();
+    /* renamed from: b */
+    private static final boolean f20008b = false;
+    /* renamed from: c */
+    private static Map<String, Method> f20009c = new HashMap();
+
+    /* renamed from: com.baidu.platform.comjni.tools.ProtobufUtils$a */
+    public static class C4838a {
+        /* renamed from: a */
+        private MessageMicro f20004a;
+        /* renamed from: b */
+        private String f20005b;
+        /* renamed from: c */
+        private byte[] f20006c;
+
+        C4838a(MessageMicro messageLite) {
+            if (messageLite == null) {
+                throw new NullPointerException();
+            }
+            this.f20004a = messageLite;
         }
-        paramInputStream.write(paramOutputStream, 0, i);
-      }
-      paramInputStream.flush();
-    }
-    finally
-    {
-      ((InputStream)localObject).close();
-      paramInputStream.close();
-    }
-    ((InputStream)localObject).close();
-    paramInputStream.close();
-  }
-  
-  public static a fromMessageLite(MessageMicro paramMessageMicro)
-  {
-    return new a(paramMessageMicro);
-  }
-  
-  public static MessageMicro getMessageLite(ClassLoader paramClassLoader, String paramString1, String paramString2, byte[] paramArrayOfByte)
-  {
-    if ((paramArrayOfByte != null) && (!TextUtils.isEmpty(paramString2)))
-    {
-      paramString1 = paramString1 + "." + paramString2.replace("\\.", "\\$");
-      try
-      {
-        paramClassLoader = (MessageMicro)a(paramClassLoader, paramString1).invoke(null, new Object[] { paramArrayOfByte });
-        return paramClassLoader;
-      }
-      catch (Exception paramClassLoader) {}
-    }
-    return null;
-  }
-  
-  public static MessageMicro getMessageLite(ClassLoader paramClassLoader, String paramString1, String paramString2, byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    if ((paramArrayOfByte != null) && (!TextUtils.isEmpty(paramString2)))
-    {
-      paramString1 = paramString1 + "." + paramString2.replace("\\.", "\\$");
-      try
-      {
-        paramClassLoader = (MessageMicro)a(paramClassLoader, paramString1).invoke(null, new Object[] { readStream(new ByteArrayInputStream(paramArrayOfByte, paramInt1, paramInt2)) });
-        return paramClassLoader;
-      }
-      catch (Exception paramClassLoader) {}
-    }
-    return null;
-  }
-  
-  public static MessageMicro getMessageLite(ClassLoader paramClassLoader, String paramString, byte[] paramArrayOfByte)
-  {
-    return getMessageLite(paramClassLoader, "com.baidu.entity.pb", paramString, paramArrayOfByte);
-  }
-  
-  public static MessageMicro getMessageLite(ClassLoader paramClassLoader, String paramString, byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    return getMessageLite(paramClassLoader, "com.baidu.entity.pb", paramString, paramArrayOfByte, paramInt1, paramInt2);
-  }
-  
-  public static MessageMicro getMessageLite(String paramString1, String paramString2, byte[] paramArrayOfByte)
-  {
-    if ((paramArrayOfByte != null) && (!TextUtils.isEmpty(paramString2)))
-    {
-      paramString1 = paramString1 + "." + paramString2.replace("\\.", "\\$");
-      try
-      {
-        paramString1 = (MessageMicro)a(ProtobufUtils.class.getClassLoader(), paramString1).invoke(null, new Object[] { paramArrayOfByte });
-        return paramString1;
-      }
-      catch (Exception paramString1) {}
-    }
-    return null;
-  }
-  
-  public static MessageMicro getMessageLite(String paramString1, String paramString2, byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    if ((paramArrayOfByte != null) && (!TextUtils.isEmpty(paramString2)))
-    {
-      paramString1 = paramString1 + "." + paramString2.replace("\\.", "\\$");
-      try
-      {
-        paramString1 = (MessageMicro)a(ProtobufUtils.class.getClassLoader(), paramString1).invoke(null, new Object[] { readStream(new ByteArrayInputStream(paramArrayOfByte, paramInt1, paramInt2)) });
-        return paramString1;
-      }
-      catch (Exception paramString1) {}
-    }
-    return null;
-  }
-  
-  public static MessageMicro getMessageLite(String paramString, byte[] paramArrayOfByte)
-  {
-    return getMessageLite("com.baidu.entity.pb", paramString, paramArrayOfByte);
-  }
-  
-  public static MessageMicro getMessageLite(String paramString, byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    return getMessageLite("com.baidu.entity.pb", paramString, paramArrayOfByte, paramInt1, paramInt2);
-  }
-  
-  public static List<MessageMicro> getMessageLiteList(ClassLoader paramClassLoader, byte[] paramArrayOfByte)
-    throws IOException
-  {
-    return getMessageLiteList(paramClassLoader, paramArrayOfByte, "com.baidu.entity.pb");
-  }
-  
-  public static List<MessageMicro> getMessageLiteList(ClassLoader paramClassLoader, byte[] paramArrayOfByte, String paramString)
-    throws IOException
-  {
-    ArrayList localArrayList = new ArrayList();
-    if ((paramArrayOfByte == null) || (paramArrayOfByte.length == 0)) {}
-    for (;;)
-    {
-      return localArrayList;
-      int j = ByteBuffer.wrap(paramArrayOfByte, 0, 4).order(ByteOrder.BIG_ENDIAN).getInt();
-      RepHead localRepHead = RepHead.parseFrom(readStream(new ByteArrayInputStream(paramArrayOfByte, 4, j)));
-      int k = localRepHead.getMessageHeadCount();
-      int i = 0;
-      while (i < k)
-      {
-        Object localObject = localRepHead.getMessageHead(i);
-        String str = ((RepHead.MessageHead)localObject).getName();
-        int m = ((RepHead.MessageHead)localObject).getLength();
-        localObject = getMessageLite(paramClassLoader, paramString, str, paramArrayOfByte, j + 4 + ((RepHead.MessageHead)localObject).getOffset(), m);
-        if (localObject != null) {
-          localArrayList.add(localObject);
+
+        /* renamed from: a */
+        public MessageMicro m16045a() {
+            return this.f20004a;
         }
-        i += 1;
-      }
-    }
-  }
-  
-  public static List<MessageMicro> getMessageLiteList(byte[] paramArrayOfByte)
-    throws IOException
-  {
-    return getMessageLiteList(paramArrayOfByte, "com.baidu.entity.pb");
-  }
-  
-  public static List<MessageMicro> getMessageLiteList(byte[] paramArrayOfByte, String paramString)
-    throws IOException
-  {
-    ArrayList localArrayList = new ArrayList();
-    if ((paramArrayOfByte == null) || (paramArrayOfByte.length == 0)) {
-      return localArrayList;
-    }
-    int j = ByteBuffer.wrap(paramArrayOfByte, 0, 4).order(ByteOrder.BIG_ENDIAN).getInt();
-    RepHead localRepHead = RepHead.parseFrom(readStream(new ByteArrayInputStream(paramArrayOfByte, 4, j)));
-    int k = localRepHead.getMessageHeadCount();
-    int i = 0;
-    label64:
-    Object localObject;
-    String str;
-    int m;
-    int n;
-    if (i < k)
-    {
-      localObject = localRepHead.getMessageHead(i);
-      str = ((RepHead.MessageHead)localObject).getName();
-      m = ((RepHead.MessageHead)localObject).getLength();
-      n = j + 4 + ((RepHead.MessageHead)localObject).getOffset();
-      if (!str.equals("M")) {
-        break label157;
-      }
-      localObject = new MagicMsg();
-      ((MagicMsg)localObject).buffer = readStream(new ByteArrayInputStream(paramArrayOfByte, n, m));
-      localArrayList.add(localObject);
-    }
-    for (;;)
-    {
-      i += 1;
-      break label64;
-      break;
-      label157:
-      localObject = getMessageLite(paramString, str, paramArrayOfByte, n, m);
-      if (localObject != null) {
-        localArrayList.add(localObject);
-      }
-    }
-  }
-  
-  public static byte[] readStream(InputStream paramInputStream)
-    throws IOException
-  {
-    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
-    a(paramInputStream, localByteArrayOutputStream);
-    return localByteArrayOutputStream.toByteArray();
-  }
-  
-  public static class a
-  {
-    private MessageMicro a;
-    private String b;
-    private byte[] c;
-    
-    a(MessageMicro paramMessageMicro)
-    {
-      if (paramMessageMicro == null) {
-        throw new NullPointerException();
-      }
-      this.a = paramMessageMicro;
-    }
-    
-    public MessageMicro a()
-    {
-      return this.a;
-    }
-    
-    public String b()
-    {
-      if (this.b == null)
-      {
-        String str = this.a.getClass().getCanonicalName();
-        if (str.startsWith("com.baidu.entity.pb.")) {
-          this.b = str.substring(20);
+
+        /* renamed from: b */
+        public String m16046b() {
+            if (this.f20005b == null) {
+                String canonicalName = this.f20004a.getClass().getCanonicalName();
+                if (canonicalName.startsWith("com.baidu.entity.pb.")) {
+                    this.f20005b = canonicalName.substring(20);
+                }
+            }
+            return this.f20005b;
         }
-      }
-      return this.b;
+
+        /* renamed from: c */
+        public byte[] m16047c() {
+            if (this.f20006c == null) {
+                this.f20006c = this.f20004a.toByteArray();
+            }
+            return this.f20006c;
+        }
     }
-    
-    public byte[] c()
-    {
-      if (this.c == null) {
-        this.c = this.a.toByteArray();
-      }
-      return this.c;
+
+    /* renamed from: a */
+    private static Method m16048a(ClassLoader classLoader, String classname) throws ClassNotFoundException, NoSuchMethodException {
+        String key = classname + "@" + classLoader.hashCode();
+        Method method = (Method) f20009c.get(key);
+        if (method != null) {
+            return method;
+        }
+        method = Class.forName(classname, true, classLoader).getDeclaredMethod("parseFrom", new Class[]{byte[].class});
+        if (method != null) {
+            method.setAccessible(true);
+            f20009c.put(key, method);
+        }
+        return method;
     }
-  }
+
+    public static MessageMicro getMessageLite(ClassLoader classLoader, String packageName, String messageName, byte[] data, int start, int length) {
+        if (!(data == null || TextUtils.isEmpty(messageName))) {
+            try {
+                return (MessageMicro) m16048a(classLoader, packageName + "." + messageName.replace("\\.", "\\$")).invoke(null, new Object[]{readStream(new ByteArrayInputStream(data, start, length))});
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
+    public static MessageMicro getMessageLite(String packageName, String messageName, byte[] data, int start, int length) {
+        if (!(data == null || TextUtils.isEmpty(messageName))) {
+            try {
+                return (MessageMicro) m16048a(ProtobufUtils.class.getClassLoader(), packageName + "." + messageName.replace("\\.", "\\$")).invoke(null, new Object[]{readStream(new ByteArrayInputStream(data, start, length))});
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
+    public static MessageMicro getMessageLite(ClassLoader classLoader, String messageName, byte[] data, int start, int length) {
+        return getMessageLite(classLoader, "com.baidu.entity.pb", messageName, data, start, length);
+    }
+
+    public static MessageMicro getMessageLite(String messageName, byte[] data, int start, int length) {
+        return getMessageLite("com.baidu.entity.pb", messageName, data, start, length);
+    }
+
+    public static MessageMicro getMessageLite(ClassLoader classLoader, String packageName, String messageName, byte[] data) {
+        if (!(data == null || TextUtils.isEmpty(messageName))) {
+            try {
+                return (MessageMicro) m16048a(classLoader, packageName + "." + messageName.replace("\\.", "\\$")).invoke(null, new Object[]{data});
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
+    public static MessageMicro getMessageLite(String packageName, String messageName, byte[] data) {
+        if (!(data == null || TextUtils.isEmpty(messageName))) {
+            try {
+                return (MessageMicro) m16048a(ProtobufUtils.class.getClassLoader(), packageName + "." + messageName.replace("\\.", "\\$")).invoke(null, new Object[]{data});
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
+    public static MessageMicro getMessageLite(ClassLoader classLoader, String messageName, byte[] data) {
+        return getMessageLite(classLoader, "com.baidu.entity.pb", messageName, data);
+    }
+
+    public static MessageMicro getMessageLite(String messageName, byte[] data) {
+        return getMessageLite("com.baidu.entity.pb", messageName, data);
+    }
+
+    public static C4838a fromMessageLite(MessageMicro messageLite) {
+        return new C4838a(messageLite);
+    }
+
+    public static List<MessageMicro> getMessageLiteList(ClassLoader classLoaders, byte[] data, String packageName) throws IOException {
+        ArrayList<MessageMicro> messageLites = new ArrayList();
+        byte[] bindata = data;
+        if (!(bindata == null || bindata.length == 0)) {
+            int length = ByteBuffer.wrap(bindata, 0, 4).order(ByteOrder.BIG_ENDIAN).getInt();
+            RepHead repHead = RepHead.parseFrom(readStream(new ByteArrayInputStream(bindata, 4, length)));
+            int messageheadCount = repHead.getMessageHeadCount();
+            int START_OFFSET = length + 4;
+            for (int i = 0; i < messageheadCount; i++) {
+                MessageHead messageHead = repHead.getMessageHead(i);
+                int msgOffset = START_OFFSET + messageHead.getOffset();
+                MessageMicro messageLite = getMessageLite(classLoaders, packageName, messageHead.getName(), bindata, msgOffset, messageHead.getLength());
+                if (messageLite != null) {
+                    messageLites.add(messageLite);
+                }
+            }
+        }
+        return messageLites;
+    }
+
+    public static List<MessageMicro> getMessageLiteList(byte[] data, String packageName) throws IOException {
+        ArrayList<MessageMicro> messageLites = new ArrayList();
+        byte[] bindata = data;
+        if (!(bindata == null || bindata.length == 0)) {
+            int length = ByteBuffer.wrap(bindata, 0, 4).order(ByteOrder.BIG_ENDIAN).getInt();
+            RepHead repHead = RepHead.parseFrom(readStream(new ByteArrayInputStream(bindata, 4, length)));
+            int messageheadCount = repHead.getMessageHeadCount();
+            int START_OFFSET = length + 4;
+            for (int i = 0; i < messageheadCount; i++) {
+                MessageHead messageHead = repHead.getMessageHead(i);
+                String msgName = messageHead.getName();
+                int msgLength = messageHead.getLength();
+                int msgOffset = START_OFFSET + messageHead.getOffset();
+                if (msgName.equals("M")) {
+                    MagicMsg msg = new MagicMsg();
+                    msg.buffer = readStream(new ByteArrayInputStream(bindata, msgOffset, msgLength));
+                    messageLites.add(msg);
+                } else {
+                    MessageMicro messageLite = getMessageLite(packageName, msgName, bindata, msgOffset, msgLength);
+                    if (messageLite != null) {
+                        messageLites.add(messageLite);
+                    }
+                }
+            }
+        }
+        return messageLites;
+    }
+
+    public static List<MessageMicro> getMessageLiteList(ClassLoader classLoader, byte[] data) throws IOException {
+        return getMessageLiteList(classLoader, data, "com.baidu.entity.pb");
+    }
+
+    public static List<MessageMicro> getMessageLiteList(byte[] data) throws IOException {
+        return getMessageLiteList(data, "com.baidu.entity.pb");
+    }
+
+    public static byte[] readStream(InputStream inputStream) throws IOException {
+        OutputStream output = new ByteArrayOutputStream();
+        m16049a(inputStream, output);
+        return output.toByteArray();
+    }
+
+    /* renamed from: a */
+    private static void m16049a(InputStream inputStream, OutputStream outputStream) throws IOException {
+        if (!(inputStream instanceof BufferedInputStream)) {
+            inputStream = new BufferedInputStream(inputStream);
+        }
+        if (!(outputStream instanceof BufferedOutputStream)) {
+            outputStream = new BufferedOutputStream(outputStream);
+        }
+        byte[] buf = new byte[512];
+        while (true) {
+            try {
+                int count = inputStream.read(buf);
+                if (count == -1) {
+                    break;
+                }
+                outputStream.write(buf, 0, count);
+            } finally {
+                inputStream.close();
+                outputStream.close();
+            }
+        }
+        outputStream.flush();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comjni/tools/ProtobufUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

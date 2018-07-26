@@ -1,26 +1,16 @@
 package com.baidu.mapframework.nirvana.concurrent;
 
-import com.baidu.mapframework.nirvana.g;
+import com.baidu.mapframework.nirvana.C3480g;
 
-public abstract class ScheduleTask
-  extends g
-  implements Runnable
-{
-  private long a;
-  
-  public ScheduleTask(long paramLong)
-  {
-    this.a = paramLong;
-  }
-  
-  public long getDelay()
-  {
-    return this.a;
-  }
+public abstract class ScheduleTask extends C3480g implements Runnable {
+    /* renamed from: a */
+    private long f19152a;
+
+    public ScheduleTask(long delay) {
+        this.f19152a = delay;
+    }
+
+    public long getDelay() {
+        return this.f19152a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/concurrent/ScheduleTask.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

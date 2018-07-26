@@ -10,132 +10,102 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.util.EntityUtils;
 
-public class BinaryHttpResponseHandler
-  extends HttpResponseHandler
-{
-  private String[] mAllowedContentTypes = { "image/jpeg", "image/png" };
-  
-  public BinaryHttpResponseHandler() {}
-  
-  public BinaryHttpResponseHandler(Looper paramLooper)
-  {
-    super(paramLooper);
-  }
-  
-  public BinaryHttpResponseHandler(Looper paramLooper, String[] paramArrayOfString)
-  {
-    super(paramLooper);
-    this.mAllowedContentTypes = paramArrayOfString;
-  }
-  
-  public BinaryHttpResponseHandler(String[] paramArrayOfString)
-  {
-    this.mAllowedContentTypes = paramArrayOfString;
-  }
-  
-  protected void handleFailureMessage(Throwable paramThrowable, byte[] paramArrayOfByte)
-  {
-    onFailure(paramThrowable, paramArrayOfByte);
-  }
-  
-  public void handleMessage(Message paramMessage)
-  {
-    switch (paramMessage.what)
-    {
+public class BinaryHttpResponseHandler extends HttpResponseHandler {
+    private String[] mAllowedContentTypes;
+
+    public BinaryHttpResponseHandler() {
+        this.mAllowedContentTypes = new String[]{"image/jpeg", "image/png"};
     }
-    for (;;)
-    {
-      super.handleMessage(paramMessage);
-      return;
-      paramMessage = (Object[])paramMessage.obj;
-      handleSuccessMessage(((Integer)paramMessage[0]).intValue(), (byte[])paramMessage[1]);
-      return;
-      Object[] arrayOfObject = (Object[])paramMessage.obj;
-      handleFailureMessage((Throwable)arrayOfObject[0], (byte[])arrayOfObject[1]);
+
+    public BinaryHttpResponseHandler(String[] allowedContentTypes) {
+        this.mAllowedContentTypes = new String[]{"image/jpeg", "image/png"};
+        this.mAllowedContentTypes = allowedContentTypes;
     }
-  }
-  
-  protected void handleSuccessMessage(int paramInt, byte[] paramArrayOfByte)
-  {
-    onSuccess(paramInt, paramArrayOfByte);
-  }
-  
-  protected void onFailure(Throwable paramThrowable, byte[] paramArrayOfByte) {}
-  
-  protected void onSuccess(int paramInt, byte[] paramArrayOfByte)
-  {
-    onSuccess(paramArrayOfByte);
-  }
-  
-  protected void onSuccess(byte[] paramArrayOfByte) {}
-  
-  protected void sendResponseMessage(HttpResponse paramHttpResponse)
-  {
-    StatusLine localStatusLine = paramHttpResponse.getStatusLine();
-    Object localObject1 = paramHttpResponse.getHeaders("Content-Type");
-    if (localObject1.length != 1)
-    {
-      sendFailureMessage(new HttpResponseException(localStatusLine.getStatusCode(), "None or more than one Content-Type Header found!"), (byte[])null);
-      return;
+
+    public BinaryHttpResponseHandler(Looper looper) {
+        super(looper);
+        this.mAllowedContentTypes = new String[]{"image/jpeg", "image/png"};
     }
-    localObject1 = localObject1[0];
-    int k = 0;
-    Object localObject2 = this.mAllowedContentTypes;
-    int m = localObject2.length;
-    int i = 0;
-    for (;;)
-    {
-      int j = k;
-      if (i < m)
-      {
-        if (localObject2[i].equalsIgnoreCase(((Header)localObject1).getValue())) {
-          j = 1;
+
+    public BinaryHttpResponseHandler(Looper looper, String[] allowedContentTypes) {
+        super(looper);
+        this.mAllowedContentTypes = new String[]{"image/jpeg", "image/png"};
+        this.mAllowedContentTypes = allowedContentTypes;
+    }
+
+    protected void onFailure(Throwable error, byte[] binaryData) {
+    }
+
+    protected void onSuccess(byte[] binaryData) {
+    }
+
+    protected void onSuccess(int statusCode, byte[] binaryData) {
+        onSuccess(binaryData);
+    }
+
+    protected void sendSuccessMessage(int statusCode, byte[] binaryData) {
+        sendMessage(obtainMessage(0, new Object[]{Integer.valueOf(statusCode), binaryData}));
+    }
+
+    protected void sendResponseMessage(HttpResponse response) {
+        StatusLine status = response.getStatusLine();
+        Header[] contentTypeHeaders = response.getHeaders("Content-Type");
+        if (contentTypeHeaders.length != 1) {
+            sendFailureMessage(new HttpResponseException(status.getStatusCode(), "None or more than one Content-Type Header found!"), (byte[]) null);
+            return;
         }
-      }
-      else
-      {
-        if (j != 0) {
-          break;
+        Header contentTypeHeader = contentTypeHeaders[0];
+        boolean foundAllowedContentType = false;
+        for (String anAllowedContentType : this.mAllowedContentTypes) {
+            if (anAllowedContentType.equalsIgnoreCase(contentTypeHeader.getValue())) {
+                foundAllowedContentType = true;
+                break;
+            }
         }
-        sendFailureMessage(new HttpResponseException(localStatusLine.getStatusCode(), "Content-Type not allowed!"), (byte[])null);
-        return;
-      }
-      i += 1;
+        if (foundAllowedContentType) {
+            byte[] responseBody = null;
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                try {
+                    responseBody = EntityUtils.toByteArray(entity);
+                } catch (IOException e) {
+                    sendFailureMessage((Throwable) e, (byte[]) null);
+                    return;
+                } finally {
+                    AsyncHttpClient.endEntityViaReflection(entity);
+                }
+            }
+            if (status.getStatusCode() >= 300) {
+                sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
+                return;
+            } else {
+                sendSuccessMessage(status.getStatusCode(), responseBody);
+                return;
+            }
+        }
+        sendFailureMessage(new HttpResponseException(status.getStatusCode(), "Content-Type not allowed!"), (byte[]) null);
     }
-    localObject1 = null;
-    localObject2 = paramHttpResponse.getEntity();
-    paramHttpResponse = (HttpResponse)localObject1;
-    if (localObject2 != null) {}
-    try
-    {
-      paramHttpResponse = EntityUtils.toByteArray((HttpEntity)localObject2);
-      AsyncHttpClient.endEntityViaReflection((HttpEntity)localObject2);
-      if (localStatusLine.getStatusCode() >= 300)
-      {
-        sendFailureMessage(new HttpResponseException(localStatusLine.getStatusCode(), localStatusLine.getReasonPhrase()), paramHttpResponse);
-        return;
-      }
+
+    protected void handleSuccessMessage(int statusCode, byte[] binaryData) {
+        onSuccess(statusCode, binaryData);
     }
-    catch (IOException paramHttpResponse)
-    {
-      sendFailureMessage(paramHttpResponse, (byte[])null);
-      return;
+
+    protected void handleFailureMessage(Throwable error, byte[] binaryData) {
+        onFailure(error, binaryData);
     }
-    finally
-    {
-      AsyncHttpClient.endEntityViaReflection((HttpEntity)localObject2);
+
+    public void handleMessage(Message msg) {
+        Object[] objs;
+        switch (msg.what) {
+            case 0:
+                objs = (Object[]) msg.obj;
+                handleSuccessMessage(((Integer) objs[0]).intValue(), (byte[]) objs[1]);
+                return;
+            case 1:
+                objs = (Object[]) msg.obj;
+                handleFailureMessage((Throwable) objs[0], (byte[]) objs[1]);
+                break;
+        }
+        super.handleMessage(msg);
     }
-    sendSuccessMessage(localStatusLine.getStatusCode(), paramHttpResponse);
-  }
-  
-  protected void sendSuccessMessage(int paramInt, byte[] paramArrayOfByte)
-  {
-    sendMessage(obtainMessage(0, new Object[] { Integer.valueOf(paramInt), paramArrayOfByte }));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/cloudsdk/common/http/BinaryHttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

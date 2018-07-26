@@ -7,88 +7,70 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
+import com.baidu.navisdk.hudsdk.BNRemoteConstants.MessageType;
 import com.baidu.navisdk.util.common.ScreenUtil;
 
-public class PressTextView
-  extends TextView
-{
-  public static final int a = 1;
-  public static final int b = 2;
-  private boolean c = false;
-  private int d = 0;
-  
-  public PressTextView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public PressTextView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    if ((!this.c) || ((this.d != 1) && (this.d != 2))) {
-      return;
+public class PressTextView extends TextView {
+    /* renamed from: a */
+    public static final int f7206a = 1;
+    /* renamed from: b */
+    public static final int f7207b = 2;
+    /* renamed from: c */
+    private boolean f7208c;
+    /* renamed from: d */
+    private int f7209d;
+
+    public PressTextView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
-    int i;
-    if (this.d == 1)
-    {
-      i = 94;
-      if (this.d != 1) {
-        break label132;
-      }
+
+    public PressTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.f7208c = false;
+        this.f7209d = 0;
     }
-    label132:
-    for (int j = 118;; j = 66)
-    {
-      i = ScreenUtil.getInstance().dip2px(i);
-      j = ScreenUtil.getInstance().dip2px(j);
-      int k = ScreenUtil.getInstance().dip2px(5);
-      Paint localPaint = new Paint();
-      localPaint.setColor(-59580);
-      localPaint.setAntiAlias(true);
-      localPaint.setDither(true);
-      localPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-      paramCanvas.drawCircle(i, j, k, localPaint);
-      return;
-      i = 90;
-      break;
+
+    public boolean onTouchEvent(MotionEvent event) {
+        if (this.f7209d != 1) {
+            return super.onTouchEvent(event);
+        }
+        switch (event.getAction()) {
+            case 0:
+                setAlpha(0.4f);
+                break;
+            case 1:
+            case 3:
+                setAlpha(1.0f);
+                break;
+        }
+        return super.onTouchEvent(event);
     }
-  }
-  
-  public boolean onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    if (this.d != 1) {
-      return super.onTouchEvent(paramMotionEvent);
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (!this.f7208c) {
+            return;
+        }
+        if (this.f7209d == 1 || this.f7209d == 2) {
+            int width = this.f7209d == 1 ? 94 : 90;
+            int height = this.f7209d == 1 ? MessageType.BNMessageTypeTunnelUpdate : 66;
+            int widthPx = ScreenUtil.getInstance().dip2px(width);
+            int heightPx = ScreenUtil.getInstance().dip2px(height);
+            int padding = ScreenUtil.getInstance().dip2px(5);
+            Paint paint = new Paint();
+            paint.setColor(-59580);
+            paint.setAntiAlias(true);
+            paint.setDither(true);
+            paint.setStyle(Style.FILL_AND_STROKE);
+            canvas.drawCircle((float) widthPx, (float) heightPx, (float) padding, paint);
+        }
     }
-    switch (paramMotionEvent.getAction())
-    {
+
+    public void setNeedRedPoint(boolean isNeed) {
+        this.f7208c = isNeed;
     }
-    for (;;)
-    {
-      return super.onTouchEvent(paramMotionEvent);
-      setAlpha(0.4F);
-      continue;
-      setAlpha(1.0F);
+
+    public void setPageType(int type) {
+        this.f7209d = type;
     }
-  }
-  
-  public void setNeedRedPoint(boolean paramBoolean)
-  {
-    this.c = paramBoolean;
-  }
-  
-  public void setPageType(int paramInt)
-  {
-    this.d = paramInt;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/PressTextView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,38 +1,30 @@
 package com.baidu.ufosdk.ui;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import com.baidu.ufosdk.UfoSDK;
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class bg
-  implements Runnable
-{
-  bg(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void run()
-  {
-    a.a(this.a.getApplicationContext());
-    if (UfoSDK.clientid.length() != 0) {
-      FeedbackInputActivity.H(this.a).obtainMessage(1, null).sendToTarget();
+/* compiled from: FeedbackInputActivity */
+final class bg implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21573a;
+
+    bg(FeedbackInputActivity feedbackInputActivity) {
+        this.f21573a = feedbackInputActivity;
     }
-    for (;;)
-    {
-      Object localObject = this.a.getApplicationContext();
-      String str = UfoSDK.clientid;
-      localObject = a.c((Context)localObject);
-      if (localObject != null) {
-        FeedbackInputActivity.H(this.a).obtainMessage(0, localObject).sendToTarget();
-      }
-      return;
-      FeedbackInputActivity.H(this.a).obtainMessage(4, null).sendToTarget();
+
+    public final void run() {
+        C5180a.m17569a(this.f21573a.getApplicationContext());
+        if (UfoSDK.clientid.length() != 0) {
+            this.f21573a.ak.obtainMessage(1, null).sendToTarget();
+        } else {
+            this.f21573a.ak.obtainMessage(4, null).sendToTarget();
+        }
+        Context applicationContext = this.f21573a.getApplicationContext();
+        String str = UfoSDK.clientid;
+        String c = C5180a.m17574c(applicationContext);
+        if (c != null) {
+            this.f21573a.ak.obtainMessage(0, c).sendToTarget();
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bg.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

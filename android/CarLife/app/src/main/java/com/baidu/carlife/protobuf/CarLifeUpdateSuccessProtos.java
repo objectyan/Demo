@@ -9,403 +9,340 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarLifeUpdateSuccessProtos
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_carlife_protobuf_CarLifeUpdateSuccess_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_carlife_protobuf_CarLifeUpdateSuccess_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarLifeUpdateSuccessProtos.access$902(paramAnonymousFileDescriptor);
-        CarLifeUpdateSuccessProtos.access$002((Descriptors.Descriptor)CarLifeUpdateSuccessProtos.getDescriptor().getMessageTypes().get(0));
-        CarLifeUpdateSuccessProtos.access$102(new GeneratedMessage.FieldAccessorTable(CarLifeUpdateSuccessProtos.internal_static_carlife_protobuf_CarLifeUpdateSuccess_descriptor, new String[] { "VersionCode", "SupportFlag" }, CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.class, CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n\016usuccess.proto\022\020carlife.protobuf\"@\n\024CarLifeUpdateSuccess\022\023\n\013versionCode\030\001 \002(\005\022\023\n\013supportFlag\030\002 \002(\bB8\n\032com.baidu.carlife.protobufB\032CarLifeUpdateSuccessProtos" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarLifeUpdateSuccess
-    extends GeneratedMessage
-  {
-    public static final int SUPPORTFLAG_FIELD_NUMBER = 2;
-    public static final int VERSIONCODE_FIELD_NUMBER = 1;
-    private static final CarLifeUpdateSuccess defaultInstance = new CarLifeUpdateSuccess();
-    private boolean hasSupportFlag;
-    private boolean hasVersionCode;
-    private int memoizedSerializedSize = -1;
-    private boolean supportFlag_ = false;
-    private int versionCode_ = 0;
-    
-    static
-    {
-      CarLifeUpdateSuccessProtos.getDescriptor();
-      CarLifeUpdateSuccessProtos.internalForceInit();
-    }
-    
-    public static CarLifeUpdateSuccess getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarLifeUpdateSuccessProtos.internal_static_carlife_protobuf_CarLifeUpdateSuccess_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarLifeUpdateSuccess paramCarLifeUpdateSuccess)
-    {
-      return newBuilder().mergeFrom(paramCarLifeUpdateSuccess);
-    }
-    
-    public static CarLifeUpdateSuccess parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarLifeUpdateSuccess parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public CarLifeUpdateSuccess getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      i = 0;
-      if (hasVersionCode()) {
-        i = 0 + CodedOutputStream.computeInt32Size(1, getVersionCode());
-      }
-      int j = i;
-      if (hasSupportFlag()) {
-        j = i + CodedOutputStream.computeBoolSize(2, getSupportFlag());
-      }
-      i = j + getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public boolean getSupportFlag()
-    {
-      return this.supportFlag_;
-    }
-    
-    public int getVersionCode()
-    {
-      return this.versionCode_;
-    }
-    
-    public boolean hasSupportFlag()
-    {
-      return this.hasSupportFlag;
-    }
-    
-    public boolean hasVersionCode()
-    {
-      return this.hasVersionCode;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarLifeUpdateSuccessProtos.internal_static_carlife_protobuf_CarLifeUpdateSuccess_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      if (!this.hasVersionCode) {}
-      while (!this.hasSupportFlag) {
-        return false;
-      }
-      return true;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasVersionCode()) {
-        paramCodedOutputStream.writeInt32(1, getVersionCode());
-      }
-      if (hasSupportFlag()) {
-        paramCodedOutputStream.writeBool(2, getSupportFlag());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess result;
-      
-      private CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarLifeUpdateSuccessProtos {
+    private static FileDescriptor descriptor;
+    private static Descriptor internal_static_carlife_protobuf_CarLifeUpdateSuccess_descriptor;
+    /* renamed from: internal_static_carlife_protobuf_CarLifeUpdateSuccess_fieldAccessorTable */
+    private static FieldAccessorTable f6574xddd45f4c;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarLifeUpdateSuccessProtos$1 */
+    static class C20381 implements InternalDescriptorAssigner {
+        C20381() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess(null);
-        return localBuilder;
-      }
-      
-      public CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarLifeUpdateSuccessProtos.descriptor = root;
+            CarLifeUpdateSuccessProtos.internal_static_carlife_protobuf_CarLifeUpdateSuccess_descriptor = (Descriptor) CarLifeUpdateSuccessProtos.getDescriptor().getMessageTypes().get(0);
+            CarLifeUpdateSuccessProtos.f6574xddd45f4c = new FieldAccessorTable(CarLifeUpdateSuccessProtos.internal_static_carlife_protobuf_CarLifeUpdateSuccess_descriptor, new String[]{"VersionCode", "SupportFlag"}, CarLifeUpdateSuccess.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess localCarLifeUpdateSuccess = this.result;
-        this.result = null;
-        return localCarLifeUpdateSuccess;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess(null);
-        return this;
-      }
-      
-      public Builder clearSupportFlag()
-      {
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.access$702(this.result, false);
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.access$802(this.result, false);
-        return this;
-      }
-      
-      public Builder clearVersionCode()
-      {
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.access$502(this.result, false);
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.access$602(this.result, 0);
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess getDefaultInstanceForType()
-      {
-        return CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.getDescriptor();
-      }
-      
-      public boolean getSupportFlag()
-      {
-        return this.result.getSupportFlag();
-      }
-      
-      public int getVersionCode()
-      {
-        return this.result.getVersionCode();
-      }
-      
-      public boolean hasSupportFlag()
-      {
-        return this.result.hasSupportFlag();
-      }
-      
-      public boolean hasVersionCode()
-      {
-        return this.result.hasVersionCode();
-      }
-      
-      protected CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess paramCarLifeUpdateSuccess)
-      {
-        if (paramCarLifeUpdateSuccess == CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarLifeUpdateSuccess.hasVersionCode()) {
-          setVersionCode(paramCarLifeUpdateSuccess.getVersionCode());
-        }
-        if (paramCarLifeUpdateSuccess.hasSupportFlag()) {
-          setSupportFlag(paramCarLifeUpdateSuccess.getSupportFlag());
-        }
-        mergeUnknownFields(paramCarLifeUpdateSuccess.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarLifeUpdateSuccess extends GeneratedMessage {
+        public static final int SUPPORTFLAG_FIELD_NUMBER = 2;
+        public static final int VERSIONCODE_FIELD_NUMBER = 1;
+        private static final CarLifeUpdateSuccess defaultInstance = new CarLifeUpdateSuccess();
+        private boolean hasSupportFlag;
+        private boolean hasVersionCode;
+        private int memoizedSerializedSize;
+        private boolean supportFlag_;
+        private int versionCode_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarLifeUpdateSuccess result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setVersionCode(paramCodedInputStream.readInt32());
-            break;
-          case 16: 
-            setSupportFlag(paramCodedInputStream.readBool());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarLifeUpdateSuccess();
+                return builder;
+            }
+
+            protected CarLifeUpdateSuccess internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarLifeUpdateSuccess();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarLifeUpdateSuccess.getDescriptor();
+            }
+
+            public CarLifeUpdateSuccess getDefaultInstanceForType() {
+                return CarLifeUpdateSuccess.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarLifeUpdateSuccess build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarLifeUpdateSuccess buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarLifeUpdateSuccess buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarLifeUpdateSuccess returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarLifeUpdateSuccess) {
+                    return mergeFrom((CarLifeUpdateSuccess) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarLifeUpdateSuccess other) {
+                if (other != CarLifeUpdateSuccess.getDefaultInstance()) {
+                    if (other.hasVersionCode()) {
+                        setVersionCode(other.getVersionCode());
+                    }
+                    if (other.hasSupportFlag()) {
+                        setSupportFlag(other.getSupportFlag());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setVersionCode(input.readInt32());
+                            continue;
+                        case 16:
+                            setSupportFlag(input.readBool());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasVersionCode() {
+                return this.result.hasVersionCode();
+            }
+
+            public int getVersionCode() {
+                return this.result.getVersionCode();
+            }
+
+            public Builder setVersionCode(int value) {
+                this.result.hasVersionCode = true;
+                this.result.versionCode_ = value;
+                return this;
+            }
+
+            public Builder clearVersionCode() {
+                this.result.hasVersionCode = false;
+                this.result.versionCode_ = 0;
+                return this;
+            }
+
+            public boolean hasSupportFlag() {
+                return this.result.hasSupportFlag();
+            }
+
+            public boolean getSupportFlag() {
+                return this.result.getSupportFlag();
+            }
+
+            public Builder setSupportFlag(boolean value) {
+                this.result.hasSupportFlag = true;
+                this.result.supportFlag_ = value;
+                return this;
+            }
+
+            public Builder clearSupportFlag() {
+                this.result.hasSupportFlag = false;
+                this.result.supportFlag_ = false;
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess)) {
-          return mergeFrom((CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess)paramMessage);
+
+        private CarLifeUpdateSuccess() {
+            this.versionCode_ = 0;
+            this.supportFlag_ = false;
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setSupportFlag(boolean paramBoolean)
-      {
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.access$702(this.result, true);
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.access$802(this.result, paramBoolean);
-        return this;
-      }
-      
-      public Builder setVersionCode(int paramInt)
-      {
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.access$502(this.result, true);
-        CarLifeUpdateSuccessProtos.CarLifeUpdateSuccess.access$602(this.result, paramInt);
-        return this;
-      }
+
+        static {
+            CarLifeUpdateSuccessProtos.getDescriptor();
+            CarLifeUpdateSuccessProtos.internalForceInit();
+        }
+
+        public static CarLifeUpdateSuccess getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public CarLifeUpdateSuccess getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarLifeUpdateSuccessProtos.internal_static_carlife_protobuf_CarLifeUpdateSuccess_descriptor;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarLifeUpdateSuccessProtos.f6574xddd45f4c;
+        }
+
+        public boolean hasVersionCode() {
+            return this.hasVersionCode;
+        }
+
+        public int getVersionCode() {
+            return this.versionCode_;
+        }
+
+        public boolean hasSupportFlag() {
+            return this.hasSupportFlag;
+        }
+
+        public boolean getSupportFlag() {
+            return this.supportFlag_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasVersionCode && this.hasSupportFlag) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasVersionCode()) {
+                output.writeInt32(1, getVersionCode());
+            }
+            if (hasSupportFlag()) {
+                output.writeBool(2, getSupportFlag());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasVersionCode()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getVersionCode());
+            }
+            if (hasSupportFlag()) {
+                size += CodedOutputStream.computeBoolSize(2, getSupportFlag());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarLifeUpdateSuccess parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarLifeUpdateSuccess parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarLifeUpdateSuccess prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarLifeUpdateSuccessProtos() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n\u000eusuccess.proto\u0012\u0010carlife.protobuf\"@\n\u0014CarLifeUpdateSuccess\u0012\u0013\n\u000bversionCode\u0018\u0001 \u0002(\u0005\u0012\u0013\n\u000bsupportFlag\u0018\u0002 \u0002(\bB8\n\u001acom.baidu.carlife.protobufB\u001aCarLifeUpdateSuccessProtos"}, new FileDescriptor[0], new C20381());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarLifeUpdateSuccessProtos.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

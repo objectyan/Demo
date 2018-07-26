@@ -5,7 +5,6 @@ import android.os.Build.VERSION;
 import android.os.Message;
 import android.os.SystemClock;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout.LayoutParams;
@@ -17,176 +16,142 @@ import com.baidu.navisdk.ui.widget.BNBaseView;
 import com.baidu.navisdk.ui.widget.BNWebViewClient;
 import com.baidu.navisdk.util.common.LogUtil;
 
-public class RGMMUserGuideView
-  extends BNBaseView
-{
-  private static final String TAG = RGMMUserGuideView.class.getSimpleName();
-  private static final String URL_USER_GUIDE = "http://webpage.navi.baidu.com/static/webpage/NoviceNavigation/";
-  private ViewGroup mGuideViewContails = null;
-  private WebView mWebView = null;
-  
-  public RGMMUserGuideView(Context paramContext, ViewGroup paramViewGroup, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext, paramViewGroup, paramOnRGSubViewListener);
-    try
-    {
-      initViews();
-      loadWebData();
-      return;
-    }
-    catch (Exception paramContext)
-    {
-      LogUtil.e(TAG, "init exception:" + paramContext.getMessage());
-    }
-  }
-  
-  private void initViews()
-  {
-    this.mWebView = new WebView(this.mContext);
-    this.mWebView.setBackgroundColor(0);
-    setWebViewSettings(this.mWebView);
-    setWebViewClient(this.mWebView);
-  }
-  
-  private void loadWebData()
-  {
-    this.mWebView.loadUrl("http://webpage.navi.baidu.com/static/webpage/NoviceNavigation/");
-  }
-  
-  private void setWebViewClient(WebView paramWebView)
-  {
-    paramWebView.setWebViewClient(new BNWebViewClient()
-    {
-      public boolean onEventAndroid(int paramAnonymousInt, WebView paramAnonymousWebView, String paramAnonymousString, Message paramAnonymousMessage)
-      {
-        switch (paramAnonymousInt)
-        {
-        default: 
-        case 2: 
-        case 3: 
-          do
-          {
-            do
-            {
-              return true;
-            } while ((paramAnonymousString == null) || (!"http://webpage.navi.baidu.com/static/webpage/NoviceNavigation/".startsWith(paramAnonymousString)));
-            RGUserGuideModel.getInstance().mReceivError = false;
-            RGUserGuideModel.getInstance().mLoadStartTime = SystemClock.elapsedRealtime();
+public class RGMMUserGuideView extends BNBaseView {
+    private static final String TAG = RGMMUserGuideView.class.getSimpleName();
+    private static final String URL_USER_GUIDE = "http://webpage.navi.baidu.com/static/webpage/NoviceNavigation/";
+    private ViewGroup mGuideViewContails = null;
+    private WebView mWebView = null;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMUserGuideView$1 */
+    class C44411 extends BNWebViewClient {
+        C44411() {
+        }
+
+        public boolean onEventBNavi(int msgType, WebView webview, String url, Message msg) {
+            switch (msgType) {
+                case 0:
+                    RGMMUserGuideView.this.hide();
+                    break;
+            }
             return true;
-          } while ((paramAnonymousString == null) || (!"http://webpage.navi.baidu.com/static/webpage/NoviceNavigation/".startsWith(paramAnonymousString)));
-          RGUserGuideModel.getInstance().mLoadEndTime = SystemClock.elapsedRealtime();
-          RGMMUserGuideView.this.show();
-          return true;
         }
-        RGUserGuideModel.getInstance().mReceivError = true;
-        return true;
-      }
-      
-      public boolean onEventBNavi(int paramAnonymousInt, WebView paramAnonymousWebView, String paramAnonymousString, Message paramAnonymousMessage)
-      {
-        switch (paramAnonymousInt)
-        {
+
+        public boolean onEventAndroid(int msgType, WebView webview, String url, Message msg) {
+            switch (msgType) {
+                case 2:
+                    if (url != null && RGMMUserGuideView.URL_USER_GUIDE.startsWith(url)) {
+                        RGUserGuideModel.getInstance().mReceivError = false;
+                        RGUserGuideModel.getInstance().mLoadStartTime = SystemClock.elapsedRealtime();
+                        break;
+                    }
+                case 3:
+                    if (url != null && RGMMUserGuideView.URL_USER_GUIDE.startsWith(url)) {
+                        RGUserGuideModel.getInstance().mLoadEndTime = SystemClock.elapsedRealtime();
+                        RGMMUserGuideView.this.show();
+                        break;
+                    }
+                case 4:
+                    RGUserGuideModel.getInstance().mReceivError = true;
+                    break;
+            }
+            return true;
         }
-        for (;;)
-        {
-          return true;
-          RGMMUserGuideView.this.hide();
+    }
+
+    public RGMMUserGuideView(Context context, ViewGroup viewGroup, OnRGSubViewListener listener) {
+        super(context, viewGroup, listener);
+        try {
+            initViews();
+            loadWebData();
+        } catch (Exception e) {
+            LogUtil.m15791e(TAG, "init exception:" + e.getMessage());
         }
-      }
-    });
-  }
-  
-  private void setWebViewSettings(WebView paramWebView)
-  {
-    paramWebView = paramWebView.getSettings();
-    paramWebView.setJavaScriptEnabled(true);
-    paramWebView.setBuiltInZoomControls(true);
-    paramWebView.setLoadWithOverviewMode(true);
-    paramWebView.setCacheMode(-1);
-    paramWebView.setJavaScriptCanOpenWindowsAutomatically(true);
-    paramWebView.setLoadsImagesAutomatically(true);
-    paramWebView.setUseWideViewPort(true);
-    paramWebView.setSupportZoom(false);
-    paramWebView.setUseWideViewPort(true);
-    paramWebView.setSupportMultipleWindows(true);
-  }
-  
-  public void dispose()
-  {
-    if (this.mWebView != null) {}
-    try
-    {
-      ViewGroup localViewGroup = (ViewGroup)this.mWebView.getParent();
-      if (localViewGroup != null) {
-        localViewGroup.removeView(this.mWebView);
-      }
-      if (Build.VERSION.SDK_INT >= 11) {
-        this.mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
-      }
-      this.mWebView.removeAllViews();
-      this.mWebView.destroy();
     }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        LogUtil.e(TAG, "webview dispose exception");
-      }
+
+    private void initViews() {
+        this.mWebView = new WebView(this.mContext);
+        this.mWebView.setBackgroundColor(0);
+        setWebViewSettings(this.mWebView);
+        setWebViewClient(this.mWebView);
     }
-    this.mWebView = null;
-    this.mSubViewListener = null;
-    this.mGuideViewContails = null;
-    this.mContext = null;
-  }
-  
-  public void hide()
-  {
-    super.hide();
-    if (this.mGuideViewContails != null) {
-      this.mGuideViewContails.setVisibility(8);
+
+    private void setWebViewSettings(WebView webView) {
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setCacheMode(-1);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setLoadsImagesAutomatically(true);
+        settings.setUseWideViewPort(true);
+        settings.setSupportZoom(false);
+        settings.setUseWideViewPort(true);
+        settings.setSupportMultipleWindows(true);
     }
-    RGUserGuideModel.getInstance().isShowing = false;
-    dispose();
-  }
-  
-  public void show()
-  {
-    if (this.mWebView == null)
-    {
-      LogUtil.e(TAG, "webview is null");
-      return;
+
+    private void setWebViewClient(WebView webView) {
+        webView.setWebViewClient(new C44411());
     }
-    if (!RGUserGuideModel.getInstance().satisfyCondition())
-    {
-      LogUtil.e(TAG, "not satisfyCondition");
-      return;
+
+    private void loadWebData() {
+        this.mWebView.loadUrl(URL_USER_GUIDE);
     }
-    this.mGuideViewContails = RGMapModeViewController.getInstance().getUserGuideViewContails();
-    if (this.mGuideViewContails == null)
-    {
-      LogUtil.e(TAG, "viewContails is null");
-      return;
+
+    public void updateOrientation() {
+        show();
     }
-    super.show();
-    Object localObject = (ViewGroup)this.mWebView.getParent();
-    if (localObject != null) {
-      ((ViewGroup)localObject).removeView(this.mWebView);
+
+    public void show() {
+        if (this.mWebView == null) {
+            LogUtil.m15791e(TAG, "webview is null");
+        } else if (RGUserGuideModel.getInstance().satisfyCondition()) {
+            this.mGuideViewContails = RGMapModeViewController.getInstance().getUserGuideViewContails();
+            if (this.mGuideViewContails == null) {
+                LogUtil.m15791e(TAG, "viewContails is null");
+                return;
+            }
+            super.show();
+            ViewGroup viewGroup = (ViewGroup) this.mWebView.getParent();
+            if (viewGroup != null) {
+                viewGroup.removeView(this.mWebView);
+            }
+            this.mGuideViewContails.addView(this.mWebView, new LayoutParams(-1, -1));
+            this.mGuideViewContails.setVisibility(0);
+            RGUserGuideModel.getInstance().isShowing = true;
+            BNSettingManager.setHasShowUserGuide(true);
+        } else {
+            LogUtil.m15791e(TAG, "not satisfyCondition");
+        }
     }
-    localObject = new RelativeLayout.LayoutParams(-1, -1);
-    this.mGuideViewContails.addView(this.mWebView, (ViewGroup.LayoutParams)localObject);
-    this.mGuideViewContails.setVisibility(0);
-    RGUserGuideModel.getInstance().isShowing = true;
-    BNSettingManager.setHasShowUserGuide(true);
-  }
-  
-  public void updateOrientation()
-  {
-    show();
-  }
+
+    public void hide() {
+        super.hide();
+        if (this.mGuideViewContails != null) {
+            this.mGuideViewContails.setVisibility(8);
+        }
+        RGUserGuideModel.getInstance().isShowing = false;
+        dispose();
+    }
+
+    public void dispose() {
+        if (this.mWebView != null) {
+            try {
+                ViewGroup viewGroup = (ViewGroup) this.mWebView.getParent();
+                if (viewGroup != null) {
+                    viewGroup.removeView(this.mWebView);
+                }
+                if (VERSION.SDK_INT >= 11) {
+                    this.mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
+                }
+                this.mWebView.removeAllViews();
+                this.mWebView.destroy();
+            } catch (Exception e) {
+                LogUtil.m15791e(TAG, "webview dispose exception");
+            }
+        }
+        this.mWebView = null;
+        this.mSubViewListener = null;
+        this.mGuideViewContails = null;
+        this.mContext = null;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMUserGuideView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

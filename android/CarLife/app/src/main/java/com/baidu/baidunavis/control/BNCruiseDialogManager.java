@@ -4,305 +4,268 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
-import com.baidu.carlife.core.screen.b;
-import com.baidu.carlife.core.screen.d;
-import com.baidu.carlife.core.screen.e;
-import com.baidu.carlife.view.dialog.c;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.C0690d;
+import com.baidu.carlife.core.screen.C1277e;
+import com.baidu.carlife.view.dialog.C1953c;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.cruise.control.CruiseDialogManager.CruiseDialogManagerInterface;
 import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.ui.widget.BNDialog.OnNaviClickListener;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BNCruiseDialogManager
-{
-  private static final String TAG = "Cruise";
-  private Activity mActivity;
-  private CruiseDialogManager.CruiseDialogManagerInterface mCruiseDialogManagerInterface = new CruiseDialogManager.CruiseDialogManagerInterface()
-  {
-    public void dismissGPSSettingDialog()
-    {
-      BNCruiseDialogManager.this.dismissGPSSettingDialogAtCarlife();
-    }
-    
-    public void dismissQuitDialog()
-    {
-      BNCruiseDialogManager.this.dismissQuitDialogAtCarlife();
-    }
-    
-    public void hideCruiseUnavailableDialog()
-    {
-      BNCruiseDialogManager.this.hideCruiseUnavailableDialogAtCarlife();
-    }
-    
-    public void popDialogAndShow()
-    {
-      BNCruiseDialogManager.this.popDialogAndShowAtCarlife();
-    }
-    
-    public void putDialogInQueue(Dialog paramAnonymousDialog)
-    {
-      BNCruiseDialogManager.this.putDialogInQueueAtCarlife(paramAnonymousDialog);
-    }
-    
-    public void showCruiseNotLocDialog(BNDialog.OnNaviClickListener paramAnonymousOnNaviClickListener)
-    {
-      BNCruiseDialogManager.this.showCruiseNotLocDialogAtCarlife(paramAnonymousOnNaviClickListener);
-    }
-    
-    public void showCruiseUnavailableDialog(BNDialog.OnNaviClickListener paramAnonymousOnNaviClickListener)
-    {
-      BNCruiseDialogManager.this.showCruiseUnavailableDialogAtCarlife(paramAnonymousOnNaviClickListener);
-    }
-    
-    public void showGPSSettingDialog()
-    {
-      BNCruiseDialogManager.this.showGPSSettingDialogAtCarlife();
-    }
-    
-    public void showQuitDialog(BNDialog.OnNaviClickListener paramAnonymousOnNaviClickListener)
-    {
-      BNCruiseDialogManager.this.showQuitDialogAtCarlife(paramAnonymousOnNaviClickListener);
-    }
-  };
-  private List<Dialog> mDialogList = new LinkedList();
-  private c mExitDialog;
-  private c mGPSSettingDialog;
-  private c mNotLocatedDialog;
-  private e mOnDialogListener;
-  private c mUnavailableDialog;
-  
-  public BNCruiseDialogManager(Activity paramActivity, e parame)
-  {
-    this.mActivity = paramActivity;
-    this.mOnDialogListener = parame;
-  }
-  
-  private void openSysNetworkSetting(boolean paramBoolean)
-  {
-    if (paramBoolean) {}
-    for (Intent localIntent = new Intent("android.settings.WIFI_SETTINGS");; localIntent = new Intent("android.settings.WIRELESS_SETTINGS")) {
-      try
-      {
-        if (this.mActivity != null) {
-          this.mActivity.startActivity(localIntent);
+public class BNCruiseDialogManager {
+    private static final String TAG = "Cruise";
+    private Activity mActivity;
+    private CruiseDialogManagerInterface mCruiseDialogManagerInterface = new C07591();
+    private List<Dialog> mDialogList = new LinkedList();
+    private C1953c mExitDialog;
+    private C1953c mGPSSettingDialog;
+    private C1953c mNotLocatedDialog;
+    private C1277e mOnDialogListener;
+    private C1953c mUnavailableDialog;
+
+    /* renamed from: com.baidu.baidunavis.control.BNCruiseDialogManager$1 */
+    class C07591 implements CruiseDialogManagerInterface {
+        C07591() {
         }
-        return;
-      }
-      catch (Exception localException)
-      {
-        LogUtil.e("Cruise", localException.toString());
-      }
+
+        public void showGPSSettingDialog() {
+            BNCruiseDialogManager.this.showGPSSettingDialogAtCarlife();
+        }
+
+        public void dismissGPSSettingDialog() {
+            BNCruiseDialogManager.this.dismissGPSSettingDialogAtCarlife();
+        }
+
+        public void showQuitDialog(OnNaviClickListener onNaviClickListener) {
+            BNCruiseDialogManager.this.showQuitDialogAtCarlife(onNaviClickListener);
+        }
+
+        public void dismissQuitDialog() {
+            BNCruiseDialogManager.this.dismissQuitDialogAtCarlife();
+        }
+
+        public void showCruiseNotLocDialog(OnNaviClickListener onNaviClickListener) {
+            BNCruiseDialogManager.this.showCruiseNotLocDialogAtCarlife(onNaviClickListener);
+        }
+
+        public void showCruiseUnavailableDialog(OnNaviClickListener onNaviClickListener) {
+            BNCruiseDialogManager.this.showCruiseUnavailableDialogAtCarlife(onNaviClickListener);
+        }
+
+        public void hideCruiseUnavailableDialog() {
+            BNCruiseDialogManager.this.hideCruiseUnavailableDialogAtCarlife();
+        }
+
+        public void popDialogAndShow() {
+            BNCruiseDialogManager.this.popDialogAndShowAtCarlife();
+        }
+
+        public void putDialogInQueue(Dialog dialog) {
+            BNCruiseDialogManager.this.putDialogInQueueAtCarlife(dialog);
+        }
     }
-  }
-  
-  public void dismissGPSSettingDialogAtCarlife()
-  {
-    try
-    {
-      this.mOnDialogListener.dismissDialog(this.mGPSSettingDialog);
-      this.mGPSSettingDialog = null;
-      return;
+
+    /* renamed from: com.baidu.baidunavis.control.BNCruiseDialogManager$2 */
+    class C07602 implements C0672b {
+        C07602() {
+        }
+
+        public void onClick() {
+            if (BNCruiseDialogManager.this.mActivity != null && BNCruiseDialogManager.this.mActivity != null && !BNCruiseDialogManager.this.mActivity.isFinishing()) {
+                TipTool.onCreateToastDialog(BNCruiseDialogManager.this.mActivity, JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_open_gps));
+            }
+        }
     }
-    catch (Exception localException)
-    {
-      this.mGPSSettingDialog = null;
+
+    /* renamed from: com.baidu.baidunavis.control.BNCruiseDialogManager$3 */
+    class C07613 implements C0672b {
+        C07613() {
+        }
+
+        public void onClick() {
+            try {
+                BNCruiseDialogManager.this.mActivity.startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
+            } catch (Exception e) {
+                LogUtil.e("", e.toString());
+                TipTool.onCreateToastDialog(BNCruiseDialogManager.this.mActivity, JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_no_gps));
+            }
+        }
     }
-  }
-  
-  public void dismissQuitDialogAtCarlife()
-  {
-    this.mOnDialogListener.dismissDialog(this.mExitDialog);
-    this.mExitDialog = null;
-  }
-  
-  public CruiseDialogManager.CruiseDialogManagerInterface getCruiseDialogManagerInterface()
-  {
-    return this.mCruiseDialogManagerInterface;
-  }
-  
-  public void hideCruiseUnavailableDialogAtCarlife()
-  {
-    try
-    {
-      this.mOnDialogListener.dismissDialog(this.mUnavailableDialog);
-      this.mUnavailableDialog = null;
-      return;
+
+    /* renamed from: com.baidu.baidunavis.control.BNCruiseDialogManager$4 */
+    class C07624 implements C0690d {
+        C07624() {
+        }
+
+        public void onCancel() {
+            BNCruiseDialogManager.this.mGPSSettingDialog = null;
+        }
     }
-    catch (Exception localException)
-    {
-      this.mUnavailableDialog = null;
+
+    /* renamed from: com.baidu.baidunavis.control.BNCruiseDialogManager$6 */
+    class C07646 implements C0690d {
+        C07646() {
+        }
+
+        public void onCancel() {
+            BNCruiseDialogManager.this.mExitDialog = null;
+        }
     }
-  }
-  
-  public void popDialogAndShowAtCarlife()
-  {
-    Dialog localDialog;
-    if ((this.mDialogList != null) && (!this.mDialogList.isEmpty()))
-    {
-      localDialog = (Dialog)this.mDialogList.remove(0);
-      if ((localDialog == null) || (localDialog.isShowing()) || (this.mActivity.isFinishing())) {}
-    }
-    try
-    {
-      localDialog.show();
-      return;
-    }
-    catch (Exception localException) {}
-  }
-  
-  public void putDialogInQueueAtCarlife(Dialog paramDialog)
-  {
-    Iterator localIterator;
-    if ((this.mDialogList != null) && (paramDialog != null)) {
-      localIterator = this.mDialogList.iterator();
-    }
-    while (localIterator.hasNext()) {
-      if (paramDialog == (Dialog)localIterator.next()) {
-        return;
-      }
-    }
-    this.mDialogList.add(paramDialog);
-  }
-  
-  public void showCruiseNotLocDialogAtCarlife(BNDialog.OnNaviClickListener paramOnNaviClickListener) {}
-  
-  public void showCruiseUnavailableDialogAtCarlife(final BNDialog.OnNaviClickListener paramOnNaviClickListener)
-  {
-    if ((this.mUnavailableDialog != null) || (this.mExitDialog != null) || (this.mGPSSettingDialog != null) || (this.mOnDialogListener.isDialogShown())) {
-      return;
-    }
-    hideCruiseUnavailableDialogAtCarlife();
-    try
-    {
-      if (this.mActivity != null)
-      {
-        Resources localResources = JarUtils.getResources();
-        this.mUnavailableDialog = new c(this.mActivity).c(localResources.getString(1711669372)).b(localResources.getString(1711669731)).g(17).d(localResources.getString(1711669732)).a(new b()
-        {
-          public void onClick()
-          {
+
+    /* renamed from: com.baidu.baidunavis.control.BNCruiseDialogManager$8 */
+    class C07668 implements C0672b {
+        C07668() {
+        }
+
+        public void onClick() {
             BNCruiseDialogManager.this.openSysNetworkSetting(true);
             BNCruiseDialogManager.this.mOnDialogListener.dismissDialog(BNCruiseDialogManager.this.mUnavailableDialog);
-          }
-        }).e(localResources.getString(1711669759)).b(new b()
-        {
-          public void onClick()
-          {
-            if (paramOnNaviClickListener != null) {
-              paramOnNaviClickListener.onClick();
-            }
-          }
-        });
-        this.mUnavailableDialog.setOnDialogCancelListener(new d()
-        {
-          public void onCancel()
-          {
-            BNCruiseDialogManager.access$402(BNCruiseDialogManager.this, null);
-          }
-        });
-      }
-      this.mOnDialogListener.showDialog(this.mUnavailableDialog);
-      return;
-    }
-    catch (Exception paramOnNaviClickListener)
-    {
-      this.mUnavailableDialog = null;
-    }
-  }
-  
-  public void showGPSSettingDialogAtCarlife()
-  {
-    if ((this.mGPSSettingDialog != null) || (this.mExitDialog != null) || (this.mUnavailableDialog != null) || (this.mOnDialogListener.isDialogShown())) {
-      return;
-    }
-    try
-    {
-      if (this.mActivity != null)
-      {
-        Resources localResources = JarUtils.getResources();
-        this.mGPSSettingDialog = new c(this.mActivity).c(localResources.getString(1711669372)).b(localResources.getString(1711669746)).g(17).d(localResources.getString(1711669747)).q().a(new b()
-        {
-          public void onClick()
-          {
-            try
-            {
-              Intent localIntent = new Intent("android.settings.LOCATION_SOURCE_SETTINGS");
-              BNCruiseDialogManager.this.mActivity.startActivity(localIntent);
-              return;
-            }
-            catch (Exception localException)
-            {
-              LogUtil.e("", localException.toString());
-              TipTool.onCreateToastDialog(BNCruiseDialogManager.this.mActivity, JarUtils.getResources().getString(1711669421));
-            }
-          }
-        }).e(localResources.getString(1711669373)).b(new b()
-        {
-          public void onClick()
-          {
-            if ((BNCruiseDialogManager.this.mActivity != null) && (BNCruiseDialogManager.this.mActivity != null) && (!BNCruiseDialogManager.this.mActivity.isFinishing())) {
-              TipTool.onCreateToastDialog(BNCruiseDialogManager.this.mActivity, JarUtils.getResources().getString(1711669415));
-            }
-          }
-        });
-        this.mGPSSettingDialog.setOnDialogCancelListener(new d()
-        {
-          public void onCancel()
-          {
-            BNCruiseDialogManager.access$102(BNCruiseDialogManager.this, null);
-          }
-        });
-      }
-      this.mOnDialogListener.showDialog(this.mGPSSettingDialog);
-      return;
-    }
-    catch (Exception localException)
-    {
-      LogUtil.e("Cruise", "dialog show failed because activity is NOT running!");
-      this.mGPSSettingDialog = null;
-    }
-  }
-  
-  public void showQuitDialogAtCarlife(final BNDialog.OnNaviClickListener paramOnNaviClickListener)
-  {
-    if (this.mActivity == null) {
-      return;
-    }
-    dismissQuitDialogAtCarlife();
-    try
-    {
-      this.mExitDialog = new c(this.mActivity).c(JarUtils.getResources().getString(1711669372)).b(JarUtils.getResources().getString(1711669745)).g(17).d(JarUtils.getResources().getString(1711669611)).q().a(new b()
-      {
-        public void onClick()
-        {
-          if (paramOnNaviClickListener != null) {
-            paramOnNaviClickListener.onClick();
-          }
         }
-      }).e(JarUtils.getResources().getString(1711669612));
-      this.mExitDialog.setOnDialogCancelListener(new d()
-      {
-        public void onCancel()
-        {
-          BNCruiseDialogManager.access$202(BNCruiseDialogManager.this, null);
+    }
+
+    /* renamed from: com.baidu.baidunavis.control.BNCruiseDialogManager$9 */
+    class C07679 implements C0690d {
+        C07679() {
         }
-      });
-      this.mOnDialogListener.showDialog(this.mExitDialog);
-      return;
+
+        public void onCancel() {
+            BNCruiseDialogManager.this.mUnavailableDialog = null;
+        }
     }
-    catch (Exception paramOnNaviClickListener)
-    {
-      this.mExitDialog = null;
+
+    public BNCruiseDialogManager(Activity activity, C1277e listener) {
+        this.mActivity = activity;
+        this.mOnDialogListener = listener;
     }
-  }
+
+    public CruiseDialogManagerInterface getCruiseDialogManagerInterface() {
+        return this.mCruiseDialogManagerInterface;
+    }
+
+    public void showGPSSettingDialogAtCarlife() {
+        if (this.mGPSSettingDialog == null && this.mExitDialog == null && this.mUnavailableDialog == null && !this.mOnDialogListener.isDialogShown()) {
+            try {
+                if (this.mActivity != null) {
+                    Resources res = JarUtils.getResources();
+                    this.mGPSSettingDialog = new C1953c(this.mActivity).m7448c(res.getString(C4048R.string.nsdk_string_rg_nav_title_tip)).m7444b(res.getString(C4048R.string.nsdk_string_cruise_gps_not_open_and_set)).m7457g(17).m7451d(res.getString(C4048R.string.nsdk_string_cruise_gps_setting)).m7458q().m7438a(new C07613()).m7454e(res.getString(C4048R.string.nsdk_string_rg_nav_dialog_cancel)).m7443b(new C07602());
+                    this.mGPSSettingDialog.setOnDialogCancelListener(new C07624());
+                }
+                this.mOnDialogListener.showDialog(this.mGPSSettingDialog);
+            } catch (Exception e) {
+                LogUtil.e("Cruise", "dialog show failed because activity is NOT running!");
+                this.mGPSSettingDialog = null;
+            }
+        }
+    }
+
+    public void dismissGPSSettingDialogAtCarlife() {
+        try {
+            this.mOnDialogListener.dismissDialog(this.mGPSSettingDialog);
+            this.mGPSSettingDialog = null;
+        } catch (Exception e) {
+            this.mGPSSettingDialog = null;
+        }
+    }
+
+    public void showQuitDialogAtCarlife(final OnNaviClickListener onQuitListener) {
+        if (this.mActivity != null) {
+            dismissQuitDialogAtCarlife();
+            try {
+                this.mExitDialog = new C1953c(this.mActivity).m7448c(JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_nav_title_tip)).m7444b(JarUtils.getResources().getString(C4048R.string.nsdk_string_cruise_exit_msg)).m7457g(17).m7451d(JarUtils.getResources().getString(C4048R.string.nsdk_string_confirm)).m7458q().m7438a(new C0672b() {
+                    public void onClick() {
+                        if (onQuitListener != null) {
+                            onQuitListener.onClick();
+                        }
+                    }
+                }).m7454e(JarUtils.getResources().getString(C4048R.string.nsdk_string_negative));
+                this.mExitDialog.setOnDialogCancelListener(new C07646());
+                this.mOnDialogListener.showDialog(this.mExitDialog);
+            } catch (Exception e) {
+                this.mExitDialog = null;
+            }
+        }
+    }
+
+    public void dismissQuitDialogAtCarlife() {
+        this.mOnDialogListener.dismissDialog(this.mExitDialog);
+        this.mExitDialog = null;
+    }
+
+    public void showCruiseNotLocDialogAtCarlife(OnNaviClickListener onCancelListener) {
+    }
+
+    public void showCruiseUnavailableDialogAtCarlife(final OnNaviClickListener onDownloadListener) {
+        if (this.mUnavailableDialog == null && this.mExitDialog == null && this.mGPSSettingDialog == null && !this.mOnDialogListener.isDialogShown()) {
+            hideCruiseUnavailableDialogAtCarlife();
+            try {
+                if (this.mActivity != null) {
+                    Resources res = JarUtils.getResources();
+                    this.mUnavailableDialog = new C1953c(this.mActivity).m7448c(res.getString(C4048R.string.nsdk_string_rg_nav_title_tip)).m7444b(res.getString(C4048R.string.nsdk_string_cruise_unavailable)).m7457g(17).m7451d(res.getString(C4048R.string.nsdk_string_cruise_open_net)).m7438a(new C07668()).m7454e(res.getString(C4048R.string.nsdk_string_common_alert_download)).m7443b(new C0672b() {
+                        public void onClick() {
+                            if (onDownloadListener != null) {
+                                onDownloadListener.onClick();
+                            }
+                        }
+                    });
+                    this.mUnavailableDialog.setOnDialogCancelListener(new C07679());
+                }
+                this.mOnDialogListener.showDialog(this.mUnavailableDialog);
+            } catch (Exception e) {
+                this.mUnavailableDialog = null;
+            }
+        }
+    }
+
+    public void hideCruiseUnavailableDialogAtCarlife() {
+        try {
+            this.mOnDialogListener.dismissDialog(this.mUnavailableDialog);
+            this.mUnavailableDialog = null;
+        } catch (Exception e) {
+            this.mUnavailableDialog = null;
+        }
+    }
+
+    private void openSysNetworkSetting(boolean isWifi) {
+        Intent intent;
+        if (isWifi) {
+            intent = new Intent("android.settings.WIFI_SETTINGS");
+        } else {
+            intent = new Intent("android.settings.WIRELESS_SETTINGS");
+        }
+        try {
+            if (this.mActivity != null) {
+                this.mActivity.startActivity(intent);
+            }
+        } catch (Exception e) {
+            LogUtil.e("Cruise", e.toString());
+        }
+    }
+
+    public void putDialogInQueueAtCarlife(Dialog dialog) {
+        if (this.mDialogList != null && dialog != null) {
+            for (Dialog dlg : this.mDialogList) {
+                if (dialog == dlg) {
+                    return;
+                }
+            }
+            this.mDialogList.add(dialog);
+        }
+    }
+
+    public void popDialogAndShowAtCarlife() {
+        if (this.mDialogList != null && !this.mDialogList.isEmpty()) {
+            Dialog dialog = (Dialog) this.mDialogList.remove(0);
+            if (dialog != null && !dialog.isShowing() && !this.mActivity.isFinishing()) {
+                try {
+                    dialog.show();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/control/BNCruiseDialogManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

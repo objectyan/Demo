@@ -3,96 +3,89 @@ package com.indooratlas.android.sdk._internal;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
 import android.os.SystemClock;
 import com.indooratlas.android.sensors.wifi.AbstractWifiScanSensor;
-import com.indooratlas.android.sensors.wifi.AbstractWifiScanSensor.a;
+import com.indooratlas.android.sensors.wifi.AbstractWifiScanSensor.C6019a;
 
-final class dz
-  extends AbstractWifiScanSensor
-{
-  long f;
-  private AbstractWifiScanSensor.a g = new AbstractWifiScanSensor.a(this);
-  private long h;
-  private Runnable i = new Runnable()
-  {
-    public final void run()
-    {
-      dz.a(dz.this);
+final class dz extends AbstractWifiScanSensor {
+    /* renamed from: f */
+    long f23490f;
+    /* renamed from: g */
+    private C6019a f23491g = new C6019a(this);
+    /* renamed from: h */
+    private long f23492h;
+    /* renamed from: i */
+    private Runnable f23493i = new C58611(this);
+
+    /* renamed from: com.indooratlas.android.sdk._internal.dz$1 */
+    class C58611 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ dz f23489a;
+
+        C58611(dz dzVar) {
+            this.f23489a = dzVar;
+        }
+
+        public final void run() {
+            this.f23489a.m20376b();
+        }
     }
-  };
-  
-  dz(eb parameb, WifiManager paramWifiManager)
-  {
-    super(-100, paramWifiManager, parameb);
-  }
-  
-  private void b()
-  {
-    if (this.c)
-    {
-      localObject = cz.a;
-      this.b.startScan();
-      this.h = SystemClock.elapsedRealtime();
-      localObject = this.g;
-      ((AbstractWifiScanSensor.a)localObject).f += 1;
-      return;
+
+    dz(eb ebVar, WifiManager wifiManager) {
+        super(-100, wifiManager, ebVar);
     }
-    Object localObject = cz.a;
-  }
-  
-  final boolean a()
-  {
-    if (this.e != null) {
-      this.e.removeCallbacks(this.i);
+
+    public final void onReceive(Context context, Intent intent) {
+        String str;
+        if (!"android.net.wifi.SCAN_RESULTS".equals(intent.getAction())) {
+            str = cz.f23362a;
+            new Object[1][0] = intent.getAction();
+        } else if (this.c) {
+            a(this.b.getScanResults());
+            long elapsedRealtime = (SystemClock.elapsedRealtime() - this.f23492h) - this.f23490f;
+            if (elapsedRealtime > 0) {
+                m20376b();
+                return;
+            }
+            String str2 = cz.f23362a;
+            new Object[1][0] = Long.valueOf(-elapsedRealtime);
+            this.e.postDelayed(this.f23493i, -elapsedRealtime);
+        } else {
+            str = cz.f23362a;
+        }
     }
-    return super.a();
-  }
-  
-  final boolean a(long paramLong)
-  {
-    if ((paramLong < 200L) || (paramLong < 0L))
-    {
-      this.f = 200L;
-      String str = cz.a;
+
+    /* renamed from: a */
+    final boolean m20378a(long j) {
+        if (j < 200 || j < 0) {
+            this.f23490f = 200;
+            String str = cz.f23362a;
+        } else {
+            this.f23490f = j;
+        }
+        boolean a = super.a(j);
+        m20376b();
+        return a;
     }
-    for (;;)
-    {
-      boolean bool = super.a(paramLong);
-      b();
-      return bool;
-      this.f = paramLong;
+
+    /* renamed from: a */
+    final boolean m20377a() {
+        if (this.e != null) {
+            this.e.removeCallbacks(this.f23493i);
+        }
+        return super.a();
     }
-  }
-  
-  public final void onReceive(Context paramContext, Intent paramIntent)
-  {
-    if (!"android.net.wifi.SCAN_RESULTS".equals(paramIntent.getAction()))
-    {
-      paramContext = cz.a;
-      paramIntent.getAction();
-      return;
+
+    /* renamed from: b */
+    private void m20376b() {
+        if (this.c) {
+            String str = cz.f23362a;
+            this.b.startScan();
+            this.f23492h = SystemClock.elapsedRealtime();
+            C6019a c6019a = this.f23491g;
+            c6019a.f24636f++;
+            return;
+        }
+        str = cz.f23362a;
     }
-    if (this.c)
-    {
-      a(this.b.getScanResults());
-      long l1 = SystemClock.elapsedRealtime() - this.h - this.f;
-      if (l1 > 0L)
-      {
-        b();
-        return;
-      }
-      paramContext = cz.a;
-      long l2 = -l1;
-      this.e.postDelayed(this.i, -l1);
-      return;
-    }
-    paramContext = cz.a;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dz.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

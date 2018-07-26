@@ -1,46 +1,43 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class es
-{
-  static final class a
-  {
-    final int a;
-    final int b;
-    final int c;
-    final int d;
-    final int e;
-    public final int f;
-    
-    a(er paramer, int paramInt)
-    {
-      this.e = paramInt;
-      et localet = et.a(paramer.b, paramer.a, paramInt);
-      paramer = et.a(paramer.d, paramer.c, paramInt);
-      this.f = (1 << paramInt);
-      int j = localet.a;
-      paramInt = paramer.a;
-      int k = localet.a;
-      int m = this.f;
-      int i = paramInt - k;
-      paramInt = i;
-      if (i < -m / 2) {
-        paramInt = (int)(i + Math.round(-i / m) * m);
-      }
-      i = paramInt;
-      if (paramInt > m / 2) {
-        i = (int)(paramInt - Math.round(paramInt / m) * m);
-      }
-      paramInt = i + k;
-      this.a = Math.min(j, paramInt);
-      this.b = Math.max(j, paramInt);
-      this.c = Math.min(localet.b, paramer.b);
-      this.d = Math.max(localet.b, paramer.b);
+public final class es {
+
+    /* renamed from: com.indooratlas.android.sdk._internal.es$a */
+    static class C5870a {
+        /* renamed from: a */
+        final int f23534a;
+        /* renamed from: b */
+        final int f23535b;
+        /* renamed from: c */
+        final int f23536c;
+        /* renamed from: d */
+        final int f23537d;
+        /* renamed from: e */
+        final int f23538e;
+        /* renamed from: f */
+        public final int f23539f;
+
+        C5870a(er erVar, int i) {
+            this.f23538e = i;
+            et a = et.m20429a(erVar.f23531b, erVar.f23530a, i);
+            et a2 = et.m20429a(erVar.f23533d, erVar.f23532c, i);
+            this.f23539f = 1 << i;
+            int i2 = a.f23541a;
+            int i3 = a2.f23541a;
+            int i4 = a.f23541a;
+            int i5 = this.f23539f;
+            i3 -= i4;
+            if (i3 < (-i5) / 2) {
+                i3 = (int) (((long) i3) + (Math.round(((double) (-i3)) / ((double) i5)) * ((long) i5)));
+            }
+            if (i3 > i5 / 2) {
+                i3 = (int) (((long) i3) - (Math.round(((double) i3) / ((double) i5)) * ((long) i5)));
+            }
+            i3 += i4;
+            this.f23534a = Math.min(i2, i3);
+            this.f23535b = Math.max(i2, i3);
+            this.f23536c = Math.min(a.f23542b, a2.f23542b);
+            this.f23537d = Math.max(a.f23542b, a2.f23542b);
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/es.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

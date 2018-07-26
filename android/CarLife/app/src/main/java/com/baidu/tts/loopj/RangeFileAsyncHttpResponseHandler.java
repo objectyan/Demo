@@ -11,112 +11,76 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpUriRequest;
 
-public abstract class RangeFileAsyncHttpResponseHandler
-  extends FileAsyncHttpResponseHandler
-{
-  private static final String LOG_TAG = "RangeFileAsyncHttpRH";
-  private boolean append = false;
-  private long current = 0L;
-  
-  public RangeFileAsyncHttpResponseHandler(File paramFile)
-  {
-    super(paramFile);
-  }
-  
-  protected byte[] getResponseData(HttpEntity paramHttpEntity)
-    throws IOException
-  {
-    if (paramHttpEntity != null)
-    {
-      InputStream localInputStream = paramHttpEntity.getContent();
-      long l = paramHttpEntity.getContentLength() + this.current;
-      paramHttpEntity = new FileOutputStream(getTargetFile(), this.append);
-      if (localInputStream != null)
-      {
-        try
-        {
-          byte[] arrayOfByte = new byte['က'];
-          while (this.current < l)
-          {
-            int i = localInputStream.read(arrayOfByte);
-            if ((i == -1) || (Thread.currentThread().isInterrupted())) {
-              break;
+public abstract class RangeFileAsyncHttpResponseHandler extends FileAsyncHttpResponseHandler {
+    private static final String LOG_TAG = "RangeFileAsyncHttpRH";
+    private boolean append = false;
+    private long current = 0;
+
+    public RangeFileAsyncHttpResponseHandler(File file) {
+        super(file);
+    }
+
+    public void sendResponseMessage(HttpResponse response) throws IOException {
+        if (!Thread.currentThread().isInterrupted()) {
+            StatusLine statusLine = response.getStatusLine();
+            if (statusLine.getStatusCode() == 416) {
+                if (!Thread.currentThread().isInterrupted()) {
+                    sendSuccessMessage(statusLine.getStatusCode(), response.getAllHeaders(), null);
+                }
+            } else if (statusLine.getStatusCode() >= 300) {
+                if (!Thread.currentThread().isInterrupted()) {
+                    sendFailureMessage(statusLine.getStatusCode(), response.getAllHeaders(), null, new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase()));
+                }
+            } else if (!Thread.currentThread().isInterrupted()) {
+                Header firstHeader = response.getFirstHeader("Content-Range");
+                if (firstHeader == null) {
+                    this.append = false;
+                    this.current = 0;
+                } else {
+                    AsyncHttpClient.log.mo3905v(LOG_TAG, "Content-Range: " + firstHeader.getValue());
+                }
+                sendSuccessMessage(statusLine.getStatusCode(), response.getAllHeaders(), getResponseData(response.getEntity()));
             }
-            this.current += i;
-            paramHttpEntity.write(arrayOfByte, 0, i);
-            sendProgressMessage(this.current, l);
-          }
-          localInputStream.close();
         }
-        finally
-        {
-          localInputStream.close();
-          paramHttpEntity.flush();
-          paramHttpEntity.close();
+    }
+
+    protected byte[] getResponseData(HttpEntity entity) throws IOException {
+        if (entity != null) {
+            InputStream content = entity.getContent();
+            long contentLength = entity.getContentLength() + this.current;
+            FileOutputStream fileOutputStream = new FileOutputStream(getTargetFile(), this.append);
+            if (content != null) {
+                try {
+                    byte[] bArr = new byte[4096];
+                    while (this.current < contentLength) {
+                        int read = content.read(bArr);
+                        if (read == -1 || Thread.currentThread().isInterrupted()) {
+                            break;
+                        }
+                        this.current += (long) read;
+                        fileOutputStream.write(bArr, 0, read);
+                        sendProgressMessage(this.current, contentLength);
+                    }
+                    content.close();
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                } catch (Throwable th) {
+                    content.close();
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
+            }
         }
-        paramHttpEntity.flush();
-        paramHttpEntity.close();
-      }
+        return null;
     }
-    return null;
-  }
-  
-  public void sendResponseMessage(HttpResponse paramHttpResponse)
-    throws IOException
-  {
-    StatusLine localStatusLine;
-    if (!Thread.currentThread().isInterrupted())
-    {
-      localStatusLine = paramHttpResponse.getStatusLine();
-      if (localStatusLine.getStatusCode() != 416) {
-        break label55;
-      }
-      if (!Thread.currentThread().isInterrupted()) {
-        sendSuccessMessage(localStatusLine.getStatusCode(), paramHttpResponse.getAllHeaders(), null);
-      }
-    }
-    label55:
-    do
-    {
-      do
-      {
-        return;
-        if (localStatusLine.getStatusCode() < 300) {
-          break;
+
+    public void updateRequestHeaders(HttpUriRequest uriRequest) {
+        if (this.file.exists() && this.file.canWrite()) {
+            this.current = this.file.length();
         }
-      } while (Thread.currentThread().isInterrupted());
-      sendFailureMessage(localStatusLine.getStatusCode(), paramHttpResponse.getAllHeaders(), null, new HttpResponseException(localStatusLine.getStatusCode(), localStatusLine.getReasonPhrase()));
-      return;
-    } while (Thread.currentThread().isInterrupted());
-    Header localHeader = paramHttpResponse.getFirstHeader("Content-Range");
-    if (localHeader == null)
-    {
-      this.append = false;
-      this.current = 0L;
+        if (this.current > 0) {
+            this.append = true;
+            uriRequest.setHeader("Range", "bytes=" + this.current + "-");
+        }
     }
-    for (;;)
-    {
-      sendSuccessMessage(localStatusLine.getStatusCode(), paramHttpResponse.getAllHeaders(), getResponseData(paramHttpResponse.getEntity()));
-      return;
-      AsyncHttpClient.log.v("RangeFileAsyncHttpRH", "Content-Range: " + localHeader.getValue());
-    }
-  }
-  
-  public void updateRequestHeaders(HttpUriRequest paramHttpUriRequest)
-  {
-    if ((this.file.exists()) && (this.file.canWrite())) {
-      this.current = this.file.length();
-    }
-    if (this.current > 0L)
-    {
-      this.append = true;
-      paramHttpUriRequest.setHeader("Range", "bytes=" + this.current + "-");
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/loopj/RangeFileAsyncHttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -4,41 +4,36 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import com.baidu.location.wifihistory.ISManager.Stub;
 
-public class SManager
-  extends Service
-{
-  private ISManager.Stub mProvider = new ISManager.Stub()
-  {
-    public WifiHistory getInfo2()
-      throws RemoteException
-    {
-      return SClient.getInstance().getWifiHistory();
+public class SManager extends Service {
+    private Stub mProvider = new C34611(this);
+    private String testStr = "test 00";
+
+    /* renamed from: com.baidu.location.wifihistory.SManager$1 */
+    class C34611 extends Stub {
+        /* renamed from: a */
+        final /* synthetic */ SManager f18733a;
+
+        C34611(SManager sManager) {
+            this.f18733a = sManager;
+        }
+
+        public WifiHistory getInfo2() throws RemoteException {
+            return SClient.getInstance().getWifiHistory();
+        }
+
+        public String getShareString01() throws RemoteException {
+            return this.f18733a.testStr;
+        }
+
+        public boolean setShareString01(String str) throws RemoteException {
+            this.f18733a.testStr = str;
+            return false;
+        }
     }
-    
-    public String getShareString01()
-      throws RemoteException
-    {
-      return SManager.this.testStr;
+
+    public IBinder onBind(Intent intent) {
+        return this.mProvider;
     }
-    
-    public boolean setShareString01(String paramAnonymousString)
-      throws RemoteException
-    {
-      SManager.access$002(SManager.this, paramAnonymousString);
-      return false;
-    }
-  };
-  private String testStr = "test 00";
-  
-  public IBinder onBind(Intent paramIntent)
-  {
-    return this.mProvider;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/location/wifihistory/SManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

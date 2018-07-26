@@ -3,1547 +3,869 @@ package com.baidu.mobstat;
 import android.content.Context;
 import android.text.TextUtils;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DataCore
-{
-  private static JSONObject a = new JSONObject();
-  private static DataCore b = new DataCore();
-  private JSONArray c = new JSONArray();
-  private JSONArray d = new JSONArray();
-  private JSONArray e = new JSONArray();
-  private boolean f = false;
-  private volatile int g = 0;
-  private StatService.WearListener h;
-  
-  private int a(JSONObject paramJSONObject)
-  {
-    int k = 0;
-    if (paramJSONObject == null) {
-      return k;
+public class DataCore {
+    /* renamed from: a */
+    private static JSONObject f19353a = new JSONObject();
+    /* renamed from: b */
+    private static DataCore f19354b = new DataCore();
+    /* renamed from: c */
+    private JSONArray f19355c = new JSONArray();
+    /* renamed from: d */
+    private JSONArray f19356d = new JSONArray();
+    /* renamed from: e */
+    private JSONArray f19357e = new JSONArray();
+    /* renamed from: f */
+    private boolean f19358f = false;
+    /* renamed from: g */
+    private volatile int f19359g = 0;
+    /* renamed from: h */
+    private StatService$WearListener f19360h;
+
+    public static DataCore instance() {
+        return f19354b;
     }
-    for (;;)
-    {
-      try
-      {
-        localJSONObject = paramJSONObject.getJSONObject("he");
-        l1 = localJSONObject.getLong("sq");
-        l2 = localJSONObject.getLong("ss");
-        if ((l2 <= 0L) || (l1 != 0L)) {
-          break label156;
-        }
-        i = 1;
-      }
-      catch (Exception localException)
-      {
-        try
-        {
-          paramJSONObject = paramJSONObject.getJSONArray("pr");
-          if (paramJSONObject == null) {
-            break label154;
-          }
-          j = paramJSONObject.length();
-          if (j == 0) {
-            break label154;
-          }
-          j = 0;
-          k = i;
-        }
-        catch (Exception paramJSONObject)
-        {
-          JSONObject localJSONObject;
-          long l1;
-          long l2;
-          int j;
-          return i;
-        }
-        try
-        {
-          if (j >= paramJSONObject.length()) {
-            break;
-          }
-          localJSONObject = (JSONObject)paramJSONObject.get(j);
-          l1 = localJSONObject.getLong("c");
-          l2 = localJSONObject.getLong("e");
-          if ((l2 == 0L) || (l1 != 0L)) {
-            break label151;
-          }
-          i += 1;
-          j += 1;
-        }
-        catch (Exception paramJSONObject)
-        {
-          return i;
-        }
-        localException = localException;
-        i = 0;
-        continue;
-      }
-      label151:
-      continue;
-      label154:
-      return i;
-      label156:
-      int i = 0;
+
+    private DataCore() {
     }
-  }
-  
-  private JSONArray a(Context paramContext, long paramLong1, long paramLong2)
-  {
-    ArrayList localArrayList = new ArrayList();
-    paramContext = cq.a().f(paramContext);
-    int i;
-    if (!TextUtils.isEmpty(paramContext)) {
-      try
-      {
-        paramContext = new JSONArray(paramContext);
-        if ((paramContext != null) && (paramContext.length() != 0))
-        {
-          i = 0;
-          while (i < paramContext.length())
-          {
-            localArrayList.add((JSONObject)paramContext.get(i));
-            i += 1;
-          }
-        }
-        paramContext = localArrayList.iterator();
-      }
-      catch (Exception paramContext) {}
+
+    public int getCacheFileSzie() {
+        return this.f19359g;
     }
-    JSONObject localJSONObject;
-    if (paramContext.hasNext()) {
-      localJSONObject = (JSONObject)paramContext.next();
-    }
-    for (;;)
-    {
-      try
-      {
-        long l = localJSONObject.getLong("day");
-        if (l != paramLong1) {
-          break;
-        }
-        i = 0;
-        if (i != 0) {}
-        try
-        {
-          paramContext = new JSONObject();
-          paramContext.put("day", paramLong1);
-          paramContext.put("count", paramLong2);
-          localArrayList.add(paramContext);
-          i = localArrayList.size();
-          if (i > 5)
-          {
-            paramContext = localArrayList.subList(i - 5, i);
-            return new JSONArray(paramContext);
-          }
-        }
-        catch (Exception paramContext)
-        {
-          continue;
-        }
-      }
-      catch (Exception localException) {}
-      paramContext = localArrayList;
-      continue;
-      i = 1;
-    }
-  }
-  
-  private void a(Context paramContext)
-  {
-    synchronized (this.d)
-    {
-      this.d = new JSONArray();
-      synchronized (this.c)
-      {
-        this.c = new JSONArray();
-      }
-    }
-    synchronized (this.e)
-    {
-      this.e = new JSONArray();
-      flush(paramContext);
-      return;
-      paramContext = finally;
-      throw paramContext;
-      paramContext = finally;
-      throw paramContext;
-    }
-  }
-  
-  private void a(Context paramContext, String paramString)
-  {
-    if ((this.h != null) && (this.h.onSendLogData(paramString)))
-    {
-      db.a("log data has been passed to app level");
-      return;
-    }
-    by.a().a(paramContext, paramString);
-  }
-  
-  private void a(Context paramContext, JSONObject paramJSONObject, long paramLong, int paramInt)
-  {
-    long l2 = cq.a().b(paramContext).longValue();
-    long l1 = l2;
-    if (l2 <= 0L)
-    {
-      l1 = l2;
-      if (paramInt != 0)
-      {
-        cq.a().a(paramContext, paramLong);
-        l1 = paramLong;
-      }
-    }
-    a(paramJSONObject, "first", Long.valueOf(l1));
-    String str1;
-    Object localObject1;
-    if (paramInt != 0)
-    {
-      l2 = cq.a().c(paramContext).longValue();
-      l1 = paramLong - l2;
-      if ((l2 != 0L) && (l1 <= 0L))
-      {
-        l1 = -1L;
-        cq.a().b(paramContext, paramLong);
-        cq.a().c(paramContext, l1);
-        a(paramJSONObject, "session_last_interval", Long.valueOf(l1));
-        String str2 = "";
-        String str3 = "";
-        Object localObject2 = cq.a().e(paramContext);
-        str1 = str3;
-        localObject1 = str2;
-        if (!TextUtils.isEmpty((CharSequence)localObject2))
-        {
-          str1 = str3;
-          localObject1 = str2;
-          if (((String)localObject2).contains(":"))
-          {
-            localObject2 = ((String)localObject2).split(":");
-            str1 = str3;
-            localObject1 = str2;
-            if (localObject2 != null)
-            {
-              str1 = str3;
-              localObject1 = str2;
-              if (localObject2.length == 2)
-              {
-                localObject1 = localObject2[0];
-                str1 = localObject2[1];
-              }
+
+    public void putSession(JSONObject jSONObject) {
+        if (jSONObject != null) {
+            if (m15281a(jSONObject.toString())) {
+                db.m15661b("data to put exceed limit, will not put");
+                return;
             }
-          }
-        }
-        if (TextUtils.isEmpty(str1)) {
-          break label524;
-        }
-      }
-    }
-    for (;;)
-    {
-      try
-      {
-        i = Integer.valueOf(str1).intValue();
-        str1 = dg.a(paramLong);
-        if ((TextUtils.isEmpty((CharSequence)localObject1)) || (str1.equals(localObject1)))
-        {
-          j = paramInt + i;
-          if (paramInt != 0) {
-            cq.a().a(paramContext, str1 + ":" + j);
-          }
-          a(paramJSONObject, "session_today_cnt", Integer.valueOf(j));
-          if (!TextUtils.isEmpty((CharSequence)localObject1))
-          {
-            try
-            {
-              j = Integer.valueOf((String)localObject1).intValue();
-              paramLong = j;
-            }
-            catch (Exception localException2)
-            {
-              paramLong = 0L;
-              continue;
-              paramContext = cq.a().f(paramContext);
-              if (TextUtils.isEmpty(paramContext)) {
-                continue;
-              }
-            }
-            if ((paramLong != 0L) && (!TextUtils.isEmpty((CharSequence)localObject1)) && (!str1.equals(localObject1)) && (paramInt != 0))
-            {
-              localObject1 = a(paramContext, paramLong, i);
-              cq.a().b(paramContext, ((JSONArray)localObject1).toString());
-              a(paramJSONObject, "recent", localObject1);
-              return;
-              if (l2 != 0L) {
-                break;
-              }
-              l1 = 0L;
-              break;
-              l1 = cq.a().d(paramContext).longValue();
-            }
-          }
-        }
-      }
-      catch (Exception localException1)
-      {
-        i = 0;
-        continue;
-        try
-        {
-          paramContext = new JSONArray(paramContext);
-          localObject1 = paramContext;
-          if (paramContext == null) {
-            localObject1 = new JSONArray();
-          }
-          a(paramJSONObject, "recent", localObject1);
-          return;
-        }
-        catch (Exception paramContext)
-        {
-          paramContext = null;
-          continue;
-        }
-        paramContext = null;
-        continue;
-        paramLong = 0L;
-        continue;
-        int j = paramInt;
-        continue;
-      }
-      label524:
-      int i = 0;
-    }
-  }
-  
-  private void a(Context paramContext, JSONObject paramJSONObject1, JSONObject paramJSONObject2)
-  {
-    int i = a(paramJSONObject1);
-    try
-    {
-      paramJSONObject1 = paramJSONObject1.getJSONObject("he");
-      if (paramJSONObject1 == null) {
-        break label60;
-      }
-      l1 = paramJSONObject1.getLong("ss");
-    }
-    catch (Exception paramJSONObject1)
-    {
-      for (;;)
-      {
-        long l2;
-        long l1 = 0L;
-        continue;
-        l1 = 0L;
-      }
-    }
-    l2 = l1;
-    if (l1 == 0L) {
-      l2 = System.currentTimeMillis();
-    }
-    a(paramContext, paramJSONObject2, l2, i);
-  }
-  
-  private void a(Context paramContext, JSONObject paramJSONObject, boolean paramBoolean)
-  {
-    int j = 1;
-    if (paramJSONObject == null) {}
-    for (;;)
-    {
-      return;
-      JSONObject localJSONObject = new JSONObject();
-      int i;
-      if (paramBoolean) {
-        i = 1;
-      }
-      try
-      {
-        localJSONObject.put("app_session", i);
-        try
-        {
-          localJSONObject.put("failed_cnt", 0);
-          try
-          {
-            paramJSONObject.put("trace", localJSONObject);
-            i = j;
-          }
-          catch (Exception localException1)
-          {
-            for (;;)
-            {
-              i = 0;
-            }
-          }
-          if (i == 0) {
-            continue;
-          }
-          a(paramContext, paramJSONObject, localJSONObject);
-          return;
-          i = 0;
-        }
-        catch (Exception localException2)
-        {
-          for (;;) {}
-        }
-      }
-      catch (Exception localException3)
-      {
-        for (;;) {}
-      }
-    }
-  }
-  
-  private void a(JSONObject paramJSONObject, String paramString, Object paramObject)
-  {
-    if (paramJSONObject == null) {
-      return;
-    }
-    if (!paramJSONObject.has("visit")) {}
-    try
-    {
-      paramJSONObject.put("visit", new JSONObject());
-      try
-      {
-        ((JSONObject)paramJSONObject.get("visit")).put(paramString, paramObject);
-        return;
-      }
-      catch (Exception paramJSONObject) {}
-    }
-    catch (Exception localException)
-    {
-      for (;;) {}
-    }
-  }
-  
-  private void a(JSONObject paramJSONObject, String paramString1, String paramString2, String paramString3, long paramLong, String paramString4, String paramString5, int paramInt, boolean paramBoolean)
-  {
-    int n;
-    int i;
-    int j;
-    JSONObject localJSONObject;
-    long l1;
-    boolean bool;
-    do
-    {
-      int i1;
-      do
-      {
-        String str3;
-        do
-        {
-          do
-          {
-            do
-            {
-              do
-              {
-                for (;;)
-                {
-                  synchronized (this.d)
-                  {
-                    n = this.d.length();
-                    if (paramString3 != null) {}
-                    try
-                    {
-                      if (paramString3.equals("")) {
-                        paramJSONObject.put("s", "0|");
-                      }
-                    }
-                    catch (JSONException paramString3)
-                    {
-                      try
-                      {
-                        localJSONObject = this.d.getJSONObject(i);
-                        paramString3 = localJSONObject.getString("i");
-                        str1 = localJSONObject.getString("l");
-                        l1 = localJSONObject.getLong("t") / 3600000L;
-                        m = 0;
-                        try
-                        {
-                          k = localJSONObject.getInt("d");
-                          m = k;
-                        }
-                        catch (JSONException localJSONException)
-                        {
-                          String str2;
-                          db.a("old version data, No duration Tag");
-                          continue;
-                        }
-                        str2 = localJSONObject.optString("h");
-                        str3 = localJSONObject.optString("p");
-                        i1 = localJSONObject.optInt("v");
-                        bool = localJSONObject.optBoolean("at");
-                        k = j;
-                        if (l1 == paramLong)
-                        {
-                          if (m == 0) {
-                            break;
-                          }
-                          k = j;
-                        }
-                        i += 1;
-                        j = k;
-                      }
-                      catch (JSONException paramString3) {}
-                      paramString3 = paramString3;
-                      db.a("event put s fail");
-                      continue;
-                    }
-                    i = 0;
-                    j = n;
-                    if (i >= n) {
-                      break label486;
-                    }
-                  }
-                  db.a(paramString3);
-                  k = j;
+            synchronized (this.f19355c) {
+                try {
+                    this.f19355c.put(this.f19355c.length(), jSONObject);
+                } catch (Throwable e) {
+                    db.m15659a(e);
                 }
-                k = j;
-              } while (!paramString3.equals(paramString1));
-              k = j;
-            } while (!str1.equals(paramString2));
-            k = j;
-          } while (!localJSONException.equals(paramString4));
-          k = j;
-        } while (!str3.equals(paramString5));
-        k = j;
-      } while (i1 != paramInt);
-      k = j;
-    } while (bool != paramBoolean);
-    int k = paramJSONObject.getInt("c");
-    int m = localJSONObject.getInt("c");
-    String str1 = localJSONObject.optString("s");
-    if (str1 != null)
-    {
-      paramString3 = str1;
-      if (str1.equalsIgnoreCase("")) {}
-    }
-    for (;;)
-    {
-      l1 = paramJSONObject.getLong("t");
-      long l2 = localJSONObject.getLong("t");
-      paramString3 = paramString3 + (l1 - l2) + "|";
-      for (;;)
-      {
-        try
-        {
-          localJSONObject.remove("c");
-          localJSONObject.put("c", m + k);
-          localJSONObject.put("s", paramString3);
-          if (i < n) {
-            return;
-          }
-          try
-          {
-            this.d.put(n, paramJSONObject);
-            return;
-          }
-          catch (JSONException paramJSONObject)
-          {
-            db.a(paramJSONObject);
-            continue;
-          }
+            }
         }
-        catch (JSONException paramString3)
-        {
-          j = i;
+    }
+
+    public void putSession(String str) {
+        if (!TextUtils.isEmpty(str) && !str.equals(new JSONObject().toString())) {
+            try {
+                JSONObject jSONObject = new JSONObject(str);
+                putSession(jSONObject);
+                db.m15657a("Load last session:" + jSONObject);
+            } catch (Throwable e) {
+                db.m15659a(e);
+            }
         }
-        label486:
-        i = j;
-      }
-      paramString3 = "0|";
     }
-  }
-  
-  private void a(boolean paramBoolean)
-  {
-    this.f = paramBoolean;
-  }
-  
-  private boolean a()
-  {
-    return this.f;
-  }
-  
-  private boolean a(String paramString)
-  {
-    return paramString.getBytes().length + ch.a().b() + this.g > 204800;
-  }
-  
-  private static boolean a(String paramString, int paramInt)
-  {
-    if (paramString == null) {}
-    for (;;)
-    {
-      return false;
-      try
-      {
-        i = paramString.getBytes().length;
-        if (i <= paramInt) {
-          continue;
-        }
-        return true;
-      }
-      catch (Exception paramString)
-      {
-        for (;;)
-        {
-          int i = 0;
-        }
-      }
-    }
-  }
-  
-  public static DataCore instance()
-  {
-    return b;
-  }
-  
-  public void clearCache(Context paramContext)
-  {
-    a(false);
-    synchronized (a)
-    {
-      a = new JSONObject();
-      installHeader(paramContext);
-      a(paramContext);
-      return;
-    }
-  }
-  
-  public String constructLogWithEmptyBody(Context paramContext, String paramString)
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    bu localbu = CooperService.a().getHeadObject();
-    if (TextUtils.isEmpty(localbu.f)) {
-      localbu.a(paramContext, localJSONObject2);
-    }
-    for (;;)
-    {
-      paramContext = new JSONArray();
-      long l = System.currentTimeMillis();
-      try
-      {
-        localJSONObject2.put("t", l);
-        localJSONObject2.put("ss", l);
-        localJSONObject2.put("wl2", paramContext);
-        localJSONObject2.put("sq", 0);
-        localJSONObject2.put("sign", CooperService.a().getUUID());
-        localJSONObject2.put("k", paramString);
-        localJSONObject1.put("he", localJSONObject2);
-      }
-      catch (Exception paramContext)
-      {
-        db.a(paramContext);
-        return null;
-      }
-      try
-      {
-        localJSONObject1.put("pr", paramContext);
-      }
-      catch (JSONException paramContext)
-      {
-        db.a(paramContext);
-        return null;
-      }
-      try
-      {
-        localJSONObject1.put("ev", paramContext);
-      }
-      catch (JSONException paramContext)
-      {
-        db.a(paramContext);
-        return null;
-      }
-      try
-      {
-        localJSONObject1.put("ex", paramContext);
-        return localJSONObject1.toString();
-      }
-      catch (JSONException paramContext)
-      {
-        db.a(paramContext);
-      }
-      localbu.b(paramContext, localJSONObject2);
-    }
-    return null;
-  }
-  
-  /* Error */
-  public void flush(Context paramContext)
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: new 22	org/json/JSONObject
-    //   5: dup
-    //   6: invokespecial 25	org/json/JSONObject:<init>	()V
-    //   9: astore_3
-    //   10: aload_0
-    //   11: getfield 37	com/baidu/mobstat/DataCore:c	Lorg/json/JSONArray;
-    //   14: astore 4
-    //   16: aload 4
-    //   18: monitorenter
-    //   19: aload_3
-    //   20: ldc 64
-    //   22: new 34	org/json/JSONArray
-    //   25: dup
-    //   26: aload_0
-    //   27: getfield 37	com/baidu/mobstat/DataCore:c	Lorg/json/JSONArray;
-    //   30: invokevirtual 249	org/json/JSONArray:toString	()Ljava/lang/String;
-    //   33: invokespecial 99	org/json/JSONArray:<init>	(Ljava/lang/String;)V
-    //   36: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   39: pop
-    //   40: aload 4
-    //   42: monitorexit
-    //   43: aload_0
-    //   44: getfield 39	com/baidu/mobstat/DataCore:d	Lorg/json/JSONArray;
-    //   47: astore 4
-    //   49: aload 4
-    //   51: monitorenter
-    //   52: aload_3
-    //   53: ldc_w 406
-    //   56: new 34	org/json/JSONArray
-    //   59: dup
-    //   60: aload_0
-    //   61: getfield 39	com/baidu/mobstat/DataCore:d	Lorg/json/JSONArray;
-    //   64: invokevirtual 249	org/json/JSONArray:toString	()Ljava/lang/String;
-    //   67: invokespecial 99	org/json/JSONArray:<init>	(Ljava/lang/String;)V
-    //   70: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   73: pop
-    //   74: aload 4
-    //   76: monitorexit
-    //   77: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   80: astore 4
-    //   82: aload 4
-    //   84: monitorenter
-    //   85: aload_3
-    //   86: ldc 50
-    //   88: new 22	org/json/JSONObject
-    //   91: dup
-    //   92: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   95: invokevirtual 409	org/json/JSONObject:toString	()Ljava/lang/String;
-    //   98: invokespecial 412	org/json/JSONObject:<init>	(Ljava/lang/String;)V
-    //   101: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   104: pop
-    //   105: aload 4
-    //   107: monitorexit
-    //   108: aload_3
-    //   109: invokevirtual 409	org/json/JSONObject:toString	()Ljava/lang/String;
-    //   112: astore_3
-    //   113: aload_0
-    //   114: invokespecial 414	com/baidu/mobstat/DataCore:a	()Z
-    //   117: ifeq +52 -> 169
-    //   120: ldc_w 416
-    //   123: invokestatic 156	com/baidu/mobstat/db:a	(Ljava/lang/String;)V
-    //   126: aload_0
-    //   127: monitorexit
-    //   128: return
-    //   129: astore 5
-    //   131: aload 4
-    //   133: monitorexit
-    //   134: aload 5
-    //   136: athrow
-    //   137: astore 4
-    //   139: ldc_w 418
-    //   142: invokestatic 156	com/baidu/mobstat/db:a	(Ljava/lang/String;)V
-    //   145: goto -37 -> 108
-    //   148: astore_1
-    //   149: aload_0
-    //   150: monitorexit
-    //   151: aload_1
-    //   152: athrow
-    //   153: astore 5
-    //   155: aload 4
-    //   157: monitorexit
-    //   158: aload 5
-    //   160: athrow
-    //   161: astore 5
-    //   163: aload 4
-    //   165: monitorexit
-    //   166: aload 5
-    //   168: athrow
-    //   169: aload_3
-    //   170: invokevirtual 357	java/lang/String:getBytes	()[B
-    //   173: arraylength
-    //   174: istore_2
-    //   175: iload_2
-    //   176: ldc_w 365
-    //   179: if_icmplt +11 -> 190
-    //   182: aload_0
-    //   183: iconst_1
-    //   184: invokespecial 371	com/baidu/mobstat/DataCore:a	(Z)V
-    //   187: goto -61 -> 126
-    //   190: aload_0
-    //   191: iload_2
-    //   192: putfield 45	com/baidu/mobstat/DataCore:g	I
-    //   195: new 228	java/lang/StringBuilder
-    //   198: dup
-    //   199: invokespecial 229	java/lang/StringBuilder:<init>	()V
-    //   202: ldc_w 420
-    //   205: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   208: aload_0
-    //   209: getfield 45	com/baidu/mobstat/DataCore:g	I
-    //   212: invokevirtual 236	java/lang/StringBuilder:append	(I)Ljava/lang/StringBuilder;
-    //   215: ldc_w 422
-    //   218: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   221: ldc_w 365
-    //   224: invokevirtual 236	java/lang/StringBuilder:append	(I)Ljava/lang/StringBuilder;
-    //   227: invokevirtual 240	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   230: invokestatic 156	com/baidu/mobstat/db:a	(Ljava/lang/String;)V
-    //   233: aload_1
-    //   234: invokestatic 427	com/baidu/mobstat/de:q	(Landroid/content/Context;)Ljava/lang/String;
-    //   237: astore 4
-    //   239: aload_1
-    //   240: new 228	java/lang/StringBuilder
-    //   243: dup
-    //   244: invokespecial 229	java/lang/StringBuilder:<init>	()V
-    //   247: aload 4
-    //   249: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   252: ldc_w 429
-    //   255: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   258: invokevirtual 240	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   261: aload_3
-    //   262: iconst_0
-    //   263: invokestatic 434	com/baidu/mobstat/cu:a	(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Z)V
-    //   266: aload_0
-    //   267: getfield 41	com/baidu/mobstat/DataCore:e	Lorg/json/JSONArray;
-    //   270: astore_3
-    //   271: aload_3
-    //   272: monitorenter
-    //   273: aload_0
-    //   274: getfield 41	com/baidu/mobstat/DataCore:e	Lorg/json/JSONArray;
-    //   277: invokevirtual 249	org/json/JSONArray:toString	()Ljava/lang/String;
-    //   280: astore 4
-    //   282: new 228	java/lang/StringBuilder
-    //   285: dup
-    //   286: invokespecial 229	java/lang/StringBuilder:<init>	()V
-    //   289: ldc_w 436
-    //   292: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   295: aload 4
-    //   297: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   300: invokevirtual 240	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   303: invokestatic 156	com/baidu/mobstat/db:a	(Ljava/lang/String;)V
-    //   306: aload_1
-    //   307: ldc_w 438
-    //   310: aload 4
-    //   312: iconst_0
-    //   313: invokestatic 434	com/baidu/mobstat/cu:a	(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Z)V
-    //   316: aload_3
-    //   317: monitorexit
-    //   318: goto -192 -> 126
-    //   321: astore_1
-    //   322: aload_3
-    //   323: monitorexit
-    //   324: aload_1
-    //   325: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	326	0	this	DataCore
-    //   0	326	1	paramContext	Context
-    //   174	18	2	i	int
-    //   137	27	4	localException	Exception
-    //   237	74	4	str	String
-    //   129	6	5	localObject3	Object
-    //   153	6	5	localObject4	Object
-    //   161	6	5	localObject5	Object
-    // Exception table:
-    //   from	to	target	type
-    //   19	43	129	finally
-    //   131	134	129	finally
-    //   10	19	137	java/lang/Exception
-    //   43	52	137	java/lang/Exception
-    //   77	85	137	java/lang/Exception
-    //   134	137	137	java/lang/Exception
-    //   158	161	137	java/lang/Exception
-    //   166	169	137	java/lang/Exception
-    //   2	10	148	finally
-    //   10	19	148	finally
-    //   43	52	148	finally
-    //   77	85	148	finally
-    //   108	126	148	finally
-    //   134	137	148	finally
-    //   139	145	148	finally
-    //   158	161	148	finally
-    //   166	169	148	finally
-    //   169	175	148	finally
-    //   182	187	148	finally
-    //   190	273	148	finally
-    //   324	326	148	finally
-    //   52	77	153	finally
-    //   155	158	153	finally
-    //   85	108	161	finally
-    //   163	166	161	finally
-    //   273	318	321	finally
-    //   322	324	321	finally
-  }
-  
-  public int getCacheFileSzie()
-  {
-    return this.g;
-  }
-  
-  public void installHeader(Context paramContext)
-  {
-    synchronized (a)
-    {
-      CooperService.a().getHeadObject().a(paramContext, a);
-      return;
-    }
-  }
-  
-  public boolean isPartEmpty()
-  {
-    for (;;)
-    {
-      synchronized (this.c)
-      {
-        if (this.c.length() == 0)
-        {
-          bool = true;
-          return bool;
-        }
-      }
-      boolean bool = false;
-    }
-  }
-  
-  public void loadLastSession(Context paramContext)
-  {
-    if (paramContext == null) {}
-    String str1;
-    do
-    {
-      return;
-      str1 = de.q(paramContext);
-      str1 = str1 + "__local_last_session.json";
-    } while (!cu.c(paramContext, str1));
-    String str2 = cu.a(paramContext, str1);
-    if (TextUtils.isEmpty(str2))
-    {
-      db.a("loadLastSession(): last_session.json file not found.");
-      return;
-    }
-    cu.a(paramContext, str1, new JSONObject().toString(), false);
-    putSession(str2);
-    flush(paramContext);
-  }
-  
-  public void loadStatData(Context arg1)
-  {
-    int j = 0;
-    if (??? == null) {}
-    Object localObject1;
-    do
-    {
-      return;
-      localObject1 = de.q(???);
-      localObject1 = (String)localObject1 + "__local_stat_cache.json";
-    } while (!cu.c(???, (String)localObject1));
-    Object localObject3 = cu.a(???, (String)localObject1);
-    if (((String)localObject3).equals(""))
-    {
-      db.a("stat_cache file not found.");
-      return;
-    }
-    db.a("loadStatData, ");
-    long l;
-    label163:
-    JSONObject localJSONObject;
-    try
-    {
-      this.g = ((String)localObject3).getBytes().length;
-      db.a("load Stat Data:cacheFileSize is:" + this.g);
-      localObject1 = new JSONObject((String)localObject3);
-      db.a("Load cache:" + (String)localObject3);
-      l = System.currentTimeMillis();
-      localObject3 = ((JSONObject)localObject1).getJSONArray("pr");
-      i = 0;
-      if (i < ((JSONArray)localObject3).length())
-      {
-        localJSONObject = ((JSONArray)localObject3).getJSONObject(i);
-        if (l - localJSONObject.getLong("s") > 604800000L) {
-          break label343;
-        }
-        putSession(localJSONObject);
-      }
-    }
-    catch (JSONException ???)
-    {
-      db.a("Load stat data error:" + ???);
-      return;
-    }
-    localObject3 = ((JSONObject)localObject1).getJSONArray("ev");
-    int i = j;
-    for (;;)
-    {
-      if (i < ((JSONArray)localObject3).length())
-      {
-        localJSONObject = ((JSONArray)localObject3).getJSONObject(i);
-        if (l - localJSONObject.getLong("t") <= 604800000L) {
-          putEvent(???, localJSONObject, true);
-        }
-      }
-      else
-      {
-        boolean bool = isPartEmpty();
-        if (bool) {
-          break;
-        }
-        try
-        {
-          localObject1 = ((JSONObject)localObject1).getJSONObject("he");
-          synchronized (a)
-          {
-            a = (JSONObject)localObject1;
-            return;
-          }
-          i += 1;
-        }
-        catch (JSONException ???)
-        {
-          db.a(???);
-          return;
-        }
-        label343:
-        break label163;
-      }
-      i += 1;
-    }
-  }
-  
-  public void loadWifiData(Context arg1)
-  {
-    if (??? == null) {}
-    while (!cu.c(???, "__local_ap_info_cache.json")) {
-      return;
-    }
-    Object localObject1 = cu.a(???, "__local_ap_info_cache.json");
-    for (;;)
-    {
-      try
-      {
-        JSONArray localJSONArray1 = new JSONArray((String)localObject1);
-        int j = localJSONArray1.length();
-        if (j >= 10)
-        {
-          JSONArray localJSONArray2 = new JSONArray();
-          int i = j - 10;
-          localObject1 = localJSONArray2;
-          if (i < j)
-          {
-            localJSONArray2.put(localJSONArray1.get(i));
-            i += 1;
-            continue;
-          }
-          ??? = de.g(1, ???);
-          if (!TextUtils.isEmpty(???)) {
-            ((JSONArray)localObject1).put(???);
-          }
-          synchronized (this.e)
-          {
-            this.e = ((JSONArray)localObject1);
-            db.a("wifiPart: " + this.e.toString());
-            return;
-          }
-        }
-        Object localObject3 = localJSONArray1;
-      }
-      catch (JSONException ???)
-      {
-        db.b(???);
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* renamed from: a */
+    private void m15278a(org.json.JSONObject r18, java.lang.String r19, java.lang.String r20, java.lang.String r21, long r22, java.lang.String r24, java.lang.String r25, int r26, boolean r27) {
+        /*
+        r17 = this;
+        r0 = r17;
+        r6 = r0.f19356d;
+        monitor-enter(r6);
+        r0 = r17;
+        r2 = r0.f19356d;	 Catch:{ all -> 0x007f }
+        r5 = r2.length();	 Catch:{ all -> 0x007f }
+        if (r21 == 0) goto L_0x001a;
+    L_0x000f:
+        r2 = "";
+        r0 = r21;
+        r2 = r0.equals(r2);	 Catch:{ JSONException -> 0x0077 }
+        if (r2 == 0) goto L_0x0025;
+    L_0x001a:
+        r2 = "s";
+        r3 = "0|";
+        r0 = r18;
+        r0.put(r2, r3);	 Catch:{ JSONException -> 0x0077 }
+    L_0x0025:
+        r4 = 0;
+        r2 = r5;
+    L_0x0027:
+        if (r4 >= r5) goto L_0x0131;
+    L_0x0029:
+        r0 = r17;
+        r3 = r0.f19356d;	 Catch:{ JSONException -> 0x008a }
+        r7 = r3.getJSONObject(r4);	 Catch:{ JSONException -> 0x008a }
+        r3 = "i";
+        r8 = r7.getString(r3);	 Catch:{ JSONException -> 0x008a }
+        r3 = "l";
+        r9 = r7.getString(r3);	 Catch:{ JSONException -> 0x008a }
+        r3 = "t";
+        r10 = r7.getLong(r3);	 Catch:{ JSONException -> 0x008a }
+        r12 = 3600000; // 0x36ee80 float:5.044674E-39 double:1.7786363E-317;
+        r10 = r10 / r12;
+        r3 = 0;
+        r12 = "d";
+        r3 = r7.getInt(r12);	 Catch:{ JSONException -> 0x0082 }
+    L_0x0052:
+        r12 = "h";
+        r12 = r7.optString(r12);	 Catch:{ JSONException -> 0x008a }
+        r13 = "p";
+        r13 = r7.optString(r13);	 Catch:{ JSONException -> 0x008a }
+        r14 = "v";
+        r14 = r7.optInt(r14);	 Catch:{ JSONException -> 0x008a }
+        r15 = "at";
+        r15 = r7.optBoolean(r15);	 Catch:{ JSONException -> 0x008a }
+        r10 = (r10 > r22 ? 1 : (r10 == r22 ? 0 : -1));
+        if (r10 != 0) goto L_0x0074;
+    L_0x0072:
+        if (r3 == 0) goto L_0x008f;
+    L_0x0074:
+        r4 = r4 + 1;
+        goto L_0x0027;
+    L_0x0077:
+        r2 = move-exception;
+        r2 = "event put s fail";
+        com.baidu.mobstat.db.m15657a(r2);	 Catch:{ all -> 0x007f }
+        goto L_0x0025;
+    L_0x007f:
+        r2 = move-exception;
+        monitor-exit(r6);	 Catch:{ all -> 0x007f }
+        throw r2;
+    L_0x0082:
+        r12 = move-exception;
+        r12 = "old version data, No duration Tag";
+        com.baidu.mobstat.db.m15657a(r12);	 Catch:{ JSONException -> 0x008a }
+        goto L_0x0052;
+    L_0x008a:
+        r3 = move-exception;
+    L_0x008b:
+        com.baidu.mobstat.db.m15659a(r3);	 Catch:{ all -> 0x007f }
+        goto L_0x0074;
+    L_0x008f:
+        r0 = r19;
+        r3 = r8.equals(r0);	 Catch:{ JSONException -> 0x008a }
+        if (r3 == 0) goto L_0x0074;
+    L_0x0097:
+        r0 = r20;
+        r3 = r9.equals(r0);	 Catch:{ JSONException -> 0x008a }
+        if (r3 == 0) goto L_0x0074;
+    L_0x009f:
+        r0 = r24;
+        r3 = r12.equals(r0);	 Catch:{ JSONException -> 0x008a }
+        if (r3 == 0) goto L_0x0074;
+    L_0x00a7:
+        r0 = r25;
+        r3 = r13.equals(r0);	 Catch:{ JSONException -> 0x008a }
+        if (r3 == 0) goto L_0x0074;
+    L_0x00af:
+        r0 = r26;
+        if (r14 != r0) goto L_0x0074;
+    L_0x00b3:
+        r0 = r27;
+        if (r15 != r0) goto L_0x0074;
+    L_0x00b7:
+        r3 = "c";
+        r0 = r18;
+        r3 = r0.getInt(r3);	 Catch:{ JSONException -> 0x008a }
+        r8 = "c";
+        r8 = r7.getInt(r8);	 Catch:{ JSONException -> 0x008a }
+        r8 = r8 + r3;
+        r3 = "s";
+        r3 = r7.optString(r3);	 Catch:{ JSONException -> 0x008a }
+        if (r3 == 0) goto L_0x00da;
+    L_0x00d1:
+        r9 = "";
+        r9 = r3.equalsIgnoreCase(r9);	 Catch:{ JSONException -> 0x008a }
+        if (r9 == 0) goto L_0x00dd;
+    L_0x00da:
+        r3 = "0|";
+    L_0x00dd:
+        r9 = "t";
+        r0 = r18;
+        r10 = r0.getLong(r9);	 Catch:{ JSONException -> 0x008a }
+        r9 = "t";
+        r12 = r7.getLong(r9);	 Catch:{ JSONException -> 0x008a }
+        r10 = r10 - r12;
+        r9 = new java.lang.StringBuilder;	 Catch:{ JSONException -> 0x008a }
+        r9.<init>();	 Catch:{ JSONException -> 0x008a }
+        r3 = r9.append(r3);	 Catch:{ JSONException -> 0x008a }
+        r3 = r3.append(r10);	 Catch:{ JSONException -> 0x008a }
+        r9 = "|";
+        r3 = r3.append(r9);	 Catch:{ JSONException -> 0x008a }
+        r2 = r3.toString();	 Catch:{ JSONException -> 0x008a }
+        r3 = "c";
+        r7.remove(r3);	 Catch:{ JSONException -> 0x012c }
+        r3 = "c";
+        r7.put(r3, r8);	 Catch:{ JSONException -> 0x012c }
+        r3 = "s";
+        r7.put(r3, r2);	 Catch:{ JSONException -> 0x012c }
+    L_0x0118:
+        if (r4 >= r5) goto L_0x011c;
+    L_0x011a:
+        monitor-exit(r6);	 Catch:{ all -> 0x007f }
+    L_0x011b:
         return;
-      }
+    L_0x011c:
+        r0 = r17;
+        r2 = r0.f19356d;	 Catch:{ JSONException -> 0x0127 }
+        r0 = r18;
+        r2.put(r5, r0);	 Catch:{ JSONException -> 0x0127 }
+    L_0x0125:
+        monitor-exit(r6);	 Catch:{ all -> 0x007f }
+        goto L_0x011b;
+    L_0x0127:
+        r2 = move-exception;
+        com.baidu.mobstat.db.m15659a(r2);	 Catch:{ all -> 0x007f }
+        goto L_0x0125;
+    L_0x012c:
+        r2 = move-exception;
+        r3 = r2;
+        r2 = r4;
+        goto L_0x008b;
+    L_0x0131:
+        r4 = r2;
+        goto L_0x0118;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.mobstat.DataCore.a(org.json.JSONObject, java.lang.String, java.lang.String, java.lang.String, long, java.lang.String, java.lang.String, int, boolean):void");
     }
-  }
-  
-  public void putEvent(Context paramContext, String paramString1, String paramString2, int paramInt1, long paramLong1, long paramLong2, String paramString3, String paramString4, int paramInt2, boolean paramBoolean, ExtraInfo paramExtraInfo, Map<String, String> paramMap)
-  {
-    JSONObject localJSONObject = new JSONObject();
-    for (;;)
-    {
-      try
-      {
-        localJSONObject.put("i", paramString1);
-        localJSONObject.put("l", paramString2);
-        localJSONObject.put("c", paramInt1);
-        localJSONObject.put("t", paramLong1);
-        localJSONObject.put("d", paramLong2);
-        localJSONObject.put("h", paramString3);
-        localJSONObject.put("p", paramString4);
-        localJSONObject.put("v", paramInt2);
-        if (paramBoolean)
-        {
-          paramInt1 = 1;
-          localJSONObject.put("at", paramInt1);
-          if ((paramExtraInfo != null) && (paramExtraInfo.dumpToJson().length() != 0)) {
-            localJSONObject.put("ext", paramExtraInfo.dumpToJson());
-          }
-          if (paramMap == null) {
-            break label310;
-          }
-          paramString1 = paramMap.entrySet().iterator();
-          paramString2 = new JSONArray();
-          if (!paramString1.hasNext()) {
-            break;
-          }
-          paramString4 = (Map.Entry)paramString1.next();
-          paramString3 = (String)paramString4.getKey();
-          paramString4 = (String)paramString4.getValue();
-          if ((TextUtils.isEmpty(paramString3)) || (TextUtils.isEmpty(paramString4)) || (a(paramString4, 1024))) {
-            continue;
-          }
-          paramExtraInfo = new JSONObject();
-          paramExtraInfo.put("k", paramString3);
-          paramExtraInfo.put("v", paramString4);
-          paramString2.put(paramExtraInfo);
-          continue;
+
+    /* renamed from: a */
+    private boolean m15281a(String str) {
+        return (str.getBytes().length + ch.m15571a().m15594b()) + this.f19359g > Config.MAX_CACHE_JSON_CAPACITY;
+    }
+
+    public void putEvent(Context context, JSONObject jSONObject, boolean z) {
+        if (jSONObject != null) {
+            if (m15281a(jSONObject.toString())) {
+                db.m15661b("data to put exceed limit, will not put");
+                return;
+            }
+            int i = 0;
+            String str = "";
+            str = "";
+            str = "";
+            str = "";
+            try {
+                String string = jSONObject.getString("i");
+                String string2 = jSONObject.getString("l");
+                long j = jSONObject.getLong("t") / 3600000;
+                String optString = jSONObject.optString("s");
+                String optString2 = jSONObject.optString("h");
+                String optString3 = jSONObject.optString("p");
+                int optInt = jSONObject.optInt("v");
+                boolean optBoolean = jSONObject.optBoolean("at");
+                CharSequence optString4 = jSONObject.optString("ext");
+                CharSequence optString5 = jSONObject.optString(Config.EVENT_ATTR);
+                try {
+                    i = jSONObject.getInt("d");
+                } catch (JSONException e) {
+                    db.m15657a("old version data, No duration Tag");
+                }
+                Object obj = null;
+                if (!(TextUtils.isEmpty(optString4) || new JSONObject().toString().equals(optString4))) {
+                    obj = 1;
+                }
+                Object obj2 = null;
+                if (!TextUtils.isEmpty(optString5)) {
+                    obj2 = 1;
+                }
+                if (i == 0 && r3 == null && r4 == null) {
+                    m15278a(jSONObject, string, string2, optString, j, optString2, optString3, optInt, optBoolean);
+                    return;
+                }
+                synchronized (this.f19356d) {
+                    i = this.f19356d.length();
+                    try {
+                        jSONObject.put("s", "0");
+                        this.f19356d.put(i, jSONObject);
+                    } catch (Throwable e2) {
+                        db.m15659a(e2);
+                    }
+                }
+            } catch (Throwable e22) {
+                db.m15659a(e22);
+            }
         }
-        paramInt1 = 0;
-      }
-      catch (JSONException paramContext)
-      {
-        db.a(paramContext);
-        return;
-      }
     }
-    if (paramString2.length() != 0) {
-      localJSONObject.put("attribute", paramString2);
+
+    public void putEvent(Context context, String str, String str2, int i, long j, long j2, String str3, String str4, int i2, boolean z, ExtraInfo extraInfo, Map<String, String> map) {
+        JSONObject jSONObject = new JSONObject();
+        try {
+            jSONObject.put("i", str);
+            jSONObject.put("l", str2);
+            jSONObject.put("c", i);
+            jSONObject.put("t", j);
+            jSONObject.put("d", j2);
+            jSONObject.put("h", str3);
+            jSONObject.put("p", str4);
+            jSONObject.put("v", i2);
+            jSONObject.put("at", z ? 1 : 0);
+            if (!(extraInfo == null || extraInfo.dumpToJson().length() == 0)) {
+                jSONObject.put("ext", extraInfo.dumpToJson());
+            }
+            if (map != null) {
+                JSONArray jSONArray = new JSONArray();
+                for (Entry entry : map.entrySet()) {
+                    String str5 = (String) entry.getKey();
+                    String str6 = (String) entry.getValue();
+                    if (!(TextUtils.isEmpty(str5) || TextUtils.isEmpty(str6) || m15282a(str6, 1024))) {
+                        JSONObject jSONObject2 = new JSONObject();
+                        jSONObject2.put(Config.APP_KEY, str5);
+                        jSONObject2.put("v", str6);
+                        jSONArray.put(jSONObject2);
+                    }
+                }
+                if (jSONArray.length() != 0) {
+                    jSONObject.put(Config.EVENT_ATTR, jSONArray);
+                }
+            }
+            putEvent(context, jSONObject, false);
+            db.m15657a("put event:" + jSONObject.toString());
+        } catch (Throwable e) {
+            db.m15659a(e);
+        }
     }
-    label310:
-    putEvent(paramContext, localJSONObject, false);
-    db.a("put event:" + localJSONObject.toString());
-  }
-  
-  public void putEvent(Context arg1, JSONObject paramJSONObject, boolean paramBoolean)
-  {
-    if (paramJSONObject == null) {
-      return;
+
+    /* renamed from: a */
+    private static boolean m15282a(String str, int i) {
+        if (str == null) {
+            return false;
+        }
+        int length;
+        try {
+            length = str.getBytes().length;
+        } catch (Exception e) {
+            length = 0;
+        }
+        if (length > i) {
+            return true;
+        }
+        return false;
     }
-    if (a(paramJSONObject.toString()))
-    {
-      db.b("data to put exceed limit, will not put");
-      return;
+
+    public void installHeader(Context context) {
+        synchronized (f19353a) {
+            CooperService.m15264a().getHeadObject().m15507a(context, f19353a);
+        }
     }
-    int i = 0;
-    try
-    {
-      ??? = paramJSONObject.getString("i");
-      str1 = paramJSONObject.getString("l");
-      l = paramJSONObject.getLong("t") / 3600000L;
-      str2 = paramJSONObject.optString("s");
-      str3 = paramJSONObject.optString("h");
-      str4 = paramJSONObject.optString("p");
-      m = paramJSONObject.optInt("v");
-      paramBoolean = paramJSONObject.optBoolean("at");
-      str5 = paramJSONObject.optString("ext");
-      str6 = paramJSONObject.optString("attribute");
+
+    public synchronized void flush(Context context) {
+        JSONObject jSONObject = new JSONObject();
+        try {
+            synchronized (this.f19355c) {
+                jSONObject.put(Config.PRINCIPAL_PART, new JSONArray(this.f19355c.toString()));
+            }
+            synchronized (this.f19356d) {
+                jSONObject.put(Config.EVENT_PART, new JSONArray(this.f19356d.toString()));
+            }
+            synchronized (f19353a) {
+                jSONObject.put(Config.HEADER_PART, new JSONObject(f19353a.toString()));
+            }
+        } catch (Exception e) {
+            db.m15657a("flushLogWithoutHeader() construct cache error");
+        }
+        String jSONObject2 = jSONObject.toString();
+        if (m15280a()) {
+            db.m15657a("cache.json exceed 204800B,stop flush.");
+        } else {
+            int length = jSONObject2.getBytes().length;
+            if (length >= Config.MAX_CACHE_JSON_CAPACITY) {
+                m15279a(true);
+            } else {
+                this.f19359g = length;
+                db.m15657a("flush:cacheFileSize is:" + this.f19359g + ", capacity is:" + Config.MAX_CACHE_JSON_CAPACITY);
+                cu.m15630a(context, de.m15706q(context) + Config.STAT_CACHE_FILE_NAME, jSONObject2, false);
+                synchronized (this.f19357e) {
+                    jSONObject2 = this.f19357e.toString();
+                    db.m15657a("flush wifi data: " + jSONObject2);
+                    cu.m15630a(context, Config.LAST_AP_INFO_FILE_NAME, jSONObject2, false);
+                }
+            }
+        }
     }
-    catch (JSONException ???)
-    {
-      String str1;
-      long l;
-      String str2;
-      String str3;
-      String str4;
-      int m;
-      String str5;
-      String str6;
-      int j;
-      label131:
-      int k;
-      db.a(???);
-      return;
+
+    /* renamed from: a */
+    private void m15279a(boolean z) {
+        this.f19358f = z;
     }
-    try
-    {
-      j = paramJSONObject.getInt("d");
-      i = j;
+
+    /* renamed from: a */
+    private boolean m15280a() {
+        return this.f19358f;
     }
-    catch (JSONException localJSONException)
-    {
-      db.a("old version data, No duration Tag");
-      break label131;
-      synchronized (this.d)
-      {
-        i = this.d.length();
-      }
+
+    public void loadLastSession(Context context) {
+        if (context != null) {
+            String str = de.m15706q(context) + Config.LAST_SESSION_FILE_NAME;
+            if (cu.m15635c(context, str)) {
+                String a = cu.m15628a(context, str);
+                if (TextUtils.isEmpty(a)) {
+                    db.m15657a("loadLastSession(): last_session.json file not found.");
+                    return;
+                }
+                cu.m15630a(context, str, new JSONObject().toString(), false);
+                putSession(a);
+                flush(context);
+            }
+        }
     }
-    k = 0;
-    j = k;
-    if (!TextUtils.isEmpty(str5))
-    {
-      j = k;
-      if (!new JSONObject().toString().equals(str5)) {
-        j = 1;
-      }
+
+    public void loadWifiData(Context context) {
+        if (context != null && cu.m15635c(context, Config.LAST_AP_INFO_FILE_NAME)) {
+            try {
+                JSONArray jSONArray;
+                JSONArray jSONArray2 = new JSONArray(cu.m15628a(context, Config.LAST_AP_INFO_FILE_NAME));
+                int length = jSONArray2.length();
+                if (length >= 10) {
+                    jSONArray = new JSONArray();
+                    for (int i = length - 10; i < length; i++) {
+                        jSONArray.put(jSONArray2.get(i));
+                    }
+                } else {
+                    jSONArray = jSONArray2;
+                }
+                CharSequence g = de.m15694g(1, context);
+                if (!TextUtils.isEmpty(g)) {
+                    jSONArray.put(g);
+                }
+                synchronized (this.f19357e) {
+                    this.f19357e = jSONArray;
+                    db.m15657a("wifiPart: " + this.f19357e.toString());
+                }
+            } catch (Throwable e) {
+                db.m15662b(e);
+            }
+        }
     }
-    k = 0;
-    if (!TextUtils.isEmpty(str6)) {
-      k = 1;
+
+    public void loadStatData(Context context) {
+        int i = 0;
+        if (context != null) {
+            String str = de.m15706q(context) + Config.STAT_CACHE_FILE_NAME;
+            if (cu.m15635c(context, str)) {
+                str = cu.m15628a(context, str);
+                if (str.equals("")) {
+                    db.m15657a("stat_cache file not found.");
+                    return;
+                }
+                db.m15657a("loadStatData, ");
+                try {
+                    this.f19359g = str.getBytes().length;
+                    db.m15657a("load Stat Data:cacheFileSize is:" + this.f19359g);
+                    JSONObject jSONObject = new JSONObject(str);
+                    db.m15657a("Load cache:" + str);
+                    long currentTimeMillis = System.currentTimeMillis();
+                    JSONArray jSONArray = jSONObject.getJSONArray(Config.PRINCIPAL_PART);
+                    for (int i2 = 0; i2 < jSONArray.length(); i2++) {
+                        JSONObject jSONObject2 = jSONArray.getJSONObject(i2);
+                        if (currentTimeMillis - jSONObject2.getLong("s") <= Config.MAX_LOG_DATA_EXSIT_TIME) {
+                            putSession(jSONObject2);
+                        }
+                    }
+                    JSONArray jSONArray2 = jSONObject.getJSONArray(Config.EVENT_PART);
+                    while (i < jSONArray2.length()) {
+                        JSONObject jSONObject3 = jSONArray2.getJSONObject(i);
+                        if (currentTimeMillis - jSONObject3.getLong("t") <= Config.MAX_LOG_DATA_EXSIT_TIME) {
+                            putEvent(context, jSONObject3, true);
+                        }
+                        i++;
+                    }
+                    if (!isPartEmpty()) {
+                        try {
+                            JSONObject jSONObject4 = jSONObject.getJSONObject(Config.HEADER_PART);
+                            synchronized (f19353a) {
+                                f19353a = jSONObject4;
+                            }
+                        } catch (Throwable e) {
+                            db.m15659a(e);
+                        }
+                    }
+                } catch (JSONException e2) {
+                    db.m15657a("Load stat data error:" + e2);
+                }
+            }
+        }
     }
-    if ((i == 0) && (j == 0) && (k == 0))
-    {
-      a(paramJSONObject, ???, str1, str2, l, str3, str4, m, paramBoolean);
-      return;
+
+    public String constructLogWithEmptyBody(Context context, String str) {
+        JSONObject jSONObject = new JSONObject();
+        JSONObject jSONObject2 = new JSONObject();
+        bu headObject = CooperService.m15264a().getHeadObject();
+        if (TextUtils.isEmpty(headObject.f19507f)) {
+            headObject.m15507a(context, jSONObject2);
+        } else {
+            headObject.m15509b(context, jSONObject2);
+        }
+        JSONArray jSONArray = new JSONArray();
+        long currentTimeMillis = System.currentTimeMillis();
+        try {
+            jSONObject2.put("t", currentTimeMillis);
+            jSONObject2.put("ss", currentTimeMillis);
+            jSONObject2.put(Config.WIFI_LOCATION, jSONArray);
+            jSONObject2.put(Config.SEQUENCE_INDEX, 0);
+            jSONObject2.put("sign", CooperService.m15264a().getUUID());
+            jSONObject2.put(Config.APP_KEY, str);
+            jSONObject.put(Config.HEADER_PART, jSONObject2);
+            try {
+                jSONObject.put(Config.PRINCIPAL_PART, jSONArray);
+                try {
+                    jSONObject.put(Config.EVENT_PART, jSONArray);
+                    try {
+                        jSONObject.put(Config.EXCEPTION_PART, jSONArray);
+                        return jSONObject.toString();
+                    } catch (Throwable e) {
+                        db.m15659a(e);
+                        return null;
+                    }
+                } catch (Throwable e2) {
+                    db.m15659a(e2);
+                    return null;
+                }
+            } catch (Throwable e22) {
+                db.m15659a(e22);
+                return null;
+            }
+        } catch (Throwable e222) {
+            db.m15659a(e222);
+            return null;
+        }
     }
-    try
-    {
-      paramJSONObject.put("s", "0");
-      this.d.put(i, paramJSONObject);
-      return;
-      paramJSONObject = finally;
-      throw paramJSONObject;
+
+    /* renamed from: a */
+    private void m15276a(Context context, JSONObject jSONObject, boolean z) {
+        Object obj = 1;
+        if (jSONObject != null) {
+            JSONObject jSONObject2 = new JSONObject();
+            try {
+                jSONObject2.put(Config.TRACE_APPLICATION_SESSION, z ? 1 : 0);
+            } catch (Exception e) {
+            }
+            try {
+                jSONObject2.put(Config.TRACE_FAILED_CNT, 0);
+            } catch (Exception e2) {
+            }
+            try {
+                jSONObject.put(Config.TRACE_PART, jSONObject2);
+            } catch (Exception e3) {
+                obj = null;
+            }
+            if (obj != null) {
+                m15275a(context, jSONObject, jSONObject2);
+            }
+        }
     }
-    catch (JSONException paramJSONObject)
-    {
-      for (;;)
-      {
-        db.a(paramJSONObject);
-      }
+
+    /* renamed from: a */
+    private void m15275a(Context context, JSONObject jSONObject, JSONObject jSONObject2) {
+        long j;
+        int a = m15270a(jSONObject);
+        try {
+            long j2;
+            JSONObject jSONObject3 = jSONObject.getJSONObject(Config.HEADER_PART);
+            if (jSONObject3 != null) {
+                j2 = jSONObject3.getLong("ss");
+            } else {
+                j2 = 0;
+            }
+            j = j2;
+        } catch (Exception e) {
+            j = 0;
+        }
+        if (j == 0) {
+            j = System.currentTimeMillis();
+        }
+        m15274a(context, jSONObject2, j, a);
     }
-  }
-  
-  public void putSession(String paramString)
-  {
-    if ((TextUtils.isEmpty(paramString)) || (paramString.equals(new JSONObject().toString()))) {
-      return;
+
+    /* renamed from: a */
+    private int m15270a(JSONObject jSONObject) {
+        if (jSONObject == null) {
+            return 0;
+        }
+        int i;
+        try {
+            JSONObject jSONObject2 = jSONObject.getJSONObject(Config.HEADER_PART);
+            i = (jSONObject2.getLong("ss") <= 0 || jSONObject2.getLong(Config.SEQUENCE_INDEX) != 0) ? 0 : 1;
+        } catch (Exception e) {
+            i = 0;
+        }
+        try {
+            JSONArray jSONArray = jSONObject.getJSONArray(Config.PRINCIPAL_PART);
+            if (jSONArray == null || jSONArray.length() == 0) {
+                return i;
+            }
+            int i2 = 0;
+            int i3 = i;
+            while (i2 < jSONArray.length()) {
+                try {
+                    jSONObject2 = (JSONObject) jSONArray.get(i2);
+                    long j = jSONObject2.getLong("c");
+                    if (jSONObject2.getLong(Config.SESSTION_END_TIME) == 0 || j != 0) {
+                        i = i3;
+                    } else {
+                        i = i3 + 1;
+                    }
+                    i2++;
+                    i3 = i;
+                } catch (Exception e2) {
+                    return i3;
+                }
+            }
+            return i3;
+        } catch (Exception e3) {
+            return i;
+        }
     }
-    try
-    {
-      paramString = new JSONObject(paramString);
-      putSession(paramString);
-      db.a("Load last session:" + paramString);
-      return;
+
+    /* renamed from: a */
+    private void m15274a(Context context, JSONObject jSONObject, long j, int i) {
+        int i2;
+        int i3;
+        long j2;
+        long longValue = cq.m15605a().m15609b(context).longValue();
+        if (longValue <= 0 && i != 0) {
+            cq.m15605a().m15607a(context, j);
+            longValue = j;
+        }
+        m15277a(jSONObject, Config.TRACE_VISIT_FIRST, Long.valueOf(longValue));
+        if (i != 0) {
+            long longValue2 = cq.m15605a().m15612c(context).longValue();
+            longValue = j - longValue2;
+            if (longValue2 != 0 && longValue <= 0) {
+                longValue = -1;
+            } else if (longValue2 == 0) {
+                longValue = 0;
+            }
+            cq.m15605a().m15610b(context, j);
+            cq.m15605a().m15613c(context, longValue);
+        } else {
+            longValue = cq.m15605a().m15614d(context).longValue();
+        }
+        m15277a(jSONObject, Config.TRACE_VISIT_SESSION_LAST_INTERVAL, Long.valueOf(longValue));
+        CharSequence charSequence = "";
+        Object obj = "";
+        String e = cq.m15605a().m15615e(context);
+        if (!TextUtils.isEmpty(e) && e.contains(Config.TRACE_TODAY_VISIT_SPLIT)) {
+            String[] split = e.split(Config.TRACE_TODAY_VISIT_SPLIT);
+            if (split != null && split.length == 2) {
+                charSequence = split[0];
+                obj = split[1];
+            }
+        }
+        if (TextUtils.isEmpty(obj)) {
+            i2 = 0;
+        } else {
+            try {
+                i2 = Integer.valueOf(obj).intValue();
+            } catch (Exception e2) {
+                i2 = 0;
+            }
+        }
+        String a = dg.m15713a(j);
+        if (TextUtils.isEmpty(charSequence) || a.equals(charSequence)) {
+            i3 = i + i2;
+        } else {
+            i3 = i;
+        }
+        if (i != 0) {
+            cq.m15605a().m15608a(context, a + Config.TRACE_TODAY_VISIT_SPLIT + i3);
+        }
+        m15277a(jSONObject, Config.TRACE_VISIT_SESSION_TODAY_COUNT, Integer.valueOf(i3));
+        if (TextUtils.isEmpty(charSequence)) {
+            j2 = 0;
+        } else {
+            try {
+                j2 = (long) Integer.valueOf(charSequence).intValue();
+            } catch (Exception e3) {
+                j2 = 0;
+            }
+        }
+        if (j2 == 0 || TextUtils.isEmpty(charSequence) || a.equals(charSequence) || i == 0) {
+            Object f = cq.m15605a().m15616f(context);
+            if (TextUtils.isEmpty(f)) {
+                obj = null;
+            } else {
+                try {
+                    obj = new JSONArray(f);
+                } catch (Exception e4) {
+                    obj = null;
+                }
+            }
+            if (obj == null) {
+                obj = new JSONArray();
+            }
+            m15277a(jSONObject, Config.TRACE_VISIT_RECENT, obj);
+            return;
+        }
+        obj = m15271a(context, j2, (long) i2);
+        cq.m15605a().m15611b(context, obj.toString());
+        m15277a(jSONObject, Config.TRACE_VISIT_RECENT, obj);
     }
-    catch (JSONException paramString)
-    {
-      db.a(paramString);
+
+    /* renamed from: a */
+    private JSONArray m15271a(Context context, long j, long j2) {
+        Collection subList;
+        List<JSONObject> arrayList = new ArrayList();
+        Object f = cq.m15605a().m15616f(context);
+        if (!TextUtils.isEmpty(f)) {
+            try {
+                JSONArray jSONArray = new JSONArray(f);
+                if (!(jSONArray == null || jSONArray.length() == 0)) {
+                    for (int i = 0; i < jSONArray.length(); i++) {
+                        arrayList.add((JSONObject) jSONArray.get(i));
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
+        for (JSONObject jSONObject : arrayList) {
+            try {
+                JSONObject jSONObject2;
+                if (jSONObject2.getLong("day") == j) {
+                    f = null;
+                    break;
+                }
+            } catch (Exception e2) {
+            }
+        }
+        int i2 = 1;
+        if (f != null) {
+            try {
+                jSONObject2 = new JSONObject();
+                jSONObject2.put("day", j);
+                jSONObject2.put("count", j2);
+                arrayList.add(jSONObject2);
+            } catch (Exception e3) {
+            }
+        }
+        i2 = arrayList.size();
+        if (i2 > 5) {
+            subList = arrayList.subList(i2 - 5, i2);
+        } else {
+            f = arrayList;
+        }
+        return new JSONArray(subList);
     }
-  }
-  
-  public void putSession(JSONObject paramJSONObject)
-  {
-    if (paramJSONObject == null) {
-      return;
+
+    /* renamed from: a */
+    private void m15277a(JSONObject jSONObject, String str, Object obj) {
+        if (jSONObject != null) {
+            if (!jSONObject.has(Config.TRACE_VISIT)) {
+                try {
+                    jSONObject.put(Config.TRACE_VISIT, new JSONObject());
+                } catch (Exception e) {
+                }
+            }
+            try {
+                ((JSONObject) jSONObject.get(Config.TRACE_VISIT)).put(str, obj);
+            } catch (Exception e2) {
+            }
+        }
     }
-    if (a(paramJSONObject.toString()))
-    {
-      db.b("data to put exceed limit, will not put");
-      return;
+
+    public void saveLogDataToSend(Context context, boolean z, boolean z2) {
+        db.m15657a("sendLogData() begin.");
+        bu headObject = CooperService.m15264a().getHeadObject();
+        if (headObject != null) {
+            synchronized (f19353a) {
+                if (TextUtils.isEmpty(headObject.f19507f)) {
+                    headObject.m15507a(context, f19353a);
+                } else {
+                    headObject.m15509b(context, f19353a);
+                }
+                db.m15657a("constructHeader() begin." + f19353a + f19353a.length());
+            }
+            if (TextUtils.isEmpty(headObject.f19507f)) {
+                db.m15663c("不能在manifest.xml中找到APP Key||can't find app key in manifest.xml.");
+                return;
+            }
+        }
+        JSONObject jSONObject = new JSONObject();
+        synchronized (f19353a) {
+            try {
+                f19353a.put("t", System.currentTimeMillis());
+                f19353a.put(Config.SEQUENCE_INDEX, z ? 0 : 1);
+                f19353a.put("ss", ch.m15571a().m15603e());
+                synchronized (this.f19357e) {
+                    f19353a.put(Config.WIFI_LOCATION, this.f19357e);
+                }
+                f19353a.put("sign", CooperService.m15264a().getUUID());
+                jSONObject.put(Config.HEADER_PART, f19353a);
+                synchronized (this.f19355c) {
+                    try {
+                        jSONObject.put(Config.PRINCIPAL_PART, this.f19355c);
+                        synchronized (this.f19356d) {
+                            try {
+                                jSONObject.put(Config.EVENT_PART, this.f19356d);
+                                try {
+                                    jSONObject.put(Config.EXCEPTION_PART, new JSONArray());
+                                    m15276a(context, jSONObject, z2);
+                                    String jSONObject2 = jSONObject.toString();
+                                    db.m15657a("---Send Data is:" + jSONObject2);
+                                    m15273a(context, jSONObject2);
+                                    clearCache(context);
+                                } catch (Throwable e) {
+                                    db.m15659a(e);
+                                    return;
+                                }
+                            } catch (Throwable e2) {
+                                db.m15659a(e2);
+                                return;
+                            }
+                        }
+                    } catch (Throwable e22) {
+                        db.m15659a(e22);
+                        return;
+                    }
+                }
+            } catch (Throwable e222) {
+                db.m15659a(e222);
+            }
+        }
     }
-    int i;
-    synchronized (this.c)
-    {
-      i = this.c.length();
+
+    /* renamed from: a */
+    private void m15273a(Context context, String str) {
+        if (this.f19360h == null || !this.f19360h.onSendLogData(str)) {
+            by.m15524a().m15543a(context, str);
+        } else {
+            db.m15657a("log data has been passed to app level");
+        }
     }
-    try
-    {
-      this.c.put(i, paramJSONObject);
-      return;
-      paramJSONObject = finally;
-      throw paramJSONObject;
+
+    public boolean isPartEmpty() {
+        boolean z;
+        synchronized (this.f19355c) {
+            z = this.f19355c.length() == 0;
+        }
+        return z;
     }
-    catch (JSONException paramJSONObject)
-    {
-      for (;;)
-      {
-        db.a(paramJSONObject);
-      }
+
+    public void clearCache(Context context) {
+        m15279a(false);
+        synchronized (f19353a) {
+            f19353a = new JSONObject();
+        }
+        installHeader(context);
+        m15272a(context);
     }
-  }
-  
-  /* Error */
-  public void saveLogDataToSend(Context paramContext, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    // Byte code:
-    //   0: ldc_w 539
-    //   3: invokestatic 156	com/baidu/mobstat/db:a	(Ljava/lang/String;)V
-    //   6: invokestatic 383	com/baidu/mobstat/CooperService:a	()Lcom/baidu/mobstat/CooperService;
-    //   9: invokevirtual 387	com/baidu/mobstat/CooperService:getHeadObject	()Lcom/baidu/mobstat/bu;
-    //   12: astore 8
-    //   14: aload 8
-    //   16: ifnull +104 -> 120
-    //   19: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   22: astore 7
-    //   24: aload 7
-    //   26: monitorenter
-    //   27: aload 8
-    //   29: getfield 392	com/baidu/mobstat/bu:f	Ljava/lang/String;
-    //   32: invokestatic 96	android/text/TextUtils:isEmpty	(Ljava/lang/CharSequence;)Z
-    //   35: ifeq +67 -> 102
-    //   38: aload 8
-    //   40: aload_1
-    //   41: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   44: invokevirtual 395	com/baidu/mobstat/bu:a	(Landroid/content/Context;Lorg/json/JSONObject;)V
-    //   47: new 228	java/lang/StringBuilder
-    //   50: dup
-    //   51: invokespecial 229	java/lang/StringBuilder:<init>	()V
-    //   54: ldc_w 541
-    //   57: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   60: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   63: invokevirtual 472	java/lang/StringBuilder:append	(Ljava/lang/Object;)Ljava/lang/StringBuilder;
-    //   66: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   69: invokevirtual 496	org/json/JSONObject:length	()I
-    //   72: invokevirtual 236	java/lang/StringBuilder:append	(I)Ljava/lang/StringBuilder;
-    //   75: invokevirtual 240	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   78: invokestatic 156	com/baidu/mobstat/db:a	(Ljava/lang/String;)V
-    //   81: aload 7
-    //   83: monitorexit
-    //   84: aload 8
-    //   86: getfield 392	com/baidu/mobstat/bu:f	Ljava/lang/String;
-    //   89: invokestatic 96	android/text/TextUtils:isEmpty	(Ljava/lang/CharSequence;)Z
-    //   92: ifeq +28 -> 120
-    //   95: ldc_w 543
-    //   98: invokestatic 545	com/baidu/mobstat/db:c	(Ljava/lang/String;)V
-    //   101: return
-    //   102: aload 8
-    //   104: aload_1
-    //   105: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   108: invokevirtual 411	com/baidu/mobstat/bu:b	(Landroid/content/Context;Lorg/json/JSONObject;)V
-    //   111: goto -64 -> 47
-    //   114: astore_1
-    //   115: aload 7
-    //   117: monitorexit
-    //   118: aload_1
-    //   119: athrow
-    //   120: new 22	org/json/JSONObject
-    //   123: dup
-    //   124: invokespecial 25	org/json/JSONObject:<init>	()V
-    //   127: astore 10
-    //   129: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   132: astore 7
-    //   134: aload 7
-    //   136: monitorenter
-    //   137: invokestatic 263	java/lang/System:currentTimeMillis	()J
-    //   140: lstore 5
-    //   142: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   145: ldc_w 308
-    //   148: lload 5
-    //   150: invokevirtual 125	org/json/JSONObject:put	(Ljava/lang/String;J)Lorg/json/JSONObject;
-    //   153: pop
-    //   154: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   157: astore 8
-    //   159: iload_2
-    //   160: ifeq +210 -> 370
-    //   163: iconst_0
-    //   164: istore 4
-    //   166: aload 8
-    //   168: ldc 56
-    //   170: iload 4
-    //   172: invokevirtual 271	org/json/JSONObject:put	(Ljava/lang/String;I)Lorg/json/JSONObject;
-    //   175: pop
-    //   176: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   179: ldc 62
-    //   181: invokestatic 362	com/baidu/mobstat/ch:a	()Lcom/baidu/mobstat/ch;
-    //   184: invokevirtual 547	com/baidu/mobstat/ch:e	()J
-    //   187: invokevirtual 125	org/json/JSONObject:put	(Ljava/lang/String;J)Lorg/json/JSONObject;
-    //   190: pop
-    //   191: aload_0
-    //   192: getfield 41	com/baidu/mobstat/DataCore:e	Lorg/json/JSONArray;
-    //   195: astore 8
-    //   197: aload 8
-    //   199: monitorenter
-    //   200: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   203: ldc_w 397
-    //   206: aload_0
-    //   207: getfield 41	com/baidu/mobstat/DataCore:e	Lorg/json/JSONArray;
-    //   210: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   213: pop
-    //   214: aload 8
-    //   216: monitorexit
-    //   217: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   220: ldc_w 399
-    //   223: invokestatic 383	com/baidu/mobstat/CooperService:a	()Lcom/baidu/mobstat/CooperService;
-    //   226: invokevirtual 402	com/baidu/mobstat/CooperService:getUUID	()Ljava/lang/String;
-    //   229: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   232: pop
-    //   233: aload 10
-    //   235: ldc 50
-    //   237: getstatic 27	com/baidu/mobstat/DataCore:a	Lorg/json/JSONObject;
-    //   240: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   243: pop
-    //   244: aload_0
-    //   245: getfield 37	com/baidu/mobstat/DataCore:c	Lorg/json/JSONArray;
-    //   248: astore 8
-    //   250: aload 8
-    //   252: monitorenter
-    //   253: aload 10
-    //   255: ldc 64
-    //   257: aload_0
-    //   258: getfield 37	com/baidu/mobstat/DataCore:c	Lorg/json/JSONArray;
-    //   261: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   264: pop
-    //   265: aload_0
-    //   266: getfield 39	com/baidu/mobstat/DataCore:d	Lorg/json/JSONArray;
-    //   269: astore 9
-    //   271: aload 9
-    //   273: monitorenter
-    //   274: aload 10
-    //   276: ldc_w 406
-    //   279: aload_0
-    //   280: getfield 39	com/baidu/mobstat/DataCore:d	Lorg/json/JSONArray;
-    //   283: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   286: pop
-    //   287: aload 10
-    //   289: ldc_w 408
-    //   292: new 34	org/json/JSONArray
-    //   295: dup
-    //   296: invokespecial 35	org/json/JSONArray:<init>	()V
-    //   299: invokevirtual 278	org/json/JSONObject:put	(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
-    //   302: pop
-    //   303: aload_0
-    //   304: aload_1
-    //   305: aload 10
-    //   307: iload_3
-    //   308: invokespecial 549	com/baidu/mobstat/DataCore:a	(Landroid/content/Context;Lorg/json/JSONObject;Z)V
-    //   311: aload 10
-    //   313: invokevirtual 409	org/json/JSONObject:toString	()Ljava/lang/String;
-    //   316: astore 10
-    //   318: new 228	java/lang/StringBuilder
-    //   321: dup
-    //   322: invokespecial 229	java/lang/StringBuilder:<init>	()V
-    //   325: ldc_w 551
-    //   328: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   331: aload 10
-    //   333: invokevirtual 233	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   336: invokevirtual 240	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   339: invokestatic 156	com/baidu/mobstat/db:a	(Ljava/lang/String;)V
-    //   342: aload_0
-    //   343: aload_1
-    //   344: aload 10
-    //   346: invokespecial 552	com/baidu/mobstat/DataCore:a	(Landroid/content/Context;Ljava/lang/String;)V
-    //   349: aload_0
-    //   350: aload_1
-    //   351: invokevirtual 554	com/baidu/mobstat/DataCore:clearCache	(Landroid/content/Context;)V
-    //   354: aload 9
-    //   356: monitorexit
-    //   357: aload 8
-    //   359: monitorexit
-    //   360: aload 7
-    //   362: monitorexit
-    //   363: return
-    //   364: astore_1
-    //   365: aload 7
-    //   367: monitorexit
-    //   368: aload_1
-    //   369: athrow
-    //   370: iconst_1
-    //   371: istore 4
-    //   373: goto -207 -> 166
-    //   376: astore_1
-    //   377: aload 8
-    //   379: monitorexit
-    //   380: aload_1
-    //   381: athrow
-    //   382: astore_1
-    //   383: aload_1
-    //   384: invokestatic 338	com/baidu/mobstat/db:a	(Ljava/lang/Throwable;)V
-    //   387: aload 7
-    //   389: monitorexit
-    //   390: return
-    //   391: astore_1
-    //   392: aload_1
-    //   393: invokestatic 338	com/baidu/mobstat/db:a	(Ljava/lang/Throwable;)V
-    //   396: aload 8
-    //   398: monitorexit
-    //   399: aload 7
-    //   401: monitorexit
-    //   402: return
-    //   403: astore_1
-    //   404: aload_1
-    //   405: invokestatic 338	com/baidu/mobstat/db:a	(Ljava/lang/Throwable;)V
-    //   408: aload 9
-    //   410: monitorexit
-    //   411: aload 8
-    //   413: monitorexit
-    //   414: aload 7
-    //   416: monitorexit
-    //   417: return
-    //   418: astore_1
-    //   419: aload_1
-    //   420: invokestatic 338	com/baidu/mobstat/db:a	(Ljava/lang/Throwable;)V
-    //   423: aload 9
-    //   425: monitorexit
-    //   426: aload 8
-    //   428: monitorexit
-    //   429: aload 7
-    //   431: monitorexit
-    //   432: return
-    //   433: astore_1
-    //   434: aload 9
-    //   436: monitorexit
-    //   437: aload_1
-    //   438: athrow
-    //   439: astore_1
-    //   440: aload 8
-    //   442: monitorexit
-    //   443: aload_1
-    //   444: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	445	0	this	DataCore
-    //   0	445	1	paramContext	Context
-    //   0	445	2	paramBoolean1	boolean
-    //   0	445	3	paramBoolean2	boolean
-    //   164	208	4	i	int
-    //   140	9	5	l	long
-    //   22	408	7	localJSONObject	JSONObject
-    //   12	429	8	localObject1	Object
-    //   127	218	10	localObject2	Object
-    // Exception table:
-    //   from	to	target	type
-    //   27	47	114	finally
-    //   47	84	114	finally
-    //   102	111	114	finally
-    //   115	118	114	finally
-    //   137	142	364	finally
-    //   142	159	364	finally
-    //   166	200	364	finally
-    //   217	244	364	finally
-    //   244	253	364	finally
-    //   360	363	364	finally
-    //   365	368	364	finally
-    //   380	382	364	finally
-    //   383	390	364	finally
-    //   399	402	364	finally
-    //   414	417	364	finally
-    //   429	432	364	finally
-    //   443	445	364	finally
-    //   200	217	376	finally
-    //   377	380	376	finally
-    //   142	159	382	java/lang/Exception
-    //   166	200	382	java/lang/Exception
-    //   217	244	382	java/lang/Exception
-    //   380	382	382	java/lang/Exception
-    //   253	265	391	org/json/JSONException
-    //   274	287	403	org/json/JSONException
-    //   287	303	418	org/json/JSONException
-    //   274	287	433	finally
-    //   287	303	433	finally
-    //   303	357	433	finally
-    //   404	411	433	finally
-    //   419	426	433	finally
-    //   434	437	433	finally
-    //   253	265	439	finally
-    //   265	274	439	finally
-    //   357	360	439	finally
-    //   392	399	439	finally
-    //   411	414	439	finally
-    //   426	429	439	finally
-    //   437	439	439	finally
-    //   440	443	439	finally
-  }
+
+    /* renamed from: a */
+    private void m15272a(Context context) {
+        synchronized (this.f19356d) {
+            this.f19356d = new JSONArray();
+        }
+        synchronized (this.f19355c) {
+            this.f19355c = new JSONArray();
+        }
+        synchronized (this.f19357e) {
+            this.f19357e = new JSONArray();
+        }
+        flush(context);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/DataCore.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

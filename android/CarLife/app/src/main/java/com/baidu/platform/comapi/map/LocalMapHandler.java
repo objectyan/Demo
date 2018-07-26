@@ -4,42 +4,46 @@ import android.os.Message;
 import com.baidu.mapframework.nirvana.looper.MainLooperHandler;
 import com.baidu.mapframework.nirvana.module.Module;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
+import com.baidu.platform.comapi.UIMsg.m_AppUI;
 
-class LocalMapHandler
-  extends MainLooperHandler
-{
-  private LocalMapListener listener = null;
-  
-  LocalMapHandler()
-  {
-    super(Module.MAP_ENGINE, ScheduleConfig.forData());
-  }
-  
-  public void onMessage(Message paramMessage)
-  {
-    if (paramMessage.what != 65289) {}
-    do
-    {
-      return;
-      switch (paramMessage.arg1)
-      {
-      default: 
-        return;
-      }
-    } while (this.listener == null);
-    this.listener.onGetLocalMapState(paramMessage.arg1, paramMessage.arg2);
-  }
-  
-  void registListener(LocalMapListener paramLocalMapListener)
-  {
-    this.listener = paramLocalMapListener;
-  }
-  
-  void removeListener(LocalMapListener paramLocalMapListener) {}
+class LocalMapHandler extends MainLooperHandler {
+    private LocalMapListener listener = null;
+
+    LocalMapHandler() {
+        super(Module.MAP_ENGINE, ScheduleConfig.forData());
+    }
+
+    void registListener(LocalMapListener listener) {
+        this.listener = listener;
+    }
+
+    void removeListener(LocalMapListener listener) {
+    }
+
+    public void onMessage(Message message) {
+        if (message.what == m_AppUI.V_WM_VDATAENGINE) {
+            switch (message.arg1) {
+                case -1:
+                case 0:
+                case 1:
+                case 2:
+                case 4:
+                case 6:
+                case 8:
+                case 9:
+                case 10:
+                case 12:
+                case 101:
+                case 102:
+                case 201:
+                    if (this.listener != null) {
+                        this.listener.onGetLocalMapState(message.arg1, message.arg2);
+                        return;
+                    }
+                    return;
+                default:
+                    return;
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/LocalMapHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

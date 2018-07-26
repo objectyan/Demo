@@ -6,20 +6,23 @@ import android.view.View.OnClickListener;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-final class bi
-  implements View.OnClickListener
-{
-  bi(FeedbackInputActivity paramFeedbackInputActivity, View paramView, PopupWindow paramPopupWindow) {}
-  
-  public final void onClick(View paramView)
-  {
-    ((ClipboardManager)this.a.getSystemService("clipboard")).setText(((TextView)this.b).getText().toString());
-    this.c.dismiss();
-  }
+/* compiled from: FeedbackInputActivity */
+final class bi implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21575a;
+    /* renamed from: b */
+    private final /* synthetic */ View f21576b;
+    /* renamed from: c */
+    private final /* synthetic */ PopupWindow f21577c;
+
+    bi(FeedbackInputActivity feedbackInputActivity, View view, PopupWindow popupWindow) {
+        this.f21575a = feedbackInputActivity;
+        this.f21576b = view;
+        this.f21577c = popupWindow;
+    }
+
+    public final void onClick(View view) {
+        ((ClipboardManager) this.f21575a.getSystemService("clipboard")).setText(((TextView) this.f21576b).getText().toString());
+        this.f21577c.dismiss();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bi.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

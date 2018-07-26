@@ -1,5 +1,6 @@
 package com.baidu.carlife.protobuf;
 
+import com.baidu.carlife.protobuf.CarlifeFeatureConfigProto.CarlifeFeatureConfig;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -9,468 +10,398 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class CarlifeFeatureConfigListProto
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_com_baidu_carlife_protobuf_CarlifeFeatureConfigList_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_com_baidu_carlife_protobuf_CarlifeFeatureConfigList_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeFeatureConfigListProto.access$802(paramAnonymousFileDescriptor);
-        CarlifeFeatureConfigListProto.access$002((Descriptors.Descriptor)CarlifeFeatureConfigListProto.getDescriptor().getMessageTypes().get(0));
-        CarlifeFeatureConfigListProto.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeFeatureConfigListProto.internal_static_com_baidu_carlife_protobuf_CarlifeFeatureConfigList_descriptor, new String[] { "Cnt", "FeatureConfig" }, CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.class, CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor localFileDescriptor = CarlifeFeatureConfigProto.getDescriptor();
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n#CarlifeFeatureConfigListProto.proto\022\032com.baidu.carlife.protobuf\032\037CarlifeFeatureConfigProto.proto\"p\n\030CarlifeFeatureConfigList\022\013\n\003cnt\030\001 \002(\005\022G\n\rfeatureConfig\030\002 \003(\01320.com.baidu.carlife.protobuf.CarlifeFeatureConfig" }, new Descriptors.FileDescriptor[] { localFileDescriptor }, local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeFeatureConfigList
-    extends GeneratedMessage
-  {
-    public static final int CNT_FIELD_NUMBER = 1;
-    public static final int FEATURECONFIG_FIELD_NUMBER = 2;
-    private static final CarlifeFeatureConfigList defaultInstance = new CarlifeFeatureConfigList();
-    private int cnt_ = 0;
-    private List<CarlifeFeatureConfigProto.CarlifeFeatureConfig> featureConfig_ = Collections.emptyList();
-    private boolean hasCnt;
-    private int memoizedSerializedSize = -1;
-    
-    static
-    {
-      CarlifeFeatureConfigListProto.getDescriptor();
-      CarlifeFeatureConfigListProto.internalForceInit();
-    }
-    
-    public static CarlifeFeatureConfigList getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeFeatureConfigListProto.internal_static_com_baidu_carlife_protobuf_CarlifeFeatureConfigList_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeFeatureConfigList paramCarlifeFeatureConfigList)
-    {
-      return newBuilder().mergeFrom(paramCarlifeFeatureConfigList);
-    }
-    
-    public static CarlifeFeatureConfigList parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeFeatureConfigList parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public int getCnt()
-    {
-      return this.cnt_;
-    }
-    
-    public CarlifeFeatureConfigList getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public CarlifeFeatureConfigProto.CarlifeFeatureConfig getFeatureConfig(int paramInt)
-    {
-      return (CarlifeFeatureConfigProto.CarlifeFeatureConfig)this.featureConfig_.get(paramInt);
-    }
-    
-    public int getFeatureConfigCount()
-    {
-      return this.featureConfig_.size();
-    }
-    
-    public List<CarlifeFeatureConfigProto.CarlifeFeatureConfig> getFeatureConfigList()
-    {
-      return this.featureConfig_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      i = 0;
-      if (hasCnt()) {
-        i = 0 + CodedOutputStream.computeInt32Size(1, getCnt());
-      }
-      Iterator localIterator = getFeatureConfigList().iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStream.computeMessageSize(2, (CarlifeFeatureConfigProto.CarlifeFeatureConfig)localIterator.next());
-      }
-      i += getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public boolean hasCnt()
-    {
-      return this.hasCnt;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeFeatureConfigListProto.internal_static_com_baidu_carlife_protobuf_CarlifeFeatureConfigList_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      if (!this.hasCnt) {
-        return false;
-      }
-      Iterator localIterator = getFeatureConfigList().iterator();
-      while (localIterator.hasNext()) {
-        if (!((CarlifeFeatureConfigProto.CarlifeFeatureConfig)localIterator.next()).isInitialized()) {
-          return false;
+public final class CarlifeFeatureConfigListProto {
+    private static FileDescriptor descriptor;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeFeatureConfigList_descriptor */
+    private static Descriptor f6617x1ae196f4;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeFeatureConfigList_fieldAccessorTable */
+    private static FieldAccessorTable f6618x37948972;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeFeatureConfigListProto$1 */
+    static class C20631 implements InternalDescriptorAssigner {
+        C20631() {
         }
-      }
-      return true;
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeFeatureConfigListProto.descriptor = root;
+            CarlifeFeatureConfigListProto.f6617x1ae196f4 = (Descriptor) CarlifeFeatureConfigListProto.getDescriptor().getMessageTypes().get(0);
+            CarlifeFeatureConfigListProto.f6618x37948972 = new FieldAccessorTable(CarlifeFeatureConfigListProto.f6617x1ae196f4, new String[]{"Cnt", "FeatureConfig"}, CarlifeFeatureConfigList.class, Builder.class);
+            return null;
+        }
     }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasCnt()) {
-        paramCodedOutputStream.writeInt32(1, getCnt());
-      }
-      Iterator localIterator = getFeatureConfigList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStream.writeMessage(2, (CarlifeFeatureConfigProto.CarlifeFeatureConfig)localIterator.next());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeFeatureConfigListProto.CarlifeFeatureConfigList result;
-      
-      private CarlifeFeatureConfigListProto.CarlifeFeatureConfigList buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
-        }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeFeatureConfigListProto.CarlifeFeatureConfigList(null);
-        return localBuilder;
-      }
-      
-      public Builder addAllFeatureConfig(Iterable<? extends CarlifeFeatureConfigProto.CarlifeFeatureConfig> paramIterable)
-      {
-        if (this.result.featureConfig_.isEmpty()) {
-          CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$502(this.result, new ArrayList());
-        }
-        GeneratedMessage.Builder.addAll(paramIterable, this.result.featureConfig_);
-        return this;
-      }
-      
-      public Builder addFeatureConfig(CarlifeFeatureConfigProto.CarlifeFeatureConfig.Builder paramBuilder)
-      {
-        if (this.result.featureConfig_.isEmpty()) {
-          CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$502(this.result, new ArrayList());
-        }
-        this.result.featureConfig_.add(paramBuilder.build());
-        return this;
-      }
-      
-      public Builder addFeatureConfig(CarlifeFeatureConfigProto.CarlifeFeatureConfig paramCarlifeFeatureConfig)
-      {
-        if (paramCarlifeFeatureConfig == null) {
-          throw new NullPointerException();
-        }
-        if (this.result.featureConfig_.isEmpty()) {
-          CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$502(this.result, new ArrayList());
-        }
-        this.result.featureConfig_.add(paramCarlifeFeatureConfig);
-        return this;
-      }
-      
-      public CarlifeFeatureConfigListProto.CarlifeFeatureConfigList build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
-        }
-        return buildPartial();
-      }
-      
-      public CarlifeFeatureConfigListProto.CarlifeFeatureConfigList buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        if (this.result.featureConfig_ != Collections.EMPTY_LIST) {
-          CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$502(this.result, Collections.unmodifiableList(this.result.featureConfig_));
-        }
-        CarlifeFeatureConfigListProto.CarlifeFeatureConfigList localCarlifeFeatureConfigList = this.result;
-        this.result = null;
-        return localCarlifeFeatureConfigList;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeFeatureConfigListProto.CarlifeFeatureConfigList(null);
-        return this;
-      }
-      
-      public Builder clearCnt()
-      {
-        CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$602(this.result, false);
-        CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$702(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearFeatureConfig()
-      {
-        CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$502(this.result, Collections.emptyList());
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public int getCnt()
-      {
-        return this.result.getCnt();
-      }
-      
-      public CarlifeFeatureConfigListProto.CarlifeFeatureConfigList getDefaultInstanceForType()
-      {
-        return CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.getDescriptor();
-      }
-      
-      public CarlifeFeatureConfigProto.CarlifeFeatureConfig getFeatureConfig(int paramInt)
-      {
-        return this.result.getFeatureConfig(paramInt);
-      }
-      
-      public int getFeatureConfigCount()
-      {
-        return this.result.getFeatureConfigCount();
-      }
-      
-      public List<CarlifeFeatureConfigProto.CarlifeFeatureConfig> getFeatureConfigList()
-      {
-        return Collections.unmodifiableList(this.result.featureConfig_);
-      }
-      
-      public boolean hasCnt()
-      {
-        return this.result.hasCnt();
-      }
-      
-      protected CarlifeFeatureConfigListProto.CarlifeFeatureConfigList internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeFeatureConfigListProto.CarlifeFeatureConfigList paramCarlifeFeatureConfigList)
-      {
-        if (paramCarlifeFeatureConfigList == CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeFeatureConfigList.hasCnt()) {
-          setCnt(paramCarlifeFeatureConfigList.getCnt());
-        }
-        if (!paramCarlifeFeatureConfigList.featureConfig_.isEmpty())
-        {
-          if (this.result.featureConfig_.isEmpty()) {
-            CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$502(this.result, new ArrayList());
-          }
-          this.result.featureConfig_.addAll(paramCarlifeFeatureConfigList.featureConfig_);
-        }
-        mergeUnknownFields(paramCarlifeFeatureConfigList.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+
+    public static final class CarlifeFeatureConfigList extends GeneratedMessage {
+        public static final int CNT_FIELD_NUMBER = 1;
+        public static final int FEATURECONFIG_FIELD_NUMBER = 2;
+        private static final CarlifeFeatureConfigList defaultInstance = new CarlifeFeatureConfigList();
+        private int cnt_;
+        private List<CarlifeFeatureConfig> featureConfig_;
+        private boolean hasCnt;
+        private int memoizedSerializedSize;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeFeatureConfigList result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setCnt(paramCodedInputStream.readInt32());
-            break;
-          case 18: 
-            CarlifeFeatureConfigProto.CarlifeFeatureConfig.Builder localBuilder1 = CarlifeFeatureConfigProto.CarlifeFeatureConfig.newBuilder();
-            paramCodedInputStream.readMessage(localBuilder1, paramExtensionRegistryLite);
-            addFeatureConfig(localBuilder1.buildPartial());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeFeatureConfigList();
+                return builder;
+            }
+
+            protected CarlifeFeatureConfigList internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeFeatureConfigList();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeFeatureConfigList.getDescriptor();
+            }
+
+            public CarlifeFeatureConfigList getDefaultInstanceForType() {
+                return CarlifeFeatureConfigList.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeFeatureConfigList build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeFeatureConfigList buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeFeatureConfigList buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                if (this.result.featureConfig_ != Collections.EMPTY_LIST) {
+                    this.result.featureConfig_ = Collections.unmodifiableList(this.result.featureConfig_);
+                }
+                CarlifeFeatureConfigList returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeFeatureConfigList) {
+                    return mergeFrom((CarlifeFeatureConfigList) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeFeatureConfigList other) {
+                if (other != CarlifeFeatureConfigList.getDefaultInstance()) {
+                    if (other.hasCnt()) {
+                        setCnt(other.getCnt());
+                    }
+                    if (!other.featureConfig_.isEmpty()) {
+                        if (this.result.featureConfig_.isEmpty()) {
+                            this.result.featureConfig_ = new ArrayList();
+                        }
+                        this.result.featureConfig_.addAll(other.featureConfig_);
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setCnt(input.readInt32());
+                            continue;
+                        case 18:
+                            com.baidu.carlife.protobuf.CarlifeFeatureConfigProto.CarlifeFeatureConfig.Builder subBuilder = CarlifeFeatureConfig.newBuilder();
+                            input.readMessage(subBuilder, extensionRegistry);
+                            addFeatureConfig(subBuilder.buildPartial());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasCnt() {
+                return this.result.hasCnt();
+            }
+
+            public int getCnt() {
+                return this.result.getCnt();
+            }
+
+            public Builder setCnt(int value) {
+                this.result.hasCnt = true;
+                this.result.cnt_ = value;
+                return this;
+            }
+
+            public Builder clearCnt() {
+                this.result.hasCnt = false;
+                this.result.cnt_ = 0;
+                return this;
+            }
+
+            public List<CarlifeFeatureConfig> getFeatureConfigList() {
+                return Collections.unmodifiableList(this.result.featureConfig_);
+            }
+
+            public int getFeatureConfigCount() {
+                return this.result.getFeatureConfigCount();
+            }
+
+            public CarlifeFeatureConfig getFeatureConfig(int index) {
+                return this.result.getFeatureConfig(index);
+            }
+
+            public Builder setFeatureConfig(int index, CarlifeFeatureConfig value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.featureConfig_.set(index, value);
+                return this;
+            }
+
+            public Builder setFeatureConfig(int index, com.baidu.carlife.protobuf.CarlifeFeatureConfigProto.CarlifeFeatureConfig.Builder builderForValue) {
+                this.result.featureConfig_.set(index, builderForValue.build());
+                return this;
+            }
+
+            public Builder addFeatureConfig(CarlifeFeatureConfig value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                if (this.result.featureConfig_.isEmpty()) {
+                    this.result.featureConfig_ = new ArrayList();
+                }
+                this.result.featureConfig_.add(value);
+                return this;
+            }
+
+            public Builder addFeatureConfig(com.baidu.carlife.protobuf.CarlifeFeatureConfigProto.CarlifeFeatureConfig.Builder builderForValue) {
+                if (this.result.featureConfig_.isEmpty()) {
+                    this.result.featureConfig_ = new ArrayList();
+                }
+                this.result.featureConfig_.add(builderForValue.build());
+                return this;
+            }
+
+            public Builder addAllFeatureConfig(Iterable<? extends CarlifeFeatureConfig> values) {
+                if (this.result.featureConfig_.isEmpty()) {
+                    this.result.featureConfig_ = new ArrayList();
+                }
+                com.google.protobuf.GeneratedMessage.Builder.addAll(values, this.result.featureConfig_);
+                return this;
+            }
+
+            public Builder clearFeatureConfig() {
+                this.result.featureConfig_ = Collections.emptyList();
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeFeatureConfigListProto.CarlifeFeatureConfigList)) {
-          return mergeFrom((CarlifeFeatureConfigListProto.CarlifeFeatureConfigList)paramMessage);
+
+        private CarlifeFeatureConfigList() {
+            this.cnt_ = 0;
+            this.featureConfig_ = Collections.emptyList();
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setCnt(int paramInt)
-      {
-        CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$602(this.result, true);
-        CarlifeFeatureConfigListProto.CarlifeFeatureConfigList.access$702(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setFeatureConfig(int paramInt, CarlifeFeatureConfigProto.CarlifeFeatureConfig.Builder paramBuilder)
-      {
-        this.result.featureConfig_.set(paramInt, paramBuilder.build());
-        return this;
-      }
-      
-      public Builder setFeatureConfig(int paramInt, CarlifeFeatureConfigProto.CarlifeFeatureConfig paramCarlifeFeatureConfig)
-      {
-        if (paramCarlifeFeatureConfig == null) {
-          throw new NullPointerException();
+
+        static {
+            CarlifeFeatureConfigListProto.getDescriptor();
+            CarlifeFeatureConfigListProto.internalForceInit();
         }
-        this.result.featureConfig_.set(paramInt, paramCarlifeFeatureConfig);
-        return this;
-      }
+
+        public static CarlifeFeatureConfigList getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public CarlifeFeatureConfigList getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeFeatureConfigListProto.f6617x1ae196f4;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeFeatureConfigListProto.f6618x37948972;
+        }
+
+        public boolean hasCnt() {
+            return this.hasCnt;
+        }
+
+        public int getCnt() {
+            return this.cnt_;
+        }
+
+        public List<CarlifeFeatureConfig> getFeatureConfigList() {
+            return this.featureConfig_;
+        }
+
+        public int getFeatureConfigCount() {
+            return this.featureConfig_.size();
+        }
+
+        public CarlifeFeatureConfig getFeatureConfig(int index) {
+            return (CarlifeFeatureConfig) this.featureConfig_.get(index);
+        }
+
+        public final boolean isInitialized() {
+            if (!this.hasCnt) {
+                return false;
+            }
+            for (CarlifeFeatureConfig element : getFeatureConfigList()) {
+                if (!element.isInitialized()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasCnt()) {
+                output.writeInt32(1, getCnt());
+            }
+            for (CarlifeFeatureConfig element : getFeatureConfigList()) {
+                output.writeMessage(2, element);
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasCnt()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getCnt());
+            }
+            for (CarlifeFeatureConfig element : getFeatureConfigList()) {
+                size += CodedOutputStream.computeMessageSize(2, element);
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeFeatureConfigList parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeFeatureConfigList parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeFeatureConfigList prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeFeatureConfigListProto() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor[] fileDescriptorArr = new FileDescriptor[]{CarlifeFeatureConfigProto.getDescriptor()};
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n#CarlifeFeatureConfigListProto.proto\u0012\u001acom.baidu.carlife.protobuf\u001a\u001fCarlifeFeatureConfigProto.proto\"p\n\u0018CarlifeFeatureConfigList\u0012\u000b\n\u0003cnt\u0018\u0001 \u0002(\u0005\u0012G\n\rfeatureConfig\u0018\u0002 \u0003(\u000b20.com.baidu.carlife.protobuf.CarlifeFeatureConfig"}, fileDescriptorArr, new C20631());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeFeatureConfigListProto.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

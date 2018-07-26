@@ -1,6 +1,12 @@
 package com.baidu.navisdk.hudsdk.socket;
 
 import android.os.Bundle;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.comapi.routeguide.RouteGuideParams.RGKey.ExpandMap;
+import com.baidu.navisdk.comapi.routeguide.RouteGuideParams.RGKey.SimpleGuideInfo;
+import com.baidu.navisdk.hudsdk.BNRemoteConstants;
+import com.baidu.navisdk.hudsdk.BNRemoteConstants.MessageType;
+import com.baidu.navisdk.hudsdk.BNRemoteConstants.ParamKey;
 import com.baidu.navisdk.hudsdk.BitmapUtils;
 import com.baidu.navisdk.jni.nativeif.JNIGuidanceControl;
 import com.baidu.navisdk.ui.routeguide.model.RGAssistGuideModel;
@@ -9,650 +15,512 @@ import com.baidu.navisdk.ui.routeguide.model.RGHighwayModel;
 import com.baidu.navisdk.ui.routeguide.model.RGSimpleGuideModel;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.util.common.PackageUtil;
+import com.baidu.navisdk.util.drivertool.BNDrivingToolParams;
 import java.util.ArrayList;
-import java.util.Collection;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PacketJSONData
-{
-  private static JSONObject packetAssistant()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    int k = RGAssistGuideModel.getInstance().getLastestData().getInt("assisttype");
-    int m = RGAssistGuideModel.getInstance().getLastestData().getInt("updatetype");
-    int j = RGAssistGuideModel.getInstance().getLastestData().getInt("speed");
-    localJSONObject1.put("messageType", 102);
-    localJSONObject2.put("assistantType", k);
-    localJSONObject2.put("assistUpdateType", m);
-    int i;
-    if (k != 8)
-    {
-      i = j;
-      if (k != 11) {}
-    }
-    else
-    {
-      i = j;
-      if (m != 3) {
-        i = j / 1000;
-      }
-    }
-    localJSONObject2.put("limitedSpeed", i);
-    if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("remain_dist")) {
-      localJSONObject2.put("distance", RGSimpleGuideModel.sSimpleGuideBundle.getInt("remain_dist"));
-    }
-    for (;;)
-    {
-      localJSONObject1.put("messageData", localJSONObject2);
-      return localJSONObject1;
-      localJSONObject2.put("distance", 0);
-    }
-  }
-  
-  public static JSONObject packetAuthRes(boolean paramBoolean)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    JSONObject localJSONObject3 = new JSONObject();
-    JSONObject localJSONObject4 = new JSONObject();
-    localJSONObject2.put("messageType", 12);
-    if (paramBoolean)
-    {
-      localJSONObject4.put("serverType", 1);
-      localJSONObject4.put("serverVersion", PackageUtil.getVersionName());
-      localJSONObject4.put("repMsg", "AUTHORIZE_SUCCESS_MSG");
-      localJSONObject3.put("errorCode", 0);
-      localJSONObject3.put("errorMessage", "ok");
-    }
-    for (;;)
-    {
-      localJSONObject2.put("messageData", localJSONObject4);
-      localJSONObject1.put("data", localJSONObject2);
-      localJSONObject1.put("error", localJSONObject3);
-      return localJSONObject1;
-      localJSONObject3.put("errorCode", 1);
-      localJSONObject3.put("errorMessage", "The user is not authorized");
-    }
-  }
-  
-  private static JSONObject packetCarFreeStatus()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    boolean bool = RGSimpleGuideModel.getInstance().isCarlogoFree();
-    localJSONObject1.put("messageType", 117);
-    localJSONObject2.put("isCarFree", bool);
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  private static JSONObject packetCarPointInfo(Bundle paramBundle)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    double d1 = paramBundle.getDouble("direction");
-    double d2 = paramBundle.getDouble("longitude");
-    double d3 = paramBundle.getDouble("latitude");
-    localJSONObject1.put("messageType", 116);
-    localJSONObject2.put("angle", d1);
-    localJSONObject2.put("longitude", d2);
-    localJSONObject2.put("latitude", d3);
-    localJSONObject2.put("speed", RGAssistGuideModel.getInstance().getCurCarSpeedInt());
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  private static JSONObject packetCarTunnelInfo(Bundle paramBundle)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    if (paramBundle.getInt("isTunnel") == 1) {}
-    for (boolean bool = true;; bool = false)
-    {
-      localJSONObject1.put("messageType", 118);
-      localJSONObject2.put("isInTunnel", bool);
-      localJSONObject1.put("messageData", localJSONObject2);
-      return localJSONObject1;
-    }
-  }
-  
-  private static JSONObject packetCurrentRoad()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    localJSONObject1.put("messageType", 104);
-    localJSONObject2.put("currentRoadName", RGSimpleGuideModel.getInstance().getCurRoadName());
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  private static JSONObject packetDestInfo(Bundle paramBundle)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    int i = paramBundle.getInt("totalDist");
-    double d1 = paramBundle.getDouble("longitude");
-    double d2 = paramBundle.getDouble("latitude");
-    localJSONObject1.put("messageType", 115);
-    localJSONObject2.put("destTotalDist", i);
-    localJSONObject2.put("longitude", d1);
-    localJSONObject2.put("latitude", d2);
-    localJSONObject2.put("destIcon", 0);
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  private static JSONObject packetDestRemainInfo()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    localJSONObject1.put("messageType", 103);
-    if (RGSimpleGuideModel.getInstance().getTotalInfo().containsKey("totaldist"))
-    {
-      localJSONObject2.put("remainDistance", RGSimpleGuideModel.getInstance().getTotalInfo().getInt("totaldist"));
-      if (!RGSimpleGuideModel.getInstance().getTotalInfo().containsKey("totaltime")) {
-        break label110;
-      }
-      localJSONObject2.put("remainTime", RGSimpleGuideModel.getInstance().getTotalInfo().getInt("totaltime"));
-    }
-    for (;;)
-    {
-      localJSONObject1.put("messageData", localJSONObject2);
-      return localJSONObject1;
-      localJSONObject2.put("remainDistance", 0);
-      break;
-      label110:
-      localJSONObject2.put("remainTime", 0);
-    }
-  }
-  
-  public static JSONObject packetDestRemainInfo(int paramInt1, int paramInt2)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    JSONObject localJSONObject3 = new JSONObject();
-    JSONObject localJSONObject4 = new JSONObject();
-    localJSONObject2.put("messageType", 103);
-    localJSONObject4.put("remainDistance", paramInt1);
-    localJSONObject4.put("remainTime", paramInt2);
-    localJSONObject2.put("messageData", localJSONObject4);
-    localJSONObject3.put("errorCode", 0);
-    localJSONObject3.put("errorMessage", "ok");
-    localJSONObject1.put("data", localJSONObject2);
-    localJSONObject1.put("error", localJSONObject3);
-    return localJSONObject1;
-  }
-  
-  public static JSONObject packetEnlargeRoad(int paramInt1, int paramInt2)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    JSONObject localJSONObject3 = new JSONObject();
-    JSONObject localJSONObject4 = new JSONObject();
-    localJSONObject2.put("messageType", 114);
-    localJSONObject4.put("enlargeType", paramInt1);
-    localJSONObject4.put("enlargeShowState", paramInt2);
-    Bundle localBundle = RGEnlargeRoadMapModel.getInstance().getLastestData();
-    if (localBundle == null) {
-      throw new JSONException("");
-    }
-    if ((paramInt2 == 0) || (paramInt2 == 1))
-    {
-      if (paramInt2 != 0) {
-        break label343;
-      }
-      byte[] arrayOfByte = BitmapUtils.bitmap2Bytes(RGEnlargeRoadMapModel.getInstance().getBGBitmap());
-      if (arrayOfByte == null) {
-        break label328;
-      }
-      localJSONObject4.put("enlargeBasicImage", BitmapUtils.encodeToBase64Str(arrayOfByte));
-      arrayOfByte = BitmapUtils.bitmap2Bytes(RGEnlargeRoadMapModel.getInstance().getArrowBitmap());
-      if (arrayOfByte == null) {
-        break label330;
-      }
-      localJSONObject4.put("enlargeArrowImage", BitmapUtils.encodeToBase64Str(arrayOfByte));
-      localJSONObject4.put("nextRoadName", localBundle.getString("road_name"));
-      localJSONObject4.put("enlargeTotalDist", localBundle.getInt("total_dist"));
-      localJSONObject4.put("enlargeRemainDist", localBundle.getInt("rem_dist"));
-      if (paramInt1 == 1)
-      {
-        localJSONObject4.put("carPosX", localBundle.getInt("car_pos_x"));
-        localJSONObject4.put("carPosY", localBundle.getInt("car_pos_y"));
-        localJSONObject4.put("carPosRotate", localBundle.getInt("car_rotate"));
-        if (paramInt2 != 0) {
-          break label366;
+public class PacketJSONData {
+    public static JSONObject packetJSONData(int type, Bundle arg) throws JSONException {
+        JSONObject msgDataJson;
+        JSONObject msgJson = new JSONObject();
+        JSONObject msgErrorJson = new JSONObject();
+        switch (type) {
+            case 100:
+                msgDataJson = packetManeuver();
+                break;
+            case 101:
+                msgDataJson = packetServiceArea();
+                break;
+            case 102:
+                msgDataJson = packetAssistant();
+                break;
+            case 103:
+                msgDataJson = packetDestRemainInfo();
+                break;
+            case 104:
+                msgDataJson = packetCurrentRoad();
+                break;
+            case 105:
+                msgDataJson = packetNextRoad();
+                break;
+            case 115:
+                msgDataJson = packetDestInfo(arg);
+                break;
+            case 116:
+                msgDataJson = packetCarPointInfo(arg);
+                break;
+            case MessageType.BNMessageTypeCarFreeStatus /*117*/:
+                msgDataJson = packetCarFreeStatus();
+                break;
+            case MessageType.BNMessageTypeTunnelUpdate /*118*/:
+                msgDataJson = packetCarTunnelInfo(arg);
+                break;
+            case 119:
+                msgDataJson = packetShapeIndexUpdate(arg);
+                break;
+            case 120:
+                msgDataJson = packetRouteInfo(arg);
+                break;
+            case 121:
+                msgDataJson = packetNearByCamera();
+                break;
+            default:
+                msgDataJson = new JSONObject();
+                JSONObject msgObjJson = new JSONObject();
+                msgDataJson.put(ParamKey.KEY_MSG_TYPE, type);
+                msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+                break;
         }
-        localJSONObject4.put("lastCarPosX", 0);
-        localJSONObject4.put("lastCarPosY", 0);
-        localJSONObject4.put("lastCarPosRotate", 0);
-      }
+        msgErrorJson.put("errorCode", 0);
+        msgErrorJson.put(ParamKey.KEY_MSG_ERROR_STR, BNRemoteConstants.ERROR_DEFAULT_STR);
+        msgJson.put("data", msgDataJson);
+        msgJson.put(ParamKey.KEY_MSG_ERRORS, msgErrorJson);
+        return msgJson;
     }
-    for (;;)
-    {
-      localJSONObject2.put("messageData", localJSONObject4);
-      localJSONObject3.put("errorCode", 0);
-      localJSONObject3.put("errorMessage", "ok");
-      localJSONObject1.put("data", localJSONObject2);
-      localJSONObject1.put("error", localJSONObject3);
-      return localJSONObject1;
-      label328:
-      return null;
-      label330:
-      localJSONObject4.put("enlargeArrowImage", "");
-      break;
-      label343:
-      localJSONObject4.put("enlargeBasicImage", "");
-      localJSONObject4.put("enlargeArrowImage", "");
-      break;
-      label366:
-      localJSONObject4.put("lastCarPosX", localBundle.getInt("last_car_pos_x"));
-      localJSONObject4.put("lastCarPosY", localBundle.getInt("last_car_pos_y"));
-      localJSONObject4.put("lastCarPosRotate", localBundle.getInt("last_car_rotate"));
+
+    public static JSONObject packetAuthRes(boolean isSuccess) throws JSONException {
+        JSONObject msgJson = new JSONObject();
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgErrorJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 12);
+        if (isSuccess) {
+            msgObjJson.put(ParamKey.KEY_AUTH_SERVER_TYPE, 1);
+            msgObjJson.put(ParamKey.KEY_AUTH_SERVER_VERSION, PackageUtil.getVersionName());
+            msgObjJson.put(ParamKey.KEY_AUTH_RES_MSG, "AUTHORIZE_SUCCESS_MSG");
+            msgErrorJson.put("errorCode", 0);
+            msgErrorJson.put(ParamKey.KEY_MSG_ERROR_STR, BNRemoteConstants.ERROR_DEFAULT_STR);
+        } else {
+            msgErrorJson.put("errorCode", 1);
+            msgErrorJson.put(ParamKey.KEY_MSG_ERROR_STR, BNRemoteConstants.AUTHORIZE_FAILED_MSG);
+        }
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        msgJson.put("data", msgDataJson);
+        msgJson.put(ParamKey.KEY_MSG_ERRORS, msgErrorJson);
+        return msgJson;
     }
-  }
-  
-  public static JSONObject packetJSONData(int paramInt, Bundle paramBundle)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    switch (paramInt)
-    {
-    case 106: 
-    case 107: 
-    case 108: 
-    case 109: 
-    case 110: 
-    case 111: 
-    case 112: 
-    case 113: 
-    case 114: 
-    default: 
-      paramBundle = new JSONObject();
-      JSONObject localJSONObject3 = new JSONObject();
-      paramBundle.put("messageType", paramInt);
-      paramBundle.put("messageData", localJSONObject3);
+
+    public static JSONObject packetPong() throws JSONException {
+        JSONObject msgJson = new JSONObject();
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgErrorJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 14);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        msgErrorJson.put("errorCode", 0);
+        msgErrorJson.put(ParamKey.KEY_MSG_ERROR_STR, BNRemoteConstants.ERROR_DEFAULT_STR);
+        msgJson.put("data", msgDataJson);
+        msgJson.put(ParamKey.KEY_MSG_ERRORS, msgErrorJson);
+        return msgJson;
     }
-    for (;;)
-    {
-      localJSONObject2.put("errorCode", 0);
-      localJSONObject2.put("errorMessage", "ok");
-      localJSONObject1.put("data", paramBundle);
-      localJSONObject1.put("error", localJSONObject2);
-      return localJSONObject1;
-      paramBundle = packetManeuver();
-      continue;
-      paramBundle = packetServiceArea();
-      continue;
-      paramBundle = packetAssistant();
-      continue;
-      paramBundle = packetDestRemainInfo();
-      continue;
-      paramBundle = packetCurrentRoad();
-      continue;
-      paramBundle = packetNextRoad();
-      continue;
-      paramBundle = packetDestInfo(paramBundle);
-      continue;
-      paramBundle = packetCarPointInfo(paramBundle);
-      continue;
-      paramBundle = packetCarFreeStatus();
-      continue;
-      paramBundle = packetCarTunnelInfo(paramBundle);
-      continue;
-      paramBundle = packetShapeIndexUpdate(paramBundle);
-      continue;
-      paramBundle = packetRouteInfo(paramBundle);
-      continue;
-      paramBundle = packetNearByCamera();
+
+    public static JSONObject packetServerExit() throws JSONException {
+        JSONObject msgJson = new JSONObject();
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgErrorJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 13);
+        msgObjJson.put("msg", BNRemoteConstants.END_COMMUNICATION);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        msgErrorJson.put("errorCode", 0);
+        msgErrorJson.put(ParamKey.KEY_MSG_ERROR_STR, BNRemoteConstants.ERROR_DEFAULT_STR);
+        msgJson.put("data", msgDataJson);
+        msgJson.put(ParamKey.KEY_MSG_ERRORS, msgErrorJson);
+        return msgJson;
     }
-  }
-  
-  private static JSONObject packetManeuver()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    int i = -1;
-    boolean bool = false;
-    Object localObject1 = "";
-    Object localObject2 = "";
-    localJSONObject1.put("messageType", 100);
-    if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("roadID")) {
-      localJSONObject2.put("maneuverId", RGSimpleGuideModel.sSimpleGuideBundle.getInt("roadID"));
-    }
-    Object localObject3;
-    if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("icon_name"))
-    {
-      localObject3 = RGSimpleGuideModel.sSimpleGuideBundle.getString("icon_name");
-      if (localObject3 != null) {
-        localJSONObject2.put("maneuverName", ((String)localObject3).replace(".png", "").toLowerCase());
-      }
-    }
-    for (;;)
-    {
-      label146:
-      label185:
-      label214:
-      String str;
-      if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("straight"))
-      {
-        if (RGSimpleGuideModel.sSimpleGuideBundle.getInt("straight", 0) > 0)
-        {
-          bool = true;
-          localJSONObject2.put("straight", bool);
+
+    private static JSONObject packetManeuver() throws JSONException {
+        ArrayList<Integer> collectionArray;
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        int remainDist = -1;
+        boolean isStraight = false;
+        String nextRoadName = "";
+        String curRoadName = "";
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 100);
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.RoadID)) {
+            msgObjJson.put(ParamKey.KEY_MANEUVER_ID, RGSimpleGuideModel.sSimpleGuideBundle.getInt(SimpleGuideInfo.RoadID));
         }
-      }
-      else
-      {
-        if (!RGSimpleGuideModel.sSimpleGuideBundle.containsKey("remain_dist")) {
-          break label609;
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("icon_name")) {
+            String turnIconName = RGSimpleGuideModel.sSimpleGuideBundle.getString("icon_name");
+            if (turnIconName != null) {
+                msgObjJson.put(ParamKey.KEY_MANEUVER_NAME, turnIconName.replace(BNDrivingToolParams.RESOURCE_PICTURE_SUFFIX, "").toLowerCase());
+            } else {
+                msgObjJson.put(ParamKey.KEY_MANEUVER_NAME, "");
+            }
+        } else {
+            msgObjJson.put(ParamKey.KEY_MANEUVER_NAME, "");
         }
-        i = RGSimpleGuideModel.sSimpleGuideBundle.getInt("remain_dist");
-        localJSONObject2.put("distance", i);
-        if (!RGSimpleGuideModel.sSimpleGuideBundle.containsKey("road_name")) {
-          break label621;
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("straight")) {
+            isStraight = RGSimpleGuideModel.sSimpleGuideBundle.getInt("straight", 0) > 0;
+            msgObjJson.put("straight", isStraight);
         }
-        localObject1 = RGSimpleGuideModel.sSimpleGuideBundle.getString("road_name");
-        localJSONObject2.put("nextRoadName", localObject1);
-        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("cur_road_name")) {
-          localObject2 = RGSimpleGuideModel.sSimpleGuideBundle.getString("cur_road_name");
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.RemainDist)) {
+            remainDist = RGSimpleGuideModel.sSimpleGuideBundle.getInt(SimpleGuideInfo.RemainDist);
+            msgObjJson.put("distance", remainDist);
+        } else {
+            msgObjJson.put("distance", 0);
         }
-        int j = -1;
-        str = RGSimpleGuideModel.getInstance().getFormatAfterMeters(i);
-        localObject3 = RGSimpleGuideModel.getInstance().getNextGuideInfo();
-        i = j;
-        if (localObject3 != null) {
-          i = ((Bundle)localObject3).getInt("resid");
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("road_name")) {
+            nextRoadName = RGSimpleGuideModel.sSimpleGuideBundle.getString("road_name");
+            msgObjJson.put(ParamKey.KEY_NEXT_ROAD_NAME, nextRoadName);
+        } else {
+            msgObjJson.put(ParamKey.KEY_NEXT_ROAD_NAME, nextRoadName);
         }
-        if ((i == 0) || ((i != 1711407751) && (i != 1711407752) && (i != 1711407704) && (i != 1711407705))) {
-          break label634;
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.CurRoadName)) {
+            curRoadName = RGSimpleGuideModel.sSimpleGuideBundle.getString(SimpleGuideInfo.CurRoadName);
         }
-        localObject3 = BNStyleManager.getString(1711669850);
-        label312:
-        if (!bool) {
-          break label645;
+        String simpleRGTips = "";
+        int resId = -1;
+        String goLable = "";
+        String frontInfo = RGSimpleGuideModel.getInstance().getFormatAfterMeters(remainDist);
+        Bundle simpleBundle = RGSimpleGuideModel.getInstance().getNextGuideInfo();
+        if (simpleBundle != null) {
+            resId = simpleBundle.getInt("resid");
         }
-        localObject1 = "沿" + (String)localObject2 + "行驶" + str;
-        label349:
-        localJSONObject2.put("maneuverTips", localObject1);
-        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("roadPosX")) {
-          localJSONObject2.put("longitude", RGSimpleGuideModel.sSimpleGuideBundle.getDouble("roadPosX"));
+        if (resId == 0 || !(resId == 1711407751 || resId == 1711407752 || resId == 1711407704 || resId == 1711407705)) {
+            goLable = BNStyleManager.getString(C4048R.string.nsdk_string_rg_come_in);
+        } else {
+            goLable = BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_word);
         }
-        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("roadPoxY")) {
-          localJSONObject2.put("latitude", RGSimpleGuideModel.sSimpleGuideBundle.getDouble("roadPoxY"));
+        if (isStraight) {
+            simpleRGTips = "沿" + curRoadName + "行驶" + frontInfo;
+        } else {
+            simpleRGTips = frontInfo + "后" + goLable + nextRoadName;
+        }
+        msgObjJson.put(ParamKey.KEY_MANEUVER_TIPS, simpleRGTips);
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.RoadPosX)) {
+            msgObjJson.put("longitude", RGSimpleGuideModel.sSimpleGuideBundle.getDouble(SimpleGuideInfo.RoadPosX));
+        }
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.RoadPoxY)) {
+            msgObjJson.put("latitude", RGSimpleGuideModel.sSimpleGuideBundle.getDouble(SimpleGuideInfo.RoadPoxY));
         }
         if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("ringFlag")) {
-          localJSONObject2.put("ringFlag", RGSimpleGuideModel.sSimpleGuideBundle.getInt("ringFlag"));
+            msgObjJson.put("ringFlag", RGSimpleGuideModel.sSimpleGuideBundle.getInt("ringFlag"));
         }
-        if (!RGSimpleGuideModel.sSimpleGuideBundle.containsKey("laneCount")) {
-          break label679;
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("laneCount")) {
+            msgObjJson.put("laneCount", RGSimpleGuideModel.sSimpleGuideBundle.getInt("laneCount"));
+        } else {
+            msgObjJson.put("laneCount", 0);
         }
-        localJSONObject2.put("laneCount", RGSimpleGuideModel.sSimpleGuideBundle.getInt("laneCount"));
-        label477:
-        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("laneAddType")) {
-          i = RGSimpleGuideModel.sSimpleGuideBundle.getInt("laneAddType");
-        }
-      }
-      try
-      {
-        localJSONObject2.put("laneTotalAddType", i);
-        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("laneAddTypeArray"))
-        {
-          localObject1 = RGSimpleGuideModel.sSimpleGuideBundle.getIntArray("laneAddTypeArray");
-          if ((localObject1 != null) && (localObject1.length > 0))
-          {
-            localObject2 = new ArrayList();
-            i = 0;
-            for (;;)
-            {
-              if (i < localObject1.length)
-              {
-                ((ArrayList)localObject2).add(Integer.valueOf(localObject1[i]));
-                i += 1;
-                continue;
-                localJSONObject2.put("maneuverName", "");
-                break;
-                localJSONObject2.put("maneuverName", "");
-                break;
-                bool = false;
-                break label146;
-                label609:
-                localJSONObject2.put("distance", 0);
-                break label185;
-                label621:
-                localJSONObject2.put("nextRoadName", "");
-                break label214;
-                label634:
-                localObject3 = BNStyleManager.getString(1711669849);
-                break label312;
-                label645:
-                localObject1 = str + "后" + (String)localObject3 + (String)localObject1;
-                break label349;
-                label679:
-                localJSONObject2.put("laneCount", 0);
-                break label477;
-              }
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.LaneAddType)) {
+            try {
+                msgObjJson.put(ParamKey.KEY_TOTAL_LANE_ADD_TYPE, RGSimpleGuideModel.sSimpleGuideBundle.getInt(SimpleGuideInfo.LaneAddType));
+            } catch (JSONException e) {
             }
-            localJSONObject2.put("laneAdditionTypeArray", new JSONArray((Collection)localObject2));
-          }
         }
-        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey("laneSignArray"))
-        {
-          localObject1 = RGSimpleGuideModel.sSimpleGuideBundle.getIntArray("laneSignArray");
-          if ((localObject1 != null) && (localObject1.length > 0))
-          {
-            localObject2 = new ArrayList();
-            i = 0;
-            while (i < localObject1.length)
-            {
-              ((ArrayList)localObject2).add(Integer.valueOf(localObject1[i]));
-              i += 1;
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.LaneAddTypeArray)) {
+            int[] laneAddTypeArray = RGSimpleGuideModel.sSimpleGuideBundle.getIntArray(SimpleGuideInfo.LaneAddTypeArray);
+            if (laneAddTypeArray != null && laneAddTypeArray.length > 0) {
+                collectionArray = new ArrayList();
+                for (int valueOf : laneAddTypeArray) {
+                    collectionArray.add(Integer.valueOf(valueOf));
+                }
+                msgObjJson.put(ParamKey.KEY_LANE_ADD_TYPE_ARRAY, new JSONArray(collectionArray));
             }
-            localJSONObject2.put("laneSignTypeArray", new JSONArray((Collection)localObject2));
-          }
         }
-        localJSONObject1.put("messageData", localJSONObject2);
-        return localJSONObject1;
-      }
-      catch (JSONException localJSONException)
-      {
-        for (;;) {}
-      }
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.LaneSignArray)) {
+            int[] laneSignArray = RGSimpleGuideModel.sSimpleGuideBundle.getIntArray(SimpleGuideInfo.LaneSignArray);
+            if (laneSignArray != null && laneSignArray.length > 0) {
+                collectionArray = new ArrayList();
+                for (int valueOf2 : laneSignArray) {
+                    collectionArray.add(Integer.valueOf(valueOf2));
+                }
+                msgObjJson.put(ParamKey.KEY_LANE_SIGN_TYPE_ARRAY, new JSONArray(collectionArray));
+            }
+        }
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
     }
-  }
-  
-  private static JSONObject packetNearByCamera()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    localJSONObject1.put("messageType", 121);
-    JSONArray localJSONArray = new JSONArray();
-    ArrayList localArrayList = new ArrayList();
-    if (JNIGuidanceControl.getInstance().GetHUDSDKCameraInfo(localArrayList) == 1)
-    {
-      int j = localArrayList.size();
-      int i = 0;
-      while (i < j)
-      {
-        Bundle localBundle = (Bundle)localArrayList.get(i);
-        if (localBundle != null)
-        {
-          JSONObject localJSONObject3 = new JSONObject();
-          localJSONObject3.put("longitude", localBundle.getDouble("longitude"));
-          localJSONObject3.put("latitude", localBundle.getDouble("latitude"));
-          localJSONObject3.put("cameraType", localBundle.getInt("cameraType"));
-          localJSONObject3.put("distance", localBundle.getInt("fromStartDist"));
-          localJSONArray.put(localJSONObject3);
-        }
-        i += 1;
-      }
+
+    private static JSONObject packetServiceArea() throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 101);
+        msgObjJson.put(ParamKey.KEY_SERVICE_AREA_NAME, RGHighwayModel.getInstance().getServiceName());
+        msgObjJson.put("distance", RGHighwayModel.getInstance().getServiceRemainDist());
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
     }
-    localJSONObject2.put("cameraList", localJSONArray);
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  private static JSONObject packetNextRoad()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    localJSONObject1.put("messageType", 105);
-    localJSONObject2.put("nextRoadName", RGSimpleGuideModel.sSimpleGuideBundle.getString("road_name"));
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  public static JSONObject packetPong()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    JSONObject localJSONObject3 = new JSONObject();
-    JSONObject localJSONObject4 = new JSONObject();
-    localJSONObject2.put("messageType", 14);
-    localJSONObject2.put("messageData", localJSONObject4);
-    localJSONObject3.put("errorCode", 0);
-    localJSONObject3.put("errorMessage", "ok");
-    localJSONObject1.put("data", localJSONObject2);
-    localJSONObject1.put("error", localJSONObject3);
-    return localJSONObject1;
-  }
-  
-  private static JSONObject packetRouteInfo(Bundle paramBundle)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    int i = paramBundle.getInt("routeId");
-    localJSONObject1.put("messageType", 120);
-    localJSONObject2.put("routeID", i);
-    paramBundle = new JSONArray();
-    JSONArray localJSONArray1 = new JSONArray();
-    JSONArray localJSONArray2 = new JSONArray();
-    Object localObject2 = new ArrayList();
-    Object localObject1 = new ArrayList();
-    ArrayList localArrayList = new ArrayList();
-    if (JNIGuidanceControl.getInstance().GetHUDSDKRouteInfo((ArrayList)localObject2, (ArrayList)localObject1, localArrayList) == 1)
-    {
-      int j = ((ArrayList)localObject2).size();
-      i = 0;
-      Object localObject3;
-      while (i < j)
-      {
-        localObject3 = (Bundle)((ArrayList)localObject2).get(i);
-        if (localObject3 != null)
-        {
-          JSONObject localJSONObject3 = new JSONObject();
-          localJSONObject3.put("longitude", ((Bundle)localObject3).getDouble("longitude"));
-          localJSONObject3.put("latitude", ((Bundle)localObject3).getDouble("latitude"));
-          localJSONObject3.put("routeType", ((Bundle)localObject3).getInt("roadType"));
-          localJSONObject3.put("fromStartDist", ((Bundle)localObject3).getInt("fromStartDist"));
-          paramBundle.put(localJSONObject3);
+
+    private static JSONObject packetAssistant() throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        int assistType = RGAssistGuideModel.getInstance().getLastestData().getInt("assisttype");
+        int assistUpdateType = RGAssistGuideModel.getInstance().getLastestData().getInt("updatetype");
+        int assistSpeed = RGAssistGuideModel.getInstance().getLastestData().getInt("speed");
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 102);
+        msgObjJson.put(ParamKey.KEY_ASSISTANT_TYPE, assistType);
+        msgObjJson.put(ParamKey.KEY_ASSISTANT_UPDATE_TYPE, assistUpdateType);
+        if ((assistType == 8 || assistType == 11) && assistUpdateType != 3) {
+            assistSpeed /= 1000;
         }
-        i += 1;
-      }
-      j = ((ArrayList)localObject1).size();
-      i = 0;
-      while (i < j)
-      {
-        localObject2 = (Bundle)((ArrayList)localObject1).get(i);
-        if (localObject2 != null)
-        {
-          localObject3 = new JSONObject();
-          ((JSONObject)localObject3).put("fromStartPointDistance", ((Bundle)localObject2).getInt("startPointFromStartDist"));
-          ((JSONObject)localObject3).put("fromEndPointDistance", ((Bundle)localObject2).getInt("endPointFromStartDist"));
-          ((JSONObject)localObject3).put("routeType", ((Bundle)localObject2).getInt("roadType"));
-          localJSONArray1.put(localObject3);
+        msgObjJson.put(ParamKey.KEY_ASSISTANT_LIMITED_SPEED, assistSpeed);
+        if (RGSimpleGuideModel.sSimpleGuideBundle.containsKey(SimpleGuideInfo.RemainDist)) {
+            msgObjJson.put("distance", RGSimpleGuideModel.sSimpleGuideBundle.getInt(SimpleGuideInfo.RemainDist));
+        } else {
+            msgObjJson.put("distance", 0);
         }
-        i += 1;
-      }
-      j = localArrayList.size();
-      i = 0;
-      while (i < j)
-      {
-        localObject1 = (Bundle)localArrayList.get(i);
-        if (localObject1 != null)
-        {
-          localObject2 = new JSONObject();
-          ((JSONObject)localObject2).put("longitude", ((Bundle)localObject1).getDouble("longitude"));
-          ((JSONObject)localObject2).put("latitude", ((Bundle)localObject1).getDouble("latitude"));
-          ((JSONObject)localObject2).put("latitude", ((Bundle)localObject1).getDouble("latitude"));
-          ((JSONObject)localObject2).put("restrictType", ((Bundle)localObject1).getInt("restrictType"));
-          ((JSONObject)localObject2).put("distance", ((Bundle)localObject1).getInt("fromStartDist"));
-          localJSONArray2.put(localObject2);
-        }
-        i += 1;
-      }
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
     }
-    localJSONObject2.put("arRoutList", paramBundle);
-    localJSONObject2.put("timeLineList", localJSONArray1);
-    localJSONObject2.put("restritInfoList", localJSONArray2);
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  public static JSONObject packetServerExit()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    JSONObject localJSONObject3 = new JSONObject();
-    JSONObject localJSONObject4 = new JSONObject();
-    localJSONObject2.put("messageType", 13);
-    localJSONObject4.put("msg", "End_Communication");
-    localJSONObject2.put("messageData", localJSONObject4);
-    localJSONObject3.put("errorCode", 0);
-    localJSONObject3.put("errorMessage", "ok");
-    localJSONObject1.put("data", localJSONObject2);
-    localJSONObject1.put("error", localJSONObject3);
-    return localJSONObject1;
-  }
-  
-  private static JSONObject packetServiceArea()
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    localJSONObject1.put("messageType", 101);
-    localJSONObject2.put("serviceArea", RGHighwayModel.getInstance().getServiceName());
-    localJSONObject2.put("distance", RGHighwayModel.getInstance().getServiceRemainDist());
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  private static JSONObject packetShapeIndexUpdate(Bundle paramBundle)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    int i = paramBundle.getInt("curLocIndex");
-    int j = paramBundle.getInt("fromStartDist");
-    localJSONObject1.put("messageType", 119);
-    localJSONObject2.put("shapeIndex", i);
-    localJSONObject2.put("distance", j);
-    localJSONObject1.put("messageData", localJSONObject2);
-    return localJSONObject1;
-  }
+
+    public static JSONObject packetDestRemainInfo(int totalDistance, int totalTime) throws JSONException {
+        JSONObject msgJson = new JSONObject();
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgErrorJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 103);
+        msgObjJson.put("remainDistance", totalDistance);
+        msgObjJson.put("remainTime", totalTime);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        msgErrorJson.put("errorCode", 0);
+        msgErrorJson.put(ParamKey.KEY_MSG_ERROR_STR, BNRemoteConstants.ERROR_DEFAULT_STR);
+        msgJson.put("data", msgDataJson);
+        msgJson.put(ParamKey.KEY_MSG_ERRORS, msgErrorJson);
+        return msgJson;
+    }
+
+    private static JSONObject packetDestRemainInfo() throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 103);
+        if (RGSimpleGuideModel.getInstance().getTotalInfo().containsKey(SimpleGuideInfo.TotalDist)) {
+            msgObjJson.put("remainDistance", RGSimpleGuideModel.getInstance().getTotalInfo().getInt(SimpleGuideInfo.TotalDist));
+        } else {
+            msgObjJson.put("remainDistance", 0);
+        }
+        if (RGSimpleGuideModel.getInstance().getTotalInfo().containsKey(SimpleGuideInfo.TotalTime)) {
+            msgObjJson.put("remainTime", RGSimpleGuideModel.getInstance().getTotalInfo().getInt(SimpleGuideInfo.TotalTime));
+        } else {
+            msgObjJson.put("remainTime", 0);
+        }
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    private static JSONObject packetCurrentRoad() throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 104);
+        msgObjJson.put(ParamKey.KEY_CUR_ROAD_NAME, RGSimpleGuideModel.getInstance().getCurRoadName());
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    private static JSONObject packetNextRoad() throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 105);
+        msgObjJson.put(ParamKey.KEY_NEXT_ROAD_NAME, RGSimpleGuideModel.sSimpleGuideBundle.getString("road_name"));
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    public static JSONObject packetEnlargeRoad(int enlargeType, int enlargeState) throws JSONException {
+        JSONObject msgJson = new JSONObject();
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgErrorJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 114);
+        msgObjJson.put(ParamKey.KEY_ENLARGE_RAOD_TYPE, enlargeType);
+        msgObjJson.put(ParamKey.KEY_ENLARGE_RAOD_SHOW_STATE, enlargeState);
+        Bundle bundle = RGEnlargeRoadMapModel.getInstance().getLastestData();
+        if (bundle == null) {
+            throw new JSONException("");
+        }
+        if (enlargeState == 0 || enlargeState == 1) {
+            if (enlargeState == 0) {
+                byte[] bgBitmapBytes = BitmapUtils.bitmap2Bytes(RGEnlargeRoadMapModel.getInstance().getBGBitmap());
+                if (bgBitmapBytes == null) {
+                    return null;
+                }
+                msgObjJson.put(ParamKey.KEY_ENLARGE_RAOD_DATA_BASIC, BitmapUtils.encodeToBase64Str(bgBitmapBytes));
+                byte[] arrowBitmapBytes = BitmapUtils.bitmap2Bytes(RGEnlargeRoadMapModel.getInstance().getArrowBitmap());
+                if (arrowBitmapBytes != null) {
+                    msgObjJson.put(ParamKey.KEY_ENLARGE_RAOD_DATA_ARROW, BitmapUtils.encodeToBase64Str(arrowBitmapBytes));
+                } else {
+                    msgObjJson.put(ParamKey.KEY_ENLARGE_RAOD_DATA_ARROW, "");
+                }
+            } else {
+                msgObjJson.put(ParamKey.KEY_ENLARGE_RAOD_DATA_BASIC, "");
+                msgObjJson.put(ParamKey.KEY_ENLARGE_RAOD_DATA_ARROW, "");
+            }
+            msgObjJson.put(ParamKey.KEY_NEXT_ROAD_NAME, bundle.getString("road_name"));
+            msgObjJson.put(ParamKey.KEY_ENLARGE_ROAD_TOTAL_DIST, bundle.getInt(ExpandMap.TotalDist));
+            msgObjJson.put(ParamKey.KEY_ENLARGE_ROAD_REMAIN_DIST, bundle.getInt(ExpandMap.RemainDist));
+            if (enlargeType == 1) {
+                msgObjJson.put(ParamKey.KEY_CAR_POS_X, bundle.getInt(ExpandMap.CarPosX));
+                msgObjJson.put(ParamKey.KEY_CAR_POS_Y, bundle.getInt(ExpandMap.CarPosY));
+                msgObjJson.put(ParamKey.KEY_CAR_POS_ROTATE, bundle.getInt(ExpandMap.CarRotate));
+                if (enlargeState == 0) {
+                    msgObjJson.put(ParamKey.KEY_LAST_CAR_POS_X, 0);
+                    msgObjJson.put(ParamKey.KEY_LAST_CAR_POS_Y, 0);
+                    msgObjJson.put(ParamKey.KEY_LAST_CAR_POS_ROTATE, 0);
+                } else {
+                    msgObjJson.put(ParamKey.KEY_LAST_CAR_POS_X, bundle.getInt(ExpandMap.LastCarPosX));
+                    msgObjJson.put(ParamKey.KEY_LAST_CAR_POS_Y, bundle.getInt(ExpandMap.LastCarPosY));
+                    msgObjJson.put(ParamKey.KEY_LAST_CAR_POS_ROTATE, bundle.getInt(ExpandMap.LastCarRotate));
+                }
+            }
+        }
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        msgErrorJson.put("errorCode", 0);
+        msgErrorJson.put(ParamKey.KEY_MSG_ERROR_STR, BNRemoteConstants.ERROR_DEFAULT_STR);
+        msgJson.put("data", msgDataJson);
+        msgJson.put(ParamKey.KEY_MSG_ERRORS, msgErrorJson);
+        return msgJson;
+    }
+
+    private static JSONObject packetDestInfo(Bundle bundle) throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        int totalDist = bundle.getInt("totalDist");
+        double longitude = bundle.getDouble("longitude");
+        double latitude = bundle.getDouble("latitude");
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 115);
+        msgObjJson.put(ParamKey.KEY_DEST_TOTAL_DIST, totalDist);
+        msgObjJson.put("longitude", longitude);
+        msgObjJson.put("latitude", latitude);
+        msgObjJson.put(ParamKey.KEY_DEST_ICON, 0);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    private static JSONObject packetCarPointInfo(Bundle bundle) throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        double direction = bundle.getDouble("direction");
+        double longitude = bundle.getDouble("longitude");
+        double latitude = bundle.getDouble("latitude");
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 116);
+        msgObjJson.put(ParamKey.KEY_CAR_DIRECTION, direction);
+        msgObjJson.put("longitude", longitude);
+        msgObjJson.put("latitude", latitude);
+        msgObjJson.put("speed", RGAssistGuideModel.getInstance().getCurCarSpeedInt());
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    private static JSONObject packetCarFreeStatus() throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        boolean isCarFree = RGSimpleGuideModel.getInstance().isCarlogoFree();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, MessageType.BNMessageTypeCarFreeStatus);
+        msgObjJson.put(ParamKey.KEY_CAR_FREE, isCarFree);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    private static JSONObject packetCarTunnelInfo(Bundle bundle) throws JSONException {
+        boolean bIsTunnel;
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        if (bundle.getInt("isTunnel") == 1) {
+            bIsTunnel = true;
+        } else {
+            bIsTunnel = false;
+        }
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, MessageType.BNMessageTypeTunnelUpdate);
+        msgObjJson.put(ParamKey.KEY_CAR_TUNNEL, bIsTunnel);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    private static JSONObject packetShapeIndexUpdate(Bundle bundle) throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        int shapeIndex = bundle.getInt("curLocIndex");
+        int fromStartDist = bundle.getInt(ParamKey.KEY_FROM_START_DIST);
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 119);
+        msgObjJson.put(ParamKey.KEY_CAR_LOCATION_INDEX, shapeIndex);
+        msgObjJson.put("distance", fromStartDist);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    private static JSONObject packetRouteInfo(Bundle bundle) throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        int routeId = bundle.getInt("routeId");
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 120);
+        msgObjJson.put(ParamKey.KEY_ROUTE_ID, routeId);
+        JSONArray arRouteArray = new JSONArray();
+        JSONArray timeLineArray = new JSONArray();
+        JSONArray restrictArray = new JSONArray();
+        ArrayList<Bundle> arRouteInfoList = new ArrayList();
+        ArrayList<Bundle> timeLineList = new ArrayList();
+        ArrayList<Bundle> restrictList = new ArrayList();
+        if (JNIGuidanceControl.getInstance().GetHUDSDKRouteInfo(arRouteInfoList, timeLineList, restrictList) == 1) {
+            int index;
+            int arRouteListSize = arRouteInfoList.size();
+            for (index = 0; index < arRouteListSize; index++) {
+                Bundle arShapeInfoBundle = (Bundle) arRouteInfoList.get(index);
+                if (arShapeInfoBundle != null) {
+                    JSONObject asShapeJsonObj = new JSONObject();
+                    asShapeJsonObj.put("longitude", arShapeInfoBundle.getDouble("longitude"));
+                    asShapeJsonObj.put("latitude", arShapeInfoBundle.getDouble("latitude"));
+                    asShapeJsonObj.put(ParamKey.KEY_ROUTE_TYPE, arShapeInfoBundle.getInt("roadType"));
+                    asShapeJsonObj.put(ParamKey.KEY_FROM_START_DIST, arShapeInfoBundle.getInt(ParamKey.KEY_FROM_START_DIST));
+                    arRouteArray.put(asShapeJsonObj);
+                }
+            }
+            int timelineListSize = timeLineList.size();
+            for (index = 0; index < timelineListSize; index++) {
+                Bundle timeLineBundle = (Bundle) timeLineList.get(index);
+                if (timeLineBundle != null) {
+                    JSONObject timeLineJsonObj = new JSONObject();
+                    timeLineJsonObj.put(ParamKey.KEY_FROM_START_POINT_DIST, timeLineBundle.getInt("startPointFromStartDist"));
+                    timeLineJsonObj.put(ParamKey.KEY_FROM_END_POINT_DIST, timeLineBundle.getInt("endPointFromStartDist"));
+                    timeLineJsonObj.put(ParamKey.KEY_ROUTE_TYPE, timeLineBundle.getInt("roadType"));
+                    timeLineArray.put(timeLineJsonObj);
+                }
+            }
+            int restrictListSize = restrictList.size();
+            for (index = 0; index < restrictListSize; index++) {
+                Bundle restrictBundle = (Bundle) restrictList.get(index);
+                if (restrictBundle != null) {
+                    JSONObject restrictJsonObj = new JSONObject();
+                    restrictJsonObj.put("longitude", restrictBundle.getDouble("longitude"));
+                    restrictJsonObj.put("latitude", restrictBundle.getDouble("latitude"));
+                    restrictJsonObj.put("latitude", restrictBundle.getDouble("latitude"));
+                    restrictJsonObj.put(ParamKey.KEY_RESTRIT_TYPE, restrictBundle.getInt(ParamKey.KEY_RESTRIT_TYPE));
+                    restrictJsonObj.put("distance", restrictBundle.getInt(ParamKey.KEY_FROM_START_DIST));
+                    restrictArray.put(restrictJsonObj);
+                }
+            }
+        }
+        msgObjJson.put(ParamKey.KEY_AR_ROUTE_LIST, arRouteArray);
+        msgObjJson.put(ParamKey.KEY_TIME_LINE_LIST, timeLineArray);
+        msgObjJson.put(ParamKey.KEY_RESTRIT_INFO_LIST, restrictArray);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
+
+    private static JSONObject packetNearByCamera() throws JSONException {
+        JSONObject msgDataJson = new JSONObject();
+        JSONObject msgObjJson = new JSONObject();
+        msgDataJson.put(ParamKey.KEY_MSG_TYPE, 121);
+        JSONArray cameraArray = new JSONArray();
+        ArrayList<Bundle> cameraInfoList = new ArrayList();
+        if (JNIGuidanceControl.getInstance().GetHUDSDKCameraInfo(cameraInfoList) == 1) {
+            int cameraListSize = cameraInfoList.size();
+            for (int index = 0; index < cameraListSize; index++) {
+                Bundle cameraInfoBundle = (Bundle) cameraInfoList.get(index);
+                if (cameraInfoBundle != null) {
+                    JSONObject cameraInfoJsonObj = new JSONObject();
+                    cameraInfoJsonObj.put("longitude", cameraInfoBundle.getDouble("longitude"));
+                    cameraInfoJsonObj.put("latitude", cameraInfoBundle.getDouble("latitude"));
+                    cameraInfoJsonObj.put(ParamKey.KEY_CAMEAR_TYPE, cameraInfoBundle.getInt(ParamKey.KEY_CAMEAR_TYPE));
+                    cameraInfoJsonObj.put("distance", cameraInfoBundle.getInt(ParamKey.KEY_FROM_START_DIST));
+                    cameraArray.put(cameraInfoJsonObj);
+                }
+            }
+        }
+        msgObjJson.put(ParamKey.KEY_CAMERA_LIST, cameraArray);
+        msgDataJson.put(ParamKey.KEY_MSG_OBJ, msgObjJson);
+        return msgDataJson;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/hudsdk/socket/PacketJSONData.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

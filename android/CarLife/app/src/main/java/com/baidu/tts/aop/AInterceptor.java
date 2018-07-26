@@ -4,41 +4,30 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AInterceptor
-  implements IInterceptor
-{
-  protected List<String> a = new ArrayList();
-  
-  public AInterceptor()
-  {
-    a();
-  }
-  
-  private boolean a(String paramString)
-  {
-    return this.a.contains(paramString);
-  }
-  
-  protected abstract Object a(Object paramObject, Method paramMethod, Object[] paramArrayOfObject);
-  
-  protected abstract void a();
-  
-  public Object after(Object paramObject1, Method paramMethod, Object[] paramArrayOfObject, Object paramObject2)
-  {
-    return AInterceptorHandler.DEFAULT;
-  }
-  
-  public Object before(Object paramObject, Method paramMethod, Object[] paramArrayOfObject)
-  {
-    if (a(paramMethod.getName())) {
-      return a(paramObject, paramMethod, paramArrayOfObject);
+public abstract class AInterceptor implements IInterceptor {
+    /* renamed from: a */
+    protected List<String> f20647a = new ArrayList();
+
+    /* renamed from: a */
+    protected abstract Object mo3795a(Object obj, Method method, Object[] objArr);
+
+    /* renamed from: a */
+    protected abstract void mo3796a();
+
+    public AInterceptor() {
+        mo3796a();
     }
-    return AInterceptorHandler.DEFAULT;
-  }
+
+    public Object before(Object proxied, Method method, Object[] args) {
+        return m16543a(method.getName()) ? mo3795a(proxied, method, args) : AInterceptorHandler.DEFAULT;
+    }
+
+    public Object after(Object proxied, Method method, Object[] args, Object methodReturn) {
+        return AInterceptorHandler.DEFAULT;
+    }
+
+    /* renamed from: a */
+    private boolean m16543a(String str) {
+        return this.f20647a.contains(str);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/aop/AInterceptor.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

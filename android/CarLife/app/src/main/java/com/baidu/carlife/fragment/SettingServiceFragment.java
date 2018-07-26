@@ -3,97 +3,93 @@ package com.baidu.carlife.fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.g;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.p078f.C1445i;
 import com.baidu.navi.fragment.ContentFragment;
-import com.baidu.navi.fragment.NaviFragmentManager;
 
-public class SettingServiceFragment
-  extends ContentFragment
-  implements View.OnClickListener
-{
-  private ImageButton a;
-  private WebView b;
-  private TextView c;
-  private g d;
-  private com.baidu.carlife.f.i e;
-  
-  public void driving()
-  {
-    com.baidu.carlife.core.i.b("yftech", "SettingServiceFragment driving");
-    getNaviFragmentManager().back();
-    getNaviFragmentManager().back();
-    com.baidu.carlife.custom.a.a().d();
-  }
-  
-  public void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    default: 
-      return;
+public class SettingServiceFragment extends ContentFragment implements OnClickListener {
+    /* renamed from: a */
+    private ImageButton f4813a;
+    /* renamed from: b */
+    private WebView f4814b;
+    /* renamed from: c */
+    private TextView f4815c;
+    /* renamed from: d */
+    private C1443g f4816d;
+    /* renamed from: e */
+    private C1445i f4817e;
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mContentView = inflater.inflate(C0965R.layout.frag_setting_service, null);
+        setCommonTitleBar(this.mContentView, getString(C0965R.string.service_terms_title));
+        this.f4814b = (WebView) this.mContentView.findViewById(C0965R.id.wv_service_terms);
+        this.f4814b.removeJavascriptInterface("searchBoxJavaBridge_");
+        this.f4814b.removeJavascriptInterface("accessibility");
+        this.f4814b.removeJavascriptInterface("accessibilityTraversal");
+        this.f4814b.setBackgroundColor(0);
+        this.f4814b.getSettings().setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
+        this.f4814b.getSettings().setSupportZoom(true);
+        this.f4814b.getSettings().setBuiltInZoomControls(true);
+        this.f4814b.getSettings().setLoadWithOverviewMode(true);
+        this.f4814b.getSettings().setJavaScriptEnabled(true);
+        this.f4814b.getSettings().setAppCacheEnabled(false);
+        this.f4814b.loadUrl("file:///android_asset/carlifeDisclaimer.html");
+        return this.mContentView;
     }
-    back(null);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = paramLayoutInflater.inflate(2130968812, null);
-    setCommonTitleBar(this.mContentView, getString(2131297137));
-    this.b = ((WebView)this.mContentView.findViewById(2131625081));
-    this.b.removeJavascriptInterface("searchBoxJavaBridge_");
-    this.b.removeJavascriptInterface("accessibility");
-    this.b.removeJavascriptInterface("accessibilityTraversal");
-    this.b.setBackgroundColor(0);
-    this.b.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-    this.b.getSettings().setSupportZoom(true);
-    this.b.getSettings().setBuiltInZoomControls(true);
-    this.b.getSettings().setLoadWithOverviewMode(true);
-    this.b.getSettings().setJavaScriptEnabled(true);
-    this.b.getSettings().setAppCacheEnabled(false);
-    this.b.loadUrl("file:///android_asset/carlifeDisclaimer.html");
-    return this.mContentView;
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.fragmentType != getCurrentFragmentType()) {
-      return;
+
+    protected void onUpdateSkin() {
+        super.onUpdateSkin();
+        updateCommonSkin();
     }
-    if (this.d == null)
-    {
-      this.d = new g(this.mContentView.findViewById(2131624146), 2);
-      this.d.d(this.mContentView.findViewById(2131624258));
+
+    protected void onInitView() {
     }
-    if (this.e == null) {
-      this.e = new com.baidu.carlife.f.i(this.b, 4);
+
+    protected void onUpdateOrientation(int orientation) {
     }
-    d.a().b(new com.baidu.carlife.f.a[] { this.d, this.e });
-    d.a().h(this.d);
-  }
-  
-  protected void onInitView() {}
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    super.onUpdateSkin();
-    updateCommonSkin();
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public void stopDriving() {}
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case C0965R.id.ib_left:
+                back(null);
+                return;
+            default:
+                return;
+        }
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "SettingServiceFragment driving");
+        getNaviFragmentManager().back();
+        getNaviFragmentManager().back();
+        C1342a.m4926a().m4931d();
+    }
+
+    public void stopDriving() {
+    }
+
+    public void onInitFocusAreas() {
+        if (this.fragmentType == getCurrentFragmentType()) {
+            if (this.f4816d == null) {
+                this.f4816d = new C1443g(this.mContentView.findViewById(C0965R.id.title_bar), 2);
+                this.f4816d.m5300d(this.mContentView.findViewById(C0965R.id.ib_left));
+            }
+            if (this.f4817e == null) {
+                this.f4817e = new C1445i(this.f4814b, 4);
+            }
+            C1440d.m5251a().m5256b(this.f4816d, this.f4817e);
+            C1440d.m5251a().m5268h(this.f4816d);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/SettingServiceFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

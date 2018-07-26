@@ -1,403 +1,458 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.gd.C5917a;
+import com.indooratlas.android.sdk._internal.gf.C5920a;
+import com.indooratlas.android.sdk._internal.gm.C5927a;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.ProtocolException;
-import java.net.SocketTimeoutException;
-import java.security.cert.CertificateException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSocketFactory;
 
-public final class hv
-{
-  public static final gn a = new gn()
-  {
-    public final gg a()
-    {
-      return null;
-    }
-    
-    public final long b()
-    {
-      return 0L;
-    }
-    
-    public final ip c()
-    {
-      return new in();
-    }
-  };
-  public final gh b;
-  public final ig c;
-  public final gm d;
-  public hx e;
-  public long f = -1L;
-  public boolean g;
-  public final boolean h;
-  public final gk i;
-  public gk j;
-  public gm k;
-  public gm l;
-  public jc m;
-  public io n;
-  public final boolean o;
-  public final boolean p;
-  public hp q;
-  public hq r;
-  
-  public hv(gh paramgh, gk paramgk, boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3, ig paramig, gm paramgm)
-  {
-    this.b = paramgh;
-    this.i = paramgk;
-    this.h = paramBoolean1;
-    this.o = paramBoolean2;
-    this.p = paramBoolean3;
-    if (paramig != null) {}
-    for (;;)
-    {
-      this.c = paramig;
-      this.m = null;
-      this.d = paramgm;
-      return;
-      fw localfw = paramgh.q;
-      paramig = null;
-      HostnameVerifier localHostnameVerifier = null;
-      ft localft = null;
-      if (paramgk.g())
-      {
-        paramig = paramgh.l;
-        localHostnameVerifier = paramgh.m;
-        localft = paramgh.n;
-      }
-      paramig = new ig(localfw, new fn(paramgk.a.b, paramgk.a.c, paramgh.r, paramgh.k, paramig, localHostnameVerifier, localft, paramgh.o, paramgh.b, paramgh.c, paramgh.d, paramgh.g));
-    }
-  }
-  
-  public static gd a(gd paramgd1, gd paramgd2)
-    throws IOException
-  {
-    int i2 = 0;
-    gd.a locala = new gd.a();
-    int i3 = paramgd1.a.length / 2;
-    int i1 = 0;
-    while (i1 < i3)
-    {
-      String str1 = paramgd1.a(i1);
-      String str2 = paramgd1.b(i1);
-      if (((!"Warning".equalsIgnoreCase(str1)) || (!str2.startsWith("1"))) && ((!hy.a(str1)) || (paramgd2.a(str1) == null))) {
-        locala.a(str1, str2);
-      }
-      i1 += 1;
-    }
-    i3 = paramgd2.a.length / 2;
-    i1 = i2;
-    while (i1 < i3)
-    {
-      paramgd1 = paramgd2.a(i1);
-      if ((!"Content-Length".equalsIgnoreCase(paramgd1)) && (hy.a(paramgd1))) {
-        locala.a(paramgd1, paramgd2.b(i1));
-      }
-      i1 += 1;
-    }
-    return locala.a();
-  }
-  
-  public static gm a(gm paramgm)
-  {
-    gm localgm = paramgm;
-    if (paramgm != null)
-    {
-      localgm = paramgm;
-      if (paramgm.g != null)
-      {
-        paramgm = paramgm.g();
-        paramgm.g = null;
-        localgm = paramgm.a();
-      }
-    }
-    return localgm;
-  }
-  
-  public static String a(List<fy> paramList)
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    int i2 = paramList.size();
-    int i1 = 0;
-    while (i1 < i2)
-    {
-      if (i1 > 0) {
-        localStringBuilder.append("; ");
-      }
-      fy localfy = (fy)paramList.get(i1);
-      localStringBuilder.append(localfy.a).append('=').append(localfy.b);
-      i1 += 1;
-    }
-    return localStringBuilder.toString();
-  }
-  
-  public static boolean a(gk paramgk)
-  {
-    return hw.b(paramgk.b);
-  }
-  
-  public static boolean a(gm paramgm1, gm paramgm2)
-  {
-    if (paramgm2.c == 304) {}
-    do
-    {
-      return true;
-      paramgm1 = paramgm1.f.b("Last-Modified");
-      if (paramgm1 == null) {
-        break;
-      }
-      paramgm2 = paramgm2.f.b("Last-Modified");
-    } while ((paramgm2 != null) && (paramgm2.getTime() < paramgm1.getTime()));
-    return false;
-  }
-  
-  public static boolean c(gm paramgm)
-  {
-    if (paramgm.a.b.equals("HEAD")) {}
-    do
-    {
-      return false;
-      int i1 = paramgm.c;
-      if (((i1 < 100) || (i1 >= 200)) && (i1 != 204) && (i1 != 304)) {
-        return true;
-      }
-    } while ((hy.a(paramgm) == -1L) && (!"chunked".equalsIgnoreCase(paramgm.a("Transfer-Encoding"))));
-    return true;
-  }
-  
-  public final hv a(IOException paramIOException)
-  {
-    int i2 = 1;
-    Object localObject = this.c;
-    if (((ig)localObject).d != null) {
-      ((ig)localObject).a(paramIOException);
-    }
-    boolean bool;
-    if (((ig)localObject).c != null)
-    {
-      localObject = ((ig)localObject).c;
-      if ((!((ie)localObject).c()) && (!((ie)localObject).b()) && (!((ie)localObject).d())) {
-        break label92;
-      }
-      i1 = 1;
-      if (i1 == 0) {}
-    }
-    else
-    {
-      if (!(paramIOException instanceof ProtocolException)) {
-        break label97;
-      }
-      bool = false;
-      label77:
-      i1 = i2;
-      if (bool) {
-        break label86;
-      }
-    }
-    int i1 = 0;
-    label86:
-    if (i1 == 0) {}
-    label92:
-    label97:
-    while (!this.b.u)
-    {
-      return null;
-      i1 = 0;
-      break;
-      if ((paramIOException instanceof InterruptedIOException))
-      {
-        bool = paramIOException instanceof SocketTimeoutException;
-        break label77;
-      }
-      if (((paramIOException instanceof SSLHandshakeException)) && ((paramIOException.getCause() instanceof CertificateException)))
-      {
-        bool = false;
-        break label77;
-      }
-      if ((paramIOException instanceof SSLPeerUnverifiedException))
-      {
-        bool = false;
-        break label77;
-      }
-      bool = true;
-      break label77;
-    }
-    paramIOException = b();
-    return new hv(this.b, this.i, this.h, this.o, this.p, paramIOException, this.d);
-  }
-  
-  public final void a()
-  {
-    if (this.f != -1L) {
-      throw new IllegalStateException();
-    }
-    this.f = System.currentTimeMillis();
-  }
-  
-  public final void a(gd paramgd)
-    throws IOException
-  {
-    if (this.b.h == fz.a) {}
-    while (fy.a(this.i.a, paramgd).isEmpty()) {
-      return;
-    }
-    this.b.h.a();
-  }
-  
-  public final boolean a(ge paramge)
-  {
-    ge localge = this.i.a;
-    return (localge.b.equals(paramge.b)) && (localge.c == paramge.c) && (localge.a.equals(paramge.a));
-  }
-  
-  public final gm b(gm paramgm)
-    throws IOException
-  {
-    if ((!this.g) || (!"gzip".equalsIgnoreCase(this.l.a("Content-Encoding")))) {}
-    while (paramgm.g == null) {
-      return paramgm;
-    }
-    iv localiv = new iv(paramgm.g.c());
-    gd localgd = paramgm.f.a().a("Content-Encoding").a("Content-Length").a();
-    paramgm = paramgm.g().a(localgd);
-    paramgm.g = new hz(localgd, ix.a(localiv));
-    return paramgm.a();
-  }
-  
-  public final ig b()
-  {
-    if (this.n != null)
-    {
-      gy.a(this.n);
-      if (this.l == null) {
-        break label53;
-      }
-      gy.a(this.l.g);
-    }
-    for (;;)
-    {
-      return this.c;
-      if (this.m == null) {
-        break;
-      }
-      gy.a(this.m);
-      break;
-      label53:
-      this.c.a(null);
-    }
-  }
-  
-  public final gm c()
-    throws IOException
-  {
-    this.e.c();
-    Object localObject = this.e.b();
-    ((gm.a)localObject).a = this.j;
-    ((gm.a)localObject).e = this.c.a().d;
-    gm localgm = ((gm.a)localObject).a(hy.b, Long.toString(this.f)).a(hy.c, Long.toString(System.currentTimeMillis())).a();
-    localObject = localgm;
-    if (!this.p)
-    {
-      localObject = localgm.g();
-      ((gm.a)localObject).g = this.e.a(localgm);
-      localObject = ((gm.a)localObject).a();
-    }
-    if (("close".equalsIgnoreCase(((gm)localObject).a.a("Connection"))) || ("close".equalsIgnoreCase(((gm)localObject).a("Connection")))) {
-      this.c.a(true, false, false);
-    }
-    return (gm)localObject;
-  }
-  
-  public final class a
-    implements gf.a
-  {
-    private final int b;
-    private final gk c;
-    private int d;
-    
-    public a(int paramInt, gk paramgk)
-    {
-      this.b = paramInt;
-      this.c = paramgk;
-    }
-    
-    public final gk a()
-    {
-      return this.c;
-    }
-    
-    public final gm a(gk paramgk)
-      throws IOException
-    {
-      this.d += 1;
-      Object localObject1;
-      Object localObject2;
-      if (this.b > 0)
-      {
-        localObject1 = (gf)hv.this.b.f.get(this.b - 1);
-        localObject2 = b().a().a;
-        if ((!paramgk.a.b.equals(((fn)localObject2).a.b)) || (paramgk.a.c != ((fn)localObject2).a.c)) {
-          throw new IllegalStateException("network interceptor " + localObject1 + " must retain the same host and port");
+public final class hv {
+    /* renamed from: a */
+    public static final gn f24302a = new C59751();
+    /* renamed from: b */
+    public final gh f24303b;
+    /* renamed from: c */
+    public final ig f24304c;
+    /* renamed from: d */
+    public final gm f24305d;
+    /* renamed from: e */
+    public hx f24306e;
+    /* renamed from: f */
+    public long f24307f = -1;
+    /* renamed from: g */
+    public boolean f24308g;
+    /* renamed from: h */
+    public final boolean f24309h;
+    /* renamed from: i */
+    public final gk f24310i;
+    /* renamed from: j */
+    public gk f24311j;
+    /* renamed from: k */
+    public gm f24312k;
+    /* renamed from: l */
+    public gm f24313l;
+    /* renamed from: m */
+    public jc f24314m;
+    /* renamed from: n */
+    public io f24315n;
+    /* renamed from: o */
+    public final boolean f24316o;
+    /* renamed from: p */
+    public final boolean f24317p;
+    /* renamed from: q */
+    public hp f24318q;
+    /* renamed from: r */
+    public hq f24319r;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hv$1 */
+    static class C59751 extends gn {
+        C59751() {
         }
-        if (this.d > 1) {
-          throw new IllegalStateException("network interceptor " + localObject1 + " must call proceed() exactly once");
+
+        /* renamed from: a */
+        public final gg m21042a() {
+            return null;
         }
-      }
-      if (this.b < hv.this.b.f.size())
-      {
-        localObject1 = new a(hv.this, this.b + 1, paramgk);
-        localObject2 = (gf)hv.this.b.f.get(this.b);
-        paramgk = ((gf)localObject2).a((gf.a)localObject1);
-        if (((a)localObject1).d != 1) {
-          throw new IllegalStateException("network interceptor " + localObject2 + " must call proceed() exactly once");
+
+        /* renamed from: b */
+        public final long m21043b() {
+            return 0;
         }
-        if (paramgk == null) {
-          throw new NullPointerException("network interceptor " + localObject2 + " returned null");
+
+        /* renamed from: c */
+        public final ip m21044c() {
+            return new in();
         }
-      }
-      int i;
-      do
-      {
-        do
-        {
-          return paramgk;
-          hv.a(hv.this).a(paramgk);
-          hv.a(hv.this, paramgk);
-          if ((hv.a(paramgk)) && (paramgk.d != null))
-          {
-            localObject1 = ix.a(hv.a(hv.this).a(paramgk, paramgk.d.b()));
-            paramgk.d.a((io)localObject1);
-            ((io)localObject1).close();
-          }
-          localObject1 = hv.b(hv.this);
-          i = ((gm)localObject1).c;
-          if (i == 204) {
-            break;
-          }
-          paramgk = (gk)localObject1;
-        } while (i != 205);
-        paramgk = (gk)localObject1;
-      } while (((gm)localObject1).g.b() <= 0L);
-      throw new ProtocolException("HTTP " + i + " had non-zero Content-Length: " + ((gm)localObject1).g.b());
     }
-    
-    public final fv b()
-    {
-      return hv.this.c.a();
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hv$2 */
+    public class C59762 implements jd {
+        /* renamed from: a */
+        boolean f24293a;
+        /* renamed from: b */
+        final /* synthetic */ ip f24294b;
+        /* renamed from: c */
+        final /* synthetic */ hp f24295c;
+        /* renamed from: d */
+        final /* synthetic */ io f24296d;
+        /* renamed from: e */
+        final /* synthetic */ hv f24297e;
+
+        public C59762(hv hvVar, ip ipVar, hp hpVar, io ioVar) {
+            this.f24297e = hvVar;
+            this.f24294b = ipVar;
+            this.f24295c = hpVar;
+            this.f24296d = ioVar;
+        }
+
+        /* renamed from: a */
+        public final long mo4730a(in inVar, long j) throws IOException {
+            try {
+                long a = this.f24294b.mo4730a(inVar, j);
+                if (a == -1) {
+                    if (!this.f24293a) {
+                        this.f24293a = true;
+                        this.f24296d.close();
+                    }
+                    return -1;
+                }
+                inVar.m21181a(this.f24296d.mo4741b(), inVar.f24392b - a, a);
+                this.f24296d.mo4765p();
+                return a;
+            } catch (IOException e) {
+                if (!this.f24293a) {
+                    this.f24293a = true;
+                }
+                throw e;
+            }
+        }
+
+        /* renamed from: a */
+        public final je mo4731a() {
+            return this.f24294b.mo4731a();
+        }
+
+        public final void close() throws IOException {
+            if (!(this.f24293a || gy.a(this, TimeUnit.MILLISECONDS))) {
+                this.f24293a = true;
+            }
+            this.f24294b.close();
+        }
     }
-  }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hv$a */
+    public class C5977a implements C5920a {
+        /* renamed from: a */
+        final /* synthetic */ hv f24298a;
+        /* renamed from: b */
+        private final int f24299b;
+        /* renamed from: c */
+        private final gk f24300c;
+        /* renamed from: d */
+        private int f24301d;
+
+        public C5977a(hv hvVar, int i, gk gkVar) {
+            this.f24298a = hvVar;
+            this.f24299b = i;
+            this.f24300c = gkVar;
+        }
+
+        /* renamed from: b */
+        public final fv m21051b() {
+            return this.f24298a.f24304c.m21105a();
+        }
+
+        /* renamed from: a */
+        public final gk m21049a() {
+            return this.f24300c;
+        }
+
+        /* renamed from: a */
+        public final gm m21050a(gk gkVar) throws IOException {
+            gf gfVar;
+            this.f24301d++;
+            if (this.f24299b > 0) {
+                gfVar = (gf) this.f24298a.f24303b.f23909f.get(this.f24299b - 1);
+                fn fnVar = m21051b().a().f23983a;
+                if (!gkVar.f23952a.f23862b.equals(fnVar.f23707a.f23862b) || gkVar.f23952a.f23863c != fnVar.f23707a.f23863c) {
+                    throw new IllegalStateException("network interceptor " + gfVar + " must retain the same host and port");
+                } else if (this.f24301d > 1) {
+                    throw new IllegalStateException("network interceptor " + gfVar + " must call proceed() exactly once");
+                }
+            }
+            if (this.f24299b < this.f24298a.f24303b.f23909f.size()) {
+                Object c5977a = new C5977a(this.f24298a, this.f24299b + 1, gkVar);
+                gfVar = (gf) this.f24298a.f24303b.f23909f.get(this.f24299b);
+                gm a = gfVar.a(c5977a);
+                if (c5977a.f24301d != 1) {
+                    throw new IllegalStateException("network interceptor " + gfVar + " must call proceed() exactly once");
+                } else if (a != null) {
+                    return a;
+                } else {
+                    throw new NullPointerException("network interceptor " + gfVar + " returned null");
+                }
+            }
+            this.f24298a.f24306e.m21073a(gkVar);
+            this.f24298a.f24311j = gkVar;
+            if (hv.m21057a(gkVar) && gkVar.f23955d != null) {
+                io a2 = ix.m21258a(this.f24298a.f24306e.m21071a(gkVar, gkVar.f23955d.b()));
+                gkVar.f23955d.a(a2);
+                a2.close();
+            }
+            gm b = this.f24298a.m21067c();
+            int i = b.f23974c;
+            if ((i != 204 && i != 205) || b.f23978g.b() <= 0) {
+                return b;
+            }
+            throw new ProtocolException("HTTP " + i + " had non-zero Content-Length: " + b.f23978g.b());
+        }
+    }
+
+    public hv(gh ghVar, gk gkVar, boolean z, boolean z2, boolean z3, ig igVar, gm gmVar) {
+        this.f24303b = ghVar;
+        this.f24310i = gkVar;
+        this.f24309h = z;
+        this.f24316o = z2;
+        this.f24317p = z3;
+        if (igVar == null) {
+            fw fwVar = ghVar.f23920q;
+            SSLSocketFactory sSLSocketFactory = null;
+            HostnameVerifier hostnameVerifier = null;
+            ft ftVar = null;
+            if (gkVar.g()) {
+                sSLSocketFactory = ghVar.f23915l;
+                hostnameVerifier = ghVar.f23916m;
+                ftVar = ghVar.f23917n;
+            }
+            ig igVar2 = new ig(fwVar, new fn(gkVar.f23952a.f23862b, gkVar.f23952a.f23863c, ghVar.f23921r, ghVar.f23914k, sSLSocketFactory, hostnameVerifier, ftVar, ghVar.f23918o, ghVar.f23905b, ghVar.f23906c, ghVar.f23907d, ghVar.f23910g));
+        }
+        this.f24304c = igVar;
+        this.f24314m = null;
+        this.f24305d = gmVar;
+    }
+
+    /* renamed from: a */
+    public static gm m21054a(gm gmVar) {
+        if (gmVar == null || gmVar.f23978g == null) {
+            return gmVar;
+        }
+        C5927a g = gmVar.g();
+        g.f23968g = null;
+        return g.a();
+    }
+
+    /* renamed from: a */
+    public final void m21062a() {
+        if (this.f24307f != -1) {
+            throw new IllegalStateException();
+        }
+        this.f24307f = System.currentTimeMillis();
+    }
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* renamed from: a */
+    public final com.indooratlas.android.sdk._internal.hv m21061a(java.io.IOException r9) {
+        /*
+        r8 = this;
+        r0 = 0;
+        r1 = 1;
+        r2 = 0;
+        r3 = r8.f24304c;
+        r4 = r3.f24350d;
+        if (r4 == 0) goto L_0x000c;
+    L_0x0009:
+        r3.m21107a(r9);
+    L_0x000c:
+        r4 = r3.f24349c;
+        if (r4 == 0) goto L_0x0027;
+    L_0x0010:
+        r3 = r3.f24349c;
+        r4 = r3.m21098c();
+        if (r4 != 0) goto L_0x0024;
+    L_0x0018:
+        r4 = r3.m21097b();
+        if (r4 != 0) goto L_0x0024;
+    L_0x001e:
+        r3 = r3.m21099d();
+        if (r3 == 0) goto L_0x0032;
+    L_0x0024:
+        r3 = r1;
+    L_0x0025:
+        if (r3 == 0) goto L_0x002e;
+    L_0x0027:
+        r3 = r9 instanceof java.net.ProtocolException;
+        if (r3 == 0) goto L_0x0034;
+    L_0x002b:
+        r3 = r2;
+    L_0x002c:
+        if (r3 != 0) goto L_0x002f;
+    L_0x002e:
+        r1 = r2;
+    L_0x002f:
+        if (r1 != 0) goto L_0x0051;
+    L_0x0031:
+        return r0;
+    L_0x0032:
+        r3 = r2;
+        goto L_0x0025;
+    L_0x0034:
+        r3 = r9 instanceof java.io.InterruptedIOException;
+        if (r3 == 0) goto L_0x003b;
+    L_0x0038:
+        r3 = r9 instanceof java.net.SocketTimeoutException;
+        goto L_0x002c;
+    L_0x003b:
+        r3 = r9 instanceof javax.net.ssl.SSLHandshakeException;
+        if (r3 == 0) goto L_0x0049;
+    L_0x003f:
+        r3 = r9.getCause();
+        r3 = r3 instanceof java.security.cert.CertificateException;
+        if (r3 == 0) goto L_0x0049;
+    L_0x0047:
+        r3 = r2;
+        goto L_0x002c;
+    L_0x0049:
+        r3 = r9 instanceof javax.net.ssl.SSLPeerUnverifiedException;
+        if (r3 == 0) goto L_0x004f;
+    L_0x004d:
+        r3 = r2;
+        goto L_0x002c;
+    L_0x004f:
+        r3 = r1;
+        goto L_0x002c;
+    L_0x0051:
+        r1 = r8.f24303b;
+        r1 = r1.f23924u;
+        if (r1 == 0) goto L_0x0031;
+    L_0x0057:
+        r6 = r8.m21066b();
+        r0 = new com.indooratlas.android.sdk._internal.hv;
+        r1 = r8.f24303b;
+        r2 = r8.f24310i;
+        r3 = r8.f24309h;
+        r4 = r8.f24316o;
+        r5 = r8.f24317p;
+        r7 = r8.f24305d;
+        r0.<init>(r1, r2, r3, r4, r5, r6, r7);
+        goto L_0x0031;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.indooratlas.android.sdk._internal.hv.a(java.io.IOException):com.indooratlas.android.sdk._internal.hv");
+    }
+
+    /* renamed from: b */
+    public final ig m21066b() {
+        if (this.f24315n != null) {
+            gy.a(this.f24315n);
+        } else if (this.f24314m != null) {
+            gy.a(this.f24314m);
+        }
+        if (this.f24313l != null) {
+            gy.a(this.f24313l.f23978g);
+        } else {
+            this.f24304c.m21107a(null);
+        }
+        return this.f24304c;
+    }
+
+    /* renamed from: b */
+    public final gm m21065b(gm gmVar) throws IOException {
+        if (!this.f24308g || !"gzip".equalsIgnoreCase(this.f24313l.a("Content-Encoding")) || gmVar.f23978g == null) {
+            return gmVar;
+        }
+        jd ivVar = new iv(gmVar.f23978g.c());
+        gd a = gmVar.f23977f.a().a("Content-Encoding").a("Content-Length").a();
+        C5927a a2 = gmVar.g().a(a);
+        a2.f23968g = new hz(a, ix.m21259a(ivVar));
+        return a2.a();
+    }
+
+    /* renamed from: c */
+    public static boolean m21060c(gm gmVar) {
+        if (gmVar.f23972a.f23953b.equals("HEAD")) {
+            return false;
+        }
+        int i = gmVar.f23974c;
+        if ((i < 100 || i >= 200) && i != 204 && i != 304) {
+            return true;
+        }
+        if (hy.m21080a(gmVar) != -1 || "chunked".equalsIgnoreCase(gmVar.a("Transfer-Encoding"))) {
+            return true;
+        }
+        return false;
+    }
+
+    /* renamed from: a */
+    public static String m21056a(List<fy> list) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int size = list.size();
+        for (int i = 0; i < size; i++) {
+            if (i > 0) {
+                stringBuilder.append("; ");
+            }
+            fy fyVar = (fy) list.get(i);
+            stringBuilder.append(fyVar.f23822a).append('=').append(fyVar.f23823b);
+        }
+        return stringBuilder.toString();
+    }
+
+    /* renamed from: c */
+    public final gm m21067c() throws IOException {
+        this.f24306e.m21077c();
+        C5927a b = this.f24306e.m21076b();
+        b.f23962a = this.f24311j;
+        b.f23966e = this.f24304c.m21105a().f24359d;
+        gm a = b.a(hy.f24321b, Long.toString(this.f24307f)).a(hy.f24322c, Long.toString(System.currentTimeMillis())).a();
+        if (!this.f24317p) {
+            C5927a g = a.g();
+            g.f23968g = this.f24306e.m21070a(a);
+            a = g.a();
+        }
+        if ("close".equalsIgnoreCase(a.f23972a.a("Connection")) || "close".equalsIgnoreCase(a.a("Connection"))) {
+            this.f24304c.m21109a(true, false, false);
+        }
+        return a;
+    }
+
+    /* renamed from: a */
+    public static boolean m21058a(gm gmVar, gm gmVar2) {
+        if (gmVar2.f23974c == 304) {
+            return true;
+        }
+        Date b = gmVar.f23977f.b("Last-Modified");
+        if (b != null) {
+            Date b2 = gmVar2.f23977f.b("Last-Modified");
+            if (b2 != null && b2.getTime() < b.getTime()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* renamed from: a */
+    public static gd m21052a(gd gdVar, gd gdVar2) throws IOException {
+        int i;
+        int i2 = 0;
+        C5917a c5917a = new C5917a();
+        int length = gdVar.f23845a.length / 2;
+        for (i = 0; i < length; i++) {
+            String a = gdVar.a(i);
+            String b = gdVar.b(i);
+            if (!("Warning".equalsIgnoreCase(a) && b.startsWith("1")) && (!hy.m21081a(a) || gdVar2.a(a) == null)) {
+                c5917a.a(a, b);
+            }
+        }
+        i = gdVar2.f23845a.length / 2;
+        while (i2 < i) {
+            String a2 = gdVar2.a(i2);
+            if (!"Content-Length".equalsIgnoreCase(a2) && hy.m21081a(a2)) {
+                c5917a.a(a2, gdVar2.b(i2));
+            }
+            i2++;
+        }
+        return c5917a.a();
+    }
+
+    /* renamed from: a */
+    public final void m21063a(gd gdVar) throws IOException {
+        if (this.f24303b.f23911h != fz.f23831a && !fy.a(this.f24310i.f23952a, gdVar).isEmpty()) {
+            this.f24303b.f23911h.a();
+        }
+    }
+
+    /* renamed from: a */
+    public final boolean m21064a(ge geVar) {
+        ge geVar2 = this.f24310i.f23952a;
+        return geVar2.f23862b.equals(geVar.f23862b) && geVar2.f23863c == geVar.f23863c && geVar2.f23861a.equals(geVar.f23861a);
+    }
+
+    /* renamed from: a */
+    public static boolean m21057a(gk gkVar) {
+        return hw.m21069b(gkVar.f23953b);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hv.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,32 +5,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.PopupWindow;
-import com.baidu.ufosdk.util.i;
-import com.baidu.ufosdk.util.u;
-import java.util.List;
+import com.baidu.ufosdk.util.C5216i;
+import com.baidu.ufosdk.util.C5228u;
 import java.util.Map;
 
-final class cs
-  implements AdapterView.OnItemLongClickListener
-{
-  cs(FeedbackListActivity paramFeedbackListActivity) {}
-  
-  public final boolean onItemLongClick(AdapterView paramAdapterView, View paramView, int paramInt, long paramLong)
-  {
-    paramAdapterView = (String)((Map)FeedbackListActivity.b(this.a).get(paramInt)).get("id");
-    paramAdapterView = FeedbackListActivity.a(this.a, this.a.getApplicationContext(), u.a("3"), paramAdapterView);
-    FeedbackListActivity.a(this.a, new PopupWindow(paramAdapterView, i.a(this.a.getApplicationContext(), 79.0F), i.a(this.a.getApplicationContext(), 68.0F)));
-    FeedbackListActivity.n(this.a).setFocusable(false);
-    FeedbackListActivity.n(this.a).setOutsideTouchable(true);
-    FeedbackListActivity.n(this.a).setBackgroundDrawable(new BitmapDrawable());
-    paramAdapterView.getLocationOnScreen(new int[2]);
-    FeedbackListActivity.n(this.a).showAtLocation(FeedbackListActivity.o(this.a), 17, 0, 0);
-    return true;
-  }
+/* compiled from: FeedbackListActivity */
+final class cs implements OnItemLongClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackListActivity f21631a;
+
+    cs(FeedbackListActivity feedbackListActivity) {
+        this.f21631a = feedbackListActivity;
+    }
+
+    public final boolean onItemLongClick(AdapterView adapterView, View view, int i, long j) {
+        View a = this.f21631a.m17683a(this.f21631a.getApplicationContext(), C5228u.m17794a("3"), (String) ((Map) this.f21631a.f21515e.get(i)).get("id"));
+        this.f21631a.f21508A = new PopupWindow(a, C5216i.m17757a(this.f21631a.getApplicationContext(), 79.0f), C5216i.m17757a(this.f21631a.getApplicationContext(), 68.0f));
+        this.f21631a.f21508A.setFocusable(false);
+        this.f21631a.f21508A.setOutsideTouchable(true);
+        this.f21631a.f21508A.setBackgroundDrawable(new BitmapDrawable());
+        a.getLocationOnScreen(new int[2]);
+        this.f21631a.f21508A.showAtLocation(this.f21631a.f21511a, 17, 0, 0);
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/cs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

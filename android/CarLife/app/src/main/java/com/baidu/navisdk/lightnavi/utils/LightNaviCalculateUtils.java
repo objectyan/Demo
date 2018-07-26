@@ -1,5 +1,6 @@
 package com.baidu.navisdk.lightnavi.utils;
 
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.util.common.StringUtils;
 import com.baidu.navisdk.util.common.StringUtils.UnitLangEnum;
@@ -7,94 +8,77 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class LightNaviCalculateUtils
-{
-  public static String calculateArriveTime(int paramInt)
-  {
-    long l = System.currentTimeMillis();
-    Date localDate1 = new Date(l);
-    Date localDate2 = new Date(l + paramInt * 1000);
-    String str = new SimpleDateFormat("HH:mm").format(localDate2);
-    if (localDate1.getDay() == localDate2.getDay()) {
-      return String.format(BNStyleManager.getString(1711669855), new Object[] { str });
+public class LightNaviCalculateUtils {
+    public static String calculateTotalRemainDistString(int nDist) {
+        StringBuffer builder = new StringBuffer();
+        StringUtils.formatDistance(nDist, UnitLangEnum.ZH, builder);
+        return builder.toString();
     }
-    paramInt = getIntervalDays(localDate1, localDate2);
-    if (paramInt == 1) {
-      return String.format(BNStyleManager.getString(1711669855), new Object[] { BNStyleManager.getString(1711669853) });
+
+    public static String calculateArriveTime(int remainTime) {
+        long mArriveTimeLong = System.currentTimeMillis();
+        Date curDate = new Date(mArriveTimeLong);
+        Date arriveDate = new Date(mArriveTimeLong + ((long) (remainTime * 1000)));
+        String mArriveTimeStr = new SimpleDateFormat("HH:mm").format(arriveDate);
+        if (curDate.getDay() == arriveDate.getDay()) {
+            return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{mArriveTimeStr});
+        }
+        int interval = getIntervalDays(curDate, arriveDate);
+        if (interval == 1) {
+            return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{BNStyleManager.getString(C4048R.string.nsdk_string_rg_tomorrow)});
+        } else if (interval == 2) {
+            return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{BNStyleManager.getString(C4048R.string.nsdk_string_rg_the_day_after_tomorrow)});
+        } else if (interval > 2) {
+            return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time_after_day), new Object[]{"" + interval});
+        } else {
+            return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{mArriveTimeStr});
+        }
     }
-    if (paramInt == 2) {
-      return String.format(BNStyleManager.getString(1711669855), new Object[] { BNStyleManager.getString(1711669854) });
+
+    public static String calculateTotalRemainTimeString(int nTime) {
+        StringBuffer timeBuffer = new StringBuffer();
+        StringUtils.formatTime2(nTime, 2, timeBuffer);
+        String timeText = timeBuffer.toString();
+        if (timeText.equals("0分钟")) {
+            timeText = "1分钟";
+        }
+        return "剩余 " + timeText.toString();
     }
-    if (paramInt > 2) {
-      return String.format(BNStyleManager.getString(1711669857), new Object[] { "" + paramInt });
+
+    public static String calculateNaviRemainTimeString(int remainTime) {
+        long mArriveTime = System.currentTimeMillis();
+        Date curDate = new Date(mArriveTime);
+        Date arriveDate = new Date(mArriveTime + ((long) (remainTime * 1000)));
+        String mArriveTimeS = new SimpleDateFormat("HH:mm").format(arriveDate);
+        GregorianCalendar curCal = new GregorianCalendar();
+        curCal.setTime(curDate);
+        GregorianCalendar arriveCal = new GregorianCalendar();
+        arriveCal.setTime(arriveDate);
+        if (curCal.get(5) != arriveCal.get(5)) {
+            int interval = getIntervalDays(curDate, arriveDate);
+            if (interval == 1) {
+                if (arriveCal.get(11) < 0 || arriveCal.get(11) >= 4) {
+                    return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{BNStyleManager.getString(C4048R.string.nsdk_string_rg_tomorrow)});
+                }
+                return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{BNStyleManager.getString(C4048R.string.nsdk_string_rg_wee_hours)});
+            } else if (interval == 2) {
+                return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{BNStyleManager.getString(C4048R.string.nsdk_string_rg_the_day_after_tomorrow)});
+            } else if (interval > 2) {
+                return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time_after_day), new Object[]{"" + interval});
+            } else {
+                return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{mArriveTimeS});
+            }
+        } else if (arriveCal.get(11) == 0) {
+            return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time_at_wee), new Object[]{mArriveTimeS});
+        } else {
+            return String.format(BNStyleManager.getString(C4048R.string.nsdk_string_rg_arrive_time), new Object[]{mArriveTimeS});
+        }
     }
-    return String.format(BNStyleManager.getString(1711669855), new Object[] { str });
-  }
-  
-  public static String calculateNaviRemainTimeString(int paramInt)
-  {
-    long l = System.currentTimeMillis();
-    Date localDate1 = new Date(l);
-    Date localDate2 = new Date(l + paramInt * 1000);
-    String str = new SimpleDateFormat("HH:mm").format(localDate2);
-    GregorianCalendar localGregorianCalendar1 = new GregorianCalendar();
-    localGregorianCalendar1.setTime(localDate1);
-    GregorianCalendar localGregorianCalendar2 = new GregorianCalendar();
-    localGregorianCalendar2.setTime(localDate2);
-    if (localGregorianCalendar1.get(5) == localGregorianCalendar2.get(5))
-    {
-      if (localGregorianCalendar2.get(11) == 0) {
-        return String.format(BNStyleManager.getString(1711669856), new Object[] { str });
-      }
-      return String.format(BNStyleManager.getString(1711669855), new Object[] { str });
+
+    private static int getIntervalDays(Date fDate, Date oDate) {
+        if (fDate == null || oDate == null) {
+            return 0;
+        }
+        return (int) ((oDate.getTime() - fDate.getTime()) / 86400000);
     }
-    paramInt = getIntervalDays(localDate1, localDate2);
-    if (paramInt == 1)
-    {
-      if ((localGregorianCalendar2.get(11) >= 0) && (localGregorianCalendar2.get(11) < 4)) {
-        return String.format(BNStyleManager.getString(1711669855), new Object[] { BNStyleManager.getString(1711669852) });
-      }
-      return String.format(BNStyleManager.getString(1711669855), new Object[] { BNStyleManager.getString(1711669853) });
-    }
-    if (paramInt == 2) {
-      return String.format(BNStyleManager.getString(1711669855), new Object[] { BNStyleManager.getString(1711669854) });
-    }
-    if (paramInt > 2) {
-      return String.format(BNStyleManager.getString(1711669857), new Object[] { "" + paramInt });
-    }
-    return String.format(BNStyleManager.getString(1711669855), new Object[] { str });
-  }
-  
-  public static String calculateTotalRemainDistString(int paramInt)
-  {
-    StringBuffer localStringBuffer = new StringBuffer();
-    StringUtils.formatDistance(paramInt, StringUtils.UnitLangEnum.ZH, localStringBuffer);
-    return localStringBuffer.toString();
-  }
-  
-  public static String calculateTotalRemainTimeString(int paramInt)
-  {
-    Object localObject = new StringBuffer();
-    StringUtils.formatTime2(paramInt, 2, (StringBuffer)localObject);
-    String str = ((StringBuffer)localObject).toString();
-    localObject = str;
-    if (str.equals("0分钟")) {
-      localObject = "1分钟";
-    }
-    return "剩余 " + ((String)localObject).toString();
-  }
-  
-  private static int getIntervalDays(Date paramDate1, Date paramDate2)
-  {
-    if ((paramDate1 == null) || (paramDate2 == null)) {
-      return 0;
-    }
-    return (int)((paramDate2.getTime() - paramDate1.getTime()) / 86400000L);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/lightnavi/utils/LightNaviCalculateUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

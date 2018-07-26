@@ -10,141 +10,117 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.navimageloader.BNImageLoadingListener;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 
-public class UgcMapsViewConstructor
-{
-  private static ViewGroup btnContainer;
-  private static boolean hasCloudData = false;
-  private static CallBackListener mCallBack;
-  private static View.OnClickListener mOnBtnClickListener = new View.OnClickListener()
-  {
-    public void onClick(View paramAnonymousView)
-    {
-      if (UgcMapsViewConstructor.mCallBack != null) {
-        UgcMapsViewConstructor.mCallBack.onBtnClick(1);
-      }
-      UserOPController.getInstance().add("3.u", "1", null, null);
-    }
-  };
-  
-  private static void constructUgcReportBtn(final Context paramContext, ViewGroup paramViewGroup)
-  {
-    if ((paramContext == null) || (paramViewGroup == null)) {
-      return;
-    }
-    paramViewGroup.setOnClickListener(mOnBtnClickListener);
-    paramContext = new ImageView(paramContext);
-    paramContext.setScaleType(ImageView.ScaleType.FIT_XY);
-    paramContext.setPadding(6, 6, 6, 6);
-    new UgcImageLoaderUtils().updateUgcViewOnLine(4096, paramContext, new BNImageLoadingListener()
-    {
-      public void onLoadingComplete(String paramAnonymousString, View paramAnonymousView, Bitmap paramAnonymousBitmap, int paramAnonymousInt)
-      {
-        this.val$mContainer.removeAllViews();
-        this.val$mContainer.addView(paramContext, new ViewGroup.LayoutParams(-1, -1));
-        this.val$mContainer.setVisibility(0);
-        if (UgcMapsViewConstructor.mCallBack != null) {
-          UgcMapsViewConstructor.mCallBack.onBtnClick(8);
+public class UgcMapsViewConstructor {
+    private static ViewGroup btnContainer;
+    private static boolean hasCloudData = false;
+    private static CallBackListener mCallBack;
+    private static OnClickListener mOnBtnClickListener = new C42372();
+
+    /* renamed from: com.baidu.navisdk.module.ugc.utils.UgcMapsViewConstructor$2 */
+    static class C42372 implements OnClickListener {
+        C42372() {
         }
-      }
-      
-      public void onLoadingFailed(String paramAnonymousString1, View paramAnonymousView, String paramAnonymousString2)
-      {
-        this.val$mContainer.removeAllViews();
-        this.val$mContainer.addView(paramContext, new ViewGroup.LayoutParams(-1, -1));
-        this.val$mContainer.setVisibility(0);
-        if (UgcMapsViewConstructor.mCallBack != null) {
-          UgcMapsViewConstructor.mCallBack.onBtnClick(8);
+
+        public void onClick(View v) {
+            if (UgcMapsViewConstructor.mCallBack != null) {
+                UgcMapsViewConstructor.mCallBack.onBtnClick(1);
+            }
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_u, "1", null, null);
         }
-      }
-      
-      public void onLoadingStarted(String paramAnonymousString, View paramAnonymousView) {}
-    });
-  }
-  
-  public static void getUgcReportBtn(ViewGroup paramViewGroup, CallBackListener paramCallBackListener)
-  {
-    if ((paramViewGroup == null) || (paramCallBackListener == null)) {
-      return;
     }
-    mCallBack = paramCallBackListener;
-    if (hasCloudData)
-    {
-      constructUgcReportBtn(BNaviModuleManager.getContext(), paramViewGroup);
-      return;
+
+    public interface CallBackListener {
+        void onBtnClick(int i);
     }
-    btnContainer = paramViewGroup;
-  }
-  
-  public static View getUgcResYellowTipsView(Activity paramActivity, YellowTipsCallback paramYellowTipsCallback)
-  {
-    View localView1 = null;
-    if (paramActivity == null) {
-      paramActivity = localView1;
+
+    public interface YellowTipsCallback {
+        void close();
     }
-    View localView2;
-    do
-    {
-      do
-      {
-        return paramActivity;
-        localView1 = JarUtils.inflate(paramActivity, 1711472650, null);
-        paramActivity = localView1;
-      } while (localView1 == null);
-      localView2 = localView1.findViewById(1711865877);
-      paramActivity = localView1;
-    } while (localView2 == null);
-    localView2.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (this.val$mYellowTipsCallback != null) {
-          this.val$mYellowTipsCallback.close();
+
+    public static void getUgcReportBtn(ViewGroup mBtnContainer, CallBackListener listener) {
+        if (mBtnContainer != null && listener != null) {
+            mCallBack = listener;
+            if (hasCloudData) {
+                constructUgcReportBtn(BNaviModuleManager.getContext(), mBtnContainer);
+            } else {
+                btnContainer = mBtnContainer;
+            }
         }
-      }
-    });
-    return localView1;
-  }
-  
-  public static void requestPhotoCaptureAuth()
-  {
-    if (mCallBack != null) {
-      mCallBack.onBtnClick(3);
     }
-  }
-  
-  public static void requestSoundsAuth()
-  {
-    if (mCallBack != null) {
-      mCallBack.onBtnClick(4);
+
+    private static void constructUgcReportBtn(Context mContext, final ViewGroup mContainer) {
+        if (mContext != null && mContainer != null) {
+            mContainer.setOnClickListener(mOnBtnClickListener);
+            final ImageView mView = new ImageView(mContext);
+            mView.setScaleType(ScaleType.FIT_XY);
+            mView.setPadding(6, 6, 6, 6);
+            new UgcImageLoaderUtils().updateUgcViewOnLine(4096, mView, new BNImageLoadingListener() {
+                public void onLoadingStarted(String imageUri, View view) {
+                }
+
+                public void onLoadingFailed(String imageUri, View view, String failReason) {
+                    mContainer.removeAllViews();
+                    mContainer.addView(mView, new LayoutParams(-1, -1));
+                    mContainer.setVisibility(0);
+                    if (UgcMapsViewConstructor.mCallBack != null) {
+                        UgcMapsViewConstructor.mCallBack.onBtnClick(8);
+                    }
+                }
+
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage, int from) {
+                    mContainer.removeAllViews();
+                    mContainer.addView(mView, new LayoutParams(-1, -1));
+                    mContainer.setVisibility(0);
+                    if (UgcMapsViewConstructor.mCallBack != null) {
+                        UgcMapsViewConstructor.mCallBack.onBtnClick(8);
+                    }
+                }
+            });
+        }
     }
-  }
-  
-  public static void updateUgcReportBtn()
-  {
-    hasCloudData = true;
-    if (btnContainer == null) {
-      return;
+
+    public static void updateUgcReportBtn() {
+        hasCloudData = true;
+        if (btnContainer != null) {
+            constructUgcReportBtn(BNaviModuleManager.getContext(), btnContainer);
+        }
     }
-    constructUgcReportBtn(BNaviModuleManager.getContext(), btnContainer);
-  }
-  
-  public static abstract interface CallBackListener
-  {
-    public abstract void onBtnClick(int paramInt);
-  }
-  
-  public static abstract interface YellowTipsCallback
-  {
-    public abstract void close();
-  }
+
+    public static void requestSoundsAuth() {
+        if (mCallBack != null) {
+            mCallBack.onBtnClick(4);
+        }
+    }
+
+    public static void requestPhotoCaptureAuth() {
+        if (mCallBack != null) {
+            mCallBack.onBtnClick(3);
+        }
+    }
+
+    public static View getUgcResYellowTipsView(Activity activity, final YellowTipsCallback mYellowTipsCallback) {
+        View mView = null;
+        if (activity != null) {
+            mView = JarUtils.inflate(activity, C4048R.layout.ndsk_ugc_ugc_yellow_tips_layout, null);
+            if (mView != null) {
+                View closeView = mView.findViewById(C4048R.id.yellow_tips_close);
+                if (closeView != null) {
+                    closeView.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                            if (mYellowTipsCallback != null) {
+                                mYellowTipsCallback.close();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        return mView;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/module/ugc/utils/UgcMapsViewConstructor.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -6,209 +6,157 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 
-public class PersistentCookieStore
-  implements CookieStore
-{
-  private static final String COOKIE_NAME_PREFIX = "cookie_";
-  private static final String COOKIE_NAME_STORE = "names";
-  private static final String COOKIE_PREFS = "CookiePrefsFile";
-  private static final String LOG_TAG = "PersistentCookieStore";
-  private final SharedPreferences cookiePrefs;
-  private final ConcurrentHashMap<String, Cookie> cookies;
-  private boolean omitNonPersistentCookies = false;
-  
-  public PersistentCookieStore(Context paramContext)
-  {
-    this.cookiePrefs = paramContext.getSharedPreferences("CookiePrefsFile", 0);
-    this.cookies = new ConcurrentHashMap();
-    paramContext = this.cookiePrefs.getString("names", null);
-    if (paramContext != null)
-    {
-      paramContext = TextUtils.split(paramContext, ",");
-      int j = paramContext.length;
-      while (i < j)
-      {
-        String str = paramContext[i];
-        Object localObject = this.cookiePrefs.getString("cookie_" + str, null);
-        if (localObject != null)
-        {
-          localObject = decodeCookie((String)localObject);
-          if (localObject != null) {
-            this.cookies.put(str, localObject);
-          }
+public class PersistentCookieStore implements CookieStore {
+    private static final String COOKIE_NAME_PREFIX = "cookie_";
+    private static final String COOKIE_NAME_STORE = "names";
+    private static final String COOKIE_PREFS = "CookiePrefsFile";
+    private static final String LOG_TAG = "PersistentCookieStore";
+    private final SharedPreferences cookiePrefs;
+    private final ConcurrentHashMap<String, Cookie> cookies;
+    private boolean omitNonPersistentCookies = false;
+
+    public PersistentCookieStore(Context context) {
+        int i = 0;
+        this.cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
+        this.cookies = new ConcurrentHashMap();
+        String string = this.cookiePrefs.getString(COOKIE_NAME_STORE, null);
+        if (string != null) {
+            String[] split = TextUtils.split(string, ",");
+            int length = split.length;
+            while (i < length) {
+                String str = split[i];
+                String string2 = this.cookiePrefs.getString(COOKIE_NAME_PREFIX + str, null);
+                if (string2 != null) {
+                    Cookie decodeCookie = decodeCookie(string2);
+                    if (decodeCookie != null) {
+                        this.cookies.put(str, decodeCookie);
+                    }
+                }
+                i++;
+            }
+            clearExpired(new Date());
         }
-        i += 1;
-      }
-      clearExpired(new Date());
     }
-  }
-  
-  public void addCookie(Cookie paramCookie)
-  {
-    if ((this.omitNonPersistentCookies) && (!paramCookie.isPersistent())) {
-      return;
+
+    public void addCookie(Cookie cookie) {
+        if (!this.omitNonPersistentCookies || cookie.isPersistent()) {
+            String str = cookie.getName() + cookie.getDomain();
+            if (cookie.isExpired(new Date())) {
+                this.cookies.remove(str);
+            } else {
+                this.cookies.put(str, cookie);
+            }
+            Editor edit = this.cookiePrefs.edit();
+            edit.putString(COOKIE_NAME_STORE, TextUtils.join(",", this.cookies.keySet()));
+            edit.putString(COOKIE_NAME_PREFIX + str, encodeCookie(new SerializableCookie(cookie)));
+            edit.commit();
+        }
     }
-    String str = paramCookie.getName() + paramCookie.getDomain();
-    if (!paramCookie.isExpired(new Date())) {
-      this.cookies.put(str, paramCookie);
+
+    public void clear() {
+        Editor edit = this.cookiePrefs.edit();
+        for (String str : this.cookies.keySet()) {
+            edit.remove(COOKIE_NAME_PREFIX + str);
+        }
+        edit.remove(COOKIE_NAME_STORE);
+        edit.commit();
+        this.cookies.clear();
     }
-    for (;;)
-    {
-      SharedPreferences.Editor localEditor = this.cookiePrefs.edit();
-      localEditor.putString("names", TextUtils.join(",", this.cookies.keySet()));
-      localEditor.putString("cookie_" + str, encodeCookie(new SerializableCookie(paramCookie)));
-      localEditor.commit();
-      return;
-      this.cookies.remove(str);
+
+    public boolean clearExpired(Date date) {
+        Editor edit = this.cookiePrefs.edit();
+        boolean z = false;
+        for (Entry entry : this.cookies.entrySet()) {
+            boolean z2;
+            String str = (String) entry.getKey();
+            if (((Cookie) entry.getValue()).isExpired(date)) {
+                this.cookies.remove(str);
+                edit.remove(COOKIE_NAME_PREFIX + str);
+                z2 = true;
+            } else {
+                z2 = z;
+            }
+            z = z2;
+        }
+        if (z) {
+            edit.putString(COOKIE_NAME_STORE, TextUtils.join(",", this.cookies.keySet()));
+        }
+        edit.commit();
+        return z;
     }
-  }
-  
-  protected String byteArrayToHexString(byte[] paramArrayOfByte)
-  {
-    StringBuilder localStringBuilder = new StringBuilder(paramArrayOfByte.length * 2);
-    int j = paramArrayOfByte.length;
-    int i = 0;
-    while (i < j)
-    {
-      int k = paramArrayOfByte[i] & 0xFF;
-      if (k < 16) {
-        localStringBuilder.append('0');
-      }
-      localStringBuilder.append(Integer.toHexString(k));
-      i += 1;
+
+    public List<Cookie> getCookies() {
+        return new ArrayList(this.cookies.values());
     }
-    return localStringBuilder.toString().toUpperCase(Locale.US);
-  }
-  
-  public void clear()
-  {
-    SharedPreferences.Editor localEditor = this.cookiePrefs.edit();
-    Iterator localIterator = this.cookies.keySet().iterator();
-    while (localIterator.hasNext())
-    {
-      String str = (String)localIterator.next();
-      localEditor.remove("cookie_" + str);
+
+    public void setOmitNonPersistentCookies(boolean omitNonPersistentCookies) {
+        this.omitNonPersistentCookies = omitNonPersistentCookies;
     }
-    localEditor.remove("names");
-    localEditor.commit();
-    this.cookies.clear();
-  }
-  
-  public boolean clearExpired(Date paramDate)
-  {
-    SharedPreferences.Editor localEditor = this.cookiePrefs.edit();
-    Iterator localIterator = this.cookies.entrySet().iterator();
-    boolean bool = false;
-    if (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      String str = (String)localEntry.getKey();
-      if (!((Cookie)localEntry.getValue()).isExpired(paramDate)) {
-        break label155;
-      }
-      this.cookies.remove(str);
-      localEditor.remove("cookie_" + str);
-      bool = true;
+
+    public void deleteCookie(Cookie cookie) {
+        String str = cookie.getName() + cookie.getDomain();
+        this.cookies.remove(str);
+        Editor edit = this.cookiePrefs.edit();
+        edit.remove(COOKIE_NAME_PREFIX + str);
+        edit.commit();
     }
-    label155:
-    for (;;)
-    {
-      break;
-      if (bool) {
-        localEditor.putString("names", TextUtils.join(",", this.cookies.keySet()));
-      }
-      localEditor.commit();
-      return bool;
+
+    protected String encodeCookie(SerializableCookie cookie) {
+        if (cookie == null) {
+            return null;
+        }
+        OutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            new ObjectOutputStream(byteArrayOutputStream).writeObject(cookie);
+            return byteArrayToHexString(byteArrayOutputStream.toByteArray());
+        } catch (Throwable e) {
+            AsyncHttpClient.log.mo3895d(LOG_TAG, "IOException in encodeCookie", e);
+            return null;
+        }
     }
-  }
-  
-  protected Cookie decodeCookie(String paramString)
-  {
-    paramString = new ByteArrayInputStream(hexStringToByteArray(paramString));
-    try
-    {
-      paramString = ((SerializableCookie)new ObjectInputStream(paramString).readObject()).getCookie();
-      return paramString;
+
+    protected Cookie decodeCookie(String cookieString) {
+        try {
+            return ((SerializableCookie) new ObjectInputStream(new ByteArrayInputStream(hexStringToByteArray(cookieString))).readObject()).getCookie();
+        } catch (Throwable e) {
+            AsyncHttpClient.log.mo3895d(LOG_TAG, "IOException in decodeCookie", e);
+            return null;
+        } catch (Throwable e2) {
+            AsyncHttpClient.log.mo3895d(LOG_TAG, "ClassNotFoundException in decodeCookie", e2);
+            return null;
+        }
     }
-    catch (IOException paramString)
-    {
-      AsyncHttpClient.log.d("PersistentCookieStore", "IOException in decodeCookie", paramString);
-      return null;
+
+    protected String byteArrayToHexString(byte[] bytes) {
+        StringBuilder stringBuilder = new StringBuilder(bytes.length * 2);
+        for (byte b : bytes) {
+            int i = b & 255;
+            if (i < 16) {
+                stringBuilder.append('0');
+            }
+            stringBuilder.append(Integer.toHexString(i));
+        }
+        return stringBuilder.toString().toUpperCase(Locale.US);
     }
-    catch (ClassNotFoundException paramString)
-    {
-      AsyncHttpClient.log.d("PersistentCookieStore", "ClassNotFoundException in decodeCookie", paramString);
+
+    protected byte[] hexStringToByteArray(String hexString) {
+        int length = hexString.length();
+        byte[] bArr = new byte[(length / 2)];
+        for (int i = 0; i < length; i += 2) {
+            bArr[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4) + Character.digit(hexString.charAt(i + 1), 16));
+        }
+        return bArr;
     }
-    return null;
-  }
-  
-  public void deleteCookie(Cookie paramCookie)
-  {
-    paramCookie = paramCookie.getName() + paramCookie.getDomain();
-    this.cookies.remove(paramCookie);
-    SharedPreferences.Editor localEditor = this.cookiePrefs.edit();
-    localEditor.remove("cookie_" + paramCookie);
-    localEditor.commit();
-  }
-  
-  protected String encodeCookie(SerializableCookie paramSerializableCookie)
-  {
-    if (paramSerializableCookie == null) {
-      return null;
-    }
-    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
-    try
-    {
-      new ObjectOutputStream(localByteArrayOutputStream).writeObject(paramSerializableCookie);
-      return byteArrayToHexString(localByteArrayOutputStream.toByteArray());
-    }
-    catch (IOException paramSerializableCookie)
-    {
-      AsyncHttpClient.log.d("PersistentCookieStore", "IOException in encodeCookie", paramSerializableCookie);
-    }
-    return null;
-  }
-  
-  public List<Cookie> getCookies()
-  {
-    return new ArrayList(this.cookies.values());
-  }
-  
-  protected byte[] hexStringToByteArray(String paramString)
-  {
-    int j = paramString.length();
-    byte[] arrayOfByte = new byte[j / 2];
-    int i = 0;
-    while (i < j)
-    {
-      arrayOfByte[(i / 2)] = ((byte)((Character.digit(paramString.charAt(i), 16) << 4) + Character.digit(paramString.charAt(i + 1), 16)));
-      i += 2;
-    }
-    return arrayOfByte;
-  }
-  
-  public void setOmitNonPersistentCookies(boolean paramBoolean)
-  {
-    this.omitNonPersistentCookies = paramBoolean;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/loopj/PersistentCookieStore.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,133 +3,100 @@ package com.baidu.android.pushservice.mzproxy;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import com.baidu.android.pushservice.PushManager;
+import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
 import java.util.Iterator;
-import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MzNotifyActivity
-  extends Activity
-{
-  private String a;
-  private String b;
-  private String c;
-  private String d = null;
-  private String e;
-  
-  private String a(Context paramContext, String paramString)
-  {
-    Intent localIntent = new Intent();
-    localIntent.setAction("android.intent.action.MAIN");
-    localIntent.addCategory("android.intent.category.LAUNCHER");
-    localIntent.setPackage(paramString);
-    paramContext = paramContext.getPackageManager().queryIntentActivities(localIntent, 0).iterator();
-    while (paramContext.hasNext())
-    {
-      paramString = (ResolveInfo)paramContext.next();
-      if (paramString.activityInfo != null) {
-        return paramString.activityInfo.name;
-      }
-    }
-    return null;
-  }
-  
-  protected void onCreate(Bundle paramBundle)
-  {
-    int i = 0;
-    super.onCreate(paramBundle);
-    for (;;)
-    {
-      try
-      {
-        paramBundle = getIntent().getStringExtra("extras");
-        if (!TextUtils.isEmpty(paramBundle))
-        {
-          paramBundle = new JSONObject("{\"extras\":" + paramBundle + "}");
-          Object localObject;
-          if (!paramBundle.isNull("extras"))
-          {
-            paramBundle = paramBundle.getJSONArray("extras");
-            if (paramBundle != null)
-            {
-              if (i < paramBundle.length())
-              {
-                localObject = paramBundle.getJSONObject(i);
-                if (!((JSONObject)localObject).isNull("Msgid")) {
-                  this.a = ((JSONObject)localObject).getString("Msgid");
-                }
-                if (((JSONObject)localObject).isNull("msgBody")) {
-                  break label414;
-                }
-                this.c = ((JSONObject)localObject).getString("msgBody");
-                break label414;
-              }
-              if (!TextUtils.isEmpty(this.c))
-              {
-                paramBundle = new JSONObject(this.c);
-                if (!paramBundle.isNull("custom_content")) {
-                  this.d = paramBundle.getString("custom_content");
-                }
-                if (!paramBundle.isNull("pkg_content")) {
-                  this.e = paramBundle.getString("pkg_content");
-                }
-                if (!paramBundle.isNull("mzsigninfo")) {
-                  this.b = paramBundle.getString("mzsigninfo");
-                }
-              }
+public class MzNotifyActivity extends Activity {
+    /* renamed from: a */
+    private String f1978a;
+    /* renamed from: b */
+    private String f1979b;
+    /* renamed from: c */
+    private String f1980c;
+    /* renamed from: d */
+    private String f1981d = null;
+    /* renamed from: e */
+    private String f1982e;
+
+    /* renamed from: a */
+    private String m2773a(Context context, String str) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.LAUNCHER");
+        intent.setPackage(str);
+        for (ResolveInfo resolveInfo : context.getPackageManager().queryIntentActivities(intent, 0)) {
+            if (resolveInfo.activityInfo != null) {
+                return resolveInfo.activityInfo.name;
             }
-          }
-          paramBundle = this.a + this.d;
-          if (PushManager.hwMessageVerify(this, this.b, paramBundle.replaceAll("\\\\", "")))
-          {
-            if (!TextUtils.isEmpty(this.e)) {
-              break label361;
-            }
-            paramBundle = new Intent();
-            localObject = a(this, getPackageName());
-            paramBundle.setClassName(getPackageName(), (String)localObject);
-            paramBundle.setFlags(268435456);
-            localObject = new JSONObject(this.d);
-            Iterator localIterator = ((JSONObject)localObject).keys();
-            if (!localIterator.hasNext()) {
-              break label389;
-            }
-            String str = (String)localIterator.next();
-            paramBundle.putExtra(str, ((JSONObject)localObject).optString(str));
-            continue;
-          }
         }
-        paramBundle = Intent.parseUri(this.e, 0);
-      }
-      catch (Exception paramBundle)
-      {
-        finish();
-        return;
-      }
-      label361:
-      paramBundle.setPackage(getPackageName());
-      paramBundle.addFlags(268435456);
-      continue;
-      label389:
-      if (getPackageManager().queryIntentActivities(paramBundle, 0).size() > 0)
-      {
-        startActivity(paramBundle);
-        continue;
-        label414:
-        i += 1;
-      }
+        return null;
     }
-  }
+
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        try {
+            Object stringExtra = getIntent().getStringExtra("extras");
+            if (!TextUtils.isEmpty(stringExtra)) {
+                JSONObject jSONObject = new JSONObject("{\"extras\":" + stringExtra + "}");
+                if (!jSONObject.isNull("extras")) {
+                    JSONArray jSONArray = jSONObject.getJSONArray("extras");
+                    if (jSONArray != null) {
+                        for (int i = 0; i < jSONArray.length(); i++) {
+                            jSONObject = jSONArray.getJSONObject(i);
+                            if (!jSONObject.isNull("Msgid")) {
+                                this.f1978a = jSONObject.getString("Msgid");
+                            }
+                            if (!jSONObject.isNull("msgBody")) {
+                                this.f1980c = jSONObject.getString("msgBody");
+                            }
+                        }
+                        if (!TextUtils.isEmpty(this.f1980c)) {
+                            JSONObject jSONObject2 = new JSONObject(this.f1980c);
+                            if (!jSONObject2.isNull("custom_content")) {
+                                this.f1981d = jSONObject2.getString("custom_content");
+                            }
+                            if (!jSONObject2.isNull("pkg_content")) {
+                                this.f1982e = jSONObject2.getString("pkg_content");
+                            }
+                            if (!jSONObject2.isNull("mzsigninfo")) {
+                                this.f1979b = jSONObject2.getString("mzsigninfo");
+                            }
+                        }
+                    }
+                }
+                if (PushManager.hwMessageVerify(this, this.f1979b, (this.f1978a + this.f1981d).replaceAll("\\\\", ""))) {
+                    Intent intent;
+                    Intent intent2;
+                    if (TextUtils.isEmpty(this.f1982e)) {
+                        intent2 = new Intent();
+                        intent2.setClassName(getPackageName(), m2773a(this, getPackageName()));
+                        intent2.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                        intent = intent2;
+                    } else {
+                        intent2 = Intent.parseUri(this.f1982e, 0);
+                        intent2.setPackage(getPackageName());
+                        intent2.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                        intent = intent2;
+                    }
+                    jSONObject = new JSONObject(this.f1981d);
+                    Iterator keys = jSONObject.keys();
+                    while (keys.hasNext()) {
+                        String str = (String) keys.next();
+                        intent.putExtra(str, jSONObject.optString(str));
+                    }
+                    if (getPackageManager().queryIntentActivities(intent, 0).size() > 0) {
+                        startActivity(intent);
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+        finish();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/mzproxy/MzNotifyActivity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

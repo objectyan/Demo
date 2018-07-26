@@ -6,212 +6,190 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public final class dw
-{
-  private final SparseArray<ArrayList<dv>> a = new SparseArray();
-  
-  private int b(int paramInt)
-  {
-    synchronized (this.a)
-    {
-      ArrayList localArrayList = (ArrayList)this.a.get(paramInt);
-      if (localArrayList != null)
-      {
-        paramInt = localArrayList.size();
-        return paramInt;
-      }
-      return 0;
-    }
-  }
-  
-  public final int a(int paramInt)
-  {
-    Object localObject = (ArrayList)this.a.get(paramInt);
-    int i;
-    int j;
-    if (localObject != null)
-    {
-      localObject = ((ArrayList)localObject).iterator();
-      i = -1;
-      if (((Iterator)localObject).hasNext())
-      {
-        j = ((dv)((Iterator)localObject).next()).c.c;
-        if (j == 0) {
-          paramInt = 5000;
-        }
-        for (;;)
-        {
-          j = paramInt;
-          if (i != -1)
-          {
-            if (paramInt >= i) {
-              break label125;
+public final class dw {
+    /* renamed from: a */
+    private final SparseArray<ArrayList<dv>> f23477a = new SparseArray();
+
+    @Nullable
+    /* renamed from: a */
+    public final dv m20368a(@NonNull cy cyVar, @NonNull cw cwVar, @NonNull da daVar) {
+        dv dvVar;
+        eg.m20413a((Object) cyVar, "listener cannot be null", new Object[0]);
+        eg.m20413a((Object) cwVar, "sensor cannot be null", new Object[0]);
+        eg.m20413a((Object) daVar, "params cannot be null", new Object[0]);
+        synchronized (this.f23477a) {
+            ArrayList arrayList;
+            ArrayList arrayList2 = (ArrayList) this.f23477a.get(cwVar.mo4658a());
+            if (arrayList2 == null) {
+                arrayList2 = new ArrayList(1);
+                this.f23477a.append(cwVar.mo4658a(), arrayList2);
+                arrayList = arrayList2;
+            } else {
+                Iterator it = arrayList2.iterator();
+                while (it.hasNext()) {
+                    if (((dv) it.next()).f23474a == cyVar) {
+                        dvVar = null;
+                        break;
+                    }
+                }
+                arrayList = arrayList2;
             }
-            j = paramInt;
-          }
-          i = j;
-          break;
-          if (j == 1)
-          {
-            paramInt = 20000;
-          }
-          else if (j == 2)
-          {
-            paramInt = 60000;
-          }
-          else
-          {
-            paramInt = j;
-            if (j == 3) {
-              paramInt = 200000;
+            dvVar = new dv(cyVar, cwVar, daVar);
+            arrayList.add(dvVar);
+        }
+        return dvVar;
+    }
+
+    @NonNull
+    /* renamed from: a */
+    public final ArrayList<dv> m20369a(@NonNull cy cyVar) {
+        eg.m20413a((Object) cyVar, "listener cannot be null", new Object[0]);
+        ArrayList<dv> arrayList = new ArrayList(1);
+        synchronized (this.f23477a) {
+            for (int i = 0; i < this.f23477a.size(); i++) {
+                ArrayList arrayList2 = (ArrayList) this.f23477a.valueAt(i);
+                Iterator it = arrayList2.iterator();
+                while (it.hasNext()) {
+                    dv dvVar = (dv) it.next();
+                    if (dvVar.f23474a == cyVar) {
+                        arrayList2.remove(dvVar);
+                        arrayList.add(dvVar);
+                        break;
+                    }
+                }
             }
-          }
         }
-      }
+        return arrayList;
     }
-    for (;;)
-    {
-      if (i >= 0) {
-        return i;
-      }
-      return 0;
-      label125:
-      j = i;
-      break;
-      i = -1;
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    @android.support.annotation.NonNull
+    /* renamed from: a */
+    public final java.util.ArrayList<com.indooratlas.android.sdk._internal.dv> m20370a(@android.support.annotation.NonNull com.indooratlas.android.sdk._internal.cy r7, @android.support.annotation.NonNull com.indooratlas.android.sdk._internal.cw r8) {
+        /*
+        r6 = this;
+        r2 = 0;
+        r0 = "listener cannot be null";
+        r1 = new java.lang.Object[r2];
+        com.indooratlas.android.sdk._internal.eg.m20413a(r7, r0, r1);
+        r0 = "sensor cannot be null";
+        r1 = new java.lang.Object[r2];
+        com.indooratlas.android.sdk._internal.eg.m20413a(r8, r0, r1);
+        r2 = new java.util.ArrayList;
+        r0 = 1;
+        r2.<init>(r0);
+        r3 = r6.f23477a;
+        monitor-enter(r3);
+        r0 = r6.f23477a;	 Catch:{ all -> 0x0048 }
+        r1 = r8.mo4658a();	 Catch:{ all -> 0x0048 }
+        r0 = r0.get(r1);	 Catch:{ all -> 0x0048 }
+        r0 = (java.util.ArrayList) r0;	 Catch:{ all -> 0x0048 }
+        if (r0 == 0) goto L_0x0045;
+    L_0x0028:
+        r4 = r0.iterator();	 Catch:{ all -> 0x0048 }
+    L_0x002c:
+        r1 = r4.hasNext();	 Catch:{ all -> 0x0048 }
+        if (r1 == 0) goto L_0x0045;
+    L_0x0032:
+        r1 = r4.next();	 Catch:{ all -> 0x0048 }
+        r1 = (com.indooratlas.android.sdk._internal.dv) r1;	 Catch:{ all -> 0x0048 }
+        r5 = r1.f23474a;	 Catch:{ all -> 0x0048 }
+        if (r5 != r7) goto L_0x002c;
+    L_0x003c:
+        r0.remove(r1);	 Catch:{ all -> 0x0048 }
+        r2.add(r1);	 Catch:{ all -> 0x0048 }
+        monitor-exit(r3);	 Catch:{ all -> 0x0048 }
+        r0 = r2;
+    L_0x0044:
+        return r0;
+    L_0x0045:
+        monitor-exit(r3);	 Catch:{ all -> 0x0048 }
+        r0 = r2;
+        goto L_0x0044;
+    L_0x0048:
+        r0 = move-exception;
+        monitor-exit(r3);	 Catch:{ all -> 0x0048 }
+        throw r0;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.indooratlas.android.sdk._internal.dw.a(com.indooratlas.android.sdk._internal.cy, com.indooratlas.android.sdk._internal.cw):java.util.ArrayList<com.indooratlas.android.sdk._internal.dv>");
     }
-  }
-  
-  public final int a(cw paramcw)
-  {
-    synchronized (this.a)
-    {
-      int i = b(paramcw.a());
-      return i;
-    }
-  }
-  
-  @Nullable
-  public final dv a(@NonNull cy paramcy, @NonNull cw paramcw, @NonNull da paramda)
-  {
-    eg.a(paramcy, "listener cannot be null", new Object[0]);
-    eg.a(paramcw, "sensor cannot be null", new Object[0]);
-    eg.a(paramda, "params cannot be null", new Object[0]);
-    for (;;)
-    {
-      synchronized (this.a)
-      {
-        ArrayList localArrayList = (ArrayList)this.a.get(paramcw.a());
-        if (localArrayList == null)
-        {
-          localArrayList = new ArrayList(1);
-          this.a.append(paramcw.a(), localArrayList);
-          paramcy = new dv(paramcy, paramcw, paramda);
-          localArrayList.add(paramcy);
-          return paramcy;
-        }
-        Iterator localIterator = localArrayList.iterator();
-        if (localIterator.hasNext()) {
-          if (((dv)localIterator.next()).a == paramcy) {
-            return null;
-          }
-        }
-      }
-    }
-  }
-  
-  @NonNull
-  public final ArrayList<dv> a(@NonNull cy paramcy)
-  {
-    eg.a(paramcy, "listener cannot be null", new Object[0]);
-    ArrayList localArrayList1 = new ArrayList(1);
-    SparseArray localSparseArray = this.a;
-    int i = 0;
-    for (;;)
-    {
-      try
-      {
-        if (i < this.a.size())
-        {
-          ArrayList localArrayList2 = (ArrayList)this.a.valueAt(i);
-          Iterator localIterator = localArrayList2.iterator();
-          if (localIterator.hasNext())
-          {
-            dv localdv = (dv)localIterator.next();
-            if (localdv.a != paramcy) {
-              continue;
+
+    /* renamed from: a */
+    public final void m20371a(int i, @NonNull cx cxVar) {
+        eg.m20413a((Object) cxVar, "Sensor event cannot be null.", new Object[0]);
+        synchronized (this.f23477a) {
+            ArrayList arrayList = (ArrayList) this.f23477a.get(i);
+            if (arrayList != null) {
+                Iterator it = arrayList.iterator();
+                while (it.hasNext()) {
+                    ((dv) it.next()).m20363a(cxVar);
+                }
             }
-            localArrayList2.remove(localdv);
-            localArrayList1.add(localdv);
-          }
         }
-        else
-        {
-          return localArrayList1;
-        }
-      }
-      finally {}
-      i += 1;
     }
-  }
-  
-  @NonNull
-  public final ArrayList<dv> a(@NonNull cy paramcy, @NonNull cw paramcw)
-  {
-    eg.a(paramcy, "listener cannot be null", new Object[0]);
-    eg.a(paramcw, "sensor cannot be null", new Object[0]);
-    ArrayList localArrayList = new ArrayList(1);
-    synchronized (this.a)
-    {
-      paramcw = (ArrayList)this.a.get(paramcw.a());
-      if (paramcw != null)
-      {
-        Iterator localIterator = paramcw.iterator();
-        while (localIterator.hasNext())
-        {
-          dv localdv = (dv)localIterator.next();
-          if (localdv.a == paramcy)
-          {
-            paramcw.remove(localdv);
-            localArrayList.add(localdv);
-            return localArrayList;
-          }
-        }
-      }
-      return localArrayList;
+
+    /* renamed from: a */
+    public final void m20372a(cx cxVar) {
+        eg.m20413a((Object) cxVar, "Sensor event cannot be null.", new Object[0]);
+        m20371a(cxVar.f23358a.mo4658a(), cxVar);
     }
-  }
-  
-  public final void a(int paramInt, @NonNull cx paramcx)
-  {
-    eg.a(paramcx, "Sensor event cannot be null.", new Object[0]);
-    synchronized (this.a)
-    {
-      Object localObject = (ArrayList)this.a.get(paramInt);
-      if (localObject != null)
-      {
-        localObject = ((ArrayList)localObject).iterator();
-        if (((Iterator)localObject).hasNext()) {
-          ((dv)((Iterator)localObject).next()).a(paramcx);
+
+    /* renamed from: b */
+    private int m20365b(int i) {
+        int size;
+        synchronized (this.f23477a) {
+            ArrayList arrayList = (ArrayList) this.f23477a.get(i);
+            if (arrayList != null) {
+                size = arrayList.size();
+            } else {
+                size = 0;
+            }
         }
-      }
+        return size;
     }
-  }
-  
-  public final void a(cx paramcx)
-  {
-    eg.a(paramcx, "Sensor event cannot be null.", new Object[0]);
-    a(paramcx.a.a(), paramcx);
-  }
-  
-  public final int b(cw paramcw)
-  {
-    return a(paramcw.a());
-  }
+
+    /* renamed from: a */
+    public final int m20367a(cw cwVar) {
+        int b;
+        synchronized (this.f23477a) {
+            b = m20365b(cwVar.mo4658a());
+        }
+        return b;
+    }
+
+    /* renamed from: a */
+    public final int m20366a(int i) {
+        int i2;
+        ArrayList arrayList = (ArrayList) this.f23477a.get(i);
+        if (arrayList != null) {
+            Iterator it = arrayList.iterator();
+            int i3 = -1;
+            while (it.hasNext()) {
+                i2 = ((dv) it.next()).f23476c.f23374c;
+                if (i2 == 0) {
+                    i2 = 5000;
+                } else if (i2 == 1) {
+                    i2 = 20000;
+                } else if (i2 == 2) {
+                    i2 = 60000;
+                } else if (i2 == 3) {
+                    i2 = 200000;
+                }
+                if (i3 != -1 && r0 >= i3) {
+                    i2 = i3;
+                }
+                i3 = i2;
+            }
+            i2 = i3;
+        } else {
+            i2 = -1;
+        }
+        return i2 >= 0 ? i2 : 0;
+    }
+
+    /* renamed from: b */
+    public final int m20373b(cw cwVar) {
+        return m20366a(cwVar.mo4658a());
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dw.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -8,90 +8,75 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.routeguide.subview.OnRGSubViewListener;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.ui.widget.BNBaseView;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class RGMMSatelliteView
-  extends BNBaseView
-{
-  private static String TAG = RGMMSatelliteView.class.getName();
-  private final String TIPS_TEXT = "GPS信号弱，请谨慎驾驶";
-  private ViewGroup mSatelliteContainer = null;
-  private TextView mSatelliteTV = null;
-  private View mSatelliteView = null;
-  
-  public RGMMSatelliteView(Context paramContext, ViewGroup paramViewGroup, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext, paramViewGroup, paramOnRGSubViewListener);
-    initViews();
-    updateStyle(BNStyleManager.getDayStyle());
-    initListener();
-  }
-  
-  private void initListener()
-  {
-    if (this.mSatelliteContainer != null) {
-      this.mSatelliteContainer.setOnTouchListener(new View.OnTouchListener()
-      {
-        public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-        {
-          return true;
+public class RGMMSatelliteView extends BNBaseView {
+    private static String TAG = RGMMSatelliteView.class.getName();
+    private final String TIPS_TEXT = "GPS信号弱，请谨慎驾驶";
+    private ViewGroup mSatelliteContainer = null;
+    private TextView mSatelliteTV = null;
+    private View mSatelliteView = null;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMSatelliteView$1 */
+    class C44301 implements OnTouchListener {
+        C44301() {
         }
-      });
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return true;
+        }
     }
-  }
-  
-  private void initViews()
-  {
-    if (this.mRootViewGroup == null) {}
-    do
-    {
-      do
-      {
-        return;
-      } while (this.mSatelliteContainer == null);
-      this.mSatelliteContainer.removeAllViews();
-      this.mSatelliteView = JarUtils.inflate((Activity)this.mContext, 1711472707, null);
-      this.mSatelliteTV = ((TextView)this.mSatelliteView.findViewById(1711866462));
-    } while ((this.mSatelliteContainer == null) || (this.mSatelliteView == null));
-    FrameLayout.LayoutParams localLayoutParams = new FrameLayout.LayoutParams(-1, -2);
-    this.mSatelliteContainer.addView(this.mSatelliteView, localLayoutParams);
-  }
-  
-  public void hide()
-  {
-    super.hide();
-    LogUtil.e(TAG, "hide()");
-    if (this.mSatelliteContainer != null) {
-      this.mSatelliteContainer.setVisibility(8);
+
+    public RGMMSatelliteView(Context c, ViewGroup p, OnRGSubViewListener lis) {
+        super(c, p, lis);
+        initViews();
+        updateStyle(BNStyleManager.getDayStyle());
+        initListener();
     }
-  }
-  
-  public void show()
-  {
-    super.show();
-    LogUtil.e(TAG, "show()");
-    if (this.mSatelliteContainer != null) {
-      this.mSatelliteContainer.setVisibility(0);
+
+    private void initViews() {
+        if (this.mRootViewGroup != null && this.mSatelliteContainer != null) {
+            this.mSatelliteContainer.removeAllViews();
+            this.mSatelliteView = JarUtils.inflate((Activity) this.mContext, C4048R.layout.nsdk_layout_rg_mapmode_common_card, null);
+            this.mSatelliteTV = (TextView) this.mSatelliteView.findViewById(C4048R.id.common_card_text);
+            if (this.mSatelliteContainer != null && this.mSatelliteView != null) {
+                this.mSatelliteContainer.addView(this.mSatelliteView, new LayoutParams(-1, -2));
+            }
+        }
     }
-    if (this.mSatelliteTV != null)
-    {
-      this.mSatelliteTV.setText("GPS信号弱，请谨慎驾驶");
-      this.mSatelliteTV.setTextColor(-1);
+
+    private void initListener() {
+        if (this.mSatelliteContainer != null) {
+            this.mSatelliteContainer.setOnTouchListener(new C44301());
+        }
     }
-  }
-  
-  public void updateStyle(boolean paramBoolean)
-  {
-    super.updateStyle(paramBoolean);
-  }
+
+    public void show() {
+        super.show();
+        LogUtil.m15791e(TAG, "show()");
+        if (this.mSatelliteContainer != null) {
+            this.mSatelliteContainer.setVisibility(0);
+        }
+        if (this.mSatelliteTV != null) {
+            this.mSatelliteTV.setText("GPS信号弱，请谨慎驾驶");
+            this.mSatelliteTV.setTextColor(-1);
+        }
+    }
+
+    public void hide() {
+        super.hide();
+        LogUtil.m15791e(TAG, "hide()");
+        if (this.mSatelliteContainer != null) {
+            this.mSatelliteContainer.setVisibility(8);
+        }
+    }
+
+    public void updateStyle(boolean day) {
+        super.updateStyle(day);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMSatelliteView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

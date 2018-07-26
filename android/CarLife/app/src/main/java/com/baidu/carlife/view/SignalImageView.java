@@ -6,130 +6,120 @@ import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import com.baidu.carlife.C0965R;
 
-public class SignalImageView
-  extends ImageView
-{
-  private TelephonyManager a;
-  private a b;
-  
-  public SignalImageView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public SignalImageView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public SignalImageView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    this.a = ((TelephonyManager)paramContext.getSystemService("phone"));
-  }
-  
-  protected void onAttachedToWindow()
-  {
-    super.onAttachedToWindow();
-    this.b = new a(null);
-    this.a.listen(this.b, 256);
-  }
-  
-  protected void onDetachedFromWindow()
-  {
-    super.onDetachedFromWindow();
-    this.a.listen(this.b, 0);
-  }
-  
-  private class a
-    extends PhoneStateListener
-  {
-    private final int b = 0;
-    private final int c = 1;
-    private final int d = 2;
-    private final int e = 3;
-    private final int f = 4;
-    
-    private a() {}
-    
-    private void a(int paramInt)
-    {
-      switch (paramInt)
-      {
-      default: 
-        return;
-      case 0: 
-        SignalImageView.this.setImageResource(2130839431);
-        return;
-      case 1: 
-        SignalImageView.this.setImageResource(2130839432);
-        return;
-      case 2: 
-        SignalImageView.this.setImageResource(2130839433);
-        return;
-      case 3: 
-        SignalImageView.this.setImageResource(2130839434);
-        return;
-      }
-      SignalImageView.this.setImageResource(2130839435);
-    }
-    
-    public void onSignalStrengthsChanged(SignalStrength paramSignalStrength)
-    {
-      super.onSignalStrengthsChanged(paramSignalStrength);
-      if (SignalImageView.a(SignalImageView.this).getSimState() == 5)
-      {
-        int i;
-        if (!paramSignalStrength.isGsm())
-        {
-          i = paramSignalStrength.getCdmaDbm();
-          if (i >= -75) {
-            i = 4;
-          }
+public class SignalImageView extends ImageView {
+    /* renamed from: a */
+    private TelephonyManager f7221a;
+    /* renamed from: b */
+    private C2231a f7222b;
+
+    /* renamed from: com.baidu.carlife.view.SignalImageView$a */
+    private class C2231a extends PhoneStateListener {
+        /* renamed from: a */
+        final /* synthetic */ SignalImageView f7215a;
+        /* renamed from: b */
+        private final int f7216b;
+        /* renamed from: c */
+        private final int f7217c;
+        /* renamed from: d */
+        private final int f7218d;
+        /* renamed from: e */
+        private final int f7219e;
+        /* renamed from: f */
+        private final int f7220f;
+
+        private C2231a(SignalImageView signalImageView) {
+            this.f7215a = signalImageView;
+            this.f7216b = 0;
+            this.f7217c = 1;
+            this.f7218d = 2;
+            this.f7219e = 3;
+            this.f7220f = 4;
         }
-        for (;;)
-        {
-          a(i);
-          return;
-          if (i >= -85)
-          {
-            i = 3;
-          }
-          else if (i >= -95)
-          {
-            i = 2;
-          }
-          else if (i >= -100)
-          {
-            i = 1;
-          }
-          else
-          {
-            i = 0;
-            continue;
-            i = paramSignalStrength.getGsmSignalStrength();
-            if ((i < 0) || (i >= 99)) {
-              i = 0;
-            } else if (i >= 16) {
-              i = 4;
-            } else if (i >= 8) {
-              i = 3;
-            } else if (i >= 4) {
-              i = 2;
-            } else {
-              i = 1;
+
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            super.onSignalStrengthsChanged(signalStrength);
+            if (this.f7215a.f7221a.getSimState() == 5) {
+                int bin;
+                if (signalStrength.isGsm()) {
+                    int asu = signalStrength.getGsmSignalStrength();
+                    if (asu < 0 || asu >= 99) {
+                        bin = 0;
+                    } else if (asu >= 16) {
+                        bin = 4;
+                    } else if (asu >= 8) {
+                        bin = 3;
+                    } else if (asu >= 4) {
+                        bin = 2;
+                    } else {
+                        bin = 1;
+                    }
+                } else {
+                    int dBm = signalStrength.getCdmaDbm();
+                    if (dBm >= -75) {
+                        bin = 4;
+                    } else if (dBm >= -85) {
+                        bin = 3;
+                    } else if (dBm >= -95) {
+                        bin = 2;
+                    } else if (dBm >= -100) {
+                        bin = 1;
+                    } else {
+                        bin = 0;
+                    }
+                }
+                m8466a(bin);
+                return;
             }
-          }
+            this.f7215a.setImageResource(C0965R.drawable.signal_cellular_no_sim);
         }
-      }
-      SignalImageView.this.setImageResource(2130839436);
+
+        /* renamed from: a */
+        private void m8466a(int level) {
+            switch (level) {
+                case 0:
+                    this.f7215a.setImageResource(C0965R.drawable.signal_cellular_0);
+                    return;
+                case 1:
+                    this.f7215a.setImageResource(C0965R.drawable.signal_cellular_1);
+                    return;
+                case 2:
+                    this.f7215a.setImageResource(C0965R.drawable.signal_cellular_2);
+                    return;
+                case 3:
+                    this.f7215a.setImageResource(C0965R.drawable.signal_cellular_3);
+                    return;
+                case 4:
+                    this.f7215a.setImageResource(C0965R.drawable.signal_cellular_4);
+                    return;
+                default:
+                    return;
+            }
+        }
     }
-  }
+
+    public SignalImageView(Context context) {
+        super(context);
+    }
+
+    public SignalImageView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public SignalImageView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.f7221a = (TelephonyManager) context.getSystemService("phone");
+    }
+
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        this.f7222b = new C2231a();
+        this.f7221a.listen(this.f7222b, 256);
+    }
+
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        this.f7221a.listen(this.f7222b, 0);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/SignalImageView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

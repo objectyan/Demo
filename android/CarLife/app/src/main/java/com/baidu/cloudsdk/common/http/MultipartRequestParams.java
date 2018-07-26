@@ -5,169 +5,115 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import org.apache.http.HttpEntity;
 
-public class MultipartRequestParams
-  extends RequestParams
-{
-  protected HashMap<String, FileWrapper> mFileParams = new HashMap();
-  
-  public MultipartRequestParams() {}
-  
-  public MultipartRequestParams(String paramString1, String paramString2)
-  {
-    super(paramString1, paramString2);
-  }
-  
-  public MultipartRequestParams(Map<String, String> paramMap)
-  {
-    super(paramMap);
-  }
-  
-  public MultipartRequestParams(Object... paramVarArgs)
-  {
-    super(paramVarArgs);
-  }
-  
-  public HttpEntity getHttpEntity()
-  {
-    if (this.mFileParams.isEmpty()) {
-      localObject1 = super.getHttpEntity();
-    }
-    MultipartEntity localMultipartEntity;
-    Object localObject2;
-    int i;
-    int j;
-    do
-    {
-      return (HttpEntity)localObject1;
-      localMultipartEntity = new MultipartEntity();
-      localObject1 = this.mParams.entrySet().iterator();
-      while (((Iterator)localObject1).hasNext())
-      {
-        localObject2 = (Map.Entry)((Iterator)localObject1).next();
-        localMultipartEntity.addPart((String)((Map.Entry)localObject2).getKey(), (String)((Map.Entry)localObject2).getValue());
-      }
-      localObject1 = this.mParamsWithArray.entrySet().iterator();
-      while (((Iterator)localObject1).hasNext())
-      {
-        localObject3 = (Map.Entry)((Iterator)localObject1).next();
-        localObject2 = (String)((Map.Entry)localObject3).getKey();
-        localObject3 = ((ArrayList)((Map.Entry)localObject3).getValue()).iterator();
-        while (((Iterator)localObject3).hasNext())
-        {
-          str = (String)((Iterator)localObject3).next();
-          if (!TextUtils.isEmpty(str)) {
-            localMultipartEntity.addPart((String)localObject2, str);
-          }
+public class MultipartRequestParams extends RequestParams {
+    protected HashMap<String, FileWrapper> mFileParams = new HashMap();
+
+    private static class FileWrapper {
+        public String mContentType;
+        public String mFileName;
+        public InputStream mIn;
+
+        public FileWrapper(InputStream in, String filename, String contentType) {
+            this.mIn = in;
+            this.mFileName = filename;
+            this.mContentType = contentType;
         }
-      }
-      i = 0;
-      j = this.mFileParams.entrySet().size();
-      localObject2 = this.mFileParams.entrySet().iterator();
-      localObject1 = localMultipartEntity;
-    } while (!((Iterator)localObject2).hasNext());
-    Object localObject3 = (Map.Entry)((Iterator)localObject2).next();
-    Object localObject1 = (FileWrapper)((Map.Entry)localObject3).getValue();
-    localObject3 = (String)((Map.Entry)localObject3).getKey();
-    String str = ((FileWrapper)localObject1).getFileName();
-    InputStream localInputStream = ((FileWrapper)localObject1).mIn;
-    localObject1 = ((FileWrapper)localObject1).mContentType;
-    if (i == j - 1) {}
-    for (boolean bool = true;; bool = false)
-    {
-      localMultipartEntity.addPart((String)localObject3, str, localInputStream, (String)localObject1, bool);
-      i += 1;
-      break;
+
+        public String getFileName() {
+            if (this.mFileName != null) {
+                return this.mFileName;
+            }
+            return "nofilename";
+        }
     }
-  }
-  
-  protected StringBuilder getStringBuilder()
-  {
-    StringBuilder localStringBuilder = super.getStringBuilder();
-    Iterator localIterator = this.mFileParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)localEntry.getKey()).append("=").append("FILE");
+
+    public MultipartRequestParams(String key, String value) {
+        super(key, value);
     }
-    return localStringBuilder;
-  }
-  
-  public void put(String paramString, File paramFile)
-    throws FileNotFoundException
-  {
-    if (paramFile != null) {
-      put(paramString, new FileInputStream(paramFile), paramFile.getName());
+
+    public MultipartRequestParams(Map<String, String> params) {
+        super((Map) params);
     }
-  }
-  
-  public void put(String paramString, InputStream paramInputStream)
-  {
-    put(paramString, paramInputStream, null);
-  }
-  
-  public void put(String paramString1, InputStream paramInputStream, String paramString2)
-  {
-    if (TextUtils.isEmpty(paramString2))
-    {
-      put(paramString1, paramInputStream, paramString2, "png");
-      return;
+
+    public MultipartRequestParams(Object... keysAndValues) {
+        super(keysAndValues);
     }
-    put(paramString1, paramInputStream, paramString2, URLConnection.getFileNameMap().getContentTypeFor(paramString2));
-  }
-  
-  public void put(String paramString1, InputStream paramInputStream, String paramString2, String paramString3)
-  {
-    if ((!TextUtils.isEmpty(paramString1)) && (paramInputStream != null)) {
-      this.mFileParams.put(paramString1, new FileWrapper(paramInputStream, paramString2, paramString3));
+
+    public void put(String key, File file) throws FileNotFoundException {
+        if (file != null) {
+            put(key, new FileInputStream(file), file.getName());
+        }
     }
-  }
-  
-  public void remove(String paramString)
-  {
-    super.remove(paramString);
-    if (paramString != null) {
-      this.mFileParams.remove(paramString);
+
+    public void put(String key, InputStream in) {
+        put(key, in, null);
     }
-  }
-  
-  private static class FileWrapper
-  {
-    public String mContentType;
-    public String mFileName;
-    public InputStream mIn;
-    
-    public FileWrapper(InputStream paramInputStream, String paramString1, String paramString2)
-    {
-      this.mIn = paramInputStream;
-      this.mFileName = paramString1;
-      this.mContentType = paramString2;
+
+    public void put(String key, InputStream in, String filename) {
+        if (TextUtils.isEmpty(filename)) {
+            put(key, in, filename, "png");
+        } else {
+            put(key, in, filename, URLConnection.getFileNameMap().getContentTypeFor(filename));
+        }
     }
-    
-    public String getFileName()
-    {
-      if (this.mFileName != null) {
-        return this.mFileName;
-      }
-      return "nofilename";
+
+    public void put(String key, InputStream in, String filename, String contentType) {
+        if (!TextUtils.isEmpty(key) && in != null) {
+            this.mFileParams.put(key, new FileWrapper(in, filename, contentType));
+        }
     }
-  }
+
+    public void remove(String key) {
+        super.remove(key);
+        if (key != null) {
+            this.mFileParams.remove(key);
+        }
+    }
+
+    public HttpEntity getHttpEntity() {
+        if (this.mFileParams.isEmpty()) {
+            return super.getHttpEntity();
+        }
+        HttpEntity entity = new MultipartEntity();
+        for (Entry<String, String> entry : this.mParams.entrySet()) {
+            entity.addPart((String) entry.getKey(), (String) entry.getValue());
+        }
+        for (Entry<String, ArrayList<String>> entry2 : this.mParamsWithArray.entrySet()) {
+            String key = (String) entry2.getKey();
+            Iterator i$ = ((ArrayList) entry2.getValue()).iterator();
+            while (i$.hasNext()) {
+                String value = (String) i$.next();
+                if (!TextUtils.isEmpty(value)) {
+                    entity.addPart(key, value);
+                }
+            }
+        }
+        int currentIndex = 0;
+        int lastIndex = this.mFileParams.entrySet().size() - 1;
+        for (Entry<String, FileWrapper> entry3 : this.mFileParams.entrySet()) {
+            FileWrapper file = (FileWrapper) entry3.getValue();
+            entity.addPart((String) entry3.getKey(), file.getFileName(), file.mIn, file.mContentType, currentIndex == lastIndex);
+            currentIndex++;
+        }
+        return entity;
+    }
+
+    protected StringBuilder getStringBuilder() {
+        StringBuilder builder = super.getStringBuilder();
+        for (Entry<String, FileWrapper> entry : this.mFileParams.entrySet()) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
+            builder.append((String) entry.getKey()).append("=").append("FILE");
+        }
+        return builder;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/cloudsdk/common/http/MultipartRequestParams.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

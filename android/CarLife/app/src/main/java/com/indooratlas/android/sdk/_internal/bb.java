@@ -3,48 +3,38 @@ package com.indooratlas.android.sdk._internal;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public final class bb
-{
-  int a;
-  public JSONObject b;
-  
-  public bb(JSONObject paramJSONObject)
-  {
-    a(paramJSONObject);
-  }
-  
-  public final String a()
-  {
-    try
-    {
-      String str = this.b.getString("url");
-      return str;
+public final class bb {
+    /* renamed from: a */
+    int f23072a;
+    /* renamed from: b */
+    public JSONObject f23073b;
+
+    public bb(JSONObject jSONObject) {
+        m19979a(jSONObject);
     }
-    catch (JSONException localJSONException)
-    {
-      throw new IllegalStateException("missing mandatory config key 'url'");
+
+    /* renamed from: a */
+    public final void m19979a(JSONObject jSONObject) {
+        this.f23073b = jSONObject;
+        this.f23072a = this.f23073b.optInt("positioning.maxMetricsPerRequest", 5);
     }
-  }
-  
-  public final void a(JSONObject paramJSONObject)
-  {
-    this.b = paramJSONObject;
-    this.a = this.b.optInt("positioning.maxMetricsPerRequest", 5);
-  }
-  
-  public final long b()
-  {
-    return this.b.optLong("positioningHibernateTimeout", 180000L);
-  }
-  
-  public final String c()
-  {
-    return this.b.optString("key");
-  }
+
+    /* renamed from: a */
+    public final String m19978a() {
+        try {
+            return this.f23073b.getString("url");
+        } catch (JSONException e) {
+            throw new IllegalStateException("missing mandatory config key 'url'");
+        }
+    }
+
+    /* renamed from: b */
+    public final long m19980b() {
+        return this.f23073b.optLong("positioningHibernateTimeout", 180000);
+    }
+
+    /* renamed from: c */
+    public final String m19981c() {
+        return this.f23073b.optString("key");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/bb.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

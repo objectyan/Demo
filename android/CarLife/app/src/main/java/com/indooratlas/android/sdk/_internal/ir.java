@@ -4,163 +4,121 @@ import java.io.IOException;
 import java.util.zip.Deflater;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
-public final class ir
-  implements jc
-{
-  private final io a;
-  private final Deflater b;
-  private boolean c;
-  
-  ir(io paramio, Deflater paramDeflater)
-  {
-    if (paramio == null) {
-      throw new IllegalArgumentException("source == null");
+public final class ir implements jc {
+    /* renamed from: a */
+    private final io f24398a;
+    /* renamed from: b */
+    private final Deflater f24399b;
+    /* renamed from: c */
+    private boolean f24400c;
+
+    public ir(jc jcVar, Deflater deflater) {
+        this(ix.m21258a(jcVar), deflater);
     }
-    if (paramDeflater == null) {
-      throw new IllegalArgumentException("inflater == null");
-    }
-    this.a = paramio;
-    this.b = paramDeflater;
-  }
-  
-  public ir(jc paramjc, Deflater paramDeflater)
-  {
-    this(ix.a(paramjc), paramDeflater);
-  }
-  
-  @IgnoreJRERequirement
-  private void a(boolean paramBoolean)
-    throws IOException
-  {
-    in localin = this.a.b();
-    ja localja;
-    label119:
-    do
-    {
-      localja = localin.f(1);
-      if (paramBoolean) {}
-      for (int i = this.b.deflate(localja.a, localja.c, 2048 - localja.c, 2);; i = this.b.deflate(localja.a, localja.c, 2048 - localja.c))
-      {
-        if (i <= 0) {
-          break label119;
+
+    ir(io ioVar, Deflater deflater) {
+        if (ioVar == null) {
+            throw new IllegalArgumentException("source == null");
+        } else if (deflater == null) {
+            throw new IllegalArgumentException("inflater == null");
+        } else {
+            this.f24398a = ioVar;
+            this.f24399b = deflater;
         }
-        localja.c += i;
-        localin.b += i;
-        this.a.p();
-        break;
-      }
-    } while (!this.b.needsInput());
-    if (localja.b == localja.c)
-    {
-      localin.a = localja.a();
-      jb.a(localja);
     }
-  }
-  
-  public final je a()
-  {
-    return this.a.a();
-  }
-  
-  public final void a_(in paramin, long paramLong)
-    throws IOException
-  {
-    jf.a(paramin.b, 0L, paramLong);
-    while (paramLong > 0L)
-    {
-      ja localja = paramin.a;
-      int i = (int)Math.min(paramLong, localja.c - localja.b);
-      this.b.setInput(localja.a, localja.b, i);
-      a(false);
-      paramin.b -= i;
-      localja.b += i;
-      if (localja.b == localja.c)
-      {
-        paramin.a = localja.a();
-        jb.a(localja);
-      }
-      paramLong -= i;
-    }
-  }
-  
-  final void b()
-    throws IOException
-  {
-    this.b.finish();
-    a(false);
-  }
-  
-  public final void close()
-    throws IOException
-  {
-    if (this.c) {}
-    for (;;)
-    {
-      return;
-      Object localObject3 = null;
-      try
-      {
-        b();
-        try
-        {
-          this.b.end();
-          localObject1 = localObject3;
-        }
-        catch (Throwable localThrowable1)
-        {
-          for (;;)
-          {
-            Object localObject1;
-            label34:
-            if (localObject3 != null) {
-              localObject2 = localObject3;
+
+    public final void a_(in inVar, long j) throws IOException {
+        jf.m21314a(inVar.f24392b, 0, j);
+        while (j > 0) {
+            ja jaVar = inVar.f24391a;
+            int min = (int) Math.min(j, (long) (jaVar.f24431c - jaVar.f24430b));
+            this.f24399b.setInput(jaVar.f24429a, jaVar.f24430b, min);
+            m21233a(false);
+            inVar.f24392b -= (long) min;
+            jaVar.f24430b += min;
+            if (jaVar.f24430b == jaVar.f24431c) {
+                inVar.f24391a = jaVar.m21304a();
+                jb.m21308a(jaVar);
             }
-          }
+            j -= (long) min;
         }
-        try
-        {
-          this.a.close();
-          localObject3 = localObject1;
-        }
-        catch (Throwable localThrowable3)
-        {
-          localObject3 = localObject2;
-          if (localObject2 != null) {
-            break label34;
-          }
-          localObject3 = localThrowable3;
-          break label34;
-        }
-        this.c = true;
-        if (localObject3 == null) {
-          continue;
-        }
-        jf.a((Throwable)localObject3);
-        return;
-      }
-      catch (Throwable localThrowable2)
-      {
-        Object localObject2;
-        for (;;) {}
-      }
     }
-  }
-  
-  public final void flush()
-    throws IOException
-  {
-    a(true);
-    this.a.flush();
-  }
-  
-  public final String toString()
-  {
-    return "DeflaterSink(" + this.a + ")";
-  }
+
+    @IgnoreJRERequirement
+    /* renamed from: a */
+    private void m21233a(boolean z) throws IOException {
+        in b = this.f24398a.mo4741b();
+        while (true) {
+            int deflate;
+            ja f = b.m21205f(1);
+            if (z) {
+                deflate = this.f24399b.deflate(f.f24429a, f.f24431c, 2048 - f.f24431c, 2);
+            } else {
+                deflate = this.f24399b.deflate(f.f24429a, f.f24431c, 2048 - f.f24431c);
+            }
+            if (deflate > 0) {
+                f.f24431c += deflate;
+                b.f24392b += (long) deflate;
+                this.f24398a.mo4765p();
+            } else if (this.f24399b.needsInput()) {
+                break;
+            }
+        }
+        if (f.f24430b == f.f24431c) {
+            b.f24391a = f.m21304a();
+            jb.m21308a(f);
+        }
+    }
+
+    public final void flush() throws IOException {
+        m21233a(true);
+        this.f24398a.flush();
+    }
+
+    /* renamed from: b */
+    final void m21235b() throws IOException {
+        this.f24399b.finish();
+        m21233a(false);
+    }
+
+    public final void close() throws IOException {
+        if (!this.f24400c) {
+            Throwable th;
+            Throwable th2 = null;
+            try {
+                m21235b();
+            } catch (Throwable th3) {
+                th2 = th3;
+            }
+            try {
+                this.f24399b.end();
+                th = th2;
+            } catch (Throwable th4) {
+                th = th4;
+                if (th2 != null) {
+                    th = th2;
+                }
+            }
+            try {
+                this.f24398a.close();
+            } catch (Throwable th22) {
+                if (th == null) {
+                    th = th22;
+                }
+            }
+            this.f24400c = true;
+            if (th != null) {
+                jf.m21315a(th);
+            }
+        }
+    }
+
+    /* renamed from: a */
+    public final je mo4733a() {
+        return this.f24398a.mo4733a();
+    }
+
+    public final String toString() {
+        return "DeflaterSink(" + this.f24398a + ")";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ir.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

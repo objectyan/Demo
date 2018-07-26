@@ -1,14 +1,9 @@
 package com.indooratlas.android.sdk._internal;
 
-public abstract interface dc
-{
-  public abstract void a(cx paramcx, dd paramdd);
-  
-  public abstract boolean a();
+public interface dc {
+    /* renamed from: a */
+    void mo4616a(cx cxVar, dd ddVar);
+
+    /* renamed from: a */
+    boolean mo4617a();
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dc.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

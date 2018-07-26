@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navi.view.DragSortListener;
 import com.baidu.navi.view.draglistview.OnDragAdapterListener;
@@ -19,185 +20,148 @@ import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.StringUtils;
 import java.util.Vector;
 
-public class DragSortListAdapter
-  extends ArrayAdapter<RoutePlanNode>
-  implements OnDragAdapterListener
-{
-  private Context mContext;
-  private Vector<RoutePlanNode> mData;
-  private DragSortListener mDragSortListener;
-  private Vector<ViewHolder> mViewHolder = new Vector();
-  private TextWatcher watcher = new TextWatcher()
-  {
-    public void afterTextChanged(Editable paramAnonymousEditable)
-    {
-      int j = DragSortListAdapter.this.mViewHolder.size();
-      int i = 0;
-      while (i < j)
-      {
-        Editable localEditable = ((DragSortListAdapter.ViewHolder)DragSortListAdapter.this.mViewHolder.get(i)).mEdit.getEditableText();
-        if ((localEditable != null) && (localEditable.equals(paramAnonymousEditable))) {
-          ((DragSortListAdapter.ViewHolder)DragSortListAdapter.this.mViewHolder.get(i)).mItem.mName = paramAnonymousEditable.toString();
+public class DragSortListAdapter extends ArrayAdapter<RoutePlanNode> implements OnDragAdapterListener {
+    private Context mContext;
+    private Vector<RoutePlanNode> mData;
+    private DragSortListener mDragSortListener;
+    private Vector<ViewHolder> mViewHolder = new Vector();
+    private TextWatcher watcher = new C36212();
+
+    /* renamed from: com.baidu.navi.adapter.DragSortListAdapter$2 */
+    class C36212 implements TextWatcher {
+        C36212() {
         }
-        i += 1;
-      }
-    }
-    
-    public void beforeTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3) {}
-    
-    public void onTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3) {}
-  };
-  
-  public DragSortListAdapter(Context paramContext, DragSortListener paramDragSortListener, Vector<RoutePlanNode> paramVector)
-  {
-    super(paramContext, 0, paramVector);
-    this.mContext = paramContext;
-    this.mData = paramVector;
-    this.mDragSortListener = paramDragSortListener;
-    if (this.mData.size() == 0) {
-      this.mData.add(new RoutePlanNode());
-    }
-  }
-  
-  private String getRoutePlanNodeName(RoutePlanNode paramRoutePlanNode)
-  {
-    String str = "";
-    if (paramRoutePlanNode == null) {
-      return "";
-    }
-    if (paramRoutePlanNode.isNodeSettedData())
-    {
-      if (paramRoutePlanNode.mFrom != 3) {
-        break label60;
-      }
-      if (!StringUtils.isEmpty(paramRoutePlanNode.mName)) {
-        break label47;
-      }
-      str = this.mContext.getString(2131296903);
-    }
-    for (;;)
-    {
-      return str;
-      label47:
-      str = this.mContext.getString(2131296902);
-      continue;
-      label60:
-      if ((paramRoutePlanNode.mFrom != 1) || (!StringUtils.isEmpty(paramRoutePlanNode.mName))) {
-        break;
-      }
-      str = this.mContext.getString(2131296901);
-    }
-    if (StringUtils.isEmpty(paramRoutePlanNode.mName)) {}
-    for (str = this.mContext.getString(2131296709);; str = paramRoutePlanNode.mName) {
-      break;
-    }
-  }
-  
-  public View getView(final int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    LogUtil.e("RoutePlan", "position:" + paramInt);
-    paramViewGroup = (LayoutInflater)this.mContext.getSystemService("layout_inflater");
-    paramView = new ViewHolder(null);
-    paramViewGroup = paramViewGroup.inflate(2130969001, null);
-    paramView.mSelectView = ((ImageView)paramViewGroup.findViewById(2131624591));
-    paramView.mEdit = ((TextView)paramViewGroup.findViewById(2131624593));
-    paramView.mDragIcon = ((ImageView)paramViewGroup.findViewById(2131624592));
-    paramView.mProgressBar = ((ProgressBar)paramViewGroup.findViewById(2131624594));
-    paramView.mItem = ((RoutePlanNode)getItem(paramInt));
-    this.mViewHolder.add(paramView);
-    paramViewGroup.setTag(paramView);
-    paramViewGroup.setVisibility(0);
-    paramView.mDragIcon.setBackgroundDrawable(StyleManager.getDrawable(2130839403));
-    paramView.mSelectView.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (DragSortListAdapter.this.mDragSortListener != null) {
-          DragSortListAdapter.this.mDragSortListener.onDeleteNode(paramInt);
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
-      }
-    });
-    paramView.mEdit.setTag(Integer.valueOf(paramInt));
-    if (paramInt == 0)
-    {
-      paramView.mEdit.setHint(2131296905);
-      RoutePlanNode localRoutePlanNode = (RoutePlanNode)this.mData.get(0);
-      paramView.mEdit.setText(getRoutePlanNodeName(localRoutePlanNode));
-      if ((paramView.mSelectView != null) && (paramView.mItem != null)) {
-        paramView.mSelectView.setImageDrawable(StyleManager.getDrawable(2130837955));
-      }
-      paramView.mEdit.removeTextChangedListener(this.watcher);
-      paramView.mEdit.setText(getRoutePlanNodeName(paramView.mItem));
-      paramView.mEdit.addTextChangedListener(this.watcher);
-      if ((paramView.mProgressBar != null) && (paramView.mItem != null))
-      {
-        if ((!StringUtils.isEmpty(paramView.mItem.mName)) || (!paramView.mItem.isNodeSettedData())) {
-          break label454;
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
         }
-        paramView.mProgressBar.setVisibility(0);
-      }
-    }
-    for (;;)
-    {
-      paramViewGroup.setBackgroundDrawable(StyleManager.getDrawable(2130838558));
-      return paramViewGroup;
-      if (getCount() < 2) {
-        break;
-      }
-      if (paramInt == getCount() - 1)
-      {
-        if (paramView.mSelectView != null) {
-          paramView.mSelectView.setImageDrawable(StyleManager.getDrawable(2130837954));
+
+        public void afterTextChanged(Editable s) {
+            int size = DragSortListAdapter.this.mViewHolder.size();
+            for (int i = 0; i < size; i++) {
+                Editable editable = ((ViewHolder) DragSortListAdapter.this.mViewHolder.get(i)).mEdit.getEditableText();
+                if (editable != null && editable.equals(s)) {
+                    ((ViewHolder) DragSortListAdapter.this.mViewHolder.get(i)).mItem.mName = s.toString();
+                }
+            }
         }
-        paramView.mEdit.setHint(this.mContext.getString(2131296899));
-        break;
-      }
-      if (paramView.mSelectView != null)
-      {
-        paramView.mSelectView.setImageDrawable(StyleManager.getDrawable(2130837948));
-        paramView.mSelectView.setVisibility(0);
-      }
-      paramView.mEdit.setHint(this.mContext.getString(2131296910) + paramInt);
-      break;
-      label454:
-      paramView.mProgressBar.setVisibility(8);
     }
-  }
-  
-  public void onExchange(int paramInt1, int paramInt2)
-  {
-    RoutePlanNode localRoutePlanNode1 = (RoutePlanNode)getItem(paramInt1);
-    RoutePlanNode localRoutePlanNode2 = (RoutePlanNode)getItem(paramInt2);
-    LogUtil.e("ON", "startPostion ==== " + paramInt1);
-    LogUtil.e("ON", "endPosition ==== " + paramInt2);
-    if (paramInt1 < paramInt2)
-    {
-      this.mData.add(paramInt2 + 1, localRoutePlanNode1);
-      this.mData.remove(paramInt1);
-      this.mData.add(paramInt1, localRoutePlanNode2);
-      this.mData.remove(paramInt2);
-      return;
+
+    private class ViewHolder {
+        public ImageView mDragIcon;
+        public TextView mEdit;
+        public RoutePlanNode mItem;
+        public ProgressBar mProgressBar;
+        public ImageView mSelectView;
+
+        private ViewHolder() {
+        }
     }
-    this.mData.add(paramInt2, localRoutePlanNode1);
-    this.mData.remove(paramInt1 + 1);
-    this.mData.add(paramInt1, localRoutePlanNode2);
-    this.mData.remove(paramInt2 + 1);
-  }
-  
-  private class ViewHolder
-  {
-    public ImageView mDragIcon;
-    public TextView mEdit;
-    public RoutePlanNode mItem;
-    public ProgressBar mProgressBar;
-    public ImageView mSelectView;
-    
-    private ViewHolder() {}
-  }
+
+    public DragSortListAdapter(Context context, DragSortListener l, Vector<RoutePlanNode> list) {
+        super(context, 0, list);
+        this.mContext = context;
+        this.mData = list;
+        this.mDragSortListener = l;
+        if (this.mData.size() == 0) {
+            this.mData.add(new RoutePlanNode());
+        }
+    }
+
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        LogUtil.m15791e("RoutePlan", "position:" + position);
+        LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService("layout_inflater");
+        ViewHolder hold = new ViewHolder();
+        View view = inflater.inflate(C0965R.layout.route_plan_node_item, null);
+        hold.mSelectView = (ImageView) view.findViewById(C0965R.id.ic_input_delete);
+        hold.mEdit = (TextView) view.findViewById(C0965R.id.tv_input);
+        hold.mDragIcon = (ImageView) view.findViewById(C0965R.id.iv_drag);
+        hold.mProgressBar = (ProgressBar) view.findViewById(C0965R.id.progress_anti_geo);
+        hold.mItem = (RoutePlanNode) getItem(position);
+        this.mViewHolder.add(hold);
+        view.setTag(hold);
+        view.setVisibility(0);
+        hold.mDragIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.route_plan_drag_list_icon_selector));
+        hold.mSelectView.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                if (DragSortListAdapter.this.mDragSortListener != null) {
+                    DragSortListAdapter.this.mDragSortListener.onDeleteNode(position);
+                }
+            }
+        });
+        hold.mEdit.setTag(Integer.valueOf(position));
+        if (position == 0) {
+            hold.mEdit.setHint(C0965R.string.route_plan_start_point);
+            hold.mEdit.setText(getRoutePlanNodeName((RoutePlanNode) this.mData.get(0)));
+            if (!(hold.mSelectView == null || hold.mItem == null)) {
+                hold.mSelectView.setImageDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_rp_ic_start));
+            }
+        } else if (getCount() >= 2) {
+            if (position == getCount() - 1) {
+                if (hold.mSelectView != null) {
+                    hold.mSelectView.setImageDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_rp_ic_end));
+                }
+                hold.mEdit.setHint(this.mContext.getString(C0965R.string.route_plan_end_point));
+            } else {
+                if (hold.mSelectView != null) {
+                    hold.mSelectView.setImageDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_rp_ic_delete));
+                    hold.mSelectView.setVisibility(0);
+                }
+                hold.mEdit.setHint(this.mContext.getString(C0965R.string.route_plan_via_point) + position);
+            }
+        }
+        hold.mEdit.removeTextChangedListener(this.watcher);
+        hold.mEdit.setText(getRoutePlanNodeName(hold.mItem));
+        hold.mEdit.addTextChangedListener(this.watcher);
+        if (!(hold.mProgressBar == null || hold.mItem == null)) {
+            if (StringUtils.isEmpty(hold.mItem.mName) && hold.mItem.isNodeSettedData()) {
+                hold.mProgressBar.setVisibility(0);
+            } else {
+                hold.mProgressBar.setVisibility(8);
+            }
+        }
+        view.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.history_list_item_bg_selector));
+        return view;
+    }
+
+    private String getRoutePlanNodeName(RoutePlanNode node) {
+        String reStr = "";
+        if (node == null) {
+            return reStr;
+        }
+        if (node.isNodeSettedData()) {
+            if (node.mFrom == 3) {
+                if (StringUtils.isEmpty(node.mName)) {
+                    reStr = this.mContext.getString(C0965R.string.route_plan_start_my_pos);
+                } else {
+                    reStr = this.mContext.getString(C0965R.string.route_plan_node_my_pos);
+                }
+            } else if (node.mFrom == 1 && StringUtils.isEmpty(node.mName)) {
+                reStr = this.mContext.getString(C0965R.string.route_plan_map_point);
+            } else {
+                reStr = StringUtils.isEmpty(node.mName) ? this.mContext.getString(C0965R.string.navi_unknown_road) : node.mName;
+            }
+        }
+        return reStr;
+    }
+
+    public void onExchange(int startPosition, int endPosition) {
+        RoutePlanNode startObject = (RoutePlanNode) getItem(startPosition);
+        RoutePlanNode endObject = (RoutePlanNode) getItem(endPosition);
+        LogUtil.m15791e("ON", "startPostion ==== " + startPosition);
+        LogUtil.m15791e("ON", "endPosition ==== " + endPosition);
+        if (startPosition < endPosition) {
+            this.mData.add(endPosition + 1, startObject);
+            this.mData.remove(startPosition);
+            this.mData.add(startPosition, endObject);
+            this.mData.remove(endPosition);
+            return;
+        }
+        this.mData.add(endPosition, startObject);
+        this.mData.remove(startPosition + 1);
+        this.mData.add(startPosition, endObject);
+        this.mData.remove(endPosition + 1);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/adapter/DragSortListAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

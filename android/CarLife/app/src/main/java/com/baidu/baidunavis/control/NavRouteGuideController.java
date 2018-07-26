@@ -2,7 +2,6 @@ package com.baidu.baidunavis.control;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +19,10 @@ import com.baidu.baidunavis.model.NavModelHelper;
 import com.baidu.baidunavis.model.NavRoutePlanModel;
 import com.baidu.baidunavis.model.RouteNode;
 import com.baidu.baidunavis.stat.NavUserBehaviour;
+import com.baidu.baidunavis.stat.NavUserBehaviourDef;
+import com.baidu.baidunavis.stat.NavUserBehaviourDef.NavUserBehaviourNaviAction;
+import com.baidu.baidunavis.stat.NavUserBehaviourDef.NavUserBehaviourNaviEnter;
+import com.baidu.baidunavis.stat.NavUserBehaviourDef.NavUserBehaviourNaviNet;
 import com.baidu.baidunavis.ui.BNCruiserFragment;
 import com.baidu.baidunavis.ui.BNRouteGuideFragment;
 import com.baidu.baidunavis.ui.NavFragmentManager;
@@ -27,18 +30,25 @@ import com.baidu.baidunavis.ui.widget.BNLoadingView;
 import com.baidu.baidunavis.ui.widget.NavTipTool;
 import com.baidu.baidunavis.wrapper.LogUtil;
 import com.baidu.baidunavis.wrapper.NaviEngineInitListener;
+import com.baidu.carlife.C0965R;
 import com.baidu.carlife.MainActivity;
-import com.baidu.carlife.core.screen.presentation.h;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.radio.p079c.C2142b;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.routeguide.BNRouteGuider;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.modelfactory.NaviDataEngine;
 import com.baidu.navisdk.model.modelfactory.RoutePlanModel;
 import com.baidu.navisdk.ui.cruise.BCruiser;
+import com.baidu.navisdk.ui.cruise.BCruiserConfig;
+import com.baidu.navisdk.ui.routeguide.BNavConfig;
 import com.baidu.navisdk.ui.routeguide.BNavigator;
-import com.baidu.navisdk.ui.routeguide.BNavigator.NavUserBehaviourCallback;
+import com.baidu.navisdk.ui.routeguide.BNavigator$NavUserBehaviourCallback;
 import com.baidu.navisdk.ui.routeguide.control.RGEngineControl;
 import com.baidu.navisdk.ui.routeguide.control.RGViewController;
 import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
@@ -53,759 +63,643 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.statistic.PerformStatItem;
 import com.baidu.navisdk.util.statistic.PerformStatisticsController;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import com.baidu.navisdk.util.worker.loop.BNMainLooperHandler;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
-import com.baidu.platform.comapi.c;
+import com.baidu.platform.comapi.C2907c;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavRouteGuideController
-{
-  public static final int MSG_PRELOAD_ROUTEGUIDE_VIEW = 1;
-  public static final String TAG = NavRouteGuideController.class.getSimpleName();
-  private static NavRouteGuideController sInstance = null;
-  private Boolean hasSetPreference = Boolean.valueOf(false);
-  private BNavigatorListener mBNavigatorListener = null;
-  private Handler mHandler = new BNMainLooperHandler()
-  {
-    public void onMessage(Message paramAnonymousMessage)
-    {
-      switch (paramAnonymousMessage.what)
-      {
-      default: 
-        return;
-      }
-      RGViewController.getInstance().preloadViews(NavCommonFuncModel.getInstance().getActivity());
-    }
-  };
-  private boolean mIsThirdServer = false;
-  private BNLoadingViewProxy.LoadingProxy mLoadingProxy;
-  private BNLoadingView mLoadingView;
-  private BNavigator.NavUserBehaviourCallback mNavUserBehaviourCallback = new BNavigator.NavUserBehaviourCallback()
-  {
-    public boolean isShouldShowNaviResult()
-    {
-      String str = ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getEndName(NavCommonFuncModel.getInstance().getActivity(), true);
-      int i = NavTrajectoryController.getInstance().endRecord(str, true, 1);
-      UserOPController.getInstance().add("8.2.2", "1", "" + i, null);
-      return i == 0;
-    }
-    
-    public void onCarLogoPageShow()
-    {
-      NavMapAdapter.getInstance().navigateToCarLogoPage();
-    }
-    
-    public boolean onFellowCloseLCS()
-    {
-      LogUtil.e("onFellowCloseLCS", "NavUserBehaviourCallback   onFellowCloseLCS====");
-      return NavLongLinkController.getInstance().CloseLCS();
-    }
-    
-    public boolean onFellowCreateLCS()
-    {
-      LogUtil.e("onFellowCreateLCS", "NavUserBehaviourCallback   onFellowCreateLCS====");
-      return NavLongLinkController.getInstance().createLCS();
-    }
-    
-    public int onFellowGetReqId()
-    {
-      LogUtil.e("onFellowGetReqId", "NavUserBehaviourCallback   onFellowGetReqId====");
-      return NavLongLinkController.getInstance().GetReqId();
-    }
-    
-    public boolean onFellowRegisterLCS()
-    {
-      LogUtil.e("onFellowRegisterLCS", "NavUserBehaviourCallback   onFellowRegisterLCS====");
-      return NavLongLinkController.getInstance().registerLCS();
-    }
-    
-    public Bundle onFellowSendData(int paramAnonymousInt, byte[] paramAnonymousArrayOfByte, String paramAnonymousString1, String paramAnonymousString2)
-    {
-      LogUtil.e("onFellowSendData", "NavUserBehaviourCallback   onFellowSendData====");
-      return NavLongLinkController.getInstance().SendData(paramAnonymousInt, paramAnonymousArrayOfByte, paramAnonymousString1, paramAnonymousString2);
-    }
-    
-    public boolean onFellowUnregisterLCS()
-    {
-      LogUtil.e("onFellowUnregisterLCS", "NavUserBehaviourCallback   onFellowUnregisterLCS====");
-      return NavLongLinkController.getInstance().unRegisterLCS();
-    }
-    
-    public void onRoutePlan()
-    {
-      LogUtil.e("onRoutePlan", "NavUserBehaviourCallback   onRoutePlan====");
-      BaiduNaviManager.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "route_plan", NavRoutePlanModel.getInstance().getmNavEnter());
-    }
-    
-    public void onShowMenu()
-    {
-      LogUtil.e("onShowMenu", "NavUserBehaviourCallback   onShowMenu====");
-      BaiduNaviManager.getInstance().sendNaviStatistics(null, null, "settings", "naving_set");
-    }
-    
-    public void onUgcPageShow(int paramAnonymousInt, String paramAnonymousString)
-    {
-      LogUtil.e("onUgcPageShow", "pageType urlStr " + paramAnonymousInt + " " + paramAnonymousString);
-    }
-    
-    public void onYawing()
-    {
-      LogUtil.e("onYawing", "NavUserBehaviourCallback   onYawing====");
-      BaiduNaviManager.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "yaw", NavRoutePlanModel.getInstance().getmNavEnter());
-    }
-    
-    public void registerLoadingProxy()
-    {
-      NavRouteGuideController.access$002(NavRouteGuideController.this, new BNLoadingViewProxy.LoadingProxy()
-      {
-        public View getLoadingView()
-        {
-          if (NavRouteGuideController.this.mLoadingView == null)
-          {
-            NavRouteGuideController.access$102(NavRouteGuideController.this, new BNLoadingView(NavCommonFuncModel.getInstance().getActivity()));
-            NavRouteGuideController.this.mLoadingView.resetBottomLoadtab(1);
-          }
-          return NavRouteGuideController.this.mLoadingView;
+public class NavRouteGuideController {
+    public static final int MSG_PRELOAD_ROUTEGUIDE_VIEW = 1;
+    public static final String TAG = NavRouteGuideController.class.getSimpleName();
+    private static NavRouteGuideController sInstance = null;
+    private Boolean hasSetPreference = Boolean.valueOf(false);
+    private BNavigatorListener mBNavigatorListener = null;
+    private Handler mHandler = new C08358();
+    private boolean mIsThirdServer = false;
+    private LoadingProxy mLoadingProxy;
+    private BNLoadingView mLoadingView;
+    private BNavigator$NavUserBehaviourCallback mNavUserBehaviourCallback = new C08262();
+    private boolean mNewGuideIsThirdServer = false;
+    private int mRouteGuideLocateMode = 1;
+    private int mRouteGuidePreference = 1;
+    private RoutePlanObserver mRoutePlanObserver = null;
+
+    /* renamed from: com.baidu.baidunavis.control.NavRouteGuideController$1 */
+    class C08231 implements Runnable {
+        C08231() {
         }
-        
-        public void onLoadingEnd(int paramAnonymous2Int, boolean paramAnonymous2Boolean, ViewGroup paramAnonymous2ViewGroup, final BNLoadingViewProxy.ViewActionListener paramAnonymous2ViewActionListener)
-        {
-          if (paramAnonymous2Int == 1) {
-            RGMapModeViewController.getInstance().dismissUgcDetailViewShowProgressDialog();
-          }
-          while ((paramAnonymous2Boolean) || (NavRouteGuideController.this.mLoadingView == null)) {
-            return;
-          }
-          NavRouteGuideController.this.mLoadingView.resetBottomLoadtab(3);
-          NavRouteGuideController.this.mLoadingView.setLoadFailAction("加载失败, ", new View.OnClickListener()
-          {
-            public void onClick(View paramAnonymous3View)
-            {
-              paramAnonymous2ViewActionListener.onAction(1);
+
+        public void run() {
+            try {
+                RGViewController.getInstance().preloadViews(NavCommonFuncModel.getInstance().getActivity());
+            } catch (Throwable e) {
+                LogUtil.m3004e("onRoutePlan", "system.err preloadRouteGuideView err:" + e.getMessage());
             }
-          });
         }
-        
-        public void onLoadingStart(int paramAnonymous2Int, ViewGroup paramAnonymous2ViewGroup)
-        {
-          if (paramAnonymous2Int == 1) {
-            RGMapModeViewController.getInstance().showUgcDetailViewShowProgressDialog();
-          }
-          while (paramAnonymous2ViewGroup == null) {
-            return;
-          }
-          paramAnonymous2ViewGroup.removeAllViews();
-          ViewGroup.LayoutParams localLayoutParams = new ViewGroup.LayoutParams(-1, -1);
-          NavRouteGuideController.access$102(NavRouteGuideController.this, new BNLoadingView(NavCommonFuncModel.getInstance().getActivity()));
-          NavRouteGuideController.this.mLoadingView.resetBottomLoadtab(1);
-          paramAnonymous2ViewGroup.addView(NavRouteGuideController.this.mLoadingView, localLayoutParams);
+    }
+
+    /* renamed from: com.baidu.baidunavis.control.NavRouteGuideController$2 */
+    class C08262 implements BNavigator$NavUserBehaviourCallback {
+
+        /* renamed from: com.baidu.baidunavis.control.NavRouteGuideController$2$1 */
+        class C08251 implements LoadingProxy {
+            C08251() {
+            }
+
+            public void onLoadingStart(int type, ViewGroup container) {
+                if (type == 1) {
+                    RGMapModeViewController.getInstance().showUgcDetailViewShowProgressDialog();
+                } else if (container != null) {
+                    container.removeAllViews();
+                    LayoutParams params = new LayoutParams(-1, -1);
+                    NavRouteGuideController.this.mLoadingView = new BNLoadingView(NavCommonFuncModel.getInstance().getActivity());
+                    NavRouteGuideController.this.mLoadingView.resetBottomLoadtab(1);
+                    container.addView(NavRouteGuideController.this.mLoadingView, params);
+                }
+            }
+
+            public void onLoadingEnd(int type, boolean success, ViewGroup container, final ViewActionListener viewActionListener) {
+                if (type == 1) {
+                    RGMapModeViewController.getInstance().dismissUgcDetailViewShowProgressDialog();
+                } else if (!success && NavRouteGuideController.this.mLoadingView != null) {
+                    NavRouteGuideController.this.mLoadingView.resetBottomLoadtab(3);
+                    NavRouteGuideController.this.mLoadingView.setLoadFailAction("加载失败, ", new OnClickListener() {
+                        public void onClick(View v) {
+                            viewActionListener.onAction(1);
+                        }
+                    });
+                }
+            }
+
+            public View getLoadingView() {
+                if (NavRouteGuideController.this.mLoadingView == null) {
+                    NavRouteGuideController.this.mLoadingView = new BNLoadingView(NavCommonFuncModel.getInstance().getActivity());
+                    NavRouteGuideController.this.mLoadingView.resetBottomLoadtab(1);
+                }
+                return NavRouteGuideController.this.mLoadingView;
+            }
         }
-      });
-      BNRCEventDetailsViewController.getInstance().setLoadingProxy(NavRouteGuideController.this.mLoadingProxy);
-    }
-    
-    public void unRegisterLoadingProxy()
-    {
-      BNRCEventDetailsViewController.getInstance().setLoadingProxy(null);
-      NavRouteGuideController.access$002(NavRouteGuideController.this, null);
-      NavRouteGuideController.access$102(NavRouteGuideController.this, null);
-    }
-  };
-  private boolean mNewGuideIsThirdServer = false;
-  private int mRouteGuideLocateMode = 1;
-  private int mRouteGuidePreference = 1;
-  private RoutePlanObserver mRoutePlanObserver = null;
-  
-  public static NavRouteGuideController getInstance()
-  {
-    if (sInstance == null) {
-      sInstance = new NavRouteGuideController();
-    }
-    return sInstance;
-  }
-  
-  private void startRGActivity(Context paramContext, GeoPoint paramGeoPoint1, String paramString1, GeoPoint paramGeoPoint2, String paramString2, int paramInt, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    Bundle localBundle;
-    if (paramBoolean1)
-    {
-      if (paramBoolean2)
-      {
-        NavRoutePlanModel.getInstance().setmNavEnter("nav_nav");
-        NavUserBehaviour.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "navi", NavRoutePlanModel.getInstance().getStrategyForUserBeh(), "nav_nav");
-      }
-    }
-    else
-    {
-      BNRoutePlaner.getInstance().EnableRoadCondition(true);
-      localBundle = new Bundle();
-      localBundle.putInt("routeguide_view_mode", 0);
-      localBundle.putInt("calroute_done", 0);
-      localBundle.putInt("start_x", paramGeoPoint1.getLongitudeE6());
-      localBundle.putInt("start_y", paramGeoPoint1.getLatitudeE6());
-      localBundle.putInt("end_x", paramGeoPoint2.getLongitudeE6());
-      localBundle.putInt("end_y", paramGeoPoint2.getLatitudeE6());
-      localBundle.putString("start_name", paramString1);
-      localBundle.putString("end_name", paramString2);
-      if (paramBoolean1) {
-        break label214;
-      }
-      localBundle.putInt("locate_mode", 2);
-    }
-    for (;;)
-    {
-      localBundle.putBoolean("net_refresh", true);
-      if (JarUtils.getAsJar()) {
-        break label225;
-      }
-      NavTipTool.onCreateToastDialog(paramContext, 2131296656);
-      return;
-      NavRoutePlanModel.getInstance().setmNavEnter("route_nav");
-      NavUserBehaviour.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "navi", NavRoutePlanModel.getInstance().getStrategyForUserBeh(), "route_nav");
-      break;
-      label214:
-      localBundle.putInt("locate_mode", 1);
-    }
-    try
-    {
-      label225:
-      NavLogUtils.e(TAG, "startRGActivity() ok");
-      NavFragmentManager.getInstance().showNavMapMapPage(BNRouteGuideFragment.class.getName(), localBundle);
-      return;
-    }
-    catch (Exception paramContext)
-    {
-      NavLogUtils.e(TAG, "startRGActivity() error");
-      NavMapAdapter.getInstance().exceptionLog(paramContext);
-    }
-  }
-  
-  public void UnSetNavUserBehaviourCallback()
-  {
-    BNavigator.getInstance().setmNavUserBehaviourCallback(null);
-  }
-  
-  public void backToCruiser(Activity paramActivity)
-  {
-    if (paramActivity == null) {
-      return;
-    }
-    NavMapAdapter.getInstance().purgeMapDataForNavi(paramActivity);
-    if (!JarUtils.getAsJar())
-    {
-      NavTipTool.onCreateToastDialog(paramActivity, 2131296656);
-      return;
-    }
-    BaiduNaviManager.getInstance().showNavPage(BNCruiserFragment.class.getName(), null);
-  }
-  
-  public void dismissWaitProgressDialog()
-  {
-    if (this.mRoutePlanObserver != null) {
-      this.mRoutePlanObserver.dismissWaitProgressDialog();
-    }
-  }
-  
-  public void forceQuitWithoutDialog()
-  {
-    if (BNavigator.getInstance().isNaviBegin())
-    {
-      NavTrajectoryController.getInstance().setEndNaviByOpenApi(true);
-      BNavigator.getInstance().forceQuitWithoutDialog();
-    }
-    while (!BCruiser.getInstance().isRouteCruiseBegin()) {
-      return;
-    }
-    BCruiser.getInstance().quitCruise();
-  }
-  
-  public BNavigatorListener getBNavigatorListener()
-  {
-    return this.mBNavigatorListener;
-  }
-  
-  public int getLocateMode()
-  {
-    return this.mRouteGuideLocateMode;
-  }
-  
-  public boolean isThirdServer()
-  {
-    return this.mIsThirdServer;
-  }
-  
-  public void launchCruiser(Activity paramActivity)
-  {
-    if (paramActivity == null) {
-      return;
-    }
-    if (!NavCommonFuncController.getInstance().hasGPSPermission(paramActivity))
-    {
-      TipTool.onCreateToastDialog(paramActivity, JarUtils.getResources().getString(1711670032));
-      return;
-    }
-    NavUserBehaviour.getInstance().sendBehaviourLog("01001");
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("cruiser_view_mode", 0);
-    NavMapAdapter.getInstance().purgeMapDataForNavi(paramActivity);
-    if (!JarUtils.getAsJar())
-    {
-      NavTipTool.onCreateToastDialog(paramActivity, 2131296656);
-      return;
-    }
-    BaiduNaviManager.getInstance().showNavPage(BNCruiserFragment.class.getName(), localBundle);
-  }
-  
-  public void launchCruiser(Activity paramActivity, Boolean paramBoolean)
-  {
-    if (paramActivity == null) {
-      return;
-    }
-    if (!NavCommonFuncController.getInstance().hasGPSPermission(paramActivity))
-    {
-      TipTool.onCreateToastDialog(paramActivity, JarUtils.getResources().getString(1711670032));
-      return;
-    }
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("cruiser_view_mode", 0);
-    NavMapAdapter.getInstance().purgeMapDataForNavi(paramActivity);
-    if (!JarUtils.getAsJar())
-    {
-      NavTipTool.onCreateToastDialog(paramActivity, 2131296656);
-      return;
-    }
-    if (paramBoolean.booleanValue())
-    {
-      paramBoolean = NavUserBehaviour.getInstance();
-      if (NavMapAdapter.getInstance().hasCurMapLocationCityOfflineData()) {}
-      for (paramActivity = "offline";; paramActivity = "online")
-      {
-        paramBoolean.sendNaviStatistics(null, null, "edog", paramActivity, "nav_edog");
-        MainActivity.a(new BNCruiserFragment(), localBundle);
-        return;
-      }
-    }
-    paramBoolean = NavUserBehaviour.getInstance();
-    if (NavMapAdapter.getInstance().hasCurMapLocationCityOfflineData()) {}
-    for (paramActivity = "offline";; paramActivity = "online")
-    {
-      paramBoolean.sendNaviStatistics(null, null, "edog", paramActivity, "map_edog");
-      break;
-    }
-  }
-  
-  @Deprecated
-  public void launchNavigator(Activity paramActivity, NavGeoPoint paramNavGeoPoint1, String paramString1, NavGeoPoint paramNavGeoPoint2, String paramString2, int paramInt1, boolean paramBoolean, int paramInt2)
-  {
-    launchNavigator(paramActivity, paramNavGeoPoint1, paramString1, paramNavGeoPoint2, paramString2, paramInt1, paramBoolean, paramInt2, false);
-  }
-  
-  @Deprecated
-  public void launchNavigator(final Activity paramActivity, final NavGeoPoint paramNavGeoPoint1, final String paramString1, final NavGeoPoint paramNavGeoPoint2, final String paramString2, final int paramInt1, final boolean paramBoolean1, int paramInt2, final boolean paramBoolean2)
-  {
-    NavLogUtils.e(TAG, "launchNavigator2() ");
-    if (paramActivity == null) {
-      return;
-    }
-    if (!NavCommonFuncController.getInstance().hasGPSPermission(paramActivity))
-    {
-      TipTool.onCreateToastDialog(paramActivity, JarUtils.getResources().getString(1711670031));
-      return;
-    }
-    NavRoutePlanModel.getInstance().setStartRouteNode(NavMapAdapter.getInstance().getRouteNode(paramNavGeoPoint1, paramString1, null));
-    NavRoutePlanModel.getInstance().setEndRouteNode(NavMapAdapter.getInstance().getRouteNode(paramNavGeoPoint2, paramString2, null));
-    NavRoutePlanModel.getInstance().setPreference(paramInt1);
-    NavRoutePlanModel.getInstance().setStrategy(paramInt2);
-    ArrayList localArrayList = new ArrayList();
-    Object localObject = new RoutePlanNode();
-    ((RoutePlanNode)localObject).setGeoPoint(NavModelHelper.convertNavGeoPoint(paramNavGeoPoint1));
-    ((RoutePlanNode)localObject).setName(paramString1);
-    localArrayList.add(localObject);
-    localObject = new RoutePlanNode();
-    ((RoutePlanNode)localObject).setGeoPoint(NavModelHelper.convertNavGeoPoint(paramNavGeoPoint2));
-    if ((!TextUtils.isEmpty(paramString2)) && (!"地图上的点".equals(paramString2))) {
-      ((RoutePlanNode)localObject).setName(paramString2);
-    }
-    localArrayList.add(localObject);
-    this.mRoutePlanObserver = null;
-    this.mRoutePlanObserver = new RoutePlanObserver(paramActivity, new RoutePlanObserver.IJumpToDownloadListener()
-    {
-      public void onJumpToDownloadOfflineData()
-      {
-        BaiduNaviManager.getInstance().launchDownloadActivity(NavMapAdapter.getInstance().getContext(), null);
-      }
-    });
-    BNRoutePlaner.getInstance().setObserver(this.mRoutePlanObserver);
-    localObject = NavMapAdapter.getInstance().getCarRoutePlanMrsl();
-    paramActivity = new BNMainLooperHandler()
-    {
-      public void onMessage(Message paramAnonymousMessage)
-      {
-        switch (paramAnonymousMessage.what)
-        {
-        case 5: 
-        case 6: 
-        default: 
-          return;
-        case 4: 
-          NavMapAdapter.getInstance().purgeMapDataForNavi(paramActivity);
-          NavRouteGuideController.this.startRGActivity(paramActivity.getApplicationContext(), NavModelHelper.convertNavGeoPoint(paramNavGeoPoint1), paramString1, NavModelHelper.convertNavGeoPoint(paramNavGeoPoint2), paramString2, paramInt1, paramBoolean1, paramBoolean2);
-          BNRoutePlaner.getInstance().removeRouteResultHandler(this);
-          return;
+
+        C08262() {
         }
-        BNRoutePlaner.getInstance().removeRouteResultHandler(this);
-      }
-    };
-    BNRoutePlaner.getInstance().addRouteResultHandler(paramActivity);
-    int i;
-    if (NavMapAdapter.getInstance().isGpsEnabled()) {
-      if (NavMapAdapter.getInstance().isGPSLocationValid()) {
-        i = 1;
-      }
-    }
-    for (;;)
-    {
-      BNRoutePlaner.getInstance().triggerGPSStatus(i);
-      NavLogUtils.e(TAG, "launchNavigator2() mrsl=" + (String)localObject + ", nRPPolicy=" + paramInt1 + ", strategy=" + paramInt2);
-      switch (paramInt2)
-      {
-      default: 
-        BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, -1, true, (String)localObject, 0);
-        return;
-        i = 2;
-        continue;
-        i = 0;
-      }
-    }
-    BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, 3, true, (String)localObject, 0);
-    return;
-    BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, -1, true, (String)localObject, 0);
-  }
-  
-  @Deprecated
-  public void launchNavigator(Activity paramActivity, RouteNode paramRouteNode1, RouteNode paramRouteNode2, List<RouteNode> paramList, int paramInt1, boolean paramBoolean, int paramInt2)
-  {
-    launchNavigator(paramActivity, paramRouteNode1, paramRouteNode2, paramList, paramInt1, paramBoolean, paramInt2, false);
-  }
-  
-  @Deprecated
-  public void launchNavigator(final Activity paramActivity, final RouteNode paramRouteNode1, final RouteNode paramRouteNode2, List<RouteNode> paramList, final int paramInt1, final boolean paramBoolean1, int paramInt2, final boolean paramBoolean2)
-  {
-    NavLogUtils.e(TAG, "launchNavigator4()  nRPPolicy=" + paramInt1 + ", strategy=" + paramInt2 + ", cuid=" + CommonParam.getCUID(paramActivity));
-    if (paramActivity == null) {
-      return;
-    }
-    if (!NavCommonFuncController.getInstance().hasGPSPermission(paramActivity))
-    {
-      TipTool.onCreateToastDialog(paramActivity, JarUtils.getResources().getString(1711670031));
-      return;
-    }
-    NavRoutePlanModel.getInstance().setStartRouteNode(paramRouteNode1);
-    NavRoutePlanModel.getInstance().setEndRouteNode(paramRouteNode2);
-    NavRoutePlanModel.getInstance().setPreference(paramInt1);
-    NavRoutePlanModel.getInstance().setStrategy(paramInt2);
-    ArrayList localArrayList = new ArrayList();
-    Object localObject = new RoutePlanNode();
-    ((RoutePlanNode)localObject).setGeoPoint(NavModelHelper.convertNavGeoPoint(paramRouteNode1.mGeoPoint));
-    ((RoutePlanNode)localObject).setName(paramRouteNode1.mName);
-    ((RoutePlanNode)localObject).setUID(paramRouteNode1.mUID);
-    localArrayList.add(localObject);
-    int i;
-    if ((paramList != null) && (paramList.size() > 0))
-    {
-      i = 0;
-      while (i < paramList.size())
-      {
-        localObject = (RouteNode)paramList.get(i);
-        if (localObject != null)
-        {
-          RoutePlanNode localRoutePlanNode = new RoutePlanNode();
-          localRoutePlanNode.setGeoPoint(NavModelHelper.convertNavGeoPoint(((RouteNode)localObject).mGeoPoint));
-          localRoutePlanNode.setName(((RouteNode)localObject).mName);
-          localRoutePlanNode.setUID(((RouteNode)localObject).mUID);
-          localArrayList.add(localRoutePlanNode);
+
+        public void onRoutePlan() {
+            LogUtil.m3004e("onRoutePlan", "NavUserBehaviourCallback   onRoutePlan====");
+            BaiduNaviManager.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), NavUserBehaviourNaviAction.BEHAVIOUR_NAVI_ACTION_RPLAN, NavRoutePlanModel.getInstance().getmNavEnter());
         }
-        i += 1;
-      }
-    }
-    paramList = new RoutePlanNode();
-    paramList.setGeoPoint(NavModelHelper.convertNavGeoPoint(paramRouteNode2.mGeoPoint));
-    if ((!TextUtils.isEmpty(paramRouteNode2.mName)) && (!"地图上的点".equals(paramRouteNode2.mName))) {
-      paramList.setName(paramRouteNode2.mName);
-    }
-    paramList.setUID(paramRouteNode2.mUID);
-    localArrayList.add(paramList);
-    this.mRoutePlanObserver = null;
-    this.mRoutePlanObserver = new RoutePlanObserver(paramActivity, new RoutePlanObserver.IJumpToDownloadListener()
-    {
-      public void onJumpToDownloadOfflineData()
-      {
-        BaiduNaviManager.getInstance().launchDownloadActivity(NavMapAdapter.getInstance().getContext(), null);
-      }
-    });
-    BNRoutePlaner.getInstance().setObserver(this.mRoutePlanObserver);
-    paramList = NavMapAdapter.getInstance().getCarRoutePlanMrsl();
-    paramActivity = new BNMainLooperHandler()
-    {
-      public void onMessage(Message paramAnonymousMessage)
-      {
-        switch (paramAnonymousMessage.what)
-        {
-        case 5: 
-        case 6: 
-        default: 
-          return;
-        case 4: 
-          NavMapAdapter.getInstance().purgeMapDataForNavi(paramActivity);
-          BNRoutePlaner.getInstance().selectRoute(0);
-          NavRouteGuideController.this.startRGActivity(paramActivity.getApplicationContext(), NavModelHelper.convertNavGeoPoint(paramRouteNode1.mGeoPoint), paramRouteNode1.mName, NavModelHelper.convertNavGeoPoint(paramRouteNode2.mGeoPoint), paramRouteNode2.mName, paramInt1, paramBoolean1, paramBoolean2);
-          BNRoutePlaner.getInstance().removeRouteResultHandler(this);
-          return;
+
+        public void onYawing() {
+            LogUtil.m3004e("onYawing", "NavUserBehaviourCallback   onYawing====");
+            BaiduNaviManager.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), NavUserBehaviourNaviAction.BEHAVIOUR_NAVI_ACTION_YAW, NavRoutePlanModel.getInstance().getmNavEnter());
         }
-        BNRoutePlaner.getInstance().removeRouteResultHandler(this);
-      }
-    };
-    BNRoutePlaner.getInstance().addRouteResultHandler(paramActivity);
-    if (NavMapAdapter.getInstance().isGpsEnabled()) {
-      if (NavMapAdapter.getInstance().isGPSLocationValid()) {
-        i = 1;
-      }
-    }
-    for (;;)
-    {
-      BNRoutePlaner.getInstance().triggerGPSStatus(i);
-      NavLogUtils.e(TAG, "launchNavigator4() mRouteGuidePreference= " + this.mRouteGuidePreference + " hasSetPreference " + this.hasSetPreference);
-      if (this.hasSetPreference.booleanValue())
-      {
-        this.hasSetPreference = Boolean.valueOf(false);
-        BNRoutePlaner.getInstance().setCalcPrference(this.mRouteGuidePreference);
-      }
-      NavLogUtils.e(TAG, "launchNavigator4() mrsl=" + paramList + ", nRPPolicy=" + paramInt1 + ", strategy=" + paramInt2);
-      switch (paramInt2)
-      {
-      default: 
-        BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, -1, true, paramList, 0);
-        return;
-        i = 2;
-        continue;
-        i = 0;
-      }
-    }
-    BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, 3, true, paramList, 0);
-    return;
-    BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, -1, true, paramList, 0);
-  }
-  
-  public boolean newGuideIsThirdServer()
-  {
-    return this.mNewGuideIsThirdServer;
-  }
-  
-  public void onPageJump(int paramInt, Object paramObject)
-  {
-    if (this.mBNavigatorListener != null) {
-      this.mBNavigatorListener.onPageJump(paramInt, paramObject);
-    }
-  }
-  
-  public void preloadRouteGuideView()
-  {
-    CommonHandlerThread.getInstance().getHandler().post(new Runnable()
-    {
-      public void run()
-      {
-        try
-        {
-          RGViewController.getInstance().preloadViews(NavCommonFuncModel.getInstance().getActivity());
-          return;
+
+        public void onShowMenu() {
+            LogUtil.m3004e("onShowMenu", "NavUserBehaviourCallback   onShowMenu====");
+            BaiduNaviManager.getInstance().sendNaviStatistics(null, null, NavUserBehaviourNaviAction.BEHAVIOUR_NAVI_ACTION_SET, NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_NAVING_SET);
         }
-        catch (Throwable localThrowable)
-        {
-          LogUtil.e("onRoutePlan", "system.err preloadRouteGuideView err:" + localThrowable.getMessage());
+
+        public boolean onFellowCreateLCS() {
+            LogUtil.m3004e("onFellowCreateLCS", "NavUserBehaviourCallback   onFellowCreateLCS====");
+            return NavLongLinkController.getInstance().createLCS();
         }
-      }
-    });
-  }
-  
-  public void releasePreloadRouteGuideView()
-  {
-    RGMapModeViewController.getInstance().releasePreloadSubViews();
-  }
-  
-  public boolean resetEndNodeInNavi(RouteNode paramRouteNode)
-  {
-    return RGEngineControl.getInstance().setEndPtToCalcRoute(NavModelHelper.convertNavGeoPoint(paramRouteNode.mGeoPoint));
-  }
-  
-  public void runMonkey()
-  {
-    if (!NavMapAdapter.sMonkey) {}
-    do
-    {
-      do
-      {
-        return;
-      } while (!BaiduNaviManager.isNaviSoLoadSuccess());
-      localActivity = NavCommonFuncModel.getInstance().getActivity();
-      if (BaiduNaviManager.sIsBaseEngineInitialized) {
-        break;
-      }
-    } while (localActivity == null);
-    BaiduNaviManager.getInstance().initBaseEngine(localActivity, new NaviEngineInitListener()
-    {
-      public void engineInitFail()
-      {
-        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("InitBEFail-" + getClass().getSimpleName(), null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            NavMapAdapter.getInstance().showMToast(c.f(), 2131296656);
-            NavMapAdapter.getInstance().dismissMProgressDialog();
-            return null;
-          }
-        }, new BNWorkerConfig(100, 0));
-      }
-      
-      public void engineInitStart()
-      {
-        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("InitBEStart-" + getClass().getSimpleName(), null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            return null;
-          }
-        }, new BNWorkerConfig(100, 0));
-      }
-      
-      public void engineInitSuccess()
-      {
-        LogUtil.e("SDKHelper", "engineInitSuccess");
-        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("InitBESuc-" + getClass().getSimpleName(), null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            NavMapAdapter.getInstance().dismissMProgressDialog();
-            Activity localActivity = BNaviModuleManager.getActivity();
-            BaiduNaviManager.getInstance().launchNavigator(localActivity, new NavGeoPoint(11394118, 2254282), "我的位置", new NavGeoPoint(11396185, 2256679), "地图上的点", 1, true, 2);
-            return null;
-          }
-        }, new BNWorkerConfig(100, 0));
-      }
-    });
-    return;
-    Activity localActivity = BNaviModuleManager.getActivity();
-    BaiduNaviManager.getInstance().launchNavigator(localActivity, new NavGeoPoint(11394118, 2254282), "我的位置", new NavGeoPoint(11396185, 2256679), "地图上的点", 1, true, 2);
-  }
-  
-  public void setBNavigatorListener(BNavigatorListener paramBNavigatorListener)
-  {
-    this.mBNavigatorListener = paramBNavigatorListener;
-    if (paramBNavigatorListener != null) {
-      setIsThirdServer(true);
+
+        public boolean onFellowCloseLCS() {
+            LogUtil.m3004e("onFellowCloseLCS", "NavUserBehaviourCallback   onFellowCloseLCS====");
+            return NavLongLinkController.getInstance().CloseLCS();
+        }
+
+        public Bundle onFellowSendData(int reqId, byte[] data, String queryStr, String fileName) {
+            LogUtil.m3004e("onFellowSendData", "NavUserBehaviourCallback   onFellowSendData====");
+            return NavLongLinkController.getInstance().SendData(reqId, data, queryStr, fileName);
+        }
+
+        public boolean onFellowRegisterLCS() {
+            LogUtil.m3004e("onFellowRegisterLCS", "NavUserBehaviourCallback   onFellowRegisterLCS====");
+            return NavLongLinkController.getInstance().registerLCS();
+        }
+
+        public boolean onFellowUnregisterLCS() {
+            LogUtil.m3004e("onFellowUnregisterLCS", "NavUserBehaviourCallback   onFellowUnregisterLCS====");
+            return NavLongLinkController.getInstance().unRegisterLCS();
+        }
+
+        public int onFellowGetReqId() {
+            LogUtil.m3004e("onFellowGetReqId", "NavUserBehaviourCallback   onFellowGetReqId====");
+            return NavLongLinkController.getInstance().GetReqId();
+        }
+
+        public void onUgcPageShow(int pageType, String urlStr) {
+            LogUtil.m3004e("onUgcPageShow", "pageType urlStr " + pageType + " " + urlStr);
+        }
+
+        public void onCarLogoPageShow() {
+            NavMapAdapter.getInstance().navigateToCarLogoPage();
+        }
+
+        public boolean isShouldShowNaviResult() {
+            int ret = NavTrajectoryController.getInstance().endRecord(((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getEndName(NavCommonFuncModel.getInstance().getActivity(), true), true, 1);
+            UserOPController.getInstance().add(UserOPParams.RECORD_END_8_2_2, "1", "" + ret, null);
+            if (ret == 0) {
+                return true;
+            }
+            return false;
+        }
+
+        public void registerLoadingProxy() {
+            NavRouteGuideController.this.mLoadingProxy = new C08251();
+            BNRCEventDetailsViewController.getInstance().setLoadingProxy(NavRouteGuideController.this.mLoadingProxy);
+        }
+
+        public void unRegisterLoadingProxy() {
+            BNRCEventDetailsViewController.getInstance().setLoadingProxy(null);
+            NavRouteGuideController.this.mLoadingProxy = null;
+            NavRouteGuideController.this.mLoadingView = null;
+        }
     }
-  }
-  
-  public void setCalcPrference(int paramInt)
-  {
-    this.hasSetPreference = Boolean.valueOf(true);
-    this.mRouteGuidePreference = paramInt;
-  }
-  
-  public void setIsThirdServer(boolean paramBoolean)
-  {
-    this.mIsThirdServer = paramBoolean;
-  }
-  
-  public void setLocateMode(int paramInt)
-  {
-    this.mRouteGuideLocateMode = paramInt;
-  }
-  
-  public void setNavUserBehaviourCallback()
-  {
-    BNavigator.getInstance().setmNavUserBehaviourCallback(this.mNavUserBehaviourCallback);
-  }
-  
-  public void setNewGuideIsThirdServer(boolean paramBoolean)
-  {
-    this.mNewGuideIsThirdServer = paramBoolean;
-  }
-  
-  public boolean setUserChooseRouteBit(int paramInt)
-  {
-    return BNRouteGuider.getInstance().setUserChooseRouteBit(paramInt);
-  }
-  
-  public void setVoiceModeInNavi(int paramInt)
-  {
-    BNSettingManager.setVoiceMode(paramInt);
-    BNRouteGuider.getInstance().setVoiceMode(paramInt);
-    if (2 == paramInt)
-    {
-      BNRouteGuider.getInstance().setElecCameraSpeak(false);
-      BNRouteGuider.getInstance().setSpeedCameraSpeak(false);
-      BNRouteGuider.getInstance().setSaftyDriveSpeak(false);
-      BNRouteGuider.getInstance().setRoadConditionSpeak(false);
-      BNRouteGuider.getInstance().setStraightDirectSpeak(false);
+
+    /* renamed from: com.baidu.baidunavis.control.NavRouteGuideController$3 */
+    class C08273 implements IJumpToDownloadListener {
+        C08273() {
+        }
+
+        public void onJumpToDownloadOfflineData() {
+            BaiduNaviManager.getInstance().launchDownloadActivity(NavMapAdapter.getInstance().getContext(), null);
+        }
     }
-    for (;;)
-    {
-      if (BNavigator.getInstance().isNaviBegin()) {
-        BNavigator.getInstance().onVoiceCommand(2, 33, 0, null, false);
-      }
-      return;
-      BNRouteGuider.getInstance().setElecCameraSpeak(BNSettingManager.isElecCameraSpeakEnable());
-      BNRouteGuider.getInstance().setSpeedCameraSpeak(BNSettingManager.isSpeedCameraSpeakEnable());
-      BNRouteGuider.getInstance().setSaftyDriveSpeak(BNSettingManager.isSaftyDriveSpeakEnable());
-      BNRouteGuider.getInstance().setRoadConditionSpeak(BNSettingManager.isRoadConditionSpeakEnable());
-      BNRouteGuider.getInstance().setStraightDirectSpeak(BNSettingManager.isStraightDirectSpeakEnable());
+
+    /* renamed from: com.baidu.baidunavis.control.NavRouteGuideController$5 */
+    class C08295 implements IJumpToDownloadListener {
+        C08295() {
+        }
+
+        public void onJumpToDownloadOfflineData() {
+            BaiduNaviManager.getInstance().launchDownloadActivity(NavMapAdapter.getInstance().getContext(), null);
+        }
     }
-  }
-  
-  public boolean startRouteGuideView(boolean paramBoolean, Bundle paramBundle)
-  {
-    Activity localActivity = NavCommonFuncModel.getInstance().getActivity();
-    if ((!paramBoolean) && (localActivity != null)) {
-      NavMapAdapter.getInstance().purgeMapDataForNavi(localActivity);
+
+    /* renamed from: com.baidu.baidunavis.control.NavRouteGuideController$7 */
+    class C08347 implements NaviEngineInitListener {
+        C08347() {
+        }
+
+        public void engineInitSuccess() {
+            LogUtil.m3004e("SDKHelper", "engineInitSuccess");
+            BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("InitBESuc-" + getClass().getSimpleName(), null) {
+                protected String execute() {
+                    NavMapAdapter.getInstance().dismissMProgressDialog();
+                    BaiduNaviManager.getInstance().launchNavigator(BNaviModuleManager.getActivity(), new NavGeoPoint(11394118, 2254282), RoutePlanParams.MY_LOCATION, new NavGeoPoint(11396185, 2256679), "地图上的点", 1, true, 2);
+                    return null;
+                }
+            }, new BNWorkerConfig(100, 0));
+        }
+
+        public void engineInitStart() {
+            BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("InitBEStart-" + getClass().getSimpleName(), null) {
+                protected String execute() {
+                    return null;
+                }
+            }, new BNWorkerConfig(100, 0));
+        }
+
+        public void engineInitFail() {
+            BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("InitBEFail-" + getClass().getSimpleName(), null) {
+                protected String execute() {
+                    NavMapAdapter.getInstance().showMToast(C2907c.m10977f(), (int) C0965R.string.nav_can_not_use);
+                    NavMapAdapter.getInstance().dismissMProgressDialog();
+                    return null;
+                }
+            }, new BNWorkerConfig(100, 0));
+        }
     }
-    if ((localActivity != null) && (!BaiduNaviManager.getInstance().hasGPSPermission(localActivity)))
-    {
-      TipTool.onCreateToastDialog(localActivity, JarUtils.getResources().getString(1711670031));
-      return false;
+
+    /* renamed from: com.baidu.baidunavis.control.NavRouteGuideController$8 */
+    class C08358 extends BNMainLooperHandler {
+        C08358() {
+        }
+
+        public void onMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    RGViewController.getInstance().preloadViews(NavCommonFuncModel.getInstance().getActivity());
+                    return;
+                default:
+                    return;
+            }
+        }
     }
-    try
-    {
-      if (PerformStatItem.sUserTest)
-      {
-        PerformStatisticsController.peByType(0, "ad_start_show_routeguide", System.currentTimeMillis());
-        PerformStatItem.sPoiToNaviTime10 = System.currentTimeMillis();
-        PerformStatisticsController.getInstance().addTimeLogForPoiGoToNavi("10", "发起跳转导航界面v2", "NaviSDK", PerformStatItem.sPoiToNaviTime9, PerformStatItem.sPoiToNaviTime10);
-        PerformStatItem.sRoutePageToNaviTime4 = System.currentTimeMillis();
-        PerformStatisticsController.getInstance().addTimeLogForRoutePageGoToNavi("4", "创建导航页面UI前的操作", "NaviSDK", PerformStatItem.sRoutePageToNaviTime3, PerformStatItem.sRoutePageToNaviTime4);
-      }
-      h.a().showFragment(113, paramBundle);
-      return true;
+
+    public interface BNavigatorListener {
+        void onPageJump(int i, Object obj);
     }
-    catch (Exception paramBundle)
-    {
-      NavMapAdapter.getInstance().exceptionLog(paramBundle);
+
+    private NavRouteGuideController() {
     }
-    return false;
-  }
-  
-  public static abstract interface BNavigatorListener
-  {
-    public abstract void onPageJump(int paramInt, Object paramObject);
-  }
+
+    public static NavRouteGuideController getInstance() {
+        if (sInstance == null) {
+            sInstance = new NavRouteGuideController();
+        }
+        return sInstance;
+    }
+
+    public void setNavUserBehaviourCallback() {
+        BNavigator.getInstance().setmNavUserBehaviourCallback(this.mNavUserBehaviourCallback);
+    }
+
+    public void UnSetNavUserBehaviourCallback() {
+        BNavigator.getInstance().setmNavUserBehaviourCallback(null);
+    }
+
+    public void setLocateMode(int locateMode) {
+        this.mRouteGuideLocateMode = locateMode;
+    }
+
+    public int getLocateMode() {
+        return this.mRouteGuideLocateMode;
+    }
+
+    public void preloadRouteGuideView() {
+        CommonHandlerThread.getInstance().getHandler().post(new C08231());
+    }
+
+    public void releasePreloadRouteGuideView() {
+        RGMapModeViewController.getInstance().releasePreloadSubViews();
+    }
+
+    public boolean startRouteGuideView(boolean isFromNavActivity, Bundle bundle) {
+        Activity activity = NavCommonFuncModel.getInstance().getActivity();
+        if (!(isFromNavActivity || activity == null)) {
+            NavMapAdapter.getInstance().purgeMapDataForNavi(activity);
+        }
+        if (activity == null || BaiduNaviManager.getInstance().hasGPSPermission(activity)) {
+            try {
+                if (PerformStatItem.sUserTest) {
+                    PerformStatisticsController.peByType(0, "ad_start_show_routeguide", System.currentTimeMillis());
+                    PerformStatItem.sPoiToNaviTime10 = System.currentTimeMillis();
+                    PerformStatisticsController.getInstance().addTimeLogForPoiGoToNavi(C2142b.f6818b, PerformStatItem.PoiToNaviStep10, PerformStatItem.NAVI_MODULE_NAME, PerformStatItem.sPoiToNaviTime9, PerformStatItem.sPoiToNaviTime10);
+                    PerformStatItem.sRoutePageToNaviTime4 = System.currentTimeMillis();
+                    PerformStatisticsController.getInstance().addTimeLogForRoutePageGoToNavi("4", "创建导航页面UI前的操作", PerformStatItem.NAVI_MODULE_NAME, PerformStatItem.sRoutePageToNaviTime3, PerformStatItem.sRoutePageToNaviTime4);
+                }
+                C1328h.m4757a().showFragment(113, bundle);
+                return true;
+            } catch (Exception e) {
+                NavMapAdapter.getInstance().exceptionLog(e);
+                return false;
+            }
+        }
+        TipTool.onCreateToastDialog(activity, JarUtils.getResources().getString(C4048R.string.nsdk_string_gps_permission_disabled));
+        return false;
+    }
+
+    @Deprecated
+    public void launchNavigator(Activity activity, NavGeoPoint startNode, String startName, NavGeoPoint endNode, String endName, int nRPPolicy, boolean isGPSNav, int strategy) {
+        launchNavigator(activity, startNode, startName, endNode, endName, nRPPolicy, isGPSNav, strategy, false);
+    }
+
+    @Deprecated
+    public void launchNavigator(Activity activity, NavGeoPoint startNode, String startName, NavGeoPoint endNode, String endName, int nRPPolicy, boolean isGPSNav, int strategy, boolean isRedirector) {
+        NavLogUtils.m3003e(TAG, "launchNavigator2() ");
+        if (activity != null) {
+            if (NavCommonFuncController.getInstance().hasGPSPermission(activity)) {
+                NavRoutePlanModel.getInstance().setStartRouteNode(NavMapAdapter.getInstance().getRouteNode(startNode, startName, null));
+                NavRoutePlanModel.getInstance().setEndRouteNode(NavMapAdapter.getInstance().getRouteNode(endNode, endName, null));
+                NavRoutePlanModel.getInstance().setPreference(nRPPolicy);
+                NavRoutePlanModel.getInstance().setStrategy(strategy);
+                ArrayList<RoutePlanNode> rpNodeLists = new ArrayList();
+                RoutePlanNode startRPNode = new RoutePlanNode();
+                startRPNode.setGeoPoint(NavModelHelper.convertNavGeoPoint(startNode));
+                startRPNode.setName(startName);
+                rpNodeLists.add(startRPNode);
+                RoutePlanNode endRPNode = new RoutePlanNode();
+                endRPNode.setGeoPoint(NavModelHelper.convertNavGeoPoint(endNode));
+                if (!(TextUtils.isEmpty(endName) || "地图上的点".equals(endName))) {
+                    endRPNode.setName(endName);
+                }
+                rpNodeLists.add(endRPNode);
+                this.mRoutePlanObserver = null;
+                this.mRoutePlanObserver = new RoutePlanObserver(activity, new C08273());
+                BNRoutePlaner.getInstance().setObserver(this.mRoutePlanObserver);
+                String mrsl = NavMapAdapter.getInstance().getCarRoutePlanMrsl();
+                final Activity activity2 = activity;
+                final NavGeoPoint navGeoPoint = startNode;
+                final String str = startName;
+                final NavGeoPoint navGeoPoint2 = endNode;
+                final String str2 = endName;
+                final int i = nRPPolicy;
+                final boolean z = isGPSNav;
+                final boolean z2 = isRedirector;
+                BNRoutePlaner.getInstance().addRouteResultHandler(new BNMainLooperHandler() {
+                    public void onMessage(Message msg) {
+                        switch (msg.what) {
+                            case 4:
+                                NavMapAdapter.getInstance().purgeMapDataForNavi(activity2);
+                                NavRouteGuideController.this.startRGActivity(activity2.getApplicationContext(), NavModelHelper.convertNavGeoPoint(navGeoPoint), str, NavModelHelper.convertNavGeoPoint(navGeoPoint2), str2, i, z, z2);
+                                BNRoutePlaner.getInstance().removeRouteResultHandler(this);
+                                return;
+                            case 7:
+                                BNRoutePlaner.getInstance().removeRouteResultHandler(this);
+                                return;
+                            default:
+                                return;
+                        }
+                    }
+                });
+                int gpsState = NavMapAdapter.getInstance().isGpsEnabled() ? NavMapAdapter.getInstance().isGPSLocationValid() ? 1 : 2 : 0;
+                BNRoutePlaner.getInstance().triggerGPSStatus(gpsState);
+                NavLogUtils.m3003e(TAG, "launchNavigator2() mrsl=" + mrsl + ", nRPPolicy=" + nRPPolicy + ", strategy=" + strategy);
+                switch (strategy) {
+                    case 1:
+                        BNRoutePlaner.getInstance().setPointsToCalcRoute(rpNodeLists, 3, true, mrsl, 0);
+                        return;
+                    case 2:
+                        BNRoutePlaner.getInstance().setPointsToCalcRoute(rpNodeLists, -1, true, mrsl, 0);
+                        return;
+                    default:
+                        BNRoutePlaner.getInstance().setPointsToCalcRoute(rpNodeLists, -1, true, mrsl, 0);
+                        return;
+                }
+            }
+            TipTool.onCreateToastDialog(activity, JarUtils.getResources().getString(C4048R.string.nsdk_string_gps_permission_disabled));
+        }
+    }
+
+    @Deprecated
+    public void launchNavigator(Activity activity, RouteNode startNode, RouteNode endNode, List<RouteNode> viaNodes, int nRPPolicy, boolean isGPSNav, int strategy) {
+        launchNavigator(activity, startNode, endNode, (List) viaNodes, nRPPolicy, isGPSNav, strategy, false);
+    }
+
+    @Deprecated
+    public void launchNavigator(Activity activity, RouteNode startNode, RouteNode endNode, List<RouteNode> viaNodes, int nRPPolicy, boolean isGPSNav, int strategy, boolean isRedirector) {
+        NavLogUtils.m3003e(TAG, "launchNavigator4()  nRPPolicy=" + nRPPolicy + ", strategy=" + strategy + ", cuid=" + CommonParam.getCUID(activity));
+        if (activity != null) {
+            if (NavCommonFuncController.getInstance().hasGPSPermission(activity)) {
+                NavRoutePlanModel.getInstance().setStartRouteNode(startNode);
+                NavRoutePlanModel.getInstance().setEndRouteNode(endNode);
+                NavRoutePlanModel.getInstance().setPreference(nRPPolicy);
+                NavRoutePlanModel.getInstance().setStrategy(strategy);
+                ArrayList<RoutePlanNode> rpNodeLists = new ArrayList();
+                RoutePlanNode startRPNode = new RoutePlanNode();
+                startRPNode.setGeoPoint(NavModelHelper.convertNavGeoPoint(startNode.mGeoPoint));
+                startRPNode.setName(startNode.mName);
+                startRPNode.setUID(startNode.mUID);
+                rpNodeLists.add(startRPNode);
+                if (viaNodes != null && viaNodes.size() > 0) {
+                    for (int i = 0; i < viaNodes.size(); i++) {
+                        RouteNode tNode = (RouteNode) viaNodes.get(i);
+                        if (tNode != null) {
+                            RoutePlanNode tRPNode = new RoutePlanNode();
+                            tRPNode.setGeoPoint(NavModelHelper.convertNavGeoPoint(tNode.mGeoPoint));
+                            tRPNode.setName(tNode.mName);
+                            tRPNode.setUID(tNode.mUID);
+                            rpNodeLists.add(tRPNode);
+                        }
+                    }
+                }
+                RoutePlanNode endRPNode = new RoutePlanNode();
+                endRPNode.setGeoPoint(NavModelHelper.convertNavGeoPoint(endNode.mGeoPoint));
+                if (!(TextUtils.isEmpty(endNode.mName) || "地图上的点".equals(endNode.mName))) {
+                    endRPNode.setName(endNode.mName);
+                }
+                endRPNode.setUID(endNode.mUID);
+                rpNodeLists.add(endRPNode);
+                this.mRoutePlanObserver = null;
+                this.mRoutePlanObserver = new RoutePlanObserver(activity, new C08295());
+                BNRoutePlaner.getInstance().setObserver(this.mRoutePlanObserver);
+                String mrsl = NavMapAdapter.getInstance().getCarRoutePlanMrsl();
+                final Activity activity2 = activity;
+                final RouteNode routeNode = startNode;
+                final RouteNode routeNode2 = endNode;
+                final int i2 = nRPPolicy;
+                final boolean z = isGPSNav;
+                final boolean z2 = isRedirector;
+                BNRoutePlaner.getInstance().addRouteResultHandler(new BNMainLooperHandler() {
+                    public void onMessage(Message msg) {
+                        switch (msg.what) {
+                            case 4:
+                                NavMapAdapter.getInstance().purgeMapDataForNavi(activity2);
+                                BNRoutePlaner.getInstance().selectRoute(0);
+                                NavRouteGuideController.this.startRGActivity(activity2.getApplicationContext(), NavModelHelper.convertNavGeoPoint(routeNode.mGeoPoint), routeNode.mName, NavModelHelper.convertNavGeoPoint(routeNode2.mGeoPoint), routeNode2.mName, i2, z, z2);
+                                BNRoutePlaner.getInstance().removeRouteResultHandler(this);
+                                return;
+                            case 7:
+                                BNRoutePlaner.getInstance().removeRouteResultHandler(this);
+                                return;
+                            default:
+                                return;
+                        }
+                    }
+                });
+                int gpsState = NavMapAdapter.getInstance().isGpsEnabled() ? NavMapAdapter.getInstance().isGPSLocationValid() ? 1 : 2 : 0;
+                BNRoutePlaner.getInstance().triggerGPSStatus(gpsState);
+                NavLogUtils.m3003e(TAG, "launchNavigator4() mRouteGuidePreference= " + this.mRouteGuidePreference + " hasSetPreference " + this.hasSetPreference);
+                if (this.hasSetPreference.booleanValue()) {
+                    this.hasSetPreference = Boolean.valueOf(false);
+                    BNRoutePlaner.getInstance().setCalcPrference(this.mRouteGuidePreference);
+                }
+                NavLogUtils.m3003e(TAG, "launchNavigator4() mrsl=" + mrsl + ", nRPPolicy=" + nRPPolicy + ", strategy=" + strategy);
+                switch (strategy) {
+                    case 1:
+                        BNRoutePlaner.getInstance().setPointsToCalcRoute(rpNodeLists, 3, true, mrsl, 0);
+                        return;
+                    case 2:
+                        BNRoutePlaner.getInstance().setPointsToCalcRoute(rpNodeLists, -1, true, mrsl, 0);
+                        return;
+                    default:
+                        BNRoutePlaner.getInstance().setPointsToCalcRoute(rpNodeLists, -1, true, mrsl, 0);
+                        return;
+                }
+            }
+            TipTool.onCreateToastDialog(activity, JarUtils.getResources().getString(C4048R.string.nsdk_string_gps_permission_disabled));
+        }
+    }
+
+    public void launchCruiser(Activity activity) {
+        if (activity != null) {
+            if (NavCommonFuncController.getInstance().hasGPSPermission(activity)) {
+                NavUserBehaviour.getInstance().sendBehaviourLog(NavUserBehaviourDef.NAVI_MAPPAGE_ENTER_EDOG);
+                Bundle launchParams = new Bundle();
+                launchParams.putInt(BCruiserConfig.KEY_CRUISER_VIEW_MODE, 0);
+                NavMapAdapter.getInstance().purgeMapDataForNavi(activity);
+                if (JarUtils.getAsJar()) {
+                    BaiduNaviManager.getInstance().showNavPage(BNCruiserFragment.class.getName(), launchParams);
+                    return;
+                } else {
+                    NavTipTool.onCreateToastDialog((Context) activity, (int) C0965R.string.nav_can_not_use);
+                    return;
+                }
+            }
+            TipTool.onCreateToastDialog(activity, JarUtils.getResources().getString(C4048R.string.nsdk_string_gps_permission_disabled_for_cruiser));
+        }
+    }
+
+    public void launchCruiser(Activity activity, Boolean from) {
+        if (activity != null) {
+            if (NavCommonFuncController.getInstance().hasGPSPermission(activity)) {
+                Bundle launchParams = new Bundle();
+                launchParams.putInt(BCruiserConfig.KEY_CRUISER_VIEW_MODE, 0);
+                NavMapAdapter.getInstance().purgeMapDataForNavi(activity);
+                if (JarUtils.getAsJar()) {
+                    if (from.booleanValue()) {
+                        NavUserBehaviour.getInstance().sendNaviStatistics(null, null, NavUserBehaviourNaviAction.BEHAVIOUR_NAVI_ACTION_EDOG, NavMapAdapter.getInstance().hasCurMapLocationCityOfflineData() ? NavUserBehaviourNaviNet.BEHAVIOUR_NAVI_NET_OFFLINE : NavUserBehaviourNaviNet.BEHAVIOUR_NAVI_NET_ONLINE, NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_NAV_EDOG);
+                    } else {
+                        NavUserBehaviour.getInstance().sendNaviStatistics(null, null, NavUserBehaviourNaviAction.BEHAVIOUR_NAVI_ACTION_EDOG, NavMapAdapter.getInstance().hasCurMapLocationCityOfflineData() ? NavUserBehaviourNaviNet.BEHAVIOUR_NAVI_NET_OFFLINE : NavUserBehaviourNaviNet.BEHAVIOUR_NAVI_NET_ONLINE, NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_MAP_EDOG);
+                    }
+                    MainActivity.m3142a(new BNCruiserFragment(), launchParams);
+                    return;
+                }
+                NavTipTool.onCreateToastDialog((Context) activity, (int) C0965R.string.nav_can_not_use);
+                return;
+            }
+            TipTool.onCreateToastDialog(activity, JarUtils.getResources().getString(C4048R.string.nsdk_string_gps_permission_disabled_for_cruiser));
+        }
+    }
+
+    public void backToCruiser(Activity activity) {
+        if (activity != null) {
+            NavMapAdapter.getInstance().purgeMapDataForNavi(activity);
+            if (JarUtils.getAsJar()) {
+                BaiduNaviManager.getInstance().showNavPage(BNCruiserFragment.class.getName(), null);
+            } else {
+                NavTipTool.onCreateToastDialog((Context) activity, (int) C0965R.string.nav_can_not_use);
+            }
+        }
+    }
+
+    private void startRGActivity(Context context, GeoPoint startNode, String startName, GeoPoint endNode, String endName, int nRPPolicy, boolean isGPSNav, boolean isRedirector) {
+        if (isGPSNav) {
+            if (isRedirector) {
+                NavRoutePlanModel.getInstance().setmNavEnter(NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_NAV_NAV);
+                NavUserBehaviour.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "navi", NavRoutePlanModel.getInstance().getStrategyForUserBeh(), NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_NAV_NAV);
+            } else {
+                NavRoutePlanModel.getInstance().setmNavEnter(NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_ROUTE_NAV);
+                NavUserBehaviour.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "navi", NavRoutePlanModel.getInstance().getStrategyForUserBeh(), NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_ROUTE_NAV);
+            }
+        }
+        BNRoutePlaner.getInstance().EnableRoadCondition(true);
+        Bundle launchParams = new Bundle();
+        launchParams.putInt(BNavConfig.KEY_ROUTEGUIDE_VIEW_MODE, 0);
+        launchParams.putInt(BNavConfig.KEY_ROUTEGUIDE_CALCROUTE_DONE, 0);
+        launchParams.putInt(BNavConfig.KEY_ROUTEGUIDE_START_X, startNode.getLongitudeE6());
+        launchParams.putInt(BNavConfig.KEY_ROUTEGUIDE_START_Y, startNode.getLatitudeE6());
+        launchParams.putInt(BNavConfig.KEY_ROUTEGUIDE_END_X, endNode.getLongitudeE6());
+        launchParams.putInt(BNavConfig.KEY_ROUTEGUIDE_END_Y, endNode.getLatitudeE6());
+        launchParams.putString("start_name", startName);
+        launchParams.putString("end_name", endName);
+        if (isGPSNav) {
+            launchParams.putInt(BNavConfig.KEY_ROUTEGUIDE_LOCATE_MODE, 1);
+        } else {
+            launchParams.putInt(BNavConfig.KEY_ROUTEGUIDE_LOCATE_MODE, 2);
+        }
+        launchParams.putBoolean(BNavConfig.KEY_ROUTEGUIDE_NET_FRESH_ENABLE, true);
+        if (JarUtils.getAsJar()) {
+            try {
+                NavLogUtils.m3003e(TAG, "startRGActivity() ok");
+                NavFragmentManager.getInstance().showNavMapMapPage(BNRouteGuideFragment.class.getName(), launchParams);
+                return;
+            } catch (Exception e) {
+                NavLogUtils.m3003e(TAG, "startRGActivity() error");
+                NavMapAdapter.getInstance().exceptionLog(e);
+                return;
+            }
+        }
+        NavTipTool.onCreateToastDialog(context, (int) C0965R.string.nav_can_not_use);
+    }
+
+    public void dismissWaitProgressDialog() {
+        if (this.mRoutePlanObserver != null) {
+            this.mRoutePlanObserver.dismissWaitProgressDialog();
+        }
+    }
+
+    public void setCalcPrference(int preference) {
+        this.hasSetPreference = Boolean.valueOf(true);
+        this.mRouteGuidePreference = preference;
+    }
+
+    public void runMonkey() {
+        if (NavMapAdapter.sMonkey && BaiduNaviManager.isNaviSoLoadSuccess()) {
+            Activity activity = NavCommonFuncModel.getInstance().getActivity();
+            if (BaiduNaviManager.sIsBaseEngineInitialized) {
+                BaiduNaviManager.getInstance().launchNavigator(BNaviModuleManager.getActivity(), new NavGeoPoint(11394118, 2254282), RoutePlanParams.MY_LOCATION, new NavGeoPoint(11396185, 2256679), "地图上的点", 1, true, 2);
+            } else if (activity != null) {
+                BaiduNaviManager.getInstance().initBaseEngine(activity, new C08347());
+            }
+        }
+    }
+
+    public boolean resetEndNodeInNavi(RouteNode newEndNode) {
+        return RGEngineControl.getInstance().setEndPtToCalcRoute(NavModelHelper.convertNavGeoPoint(newEndNode.mGeoPoint));
+    }
+
+    public void setVoiceModeInNavi(int voiceMode) {
+        BNSettingManager.setVoiceMode(voiceMode);
+        BNRouteGuider.getInstance().setVoiceMode(voiceMode);
+        if (2 == voiceMode) {
+            BNRouteGuider.getInstance().setElecCameraSpeak(false);
+            BNRouteGuider.getInstance().setSpeedCameraSpeak(false);
+            BNRouteGuider.getInstance().setSaftyDriveSpeak(false);
+            BNRouteGuider.getInstance().setRoadConditionSpeak(false);
+            BNRouteGuider.getInstance().setStraightDirectSpeak(false);
+        } else {
+            BNRouteGuider.getInstance().setElecCameraSpeak(BNSettingManager.isElecCameraSpeakEnable());
+            BNRouteGuider.getInstance().setSpeedCameraSpeak(BNSettingManager.isSpeedCameraSpeakEnable());
+            BNRouteGuider.getInstance().setSaftyDriveSpeak(BNSettingManager.isSaftyDriveSpeakEnable());
+            BNRouteGuider.getInstance().setRoadConditionSpeak(BNSettingManager.isRoadConditionSpeakEnable());
+            BNRouteGuider.getInstance().setStraightDirectSpeak(BNSettingManager.isStraightDirectSpeakEnable());
+        }
+        if (BNavigator.getInstance().isNaviBegin()) {
+            BNavigator.getInstance().onVoiceCommand(2, 33, 0, null, false);
+        }
+    }
+
+    public void forceQuitWithoutDialog() {
+        if (BNavigator.getInstance().isNaviBegin()) {
+            NavTrajectoryController.getInstance().setEndNaviByOpenApi(true);
+            BNavigator.getInstance().forceQuitWithoutDialog();
+        } else if (BCruiser.getInstance().isRouteCruiseBegin()) {
+            BCruiser.getInstance().quitCruise();
+        }
+    }
+
+    public boolean setUserChooseRouteBit(int nBit) {
+        return BNRouteGuider.getInstance().setUserChooseRouteBit(nBit);
+    }
+
+    public void onPageJump(int jumpTiming, Object arg) {
+        if (this.mBNavigatorListener != null) {
+            this.mBNavigatorListener.onPageJump(jumpTiming, arg);
+        }
+    }
+
+    public void setBNavigatorListener(BNavigatorListener bNavigatorListener) {
+        this.mBNavigatorListener = bNavigatorListener;
+        if (bNavigatorListener != null) {
+            setIsThirdServer(true);
+        }
+    }
+
+    public BNavigatorListener getBNavigatorListener() {
+        return this.mBNavigatorListener;
+    }
+
+    public boolean isThirdServer() {
+        return this.mIsThirdServer;
+    }
+
+    public void setIsThirdServer(boolean isThirdServer) {
+        this.mIsThirdServer = isThirdServer;
+    }
+
+    public boolean newGuideIsThirdServer() {
+        return this.mNewGuideIsThirdServer;
+    }
+
+    public void setNewGuideIsThirdServer(boolean newGuideIsThirdServer) {
+        this.mNewGuideIsThirdServer = newGuideIsThirdServer;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/control/NavRouteGuideController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

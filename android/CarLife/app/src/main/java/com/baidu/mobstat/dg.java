@@ -8,68 +8,45 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-public final class dg
-{
-  public static String a(long paramLong)
-  {
-    Date localDate = new Date(paramLong);
-    SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-    localSimpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
-    return localSimpleDateFormat.format(localDate);
-  }
-  
-  public static String a(Context paramContext)
-  {
-    return e.a(paramContext);
-  }
-  
-  public static HashMap<String, String> a(Map<String, String> paramMap)
-  {
-    HashMap localHashMap = null;
-    if (paramMap != null) {
-      localHashMap = new HashMap(paramMap);
+public final class dg {
+    /* renamed from: a */
+    public static String m15714a(Context context) {
+        return C3591e.m15717a(context);
     }
-    return localHashMap;
-  }
-  
-  public static boolean a(Class<?> paramClass, String paramString)
-  {
-    boolean bool2 = false;
-    StackTraceElement[] arrayOfStackTraceElement = Thread.currentThread().getStackTrace();
-    int i = 0;
-    boolean bool1 = bool2;
-    if (i < arrayOfStackTraceElement.length)
-    {
-      Object localObject1 = arrayOfStackTraceElement[i];
-      Object localObject2 = ((StackTraceElement)localObject1).getMethodName();
-      if ((TextUtils.isEmpty((CharSequence)localObject2)) || (paramClass == null) || (!((String)localObject2).equals(paramString))) {}
-      do
-      {
-        i += 1;
-        break;
-        localObject2 = ((StackTraceElement)localObject1).getClassName();
-        localObject1 = null;
-        try
-        {
-          localObject2 = Class.forName((String)localObject2);
-          localObject1 = localObject2;
+
+    /* renamed from: a */
+    public static HashMap<String, String> m15715a(Map<String, String> map) {
+        if (map != null) {
+            return new HashMap(map);
         }
-        catch (Throwable localThrowable)
-        {
-          for (;;) {}
+        return null;
+    }
+
+    /* renamed from: a */
+    public static String m15713a(long j) {
+        Date date = new Date(j);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
+        return simpleDateFormat.format(date);
+    }
+
+    /* renamed from: a */
+    public static boolean m15716a(Class<?> cls, String str) {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            Object methodName = stackTraceElement.getMethodName();
+            if (!(TextUtils.isEmpty(methodName) || cls == null || !methodName.equals(str))) {
+                String className = stackTraceElement.getClassName();
+                Class cls2 = null;
+                try {
+                    cls2 = Class.forName(className);
+                } catch (Throwable th) {
+                }
+                if (cls2 != null && cls.isAssignableFrom(cls2)) {
+                    return true;
+                }
+            }
         }
-      } while ((localObject1 == null) || (!paramClass.isAssignableFrom((Class)localObject1)));
-      bool1 = true;
+        return false;
     }
-    else
-    {
-      return bool1;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/dg.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

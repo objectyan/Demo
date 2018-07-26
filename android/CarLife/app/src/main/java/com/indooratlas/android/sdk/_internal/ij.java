@@ -1,268 +1,248 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.baidu.carlife.core.C1253f;
 import javax.security.auth.x500.X500Principal;
 
-final class ij
-{
-  final String a;
-  final int b;
-  int c;
-  int d;
-  int e;
-  int f;
-  char[] g;
-  
-  public ij(X500Principal paramX500Principal)
-  {
-    this.a = paramX500Principal.getName("RFC2253");
-    this.b = this.a.length();
-  }
-  
-  private int a(int paramInt)
-  {
-    if (paramInt + 1 >= this.b) {
-      throw new IllegalStateException("Malformed DN: " + this.a);
+final class ij {
+    /* renamed from: a */
+    final String f24368a;
+    /* renamed from: b */
+    final int f24369b = this.f24368a.length();
+    /* renamed from: c */
+    int f24370c;
+    /* renamed from: d */
+    int f24371d;
+    /* renamed from: e */
+    int f24372e;
+    /* renamed from: f */
+    int f24373f;
+    /* renamed from: g */
+    char[] f24374g;
+
+    public ij(X500Principal x500Principal) {
+        this.f24368a = x500Principal.getName("RFC2253");
     }
-    int i = this.g[paramInt];
-    if ((i >= 48) && (i <= 57))
-    {
-      i -= 48;
-      paramInt = this.g[(paramInt + 1)];
-      if ((paramInt < 48) || (paramInt > 57)) {
-        break label160;
-      }
-      paramInt -= 48;
-    }
-    for (;;)
-    {
-      return (i << 4) + paramInt;
-      if ((i >= 97) && (i <= 102))
-      {
-        i -= 87;
-        break;
-      }
-      if ((i >= 65) && (i <= 70))
-      {
-        i -= 55;
-        break;
-      }
-      throw new IllegalStateException("Malformed DN: " + this.a);
-      label160:
-      if ((paramInt >= 97) && (paramInt <= 102))
-      {
-        paramInt -= 87;
-      }
-      else
-      {
-        if ((paramInt < 65) || (paramInt > 70)) {
-          break label200;
+
+    /* renamed from: a */
+    final String m21118a() {
+        while (this.f24370c < this.f24369b && this.f24374g[this.f24370c] == ' ') {
+            this.f24370c++;
         }
-        paramInt -= 55;
-      }
-    }
-    label200:
-    throw new IllegalStateException("Malformed DN: " + this.a);
-  }
-  
-  private char e()
-  {
-    int i = a(this.c);
-    this.c += 1;
-    if (i < 128) {
-      return (char)i;
-    }
-    if ((i >= 192) && (i <= 247))
-    {
-      int j;
-      int m;
-      int k;
-      if (i <= 223)
-      {
-        j = 1;
-        i &= 0x1F;
-        m = 0;
-        k = i;
-        i = m;
-      }
-      for (;;)
-      {
-        if (i >= j) {
-          break label198;
+        if (this.f24370c == this.f24369b) {
+            return null;
         }
-        this.c += 1;
-        if ((this.c == this.b) || (this.g[this.c] != '\\'))
-        {
-          return '?';
-          if (i <= 239)
-          {
-            j = 2;
-            i &= 0xF;
-            break;
-          }
-          j = 3;
-          i &= 0x7;
-          break;
+        this.f24371d = this.f24370c;
+        this.f24370c++;
+        while (this.f24370c < this.f24369b && this.f24374g[this.f24370c] != '=' && this.f24374g[this.f24370c] != ' ') {
+            this.f24370c++;
         }
-        this.c += 1;
-        m = a(this.c);
-        this.c += 1;
-        if ((m & 0xC0) != 128) {
-          return '?';
+        if (this.f24370c >= this.f24369b) {
+            throw new IllegalStateException("Unexpected end of DN: " + this.f24368a);
         }
-        k = (k << 6) + (m & 0x3F);
-        i += 1;
-      }
-      label198:
-      return (char)k;
-    }
-    return '?';
-  }
-  
-  final String a()
-  {
-    while ((this.c < this.b) && (this.g[this.c] == ' ')) {
-      this.c += 1;
-    }
-    if (this.c == this.b) {
-      return null;
-    }
-    this.d = this.c;
-    for (this.c += 1; (this.c < this.b) && (this.g[this.c] != '=') && (this.g[this.c] != ' '); this.c += 1) {}
-    if (this.c >= this.b) {
-      throw new IllegalStateException("Unexpected end of DN: " + this.a);
-    }
-    this.e = this.c;
-    if (this.g[this.c] == ' ')
-    {
-      while ((this.c < this.b) && (this.g[this.c] != '=') && (this.g[this.c] == ' ')) {
-        this.c += 1;
-      }
-      if ((this.g[this.c] != '=') || (this.c == this.b)) {
-        throw new IllegalStateException("Unexpected end of DN: " + this.a);
-      }
-    }
-    do
-    {
-      this.c += 1;
-    } while ((this.c < this.b) && (this.g[this.c] == ' '));
-    if ((this.e - this.d > 4) && (this.g[(this.d + 3)] == '.') && ((this.g[this.d] == 'O') || (this.g[this.d] == 'o')) && ((this.g[(this.d + 1)] == 'I') || (this.g[(this.d + 1)] == 'i')) && ((this.g[(this.d + 2)] == 'D') || (this.g[(this.d + 2)] == 'd'))) {
-      this.d += 4;
-    }
-    return new String(this.g, this.d, this.e - this.d);
-  }
-  
-  final String b()
-  {
-    if (this.c + 4 >= this.b) {
-      throw new IllegalStateException("Unexpected end of DN: " + this.a);
-    }
-    this.d = this.c;
-    int k;
-    for (this.c += 1;; this.c += 1)
-    {
-      if ((this.c == this.b) || (this.g[this.c] == '+') || (this.g[this.c] == ',') || (this.g[this.c] == ';')) {
-        this.e = this.c;
-      }
-      for (;;)
-      {
-        k = this.e - this.d;
-        if ((k >= 5) && ((k & 0x1) != 0)) {
-          break label301;
+        this.f24372e = this.f24370c;
+        if (this.f24374g[this.f24370c] == ' ') {
+            while (this.f24370c < this.f24369b && this.f24374g[this.f24370c] != '=' && this.f24374g[this.f24370c] == ' ') {
+                this.f24370c++;
+            }
+            if (this.f24374g[this.f24370c] != '=' || this.f24370c == this.f24369b) {
+                throw new IllegalStateException("Unexpected end of DN: " + this.f24368a);
+            }
         }
-        throw new IllegalStateException("Unexpected end of DN: " + this.a);
-        if (this.g[this.c] != ' ') {
-          break;
+        do {
+            this.f24370c++;
+            if (this.f24370c >= this.f24369b) {
+                break;
+            }
+        } while (this.f24374g[this.f24370c] == ' ');
+        if (this.f24372e - this.f24371d > 4 && this.f24374g[this.f24371d + 3] == '.' && ((this.f24374g[this.f24371d] == 'O' || this.f24374g[this.f24371d] == 'o') && ((this.f24374g[this.f24371d + 1] == 'I' || this.f24374g[this.f24371d + 1] == 'i') && (this.f24374g[this.f24371d + 2] == 'D' || this.f24374g[this.f24371d + 2] == 'd')))) {
+            this.f24371d += 4;
         }
-        this.e = this.c;
-        for (this.c += 1; (this.c < this.b) && (this.g[this.c] == ' '); this.c += 1) {}
-      }
-      if ((this.g[this.c] >= 'A') && (this.g[this.c] <= 'F'))
-      {
-        localObject = this.g;
-        i = this.c;
-        localObject[i] = ((char)(localObject[i] + ' '));
-      }
+        return new String(this.f24374g, this.f24371d, this.f24372e - this.f24371d);
     }
-    label301:
-    Object localObject = new byte[k / 2];
-    int i = 0;
-    int j = this.d + 1;
-    while (i < localObject.length)
-    {
-      localObject[i] = ((byte)a(j));
-      j += 2;
-      i += 1;
-    }
-    return new String(this.g, this.d, k);
-  }
-  
-  final String c()
-  {
-    this.d = this.c;
-    this.e = this.c;
-    do
-    {
-      for (;;)
-      {
-        if (this.c >= this.b) {
-          return new String(this.g, this.d, this.e - this.d);
+
+    /* renamed from: b */
+    final String m21119b() {
+        if (this.f24370c + 4 >= this.f24369b) {
+            throw new IllegalStateException("Unexpected end of DN: " + this.f24368a);
         }
-        switch (this.g[this.c])
-        {
-        default: 
-          arrayOfChar = this.g;
-          i = this.e;
-          this.e = (i + 1);
-          arrayOfChar[i] = this.g[this.c];
-          this.c += 1;
-          break;
-        case '+': 
-        case ',': 
-        case ';': 
-          return new String(this.g, this.d, this.e - this.d);
-        case '\\': 
-          arrayOfChar = this.g;
-          i = this.e;
-          this.e = (i + 1);
-          arrayOfChar[i] = d();
-          this.c += 1;
+        int i;
+        this.f24371d = this.f24370c;
+        this.f24370c++;
+        while (this.f24370c != this.f24369b && this.f24374g[this.f24370c] != '+' && this.f24374g[this.f24370c] != ',' && this.f24374g[this.f24370c] != ';') {
+            int i2;
+            if (this.f24374g[this.f24370c] == ' ') {
+                this.f24372e = this.f24370c;
+                this.f24370c++;
+                while (this.f24370c < this.f24369b && this.f24374g[this.f24370c] == ' ') {
+                    this.f24370c++;
+                }
+                i = this.f24372e - this.f24371d;
+                if (i >= 5 || (i & 1) == 0) {
+                    throw new IllegalStateException("Unexpected end of DN: " + this.f24368a);
+                }
+                byte[] bArr = new byte[(i / 2)];
+                int i3 = this.f24371d + 1;
+                for (i2 = 0; i2 < bArr.length; i2++) {
+                    bArr[i2] = (byte) m21116a(i3);
+                    i3 += 2;
+                }
+                return new String(this.f24374g, this.f24371d, i);
+            }
+            if (this.f24374g[this.f24370c] >= 'A' && this.f24374g[this.f24370c] <= 'F') {
+                char[] cArr = this.f24374g;
+                i2 = this.f24370c;
+                cArr[i2] = (char) (cArr[i2] + 32);
+            }
+            this.f24370c++;
         }
-      }
-      this.f = this.e;
-      this.c += 1;
-      char[] arrayOfChar = this.g;
-      int i = this.e;
-      this.e = (i + 1);
-      arrayOfChar[i] = ' ';
-      while ((this.c < this.b) && (this.g[this.c] == ' '))
-      {
-        arrayOfChar = this.g;
-        i = this.e;
-        this.e = (i + 1);
-        arrayOfChar[i] = ' ';
-        this.c += 1;
-      }
-    } while ((this.c != this.b) && (this.g[this.c] != ',') && (this.g[this.c] != '+') && (this.g[this.c] != ';'));
-    return new String(this.g, this.d, this.f - this.d);
-  }
-  
-  final char d()
-  {
-    this.c += 1;
-    if (this.c == this.b) {
-      throw new IllegalStateException("Unexpected end of DN: " + this.a);
+        this.f24372e = this.f24370c;
+        i = this.f24372e - this.f24371d;
+        if (i >= 5) {
+        }
+        throw new IllegalStateException("Unexpected end of DN: " + this.f24368a);
     }
-    switch (this.g[this.c])
-    {
-    default: 
-      return e();
+
+    /* renamed from: c */
+    final String m21120c() {
+        this.f24371d = this.f24370c;
+        this.f24372e = this.f24370c;
+        while (this.f24370c < this.f24369b) {
+            char[] cArr;
+            int i;
+            switch (this.f24374g[this.f24370c]) {
+                case ' ':
+                    this.f24373f = this.f24372e;
+                    this.f24370c++;
+                    cArr = this.f24374g;
+                    i = this.f24372e;
+                    this.f24372e = i + 1;
+                    cArr[i] = ' ';
+                    while (this.f24370c < this.f24369b && this.f24374g[this.f24370c] == ' ') {
+                        cArr = this.f24374g;
+                        i = this.f24372e;
+                        this.f24372e = i + 1;
+                        cArr[i] = ' ';
+                        this.f24370c++;
+                    }
+                    if (this.f24370c != this.f24369b && this.f24374g[this.f24370c] != ',' && this.f24374g[this.f24370c] != '+' && this.f24374g[this.f24370c] != ';') {
+                        break;
+                    }
+                    return new String(this.f24374g, this.f24371d, this.f24373f - this.f24371d);
+                    break;
+                case '+':
+                case ',':
+                case ';':
+                    return new String(this.f24374g, this.f24371d, this.f24372e - this.f24371d);
+                case '\\':
+                    cArr = this.f24374g;
+                    i = this.f24372e;
+                    this.f24372e = i + 1;
+                    cArr[i] = m21121d();
+                    this.f24370c++;
+                    break;
+                default:
+                    cArr = this.f24374g;
+                    i = this.f24372e;
+                    this.f24372e = i + 1;
+                    cArr[i] = this.f24374g[this.f24370c];
+                    this.f24370c++;
+                    break;
+            }
+        }
+        return new String(this.f24374g, this.f24371d, this.f24372e - this.f24371d);
     }
-    return this.g[this.c];
-  }
+
+    /* renamed from: d */
+    final char m21121d() {
+        this.f24370c++;
+        if (this.f24370c == this.f24369b) {
+            throw new IllegalStateException("Unexpected end of DN: " + this.f24368a);
+        }
+        switch (this.f24374g[this.f24370c]) {
+            case ' ':
+            case '\"':
+            case '#':
+            case '%':
+            case '*':
+            case '+':
+            case ',':
+            case ';':
+            case '<':
+            case '=':
+            case '>':
+            case '\\':
+            case '_':
+                return this.f24374g[this.f24370c];
+            default:
+                return m21117e();
+        }
+    }
+
+    /* renamed from: e */
+    private char m21117e() {
+        int a = m21116a(this.f24370c);
+        this.f24370c++;
+        if (a < 128) {
+            return (char) a;
+        }
+        if (a < 192 || a > C1253f.dP) {
+            return '?';
+        }
+        int i;
+        if (a <= 223) {
+            i = 1;
+            a &= 31;
+        } else if (a <= 239) {
+            i = 2;
+            a &= 15;
+        } else {
+            i = 3;
+            a &= 7;
+        }
+        int i2 = a;
+        for (a = 0; a < i; a++) {
+            this.f24370c++;
+            if (this.f24370c == this.f24369b || this.f24374g[this.f24370c] != '\\') {
+                return '?';
+            }
+            this.f24370c++;
+            int a2 = m21116a(this.f24370c);
+            this.f24370c++;
+            if ((a2 & 192) != 128) {
+                return '?';
+            }
+            i2 = (i2 << 6) + (a2 & 63);
+        }
+        return (char) i2;
+    }
+
+    /* renamed from: a */
+    private int m21116a(int i) {
+        if (i + 1 >= this.f24369b) {
+            throw new IllegalStateException("Malformed DN: " + this.f24368a);
+        }
+        int i2;
+        int i3;
+        char c = this.f24374g[i];
+        if (c >= '0' && c <= '9') {
+            i2 = c - 48;
+        } else if (c >= 'a' && c <= 'f') {
+            i2 = c - 87;
+        } else if (c < 'A' || c > 'F') {
+            throw new IllegalStateException("Malformed DN: " + this.f24368a);
+        } else {
+            i2 = c - 55;
+        }
+        char c2 = this.f24374g[i + 1];
+        if (c2 >= '0' && c2 <= '9') {
+            i3 = c2 - 48;
+        } else if (c2 >= 'a' && c2 <= 'f') {
+            i3 = c2 - 87;
+        } else if (c2 < 'A' || c2 > 'F') {
+            throw new IllegalStateException("Malformed DN: " + this.f24368a);
+        } else {
+            i3 = c2 - 55;
+        }
+        return (i2 << 4) + i3;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ij.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

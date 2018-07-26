@@ -10,110 +10,91 @@ import com.baidu.speech.utils.LogUtil;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class EventManagerWp
-  implements EventManager
-{
-  private static final String TAG = "EventManagerWp";
-  private static final String version = "1.1.0.20161226";
-  private Exception initException = null;
-  private ArrayList<EventListener> listeners = new ArrayList();
-  private Context mContext;
-  private WakeUpControl mEnginer;
-  private Handler mHandler = new Handler(Looper.getMainLooper());
-  
-  public EventManagerWp(Context paramContext)
-  {
-    this.mContext = paramContext;
-    try
-    {
-      this.mEnginer = new WakeUpControl(paramContext);
-      return;
-    }
-    catch (Exception paramContext)
-    {
-      paramContext.printStackTrace();
-      this.initException = paramContext;
-    }
-  }
-  
-  public static final String getSDKVersion()
-  {
-    return "1.1.0.20161226";
-  }
-  
-  public void registerListener(EventListener paramEventListener)
-  {
-    if ((paramEventListener != null) && (!this.listeners.contains(paramEventListener))) {
-      this.listeners.add(paramEventListener);
-    }
-  }
-  
-  public void send(String paramString1, String paramString2, byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    LogUtil.i("EventManagerWp", new String[] { "send cmd : " + paramString1 });
-    LogUtil.i("EventManagerWp", new String[] { "send params : " + paramString2 });
-    if (TextUtils.isEmpty(paramString1)) {}
-    do
-    {
-      return;
-      if (("wp.start".equals(paramString1)) && (this.initException != null))
-      {
-        paramArrayOfByte = this.listeners.iterator();
-        while (paramArrayOfByte.hasNext())
-        {
-          final EventListener localEventListener = (EventListener)paramArrayOfByte.next();
-          this.mHandler.post(new Runnable()
-          {
-            public void run()
-            {
-              if (localEventListener != null)
-              {
-                LogUtil.i("EventManagerWp", new String[] { "onEvent mCommand : wp.error and wp.exit  onEvent mParam : " + EventManagerWp.this.initException.getMessage() });
-                localEventListener.onEvent("wp.error", EventManagerWp.this.initException.getMessage(), null, 0, 0);
-                localEventListener.onEvent("wp.exit", EventManagerWp.this.initException.getMessage(), null, 0, 0);
-              }
-            }
-          });
+public class EventManagerWp implements EventManager {
+    private static final String TAG = "EventManagerWp";
+    private static final String version = "1.1.0.20161226";
+    private Exception initException = null;
+    private ArrayList<EventListener> listeners = new ArrayList();
+    private Context mContext;
+    private WakeUpControl mEnginer;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+
+    /* renamed from: com.baidu.speech.asr.EventManagerWp$2 */
+    class C49422 implements EventListener {
+        C49422() {
         }
-      }
-    } while ((this.mEnginer == null) || (paramString1 == null));
-    this.mEnginer.setListener(new EventListener()
-    {
-      public void onEvent(final String paramAnonymousString1, final String paramAnonymousString2, final byte[] paramAnonymousArrayOfByte, final int paramAnonymousInt1, final int paramAnonymousInt2)
-      {
-        synchronized (EventManagerWp.this.listeners)
-        {
-          Iterator localIterator = EventManagerWp.this.listeners.iterator();
-          if (localIterator.hasNext())
-          {
-            final EventListener localEventListener = (EventListener)localIterator.next();
-            EventManagerWp.this.mHandler.post(new Runnable()
-            {
-              public void run()
-              {
-                if (localEventListener != null)
-                {
-                  LogUtil.i("EventManagerWp", new String[] { "onEvent mCommand : " + paramAnonymousString1 });
-                  LogUtil.i("EventManagerWp", new String[] { "onEvent mParam : " + paramAnonymousString2 });
-                  localEventListener.onEvent(paramAnonymousString1, paramAnonymousString2, paramAnonymousArrayOfByte, paramAnonymousInt1, paramAnonymousInt2);
+
+        public void onEvent(String str, String str2, byte[] bArr, int i, int i2) {
+            synchronized (EventManagerWp.this.listeners) {
+                Iterator it = EventManagerWp.this.listeners.iterator();
+                while (it.hasNext()) {
+                    final EventListener eventListener = (EventListener) it.next();
+                    final String str3 = str;
+                    final String str4 = str2;
+                    final byte[] bArr2 = bArr;
+                    final int i3 = i;
+                    final int i4 = i2;
+                    EventManagerWp.this.mHandler.post(new Runnable() {
+                        public void run() {
+                            if (eventListener != null) {
+                                LogUtil.m16427i(EventManagerWp.TAG, "onEvent mCommand : " + str3);
+                                LogUtil.m16427i(EventManagerWp.TAG, "onEvent mParam : " + str4);
+                                eventListener.onEvent(str3, str4, bArr2, i3, i4);
+                            }
+                        }
+                    });
                 }
-              }
-            });
-          }
+            }
         }
-      }
-    });
-    this.mEnginer.postEvent(paramString1, paramString2);
-  }
-  
-  public void unregisterListener(EventListener paramEventListener)
-  {
-    this.listeners.remove(paramEventListener);
-  }
+    }
+
+    public EventManagerWp(Context context) {
+        this.mContext = context;
+        try {
+            this.mEnginer = new WakeUpControl(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.initException = e;
+        }
+    }
+
+    public static final String getSDKVersion() {
+        return version;
+    }
+
+    public void registerListener(EventListener eventListener) {
+        if (eventListener != null && !this.listeners.contains(eventListener)) {
+            this.listeners.add(eventListener);
+        }
+    }
+
+    public void send(String str, String str2, byte[] bArr, int i, int i2) {
+        LogUtil.m16427i(TAG, "send cmd : " + str);
+        LogUtil.m16427i(TAG, "send params : " + str2);
+        if (!TextUtils.isEmpty(str)) {
+            if (SpeechConstant.WAKEUP_START.equals(str) && this.initException != null) {
+                Iterator it = this.listeners.iterator();
+                while (it.hasNext()) {
+                    final EventListener eventListener = (EventListener) it.next();
+                    this.mHandler.post(new Runnable() {
+                        public void run() {
+                            if (eventListener != null) {
+                                LogUtil.m16427i(EventManagerWp.TAG, "onEvent mCommand : wp.error and wp.exit  onEvent mParam : " + EventManagerWp.this.initException.getMessage());
+                                eventListener.onEvent("wp.error", EventManagerWp.this.initException.getMessage(), null, 0, 0);
+                                eventListener.onEvent("wp.exit", EventManagerWp.this.initException.getMessage(), null, 0, 0);
+                            }
+                        }
+                    });
+                }
+            }
+            if (this.mEnginer != null && str != null) {
+                this.mEnginer.setListener(new C49422());
+                this.mEnginer.postEvent(str, str2);
+            }
+        }
+    }
+
+    public void unregisterListener(EventListener eventListener) {
+        this.listeners.remove(eventListener);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/speech/asr/EventManagerWp.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

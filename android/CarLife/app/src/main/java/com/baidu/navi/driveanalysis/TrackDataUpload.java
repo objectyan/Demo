@@ -7,83 +7,78 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.Message;
 import com.baidu.carlife.BaiduNaviApplication;
-import com.baidu.carlife.core.j;
-import com.baidu.carlife.e.a;
+import com.baidu.carlife.core.C0936j;
+import com.baidu.carlife.p077e.C1435a;
+import com.baidu.navi.driveanalysis.DataService.DataUploadBinder;
 
-public class TrackDataUpload
-{
-  public static TrackDataUpload mInstance;
-  private DataService.DataUploadBinder mBinder;
-  private Context mContext = BaiduNaviApplication.getInstance().getApplicationContext();
-  private MsgRomoteConfigSyncHandler mMsgRomoteConfigSyncHandler;
-  private ServiceConnection mServiceConnection;
-  
-  public static TrackDataUpload getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new TrackDataUpload();
+public class TrackDataUpload {
+    public static TrackDataUpload mInstance;
+    private DataUploadBinder mBinder;
+    private Context mContext = BaiduNaviApplication.getInstance().getApplicationContext();
+    private MsgRomoteConfigSyncHandler mMsgRomoteConfigSyncHandler;
+    private ServiceConnection mServiceConnection;
+
+    /* renamed from: com.baidu.navi.driveanalysis.TrackDataUpload$1 */
+    class C37741 implements ServiceConnection {
+        C37741() {
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+        }
+
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            TrackDataUpload.this.mBinder = (DataUploadBinder) service;
+            TrackDataUpload.this.mBinder.startUpload();
+        }
     }
-    return mInstance;
-  }
-  
-  private void init()
-  {
-    this.mServiceConnection = new ServiceConnection()
-    {
-      public void onServiceConnected(ComponentName paramAnonymousComponentName, IBinder paramAnonymousIBinder)
-      {
-        TrackDataUpload.access$002(TrackDataUpload.this, (DataService.DataUploadBinder)paramAnonymousIBinder);
-        TrackDataUpload.this.mBinder.startUpload();
-      }
-      
-      public void onServiceDisconnected(ComponentName paramAnonymousComponentName) {}
-    };
-    this.mContext.bindService(new Intent(this.mContext, DataService.class), this.mServiceConnection, 1);
-  }
-  
-  public void startTrackDataUpload()
-  {
-    if (a.a().i() != 1) {
-      return;
+
+    private class MsgRomoteConfigSyncHandler extends C0936j {
+        private MsgRomoteConfigSyncHandler() {
+        }
+
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 6001:
+                    if (C1435a.a().i() == 1) {
+                        TrackDataUpload.this.startTrackDataUpload();
+                        return;
+                    }
+                    return;
+                default:
+                    return;
+            }
+        }
+
+        public void careAbout() {
+            addMsg(6001);
+        }
     }
-    init();
-  }
-  
-  public void stopTrackDataUpload()
-  {
-    if (this.mBinder != null)
-    {
-      this.mBinder.stopUpload();
-      this.mContext.unbindService(this.mServiceConnection);
+
+    public static TrackDataUpload getInstance() {
+        if (mInstance == null) {
+            mInstance = new TrackDataUpload();
+        }
+        return mInstance;
     }
-  }
-  
-  private class MsgRomoteConfigSyncHandler
-    extends j
-  {
-    private MsgRomoteConfigSyncHandler() {}
-    
-    public void careAbout()
-    {
-      addMsg(6001);
+
+    private TrackDataUpload() {
     }
-    
-    public void handleMessage(Message paramMessage)
-    {
-      switch (paramMessage.what)
-      {
-      }
-      do
-      {
-        return;
-      } while (a.a().i() != 1);
-      TrackDataUpload.this.startTrackDataUpload();
+
+    public void startTrackDataUpload() {
+        if (C1435a.a().i() == 1) {
+            init();
+        }
     }
-  }
+
+    public void stopTrackDataUpload() {
+        if (this.mBinder != null) {
+            this.mBinder.stopUpload();
+            this.mContext.unbindService(this.mServiceConnection);
+        }
+    }
+
+    private void init() {
+        this.mServiceConnection = new C37741();
+        this.mContext.bindService(new Intent(this.mContext, DataService.class), this.mServiceConnection, 1);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/driveanalysis/TrackDataUpload.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

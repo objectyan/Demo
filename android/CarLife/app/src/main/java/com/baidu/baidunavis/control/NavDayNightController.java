@@ -11,117 +11,95 @@ import com.baidu.navisdk.ui.util.BNStyleManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavDayNightController
-{
-  private static final int MSG_Day = 1;
-  private static final int MSG_Night = 2;
-  private static NavDayNightController sInstance = null;
-  private BNDayNightChangedObserver mDayNightChangedObserver = new BNDayNightChangedObserver()
-  {
-    public void update(BNSubject paramAnonymousBNSubject, int paramAnonymousInt1, int paramAnonymousInt2, Object paramAnonymousObject)
-    {
-      if (paramAnonymousInt1 == 1) {}
-      switch (paramAnonymousInt2)
-      {
-      default: 
-        return;
-      case 2: 
-      case 4: 
-        NavDayNightController.this.setStyle(true);
-        return;
-      }
-      NavDayNightController.this.setStyle(false);
+public class NavDayNightController {
+    private static final int MSG_Day = 1;
+    private static final int MSG_Night = 2;
+    private static NavDayNightController sInstance = null;
+    private BNDayNightChangedObserver mDayNightChangedObserver = new C07831();
+    private boolean mDayStyle = true;
+    private MainLooperHandler mHandler = new MainLooperHandler(Module.NAV_MODULE, ScheduleConfig.forData()) {
+        public void onMessage(Message msg) {
+            if (msg.what == 1) {
+                NavDayNightController.this.notifyDayNightChanged(true);
+            } else if (msg.what == 2) {
+                NavDayNightController.this.notifyDayNightChanged(false);
+            }
+        }
+    };
+    private List<OnDayNightChangedListener> mListeners = new ArrayList();
+
+    /* renamed from: com.baidu.baidunavis.control.NavDayNightController$1 */
+    class C07831 implements BNDayNightChangedObserver {
+        C07831() {
+        }
+
+        public void update(BNSubject o, int type, int event, Object arg) {
+            if (type == 1) {
+                switch (event) {
+                    case 2:
+                    case 4:
+                        NavDayNightController.this.setStyle(true);
+                        return;
+                    case 3:
+                    case 5:
+                        NavDayNightController.this.setStyle(false);
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
     }
-  };
-  private boolean mDayStyle = true;
-  private MainLooperHandler mHandler = new MainLooperHandler(Module.NAV_MODULE, ScheduleConfig.forData())
-  {
-    public void onMessage(Message paramAnonymousMessage)
-    {
-      if (paramAnonymousMessage.what == 1) {
-        NavDayNightController.this.notifyDayNightChanged(true);
-      }
-      while (paramAnonymousMessage.what != 2) {
-        return;
-      }
-      NavDayNightController.this.notifyDayNightChanged(false);
+
+    public interface OnDayNightChangedListener {
+        void onDayNightChanged(boolean z);
     }
-  };
-  private List<OnDayNightChangedListener> mListeners = new ArrayList();
-  
-  public static NavDayNightController getInstance()
-  {
-    if (sInstance == null) {
-      sInstance = new NavDayNightController();
+
+    private NavDayNightController() {
     }
-    return sInstance;
-  }
-  
-  private void notifyDayNightChanged(boolean paramBoolean)
-  {
-    int i = 0;
-    while (i < this.mListeners.size())
-    {
-      if (this.mListeners.get(i) != null) {
-        ((OnDayNightChangedListener)this.mListeners.get(i)).onDayNightChanged(paramBoolean);
-      }
-      i += 1;
+
+    public static NavDayNightController getInstance() {
+        if (sInstance == null) {
+            sInstance = new NavDayNightController();
+        }
+        return sInstance;
     }
-  }
-  
-  public void init()
-  {
-    BNAutoDayNightHelper.getInstance().addObserver(this.mDayNightChangedObserver);
-    BNAutoDayNightHelper.getInstance().updateDayNightMode();
-  }
-  
-  public boolean isDay()
-  {
-    return this.mDayStyle;
-  }
-  
-  public void registerDayNightListener(OnDayNightChangedListener paramOnDayNightChangedListener)
-  {
-    if ((paramOnDayNightChangedListener != null) && (!this.mListeners.contains(paramOnDayNightChangedListener))) {
-      this.mListeners.add(paramOnDayNightChangedListener);
+
+    public void init() {
+        BNAutoDayNightHelper.getInstance().addObserver(this.mDayNightChangedObserver);
+        BNAutoDayNightHelper.getInstance().updateDayNightMode();
     }
-  }
-  
-  public void setStyle(boolean paramBoolean)
-  {
-    try
-    {
-      BNStyleManager.setDayStyle(paramBoolean);
-      this.mDayStyle = paramBoolean;
-      MainLooperHandler localMainLooperHandler = this.mHandler;
-      if (this.mDayStyle) {}
-      for (int i = 1;; i = 2)
-      {
-        localMainLooperHandler.sendEmptyMessage(i);
-        return;
-      }
+
+    public boolean isDay() {
+        return this.mDayStyle;
     }
-    catch (Throwable localThrowable)
-    {
-      for (;;) {}
+
+    public void registerDayNightListener(OnDayNightChangedListener hd) {
+        if (hd != null && !this.mListeners.contains(hd)) {
+            this.mListeners.add(hd);
+        }
     }
-  }
-  
-  public void unregisterDayNightListener(OnDayNightChangedListener paramOnDayNightChangedListener)
-  {
-    if ((paramOnDayNightChangedListener != null) && (this.mListeners.contains(paramOnDayNightChangedListener))) {
-      this.mListeners.remove(paramOnDayNightChangedListener);
+
+    public void unregisterDayNightListener(OnDayNightChangedListener hd) {
+        if (hd != null && this.mListeners.contains(hd)) {
+            this.mListeners.remove(hd);
+        }
     }
-  }
-  
-  public static abstract interface OnDayNightChangedListener
-  {
-    public abstract void onDayNightChanged(boolean paramBoolean);
-  }
+
+    private void notifyDayNightChanged(boolean isDay) {
+        for (int i = 0; i < this.mListeners.size(); i++) {
+            if (this.mListeners.get(i) != null) {
+                ((OnDayNightChangedListener) this.mListeners.get(i)).onDayNightChanged(isDay);
+            }
+        }
+    }
+
+    public void setStyle(boolean dayStyle) {
+        try {
+            BNStyleManager.setDayStyle(dayStyle);
+        } catch (Throwable th) {
+        }
+        this.mDayStyle = dayStyle;
+        this.mHandler.sendEmptyMessage(this.mDayStyle ? 1 : 2);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/control/NavDayNightController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

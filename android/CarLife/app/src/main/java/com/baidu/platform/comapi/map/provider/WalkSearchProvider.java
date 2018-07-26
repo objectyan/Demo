@@ -1,68 +1,51 @@
 package com.baidu.platform.comapi.map.provider;
 
+import com.baidu.carlife.core.C1253f;
 import com.baidu.entity.pb.WalkSearch;
 import com.baidu.entity.pb.WalkSearch.Content;
 import com.baidu.platform.comapi.basestruct.Point;
 import com.baidu.platform.comapi.location.CoordinateUtil;
-import java.util.List;
+import com.baidu.platform.comapi.map.provider.EngineConst.OVERLAY_KEY;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WalkSearchProvider
-  implements RenderProvider
-{
-  private WalkSearch walkSearch;
-  
-  public WalkSearchProvider(WalkSearch paramWalkSearch)
-  {
-    this.walkSearch = paramWalkSearch;
-  }
-  
-  private JSONObject buildContentJson(WalkSearch.Content paramContent, int paramInt1, int paramInt2)
-    throws JSONException
-  {
-    JSONObject localJSONObject = new JSONObject();
-    localJSONObject.put("ud", paramContent.getUid());
-    localJSONObject.put("align", 2);
-    localJSONObject.put("ty", 3);
-    localJSONObject.put("nst", 247);
-    localJSONObject.put("fst", 248);
-    localJSONObject.put("of", 15);
-    localJSONObject.put("in", paramInt2);
-    localJSONObject.put("tx", paramContent.getName());
-    localJSONObject.put("geo", CoordinateUtil.pointToGeoString(new Point(paramContent.getX(), paramContent.getY())));
-    return localJSONObject;
-  }
-  
-  private JSONArray generateWalkSearchJson()
-    throws JSONException
-  {
-    JSONArray localJSONArray = new JSONArray();
-    int i = 0;
-    while (i < this.walkSearch.getContentList().size())
-    {
-      localJSONArray.put(buildContentJson(this.walkSearch.getContent(i), localJSONArray.length(), i));
-      i += 1;
+public class WalkSearchProvider implements RenderProvider {
+    private WalkSearch walkSearch;
+
+    public WalkSearchProvider(WalkSearch search) {
+        this.walkSearch = search;
     }
-    return localJSONArray;
-  }
-  
-  public String getRenderData()
-  {
-    JSONObject localJSONObject = new JSONObject();
-    try
-    {
-      localJSONObject.put("dataset", generateWalkSearchJson());
-      return localJSONObject.toString();
+
+    public String getRenderData() {
+        JSONObject result = new JSONObject();
+        try {
+            result.put("dataset", generateWalkSearchJson());
+            return result.toString();
+        } catch (Exception e) {
+            return "";
+        }
     }
-    catch (Exception localException) {}
-    return "";
-  }
+
+    private JSONArray generateWalkSearchJson() throws JSONException {
+        JSONArray walkJsonArray = new JSONArray();
+        for (int i = 0; i < this.walkSearch.getContentList().size(); i++) {
+            walkJsonArray.put(buildContentJson(this.walkSearch.getContent(i), walkJsonArray.length(), i));
+        }
+        return walkJsonArray;
+    }
+
+    private JSONObject buildContentJson(Content content, int id, int index) throws JSONException {
+        JSONObject poiJson = new JSONObject();
+        poiJson.put("ud", content.getUid());
+        poiJson.put(OVERLAY_KEY.ALIGN, 2);
+        poiJson.put("ty", 3);
+        poiJson.put("nst", C1253f.dP);
+        poiJson.put("fst", C1253f.dQ);
+        poiJson.put("of", 15);
+        poiJson.put("in", index);
+        poiJson.put("tx", content.getName());
+        poiJson.put("geo", CoordinateUtil.pointToGeoString(new Point((double) content.getX(), (double) content.getY())));
+        return poiJson;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/provider/WalkSearchProvider.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

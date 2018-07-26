@@ -1,28 +1,24 @@
 package com.baidu.ufosdk.ui;
 
+import android.content.Context;
 import com.baidu.ufosdk.UfoSDK;
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class am
-  implements Runnable
-{
-  am(aj paramaj) {}
-  
-  public final void run()
-  {
-    try
-    {
-      FeedbackInputActivity localFeedbackInputActivity = aj.a(this.a);
-      String str = UfoSDK.clientid;
-      a.c(localFeedbackInputActivity, FeedbackInputActivity.g(aj.a(this.a)));
-      return;
+/* compiled from: FeedbackInputActivity */
+final class am implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ aj f21550a;
+
+    am(aj ajVar) {
+        this.f21550a = ajVar;
     }
-    catch (Exception localException) {}
-  }
+
+    public final void run() {
+        try {
+            Context a = this.f21550a.f21546a;
+            String str = UfoSDK.clientid;
+            C5180a.m17575c(a, this.f21550a.f21546a.f21469M);
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/am.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

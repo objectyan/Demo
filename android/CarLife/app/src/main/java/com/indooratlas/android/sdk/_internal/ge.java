@@ -1,1116 +1,1057 @@
 package com.indooratlas.android.sdk._internal;
 
+import android.support.v4.media.TransportMediator;
+import com.baidu.mobstat.Config;
+import com.facebook.common.p141m.C2924g;
 import java.net.InetAddress;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class ge
-{
-  private static final char[] d = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70 };
-  public final String a;
-  public final String b;
-  public final int c;
-  private final String e;
-  private final String f;
-  private final List<String> g;
-  private final List<String> h;
-  private final String i;
-  private final String j;
-  
-  private ge(a parama)
-  {
-    this.a = parama.a;
-    this.e = a(parama.b, false);
-    this.f = a(parama.c, false);
-    this.b = parama.d;
-    this.c = parama.a();
-    this.g = a(parama.f, false);
-    if (parama.g != null) {}
-    for (Object localObject1 = a(parama.g, true);; localObject1 = null)
-    {
-      this.h = ((List)localObject1);
-      localObject1 = localObject2;
-      if (parama.h != null) {
-        localObject1 = a(parama.h, false);
-      }
-      this.i = ((String)localObject1);
-      this.j = parama.toString();
-      return;
-    }
-  }
-  
-  static int a(char paramChar)
-  {
-    if ((paramChar >= '0') && (paramChar <= '9')) {
-      return paramChar - '0';
-    }
-    if ((paramChar >= 'a') && (paramChar <= 'f')) {
-      return paramChar - 'a' + 10;
-    }
-    if ((paramChar >= 'A') && (paramChar <= 'F')) {
-      return paramChar - 'A' + 10;
-    }
-    return -1;
-  }
-  
-  public static int a(String paramString)
-  {
-    if (paramString.equals("http")) {
-      return 80;
-    }
-    if (paramString.equals("https")) {
-      return 443;
-    }
-    return -1;
-  }
-  
-  public static ge a(URL paramURL)
-  {
-    return d(paramURL.toString());
-  }
-  
-  static String a(String paramString1, int paramInt1, int paramInt2, String paramString2, boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3, boolean paramBoolean4)
-  {
-    int k = paramInt1;
-    while (k < paramInt2)
-    {
-      int m = paramString1.codePointAt(k);
-      if ((m < 32) || (m == 127) || ((m >= 128) && (paramBoolean4)) || (paramString2.indexOf(m) != -1) || ((m == 37) && ((!paramBoolean1) || ((paramBoolean2) && (!a(paramString1, k, paramInt2))))) || ((m == 43) && (paramBoolean3)))
-      {
-        in localin = new in();
-        localin.a(paramString1, paramInt1, k);
-        paramInt1 = k;
-        Object localObject1 = null;
-        if (paramInt1 < paramInt2)
-        {
-          k = paramString1.codePointAt(paramInt1);
-          Object localObject3;
-          Object localObject2;
-          if (paramBoolean1)
-          {
-            localObject3 = localObject1;
-            if (k != 9)
-            {
-              localObject3 = localObject1;
-              if (k != 10)
-              {
-                localObject3 = localObject1;
-                if (k != 12)
-                {
-                  localObject3 = localObject1;
-                  if (k == 13) {}
-                }
-              }
+public final class ge {
+    /* renamed from: d */
+    private static final char[] f23860d = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    /* renamed from: a */
+    public final String f23861a;
+    /* renamed from: b */
+    public final String f23862b;
+    /* renamed from: c */
+    public final int f23863c;
+    /* renamed from: e */
+    private final String f23864e;
+    /* renamed from: f */
+    private final String f23865f;
+    /* renamed from: g */
+    private final List<String> f23866g;
+    /* renamed from: h */
+    private final List<String> f23867h;
+    /* renamed from: i */
+    private final String f23868i;
+    /* renamed from: j */
+    private final String f23869j;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ge$a */
+    public static final class C5919a {
+        /* renamed from: a */
+        String f23852a;
+        /* renamed from: b */
+        String f23853b = "";
+        /* renamed from: c */
+        String f23854c = "";
+        /* renamed from: d */
+        String f23855d;
+        /* renamed from: e */
+        int f23856e = -1;
+        /* renamed from: f */
+        final List<String> f23857f = new ArrayList();
+        /* renamed from: g */
+        List<String> f23858g;
+        /* renamed from: h */
+        String f23859h;
+
+        /* renamed from: com.indooratlas.android.sdk._internal.ge$a$a */
+        enum C5918a {
+            ;
+
+            static {
+                f23846a = 1;
+                f23847b = 2;
+                f23848c = 3;
+                f23849d = 4;
+                f23850e = 5;
+                f23851f = new int[]{f23846a, f23847b, f23848c, f23849d, f23850e};
             }
-          }
-          else
-          {
-            if ((k != 43) || (!paramBoolean3)) {
-              break label234;
-            }
-            if (!paramBoolean1) {
-              break label227;
-            }
-            localObject2 = "+";
-            label200:
-            localin.a((String)localObject2);
-            localObject3 = localObject1;
-          }
-          for (;;)
-          {
-            paramInt1 = Character.charCount(k) + paramInt1;
-            localObject1 = localObject3;
-            break;
-            label227:
-            localObject2 = "%2B";
-            break label200;
-            label234:
-            if ((k < 32) || (k == 127) || ((k >= 128) && (paramBoolean4)) || (paramString2.indexOf(k) != -1) || ((k == 37) && ((!paramBoolean1) || ((paramBoolean2) && (!a(paramString1, paramInt1, paramInt2))))))
-            {
-              localObject2 = localObject1;
-              if (localObject1 == null) {
-                localObject2 = new in();
-              }
-              ((in)localObject2).a(k);
-              for (;;)
-              {
-                localObject3 = localObject2;
-                if (((in)localObject2).d()) {
-                  break;
-                }
-                m = ((in)localObject2).e() & 0xFF;
-                localin.b(37);
-                localin.b(d[(m >> 4 & 0xF)]);
-                localin.b(d[(m & 0xF)]);
-              }
-            }
-            localin.a(k);
-            localObject3 = localObject1;
-          }
         }
-        return localin.l();
-      }
-      k += Character.charCount(m);
-    }
-    return paramString1.substring(paramInt1, paramInt2);
-  }
-  
-  static String a(String paramString, int paramInt1, int paramInt2, boolean paramBoolean)
-  {
-    int k = paramInt1;
-    while (k < paramInt2)
-    {
-      int m = paramString.charAt(k);
-      if ((m == 37) || ((m == 43) && (paramBoolean)))
-      {
-        in localin = new in();
-        localin.a(paramString, paramInt1, k);
-        paramInt1 = k;
-        if (paramInt1 < paramInt2)
-        {
-          k = paramString.codePointAt(paramInt1);
-          if ((k == 37) && (paramInt1 + 2 < paramInt2))
-          {
-            m = a(paramString.charAt(paramInt1 + 1));
-            int n = a(paramString.charAt(paramInt1 + 2));
-            if ((m == -1) || (n == -1)) {
-              break label169;
-            }
-            localin.b((m << 4) + n);
-            paramInt1 += 2;
-          }
-          for (;;)
-          {
-            paramInt1 += Character.charCount(k);
-            break;
-            if ((k == 43) && (paramBoolean)) {
-              localin.b(32);
+
+        public C5919a() {
+            this.f23857f.add("");
+        }
+
+        /* renamed from: a */
+        final int m20626a() {
+            return this.f23856e != -1 ? this.f23856e : ge.m20631a(this.f23852a);
+        }
+
+        /* renamed from: a */
+        public final C5919a m20628a(String str) {
+            this.f23858g = str != null ? ge.m20642b(ge.m20636a(str, " \"'<>#", false, true, true)) : null;
+            return this;
+        }
+
+        /* renamed from: b */
+        public final ge m20629b() {
+            if (this.f23852a == null) {
+                throw new IllegalStateException("scheme == null");
+            } else if (this.f23855d != null) {
+                return new ge();
             } else {
-              label169:
-              localin.a(k);
+                throw new IllegalStateException("host == null");
             }
-          }
         }
-        return localin.l();
-      }
-      k += 1;
-    }
-    return paramString.substring(paramInt1, paramInt2);
-  }
-  
-  static String a(String paramString1, String paramString2, boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3)
-  {
-    return a(paramString1, 0, paramString1.length(), paramString2, true, paramBoolean1, paramBoolean2, paramBoolean3);
-  }
-  
-  private static String a(String paramString, boolean paramBoolean)
-  {
-    return a(paramString, 0, paramString.length(), paramBoolean);
-  }
-  
-  private static List<String> a(List<String> paramList, boolean paramBoolean)
-  {
-    ArrayList localArrayList = new ArrayList(paramList.size());
-    Iterator localIterator = paramList.iterator();
-    if (localIterator.hasNext())
-    {
-      paramList = (String)localIterator.next();
-      if (paramList != null) {}
-      for (paramList = a(paramList, paramBoolean);; paramList = null)
-      {
-        localArrayList.add(paramList);
-        break;
-      }
-    }
-    return Collections.unmodifiableList(localArrayList);
-  }
-  
-  static void a(StringBuilder paramStringBuilder, List<String> paramList)
-  {
-    int m = paramList.size();
-    int k = 0;
-    while (k < m)
-    {
-      paramStringBuilder.append('/');
-      paramStringBuilder.append((String)paramList.get(k));
-      k += 1;
-    }
-  }
-  
-  private static boolean a(String paramString, int paramInt1, int paramInt2)
-  {
-    return (paramInt1 + 2 < paramInt2) && (paramString.charAt(paramInt1) == '%') && (a(paramString.charAt(paramInt1 + 1)) != -1) && (a(paramString.charAt(paramInt1 + 2)) != -1);
-  }
-  
-  static List<String> b(String paramString)
-  {
-    ArrayList localArrayList = new ArrayList();
-    int k = 0;
-    if (k <= paramString.length())
-    {
-      int n = paramString.indexOf('&', k);
-      int m = n;
-      if (n == -1) {
-        m = paramString.length();
-      }
-      n = paramString.indexOf('=', k);
-      if ((n == -1) || (n > m))
-      {
-        localArrayList.add(paramString.substring(k, m));
-        localArrayList.add(null);
-      }
-      for (;;)
-      {
-        k = m + 1;
-        break;
-        localArrayList.add(paramString.substring(k, n));
-        localArrayList.add(paramString.substring(n + 1, m));
-      }
-    }
-    return localArrayList;
-  }
-  
-  static void b(StringBuilder paramStringBuilder, List<String> paramList)
-  {
-    int m = paramList.size();
-    int k = 0;
-    while (k < m)
-    {
-      String str1 = (String)paramList.get(k);
-      String str2 = (String)paramList.get(k + 1);
-      if (k > 0) {
-        paramStringBuilder.append('&');
-      }
-      paramStringBuilder.append(str1);
-      if (str2 != null)
-      {
-        paramStringBuilder.append('=');
-        paramStringBuilder.append(str2);
-      }
-      k += 2;
-    }
-  }
-  
-  public static ge d(String paramString)
-  {
-    ge localge = null;
-    a locala = new a();
-    if (locala.a(null, paramString) == ge.a.a.a) {
-      localge = locala.b();
-    }
-    return localge;
-  }
-  
-  public final URI a()
-  {
-    Object localObject2 = new a();
-    ((a)localObject2).a = this.a;
-    ((a)localObject2).b = b();
-    ((a)localObject2).c = c();
-    ((a)localObject2).d = this.b;
-    int k;
-    if (this.c != a(this.a))
-    {
-      k = this.c;
-      ((a)localObject2).e = k;
-      ((a)localObject2).f.clear();
-      ((a)localObject2).f.addAll(e());
-      ((a)localObject2).a(f());
-      if (this.i != null) {
-        break label187;
-      }
-    }
-    int m;
-    for (Object localObject1 = null;; localObject1 = this.j.substring(k + 1))
-    {
-      ((a)localObject2).h = ((String)localObject1);
-      m = ((a)localObject2).f.size();
-      k = 0;
-      while (k < m)
-      {
-        localObject1 = (String)((a)localObject2).f.get(k);
-        ((a)localObject2).f.set(k, a((String)localObject1, "[]", true, false, true));
-        k += 1;
-      }
-      k = -1;
-      break;
-      label187:
-      k = this.j.indexOf('#');
-    }
-    if (((a)localObject2).g != null)
-    {
-      m = ((a)localObject2).g.size();
-      k = 0;
-      while (k < m)
-      {
-        localObject1 = (String)((a)localObject2).g.get(k);
-        if (localObject1 != null) {
-          ((a)localObject2).g.set(k, a((String)localObject1, "\\^`{|}", true, true, true));
-        }
-        k += 1;
-      }
-    }
-    if (((a)localObject2).h != null) {
-      ((a)localObject2).h = a(((a)localObject2).h, " \"#<>\\^`{|}", true, false, false);
-    }
-    localObject2 = ((a)localObject2).toString();
-    try
-    {
-      localObject1 = new URI((String)localObject2);
-      return (URI)localObject1;
-    }
-    catch (URISyntaxException localURISyntaxException)
-    {
-      try
-      {
-        localObject2 = URI.create(((String)localObject2).replaceAll("[\\u0000-\\u001F\\u007F-\\u009F\\p{javaWhitespace}]", ""));
-        return (URI)localObject2;
-      }
-      catch (Exception localException)
-      {
-        throw new RuntimeException(localURISyntaxException);
-      }
-    }
-  }
-  
-  public final String b()
-  {
-    if (this.e.isEmpty()) {
-      return "";
-    }
-    int k = this.a.length() + 3;
-    int m = gy.a(this.j, k, this.j.length(), ":@");
-    return this.j.substring(k, m);
-  }
-  
-  public final ge c(String paramString)
-  {
-    ge localge = null;
-    a locala = new a();
-    if (locala.a(this, paramString) == ge.a.a.a) {}
-    for (paramString = locala;; paramString = null)
-    {
-      if (paramString != null) {
-        localge = paramString.b();
-      }
-      return localge;
-    }
-  }
-  
-  public final String c()
-  {
-    if (this.f.isEmpty()) {
-      return "";
-    }
-    int k = this.j.indexOf(':', this.a.length() + 3);
-    int m = this.j.indexOf('@');
-    return this.j.substring(k + 1, m);
-  }
-  
-  public final String d()
-  {
-    int k = this.j.indexOf('/', this.a.length() + 3);
-    int m = gy.a(this.j, k, this.j.length(), "?#");
-    return this.j.substring(k, m);
-  }
-  
-  public final List<String> e()
-  {
-    int k = this.j.indexOf('/', this.a.length() + 3);
-    int m = gy.a(this.j, k, this.j.length(), "?#");
-    ArrayList localArrayList = new ArrayList();
-    while (k < m)
-    {
-      int n = k + 1;
-      k = gy.a(this.j, n, m, '/');
-      localArrayList.add(this.j.substring(n, k));
-    }
-    return localArrayList;
-  }
-  
-  public final boolean equals(Object paramObject)
-  {
-    return ((paramObject instanceof ge)) && (((ge)paramObject).j.equals(this.j));
-  }
-  
-  public final String f()
-  {
-    if (this.h == null) {
-      return null;
-    }
-    int k = this.j.indexOf('?') + 1;
-    int m = gy.a(this.j, k + 1, this.j.length(), '#');
-    return this.j.substring(k, m);
-  }
-  
-  public final String g()
-  {
-    if (this.h == null) {
-      return null;
-    }
-    StringBuilder localStringBuilder = new StringBuilder();
-    b(localStringBuilder, this.h);
-    return localStringBuilder.toString();
-  }
-  
-  public final int hashCode()
-  {
-    return this.j.hashCode();
-  }
-  
-  public final String toString()
-  {
-    return this.j;
-  }
-  
-  public static final class a
-  {
-    String a;
-    String b = "";
-    String c = "";
-    String d;
-    int e = -1;
-    final List<String> f = new ArrayList();
-    List<String> g;
-    String h;
-    
-    public a()
-    {
-      this.f.add("");
-    }
-    
-    static String a(String paramString, int paramInt1, int paramInt2)
-    {
-      int m = 0;
-      paramString = ge.a(paramString, paramInt1, paramInt2, false);
-      if ((paramString.startsWith("[")) && (paramString.endsWith("]")))
-      {
-        paramString = a(paramString, paramString.length() - 1);
-        if (paramString == null) {
-          return null;
-        }
-        paramString = paramString.getAddress();
-        if (paramString.length == 16)
-        {
-          paramInt2 = 0;
-          int i = -1;
-          paramInt1 = 0;
-          int j;
-          while (paramInt1 < paramString.length)
-          {
-            j = paramInt1;
-            while ((j < 16) && (paramString[j] == 0) && (paramString[(j + 1)] == 0)) {
-              j += 2;
-            }
-            int n = j - paramInt1;
-            int k = paramInt2;
-            if (n > paramInt2)
-            {
-              k = n;
-              i = paramInt1;
-            }
-            paramInt1 = j + 2;
-            paramInt2 = k;
-          }
-          in localin = new in();
-          paramInt1 = m;
-          while (paramInt1 < paramString.length) {
-            if (paramInt1 == i)
-            {
-              localin.b(58);
-              j = paramInt1 + paramInt2;
-              paramInt1 = j;
-              if (j == 16)
-              {
-                localin.b(58);
-                paramInt1 = j;
-              }
-            }
-            else
-            {
-              if (paramInt1 > 0) {
-                localin.b(58);
-              }
-              localin.h((paramString[paramInt1] & 0xFF) << 8 | paramString[(paramInt1 + 1)] & 0xFF);
-              paramInt1 += 2;
-            }
-          }
-          return localin.l();
-        }
-        throw new AssertionError();
-      }
-      return gy.a(paramString);
-    }
-    
-    private static InetAddress a(String paramString, int paramInt)
-    {
-      byte[] arrayOfByte = new byte[16];
-      int j = 0;
-      int k = -1;
-      int m = -1;
-      int n = 1;
-      int i1 = k;
-      int i = j;
-      if (n < paramInt)
-      {
-        if (j == 16) {
-          return null;
-        }
-        if ((n + 2 <= paramInt) && (paramString.regionMatches(n, "::", 0, 2)))
-        {
-          if (k != -1) {
-            return null;
-          }
-          i = n + 2;
-          j += 2;
-          if (i != paramInt) {
-            break label525;
-          }
-          i = j;
-          i1 = j;
-        }
-      }
-      else
-      {
-        if (i == 16) {
-          break label508;
-        }
-        if (i1 != -1) {
-          break label473;
-        }
-        return null;
-      }
-      i = n;
-      i1 = k;
-      int i2 = j;
-      if (j != 0)
-      {
-        if (!paramString.regionMatches(n, ":", 0, 1)) {
-          break label180;
-        }
-        i = n + 1;
-        i2 = j;
-      }
-      for (i1 = k;; i1 = j)
-      {
-        k = 0;
-        j = i;
-        for (;;)
-        {
-          if (j < paramInt)
-          {
-            m = ge.a(paramString.charAt(j));
-            if (m != -1)
-            {
-              k = (k << 4) + m;
-              j += 1;
-              continue;
-              label180:
-              if (paramString.regionMatches(n, ".", 0, 1))
-              {
-                i2 = j - 2;
-                n = i2;
-                if (m < paramInt) {
-                  if (n == 16) {
-                    paramInt = 0;
-                  }
+
+        public final String toString() {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(this.f23852a);
+            stringBuilder.append("://");
+            if (!(this.f23853b.isEmpty() && this.f23854c.isEmpty())) {
+                stringBuilder.append(this.f23853b);
+                if (!this.f23854c.isEmpty()) {
+                    stringBuilder.append(':');
+                    stringBuilder.append(this.f23854c);
                 }
-                for (;;)
-                {
-                  if (paramInt != 0) {
-                    break label387;
-                  }
-                  return null;
-                  i = m;
-                  if (n != i2)
-                  {
-                    if (paramString.charAt(m) != '.') {
-                      paramInt = 0;
+                stringBuilder.append('@');
+            }
+            if (this.f23855d.indexOf(58) != -1) {
+                stringBuilder.append('[');
+                stringBuilder.append(this.f23855d);
+                stringBuilder.append(']');
+            } else {
+                stringBuilder.append(this.f23855d);
+            }
+            int a = m20626a();
+            if (a != ge.m20631a(this.f23852a)) {
+                stringBuilder.append(':');
+                stringBuilder.append(a);
+            }
+            ge.m20639a(stringBuilder, this.f23857f);
+            if (this.f23858g != null) {
+                stringBuilder.append('?');
+                ge.m20643b(stringBuilder, this.f23858g);
+            }
+            if (this.f23859h != null) {
+                stringBuilder.append('#');
+                stringBuilder.append(this.f23859h);
+            }
+            return stringBuilder.toString();
+        }
+
+        /* renamed from: a */
+        final int m20627a(ge geVar, String str) {
+            int i;
+            Object obj;
+            Object obj2;
+            int i2;
+            char charAt;
+            int a;
+            String a2;
+            Object obj3;
+            Object obj4;
+            int a3 = gy.m20779a(str, 0, str.length());
+            int b = gy.m20799b(str, a3, str.length());
+            if (b - a3 >= 2) {
+                char charAt2 = str.charAt(a3);
+                if ((charAt2 < 'a' || charAt2 > 'z') && (charAt2 < 'A' || charAt2 > 'Z')) {
+                    i = -1;
+                    if (i == -1) {
+                        if (str.regionMatches(true, a3, "https:", 0, 6)) {
+                            this.f23852a = C2924g.f12888b;
+                            a3 += 6;
+                        } else {
+                            if (str.regionMatches(true, a3, "http:", 0, 5)) {
+                                return C5918a.f23848c;
+                            }
+                            this.f23852a = "http";
+                            a3 += 5;
+                        }
+                    } else if (geVar != null) {
+                        return C5918a.f23847b;
                     } else {
-                      i = m + 1;
+                        this.f23852a = geVar.f23861a;
                     }
-                  }
-                  else
-                  {
-                    i1 = 0;
-                    m = i;
-                    for (;;)
-                    {
-                      if (m >= paramInt) {
-                        break label339;
-                      }
-                      int i3 = paramString.charAt(m);
-                      if ((i3 < 48) || (i3 > 57)) {
-                        break label339;
-                      }
-                      if ((i1 == 0) && (i != m))
-                      {
-                        paramInt = 0;
-                        break;
-                      }
-                      i1 = i1 * 10 + i3 - 48;
-                      if (i1 > 255)
-                      {
-                        paramInt = 0;
-                        break;
-                      }
-                      m += 1;
+                    obj = null;
+                    obj2 = null;
+                    i = 0;
+                    for (i2 = a3; i2 < b; i2++) {
+                        charAt = str.charAt(i2);
+                        if (charAt != '\\' && charAt != '/') {
+                            break;
+                        }
+                        i++;
                     }
-                    label339:
-                    if (m - i == 0)
-                    {
-                      paramInt = 0;
+                    if (i < 2 || geVar == null || !geVar.f23861a.equals(this.f23852a)) {
+                        i2 = a3 + i;
+                        while (true) {
+                            a = gy.m20781a(str, i2, b, "@/\\?#");
+                            switch (a != b ? str.charAt(a) : '￿') {
+                                case '￿':
+                                case '#':
+                                case '/':
+                                case '?':
+                                case '\\':
+                                    i = C5919a.m20624c(str, i2, a);
+                                    if (i + 1 < a) {
+                                        this.f23855d = C5919a.m20621a(str, i2, i);
+                                        this.f23856e = C5919a.m20625d(str, i + 1, a);
+                                        if (this.f23856e == -1) {
+                                            return C5918a.f23849d;
+                                        }
+                                    }
+                                    this.f23855d = C5919a.m20621a(str, i2, i);
+                                    this.f23856e = ge.m20631a(this.f23852a);
+                                    if (this.f23855d == null) {
+                                        a3 = a;
+                                        break;
+                                    }
+                                    return C5918a.f23850e;
+                                case '@':
+                                    if (obj2 == null) {
+                                        a3 = gy.m20780a(str, i2, a, ':');
+                                        a2 = ge.m20634a(str, i2, a3, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                                        if (obj != null) {
+                                            a2 = this.f23853b + "%40" + a2;
+                                        }
+                                        this.f23853b = a2;
+                                        if (a3 != a) {
+                                            obj2 = 1;
+                                            this.f23854c = ge.m20634a(str, a3 + 1, a, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                                        }
+                                        obj3 = obj2;
+                                        obj4 = 1;
+                                    } else {
+                                        this.f23854c += "%40" + ge.m20634a(str, i2, a, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                                        obj3 = obj2;
+                                        obj4 = obj;
+                                    }
+                                    obj2 = obj3;
+                                    obj = obj4;
+                                    i2 = a + 1;
+                                    continue;
+                                    continue;
+                                    continue;
+                                default:
+                                    continue;
+                                    continue;
+                                    continue;
+                            }
+                        }
+                    } else {
+                        this.f23853b = geVar.m20647b();
+                        this.f23854c = geVar.m20649c();
+                        this.f23855d = geVar.f23862b;
+                        this.f23856e = geVar.f23863c;
+                        this.f23857f.clear();
+                        this.f23857f.addAll(geVar.m20651e());
+                        if (a3 == b || str.charAt(a3) == '#') {
+                            m20628a(geVar.m20652f());
+                        }
                     }
-                    else
-                    {
-                      arrayOfByte[n] = ((byte)i1);
-                      n += 1;
-                      break;
-                      if (n != i2 + 4) {
-                        paramInt = 0;
-                      } else {
-                        paramInt = 1;
-                      }
+                    i = gy.m20781a(str, a3, b, "?#");
+                    m20623b(str, a3, i);
+                    if (i < b || str.charAt(i) != '?') {
+                        a3 = i;
+                    } else {
+                        a3 = gy.m20780a(str, i, b, '#');
+                        this.f23858g = ge.m20642b(ge.m20634a(str, i + 1, a3, " \"'<>#", true, false, true, true));
                     }
-                  }
+                    if (a3 < b && str.charAt(a3) == '#') {
+                        this.f23859h = ge.m20634a(str, a3 + 1, b, "", true, false, false, false);
+                    }
+                    return C5918a.f23846a;
                 }
-                label387:
-                i = j + 2;
-                i1 = k;
-                break;
-              }
-              return null;
-            }
-          }
-        }
-        m = j - i;
-        if ((m == 0) || (m > 4)) {
-          return null;
-        }
-        n = i2 + 1;
-        arrayOfByte[i2] = ((byte)(k >>> 8 & 0xFF));
-        m = n + 1;
-        arrayOfByte[n] = ((byte)(k & 0xFF));
-        n = j;
-        k = i1;
-        j = m;
-        m = i;
-        break;
-        label473:
-        System.arraycopy(arrayOfByte, i1, arrayOfByte, 16 - (i - i1), i - i1);
-        Arrays.fill(arrayOfByte, i1, 16 - i + i1, (byte)0);
-        try
-        {
-          label508:
-          paramString = InetAddress.getByAddress(arrayOfByte);
-          return paramString;
-        }
-        catch (UnknownHostException paramString)
-        {
-          throw new AssertionError();
-        }
-        label525:
-        i2 = j;
-      }
-    }
-    
-    private void b(String paramString, int paramInt1, int paramInt2)
-    {
-      if (paramInt1 == paramInt2) {
-        return;
-      }
-      int i = paramString.charAt(paramInt1);
-      label52:
-      int j;
-      label76:
-      String str;
-      if ((i == 47) || (i == 92))
-      {
-        this.f.clear();
-        this.f.add("");
-        paramInt1 += 1;
-        if (paramInt1 >= paramInt2) {
-          break label267;
-        }
-        j = gy.a(paramString, paramInt1, paramInt2, "/\\");
-        if (j >= paramInt2) {
-          break label269;
-        }
-        i = 1;
-        str = ge.a(paramString, paramInt1, j, " \"<>^`{}|/\\?#", true, false, false, true);
-        if ((!str.equals(".")) && (!str.equalsIgnoreCase("%2e"))) {
-          break label275;
-        }
-        paramInt1 = 1;
-        label113:
-        if (paramInt1 == 0)
-        {
-          if ((!str.equals("..")) && (!str.equalsIgnoreCase("%2e.")) && (!str.equalsIgnoreCase(".%2e")) && (!str.equalsIgnoreCase("%2e%2e"))) {
-            break label280;
-          }
-          paramInt1 = 1;
-          label159:
-          if (paramInt1 == 0) {
-            break label300;
-          }
-          if ((!((String)this.f.remove(this.f.size() - 1)).isEmpty()) || (this.f.isEmpty())) {
-            break label285;
-          }
-          this.f.set(this.f.size() - 1, "");
-        }
-      }
-      label267:
-      label269:
-      label275:
-      label280:
-      label285:
-      label300:
-      label385:
-      for (;;)
-      {
-        paramInt1 = j;
-        if (i != 0) {
-          paramInt1 = j + 1;
-        }
-        break label52;
-        this.f.set(this.f.size() - 1, "");
-        break label52;
-        break;
-        i = 0;
-        break label76;
-        paramInt1 = 0;
-        break label113;
-        paramInt1 = 0;
-        break label159;
-        this.f.add("");
-        continue;
-        if (((String)this.f.get(this.f.size() - 1)).isEmpty()) {
-          this.f.set(this.f.size() - 1, str);
-        }
-        for (;;)
-        {
-          if (i == 0) {
-            break label385;
-          }
-          this.f.add("");
-          break;
-          this.f.add(str);
-        }
-      }
-    }
-    
-    private static int c(String paramString, int paramInt1, int paramInt2)
-    {
-      int i;
-      int j;
-      if (paramInt1 < paramInt2)
-      {
-        i = paramInt1;
-        j = paramInt1;
-      }
-      switch (paramString.charAt(paramInt1))
-      {
-      default: 
-        i = paramInt1;
-      case '[': 
-        for (;;)
-        {
-          paramInt1 = i + 1;
-          break;
-          do
-          {
-            paramInt1 = i + 1;
-            i = paramInt1;
-            if (paramInt1 >= paramInt2) {
-              break;
-            }
-            i = paramInt1;
-          } while (paramString.charAt(paramInt1) != ']');
-          i = paramInt1;
-        }
-        j = paramInt2;
-      }
-      return j;
-    }
-    
-    private static int d(String paramString, int paramInt1, int paramInt2)
-    {
-      try
-      {
-        paramInt1 = Integer.parseInt(ge.a(paramString, paramInt1, paramInt2, "", false, false, false, true));
-        if ((paramInt1 > 0) && (paramInt1 <= 65535)) {
-          return paramInt1;
-        }
-        return -1;
-      }
-      catch (NumberFormatException paramString) {}
-      return -1;
-    }
-    
-    final int a()
-    {
-      if (this.e != -1) {
-        return this.e;
-      }
-      return ge.a(this.a);
-    }
-    
-    final int a(ge paramge, String paramString)
-    {
-      int j = gy.a(paramString, 0, paramString.length());
-      int i1 = gy.b(paramString, j, paramString.length());
-      int i;
-      if (i1 - j >= 2)
-      {
-        i = paramString.charAt(j);
-        if (((i < 97) || (i > 122)) && ((i < 65) || (i > 90)))
-        {
-          i = -1;
-          if (i == -1) {
-            break label290;
-          }
-          if (!paramString.regionMatches(true, j, "https:", 0, 6)) {
-            break label258;
-          }
-          this.a = "https";
-          i = j + 6;
-        }
-      }
-      int n;
-      int m;
-      int k;
-      for (;;)
-      {
-        n = 0;
-        m = 0;
-        k = 0;
-        j = i;
-        while (j < i1)
-        {
-          int i2 = paramString.charAt(j);
-          if ((i2 != 92) && (i2 != 47)) {
-            break;
-          }
-          k += 1;
-          j += 1;
-        }
-        i = j + 1;
-        for (;;)
-        {
-          if (i >= i1) {
-            break label253;
-          }
-          k = paramString.charAt(i);
-          if (((k < 97) || (k > 122)) && ((k < 65) || (k > 90)) && ((k < 48) || (k > 57)) && (k != 43) && (k != 45) && (k != 46))
-          {
-            if (k == 58) {
-              break;
+                i = a3 + 1;
+                while (i < b) {
+                    char charAt3 = str.charAt(i);
+                    if ((charAt3 < 'a' || charAt3 > 'z') && ((charAt3 < 'A' || charAt3 > 'Z') && !((charAt3 >= '0' && charAt3 <= '9') || charAt3 == '+' || charAt3 == '-' || charAt3 == '.'))) {
+                        if (charAt3 != ':') {
+                            i = -1;
+                        }
+                        if (i == -1) {
+                            if (str.regionMatches(true, a3, "https:", 0, 6)) {
+                                if (str.regionMatches(true, a3, "http:", 0, 5)) {
+                                    return C5918a.f23848c;
+                                }
+                                this.f23852a = "http";
+                                a3 += 5;
+                            } else {
+                                this.f23852a = C2924g.f12888b;
+                                a3 += 6;
+                            }
+                        } else if (geVar != null) {
+                            return C5918a.f23847b;
+                        } else {
+                            this.f23852a = geVar.f23861a;
+                        }
+                        obj = null;
+                        obj2 = null;
+                        i = 0;
+                        for (i2 = a3; i2 < b; i2++) {
+                            charAt = str.charAt(i2);
+                            if (charAt != '\\') {
+                            }
+                            i++;
+                        }
+                        if (i < 2) {
+                        }
+                        i2 = a3 + i;
+                        while (true) {
+                            a = gy.m20781a(str, i2, b, "@/\\?#");
+                            if (a != b) {
+                            }
+                            switch (a != b ? str.charAt(a) : '￿') {
+                                case '￿':
+                                case '#':
+                                case '/':
+                                case '?':
+                                case '\\':
+                                    i = C5919a.m20624c(str, i2, a);
+                                    if (i + 1 < a) {
+                                        this.f23855d = C5919a.m20621a(str, i2, i);
+                                        this.f23856e = ge.m20631a(this.f23852a);
+                                    } else {
+                                        this.f23855d = C5919a.m20621a(str, i2, i);
+                                        this.f23856e = C5919a.m20625d(str, i + 1, a);
+                                        if (this.f23856e == -1) {
+                                            return C5918a.f23849d;
+                                        }
+                                    }
+                                    if (this.f23855d == null) {
+                                        a3 = a;
+                                        break;
+                                    }
+                                    return C5918a.f23850e;
+                                case '@':
+                                    if (obj2 == null) {
+                                        this.f23854c += "%40" + ge.m20634a(str, i2, a, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                                        obj3 = obj2;
+                                        obj4 = obj;
+                                    } else {
+                                        a3 = gy.m20780a(str, i2, a, ':');
+                                        a2 = ge.m20634a(str, i2, a3, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                                        if (obj != null) {
+                                            a2 = this.f23853b + "%40" + a2;
+                                        }
+                                        this.f23853b = a2;
+                                        if (a3 != a) {
+                                            obj2 = 1;
+                                            this.f23854c = ge.m20634a(str, a3 + 1, a, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                                        }
+                                        obj3 = obj2;
+                                        obj4 = 1;
+                                    }
+                                    obj2 = obj3;
+                                    obj = obj4;
+                                    i2 = a + 1;
+                                    continue;
+                                    continue;
+                                    continue;
+                                default:
+                                    continue;
+                                    continue;
+                                    continue;
+                            }
+                            i = gy.m20781a(str, a3, b, "?#");
+                            m20623b(str, a3, i);
+                            if (i < b) {
+                            }
+                            a3 = i;
+                            this.f23859h = ge.m20634a(str, a3 + 1, b, "", true, false, false, false);
+                            return C5918a.f23846a;
+                        }
+                    }
+                    i++;
+                }
             }
             i = -1;
-            break;
-          }
-          i += 1;
-        }
-        label253:
-        i = -1;
-        break;
-        label258:
-        if (paramString.regionMatches(true, j, "http:", 0, 5))
-        {
-          this.a = "http";
-          i = j + 5;
-        }
-        else
-        {
-          return a.c;
-          label290:
-          if (paramge == null) {
-            break label308;
-          }
-          this.a = ge.a(paramge);
-          i = j;
-        }
-      }
-      label308:
-      return a.b;
-      if ((k >= 2) || (paramge == null) || (!ge.a(paramge).equals(this.a)))
-      {
-        k = i + k;
-        j = n;
-        i = m;
-        n = gy.a(paramString, k, i1, "@/\\?#");
-        if (n != i1) {}
-        for (m = paramString.charAt(n);; m = -1) {
-          switch (m)
-          {
-          default: 
-            break;
-          case -1: 
-          case 35: 
-          case 47: 
-          case 63: 
-          case 92: 
-            i = c(paramString, k, n);
-            if (i + 1 >= n) {
-              break label680;
+            if (i == -1) {
+                if (str.regionMatches(true, a3, "https:", 0, 6)) {
+                    this.f23852a = C2924g.f12888b;
+                    a3 += 6;
+                } else {
+                    if (str.regionMatches(true, a3, "http:", 0, 5)) {
+                        return C5918a.f23848c;
+                    }
+                    this.f23852a = "http";
+                    a3 += 5;
+                }
+            } else if (geVar != null) {
+                return C5918a.f23847b;
+            } else {
+                this.f23852a = geVar.f23861a;
             }
-            this.d = a(paramString, k, i);
-            this.e = d(paramString, i + 1, n);
-            if (this.e != -1) {
-              break label702;
+            obj = null;
+            obj2 = null;
+            i = 0;
+            for (i2 = a3; i2 < b; i2++) {
+                charAt = str.charAt(i2);
+                if (charAt != '\\') {
+                }
+                i++;
             }
-            return a.d;
-          }
+            if (i < 2) {
+            }
+            i2 = a3 + i;
+            while (true) {
+                a = gy.m20781a(str, i2, b, "@/\\?#");
+                if (a != b) {
+                }
+                switch (a != b ? str.charAt(a) : '￿') {
+                    case '￿':
+                    case '#':
+                    case '/':
+                    case '?':
+                    case '\\':
+                        i = C5919a.m20624c(str, i2, a);
+                        if (i + 1 < a) {
+                            this.f23855d = C5919a.m20621a(str, i2, i);
+                            this.f23856e = C5919a.m20625d(str, i + 1, a);
+                            if (this.f23856e == -1) {
+                                return C5918a.f23849d;
+                            }
+                        }
+                        this.f23855d = C5919a.m20621a(str, i2, i);
+                        this.f23856e = ge.m20631a(this.f23852a);
+                        if (this.f23855d == null) {
+                            a3 = a;
+                            break;
+                        }
+                        return C5918a.f23850e;
+                    case '@':
+                        if (obj2 == null) {
+                            a3 = gy.m20780a(str, i2, a, ':');
+                            a2 = ge.m20634a(str, i2, a3, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                            if (obj != null) {
+                                a2 = this.f23853b + "%40" + a2;
+                            }
+                            this.f23853b = a2;
+                            if (a3 != a) {
+                                obj2 = 1;
+                                this.f23854c = ge.m20634a(str, a3 + 1, a, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                            }
+                            obj3 = obj2;
+                            obj4 = 1;
+                        } else {
+                            this.f23854c += "%40" + ge.m20634a(str, i2, a, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
+                            obj3 = obj2;
+                            obj4 = obj;
+                        }
+                        obj2 = obj3;
+                        obj = obj4;
+                        i2 = a + 1;
+                        continue;
+                        continue;
+                        continue;
+                    default:
+                        continue;
+                        continue;
+                        continue;
+                }
+                i = gy.m20781a(str, a3, b, "?#");
+                m20623b(str, a3, i);
+                if (i < b) {
+                }
+                a3 = i;
+                this.f23859h = ge.m20634a(str, a3 + 1, b, "", true, false, false, false);
+                return C5918a.f23846a;
+            }
         }
-        if (i == 0)
-        {
-          m = gy.a(paramString, k, n, ':');
-          String str = ge.a(paramString, k, m, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
-          paramge = str;
-          if (j != 0) {
-            paramge = this.b + "%40" + str;
-          }
-          this.b = paramge;
-          if (m != n)
-          {
-            i = 1;
-            this.c = ge.a(paramString, m + 1, n, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true);
-          }
-          j = i;
+
+        /* renamed from: b */
+        private void m20623b(String str, int i, int i2) {
+            if (i != i2) {
+                int i3;
+                char charAt = str.charAt(i);
+                if (charAt == '/' || charAt == '\\') {
+                    this.f23857f.clear();
+                    this.f23857f.add("");
+                    i3 = i + 1;
+                } else {
+                    this.f23857f.set(this.f23857f.size() - 1, "");
+                    i3 = i;
+                }
+                while (i3 < i2) {
+                    boolean z;
+                    boolean z2;
+                    int a = gy.m20781a(str, i3, i2, "/\\");
+                    if (a < i2) {
+                        z = true;
+                    } else {
+                        z = false;
+                    }
+                    String a2 = ge.m20634a(str, i3, a, " \"<>^`{}|/\\?#", true, false, false, true);
+                    if (a2.equals(".") || a2.equalsIgnoreCase("%2e")) {
+                        z2 = true;
+                    } else {
+                        z2 = false;
+                    }
+                    if (!z2) {
+                        if (a2.equals("..") || a2.equalsIgnoreCase("%2e.") || a2.equalsIgnoreCase(".%2e") || a2.equalsIgnoreCase("%2e%2e")) {
+                            z2 = true;
+                        } else {
+                            z2 = false;
+                        }
+                        if (!z2) {
+                            if (((String) this.f23857f.get(this.f23857f.size() - 1)).isEmpty()) {
+                                this.f23857f.set(this.f23857f.size() - 1, a2);
+                            } else {
+                                this.f23857f.add(a2);
+                            }
+                            if (z) {
+                                this.f23857f.add("");
+                            }
+                        } else if (!((String) this.f23857f.remove(this.f23857f.size() - 1)).isEmpty() || this.f23857f.isEmpty()) {
+                            this.f23857f.add("");
+                        } else {
+                            this.f23857f.set(this.f23857f.size() - 1, "");
+                        }
+                    }
+                    if (z) {
+                        a++;
+                    }
+                    i3 = a;
+                }
+            }
         }
-        for (i = 1;; i = k)
-        {
-          m = i;
-          k = n + 1;
-          i = j;
-          j = m;
-          break;
-          this.c = (this.c + "%40" + ge.a(paramString, k, n, " \"':;<=>@[]^`{}|/\\?#", true, false, false, true));
-          k = j;
-          j = i;
+
+        /* JADX WARNING: inconsistent code. */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        /* renamed from: c */
+        private static int m20624c(java.lang.String r3, int r4, int r5) {
+            /*
+            r0 = r4;
+        L_0x0001:
+            if (r0 >= r5) goto L_0x001a;
+        L_0x0003:
+            r1 = r3.charAt(r0);
+            switch(r1) {
+                case 58: goto L_0x001b;
+                case 91: goto L_0x000d;
+                default: goto L_0x000a;
+            };
+        L_0x000a:
+            r0 = r0 + 1;
+            goto L_0x0001;
+        L_0x000d:
+            r0 = r0 + 1;
+            if (r0 >= r5) goto L_0x000a;
+        L_0x0011:
+            r1 = r3.charAt(r0);
+            r2 = 93;
+            if (r1 != r2) goto L_0x000d;
+        L_0x0019:
+            goto L_0x000a;
+        L_0x001a:
+            r0 = r5;
+        L_0x001b:
+            return r0;
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.indooratlas.android.sdk._internal.ge.a.c(java.lang.String, int, int):int");
         }
-        label680:
-        this.d = a(paramString, k, i);
-        this.e = ge.a(this.a);
-        label702:
-        if (this.d == null) {
-          return a.e;
+
+        /* renamed from: a */
+        static String m20621a(String str, int i, int i2) {
+            int i3 = 0;
+            String a = ge.m20635a(str, i, i2, false);
+            if (!a.startsWith("[") || !a.endsWith("]")) {
+                return gy.m20784a(a);
+            }
+            InetAddress a2 = C5919a.m20622a(a, a.length() - 1);
+            if (a2 == null) {
+                return null;
+            }
+            byte[] address = a2.getAddress();
+            if (address.length == 16) {
+                int i4 = 0;
+                int i5 = -1;
+                int i6 = 0;
+                while (i6 < address.length) {
+                    int i7 = i6;
+                    while (i7 < 16 && address[i7] == (byte) 0 && address[i7 + 1] == (byte) 0) {
+                        i7 += 2;
+                    }
+                    int i8 = i7 - i6;
+                    if (i8 > i4) {
+                        i4 = i8;
+                        i5 = i6;
+                    }
+                    i6 = i7 + 2;
+                }
+                in inVar = new in();
+                while (i3 < address.length) {
+                    if (i3 == i5) {
+                        inVar.b(58);
+                        i3 += i4;
+                        if (i3 == 16) {
+                            inVar.b(58);
+                        }
+                    } else {
+                        if (i3 > 0) {
+                            inVar.b(58);
+                        }
+                        inVar.h((long) (((address[i3] & 255) << 8) | (address[i3 + 1] & 255)));
+                        i3 += 2;
+                    }
+                }
+                return inVar.l();
+            }
+            throw new AssertionError();
         }
-        j = n;
-        i = gy.a(paramString, j, i1, "?#");
-        b(paramString, j, i);
-        if ((i >= i1) || (paramString.charAt(i) != '?')) {
-          break label916;
+
+        /* renamed from: a */
+        private static InetAddress m20622a(String str, int i) {
+            Object obj = new byte[16];
+            int i2 = 0;
+            int i3 = -1;
+            int i4 = -1;
+            int i5 = 1;
+            while (i5 < i) {
+                if (i2 == 16) {
+                    return null;
+                }
+                int i6;
+                int i7;
+                if (i5 + 2 > i || !str.regionMatches(i5, "::", 0, 2)) {
+                    if (i2 != 0) {
+                        if (str.regionMatches(i5, Config.TRACE_TODAY_VISIT_SPLIT, 0, 1)) {
+                            i5++;
+                        } else if (!str.regionMatches(i5, ".", 0, 1)) {
+                            return null;
+                        } else {
+                            Object obj2;
+                            int i8 = i2 - 2;
+                            i6 = i8;
+                            i5 = i4;
+                            loop2:
+                            while (i5 < i) {
+                                if (i6 == 16) {
+                                    obj2 = null;
+                                    break;
+                                }
+                                if (i6 != i8) {
+                                    if (str.charAt(i5) != '.') {
+                                        obj2 = null;
+                                        break;
+                                    }
+                                    i5++;
+                                }
+                                i7 = 0;
+                                i4 = i5;
+                                while (i4 < i) {
+                                    char charAt = str.charAt(i4);
+                                    if (charAt >= '0' && charAt <= '9') {
+                                        if (i7 == 0 && i5 != i4) {
+                                            obj2 = null;
+                                            break loop2;
+                                        }
+                                        i7 = ((i7 * 10) + charAt) - 48;
+                                        if (i7 > 255) {
+                                            obj2 = null;
+                                            break loop2;
+                                        }
+                                        i4++;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (i4 - i5 == 0) {
+                                    obj2 = null;
+                                    break;
+                                }
+                                i5 = i6 + 1;
+                                obj[i6] = (byte) i7;
+                                i6 = i5;
+                                i5 = i4;
+                            }
+                            if (i6 != i8 + 4) {
+                                obj2 = null;
+                            } else {
+                                obj2 = 1;
+                            }
+                            if (obj2 == null) {
+                                return null;
+                            }
+                            i2 += 2;
+                        }
+                    }
+                } else if (i3 != -1) {
+                    return null;
+                } else {
+                    i5 += 2;
+                    i3 = i2 + 2;
+                    if (i5 == i) {
+                        i2 = i3;
+                        break;
+                    }
+                    i2 = i3;
+                }
+                i7 = 0;
+                i4 = i5;
+                while (i4 < i) {
+                    i6 = ge.m20630a(str.charAt(i4));
+                    if (i6 == -1) {
+                        break;
+                    }
+                    i7 = (i7 << 4) + i6;
+                    i4++;
+                }
+                i6 = i4 - i5;
+                if (i6 == 0 || i6 > 4) {
+                    return null;
+                }
+                i6 = i2 + 1;
+                obj[i2] = (byte) ((i7 >>> 8) & 255);
+                i2 = i6 + 1;
+                obj[i6] = (byte) (i7 & 255);
+                int i9 = i4;
+                i4 = i5;
+                i5 = i9;
+            }
+            if (i2 != 16) {
+                if (i3 == -1) {
+                    return null;
+                }
+                System.arraycopy(obj, i3, obj, 16 - (i2 - i3), i2 - i3);
+                Arrays.fill(obj, i3, (16 - i2) + i3, (byte) 0);
+            }
+            try {
+                return InetAddress.getByAddress(obj);
+            } catch (UnknownHostException e) {
+                throw new AssertionError();
+            }
         }
-        j = gy.a(paramString, i, i1, '#');
-        this.g = ge.b(ge.a(paramString, i + 1, j, " \"'<>#", true, false, true, true));
-        i = j;
-      }
-      label916:
-      for (;;)
-      {
-        if ((i < i1) && (paramString.charAt(i) == '#')) {
-          this.h = ge.a(paramString, i + 1, i1, "", true, false, false, false);
+
+        /* renamed from: d */
+        private static int m20625d(String str, int i, int i2) {
+            try {
+                int parseInt = Integer.parseInt(ge.m20634a(str, i, i2, "", false, false, false, true));
+                return (parseInt <= 0 || parseInt > 65535) ? -1 : parseInt;
+            } catch (NumberFormatException e) {
+                return -1;
+            }
         }
-        return a.a;
-        this.b = paramge.b();
-        this.c = paramge.c();
-        this.d = ge.b(paramge);
-        this.e = ge.c(paramge);
-        this.f.clear();
-        this.f.addAll(paramge.e());
-        if (i != i1)
-        {
-          j = i;
-          if (paramString.charAt(i) != '#') {
-            break;
-          }
-        }
-        a(paramge.f());
-        j = i;
-        break;
-      }
     }
-    
-    public final a a(String paramString)
-    {
-      if (paramString != null) {}
-      for (paramString = ge.b(ge.a(paramString, " \"'<>#", false, true, true));; paramString = null)
-      {
-        this.g = paramString;
-        return this;
-      }
+
+    private ge(C5919a c5919a) {
+        String str = null;
+        this.f23861a = c5919a.f23852a;
+        this.f23864e = m20637a(c5919a.f23853b, false);
+        this.f23865f = m20637a(c5919a.f23854c, false);
+        this.f23862b = c5919a.f23855d;
+        this.f23863c = c5919a.m20626a();
+        this.f23866g = m20638a(c5919a.f23857f, false);
+        this.f23867h = c5919a.f23858g != null ? m20638a(c5919a.f23858g, true) : null;
+        if (c5919a.f23859h != null) {
+            str = m20637a(c5919a.f23859h, false);
+        }
+        this.f23868i = str;
+        this.f23869j = c5919a.toString();
     }
-    
-    public final ge b()
-    {
-      if (this.a == null) {
-        throw new IllegalStateException("scheme == null");
-      }
-      if (this.d == null) {
-        throw new IllegalStateException("host == null");
-      }
-      return new ge(this, (byte)0);
+
+    /* renamed from: a */
+    public final URI m20646a() {
+        String str;
+        int i;
+        C5919a c5919a = new C5919a();
+        c5919a.f23852a = this.f23861a;
+        c5919a.f23853b = m20647b();
+        c5919a.f23854c = m20649c();
+        c5919a.f23855d = this.f23862b;
+        c5919a.f23856e = this.f23863c != m20631a(this.f23861a) ? this.f23863c : -1;
+        c5919a.f23857f.clear();
+        c5919a.f23857f.addAll(m20651e());
+        c5919a.m20628a(m20652f());
+        if (this.f23868i == null) {
+            str = null;
+        } else {
+            str = this.f23869j.substring(this.f23869j.indexOf(35) + 1);
+        }
+        c5919a.f23859h = str;
+        int size = c5919a.f23857f.size();
+        for (i = 0; i < size; i++) {
+            c5919a.f23857f.set(i, m20636a((String) c5919a.f23857f.get(i), "[]", true, false, true));
+        }
+        if (c5919a.f23858g != null) {
+            size = c5919a.f23858g.size();
+            for (i = 0; i < size; i++) {
+                str = (String) c5919a.f23858g.get(i);
+                if (str != null) {
+                    c5919a.f23858g.set(i, m20636a(str, "\\^`{|}", true, true, true));
+                }
+            }
+        }
+        if (c5919a.f23859h != null) {
+            c5919a.f23859h = m20636a(c5919a.f23859h, " \"#<>\\^`{|}", true, false, false);
+        }
+        String c5919a2 = c5919a.toString();
+        try {
+            return new URI(c5919a2);
+        } catch (Throwable e) {
+            try {
+                return URI.create(c5919a2.replaceAll("[\\u0000-\\u001F\\u007F-\\u009F\\p{javaWhitespace}]", ""));
+            } catch (Exception e2) {
+                throw new RuntimeException(e);
+            }
+        }
     }
-    
-    public final String toString()
-    {
-      StringBuilder localStringBuilder = new StringBuilder();
-      localStringBuilder.append(this.a);
-      localStringBuilder.append("://");
-      if ((!this.b.isEmpty()) || (!this.c.isEmpty()))
-      {
-        localStringBuilder.append(this.b);
-        if (!this.c.isEmpty())
-        {
-          localStringBuilder.append(':');
-          localStringBuilder.append(this.c);
+
+    /* renamed from: b */
+    public final String m20647b() {
+        if (this.f23864e.isEmpty()) {
+            return "";
         }
-        localStringBuilder.append('@');
-      }
-      if (this.d.indexOf(':') != -1)
-      {
-        localStringBuilder.append('[');
-        localStringBuilder.append(this.d);
-        localStringBuilder.append(']');
-      }
-      for (;;)
-      {
-        int i = a();
-        if (i != ge.a(this.a))
-        {
-          localStringBuilder.append(':');
-          localStringBuilder.append(i);
-        }
-        ge.a(localStringBuilder, this.f);
-        if (this.g != null)
-        {
-          localStringBuilder.append('?');
-          ge.b(localStringBuilder, this.g);
-        }
-        if (this.h != null)
-        {
-          localStringBuilder.append('#');
-          localStringBuilder.append(this.h);
-        }
-        return localStringBuilder.toString();
-        localStringBuilder.append(this.d);
-      }
+        int length = this.f23861a.length() + 3;
+        return this.f23869j.substring(length, gy.m20781a(this.f23869j, length, this.f23869j.length(), ":@"));
     }
-    
-    static enum a {}
-  }
+
+    /* renamed from: c */
+    public final String m20649c() {
+        if (this.f23865f.isEmpty()) {
+            return "";
+        }
+        return this.f23869j.substring(this.f23869j.indexOf(58, this.f23861a.length() + 3) + 1, this.f23869j.indexOf(64));
+    }
+
+    /* renamed from: a */
+    public static int m20631a(String str) {
+        if (str.equals("http")) {
+            return 80;
+        }
+        if (str.equals(C2924g.f12888b)) {
+            return 443;
+        }
+        return -1;
+    }
+
+    /* renamed from: d */
+    public final String m20650d() {
+        int indexOf = this.f23869j.indexOf(47, this.f23861a.length() + 3);
+        return this.f23869j.substring(indexOf, gy.m20781a(this.f23869j, indexOf, this.f23869j.length(), "?#"));
+    }
+
+    /* renamed from: a */
+    static void m20639a(StringBuilder stringBuilder, List<String> list) {
+        int size = list.size();
+        for (int i = 0; i < size; i++) {
+            stringBuilder.append('/');
+            stringBuilder.append((String) list.get(i));
+        }
+    }
+
+    /* renamed from: e */
+    public final List<String> m20651e() {
+        int indexOf = this.f23869j.indexOf(47, this.f23861a.length() + 3);
+        int a = gy.m20781a(this.f23869j, indexOf, this.f23869j.length(), "?#");
+        List<String> arrayList = new ArrayList();
+        while (indexOf < a) {
+            int i = indexOf + 1;
+            indexOf = gy.m20780a(this.f23869j, i, a, '/');
+            arrayList.add(this.f23869j.substring(i, indexOf));
+        }
+        return arrayList;
+    }
+
+    /* renamed from: f */
+    public final String m20652f() {
+        if (this.f23867h == null) {
+            return null;
+        }
+        int indexOf = this.f23869j.indexOf(63) + 1;
+        return this.f23869j.substring(indexOf, gy.m20780a(this.f23869j, indexOf + 1, this.f23869j.length(), '#'));
+    }
+
+    /* renamed from: b */
+    static void m20643b(StringBuilder stringBuilder, List<String> list) {
+        int size = list.size();
+        for (int i = 0; i < size; i += 2) {
+            String str = (String) list.get(i);
+            String str2 = (String) list.get(i + 1);
+            if (i > 0) {
+                stringBuilder.append('&');
+            }
+            stringBuilder.append(str);
+            if (str2 != null) {
+                stringBuilder.append('=');
+                stringBuilder.append(str2);
+            }
+        }
+    }
+
+    /* renamed from: b */
+    static List<String> m20642b(String str) {
+        List<String> arrayList = new ArrayList();
+        int i = 0;
+        while (i <= str.length()) {
+            int indexOf = str.indexOf(38, i);
+            if (indexOf == -1) {
+                indexOf = str.length();
+            }
+            int indexOf2 = str.indexOf(61, i);
+            if (indexOf2 == -1 || indexOf2 > indexOf) {
+                arrayList.add(str.substring(i, indexOf));
+                arrayList.add(null);
+            } else {
+                arrayList.add(str.substring(i, indexOf2));
+                arrayList.add(str.substring(indexOf2 + 1, indexOf));
+            }
+            i = indexOf + 1;
+        }
+        return arrayList;
+    }
+
+    /* renamed from: g */
+    public final String m20653g() {
+        if (this.f23867h == null) {
+            return null;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        m20643b(stringBuilder, this.f23867h);
+        return stringBuilder.toString();
+    }
+
+    /* renamed from: c */
+    public final ge m20648c(String str) {
+        C5919a c5919a = new C5919a();
+        if (c5919a.m20627a(this, str) != C5918a.f23846a) {
+            c5919a = null;
+        }
+        if (c5919a != null) {
+            return c5919a.m20629b();
+        }
+        return null;
+    }
+
+    /* renamed from: d */
+    public static ge m20645d(String str) {
+        C5919a c5919a = new C5919a();
+        if (c5919a.m20627a(null, str) == C5918a.f23846a) {
+            return c5919a.m20629b();
+        }
+        return null;
+    }
+
+    /* renamed from: a */
+    public static ge m20632a(URL url) {
+        return m20645d(url.toString());
+    }
+
+    public final boolean equals(Object o) {
+        return (o instanceof ge) && ((ge) o).f23869j.equals(this.f23869j);
+    }
+
+    public final int hashCode() {
+        return this.f23869j.hashCode();
+    }
+
+    public final String toString() {
+        return this.f23869j;
+    }
+
+    /* renamed from: a */
+    private static String m20637a(String str, boolean z) {
+        return m20635a(str, 0, str.length(), z);
+    }
+
+    /* renamed from: a */
+    private static List<String> m20638a(List<String> list, boolean z) {
+        List arrayList = new ArrayList(list.size());
+        for (String str : list) {
+            arrayList.add(str != null ? m20637a(str, z) : null);
+        }
+        return Collections.unmodifiableList(arrayList);
+    }
+
+    /* renamed from: a */
+    static String m20635a(String str, int i, int i2, boolean z) {
+        int i3 = i;
+        while (i3 < i2) {
+            char charAt = str.charAt(i3);
+            if (charAt == '%' || (charAt == '+' && z)) {
+                in inVar = new in();
+                inVar.a(str, i, i3);
+                while (i3 < i2) {
+                    int codePointAt = str.codePointAt(i3);
+                    if (codePointAt != 37 || i3 + 2 >= i2) {
+                        if (codePointAt == 43 && z) {
+                            inVar.b(32);
+                        }
+                        inVar.a(codePointAt);
+                    } else {
+                        int a = m20630a(str.charAt(i3 + 1));
+                        int a2 = m20630a(str.charAt(i3 + 2));
+                        if (!(a == -1 || a2 == -1)) {
+                            inVar.b((a << 4) + a2);
+                            i3 += 2;
+                        }
+                        inVar.a(codePointAt);
+                    }
+                    i3 += Character.charCount(codePointAt);
+                }
+                return inVar.l();
+            }
+            i3++;
+        }
+        return str.substring(i, i2);
+    }
+
+    /* renamed from: a */
+    private static boolean m20640a(String str, int i, int i2) {
+        return i + 2 < i2 && str.charAt(i) == '%' && m20630a(str.charAt(i + 1)) != -1 && m20630a(str.charAt(i + 2)) != -1;
+    }
+
+    /* renamed from: a */
+    static int m20630a(char c) {
+        if (c >= '0' && c <= '9') {
+            return c - 48;
+        }
+        if (c >= 'a' && c <= 'f') {
+            return (c - 97) + 10;
+        }
+        if (c < 'A' || c > 'F') {
+            return -1;
+        }
+        return (c - 65) + 10;
+    }
+
+    /* renamed from: a */
+    static String m20634a(String str, int i, int i2, String str2, boolean z, boolean z2, boolean z3, boolean z4) {
+        int i3 = i;
+        while (i3 < i2) {
+            int codePointAt = str.codePointAt(i3);
+            if (codePointAt < 32 || codePointAt == TransportMediator.KEYCODE_MEDIA_PAUSE || ((codePointAt >= 128 && z4) || str2.indexOf(codePointAt) != -1 || ((codePointAt == 37 && (!z || (z2 && !m20640a(str, i3, i2)))) || (codePointAt == 43 && z3)))) {
+                in inVar = new in();
+                inVar.a(str, i, i3);
+                int i4 = i3;
+                in inVar2 = null;
+                while (i4 < i2) {
+                    int codePointAt2 = str.codePointAt(i4);
+                    if (!(z && (codePointAt2 == 9 || codePointAt2 == 10 || codePointAt2 == 12 || codePointAt2 == 13))) {
+                        if (codePointAt2 == 43 && z3) {
+                            String str3;
+                            if (z) {
+                                str3 = "+";
+                            } else {
+                                str3 = "%2B";
+                            }
+                            inVar.a(str3);
+                        } else if (codePointAt2 < 32 || codePointAt2 == TransportMediator.KEYCODE_MEDIA_PAUSE || ((codePointAt2 >= 128 && z4) || str2.indexOf(codePointAt2) != -1 || (codePointAt2 == 37 && (!z || (z2 && !m20640a(str, i4, i2)))))) {
+                            if (inVar2 == null) {
+                                inVar2 = new in();
+                            }
+                            inVar2.a(codePointAt2);
+                            while (!inVar2.d()) {
+                                codePointAt = inVar2.e() & 255;
+                                inVar.b(37);
+                                inVar.b(f23860d[(codePointAt >> 4) & 15]);
+                                inVar.b(f23860d[codePointAt & 15]);
+                            }
+                        } else {
+                            inVar.a(codePointAt2);
+                        }
+                    }
+                    i4 = Character.charCount(codePointAt2) + i4;
+                }
+                return inVar.l();
+            }
+            i3 += Character.charCount(codePointAt);
+        }
+        return str.substring(i, i2);
+    }
+
+    /* renamed from: a */
+    static String m20636a(String str, String str2, boolean z, boolean z2, boolean z3) {
+        return m20634a(str, 0, str.length(), str2, true, z, z2, z3);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ge.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

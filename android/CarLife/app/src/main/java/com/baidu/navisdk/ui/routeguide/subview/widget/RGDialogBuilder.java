@@ -7,52 +7,44 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.view.KeyEvent;
 
-public class RGDialogBuilder
-  extends AlertDialog.Builder
-{
-  boolean mCanceledOnTouchOutside;
-  DialogInterface.OnKeyListener onKeyListener;
-  
-  public RGDialogBuilder(Context paramContext)
-  {
-    super(paramContext);
-    setCancelable(false);
-  }
-  
-  public AlertDialog create()
-  {
-    AlertDialog localAlertDialog = super.create();
-    localAlertDialog.setCanceledOnTouchOutside(this.mCanceledOnTouchOutside);
-    localAlertDialog.setOnKeyListener(new DialogInterface.OnKeyListener()
-    {
-      public boolean onKey(DialogInterface paramAnonymousDialogInterface, int paramAnonymousInt, KeyEvent paramAnonymousKeyEvent)
-      {
-        if (paramAnonymousInt == 84) {
-          return true;
+public class RGDialogBuilder extends Builder {
+    boolean mCanceledOnTouchOutside;
+    OnKeyListener onKeyListener;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.subview.widget.RGDialogBuilder$1 */
+    class C44671 implements OnKeyListener {
+        C44671() {
         }
-        if (RGDialogBuilder.this.onKeyListener != null) {
-          return RGDialogBuilder.this.onKeyListener.onKey(paramAnonymousDialogInterface, paramAnonymousInt, paramAnonymousKeyEvent);
+
+        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+            if (keyCode == 84) {
+                return true;
+            }
+            if (RGDialogBuilder.this.onKeyListener != null) {
+                return RGDialogBuilder.this.onKeyListener.onKey(dialog, keyCode, event);
+            }
+            return false;
         }
-        return false;
-      }
-    });
-    return localAlertDialog;
-  }
-  
-  public void setCanceledOnTouchOutside(boolean paramBoolean)
-  {
-    this.mCanceledOnTouchOutside = paramBoolean;
-  }
-  
-  public AlertDialog.Builder setOnKeyListener(DialogInterface.OnKeyListener paramOnKeyListener)
-  {
-    this.onKeyListener = paramOnKeyListener;
-    return this;
-  }
+    }
+
+    public RGDialogBuilder(Context arg0) {
+        super(arg0);
+        setCancelable(false);
+    }
+
+    public void setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
+        this.mCanceledOnTouchOutside = canceledOnTouchOutside;
+    }
+
+    public Builder setOnKeyListener(OnKeyListener _onKeyListener) {
+        this.onKeyListener = _onKeyListener;
+        return this;
+    }
+
+    public AlertDialog create() {
+        AlertDialog dialog = super.create();
+        dialog.setCanceledOnTouchOutside(this.mCanceledOnTouchOutside);
+        dialog.setOnKeyListener(new C44671());
+        return dialog;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/widget/RGDialogBuilder.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

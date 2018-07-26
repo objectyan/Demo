@@ -7,126 +7,94 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.view.Window;
+import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
+import com.baidu.navisdk.lightnavi.LightNaviParams;
 import com.baidu.navisdk.lightnavi.controller.BNLightNaviManager;
+import com.baidu.navisdk.module.BusinessActivityManager;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
-import java.util.Iterator;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 import java.util.List;
 
-public class LightNaviLockScreenReceiver
-  extends BroadcastReceiver
-{
-  private static final String TAG = "LightNaviLockScreenReceiver";
-  private static Activity mActivity;
-  private static Context mContext;
-  public static boolean mIsLock = false;
-  private static LightNaviLockScreenReceiver sInstance = new LightNaviLockScreenReceiver();
-  private static boolean sLockScreenReceiverRegisted = false;
-  
-  private String getCurrentPackagename(Context paramContext)
-  {
-    paramContext = ((ActivityManager)paramContext.getSystemService("activity")).getRunningAppProcesses();
-    if (paramContext != null)
-    {
-      paramContext = paramContext.iterator();
-      while (paramContext.hasNext())
-      {
-        ActivityManager.RunningAppProcessInfo localRunningAppProcessInfo = (ActivityManager.RunningAppProcessInfo)paramContext.next();
-        if (localRunningAppProcessInfo.importance == 100) {
-          return localRunningAppProcessInfo.processName;
+public class LightNaviLockScreenReceiver extends BroadcastReceiver {
+    private static final String TAG = "LightNaviLockScreenReceiver";
+    private static Activity mActivity;
+    private static Context mContext;
+    public static boolean mIsLock = false;
+    private static LightNaviLockScreenReceiver sInstance = new LightNaviLockScreenReceiver();
+    private static boolean sLockScreenReceiverRegisted = false;
+
+    private LightNaviLockScreenReceiver() {
+    }
+
+    public static void initLockScreenReceiver(Context context, Activity activity) {
+        if (context != null) {
+            mContext = context;
+            mActivity = activity;
+            IntentFilter filter = new IntentFilter("android.intent.action.SCREEN_ON");
+            filter.addAction("android.intent.action.SCREEN_OFF");
+            filter.addAction("android.intent.action.SCREEN_ON");
+            filter.setPriority(Integer.MAX_VALUE);
+            try {
+                mContext.registerReceiver(sInstance, filter);
+                sLockScreenReceiverRegisted = true;
+            } catch (Exception e) {
+                LogUtil.m15791e("wy", "[LightNaviLockScreenReceiver]initLockScreenReceiver->" + e.toString());
+            }
         }
-      }
     }
-    return "com.baidu.BaiduMap";
-  }
-  
-  public static void initLockScreenReceiver(Context paramContext, Activity paramActivity)
-  {
-    if (paramContext == null) {
-      return;
-    }
-    mContext = paramContext;
-    mActivity = paramActivity;
-    paramContext = new IntentFilter("android.intent.action.SCREEN_ON");
-    paramContext.addAction("android.intent.action.SCREEN_OFF");
-    paramContext.addAction("android.intent.action.SCREEN_ON");
-    paramContext.setPriority(Integer.MAX_VALUE);
-    try
-    {
-      mContext.registerReceiver(sInstance, paramContext);
-      sLockScreenReceiverRegisted = true;
-      return;
-    }
-    catch (Exception paramContext)
-    {
-      LogUtil.e("wy", "[LightNaviLockScreenReceiver]initLockScreenReceiver->" + paramContext.toString());
-    }
-  }
-  
-  public static void uninitLockScreenReceiver()
-  {
-    try
-    {
-      if ((mContext != null) && (sLockScreenReceiverRegisted))
-      {
-        sLockScreenReceiverRegisted = false;
-        mContext.unregisterReceiver(sInstance);
-      }
-      mActivity = null;
-      mContext = null;
-      return;
-    }
-    catch (Exception localException)
-    {
-      LogUtil.e("wy", "[LightNaviLockScreenReceiver]uninitLockScreenReceiver->" + localException.toString());
-    }
-  }
-  
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    Object localObject;
-    if (paramIntent.getAction().equals("android.intent.action.SCREEN_ON"))
-    {
-      UserOPController.getInstance().add("4.6", "", null, null);
-      localObject = getCurrentPackagename(paramContext);
-      BNLightNaviManager.getInstance().setPackageName((String)localObject);
-      LogUtil.e("wangyang", "LightNaviLockScreenReceiver " + (String)localObject);
-      BNLightNaviManager.getInstance().setType(1);
-      localObject = new Intent("android.intent.baidunavi.slight.lock");
-      ((Intent)localObject).addFlags(268435456);
-    }
-    try
-    {
-      paramContext.startActivity((Intent)localObject);
-      if (paramIntent.getAction().equals("android.intent.action.SCREEN_OFF"))
-      {
-        UserOPController.getInstance().add("4.e");
-        BNLightNaviManager.getInstance().setType(1);
-      }
-      if (mIsLock) {}
-    }
-    catch (Exception paramContext)
-    {
-      try
-      {
-        if (mActivity != null) {
-          mActivity.getWindow().addFlags(525312);
+
+    public static void uninitLockScreenReceiver() {
+        try {
+            if (mContext != null && sLockScreenReceiverRegisted) {
+                sLockScreenReceiverRegisted = false;
+                mContext.unregisterReceiver(sInstance);
+            }
+            mActivity = null;
+            mContext = null;
+        } catch (Exception e) {
+            LogUtil.m15791e("wy", "[LightNaviLockScreenReceiver]uninitLockScreenReceiver->" + e.toString());
         }
-        mIsLock = true;
-        return;
-        paramContext = paramContext;
-      }
-      catch (Exception paramContext)
-      {
-        for (;;) {}
-      }
     }
-  }
+
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals("android.intent.action.SCREEN_ON")) {
+            UserOPController.getInstance().add(UserOPParams.LIGHTGUIDE_4_6, "", null, null);
+            String mPackageName = getCurrentPackagename(context);
+            BNLightNaviManager.getInstance().setPackageName(mPackageName);
+            LogUtil.m15791e("wangyang", "LightNaviLockScreenReceiver " + mPackageName);
+            BNLightNaviManager.getInstance().setType(1);
+            Intent intentLock = new Intent(LightNaviParams.DEFAULT_SLIGHT_ACTION);
+            intentLock.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+            try {
+                context.startActivity(intentLock);
+            } catch (Exception e) {
+            }
+        }
+        if (intent.getAction().equals("android.intent.action.SCREEN_OFF")) {
+            UserOPController.getInstance().add(UserOPParams.LIGHTGUIDE_4_e);
+            BNLightNaviManager.getInstance().setType(1);
+        }
+        if (!mIsLock) {
+            try {
+                if (mActivity != null) {
+                    mActivity.getWindow().addFlags(525312);
+                }
+            } catch (Exception e2) {
+            }
+            mIsLock = true;
+        }
+    }
+
+    private String getCurrentPackagename(Context context) {
+        List<RunningAppProcessInfo> taskInfo = ((ActivityManager) context.getSystemService(BusinessActivityManager.AUDIO_DIR)).getRunningAppProcesses();
+        if (taskInfo != null) {
+            for (RunningAppProcessInfo runinfo : taskInfo) {
+                if (runinfo.importance == 100) {
+                    return runinfo.processName;
+                }
+            }
+        }
+        return LightNaviParams.DEFAULT_PACKAGE_NAME;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/lightnavi/utils/LightNaviLockScreenReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

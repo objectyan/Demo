@@ -8,38 +8,27 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.navisdk.R.styleable;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class DisclaimerLineView
-  extends RelativeLayout
-{
-  public DisclaimerLineView(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public DisclaimerLineView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public DisclaimerLineView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    View localView = JarUtils.inflate((Activity)paramContext, 1711472670, this);
-    paramAttributeSet = paramContext.obtainStyledAttributes(paramAttributeSet, R.styleable.DisclaimerLineView);
-    paramContext = paramAttributeSet.getString(0);
-    paramAttributeSet.recycle();
-    paramAttributeSet = (TextView)localView.findViewById(1711866080);
-    if (!TextUtils.isEmpty(paramContext)) {
-      paramAttributeSet.setText(String.format("　 %s", new Object[] { paramContext }));
+public class DisclaimerLineView extends RelativeLayout {
+    public DisclaimerLineView(Context context) {
+        this(context, null);
     }
-  }
+
+    public DisclaimerLineView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public DisclaimerLineView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        View view = JarUtils.inflate((Activity) context, C4048R.layout.nsdk_layout_disclaimer_line, this);
+        TypedArray ta = context.obtainStyledAttributes(attrs, C4048R.styleable.DisclaimerLineView);
+        String content = ta.getString(0);
+        ta.recycle();
+        TextView contentView = (TextView) view.findViewById(C4048R.id.content);
+        if (!TextUtils.isEmpty(content)) {
+            contentView.setText(String.format("　 %s", new Object[]{content}));
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/disclaimer/view/DisclaimerLineView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

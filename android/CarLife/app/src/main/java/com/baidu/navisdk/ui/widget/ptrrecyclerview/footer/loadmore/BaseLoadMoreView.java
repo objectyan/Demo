@@ -6,101 +6,81 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.support.v7.widget.RecyclerView.State;
 import com.baidu.navisdk.ui.widget.ptrrecyclerview.util.PullToRefreshRecyclerViewUtil;
 
-public class BaseLoadMoreView
-  extends RecyclerView.ItemDecoration
-{
-  protected static final int MSG_INVILIDATE = 1;
-  protected Handler mInvalidateHanlder = new Handler()
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      super.handleMessage(paramAnonymousMessage);
-      if ((BaseLoadMoreView.this.mRecyclerView == null) || (BaseLoadMoreView.this.mRecyclerView.getAdapter() == null)) {}
-      int i;
-      do
-      {
-        return;
-        i = BaseLoadMoreView.this.mRecyclerView.getAdapter().getItemCount();
-      } while (BaseLoadMoreView.this.mPtrrvUtil.findLastVisibleItemPosition(BaseLoadMoreView.this.mRecyclerView.getLayoutManager()) != i - 1);
-      BaseLoadMoreView.this.mRecyclerView.invalidate();
+public class BaseLoadMoreView extends ItemDecoration {
+    protected static final int MSG_INVILIDATE = 1;
+    protected Handler mInvalidateHanlder = new C46151();
+    protected int mLoadMorePadding = 100;
+    protected String mLoadMoreString;
+    protected OnDrawListener mOnDrawListener;
+    protected PullToRefreshRecyclerViewUtil mPtrrvUtil;
+    protected RecyclerView mRecyclerView;
+    protected long mUpdateTime = 150;
+
+    public interface OnDrawListener {
+        boolean onDrawLoadMore(Canvas canvas, RecyclerView recyclerView);
     }
-  };
-  protected int mLoadMorePadding = 100;
-  protected String mLoadMoreString;
-  protected OnDrawListener mOnDrawListener;
-  protected PullToRefreshRecyclerViewUtil mPtrrvUtil;
-  protected RecyclerView mRecyclerView;
-  protected long mUpdateTime = 150L;
-  
-  public BaseLoadMoreView(Context paramContext, RecyclerView paramRecyclerView)
-  {
-    this.mRecyclerView = paramRecyclerView;
-    this.mPtrrvUtil = new PullToRefreshRecyclerViewUtil();
-  }
-  
-  public void getItemOffsets(Rect paramRect, int paramInt, RecyclerView paramRecyclerView)
-  {
-    if (paramInt == paramRecyclerView.getAdapter().getItemCount() - 1) {
-      paramRect.set(0, 0, 0, getLoadMorePadding());
+
+    /* renamed from: com.baidu.navisdk.ui.widget.ptrrecyclerview.footer.loadmore.BaseLoadMoreView$1 */
+    class C46151 extends Handler {
+        C46151() {
+        }
+
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (BaseLoadMoreView.this.mRecyclerView != null && BaseLoadMoreView.this.mRecyclerView.getAdapter() != null && BaseLoadMoreView.this.mPtrrvUtil.findLastVisibleItemPosition(BaseLoadMoreView.this.mRecyclerView.getLayoutManager()) == BaseLoadMoreView.this.mRecyclerView.getAdapter().getItemCount() - 1) {
+                BaseLoadMoreView.this.mRecyclerView.invalidate();
+            }
+        }
     }
-  }
-  
-  public int getLoadMorePadding()
-  {
-    return this.mLoadMorePadding;
-  }
-  
-  public String getLoadmoreString()
-  {
-    return this.mLoadMoreString;
-  }
-  
-  protected void onDrawLoadMore(Canvas paramCanvas, RecyclerView paramRecyclerView)
-  {
-    if ((this.mOnDrawListener != null) && (this.mOnDrawListener.onDrawLoadMore(paramCanvas, paramRecyclerView))) {}
-  }
-  
-  public void onDrawOver(Canvas paramCanvas, RecyclerView paramRecyclerView, RecyclerView.State paramState)
-  {
-    super.onDrawOver(paramCanvas, paramRecyclerView, paramState);
-    this.mInvalidateHanlder.removeMessages(1);
-    onDrawLoadMore(paramCanvas, paramRecyclerView);
-    this.mInvalidateHanlder.sendEmptyMessageDelayed(1, this.mUpdateTime);
-  }
-  
-  public void release()
-  {
-    this.mRecyclerView = null;
-  }
-  
-  public void setLoadMorePadding(int paramInt)
-  {
-    this.mLoadMorePadding = paramInt;
-  }
-  
-  public void setLoadmoreString(String paramString)
-  {
-    this.mLoadMoreString = paramString;
-  }
-  
-  public void setOnDrawListener(OnDrawListener paramOnDrawListener)
-  {
-    this.mOnDrawListener = paramOnDrawListener;
-  }
-  
-  public static abstract interface OnDrawListener
-  {
-    public abstract boolean onDrawLoadMore(Canvas paramCanvas, RecyclerView paramRecyclerView);
-  }
+
+    public BaseLoadMoreView(Context context, RecyclerView recyclerView) {
+        this.mRecyclerView = recyclerView;
+        this.mPtrrvUtil = new PullToRefreshRecyclerViewUtil();
+    }
+
+    public void setLoadmoreString(String str) {
+        this.mLoadMoreString = str;
+    }
+
+    public String getLoadmoreString() {
+        return this.mLoadMoreString;
+    }
+
+    public int getLoadMorePadding() {
+        return this.mLoadMorePadding;
+    }
+
+    public void setLoadMorePadding(int padding) {
+        this.mLoadMorePadding = padding;
+    }
+
+    public void onDrawOver(Canvas c, RecyclerView parent, State state) {
+        super.onDrawOver(c, parent, state);
+        this.mInvalidateHanlder.removeMessages(1);
+        onDrawLoadMore(c, parent);
+        this.mInvalidateHanlder.sendEmptyMessageDelayed(1, this.mUpdateTime);
+    }
+
+    public void getItemOffsets(Rect outRect, int itemPosition, RecyclerView parent) {
+        if (itemPosition == parent.getAdapter().getItemCount() - 1) {
+            outRect.set(0, 0, 0, getLoadMorePadding());
+        }
+    }
+
+    protected void onDrawLoadMore(Canvas c, RecyclerView parent) {
+        if (this.mOnDrawListener != null && !this.mOnDrawListener.onDrawLoadMore(c, parent)) {
+        }
+    }
+
+    public void setOnDrawListener(OnDrawListener listener) {
+        this.mOnDrawListener = listener;
+    }
+
+    public void release() {
+        this.mRecyclerView = null;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/widget/ptrrecyclerview/footer/loadmore/BaseLoadMoreView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

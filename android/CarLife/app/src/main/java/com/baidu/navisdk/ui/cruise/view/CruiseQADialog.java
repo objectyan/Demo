@@ -8,80 +8,69 @@ import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.util.common.WebviewUtils;
 import com.baidu.navisdk.util.http.HttpURLManager;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class CruiseQADialog
-  extends Dialog
-{
-  private static final String URL = HttpURLManager.getInstance().getScheme() + "appnavi.baidu.com/distance/electroneyes?mid=2&os=android&mobile=i9300&cuid=niubi&channel=baidu&appvercode=4.0";
-  private Activity mActivity;
-  private WebView mDetailWebView = null;
-  private View mQAView;
-  
-  public CruiseQADialog(Activity paramActivity, int paramInt)
-  {
-    super(paramActivity, paramInt);
-    this.mActivity = paramActivity;
-    initView();
-  }
-  
-  private void initWebView()
-  {
-    this.mDetailWebView = ((WebView)this.mQAView.findViewById(1711865994));
-    this.mDetailWebView.setWebViewClient(new MyWebViewClient(null));
-    WebSettings localWebSettings = this.mDetailWebView.getSettings();
-    localWebSettings.setUseWideViewPort(true);
-    localWebSettings.setLoadWithOverviewMode(true);
-    localWebSettings.setSupportZoom(false);
-    localWebSettings.setUseWideViewPort(true);
-    this.mDetailWebView.loadUrl(URL);
-  }
-  
-  public void initView()
-  {
-    this.mQAView = JarUtils.inflate(this.mActivity, 1711472665, null);
-    if (this.mQAView == null) {
-      return;
+public class CruiseQADialog extends Dialog {
+    private static final String URL = (HttpURLManager.getInstance().getScheme() + "appnavi.baidu.com/distance/electroneyes?mid=2&os=android&mobile=i9300&cuid=niubi&channel=baidu&appvercode=4.0");
+    private Activity mActivity;
+    private WebView mDetailWebView = null;
+    private View mQAView;
+
+    /* renamed from: com.baidu.navisdk.ui.cruise.view.CruiseQADialog$1 */
+    class C42911 implements OnClickListener {
+        C42911() {
+        }
+
+        public void onClick(View v) {
+            CruiseQADialog.this.dismiss();
+            WebviewUtils.pauseWebview(CruiseQADialog.this.mDetailWebView);
+        }
     }
-    this.mQAView.findViewById(1711865993).setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        CruiseQADialog.this.dismiss();
-        WebviewUtils.pauseWebview(CruiseQADialog.this.mDetailWebView);
-      }
-    });
-    initWebView();
-    setContentView(this.mQAView);
-  }
-  
-  private class MyWebViewClient
-    extends WebViewClient
-  {
-    private MyWebViewClient() {}
-    
-    public void onPageFinished(WebView paramWebView, String paramString)
-    {
-      super.onPageFinished(paramWebView, paramString);
+
+    private class MyWebViewClient extends WebViewClient {
+        private MyWebViewClient() {
+        }
+
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+        }
     }
-    
-    public void onPageStarted(WebView paramWebView, String paramString, Bitmap paramBitmap)
-    {
-      super.onPageStarted(paramWebView, paramString, paramBitmap);
+
+    public CruiseQADialog(Activity activity, int theme) {
+        super(activity, theme);
+        this.mActivity = activity;
+        initView();
     }
-    
-    public boolean shouldOverrideUrlLoading(WebView paramWebView, String paramString)
-    {
-      paramWebView.loadUrl(paramString);
-      return true;
+
+    public void initView() {
+        this.mQAView = JarUtils.inflate(this.mActivity, C4048R.layout.nsdk_layout_cruise_qa, null);
+        if (this.mQAView != null) {
+            this.mQAView.findViewById(C4048R.id.bnav_cruise_qa_back).setOnClickListener(new C42911());
+            initWebView();
+            setContentView(this.mQAView);
+        }
     }
-  }
+
+    private void initWebView() {
+        this.mDetailWebView = (WebView) this.mQAView.findViewById(C4048R.id.bnav_cruise_qa_webview);
+        this.mDetailWebView.setWebViewClient(new MyWebViewClient());
+        WebSettings settings = this.mDetailWebView.getSettings();
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setSupportZoom(false);
+        settings.setUseWideViewPort(true);
+        this.mDetailWebView.loadUrl(URL);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/cruise/view/CruiseQADialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

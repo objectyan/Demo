@@ -1,86 +1,64 @@
 package com.facebook.imagepipeline.nativecode;
 
+import com.facebook.common.internal.C5350k;
 import com.facebook.common.internal.DoNotStrip;
-import com.facebook.common.internal.k;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 @DoNotStrip
-public class JpegTranscoder
-{
-  public static final int a = 0;
-  public static final int b = 100;
-  public static final int c = 1;
-  public static final int d = 16;
-  public static final int e = 8;
-  
-  static {}
-  
-  public static void a(InputStream paramInputStream, OutputStream paramOutputStream, int paramInt1, int paramInt2, int paramInt3)
-    throws IOException
-  {
-    boolean bool2 = false;
-    if (paramInt2 >= 1)
-    {
-      bool1 = true;
-      k.a(bool1);
-      if (paramInt2 > 16) {
-        break label117;
-      }
-      bool1 = true;
-      label25:
-      k.a(bool1);
-      if (paramInt3 < 0) {
-        break label123;
-      }
-      bool1 = true;
-      label38:
-      k.a(bool1);
-      if (paramInt3 > 100) {
-        break label129;
-      }
+public class JpegTranscoder {
+    /* renamed from: a */
+    public static final int f22830a = 0;
+    /* renamed from: b */
+    public static final int f22831b = 100;
+    /* renamed from: c */
+    public static final int f22832c = 1;
+    /* renamed from: d */
+    public static final int f22833d = 16;
+    /* renamed from: e */
+    public static final int f22834e = 8;
+
+    @DoNotStrip
+    private static native void nativeTranscodeJpeg(InputStream inputStream, OutputStream outputStream, int i, int i2, int i3) throws IOException;
+
+    static {
+        C5656a.m19641a();
     }
-    label117:
-    label123:
-    label129:
-    for (boolean bool1 = true;; bool1 = false)
-    {
-      k.a(bool1);
-      k.a(a(paramInt1));
-      if (paramInt2 == 8)
-      {
-        bool1 = bool2;
-        if (paramInt1 == 0) {}
-      }
-      else
-      {
-        bool1 = true;
-      }
-      k.a(bool1, "no transformation requested");
-      nativeTranscodeJpeg((InputStream)k.a(paramInputStream), (OutputStream)k.a(paramOutputStream), paramInt1, paramInt2, paramInt3);
-      return;
-      bool1 = false;
-      break;
-      bool1 = false;
-      break label25;
-      bool1 = false;
-      break label38;
+
+    /* renamed from: a */
+    public static boolean m19640a(int degrees) {
+        return degrees >= 0 && degrees <= 270 && degrees % 90 == 0;
     }
-  }
-  
-  public static boolean a(int paramInt)
-  {
-    return (paramInt >= 0) && (paramInt <= 270) && (paramInt % 90 == 0);
-  }
-  
-  @DoNotStrip
-  private static native void nativeTranscodeJpeg(InputStream paramInputStream, OutputStream paramOutputStream, int paramInt1, int paramInt2, int paramInt3)
-    throws IOException;
+
+    /* renamed from: a */
+    public static void m19639a(InputStream inputStream, OutputStream outputStream, int rotationAngle, int scaleNumerator, int quality) throws IOException {
+        boolean z;
+        boolean z2 = false;
+        C5350k.m18315a(scaleNumerator >= 1);
+        if (scaleNumerator <= 16) {
+            z = true;
+        } else {
+            z = false;
+        }
+        C5350k.m18315a(z);
+        if (quality >= 0) {
+            z = true;
+        } else {
+            z = false;
+        }
+        C5350k.m18315a(z);
+        if (quality <= 100) {
+            z = true;
+        } else {
+            z = false;
+        }
+        C5350k.m18315a(z);
+        C5350k.m18315a(m19640a(rotationAngle));
+        if (!(scaleNumerator == 8 && rotationAngle == 0)) {
+            z2 = true;
+        }
+        C5350k.m18316a(z2, (Object) "no transformation requested");
+        nativeTranscodeJpeg((InputStream) C5350k.m18310a((Object) inputStream), (OutputStream) C5350k.m18310a((Object) outputStream), rotationAngle, scaleNumerator, quality);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/facebook/imagepipeline/nativecode/JpegTranscoder.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

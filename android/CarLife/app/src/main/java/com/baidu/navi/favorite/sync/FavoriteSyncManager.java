@@ -1,149 +1,119 @@
 package com.baidu.navi.favorite.sync;
 
 import android.os.Handler;
-import com.baidu.carlife.k.a.e.a;
+import com.baidu.carlife.p054k.p055a.C1626e.C0924a;
 import com.baidu.navi.favorite.FavoriteConfig;
 import com.baidu.navi.favorite.http.FavoriteSyncRequest;
 import com.baidu.navi.favorite.model.FavoriteSyncRequestModel;
 import com.baidu.navi.favorite.util.FavoriteSyncUtils;
 
-public class FavoriteSyncManager
-{
-  public static final String TAG = FavoriteSyncManager.class.getSimpleName();
-  private static FavoriteSyncManager mInstance;
-  private boolean isSyncing = false;
-  private FavoriteSyncRequestModel mSyncData;
-  private Handler mSyncHandler;
-  private FavoriteSyncRequest mSyncRequest;
-  e.a mSyncResponseListener = new e.a()
-  {
-    public void onNetWorkResponse(int paramAnonymousInt)
-    {
-      switch (paramAnonymousInt)
-      {
-      case 1: 
-      default: 
-        FavoriteSyncManager.access$002(FavoriteSyncManager.this, false);
-        if (FavoriteSyncManager.this.mSyncHandler != null) {
-          FavoriteSyncManager.this.mSyncHandler.sendEmptyMessage(1);
+public class FavoriteSyncManager {
+    public static final String TAG = FavoriteSyncManager.class.getSimpleName();
+    private static FavoriteSyncManager mInstance;
+    private boolean isSyncing = false;
+    private FavoriteSyncRequestModel mSyncData;
+    private Handler mSyncHandler;
+    private FavoriteSyncRequest mSyncRequest;
+    C0924a mSyncResponseListener = new C37831();
+
+    /* renamed from: com.baidu.navi.favorite.sync.FavoriteSyncManager$1 */
+    class C37831 implements C0924a {
+        C37831() {
         }
-      case 0: 
-      case -1: 
-      case -2: 
-        do
-        {
-          do
-          {
-            do
-            {
-              return;
-              FavoriteSyncManager.access$002(FavoriteSyncManager.this, false);
-              FavoriteConfig.getInstance().setLastSyncTime(System.currentTimeMillis());
-            } while (FavoriteSyncManager.this.mSyncHandler == null);
-            FavoriteSyncManager.this.mSyncHandler.sendEmptyMessage(0);
-            return;
-            FavoriteSyncManager.access$002(FavoriteSyncManager.this, false);
-          } while (FavoriteSyncManager.this.mSyncHandler == null);
-          FavoriteSyncManager.this.mSyncHandler.sendEmptyMessage(1);
-          return;
-          FavoriteSyncManager.access$002(FavoriteSyncManager.this, false);
-        } while (FavoriteSyncManager.this.mSyncHandler == null);
-        FavoriteSyncManager.this.mSyncHandler.sendEmptyMessage(2);
-        return;
-      }
-      FavoriteSyncManager.this.startSync();
+
+        public void onNetWorkResponse(int responseCode) {
+            switch (responseCode) {
+                case -2:
+                    FavoriteSyncManager.this.isSyncing = false;
+                    if (FavoriteSyncManager.this.mSyncHandler != null) {
+                        FavoriteSyncManager.this.mSyncHandler.sendEmptyMessage(2);
+                        return;
+                    }
+                    return;
+                case -1:
+                    FavoriteSyncManager.this.isSyncing = false;
+                    if (FavoriteSyncManager.this.mSyncHandler != null) {
+                        FavoriteSyncManager.this.mSyncHandler.sendEmptyMessage(1);
+                        return;
+                    }
+                    return;
+                case 0:
+                    FavoriteSyncManager.this.isSyncing = false;
+                    FavoriteConfig.getInstance().setLastSyncTime(System.currentTimeMillis());
+                    if (FavoriteSyncManager.this.mSyncHandler != null) {
+                        FavoriteSyncManager.this.mSyncHandler.sendEmptyMessage(0);
+                        return;
+                    }
+                    return;
+                case 2:
+                    FavoriteSyncManager.this.startSync();
+                    return;
+                default:
+                    FavoriteSyncManager.this.isSyncing = false;
+                    if (FavoriteSyncManager.this.mSyncHandler != null) {
+                        FavoriteSyncManager.this.mSyncHandler.sendEmptyMessage(1);
+                        return;
+                    }
+                    return;
+            }
+        }
     }
-  };
-  
-  public static FavoriteSyncManager getInstance()
-  {
-    if (mInstance == null) {}
-    try
-    {
-      if (mInstance == null)
-      {
-        mInstance = new FavoriteSyncManager();
-        mInstance.init();
-      }
-      return mInstance;
+
+    private FavoriteSyncManager() {
     }
-    finally {}
-  }
-  
-  private void init()
-  {
-    this.mSyncRequest = new FavoriteSyncRequest();
-    this.mSyncRequest.registerResponseListener(this.mSyncResponseListener);
-  }
-  
-  private void sendSyncRequest()
-  {
-    if (this.mSyncData != null)
-    {
-      this.isSyncing = true;
-      if (this.mSyncRequest == null)
-      {
+
+    public static FavoriteSyncManager getInstance() {
+        if (mInstance == null) {
+            synchronized (FavoriteSyncManager.class) {
+                if (mInstance == null) {
+                    mInstance = new FavoriteSyncManager();
+                    mInstance.init();
+                }
+            }
+        }
+        return mInstance;
+    }
+
+    private void init() {
         this.mSyncRequest = new FavoriteSyncRequest();
         this.mSyncRequest.registerResponseListener(this.mSyncResponseListener);
-      }
-      this.mSyncRequest.setParamsModel(this.mSyncData);
-      this.mSyncRequest.toPostRequest();
     }
-    do
-    {
-      return;
-      this.isSyncing = false;
-    } while (this.mSyncHandler == null);
-    this.mSyncHandler.sendEmptyMessage(1);
-  }
-  
-  public boolean isSyncing()
-  {
-    return this.isSyncing;
-  }
-  
-  public void setHandler(Handler paramHandler)
-  {
-    this.mSyncHandler = paramHandler;
-  }
-  
-  public void startSync()
-  {
-    try
-    {
-      this.isSyncing = true;
-      this.mSyncData = FavoriteSyncUtils.getSyncDataRequestParams();
-      sendSyncRequest();
-      return;
+
+    public boolean isSyncing() {
+        return this.isSyncing;
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public void setHandler(Handler handler) {
+        this.mSyncHandler = handler;
     }
-  }
-  
-  public void stopSync()
-  {
-    try
-    {
-      if (this.mSyncRequest != null)
-      {
-        this.mSyncRequest.cancel();
+
+    public synchronized void startSync() {
+        this.isSyncing = true;
+        this.mSyncData = FavoriteSyncUtils.getSyncDataRequestParams();
+        sendSyncRequest();
+    }
+
+    public synchronized void stopSync() {
+        if (this.mSyncRequest != null) {
+            this.mSyncRequest.cancel();
+            this.isSyncing = false;
+        }
+    }
+
+    private void sendSyncRequest() {
+        if (this.mSyncData != null) {
+            this.isSyncing = true;
+            if (this.mSyncRequest == null) {
+                this.mSyncRequest = new FavoriteSyncRequest();
+                this.mSyncRequest.registerResponseListener(this.mSyncResponseListener);
+            }
+            this.mSyncRequest.setParamsModel(this.mSyncData);
+            this.mSyncRequest.toPostRequest();
+            return;
+        }
         this.isSyncing = false;
-      }
-      return;
+        if (this.mSyncHandler != null) {
+            this.mSyncHandler.sendEmptyMessage(1);
+        }
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/favorite/sync/FavoriteSyncManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

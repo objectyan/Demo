@@ -1,12 +1,14 @@
 package com.baidu.navisdk.model.modelfactory;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.mapcontrol.BNMapController;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
+import com.baidu.navisdk.comapi.routeguide.RouteGuideParams;
+import com.baidu.navisdk.comapi.routeguide.RouteGuideParams.RGKey.SimpleGuideInfo;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.routeplan.RoutePlanParams;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
@@ -24,1225 +26,1078 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RoutePlanModel
-  extends BaseModel
-{
-  private static final int MSG_AVOID_TRAFFICJAM_ENABLE = 1;
-  public static final String SWITCH_OTHER_ROUTE_KEY = "isSwitch";
-  private static final String TAG = "RoutePlan";
-  public static ArrayList<RoutePlanNode> sNavNodeList = new ArrayList();
-  private boolean bIsPoiDetail = false;
-  private int enComfrom = 0;
-  private int enNaviType = 0;
-  public Map<Integer, RoutePlanResultInfo> mAllRoutePlanInfo = new HashMap();
-  private IAvoidTrafficjamEnableListener mAvoidTrafficjamEnableListener;
-  public int mCurRouteIndex = 0;
-  private String mCurrentMRSL = null;
-  private BNWorkerNormalTask<String, String> mDistrictTask = null;
-  public List<RGRouteItemModel.RouteItem> mNavingBrowseRoutItems = null;
-  private int mNodeNumBackup = 0;
-  private RoutePlanNode mPointByPoiDetail = new RoutePlanNode();
-  private PointSelectNode mPointSelectNode = new PointSelectNode();
-  int[] mPrefId = null;
-  String[] mPrefStr = null;
-  private int mRouteCnt = 0;
-  private ArrayList<RoutePlanResultItem> mRouteListBackup = null;
-  public ArrayList<RoutePlanOutlineItem> mRouteOutlineItemList = new ArrayList();
-  private int mRoutePlanMode = 1;
-  private ArrayList<RoutePlanNode> mRoutePlanNodeList = new ArrayList();
-  private int routePlanNetMode = -1;
-  private boolean sIsSelectNode = false;
-  
-  private void cancelDistrictThread()
-  {
-    BNWorkerCenter.getInstance().cancelTask(this.mDistrictTask, true);
-    this.mDistrictTask = null;
-  }
-  
-  public static RoutePlanNode changeToRoutePlanNode(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return new RoutePlanNode();
+public class RoutePlanModel extends BaseModel {
+    private static final int MSG_AVOID_TRAFFICJAM_ENABLE = 1;
+    public static final String SWITCH_OTHER_ROUTE_KEY = "isSwitch";
+    private static final String TAG = "RoutePlan";
+    public static ArrayList<RoutePlanNode> sNavNodeList = new ArrayList();
+    private boolean bIsPoiDetail = false;
+    private int enComfrom = 0;
+    private int enNaviType = 0;
+    public Map<Integer, RoutePlanResultInfo> mAllRoutePlanInfo = new HashMap();
+    private IAvoidTrafficjamEnableListener mAvoidTrafficjamEnableListener;
+    public int mCurRouteIndex = 0;
+    private String mCurrentMRSL = null;
+    private BNWorkerNormalTask<String, String> mDistrictTask = null;
+    public List<RouteItem> mNavingBrowseRoutItems = null;
+    private int mNodeNumBackup = 0;
+    private RoutePlanNode mPointByPoiDetail = new RoutePlanNode();
+    private PointSelectNode mPointSelectNode = new PointSelectNode();
+    int[] mPrefId = null;
+    String[] mPrefStr = null;
+    private int mRouteCnt = 0;
+    private ArrayList<RoutePlanResultItem> mRouteListBackup = null;
+    public ArrayList<RoutePlanOutlineItem> mRouteOutlineItemList = new ArrayList();
+    private int mRoutePlanMode = 1;
+    private ArrayList<RoutePlanNode> mRoutePlanNodeList = new ArrayList();
+    private int routePlanNetMode = -1;
+    private boolean sIsSelectNode = false;
+
+    public interface IAvoidTrafficjamEnableListener {
+        void onAvoidTrafficjamEnable(boolean z);
     }
-    return new RoutePlanNode(paramSearchPoi.mViewPoint, 8, paramSearchPoi.mName, paramSearchPoi.mAddress, paramSearchPoi.mOriginUID);
-  }
-  
-  public static String htmlRemoveTag(String paramString)
-  {
-    if (paramString == null) {
-      return null;
+
+    public class RoutePlanResultInfo {
+        public int mDistance;
+        public int mFirstRemainDist;
+        public String mFirstRoadName;
+        public int mFirstTurnType;
+        public int mGasMoney;
+        public String mMainRoads;
+        public int mNodeNum;
+        public String mPusDetectRoad;
+        public String mPusDirection;
+        public String mPusLabelName;
+        public String mPusLabelTips;
+        public ArrayList<RoutePlanResultItem> mRouteItems = new ArrayList();
+        public int mTime;
+        public int mTollFees;
+        public int mTrafficLightCnt;
     }
-    return paramString.replace("font", "null");
-  }
-  
-  private String parserLableId(int paramInt)
-  {
-    if (paramInt <= 1) {
-      return "";
-    }
-    switch (paramInt)
-    {
-    default: 
-      return "推荐";
-    case 2: 
-      return "高速优先";
-    case 4: 
-      return "不走高速";
-    case 8: 
-      return "少收费";
-    }
-    return "躲避拥堵";
-  }
-  
-  public void clearPointPoiDetail()
-  {
-    this.bIsPoiDetail = false;
-    this.mPointByPoiDetail.mName = "";
-    this.mPointByPoiDetail.mDescription = "";
-    this.mPointByPoiDetail.mGeoPoint = new GeoPoint();
-    this.mPointByPoiDetail.mFrom = 0;
-    this.mPointByPoiDetail.mViewPoint = null;
-    this.mPointByPoiDetail.clearSubPoiList();
-  }
-  
-  public void clearRouteInput()
-  {
-    cancelDistrictThread();
-    this.mRoutePlanNodeList.clear();
-  }
-  
-  public void clearRouteOutLineResult()
-  {
-    this.mRouteOutlineItemList.clear();
-  }
-  
-  public void clearRouteResult()
-  {
-    LogUtil.e("wangyang", "clearRouteResult");
-    this.mAllRoutePlanInfo.clear();
-    this.mRouteOutlineItemList.clear();
-    this.mCurRouteIndex = 0;
-  }
-  
-  public void clearSelectNode()
-  {
-    this.sIsSelectNode = false;
-    this.mPointSelectNode.clearSelectNode();
-  }
-  
-  public boolean getAvoidTrafficjamEnable()
-  {
-    final ArrayList localArrayList1 = getRouteInput();
-    if (BNOfflineDataManager.getInstance().isProvinceDataDownload(0))
-    {
-      ArrayList localArrayList2 = new ArrayList();
-      int j = localArrayList1.size();
-      int i = 0;
-      while (i < j)
-      {
-        Object localObject = (RoutePlanNode)localArrayList1.get(i);
-        if ((localObject != null) && (((RoutePlanNode)localObject).isNodeSettedData()))
-        {
-          localObject = BNPoiSearcher.getInstance().getDistrictByPoint(((RoutePlanNode)localObject).mGeoPoint, 0);
-          if ((localObject != null) && (((DistrictInfo)localObject).mType == 3) && (!localArrayList2.contains(Integer.valueOf(((DistrictInfo)localObject).mId)))) {
-            localArrayList2.add(Integer.valueOf(((DistrictInfo)localObject).mId));
-          }
+
+    public String getDistance() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            StringBuffer dist = new StringBuffer();
+            StringUtils.formatDistance(((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance, UnitLangEnum.ZH, dist);
+            return dist.toString();
         }
-        i += 1;
-      }
-      if (1 == localArrayList2.size())
-      {
-        i = ((Integer)localArrayList2.get(0)).intValue();
-        LogUtil.e("RoutePlan", "cityinfo.cityID = " + i);
-        if (BNMapController.getInstance().checkRoadConditionSupport(i)) {
-          return true;
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return "";
         }
-      }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (!hasParseRouteDetail(this.mCurRouteIndex)) {
+            return "";
+        }
+        dist = new StringBuffer();
+        StringUtils.formatDistance(((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance, UnitLangEnum.ZH, dist);
+        return dist.toString();
     }
-    else
-    {
-      cancelDistrictThread();
-      this.mDistrictTask = new BNWorkerNormalTask("CarNavi-DistrictTask", null)
-      {
-        protected String execute()
-        {
-          ArrayList localArrayList = new ArrayList();
-          int j = localArrayList1.size();
-          int i = 0;
-          while (i < j)
-          {
-            Object localObject = (RoutePlanNode)localArrayList1.get(i);
-            if ((localObject != null) && (((RoutePlanNode)localObject).isNodeSettedData()))
-            {
-              localObject = BNPoiSearcher.getInstance().getDistrictByPoint(((RoutePlanNode)localObject).mGeoPoint, 1);
-              if ((localObject != null) && (((DistrictInfo)localObject).mType == 3) && (!localArrayList.contains(Integer.valueOf(((DistrictInfo)localObject).mId)))) {
-                localArrayList.add(Integer.valueOf(((DistrictInfo)localObject).mId));
-              }
+
+    public String getTotalTime() {
+        String time = "";
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            LogUtil.m15791e("RoutePlan", "remain time before format = " + time);
+            time = StringUtils.formatTime2(((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTime, 2);
+            LogUtil.m15791e("RoutePlan", "remain time after format = " + time);
+            return time;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return "";
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (!hasParseRouteDetail(this.mCurRouteIndex)) {
+            return "";
+        }
+        LogUtil.m15791e("RoutePlan", "remain time before format = " + time);
+        time = StringUtils.formatTime2(((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTime, 2);
+        LogUtil.m15791e("RoutePlan", "remain time after format = " + time);
+        return time;
+    }
+
+    public int getNodeNum() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return 0;
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum;
+        }
+        return 0;
+    }
+
+    public ArrayList<RoutePlanResultItem> getRouteNodeData() {
+        if (this.mAllRoutePlanInfo == null || this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex)) == null) {
+            return null;
+        }
+        ArrayList<RoutePlanResultItem> mRouteList = ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems;
+        if (mRouteList.size() == 0) {
+            return null;
+        }
+        return mRouteList;
+    }
+
+    public ArrayList<RoutePlanResultItem> getRouteTwoNodeData(int index) {
+        if (this.mAllRoutePlanInfo == null || this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex)) == null) {
+            return null;
+        }
+        ArrayList<RoutePlanResultItem> mRouteList = ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems;
+        if (mRouteList.size() == 0 || mRouteList.size() <= index - 1) {
+            return null;
+        }
+        try {
+            ArrayList<RoutePlanResultItem> list = new ArrayList();
+            list.add(mRouteList.get(index));
+            list.add(mRouteList.get(index + 1));
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public ArrayList<RoutePlanOutlineItem> getRouteOutlineData() {
+        return this.mRouteOutlineItemList;
+    }
+
+    public void saveCurRouteNaviBrowseInfo() {
+        LogUtil.m15791e("RoutePlan", "sunhao.routeitem.saveCurRouteNaviBrowseInfo()");
+        if (this.mNavingBrowseRoutItems == null) {
+            this.mNavingBrowseRoutItems = new ArrayList();
+        } else {
+            this.mNavingBrowseRoutItems.clear();
+        }
+        if (this.mRouteListBackup == null) {
+            this.mRouteListBackup = new ArrayList();
+        } else {
+            this.mRouteListBackup.clear();
+        }
+        List<RouteItem> tempRouteItemList = RGRouteItemModel.getInstance().getRouteItems();
+        if (tempRouteItemList != null && tempRouteItemList.size() != 0) {
+            if (hasParseRouteDetail(this.mCurRouteIndex)) {
+                this.mNodeNumBackup = ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum;
+                this.mRouteListBackup.addAll(((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems);
+                this.mNavingBrowseRoutItems.addAll(tempRouteItemList);
+                return;
             }
-            i += 1;
-          }
-          if (1 == localArrayList.size())
-          {
-            i = ((Integer)localArrayList.get(0)).intValue();
-            LogUtil.e(TAG, "mDistrictThread cityinfo.cityID = " + i);
-            if (!BNMapController.getInstance().checkRoadConditionSupport(i)) {}
-          }
-          return null;
-        }
-      };
-      BNWorkerCenter.getInstance().submitNormalTask(this.mDistrictTask, new BNWorkerConfig(101, 0));
-    }
-    return false;
-  }
-  
-  public int getCurIndex()
-  {
-    return this.mCurRouteIndex;
-  }
-  
-  public String getDistance()
-  {
-    if (hasParseRouteDetail(this.mCurRouteIndex))
-    {
-      localObject = new StringBuffer();
-      StringUtils.formatDistance(((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance, StringUtils.UnitLangEnum.ZH, (StringBuffer)localObject);
-      return ((StringBuffer)localObject).toString();
-    }
-    Object localObject = getRoutePlanBundle();
-    if (localObject != null)
-    {
-      parseRouteResult(BNaviModuleManager.getContext(), (Bundle)localObject);
-      if (hasParseRouteDetail(this.mCurRouteIndex))
-      {
-        localObject = new StringBuffer();
-        StringUtils.formatDistance(((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance, StringUtils.UnitLangEnum.ZH, (StringBuffer)localObject);
-        return ((StringBuffer)localObject).toString();
-      }
-      return "";
-    }
-    return "";
-  }
-  
-  public int getEnComfrom()
-  {
-    return this.enComfrom;
-  }
-  
-  public int getEnNaviType()
-  {
-    return this.enNaviType;
-  }
-  
-  public String getEndName(Context paramContext, boolean paramBoolean)
-  {
-    if (this.mRoutePlanNodeList.size() <= 1) {
-      return "";
-    }
-    return getNodeName(paramContext, (RoutePlanNode)this.mRoutePlanNodeList.get(this.mRoutePlanNodeList.size() - 1), paramBoolean);
-  }
-  
-  public RoutePlanNode getEndNode()
-  {
-    if (this.mRoutePlanNodeList.size() <= 1) {
-      return null;
-    }
-    return (RoutePlanNode)this.mRoutePlanNodeList.get(this.mRoutePlanNodeList.size() - 1);
-  }
-  
-  public int getFirstRemainDist()
-  {
-    int j = 0;
-    int i;
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      i = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstRemainDist;
-    }
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return i;
-        localBundle = getRoutePlanBundle();
-        i = j;
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      i = j;
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstRemainDist;
-  }
-  
-  public String getFirstRoadName()
-  {
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstRoadName;
-    }
-    Bundle localBundle = getRoutePlanBundle();
-    if (localBundle != null)
-    {
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      if (hasParseRouteDetail(this.mCurRouteIndex)) {
-        return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstRoadName;
-      }
-      return "";
-    }
-    return "";
-  }
-  
-  public int getFirstTurnType()
-  {
-    int j = 0;
-    int i;
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      i = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstTurnType;
-    }
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return i;
-        localBundle = getRoutePlanBundle();
-        i = j;
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      i = j;
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstTurnType;
-  }
-  
-  public int getGasMoney()
-  {
-    int j = 0;
-    int i;
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      i = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mGasMoney;
-    }
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return i;
-        localBundle = getRoutePlanBundle();
-        i = j;
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      i = j;
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mGasMoney;
-  }
-  
-  public String getMainRoads()
-  {
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mMainRoads;
-    }
-    Bundle localBundle = getRoutePlanBundle();
-    if (localBundle != null)
-    {
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      if (hasParseRouteDetail(this.mCurRouteIndex)) {
-        return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mMainRoads;
-      }
-      return "";
-    }
-    return "";
-  }
-  
-  public String getMultiRouteCurrentMSRL()
-  {
-    return this.mCurrentMRSL;
-  }
-  
-  public String getNodeName(Context paramContext, RoutePlanNode paramRoutePlanNode, boolean paramBoolean)
-  {
-    String str = "";
-    if ((paramRoutePlanNode == null) || (paramContext == null) || (!paramRoutePlanNode.isNodeSettedData())) {
-      return "";
-    }
-    try
-    {
-      switch (paramRoutePlanNode.mFrom)
-      {
-      case 2: 
-        if (StringUtils.isEmpty(paramRoutePlanNode.mName)) {
-          paramContext = JarUtils.getResources().getString(1711669365);
-        }
-      case 3: 
-      case 4: 
-      case 5: 
-      case 1: 
-        for (;;)
-        {
-          paramRoutePlanNode = paramContext;
-          if (paramBoolean)
-          {
-            paramRoutePlanNode = paramContext;
-            if (paramContext.length() > 6) {
-              paramRoutePlanNode = paramContext.substring(0, 6) + "...";
+            Bundle bundle = getRoutePlanBundle();
+            if (bundle != null) {
+                parseRouteResult(BNaviModuleManager.getContext(), bundle);
+                if (hasParseRouteDetail(this.mCurRouteIndex)) {
+                    this.mNodeNumBackup = ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum;
+                    this.mRouteListBackup.addAll(((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems);
+                    this.mNavingBrowseRoutItems.addAll(tempRouteItemList);
+                }
             }
-          }
-          return paramRoutePlanNode;
-          if (StringUtils.isEmpty(paramRoutePlanNode.mName))
-          {
-            paramContext = JarUtils.getResources().getString(1711669559);
-            break;
-          }
-          paramContext = paramRoutePlanNode.mName;
-          break;
-          paramContext = JarUtils.getResources().getString(1711669557);
-          continue;
-          paramContext = JarUtils.getResources().getString(1711669558);
-          continue;
-          if (StringUtils.isEmpty(paramRoutePlanNode.mName))
-          {
-            paramContext = JarUtils.getResources().getString(1711669560);
-            break label244;
-          }
-          paramContext = paramRoutePlanNode.mName;
-          break label244;
-          paramContext = paramRoutePlanNode.mName;
         }
-      }
     }
-    catch (Exception paramContext)
-    {
-      label244:
-      for (;;)
-      {
-        LogUtil.e("RoutePlan", paramContext.toString());
-        paramContext = str;
-        continue;
-        continue;
-      }
+
+    public void restoreCurRouteNaviBrowseInfo() {
+        LogUtil.m15791e("RoutePlan", "sunhao.routeitem.restoreCurRouteNaviBrowseInfo()");
+        ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum = this.mNodeNumBackup;
+        if (this.mNavingBrowseRoutItems != null) {
+            RGRouteItemModel.getInstance().updateRouteItems(this.mNavingBrowseRoutItems);
+        }
+        if (this.mRouteListBackup != null && hasParseRouteDetail(this.mCurRouteIndex)) {
+            List<RoutePlanResultItem> mRouteList = ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems;
+            mRouteList.clear();
+            mRouteList.addAll(this.mRouteListBackup);
+        }
     }
-  }
-  
-  public int getNodeNum()
-  {
-    int j = 0;
-    int i;
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      i = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum;
+
+    public void clearRouteOutLineResult() {
+        this.mRouteOutlineItemList.clear();
     }
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return i;
-        localBundle = getRoutePlanBundle();
-        i = j;
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      i = j;
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum;
-  }
-  
-  public RoutePlanNode getPointPoiDetail()
-  {
-    return this.mPointByPoiDetail;
-  }
-  
-  public PointSelectNode getPointSelectNode()
-  {
-    return this.mPointSelectNode;
-  }
-  
-  public int[] getPrefId()
-  {
-    return this.mPrefId;
-  }
-  
-  public String[] getPrefStr()
-  {
-    return this.mPrefStr;
-  }
-  
-  public int getRouteCnt()
-  {
-    return this.mRouteCnt;
-  }
-  
-  public ArrayList<RoutePlanNode> getRouteInput()
-  {
-    return (ArrayList)this.mRoutePlanNodeList.clone();
-  }
-  
-  public ArrayList<RoutePlanResultItem> getRouteNodeData()
-  {
-    if ((this.mAllRoutePlanInfo != null) && (this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex)) != null))
-    {
-      ArrayList localArrayList2 = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems;
-      ArrayList localArrayList1 = localArrayList2;
-      if (localArrayList2.size() == 0) {
-        localArrayList1 = null;
-      }
-      return localArrayList1;
+
+    public void clearRouteResult() {
+        LogUtil.m15791e("wangyang", "clearRouteResult");
+        this.mAllRoutePlanInfo.clear();
+        this.mRouteOutlineItemList.clear();
+        this.mCurRouteIndex = 0;
     }
-    return null;
-  }
-  
-  public ArrayList<RoutePlanOutlineItem> getRouteOutlineData()
-  {
-    return this.mRouteOutlineItemList;
-  }
-  
-  public Bundle getRoutePlanBundle()
-  {
-    LogUtil.e("wangyang", "getRoutePlanBundle start");
-    Bundle localBundle = new Bundle();
-    if (BNRoutePlaner.getInstance().getRouteInfo(this.mCurRouteIndex, localBundle) == 2)
-    {
-      LogUtil.e("wangyang", "getRoutePlanBundle: full");
-      return localBundle;
+
+    public void parseRouteResultOutline(ArrayList<Bundle> routeResultBundle) {
+        clearRouteOutLineResult();
+        if (routeResultBundle != null && !routeResultBundle.isEmpty()) {
+            clearRouteOutLineResult();
+            this.mRouteCnt = routeResultBundle.size();
+            for (int i = 0; i < this.mRouteCnt; i++) {
+                Bundle bundle = (Bundle) routeResultBundle.get(i);
+                int distance = bundle.getInt("totaldistance");
+                int time = bundle.getInt(SimpleGuideInfo.TotalTime);
+                int trafficLight = bundle.getInt("trafficlightcnt");
+                int tollfees = bundle.getInt("tollfees");
+                String pusLabelName = bundle.getString("pusLabelName");
+                int preference = BNRoutePlaner.getInstance().getCalcPreference();
+                int pusLabelID = bundle.getInt("pusLabelID");
+                if ("".equals(pusLabelName) && preference != 1) {
+                    if (i == 0) {
+                        pusLabelName = parserLableId(preference);
+                    } else {
+                        if (i == 1) {
+                            pusLabelName = "方案二";
+                        }
+                        if (i == 2) {
+                            pusLabelName = "方案三";
+                        }
+                    }
+                }
+                this.mRouteOutlineItemList.add(new RoutePlanOutlineItem(i, "", tollfees, trafficLight, 0, (double) distance, (double) time, pusLabelName, bundle.getString("pusLabelTips"), pusLabelID));
+            }
+            Bundle prefBundle = (Bundle) routeResultBundle.get(0);
+            this.mPrefId = prefBundle.getIntArray("prefId");
+            this.mPrefStr = prefBundle.getStringArray("prefStr");
+        }
     }
-    return null;
-  }
-  
-  public int getRoutePlanMode()
-  {
-    return this.mRoutePlanMode;
-  }
-  
-  public int getRoutePlanNetMode()
-  {
-    return this.routePlanNetMode;
-  }
-  
-  public RoutePlanNode getRoutePlanNode()
-  {
-    return this.mPointSelectNode.getRoutePlanNode();
-  }
-  
-  public int getRoutePlanNodeSize()
-  {
-    if (this.mRoutePlanNodeList != null) {
-      return this.mRoutePlanNodeList.size();
+
+    public void parseRouteResultMainInfo(Bundle bundle) {
+        if (bundle != null && !bundle.isEmpty() && ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))) == null) {
+            RoutePlanResultInfo tmp = new RoutePlanResultInfo();
+            tmp.mDistance = bundle.getInt("totaldistance");
+            tmp.mTime = bundle.getInt(SimpleGuideInfo.TotalTime);
+            tmp.mNodeNum = bundle.getInt("nodenum");
+            tmp.mMainRoads = bundle.getString("mainroads");
+            tmp.mTrafficLightCnt = bundle.getInt("trafficlightcnt");
+            tmp.mTollFees = bundle.getInt("tollfees");
+            tmp.mGasMoney = bundle.getInt("gasmoney");
+            this.mAllRoutePlanInfo.put(Integer.valueOf(this.mCurRouteIndex), tmp);
+        }
     }
-    return 0;
-  }
-  
-  public ArrayList<RoutePlanResultItem> getRouteTwoNodeData(int paramInt)
-  {
-    if ((this.mAllRoutePlanInfo != null) && (this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex)) != null))
-    {
-      ArrayList localArrayList1 = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems;
-      if ((localArrayList1.size() == 0) || (localArrayList1.size() <= paramInt - 1)) {
-        return null;
-      }
-      try
-      {
-        ArrayList localArrayList2 = new ArrayList();
-        localArrayList2.add(localArrayList1.get(paramInt));
-        localArrayList2.add(localArrayList1.get(paramInt + 1));
-        return localArrayList2;
-      }
-      catch (Exception localException)
-      {
-        return null;
-      }
+
+    public void parseRouteResult(Context context, Bundle bundle) {
+        RoutePlanResultInfo routePlanResultInfo = new RoutePlanResultInfo();
+        if (context != null) {
+            int i;
+            routePlanResultInfo.mDistance = bundle.getInt("totaldistance");
+            routePlanResultInfo.mTime = bundle.getInt(SimpleGuideInfo.TotalTime);
+            routePlanResultInfo.mNodeNum = bundle.getInt("nodenum");
+            LogUtil.m15791e("wangyang", "parseRouteResult mDistance = " + routePlanResultInfo.mDistance + " mTime = " + routePlanResultInfo.mTime + " mNodeNum = " + routePlanResultInfo.mNodeNum);
+            if (routePlanResultInfo.mNodeNum <= 0) {
+                LogUtil.m15791e("wangyang", "route plan not finished ");
+            }
+            String[] nextRoadArr = bundle.getStringArray("nextroadname");
+            int[] distArr = bundle.getIntArray("distance");
+            int[] turnType = bundle.getIntArray("turntype");
+            int[] geoPosX = bundle.getIntArray("ptX");
+            int[] geoPosY = bundle.getIntArray("ptY");
+            int[] roadCondition = bundle.getIntArray("roadCond");
+            int[] linkAngle = bundle.getIntArray("linkAngle");
+            routePlanResultInfo.mMainRoads = bundle.getString("mainroads");
+            routePlanResultInfo.mTrafficLightCnt = bundle.getInt("trafficlightcnt");
+            routePlanResultInfo.mTollFees = bundle.getInt("tollfees");
+            routePlanResultInfo.mGasMoney = bundle.getInt("gasmoney");
+            routePlanResultInfo.mPusDirection = bundle.getString("pusDirection");
+            routePlanResultInfo.mPusDetectRoad = bundle.getString("pusDetectedRoad");
+            if (nextRoadArr != null) {
+                if (nextRoadArr.length >= 1) {
+                    for (i = 1; i < nextRoadArr.length; i++) {
+                        if (!StringUtils.isEmpty(nextRoadArr[i])) {
+                            routePlanResultInfo.mFirstRoadName = nextRoadArr[i];
+                            break;
+                        }
+                    }
+                }
+                if (turnType.length >= 2) {
+                    routePlanResultInfo.mFirstTurnType = turnType[1];
+                }
+                if (distArr.length >= 2) {
+                    routePlanResultInfo.mFirstRemainDist = distArr[0];
+                }
+            }
+            String endName = getEndName(context, false);
+            List<RouteItem> tNavingRoutItems = new ArrayList();
+            if (turnType != null) {
+                try {
+                    if (turnType.length > 0) {
+                        i = 0;
+                        while (i < routePlanResultInfo.mNodeNum) {
+                            int turnTypeIndex = turnType[i];
+                            if (turnTypeIndex >= RoutePlanParams.gTurnIconIDSmall.length) {
+                                LogUtil.m15791e("RoutePlan", "parseRouteResult out of arry! turnTypeIndex=" + turnTypeIndex);
+                            } else {
+                                String formatter;
+                                String formatterNight;
+                                String bubbleFromat;
+                                RouteItem tNavingRI;
+                                String nodeDesc;
+                                String nodeDescNight;
+                                String bubleDesc;
+                                RoutePlanResultItem item;
+                                String turnTypeStr = RouteGuideParams.gTurnTypeDesc[turnTypeIndex];
+                                int turnTypeId = RoutePlanParams.gTurnIconIDSmall[turnTypeIndex];
+                                if (!RoutePlanParams.TURN_TYPE_ID_START.equals(turnTypeStr)) {
+                                    if (!turnTypeStr.startsWith(RoutePlanParams.TURN_TYPE_ID_VIA)) {
+                                        formatter = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_route_node_desc_format);
+                                        formatterNight = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_route_node_desc_format_night);
+                                        bubbleFromat = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_route_node_bubble_format);
+                                        tNavingRI = null;
+                                        if (routePlanResultInfo.mNodeNum > 1 || i <= 0) {
+                                            if (routePlanResultInfo.mNodeNum == 1) {
+                                                tNavingRI = new RouteItem(turnTypeIndex, distArr[0], RoutePlanParams.TURN_TYPE_ID_END, geoPosX[0], geoPosY[0]);
+                                                tNavingRI.type = 3;
+                                            }
+                                        } else if (RoutePlanParams.TURN_TYPE_ID_START.equals(turnTypeStr)) {
+                                            tNavingRI = new RouteItem(turnTypeIndex, distArr[i - 1], RoutePlanParams.TURN_TYPE_ID_START, geoPosX[i - 1], geoPosY[i - 1]);
+                                            tNavingRI.type = 1;
+                                        } else {
+                                            if (turnTypeStr.startsWith(RoutePlanParams.TURN_TYPE_ID_VIA)) {
+                                                tNavingRI = new RouteItem(turnTypeIndex, distArr[i - 1], RoutePlanParams.TURN_TYPE_ID_VIA, geoPosX[i - 1], geoPosY[i - 1]);
+                                                tNavingRI.type = 2;
+                                            } else {
+                                                if (turnTypeStr.startsWith(RoutePlanParams.TURN_TYPE_ID_END)) {
+                                                    tNavingRI = new RouteItem(turnTypeIndex, distArr[i - 1], RoutePlanParams.TURN_TYPE_ID_END, geoPosX[i - 1], geoPosY[i - 1]);
+                                                    tNavingRI.type = 3;
+                                                } else {
+                                                    tNavingRI = new RouteItem(turnTypeIndex, distArr[i - 1], nextRoadArr[i], geoPosX[i - 1], geoPosY[i - 1]);
+                                                }
+                                            }
+                                        }
+                                        if (tNavingRI != null) {
+                                            tNavingRoutItems.add(tNavingRI);
+                                        }
+                                        if (RoutePlanParams.TURN_TYPE_ID_END.equals(turnTypeStr)) {
+                                            if (nextRoadArr[i].length() == 0) {
+                                                nextRoadArr[i] = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_no_name_road);
+                                            }
+                                            StringUtils.formatDistance(distArr[i], UnitLangEnum.ZH, new StringBuffer());
+                                            nodeDesc = String.format(formatter, new Object[]{nextRoadArr[i], displayDistArr});
+                                            nodeDescNight = String.format(formatterNight, new Object[]{nextRoadArr[i], displayDistArr});
+                                            bubleDesc = String.format(bubbleFromat, new Object[]{RouteGuideParams.gTurnTypeDesc[turnTypeIndex], nextRoadArr[i], displayDistArr});
+                                        } else {
+                                            nodeDesc = "nodeEnd";
+                                            nodeDescNight = "nodeEnd";
+                                            bubleDesc = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_destination_bubble_format, new Object[]{RouteGuideParams.gTurnTypeDesc[turnTypeIndex], endName});
+                                        }
+                                        if (i < geoPosX.length && i < geoPosY.length) {
+                                            item = new RoutePlanResultItem(turnTypeId, nodeDesc, nodeDescNight, bubleDesc, geoPosX[i], geoPosY[i], roadCondition == null ? roadCondition[i] : 0);
+                                            if (linkAngle != null && i < linkAngle.length) {
+                                                item.angle = linkAngle[i];
+                                            }
+                                            if (i < nextRoadArr.length) {
+                                                item.roadName = nextRoadArr[i];
+                                            }
+                                            routePlanResultInfo.mRouteItems.add(item);
+                                        }
+                                    }
+                                }
+                                formatter = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_from_node_desc_format);
+                                formatterNight = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_from_node_desc_format_night);
+                                bubbleFromat = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_from_node_bubble_format);
+                                tNavingRI = null;
+                                if (routePlanResultInfo.mNodeNum > 1) {
+                                }
+                                if (routePlanResultInfo.mNodeNum == 1) {
+                                    tNavingRI = new RouteItem(turnTypeIndex, distArr[0], RoutePlanParams.TURN_TYPE_ID_END, geoPosX[0], geoPosY[0]);
+                                    tNavingRI.type = 3;
+                                }
+                                if (tNavingRI != null) {
+                                    tNavingRoutItems.add(tNavingRI);
+                                }
+                                if (RoutePlanParams.TURN_TYPE_ID_END.equals(turnTypeStr)) {
+                                    if (nextRoadArr[i].length() == 0) {
+                                        nextRoadArr[i] = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_no_name_road);
+                                    }
+                                    StringUtils.formatDistance(distArr[i], UnitLangEnum.ZH, new StringBuffer());
+                                    nodeDesc = String.format(formatter, new Object[]{nextRoadArr[i], displayDistArr});
+                                    nodeDescNight = String.format(formatterNight, new Object[]{nextRoadArr[i], displayDistArr});
+                                    bubleDesc = String.format(bubbleFromat, new Object[]{RouteGuideParams.gTurnTypeDesc[turnTypeIndex], nextRoadArr[i], displayDistArr});
+                                } else {
+                                    nodeDesc = "nodeEnd";
+                                    nodeDescNight = "nodeEnd";
+                                    bubleDesc = JarUtils.getResources().getString(C4048R.string.nsdk_string_navi_destination_bubble_format, new Object[]{RouteGuideParams.gTurnTypeDesc[turnTypeIndex], endName});
+                                }
+                                if (roadCondition == null) {
+                                }
+                                item = new RoutePlanResultItem(turnTypeId, nodeDesc, nodeDescNight, bubleDesc, geoPosX[i], geoPosY[i], roadCondition == null ? roadCondition[i] : 0);
+                                item.angle = linkAngle[i];
+                                if (i < nextRoadArr.length) {
+                                    item.roadName = nextRoadArr[i];
+                                }
+                                routePlanResultInfo.mRouteItems.add(item);
+                            }
+                            i++;
+                        }
+                        this.mAllRoutePlanInfo.put(Integer.valueOf(this.mCurRouteIndex), routePlanResultInfo);
+                        LogUtil.m15791e("wangyang", "mAllRoutePlanInfo.put  done mCurRouteIndex = " + this.mCurRouteIndex);
+                        RGRouteItemModel.getInstance().updateRouteItems(tNavingRoutItems);
+                        LogUtil.m15791e("wangyang", "parseRouteResult done");
+                        return;
+                    }
+                } catch (Exception e) {
+                    LogUtil.m15791e("RoutePlan", e.toString());
+                    return;
+                }
+            }
+            LogUtil.m15791e("RoutePlan", "turnType null");
+        }
     }
-    return null;
-  }
-  
-  public String getStartName(Context paramContext, boolean paramBoolean)
-  {
-    if (this.mRoutePlanNodeList.size() <= 0) {
-      return "";
-    }
-    return getNodeName(paramContext, (RoutePlanNode)this.mRoutePlanNodeList.get(0), paramBoolean);
-  }
-  
-  public RoutePlanNode getStartNode()
-  {
-    if (this.mRoutePlanNodeList.size() <= 0) {
-      return null;
-    }
-    return (RoutePlanNode)this.mRoutePlanNodeList.get(0);
-  }
-  
-  public int getTollFees()
-  {
-    int j = 0;
-    int i;
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      i = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTollFees;
-    }
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return i;
-        localBundle = getRoutePlanBundle();
-        i = j;
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      i = j;
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTollFees;
-  }
-  
-  public String getTotalDistance()
-  {
-    if (hasParseRouteDetail(this.mCurRouteIndex))
-    {
-      localObject = new StringBuffer();
-      StringUtils.formatDistance(((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance, StringUtils.UnitLangEnum.ZH, (StringBuffer)localObject);
-      return ((StringBuffer)localObject).toString();
-    }
-    Object localObject = getRoutePlanBundle();
-    if (localObject != null)
-    {
-      parseRouteResult(BNaviModuleManager.getContext(), (Bundle)localObject);
-      if (hasParseRouteDetail(this.mCurRouteIndex))
-      {
-        localObject = new StringBuffer();
-        StringUtils.formatDistance(((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance, StringUtils.UnitLangEnum.ZH, (StringBuffer)localObject);
-        return ((StringBuffer)localObject).toString();
-      }
-      return "";
-    }
-    return "";
-  }
-  
-  public int getTotalDistanceInt()
-  {
-    int j = 0;
-    int i;
-    if (hasParseRouteDetail(this.mCurRouteIndex))
-    {
-      LogUtil.e("wangyang", "getTotalDistanceInt Parse");
-      i = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance;
-    }
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return i;
-        localBundle = getRoutePlanBundle();
-        i = j;
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      i = j;
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance;
-  }
-  
-  public String getTotalTime()
-  {
-    if (hasParseRouteDetail(this.mCurRouteIndex))
-    {
-      LogUtil.e("RoutePlan", "remain time before format = " + "");
-      localObject = StringUtils.formatTime2(((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTime, 2);
-      LogUtil.e("RoutePlan", "remain time after format = " + (String)localObject);
-      return (String)localObject;
-    }
-    Object localObject = getRoutePlanBundle();
-    if (localObject != null)
-    {
-      parseRouteResult(BNaviModuleManager.getContext(), (Bundle)localObject);
-      if (hasParseRouteDetail(this.mCurRouteIndex))
-      {
-        LogUtil.e("RoutePlan", "remain time before format = " + "");
-        localObject = StringUtils.formatTime2(((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTime, 2);
-        LogUtil.e("RoutePlan", "remain time after format = " + (String)localObject);
-        return (String)localObject;
-      }
-      return "";
-    }
-    return "";
-  }
-  
-  public int getTotalTimeInt()
-  {
-    int j = 0;
-    int i;
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      i = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTime;
-    }
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return i;
-        localBundle = getRoutePlanBundle();
-        i = j;
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      i = j;
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTime;
-  }
-  
-  public int getTrafficLightCnt()
-  {
-    int j = 0;
-    int i;
-    if (hasParseRouteDetail(this.mCurRouteIndex)) {
-      i = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTrafficLightCnt;
-    }
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return i;
-        localBundle = getRoutePlanBundle();
-        i = j;
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-      i = j;
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    return ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTrafficLightCnt;
-  }
-  
-  public ArrayList<RoutePlanNode> getViaNodeList()
-  {
-    Object localObject;
-    if (this.mRoutePlanNodeList.size() <= 2)
-    {
-      localObject = null;
-      return (ArrayList<RoutePlanNode>)localObject;
-    }
-    ArrayList localArrayList2 = this.mRoutePlanNodeList;
-    int j = localArrayList2.size();
-    ArrayList localArrayList1 = new ArrayList();
-    int i = 1;
-    for (;;)
-    {
-      localObject = localArrayList1;
-      if (i >= j - 1) {
-        break;
-      }
-      localArrayList1.add(localArrayList2.get(i));
-      i += 1;
-    }
-  }
-  
-  public boolean hasParseRouteDetail(int paramInt)
-  {
-    return (RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(paramInt)) != null;
-  }
-  
-  public boolean isAvoidTrafficLable()
-  {
-    if (this.mRouteOutlineItemList.size() <= 0) {}
-    Object localObject;
-    do
-    {
-      do
-      {
+
+    public boolean hasParseRouteDetail(int index) {
+        if (((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(index))) != null) {
+            return true;
+        }
         return false;
-        localObject = (RoutePlanOutlineItem)this.mRouteOutlineItemList.get(this.mCurRouteIndex);
-      } while (localObject == null);
-      localObject = ((RoutePlanOutlineItem)localObject).getPusLabelName();
-    } while ((localObject == null) || (!"躲避拥堵".equals(localObject)));
-    return true;
-  }
-  
-  public boolean isSelectNode()
-  {
-    return this.sIsSelectNode;
-  }
-  
-  public void parseRouteResult(Context paramContext, Bundle paramBundle)
-  {
-    RoutePlanResultInfo localRoutePlanResultInfo = new RoutePlanResultInfo();
-    String[] arrayOfString;
-    int[] arrayOfInt1;
-    int[] arrayOfInt2;
-    int[] arrayOfInt3;
-    int[] arrayOfInt4;
-    int[] arrayOfInt5;
-    int[] arrayOfInt6;
-    int i;
-    String str3;
-    ArrayList localArrayList;
-    if (paramContext != null)
-    {
-      localRoutePlanResultInfo.mDistance = paramBundle.getInt("totaldistance");
-      localRoutePlanResultInfo.mTime = paramBundle.getInt("totaltime");
-      localRoutePlanResultInfo.mNodeNum = paramBundle.getInt("nodenum");
-      LogUtil.e("wangyang", "parseRouteResult mDistance = " + localRoutePlanResultInfo.mDistance + " mTime = " + localRoutePlanResultInfo.mTime + " mNodeNum = " + localRoutePlanResultInfo.mNodeNum);
-      if (localRoutePlanResultInfo.mNodeNum <= 0) {
-        LogUtil.e("wangyang", "route plan not finished ");
-      }
-      arrayOfString = paramBundle.getStringArray("nextroadname");
-      arrayOfInt1 = paramBundle.getIntArray("distance");
-      arrayOfInt2 = paramBundle.getIntArray("turntype");
-      arrayOfInt3 = paramBundle.getIntArray("ptX");
-      arrayOfInt4 = paramBundle.getIntArray("ptY");
-      arrayOfInt5 = paramBundle.getIntArray("roadCond");
-      arrayOfInt6 = paramBundle.getIntArray("linkAngle");
-      localRoutePlanResultInfo.mMainRoads = paramBundle.getString("mainroads");
-      localRoutePlanResultInfo.mTrafficLightCnt = paramBundle.getInt("trafficlightcnt");
-      localRoutePlanResultInfo.mTollFees = paramBundle.getInt("tollfees");
-      localRoutePlanResultInfo.mGasMoney = paramBundle.getInt("gasmoney");
-      localRoutePlanResultInfo.mPusDirection = paramBundle.getString("pusDirection");
-      localRoutePlanResultInfo.mPusDetectRoad = paramBundle.getString("pusDetectedRoad");
-      if (arrayOfString != null)
-      {
-        if (arrayOfString.length >= 1)
-        {
-          i = 1;
-          if (i < arrayOfString.length)
-          {
-            if (StringUtils.isEmpty(arrayOfString[i])) {
-              break label1144;
-            }
-            localRoutePlanResultInfo.mFirstRoadName = arrayOfString[i];
-          }
-        }
-        if (arrayOfInt2.length >= 2) {
-          localRoutePlanResultInfo.mFirstTurnType = arrayOfInt2[1];
-        }
-        if (arrayOfInt1.length >= 2) {
-          localRoutePlanResultInfo.mFirstRemainDist = arrayOfInt1[0];
-        }
-      }
-      str3 = getEndName(paramContext, false);
-      localArrayList = new ArrayList();
-      if (arrayOfInt2 == null) {
-        break label1128;
-      }
     }
-    for (;;)
-    {
-      int j;
-      Object localObject;
-      try
-      {
-        if (arrayOfInt2.length <= 0) {
-          break label1128;
-        }
-        i = 0;
-        if (i >= localRoutePlanResultInfo.mNodeNum) {
-          break label1064;
-        }
-        j = arrayOfInt2[i];
-        if (j >= RoutePlanParams.gTurnIconIDSmall.length)
-        {
-          LogUtil.e("RoutePlan", "parseRouteResult out of arry! turnTypeIndex=" + j);
-        }
-        else
-        {
-          localObject = com.baidu.navisdk.comapi.routeguide.RouteGuideParams.gTurnTypeDesc[j];
-          int k = RoutePlanParams.gTurnIconIDSmall[j];
-          if (("起始地".equals(localObject)) || (((String)localObject).startsWith("途经点")))
-          {
-            str2 = JarUtils.getResources().getString(1711669534);
-            str1 = JarUtils.getResources().getString(1711669535);
-            paramBundle = JarUtils.getResources().getString(1711669546);
-            paramContext = null;
-            if ((localRoutePlanResultInfo.mNodeNum <= 1) || (i <= 0)) {
-              break label892;
-            }
-            if (!"起始地".equals(localObject)) {
-              break label757;
-            }
-            paramContext = new RGRouteItemModel.RouteItem(j, arrayOfInt1[(i - 1)], "起始地", arrayOfInt3[(i - 1)], arrayOfInt4[(i - 1)]);
-            paramContext.type = 1;
-            if (paramContext != null) {
-              localArrayList.add(paramContext);
-            }
-            if (!"目的地".equals(localObject)) {
-              break label934;
-            }
-            paramContext = "nodeEnd";
-            paramBundle = "nodeEnd";
-            str1 = JarUtils.getResources().getString(1711669548, new Object[] { com.baidu.navisdk.comapi.routeguide.RouteGuideParams.gTurnTypeDesc[j], str3 });
-            if ((i >= arrayOfInt3.length) || (i >= arrayOfInt4.length)) {
-              break label1137;
-            }
-            int m = arrayOfInt3[i];
-            int n = arrayOfInt4[i];
-            if (arrayOfInt5 == null) {
-              break label1151;
-            }
-            j = arrayOfInt5[i];
-            paramContext = new RoutePlanResultItem(k, paramContext, paramBundle, str1, m, n, j);
-            if ((arrayOfInt6 != null) && (i < arrayOfInt6.length)) {
-              paramContext.angle = arrayOfInt6[i];
-            }
-            if (i < arrayOfString.length) {
-              paramContext.roadName = arrayOfString[i];
-            }
-            localRoutePlanResultInfo.mRouteItems.add(paramContext);
-          }
-        }
-      }
-      catch (Exception paramContext)
-      {
-        LogUtil.e("RoutePlan", paramContext.toString());
-      }
-      return;
-      String str2 = JarUtils.getResources().getString(1711669532);
-      String str1 = JarUtils.getResources().getString(1711669533);
-      paramBundle = JarUtils.getResources().getString(1711669545);
-      continue;
-      label757:
-      if (((String)localObject).startsWith("途经点"))
-      {
-        paramContext = new RGRouteItemModel.RouteItem(j, arrayOfInt1[(i - 1)], "途经点", arrayOfInt3[(i - 1)], arrayOfInt4[(i - 1)]);
-        paramContext.type = 2;
-      }
-      else if (((String)localObject).startsWith("目的地"))
-      {
-        paramContext = new RGRouteItemModel.RouteItem(j, arrayOfInt1[(i - 1)], "目的地", arrayOfInt3[(i - 1)], arrayOfInt4[(i - 1)]);
-        paramContext.type = 3;
-      }
-      else
-      {
-        paramContext = new RGRouteItemModel.RouteItem(j, arrayOfInt1[(i - 1)], arrayOfString[i], arrayOfInt3[(i - 1)], arrayOfInt4[(i - 1)]);
-        continue;
-        label892:
-        if (localRoutePlanResultInfo.mNodeNum == 1)
-        {
-          paramContext = new RGRouteItemModel.RouteItem(j, arrayOfInt1[0], "目的地", arrayOfInt3[0], arrayOfInt4[0]);
-          paramContext.type = 3;
-          continue;
-          label934:
-          if (arrayOfString[i].length() == 0) {
-            arrayOfString[i] = JarUtils.getResources().getString(1711669540);
-          }
-          localObject = new StringBuffer();
-          StringUtils.formatDistance(arrayOfInt1[i], StringUtils.UnitLangEnum.ZH, (StringBuffer)localObject);
-          paramContext = String.format(str2, new Object[] { arrayOfString[i], localObject });
-          str1 = String.format(str1, new Object[] { arrayOfString[i], localObject });
-          str2 = String.format(paramBundle, new Object[] { com.baidu.navisdk.comapi.routeguide.RouteGuideParams.gTurnTypeDesc[j], arrayOfString[i], localObject });
-          paramBundle = str1;
-          str1 = str2;
-          continue;
-          label1064:
-          this.mAllRoutePlanInfo.put(Integer.valueOf(this.mCurRouteIndex), localRoutePlanResultInfo);
-          LogUtil.e("wangyang", "mAllRoutePlanInfo.put  done mCurRouteIndex = " + this.mCurRouteIndex);
-          RGRouteItemModel.getInstance().updateRouteItems(localArrayList);
-          LogUtil.e("wangyang", "parseRouteResult done");
-          return;
-          label1128:
-          LogUtil.e("RoutePlan", "turnType null");
-          return;
-          label1137:
-          i += 1;
-          continue;
-          label1144:
-          i += 1;
-          break;
-          label1151:
-          j = 0;
-        }
-      }
+
+    public void clearRouteInput() {
+        cancelDistrictThread();
+        this.mRoutePlanNodeList.clear();
     }
-  }
-  
-  public void parseRouteResultMainInfo(Bundle paramBundle)
-  {
-    if (paramBundle == null) {}
-    while ((paramBundle.isEmpty()) || ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex)) != null)) {
-      return;
-    }
-    RoutePlanResultInfo localRoutePlanResultInfo = new RoutePlanResultInfo();
-    localRoutePlanResultInfo.mDistance = paramBundle.getInt("totaldistance");
-    localRoutePlanResultInfo.mTime = paramBundle.getInt("totaltime");
-    localRoutePlanResultInfo.mNodeNum = paramBundle.getInt("nodenum");
-    localRoutePlanResultInfo.mMainRoads = paramBundle.getString("mainroads");
-    localRoutePlanResultInfo.mTrafficLightCnt = paramBundle.getInt("trafficlightcnt");
-    localRoutePlanResultInfo.mTollFees = paramBundle.getInt("tollfees");
-    localRoutePlanResultInfo.mGasMoney = paramBundle.getInt("gasmoney");
-    this.mAllRoutePlanInfo.put(Integer.valueOf(this.mCurRouteIndex), localRoutePlanResultInfo);
-  }
-  
-  public void parseRouteResultOutline(ArrayList<Bundle> paramArrayList)
-  {
-    clearRouteOutLineResult();
-    if (paramArrayList == null) {}
-    while (paramArrayList.isEmpty()) {
-      return;
-    }
-    clearRouteOutLineResult();
-    this.mRouteCnt = paramArrayList.size();
-    int i = 0;
-    if (i < this.mRouteCnt)
-    {
-      Bundle localBundle = (Bundle)paramArrayList.get(i);
-      int j = localBundle.getInt("totaldistance");
-      int k = localBundle.getInt("totaltime");
-      int m = localBundle.getInt("trafficlightcnt");
-      int n = localBundle.getInt("tollfees");
-      String str = localBundle.getString("pusLabelName");
-      int i1 = BNRoutePlaner.getInstance().getCalcPreference();
-      int i2 = localBundle.getInt("pusLabelID");
-      Object localObject = str;
-      if ("".equals(str))
-      {
-        localObject = str;
-        if (i1 != 1)
-        {
-          if (i != 0) {
-            break label206;
-          }
-          localObject = parserLableId(i1);
+
+    public int getRoutePlanNodeSize() {
+        if (this.mRoutePlanNodeList != null) {
+            return this.mRoutePlanNodeList.size();
         }
-      }
-      for (;;)
-      {
-        str = localBundle.getString("pusLabelTips");
-        localObject = new RoutePlanOutlineItem(i, "", n, m, 0, j, k, (String)localObject, str, i2);
-        this.mRouteOutlineItemList.add(localObject);
-        i += 1;
-        break;
-        label206:
-        localObject = str;
-        if (i == 1) {
-          localObject = "方案二";
+        return 0;
+    }
+
+    public void setRouteInput(ArrayList<RoutePlanNode> navNodeList) {
+        if (navNodeList != null) {
+            clearRouteInput();
+            int nodeCount = navNodeList.size();
+            for (int i = 0; i < nodeCount; i++) {
+                this.mRoutePlanNodeList.add(new RoutePlanNode((RoutePlanNode) navNodeList.get(i)));
+            }
         }
-        if (i == 2) {
-          localObject = "方案三";
+    }
+
+    public ArrayList<RoutePlanNode> getRouteInput() {
+        return (ArrayList) this.mRoutePlanNodeList.clone();
+    }
+
+    public int getRoutePlanMode() {
+        return this.mRoutePlanMode;
+    }
+
+    public int getRouteCnt() {
+        return this.mRouteCnt;
+    }
+
+    public String getStartName(Context context, boolean isSimple) {
+        if (this.mRoutePlanNodeList.size() <= 0) {
+            return "";
         }
-      }
+        return getNodeName(context, (RoutePlanNode) this.mRoutePlanNodeList.get(0), isSimple);
     }
-    paramArrayList = (Bundle)paramArrayList.get(0);
-    this.mPrefId = paramArrayList.getIntArray("prefId");
-    this.mPrefStr = paramArrayList.getStringArray("prefStr");
-  }
-  
-  public void restoreCurRouteNaviBrowseInfo()
-  {
-    LogUtil.e("RoutePlan", "sunhao.routeitem.restoreCurRouteNaviBrowseInfo()");
-    ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum = this.mNodeNumBackup;
-    if (this.mNavingBrowseRoutItems != null) {
-      RGRouteItemModel.getInstance().updateRouteItems(this.mNavingBrowseRoutItems);
-    }
-    if ((this.mRouteListBackup != null) && (hasParseRouteDetail(this.mCurRouteIndex)))
-    {
-      ArrayList localArrayList = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems;
-      localArrayList.clear();
-      localArrayList.addAll(this.mRouteListBackup);
-    }
-  }
-  
-  public void saveCurRouteNaviBrowseInfo()
-  {
-    LogUtil.e("RoutePlan", "sunhao.routeitem.saveCurRouteNaviBrowseInfo()");
-    label44:
-    List localList;
-    if (this.mNavingBrowseRoutItems == null)
-    {
-      this.mNavingBrowseRoutItems = new ArrayList();
-      if (this.mRouteListBackup != null) {
-        break label77;
-      }
-      this.mRouteListBackup = new ArrayList();
-      localList = RGRouteItemModel.getInstance().getRouteItems();
-      if ((localList != null) && (localList.size() != 0)) {
-        break label87;
-      }
-    }
-    label77:
-    label87:
-    do
-    {
-      Bundle localBundle;
-      do
-      {
-        return;
-        this.mNavingBrowseRoutItems.clear();
-        break;
-        this.mRouteListBackup.clear();
-        break label44;
-        if (hasParseRouteDetail(this.mCurRouteIndex))
-        {
-          this.mNodeNumBackup = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum;
-          this.mRouteListBackup.addAll(((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems);
-          this.mNavingBrowseRoutItems.addAll(localList);
-          return;
+
+    public String getEndName(Context context, boolean isSimple) {
+        if (this.mRoutePlanNodeList.size() <= 1) {
+            return "";
         }
-        localBundle = getRoutePlanBundle();
-      } while (localBundle == null);
-      parseRouteResult(BNaviModuleManager.getContext(), localBundle);
-    } while (!hasParseRouteDetail(this.mCurRouteIndex));
-    this.mNodeNumBackup = ((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mNodeNum;
-    this.mRouteListBackup.addAll(((RoutePlanResultInfo)this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mRouteItems);
-    this.mNavingBrowseRoutItems.addAll(localList);
-  }
-  
-  public void setAvoidTrafficjamEnableListener(IAvoidTrafficjamEnableListener paramIAvoidTrafficjamEnableListener)
-  {
-    this.mAvoidTrafficjamEnableListener = paramIAvoidTrafficjamEnableListener;
-  }
-  
-  public void setCurIndex(int paramInt)
-  {
-    this.mCurRouteIndex = paramInt;
-  }
-  
-  public void setEnComfrom(int paramInt)
-  {
-    this.enComfrom = paramInt;
-  }
-  
-  public void setEnNaviType(int paramInt)
-  {
-    this.enNaviType = paramInt;
-  }
-  
-  public void setPointPoiDetail(RoutePlanNode paramRoutePlanNode)
-  {
-    this.bIsPoiDetail = true;
-    this.mPointByPoiDetail.copy(paramRoutePlanNode);
-  }
-  
-  public void setPointSelectNode(int paramInt1, int paramInt2, int paramInt3, int paramInt4, String paramString1, String paramString2)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setPointIndex(paramInt1);
-    this.mPointSelectNode.setRoutePlanNode(paramInt2, paramInt3, paramInt4, paramString1, paramString2);
-    this.mPointSelectNode.setUID(null);
-  }
-  
-  public void setPointSelectNode(int paramInt1, int paramInt2, int paramInt3, String paramString1, String paramString2)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramInt1, paramInt2, paramInt3, paramString1, paramString2);
-    this.mPointSelectNode.setUID(null);
-  }
-  
-  public void setPointSelectNode(int paramInt, SearchPoi paramSearchPoi)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramInt, paramSearchPoi);
-  }
-  
-  public void setPointSelectNode(int paramInt, SearchPoi paramSearchPoi, ArrayList<SearchPoi> paramArrayList)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramInt, paramSearchPoi, paramArrayList);
-  }
-  
-  public void setPointSelectNode(int paramInt1, GeoPoint paramGeoPoint, int paramInt2, String paramString1, String paramString2)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setPointIndex(paramInt1);
-    this.mPointSelectNode.setRoutePlanNode(paramGeoPoint, paramInt2, paramString1, paramString2);
-    this.mPointSelectNode.setUID(null);
-  }
-  
-  public void setPointSelectNode(PointSelectNode paramPointSelectNode)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode = paramPointSelectNode;
-  }
-  
-  public void setPointSelectNode(RoutePlanNode paramRoutePlanNode)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramRoutePlanNode);
-  }
-  
-  public void setPointSelectNode(RoutePlanNode paramRoutePlanNode, int paramInt)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramRoutePlanNode);
-    this.mPointSelectNode.setFrom(paramInt);
-  }
-  
-  public void setPointSelectNode(SearchPoi paramSearchPoi)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramSearchPoi);
-  }
-  
-  public void setPointSelectNode(GeoPoint paramGeoPoint)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramGeoPoint);
-    this.mPointSelectNode.setUID(null);
-  }
-  
-  public void setPointSelectNode(GeoPoint paramGeoPoint, int paramInt, String paramString1, String paramString2)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramGeoPoint, paramGeoPoint, paramInt, paramString1, paramString2);
-    this.mPointSelectNode.setUID(null);
-  }
-  
-  public void setPointSelectNode(ArrayList<SearchPoi> paramArrayList, SearchPoi paramSearchPoi)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setRoutePlanNode(paramSearchPoi, paramArrayList);
-  }
-  
-  public void setPointSelectNodeInfo(int paramInt, String paramString)
-  {
-    this.sIsSelectNode = true;
-    this.mPointSelectNode.setPointIndex(paramInt);
-    this.mPointSelectNode.setPointDescription(paramString);
-    this.mPointSelectNode.setUID(null);
-  }
-  
-  public void setRouteInput(ArrayList<RoutePlanNode> paramArrayList)
-  {
-    if (paramArrayList == null) {}
-    for (;;)
-    {
-      return;
-      clearRouteInput();
-      int j = paramArrayList.size();
-      int i = 0;
-      while (i < j)
-      {
-        this.mRoutePlanNodeList.add(new RoutePlanNode((RoutePlanNode)paramArrayList.get(i)));
-        i += 1;
-      }
+        return getNodeName(context, (RoutePlanNode) this.mRoutePlanNodeList.get(this.mRoutePlanNodeList.size() - 1), isSimple);
     }
-  }
-  
-  public void setRoutePlanNetMode(int paramInt)
-  {
-    this.routePlanNetMode = paramInt;
-  }
-  
-  public static abstract interface IAvoidTrafficjamEnableListener
-  {
-    public abstract void onAvoidTrafficjamEnable(boolean paramBoolean);
-  }
-  
-  public class RoutePlanResultInfo
-  {
-    public int mDistance;
-    public int mFirstRemainDist;
-    public String mFirstRoadName;
-    public int mFirstTurnType;
-    public int mGasMoney;
-    public String mMainRoads;
-    public int mNodeNum;
-    public String mPusDetectRoad;
-    public String mPusDirection;
-    public String mPusLabelName;
-    public String mPusLabelTips;
-    public ArrayList<RoutePlanResultItem> mRouteItems = new ArrayList();
-    public int mTime;
-    public int mTollFees;
-    public int mTrafficLightCnt;
-    
-    public RoutePlanResultInfo() {}
-  }
+
+    public RoutePlanNode getEndNode() {
+        if (this.mRoutePlanNodeList.size() <= 1) {
+            return null;
+        }
+        return (RoutePlanNode) this.mRoutePlanNodeList.get(this.mRoutePlanNodeList.size() - 1);
+    }
+
+    public ArrayList<RoutePlanNode> getViaNodeList() {
+        if (this.mRoutePlanNodeList.size() <= 2) {
+            return null;
+        }
+        ArrayList<RoutePlanNode> routePlanNodeArrayList = this.mRoutePlanNodeList;
+        int size = routePlanNodeArrayList.size();
+        ArrayList<RoutePlanNode> list = new ArrayList();
+        for (int index = 1; index < size - 1; index++) {
+            list.add(routePlanNodeArrayList.get(index));
+        }
+        return list;
+    }
+
+    public RoutePlanNode getStartNode() {
+        if (this.mRoutePlanNodeList.size() <= 0) {
+            return null;
+        }
+        return (RoutePlanNode) this.mRoutePlanNodeList.get(0);
+    }
+
+    public boolean getAvoidTrafficjamEnable() {
+        final ArrayList<RoutePlanNode> navNodeList = getRouteInput();
+        if (BNOfflineDataManager.getInstance().isProvinceDataDownload(0)) {
+            ArrayList<Integer> cityidlist = new ArrayList();
+            int nodeSize = navNodeList.size();
+            for (int i = 0; i < nodeSize; i++) {
+                RoutePlanNode node = (RoutePlanNode) navNodeList.get(i);
+                if (node != null && node.isNodeSettedData()) {
+                    DistrictInfo cityinfo = BNPoiSearcher.getInstance().getDistrictByPoint(node.mGeoPoint, 0);
+                    if (!(cityinfo == null || cityinfo.mType != 3 || cityidlist.contains(Integer.valueOf(cityinfo.mId)))) {
+                        cityidlist.add(Integer.valueOf(cityinfo.mId));
+                    }
+                }
+            }
+            if (1 == cityidlist.size()) {
+                int cityID = ((Integer) cityidlist.get(0)).intValue();
+                LogUtil.m15791e("RoutePlan", "cityinfo.cityID = " + cityID);
+                if (BNMapController.getInstance().checkRoadConditionSupport(cityID)) {
+                    return true;
+                }
+            }
+        }
+        cancelDistrictThread();
+        this.mDistrictTask = new BNWorkerNormalTask<String, String>("CarNavi-DistrictTask", null) {
+            /* JADX WARNING: inconsistent code. */
+            /* Code decompiled incorrectly, please refer to instructions dump. */
+            protected java.lang.String execute() {
+                /*
+                r9 = this;
+                r8 = 1;
+                r2 = 0;
+                r1 = new java.util.ArrayList;
+                r1.<init>();
+                r6 = r4;
+                r5 = r6.size();
+                r4 = 0;
+                r3 = 0;
+            L_0x000f:
+                if (r3 >= r5) goto L_0x004a;
+            L_0x0011:
+                r6 = r4;
+                r4 = r6.get(r3);
+                r4 = (com.baidu.navisdk.model.datastruct.RoutePlanNode) r4;
+                if (r4 == 0) goto L_0x0047;
+            L_0x001b:
+                r6 = r4.isNodeSettedData();
+                if (r6 == 0) goto L_0x0047;
+            L_0x0021:
+                r6 = com.baidu.navisdk.comapi.poisearch.BNPoiSearcher.getInstance();
+                r7 = r4.mGeoPoint;
+                r2 = r6.getDistrictByPoint(r7, r8);
+                if (r2 == 0) goto L_0x0047;
+            L_0x002d:
+                r6 = r2.mType;
+                r7 = 3;
+                if (r6 != r7) goto L_0x0047;
+            L_0x0032:
+                r6 = r2.mId;
+                r6 = java.lang.Integer.valueOf(r6);
+                r6 = r1.contains(r6);
+                if (r6 != 0) goto L_0x0047;
+            L_0x003e:
+                r6 = r2.mId;
+                r6 = java.lang.Integer.valueOf(r6);
+                r1.add(r6);
+            L_0x0047:
+                r3 = r3 + 1;
+                goto L_0x000f;
+            L_0x004a:
+                r6 = r1.size();
+                if (r8 != r6) goto L_0x007e;
+            L_0x0050:
+                r6 = 0;
+                r6 = r1.get(r6);
+                r6 = (java.lang.Integer) r6;
+                r0 = r6.intValue();
+                r6 = TAG;
+                r7 = new java.lang.StringBuilder;
+                r7.<init>();
+                r8 = "mDistrictThread cityinfo.cityID = ";
+                r7 = r7.append(r8);
+                r7 = r7.append(r0);
+                r7 = r7.toString();
+                com.baidu.navisdk.util.common.LogUtil.m15791e(r6, r7);
+                r6 = com.baidu.navisdk.comapi.mapcontrol.BNMapController.getInstance();
+                r6 = r6.checkRoadConditionSupport(r0);
+                if (r6 == 0) goto L_0x007e;
+            L_0x007e:
+                r6 = 0;
+                return r6;
+                */
+                throw new UnsupportedOperationException("Method not decompiled: com.baidu.navisdk.model.modelfactory.RoutePlanModel.1.execute():java.lang.String");
+            }
+        };
+        BNWorkerCenter.getInstance().submitNormalTask(this.mDistrictTask, new BNWorkerConfig(101, 0));
+        return false;
+    }
+
+    private void cancelDistrictThread() {
+        BNWorkerCenter.getInstance().cancelTask(this.mDistrictTask, true);
+        this.mDistrictTask = null;
+    }
+
+    public void setAvoidTrafficjamEnableListener(IAvoidTrafficjamEnableListener l) {
+        this.mAvoidTrafficjamEnableListener = l;
+    }
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public java.lang.String getNodeName(android.content.Context r7, com.baidu.navisdk.model.datastruct.RoutePlanNode r8, boolean r9) {
+        /*
+        r6 = this;
+        r5 = 6;
+        r1 = "";
+        if (r8 == 0) goto L_0x000e;
+    L_0x0006:
+        if (r7 == 0) goto L_0x000e;
+    L_0x0008:
+        r3 = r8.isNodeSettedData();
+        if (r3 != 0) goto L_0x0010;
+    L_0x000e:
+        r2 = r1;
+    L_0x000f:
+        return r2;
+    L_0x0010:
+        r3 = r8.mFrom;	 Catch:{ Exception -> 0x0094 }
+        switch(r3) {
+            case 1: goto L_0x007a;
+            case 2: goto L_0x0015;
+            case 3: goto L_0x004b;
+            case 4: goto L_0x0062;
+            case 5: goto L_0x006e;
+            default: goto L_0x0015;
+        };	 Catch:{ Exception -> 0x0094 }
+    L_0x0015:
+        r3 = r8.mName;	 Catch:{ Exception -> 0x0094 }
+        r3 = com.baidu.navisdk.util.common.StringUtils.isEmpty(r3);	 Catch:{ Exception -> 0x0094 }
+        if (r3 == 0) goto L_0x0091;
+    L_0x001d:
+        r3 = com.baidu.navisdk.util.jar.JarUtils.getResources();	 Catch:{ Exception -> 0x0094 }
+        r4 = 1711669365; // 0x66060075 float:1.5820138E23 double:8.456770303E-315;
+        r1 = r3.getString(r4);	 Catch:{ Exception -> 0x0094 }
+    L_0x0028:
+        if (r9 == 0) goto L_0x0049;
+    L_0x002a:
+        r3 = r1.length();
+        if (r3 <= r5) goto L_0x0049;
+    L_0x0030:
+        r3 = new java.lang.StringBuilder;
+        r3.<init>();
+        r4 = 0;
+        r4 = r1.substring(r4, r5);
+        r3 = r3.append(r4);
+        r4 = "...";
+        r3 = r3.append(r4);
+        r1 = r3.toString();
+    L_0x0049:
+        r2 = r1;
+        goto L_0x000f;
+    L_0x004b:
+        r3 = r8.mName;	 Catch:{ Exception -> 0x0094 }
+        r3 = com.baidu.navisdk.util.common.StringUtils.isEmpty(r3);	 Catch:{ Exception -> 0x0094 }
+        if (r3 == 0) goto L_0x005f;
+    L_0x0053:
+        r3 = com.baidu.navisdk.util.jar.JarUtils.getResources();	 Catch:{ Exception -> 0x0094 }
+        r4 = 1711669559; // 0x66060137 float:1.5820488E23 double:8.45677126E-315;
+        r1 = r3.getString(r4);	 Catch:{ Exception -> 0x0094 }
+    L_0x005e:
+        goto L_0x0028;
+    L_0x005f:
+        r1 = r8.mName;	 Catch:{ Exception -> 0x0094 }
+        goto L_0x005e;
+    L_0x0062:
+        r3 = com.baidu.navisdk.util.jar.JarUtils.getResources();	 Catch:{ Exception -> 0x0094 }
+        r4 = 1711669557; // 0x66060135 float:1.5820484E23 double:8.45677125E-315;
+        r1 = r3.getString(r4);	 Catch:{ Exception -> 0x0094 }
+        goto L_0x0028;
+    L_0x006e:
+        r3 = com.baidu.navisdk.util.jar.JarUtils.getResources();	 Catch:{ Exception -> 0x0094 }
+        r4 = 1711669558; // 0x66060136 float:1.5820486E23 double:8.456771256E-315;
+        r1 = r3.getString(r4);	 Catch:{ Exception -> 0x0094 }
+        goto L_0x0028;
+    L_0x007a:
+        r3 = r8.mName;	 Catch:{ Exception -> 0x0094 }
+        r3 = com.baidu.navisdk.util.common.StringUtils.isEmpty(r3);	 Catch:{ Exception -> 0x0094 }
+        if (r3 == 0) goto L_0x008e;
+    L_0x0082:
+        r3 = com.baidu.navisdk.util.jar.JarUtils.getResources();	 Catch:{ Exception -> 0x0094 }
+        r4 = 1711669560; // 0x66060138 float:1.582049E23 double:8.456771266E-315;
+        r1 = r3.getString(r4);	 Catch:{ Exception -> 0x0094 }
+    L_0x008d:
+        goto L_0x0028;
+    L_0x008e:
+        r1 = r8.mName;	 Catch:{ Exception -> 0x0094 }
+        goto L_0x008d;
+    L_0x0091:
+        r1 = r8.mName;	 Catch:{ Exception -> 0x0094 }
+        goto L_0x0028;
+    L_0x0094:
+        r0 = move-exception;
+        r3 = "RoutePlan";
+        r4 = r0.toString();
+        com.baidu.navisdk.util.common.LogUtil.m15791e(r3, r4);
+        goto L_0x0028;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.navisdk.model.modelfactory.RoutePlanModel.getNodeName(android.content.Context, com.baidu.navisdk.model.datastruct.RoutePlanNode, boolean):java.lang.String");
+    }
+
+    public PointSelectNode getPointSelectNode() {
+        return this.mPointSelectNode;
+    }
+
+    public RoutePlanNode getRoutePlanNode() {
+        return this.mPointSelectNode.getRoutePlanNode();
+    }
+
+    public void setPointSelectNode(PointSelectNode pointSelectNode) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode = pointSelectNode;
+    }
+
+    public void setPointSelectNode(RoutePlanNode node) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(node);
+    }
+
+    public void setPointSelectNode(RoutePlanNode node, int from) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(node);
+        this.mPointSelectNode.setFrom(from);
+    }
+
+    public void setPointSelectNode(GeoPoint geoPoint) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(geoPoint);
+        this.mPointSelectNode.setUID(null);
+    }
+
+    public void setPointSelectNode(GeoPoint geoPoint, int from, String name, String description) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(geoPoint, geoPoint, from, name, description);
+        this.mPointSelectNode.setUID(null);
+    }
+
+    public void setPointSelectNode(SearchPoi node) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(node);
+    }
+
+    public void setPointSelectNode(ArrayList<SearchPoi> list, SearchPoi node) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(node, (ArrayList) list);
+    }
+
+    public void setPointSelectNode(int index, SearchPoi node, ArrayList<SearchPoi> list) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(index, node, list);
+    }
+
+    public void setPointSelectNode(int index, SearchPoi node) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(index, node);
+    }
+
+    public void setPointSelectNode(int latitude, int longitude, int from, String name, String description) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setRoutePlanNode(latitude, longitude, from, name, description);
+        this.mPointSelectNode.setUID(null);
+    }
+
+    public void setPointSelectNode(int pointIndex, GeoPoint geoPoint, int from, String name, String description) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setPointIndex(pointIndex);
+        this.mPointSelectNode.setRoutePlanNode(geoPoint, from, name, description);
+        this.mPointSelectNode.setUID(null);
+    }
+
+    public void setPointSelectNode(int pointIndex, int latitude, int longitude, int from, String name, String description) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setPointIndex(pointIndex);
+        this.mPointSelectNode.setRoutePlanNode(latitude, longitude, from, name, description);
+        this.mPointSelectNode.setUID(null);
+    }
+
+    public void setPointSelectNodeInfo(int pointIndex, String description) {
+        this.sIsSelectNode = true;
+        this.mPointSelectNode.setPointIndex(pointIndex);
+        this.mPointSelectNode.setPointDescription(description);
+        this.mPointSelectNode.setUID(null);
+    }
+
+    public boolean isSelectNode() {
+        return this.sIsSelectNode;
+    }
+
+    public void clearSelectNode() {
+        this.sIsSelectNode = false;
+        this.mPointSelectNode.clearSelectNode();
+    }
+
+    public void setPointPoiDetail(RoutePlanNode node) {
+        this.bIsPoiDetail = true;
+        this.mPointByPoiDetail.copy(node);
+    }
+
+    public RoutePlanNode getPointPoiDetail() {
+        return this.mPointByPoiDetail;
+    }
+
+    public void clearPointPoiDetail() {
+        this.bIsPoiDetail = false;
+        this.mPointByPoiDetail.mName = "";
+        this.mPointByPoiDetail.mDescription = "";
+        this.mPointByPoiDetail.mGeoPoint = new GeoPoint();
+        this.mPointByPoiDetail.mFrom = 0;
+        this.mPointByPoiDetail.mViewPoint = null;
+        this.mPointByPoiDetail.clearSubPoiList();
+    }
+
+    public static RoutePlanNode changeToRoutePlanNode(SearchPoi node) {
+        if (node == null) {
+            return new RoutePlanNode();
+        }
+        return new RoutePlanNode(node.mViewPoint, 8, node.mName, node.mAddress, node.mOriginUID);
+    }
+
+    public int getTotalDistanceInt() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            LogUtil.m15791e("wangyang", "getTotalDistanceInt Parse");
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return 0;
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance;
+        }
+        return 0;
+    }
+
+    public String getTotalDistance() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            StringBuffer dist = new StringBuffer();
+            StringUtils.formatDistance(((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance, UnitLangEnum.ZH, dist);
+            return dist.toString();
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return "";
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (!hasParseRouteDetail(this.mCurRouteIndex)) {
+            return "";
+        }
+        dist = new StringBuffer();
+        StringUtils.formatDistance(((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mDistance, UnitLangEnum.ZH, dist);
+        return dist.toString();
+    }
+
+    public int getTotalTimeInt() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTime;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return 0;
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTime;
+        }
+        return 0;
+    }
+
+    public int getFirstTurnType() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstTurnType;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return 0;
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstTurnType;
+        }
+        return 0;
+    }
+
+    public int getFirstRemainDist() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstRemainDist;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return 0;
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstRemainDist;
+        }
+        return 0;
+    }
+
+    public String getFirstRoadName() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstRoadName;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return "";
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mFirstRoadName;
+        }
+        return "";
+    }
+
+    public String getMultiRouteCurrentMSRL() {
+        return this.mCurrentMRSL;
+    }
+
+    public static String htmlRemoveTag(String inputString) {
+        if (inputString == null) {
+            return null;
+        }
+        String textStr = "";
+        return inputString.replace("font", "null");
+    }
+
+    public String getMainRoads() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mMainRoads;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return "";
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mMainRoads;
+        }
+        return "";
+    }
+
+    public int getTrafficLightCnt() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTrafficLightCnt;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return 0;
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTrafficLightCnt;
+        }
+        return 0;
+    }
+
+    public int getGasMoney() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mGasMoney;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return 0;
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mGasMoney;
+        }
+        return 0;
+    }
+
+    public int getTollFees() {
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTollFees;
+        }
+        Bundle bundle = getRoutePlanBundle();
+        if (bundle == null) {
+            return 0;
+        }
+        parseRouteResult(BNaviModuleManager.getContext(), bundle);
+        if (hasParseRouteDetail(this.mCurRouteIndex)) {
+            return ((RoutePlanResultInfo) this.mAllRoutePlanInfo.get(Integer.valueOf(this.mCurRouteIndex))).mTollFees;
+        }
+        return 0;
+    }
+
+    public int[] getPrefId() {
+        return this.mPrefId;
+    }
+
+    public String[] getPrefStr() {
+        return this.mPrefStr;
+    }
+
+    public void setCurIndex(int index) {
+        this.mCurRouteIndex = index;
+    }
+
+    public int getCurIndex() {
+        return this.mCurRouteIndex;
+    }
+
+    public Bundle getRoutePlanBundle() {
+        LogUtil.m15791e("wangyang", "getRoutePlanBundle start");
+        Bundle bundle = new Bundle();
+        if (BNRoutePlaner.getInstance().getRouteInfo(this.mCurRouteIndex, bundle) != 2) {
+            return null;
+        }
+        LogUtil.m15791e("wangyang", "getRoutePlanBundle: full");
+        return bundle;
+    }
+
+    public boolean isAvoidTrafficLable() {
+        if (this.mRouteOutlineItemList.size() <= 0) {
+            return false;
+        }
+        RoutePlanOutlineItem outlineitem = (RoutePlanOutlineItem) this.mRouteOutlineItemList.get(this.mCurRouteIndex);
+        if (outlineitem == null) {
+            return false;
+        }
+        String lableName = outlineitem.getPusLabelName();
+        if (lableName == null || !"躲避拥堵".equals(lableName)) {
+            return false;
+        }
+        return true;
+    }
+
+    private String parserLableId(int id) {
+        if (id <= 1) {
+            return "";
+        }
+        String str = "";
+        switch (id) {
+            case 2:
+                return "高速优先";
+            case 4:
+                return "不走高速";
+            case 8:
+                return "少收费";
+            case 16:
+                return "躲避拥堵";
+            default:
+                return "推荐";
+        }
+    }
+
+    public int getEnNaviType() {
+        return this.enNaviType;
+    }
+
+    public void setEnNaviType(int enNaviType) {
+        this.enNaviType = enNaviType;
+    }
+
+    public int getEnComfrom() {
+        return this.enComfrom;
+    }
+
+    public void setEnComfrom(int enComfrom) {
+        this.enComfrom = enComfrom;
+    }
+
+    public int getRoutePlanNetMode() {
+        return this.routePlanNetMode;
+    }
+
+    public void setRoutePlanNetMode(int mNetMode) {
+        this.routePlanNetMode = mNetMode;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/model/modelfactory/RoutePlanModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

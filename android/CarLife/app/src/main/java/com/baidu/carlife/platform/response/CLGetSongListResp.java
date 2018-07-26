@@ -1,58 +1,39 @@
 package com.baidu.carlife.platform.response;
 
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1260i;
 import com.baidu.carlife.platform.model.CLSong;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 
-public class CLGetSongListResp
-  extends CLResponse
-{
-  private static final String TAG = CLGetSongListResp.class.getSimpleName();
-  public String playSongId;
-  public int pn;
-  public int rn;
-  public ArrayList<CLSong> songList;
-  public String songListId;
-  public int total;
-  public int version = 1;
-  
-  public static CLGetSongListResp fromJson(String paramString)
-  {
-    try
-    {
-      paramString = (CLGetSongListResp)new Gson().fromJson(paramString, CLGetSongListResp.class);
-      return paramString;
+public class CLGetSongListResp extends CLResponse {
+    private static final String TAG = CLGetSongListResp.class.getSimpleName();
+    public String playSongId;
+    public int pn;
+    public int rn;
+    public ArrayList<CLSong> songList;
+    public String songListId;
+    public int total;
+    public int version = 1;
+
+    public String toJson() {
+        try {
+            return new Gson().toJson(this);
+        } catch (Throwable e) {
+            C1260i.m4432a(TAG, e);
+            return null;
+        }
     }
-    catch (Exception paramString)
-    {
-      i.a(TAG, paramString);
+
+    public static CLGetSongListResp fromJson(String json) {
+        try {
+            return (CLGetSongListResp) new Gson().fromJson(json, CLGetSongListResp.class);
+        } catch (Throwable e) {
+            C1260i.m4432a(TAG, e);
+            return null;
+        }
     }
-    return null;
-  }
-  
-  public int getResponseType()
-  {
-    return 2;
-  }
-  
-  public String toJson()
-  {
-    try
-    {
-      String str = new Gson().toJson(this);
-      return str;
+
+    public int getResponseType() {
+        return 2;
     }
-    catch (Exception localException)
-    {
-      i.a(TAG, localException);
-    }
-    return null;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/platform/response/CLGetSongListResp.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

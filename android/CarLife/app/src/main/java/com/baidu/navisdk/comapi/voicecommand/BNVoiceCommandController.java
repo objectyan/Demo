@@ -1,19 +1,20 @@
 package com.baidu.navisdk.comapi.voicecommand;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.base.BNLogicController;
 import com.baidu.navisdk.comapi.geolocate.BNGeoLocateManager;
 import com.baidu.navisdk.comapi.routeguide.BNRouteGuider;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.statistics.BNStatisticsManager;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
+import com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandParams.VoiceRegActionFinishResult;
 import com.baidu.navisdk.model.GeoLocateModel;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
-import com.baidu.navisdk.model.datastruct.LocData;
 import com.baidu.navisdk.ui.routeguide.control.NMapControlProxy;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.util.common.AppStateUtils;
@@ -24,966 +25,857 @@ import com.baidu.navisdk.util.common.StringUtils;
 import com.baidu.navisdk.util.listener.NetworkListener;
 import com.baidu.navisdk.util.listener.PhoneStatusReceiver;
 import com.baidu.navisdk.vi.VMsgDispatcher;
+import com.baidu.sapi2.SapiWebView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
+import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-public class BNVoiceCommandController
-  extends BNLogicController
-{
-  private static final boolean Open_Stat = true;
-  public static final String TAG = BNVoiceCommandController.class.getSimpleName();
-  private static byte[] appID = new String("navinavinavinavinavinavinavinavi").getBytes();
-  private static String cuid;
-  private static int len;
-  private static byte[] license;
-  private static BNVoiceCommandController sInstance;
-  private static Object sObj = new Object();
-  private APPVoiceFuncCallback mAPPVoiceFuncCallback = null;
-  private AppStateUtils.AppStateListener mAppStateListener = null;
-  private boolean mHadResponseActionFinish = true;
-  private Handler mHandler = null;
-  private boolean mIsASRStarted = false;
-  private boolean mIsJustStart = false;
-  private boolean mIsRequestDelayResponse = false;
-  private boolean mIsSettingHome = false;
-  private boolean mIsSettingOffice = false;
-  private int mLastestVCSubType = -1;
-  private int mLastestVCTarget = -1;
-  private int mLastestVCTopType = -1;
-  private int mLastestVoiceStatus = 0;
-  private OnVoiceCommandListener mOnVoiceCommandListener = null;
-  private Set<OnVoiceStatusListener> mOnVoiceStatusListeners = new HashSet();
-  private Object mSyncObj = new Object();
-  
-  static
-  {
-    sInstance = null;
-    cuid = "baidu";
-    license = new String("bdccd9288c0e962011eae8bf12369e61a0fcb254d48f340b5755ac0ef46dd3dd9bdd09100f2c681cc78b634824e9ff2d2babbdcea918214c0459d34755455407d8f0def5b5c6f09a40b60915c204cef2159a6c89b0a658aef707393d02081a0df0421cdb3fee0b33dd32d449ef330175fa8309d8992abb92044de98ea320a482").getBytes();
-    len = license.length;
-  }
-  
-  private void arrangeResponseTimeoutMsg()
-  {
-    if (this.mHandler == null) {
-      return;
-    }
-    cancelResponseTimeoutMsg();
-    this.mHandler.sendEmptyMessageDelayed(100, 90000L);
-  }
-  
-  private Bundle asrGetVoiceASRRegResult()
-  {
-    return new Bundle();
-  }
-  
-  private int asrTriggerRegActionFinish(BNVoiceCommandParams.VoiceRegActionFinishResult paramVoiceRegActionFinishResult)
-  {
-    LogUtil.e(TAG, "asrTriggerRegActionFinish() response, mode=" + paramVoiceRegActionFinishResult.regStatus + ", result=" + paramVoiceRegActionFinishResult.actionStatus);
-    cancelResponseTimeoutMsg();
-    requestDelayResponse(false);
-    this.mHadResponseActionFinish = true;
-    statVoiceCommand(paramVoiceRegActionFinishResult.actionStatus);
-    return 0;
-  }
-  
-  private void cancelResponseTimeoutMsg()
-  {
-    if (this.mHandler == null) {}
-    while (!this.mHandler.hasMessages(100)) {
-      return;
-    }
-    this.mHandler.removeMessages(100);
-  }
-  
-  private boolean defaultHandleVoiceCommand(int paramInt1, int paramInt2, int paramInt3, Object paramObject)
-  {
-    boolean bool = true;
-    if (2 == paramInt1) {
-      switch (paramInt2)
-      {
-      default: 
-        bool = false;
-      }
-    }
-    label662:
-    label794:
-    label879:
-    do
-    {
-      Object localObject1;
-      do
-      {
-        do
-        {
-          return bool;
-          NMapControlProxy.getInstance().zoomOut();
-          commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          NMapControlProxy.getInstance().zoomIn();
-          commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          if ((this.mAPPVoiceFuncCallback != null) && (this.mAPPVoiceFuncCallback.onFullview()))
-          {
-            getInstance().commonVoiceCommandResponse(paramInt1, 1);
-            return true;
-          }
-          getInstance().commonVoiceCommandResponse(paramInt1, 2);
-          return true;
-          VoiceCommandHelper.onITSChanged(true);
-          getInstance().commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          VoiceCommandHelper.onITSChanged(false);
-          getInstance().commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          VoiceCommandHelper.MapMoveLeft();
-          commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          VoiceCommandHelper.MapMoveRight();
-          commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          VoiceCommandHelper.MapMoveUp();
-          commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          VoiceCommandHelper.MapMoveDown();
-          commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          if (this.mAPPVoiceFuncCallback != null)
-          {
-            if (this.mAPPVoiceFuncCallback.changeLocationMode(1))
-            {
-              commonVoiceCommandResponse(paramInt1, 1);
-              return true;
-            }
-            commonVoiceCommandResponse(paramInt1, 2);
-            return true;
-          }
-          commonVoiceCommandResponse(paramInt1, 3);
-          return true;
-          if (this.mAPPVoiceFuncCallback != null)
-          {
-            if (this.mAPPVoiceFuncCallback.changeLocationMode(2))
-            {
-              commonVoiceCommandResponse(paramInt1, 1);
-              return true;
-            }
-            commonVoiceCommandResponse(paramInt1, 2);
-            return true;
-          }
-          commonVoiceCommandResponse(paramInt1, 3);
-          return true;
-          if (this.mAPPVoiceFuncCallback != null)
-          {
-            this.mAPPVoiceFuncCallback.exitAPP();
-            commonVoiceCommandResponse(paramInt1, 1);
-            return true;
-          }
-          commonVoiceCommandResponse(paramInt1, 3);
-          return true;
-          BNSettingManager.setAlwaysBright(true);
-          getInstance().commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          BNSettingManager.setAlwaysBright(false);
-          getInstance().commonVoiceCommandResponse(paramInt1, 1);
-          return true;
-          if (3 == paramInt1)
-          {
-            switch (paramInt2)
-            {
-            }
-            break;
-          }
-          if (5 != paramInt1) {
-            break label879;
-          }
-          switch (paramInt2)
-          {
-          default: 
-            break;
-          case 3: 
-            localObject2 = null;
-            localObject1 = localObject2;
-            if (paramObject != null)
-            {
-              localObject1 = localObject2;
-              if ((paramObject instanceof Bundle)) {
-                localObject1 = (Bundle)paramObject;
-              }
-            }
-            localObject2 = null;
-            paramObject = localObject2;
-            if (localObject1 != null)
-            {
-              paramObject = localObject2;
-              if (((Bundle)localObject1).containsKey("poiname"))
-              {
-                paramObject = ((Bundle)localObject1).getString("poiname");
-                LogUtil.e(TAG, "Searchname2  poi=" + (String)paramObject);
-              }
-            }
-            if (paramObject == null) {
-              break label662;
-            }
-          }
-        } while (this.mAPPVoiceFuncCallback.nameSearch((String)paramObject));
-        commonVoiceCommandResponse(paramInt1, 2);
-        return true;
-        commonVoiceCommandResponse(paramInt1, 0);
-        return true;
-        Object localObject2 = null;
-        localObject1 = localObject2;
-        if (paramObject != null)
-        {
-          localObject1 = localObject2;
-          if ((paramObject instanceof Bundle)) {
-            localObject1 = (Bundle)paramObject;
-          }
+public class BNVoiceCommandController extends BNLogicController {
+    private static final boolean Open_Stat = true;
+    public static final String TAG = BNVoiceCommandController.class.getSimpleName();
+    private static byte[] appID = new String("navinavinavinavinavinavinavinavi").getBytes();
+    private static String cuid = "baidu";
+    private static int len = license.length;
+    private static byte[] license = new String("bdccd9288c0e962011eae8bf12369e61a0fcb254d48f340b5755ac0ef46dd3dd9bdd09100f2c681cc78b634824e9ff2d2babbdcea918214c0459d34755455407d8f0def5b5c6f09a40b60915c204cef2159a6c89b0a658aef707393d02081a0df0421cdb3fee0b33dd32d449ef330175fa8309d8992abb92044de98ea320a482").getBytes();
+    private static BNVoiceCommandController sInstance = null;
+    private static Object sObj = new Object();
+    private APPVoiceFuncCallback mAPPVoiceFuncCallback = null;
+    private AppStateListener mAppStateListener = null;
+    private boolean mHadResponseActionFinish = true;
+    private Handler mHandler = null;
+    private boolean mIsASRStarted = false;
+    private boolean mIsJustStart = false;
+    private boolean mIsRequestDelayResponse = false;
+    private boolean mIsSettingHome = false;
+    private boolean mIsSettingOffice = false;
+    private int mLastestVCSubType = -1;
+    private int mLastestVCTarget = -1;
+    private int mLastestVCTopType = -1;
+    private int mLastestVoiceStatus = 0;
+    private OnVoiceCommandListener mOnVoiceCommandListener = null;
+    private Set<OnVoiceStatusListener> mOnVoiceStatusListeners = new HashSet();
+    private Object mSyncObj = new Object();
+
+    /* renamed from: com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandController$1 */
+    class C40761 extends Handler {
+        C40761() {
         }
-        localObject2 = null;
-        paramObject = localObject2;
-        if (localObject1 != null)
-        {
-          paramObject = localObject2;
-          if (((Bundle)localObject1).containsKey("poiname"))
-          {
-            paramObject = ((Bundle)localObject1).getString("poiname");
-            LogUtil.e(TAG, "SearchAround  poi=" + (String)paramObject);
-          }
-        }
-        if (paramObject == null) {
-          break label794;
-        }
-      } while (this.mAPPVoiceFuncCallback.spaceSearch((String)paramObject));
-      commonVoiceCommandResponse(paramInt1, 2);
-      return true;
-      commonVoiceCommandResponse(paramInt1, 0);
-      return true;
-      if (this.mAPPVoiceFuncCallback != null)
-      {
-        setIsSettingHome(true);
-        setIsSettingOffice(false);
-        this.mAPPVoiceFuncCallback.goHome();
-        return true;
-      }
-      commonVoiceCommandResponse(paramInt1, 2);
-      return true;
-      if (this.mAPPVoiceFuncCallback != null)
-      {
-        setIsSettingHome(false);
-        setIsSettingOffice(true);
-        this.mAPPVoiceFuncCallback.goOffice();
-        return true;
-      }
-      commonVoiceCommandResponse(paramInt1, 2);
-      return true;
-      if (4 != paramInt1) {
-        break;
-      }
-      switch (paramInt2)
-      {
-      default: 
-        break;
-      case 1: 
-        localObject1 = BNStyleManager.getString(1711669383);
-        paramObject = localObject1;
-        if (BNGeoLocateManager.getInstance().isGPSLocationValid())
-        {
-          paramObject = localObject1;
-          if (BNGeoLocateManager.getInstance().getCurLocation() != null) {
-            paramObject = StringUtils.getDirection(BNGeoLocateManager.getInstance().getCurLocation().direction, (String)localObject1);
-          }
-        }
-        paramObject = (String)paramObject + BNStyleManager.getString(1711669871);
-        getInstance().commonVoiceCommandResponse(paramInt1, 1, (String)paramObject);
-        return true;
-      }
-    } while (this.mAPPVoiceFuncCallback == null);
-    paramObject = this.mAPPVoiceFuncCallback.myLoc();
-    if ((paramObject != null) && (((String)paramObject).length() > 0))
-    {
-      commonVoiceCommandResponse(paramInt1, 1, (String)paramObject);
-      return true;
-    }
-    commonVoiceCommandResponse(paramInt1, 2);
-    return true;
-  }
-  
-  public static BNVoiceCommandController getInstance()
-  {
-    if (sInstance == null) {}
-    synchronized (sObj)
-    {
-      if (sInstance == null) {
-        sInstance = new BNVoiceCommandController();
-      }
-      return sInstance;
-    }
-  }
-  
-  private void handleAppStateChanged(int paramInt, boolean paramBoolean)
-  {
-    if ((3 == paramInt) || (1 == paramInt))
-    {
-      asrTriggerAppStatus(2);
-      return;
-    }
-    if (!paramBoolean)
-    {
-      asrTriggerAppStatus(3);
-      return;
-    }
-    asrTriggerAppStatus(1);
-  }
-  
-  private void handleNetworkChanged(boolean paramBoolean1, boolean paramBoolean2) {}
-  
-  private void handlePhoneStateChanged(int paramInt)
-  {
-    switch (paramInt)
-    {
-    case 2: 
-    default: 
-      return;
-    }
-    handleAppStateChanged(paramInt, AppStateUtils.getInstance().isForeground());
-  }
-  
-  private void handleVoiceCommandMsg(int paramInt1, int paramInt2, int paramInt3)
-  {
-    synchronized (this.mSyncObj)
-    {
-      this.mHadResponseActionFinish = false;
-      arrangeResponseTimeoutMsg();
-      this.mLastestVCTopType = paramInt1;
-      this.mLastestVCSubType = paramInt2;
-      this.mLastestVCTarget = paramInt3;
-      ??? = null;
-      if (5 == paramInt1) {
-        ??? = asrGetVoiceASRRegResult();
-      }
-      if (!preHandleVoiceCommand(paramInt1, paramInt2, paramInt3, ???)) {
-        if (this.mOnVoiceCommandListener != null) {
-          if ((!this.mOnVoiceCommandListener.onVoiceCommand(paramInt1, paramInt2, paramInt3, ???, true)) && (defaultHandleVoiceCommand(paramInt1, paramInt2, paramInt3, ???))) {
-            this.mOnVoiceCommandListener.onVoiceCommand(paramInt1, paramInt2, paramInt3, null, false);
-          }
-        }
-      }
-    }
-    synchronized (this.mSyncObj)
-    {
-      do
-      {
-        for (;;)
-        {
-          if ((!isRequestDelayResponse()) && (!this.mHadResponseActionFinish) && (5 != paramInt1))
-          {
-            this.mHadResponseActionFinish = true;
-            BNVoiceCommandParams.VoiceRegActionFinishResult localVoiceRegActionFinishResult = new BNVoiceCommandParams.VoiceRegActionFinishResult();
-            localVoiceRegActionFinishResult.regStatus = paramInt1;
-            localVoiceRegActionFinishResult.actionStatus = 3;
-            localVoiceRegActionFinishResult.extras = new Bundle();
-            LogUtil.e(TAG, "BNVoiceCommandController.handleVoiceCommandMsg() default response");
-            asrTriggerRegActionFinish(localVoiceRegActionFinishResult);
-          }
-          return;
-          localObject2 = finally;
-          throw ((Throwable)localObject2);
-          defaultHandleVoiceCommand(paramInt1, paramInt2, paramInt3, ???);
-        }
-      } while (this.mOnVoiceCommandListener == null);
-      this.mOnVoiceCommandListener.onVoiceCommand(paramInt1, paramInt2, paramInt3, null, false);
-    }
-  }
-  
-  private void initHandler()
-  {
-    ArrayList localArrayList = new ArrayList();
-    localArrayList.add(Integer.valueOf(4154));
-    localArrayList.add(Integer.valueOf(4155));
-    localArrayList.add(Integer.valueOf(4156));
-    localArrayList.add(Integer.valueOf(4157));
-    localArrayList.add(Integer.valueOf(4158));
-    localArrayList.add(Integer.valueOf(4159));
-    localArrayList.add(Integer.valueOf(4161));
-    this.mHandler = new Handler()
-    {
-      public void handleMessage(Message paramAnonymousMessage)
-      {
-        boolean bool2 = true;
-        int j = -1;
-        int i = j;
-        switch (paramAnonymousMessage.what)
-        {
-        default: 
-          i = j;
-        }
-        for (;;)
-        {
-          if (i >= 0) {
-            BNVoiceCommandController.this.handleVoiceCommandMsg(i, paramAnonymousMessage.arg1, paramAnonymousMessage.arg2);
-          }
-          return;
-          BNVoiceCommandController.this.onResponseTimeout();
-          i = j;
-          continue;
-          i = 2;
-          LogUtil.e(BNVoiceCommandController.TAG, "ui, arg1=" + paramAnonymousMessage.arg1 + ", arg2=" + paramAnonymousMessage.arg2);
-          continue;
-          i = 3;
-          LogUtil.e(BNVoiceCommandController.TAG, "PAGE, arg1=" + paramAnonymousMessage.arg1 + ", arg2=" + paramAnonymousMessage.arg2);
-          continue;
-          i = 4;
-          LogUtil.e(BNVoiceCommandController.TAG, "GUIDANCE, arg1=" + paramAnonymousMessage.arg1 + ", arg2=" + paramAnonymousMessage.arg2);
-          continue;
-          i = 5;
-          LogUtil.e(BNVoiceCommandController.TAG, "SEARCH, arg1=" + paramAnonymousMessage.arg1 + ", arg2=" + paramAnonymousMessage.arg2);
-          continue;
-          if ((BNVoiceCommandController.this.mIsJustStart) && (paramAnonymousMessage.arg1 == 0))
-          {
-            BNVoiceCommandController.access$102(BNVoiceCommandController.this, false);
-            i = j;
-          }
-          else
-          {
-            LogUtil.e(BNVoiceCommandController.TAG, "BNVoiceCommandController.status=" + paramAnonymousMessage.arg1);
-            if ((paramAnonymousMessage.arg1 >= 0) && (paramAnonymousMessage.arg1 <= 3)) {
-              BNVoiceCommandController.access$202(BNVoiceCommandController.this, paramAnonymousMessage.arg1);
+
+        public void handleMessage(Message msg) {
+            boolean z = true;
+            int topType = -1;
+            switch (msg.what) {
+                case 100:
+                    BNVoiceCommandController.this.onResponseTimeout();
+                    break;
+                case 4154:
+                    topType = 2;
+                    LogUtil.m15791e(BNVoiceCommandController.TAG, "ui, arg1=" + msg.arg1 + ", arg2=" + msg.arg2);
+                    break;
+                case 4155:
+                    topType = 3;
+                    LogUtil.m15791e(BNVoiceCommandController.TAG, "PAGE, arg1=" + msg.arg1 + ", arg2=" + msg.arg2);
+                    break;
+                case 4156:
+                    topType = 5;
+                    LogUtil.m15791e(BNVoiceCommandController.TAG, "SEARCH, arg1=" + msg.arg1 + ", arg2=" + msg.arg2);
+                    break;
+                case 4157:
+                    topType = 4;
+                    LogUtil.m15791e(BNVoiceCommandController.TAG, "GUIDANCE, arg1=" + msg.arg1 + ", arg2=" + msg.arg2);
+                    break;
+                case 4159:
+                    if (!BNVoiceCommandController.this.mIsJustStart || msg.arg1 != 0) {
+                        LogUtil.m15791e(BNVoiceCommandController.TAG, "BNVoiceCommandController.status=" + msg.arg1);
+                        if (msg.arg1 >= 0 && msg.arg1 <= 3) {
+                            BNVoiceCommandController.this.mLastestVoiceStatus = msg.arg1;
+                        }
+                        if (msg.arg1 >= 0 && msg.arg1 <= 3 && BNVoiceCommandController.this.mOnVoiceStatusListeners.size() > 0) {
+                            for (OnVoiceStatusListener onVoiceStatusChanged : BNVoiceCommandController.this.mOnVoiceStatusListeners) {
+                                onVoiceStatusChanged.onVoiceStatusChanged(msg.arg1);
+                            }
+                        }
+                        if (msg.arg1 == 3) {
+                            BNVoiceCommandController.this.statVoiceCommandNotUnderstand();
+                            break;
+                        }
+                    }
+                    BNVoiceCommandController.this.mIsJustStart = false;
+                    break;
+                    break;
+                case 4161:
+                    if (BNVoiceCommandController.this.mAPPVoiceFuncCallback != null) {
+                        BNVoiceCommandController.this.mAPPVoiceFuncCallback.poiDataNotNew();
+                        break;
+                    }
+                    break;
+                case NetworkListener.MSG_TYPE_NET_WORK_CHANGE /*5555*/:
+                    BNVoiceCommandController bNVoiceCommandController = BNVoiceCommandController.this;
+                    boolean z2 = msg.arg2 == 1;
+                    if (msg.arg1 != 1) {
+                        z = false;
+                    }
+                    bNVoiceCommandController.handleNetworkChanged(z2, z);
+                    break;
+                case PhoneStatusReceiver.MSG_TYPE_PHONE_CHANGE /*5556*/:
+                    BNVoiceCommandController.this.handlePhoneStateChanged(msg.arg1);
+                    break;
             }
-            Object localObject;
-            if ((paramAnonymousMessage.arg1 >= 0) && (paramAnonymousMessage.arg1 <= 3) && (BNVoiceCommandController.this.mOnVoiceStatusListeners.size() > 0))
-            {
-              localObject = BNVoiceCommandController.this.mOnVoiceStatusListeners.iterator();
-              while (((Iterator)localObject).hasNext()) {
-                ((OnVoiceStatusListener)((Iterator)localObject).next()).onVoiceStatusChanged(paramAnonymousMessage.arg1);
-              }
+            if (topType >= 0) {
+                BNVoiceCommandController.this.handleVoiceCommandMsg(topType, msg.arg1, msg.arg2);
             }
-            i = j;
-            if (paramAnonymousMessage.arg1 == 3)
-            {
-              BNVoiceCommandController.this.statVoiceCommandNotUnderstand();
-              i = j;
-              continue;
-              i = j;
-              if (BNVoiceCommandController.this.mAPPVoiceFuncCallback != null)
-              {
-                BNVoiceCommandController.this.mAPPVoiceFuncCallback.poiDataNotNew();
-                i = j;
-                continue;
-                localObject = BNVoiceCommandController.this;
-                boolean bool1;
-                if (paramAnonymousMessage.arg2 == 1)
-                {
-                  bool1 = true;
-                  label545:
-                  if (paramAnonymousMessage.arg1 != 1) {
-                    break label573;
-                  }
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandController$2 */
+    class C40772 implements AppStateListener {
+        C40772() {
+        }
+
+        public void onAppStateChanged(int type, int arg1, int arg2, Object obj) {
+            if (1 == type) {
+                BNVoiceCommandController.this.handleAppStateChanged(AppStateUtils.getInstance().getPhoneStatus(), AppStateUtils.getInstance().isForeground());
+            }
+        }
+    }
+
+    private BNVoiceCommandController() {
+    }
+
+    public static BNVoiceCommandController getInstance() {
+        if (sInstance == null) {
+            synchronized (sObj) {
+                if (sInstance == null) {
+                    sInstance = new BNVoiceCommandController();
                 }
-                for (;;)
-                {
-                  ((BNVoiceCommandController)localObject).handleNetworkChanged(bool1, bool2);
-                  i = j;
-                  break;
-                  bool1 = false;
-                  break label545;
-                  label573:
-                  bool2 = false;
-                }
-                BNVoiceCommandController.this.handlePhoneStateChanged(paramAnonymousMessage.arg1);
-                i = j;
-              }
             }
-          }
         }
-      }
-    };
-    VMsgDispatcher.registerMsgHandler(this.mHandler, localArrayList);
-  }
-  
-  private void initListener()
-  {
-    if (this.mAppStateListener == null) {
-      this.mAppStateListener = new AppStateUtils.AppStateListener()
-      {
-        public void onAppStateChanged(int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3, Object paramAnonymousObject)
-        {
-          if (1 == paramAnonymousInt1) {
-            BNVoiceCommandController.this.handleAppStateChanged(AppStateUtils.getInstance().getPhoneStatus(), AppStateUtils.getInstance().isForeground());
-          }
+        return sInstance;
+    }
+
+    public void init() {
+        initHandler();
+        initListener();
+        NetworkListener.registerMessageHandler(this.mHandler);
+        PhoneStatusReceiver.registerMessageHandler(this.mHandler);
+    }
+
+    private void uninit() {
+        uninitListener();
+        NetworkListener.unRegisterMessageHandler(this.mHandler);
+        PhoneStatusReceiver.unRegisterMessageHandler(this.mHandler);
+    }
+
+    public void setAPPVoiceFuncCallback(APPVoiceFuncCallback callback) {
+        this.mAPPVoiceFuncCallback = callback;
+    }
+
+    public void addOnVoiceStatusListener(OnVoiceStatusListener lis) {
+        if (lis != null) {
+            this.mOnVoiceStatusListeners.add(lis);
         }
-      };
     }
-    AppStateUtils.getInstance().addAppStateListener(this.mAppStateListener);
-  }
-  
-  private void onResponseTimeout()
-  {
-    synchronized (this.mSyncObj)
-    {
-      if (!this.mHadResponseActionFinish)
-      {
-        this.mHadResponseActionFinish = true;
-        BNVoiceCommandParams.VoiceRegActionFinishResult localVoiceRegActionFinishResult = new BNVoiceCommandParams.VoiceRegActionFinishResult();
-        localVoiceRegActionFinishResult.regStatus = getLastestVCTopType();
-        localVoiceRegActionFinishResult.actionStatus = 2;
-        localVoiceRegActionFinishResult.extras = new Bundle();
-        LogUtil.e(TAG, "BNVoiceCommandController.onResponseTimeout() timeout response.");
-        asrTriggerRegActionFinish(localVoiceRegActionFinishResult);
-      }
-      return;
-    }
-  }
-  
-  private boolean preHandleVoiceCommand(int paramInt1, int paramInt2, int paramInt3, Object paramObject)
-  {
-    if (2 == paramInt1) {
-      switch (paramInt2)
-      {
-      }
-    }
-    for (;;)
-    {
-      return false;
-      paramObject = new Intent("android.intent.action.CALL");
-      if (BNaviModuleManager.getContext() != null) {
-        BNaviModuleManager.getContext().startActivity((Intent)paramObject);
-      }
-      commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      AudioUtils.volumeUp(BNaviModuleManager.getContext());
-      commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      AudioUtils.volumeDown(BNaviModuleManager.getContext());
-      commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setVoiceMode(2);
-      BNRouteGuider.getInstance().setVoiceMode(2);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setVoiceMode(0);
-      BNRouteGuider.getInstance().setVoiceMode(0);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setVoiceMode(1);
-      BNRouteGuider.getInstance().setVoiceMode(1);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setStraightDirectSpeakEnable(true);
-      BNRouteGuider.getInstance().setStraightDirectSpeak(true);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setStraightDirectSpeakEnable(false);
-      BNRouteGuider.getInstance().setStraightDirectSpeak(false);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setSpeedCameraSpeakEnable(true);
-      BNRouteGuider.getInstance().setSpeedCameraSpeak(true);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setSpeedCameraSpeakEnable(false);
-      BNRouteGuider.getInstance().setSpeedCameraSpeak(false);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      if (this.mAPPVoiceFuncCallback != null)
-      {
-        this.mAPPVoiceFuncCallback.switchDayNightMode(3);
-        getInstance().commonVoiceCommandResponse(paramInt1, 1);
-        return true;
-      }
-      return false;
-      if (this.mAPPVoiceFuncCallback != null)
-      {
-        this.mAPPVoiceFuncCallback.switchDayNightMode(2);
-        getInstance().commonVoiceCommandResponse(paramInt1, 1);
-        return true;
-      }
-      return false;
-      if (this.mAPPVoiceFuncCallback != null) {
-        return this.mAPPVoiceFuncCallback.washCar();
-      }
-      getInstance().commonVoiceCommandResponse(paramInt1, 2);
-      return true;
-      if (this.mAPPVoiceFuncCallback != null) {
-        return this.mAPPVoiceFuncCallback.weather();
-      }
-      getInstance().commonVoiceCommandResponse(paramInt1, 2);
-      return true;
-      if (this.mAPPVoiceFuncCallback != null) {
-        return this.mAPPVoiceFuncCallback.limitLine();
-      }
-      getInstance().commonVoiceCommandResponse(paramInt1, 2);
-      return true;
-      VoiceCommandHelper.help();
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setElecCameraSpeakEnable(true);
-      BNRouteGuider.getInstance().setElecCameraSpeak(true);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setElecCameraSpeakEnable(false);
-      BNRouteGuider.getInstance().setElecCameraSpeak(false);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setSaftyDriveSpeakEnable(true);
-      BNRouteGuider.getInstance().setSaftyDriveSpeak(true);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setSaftyDriveSpeakEnable(false);
-      BNRouteGuider.getInstance().setSaftyDriveSpeak(false);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setPrefSearchMode(3);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setPrefSearchMode(2);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setPrefRoutePlanMode(3);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setPrefRoutePlanMode(2);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setRoadConditionpeakEnable(true);
-      BNRouteGuider.getInstance().setRoadConditionSpeak(true);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setRoadConditionpeakEnable(false);
-      BNRouteGuider.getInstance().setRoadConditionSpeak(false);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setSpeedCameraSpeakEnable(true);
-      BNRouteGuider.getInstance().setSpeedCameraSpeak(true);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      BNSettingManager.setSpeedCameraSpeakEnable(false);
-      BNRouteGuider.getInstance().setSpeedCameraSpeak(false);
-      getInstance().commonVoiceCommandResponse(paramInt1, 1);
-      return true;
-      if (this.mAPPVoiceFuncCallback != null)
-      {
-        this.mAPPVoiceFuncCallback.showVoiceHelp();
-        getInstance().commonVoiceCommandResponse(paramInt1, 1);
-        return true;
-      }
-      return false;
-      if ((3 != paramInt1) && (5 != paramInt1) && (4 == paramInt1)) {
-        switch (paramInt2)
-        {
+
+    public void removeOnVoiceStatusListener(OnVoiceStatusListener lis) {
+        if (lis != null) {
+            this.mOnVoiceStatusListeners.remove(lis);
         }
-      }
     }
-  }
-  
-  private void statVoiceCommand(int paramInt)
-  {
-    String str = null;
-    switch (paramInt)
-    {
+
+    public int getLastestVCTopType() {
+        return this.mLastestVCTopType;
     }
-    for (;;)
-    {
-      if ((str != null) && (str.length() > 0))
-      {
-        ArrayList localArrayList = new ArrayList();
-        paramInt = 0;
-        if (this.mAPPVoiceFuncCallback != null) {
-          paramInt = this.mAPPVoiceFuncCallback.getPageType();
-        }
-        BasicNameValuePair localBasicNameValuePair1 = new BasicNameValuePair("pg_type", Integer.toString(paramInt));
-        BasicNameValuePair localBasicNameValuePair2 = new BasicNameValuePair("top_vc", Integer.toString(getLastestVCTopType()));
-        BasicNameValuePair localBasicNameValuePair3 = new BasicNameValuePair("sub_vc", Integer.toString(getLastestVCSubType()));
-        BasicNameValuePair localBasicNameValuePair4 = new BasicNameValuePair("target", Integer.toString(getLastestVCTarget()));
-        localArrayList.add(localBasicNameValuePair1);
-        localArrayList.add(localBasicNameValuePair2);
-        localArrayList.add(localBasicNameValuePair3);
-        localArrayList.add(localBasicNameValuePair4);
-        BNStatisticsManager.getInstance().onEventWithParam(50008, str, localArrayList);
-      }
-      return;
-      str = "1";
-      continue;
-      str = "2";
-      continue;
-      str = "3";
+
+    public int getLastestVCSubType() {
+        return this.mLastestVCSubType;
     }
-  }
-  
-  private void statVoiceCommandNotUnderstand()
-  {
-    int i = 0;
-    if (this.mAPPVoiceFuncCallback != null) {
-      i = this.mAPPVoiceFuncCallback.getPageType();
+
+    public int getLastestVCTarget() {
+        return this.mLastestVCTarget;
     }
-    BasicNameValuePair localBasicNameValuePair = new BasicNameValuePair("pg_type", Integer.toString(i));
-    BNStatisticsManager.getInstance().onEventWithParam(50008, "4", localBasicNameValuePair);
-  }
-  
-  private void uninit()
-  {
-    uninitListener();
-    NetworkListener.unRegisterMessageHandler(this.mHandler);
-    PhoneStatusReceiver.unRegisterMessageHandler(this.mHandler);
-  }
-  
-  private void uninitListener()
-  {
-    AppStateUtils.getInstance().removeAppStateListener(this.mAppStateListener);
-  }
-  
-  private int voiceASRVerifyLicense()
-  {
-    return -1;
-  }
-  
-  public void addOnVoiceStatusListener(OnVoiceStatusListener paramOnVoiceStatusListener)
-  {
-    if (paramOnVoiceStatusListener != null) {
-      this.mOnVoiceStatusListeners.add(paramOnVoiceStatusListener);
+
+    public int getLastestVoiceStatus() {
+        return this.mLastestVoiceStatus;
     }
-  }
-  
-  public int asrTriggerAppStatus(int paramInt)
-  {
-    return 0;
-  }
-  
-  public int asrTriggerRecorderStatus(int paramInt)
-  {
-    return 0;
-  }
-  
-  public int commonVoiceCommandResponse(int paramInt1, int paramInt2)
-  {
-    return commonVoiceCommandResponse(paramInt1, paramInt2, new Bundle());
-  }
-  
-  public int commonVoiceCommandResponse(int paramInt1, int paramInt2, Bundle paramBundle)
-  {
-    synchronized (this.mSyncObj)
-    {
-      if (!this.mHadResponseActionFinish)
-      {
-        this.mHadResponseActionFinish = true;
-        ??? = new BNVoiceCommandParams.VoiceRegActionFinishResult();
-        ((BNVoiceCommandParams.VoiceRegActionFinishResult)???).regStatus = paramInt1;
-        ((BNVoiceCommandParams.VoiceRegActionFinishResult)???).actionStatus = paramInt2;
-        ((BNVoiceCommandParams.VoiceRegActionFinishResult)???).extras = paramBundle;
-        return asrTriggerRegActionFinish((BNVoiceCommandParams.VoiceRegActionFinishResult)???);
-      }
-      return 0;
+
+    public void setIsSettingHome(boolean setting) {
+        this.mIsSettingHome = setting;
     }
-  }
-  
-  public int commonVoiceCommandResponse(int paramInt1, int paramInt2, String paramString)
-  {
-    Bundle localBundle = new Bundle();
-    if (paramString != null) {
-      switch (paramInt1)
-      {
-      }
+
+    public boolean isSettingHome() {
+        return this.mIsSettingHome;
     }
-    for (;;)
-    {
-      return commonVoiceCommandResponse(paramInt1, paramInt2, localBundle);
-      localBundle.putString("weatherinfo", paramString);
-      continue;
-      localBundle.putString("weatherinfo", paramString);
-      continue;
-      localBundle.putString("curpoiinfo", paramString);
-      continue;
-      localBundle.putString("guidanceinfo", paramString);
+
+    public void setIsSettingOffice(boolean setting) {
+        this.mIsSettingOffice = setting;
     }
-  }
-  
-  public int getLastestVCSubType()
-  {
-    return this.mLastestVCSubType;
-  }
-  
-  public int getLastestVCTarget()
-  {
-    return this.mLastestVCTarget;
-  }
-  
-  public int getLastestVCTopType()
-  {
-    return this.mLastestVCTopType;
-  }
-  
-  public int getLastestVoiceStatus()
-  {
-    return this.mLastestVoiceStatus;
-  }
-  
-  public void handleVoiceCommandMsg(int paramInt1, int paramInt2, int paramInt3, Bundle arg4)
-  {
-    synchronized (this.mSyncObj)
-    {
-      this.mHadResponseActionFinish = false;
-      arrangeResponseTimeoutMsg();
-      this.mLastestVCTopType = paramInt1;
-      this.mLastestVCSubType = paramInt2;
-      this.mLastestVCTarget = paramInt3;
-      if (!preHandleVoiceCommand(paramInt1, paramInt2, paramInt3, ???)) {
-        if (this.mOnVoiceCommandListener != null) {
-          if ((!this.mOnVoiceCommandListener.onVoiceCommand(paramInt1, paramInt2, paramInt3, ???, true)) && (defaultHandleVoiceCommand(paramInt1, paramInt2, paramInt3, ???))) {
-            this.mOnVoiceCommandListener.onVoiceCommand(paramInt1, paramInt2, paramInt3, null, false);
-          }
-        }
-      }
+
+    public boolean isSettingOffice() {
+        return this.mIsSettingOffice;
     }
-    synchronized (this.mSyncObj)
-    {
-      do
-      {
-        for (;;)
-        {
-          if ((!isRequestDelayResponse()) && (!this.mHadResponseActionFinish) && (5 != paramInt1))
-          {
-            this.mHadResponseActionFinish = true;
-            ??? = new BNVoiceCommandParams.VoiceRegActionFinishResult();
-            ((BNVoiceCommandParams.VoiceRegActionFinishResult)???).regStatus = paramInt1;
-            ((BNVoiceCommandParams.VoiceRegActionFinishResult)???).actionStatus = 3;
-            ((BNVoiceCommandParams.VoiceRegActionFinishResult)???).extras = new Bundle();
-            LogUtil.e(TAG, "BNVoiceCommandController.handleVoiceCommandMsg() default respone");
-            asrTriggerRegActionFinish((BNVoiceCommandParams.VoiceRegActionFinishResult)???);
-          }
-          return;
-          ??? = finally;
-          throw ???;
-          defaultHandleVoiceCommand(paramInt1, paramInt2, paramInt3, ???);
-        }
-      } while (this.mOnVoiceCommandListener == null);
-      this.mOnVoiceCommandListener.onVoiceCommand(paramInt1, paramInt2, paramInt3, null, false);
-    }
-  }
-  
-  public void init()
-  {
-    initHandler();
-    initListener();
-    NetworkListener.registerMessageHandler(this.mHandler);
-    PhoneStatusReceiver.registerMessageHandler(this.mHandler);
-  }
-  
-  public boolean isRequestDelayResponse()
-  {
-    return this.mIsRequestDelayResponse;
-  }
-  
-  public boolean isSettingHome()
-  {
-    return this.mIsSettingHome;
-  }
-  
-  public boolean isSettingOffice()
-  {
-    return this.mIsSettingOffice;
-  }
-  
-  public boolean isStarted()
-  {
-    return this.mIsASRStarted;
-  }
-  
-  public int pauseASR()
-  {
-    return 0;
-  }
-  
-  public void removeOnVoiceStatusListener(OnVoiceStatusListener paramOnVoiceStatusListener)
-  {
-    if (paramOnVoiceStatusListener != null) {
-      this.mOnVoiceStatusListeners.remove(paramOnVoiceStatusListener);
-    }
-  }
-  
-  public void requestDelayResponse(boolean paramBoolean)
-  {
-    this.mIsRequestDelayResponse = paramBoolean;
-  }
-  
-  public int resumeASR()
-  {
-    return 0;
-  }
-  
-  public void setAPPVoiceFuncCallback(APPVoiceFuncCallback paramAPPVoiceFuncCallback)
-  {
-    this.mAPPVoiceFuncCallback = paramAPPVoiceFuncCallback;
-  }
-  
-  public void setIsSettingHome(boolean paramBoolean)
-  {
-    this.mIsSettingHome = paramBoolean;
-  }
-  
-  public void setIsSettingOffice(boolean paramBoolean)
-  {
-    this.mIsSettingOffice = paramBoolean;
-  }
-  
-  public void setOnVoiceCommandListener(OnVoiceCommandListener paramOnVoiceCommandListener)
-  {
-    this.mOnVoiceCommandListener = paramOnVoiceCommandListener;
-  }
-  
-  public boolean startASR()
-  {
-    if (!this.mIsASRStarted) {}
-    synchronized (sObj)
-    {
-      if (!this.mIsASRStarted)
-      {
-        if (voiceASRVerifyLicense() == 0)
-        {
-          LogUtil.e(TAG, "startASR() success");
-          handleAppStateChanged(AppStateUtils.getInstance().getPhoneStatus(), AppStateUtils.getInstance().isForeground());
-          DistrictInfo localDistrictInfo = GeoLocateModel.getInstance().getProvinceDistrict();
-          if (localDistrictInfo != null) {
-            int i = localDistrictInfo.mId;
-          }
-          this.mIsASRStarted = false;
-        }
-      }
-      else {
+
+    public boolean isStarted() {
         return this.mIsASRStarted;
-      }
-      this.mIsASRStarted = false;
-      LogUtil.e(TAG, "startASR() failed");
     }
-  }
-  
-  public int startVoiceRegDecode()
-  {
-    return 0;
-  }
-  
-  public boolean stopASR()
-  {
-    if (this.mIsASRStarted) {}
-    synchronized (sObj)
-    {
-      if ((!this.mIsASRStarted) || (!this.mIsASRStarted)) {
-        return true;
-      }
+
+    public boolean isRequestDelayResponse() {
+        return this.mIsRequestDelayResponse;
     }
-    return false;
-  }
-  
-  public int stopVoiceRegDecode()
-  {
-    return 0;
-  }
+
+    public void requestDelayResponse(boolean delayResponse) {
+        this.mIsRequestDelayResponse = delayResponse;
+    }
+
+    public boolean startASR() {
+        if (!this.mIsASRStarted) {
+            synchronized (sObj) {
+                if (!this.mIsASRStarted) {
+                    if (voiceASRVerifyLicense() == 0) {
+                        LogUtil.m15791e(TAG, "startASR() success");
+                        handleAppStateChanged(AppStateUtils.getInstance().getPhoneStatus(), AppStateUtils.getInstance().isForeground());
+                        DistrictInfo di = GeoLocateModel.getInstance().getProvinceDistrict();
+                        if (di != null) {
+                            int provinceID = di.mId;
+                        }
+                        this.mIsASRStarted = false;
+                    } else {
+                        this.mIsASRStarted = false;
+                        LogUtil.m15791e(TAG, "startASR() failed");
+                    }
+                }
+            }
+        }
+        return this.mIsASRStarted;
+    }
+
+    public boolean stopASR() {
+        if (this.mIsASRStarted) {
+            synchronized (sObj) {
+                if (this.mIsASRStarted) {
+                }
+            }
+        }
+        return !this.mIsASRStarted;
+    }
+
+    public int pauseASR() {
+        return 0;
+    }
+
+    public int resumeASR() {
+        return 0;
+    }
+
+    public void setOnVoiceCommandListener(OnVoiceCommandListener lis) {
+        this.mOnVoiceCommandListener = lis;
+    }
+
+    private Bundle asrGetVoiceASRRegResult() {
+        return new Bundle();
+    }
+
+    private int asrTriggerRegActionFinish(VoiceRegActionFinishResult actionFinishStatus) {
+        LogUtil.m15791e(TAG, "asrTriggerRegActionFinish() response, mode=" + actionFinishStatus.regStatus + ", result=" + actionFinishStatus.actionStatus);
+        cancelResponseTimeoutMsg();
+        requestDelayResponse(false);
+        this.mHadResponseActionFinish = true;
+        statVoiceCommand(actionFinishStatus.actionStatus);
+        return 0;
+    }
+
+    public int asrTriggerAppStatus(int appStatus) {
+        return 0;
+    }
+
+    public int asrTriggerRecorderStatus(int recorderStatus) {
+        return 0;
+    }
+
+    public int startVoiceRegDecode() {
+        return 0;
+    }
+
+    public int stopVoiceRegDecode() {
+        return 0;
+    }
+
+    private int voiceASRVerifyLicense() {
+        return -1;
+    }
+
+    private void initHandler() {
+        Collection careMsgTypes = new ArrayList();
+        careMsgTypes.add(Integer.valueOf(4154));
+        careMsgTypes.add(Integer.valueOf(4155));
+        careMsgTypes.add(Integer.valueOf(4156));
+        careMsgTypes.add(Integer.valueOf(4157));
+        careMsgTypes.add(Integer.valueOf(4158));
+        careMsgTypes.add(Integer.valueOf(4159));
+        careMsgTypes.add(Integer.valueOf(4161));
+        this.mHandler = new C40761();
+        VMsgDispatcher.registerMsgHandler(this.mHandler, careMsgTypes);
+    }
+
+    private void initListener() {
+        if (this.mAppStateListener == null) {
+            this.mAppStateListener = new C40772();
+        }
+        AppStateUtils.getInstance().addAppStateListener(this.mAppStateListener);
+    }
+
+    private void uninitListener() {
+        AppStateUtils.getInstance().removeAppStateListener(this.mAppStateListener);
+    }
+
+    private void handleNetworkChanged(boolean networkConnected, boolean wifiContected) {
+    }
+
+    private void handlePhoneStateChanged(int phoneState) {
+        switch (phoneState) {
+            case 1:
+            case 3:
+            case 4:
+                handleAppStateChanged(phoneState, AppStateUtils.getInstance().isForeground());
+                return;
+            default:
+                return;
+        }
+    }
+
+    private void handleAppStateChanged(int phoneState, boolean isForeground) {
+        if (3 == phoneState || 1 == phoneState) {
+            asrTriggerAppStatus(2);
+        } else if (isForeground) {
+            asrTriggerAppStatus(1);
+        } else {
+            asrTriggerAppStatus(3);
+        }
+    }
+
+    private void cancelResponseTimeoutMsg() {
+        if (this.mHandler != null && this.mHandler.hasMessages(100)) {
+            this.mHandler.removeMessages(100);
+        }
+    }
+
+    private void arrangeResponseTimeoutMsg() {
+        if (this.mHandler != null) {
+            cancelResponseTimeoutMsg();
+            this.mHandler.sendEmptyMessageDelayed(100, SapiWebView.DEFAULT_TIMEOUT_MILLIS);
+        }
+    }
+
+    private void onResponseTimeout() {
+        synchronized (this.mSyncObj) {
+            if (!this.mHadResponseActionFinish) {
+                this.mHadResponseActionFinish = true;
+                VoiceRegActionFinishResult ret = new VoiceRegActionFinishResult();
+                ret.regStatus = getLastestVCTopType();
+                ret.actionStatus = 2;
+                ret.extras = new Bundle();
+                LogUtil.m15791e(TAG, "BNVoiceCommandController.onResponseTimeout() timeout response.");
+                asrTriggerRegActionFinish(ret);
+            }
+        }
+    }
+
+    private void handleVoiceCommandMsg(int topType, int subType, int arg) {
+        synchronized (this.mSyncObj) {
+            this.mHadResponseActionFinish = false;
+            arrangeResponseTimeoutMsg();
+        }
+        this.mLastestVCTopType = topType;
+        this.mLastestVCSubType = subType;
+        this.mLastestVCTarget = arg;
+        Bundle data = null;
+        if (5 == topType) {
+            data = asrGetVoiceASRRegResult();
+        }
+        if (preHandleVoiceCommand(topType, subType, arg, data)) {
+            if (this.mOnVoiceCommandListener != null) {
+                this.mOnVoiceCommandListener.onVoiceCommand(topType, subType, arg, null, false);
+            }
+        } else if (this.mOnVoiceCommandListener == null) {
+            defaultHandleVoiceCommand(topType, subType, arg, data);
+        } else if (!this.mOnVoiceCommandListener.onVoiceCommand(topType, subType, arg, data, true) && defaultHandleVoiceCommand(topType, subType, arg, data)) {
+            this.mOnVoiceCommandListener.onVoiceCommand(topType, subType, arg, null, false);
+        }
+        synchronized (this.mSyncObj) {
+            if (!(isRequestDelayResponse() || this.mHadResponseActionFinish || 5 == topType)) {
+                this.mHadResponseActionFinish = true;
+                VoiceRegActionFinishResult ret = new VoiceRegActionFinishResult();
+                ret.regStatus = topType;
+                ret.actionStatus = 3;
+                ret.extras = new Bundle();
+                LogUtil.m15791e(TAG, "BNVoiceCommandController.handleVoiceCommandMsg() default response");
+                asrTriggerRegActionFinish(ret);
+            }
+        }
+    }
+
+    public void handleVoiceCommandMsg(int topType, int subType, int arg, Bundle data) {
+        synchronized (this.mSyncObj) {
+            this.mHadResponseActionFinish = false;
+            arrangeResponseTimeoutMsg();
+        }
+        this.mLastestVCTopType = topType;
+        this.mLastestVCSubType = subType;
+        this.mLastestVCTarget = arg;
+        if (preHandleVoiceCommand(topType, subType, arg, data)) {
+            if (this.mOnVoiceCommandListener != null) {
+                this.mOnVoiceCommandListener.onVoiceCommand(topType, subType, arg, null, false);
+            }
+        } else if (this.mOnVoiceCommandListener == null) {
+            defaultHandleVoiceCommand(topType, subType, arg, data);
+        } else if (!this.mOnVoiceCommandListener.onVoiceCommand(topType, subType, arg, data, true) && defaultHandleVoiceCommand(topType, subType, arg, data)) {
+            this.mOnVoiceCommandListener.onVoiceCommand(topType, subType, arg, null, false);
+        }
+        synchronized (this.mSyncObj) {
+            if (!(isRequestDelayResponse() || this.mHadResponseActionFinish || 5 == topType)) {
+                this.mHadResponseActionFinish = true;
+                VoiceRegActionFinishResult ret = new VoiceRegActionFinishResult();
+                ret.regStatus = topType;
+                ret.actionStatus = 3;
+                ret.extras = new Bundle();
+                LogUtil.m15791e(TAG, "BNVoiceCommandController.handleVoiceCommandMsg() default respone");
+                asrTriggerRegActionFinish(ret);
+            }
+        }
+    }
+
+    private boolean preHandleVoiceCommand(int type, int subType, int arg1, Object arg2) {
+        if (2 != type) {
+            if (!(3 == type || 5 == type || 4 != type)) {
+                switch (subType) {
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        switch (subType) {
+            case 1:
+                Intent it = new Intent("android.intent.action.CALL");
+                if (BNaviModuleManager.getContext() != null) {
+                    BNaviModuleManager.getContext().startActivity(it);
+                }
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 4:
+                AudioUtils.volumeUp(BNaviModuleManager.getContext());
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 5:
+                AudioUtils.volumeDown(BNaviModuleManager.getContext());
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 6:
+            case 11:
+                BNSettingManager.setVoiceMode(2);
+                BNRouteGuider.getInstance().setVoiceMode(2);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 9:
+            case 33:
+                BNSettingManager.setVoiceMode(0);
+                BNRouteGuider.getInstance().setVoiceMode(0);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 10:
+            case 34:
+            case 35:
+            case 36:
+            case 37:
+                BNSettingManager.setVoiceMode(1);
+                BNRouteGuider.getInstance().setVoiceMode(1);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 12:
+                BNSettingManager.setStraightDirectSpeakEnable(true);
+                BNRouteGuider.getInstance().setStraightDirectSpeak(true);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 13:
+                BNSettingManager.setStraightDirectSpeakEnable(false);
+                BNRouteGuider.getInstance().setStraightDirectSpeak(false);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 14:
+                BNSettingManager.setSpeedCameraSpeakEnable(true);
+                BNRouteGuider.getInstance().setSpeedCameraSpeak(true);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 15:
+                BNSettingManager.setSpeedCameraSpeakEnable(false);
+                BNRouteGuider.getInstance().setSpeedCameraSpeak(false);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 31:
+                if (this.mAPPVoiceFuncCallback == null) {
+                    return false;
+                }
+                this.mAPPVoiceFuncCallback.switchDayNightMode(3);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 32:
+                if (this.mAPPVoiceFuncCallback == null) {
+                    return false;
+                }
+                this.mAPPVoiceFuncCallback.switchDayNightMode(2);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 40:
+                if (this.mAPPVoiceFuncCallback != null) {
+                    return this.mAPPVoiceFuncCallback.washCar();
+                }
+                getInstance().commonVoiceCommandResponse(type, 2);
+                return true;
+            case 41:
+                if (this.mAPPVoiceFuncCallback != null) {
+                    return this.mAPPVoiceFuncCallback.weather();
+                }
+                getInstance().commonVoiceCommandResponse(type, 2);
+                return true;
+            case 42:
+                if (this.mAPPVoiceFuncCallback != null) {
+                    return this.mAPPVoiceFuncCallback.limitLine();
+                }
+                getInstance().commonVoiceCommandResponse(type, 2);
+                return true;
+            case 43:
+                VoiceCommandHelper.help();
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 46:
+                BNSettingManager.setElecCameraSpeakEnable(true);
+                BNRouteGuider.getInstance().setElecCameraSpeak(true);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 47:
+                BNSettingManager.setElecCameraSpeakEnable(false);
+                BNRouteGuider.getInstance().setElecCameraSpeak(false);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 48:
+                BNSettingManager.setSaftyDriveSpeakEnable(true);
+                BNRouteGuider.getInstance().setSaftyDriveSpeak(true);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 49:
+                BNSettingManager.setSaftyDriveSpeakEnable(false);
+                BNRouteGuider.getInstance().setSaftyDriveSpeak(false);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 56:
+                BNSettingManager.setPrefSearchMode(3);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 57:
+                BNSettingManager.setPrefSearchMode(2);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 58:
+                BNSettingManager.setPrefRoutePlanMode(3);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 59:
+                BNSettingManager.setPrefRoutePlanMode(2);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 60:
+                BNSettingManager.setRoadConditionpeakEnable(true);
+                BNRouteGuider.getInstance().setRoadConditionSpeak(true);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 61:
+                BNSettingManager.setRoadConditionpeakEnable(false);
+                BNRouteGuider.getInstance().setRoadConditionSpeak(false);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 62:
+                BNSettingManager.setSpeedCameraSpeakEnable(true);
+                BNRouteGuider.getInstance().setSpeedCameraSpeak(true);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 63:
+                BNSettingManager.setSpeedCameraSpeakEnable(false);
+                BNRouteGuider.getInstance().setSpeedCameraSpeak(false);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 64:
+                if (this.mAPPVoiceFuncCallback == null) {
+                    return false;
+                }
+                this.mAPPVoiceFuncCallback.showVoiceHelp();
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+        }
+        return false;
+    }
+
+    private boolean defaultHandleVoiceCommand(int type, int subType, int arg1, Object arg2) {
+        if (2 != type) {
+            if (3 != type) {
+                if (5 != type) {
+                    if (4 == type) {
+                        switch (subType) {
+                            case 1:
+                                String speakContent = BNStyleManager.getString(C4048R.string.nsdk_string_rg_nav_direction_unknown);
+                                if (BNGeoLocateManager.getInstance().isGPSLocationValid() && BNGeoLocateManager.getInstance().getCurLocation() != null) {
+                                    speakContent = StringUtils.getDirection((double) BNGeoLocateManager.getInstance().getCurLocation().direction, speakContent);
+                                }
+                                getInstance().commonVoiceCommandResponse(type, 1, speakContent + BNStyleManager.getString(C4048R.string.bnav_string_hw_direction));
+                                return true;
+                            case 2:
+                                if (this.mAPPVoiceFuncCallback == null) {
+                                    return true;
+                                }
+                                String myloc = this.mAPPVoiceFuncCallback.myLoc();
+                                if (myloc == null || myloc.length() <= 0) {
+                                    commonVoiceCommandResponse(type, 2);
+                                    return true;
+                                }
+                                commonVoiceCommandResponse(type, 1, myloc);
+                                return true;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                Bundle data;
+                String name;
+                switch (subType) {
+                    case 3:
+                        data = null;
+                        if (arg2 != null && (arg2 instanceof Bundle)) {
+                            data = (Bundle) arg2;
+                        }
+                        name = null;
+                        if (data != null && data.containsKey("poiname")) {
+                            name = data.getString("poiname");
+                            LogUtil.m15791e(TAG, "Searchname2  poi=" + name);
+                        }
+                        if (name == null) {
+                            commonVoiceCommandResponse(type, 0);
+                            return true;
+                        } else if (this.mAPPVoiceFuncCallback.nameSearch(name)) {
+                            return true;
+                        } else {
+                            commonVoiceCommandResponse(type, 2);
+                            return true;
+                        }
+                    case 4:
+                        data = null;
+                        if (arg2 != null && (arg2 instanceof Bundle)) {
+                            data = (Bundle) arg2;
+                        }
+                        name = null;
+                        if (data != null && data.containsKey("poiname")) {
+                            name = data.getString("poiname");
+                            LogUtil.m15791e(TAG, "SearchAround  poi=" + name);
+                        }
+                        if (name == null) {
+                            commonVoiceCommandResponse(type, 0);
+                            return true;
+                        } else if (this.mAPPVoiceFuncCallback.spaceSearch(name)) {
+                            return true;
+                        } else {
+                            commonVoiceCommandResponse(type, 2);
+                            return true;
+                        }
+                    case 5:
+                        if (this.mAPPVoiceFuncCallback != null) {
+                            setIsSettingHome(true);
+                            setIsSettingOffice(false);
+                            this.mAPPVoiceFuncCallback.goHome();
+                            return true;
+                        }
+                        commonVoiceCommandResponse(type, 2);
+                        return true;
+                    case 6:
+                        if (this.mAPPVoiceFuncCallback != null) {
+                            setIsSettingHome(false);
+                            setIsSettingOffice(true);
+                            this.mAPPVoiceFuncCallback.goOffice();
+                            return true;
+                        }
+                        commonVoiceCommandResponse(type, 2);
+                        return true;
+                    default:
+                        break;
+                }
+            }
+            switch (subType) {
+                case 2:
+                    break;
+                default:
+                    break;
+            }
+        }
+        switch (subType) {
+            case 2:
+                NMapControlProxy.getInstance().zoomOut();
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 3:
+                NMapControlProxy.getInstance().zoomIn();
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 7:
+                VoiceCommandHelper.onITSChanged(true);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 8:
+                VoiceCommandHelper.onITSChanged(false);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 16:
+                if (this.mAPPVoiceFuncCallback == null || !this.mAPPVoiceFuncCallback.onFullview()) {
+                    getInstance().commonVoiceCommandResponse(type, 2);
+                    return true;
+                }
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 18:
+                return true;
+            case 20:
+                VoiceCommandHelper.MapMoveLeft();
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 21:
+                VoiceCommandHelper.MapMoveRight();
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 22:
+                VoiceCommandHelper.MapMoveUp();
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 23:
+                VoiceCommandHelper.MapMoveDown();
+                commonVoiceCommandResponse(type, 1);
+                return true;
+            case 29:
+            case 53:
+                if (this.mAPPVoiceFuncCallback == null) {
+                    commonVoiceCommandResponse(type, 3);
+                    return true;
+                } else if (this.mAPPVoiceFuncCallback.changeLocationMode(1)) {
+                    commonVoiceCommandResponse(type, 1);
+                    return true;
+                } else {
+                    commonVoiceCommandResponse(type, 2);
+                    return true;
+                }
+            case 30:
+                if (this.mAPPVoiceFuncCallback == null) {
+                    commonVoiceCommandResponse(type, 3);
+                    return true;
+                } else if (this.mAPPVoiceFuncCallback.changeLocationMode(2)) {
+                    commonVoiceCommandResponse(type, 1);
+                    return true;
+                } else {
+                    commonVoiceCommandResponse(type, 2);
+                    return true;
+                }
+            case 39:
+                if (this.mAPPVoiceFuncCallback != null) {
+                    this.mAPPVoiceFuncCallback.exitAPP();
+                    commonVoiceCommandResponse(type, 1);
+                    return true;
+                }
+                commonVoiceCommandResponse(type, 3);
+                return true;
+            case 54:
+                BNSettingManager.setAlwaysBright(true);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+            case 55:
+                BNSettingManager.setAlwaysBright(false);
+                getInstance().commonVoiceCommandResponse(type, 1);
+                return true;
+        }
+        return false;
+    }
+
+    public int commonVoiceCommandResponse(int voiceRegMode, int voiceRegActionRet) {
+        return commonVoiceCommandResponse(voiceRegMode, voiceRegActionRet, new Bundle());
+    }
+
+    public int commonVoiceCommandResponse(int voiceRegMode, int voiceRegActionRet, String speakContent) {
+        Bundle data = new Bundle();
+        if (speakContent != null) {
+            switch (voiceRegMode) {
+                case 2:
+                    data.putString(BNVoiceCommandParams.Key_VoiceASR_Weather_Info, speakContent);
+                    break;
+                case 3:
+                    data.putString(BNVoiceCommandParams.Key_VoiceASR_Weather_Info, speakContent);
+                    break;
+                case 4:
+                    data.putString(BNVoiceCommandParams.Key_VoiceASR_Guidance_Info, speakContent);
+                    break;
+                case 5:
+                    data.putString(BNVoiceCommandParams.Key_VoiceASR_Cur_POI_Info, speakContent);
+                    break;
+            }
+        }
+        return commonVoiceCommandResponse(voiceRegMode, voiceRegActionRet, data);
+    }
+
+    public int commonVoiceCommandResponse(int voiceRegMode, int voiceRegActionRet, Bundle data) {
+        synchronized (this.mSyncObj) {
+            if (this.mHadResponseActionFinish) {
+                return 0;
+            }
+            this.mHadResponseActionFinish = true;
+            VoiceRegActionFinishResult ret = new VoiceRegActionFinishResult();
+            ret.regStatus = voiceRegMode;
+            ret.actionStatus = voiceRegActionRet;
+            ret.extras = data;
+            return asrTriggerRegActionFinish(ret);
+        }
+    }
+
+    private void statVoiceCommand(int actionStatus) {
+        String lt = null;
+        switch (actionStatus) {
+            case 1:
+                lt = "1";
+                break;
+            case 2:
+                lt = "2";
+                break;
+            case 3:
+                lt = "3";
+                break;
+        }
+        if (lt != null && lt.length() > 0) {
+            ArrayList<NameValuePair> list = new ArrayList();
+            int pageType = 0;
+            if (this.mAPPVoiceFuncCallback != null) {
+                pageType = this.mAPPVoiceFuncCallback.getPageType();
+            }
+            NameValuePair param1 = new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_VC_Page_Type, Integer.toString(pageType));
+            NameValuePair param2 = new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_VC_Top_VC, Integer.toString(getLastestVCTopType()));
+            NameValuePair param3 = new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_VC_Sub_VC, Integer.toString(getLastestVCSubType()));
+            NameValuePair param4 = new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_VC_Target, Integer.toString(getLastestVCTarget()));
+            list.add(param1);
+            list.add(param2);
+            list.add(param3);
+            list.add(param4);
+            BNStatisticsManager.getInstance().onEventWithParam(50008, lt, list);
+        }
+    }
+
+    private void statVoiceCommandNotUnderstand() {
+        int pageType = 0;
+        if (this.mAPPVoiceFuncCallback != null) {
+            pageType = this.mAPPVoiceFuncCallback.getPageType();
+        }
+        BNStatisticsManager.getInstance().onEventWithParam(50008, "4", new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_VC_Page_Type, Integer.toString(pageType)));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/comapi/voicecommand/BNVoiceCommandController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

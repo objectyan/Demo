@@ -8,171 +8,130 @@ import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PoiSearchModel
-  extends BaseModel
-{
-  private SearchPoi mAntiGeoPoi = new SearchPoi();
-  private GeoPoint mAntiGeoPoint;
-  private SearchPoi mMapSearchPoi;
-  private ArrayList<SearchParkPoi> mParkPoiList = new ArrayList(0);
-  private ArrayList<SearchPoi> mPoiList = new ArrayList();
-  private byte[] mSearchPBData = null;
-  private List<SearchPoiPager> mSearchPoiPageraList = new ArrayList();
-  private SearchPoi mSpaceSearchPoi;
-  private ArrayList<SearchSugData> mSugList = new ArrayList();
-  private GeoPoint myPositionPoint;
-  
-  public void addSearchPoiPager(SearchPoiPager paramSearchPoiPager)
-  {
-    if (paramSearchPoiPager == null) {
-      return;
+public class PoiSearchModel extends BaseModel {
+    private SearchPoi mAntiGeoPoi = new SearchPoi();
+    private GeoPoint mAntiGeoPoint;
+    private SearchPoi mMapSearchPoi;
+    private ArrayList<SearchParkPoi> mParkPoiList = new ArrayList(0);
+    private ArrayList<SearchPoi> mPoiList = new ArrayList();
+    private byte[] mSearchPBData = null;
+    private List<SearchPoiPager> mSearchPoiPageraList = new ArrayList();
+    private SearchPoi mSpaceSearchPoi;
+    private ArrayList<SearchSugData> mSugList = new ArrayList();
+    private GeoPoint myPositionPoint;
+
+    public void setPoiList(List<SearchPoi> poiList) {
+        this.mPoiList.clear();
+        if (poiList != null) {
+            this.mPoiList.addAll(poiList);
+        }
     }
-    SearchPoiPager localSearchPoiPager = paramSearchPoiPager.getPrevPager();
-    if (localSearchPoiPager == null) {
-      this.mSearchPoiPageraList.clear();
+
+    public List<SearchPoi> getPoiList() {
+        return this.mPoiList;
     }
-    for (;;)
-    {
-      this.mSearchPoiPageraList.add(paramSearchPoiPager);
-      return;
-      if ((this.mSearchPoiPageraList.size() > 0) && (!localSearchPoiPager.equals((SearchPoiPager)this.mSearchPoiPageraList.get(this.mSearchPoiPageraList.size() - 1)))) {
-        this.mSearchPoiPageraList.clear();
-      }
+
+    public void setMyPositionGeo(GeoPoint point) {
+        if (point != null) {
+            this.myPositionPoint = point;
+        }
     }
-  }
-  
-  public void clearSearchParkPoi()
-  {
-    if (this.mParkPoiList != null) {}
-    try
-    {
-      this.mParkPoiList.clear();
-      return;
+
+    public GeoPoint getMyPositionGeo() {
+        return this.myPositionPoint;
     }
-    catch (Exception localException) {}
-  }
-  
-  public SearchPoi getAntiGeoPoi()
-  {
-    return this.mAntiGeoPoi;
-  }
-  
-  public GeoPoint getAntiGeoPoint()
-  {
-    return this.mAntiGeoPoint;
-  }
-  
-  public SearchPoi getMapSearchPoi()
-  {
-    return this.mMapSearchPoi;
-  }
-  
-  public GeoPoint getMyPositionGeo()
-  {
-    return this.myPositionPoint;
-  }
-  
-  public List<SearchPoi> getPoiList()
-  {
-    return this.mPoiList;
-  }
-  
-  public byte[] getSearchPBData()
-  {
-    return this.mSearchPBData;
-  }
-  
-  public ArrayList<SearchParkPoi> getSearchParkPoi()
-  {
-    return this.mParkPoiList;
-  }
-  
-  public List<SearchPoiPager> getSearchPoiPagerList()
-  {
-    return this.mSearchPoiPageraList;
-  }
-  
-  public SearchPoi getSpaceSearchPoi()
-  {
-    return this.mSpaceSearchPoi;
-  }
-  
-  public ArrayList<SearchSugData> getSugList()
-  {
-    return this.mSugList;
-  }
-  
-  public void setAntiGeoPoi(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
+
+    public void setSugList(ArrayList<SearchSugData> sugList) {
+        this.mSugList.clear();
+        if (sugList != null) {
+            this.mSugList.addAll(sugList);
+        }
     }
-    this.mAntiGeoPoi = new SearchPoi();
-    this.mAntiGeoPoi.copy(paramSearchPoi);
-  }
-  
-  public void setAntiGeoPoint(GeoPoint paramGeoPoint)
-  {
-    if (paramGeoPoint == null) {
-      return;
+
+    public ArrayList<SearchSugData> getSugList() {
+        return this.mSugList;
     }
-    this.mAntiGeoPoint = paramGeoPoint;
-  }
-  
-  public void setMapSearchPoi(SearchPoi paramSearchPoi)
-  {
-    this.mMapSearchPoi = paramSearchPoi;
-  }
-  
-  public void setMyPositionGeo(GeoPoint paramGeoPoint)
-  {
-    if (paramGeoPoint != null) {
-      this.myPositionPoint = paramGeoPoint;
+
+    public void setAntiGeoPoi(SearchPoi poi) {
+        if (poi != null) {
+            this.mAntiGeoPoi = new SearchPoi();
+            this.mAntiGeoPoi.copy(poi);
+        }
     }
-  }
-  
-  public void setPoiList(List<SearchPoi> paramList)
-  {
-    this.mPoiList.clear();
-    if (paramList == null) {
-      return;
+
+    public SearchPoi getAntiGeoPoi() {
+        return this.mAntiGeoPoi;
     }
-    this.mPoiList.addAll(paramList);
-  }
-  
-  public void setSearchPBData(byte[] paramArrayOfByte)
-  {
-    this.mSearchPBData = paramArrayOfByte;
-  }
-  
-  public void setSearchParkPoi(ArrayList<SearchParkPoi> paramArrayList)
-  {
-    this.mParkPoiList.clear();
-    if (paramArrayList != null) {
-      this.mParkPoiList.addAll(paramArrayList);
+
+    public void setAntiGeoPoint(GeoPoint geoPt) {
+        if (geoPt != null) {
+            this.mAntiGeoPoint = geoPt;
+        }
     }
-  }
-  
-  public void setSpaceSearchPoi(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
+
+    public GeoPoint getAntiGeoPoint() {
+        return this.mAntiGeoPoint;
     }
-    this.mSpaceSearchPoi = paramSearchPoi;
-  }
-  
-  public void setSugList(ArrayList<SearchSugData> paramArrayList)
-  {
-    this.mSugList.clear();
-    if (paramArrayList == null) {
-      return;
+
+    public SearchPoi getMapSearchPoi() {
+        return this.mMapSearchPoi;
     }
-    this.mSugList.addAll(paramArrayList);
-  }
+
+    public void setMapSearchPoi(SearchPoi searchPoi) {
+        this.mMapSearchPoi = searchPoi;
+    }
+
+    public void setSpaceSearchPoi(SearchPoi poi) {
+        if (poi != null) {
+            this.mSpaceSearchPoi = poi;
+        }
+    }
+
+    public SearchPoi getSpaceSearchPoi() {
+        return this.mSpaceSearchPoi;
+    }
+
+    public void addSearchPoiPager(SearchPoiPager searchPoiPager) {
+        if (searchPoiPager != null) {
+            SearchPoiPager prevPager = searchPoiPager.getPrevPager();
+            if (prevPager == null) {
+                this.mSearchPoiPageraList.clear();
+            } else if (this.mSearchPoiPageraList.size() > 0 && !prevPager.equals((SearchPoiPager) this.mSearchPoiPageraList.get(this.mSearchPoiPageraList.size() - 1))) {
+                this.mSearchPoiPageraList.clear();
+            }
+            this.mSearchPoiPageraList.add(searchPoiPager);
+        }
+    }
+
+    public List<SearchPoiPager> getSearchPoiPagerList() {
+        return this.mSearchPoiPageraList;
+    }
+
+    public void setSearchParkPoi(ArrayList<SearchParkPoi> poiList) {
+        this.mParkPoiList.clear();
+        if (poiList != null) {
+            this.mParkPoiList.addAll(poiList);
+        }
+    }
+
+    public ArrayList<SearchParkPoi> getSearchParkPoi() {
+        return this.mParkPoiList;
+    }
+
+    public void clearSearchParkPoi() {
+        if (this.mParkPoiList != null) {
+            try {
+                this.mParkPoiList.clear();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public void setSearchPBData(byte[] searchPBData) {
+        this.mSearchPBData = searchPBData;
+    }
+
+    public byte[] getSearchPBData() {
+        return this.mSearchPBData;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/model/modelfactory/PoiSearchModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

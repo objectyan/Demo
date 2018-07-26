@@ -2,55 +2,51 @@ package com.baidu.ufosdk.ui;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
-import android.widget.TextView;
-import com.baidu.ufosdk.a;
-import com.baidu.ufosdk.util.d;
-import com.baidu.ufosdk.util.i;
+import com.baidu.ufosdk.C5167a;
+import com.baidu.ufosdk.util.C5211d;
+import com.baidu.ufosdk.util.C5216i;
 
-final class bm
-  implements TextWatcher
-{
-  bm(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void afterTextChanged(Editable paramEditable)
-  {
-    if (!FeedbackInputActivity.K(this.a))
-    {
-      paramEditable = new d(this.a);
-      paramEditable.b(paramEditable.b() + 1);
-      FeedbackInputActivity.L(this.a);
+/* compiled from: FeedbackInputActivity */
+final class bm implements TextWatcher {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21581a;
+
+    bm(FeedbackInputActivity feedbackInputActivity) {
+        this.f21581a = feedbackInputActivity;
     }
-    switch (this.a.f)
-    {
+
+    public final void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
     }
-    do
-    {
-      do
-      {
-        return;
-      } while (FeedbackInputActivity.d(this.a).getText().toString().trim().length() <= 0);
-      FeedbackInputActivity.j(this.a).setTextColor(i.a(a.w, a.x, a.w, a.w));
-      return;
-    } while (FeedbackInputActivity.d(this.a).getText().toString().trim().length() > 0);
-    FeedbackInputActivity.j(this.a).setTextColor(a.x);
-  }
-  
-  public final void beforeTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3)
-  {
-    if (FeedbackInputActivity.d(this.a).getText().toString().trim().length() <= 0)
-    {
-      this.a.f = 0;
-      return;
+
+    public final void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        if (this.f21581a.ap.getText().toString().trim().length() <= 0) {
+            this.f21581a.f21486f = 0;
+        } else {
+            this.f21581a.f21486f = 1;
+        }
     }
-    this.a.f = 1;
-  }
-  
-  public final void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {}
+
+    public final void afterTextChanged(Editable editable) {
+        if (!this.f21581a.ai) {
+            C5211d c5211d = new C5211d(this.f21581a);
+            c5211d.m17742b(c5211d.m17741b() + 1);
+            this.f21581a.ai = true;
+        }
+        switch (this.f21581a.f21486f) {
+            case 0:
+                if (this.f21581a.ap.getText().toString().trim().length() > 0) {
+                    this.f21581a.av.setTextColor(C5216i.m17759a(C5167a.f21377w, C5167a.f21378x, C5167a.f21377w, C5167a.f21377w));
+                    return;
+                }
+                return;
+            case 1:
+                if (this.f21581a.ap.getText().toString().trim().length() <= 0) {
+                    this.f21581a.av.setTextColor(C5167a.f21378x);
+                    return;
+                }
+                return;
+            default:
+                return;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bm.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

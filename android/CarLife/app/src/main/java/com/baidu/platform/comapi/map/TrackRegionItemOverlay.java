@@ -1,162 +1,136 @@
 package com.baidu.platform.comapi.map;
 
+import com.baidu.platform.comapi.map.provider.EngineConst.OVERLAY_KEY;
 import com.baidu.platform.comapi.map.provider.TrackRegionData;
-import com.baidu.platform.comapi.util.f;
+import com.baidu.platform.comapi.util.C2911f;
 import com.baidu.platform.comjni.map.basemap.AppBaseMap;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TrackRegionItemOverlay
-  extends InnerOverlay
-{
-  private static final int AREA_NEW_FLAG_COLOR = -939489287;
-  private static final int GEO_TYPE_AREA = 3;
-  private static final int NORMAL_OFFSET = 15;
-  private ArrayList<TrackRegionData> mTrackRegionDatas;
-  
-  public TrackRegionItemOverlay()
-  {
-    super(33);
-  }
-  
-  public TrackRegionItemOverlay(AppBaseMap paramAppBaseMap)
-  {
-    super(33, paramAppBaseMap);
-  }
-  
-  private JSONObject buildChildJson(TrackRegionData paramTrackRegionData, int paramInt)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    localJSONObject1.put("ud", paramTrackRegionData.uid);
-    localJSONObject1.put("ty", 32);
-    localJSONObject1.put("of", 15);
-    localJSONObject1.put("in", paramInt);
-    localJSONObject1.put("tx", paramTrackRegionData.name);
-    localJSONObject1.put("sgeo", buildSgeoJson(paramTrackRegionData, 3));
-    JSONObject localJSONObject2 = new JSONObject();
-    paramInt = getProvAreaColorForNum(paramTrackRegionData.trackNum);
-    int i = getNewRegionLineColor(paramTrackRegionData.isNewFlag);
-    if (paramTrackRegionData.isNewFlag) {
-      paramInt = -939489287;
+public class TrackRegionItemOverlay extends InnerOverlay {
+    private static final int AREA_NEW_FLAG_COLOR = -939489287;
+    private static final int GEO_TYPE_AREA = 3;
+    private static final int NORMAL_OFFSET = 15;
+    private ArrayList<TrackRegionData> mTrackRegionDatas;
+
+    public TrackRegionItemOverlay() {
+        super(33);
     }
-    localJSONObject2.put("scolor", paramInt);
-    localJSONObject2.put("color", i);
-    localJSONObject2.put("width", 4);
-    localJSONObject1.put("style", localJSONObject2);
-    return localJSONObject1;
-  }
-  
-  private JSONObject buildSgeoJson(TrackRegionData paramTrackRegionData, int paramInt)
-    throws JSONException
-  {
-    JSONObject localJSONObject = new JSONObject();
-    localJSONObject.put("type", paramInt);
-    if ((paramTrackRegionData != null) && (!paramTrackRegionData.region.isEmpty()))
-    {
-      JSONArray localJSONArray1 = new JSONArray();
-      JSONArray localJSONArray2 = new JSONArray();
-      paramInt = 0;
-      while (paramInt < paramTrackRegionData.region.size())
-      {
-        localJSONArray2.put(paramTrackRegionData.region.get(paramInt));
-        paramInt += 1;
-      }
-      paramTrackRegionData = new JSONObject();
-      paramTrackRegionData.put("points", localJSONArray2);
-      localJSONArray1.put(paramTrackRegionData);
-      localJSONObject.put("elements", localJSONArray1);
+
+    public TrackRegionItemOverlay(AppBaseMap baseMap) {
+        super(33, baseMap);
     }
-    return localJSONObject;
-  }
-  
-  private String generateChildJson(ArrayList<TrackRegionData> paramArrayList)
-  {
-    JSONObject localJSONObject = new JSONObject();
-    JSONArray localJSONArray = new JSONArray();
-    int i = 0;
-    try
-    {
-      while (i < paramArrayList.size())
-      {
-        localJSONArray.put(buildChildJson((TrackRegionData)paramArrayList.get(i), 0));
-        i += 1;
-      }
-      localJSONObject.put("dataset", localJSONArray);
-      return localJSONObject.toString();
+
+    public boolean addedToMapView() {
+        if (this.mBaseMap == null) {
+            return false;
+        }
+        this.mLayerID = this.mBaseMap.AddLayer(2, 0, MapController.TRACK_REGION_TAG);
+        if (this.mLayerID == 0) {
+            return false;
+        }
+        this.mBaseMap.SetLayersClickable(this.mLayerID, true);
+        this.mBaseMap.ShowLayers(this.mLayerID, false);
+        return true;
     }
-    catch (Exception paramArrayList)
-    {
-      f.a("Cary", "getRenderData error", paramArrayList);
+
+    public void setData(ArrayList<TrackRegionData> trackRegionDatas) {
+        this.mTrackRegionDatas = trackRegionDatas;
     }
-    return "";
-  }
-  
-  private int getNewRegionLineColor(boolean paramBoolean)
-  {
-    if (paramBoolean) {
-      return -16757816;
+
+    public String getData() {
+        return generateChildJson(this.mTrackRegionDatas);
     }
-    return -3641826;
-  }
-  
-  private int getProvAreaColorForNum(int paramInt)
-  {
-    if ((paramInt >= 0) && (paramInt < 10)) {
-      return -923081024;
+
+    private String generateChildJson(ArrayList<TrackRegionData> trackRegionDatas) {
+        JSONObject result = new JSONObject();
+        JSONArray childArray = new JSONArray();
+        int i = 0;
+        while (i < trackRegionDatas.size()) {
+            try {
+                childArray.put(buildChildJson((TrackRegionData) trackRegionDatas.get(i), 0));
+                i++;
+            } catch (Exception e) {
+                C2911f.a("Cary", "getRenderData error", e);
+                return "";
+            }
+        }
+        result.put("dataset", childArray);
+        return result.toString();
     }
-    if (paramInt < 20) {
-      return -923411280;
+
+    private JSONObject buildChildJson(TrackRegionData trackRegionData, int id) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("ud", trackRegionData.uid);
+        jsonObject.put("ty", 32);
+        jsonObject.put("of", 15);
+        jsonObject.put("in", id);
+        jsonObject.put("tx", trackRegionData.name);
+        jsonObject.put(OVERLAY_KEY.SGEO, buildSgeoJson(trackRegionData, 3));
+        JSONObject style = new JSONObject();
+        int scolor = getProvAreaColorForNum(trackRegionData.trackNum);
+        int color = getNewRegionLineColor(trackRegionData.isNewFlag);
+        if (trackRegionData.isNewFlag) {
+            scolor = AREA_NEW_FLAG_COLOR;
+        }
+        style.put(OVERLAY_KEY.SGEO_LEVEL_COLOR, scolor);
+        style.put(OVERLAY_KEY.SGEO_LEVEL_COLOR_LINE, color);
+        style.put("width", 4);
+        jsonObject.put(OVERLAY_KEY.AREA_STYLE, style);
+        return jsonObject;
     }
-    if (paramInt < 30) {
-      return -923741018;
+
+    private JSONObject buildSgeoJson(TrackRegionData trackRegionData, int type) throws JSONException {
+        JSONObject sgeo = new JSONObject();
+        sgeo.put("type", type);
+        if (!(trackRegionData == null || trackRegionData.region.isEmpty())) {
+            JSONArray geoElements = new JSONArray();
+            JSONArray points = new JSONArray();
+            for (int i = 0; i < trackRegionData.region.size(); i++) {
+                points.put(trackRegionData.region.get(i));
+            }
+            JSONObject pointObj = new JSONObject();
+            pointObj.put(OVERLAY_KEY.SGEO_ELEMENTS_POINTS, points);
+            geoElements.put(pointObj);
+            sgeo.put(OVERLAY_KEY.SGEO_ELEMENTS, geoElements);
+        }
+        return sgeo;
     }
-    if (paramInt < 40) {
-      return -923547501;
+
+    private int getNewRegionLineColor(boolean isNewFlag) {
+        if (isNewFlag) {
+            return -16757816;
+        }
+        return -3641826;
     }
-    if (paramInt < 60) {
-      return -923877759;
+
+    private int getProvAreaColorForNum(int num) {
+        if (num >= 0 && num < 10) {
+            return -923081024;
+        }
+        if (num < 20) {
+            return -923411280;
+        }
+        if (num < 30) {
+            return -923741018;
+        }
+        if (num < 40) {
+            return -923547501;
+        }
+        if (num < 60) {
+            return -923877759;
+        }
+        if (num < 100) {
+            return -924405906;
+        }
+        if (num < 200) {
+            return -924935335;
+        }
+        if (num < 400) {
+            return -926644400;
+        }
+        return -928091325;
     }
-    if (paramInt < 100) {
-      return -924405906;
-    }
-    if (paramInt < 200) {
-      return -924935335;
-    }
-    if (paramInt < 400) {
-      return -926644400;
-    }
-    return -928091325;
-  }
-  
-  public boolean addedToMapView()
-  {
-    if (this.mBaseMap == null) {}
-    do
-    {
-      return false;
-      this.mLayerID = this.mBaseMap.AddLayer(2, 0, "extend");
-    } while (this.mLayerID == 0);
-    this.mBaseMap.SetLayersClickable(this.mLayerID, true);
-    this.mBaseMap.ShowLayers(this.mLayerID, false);
-    return true;
-  }
-  
-  public String getData()
-  {
-    return generateChildJson(this.mTrackRegionDatas);
-  }
-  
-  public void setData(ArrayList<TrackRegionData> paramArrayList)
-  {
-    this.mTrackRegionDatas = paramArrayList;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/TrackRegionItemOverlay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

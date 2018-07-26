@@ -1,18 +1,14 @@
 package com.tencent.wxop.stat;
 
-class aq
-  implements Runnable
-{
-  aq(b paramb) {}
-  
-  public void run()
-  {
-    this.a.a.g();
-  }
+class aq implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ C6152b f24852a;
+
+    aq(C6152b c6152b) {
+        this.f24852a = c6152b;
+    }
+
+    public void run() {
+        this.f24852a.f24967a.m22174g();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/aq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

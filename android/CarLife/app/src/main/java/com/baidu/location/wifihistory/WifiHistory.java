@@ -4,128 +4,107 @@ import android.net.wifi.ScanResult;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
-import com.baidu.location.f.e;
-import com.baidu.location.f.f;
+import com.baidu.location.p194f.C3372e;
+import com.baidu.location.p194f.C3376f;
 import java.util.LinkedList;
 import java.util.List;
 
-public class WifiHistory
-  implements Parcelable
-{
-  public static final Parcelable.Creator<WifiHistory> CREATOR = new Parcelable.Creator()
-  {
-    public WifiHistory a(Parcel paramAnonymousParcel)
-    {
-      return new WifiHistory(paramAnonymousParcel);
-    }
-    
-    public WifiHistory[] a(int paramAnonymousInt)
-    {
-      return new WifiHistory[paramAnonymousInt];
-    }
-  };
-  List<String> historyWifi = new LinkedList();
-  long lastTime = 0L;
-  List<ScanResult> lastWifi = null;
-  boolean updateFlag = false;
-  
-  public WifiHistory() {}
-  
-  public WifiHistory(Parcel paramParcel)
-  {
-    try
-    {
-      paramParcel.readList(this.historyWifi, null);
-      if (this.historyWifi == null) {
-        this.historyWifi = new LinkedList();
-      }
-      paramParcel.readList(null, null);
-      this.lastWifi = null;
-      this.lastTime = paramParcel.readLong();
-      return;
-    }
-    catch (Exception paramParcel) {}
-  }
-  
-  public int describeContents()
-  {
-    return 0;
-  }
-  
-  public String getWifiHistory()
-  {
-    int k = 0;
-    if ((this.historyWifi == null) || (this.historyWifi.size() == 0)) {
-      return null;
-    }
-    StringBuilder localStringBuilder = new StringBuilder(512);
-    int j = 3;
-    int i;
-    if (this.updateFlag)
-    {
-      i = 1;
-      j = 4;
-    }
-    for (;;)
-    {
-      if (j > this.historyWifi.size()) {
-        j = this.historyWifi.size();
-      }
-      for (;;)
-      {
-        if (i < j)
-        {
-          localStringBuilder.append("&wfh");
-          localStringBuilder.append(k);
-          localStringBuilder.append("=");
-          localStringBuilder.append((String)this.historyWifi.get(i));
-          i += 1;
-          k += 1;
+public class WifiHistory implements Parcelable {
+    public static final Creator<WifiHistory> CREATOR = new C34621();
+    List<String> historyWifi = new LinkedList();
+    long lastTime = 0;
+    List<ScanResult> lastWifi = null;
+    boolean updateFlag = false;
+
+    /* renamed from: com.baidu.location.wifihistory.WifiHistory$1 */
+    static class C34621 implements Creator<WifiHistory> {
+        C34621() {
         }
-        else
-        {
-          return localStringBuilder.toString();
+
+        /* renamed from: a */
+        public WifiHistory m14854a(Parcel parcel) {
+            return new WifiHistory(parcel);
         }
-      }
-      i = 0;
+
+        /* renamed from: a */
+        public WifiHistory[] m14855a(int i) {
+            return new WifiHistory[i];
+        }
+
+        public /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return m14854a(parcel);
+        }
+
+        public /* synthetic */ Object[] newArray(int i) {
+            return m14855a(i);
+        }
     }
-  }
-  
-  void recordWifi(List<ScanResult> paramList)
-  {
-    this.lastWifi = paramList;
-    paramList = e.a(5, paramList);
-    if (paramList == null) {}
-    for (;;)
-    {
-      return;
-      paramList = paramList + ";" + System.currentTimeMillis() / 1000L;
-      this.historyWifi.add(paramList);
-      while (this.historyWifi.size() > 4) {
-        this.historyWifi.remove(0);
-      }
+
+    public WifiHistory(Parcel parcel) {
+        try {
+            parcel.readList(this.historyWifi, null);
+            if (this.historyWifi == null) {
+                this.historyWifi = new LinkedList();
+            }
+            parcel.readList(null, null);
+            this.lastWifi = null;
+            this.lastTime = parcel.readLong();
+        } catch (Exception e) {
+        }
     }
-  }
-  
-  void updateWifi(List<ScanResult> paramList)
-  {
-    if ((this.lastWifi != null) && (f.a(paramList, this.lastWifi, 0.5F))) {
-      return;
+
+    public int describeContents() {
+        return 0;
     }
-    this.updateFlag = true;
-    recordWifi(paramList);
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeList(this.historyWifi);
-    paramParcel.writeList(this.lastWifi);
-    paramParcel.writeLong(this.lastTime);
-  }
+
+    public String getWifiHistory() {
+        int i = 0;
+        if (this.historyWifi == null || this.historyWifi.size() == 0) {
+            return null;
+        }
+        int i2;
+        StringBuilder stringBuilder = new StringBuilder(512);
+        int i3 = 3;
+        if (this.updateFlag) {
+            i2 = 1;
+            i3 = 4;
+        } else {
+            i2 = 0;
+        }
+        int size = i3 > this.historyWifi.size() ? this.historyWifi.size() : i3;
+        while (i2 < size) {
+            stringBuilder.append("&wfh");
+            int i4 = i + 1;
+            stringBuilder.append(i);
+            stringBuilder.append("=");
+            stringBuilder.append((String) this.historyWifi.get(i2));
+            i2++;
+            i = i4;
+        }
+        return stringBuilder.toString();
+    }
+
+    void recordWifi(List<ScanResult> list) {
+        this.lastWifi = list;
+        String a = C3372e.m14326a(5, list);
+        if (a != null) {
+            this.historyWifi.add(a + ";" + (System.currentTimeMillis() / 1000));
+            while (this.historyWifi.size() > 4) {
+                this.historyWifi.remove(0);
+            }
+        }
+    }
+
+    void updateWifi(List<ScanResult> list) {
+        if (this.lastWifi == null || !C3376f.m14359a((List) list, this.lastWifi, 0.5f)) {
+            this.updateFlag = true;
+            recordWifi(list);
+        }
+    }
+
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeList(this.historyWifi);
+        parcel.writeList(this.lastWifi);
+        parcel.writeLong(this.lastTime);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/location/wifihistory/WifiHistory.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

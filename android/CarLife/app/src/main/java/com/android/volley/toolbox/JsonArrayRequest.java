@@ -5,38 +5,24 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import java.io.UnsupportedEncodingException;
 import org.json.JSONArray;
-import org.json.JSONException;
 
-public class JsonArrayRequest
-  extends JsonRequest<JSONArray>
-{
-  public JsonArrayRequest(int paramInt, String paramString, JSONArray paramJSONArray, Response.Listener<JSONArray> paramListener, Response.ErrorListener paramErrorListener) {}
-  
-  public JsonArrayRequest(String paramString, Response.Listener<JSONArray> paramListener, Response.ErrorListener paramErrorListener)
-  {
-    super(0, paramString, null, paramListener, paramErrorListener);
-  }
-  
-  protected Response<JSONArray> parseNetworkResponse(NetworkResponse paramNetworkResponse)
-  {
-    try
-    {
-      paramNetworkResponse = Response.success(new JSONArray(new String(paramNetworkResponse.data, HttpHeaderParser.parseCharset(paramNetworkResponse.headers, "utf-8"))), HttpHeaderParser.parseCacheHeaders(paramNetworkResponse));
-      return paramNetworkResponse;
+public class JsonArrayRequest extends JsonRequest<JSONArray> {
+    public JsonArrayRequest(String url, Listener<JSONArray> listener, ErrorListener errorListener) {
+        super(0, url, null, listener, errorListener);
     }
-    catch (UnsupportedEncodingException paramNetworkResponse)
-    {
-      return Response.error(new ParseError(paramNetworkResponse));
+
+    public JsonArrayRequest(int method, String url, JSONArray jsonRequest, Listener<JSONArray> listener, ErrorListener errorListener) {
+        super(method, url, jsonRequest == null ? null : jsonRequest.toString(), listener, errorListener);
     }
-    catch (JSONException paramNetworkResponse) {}
-    return Response.error(new ParseError(paramNetworkResponse));
-  }
+
+    protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+        try {
+            return Response.success(new JSONArray(new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"))), HttpHeaderParser.parseCacheHeaders(response));
+        } catch (Throwable e) {
+            return Response.error(new ParseError(e));
+        } catch (Throwable je) {
+            return Response.error(new ParseError(je));
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/toolbox/JsonArrayRequest.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

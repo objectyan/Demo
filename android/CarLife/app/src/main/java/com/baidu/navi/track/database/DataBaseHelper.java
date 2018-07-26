@@ -4,93 +4,61 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1260i;
 
-public class DataBaseHelper
-  extends SQLiteOpenHelper
-{
-  private static final String TAG = "DataBaseHelper";
-  
-  public DataBaseHelper(Context paramContext)
-  {
-    super(paramContext, "tracks.db", null, 1);
-    i.b("DataBaseHelper", "db DataBaseHelper()");
-  }
-  
-  public DataBaseHelper(Context paramContext, String paramString, SQLiteDatabase.CursorFactory paramCursorFactory, int paramInt)
-  {
-    super(paramContext, paramString, paramCursorFactory, paramInt);
-  }
-  
-  public SQLiteDatabase getReadableDatabase()
-  {
-    try
-    {
-      SQLiteDatabase localSQLiteDatabase = super.getReadableDatabase();
-      return localSQLiteDatabase;
+public class DataBaseHelper extends SQLiteOpenHelper {
+    private static final String TAG = "DataBaseHelper";
+
+    public DataBaseHelper(Context context, String name, CursorFactory factory, int version) {
+        super(context, name, factory, version);
     }
-    catch (Exception localException)
-    {
-      i.b("DataBaseHelper", "db getReadableDatabase exception");
+
+    public DataBaseHelper(Context context) {
+        super(context, DataBaseConstants.DATABASE_NAME, null, 1);
+        C1260i.b(TAG, "db DataBaseHelper()");
     }
-    return null;
-  }
-  
-  public SQLiteDatabase getWritableDatabase()
-  {
-    try
-    {
-      SQLiteDatabase localSQLiteDatabase = super.getWritableDatabase();
-      return localSQLiteDatabase;
+
+    public void onCreate(SQLiteDatabase db) {
+        C1260i.b(TAG, "db = " + db);
+        try {
+            db.execSQL(DataBaseConstants.CREATE_TRACK_CAR_TABLE);
+        } catch (Exception e) {
+            C1260i.b(TAG, "db onCreate exception");
+        }
     }
-    catch (Exception localException)
-    {
-      i.b("DataBaseHelper", "db getWritableDatabase exception");
+
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        C1260i.b(TAG, "lodVersion = " + oldVersion + ", newVersion = " + newVersion);
+        try {
+            db.execSQL(DataBaseConstants.DELETE_TRACK_CAR_TABLE);
+            onCreate(db);
+        } catch (Exception e) {
+            C1260i.b(TAG, "db onUpgrade exception");
+        }
+        C1260i.b(TAG, "db onUpgrade");
     }
-    return null;
-  }
-  
-  public void onCreate(SQLiteDatabase paramSQLiteDatabase)
-  {
-    i.b("DataBaseHelper", "db = " + paramSQLiteDatabase);
-    try
-    {
-      paramSQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS Track_Car( guid TEXT PRIMARY KEY UNIQUE ,type TEXT ,car_cuid TEXT ,car_channel TEXT ,car_version TEXT ,isconnect INTEGER DEFAULT 0,ctime INTEGER DEFAULT 0,modifyTime INTEGER DEFAULT 0,sid TEXT ,action_state INTEGER DEFAULT 0,useid TEXT ,sign TEXT ,start_lng REAL ,start_lat REAL ,start_addr TEXT ,end_lng REAL ,end_lat REAL ,end_addr TEXT ,distance INTEGER DEFAULT 0,duration INTEGER DEFAULT 0,avg_speed REAL DEFAULT 0,maxSpeed REAL DEFAULT 0,sdcard_path TEXT )");
-      return;
+
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        C1260i.b(TAG, "db onDowngrade");
     }
-    catch (Exception paramSQLiteDatabase)
-    {
-      i.b("DataBaseHelper", "db onCreate exception");
+
+    public SQLiteDatabase getReadableDatabase() {
+        SQLiteDatabase db = null;
+        try {
+            db = super.getReadableDatabase();
+        } catch (Exception e) {
+            C1260i.b(TAG, "db getReadableDatabase exception");
+        }
+        return db;
     }
-  }
-  
-  public void onDowngrade(SQLiteDatabase paramSQLiteDatabase, int paramInt1, int paramInt2)
-  {
-    i.b("DataBaseHelper", "db onDowngrade");
-  }
-  
-  public void onUpgrade(SQLiteDatabase paramSQLiteDatabase, int paramInt1, int paramInt2)
-  {
-    i.b("DataBaseHelper", "lodVersion = " + paramInt1 + ", newVersion = " + paramInt2);
-    try
-    {
-      paramSQLiteDatabase.execSQL("DROP TABLE IF EXISTS Track_Car");
-      onCreate(paramSQLiteDatabase);
-      i.b("DataBaseHelper", "db onUpgrade");
-      return;
+
+    public SQLiteDatabase getWritableDatabase() {
+        SQLiteDatabase db = null;
+        try {
+            db = super.getWritableDatabase();
+        } catch (Exception e) {
+            C1260i.b(TAG, "db getWritableDatabase exception");
+        }
+        return db;
     }
-    catch (Exception paramSQLiteDatabase)
-    {
-      for (;;)
-      {
-        i.b("DataBaseHelper", "db onUpgrade exception");
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/track/database/DataBaseHelper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

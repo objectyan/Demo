@@ -2,84 +2,65 @@ package com.baidu.ufosdk.ui;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
-import com.baidu.ufosdk.a;
-import com.baidu.ufosdk.util.c;
-import com.baidu.ufosdk.util.i;
-import com.baidu.ufosdk.util.u;
+import com.baidu.navisdk.util.common.HttpsClient;
+import com.baidu.ufosdk.C5167a;
+import com.baidu.ufosdk.util.C5210c;
+import com.baidu.ufosdk.util.C5216i;
+import com.baidu.ufosdk.util.C5228u;
 import java.util.Timer;
 
-final class ag
-  extends WebViewClient
-{
-  private ag(FeedbackHotActivity paramFeedbackHotActivity) {}
-  
-  public final void onLoadResource(WebView paramWebView, String paramString)
-  {
-    super.onLoadResource(paramWebView, paramString);
-  }
-  
-  public final void onPageFinished(WebView paramWebView, String paramString)
-  {
-    super.onPageFinished(paramWebView, paramString);
-    FeedbackHotActivity.b(this.a).setVisibility(8);
-    paramWebView.requestFocus();
-    if (FeedbackHotActivity.g(this.a) != null)
-    {
-      FeedbackHotActivity.g(this.a).cancel();
-      FeedbackHotActivity.g(this.a).purge();
+/* compiled from: FeedbackHotActivity */
+final class ag extends WebViewClient {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackHotActivity f21543a;
+
+    private ag(FeedbackHotActivity feedbackHotActivity) {
+        this.f21543a = feedbackHotActivity;
     }
-  }
-  
-  public final void onPageStarted(WebView paramWebView, String paramString, Bitmap paramBitmap)
-  {
-    super.onPageStarted(paramWebView, paramString, paramBitmap);
-    paramWebView.clearView();
-    FeedbackHotActivity.b(this.a).setVisibility(0);
-    FeedbackHotActivity.a(this.a, new Timer());
-    paramWebView = new ai(this);
-    FeedbackHotActivity.g(this.a).schedule(paramWebView, 30000L);
-  }
-  
-  public final void onReceivedError(WebView paramWebView, int paramInt, String paramString1, String paramString2)
-  {
-    super.onReceivedError(paramWebView, paramInt, paramString1, paramString2);
-    i.a(this.a.getApplicationContext(), FeedbackHotActivity.c(this.a));
-    FeedbackHotActivity.d(this.a).setVisibility(0);
-    FeedbackHotActivity.a(this.a).setVisibility(8);
-  }
-  
-  public final boolean shouldOverrideUrlLoading(WebView paramWebView, String paramString)
-  {
-    c.b("UfoWebViewClient-->shouldOverrideUrlLoading:" + paramString);
-    if (paramString.startsWith("feedback://")) {
-      FeedbackHotActivity.e(this.a);
+
+    public final boolean shouldOverrideUrlLoading(WebView webView, String str) {
+        C5210c.m17734b("UfoWebViewClient-->shouldOverrideUrlLoading:" + str);
+        if (str.startsWith("feedback://")) {
+            FeedbackHotActivity.m17617e(this.f21543a);
+        } else if (str.startsWith("solve://")) {
+            C5216i.m17761a(this.f21543a, C5228u.m17794a("26"), C5167a.f21371q);
+            new Handler().postDelayed(new ah(this), C5167a.f21371q);
+        } else if (str.startsWith("backtoufo://")) {
+            this.f21543a.finish();
+        } else {
+            webView.loadUrl(str);
+        }
+        return true;
     }
-    for (;;)
-    {
-      return true;
-      if (paramString.startsWith("solve://"))
-      {
-        i.a(this.a, u.a("26"), a.q);
-        new Handler().postDelayed(new ah(this), a.q);
-      }
-      else if (paramString.startsWith("backtoufo://"))
-      {
-        this.a.finish();
-      }
-      else
-      {
-        paramWebView.loadUrl(paramString);
-      }
+
+    public final void onPageStarted(WebView webView, String str, Bitmap bitmap) {
+        super.onPageStarted(webView, str, bitmap);
+        webView.clearView();
+        this.f21543a.f21446k.setVisibility(0);
+        this.f21543a.f21451p = new Timer();
+        this.f21543a.f21451p.schedule(new ai(this), HttpsClient.CONN_MGR_TIMEOUT);
     }
-  }
+
+    public final void onPageFinished(WebView webView, String str) {
+        super.onPageFinished(webView, str);
+        this.f21543a.f21446k.setVisibility(8);
+        webView.requestFocus();
+        if (this.f21543a.f21451p != null) {
+            this.f21543a.f21451p.cancel();
+            this.f21543a.f21451p.purge();
+        }
+    }
+
+    public final void onReceivedError(WebView webView, int i, String str, String str2) {
+        super.onReceivedError(webView, i, str, str2);
+        C5216i.m17762a(this.f21543a.getApplicationContext(), this.f21543a.f21447l);
+        this.f21543a.f21442g.setVisibility(0);
+        this.f21543a.f21444i.setVisibility(8);
+    }
+
+    public final void onLoadResource(WebView webView, String str) {
+        super.onLoadResource(webView, str);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ag.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

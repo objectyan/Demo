@@ -2,33 +2,29 @@ package com.baidu.ufosdk.ui;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import com.baidu.ufosdk.util.p;
-import java.util.List;
+import com.baidu.ufosdk.util.C5223p;
 
-final class bd
-  implements View.OnClickListener
-{
-  bd(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void onClick(View paramView)
-  {
-    if (FeedbackInputActivity.M(this.a)) {}
-    do
-    {
-      return;
-      FeedbackInputActivity.Q(this.a).remove(((Integer)paramView.getTag()).intValue());
-      if (FeedbackInputActivity.Q(this.a).size() != 1) {
-        break;
-      }
-      paramView = p.a(this.a.getApplicationContext());
-    } while (paramView == null);
-    FeedbackInputActivity.Q(this.a).set(0, paramView);
-    FeedbackInputActivity.R(this.a);
-  }
+/* compiled from: FeedbackInputActivity */
+final class bd implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21570a;
+
+    bd(FeedbackInputActivity feedbackInputActivity) {
+        this.f21570a = feedbackInputActivity;
+    }
+
+    public final void onClick(View view) {
+        if (!this.f21570a.ao) {
+            this.f21570a.f21481Y.remove(((Integer) view.getTag()).intValue());
+            if (this.f21570a.f21481Y.size() == 1) {
+                Object a = C5223p.m17782a(this.f21570a.getApplicationContext());
+                if (a != null) {
+                    this.f21570a.f21481Y.set(0, a);
+                } else {
+                    return;
+                }
+            }
+            this.f21570a.m17653b();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bd.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

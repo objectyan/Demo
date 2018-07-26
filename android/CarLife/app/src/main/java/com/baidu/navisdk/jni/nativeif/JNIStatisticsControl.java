@@ -4,66 +4,52 @@ import android.os.Bundle;
 import com.baidu.navisdk.jni.control.EnvironmentUtil;
 import com.baidu.navisdk.util.common.PackageUtil;
 
-public class JNIStatisticsControl
-{
-  private static final String KEY_LOG_HEAD_CHANNEL = "channel";
-  private static final String KEY_LOG_HEAD_UID = "duid";
-  public static JNIStatisticsControl sInstance = new JNIStatisticsControl();
-  
-  private int setLogHeaderParam(String paramString1, String paramString2)
-  {
-    try
-    {
-      Bundle localBundle = new Bundle();
-      localBundle.putString("channel", paramString1);
-      localBundle.putString("duid", paramString2);
-      int i = setLogHeaderParam(localBundle);
-      return i;
+public class JNIStatisticsControl {
+    private static final String KEY_LOG_HEAD_CHANNEL = "channel";
+    private static final String KEY_LOG_HEAD_UID = "duid";
+    public static JNIStatisticsControl sInstance = new JNIStatisticsControl();
+
+    public native void clearOldNetWorkDataRecord();
+
+    public native void getAllNetWorkDataSize(Bundle bundle);
+
+    public native int getStatisticsResult(String str, Bundle bundle);
+
+    public native int recordStatisticsItem(String str);
+
+    public native int setLogHeaderParam(Bundle bundle);
+
+    public native int setTTSTextPlayResult(String str, String str2);
+
+    public native int upLoadStatistics();
+
+    public native int writeTmpLogFile();
+
+    private JNIStatisticsControl() {
     }
-    catch (Throwable paramString1) {}
-    return -1;
-  }
-  
-  public native void clearOldNetWorkDataRecord();
-  
-  public void exit()
-  {
-    try
-    {
-      writeTmpLogFile();
-      return;
+
+    public void init() {
+        try {
+            setLogHeaderParam(PackageUtil.getChannel(), EnvironmentUtil.getCuid());
+        } catch (Throwable th) {
+        }
     }
-    catch (Throwable localThrowable) {}
-  }
-  
-  public native void getAllNetWorkDataSize(Bundle paramBundle);
-  
-  public native int getStatisticsResult(String paramString, Bundle paramBundle);
-  
-  public void init()
-  {
-    String str = PackageUtil.getChannel();
-    try
-    {
-      setLogHeaderParam(str, EnvironmentUtil.getCuid());
-      return;
+
+    public void exit() {
+        try {
+            writeTmpLogFile();
+        } catch (Throwable th) {
+        }
     }
-    catch (Throwable localThrowable) {}
-  }
-  
-  public native int recordStatisticsItem(String paramString);
-  
-  public native int setLogHeaderParam(Bundle paramBundle);
-  
-  public native int setTTSTextPlayResult(String paramString1, String paramString2);
-  
-  public native int upLoadStatistics();
-  
-  public native int writeTmpLogFile();
+
+    private int setLogHeaderParam(String strChannel, String strUid) {
+        try {
+            Bundle input = new Bundle();
+            input.putString(KEY_LOG_HEAD_CHANNEL, strChannel);
+            input.putString(KEY_LOG_HEAD_UID, strUid);
+            return setLogHeaderParam(input);
+        } catch (Throwable th) {
+            return -1;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/jni/nativeif/JNIStatisticsControl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

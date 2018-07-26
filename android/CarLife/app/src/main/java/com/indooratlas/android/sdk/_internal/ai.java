@@ -2,36 +2,30 @@ package com.indooratlas.android.sdk._internal;
 
 import android.text.TextUtils;
 import java.io.IOException;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ai
-  extends z<JSONObject>
-{
-  private static final String b = ee.a(ai.class);
-  private static final JSONObject c = new JSONObject();
-  
-  private static JSONObject c(x paramx)
-    throws IOException
-  {
-    paramx = paramx.d();
-    try
-    {
-      if (TextUtils.isEmpty(paramx)) {
-        return c;
-      }
-      paramx = new JSONObject(paramx);
-      return paramx;
+public class ai extends C6015z<JSONObject> {
+    /* renamed from: b */
+    private static final String f22946b = ee.m20406a(ai.class);
+    /* renamed from: c */
+    private static final JSONObject f22947c = new JSONObject();
+
+    /* renamed from: a */
+    public final /* synthetic */ Object m19806a(C6013x c6013x) throws IOException {
+        return m19805c(c6013x);
     }
-    catch (JSONException paramx)
-    {
-      throw new IOException("error parsing response body to JSON", paramx);
+
+    /* renamed from: c */
+    private static JSONObject m19805c(C6013x c6013x) throws IOException {
+        Object d = c6013x.d();
+        new Object[1][0] = d;
+        try {
+            if (TextUtils.isEmpty(d)) {
+                return f22947c;
+            }
+            return new JSONObject(d);
+        } catch (Throwable e) {
+            throw new IOException("error parsing response body to JSON", e);
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ai.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

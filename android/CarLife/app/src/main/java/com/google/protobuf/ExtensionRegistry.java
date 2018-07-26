@@ -1,149 +1,129 @@
 package com.google.protobuf;
 
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor.JavaType;
+import com.google.protobuf.Descriptors.FieldDescriptor.Type;
+import com.google.protobuf.GeneratedMessage.GeneratedExtension;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ExtensionRegistry
-  extends ExtensionRegistryLite
-{
-  private static final ExtensionRegistry EMPTY = new ExtensionRegistry(true);
-  private final Map<String, ExtensionInfo> extensionsByName;
-  private final Map<DescriptorIntPair, ExtensionInfo> extensionsByNumber;
-  
-  private ExtensionRegistry()
-  {
-    this.extensionsByName = new HashMap();
-    this.extensionsByNumber = new HashMap();
-  }
-  
-  private ExtensionRegistry(ExtensionRegistry paramExtensionRegistry)
-  {
-    super(paramExtensionRegistry);
-    this.extensionsByName = Collections.unmodifiableMap(paramExtensionRegistry.extensionsByName);
-    this.extensionsByNumber = Collections.unmodifiableMap(paramExtensionRegistry.extensionsByNumber);
-  }
-  
-  private ExtensionRegistry(boolean paramBoolean)
-  {
-    super(ExtensionRegistryLite.getEmptyRegistry());
-    this.extensionsByName = Collections.emptyMap();
-    this.extensionsByNumber = Collections.emptyMap();
-  }
-  
-  private void add(ExtensionInfo paramExtensionInfo)
-  {
-    if (!paramExtensionInfo.descriptor.isExtension()) {
-      throw new IllegalArgumentException("ExtensionRegistry.add() was given a FieldDescriptor for a regular (non-extension) field.");
+public final class ExtensionRegistry extends ExtensionRegistryLite {
+    private static final ExtensionRegistry EMPTY = new ExtensionRegistry(true);
+    private final Map<String, ExtensionInfo> extensionsByName;
+    private final Map<DescriptorIntPair, ExtensionInfo> extensionsByNumber;
+
+    private static final class DescriptorIntPair {
+        private final Descriptor descriptor;
+        private final int number;
+
+        DescriptorIntPair(Descriptor descriptor, int number) {
+            this.descriptor = descriptor;
+            this.number = number;
+        }
+
+        public int hashCode() {
+            return (this.descriptor.hashCode() * 65535) + this.number;
+        }
+
+        public boolean equals(Object obj) {
+            if (!(obj instanceof DescriptorIntPair)) {
+                return false;
+            }
+            DescriptorIntPair other = (DescriptorIntPair) obj;
+            if (this.descriptor == other.descriptor && this.number == other.number) {
+                return true;
+            }
+            return false;
+        }
     }
-    this.extensionsByName.put(paramExtensionInfo.descriptor.getFullName(), paramExtensionInfo);
-    this.extensionsByNumber.put(new DescriptorIntPair(paramExtensionInfo.descriptor.getContainingType(), paramExtensionInfo.descriptor.getNumber()), paramExtensionInfo);
-    Descriptors.FieldDescriptor localFieldDescriptor = paramExtensionInfo.descriptor;
-    if ((localFieldDescriptor.getContainingType().getOptions().getMessageSetWireFormat()) && (localFieldDescriptor.getType() == Descriptors.FieldDescriptor.Type.MESSAGE) && (localFieldDescriptor.isOptional()) && (localFieldDescriptor.getExtensionScope() == localFieldDescriptor.getMessageType())) {
-      this.extensionsByName.put(localFieldDescriptor.getMessageType().getFullName(), paramExtensionInfo);
+
+    public static final class ExtensionInfo {
+        public final Message defaultInstance;
+        public final FieldDescriptor descriptor;
+
+        private ExtensionInfo(FieldDescriptor descriptor) {
+            this.descriptor = descriptor;
+            this.defaultInstance = null;
+        }
+
+        private ExtensionInfo(FieldDescriptor descriptor, Message defaultInstance) {
+            this.descriptor = descriptor;
+            this.defaultInstance = defaultInstance;
+        }
     }
-  }
-  
-  public static ExtensionRegistry getEmptyRegistry()
-  {
-    return EMPTY;
-  }
-  
-  public static ExtensionRegistry newInstance()
-  {
-    return new ExtensionRegistry();
-  }
-  
-  public void add(Descriptors.FieldDescriptor paramFieldDescriptor)
-  {
-    if (paramFieldDescriptor.getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE) {
-      throw new IllegalArgumentException("ExtensionRegistry.add() must be provided a default instance when adding an embedded message extension.");
+
+    public static ExtensionRegistry newInstance() {
+        return new ExtensionRegistry();
     }
-    add(new ExtensionInfo(paramFieldDescriptor, null, null));
-  }
-  
-  public void add(Descriptors.FieldDescriptor paramFieldDescriptor, Message paramMessage)
-  {
-    if (paramFieldDescriptor.getJavaType() != Descriptors.FieldDescriptor.JavaType.MESSAGE) {
-      throw new IllegalArgumentException("ExtensionRegistry.add() provided a default instance for a non-message extension.");
+
+    public static ExtensionRegistry getEmptyRegistry() {
+        return EMPTY;
     }
-    add(new ExtensionInfo(paramFieldDescriptor, paramMessage, null));
-  }
-  
-  public void add(GeneratedMessage.GeneratedExtension<?, ?> paramGeneratedExtension)
-  {
-    if (paramGeneratedExtension.getDescriptor().getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE)
-    {
-      add(new ExtensionInfo(paramGeneratedExtension.getDescriptor(), paramGeneratedExtension.getMessageDefaultInstance(), null));
-      return;
+
+    public ExtensionRegistry getUnmodifiable() {
+        return new ExtensionRegistry(this);
     }
-    add(new ExtensionInfo(paramGeneratedExtension.getDescriptor(), null, null));
-  }
-  
-  public ExtensionInfo findExtensionByName(String paramString)
-  {
-    return (ExtensionInfo)this.extensionsByName.get(paramString);
-  }
-  
-  public ExtensionInfo findExtensionByNumber(Descriptors.Descriptor paramDescriptor, int paramInt)
-  {
-    return (ExtensionInfo)this.extensionsByNumber.get(new DescriptorIntPair(paramDescriptor, paramInt));
-  }
-  
-  public ExtensionRegistry getUnmodifiable()
-  {
-    return new ExtensionRegistry(this);
-  }
-  
-  private static final class DescriptorIntPair
-  {
-    private final Descriptors.Descriptor descriptor;
-    private final int number;
-    
-    DescriptorIntPair(Descriptors.Descriptor paramDescriptor, int paramInt)
-    {
-      this.descriptor = paramDescriptor;
-      this.number = paramInt;
+
+    public ExtensionInfo findExtensionByName(String fullName) {
+        return (ExtensionInfo) this.extensionsByName.get(fullName);
     }
-    
-    public boolean equals(Object paramObject)
-    {
-      if (!(paramObject instanceof DescriptorIntPair)) {}
-      do
-      {
-        return false;
-        paramObject = (DescriptorIntPair)paramObject;
-      } while ((this.descriptor != ((DescriptorIntPair)paramObject).descriptor) || (this.number != ((DescriptorIntPair)paramObject).number));
-      return true;
+
+    public ExtensionInfo findExtensionByNumber(Descriptor containingType, int fieldNumber) {
+        return (ExtensionInfo) this.extensionsByNumber.get(new DescriptorIntPair(containingType, fieldNumber));
     }
-    
-    public int hashCode()
-    {
-      return this.descriptor.hashCode() * 65535 + this.number;
+
+    public void add(GeneratedExtension<?, ?> extension) {
+        if (extension.getDescriptor().getJavaType() == JavaType.MESSAGE) {
+            add(new ExtensionInfo(extension.getDescriptor(), extension.getMessageDefaultInstance()));
+        } else {
+            add(new ExtensionInfo(extension.getDescriptor(), null));
+        }
     }
-  }
-  
-  public static final class ExtensionInfo
-  {
-    public final Message defaultInstance;
-    public final Descriptors.FieldDescriptor descriptor;
-    
-    private ExtensionInfo(Descriptors.FieldDescriptor paramFieldDescriptor)
-    {
-      this.descriptor = paramFieldDescriptor;
-      this.defaultInstance = null;
+
+    public void add(FieldDescriptor type) {
+        if (type.getJavaType() == JavaType.MESSAGE) {
+            throw new IllegalArgumentException("ExtensionRegistry.add() must be provided a default instance when adding an embedded message extension.");
+        }
+        add(new ExtensionInfo(type, null));
     }
-    
-    private ExtensionInfo(Descriptors.FieldDescriptor paramFieldDescriptor, Message paramMessage)
-    {
-      this.descriptor = paramFieldDescriptor;
-      this.defaultInstance = paramMessage;
+
+    public void add(FieldDescriptor type, Message defaultInstance) {
+        if (type.getJavaType() != JavaType.MESSAGE) {
+            throw new IllegalArgumentException("ExtensionRegistry.add() provided a default instance for a non-message extension.");
+        }
+        add(new ExtensionInfo(type, defaultInstance));
     }
-  }
+
+    private ExtensionRegistry() {
+        this.extensionsByName = new HashMap();
+        this.extensionsByNumber = new HashMap();
+    }
+
+    private ExtensionRegistry(ExtensionRegistry other) {
+        super((ExtensionRegistryLite) other);
+        this.extensionsByName = Collections.unmodifiableMap(other.extensionsByName);
+        this.extensionsByNumber = Collections.unmodifiableMap(other.extensionsByNumber);
+    }
+
+    private ExtensionRegistry(boolean empty) {
+        super(ExtensionRegistryLite.getEmptyRegistry());
+        this.extensionsByName = Collections.emptyMap();
+        this.extensionsByNumber = Collections.emptyMap();
+    }
+
+    private void add(ExtensionInfo extension) {
+        if (extension.descriptor.isExtension()) {
+            this.extensionsByName.put(extension.descriptor.getFullName(), extension);
+            this.extensionsByNumber.put(new DescriptorIntPair(extension.descriptor.getContainingType(), extension.descriptor.getNumber()), extension);
+            FieldDescriptor field = extension.descriptor;
+            if (field.getContainingType().getOptions().getMessageSetWireFormat() && field.getType() == Type.MESSAGE && field.isOptional() && field.getExtensionScope() == field.getMessageType()) {
+                this.extensionsByName.put(field.getMessageType().getFullName(), extension);
+                return;
+            }
+            return;
+        }
+        throw new IllegalArgumentException("ExtensionRegistry.add() was given a FieldDescriptor for a regular (non-extension) field.");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/ExtensionRegistry.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

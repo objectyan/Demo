@@ -1,701 +1,553 @@
 package com.baidu.che.codriver.platform.navi;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
-import com.baidu.che.codriver.h.d;
+import com.baidu.carlife.C0965R;
+import com.baidu.che.codriver.p122h.C2543d;
+import com.baidu.che.codriver.platform.NaviCmdConstants;
 import com.baidu.che.codriver.platform.NaviCmdData;
 import com.baidu.che.codriver.platform.NaviParse;
 import com.baidu.che.codriver.platform.PlatformManager;
-import com.baidu.che.codriver.util.c;
-import com.baidu.che.codriver.util.e;
-import com.baidu.che.codriver.util.f;
-import com.baidu.che.codriver.util.h;
+import com.baidu.che.codriver.util.C2716c;
+import com.baidu.che.codriver.util.C2721e;
+import com.baidu.che.codriver.util.C2722f;
+import com.baidu.che.codriver.util.C2725h;
+import com.baidu.che.codriver.vr.p130a.C2747a;
 import com.google.gson.Gson;
 import java.util.HashMap;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NaviCmdController
-{
-  private static final String COMMPANY_ADDRESS_FILE = "commpany_address_file";
-  private static final String HOME_ADDRESS_FILE = "home_address_file";
-  public static final String TAG = "NaviCmdController";
-  private static NaviCmdController mInstance;
-  private NaviAddressData mCommpanyAddress = null;
-  private NaviState mCurrentState = new NaviState();
-  private Gson mGson = new Gson();
-  private Handler mHandler = new Handler(Looper.getMainLooper());
-  private NaviAddressData mHomeAddress = null;
-  private boolean mIsNaviFront = false;
-  private HashMap<String, String> mMapControlRequestMap = new HashMap();
-  
-  public static NaviCmdController getInstance()
-  {
-    if (mInstance == null) {}
-    try
-    {
-      if (mInstance == null) {
-        mInstance = new NaviCmdController();
-      }
-      return mInstance;
-    }
-    finally {}
-  }
-  
-  private void handleCruiseResponse(String paramString1, int paramInt, String paramString2)
-  {
-    paramString1 = (String)this.mMapControlRequestMap.get(paramString1);
-    if (paramString1 == null) {
-      return;
-    }
-    localObject = null;
-    for (;;)
-    {
-      try
-      {
-        str = new JSONObject(paramString1).getString("event");
-        boolean bool = "open".equals(str);
-        if (!bool) {
-          continue;
+public class NaviCmdController {
+    private static final String COMMPANY_ADDRESS_FILE = "commpany_address_file";
+    private static final String HOME_ADDRESS_FILE = "home_address_file";
+    public static final String TAG = "NaviCmdController";
+    private static NaviCmdController mInstance;
+    private NaviAddressData mCommpanyAddress = null;
+    private NaviState mCurrentState = new NaviState();
+    private Gson mGson = new Gson();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private NaviAddressData mHomeAddress = null;
+    private boolean mIsNaviFront = false;
+    private HashMap<String, String> mMapControlRequestMap = new HashMap();
+
+    /* renamed from: com.baidu.che.codriver.platform.navi.NaviCmdController$2 */
+    class C25512 implements Runnable {
+        C25512() {
         }
-        if (paramInt != 0) {
-          continue;
+
+        public void run() {
+            C2543d.m9631a().m9633a(C2716c.m10141a().getString(C0965R.string.navi_command_reset_bypreference_success));
         }
-        paramString1 = (String)localObject;
-      }
-      catch (JSONException paramString1)
-      {
-        String str;
-        paramString1.printStackTrace();
-        paramString1 = (String)localObject;
-        continue;
-      }
-      if (paramString1 == null) {
-        break;
-      }
-      d.a().a(paramString1);
-      return;
-      if (paramInt == 4)
-      {
-        paramString1 = paramString2;
-      }
-      else
-      {
-        paramString1 = c.a().getString(2131297700);
-        continue;
-        paramString1 = (String)localObject;
-        if ("close".equals(str)) {
-          if (paramInt == 0) {
-            paramString1 = c.a().getString(2131297698);
-          } else {
-            paramString1 = c.a().getString(2131297699);
-          }
+    }
+
+    /* renamed from: com.baidu.che.codriver.platform.navi.NaviCmdController$3 */
+    class C25523 implements Runnable {
+        C25523() {
         }
-      }
+
+        public void run() {
+            NaviCmdController.this.executeCmd(NaviCmdConstants.KEY_NAVI_QUERY_HOME_ADDRESS, Boolean.valueOf(false));
+            NaviCmdController.this.executeCmd(NaviCmdConstants.KEY_NAVI_QUERY_COMPANY_ADDRESS, Boolean.valueOf(false));
+        }
     }
-  }
-  
-  private void handleDialogCancel(String paramString)
-  {
-    this.mCurrentState.notifyCancelDialog(paramString);
-  }
-  
-  private void handleDialogResponse(String paramString)
-  {
-    this.mCurrentState.handleDialogResponse(paramString);
-  }
-  
-  private void handleDialogShow(String paramString)
-  {
-    this.mCurrentState.notifyShowDialog(paramString);
-  }
-  
-  private void handleMapControlReceive(String paramString1, int paramInt, String paramString2)
-  {
-    Object localObject = null;
-    paramString1 = (String)this.mMapControlRequestMap.get(paramString1);
-    int j = -1;
-    int i = j;
-    if (paramString1 != null) {}
-    Resources localResources;
-    try
-    {
-      i = new JSONObject(paramString1).optInt("order", -1);
-      localResources = c.a().getResources();
-      switch (i)
-      {
-      default: 
-        paramString1 = (String)localObject;
-        d.a().a(paramString1);
-        return;
-      }
+
+    /* renamed from: com.baidu.che.codriver.platform.navi.NaviCmdController$4 */
+    class C25534 implements Runnable {
+        C25534() {
+        }
+
+        public void run() {
+            try {
+                String homeParams = C2722f.m10186a(NaviCmdController.HOME_ADDRESS_FILE);
+                String commpanyParams = C2722f.m10186a(NaviCmdController.COMMPANY_ADDRESS_FILE);
+                NaviCmdController.this.handleNaviAppAddress(homeParams);
+                NaviCmdController.this.handleNaviAppAddress(commpanyParams);
+            } catch (Exception ex) {
+                C2725h.m10207b(NaviCmdController.TAG, "read address from file error");
+                ex.printStackTrace();
+            }
+        }
     }
-    catch (JSONException paramString1)
-    {
-      do
-      {
-        do
-        {
-          do
-          {
-            do
-            {
-              do
-              {
-                do
-                {
-                  do
-                  {
-                    for (;;)
-                    {
-                      paramString1.printStackTrace();
-                      i = j;
-                      continue;
-                      if (paramInt == 0)
-                      {
-                        if (Log.isLoggable("CoDriverVoice", 3)) {}
-                        for (paramString1 = localResources.getString(2131297725);; paramString1 = localResources.getString(2131297726)) {
-                          break;
-                        }
-                      }
-                      paramString1 = (String)localObject;
-                      if (paramInt == 4)
-                      {
-                        paramString1 = paramString2;
-                        continue;
-                        if (paramInt == 0)
-                        {
-                          if (Log.isLoggable("CoDriverVoice", 3)) {}
-                          for (paramString1 = localResources.getString(2131297727);; paramString1 = localResources.getString(2131297728)) {
-                            break;
-                          }
-                        }
-                        paramString1 = (String)localObject;
-                        if (paramInt == 4)
-                        {
-                          paramString1 = paramString2;
-                          continue;
-                          if (paramInt == 0)
-                          {
-                            if (Log.isLoggable("CoDriverVoice", 3)) {}
-                            for (paramString1 = localResources.getString(2131297723);; paramString1 = localResources.getString(2131297724)) {
-                              break;
-                            }
-                          }
-                          paramString1 = (String)localObject;
-                          if (paramInt == 4)
-                          {
-                            paramString1 = paramString2;
-                            continue;
-                            if (paramInt == 0)
-                            {
-                              if (Log.isLoggable("CoDriverVoice", 3)) {}
-                              for (paramString1 = localResources.getString(2131297721);; paramString1 = localResources.getString(2131297722)) {
-                                break;
-                              }
-                            }
-                            paramString1 = (String)localObject;
-                            if (paramInt == 4)
-                            {
-                              paramString1 = paramString2;
-                              continue;
-                              if (paramInt == 0)
-                              {
-                                if (Log.isLoggable("CoDriverVoice", 3)) {}
-                                for (paramString1 = localResources.getString(2131297716);; paramString1 = localResources.getString(2131297717)) {
-                                  break;
-                                }
-                              }
-                              paramString1 = (String)localObject;
-                              if (paramInt == 4)
-                              {
-                                paramString1 = localResources.getString(2131297718);
-                                continue;
-                                if (paramInt == 0)
-                                {
-                                  if (Log.isLoggable("CoDriverVoice", 3)) {}
-                                  for (paramString1 = localResources.getString(2131297695);; paramString1 = localResources.getString(2131297696)) {
-                                    break;
-                                  }
-                                }
-                                paramString1 = (String)localObject;
-                                if (paramInt == 4) {
-                                  paramString1 = localResources.getString(2131297697);
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
+
+    private NaviCmdController() {
+    }
+
+    public static NaviCmdController getInstance() {
+        if (mInstance == null) {
+            synchronized (NaviCmdController.class) {
+                if (mInstance == null) {
+                    mInstance = new NaviCmdController();
+                }
+            }
+        }
+        return mInstance;
+    }
+
+    public void executeCmd(String cmdType) {
+        C2725h.m10207b(TAG, "executeCmd() cmdType = " + cmdType);
+        PlatformManager.getInstance().sendNaviCommand(cmdType, Boolean.valueOf(true));
+    }
+
+    public void executeCmd(String cmdType, Boolean needLaunchApp) {
+        C2725h.m10207b(TAG, "executeCmd() cmdType = " + cmdType);
+        PlatformManager.getInstance().sendNaviCommand(cmdType, needLaunchApp);
+    }
+
+    public boolean isNaviFront() {
+        C2725h.m10214e(TAG, "isNaviFront = " + this.mIsNaviFront);
+        return this.mIsNaviFront;
+    }
+
+    public void handleResponse(int type, int errorNo, String requestId, String func, String params) {
+        final String str = func;
+        final String str2 = params;
+        final String str3 = requestId;
+        final int i = errorNo;
+        this.mHandler.post(new Runnable() {
+            public void run() {
+                if (NaviCmdConstants.FUN_NAVI_STATUS_SYNC.equals(str)) {
+                    NaviCmdController.this.handleStatusSyncRequest(str2);
+                } else if (NaviCmdConstants.FUN_NAVI_MAP_CONTROL.equals(str)) {
+                    NaviCmdController.this.handleMapControlReceive(str3, i, str2);
+                } else if (NaviCmdConstants.FUN_NAVI_DIALOG_NOTIFY.equals(str)) {
+                    NaviCmdController.this.handleDialogShow(str2);
+                } else if (NaviCmdConstants.FUN_NAVI_DIALOG_CANCEL.equals(str)) {
+                    NaviCmdController.this.handleDialogCancel(str2);
+                } else if (NaviCmdConstants.FUN_NAVI_DIALOG_RESPONSE.equals(str)) {
+                    NaviCmdController.this.handleDialogResponse(str2);
+                } else if (NaviCmdConstants.FUN_NAVI_ROUTE_PLAN.equals(str)) {
+                    NaviCmdController.this.handleRouteDetail(str2);
+                } else if (NaviCmdConstants.FUN_NAVI_NAVI_STATE.equals(str)) {
+                    NaviCmdController.this.handleNaviAppState(str2);
+                } else if (NaviCmdConstants.FUN_NAVI_CRUISE.equals(str)) {
+                    NaviCmdController.this.handleCruiseResponse(str3, i, str2);
+                } else if (NaviCmdConstants.FUN_NAVI_SYN_ADDRESS.equals(str)) {
+                    NaviCmdController.this.handleNaviAppAddress(str2);
+                } else if (NaviCmdConstants.FUN_NAVI_LIMIT_SPEED.equals(str)) {
+                    NaviCmdController.this.handleNaviLimitSpeed(str2);
+                } else if (NaviCmdConstants.FUN_NAVI_NAVI_SET.equals(str)) {
+                    NaviCmdController.this.handleNaviSet(str3, i);
+                }
+                NaviCmdController.this.mMapControlRequestMap.remove(str3);
+            }
+        });
+    }
+
+    private void handleCruiseResponse(String requestId, int errorNo, String error) {
+        String params = (String) this.mMapControlRequestMap.get(requestId);
+        if (params != null) {
+            String tts = null;
+            try {
+                String event = new JSONObject(params).getString("event");
+                if ("open".equals(event)) {
+                    if (errorNo != 0) {
+                        tts = errorNo == 4 ? error : C2716c.m10141a().getString(C0965R.string.navi_command_mode_cruise_open_already);
                     }
-                    if (paramInt == 0)
-                    {
-                      if (Log.isLoggable("CoDriverVoice", 3)) {}
-                      for (paramString1 = localResources.getString(2131297715);; paramString1 = localResources.getString(2131297713)) {
+                } else if ("close".equals(event)) {
+                    tts = errorNo == 0 ? C2716c.m10141a().getString(C0965R.string.navi_command_mode_cruise_close) : C2716c.m10141a().getString(C0965R.string.navi_command_mode_cruise_close_already);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (tts != null) {
+                C2543d.m9631a().m9633a(tts);
+            }
+        }
+    }
+
+    private void handleRouteDetail(String params) {
+        this.mCurrentState.notifyRouteDetail(params);
+    }
+
+    private void handleNaviAppState(String params) {
+        try {
+            JSONObject json = new JSONObject(params);
+            if (json.has("is_innavi")) {
+                if (json.getString("is_innavi").equals("true")) {
+                    this.mCurrentState.enter(NaviAppState.STATE_NAVI);
+                }
+            } else if (json.has("is_incruise") && json.getString("is_incruise").equals("true")) {
+                this.mCurrentState.enter(NaviAppState.STATE_CRUISE);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleStatusSyncRequest(String params) {
+        try {
+            String event = new JSONObject(params).optString("event");
+            if ("navi_front".equals(event)) {
+                this.mIsNaviFront = true;
+            } else if ("navi_background".equals(event)) {
+                this.mIsNaviFront = false;
+            } else if ("navi_app_launch".equals(event)) {
+                requestSyncAddress();
+            } else if ("navi_app_exit".equals(event)) {
+                this.mIsNaviFront = false;
+            } else if ("navi_start".equals(event)) {
+                this.mCurrentState.enter(NaviAppState.STATE_NAVI);
+            } else if ("navi_end".equals(event)) {
+                this.mCurrentState.enter(NaviAppState.STATE_NORMAL);
+            } else if ("cruise_start".equals(event)) {
+                this.mCurrentState.enter(NaviAppState.STATE_CRUISE);
+            } else if ("cruise_end".equals(event)) {
+                this.mCurrentState.enter(NaviAppState.STATE_NORMAL);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleMapControlReceive(String requestId, int errorNo, String error) {
+        String tts = null;
+        String params = (String) this.mMapControlRequestMap.get(requestId);
+        int order = -1;
+        if (params != null) {
+            try {
+                order = new JSONObject(params).optInt(NaviCmdConstants.KEY_NAVI_CMD_ORDER, -1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        Resources mResources = C2716c.m10141a().getResources();
+        switch (order) {
+            case 202:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        tts = error;
                         break;
-                      }
                     }
-                    paramString1 = (String)localObject;
-                  } while (paramInt != 4);
-                  if (Log.isLoggable("CoDriverVoice", 3)) {}
-                  for (paramString1 = localResources.getString(2131297714);; paramString1 = localResources.getString(2131297694)) {
-                    break;
-                  }
-                  if (paramInt == 0)
-                  {
-                    if (Log.isLoggable("CoDriverVoice", 3)) {}
-                    for (paramString1 = localResources.getString(2131297706);; paramString1 = localResources.getString(2131297713)) {
-                      break;
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_zoom_out);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_zoom_out_1);
+                }
+                break;
+                break;
+            case 203:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        tts = error;
+                        break;
                     }
-                  }
-                  paramString1 = (String)localObject;
-                } while (paramInt != 4);
-                if (Log.isLoggable("CoDriverVoice", 3)) {}
-                for (paramString1 = localResources.getString(2131297705);; paramString1 = localResources.getString(2131297694)) {
-                  break;
                 }
-                if (paramInt == 0)
-                {
-                  if (Log.isLoggable("CoDriverVoice", 3)) {}
-                  for (paramString1 = localResources.getString(2131297712);; paramString1 = localResources.getString(2131297713)) {
-                    break;
-                  }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_zoom_in);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_zoom_in_1);
                 }
-                paramString1 = (String)localObject;
-              } while (paramInt != 4);
-              if (Log.isLoggable("CoDriverVoice", 3)) {}
-              for (paramString1 = localResources.getString(2131297711);; paramString1 = localResources.getString(2131297694)) {
                 break;
-              }
-              if (paramInt == 0)
-              {
-                if (Log.isLoggable("CoDriverVoice", 3)) {}
-                for (paramString1 = localResources.getString(2131297702);; paramString1 = localResources.getString(2131297713)) {
-                  break;
-                }
-              }
-              paramString1 = (String)localObject;
-            } while (paramInt != 4);
-            if (Log.isLoggable("CoDriverVoice", 3)) {}
-            for (paramString1 = localResources.getString(2131297701);; paramString1 = localResources.getString(2131297694)) {
-              break;
-            }
-            if (paramInt == 0)
-            {
-              if (Log.isLoggable("CoDriverVoice", 3)) {}
-              for (paramString1 = localResources.getString(2131297710);; paramString1 = localResources.getString(2131297713)) {
                 break;
-              }
+            case 206:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        if (Log.isLoggable(C2747a.f9028a, 3)) {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_silence_already);
+                        } else {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_already);
+                        }
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_silence_echo);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_normal);
+                }
+                break;
+                break;
+            case 207:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        tts = error;
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_traffic_on);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_traffic_on_1);
+                }
+                break;
+                break;
+            case 208:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        tts = error;
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_traffic_off);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_traffic_off_1);
+                }
+                break;
+                break;
+            case 216:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        tts = mResources.getString(C0965R.string.navi_command_mode_over_view_already);
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_over_view);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_over_view_1);
+                }
+                break;
+                break;
+            case 217:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        tts = mResources.getString(C0965R.string.navi_command_mode_continue_navi_already);
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_continue_navi);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_continue_navi_1);
+                }
+                break;
+                break;
+            case 229:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        if (Log.isLoggable(C2747a.f9028a, 3)) {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_north_forward_already);
+                        } else {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_already);
+                        }
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_north_forward_echo);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_normal);
+                }
+                break;
+                break;
+            case 230:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        if (Log.isLoggable(C2747a.f9028a, 3)) {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_head_forward_already);
+                        } else {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_already);
+                        }
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_head_forward_echo);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_normal);
+                }
+                break;
+                break;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_MODE_NIGHT /*231*/:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        if (Log.isLoggable(C2747a.f9028a, 3)) {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_night_already);
+                        } else {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_already);
+                        }
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_night_echo);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_normal);
+                }
+                break;
+                break;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_MODE_DAY /*232*/:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        if (Log.isLoggable(C2747a.f9028a, 3)) {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_day_already);
+                        } else {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_already);
+                        }
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_day_echo);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_normal);
+                }
+                break;
+                break;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_TTS_MODE_NEWER /*233*/:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        if (Log.isLoggable(C2747a.f9028a, 3)) {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_newer_already);
+                        } else {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_already);
+                        }
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_newer_echo);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_normal);
+                }
+                break;
+                break;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_TTS_MODE_EXPERT /*234*/:
+                if (errorNo != 0) {
+                    if (errorNo == 4) {
+                        if (Log.isLoggable(C2747a.f9028a, 3)) {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_expert_already);
+                        } else {
+                            tts = mResources.getString(C0965R.string.navi_command_mode_already);
+                        }
+                        break;
+                    }
+                }
+                if (Log.isLoggable(C2747a.f9028a, 3)) {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_expert_echo);
+                } else {
+                    tts = mResources.getString(C0965R.string.navi_command_mode_normal);
+                }
+                break;
+                break;
+        }
+        C2543d.m9631a().m9633a(tts);
+    }
+
+    public void addMapControlRequest(String requestId, String params) {
+        this.mMapControlRequestMap.put(requestId, params);
+    }
+
+    private void handleDialogShow(String params) {
+        this.mCurrentState.notifyShowDialog(params);
+    }
+
+    private void handleDialogCancel(String params) {
+        this.mCurrentState.notifyCancelDialog(params);
+    }
+
+    private void handleDialogResponse(String params) {
+        this.mCurrentState.handleDialogResponse(params);
+    }
+
+    public void handleNaviAppAddress(String params) {
+        try {
+            C2725h.m10207b(TAG, "navi address is " + params);
+            if (!TextUtils.isEmpty(params)) {
+                NaviAddressData mAddress = (NaviAddressData) this.mGson.fromJson(new JSONObject(params).getString("data"), NaviAddressData.class);
+                if (mAddress.getType() == null) {
+                    return;
+                }
+                if (TextUtils.isEmpty(mAddress.getName()) || TextUtils.isEmpty(mAddress.getAddress()) || "0".equals(mAddress.getLat()) || "0".equals(mAddress.getLng())) {
+                    if (mAddress.getType().equals(NaviCmdConstants.KEY_NAVI_CMD_SET_ADDRESS_COMPANY)) {
+                        setCommpanyAddress(null);
+                        writeAddress(NaviCmdConstants.KEY_NAVI_CMD_SET_ADDRESS_COMPANY, "");
+                    } else if (mAddress.getType().equals("home")) {
+                        setHomeAddress(null);
+                        writeAddress("home", "");
+                    }
+                } else if (mAddress.getType().equals(NaviCmdConstants.KEY_NAVI_CMD_SET_ADDRESS_COMPANY)) {
+                    setCommpanyAddress(mAddress);
+                    writeAddress(NaviCmdConstants.KEY_NAVI_CMD_SET_ADDRESS_COMPANY, params);
+                } else if (mAddress.getType().equals("home")) {
+                    setHomeAddress(mAddress);
+                    writeAddress("home", params);
+                }
             }
-            paramString1 = (String)localObject;
-          } while (paramInt != 4);
-          if (Log.isLoggable("CoDriverVoice", 3)) {}
-          for (paramString1 = localResources.getString(2131297709);; paramString1 = localResources.getString(2131297694)) {
-            break;
-          }
-          if (paramInt == 0)
-          {
-            if (Log.isLoggable("CoDriverVoice", 3)) {}
-            for (paramString1 = localResources.getString(2131297704);; paramString1 = localResources.getString(2131297713)) {
-              break;
+        } catch (Exception ex) {
+            C2725h.m10214e(TAG, "parse address error");
+            ex.printStackTrace();
+        }
+    }
+
+    private void handleNaviLimitSpeed(String params) {
+        String tts = params;
+        try {
+            tts = C2716c.m10141a().getString(C0965R.string.navi_command_mode_limit_speed) + new JSONObject(params).optInt("limsp");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            tts = C2716c.m10141a().getString(C0965R.string.navi_command_mode_limit_speed_fail);
+        }
+        C2543d.m9631a().m9633a(tts);
+    }
+
+    private void handleNaviSet(String requestId, int errorNo) {
+        String params = (String) this.mMapControlRequestMap.get(requestId);
+        String order = "";
+        if (params != null) {
+            try {
+                if (!new JSONObject(params).optString(NaviCmdConstants.KEY_NAVI_CMD_ORDER, "").equals("type_reset_navi_bypreference")) {
+                    return;
+                }
+                if (errorNo == 0) {
+                    this.mHandler.postDelayed(new C25512(), 1500);
+                } else if (errorNo == 4) {
+                    C2543d.m9631a().m9633a(C2716c.m10141a().getString(C0965R.string.navi_command_reset_bypreference_fail));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-          }
-          paramString1 = (String)localObject;
-        } while (paramInt != 4);
-        if (Log.isLoggable("CoDriverVoice", 3)) {}
-        for (paramString1 = localResources.getString(2131297703);; paramString1 = localResources.getString(2131297694)) {
-          break;
         }
-        if (paramInt == 0)
-        {
-          if (Log.isLoggable("CoDriverVoice", 3)) {}
-          for (paramString1 = localResources.getString(2131297720);; paramString1 = localResources.getString(2131297713)) {
-            break;
-          }
-        }
-        paramString1 = (String)localObject;
-      } while (paramInt != 4);
-      if (!Log.isLoggable("CoDriverVoice", 3)) {}
     }
-    for (paramString1 = localResources.getString(2131297719);; paramString1 = localResources.getString(2131297694)) {
-      break;
+
+    public void requestSyncAddress() {
+        this.mHandler.post(new C25523());
     }
-  }
-  
-  private void handleNaviAppState(String paramString)
-  {
-    try
-    {
-      paramString = new JSONObject(paramString);
-      if (paramString.has("is_innavi"))
-      {
-        if (paramString.getString("is_innavi").equals("true")) {
-          this.mCurrentState.enter(NaviState.NaviAppState.STATE_NAVI);
-        }
-      }
-      else if ((paramString.has("is_incruise")) && (paramString.getString("is_incruise").equals("true")))
-      {
-        this.mCurrentState.enter(NaviState.NaviAppState.STATE_CRUISE);
-        return;
-      }
+
+    public void readAddress() {
+        new Thread(new C25534()).start();
     }
-    catch (JSONException paramString)
-    {
-      paramString.printStackTrace();
+
+    public void writeAddress(final String type, final String params) {
+        C2721e.m10184a().execute(new Runnable() {
+            public void run() {
+                try {
+                    if (NaviCmdConstants.KEY_NAVI_CMD_SET_ADDRESS_COMPANY.equals(type)) {
+                        C2722f.m10188a(NaviCmdController.COMMPANY_ADDRESS_FILE, params);
+                    } else if ("home".equals(type)) {
+                        C2722f.m10188a(NaviCmdController.HOME_ADDRESS_FILE, params);
+                    }
+                } catch (Exception ex) {
+                    C2725h.m10207b(NaviCmdController.TAG, "write address to file error");
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
-  }
-  
-  private void handleNaviLimitSpeed(String paramString)
-  {
-    try
-    {
-      int i = new JSONObject(paramString).optInt("limsp");
-      paramString = c.a().getString(2131297707) + i;
-      d.a().a(paramString);
-      return;
+
+    public boolean isSetHomeAddress() {
+        return this.mHomeAddress != null;
     }
-    catch (Exception paramString)
-    {
-      for (;;)
-      {
-        paramString.printStackTrace();
-        paramString = c.a().getString(2131297708);
-      }
+
+    public boolean isSetCompanyAddress() {
+        return this.mCommpanyAddress != null;
     }
-  }
-  
-  private void handleNaviSet(String paramString, int paramInt)
-  {
-    paramString = (String)this.mMapControlRequestMap.get(paramString);
-    if (paramString != null) {
-      try
-      {
-        if (new JSONObject(paramString).optString("order", "").equals("type_reset_navi_bypreference"))
-        {
-          if (paramInt == 0)
-          {
-            this.mHandler.postDelayed(new Runnable()
-            {
-              public void run()
-              {
-                String str = c.a().getString(2131297731);
-                d.a().a(str);
-              }
-            }, 1500L);
-            return;
-          }
-          if (paramInt == 4)
-          {
-            paramString = c.a().getString(2131297730);
-            d.a().a(paramString);
-            return;
-          }
-        }
-      }
-      catch (JSONException paramString)
-      {
-        paramString.printStackTrace();
-      }
+
+    public void setCommpanyAddress(NaviAddressData mAddress) {
+        this.mCommpanyAddress = mAddress;
+        NaviParse.getInstance().getNaviCmdData(NaviCmdConstants.KEY_NAVI_START_TASK_COMPANY).setParams(mAddress != null ? NaviCmdData.createParamsPoi(mAddress) : "");
+        NaviParse.getInstance().getNaviCmdData(NaviCmdConstants.KEY_NAVI_SET_COMPANY_ADDRESS).setParams(mAddress != null ? NaviCmdData.createParamsAddress(mAddress) : "");
     }
-  }
-  
-  private void handleRouteDetail(String paramString)
-  {
-    this.mCurrentState.notifyRouteDetail(paramString);
-  }
-  
-  private void handleStatusSyncRequest(String paramString)
-  {
-    try
-    {
-      paramString = new JSONObject(paramString).optString("event");
-      if ("navi_front".equals(paramString))
-      {
-        this.mIsNaviFront = true;
-        return;
-      }
-      if ("navi_background".equals(paramString))
-      {
-        this.mIsNaviFront = false;
-        return;
-      }
+
+    public void setHomeAddress(NaviAddressData mAddress) {
+        this.mHomeAddress = mAddress;
+        NaviParse.getInstance().getNaviCmdData(NaviCmdConstants.KEY_NAVI_START_TASK_HOME).setParams(mAddress != null ? NaviCmdData.createParamsPoi(mAddress) : "");
+        NaviParse.getInstance().getNaviCmdData(NaviCmdConstants.KEY_NAVI_SET_HOME_ADDRESS).setParams(mAddress != null ? NaviCmdData.createParamsAddress(mAddress) : "");
     }
-    catch (JSONException paramString)
-    {
-      paramString.printStackTrace();
-      return;
-    }
-    if ("navi_app_launch".equals(paramString))
-    {
-      requestSyncAddress();
-      return;
-    }
-    if ("navi_app_exit".equals(paramString))
-    {
-      this.mIsNaviFront = false;
-      return;
-    }
-    if ("navi_start".equals(paramString))
-    {
-      this.mCurrentState.enter(NaviState.NaviAppState.STATE_NAVI);
-      return;
-    }
-    if ("navi_end".equals(paramString))
-    {
-      this.mCurrentState.enter(NaviState.NaviAppState.STATE_NORMAL);
-      return;
-    }
-    if ("cruise_start".equals(paramString))
-    {
-      this.mCurrentState.enter(NaviState.NaviAppState.STATE_CRUISE);
-      return;
-    }
-    if ("cruise_end".equals(paramString)) {
-      this.mCurrentState.enter(NaviState.NaviAppState.STATE_NORMAL);
-    }
-  }
-  
-  public void addMapControlRequest(String paramString1, String paramString2)
-  {
-    this.mMapControlRequestMap.put(paramString1, paramString2);
-  }
-  
-  public void executeCmd(String paramString)
-  {
-    h.b("NaviCmdController", "executeCmd() cmdType = " + paramString);
-    PlatformManager.getInstance().sendNaviCommand(paramString, Boolean.valueOf(true));
-  }
-  
-  public void executeCmd(String paramString, Boolean paramBoolean)
-  {
-    h.b("NaviCmdController", "executeCmd() cmdType = " + paramString);
-    PlatformManager.getInstance().sendNaviCommand(paramString, paramBoolean);
-  }
-  
-  public void handleNaviAppAddress(String paramString)
-  {
-    Object localObject;
-    try
-    {
-      h.b("NaviCmdController", "navi address is " + paramString);
-      if (TextUtils.isEmpty(paramString)) {
-        return;
-      }
-      localObject = new JSONObject(paramString).getString("data");
-      localObject = (NaviAddressData)this.mGson.fromJson((String)localObject, NaviAddressData.class);
-      if (((NaviAddressData)localObject).getType() == null) {
-        return;
-      }
-      if ((!TextUtils.isEmpty(((NaviAddressData)localObject).getName())) && (!TextUtils.isEmpty(((NaviAddressData)localObject).getAddress())) && (!"0".equals(((NaviAddressData)localObject).getLat())) && (!"0".equals(((NaviAddressData)localObject).getLng()))) {
-        break label188;
-      }
-      if (((NaviAddressData)localObject).getType().equals("office"))
-      {
-        setCommpanyAddress(null);
-        writeAddress("office", "");
-        return;
-      }
-    }
-    catch (Exception paramString)
-    {
-      h.e("NaviCmdController", "parse address error");
-      paramString.printStackTrace();
-      return;
-    }
-    if (((NaviAddressData)localObject).getType().equals("home"))
-    {
-      setHomeAddress(null);
-      writeAddress("home", "");
-      return;
-      label188:
-      if (((NaviAddressData)localObject).getType().equals("office"))
-      {
-        setCommpanyAddress((NaviAddressData)localObject);
-        writeAddress("office", paramString);
-        return;
-      }
-      if (((NaviAddressData)localObject).getType().equals("home"))
-      {
-        setHomeAddress((NaviAddressData)localObject);
-        writeAddress("home", paramString);
-      }
-    }
-  }
-  
-  public void handleResponse(int paramInt1, final int paramInt2, final String paramString1, final String paramString2, final String paramString3)
-  {
-    this.mHandler.post(new Runnable()
-    {
-      public void run()
-      {
-        if ("fun_navi_status_sync".equals(paramString2)) {
-          NaviCmdController.this.handleStatusSyncRequest(paramString3);
-        }
-        for (;;)
-        {
-          NaviCmdController.this.mMapControlRequestMap.remove(paramString1);
-          return;
-          if ("fun_navi_map_control".equals(paramString2)) {
-            NaviCmdController.this.handleMapControlReceive(paramString1, paramInt2, paramString3);
-          } else if ("fun_navi_dialog_notify".equals(paramString2)) {
-            NaviCmdController.this.handleDialogShow(paramString3);
-          } else if ("fun_navi_dialog_cancel".equals(paramString2)) {
-            NaviCmdController.this.handleDialogCancel(paramString3);
-          } else if ("fun_navi_dialog_response".equals(paramString2)) {
-            NaviCmdController.this.handleDialogResponse(paramString3);
-          } else if ("fun_navi_route_plan".equals(paramString2)) {
-            NaviCmdController.this.handleRouteDetail(paramString3);
-          } else if ("fun_navi_navi_state".equals(paramString2)) {
-            NaviCmdController.this.handleNaviAppState(paramString3);
-          } else if ("fun_navi_cruise".equals(paramString2)) {
-            NaviCmdController.this.handleCruiseResponse(paramString1, paramInt2, paramString3);
-          } else if ("fun_navi_syn_address".equals(paramString2)) {
-            NaviCmdController.this.handleNaviAppAddress(paramString3);
-          } else if ("fun_navi_limit_speed".equals(paramString2)) {
-            NaviCmdController.this.handleNaviLimitSpeed(paramString3);
-          } else if ("fun_navi_navi_set".equals(paramString2)) {
-            NaviCmdController.this.handleNaviSet(paramString1, paramInt2);
-          }
-        }
-      }
-    });
-  }
-  
-  public boolean isNaviFront()
-  {
-    h.e("NaviCmdController", "isNaviFront = " + this.mIsNaviFront);
-    return this.mIsNaviFront;
-  }
-  
-  public boolean isSetCompanyAddress()
-  {
-    return this.mCommpanyAddress != null;
-  }
-  
-  public boolean isSetHomeAddress()
-  {
-    return this.mHomeAddress != null;
-  }
-  
-  public void readAddress()
-  {
-    new Thread(new Runnable()
-    {
-      public void run()
-      {
-        try
-        {
-          String str1 = f.a("home_address_file");
-          String str2 = f.a("commpany_address_file");
-          NaviCmdController.this.handleNaviAppAddress(str1);
-          NaviCmdController.this.handleNaviAppAddress(str2);
-          return;
-        }
-        catch (Exception localException)
-        {
-          h.b("NaviCmdController", "read address from file error");
-          localException.printStackTrace();
-        }
-      }
-    }).start();
-  }
-  
-  public void requestSyncAddress()
-  {
-    this.mHandler.post(new Runnable()
-    {
-      public void run()
-      {
-        NaviCmdController.this.executeCmd("key_navi_query_home_address", Boolean.valueOf(false));
-        NaviCmdController.this.executeCmd("key_navi_query_company_address", Boolean.valueOf(false));
-      }
-    });
-  }
-  
-  public void setCommpanyAddress(NaviAddressData paramNaviAddressData)
-  {
-    this.mCommpanyAddress = paramNaviAddressData;
-    NaviCmdData localNaviCmdData = NaviParse.getInstance().getNaviCmdData("key_navi_start_task_company");
-    Object localObject;
-    if (paramNaviAddressData != null)
-    {
-      localObject = NaviCmdData.createParamsPoi(paramNaviAddressData);
-      localNaviCmdData.setParams((String)localObject);
-      localObject = NaviParse.getInstance().getNaviCmdData("key_navi_set_company_address");
-      if (paramNaviAddressData == null) {
-        break label61;
-      }
-    }
-    label61:
-    for (paramNaviAddressData = NaviCmdData.createParamsAddress(paramNaviAddressData);; paramNaviAddressData = "")
-    {
-      ((NaviCmdData)localObject).setParams(paramNaviAddressData);
-      return;
-      localObject = "";
-      break;
-    }
-  }
-  
-  public void setHomeAddress(NaviAddressData paramNaviAddressData)
-  {
-    this.mHomeAddress = paramNaviAddressData;
-    NaviCmdData localNaviCmdData = NaviParse.getInstance().getNaviCmdData("key_navi_start_task_home");
-    Object localObject;
-    if (paramNaviAddressData != null)
-    {
-      localObject = NaviCmdData.createParamsPoi(paramNaviAddressData);
-      localNaviCmdData.setParams((String)localObject);
-      localObject = NaviParse.getInstance().getNaviCmdData("key_navi_set_home_address");
-      if (paramNaviAddressData == null) {
-        break label61;
-      }
-    }
-    label61:
-    for (paramNaviAddressData = NaviCmdData.createParamsAddress(paramNaviAddressData);; paramNaviAddressData = "")
-    {
-      ((NaviCmdData)localObject).setParams(paramNaviAddressData);
-      return;
-      localObject = "";
-      break;
-    }
-  }
-  
-  public void writeAddress(final String paramString1, final String paramString2)
-  {
-    e.a().execute(new Runnable()
-    {
-      public void run()
-      {
-        try
-        {
-          if ("office".equals(paramString1))
-          {
-            f.a("commpany_address_file", paramString2);
-            return;
-          }
-          if ("home".equals(paramString1))
-          {
-            f.a("home_address_file", paramString2);
-            return;
-          }
-        }
-        catch (Exception localException)
-        {
-          h.b("NaviCmdController", "write address to file error");
-          localException.printStackTrace();
-        }
-      }
-    });
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/platform/navi/NaviCmdController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

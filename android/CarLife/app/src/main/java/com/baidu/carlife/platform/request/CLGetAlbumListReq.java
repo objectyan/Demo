@@ -1,49 +1,30 @@
 package com.baidu.carlife.platform.request;
 
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1260i;
 import com.google.gson.Gson;
 
-public class CLGetAlbumListReq
-  extends CLRequest
-{
-  private static final String TAG = CLGetAlbumListReq.class.getSimpleName();
-  
-  public static CLGetAlbumListReq fromJson(String paramString)
-  {
-    try
-    {
-      paramString = (CLGetAlbumListReq)new Gson().fromJson(paramString, CLGetAlbumListReq.class);
-      return paramString;
+public class CLGetAlbumListReq extends CLRequest {
+    private static final String TAG = CLGetAlbumListReq.class.getSimpleName();
+
+    public String toJson() {
+        try {
+            return new Gson().toJson(this);
+        } catch (Throwable e) {
+            C1260i.m4432a(TAG, e);
+            return null;
+        }
     }
-    catch (Exception paramString)
-    {
-      i.a(TAG, paramString);
+
+    public static CLGetAlbumListReq fromJson(String json) {
+        try {
+            return (CLGetAlbumListReq) new Gson().fromJson(json, CLGetAlbumListReq.class);
+        } catch (Throwable e) {
+            C1260i.m4432a(TAG, e);
+            return null;
+        }
     }
-    return null;
-  }
-  
-  public int getRequestType()
-  {
-    return 1;
-  }
-  
-  public String toJson()
-  {
-    try
-    {
-      String str = new Gson().toJson(this);
-      return str;
+
+    public int getRequestType() {
+        return 1;
     }
-    catch (Exception localException)
-    {
-      i.a(TAG, localException);
-    }
-    return null;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/platform/request/CLGetAlbumListReq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

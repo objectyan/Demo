@@ -5,163 +5,118 @@ import com.baidu.baidunavis.control.NavSearchController;
 import com.baidu.navi.location.LocationChangeListener.CoordType;
 import com.baidu.navi.location.LocationManager;
 import com.baidu.navi.location.LocationManager.LocData;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.datastruct.SearchCircle;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
-import com.baidu.platform.comapi.map.MapStatus.GeoBound;
 
-public class NavModelHelper
-{
-  private static final String TAG = NavModelHelper.class.getSimpleName();
-  
-  public static NavGeoPoint convertGeoPoint(GeoPoint paramGeoPoint)
-  {
-    NavGeoPoint localNavGeoPoint = new NavGeoPoint();
-    if (paramGeoPoint == null) {
-      return localNavGeoPoint;
-    }
-    localNavGeoPoint.setLatitudeE6(paramGeoPoint.getLatitudeE6());
-    localNavGeoPoint.setLongitudeE6(paramGeoPoint.getLongitudeE6());
-    return localNavGeoPoint;
-  }
-  
-  public static GeoPoint convertNavGeoPoint(NavGeoPoint paramNavGeoPoint)
-  {
-    GeoPoint localGeoPoint = new GeoPoint();
-    if (paramNavGeoPoint == null) {
-      return localGeoPoint;
-    }
-    localGeoPoint.setLatitudeE6(paramNavGeoPoint.getLatitudeE6());
-    localGeoPoint.setLongitudeE6(paramNavGeoPoint.getLongitudeE6());
-    return localGeoPoint;
-  }
-  
-  public static SearchCircle convertNavSearchCircle(NavSearchCircle paramNavSearchCircle)
-  {
-    if (paramNavSearchCircle == null) {
-      return null;
-    }
-    return new SearchCircle(paramNavSearchCircle.mCenter.getLongitudeE6(), paramNavSearchCircle.mCenter.getLatitudeE6(), paramNavSearchCircle.mRadius);
-  }
-  
-  public static RoutePlanNode convertRouteNode(RouteNode paramRouteNode)
-  {
-    if (paramRouteNode == null) {
-      return null;
-    }
-    localRoutePlanNode = new RoutePlanNode();
-    try
-    {
-      int j = paramRouteNode.mCityID;
-      int i = j;
-      if (j < 0) {
-        i = paramRouteNode.mProvinceID;
-      }
-      for (;;)
-      {
-        localRoutePlanNode.setGeoPoint(convertNavGeoPoint(paramRouteNode.mGeoPoint));
-        localRoutePlanNode.setUID(paramRouteNode.mUID);
-        localRoutePlanNode.setDistrictID(j);
-        if (!TextUtils.isEmpty(paramRouteNode.mName)) {
-          localRoutePlanNode.setName(paramRouteNode.mName);
+public class NavModelHelper {
+    private static final String TAG = NavModelHelper.class.getSimpleName();
+
+    public static GeoPoint convertNavGeoPoint(NavGeoPoint ngp) {
+        GeoPoint gp = new GeoPoint();
+        if (ngp != null) {
+            gp.setLatitudeE6(ngp.getLatitudeE6());
+            gp.setLongitudeE6(ngp.getLongitudeE6());
         }
-        localRoutePlanNode.mDescription = paramRouteNode.mAddr;
-        localRoutePlanNode.mFrom = paramRouteNode.mFromType;
-        if (paramRouteNode.mMapGeoBound != null)
-        {
-          localRoutePlanNode.mLeft = paramRouteNode.mMapGeoBound.left;
-          localRoutePlanNode.mRight = paramRouteNode.mMapGeoBound.right;
-          localRoutePlanNode.mBottom = paramRouteNode.mMapGeoBound.bottom;
-          localRoutePlanNode.mTop = paramRouteNode.mMapGeoBound.top;
+        return gp;
+    }
+
+    public static NavGeoPoint convertGeoPoint(GeoPoint ngp) {
+        NavGeoPoint gp = new NavGeoPoint();
+        if (ngp != null) {
+            gp.setLatitudeE6(ngp.getLatitudeE6());
+            gp.setLongitudeE6(ngp.getLongitudeE6());
         }
-        if (paramRouteNode.mFromType == 4) {
-          localRoutePlanNode.mFrom = 4;
+        return gp;
+    }
+
+    public static SearchCircle convertNavSearchCircle(NavSearchCircle nsc) {
+        if (nsc == null) {
+            return null;
         }
-        for (;;)
-        {
-          if ((paramRouteNode.mFromType == 2) || (paramRouteNode.mFromType == 1) || (paramRouteNode.mFromType == 4) || (paramRouteNode.mFromType == 5)) {
-            localRoutePlanNode.mDistrictID = NavSearchController.getInstance().getDistrictIdForKeySearch(j);
-          }
-          localRoutePlanNode.mLevel = paramRouteNode.mLevel;
-          localRoutePlanNode.mNodeType = paramRouteNode.mNodeType;
-          if (paramRouteNode.mLocType == 61)
-          {
-            localRoutePlanNode.mLocType = 1;
-            label244:
-            if (paramRouteNode.mLocType != 61) {
-              break label483;
+        return new SearchCircle(nsc.mCenter.getLongitudeE6(), nsc.mCenter.getLatitudeE6(), nsc.mRadius);
+    }
+
+    public static RoutePlanNode convertRouteNode(RouteNode rn) {
+        if (rn == null) {
+            return null;
+        }
+        RoutePlanNode rpn = new RoutePlanNode();
+        try {
+            int districtID = rn.mCityID;
+            if (districtID < 0) {
+                districtID = rn.mProvinceID;
             }
-            localRoutePlanNode.mGPSAngle = paramRouteNode.mGPSAngle;
-            localRoutePlanNode.mGPSAccuracy = paramRouteNode.mGPSAccuracy;
-            localRoutePlanNode.mGPSSpeed = (paramRouteNode.mGPSSpeed / 3.6F);
-            localRoutePlanNode.mAltitude = ((float)paramRouteNode.mAltitude);
-            float f = localRoutePlanNode.mAltitude;
-            if (f >= 0.0F) {}
-          }
-          try
-          {
-            LocationManager.LocData localLocData = LocationManager.getInstance().getCurLocation(LocationChangeListener.CoordType.CoordType_BD09);
-            localRoutePlanNode.mAltitude = ((float)localLocData.altitude);
-            localRoutePlanNode.mGPSAngle = localLocData.direction;
-            localRoutePlanNode.mGPSAccuracy = localLocData.accuracy;
-            localRoutePlanNode.mGPSSpeed = (localLocData.speed / 3.6F);
-            for (;;)
-            {
-              if ("我的位置".equals(paramRouteNode.mName)) {
-                localRoutePlanNode.mSensorAngle = NavRoutePlanModel.getInstance().getmSensorAngle();
-              }
-              localRoutePlanNode.mBusinessPoi = paramRouteNode.mBusinessPoi;
-              return localRoutePlanNode;
-              if (paramRouteNode.mFromType != 5) {
-                break;
-              }
-              localRoutePlanNode.mFrom = 5;
-              break;
-              if (paramRouteNode.mLocType == 161)
-              {
-                if ("wf".equalsIgnoreCase(paramRouteNode.mNetworkLocStr))
-                {
-                  localRoutePlanNode.mLocType = 2;
-                  break label244;
-                }
-                if ("cl".equalsIgnoreCase(paramRouteNode.mNetworkLocStr))
-                {
-                  localRoutePlanNode.mLocType = 3;
-                  break label244;
-                }
-                localRoutePlanNode.mLocType = 0;
-                break label244;
-              }
-              localRoutePlanNode.mLocType = 0;
-              break label244;
-              label483:
-              localRoutePlanNode.mGPSAngle = -2.0F;
-              localRoutePlanNode.mGPSSpeed = -2.0F;
-              if (paramRouteNode.mGPSAccuracy >= 0.0F) {
-                localRoutePlanNode.mGPSAccuracy = paramRouteNode.mGPSAccuracy;
-              } else {
-                localRoutePlanNode.mGPSAccuracy = -2.0F;
-              }
+            if (districtID < 0) {
+                districtID = 0;
             }
-          }
-          catch (Exception localException)
-          {
-            for (;;) {}
-          }
+            rpn.setGeoPoint(convertNavGeoPoint(rn.mGeoPoint));
+            rpn.setUID(rn.mUID);
+            rpn.setDistrictID(districtID);
+            if (!TextUtils.isEmpty(rn.mName)) {
+                rpn.setName(rn.mName);
+            }
+            rpn.mDescription = rn.mAddr;
+            rpn.mFrom = rn.mFromType;
+            if (rn.mMapGeoBound != null) {
+                rpn.mLeft = rn.mMapGeoBound.left;
+                rpn.mRight = rn.mMapGeoBound.right;
+                rpn.mBottom = rn.mMapGeoBound.bottom;
+                rpn.mTop = rn.mMapGeoBound.top;
+            }
+            if (rn.mFromType == 4) {
+                rpn.mFrom = 4;
+            } else if (rn.mFromType == 5) {
+                rpn.mFrom = 5;
+            }
+            if (rn.mFromType == 2 || rn.mFromType == 1 || rn.mFromType == 4 || rn.mFromType == 5) {
+                rpn.mDistrictID = NavSearchController.getInstance().getDistrictIdForKeySearch(districtID);
+            }
+            rpn.mLevel = rn.mLevel;
+            rpn.mNodeType = rn.mNodeType;
+            if (rn.mLocType == 61) {
+                rpn.mLocType = 1;
+            } else if (rn.mLocType != 161) {
+                rpn.mLocType = 0;
+            } else if ("wf".equalsIgnoreCase(rn.mNetworkLocStr)) {
+                rpn.mLocType = 2;
+            } else if ("cl".equalsIgnoreCase(rn.mNetworkLocStr)) {
+                rpn.mLocType = 3;
+            } else {
+                rpn.mLocType = 0;
+            }
+            if (rn.mLocType == 61) {
+                rpn.mGPSAngle = rn.mGPSAngle;
+                rpn.mGPSAccuracy = rn.mGPSAccuracy;
+                rpn.mGPSSpeed = rn.mGPSSpeed / 3.6f;
+                rpn.mAltitude = (float) rn.mAltitude;
+                if (rpn.mAltitude < 0.0f) {
+                    try {
+                        LocData mCurLocData = LocationManager.getInstance().getCurLocation(CoordType.CoordType_BD09);
+                        rpn.mAltitude = (float) mCurLocData.altitude;
+                        rpn.mGPSAngle = mCurLocData.direction;
+                        rpn.mGPSAccuracy = mCurLocData.accuracy;
+                        rpn.mGPSSpeed = mCurLocData.speed / 3.6f;
+                    } catch (Exception e) {
+                    }
+                }
+            } else {
+                rpn.mGPSAngle = -2.0f;
+                rpn.mGPSSpeed = -2.0f;
+                if (rn.mGPSAccuracy >= 0.0f) {
+                    rpn.mGPSAccuracy = rn.mGPSAccuracy;
+                } else {
+                    rpn.mGPSAccuracy = -2.0f;
+                }
+            }
+            if (RoutePlanParams.MY_LOCATION.equals(rn.mName)) {
+                rpn.mSensorAngle = NavRoutePlanModel.getInstance().getmSensorAngle();
+            }
+            rpn.mBusinessPoi = rn.mBusinessPoi;
+            return rpn;
+        } catch (Exception e2) {
+            return rpn;
         }
-        j = i;
-        if (i < 0) {
-          j = 0;
-        }
-      }
-      return localRoutePlanNode;
     }
-    catch (Exception paramRouteNode) {}
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/model/NavModelHelper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

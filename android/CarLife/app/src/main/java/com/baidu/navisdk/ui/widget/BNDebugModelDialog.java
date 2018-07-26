@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.os.Build.VERSION;
 import android.os.Handler;
@@ -27,20 +26,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
+import com.baidu.navisdk.debug.NavSDKDebug;
+import com.baidu.navisdk.hudsdk.BNRemoteConstants;
 import com.baidu.navisdk.jni.nativeif.JNIGuidanceControl;
+import com.baidu.navisdk.logic.CommandConst;
 import com.baidu.navisdk.logic.commandparser.CmdDebugModeGetURL;
 import com.baidu.navisdk.logic.commandparser.DebugModeMessageBean;
 import com.baidu.navisdk.logic.commandparser.DebugModeMessageSerBean;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.ui.util.ForbidDaulClickUtils;
 import com.baidu.navisdk.ui.util.TipTool;
+import com.baidu.navisdk.ui.widget.StatusButton.StatusButtonChild;
+import com.baidu.navisdk.ui.widget.StatusButton.onStatusButtonClickListener;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.NetworkUtils;
 import com.baidu.navisdk.util.common.PackageUtil;
 import com.baidu.navisdk.util.drivertool.BNDrivingToolManager;
+import com.baidu.navisdk.util.drivertool.BNDrivingToolParams;
 import com.baidu.navisdk.util.drivertool.BNDrivingToolUtils;
 import com.baidu.navisdk.util.http.HttpURLManager;
 import com.baidu.navisdk.util.http.HttpURLManager.ULRParam;
@@ -48,1316 +53,1085 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class BNDebugModelDialog
-  extends Dialog
-{
-  public static final boolean ANTI_CHEAT_DEBUG_SHOW = false;
-  private ArrayAdapter<String> adapter;
-  private int[] hDivider = { 1711866002, 1711866006, 1711866010, 1711866014, 1711866018, 1711866022, 1711866030, 1711866048, 1711866064 };
-  private DebugUrlAdapter mAdapter;
-  private StatusButton mAntiCheatBtn = null;
-  private View mAntiCheatView = null;
-  private TextView mBuildTimeTv = null;
-  private View mBuildView = null;
-  protected ImageView mCloseIV;
-  private Context mContext;
-  private Button mCreateRouteBtn;
-  private TextView mCuidTv = null;
-  private View mCuidView = null;
-  private StatusButton mDrivingToolOpenBtn;
-  private Button mDrivingToolStartBtn;
-  private ExpandableListView mELUrlDebugView;
-  private View mFactoryCategory = null;
-  private List<DebugModeMessageBean> mGuideMsg = null;
-  private Handler mHandler = new Handler(Looper.getMainLooper())
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if (1405 == paramAnonymousMessage.what)
-      {
-        if (paramAnonymousMessage.arg1 != 0) {
-          break label128;
+public class BNDebugModelDialog extends Dialog {
+    public static final boolean ANTI_CHEAT_DEBUG_SHOW = false;
+    private ArrayAdapter<String> adapter;
+    private int[] hDivider = new int[]{C4048R.id.bnav_rg_menu_h_divider_1, C4048R.id.bnav_rg_menu_h_divider_2, C4048R.id.bnav_rg_menu_h_divider_3, C4048R.id.bnav_rg_menu_h_divider_4, C4048R.id.bnav_rg_menu_h_divider_5, C4048R.id.bnav_rg_menu_h_divider_6, C4048R.id.bnav_rg_menu_h_divider_7, C4048R.id.bnav_rg_menu_h_divider_8, C4048R.id.bnav_rg_menu_h_divider_9};
+    private DebugUrlAdapter mAdapter;
+    private StatusButton mAntiCheatBtn = null;
+    private View mAntiCheatView = null;
+    private TextView mBuildTimeTv = null;
+    private View mBuildView = null;
+    protected ImageView mCloseIV;
+    private Context mContext;
+    private Button mCreateRouteBtn;
+    private TextView mCuidTv = null;
+    private View mCuidView = null;
+    private StatusButton mDrivingToolOpenBtn;
+    private Button mDrivingToolStartBtn;
+    private ExpandableListView mELUrlDebugView;
+    private View mFactoryCategory = null;
+    private List<DebugModeMessageBean> mGuideMsg = null;
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            if (CommandConst.K_MSG_GENERAL_HTTP_DEBUG_MODE_GET_URL_EXEC == msg.what) {
+                if (msg.arg1 == 0) {
+                    HttpURLManager.getInstance().mGuideMsg = CmdDebugModeGetURL.mGuideMsg;
+                    BNDebugModelDialog.this.mGuideMsg = HttpURLManager.getInstance().mGuideMsg;
+                    if (BNDebugModelDialog.this.mGuideMsg != null && BNDebugModelDialog.this.mGuideMsg.size() > 0) {
+                        if (BNDebugModelDialog.this.mAdapter == null) {
+                            BNDebugModelDialog.this.mAdapter = new DebugUrlAdapter();
+                            BNDebugModelDialog.this.mELUrlDebugView.setAdapter(BNDebugModelDialog.this.mAdapter);
+                        }
+                        BNDebugModelDialog.this.mRLUrlDebugExpandView.setVisibility(0);
+                    }
+                } else {
+                    TipTool.onCreateToastDialog(BNDebugModelDialog.this.mContext, "url配置请求失败 + error msg = " + msg.arg1);
+                }
+            }
+            super.handleMessage(msg);
         }
-        HttpURLManager.getInstance().mGuideMsg = CmdDebugModeGetURL.mGuideMsg;
-        BNDebugModelDialog.access$002(BNDebugModelDialog.this, HttpURLManager.getInstance().mGuideMsg);
-        if ((BNDebugModelDialog.this.mGuideMsg != null) && (BNDebugModelDialog.this.mGuideMsg.size() > 0))
-        {
-          if (BNDebugModelDialog.this.mAdapter == null)
-          {
-            BNDebugModelDialog.access$102(BNDebugModelDialog.this, new BNDebugModelDialog.DebugUrlAdapter(BNDebugModelDialog.this));
-            BNDebugModelDialog.this.mELUrlDebugView.setAdapter(BNDebugModelDialog.this.mAdapter);
-          }
-          BNDebugModelDialog.this.mRLUrlDebugExpandView.setVisibility(0);
-        }
-      }
-      for (;;)
-      {
-        super.handleMessage(paramAnonymousMessage);
-        return;
-        label128:
-        TipTool.onCreateToastDialog(BNDebugModelDialog.this.mContext, "url配置请求失败 + error msg = " + paramAnonymousMessage.arg1);
-      }
-    }
-  };
-  private StatusButton mHttpsDebugBtn = null;
-  private View mHttpsDebugView = null;
-  private StatusButton mImageLogBtn = null;
-  private View mImageLogView = null;
-  private StatusButton mJavaLogBtn = null;
-  private View mJavaLogView = null;
-  private StatusButton mMonkeyBtn = null;
-  private View mMonkeyView = null;
-  private Button mMuitipleBtn;
-  private StatusButton mNativeLogBtn = null;
-  private View mNativeLogView = null;
-  private StatusButton mNotificationDebugBtn = null;
-  private View mNotificationDebugView = null;
-  protected DialogInterface.OnCancelListener mOnCancelListener = null;
-  private View.OnClickListener mOnClickListener = null;
-  private RelativeLayout mRLGPSDebugView;
-  private RelativeLayout mRLUrlDebugExpandView;
-  private RelativeLayout mRLUrlDebugView;
-  private StatusButton mRootScreenBtn = null;
-  private View mRootScreenView = null;
-  private Spinner mRouteListSp;
-  private LinearLayout mRouteLl;
-  private StatusButton mSBGPSDebugView;
-  private RelativeLayout mShowPullBtn;
-  private Button mSingleDtBtn;
-  private StatusButton.onStatusButtonClickListener mStatusButtonClickListener = null;
-  private Button mStopDtBtn;
-  private ImageView mTTSSpeedDownIv = null;
-  private Button mTTSSpeedResetBtn = null;
-  private TextView mTTSSpeedTv = null;
-  private ImageView mTTSSpeedUpIv = null;
-  private StatusButton mTTSVocoderBtn = null;
-  private View mTTSVocoderView = null;
-  private TextView mTVGPSDebugView;
-  private TextView mTVUrlDebugColseView;
-  private TextView mTVUrlDebugView;
-  private Spinner mTaskListSp;
-  
-  public BNDebugModelDialog(Context paramContext)
-  {
-    super(paramContext);
-    this.mContext = paramContext;
-    Object localObject;
-    if (Build.VERSION.SDK_INT < 21)
-    {
-      localObject = JarUtils.getResources().newTheme();
-      ((Resources.Theme)localObject).applyStyle(1711996939, true);
-      JarUtils.setDialogThemeField(this, (Resources.Theme)localObject);
-    }
-    try
-    {
-      for (;;)
-      {
-        paramContext = JarUtils.oldInflate((Activity)paramContext, 1711472666, null);
-        if (paramContext != null) {
-          break;
-        }
-        return;
-        localObject = getWindow();
-        requestWindowFeature(1);
-        ((Window)localObject).setBackgroundDrawableResource(17170445);
-        ((Window)localObject).getAttributes().gravity = 17;
-      }
-    }
-    catch (Exception paramContext)
-    {
-      for (;;)
-      {
-        paramContext = null;
-      }
-      setContentView(paramContext);
-      setCanceledOnTouchOutside(false);
-      setCancelable(true);
-      getWindow().getAttributes().gravity = 17;
-      findView();
-      setCloseIVListener();
-      initListener();
-      initButtonStatus();
-    }
-  }
-  
-  private int getSpeIndexFromUrl(String paramString)
-  {
-    if (TextUtils.isEmpty(paramString)) {
-      return -1;
-    }
-    int i = 0;
-    if ((paramString.startsWith("http://")) && (paramString.length() > "http://".length()))
-    {
-      paramString = paramString.substring("http://".length());
-      i = "http://".length();
-    }
-    for (;;)
-    {
-      return paramString.indexOf("/") + i;
-      if ((paramString.startsWith("https://")) && (paramString.length() > "https://".length()))
-      {
-        paramString = paramString.substring("https://".length());
-        i = "https://".length();
-      }
-    }
-  }
-  
-  private String getUrlHost(String paramString)
-  {
-    int i = getSpeIndexFromUrl(paramString);
-    if (i < 0) {}
-    while ((paramString == null) || (paramString.length() <= i + 1)) {
-      return null;
-    }
-    return paramString.substring(0, i);
-  }
-  
-  private String getUrlWithNoHost(String paramString)
-  {
-    int i = getSpeIndexFromUrl(paramString);
-    if (i < 0) {}
-    while ((paramString == null) || (paramString.length() <= i + 1)) {
-      return null;
-    }
-    return paramString.substring(i + 1);
-  }
-  
-  private void initListener()
-  {
-    initStatusButtonClickListener();
-    if (this.mJavaLogBtn != null) {
-      this.mJavaLogBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mNotificationDebugBtn != null) {
-      this.mNotificationDebugBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mRootScreenBtn != null) {
-      this.mRootScreenBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mImageLogBtn != null) {
-      this.mImageLogBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mHttpsDebugBtn != null) {
-      this.mHttpsDebugBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mNativeLogBtn != null) {
-      this.mNativeLogBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mMonkeyBtn != null) {
-      this.mMonkeyBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mTTSVocoderBtn != null) {
-      this.mTTSVocoderBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mSBGPSDebugView != null) {
-      this.mSBGPSDebugView.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mDrivingToolOpenBtn != null) {
-      this.mDrivingToolOpenBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
-    }
-    if (this.mTTSSpeedUpIv != null) {
-      this.mTTSSpeedUpIv.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          int i;
-          if (BNDebugModelDialog.this.mTTSSpeedTv != null)
-          {
-            i = Integer.parseInt(BNDebugModelDialog.this.mTTSSpeedTv.getText().toString());
-            if (i >= 9) {
-              TipTool.onCreateToastDialog(BNDebugModelDialog.this.mContext, "当前为最高语速");
-            }
-          }
-          else
-          {
-            return;
-          }
-          paramAnonymousView = BNDebugModelDialog.this.mTTSSpeedTv;
-          StringBuilder localStringBuilder = new StringBuilder();
-          i += 1;
-          paramAnonymousView.setText(i + "");
-          BNSettingManager.setTTSSpeedParam(i);
-        }
-      });
-    }
-    if (this.mTTSSpeedDownIv != null) {
-      this.mTTSSpeedDownIv.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          int i;
-          if (BNDebugModelDialog.this.mTTSSpeedTv != null)
-          {
-            i = Integer.parseInt(BNDebugModelDialog.this.mTTSSpeedTv.getText().toString());
-            if (i <= 0) {
-              TipTool.onCreateToastDialog(BNDebugModelDialog.this.mContext, "当前为最低语速");
-            }
-          }
-          else
-          {
-            return;
-          }
-          paramAnonymousView = BNDebugModelDialog.this.mTTSSpeedTv;
-          StringBuilder localStringBuilder = new StringBuilder();
-          i -= 1;
-          paramAnonymousView.setText(i + "");
-          BNSettingManager.setTTSSpeedParam(i);
-        }
-      });
-    }
-    if (this.mTTSSpeedResetBtn != null) {
-      this.mTTSSpeedResetBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (BNDebugModelDialog.this.mTTSSpeedTv != null) {
-            BNDebugModelDialog.this.mTTSSpeedTv.setText(String.valueOf(5));
-          }
-          BNSettingManager.setTTSSpeedParam(5);
-        }
-      });
-    }
-  }
-  
-  private void initStatusButtonClickListener()
-  {
-    this.mStatusButtonClickListener = new StatusButton.onStatusButtonClickListener()
-    {
-      public void onClick(StatusButton paramAnonymousStatusButton, StatusButton.StatusButtonChild paramAnonymousStatusButtonChild)
-      {
-        if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mJavaLogBtn) && (BNDebugModelDialog.this.mJavaLogBtn != null)) {
-          switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-          {
-          }
-        }
-        do
-        {
-          return;
-          BNSettingManager.setShowJavaLog(true);
-          return;
-          BNSettingManager.setShowJavaLog(false);
-          return;
-          if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mNotificationDebugBtn) && (BNDebugModelDialog.this.mNotificationDebugBtn != null))
-          {
-            switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-            {
-            default: 
-              return;
-            case 1: 
-              BNSettingManager.setShowNotificationDebug(true);
-              return;
-            }
-            BNSettingManager.setShowNotificationDebug(false);
-            return;
-          }
-          if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mRootScreenBtn) && (BNDebugModelDialog.this.mRootScreenBtn != null))
-          {
-            switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-            {
-            default: 
-              return;
-            case 1: 
-              BNSettingManager.setRootScreenOpen(true);
-              return;
-            }
-            BNSettingManager.setRootScreenOpen(false);
-            return;
-          }
-          if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mImageLogBtn) && (BNDebugModelDialog.this.mImageLogBtn != null))
-          {
-            switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-            {
-            default: 
-              return;
-            case 1: 
-              JNIGuidanceControl.getInstance().SetMapLoggerOpen(true);
-              return;
-            }
-            JNIGuidanceControl.getInstance().SetMapLoggerOpen(false);
-            return;
-          }
-          if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mHttpsDebugBtn) && (BNDebugModelDialog.this.mHttpsDebugBtn != null))
-          {
-            switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-            {
-            default: 
-              return;
-            case 1: 
-              BNSettingManager.setUseHttpsOfflineURL(true);
-              return;
-            }
-            BNSettingManager.setUseHttpsOfflineURL(false);
-            return;
-          }
-          if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mNativeLogBtn) && (BNDebugModelDialog.this.mNativeLogBtn != null))
-          {
-            switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-            {
-            default: 
-              return;
-            case 1: 
-              BNSettingManager.setShowNativeLog(true);
-              return;
-            }
-            BNSettingManager.setShowNativeLog(false);
-            return;
-          }
-          if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mMonkeyBtn) && (BNDebugModelDialog.this.mMonkeyBtn != null))
-          {
-            switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-            {
-            default: 
-              return;
-            case 1: 
-              BNSettingManager.setMonkey(true);
-              return;
-            }
-            BNSettingManager.setMonkey(false);
-            return;
-          }
-          if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mTTSVocoderBtn) && (BNDebugModelDialog.this.mTTSVocoderBtn != null))
-          {
-            switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-            {
-            default: 
-              return;
-            case 1: 
-              BNSettingManager.setTTSVocoderParam("0");
-              return;
-            case 3: 
-              BNSettingManager.setTTSVocoderParam("1");
-              return;
-            }
-            BNSettingManager.setTTSVocoderParam("2");
-            return;
-          }
-          if ((paramAnonymousStatusButton == BNDebugModelDialog.this.mSBGPSDebugView) && (BNDebugModelDialog.this.mSBGPSDebugView != null))
-          {
-            switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-            {
-            default: 
-              return;
-            case 1: 
-              BNSettingManager.setGPSDebug(true);
-              return;
-            }
-            BNSettingManager.setGPSDebug(false);
-            return;
-          }
-        } while ((paramAnonymousStatusButton != BNDebugModelDialog.this.mDrivingToolOpenBtn) || (BNDebugModelDialog.this.mDrivingToolOpenBtn == null));
-        switch (BNDebugModelDialog.18.$SwitchMap$com$baidu$navisdk$ui$widget$StatusButton$StatusButtonChild[paramAnonymousStatusButtonChild.ordinal()])
-        {
-        case 2: 
-        default: 
-          return;
-        }
-        if (BNDrivingToolUtils.canDrivingToolOpen())
-        {
-          BNDebugModelDialog.this.mDrivingToolOpenBtn.setVisibility(8);
-          BNDebugModelDialog.this.mSingleDtBtn.setVisibility(0);
-          BNDebugModelDialog.this.mShowPullBtn.setVisibility(0);
-          BNDebugModelDialog.this.mRouteLl.setVisibility(8);
-          BNDebugModelDialog.this.mMuitipleBtn.setVisibility(0);
-          BNDrivingToolManager.getInstance().isSinglePerson = true;
-          BNDrivingToolManager.getInstance().mRouteID = "0";
-          return;
-        }
-        BNSettingManager.setShowingDrivingTool(false);
-        BNDebugModelDialog.this.mDrivingToolOpenBtn.setRightBtnChecked();
-      }
     };
-  }
-  
-  private void synUrlHostOneMoudlue(DebugModeMessageSerBean paramDebugModeMessageSerBean)
-  {
-    if (paramDebugModeMessageSerBean.key.equals(HttpURLManager.ULRParam.URL_UGC_OPER_INFO_REPORT)) {
-      if (paramDebugModeMessageSerBean.flag)
-      {
-        paramDebugModeMessageSerBean = getUrlHost(paramDebugModeMessageSerBean.value);
-        str = getUrlWithNoHost(HttpURLManager.getInstance().getOnlineUrl(HttpURLManager.ULRParam.URL_UGC_EVENT_FEEDBACK));
-        if (paramDebugModeMessageSerBean != null) {}
-      }
-    }
-    while (!paramDebugModeMessageSerBean.key.equals(HttpURLManager.ULRParam.URL_INIT_CLOUD_CONFIG))
-    {
-      String str;
-      do
-      {
-        return;
-        if (str != null) {
-          HttpURLManager.getInstance().putUrl(HttpURLManager.ULRParam.URL_UGC_EVENT_FEEDBACK, paramDebugModeMessageSerBean + "/" + str);
+    private StatusButton mHttpsDebugBtn = null;
+    private View mHttpsDebugView = null;
+    private StatusButton mImageLogBtn = null;
+    private View mImageLogView = null;
+    private StatusButton mJavaLogBtn = null;
+    private View mJavaLogView = null;
+    private StatusButton mMonkeyBtn = null;
+    private View mMonkeyView = null;
+    private Button mMuitipleBtn;
+    private StatusButton mNativeLogBtn = null;
+    private View mNativeLogView = null;
+    private StatusButton mNotificationDebugBtn = null;
+    private View mNotificationDebugView = null;
+    protected OnCancelListener mOnCancelListener = null;
+    private OnClickListener mOnClickListener = null;
+    private RelativeLayout mRLGPSDebugView;
+    private RelativeLayout mRLUrlDebugExpandView;
+    private RelativeLayout mRLUrlDebugView;
+    private StatusButton mRootScreenBtn = null;
+    private View mRootScreenView = null;
+    private Spinner mRouteListSp;
+    private LinearLayout mRouteLl;
+    private StatusButton mSBGPSDebugView;
+    private RelativeLayout mShowPullBtn;
+    private Button mSingleDtBtn;
+    private onStatusButtonClickListener mStatusButtonClickListener = null;
+    private Button mStopDtBtn;
+    private ImageView mTTSSpeedDownIv = null;
+    private Button mTTSSpeedResetBtn = null;
+    private TextView mTTSSpeedTv = null;
+    private ImageView mTTSSpeedUpIv = null;
+    private StatusButton mTTSVocoderBtn = null;
+    private View mTTSVocoderView = null;
+    private TextView mTVGPSDebugView;
+    private TextView mTVUrlDebugColseView;
+    private TextView mTVUrlDebugView;
+    private Spinner mTaskListSp;
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNDebugModelDialog$2 */
+    class C45672 implements OnChildClickListener {
+        C45672() {
         }
-        str = getUrlWithNoHost(HttpURLManager.getInstance().getOnlineUrl(HttpURLManager.ULRParam.URL_UGC_RCEVENT_COUNTS));
-        if (str != null) {
-          HttpURLManager.getInstance().putUrl(HttpURLManager.ULRParam.URL_UGC_RCEVENT_COUNTS, paramDebugModeMessageSerBean + "/" + str);
-        }
-        str = getUrlWithNoHost(HttpURLManager.getInstance().getOnlineUrl(HttpURLManager.ULRParam.URL_UGC_GET_EVENT_DETAIL));
-      } while (str == null);
-      HttpURLManager.getInstance().putUrl(HttpURLManager.ULRParam.URL_UGC_GET_EVENT_DETAIL, paramDebugModeMessageSerBean + "/" + str);
-      return;
-      HttpURLManager.getInstance().putUrl(HttpURLManager.ULRParam.URL_UGC_EVENT_FEEDBACK, HttpURLManager.getInstance().getOnlineUrl(HttpURLManager.ULRParam.URL_UGC_EVENT_FEEDBACK));
-      HttpURLManager.getInstance().putUrl(HttpURLManager.ULRParam.URL_UGC_RCEVENT_COUNTS, HttpURLManager.getInstance().getOnlineUrl(HttpURLManager.ULRParam.URL_UGC_RCEVENT_COUNTS));
-      HttpURLManager.getInstance().putUrl(HttpURLManager.ULRParam.URL_UGC_GET_EVENT_DETAIL, HttpURLManager.getInstance().getOnlineUrl(HttpURLManager.ULRParam.URL_UGC_GET_EVENT_DETAIL));
-      return;
-    }
-    BNSettingManager.setInitCloudCfg(paramDebugModeMessageSerBean.flag);
-  }
-  
-  public void findView()
-  {
-    this.mCloseIV = ((ImageView)findViewById(1711865904));
-    this.mFactoryCategory = findViewById(1711866766);
-    this.mCuidView = findViewById(1711866768);
-    this.mBuildView = findViewById(1711865999);
-    this.mJavaLogView = findViewById(1711866003);
-    this.mNativeLogView = findViewById(1711866007);
-    this.mMonkeyView = findViewById(1711866011);
-    this.mCuidTv = ((TextView)findViewById(1711866769));
-    this.mBuildTimeTv = ((TextView)findViewById(1711866001));
-    this.mJavaLogBtn = ((StatusButton)findViewById(1711866005));
-    this.mNativeLogBtn = ((StatusButton)findViewById(1711866009));
-    this.mMonkeyBtn = ((StatusButton)findViewById(1711866013));
-    this.mTTSVocoderView = findViewById(1711866028);
-    this.mTTSVocoderBtn = ((StatusButton)findViewById(1711866029));
-    this.mAntiCheatView = findViewById(1711866072);
-    this.mAntiCheatBtn = ((StatusButton)findViewById(1711866073));
-    this.mTTSSpeedUpIv = ((ImageView)findViewById(1711866034));
-    this.mTTSSpeedDownIv = ((ImageView)findViewById(1711866035));
-    this.mTTSSpeedResetBtn = ((Button)findViewById(1711866036));
-    this.mTTSSpeedTv = ((TextView)findViewById(1711866032));
-    this.mRLGPSDebugView = ((RelativeLayout)findViewById(1711866023));
-    this.mTVGPSDebugView = ((TextView)findViewById(1711866024));
-    this.mSBGPSDebugView = ((StatusButton)findViewById(1711866025));
-    this.mRLUrlDebugView = ((RelativeLayout)findViewById(1711866046));
-    this.mTVUrlDebugView = ((TextView)findViewById(1711866047));
-    this.mRLUrlDebugExpandView = ((RelativeLayout)findViewById(1711866074));
-    this.mELUrlDebugView = ((ExpandableListView)findViewById(1711866076));
-    this.mNotificationDebugView = findViewById(1711866038);
-    this.mNotificationDebugBtn = ((StatusButton)findViewById(1711866040));
-    this.mRootScreenView = ((RelativeLayout)findViewById(1711866065));
-    this.mRootScreenBtn = ((StatusButton)findViewById(1711866067));
-    this.mImageLogView = ((RelativeLayout)findViewById(1711866069));
-    this.mImageLogBtn = ((StatusButton)findViewById(1711866071));
-    this.mHttpsDebugView = findViewById(1711866043);
-    this.mHttpsDebugBtn = ((StatusButton)findViewById(1711866045));
-    this.mELUrlDebugView.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
-    {
-      public boolean onChildClick(ExpandableListView paramAnonymousExpandableListView, View paramAnonymousView, int paramAnonymousInt1, int paramAnonymousInt2, long paramAnonymousLong)
-      {
-        boolean bool;
-        if (BNDebugModelDialog.this.mGuideMsg != null)
-        {
-          paramAnonymousExpandableListView = (DebugModeMessageSerBean)((DebugModeMessageBean)BNDebugModelDialog.this.mGuideMsg.get(paramAnonymousInt1)).serList.get(paramAnonymousInt2);
-          if (paramAnonymousExpandableListView.flag) {
-            break label137;
-          }
-          bool = true;
-          paramAnonymousExpandableListView.flag = bool;
-          if (paramAnonymousExpandableListView.type != 0) {
-            break label157;
-          }
-          if (!paramAnonymousExpandableListView.flag) {
-            break label143;
-          }
-          HttpURLManager.getInstance().putUrl(paramAnonymousExpandableListView.key, paramAnonymousExpandableListView.value);
-          JNIGuidanceControl.getInstance().loadUrlAddrConfigParams(paramAnonymousExpandableListView.key, HttpURLManager.getInstance().getUsedUrl(paramAnonymousExpandableListView.key));
-        }
-        for (;;)
-        {
-          BNDebugModelDialog.this.synUrlHostOneMoudlue(paramAnonymousExpandableListView);
-          BNDebugModelDialog.this.mAdapter.notifyDataSetChanged();
-          BNDebugModelDialog.this.mELUrlDebugView.expandGroup(paramAnonymousInt1);
-          return false;
-          label137:
-          bool = false;
-          break;
-          label143:
-          JNIGuidanceControl.getInstance().resetUrlAddrConfigParams(paramAnonymousExpandableListView.key);
-          continue;
-          label157:
-          if (paramAnonymousExpandableListView.flag) {
-            HttpURLManager.getInstance().putUrl(paramAnonymousExpandableListView.key, paramAnonymousExpandableListView.value);
-          } else {
-            HttpURLManager.getInstance().putUrl(paramAnonymousExpandableListView.key, HttpURLManager.getInstance().getOnlineUrl(paramAnonymousExpandableListView.key));
-          }
-        }
-      }
-    });
-    this.mTVUrlDebugColseView = ((TextView)findViewById(1711866075));
-    this.mDrivingToolOpenBtn = ((StatusButton)findViewById(1711866052));
-    if (this.mDrivingToolOpenBtn != null)
-    {
-      this.mDrivingToolOpenBtn.setLeftButtonText(BNStyleManager.getString(1711669886));
-      this.mDrivingToolOpenBtn.setRightButtonText(BNStyleManager.getString(1711669887));
-      this.mDrivingToolOpenBtn.setMidBtnGone(true);
-      this.mDrivingToolOpenBtn.setRightBtnChecked();
-    }
-    this.mDrivingToolStartBtn = ((Button)findViewById(1711866053));
-    this.mShowPullBtn = ((RelativeLayout)findViewById(1711866055));
-    if (this.mDrivingToolStartBtn != null)
-    {
-      this.mDrivingToolStartBtn.setVisibility(8);
-      this.mDrivingToolStartBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNDebugModelDialog.this.dismiss();
-          BNDebugModelDialog.this.setStartButtonState(false);
-          BNDebugModelDialog.this.mDrivingToolStartBtn.setVisibility(8);
-          BNDebugModelDialog.this.mDrivingToolOpenBtn.setVisibility(0);
-          if (BNDebugModelDialog.this.mShowPullBtn != null) {
-            BNDebugModelDialog.this.mShowPullBtn.setVisibility(8);
-          }
-          BNDrivingToolManager.getInstance().mNewRouteList.clear();
-        }
-      });
-    }
-    setStartButtonState(false);
-    if (this.mShowPullBtn != null) {
-      this.mShowPullBtn.setVisibility(8);
-    }
-    this.mSingleDtBtn = ((Button)findViewById(1711866054));
-    if (this.mSingleDtBtn != null) {
-      this.mSingleDtBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNDebugModelDialog.this.dismiss();
-        }
-      });
-    }
-    this.mRouteLl = ((LinearLayout)findViewById(1711866059));
-    this.mMuitipleBtn = ((Button)findViewById(1711866062));
-    if (this.mMuitipleBtn != null) {
-      this.mMuitipleBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNDrivingToolManager.getInstance().isSinglePerson = false;
-          BNDebugModelDialog.this.mMuitipleBtn.setVisibility(8);
-          BNDebugModelDialog.this.mRouteLl.setVisibility(0);
-          BNDebugModelDialog.this.mDrivingToolStartBtn.setVisibility(0);
-          BNDebugModelDialog.this.mSingleDtBtn.setVisibility(8);
-          BNDebugModelDialog.this.mStopDtBtn.setVisibility(8);
-          BNDrivingToolManager.getInstance().asynPullRoadList();
-        }
-      });
-    }
-    this.mStopDtBtn = ((Button)findViewById(1711866063));
-    if (this.mStopDtBtn != null) {
-      this.mStopDtBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (BNDebugModelDialog.this.mTaskListSp != null) {
-            BNDebugModelDialog.this.mTaskListSp.setSelection(0);
-          }
-        }
-      });
-    }
-    this.mTaskListSp = ((Spinner)findViewById(1711866058));
-    if (this.mTaskListSp != null)
-    {
-      BNDrivingToolManager.getInstance().asynPullTaskList();
-      this.mTaskListSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-      {
-        public void onItemSelected(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-        {
-          paramAnonymousAdapterView = BNDrivingToolManager.getInstance().mTaskList;
-          if (paramAnonymousAdapterView != null)
-          {
-            paramAnonymousView = (String)paramAnonymousAdapterView.get(paramAnonymousInt);
-            paramAnonymousAdapterView = null;
-            if (!"-  -  -  -  -  -  -  -  -  -  -  -  -  -  -".equals(paramAnonymousView)) {
-              break label212;
+
+        public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+            if (BNDebugModelDialog.this.mGuideMsg != null) {
+                boolean z;
+                DebugModeMessageSerBean serBean = (DebugModeMessageSerBean) ((DebugModeMessageBean) BNDebugModelDialog.this.mGuideMsg.get(groupPosition)).serList.get(childPosition);
+                if (serBean.flag) {
+                    z = false;
+                } else {
+                    z = true;
+                }
+                serBean.flag = z;
+                if (serBean.type == 0) {
+                    if (serBean.flag) {
+                        HttpURLManager.getInstance().putUrl(serBean.key, serBean.value);
+                        JNIGuidanceControl.getInstance().loadUrlAddrConfigParams(serBean.key, HttpURLManager.getInstance().getUsedUrl(serBean.key));
+                    } else {
+                        JNIGuidanceControl.getInstance().resetUrlAddrConfigParams(serBean.key);
+                    }
+                } else if (serBean.flag) {
+                    HttpURLManager.getInstance().putUrl(serBean.key, serBean.value);
+                } else {
+                    HttpURLManager.getInstance().putUrl(serBean.key, HttpURLManager.getInstance().getOnlineUrl(serBean.key));
+                }
+                BNDebugModelDialog.this.synUrlHostOneMoudlue(serBean);
+                BNDebugModelDialog.this.mAdapter.notifyDataSetChanged();
+                BNDebugModelDialog.this.mELUrlDebugView.expandGroup(groupPosition);
             }
-            BNDrivingToolManager.getInstance().isTaskRet = false;
-            if (!"-  -  -  -  -  -  -  -  -  -  -  -  -  -  -".equals(paramAnonymousView))
-            {
-              paramAnonymousAdapterView = (String)BNDrivingToolManager.getInstance().mTaskMap.get(paramAnonymousView);
-              BNDrivingToolManager.getInstance().mTaskID = paramAnonymousAdapterView;
+            return false;
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNDebugModelDialog$3 */
+    class C45683 implements OnClickListener {
+        C45683() {
+        }
+
+        public void onClick(View v) {
+            BNDebugModelDialog.this.dismiss();
+            BNDebugModelDialog.this.setStartButtonState(false);
+            BNDebugModelDialog.this.mDrivingToolStartBtn.setVisibility(8);
+            BNDebugModelDialog.this.mDrivingToolOpenBtn.setVisibility(0);
+            if (BNDebugModelDialog.this.mShowPullBtn != null) {
+                BNDebugModelDialog.this.mShowPullBtn.setVisibility(8);
             }
-            if (!BNDrivingToolManager.getInstance().canDrivingToolStart()) {
-              break label222;
-            }
+            BNDrivingToolManager.getInstance().mNewRouteList.clear();
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNDebugModelDialog$4 */
+    class C45694 implements OnClickListener {
+        C45694() {
+        }
+
+        public void onClick(View v) {
+            BNDebugModelDialog.this.dismiss();
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNDebugModelDialog$5 */
+    class C45705 implements OnClickListener {
+        C45705() {
+        }
+
+        public void onClick(View v) {
             BNDrivingToolManager.getInstance().isSinglePerson = false;
-            BNDebugModelDialog.this.setStartButtonState(true);
-            BNSettingManager.setShowingDrivingTool(true);
-            BNDrivingToolUtils.storeDrivingToolTask();
-            BNDrivingToolUtils.sCanShow = true;
-            label107:
-            if (BNDebugModelDialog.this.mSingleDtBtn.getVisibility() == 0)
-            {
-              if (!BNDrivingToolManager.getInstance().isTaskRet) {
-                break label241;
-              }
-              BNDebugModelDialog.this.setSingleButtonState(true);
-              BNSettingManager.setShowingDrivingTool(true);
-              BNDrivingToolUtils.storeDrivingToolTask();
-              BNDrivingToolManager.getInstance().isSinglePerson = true;
+            BNDebugModelDialog.this.mMuitipleBtn.setVisibility(8);
+            BNDebugModelDialog.this.mRouteLl.setVisibility(0);
+            BNDebugModelDialog.this.mDrivingToolStartBtn.setVisibility(0);
+            BNDebugModelDialog.this.mSingleDtBtn.setVisibility(8);
+            BNDebugModelDialog.this.mStopDtBtn.setVisibility(8);
+            BNDrivingToolManager.getInstance().asynPullRoadList();
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNDebugModelDialog$6 */
+    class C45716 implements OnClickListener {
+        C45716() {
+        }
+
+        public void onClick(View v) {
+            if (BNDebugModelDialog.this.mTaskListSp != null) {
+                BNDebugModelDialog.this.mTaskListSp.setSelection(0);
             }
-          }
-          for (BNDrivingToolUtils.sCanShow = true;; BNDrivingToolUtils.sCanShow = false)
-          {
-            if (!"-  -  -  -  -  -  -  -  -  -  -  -  -  -  -".equals(paramAnonymousView))
-            {
-              BNDrivingToolManager.getInstance().mRouteFlag = "0";
-              if (!BNDrivingToolManager.getInstance().isSinglePerson) {
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNDebugModelDialog$7 */
+    class C45727 implements OnItemSelectedListener {
+        C45727() {
+        }
+
+        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+            List<String> taskList = BNDrivingToolManager.getInstance().mTaskList;
+            if (taskList != null) {
+                String taskName = (String) taskList.get(position);
+                String taskId = null;
+                if (BNDrivingToolParams.DEFAULT_SPINNER_DATA.equals(taskName)) {
+                    BNDrivingToolManager.getInstance().isTaskRet = false;
+                } else {
+                    BNDrivingToolManager.getInstance().isTaskRet = true;
+                }
+                if (!BNDrivingToolParams.DEFAULT_SPINNER_DATA.equals(taskName)) {
+                    taskId = (String) BNDrivingToolManager.getInstance().mTaskMap.get(taskName);
+                    BNDrivingToolManager.getInstance().mTaskID = taskId;
+                }
+                if (BNDrivingToolManager.getInstance().canDrivingToolStart()) {
+                    BNDrivingToolManager.getInstance().isSinglePerson = false;
+                    BNDebugModelDialog.this.setStartButtonState(true);
+                    BNSettingManager.setShowingDrivingTool(true);
+                    BNDrivingToolUtils.storeDrivingToolTask();
+                    BNDrivingToolUtils.sCanShow = true;
+                } else {
+                    BNDebugModelDialog.this.setStartButtonState(false);
+                    BNSettingManager.setShowingDrivingTool(false);
+                    BNDrivingToolUtils.sCanShow = false;
+                }
+                if (BNDebugModelDialog.this.mSingleDtBtn.getVisibility() == 0) {
+                    if (BNDrivingToolManager.getInstance().isTaskRet) {
+                        BNDebugModelDialog.this.setSingleButtonState(true);
+                        BNSettingManager.setShowingDrivingTool(true);
+                        BNDrivingToolUtils.storeDrivingToolTask();
+                        BNDrivingToolManager.getInstance().isSinglePerson = true;
+                        BNDrivingToolUtils.sCanShow = true;
+                    } else {
+                        BNDebugModelDialog.this.setSingleButtonState(false);
+                        BNSettingManager.setShowingDrivingTool(false);
+                        BNDrivingToolUtils.sCanShow = false;
+                    }
+                }
+                if (!BNDrivingToolParams.DEFAULT_SPINNER_DATA.equals(taskName)) {
+                    BNDrivingToolManager.getInstance().mRouteFlag = "0";
+                    if (!BNDrivingToolManager.getInstance().isSinglePerson) {
+                        BNDrivingToolManager.getInstance().asynPullRoadList();
+                    }
+                }
+                LogUtil.m15791e(BNDrivingToolManager.MODULENAME, "taskId is + " + taskId);
+            }
+        }
+
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNDebugModelDialog$8 */
+    class C45738 implements OnItemSelectedListener {
+        C45738() {
+        }
+
+        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+            List<String> routeList = BNDrivingToolManager.getInstance().mRouteList;
+            if (routeList != null) {
+                String routeName = (String) routeList.get(position);
+                if (BNDrivingToolParams.DEFAULT_SPINNER_DATA.equals(routeName)) {
+                    BNDrivingToolManager.getInstance().isRouteRet = false;
+                } else {
+                    BNDrivingToolManager.getInstance().isRouteRet = true;
+                    BNDrivingToolManager.getInstance().mRouteName = routeName;
+                }
+                if (BNDrivingToolManager.getInstance().canDrivingToolStart()) {
+                    BNDebugModelDialog.this.setStartButtonState(true);
+                    BNSettingManager.setShowingDrivingTool(true);
+                    BNDrivingToolUtils.storeDrivingToolTask();
+                    BNDrivingToolManager.getInstance().isSinglePerson = false;
+                    BNDrivingToolUtils.sCanShow = true;
+                } else {
+                    BNDebugModelDialog.this.setStartButtonState(false);
+                    BNSettingManager.setShowingDrivingTool(false);
+                    BNDrivingToolUtils.sCanShow = false;
+                }
+                List<String> newRouteList = BNDrivingToolManager.getInstance().mNewRouteList;
+                if (newRouteList == null || newRouteList.size() <= 0) {
+                    BNDrivingToolManager.getInstance().mRouteFlag = "0";
+                } else if (newRouteList.contains(routeName)) {
+                    BNDrivingToolManager.getInstance().mRouteFlag = "1";
+                } else {
+                    BNDrivingToolManager.getInstance().mRouteFlag = "0";
+                }
+                String routeId = (String) BNDrivingToolManager.getInstance().mRoadMap.get(routeName);
+                BNDrivingToolManager.getInstance().mRouteID = routeId;
+                LogUtil.m15791e(BNDrivingToolManager.MODULENAME, "routeId is + " + routeId);
+            }
+        }
+
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNDebugModelDialog$9 */
+    class C45749 implements OnClickListener {
+        C45749() {
+        }
+
+        public void onClick(View v) {
+            if (!ForbidDaulClickUtils.isFastDoubleClick(1500)) {
+                BNDrivingToolManager.getInstance().mRouteFlag = "1";
                 BNDrivingToolManager.getInstance().asynPullRoadList();
-              }
             }
-            LogUtil.e("drivingTool", "taskId is + " + paramAnonymousAdapterView);
-            return;
-            label212:
-            BNDrivingToolManager.getInstance().isTaskRet = true;
-            break;
-            label222:
-            BNDebugModelDialog.this.setStartButtonState(false);
-            BNSettingManager.setShowingDrivingTool(false);
-            BNDrivingToolUtils.sCanShow = false;
-            break label107;
-            label241:
-            BNDebugModelDialog.this.setSingleButtonState(false);
-            BNSettingManager.setShowingDrivingTool(false);
-          }
         }
-        
-        public void onNothingSelected(AdapterView<?> paramAnonymousAdapterView) {}
-      });
     }
-    this.mRouteListSp = ((Spinner)findViewById(1711866060));
-    if (this.mRouteListSp != null) {
-      this.mRouteListSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-      {
-        public void onItemSelected(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-        {
-          paramAnonymousAdapterView = BNDrivingToolManager.getInstance().mRouteList;
-          if (paramAnonymousAdapterView != null)
-          {
-            paramAnonymousAdapterView = (String)paramAnonymousAdapterView.get(paramAnonymousInt);
-            if (!"-  -  -  -  -  -  -  -  -  -  -  -  -  -  -".equals(paramAnonymousAdapterView)) {
-              break label159;
+
+    class DebugUrlAdapter extends BaseExpandableListAdapter {
+        ViewHolder mViewHolder;
+
+        private class ViewHolder {
+            CheckBox mCb;
+            TextView mTVUrl;
+
+            private ViewHolder() {
             }
-            BNDrivingToolManager.getInstance().isRouteRet = false;
-            if (!BNDrivingToolManager.getInstance().canDrivingToolStart()) {
-              break label176;
+        }
+
+        DebugUrlAdapter() {
+        }
+
+        public Object getChild(int groupPosition, int childPosition) {
+            return ((DebugModeMessageBean) BNDebugModelDialog.this.mGuideMsg.get(groupPosition)).serList.get(childPosition);
+        }
+
+        public long getChildId(int groupPosition, int childPosition) {
+            return (long) childPosition;
+        }
+
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            DebugModeMessageSerBean bean = (DebugModeMessageSerBean) ((DebugModeMessageBean) BNDebugModelDialog.this.mGuideMsg.get(groupPosition)).serList.get(childPosition);
+            if (convertView == null) {
+                convertView = JarUtils.inflate((Activity) BNDebugModelDialog.this.mContext, C4048R.layout.nsdk_layout_debug_url_children, null);
+                this.mViewHolder = new ViewHolder();
+                this.mViewHolder.mTVUrl = (TextView) convertView.findViewById(C4048R.id.second_textview);
+                this.mViewHolder.mCb = (CheckBox) convertView.findViewById(C4048R.id.child_check_box);
+                convertView.setTag(this.mViewHolder);
+            } else {
+                this.mViewHolder = (ViewHolder) convertView.getTag();
             }
-            BNDebugModelDialog.this.setStartButtonState(true);
-            BNSettingManager.setShowingDrivingTool(true);
-            BNDrivingToolUtils.storeDrivingToolTask();
-            BNDrivingToolManager.getInstance().isSinglePerson = false;
-            BNDrivingToolUtils.sCanShow = true;
-            label73:
-            paramAnonymousView = BNDrivingToolManager.getInstance().mNewRouteList;
-            if ((paramAnonymousView == null) || (paramAnonymousView.size() <= 0)) {
-              break label206;
+            this.mViewHolder.mTVUrl.setText(bean.key + "--" + bean.value);
+            this.mViewHolder.mCb.setFocusable(false);
+            this.mViewHolder.mCb.setClickable(false);
+            if (bean.flag) {
+                this.mViewHolder.mCb.setChecked(true);
+            } else {
+                this.mViewHolder.mCb.setChecked(false);
             }
-            if (!paramAnonymousView.contains(paramAnonymousAdapterView)) {
-              break label195;
+            return convertView;
+        }
+
+        public int getChildrenCount(int groupPosition) {
+            return ((DebugModeMessageBean) BNDebugModelDialog.this.mGuideMsg.get(groupPosition)).serList.size();
+        }
+
+        public Object getGroup(int groupPosition) {
+            return BNDebugModelDialog.this.mGuideMsg.get(groupPosition);
+        }
+
+        public int getGroupCount() {
+            return BNDebugModelDialog.this.mGuideMsg.size();
+        }
+
+        public long getGroupId(int groupPosition) {
+            return (long) groupPosition;
+        }
+
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = JarUtils.inflate((Activity) BNDebugModelDialog.this.mContext, C4048R.layout.nsdk_layout_debug_url_parent, null);
             }
-            BNDrivingToolManager.getInstance().mRouteFlag = "1";
-          }
-          for (;;)
-          {
-            paramAnonymousAdapterView = (String)BNDrivingToolManager.getInstance().mRoadMap.get(paramAnonymousAdapterView);
-            BNDrivingToolManager.getInstance().mRouteID = paramAnonymousAdapterView;
-            LogUtil.e("drivingTool", "routeId is + " + paramAnonymousAdapterView);
-            return;
-            label159:
-            BNDrivingToolManager.getInstance().isRouteRet = true;
-            BNDrivingToolManager.getInstance().mRouteName = paramAnonymousAdapterView;
-            break;
-            label176:
-            BNDebugModelDialog.this.setStartButtonState(false);
-            BNSettingManager.setShowingDrivingTool(false);
-            BNDrivingToolUtils.sCanShow = false;
-            break label73;
-            label195:
-            BNDrivingToolManager.getInstance().mRouteFlag = "0";
-            continue;
-            label206:
-            BNDrivingToolManager.getInstance().mRouteFlag = "0";
-          }
+            ((TextView) convertView.findViewById(C4048R.id.parent_textview)).setText(((DebugModeMessageBean) BNDebugModelDialog.this.mGuideMsg.get(groupPosition)).mSceneName);
+            return convertView;
         }
-        
-        public void onNothingSelected(AdapterView<?> paramAnonymousAdapterView) {}
-      });
-    }
-    this.mCreateRouteBtn = ((Button)findViewById(1711866061));
-    if (this.mCreateRouteBtn != null) {
-      this.mCreateRouteBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (ForbidDaulClickUtils.isFastDoubleClick(1500L)) {
-            return;
-          }
-          BNDrivingToolManager.getInstance().mRouteFlag = "1";
-          BNDrivingToolManager.getInstance().asynPullRoadList();
+
+        public boolean hasStableIds() {
+            return true;
         }
-      });
+
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            LogUtil.m15791e("wangyang", "selectable");
+            return true;
+        }
     }
-    if ((this.mRLUrlDebugView != null) && (this.mTVUrlDebugView != null))
-    {
-      this.mRLUrlDebugView.setVisibility(0);
-      this.mTVUrlDebugView.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if ((HttpURLManager.getInstance().mGuideMsg == null) || (HttpURLManager.getInstance().mGuideMsg.size() <= 0))
-          {
-            if (NetworkUtils.isNetworkAvailable(BNDebugModelDialog.this.mContext))
-            {
-              CmdDebugModeGetURL.requestDebugModeUrl(BNDebugModelDialog.this.mHandler);
-              return;
+
+    class SpinnerSelectedListener implements OnItemSelectedListener {
+        SpinnerSelectedListener() {
+        }
+
+        public void onItemSelected(AdapterView arg0, View arg1, int arg2, long arg3) {
+        }
+
+        public void onNothingSelected(AdapterView arg0) {
+        }
+    }
+
+    class SpinnerURLSelectedListener implements OnItemSelectedListener {
+        SpinnerURLSelectedListener() {
+        }
+
+        public void onItemSelected(AdapterView arg0, View arg1, int arg2, long arg3) {
+        }
+
+        public void onNothingSelected(AdapterView arg0) {
+        }
+    }
+
+    public BNDebugModelDialog(Context context) {
+        View view;
+        super(context);
+        this.mContext = context;
+        if (VERSION.SDK_INT < 21) {
+            Theme theme = JarUtils.getResources().newTheme();
+            theme.applyStyle(C4048R.style.theme_comm_progressdlg, true);
+            JarUtils.setDialogThemeField(this, theme);
+        } else {
+            Window win = getWindow();
+            requestWindowFeature(1);
+            win.setBackgroundDrawableResource(17170445);
+            win.getAttributes().gravity = 17;
+        }
+        try {
+            view = JarUtils.oldInflate((Activity) context, C4048R.layout.nsdk_layout_debug_mode_dialog, null);
+        } catch (Exception e) {
+            view = null;
+        }
+        if (view != null) {
+            setContentView(view);
+            setCanceledOnTouchOutside(false);
+            setCancelable(true);
+            getWindow().getAttributes().gravity = 17;
+            findView();
+            setCloseIVListener();
+            initListener();
+            initButtonStatus();
+        }
+    }
+
+    public void findView() {
+        this.mCloseIV = (ImageView) findViewById(C4048R.id.iv_dialog_close);
+        this.mFactoryCategory = findViewById(C4048R.id.bnav_rg_menu_factory_category);
+        this.mCuidView = findViewById(C4048R.id.bnav_rg_menu_factory_cuid_item);
+        this.mBuildView = findViewById(C4048R.id.bnav_rg_menu_factory_build_item);
+        this.mJavaLogView = findViewById(C4048R.id.bnav_rg_menu_factory_java_log);
+        this.mNativeLogView = findViewById(C4048R.id.bnav_rg_menu_factory_native_log);
+        this.mMonkeyView = findViewById(C4048R.id.bnav_rg_menu_factory_monkey);
+        this.mCuidTv = (TextView) findViewById(C4048R.id.bnav_rg_menu_cuid_item_tv);
+        this.mBuildTimeTv = (TextView) findViewById(C4048R.id.bnav_rg_menu_build_item_tv);
+        this.mJavaLogBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_java_log_checkbox);
+        this.mNativeLogBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_native_log_checkbox);
+        this.mMonkeyBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_monkey_checkbox);
+        this.mTTSVocoderView = findViewById(C4048R.id.bnav_rg_menu_factory_tts_vocoder_debug);
+        this.mTTSVocoderBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_tts_vocoder_checkbox);
+        this.mAntiCheatView = findViewById(C4048R.id.bnav_rg_menu_factory_antic);
+        this.mAntiCheatBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_antic_checkbox);
+        this.mTTSSpeedUpIv = (ImageView) findViewById(C4048R.id.bnav_rg_menu_tts_speed_debug_up_iv);
+        this.mTTSSpeedDownIv = (ImageView) findViewById(C4048R.id.bnav_rg_menu_tts_speed_debug_down_iv);
+        this.mTTSSpeedResetBtn = (Button) findViewById(C4048R.id.bnav_rg_menu_tts_speed_debug_reset_btn);
+        this.mTTSSpeedTv = (TextView) findViewById(C4048R.id.bnav_rg_menu_tts_speed_num_debug_tv);
+        this.mRLGPSDebugView = (RelativeLayout) findViewById(C4048R.id.bnav_rg_menu_factory_gps_debug);
+        this.mTVGPSDebugView = (TextView) findViewById(C4048R.id.bnav_rg_menu_gps_debug_tv);
+        this.mSBGPSDebugView = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_gps_checkbox);
+        this.mRLUrlDebugView = (RelativeLayout) findViewById(C4048R.id.bnav_rg_menu_factory_debug_url);
+        this.mTVUrlDebugView = (TextView) findViewById(C4048R.id.bnav_rg_menu_factory_debug_url_tv);
+        this.mRLUrlDebugExpandView = (RelativeLayout) findViewById(C4048R.id.bnav_rl_expandable_debug_url);
+        this.mELUrlDebugView = (ExpandableListView) findViewById(C4048R.id.bnav_rg_expandable_debug_url);
+        this.mNotificationDebugView = findViewById(C4048R.id.bnav_rg_menu_factory_notification_layout);
+        this.mNotificationDebugBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_java_notification_checkbox);
+        this.mRootScreenView = (RelativeLayout) findViewById(C4048R.id.bnav_rg_menu_factory_root_switch);
+        this.mRootScreenBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_root_screen_checkbox);
+        this.mImageLogView = (RelativeLayout) findViewById(C4048R.id.bnav_rg_menu_factory_image_switch);
+        this.mImageLogBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_image_log_checkbox);
+        this.mHttpsDebugView = findViewById(C4048R.id.bnav_rg_menu_factory_https_layout);
+        this.mHttpsDebugBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_java_https_checkbox);
+        this.mELUrlDebugView.setOnChildClickListener(new C45672());
+        this.mTVUrlDebugColseView = (TextView) findViewById(C4048R.id.bnav_rg_expandable_close_tv);
+        this.mDrivingToolOpenBtn = (StatusButton) findViewById(C4048R.id.bnav_rg_menu_driving_tool_checkbox);
+        if (this.mDrivingToolOpenBtn != null) {
+            this.mDrivingToolOpenBtn.setLeftButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_open));
+            this.mDrivingToolOpenBtn.setRightButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_close));
+            this.mDrivingToolOpenBtn.setMidBtnGone(true);
+            this.mDrivingToolOpenBtn.setRightBtnChecked();
+        }
+        this.mDrivingToolStartBtn = (Button) findViewById(C4048R.id.bnav_rg_menu_start_driving_btn);
+        this.mShowPullBtn = (RelativeLayout) findViewById(C4048R.id.bnav_rg_menu_pull_list_rl);
+        if (this.mDrivingToolStartBtn != null) {
+            this.mDrivingToolStartBtn.setVisibility(8);
+            this.mDrivingToolStartBtn.setOnClickListener(new C45683());
+        }
+        setStartButtonState(false);
+        if (this.mShowPullBtn != null) {
+            this.mShowPullBtn.setVisibility(8);
+        }
+        this.mSingleDtBtn = (Button) findViewById(C4048R.id.bnav_rg_menu_single_driving_btn);
+        if (this.mSingleDtBtn != null) {
+            this.mSingleDtBtn.setOnClickListener(new C45694());
+        }
+        this.mRouteLl = (LinearLayout) findViewById(C4048R.id.bnav_menu_route_ll);
+        this.mMuitipleBtn = (Button) findViewById(C4048R.id.bnav_rg_menu_multiple_btn);
+        if (this.mMuitipleBtn != null) {
+            this.mMuitipleBtn.setOnClickListener(new C45705());
+        }
+        this.mStopDtBtn = (Button) findViewById(C4048R.id.bnav_rg_menu_stop_driving_btn);
+        if (this.mStopDtBtn != null) {
+            this.mStopDtBtn.setOnClickListener(new C45716());
+        }
+        this.mTaskListSp = (Spinner) findViewById(C4048R.id.bnav_rg_menu_task_list_sp);
+        if (this.mTaskListSp != null) {
+            BNDrivingToolManager.getInstance().asynPullTaskList();
+            this.mTaskListSp.setOnItemSelectedListener(new C45727());
+        }
+        this.mRouteListSp = (Spinner) findViewById(C4048R.id.bnav_rg_menu_road_line_sp);
+        if (this.mRouteListSp != null) {
+            this.mRouteListSp.setOnItemSelectedListener(new C45738());
+        }
+        this.mCreateRouteBtn = (Button) findViewById(C4048R.id.bnav_rg_menu_new_road_btn);
+        if (this.mCreateRouteBtn != null) {
+            this.mCreateRouteBtn.setOnClickListener(new C45749());
+        }
+        if (!(this.mRLUrlDebugView == null || this.mTVUrlDebugView == null)) {
+            this.mRLUrlDebugView.setVisibility(0);
+            this.mTVUrlDebugView.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    if (HttpURLManager.getInstance().mGuideMsg != null && HttpURLManager.getInstance().mGuideMsg.size() > 0) {
+                        BNDebugModelDialog.this.mGuideMsg = HttpURLManager.getInstance().mGuideMsg;
+                        if (BNDebugModelDialog.this.mAdapter == null) {
+                            BNDebugModelDialog.this.mAdapter = new DebugUrlAdapter();
+                            BNDebugModelDialog.this.mELUrlDebugView.setAdapter(BNDebugModelDialog.this.mAdapter);
+                        }
+                        BNDebugModelDialog.this.mRLUrlDebugExpandView.setVisibility(0);
+                    } else if (NetworkUtils.isNetworkAvailable(BNDebugModelDialog.this.mContext)) {
+                        CmdDebugModeGetURL.requestDebugModeUrl(BNDebugModelDialog.this.mHandler);
+                    } else {
+                        TipTool.onCreateToastDialog(BNDebugModelDialog.this.mContext, "网络未连接");
+                    }
+                }
+            });
+            this.mTVUrlDebugColseView.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    BNDebugModelDialog.this.mRLUrlDebugExpandView.setVisibility(8);
+                }
+            });
+        }
+        if (this.mFactoryCategory != null) {
+            this.mFactoryCategory.setVisibility(0);
+        }
+        if (!(this.mCuidView == null || this.mCuidTv == null)) {
+            this.mCuidView.setVisibility(0);
+            this.mCuidTv.setText("CUID:" + PackageUtil.getCuid());
+        }
+        if (!(this.mBuildView == null || this.mBuildTimeTv == null)) {
+            this.mBuildView.setVisibility(0);
+            this.mBuildTimeTv.setText("BuildTime:(" + PackageUtil.getBuildNo() + ")");
+        }
+        if (!(this.mJavaLogView == null || this.mJavaLogBtn == null)) {
+            this.mJavaLogView.setVisibility(0);
+            this.mJavaLogBtn.setLeftButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_open));
+            this.mJavaLogBtn.setRightButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_close));
+            this.mJavaLogBtn.setMidBtnGone(true);
+        }
+        if (!(this.mNotificationDebugView == null || this.mNotificationDebugBtn == null)) {
+            this.mNotificationDebugView.setVisibility(0);
+            this.mNotificationDebugBtn.setLeftButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_open));
+            this.mNotificationDebugBtn.setRightButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_close));
+            this.mNotificationDebugBtn.setMidBtnGone(true);
+        }
+        if (!(this.mRootScreenView == null || this.mRootScreenBtn == null)) {
+            this.mRootScreenView.setVisibility(0);
+            this.mRootScreenBtn.setLeftButtonText("开启");
+            this.mRootScreenBtn.setRightButtonText("关闭");
+            this.mRootScreenBtn.setMidBtnGone(true);
+        }
+        if (!(this.mImageLogView == null || this.mImageLogBtn == null)) {
+            this.mImageLogView.setVisibility(0);
+            this.mImageLogBtn.setLeftButtonText("开启");
+            this.mImageLogBtn.setRightButtonText("关闭");
+            this.mImageLogBtn.setMidBtnGone(true);
+        }
+        if (!(this.mHttpsDebugView == null || this.mHttpsDebugBtn == null)) {
+            this.mHttpsDebugView.setVisibility(0);
+            this.mHttpsDebugBtn.setLeftButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_open));
+            this.mHttpsDebugBtn.setRightButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_close));
+            this.mHttpsDebugBtn.setMidBtnGone(true);
+        }
+        if (!(this.mNativeLogView == null || this.mNativeLogBtn == null)) {
+            this.mNativeLogView.setVisibility(0);
+            this.mNativeLogBtn.setLeftButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_open));
+            this.mNativeLogBtn.setRightButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_close));
+            this.mNativeLogBtn.setMidBtnGone(true);
+        }
+        if (!(this.mMonkeyView == null || this.mMonkeyBtn == null)) {
+            this.mMonkeyView.setVisibility(0);
+            this.mMonkeyBtn.setLeftButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_open));
+            this.mMonkeyBtn.setRightButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_close));
+            this.mMonkeyBtn.setMidBtnGone(true);
+        }
+        if (!(this.mTTSVocoderView == null || this.mTTSVocoderBtn == null)) {
+            this.mTTSVocoderView.setVisibility(0);
+            this.mTTSVocoderBtn.setLeftButtonText("0");
+            this.mTTSVocoderBtn.setMidButtonText("1");
+            this.mTTSVocoderBtn.setRightButtonText("2");
+        }
+        if (this.mRLGPSDebugView != null && this.mSBGPSDebugView != null) {
+            this.mRLGPSDebugView.setVisibility(0);
+            this.mSBGPSDebugView.setLeftButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_open));
+            this.mSBGPSDebugView.setRightButtonText(BNStyleManager.getString(C4048R.string.nsdk_string_close));
+            this.mSBGPSDebugView.setMidBtnGone(true);
+        }
+    }
+
+    public void setSingleButtonState(boolean state) {
+        if (this.mSingleDtBtn != null) {
+            if (state) {
+                this.mSingleDtBtn.setBackgroundColor(-16711936);
+                this.mSingleDtBtn.setClickable(true);
+                return;
             }
-            TipTool.onCreateToastDialog(BNDebugModelDialog.this.mContext, "网络未连接");
-            return;
-          }
-          BNDebugModelDialog.access$002(BNDebugModelDialog.this, HttpURLManager.getInstance().mGuideMsg);
-          if (BNDebugModelDialog.this.mAdapter == null)
-          {
-            BNDebugModelDialog.access$102(BNDebugModelDialog.this, new BNDebugModelDialog.DebugUrlAdapter(BNDebugModelDialog.this));
-            BNDebugModelDialog.this.mELUrlDebugView.setAdapter(BNDebugModelDialog.this.mAdapter);
-          }
-          BNDebugModelDialog.this.mRLUrlDebugExpandView.setVisibility(0);
+            this.mSingleDtBtn.setBackgroundColor(-7829368);
+            this.mSingleDtBtn.setClickable(false);
         }
-      });
-      this.mTVUrlDebugColseView.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNDebugModelDialog.this.mRLUrlDebugExpandView.setVisibility(8);
+    }
+
+    public void setStartButtonState(boolean state) {
+        if (this.mDrivingToolStartBtn != null) {
+            if (state) {
+                this.mDrivingToolStartBtn.setBackgroundColor(-16711936);
+                this.mDrivingToolStartBtn.setClickable(true);
+                return;
+            }
+            this.mDrivingToolStartBtn.setBackgroundColor(-7829368);
+            this.mDrivingToolStartBtn.setClickable(false);
         }
-      });
     }
-    if (this.mFactoryCategory != null) {
-      this.mFactoryCategory.setVisibility(0);
-    }
-    if ((this.mCuidView != null) && (this.mCuidTv != null))
-    {
-      this.mCuidView.setVisibility(0);
-      this.mCuidTv.setText("CUID:" + PackageUtil.getCuid());
-    }
-    if ((this.mBuildView != null) && (this.mBuildTimeTv != null))
-    {
-      this.mBuildView.setVisibility(0);
-      this.mBuildTimeTv.setText("BuildTime:(" + PackageUtil.getBuildNo() + ")");
-    }
-    if ((this.mJavaLogView != null) && (this.mJavaLogBtn != null))
-    {
-      this.mJavaLogView.setVisibility(0);
-      this.mJavaLogBtn.setLeftButtonText(BNStyleManager.getString(1711669886));
-      this.mJavaLogBtn.setRightButtonText(BNStyleManager.getString(1711669887));
-      this.mJavaLogBtn.setMidBtnGone(true);
-    }
-    if ((this.mNotificationDebugView != null) && (this.mNotificationDebugBtn != null))
-    {
-      this.mNotificationDebugView.setVisibility(0);
-      this.mNotificationDebugBtn.setLeftButtonText(BNStyleManager.getString(1711669886));
-      this.mNotificationDebugBtn.setRightButtonText(BNStyleManager.getString(1711669887));
-      this.mNotificationDebugBtn.setMidBtnGone(true);
-    }
-    if ((this.mRootScreenView != null) && (this.mRootScreenBtn != null))
-    {
-      this.mRootScreenView.setVisibility(0);
-      this.mRootScreenBtn.setLeftButtonText("开启");
-      this.mRootScreenBtn.setRightButtonText("关闭");
-      this.mRootScreenBtn.setMidBtnGone(true);
-    }
-    if ((this.mImageLogView != null) && (this.mImageLogBtn != null))
-    {
-      this.mImageLogView.setVisibility(0);
-      this.mImageLogBtn.setLeftButtonText("开启");
-      this.mImageLogBtn.setRightButtonText("关闭");
-      this.mImageLogBtn.setMidBtnGone(true);
-    }
-    if ((this.mHttpsDebugView != null) && (this.mHttpsDebugBtn != null))
-    {
-      this.mHttpsDebugView.setVisibility(0);
-      this.mHttpsDebugBtn.setLeftButtonText(BNStyleManager.getString(1711669886));
-      this.mHttpsDebugBtn.setRightButtonText(BNStyleManager.getString(1711669887));
-      this.mHttpsDebugBtn.setMidBtnGone(true);
-    }
-    if ((this.mNativeLogView != null) && (this.mNativeLogBtn != null))
-    {
-      this.mNativeLogView.setVisibility(0);
-      this.mNativeLogBtn.setLeftButtonText(BNStyleManager.getString(1711669886));
-      this.mNativeLogBtn.setRightButtonText(BNStyleManager.getString(1711669887));
-      this.mNativeLogBtn.setMidBtnGone(true);
-    }
-    if ((this.mMonkeyView != null) && (this.mMonkeyBtn != null))
-    {
-      this.mMonkeyView.setVisibility(0);
-      this.mMonkeyBtn.setLeftButtonText(BNStyleManager.getString(1711669886));
-      this.mMonkeyBtn.setRightButtonText(BNStyleManager.getString(1711669887));
-      this.mMonkeyBtn.setMidBtnGone(true);
-    }
-    if ((this.mTTSVocoderView != null) && (this.mTTSVocoderBtn != null))
-    {
-      this.mTTSVocoderView.setVisibility(0);
-      this.mTTSVocoderBtn.setLeftButtonText("0");
-      this.mTTSVocoderBtn.setMidButtonText("1");
-      this.mTTSVocoderBtn.setRightButtonText("2");
-    }
-    if ((this.mRLGPSDebugView != null) && (this.mSBGPSDebugView != null))
-    {
-      this.mRLGPSDebugView.setVisibility(0);
-      this.mSBGPSDebugView.setLeftButtonText(BNStyleManager.getString(1711669886));
-      this.mSBGPSDebugView.setRightButtonText(BNStyleManager.getString(1711669887));
-      this.mSBGPSDebugView.setMidBtnGone(true);
-    }
-  }
-  
-  public void initButtonStatus()
-  {
-    if (this.mJavaLogBtn != null)
-    {
-      if (BNSettingManager.isShowJavaLog()) {
-        this.mJavaLogBtn.setLeftBtnChecked();
-      }
-    }
-    else
-    {
-      if (this.mNotificationDebugBtn != null)
-      {
-        if (!BNSettingManager.isShowNotificationDebug()) {
-          break label271;
+
+    public void setRouteSpinnerCLickable(boolean isClickble) {
+        if (this.mRouteListSp != null) {
+            this.mRouteListSp.setClickable(isClickble);
         }
-        this.mNotificationDebugBtn.setLeftBtnChecked();
-      }
-      label42:
-      if (this.mImageLogBtn != null)
-      {
-        if (!JNIGuidanceControl.getInstance().IsMapLoggerOpen()) {
-          break label282;
+    }
+
+    public void updateTaskListView() {
+        if (this.mTaskListSp != null && BNDrivingToolManager.getInstance().mTaskList != null) {
+            String lastTaskInfo = BNSettingManager.getLastDrivingInfo();
+            String lastTaskId = null;
+            if (lastTaskInfo != null) {
+                String[] infoArray = lastTaskInfo.split(",");
+                if (infoArray != null && infoArray.length > 0) {
+                    lastTaskId = infoArray[0];
+                }
+            }
+            String taskName = null;
+            if (!TextUtils.isEmpty(lastTaskId)) {
+                Map<String, String> taskMap = BNDrivingToolManager.getInstance().mTaskMap;
+                if (taskMap != null && taskMap.size() > 0) {
+                    for (String id : taskMap.values()) {
+                        if (lastTaskId.equals(id)) {
+                            taskName = BNRemoteConstants.ERROR_DEFAULT_STR;
+                            break;
+                        }
+                    }
+                }
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter(this.mContext, 17367048, BNDrivingToolManager.getInstance().mTaskList);
+            adapter.setDropDownViewResource(17367049);
+            this.mTaskListSp.setAdapter(adapter);
+            if (!TextUtils.isEmpty(taskName)) {
+                this.mTaskListSp.setSelection(0, true);
+                BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("updateTaskListView-" + getClass().getSimpleName(), null) {
+                    protected String execute() {
+                        BNDebugModelDialog.this.updateTaskSpinnerView();
+                        return null;
+                    }
+                }, new BNWorkerConfig(100, 0));
+            }
         }
-        this.mImageLogBtn.setLeftBtnChecked();
-      }
-      label66:
-      if (this.mRootScreenBtn != null)
-      {
-        if (!BNSettingManager.isRootScreenOpen()) {
-          break label293;
+    }
+
+    public void updatRouteListView() {
+        if (this.mRouteListSp != null) {
+            List<String> routeList = BNDrivingToolManager.getInstance().mRouteList;
+            if (routeList != null) {
+                ArrayAdapter<String> adapter = new ArrayAdapter(this.mContext, 17367048, routeList);
+                adapter.setDropDownViewResource(17367049);
+                this.mRouteListSp.setAdapter(adapter);
+                if (BNDrivingToolManager.getInstance().mRouteList != null && BNDrivingToolManager.getInstance().mRouteFlag.equals("1")) {
+                    this.mRouteListSp.setSelection(BNDrivingToolManager.getInstance().mRouteList.size() - 1, true);
+                }
+            }
         }
-        this.mRootScreenBtn.setLeftBtnChecked();
-      }
-      label87:
-      if (this.mHttpsDebugBtn != null)
-      {
-        if (!BNSettingManager.isUseHttpsOfflineURL()) {
-          break label304;
+        setRouteSpinnerCLickable(true);
+    }
+
+    public void setCloseIVListener() {
+        this.mCloseIV.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                if (BNDebugModelDialog.this.mOnCancelListener != null) {
+                    BNDebugModelDialog.this.mOnCancelListener.onCancel(BNDebugModelDialog.this);
+                }
+                NavSDKDebug.sSDKFactoryMode = false;
+                BNDebugModelDialog.this.dismiss();
+            }
+        });
+    }
+
+    public BNDebugModelDialog setYawingStyleGrivity(boolean isYawing) {
+        Theme theme;
+        if (isYawing) {
+            theme = JarUtils.getResources().newTheme();
+            theme.applyStyle(C4048R.style.theme_yaw_progressdlg, true);
+            JarUtils.setDialogThemeField(this, theme);
+            getWindow().getAttributes().gravity = 51;
+        } else {
+            theme = JarUtils.getResources().newTheme();
+            theme.applyStyle(C4048R.style.theme_comm_progressdlg, true);
+            JarUtils.setDialogThemeField(this, theme);
+            getWindow().getAttributes().gravity = 17;
         }
-        this.mHttpsDebugBtn.setLeftBtnChecked();
-      }
-      label108:
-      if (this.mNativeLogBtn != null)
-      {
-        if (!BNSettingManager.isShowNativeLog()) {
-          break label315;
+        return this;
+    }
+
+    public void setOnCancelListener(OnCancelListener listener) {
+        this.mOnCancelListener = listener;
+        super.setOnCancelListener(listener);
+    }
+
+    public void setCloseGone() {
+        this.mCloseIV.setVisibility(8);
+    }
+
+    public void setCloseVisible() {
+        this.mCloseIV.setVisibility(0);
+    }
+
+    private void initStatusButtonClickListener() {
+        this.mStatusButtonClickListener = new onStatusButtonClickListener() {
+            public void onClick(StatusButton sButton, StatusButtonChild child) {
+                if (sButton == BNDebugModelDialog.this.mJavaLogBtn && BNDebugModelDialog.this.mJavaLogBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            BNSettingManager.setShowJavaLog(true);
+                            return;
+                        case RIGHT:
+                            BNSettingManager.setShowJavaLog(false);
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mNotificationDebugBtn && BNDebugModelDialog.this.mNotificationDebugBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            BNSettingManager.setShowNotificationDebug(true);
+                            return;
+                        case RIGHT:
+                            BNSettingManager.setShowNotificationDebug(false);
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mRootScreenBtn && BNDebugModelDialog.this.mRootScreenBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            BNSettingManager.setRootScreenOpen(true);
+                            return;
+                        case RIGHT:
+                            BNSettingManager.setRootScreenOpen(false);
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mImageLogBtn && BNDebugModelDialog.this.mImageLogBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            JNIGuidanceControl.getInstance().SetMapLoggerOpen(true);
+                            return;
+                        case RIGHT:
+                            JNIGuidanceControl.getInstance().SetMapLoggerOpen(false);
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mHttpsDebugBtn && BNDebugModelDialog.this.mHttpsDebugBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            BNSettingManager.setUseHttpsOfflineURL(true);
+                            return;
+                        case RIGHT:
+                            BNSettingManager.setUseHttpsOfflineURL(false);
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mNativeLogBtn && BNDebugModelDialog.this.mNativeLogBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            BNSettingManager.setShowNativeLog(true);
+                            return;
+                        case RIGHT:
+                            BNSettingManager.setShowNativeLog(false);
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mMonkeyBtn && BNDebugModelDialog.this.mMonkeyBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            BNSettingManager.setMonkey(true);
+                            return;
+                        case RIGHT:
+                            BNSettingManager.setMonkey(false);
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mTTSVocoderBtn && BNDebugModelDialog.this.mTTSVocoderBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            BNSettingManager.setTTSVocoderParam("0");
+                            return;
+                        case RIGHT:
+                            BNSettingManager.setTTSVocoderParam("2");
+                            return;
+                        case MID:
+                            BNSettingManager.setTTSVocoderParam("1");
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mSBGPSDebugView && BNDebugModelDialog.this.mSBGPSDebugView != null) {
+                    switch (child) {
+                        case LEFT:
+                            BNSettingManager.setGPSDebug(true);
+                            return;
+                        case RIGHT:
+                            BNSettingManager.setGPSDebug(false);
+                            return;
+                        default:
+                            return;
+                    }
+                } else if (sButton == BNDebugModelDialog.this.mDrivingToolOpenBtn && BNDebugModelDialog.this.mDrivingToolOpenBtn != null) {
+                    switch (child) {
+                        case LEFT:
+                            if (BNDrivingToolUtils.canDrivingToolOpen()) {
+                                BNDebugModelDialog.this.mDrivingToolOpenBtn.setVisibility(8);
+                                BNDebugModelDialog.this.mSingleDtBtn.setVisibility(0);
+                                BNDebugModelDialog.this.mShowPullBtn.setVisibility(0);
+                                BNDebugModelDialog.this.mRouteLl.setVisibility(8);
+                                BNDebugModelDialog.this.mMuitipleBtn.setVisibility(0);
+                                BNDrivingToolManager.getInstance().isSinglePerson = true;
+                                BNDrivingToolManager.getInstance().mRouteID = "0";
+                                return;
+                            }
+                            BNSettingManager.setShowingDrivingTool(false);
+                            BNDebugModelDialog.this.mDrivingToolOpenBtn.setRightBtnChecked();
+                            return;
+                        case RIGHT:
+                            return;
+                        default:
+                            return;
+                    }
+                }
+            }
+        };
+    }
+
+    private void initListener() {
+        initStatusButtonClickListener();
+        if (this.mJavaLogBtn != null) {
+            this.mJavaLogBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-        this.mNativeLogBtn.setLeftBtnChecked();
-      }
-      label129:
-      if (this.mMonkeyBtn != null)
-      {
-        if (!BNSettingManager.isMonkey()) {
-          break label326;
+        if (this.mNotificationDebugBtn != null) {
+            this.mNotificationDebugBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-        this.mMonkeyBtn.setLeftBtnChecked();
-      }
-      label150:
-      if (this.mTTSVocoderBtn != null)
-      {
-        if (!BNSettingManager.getTTSVocoderParam().equals("0")) {
-          break label337;
+        if (this.mRootScreenBtn != null) {
+            this.mRootScreenBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-        this.mTTSVocoderBtn.setLeftBtnChecked();
-      }
-      label177:
-      if (this.mSBGPSDebugView != null)
-      {
-        if (!BNSettingManager.isGPSDebug()) {
-          break label371;
+        if (this.mImageLogBtn != null) {
+            this.mImageLogBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-        this.mSBGPSDebugView.setLeftBtnChecked();
-      }
-      label198:
-      if (this.mDrivingToolOpenBtn != null)
-      {
-        if (!BNSettingManager.isShowingDrivingTool()) {
-          break label382;
+        if (this.mHttpsDebugBtn != null) {
+            this.mHttpsDebugBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-        this.mDrivingToolOpenBtn.setLeftBtnChecked();
-        updateDrivingToolView();
-      }
-    }
-    for (;;)
-    {
-      if (this.mTTSSpeedTv != null) {
-        this.mTTSSpeedTv.setText(BNSettingManager.getTTSSpeedParam() + "");
-      }
-      return;
-      this.mJavaLogBtn.setRightBtnChecked();
-      break;
-      label271:
-      this.mNotificationDebugBtn.setRightBtnChecked();
-      break label42;
-      label282:
-      this.mImageLogBtn.setRightBtnChecked();
-      break label66;
-      label293:
-      this.mRootScreenBtn.setRightBtnChecked();
-      break label87;
-      label304:
-      this.mHttpsDebugBtn.setRightBtnChecked();
-      break label108;
-      label315:
-      this.mNativeLogBtn.setRightBtnChecked();
-      break label129;
-      label326:
-      this.mMonkeyBtn.setRightBtnChecked();
-      break label150;
-      label337:
-      if (BNSettingManager.getTTSVocoderParam().equals("1"))
-      {
-        this.mTTSVocoderBtn.setMidBtnChecked();
-        break label177;
-      }
-      this.mTTSVocoderBtn.setRightBtnChecked();
-      break label177;
-      label371:
-      this.mSBGPSDebugView.setRightBtnChecked();
-      break label198;
-      label382:
-      this.mDrivingToolOpenBtn.setRightBtnChecked();
-    }
-  }
-  
-  public void setCloseGone()
-  {
-    this.mCloseIV.setVisibility(8);
-  }
-  
-  public void setCloseIVListener()
-  {
-    this.mCloseIV.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (BNDebugModelDialog.this.mOnCancelListener != null) {
-          BNDebugModelDialog.this.mOnCancelListener.onCancel(BNDebugModelDialog.this);
+        if (this.mNativeLogBtn != null) {
+            this.mNativeLogBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-        com.baidu.navisdk.debug.NavSDKDebug.sSDKFactoryMode = false;
-        BNDebugModelDialog.this.dismiss();
-      }
-    });
-  }
-  
-  public void setCloseVisible()
-  {
-    this.mCloseIV.setVisibility(0);
-  }
-  
-  public void setOnCancelListener(DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    this.mOnCancelListener = paramOnCancelListener;
-    super.setOnCancelListener(paramOnCancelListener);
-  }
-  
-  public void setRouteSpinnerCLickable(boolean paramBoolean)
-  {
-    if (this.mRouteListSp != null) {
-      this.mRouteListSp.setClickable(paramBoolean);
-    }
-  }
-  
-  public void setSingleButtonState(boolean paramBoolean)
-  {
-    if (this.mSingleDtBtn == null) {
-      return;
-    }
-    if (paramBoolean)
-    {
-      this.mSingleDtBtn.setBackgroundColor(-16711936);
-      this.mSingleDtBtn.setClickable(true);
-      return;
-    }
-    this.mSingleDtBtn.setBackgroundColor(-7829368);
-    this.mSingleDtBtn.setClickable(false);
-  }
-  
-  public void setStartButtonState(boolean paramBoolean)
-  {
-    if (this.mDrivingToolStartBtn == null) {
-      return;
-    }
-    if (paramBoolean)
-    {
-      this.mDrivingToolStartBtn.setBackgroundColor(-16711936);
-      this.mDrivingToolStartBtn.setClickable(true);
-      return;
-    }
-    this.mDrivingToolStartBtn.setBackgroundColor(-7829368);
-    this.mDrivingToolStartBtn.setClickable(false);
-  }
-  
-  public BNDebugModelDialog setYawingStyleGrivity(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      localTheme = JarUtils.getResources().newTheme();
-      localTheme.applyStyle(1711996941, true);
-      JarUtils.setDialogThemeField(this, localTheme);
-      getWindow().getAttributes().gravity = 51;
-      return this;
-    }
-    Resources.Theme localTheme = JarUtils.getResources().newTheme();
-    localTheme.applyStyle(1711996939, true);
-    JarUtils.setDialogThemeField(this, localTheme);
-    getWindow().getAttributes().gravity = 17;
-    return this;
-  }
-  
-  public void updatRouteListView()
-  {
-    if (this.mRouteListSp != null)
-    {
-      Object localObject = BNDrivingToolManager.getInstance().mRouteList;
-      if (localObject != null)
-      {
-        localObject = new ArrayAdapter(this.mContext, 17367048, (List)localObject);
-        ((ArrayAdapter)localObject).setDropDownViewResource(17367049);
-        this.mRouteListSp.setAdapter((SpinnerAdapter)localObject);
-        if ((BNDrivingToolManager.getInstance().mRouteList != null) && (BNDrivingToolManager.getInstance().mRouteFlag.equals("1")))
-        {
-          int i = BNDrivingToolManager.getInstance().mRouteList.size();
-          this.mRouteListSp.setSelection(i - 1, true);
+        if (this.mMonkeyBtn != null) {
+            this.mMonkeyBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-      }
-    }
-    setRouteSpinnerCLickable(true);
-  }
-  
-  public void updateDrivingToolView()
-  {
-    this.mDrivingToolOpenBtn.setVisibility(8);
-    this.mSingleDtBtn.setVisibility(0);
-    this.mShowPullBtn.setVisibility(0);
-    this.mRouteLl.setVisibility(8);
-    this.mMuitipleBtn.setVisibility(0);
-    BNDrivingToolManager.getInstance().isSinglePerson = true;
-    BNDrivingToolManager.getInstance().mRouteID = "0";
-  }
-  
-  public void updateTaskListView()
-  {
-    if ((this.mTaskListSp != null) && (BNDrivingToolManager.getInstance().mTaskList != null))
-    {
-      Object localObject3 = BNSettingManager.getLastDrivingInfo();
-      Object localObject2 = null;
-      Object localObject1 = localObject2;
-      if (localObject3 != null)
-      {
-        localObject3 = ((String)localObject3).split(",");
-        localObject1 = localObject2;
-        if (localObject3 != null)
-        {
-          localObject1 = localObject2;
-          if (localObject3.length > 0) {
-            localObject1 = localObject3[0];
-          }
+        if (this.mTTSVocoderBtn != null) {
+            this.mTTSVocoderBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-      }
-      localObject3 = null;
-      localObject2 = localObject3;
-      if (!TextUtils.isEmpty((CharSequence)localObject1))
-      {
-        Object localObject4 = BNDrivingToolManager.getInstance().mTaskMap;
-        localObject2 = localObject3;
-        if (localObject4 != null)
-        {
-          localObject2 = localObject3;
-          if (((Map)localObject4).size() > 0)
-          {
-            localObject4 = ((Map)localObject4).values().iterator();
-            do
-            {
-              localObject2 = localObject3;
-              if (!((Iterator)localObject4).hasNext()) {
-                break;
-              }
-            } while (!((String)localObject1).equals((String)((Iterator)localObject4).next()));
-            localObject2 = "ok";
-          }
+        if (this.mSBGPSDebugView != null) {
+            this.mSBGPSDebugView.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-      }
-      localObject1 = new ArrayAdapter(this.mContext, 17367048, BNDrivingToolManager.getInstance().mTaskList);
-      ((ArrayAdapter)localObject1).setDropDownViewResource(17367049);
-      this.mTaskListSp.setAdapter((SpinnerAdapter)localObject1);
-      if (!TextUtils.isEmpty((CharSequence)localObject2))
-      {
-        this.mTaskListSp.setSelection(0, true);
-        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("updateTaskListView-" + getClass().getSimpleName(), null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            BNDebugModelDialog.this.updateTaskSpinnerView();
-            return null;
-          }
-        }, new BNWorkerConfig(100, 0));
-      }
-    }
-  }
-  
-  public void updateTaskSpinnerView()
-  {
-    i = -1;
-    try
-    {
-      int j = BNDrivingToolManager.getInstance().getLastSelectedTaskIndex();
-      k = j;
-      i = j;
-      if (this.mTaskListSp != null)
-      {
-        i = j;
-        this.mTaskListSp.setSelection(j);
-        k = j;
-      }
-    }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        int k = i;
-      }
-    }
-    LogUtil.e("drivingTool", "getSelectedTaskIndex index is " + k);
-  }
-  
-  class DebugUrlAdapter
-    extends BaseExpandableListAdapter
-  {
-    ViewHolder mViewHolder;
-    
-    DebugUrlAdapter() {}
-    
-    public Object getChild(int paramInt1, int paramInt2)
-    {
-      return ((DebugModeMessageBean)BNDebugModelDialog.this.mGuideMsg.get(paramInt1)).serList.get(paramInt2);
-    }
-    
-    public long getChildId(int paramInt1, int paramInt2)
-    {
-      return paramInt2;
-    }
-    
-    public View getChildView(int paramInt1, int paramInt2, boolean paramBoolean, View paramView, ViewGroup paramViewGroup)
-    {
-      paramViewGroup = (DebugModeMessageSerBean)((DebugModeMessageBean)BNDebugModelDialog.this.mGuideMsg.get(paramInt1)).serList.get(paramInt2);
-      if (paramView == null)
-      {
-        paramView = JarUtils.inflate((Activity)BNDebugModelDialog.this.mContext, 1711472667, null);
-        this.mViewHolder = new ViewHolder(null);
-        this.mViewHolder.mTVUrl = ((TextView)paramView.findViewById(1711866077));
-        this.mViewHolder.mCb = ((CheckBox)paramView.findViewById(1711866078));
-        paramView.setTag(this.mViewHolder);
-      }
-      for (;;)
-      {
-        this.mViewHolder.mTVUrl.setText(paramViewGroup.key + "--" + paramViewGroup.value);
-        this.mViewHolder.mCb.setFocusable(false);
-        this.mViewHolder.mCb.setClickable(false);
-        if (!paramViewGroup.flag) {
-          break;
+        if (this.mDrivingToolOpenBtn != null) {
+            this.mDrivingToolOpenBtn.setAllBtnClickListener(this.mStatusButtonClickListener);
         }
-        this.mViewHolder.mCb.setChecked(true);
-        return paramView;
-        this.mViewHolder = ((ViewHolder)paramView.getTag());
-      }
-      this.mViewHolder.mCb.setChecked(false);
-      return paramView;
+        if (this.mTTSSpeedUpIv != null) {
+            this.mTTSSpeedUpIv.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    if (BNDebugModelDialog.this.mTTSSpeedTv != null) {
+                        int i = Integer.parseInt(BNDebugModelDialog.this.mTTSSpeedTv.getText().toString());
+                        if (i >= 9) {
+                            TipTool.onCreateToastDialog(BNDebugModelDialog.this.mContext, "当前为最高语速");
+                            return;
+                        }
+                        i++;
+                        BNDebugModelDialog.this.mTTSSpeedTv.setText(i + "");
+                        BNSettingManager.setTTSSpeedParam(i);
+                    }
+                }
+            });
+        }
+        if (this.mTTSSpeedDownIv != null) {
+            this.mTTSSpeedDownIv.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    if (BNDebugModelDialog.this.mTTSSpeedTv != null) {
+                        int i = Integer.parseInt(BNDebugModelDialog.this.mTTSSpeedTv.getText().toString());
+                        if (i <= 0) {
+                            TipTool.onCreateToastDialog(BNDebugModelDialog.this.mContext, "当前为最低语速");
+                            return;
+                        }
+                        i--;
+                        BNDebugModelDialog.this.mTTSSpeedTv.setText(i + "");
+                        BNSettingManager.setTTSSpeedParam(i);
+                    }
+                }
+            });
+        }
+        if (this.mTTSSpeedResetBtn != null) {
+            this.mTTSSpeedResetBtn.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    if (BNDebugModelDialog.this.mTTSSpeedTv != null) {
+                        BNDebugModelDialog.this.mTTSSpeedTv.setText(String.valueOf(5));
+                    }
+                    BNSettingManager.setTTSSpeedParam(5);
+                }
+            });
+        }
     }
-    
-    public int getChildrenCount(int paramInt)
-    {
-      return ((DebugModeMessageBean)BNDebugModelDialog.this.mGuideMsg.get(paramInt)).serList.size();
+
+    public void initButtonStatus() {
+        if (this.mJavaLogBtn != null) {
+            if (BNSettingManager.isShowJavaLog()) {
+                this.mJavaLogBtn.setLeftBtnChecked();
+            } else {
+                this.mJavaLogBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mNotificationDebugBtn != null) {
+            if (BNSettingManager.isShowNotificationDebug()) {
+                this.mNotificationDebugBtn.setLeftBtnChecked();
+            } else {
+                this.mNotificationDebugBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mImageLogBtn != null) {
+            if (JNIGuidanceControl.getInstance().IsMapLoggerOpen()) {
+                this.mImageLogBtn.setLeftBtnChecked();
+            } else {
+                this.mImageLogBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mRootScreenBtn != null) {
+            if (BNSettingManager.isRootScreenOpen()) {
+                this.mRootScreenBtn.setLeftBtnChecked();
+            } else {
+                this.mRootScreenBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mHttpsDebugBtn != null) {
+            if (BNSettingManager.isUseHttpsOfflineURL()) {
+                this.mHttpsDebugBtn.setLeftBtnChecked();
+            } else {
+                this.mHttpsDebugBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mNativeLogBtn != null) {
+            if (BNSettingManager.isShowNativeLog()) {
+                this.mNativeLogBtn.setLeftBtnChecked();
+            } else {
+                this.mNativeLogBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mMonkeyBtn != null) {
+            if (BNSettingManager.isMonkey()) {
+                this.mMonkeyBtn.setLeftBtnChecked();
+            } else {
+                this.mMonkeyBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mTTSVocoderBtn != null) {
+            if (BNSettingManager.getTTSVocoderParam().equals("0")) {
+                this.mTTSVocoderBtn.setLeftBtnChecked();
+            } else if (BNSettingManager.getTTSVocoderParam().equals("1")) {
+                this.mTTSVocoderBtn.setMidBtnChecked();
+            } else {
+                this.mTTSVocoderBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mSBGPSDebugView != null) {
+            if (BNSettingManager.isGPSDebug()) {
+                this.mSBGPSDebugView.setLeftBtnChecked();
+            } else {
+                this.mSBGPSDebugView.setRightBtnChecked();
+            }
+        }
+        if (this.mDrivingToolOpenBtn != null) {
+            if (BNSettingManager.isShowingDrivingTool()) {
+                this.mDrivingToolOpenBtn.setLeftBtnChecked();
+                updateDrivingToolView();
+            } else {
+                this.mDrivingToolOpenBtn.setRightBtnChecked();
+            }
+        }
+        if (this.mTTSSpeedTv != null) {
+            this.mTTSSpeedTv.setText(BNSettingManager.getTTSSpeedParam() + "");
+        }
     }
-    
-    public Object getGroup(int paramInt)
-    {
-      return BNDebugModelDialog.this.mGuideMsg.get(paramInt);
+
+    public void updateDrivingToolView() {
+        this.mDrivingToolOpenBtn.setVisibility(8);
+        this.mSingleDtBtn.setVisibility(0);
+        this.mShowPullBtn.setVisibility(0);
+        this.mRouteLl.setVisibility(8);
+        this.mMuitipleBtn.setVisibility(0);
+        BNDrivingToolManager.getInstance().isSinglePerson = true;
+        BNDrivingToolManager.getInstance().mRouteID = "0";
     }
-    
-    public int getGroupCount()
-    {
-      return BNDebugModelDialog.this.mGuideMsg.size();
+
+    public void updateTaskSpinnerView() {
+        int index = -1;
+        try {
+            index = BNDrivingToolManager.getInstance().getLastSelectedTaskIndex();
+            if (this.mTaskListSp != null) {
+                this.mTaskListSp.setSelection(index);
+            }
+        } catch (Exception e) {
+        }
+        LogUtil.m15791e(BNDrivingToolManager.MODULENAME, "getSelectedTaskIndex index is " + index);
     }
-    
-    public long getGroupId(int paramInt)
-    {
-      return paramInt;
+
+    private void synUrlHostOneMoudlue(DebugModeMessageSerBean serBean) {
+        if (serBean.key.equals(ULRParam.URL_UGC_OPER_INFO_REPORT)) {
+            if (serBean.flag) {
+                String hostStr = getUrlHost(serBean.value);
+                String noHostStr = getUrlWithNoHost(HttpURLManager.getInstance().getOnlineUrl(ULRParam.URL_UGC_EVENT_FEEDBACK));
+                if (hostStr != null) {
+                    if (noHostStr != null) {
+                        HttpURLManager.getInstance().putUrl(ULRParam.URL_UGC_EVENT_FEEDBACK, hostStr + "/" + noHostStr);
+                    }
+                    noHostStr = getUrlWithNoHost(HttpURLManager.getInstance().getOnlineUrl(ULRParam.URL_UGC_RCEVENT_COUNTS));
+                    if (noHostStr != null) {
+                        HttpURLManager.getInstance().putUrl(ULRParam.URL_UGC_RCEVENT_COUNTS, hostStr + "/" + noHostStr);
+                    }
+                    noHostStr = getUrlWithNoHost(HttpURLManager.getInstance().getOnlineUrl(ULRParam.URL_UGC_GET_EVENT_DETAIL));
+                    if (noHostStr != null) {
+                        HttpURLManager.getInstance().putUrl(ULRParam.URL_UGC_GET_EVENT_DETAIL, hostStr + "/" + noHostStr);
+                        return;
+                    }
+                    return;
+                }
+                return;
+            }
+            HttpURLManager.getInstance().putUrl(ULRParam.URL_UGC_EVENT_FEEDBACK, HttpURLManager.getInstance().getOnlineUrl(ULRParam.URL_UGC_EVENT_FEEDBACK));
+            HttpURLManager.getInstance().putUrl(ULRParam.URL_UGC_RCEVENT_COUNTS, HttpURLManager.getInstance().getOnlineUrl(ULRParam.URL_UGC_RCEVENT_COUNTS));
+            HttpURLManager.getInstance().putUrl(ULRParam.URL_UGC_GET_EVENT_DETAIL, HttpURLManager.getInstance().getOnlineUrl(ULRParam.URL_UGC_GET_EVENT_DETAIL));
+        } else if (serBean.key.equals(ULRParam.URL_INIT_CLOUD_CONFIG)) {
+            BNSettingManager.setInitCloudCfg(serBean.flag);
+        }
     }
-    
-    public View getGroupView(int paramInt, boolean paramBoolean, View paramView, ViewGroup paramViewGroup)
-    {
-      paramViewGroup = paramView;
-      if (paramView == null) {
-        paramViewGroup = JarUtils.inflate((Activity)BNDebugModelDialog.this.mContext, 1711472668, null);
-      }
-      ((TextView)paramViewGroup.findViewById(1711866079)).setText(((DebugModeMessageBean)BNDebugModelDialog.this.mGuideMsg.get(paramInt)).mSceneName);
-      return paramViewGroup;
+
+    private String getUrlHost(String url) {
+        int index = getSpeIndexFromUrl(url);
+        if (index >= 0 && url != null && url.length() > index + 1) {
+            return url.substring(0, index);
+        }
+        return null;
     }
-    
-    public boolean hasStableIds()
-    {
-      return true;
+
+    private String getUrlWithNoHost(String url) {
+        int index = getSpeIndexFromUrl(url);
+        if (index >= 0 && url != null && url.length() > index + 1) {
+            return url.substring(index + 1);
+        }
+        return null;
     }
-    
-    public boolean isChildSelectable(int paramInt1, int paramInt2)
-    {
-      LogUtil.e("wangyang", "selectable");
-      return true;
+
+    private int getSpeIndexFromUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return -1;
+        }
+        String str;
+        int indexAdd = 0;
+        if (url.startsWith("http://") && url.length() > "http://".length()) {
+            str = url.substring("http://".length());
+            indexAdd = "http://".length();
+        } else if (!url.startsWith("https://") || url.length() <= "https://".length()) {
+            str = url;
+        } else {
+            str = url.substring("https://".length());
+            indexAdd = "https://".length();
+        }
+        return str.indexOf("/") + indexAdd;
     }
-    
-    private class ViewHolder
-    {
-      CheckBox mCb;
-      TextView mTVUrl;
-      
-      private ViewHolder() {}
-    }
-  }
-  
-  class SpinnerSelectedListener
-    implements AdapterView.OnItemSelectedListener
-  {
-    SpinnerSelectedListener() {}
-    
-    public void onItemSelected(AdapterView paramAdapterView, View paramView, int paramInt, long paramLong) {}
-    
-    public void onNothingSelected(AdapterView paramAdapterView) {}
-  }
-  
-  class SpinnerURLSelectedListener
-    implements AdapterView.OnItemSelectedListener
-  {
-    SpinnerURLSelectedListener() {}
-    
-    public void onItemSelected(AdapterView paramAdapterView, View paramView, int paramInt, long paramLong) {}
-    
-    public void onNothingSelected(AdapterView paramAdapterView) {}
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/widget/BNDebugModelDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

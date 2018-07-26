@@ -3,75 +3,71 @@ package com.baidu.carlife.service;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat.Builder;
+import com.baidu.carlife.C0965R;
 import com.baidu.carlife.CarlifeActivity;
 
-public class NotificationDownloadService
-  extends Service
-{
-  private NotificationManager a = null;
-  private NotificationCompat.Builder b = null;
-  private final int c = 8193;
-  private CarlifeActivity d = null;
-  
-  public void a()
-  {
-    if (this.a == null) {
-      return;
+public class NotificationDownloadService extends Service {
+    /* renamed from: a */
+    private NotificationManager f6905a = null;
+    /* renamed from: b */
+    private Builder f6906b = null;
+    /* renamed from: c */
+    private final int f6907c = 8193;
+    /* renamed from: d */
+    private CarlifeActivity f6908d = null;
+
+    /* renamed from: com.baidu.carlife.service.NotificationDownloadService$a */
+    public class C2165a extends Binder {
+        /* renamed from: a */
+        final /* synthetic */ NotificationDownloadService f6904a;
+
+        public C2165a(NotificationDownloadService this$0) {
+            this.f6904a = this$0;
+        }
+
+        /* renamed from: a */
+        public NotificationDownloadService m8208a() {
+            return this.f6904a;
+        }
     }
-    this.a.cancel(8193);
-  }
-  
-  public void a(int paramInt)
-  {
-    if ((this.b == null) && (this.d != null))
-    {
-      Object localObject = new Intent(this.d, CarlifeActivity.class);
-      TaskStackBuilder localTaskStackBuilder = TaskStackBuilder.create(this.d);
-      localTaskStackBuilder.addParentStack(CarlifeActivity.class);
-      localTaskStackBuilder.addNextIntent((Intent)localObject);
-      localObject = localTaskStackBuilder.getPendingIntent(0, 134217728);
-      this.b = new NotificationCompat.Builder(this.d).setSmallIcon(2130838698).setContentTitle("CarLife 正在下载").setProgress(100, paramInt, false).setContentIntent((PendingIntent)localObject).setOngoing(true);
-      localObject = this.b.build();
-      ((Notification)localObject).flags |= 0x10;
-      this.a = ((NotificationManager)this.d.getSystemService("notification"));
-      this.a.notify(8193, (Notification)localObject);
-      return;
+
+    /* renamed from: a */
+    public void m8211a(Activity activity) {
+        this.f6908d = (CarlifeActivity) activity;
     }
-    this.b.setProgress(100, paramInt, false);
-    this.a.notify(8193, this.b.build());
-  }
-  
-  public void a(Activity paramActivity)
-  {
-    this.d = ((CarlifeActivity)paramActivity);
-  }
-  
-  public IBinder onBind(Intent paramIntent)
-  {
-    return new a();
-  }
-  
-  public class a
-    extends Binder
-  {
-    public a() {}
-    
-    public NotificationDownloadService a()
-    {
-      return NotificationDownloadService.this;
+
+    public IBinder onBind(Intent intent) {
+        return new C2165a(this);
     }
-  }
+
+    /* renamed from: a */
+    public void m8210a(int progress) {
+        if (this.f6906b != null || this.f6908d == null) {
+            this.f6906b.setProgress(100, progress, false);
+            this.f6905a.notify(8193, this.f6906b.build());
+            return;
+        }
+        Intent resultIntent = new Intent(this.f6908d, CarlifeActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.f6908d);
+        stackBuilder.addParentStack(CarlifeActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        this.f6906b = new Builder(this.f6908d).setSmallIcon(C0965R.drawable.ic_launcher).setContentTitle("CarLife 正在下载").setProgress(100, progress, false).setContentIntent(stackBuilder.getPendingIntent(0, 134217728)).setOngoing(true);
+        Notification n = this.f6906b.build();
+        n.flags |= 16;
+        this.f6905a = (NotificationManager) this.f6908d.getSystemService("notification");
+        this.f6905a.notify(8193, n);
+    }
+
+    /* renamed from: a */
+    public void m8209a() {
+        if (this.f6905a != null) {
+            this.f6905a.cancel(8193);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/service/NotificationDownloadService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

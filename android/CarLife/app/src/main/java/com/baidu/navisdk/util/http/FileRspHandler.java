@@ -16,489 +16,351 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpResponseException;
 
-public class FileRspHandler
-  extends BaseRspHandler
-{
-  private static final int BUFFER_SIZE = 4096;
-  private static final String TAG = "FileRspHandler";
-  private static final String TEMP_SUFFIX = ".download";
-  private boolean isStop = false;
-  private long mDownloadSize;
-  private File mFile;
-  private long mNetworkSpeed;
-  private long mPreviousFileSize;
-  private long mPreviousTime;
-  private File mTempFile;
-  private long mTotalSize;
-  private long mTotalTime;
-  private String md5;
-  
-  public FileRspHandler(String paramString1, String paramString2)
-  {
-    this.mFile = new File(paramString1);
-    this.mTempFile = new File(paramString2);
-    if (this.mTempFile.exists()) {
-      this.mPreviousFileSize = this.mTempFile.length();
-    }
-  }
-  
-  public FileRspHandler(String paramString1, String paramString2, long paramLong)
-  {
-    this.mFile = new File(paramString1);
-    this.mTempFile = new File(paramString2);
-    this.mTotalSize = paramLong;
-    if (this.mTempFile.exists()) {
-      this.mPreviousFileSize = this.mTempFile.length();
-    }
-  }
-  
-  public FileRspHandler(String paramString1, String paramString2, long paramLong, String paramString3)
-  {
-    this.mFile = new File(paramString1);
-    this.mTempFile = new File(paramString2);
-    this.mTotalSize = paramLong;
-    if (this.mTempFile.exists()) {
-      this.mPreviousFileSize = this.mTempFile.length();
-    }
-    this.md5 = paramString3;
-  }
-  
-  private boolean copyFile(File paramFile1, File paramFile2)
-  {
-    if ((paramFile1 != null) && (paramFile1.exists())) {
-      paramFile1.delete();
-    }
-    boolean bool2 = paramFile2.renameTo(paramFile1);
-    boolean bool1 = bool2;
-    File localFile2;
-    File localFile1;
-    Object localObject4;
-    Object localObject3;
-    Object localObject1;
-    Object localObject2;
-    if (!bool2)
-    {
-      localFile2 = null;
-      localFile1 = null;
-      localObject4 = null;
-      localObject3 = null;
-      localObject1 = localObject3;
-      localObject2 = localObject4;
-    }
-    for (;;)
-    {
-      try
-      {
-        paramFile2 = new FileInputStream(paramFile2).getChannel();
-        localObject1 = localObject3;
-        localFile1 = paramFile2;
-        localObject2 = localObject4;
-        localFile2 = paramFile2;
-        paramFile1 = new FileOutputStream(paramFile1).getChannel();
-        localObject1 = paramFile1;
-        localFile1 = paramFile2;
-        localObject2 = paramFile1;
-        localFile2 = paramFile2;
-        paramFile1.transferFrom(paramFile2, 0L, paramFile2.size());
-        bool2 = true;
-      }
-      catch (Exception paramFile1)
-      {
-        bool1 = false;
-        if (localFile1 == null) {
-          continue;
+public class FileRspHandler extends BaseRspHandler {
+    private static final int BUFFER_SIZE = 4096;
+    private static final String TAG = "FileRspHandler";
+    private static final String TEMP_SUFFIX = ".download";
+    private boolean isStop = false;
+    private long mDownloadSize;
+    private File mFile;
+    private long mNetworkSpeed;
+    private long mPreviousFileSize;
+    private long mPreviousTime;
+    private File mTempFile;
+    private long mTotalSize;
+    private long mTotalTime;
+    private String md5;
+
+    class CloseTask extends Thread {
+        InputStream inputStream = null;
+
+        public CloseTask(InputStream input) {
+            this.inputStream = input;
         }
-        try
-        {
-          localFile1.close();
-          if (localObject1 == null) {
-            continue;
-          }
-          try
-          {
-            ((FileChannel)localObject1).close();
-            return false;
-          }
-          catch (IOException paramFile1)
-          {
-            paramFile1.printStackTrace();
-            return false;
-          }
+
+        public void run() {
+            if (this.inputStream != null) {
+                try {
+                    this.inputStream.close();
+                } catch (Exception e) {
+                }
+            }
         }
-        catch (IOException paramFile1)
-        {
-          paramFile1.printStackTrace();
-          continue;
-        }
-      }
-      finally
-      {
-        if (localFile2 == null) {
-          break label205;
-        }
-      }
-      try
-      {
-        paramFile2.close();
-        bool1 = bool2;
-        if (paramFile1 == null) {}
-      }
-      catch (IOException paramFile2)
-      {
-        try
-        {
-          paramFile1.close();
-          bool1 = bool2;
-          return bool1;
-        }
-        catch (IOException paramFile1)
-        {
-          paramFile1.printStackTrace();
-          return true;
-        }
-        paramFile2 = paramFile2;
-        paramFile2.printStackTrace();
-      }
     }
-    try
-    {
-      localFile2.close();
-      label205:
-      if (localObject2 == null) {}
-    }
-    catch (IOException paramFile2)
-    {
-      try
-      {
-        ((FileChannel)localObject2).close();
-        throw paramFile1;
-        paramFile2 = paramFile2;
-        paramFile2.printStackTrace();
-      }
-      catch (IOException paramFile2)
-      {
-        for (;;)
-        {
-          paramFile2.printStackTrace();
+
+    private class ProgressReportingRandomAccessFile extends RandomAccessFile {
+        private int progress = 0;
+
+        public ProgressReportingRandomAccessFile(File file, String mode) throws FileNotFoundException {
+            super(file, mode);
         }
-      }
+
+        public void write(byte[] buffer, int offset, int count) throws IOException {
+            super.write(buffer, offset, count);
+            this.progress += count;
+            FileRspHandler.this.mTotalTime = System.currentTimeMillis() - FileRspHandler.this.mPreviousTime;
+            FileRspHandler.this.mDownloadSize = ((long) this.progress) + FileRspHandler.this.mPreviousFileSize;
+            if (FileRspHandler.this.mTotalTime > 0) {
+                FileRspHandler.this.mNetworkSpeed = (long) (((double) (((long) this.progress) / FileRspHandler.this.mTotalTime)) / 1.024d);
+            }
+        }
     }
-  }
-  
-  /* Error */
-  private void copyStream(HttpEntity paramHttpEntity)
-    throws Exception
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: getfield 40	com/baidu/navisdk/util/http/FileRspHandler:isStop	Z
-    //   4: ifeq +4 -> 8
-    //   7: return
-    //   8: aload_1
-    //   9: invokeinterface 131 1 0
-    //   14: astore_1
-    //   15: new 9	com/baidu/navisdk/util/http/FileRspHandler$ProgressReportingRandomAccessFile
-    //   18: dup
-    //   19: aload_0
-    //   20: aload_0
-    //   21: getfield 49	com/baidu/navisdk/util/http/FileRspHandler:mTempFile	Ljava/io/File;
-    //   24: ldc -123
-    //   26: invokespecial 136	com/baidu/navisdk/util/http/FileRspHandler$ProgressReportingRandomAccessFile:<init>	(Lcom/baidu/navisdk/util/http/FileRspHandler;Ljava/io/File;Ljava/lang/String;)V
-    //   29: astore_3
-    //   30: sipush 4096
-    //   33: newarray <illegal type>
-    //   35: astore 4
-    //   37: aload_3
-    //   38: aload_3
-    //   39: invokevirtual 139	java/io/RandomAccessFile:length	()J
-    //   42: invokevirtual 143	java/io/RandomAccessFile:seek	(J)V
-    //   45: aload_0
-    //   46: invokestatic 148	java/lang/System:currentTimeMillis	()J
-    //   49: putfield 75	com/baidu/navisdk/util/http/FileRspHandler:mPreviousTime	J
-    //   52: aload_0
-    //   53: getfield 40	com/baidu/navisdk/util/http/FileRspHandler:isStop	Z
-    //   56: ifne +28 -> 84
-    //   59: invokestatic 154	java/lang/Thread:currentThread	()Ljava/lang/Thread;
-    //   62: invokevirtual 157	java/lang/Thread:isInterrupted	()Z
-    //   65: ifne +19 -> 84
-    //   68: aload_1
-    //   69: aload 4
-    //   71: iconst_0
-    //   72: aload 4
-    //   74: arraylength
-    //   75: invokevirtual 163	java/io/InputStream:read	([BII)I
-    //   78: istore_2
-    //   79: iload_2
-    //   80: iconst_m1
-    //   81: if_icmpne +61 -> 142
-    //   84: aload_0
-    //   85: getfield 40	com/baidu/navisdk/util/http/FileRspHandler:isStop	Z
-    //   88: ifne +25 -> 113
-    //   91: invokestatic 154	java/lang/Thread:currentThread	()Ljava/lang/Thread;
-    //   94: invokevirtual 157	java/lang/Thread:isInterrupted	()Z
-    //   97: ifeq +16 -> 113
-    //   100: aload_0
-    //   101: new 165	java/lang/Throwable
-    //   104: dup
-    //   105: ldc -89
-    //   107: invokespecial 168	java/lang/Throwable:<init>	(Ljava/lang/String;)V
-    //   110: invokevirtual 172	com/baidu/navisdk/util/http/FileRspHandler:handlePauseMessage	(Ljava/lang/Throwable;)V
-    //   113: aload_3
-    //   114: ifnull +7 -> 121
-    //   117: aload_3
-    //   118: invokevirtual 173	java/io/RandomAccessFile:close	()V
-    //   121: aload_1
-    //   122: ifnull -115 -> 7
-    //   125: new 6	com/baidu/navisdk/util/http/FileRspHandler$CloseTask
-    //   128: dup
-    //   129: aload_0
-    //   130: aload_1
-    //   131: invokespecial 176	com/baidu/navisdk/util/http/FileRspHandler$CloseTask:<init>	(Lcom/baidu/navisdk/util/http/FileRspHandler;Ljava/io/InputStream;)V
-    //   134: invokevirtual 179	com/baidu/navisdk/util/http/FileRspHandler$CloseTask:start	()V
-    //   137: aload_1
-    //   138: invokevirtual 180	java/io/InputStream:close	()V
-    //   141: return
-    //   142: aload_3
-    //   143: aload 4
-    //   145: iconst_0
-    //   146: iload_2
-    //   147: invokevirtual 184	java/io/RandomAccessFile:write	([BII)V
-    //   150: aload_0
-    //   151: aload_0
-    //   152: getfield 63	com/baidu/navisdk/util/http/FileRspHandler:mTotalSize	J
-    //   155: aload_0
-    //   156: getfield 78	com/baidu/navisdk/util/http/FileRspHandler:mDownloadSize	J
-    //   159: aload_0
-    //   160: getfield 82	com/baidu/navisdk/util/http/FileRspHandler:mNetworkSpeed	J
-    //   163: invokevirtual 188	com/baidu/navisdk/util/http/FileRspHandler:handleProgressMessage	(JJJ)V
-    //   166: goto -114 -> 52
-    //   169: astore 4
-    //   171: aload_3
-    //   172: ifnull +7 -> 179
-    //   175: aload_3
-    //   176: invokevirtual 173	java/io/RandomAccessFile:close	()V
-    //   179: aload_1
-    //   180: ifnull +19 -> 199
-    //   183: new 6	com/baidu/navisdk/util/http/FileRspHandler$CloseTask
-    //   186: dup
-    //   187: aload_0
-    //   188: aload_1
-    //   189: invokespecial 176	com/baidu/navisdk/util/http/FileRspHandler$CloseTask:<init>	(Lcom/baidu/navisdk/util/http/FileRspHandler;Ljava/io/InputStream;)V
-    //   192: invokevirtual 179	com/baidu/navisdk/util/http/FileRspHandler$CloseTask:start	()V
-    //   195: aload_1
-    //   196: invokevirtual 180	java/io/InputStream:close	()V
-    //   199: aload 4
-    //   201: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	202	0	this	FileRspHandler
-    //   0	202	1	paramHttpEntity	HttpEntity
-    //   78	69	2	i	int
-    //   29	147	3	localProgressReportingRandomAccessFile	ProgressReportingRandomAccessFile
-    //   35	109	4	arrayOfByte	byte[]
-    //   169	31	4	localObject	Object
-    // Exception table:
-    //   from	to	target	type
-    //   52	79	169	finally
-    //   84	113	169	finally
-    //   142	166	169	finally
-  }
-  
-  private void ensureFinishDownload()
-  {
-    if ((this.isStop) && (this.mTotalSize != this.mDownloadSize)) {}
-    String str;
-    do
-    {
-      return;
-      if (this.mTotalSize != this.mDownloadSize)
-      {
-        handleFailureMessage(new Throwable("the download size not equal the given total size"));
+
+    private void copyStream(org.apache.http.HttpEntity r12) throws java.lang.Exception {
+        /* JADX: method processing error */
+/*
+Error: jadx.core.utils.exceptions.JadxRuntimeException: Can't find block by offset: 0x0004 in list [B:18:0x005c]
+	at jadx.core.utils.BlockUtils.getBlockByOffset(BlockUtils.java:43)
+	at jadx.core.dex.instructions.IfNode.initBlocks(IfNode.java:60)
+	at jadx.core.dex.visitors.blocksmaker.BlockFinish.initBlocksInIfNodes(BlockFinish.java:48)
+	at jadx.core.dex.visitors.blocksmaker.BlockFinish.visit(BlockFinish.java:33)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:31)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:17)
+	at jadx.core.ProcessClass.process(ProcessClass.java:34)
+	at jadx.api.JadxDecompiler.processClass(JadxDecompiler.java:282)
+	at jadx.api.JavaClass.decompile(JavaClass.java:62)
+	at jadx.api.JadxDecompiler.lambda$appendSourcesSave$0(JadxDecompiler.java:200)
+*/
+        /*
+        r11 = this;
+        r1 = r11.isStop;
+        if (r1 == 0) goto L_0x0005;
+    L_0x0004:
         return;
-      }
-      if (!copyFile(this.mFile, this.mTempFile))
-      {
-        handleFailureMessage(new Throwable("can not copy the temp file to dst file"));
-        return;
-      }
-      if (this.mTempFile.exists()) {
-        this.mTempFile.delete();
-      }
-      if (TextUtils.isEmpty(this.md5)) {
-        break;
-      }
-      str = FileUtils.getMd5ByFile(this.mFile.getAbsolutePath());
-      if ((str == null) || (TextUtils.isEmpty(str)))
-      {
-        handleFailureMessage(new Throwable("can not calc the download file md5"));
-        return;
-      }
-      if (str.equals(this.md5))
-      {
-        handleSuccessMessage(this.mFile.getAbsolutePath());
-        LogUtil.e("FileRspHandler", "success");
-        return;
-      }
-    } while (str.equals(this.md5));
-    handleFailureMessage(new Throwable("the download file md5 is not equal the given md5 value"));
-    return;
-    handleSuccessMessage(this.mFile.getAbsolutePath());
-  }
-  
-  private void getFileSize(HttpEntity paramHttpEntity)
-    throws Exception
-  {
-    if (this.isStop) {
-      return;
+    L_0x0005:
+        r8 = r12.getContent();
+        r10 = new com.baidu.navisdk.util.http.FileRspHandler$ProgressReportingRandomAccessFile;
+        r1 = r11.mTempFile;
+        r2 = "rw";
+        r10.<init>(r1, r2);
+        r1 = 4096; // 0x1000 float:5.74E-42 double:2.0237E-320;
+        r0 = new byte[r1];
+        r2 = r10.length();
+        r10.seek(r2);
+        r2 = java.lang.System.currentTimeMillis();
+        r11.mPreviousTime = r2;
+        r9 = 0;
+    L_0x0025:
+        r1 = r11.isStop;	 Catch:{ all -> 0x0077 }
+        if (r1 != 0) goto L_0x003c;	 Catch:{ all -> 0x0077 }
+    L_0x0029:
+        r1 = java.lang.Thread.currentThread();	 Catch:{ all -> 0x0077 }
+        r1 = r1.isInterrupted();	 Catch:{ all -> 0x0077 }
+        if (r1 != 0) goto L_0x003c;	 Catch:{ all -> 0x0077 }
+    L_0x0033:
+        r1 = 0;	 Catch:{ all -> 0x0077 }
+        r2 = r0.length;	 Catch:{ all -> 0x0077 }
+        r9 = r8.read(r0, r1, r2);	 Catch:{ all -> 0x0077 }
+        r1 = -1;	 Catch:{ all -> 0x0077 }
+        if (r9 != r1) goto L_0x0068;	 Catch:{ all -> 0x0077 }
+    L_0x003c:
+        r1 = r11.isStop;	 Catch:{ all -> 0x0077 }
+        if (r1 != 0) goto L_0x0055;	 Catch:{ all -> 0x0077 }
+    L_0x0040:
+        r1 = java.lang.Thread.currentThread();	 Catch:{ all -> 0x0077 }
+        r1 = r1.isInterrupted();	 Catch:{ all -> 0x0077 }
+        if (r1 == 0) goto L_0x0055;	 Catch:{ all -> 0x0077 }
+    L_0x004a:
+        r1 = new java.lang.Throwable;	 Catch:{ all -> 0x0077 }
+        r2 = "stop by interrupted";	 Catch:{ all -> 0x0077 }
+        r1.<init>(r2);	 Catch:{ all -> 0x0077 }
+        r11.handlePauseMessage(r1);	 Catch:{ all -> 0x0077 }
+    L_0x0055:
+        if (r10 == 0) goto L_0x005a;
+    L_0x0057:
+        r10.close();
+    L_0x005a:
+        if (r8 == 0) goto L_0x0004;
+    L_0x005c:
+        r1 = new com.baidu.navisdk.util.http.FileRspHandler$CloseTask;
+        r1.<init>(r8);
+        r1.start();
+        r8.close();
+        goto L_0x0004;
+    L_0x0068:
+        r1 = 0;
+        r10.write(r0, r1, r9);	 Catch:{ all -> 0x0077 }
+        r2 = r11.mTotalSize;	 Catch:{ all -> 0x0077 }
+        r4 = r11.mDownloadSize;	 Catch:{ all -> 0x0077 }
+        r6 = r11.mNetworkSpeed;	 Catch:{ all -> 0x0077 }
+        r1 = r11;	 Catch:{ all -> 0x0077 }
+        r1.handleProgressMessage(r2, r4, r6);	 Catch:{ all -> 0x0077 }
+        goto L_0x0025;
+    L_0x0077:
+        r1 = move-exception;
+        if (r10 == 0) goto L_0x007d;
+    L_0x007a:
+        r10.close();
+    L_0x007d:
+        if (r8 == 0) goto L_0x008a;
+    L_0x007f:
+        r2 = new com.baidu.navisdk.util.http.FileRspHandler$CloseTask;
+        r2.<init>(r8);
+        r2.start();
+        r8.close();
+    L_0x008a:
+        throw r1;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.navisdk.util.http.FileRspHandler.copyStream(org.apache.http.HttpEntity):void");
     }
-    long l = paramHttpEntity.getContentLength();
-    if (l <= 0L) {
-      throw new IOException("can not get the file size!");
-    }
-    this.mTotalSize = (this.mPreviousFileSize + l);
-  }
-  
-  public long getDownloadSize()
-  {
-    return this.mDownloadSize;
-  }
-  
-  public double getDownloadSpeed()
-  {
-    return this.mNetworkSpeed;
-  }
-  
-  public long getPreviousFileSize()
-  {
-    return this.mPreviousFileSize;
-  }
-  
-  public File getTempFile()
-  {
-    return this.mTempFile;
-  }
-  
-  public long getTotalSize()
-  {
-    return this.mTotalSize;
-  }
-  
-  public long getTotalTime()
-  {
-    return this.mTotalTime;
-  }
-  
-  public void handlePauseMessage(Throwable paramThrowable)
-  {
-    LogUtil.e("FileRspHandler", getClass().getName() + ":onPause");
-    onPause(paramThrowable);
-  }
-  
-  protected void handleResponse(HttpResponse paramHttpResponse)
-  {
-    if (this.isStop) {
-      return;
-    }
-    Object localObject = paramHttpResponse.getStatusLine();
-    int i = ((StatusLine)localObject).getStatusCode();
-    if ((i != 200) && (i != 206))
-    {
-      handlePauseMessage(new HttpResponseException(((StatusLine)localObject).getStatusCode(), ((StatusLine)localObject).getReasonPhrase()));
-      return;
-    }
-    localObject = paramHttpResponse.getEntity();
-    paramHttpResponse = null;
-    if (localObject != null) {}
-    for (;;)
-    {
-      try
-      {
-        getFileSize((HttpEntity)localObject);
-        LogUtil.e("FileRspHandler", "get file size end");
-        copyStream((HttpEntity)localObject);
-        LogUtil.e("FileRspHandler", "copy stream end");
-        ensureFinishDownload();
-        LogUtil.e("FileRspHandler", "ensureFinishDownload end");
-        if (paramHttpResponse == null) {
-          break;
+
+    public FileRspHandler(String dstFilePath, String tempFilePath, long fileSize) {
+        this.mFile = new File(dstFilePath);
+        this.mTempFile = new File(tempFilePath);
+        this.mTotalSize = fileSize;
+        if (this.mTempFile.exists()) {
+            this.mPreviousFileSize = this.mTempFile.length();
         }
-        handlePauseMessage(paramHttpResponse);
-        return;
-      }
-      catch (Exception localException)
-      {
-        if (localException != null)
-        {
-          paramHttpResponse = localException;
-          if (localException.getMessage() != null) {}
+    }
+
+    public FileRspHandler(String dstFilePath, String tempFilePath) {
+        this.mFile = new File(dstFilePath);
+        this.mTempFile = new File(tempFilePath);
+        if (this.mTempFile.exists()) {
+            this.mPreviousFileSize = this.mTempFile.length();
         }
-        else
-        {
-          paramHttpResponse = new Exception("unknow error when handle get fiel");
+    }
+
+    public FileRspHandler(String dstFilePath, String tempFilePath, long fileSize, String md5) {
+        this.mFile = new File(dstFilePath);
+        this.mTempFile = new File(tempFilePath);
+        this.mTotalSize = fileSize;
+        if (this.mTempFile.exists()) {
+            this.mPreviousFileSize = this.mTempFile.length();
         }
-        continue;
-      }
-      paramHttpResponse = new NullPointerException("the http entity is null!");
+        this.md5 = md5;
     }
-  }
-  
-  public void onPause(Throwable paramThrowable) {}
-  
-  public void stop()
-  {
-    handlePauseMessage(new Throwable("stop by call the stop method"));
-    this.isStop = true;
-  }
-  
-  class CloseTask
-    extends Thread
-  {
-    InputStream inputStream = null;
-    
-    public CloseTask(InputStream paramInputStream)
-    {
-      this.inputStream = paramInputStream;
+
+    public void stop() {
+        handlePauseMessage(new Throwable("stop by call the stop method"));
+        this.isStop = true;
     }
-    
-    public void run()
-    {
-      if (this.inputStream != null) {}
-      try
-      {
-        this.inputStream.close();
-        return;
-      }
-      catch (Exception localException) {}
+
+    public long getDownloadSize() {
+        return this.mDownloadSize;
     }
-  }
-  
-  private class ProgressReportingRandomAccessFile
-    extends RandomAccessFile
-  {
-    private int progress = 0;
-    
-    public ProgressReportingRandomAccessFile(File paramFile, String paramString)
-      throws FileNotFoundException
-    {
-      super(paramString);
+
+    public long getTotalSize() {
+        return this.mTotalSize;
     }
-    
-    public void write(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-      throws IOException
-    {
-      super.write(paramArrayOfByte, paramInt1, paramInt2);
-      this.progress += paramInt2;
-      FileRspHandler.access$002(FileRspHandler.this, System.currentTimeMillis() - FileRspHandler.this.mPreviousTime);
-      FileRspHandler.access$202(FileRspHandler.this, this.progress + FileRspHandler.this.mPreviousFileSize);
-      if (FileRspHandler.this.mTotalTime > 0L) {
-        FileRspHandler.access$402(FileRspHandler.this, (this.progress / FileRspHandler.this.mTotalTime / 1.024D));
-      }
+
+    public double getDownloadSpeed() {
+        return (double) this.mNetworkSpeed;
     }
-  }
+
+    public long getPreviousFileSize() {
+        return this.mPreviousFileSize;
+    }
+
+    public long getTotalTime() {
+        return this.mTotalTime;
+    }
+
+    public File getTempFile() {
+        return this.mTempFile;
+    }
+
+    public void onPause(Throwable pauseReason) {
+    }
+
+    public void handlePauseMessage(Throwable error) {
+        LogUtil.m15791e(TAG, getClass().getName() + ":onPause");
+        onPause(error);
+    }
+
+    protected void handleResponse(HttpResponse response) {
+        if (!this.isStop) {
+            StatusLine status = response.getStatusLine();
+            int statusCode = status.getStatusCode();
+            if (statusCode == 200 || statusCode == 206) {
+                HttpEntity entity = response.getEntity();
+                Throwable error = null;
+                if (entity != null) {
+                    try {
+                        getFileSize(entity);
+                        LogUtil.m15791e(TAG, "get file size end");
+                        copyStream(entity);
+                        LogUtil.m15791e(TAG, "copy stream end");
+                        ensureFinishDownload();
+                        LogUtil.m15791e(TAG, "ensureFinishDownload end");
+                    } catch (Exception e) {
+                        Throwable e2 = e;
+                        if (e2 == null || e2.getMessage() == null) {
+                            e2 = new Exception("unknow error when handle get fiel");
+                        }
+                        error = e2;
+                    }
+                } else {
+                    error = new NullPointerException("the http entity is null!");
+                }
+                if (error != null) {
+                    handlePauseMessage(error);
+                    return;
+                }
+                return;
+            }
+            handlePauseMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()));
+        }
+    }
+
+    private void getFileSize(HttpEntity entity) throws Exception {
+        if (!this.isStop) {
+            long contentLenght = entity.getContentLength();
+            if (contentLenght <= 0) {
+                throw new IOException("can not get the file size!");
+            }
+            this.mTotalSize = this.mPreviousFileSize + contentLenght;
+        }
+    }
+
+    private void ensureFinishDownload() {
+        if (this.isStop && this.mTotalSize != this.mDownloadSize) {
+            return;
+        }
+        if (this.mTotalSize != this.mDownloadSize) {
+            handleFailureMessage(new Throwable("the download size not equal the given total size"));
+        } else if (copyFile(this.mFile, this.mTempFile)) {
+            if (this.mTempFile.exists()) {
+                this.mTempFile.delete();
+            }
+            if (TextUtils.isEmpty(this.md5)) {
+                handleSuccessMessage(this.mFile.getAbsolutePath());
+                return;
+            }
+            String downloadFileMd5 = FileUtils.getMd5ByFile(this.mFile.getAbsolutePath());
+            if (downloadFileMd5 == null || TextUtils.isEmpty(downloadFileMd5)) {
+                handleFailureMessage(new Throwable("can not calc the download file md5"));
+            } else if (downloadFileMd5.equals(this.md5)) {
+                handleSuccessMessage(this.mFile.getAbsolutePath());
+                LogUtil.m15791e(TAG, "success");
+            } else if (!downloadFileMd5.equals(this.md5)) {
+                handleFailureMessage(new Throwable("the download file md5 is not equal the given md5 value"));
+            }
+        } else {
+            handleFailureMessage(new Throwable("can not copy the temp file to dst file"));
+        }
+    }
+
+    private boolean copyFile(File dstFile, File srcFile) {
+        if (dstFile != null && dstFile.exists()) {
+            dstFile.delete();
+        }
+        boolean hasCopy = srcFile.renameTo(dstFile);
+        if (!hasCopy) {
+            FileChannel srcChannel = null;
+            FileChannel dstChannel = null;
+            try {
+                srcChannel = new FileInputStream(srcFile).getChannel();
+                dstChannel = new FileOutputStream(dstFile).getChannel();
+                dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+                hasCopy = true;
+                if (srcChannel != null) {
+                    try {
+                        srcChannel.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (dstChannel != null) {
+                    try {
+                        dstChannel.close();
+                    } catch (IOException e2) {
+                        e2.printStackTrace();
+                    }
+                }
+            } catch (Exception e3) {
+                hasCopy = false;
+                if (srcChannel != null) {
+                    try {
+                        srcChannel.close();
+                    } catch (IOException e22) {
+                        e22.printStackTrace();
+                    }
+                }
+                if (dstChannel != null) {
+                    try {
+                        dstChannel.close();
+                    } catch (IOException e222) {
+                        e222.printStackTrace();
+                    }
+                }
+            } catch (Throwable th) {
+                if (srcChannel != null) {
+                    try {
+                        srcChannel.close();
+                    } catch (IOException e2222) {
+                        e2222.printStackTrace();
+                    }
+                }
+                if (dstChannel != null) {
+                    try {
+                        dstChannel.close();
+                    } catch (IOException e22222) {
+                        e22222.printStackTrace();
+                    }
+                }
+            }
+        }
+        return hasCopy;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/http/FileRspHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

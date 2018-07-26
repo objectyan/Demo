@@ -1,8 +1,6 @@
 package com.baidu.navisdk.ui.voice.view;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build.VERSION;
@@ -12,22 +10,28 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
-import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.radio.p080b.C2125n;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.CommonParams.Key;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.statistics.BNStatisticsManager;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
 import com.baidu.navisdk.ui.util.EventDelayUtil;
 import com.baidu.navisdk.ui.util.EventDelayUtil.EventDelayListener;
 import com.baidu.navisdk.ui.util.ForbidDaulClickUtils;
 import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.ui.voice.BNVoice;
-import com.baidu.navisdk.ui.voice.BNVoice.OnVoicePageJumpListener;
+import com.baidu.navisdk.ui.voice.BNVoice$VoiceUserAction;
+import com.baidu.navisdk.ui.voice.BNVoiceParams;
+import com.baidu.navisdk.ui.voice.BNVoiceParams.VoiceEntry;
 import com.baidu.navisdk.ui.voice.controller.VoiceDownloadController;
 import com.baidu.navisdk.ui.voice.controller.VoiceDownloadStatus;
 import com.baidu.navisdk.ui.voice.controller.VoiceHelper;
@@ -36,6 +40,7 @@ import com.baidu.navisdk.ui.widget.BNCommonProgressDialog;
 import com.baidu.navisdk.ui.widget.BNCommonTitleBar;
 import com.baidu.navisdk.ui.widget.BNDialog;
 import com.baidu.navisdk.ui.widget.BNDialog.OnNaviClickListener;
+import com.baidu.navisdk.util.common.CommonHandlerThread;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.NetworkUtils;
 import com.baidu.navisdk.util.http.HttpURLManager;
@@ -44,7 +49,6 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,1187 +57,910 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class VoiceSquareView
-  extends VoiceBaseView
-{
-  private static final int ERRNO_SUCCESS = 0;
-  private static final int ERRNO_SYSTEM_ERRO = 1;
-  private static final int PAGE_TYPE_DETAIL = 2;
-  private static final int PAGE_TYPE_SQUARE = 0;
-  private static final int PAGE_TYPE_TOPIC = 1;
-  private boolean isFromNavingPage;
-  private String mActionParam = null;
-  private boolean mBtnShareClicked;
-  private View mClickableFalseLayout;
-  private int mCurrentWebPage = 0;
-  private EventDelayUtil.EventDelayListener mDelayListener = new EventDelayUtil.EventDelayListener()
-  {
-    public void onStart(int paramAnonymousInt, Object... paramAnonymousVarArgs)
-    {
-      boolean bool = true;
-      LogUtil.e("BNVoice", "onStart key: " + paramAnonymousInt);
-      Object localObject;
-      if ((paramAnonymousInt == 1) || (paramAnonymousInt == 4) || (paramAnonymousInt == 8))
-      {
-        localObject = (String)paramAnonymousVarArgs[0];
-        if ((paramAnonymousInt == 1) || (paramAnonymousInt == 8))
-        {
-          paramAnonymousInt = ((Integer)paramAnonymousVarArgs[1]).intValue();
-          VoiceSquareView.access$2002(VoiceSquareView.this, VoiceSquareView.this.showDownloadingList((String)localObject, paramAnonymousInt));
-          if ((VoiceSquareView.this.mUrlLoadingWebView == null) || (VoiceSquareView.this.mDownloadingStr == null) || (VoiceSquareView.this.mDownloadingStr.length() <= 0)) {}
-        }
-      }
-      for (;;)
-      {
-        try
-        {
-          VoiceSquareView.this.mUrlLoadingWebView.loadUrl("javascript:showDownloadingList('" + VoiceSquareView.this.mDownloadingStr + "')");
-          return;
-        }
-        catch (Exception paramAnonymousVarArgs) {}
-        paramAnonymousInt = 100;
-        break;
-        if (paramAnonymousInt == 2)
-        {
-          paramAnonymousVarArgs = (String)paramAnonymousVarArgs[0];
-          VoiceSquareView.access$2102(VoiceSquareView.this, VoiceSquareView.this.setPauseStatus(paramAnonymousVarArgs));
-          if ((VoiceSquareView.this.mUrlLoadingWebView == null) || (VoiceSquareView.this.mPauseStatusStr == null) || (VoiceSquareView.this.mPauseStatusStr.length() <= 0)) {
-            continue;
-          }
-          try
-          {
-            VoiceSquareView.this.mUrlLoadingWebView.loadUrl("javascript:setPauseStatus('" + VoiceSquareView.this.mPauseStatusStr + "')");
-            return;
-          }
-          catch (Exception paramAnonymousVarArgs)
-          {
-            return;
-          }
-        }
-        if (paramAnonymousInt == 3)
-        {
-          VoiceSquareView.this.showDownloadList();
-          return;
-        }
-        if (paramAnonymousInt == 6)
-        {
-          paramAnonymousVarArgs = (String)paramAnonymousVarArgs[0];
-          paramAnonymousVarArgs = VoiceHelper.getInstance().getVoiceInfo(paramAnonymousVarArgs);
-          localObject = new StringBuilder().append("realData is null?");
-          if (paramAnonymousVarArgs == null) {}
-          for (;;)
-          {
-            LogUtil.e("BNVoice", bool);
-            if (paramAnonymousVarArgs == null) {
-              break;
+public class VoiceSquareView extends VoiceBaseView {
+    private static final int ERRNO_SUCCESS = 0;
+    private static final int ERRNO_SYSTEM_ERRO = 1;
+    private static final int PAGE_TYPE_DETAIL = 2;
+    private static final int PAGE_TYPE_SQUARE = 0;
+    private static final int PAGE_TYPE_TOPIC = 1;
+    private boolean isFromNavingPage;
+    private String mActionParam = null;
+    private boolean mBtnShareClicked;
+    private View mClickableFalseLayout;
+    private int mCurrentWebPage = 0;
+    private EventDelayListener mDelayListener = new C45586();
+    private String mDownloadingStr = null;
+    private ArrayList<VoiceInfo> mDownsInfos = new ArrayList();
+    private EventDelayUtil mEventDelayUtil = null;
+    private ArrayList<VoiceInfo> mHasDownloadInfos = new ArrayList();
+    private View mLoadingFailLayout;
+    private View mLoadingSuccessLayout;
+    private int mLocalVoiceSize = 0;
+    boolean mMapMode = BNSettingManager.isUsingMapMode();
+    private BNDialog mNetStatusDialog = null;
+    private String mPauseStatusStr = null;
+    private ProgressBar mProgressBar;
+    private ArrayList<VoiceInfo> mRecommendInfos = new ArrayList();
+    private ArrayList<VoiceInfo> mSharedInfos = new ArrayList();
+    private String mStartStatusStr = null;
+    private String mTaskId = null;
+    private BNWorkerNormalTask<String, String> mTimeOutMonitorTask = new BNWorkerNormalTask<String, String>("mTimeOutMonitorTask-" + getClass().getSimpleName(), null) {
+        protected String execute() {
+            if (VoiceSquareView.this.mWebView != null) {
+                VoiceSquareView.this.mWebView.stopLoading();
             }
-            VoiceSquareView.this.showDownloadList();
-            return;
-            bool = false;
-          }
-        }
-      }
-    }
-  };
-  private String mDownloadingStr = null;
-  private ArrayList<VoiceInfo> mDownsInfos = new ArrayList();
-  private EventDelayUtil mEventDelayUtil = null;
-  private ArrayList<VoiceInfo> mHasDownloadInfos = new ArrayList();
-  private View mLoadingFailLayout;
-  private View mLoadingSuccessLayout;
-  private int mLocalVoiceSize = 0;
-  boolean mMapMode = BNSettingManager.isUsingMapMode();
-  private BNDialog mNetStatusDialog = null;
-  private String mPauseStatusStr = null;
-  private ProgressBar mProgressBar;
-  private ArrayList<VoiceInfo> mRecommendInfos = new ArrayList();
-  private ArrayList<VoiceInfo> mSharedInfos = new ArrayList();
-  private String mStartStatusStr = null;
-  private String mTaskId = null;
-  private BNWorkerNormalTask<String, String> mTimeOutMonitorTask = new BNWorkerNormalTask("mTimeOutMonitorTask-" + getClass().getSimpleName(), null)
-  {
-    protected String execute()
-    {
-      if (VoiceSquareView.this.mWebView != null) {
-        VoiceSquareView.this.mWebView.stopLoading();
-      }
-      VoiceSquareView.this.showLoadingFailView();
-      return null;
-    }
-  };
-  private BNCommonTitleBar mTitleBar;
-  private String mTopicShareParam = null;
-  private String mUrl = null;
-  private WebView mUrlLoadingWebView;
-  private ViewGroup mVoiceSquareView;
-  private LinkedList<String> mWaitingInfos = new LinkedList();
-  private BNCommonProgressDialog mWaitingLoading = null;
-  private WebView mWebView;
-  private String mYPID = null;
-  
-  private void dismissWaitingLoading()
-  {
-    try
-    {
-      if ((this.mWaitingLoading != null) && (this.mActivity != null) && (!this.mActivity.isFinishing()) && (this.mWaitingLoading.isShowing())) {
-        this.mWaitingLoading.dismiss();
-      }
-      return;
-    }
-    catch (Exception localException)
-    {
-      this.mWaitingLoading = null;
-    }
-  }
-  
-  @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface"})
-  private void findViews()
-  {
-    if (this.mVoiceSquareView == null) {
-      return;
-    }
-    this.mLoadingSuccessLayout = ((RelativeLayout)this.mVoiceSquareView.findViewById(1711867313));
-    this.mLoadingFailLayout = this.mVoiceSquareView.findViewById(1711867293);
-    this.mClickableFalseLayout = ((RelativeLayout)this.mVoiceSquareView.findViewById(1711867316));
-    this.mClickableFalseLayout.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (NetworkUtils.isNetworkAvailable(VoiceSquareView.this.mActivity))
-        {
-          VoiceSquareView.this.setWebViewClickableTrue();
-          return;
-        }
-        TipTool.onCreateToastDialog(VoiceSquareView.this.mActivity, JarUtils.getResources().getString(1711670130));
-      }
-    });
-    hideLoadingFailView();
-    this.mLoadingFailLayout.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (NetworkUtils.isNetworkAvailable(VoiceSquareView.this.mActivity))
-        {
-          if (VoiceSquareView.this.mLoadingFailLayout.getVisibility() == 0) {
-            if (VoiceSquareView.this.mWebView != null)
-            {
-              if (VoiceSquareView.this.mWebView.getUrl() != null) {
-                break label122;
-              }
-              VoiceSquareView.this.mWebView.loadUrl(VoiceSquareView.this.mUrl);
-            }
-          }
-          for (;;)
-          {
-            BNWorkerCenter.getInstance().submitMainThreadTaskDelay(new BNWorkerNormalTask("findViews-" + getClass().getSimpleName(), null)new BNWorkerConfig
-            {
-              protected String execute()
-              {
-                VoiceSquareView.this.hideLoadingFailView();
-                return null;
-              }
-            }, new BNWorkerConfig(100, 0), 1000L);
-            return;
-            label122:
-            VoiceSquareView.this.mWebView.reload();
-          }
-        }
-        TipTool.onCreateToastDialog(VoiceSquareView.this.mActivity, JarUtils.getResources().getString(1711670130));
-      }
-    });
-    this.mTitleBar = ((BNCommonTitleBar)this.mVoiceSquareView.findViewById(1711867312));
-    this.mTitleBar.setMiddleTextSize(18.0F);
-    this.mTitleBar.setLeftOnClickedListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (VoiceSquareView.this.mJumpListener != null) {
-          VoiceSquareView.this.mJumpListener.onBack(null);
-        }
-      }
-    });
-    updateRightMenu();
-    this.mProgressBar = ((ProgressBar)this.mVoiceSquareView.findViewById(1711867315));
-    this.mWebView = ((WebView)this.mVoiceSquareView.findViewById(1711867314));
-    this.mWebView.getSettings().setJavaScriptEnabled(true);
-    this.mWebView.getSettings().setBuiltInZoomControls(true);
-    this.mWebView.getSettings().setLoadWithOverviewMode(true);
-    WebSettings localWebSettings = this.mWebView.getSettings();
-    localWebSettings.setCacheMode(-1);
-    localWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-    localWebSettings.setLoadsImagesAutomatically(true);
-    localWebSettings.setUseWideViewPort(true);
-    localWebSettings.setLoadWithOverviewMode(true);
-    localWebSettings.setSupportZoom(false);
-    localWebSettings.setUseWideViewPort(true);
-    localWebSettings.setSupportMultipleWindows(true);
-    localWebSettings.setUserAgentString("baidumap_ANDR");
-    this.mWebView.setWebViewClient(new WebViewClient()
-    {
-      public void onPageFinished(WebView paramAnonymousWebView, String paramAnonymousString)
-      {
-        if (!NetworkUtils.isNetworkAvailable(VoiceSquareView.this.mActivity)) {
-          VoiceSquareView.this.showLoadingFailView();
-        }
-        BNWorkerCenter.getInstance().cancelTask(VoiceSquareView.this.mTimeOutMonitorTask, false);
-        super.onPageFinished(paramAnonymousWebView, paramAnonymousString);
-      }
-      
-      public void onPageStarted(WebView paramAnonymousWebView, String paramAnonymousString, Bitmap paramAnonymousBitmap)
-      {
-        BNWorkerCenter.getInstance().cancelTask(VoiceSquareView.this.mTimeOutMonitorTask, false);
-        BNWorkerCenter.getInstance().submitMainThreadTaskDelay(VoiceSquareView.this.mTimeOutMonitorTask, new BNWorkerConfig(4, 0), 15000L);
-        VoiceSquareView.this.updateRightMenu();
-        super.onPageStarted(paramAnonymousWebView, paramAnonymousString, paramAnonymousBitmap);
-      }
-      
-      public void onReceivedError(WebView paramAnonymousWebView, int paramAnonymousInt, String paramAnonymousString1, String paramAnonymousString2)
-      {
-        BNWorkerCenter.getInstance().cancelTask(VoiceSquareView.this.mTimeOutMonitorTask, false);
-        VoiceSquareView.this.showLoadingFailView();
-        super.onReceivedError(paramAnonymousWebView, paramAnonymousInt, paramAnonymousString1, paramAnonymousString2);
-      }
-      
-      public void onReceivedSslError(WebView paramAnonymousWebView, SslErrorHandler paramAnonymousSslErrorHandler, SslError paramAnonymousSslError)
-      {
-        super.onReceivedSslError(paramAnonymousWebView, paramAnonymousSslErrorHandler, paramAnonymousSslError);
-      }
-      
-      public boolean shouldOverrideUrlLoading(WebView paramAnonymousWebView, String paramAnonymousString)
-      {
-        VoiceSquareView.access$602(VoiceSquareView.this, paramAnonymousWebView);
-        if ((paramAnonymousString != null) && (paramAnonymousString.contains("bdnavi://check"))) {
-          VoiceSquareView.this.showDownloadList();
-        }
-        for (;;)
-        {
-          return true;
-          if ((paramAnonymousString != null) && (paramAnonymousString.contains("bdnavi://start")))
-          {
-            VoiceSquareView.access$802(VoiceSquareView.this, VoiceSquareView.this.getURLParam(paramAnonymousString, "actionParam"));
-            VoiceSquareView.access$1002(VoiceSquareView.this, VoiceSquareView.this.getActionParamID(VoiceSquareView.this.mActionParam));
-            paramAnonymousWebView = new VoiceInfo();
-            paramAnonymousWebView.taskId = VoiceSquareView.this.mTaskId;
-            VoiceSquareView.access$1202(VoiceSquareView.this, VoiceDownloadController.getInstance().getDownloadVoiceTask());
-            VoiceSquareView.this.downloadStatics(VoiceSquareView.this.mTaskId);
-            if ((VoiceSquareView.this.mHasDownloadInfos != null) && (VoiceSquareView.this.mHasDownloadInfos.contains(paramAnonymousWebView))) {
-              TipTool.onCreateToastDialog(VoiceSquareView.this.mActivity, "已经下载了");
-            } else if (!VoiceDownloadStatus.getInstance().hasInTaskQueue(VoiceSquareView.this.mTaskId)) {
-              if (VoiceDownloadController.getInstance().hasInSharedVoice(VoiceSquareView.this.mTaskId))
-              {
-                VoiceSquareView.this.startDownloadCheckNet(VoiceSquareView.this.mTaskId);
-              }
-              else
-              {
-                paramAnonymousWebView = VoiceHelper.getInstance().getVoiceInfo(VoiceSquareView.this.mTaskId);
-                if (paramAnonymousWebView == null)
-                {
-                  VoiceSquareView.this.showWaitingLoading(JarUtils.getResources().getString(1711670125));
-                }
-                else
-                {
-                  VoiceDownloadController.getInstance().addSharedVoiceInfo(paramAnonymousWebView);
-                  VoiceSquareView.this.startDownloadCheckNet(VoiceSquareView.this.mTaskId);
-                }
-              }
-            }
-          }
-          else if ((paramAnonymousString != null) && (paramAnonymousString.contains("bdnavi://pause")))
-          {
-            VoiceSquareView.access$802(VoiceSquareView.this, VoiceSquareView.this.getURLParam(paramAnonymousString, "actionParam"));
-            VoiceSquareView.access$1002(VoiceSquareView.this, VoiceSquareView.this.getActionParamID(VoiceSquareView.this.mActionParam));
-            if (VoiceSquareView.this.mTaskId != null) {
-              VoiceDownloadController.getInstance().pauseDownload(VoiceSquareView.this.mTaskId);
-            }
-          }
-          else if ((paramAnonymousString != null) && (paramAnonymousString.contains("bdnavi://passTopicInfo")))
-          {
-            VoiceSquareView.access$1502(VoiceSquareView.this, VoiceSquareView.this.getURLParam(paramAnonymousString, "actionParam"));
-          }
-          else if ((paramAnonymousString != null) && (paramAnonymousString.contains("bdnavi://getdataerr")))
-          {
             VoiceSquareView.this.showLoadingFailView();
-          }
-          else
-          {
-            if (VoiceSquareView.this.mUrlLoadingWebView != null) {
-              VoiceSquareView.this.mUrlLoadingWebView.loadUrl(paramAnonymousString);
+            return null;
+        }
+    };
+    private BNCommonTitleBar mTitleBar;
+    private String mTopicShareParam = null;
+    private String mUrl = null;
+    private WebView mUrlLoadingWebView;
+    private ViewGroup mVoiceSquareView;
+    private LinkedList<String> mWaitingInfos = new LinkedList();
+    private BNCommonProgressDialog mWaitingLoading = null;
+    private WebView mWebView;
+    private String mYPID = null;
+
+    /* renamed from: com.baidu.navisdk.ui.voice.view.VoiceSquareView$1 */
+    class C45521 implements OnClickListener {
+        C45521() {
+        }
+
+        public void onClick(View v) {
+            if (NetworkUtils.isNetworkAvailable(VoiceSquareView.this.mActivity)) {
+                VoiceSquareView.this.setWebViewClickableTrue();
+            } else {
+                TipTool.onCreateToastDialog(VoiceSquareView.this.mActivity, JarUtils.getResources().getString(C4048R.string.nsdk_voice_net_work_unaiable));
             }
-            if ((paramAnonymousString != null) && (paramAnonymousString.contains("ypid")))
-            {
-              VoiceSquareView.access$1602(VoiceSquareView.this, 2);
-              VoiceSquareView.access$1702(VoiceSquareView.this, VoiceSquareView.this.getURLParam(paramAnonymousString, "ypid"));
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.voice.view.VoiceSquareView$2 */
+    class C45542 implements OnClickListener {
+        C45542() {
+        }
+
+        public void onClick(View v) {
+            if (!NetworkUtils.isNetworkAvailable(VoiceSquareView.this.mActivity)) {
+                TipTool.onCreateToastDialog(VoiceSquareView.this.mActivity, JarUtils.getResources().getString(C4048R.string.nsdk_voice_net_work_unaiable));
+            } else if (VoiceSquareView.this.mLoadingFailLayout.getVisibility() == 0) {
+                if (VoiceSquareView.this.mWebView != null) {
+                    if (VoiceSquareView.this.mWebView.getUrl() == null) {
+                        VoiceSquareView.this.mWebView.loadUrl(VoiceSquareView.this.mUrl);
+                    } else {
+                        VoiceSquareView.this.mWebView.reload();
+                    }
+                }
+                BNWorkerCenter.getInstance().submitMainThreadTaskDelay(new BNWorkerNormalTask<String, String>("findViews-" + getClass().getSimpleName(), null) {
+                    protected String execute() {
+                        VoiceSquareView.this.hideLoadingFailView();
+                        return null;
+                    }
+                }, new BNWorkerConfig(100, 0), 1000);
             }
-          }
         }
-      }
-    });
-    this.mWebView.setWebChromeClient(new WebChromeClient()
-    {
-      public void onProgressChanged(WebView paramAnonymousWebView, int paramAnonymousInt)
-      {
-        if (paramAnonymousInt == 100) {
-          VoiceSquareView.this.mProgressBar.setVisibility(8);
-        }
-        for (;;)
-        {
-          super.onProgressChanged(paramAnonymousWebView, paramAnonymousInt);
-          return;
-          if (VoiceSquareView.this.mProgressBar.getVisibility() == 8) {
-            VoiceSquareView.this.mProgressBar.setVisibility(0);
-          }
-          VoiceSquareView.this.mProgressBar.setProgress(paramAnonymousInt);
-        }
-      }
-    });
-  }
-  
-  private String getActionParamID(String paramString)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (paramString != null)
-    {
-      localObject1 = localObject2;
-      if (paramString.length() <= 0) {}
     }
-    try
-    {
-      localObject1 = new JSONObject(paramString).get("id").toString();
-      return (String)localObject1;
-    }
-    catch (JSONException paramString) {}
-    return null;
-  }
-  
-  private String getSquareVoiceInfo()
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONArray localJSONArray1 = new JSONArray();
-    JSONArray localJSONArray2 = new JSONArray();
-    JSONArray localJSONArray3 = new JSONArray();
-    JSONArray localJSONArray4 = new JSONArray();
-    this.mDownsInfos = VoiceDownloadController.getInstance().getDownloadVoiceTask();
-    Iterator localIterator;
-    Object localObject2;
-    if ((this.mDownsInfos != null) && (this.mDownsInfos.size() > 0))
-    {
-      localIterator = this.mDownsInfos.iterator();
-      while (localIterator.hasNext())
-      {
-        VoiceInfo localVoiceInfo1 = (VoiceInfo)localIterator.next();
-        try
-        {
-          localObject2 = new JSONObject();
-          ((JSONObject)localObject2).put("id", localVoiceInfo1.taskId);
-          localJSONArray1.put(localObject2);
+
+    /* renamed from: com.baidu.navisdk.ui.voice.view.VoiceSquareView$3 */
+    class C45553 implements OnClickListener {
+        C45553() {
         }
-        catch (JSONException localJSONException3) {}
-      }
-    }
-    label343:
-    Object localObject1;
-    try
-    {
-      this.mRecommendInfos = VoiceDownloadController.getInstance().getRecommendVoiceTask();
-      if ((this.mRecommendInfos != null) && (this.mRecommendInfos.size() > 0))
-      {
-        localIterator = this.mRecommendInfos.iterator();
-        for (;;)
-        {
-          if (!localIterator.hasNext()) {
-            break label343;
-          }
-          VoiceInfo localVoiceInfo2 = (VoiceInfo)localIterator.next();
-          localObject2 = VoiceMainView.DownStats.getTaskDownStatus(localVoiceInfo2.taskId);
-          if (((VoiceMainView.DownStats)localObject2).stats != 1) {
-            break;
-          }
-          try
-          {
-            localJSONObject3 = new JSONObject();
-            localJSONObject3.put("id", localVoiceInfo2.taskId);
-            localJSONObject3.put("progress", ((VoiceMainView.DownStats)localObject2).progress);
-            localJSONArray2.put(localJSONObject3);
-          }
-          catch (JSONException localJSONException4) {}
-        }
-      }
-    }
-    catch (UnsatisfiedLinkError localUnsatisfiedLinkError)
-    {
-      JSONObject localJSONObject3;
-      for (;;)
-      {
-        LogUtil.e("BNVoice", "getRecommendVoiceTask");
-        continue;
-        if (((VoiceMainView.DownStats)localObject2).stats == 2) {
-          try
-          {
-            localJSONObject3 = new JSONObject();
-            localJSONObject3.put("id", localJSONException4.taskId);
-            localJSONObject3.put("progress", ((VoiceMainView.DownStats)localObject2).progress);
-            localJSONArray3.put(localJSONObject3);
-          }
-          catch (JSONException localJSONException5) {}
-        }
-      }
-      this.mSharedInfos = VoiceDownloadController.getInstance().getSharedVoiceInfos();
-      if ((this.mSharedInfos != null) && (this.mSharedInfos.size() > 0))
-      {
-        localObject1 = this.mSharedInfos.iterator();
-        while (((Iterator)localObject1).hasNext())
-        {
-          VoiceInfo localVoiceInfo3 = (VoiceInfo)((Iterator)localObject1).next();
-          localObject2 = VoiceMainView.DownStats.getTaskDownStatus(localVoiceInfo3.taskId);
-          if ((((VoiceMainView.DownStats)localObject2).stats == 1) || (((VoiceMainView.DownStats)localObject2).stats == 3)) {
-            try
-            {
-              localJSONObject3 = new JSONObject();
-              localJSONObject3.put("id", localVoiceInfo3.taskId);
-              localJSONObject3.put("progress", ((VoiceMainView.DownStats)localObject2).progress);
-              localJSONArray2.put(localJSONObject3);
+
+        public void onClick(View v) {
+            if (VoiceSquareView.this.mJumpListener != null) {
+                VoiceSquareView.this.mJumpListener.onBack(null);
             }
-            catch (JSONException localJSONException6) {}
-          } else if (((VoiceMainView.DownStats)localObject2).stats == 2) {
-            try
-            {
-              localJSONObject3 = new JSONObject();
-              localJSONObject3.put("id", localJSONException6.taskId);
-              localJSONObject3.put("progress", ((VoiceMainView.DownStats)localObject2).progress);
-              localJSONArray3.put(localJSONObject3);
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.voice.view.VoiceSquareView$4 */
+    class C45564 extends WebViewClient {
+        C45564() {
+        }
+
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            BNWorkerCenter.getInstance().cancelTask(VoiceSquareView.this.mTimeOutMonitorTask, false);
+            VoiceSquareView.this.showLoadingFailView();
+            super.onReceivedError(view, errorCode, description, failingUrl);
+        }
+
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            VoiceSquareView.this.mUrlLoadingWebView = view;
+            if (url != null && url.contains(VoiceBaseView.URL_CHECK)) {
+                VoiceSquareView.this.showDownloadList();
+            } else if (url != null && url.contains(VoiceBaseView.URL_START)) {
+                VoiceSquareView.this.mActionParam = VoiceSquareView.this.getURLParam(url, VoiceBaseView.ACTION_PARAM);
+                VoiceSquareView.this.mTaskId = VoiceSquareView.this.getActionParamID(VoiceSquareView.this.mActionParam);
+                VoiceInfo voiceInfo = new VoiceInfo();
+                voiceInfo.taskId = VoiceSquareView.this.mTaskId;
+                VoiceSquareView.this.mHasDownloadInfos = VoiceDownloadController.getInstance().getDownloadVoiceTask();
+                VoiceSquareView.this.downloadStatics(VoiceSquareView.this.mTaskId);
+                if (VoiceSquareView.this.mHasDownloadInfos != null && VoiceSquareView.this.mHasDownloadInfos.contains(voiceInfo)) {
+                    TipTool.onCreateToastDialog(VoiceSquareView.this.mActivity, "已经下载了");
+                } else if (!VoiceDownloadStatus.getInstance().hasInTaskQueue(VoiceSquareView.this.mTaskId)) {
+                    if (VoiceDownloadController.getInstance().hasInSharedVoice(VoiceSquareView.this.mTaskId)) {
+                        VoiceSquareView.this.startDownloadCheckNet(VoiceSquareView.this.mTaskId);
+                    } else {
+                        VoiceInfo realData = VoiceHelper.getInstance().getVoiceInfo(VoiceSquareView.this.mTaskId);
+                        if (realData == null) {
+                            VoiceSquareView.this.showWaitingLoading(JarUtils.getResources().getString(C4048R.string.nsdk_string_voice_main_waiting));
+                        } else {
+                            VoiceDownloadController.getInstance().addSharedVoiceInfo(realData);
+                            VoiceSquareView.this.startDownloadCheckNet(VoiceSquareView.this.mTaskId);
+                        }
+                    }
+                }
+            } else if (url != null && url.contains(VoiceBaseView.URL_PAUSE)) {
+                VoiceSquareView.this.mActionParam = VoiceSquareView.this.getURLParam(url, VoiceBaseView.ACTION_PARAM);
+                VoiceSquareView.this.mTaskId = VoiceSquareView.this.getActionParamID(VoiceSquareView.this.mActionParam);
+                if (VoiceSquareView.this.mTaskId != null) {
+                    VoiceDownloadController.getInstance().pauseDownload(VoiceSquareView.this.mTaskId);
+                }
+            } else if (url != null && url.contains(VoiceBaseView.URL_PASS_TOPIC_INFO)) {
+                VoiceSquareView.this.mTopicShareParam = VoiceSquareView.this.getURLParam(url, VoiceBaseView.ACTION_PARAM);
+            } else if (url == null || !url.contains(VoiceBaseView.URL_NET_LOSS)) {
+                if (VoiceSquareView.this.mUrlLoadingWebView != null) {
+                    VoiceSquareView.this.mUrlLoadingWebView.loadUrl(url);
+                }
+                if (url != null && url.contains("ypid")) {
+                    VoiceSquareView.this.mCurrentWebPage = 2;
+                    VoiceSquareView.this.mYPID = VoiceSquareView.this.getURLParam(url, "ypid");
+                }
+            } else {
+                VoiceSquareView.this.showLoadingFailView();
             }
-            catch (JSONException localJSONException7) {}
-          }
+            return true;
         }
-      }
-      this.mWaitingInfos = VoiceDownloadStatus.getInstance().getTaskQueue();
-      localObject1 = this.mWaitingInfos.iterator();
-      while (((Iterator)localObject1).hasNext())
-      {
-        String str = (String)((Iterator)localObject1).next();
-        try
-        {
-          localObject2 = new JSONObject();
-          ((JSONObject)localObject2).put("id", str);
-          ((JSONObject)localObject2).put("progress", 0);
-          localJSONArray2.put(localObject2);
+
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            BNWorkerCenter.getInstance().cancelTask(VoiceSquareView.this.mTimeOutMonitorTask, false);
+            BNWorkerCenter.getInstance().submitMainThreadTaskDelay(VoiceSquareView.this.mTimeOutMonitorTask, new BNWorkerConfig(4, 0), 15000);
+            VoiceSquareView.this.updateRightMenu();
+            super.onPageStarted(view, url, favicon);
         }
-        catch (JSONException localJSONException8) {}
-      }
-      localObject1 = VoiceHelper.getInstance().getCurrentUsedTTSId();
-      if (localObject1 == null) {}
-    }
-    try
-    {
-      JSONObject localJSONObject2 = new JSONObject();
-      localJSONObject2.put("id", localObject1);
-      localJSONArray4.put(localJSONObject2);
-      try
-      {
-        localJSONObject1.put("downloadedList", localJSONArray1);
-        localJSONObject1.put("downloadingList", localJSONArray2);
-        localJSONObject1.put("downloadPauseList", localJSONArray3);
-        localJSONObject1.put("usingList", localJSONArray4);
-        return localJSONObject1.toString();
-      }
-      catch (JSONException localJSONException1)
-      {
-        for (;;) {}
-      }
-    }
-    catch (JSONException localJSONException2)
-    {
-      for (;;) {}
-    }
-  }
-  
-  private String getURLParam(String paramString1, String paramString2)
-  {
-    try
-    {
-      paramString1 = URLDecoder.decode(paramString1, "UTF-8");
-      String[] arrayOfString = new String[50];
-      if (paramString1.indexOf(paramString2) != -1)
-      {
-        paramString1 = paramString1.substring(paramString1.indexOf(paramString2)).split("&")[0].split("=", 2);
-        if ((paramString1 != null) && (paramString1.length >= 2))
-        {
-          paramString1 = paramString1[1];
-          return paramString1;
+
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            super.onReceivedSslError(view, handler, error);
         }
-      }
-    }
-    catch (Exception paramString1) {}
-    return null;
-  }
-  
-  private void hideLoadingFailView()
-  {
-    if (this.mLoadingFailLayout != null) {
-      this.mLoadingFailLayout.setVisibility(8);
-    }
-    if (this.mLoadingSuccessLayout != null) {
-      this.mLoadingSuccessLayout.setVisibility(0);
-    }
-  }
-  
-  private String setPauseStatus(String paramString)
-  {
-    JSONObject localJSONObject = new JSONObject();
-    if ((paramString != null) && (paramString.length() > 0)) {}
-    try
-    {
-      localJSONObject.put("errno", 0);
-      localJSONObject.put("id", paramString);
-      return localJSONObject.toString();
-      try
-      {
-        localJSONObject.put("errno", 1);
-        localJSONObject.put("id", paramString);
-        return localJSONObject.toString();
-      }
-      catch (JSONException paramString)
-      {
-        for (;;) {}
-      }
-    }
-    catch (JSONException paramString)
-    {
-      for (;;) {}
-    }
-  }
-  
-  private String setStartStatus(String paramString)
-  {
-    JSONObject localJSONObject = new JSONObject();
-    if ((NetworkUtils.isNetworkAvailable(this.mActivity)) && (paramString != null) && (paramString.length() > 0)) {}
-    try
-    {
-      localJSONObject.put("errno", 0);
-      localJSONObject.put("id", paramString);
-      return localJSONObject.toString();
-      try
-      {
-        localJSONObject.put("errno", 1);
-        localJSONObject.put("id", paramString);
-        return localJSONObject.toString();
-      }
-      catch (JSONException paramString)
-      {
-        for (;;) {}
-      }
-    }
-    catch (JSONException paramString)
-    {
-      for (;;) {}
-    }
-  }
-  
-  private void showDownloadList()
-  {
-    String str = getSquareVoiceInfo();
-    LogUtil.e("BNVoice", "downloadListStr:" + str);
-    if ((this.mUrlLoadingWebView != null) && (str != null) && (str.length() > 0)) {}
-    try
-    {
-      LogUtil.e("BNVoice", "loadUrl");
-      this.mUrlLoadingWebView.loadUrl("javascript:showDownloadList('" + str + "')");
-      return;
-    }
-    catch (Exception localException)
-    {
-      LogUtil.e("BNVoice", "showDownloadList Exception:" + localException.getMessage());
-    }
-  }
-  
-  private void showLoadingFailView()
-  {
-    if (this.mLoadingFailLayout != null) {
-      this.mLoadingFailLayout.setVisibility(0);
-    }
-    if (this.mLoadingSuccessLayout != null) {
-      this.mLoadingSuccessLayout.setVisibility(8);
-    }
-  }
-  
-  private void showWaitingLoading(String paramString)
-  {
-    if (this.mActivity == null) {}
-    for (;;)
-    {
-      return;
-      dismissWaitingLoading();
-      try
-      {
-        if ((this.mWaitingLoading == null) && (this.mActivity != null)) {
-          this.mWaitingLoading = new BNCommonProgressDialog(this.mActivity);
-        }
-        if (this.mWaitingLoading != null) {
-          this.mWaitingLoading.setMessage(paramString);
-        }
-        if ((!this.mWaitingLoading.isShowing()) && (this.mActivity != null) && (!this.mActivity.isFinishing()))
-        {
-          this.mWaitingLoading.show();
-          return;
-        }
-      }
-      catch (Exception paramString) {}
-    }
-  }
-  
-  private void startDownloadCheckNet(final String paramString)
-  {
-    if ((!"9999".equals(paramString)) && (!"2-".equals(paramString.substring(0, 2))))
-    {
-      VoiceDownloadController.getInstance().startDownload(paramString);
-      return;
-    }
-    if (NetworkUtils.isTypeNetworkAvailable(this.mActivity, 1))
-    {
-      VoiceDownloadController.getInstance().startDownload(paramString);
-      return;
-    }
-    if (this.mActivity == null)
-    {
-      LogUtil.e("BNVoice", "startDownloadCheckNet mActivity is null");
-      return;
-    }
-    if (this.mNetStatusDialog == null) {
-      this.mNetStatusDialog = new BNDialog(this.mActivity);
-    }
-    while (!this.mNetStatusDialog.isShowing())
-    {
-      this.mNetStatusDialog.setTitleText(JarUtils.getResources().getString(1711669753));
-      this.mNetStatusDialog.setContentMessage(JarUtils.getResources().getString(1711670139));
-      this.mNetStatusDialog.setSecondBtnText(JarUtils.getResources().getString(1711669754));
-      this.mNetStatusDialog.setOnSecondBtnClickListener(new BNDialog.OnNaviClickListener()
-      {
-        public void onClick()
-        {
-          VoiceDownloadController.getInstance().startDownload(paramString);
-        }
-      });
-      this.mNetStatusDialog.setFirstBtnText(JarUtils.getResources().getString(1711669755));
-      this.mNetStatusDialog.setOnFirstBtnClickListener(new BNDialog.OnNaviClickListener()
-      {
-        public void onClick()
-        {
-          VoiceSquareView.this.mNetStatusDialog.dismiss();
-          VoiceMainView.DownStats localDownStats = VoiceMainView.DownStats.getTaskDownStatus(paramString);
-          if ((localDownStats.stats == 0) || ((localDownStats.stats == 2) && (localDownStats.progress == 0)))
-          {
-            VoiceDownloadController.getInstance().removeDownload(paramString);
-            VoiceDownloadController.getInstance().removeSharedVoieInfo(paramString);
-          }
-        }
-      });
-      if ((this.mNetStatusDialog.isShowing()) || (this.mActivity == null) || (this.mActivity.isFinishing())) {
-        break;
-      }
-      this.mNetStatusDialog.show();
-      return;
-    }
-  }
-  
-  private void stopWebVoice()
-  {
-    if (this.mUrlLoadingWebView != null) {
-      this.mUrlLoadingWebView.loadUrl("javascript:stopListen()");
-    }
-  }
-  
-  private void updateRightMenu()
-  {
-    if (this.mTitleBar == null) {
-      return;
-    }
-    if (this.isFromNavingPage)
-    {
-      this.mTitleBar.setRightIconVisible(false);
-      this.mTitleBar.setRightTextVisible(false);
-      return;
-    }
-    if ((this.mCurrentWebPage == 2) || (this.mCurrentWebPage == 1)) {
-      if (BNaviModuleManager.isGooglePlayChannel())
-      {
-        this.mTitleBar.setRightIconVisible(false);
-        this.mTitleBar.setRightTextVisible(false);
-        if ((!BNaviModuleManager.isGooglePlayChannel()) || ((this.mCurrentWebPage != 2) && (this.mCurrentWebPage != 1))) {
-          break label200;
-        }
-        this.mTitleBar.setRightTextVisible(false);
-        this.mTitleBar.setRightIconVisible(false);
-      }
-    }
-    for (;;)
-    {
-      if (((this.mCurrentWebPage != 2) && (this.mCurrentWebPage != 1)) || (BNaviModuleManager.isGooglePlayChannel())) {
-        break label211;
-      }
-      this.mTitleBar.setRightOnClickedListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (ForbidDaulClickUtils.isFastDoubleClick()) {
-            return;
-          }
-          if (VoiceSquareView.this.mJumpListener != null) {
-            VoiceSquareView.this.mJumpListener.onVoiceUserBehaviour("voice_share");
-          }
-          BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410356", "410356");
-          if (!NetworkUtils.isNetworkAvailable(VoiceSquareView.this.mActivity))
-          {
-            TipTool.onCreateToastDialog(VoiceSquareView.this.mActivity, JarUtils.getResources().getString(1711670130));
-            return;
-          }
-          if ((VoiceSquareView.this.mCurrentWebPage == 2) && (VoiceSquareView.this.mYPID != null))
-          {
-            paramAnonymousView = VoiceHelper.getInstance().getVoiceInfo(VoiceSquareView.this.mYPID);
-            if (paramAnonymousView != null)
-            {
-              VoiceHelper.getInstance().share(paramAnonymousView);
-              return;
+
+        public void onPageFinished(WebView view, String url) {
+            if (!NetworkUtils.isNetworkAvailable(VoiceSquareView.this.mActivity)) {
+                VoiceSquareView.this.showLoadingFailView();
             }
-            VoiceSquareView.access$2302(VoiceSquareView.this, true);
-            VoiceSquareView.this.showWaitingLoading("正在获取分享信息...");
-            return;
-          }
-          if ((VoiceSquareView.this.mCurrentWebPage == 1) && (VoiceSquareView.this.mTopicShareParam != null)) {
-            try
-            {
-              VoiceHelper.getInstance().shareTopic(VoiceSquareView.this.mTopicShareParam);
-              return;
-            }
-            catch (JSONException paramAnonymousView)
-            {
-              return;
-            }
-          }
-          VoiceHelper.getInstance().shareFromSquare();
+            BNWorkerCenter.getInstance().cancelTask(VoiceSquareView.this.mTimeOutMonitorTask, false);
+            super.onPageFinished(view, url);
         }
-      });
-      return;
-      this.mTitleBar.setRightIcon(JarUtils.getResources().getDrawable(1711408156));
-      this.mTitleBar.setRightText(null);
-      break;
-      this.mTitleBar.setRightIcon(null);
-      this.mTitleBar.setRightText(JarUtils.getResources().getString(1711670137));
-      break;
-      label200:
-      this.mTitleBar.setRightIconVisible(true);
     }
-    label211:
-    this.mTitleBar.setRightOnClickedListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (ForbidDaulClickUtils.isFastDoubleClick()) {}
-        while (VoiceSquareView.this.mJumpListener == null) {
-          return;
+
+    /* renamed from: com.baidu.navisdk.ui.voice.view.VoiceSquareView$5 */
+    class C45575 extends WebChromeClient {
+        C45575() {
         }
-        paramAnonymousView = new Bundle();
-        VoiceSquareView.this.mJumpListener.onPageJump(5, 1, paramAnonymousView);
-      }
-    });
-  }
-  
-  public void downloadStatics(String paramString)
-  {
-    if (this.mJumpListener != null) {
-      this.mJumpListener.onVoiceUserBehaviour("voice_download");
-    }
-    BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410353", "410353");
-  }
-  
-  public void handleSwitchVoiceData(boolean paramBoolean, String paramString)
-  {
-    LogUtil.e("BNVoice", "handleSwitchVoiceData success:" + paramBoolean);
-    if ((paramBoolean) && (this.mEventDelayUtil != null)) {
-      this.mEventDelayUtil.exec(6, 150, new Object[] { paramString });
-    }
-    dismissWaitingLoading();
-  }
-  
-  public void initValues(Bundle paramBundle)
-  {
-    Object localObject4 = null;
-    Object localObject1 = null;
-    this.mStartStatusStr = null;
-    this.mPauseStatusStr = null;
-    this.mDownloadingStr = null;
-    this.mActionParam = null;
-    this.mTaskId = null;
-    this.mBtnShareClicked = false;
-    setWebViewClickableTrue();
-    Object localObject2 = null;
-    Bundle localBundle1 = BNVoice.getInstance().getCallBundle();
-    paramBundle = null;
-    Object localObject3 = paramBundle;
-    String str;
-    if (localBundle1 != null)
-    {
-      str = localBundle1.getString("entry");
-      if (2 != localBundle1.getInt("root_page_type")) {
-        break label556;
-      }
-      this.isFromNavingPage = true;
-      Bundle localBundle2 = localBundle1.getBundle("VOICEINFO");
-      localObject2 = str;
-      localObject3 = paramBundle;
-      if (localBundle2 != null)
-      {
-        localObject3 = VoiceInfo.getVoiceInfo(localBundle2);
-        localObject2 = str;
-      }
-    }
-    for (;;)
-    {
-      updateRightMenu();
-      if (this.mUrl == null)
-      {
-        paramBundle = (Bundle)localObject4;
-        if (localBundle1 != null)
-        {
-          paramBundle = (Bundle)localObject4;
-          if (localBundle1.containsKey("downIds"))
-          {
-            paramBundle = localBundle1.getString("downIds");
-            if (!TextUtils.isEmpty(paramBundle)) {
-              localObject1 = "load=" + paramBundle;
+
+        public void onProgressChanged(WebView view, int newProgress) {
+            if (newProgress == 100) {
+                VoiceSquareView.this.mProgressBar.setVisibility(8);
+            } else {
+                if (VoiceSquareView.this.mProgressBar.getVisibility() == 8) {
+                    VoiceSquareView.this.mProgressBar.setVisibility(0);
+                }
+                VoiceSquareView.this.mProgressBar.setProgress(newProgress);
             }
-            paramBundle = (Bundle)localObject1;
-            if (localObject1 != null) {
-              paramBundle = (String)localObject1 + "&";
+            super.onProgressChanged(view, newProgress);
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.voice.view.VoiceSquareView$6 */
+    class C45586 implements EventDelayListener {
+        C45586() {
+        }
+
+        public void onStart(int key, Object... objects) {
+            boolean z = true;
+            LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "onStart key: " + key);
+            if (key == 1 || key == 4 || key == 8) {
+                int value;
+                String ttsId = objects[0];
+                if (key == 1 || key == 8) {
+                    value = ((Integer) objects[1]).intValue();
+                } else {
+                    value = 100;
+                }
+                VoiceSquareView.this.mDownloadingStr = VoiceSquareView.this.showDownloadingList(ttsId, value);
+                if (VoiceSquareView.this.mUrlLoadingWebView != null && VoiceSquareView.this.mDownloadingStr != null && VoiceSquareView.this.mDownloadingStr.length() > 0) {
+                    try {
+                        VoiceSquareView.this.mUrlLoadingWebView.loadUrl("javascript:showDownloadingList('" + VoiceSquareView.this.mDownloadingStr + "')");
+                    } catch (Exception e) {
+                    }
+                }
+            } else if (key == 2) {
+                VoiceSquareView.this.mPauseStatusStr = VoiceSquareView.this.setPauseStatus((String) objects[0]);
+                if (VoiceSquareView.this.mUrlLoadingWebView != null && VoiceSquareView.this.mPauseStatusStr != null && VoiceSquareView.this.mPauseStatusStr.length() > 0) {
+                    try {
+                        VoiceSquareView.this.mUrlLoadingWebView.loadUrl("javascript:setPauseStatus('" + VoiceSquareView.this.mPauseStatusStr + "')");
+                    } catch (Exception e2) {
+                    }
+                }
+            } else if (key == 3) {
+                VoiceSquareView.this.showDownloadList();
+            } else if (key == 6) {
+                VoiceInfo realData = VoiceHelper.getInstance().getVoiceInfo((String) objects[0]);
+                String str = BNVoiceParams.MODULE_TAG;
+                StringBuilder append = new StringBuilder().append("realData is null?");
+                if (realData != null) {
+                    z = false;
+                }
+                LogUtil.m15791e(str, append.append(z).toString());
+                if (realData != null) {
+                    VoiceSquareView.this.showDownloadList();
+                }
             }
-          }
         }
-        if ((localObject3 == null) || (((VoiceInfo)localObject3).status != 4)) {
-          break label570;
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.voice.view.VoiceSquareView$7 */
+    class C45597 implements OnClickListener {
+        C45597() {
         }
-        this.mUrl = (((VoiceInfo)localObject3).voiceUrl + "&from=in");
-        label256:
-        if ("1" != null) {
-          this.mUrl = (this.mUrl + '&' + "sid=" + "1");
+
+        public void onClick(View v) {
+            if (!ForbidDaulClickUtils.isFastDoubleClick()) {
+                if (VoiceSquareView.this.mJumpListener != null) {
+                    VoiceSquareView.this.mJumpListener.onVoiceUserBehaviour(BNVoice$VoiceUserAction.voice_share);
+                }
+                BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_VOICE_SHARING, NaviStatConstants.NAVI_VOICE_SHARING);
+                if (!NetworkUtils.isNetworkAvailable(VoiceSquareView.this.mActivity)) {
+                    TipTool.onCreateToastDialog(VoiceSquareView.this.mActivity, JarUtils.getResources().getString(C4048R.string.nsdk_voice_net_work_unaiable));
+                } else if (VoiceSquareView.this.mCurrentWebPage == 2 && VoiceSquareView.this.mYPID != null) {
+                    VoiceInfo vi = VoiceHelper.getInstance().getVoiceInfo(VoiceSquareView.this.mYPID);
+                    if (vi != null) {
+                        VoiceHelper.getInstance().share(vi);
+                        return;
+                    }
+                    VoiceSquareView.this.mBtnShareClicked = true;
+                    VoiceSquareView.this.showWaitingLoading("正在获取分享信息...");
+                } else if (VoiceSquareView.this.mCurrentWebPage != 1 || VoiceSquareView.this.mTopicShareParam == null) {
+                    VoiceHelper.getInstance().shareFromSquare();
+                } else {
+                    try {
+                        VoiceHelper.getInstance().shareTopic(VoiceSquareView.this.mTopicShareParam);
+                    } catch (JSONException e) {
+                    }
+                }
+            }
         }
-        if ("10.1.0" != null) {
-          this.mUrl = (this.mUrl + '&' + "app_version=" + "10.1.0");
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.voice.view.VoiceSquareView$8 */
+    class C45608 implements OnClickListener {
+        C45608() {
         }
-        if ("0" != null) {
-          this.mUrl = (this.mUrl + '&' + "os=" + "0");
+
+        public void onClick(View v) {
+            if (!ForbidDaulClickUtils.isFastDoubleClick() && VoiceSquareView.this.mJumpListener != null) {
+                VoiceSquareView.this.mJumpListener.onPageJump(5, 1, new Bundle());
+            }
         }
-        if (!this.isFromNavingPage) {
-          break label755;
+    }
+
+    protected View onInitView(Bundle configBundle) {
+        this.mVoiceSquareView = (ViewGroup) JarUtils.oldInflate(this.mActivity, C4048R.layout.nsdk_layout_voice_square_view, null);
+        BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_VOICE_PIAZZA_ACCESS, NaviStatConstants.NAVI_VOICE_PIAZZA_ACCESS);
+        findViews();
+        if (this.mEventDelayUtil == null) {
+            this.mEventDelayUtil = new EventDelayUtil();
         }
-        this.mUrl = (this.mUrl + '&' + "entry=" + "naving");
-        label433:
-        if ((this.mWebView != null) && (this.mUrl != null)) {
-          LogUtil.e("BNVoice", "url = " + this.mUrl);
+        this.mEventDelayUtil.registListner(this.mDelayListener);
+        return this.mVoiceSquareView;
+    }
+
+    @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface"})
+    private void findViews() {
+        if (this.mVoiceSquareView != null) {
+            this.mLoadingSuccessLayout = (RelativeLayout) this.mVoiceSquareView.findViewById(C4048R.id.voice_square_loading_success_layout);
+            this.mLoadingFailLayout = this.mVoiceSquareView.findViewById(C4048R.id.voice_square_loading_fail_layout);
+            this.mClickableFalseLayout = (RelativeLayout) this.mVoiceSquareView.findViewById(C4048R.id.voice_square_clickable_false_layout);
+            this.mClickableFalseLayout.setOnClickListener(new C45521());
+            hideLoadingFailView();
+            this.mLoadingFailLayout.setOnClickListener(new C45542());
+            this.mTitleBar = (BNCommonTitleBar) this.mVoiceSquareView.findViewById(C4048R.id.voice_square_title_bar);
+            this.mTitleBar.setMiddleTextSize(18.0f);
+            this.mTitleBar.setLeftOnClickedListener(new C45553());
+            updateRightMenu();
+            this.mProgressBar = (ProgressBar) this.mVoiceSquareView.findViewById(C4048R.id.voice_square_progress_bar);
+            this.mWebView = (WebView) this.mVoiceSquareView.findViewById(C4048R.id.voice_square_webview);
+            this.mWebView.getSettings().setJavaScriptEnabled(true);
+            this.mWebView.getSettings().setBuiltInZoomControls(true);
+            this.mWebView.getSettings().setLoadWithOverviewMode(true);
+            WebSettings settings = this.mWebView.getSettings();
+            settings.setCacheMode(-1);
+            settings.setJavaScriptCanOpenWindowsAutomatically(true);
+            settings.setLoadsImagesAutomatically(true);
+            settings.setUseWideViewPort(true);
+            settings.setLoadWithOverviewMode(true);
+            settings.setSupportZoom(false);
+            settings.setUseWideViewPort(true);
+            settings.setSupportMultipleWindows(true);
+            settings.setUserAgentString("baidumap_ANDR");
+            this.mWebView.setWebViewClient(new C45564());
+            this.mWebView.setWebChromeClient(new C45575());
         }
-      }
-      try
-      {
-        this.mWebView.loadUrl(this.mUrl);
+    }
+
+    private String getURLParam(String urlorigin, String paramName) {
+        try {
+            String url = URLDecoder.decode(urlorigin, "UTF-8");
+            String[] a = new String[50];
+            if (url.indexOf(paramName) != -1) {
+                String[] strs = url.substring(url.indexOf(paramName)).split("&")[0].split("=", 2);
+                if (strs != null && strs.length >= 2) {
+                    return strs[1];
+                }
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public void initValues(Bundle bundle) {
+        String loadParams = null;
+        this.mStartStatusStr = null;
+        this.mPauseStatusStr = null;
+        this.mDownloadingStr = null;
+        this.mActionParam = null;
+        this.mTaskId = null;
+        this.mBtnShareClicked = false;
+        setWebViewClickableTrue();
+        String entry = null;
+        Bundle extBundle = BNVoice.getInstance().getCallBundle();
+        VoiceInfo voiceInfo = null;
+        if (extBundle != null) {
+            entry = extBundle.getString("entry");
+            if (2 == extBundle.getInt(Key.BUNDLE_ROOT_PAGE_TYPE)) {
+                this.isFromNavingPage = true;
+                Bundle voiceInfoBd = extBundle.getBundle(BNVoiceParams.BUNDLE_VOICEINFO);
+                if (voiceInfoBd != null) {
+                    voiceInfo = VoiceInfo.getVoiceInfo(voiceInfoBd);
+                }
+            } else {
+                this.isFromNavingPage = false;
+            }
+        }
+        updateRightMenu();
+        if (this.mUrl == null) {
+            if (extBundle != null && extBundle.containsKey("downIds")) {
+                String ids = extBundle.getString("downIds");
+                if (!TextUtils.isEmpty(ids)) {
+                    loadParams = "load=" + ids;
+                }
+                if (loadParams != null) {
+                    loadParams = loadParams + "&";
+                }
+            }
+            if (voiceInfo != null && voiceInfo.status == 4) {
+                this.mUrl = voiceInfo.voiceUrl + "&from=in";
+            } else if (loadParams != null) {
+                LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "loadparams = " + loadParams);
+                this.mUrl = HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_VOICE_SQUARE) + "?" + loadParams + "from=in";
+            } else if (this.isFromNavingPage) {
+                String str;
+                StringBuilder stringBuilder = new StringBuilder();
+                if (BNSettingManager.isUseHttpsOfflineURL()) {
+                    str = "http://cp01-rdqa04-dev108.cp01.baidu.com:8111/static/webpage/voice_market_navingvoice/navingvoice/";
+                } else {
+                    str = HttpURLManager.getInstance().getScheme() + "webpagenavi.baidu.com/static/webpage/voice_market_navingvoice/navingvoice/";
+                }
+                this.mUrl = stringBuilder.append(str).append("?from=in").toString();
+            } else {
+                this.mUrl = HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_VOICE_SQUARE) + "?from=in";
+            }
+            if ("1" != null) {
+                this.mUrl += '&' + "sid=" + "1";
+            }
+            String appVersionStr = "10.1.0";
+            if (appVersionStr != null) {
+                this.mUrl += '&' + "app_version=" + appVersionStr;
+            }
+            if ("0" != null) {
+                this.mUrl += '&' + "os=" + "0";
+            }
+            if (this.isFromNavingPage) {
+                this.mUrl += '&' + "entry=" + VoiceEntry.NAVING;
+            } else if (entry != null) {
+                this.mUrl += '&' + "entry=" + entry;
+            } else {
+                this.mUrl += '&' + "entry=" + "navi";
+            }
+            if (!(this.mWebView == null || this.mUrl == null)) {
+                LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "url = " + this.mUrl);
+                try {
+                    this.mWebView.loadUrl(this.mUrl);
+                } catch (Exception e) {
+                }
+            }
+        }
         showDownloadList();
         this.mLocalVoiceSize = 0;
-        paramBundle = VoiceDownloadController.getInstance().getDownloadVoiceTask();
-        if ((paramBundle != null) && (paramBundle.size() > 0))
-        {
-          paramBundle = paramBundle.iterator();
-          for (;;)
-          {
-            if (paramBundle.hasNext()) {
-              if (((VoiceInfo)paramBundle.next()).status == 0)
-              {
-                this.mLocalVoiceSize += 1;
-                continue;
-                label556:
-                this.isFromNavingPage = false;
-                localObject2 = str;
-                localObject3 = paramBundle;
-                break;
-                label570:
-                if (paramBundle != null)
-                {
-                  LogUtil.e("BNVoice", "loadparams = " + paramBundle);
-                  this.mUrl = (HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_VOICE_SQUARE) + "?" + paramBundle + "from=in");
-                  break label256;
+        ArrayList<VoiceInfo> downsInfos = VoiceDownloadController.getInstance().getDownloadVoiceTask();
+        if (downsInfos != null && downsInfos.size() > 0) {
+            Iterator it = downsInfos.iterator();
+            while (it.hasNext()) {
+                if (((VoiceInfo) it.next()).status == 0) {
+                    this.mLocalVoiceSize++;
                 }
-                if (this.isFromNavingPage)
-                {
-                  localObject1 = new StringBuilder();
-                  if (BNSettingManager.isUseHttpsOfflineURL()) {}
-                  for (paramBundle = "http://cp01-rdqa04-dev108.cp01.baidu.com:8111/static/webpage/voice_market_navingvoice/navingvoice/";; paramBundle = HttpURLManager.getInstance().getScheme() + "webpagenavi.baidu.com/static/webpage/voice_market_navingvoice/navingvoice/")
-                  {
-                    this.mUrl = (paramBundle + "?from=in");
-                    break;
-                  }
-                }
-                this.mUrl = (HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_VOICE_SQUARE) + "?from=in");
-                break label256;
-                label755:
-                if (localObject2 != null)
-                {
-                  this.mUrl = (this.mUrl + '&' + "entry=" + (String)localObject2);
-                  break label433;
-                }
-                this.mUrl = (this.mUrl + '&' + "entry=" + "navi");
-                break label433;
-              }
             }
-          }
         }
-        return;
-      }
-      catch (Exception paramBundle)
-      {
-        for (;;) {}
-      }
     }
-  }
-  
-  public boolean onBackPressed()
-  {
-    if (this.mWebView != null) {
-      try
-      {
-        int i = this.mWebView.copyBackForwardList().getCurrentIndex();
-        LogUtil.e("BNVoice", "onBackPressed, BackForwardList index=" + i);
-        if (i <= 1) {
-          this.mCurrentWebPage = 0;
+
+    public void onResume() {
+        BNVoice.getInstance().setExternalCall(false, null);
+        if (this.mWebView != null && this.mWebView.getVisibility() == 0) {
+            try {
+                this.mWebView.onResume();
+                this.mWebView.resumeTimers();
+            } catch (Exception e) {
+            }
         }
-        if ((i > 0) && (this.mWebView.canGoBack()))
-        {
-          this.mWebView.goBack();
-          return false;
+    }
+
+    private void stopWebVoice() {
+        if (this.mUrlLoadingWebView != null) {
+            this.mUrlLoadingWebView.loadUrl("javascript:stopListen()");
         }
-      }
-      catch (Exception localException)
-      {
-        LogUtil.e("BNVoice", "onBackPressed, error");
-      }
     }
-    return super.onBackPressed();
-  }
-  
-  public void onDestory()
-  {
-    this.mEventDelayUtil.unRegistListner();
-    this.mEventDelayUtil.clean();
-    BNWorkerCenter.getInstance().cancelTask(this.mTimeOutMonitorTask, false);
-    if (this.mWebView != null) {}
-    try
-    {
-      if (Build.VERSION.SDK_INT >= 11) {
-        this.mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
-      }
-      ViewGroup localViewGroup = (ViewGroup)this.mWebView.getParent();
-      if (localViewGroup != null) {
-        localViewGroup.removeView(this.mWebView);
-      }
-      this.mWebView.removeAllViews();
-      this.mWebView.destroy();
-      this.mWebView = null;
-      this.mUrlLoadingWebView = null;
-    }
-    catch (Exception localException)
-    {
-      for (;;) {}
-    }
-    super.onDestory();
-  }
-  
-  protected View onInitView(Bundle paramBundle)
-  {
-    this.mVoiceSquareView = ((ViewGroup)JarUtils.oldInflate(this.mActivity, 1711472783, null));
-    BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410352", "410352");
-    findViews();
-    if (this.mEventDelayUtil == null) {
-      this.mEventDelayUtil = new EventDelayUtil();
-    }
-    this.mEventDelayUtil.registListner(this.mDelayListener);
-    return this.mVoiceSquareView;
-  }
-  
-  public void onPause()
-  {
-    stopWebVoice();
-    BNWorkerCenter.getInstance().cancelTask(this.mTimeOutMonitorTask, false);
-    if ((this.mWebView != null) && (this.mWebView.getVisibility() == 0)) {}
-    try
-    {
-      this.mWebView.pauseTimers();
-      this.mWebView.onPause();
-      return;
-    }
-    catch (Exception localException) {}
-  }
-  
-  public void onResume()
-  {
-    BNVoice.getInstance().setExternalCall(false, null);
-    if ((this.mWebView != null) && (this.mWebView.getVisibility() == 0)) {}
-    try
-    {
-      this.mWebView.onResume();
-      this.mWebView.resumeTimers();
-      return;
-    }
-    catch (Exception localException) {}
-  }
-  
-  public void onUpdateStyle(boolean paramBoolean)
-  {
-    if ((this.mTitleBar != null) && (!BNSettingManager.isUsingMapMode())) {
-      this.mTitleBar.setLeftContenVisible(false);
-    }
-    if (this.mProgressBar != null) {
-      this.mProgressBar.setProgressDrawable(JarUtils.getResources().getDrawable(1711408058));
-    }
-  }
-  
-  public void setWebViewClickableFalse()
-  {
-    if (this.mClickableFalseLayout != null) {
-      this.mClickableFalseLayout.setVisibility(0);
-    }
-  }
-  
-  public void setWebViewClickableTrue()
-  {
-    if (this.mClickableFalseLayout != null) {
-      this.mClickableFalseLayout.setVisibility(8);
-    }
-  }
-  
-  public String showDownloadingList(String paramString, int paramInt)
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONArray localJSONArray = new JSONArray();
-    JSONObject localJSONObject2 = new JSONObject();
-    try
-    {
-      localJSONObject2.put("id", paramString);
-      localJSONObject2.put("progress", paramInt);
-      localJSONArray.put(localJSONObject2);
-      localJSONObject1.put("downloadingList", localJSONArray);
-      return localJSONObject1.toString();
-    }
-    catch (JSONException paramString)
-    {
-      for (;;) {}
-    }
-  }
-  
-  public void switchVoiceData(String paramString)
-  {
-    if (this.mJumpListener != null) {
-      this.mJumpListener.onVoiceUserBehaviour("voice_usage");
-    }
-    if (BNVoice.getInstance().switchVoice(paramString)) {
-      showWaitingLoading("切换中...");
-    }
-  }
-  
-  public void updateItemView(String paramString, int paramInt1, int paramInt2)
-  {
-    if (paramInt1 == 3)
-    {
-      TipTool.onCreateToastDialog(this.mActivity, "下载错误");
-      this.mEventDelayUtil.exec(paramInt1, 150, new Object[] { paramString });
-    }
-    do
-    {
-      do
-      {
-        return;
-        if (paramInt1 != 5) {
-          break;
+
+    public void onPause() {
+        stopWebVoice();
+        BNWorkerCenter.getInstance().cancelTask(this.mTimeOutMonitorTask, false);
+        if (this.mWebView != null && this.mWebView.getVisibility() == 0) {
+            try {
+                this.mWebView.pauseTimers();
+                this.mWebView.onPause();
+            } catch (Exception e) {
+            }
         }
-        this.mStartStatusStr = setStartStatus(paramString);
-      } while ((this.mUrlLoadingWebView == null) || (this.mStartStatusStr == null) || (this.mStartStatusStr.length() <= 0));
-      try
-      {
-        this.mUrlLoadingWebView.loadUrl("javascript:setStartStatus('" + this.mStartStatusStr + "')");
-        return;
-      }
-      catch (Exception paramString)
-      {
-        return;
-      }
-      if (paramInt1 == 2)
-      {
-        this.mEventDelayUtil.exec(paramInt1, 150, new Object[] { paramString });
-        TipTool.onCreateToastDialog(this.mActivity, "下载暂停");
-        return;
-      }
-      if (paramInt1 == 1)
-      {
-        this.mEventDelayUtil.exec(paramInt1, 150, new Object[] { paramString, Integer.valueOf(paramInt2) });
-        return;
-      }
-      if (paramInt1 == 4)
-      {
-        this.mEventDelayUtil.exec(paramInt1, 150, new Object[] { paramString });
-        return;
-      }
-    } while (paramInt1 != 8);
-    this.mEventDelayUtil.exec(paramInt1, 0, new Object[] { paramString, Integer.valueOf(paramInt2) });
-  }
-  
-  public void updateSharedVoiceInfo(boolean paramBoolean)
-  {
-    if (!paramBoolean)
-    {
-      dismissWaitingLoading();
-      TipTool.onCreateToastDialog(this.mActivity, "获取失败");
-      return;
     }
-    VoiceInfo localVoiceInfo;
-    if (this.mCurrentWebPage == 2)
-    {
-      if (this.mYPID == null)
-      {
+
+    public void onDestory() {
+        this.mEventDelayUtil.unRegistListner();
+        this.mEventDelayUtil.clean();
+        BNWorkerCenter.getInstance().cancelTask(this.mTimeOutMonitorTask, false);
+        if (this.mWebView != null) {
+            try {
+                if (VERSION.SDK_INT >= 11) {
+                    this.mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
+                }
+                ViewGroup viewGroup = (ViewGroup) this.mWebView.getParent();
+                if (viewGroup != null) {
+                    viewGroup.removeView(this.mWebView);
+                }
+                this.mWebView.removeAllViews();
+                this.mWebView.destroy();
+                this.mWebView = null;
+                this.mUrlLoadingWebView = null;
+            } catch (Exception e) {
+            }
+        }
+        super.onDestory();
+    }
+
+    public void onUpdateStyle(boolean day) {
+        if (!(this.mTitleBar == null || BNSettingManager.isUsingMapMode())) {
+            this.mTitleBar.setLeftContenVisible(false);
+        }
+        if (this.mProgressBar != null) {
+            this.mProgressBar.setProgressDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_voice_webview_progressbar));
+        }
+    }
+
+    public boolean onBackPressed() {
+        if (this.mWebView != null) {
+            try {
+                int index = this.mWebView.copyBackForwardList().getCurrentIndex();
+                LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "onBackPressed, BackForwardList index=" + index);
+                if (index <= 1) {
+                    this.mCurrentWebPage = 0;
+                }
+                if (index > 0 && this.mWebView.canGoBack()) {
+                    this.mWebView.goBack();
+                    return false;
+                }
+            } catch (Exception e) {
+                LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "onBackPressed, error");
+            }
+        }
+        return super.onBackPressed();
+    }
+
+    public void downloadStatics(String taskId) {
+        if (this.mJumpListener != null) {
+            this.mJumpListener.onVoiceUserBehaviour(BNVoice$VoiceUserAction.voice_download);
+        }
+        BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_VOICE_PIAZZA_DOWNLOAD_CLICK, NaviStatConstants.NAVI_VOICE_PIAZZA_DOWNLOAD_CLICK);
+    }
+
+    public void updateSharedVoiceInfo(boolean success) {
+        if (success) {
+            VoiceInfo realData;
+            if (this.mCurrentWebPage == 2) {
+                if (this.mYPID == null) {
+                    dismissWaitingLoading();
+                    return;
+                }
+                realData = VoiceHelper.getInstance().getVoiceInfo(this.mYPID);
+                if (realData == null) {
+                    dismissWaitingLoading();
+                    return;
+                } else if (this.mBtnShareClicked) {
+                    this.mBtnShareClicked = false;
+                    VoiceHelper.getInstance().share(realData);
+                } else if (this.mUrlLoadingWebView != null) {
+                    VoiceDownloadController.getInstance().addSharedVoiceInfo(realData);
+                    startDownloadCheckNet(realData.taskId);
+                }
+            } else if (this.mTaskId != null) {
+                realData = VoiceHelper.getInstance().getVoiceInfo(this.mTaskId);
+                if (!(realData == null || this.mUrlLoadingWebView == null)) {
+                    VoiceDownloadController.getInstance().addSharedVoiceInfo(realData);
+                    startDownloadCheckNet(realData.taskId);
+                }
+            }
+            dismissWaitingLoading();
+            return;
+        }
         dismissWaitingLoading();
-        return;
-      }
-      localVoiceInfo = VoiceHelper.getInstance().getVoiceInfo(this.mYPID);
-      if (localVoiceInfo == null)
-      {
-        dismissWaitingLoading();
-        return;
-      }
-      if (this.mBtnShareClicked)
-      {
-        this.mBtnShareClicked = false;
-        VoiceHelper.getInstance().share(localVoiceInfo);
-      }
+        TipTool.onCreateToastDialog(this.mActivity, "获取失败");
     }
-    for (;;)
-    {
-      dismissWaitingLoading();
-      return;
-      if (this.mUrlLoadingWebView != null)
-      {
-        VoiceDownloadController.getInstance().addSharedVoiceInfo(localVoiceInfo);
-        startDownloadCheckNet(localVoiceInfo.taskId);
-        continue;
-        if (this.mTaskId != null)
-        {
-          localVoiceInfo = VoiceHelper.getInstance().getVoiceInfo(this.mTaskId);
-          if ((localVoiceInfo != null) && (this.mUrlLoadingWebView != null))
-          {
-            VoiceDownloadController.getInstance().addSharedVoiceInfo(localVoiceInfo);
-            startDownloadCheckNet(localVoiceInfo.taskId);
-          }
+
+    private void showWaitingLoading(String strTip) {
+        if (this.mActivity != null) {
+            dismissWaitingLoading();
+            try {
+                if (this.mWaitingLoading == null && this.mActivity != null) {
+                    this.mWaitingLoading = new BNCommonProgressDialog(this.mActivity);
+                }
+                if (this.mWaitingLoading != null) {
+                    this.mWaitingLoading.setMessage(strTip);
+                }
+                if (!this.mWaitingLoading.isShowing() && this.mActivity != null && !this.mActivity.isFinishing()) {
+                    this.mWaitingLoading.show();
+                }
+            } catch (Exception e) {
+            }
         }
-      }
     }
-  }
+
+    private void dismissWaitingLoading() {
+        try {
+            if (this.mWaitingLoading != null && this.mActivity != null && !this.mActivity.isFinishing() && this.mWaitingLoading.isShowing()) {
+                this.mWaitingLoading.dismiss();
+            }
+        } catch (Exception e) {
+            this.mWaitingLoading = null;
+        }
+    }
+
+    private String getActionParamID(String jsonStr) {
+        String idStr = null;
+        if (jsonStr != null && jsonStr.length() > 0) {
+            try {
+                idStr = new JSONObject(jsonStr).get("id").toString();
+            } catch (JSONException e) {
+            }
+        }
+        return idStr;
+    }
+
+    private void showDownloadList() {
+        String downloadListStr = getSquareVoiceInfo();
+        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "downloadListStr:" + downloadListStr);
+        if (this.mUrlLoadingWebView != null && downloadListStr != null && downloadListStr.length() > 0) {
+            try {
+                LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "loadUrl");
+                this.mUrlLoadingWebView.loadUrl("javascript:showDownloadList('" + downloadListStr + "')");
+            } catch (Exception e) {
+                LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "showDownloadList Exception:" + e.getMessage());
+            }
+        }
+    }
+
+    private String setStartStatus(String taskId) {
+        JSONObject jsonObj = new JSONObject();
+        if (!NetworkUtils.isNetworkAvailable(this.mActivity) || taskId == null || taskId.length() <= 0) {
+            try {
+                jsonObj.put(C2125n.f6745M, 1);
+                jsonObj.put("id", taskId);
+            } catch (JSONException e) {
+            }
+            return jsonObj.toString();
+        }
+        try {
+            jsonObj.put(C2125n.f6745M, 0);
+            jsonObj.put("id", taskId);
+        } catch (JSONException e2) {
+        }
+        return jsonObj.toString();
+    }
+
+    private String setPauseStatus(String taskId) {
+        JSONObject jsonObj = new JSONObject();
+        if (taskId == null || taskId.length() <= 0) {
+            try {
+                jsonObj.put(C2125n.f6745M, 1);
+                jsonObj.put("id", taskId);
+            } catch (JSONException e) {
+            }
+            return jsonObj.toString();
+        }
+        try {
+            jsonObj.put(C2125n.f6745M, 0);
+            jsonObj.put("id", taskId);
+        } catch (JSONException e2) {
+        }
+        return jsonObj.toString();
+    }
+
+    private String getSquareVoiceInfo() {
+        Iterator it;
+        VoiceInfo info;
+        DownStats downstats;
+        JSONObject squareVoiceInfoJsonObj = new JSONObject();
+        JSONArray downloadedJsonArr = new JSONArray();
+        JSONArray downloadingJsonArr = new JSONArray();
+        JSONArray downloadPauseJsonArr = new JSONArray();
+        JSONArray usingJsonArr = new JSONArray();
+        this.mDownsInfos = VoiceDownloadController.getInstance().getDownloadVoiceTask();
+        if (this.mDownsInfos != null && this.mDownsInfos.size() > 0) {
+            it = this.mDownsInfos.iterator();
+            while (it.hasNext()) {
+                info = (VoiceInfo) it.next();
+                try {
+                    JSONObject jsonObj = new JSONObject();
+                    jsonObj.put("id", info.taskId);
+                    downloadedJsonArr.put(jsonObj);
+                } catch (JSONException e) {
+                }
+            }
+        }
+        try {
+            this.mRecommendInfos = VoiceDownloadController.getInstance().getRecommendVoiceTask();
+        } catch (UnsatisfiedLinkError e2) {
+            LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "getRecommendVoiceTask");
+        }
+        if (this.mRecommendInfos != null && this.mRecommendInfos.size() > 0) {
+            it = this.mRecommendInfos.iterator();
+            while (it.hasNext()) {
+                info = (VoiceInfo) it.next();
+                downstats = DownStats.getTaskDownStatus(info.taskId);
+                if (downstats.stats == 1) {
+                    try {
+                        jsonObj = new JSONObject();
+                        jsonObj.put("id", info.taskId);
+                        jsonObj.put("progress", downstats.progress);
+                        downloadingJsonArr.put(jsonObj);
+                    } catch (JSONException e3) {
+                    }
+                } else if (downstats.stats == 2) {
+                    try {
+                        jsonObj = new JSONObject();
+                        jsonObj.put("id", info.taskId);
+                        jsonObj.put("progress", downstats.progress);
+                        downloadPauseJsonArr.put(jsonObj);
+                    } catch (JSONException e4) {
+                    }
+                }
+            }
+        }
+        this.mSharedInfos = VoiceDownloadController.getInstance().getSharedVoiceInfos();
+        if (this.mSharedInfos != null && this.mSharedInfos.size() > 0) {
+            it = this.mSharedInfos.iterator();
+            while (it.hasNext()) {
+                info = (VoiceInfo) it.next();
+                downstats = DownStats.getTaskDownStatus(info.taskId);
+                if (downstats.stats == 1 || downstats.stats == 3) {
+                    try {
+                        jsonObj = new JSONObject();
+                        jsonObj.put("id", info.taskId);
+                        jsonObj.put("progress", downstats.progress);
+                        downloadingJsonArr.put(jsonObj);
+                    } catch (JSONException e5) {
+                    }
+                } else if (downstats.stats == 2) {
+                    try {
+                        jsonObj = new JSONObject();
+                        jsonObj.put("id", info.taskId);
+                        jsonObj.put("progress", downstats.progress);
+                        downloadPauseJsonArr.put(jsonObj);
+                    } catch (JSONException e6) {
+                    }
+                }
+            }
+        }
+        this.mWaitingInfos = VoiceDownloadStatus.getInstance().getTaskQueue();
+        it = this.mWaitingInfos.iterator();
+        while (it.hasNext()) {
+            String str = (String) it.next();
+            try {
+                jsonObj = new JSONObject();
+                jsonObj.put("id", str);
+                jsonObj.put("progress", 0);
+                downloadingJsonArr.put(jsonObj);
+            } catch (JSONException e7) {
+            }
+        }
+        String usingTaskId = VoiceHelper.getInstance().getCurrentUsedTTSId();
+        if (usingTaskId != null) {
+            try {
+                jsonObj = new JSONObject();
+                jsonObj.put("id", usingTaskId);
+                usingJsonArr.put(jsonObj);
+            } catch (JSONException e8) {
+            }
+        }
+        try {
+            squareVoiceInfoJsonObj.put("downloadedList", downloadedJsonArr);
+            squareVoiceInfoJsonObj.put("downloadingList", downloadingJsonArr);
+            squareVoiceInfoJsonObj.put("downloadPauseList", downloadPauseJsonArr);
+            squareVoiceInfoJsonObj.put("usingList", usingJsonArr);
+        } catch (JSONException e9) {
+        }
+        return squareVoiceInfoJsonObj.toString();
+    }
+
+    public String showDownloadingList(String taskId, int progress) {
+        JSONObject downloadingJsonObj = new JSONObject();
+        JSONArray downloadingJsonArr = new JSONArray();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("id", taskId);
+            jsonObj.put("progress", progress);
+            downloadingJsonArr.put(jsonObj);
+            downloadingJsonObj.put("downloadingList", downloadingJsonArr);
+        } catch (JSONException e) {
+        }
+        return downloadingJsonObj.toString();
+    }
+
+    public void updateItemView(String taskId, int status, int value) {
+        if (status == 3) {
+            TipTool.onCreateToastDialog(this.mActivity, "下载错误");
+            this.mEventDelayUtil.exec(status, CommonHandlerThread.MSG_START_RECORD_TRAJECTORY, taskId);
+        } else if (status == 5) {
+            this.mStartStatusStr = setStartStatus(taskId);
+            if (this.mUrlLoadingWebView != null && this.mStartStatusStr != null && this.mStartStatusStr.length() > 0) {
+                try {
+                    this.mUrlLoadingWebView.loadUrl("javascript:setStartStatus('" + this.mStartStatusStr + "')");
+                } catch (Exception e) {
+                }
+            }
+        } else if (status == 2) {
+            this.mEventDelayUtil.exec(status, CommonHandlerThread.MSG_START_RECORD_TRAJECTORY, taskId);
+            TipTool.onCreateToastDialog(this.mActivity, C1253f.gr);
+        } else if (status == 1) {
+            this.mEventDelayUtil.exec(status, CommonHandlerThread.MSG_START_RECORD_TRAJECTORY, taskId, Integer.valueOf(value));
+        } else if (status == 4) {
+            this.mEventDelayUtil.exec(status, CommonHandlerThread.MSG_START_RECORD_TRAJECTORY, taskId);
+        } else if (status == 8) {
+            this.mEventDelayUtil.exec(status, 0, taskId, Integer.valueOf(value));
+        }
+    }
+
+    public void switchVoiceData(String taskId) {
+        if (this.mJumpListener != null) {
+            this.mJumpListener.onVoiceUserBehaviour(BNVoice$VoiceUserAction.voice_usage);
+        }
+        if (BNVoice.getInstance().switchVoice(taskId)) {
+            showWaitingLoading("切换中...");
+        }
+    }
+
+    public void handleSwitchVoiceData(boolean success, String taskId) {
+        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "handleSwitchVoiceData success:" + success);
+        if (success && this.mEventDelayUtil != null) {
+            this.mEventDelayUtil.exec(6, CommonHandlerThread.MSG_START_RECORD_TRAJECTORY, taskId);
+        }
+        dismissWaitingLoading();
+    }
+
+    public void setWebViewClickableFalse() {
+        if (this.mClickableFalseLayout != null) {
+            this.mClickableFalseLayout.setVisibility(0);
+        }
+    }
+
+    public void setWebViewClickableTrue() {
+        if (this.mClickableFalseLayout != null) {
+            this.mClickableFalseLayout.setVisibility(8);
+        }
+    }
+
+    private void updateRightMenu() {
+        if (this.mTitleBar != null) {
+            if (this.isFromNavingPage) {
+                this.mTitleBar.setRightIconVisible(false);
+                this.mTitleBar.setRightTextVisible(false);
+                return;
+            }
+            if (this.mCurrentWebPage != 2 && this.mCurrentWebPage != 1) {
+                this.mTitleBar.setRightIcon(null);
+                this.mTitleBar.setRightText(JarUtils.getResources().getString(C4048R.string.nsdk_string_voice_square_titlebar_right_text));
+            } else if (BNaviModuleManager.isGooglePlayChannel()) {
+                this.mTitleBar.setRightIconVisible(false);
+                this.mTitleBar.setRightTextVisible(false);
+            } else {
+                this.mTitleBar.setRightIcon(JarUtils.getResources().getDrawable(C4048R.drawable.voice_navi_share_icon));
+                this.mTitleBar.setRightText(null);
+            }
+            if (BNaviModuleManager.isGooglePlayChannel() && (this.mCurrentWebPage == 2 || this.mCurrentWebPage == 1)) {
+                this.mTitleBar.setRightTextVisible(false);
+                this.mTitleBar.setRightIconVisible(false);
+            } else {
+                this.mTitleBar.setRightIconVisible(true);
+            }
+            if ((this.mCurrentWebPage == 2 || this.mCurrentWebPage == 1) && !BNaviModuleManager.isGooglePlayChannel()) {
+                this.mTitleBar.setRightOnClickedListener(new C45597());
+            } else {
+                this.mTitleBar.setRightOnClickedListener(new C45608());
+            }
+        }
+    }
+
+    private void startDownloadCheckNet(String mTaskId) {
+        final String taskId = mTaskId;
+        if (!"9999".equals(taskId) && !"2-".equals(taskId.substring(0, 2))) {
+            VoiceDownloadController.getInstance().startDownload(taskId);
+        } else if (NetworkUtils.isTypeNetworkAvailable(this.mActivity, 1)) {
+            VoiceDownloadController.getInstance().startDownload(taskId);
+        } else if (this.mActivity == null) {
+            LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "startDownloadCheckNet mActivity is null");
+        } else {
+            if (this.mNetStatusDialog == null) {
+                this.mNetStatusDialog = new BNDialog(this.mActivity);
+            } else if (this.mNetStatusDialog.isShowing()) {
+                return;
+            }
+            this.mNetStatusDialog.setTitleText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_notification));
+            this.mNetStatusDialog.setContentMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_voice_not_wifi_notification));
+            this.mNetStatusDialog.setSecondBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_confirm));
+            this.mNetStatusDialog.setOnSecondBtnClickListener(new OnNaviClickListener() {
+                public void onClick() {
+                    VoiceDownloadController.getInstance().startDownload(taskId);
+                }
+            });
+            this.mNetStatusDialog.setFirstBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_cancel));
+            this.mNetStatusDialog.setOnFirstBtnClickListener(new OnNaviClickListener() {
+                public void onClick() {
+                    VoiceSquareView.this.mNetStatusDialog.dismiss();
+                    DownStats downstatus = DownStats.getTaskDownStatus(taskId);
+                    if (downstatus.stats == 0 || (downstatus.stats == 2 && downstatus.progress == 0)) {
+                        VoiceDownloadController.getInstance().removeDownload(taskId);
+                        VoiceDownloadController.getInstance().removeSharedVoieInfo(taskId);
+                    }
+                }
+            });
+            if (!this.mNetStatusDialog.isShowing() && this.mActivity != null && !this.mActivity.isFinishing()) {
+                this.mNetStatusDialog.show();
+            }
+        }
+    }
+
+    private void showLoadingFailView() {
+        if (this.mLoadingFailLayout != null) {
+            this.mLoadingFailLayout.setVisibility(0);
+        }
+        if (this.mLoadingSuccessLayout != null) {
+            this.mLoadingSuccessLayout.setVisibility(8);
+        }
+    }
+
+    private void hideLoadingFailView() {
+        if (this.mLoadingFailLayout != null) {
+            this.mLoadingFailLayout.setVisibility(8);
+        }
+        if (this.mLoadingSuccessLayout != null) {
+            this.mLoadingSuccessLayout.setVisibility(0);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/voice/view/VoiceSquareView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

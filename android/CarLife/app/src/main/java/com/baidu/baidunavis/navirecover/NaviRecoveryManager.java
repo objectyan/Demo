@@ -20,298 +20,241 @@ import com.baidu.mapframework.widget.BMAlertDialog.Builder;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
-import com.baidu.platform.comapi.c;
+import com.baidu.platform.comapi.C2907c;
 import java.io.File;
 import java.io.FilenameFilter;
 
-public class NaviRecoveryManager
-{
-  private static final int CRASH_STANDARD_TIME = 300;
-  public static final String DUMP_FILE_SUFFIX = ".dmp";
-  public static final String NAVI_RECO_DIALOG = "navi_reco_dialog";
-  public static final String NAVI_RECO_NEG_CLICK = "navi_reco_neg_click";
-  public static final String NAVI_RECO_POS_CLICK = "navi_reco_pos_click";
-  public static final String NAVI_RECO_SUCCESS = "navi_reco_success";
-  public static final String NAVI_RECO_TAG = "naviRecovery";
-  private static final int RECOVER_STANDARD_TIME = 900;
-  private static final int SLEEP_TIME = 500;
-  private static NaviRecoveryManager sInstance = null;
-  private BMAlertDialog naviRecoverDialog;
-  
-  private void clearLastNaviRoutelnfo(Handler paramHandler)
-  {
-    BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-clearLastNaviRoutelnfo", null)new BNWorkerConfig
-    {
-      protected String execute()
-      {
-        while ((!BaiduNaviManager.sIsEngineInitialFailed) && (!BaiduNaviManager.sIsBaseEngineInitialized)) {
-          try
-          {
-            Thread.sleep(500L);
-          }
-          catch (InterruptedException localInterruptedException)
-          {
-            localInterruptedException.printStackTrace();
-          }
-        }
-        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("CarNavi-clearLastNaviRoutelnfo2", null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            BaiduNaviManager.getInstance().clearLastNaviRoutelnfo();
-            return null;
-          }
-        }, new BNWorkerConfig(100, 0));
-        return null;
-      }
-    }, new BNWorkerConfig(100, 0));
-  }
-  
-  public static NaviRecoveryManager getInstance()
-  {
-    if (sInstance == null) {}
-    try
-    {
-      if (sInstance == null) {
-        sInstance = new NaviRecoveryManager();
-      }
-      return sInstance;
-    }
-    finally {}
-  }
-  
-  public static File getLastModifiedFile(String paramString1, String paramString2)
-  {
-    File[] arrayOfFile = new File(paramString1).listFiles(new FilenameFilter()
-    {
-      public boolean accept(File paramAnonymousFile, String paramAnonymousString)
-      {
-        return paramAnonymousString.endsWith(this.val$suffix);
-      }
-    });
-    if ((arrayOfFile == null) || (arrayOfFile.length <= 0))
-    {
-      paramString2 = null;
-      return paramString2;
-    }
-    paramString1 = arrayOfFile[0];
-    int i = 1;
-    for (;;)
-    {
-      paramString2 = paramString1;
-      if (i >= arrayOfFile.length) {
-        break;
-      }
-      paramString2 = paramString1;
-      if (arrayOfFile[i].lastModified() > paramString1.lastModified()) {
-        paramString2 = arrayOfFile[i];
-      }
-      i += 1;
-      paramString1 = paramString2;
-    }
-  }
-  
-  private boolean hasCrashed()
-  {
-    if (System.currentTimeMillis() / 1000L - NaviRecoveryModel.getInstance().getCrashTime() < 300L)
-    {
-      NaviRecoveryModel.getInstance().markCrashTime(0L);
-      return true;
-    }
-    return hasNaCrashed();
-  }
-  
-  private boolean hasKilled(Context paramContext)
-  {
-    if ((System.currentTimeMillis() / 1000L - BaiduNaviManager.getInstance().getKilledTime(paramContext) < 300L) && (BaiduNaviManager.getInstance().isLastNaviUnfinished(paramContext)))
-    {
-      BaiduNaviManager.getInstance().setKilledTime(paramContext, 0L);
-      return true;
-    }
-    return false;
-  }
-  
-  private boolean hasNaCrashed()
-  {
-    File localFile = new File(c.f().getCacheDir(), "dump");
-    if (!localFile.exists()) {}
-    long l;
-    do
-    {
-      do
-      {
-        return false;
-        localFile = getLastModifiedFile(localFile.getAbsolutePath(), ".dmp");
-      } while (localFile == null);
-      l = localFile.lastModified();
-    } while ((l == NaviRecoveryModel.getInstance().getNaCrashTime()) || (System.currentTimeMillis() / 1000L - l / 1000L >= 300L));
-    NaviRecoveryModel.getInstance().markNaCrashTime(l);
-    return true;
-  }
-  
-  private boolean hasRecovered()
-  {
-    return System.currentTimeMillis() / 1000L - NaviRecoveryModel.getInstance().getRecoverTime() < 900L;
-  }
-  
-  private void recoverNaviData(final Handler paramHandler)
-  {
-    NaviRecoveryModel.getInstance().markRecoverTime(System.currentTimeMillis() / 1000L);
-    BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-recoverNaviData", null)new BNWorkerConfig
-    {
-      protected String execute()
-      {
-        while ((!BaiduNaviManager.sIsEngineInitialFailed) && (!BaiduNaviManager.sIsBaseEngineInitialized)) {
-          try
-          {
-            Thread.sleep(500L);
-          }
-          catch (InterruptedException localInterruptedException)
-          {
-            localInterruptedException.printStackTrace();
-          }
-        }
-        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("CarNavi-recoverNaviData2", null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            BaiduNaviManager.getInstance().checkLastNaviStatus(NaviRecoveryManager.6.this.val$handler);
-            return null;
-          }
-        }, new BNWorkerConfig(100, 0));
-        return null;
-      }
-    }, new BNWorkerConfig(100, 0));
-  }
-  
-  private void showNaviRecoverDialog(final Activity paramActivity, final Handler paramHandler)
-  {
-    BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("calcRouteForPBData", null)new BNWorkerConfig
-    {
-      protected String execute()
-      {
-        if (paramActivity == null) {
-          return null;
-        }
-        NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_dialog");
-        try
-        {
-          NaviRecoveryManager.access$102(NaviRecoveryManager.this, new BMAlertDialog.Builder(paramActivity).setTitle(Html.fromHtml("是否恢复上次的<font color='#3385ff'>导航</font><br>?")).setPositiveButton("恢复", new DialogInterface.OnClickListener()
-          {
-            public void onClick(DialogInterface paramAnonymous2DialogInterface, int paramAnonymous2Int)
-            {
-              NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_pos_click");
-              NaviRecoveryManager.this.recoverNaviData(NaviRecoveryManager.5.this.val$handler);
+public class NaviRecoveryManager {
+    private static final int CRASH_STANDARD_TIME = 300;
+    public static final String DUMP_FILE_SUFFIX = ".dmp";
+    public static final String NAVI_RECO_DIALOG = "navi_reco_dialog";
+    public static final String NAVI_RECO_NEG_CLICK = "navi_reco_neg_click";
+    public static final String NAVI_RECO_POS_CLICK = "navi_reco_pos_click";
+    public static final String NAVI_RECO_SUCCESS = "navi_reco_success";
+    public static final String NAVI_RECO_TAG = "naviRecovery";
+    private static final int RECOVER_STANDARD_TIME = 900;
+    private static final int SLEEP_TIME = 500;
+    private static NaviRecoveryManager sInstance = null;
+    private BMAlertDialog naviRecoverDialog;
+
+    public static NaviRecoveryManager getInstance() {
+        if (sInstance == null) {
+            synchronized (NaviRecoveryManager.class) {
+                if (sInstance == null) {
+                    sInstance = new NaviRecoveryManager();
+                }
             }
-          }).setNegativeButton("放弃", new DialogInterface.OnClickListener()
-          {
-            public void onClick(DialogInterface paramAnonymous2DialogInterface, int paramAnonymous2Int)
-            {
-              NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_neg_click");
-              NaviRecoveryManager.this.clearLastNaviRoutelnfo(NaviRecoveryManager.5.this.val$handler);
-            }
-          }).create());
-          NaviRecoveryManager.this.naviRecoverDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
-          {
-            public void onCancel(DialogInterface paramAnonymous2DialogInterface)
-            {
-              NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_neg_click");
-              NaviRecoveryManager.this.clearLastNaviRoutelnfo(NaviRecoveryManager.5.this.val$handler);
-            }
-          });
-          NaviRecoveryManager.this.naviRecoverDialog.show();
-          return null;
         }
-        catch (Exception localException) {}
-        return null;
-      }
-    }, new BNWorkerConfig(100, 0));
-  }
-  
-  public void cancelDialog()
-  {
-    if ((this.naviRecoverDialog != null) && (this.naviRecoverDialog.isShowing())) {}
-    try
-    {
-      this.naviRecoverDialog.cancel();
-      return;
+        return sInstance;
     }
-    catch (Exception localException) {}
-  }
-  
-  public void markCrashTime()
-  {
-    NaviRecoveryModel.getInstance().markCrashTime(System.currentTimeMillis() / 1000L);
-  }
-  
-  public void recoverNavi(final Activity paramActivity)
-  {
-    if (paramActivity == null) {}
-    final MainLooperHandler local3;
-    boolean bool2;
-    do
-    {
-      boolean bool1;
-      do
-      {
-        return;
-        local3 = new MainLooperHandler(Module.NAV_MODULE, ScheduleConfig.forData())
-        {
-          public void onMessage(Message paramAnonymousMessage)
-          {
-            NavMapAdapter.getInstance().dismissMProgressDialog();
-            switch (paramAnonymousMessage.arg1)
-            {
-            default: 
-              return;
-            case 0: 
-              NavTipTool.onCreateToastDialog(paramActivity, "导航恢复失败，请重新发起！");
-              return;
-            }
-            BaiduNaviManager.getInstance().continueLastNavi();
-            NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_success");
-          }
-        };
-        bool1 = hasCrashed();
-        bool2 = hasKilled(paramActivity);
-        if ((!bool1) && (!bool2))
-        {
-          clearLastNaviRoutelnfo(local3);
-          return;
+
+    public void markCrashTime() {
+        NaviRecoveryModel.getInstance().markCrashTime(System.currentTimeMillis() / 1000);
+    }
+
+    private boolean hasCrashed() {
+        if ((System.currentTimeMillis() / 1000) - NaviRecoveryModel.getInstance().getCrashTime() >= 300) {
+            return hasNaCrashed();
         }
-      } while (!BaiduNaviManager.getInstance().isLastNaviUnfinished(paramActivity));
-      if (hasRecovered())
-      {
-        showNaviRecoverDialog(paramActivity, local3);
-        return;
-      }
-      if (bool1)
-      {
-        NavTipTool.onCreateToastDialog(paramActivity, "正在恢复上次导航...");
-        NavMapAdapter.getInstance().showMProgressDialog((FragmentActivity)paramActivity, "正在恢复上次导航...", "", new DialogInterface.OnCancelListener()
-        {
-          public void onCancel(DialogInterface paramAnonymousDialogInterface)
-          {
-            NaviRecoveryManager.this.clearLastNaviRoutelnfo(local3);
-          }
+        NaviRecoveryModel.getInstance().markCrashTime(0);
+        return true;
+    }
+
+    private boolean hasKilled(Context context) {
+        if ((System.currentTimeMillis() / 1000) - BaiduNaviManager.getInstance().getKilledTime(context) >= 300 || !BaiduNaviManager.getInstance().isLastNaviUnfinished(context)) {
+            return false;
+        }
+        BaiduNaviManager.getInstance().setKilledTime(context, 0);
+        return true;
+    }
+
+    private boolean hasNaCrashed() {
+        File dumpDir = new File(C2907c.m10977f().getCacheDir(), "dump");
+        if (!dumpDir.exists()) {
+            return false;
+        }
+        File lastestDumpFiles = getLastModifiedFile(dumpDir.getAbsolutePath(), DUMP_FILE_SUFFIX);
+        if (lastestDumpFiles == null) {
+            return false;
+        }
+        long lastNaCrashTime = lastestDumpFiles.lastModified();
+        if (lastNaCrashTime == NaviRecoveryModel.getInstance().getNaCrashTime() || (System.currentTimeMillis() / 1000) - (lastNaCrashTime / 1000) >= 300) {
+            return false;
+        }
+        NaviRecoveryModel.getInstance().markNaCrashTime(lastNaCrashTime);
+        return true;
+    }
+
+    public static File getLastModifiedFile(String dir, final String suffix) {
+        File[] files = new File(dir).listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String filename) {
+                return filename.endsWith(suffix);
+            }
         });
-        recoverNaviData(local3);
-        return;
-      }
-    } while (!bool2);
-    showNaviRecoverDialog(paramActivity, local3);
-  }
-  
-  public void resetCrashAndKillTime(Context paramContext)
-  {
-    hasCrashed();
-    hasKilled(paramContext);
-  }
+        if (files == null || files.length <= 0) {
+            return null;
+        }
+        File lastFile = files[0];
+        for (int i = 1; i < files.length; i++) {
+            if (files[i].lastModified() > lastFile.lastModified()) {
+                lastFile = files[i];
+            }
+        }
+        return lastFile;
+    }
+
+    private boolean hasRecovered() {
+        return (System.currentTimeMillis() / 1000) - NaviRecoveryModel.getInstance().getRecoverTime() < 900;
+    }
+
+    private void clearLastNaviRoutelnfo(Handler handler) {
+        BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-clearLastNaviRoutelnfo", null) {
+            protected String execute() {
+                while (!BaiduNaviManager.sIsEngineInitialFailed && !BaiduNaviManager.sIsBaseEngineInitialized) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("CarNavi-clearLastNaviRoutelnfo2", null) {
+                    protected String execute() {
+                        BaiduNaviManager.getInstance().clearLastNaviRoutelnfo();
+                        return null;
+                    }
+                }, new BNWorkerConfig(100, 0));
+                return null;
+            }
+        }, new BNWorkerConfig(100, 0));
+    }
+
+    public void recoverNavi(final Activity activity) {
+        if (activity != null) {
+            final Handler handler = new MainLooperHandler(Module.NAV_MODULE, ScheduleConfig.forData()) {
+                public void onMessage(Message msg) {
+                    NavMapAdapter.getInstance().dismissMProgressDialog();
+                    switch (msg.arg1) {
+                        case 0:
+                            NavTipTool.onCreateToastDialog(activity, "导航恢复失败，请重新发起！");
+                            return;
+                        case 1:
+                            BaiduNaviManager.getInstance().continueLastNavi();
+                            NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_success");
+                            return;
+                        default:
+                            return;
+                    }
+                }
+            };
+            boolean isCrashed = hasCrashed();
+            boolean isKilled = hasKilled(activity);
+            if (!isCrashed && !isKilled) {
+                clearLastNaviRoutelnfo(handler);
+            } else if (!BaiduNaviManager.getInstance().isLastNaviUnfinished(activity)) {
+            } else {
+                if (hasRecovered()) {
+                    showNaviRecoverDialog(activity, handler);
+                } else if (isCrashed) {
+                    NavTipTool.onCreateToastDialog((Context) activity, "正在恢复上次导航...");
+                    NavMapAdapter.getInstance().showMProgressDialog((FragmentActivity) activity, "正在恢复上次导航...", "", new OnCancelListener() {
+                        public void onCancel(DialogInterface dialog) {
+                            NaviRecoveryManager.this.clearLastNaviRoutelnfo(handler);
+                        }
+                    });
+                    recoverNaviData(handler);
+                } else if (isKilled) {
+                    showNaviRecoverDialog(activity, handler);
+                }
+            }
+        }
+    }
+
+    private void showNaviRecoverDialog(Activity activity, Handler handler) {
+        final Activity activity2 = activity;
+        final Handler handler2 = handler;
+        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("calcRouteForPBData", null) {
+
+            /* renamed from: com.baidu.baidunavis.navirecover.NaviRecoveryManager$5$1 */
+            class C08591 implements OnClickListener {
+                C08591() {
+                }
+
+                public void onClick(DialogInterface dialog, int which) {
+                    NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_neg_click");
+                    NaviRecoveryManager.this.clearLastNaviRoutelnfo(handler2);
+                }
+            }
+
+            /* renamed from: com.baidu.baidunavis.navirecover.NaviRecoveryManager$5$2 */
+            class C08602 implements OnClickListener {
+                C08602() {
+                }
+
+                public void onClick(DialogInterface dialog, int which) {
+                    NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_pos_click");
+                    NaviRecoveryManager.this.recoverNaviData(handler2);
+                }
+            }
+
+            /* renamed from: com.baidu.baidunavis.navirecover.NaviRecoveryManager$5$3 */
+            class C08613 implements OnCancelListener {
+                C08613() {
+                }
+
+                public void onCancel(DialogInterface dialog) {
+                    NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_neg_click");
+                    NaviRecoveryManager.this.clearLastNaviRoutelnfo(handler2);
+                }
+            }
+
+            protected String execute() {
+                if (activity2 != null) {
+                    NavMapAdapter.getInstance().addLog("naviRecovery.navi_reco_dialog");
+                    try {
+                        NaviRecoveryManager.this.naviRecoverDialog = new Builder(activity2).setTitle(Html.fromHtml("是否恢复上次的<font color='#3385ff'>导航</font><br>?")).setPositiveButton("恢复", new C08602()).setNegativeButton("放弃", new C08591()).create();
+                        NaviRecoveryManager.this.naviRecoverDialog.setOnCancelListener(new C08613());
+                        NaviRecoveryManager.this.naviRecoverDialog.show();
+                    } catch (Exception e) {
+                    }
+                }
+                return null;
+            }
+        }, new BNWorkerConfig(100, 0));
+    }
+
+    private void recoverNaviData(final Handler handler) {
+        NaviRecoveryModel.getInstance().markRecoverTime(System.currentTimeMillis() / 1000);
+        BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-recoverNaviData", null) {
+            protected String execute() {
+                while (!BaiduNaviManager.sIsEngineInitialFailed && !BaiduNaviManager.sIsBaseEngineInitialized) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("CarNavi-recoverNaviData2", null) {
+                    protected String execute() {
+                        BaiduNaviManager.getInstance().checkLastNaviStatus(handler);
+                        return null;
+                    }
+                }, new BNWorkerConfig(100, 0));
+                return null;
+            }
+        }, new BNWorkerConfig(100, 0));
+    }
+
+    public void resetCrashAndKillTime(Context context) {
+        hasCrashed();
+        hasKilled(context);
+    }
+
+    public void cancelDialog() {
+        if (this.naviRecoverDialog != null && this.naviRecoverDialog.isShowing()) {
+            try {
+                this.naviRecoverDialog.cancel();
+            } catch (Exception e) {
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/navirecover/NaviRecoveryManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

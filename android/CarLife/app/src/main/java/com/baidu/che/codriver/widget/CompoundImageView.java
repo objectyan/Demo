@@ -4,47 +4,35 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class CompoundImageView
-  extends ImageView
-{
-  private boolean a;
-  
-  public CompoundImageView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public CompoundImageView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public boolean a()
-  {
-    return this.a;
-  }
-  
-  public int[] onCreateDrawableState(int paramInt)
-  {
-    int[] arrayOfInt = super.onCreateDrawableState(paramInt + 1);
-    if (a()) {
-      mergeDrawableStates(arrayOfInt, new int[] { 16842912 });
+public class CompoundImageView extends ImageView {
+    /* renamed from: a */
+    private boolean f9412a;
+
+    public CompoundImageView(Context context) {
+        super(context);
     }
-    return arrayOfInt;
-  }
-  
-  public void setChecked(boolean paramBoolean)
-  {
-    if (a() == paramBoolean) {
-      return;
+
+    public CompoundImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-    this.a = paramBoolean;
-    refreshDrawableState();
-  }
+
+    public int[] onCreateDrawableState(int extraSpace) {
+        int[] states = super.onCreateDrawableState(extraSpace + 1);
+        if (m10853a()) {
+            mergeDrawableStates(states, new int[]{16842912});
+        }
+        return states;
+    }
+
+    /* renamed from: a */
+    public boolean m10853a() {
+        return this.f9412a;
+    }
+
+    public void setChecked(boolean checked) {
+        if (m10853a() != checked) {
+            this.f9412a = checked;
+            refreshDrawableState();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/widget/CompoundImageView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

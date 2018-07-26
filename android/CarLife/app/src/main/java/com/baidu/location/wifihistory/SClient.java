@@ -1,95 +1,82 @@
 package com.baidu.location.wifihistory;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.wifi.ScanResult;
 import android.os.IBinder;
-import com.baidu.location.f;
+import com.baidu.location.C3377f;
+import com.baidu.location.wifihistory.ISManager.Stub;
+import com.baidu.navisdk.lightnavi.LightNaviParams;
 import java.util.List;
 
-public class SClient
-{
-  ISManager mShare = null;
-  private WifiHistory mWHistory = null;
-  
-  public static SClient getInstance()
-  {
-    return a.a;
-  }
-  
-  public WifiHistory getRemoteObject()
-  {
-    if (this.mShare == null) {
-      return null;
-    }
-    try
-    {
-      WifiHistory localWifiHistory = this.mShare.getInfo2();
-      return localWifiHistory;
-    }
-    catch (Exception localException) {}
-    return null;
-  }
-  
-  public WifiHistory getWifiHistory()
-  {
-    return this.mWHistory;
-  }
-  
-  public String getWifiHistoryString()
-  {
-    if (this.mWHistory != null) {
-      return this.mWHistory.getWifiHistory();
-    }
-    return null;
-  }
-  
-  public void start()
-  {
-    Intent localIntent = new Intent("com.baidu.location.locSManager");
-    localIntent.setPackage("com.baidu.BaiduMap");
-    try
-    {
-      f.getServiceContext().bindService(localIntent, new ServiceConnection()
-      {
-        public void onServiceConnected(ComponentName paramAnonymousComponentName, IBinder paramAnonymousIBinder)
-        {
-          SClient.this.mShare = ISManager.Stub.asInterface(paramAnonymousIBinder);
-          SClient.access$002(SClient.this, SClient.getInstance().getRemoteObject());
-          if (SClient.this.mWHistory == null) {
-            SClient.access$002(SClient.this, new WifiHistory());
-          }
+public class SClient {
+    ISManager mShare = null;
+    private WifiHistory mWHistory = null;
+
+    /* renamed from: com.baidu.location.wifihistory.SClient$1 */
+    class C34591 implements ServiceConnection {
+        /* renamed from: a */
+        final /* synthetic */ SClient f18731a;
+
+        C34591(SClient sClient) {
+            this.f18731a = sClient;
         }
-        
-        public void onServiceDisconnected(ComponentName paramAnonymousComponentName)
-        {
-          SClient.this.mShare = null;
+
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            this.f18731a.mShare = Stub.asInterface(iBinder);
+            this.f18731a.mWHistory = SClient.getInstance().getRemoteObject();
+            if (this.f18731a.mWHistory == null) {
+                this.f18731a.mWHistory = new WifiHistory();
+            }
         }
-      }, 1);
-      return;
+
+        public void onServiceDisconnected(ComponentName componentName) {
+            this.f18731a.mShare = null;
+        }
     }
-    catch (Exception localException) {}
-  }
-  
-  public void updateWifiHistory(List<ScanResult> paramList)
-  {
-    if (paramList == null) {}
-    while (this.mWHistory == null) {
-      return;
+
+    /* renamed from: com.baidu.location.wifihistory.SClient$a */
+    static class C3460a {
+        /* renamed from: a */
+        static SClient f18732a = new SClient();
     }
-    this.mWHistory.updateWifi(paramList);
-  }
-  
-  static class a
-  {
-    static SClient a = new SClient();
-  }
+
+    public static SClient getInstance() {
+        return C3460a.f18732a;
+    }
+
+    public WifiHistory getRemoteObject() {
+        WifiHistory wifiHistory = null;
+        if (this.mShare != null) {
+            try {
+                wifiHistory = this.mShare.getInfo2();
+            } catch (Exception e) {
+            }
+        }
+        return wifiHistory;
+    }
+
+    public WifiHistory getWifiHistory() {
+        return this.mWHistory;
+    }
+
+    public String getWifiHistoryString() {
+        return this.mWHistory != null ? this.mWHistory.getWifiHistory() : null;
+    }
+
+    public void start() {
+        Intent intent = new Intent("com.baidu.location.locSManager");
+        intent.setPackage(LightNaviParams.DEFAULT_PACKAGE_NAME);
+        try {
+            C3377f.getServiceContext().bindService(intent, new C34591(this), 1);
+        } catch (Exception e) {
+        }
+    }
+
+    public void updateWifiHistory(List<ScanResult> list) {
+        if (list != null && this.mWHistory != null) {
+            this.mWHistory.updateWifi(list);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/location/wifihistory/SClient.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

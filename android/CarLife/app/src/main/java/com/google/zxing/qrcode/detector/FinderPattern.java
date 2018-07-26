@@ -2,72 +2,45 @@ package com.google.zxing.qrcode.detector;
 
 import com.google.zxing.ResultPoint;
 
-public final class FinderPattern
-  extends ResultPoint
-{
-  private int count;
-  private final float estimatedModuleSize;
-  
-  FinderPattern(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    this(paramFloat1, paramFloat2, paramFloat3, 1);
-  }
-  
-  FinderPattern(float paramFloat1, float paramFloat2, float paramFloat3, int paramInt)
-  {
-    super(paramFloat1, paramFloat2);
-    this.estimatedModuleSize = paramFloat3;
-    this.count = paramInt;
-  }
-  
-  boolean aboutEquals(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (Math.abs(paramFloat2 - getY()) <= paramFloat1)
-    {
-      bool1 = bool2;
-      if (Math.abs(paramFloat3 - getX()) <= paramFloat1)
-      {
-        paramFloat1 = Math.abs(paramFloat1 - this.estimatedModuleSize);
-        if (paramFloat1 > 1.0F)
-        {
-          bool1 = bool2;
-          if (paramFloat1 > this.estimatedModuleSize) {}
-        }
-        else
-        {
-          bool1 = true;
-        }
-      }
+public final class FinderPattern extends ResultPoint {
+    private int count;
+    private final float estimatedModuleSize;
+
+    FinderPattern(float posX, float posY, float estimatedModuleSize) {
+        this(posX, posY, estimatedModuleSize, 1);
     }
-    return bool1;
-  }
-  
-  FinderPattern combineEstimate(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    int i = this.count + 1;
-    return new FinderPattern((this.count * getX() + paramFloat2) / i, (this.count * getY() + paramFloat1) / i, (this.count * this.estimatedModuleSize + paramFloat3) / i, i);
-  }
-  
-  int getCount()
-  {
-    return this.count;
-  }
-  
-  public float getEstimatedModuleSize()
-  {
-    return this.estimatedModuleSize;
-  }
-  
-  void incrementCount()
-  {
-    this.count += 1;
-  }
+
+    FinderPattern(float posX, float posY, float estimatedModuleSize, int count) {
+        super(posX, posY);
+        this.estimatedModuleSize = estimatedModuleSize;
+        this.count = count;
+    }
+
+    public float getEstimatedModuleSize() {
+        return this.estimatedModuleSize;
+    }
+
+    int getCount() {
+        return this.count;
+    }
+
+    void incrementCount() {
+        this.count++;
+    }
+
+    boolean aboutEquals(float moduleSize, float i, float j) {
+        if (Math.abs(i - getY()) > moduleSize || Math.abs(j - getX()) > moduleSize) {
+            return false;
+        }
+        float moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
+        if (moduleSizeDiff <= 1.0f || moduleSizeDiff <= this.estimatedModuleSize) {
+            return true;
+        }
+        return false;
+    }
+
+    FinderPattern combineEstimate(float i, float j, float newModuleSize) {
+        int combinedCount = this.count + 1;
+        return new FinderPattern(((((float) this.count) * getX()) + j) / ((float) combinedCount), ((((float) this.count) * getY()) + i) / ((float) combinedCount), ((((float) this.count) * this.estimatedModuleSize) + newModuleSize) / ((float) combinedCount), combinedCount);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/detector/FinderPattern.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

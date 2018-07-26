@@ -14,373 +14,274 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-public class MatrixImageView
-  extends ImageView
-{
-  private static final String TAG = "MatrixImageView";
-  private GestureDetector mGestureDetector;
-  public float mImageHeight;
-  public float mImageWidth;
-  private Matrix mMatrix = new Matrix();
-  
-  public MatrixImageView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    setScaleType(ImageView.ScaleType.FIT_CENTER);
-  }
-  
-  public void setImageBitmap(Bitmap paramBitmap)
-  {
-    super.setImageBitmap(paramBitmap);
-    this.mMatrix.set(getImageMatrix());
-    paramBitmap = new float[9];
-    this.mMatrix.getValues(paramBitmap);
-    this.mImageWidth /= paramBitmap[0];
-    this.mImageHeight = ((this.mImageHeight - paramBitmap[5] * 2.0F) / paramBitmap[4]);
-  }
-  
-  public void start(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    MatrixTouchListener localMatrixTouchListener = new MatrixTouchListener();
-    localMatrixTouchListener.mMaxScale = paramFloat1;
-    localMatrixTouchListener.mDobleClickScale = paramFloat3;
-    localMatrixTouchListener.mMinScale = paramFloat2;
-    setOnTouchListener(localMatrixTouchListener);
-    this.mGestureDetector = new GestureDetector(getContext(), new GestureListener(localMatrixTouchListener));
-  }
-  
-  private class GestureListener
-    extends GestureDetector.SimpleOnGestureListener
-  {
-    private final MatrixImageView.MatrixTouchListener listener;
-    
-    public GestureListener(MatrixImageView.MatrixTouchListener paramMatrixTouchListener)
-    {
-      this.listener = paramMatrixTouchListener;
-    }
-    
-    public boolean onDoubleTap(MotionEvent paramMotionEvent)
-    {
-      return true;
-    }
-    
-    public boolean onDoubleTapEvent(MotionEvent paramMotionEvent)
-    {
-      return super.onDoubleTapEvent(paramMotionEvent);
-    }
-    
-    public boolean onDown(MotionEvent paramMotionEvent)
-    {
-      return true;
-    }
-    
-    public boolean onFling(MotionEvent paramMotionEvent1, MotionEvent paramMotionEvent2, float paramFloat1, float paramFloat2)
-    {
-      return super.onFling(paramMotionEvent1, paramMotionEvent2, paramFloat1, paramFloat2);
-    }
-    
-    public void onLongPress(MotionEvent paramMotionEvent)
-    {
-      super.onLongPress(paramMotionEvent);
-    }
-    
-    public boolean onScroll(MotionEvent paramMotionEvent1, MotionEvent paramMotionEvent2, float paramFloat1, float paramFloat2)
-    {
-      return super.onScroll(paramMotionEvent1, paramMotionEvent2, paramFloat1, paramFloat2);
-    }
-    
-    public void onShowPress(MotionEvent paramMotionEvent)
-    {
-      super.onShowPress(paramMotionEvent);
-    }
-    
-    public boolean onSingleTapConfirmed(MotionEvent paramMotionEvent)
-    {
-      return super.onSingleTapConfirmed(paramMotionEvent);
-    }
-    
-    public boolean onSingleTapUp(MotionEvent paramMotionEvent)
-    {
-      return super.onSingleTapUp(paramMotionEvent);
-    }
-  }
-  
-  public class MatrixTouchListener
-    implements View.OnTouchListener
-  {
-    private static final int MODE_DRAG = 1;
-    private static final int MODE_UNABLE = 3;
-    private static final int MODE_ZOOM = 2;
-    private Matrix mCurrentMatrix = new Matrix();
-    float mDobleClickScale = 2.0F;
-    float mMaxScale = 6.0F;
-    float mMinScale = 1.0F;
-    private int mMode = 0;
-    private float mStartDis;
-    private PointF startPoint = new PointF();
-    
-    public MatrixTouchListener() {}
-    
-    private float checkDxBound(float[] paramArrayOfFloat, float paramFloat)
-    {
-      float f2 = MatrixImageView.this.getWidth();
-      if (MatrixImageView.this.mImageWidth * paramArrayOfFloat[0] < f2) {
-        return 0.0F;
-      }
-      float f1;
-      if (paramArrayOfFloat[2] + paramFloat > 0.0F) {
-        f1 = -paramArrayOfFloat[2];
-      }
-      for (;;)
-      {
-        return f1;
-        f1 = paramFloat;
-        if (paramArrayOfFloat[2] + paramFloat < -(MatrixImageView.this.mImageWidth * paramArrayOfFloat[0] - f2)) {
-          f1 = -(MatrixImageView.this.mImageWidth * paramArrayOfFloat[0] - f2) - paramArrayOfFloat[2];
+public class MatrixImageView extends ImageView {
+    private static final String TAG = "MatrixImageView";
+    private GestureDetector mGestureDetector;
+    public float mImageHeight;
+    public float mImageWidth;
+    private Matrix mMatrix = new Matrix();
+
+    private class GestureListener extends SimpleOnGestureListener {
+        private final MatrixTouchListener listener;
+
+        public GestureListener(MatrixTouchListener listener) {
+            this.listener = listener;
         }
-      }
-    }
-    
-    private float checkDyBound(float[] paramArrayOfFloat, float paramFloat)
-    {
-      float f2 = MatrixImageView.this.getHeight();
-      if (MatrixImageView.this.mImageHeight * paramArrayOfFloat[4] < f2) {
-        return 0.0F;
-      }
-      float f1;
-      if (paramArrayOfFloat[5] + paramFloat > 0.0F) {
-        f1 = -paramArrayOfFloat[5];
-      }
-      for (;;)
-      {
-        return f1;
-        f1 = paramFloat;
-        if (paramArrayOfFloat[5] + paramFloat < -(MatrixImageView.this.mImageHeight * paramArrayOfFloat[4] - f2)) {
-          f1 = -(MatrixImageView.this.mImageHeight * paramArrayOfFloat[4] - f2) - paramArrayOfFloat[5];
+
+        public boolean onDown(MotionEvent e) {
+            return true;
         }
-      }
-    }
-    
-    private float checkMaxScale(float paramFloat, float[] paramArrayOfFloat)
-    {
-      float f;
-      if (paramArrayOfFloat[0] * paramFloat > this.mMaxScale) {
-        f = this.mMaxScale / paramArrayOfFloat[0];
-      }
-      do
-      {
-        this.mCurrentMatrix.postScale(f, f, MatrixImageView.this.getWidth() / 2, MatrixImageView.this.getHeight() / 2);
-        return f;
-        f = paramFloat;
-      } while (paramArrayOfFloat[0] * paramFloat >= this.mMinScale);
-      paramFloat = this.mMinScale / paramArrayOfFloat[0];
-      this.mCurrentMatrix.setScale(this.mMinScale, this.mMinScale);
-      return paramFloat;
-    }
-    
-    private boolean checkRest()
-    {
-      boolean bool = false;
-      float[] arrayOfFloat = new float[9];
-      MatrixImageView.this.getImageMatrix().getValues(arrayOfFloat);
-      float f = arrayOfFloat[0];
-      MatrixImageView.this.mMatrix.getValues(arrayOfFloat);
-      if (f < arrayOfFloat[0]) {
-        bool = true;
-      }
-      return bool;
-    }
-    
-    private float distance(MotionEvent paramMotionEvent)
-    {
-      float f1 = paramMotionEvent.getX(1) - paramMotionEvent.getX(0);
-      float f2 = paramMotionEvent.getY(1) - paramMotionEvent.getY(0);
-      return (float)Math.sqrt(f1 * f1 + f2 * f2);
-    }
-    
-    private void isMatrixEnable()
-    {
-      if (MatrixImageView.this.getScaleType() != ImageView.ScaleType.CENTER)
-      {
-        MatrixImageView.this.setScaleType(ImageView.ScaleType.MATRIX);
-        return;
-      }
-      this.mMode = 3;
-    }
-    
-    private boolean isZoomChanged()
-    {
-      boolean bool = false;
-      float[] arrayOfFloat = new float[9];
-      MatrixImageView.this.getImageMatrix().getValues(arrayOfFloat);
-      float f = arrayOfFloat[0];
-      MatrixImageView.this.mMatrix.getValues(arrayOfFloat);
-      if (f != arrayOfFloat[0]) {
-        bool = true;
-      }
-      return bool;
-    }
-    
-    private void reSetMatrix()
-    {
-      if (checkRest())
-      {
-        this.mCurrentMatrix.set(MatrixImageView.this.mMatrix);
-        MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
-      }
-    }
-    
-    private void setZoomMatrix(MotionEvent paramMotionEvent)
-    {
-      if (paramMotionEvent.getPointerCount() < 2) {}
-      float f1;
-      do
-      {
-        return;
-        f1 = distance(paramMotionEvent);
-      } while (f1 <= 10.0F);
-      float f2 = f1 / this.mStartDis;
-      this.mStartDis = f1;
-      this.mCurrentMatrix.set(MatrixImageView.this.getImageMatrix());
-      paramMotionEvent = new float[9];
-      this.mCurrentMatrix.getValues(paramMotionEvent);
-      checkMaxScale(f2, paramMotionEvent);
-      MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
-      center(true, true);
-    }
-    
-    protected void center(boolean paramBoolean1, boolean paramBoolean2)
-    {
-      Matrix localMatrix = new Matrix();
-      localMatrix.set(this.mCurrentMatrix);
-      RectF localRectF = new RectF(0.0F, 0.0F, MatrixImageView.this.mImageWidth, MatrixImageView.this.mImageHeight);
-      localMatrix.mapRect(localRectF);
-      float f5 = localRectF.height();
-      float f4 = localRectF.width();
-      float f3 = 0.0F;
-      float f2 = 0.0F;
-      float f1 = f2;
-      int i;
-      if (paramBoolean2)
-      {
-        i = MatrixImageView.this.getHeight();
-        if (f5 < i) {
-          f1 = (i - f5) / 2.0F - localRectF.top;
+
+        public boolean onDoubleTap(MotionEvent e) {
+            return true;
         }
-      }
-      else
-      {
-        f2 = f3;
-        if (paramBoolean1)
-        {
-          i = MatrixImageView.this.getWidth();
-          if (f4 >= i) {
-            break label224;
-          }
-          f2 = (i - f4) / 2.0F - localRectF.left;
+
+        public boolean onSingleTapUp(MotionEvent e) {
+            return super.onSingleTapUp(e);
         }
-      }
-      for (;;)
-      {
-        this.mCurrentMatrix.postTranslate(f2, f1);
-        MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
-        return;
-        if (localRectF.top > 0.0F)
-        {
-          f1 = -localRectF.top;
-          break;
+
+        public void onLongPress(MotionEvent e) {
+            super.onLongPress(e);
         }
-        f1 = f2;
-        if (localRectF.bottom >= i) {
-          break;
+
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return super.onScroll(e1, e2, distanceX, distanceY);
         }
-        f1 = i - localRectF.bottom;
-        break;
-        label224:
-        if (localRectF.left > 0.0F)
-        {
-          f2 = -localRectF.left;
+
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return super.onFling(e1, e2, velocityX, velocityY);
         }
-        else
-        {
-          f2 = f3;
-          if (localRectF.right < i) {
-            f2 = i - localRectF.right;
-          }
+
+        public void onShowPress(MotionEvent e) {
+            super.onShowPress(e);
         }
-      }
+
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            return super.onDoubleTapEvent(e);
+        }
+
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return super.onSingleTapConfirmed(e);
+        }
     }
-    
-    public void onDoubleClick()
-    {
-      if (isZoomChanged()) {}
-      for (float f = 1.0F;; f = this.mDobleClickScale)
-      {
-        this.mCurrentMatrix.set(MatrixImageView.this.mMatrix);
-        this.mCurrentMatrix.postScale(f, f, MatrixImageView.this.getWidth() / 2, MatrixImageView.this.getHeight() / 2);
-        MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
-        return;
-      }
-    }
-    
-    public boolean onTouch(View paramView, MotionEvent paramMotionEvent)
-    {
-      boolean bool = true;
-      switch (paramMotionEvent.getActionMasked())
-      {
-      }
-      for (;;)
-      {
-        bool = MatrixImageView.this.mGestureDetector.onTouchEvent(paramMotionEvent);
-        do
-        {
-          return bool;
-          this.mMode = 1;
-          this.startPoint.set(paramMotionEvent.getX(), paramMotionEvent.getY());
-          isMatrixEnable();
-          break;
-          reSetMatrix();
-          break;
-          if (this.mMode == 2)
-          {
-            setZoomMatrix(paramMotionEvent);
-            break;
-          }
-          if (this.mMode != 1) {
-            break;
-          }
-          setDragMatrix(paramMotionEvent);
-          break;
-        } while (this.mMode == 3);
-        this.mMode = 2;
-        this.mStartDis = distance(paramMotionEvent);
-      }
-    }
-    
-    public void setDragMatrix(MotionEvent paramMotionEvent)
-    {
-      if (isZoomChanged())
-      {
-        float f2 = paramMotionEvent.getX() - this.startPoint.x;
-        float f1 = paramMotionEvent.getY() - this.startPoint.y;
-        if (Math.sqrt(f2 * f2 + f1 * f1) > 10.0D)
-        {
-          this.startPoint.set(paramMotionEvent.getX(), paramMotionEvent.getY());
-          this.mCurrentMatrix.set(MatrixImageView.this.getImageMatrix());
-          paramMotionEvent = new float[9];
-          this.mCurrentMatrix.getValues(paramMotionEvent);
-          f2 = checkDxBound(paramMotionEvent, f2);
-          f1 = checkDyBound(paramMotionEvent, f1);
-          this.mCurrentMatrix.postTranslate(f2, f1);
-          MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
+
+    public class MatrixTouchListener implements OnTouchListener {
+        private static final int MODE_DRAG = 1;
+        private static final int MODE_UNABLE = 3;
+        private static final int MODE_ZOOM = 2;
+        private Matrix mCurrentMatrix = new Matrix();
+        float mDobleClickScale = 2.0f;
+        float mMaxScale = 6.0f;
+        float mMinScale = 1.0f;
+        private int mMode = 0;
+        private float mStartDis;
+        private PointF startPoint = new PointF();
+
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getActionMasked()) {
+                case 0:
+                    this.mMode = 1;
+                    this.startPoint.set(event.getX(), event.getY());
+                    isMatrixEnable();
+                    break;
+                case 1:
+                case 3:
+                    reSetMatrix();
+                    break;
+                case 2:
+                    if (this.mMode != 2) {
+                        if (this.mMode == 1) {
+                            setDragMatrix(event);
+                            break;
+                        }
+                    }
+                    setZoomMatrix(event);
+                    break;
+                    break;
+                case 5:
+                    if (this.mMode != 3) {
+                        this.mMode = 2;
+                        this.mStartDis = distance(event);
+                        break;
+                    }
+                    return true;
+            }
+            return MatrixImageView.this.mGestureDetector.onTouchEvent(event);
         }
-      }
+
+        protected void center(boolean horizontal, boolean vertical) {
+            Matrix m = new Matrix();
+            m.set(this.mCurrentMatrix);
+            RectF rect = new RectF(0.0f, 0.0f, MatrixImageView.this.mImageWidth, MatrixImageView.this.mImageHeight);
+            m.mapRect(rect);
+            float height = rect.height();
+            float width = rect.width();
+            float deltaX = 0.0f;
+            float deltaY = 0.0f;
+            if (vertical) {
+                int screenHeight = MatrixImageView.this.getHeight();
+                if (height < ((float) screenHeight)) {
+                    deltaY = ((((float) screenHeight) - height) / 2.0f) - rect.top;
+                } else if (rect.top > 0.0f) {
+                    deltaY = -rect.top;
+                } else if (rect.bottom < ((float) screenHeight)) {
+                    deltaY = ((float) screenHeight) - rect.bottom;
+                }
+            }
+            if (horizontal) {
+                int screenWidth = MatrixImageView.this.getWidth();
+                if (width < ((float) screenWidth)) {
+                    deltaX = ((((float) screenWidth) - width) / 2.0f) - rect.left;
+                } else if (rect.left > 0.0f) {
+                    deltaX = -rect.left;
+                } else if (rect.right < ((float) screenWidth)) {
+                    deltaX = ((float) screenWidth) - rect.right;
+                }
+            }
+            this.mCurrentMatrix.postTranslate(deltaX, deltaY);
+            MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
+        }
+
+        public void setDragMatrix(MotionEvent event) {
+            if (isZoomChanged()) {
+                float dx = event.getX() - this.startPoint.x;
+                float dy = event.getY() - this.startPoint.y;
+                if (Math.sqrt((double) ((dx * dx) + (dy * dy))) > 10.0d) {
+                    this.startPoint.set(event.getX(), event.getY());
+                    this.mCurrentMatrix.set(MatrixImageView.this.getImageMatrix());
+                    float[] values = new float[9];
+                    this.mCurrentMatrix.getValues(values);
+                    this.mCurrentMatrix.postTranslate(checkDxBound(values, dx), checkDyBound(values, dy));
+                    MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
+                }
+            }
+        }
+
+        private boolean isZoomChanged() {
+            float[] values = new float[9];
+            MatrixImageView.this.getImageMatrix().getValues(values);
+            float scale = values[0];
+            MatrixImageView.this.mMatrix.getValues(values);
+            if (scale != values[0]) {
+                return true;
+            }
+            return false;
+        }
+
+        private float checkDyBound(float[] values, float dy) {
+            float height = (float) MatrixImageView.this.getHeight();
+            if (MatrixImageView.this.mImageHeight * values[4] < height) {
+                return 0.0f;
+            }
+            if (values[5] + dy > 0.0f) {
+                dy = -values[5];
+            } else if (values[5] + dy < (-((MatrixImageView.this.mImageHeight * values[4]) - height))) {
+                dy = (-((MatrixImageView.this.mImageHeight * values[4]) - height)) - values[5];
+            }
+            return dy;
+        }
+
+        private float checkDxBound(float[] values, float dx) {
+            float width = (float) MatrixImageView.this.getWidth();
+            if (MatrixImageView.this.mImageWidth * values[0] < width) {
+                return 0.0f;
+            }
+            if (values[2] + dx > 0.0f) {
+                dx = -values[2];
+            } else if (values[2] + dx < (-((MatrixImageView.this.mImageWidth * values[0]) - width))) {
+                dx = (-((MatrixImageView.this.mImageWidth * values[0]) - width)) - values[2];
+            }
+            return dx;
+        }
+
+        private void setZoomMatrix(MotionEvent event) {
+            if (event.getPointerCount() >= 2) {
+                float endDis = distance(event);
+                if (endDis > 10.0f) {
+                    float scale = endDis / this.mStartDis;
+                    this.mStartDis = endDis;
+                    this.mCurrentMatrix.set(MatrixImageView.this.getImageMatrix());
+                    float[] values = new float[9];
+                    this.mCurrentMatrix.getValues(values);
+                    scale = checkMaxScale(scale, values);
+                    MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
+                    center(true, true);
+                }
+            }
+        }
+
+        private float checkMaxScale(float scale, float[] values) {
+            if (values[0] * scale > this.mMaxScale) {
+                scale = this.mMaxScale / values[0];
+            } else if (values[0] * scale < this.mMinScale) {
+                scale = this.mMinScale / values[0];
+                this.mCurrentMatrix.setScale(this.mMinScale, this.mMinScale);
+                return scale;
+            }
+            this.mCurrentMatrix.postScale(scale, scale, (float) (MatrixImageView.this.getWidth() / 2), (float) (MatrixImageView.this.getHeight() / 2));
+            return scale;
+        }
+
+        private void reSetMatrix() {
+            if (checkRest()) {
+                this.mCurrentMatrix.set(MatrixImageView.this.mMatrix);
+                MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
+            }
+        }
+
+        private boolean checkRest() {
+            float[] values = new float[9];
+            MatrixImageView.this.getImageMatrix().getValues(values);
+            float scale = values[0];
+            MatrixImageView.this.mMatrix.getValues(values);
+            if (scale < values[0]) {
+                return true;
+            }
+            return false;
+        }
+
+        private void isMatrixEnable() {
+            if (MatrixImageView.this.getScaleType() != ScaleType.CENTER) {
+                MatrixImageView.this.setScaleType(ScaleType.MATRIX);
+            } else {
+                this.mMode = 3;
+            }
+        }
+
+        private float distance(MotionEvent event) {
+            float dx = event.getX(1) - event.getX(0);
+            float dy = event.getY(1) - event.getY(0);
+            return (float) Math.sqrt((double) ((dx * dx) + (dy * dy)));
+        }
+
+        public void onDoubleClick() {
+            float scale = isZoomChanged() ? 1.0f : this.mDobleClickScale;
+            this.mCurrentMatrix.set(MatrixImageView.this.mMatrix);
+            this.mCurrentMatrix.postScale(scale, scale, (float) (MatrixImageView.this.getWidth() / 2), (float) (MatrixImageView.this.getHeight() / 2));
+            MatrixImageView.this.setImageMatrix(this.mCurrentMatrix);
+        }
     }
-  }
+
+    public MatrixImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setScaleType(ScaleType.FIT_CENTER);
+    }
+
+    public void setImageBitmap(Bitmap bm) {
+        super.setImageBitmap(bm);
+        this.mMatrix.set(getImageMatrix());
+        float[] values = new float[9];
+        this.mMatrix.getValues(values);
+        this.mImageWidth /= values[0];
+        this.mImageHeight = (this.mImageHeight - (values[5] * 2.0f)) / values[4];
+    }
+
+    public void start(float mMaxScale, float mMinScale, float mDobleClickScale) {
+        MatrixTouchListener mListener = new MatrixTouchListener();
+        mListener.mMaxScale = mMaxScale;
+        mListener.mDobleClickScale = mDobleClickScale;
+        mListener.mMinScale = mMinScale;
+        setOnTouchListener(mListener);
+        this.mGestureDetector = new GestureDetector(getContext(), new GestureListener(mListener));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/widget/MatrixImageView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

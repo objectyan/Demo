@@ -7,81 +7,67 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 import com.baidu.navi.style.StyleManager;
+import com.baidu.navisdk.ui.routeguide.subview.OnRGSubViewListener.ActionTypeSearchParams;
 
-public class NaviRouteSearchAdapter
-  extends BaseAdapter
-{
-  private int[] icons = { 2130838902, 2130838903, 2130838904, 2130838900, 2130838901, 2130838899 };
-  private String[] items;
-  private Context mContext;
-  
-  public NaviRouteSearchAdapter(Context paramContext)
-  {
-    this.mContext = paramContext;
-    this.items = StyleManager.getStringArray(2131230731);
-  }
-  
-  public int getCount()
-  {
-    return this.items.length;
-  }
-  
-  public String getItem(int paramInt)
-  {
-    if ((paramInt < 0) || (paramInt >= this.items.length)) {
-      return "";
+public class NaviRouteSearchAdapter extends BaseAdapter {
+    private int[] icons = new int[]{C0965R.drawable.map_ic_navigating_point_oil, C0965R.drawable.map_ic_navigating_point_park, C0965R.drawable.map_ic_navigating_point_toilets, C0965R.drawable.map_ic_navigating_point_food, C0965R.drawable.map_ic_navigating_point_hotel, C0965R.drawable.map_ic_navigating_point_bank};
+    private String[] items;
+    private Context mContext;
+
+    public NaviRouteSearchAdapter(Context context) {
+        this.mContext = context;
+        this.items = StyleManager.getStringArray(C0965R.array.map_in_navi_route_search_list_item_keywords);
     }
-    return this.items[paramInt];
-  }
-  
-  public long getItemId(int paramInt)
-  {
-    return paramInt;
-  }
-  
-  public String getSearchKey(int paramInt)
-  {
-    if ((paramInt >= 0) && (paramInt < this.items.length))
-    {
-      if (paramInt == 0) {
-        return "加油站";
-      }
-      if (paramInt == 1) {
-        return "停车场";
-      }
-      if (paramInt == 2) {
-        return "厕所";
-      }
-      if (paramInt == 3) {
-        return "餐饮";
-      }
-      if (paramInt == 4) {
-        return "酒店";
-      }
-      if (paramInt == 5) {
-        return "银行";
-      }
+
+    public int getCount() {
+        return this.items.length;
     }
-    return "";
-  }
-  
-  public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    paramView = LayoutInflater.from(this.mContext).inflate(2130968842, paramViewGroup, false);
-    paramViewGroup = (ImageView)paramView.findViewById(2131625272);
-    TextView localTextView = (TextView)paramView.findViewById(2131625273);
-    paramViewGroup.setImageDrawable(StyleManager.getDrawable(this.icons[paramInt]));
-    localTextView.setText(getItem(paramInt));
-    if (paramInt + 1 == getCount()) {
-      paramView.findViewById(2131625274).setVisibility(8);
+
+    public String getItem(int position) {
+        if (position < 0 || position >= this.items.length) {
+            return "";
+        }
+        return this.items[position];
     }
-    return paramView;
-  }
+
+    public String getSearchKey(int position) {
+        if (position >= 0 && position < this.items.length) {
+            if (position == 0) {
+                return ActionTypeSearchParams.Gas_Station;
+            }
+            if (position == 1) {
+                return ActionTypeSearchParams.Park;
+            }
+            if (position == 2) {
+                return ActionTypeSearchParams.Toilet;
+            }
+            if (position == 3) {
+                return ActionTypeSearchParams.Restaurant;
+            }
+            if (position == 4) {
+                return ActionTypeSearchParams.Hotel;
+            }
+            if (position == 5) {
+                return ActionTypeSearchParams.Bank;
+            }
+        }
+        return "";
+    }
+
+    public long getItemId(int position) {
+        return (long) position;
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        convertView = LayoutInflater.from(this.mContext).inflate(C0965R.layout.innavi_route_search_list_item, parent, false);
+        TextView tv = (TextView) convertView.findViewById(C0965R.id.tv_route_search_keyword);
+        ((ImageView) convertView.findViewById(C0965R.id.img_route_search_icon)).setImageDrawable(StyleManager.getDrawable(this.icons[position]));
+        tv.setText(getItem(position));
+        if (position + 1 == getCount()) {
+            convertView.findViewById(C0965R.id.dirver).setVisibility(8);
+        }
+        return convertView;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/adapter/NaviRouteSearchAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

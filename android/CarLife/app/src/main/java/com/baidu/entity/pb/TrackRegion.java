@@ -7,431 +7,370 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class TrackRegion
-  extends MessageMicro
-{
-  public static final int REGION_LIST_FIELD_NUMBER = 1;
-  private List<Region> a = Collections.emptyList();
-  private int b = -1;
-  
-  public static TrackRegion parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new TrackRegion().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static TrackRegion parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (TrackRegion)new TrackRegion().mergeFrom(paramArrayOfByte);
-  }
-  
-  public TrackRegion addRegionList(Region paramRegion)
-  {
-    if (paramRegion == null) {
-      return this;
-    }
-    if (this.a.isEmpty()) {
-      this.a = new ArrayList();
-    }
-    this.a.add(paramRegion);
-    return this;
-  }
-  
-  public final TrackRegion clear()
-  {
-    clearRegionList();
-    this.b = -1;
-    return this;
-  }
-  
-  public TrackRegion clearRegionList()
-  {
-    this.a = Collections.emptyList();
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.b < 0) {
-      getSerializedSize();
-    }
-    return this.b;
-  }
-  
-  public Region getRegionList(int paramInt)
-  {
-    return (Region)this.a.get(paramInt);
-  }
-  
-  public int getRegionListCount()
-  {
-    return this.a.size();
-  }
-  
-  public List<Region> getRegionListList()
-  {
-    return this.a;
-  }
-  
-  public int getSerializedSize()
-  {
-    Iterator localIterator = getRegionListList().iterator();
-    for (int i = 0; localIterator.hasNext(); i = CodedOutputStreamMicro.computeMessageSize(1, (Region)localIterator.next()) + i) {}
-    this.b = i;
-    return i;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public TrackRegion mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
-        return this;
-      case 10: 
-        Region localRegion = new Region();
-        paramCodedInputStreamMicro.readMessage(localRegion);
-        addRegionList(localRegion);
-      }
-    }
-  }
-  
-  public TrackRegion setRegionList(int paramInt, Region paramRegion)
-  {
-    if (paramRegion == null) {
-      return this;
-    }
-    this.a.set(paramInt, paramRegion);
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    Iterator localIterator = getRegionListList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(1, (Region)localIterator.next());
-    }
-  }
-  
-  public static final class Point
-    extends MessageMicro
-  {
-    public static final int DATA_FIELD_NUMBER = 1;
-    private boolean a;
-    private String b = "";
-    private int c = -1;
-    
-    public static Point parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Point().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Point parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Point)new Point().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Point clear()
-    {
-      clearData();
-      this.c = -1;
-      return this;
-    }
-    
-    public Point clearData()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.c < 0) {
-        getSerializedSize();
-      }
-      return this.c;
-    }
-    
-    public String getData()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasData()) {
-        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getData());
-      }
-      this.c = i;
-      return i;
-    }
-    
-    public boolean hasData()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Point mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setData(paramCodedInputStreamMicro.readString());
+public final class TrackRegion extends MessageMicro {
+    public static final int REGION_LIST_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private List<Region> f16349a = Collections.emptyList();
+    /* renamed from: b */
+    private int f16350b = -1;
+
+    public static final class Point extends MessageMicro {
+        public static final int DATA_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f16340a;
+        /* renamed from: b */
+        private String f16341b = "";
+        /* renamed from: c */
+        private int f16342c = -1;
+
+        public static Point parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Point().mergeFrom(codedInputStreamMicro);
         }
-      }
-    }
-    
-    public Point setData(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasData()) {
-        paramCodedOutputStreamMicro.writeString(1, getData());
-      }
-    }
-  }
-  
-  public static final class Region
-    extends MessageMicro
-  {
-    public static final int NAME_FIELD_NUMBER = 1;
-    public static final int REGION_FIELD_NUMBER = 3;
-    public static final int UID_FIELD_NUMBER = 2;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private String d = "";
-    private List<TrackRegion.Point> e = Collections.emptyList();
-    private int f = -1;
-    
-    public static Region parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Region().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Region parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Region)new Region().mergeFrom(paramArrayOfByte);
-    }
-    
-    public Region addRegion(TrackRegion.Point paramPoint)
-    {
-      if (paramPoint == null) {
-        return this;
-      }
-      if (this.e.isEmpty()) {
-        this.e = new ArrayList();
-      }
-      this.e.add(paramPoint);
-      return this;
-    }
-    
-    public final Region clear()
-    {
-      clearName();
-      clearUid();
-      clearRegion();
-      this.f = -1;
-      return this;
-    }
-    
-    public Region clearName()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public Region clearRegion()
-    {
-      this.e = Collections.emptyList();
-      return this;
-    }
-    
-    public Region clearUid()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.f < 0) {
-        getSerializedSize();
-      }
-      return this.f;
-    }
-    
-    public String getName()
-    {
-      return this.b;
-    }
-    
-    public TrackRegion.Point getRegion(int paramInt)
-    {
-      return (TrackRegion.Point)this.e.get(paramInt);
-    }
-    
-    public int getRegionCount()
-    {
-      return this.e.size();
-    }
-    
-    public List<TrackRegion.Point> getRegionList()
-    {
-      return this.e;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasName()) {
-        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getName());
-      }
-      int j = i;
-      if (hasUid()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getUid());
-      }
-      Iterator localIterator = getRegionList().iterator();
-      while (localIterator.hasNext()) {
-        j = CodedOutputStreamMicro.computeMessageSize(3, (TrackRegion.Point)localIterator.next()) + j;
-      }
-      this.f = j;
-      return j;
-    }
-    
-    public String getUid()
-    {
-      return this.d;
-    }
-    
-    public boolean hasName()
-    {
-      return this.a;
-    }
-    
-    public boolean hasUid()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Region mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setName(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          setUid(paramCodedInputStreamMicro.readString());
-          break;
-        case 26: 
-          TrackRegion.Point localPoint = new TrackRegion.Point();
-          paramCodedInputStreamMicro.readMessage(localPoint);
-          addRegion(localPoint);
+
+        public static Point parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Point) new Point().mergeFrom(bArr);
         }
-      }
+
+        public final Point clear() {
+            clearData();
+            this.f16342c = -1;
+            return this;
+        }
+
+        public Point clearData() {
+            this.f16340a = false;
+            this.f16341b = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16342c < 0) {
+                getSerializedSize();
+            }
+            return this.f16342c;
+        }
+
+        public String getData() {
+            return this.f16341b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasData()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getData());
+            }
+            this.f16342c = i;
+            return i;
+        }
+
+        public boolean hasData() {
+            return this.f16340a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Point mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setData(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Point setData(String str) {
+            this.f16340a = true;
+            this.f16341b = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasData()) {
+                codedOutputStreamMicro.writeString(1, getData());
+            }
+        }
     }
-    
-    public Region setName(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
+
+    public static final class Region extends MessageMicro {
+        public static final int NAME_FIELD_NUMBER = 1;
+        public static final int REGION_FIELD_NUMBER = 3;
+        public static final int UID_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f16343a;
+        /* renamed from: b */
+        private String f16344b = "";
+        /* renamed from: c */
+        private boolean f16345c;
+        /* renamed from: d */
+        private String f16346d = "";
+        /* renamed from: e */
+        private List<Point> f16347e = Collections.emptyList();
+        /* renamed from: f */
+        private int f16348f = -1;
+
+        public static Region parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Region().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Region parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Region) new Region().mergeFrom(bArr);
+        }
+
+        public Region addRegion(Point point) {
+            if (point != null) {
+                if (this.f16347e.isEmpty()) {
+                    this.f16347e = new ArrayList();
+                }
+                this.f16347e.add(point);
+            }
+            return this;
+        }
+
+        public final Region clear() {
+            clearName();
+            clearUid();
+            clearRegion();
+            this.f16348f = -1;
+            return this;
+        }
+
+        public Region clearName() {
+            this.f16343a = false;
+            this.f16344b = "";
+            return this;
+        }
+
+        public Region clearRegion() {
+            this.f16347e = Collections.emptyList();
+            return this;
+        }
+
+        public Region clearUid() {
+            this.f16345c = false;
+            this.f16346d = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16348f < 0) {
+                getSerializedSize();
+            }
+            return this.f16348f;
+        }
+
+        public String getName() {
+            return this.f16344b;
+        }
+
+        public Point getRegion(int i) {
+            return (Point) this.f16347e.get(i);
+        }
+
+        public int getRegionCount() {
+            return this.f16347e.size();
+        }
+
+        public List<Point> getRegionList() {
+            return this.f16347e;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasName()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getName());
+            }
+            if (hasUid()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getUid());
+            }
+            int i2 = i;
+            for (Point computeMessageSize : getRegionList()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(3, computeMessageSize) + i2;
+            }
+            this.f16348f = i2;
+            return i2;
+        }
+
+        public String getUid() {
+            return this.f16346d;
+        }
+
+        public boolean hasName() {
+            return this.f16343a;
+        }
+
+        public boolean hasUid() {
+            return this.f16345c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Region mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setName(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        setUid(codedInputStreamMicro.readString());
+                        continue;
+                    case 26:
+                        MessageMicro point = new Point();
+                        codedInputStreamMicro.readMessage(point);
+                        addRegion(point);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Region setName(String str) {
+            this.f16343a = true;
+            this.f16344b = str;
+            return this;
+        }
+
+        public Region setRegion(int i, Point point) {
+            if (point != null) {
+                this.f16347e.set(i, point);
+            }
+            return this;
+        }
+
+        public Region setUid(String str) {
+            this.f16345c = true;
+            this.f16346d = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasName()) {
+                codedOutputStreamMicro.writeString(1, getName());
+            }
+            if (hasUid()) {
+                codedOutputStreamMicro.writeString(2, getUid());
+            }
+            for (Point writeMessage : getRegionList()) {
+                codedOutputStreamMicro.writeMessage(3, writeMessage);
+            }
+        }
     }
-    
-    public Region setRegion(int paramInt, TrackRegion.Point paramPoint)
-    {
-      if (paramPoint == null) {
+
+    public static TrackRegion parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new TrackRegion().mergeFrom(codedInputStreamMicro);
+    }
+
+    public static TrackRegion parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (TrackRegion) new TrackRegion().mergeFrom(bArr);
+    }
+
+    public TrackRegion addRegionList(Region region) {
+        if (region != null) {
+            if (this.f16349a.isEmpty()) {
+                this.f16349a = new ArrayList();
+            }
+            this.f16349a.add(region);
+        }
         return this;
-      }
-      this.e.set(paramInt, paramPoint);
-      return this;
     }
-    
-    public Region setUid(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
+
+    public final TrackRegion clear() {
+        clearRegionList();
+        this.f16350b = -1;
+        return this;
     }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasName()) {
-        paramCodedOutputStreamMicro.writeString(1, getName());
-      }
-      if (hasUid()) {
-        paramCodedOutputStreamMicro.writeString(2, getUid());
-      }
-      Iterator localIterator = getRegionList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(3, (TrackRegion.Point)localIterator.next());
-      }
+
+    public TrackRegion clearRegionList() {
+        this.f16349a = Collections.emptyList();
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f16350b < 0) {
+            getSerializedSize();
+        }
+        return this.f16350b;
+    }
+
+    public Region getRegionList(int i) {
+        return (Region) this.f16349a.get(i);
+    }
+
+    public int getRegionListCount() {
+        return this.f16349a.size();
+    }
+
+    public List<Region> getRegionListList() {
+        return this.f16349a;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        for (Region computeMessageSize : getRegionListList()) {
+            i = CodedOutputStreamMicro.computeMessageSize(1, computeMessageSize) + i;
+        }
+        this.f16350b = i;
+        return i;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public TrackRegion mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    MessageMicro region = new Region();
+                    codedInputStreamMicro.readMessage(region);
+                    addRegionList(region);
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public TrackRegion setRegionList(int i, Region region) {
+        if (region != null) {
+            this.f16349a.set(i, region);
+        }
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        for (Region writeMessage : getRegionListList()) {
+            codedOutputStreamMicro.writeMessage(1, writeMessage);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/TrackRegion.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

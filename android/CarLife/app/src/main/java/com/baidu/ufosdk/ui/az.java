@@ -1,39 +1,37 @@
 package com.baidu.ufosdk.ui;
 
-import android.view.View;
+/* compiled from: FeedbackInputActivity */
+final class az implements da {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21563a;
+    /* renamed from: b */
+    private final /* synthetic */ cx f21564b;
 
-final class az
-  implements da
-{
-  az(FeedbackInputActivity paramFeedbackInputActivity, cx paramcx) {}
-  
-  public final void a()
-  {
-    this.b.dismiss();
-    FeedbackInputActivity.b(this.a).setVisibility(0);
-    FeedbackInputActivity.b(this.a).bringToFront();
-    new Thread(new bc(this)).start();
-  }
-  
-  public final void a(String paramString)
-  {
-    if ((paramString != null) && (paramString.trim().length() != 0))
-    {
-      this.b.dismiss();
-      FeedbackInputActivity.b(this.a).setVisibility(0);
-      FeedbackInputActivity.b(this.a).bringToFront();
-      new Thread(new ba(this, paramString)).start();
-      return;
+    az(FeedbackInputActivity feedbackInputActivity, cx cxVar) {
+        this.f21563a = feedbackInputActivity;
+        this.f21564b = cxVar;
     }
-    this.b.dismiss();
-    FeedbackInputActivity.b(this.a).setVisibility(0);
-    FeedbackInputActivity.b(this.a).bringToFront();
-    new Thread(new bb(this)).start();
-  }
+
+    /* renamed from: a */
+    public final void mo3929a(String str) {
+        if (str == null || str.trim().length() == 0) {
+            this.f21564b.dismiss();
+            this.f21563a.ac.setVisibility(0);
+            this.f21563a.ac.bringToFront();
+            new Thread(new bb(this)).start();
+            return;
+        }
+        this.f21564b.dismiss();
+        this.f21563a.ac.setVisibility(0);
+        this.f21563a.ac.bringToFront();
+        new Thread(new ba(this, str)).start();
+    }
+
+    /* renamed from: a */
+    public final void mo3928a() {
+        this.f21564b.dismiss();
+        this.f21563a.ac.setVisibility(0);
+        this.f21563a.ac.bringToFront();
+        new Thread(new bc(this)).start();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/az.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

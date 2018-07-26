@@ -4,40 +4,30 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import com.baidu.carlife.C0965R;
 
-public class RouteLoadingView
-  extends ImageView
-{
-  private AnimationDrawable a;
-  
-  public RouteLoadingView(Context paramContext)
-  {
-    super(paramContext, null);
-    startAni();
-  }
-  
-  public RouteLoadingView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet, -1);
-    startAni();
-  }
-  
-  public RouteLoadingView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    startAni();
-  }
-  
-  public void startAni()
-  {
-    setImageResource(2130839400);
-    this.a = ((AnimationDrawable)getDrawable());
-    this.a.start();
-  }
+public class RouteLoadingView extends ImageView {
+    /* renamed from: a */
+    private AnimationDrawable f19348a;
+
+    public RouteLoadingView(Context context) {
+        super(context, null);
+        startAni();
+    }
+
+    public RouteLoadingView(Context context, AttributeSet attrs) {
+        super(context, attrs, -1);
+        startAni();
+    }
+
+    public RouteLoadingView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        startAni();
+    }
+
+    public void startAni() {
+        setImageResource(C0965R.drawable.route_loading_view);
+        this.f19348a = (AnimationDrawable) getDrawable();
+        this.f19348a.start();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/widget/RouteLoadingView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -4,49 +4,51 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
 
-public final class IAOrientationRequest
-  implements Parcelable
-{
-  public static final Parcelable.Creator<IAOrientationRequest> CREATOR = new Parcelable.Creator() {};
-  private final double a;
-  private final double b;
-  
-  public IAOrientationRequest(double paramDouble1, double paramDouble2)
-  {
-    this.a = paramDouble1;
-    this.b = paramDouble2;
-  }
-  
-  protected IAOrientationRequest(Parcel paramParcel)
-  {
-    this.a = paramParcel.readDouble();
-    this.b = paramParcel.readDouble();
-  }
-  
-  public final int describeContents()
-  {
-    return 0;
-  }
-  
-  public final double getHeadingSensitivity()
-  {
-    return this.a;
-  }
-  
-  public final double getOrientationSensitivity()
-  {
-    return this.b;
-  }
-  
-  public final void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeDouble(this.a);
-    paramParcel.writeDouble(this.b);
-  }
+public final class IAOrientationRequest implements Parcelable {
+    public static final Creator<IAOrientationRequest> CREATOR = new C57551();
+    /* renamed from: a */
+    private final double f22903a;
+    /* renamed from: b */
+    private final double f22904b;
+
+    /* renamed from: com.indooratlas.android.sdk.IAOrientationRequest$1 */
+    static class C57551 implements Creator<IAOrientationRequest> {
+        C57551() {
+        }
+
+        public final /* bridge */ /* synthetic */ Object[] newArray(int i) {
+            return new IAOrientationRequest[i];
+        }
+
+        public final /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return new IAOrientationRequest(parcel);
+        }
+    }
+
+    public IAOrientationRequest(double heading, double orientation) {
+        this.f22903a = heading;
+        this.f22904b = orientation;
+    }
+
+    public final double getHeadingSensitivity() {
+        return this.f22903a;
+    }
+
+    public final double getOrientationSensitivity() {
+        return this.f22904b;
+    }
+
+    protected IAOrientationRequest(Parcel in) {
+        this.f22903a = in.readDouble();
+        this.f22904b = in.readDouble();
+    }
+
+    public final void writeToParcel(Parcel dest, int i) {
+        dest.writeDouble(this.f22903a);
+        dest.writeDouble(this.f22904b);
+    }
+
+    public final int describeContents() {
+        return 0;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/IAOrientationRequest.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

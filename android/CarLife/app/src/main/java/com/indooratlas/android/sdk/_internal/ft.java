@@ -1,11 +1,9 @@
 package com.indooratlas.android.sdk._internal;
 
-import java.security.Principal;
-import java.security.PublicKey;
+import com.baidu.mobstat.Config;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -13,97 +11,79 @@ import java.util.Map;
 import java.util.Set;
 import javax.net.ssl.SSLPeerUnverifiedException;
 
-public final class ft
-{
-  public static final ft a = new ft(new a(), (byte)0);
-  private final Map<String, Set<iq>> b;
-  
-  private ft(a parama)
-  {
-    this.b = gy.a(parama.a);
-  }
-  
-  private static iq a(X509Certificate paramX509Certificate)
-  {
-    return gy.a(iq.a(paramX509Certificate.getPublicKey().getEncoded()));
-  }
-  
-  public static String a(Certificate paramCertificate)
-  {
-    if (!(paramCertificate instanceof X509Certificate)) {
-      throw new IllegalArgumentException("Certificate pinning requires X509 certificates");
+public final class ft {
+    /* renamed from: a */
+    public static final ft f23743a = new ft(new C5911a());
+    /* renamed from: b */
+    private final Map<String, Set<iq>> f23744b;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ft$a */
+    public static final class C5911a {
+        /* renamed from: a */
+        final Map<String, Set<iq>> f23742a = new LinkedHashMap();
     }
-    return "sha1/" + im.a(a((X509Certificate)paramCertificate).c);
-  }
-  
-  public final void a(String paramString, List<Certificate> paramList)
-    throws SSLPeerUnverifiedException
-  {
-    Object localObject3 = null;
-    Object localObject2 = (Set)this.b.get(paramString);
-    int i = paramString.indexOf('.');
-    if (i != paramString.lastIndexOf('.')) {}
-    for (Object localObject1 = (Set)this.b.get("*." + paramString.substring(i + 1));; localObject1 = null)
-    {
-      if ((localObject2 == null) && (localObject1 == null)) {
-        localObject1 = localObject3;
-      }
-      while (localObject1 == null)
-      {
-        return;
-        if ((localObject2 != null) && (localObject1 != null))
-        {
-          localObject3 = new LinkedHashSet();
-          ((Set)localObject3).addAll((Collection)localObject2);
-          ((Set)localObject3).addAll((Collection)localObject1);
-          localObject1 = localObject3;
-        }
-        else if (localObject2 != null)
-        {
-          localObject1 = localObject2;
-        }
-      }
-      int j = paramList.size();
-      i = 0;
-      for (;;)
-      {
-        if (i >= j) {
-          break label198;
-        }
-        if (((Set)localObject1).contains(a((X509Certificate)paramList.get(i)))) {
-          break;
-        }
-        i += 1;
-      }
-      label198:
-      localObject2 = new StringBuilder("Certificate pinning failure!\n  Peer certificate chain:");
-      j = paramList.size();
-      i = 0;
-      while (i < j)
-      {
-        localObject3 = (X509Certificate)paramList.get(i);
-        ((StringBuilder)localObject2).append("\n    ").append(a((Certificate)localObject3)).append(": ").append(((X509Certificate)localObject3).getSubjectDN().getName());
-        i += 1;
-      }
-      ((StringBuilder)localObject2).append("\n  Pinned certificates for ").append(paramString).append(":");
-      paramString = ((Set)localObject1).iterator();
-      while (paramString.hasNext())
-      {
-        paramList = (iq)paramString.next();
-        ((StringBuilder)localObject2).append("\n    sha1/").append(im.a(paramList.c));
-      }
-      throw new SSLPeerUnverifiedException(((StringBuilder)localObject2).toString());
+
+    private ft(C5911a c5911a) {
+        this.f23744b = gy.m20787a(c5911a.f23742a);
     }
-  }
-  
-  public static final class a
-  {
-    final Map<String, Set<iq>> a = new LinkedHashMap();
-  }
+
+    /* renamed from: a */
+    public final void m20573a(String str, List<Certificate> list) throws SSLPeerUnverifiedException {
+        Collection collection;
+        Set set = null;
+        Set set2 = (Set) this.f23744b.get(str);
+        int indexOf = str.indexOf(46);
+        if (indexOf != str.lastIndexOf(46)) {
+            collection = (Set) this.f23744b.get("*." + str.substring(indexOf + 1));
+        } else {
+            collection = null;
+        }
+        if (!(set2 == null && collection == null)) {
+            if (set2 != null && collection != null) {
+                Set linkedHashSet = new LinkedHashSet();
+                linkedHashSet.addAll(set2);
+                linkedHashSet.addAll(collection);
+                set = linkedHashSet;
+            } else if (set2 != null) {
+                set = set2;
+            } else {
+                Collection collection2 = collection;
+            }
+        }
+        if (r3 != null) {
+            int size = list.size();
+            indexOf = 0;
+            while (indexOf < size) {
+                if (!r3.contains(m20571a((X509Certificate) list.get(indexOf)))) {
+                    indexOf++;
+                } else {
+                    return;
+                }
+            }
+            StringBuilder stringBuilder = new StringBuilder("Certificate pinning failure!\n  Peer certificate chain:");
+            int size2 = list.size();
+            for (indexOf = 0; indexOf < size2; indexOf++) {
+                Certificate certificate = (X509Certificate) list.get(indexOf);
+                stringBuilder.append("\n    ").append(m20572a(certificate)).append(": ").append(certificate.getSubjectDN().getName());
+            }
+            stringBuilder.append("\n  Pinned certificates for ").append(str).append(Config.TRACE_TODAY_VISIT_SPLIT);
+            for (iq iqVar : r3) {
+                stringBuilder.append("\n    sha1/").append(im.a(iqVar.f24395c));
+            }
+            throw new SSLPeerUnverifiedException(stringBuilder.toString());
+        }
+    }
+
+    /* renamed from: a */
+    public static String m20572a(Certificate certificate) {
+        if (certificate instanceof X509Certificate) {
+            return "sha1/" + im.a(m20571a((X509Certificate) certificate).f24395c);
+        }
+        throw new IllegalArgumentException("Certificate pinning requires X509 certificates");
+    }
+
+    /* renamed from: a */
+    private static iq m20571a(X509Certificate x509Certificate) {
+        return gy.m20782a(iq.a(x509Certificate.getPublicKey().getEncoded()));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ft.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,90 +1,70 @@
 package com.baidu.platform.comapi.search;
 
-public class SugResult
-  implements ResultBase
-{
-  private String[] cityid;
-  private String[] distance;
-  public boolean ispinyin;
-  public String keyword;
-  public int mResultType;
-  private String[] poiname;
-  private int requestId;
-  private String[] subtitle;
-  public int type;
-  
-  public String getCityid(int paramInt)
-  {
-    if (this.cityid.length > paramInt) {
-      return this.cityid[paramInt];
+public class SugResult implements ResultBase {
+    private String[] cityid;
+    private String[] distance;
+    public boolean ispinyin;
+    public String keyword;
+    public int mResultType;
+    private String[] poiname;
+    private int requestId;
+    private String[] subtitle;
+    public int type;
+
+    public String[] getPoiname() {
+        return this.poiname;
     }
-    return null;
-  }
-  
-  public String[] getCityid()
-  {
-    return this.cityid;
-  }
-  
-  public String getPoiname(int paramInt)
-  {
-    if (this.poiname.length > paramInt) {
-      return this.poiname[paramInt];
+
+    public String getPoiname(int index) {
+        if (this.poiname.length > index) {
+            return this.poiname[index];
+        }
+        return null;
     }
-    return null;
-  }
-  
-  public String[] getPoiname()
-  {
-    return this.poiname;
-  }
-  
-  public int getRequestId()
-  {
-    return this.requestId;
-  }
-  
-  public String getSubtitle(int paramInt)
-  {
-    if (this.subtitle.length > paramInt) {
-      return this.subtitle[paramInt];
+
+    public void setPoiname(String[] poiname) {
+        this.poiname = poiname;
     }
-    return null;
-  }
-  
-  public String[] getSubtitle(String[] paramArrayOfString)
-  {
-    return paramArrayOfString;
-  }
-  
-  public void setCityid(String[] paramArrayOfString)
-  {
-    this.cityid = paramArrayOfString;
-  }
-  
-  public void setDistance(String[] paramArrayOfString)
-  {
-    this.distance = paramArrayOfString;
-  }
-  
-  public void setPoiname(String[] paramArrayOfString)
-  {
-    this.poiname = paramArrayOfString;
-  }
-  
-  public void setRequestId(int paramInt)
-  {
-    this.requestId = paramInt;
-  }
-  
-  public void setSubtitle(String[] paramArrayOfString)
-  {
-    this.subtitle = paramArrayOfString;
-  }
+
+    public String getSubtitle(int index) {
+        if (this.subtitle.length > index) {
+            return this.subtitle[index];
+        }
+        return null;
+    }
+
+    public String[] getSubtitle(String[] subtitle) {
+        return subtitle;
+    }
+
+    public void setSubtitle(String[] subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String[] getCityid() {
+        return this.cityid;
+    }
+
+    public String getCityid(int index) {
+        if (this.cityid.length > index) {
+            return this.cityid[index];
+        }
+        return null;
+    }
+
+    public void setCityid(String[] cityid) {
+        this.cityid = cityid;
+    }
+
+    public void setDistance(String[] distance) {
+        this.distance = distance;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
+    public int getRequestId() {
+        return this.requestId;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/search/SugResult.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,35 +5,24 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import java.io.UnsupportedEncodingException;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JsonObjectRequest
-  extends JsonRequest<JSONObject>
-{
-  public JsonObjectRequest(int paramInt, String paramString, JSONObject paramJSONObject, Response.Listener<JSONObject> paramListener, Response.ErrorListener paramErrorListener) {}
-  
-  public JsonObjectRequest(String paramString, JSONObject paramJSONObject, Response.Listener<JSONObject> paramListener, Response.ErrorListener paramErrorListener) {}
-  
-  protected Response<JSONObject> parseNetworkResponse(NetworkResponse paramNetworkResponse)
-  {
-    try
-    {
-      paramNetworkResponse = Response.success(new JSONObject(new String(paramNetworkResponse.data, HttpHeaderParser.parseCharset(paramNetworkResponse.headers, "utf-8"))), HttpHeaderParser.parseCacheHeaders(paramNetworkResponse));
-      return paramNetworkResponse;
+public class JsonObjectRequest extends JsonRequest<JSONObject> {
+    public JsonObjectRequest(int method, String url, JSONObject jsonRequest, Listener<JSONObject> listener, ErrorListener errorListener) {
+        super(method, url, jsonRequest == null ? null : jsonRequest.toString(), listener, errorListener);
     }
-    catch (UnsupportedEncodingException paramNetworkResponse)
-    {
-      return Response.error(new ParseError(paramNetworkResponse));
+
+    public JsonObjectRequest(String url, JSONObject jsonRequest, Listener<JSONObject> listener, ErrorListener errorListener) {
+        this(jsonRequest == null ? 0 : 1, url, jsonRequest, listener, errorListener);
     }
-    catch (JSONException paramNetworkResponse) {}
-    return Response.error(new ParseError(paramNetworkResponse));
-  }
+
+    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+        try {
+            return Response.success(new JSONObject(new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"))), HttpHeaderParser.parseCacheHeaders(response));
+        } catch (Throwable e) {
+            return Response.error(new ParseError(e));
+        } catch (Throwable je) {
+            return Response.error(new ParseError(je));
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/toolbox/JsonObjectRequest.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

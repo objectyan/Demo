@@ -4,106 +4,74 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class UsbListener
-  extends BroadcastReceiver
-{
-  public static final int MSG_TYPE_USB_CHANGE = 10501;
-  private static final String TAG = "UsbListener";
-  private static final String USB_STATE_ACTION = "android.hardware.usb.action.USB_STATE";
-  public static boolean isUSBConnect = false;
-  private static final List<Handler> outboxHandlers;
-  private static UsbListener sInstance = new UsbListener();
-  
-  static
-  {
-    outboxHandlers = new ArrayList();
-  }
-  
-  private static void dispatchMessage(int paramInt1, int paramInt2, int paramInt3)
-  {
-    if (!outboxHandlers.isEmpty())
-    {
-      Iterator localIterator = outboxHandlers.iterator();
-      while (localIterator.hasNext()) {
-        Message.obtain((Handler)localIterator.next(), paramInt1, paramInt2, paramInt3, null).sendToTarget();
-      }
+public class UsbListener extends BroadcastReceiver {
+    public static final int MSG_TYPE_USB_CHANGE = 10501;
+    private static final String TAG = "UsbListener";
+    private static final String USB_STATE_ACTION = "android.hardware.usb.action.USB_STATE";
+    public static boolean isUSBConnect = false;
+    private static final List<Handler> outboxHandlers = new ArrayList();
+    private static UsbListener sInstance = new UsbListener();
+
+    public static void registerReceiver(Context context) {
+        try {
+            isUSBConnect = false;
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(USB_STATE_ACTION);
+            context.registerReceiver(sInstance, filter);
+        } catch (Exception e) {
+        }
     }
-  }
-  
-  public static void registerMessageHandler(Handler paramHandler)
-  {
-    if ((paramHandler != null) && (!outboxHandlers.contains(paramHandler))) {
-      outboxHandlers.add(paramHandler);
+
+    public static void unregisterReceiver(Context context) {
+        try {
+            isUSBConnect = false;
+            context.unregisterReceiver(sInstance);
+        } catch (Exception e) {
+        }
     }
-  }
-  
-  public static void registerReceiver(Context paramContext)
-  {
-    try
-    {
-      isUSBConnect = false;
-      IntentFilter localIntentFilter = new IntentFilter();
-      localIntentFilter.addAction("android.hardware.usb.action.USB_STATE");
-      paramContext.registerReceiver(sInstance, localIntentFilter);
-      return;
+
+    public static void registerMessageHandler(Handler handler) {
+        if (handler != null && !outboxHandlers.contains(handler)) {
+            outboxHandlers.add(handler);
+        }
     }
-    catch (Exception paramContext) {}
-  }
-  
-  public static void unRegisterMessageHandler(Handler paramHandler)
-  {
-    if ((paramHandler != null) && (outboxHandlers.contains(paramHandler))) {
-      outboxHandlers.remove(paramHandler);
+
+    public static void unRegisterMessageHandler(Handler handler) {
+        if (handler != null && outboxHandlers.contains(handler)) {
+            outboxHandlers.remove(handler);
+        }
     }
-  }
-  
-  public static void unregisterReceiver(Context paramContext)
-  {
-    try
-    {
-      isUSBConnect = false;
-      paramContext.unregisterReceiver(sInstance);
-      return;
+
+    private static void dispatchMessage(int what, int arg1, int arg2) {
+        if (!outboxHandlers.isEmpty()) {
+            for (Handler handler : outboxHandlers) {
+                Message.obtain(handler, what, arg1, arg2, null).sendToTarget();
+            }
+        }
     }
-    catch (Exception paramContext) {}
-  }
-  
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    int i;
-    if (paramIntent.getAction().equals("android.hardware.usb.action.USB_STATE"))
-    {
-      if (!paramIntent.getExtras().getBoolean("connected")) {
-        break label71;
-      }
-      UserOPController.getInstance().add("3.r.2");
-      isUSBConnect = true;
-      i = 1;
-      dispatchMessage(10501, 1, 0);
+
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals(USB_STATE_ACTION)) {
+            int arg1;
+            if (intent.getExtras().getBoolean("connected")) {
+                UserOPController.getInstance().add(UserOPParams.GUIDE_3_r_2);
+                isUSBConnect = true;
+                arg1 = 1;
+                dispatchMessage(MSG_TYPE_USB_CHANGE, 1, 0);
+            } else {
+                isUSBConnect = false;
+                arg1 = 0;
+                dispatchMessage(MSG_TYPE_USB_CHANGE, 0, 0);
+            }
+            LogUtil.m15791e(TAG, "usb connect is changed arg1 " + arg1);
+        }
     }
-    for (;;)
-    {
-      LogUtil.e("UsbListener", "usb connect is changed arg1 " + i);
-      return;
-      label71:
-      isUSBConnect = false;
-      i = 0;
-      dispatchMessage(10501, 0, 0);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/listener/UsbListener.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

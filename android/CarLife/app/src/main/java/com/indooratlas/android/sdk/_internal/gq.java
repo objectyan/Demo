@@ -6,62 +6,48 @@ import java.util.Arrays;
 import java.util.List;
 import javax.net.ssl.SSLSocket;
 
-public final class gq
-{
-  public boolean a;
-  public boolean b;
-  private final List<fx> c;
-  private int d = 0;
-  
-  public gq(List<fx> paramList)
-  {
-    this.c = paramList;
-  }
-  
-  private boolean b(SSLSocket paramSSLSocket)
-  {
-    int i = this.d;
-    while (i < this.c.size())
-    {
-      if (((fx)this.c.get(i)).a(paramSSLSocket)) {
-        return true;
-      }
-      i += 1;
+public final class gq {
+    /* renamed from: a */
+    public boolean f23992a;
+    /* renamed from: b */
+    public boolean f23993b;
+    /* renamed from: c */
+    private final List<fx> f23994c;
+    /* renamed from: d */
+    private int f23995d = 0;
+
+    public gq(List<fx> list) {
+        this.f23994c = list;
     }
-    return false;
-  }
-  
-  public final fx a(SSLSocket paramSSLSocket)
-    throws IOException
-  {
-    int i = this.d;
-    int j = this.c.size();
-    fx localfx;
-    if (i < j)
-    {
-      localfx = (fx)this.c.get(i);
-      if (localfx.a(paramSSLSocket)) {
-        this.d = (i + 1);
-      }
+
+    /* renamed from: a */
+    public final fx m20744a(SSLSocket sSLSocket) throws IOException {
+        fx fxVar;
+        int i = this.f23995d;
+        int size = this.f23994c.size();
+        for (int i2 = i; i2 < size; i2++) {
+            fxVar = (fx) this.f23994c.get(i2);
+            if (fxVar.m20587a(sSLSocket)) {
+                this.f23995d = i2 + 1;
+                break;
+            }
+        }
+        fxVar = null;
+        if (fxVar == null) {
+            throw new UnknownServiceException("Unable to find acceptable protocols. isFallback=" + this.f23993b + ", modes=" + this.f23994c + ", supported protocols=" + Arrays.toString(sSLSocket.getEnabledProtocols()));
+        }
+        this.f23992a = m20743b(sSLSocket);
+        gs.f23877b.mo4685a(fxVar, sSLSocket, this.f23993b);
+        return fxVar;
     }
-    for (;;)
-    {
-      if (localfx == null)
-      {
-        throw new UnknownServiceException("Unable to find acceptable protocols. isFallback=" + this.b + ", modes=" + this.c + ", supported protocols=" + Arrays.toString(paramSSLSocket.getEnabledProtocols()));
-        i += 1;
-        break;
-      }
-      this.a = b(paramSSLSocket);
-      gs.b.a(localfx, paramSSLSocket, this.b);
-      return localfx;
-      localfx = null;
+
+    /* renamed from: b */
+    private boolean m20743b(SSLSocket sSLSocket) {
+        for (int i = this.f23995d; i < this.f23994c.size(); i++) {
+            if (((fx) this.f23994c.get(i)).m20587a(sSLSocket)) {
+                return true;
+            }
+        }
+        return false;
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

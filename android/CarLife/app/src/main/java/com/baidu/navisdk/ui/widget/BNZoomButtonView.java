@@ -1,323 +1,271 @@
 package com.baidu.navisdk.ui.widget;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewParent;
 import android.widget.ImageView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.mapcontrol.BNMapController;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 
-public class BNZoomButtonView
-{
-  private static final int MSG_AUTO_HIDE_ZOOMBUTTON = 8;
-  private AutoHandler mAutoHandler = new AutoHandler(this, null);
-  private Context mContext;
-  private boolean mDayStyle;
-  private boolean mIsFullView = true;
-  private View mLineLeftView = null;
-  private View mLineRightView = null;
-  private OnZoomBtnClickListener mListener;
-  private boolean mShowTwoBtn;
-  private View.OnClickListener mZoomBtnClickListener = new View.OnClickListener()
-  {
-    public void onClick(View paramAnonymousView)
-    {
-      BNZoomButtonView.this.mAutoHandler.removeMessages(8);
-      if (paramAnonymousView == BNZoomButtonView.this.mZoomInBtnView)
-      {
-        UserOPController.getInstance().add("1.9");
-        BNZoomButtonView.this.handleZoomIn();
-      }
-      do
-      {
-        return;
-        if (paramAnonymousView == BNZoomButtonView.this.mZoomOutBtnView)
-        {
-          UserOPController.getInstance().add("1.a");
-          BNZoomButtonView.this.handleZoomOut();
-          return;
+public class BNZoomButtonView {
+    private static final int MSG_AUTO_HIDE_ZOOMBUTTON = 8;
+    private AutoHandler mAutoHandler = new AutoHandler();
+    private Context mContext;
+    private boolean mDayStyle;
+    private boolean mIsFullView = true;
+    private View mLineLeftView = null;
+    private View mLineRightView = null;
+    private OnZoomBtnClickListener mListener;
+    private boolean mShowTwoBtn;
+    private OnClickListener mZoomBtnClickListener = new C46001();
+    private OnTouchListener mZoomBtnTouchListener = new C46012();
+    private ImageView mZoomFullViewBtnView = null;
+    private ImageView mZoomInBtnView = null;
+    private boolean mZoomInEnabled;
+    private ImageView mZoomOutBtnView = null;
+    private boolean mZoomOutEnabled;
+    private View mZoomPanelView = null;
+    private boolean noNightStyle = false;
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNZoomButtonView$1 */
+    class C46001 implements OnClickListener {
+        C46001() {
         }
-      } while ((paramAnonymousView != BNZoomButtonView.this.mZoomFullViewBtnView) || (BNZoomButtonView.this.mListener == null));
-      BNZoomButtonView.this.mListener.onZoomFullViewBtnClick();
-    }
-  };
-  private View.OnTouchListener mZoomBtnTouchListener = new View.OnTouchListener()
-  {
-    public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-    {
-      if ((paramAnonymousView == BNZoomButtonView.this.mZoomInBtnView) || (paramAnonymousView == BNZoomButtonView.this.mZoomOutBtnView) || (paramAnonymousView == BNZoomButtonView.this.mZoomFullViewBtnView)) {
-        BNZoomButtonView.this.mAutoHandler.removeMessages(8);
-      }
-      return false;
-    }
-  };
-  private ImageView mZoomFullViewBtnView = null;
-  private ImageView mZoomInBtnView = null;
-  private boolean mZoomInEnabled;
-  private ImageView mZoomOutBtnView = null;
-  private boolean mZoomOutEnabled;
-  private View mZoomPanelView = null;
-  private boolean noNightStyle = false;
-  
-  private void handleMessage(Message paramMessage)
-  {
-    switch (paramMessage.what)
-    {
-    default: 
-      return;
-    }
-    hide();
-  }
-  
-  private void initStyle()
-  {
-    this.mZoomInBtnView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407470));
-    this.mLineLeftView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407398));
-    this.mLineLeftView.setBackgroundColor(JarUtils.getResources().getColor(1711800690));
-    if (!this.mShowTwoBtn)
-    {
-      this.mZoomOutBtnView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407452));
-      this.mLineRightView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407398));
-      this.mZoomFullViewBtnView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407462));
-      if (this.mIsFullView)
-      {
-        this.mZoomFullViewBtnView.setImageDrawable(JarUtils.getResources().getDrawable(1711407379));
-        if (!this.mZoomInEnabled) {
-          break label222;
+
+        public void onClick(View v) {
+            BNZoomButtonView.this.mAutoHandler.removeMessages(8);
+            if (v == BNZoomButtonView.this.mZoomInBtnView) {
+                UserOPController.getInstance().add(UserOPParams.COMMON_1_9);
+                BNZoomButtonView.this.handleZoomIn();
+            } else if (v == BNZoomButtonView.this.mZoomOutBtnView) {
+                UserOPController.getInstance().add(UserOPParams.COMMON_1_a);
+                BNZoomButtonView.this.handleZoomOut();
+            } else if (v == BNZoomButtonView.this.mZoomFullViewBtnView && BNZoomButtonView.this.mListener != null) {
+                BNZoomButtonView.this.mListener.onZoomFullViewBtnClick();
+            }
         }
-        this.mZoomInBtnView.setImageDrawable(JarUtils.getResources().getDrawable(1711407391));
-        label141:
-        if (!this.mZoomOutEnabled) {
-          break label240;
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.widget.BNZoomButtonView$2 */
+    class C46012 implements OnTouchListener {
+        C46012() {
         }
-        this.mZoomOutBtnView.setImageDrawable(JarUtils.getResources().getDrawable(1711407395));
-      }
-    }
-    for (;;)
-    {
-      this.mZoomInBtnView.setEnabled(this.mZoomInEnabled);
-      this.mZoomOutBtnView.setEnabled(this.mZoomOutEnabled);
-      return;
-      this.mZoomFullViewBtnView.setImageDrawable(JarUtils.getResources().getDrawable(1711407377));
-      break;
-      this.mZoomOutBtnView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407452));
-      break;
-      label222:
-      this.mZoomInBtnView.setImageDrawable(JarUtils.getResources().getDrawable(1711407389));
-      break label141;
-      label240:
-      this.mZoomOutBtnView.setImageDrawable(JarUtils.getResources().getDrawable(1711407393));
-    }
-  }
-  
-  private void updateStyle()
-  {
-    this.mZoomInBtnView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407470));
-    this.mLineLeftView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407398));
-    this.mLineLeftView.setBackgroundColor(BNStyleManager.getColor(1711800690));
-    if (!this.mShowTwoBtn)
-    {
-      this.mZoomOutBtnView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407452));
-      this.mLineRightView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407398));
-      this.mZoomFullViewBtnView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407462));
-      if (this.mIsFullView)
-      {
-        this.mZoomFullViewBtnView.setImageDrawable(BNStyleManager.getDrawable(1711407379));
-        if (!this.mZoomInEnabled) {
-          break label189;
+
+        public boolean onTouch(View v, MotionEvent event) {
+            if (v == BNZoomButtonView.this.mZoomInBtnView || v == BNZoomButtonView.this.mZoomOutBtnView || v == BNZoomButtonView.this.mZoomFullViewBtnView) {
+                BNZoomButtonView.this.mAutoHandler.removeMessages(8);
+            }
+            return false;
         }
-        this.mZoomInBtnView.setImageDrawable(BNStyleManager.getDrawable(1711407391));
-        label117:
-        if (!this.mZoomOutEnabled) {
-          break label204;
+    }
+
+    private static class AutoHandler extends Handler {
+        private BNZoomButtonView mView;
+
+        private AutoHandler(BNZoomButtonView view) {
+            this.mView = view;
         }
-        this.mZoomOutBtnView.setImageDrawable(BNStyleManager.getDrawable(1711407395));
-      }
+
+        public void handleMessage(Message msg) {
+            this.mView.handleMessage(msg);
+        }
     }
-    for (;;)
-    {
-      this.mZoomInBtnView.setEnabled(this.mZoomInEnabled);
-      this.mZoomOutBtnView.setEnabled(this.mZoomOutEnabled);
-      return;
-      this.mZoomFullViewBtnView.setImageDrawable(BNStyleManager.getDrawable(1711407377));
-      break;
-      this.mZoomOutBtnView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407452));
-      break;
-      label189:
-      this.mZoomInBtnView.setImageDrawable(BNStyleManager.getDrawable(1711407389));
-      break label117;
-      label204:
-      this.mZoomOutBtnView.setImageDrawable(BNStyleManager.getDrawable(1711407393));
+
+    public interface OnZoomBtnClickListener {
+        void onZoomFullViewBtnClick();
+
+        void onZoomInBtnClick();
+
+        void onZoomOutBtnClick();
     }
-  }
-  
-  private void updateZoomBtnVisibility()
-  {
-    if (this.mShowTwoBtn)
-    {
-      this.mZoomFullViewBtnView.setVisibility(8);
-      this.mLineRightView.setVisibility(8);
-      return;
+
+    public void initView(Context context, View view, boolean showTwoBtn) {
+        this.mContext = context;
+        this.mZoomPanelView = view.findViewById(C4048R.id.nav_zoom_panel);
+        this.mZoomInBtnView = (ImageView) view.findViewById(C4048R.id.btn_zoom_in);
+        this.mZoomOutBtnView = (ImageView) view.findViewById(C4048R.id.btn_zoom_out);
+        this.mZoomFullViewBtnView = (ImageView) view.findViewById(C4048R.id.btn_zoom_full_view);
+        this.mLineLeftView = view.findViewById(C4048R.id.line_left);
+        this.mLineRightView = view.findViewById(C4048R.id.line_right);
+        this.mZoomInBtnView.setOnClickListener(this.mZoomBtnClickListener);
+        this.mZoomOutBtnView.setOnClickListener(this.mZoomBtnClickListener);
+        this.mZoomFullViewBtnView.setOnClickListener(this.mZoomBtnClickListener);
+        this.mZoomInBtnView.setOnTouchListener(this.mZoomBtnTouchListener);
+        this.mZoomOutBtnView.setOnTouchListener(this.mZoomBtnTouchListener);
+        this.mZoomFullViewBtnView.setOnTouchListener(this.mZoomBtnTouchListener);
+        this.mDayStyle = true;
+        this.mZoomInEnabled = true;
+        this.mZoomOutEnabled = true;
+        setTwoBtnMode(showTwoBtn);
     }
-    this.mZoomFullViewBtnView.setVisibility(0);
-    this.mLineRightView.setVisibility(0);
-  }
-  
-  public void handleZoomIn()
-  {
-    BNMapController.getInstance().zoomIn();
-    if (this.mListener != null) {
-      this.mListener.onZoomInBtnClick();
+
+    public void setTwoBtnMode(boolean showTwoBtn) {
+        this.mShowTwoBtn = showTwoBtn;
+        updateZoomBtnVisibility();
+        if (this.noNightStyle) {
+            initStyle();
+        } else {
+            updateStyle();
+        }
     }
-    updateFullViewState(false);
-  }
-  
-  public void handleZoomOut()
-  {
-    BNMapController.getInstance().zoomOut();
-    if (this.mListener != null) {
-      this.mListener.onZoomOutBtnClick();
+
+    public void updateZoomBtn(boolean enableZoomIn, boolean enableZoomOut) {
+        this.mZoomInEnabled = enableZoomIn;
+        this.mZoomOutEnabled = enableZoomOut;
+        if (this.noNightStyle) {
+            initStyle();
+        } else {
+            updateStyle();
+        }
     }
-    updateFullViewState(false);
-  }
-  
-  public void hide()
-  {
-    this.mZoomPanelView.setVisibility(8);
-  }
-  
-  public void initView(Context paramContext, View paramView, boolean paramBoolean)
-  {
-    this.mContext = paramContext;
-    this.mZoomPanelView = paramView.findViewById(1711866169);
-    this.mZoomInBtnView = ((ImageView)paramView.findViewById(1711866170));
-    this.mZoomOutBtnView = ((ImageView)paramView.findViewById(1711866172));
-    this.mZoomFullViewBtnView = ((ImageView)paramView.findViewById(1711866174));
-    this.mLineLeftView = paramView.findViewById(1711865958);
-    this.mLineRightView = paramView.findViewById(1711867037);
-    this.mZoomInBtnView.setOnClickListener(this.mZoomBtnClickListener);
-    this.mZoomOutBtnView.setOnClickListener(this.mZoomBtnClickListener);
-    this.mZoomFullViewBtnView.setOnClickListener(this.mZoomBtnClickListener);
-    this.mZoomInBtnView.setOnTouchListener(this.mZoomBtnTouchListener);
-    this.mZoomOutBtnView.setOnTouchListener(this.mZoomBtnTouchListener);
-    this.mZoomFullViewBtnView.setOnTouchListener(this.mZoomBtnTouchListener);
-    this.mDayStyle = true;
-    this.mZoomInEnabled = true;
-    this.mZoomOutEnabled = true;
-    setTwoBtnMode(paramBoolean);
-  }
-  
-  public boolean isFullView()
-  {
-    return this.mIsFullView;
-  }
-  
-  public boolean isNoNightStyle()
-  {
-    return this.noNightStyle;
-  }
-  
-  public void onUpdateStyle(boolean paramBoolean)
-  {
-    this.mDayStyle = paramBoolean;
-    if (this.noNightStyle)
-    {
-      initStyle();
-      return;
+
+    public void updateFullViewState(boolean isFullView) {
+        LogUtil.m15791e("jzc", "onZoomFullViewBtnClick FullView=" + isFullView);
+        this.mIsFullView = isFullView;
+        this.mIsFullView = isFullView;
+        if (isFullView) {
+            this.mZoomFullViewBtnView.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_ic_fullview_off));
+        } else {
+            this.mZoomFullViewBtnView.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_ic_fullview));
+        }
     }
-    updateStyle();
-  }
-  
-  public void setNoNightStyle(boolean paramBoolean)
-  {
-    this.noNightStyle = paramBoolean;
-  }
-  
-  public void setTwoBtnMode(boolean paramBoolean)
-  {
-    this.mShowTwoBtn = paramBoolean;
-    updateZoomBtnVisibility();
-    if (this.noNightStyle)
-    {
-      initStyle();
-      return;
+
+    public boolean isFullView() {
+        return this.mIsFullView;
     }
-    updateStyle();
-  }
-  
-  public void setZoomBtnClickListener(OnZoomBtnClickListener paramOnZoomBtnClickListener)
-  {
-    this.mListener = paramOnZoomBtnClickListener;
-  }
-  
-  public void show()
-  {
-    this.mZoomPanelView.setVisibility(0);
-    this.mZoomInBtnView.getParent().requestTransparentRegion(this.mZoomInBtnView);
-  }
-  
-  public void updateFullViewState(boolean paramBoolean)
-  {
-    LogUtil.e("jzc", "onZoomFullViewBtnClick FullView=" + paramBoolean);
-    this.mIsFullView = paramBoolean;
-    this.mIsFullView = paramBoolean;
-    if (paramBoolean)
-    {
-      this.mZoomFullViewBtnView.setImageDrawable(BNStyleManager.getDrawable(1711407379));
-      return;
+
+    public void setZoomBtnClickListener(OnZoomBtnClickListener listener) {
+        this.mListener = listener;
     }
-    this.mZoomFullViewBtnView.setImageDrawable(BNStyleManager.getDrawable(1711407377));
-  }
-  
-  public void updateZoomBtn(boolean paramBoolean1, boolean paramBoolean2)
-  {
-    this.mZoomInEnabled = paramBoolean1;
-    this.mZoomOutEnabled = paramBoolean2;
-    if (this.noNightStyle)
-    {
-      initStyle();
-      return;
+
+    public void show() {
+        this.mZoomPanelView.setVisibility(0);
+        this.mZoomInBtnView.getParent().requestTransparentRegion(this.mZoomInBtnView);
     }
-    updateStyle();
-  }
-  
-  private static class AutoHandler
-    extends Handler
-  {
-    private BNZoomButtonView mView;
-    
-    private AutoHandler(BNZoomButtonView paramBNZoomButtonView)
-    {
-      this.mView = paramBNZoomButtonView;
+
+    public void hide() {
+        this.mZoomPanelView.setVisibility(8);
     }
-    
-    public void handleMessage(Message paramMessage)
-    {
-      this.mView.handleMessage(paramMessage);
+
+    public void onUpdateStyle(boolean dayStyle) {
+        this.mDayStyle = dayStyle;
+        if (this.noNightStyle) {
+            initStyle();
+        } else {
+            updateStyle();
+        }
     }
-  }
-  
-  public static abstract interface OnZoomBtnClickListener
-  {
-    public abstract void onZoomFullViewBtnClick();
-    
-    public abstract void onZoomInBtnClick();
-    
-    public abstract void onZoomOutBtnClick();
-  }
+
+    private void initStyle() {
+        this.mZoomInBtnView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_common_bg_prj_card_top_selector));
+        this.mLineLeftView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_line_horizontal));
+        this.mLineLeftView.setBackgroundColor(JarUtils.getResources().getColor(C4048R.color.cl_bg_b));
+        if (this.mShowTwoBtn) {
+            this.mZoomOutBtnView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_common_bg_prj_card_bottom_selector));
+        } else {
+            this.mZoomOutBtnView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_common_bg_prj_card_bottom_selector));
+            this.mLineRightView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_line_horizontal));
+            this.mZoomFullViewBtnView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_common_bg_prj_card_selector));
+            if (this.mIsFullView) {
+                this.mZoomFullViewBtnView.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_ic_fullview_off));
+            } else {
+                this.mZoomFullViewBtnView.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_ic_fullview));
+            }
+        }
+        if (this.mZoomInEnabled) {
+            this.mZoomInBtnView.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_ic_zoom_in_normal));
+        } else {
+            this.mZoomInBtnView.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_ic_zoom_in_disabled));
+        }
+        if (this.mZoomOutEnabled) {
+            this.mZoomOutBtnView.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_ic_zoom_out_normal));
+        } else {
+            this.mZoomOutBtnView.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_ic_zoom_out_disabled));
+        }
+        this.mZoomInBtnView.setEnabled(this.mZoomInEnabled);
+        this.mZoomOutBtnView.setEnabled(this.mZoomOutEnabled);
+    }
+
+    private void updateStyle() {
+        this.mZoomInBtnView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_prj_card_top_selector));
+        this.mLineLeftView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_line_horizontal));
+        this.mLineLeftView.setBackgroundColor(BNStyleManager.getColor(C4048R.color.cl_bg_b));
+        if (this.mShowTwoBtn) {
+            this.mZoomOutBtnView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_prj_card_bottom_selector));
+        } else {
+            this.mZoomOutBtnView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_prj_card_bottom_selector));
+            this.mLineRightView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_line_horizontal));
+            this.mZoomFullViewBtnView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_prj_card_selector));
+            if (this.mIsFullView) {
+                this.mZoomFullViewBtnView.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_ic_fullview_off));
+            } else {
+                this.mZoomFullViewBtnView.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_ic_fullview));
+            }
+        }
+        if (this.mZoomInEnabled) {
+            this.mZoomInBtnView.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_ic_zoom_in_normal));
+        } else {
+            this.mZoomInBtnView.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_ic_zoom_in_disabled));
+        }
+        if (this.mZoomOutEnabled) {
+            this.mZoomOutBtnView.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_ic_zoom_out_normal));
+        } else {
+            this.mZoomOutBtnView.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_ic_zoom_out_disabled));
+        }
+        this.mZoomInBtnView.setEnabled(this.mZoomInEnabled);
+        this.mZoomOutBtnView.setEnabled(this.mZoomOutEnabled);
+    }
+
+    private void updateZoomBtnVisibility() {
+        if (this.mShowTwoBtn) {
+            this.mZoomFullViewBtnView.setVisibility(8);
+            this.mLineRightView.setVisibility(8);
+            return;
+        }
+        this.mZoomFullViewBtnView.setVisibility(0);
+        this.mLineRightView.setVisibility(0);
+    }
+
+    private void handleMessage(Message msg) {
+        switch (msg.what) {
+            case 8:
+                hide();
+                return;
+            default:
+                return;
+        }
+    }
+
+    public void handleZoomIn() {
+        BNMapController.getInstance().zoomIn();
+        if (this.mListener != null) {
+            this.mListener.onZoomInBtnClick();
+        }
+        updateFullViewState(false);
+    }
+
+    public void handleZoomOut() {
+        BNMapController.getInstance().zoomOut();
+        if (this.mListener != null) {
+            this.mListener.onZoomOutBtnClick();
+        }
+        updateFullViewState(false);
+    }
+
+    public boolean isNoNightStyle() {
+        return this.noNightStyle;
+    }
+
+    public void setNoNightStyle(boolean noNightStyle) {
+        this.noNightStyle = noNightStyle;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/widget/BNZoomButtonView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

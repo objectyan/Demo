@@ -6,154 +6,106 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public final class cj
-  extends SQLiteOpenHelper
-{
-  private static AtomicInteger a = new AtomicInteger();
-  
-  private cj(Context paramContext)
-  {
-    super(paramContext, "com_indooratlas_sdk.db", null, 3);
-    paramContext = a();
-    if (paramContext != null) {}
-    for (paramContext = Integer.valueOf(paramContext.getVersion());; paramContext = "null") {
-      return;
+public final class cj extends SQLiteOpenHelper {
+    /* renamed from: a */
+    private static AtomicInteger f23314a = new AtomicInteger();
+
+    /* renamed from: com.indooratlas.android.sdk._internal.cj$a */
+    interface C5837a {
+        /* renamed from: a */
+        public static final String[] f23313a = new String[]{"event"};
     }
-  }
-  
-  public static cj a(Context paramContext)
-  {
-    try
-    {
-      a.incrementAndGet();
-      paramContext = new cj(paramContext);
-      return paramContext;
-    }
-    finally
-    {
-      paramContext = finally;
-      throw paramContext;
-    }
-  }
-  
-  public static void a(SQLiteDatabase paramSQLiteDatabase)
-  {
-    if (paramSQLiteDatabase == null) {
-      return;
-    }
-    try
-    {
-      paramSQLiteDatabase.endTransaction();
-      return;
-    }
-    catch (SQLiteException paramSQLiteDatabase)
-    {
-      new StringBuilder("endTransactionSafely, SQLiteException: ").append(paramSQLiteDatabase.toString());
-    }
-  }
-  
-  public final SQLiteDatabase a()
-  {
-    try
-    {
-      SQLiteDatabase localSQLiteDatabase = getWritableDatabase();
-      return localSQLiteDatabase;
-    }
-    catch (SQLiteException localSQLiteException)
-    {
-      ee.a("IAStorage", "Failed to get writable database: " + localSQLiteException.toString(), new Object[0]);
-    }
-    return null;
-  }
-  
-  public final SQLiteDatabase b()
-  {
-    try
-    {
-      SQLiteDatabase localSQLiteDatabase = getReadableDatabase();
-      return localSQLiteDatabase;
-    }
-    catch (SQLiteException localSQLiteException)
-    {
-      ee.a("IAStorage", "Failed to get readable database: " + localSQLiteException.toString(), new Object[0]);
-    }
-    return null;
-  }
-  
-  public final void c()
-  {
-    try
-    {
-      SQLiteDatabase localSQLiteDatabase = a();
-      if (localSQLiteDatabase != null)
-      {
-        String[] arrayOfString = a.a;
-        int j = arrayOfString.length;
-        int i = 0;
-        while (i < j)
-        {
-          localSQLiteDatabase.delete(arrayOfString[i], null, null);
-          i += 1;
+
+    /* renamed from: a */
+    public static synchronized cj m20218a(Context context) {
+        cj cjVar;
+        synchronized (cj.class) {
+            f23314a.incrementAndGet();
+            cjVar = new cj(context);
         }
-      }
-      localSQLiteDatabase = a();
-      if (localSQLiteDatabase != null) {
-        onCreate(localSQLiteDatabase);
-      }
-      return;
+        return cjVar;
     }
-    catch (SQLiteException localSQLiteException)
-    {
-      ee.a("IAStorage", "handleDatabaseFullException failed: " + localSQLiteException.toString(), new Object[0]);
+
+    private cj(Context context) {
+        super(context, "com_indooratlas_sdk.db", null, 3);
+        SQLiteDatabase a = m20220a();
+        Object[] objArr = new Object[2];
+        objArr[0] = a != null ? Integer.valueOf(a.getVersion()) : "null";
+        objArr[1] = this;
     }
-  }
-  
-  public final void close()
-  {
-    try
-    {
-      a.decrementAndGet();
-      super.close();
-      return;
+
+    public final synchronized void close() {
+        Object[] objArr = new Object[]{Integer.valueOf(f23314a.decrementAndGet()), this};
+        super.close();
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public final void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE event (_id INTEGER PRIMARY KEY AUTOINCREMENT, type INTEGER NOT NULL,data TEXT NOT NULL,sync_batch_id TEXT,sync_status TEXT)");
     }
-  }
-  
-  public final void onCreate(SQLiteDatabase paramSQLiteDatabase)
-  {
-    paramSQLiteDatabase.execSQL("CREATE TABLE event (_id INTEGER PRIMARY KEY AUTOINCREMENT, type INTEGER NOT NULL,data TEXT NOT NULL,sync_batch_id TEXT,sync_status TEXT)");
-  }
-  
-  public final void onUpgrade(SQLiteDatabase paramSQLiteDatabase, int paramInt1, int paramInt2)
-  {
-    paramInt2 = 0;
-    if (paramInt1 != 3)
-    {
-      String[] arrayOfString = a.a;
-      int i = arrayOfString.length;
-      paramInt1 = paramInt2;
-      while (paramInt1 < i)
-      {
-        String str = arrayOfString[paramInt1];
-        paramSQLiteDatabase.execSQL("drop table if exists " + str);
-        paramInt1 += 1;
-      }
-      onCreate(paramSQLiteDatabase);
+
+    public final void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        int i = 0;
+        Object[] objArr = new Object[]{Integer.valueOf(oldVersion), Integer.valueOf(newVersion)};
+        if (oldVersion != 3) {
+            new Object[1][0] = Integer.valueOf(oldVersion);
+            String[] strArr = C5837a.f23313a;
+            int length = strArr.length;
+            while (i < length) {
+                db.execSQL("drop table if exists " + strArr[i]);
+                i++;
+            }
+            onCreate(db);
+        }
     }
-  }
-  
-  static abstract interface a
-  {
-    public static final String[] a = { "event" };
-  }
+
+    /* renamed from: a */
+    public final SQLiteDatabase m20220a() {
+        SQLiteDatabase sQLiteDatabase = null;
+        try {
+            sQLiteDatabase = getWritableDatabase();
+        } catch (SQLiteException e) {
+            ee.m20409a("IAStorage", "Failed to get writable database: " + e.toString(), new Object[0]);
+        }
+        return sQLiteDatabase;
+    }
+
+    /* renamed from: b */
+    public final SQLiteDatabase m20221b() {
+        SQLiteDatabase sQLiteDatabase = null;
+        try {
+            sQLiteDatabase = getReadableDatabase();
+        } catch (SQLiteException e) {
+            ee.m20409a("IAStorage", "Failed to get readable database: " + e.toString(), new Object[0]);
+        }
+        return sQLiteDatabase;
+    }
+
+    /* renamed from: a */
+    public static void m20219a(SQLiteDatabase sQLiteDatabase) {
+        if (sQLiteDatabase != null) {
+            try {
+                sQLiteDatabase.endTransaction();
+            } catch (SQLiteException e) {
+                new StringBuilder("endTransactionSafely, SQLiteException: ").append(e.toString());
+            }
+        }
+    }
+
+    /* renamed from: c */
+    public final void m20222c() {
+        try {
+            SQLiteDatabase a = m20220a();
+            if (a != null) {
+                for (String delete : C5837a.f23313a) {
+                    a.delete(delete, null, null);
+                }
+            }
+            SQLiteDatabase a2 = m20220a();
+            if (a2 != null) {
+                onCreate(a2);
+            }
+        } catch (SQLiteException e) {
+            ee.m20409a("IAStorage", "handleDatabaseFullException failed: " + e.toString(), new Object[0]);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/cj.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

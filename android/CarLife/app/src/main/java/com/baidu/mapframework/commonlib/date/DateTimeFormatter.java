@@ -1,11 +1,11 @@
 package com.baidu.mapframework.commonlib.date;
 
+import com.baidu.navisdk.util.statistic.datacheck.regular.Regular;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -13,589 +13,552 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-final class DateTimeFormatter
-{
-  private static final String a = "|";
-  private static final Pattern b = Pattern.compile("\\|[^\\|]*\\|");
-  private static final String c = "YYYY";
-  private static final String d = "YY";
-  private static final String e = "M";
-  private static final String f = "MM";
-  private static final String g = "MMM";
-  private static final String h = "MMMM";
-  private static final String i = "D";
-  private static final String j = "DD";
-  private static final String k = "WWW";
-  private static final String l = "WWWW";
-  private static final String m = "hh";
-  private static final String n = "h";
-  private static final String o = "m";
-  private static final String p = "mm";
-  private static final String q = "s";
-  private static final String r = "ss";
-  private static final String s = "h12";
-  private static final String t = "hh12";
-  private static final int u = 0;
-  private static final int v = 1;
-  private static final String w = "a";
-  private static final Pattern x = Pattern.compile("f{1,9}");
-  private static final String y = "";
-  private static final List<String> z = new ArrayList();
-  private final String A;
-  private final Locale B;
-  private final Map<Locale, List<String>> C = new LinkedHashMap();
-  private final Map<Locale, List<String>> D = new LinkedHashMap();
-  private final Map<Locale, List<String>> E = new LinkedHashMap();
-  private final CustomLocalization F;
-  private Collection<InterpretedRange> G;
-  private Collection<EscapedRange> H;
-  
-  static
-  {
-    z.add("YYYY");
-    z.add("YY");
-    z.add("MMMM");
-    z.add("MMM");
-    z.add("MM");
-    z.add("M");
-    z.add("DD");
-    z.add("D");
-    z.add("WWWW");
-    z.add("WWW");
-    z.add("hh12");
-    z.add("h12");
-    z.add("hh");
-    z.add("h");
-    z.add("mm");
-    z.add("m");
-    z.add("ss");
-    z.add("s");
-    z.add("a");
-    z.add("fffffffff");
-    z.add("ffffffff");
-    z.add("fffffff");
-    z.add("ffffff");
-    z.add("fffff");
-    z.add("ffff");
-    z.add("fff");
-    z.add("ff");
-    z.add("f");
-  }
-  
-  DateTimeFormatter(String paramString)
-  {
-    this.A = paramString;
-    this.B = null;
-    this.F = null;
-    c();
-  }
-  
-  DateTimeFormatter(String paramString, List<String> paramList1, List<String> paramList2, List<String> paramList3)
-  {
-    this.A = paramString;
-    this.B = null;
-    this.F = new CustomLocalization(paramList1, paramList2, paramList3);
-    c();
-  }
-  
-  DateTimeFormatter(String paramString, Locale paramLocale)
-  {
-    this.A = paramString;
-    this.B = paramLocale;
-    this.F = null;
-    c();
-  }
-  
-  private InterpretedRange a(int paramInt)
-  {
-    Object localObject = null;
-    Iterator localIterator = this.G.iterator();
-    while (localIterator.hasNext())
-    {
-      InterpretedRange localInterpretedRange = (InterpretedRange)localIterator.next();
-      if (localInterpretedRange.a == paramInt) {
-        localObject = localInterpretedRange;
-      }
-    }
-    return (InterpretedRange)localObject;
-  }
-  
-  private String a(Integer paramInteger)
-  {
-    for (paramInteger = a(paramInteger); paramInteger.length() < 9; paramInteger = "0" + paramInteger) {}
-    return paramInteger;
-  }
-  
-  private String a(Object paramObject)
-  {
-    String str = "";
-    if (paramObject != null) {
-      str = String.valueOf(paramObject);
-    }
-    return str;
-  }
-  
-  private String a(String paramString)
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    int i1 = 1;
-    while (i1 <= paramString.length())
-    {
-      localStringBuilder.append("@");
-      i1 += 1;
-    }
-    return localStringBuilder.toString();
-  }
-  
-  private String a(String paramString, int paramInt)
-  {
-    String str1 = paramString;
-    String str2 = str1;
-    if (Util.a(paramString))
-    {
-      str2 = str1;
-      if (paramString.length() >= paramInt) {
-        str2 = paramString.substring(0, paramInt);
-      }
-    }
-    return str2;
-  }
-  
-  private String a(String paramString, DateTime paramDateTime)
-  {
-    if ("YYYY".equals(paramString)) {
-      return a(paramDateTime.getYear());
-    }
-    if ("YY".equals(paramString)) {
-      return b(a(paramDateTime.getYear()));
-    }
-    if ("MMMM".equals(paramString)) {
-      return b(Integer.valueOf(paramDateTime.getMonth().intValue()));
-    }
-    if ("MMM".equals(paramString)) {
-      return d(b(Integer.valueOf(paramDateTime.getMonth().intValue())));
-    }
-    if ("MM".equals(paramString)) {
-      return c(a(paramDateTime.getMonth()));
-    }
-    if ("M".equals(paramString)) {
-      return a(paramDateTime.getMonth());
-    }
-    if ("DD".equals(paramString)) {
-      return c(a(paramDateTime.getDay()));
-    }
-    if ("D".equals(paramString)) {
-      return a(paramDateTime.getDay());
-    }
-    if ("WWWW".equals(paramString)) {
-      return e(Integer.valueOf(paramDateTime.getWeekDay().intValue()));
-    }
-    if ("WWW".equals(paramString)) {
-      return d(e(Integer.valueOf(paramDateTime.getWeekDay().intValue())));
-    }
-    if ("hh".equals(paramString)) {
-      return c(a(paramDateTime.getHour()));
-    }
-    if ("h".equals(paramString)) {
-      return a(paramDateTime.getHour());
-    }
-    if ("h12".equals(paramString)) {
-      return a(h(paramDateTime.getHour()));
-    }
-    if ("hh12".equals(paramString)) {
-      return c(a(h(paramDateTime.getHour())));
-    }
-    if ("a".equals(paramString)) {
-      return i(Integer.valueOf(paramDateTime.getHour().intValue()));
-    }
-    if ("mm".equals(paramString)) {
-      return c(a(paramDateTime.getMinute()));
-    }
-    if ("m".equals(paramString)) {
-      return a(paramDateTime.getMinute());
-    }
-    if ("ss".equals(paramString)) {
-      return c(a(paramDateTime.getSecond()));
-    }
-    if ("s".equals(paramString)) {
-      return a(paramDateTime.getSecond());
-    }
-    if (paramString.startsWith("f"))
-    {
-      if (x.matcher(paramString).matches()) {
-        return a(a(paramDateTime.getNanoseconds()), paramString.length());
-      }
-      throw new IllegalArgumentException("Unknown token in date formatting pattern: " + paramString);
-    }
-    throw new IllegalArgumentException("Unknown token in date formatting pattern: " + paramString);
-  }
-  
-  private void a()
-  {
-    Matcher localMatcher = b.matcher(this.A);
-    while (localMatcher.find())
-    {
-      EscapedRange localEscapedRange = new EscapedRange(null);
-      localEscapedRange.a = localMatcher.start();
-      localEscapedRange.b = (localMatcher.end() - 1);
-      this.H.add(localEscapedRange);
-    }
-  }
-  
-  private boolean a(InterpretedRange paramInterpretedRange)
-  {
-    boolean bool2 = false;
-    Iterator localIterator = this.H.iterator();
-    EscapedRange localEscapedRange;
-    do
-    {
-      bool1 = bool2;
-      if (!localIterator.hasNext()) {
-        break;
-      }
-      localEscapedRange = (EscapedRange)localIterator.next();
-    } while ((localEscapedRange.a > paramInterpretedRange.a) || (paramInterpretedRange.a > localEscapedRange.b));
-    boolean bool1 = true;
-    return bool1;
-  }
-  
-  private String b()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    int i1 = 0;
-    if (i1 < this.A.length())
-    {
-      String str = b(i1);
-      InterpretedRange localInterpretedRange = a(i1);
-      int i2;
-      if (localInterpretedRange != null)
-      {
-        localStringBuilder.append(localInterpretedRange.c);
-        i2 = localInterpretedRange.b;
-      }
-      for (;;)
-      {
-        i1 = i2 + 1;
-        break;
-        i2 = i1;
-        if (!"|".equals(str))
-        {
-          localStringBuilder.append(str);
-          i2 = i1;
+final class DateTimeFormatter {
+    /* renamed from: a */
+    private static final String f18951a = "|";
+    /* renamed from: b */
+    private static final Pattern f18952b = Pattern.compile("\\|[^\\|]*\\|");
+    /* renamed from: c */
+    private static final String f18953c = "YYYY";
+    /* renamed from: d */
+    private static final String f18954d = "YY";
+    /* renamed from: e */
+    private static final String f18955e = "M";
+    /* renamed from: f */
+    private static final String f18956f = "MM";
+    /* renamed from: g */
+    private static final String f18957g = "MMM";
+    /* renamed from: h */
+    private static final String f18958h = "MMMM";
+    /* renamed from: i */
+    private static final String f18959i = "D";
+    /* renamed from: j */
+    private static final String f18960j = "DD";
+    /* renamed from: k */
+    private static final String f18961k = "WWW";
+    /* renamed from: l */
+    private static final String f18962l = "WWWW";
+    /* renamed from: m */
+    private static final String f18963m = "hh";
+    /* renamed from: n */
+    private static final String f18964n = "h";
+    /* renamed from: o */
+    private static final String f18965o = "m";
+    /* renamed from: p */
+    private static final String f18966p = "mm";
+    /* renamed from: q */
+    private static final String f18967q = "s";
+    /* renamed from: r */
+    private static final String f18968r = "ss";
+    /* renamed from: s */
+    private static final String f18969s = "h12";
+    /* renamed from: t */
+    private static final String f18970t = "hh12";
+    /* renamed from: u */
+    private static final int f18971u = 0;
+    /* renamed from: v */
+    private static final int f18972v = 1;
+    /* renamed from: w */
+    private static final String f18973w = "a";
+    /* renamed from: x */
+    private static final Pattern f18974x = Pattern.compile("f{1,9}");
+    /* renamed from: y */
+    private static final String f18975y = "";
+    /* renamed from: z */
+    private static final List<String> f18976z = new ArrayList();
+    /* renamed from: A */
+    private final String f18977A;
+    /* renamed from: B */
+    private final Locale f18978B;
+    /* renamed from: C */
+    private final Map<Locale, List<String>> f18979C = new LinkedHashMap();
+    /* renamed from: D */
+    private final Map<Locale, List<String>> f18980D = new LinkedHashMap();
+    /* renamed from: E */
+    private final Map<Locale, List<String>> f18981E = new LinkedHashMap();
+    /* renamed from: F */
+    private final CustomLocalization f18982F;
+    /* renamed from: G */
+    private Collection<InterpretedRange> f18983G;
+    /* renamed from: H */
+    private Collection<EscapedRange> f18984H;
+
+    private final class CustomLocalization {
+        /* renamed from: a */
+        List<String> f18942a;
+        /* renamed from: b */
+        List<String> f18943b;
+        /* renamed from: c */
+        List<String> f18944c;
+        /* renamed from: d */
+        final /* synthetic */ DateTimeFormatter f18945d;
+
+        CustomLocalization(DateTimeFormatter dateTimeFormatter, List<String> aMonths, List<String> aWeekdays, List<String> aAmPm) {
+            this.f18945d = dateTimeFormatter;
+            if (aMonths.size() != 12) {
+                throw new IllegalArgumentException("Your List of custom months must have size 12, but its size is " + aMonths.size());
+            } else if (aWeekdays.size() != 7) {
+                throw new IllegalArgumentException("Your List of custom weekdays must have size 7, but its size is " + aWeekdays.size());
+            } else if (aAmPm.size() != 2) {
+                throw new IllegalArgumentException("Your List of custom a.m./p.m. indicators must have size 2, but its size is " + aAmPm.size());
+            } else {
+                this.f18942a = aMonths;
+                this.f18943b = aWeekdays;
+                this.f18944c = aAmPm;
+            }
         }
-      }
     }
-    return localStringBuilder.toString();
-  }
-  
-  private String b(int paramInt)
-  {
-    String str = "";
-    if (this.A.length() >= paramInt + 1) {
-      str = this.A.substring(paramInt, paramInt + 1);
-    }
-    return str;
-  }
-  
-  private String b(Integer paramInteger)
-  {
-    String str = "";
-    if (paramInteger != null)
-    {
-      if (this.F != null) {
-        str = c(paramInteger);
-      }
-    }
-    else {
-      return str;
-    }
-    if (this.B != null) {
-      return d(paramInteger);
-    }
-    throw new IllegalArgumentException("Your date pattern requires either a Locale, or your own custom localizations for text:" + Util.a(this.A));
-  }
-  
-  private String b(String paramString)
-  {
-    String str = "";
-    if (Util.a(paramString)) {
-      str = paramString.substring(2);
-    }
-    return str;
-  }
-  
-  private void b(DateTime paramDateTime)
-  {
-    String str1 = this.A;
-    Iterator localIterator = z.iterator();
-    while (localIterator.hasNext())
-    {
-      String str2 = (String)localIterator.next();
-      Matcher localMatcher = Pattern.compile(str2).matcher(str1);
-      while (localMatcher.find())
-      {
-        InterpretedRange localInterpretedRange = new InterpretedRange(null);
-        localInterpretedRange.a = localMatcher.start();
-        localInterpretedRange.b = (localMatcher.end() - 1);
-        if (!a(localInterpretedRange))
-        {
-          localInterpretedRange.c = a(localMatcher.group(), paramDateTime);
-          this.G.add(localInterpretedRange);
+
+    private static final class EscapedRange {
+        /* renamed from: a */
+        int f18946a;
+        /* renamed from: b */
+        int f18947b;
+
+        private EscapedRange() {
         }
-      }
-      str1 = str1.replace(str2, a(str2));
     }
-  }
-  
-  private String c(Integer paramInteger)
-  {
-    if ((this.F == null) || (this.F.a == null)) {
-      return "";
-    }
-    return (String)this.F.a.get(paramInteger.intValue() - 1);
-  }
-  
-  private String c(String paramString)
-  {
-    String str1 = paramString;
-    String str2 = str1;
-    if (Util.a(paramString))
-    {
-      str2 = str1;
-      if (paramString.length() == 1) {
-        str2 = "0" + str1;
-      }
-    }
-    return str2;
-  }
-  
-  private void c()
-  {
-    if (!Util.a(this.A)) {
-      throw new IllegalArgumentException("DateTime format has no content.");
-    }
-  }
-  
-  private String d(Integer paramInteger)
-  {
-    if (!this.C.containsKey(this.B))
-    {
-      ArrayList localArrayList = new ArrayList();
-      SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("MMMM", this.B);
-      int i1 = 0;
-      while (i1 <= 11)
-      {
-        GregorianCalendar localGregorianCalendar = new GregorianCalendar();
-        localGregorianCalendar.set(1, 2000);
-        localGregorianCalendar.set(2, i1);
-        localGregorianCalendar.set(5, 15);
-        localArrayList.add(localSimpleDateFormat.format(localGregorianCalendar.getTime()));
-        i1 += 1;
-      }
-      this.C.put(this.B, localArrayList);
-    }
-    return (String)((List)this.C.get(this.B)).get(paramInteger.intValue() - 1);
-  }
-  
-  private String d(String paramString)
-  {
-    String str1 = paramString;
-    String str2 = str1;
-    if (Util.a(paramString))
-    {
-      str2 = str1;
-      if (paramString.length() >= 3) {
-        str2 = paramString.substring(0, 3);
-      }
-    }
-    return str2;
-  }
-  
-  private String e(Integer paramInteger)
-  {
-    String str = "";
-    if (paramInteger != null)
-    {
-      if (this.F != null) {
-        str = f(paramInteger);
-      }
-    }
-    else {
-      return str;
-    }
-    if (this.B != null) {
-      return g(paramInteger);
-    }
-    throw new IllegalArgumentException("Your date pattern requires either a Locale, or your own custom localizations for text:" + Util.a(this.A));
-  }
-  
-  private String f(Integer paramInteger)
-  {
-    if ((this.F == null) || (this.F.b == null)) {
-      return "";
-    }
-    return (String)this.F.b.get(paramInteger.intValue() - 1);
-  }
-  
-  private String g(Integer paramInteger)
-  {
-    if (!this.D.containsKey(this.B))
-    {
-      ArrayList localArrayList = new ArrayList();
-      SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("EEEE", this.B);
-      int i1 = 8;
-      while (i1 <= 14)
-      {
-        GregorianCalendar localGregorianCalendar = new GregorianCalendar();
-        localGregorianCalendar.set(1, 2009);
-        localGregorianCalendar.set(2, 1);
-        localGregorianCalendar.set(5, i1);
-        localArrayList.add(localSimpleDateFormat.format(localGregorianCalendar.getTime()));
-        i1 += 1;
-      }
-      this.D.put(this.B, localArrayList);
-    }
-    return (String)((List)this.D.get(this.B)).get(paramInteger.intValue() - 1);
-  }
-  
-  private Integer h(Integer paramInteger)
-  {
-    Integer localInteger1 = paramInteger;
-    Integer localInteger2 = localInteger1;
-    if (paramInteger != null)
-    {
-      if (paramInteger.intValue() != 0) {
-        break label23;
-      }
-      localInteger2 = Integer.valueOf(12);
-    }
-    label23:
-    do
-    {
-      return localInteger2;
-      localInteger2 = localInteger1;
-    } while (paramInteger.intValue() <= 12);
-    return Integer.valueOf(paramInteger.intValue() - 12);
-  }
-  
-  private String i(Integer paramInteger)
-  {
-    String str = "";
-    if (paramInteger != null)
-    {
-      if (this.F != null) {
-        str = j(paramInteger);
-      }
-    }
-    else {
-      return str;
-    }
-    if (this.B != null) {
-      return k(paramInteger);
-    }
-    throw new IllegalArgumentException("Your date pattern requires either a Locale, or your own custom localizations for text:" + Util.a(this.A));
-  }
-  
-  private String j(Integer paramInteger)
-  {
-    String str2 = "";
-    String str1 = str2;
-    if (this.F != null)
-    {
-      str1 = str2;
-      if (this.F.c != null)
-      {
-        if (paramInteger.intValue() >= 12) {
-          break label52;
+
+    private static final class InterpretedRange {
+        /* renamed from: a */
+        int f18948a;
+        /* renamed from: b */
+        int f18949b;
+        /* renamed from: c */
+        String f18950c;
+
+        private InterpretedRange() {
         }
-        str1 = (String)this.F.c.get(0);
-      }
+
+        public String toString() {
+            return "Start:" + this.f18948a + " End:" + this.f18949b + " '" + this.f18950c + "'";
+        }
     }
-    return str1;
-    label52:
-    return (String)this.F.c.get(1);
-  }
-  
-  private String k(Integer paramInteger)
-  {
-    if (!this.E.containsKey(this.B))
-    {
-      ArrayList localArrayList = new ArrayList();
-      localArrayList.add(l(Integer.valueOf(6)));
-      localArrayList.add(l(Integer.valueOf(18)));
-      this.E.put(this.B, localArrayList);
+
+    static {
+        f18976z.add(f18953c);
+        f18976z.add(f18954d);
+        f18976z.add(f18958h);
+        f18976z.add(f18957g);
+        f18976z.add(f18956f);
+        f18976z.add(f18955e);
+        f18976z.add(f18960j);
+        f18976z.add(f18959i);
+        f18976z.add(f18962l);
+        f18976z.add(f18961k);
+        f18976z.add(f18970t);
+        f18976z.add(f18969s);
+        f18976z.add(f18963m);
+        f18976z.add("h");
+        f18976z.add(f18966p);
+        f18976z.add("m");
+        f18976z.add("ss");
+        f18976z.add("s");
+        f18976z.add("a");
+        f18976z.add("fffffffff");
+        f18976z.add("ffffffff");
+        f18976z.add("fffffff");
+        f18976z.add("ffffff");
+        f18976z.add("fffff");
+        f18976z.add("ffff");
+        f18976z.add("fff");
+        f18976z.add("ff");
+        f18976z.add(Regular.CATEGORY_FIX_VALUE);
     }
-    if (paramInteger.intValue() < 12) {
-      return (String)((List)this.E.get(this.B)).get(0);
+
+    DateTimeFormatter(String aFormat) {
+        this.f18977A = aFormat;
+        this.f18978B = null;
+        this.f18982F = null;
+        m15015c();
     }
-    return (String)((List)this.E.get(this.B)).get(1);
-  }
-  
-  private String l(Integer paramInteger)
-  {
-    SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("a", this.B);
-    GregorianCalendar localGregorianCalendar = new GregorianCalendar();
-    localGregorianCalendar.set(1, 2000);
-    localGregorianCalendar.set(2, 6);
-    localGregorianCalendar.set(5, 15);
-    localGregorianCalendar.set(11, paramInteger.intValue());
-    return localSimpleDateFormat.format(localGregorianCalendar.getTime());
-  }
-  
-  String a(DateTime paramDateTime)
-  {
-    this.H = new ArrayList();
-    this.G = new ArrayList();
-    a();
-    b(paramDateTime);
-    return b();
-  }
-  
-  private final class CustomLocalization
-  {
-    List<String> a;
-    List<String> b;
-    List<String> c;
-    
-    CustomLocalization(List<String> paramList1, List<String> paramList2)
-    {
-      if (paramList1.size() != 12) {
-        throw new IllegalArgumentException("Your List of custom months must have size 12, but its size is " + paramList1.size());
-      }
-      if (paramList2.size() != 7) {
-        throw new IllegalArgumentException("Your List of custom weekdays must have size 7, but its size is " + paramList2.size());
-      }
-      List localList;
-      if (localList.size() != 2) {
-        throw new IllegalArgumentException("Your List of custom a.m./p.m. indicators must have size 2, but its size is " + localList.size());
-      }
-      this.a = paramList1;
-      this.b = paramList2;
-      this.c = localList;
+
+    DateTimeFormatter(String aFormat, Locale aLocale) {
+        this.f18977A = aFormat;
+        this.f18978B = aLocale;
+        this.f18982F = null;
+        m15015c();
     }
-  }
-  
-  private static final class EscapedRange
-  {
-    int a;
-    int b;
-  }
-  
-  private static final class InterpretedRange
-  {
-    int a;
-    int b;
-    String c;
-    
-    public String toString()
-    {
-      return "Start:" + this.a + " End:" + this.b + " '" + this.c + "'";
+
+    DateTimeFormatter(String aFormat, List<String> aMonths, List<String> aWeekdays, List<String> aAmPmIndicators) {
+        this.f18977A = aFormat;
+        this.f18978B = null;
+        this.f18982F = new CustomLocalization(this, aMonths, aWeekdays, aAmPmIndicators);
+        m15015c();
     }
-  }
+
+    /* renamed from: a */
+    String m15026a(DateTime aDateTime) {
+        this.f18984H = new ArrayList();
+        this.f18983G = new ArrayList();
+        m15006a();
+        m15012b(aDateTime);
+        return m15008b();
+    }
+
+    /* renamed from: a */
+    private void m15006a() {
+        Matcher matcher = f18952b.matcher(this.f18977A);
+        while (matcher.find()) {
+            EscapedRange escapedRange = new EscapedRange();
+            escapedRange.f18946a = matcher.start();
+            escapedRange.f18947b = matcher.end() - 1;
+            this.f18984H.add(escapedRange);
+        }
+    }
+
+    /* renamed from: a */
+    private boolean m15007a(InterpretedRange aInterpretedRange) {
+        for (EscapedRange escapedRange : this.f18984H) {
+            if (escapedRange.f18946a <= aInterpretedRange.f18948a && aInterpretedRange.f18948a <= escapedRange.f18947b) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* renamed from: b */
+    private void m15012b(DateTime aDateTime) {
+        String format = this.f18977A;
+        for (String token : f18976z) {
+            Matcher matcher = Pattern.compile(token).matcher(format);
+            while (matcher.find()) {
+                InterpretedRange interpretedRange = new InterpretedRange();
+                interpretedRange.f18948a = matcher.start();
+                interpretedRange.f18949b = matcher.end() - 1;
+                if (!m15007a(interpretedRange)) {
+                    interpretedRange.f18950c = m15005a(matcher.group(), aDateTime);
+                    this.f18983G.add(interpretedRange);
+                }
+            }
+            format = format.replace(token, m15003a(token));
+        }
+    }
+
+    /* renamed from: a */
+    private String m15003a(String aToken) {
+        StringBuilder result = new StringBuilder();
+        for (int idx = 1; idx <= aToken.length(); idx++) {
+            result.append("@");
+        }
+        return result.toString();
+    }
+
+    /* renamed from: b */
+    private String m15008b() {
+        StringBuilder result = new StringBuilder();
+        int idx = 0;
+        while (idx < this.f18977A.length()) {
+            String letter = m15009b(idx);
+            InterpretedRange interpretation = m15000a(idx);
+            if (interpretation != null) {
+                result.append(interpretation.f18950c);
+                idx = interpretation.f18949b;
+            } else if (!f18951a.equals(letter)) {
+                result.append(letter);
+            }
+            idx++;
+        }
+        return result.toString();
+    }
+
+    /* renamed from: a */
+    private InterpretedRange m15000a(int aIdx) {
+        InterpretedRange result = null;
+        for (InterpretedRange interpretedRange : this.f18983G) {
+            if (interpretedRange.f18948a == aIdx) {
+                result = interpretedRange;
+            }
+        }
+        return result;
+    }
+
+    /* renamed from: b */
+    private String m15009b(int aIdx) {
+        String strNextLetter = "";
+        if (this.f18977A.length() >= aIdx + 1) {
+            return this.f18977A.substring(aIdx, aIdx + 1);
+        }
+        return strNextLetter;
+    }
+
+    /* renamed from: a */
+    private String m15005a(String aCurrentToken, DateTime aDateTime) {
+        String result = "";
+        if (f18953c.equals(aCurrentToken)) {
+            return m15002a(aDateTime.getYear());
+        }
+        if (f18954d.equals(aCurrentToken)) {
+            return m15011b(m15002a(aDateTime.getYear()));
+        }
+        if (f18958h.equals(aCurrentToken)) {
+            return m15010b(Integer.valueOf(aDateTime.getMonth().intValue()));
+        }
+        if (f18957g.equals(aCurrentToken)) {
+            return m15017d(m15010b(Integer.valueOf(aDateTime.getMonth().intValue())));
+        }
+        if (f18956f.equals(aCurrentToken)) {
+            return m15014c(m15002a(aDateTime.getMonth()));
+        }
+        if (f18955e.equals(aCurrentToken)) {
+            return m15002a(aDateTime.getMonth());
+        }
+        if (f18960j.equals(aCurrentToken)) {
+            return m15014c(m15002a(aDateTime.getDay()));
+        }
+        if (f18959i.equals(aCurrentToken)) {
+            return m15002a(aDateTime.getDay());
+        }
+        if (f18962l.equals(aCurrentToken)) {
+            return m15018e(Integer.valueOf(aDateTime.getWeekDay().intValue()));
+        }
+        if (f18961k.equals(aCurrentToken)) {
+            return m15017d(m15018e(Integer.valueOf(aDateTime.getWeekDay().intValue())));
+        }
+        if (f18963m.equals(aCurrentToken)) {
+            return m15014c(m15002a(aDateTime.getHour()));
+        }
+        if ("h".equals(aCurrentToken)) {
+            return m15002a(aDateTime.getHour());
+        }
+        if (f18969s.equals(aCurrentToken)) {
+            return m15002a(m15021h(aDateTime.getHour()));
+        }
+        if (f18970t.equals(aCurrentToken)) {
+            return m15014c(m15002a(m15021h(aDateTime.getHour())));
+        }
+        if ("a".equals(aCurrentToken)) {
+            return m15022i(Integer.valueOf(aDateTime.getHour().intValue()));
+        }
+        if (f18966p.equals(aCurrentToken)) {
+            return m15014c(m15002a(aDateTime.getMinute()));
+        }
+        if ("m".equals(aCurrentToken)) {
+            return m15002a(aDateTime.getMinute());
+        }
+        if ("ss".equals(aCurrentToken)) {
+            return m15014c(m15002a(aDateTime.getSecond()));
+        }
+        if ("s".equals(aCurrentToken)) {
+            return m15002a(aDateTime.getSecond());
+        }
+        if (!aCurrentToken.startsWith(Regular.CATEGORY_FIX_VALUE)) {
+            throw new IllegalArgumentException("Unknown token in date formatting pattern: " + aCurrentToken);
+        } else if (f18974x.matcher(aCurrentToken).matches()) {
+            return m15004a(m15001a(aDateTime.getNanoseconds()), aCurrentToken.length());
+        } else {
+            throw new IllegalArgumentException("Unknown token in date formatting pattern: " + aCurrentToken);
+        }
+    }
+
+    /* renamed from: a */
+    private String m15002a(Object aItem) {
+        String result = "";
+        if (aItem != null) {
+            return String.valueOf(aItem);
+        }
+        return result;
+    }
+
+    /* renamed from: b */
+    private String m15011b(String aItem) {
+        String result = "";
+        if (Util.m15096a(aItem)) {
+            return aItem.substring(2);
+        }
+        return result;
+    }
+
+    /* renamed from: a */
+    private String m15001a(Integer aNanos) {
+        String result = m15002a((Object) aNanos);
+        while (result.length() < 9) {
+            result = "0" + result;
+        }
+        return result;
+    }
+
+    /* renamed from: c */
+    private String m15014c(String aTimePart) {
+        String result = aTimePart;
+        if (Util.m15096a(aTimePart) && aTimePart.length() == 1) {
+            return "0" + result;
+        }
+        return result;
+    }
+
+    /* renamed from: d */
+    private String m15017d(String aText) {
+        String result = aText;
+        if (!Util.m15096a(aText) || aText.length() < 3) {
+            return result;
+        }
+        return aText.substring(0, 3);
+    }
+
+    /* renamed from: b */
+    private String m15010b(Integer aMonth) {
+        String result = "";
+        if (aMonth == null) {
+            return result;
+        }
+        if (this.f18982F != null) {
+            return m15013c(aMonth);
+        }
+        if (this.f18978B != null) {
+            return m15016d(aMonth);
+        }
+        throw new IllegalArgumentException("Your date pattern requires either a Locale, or your own custom localizations for text:" + Util.m15093a(this.f18977A));
+    }
+
+    /* renamed from: c */
+    private String m15013c(Integer aMonth) {
+        if (this.f18982F == null || this.f18982F.f18942a == null) {
+            return "";
+        }
+        return (String) this.f18982F.f18942a.get(aMonth.intValue() - 1);
+    }
+
+    /* renamed from: d */
+    private String m15016d(Integer aMonth) {
+        String result = "";
+        if (!this.f18979C.containsKey(this.f18978B)) {
+            List<String> months = new ArrayList();
+            SimpleDateFormat format = new SimpleDateFormat(f18958h, this.f18978B);
+            for (int idx = 0; idx <= 11; idx++) {
+                Calendar firstDayOfMonth = new GregorianCalendar();
+                firstDayOfMonth.set(1, 2000);
+                firstDayOfMonth.set(2, idx);
+                firstDayOfMonth.set(5, 15);
+                months.add(format.format(firstDayOfMonth.getTime()));
+            }
+            this.f18979C.put(this.f18978B, months);
+        }
+        return (String) ((List) this.f18979C.get(this.f18978B)).get(aMonth.intValue() - 1);
+    }
+
+    /* renamed from: e */
+    private String m15018e(Integer aWeekday) {
+        String result = "";
+        if (aWeekday == null) {
+            return result;
+        }
+        if (this.f18982F != null) {
+            return m15019f(aWeekday);
+        }
+        if (this.f18978B != null) {
+            return m15020g(aWeekday);
+        }
+        throw new IllegalArgumentException("Your date pattern requires either a Locale, or your own custom localizations for text:" + Util.m15093a(this.f18977A));
+    }
+
+    /* renamed from: f */
+    private String m15019f(Integer aWeekday) {
+        if (this.f18982F == null || this.f18982F.f18943b == null) {
+            return "";
+        }
+        return (String) this.f18982F.f18943b.get(aWeekday.intValue() - 1);
+    }
+
+    /* renamed from: g */
+    private String m15020g(Integer aWeekday) {
+        String result = "";
+        if (!this.f18980D.containsKey(this.f18978B)) {
+            List<String> weekdays = new ArrayList();
+            SimpleDateFormat format = new SimpleDateFormat("EEEE", this.f18978B);
+            for (int idx = 8; idx <= 14; idx++) {
+                Calendar firstDayOfWeek = new GregorianCalendar();
+                firstDayOfWeek.set(1, 2009);
+                firstDayOfWeek.set(2, 1);
+                firstDayOfWeek.set(5, idx);
+                weekdays.add(format.format(firstDayOfWeek.getTime()));
+            }
+            this.f18980D.put(this.f18978B, weekdays);
+        }
+        return (String) ((List) this.f18980D.get(this.f18978B)).get(aWeekday.intValue() - 1);
+    }
+
+    /* renamed from: a */
+    private String m15004a(String aText, int aN) {
+        String result = aText;
+        if (!Util.m15096a(aText) || aText.length() < aN) {
+            return result;
+        }
+        return aText.substring(0, aN);
+    }
+
+    /* renamed from: h */
+    private Integer m15021h(Integer aHour) {
+        Integer result = aHour;
+        if (aHour == null) {
+            return result;
+        }
+        if (aHour.intValue() == 0) {
+            return Integer.valueOf(12);
+        }
+        if (aHour.intValue() > 12) {
+            return Integer.valueOf(aHour.intValue() - 12);
+        }
+        return result;
+    }
+
+    /* renamed from: i */
+    private String m15022i(Integer aHour) {
+        String result = "";
+        if (aHour == null) {
+            return result;
+        }
+        if (this.f18982F != null) {
+            return m15023j(aHour);
+        }
+        if (this.f18978B != null) {
+            return m15024k(aHour);
+        }
+        throw new IllegalArgumentException("Your date pattern requires either a Locale, or your own custom localizations for text:" + Util.m15093a(this.f18977A));
+    }
+
+    /* renamed from: j */
+    private String m15023j(Integer aHour) {
+        String result = "";
+        if (this.f18982F == null || this.f18982F.f18944c == null) {
+            return result;
+        }
+        if (aHour.intValue() < 12) {
+            return (String) this.f18982F.f18944c.get(0);
+        }
+        return (String) this.f18982F.f18944c.get(1);
+    }
+
+    /* renamed from: k */
+    private String m15024k(Integer aHour) {
+        String result = "";
+        if (!this.f18981E.containsKey(this.f18978B)) {
+            List<String> indicators = new ArrayList();
+            indicators.add(m15025l(Integer.valueOf(6)));
+            indicators.add(m15025l(Integer.valueOf(18)));
+            this.f18981E.put(this.f18978B, indicators);
+        }
+        if (aHour.intValue() < 12) {
+            return (String) ((List) this.f18981E.get(this.f18978B)).get(0);
+        }
+        return (String) ((List) this.f18981E.get(this.f18978B)).get(1);
+    }
+
+    /* renamed from: l */
+    private String m15025l(Integer aHour) {
+        SimpleDateFormat format = new SimpleDateFormat("a", this.f18978B);
+        Calendar someDay = new GregorianCalendar();
+        someDay.set(1, 2000);
+        someDay.set(2, 6);
+        someDay.set(5, 15);
+        someDay.set(11, aHour.intValue());
+        return format.format(someDay.getTime());
+    }
+
+    /* renamed from: c */
+    private void m15015c() {
+        if (!Util.m15096a(this.f18977A)) {
+            throw new IllegalArgumentException("DateTime format has no content.");
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/date/DateTimeFormatter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

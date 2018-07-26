@@ -2,17 +2,16 @@ package com.android.volley.toolbox;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.facebook.common.p141m.C2924g;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 import org.apache.http.HttpEntity;
@@ -24,188 +23,152 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 
-public class HurlStack
-  implements HttpStack
-{
-  private static final String HEADER_CONTENT_TYPE = "Content-Type";
-  private final SSLSocketFactory mSslSocketFactory;
-  private final UrlRewriter mUrlRewriter;
-  
-  public HurlStack()
-  {
-    this(null);
-  }
-  
-  public HurlStack(UrlRewriter paramUrlRewriter)
-  {
-    this(paramUrlRewriter, null);
-  }
-  
-  public HurlStack(UrlRewriter paramUrlRewriter, SSLSocketFactory paramSSLSocketFactory)
-  {
-    this.mUrlRewriter = paramUrlRewriter;
-    this.mSslSocketFactory = paramSSLSocketFactory;
-  }
-  
-  private static void addBodyIfExists(HttpURLConnection paramHttpURLConnection, Request<?> paramRequest)
-    throws IOException, AuthFailureError
-  {
-    byte[] arrayOfByte = paramRequest.getBody();
-    if (arrayOfByte != null)
-    {
-      paramHttpURLConnection.setDoOutput(true);
-      paramHttpURLConnection.addRequestProperty("Content-Type", paramRequest.getBodyContentType());
-      paramHttpURLConnection = new DataOutputStream(paramHttpURLConnection.getOutputStream());
-      paramHttpURLConnection.write(arrayOfByte);
-      paramHttpURLConnection.close();
+public class HurlStack implements HttpStack {
+    private static final String HEADER_CONTENT_TYPE = "Content-Type";
+    private final SSLSocketFactory mSslSocketFactory;
+    private final UrlRewriter mUrlRewriter;
+
+    public interface UrlRewriter {
+        String rewriteUrl(String str);
     }
-  }
-  
-  private static HttpEntity entityFromConnection(HttpURLConnection paramHttpURLConnection)
-  {
-    BasicHttpEntity localBasicHttpEntity = new BasicHttpEntity();
-    try
-    {
-      InputStream localInputStream1 = paramHttpURLConnection.getInputStream();
-      localBasicHttpEntity.setContent(localInputStream1);
-      localBasicHttpEntity.setContentLength(paramHttpURLConnection.getContentLength());
-      localBasicHttpEntity.setContentEncoding(paramHttpURLConnection.getContentEncoding());
-      localBasicHttpEntity.setContentType(paramHttpURLConnection.getContentType());
-      return localBasicHttpEntity;
+
+    public HurlStack() {
+        this(null);
     }
-    catch (IOException localIOException)
-    {
-      for (;;)
-      {
-        InputStream localInputStream2 = paramHttpURLConnection.getErrorStream();
-      }
+
+    public HurlStack(UrlRewriter urlRewriter) {
+        this(urlRewriter, null);
     }
-  }
-  
-  private static boolean hasResponseBody(int paramInt1, int paramInt2)
-  {
-    return (paramInt1 != 4) && ((100 > paramInt2) || (paramInt2 >= 200)) && (paramInt2 != 204) && (paramInt2 != 304);
-  }
-  
-  private HttpURLConnection openConnection(URL paramURL, Request<?> paramRequest)
-    throws IOException
-  {
-    HttpURLConnection localHttpURLConnection = createConnection(paramURL);
-    int i = paramRequest.getTimeoutMs();
-    localHttpURLConnection.setConnectTimeout(i);
-    localHttpURLConnection.setReadTimeout(i);
-    localHttpURLConnection.setUseCaches(false);
-    localHttpURLConnection.setDoInput(true);
-    if (("https".equals(paramURL.getProtocol())) && (this.mSslSocketFactory != null)) {
-      ((HttpsURLConnection)localHttpURLConnection).setSSLSocketFactory(this.mSslSocketFactory);
+
+    public HurlStack(UrlRewriter urlRewriter, SSLSocketFactory sslSocketFactory) {
+        this.mUrlRewriter = urlRewriter;
+        this.mSslSocketFactory = sslSocketFactory;
     }
-    return localHttpURLConnection;
-  }
-  
-  static void setConnectionParametersForRequest(HttpURLConnection paramHttpURLConnection, Request<?> paramRequest)
-    throws IOException, AuthFailureError
-  {
-    switch (paramRequest.getMethod())
-    {
-    default: 
-      throw new IllegalStateException("Unknown method type.");
-    case -1: 
-      byte[] arrayOfByte = paramRequest.getPostBody();
-      if (arrayOfByte != null)
-      {
-        paramHttpURLConnection.setDoOutput(true);
-        paramHttpURLConnection.setRequestMethod("POST");
-        paramHttpURLConnection.addRequestProperty("Content-Type", paramRequest.getPostBodyContentType());
-        paramHttpURLConnection = new DataOutputStream(paramHttpURLConnection.getOutputStream());
-        paramHttpURLConnection.write(arrayOfByte);
-        paramHttpURLConnection.close();
-      }
-      return;
-    case 0: 
-      paramHttpURLConnection.setRequestMethod("GET");
-      return;
-    case 3: 
-      paramHttpURLConnection.setRequestMethod("DELETE");
-      return;
-    case 1: 
-      paramHttpURLConnection.setRequestMethod("POST");
-      addBodyIfExists(paramHttpURLConnection, paramRequest);
-      return;
-    case 2: 
-      paramHttpURLConnection.setRequestMethod("PUT");
-      addBodyIfExists(paramHttpURLConnection, paramRequest);
-      return;
-    case 4: 
-      paramHttpURLConnection.setRequestMethod("HEAD");
-      return;
-    case 5: 
-      paramHttpURLConnection.setRequestMethod("OPTIONS");
-      return;
-    case 6: 
-      paramHttpURLConnection.setRequestMethod("TRACE");
-      return;
+
+    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders) throws IOException, AuthFailureError {
+        String url = request.getUrl();
+        HashMap<String, String> map = new HashMap();
+        map.putAll(request.getHeaders());
+        map.putAll(additionalHeaders);
+        if (this.mUrlRewriter != null) {
+            String rewritten = this.mUrlRewriter.rewriteUrl(url);
+            if (rewritten == null) {
+                throw new IOException("URL blocked by rewriter: " + url);
+            }
+            url = rewritten;
+        }
+        HttpURLConnection connection = openConnection(new URL(url), request);
+        for (String headerName : map.keySet()) {
+            connection.addRequestProperty(headerName, (String) map.get(headerName));
+        }
+        setConnectionParametersForRequest(connection, request);
+        ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 1);
+        if (connection.getResponseCode() == -1) {
+            throw new IOException("Could not retrieve response code from HttpUrlConnection.");
+        }
+        StatusLine responseStatus = new BasicStatusLine(protocolVersion, connection.getResponseCode(), connection.getResponseMessage());
+        BasicHttpResponse response = new BasicHttpResponse(responseStatus);
+        if (hasResponseBody(request.getMethod(), responseStatus.getStatusCode())) {
+            response.setEntity(entityFromConnection(connection));
+        }
+        for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
+            if (header.getKey() != null) {
+                response.addHeader(new BasicHeader((String) header.getKey(), (String) ((List) header.getValue()).get(0)));
+            }
+        }
+        return response;
     }
-    paramHttpURLConnection.setRequestMethod("PATCH");
-    addBodyIfExists(paramHttpURLConnection, paramRequest);
-  }
-  
-  protected HttpURLConnection createConnection(URL paramURL)
-    throws IOException
-  {
-    return (HttpURLConnection)paramURL.openConnection();
-  }
-  
-  public HttpResponse performRequest(Request<?> paramRequest, Map<String, String> paramMap)
-    throws IOException, AuthFailureError
-  {
-    Object localObject1 = paramRequest.getUrl();
-    Object localObject2 = new HashMap();
-    ((HashMap)localObject2).putAll(paramRequest.getHeaders());
-    ((HashMap)localObject2).putAll(paramMap);
-    paramMap = (Map<String, String>)localObject1;
-    if (this.mUrlRewriter != null)
-    {
-      paramMap = this.mUrlRewriter.rewriteUrl((String)localObject1);
-      if (paramMap == null) {
-        throw new IOException("URL blocked by rewriter: " + (String)localObject1);
-      }
+
+    private static boolean hasResponseBody(int requestMethod, int responseCode) {
+        return (requestMethod == 4 || ((100 <= responseCode && responseCode < 200) || responseCode == 204 || responseCode == 304)) ? false : true;
     }
-    paramMap = openConnection(new URL(paramMap), paramRequest);
-    localObject1 = ((HashMap)localObject2).keySet().iterator();
-    while (((Iterator)localObject1).hasNext())
-    {
-      String str = (String)((Iterator)localObject1).next();
-      paramMap.addRequestProperty(str, (String)((HashMap)localObject2).get(str));
+
+    private static HttpEntity entityFromConnection(HttpURLConnection connection) {
+        InputStream inputStream;
+        BasicHttpEntity entity = new BasicHttpEntity();
+        try {
+            inputStream = connection.getInputStream();
+        } catch (IOException e) {
+            inputStream = connection.getErrorStream();
+        }
+        entity.setContent(inputStream);
+        entity.setContentLength((long) connection.getContentLength());
+        entity.setContentEncoding(connection.getContentEncoding());
+        entity.setContentType(connection.getContentType());
+        return entity;
     }
-    setConnectionParametersForRequest(paramMap, paramRequest);
-    localObject1 = new ProtocolVersion("HTTP", 1, 1);
-    if (paramMap.getResponseCode() == -1) {
-      throw new IOException("Could not retrieve response code from HttpUrlConnection.");
+
+    protected HttpURLConnection createConnection(URL url) throws IOException {
+        return (HttpURLConnection) url.openConnection();
     }
-    localObject2 = new BasicStatusLine((ProtocolVersion)localObject1, paramMap.getResponseCode(), paramMap.getResponseMessage());
-    localObject1 = new BasicHttpResponse((StatusLine)localObject2);
-    if (hasResponseBody(paramRequest.getMethod(), ((StatusLine)localObject2).getStatusCode())) {
-      ((BasicHttpResponse)localObject1).setEntity(entityFromConnection(paramMap));
+
+    private HttpURLConnection openConnection(URL url, Request<?> request) throws IOException {
+        HttpURLConnection connection = createConnection(url);
+        int timeoutMs = request.getTimeoutMs();
+        connection.setConnectTimeout(timeoutMs);
+        connection.setReadTimeout(timeoutMs);
+        connection.setUseCaches(false);
+        connection.setDoInput(true);
+        if (C2924g.f12888b.equals(url.getProtocol()) && this.mSslSocketFactory != null) {
+            ((HttpsURLConnection) connection).setSSLSocketFactory(this.mSslSocketFactory);
+        }
+        return connection;
     }
-    paramRequest = paramMap.getHeaderFields().entrySet().iterator();
-    while (paramRequest.hasNext())
-    {
-      paramMap = (Map.Entry)paramRequest.next();
-      if (paramMap.getKey() != null) {
-        ((BasicHttpResponse)localObject1).addHeader(new BasicHeader((String)paramMap.getKey(), (String)((List)paramMap.getValue()).get(0)));
-      }
+
+    static void setConnectionParametersForRequest(HttpURLConnection connection, Request<?> request) throws IOException, AuthFailureError {
+        switch (request.getMethod()) {
+            case -1:
+                byte[] postBody = request.getPostBody();
+                if (postBody != null) {
+                    connection.setDoOutput(true);
+                    connection.setRequestMethod("POST");
+                    connection.addRequestProperty("Content-Type", request.getPostBodyContentType());
+                    DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+                    out.write(postBody);
+                    out.close();
+                    return;
+                }
+                return;
+            case 0:
+                connection.setRequestMethod("GET");
+                return;
+            case 1:
+                connection.setRequestMethod("POST");
+                addBodyIfExists(connection, request);
+                return;
+            case 2:
+                connection.setRequestMethod("PUT");
+                addBodyIfExists(connection, request);
+                return;
+            case 3:
+                connection.setRequestMethod("DELETE");
+                return;
+            case 4:
+                connection.setRequestMethod("HEAD");
+                return;
+            case 5:
+                connection.setRequestMethod("OPTIONS");
+                return;
+            case 6:
+                connection.setRequestMethod("TRACE");
+                return;
+            case 7:
+                connection.setRequestMethod("PATCH");
+                addBodyIfExists(connection, request);
+                return;
+            default:
+                throw new IllegalStateException("Unknown method type.");
+        }
     }
-    return (HttpResponse)localObject1;
-  }
-  
-  public static abstract interface UrlRewriter
-  {
-    public abstract String rewriteUrl(String paramString);
-  }
+
+    private static void addBodyIfExists(HttpURLConnection connection, Request<?> request) throws IOException, AuthFailureError {
+        byte[] body = request.getBody();
+        if (body != null) {
+            connection.setDoOutput(true);
+            connection.addRequestProperty("Content-Type", request.getBodyContentType());
+            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+            out.write(body);
+            out.close();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/toolbox/HurlStack.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

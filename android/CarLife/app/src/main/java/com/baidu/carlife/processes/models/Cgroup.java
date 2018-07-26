@@ -6,92 +6,73 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public final class Cgroup
-  extends ProcFile
-{
-  public static final Parcelable.Creator<Cgroup> CREATOR = new Parcelable.Creator()
-  {
-    public Cgroup a(Parcel paramAnonymousParcel)
-    {
-      return new Cgroup(paramAnonymousParcel, null);
-    }
-    
-    public Cgroup[] a(int paramAnonymousInt)
-    {
-      return new Cgroup[paramAnonymousInt];
-    }
-  };
-  public final ArrayList<ControlGroup> a;
-  
-  private Cgroup(Parcel paramParcel)
-  {
-    super(paramParcel);
-    this.a = paramParcel.createTypedArrayList(ControlGroup.CREATOR);
-  }
-  
-  private Cgroup(String paramString)
-    throws IOException
-  {
-    super(paramString);
-    paramString = this.b.split("\n");
-    this.a = new ArrayList();
-    int j = paramString.length;
-    int i = 0;
-    for (;;)
-    {
-      String str;
-      if (i < j) {
-        str = paramString[i];
-      }
-      try
-      {
-        this.a.add(new ControlGroup(str));
-        i += 1;
-        continue;
-        return;
-      }
-      catch (Exception localException)
-      {
-        for (;;) {}
-      }
-    }
-  }
-  
-  public static Cgroup a(int paramInt)
-    throws IOException
-  {
-    return new Cgroup(String.format("/proc/%d/cgroup", new Object[] { Integer.valueOf(paramInt) }));
-  }
-  
-  public ControlGroup a(String paramString)
-  {
-    Iterator localIterator = this.a.iterator();
-    while (localIterator.hasNext())
-    {
-      ControlGroup localControlGroup = (ControlGroup)localIterator.next();
-      String[] arrayOfString = localControlGroup.b.split(",");
-      int j = arrayOfString.length;
-      int i = 0;
-      while (i < j)
-      {
-        if (arrayOfString[i].equals(paramString)) {
-          return localControlGroup;
+public final class Cgroup extends ProcFile {
+    public static final Creator<Cgroup> CREATOR = new C20321();
+    /* renamed from: a */
+    public final ArrayList<ControlGroup> f6568a;
+
+    /* renamed from: com.baidu.carlife.processes.models.Cgroup$1 */
+    static class C20321 implements Creator<Cgroup> {
+        C20321() {
         }
-        i += 1;
-      }
+
+        public /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return m7805a(parcel);
+        }
+
+        public /* synthetic */ Object[] newArray(int i) {
+            return m7806a(i);
+        }
+
+        /* renamed from: a */
+        public Cgroup m7805a(Parcel source) {
+            return new Cgroup(source);
+        }
+
+        /* renamed from: a */
+        public Cgroup[] m7806a(int size) {
+            return new Cgroup[size];
+        }
     }
-    return null;
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    super.writeToParcel(paramParcel, paramInt);
-    paramParcel.writeTypedList(this.a);
-  }
+
+    /* renamed from: a */
+    public static Cgroup m7808a(int pid) throws IOException {
+        return new Cgroup(String.format("/proc/%d/cgroup", new Object[]{Integer.valueOf(pid)}));
+    }
+
+    private Cgroup(String path) throws IOException {
+        super(path);
+        String[] lines = this.b.split("\n");
+        this.f6568a = new ArrayList();
+        for (String line : lines) {
+            try {
+                this.f6568a.add(new ControlGroup(line));
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private Cgroup(Parcel in) {
+        super(in);
+        this.f6568a = in.createTypedArrayList(ControlGroup.CREATOR);
+    }
+
+    /* renamed from: a */
+    public ControlGroup m7809a(String subsystem) {
+        Iterator it = this.f6568a.iterator();
+        while (it.hasNext()) {
+            ControlGroup group = (ControlGroup) it.next();
+            for (String name : group.f6570b.split(",")) {
+                if (name.equals(subsystem)) {
+                    return group;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeTypedList(this.f6568a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/processes/models/Cgroup.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

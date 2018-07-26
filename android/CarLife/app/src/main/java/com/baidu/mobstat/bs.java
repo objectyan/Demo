@@ -1,14 +1,13 @@
 package com.baidu.mobstat;
 
-class bs
-{
-  String a;
-  String b;
-  long c;
+class bs {
+    /* renamed from: a */
+    String f19497a;
+    /* renamed from: b */
+    String f19498b;
+    /* renamed from: c */
+    long f19499c;
+
+    bs() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

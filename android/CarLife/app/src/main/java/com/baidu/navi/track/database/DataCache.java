@@ -2,57 +2,47 @@ package com.baidu.navi.track.database;
 
 import android.util.SparseArray;
 
-public class DataCache
-{
-  private static DataCache mInstance;
-  private int index = 0;
-  private SparseArray<Object> mCacheArray = new SparseArray();
-  
-  public static DataCache getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new DataCache();
+public class DataCache {
+    private static DataCache mInstance;
+    private int index = 0;
+    private SparseArray<Object> mCacheArray = new SparseArray();
+
+    private DataCache() {
     }
-    return mInstance;
-  }
-  
-  public int addCache(Object paramObject)
-  {
-    if (this.mCacheArray == null) {
-      return -1;
+
+    public static DataCache getInstance() {
+        if (mInstance == null) {
+            mInstance = new DataCache();
+        }
+        return mInstance;
     }
-    int i = this.index;
-    this.index = (i + 1);
-    this.mCacheArray.put(i, paramObject);
-    return i;
-  }
-  
-  public void clearAllCache()
-  {
-    if (this.mCacheArray != null) {
-      this.mCacheArray.clear();
+
+    public void clearAllCache() {
+        if (this.mCacheArray != null) {
+            this.mCacheArray.clear();
+        }
     }
-  }
-  
-  public Object getCache(int paramInt)
-  {
-    if (this.mCacheArray == null) {
-      return null;
+
+    public int addCache(Object data) {
+        if (this.mCacheArray == null) {
+            return -1;
+        }
+        int key = this.index;
+        this.index = key + 1;
+        this.mCacheArray.put(key, data);
+        return key;
     }
-    return this.mCacheArray.get(paramInt);
-  }
-  
-  public void removeCache(int paramInt)
-  {
-    if (this.mCacheArray == null) {
-      return;
+
+    public void removeCache(int key) {
+        if (this.mCacheArray != null) {
+            this.mCacheArray.remove(key);
+        }
     }
-    this.mCacheArray.remove(paramInt);
-  }
+
+    public Object getCache(int key) {
+        if (this.mCacheArray == null) {
+            return null;
+        }
+        return this.mCacheArray.get(key);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/track/database/DataCache.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

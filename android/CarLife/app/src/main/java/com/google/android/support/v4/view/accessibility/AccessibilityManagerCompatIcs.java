@@ -5,52 +5,49 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityManager.AccessibilityStateChangeListener;
 import java.util.List;
 
-class AccessibilityManagerCompatIcs
-{
-  public static boolean addAccessibilityStateChangeListener(AccessibilityManager paramAccessibilityManager, Object paramObject)
-  {
-    return paramAccessibilityManager.addAccessibilityStateChangeListener((AccessibilityManager.AccessibilityStateChangeListener)paramObject);
-  }
-  
-  public static List<AccessibilityServiceInfo> getEnabledAccessibilityServiceList(AccessibilityManager paramAccessibilityManager, int paramInt)
-  {
-    return paramAccessibilityManager.getEnabledAccessibilityServiceList(paramInt);
-  }
-  
-  public static List<AccessibilityServiceInfo> getInstalledAccessibilityServiceList(AccessibilityManager paramAccessibilityManager)
-  {
-    return paramAccessibilityManager.getInstalledAccessibilityServiceList();
-  }
-  
-  public static boolean isTouchExplorationEnabled(AccessibilityManager paramAccessibilityManager)
-  {
-    return paramAccessibilityManager.isTouchExplorationEnabled();
-  }
-  
-  public static Object newAccessibilityStateChangeListener(AccessibilityStateChangeListenerBridge paramAccessibilityStateChangeListenerBridge)
-  {
-    new AccessibilityManager.AccessibilityStateChangeListener()
-    {
-      public void onAccessibilityStateChanged(boolean paramAnonymousBoolean)
-      {
-        AccessibilityManagerCompatIcs.this.onAccessibilityStateChanged(paramAnonymousBoolean);
-      }
-    };
-  }
-  
-  public static boolean removeAccessibilityStateChangeListener(AccessibilityManager paramAccessibilityManager, Object paramObject)
-  {
-    return paramAccessibilityManager.removeAccessibilityStateChangeListener((AccessibilityManager.AccessibilityStateChangeListener)paramObject);
-  }
-  
-  static abstract interface AccessibilityStateChangeListenerBridge
-  {
-    public abstract void onAccessibilityStateChanged(boolean paramBoolean);
-  }
+class AccessibilityManagerCompatIcs {
+
+    interface AccessibilityStateChangeListenerBridge {
+        void onAccessibilityStateChanged(boolean z);
+    }
+
+    /* renamed from: com.google.android.support.v4.view.accessibility.AccessibilityManagerCompatIcs$1 */
+    class C56701 implements AccessibilityStateChangeListener {
+        private final /* synthetic */ AccessibilityStateChangeListenerBridge val$bridge;
+
+        C56701(AccessibilityStateChangeListenerBridge accessibilityStateChangeListenerBridge) {
+            this.val$bridge = accessibilityStateChangeListenerBridge;
+        }
+
+        public void onAccessibilityStateChanged(boolean enabled) {
+            this.val$bridge.onAccessibilityStateChanged(enabled);
+        }
+    }
+
+    AccessibilityManagerCompatIcs() {
+    }
+
+    public static Object newAccessibilityStateChangeListener(AccessibilityStateChangeListenerBridge bridge) {
+        return new C56701(bridge);
+    }
+
+    public static boolean addAccessibilityStateChangeListener(AccessibilityManager manager, Object listener) {
+        return manager.addAccessibilityStateChangeListener((AccessibilityStateChangeListener) listener);
+    }
+
+    public static boolean removeAccessibilityStateChangeListener(AccessibilityManager manager, Object listener) {
+        return manager.removeAccessibilityStateChangeListener((AccessibilityStateChangeListener) listener);
+    }
+
+    public static List<AccessibilityServiceInfo> getEnabledAccessibilityServiceList(AccessibilityManager manager, int feedbackTypeFlags) {
+        return manager.getEnabledAccessibilityServiceList(feedbackTypeFlags);
+    }
+
+    public static List<AccessibilityServiceInfo> getInstalledAccessibilityServiceList(AccessibilityManager manager) {
+        return manager.getInstalledAccessibilityServiceList();
+    }
+
+    public static boolean isTouchExplorationEnabled(AccessibilityManager manager) {
+        return manager.isTouchExplorationEnabled();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/accessibility/AccessibilityManagerCompatIcs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

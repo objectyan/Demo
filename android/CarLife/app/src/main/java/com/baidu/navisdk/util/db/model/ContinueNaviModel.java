@@ -1,67 +1,63 @@
 package com.baidu.navisdk.util.db.model;
 
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
+import com.baidu.navisdk.util.db.object.BaseDBObject;
 import com.baidu.navisdk.util.db.object.RoutePlanNodeDBObject;
+import com.baidu.navisdk.util.db.table.BaseDBTable;
 import com.baidu.navisdk.util.db.table.RoutePlanNodeDBTable;
 import java.util.List;
 
-public class ContinueNaviModel
-{
-  private static final int mArg1 = 1;
-  private List<RoutePlanNodeDBObject> mRoutePlanNodes = this.mTable.queryMulti("arg1=?", new String[] { "1" }, "routeplan_id", "ASC");
-  private RoutePlanNodeDBTable mTable = new RoutePlanNodeDBTable();
-  
-  public static ContinueNaviModel getInstance()
-  {
-    return InnerHolder.mInstance;
-  }
-  
-  public void addContinueNaviNodes(List<RoutePlanNode> paramList)
-  {
-    if ((paramList == null) || (paramList.size() == 0)) {
-      return;
+public class ContinueNaviModel {
+    private static final int mArg1 = 1;
+    private List<RoutePlanNodeDBObject> mRoutePlanNodes;
+    private RoutePlanNodeDBTable mTable;
+
+    static class InnerHolder {
+        static ContinueNaviModel mInstance = new ContinueNaviModel();
+
+        InnerHolder() {
+        }
     }
-    if ((this.mRoutePlanNodes != null) && (this.mRoutePlanNodes.size() != 0)) {
-      clear();
+
+    private ContinueNaviModel() {
+        this.mTable = new RoutePlanNodeDBTable();
+        String[] whereArgs = new String[]{"1"};
+        String orderBy = BaseDBTable.ORDERBY_UP;
+        this.mRoutePlanNodes = this.mTable.queryMulti("arg1=?", whereArgs, "routeplan_id", orderBy);
     }
-    this.mTable.beginTransaction();
-    int i = 0;
-    while (i < paramList.size())
-    {
-      RoutePlanNodeDBObject localRoutePlanNodeDBObject = new RoutePlanNodeDBObject();
-      localRoutePlanNodeDBObject.setArg1(1);
-      localRoutePlanNodeDBObject.copy((RoutePlanNode)paramList.get(i));
-      this.mTable.insert(localRoutePlanNodeDBObject);
-      this.mRoutePlanNodes.add(localRoutePlanNodeDBObject);
-      i += 1;
+
+    public static ContinueNaviModel getInstance() {
+        return InnerHolder.mInstance;
     }
-    this.mTable.endTransaction();
-  }
-  
-  public void clear()
-  {
-    this.mTable.delete("arg1=?", new String[] { "1" });
-    this.mRoutePlanNodes = null;
-  }
-  
-  public List<RoutePlanNode> getContinueNaviNodes()
-  {
-    return RoutePlanNodeDBObject.convertToRoutePlanNodeList(this.mRoutePlanNodes);
-  }
-  
-  public boolean hasContinueNaviNode()
-  {
-    return (this.mRoutePlanNodes != null) && (this.mRoutePlanNodes.size() != 0);
-  }
-  
-  static class InnerHolder
-  {
-    static ContinueNaviModel mInstance = new ContinueNaviModel(null);
-  }
+
+    public List<RoutePlanNode> getContinueNaviNodes() {
+        return RoutePlanNodeDBObject.convertToRoutePlanNodeList(this.mRoutePlanNodes);
+    }
+
+    public boolean hasContinueNaviNode() {
+        return (this.mRoutePlanNodes == null || this.mRoutePlanNodes.size() == 0) ? false : true;
+    }
+
+    public void clear() {
+        String[] whereArgs = new String[]{"1"};
+        this.mTable.delete("arg1=?", whereArgs);
+        this.mRoutePlanNodes = null;
+    }
+
+    public void addContinueNaviNodes(List<RoutePlanNode> nodes) {
+        if (nodes != null && nodes.size() != 0) {
+            if (!(this.mRoutePlanNodes == null || this.mRoutePlanNodes.size() == 0)) {
+                clear();
+            }
+            this.mTable.beginTransaction();
+            for (int i = 0; i < nodes.size(); i++) {
+                RoutePlanNodeDBObject obj = new RoutePlanNodeDBObject();
+                obj.setArg1(1);
+                obj.copy((RoutePlanNode) nodes.get(i));
+                this.mTable.insert((BaseDBObject) obj);
+                this.mRoutePlanNodes.add(obj);
+            }
+            this.mTable.endTransaction();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/db/model/ContinueNaviModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

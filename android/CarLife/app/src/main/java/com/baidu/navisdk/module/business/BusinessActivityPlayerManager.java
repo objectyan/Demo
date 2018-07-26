@@ -7,210 +7,173 @@ import android.text.TextUtils;
 import com.baidu.navisdk.BNaviModuleManager;
 import com.baidu.navisdk.comapi.tts.IBNTTSPlayerListener.AudioPlayerListener;
 import com.baidu.navisdk.comapi.tts.TTSPlayerControl;
-import com.baidu.navisdk.model.modelfactory.BusinessActivityModel;
 import com.baidu.navisdk.module.BusinessActivityManager;
 import com.baidu.navisdk.util.common.LogUtil;
 
-public class BusinessActivityPlayerManager
-{
-  public static final int AUDIO_PLAY_TIMEOUT = 15000;
-  private static final int MSG_FORCE_RESET_PLAY_AUDIO = 102;
-  private static final int MSG_PLAY_AUDIO = 101;
-  private static final int MSG_PLAY_TEXT = 100;
-  private static final String TAG = BusinessActivityPlayerManager.class.getSimpleName();
-  private static Object mSyncObj = new Object();
-  private static BusinessActivityPlayerManager sInstance = null;
-  private Handler mHD = new Handler(Looper.getMainLooper())
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if ((100 == paramAnonymousMessage.what) && (paramAnonymousMessage.obj != null) && ((paramAnonymousMessage.obj instanceof String))) {
-        if ((paramAnonymousMessage.arg1 == 2) && (!BNaviModuleManager.isAppForeground())) {
-          LogUtil.e(BusinessActivityPlayerManager.TAG, "handleMessage()1 return for background.");
+public class BusinessActivityPlayerManager {
+    public static final int AUDIO_PLAY_TIMEOUT = 15000;
+    private static final int MSG_FORCE_RESET_PLAY_AUDIO = 102;
+    private static final int MSG_PLAY_AUDIO = 101;
+    private static final int MSG_PLAY_TEXT = 100;
+    private static final String TAG = BusinessActivityPlayerManager.class.getSimpleName();
+    private static Object mSyncObj = new Object();
+    private static BusinessActivityPlayerManager sInstance = null;
+    private Handler mHD = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            if (100 == msg.what && msg.obj != null && (msg.obj instanceof String)) {
+                if (msg.arg1 != 2 || BNaviModuleManager.isAppForeground()) {
+                    BusinessActivityPlayerManager.this.playText((String) msg.obj);
+                } else {
+                    LogUtil.m15791e(BusinessActivityPlayerManager.TAG, "handleMessage()1 return for background.");
+                }
+            } else if (101 == msg.what && msg.obj != null && (msg.obj instanceof String)) {
+                if (msg.arg1 != 2 || BNaviModuleManager.isAppForeground()) {
+                    BusinessActivityPlayerManager.this.playAudio((String) msg.obj, msg.arg1);
+                } else {
+                    LogUtil.m15791e(BusinessActivityPlayerManager.TAG, "handleMessage()2 return for background.");
+                }
+            } else if (102 == msg.what) {
+                BusinessActivityPlayerManager.this.mIsAudioPlaying = false;
+                BusinessActivityPlayerManager.this.cancelPlayAudio();
+            }
         }
-      }
-      do
-      {
-        return;
-        BusinessActivityPlayerManager.this.playText((String)paramAnonymousMessage.obj);
-        return;
-        if ((101 == paramAnonymousMessage.what) && (paramAnonymousMessage.obj != null) && ((paramAnonymousMessage.obj instanceof String)))
-        {
-          if ((paramAnonymousMessage.arg1 == 2) && (!BNaviModuleManager.isAppForeground()))
-          {
-            LogUtil.e(BusinessActivityPlayerManager.TAG, "handleMessage()2 return for background.");
-            return;
-          }
-          BusinessActivityPlayerManager.this.playAudio((String)paramAnonymousMessage.obj, paramAnonymousMessage.arg1);
-          return;
+    };
+    private boolean mIsAudioPlaying = false;
+
+    /* renamed from: com.baidu.navisdk.module.business.BusinessActivityPlayerManager$1 */
+    class C41571 implements AudioPlayerListener {
+        C41571() {
         }
-      } while (102 != paramAnonymousMessage.what);
-      BusinessActivityPlayerManager.access$302(BusinessActivityPlayerManager.this, false);
-      BusinessActivityPlayerManager.this.cancelPlayAudio();
-    }
-  };
-  private boolean mIsAudioPlaying = false;
-  
-  public static BusinessActivityPlayerManager getInstance()
-  {
-    if (sInstance == null) {}
-    synchronized (mSyncObj)
-    {
-      if (sInstance == null) {
-        sInstance = new BusinessActivityPlayerManager();
-      }
-      return sInstance;
-    }
-  }
-  
-  private void playAudio(String paramString, int paramInt)
-  {
-    cancelPlayAudio();
-    if (TTSPlayerControl.getTTSState() == 1)
-    {
-      this.mIsAudioPlaying = true;
-      LogUtil.e(TAG, "playAudio() audio play true 1");
-      try
-      {
-        TTSPlayerControl.stopVoiceTTSOutput();
-        TTSPlayerControl.playAudio(paramString, new IBNTTSPlayerListener.AudioPlayerListener()
-        {
-          public void playCompletion()
-          {
+
+        public void playCompletion() {
             BusinessActivityPlayerManager.this.cancelPlayAudio();
-          }
-        });
-        this.mIsAudioPlaying = true;
-        LogUtil.e(TAG, "playAudio() audio play true 2");
-        if (this.mHD.hasMessages(102)) {
-          this.mHD.removeMessages(102);
         }
-        this.mHD.sendEmptyMessageDelayed(102, 15000L);
-        return;
-      }
-      catch (Exception paramString)
-      {
+    }
+
+    private BusinessActivityPlayerManager() {
+    }
+
+    public static BusinessActivityPlayerManager getInstance() {
+        if (sInstance == null) {
+            synchronized (mSyncObj) {
+                if (sInstance == null) {
+                    sInstance = new BusinessActivityPlayerManager();
+                }
+            }
+        }
+        return sInstance;
+    }
+
+    public void playNaviStartContent() {
+        Message msg;
+        if (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voiceLinkOnStartNavi) && !TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voicePathOnStartNavi)) {
+            msg = this.mHD.obtainMessage(101);
+            msg.arg1 = 1;
+            msg.obj = BusinessActivityManager.getInstance().getModel().voicePathOnStartNavi;
+            this.mHD.sendMessageDelayed(msg, 1200);
+            LogUtil.m15791e(TAG, "playNaviStartContent() play audio");
+        } else if (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voiceTextOnStartNavi)) {
+            msg = this.mHD.obtainMessage(100);
+            msg.obj = BusinessActivityManager.getInstance().getModel().voiceTextOnStartNavi;
+            this.mHD.sendMessageDelayed(msg, 1200);
+            LogUtil.m15791e(TAG, "playNaviStartContent() play text");
+        }
+    }
+
+    public void playHolidayRedGift() {
+        if (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().envelopeSoundEffectLink) && !TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().envelopeSoundEffectPath)) {
+            Message msg = this.mHD.obtainMessage(101);
+            msg.arg1 = 1;
+            msg.obj = BusinessActivityManager.getInstance().getModel().envelopeSoundEffectPath;
+            this.mHD.sendMessage(msg);
+            LogUtil.m15791e(TAG, "playHolidayRedGift() play audio");
+        }
+    }
+
+    public void playNaviEndContent() {
+        if (!BNaviModuleManager.isAppForeground()) {
+            LogUtil.m15791e(TAG, "playNaviEndContent() return for background.");
+        } else if (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voiceLinkOnEndNavi) && !TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voicePathOnEndNavi)) {
+            msg = this.mHD.obtainMessage(101);
+            msg.arg1 = 2;
+            msg.obj = BusinessActivityManager.getInstance().getModel().voicePathOnEndNavi;
+            this.mHD.sendMessageDelayed(msg, 1200);
+            LogUtil.m15791e(TAG, "playNaviEndContent() play audio");
+        } else if (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voiceTextOnEndNavi)) {
+            msg = this.mHD.obtainMessage(100);
+            msg.obj = BusinessActivityManager.getInstance().getModel().voiceTextOnEndNavi;
+            this.mHD.sendMessageDelayed(msg, 1200);
+            LogUtil.m15791e(TAG, "playNaviEndContent() play text");
+        }
+    }
+
+    public void playContentWhenShowActivity() {
+        if (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().showVoiceLink) && !TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().showVoicePath)) {
+            playAudio(BusinessActivityManager.getInstance().getModel().showVoicePath, 3);
+            LogUtil.m15791e(TAG, "playContentWhenShowActivity() play audio");
+        } else if (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().showVoiceText)) {
+            playText(BusinessActivityManager.getInstance().getModel().showVoiceText);
+            LogUtil.m15791e(TAG, "playContentWhenShowActivity() play text");
+        }
+    }
+
+    public boolean isAudioPlaying() {
+        return this.mIsAudioPlaying;
+    }
+
+    private void playAudio(String audioPath, int what) {
+        cancelPlayAudio();
+        if (TTSPlayerControl.getTTSState() == 1) {
+            this.mIsAudioPlaying = true;
+            LogUtil.m15791e(TAG, "playAudio() audio play true 1");
+            try {
+                TTSPlayerControl.stopVoiceTTSOutput();
+                TTSPlayerControl.playAudio(audioPath, new C41571());
+                this.mIsAudioPlaying = true;
+                LogUtil.m15791e(TAG, "playAudio() audio play true 2");
+                if (this.mHD.hasMessages(102)) {
+                    this.mHD.removeMessages(102);
+                }
+                this.mHD.sendEmptyMessageDelayed(102, 15000);
+                return;
+            } catch (Exception e) {
+                this.mIsAudioPlaying = false;
+                return;
+            }
+        }
         this.mIsAudioPlaying = false;
-        return;
-      }
+        Message msg = this.mHD.obtainMessage(101);
+        msg.arg1 = what;
+        msg.obj = audioPath;
+        this.mHD.sendMessageDelayed(msg, 1000);
     }
-    this.mIsAudioPlaying = false;
-    Message localMessage = this.mHD.obtainMessage(101);
-    localMessage.arg1 = paramInt;
-    localMessage.obj = paramString;
-    this.mHD.sendMessageDelayed(localMessage, 1000L);
-  }
-  
-  private void playText(String paramString)
-  {
-    if (TTSPlayerControl.getTTSState() == 1)
-    {
-      TTSPlayerControl.playTTS(paramString, 0);
-      return;
+
+    public void cancelPlayAudio() {
+        LogUtil.m15791e(TAG, "cancelPlayAudio");
+        if (this.mHD.hasMessages(102)) {
+            this.mHD.removeMessages(102);
+        }
+        TTSPlayerControl.cancelAudio();
+        this.mIsAudioPlaying = false;
     }
-    Message localMessage = this.mHD.obtainMessage(100);
-    localMessage.obj = paramString;
-    this.mHD.sendMessageDelayed(localMessage, 1000L);
-  }
-  
-  public void cancelPlayAudio()
-  {
-    LogUtil.e(TAG, "cancelPlayAudio");
-    if (this.mHD.hasMessages(102)) {
-      this.mHD.removeMessages(102);
+
+    public void cancelPlayAudioAndPlayMsg() {
+        if (this.mHD.hasMessages(101)) {
+            this.mHD.removeMessages(101);
+        }
+        if (this.mHD.hasMessages(100)) {
+            this.mHD.removeMessages(100);
+        }
+        cancelPlayAudio();
     }
-    TTSPlayerControl.cancelAudio();
-    this.mIsAudioPlaying = false;
-  }
-  
-  public void cancelPlayAudioAndPlayMsg()
-  {
-    if (this.mHD.hasMessages(101)) {
-      this.mHD.removeMessages(101);
+
+    private void playText(String text) {
+        if (TTSPlayerControl.getTTSState() == 1) {
+            TTSPlayerControl.playTTS(text, 0);
+            return;
+        }
+        Message msg = this.mHD.obtainMessage(100);
+        msg.obj = text;
+        this.mHD.sendMessageDelayed(msg, 1000);
     }
-    if (this.mHD.hasMessages(100)) {
-      this.mHD.removeMessages(100);
-    }
-    cancelPlayAudio();
-  }
-  
-  public boolean isAudioPlaying()
-  {
-    return this.mIsAudioPlaying;
-  }
-  
-  public void playContentWhenShowActivity()
-  {
-    if ((!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().showVoiceLink)) && (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().showVoicePath)))
-    {
-      playAudio(BusinessActivityManager.getInstance().getModel().showVoicePath, 3);
-      LogUtil.e(TAG, "playContentWhenShowActivity() play audio");
-    }
-    while (TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().showVoiceText)) {
-      return;
-    }
-    playText(BusinessActivityManager.getInstance().getModel().showVoiceText);
-    LogUtil.e(TAG, "playContentWhenShowActivity() play text");
-  }
-  
-  public void playHolidayRedGift()
-  {
-    if ((!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().envelopeSoundEffectLink)) && (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().envelopeSoundEffectPath)))
-    {
-      Message localMessage = this.mHD.obtainMessage(101);
-      localMessage.arg1 = 1;
-      localMessage.obj = BusinessActivityManager.getInstance().getModel().envelopeSoundEffectPath;
-      this.mHD.sendMessage(localMessage);
-      LogUtil.e(TAG, "playHolidayRedGift() play audio");
-    }
-  }
-  
-  public void playNaviEndContent()
-  {
-    if (!BNaviModuleManager.isAppForeground()) {
-      LogUtil.e(TAG, "playNaviEndContent() return for background.");
-    }
-    do
-    {
-      return;
-      if ((!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voiceLinkOnEndNavi)) && (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voicePathOnEndNavi)))
-      {
-        localMessage = this.mHD.obtainMessage(101);
-        localMessage.arg1 = 2;
-        localMessage.obj = BusinessActivityManager.getInstance().getModel().voicePathOnEndNavi;
-        this.mHD.sendMessageDelayed(localMessage, 1200L);
-        LogUtil.e(TAG, "playNaviEndContent() play audio");
-        return;
-      }
-    } while (TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voiceTextOnEndNavi));
-    Message localMessage = this.mHD.obtainMessage(100);
-    localMessage.obj = BusinessActivityManager.getInstance().getModel().voiceTextOnEndNavi;
-    this.mHD.sendMessageDelayed(localMessage, 1200L);
-    LogUtil.e(TAG, "playNaviEndContent() play text");
-  }
-  
-  public void playNaviStartContent()
-  {
-    if ((!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voiceLinkOnStartNavi)) && (!TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voicePathOnStartNavi)))
-    {
-      localMessage = this.mHD.obtainMessage(101);
-      localMessage.arg1 = 1;
-      localMessage.obj = BusinessActivityManager.getInstance().getModel().voicePathOnStartNavi;
-      this.mHD.sendMessageDelayed(localMessage, 1200L);
-      LogUtil.e(TAG, "playNaviStartContent() play audio");
-    }
-    while (TextUtils.isEmpty(BusinessActivityManager.getInstance().getModel().voiceTextOnStartNavi)) {
-      return;
-    }
-    Message localMessage = this.mHD.obtainMessage(100);
-    localMessage.obj = BusinessActivityManager.getInstance().getModel().voiceTextOnStartNavi;
-    this.mHD.sendMessageDelayed(localMessage, 1200L);
-    LogUtil.e(TAG, "playNaviStartContent() play text");
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/module/business/BusinessActivityPlayerManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

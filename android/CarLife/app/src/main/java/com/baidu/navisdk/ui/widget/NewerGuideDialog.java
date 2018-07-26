@@ -2,7 +2,6 @@ package com.baidu.navisdk.ui.widget;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -10,96 +9,83 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class NewerGuideDialog
-  extends Dialog
-{
-  private static final int HIGHT_VIEW_ID = 1;
-  private RelativeLayout mContent;
-  private Activity mContext;
-  private ImageView mInfoImageView;
-  
-  public NewerGuideDialog(Activity paramActivity)
-  {
-    super(paramActivity);
-    Object localObject = JarUtils.getResources().newTheme();
-    ((Resources.Theme)localObject).applyStyle(1711996937, true);
-    JarUtils.setDialogThemeField(this, (Resources.Theme)localObject);
-    localObject = JarUtils.inflate(paramActivity, 1711472689, null);
-    setContentView((View)localObject);
-    this.mContent = ((RelativeLayout)((View)localObject).findViewById(1711866080));
-    this.mInfoImageView = ((ImageView)((View)localObject).findViewById(1711866330));
-    getWindow().setLayout(-1, -1);
-    this.mContext = paramActivity;
-    ((View)localObject).setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        NewerGuideDialog.this.dissmss();
-      }
-    });
-  }
-  
-  public NewerGuideDialog addHighLightView(View paramView, int paramInt, boolean paramBoolean)
-  {
-    try
-    {
-      Object localObject1 = new Rect();
-      paramView.getGlobalVisibleRect((Rect)localObject1);
-      Object localObject2 = new ViewGroup.MarginLayoutParams(paramView.getLayoutParams());
-      Object localObject3 = new Rect();
-      this.mContext.getWindow().getDecorView().getWindowVisibleDisplayFrame((Rect)localObject3);
-      LogUtil.e("NewER", "status bar height2=" + ((Rect)localObject3).top);
-      ((ViewGroup.MarginLayoutParams)localObject2).setMargins(((Rect)localObject1).left, ((Rect)localObject1).top - ((Rect)localObject3).top, 0, 0);
-      localObject2 = new RelativeLayout.LayoutParams((ViewGroup.MarginLayoutParams)localObject2);
-      ((RelativeLayout.LayoutParams)localObject2).addRule(10);
-      ((RelativeLayout.LayoutParams)localObject2).addRule(9);
-      localObject3 = new ImageView(this.mContext);
-      localObject1 = Bitmap.createBitmap(((Rect)localObject1).right - ((Rect)localObject1).left, ((Rect)localObject1).bottom - ((Rect)localObject1).top, Bitmap.Config.ARGB_8888);
-      paramView.draw(new Canvas((Bitmap)localObject1));
-      ((ImageView)localObject3).setImageBitmap((Bitmap)localObject1);
-      ((ImageView)localObject3).setId(1);
-      if (this.mContent != null) {
-        this.mContent.addView((View)localObject3, (ViewGroup.LayoutParams)localObject2);
-      }
-      this.mInfoImageView.setBackgroundDrawable(JarUtils.getResources().getDrawable(paramInt));
-      paramView = new RelativeLayout.LayoutParams(-2, -2);
-      if (paramBoolean) {
-        paramView.addRule(3, 1);
-      }
-      for (;;)
-      {
-        paramView.addRule(5, 1);
-        this.mInfoImageView.setLayoutParams(paramView);
-        if (this.mContent == null) {
-          break;
+public class NewerGuideDialog extends Dialog {
+    private static final int HIGHT_VIEW_ID = 1;
+    private RelativeLayout mContent;
+    private Activity mContext;
+    private ImageView mInfoImageView;
+
+    /* renamed from: com.baidu.navisdk.ui.widget.NewerGuideDialog$1 */
+    class C46041 implements OnClickListener {
+        C46041() {
         }
-        this.mContent.requestLayout();
-        this.mContent.invalidate();
-        return this;
-        paramView.addRule(2, 1);
-      }
-      return this;
+
+        public void onClick(View v) {
+            NewerGuideDialog.this.dissmss();
+        }
     }
-    catch (Exception paramView) {}
-  }
-  
-  public void dissmss()
-  {
-    dismiss();
-  }
+
+    public NewerGuideDialog(Activity activity) {
+        super(activity);
+        Theme theme = JarUtils.getResources().newTheme();
+        theme.applyStyle(C4048R.style.BNDialog, true);
+        JarUtils.setDialogThemeField(this, theme);
+        View view = JarUtils.inflate(activity, C4048R.layout.nsdk_layout_newer_guide_dialog, null);
+        setContentView(view);
+        this.mContent = (RelativeLayout) view.findViewById(C4048R.id.content);
+        this.mInfoImageView = (ImageView) view.findViewById(C4048R.id.infor_imageview);
+        getWindow().setLayout(-1, -1);
+        this.mContext = activity;
+        view.setOnClickListener(new C46041());
+    }
+
+    public NewerGuideDialog addHighLightView(View view, int resid, boolean isBelow) {
+        try {
+            Rect rect = new Rect();
+            view.getGlobalVisibleRect(rect);
+            MarginLayoutParams margin = new MarginLayoutParams(view.getLayoutParams());
+            Rect localRect = new Rect();
+            this.mContext.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
+            LogUtil.m15791e("NewER", "status bar height2=" + localRect.top);
+            margin.setMargins(rect.left, rect.top - localRect.top, 0, 0);
+            LayoutParams layoutParams = new LayoutParams(margin);
+            layoutParams.addRule(10);
+            layoutParams.addRule(9);
+            ImageView hightLightView = new ImageView(this.mContext);
+            Bitmap bitmap = Bitmap.createBitmap(rect.right - rect.left, rect.bottom - rect.top, Config.ARGB_8888);
+            view.draw(new Canvas(bitmap));
+            hightLightView.setImageBitmap(bitmap);
+            hightLightView.setId(1);
+            if (this.mContent != null) {
+                this.mContent.addView(hightLightView, layoutParams);
+            }
+            this.mInfoImageView.setBackgroundDrawable(JarUtils.getResources().getDrawable(resid));
+            LayoutParams infoLayoutParams = new LayoutParams(-2, -2);
+            if (isBelow) {
+                infoLayoutParams.addRule(3, 1);
+            } else {
+                infoLayoutParams.addRule(2, 1);
+            }
+            infoLayoutParams.addRule(5, 1);
+            this.mInfoImageView.setLayoutParams(infoLayoutParams);
+            if (this.mContent != null) {
+                this.mContent.requestLayout();
+                this.mContent.invalidate();
+            }
+        } catch (Exception e) {
+        }
+        return this;
+    }
+
+    public void dissmss() {
+        dismiss();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/widget/NewerGuideDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

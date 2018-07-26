@@ -2,185 +2,103 @@ package com.android.volley.toolbox;
 
 import com.android.volley.Cache.Entry;
 import com.android.volley.NetworkResponse;
-import java.util.Date;
+import cz.msebera.android.httpclient.p158b.p294a.C6197b;
 import java.util.Map;
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 
-public class HttpHeaderParser
-{
-  public static Cache.Entry parseCacheHeaders(NetworkResponse paramNetworkResponse)
-  {
-    long l10 = System.currentTimeMillis();
-    Map localMap = paramNetworkResponse.headers;
-    long l3 = 0L;
-    long l6 = 0L;
-    long l7 = 0L;
-    long l8 = 0L;
-    long l9 = 0L;
-    l2 = 0L;
-    l1 = 0L;
-    int k = 0;
-    int m = 0;
-    int i = 0;
-    Object localObject1 = (String)localMap.get("Date");
-    if (localObject1 != null) {
-      l3 = parseDateAsEpoch((String)localObject1);
-    }
-    localObject1 = (String)localMap.get("Cache-Control");
-    l5 = l2;
-    l4 = l1;
-    int j;
-    Object localObject2;
-    if (localObject1 != null)
-    {
-      int n = 1;
-      localObject1 = ((String)localObject1).split(",");
-      j = 0;
-      k = n;
-      m = i;
-      l5 = l2;
-      l4 = l1;
-      if (j < localObject1.length)
-      {
-        localObject2 = localObject1[j].trim();
-        if ((((String)localObject2).equals("no-cache")) || (((String)localObject2).equals("no-store"))) {
-          return null;
+public class HttpHeaderParser {
+    public static Entry parseCacheHeaders(NetworkResponse response) {
+        long now = System.currentTimeMillis();
+        Map<String, String> headers = response.headers;
+        long serverDate = 0;
+        long lastModified = 0;
+        long serverExpires = 0;
+        long softExpire = 0;
+        long finalExpire = 0;
+        long maxAge = 0;
+        long staleWhileRevalidate = 0;
+        boolean hasCacheControl = false;
+        boolean mustRevalidate = false;
+        String headerValue = (String) headers.get("Date");
+        if (headerValue != null) {
+            serverDate = parseDateAsEpoch(headerValue);
         }
-        if (!((String)localObject2).startsWith("max-age=")) {}
-      }
-    }
-    for (;;)
-    {
-      try
-      {
-        l4 = Long.parseLong(((String)localObject2).substring(8));
-        l5 = l1;
-      }
-      catch (Exception localException2)
-      {
-        l4 = l2;
-        l5 = l1;
-        continue;
-      }
-      j += 1;
-      l2 = l4;
-      l1 = l5;
-      break;
-      if (((String)localObject2).startsWith("stale-while-revalidate=")) {}
-      try
-      {
-        l5 = Long.parseLong(((String)localObject2).substring(23));
-        l4 = l2;
-      }
-      catch (Exception localException1)
-      {
-        l4 = l2;
-        l5 = l1;
-      }
-      if (!((String)localObject2).equals("must-revalidate"))
-      {
-        l4 = l2;
-        l5 = l1;
-        if (!((String)localObject2).equals("proxy-revalidate")) {}
-      }
-      else
-      {
-        i = 1;
-        l4 = l2;
-        l5 = l1;
-        continue;
-        localObject1 = (String)localMap.get("Expires");
-        if (localObject1 != null) {
-          l7 = parseDateAsEpoch((String)localObject1);
+        headerValue = (String) headers.get("Cache-Control");
+        if (headerValue != null) {
+            hasCacheControl = true;
+            String[] tokens = headerValue.split(",");
+            for (String trim : tokens) {
+                String token = trim.trim();
+                if (token.equals(C6197b.f25310y) || token.equals(C6197b.f25309x)) {
+                    return null;
+                }
+                if (token.startsWith("max-age=")) {
+                    try {
+                        maxAge = Long.parseLong(token.substring(8));
+                    } catch (Exception e) {
+                    }
+                } else if (token.startsWith("stale-while-revalidate=")) {
+                    try {
+                        staleWhileRevalidate = Long.parseLong(token.substring(23));
+                    } catch (Exception e2) {
+                    }
+                } else if (token.equals(C6197b.f25276C) || token.equals(C6197b.f25277D)) {
+                    mustRevalidate = true;
+                }
+            }
         }
-        localObject1 = (String)localMap.get("Last-Modified");
-        if (localObject1 != null) {
-          l6 = parseDateAsEpoch((String)localObject1);
+        headerValue = (String) headers.get("Expires");
+        if (headerValue != null) {
+            serverExpires = parseDateAsEpoch(headerValue);
         }
-        localObject1 = (String)localMap.get("ETag");
-        if (k != 0)
-        {
-          l2 = l10 + 1000L * l5;
-          if (m != 0)
-          {
-            l1 = l2;
-            localObject2 = new Cache.Entry();
-            ((Cache.Entry)localObject2).data = paramNetworkResponse.data;
-            ((Cache.Entry)localObject2).etag = ((String)localObject1);
-            ((Cache.Entry)localObject2).softTtl = l2;
-            ((Cache.Entry)localObject2).ttl = l1;
-            ((Cache.Entry)localObject2).serverDate = l3;
-            ((Cache.Entry)localObject2).lastModified = l6;
-            ((Cache.Entry)localObject2).responseHeaders = localMap;
-            return (Cache.Entry)localObject2;
-          }
-          l1 = l2 + 1000L * l4;
-          continue;
+        headerValue = (String) headers.get("Last-Modified");
+        if (headerValue != null) {
+            lastModified = parseDateAsEpoch(headerValue);
         }
-        l1 = l9;
-        l2 = l8;
-        if (l3 > 0L)
-        {
-          l1 = l9;
-          l2 = l8;
-          if (l7 >= l3)
-          {
-            l2 = l10 + (l7 - l3);
-            l1 = l2;
-          }
+        String serverEtag = (String) headers.get("ETag");
+        if (hasCacheControl) {
+            softExpire = now + (1000 * maxAge);
+            finalExpire = mustRevalidate ? softExpire : softExpire + (1000 * staleWhileRevalidate);
+        } else if (serverDate > 0 && serverExpires >= serverDate) {
+            softExpire = now + (serverExpires - serverDate);
+            finalExpire = softExpire;
         }
-      }
+        Entry entry = new Entry();
+        entry.data = response.data;
+        entry.etag = serverEtag;
+        entry.softTtl = softExpire;
+        entry.ttl = finalExpire;
+        entry.serverDate = serverDate;
+        entry.lastModified = lastModified;
+        entry.responseHeaders = headers;
+        return entry;
     }
-  }
-  
-  public static String parseCharset(Map<String, String> paramMap)
-  {
-    return parseCharset(paramMap, "UTF-8");
-  }
-  
-  public static String parseCharset(Map<String, String> paramMap, String paramString)
-  {
-    Object localObject = (String)paramMap.get("Content-Type");
-    paramMap = paramString;
-    int i;
-    if (localObject != null)
-    {
-      localObject = ((String)localObject).split(";");
-      i = 1;
-    }
-    for (;;)
-    {
-      paramMap = paramString;
-      if (i < localObject.length)
-      {
-        paramMap = localObject[i].trim().split("=");
-        if ((paramMap.length == 2) && (paramMap[0].equals("charset"))) {
-          paramMap = paramMap[1];
+
+    public static long parseDateAsEpoch(String dateStr) {
+        try {
+            return DateUtils.parseDate(dateStr).getTime();
+        } catch (DateParseException e) {
+            return 0;
         }
-      }
-      else
-      {
-        return paramMap;
-      }
-      i += 1;
     }
-  }
-  
-  public static long parseDateAsEpoch(String paramString)
-  {
-    try
-    {
-      long l = DateUtils.parseDate(paramString).getTime();
-      return l;
+
+    public static String parseCharset(Map<String, String> headers, String defaultCharset) {
+        String contentType = (String) headers.get("Content-Type");
+        if (contentType == null) {
+            return defaultCharset;
+        }
+        String[] params = contentType.split(";");
+        for (int i = 1; i < params.length; i++) {
+            String[] pair = params[i].trim().split("=");
+            if (pair.length == 2 && pair[0].equals("charset")) {
+                return pair[1];
+            }
+        }
+        return defaultCharset;
     }
-    catch (DateParseException paramString) {}
-    return 0L;
-  }
+
+    public static String parseCharset(Map<String, String> headers) {
+        return parseCharset(headers, "UTF-8");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/toolbox/HttpHeaderParser.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

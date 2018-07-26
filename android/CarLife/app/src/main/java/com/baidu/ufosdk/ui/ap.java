@@ -1,28 +1,21 @@
 package com.baidu.ufosdk.ui;
 
-import android.os.Handler;
-import android.os.Message;
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class ap
-  implements Runnable
-{
-  ap(ao paramao) {}
-  
-  public final void run()
-  {
-    try
-    {
-      a.a(FeedbackInputActivity.g(ao.a(this.a)), "1");
-      FeedbackInputActivity.H(ao.a(this.a)).obtainMessage(7).sendToTarget();
-      return;
+/* compiled from: FeedbackInputActivity */
+final class ap implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ ao f21553a;
+
+    ap(ao aoVar) {
+        this.f21553a = aoVar;
     }
-    catch (Exception localException) {}
-  }
+
+    public final void run() {
+        try {
+            C5180a.m17571a(this.f21553a.f21552a.f21469M, "1");
+            this.f21553a.f21552a.ak.obtainMessage(7).sendToTarget();
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ap.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

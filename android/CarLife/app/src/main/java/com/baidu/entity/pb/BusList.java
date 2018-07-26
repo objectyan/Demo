@@ -7,1134 +7,1016 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class BusList
-  extends MessageMicro
-{
-  public static final int CONTENT_FIELD_NUMBER = 3;
-  public static final int ERROR_FIELD_NUMBER = 1;
-  public static final int OPTION_FIELD_NUMBER = 2;
-  private boolean a;
-  private Option b = null;
-  private List<Content> c = Collections.emptyList();
-  private boolean d;
-  private int e = 0;
-  private int f = -1;
-  
-  public static BusList parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new BusList().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static BusList parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (BusList)new BusList().mergeFrom(paramArrayOfByte);
-  }
-  
-  public BusList addContent(Content paramContent)
-  {
-    if (paramContent == null) {
-      return this;
-    }
-    if (this.c.isEmpty()) {
-      this.c = new ArrayList();
-    }
-    this.c.add(paramContent);
-    return this;
-  }
-  
-  public final BusList clear()
-  {
-    clearOption();
-    clearContent();
-    clearError();
-    this.f = -1;
-    return this;
-  }
-  
-  public BusList clearContent()
-  {
-    this.c = Collections.emptyList();
-    return this;
-  }
-  
-  public BusList clearError()
-  {
-    this.d = false;
-    this.e = 0;
-    return this;
-  }
-  
-  public BusList clearOption()
-  {
-    this.a = false;
-    this.b = null;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.f < 0) {
-      getSerializedSize();
-    }
-    return this.f;
-  }
-  
-  public Content getContent(int paramInt)
-  {
-    return (Content)this.c.get(paramInt);
-  }
-  
-  public int getContentCount()
-  {
-    return this.c.size();
-  }
-  
-  public List<Content> getContentList()
-  {
-    return this.c;
-  }
-  
-  public int getError()
-  {
-    return this.e;
-  }
-  
-  public Option getOption()
-  {
-    return this.b;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasError()) {
-      i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getError());
-    }
-    int j = i;
-    if (hasOption()) {
-      j = i + CodedOutputStreamMicro.computeMessageSize(2, getOption());
-    }
-    Iterator localIterator = getContentList().iterator();
-    while (localIterator.hasNext()) {
-      j = CodedOutputStreamMicro.computeMessageSize(3, (Content)localIterator.next()) + j;
-    }
-    this.f = j;
-    return j;
-  }
-  
-  public boolean hasError()
-  {
-    return this.d;
-  }
-  
-  public boolean hasOption()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public BusList mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      Object localObject;
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
-        return this;
-      case 8: 
-        setError(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 18: 
-        localObject = new Option();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setOption((Option)localObject);
-        break;
-      case 26: 
-        localObject = new Content();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        addContent((Content)localObject);
-      }
-    }
-  }
-  
-  public BusList setContent(int paramInt, Content paramContent)
-  {
-    if (paramContent == null) {
-      return this;
-    }
-    this.c.set(paramInt, paramContent);
-    return this;
-  }
-  
-  public BusList setError(int paramInt)
-  {
-    this.d = true;
-    this.e = paramInt;
-    return this;
-  }
-  
-  public BusList setOption(Option paramOption)
-  {
-    if (paramOption == null) {
-      return clearOption();
-    }
-    this.a = true;
-    this.b = paramOption;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasError()) {
-      paramCodedOutputStreamMicro.writeInt32(1, getError());
-    }
-    if (hasOption()) {
-      paramCodedOutputStreamMicro.writeMessage(2, getOption());
-    }
-    Iterator localIterator = getContentList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(3, (Content)localIterator.next());
-    }
-  }
-  
-  public static final class Content
-    extends MessageMicro
-  {
-    public static final int ENDTIME_FIELD_NUMBER = 6;
-    public static final int HAS_RTBUS_FIELD_NUMBER = 10;
-    public static final int HEADWAY_FIELD_NUMBER = 13;
-    public static final int ISMONTICKET_FIELD_NUMBER = 2;
-    public static final int KINDTYPE_FIELD_NUMBER = 4;
-    public static final int MAXPRICE_FIELD_NUMBER = 3;
-    public static final int NAME_FIELD_NUMBER = 1;
-    public static final int NEAREST_STATION_FIELD_NUMBER = 12;
-    public static final int PRIMARY_UID_FIELD_NUMBER = 9;
-    public static final int RTBUS_UPDATE_TIME_FIELD_NUMBER = 11;
-    public static final int STARTTIME_FIELD_NUMBER = 5;
-    public static final int TICKETPRICE_FIELD_NUMBER = 7;
-    public static final int UID_FIELD_NUMBER = 8;
-    private int A = -1;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private int d = 0;
-    private boolean e;
-    private int f = 0;
-    private boolean g;
-    private int h = 0;
-    private boolean i;
-    private String j = "";
-    private boolean k;
-    private String l = "";
-    private boolean m;
-    private int n = 0;
-    private boolean o;
-    private String p = "";
-    private boolean q;
-    private String r = "";
-    private boolean s;
-    private int t = 0;
-    private boolean u;
-    private int v = 0;
-    private boolean w;
-    private NearestStation x = null;
-    private boolean y;
-    private String z = "";
-    
-    public static Content parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Content().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Content parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Content)new Content().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Content clear()
-    {
-      clearName();
-      clearIsMonTicket();
-      clearMaxPrice();
-      clearKindtype();
-      clearStartTime();
-      clearEndTime();
-      clearTicketPrice();
-      clearUid();
-      clearPrimaryUid();
-      clearHasRtbus();
-      clearRtbusUpdateTime();
-      clearNearestStation();
-      clearHeadway();
-      this.A = -1;
-      return this;
-    }
-    
-    public Content clearEndTime()
-    {
-      this.k = false;
-      this.l = "";
-      return this;
-    }
-    
-    public Content clearHasRtbus()
-    {
-      this.s = false;
-      this.t = 0;
-      return this;
-    }
-    
-    public Content clearHeadway()
-    {
-      this.y = false;
-      this.z = "";
-      return this;
-    }
-    
-    public Content clearIsMonTicket()
-    {
-      this.c = false;
-      this.d = 0;
-      return this;
-    }
-    
-    public Content clearKindtype()
-    {
-      this.g = false;
-      this.h = 0;
-      return this;
-    }
-    
-    public Content clearMaxPrice()
-    {
-      this.e = false;
-      this.f = 0;
-      return this;
-    }
-    
-    public Content clearName()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public Content clearNearestStation()
-    {
-      this.w = false;
-      this.x = null;
-      return this;
-    }
-    
-    public Content clearPrimaryUid()
-    {
-      this.q = false;
-      this.r = "";
-      return this;
-    }
-    
-    public Content clearRtbusUpdateTime()
-    {
-      this.u = false;
-      this.v = 0;
-      return this;
-    }
-    
-    public Content clearStartTime()
-    {
-      this.i = false;
-      this.j = "";
-      return this;
-    }
-    
-    public Content clearTicketPrice()
-    {
-      this.m = false;
-      this.n = 0;
-      return this;
-    }
-    
-    public Content clearUid()
-    {
-      this.o = false;
-      this.p = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.A < 0) {
-        getSerializedSize();
-      }
-      return this.A;
-    }
-    
-    public String getEndTime()
-    {
-      return this.l;
-    }
-    
-    public int getHasRtbus()
-    {
-      return this.t;
-    }
-    
-    public String getHeadway()
-    {
-      return this.z;
-    }
-    
-    public int getIsMonTicket()
-    {
-      return this.d;
-    }
-    
-    public int getKindtype()
-    {
-      return this.h;
-    }
-    
-    public int getMaxPrice()
-    {
-      return this.f;
-    }
-    
-    public String getName()
-    {
-      return this.b;
-    }
-    
-    public NearestStation getNearestStation()
-    {
-      return this.x;
-    }
-    
-    public String getPrimaryUid()
-    {
-      return this.r;
-    }
-    
-    public int getRtbusUpdateTime()
-    {
-      return this.v;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasName()) {
-        i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getName());
-      }
-      int i1 = i2;
-      if (hasIsMonTicket()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(2, getIsMonTicket());
-      }
-      i2 = i1;
-      if (hasMaxPrice()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getMaxPrice());
-      }
-      i1 = i2;
-      if (hasKindtype()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(4, getKindtype());
-      }
-      i2 = i1;
-      if (hasStartTime()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getStartTime());
-      }
-      i1 = i2;
-      if (hasEndTime()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getEndTime());
-      }
-      i2 = i1;
-      if (hasTicketPrice()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(7, getTicketPrice());
-      }
-      i1 = i2;
-      if (hasUid()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getUid());
-      }
-      i2 = i1;
-      if (hasPrimaryUid()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getPrimaryUid());
-      }
-      i1 = i2;
-      if (hasHasRtbus()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(10, getHasRtbus());
-      }
-      i2 = i1;
-      if (hasRtbusUpdateTime()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(11, getRtbusUpdateTime());
-      }
-      i1 = i2;
-      if (hasNearestStation()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(12, getNearestStation());
-      }
-      i2 = i1;
-      if (hasHeadway()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(13, getHeadway());
-      }
-      this.A = i2;
-      return i2;
-    }
-    
-    public String getStartTime()
-    {
-      return this.j;
-    }
-    
-    public int getTicketPrice()
-    {
-      return this.n;
-    }
-    
-    public String getUid()
-    {
-      return this.p;
-    }
-    
-    public boolean hasEndTime()
-    {
-      return this.k;
-    }
-    
-    public boolean hasHasRtbus()
-    {
-      return this.s;
-    }
-    
-    public boolean hasHeadway()
-    {
-      return this.y;
-    }
-    
-    public boolean hasIsMonTicket()
-    {
-      return this.c;
-    }
-    
-    public boolean hasKindtype()
-    {
-      return this.g;
-    }
-    
-    public boolean hasMaxPrice()
-    {
-      return this.e;
-    }
-    
-    public boolean hasName()
-    {
-      return this.a;
-    }
-    
-    public boolean hasNearestStation()
-    {
-      return this.w;
-    }
-    
-    public boolean hasPrimaryUid()
-    {
-      return this.q;
-    }
-    
-    public boolean hasRtbusUpdateTime()
-    {
-      return this.u;
-    }
-    
-    public boolean hasStartTime()
-    {
-      return this.i;
-    }
-    
-    public boolean hasTicketPrice()
-    {
-      return this.m;
-    }
-    
-    public boolean hasUid()
-    {
-      return this.o;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Content mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setName(paramCodedInputStreamMicro.readString());
-          break;
-        case 16: 
-          setIsMonTicket(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 24: 
-          setMaxPrice(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 32: 
-          setKindtype(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 42: 
-          setStartTime(paramCodedInputStreamMicro.readString());
-          break;
-        case 50: 
-          setEndTime(paramCodedInputStreamMicro.readString());
-          break;
-        case 56: 
-          setTicketPrice(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 66: 
-          setUid(paramCodedInputStreamMicro.readString());
-          break;
-        case 74: 
-          setPrimaryUid(paramCodedInputStreamMicro.readString());
-          break;
-        case 80: 
-          setHasRtbus(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 88: 
-          setRtbusUpdateTime(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 98: 
-          NearestStation localNearestStation = new NearestStation();
-          paramCodedInputStreamMicro.readMessage(localNearestStation);
-          setNearestStation(localNearestStation);
-          break;
-        case 106: 
-          setHeadway(paramCodedInputStreamMicro.readString());
+public final class BusList extends MessageMicro {
+    public static final int CONTENT_FIELD_NUMBER = 3;
+    public static final int ERROR_FIELD_NUMBER = 1;
+    public static final int OPTION_FIELD_NUMBER = 2;
+    /* renamed from: a */
+    private boolean f10402a;
+    /* renamed from: b */
+    private Option f10403b = null;
+    /* renamed from: c */
+    private List<Content> f10404c = Collections.emptyList();
+    /* renamed from: d */
+    private boolean f10405d;
+    /* renamed from: e */
+    private int f10406e = 0;
+    /* renamed from: f */
+    private int f10407f = -1;
+
+    public static final class Content extends MessageMicro {
+        public static final int ENDTIME_FIELD_NUMBER = 6;
+        public static final int HAS_RTBUS_FIELD_NUMBER = 10;
+        public static final int HEADWAY_FIELD_NUMBER = 13;
+        public static final int ISMONTICKET_FIELD_NUMBER = 2;
+        public static final int KINDTYPE_FIELD_NUMBER = 4;
+        public static final int MAXPRICE_FIELD_NUMBER = 3;
+        public static final int NAME_FIELD_NUMBER = 1;
+        public static final int NEAREST_STATION_FIELD_NUMBER = 12;
+        public static final int PRIMARY_UID_FIELD_NUMBER = 9;
+        public static final int RTBUS_UPDATE_TIME_FIELD_NUMBER = 11;
+        public static final int STARTTIME_FIELD_NUMBER = 5;
+        public static final int TICKETPRICE_FIELD_NUMBER = 7;
+        public static final int UID_FIELD_NUMBER = 8;
+        /* renamed from: A */
+        private int f10366A = -1;
+        /* renamed from: a */
+        private boolean f10367a;
+        /* renamed from: b */
+        private String f10368b = "";
+        /* renamed from: c */
+        private boolean f10369c;
+        /* renamed from: d */
+        private int f10370d = 0;
+        /* renamed from: e */
+        private boolean f10371e;
+        /* renamed from: f */
+        private int f10372f = 0;
+        /* renamed from: g */
+        private boolean f10373g;
+        /* renamed from: h */
+        private int f10374h = 0;
+        /* renamed from: i */
+        private boolean f10375i;
+        /* renamed from: j */
+        private String f10376j = "";
+        /* renamed from: k */
+        private boolean f10377k;
+        /* renamed from: l */
+        private String f10378l = "";
+        /* renamed from: m */
+        private boolean f10379m;
+        /* renamed from: n */
+        private int f10380n = 0;
+        /* renamed from: o */
+        private boolean f10381o;
+        /* renamed from: p */
+        private String f10382p = "";
+        /* renamed from: q */
+        private boolean f10383q;
+        /* renamed from: r */
+        private String f10384r = "";
+        /* renamed from: s */
+        private boolean f10385s;
+        /* renamed from: t */
+        private int f10386t = 0;
+        /* renamed from: u */
+        private boolean f10387u;
+        /* renamed from: v */
+        private int f10388v = 0;
+        /* renamed from: w */
+        private boolean f10389w;
+        /* renamed from: x */
+        private NearestStation f10390x = null;
+        /* renamed from: y */
+        private boolean f10391y;
+        /* renamed from: z */
+        private String f10392z = "";
+
+        public static final class NearestStation extends MessageMicro {
+            public static final int NAME_FIELD_NUMBER = 1;
+            public static final int TIP_RTBUS_FIELD_NUMBER = 2;
+            /* renamed from: a */
+            private boolean f10361a;
+            /* renamed from: b */
+            private String f10362b = "";
+            /* renamed from: c */
+            private boolean f10363c;
+            /* renamed from: d */
+            private String f10364d = "";
+            /* renamed from: e */
+            private int f10365e = -1;
+
+            public static NearestStation parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new NearestStation().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static NearestStation parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (NearestStation) new NearestStation().mergeFrom(bArr);
+            }
+
+            public final NearestStation clear() {
+                clearName();
+                clearTipRtbus();
+                this.f10365e = -1;
+                return this;
+            }
+
+            public NearestStation clearName() {
+                this.f10361a = false;
+                this.f10362b = "";
+                return this;
+            }
+
+            public NearestStation clearTipRtbus() {
+                this.f10363c = false;
+                this.f10364d = "";
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f10365e < 0) {
+                    getSerializedSize();
+                }
+                return this.f10365e;
+            }
+
+            public String getName() {
+                return this.f10362b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasName()) {
+                    i = 0 + CodedOutputStreamMicro.computeStringSize(1, getName());
+                }
+                if (hasTipRtbus()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getTipRtbus());
+                }
+                this.f10365e = i;
+                return i;
+            }
+
+            public String getTipRtbus() {
+                return this.f10364d;
+            }
+
+            public boolean hasName() {
+                return this.f10361a;
+            }
+
+            public boolean hasTipRtbus() {
+                return this.f10363c;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public NearestStation mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 10:
+                            setName(codedInputStreamMicro.readString());
+                            continue;
+                        case 18:
+                            setTipRtbus(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public NearestStation setName(String str) {
+                this.f10361a = true;
+                this.f10362b = str;
+                return this;
+            }
+
+            public NearestStation setTipRtbus(String str) {
+                this.f10363c = true;
+                this.f10364d = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasName()) {
+                    codedOutputStreamMicro.writeString(1, getName());
+                }
+                if (hasTipRtbus()) {
+                    codedOutputStreamMicro.writeString(2, getTipRtbus());
+                }
+            }
         }
-      }
-    }
-    
-    public Content setEndTime(String paramString)
-    {
-      this.k = true;
-      this.l = paramString;
-      return this;
-    }
-    
-    public Content setHasRtbus(int paramInt)
-    {
-      this.s = true;
-      this.t = paramInt;
-      return this;
-    }
-    
-    public Content setHeadway(String paramString)
-    {
-      this.y = true;
-      this.z = paramString;
-      return this;
-    }
-    
-    public Content setIsMonTicket(int paramInt)
-    {
-      this.c = true;
-      this.d = paramInt;
-      return this;
-    }
-    
-    public Content setKindtype(int paramInt)
-    {
-      this.g = true;
-      this.h = paramInt;
-      return this;
-    }
-    
-    public Content setMaxPrice(int paramInt)
-    {
-      this.e = true;
-      this.f = paramInt;
-      return this;
-    }
-    
-    public Content setName(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
-    }
-    
-    public Content setNearestStation(NearestStation paramNearestStation)
-    {
-      if (paramNearestStation == null) {
-        return clearNearestStation();
-      }
-      this.w = true;
-      this.x = paramNearestStation;
-      return this;
-    }
-    
-    public Content setPrimaryUid(String paramString)
-    {
-      this.q = true;
-      this.r = paramString;
-      return this;
-    }
-    
-    public Content setRtbusUpdateTime(int paramInt)
-    {
-      this.u = true;
-      this.v = paramInt;
-      return this;
-    }
-    
-    public Content setStartTime(String paramString)
-    {
-      this.i = true;
-      this.j = paramString;
-      return this;
-    }
-    
-    public Content setTicketPrice(int paramInt)
-    {
-      this.m = true;
-      this.n = paramInt;
-      return this;
-    }
-    
-    public Content setUid(String paramString)
-    {
-      this.o = true;
-      this.p = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasName()) {
-        paramCodedOutputStreamMicro.writeString(1, getName());
-      }
-      if (hasIsMonTicket()) {
-        paramCodedOutputStreamMicro.writeInt32(2, getIsMonTicket());
-      }
-      if (hasMaxPrice()) {
-        paramCodedOutputStreamMicro.writeInt32(3, getMaxPrice());
-      }
-      if (hasKindtype()) {
-        paramCodedOutputStreamMicro.writeInt32(4, getKindtype());
-      }
-      if (hasStartTime()) {
-        paramCodedOutputStreamMicro.writeString(5, getStartTime());
-      }
-      if (hasEndTime()) {
-        paramCodedOutputStreamMicro.writeString(6, getEndTime());
-      }
-      if (hasTicketPrice()) {
-        paramCodedOutputStreamMicro.writeInt32(7, getTicketPrice());
-      }
-      if (hasUid()) {
-        paramCodedOutputStreamMicro.writeString(8, getUid());
-      }
-      if (hasPrimaryUid()) {
-        paramCodedOutputStreamMicro.writeString(9, getPrimaryUid());
-      }
-      if (hasHasRtbus()) {
-        paramCodedOutputStreamMicro.writeInt32(10, getHasRtbus());
-      }
-      if (hasRtbusUpdateTime()) {
-        paramCodedOutputStreamMicro.writeInt32(11, getRtbusUpdateTime());
-      }
-      if (hasNearestStation()) {
-        paramCodedOutputStreamMicro.writeMessage(12, getNearestStation());
-      }
-      if (hasHeadway()) {
-        paramCodedOutputStreamMicro.writeString(13, getHeadway());
-      }
-    }
-    
-    public static final class NearestStation
-      extends MessageMicro
-    {
-      public static final int NAME_FIELD_NUMBER = 1;
-      public static final int TIP_RTBUS_FIELD_NUMBER = 2;
-      private boolean a;
-      private String b = "";
-      private boolean c;
-      private String d = "";
-      private int e = -1;
-      
-      public static NearestStation parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new NearestStation().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static NearestStation parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (NearestStation)new NearestStation().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final NearestStation clear()
-      {
-        clearName();
-        clearTipRtbus();
-        this.e = -1;
-        return this;
-      }
-      
-      public NearestStation clearName()
-      {
-        this.a = false;
-        this.b = "";
-        return this;
-      }
-      
-      public NearestStation clearTipRtbus()
-      {
-        this.c = false;
-        this.d = "";
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.e < 0) {
-          getSerializedSize();
+
+        public static Content parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Content().mergeFrom(codedInputStreamMicro);
         }
-        return this.e;
-      }
-      
-      public String getName()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i = 0;
-        if (hasName()) {
-          i = 0 + CodedOutputStreamMicro.computeStringSize(1, getName());
+
+        public static Content parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Content) new Content().mergeFrom(bArr);
         }
-        int j = i;
-        if (hasTipRtbus()) {
-          j = i + CodedOutputStreamMicro.computeStringSize(2, getTipRtbus());
-        }
-        this.e = j;
-        return j;
-      }
-      
-      public String getTipRtbus()
-      {
-        return this.d;
-      }
-      
-      public boolean hasName()
-      {
-        return this.a;
-      }
-      
-      public boolean hasTipRtbus()
-      {
-        return this.c;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public NearestStation mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
+
+        public final Content clear() {
+            clearName();
+            clearIsMonTicket();
+            clearMaxPrice();
+            clearKindtype();
+            clearStartTime();
+            clearEndTime();
+            clearTicketPrice();
+            clearUid();
+            clearPrimaryUid();
+            clearHasRtbus();
+            clearRtbusUpdateTime();
+            clearNearestStation();
+            clearHeadway();
+            this.f10366A = -1;
             return this;
-          case 10: 
-            setName(paramCodedInputStreamMicro.readString());
-            break;
-          case 18: 
-            setTipRtbus(paramCodedInputStreamMicro.readString());
-          }
         }
-      }
-      
-      public NearestStation setName(String paramString)
-      {
-        this.a = true;
-        this.b = paramString;
+
+        public Content clearEndTime() {
+            this.f10377k = false;
+            this.f10378l = "";
+            return this;
+        }
+
+        public Content clearHasRtbus() {
+            this.f10385s = false;
+            this.f10386t = 0;
+            return this;
+        }
+
+        public Content clearHeadway() {
+            this.f10391y = false;
+            this.f10392z = "";
+            return this;
+        }
+
+        public Content clearIsMonTicket() {
+            this.f10369c = false;
+            this.f10370d = 0;
+            return this;
+        }
+
+        public Content clearKindtype() {
+            this.f10373g = false;
+            this.f10374h = 0;
+            return this;
+        }
+
+        public Content clearMaxPrice() {
+            this.f10371e = false;
+            this.f10372f = 0;
+            return this;
+        }
+
+        public Content clearName() {
+            this.f10367a = false;
+            this.f10368b = "";
+            return this;
+        }
+
+        public Content clearNearestStation() {
+            this.f10389w = false;
+            this.f10390x = null;
+            return this;
+        }
+
+        public Content clearPrimaryUid() {
+            this.f10383q = false;
+            this.f10384r = "";
+            return this;
+        }
+
+        public Content clearRtbusUpdateTime() {
+            this.f10387u = false;
+            this.f10388v = 0;
+            return this;
+        }
+
+        public Content clearStartTime() {
+            this.f10375i = false;
+            this.f10376j = "";
+            return this;
+        }
+
+        public Content clearTicketPrice() {
+            this.f10379m = false;
+            this.f10380n = 0;
+            return this;
+        }
+
+        public Content clearUid() {
+            this.f10381o = false;
+            this.f10382p = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f10366A < 0) {
+                getSerializedSize();
+            }
+            return this.f10366A;
+        }
+
+        public String getEndTime() {
+            return this.f10378l;
+        }
+
+        public int getHasRtbus() {
+            return this.f10386t;
+        }
+
+        public String getHeadway() {
+            return this.f10392z;
+        }
+
+        public int getIsMonTicket() {
+            return this.f10370d;
+        }
+
+        public int getKindtype() {
+            return this.f10374h;
+        }
+
+        public int getMaxPrice() {
+            return this.f10372f;
+        }
+
+        public String getName() {
+            return this.f10368b;
+        }
+
+        public NearestStation getNearestStation() {
+            return this.f10390x;
+        }
+
+        public String getPrimaryUid() {
+            return this.f10384r;
+        }
+
+        public int getRtbusUpdateTime() {
+            return this.f10388v;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasName()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getName());
+            }
+            if (hasIsMonTicket()) {
+                i += CodedOutputStreamMicro.computeInt32Size(2, getIsMonTicket());
+            }
+            if (hasMaxPrice()) {
+                i += CodedOutputStreamMicro.computeInt32Size(3, getMaxPrice());
+            }
+            if (hasKindtype()) {
+                i += CodedOutputStreamMicro.computeInt32Size(4, getKindtype());
+            }
+            if (hasStartTime()) {
+                i += CodedOutputStreamMicro.computeStringSize(5, getStartTime());
+            }
+            if (hasEndTime()) {
+                i += CodedOutputStreamMicro.computeStringSize(6, getEndTime());
+            }
+            if (hasTicketPrice()) {
+                i += CodedOutputStreamMicro.computeInt32Size(7, getTicketPrice());
+            }
+            if (hasUid()) {
+                i += CodedOutputStreamMicro.computeStringSize(8, getUid());
+            }
+            if (hasPrimaryUid()) {
+                i += CodedOutputStreamMicro.computeStringSize(9, getPrimaryUid());
+            }
+            if (hasHasRtbus()) {
+                i += CodedOutputStreamMicro.computeInt32Size(10, getHasRtbus());
+            }
+            if (hasRtbusUpdateTime()) {
+                i += CodedOutputStreamMicro.computeInt32Size(11, getRtbusUpdateTime());
+            }
+            if (hasNearestStation()) {
+                i += CodedOutputStreamMicro.computeMessageSize(12, getNearestStation());
+            }
+            if (hasHeadway()) {
+                i += CodedOutputStreamMicro.computeStringSize(13, getHeadway());
+            }
+            this.f10366A = i;
+            return i;
+        }
+
+        public String getStartTime() {
+            return this.f10376j;
+        }
+
+        public int getTicketPrice() {
+            return this.f10380n;
+        }
+
+        public String getUid() {
+            return this.f10382p;
+        }
+
+        public boolean hasEndTime() {
+            return this.f10377k;
+        }
+
+        public boolean hasHasRtbus() {
+            return this.f10385s;
+        }
+
+        public boolean hasHeadway() {
+            return this.f10391y;
+        }
+
+        public boolean hasIsMonTicket() {
+            return this.f10369c;
+        }
+
+        public boolean hasKindtype() {
+            return this.f10373g;
+        }
+
+        public boolean hasMaxPrice() {
+            return this.f10371e;
+        }
+
+        public boolean hasName() {
+            return this.f10367a;
+        }
+
+        public boolean hasNearestStation() {
+            return this.f10389w;
+        }
+
+        public boolean hasPrimaryUid() {
+            return this.f10383q;
+        }
+
+        public boolean hasRtbusUpdateTime() {
+            return this.f10387u;
+        }
+
+        public boolean hasStartTime() {
+            return this.f10375i;
+        }
+
+        public boolean hasTicketPrice() {
+            return this.f10379m;
+        }
+
+        public boolean hasUid() {
+            return this.f10381o;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Content mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setName(codedInputStreamMicro.readString());
+                        continue;
+                    case 16:
+                        setIsMonTicket(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 24:
+                        setMaxPrice(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 32:
+                        setKindtype(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 42:
+                        setStartTime(codedInputStreamMicro.readString());
+                        continue;
+                    case 50:
+                        setEndTime(codedInputStreamMicro.readString());
+                        continue;
+                    case 56:
+                        setTicketPrice(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 66:
+                        setUid(codedInputStreamMicro.readString());
+                        continue;
+                    case 74:
+                        setPrimaryUid(codedInputStreamMicro.readString());
+                        continue;
+                    case 80:
+                        setHasRtbus(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 88:
+                        setRtbusUpdateTime(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 98:
+                        MessageMicro nearestStation = new NearestStation();
+                        codedInputStreamMicro.readMessage(nearestStation);
+                        setNearestStation(nearestStation);
+                        continue;
+                    case 106:
+                        setHeadway(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Content setEndTime(String str) {
+            this.f10377k = true;
+            this.f10378l = str;
+            return this;
+        }
+
+        public Content setHasRtbus(int i) {
+            this.f10385s = true;
+            this.f10386t = i;
+            return this;
+        }
+
+        public Content setHeadway(String str) {
+            this.f10391y = true;
+            this.f10392z = str;
+            return this;
+        }
+
+        public Content setIsMonTicket(int i) {
+            this.f10369c = true;
+            this.f10370d = i;
+            return this;
+        }
+
+        public Content setKindtype(int i) {
+            this.f10373g = true;
+            this.f10374h = i;
+            return this;
+        }
+
+        public Content setMaxPrice(int i) {
+            this.f10371e = true;
+            this.f10372f = i;
+            return this;
+        }
+
+        public Content setName(String str) {
+            this.f10367a = true;
+            this.f10368b = str;
+            return this;
+        }
+
+        public Content setNearestStation(NearestStation nearestStation) {
+            if (nearestStation == null) {
+                return clearNearestStation();
+            }
+            this.f10389w = true;
+            this.f10390x = nearestStation;
+            return this;
+        }
+
+        public Content setPrimaryUid(String str) {
+            this.f10383q = true;
+            this.f10384r = str;
+            return this;
+        }
+
+        public Content setRtbusUpdateTime(int i) {
+            this.f10387u = true;
+            this.f10388v = i;
+            return this;
+        }
+
+        public Content setStartTime(String str) {
+            this.f10375i = true;
+            this.f10376j = str;
+            return this;
+        }
+
+        public Content setTicketPrice(int i) {
+            this.f10379m = true;
+            this.f10380n = i;
+            return this;
+        }
+
+        public Content setUid(String str) {
+            this.f10381o = true;
+            this.f10382p = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasName()) {
+                codedOutputStreamMicro.writeString(1, getName());
+            }
+            if (hasIsMonTicket()) {
+                codedOutputStreamMicro.writeInt32(2, getIsMonTicket());
+            }
+            if (hasMaxPrice()) {
+                codedOutputStreamMicro.writeInt32(3, getMaxPrice());
+            }
+            if (hasKindtype()) {
+                codedOutputStreamMicro.writeInt32(4, getKindtype());
+            }
+            if (hasStartTime()) {
+                codedOutputStreamMicro.writeString(5, getStartTime());
+            }
+            if (hasEndTime()) {
+                codedOutputStreamMicro.writeString(6, getEndTime());
+            }
+            if (hasTicketPrice()) {
+                codedOutputStreamMicro.writeInt32(7, getTicketPrice());
+            }
+            if (hasUid()) {
+                codedOutputStreamMicro.writeString(8, getUid());
+            }
+            if (hasPrimaryUid()) {
+                codedOutputStreamMicro.writeString(9, getPrimaryUid());
+            }
+            if (hasHasRtbus()) {
+                codedOutputStreamMicro.writeInt32(10, getHasRtbus());
+            }
+            if (hasRtbusUpdateTime()) {
+                codedOutputStreamMicro.writeInt32(11, getRtbusUpdateTime());
+            }
+            if (hasNearestStation()) {
+                codedOutputStreamMicro.writeMessage(12, getNearestStation());
+            }
+            if (hasHeadway()) {
+                codedOutputStreamMicro.writeString(13, getHeadway());
+            }
+        }
+    }
+
+    public static final class Option extends MessageMicro {
+        public static final int AREAID_FIELD_NUMBER = 4;
+        public static final int COUNT_FIELD_NUMBER = 2;
+        public static final int TOTAL_BUSLINE_NUM_FIELD_NUMBER = 3;
+        public static final int TOTAL_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f10393a;
+        /* renamed from: b */
+        private int f10394b = 0;
+        /* renamed from: c */
+        private boolean f10395c;
+        /* renamed from: d */
+        private int f10396d = 0;
+        /* renamed from: e */
+        private boolean f10397e;
+        /* renamed from: f */
+        private int f10398f = 0;
+        /* renamed from: g */
+        private boolean f10399g;
+        /* renamed from: h */
+        private int f10400h = 0;
+        /* renamed from: i */
+        private int f10401i = -1;
+
+        public static Option parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Option().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Option parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Option) new Option().mergeFrom(bArr);
+        }
+
+        public final Option clear() {
+            clearTotal();
+            clearCount();
+            clearTotalBuslineNum();
+            clearAreaID();
+            this.f10401i = -1;
+            return this;
+        }
+
+        public Option clearAreaID() {
+            this.f10399g = false;
+            this.f10400h = 0;
+            return this;
+        }
+
+        public Option clearCount() {
+            this.f10395c = false;
+            this.f10396d = 0;
+            return this;
+        }
+
+        public Option clearTotal() {
+            this.f10393a = false;
+            this.f10394b = 0;
+            return this;
+        }
+
+        public Option clearTotalBuslineNum() {
+            this.f10397e = false;
+            this.f10398f = 0;
+            return this;
+        }
+
+        public int getAreaID() {
+            return this.f10400h;
+        }
+
+        public int getCachedSize() {
+            if (this.f10401i < 0) {
+                getSerializedSize();
+            }
+            return this.f10401i;
+        }
+
+        public int getCount() {
+            return this.f10396d;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasTotal()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getTotal());
+            }
+            if (hasCount()) {
+                i += CodedOutputStreamMicro.computeInt32Size(2, getCount());
+            }
+            if (hasTotalBuslineNum()) {
+                i += CodedOutputStreamMicro.computeInt32Size(3, getTotalBuslineNum());
+            }
+            if (hasAreaID()) {
+                i += CodedOutputStreamMicro.computeInt32Size(4, getAreaID());
+            }
+            this.f10401i = i;
+            return i;
+        }
+
+        public int getTotal() {
+            return this.f10394b;
+        }
+
+        public int getTotalBuslineNum() {
+            return this.f10398f;
+        }
+
+        public boolean hasAreaID() {
+            return this.f10399g;
+        }
+
+        public boolean hasCount() {
+            return this.f10395c;
+        }
+
+        public boolean hasTotal() {
+            return this.f10393a;
+        }
+
+        public boolean hasTotalBuslineNum() {
+            return this.f10397e;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Option mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setTotal(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 16:
+                        setCount(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 24:
+                        setTotalBuslineNum(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 32:
+                        setAreaID(codedInputStreamMicro.readInt32());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Option setAreaID(int i) {
+            this.f10399g = true;
+            this.f10400h = i;
+            return this;
+        }
+
+        public Option setCount(int i) {
+            this.f10395c = true;
+            this.f10396d = i;
+            return this;
+        }
+
+        public Option setTotal(int i) {
+            this.f10393a = true;
+            this.f10394b = i;
+            return this;
+        }
+
+        public Option setTotalBuslineNum(int i) {
+            this.f10397e = true;
+            this.f10398f = i;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasTotal()) {
+                codedOutputStreamMicro.writeInt32(1, getTotal());
+            }
+            if (hasCount()) {
+                codedOutputStreamMicro.writeInt32(2, getCount());
+            }
+            if (hasTotalBuslineNum()) {
+                codedOutputStreamMicro.writeInt32(3, getTotalBuslineNum());
+            }
+            if (hasAreaID()) {
+                codedOutputStreamMicro.writeInt32(4, getAreaID());
+            }
+        }
+    }
+
+    public static BusList parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new BusList().mergeFrom(codedInputStreamMicro);
+    }
+
+    public static BusList parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (BusList) new BusList().mergeFrom(bArr);
+    }
+
+    public BusList addContent(Content content) {
+        if (content != null) {
+            if (this.f10404c.isEmpty()) {
+                this.f10404c = new ArrayList();
+            }
+            this.f10404c.add(content);
+        }
         return this;
-      }
-      
-      public NearestStation setTipRtbus(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
+    }
+
+    public final BusList clear() {
+        clearOption();
+        clearContent();
+        clearError();
+        this.f10407f = -1;
         return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasName()) {
-          paramCodedOutputStreamMicro.writeString(1, getName());
+    }
+
+    public BusList clearContent() {
+        this.f10404c = Collections.emptyList();
+        return this;
+    }
+
+    public BusList clearError() {
+        this.f10405d = false;
+        this.f10406e = 0;
+        return this;
+    }
+
+    public BusList clearOption() {
+        this.f10402a = false;
+        this.f10403b = null;
+        return this;
+    }
+
+    public int getCachedSize() {
+        if (this.f10407f < 0) {
+            getSerializedSize();
         }
-        if (hasTipRtbus()) {
-          paramCodedOutputStreamMicro.writeString(2, getTipRtbus());
+        return this.f10407f;
+    }
+
+    public Content getContent(int i) {
+        return (Content) this.f10404c.get(i);
+    }
+
+    public int getContentCount() {
+        return this.f10404c.size();
+    }
+
+    public List<Content> getContentList() {
+        return this.f10404c;
+    }
+
+    public int getError() {
+        return this.f10406e;
+    }
+
+    public Option getOption() {
+        return this.f10403b;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasError()) {
+            i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getError());
         }
-      }
-    }
-  }
-  
-  public static final class Option
-    extends MessageMicro
-  {
-    public static final int AREAID_FIELD_NUMBER = 4;
-    public static final int COUNT_FIELD_NUMBER = 2;
-    public static final int TOTAL_BUSLINE_NUM_FIELD_NUMBER = 3;
-    public static final int TOTAL_FIELD_NUMBER = 1;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private int d = 0;
-    private boolean e;
-    private int f = 0;
-    private boolean g;
-    private int h = 0;
-    private int i = -1;
-    
-    public static Option parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Option().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Option parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Option)new Option().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Option clear()
-    {
-      clearTotal();
-      clearCount();
-      clearTotalBuslineNum();
-      clearAreaID();
-      this.i = -1;
-      return this;
-    }
-    
-    public Option clearAreaID()
-    {
-      this.g = false;
-      this.h = 0;
-      return this;
-    }
-    
-    public Option clearCount()
-    {
-      this.c = false;
-      this.d = 0;
-      return this;
-    }
-    
-    public Option clearTotal()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public Option clearTotalBuslineNum()
-    {
-      this.e = false;
-      this.f = 0;
-      return this;
-    }
-    
-    public int getAreaID()
-    {
-      return this.h;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.i < 0) {
-        getSerializedSize();
-      }
-      return this.i;
-    }
-    
-    public int getCount()
-    {
-      return this.d;
-    }
-    
-    public int getSerializedSize()
-    {
-      int k = 0;
-      if (hasTotal()) {
-        k = 0 + CodedOutputStreamMicro.computeInt32Size(1, getTotal());
-      }
-      int j = k;
-      if (hasCount()) {
-        j = k + CodedOutputStreamMicro.computeInt32Size(2, getCount());
-      }
-      k = j;
-      if (hasTotalBuslineNum()) {
-        k = j + CodedOutputStreamMicro.computeInt32Size(3, getTotalBuslineNum());
-      }
-      j = k;
-      if (hasAreaID()) {
-        j = k + CodedOutputStreamMicro.computeInt32Size(4, getAreaID());
-      }
-      this.i = j;
-      return j;
-    }
-    
-    public int getTotal()
-    {
-      return this.b;
-    }
-    
-    public int getTotalBuslineNum()
-    {
-      return this.f;
-    }
-    
-    public boolean hasAreaID()
-    {
-      return this.g;
-    }
-    
-    public boolean hasCount()
-    {
-      return this.c;
-    }
-    
-    public boolean hasTotal()
-    {
-      return this.a;
-    }
-    
-    public boolean hasTotalBuslineNum()
-    {
-      return this.e;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Option mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int j = paramCodedInputStreamMicro.readTag();
-        switch (j)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, j)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setTotal(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 16: 
-          setCount(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 24: 
-          setTotalBuslineNum(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 32: 
-          setAreaID(paramCodedInputStreamMicro.readInt32());
+        if (hasOption()) {
+            i += CodedOutputStreamMicro.computeMessageSize(2, getOption());
         }
-      }
+        int i2 = i;
+        for (Content computeMessageSize : getContentList()) {
+            i2 = CodedOutputStreamMicro.computeMessageSize(3, computeMessageSize) + i2;
+        }
+        this.f10407f = i2;
+        return i2;
     }
-    
-    public Option setAreaID(int paramInt)
-    {
-      this.g = true;
-      this.h = paramInt;
-      return this;
+
+    public boolean hasError() {
+        return this.f10405d;
     }
-    
-    public Option setCount(int paramInt)
-    {
-      this.c = true;
-      this.d = paramInt;
-      return this;
+
+    public boolean hasOption() {
+        return this.f10402a;
     }
-    
-    public Option setTotal(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
+
+    public final boolean isInitialized() {
+        return true;
     }
-    
-    public Option setTotalBuslineNum(int paramInt)
-    {
-      this.e = true;
-      this.f = paramInt;
-      return this;
+
+    public BusList mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            MessageMicro option;
+            switch (readTag) {
+                case 0:
+                    break;
+                case 8:
+                    setError(codedInputStreamMicro.readInt32());
+                    continue;
+                case 18:
+                    option = new Option();
+                    codedInputStreamMicro.readMessage(option);
+                    setOption(option);
+                    continue;
+                case 26:
+                    option = new Content();
+                    codedInputStreamMicro.readMessage(option);
+                    addContent(option);
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
     }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasTotal()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getTotal());
-      }
-      if (hasCount()) {
-        paramCodedOutputStreamMicro.writeInt32(2, getCount());
-      }
-      if (hasTotalBuslineNum()) {
-        paramCodedOutputStreamMicro.writeInt32(3, getTotalBuslineNum());
-      }
-      if (hasAreaID()) {
-        paramCodedOutputStreamMicro.writeInt32(4, getAreaID());
-      }
+
+    public BusList setContent(int i, Content content) {
+        if (content != null) {
+            this.f10404c.set(i, content);
+        }
+        return this;
     }
-  }
+
+    public BusList setError(int i) {
+        this.f10405d = true;
+        this.f10406e = i;
+        return this;
+    }
+
+    public BusList setOption(Option option) {
+        if (option == null) {
+            return clearOption();
+        }
+        this.f10402a = true;
+        this.f10403b = option;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasError()) {
+            codedOutputStreamMicro.writeInt32(1, getError());
+        }
+        if (hasOption()) {
+            codedOutputStreamMicro.writeMessage(2, getOption());
+        }
+        for (Content writeMessage : getContentList()) {
+            codedOutputStreamMicro.writeMessage(3, writeMessage);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/BusList.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

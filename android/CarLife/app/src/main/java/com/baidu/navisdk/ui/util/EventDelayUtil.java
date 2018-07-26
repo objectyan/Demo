@@ -6,68 +6,52 @@ import android.os.Message;
 import android.util.SparseArray;
 import com.baidu.navisdk.util.common.LogUtil;
 
-public class EventDelayUtil
-{
-  private static final String TAG = "EventDelayUtil";
-  private SparseArray<Object[]> mEventMap = new SparseArray();
-  private Handler mHandler = new Handler(Looper.getMainLooper())
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      int i = paramAnonymousMessage.what;
-      paramAnonymousMessage = (Object[])EventDelayUtil.this.mEventMap.get(i);
-      if (EventDelayUtil.this.mListener != null) {
-        EventDelayUtil.this.mListener.onStart(i, paramAnonymousMessage);
-      }
-      EventDelayUtil.this.mEventMap.remove(i);
+public class EventDelayUtil {
+    private static final String TAG = "EventDelayUtil";
+    private SparseArray<Object[]> mEventMap = new SparseArray();
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            int key = msg.what;
+            Object[] params = (Object[]) EventDelayUtil.this.mEventMap.get(key);
+            if (EventDelayUtil.this.mListener != null) {
+                EventDelayUtil.this.mListener.onStart(key, params);
+            }
+            EventDelayUtil.this.mEventMap.remove(key);
+        }
+    };
+    private EventDelayListener mListener;
+
+    public interface EventDelayListener {
+        void onStart(int i, Object... objArr);
     }
-  };
-  private EventDelayListener mListener;
-  
-  public void cancle(int paramInt)
-  {
-    this.mEventMap.remove(paramInt);
-  }
-  
-  public void clean()
-  {
-    this.mHandler.removeCallbacks(null);
-    this.mHandler = null;
-    this.mEventMap.clear();
-  }
-  
-  public void exec(int paramInt1, int paramInt2, Object... paramVarArgs)
-  {
-    if (this.mHandler == null) {
-      LogUtil.e("EventDelayUtil", "handler is null");
+
+    public void registListner(EventDelayListener listener) {
+        this.mListener = listener;
     }
-    do
-    {
-      return;
-      this.mEventMap.put(paramInt1, paramVarArgs);
-    } while (this.mHandler.hasMessages(paramInt1));
-    paramVarArgs = this.mHandler.obtainMessage(paramInt1, paramVarArgs);
-    this.mHandler.sendMessageDelayed(paramVarArgs, paramInt2);
-  }
-  
-  public void registListner(EventDelayListener paramEventDelayListener)
-  {
-    this.mListener = paramEventDelayListener;
-  }
-  
-  public void unRegistListner()
-  {
-    this.mListener = null;
-  }
-  
-  public static abstract interface EventDelayListener
-  {
-    public abstract void onStart(int paramInt, Object... paramVarArgs);
-  }
+
+    public void unRegistListner() {
+        this.mListener = null;
+    }
+
+    public void exec(int key, int delay, Object... params) {
+        if (this.mHandler == null) {
+            LogUtil.m15791e(TAG, "handler is null");
+            return;
+        }
+        Object[] objArray = params;
+        this.mEventMap.put(key, objArray);
+        if (!this.mHandler.hasMessages(key)) {
+            this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(key, objArray), (long) delay);
+        }
+    }
+
+    public void cancle(int key) {
+        this.mEventMap.remove(key);
+    }
+
+    public void clean() {
+        this.mHandler.removeCallbacks(null);
+        this.mHandler = null;
+        this.mEventMap.clear();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/util/EventDelayUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

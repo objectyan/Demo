@@ -2,49 +2,40 @@ package com.indooratlas.android.sdk._internal;
 
 import java.nio.charset.Charset;
 
-final class jf
-{
-  public static final Charset a = Charset.forName("UTF-8");
-  
-  public static int a(int paramInt)
-  {
-    return (0xFF000000 & paramInt) >>> 24 | (0xFF0000 & paramInt) >>> 8 | (0xFF00 & paramInt) << 8 | (paramInt & 0xFF) << 24;
-  }
-  
-  public static short a(short paramShort)
-  {
-    paramShort = 0xFFFF & paramShort;
-    return (short)((paramShort & 0xFF) << 8 | (0xFF00 & paramShort) >>> 8);
-  }
-  
-  public static void a(long paramLong1, long paramLong2, long paramLong3)
-  {
-    if (((paramLong2 | paramLong3) < 0L) || (paramLong2 > paramLong1) || (paramLong1 - paramLong2 < paramLong3)) {
-      throw new ArrayIndexOutOfBoundsException(String.format("size=%s offset=%s byteCount=%s", new Object[] { Long.valueOf(paramLong1), Long.valueOf(paramLong2), Long.valueOf(paramLong3) }));
+final class jf {
+    /* renamed from: a */
+    public static final Charset f24438a = Charset.forName("UTF-8");
+
+    /* renamed from: a */
+    public static void m21314a(long j, long j2, long j3) {
+        if ((j2 | j3) < 0 || j2 > j || j - j2 < j3) {
+            throw new ArrayIndexOutOfBoundsException(String.format("size=%s offset=%s byteCount=%s", new Object[]{Long.valueOf(j), Long.valueOf(j2), Long.valueOf(j3)}));
+        }
     }
-  }
-  
-  public static void a(Throwable paramThrowable)
-  {
-    throw paramThrowable;
-  }
-  
-  public static boolean a(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2, int paramInt)
-  {
-    int i = 0;
-    while (i < paramInt)
-    {
-      if (paramArrayOfByte1[(i + 0)] != paramArrayOfByte2[(i + 0)]) {
-        return false;
-      }
-      i += 1;
+
+    /* renamed from: a */
+    public static short m21313a(short s) {
+        int i = 65535 & s;
+        return (short) (((i & 255) << 8) | ((65280 & i) >>> 8));
     }
-    return true;
-  }
+
+    /* renamed from: a */
+    public static int m21312a(int i) {
+        return ((((-16777216 & i) >>> 24) | ((16711680 & i) >>> 8)) | ((65280 & i) << 8)) | ((i & 255) << 24);
+    }
+
+    /* renamed from: a */
+    public static boolean m21316a(byte[] bArr, byte[] bArr2, int i) {
+        for (int i2 = 0; i2 < i; i2++) {
+            if (bArr[i2 + 0] != bArr2[i2 + 0]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /* renamed from: a */
+    public static void m21315a(Throwable th) {
+        throw th;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/jf.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -4,208 +4,226 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.screen.b;
-import com.baidu.carlife.core.screen.presentation.a.g;
-import com.baidu.carlife.l.a;
-import com.baidu.carlife.view.dialog.c;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1251e;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.C1277e;
+import com.baidu.carlife.core.screen.presentation.p071a.C1309g;
+import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.view.dialog.C1953c;
+import com.baidu.navisdk.module.offscreen.BNOffScreenParams;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class UsbStateReceiver
-  extends BroadcastReceiver
-{
-  private static final String a = "UsbConnectStateReceiver";
-  private static final String b = "android.hardware.usb.action.USB_STATE";
-  private static UsbStateReceiver c = null;
-  private static final int h = 10000;
-  private Context d = null;
-  private boolean e = false;
-  private Timer f = null;
-  private TimerTask g = null;
-  private c i = null;
-  private com.baidu.carlife.core.screen.e j = null;
-  
-  public static UsbStateReceiver a()
-  {
-    if (c == null) {}
-    try
-    {
-      if (c == null) {
-        c = new UsbStateReceiver();
-      }
-      return c;
+public class UsbStateReceiver extends BroadcastReceiver {
+    /* renamed from: a */
+    private static final String f2956a = "UsbConnectStateReceiver";
+    /* renamed from: b */
+    private static final String f2957b = "android.hardware.usb.action.USB_STATE";
+    /* renamed from: c */
+    private static UsbStateReceiver f2958c = null;
+    /* renamed from: h */
+    private static final int f2959h = 10000;
+    /* renamed from: d */
+    private Context f2960d = null;
+    /* renamed from: e */
+    private boolean f2961e = false;
+    /* renamed from: f */
+    private Timer f2962f = null;
+    /* renamed from: g */
+    private TimerTask f2963g = null;
+    /* renamed from: i */
+    private C1953c f2964i = null;
+    /* renamed from: j */
+    private C1277e f2965j = null;
+
+    /* renamed from: com.baidu.carlife.connect.UsbStateReceiver$2 */
+    class C11532 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ UsbStateReceiver f2954a;
+
+        C11532(UsbStateReceiver this$0) {
+            this.f2954a = this$0;
+        }
+
+        public void onClick() {
+            this.f2954a.m3867h();
+            if (this.f2954a.f2965j != null) {
+                this.f2954a.f2965j.dismissDialog(this.f2954a.f2964i);
+            }
+        }
     }
-    finally {}
-  }
-  
-  private void e()
-  {
-    f();
-    final Handler localHandler = new Handler();
-    try
-    {
-      i.b("UsbConnectStateReceiver", "startTimer for usb debug switch");
-      this.f = new Timer();
-      this.g = new TimerTask()
-      {
-        public void run()
-        {
-          if (UsbStateReceiver.a(UsbStateReceiver.this) != null)
-          {
-            UsbStateReceiver.b(UsbStateReceiver.this);
-            if ((a.a().S() == 1) && (!com.baidu.carlife.core.e.a().x())) {
-              localHandler.post(new Runnable()
-              {
-                public void run()
-                {
-                  UsbStateReceiver.c(UsbStateReceiver.this);
+
+    /* renamed from: com.baidu.carlife.connect.UsbStateReceiver$3 */
+    class C11543 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ UsbStateReceiver f2955a;
+
+        C11543(UsbStateReceiver this$0) {
+            this.f2955a = this$0;
+        }
+
+        public void onClick(View v) {
+            this.f2955a.m3871d();
+        }
+    }
+
+    /* renamed from: a */
+    public static UsbStateReceiver m3857a() {
+        if (f2958c == null) {
+            synchronized (UsbStateReceiver.class) {
+                if (f2958c == null) {
+                    f2958c = new UsbStateReceiver();
                 }
-              });
             }
-          }
-          else
-          {
+        }
+        return f2958c;
+    }
+
+    /* renamed from: a */
+    public void m3868a(Context context) {
+        this.f2960d = context;
+        m3869b();
+    }
+
+    /* renamed from: b */
+    public void m3869b() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(f2957b);
+        this.f2960d.registerReceiver(this, filter);
+    }
+
+    /* renamed from: c */
+    public void m3870c() {
+        this.f2960d.unregisterReceiver(this);
+    }
+
+    public void onReceive(Context context, Intent intent) {
+        this.f2965j = C1309g.m4699a().m4701b();
+        String action = intent.getAction();
+        Message msg = new Message();
+        msg.what = 1031;
+        if (!action.equals(f2957b)) {
             return;
-          }
-          localHandler.post(new Runnable()
-          {
-            public void run()
-            {
-              UsbStateReceiver.this.d();
+        }
+        if (intent.getExtras().getBoolean("connected")) {
+            C1260i.m4435b(f2956a, "usb connect is changed: connected");
+            msg.arg1 = C1253f.fe;
+            if (!this.f2961e) {
+                m3863e();
             }
-          });
+            this.f2961e = true;
+            return;
         }
-      };
-      this.f.schedule(this.g, 10000L);
-      return;
+        C1260i.m4435b(f2956a, "usb connect is changed: disconnected");
+        msg.arg1 = C1253f.ff;
+        this.f2961e = false;
     }
-    catch (Exception localException)
-    {
-      i.b("UsbConnectStateReceiver", "startTimer get exception for usb debug switch");
-      localException.printStackTrace();
-    }
-  }
-  
-  private void f()
-  {
-    i.b("UsbConnectStateReceiver", "stopTimer for usb debug switch");
-    if (this.f != null)
-    {
-      this.f.cancel();
-      this.f = null;
-    }
-    if (this.g != null)
-    {
-      this.g.cancel();
-      this.g = null;
-    }
-  }
-  
-  private void g()
-  {
-    if (this.i == null)
-    {
-      this.i = new c(this.d).b(2131296392).a(2131296390).c(2131296391).a(new b()
-      {
-        public void onClick()
-        {
-          UsbStateReceiver.d(UsbStateReceiver.this);
-          if (UsbStateReceiver.e(UsbStateReceiver.this) != null) {
-            UsbStateReceiver.e(UsbStateReceiver.this).dismissDialog(UsbStateReceiver.f(UsbStateReceiver.this));
-          }
+
+    /* renamed from: e */
+    private void m3863e() {
+        m3865f();
+        final Handler mHandlerTimer = new Handler();
+        try {
+            C1260i.m4435b(f2956a, "startTimer for usb debug switch");
+            this.f2962f = new Timer();
+            this.f2963g = new TimerTask(this) {
+                /* renamed from: b */
+                final /* synthetic */ UsbStateReceiver f2953b;
+
+                /* renamed from: com.baidu.carlife.connect.UsbStateReceiver$1$1 */
+                class C11501 implements Runnable {
+                    /* renamed from: a */
+                    final /* synthetic */ C11521 f2950a;
+
+                    C11501(C11521 this$1) {
+                        this.f2950a = this$1;
+                    }
+
+                    public void run() {
+                        this.f2950a.f2953b.m3866g();
+                    }
+                }
+
+                /* renamed from: com.baidu.carlife.connect.UsbStateReceiver$1$2 */
+                class C11512 implements Runnable {
+                    /* renamed from: a */
+                    final /* synthetic */ C11521 f2951a;
+
+                    C11512(C11521 this$1) {
+                        this.f2951a = this$1;
+                    }
+
+                    public void run() {
+                        this.f2951a.f2953b.m3871d();
+                    }
+                }
+
+                public void run() {
+                    if (this.f2953b.f2962f != null) {
+                        this.f2953b.m3865f();
+                        if (C1663a.m5979a().m5998S() != 1 || C1251e.m4358a().m4402x()) {
+                            mHandlerTimer.post(new C11512(this));
+                        } else {
+                            mHandlerTimer.post(new C11501(this));
+                        }
+                    }
+                }
+            };
+            this.f2962f.schedule(this.f2963g, BNOffScreenParams.MIN_ENTER_INTERVAL);
+        } catch (Exception e) {
+            C1260i.m4435b(f2956a, "startTimer get exception for usb debug switch");
+            e.printStackTrace();
         }
-      });
-      this.i.getContentView().setCompoundDrawablesWithIntrinsicBounds(0, 2130838336, 0, 0);
-      ImageButton localImageButton = this.i.getTitlebntRight();
-      localImageButton.setVisibility(0);
-      localImageButton.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          UsbStateReceiver.this.d();
+    }
+
+    /* renamed from: f */
+    private void m3865f() {
+        C1260i.m4435b(f2956a, "stopTimer for usb debug switch");
+        if (this.f2962f != null) {
+            this.f2962f.cancel();
+            this.f2962f = null;
         }
-      });
-    }
-    if (this.j != null) {
-      this.j.showDialog(this.i);
-    }
-  }
-  
-  private void h()
-  {
-    try
-    {
-      this.d.startActivity(new Intent("android.settings.APPLICATION_DEVELOPMENT_SETTINGS"));
-      return;
-    }
-    catch (Exception localException)
-    {
-      localException.printStackTrace();
-    }
-  }
-  
-  public void a(Context paramContext)
-  {
-    this.d = paramContext;
-    b();
-  }
-  
-  public void b()
-  {
-    IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction("android.hardware.usb.action.USB_STATE");
-    this.d.registerReceiver(this, localIntentFilter);
-  }
-  
-  public void c()
-  {
-    this.d.unregisterReceiver(this);
-  }
-  
-  public void d()
-  {
-    if (this.j != null) {
-      this.j.dismissDialog(this.i);
-    }
-  }
-  
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    this.j = g.a().b();
-    paramContext = paramIntent.getAction();
-    Message localMessage = new Message();
-    localMessage.what = 1031;
-    if (paramContext.equals("android.hardware.usb.action.USB_STATE"))
-    {
-      if (paramIntent.getExtras().getBoolean("connected"))
-      {
-        i.b("UsbConnectStateReceiver", "usb connect is changed: connected");
-        localMessage.arg1 = 1032;
-        if (!this.e) {
-          e();
+        if (this.f2963g != null) {
+            this.f2963g.cancel();
+            this.f2963g = null;
         }
-        this.e = true;
-      }
     }
-    else {
-      return;
+
+    /* renamed from: g */
+    private void m3866g() {
+        if (this.f2964i == null) {
+            this.f2964i = new C1953c(this.f2960d).m7442b((int) C0965R.string.connectguide_dialog_title).m7435a((int) C0965R.string.connectguide_dialog_hint).m7447c((int) C0965R.string.connectguide_dialog_ok).m7438a(new C11532(this));
+            this.f2964i.getContentView().setCompoundDrawablesWithIntrinsicBounds(0, C0965R.drawable.com_ic_usb_debug, 0, 0);
+            ImageButton cancelButton = this.f2964i.getTitlebntRight();
+            cancelButton.setVisibility(0);
+            cancelButton.setOnClickListener(new C11543(this));
+        }
+        if (this.f2965j != null) {
+            this.f2965j.showDialog(this.f2964i);
+        }
     }
-    i.b("UsbConnectStateReceiver", "usb connect is changed: disconnected");
-    localMessage.arg1 = 1033;
-    this.e = false;
-  }
+
+    /* renamed from: d */
+    public void m3871d() {
+        if (this.f2965j != null) {
+            this.f2965j.dismissDialog(this.f2964i);
+        }
+    }
+
+    /* renamed from: h */
+    private void m3867h() {
+        try {
+            this.f2960d.startActivity(new Intent("android.settings.APPLICATION_DEVELOPMENT_SETTINGS"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/connect/UsbStateReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

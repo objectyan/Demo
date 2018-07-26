@@ -1,8 +1,6 @@
 package com.baidu.carlife.view;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,254 +8,264 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.carlife.k.a.h;
-import com.baidu.carlife.k.a.h.a;
-import com.baidu.carlife.k.a.h.b;
-import com.baidu.carlife.k.a.h.c;
-import com.baidu.carlife.logic.t;
-import com.baidu.carlife.model.l;
-import com.baidu.carlife.model.l.a;
-import com.baidu.carlife.util.r;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.logic.C1872t;
+import com.baidu.carlife.model.C1934l;
+import com.baidu.carlife.model.C1934l.C1933a;
+import com.baidu.carlife.p054k.p055a.C1635h;
+import com.baidu.carlife.p054k.p055a.C1635h.C1489c;
+import com.baidu.carlife.p054k.p055a.C1635h.C1633a;
+import com.baidu.carlife.p054k.p055a.C1635h.C1634b;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 
-public class SkinItemView
-  extends RelativeLayout
-  implements h.c
-{
-  private a a;
-  private DecimalFormat b;
-  private t c;
-  private l d;
-  private h e;
-  private View.OnClickListener f = new View.OnClickListener()
-  {
-    public void onClick(View paramAnonymousView)
-    {
-      if (SkinItemView.a(SkinItemView.this).c().equals(SkinItemView.b(SkinItemView.this).h)) {
-        return;
-      }
-      switch (SkinItemView.b(SkinItemView.this).j)
-      {
-      default: 
-        return;
-      case 0: 
-        SkinItemView.a(SkinItemView.this).d();
-        StatisticManager.onEvent("1053", "默认皮肤");
-        return;
-      case 1: 
-        paramAnonymousView = null;
-        try
-        {
-          InputStream localInputStream = SkinItemView.this.getResources().getAssets().open(SkinItemView.b(SkinItemView.this).h);
-          paramAnonymousView = localInputStream;
+public class SkinItemView extends RelativeLayout implements C1489c {
+    /* renamed from: a */
+    private C2235a f7235a;
+    /* renamed from: b */
+    private DecimalFormat f7236b;
+    /* renamed from: c */
+    private C1872t f7237c;
+    /* renamed from: d */
+    private C1934l f7238d;
+    /* renamed from: e */
+    private C1635h f7239e;
+    /* renamed from: f */
+    private OnClickListener f7240f;
+    /* renamed from: g */
+    private OnClickListener f7241g;
+
+    /* renamed from: com.baidu.carlife.view.SkinItemView$1 */
+    class C22321 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ SkinItemView f7223a;
+
+        C22321(SkinItemView this$0) {
+            this.f7223a = this$0;
         }
-        catch (IOException localIOException)
-        {
-          for (;;)
-          {
-            localIOException.printStackTrace();
-          }
+
+        public void onClick(View v) {
+            if (!this.f7223a.f7237c.m7159c().equals(this.f7223a.f7238d.f6093h)) {
+                switch (this.f7223a.f7238d.f6095j) {
+                    case 0:
+                        this.f7223a.f7237c.m7161d();
+                        StatisticManager.onEvent(StatisticConstants.HOME_MY_SKIN_WHICH, StatisticConstants.HOME_MY_SKIN_WHICH_DEFAULT);
+                        return;
+                    case 1:
+                        InputStream rawIn = null;
+                        try {
+                            rawIn = this.f7223a.getResources().getAssets().open(this.f7223a.f7238d.f6093h);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        this.f7223a.f7237c.m7153a(rawIn, this.f7223a.f7238d.f6093h, this.f7223a.f7238d.f6090e);
+                        StatisticManager.onEvent(StatisticConstants.HOME_MY_SKIN_WHICH, StatisticConstants.HOME_MY_SKIN_WHICH_NATIVE);
+                        return;
+                    case 2:
+                        if (this.f7223a.f7238d.f6097l == C1933a.DOWNLOAD) {
+                            this.f7223a.m8473a();
+                            this.f7223a.f7239e = new C1635h(this.f7223a.f7238d.f6092g, this.f7223a.f7238d.f6093h, this.f7223a);
+                            this.f7223a.f7239e.m5924e();
+                        } else if (this.f7223a.f7238d.f6097l == C1933a.APPLY) {
+                            this.f7223a.f7237c.m7154a(this.f7223a.f7238d.f6093h, this.f7223a.f7238d.f6090e);
+                        }
+                        StatisticManager.onEvent(StatisticConstants.HOME_MY_SKIN_WHICH, StatisticConstants.HOME_MY_SKIN_WHICH_SERVER);
+                        return;
+                    default:
+                        return;
+                }
+            }
         }
-        SkinItemView.a(SkinItemView.this).a(paramAnonymousView, SkinItemView.b(SkinItemView.this).h, SkinItemView.b(SkinItemView.this).e);
-        StatisticManager.onEvent("1053", "本地皮肤");
-        return;
-      }
-      if (SkinItemView.b(SkinItemView.this).l == l.a.b)
-      {
-        SkinItemView.this.a();
-        SkinItemView.a(SkinItemView.this, new h(SkinItemView.b(SkinItemView.this).g, SkinItemView.b(SkinItemView.this).h, SkinItemView.this));
-        SkinItemView.c(SkinItemView.this).e();
-      }
-      for (;;)
-      {
-        StatisticManager.onEvent("1053", "服务端皮肤");
-        return;
-        if (SkinItemView.b(SkinItemView.this).l == l.a.a) {
-          SkinItemView.a(SkinItemView.this).a(SkinItemView.b(SkinItemView.this).h, SkinItemView.b(SkinItemView.this).e);
+    }
+
+    /* renamed from: com.baidu.carlife.view.SkinItemView$2 */
+    class C22332 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ SkinItemView f7224a;
+
+        C22332(SkinItemView this$0) {
+            this.f7224a = this$0;
         }
-      }
-    }
-  };
-  private View.OnClickListener g = new View.OnClickListener()
-  {
-    public void onClick(View paramAnonymousView)
-    {
-      if (SkinItemView.c(SkinItemView.this) != null)
-      {
-        SkinItemView.this.c();
-        SkinItemView.c(SkinItemView.this).d();
-        SkinItemView.c(SkinItemView.this).a();
-      }
-    }
-  };
-  
-  public SkinItemView(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public SkinItemView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    a(paramContext);
-    this.c = t.a();
-    this.b = new DecimalFormat("0.0");
-  }
-  
-  private void a(Context paramContext)
-  {
-    paramContext = LayoutInflater.from(paramContext).inflate(2130968840, this, true);
-    paramContext.setOnClickListener(this.f);
-    this.a = new a(null);
-    this.a.a = ((MultiImageView)paramContext.findViewById(2131625263));
-    this.a.b = paramContext.findViewById(2131625264);
-    this.a.c = ((CircleProgressBarView)paramContext.findViewById(2131625265));
-    this.a.d = ((TriangleStateView)paramContext.findViewById(2131625266));
-    this.a.e = ((ImageView)paramContext.findViewById(2131625267));
-    this.a.f = ((TextView)paramContext.findViewById(2131625268));
-    this.a.g = ((TextView)paramContext.findViewById(2131625269));
-  }
-  
-  public void a()
-  {
-    if (this.a == null) {
-      return;
-    }
-    this.d.l = l.a.c;
-    this.a.d.setVisibility(8);
-    this.a.e.setVisibility(8);
-    this.a.g.setVisibility(0);
-    this.a.b.setVisibility(0);
-  }
-  
-  public void a(long paramLong, int paramInt)
-  {
-    a();
-    if (this.a != null) {
-      this.a.c.setProgress(paramInt);
-    }
-  }
-  
-  public void a(h.b paramb, h.a parama)
-  {
-    switch (3.b[paramb.ordinal()])
-    {
-    }
-    do
-    {
-      return;
-      c();
-      return;
-    } while ((this.e == null) || (this.c == null));
-    this.c.a(this.e.b(), this.d.e);
-    b();
-  }
-  
-  public void b()
-  {
-    if (this.a == null) {
-      return;
-    }
-    this.d.l = l.a.a;
-    this.a.d.setVisibility(8);
-    this.a.e.setVisibility(8);
-    this.a.g.setVisibility(8);
-    this.a.b.setVisibility(8);
-  }
-  
-  public void c()
-  {
-    if (this.a == null) {
-      return;
-    }
-    this.d.l = l.a.b;
-    this.a.d.setVisibility(0);
-    this.a.d.setBgColor(r.a(2131558660));
-    this.a.e.setVisibility(0);
-    this.a.e.setImageResource(2130838598);
-    this.a.g.setVisibility(0);
-    this.a.b.setVisibility(8);
-  }
-  
-  public void setData(l paraml)
-  {
-    if (this.e != null) {
-      this.e.a();
-    }
-    this.d = paraml;
-    switch (paraml.j)
-    {
-    }
-    for (;;)
-    {
-      this.a.a.setBackground(r.b(2130838566));
-      this.a.f.setTextColor(r.a(2131558702));
-      this.a.g.setTextColor(r.a(2131558692));
-      if (!t.a().c().equals(paraml.h)) {
-        break;
-      }
-      this.a.a.setSelected(true);
-      this.a.d.setVisibility(0);
-      this.a.d.setBgColor(r.a(2131558610));
-      this.a.e.setVisibility(0);
-      this.a.e.setImageResource(2130838599);
-      return;
-      this.a.a.setDefaultDrawableResId(paraml.k);
-      this.a.a.setImageUrl(null);
-      this.a.b.setVisibility(8);
-      this.a.f.setText(paraml.d);
-      this.a.g.setVisibility(8);
-      this.a.d.setVisibility(8);
-      this.a.e.setVisibility(8);
-      continue;
-      this.a.a.setDefaultDrawable(r.b(2130838597));
-      this.a.a.setImageUrl(paraml.f);
-      this.a.f.setText(paraml.d);
-      float f1 = paraml.i / 1000.0F / 1000.0F;
-      this.a.g.setText(this.b.format(f1) + "M");
-      if (this.c.a(paraml.h)) {
-        paraml.l = l.a.a;
-      }
-      switch (3.a[paraml.l.ordinal()])
-      {
-      default: 
-        break;
-      case 1: 
-        b();
-        break;
-      case 2: 
-        c();
-        break;
-      case 3: 
-        a();
-        if (this.e != null) {
-          this.e.a(this);
+
+        public void onClick(View v) {
+            if (this.f7224a.f7239e != null) {
+                this.f7224a.m8477c();
+                this.f7224a.f7239e.m5923d();
+                this.f7224a.f7239e.m5919a();
+            }
         }
-        this.a.c.setOnClickListener(this.g);
-      }
     }
-    this.a.a.setSelected(false);
-  }
-  
-  private class a
-  {
-    MultiImageView a;
-    View b;
-    CircleProgressBarView c;
-    TriangleStateView d;
-    ImageView e;
-    TextView f;
-    TextView g;
-    
-    private a() {}
-  }
+
+    /* renamed from: com.baidu.carlife.view.SkinItemView$a */
+    private class C2235a {
+        /* renamed from: a */
+        MultiImageView f7227a;
+        /* renamed from: b */
+        View f7228b;
+        /* renamed from: c */
+        CircleProgressBarView f7229c;
+        /* renamed from: d */
+        TriangleStateView f7230d;
+        /* renamed from: e */
+        ImageView f7231e;
+        /* renamed from: f */
+        TextView f7232f;
+        /* renamed from: g */
+        TextView f7233g;
+        /* renamed from: h */
+        final /* synthetic */ SkinItemView f7234h;
+
+        private C2235a(SkinItemView skinItemView) {
+            this.f7234h = skinItemView;
+        }
+    }
+
+    public SkinItemView(Context context) {
+        this(context, null);
+    }
+
+    public SkinItemView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.f7240f = new C22321(this);
+        this.f7241g = new C22332(this);
+        m8470a(context);
+        this.f7237c = C1872t.m7136a();
+        this.f7236b = new DecimalFormat("0.0");
+    }
+
+    /* renamed from: a */
+    private void m8470a(Context context) {
+        View convertView = LayoutInflater.from(context).inflate(C0965R.layout.home_my_skin_item, this, true);
+        convertView.setOnClickListener(this.f7240f);
+        this.f7235a = new C2235a();
+        this.f7235a.f7227a = (MultiImageView) convertView.findViewById(C0965R.id.image_iv);
+        this.f7235a.f7228b = convertView.findViewById(C0965R.id.loading_layer);
+        this.f7235a.f7229c = (CircleProgressBarView) convertView.findViewById(C0965R.id.progress_view);
+        this.f7235a.f7230d = (TriangleStateView) convertView.findViewById(C0965R.id.state_bg_iv);
+        this.f7235a.f7231e = (ImageView) convertView.findViewById(C0965R.id.state_iv);
+        this.f7235a.f7232f = (TextView) convertView.findViewById(C0965R.id.name_tv);
+        this.f7235a.f7233g = (TextView) convertView.findViewById(C0965R.id.size_tv);
+    }
+
+    public void setData(C1934l model) {
+        if (this.f7239e != null) {
+            this.f7239e.m5919a();
+        }
+        this.f7238d = model;
+        switch (model.f6095j) {
+            case 0:
+            case 1:
+                this.f7235a.f7227a.setDefaultDrawableResId(model.f6096k);
+                this.f7235a.f7227a.setImageUrl(null);
+                this.f7235a.f7228b.setVisibility(8);
+                this.f7235a.f7232f.setText(model.f6089d);
+                this.f7235a.f7233g.setVisibility(8);
+                this.f7235a.f7230d.setVisibility(8);
+                this.f7235a.f7231e.setVisibility(8);
+                break;
+            case 2:
+                this.f7235a.f7227a.setDefaultDrawable(C2188r.m8331b(C0965R.drawable.home_ic_my_skin_default));
+                this.f7235a.f7227a.setImageUrl(model.f6091f);
+                this.f7235a.f7232f.setText(model.f6089d);
+                this.f7235a.f7233g.setText(this.f7236b.format((double) ((((float) model.f6094i) / 1000.0f) / 1000.0f)) + "M");
+                if (this.f7237c.m7155a(model.f6093h)) {
+                    model.f6097l = C1933a.APPLY;
+                }
+                switch (model.f6097l) {
+                    case APPLY:
+                        m8476b();
+                        break;
+                    case DOWNLOAD:
+                        m8477c();
+                        break;
+                    case DOWNLOADING:
+                        m8473a();
+                        if (this.f7239e != null) {
+                            this.f7239e.m5921a((C1489c) this);
+                        }
+                        this.f7235a.f7229c.setOnClickListener(this.f7241g);
+                        break;
+                    default:
+                        break;
+                }
+        }
+        this.f7235a.f7227a.setBackground(C2188r.m8331b(C0965R.drawable.home_bg_skin_image_selector));
+        this.f7235a.f7232f.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a5_content));
+        this.f7235a.f7233g.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a2_content));
+        if (C1872t.m7136a().m7159c().equals(model.f6093h)) {
+            this.f7235a.f7227a.setSelected(true);
+            this.f7235a.f7230d.setVisibility(0);
+            this.f7235a.f7230d.setBgColor(C2188r.m8328a((int) C0965R.color.cl_btn_b_tab_select));
+            this.f7235a.f7231e.setVisibility(0);
+            this.f7235a.f7231e.setImageResource(C0965R.drawable.home_ic_my_skin_selected);
+            return;
+        }
+        this.f7235a.f7227a.setSelected(false);
+    }
+
+    /* renamed from: a */
+    public void m8473a() {
+        if (this.f7235a != null) {
+            this.f7238d.f6097l = C1933a.DOWNLOADING;
+            this.f7235a.f7230d.setVisibility(8);
+            this.f7235a.f7231e.setVisibility(8);
+            this.f7235a.f7233g.setVisibility(0);
+            this.f7235a.f7228b.setVisibility(0);
+        }
+    }
+
+    /* renamed from: b */
+    public void m8476b() {
+        if (this.f7235a != null) {
+            this.f7238d.f6097l = C1933a.APPLY;
+            this.f7235a.f7230d.setVisibility(8);
+            this.f7235a.f7231e.setVisibility(8);
+            this.f7235a.f7233g.setVisibility(8);
+            this.f7235a.f7228b.setVisibility(8);
+        }
+    }
+
+    /* renamed from: c */
+    public void m8477c() {
+        if (this.f7235a != null) {
+            this.f7238d.f6097l = C1933a.DOWNLOAD;
+            this.f7235a.f7230d.setVisibility(0);
+            this.f7235a.f7230d.setBgColor(C2188r.m8328a((int) C0965R.color.cl_other_g_bg));
+            this.f7235a.f7231e.setVisibility(0);
+            this.f7235a.f7231e.setImageResource(C0965R.drawable.home_ic_my_skin_download);
+            this.f7235a.f7233g.setVisibility(0);
+            this.f7235a.f7228b.setVisibility(8);
+        }
+    }
+
+    /* renamed from: a */
+    public void mo1561a(C1634b state, C1633a errorCode) {
+        switch (state) {
+            case CANCEL:
+            case ERROR:
+                m8477c();
+                return;
+            case SUCESS:
+                if (this.f7239e != null && this.f7237c != null) {
+                    this.f7237c.m7152a(this.f7239e.m5922b(), this.f7238d.f6090e);
+                    m8476b();
+                    return;
+                }
+                return;
+            default:
+                return;
+        }
+    }
+
+    /* renamed from: a */
+    public void mo1560a(long total, int progress) {
+        m8473a();
+        if (this.f7235a != null) {
+            this.f7235a.f7229c.setProgress(progress);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/SkinItemView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

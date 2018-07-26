@@ -5,41 +5,41 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityNodeProvider;
 import java.util.List;
 
-class AccessibilityNodeProviderCompatJellyBean
-{
-  public static Object newAccessibilityNodeProviderBridge(AccessibilityNodeInfoBridge paramAccessibilityNodeInfoBridge)
-  {
-    new AccessibilityNodeProvider()
-    {
-      public AccessibilityNodeInfo createAccessibilityNodeInfo(int paramAnonymousInt)
-      {
-        return (AccessibilityNodeInfo)AccessibilityNodeProviderCompatJellyBean.this.createAccessibilityNodeInfo(paramAnonymousInt);
-      }
-      
-      public List<AccessibilityNodeInfo> findAccessibilityNodeInfosByText(String paramAnonymousString, int paramAnonymousInt)
-      {
-        return AccessibilityNodeProviderCompatJellyBean.this.findAccessibilityNodeInfosByText(paramAnonymousString, paramAnonymousInt);
-      }
-      
-      public boolean performAction(int paramAnonymousInt1, int paramAnonymousInt2, Bundle paramAnonymousBundle)
-      {
-        return AccessibilityNodeProviderCompatJellyBean.this.performAction(paramAnonymousInt1, paramAnonymousInt2, paramAnonymousBundle);
-      }
-    };
-  }
-  
-  static abstract interface AccessibilityNodeInfoBridge
-  {
-    public abstract Object createAccessibilityNodeInfo(int paramInt);
-    
-    public abstract List<Object> findAccessibilityNodeInfosByText(String paramString, int paramInt);
-    
-    public abstract boolean performAction(int paramInt1, int paramInt2, Bundle paramBundle);
-  }
+class AccessibilityNodeProviderCompatJellyBean {
+
+    interface AccessibilityNodeInfoBridge {
+        Object createAccessibilityNodeInfo(int i);
+
+        List<Object> findAccessibilityNodeInfosByText(String str, int i);
+
+        boolean performAction(int i, int i2, Bundle bundle);
+    }
+
+    /* renamed from: com.google.android.support.v4.view.accessibility.AccessibilityNodeProviderCompatJellyBean$1 */
+    class C56731 extends AccessibilityNodeProvider {
+        private final /* synthetic */ AccessibilityNodeInfoBridge val$bridge;
+
+        C56731(AccessibilityNodeInfoBridge accessibilityNodeInfoBridge) {
+            this.val$bridge = accessibilityNodeInfoBridge;
+        }
+
+        public AccessibilityNodeInfo createAccessibilityNodeInfo(int virtualViewId) {
+            return (AccessibilityNodeInfo) this.val$bridge.createAccessibilityNodeInfo(virtualViewId);
+        }
+
+        public List<AccessibilityNodeInfo> findAccessibilityNodeInfosByText(String text, int virtualViewId) {
+            return this.val$bridge.findAccessibilityNodeInfosByText(text, virtualViewId);
+        }
+
+        public boolean performAction(int virtualViewId, int action, Bundle arguments) {
+            return this.val$bridge.performAction(virtualViewId, action, arguments);
+        }
+    }
+
+    AccessibilityNodeProviderCompatJellyBean() {
+    }
+
+    public static Object newAccessibilityNodeProviderBridge(AccessibilityNodeInfoBridge bridge) {
+        return new C56731(bridge);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/accessibility/AccessibilityNodeProviderCompatJellyBean.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

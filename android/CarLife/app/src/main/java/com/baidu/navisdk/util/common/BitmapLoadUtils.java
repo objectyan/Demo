@@ -5,92 +5,55 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import java.io.InputStream;
 
-public class BitmapLoadUtils
-{
-  public static Bitmap getBitmapFromByteArray(byte[] paramArrayOfByte)
-  {
-    try
-    {
-      paramArrayOfByte = BitmapFactory.decodeByteArray(paramArrayOfByte, 0, paramArrayOfByte.length);
-      return paramArrayOfByte;
-    }
-    catch (OutOfMemoryError paramArrayOfByte) {}
-    return null;
-  }
-  
-  public static Bitmap getBitmapFromPath(String paramString)
-  {
-    try
-    {
-      paramString = BitmapFactory.decodeFile(paramString);
-      return paramString;
-    }
-    catch (OutOfMemoryError paramString) {}
-    return null;
-  }
-  
-  public static Bitmap getBitmapFromResId(Resources paramResources, int paramInt)
-  {
-    try
-    {
-      paramResources = BitmapFactory.decodeResource(paramResources, paramInt);
-      return paramResources;
-    }
-    catch (OutOfMemoryError paramResources) {}
-    return null;
-  }
-  
-  public static Bitmap getBitmapFromStream(InputStream paramInputStream)
-  {
-    try
-    {
-      Bitmap localBitmap = BitmapFactory.decodeStream(paramInputStream);
-      try
-      {
-        paramInputStream.close();
-        return localBitmap;
-      }
-      catch (Exception paramInputStream)
-      {
-        paramInputStream.printStackTrace();
-        return localBitmap;
-      }
-      try
-      {
-        paramInputStream.close();
-        throw ((Throwable)localObject);
-      }
-      catch (Exception paramInputStream)
-      {
-        for (;;)
-        {
-          paramInputStream.printStackTrace();
+public class BitmapLoadUtils {
+    public static Bitmap getBitmapFromByteArray(byte[] data) {
+        try {
+            return BitmapFactory.decodeByteArray(data, 0, data.length);
+        } catch (OutOfMemoryError e) {
+            return null;
         }
-      }
     }
-    catch (OutOfMemoryError localOutOfMemoryError)
-    {
-      localOutOfMemoryError = localOutOfMemoryError;
-      try
-      {
-        paramInputStream.close();
-        return null;
-      }
-      catch (Exception paramInputStream)
-      {
-        paramInputStream.printStackTrace();
-        return null;
-      }
+
+    public static Bitmap getBitmapFromPath(String path) {
+        try {
+            return BitmapFactory.decodeFile(path);
+        } catch (OutOfMemoryError e) {
+            return null;
+        }
     }
-    finally
-    {
-      localObject = finally;
+
+    public static Bitmap getBitmapFromResId(Resources res, int resId) {
+        try {
+            return BitmapFactory.decodeResource(res, resId);
+        } catch (OutOfMemoryError e) {
+            return null;
+        }
     }
-  }
+
+    public static Bitmap getBitmapFromStream(InputStream stream) {
+        Bitmap bmp;
+        try {
+            bmp = BitmapFactory.decodeStream(stream);
+            try {
+                stream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (OutOfMemoryError e2) {
+            bmp = null;
+            try {
+                stream.close();
+            } catch (Exception e3) {
+                e3.printStackTrace();
+            }
+        } catch (Throwable th) {
+            try {
+                stream.close();
+            } catch (Exception e32) {
+                e32.printStackTrace();
+            }
+            throw th;
+        }
+        return bmp;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/common/BitmapLoadUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

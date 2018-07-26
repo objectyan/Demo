@@ -13,160 +13,141 @@ import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 
-public class RGAnimUtil
-{
-  private static IAnimationLister mAnimationListener;
-  
-  public static void applyRotation(ViewGroup paramViewGroup, View paramView, int paramInt, float paramFloat1, float paramFloat2)
-  {
-    Rotate3dAnimation localRotate3dAnimation = new Rotate3dAnimation(paramFloat1, paramFloat2, paramViewGroup.getWidth() / 2.0F, paramViewGroup.getHeight() / 2.0F, 310.0F, true);
-    localRotate3dAnimation.setDuration(500L);
-    localRotate3dAnimation.setFillAfter(true);
-    localRotate3dAnimation.setRepeatMode(1);
-    localRotate3dAnimation.setInterpolator(new AccelerateInterpolator());
-    localRotate3dAnimation.setAnimationListener(new DisplayNextView(paramInt, paramView, null));
-    paramViewGroup.startAnimation(localRotate3dAnimation);
-  }
-  
-  public static void setAnimationListener(IAnimationLister paramIAnimationLister)
-  {
-    mAnimationListener = paramIAnimationLister;
-  }
-  
-  private static final class DisplayNextView
-    implements Animation.AnimationListener
-  {
-    private View mDestView;
-    private final int mPosition;
-    
-    private DisplayNextView(int paramInt, View paramView)
-    {
-      this.mPosition = paramInt;
-      this.mDestView = paramView;
+public class RGAnimUtil {
+    private static IAnimationLister mAnimationListener;
+
+    public interface IAnimationLister {
+        void onEnd1();
+
+        void onEnd2();
     }
-    
-    public void onAnimationEnd(Animation paramAnimation)
-    {
-      LogUtil.e("anim", "src onAnimationEnd");
-      BNWorkerCenter.getInstance().submitMainThreadTask(new RGAnimUtil.SwapViews("RGAnimUtil.SwapViews", null, this.mPosition, this.mDestView), new BNWorkerConfig(2, 0));
-      RGAnimUtil.mAnimationListener.onEnd1();
+
+    private static final class DisplayNextView implements AnimationListener {
+        private View mDestView;
+        private final int mPosition;
+
+        private DisplayNextView(int position, View destView) {
+            this.mPosition = position;
+            this.mDestView = destView;
+        }
+
+        public void onAnimationStart(Animation animation) {
+        }
+
+        public void onAnimationEnd(Animation animation) {
+            LogUtil.m15791e("anim", "src onAnimationEnd");
+            BNWorkerCenter.getInstance().submitMainThreadTask(new SwapViews("RGAnimUtil.SwapViews", null, this.mPosition, this.mDestView), new BNWorkerConfig(2, 0));
+            RGAnimUtil.mAnimationListener.onEnd1();
+        }
+
+        public void onAnimationRepeat(Animation animation) {
+        }
     }
-    
-    public void onAnimationRepeat(Animation paramAnimation) {}
-    
-    public void onAnimationStart(Animation paramAnimation) {}
-  }
-  
-  public static abstract interface IAnimationLister
-  {
-    public abstract void onEnd1();
-    
-    public abstract void onEnd2();
-  }
-  
-  private static class Rotate3dAnimation
-    extends Animation
-  {
-    private Camera mCamera;
-    private final float mCenterX;
-    private final float mCenterY;
-    private final float mDepthZ;
-    private final float mFromDegrees;
-    private final boolean mReverse;
-    private final float mToDegrees;
-    
-    public Rotate3dAnimation(float paramFloat1, float paramFloat2, float paramFloat3, float paramFloat4, float paramFloat5, boolean paramBoolean)
-    {
-      this.mFromDegrees = paramFloat1;
-      this.mToDegrees = paramFloat2;
-      this.mCenterX = paramFloat3;
-      this.mCenterY = paramFloat4;
-      this.mDepthZ = paramFloat5;
-      this.mReverse = paramBoolean;
+
+    private static class Rotate3dAnimation extends Animation {
+        private Camera mCamera;
+        private final float mCenterX;
+        private final float mCenterY;
+        private final float mDepthZ;
+        private final float mFromDegrees;
+        private final boolean mReverse;
+        private final float mToDegrees;
+
+        public Rotate3dAnimation(float fromDegrees, float toDegrees, float centerX, float centerY, float depthZ, boolean reverse) {
+            this.mFromDegrees = fromDegrees;
+            this.mToDegrees = toDegrees;
+            this.mCenterX = centerX;
+            this.mCenterY = centerY;
+            this.mDepthZ = depthZ;
+            this.mReverse = reverse;
+        }
+
+        public void initialize(int width, int height, int parentWidth, int parentHeight) {
+            super.initialize(width, height, parentWidth, parentHeight);
+            this.mCamera = new Camera();
+        }
+
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            float fromDegrees = this.mFromDegrees;
+            float degrees = fromDegrees + ((this.mToDegrees - fromDegrees) * interpolatedTime);
+            float centerX = this.mCenterX;
+            float centerY = this.mCenterY;
+            Camera camera = this.mCamera;
+            Matrix matrix = t.getMatrix();
+            camera.save();
+            if (this.mReverse) {
+                camera.translate(0.0f, 0.0f, this.mDepthZ * interpolatedTime);
+            } else {
+                camera.translate(0.0f, 0.0f, this.mDepthZ * (1.0f - interpolatedTime));
+            }
+            camera.rotateY(degrees);
+            camera.getMatrix(matrix);
+            camera.restore();
+            matrix.preTranslate(-centerX, -centerY);
+            matrix.postTranslate(centerX, centerY);
+        }
     }
-    
-    protected void applyTransformation(float paramFloat, Transformation paramTransformation)
-    {
-      float f1 = this.mFromDegrees;
-      float f2 = this.mToDegrees;
-      float f3 = this.mCenterX;
-      float f4 = this.mCenterY;
-      Camera localCamera = this.mCamera;
-      paramTransformation = paramTransformation.getMatrix();
-      localCamera.save();
-      if (this.mReverse) {
-        localCamera.translate(0.0F, 0.0F, this.mDepthZ * paramFloat);
-      }
-      for (;;)
-      {
-        localCamera.rotateY(f1 + (f2 - f1) * paramFloat);
-        localCamera.getMatrix(paramTransformation);
-        localCamera.restore();
-        paramTransformation.preTranslate(-f3, -f4);
-        paramTransformation.postTranslate(f3, f4);
-        return;
-        localCamera.translate(0.0F, 0.0F, this.mDepthZ * (1.0F - paramFloat));
-      }
+
+    private static final class SwapViews<K, T> extends BNWorkerNormalTask<K, T> {
+        private final int mPosition;
+        private View mView;
+
+        /* renamed from: com.baidu.navisdk.ui.routeguide.subview.util.RGAnimUtil$SwapViews$1 */
+        class C44631 implements AnimationListener {
+            C44631() {
+            }
+
+            public void onAnimationStart(Animation animation) {
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            public void onAnimationEnd(Animation animation) {
+                RGAnimUtil.mAnimationListener.onEnd2();
+            }
+        }
+
+        public SwapViews(String taskName, K pInData, int position, View view) {
+            super(taskName, pInData);
+            this.mPosition = position;
+            this.mView = view;
+        }
+
+        public T execute() {
+            Rotate3dAnimation rotation;
+            float centerX = ((float) this.mView.getWidth()) / 2.0f;
+            float centerY = ((float) this.mView.getHeight()) / 2.0f;
+            if (this.mPosition > -1) {
+                this.mView.setVisibility(0);
+                this.mView.requestFocus();
+                rotation = new Rotate3dAnimation(90.0f, 180.0f, centerX, centerY, 310.0f, false);
+            } else {
+                this.mView.setVisibility(0);
+                rotation = new Rotate3dAnimation(90.0f, 0.0f, centerX, centerY, 310.0f, false);
+            }
+            rotation.setDuration(500);
+            rotation.setFillAfter(false);
+            rotation.setRepeatMode(1);
+            rotation.setInterpolator(new DecelerateInterpolator());
+            rotation.setAnimationListener(new C44631());
+            this.mView.startAnimation(rotation);
+            return null;
+        }
     }
-    
-    public void initialize(int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-    {
-      super.initialize(paramInt1, paramInt2, paramInt3, paramInt4);
-      this.mCamera = new Camera();
+
+    public static void applyRotation(ViewGroup srcViewGroup, View destView, int position, float start, float end) {
+        Rotate3dAnimation rotation = new Rotate3dAnimation(start, end, ((float) srcViewGroup.getWidth()) / 2.0f, ((float) srcViewGroup.getHeight()) / 2.0f, 310.0f, true);
+        rotation.setDuration(500);
+        rotation.setFillAfter(true);
+        rotation.setRepeatMode(1);
+        rotation.setInterpolator(new AccelerateInterpolator());
+        rotation.setAnimationListener(new DisplayNextView(position, destView));
+        srcViewGroup.startAnimation(rotation);
     }
-  }
-  
-  private static final class SwapViews<K, T>
-    extends BNWorkerNormalTask<K, T>
-  {
-    private final int mPosition;
-    private View mView;
-    
-    public SwapViews(String paramString, K paramK, int paramInt, View paramView)
-    {
-      super(paramK);
-      this.mPosition = paramInt;
-      this.mView = paramView;
+
+    public static void setAnimationListener(IAnimationLister listener) {
+        mAnimationListener = listener;
     }
-    
-    public T execute()
-    {
-      float f1 = this.mView.getWidth() / 2.0F;
-      float f2 = this.mView.getHeight() / 2.0F;
-      if (this.mPosition > -1)
-      {
-        this.mView.setVisibility(0);
-        this.mView.requestFocus();
-      }
-      for (RGAnimUtil.Rotate3dAnimation localRotate3dAnimation = new RGAnimUtil.Rotate3dAnimation(90.0F, 180.0F, f1, f2, 310.0F, false);; localRotate3dAnimation = new RGAnimUtil.Rotate3dAnimation(90.0F, 0.0F, f1, f2, 310.0F, false))
-      {
-        localRotate3dAnimation.setDuration(500L);
-        localRotate3dAnimation.setFillAfter(false);
-        localRotate3dAnimation.setRepeatMode(1);
-        localRotate3dAnimation.setInterpolator(new DecelerateInterpolator());
-        localRotate3dAnimation.setAnimationListener(new Animation.AnimationListener()
-        {
-          public void onAnimationEnd(Animation paramAnonymousAnimation)
-          {
-            RGAnimUtil.mAnimationListener.onEnd2();
-          }
-          
-          public void onAnimationRepeat(Animation paramAnonymousAnimation) {}
-          
-          public void onAnimationStart(Animation paramAnonymousAnimation) {}
-        });
-        this.mView.startAnimation(localRotate3dAnimation);
-        return null;
-        this.mView.setVisibility(0);
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/util/RGAnimUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

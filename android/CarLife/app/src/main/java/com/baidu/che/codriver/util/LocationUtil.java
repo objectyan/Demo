@@ -1,122 +1,75 @@
 package com.baidu.che.codriver.util;
 
-import com.baidu.che.codriver.sdk.a.m;
+import com.baidu.che.codriver.sdk.p081a.C2607m;
 
-public class LocationUtil
-  implements INoProguard
-{
-  public static final String COORDINATE_SYSTEM_BD09 = "bd09ll";
-  public static final String COORDINATE_SYSTEM_GCJ02 = "gcj02ll";
-  private static LocationUtil mInstance;
-  private String mCoordinateSystem = "gcj02ll";
-  private m mNaviTool;
-  
-  public static LocationUtil getInstance()
-  {
-    if (mInstance == null) {}
-    try
-    {
-      if (mInstance == null)
-      {
-        mInstance = new LocationUtil();
-        LocationUtil localLocationUtil = mInstance;
-        return localLocationUtil;
-      }
-      return mInstance;
+public class LocationUtil implements INoProguard {
+    public static final String COORDINATE_SYSTEM_BD09 = "bd09ll";
+    public static final String COORDINATE_SYSTEM_GCJ02 = "gcj02ll";
+    private static LocationUtil mInstance;
+    private String mCoordinateSystem = COORDINATE_SYSTEM_GCJ02;
+    private C2607m mNaviTool;
+
+    private LocationUtil() {
     }
-    finally {}
-  }
-  
-  public double calculateDistance(double paramDouble1, double paramDouble2)
-  {
-    if (this.mNaviTool == null) {
-      return -1.0D;
+
+    public static LocationUtil getInstance() {
+        if (mInstance == null) {
+            synchronized (LocationUtil.class) {
+                if (mInstance == null) {
+                    mInstance = new LocationUtil();
+                    LocationUtil locationUtil = mInstance;
+                    return locationUtil;
+                }
+            }
+        }
+        return mInstance;
     }
-    return this.mNaviTool.calculateDistance(paramDouble1, paramDouble2);
-  }
-  
-  public String getCity()
-  {
-    if (this.mNaviTool == null) {
-      return "";
+
+    public String getCoordinateSysmem() {
+        return this.mCoordinateSystem;
     }
-    return this.mNaviTool.getCity();
-  }
-  
-  public String getCoordinateSysmem()
-  {
-    return this.mCoordinateSystem;
-  }
-  
-  public double getLatitude()
-  {
-    if (this.mNaviTool == null) {
-      return 39.912733D;
+
+    public void setCoordinateSystem(String coordinateSystem) {
+        this.mCoordinateSystem = coordinateSystem;
     }
-    return this.mNaviTool.getLatitude();
-  }
-  
-  public double getLatitudeBd09ll()
-  {
-    if (this.mNaviTool == null) {
-      return 39.912733D;
+
+    public void setNaviTool(C2607m tool) {
+        this.mNaviTool = tool;
     }
-    return this.mNaviTool.getLatitudeBd09ll();
-  }
-  
-  public double getLatitudeBd09mc()
-  {
-    if (this.mNaviTool == null) {
-      return 4443113.458D;
+
+    public boolean isReady() {
+        return this.mNaviTool == null ? false : this.mNaviTool.isLocationReady();
     }
-    return this.mNaviTool.getLatitudeBd09mc();
-  }
-  
-  public double getLongitude()
-  {
-    if (this.mNaviTool == null) {
-      return 116.403963D;
+
+    public String getCity() {
+        return this.mNaviTool == null ? "" : this.mNaviTool.getCity();
     }
-    return this.mNaviTool.getLongitude();
-  }
-  
-  public double getLongitudeBd09ll()
-  {
-    if (this.mNaviTool == null) {
-      return 116.403963D;
+
+    public double getLatitude() {
+        return this.mNaviTool == null ? 39.912733d : this.mNaviTool.getLatitude();
     }
-    return this.mNaviTool.getLongitudeBd09ll();
-  }
-  
-  public double getLongitudeBd09mc()
-  {
-    if (this.mNaviTool == null) {
-      return 1.2474104174E7D;
+
+    public double getLongitude() {
+        return this.mNaviTool == null ? 116.403963d : this.mNaviTool.getLongitude();
     }
-    return this.mNaviTool.getLongitudeBd09mc();
-  }
-  
-  public boolean isReady()
-  {
-    if (this.mNaviTool == null) {
-      return false;
+
+    public double calculateDistance(double lat, double lng) {
+        return this.mNaviTool == null ? -1.0d : this.mNaviTool.calculateDistance(lat, lng);
     }
-    return this.mNaviTool.isLocationReady();
-  }
-  
-  public void setCoordinateSystem(String paramString)
-  {
-    this.mCoordinateSystem = paramString;
-  }
-  
-  public void setNaviTool(m paramm)
-  {
-    this.mNaviTool = paramm;
-  }
+
+    public double getLatitudeBd09ll() {
+        return this.mNaviTool == null ? 39.912733d : this.mNaviTool.getLatitudeBd09ll();
+    }
+
+    public double getLongitudeBd09ll() {
+        return this.mNaviTool == null ? 116.403963d : this.mNaviTool.getLongitudeBd09ll();
+    }
+
+    public double getLatitudeBd09mc() {
+        return this.mNaviTool == null ? 4443113.458d : this.mNaviTool.getLatitudeBd09mc();
+    }
+
+    public double getLongitudeBd09mc() {
+        return this.mNaviTool == null ? 1.2474104174E7d : this.mNaviTool.getLongitudeBd09mc();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/util/LocationUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

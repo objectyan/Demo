@@ -10,131 +10,126 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 
-public class DiscoverCardView
-  extends ConstraintLayout
-{
-  private View a;
-  private TextView b;
-  private TextView c;
-  private ImageView d;
-  private View e;
-  private View f;
-  private int g = -1;
-  
-  public DiscoverCardView(Context paramContext)
-  {
-    super(paramContext);
-    a(paramContext);
-  }
-  
-  public DiscoverCardView(Context paramContext, @Nullable AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    a(paramContext);
-  }
-  
-  public DiscoverCardView(Context paramContext, @Nullable AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    a(paramContext);
-  }
-  
-  private void a(Context paramContext)
-  {
-    this.a = ((LayoutInflater)paramContext.getSystemService("layout_inflater")).inflate(2130968859, this, true);
-    this.d = ((ImageView)this.a.findViewById(2131625345));
-    this.b = ((TextView)this.a.findViewById(2131625346));
-    this.f = this.a.findViewById(2131624253);
-    this.c = ((TextView)this.a.findViewById(2131625347));
-    this.e = this.a.findViewById(2131624255);
-    setOnFocusChangeListener(new View.OnFocusChangeListener()
-    {
-      public void onFocusChange(View paramAnonymousView, boolean paramAnonymousBoolean)
-      {
-        if (paramAnonymousBoolean)
-        {
-          DiscoverCardView.a(DiscoverCardView.this).setVisibility(0);
-          return;
+public class DiscoverCardView extends ConstraintLayout {
+    /* renamed from: a */
+    private View f7102a;
+    /* renamed from: b */
+    private TextView f7103b;
+    /* renamed from: c */
+    private TextView f7104c;
+    /* renamed from: d */
+    private ImageView f7105d;
+    /* renamed from: e */
+    private View f7106e;
+    /* renamed from: f */
+    private View f7107f;
+    /* renamed from: g */
+    private int f7108g = -1;
+
+    /* renamed from: com.baidu.carlife.view.DiscoverCardView$1 */
+    class C22091 implements OnFocusChangeListener {
+        /* renamed from: a */
+        final /* synthetic */ DiscoverCardView f7101a;
+
+        C22091(DiscoverCardView this$0) {
+            this.f7101a = this$0;
         }
-        DiscoverCardView.a(DiscoverCardView.this).setVisibility(8);
-      }
-    });
-  }
-  
-  public DiscoverCardView a(int paramInt)
-  {
-    this.d.setImageResource(paramInt);
-    return this;
-  }
-  
-  public DiscoverCardView a(String paramString)
-  {
-    this.b.setText(paramString);
-    return this;
-  }
-  
-  public DiscoverCardView b(String paramString)
-  {
-    this.c.setText(paramString);
-    return this;
-  }
-  
-  public String getCardName()
-  {
-    return this.b.getText().toString();
-  }
-  
-  public int getTagInt()
-  {
-    return this.g;
-  }
-  
-  public void setCardDescriptionVisibility(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      this.c.setVisibility(0);
-      return;
+
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                this.f7101a.f7106e.setVisibility(0);
+            } else {
+                this.f7101a.f7106e.setVisibility(8);
+            }
+        }
     }
-    this.c.setVisibility(8);
-    ConstraintLayout.LayoutParams localLayoutParams = (ConstraintLayout.LayoutParams)this.b.getLayoutParams();
-    localLayoutParams.topToTop = 0;
-    localLayoutParams.bottomToBottom = 0;
-    this.b.setLayoutParams(localLayoutParams);
-  }
-  
-  public void setCardTitleColor(int paramInt)
-  {
-    if (this.b != null) {
-      this.b.setTextColor(paramInt);
+
+    public DiscoverCardView(Context context) {
+        super(context);
+        m8405a(context);
     }
-  }
-  
-  public void setEnabled(boolean paramBoolean)
-  {
-    super.setEnabled(paramBoolean);
-    if (paramBoolean)
-    {
-      setAlpha(1.0F);
-      return;
+
+    public DiscoverCardView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        m8405a(context);
     }
-    setAlpha(0.5F);
-  }
-  
-  public void setRedPointVisibility(int paramInt)
-  {
-    this.f.setVisibility(paramInt);
-  }
-  
-  public void setTagInt(int paramInt)
-  {
-    this.g = paramInt;
-  }
+
+    public DiscoverCardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        m8405a(context);
+    }
+
+    /* renamed from: a */
+    private void m8405a(Context context) {
+        this.f7102a = ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(C0965R.layout.item_discover_card, this, true);
+        this.f7105d = (ImageView) this.f7102a.findViewById(C0965R.id.icon);
+        this.f7103b = (TextView) this.f7102a.findViewById(C0965R.id.title);
+        this.f7107f = this.f7102a.findViewById(C0965R.id.red_point);
+        this.f7104c = (TextView) this.f7102a.findViewById(C0965R.id.description);
+        this.f7106e = this.f7102a.findViewById(C0965R.id.card_focus_view);
+        setOnFocusChangeListener(new C22091(this));
+    }
+
+    /* renamed from: a */
+    public DiscoverCardView m8406a(int resId) {
+        this.f7105d.setImageResource(resId);
+        return this;
+    }
+
+    /* renamed from: a */
+    public DiscoverCardView m8407a(String title) {
+        this.f7103b.setText(title);
+        return this;
+    }
+
+    public String getCardName() {
+        return this.f7103b.getText().toString();
+    }
+
+    /* renamed from: b */
+    public DiscoverCardView m8408b(String description) {
+        this.f7104c.setText(description);
+        return this;
+    }
+
+    public int getTagInt() {
+        return this.f7108g;
+    }
+
+    public void setTagInt(int tagInt) {
+        this.f7108g = tagInt;
+    }
+
+    public void setCardDescriptionVisibility(boolean visible) {
+        if (visible) {
+            this.f7104c.setVisibility(0);
+            return;
+        }
+        this.f7104c.setVisibility(8);
+        LayoutParams layoutParams = (LayoutParams) this.f7103b.getLayoutParams();
+        layoutParams.topToTop = 0;
+        layoutParams.bottomToBottom = 0;
+        this.f7103b.setLayoutParams(layoutParams);
+    }
+
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (enabled) {
+            setAlpha(1.0f);
+        } else {
+            setAlpha(0.5f);
+        }
+    }
+
+    public void setCardTitleColor(int color) {
+        if (this.f7103b != null) {
+            this.f7103b.setTextColor(color);
+        }
+    }
+
+    public void setRedPointVisibility(int visiable) {
+        this.f7107f.setVisibility(visiable);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/DiscoverCardView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

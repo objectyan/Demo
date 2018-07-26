@@ -6,26 +6,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-final class bs
-  implements View.OnClickListener
-{
-  bs(br parambr) {}
-  
-  public final void onClick(View paramView)
-  {
-    try
-    {
-      FeedbackInputActivity.b = ((BitmapDrawable)((ImageView)paramView).getDrawable()).getBitmap();
-      paramView = new Intent(br.a(this.a), FeedbackImageViewFlipperActivity.class);
-      br.a(this.a).startActivity(paramView);
-      return;
+/* compiled from: FeedbackInputActivity */
+final class bs implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ br f21588a;
+
+    bs(br brVar) {
+        this.f21588a = brVar;
     }
-    catch (Exception paramView) {}
-  }
+
+    public final void onClick(View view) {
+        try {
+            FeedbackInputActivity.f21456b = ((BitmapDrawable) ((ImageView) view).getDrawable()).getBitmap();
+            this.f21588a.f21586a.startActivity(new Intent(this.f21588a.f21586a, FeedbackImageViewFlipperActivity.class));
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

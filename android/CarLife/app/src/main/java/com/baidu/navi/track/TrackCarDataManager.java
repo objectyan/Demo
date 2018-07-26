@@ -2,109 +2,88 @@ package com.baidu.navi.track;
 
 import android.os.Handler;
 import android.os.Message;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1260i;
 import com.baidu.navi.track.database.DataBaseConstants.TrackQueryType;
 import com.baidu.navi.track.datashop.TrackDataShop;
 import com.baidu.navi.track.datashop.TrackShopEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class TrackCarDataManager
-{
-  private static final String TAG = TrackCarDataManager.class.getSimpleName();
-  private static TrackCarDataManager mInstance;
-  private List<OnTrackShopListener> listenerList = new ArrayList();
-  private MyHandler mHandler = new MyHandler(null);
-  
-  public static TrackCarDataManager getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new TrackCarDataManager();
-    }
-    return mInstance;
-  }
-  
-  private void notifyTrackShop(TrackShopEvent paramTrackShopEvent)
-  {
-    synchronized (this.listenerList)
-    {
-      if (this.listenerList != null)
-      {
-        Iterator localIterator = this.listenerList.iterator();
-        if (localIterator.hasNext()) {
-          ((OnTrackShopListener)localIterator.next()).callBack(paramTrackShopEvent);
+public class TrackCarDataManager {
+    private static final String TAG = TrackCarDataManager.class.getSimpleName();
+    private static TrackCarDataManager mInstance;
+    private List<OnTrackShopListener> listenerList;
+    private MyHandler mHandler;
+
+    private class MyHandler extends Handler {
+        private MyHandler() {
         }
-      }
+
+        public void handleMessage(Message msg) {
+            C1260i.b(TrackCarDataManager.TAG, msg.toString());
+        }
     }
-  }
-  
-  public void addRecord(Object paramObject, boolean paramBoolean)
-  {
-    TrackDataShop.getInstance().addRecord(paramObject, paramBoolean);
-  }
-  
-  public void clearTrackReacords(String paramString)
-  {
-    TrackDataShop.getInstance().clearTrackReacords(paramString);
-  }
-  
-  public void deleteRecord(Object paramObject)
-  {
-    TrackDataShop.getInstance().deleteRecord(this.mHandler, paramObject);
-  }
-  
-  public void fetchStatistics(int paramInt)
-  {
-    TrackDataShop.getInstance().fetchStatistics(this.mHandler, paramInt);
-  }
-  
-  public void fetchTrackList(String paramString, int paramInt, DataBaseConstants.TrackQueryType paramTrackQueryType)
-  {
-    TrackDataShop.getInstance().fetchTrackList(this.mHandler, paramString, paramInt, paramTrackQueryType);
-  }
-  
-  public void registerListener(OnTrackShopListener paramOnTrackShopListener)
-  {
-    synchronized (this.listenerList)
-    {
-      if ((this.listenerList != null) && (paramOnTrackShopListener != null)) {
-        this.listenerList.add(paramOnTrackShopListener);
-      }
-      return;
+
+    public interface OnTrackShopListener {
+        void callBack(TrackShopEvent trackShopEvent);
     }
-  }
-  
-  public void unRegisterListener(OnTrackShopListener paramOnTrackShopListener)
-  {
-    synchronized (this.listenerList)
-    {
-      if ((this.listenerList != null) && (paramOnTrackShopListener != null)) {
-        this.listenerList.remove(paramOnTrackShopListener);
-      }
-      return;
+
+    private TrackCarDataManager() {
+        this.listenerList = new ArrayList();
+        this.mHandler = new MyHandler();
+        this.listenerList = new ArrayList();
     }
-  }
-  
-  private class MyHandler
-    extends Handler
-  {
-    private MyHandler() {}
-    
-    public void handleMessage(Message paramMessage)
-    {
-      i.b(TrackCarDataManager.TAG, paramMessage.toString());
+
+    public static TrackCarDataManager getInstance() {
+        if (mInstance == null) {
+            mInstance = new TrackCarDataManager();
+        }
+        return mInstance;
     }
-  }
-  
-  public static abstract interface OnTrackShopListener
-  {
-    public abstract void callBack(TrackShopEvent paramTrackShopEvent);
-  }
+
+    public void addRecord(Object item, boolean isSync) {
+        TrackDataShop.getInstance().addRecord(item, isSync);
+    }
+
+    public void fetchTrackList(String bduid, int ctime, TrackQueryType type) {
+        TrackDataShop.getInstance().fetchTrackList(this.mHandler, bduid, ctime, type);
+    }
+
+    public void fetchStatistics(int monthLimint) {
+        TrackDataShop.getInstance().fetchStatistics(this.mHandler, monthLimint);
+    }
+
+    public void deleteRecord(Object trackItem) {
+        TrackDataShop.getInstance().deleteRecord(this.mHandler, trackItem);
+    }
+
+    public void clearTrackReacords(String useId) {
+        TrackDataShop.getInstance().clearTrackReacords(useId);
+    }
+
+    private void notifyTrackShop(TrackShopEvent event) {
+        synchronized (this.listenerList) {
+            if (this.listenerList != null) {
+                for (OnTrackShopListener listener : this.listenerList) {
+                    listener.callBack(event);
+                }
+            }
+        }
+    }
+
+    public void registerListener(OnTrackShopListener listener) {
+        synchronized (this.listenerList) {
+            if (!(this.listenerList == null || listener == null)) {
+                this.listenerList.add(listener);
+            }
+        }
+    }
+
+    public void unRegisterListener(OnTrackShopListener listener) {
+        synchronized (this.listenerList) {
+            if (!(this.listenerList == null || listener == null)) {
+                this.listenerList.remove(listener);
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/track/TrackCarDataManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

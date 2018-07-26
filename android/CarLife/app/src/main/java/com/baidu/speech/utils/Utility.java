@@ -2,12 +2,14 @@ package com.baidu.speech.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.text.TextUtils;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.che.codriver.sdk.p081a.C2602k.C1981b;
+import com.baidu.mobstat.Config;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -16,380 +18,304 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Locale;
 
-public final class Utility
-{
-  private static final int BYTES_PER_SAMPLE_16BIT = 2;
-  private static final int BYTES_PER_SAMPLE_8BIT = 1;
-  private static final int BYTES_PER_SHORT = 2;
-  private static int EVR_NETWORK_TYPE_2G = 1;
-  private static int EVR_NETWORK_TYPE_3G = 2;
-  private static int EVR_NETWORK_TYPE_4G = 3;
-  private static int EVR_NETWORK_TYPE_NO = 0;
-  private static int EVR_NETWORK_TYPE_WIFI = 4;
-  private static final String TAG = "Utility";
-  private static final int THOUSAND_DIV = 1000;
-  private static ConnectivityManager mConnManager = null;
-  private static int maxCpuFreq = 0;
-  
-  static
-  {
-    EVR_NETWORK_TYPE_NO = 0;
-  }
-  
-  public static boolean checkPermission(Context paramContext, String paramString)
-  {
-    return paramContext.checkCallingOrSelfPermission(paramString) == 0;
-  }
-  
-  public static String fun(Exception paramException)
-  {
-    paramException = paramException.getStackTrace();
-    if (paramException == null) {
-      return "";
+public final class Utility {
+    private static final int BYTES_PER_SAMPLE_16BIT = 2;
+    private static final int BYTES_PER_SAMPLE_8BIT = 1;
+    private static final int BYTES_PER_SHORT = 2;
+    private static int EVR_NETWORK_TYPE_2G = 1;
+    private static int EVR_NETWORK_TYPE_3G = 2;
+    private static int EVR_NETWORK_TYPE_4G = 3;
+    private static int EVR_NETWORK_TYPE_NO = 0;
+    private static int EVR_NETWORK_TYPE_WIFI = 4;
+    private static final String TAG = "Utility";
+    private static final int THOUSAND_DIV = 1000;
+    private static ConnectivityManager mConnManager = null;
+    private static int maxCpuFreq = 0;
+
+    private Utility() {
     }
-    return paramException[0].getMethodName() + "()";
-  }
-  
-  static String generatePlatformString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder("Android");
-    localStringBuilder.append('&');
-    try
-    {
-      localStringBuilder.append(URLEncoder.encode(Build.MODEL, "utf-8"));
-      localStringBuilder.append('&');
-      localStringBuilder.append(URLEncoder.encode(Build.VERSION.RELEASE, "utf-8"));
-      localStringBuilder.append('&');
-      localStringBuilder.append(Build.VERSION.SDK_INT);
-      return localStringBuilder.toString();
+
+    public static boolean checkPermission(Context context, String str) {
+        return context.checkCallingOrSelfPermission(str) == 0;
     }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      for (;;)
-      {
-        localUnsupportedEncodingException.printStackTrace();
-      }
+
+    public static String fun(Exception exception) {
+        StackTraceElement[] stackTrace = exception.getStackTrace();
+        return stackTrace == null ? "" : stackTrace[0].getMethodName() + "()";
     }
-  }
-  
-  private static int getCpuInfo()
-  {
-    String str2 = "";
-    try
-    {
-      BufferedReader localBufferedReader = new BufferedReader(new FileReader("/proc/cpuinfo"), 1024);
-      String str3;
-      do
-      {
-        str3 = localBufferedReader.readLine();
-        str1 = str2;
-        if (str3 == null) {
-          break;
+
+    static String generatePlatformString() {
+        StringBuilder stringBuilder = new StringBuilder(C1253f.jb);
+        stringBuilder.append('&');
+        try {
+            stringBuilder.append(URLEncoder.encode(Build.MODEL, "utf-8"));
+            stringBuilder.append('&');
+            stringBuilder.append(URLEncoder.encode(VERSION.RELEASE, "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-      } while (str3.indexOf("BogoMIPS") == -1);
-      String str1 = str3.split("\\s+")[2];
-      localBufferedReader.close();
-      float f = Float.parseFloat(str1.trim());
-      return (int)(f * 1000.0F);
+        stringBuilder.append('&');
+        stringBuilder.append(VERSION.SDK_INT);
+        return stringBuilder.toString();
     }
-    catch (Exception localException) {}
-    return 0;
-  }
-  
-  public static String getFileName(Exception paramException)
-  {
-    paramException = paramException.getStackTrace();
-    if ((paramException == null) || (paramException.length == 0)) {
-      return null;
-    }
-    return paramException[0].getFileName();
-  }
-  
-  public static String getLineNumber(Exception paramException)
-  {
-    paramException = paramException.getStackTrace();
-    if ((paramException == null) || (paramException.length == 0)) {
-      return null;
-    }
-    return paramException[0].getFileName() + ":" + paramException[0].getLineNumber();
-  }
-  
-  public static int getMaxCpuFreq()
-  {
-    String str = "";
-    try
-    {
-      if (maxCpuFreq != 0) {
-        return maxCpuFreq;
-      }
-      Object localObject1;
-      Object localObject2;
-      if (isRunningEmulator())
-      {
-        localObject1 = new ProcessBuilder(new String[] { "/system/bin/cat", "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq" }).start();
-        localObject2 = ((Process)localObject1).getInputStream();
-        byte[] arrayOfByte = new byte[24];
-        while (((InputStream)localObject2).read(arrayOfByte) != -1) {
-          str = str + new String(arrayOfByte);
+
+    private static int getCpuInfo() {
+        try {
+            String readLine;
+            String str = "";
+            str = "";
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("/proc/cpuinfo"), 1024);
+            do {
+                readLine = bufferedReader.readLine();
+                if (readLine == null) {
+                    break;
+                }
+            } while (readLine.indexOf("BogoMIPS") == -1);
+            str = readLine.split("\\s+")[2];
+            bufferedReader.close();
+            return (int) (Float.parseFloat(str.trim()) * 1000.0f);
+        } catch (Exception e) {
+            return 0;
         }
-        ((InputStream)localObject2).close();
-        ((Process)localObject1).destroy();
-      }
-      int j;
-      for (;;)
-      {
-        int i = getCpuInfo();
-        j = i;
-        if (TextUtils.isEmpty(str)) {
-          break;
+    }
+
+    public static String getFileName(Exception exception) {
+        StackTraceElement[] stackTrace = exception.getStackTrace();
+        return (stackTrace == null || stackTrace.length == 0) ? null : stackTrace[0].getFileName();
+    }
+
+    public static String getLineNumber(Exception exception) {
+        StackTraceElement[] stackTrace = exception.getStackTrace();
+        return (stackTrace == null || stackTrace.length == 0) ? null : stackTrace[0].getFileName() + Config.TRACE_TODAY_VISIT_SPLIT + stackTrace[0].getLineNumber();
+    }
+
+    public static int getMaxCpuFreq() {
+        try {
+            String str = "";
+            if (maxCpuFreq != 0) {
+                return maxCpuFreq;
+            }
+            Object obj;
+            if (isRunningEmulator()) {
+                Process start = new ProcessBuilder(new String[]{"/system/bin/cat", "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"}).start();
+                InputStream inputStream = start.getInputStream();
+                byte[] bArr = new byte[24];
+                while (inputStream.read(bArr) != -1) {
+                    str = str + new String(bArr);
+                }
+                inputStream.close();
+                start.destroy();
+                obj = str;
+            } else {
+                Reader fileReader = new FileReader("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                str = bufferedReader.readLine();
+                bufferedReader.close();
+                fileReader.close();
+                String str2 = str;
+            }
+            int cpuInfo = getCpuInfo();
+            if (TextUtils.isEmpty(obj)) {
+                return cpuInfo;
+            }
+            int parseInt = Integer.parseInt(obj.trim());
+            if (parseInt >= cpuInfo) {
+                cpuInfo = parseInt;
+            }
+            maxCpuFreq = cpuInfo;
+            return maxCpuFreq;
+        } catch (Exception e) {
+            return 0;
         }
-        int k = Integer.parseInt(str.trim());
-        j = i;
-        if (k >= i) {
-          j = k;
+    }
+
+    public static NetworkInfo getNetworkInfo(Context context) {
+        return ((ConnectivityManager) context.getSystemService("connectivity")).getActiveNetworkInfo();
+    }
+
+    static int getStatusType(int i) {
+        return -65536 & i;
+    }
+
+    public static int getVoiceDataSizeInShort(int i, int i2, int i3) {
+        int i4 = 2;
+        if (i3 == 2 || i3 == 3) {
+            if (i3 == 3) {
+                i4 = 1;
+            }
+            return ((i4 * (i * i2)) / 1000) / 2;
         }
-        maxCpuFreq = j;
-        return maxCpuFreq;
-        localObject1 = new FileReader("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
-        localObject2 = new BufferedReader((Reader)localObject1);
-        str = ((BufferedReader)localObject2).readLine();
-        ((BufferedReader)localObject2).close();
-        ((FileReader)localObject1).close();
-      }
-      return j;
+        throw new IllegalArgumentException("audio format invalid");
     }
-    catch (Exception localException)
-    {
-      j = 0;
-    }
-  }
-  
-  public static NetworkInfo getNetworkInfo(Context paramContext)
-  {
-    return ((ConnectivityManager)paramContext.getSystemService("connectivity")).getActiveNetworkInfo();
-  }
-  
-  static int getStatusType(int paramInt)
-  {
-    return 0xFFFF0000 & paramInt;
-  }
-  
-  public static int getVoiceDataSizeInShort(int paramInt1, int paramInt2, int paramInt3)
-  {
-    int i = 2;
-    if ((paramInt3 != 2) && (paramInt3 != 3)) {
-      throw new IllegalArgumentException("audio format invalid");
-    }
-    if (paramInt3 == 3) {
-      i = 1;
-    }
-    return i * (paramInt1 * paramInt2) / 1000 / 2;
-  }
-  
-  @SuppressLint({"DefaultLocale"})
-  public static int getWifiOr2gOr3G(Context paramContext)
-  {
-    int i = EVR_NETWORK_TYPE_NO;
-    int j;
-    if (paramContext != null)
-    {
-      try
-      {
-        ConnectivityManager localConnectivityManager = (ConnectivityManager)paramContext.getApplicationContext().getSystemService("connectivity");
-        if (!isNetworkPerission(paramContext)) {
-          return i;
+
+    @SuppressLint({"DefaultLocale"})
+    public static int getWifiOr2gOr3G(Context context) {
+        int i;
+        int i2 = EVR_NETWORK_TYPE_NO;
+        if (context != null) {
+            try {
+                ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService("connectivity");
+                if (!isNetworkPerission(context)) {
+                    return i2;
+                }
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting()) {
+                    if (activeNetworkInfo.getTypeName().toLowerCase().equals(C1981b.f6365e)) {
+                        i = EVR_NETWORK_TYPE_WIFI;
+                    } else {
+                        i = EVR_NETWORK_TYPE_2G;
+                        try {
+                            switch (activeNetworkInfo.getSubtype()) {
+                                case 1:
+                                case 2:
+                                case 4:
+                                case 11:
+                                    break;
+                                case 3:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 5:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 6:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 7:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 8:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 9:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 10:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 12:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 13:
+                                    i = EVR_NETWORK_TYPE_4G;
+                                    break;
+                                case 14:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                case 15:
+                                    i = EVR_NETWORK_TYPE_3G;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            Exception e2 = e;
+                            e2.printStackTrace();
+                            return i;
+                        }
+                    }
+                    return i;
+                }
+            } catch (Exception e3) {
+                Exception exception = e3;
+                i = i2;
+                e2 = exception;
+                e2.printStackTrace();
+                return i;
+            }
         }
-        paramContext = localConnectivityManager.getActiveNetworkInfo();
-        if ((paramContext == null) || (!paramContext.isConnectedOrConnecting())) {
-          break label247;
+        i = i2;
+        return i;
+    }
+
+    static void init(Context context) {
+        if (context != null) {
+            mConnManager = (ConnectivityManager) context.getSystemService("connectivity");
         }
-        if (paramContext.getTypeName().toLowerCase().equals("wifi"))
-        {
-          j = EVR_NETWORK_TYPE_WIFI;
-          i = j;
-          break label250;
+    }
+
+    public static boolean is2G(Context context) {
+        try {
+            String str = "";
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService("connectivity");
+            if (!isNetworkPerission(context)) {
+                return false;
+            }
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting()) {
+                if (activeNetworkInfo.getTypeName().toLowerCase().equals(C1981b.f6365e)) {
+                    return false;
+                }
+                switch (activeNetworkInfo.getSubtype()) {
+                    case 1:
+                    case 2:
+                    case 4:
+                    case 7:
+                    case 11:
+                    case 16:
+                        return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        j = EVR_NETWORK_TYPE_2G;
-        i = j;
-      }
-      catch (Exception paramContext)
-      {
-        paramContext.printStackTrace();
-      }
-      try
-      {
-        switch (paramContext.getSubtype())
-        {
-        case 3: 
-          i = EVR_NETWORK_TYPE_3G;
+    }
+
+    public static boolean isNetworkConnected(Context context) {
+        NetworkInfo networkInfo = getNetworkInfo(context);
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    private static boolean isNetworkPerission(Context context) {
+        try {
+            return context.getPackageManager().checkPermission("android.permission.ACCESS_NETWORK_STATE", context.getPackageName()) == 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-      }
-      catch (Exception paramContext)
-      {
-        i = j;
-        break label234;
-      }
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_3G;
-      break label250;
-      i = EVR_NETWORK_TYPE_4G;
     }
-    else {}
-    for (;;)
-    {
-      label234:
-      label247:
-      label250:
-      return i;
-      i = j;
+
+    private static boolean isRunningEmulator() {
+        return Build.MODEL.equals("sdk") || Build.MODEL.equals("google_sdk");
     }
-  }
-  
-  static void init(Context paramContext)
-  {
-    if (paramContext != null) {
-      mConnManager = (ConnectivityManager)paramContext.getSystemService("connectivity");
-    }
-  }
-  
-  public static boolean is2G(Context paramContext)
-  {
-    try
-    {
-      ConnectivityManager localConnectivityManager = (ConnectivityManager)paramContext.getApplicationContext().getSystemService("connectivity");
-      if (!isNetworkPerission(paramContext)) {
-        return false;
-      }
-      paramContext = localConnectivityManager.getActiveNetworkInfo();
-      if ((paramContext != null) && (paramContext.isConnectedOrConnecting()))
-      {
-        if (paramContext.getTypeName().toLowerCase().equals("wifi")) {
-          return false;
+
+    @SuppressLint({"DefaultLocale"})
+    static boolean isUsingWifi() {
+        if (mConnManager == null) {
+            return false;
         }
-        int i = paramContext.getSubtype();
-        switch (i)
-        {
+        NetworkInfo activeNetworkInfo = mConnManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null ? C1981b.f6365e.equals(activeNetworkInfo.getTypeName().toLowerCase()) : false;
+    }
+
+    static boolean isUsingWifi(Context context) {
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService("connectivity");
+            if (!isNetworkPerission(context)) {
+                return false;
+            }
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && C1981b.f6365e.equals(activeNetworkInfo.getTypeName().toLowerCase(Locale.US))) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-      }
     }
-    catch (Exception paramContext)
-    {
-      for (;;)
-      {
-        paramContext.printStackTrace();
-      }
+
+    public static boolean isWifiConnected(Context context) {
+        NetworkInfo networkInfo = getNetworkInfo(context);
+        return networkInfo != null && networkInfo.isConnected() && networkInfo.getType() == 1;
     }
-    return false;
-    return true;
-  }
-  
-  public static boolean isNetworkConnected(Context paramContext)
-  {
-    paramContext = getNetworkInfo(paramContext);
-    return (paramContext != null) && (paramContext.isConnected());
-  }
-  
-  private static boolean isNetworkPerission(Context paramContext)
-  {
-    boolean bool = false;
-    try
-    {
-      int i = paramContext.getPackageManager().checkPermission("android.permission.ACCESS_NETWORK_STATE", paramContext.getPackageName());
-      if (i == 0) {
-        bool = true;
-      }
-      return bool;
-    }
-    catch (Exception paramContext)
-    {
-      paramContext.printStackTrace();
-    }
-    return false;
-  }
-  
-  private static boolean isRunningEmulator()
-  {
-    return (Build.MODEL.equals("sdk")) || (Build.MODEL.equals("google_sdk"));
-  }
-  
-  @SuppressLint({"DefaultLocale"})
-  static boolean isUsingWifi()
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (mConnManager != null)
-    {
-      NetworkInfo localNetworkInfo = mConnManager.getActiveNetworkInfo();
-      bool1 = bool2;
-      if (localNetworkInfo != null) {
-        bool1 = "wifi".equals(localNetworkInfo.getTypeName().toLowerCase());
-      }
-    }
-    return bool1;
-  }
-  
-  static boolean isUsingWifi(Context paramContext)
-  {
-    try
-    {
-      ConnectivityManager localConnectivityManager = (ConnectivityManager)paramContext.getApplicationContext().getSystemService("connectivity");
-      if (!isNetworkPerission(paramContext)) {
-        return false;
-      }
-      paramContext = localConnectivityManager.getActiveNetworkInfo();
-      if (paramContext != null)
-      {
-        boolean bool = "wifi".equals(paramContext.getTypeName().toLowerCase(Locale.US));
-        if (bool) {
-          return true;
+
+    public static String urlEncode(String str, String str2) {
+        try {
+            if (!TextUtils.isEmpty(str)) {
+                str = URLEncoder.encode(str, str2);
+            }
+        } catch (UnsupportedEncodingException e) {
         }
-      }
+        return str;
     }
-    catch (Exception paramContext)
-    {
-      paramContext.printStackTrace();
-    }
-    return false;
-  }
-  
-  public static boolean isWifiConnected(Context paramContext)
-  {
-    paramContext = getNetworkInfo(paramContext);
-    return (paramContext != null) && (paramContext.isConnected()) && (paramContext.getType() == 1);
-  }
-  
-  public static String urlEncode(String paramString1, String paramString2)
-  {
-    String str = paramString1;
-    try
-    {
-      if (!TextUtils.isEmpty(paramString1)) {
-        str = URLEncoder.encode(paramString1, paramString2);
-      }
-      return str;
-    }
-    catch (UnsupportedEncodingException paramString2) {}
-    return paramString1;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/speech/utils/Utility.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

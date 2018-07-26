@@ -2,18 +2,13 @@ package com.indooratlas.android.sdk._internal;
 
 import org.json.JSONObject;
 
-public abstract interface ac
-  extends ab
-{
-  public abstract <R> aa<R> a(z<R> paramz, String paramString);
-  
-  public abstract <R> aa<R> a(z<R> paramz, JSONObject paramJSONObject);
-  
-  public abstract aa<Void> a(String paramString, byte[] paramArrayOfByte);
+public interface ac extends ab {
+    /* renamed from: a */
+    <R> aa<R> mo4596a(C6015z<R> c6015z, String str);
+
+    /* renamed from: a */
+    <R> aa<R> mo4597a(C6015z<R> c6015z, JSONObject jSONObject);
+
+    /* renamed from: a */
+    aa<Void> mo4598a(String str, byte[] bArr);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ac.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

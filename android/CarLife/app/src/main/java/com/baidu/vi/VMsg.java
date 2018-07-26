@@ -5,67 +5,41 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
-public class VMsg
-{
-  private static final boolean DEBUG = false;
-  private static Handler g_viMsgHandler;
-  private static HandlerThread looperThread;
-  
-  private static native void OnUserCommand1(int paramInt1, int paramInt2, int paramInt3, int paramInt4);
-  
-  public static void destroy()
-  {
-    if (looperThread != null) {
-      looperThread.quit();
+public class VMsg {
+    private static final boolean DEBUG = false;
+    private static Handler g_viMsgHandler;
+    private static HandlerThread looperThread;
+
+    static class VIHandler extends Handler {
+        public VIHandler(Looper looper) {
+            super(looper);
+        }
+
+        public void handleMessage(Message message) {
+            VMsg.OnUserCommand1(message.what, message.arg1, message.arg2, message.obj == null ? 0 : ((Integer) message.obj).intValue());
+        }
     }
-    looperThread = null;
-    g_viMsgHandler.removeCallbacksAndMessages(null);
-    g_viMsgHandler = null;
-  }
-  
-  public static void init()
-  {
-    looperThread = new HandlerThread("VIMsgThread");
-    looperThread.start();
-    g_viMsgHandler = new VIHandler(looperThread.getLooper());
-  }
-  
-  private static void postMessage(int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    if (g_viMsgHandler == null) {
-      return;
+
+    private static native void OnUserCommand1(int i, int i2, int i3, int i4);
+
+    public static void init() {
+        looperThread = new HandlerThread("VIMsgThread");
+        looperThread.start();
+        g_viMsgHandler = new VIHandler(looperThread.getLooper());
     }
-    Handler localHandler = g_viMsgHandler;
-    if (paramInt4 == 0) {}
-    for (Object localObject = null;; localObject = Integer.valueOf(paramInt4))
-    {
-      Message.obtain(localHandler, paramInt1, paramInt2, paramInt3, localObject).sendToTarget();
-      return;
+
+    public static void destroy() {
+        if (looperThread != null) {
+            looperThread.quit();
+        }
+        looperThread = null;
+        g_viMsgHandler.removeCallbacksAndMessages(null);
+        g_viMsgHandler = null;
     }
-  }
-  
-  static class VIHandler
-    extends Handler
-  {
-    public VIHandler(Looper paramLooper)
-    {
-      super();
+
+    private static void postMessage(int nMsgID, int nArg1, int nArg2, int nHandle) {
+        if (g_viMsgHandler != null) {
+            Message.obtain(g_viMsgHandler, nMsgID, nArg1, nArg2, nHandle == 0 ? null : Integer.valueOf(nHandle)).sendToTarget();
+        }
     }
-    
-    public void handleMessage(Message paramMessage)
-    {
-      if (paramMessage.obj == null) {}
-      for (int i = 0;; i = ((Integer)paramMessage.obj).intValue())
-      {
-        VMsg.a(paramMessage.what, paramMessage.arg1, paramMessage.arg2, i);
-        return;
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/vi/VMsg.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

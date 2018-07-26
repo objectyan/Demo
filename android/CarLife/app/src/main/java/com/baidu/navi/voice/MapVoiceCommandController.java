@@ -1,20 +1,27 @@
 package com.baidu.navi.voice;
 
 import android.os.Bundle;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.screen.presentation.a.d;
-import com.baidu.carlife.core.screen.presentation.h;
-import com.baidu.carlife.util.w;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.C1269a;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.core.screen.presentation.p071a.C1306d;
+import com.baidu.carlife.p052m.C1915a;
+import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.util.C2201w;
 import com.baidu.navi.BaiduNaviSDKManager;
 import com.baidu.navi.cruise.BCruiser;
 import com.baidu.navi.cruise.control.EnterQuitLogicManager;
 import com.baidu.navi.logic.model.UIModel;
+import com.baidu.navi.protocol.util.BNaviProtocolDef;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navisdk.comapi.mapcontrol.BNMapController;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams.BundleKey;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandController;
 import com.baidu.navisdk.model.MainMapModel;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
+import com.baidu.navisdk.ui.cruise.model.CruiseParams.Key;
 import com.baidu.navisdk.ui.routeguide.BNavigator;
 import com.baidu.navisdk.ui.routeguide.control.NMapControlProxy;
 import com.baidu.navisdk.ui.routeguide.model.RGControlPanelModel;
@@ -25,445 +32,348 @@ import com.baidu.nplatform.comapi.basestruct.MapStatus;
 import com.baidu.nplatform.comapi.basestruct.Point;
 import com.baidu.nplatform.comapi.map.MapController.AnimationType;
 
-public class MapVoiceCommandController
-{
-  private static final String TAG = MapVoiceCommandController.class.getSimpleName();
-  private static MapVoiceCommandController mInstance;
-  private d mCarlifePresenter;
-  
-  public static MapVoiceCommandController getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new MapVoiceCommandController();
+public class MapVoiceCommandController {
+    private static final String TAG = MapVoiceCommandController.class.getSimpleName();
+    private static MapVoiceCommandController mInstance;
+    private C1306d mCarlifePresenter;
+
+    private MapVoiceCommandController() {
     }
-    return mInstance;
-  }
-  
-  private void handleError()
-  {
-    com.baidu.carlife.m.a.a().b("当前页面不支持", 0);
-    w.a("当前页面不支持");
-  }
-  
-  private void handleVoiceCommandMsg(int paramInt1, int paramInt2, int paramInt3, Bundle paramBundle)
-  {
-    BNVoiceCommandController.getInstance().handleVoiceCommandMsg(paramInt1, paramInt2, paramInt3, paramBundle);
-  }
-  
-  private static boolean mapMove(int paramInt1, int paramInt2)
-  {
-    MapStatus localMapStatus = BNMapController.getInstance().getMapStatus();
-    if (localMapStatus != null)
-    {
-      localObject = CoordinateTransformUtil.MC2LLE6(localMapStatus._CenterPtX, localMapStatus._CenterPtY);
-      localObject = new GeoPoint(((Bundle)localObject).getInt("LLx"), ((Bundle)localObject).getInt("LLy"));
-      localObject = BNMapController.getInstance().getScreenPosByGeoPos((GeoPoint)localObject);
-      if (localObject != null) {}
-    }
-    else
-    {
-      return false;
-    }
-    ((Point)localObject).x += paramInt1;
-    ((Point)localObject).y += paramInt2;
-    Object localObject = BNMapController.getInstance().getGeoPosByScreenPos(((Point)localObject).x, ((Point)localObject).y);
-    localObject = CoordinateTransformUtil.LL2MC(((GeoPoint)localObject).getLongitudeE6() / 100000.0D, ((GeoPoint)localObject).getLatitudeE6() / 100000.0D);
-    localMapStatus._CenterPtX = ((Bundle)localObject).getInt("MCx");
-    localMapStatus._CenterPtY = ((Bundle)localObject).getInt("MCy");
-    NMapControlProxy.getInstance().setMapStatus(localMapStatus, MapController.AnimationType.eAnimationPos);
-    return true;
-  }
-  
-  public void cancelNavi()
-  {
-    i.b(TAG, "cancelNavi");
-    handleVoiceCommandMsg(2, 38, 0, null);
-  }
-  
-  public void enterCruise()
-  {
-    i.b(TAG, "enterCruise");
-    com.baidu.carlife.m.a.a().a(com.baidu.carlife.l.a.a().N());
-    h.a().showFragment(114, null);
-  }
-  
-  public void exitCruise()
-  {
-    i.b(TAG, "exitCruise");
-    if (BaiduNaviSDKManager.getInstance().isCruiseBegin()) {
-      BaiduNaviSDKManager.getInstance().quitCruise();
-    }
-  }
-  
-  public void exitCruiseFollow()
-  {
-    i.b(TAG, "exitCruiseFollow");
-    if (BCruiser.getInstance().isCruiseBegin()) {
-      EnterQuitLogicManager.getmInstance().quitCruiseFollowMode();
-    }
-  }
-  
-  public void exitNavi()
-  {
-    i.b(TAG, "exitNavi");
-    if (BaiduNaviSDKManager.getInstance().isNaviBegin())
-    {
-      BaiduNaviSDKManager.getInstance().quitNavi();
-      return;
-    }
-    handleError();
-  }
-  
-  public void goHome()
-  {
-    i.b(TAG, "goHome");
-    handleVoiceCommandMsg(5, 5, 0, null);
-  }
-  
-  public void goOffice()
-  {
-    i.b(TAG, "goOffice");
-    handleVoiceCommandMsg(5, 6, 0, null);
-  }
-  
-  public boolean isMapContentFragment()
-  {
-    int i = this.mCarlifePresenter.h();
-    return (i == 17) || (i == 52) || (i == 113) || (i == 116) || (i == 114) || (i == 33);
-  }
-  
-  public boolean isMapModule()
-  {
-    return this.mCarlifePresenter.i() == 4003;
-  }
-  
-  public boolean isRouteDetailFragment()
-  {
-    return this.mCarlifePresenter.h() == 52;
-  }
-  
-  public void mapCarForward()
-  {
-    i.b(TAG, "mapCarForward");
-    if (!isMapContentFragment()) {
-      return;
-    }
-    if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
-      if (RGControlPanelModel.getInstance().getLocateStatus() == 1) {
-        com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-      }
-    }
-    for (;;)
-    {
-      handleVoiceCommandMsg(2, 30, 0, null);
-      return;
-      com.baidu.carlife.m.a.a().b("已为您切换", 0);
-      continue;
-      if ((BaiduNaviSDKManager.getInstance().isCruiseBegin()) || (BCruiser.getInstance().isCruiseBegin()))
-      {
-        if (!PreferenceHelper.getInstance(com.baidu.carlife.core.a.a()).getBoolean("SP_Last_Cruise_Map_Status", true)) {
-          com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-        } else {
-          com.baidu.carlife.m.a.a().b("已为您切换", 0);
+
+    public static MapVoiceCommandController getInstance() {
+        if (mInstance == null) {
+            mInstance = new MapVoiceCommandController();
         }
-      }
-      else if (2 == MainMapModel.getInstance().getCurLocMode()) {
-        com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-      } else {
-        com.baidu.carlife.m.a.a().b("已为您切换", 0);
-      }
+        return mInstance;
     }
-  }
-  
-  public boolean mapMoveDown()
-  {
-    return mapMove(0, -BNMapController.getInstance().getScreenHeight() / 3);
-  }
-  
-  public boolean mapMoveLeft()
-  {
-    return mapMove(BNMapController.getInstance().getScreenWidth() / 3, 0);
-  }
-  
-  public boolean mapMoveLeftDown()
-  {
-    int i = BNMapController.getInstance().getScreenHeight();
-    return mapMove(BNMapController.getInstance().getScreenWidth() / 3, -i / 3);
-  }
-  
-  public boolean mapMoveLeftUp()
-  {
-    int i = BNMapController.getInstance().getScreenHeight();
-    return mapMove(BNMapController.getInstance().getScreenWidth() / 3, i / 3);
-  }
-  
-  public boolean mapMoveRight()
-  {
-    return mapMove(-BNMapController.getInstance().getScreenWidth() / 3, 0);
-  }
-  
-  public boolean mapMoveRightDown()
-  {
-    int i = BNMapController.getInstance().getScreenHeight();
-    return mapMove(-BNMapController.getInstance().getScreenWidth() / 3, -i / 3);
-  }
-  
-  public boolean mapMoveRightUp()
-  {
-    int i = BNMapController.getInstance().getScreenHeight();
-    return mapMove(-BNMapController.getInstance().getScreenWidth() / 3, i / 3);
-  }
-  
-  public boolean mapMoveUp()
-  {
-    return mapMove(0, BNMapController.getInstance().getScreenHeight() / 3);
-  }
-  
-  public void mapNorthForward()
-  {
-    i.b(TAG, "mapNorthForward");
-    if (!isMapContentFragment()) {
-      return;
+
+    public void setCarlifePresenter(C1306d presenter) {
+        this.mCarlifePresenter = presenter;
     }
-    if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
-      if (RGControlPanelModel.getInstance().getLocateStatus() == 2) {
-        com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-      }
+
+    public boolean isMapModule() {
+        return this.mCarlifePresenter.i() == 4003;
     }
-    for (;;)
-    {
-      handleVoiceCommandMsg(2, 29, 0, null);
-      return;
-      com.baidu.carlife.m.a.a().b("已为您切换", 0);
-      continue;
-      if ((BaiduNaviSDKManager.getInstance().isCruiseBegin()) || (BCruiser.getInstance().isCruiseBegin()))
-      {
-        if (PreferenceHelper.getInstance(com.baidu.carlife.core.a.a()).getBoolean("SP_Last_Cruise_Map_Status", true)) {
-          com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-        } else {
-          com.baidu.carlife.m.a.a().b("已为您切换", 0);
+
+    public void openNavi() {
+        this.mCarlifePresenter.e();
+    }
+
+    public boolean isMapContentFragment() {
+        int type = this.mCarlifePresenter.h();
+        if (type == 17 || type == 52 || type == 113 || type == 116 || type == 114 || type == 33) {
+            return true;
         }
-      }
-      else if (1 == MainMapModel.getInstance().getCurLocMode()) {
-        com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-      } else {
-        com.baidu.carlife.m.a.a().b("已为您切换", 0);
-      }
+        return false;
     }
-  }
-  
-  public void mapZoomIn()
-  {
-    i.b(TAG, "mapZoomIn");
-    if (!isMapContentFragment()) {
-      return;
+
+    public boolean isRouteDetailFragment() {
+        return this.mCarlifePresenter.h() == 52;
     }
-    if (BNMapController.getInstance().getZoomLevel() >= 20) {
-      com.baidu.carlife.m.a.a().b("已为最大模式", 0);
+
+    private void handleVoiceCommandMsg(int topType, int subType, int arg, Bundle data) {
+        BNVoiceCommandController.getInstance().handleVoiceCommandMsg(topType, subType, arg, data);
     }
-    for (;;)
-    {
-      handleVoiceCommandMsg(2, 3, 0, null);
-      return;
-      com.baidu.carlife.m.a.a().b("地图已放大", 0);
+
+    public void startCalcRoute(double lng, double lat) {
+        GeoPoint geoPoint = CoordinateTransformUtil.transferGCJ02ToBD09(lng, lat);
+        if (geoPoint.isValid()) {
+            C1269a carLifeSearchPoi = new C1269a(((double) geoPoint.getLongitudeE6()) / 100000.0d, ((double) geoPoint.getLatitudeE6()) / 100000.0d);
+            if (this.mCarlifePresenter != null) {
+                this.mCarlifePresenter.a(carLifeSearchPoi);
+            }
+        }
     }
-  }
-  
-  public void mapZoomOut()
-  {
-    i.b(TAG, "mapZoomOut");
-    if (!isMapContentFragment()) {
-      return;
+
+    public void switchDayNightMode(boolean isDay) {
+        C1260i.b(TAG, "switchDayNightMode isDay: " + isDay);
+        if (!isMapContentFragment()) {
+            return;
+        }
+        if (isDay) {
+            if (StyleManager.getDayStyle()) {
+                C1915a.a().b("当前已为该模式", 0);
+            } else {
+                C1915a.a().b("已为您切换", 0);
+            }
+            handleVoiceCommandMsg(2, 32, 0, null);
+            return;
+        }
+        if (StyleManager.getDayStyle()) {
+            C1915a.a().b("已为您切换", 0);
+        } else {
+            C1915a.a().b("当前已为该模式", 0);
+        }
+        handleVoiceCommandMsg(2, 31, 0, null);
     }
-    if (BNMapController.getInstance().getZoomLevel() <= 3) {
-      com.baidu.carlife.m.a.a().b("已为最小模式", 0);
+
+    public void mapZoomIn() {
+        C1260i.b(TAG, BNaviProtocolDef.COMMAND_MAP_ZOOM_IN);
+        if (isMapContentFragment()) {
+            if (BNMapController.getInstance().getZoomLevel() >= 20) {
+                C1915a.a().b("已为最大模式", 0);
+            } else {
+                C1915a.a().b("地图已放大", 0);
+            }
+            handleVoiceCommandMsg(2, 3, 0, null);
+        }
     }
-    for (;;)
-    {
-      handleVoiceCommandMsg(2, 2, 0, null);
-      return;
-      com.baidu.carlife.m.a.a().b("地图已缩小", 0);
+
+    public void mapZoomOut() {
+        C1260i.b(TAG, BNaviProtocolDef.COMMAND_MAP_ZOOM_OUT);
+        if (isMapContentFragment()) {
+            if (BNMapController.getInstance().getZoomLevel() <= 3) {
+                C1915a.a().b("已为最小模式", 0);
+            } else {
+                C1915a.a().b("地图已缩小", 0);
+            }
+            handleVoiceCommandMsg(2, 2, 0, null);
+        }
     }
-  }
-  
-  public void nameSearch(String paramString)
-  {
-    i.b(TAG, "nameSearch key: " + paramString);
-    Bundle localBundle = new Bundle();
-    localBundle.putString("poiname", paramString);
-    handleVoiceCommandMsg(5, 3, 0, localBundle);
-  }
-  
-  public void naviContinue()
-  {
-    i.b(TAG, "naviContinue");
-    if (BaiduNaviSDKManager.getInstance().isNaviBegin())
-    {
-      if (RGControlPanelModel.getInstance().getFullviewState())
-      {
-        com.baidu.carlife.m.a.a().b("已为您切换", 0);
-        BNavigator.getInstance().enterNavState();
-        return;
-      }
-      com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-      return;
+
+    public boolean mapMoveLeft() {
+        return mapMove(BNMapController.getInstance().getScreenWidth() / 3, 0);
     }
-    handleError();
-  }
-  
-  public void naviFullView()
-  {
-    i.b(TAG, "naviFullView");
-    if (BaiduNaviSDKManager.getInstance().isNaviBegin())
-    {
-      if (!RGControlPanelModel.getInstance().getFullviewState())
-      {
-        com.baidu.carlife.m.a.a().b("已为您切换", 0);
-        BNavigator.getInstance().onVoiceCommand(2, 16, 0, null, true);
-        return;
-      }
-      com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-      return;
+
+    public boolean mapMoveRight() {
+        return mapMove((-BNMapController.getInstance().getScreenWidth()) / 3, 0);
     }
-    handleError();
-  }
-  
-  public void openNavi()
-  {
-    this.mCarlifePresenter.e();
-  }
-  
-  public void selectRoute(int paramInt)
-  {
-    i.b(TAG, "selectRoute index: " + paramInt);
-    handleVoiceCommandMsg(2, 67, paramInt, null);
-  }
-  
-  public void selectRouteAndStartNavi(int paramInt)
-  {
-    i.b(TAG, "selectRouteAndStartNavi index: " + paramInt);
-    handleVoiceCommandMsg(2, 66, paramInt, null);
-  }
-  
-  public void setCarlifePresenter(d paramd)
-  {
-    this.mCarlifePresenter = paramd;
-  }
-  
-  public void setCompanyAddress(RoutePlanNode paramRoutePlanNode)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("select_point_action", 5);
-    UIModel.settingAddress(paramRoutePlanNode, com.baidu.carlife.core.a.a(), localBundle);
-  }
-  
-  public void setHomeAddress(RoutePlanNode paramRoutePlanNode)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("select_point_action", 4);
-    UIModel.settingAddress(paramRoutePlanNode, com.baidu.carlife.core.a.a(), localBundle);
-  }
-  
-  public void spaceSearch(String paramString)
-  {
-    i.b(TAG, "spaceSearch key: " + paramString);
-    Bundle localBundle = new Bundle();
-    localBundle.putString("poiname", paramString);
-    handleVoiceCommandMsg(5, 4, 0, localBundle);
-  }
-  
-  public void startCalcRoute(double paramDouble1, double paramDouble2)
-  {
-    Object localObject = CoordinateTransformUtil.transferGCJ02ToBD09(paramDouble1, paramDouble2);
-    if (!((GeoPoint)localObject).isValid()) {}
-    do
-    {
-      return;
-      localObject = new com.baidu.carlife.core.screen.a(((GeoPoint)localObject).getLongitudeE6() / 100000.0D, ((GeoPoint)localObject).getLatitudeE6() / 100000.0D);
-    } while (this.mCarlifePresenter == null);
-    this.mCarlifePresenter.a((com.baidu.carlife.core.screen.a)localObject);
-  }
-  
-  public void startNavi()
-  {
-    i.b(TAG, "startNavi");
-    if (isRouteDetailFragment())
-    {
-      handleVoiceCommandMsg(2, 65, 0, null);
-      return;
+
+    public boolean mapMoveUp() {
+        return mapMove(0, BNMapController.getInstance().getScreenHeight() / 3);
     }
-    handleError();
-  }
-  
-  public void switchDayNightMode(boolean paramBoolean)
-  {
-    i.b(TAG, "switchDayNightMode isDay: " + paramBoolean);
-    if (!isMapContentFragment()) {
-      return;
+
+    public boolean mapMoveDown() {
+        return mapMove(0, (-BNMapController.getInstance().getScreenHeight()) / 3);
     }
-    if (paramBoolean)
-    {
-      if (StyleManager.getDayStyle()) {
-        com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
-      }
-      for (;;)
-      {
-        handleVoiceCommandMsg(2, 32, 0, null);
-        return;
-        com.baidu.carlife.m.a.a().b("已为您切换", 0);
-      }
+
+    public boolean mapMoveLeftDown() {
+        return mapMove(BNMapController.getInstance().getScreenWidth() / 3, (-BNMapController.getInstance().getScreenHeight()) / 3);
     }
-    if (!StyleManager.getDayStyle()) {
-      com.baidu.carlife.m.a.a().b("当前已为该模式", 0);
+
+    public boolean mapMoveRightDown() {
+        return mapMove((-BNMapController.getInstance().getScreenWidth()) / 3, (-BNMapController.getInstance().getScreenHeight()) / 3);
     }
-    for (;;)
-    {
-      handleVoiceCommandMsg(2, 31, 0, null);
-      return;
-      com.baidu.carlife.m.a.a().b("已为您切换", 0);
+
+    public boolean mapMoveLeftUp() {
+        return mapMove(BNMapController.getInstance().getScreenWidth() / 3, BNMapController.getInstance().getScreenHeight() / 3);
     }
-  }
-  
-  public void switchNaviVoiceMode(boolean paramBoolean)
-  {
-    i.b(TAG, "switchNaviVoiceMode isNewerMode: " + paramBoolean);
-    if (paramBoolean)
-    {
-      handleVoiceCommandMsg(2, 33, 0, null);
-      return;
+
+    public boolean mapMoveRightUp() {
+        return mapMove((-BNMapController.getInstance().getScreenWidth()) / 3, BNMapController.getInstance().getScreenHeight() / 3);
     }
-    handleVoiceCommandMsg(2, 34, 0, null);
-  }
-  
-  public void switchRoadCondition(boolean paramBoolean)
-  {
-    i.b(TAG, "switchRoadCondition isEnable: " + paramBoolean);
-    if (paramBoolean)
-    {
-      if (BNSettingManager.isRoadCondOnOrOff()) {
-        com.baidu.carlife.m.a.a().b("当前路况已开启", 0);
-      }
-      for (;;)
-      {
-        handleVoiceCommandMsg(2, 7, 0, null);
-        return;
-        com.baidu.carlife.m.a.a().b("路况已开启", 0);
-      }
+
+    private static boolean mapMove(int x, int y) {
+        MapStatus st = BNMapController.getInstance().getMapStatus();
+        if (st == null) {
+            return false;
+        }
+        Bundle bd = CoordinateTransformUtil.MC2LLE6(st._CenterPtX, st._CenterPtY);
+        Point pt = BNMapController.getInstance().getScreenPosByGeoPos(new GeoPoint(bd.getInt("LLx"), bd.getInt("LLy")));
+        if (pt == null) {
+            return false;
+        }
+        pt.f19727x += x;
+        pt.f19728y += y;
+        GeoPoint newGP = BNMapController.getInstance().getGeoPosByScreenPos(pt.f19727x, pt.f19728y);
+        Bundle b = CoordinateTransformUtil.LL2MC(((double) newGP.getLongitudeE6()) / 100000.0d, ((double) newGP.getLatitudeE6()) / 100000.0d);
+        st._CenterPtX = b.getInt("MCx");
+        st._CenterPtY = b.getInt("MCy");
+        NMapControlProxy.getInstance().setMapStatus(st, AnimationType.eAnimationPos);
+        return true;
     }
-    if (!BNSettingManager.isRoadCondOnOrOff()) {
-      com.baidu.carlife.m.a.a().b("当前路况已关闭", 0);
+
+    public void mapNorthForward() {
+        C1260i.b(TAG, "mapNorthForward");
+        if (isMapContentFragment()) {
+            if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
+                if (RGControlPanelModel.getInstance().getLocateStatus() == 2) {
+                    C1915a.a().b("当前已为该模式", 0);
+                } else {
+                    C1915a.a().b("已为您切换", 0);
+                }
+            } else if (BaiduNaviSDKManager.getInstance().isCruiseBegin() || BCruiser.getInstance().isCruiseBegin()) {
+                if (PreferenceHelper.getInstance(C1157a.a()).getBoolean(Key.SP_Last_Cruise_Map_Status, true)) {
+                    C1915a.a().b("当前已为该模式", 0);
+                } else {
+                    C1915a.a().b("已为您切换", 0);
+                }
+            } else if (1 == MainMapModel.getInstance().getCurLocMode()) {
+                C1915a.a().b("当前已为该模式", 0);
+            } else {
+                C1915a.a().b("已为您切换", 0);
+            }
+            handleVoiceCommandMsg(2, 29, 0, null);
+        }
     }
-    for (;;)
-    {
-      handleVoiceCommandMsg(2, 8, 0, null);
-      return;
-      com.baidu.carlife.m.a.a().b("路况已关闭", 0);
+
+    public void mapCarForward() {
+        C1260i.b(TAG, "mapCarForward");
+        if (isMapContentFragment()) {
+            if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
+                if (RGControlPanelModel.getInstance().getLocateStatus() == 1) {
+                    C1915a.a().b("当前已为该模式", 0);
+                } else {
+                    C1915a.a().b("已为您切换", 0);
+                }
+            } else if (BaiduNaviSDKManager.getInstance().isCruiseBegin() || BCruiser.getInstance().isCruiseBegin()) {
+                if (PreferenceHelper.getInstance(C1157a.a()).getBoolean(Key.SP_Last_Cruise_Map_Status, true)) {
+                    C1915a.a().b("已为您切换", 0);
+                } else {
+                    C1915a.a().b("当前已为该模式", 0);
+                }
+            } else if (2 == MainMapModel.getInstance().getCurLocMode()) {
+                C1915a.a().b("当前已为该模式", 0);
+            } else {
+                C1915a.a().b("已为您切换", 0);
+            }
+            handleVoiceCommandMsg(2, 30, 0, null);
+        }
     }
-  }
+
+    public void naviContinue() {
+        C1260i.b(TAG, "naviContinue");
+        if (!BaiduNaviSDKManager.getInstance().isNaviBegin()) {
+            handleError();
+        } else if (RGControlPanelModel.getInstance().getFullviewState()) {
+            C1915a.a().b("已为您切换", 0);
+            BNavigator.getInstance().enterNavState();
+        } else {
+            C1915a.a().b("当前已为该模式", 0);
+        }
+    }
+
+    public void naviFullView() {
+        C1260i.b(TAG, "naviFullView");
+        if (!BaiduNaviSDKManager.getInstance().isNaviBegin()) {
+            handleError();
+        } else if (RGControlPanelModel.getInstance().getFullviewState()) {
+            C1915a.a().b("当前已为该模式", 0);
+        } else {
+            C1915a.a().b("已为您切换", 0);
+            BNavigator.getInstance().onVoiceCommand(2, 16, 0, null, true);
+        }
+    }
+
+    public void switchRoadCondition(boolean isEnable) {
+        C1260i.b(TAG, "switchRoadCondition isEnable: " + isEnable);
+        if (isEnable) {
+            if (BNSettingManager.isRoadCondOnOrOff()) {
+                C1915a.a().b("当前路况已开启", 0);
+            } else {
+                C1915a.a().b("路况已开启", 0);
+            }
+            handleVoiceCommandMsg(2, 7, 0, null);
+            return;
+        }
+        if (BNSettingManager.isRoadCondOnOrOff()) {
+            C1915a.a().b("路况已关闭", 0);
+        } else {
+            C1915a.a().b("当前路况已关闭", 0);
+        }
+        handleVoiceCommandMsg(2, 8, 0, null);
+    }
+
+    public void switchNaviVoiceMode(boolean isNewerMode) {
+        C1260i.b(TAG, "switchNaviVoiceMode isNewerMode: " + isNewerMode);
+        if (isNewerMode) {
+            handleVoiceCommandMsg(2, 33, 0, null);
+        } else {
+            handleVoiceCommandMsg(2, 34, 0, null);
+        }
+    }
+
+    public void exitNavi() {
+        C1260i.b(TAG, "exitNavi");
+        if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
+            BaiduNaviSDKManager.getInstance().quitNavi();
+        } else {
+            handleError();
+        }
+    }
+
+    public void startNavi() {
+        C1260i.b(TAG, BNaviProtocolDef.COMMAND_START_NAVI);
+        if (isRouteDetailFragment()) {
+            handleVoiceCommandMsg(2, 65, 0, null);
+        } else {
+            handleError();
+        }
+    }
+
+    public void cancelNavi() {
+        C1260i.b(TAG, "cancelNavi");
+        handleVoiceCommandMsg(2, 38, 0, null);
+    }
+
+    public void exitCruise() {
+        C1260i.b(TAG, "exitCruise");
+        if (BaiduNaviSDKManager.getInstance().isCruiseBegin()) {
+            BaiduNaviSDKManager.getInstance().quitCruise();
+        }
+    }
+
+    public void enterCruise() {
+        C1260i.b(TAG, "enterCruise");
+        C1915a.a().a(C1663a.a().N());
+        C1328h.a().showFragment(114, null);
+    }
+
+    public void exitCruiseFollow() {
+        C1260i.b(TAG, "exitCruiseFollow");
+        if (BCruiser.getInstance().isCruiseBegin()) {
+            EnterQuitLogicManager.getmInstance().quitCruiseFollowMode();
+        }
+    }
+
+    public void selectRoute(int index) {
+        C1260i.b(TAG, "selectRoute index: " + index);
+        handleVoiceCommandMsg(2, 67, index, null);
+    }
+
+    public void selectRouteAndStartNavi(int index) {
+        C1260i.b(TAG, "selectRouteAndStartNavi index: " + index);
+        handleVoiceCommandMsg(2, 66, index, null);
+    }
+
+    public void goHome() {
+        C1260i.b(TAG, "goHome");
+        handleVoiceCommandMsg(5, 5, 0, null);
+    }
+
+    public void goOffice() {
+        C1260i.b(TAG, "goOffice");
+        handleVoiceCommandMsg(5, 6, 0, null);
+    }
+
+    public void nameSearch(String key) {
+        C1260i.b(TAG, "nameSearch key: " + key);
+        Bundle data = new Bundle();
+        data.putString("poiname", key);
+        handleVoiceCommandMsg(5, 3, 0, data);
+    }
+
+    public void spaceSearch(String key) {
+        C1260i.b(TAG, "spaceSearch key: " + key);
+        Bundle data = new Bundle();
+        data.putString("poiname", key);
+        handleVoiceCommandMsg(5, 4, 0, data);
+    }
+
+    public void setHomeAddress(RoutePlanNode node) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BundleKey.SELECT_POINT_ACTION, 4);
+        UIModel.settingAddress(node, C1157a.a(), bundle);
+    }
+
+    public void setCompanyAddress(RoutePlanNode node) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BundleKey.SELECT_POINT_ACTION, 5);
+        UIModel.settingAddress(node, C1157a.a(), bundle);
+    }
+
+    private void handleError() {
+        C1915a.a().b("当前页面不支持", 0);
+        C2201w.a("当前页面不支持");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/voice/MapVoiceCommandController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

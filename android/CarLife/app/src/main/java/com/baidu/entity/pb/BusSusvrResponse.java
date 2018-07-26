@@ -7,659 +7,580 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class BusSusvrResponse
-  extends MessageMicro
-{
-  public static final int POI_ARRAY_FIELD_NUMBER = 1;
-  public static final int TYPE_FIELD_NUMBER = 2;
-  private List<PoiElement> a = Collections.emptyList();
-  private boolean b;
-  private int c = 0;
-  private int d = -1;
-  
-  public static BusSusvrResponse parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new BusSusvrResponse().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static BusSusvrResponse parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (BusSusvrResponse)new BusSusvrResponse().mergeFrom(paramArrayOfByte);
-  }
-  
-  public BusSusvrResponse addPoiArray(PoiElement paramPoiElement)
-  {
-    if (paramPoiElement == null) {
-      return this;
-    }
-    if (this.a.isEmpty()) {
-      this.a = new ArrayList();
-    }
-    this.a.add(paramPoiElement);
-    return this;
-  }
-  
-  public final BusSusvrResponse clear()
-  {
-    clearPoiArray();
-    clearType();
-    this.d = -1;
-    return this;
-  }
-  
-  public BusSusvrResponse clearPoiArray()
-  {
-    this.a = Collections.emptyList();
-    return this;
-  }
-  
-  public BusSusvrResponse clearType()
-  {
-    this.b = false;
-    this.c = 0;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.d < 0) {
-      getSerializedSize();
-    }
-    return this.d;
-  }
-  
-  public PoiElement getPoiArray(int paramInt)
-  {
-    return (PoiElement)this.a.get(paramInt);
-  }
-  
-  public int getPoiArrayCount()
-  {
-    return this.a.size();
-  }
-  
-  public List<PoiElement> getPoiArrayList()
-  {
-    return this.a;
-  }
-  
-  public int getSerializedSize()
-  {
-    Iterator localIterator = getPoiArrayList().iterator();
-    for (int i = 0; localIterator.hasNext(); i = CodedOutputStreamMicro.computeMessageSize(1, (PoiElement)localIterator.next()) + i) {}
-    int j = i;
-    if (hasType()) {
-      j = i + CodedOutputStreamMicro.computeInt32Size(2, getType());
-    }
-    this.d = j;
-    return j;
-  }
-  
-  public int getType()
-  {
-    return this.c;
-  }
-  
-  public boolean hasType()
-  {
-    return this.b;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public BusSusvrResponse mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
-        return this;
-      case 10: 
-        PoiElement localPoiElement = new PoiElement();
-        paramCodedInputStreamMicro.readMessage(localPoiElement);
-        addPoiArray(localPoiElement);
-        break;
-      case 16: 
-        setType(paramCodedInputStreamMicro.readInt32());
-      }
-    }
-  }
-  
-  public BusSusvrResponse setPoiArray(int paramInt, PoiElement paramPoiElement)
-  {
-    if (paramPoiElement == null) {
-      return this;
-    }
-    this.a.set(paramInt, paramPoiElement);
-    return this;
-  }
-  
-  public BusSusvrResponse setType(int paramInt)
-  {
-    this.b = true;
-    this.c = paramInt;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    Iterator localIterator = getPoiArrayList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(1, (PoiElement)localIterator.next());
-    }
-    if (hasType()) {
-      paramCodedOutputStreamMicro.writeInt32(2, getType());
-    }
-  }
-  
-  public static final class PoiElement
-    extends MessageMicro
-  {
-    public static final int CITYID_FIELD_NUMBER = 3;
-    public static final int DISTANCE_FIELD_NUMBER = 4;
-    public static final int POI_NAME_FIELD_NUMBER = 1;
-    public static final int SUB_POI_ARRAY_FIELD_NUMBER = 6;
-    public static final int SUB_POI_TYPE_FIELD_NUMBER = 5;
-    public static final int SUB_TITLE_FIELD_NUMBER = 2;
-    public static final int TYPE_FIELD_NUMBER = 8;
-    public static final int UID_FIELD_NUMBER = 7;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private String d = "";
-    private boolean e;
-    private int f = 0;
-    private boolean g;
-    private String h = "";
-    private boolean i;
-    private int j = 0;
-    private List<SubPoi> k = Collections.emptyList();
-    private boolean l;
-    private String m = "";
-    private boolean n;
-    private int o = 0;
-    private int p = -1;
-    
-    public static PoiElement parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new PoiElement().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static PoiElement parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (PoiElement)new PoiElement().mergeFrom(paramArrayOfByte);
-    }
-    
-    public PoiElement addSubPoiArray(SubPoi paramSubPoi)
-    {
-      if (paramSubPoi == null) {
-        return this;
-      }
-      if (this.k.isEmpty()) {
-        this.k = new ArrayList();
-      }
-      this.k.add(paramSubPoi);
-      return this;
-    }
-    
-    public final PoiElement clear()
-    {
-      clearPoiName();
-      clearSubTitle();
-      clearCityid();
-      clearDistance();
-      clearSubPoiType();
-      clearSubPoiArray();
-      clearUid();
-      clearType();
-      this.p = -1;
-      return this;
-    }
-    
-    public PoiElement clearCityid()
-    {
-      this.e = false;
-      this.f = 0;
-      return this;
-    }
-    
-    public PoiElement clearDistance()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public PoiElement clearPoiName()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public PoiElement clearSubPoiArray()
-    {
-      this.k = Collections.emptyList();
-      return this;
-    }
-    
-    public PoiElement clearSubPoiType()
-    {
-      this.i = false;
-      this.j = 0;
-      return this;
-    }
-    
-    public PoiElement clearSubTitle()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public PoiElement clearType()
-    {
-      this.n = false;
-      this.o = 0;
-      return this;
-    }
-    
-    public PoiElement clearUid()
-    {
-      this.l = false;
-      this.m = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.p < 0) {
-        getSerializedSize();
-      }
-      return this.p;
-    }
-    
-    public int getCityid()
-    {
-      return this.f;
-    }
-    
-    public String getDistance()
-    {
-      return this.h;
-    }
-    
-    public String getPoiName()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasPoiName()) {
-        i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getPoiName());
-      }
-      int i1 = i2;
-      if (hasSubTitle()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getSubTitle());
-      }
-      i2 = i1;
-      if (hasCityid()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getCityid());
-      }
-      i1 = i2;
-      if (hasDistance()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getDistance());
-      }
-      i2 = i1;
-      if (hasSubPoiType()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(5, getSubPoiType());
-      }
-      Iterator localIterator = getSubPoiArrayList().iterator();
-      while (localIterator.hasNext()) {
-        i2 = CodedOutputStreamMicro.computeMessageSize(6, (SubPoi)localIterator.next()) + i2;
-      }
-      i1 = i2;
-      if (hasUid()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(7, getUid());
-      }
-      i2 = i1;
-      if (hasType()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(8, getType());
-      }
-      this.p = i2;
-      return i2;
-    }
-    
-    public SubPoi getSubPoiArray(int paramInt)
-    {
-      return (SubPoi)this.k.get(paramInt);
-    }
-    
-    public int getSubPoiArrayCount()
-    {
-      return this.k.size();
-    }
-    
-    public List<SubPoi> getSubPoiArrayList()
-    {
-      return this.k;
-    }
-    
-    public int getSubPoiType()
-    {
-      return this.j;
-    }
-    
-    public String getSubTitle()
-    {
-      return this.d;
-    }
-    
-    public int getType()
-    {
-      return this.o;
-    }
-    
-    public String getUid()
-    {
-      return this.m;
-    }
-    
-    public boolean hasCityid()
-    {
-      return this.e;
-    }
-    
-    public boolean hasDistance()
-    {
-      return this.g;
-    }
-    
-    public boolean hasPoiName()
-    {
-      return this.a;
-    }
-    
-    public boolean hasSubPoiType()
-    {
-      return this.i;
-    }
-    
-    public boolean hasSubTitle()
-    {
-      return this.c;
-    }
-    
-    public boolean hasType()
-    {
-      return this.n;
-    }
-    
-    public boolean hasUid()
-    {
-      return this.l;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public PoiElement mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setPoiName(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          setSubTitle(paramCodedInputStreamMicro.readString());
-          break;
-        case 24: 
-          setCityid(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 34: 
-          setDistance(paramCodedInputStreamMicro.readString());
-          break;
-        case 40: 
-          setSubPoiType(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 50: 
-          SubPoi localSubPoi = new SubPoi();
-          paramCodedInputStreamMicro.readMessage(localSubPoi);
-          addSubPoiArray(localSubPoi);
-          break;
-        case 58: 
-          setUid(paramCodedInputStreamMicro.readString());
-          break;
-        case 64: 
-          setType(paramCodedInputStreamMicro.readInt32());
+public final class BusSusvrResponse extends MessageMicro {
+    public static final int POI_ARRAY_FIELD_NUMBER = 1;
+    public static final int TYPE_FIELD_NUMBER = 2;
+    /* renamed from: a */
+    private List<PoiElement> f10427a = Collections.emptyList();
+    /* renamed from: b */
+    private boolean f10428b;
+    /* renamed from: c */
+    private int f10429c = 0;
+    /* renamed from: d */
+    private int f10430d = -1;
+
+    public static final class PoiElement extends MessageMicro {
+        public static final int CITYID_FIELD_NUMBER = 3;
+        public static final int DISTANCE_FIELD_NUMBER = 4;
+        public static final int POI_NAME_FIELD_NUMBER = 1;
+        public static final int SUB_POI_ARRAY_FIELD_NUMBER = 6;
+        public static final int SUB_POI_TYPE_FIELD_NUMBER = 5;
+        public static final int SUB_TITLE_FIELD_NUMBER = 2;
+        public static final int TYPE_FIELD_NUMBER = 8;
+        public static final int UID_FIELD_NUMBER = 7;
+        /* renamed from: a */
+        private boolean f10411a;
+        /* renamed from: b */
+        private String f10412b = "";
+        /* renamed from: c */
+        private boolean f10413c;
+        /* renamed from: d */
+        private String f10414d = "";
+        /* renamed from: e */
+        private boolean f10415e;
+        /* renamed from: f */
+        private int f10416f = 0;
+        /* renamed from: g */
+        private boolean f10417g;
+        /* renamed from: h */
+        private String f10418h = "";
+        /* renamed from: i */
+        private boolean f10419i;
+        /* renamed from: j */
+        private int f10420j = 0;
+        /* renamed from: k */
+        private List<SubPoi> f10421k = Collections.emptyList();
+        /* renamed from: l */
+        private boolean f10422l;
+        /* renamed from: m */
+        private String f10423m = "";
+        /* renamed from: n */
+        private boolean f10424n;
+        /* renamed from: o */
+        private int f10425o = 0;
+        /* renamed from: p */
+        private int f10426p = -1;
+
+        public static final class SubPoi extends MessageMicro {
+            public static final int POI_NAME_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private boolean f10408a;
+            /* renamed from: b */
+            private String f10409b = "";
+            /* renamed from: c */
+            private int f10410c = -1;
+
+            public static SubPoi parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new SubPoi().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static SubPoi parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (SubPoi) new SubPoi().mergeFrom(bArr);
+            }
+
+            public final SubPoi clear() {
+                clearPoiName();
+                this.f10410c = -1;
+                return this;
+            }
+
+            public SubPoi clearPoiName() {
+                this.f10408a = false;
+                this.f10409b = "";
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f10410c < 0) {
+                    getSerializedSize();
+                }
+                return this.f10410c;
+            }
+
+            public String getPoiName() {
+                return this.f10409b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasPoiName()) {
+                    i = 0 + CodedOutputStreamMicro.computeStringSize(1, getPoiName());
+                }
+                this.f10410c = i;
+                return i;
+            }
+
+            public boolean hasPoiName() {
+                return this.f10408a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public SubPoi mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 10:
+                            setPoiName(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public SubPoi setPoiName(String str) {
+                this.f10408a = true;
+                this.f10409b = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasPoiName()) {
+                    codedOutputStreamMicro.writeString(1, getPoiName());
+                }
+            }
         }
-      }
-    }
-    
-    public PoiElement setCityid(int paramInt)
-    {
-      this.e = true;
-      this.f = paramInt;
-      return this;
-    }
-    
-    public PoiElement setDistance(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
-    }
-    
-    public PoiElement setPoiName(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
-    }
-    
-    public PoiElement setSubPoiArray(int paramInt, SubPoi paramSubPoi)
-    {
-      if (paramSubPoi == null) {
-        return this;
-      }
-      this.k.set(paramInt, paramSubPoi);
-      return this;
-    }
-    
-    public PoiElement setSubPoiType(int paramInt)
-    {
-      this.i = true;
-      this.j = paramInt;
-      return this;
-    }
-    
-    public PoiElement setSubTitle(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public PoiElement setType(int paramInt)
-    {
-      this.n = true;
-      this.o = paramInt;
-      return this;
-    }
-    
-    public PoiElement setUid(String paramString)
-    {
-      this.l = true;
-      this.m = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasPoiName()) {
-        paramCodedOutputStreamMicro.writeString(1, getPoiName());
-      }
-      if (hasSubTitle()) {
-        paramCodedOutputStreamMicro.writeString(2, getSubTitle());
-      }
-      if (hasCityid()) {
-        paramCodedOutputStreamMicro.writeInt32(3, getCityid());
-      }
-      if (hasDistance()) {
-        paramCodedOutputStreamMicro.writeString(4, getDistance());
-      }
-      if (hasSubPoiType()) {
-        paramCodedOutputStreamMicro.writeInt32(5, getSubPoiType());
-      }
-      Iterator localIterator = getSubPoiArrayList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(6, (SubPoi)localIterator.next());
-      }
-      if (hasUid()) {
-        paramCodedOutputStreamMicro.writeString(7, getUid());
-      }
-      if (hasType()) {
-        paramCodedOutputStreamMicro.writeInt32(8, getType());
-      }
-    }
-    
-    public static final class SubPoi
-      extends MessageMicro
-    {
-      public static final int POI_NAME_FIELD_NUMBER = 1;
-      private boolean a;
-      private String b = "";
-      private int c = -1;
-      
-      public static SubPoi parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new SubPoi().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static SubPoi parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (SubPoi)new SubPoi().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final SubPoi clear()
-      {
-        clearPoiName();
-        this.c = -1;
-        return this;
-      }
-      
-      public SubPoi clearPoiName()
-      {
-        this.a = false;
-        this.b = "";
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.c < 0) {
-          getSerializedSize();
+
+        public static PoiElement parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new PoiElement().mergeFrom(codedInputStreamMicro);
         }
-        return this.c;
-      }
-      
-      public String getPoiName()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i = 0;
-        if (hasPoiName()) {
-          i = 0 + CodedOutputStreamMicro.computeStringSize(1, getPoiName());
+
+        public static PoiElement parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (PoiElement) new PoiElement().mergeFrom(bArr);
         }
-        this.c = i;
-        return i;
-      }
-      
-      public boolean hasPoiName()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public SubPoi mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
+
+        public PoiElement addSubPoiArray(SubPoi subPoi) {
+            if (subPoi != null) {
+                if (this.f10421k.isEmpty()) {
+                    this.f10421k = new ArrayList();
+                }
+                this.f10421k.add(subPoi);
+            }
             return this;
-          case 10: 
-            setPoiName(paramCodedInputStreamMicro.readString());
-          }
         }
-      }
-      
-      public SubPoi setPoiName(String paramString)
-      {
-        this.a = true;
-        this.b = paramString;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasPoiName()) {
-          paramCodedOutputStreamMicro.writeString(1, getPoiName());
+
+        public final PoiElement clear() {
+            clearPoiName();
+            clearSubTitle();
+            clearCityid();
+            clearDistance();
+            clearSubPoiType();
+            clearSubPoiArray();
+            clearUid();
+            clearType();
+            this.f10426p = -1;
+            return this;
         }
-      }
+
+        public PoiElement clearCityid() {
+            this.f10415e = false;
+            this.f10416f = 0;
+            return this;
+        }
+
+        public PoiElement clearDistance() {
+            this.f10417g = false;
+            this.f10418h = "";
+            return this;
+        }
+
+        public PoiElement clearPoiName() {
+            this.f10411a = false;
+            this.f10412b = "";
+            return this;
+        }
+
+        public PoiElement clearSubPoiArray() {
+            this.f10421k = Collections.emptyList();
+            return this;
+        }
+
+        public PoiElement clearSubPoiType() {
+            this.f10419i = false;
+            this.f10420j = 0;
+            return this;
+        }
+
+        public PoiElement clearSubTitle() {
+            this.f10413c = false;
+            this.f10414d = "";
+            return this;
+        }
+
+        public PoiElement clearType() {
+            this.f10424n = false;
+            this.f10425o = 0;
+            return this;
+        }
+
+        public PoiElement clearUid() {
+            this.f10422l = false;
+            this.f10423m = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f10426p < 0) {
+                getSerializedSize();
+            }
+            return this.f10426p;
+        }
+
+        public int getCityid() {
+            return this.f10416f;
+        }
+
+        public String getDistance() {
+            return this.f10418h;
+        }
+
+        public String getPoiName() {
+            return this.f10412b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasPoiName()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getPoiName());
+            }
+            if (hasSubTitle()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getSubTitle());
+            }
+            if (hasCityid()) {
+                i += CodedOutputStreamMicro.computeInt32Size(3, getCityid());
+            }
+            if (hasDistance()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getDistance());
+            }
+            if (hasSubPoiType()) {
+                i += CodedOutputStreamMicro.computeInt32Size(5, getSubPoiType());
+            }
+            int i2 = i;
+            for (SubPoi computeMessageSize : getSubPoiArrayList()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(6, computeMessageSize) + i2;
+            }
+            if (hasUid()) {
+                i2 += CodedOutputStreamMicro.computeStringSize(7, getUid());
+            }
+            if (hasType()) {
+                i2 += CodedOutputStreamMicro.computeInt32Size(8, getType());
+            }
+            this.f10426p = i2;
+            return i2;
+        }
+
+        public SubPoi getSubPoiArray(int i) {
+            return (SubPoi) this.f10421k.get(i);
+        }
+
+        public int getSubPoiArrayCount() {
+            return this.f10421k.size();
+        }
+
+        public List<SubPoi> getSubPoiArrayList() {
+            return this.f10421k;
+        }
+
+        public int getSubPoiType() {
+            return this.f10420j;
+        }
+
+        public String getSubTitle() {
+            return this.f10414d;
+        }
+
+        public int getType() {
+            return this.f10425o;
+        }
+
+        public String getUid() {
+            return this.f10423m;
+        }
+
+        public boolean hasCityid() {
+            return this.f10415e;
+        }
+
+        public boolean hasDistance() {
+            return this.f10417g;
+        }
+
+        public boolean hasPoiName() {
+            return this.f10411a;
+        }
+
+        public boolean hasSubPoiType() {
+            return this.f10419i;
+        }
+
+        public boolean hasSubTitle() {
+            return this.f10413c;
+        }
+
+        public boolean hasType() {
+            return this.f10424n;
+        }
+
+        public boolean hasUid() {
+            return this.f10422l;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public PoiElement mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setPoiName(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        setSubTitle(codedInputStreamMicro.readString());
+                        continue;
+                    case 24:
+                        setCityid(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 34:
+                        setDistance(codedInputStreamMicro.readString());
+                        continue;
+                    case 40:
+                        setSubPoiType(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 50:
+                        MessageMicro subPoi = new SubPoi();
+                        codedInputStreamMicro.readMessage(subPoi);
+                        addSubPoiArray(subPoi);
+                        continue;
+                    case 58:
+                        setUid(codedInputStreamMicro.readString());
+                        continue;
+                    case 64:
+                        setType(codedInputStreamMicro.readInt32());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public PoiElement setCityid(int i) {
+            this.f10415e = true;
+            this.f10416f = i;
+            return this;
+        }
+
+        public PoiElement setDistance(String str) {
+            this.f10417g = true;
+            this.f10418h = str;
+            return this;
+        }
+
+        public PoiElement setPoiName(String str) {
+            this.f10411a = true;
+            this.f10412b = str;
+            return this;
+        }
+
+        public PoiElement setSubPoiArray(int i, SubPoi subPoi) {
+            if (subPoi != null) {
+                this.f10421k.set(i, subPoi);
+            }
+            return this;
+        }
+
+        public PoiElement setSubPoiType(int i) {
+            this.f10419i = true;
+            this.f10420j = i;
+            return this;
+        }
+
+        public PoiElement setSubTitle(String str) {
+            this.f10413c = true;
+            this.f10414d = str;
+            return this;
+        }
+
+        public PoiElement setType(int i) {
+            this.f10424n = true;
+            this.f10425o = i;
+            return this;
+        }
+
+        public PoiElement setUid(String str) {
+            this.f10422l = true;
+            this.f10423m = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasPoiName()) {
+                codedOutputStreamMicro.writeString(1, getPoiName());
+            }
+            if (hasSubTitle()) {
+                codedOutputStreamMicro.writeString(2, getSubTitle());
+            }
+            if (hasCityid()) {
+                codedOutputStreamMicro.writeInt32(3, getCityid());
+            }
+            if (hasDistance()) {
+                codedOutputStreamMicro.writeString(4, getDistance());
+            }
+            if (hasSubPoiType()) {
+                codedOutputStreamMicro.writeInt32(5, getSubPoiType());
+            }
+            for (SubPoi writeMessage : getSubPoiArrayList()) {
+                codedOutputStreamMicro.writeMessage(6, writeMessage);
+            }
+            if (hasUid()) {
+                codedOutputStreamMicro.writeString(7, getUid());
+            }
+            if (hasType()) {
+                codedOutputStreamMicro.writeInt32(8, getType());
+            }
+        }
     }
-  }
+
+    public static BusSusvrResponse parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new BusSusvrResponse().mergeFrom(codedInputStreamMicro);
+    }
+
+    public static BusSusvrResponse parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (BusSusvrResponse) new BusSusvrResponse().mergeFrom(bArr);
+    }
+
+    public BusSusvrResponse addPoiArray(PoiElement poiElement) {
+        if (poiElement != null) {
+            if (this.f10427a.isEmpty()) {
+                this.f10427a = new ArrayList();
+            }
+            this.f10427a.add(poiElement);
+        }
+        return this;
+    }
+
+    public final BusSusvrResponse clear() {
+        clearPoiArray();
+        clearType();
+        this.f10430d = -1;
+        return this;
+    }
+
+    public BusSusvrResponse clearPoiArray() {
+        this.f10427a = Collections.emptyList();
+        return this;
+    }
+
+    public BusSusvrResponse clearType() {
+        this.f10428b = false;
+        this.f10429c = 0;
+        return this;
+    }
+
+    public int getCachedSize() {
+        if (this.f10430d < 0) {
+            getSerializedSize();
+        }
+        return this.f10430d;
+    }
+
+    public PoiElement getPoiArray(int i) {
+        return (PoiElement) this.f10427a.get(i);
+    }
+
+    public int getPoiArrayCount() {
+        return this.f10427a.size();
+    }
+
+    public List<PoiElement> getPoiArrayList() {
+        return this.f10427a;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        for (PoiElement computeMessageSize : getPoiArrayList()) {
+            i = CodedOutputStreamMicro.computeMessageSize(1, computeMessageSize) + i;
+        }
+        if (hasType()) {
+            i += CodedOutputStreamMicro.computeInt32Size(2, getType());
+        }
+        this.f10430d = i;
+        return i;
+    }
+
+    public int getType() {
+        return this.f10429c;
+    }
+
+    public boolean hasType() {
+        return this.f10428b;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public BusSusvrResponse mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    MessageMicro poiElement = new PoiElement();
+                    codedInputStreamMicro.readMessage(poiElement);
+                    addPoiArray(poiElement);
+                    continue;
+                case 16:
+                    setType(codedInputStreamMicro.readInt32());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public BusSusvrResponse setPoiArray(int i, PoiElement poiElement) {
+        if (poiElement != null) {
+            this.f10427a.set(i, poiElement);
+        }
+        return this;
+    }
+
+    public BusSusvrResponse setType(int i) {
+        this.f10428b = true;
+        this.f10429c = i;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        for (PoiElement writeMessage : getPoiArrayList()) {
+            codedOutputStreamMicro.writeMessage(1, writeMessage);
+        }
+        if (hasType()) {
+            codedOutputStreamMicro.writeInt32(2, getType());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/BusSusvrResponse.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

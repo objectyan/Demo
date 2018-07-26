@@ -1,83 +1,66 @@
 package com.baidu.che.codriver.platform.navi;
 
+import com.baidu.che.codriver.platform.NaviCmdConstants;
+import com.tencent.qplayauto.device.QPlayAutoJNI;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NaviDialog
-{
-  public static final String TAG = "NaviDialog";
-  String mContent;
-  String mDialogId;
-  String mFirstBtn;
-  String mSecondBtn;
-  
-  public static NaviDialog create(String paramString)
-  {
-    Object localObject = null;
-    try
-    {
-      NaviDialog localNaviDialog = new NaviDialog();
-      localJSONException1.printStackTrace();
+public class NaviDialog {
+    public static final String TAG = "NaviDialog";
+    String mContent;
+    String mDialogId;
+    String mFirstBtn;
+    String mSecondBtn;
+
+    private NaviDialog() {
     }
-    catch (JSONException localJSONException1)
-    {
-      try
-      {
-        paramString = new JSONObject(paramString);
-        localNaviDialog.mDialogId = paramString.optString("dialogid");
-        paramString = paramString.getJSONObject("value");
-        localNaviDialog.mContent = paramString.optString("content");
-        localNaviDialog.mFirstBtn = paramString.optString("firstbtn");
-        localNaviDialog.mSecondBtn = paramString.optString("secondbtn");
-        return localNaviDialog;
-      }
-      catch (JSONException localJSONException3)
-      {
-        for (;;)
-        {
-          paramString = localJSONException1;
-          JSONException localJSONException2 = localJSONException3;
+
+    public static NaviDialog create(String params) {
+        JSONException e;
+        NaviDialog dialog = null;
+        try {
+            NaviDialog dialog2 = new NaviDialog();
+            try {
+                JSONObject json = new JSONObject(params);
+                dialog2.mDialogId = json.optString("dialogid");
+                JSONObject valueObject = json.getJSONObject("value");
+                dialog2.mContent = valueObject.optString("content");
+                dialog2.mFirstBtn = valueObject.optString("firstbtn");
+                dialog2.mSecondBtn = valueObject.optString("secondbtn");
+                return dialog2;
+            } catch (JSONException e2) {
+                e = e2;
+                dialog = dialog2;
+                e.printStackTrace();
+                return dialog;
+            }
+        } catch (JSONException e3) {
+            e = e3;
+            e.printStackTrace();
+            return dialog;
         }
-      }
-      localJSONException1 = localJSONException1;
-      paramString = (String)localObject;
     }
-    return paramString;
-  }
-  
-  public static NaviDialog create(String paramString1, String paramString2, String paramString3, String paramString4)
-  {
-    NaviDialog localNaviDialog = new NaviDialog();
-    localNaviDialog.mDialogId = paramString4;
-    localNaviDialog.mContent = paramString1;
-    localNaviDialog.mFirstBtn = paramString2;
-    localNaviDialog.mSecondBtn = paramString3;
-    return localNaviDialog;
-  }
-  
-  public void notifyBtnClick(boolean paramBoolean)
-  {
-    try
-    {
-      JSONObject localJSONObject = new JSONObject();
-      localJSONObject.put("dialogid", this.mDialogId);
-      if (paramBoolean)
-      {
-        localJSONObject.put("order", "-1");
-        return;
-      }
-      localJSONObject.put("order", "-2");
-      return;
+
+    public static NaviDialog create(String content, String firstBtn, String secondBtn, String id) {
+        NaviDialog dialog = new NaviDialog();
+        dialog.mDialogId = id;
+        dialog.mContent = content;
+        dialog.mFirstBtn = firstBtn;
+        dialog.mSecondBtn = secondBtn;
+        return dialog;
     }
-    catch (JSONException localJSONException)
-    {
-      localJSONException.printStackTrace();
+
+    public void notifyBtnClick(boolean first) {
+        try {
+            JSONObject response = new JSONObject();
+            response.put("dialogid", this.mDialogId);
+            if (first) {
+                response.put(NaviCmdConstants.KEY_NAVI_CMD_ORDER, QPlayAutoJNI.SONG_LIST_ROOT_ID);
+            } else {
+                response.put(NaviCmdConstants.KEY_NAVI_CMD_ORDER, "-2");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/platform/navi/NaviDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

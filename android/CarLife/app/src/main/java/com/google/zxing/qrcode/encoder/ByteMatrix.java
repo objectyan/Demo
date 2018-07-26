@@ -2,107 +2,71 @@ package com.google.zxing.qrcode.encoder;
 
 import java.lang.reflect.Array;
 
-public final class ByteMatrix
-{
-  private final byte[][] bytes;
-  private final int height;
-  private final int width;
-  
-  public ByteMatrix(int paramInt1, int paramInt2)
-  {
-    this.bytes = ((byte[][])Array.newInstance(Byte.TYPE, new int[] { paramInt2, paramInt1 }));
-    this.width = paramInt1;
-    this.height = paramInt2;
-  }
-  
-  public void clear(byte paramByte)
-  {
-    int i = 0;
-    while (i < this.height)
-    {
-      int j = 0;
-      while (j < this.width)
-      {
-        this.bytes[i][j] = paramByte;
-        j += 1;
-      }
-      i += 1;
+public final class ByteMatrix {
+    private final byte[][] bytes;
+    private final int height;
+    private final int width;
+
+    public ByteMatrix(int width, int height) {
+        this.bytes = (byte[][]) Array.newInstance(Byte.TYPE, new int[]{height, width});
+        this.width = width;
+        this.height = height;
     }
-  }
-  
-  public byte get(int paramInt1, int paramInt2)
-  {
-    return this.bytes[paramInt2][paramInt1];
-  }
-  
-  public byte[][] getArray()
-  {
-    return this.bytes;
-  }
-  
-  public int getHeight()
-  {
-    return this.height;
-  }
-  
-  public int getWidth()
-  {
-    return this.width;
-  }
-  
-  public void set(int paramInt1, int paramInt2, byte paramByte)
-  {
-    this.bytes[paramInt2][paramInt1] = paramByte;
-  }
-  
-  public void set(int paramInt1, int paramInt2, int paramInt3)
-  {
-    this.bytes[paramInt2][paramInt1] = ((byte)paramInt3);
-  }
-  
-  public void set(int paramInt1, int paramInt2, boolean paramBoolean)
-  {
-    byte[] arrayOfByte = this.bytes[paramInt2];
-    if (paramBoolean) {}
-    for (paramInt2 = 1;; paramInt2 = 0)
-    {
-      arrayOfByte[paramInt1] = ((byte)paramInt2);
-      return;
+
+    public int getHeight() {
+        return this.height;
     }
-  }
-  
-  public String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder(this.width * 2 * this.height + 2);
-    int i = 0;
-    while (i < this.height)
-    {
-      int j = 0;
-      if (j < this.width)
-      {
-        switch (this.bytes[i][j])
-        {
-        default: 
-          localStringBuilder.append("  ");
+
+    public int getWidth() {
+        return this.width;
+    }
+
+    public byte get(int x, int y) {
+        return this.bytes[y][x];
+    }
+
+    public byte[][] getArray() {
+        return this.bytes;
+    }
+
+    public void set(int x, int y, byte value) {
+        this.bytes[y][x] = value;
+    }
+
+    public void set(int x, int y, int value) {
+        this.bytes[y][x] = (byte) value;
+    }
+
+    public void set(int x, int y, boolean value) {
+        this.bytes[y][x] = (byte) (value ? 1 : 0);
+    }
+
+    public void clear(byte value) {
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                this.bytes[y][x] = value;
+            }
         }
-        for (;;)
-        {
-          j += 1;
-          break;
-          localStringBuilder.append(" 0");
-          continue;
-          localStringBuilder.append(" 1");
-        }
-      }
-      localStringBuilder.append('\n');
-      i += 1;
     }
-    return localStringBuilder.toString();
-  }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder(((this.width * 2) * this.height) + 2);
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                switch (this.bytes[y][x]) {
+                    case (byte) 0:
+                        result.append(" 0");
+                        break;
+                    case (byte) 1:
+                        result.append(" 1");
+                        break;
+                    default:
+                        result.append("  ");
+                        break;
+                }
+            }
+            result.append('\n');
+        }
+        return result.toString();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/encoder/ByteMatrix.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

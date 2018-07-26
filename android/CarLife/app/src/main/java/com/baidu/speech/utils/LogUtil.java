@@ -2,236 +2,188 @@ package com.baidu.speech.utils;
 
 import android.util.Log;
 
-public class LogUtil
-{
-  public static final int DEBUG = 3;
-  private static final boolean DEBUG_MODE = false;
-  public static final int ERROR = 6;
-  public static final int INFO = 4;
-  public static final int OFF = 7;
-  private static final String PREFIX = "[BDASR_LOG] ";
-  private static final String TAG = "LogUtil";
-  public static final int VERBOSE = 2;
-  public static final int WARN = 5;
-  public static int logLevel = 7;
-  
-  static
-  {
-    setLogLevel(7);
-  }
-  
-  public static void Test(String paramString)
-  {
-    if (3 < logLevel) {
-      return;
+public class LogUtil {
+    public static final int DEBUG = 3;
+    private static final boolean DEBUG_MODE = false;
+    public static final int ERROR = 6;
+    public static final int INFO = 4;
+    public static final int OFF = 7;
+    private static final String PREFIX = "[BDASR_LOG] ";
+    private static final String TAG = "LogUtil";
+    public static final int VERBOSE = 2;
+    public static final int WARN = 5;
+    public static int logLevel = 7;
+
+    static {
+        setLogLevel(7);
     }
-    Log.d("LogUtil", paramString);
-  }
-  
-  private static String argsToString(String... paramVarArgs)
-  {
-    if (paramVarArgs == null) {
-      return null;
+
+    public static void Test(String str) {
+        if (3 >= logLevel) {
+            Log.d(TAG, str);
+        }
     }
-    StringBuffer localStringBuffer = new StringBuffer();
-    int j = paramVarArgs.length;
-    int i = 0;
-    while (i < j)
-    {
-      localStringBuffer.append(paramVarArgs[i]);
-      i += 1;
+
+    private static String argsToString(String... strArr) {
+        if (strArr == null) {
+            return null;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String append : strArr) {
+            stringBuffer.append(append);
+        }
+        return stringBuffer.toString();
     }
-    return localStringBuffer.toString();
-  }
-  
-  public static void d(String paramString1, String paramString2, Object... paramVarArgs)
-  {
-    if (3 < logLevel) {
-      return;
+
+    /* renamed from: d */
+    public static void m16418d(String str, String str2, Object... objArr) {
+        if (3 >= logLevel) {
+            Log.d(PREFIX + str, String.format(str2, objArr));
+        }
     }
-    Log.d("[BDASR_LOG] " + paramString1, String.format(paramString2, paramVarArgs));
-  }
-  
-  public static void d(String paramString, Throwable paramThrowable, String... paramVarArgs)
-  {
-    if (3 < logLevel) {
-      return;
+
+    /* renamed from: d */
+    public static void m16419d(String str, Throwable th, String... strArr) {
+        if (3 >= logLevel) {
+            Log.d(PREFIX + str, argsToString(strArr), th);
+        }
     }
-    Log.d("[BDASR_LOG] " + paramString, argsToString(paramVarArgs), paramThrowable);
-  }
-  
-  public static void d(String paramString, String... paramVarArgs)
-  {
-    if (3 < logLevel) {
-      return;
+
+    /* renamed from: d */
+    public static void m16420d(String str, String... strArr) {
+        if (3 >= logLevel) {
+            Log.d(PREFIX + str, argsToString(strArr));
+        }
     }
-    Log.d("[BDASR_LOG] " + paramString, argsToString(paramVarArgs));
-  }
-  
-  public static void e(String paramString1, String paramString2, Object... paramVarArgs)
-  {
-    if (6 < logLevel) {
-      return;
+
+    /* renamed from: e */
+    public static void m16421e(String str, String str2, Object... objArr) {
+        if (6 >= logLevel) {
+            Log.e(PREFIX + str, String.format(str2, objArr));
+        }
     }
-    Log.e("[BDASR_LOG] " + paramString1, String.format(paramString2, paramVarArgs));
-  }
-  
-  public static void e(String paramString, Throwable paramThrowable, String... paramVarArgs)
-  {
-    if (6 < logLevel) {
-      return;
+
+    /* renamed from: e */
+    public static void m16422e(String str, Throwable th, String... strArr) {
+        if (6 >= logLevel) {
+            Log.e(PREFIX + str, argsToString(strArr), th);
+        }
     }
-    Log.e("[BDASR_LOG] " + paramString, argsToString(paramVarArgs), paramThrowable);
-  }
-  
-  public static void e(String paramString, String... paramVarArgs)
-  {
-    if (6 < logLevel) {
-      return;
+
+    /* renamed from: e */
+    public static void m16423e(String str, String... strArr) {
+        if (6 >= logLevel) {
+            Log.e(PREFIX + str, argsToString(strArr));
+        }
     }
-    Log.e("[BDASR_LOG] " + paramString, argsToString(paramVarArgs));
-  }
-  
-  public static void e(Throwable paramThrowable)
-  {
-    if (6 < logLevel) {
-      return;
+
+    /* renamed from: e */
+    public static void m16424e(Throwable th) {
+        if (6 >= logLevel) {
+            printStrackTrace(th);
+        }
     }
-    printStrackTrace(paramThrowable);
-  }
-  
-  public static void i(String paramString1, String paramString2, Object... paramVarArgs)
-  {
-    if (4 < logLevel) {
-      return;
+
+    /* renamed from: i */
+    public static void m16425i(String str, String str2, Object... objArr) {
+        if (4 >= logLevel) {
+            Log.i(PREFIX + str, String.format(str2, objArr));
+        }
     }
-    Log.i("[BDASR_LOG] " + paramString1, String.format(paramString2, paramVarArgs));
-  }
-  
-  public static void i(String paramString, Throwable paramThrowable, String... paramVarArgs)
-  {
-    if (4 < logLevel) {
-      return;
+
+    /* renamed from: i */
+    public static void m16426i(String str, Throwable th, String... strArr) {
+        if (4 >= logLevel) {
+            Log.i(PREFIX + str, argsToString(strArr), th);
+        }
     }
-    Log.i("[BDASR_LOG] " + paramString, argsToString(paramVarArgs), paramThrowable);
-  }
-  
-  public static void i(String paramString, String... paramVarArgs)
-  {
-    if (4 < logLevel) {
-      return;
+
+    /* renamed from: i */
+    public static void m16427i(String str, String... strArr) {
+        if (4 >= logLevel) {
+            Log.i(PREFIX + str, argsToString(strArr));
+        }
     }
-    Log.i("[BDASR_LOG] " + paramString, argsToString(paramVarArgs));
-  }
-  
-  private static boolean isFilteredLog(int paramInt, String paramString)
-  {
-    return (paramString.contains("")) && (paramInt == 3);
-  }
-  
-  public static boolean isLoggable(int paramInt)
-  {
-    return logLevel >= paramInt;
-  }
-  
-  private static void printStrackTrace(Throwable paramThrowable)
-  {
-    if ((paramThrowable != null) && (paramThrowable.getStackTrace() != null))
-    {
-      StringBuffer localStringBuffer = new StringBuffer();
-      localStringBuffer.append("\n").append(paramThrowable.getLocalizedMessage());
-      paramThrowable = paramThrowable.getStackTrace();
-      int j = paramThrowable.length;
-      int i = 0;
-      while (i < j)
-      {
-        Object localObject = paramThrowable[i];
-        localStringBuffer.append("\n").append(((StackTraceElement)localObject).toString());
-        i += 1;
-      }
+
+    private static boolean isFilteredLog(int i, String str) {
+        return str.contains("") && i == 3;
     }
-  }
-  
-  public static void setLogLevel(int paramInt)
-  {
-    logLevel = paramInt;
-    Log.i("[BDASR_LOG] LogUtil", "Changing log level to " + paramInt);
-  }
-  
-  public static void setLogLevel(String paramString)
-  {
-    if ("VERBOSE".equals(paramString)) {
-      logLevel = 2;
+
+    public static boolean isLoggable(int i) {
+        return logLevel >= i;
     }
-    for (;;)
-    {
-      Log.i("LogUtil", "Changing log level to " + logLevel + "(" + paramString + ")");
-      return;
-      if ("DEBUG".equals(paramString)) {
-        logLevel = 3;
-      } else if ("INFO".equals(paramString)) {
-        logLevel = 4;
-      } else if ("WARN".equals(paramString)) {
-        logLevel = 5;
-      } else if ("ERROR".equals(paramString)) {
-        logLevel = 6;
-      } else if ("OFF".equals(paramString)) {
-        logLevel = 7;
-      }
+
+    private static void printStrackTrace(Throwable th) {
+        if (th != null && th.getStackTrace() != null) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("\n").append(th.getLocalizedMessage());
+            for (StackTraceElement stackTraceElement : th.getStackTrace()) {
+                stringBuffer.append("\n").append(stackTraceElement.toString());
+            }
+        }
     }
-  }
-  
-  public static void v(String paramString1, String paramString2, Object... paramVarArgs)
-  {
-    if (2 < logLevel) {
-      return;
+
+    public static void setLogLevel(int i) {
+        logLevel = i;
+        Log.i("[BDASR_LOG] LogUtil", "Changing log level to " + i);
     }
-    Log.v("[BDASR_LOG] " + paramString1, String.format(paramString2, paramVarArgs));
-  }
-  
-  public static void v(String paramString, Throwable paramThrowable, String... paramVarArgs)
-  {
-    if (2 < logLevel) {
-      return;
+
+    public static void setLogLevel(String str) {
+        if ("VERBOSE".equals(str)) {
+            logLevel = 2;
+        } else if ("DEBUG".equals(str)) {
+            logLevel = 3;
+        } else if ("INFO".equals(str)) {
+            logLevel = 4;
+        } else if ("WARN".equals(str)) {
+            logLevel = 5;
+        } else if ("ERROR".equals(str)) {
+            logLevel = 6;
+        } else if ("OFF".equals(str)) {
+            logLevel = 7;
+        }
+        Log.i(TAG, "Changing log level to " + logLevel + "(" + str + ")");
     }
-    Log.v("[BDASR_LOG] " + paramString, argsToString(paramVarArgs), paramThrowable);
-  }
-  
-  public static void v(String paramString, String... paramVarArgs)
-  {
-    if (2 < logLevel) {
-      return;
+
+    /* renamed from: v */
+    public static void m16428v(String str, String str2, Object... objArr) {
+        if (2 >= logLevel) {
+            Log.v(PREFIX + str, String.format(str2, objArr));
+        }
     }
-    Log.v("[BDASR_LOG] " + paramString, argsToString(paramVarArgs));
-  }
-  
-  public static void w(String paramString1, String paramString2, Object... paramVarArgs)
-  {
-    if (5 < logLevel) {
-      return;
+
+    /* renamed from: v */
+    public static void m16429v(String str, Throwable th, String... strArr) {
+        if (2 >= logLevel) {
+            Log.v(PREFIX + str, argsToString(strArr), th);
+        }
     }
-    Log.w("[BDASR_LOG] " + paramString1, String.format(paramString2, paramVarArgs));
-  }
-  
-  public static void w(String paramString, Throwable paramThrowable, String... paramVarArgs)
-  {
-    if (5 < logLevel) {
-      return;
+
+    /* renamed from: v */
+    public static void m16430v(String str, String... strArr) {
+        if (2 >= logLevel) {
+            Log.v(PREFIX + str, argsToString(strArr));
+        }
     }
-    Log.w("[BDASR_LOG] " + paramString, argsToString(paramVarArgs), paramThrowable);
-  }
-  
-  public static void w(String paramString, String... paramVarArgs)
-  {
-    if (5 < logLevel) {
-      return;
+
+    /* renamed from: w */
+    public static void m16431w(String str, String str2, Object... objArr) {
+        if (5 >= logLevel) {
+            Log.w(PREFIX + str, String.format(str2, objArr));
+        }
     }
-    Log.w("[BDASR_LOG] " + paramString, argsToString(paramVarArgs));
-  }
+
+    /* renamed from: w */
+    public static void m16432w(String str, Throwable th, String... strArr) {
+        if (5 >= logLevel) {
+            Log.w(PREFIX + str, argsToString(strArr), th);
+        }
+    }
+
+    /* renamed from: w */
+    public static void m16433w(String str, String... strArr) {
+        if (5 >= logLevel) {
+            Log.w(PREFIX + str, argsToString(strArr));
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/speech/utils/LogUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

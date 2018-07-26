@@ -2,8 +2,8 @@ package com.baidu.navi.track.sync;
 
 import android.os.Handler;
 import android.os.Message;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.k.a.e.a;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.p054k.p055a.C1626e.C0924a;
 import com.baidu.navi.track.http.TrackSyncRequest;
 import com.baidu.navi.track.model.TrackSyncRequestModel;
 import com.baidu.navi.track.model.TrackSyncResponseModel;
@@ -11,205 +11,182 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class SyncManager
-{
-  private static final String TAG = "SyncManager";
-  private static SyncManager mInstance;
-  private Handler handler;
-  private boolean hasErrorRecord;
-  private TrackSyncRequest mRequest;
-  e.a mSyncResponseListener = new e.a()
-  {
-    public void onNetWorkResponse(int paramAnonymousInt)
-    {
-      i.b("SyncManager", "onNetWorkResponse responseCode = " + paramAnonymousInt);
-      switch (paramAnonymousInt)
-      {
-      default: 
-        SyncManager.access$002(SyncManager.this, true);
-        SyncManager.this.syncFinsh();
-        return;
-      case -1: 
-        SyncManager.access$002(SyncManager.this, true);
-        SyncManager.this.sendSyncRequest();
-        return;
-      case -2: 
-        SyncManager.access$002(SyncManager.this, true);
-        SyncManager.this.stopSync();
-        SyncManager.this.syncFinsh();
-        return;
-      case 0: 
-        if (SyncManager.this.mRequest.hasGuid()) {
-          SyncManager.this.addUploadSuccessGuid(SyncManager.this.mRequest.getGuid());
+public class SyncManager {
+    private static final String TAG = "SyncManager";
+    private static SyncManager mInstance;
+    private Handler handler;
+    private boolean hasErrorRecord;
+    private TrackSyncRequest mRequest;
+    C0924a mSyncResponseListener = new C39731();
+    private ArrayList<TrackSyncRequestModel> syncDataList;
+    private TrackSyncResponseModel syncResponseModel;
+    private ArrayList<String> uploadGuidList;
+
+    /* renamed from: com.baidu.navi.track.sync.SyncManager$1 */
+    class C39731 implements C0924a {
+        C39731() {
         }
-        if (SyncManager.this.mRequest.isResponse() == 1)
-        {
-          SyncManager.this.setSyncResponseModel(SyncManager.this.mRequest.getResponseModel());
-          SyncManager.this.syncFinsh();
-          return;
+
+        public void onNetWorkResponse(int responseCode) {
+            C1260i.b(SyncManager.TAG, "onNetWorkResponse responseCode = " + responseCode);
+            switch (responseCode) {
+                case -2:
+                    SyncManager.this.hasErrorRecord = true;
+                    SyncManager.this.stopSync();
+                    SyncManager.this.syncFinsh();
+                    return;
+                case -1:
+                    SyncManager.this.hasErrorRecord = true;
+                    SyncManager.this.sendSyncRequest();
+                    return;
+                case 0:
+                    if (SyncManager.this.mRequest.hasGuid()) {
+                        SyncManager.this.addUploadSuccessGuid(SyncManager.this.mRequest.getGuid());
+                    }
+                    if (SyncManager.this.mRequest.isResponse() == 1) {
+                        SyncManager.this.setSyncResponseModel(SyncManager.this.mRequest.getResponseModel());
+                        SyncManager.this.syncFinsh();
+                        return;
+                    }
+                    SyncManager.this.sendSyncRequest();
+                    return;
+                case 51:
+                    SyncManager.this.hasErrorRecord = true;
+                    SyncManager.this.stopSync();
+                    SyncManager.this.syncFinsh();
+                    return;
+                case 53:
+                    SyncManager.this.syncFinsh();
+                    return;
+                default:
+                    SyncManager.this.hasErrorRecord = true;
+                    SyncManager.this.syncFinsh();
+                    return;
+            }
         }
-        SyncManager.this.sendSyncRequest();
-        return;
-      case 53: 
-        SyncManager.this.syncFinsh();
-        return;
-      }
-      SyncManager.access$002(SyncManager.this, true);
-      SyncManager.this.stopSync();
-      SyncManager.this.syncFinsh();
     }
-  };
-  private ArrayList<TrackSyncRequestModel> syncDataList;
-  private TrackSyncResponseModel syncResponseModel;
-  private ArrayList<String> uploadGuidList;
-  
-  public static SyncManager getInstance()
-  {
-    if (mInstance == null) {}
-    try
-    {
-      if (mInstance == null)
-      {
-        mInstance = new SyncManager();
-        mInstance.init();
-      }
-      return mInstance;
+
+    private SyncManager() {
     }
-    finally {}
-  }
-  
-  private boolean init()
-  {
-    this.syncDataList = new ArrayList();
-    this.uploadGuidList = new ArrayList();
-    this.mRequest = new TrackSyncRequest();
-    this.mRequest.registerResponseListener(this.mSyncResponseListener);
-    return true;
-  }
-  
-  private boolean isContinueSync()
-  {
-    return (this.syncDataList != null) && (this.syncDataList.size() > 0);
-  }
-  
-  private void sendSyncRequest()
-  {
-    if ((this.syncDataList != null) && (this.syncDataList.size() > 0))
-    {
-      TrackSyncRequestModel localTrackSyncRequestModel = (TrackSyncRequestModel)this.syncDataList.get(0);
-      this.syncDataList.remove(0);
-      if (localTrackSyncRequestModel == null)
-      {
-        sendSyncRequest();
-        return;
-      }
-      if (this.mRequest == null)
-      {
+
+    private boolean init() {
+        this.syncDataList = new ArrayList();
+        this.uploadGuidList = new ArrayList();
         this.mRequest = new TrackSyncRequest();
         this.mRequest.registerResponseListener(this.mSyncResponseListener);
-      }
-      this.mRequest.setParamsModel(localTrackSyncRequestModel);
-      this.mRequest.toPostRequest();
-      return;
+        return true;
     }
-    syncFinsh();
-  }
-  
-  private void syncFinsh()
-  {
-    int i = 0;
-    if (this.syncResponseModel == null)
-    {
-      this.syncResponseModel = new TrackSyncResponseModel();
-      this.syncResponseModel.isResponse = 0;
+
+    public static SyncManager getInstance() {
+        if (mInstance == null) {
+            synchronized (SyncManager.class) {
+                if (mInstance == null) {
+                    mInstance = new SyncManager();
+                    mInstance.init();
+                }
+            }
+        }
+        return mInstance;
     }
-    if (this.uploadGuidList != null)
-    {
-      localObject = this.uploadGuidList.iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        String str = (String)((Iterator)localObject).next();
-        this.syncResponseModel.guidList.add(str);
-      }
-      this.uploadGuidList.clear();
+
+    public boolean setSyncData(List<TrackSyncRequestModel> data) {
+        if (this.syncDataList != null) {
+            for (int i = 0; i < data.size(); i++) {
+                this.syncDataList.add(data.get(i));
+            }
+        }
+        return true;
     }
-    if (this.syncDataList != null) {
-      this.syncDataList.clear();
+
+    public void registerHandler(Handler handler) {
+        this.handler = handler;
     }
-    Object localObject = new Message();
-    ((Message)localObject).what = 524;
-    if (this.hasErrorRecord) {
-      i = 1;
+
+    public void startSync() {
+        this.hasErrorRecord = false;
+        if (isContinueSync()) {
+            sendSyncRequest();
+        }
     }
-    ((Message)localObject).arg1 = i;
-    ((Message)localObject).arg2 = 100;
-    if (this.handler != null) {
-      this.handler.sendMessage((Message)localObject);
+
+    public void stopSync() {
+        if (this.mRequest != null) {
+            this.mRequest.cancel();
+        }
     }
-  }
-  
-  public void addUploadSuccessGuid(String paramString)
-  {
-    if (this.uploadGuidList != null) {
-      this.uploadGuidList.add(paramString);
+
+    private void sendSyncRequest() {
+        if (this.syncDataList == null || this.syncDataList.size() <= 0) {
+            syncFinsh();
+            return;
+        }
+        TrackSyncRequestModel dataItem = (TrackSyncRequestModel) this.syncDataList.get(0);
+        this.syncDataList.remove(0);
+        if (dataItem == null) {
+            sendSyncRequest();
+            return;
+        }
+        if (this.mRequest == null) {
+            this.mRequest = new TrackSyncRequest();
+            this.mRequest.registerResponseListener(this.mSyncResponseListener);
+        }
+        this.mRequest.setParamsModel(dataItem);
+        this.mRequest.toPostRequest();
     }
-  }
-  
-  public TrackSyncResponseModel getSyncData()
-  {
-    return this.syncResponseModel;
-  }
-  
-  public void registerHandler(Handler paramHandler)
-  {
-    this.handler = paramHandler;
-  }
-  
-  public void releaseSyncData()
-  {
-    if (this.uploadGuidList != null) {
-      this.uploadGuidList.clear();
+
+    private void syncFinsh() {
+        int i = 0;
+        if (this.syncResponseModel == null) {
+            this.syncResponseModel = new TrackSyncResponseModel();
+            this.syncResponseModel.isResponse = 0;
+        }
+        if (this.uploadGuidList != null) {
+            Iterator it = this.uploadGuidList.iterator();
+            while (it.hasNext()) {
+                this.syncResponseModel.guidList.add((String) it.next());
+            }
+            this.uploadGuidList.clear();
+        }
+        if (this.syncDataList != null) {
+            this.syncDataList.clear();
+        }
+        Message msg = new Message();
+        msg.what = SyncChannelConstant.MSG_SYNC_DATA;
+        if (this.hasErrorRecord) {
+            i = 1;
+        }
+        msg.arg1 = i;
+        msg.arg2 = 100;
+        if (this.handler != null) {
+            this.handler.sendMessage(msg);
+        }
     }
-    this.syncResponseModel = null;
-  }
-  
-  public boolean setSyncData(List<TrackSyncRequestModel> paramList)
-  {
-    if (this.syncDataList != null)
-    {
-      int i = 0;
-      while (i < paramList.size())
-      {
-        this.syncDataList.add(paramList.get(i));
-        i += 1;
-      }
+
+    private boolean isContinueSync() {
+        if (this.syncDataList == null || this.syncDataList.size() <= 0) {
+            return false;
+        }
+        return true;
     }
-    return true;
-  }
-  
-  public void setSyncResponseModel(TrackSyncResponseModel paramTrackSyncResponseModel)
-  {
-    this.syncResponseModel = paramTrackSyncResponseModel;
-  }
-  
-  public void startSync()
-  {
-    this.hasErrorRecord = false;
-    if (isContinueSync()) {
-      sendSyncRequest();
+
+    public void addUploadSuccessGuid(String guid) {
+        if (this.uploadGuidList != null) {
+            this.uploadGuidList.add(guid);
+        }
     }
-  }
-  
-  public void stopSync()
-  {
-    if (this.mRequest != null) {
-      this.mRequest.cancel();
+
+    public void setSyncResponseModel(TrackSyncResponseModel model) {
+        this.syncResponseModel = model;
     }
-  }
+
+    public void releaseSyncData() {
+        if (this.uploadGuidList != null) {
+            this.uploadGuidList.clear();
+        }
+        this.syncResponseModel = null;
+    }
+
+    public TrackSyncResponseModel getSyncData() {
+        return this.syncResponseModel;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/track/sync/SyncManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

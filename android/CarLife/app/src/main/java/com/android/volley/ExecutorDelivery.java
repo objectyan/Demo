@@ -3,96 +3,65 @@ package com.android.volley;
 import android.os.Handler;
 import java.util.concurrent.Executor;
 
-public class ExecutorDelivery
-  implements ResponseDelivery
-{
-  private final Executor mResponsePoster;
-  
-  public ExecutorDelivery(final Handler paramHandler)
-  {
-    this.mResponsePoster = new Executor()
-    {
-      public void execute(Runnable paramAnonymousRunnable)
-      {
-        paramHandler.post(paramAnonymousRunnable);
-      }
-    };
-  }
-  
-  public ExecutorDelivery(Executor paramExecutor)
-  {
-    this.mResponsePoster = paramExecutor;
-  }
-  
-  public void postError(Request<?> paramRequest, VolleyError paramVolleyError)
-  {
-    paramRequest.addMarker("post-error");
-    paramVolleyError = Response.error(paramVolleyError);
-    this.mResponsePoster.execute(new ResponseDeliveryRunnable(paramRequest, paramVolleyError, null));
-  }
-  
-  public void postResponse(Request<?> paramRequest, Response<?> paramResponse)
-  {
-    postResponse(paramRequest, paramResponse, null);
-  }
-  
-  public void postResponse(Request<?> paramRequest, Response<?> paramResponse, Runnable paramRunnable)
-  {
-    paramRequest.markDelivered();
-    paramRequest.addMarker("post-response");
-    this.mResponsePoster.execute(new ResponseDeliveryRunnable(paramRequest, paramResponse, paramRunnable));
-  }
-  
-  private class ResponseDeliveryRunnable
-    implements Runnable
-  {
-    private final Request mRequest;
-    private final Response mResponse;
-    private final Runnable mRunnable;
-    
-    public ResponseDeliveryRunnable(Request paramRequest, Response paramResponse, Runnable paramRunnable)
-    {
-      this.mRequest = paramRequest;
-      this.mResponse = paramResponse;
-      this.mRunnable = paramRunnable;
-    }
-    
-    public void run()
-    {
-      if (this.mRequest.isCanceled()) {
-        this.mRequest.finish("canceled-at-delivery");
-      }
-      label97:
-      label107:
-      for (;;)
-      {
-        return;
-        if (this.mResponse.isSuccess())
-        {
-          this.mRequest.deliverResponse(this.mResponse.result);
-          if (!this.mResponse.intermediate) {
-            break label97;
-          }
-          this.mRequest.addMarker("intermediate-response");
+public class ExecutorDelivery implements ResponseDelivery {
+    private final Executor mResponsePoster;
+
+    private class ResponseDeliveryRunnable implements Runnable {
+        private final Request mRequest;
+        private final Response mResponse;
+        private final Runnable mRunnable;
+
+        public ResponseDeliveryRunnable(Request request, Response response, Runnable runnable) {
+            this.mRequest = request;
+            this.mResponse = response;
+            this.mRunnable = runnable;
         }
-        for (;;)
-        {
-          if (this.mRunnable == null) {
-            break label107;
-          }
-          this.mRunnable.run();
-          return;
-          this.mRequest.deliverError(this.mResponse.error);
-          break;
-          this.mRequest.finish("done");
+
+        public void run() {
+            if (this.mRequest.isCanceled()) {
+                this.mRequest.finish("canceled-at-delivery");
+                return;
+            }
+            if (this.mResponse.isSuccess()) {
+                this.mRequest.deliverResponse(this.mResponse.result);
+            } else {
+                this.mRequest.deliverError(this.mResponse.error);
+            }
+            if (this.mResponse.intermediate) {
+                this.mRequest.addMarker("intermediate-response");
+            } else {
+                this.mRequest.finish("done");
+            }
+            if (this.mRunnable != null) {
+                this.mRunnable.run();
+            }
         }
-      }
     }
-  }
+
+    public ExecutorDelivery(final Handler handler) {
+        this.mResponsePoster = new Executor() {
+            public void execute(Runnable command) {
+                handler.post(command);
+            }
+        };
+    }
+
+    public ExecutorDelivery(Executor executor) {
+        this.mResponsePoster = executor;
+    }
+
+    public void postResponse(Request<?> request, Response<?> response) {
+        postResponse(request, response, null);
+    }
+
+    public void postResponse(Request<?> request, Response<?> response, Runnable runnable) {
+        request.markDelivered();
+        request.addMarker("post-response");
+        this.mResponsePoster.execute(new ResponseDeliveryRunnable(request, response, runnable));
+    }
+
+    public void postError(Request<?> request, VolleyError error) {
+        request.addMarker("post-error");
+        this.mResponsePoster.execute(new ResponseDeliveryRunnable(request, Response.error(error), null));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/ExecutorDelivery.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

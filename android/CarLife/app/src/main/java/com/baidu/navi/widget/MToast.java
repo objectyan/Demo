@@ -2,41 +2,29 @@ package com.baidu.navi.widget;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
-import android.content.ComponentName;
 import android.content.Context;
 import android.text.TextUtils;
-import com.baidu.carlife.util.w;
+import com.baidu.carlife.util.C2201w;
+import com.baidu.navisdk.module.BusinessActivityManager;
 import java.util.List;
 
-public class MToast
-{
-  public static void show(Context paramContext, int paramInt)
-  {
-    if (paramContext == null) {
-      return;
+public class MToast {
+    public static void show(Context context, String message) {
+        if (context != null && !TextUtils.isEmpty(message)) {
+            List<RunningTaskInfo> infos = ((ActivityManager) context.getSystemService(BusinessActivityManager.AUDIO_DIR)).getRunningTasks(1);
+            if (infos != null && infos.get(0) != null && context.getPackageName().equals(((RunningTaskInfo) infos.get(0)).baseActivity.getPackageName())) {
+                int duration = 0;
+                if (message.length() > 15) {
+                    duration = 1;
+                }
+                C2201w.a(message, duration);
+            }
+        }
     }
-    show(paramContext, paramContext.getString(paramInt));
-  }
-  
-  public static void show(Context paramContext, String paramString)
-  {
-    if ((paramContext == null) || (TextUtils.isEmpty(paramString))) {}
-    List localList;
-    do
-    {
-      return;
-      localList = ((ActivityManager)paramContext.getSystemService("activity")).getRunningTasks(1);
-    } while ((localList == null) || (localList.get(0) == null) || (!paramContext.getPackageName().equals(((ActivityManager.RunningTaskInfo)localList.get(0)).baseActivity.getPackageName())));
-    int i = 0;
-    if (paramString.length() > 15) {
-      i = 1;
+
+    public static void show(Context context, int resId) {
+        if (context != null) {
+            show(context, context.getString(resId));
+        }
     }
-    w.a(paramString, i);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/widget/MToast.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

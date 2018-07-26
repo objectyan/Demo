@@ -4,26 +4,22 @@ import android.graphics.drawable.Drawable;
 import android.text.Html.ImageGetter;
 import java.net.URL;
 
-final class bk
-  implements Html.ImageGetter
-{
-  bk(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final Drawable getDrawable(String paramString)
-  {
-    try
-    {
-      paramString = Drawable.createFromStream(new URL(paramString).openStream(), "");
-      paramString.setBounds(0, 0, paramString.getIntrinsicWidth(), paramString.getIntrinsicHeight());
-      return paramString;
+/* compiled from: FeedbackInputActivity */
+final class bk implements ImageGetter {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21579a;
+
+    bk(FeedbackInputActivity feedbackInputActivity) {
+        this.f21579a = feedbackInputActivity;
     }
-    catch (Exception paramString) {}
-    return null;
-  }
+
+    public final Drawable getDrawable(String str) {
+        try {
+            Drawable createFromStream = Drawable.createFromStream(new URL(str).openStream(), "");
+            createFromStream.setBounds(0, 0, createFromStream.getIntrinsicWidth(), createFromStream.getIntrinsicHeight());
+            return createFromStream;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bk.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

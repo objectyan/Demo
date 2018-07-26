@@ -2,108 +2,93 @@ package com.baidu.mapframework.nirvana.looper;
 
 import android.os.Handler;
 import android.os.Looper;
-import com.baidu.mapframework.nirvana.b;
-import com.baidu.mapframework.nirvana.b.a;
-import com.baidu.mapframework.nirvana.b.c;
-import com.baidu.mapframework.nirvana.e;
+import com.baidu.mapframework.nirvana.C3480g;
+import com.baidu.mapframework.nirvana.C3534b;
+import com.baidu.mapframework.nirvana.C3541e;
+import com.baidu.mapframework.nirvana.C3560n;
 import com.baidu.mapframework.nirvana.module.Module;
-import com.baidu.mapframework.nirvana.n;
+import com.baidu.mapframework.nirvana.p205b.C3533c;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
 import org.jetbrains.annotations.NotNull;
 
-public class LooperManager
-{
-  private static final Handler a = new Handler(Looper.getMainLooper());
-  private static final IdleRunner b = new IdleRunner(a);
-  
-  private static Runnable a(BaseLooperTask paramBaseLooperTask, final ScheduleConfig paramScheduleConfig)
-  {
-    new Runnable()
-    {
-      public void run()
-      {
-        e.c().run(new Runnable()
-        {
-          public void run()
-          {
-            e.b().a(LooperManager.2.this.a);
-            try
-            {
-              if ((!LooperManager.2.this.a.isCancel()) && (LooperManager.2.this.b.isLifecycleActive())) {
-                LooperManager.2.this.a.run();
-              }
-              e.b().b(LooperManager.2.this.a);
-              return;
-            }
-            catch (Exception localException)
-            {
-              for (;;)
-              {
-                b localb = LooperManager.2.this.a.getExceptionCallback();
-                if (localb != null) {
-                  localb.a(localException);
-                } else {
-                  e.a("LooperManager", localException);
+public class LooperManager {
+    /* renamed from: a */
+    private static final Handler f19210a = new Handler(Looper.getMainLooper());
+    /* renamed from: b */
+    private static final IdleRunner f19211b = new IdleRunner(f19210a);
+
+    public static void executeTask(@NotNull Module module, @NotNull LooperTask task, @NotNull ScheduleConfig config) {
+        if (C3560n.m15213a(module, (C3480g) task, config)) {
+            C3541e.m15174b().m15142a(C3533c.LOOPER, task, module, config);
+            final Runnable runnable = m15206a(task, config);
+            task.setOnCancel(new Runnable() {
+                public void run() {
+                    LooperManager.f19210a.removeCallbacks(runnable);
                 }
-              }
+            });
+            f19210a.postDelayed(runnable, task.getDelay());
+        }
+    }
+
+    public static void executeTaskWhenIdle(@NotNull Module module, @NotNull DiscreteLooperTask task, @NotNull ScheduleConfig config) {
+        if (C3560n.m15213a(module, (C3480g) task, config)) {
+            task.appendDescription("executeTaskWhenIdle");
+            C3541e.m15174b().m15142a(C3533c.LOOPER, task, module, config);
+            f19211b.m15195a(m15206a(task, config));
+        }
+    }
+
+    public static DiscreteQueueToken createDiscreteQueue(Module module) {
+        return new DiscreteQueueToken(new DiscreteRunner(f19210a));
+    }
+
+    public static void destroyDiscreteQueue(DiscreteQueueToken token) {
+        token.m15190a().m15191a();
+    }
+
+    public static void executeTaskDiscreted(@NotNull Module module, @NotNull DiscreteQueueToken token, @NotNull DiscreteLooperTask task, @NotNull ScheduleConfig config) {
+        if (C3560n.m15213a(module, (C3480g) task, config) && token != null) {
+            task.appendDescription("executeTaskDiscreted");
+            task.appendDescription("DiscreteQueueToken " + token.hashCode());
+            C3541e.m15174b().m15142a(C3533c.LOOPER, task, module, config);
+            token.m15190a().m15192a(m15206a(task, config));
+        }
+    }
+
+    /* renamed from: a */
+    private static Runnable m15206a(final BaseLooperTask task, final ScheduleConfig config) {
+        return new Runnable() {
+
+            /* renamed from: com.baidu.mapframework.nirvana.looper.LooperManager$2$1 */
+            class C35551 implements Runnable {
+                /* renamed from: a */
+                final /* synthetic */ C35562 f19207a;
+
+                C35551(C35562 this$0) {
+                    this.f19207a = this$0;
+                }
+
+                public void run() {
+                    C3541e.m15174b().m15143a(task);
+                    try {
+                        if (!task.isCancel() && config.isLifecycleActive()) {
+                            task.run();
+                        }
+                    } catch (Exception e) {
+                        C3534b callback = task.getExceptionCallback();
+                        if (callback != null) {
+                            callback.m15158a(e);
+                        } else {
+                            C3541e.m15171a("LooperManager", e);
+                        }
+                    }
+                    C3541e.m15174b().m15146b(task);
+                }
             }
-          }
-        });
-      }
-    };
-  }
-  
-  public static DiscreteQueueToken createDiscreteQueue(Module paramModule)
-  {
-    return new DiscreteQueueToken(new DiscreteRunner(a));
-  }
-  
-  public static void destroyDiscreteQueue(DiscreteQueueToken paramDiscreteQueueToken)
-  {
-    paramDiscreteQueueToken.a().a();
-  }
-  
-  public static void executeTask(@NotNull Module paramModule, @NotNull LooperTask paramLooperTask, @NotNull ScheduleConfig paramScheduleConfig)
-  {
-    if (!n.a(paramModule, paramLooperTask, paramScheduleConfig)) {
-      return;
+
+            public void run() {
+                C3541e.m15175c().run(new C35551(this));
+            }
+        };
     }
-    e.b().a(c.c, paramLooperTask, paramModule, paramScheduleConfig);
-    paramModule = a(paramLooperTask, paramScheduleConfig);
-    paramLooperTask.setOnCancel(new Runnable()
-    {
-      public void run()
-      {
-        LooperManager.a().removeCallbacks(this.a);
-      }
-    });
-    a.postDelayed(paramModule, paramLooperTask.getDelay());
-  }
-  
-  public static void executeTaskDiscreted(@NotNull Module paramModule, @NotNull DiscreteQueueToken paramDiscreteQueueToken, @NotNull DiscreteLooperTask paramDiscreteLooperTask, @NotNull ScheduleConfig paramScheduleConfig)
-  {
-    if ((!n.a(paramModule, paramDiscreteLooperTask, paramScheduleConfig)) || (paramDiscreteQueueToken == null)) {
-      return;
-    }
-    paramDiscreteLooperTask.appendDescription("executeTaskDiscreted");
-    paramDiscreteLooperTask.appendDescription("DiscreteQueueToken " + paramDiscreteQueueToken.hashCode());
-    e.b().a(c.c, paramDiscreteLooperTask, paramModule, paramScheduleConfig);
-    paramDiscreteQueueToken.a().a(a(paramDiscreteLooperTask, paramScheduleConfig));
-  }
-  
-  public static void executeTaskWhenIdle(@NotNull Module paramModule, @NotNull DiscreteLooperTask paramDiscreteLooperTask, @NotNull ScheduleConfig paramScheduleConfig)
-  {
-    if (!n.a(paramModule, paramDiscreteLooperTask, paramScheduleConfig)) {
-      return;
-    }
-    paramDiscreteLooperTask.appendDescription("executeTaskWhenIdle");
-    e.b().a(c.c, paramDiscreteLooperTask, paramModule, paramScheduleConfig);
-    b.a(a(paramDiscreteLooperTask, paramScheduleConfig));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/looper/LooperManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

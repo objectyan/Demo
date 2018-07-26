@@ -4,44 +4,42 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 
-public final class da
-{
-  @Nullable
-  public final Handler a;
-  @Nullable
-  public final Bundle b;
-  public final int c;
-  
-  private da(a parama)
-  {
-    this.a = parama.a;
-    this.b = parama.b;
-    this.c = parama.c;
-  }
-  
-  public static final class a
-  {
-    public Handler a = null;
-    public Bundle b;
-    public int c;
-    
-    public final Bundle a()
-    {
-      if (this.b == null) {
-        this.b = new Bundle(1);
-      }
-      return this.b;
+public final class da {
+    @Nullable
+    /* renamed from: a */
+    public final Handler f23372a;
+    @Nullable
+    /* renamed from: b */
+    public final Bundle f23373b;
+    /* renamed from: c */
+    public final int f23374c;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.da$a */
+    public static class C5846a {
+        /* renamed from: a */
+        public Handler f23369a = null;
+        /* renamed from: b */
+        public Bundle f23370b;
+        /* renamed from: c */
+        public int f23371c;
+
+        /* renamed from: a */
+        public final Bundle m20292a() {
+            if (this.f23370b == null) {
+                this.f23370b = new Bundle(1);
+            }
+            return this.f23370b;
+        }
+
+        /* renamed from: b */
+        public final da m20293b() {
+            return new da();
+        }
     }
-    
-    public final da b()
-    {
-      return new da(this, (byte)0);
+
+    private da(C5846a c5846a) {
+        this.f23372a = c5846a.f23369a;
+        this.f23373b = c5846a.f23370b;
+        this.f23374c = c5846a.f23371c;
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/da.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

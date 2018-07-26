@@ -1,8 +1,5 @@
 package com.baidu.navisdk.ui.routeguide.mapmode.subview;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build.VERSION;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,110 +7,99 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
+import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 
-public class RGMMMessageFloatView
-{
-  private static final String TAG = RGMMMessageFloatView.class.getSimpleName();
-  private volatile boolean isShowing = false;
-  private TextView mContentText;
-  private ViewGroup mFloatLayout;
-  private TextView mHideButton;
-  private WindowManager mWindowManager;
-  private WindowManager.LayoutParams wmParams;
-  
-  public RGMMMessageFloatView()
-  {
-    initWindowsManger();
-    initViews();
-  }
-  
-  private void initViews()
-  {
-    this.mFloatLayout = ((ViewGroup)JarUtils.inflate(BNaviModuleManager.getActivity(), 1711472690, null));
-    this.mContentText = ((TextView)this.mFloatLayout.findViewById(1711866331));
-    this.mContentText.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407509));
-    this.mHideButton = ((TextView)this.mFloatLayout.findViewById(1711866332));
-    this.mHideButton.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407371));
-    this.mHideButton.setText(JarUtils.getResources().getString(1711669685));
-    this.mHideButton.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        RGMMMessageFloatView.this.hide();
-      }
-    });
-  }
-  
-  private void initWindowsManger()
-  {
-    this.wmParams = new WindowManager.LayoutParams();
-    this.mWindowManager = ((WindowManager)BNaviModuleManager.getActivity().getApplicationContext().getSystemService("window"));
-    if (Build.VERSION.SDK_INT >= 19) {}
-    for (this.wmParams.type = 2005;; this.wmParams.type = 2002)
-    {
-      this.wmParams.format = -3;
-      this.wmParams.flags = 268435456;
-      this.wmParams.gravity = 17;
-      this.wmParams.x = 0;
-      this.wmParams.y = 0;
-      this.wmParams.width = -1;
-      this.wmParams.height = -1;
-      return;
+public class RGMMMessageFloatView {
+    private static final String TAG = RGMMMessageFloatView.class.getSimpleName();
+    private volatile boolean isShowing = false;
+    private TextView mContentText;
+    private ViewGroup mFloatLayout;
+    private TextView mHideButton;
+    private WindowManager mWindowManager;
+    private LayoutParams wmParams;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMMessageFloatView$1 */
+    class C43951 implements OnClickListener {
+        C43951() {
+        }
+
+        public void onClick(View v) {
+            RGMMMessageFloatView.this.hide();
+        }
     }
-  }
-  
-  public void dispose()
-  {
-    hide();
-  }
-  
-  public void hide()
-  {
-    this.isShowing = false;
-    if ((this.mFloatLayout != null) && (this.mFloatLayout.getParent() != null)) {
-      this.mWindowManager.removeView(this.mFloatLayout);
+
+    public RGMMMessageFloatView() {
+        initWindowsManger();
+        initViews();
     }
-  }
-  
-  public boolean isShow()
-  {
-    return this.isShowing;
-  }
-  
-  public void setText(String paramString)
-  {
-    if (this.mContentText != null) {
-      this.mContentText.setText(paramString);
+
+    private void initWindowsManger() {
+        this.wmParams = new LayoutParams();
+        this.mWindowManager = (WindowManager) BNaviModuleManager.getActivity().getApplicationContext().getSystemService("window");
+        if (VERSION.SDK_INT >= 19) {
+            this.wmParams.type = 2005;
+        } else {
+            this.wmParams.type = 2002;
+        }
+        this.wmParams.format = -3;
+        this.wmParams.flags = RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL;
+        this.wmParams.gravity = 17;
+        this.wmParams.x = 0;
+        this.wmParams.y = 0;
+        this.wmParams.width = -1;
+        this.wmParams.height = -1;
     }
-  }
-  
-  public boolean show()
-  {
-    if (isShow()) {
-      return true;
+
+    private void initViews() {
+        this.mFloatLayout = (ViewGroup) JarUtils.inflate(BNaviModuleManager.getActivity(), C4048R.layout.nsdk_layout_notice_float, null);
+        this.mContentText = (TextView) this.mFloatLayout.findViewById(C4048R.id.text_content);
+        this.mContentText.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_common_dialog_top));
+        this.mHideButton = (TextView) this.mFloatLayout.findViewById(C4048R.id.text_hide);
+        this.mHideButton.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_common_dialog_chang));
+        this.mHideButton.setText(JarUtils.getResources().getString(C4048R.string.alert_i_know));
+        this.mHideButton.setOnClickListener(new C43951());
     }
-    try
-    {
-      UserOPController.getInstance().add("3.x.5");
-      this.mWindowManager.addView(this.mFloatLayout, this.wmParams);
-      this.isShowing = true;
-      return true;
+
+    public void setText(String text) {
+        if (this.mContentText != null) {
+            this.mContentText.setText(text);
+        }
     }
-    catch (Exception localException)
-    {
-      LogUtil.e(TAG, "float excetion e:" + localException.getMessage());
-      this.isShowing = false;
+
+    public boolean show() {
+        if (isShow()) {
+            return true;
+        }
+        try {
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_x_5);
+            this.mWindowManager.addView(this.mFloatLayout, this.wmParams);
+            this.isShowing = true;
+            return true;
+        } catch (Exception e) {
+            LogUtil.m15791e(TAG, "float excetion e:" + e.getMessage());
+            this.isShowing = false;
+            return false;
+        }
     }
-    return false;
-  }
+
+    public void hide() {
+        this.isShowing = false;
+        if (this.mFloatLayout != null && this.mFloatLayout.getParent() != null) {
+            this.mWindowManager.removeView(this.mFloatLayout);
+        }
+    }
+
+    public boolean isShow() {
+        return this.isShowing;
+    }
+
+    public void dispose() {
+        hide();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMMessageFloatView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,13 +5,10 @@ import android.app.Notification;
 import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build.VERSION;
@@ -22,420 +19,376 @@ import android.provider.MediaStore.Images.Media;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
-import com.baidu.android.pushservice.d.a.g;
-import com.baidu.android.pushservice.j.o;
-import com.baidu.android.pushservice.j.p;
 import com.baidu.android.pushservice.message.PublicMsg;
+import com.baidu.android.pushservice.message.p033a.C0602e;
+import com.baidu.android.pushservice.p022i.C0420c;
+import com.baidu.android.pushservice.p022i.C0559d;
+import com.baidu.android.pushservice.p024c.C0448d;
+import com.baidu.android.pushservice.p025d.C0463a;
+import com.baidu.android.pushservice.p025d.C0463a.C0459g;
+import com.baidu.android.pushservice.p028g.C0527a;
+import com.baidu.android.pushservice.p031j.C0577o;
+import com.baidu.android.pushservice.p031j.C0578p;
+import com.baidu.android.pushservice.richmedia.C0424f;
+import com.baidu.android.pushservice.richmedia.C0638a;
+import com.baidu.android.pushservice.richmedia.C0639b;
+import com.baidu.android.pushservice.richmedia.C0641c;
+import com.baidu.android.pushservice.richmedia.C0641c.C0640a;
+import com.baidu.android.pushservice.richmedia.C0643d;
+import com.baidu.android.pushservice.richmedia.C0644e;
 import com.baidu.android.pushservice.richmedia.MediaViewActivity;
-import com.baidu.android.pushservice.richmedia.b;
-import com.baidu.android.pushservice.richmedia.c.a;
+import com.baidu.baidumaps.common.network.NetworkListener;
+import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
+import cz.msebera.android.httpclient.p158b.p294a.C6197b;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.concurrent.locks.ReentrantLock;
 
 @SuppressLint({"NewApi"})
-public class PushServiceReceiver
-  extends BroadcastReceiver
-{
-  private final ReentrantLock a = new ReentrantLock();
-  
-  private static Intent a(String paramString)
-  {
-    try
-    {
-      Intent localIntent = new Intent();
-      return localIntent;
-    }
-    catch (Exception paramString)
-    {
-      try
-      {
-        localIntent.setAction("android.intent.action.VIEW");
-        localIntent.setData(Uri.parse(paramString));
-        localIntent.setFlags(268435456);
-        return localIntent;
-      }
-      catch (Exception paramString) {}
-      paramString = paramString;
-      return null;
-    }
-  }
-  
-  public static void a(Context paramContext, PublicMsg paramPublicMsg)
-  {
-    if (!Environment.getExternalStorageState().equals("mounted"))
-    {
-      paramContext = Toast.makeText(paramContext, "请插入SD卡", 1);
-      paramContext.setGravity(17, 0, 0);
-      paramContext.show();
-    }
-    do
-    {
-      do
-      {
-        return;
-      } while ((paramPublicMsg == null) || (paramPublicMsg.mUrl == null));
-      localObject1 = Uri.parse(paramPublicMsg.mUrl);
-      localObject2 = ((Uri)localObject1).getPath();
-    } while (TextUtils.isEmpty(((Uri)localObject1).getPath()));
-    Object localObject2 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "baidu/pushservice/files" + "/" + ((Uri)localObject1).getAuthority() + "/" + ((String)localObject2).substring(0, ((String)localObject2).lastIndexOf('/')));
-    Object localObject1 = com.baidu.android.pushservice.richmedia.d.a(c.a.a, ((Uri)localObject1).toString());
-    ((com.baidu.android.pushservice.richmedia.c)localObject1).a = paramPublicMsg.mPkgName;
-    ((com.baidu.android.pushservice.richmedia.c)localObject1).b = ((File)localObject2).getAbsolutePath();
-    ((com.baidu.android.pushservice.richmedia.c)localObject1).c = paramPublicMsg.mTitle;
-    ((com.baidu.android.pushservice.richmedia.c)localObject1).d = paramPublicMsg.mDescription;
-    new com.baidu.android.pushservice.richmedia.a(paramContext, new a(paramContext, paramPublicMsg), (com.baidu.android.pushservice.richmedia.c)localObject1).start();
-  }
-  
-  private static void a(Context paramContext, PublicMsg paramPublicMsg, byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
-  {
-    Intent localIntent = new Intent();
-    localIntent.setPackage(paramPublicMsg.mPkgName);
-    localIntent.putExtra("method", "com.baidu.android.pushservice.action.notification.ARRIVED");
-    localIntent.putExtra("msgid", paramPublicMsg.mMsgId);
-    localIntent.putExtra("notification_title", paramPublicMsg.mTitle);
-    localIntent.putExtra("notification_content", paramPublicMsg.mDescription);
-    localIntent.putExtra("extra_extra_custom_content", paramPublicMsg.mCustomContent);
-    localIntent.putExtra("com.baidu.pushservice.app_id", paramPublicMsg.mAppId);
-    localIntent.putExtra("baidu_message_secur_info", paramArrayOfByte1);
-    localIntent.putExtra("baidu_message_body", paramArrayOfByte2);
-    p.a(paramContext, paramPublicMsg.mMsgId, paramPublicMsg.mAppId, paramPublicMsg.mTitle, paramPublicMsg.mDescription, paramPublicMsg.mCustomContent);
-    p.b(paramContext, localIntent, "com.baidu.android.pushservice.action.RECEIVE", paramPublicMsg.mPkgName);
-  }
-  
-  public static void a(Context paramContext, String paramString1, String paramString2, PublicMsg paramPublicMsg)
-  {
-    try
-    {
-      paramString2 = (NotificationManager)paramContext.getSystemService("notification");
-      boolean bool = TextUtils.isEmpty(paramPublicMsg.mPkgContent);
-      if (!bool) {}
-      for (;;)
-      {
-        try
-        {
-          paramString1 = Intent.parseUri(paramPublicMsg.mPkgContent, 1);
-          paramString1.setPackage(paramContext.getPackageName());
-          if (paramString1 == null) {
-            break;
-          }
-          paramString1 = PendingIntent.getActivity(paramContext, 0, paramString1, 0);
-          paramContext = d.a(paramContext, 0, 7, paramPublicMsg.mTitle, paramPublicMsg.mDescription, false);
-          if (paramContext == null) {
-            break;
-          }
-          paramContext.contentIntent = paramString1;
-          long l = System.currentTimeMillis();
-          paramString2.notify(l + "", 0, paramContext);
-          return;
-        }
-        catch (URISyntaxException paramString1)
-        {
-          paramString1 = b(paramContext, paramPublicMsg);
-          continue;
-        }
-        if (!TextUtils.isEmpty(paramPublicMsg.mUrl)) {
-          paramString1 = a(paramPublicMsg.mUrl);
-        } else {
-          paramString1 = b(paramContext, paramPublicMsg);
-        }
-      }
-      return;
-    }
-    catch (Exception paramContext) {}
-  }
-  
-  private static Intent b(Context paramContext, PublicMsg paramPublicMsg)
-  {
-    try
-    {
-      Intent localIntent = new Intent();
-      return localIntent;
-    }
-    catch (Exception paramContext)
-    {
-      try
-      {
-        paramPublicMsg = paramPublicMsg.getLauncherActivityName(paramContext, paramContext.getPackageName());
-        localIntent.setClassName(paramContext.getPackageName(), paramPublicMsg);
-        localIntent.setFlags(268435456);
-        return localIntent;
-      }
-      catch (Exception paramContext) {}
-      paramContext = paramContext;
-      return null;
-    }
-  }
-  
-  private static void b(Context paramContext, String paramString1, String paramString2, PublicMsg paramPublicMsg, String paramString3)
-  {
-    NotificationManager localNotificationManager = (NotificationManager)paramContext.getSystemService("notification");
-    Object localObject = new Intent("com.baidu.android.pushservice.action.media.CLICK");
-    ((Intent)localObject).setClassName(paramString1, paramString2);
-    ((Intent)localObject).setData(Uri.parse("content://" + paramPublicMsg.mMsgId));
-    ((Intent)localObject).putExtra("public_msg", paramPublicMsg);
-    ((Intent)localObject).putExtra("app_id", paramString3);
-    localObject = PendingIntent.getService(paramContext, 0, (Intent)localObject, 0);
-    Intent localIntent = new Intent();
-    localIntent.setClassName(paramString1, paramString2);
-    localIntent.setAction("com.baidu.android.pushservice.action.media.DELETE");
-    localIntent.setData(Uri.parse("content://" + paramPublicMsg.mMsgId));
-    localIntent.putExtra("public_msg", paramPublicMsg);
-    localIntent.putExtra("app_id", paramString3);
-    paramString1 = PendingIntent.getService(paramContext, 0, localIntent, 0);
-    boolean bool = p.q(paramContext, paramPublicMsg.mPkgName);
-    paramContext = d.a(paramContext, 8888, paramPublicMsg.mTitle, "富媒体消息：点击后下载与查看", bool);
-    paramContext.contentIntent = ((PendingIntent)localObject);
-    paramContext.deleteIntent = paramString1;
-    localNotificationManager.notify(paramPublicMsg.mMsgId, 0, paramContext);
-  }
-  
-  private static void b(Context paramContext, String paramString1, String paramString2, PublicMsg paramPublicMsg, byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
-  {
-    NotificationManager localNotificationManager = (NotificationManager)paramContext.getSystemService("notification");
-    Object localObject = new Intent();
-    ((Intent)localObject).setClassName(paramString1, paramString2);
-    ((Intent)localObject).setAction("com.baidu.android.pushservice.action.privatenotification.CLICK");
-    ((Intent)localObject).setData(Uri.parse("content://" + paramPublicMsg.mMsgId));
-    ((Intent)localObject).putExtra("public_msg", paramPublicMsg);
-    ((Intent)localObject).putExtra("app_id", paramPublicMsg.mAppId);
-    ((Intent)localObject).putExtra("msg_id", paramPublicMsg.mMsgId);
-    ((Intent)localObject).putExtra("baidu_message_secur_info", paramArrayOfByte1);
-    ((Intent)localObject).putExtra("baidu_message_body", paramArrayOfByte2);
-    localObject = PendingIntent.getService(paramContext, 0, (Intent)localObject, 0);
-    Intent localIntent = new Intent();
-    localIntent.setClassName(paramString1, paramString2);
-    localIntent.setAction("com.baidu.android.pushservice.action.privatenotification.DELETE");
-    localIntent.setData(Uri.parse("content://" + paramPublicMsg.mMsgId));
-    localIntent.putExtra("public_msg", paramPublicMsg);
-    localIntent.putExtra("app_id", paramPublicMsg.mAppId);
-    localIntent.putExtra("msg_id", paramPublicMsg.mMsgId);
-    paramString2 = PendingIntent.getService(paramContext, 0, localIntent, 0);
-    boolean bool = p.q(paramContext, paramPublicMsg.mPkgName);
-    if (paramPublicMsg.mNotificationBuilder == 0) {}
-    for (paramString1 = d.a(paramContext, paramPublicMsg.mNotificationBuilder, paramPublicMsg.mNotificationBasicStyle, paramPublicMsg.mTitle, paramPublicMsg.mDescription, bool);; paramString1 = d.a(paramContext, paramPublicMsg.mNotificationBuilder, paramPublicMsg.mTitle, paramPublicMsg.mDescription, bool))
-    {
-      paramString1.contentIntent = ((PendingIntent)localObject);
-      paramString1.deleteIntent = paramString2;
-      localNotificationManager.notify(paramPublicMsg.mMsgId, 0, paramString1);
-      a(paramContext, paramPublicMsg, paramArrayOfByte1, paramArrayOfByte2);
-      return;
-    }
-  }
-  
-  public void onReceive(final Context paramContext, final Intent paramIntent)
-  {
-    final Object localObject = paramIntent.getAction();
-    try
-    {
-      paramIntent.getByteArrayExtra("baidu_message_secur_info");
-      if (("android.intent.action.BOOT_COMPLETED".equals(localObject)) || ("android.net.conn.CONNECTIVITY_CHANGE".equals(localObject)) || ("android.intent.action.USER_PRESENT".equals(localObject)) || ("android.intent.action.MEDIA_CHECKING".equals(localObject)) || ("android.intent.action.ACTION_POWER_CONNECTED".equals(localObject)) || ("android.intent.action.ACTION_POWER_DISCONNECTED".equals(localObject)) || ("android.bluetooth.adapter.action.STATE_CHANGED".equals(localObject))) {
-        if ((!com.baidu.android.pushservice.c.d.g(paramContext)) && (p.h(paramContext.getApplicationContext()) > 0L)) {
-          o.d(paramContext);
-        }
-      }
-      for (;;)
-      {
-        return;
-        if ("com.baidu.android.pushservice.action.notification.SHOW".equals(localObject))
-        {
-          if (!com.baidu.android.pushservice.c.d.g(paramContext))
-          {
-            if (!p.y(paramContext))
-            {
-              f.g(paramContext);
-              return;
+public class PushServiceReceiver extends BroadcastReceiver {
+    /* renamed from: a */
+    private final ReentrantLock f1342a = new ReentrantLock();
+
+    /* renamed from: com.baidu.android.pushservice.PushServiceReceiver$a */
+    private static class C0425a implements C0424f {
+        /* renamed from: a */
+        public Context f1335a = null;
+        /* renamed from: b */
+        public RemoteViews f1336b = null;
+        /* renamed from: c */
+        public int f1337c = 0;
+        /* renamed from: d */
+        public int f1338d = 0;
+        /* renamed from: e */
+        public int f1339e = 0;
+        /* renamed from: f */
+        public int f1340f = 0;
+        /* renamed from: g */
+        NotificationManager f1341g;
+
+        /* renamed from: com.baidu.android.pushservice.PushServiceReceiver$a$1 */
+        class C04221 implements Runnable {
+            /* renamed from: a */
+            final /* synthetic */ C0425a f1332a;
+
+            C04221(C0425a c0425a) {
+                this.f1332a = c0425a;
             }
-            localObject = paramIntent.getStringExtra("pushService_package_name");
-            final String str1 = paramIntent.getStringExtra("service_name");
-            final String str2 = paramIntent.getStringExtra("notify_type");
-            final String str3 = paramIntent.getStringExtra("app_id");
-            final byte[] arrayOfByte1 = paramIntent.getByteArrayExtra("baidu_message_body");
-            final byte[] arrayOfByte2 = paramIntent.getByteArrayExtra("baidu_message_secur_info");
-            int i = paramIntent.getIntExtra("baidu_message_type", -1);
-            paramIntent = paramIntent.getStringExtra("message_id");
-            if ((!TextUtils.isEmpty((CharSequence)localObject)) && (!TextUtils.isEmpty(str1)) && (arrayOfByte1 != null) && (arrayOfByte2 != null) && (i != -1) && (!p.t(paramContext, paramIntent))) {
-              com.baidu.android.pushservice.i.d.a().a(new com.baidu.android.pushservice.i.c("showPrivateNotification", (short)99)
-              {
-                public void a()
-                {
-                  PublicMsg localPublicMsg = com.baidu.android.pushservice.message.a.e.a(paramContext, str3, paramIntent, arrayOfByte2, arrayOfByte1);
-                  if (localPublicMsg == null) {}
-                  do
-                  {
-                    return;
-                    p.a(paramContext, localPublicMsg);
-                    if ("private".equals(str2))
-                    {
-                      PushServiceReceiver.a(paramContext, localObject, str1, localPublicMsg, arrayOfByte2, arrayOfByte1);
-                      return;
-                    }
-                  } while (!"rich_media".equals(str2));
-                  PushServiceReceiver.a(paramContext, localObject, str1, localPublicMsg, str3);
+
+            public void run() {
+                Toast.makeText(this.f1332a.f1335a, "富媒体推送没有声明必须的Activity，请检查！", 1).show();
+            }
+        }
+
+        C0425a(Context context, PublicMsg publicMsg) {
+            this.f1335a = context;
+            this.f1341g = (NotificationManager) context.getSystemService("notification");
+        }
+
+        /* renamed from: a */
+        public void mo1273a(C0638a c0638a) {
+            Resources resources = this.f1335a.getResources();
+            String packageName = this.f1335a.getPackageName();
+            if (resources != null) {
+                int identifier = resources.getIdentifier("bpush_download_progress", "layout", packageName);
+                this.f1336b = new RemoteViews(this.f1335a.getPackageName(), identifier);
+                if (identifier != 0) {
+                    this.f1337c = resources.getIdentifier("bpush_download_progress", "id", packageName);
+                    this.f1338d = resources.getIdentifier("bpush_progress_percent", "id", packageName);
+                    this.f1339e = resources.getIdentifier("bpush_progress_text", "id", packageName);
+                    this.f1340f = resources.getIdentifier("bpush_download_icon", "id", packageName);
+                    this.f1336b.setImageViewResource(this.f1340f, this.f1335a.getApplicationInfo().icon);
                 }
-              });
             }
-          }
         }
-        else if ("com.baidu.android.pushservice.action.media.CLICK".equals(localObject))
-        {
-          com.baidu.android.pushservice.g.a.a("PushServiceReceiver", "Rich media notification clicked", paramContext.getApplicationContext());
-          localObject = null;
-          try
-          {
-            if (paramIntent.hasExtra("public_msg")) {
-              localObject = (PublicMsg)paramIntent.getParcelableExtra("public_msg");
+
+        @SuppressLint({"NewApi"})
+        /* renamed from: a */
+        public void mo1274a(C0638a c0638a, C0639b c0639b) {
+            String c = c0638a.f2026d.m2808c();
+            if (c0639b.f2028a != c0639b.f2029b && this.f1336b != null) {
+                int i = (int) ((((double) c0639b.f2028a) * 100.0d) / ((double) c0639b.f2029b));
+                this.f1336b.setTextViewText(this.f1338d, i + "%");
+                this.f1336b.setTextViewText(this.f1339e, "正在下载富媒体:" + c);
+                this.f1336b.setProgressBar(this.f1337c, 100, i, false);
+                Notification build = VERSION.SDK_INT >= 16 ? new Builder(this.f1335a).setSmallIcon(17301633).setWhen(System.currentTimeMillis()).build() : new Notification(17301633, null, System.currentTimeMillis());
+                build.contentView = this.f1336b;
+                build.contentIntent = PendingIntent.getActivity(this.f1335a, 0, new Intent(), 0);
+                build.flags |= 32;
+                build.flags |= 2;
+                this.f1341g.notify(c, 0, build);
             }
-            if (p.b(paramContext, (PublicMsg)localObject))
-            {
-              a(paramContext, (PublicMsg)localObject);
-              return;
+        }
+
+        /* renamed from: a */
+        public void mo1275a(C0638a c0638a, C0644e c0644e) {
+            String c = c0638a.f2026d.m2808c();
+            this.f1341g.cancel(c, 0);
+            C0459g a = C0463a.m1996a(this.f1335a, c);
+            if (a != null && a.f1490i == C0638a.f2021f) {
+                String str = a.f1486e;
+                c = a.f1487f;
+                if (!TextUtils.isEmpty(c) && c.length() > 0) {
+                    Uri insert;
+                    c = str + "/" + c.substring(0, c.lastIndexOf(".")) + "/index.html";
+                    Intent intent = new Intent();
+                    intent.setClass(this.f1335a, MediaViewActivity.class);
+                    int A = C0578p.m2492A(this.f1335a, this.f1335a.getPackageName());
+                    File file = new File(c);
+                    if (A >= 24) {
+                        ContentValues contentValues = new ContentValues(1);
+                        contentValues.put("_data", file.getAbsolutePath());
+                        insert = this.f1335a.getContentResolver().insert(Media.EXTERNAL_CONTENT_URI, contentValues);
+                    } else {
+                        insert = Uri.fromFile(file);
+                    }
+                    intent.setData(insert);
+                    intent.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                    try {
+                        this.f1335a.startActivity(intent);
+                    } catch (Throwable e) {
+                        new Handler(Looper.getMainLooper()).post(new C04221(this));
+                        C0527a.m2217a("PushServiceReceiver", e, this.f1335a);
+                    }
+                }
             }
-          }
-          catch (ClassCastException paramContext) {}
         }
-      }
-      return;
-    }
-    catch (Exception paramContext) {}
-  }
-  
-  private static class a
-    implements com.baidu.android.pushservice.richmedia.f
-  {
-    public Context a = null;
-    public RemoteViews b = null;
-    public int c = 0;
-    public int d = 0;
-    public int e = 0;
-    public int f = 0;
-    NotificationManager g;
-    
-    a(Context paramContext, PublicMsg paramPublicMsg)
-    {
-      this.a = paramContext;
-      this.g = ((NotificationManager)paramContext.getSystemService("notification"));
-    }
-    
-    public void a(com.baidu.android.pushservice.richmedia.a parama)
-    {
-      parama = this.a.getResources();
-      String str = this.a.getPackageName();
-      if (parama == null) {}
-      int i;
-      do
-      {
-        return;
-        i = parama.getIdentifier("bpush_download_progress", "layout", str);
-        this.b = new RemoteViews(this.a.getPackageName(), i);
-      } while (i == 0);
-      this.c = parama.getIdentifier("bpush_download_progress", "id", str);
-      this.d = parama.getIdentifier("bpush_progress_percent", "id", str);
-      this.e = parama.getIdentifier("bpush_progress_text", "id", str);
-      this.f = parama.getIdentifier("bpush_download_icon", "id", str);
-      this.b.setImageViewResource(this.f, this.a.getApplicationInfo().icon);
-    }
-    
-    @SuppressLint({"NewApi"})
-    public void a(com.baidu.android.pushservice.richmedia.a parama, b paramb)
-    {
-      String str = parama.d.c();
-      if (paramb.a == paramb.b) {}
-      while (this.b == null) {
-        return;
-      }
-      int i = (int)(paramb.a * 100.0D / paramb.b);
-      this.b.setTextViewText(this.d, i + "%");
-      this.b.setTextViewText(this.e, "正在下载富媒体:" + str);
-      this.b.setProgressBar(this.c, 100, i, false);
-      if (Build.VERSION.SDK_INT >= 16) {}
-      for (parama = new Notification.Builder(this.a).setSmallIcon(17301633).setWhen(System.currentTimeMillis()).build();; parama = new Notification(17301633, null, System.currentTimeMillis()))
-      {
-        parama.contentView = this.b;
-        parama.contentIntent = PendingIntent.getActivity(this.a, 0, new Intent(), 0);
-        parama.flags |= 0x20;
-        parama.flags |= 0x2;
-        this.g.notify(str, 0, parama);
-        return;
-      }
-    }
-    
-    public void a(com.baidu.android.pushservice.richmedia.a parama, com.baidu.android.pushservice.richmedia.e parame)
-    {
-      parama = parama.d.c();
-      this.g.cancel(parama, 0);
-      parame = com.baidu.android.pushservice.d.a.a(this.a, parama);
-      ContentValues localContentValues;
-      if ((parame != null) && (parame.i == com.baidu.android.pushservice.richmedia.a.f))
-      {
-        parama = parame.e;
-        parame = parame.f;
-        if ((!TextUtils.isEmpty(parame)) && (parame.length() > 0))
-        {
-          parama = parama + "/" + parame.substring(0, parame.lastIndexOf(".")) + "/index.html";
-          parame = new Intent();
-          parame.setClass(this.a, MediaViewActivity.class);
-          int i = p.A(this.a, this.a.getPackageName());
-          parama = new File(parama);
-          if (i < 24) {
-            break label213;
-          }
-          localContentValues = new ContentValues(1);
-          localContentValues.put("_data", parama.getAbsolutePath());
-        }
-      }
-      for (parama = this.a.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, localContentValues);; parama = Uri.fromFile(parama))
-      {
-        parame.setData(parama);
-        parame.addFlags(268435456);
-        try
-        {
-          this.a.startActivity(parame);
-          return;
-        }
-        catch (ActivityNotFoundException parama)
-        {
-          label213:
-          new Handler(Looper.getMainLooper()).post(new Runnable()
-          {
-            public void run()
-            {
-              Toast.makeText(PushServiceReceiver.a.this.a, "富媒体推送没有声明必须的Activity，请检查！", 1).show();
+
+        /* renamed from: a */
+        public void mo1276a(C0638a c0638a, Throwable th) {
+            if (this.f1335a != null) {
+                final String c = c0638a.f2026d.m2808c();
+                this.f1341g.cancel(c, 0);
+                new Handler(Looper.getMainLooper()).post(new Runnable(this) {
+                    /* renamed from: b */
+                    final /* synthetic */ C0425a f1334b;
+
+                    public void run() {
+                        Toast makeText = Toast.makeText(this.f1334b.f1335a, "下载富媒体" + Uri.parse(c).getAuthority() + "失败", 1);
+                        makeText.setGravity(17, 0, 0);
+                        makeText.show();
+                    }
+                });
             }
-          });
-          com.baidu.android.pushservice.g.a.a("PushServiceReceiver", parama, this.a);
         }
-      }
-    }
-    
-    public void a(final com.baidu.android.pushservice.richmedia.a parama, Throwable paramThrowable)
-    {
-      if (this.a == null) {
-        return;
-      }
-      parama = parama.d.c();
-      this.g.cancel(parama, 0);
-      new Handler(Looper.getMainLooper()).post(new Runnable()
-      {
-        public void run()
-        {
-          Toast localToast = Toast.makeText(PushServiceReceiver.a.this.a, "下载富媒体" + Uri.parse(parama).getAuthority() + "失败", 1);
-          localToast.setGravity(17, 0, 0);
-          localToast.show();
+
+        /* renamed from: b */
+        public void mo1277b(C0638a c0638a) {
+            this.f1341g.cancel(c0638a.f2026d.m2808c(), 0);
         }
-      });
     }
-    
-    public void b(com.baidu.android.pushservice.richmedia.a parama)
-    {
-      parama = parama.d.c();
-      this.g.cancel(parama, 0);
+
+    /* renamed from: a */
+    private static Intent m1807a(String str) {
+        try {
+            Intent intent = new Intent();
+            try {
+                intent.setAction("android.intent.action.VIEW");
+                intent.setData(Uri.parse(str));
+                intent.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                return intent;
+            } catch (Exception e) {
+                return intent;
+            }
+        } catch (Exception e2) {
+            return null;
+        }
     }
-  }
+
+    /* renamed from: a */
+    public static void m1808a(Context context, PublicMsg publicMsg) {
+        if (!Environment.getExternalStorageState().equals("mounted")) {
+            Toast makeText = Toast.makeText(context, "请插入SD卡", 1);
+            makeText.setGravity(17, 0, 0);
+            makeText.show();
+        } else if (publicMsg != null && publicMsg.mUrl != null) {
+            Uri parse = Uri.parse(publicMsg.mUrl);
+            String path = parse.getPath();
+            if (!TextUtils.isEmpty(parse.getPath())) {
+                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "baidu/pushservice/files" + "/" + parse.getAuthority() + "/" + path.substring(0, path.lastIndexOf(47)));
+                C0641c a = C0643d.m2809a(C0640a.REQ_TYPE_GET_ZIP, parse.toString());
+                a.f2032a = publicMsg.mPkgName;
+                a.f2033b = file.getAbsolutePath();
+                a.f2034c = publicMsg.mTitle;
+                a.f2035d = publicMsg.mDescription;
+                new C0638a(context, new C0425a(context, publicMsg), a).start();
+            }
+        }
+    }
+
+    /* renamed from: a */
+    private static void m1809a(Context context, PublicMsg publicMsg, byte[] bArr, byte[] bArr2) {
+        Intent intent = new Intent();
+        intent.setPackage(publicMsg.mPkgName);
+        intent.putExtra("method", "com.baidu.android.pushservice.action.notification.ARRIVED");
+        intent.putExtra("msgid", publicMsg.mMsgId);
+        intent.putExtra("notification_title", publicMsg.mTitle);
+        intent.putExtra("notification_content", publicMsg.mDescription);
+        intent.putExtra("extra_extra_custom_content", publicMsg.mCustomContent);
+        intent.putExtra("com.baidu.pushservice.app_id", publicMsg.mAppId);
+        intent.putExtra("baidu_message_secur_info", bArr);
+        intent.putExtra("baidu_message_body", bArr2);
+        C0578p.m2536a(context, publicMsg.mMsgId, publicMsg.mAppId, publicMsg.mTitle, publicMsg.mDescription, publicMsg.mCustomContent);
+        C0578p.m2545b(context, intent, PushConstants.ACTION_RECEIVE, publicMsg.mPkgName);
+    }
+
+    /* renamed from: a */
+    public static void m1810a(Context context, String str, String str2, PublicMsg publicMsg) {
+        try {
+            Intent a;
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
+            if (TextUtils.isEmpty(publicMsg.mPkgContent)) {
+                a = !TextUtils.isEmpty(publicMsg.mUrl) ? m1807a(publicMsg.mUrl) : m1813b(context, publicMsg);
+            } else {
+                try {
+                    a = Intent.parseUri(publicMsg.mPkgContent, 1);
+                    a.setPackage(context.getPackageName());
+                } catch (URISyntaxException e) {
+                    a = m1813b(context, publicMsg);
+                }
+            }
+            if (a != null) {
+                PendingIntent activity = PendingIntent.getActivity(context, 0, a, 0);
+                Notification a2 = C0475d.m2051a(context, 0, 7, publicMsg.mTitle, publicMsg.mDescription, false);
+                if (a2 != null) {
+                    a2.contentIntent = activity;
+                    notificationManager.notify(System.currentTimeMillis() + "", 0, a2);
+                }
+            }
+        } catch (Exception e2) {
+        }
+    }
+
+    /* renamed from: b */
+    private static Intent m1813b(Context context, PublicMsg publicMsg) {
+        try {
+            Intent intent = new Intent();
+            try {
+                intent.setClassName(context.getPackageName(), publicMsg.getLauncherActivityName(context, context.getPackageName()));
+                intent.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                return intent;
+            } catch (Exception e) {
+                return intent;
+            }
+        } catch (Exception e2) {
+            return null;
+        }
+    }
+
+    /* renamed from: b */
+    private static void m1814b(Context context, String str, String str2, PublicMsg publicMsg, String str3) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
+        Intent intent = new Intent("com.baidu.android.pushservice.action.media.CLICK");
+        intent.setClassName(str, str2);
+        intent.setData(Uri.parse("content://" + publicMsg.mMsgId));
+        intent.putExtra("public_msg", publicMsg);
+        intent.putExtra("app_id", str3);
+        PendingIntent service = PendingIntent.getService(context, 0, intent, 0);
+        Intent intent2 = new Intent();
+        intent2.setClassName(str, str2);
+        intent2.setAction("com.baidu.android.pushservice.action.media.DELETE");
+        intent2.setData(Uri.parse("content://" + publicMsg.mMsgId));
+        intent2.putExtra("public_msg", publicMsg);
+        intent2.putExtra("app_id", str3);
+        PendingIntent service2 = PendingIntent.getService(context, 0, intent2, 0);
+        Notification a = C0475d.m2052a(context, 8888, publicMsg.mTitle, "富媒体消息：点击后下载与查看", C0578p.m2593q(context, publicMsg.mPkgName));
+        a.contentIntent = service;
+        a.deleteIntent = service2;
+        notificationManager.notify(publicMsg.mMsgId, 0, a);
+    }
+
+    /* renamed from: b */
+    private static void m1815b(Context context, String str, String str2, PublicMsg publicMsg, byte[] bArr, byte[] bArr2) {
+        Notification a;
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
+        Intent intent = new Intent();
+        intent.setClassName(str, str2);
+        intent.setAction("com.baidu.android.pushservice.action.privatenotification.CLICK");
+        intent.setData(Uri.parse("content://" + publicMsg.mMsgId));
+        intent.putExtra("public_msg", publicMsg);
+        intent.putExtra("app_id", publicMsg.mAppId);
+        intent.putExtra("msg_id", publicMsg.mMsgId);
+        intent.putExtra("baidu_message_secur_info", bArr);
+        intent.putExtra("baidu_message_body", bArr2);
+        PendingIntent service = PendingIntent.getService(context, 0, intent, 0);
+        intent = new Intent();
+        intent.setClassName(str, str2);
+        intent.setAction("com.baidu.android.pushservice.action.privatenotification.DELETE");
+        intent.setData(Uri.parse("content://" + publicMsg.mMsgId));
+        intent.putExtra("public_msg", publicMsg);
+        intent.putExtra("app_id", publicMsg.mAppId);
+        intent.putExtra("msg_id", publicMsg.mMsgId);
+        PendingIntent service2 = PendingIntent.getService(context, 0, intent, 0);
+        boolean q = C0578p.m2593q(context, publicMsg.mPkgName);
+        if (publicMsg.mNotificationBuilder == 0) {
+            a = C0475d.m2051a(context, publicMsg.mNotificationBuilder, publicMsg.mNotificationBasicStyle, publicMsg.mTitle, publicMsg.mDescription, q);
+        } else {
+            a = C0475d.m2052a(context, publicMsg.mNotificationBuilder, publicMsg.mTitle, publicMsg.mDescription, q);
+        }
+        a.contentIntent = service;
+        a.deleteIntent = service2;
+        notificationManager.notify(publicMsg.mMsgId, 0, a);
+        m1809a(context, publicMsg, bArr, bArr2);
+    }
+
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        try {
+            intent.getByteArrayExtra("baidu_message_secur_info");
+            if ("android.intent.action.BOOT_COMPLETED".equals(action) || NetworkListener.f2257d.equals(action) || "android.intent.action.USER_PRESENT".equals(action) || "android.intent.action.MEDIA_CHECKING".equals(action) || "android.intent.action.ACTION_POWER_CONNECTED".equals(action) || "android.intent.action.ACTION_POWER_DISCONNECTED".equals(action) || "android.bluetooth.adapter.action.STATE_CHANGED".equals(action)) {
+                if (!C0448d.m1945g(context) && C0578p.m2574h(context.getApplicationContext()) > 0) {
+                    C0577o.m2490d(context);
+                }
+            } else if ("com.baidu.android.pushservice.action.notification.SHOW".equals(action)) {
+                if (!C0448d.m1945g(context)) {
+                    if (C0578p.m2608y(context)) {
+                        final Object stringExtra = intent.getStringExtra("pushService_package_name");
+                        final Object stringExtra2 = intent.getStringExtra("service_name");
+                        final String stringExtra3 = intent.getStringExtra("notify_type");
+                        final String stringExtra4 = intent.getStringExtra("app_id");
+                        final byte[] byteArrayExtra = intent.getByteArrayExtra("baidu_message_body");
+                        final byte[] byteArrayExtra2 = intent.getByteArrayExtra("baidu_message_secur_info");
+                        int intExtra = intent.getIntExtra("baidu_message_type", -1);
+                        final String stringExtra5 = intent.getStringExtra("message_id");
+                        if (!TextUtils.isEmpty(stringExtra) && !TextUtils.isEmpty(stringExtra2) && byteArrayExtra != null && byteArrayExtra2 != null && intExtra != -1 && !C0578p.m2599t(context, stringExtra5)) {
+                            final Context context2 = context;
+                            C0559d.m2387a().m2388a(new C0420c(this, "showPrivateNotification", (short) 99) {
+                                /* renamed from: i */
+                                final /* synthetic */ PushServiceReceiver f1331i;
+
+                                /* renamed from: a */
+                                public void mo1272a() {
+                                    PublicMsg a = C0602e.m2690a(context2, stringExtra4, stringExtra5, byteArrayExtra2, byteArrayExtra);
+                                    if (a != null) {
+                                        C0578p.m2535a(context2, a);
+                                        if (C6197b.f25307v.equals(stringExtra3)) {
+                                            PushServiceReceiver.m1815b(context2, stringExtra, stringExtra2, a, byteArrayExtra2, byteArrayExtra);
+                                        } else if ("rich_media".equals(stringExtra3)) {
+                                            PushServiceReceiver.m1814b(context2, stringExtra, stringExtra2, a, stringExtra4);
+                                        }
+                                    }
+                                }
+                            });
+                            return;
+                        }
+                        return;
+                    }
+                    C0522f.m2200g(context);
+                }
+            } else if ("com.baidu.android.pushservice.action.media.CLICK".equals(action)) {
+                C0527a.m2216a("PushServiceReceiver", "Rich media notification clicked", context.getApplicationContext());
+                PublicMsg publicMsg = null;
+                try {
+                    if (intent.hasExtra("public_msg")) {
+                        publicMsg = (PublicMsg) intent.getParcelableExtra("public_msg");
+                    }
+                    if (C0578p.m2548b(context, publicMsg)) {
+                        m1808a(context, publicMsg);
+                    }
+                } catch (ClassCastException e) {
+                }
+            }
+        } catch (Exception e2) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/PushServiceReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

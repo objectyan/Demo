@@ -9,15 +9,21 @@ import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Process;
 import android.text.TextUtils;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.che.codriver.sdk.p081a.C2602k.C1981b;
+import com.baidu.navi.protocol.model.UpdateDeviceStatusDataStruct;
+import com.baidu.navisdk.jni.nativeif.JNISearchConst;
+import com.baidu.sapi2.shell.SapiErrorCode;
+import com.indooratlas.android.sdk.BuildConfig;
 import com.indooratlas.android.sdk.IALocation;
 import com.indooratlas.android.sdk.IALocation.Builder;
+import com.indooratlas.android.sdk._internal.ar.C5767b;
+import com.indooratlas.android.sdk._internal.ar.C5768c;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -30,418 +36,473 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public final class ct
-{
-  public static int a(Cursor paramCursor, Writer paramWriter)
-    throws IOException
-  {
-    int i = paramCursor.getCount();
-    if ((i > 0) && (paramCursor.moveToFirst()))
-    {
-      paramWriter.write(91);
-      do
-      {
-        paramWriter.write(paramCursor.getString(0));
-        if (!paramCursor.isLast()) {
-          paramWriter.write(",");
+public final class ct {
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ct$1 */
+    public static class C58441 extends AsyncTask {
+        /* renamed from: a */
+        final /* synthetic */ cj f23353a;
+        /* renamed from: b */
+        final /* synthetic */ int f23354b = 100;
+        /* renamed from: c */
+        final /* synthetic */ ac f23355c;
+        /* renamed from: d */
+        final /* synthetic */ String f23356d;
+
+        public C58441(cj cjVar, ac acVar, String str) {
+            this.f23353a = cjVar;
+            this.f23355c = acVar;
+            this.f23356d = str;
         }
-      } while (paramCursor.moveToNext());
-      paramWriter.write(93);
+
+        /* JADX WARNING: inconsistent code. */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        protected final java.lang.Object doInBackground(java.lang.Object[] r8) {
+            /*
+            r7 = this;
+            r6 = 0;
+            r2 = 1;
+            r4 = 0;
+            r1 = com.indooratlas.android.sdk._internal.ci.m20217a();
+            r0 = r7.f23353a;
+            com.indooratlas.android.sdk._internal.ci.C5836a.m20213a(r0, r1);
+            r0 = r7.f23353a;
+            r2 = new java.lang.String[r2];
+            r3 = "data";
+            r2[r4] = r3;
+            r3 = r7.f23354b;
+            r2 = com.indooratlas.android.sdk._internal.ci.C5836a.m20214a(r0, r1, r2, r3);
+            if (r2 != 0) goto L_0x001e;
+        L_0x001d:
+            return r6;
+        L_0x001e:
+            r0 = new java.io.StringWriter;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0.<init>();	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r3 = com.indooratlas.android.sdk._internal.ct.m20250a(r2, r0);	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            if (r3 <= 0) goto L_0x006f;
+        L_0x0029:
+            r0 = r0.toString();	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r3 = 1;
+            r3 = new java.lang.Object[r3];	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r4 = 0;
+            r3[r4] = r0;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r3 = r7.f23355c;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r4 = r7.f23356d;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r5 = "UTF-8";
+            r5 = java.nio.charset.Charset.forName(r5);	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r0.getBytes(r5);	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r3.mo4598a(r4, r0);	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r3 = r0.mo4595c();	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r3.f22927a;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            if (r0 == 0) goto L_0x0084;
+        L_0x004e:
+            r0 = r3.f22927a;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            if (r0 == 0) goto L_0x0073;
+        L_0x0052:
+            r0 = r3.f22929c;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r0.b();	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+        L_0x0058:
+            r4 = 204; // 0xcc float:2.86E-43 double:1.01E-321;
+            if (r0 != r4) goto L_0x0084;
+        L_0x005c:
+            r0 = 1;
+            r0 = new java.lang.Object[r0];	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r3 = 0;
+            r4 = r2.getCount();	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r4 = java.lang.Integer.valueOf(r4);	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0[r3] = r4;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r7.f23353a;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            com.indooratlas.android.sdk._internal.ci.C5836a.m20215b(r0, r1);	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+        L_0x006f:
+            com.indooratlas.android.sdk._internal.ct.m20263a(r2);
+            goto L_0x001d;
+        L_0x0073:
+            r0 = r3.f22930d;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r0.f22925b;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            if (r0 == 0) goto L_0x0082;
+        L_0x0079:
+            r0 = r3.f22930d;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r0.f22925b;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r0.b();	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            goto L_0x0058;
+        L_0x0082:
+            r0 = -1;
+            goto L_0x0058;
+        L_0x0084:
+            r0 = 1;
+            r0 = new java.lang.Object[r0];	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r4 = 0;
+            r0[r4] = r3;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            r0 = r7.f23353a;	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            com.indooratlas.android.sdk._internal.ci.C5836a.m20216c(r0, r1);	 Catch:{ IOException -> 0x0090, Throwable -> 0x009a }
+            goto L_0x006f;
+        L_0x0090:
+            r0 = move-exception;
+            r0 = r7.f23353a;	 Catch:{ all -> 0x00ac }
+            com.indooratlas.android.sdk._internal.ci.C5836a.m20216c(r0, r1);	 Catch:{ all -> 0x00ac }
+            com.indooratlas.android.sdk._internal.ct.m20263a(r2);
+            goto L_0x001d;
+        L_0x009a:
+            r0 = move-exception;
+            r1 = "IACore";
+            r3 = "unexpected error while uploading logs";
+            r4 = 0;
+            r4 = new java.lang.Object[r4];	 Catch:{ all -> 0x00ac }
+            com.indooratlas.android.sdk._internal.ee.m20410a(r1, r0, r3, r4);	 Catch:{ all -> 0x00ac }
+            com.indooratlas.android.sdk._internal.ct.m20263a(r2);
+            goto L_0x001d;
+        L_0x00ac:
+            r0 = move-exception;
+            com.indooratlas.android.sdk._internal.ct.m20263a(r2);
+            throw r0;
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.indooratlas.android.sdk._internal.ct.1.doInBackground(java.lang.Object[]):java.lang.Object");
+        }
     }
-    return i;
-  }
-  
-  public static int a(int[] paramArrayOfInt)
-  {
-    int i = 0;
-    while (i < 4)
-    {
-      int j = paramArrayOfInt[i];
-      if (j != -1) {
-        return j;
-      }
-      i += 1;
+
+    /* renamed from: a */
+    public static ArrayList<String> m20260a(Context context, String... strArr) {
+        ArrayList<String> arrayList = new ArrayList(0);
+        PackageManager packageManager = context.getPackageManager();
+        for (int i = 0; i <= 0; i++) {
+            String str = strArr[0];
+            if (!packageManager.hasSystemFeature(str)) {
+                arrayList.add(str);
+            }
+        }
+        return arrayList;
     }
-    return -1;
-  }
-  
-  public static IALocation a(cx paramcx)
-  {
-    if ((paramcx == null) || (!paramcx.b())) {
-      return null;
+
+    /* renamed from: a */
+    public static String m20253a() {
+        return String.format(Locale.US, "%s; %s-%d; %s; Android %d", new Object[]{"indooratlas-android-sdk", BuildConfig.VERSION_NAME, Integer.valueOf(BuildConfig.VERSION_CODE), "release", Integer.valueOf(VERSION.SDK_INT)});
     }
-    dq localdq = (dq)paramcx.c;
-    if (localdq.a == 65236) {
-      paramcx = "gps";
+
+    /* renamed from: a */
+    public static JSONObject m20261a(Context context, String str, JSONObject jSONObject) {
+        try {
+            ck a = ck.m20223a(context);
+            JSONObject put = new JSONObject().put("idauuid", str).put("bundle", new JSONObject().put("id", a.f23316a).put("version", a.f23317b));
+            String str2 = "sdk";
+            Object obj = TextUtils.isEmpty("") ? "release" : ",release";
+            ar a2 = ar.m19847a();
+            JSONObject put2 = put.put(str2, new JSONObject().put("id", "indooratlas-android-sdk").put("version", BuildConfig.VERSION_NAME).put("build", "743").put("variant", obj).put("apiLevel", 4)).put("platform", new JSONObject().put("os", C1253f.jb).put("osVersion", a2.m19849a(C5768c.VERSION_RELEASE)).put("manufacturer", a2.m19849a(C5768c.MANUFACTURER)).put(UpdateDeviceStatusDataStruct.KEY_DEVICE, a2.m19849a(C5768c.DEVICE)).put("product", a2.m19849a(C5768c.PRODUCT)).put("model", a2.m19849a(C5768c.MODEL)).put("board", a2.m19849a(C5768c.BOARD)).put("hardware", a2.m19849a(C5768c.HARDWARE)).put("apiLevel", String.valueOf(a2.m19848a(C5767b.f22973a))).put("sensors", m20271c(context)));
+            if (jSONObject != null) {
+                put2.put("androidNativeSensors", jSONObject);
+            }
+            return put2;
+        } catch (Throwable e) {
+            throw new IllegalStateException("failure creating init sdk json", e);
+        }
     }
-    for (;;)
-    {
-      return new IALocation.Builder(paramcx).withLatitude(localdq.c).withLongitude(localdq.d).withAccuracy(localdq.e).withAltitude(localdq.f).withBearing(localdq.g).withTime(localdq.i).build();
-      if (localdq.a == 65235) {
-        paramcx = "network";
-      } else {
-        paramcx = "passive";
-      }
+
+    /* renamed from: c */
+    private static JSONArray m20271c(Context context) throws JSONException {
+        cz a = cz.m20279a(context);
+        ArrayList arrayList = new ArrayList(6);
+        arrayList.add(a.m20283a(1));
+        arrayList.add(a.m20283a(4));
+        arrayList.add(a.m20283a(16));
+        arrayList.add(a.m20283a(2));
+        arrayList.add(a.m20283a(14));
+        arrayList.add(a.m20283a(6));
+        JSONArray jSONArray = new JSONArray();
+        Iterator it = arrayList.iterator();
+        while (it.hasNext()) {
+            cw cwVar = (cw) it.next();
+            if (cwVar != null) {
+                jSONArray.put(m20254a(cwVar.mo4658a()));
+            }
+        }
+        return jSONArray;
     }
-  }
-  
-  public static String a()
-  {
-    return String.format(Locale.US, "%s; %s-%d; %s; Android %d", new Object[] { "indooratlas-android-sdk", "2.4.2", Integer.valueOf(743), "release", Integer.valueOf(Build.VERSION.SDK_INT) });
-  }
-  
-  private static String a(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      return "unknown";
-    case 0: 
-      return "unknown";
-    case -1: 
-      return "all";
-    case 1: 
-      return "acc";
-    case 2: 
-      return "magn_calib";
-    case 3: 
-      return "orientation";
-    case 4: 
-      return "gyro_calib";
-    case 5: 
-      return "light";
-    case 6: 
-      return "pressure";
-    case 8: 
-      return "proximity";
-    case 9: 
-      return "gravity";
-    case 10: 
-      return "linear_acc";
-    case 11: 
-      return "rot_vec";
-    case 12: 
-      return "humidity";
-    case 13: 
-      return "temp";
-    case 14: 
-      return "magn_uncalib";
-    case 15: 
-      return "game_rot_vec";
-    case 16: 
-      return "gyro_uncalib";
-    case 17: 
-      return "significant_motion";
-    case 18: 
-      return "step_detector";
-    case 19: 
-      return "step_counter";
-    case 20: 
-      return "geomagn_rot_vec";
-    case 21: 
-      return "hearth_rate";
-    case 22: 
-      return "tilt_detector";
-    case 23: 
-      return "wake_gesture";
-    case 24: 
-      return "glance_gesture";
-    case 25: 
-      return "pick_up_gesture";
-    case 26: 
-      return "wrist_tilt_gesture";
-    case -100: 
-      return "wifi";
-    case -101: 
-      return "wifi_passive";
-    case -200: 
-      return "ble";
-    case -300: 
-      return "gps_location";
+
+    /* renamed from: a */
+    public static JSONObject m20262a(List<cw> list) {
+        if (list == null) {
+            throw new IllegalArgumentException("sensor list cannot be null");
+        }
+        try {
+            JSONObject jSONObject = new JSONObject();
+            for (cw cwVar : list) {
+                if (cwVar.mo4659b() != null) {
+                    String a = m20254a(cwVar.mo4658a());
+                    Sensor b = cwVar.mo4659b();
+                    JSONObject jSONObject2 = new JSONObject();
+                    if (VERSION.SDK_INT >= 19) {
+                        jSONObject2.put("fifoMaxEventCount", b.getFifoMaxEventCount());
+                        jSONObject2.put("fifoReservedEventCount", b.getFifoReservedEventCount());
+                    }
+                    if (VERSION.SDK_INT >= 21) {
+                        jSONObject2.put("maxDelay", b.getMaxDelay());
+                    }
+                    m20264a(jSONObject2, "maximumRange", b.getMaximumRange());
+                    jSONObject2.put("minDelay", b.getMinDelay());
+                    jSONObject2.put("name", b.getName());
+                    m20264a(jSONObject2, "power", b.getPower());
+                    if (VERSION.SDK_INT >= 21) {
+                        jSONObject2.put("reportingMode", b.getReportingMode());
+                    }
+                    m20264a(jSONObject2, "resolution", b.getResolution());
+                    if (VERSION.SDK_INT >= 20) {
+                        jSONObject2.put("stringType", b.getStringType());
+                    }
+                    jSONObject2.put("type", b.getType());
+                    jSONObject2.put("vendor", b.getVendor());
+                    jSONObject2.put("version", b.getVersion());
+                    jSONObject.put(a, jSONObject2);
+                }
+            }
+            return jSONObject;
+        } catch (JSONException e) {
+            ee.m20409a("IACore", "Failed to create json array with all sensors", e);
+            return null;
+        }
     }
-    return "network_location";
-  }
-  
-  public static String a(String paramString1, String paramString2)
-  {
-    try
-    {
-      paramString1 = a(a(paramString1 + "_" + paramString2));
-      return paramString1;
+
+    /* renamed from: a */
+    private static void m20264a(JSONObject jSONObject, String str, float f) throws JSONException {
+        if (!Float.isNaN(f) && !Float.isInfinite(f)) {
+            jSONObject.put(str, (double) f);
+        }
     }
-    catch (NoSuchAlgorithmException paramString1)
-    {
-      throw new IllegalStateException(paramString1);
+
+    /* renamed from: a */
+    private static String m20254a(int i) {
+        switch (i) {
+            case -301:
+                return "network_location";
+            case -300:
+                return "gps_location";
+            case SapiErrorCode.NETWORK_FAILED /*-200*/:
+                return "ble";
+            case -101:
+                return "wifi_passive";
+            case -100:
+                return C1981b.f6365e;
+            case -1:
+                return "all";
+            case 0:
+                return "unknown";
+            case 1:
+                return "acc";
+            case 2:
+                return "magn_calib";
+            case 3:
+                return "orientation";
+            case 4:
+                return "gyro_calib";
+            case 5:
+                return C1981b.f6364d;
+            case 6:
+                return "pressure";
+            case 8:
+                return "proximity";
+            case 9:
+                return "gravity";
+            case 10:
+                return "linear_acc";
+            case 11:
+                return "rot_vec";
+            case 12:
+                return "humidity";
+            case 13:
+                return "temp";
+            case 14:
+                return "magn_uncalib";
+            case 15:
+                return "game_rot_vec";
+            case 16:
+                return "gyro_uncalib";
+            case 17:
+                return "significant_motion";
+            case 18:
+                return "step_detector";
+            case 19:
+                return "step_counter";
+            case 20:
+                return "geomagn_rot_vec";
+            case 21:
+                return "hearth_rate";
+            case 22:
+                return "tilt_detector";
+            case 23:
+                return "wake_gesture";
+            case 24:
+                return "glance_gesture";
+            case 25:
+                return "pick_up_gesture";
+            case 26:
+                return "wrist_tilt_gesture";
+            default:
+                return "unknown";
+        }
     }
-    catch (UnsupportedEncodingException paramString1)
-    {
-      throw new IllegalStateException(paramString1);
+
+    /* renamed from: a */
+    public static String m20255a(String str, String str2) {
+        try {
+            return m20258a(m20267a(str + JNISearchConst.LAYER_ID_DIVIDER + str2));
+        } catch (Throwable e) {
+            throw new IllegalStateException(e);
+        } catch (Throwable e2) {
+            throw new IllegalStateException(e2);
+        }
     }
-  }
-  
-  public static String a(String paramString, Object... paramVarArgs)
-  {
-    try
-    {
-      String str = String.format(Locale.US, paramString, paramVarArgs);
-      return str;
-    }
-    catch (IllegalFormatException localIllegalFormatException)
-    {
-      ee.a("IACore", "bad string format: " + paramString + ", args: " + Arrays.toString(paramVarArgs), new Object[0]);
-    }
-    return paramString;
-  }
-  
-  public static String a(JSONObject paramJSONObject)
-  {
-    if (paramJSONObject == null) {
-      return "null response";
-    }
-    if (paramJSONObject.length() == 0) {
-      return "no keys in response";
-    }
-    if (TextUtils.isEmpty(paramJSONObject.optString("key"))) {
-      return "missing mandatory key: 'key'";
-    }
-    paramJSONObject = paramJSONObject.optString("url");
-    if (TextUtils.isEmpty(paramJSONObject)) {
-      return "missing mandatory key: 'url'";
-    }
-    try
-    {
-      new URI(paramJSONObject);
-      return null;
-    }
-    catch (URISyntaxException localURISyntaxException) {}
-    return "malformed url: " + paramJSONObject;
-  }
-  
-  public static String a(byte[] paramArrayOfByte)
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    int j = paramArrayOfByte.length;
-    int i = 0;
-    while (i < j)
-    {
-      localStringBuilder.append(Integer.toString((paramArrayOfByte[i] & 0xFF) + 256, 16).substring(1));
-      i += 1;
-    }
-    return localStringBuilder.toString();
-  }
-  
-  public static String a(String... paramVarArgs)
-  {
-    int j = paramVarArgs.length;
-    int i = 0;
-    while (i < j)
-    {
-      String str = paramVarArgs[i];
-      if (!ei.a(str)) {
+
+    /* renamed from: a */
+    public static String m20256a(String str, Object... objArr) {
+        try {
+            str = String.format(Locale.US, str, objArr);
+        } catch (IllegalFormatException e) {
+            ee.m20409a("IACore", "bad string format: " + str + ", args: " + Arrays.toString(objArr), new Object[0]);
+        }
         return str;
-      }
-      i += 1;
     }
-    return null;
-  }
-  
-  public static ArrayList<String> a(Context paramContext, String... paramVarArgs)
-  {
-    ArrayList localArrayList = new ArrayList(0);
-    paramContext = paramContext.getPackageManager();
-    int i = 0;
-    while (i <= 0)
-    {
-      String str = paramVarArgs[0];
-      if (!paramContext.hasSystemFeature(str)) {
-        localArrayList.add(str);
-      }
-      i += 1;
+
+    /* renamed from: a */
+    public static byte[] m20267a(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest instance = MessageDigest.getInstance("SHA-256");
+        instance.reset();
+        instance.update(str.getBytes("UTF-8"));
+        return instance.digest();
     }
-    return localArrayList;
-  }
-  
-  public static JSONObject a(Context paramContext, String paramString, JSONObject paramJSONObject)
-  {
-    try
-    {
-      paramString = new JSONObject().put("idauuid", paramString);
-      Object localObject = ck.a(paramContext);
-      localObject = paramString.put("bundle", new JSONObject().put("id", ((ck)localObject).a).put("version", ((ck)localObject).b));
-      if (TextUtils.isEmpty("")) {}
-      for (paramString = "release";; paramString = ",release")
-      {
-        paramString = ((JSONObject)localObject).put("sdk", new JSONObject().put("id", "indooratlas-android-sdk").put("version", "2.4.2").put("build", "743").put("variant", paramString).put("apiLevel", 4));
-        localObject = ar.a();
-        paramContext = paramString.put("platform", new JSONObject().put("os", "Android").put("osVersion", ((ar)localObject).a(ar.c.m)).put("manufacturer", ((ar)localObject).a(ar.c.f)).put("device", ((ar)localObject).a(ar.c.d)).put("product", ((ar)localObject).a(ar.c.c)).put("model", ((ar)localObject).a(ar.c.h)).put("board", ((ar)localObject).a(ar.c.e)).put("hardware", ((ar)localObject).a(ar.c.j)).put("apiLevel", String.valueOf(((ar)localObject).a(ar.b.a))).put("sensors", c(paramContext)));
-        if (paramJSONObject == null) {
-          break;
+
+    /* renamed from: a */
+    public static String m20258a(byte[] bArr) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte b : bArr) {
+            stringBuilder.append(Integer.toString((b & 255) + 256, 16).substring(1));
         }
-        paramContext.put("androidNativeSensors", paramJSONObject);
-        return paramContext;
-      }
-      return paramContext;
+        return stringBuilder.toString();
     }
-    catch (JSONException paramContext)
-    {
-      throw new IllegalStateException("failure creating init sdk json", paramContext);
-    }
-  }
-  
-  public static JSONObject a(List<cw> paramList)
-  {
-    if (paramList == null) {
-      throw new IllegalArgumentException("sensor list cannot be null");
-    }
-    try
-    {
-      JSONObject localJSONObject1 = new JSONObject();
-      paramList = paramList.iterator();
-      while (paramList.hasNext())
-      {
-        Object localObject = (cw)paramList.next();
-        if (((cw)localObject).b() != null)
-        {
-          String str = a(((cw)localObject).a());
-          localObject = ((cw)localObject).b();
-          JSONObject localJSONObject2 = new JSONObject();
-          if (Build.VERSION.SDK_INT >= 19)
-          {
-            localJSONObject2.put("fifoMaxEventCount", ((Sensor)localObject).getFifoMaxEventCount());
-            localJSONObject2.put("fifoReservedEventCount", ((Sensor)localObject).getFifoReservedEventCount());
-          }
-          if (Build.VERSION.SDK_INT >= 21) {
-            localJSONObject2.put("maxDelay", ((Sensor)localObject).getMaxDelay());
-          }
-          a(localJSONObject2, "maximumRange", ((Sensor)localObject).getMaximumRange());
-          localJSONObject2.put("minDelay", ((Sensor)localObject).getMinDelay());
-          localJSONObject2.put("name", ((Sensor)localObject).getName());
-          a(localJSONObject2, "power", ((Sensor)localObject).getPower());
-          if (Build.VERSION.SDK_INT >= 21) {
-            localJSONObject2.put("reportingMode", ((Sensor)localObject).getReportingMode());
-          }
-          a(localJSONObject2, "resolution", ((Sensor)localObject).getResolution());
-          if (Build.VERSION.SDK_INT >= 20) {
-            localJSONObject2.put("stringType", ((Sensor)localObject).getStringType());
-          }
-          localJSONObject2.put("type", ((Sensor)localObject).getType());
-          localJSONObject2.put("vendor", ((Sensor)localObject).getVendor());
-          localJSONObject2.put("version", ((Sensor)localObject).getVersion());
-          localJSONObject1.put(str, localJSONObject2);
+
+    /* renamed from: a */
+    public static void m20263a(Cursor cursor) {
+        try {
+            cursor.close();
+        } catch (Throwable th) {
         }
-      }
-      return localJSONObject1;
     }
-    catch (JSONException paramList)
-    {
-      ee.a("IACore", "Failed to create json array with all sensors", new Object[] { paramList });
-      return null;
+
+    /* renamed from: a */
+    public static int m20250a(Cursor cursor, Writer writer) throws IOException {
+        int count = cursor.getCount();
+        if (count > 0 && cursor.moveToFirst()) {
+            writer.write(91);
+            do {
+                writer.write(cursor.getString(0));
+                if (!cursor.isLast()) {
+                    writer.write(",");
+                }
+            } while (cursor.moveToNext());
+            writer.write(93);
+        }
+        return count;
     }
-  }
-  
-  public static void a(Cursor paramCursor)
-  {
-    try
-    {
-      paramCursor.close();
-      return;
+
+    /* renamed from: a */
+    public static String m20257a(JSONObject jSONObject) {
+        if (jSONObject == null) {
+            return "null response";
+        }
+        if (jSONObject.length() == 0) {
+            return "no keys in response";
+        }
+        if (TextUtils.isEmpty(jSONObject.optString("key"))) {
+            return "missing mandatory key: 'key'";
+        }
+        String optString = jSONObject.optString("url");
+        if (TextUtils.isEmpty(optString)) {
+            return "missing mandatory key: 'url'";
+        }
+        try {
+            URI uri = new URI(optString);
+            return null;
+        } catch (URISyntaxException e) {
+            return "malformed url: " + optString;
+        }
     }
-    catch (Throwable paramCursor) {}
-  }
-  
-  private static void a(JSONObject paramJSONObject, String paramString, float paramFloat)
-    throws JSONException
-  {
-    if ((!Float.isNaN(paramFloat)) && (!Float.isInfinite(paramFloat))) {
-      paramJSONObject.put(paramString, paramFloat);
+
+    /* renamed from: a */
+    public static int m20251a(int[] iArr) {
+        for (int i = 0; i < 4; i++) {
+            int i2 = iArr[i];
+            if (i2 != -1) {
+                return i2;
+            }
+        }
+        return -1;
     }
-  }
-  
-  public static boolean a(Context paramContext)
-  {
-    return (a(paramContext, "android.permission.BLUETOOTH")) && (a(paramContext, "android.permission.BLUETOOTH_ADMIN")) && (a(paramContext, "android.permission.ACCESS_COARSE_LOCATION"));
-  }
-  
-  public static boolean a(Context paramContext, String paramString)
-  {
-    return paramContext.checkPermission(paramString, Process.myPid(), Process.myUid()) == 0;
-  }
-  
-  public static byte[] a(String paramString)
-    throws NoSuchAlgorithmException, UnsupportedEncodingException
-  {
-    MessageDigest localMessageDigest = MessageDigest.getInstance("SHA-256");
-    localMessageDigest.reset();
-    localMessageDigest.update(paramString.getBytes("UTF-8"));
-    return localMessageDigest.digest();
-  }
-  
-  public static String b(String paramString)
-  {
-    try
-    {
-      String str = System.getProperty(paramString);
-      return str;
+
+    /* renamed from: a */
+    public static boolean m20265a(Context context) {
+        return m20266a(context, "android.permission.BLUETOOTH") && m20266a(context, "android.permission.BLUETOOTH_ADMIN") && m20266a(context, "android.permission.ACCESS_COARSE_LOCATION");
     }
-    catch (Exception localException)
-    {
-      ee.a("IACore", "Unable to read property: %s", new Object[] { paramString });
+
+    @TargetApi(18)
+    /* renamed from: b */
+    public static boolean m20269b(Context context) {
+        if (VERSION.SDK_INT >= 18) {
+            return context.getPackageManager().hasSystemFeature("android.hardware.bluetooth_le");
+        }
+        return false;
     }
-    return null;
-  }
-  
-  @TargetApi(18)
-  public static boolean b(Context paramContext)
-  {
-    if (Build.VERSION.SDK_INT >= 18) {
-      return paramContext.getPackageManager().hasSystemFeature("android.hardware.bluetooth_le");
+
+    /* renamed from: a */
+    public static IALocation m20252a(cx cxVar) {
+        if (cxVar == null || !cxVar.m20277b()) {
+            return null;
+        }
+        String str;
+        dq dqVar = (dq) cxVar.f23360c;
+        if (dqVar.f23432a == -300) {
+            str = "gps";
+        } else if (dqVar.f23432a == -301) {
+            str = C1981b.f6367g;
+        } else {
+            str = "passive";
+        }
+        return new Builder(str).withLatitude(dqVar.f23434c).withLongitude(dqVar.f23435d).withAccuracy(dqVar.f23436e).withAltitude(dqVar.f23437f).withBearing(dqVar.f23438g).withTime(dqVar.f23440i).build();
     }
-    return false;
-  }
-  
-  public static int c(String paramString)
-  {
-    int i = -1;
-    String str = b(paramString);
-    if (str != null) {}
-    try
-    {
-      i = Integer.parseInt(str);
-      return i;
+
+    /* renamed from: a */
+    public static boolean m20266a(Context context, String str) {
+        return context.checkPermission(str, Process.myPid(), Process.myUid()) == 0;
     }
-    catch (NumberFormatException localNumberFormatException)
-    {
-      ee.a("IACore", "Unable to read property int: %s", new Object[] { paramString });
+
+    /* renamed from: b */
+    public static String m20268b(String str) {
+        String str2 = null;
+        try {
+            str2 = System.getProperty(str);
+        } catch (Exception e) {
+            ee.m20409a("IACore", "Unable to read property: %s", str);
+        }
+        return str2;
     }
-    return -1;
-  }
-  
-  private static JSONArray c(Context paramContext)
-    throws JSONException
-  {
-    paramContext = cz.a(paramContext);
-    Object localObject = new ArrayList(6);
-    ((ArrayList)localObject).add(paramContext.a(1));
-    ((ArrayList)localObject).add(paramContext.a(4));
-    ((ArrayList)localObject).add(paramContext.a(16));
-    ((ArrayList)localObject).add(paramContext.a(2));
-    ((ArrayList)localObject).add(paramContext.a(14));
-    ((ArrayList)localObject).add(paramContext.a(6));
-    paramContext = new JSONArray();
-    localObject = ((ArrayList)localObject).iterator();
-    while (((Iterator)localObject).hasNext())
-    {
-      cw localcw = (cw)((Iterator)localObject).next();
-      if (localcw != null) {
-        paramContext.put(a(localcw.a()));
-      }
+
+    /* renamed from: c */
+    public static int m20270c(String str) {
+        int i = -1;
+        String b = m20268b(str);
+        if (b != null) {
+            try {
+                i = Integer.parseInt(b);
+            } catch (NumberFormatException e) {
+                ee.m20409a("IACore", "Unable to read property int: %s", str);
+            }
+        }
+        return i;
     }
-    return paramContext;
-  }
+
+    /* renamed from: a */
+    public static String m20259a(String... strArr) {
+        for (String str : strArr) {
+            if (!ei.m20418a(str)) {
+                return str;
+            }
+        }
+        return null;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ct.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

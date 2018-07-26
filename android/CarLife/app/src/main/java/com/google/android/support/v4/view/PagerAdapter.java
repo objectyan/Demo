@@ -6,97 +6,80 @@ import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class PagerAdapter
-{
-  public static final int POSITION_NONE = -2;
-  public static final int POSITION_UNCHANGED = -1;
-  private DataSetObservable mObservable = new DataSetObservable();
-  
-  public void destroyItem(View paramView, int paramInt, Object paramObject)
-  {
-    throw new UnsupportedOperationException("Required method destroyItem was not overridden");
-  }
-  
-  public void destroyItem(ViewGroup paramViewGroup, int paramInt, Object paramObject)
-  {
-    destroyItem(paramViewGroup, paramInt, paramObject);
-  }
-  
-  public void finishUpdate(View paramView) {}
-  
-  public void finishUpdate(ViewGroup paramViewGroup)
-  {
-    finishUpdate(paramViewGroup);
-  }
-  
-  public abstract int getCount();
-  
-  public int getItemPosition(Object paramObject)
-  {
-    return -1;
-  }
-  
-  public CharSequence getPageTitle(int paramInt)
-  {
-    return null;
-  }
-  
-  public float getPageWidth(int paramInt)
-  {
-    return 1.0F;
-  }
-  
-  public Object instantiateItem(View paramView, int paramInt)
-  {
-    throw new UnsupportedOperationException("Required method instantiateItem was not overridden");
-  }
-  
-  public Object instantiateItem(ViewGroup paramViewGroup, int paramInt)
-  {
-    return instantiateItem(paramViewGroup, paramInt);
-  }
-  
-  public abstract boolean isViewFromObject(View paramView, Object paramObject);
-  
-  public void notifyDataSetChanged()
-  {
-    this.mObservable.notifyChanged();
-  }
-  
-  public void registerDataSetObserver(DataSetObserver paramDataSetObserver)
-  {
-    this.mObservable.registerObserver(paramDataSetObserver);
-  }
-  
-  public void restoreState(Parcelable paramParcelable, ClassLoader paramClassLoader) {}
-  
-  public Parcelable saveState()
-  {
-    return null;
-  }
-  
-  public void setPrimaryItem(View paramView, int paramInt, Object paramObject) {}
-  
-  public void setPrimaryItem(ViewGroup paramViewGroup, int paramInt, Object paramObject)
-  {
-    setPrimaryItem(paramViewGroup, paramInt, paramObject);
-  }
-  
-  public void startUpdate(View paramView) {}
-  
-  public void startUpdate(ViewGroup paramViewGroup)
-  {
-    startUpdate(paramViewGroup);
-  }
-  
-  public void unregisterDataSetObserver(DataSetObserver paramDataSetObserver)
-  {
-    this.mObservable.unregisterObserver(paramDataSetObserver);
-  }
+public abstract class PagerAdapter {
+    public static final int POSITION_NONE = -2;
+    public static final int POSITION_UNCHANGED = -1;
+    private DataSetObservable mObservable = new DataSetObservable();
+
+    public abstract int getCount();
+
+    public abstract boolean isViewFromObject(View view, Object obj);
+
+    public void startUpdate(ViewGroup container) {
+        startUpdate((View) container);
+    }
+
+    public Object instantiateItem(ViewGroup container, int position) {
+        return instantiateItem((View) container, position);
+    }
+
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        destroyItem((View) container, position, object);
+    }
+
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        setPrimaryItem((View) container, position, object);
+    }
+
+    public void finishUpdate(ViewGroup container) {
+        finishUpdate((View) container);
+    }
+
+    public void startUpdate(View container) {
+    }
+
+    public Object instantiateItem(View container, int position) {
+        throw new UnsupportedOperationException("Required method instantiateItem was not overridden");
+    }
+
+    public void destroyItem(View container, int position, Object object) {
+        throw new UnsupportedOperationException("Required method destroyItem was not overridden");
+    }
+
+    public void setPrimaryItem(View container, int position, Object object) {
+    }
+
+    public void finishUpdate(View container) {
+    }
+
+    public Parcelable saveState() {
+        return null;
+    }
+
+    public void restoreState(Parcelable state, ClassLoader loader) {
+    }
+
+    public int getItemPosition(Object object) {
+        return -1;
+    }
+
+    public void notifyDataSetChanged() {
+        this.mObservable.notifyChanged();
+    }
+
+    public void registerDataSetObserver(DataSetObserver observer) {
+        this.mObservable.registerObserver(observer);
+    }
+
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+        this.mObservable.unregisterObserver(observer);
+    }
+
+    public CharSequence getPageTitle(int position) {
+        return null;
+    }
+
+    public float getPageWidth(int position) {
+        return 1.0f;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/PagerAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,52 +1,37 @@
 package com.android.volley;
 
-public class VolleyError
-  extends Exception
-{
-  public final NetworkResponse networkResponse;
-  private long networkTimeMs;
-  
-  public VolleyError()
-  {
-    this.networkResponse = null;
-  }
-  
-  public VolleyError(NetworkResponse paramNetworkResponse)
-  {
-    this.networkResponse = paramNetworkResponse;
-  }
-  
-  public VolleyError(String paramString)
-  {
-    super(paramString);
-    this.networkResponse = null;
-  }
-  
-  public VolleyError(String paramString, Throwable paramThrowable)
-  {
-    super(paramString, paramThrowable);
-    this.networkResponse = null;
-  }
-  
-  public VolleyError(Throwable paramThrowable)
-  {
-    super(paramThrowable);
-    this.networkResponse = null;
-  }
-  
-  public long getNetworkTimeMs()
-  {
-    return this.networkTimeMs;
-  }
-  
-  void setNetworkTimeMs(long paramLong)
-  {
-    this.networkTimeMs = paramLong;
-  }
+public class VolleyError extends Exception {
+    public final NetworkResponse networkResponse;
+    private long networkTimeMs;
+
+    public VolleyError() {
+        this.networkResponse = null;
+    }
+
+    public VolleyError(NetworkResponse response) {
+        this.networkResponse = response;
+    }
+
+    public VolleyError(String exceptionMessage) {
+        super(exceptionMessage);
+        this.networkResponse = null;
+    }
+
+    public VolleyError(String exceptionMessage, Throwable reason) {
+        super(exceptionMessage, reason);
+        this.networkResponse = null;
+    }
+
+    public VolleyError(Throwable cause) {
+        super(cause);
+        this.networkResponse = null;
+    }
+
+    void setNetworkTimeMs(long networkTimeMs) {
+        this.networkTimeMs = networkTimeMs;
+    }
+
+    public long getNetworkTimeMs() {
+        return this.networkTimeMs;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/VolleyError.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

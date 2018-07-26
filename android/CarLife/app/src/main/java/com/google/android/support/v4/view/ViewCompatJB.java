@@ -4,66 +4,51 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewParent;
 
-class ViewCompatJB
-{
-  public static Object getAccessibilityNodeProvider(View paramView)
-  {
-    return paramView.getAccessibilityNodeProvider();
-  }
-  
-  public static int getImportantForAccessibility(View paramView)
-  {
-    return paramView.getImportantForAccessibility();
-  }
-  
-  public static ViewParent getParentForAccessibility(View paramView)
-  {
-    return paramView.getParentForAccessibility();
-  }
-  
-  public static boolean hasTransientState(View paramView)
-  {
-    return paramView.hasTransientState();
-  }
-  
-  public static boolean performAccessibilityAction(View paramView, int paramInt, Bundle paramBundle)
-  {
-    return paramView.performAccessibilityAction(paramInt, paramBundle);
-  }
-  
-  public static void postInvalidateOnAnimation(View paramView)
-  {
-    paramView.postInvalidateOnAnimation();
-  }
-  
-  public static void postInvalidateOnAnimation(View paramView, int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    paramView.postInvalidate(paramInt1, paramInt2, paramInt3, paramInt4);
-  }
-  
-  public static void postOnAnimation(View paramView, Runnable paramRunnable)
-  {
-    paramView.postOnAnimation(paramRunnable);
-  }
-  
-  public static void postOnAnimationDelayed(View paramView, Runnable paramRunnable, long paramLong)
-  {
-    paramView.postOnAnimationDelayed(paramRunnable, paramLong);
-  }
-  
-  public static void setHasTransientState(View paramView, boolean paramBoolean)
-  {
-    paramView.setHasTransientState(paramBoolean);
-  }
-  
-  public static void setImportantForAccessibility(View paramView, int paramInt)
-  {
-    paramView.setImportantForAccessibility(paramInt);
-  }
+class ViewCompatJB {
+    ViewCompatJB() {
+    }
+
+    public static boolean hasTransientState(View view) {
+        return view.hasTransientState();
+    }
+
+    public static void setHasTransientState(View view, boolean hasTransientState) {
+        view.setHasTransientState(hasTransientState);
+    }
+
+    public static void postInvalidateOnAnimation(View view) {
+        view.postInvalidateOnAnimation();
+    }
+
+    public static void postInvalidateOnAnimation(View view, int left, int top, int right, int bottom) {
+        view.postInvalidate(left, top, right, bottom);
+    }
+
+    public static void postOnAnimation(View view, Runnable action) {
+        view.postOnAnimation(action);
+    }
+
+    public static void postOnAnimationDelayed(View view, Runnable action, long delayMillis) {
+        view.postOnAnimationDelayed(action, delayMillis);
+    }
+
+    public static int getImportantForAccessibility(View view) {
+        return view.getImportantForAccessibility();
+    }
+
+    public static void setImportantForAccessibility(View view, int mode) {
+        view.setImportantForAccessibility(mode);
+    }
+
+    public static boolean performAccessibilityAction(View view, int action, Bundle arguments) {
+        return view.performAccessibilityAction(action, arguments);
+    }
+
+    public static Object getAccessibilityNodeProvider(View view) {
+        return view.getAccessibilityNodeProvider();
+    }
+
+    public static ViewParent getParentForAccessibility(View view) {
+        return view.getParentForAccessibility();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/ViewCompatJB.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

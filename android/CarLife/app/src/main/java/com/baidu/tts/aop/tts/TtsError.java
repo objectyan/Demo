@@ -1,85 +1,62 @@
 package com.baidu.tts.aop.tts;
 
-import com.baidu.tts.f.n;
-import com.baidu.tts.h.a.b;
+import com.baidu.tts.p233f.C5097n;
+import com.baidu.tts.p236h.p237a.C5104b;
 
-public class TtsError
-{
-  private Throwable a;
-  private int b;
-  private String c;
-  private b d;
-  
-  public int getCode()
-  {
-    return this.b;
-  }
-  
-  public int getDetailCode()
-  {
-    if (this.d != null) {
-      return this.d.a(this);
+public class TtsError {
+    /* renamed from: a */
+    private Throwable f20653a;
+    /* renamed from: b */
+    private int f20654b;
+    /* renamed from: c */
+    private String f20655c;
+    /* renamed from: d */
+    private C5104b f20656d;
+
+    public C5104b getTtsErrorFlyweight() {
+        return this.f20656d;
     }
-    return this.b;
-  }
-  
-  public String getDetailMessage()
-  {
-    if (this.d != null) {
-      return this.d.b(this);
+
+    public void setTtsErrorFlyweight(C5104b ttsErrorFlyweight) {
+        this.f20656d = ttsErrorFlyweight;
     }
-    if (this.c != null) {
-      return this.c;
+
+    public C5097n getErrorEnum() {
+        return this.f20656d == null ? null : this.f20656d.m17292a();
     }
-    return "TtsErrorFlyweight is null";
-  }
-  
-  public n getErrorEnum()
-  {
-    if (this.d == null) {
-      return null;
+
+    public Throwable getThrowable() {
+        return this.f20653a;
     }
-    return this.d.a();
-  }
-  
-  public String getMessage()
-  {
-    return this.c;
-  }
-  
-  public Throwable getThrowable()
-  {
-    return this.a;
-  }
-  
-  public b getTtsErrorFlyweight()
-  {
-    return this.d;
-  }
-  
-  public void setCode(int paramInt)
-  {
-    this.b = paramInt;
-  }
-  
-  public void setMessage(String paramString)
-  {
-    this.c = paramString;
-  }
-  
-  public void setThrowable(Throwable paramThrowable)
-  {
-    this.a = paramThrowable;
-  }
-  
-  public void setTtsErrorFlyweight(b paramb)
-  {
-    this.d = paramb;
-  }
+
+    public void setThrowable(Throwable throwable) {
+        this.f20653a = throwable;
+    }
+
+    public int getCode() {
+        return this.f20654b;
+    }
+
+    public void setCode(int code) {
+        this.f20654b = code;
+    }
+
+    public String getMessage() {
+        return this.f20655c;
+    }
+
+    public void setMessage(String message) {
+        this.f20655c = message;
+    }
+
+    public int getDetailCode() {
+        return this.f20656d != null ? this.f20656d.m17293a(this) : this.f20654b;
+    }
+
+    public String getDetailMessage() {
+        if (this.f20656d != null) {
+            return this.f20656d.m17294b(this);
+        }
+        return this.f20655c != null ? this.f20655c : "TtsErrorFlyweight is null";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/aop/tts/TtsError.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

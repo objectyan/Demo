@@ -6,119 +6,99 @@ import android.os.Build.VERSION;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.HorizontalScrollView;
-import com.baidu.navi.view.pulltorefresh.internal.LoadingLayout;
+import com.baidu.carlife.C0965R;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.AnimationStyle;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Mode;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Orientation;
 
-public class PullToRefreshHorizontalScrollView
-  extends PullToRefreshBase<HorizontalScrollView>
-{
-  public PullToRefreshHorizontalScrollView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public PullToRefreshHorizontalScrollView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public PullToRefreshHorizontalScrollView(Context paramContext, PullToRefreshBase.Mode paramMode)
-  {
-    super(paramContext, paramMode);
-  }
-  
-  public PullToRefreshHorizontalScrollView(Context paramContext, PullToRefreshBase.Mode paramMode, PullToRefreshBase.AnimationStyle paramAnimationStyle)
-  {
-    super(paramContext, paramMode, paramAnimationStyle);
-  }
-  
-  protected HorizontalScrollView createRefreshableView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    if (Build.VERSION.SDK_INT >= 9) {}
-    for (paramContext = new InternalHorizontalScrollViewSDK9(paramContext, paramAttributeSet);; paramContext = new slowHorizontalScrollView(paramContext, paramAttributeSet))
-    {
-      paramContext.setId(2131623938);
-      return paramContext;
+public class PullToRefreshHorizontalScrollView extends PullToRefreshBase<HorizontalScrollView> {
+
+    class slowHorizontalScrollView extends HorizontalScrollView {
+        public slowHorizontalScrollView(Context context, AttributeSet attrs, int defStyle) {
+            super(context, attrs, defStyle);
+        }
+
+        public slowHorizontalScrollView(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        public slowHorizontalScrollView(Context context) {
+            super(context);
+        }
+
+        public void fling(int velocityX) {
+            super.fling(velocityX / 2);
+        }
     }
-  }
-  
-  public final PullToRefreshBase.Orientation getPullToRefreshScrollDirection()
-  {
-    return PullToRefreshBase.Orientation.HORIZONTAL;
-  }
-  
-  public void hideLayoutViews()
-  {
-    getHeaderLayout().hideAllViews();
-    getFooterLayout().hideAllViews();
-  }
-  
-  protected boolean isReadyForPullEnd()
-  {
-    View localView = ((HorizontalScrollView)this.mRefreshableView).getChildAt(0);
-    if (localView != null) {
-      return ((HorizontalScrollView)this.mRefreshableView).getScrollX() >= localView.getWidth() - getWidth();
+
+    @TargetApi(9)
+    final class InternalHorizontalScrollViewSDK9 extends slowHorizontalScrollView {
+        public InternalHorizontalScrollViewSDK9(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+            boolean returnValue = super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+            OverscrollHelper.overScrollBy(PullToRefreshHorizontalScrollView.this, deltaX, scrollX, deltaY, scrollY, getScrollRange(), isTouchEvent);
+            return returnValue;
+        }
+
+        private int getScrollRange() {
+            if (getChildCount() > 0) {
+                return Math.max(0, getChildAt(0).getWidth() - ((getWidth() - getPaddingLeft()) - getPaddingRight()));
+            }
+            return 0;
+        }
     }
-    return false;
-  }
-  
-  protected boolean isReadyForPullStart()
-  {
-    return ((HorizontalScrollView)this.mRefreshableView).getScrollX() == 0;
-  }
-  
-  @TargetApi(9)
-  final class InternalHorizontalScrollViewSDK9
-    extends PullToRefreshHorizontalScrollView.slowHorizontalScrollView
-  {
-    public InternalHorizontalScrollViewSDK9(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramContext, paramAttributeSet);
+
+    public PullToRefreshHorizontalScrollView(Context context) {
+        super(context);
     }
-    
-    private int getScrollRange()
-    {
-      int i = 0;
-      if (getChildCount() > 0) {
-        i = Math.max(0, getChildAt(0).getWidth() - (getWidth() - getPaddingLeft() - getPaddingRight()));
-      }
-      return i;
+
+    public PullToRefreshHorizontalScrollView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-    
-    protected boolean overScrollBy(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, int paramInt6, int paramInt7, int paramInt8, boolean paramBoolean)
-    {
-      boolean bool = super.overScrollBy(paramInt1, paramInt2, paramInt3, paramInt4, paramInt5, paramInt6, paramInt7, paramInt8, paramBoolean);
-      OverscrollHelper.overScrollBy(PullToRefreshHorizontalScrollView.this, paramInt1, paramInt3, paramInt2, paramInt4, getScrollRange(), paramBoolean);
-      return bool;
+
+    public PullToRefreshHorizontalScrollView(Context context, Mode mode) {
+        super(context, mode);
     }
-  }
-  
-  class slowHorizontalScrollView
-    extends HorizontalScrollView
-  {
-    public slowHorizontalScrollView(Context paramContext)
-    {
-      super();
+
+    public PullToRefreshHorizontalScrollView(Context context, Mode mode, AnimationStyle style) {
+        super(context, mode, style);
     }
-    
-    public slowHorizontalScrollView(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramAttributeSet);
+
+    public final Orientation getPullToRefreshScrollDirection() {
+        return Orientation.HORIZONTAL;
     }
-    
-    public slowHorizontalScrollView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-    {
-      super(paramAttributeSet, paramInt);
+
+    protected HorizontalScrollView createRefreshableView(Context context, AttributeSet attrs) {
+        HorizontalScrollView scrollView;
+        if (VERSION.SDK_INT >= 9) {
+            scrollView = new InternalHorizontalScrollViewSDK9(context, attrs);
+        } else {
+            scrollView = new slowHorizontalScrollView(context, attrs);
+        }
+        scrollView.setId(C0965R.id.nsdk_ptr_scrollview);
+        return scrollView;
     }
-    
-    public void fling(int paramInt)
-    {
-      super.fling(paramInt / 2);
+
+    protected boolean isReadyForPullStart() {
+        return ((HorizontalScrollView) this.mRefreshableView).getScrollX() == 0;
     }
-  }
+
+    protected boolean isReadyForPullEnd() {
+        View scrollViewChild = ((HorizontalScrollView) this.mRefreshableView).getChildAt(0);
+        if (scrollViewChild == null) {
+            return false;
+        }
+        if (((HorizontalScrollView) this.mRefreshableView).getScrollX() >= scrollViewChild.getWidth() - getWidth()) {
+            return true;
+        }
+        return false;
+    }
+
+    public void hideLayoutViews() {
+        getHeaderLayout().hideAllViews();
+        getFooterLayout().hideAllViews();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/pulltorefresh/PullToRefreshHorizontalScrollView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

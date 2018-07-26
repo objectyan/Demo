@@ -10,151 +10,115 @@ import android.os.Message;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.NetworkUtils;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class NetworkListener
-  extends BroadcastReceiver
-{
-  public static final int MSG_TYPE_NET_WORK_CHANGE = 5555;
-  private static final String TAG = "NetworkListener";
-  private static Object mListenerLock = new Object();
-  private static final List<Handler> outboxHandlers = new ArrayList();
-  private boolean mIsCareMobileNetworkChange = false;
-  
-  public NetworkListener()
-  {
-    this.mIsCareMobileNetworkChange = false;
-  }
-  
-  public NetworkListener(boolean paramBoolean)
-  {
-    this.mIsCareMobileNetworkChange = paramBoolean;
-  }
-  
-  private static void dispatchMessage(int paramInt1, int paramInt2, int paramInt3)
-  {
-    LogUtil.e("NetworkListener", "dispatchMessage arg1=" + paramInt2 + "arg2=" + paramInt3);
-    synchronized (mListenerLock)
-    {
-      Object localObject2 = new ArrayList(outboxHandlers);
-      if (!((List)localObject2).isEmpty())
-      {
-        ??? = ((List)localObject2).iterator();
-        while (((Iterator)???).hasNext())
-        {
-          localObject2 = (Handler)((Iterator)???).next();
-          if (localObject2 != null)
-          {
-            localObject2 = Message.obtain((Handler)localObject2, paramInt1, paramInt2, paramInt3, null);
-            if (localObject2 != null) {
-              ((Message)localObject2).sendToTarget();
+public class NetworkListener extends BroadcastReceiver {
+    public static final int MSG_TYPE_NET_WORK_CHANGE = 5555;
+    private static final String TAG = "NetworkListener";
+    private static Object mListenerLock = new Object();
+    private static final List<Handler> outboxHandlers = new ArrayList();
+    private boolean mIsCareMobileNetworkChange;
+
+    public NetworkListener() {
+        this.mIsCareMobileNetworkChange = false;
+        this.mIsCareMobileNetworkChange = false;
+    }
+
+    public NetworkListener(boolean careMobileNetworkChange) {
+        this.mIsCareMobileNetworkChange = false;
+        this.mIsCareMobileNetworkChange = careMobileNetworkChange;
+    }
+
+    public static void registerMessageHandler(Handler handler) {
+        synchronized (mListenerLock) {
+            if (handler != null) {
+                if (!outboxHandlers.contains(handler)) {
+                    outboxHandlers.add(handler);
+                }
             }
-          }
         }
-      }
     }
-  }
-  
-  public static void registerMessageHandler(Handler paramHandler)
-  {
-    Object localObject = mListenerLock;
-    if (paramHandler != null) {}
-    try
-    {
-      if (!outboxHandlers.contains(paramHandler)) {
-        outboxHandlers.add(paramHandler);
-      }
-      return;
-    }
-    finally {}
-  }
-  
-  public static void unRegisterMessageHandler(Handler paramHandler)
-  {
-    Object localObject = mListenerLock;
-    if (paramHandler != null) {}
-    try
-    {
-      if (outboxHandlers.contains(paramHandler)) {
-        outboxHandlers.remove(paramHandler);
-      }
-      return;
-    }
-    finally {}
-  }
-  
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    paramIntent = null;
-    try
-    {
-      Object localObject = (ConnectivityManager)paramContext.getSystemService("connectivity");
-      if (localObject == null) {
-        return;
-      }
-      localObject = ((ConnectivityManager)localObject).getActiveNetworkInfo();
-      paramIntent = (Intent)localObject;
-    }
-    catch (Exception localException)
-    {
-      int i;
-      boolean bool;
-      int j;
-      for (;;) {}
-    }
-    if (paramIntent != null)
-    {
-      i = paramIntent.getType();
-      bool = paramIntent.isConnected();
-      switch (i)
-      {
-      default: 
-        i = 0;
-        if (bool == true) {
-          j = 1;
+
+    public static void unRegisterMessageHandler(Handler handler) {
+        synchronized (mListenerLock) {
+            if (handler != null) {
+                if (outboxHandlers.contains(handler)) {
+                    outboxHandlers.remove(handler);
+                }
+            }
         }
-        break;
-      }
     }
-    for (;;)
-    {
-      if ((i != NetworkUtils.mWifiState) || (this.mIsCareMobileNetworkChange)) {
-        break label134;
-      }
-      NetworkUtils.mConnectState = j;
-      return;
-      i = 0;
-      break;
-      if (bool == true) {}
-      for (i = 1;; i = 0) {
-        break;
-      }
-      j = 0;
-      continue;
-      i = 0;
-      j = 0;
+
+    private static void dispatchMessage(int what, int arg1, int arg2) {
+        LogUtil.m15791e("NetworkListener", "dispatchMessage arg1=" + arg1 + "arg2=" + arg2);
+        synchronized (mListenerLock) {
+            List<Handler> tempHandlers = new ArrayList(outboxHandlers);
+        }
+        if (!tempHandlers.isEmpty()) {
+            for (Handler handler : tempHandlers) {
+                if (handler != null) {
+                    Message msg = Message.obtain(handler, what, arg1, arg2, null);
+                    if (msg != null) {
+                        msg.sendToTarget();
+                    }
+                }
+            }
+        }
     }
-    label134:
-    if ((i != NetworkUtils.mWifiState) || (j != NetworkUtils.mConnectState))
-    {
-      LogUtil.e("NetworkListener", "network TYPE=" + i + "CONNECT=" + NetworkUtils.mConnectState);
-      NetworkUtils.mWifiState = i;
-      NetworkUtils.mConnectState = j;
-      dispatchMessage(5555, i, NetworkUtils.mConnectState);
+
+    public void onReceive(Context context, Intent intent) {
+        NetworkInfo activeNetInfo = null;
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService("connectivity");
+            if (connectivityManager != null) {
+                int wifiState;
+                int connectState;
+                activeNetInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetInfo != null) {
+                    int NetworkType = activeNetInfo.getType();
+                    boolean bConnected = activeNetInfo.isConnected();
+                    switch (NetworkType) {
+                        case 0:
+                            wifiState = 0;
+                            break;
+                        case 1:
+                            if (bConnected) {
+                                wifiState = 1;
+                            } else {
+                                wifiState = 0;
+                            }
+                            break;
+                        default:
+                            wifiState = 0;
+                            break;
+                    }
+                    if (bConnected) {
+                        connectState = 1;
+                    } else {
+                        connectState = 0;
+                    }
+                } else {
+                    wifiState = 0;
+                    connectState = 0;
+                }
+                if (wifiState != NetworkUtils.mWifiState || this.mIsCareMobileNetworkChange) {
+                    if (!(wifiState == NetworkUtils.mWifiState && connectState == NetworkUtils.mConnectState)) {
+                        LogUtil.m15791e("NetworkListener", "network TYPE=" + wifiState + "CONNECT=" + NetworkUtils.mConnectState);
+                        NetworkUtils.mWifiState = wifiState;
+                        NetworkUtils.mConnectState = connectState;
+                        dispatchMessage(MSG_TYPE_NET_WORK_CHANGE, wifiState, NetworkUtils.mConnectState);
+                    }
+                    NetworkUtils.mWifiState = wifiState;
+                    NetworkUtils.mConnectState = connectState;
+                    if (-1 != NetworkUtils.mWifiState) {
+                        NetworkUtils.ChangeGprsConnect(context);
+                        return;
+                    }
+                    return;
+                }
+                NetworkUtils.mConnectState = connectState;
+            }
+        } catch (Exception e) {
+        }
     }
-    NetworkUtils.mWifiState = i;
-    NetworkUtils.mConnectState = j;
-    if (-1 != NetworkUtils.mWifiState)
-    {
-      NetworkUtils.ChangeGprsConnect(paramContext);
-      return;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/listener/NetworkListener.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

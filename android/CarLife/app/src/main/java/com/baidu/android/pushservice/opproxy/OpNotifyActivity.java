@@ -4,37 +4,26 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import com.baidu.android.pushservice.j.p;
+import com.baidu.android.pushservice.p031j.C0578p;
 
-public class OpNotifyActivity
-  extends Activity
-{
-  protected void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    Object localObject = getIntent();
-    if (localObject != null)
-    {
-      paramBundle = ((Intent)localObject).getStringExtra("msgid");
-      String str1 = ((Intent)localObject).getStringExtra("opsigninfo");
-      String str2 = ((Intent)localObject).getStringExtra("custom_content");
-      localObject = ((Intent)localObject).getStringExtra("pkg_content");
-      if ((!TextUtils.isEmpty(paramBundle)) && (!TextUtils.isEmpty(str1)))
-      {
-        Intent localIntent = new Intent("com.baidu.android.pushservice.action.OPPO_CLICK");
-        localIntent.putExtra("op_notification_sign", str1);
-        localIntent.putExtra("op_notification_msg_id", paramBundle);
-        localIntent.putExtra("op_notification_pkg_content", (String)localObject);
-        localIntent.putExtra("extra_extra_custom_content", str2);
-        p.a(localIntent, getApplicationContext());
-      }
+public class OpNotifyActivity extends Activity {
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        Intent intent = getIntent();
+        if (intent != null) {
+            Object stringExtra = intent.getStringExtra("msgid");
+            Object stringExtra2 = intent.getStringExtra("opsigninfo");
+            String stringExtra3 = intent.getStringExtra("custom_content");
+            String stringExtra4 = intent.getStringExtra("pkg_content");
+            if (!(TextUtils.isEmpty(stringExtra) || TextUtils.isEmpty(stringExtra2))) {
+                Intent intent2 = new Intent("com.baidu.android.pushservice.action.OPPO_CLICK");
+                intent2.putExtra("op_notification_sign", stringExtra2);
+                intent2.putExtra("op_notification_msg_id", stringExtra);
+                intent2.putExtra("op_notification_pkg_content", stringExtra4);
+                intent2.putExtra("extra_extra_custom_content", stringExtra3);
+                C0578p.m2529a(intent2, getApplicationContext());
+            }
+        }
+        finish();
     }
-    finish();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/opproxy/OpNotifyActivity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

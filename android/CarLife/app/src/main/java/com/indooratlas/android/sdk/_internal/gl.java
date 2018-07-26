@@ -2,49 +2,43 @@ package com.indooratlas.android.sdk._internal;
 
 import java.io.IOException;
 
-public abstract class gl
-{
-  public static gl a(gg paramgg, final byte[] paramArrayOfByte)
-  {
-    final int i = paramArrayOfByte.length;
-    if (paramArrayOfByte == null) {
-      throw new NullPointerException("content == null");
+public abstract class gl {
+    /* renamed from: a */
+    public abstract gg mo4586a();
+
+    /* renamed from: a */
+    public abstract void mo4587a(io ioVar) throws IOException;
+
+    /* renamed from: b */
+    public long mo4588b() throws IOException {
+        return -1;
     }
-    gy.a(paramArrayOfByte.length, i);
-    new gl()
-    {
-      public final gg a()
-      {
-        return this.a;
-      }
-      
-      public final void a(io paramAnonymousio)
-        throws IOException
-      {
-        paramAnonymousio.b(paramArrayOfByte, this.d, i);
-      }
-      
-      public final long b()
-      {
-        return i;
-      }
-    };
-  }
-  
-  public abstract gg a();
-  
-  public abstract void a(io paramio)
-    throws IOException;
-  
-  public long b()
-    throws IOException
-  {
-    return -1L;
-  }
+
+    /* renamed from: a */
+    public static gl m19807a(final gg ggVar, final byte[] bArr) {
+        final int length = bArr.length;
+        if (bArr == null) {
+            throw new NullPointerException("content == null");
+        }
+        gy.m20789a((long) bArr.length, (long) length);
+        return new gl() {
+            /* renamed from: d */
+            final /* synthetic */ int f23961d = 0;
+
+            /* renamed from: a */
+            public final gg mo4586a() {
+                return ggVar;
+            }
+
+            /* renamed from: b */
+            public final long mo4588b() {
+                return (long) length;
+            }
+
+            /* renamed from: a */
+            public final void mo4587a(io ioVar) throws IOException {
+                ioVar.b(bArr, this.f23961d, length);
+            }
+        };
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

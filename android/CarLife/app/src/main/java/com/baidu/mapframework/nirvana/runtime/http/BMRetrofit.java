@@ -1,47 +1,34 @@
 package com.baidu.mapframework.nirvana.runtime.http;
 
-public class BMRetrofit
-{
-  String a;
-  private HttpRequestManager b;
-  private int c = 10000;
-  
-  public HttpRequestManager build()
-  {
-    try
-    {
-      if (this.b == null) {
-        this.b = new HttpRequestManager(this.c, this.a);
-      }
-      HttpRequestManager localHttpRequestManager = this.b;
-      return localHttpRequestManager;
+public class BMRetrofit {
+    /* renamed from: a */
+    String f19229a;
+    /* renamed from: b */
+    private HttpRequestManager f19230b;
+    /* renamed from: c */
+    private int f19231c = 10000;
+
+    public BMRetrofit setTimeout(int value) {
+        this.f19231c = value;
+        return this;
     }
-    finally {}
-  }
-  
-  public BMRetrofit cancelAllRequests(boolean paramBoolean)
-  {
-    if (this.b != null) {
-      this.b.cancelAllRequests(paramBoolean);
+
+    public BMRetrofit setCookiePolicy(String cookiePolicy) {
+        this.f19229a = cookiePolicy;
+        return this;
     }
-    return this;
-  }
-  
-  public BMRetrofit setCookiePolicy(String paramString)
-  {
-    this.a = paramString;
-    return this;
-  }
-  
-  public BMRetrofit setTimeout(int paramInt)
-  {
-    this.c = paramInt;
-    return this;
-  }
+
+    public BMRetrofit cancelAllRequests(boolean mayInterruptIfRunning) {
+        if (this.f19230b != null) {
+            this.f19230b.cancelAllRequests(mayInterruptIfRunning);
+        }
+        return this;
+    }
+
+    public synchronized HttpRequestManager build() {
+        if (this.f19230b == null) {
+            this.f19230b = new HttpRequestManager(this.f19231c, this.f19229a);
+        }
+        return this.f19230b;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/runtime/http/BMRetrofit.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

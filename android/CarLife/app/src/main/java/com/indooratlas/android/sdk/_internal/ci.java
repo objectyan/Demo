@@ -5,73 +5,75 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import com.baidu.che.codriver.platform.PlatformConstants;
 import java.util.UUID;
 
-public final class ci
-{
-  public static final String a = bd.a;
-  public static final Uri b = Uri.parse("content://" + a);
-  
-  public static String a()
-  {
-    return UUID.randomUUID().toString();
-  }
-  
-  public static final class a
-    implements BaseColumns
-  {
-    public static final Uri a = Uri.withAppendedPath(ci.b, "events");
-    
-    public static int a(cj paramcj, String paramString)
-    {
-      paramcj = paramcj.a();
-      if (paramcj == null) {
-        return 0;
-      }
-      ContentValues localContentValues = new ContentValues(1);
-      localContentValues.put("sync_batch_id", paramString);
-      return paramcj.update("event", localContentValues, "sync_status=?", new String[] { "local" });
+public final class ci {
+    /* renamed from: a */
+    public static final String f23311a = bd.f23074a;
+    /* renamed from: b */
+    public static final Uri f23312b = Uri.parse("content://" + f23311a);
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ci$a */
+    public static final class C5836a implements BaseColumns {
+        /* renamed from: a */
+        public static final Uri f23310a = Uri.withAppendedPath(ci.f23312b, "events");
+
+        /* renamed from: a */
+        public static int m20213a(cj cjVar, String str) {
+            SQLiteDatabase a = cjVar.m20220a();
+            if (a == null) {
+                return 0;
+            }
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put("sync_batch_id", str);
+            return a.update("event", contentValues, "sync_status=?", new String[]{PlatformConstants.CONNECT_EXTRA_VALUE_LOCAL});
+        }
+
+        /* renamed from: a */
+        public static Cursor m20214a(cj cjVar, String str, String[] strArr, int i) {
+            SQLiteDatabase b = cjVar.m20221b();
+            if (b == null) {
+                return null;
+            }
+            String valueOf;
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("sync_batch_id=?");
+            String[] strArr2 = new String[]{str};
+            String str2 = "event";
+            String stringBuilder2 = stringBuilder.toString();
+            String str3 = "_id asc";
+            if (i != -1) {
+                valueOf = String.valueOf(i);
+            } else {
+                valueOf = null;
+            }
+            return b.query(str2, strArr, stringBuilder2, strArr2, null, null, str3, valueOf);
+        }
+
+        /* renamed from: b */
+        public static int m20215b(cj cjVar, String str) {
+            SQLiteDatabase a = cjVar.m20220a();
+            if (a == null) {
+                return 0;
+            }
+            return a.delete("event", "sync_batch_id=?", new String[]{str});
+        }
+
+        /* renamed from: c */
+        public static int m20216c(cj cjVar, String str) {
+            SQLiteDatabase a = cjVar.m20220a();
+            if (a == null) {
+                return 0;
+            }
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put("sync_batch_id", null);
+            return a.update("event", contentValues, "sync_batch_id=?", new String[]{str});
+        }
     }
-    
-    public static Cursor a(cj paramcj, String paramString, String[] paramArrayOfString, int paramInt)
-    {
-      SQLiteDatabase localSQLiteDatabase = paramcj.b();
-      if (localSQLiteDatabase == null) {
-        return null;
-      }
-      paramcj = new StringBuilder();
-      paramcj.append("sync_batch_id=?");
-      String str = paramcj.toString();
-      if (paramInt != -1) {}
-      for (paramcj = String.valueOf(paramInt);; paramcj = null) {
-        return localSQLiteDatabase.query("event", paramArrayOfString, str, new String[] { paramString }, null, null, "_id asc", paramcj);
-      }
+
+    /* renamed from: a */
+    public static String m20217a() {
+        return UUID.randomUUID().toString();
     }
-    
-    public static int b(cj paramcj, String paramString)
-    {
-      paramcj = paramcj.a();
-      if (paramcj == null) {
-        return 0;
-      }
-      return paramcj.delete("event", "sync_batch_id=?", new String[] { paramString });
-    }
-    
-    public static int c(cj paramcj, String paramString)
-    {
-      paramcj = paramcj.a();
-      if (paramcj == null) {
-        return 0;
-      }
-      ContentValues localContentValues = new ContentValues(1);
-      localContentValues.put("sync_batch_id", null);
-      return paramcj.update("event", localContentValues, "sync_batch_id=?", new String[] { paramString });
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ci.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

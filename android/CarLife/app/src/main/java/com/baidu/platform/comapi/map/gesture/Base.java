@@ -2,123 +2,100 @@ package com.baidu.platform.comapi.map.gesture;
 
 import android.view.MotionEvent;
 
-public class Base
-{
-  public static final Line HORIZONTAL = new Line(new Point(0.0D, 0.0D), new Point(1.0D, 0.0D));
-  public static final Line VERTICAL = new Line(new Point(0.0D, 0.0D), new Point(0.0D, 1.0D));
-  
-  public static class Line
-  {
-    public Base.Point a;
-    public Base.Point b;
-    
-    public Line(Base.Point paramPoint1, Base.Point paramPoint2)
-    {
-      this.a = paramPoint1;
-      this.b = paramPoint2;
+public class Base {
+    public static final Line HORIZONTAL = new Line(new Point(0.0d, 0.0d), new Point(1.0d, 0.0d));
+    public static final Line VERTICAL = new Line(new Point(0.0d, 0.0d), new Point(0.0d, 1.0d));
+
+    public static class Line {
+        /* renamed from: a */
+        public Point f19856a;
+        /* renamed from: b */
+        public Point f19857b;
+
+        public Line(Point a, Point b) {
+            this.f19856a = a;
+            this.f19857b = b;
+        }
+
+        public Point center() {
+            return new Point((this.f19856a.f19858x + this.f19857b.f19858x) / 2.0d, (this.f19856a.f19859y + this.f19857b.f19859y) / 2.0d);
+        }
+
+        public double length() {
+            return Math.sqrt(((this.f19856a.f19858x - this.f19857b.f19858x) * (this.f19856a.f19858x - this.f19857b.f19858x)) + ((this.f19856a.f19859y - this.f19857b.f19859y) * (this.f19856a.f19859y - this.f19857b.f19859y)));
+        }
+
+        public Vector vector() {
+            return new Vector(this.f19857b.f19858x - this.f19856a.f19858x, this.f19857b.f19859y - this.f19856a.f19859y);
+        }
+
+        public String toString() {
+            return getClass().getSimpleName() + "  a : " + this.f19856a.toString() + " b : " + this.f19857b.toString();
+        }
+
+        public static Line make(MotionEvent event) {
+            return new Line(new Point((double) event.getX(0), (double) event.getY(0)), new Point((double) event.getX(1), (double) event.getY(1)));
+        }
     }
-    
-    public static Line make(MotionEvent paramMotionEvent)
-    {
-      float f1 = paramMotionEvent.getX(0);
-      float f2 = paramMotionEvent.getY(0);
-      float f3 = paramMotionEvent.getX(1);
-      float f4 = paramMotionEvent.getY(1);
-      return new Line(new Base.Point(f1, f2), new Base.Point(f3, f4));
+
+    public static class Point {
+        /* renamed from: x */
+        public double f19858x;
+        /* renamed from: y */
+        public double f19859y;
+
+        public Point(double x, double y) {
+            this.f19858x = x;
+            this.f19859y = y;
+        }
+
+        public String toString() {
+            return getClass().getSimpleName() + " x : " + this.f19858x + " y : " + this.f19859y;
+        }
     }
-    
-    public Base.Point center()
-    {
-      return new Base.Point((this.a.x + this.b.x) / 2.0D, (this.a.y + this.b.y) / 2.0D);
+
+    public static class Translation {
+        public final Vector move;
+        public final double rotate;
+        public final double scale;
+
+        public Translation(Line from, Line to) {
+            this.move = new Vector(from.center(), to.center());
+            double result = 0.0d;
+            if (from.length() != 0.0d) {
+                result = to.length() / from.length();
+            }
+            this.scale = result;
+            this.rotate = Vector.angle(from.vector(), to.vector());
+        }
+
+        public String toString() {
+            return getClass().getSimpleName() + " rotate : " + this.rotate + " scale : " + (this.scale * 100.0d) + " move : " + this.move.toString();
+        }
     }
-    
-    public double length()
-    {
-      return Math.sqrt((this.a.x - this.b.x) * (this.a.x - this.b.x) + (this.a.y - this.b.y) * (this.a.y - this.b.y));
+
+    public static class Vector {
+        /* renamed from: x */
+        public double f19860x;
+        /* renamed from: y */
+        public double f19861y;
+
+        public Vector(double x, double y) {
+            this.f19860x = x;
+            this.f19861y = y;
+        }
+
+        public Vector(Point from, Point to) {
+            this.f19860x = to.f19858x - from.f19858x;
+            this.f19861y = to.f19859y - from.f19859y;
+        }
+
+        public static double angle(Vector a, Vector b) {
+            return ((Math.atan2(a.f19861y, a.f19860x) - Math.atan2(b.f19861y, b.f19860x)) * 180.0d) / 3.141592653589793d;
+        }
+
+        public String toString() {
+            return getClass().getSimpleName() + " x : " + this.f19860x + " y : " + this.f19861y;
+        }
     }
-    
-    public String toString()
-    {
-      return getClass().getSimpleName() + "  a : " + this.a.toString() + " b : " + this.b.toString();
-    }
-    
-    public Base.Vector vector()
-    {
-      return new Base.Vector(this.b.x - this.a.x, this.b.y - this.a.y);
-    }
-  }
-  
-  public static class Point
-  {
-    public double x;
-    public double y;
-    
-    public Point(double paramDouble1, double paramDouble2)
-    {
-      this.x = paramDouble1;
-      this.y = paramDouble2;
-    }
-    
-    public String toString()
-    {
-      return getClass().getSimpleName() + " x : " + this.x + " y : " + this.y;
-    }
-  }
-  
-  public static class Translation
-  {
-    public final Base.Vector move;
-    public final double rotate;
-    public final double scale;
-    
-    public Translation(Base.Line paramLine1, Base.Line paramLine2)
-    {
-      this.move = new Base.Vector(paramLine1.center(), paramLine2.center());
-      double d = 0.0D;
-      if (paramLine1.length() != 0.0D) {
-        d = paramLine2.length() / paramLine1.length();
-      }
-      this.scale = d;
-      this.rotate = Base.Vector.angle(paramLine1.vector(), paramLine2.vector());
-    }
-    
-    public String toString()
-    {
-      return getClass().getSimpleName() + " rotate : " + this.rotate + " scale : " + this.scale * 100.0D + " move : " + this.move.toString();
-    }
-  }
-  
-  public static class Vector
-  {
-    public double x;
-    public double y;
-    
-    public Vector(double paramDouble1, double paramDouble2)
-    {
-      this.x = paramDouble1;
-      this.y = paramDouble2;
-    }
-    
-    public Vector(Base.Point paramPoint1, Base.Point paramPoint2)
-    {
-      this.x = (paramPoint2.x - paramPoint1.x);
-      this.y = (paramPoint2.y - paramPoint1.y);
-    }
-    
-    public static double angle(Vector paramVector1, Vector paramVector2)
-    {
-      return (Math.atan2(paramVector1.y, paramVector1.x) - Math.atan2(paramVector2.y, paramVector2.x)) * 180.0D / 3.141592653589793D;
-    }
-    
-    public String toString()
-    {
-      return getClass().getSimpleName() + " x : " + this.x + " y : " + this.y;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/gesture/Base.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

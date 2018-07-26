@@ -3,147 +3,143 @@ package com.baidu.mobstat;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-class bj
-  extends bk
-{
-  static bj a = new bj();
-  
-  public static bj a()
-  {
-    return a;
-  }
-  
-  public SharedPreferences a(Context paramContext)
-  {
-    return paramContext.getSharedPreferences("__Baidu_Stat_SDK_SendRem", 0);
-  }
-  
-  protected void a(Context paramContext, int paramInt)
-  {
-    b(paramContext, "sendLogtype", paramInt);
-  }
-  
-  protected void a(Context paramContext, String paramString)
-  {
-    b(paramContext, "device_id_1", paramString);
-  }
-  
-  protected void a(Context paramContext, boolean paramBoolean)
-  {
-    b(paramContext, "onlywifi", paramBoolean);
-  }
-  
-  protected int b(Context paramContext)
-  {
-    return a(paramContext, "sendLogtype", 0);
-  }
-  
-  protected void b(Context paramContext, int paramInt)
-  {
-    b(paramContext, "timeinterval", paramInt);
-  }
-  
-  protected void b(Context paramContext, String paramString)
-  {
-    if (a(paramContext, "cuid", null) != null) {
-      g(paramContext, "cuid");
+class bj extends bk {
+    /* renamed from: a */
+    static bj f19452a = new bj();
+
+    private bj() {
     }
-    b(paramContext, "cuidsec_1", paramString);
-  }
-  
-  protected void b(Context paramContext, boolean paramBoolean)
-  {
-    b(paramContext, "setchannelwithcode", paramBoolean);
-  }
-  
-  protected int c(Context paramContext)
-  {
-    return a(paramContext, "timeinterval", 1);
-  }
-  
-  protected void c(Context paramContext, String paramString)
-  {
-    b(paramContext, "setchannelwithcodevalue", paramString);
-  }
-  
-  protected void c(Context paramContext, boolean paramBoolean)
-  {
-    b(paramContext, "mtjtv", paramBoolean);
-  }
-  
-  protected void d(Context paramContext, String paramString)
-  {
-    b(paramContext, "mtjsdkmacss2_1", paramString);
-  }
-  
-  protected void d(Context paramContext, boolean paramBoolean)
-  {
-    b(paramContext, "mtjsdkmactrick", paramBoolean);
-  }
-  
-  protected boolean d(Context paramContext)
-  {
-    return a(paramContext, "onlywifi", false);
-  }
-  
-  protected String e(Context paramContext)
-  {
-    return a(paramContext, "device_id_1", null);
-  }
-  
-  protected void e(Context paramContext, String paramString)
-  {
-    b(paramContext, "mtjsdkmacsstv_1", paramString);
-  }
-  
-  protected String f(Context paramContext)
-  {
-    return a(paramContext, "cuidsec_1", null);
-  }
-  
-  protected void f(Context paramContext, String paramString)
-  {
-    b(paramContext, "he.ext", paramString);
-  }
-  
-  protected String g(Context paramContext)
-  {
-    return a(paramContext, "setchannelwithcodevalue", null);
-  }
-  
-  protected boolean h(Context paramContext)
-  {
-    return a(paramContext, "setchannelwithcode", false);
-  }
-  
-  protected String i(Context paramContext)
-  {
-    return a(paramContext, "mtjsdkmacss2_1", null);
-  }
-  
-  protected boolean j(Context paramContext)
-  {
-    return a(paramContext, "mtjtv", false);
-  }
-  
-  protected String k(Context paramContext)
-  {
-    return a(paramContext, "mtjsdkmacsstv_1", null);
-  }
-  
-  protected String l(Context paramContext)
-  {
-    return a(paramContext, "he.ext", null);
-  }
-  
-  protected boolean m(Context paramContext)
-  {
-    return a(paramContext, "mtjsdkmactrick", true);
-  }
+
+    /* renamed from: a */
+    public static bj m15464a() {
+        return f19452a;
+    }
+
+    /* renamed from: a */
+    public SharedPreferences mo2732a(Context context) {
+        return context.getSharedPreferences("__Baidu_Stat_SDK_SendRem", 0);
+    }
+
+    /* renamed from: a */
+    protected void m15466a(Context context, int i) {
+        m15459b(context, "sendLogtype", i);
+    }
+
+    /* renamed from: b */
+    protected int m15469b(Context context) {
+        return m15454a(context, "sendLogtype", 0);
+    }
+
+    /* renamed from: b */
+    protected void m15470b(Context context, int i) {
+        m15459b(context, "timeinterval", i);
+    }
+
+    /* renamed from: c */
+    protected int m15473c(Context context) {
+        return m15454a(context, "timeinterval", 1);
+    }
+
+    /* renamed from: a */
+    protected void m15468a(Context context, boolean z) {
+        m15462b(context, "onlywifi", z);
+    }
+
+    /* renamed from: d */
+    protected boolean m15478d(Context context) {
+        return m15458a(context, "onlywifi", false);
+    }
+
+    /* renamed from: a */
+    protected void m15467a(Context context, String str) {
+        m15461b(context, "device_id_1", str);
+    }
+
+    /* renamed from: e */
+    protected String m15479e(Context context) {
+        return m15457a(context, "device_id_1", null);
+    }
+
+    /* renamed from: b */
+    protected void m15471b(Context context, String str) {
+        if (m15457a(context, "cuid", null) != null) {
+            m15463g(context, "cuid");
+        }
+        m15461b(context, "cuidsec_1", str);
+    }
+
+    /* renamed from: f */
+    protected String m15481f(Context context) {
+        return m15457a(context, "cuidsec_1", null);
+    }
+
+    /* renamed from: c */
+    protected void m15474c(Context context, String str) {
+        m15461b(context, "setchannelwithcodevalue", str);
+    }
+
+    /* renamed from: g */
+    protected String m15483g(Context context) {
+        return m15457a(context, "setchannelwithcodevalue", null);
+    }
+
+    /* renamed from: b */
+    protected void m15472b(Context context, boolean z) {
+        m15462b(context, "setchannelwithcode", z);
+    }
+
+    /* renamed from: h */
+    protected boolean m15484h(Context context) {
+        return m15458a(context, "setchannelwithcode", false);
+    }
+
+    /* renamed from: d */
+    protected void m15476d(Context context, String str) {
+        m15461b(context, "mtjsdkmacss2_1", str);
+    }
+
+    /* renamed from: i */
+    protected String m15485i(Context context) {
+        return m15457a(context, "mtjsdkmacss2_1", null);
+    }
+
+    /* renamed from: c */
+    protected void m15475c(Context context, boolean z) {
+        m15462b(context, "mtjtv", z);
+    }
+
+    /* renamed from: j */
+    protected boolean m15486j(Context context) {
+        return m15458a(context, "mtjtv", false);
+    }
+
+    /* renamed from: e */
+    protected void m15480e(Context context, String str) {
+        m15461b(context, "mtjsdkmacsstv_1", str);
+    }
+
+    /* renamed from: k */
+    protected String m15487k(Context context) {
+        return m15457a(context, "mtjsdkmacsstv_1", null);
+    }
+
+    /* renamed from: f */
+    protected void m15482f(Context context, String str) {
+        m15461b(context, "he.ext", str);
+    }
+
+    /* renamed from: l */
+    protected String m15488l(Context context) {
+        return m15457a(context, "he.ext", null);
+    }
+
+    /* renamed from: d */
+    protected void m15477d(Context context, boolean z) {
+        m15462b(context, "mtjsdkmactrick", z);
+    }
+
+    /* renamed from: m */
+    protected boolean m15489m(Context context) {
+        return m15458a(context, "mtjsdkmactrick", true);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bj.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -7,44 +7,29 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.http.NameValuePair;
 
-public class UserOPDataCheckItem
-  implements StatisitcsDataCheck
-{
-  private Bundle mDataCheckBundle = null;
-  
-  public UserOPDataCheckItem(ArrayList<NameValuePair> paramArrayList)
-  {
-    if (this.mDataCheckBundle == null) {
-      this.mDataCheckBundle = new Bundle();
+public class UserOPDataCheckItem implements StatisitcsDataCheck {
+    private Bundle mDataCheckBundle = null;
+
+    public UserOPDataCheckItem(ArrayList<NameValuePair> statPairList) {
+        if (this.mDataCheckBundle == null) {
+            this.mDataCheckBundle = new Bundle();
+        }
+        Iterator it = statPairList.iterator();
+        while (it.hasNext()) {
+            NameValuePair mNameValuePair = (NameValuePair) it.next();
+            this.mDataCheckBundle.putString(mNameValuePair.getName(), mNameValuePair.getValue());
+        }
     }
-    paramArrayList = paramArrayList.iterator();
-    while (paramArrayList.hasNext())
-    {
-      Object localObject = (NameValuePair)paramArrayList.next();
-      String str = ((NameValuePair)localObject).getName();
-      localObject = ((NameValuePair)localObject).getValue();
-      this.mDataCheckBundle.putString(str, (String)localObject);
+
+    public String getID() {
+        return "50008";
     }
-  }
-  
-  public void check()
-  {
-    DataCheckCenter.getInstance().check(this);
-  }
-  
-  public Bundle getDataBundle()
-  {
-    return this.mDataCheckBundle;
-  }
-  
-  public String getID()
-  {
-    return "50008";
-  }
+
+    public Bundle getDataBundle() {
+        return this.mDataCheckBundle;
+    }
+
+    public void check() {
+        DataCheckCenter.getInstance().check(this);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/statistic/userop/UserOPDataCheckItem.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

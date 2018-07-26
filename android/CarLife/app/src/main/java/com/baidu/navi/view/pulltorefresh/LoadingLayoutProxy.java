@@ -6,69 +6,57 @@ import com.baidu.navi.view.pulltorefresh.internal.LoadingLayout;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class LoadingLayoutProxy
-  implements ILoadingLayout
-{
-  private final HashSet<LoadingLayout> mLoadingLayouts = new HashSet();
-  
-  public void addLayout(LoadingLayout paramLoadingLayout)
-  {
-    if (paramLoadingLayout != null) {
-      this.mLoadingLayouts.add(paramLoadingLayout);
+public class LoadingLayoutProxy implements ILoadingLayout {
+    private final HashSet<LoadingLayout> mLoadingLayouts = new HashSet();
+
+    LoadingLayoutProxy() {
     }
-  }
-  
-  public void setLastUpdatedLabel(CharSequence paramCharSequence)
-  {
-    Iterator localIterator = this.mLoadingLayouts.iterator();
-    while (localIterator.hasNext()) {
-      ((LoadingLayout)localIterator.next()).setLastUpdatedLabel(paramCharSequence);
+
+    public void addLayout(LoadingLayout layout) {
+        if (layout != null) {
+            this.mLoadingLayouts.add(layout);
+        }
     }
-  }
-  
-  public void setLoadingDrawable(Drawable paramDrawable)
-  {
-    Iterator localIterator = this.mLoadingLayouts.iterator();
-    while (localIterator.hasNext()) {
-      ((LoadingLayout)localIterator.next()).setLoadingDrawable(paramDrawable);
+
+    public void setLastUpdatedLabel(CharSequence label) {
+        Iterator it = this.mLoadingLayouts.iterator();
+        while (it.hasNext()) {
+            ((LoadingLayout) it.next()).setLastUpdatedLabel(label);
+        }
     }
-  }
-  
-  public void setPullLabel(CharSequence paramCharSequence)
-  {
-    Iterator localIterator = this.mLoadingLayouts.iterator();
-    while (localIterator.hasNext()) {
-      ((LoadingLayout)localIterator.next()).setPullLabel(paramCharSequence);
+
+    public void setLoadingDrawable(Drawable drawable) {
+        Iterator it = this.mLoadingLayouts.iterator();
+        while (it.hasNext()) {
+            ((LoadingLayout) it.next()).setLoadingDrawable(drawable);
+        }
     }
-  }
-  
-  public void setRefreshingLabel(CharSequence paramCharSequence)
-  {
-    Iterator localIterator = this.mLoadingLayouts.iterator();
-    while (localIterator.hasNext()) {
-      ((LoadingLayout)localIterator.next()).setRefreshingLabel(paramCharSequence);
+
+    public void setRefreshingLabel(CharSequence refreshingLabel) {
+        Iterator it = this.mLoadingLayouts.iterator();
+        while (it.hasNext()) {
+            ((LoadingLayout) it.next()).setRefreshingLabel(refreshingLabel);
+        }
     }
-  }
-  
-  public void setReleaseLabel(CharSequence paramCharSequence)
-  {
-    Iterator localIterator = this.mLoadingLayouts.iterator();
-    while (localIterator.hasNext()) {
-      ((LoadingLayout)localIterator.next()).setReleaseLabel(paramCharSequence);
+
+    public void setPullLabel(CharSequence label) {
+        Iterator it = this.mLoadingLayouts.iterator();
+        while (it.hasNext()) {
+            ((LoadingLayout) it.next()).setPullLabel(label);
+        }
     }
-  }
-  
-  public void setTextTypeface(Typeface paramTypeface)
-  {
-    Iterator localIterator = this.mLoadingLayouts.iterator();
-    while (localIterator.hasNext()) {
-      ((LoadingLayout)localIterator.next()).setTextTypeface(paramTypeface);
+
+    public void setReleaseLabel(CharSequence label) {
+        Iterator it = this.mLoadingLayouts.iterator();
+        while (it.hasNext()) {
+            ((LoadingLayout) it.next()).setReleaseLabel(label);
+        }
     }
-  }
+
+    public void setTextTypeface(Typeface tf) {
+        Iterator it = this.mLoadingLayouts.iterator();
+        while (it.hasNext()) {
+            ((LoadingLayout) it.next()).setTextTypeface(tf);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/pulltorefresh/LoadingLayoutProxy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

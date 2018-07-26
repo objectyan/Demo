@@ -2,53 +2,46 @@ package com.indooratlas.android.sdk._internal;
 
 import java.io.IOException;
 
-public abstract interface io
-  extends jc
-{
-  public abstract long a(jd paramjd)
-    throws IOException;
-  
-  public abstract in b();
-  
-  public abstract io b(iq paramiq)
-    throws IOException;
-  
-  public abstract io b(String paramString)
-    throws IOException;
-  
-  public abstract io b(byte[] paramArrayOfByte)
-    throws IOException;
-  
-  public abstract io b(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-    throws IOException;
-  
-  public abstract io c()
-    throws IOException;
-  
-  public abstract io g(int paramInt)
-    throws IOException;
-  
-  public abstract io h(int paramInt)
-    throws IOException;
-  
-  public abstract io i(int paramInt)
-    throws IOException;
-  
-  public abstract io i(long paramLong)
-    throws IOException;
-  
-  public abstract io j(int paramInt)
-    throws IOException;
-  
-  public abstract io j(long paramLong)
-    throws IOException;
-  
-  public abstract io p()
-    throws IOException;
+public interface io extends jc {
+    /* renamed from: a */
+    long mo4739a(jd jdVar) throws IOException;
+
+    /* renamed from: b */
+    in mo4741b();
+
+    /* renamed from: b */
+    io mo4742b(iq iqVar) throws IOException;
+
+    /* renamed from: b */
+    io mo4743b(String str) throws IOException;
+
+    /* renamed from: b */
+    io mo4744b(byte[] bArr) throws IOException;
+
+    /* renamed from: b */
+    io mo4745b(byte[] bArr, int i, int i2) throws IOException;
+
+    /* renamed from: c */
+    io mo4746c() throws IOException;
+
+    /* renamed from: g */
+    io mo4754g(int i) throws IOException;
+
+    /* renamed from: h */
+    io mo4755h(int i) throws IOException;
+
+    /* renamed from: i */
+    io mo4758i(int i) throws IOException;
+
+    /* renamed from: i */
+    io mo4759i(long j) throws IOException;
+
+    /* renamed from: j */
+    io mo4761j(int i) throws IOException;
+
+    /* renamed from: j */
+    io mo4762j(long j) throws IOException;
+
+    /* renamed from: p */
+    io mo4765p() throws IOException;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/io.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

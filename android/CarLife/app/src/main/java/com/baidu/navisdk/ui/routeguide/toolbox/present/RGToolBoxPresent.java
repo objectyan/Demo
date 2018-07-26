@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.comapi.routeguide.RouteGuideParams.NavState;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.tts.TTSPlayerControl;
@@ -12,8 +14,9 @@ import com.baidu.navisdk.ui.routeguide.BNavigator;
 import com.baidu.navisdk.ui.routeguide.control.RGCarPreferSettingController;
 import com.baidu.navisdk.ui.routeguide.control.RGNotificationController;
 import com.baidu.navisdk.ui.routeguide.control.RGViewController;
+import com.baidu.navisdk.ui.routeguide.fsm.RGFSMTable.FsmEvent;
+import com.baidu.navisdk.ui.routeguide.fsm.RGFSMTable.FsmState;
 import com.baidu.navisdk.ui.routeguide.fsm.RouteGuideFSM;
-import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
 import com.baidu.navisdk.ui.routeguide.model.RGControlPanelModel;
 import com.baidu.navisdk.ui.routeguide.model.RGEnlargeRoadMapModel;
 import com.baidu.navisdk.ui.routeguide.model.RGRouteSearchModel;
@@ -28,384 +31,347 @@ import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.NetworkUtils;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 
-public class RGToolBoxPresent
-  extends BaseNavPresent
-{
-  private static final String TAG = "RGToolBoxPresent";
-  private RGToolBoxView.LoadingCallback mLoadingCallback;
-  private OnRGSubViewListener mSubViewListener;
-  private RGToolBoxView mToolBoxView;
-  
-  public RGToolBoxPresent(RGToolBoxView paramRGToolBoxView)
-  {
-    this.mToolBoxView = paramRGToolBoxView;
-  }
-  
-  public void closeToolbox()
-  {
-    if ((this.mToolBoxView != null) && (this.mToolBoxView.isOpenStatus())) {
-      this.mToolBoxView.closeToolBox();
+public class RGToolBoxPresent extends BaseNavPresent {
+    private static final String TAG = "RGToolBoxPresent";
+    private LoadingCallback mLoadingCallback;
+    private OnRGSubViewListener mSubViewListener;
+    private RGToolBoxView mToolBoxView;
+
+    public RGToolBoxPresent(RGToolBoxView toolboxView) {
+        this.mToolBoxView = toolboxView;
     }
-  }
-  
-  public void hideLoading()
-  {
-    this.mToolBoxView.hideLoadingViewHasProgress();
-    this.mLoadingCallback = null;
-  }
-  
-  public void hideResumeSwitchView()
-  {
-    this.mToolBoxView.showResumeSwitchView(false);
-  }
-  
-  protected void initViewStatus()
-  {
-    LogUtil.e("RGToolBoxPresent", "initViewStatus");
-    updateToolBoxItemState(4);
-    updateToolBoxItemState(5);
-    updateToolBoxItemState(6);
-    updateToolBoxItemState(7);
-    onRemainDistTimeUpdate();
-  }
-  
-  public boolean isToolboxOpened()
-  {
-    return (this.mToolBoxView != null) && (this.mToolBoxView.isOpenStatus());
-  }
-  
-  public void onClick(View paramView, int paramInt)
-  {
-    LogUtil.e("RGToolBoxPresent", "RGToolBoxPresent onClick key :" + paramInt);
-    switch (paramInt)
-    {
+
+    public void setOnSubViewClickListener(OnRGSubViewListener listener) {
+        this.mSubViewListener = listener;
     }
-    do
-    {
-      do
-      {
-        do
-        {
-          do
-          {
-            do
-            {
-              do
-              {
-                return;
-                UserOPController.getInstance().add("2.i.5", null, "3", null);
-                paramInt = BNRoutePlaner.getInstance().getCalcPreference();
-                RGCarPreferSettingController.getInstance().setLastRPPreferSettingValue(paramInt);
+
+    public void onClick(View view, int key) {
+        LogUtil.m15791e(TAG, "RGToolBoxPresent onClick key :" + key);
+        switch (key) {
+            case 0:
+                UserOPController.getInstance().add(UserOPParams.ROUTE_2_i_5, null, "3", null);
+                RGCarPreferSettingController.getInstance().setLastRPPreferSettingValue(BNRoutePlaner.getInstance().getCalcPreference());
                 if (this.mSubViewListener != null) {
-                  this.mSubViewListener.onRouteSortAction();
+                    this.mSubViewListener.onRouteSortAction();
                 }
                 closeToolbox();
                 return;
-                UserOPController.getInstance().add("3.5.j.2");
+            case 1:
+                UserOPController.getInstance().add(UserOPParams.GUIDE_3_5_j_2);
                 if (this.mSubViewListener != null) {
-                  this.mSubViewListener.onMoreRouteSearchAction();
+                    this.mSubViewListener.onMoreRouteSearchAction();
                 }
                 closeToolbox();
                 return;
-                if (RightHandResourcesProvider.isInternationalWithToast(this.mToolBoxView.getContext()))
-                {
-                  closeToolbox();
-                  return;
+            case 2:
+                if (RightHandResourcesProvider.isInternationalWithToast(this.mToolBoxView.getContext())) {
+                    closeToolbox();
+                    return;
+                } else if (NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext())) {
+                    if (this.mSubViewListener != null) {
+                        UserOPController.getInstance().add(UserOPParams.GUIDE_3_p, "0", null, null);
+                        this.mSubViewListener.onUGCMenuAction();
+                    }
+                    closeToolbox();
+                    return;
+                } else {
+                    closeToolbox();
+                    TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "网络连接不可用");
+                    return;
                 }
-                if (!NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext()))
-                {
-                  closeToolbox();
-                  TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "网络连接不可用");
-                  return;
+            case 3:
+                if (!ForbidDaulClickUtils.isFastDoubleClick() && !RightHandResourcesProvider.isInternationalWithToast(this.mToolBoxView.getContext())) {
+                    UserOPController.getInstance().add(UserOPParams.GUIDE_3_5_j_3);
+                    UserOPController.getInstance().add(UserOPParams.GUIDE_3_y_1, "1", null, null);
+                    BusinessActivityManager.getInstance().safetyUpload(0, true);
+                    closeToolbox();
+                    return;
                 }
-                if (this.mSubViewListener != null)
-                {
-                  UserOPController.getInstance().add("3.p", "0", null, null);
-                  this.mSubViewListener.onUGCMenuAction();
-                }
-                closeToolbox();
                 return;
-              } while ((ForbidDaulClickUtils.isFastDoubleClick()) || (RightHandResourcesProvider.isInternationalWithToast(this.mToolBoxView.getContext())));
-              UserOPController.getInstance().add("3.5.j.3");
-              UserOPController.getInstance().add("3.y.1", "1", null, null);
-              BusinessActivityManager.getInstance().safetyUpload(0, true);
-              closeToolbox();
-              return;
-              closeToolbox();
-              if (BNSettingManager.getMapMode() == 1)
-              {
-                RouteGuideFSM.getInstance().cacheBackMapState("North2D");
-                BNSettingManager.setMapMode(2);
-                paramView = BNStyleManager.getString(1711670376);
-                RGNotificationController.getInstance().showCommonResultMsg(paramView, true);
-              }
-              for (;;)
-              {
+            case 4:
+                closeToolbox();
+                if (BNSettingManager.getMapMode() == 1) {
+                    RouteGuideFSM.getInstance().cacheBackMapState(FsmState.North2D);
+                    BNSettingManager.setMapMode(2);
+                    RGNotificationController.getInstance().showCommonResultMsg(BNStyleManager.getString(C4048R.string.nsdk_string_rg_switch_north2_success), true);
+                } else {
+                    RouteGuideFSM.getInstance().cacheBackMapState(FsmState.Car3D);
+                    BNSettingManager.setMapMode(1);
+                    RGNotificationController.getInstance().showCommonResultMsg(BNStyleManager.getString(C4048R.string.nsdk_string_rg_switch_car3d_success), true);
+                }
                 BNavigator.getInstance().enterNavState();
-                updateToolBoxItemState(paramInt);
+                updateToolBoxItemState(key);
                 return;
-                RouteGuideFSM.getInstance().cacheBackMapState("Car3D");
-                BNSettingManager.setMapMode(1);
-                paramView = BNStyleManager.getString(1711670377);
-                RGNotificationController.getInstance().showCommonResultMsg(paramView, true);
-              }
-              closeToolbox();
-              if (("NAV_STATE_OPERATE".equals(RGControlPanelModel.getInstance().getNavState())) && (this.mSubViewListener != null)) {
-                this.mSubViewListener.onOtherAction(3, 0, 0, null);
-              }
-              int i = BNSettingManager.getVoiceMode();
-              if ((i == 0) || (i == 1))
-              {
-                TTSPlayerControl.playTTS(BNStyleManager.getString(1711670316), 1);
-                BNSettingManager.setLastVoiceMode(i);
-                BNSettingManager.resetVoiceModeParams(2);
-                if (this.mSubViewListener != null) {
-                  this.mSubViewListener.onOtherAction(6, 0, 2, null);
+            case 5:
+                closeToolbox();
+                if (NavState.NAV_STATE_OPERATE.equals(RGControlPanelModel.getInstance().getNavState()) && this.mSubViewListener != null) {
+                    this.mSubViewListener.onOtherAction(3, 0, 0, null);
                 }
-                UserOPController.getInstance().add("3.i", "", null, null);
-              }
-              for (;;)
-              {
+                int voiceMode = BNSettingManager.getVoiceMode();
+                if (voiceMode == 0 || voiceMode == 1) {
+                    TTSPlayerControl.playTTS(BNStyleManager.getString(C4048R.string.nsdk_string_rg_common_notification_open_quiet_mode_voice), 1);
+                    BNSettingManager.setLastVoiceMode(voiceMode);
+                    BNSettingManager.resetVoiceModeParams(2);
+                    if (this.mSubViewListener != null) {
+                        this.mSubViewListener.onOtherAction(6, 0, 2, null);
+                    }
+                    UserOPController.getInstance().add(UserOPParams.GUIDE_3_i, "", null, null);
+                } else if (voiceMode == 2) {
+                    int lastVoiceMode = BNSettingManager.getLastVoiceMode();
+                    BNSettingManager.resetVoiceModeParams(lastVoiceMode);
+                    if (this.mSubViewListener != null) {
+                        this.mSubViewListener.onOtherAction(6, 0, lastVoiceMode, null);
+                    }
+                    TTSPlayerControl.playTTS(BNStyleManager.getString(C4048R.string.nsdk_string_rg_common_notification_close_quiet_voice), 1);
+                    UserOPController.getInstance().add(UserOPParams.GUIDE_3_i, null, "", null);
+                }
                 RGNotificationController.getInstance().mIsClickQuietBtn = true;
                 RGNotificationController.getInstance().showQuietMode();
-                updateToolBoxItemState(paramInt);
+                updateToolBoxItemState(key);
                 return;
-                if (i == 2)
-                {
-                  i = BNSettingManager.getLastVoiceMode();
-                  BNSettingManager.resetVoiceModeParams(i);
-                  if (this.mSubViewListener != null) {
-                    this.mSubViewListener.onOtherAction(6, 0, i, null);
-                  }
-                  TTSPlayerControl.playTTS(BNStyleManager.getString(1711670319), 1);
-                  UserOPController.getInstance().add("3.i", null, "", null);
+            case 6:
+                int type = BNSettingManager.getIsShowMapSwitch();
+                if (type == 0) {
+                    BNSettingManager.setIsShowMapSwitch(1);
+                } else if (type == 1) {
+                    BNSettingManager.setIsShowMapSwitch(0);
                 }
-              }
-              i = BNSettingManager.getIsShowMapSwitch();
-              if (i == 0) {
-                BNSettingManager.setIsShowMapSwitch(1);
-              }
-              for (;;)
-              {
                 RGViewController.getInstance().showAssistMapSwitch();
-                if ((!"BrowseMap".equals(RouteGuideFSM.getInstance().getLastestGlassState())) && (this.mSubViewListener != null)) {
-                  this.mSubViewListener.onOtherAction(3, 0, 0, null);
+                if (!(FsmState.BrowseMap.equals(RouteGuideFSM.getInstance().getLastestGlassState()) || this.mSubViewListener == null)) {
+                    this.mSubViewListener.onOtherAction(3, 0, 0, null);
                 }
                 closeToolbox();
-                updateToolBoxItemState(paramInt);
-                if (i != 1) {
-                  break;
+                updateToolBoxItemState(key);
+                if (type == 1) {
+                    RGNotificationController.getInstance().showCommonResultMsg(BNStyleManager.getString(C4048R.string.nsdk_string_rg_notification_mini_map_mode), true);
+                    return;
+                } else {
+                    RGNotificationController.getInstance().showCommonResultMsg(BNStyleManager.getString(C4048R.string.nsdk_string_rg_notification_roadbar_mode), true);
+                    return;
                 }
-                RGNotificationController.getInstance().showCommonResultMsg(BNStyleManager.getString(1711670368), true);
-                return;
-                if (i == 1) {
-                  BNSettingManager.setIsShowMapSwitch(0);
+            case 7:
+                UserOPController.getInstance().add(UserOPParams.GUIDE_3_5_j_4);
+                if (NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext())) {
+                    int netModeCarplate = BNRoutePlaner.getInstance().getRoutePlanNetMode();
+                    int engineNetModeCarplate = BNRoutePlaner.getInstance().getEngineCalcRouteNetMode();
+                    if (netModeCarplate == 1 && (engineNetModeCarplate == 0 || engineNetModeCarplate == 2)) {
+                        closeToolbox();
+                        TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "离线导航路线偏好不可用");
+                        return;
+                    }
+                    closeToolbox();
+                    RGCarPreferSettingController.getInstance().setLastRPPreferSettingValue(BNRoutePlaner.getInstance().getCalcPreference());
+                    if (TextUtils.isEmpty(BNSettingManager.getPlateFromLocal(this.mToolBoxView.getContext()))) {
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("open_car_plate", true);
+                        RGViewController.getInstance().showMenuMoreView(bundle);
+                        return;
+                    }
+                    if (RGCarPreferSettingController.getInstance().isCarLimitOpen()) {
+                        RGCarPreferSettingController.getInstance().setCarLimitOpen(false);
+                    } else {
+                        RGCarPreferSettingController.getInstance().setCarLimitOpen(true);
+                    }
+                    if (this.mSubViewListener != null) {
+                        RGSimpleGuideModel.getInstance();
+                        RGSimpleGuideModel.mCalcRouteType = 3;
+                        this.mSubViewListener.onJudgePreferWithMenuHide();
+                    }
+                    updateToolBoxItemState(key);
+                    return;
                 }
-              }
-              RGNotificationController.getInstance().showCommonResultMsg(BNStyleManager.getString(1711670369), true);
-              return;
-              UserOPController.getInstance().add("3.5.j.4");
-              if (!NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext()))
-              {
                 closeToolbox();
                 TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "网络连接不可用");
                 return;
-              }
-              i = BNRoutePlaner.getInstance().getRoutePlanNetMode();
-              int j = BNRoutePlaner.getInstance().getEngineCalcRouteNetMode();
-              if ((i == 1) && ((j == 0) || (j == 2)))
-              {
-                closeToolbox();
-                TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), "离线导航路线偏好不可用");
-                return;
-              }
-              closeToolbox();
-              i = BNRoutePlaner.getInstance().getCalcPreference();
-              RGCarPreferSettingController.getInstance().setLastRPPreferSettingValue(i);
-              if (TextUtils.isEmpty(BNSettingManager.getPlateFromLocal(this.mToolBoxView.getContext())))
-              {
-                paramView = new Bundle();
-                paramView.putBoolean("open_car_plate", true);
-                RGViewController.getInstance().showMenuMoreView(paramView);
-                return;
-              }
-              if (RGCarPreferSettingController.getInstance().isCarLimitOpen()) {
-                RGCarPreferSettingController.getInstance().setCarLimitOpen(false);
-              }
-              for (;;)
-              {
-                if (this.mSubViewListener != null)
-                {
-                  RGSimpleGuideModel.getInstance();
-                  RGSimpleGuideModel.mCalcRouteType = 3;
-                  this.mSubViewListener.onJudgePreferWithMenuHide();
+            case 8:
+                if (this.mSubViewListener != null) {
+                    this.mSubViewListener.onShowQuitNaviView();
+                    return;
                 }
-                updateToolBoxItemState(paramInt);
                 return;
-                RGCarPreferSettingController.getInstance().setCarLimitOpen(true);
-              }
-            } while (this.mSubViewListener == null);
-            this.mSubViewListener.onShowQuitNaviView();
-            return;
-            this.mSubViewListener.onOtherAction(13, 0, 0, null);
-            return;
-            if (this.mSubViewListener != null) {
-              this.mSubViewListener.onMenuMoreAction();
-            }
-            closeToolbox();
-            return;
-            if (this.mSubViewListener != null) {
-              this.mSubViewListener.onOtherAction(3, 0, 0, null);
-            }
-            closeToolbox();
-            return;
-          } while (this.mSubViewListener == null);
-          this.mSubViewListener.onLocationAction();
-          return;
-        } while (this.mSubViewListener == null);
-        this.mSubViewListener.onMultiRouteSwitchAction();
-        return;
-        if (this.mLoadingCallback != null)
-        {
-          this.mLoadingCallback.onQuitClick();
-          this.mLoadingCallback = null;
+            case 9:
+                this.mSubViewListener.onOtherAction(13, 0, 0, null);
+                return;
+            case 10:
+                if (this.mSubViewListener != null) {
+                    this.mSubViewListener.onMenuMoreAction();
+                }
+                closeToolbox();
+                return;
+            case 11:
+                if (this.mSubViewListener != null) {
+                    this.mSubViewListener.onOtherAction(3, 0, 0, null);
+                }
+                closeToolbox();
+                return;
+            case 12:
+                if (this.mSubViewListener != null) {
+                    this.mSubViewListener.onLocationAction();
+                    return;
+                }
+                return;
+            case 13:
+                if (this.mSubViewListener != null) {
+                    this.mSubViewListener.onMultiRouteSwitchAction();
+                    return;
+                }
+                return;
+            case 14:
+                if (this.mLoadingCallback != null) {
+                    this.mLoadingCallback.onQuitClick();
+                    this.mLoadingCallback = null;
+                }
+                if (this.mToolBoxView != null) {
+                    this.mToolBoxView.hideLoadingViewHasProgress();
+                    return;
+                }
+                return;
+            case 15:
+                if (this.mSubViewListener != null) {
+                    this.mSubViewListener.onEmptyPoiAction();
+                    return;
+                }
+                return;
+            default:
+                return;
         }
-      } while (this.mToolBoxView == null);
-      this.mToolBoxView.hideLoadingViewHasProgress();
-      return;
-    } while (this.mSubViewListener == null);
-    this.mSubViewListener.onEmptyPoiAction();
-  }
-  
-  public void onRPComplete()
-  {
-    this.mToolBoxView.hideLoadingViewNoProgress();
-  }
-  
-  public void onRPWatting()
-  {
-    this.mToolBoxView.showLoadingViewNoProgress("正在算路，请稍等");
-  }
-  
-  public void onRemainDistTimeUpdate()
-  {
-    this.mToolBoxView.updateArriveTime(RGSimpleGuideModel.getInstance().getArriveTimeString());
-    this.mToolBoxView.updateRemainTimeAndDist(RGSimpleGuideModel.getInstance().getTotalRemainDistString() + " " + RGSimpleGuideModel.getInstance().getTotalRemainTimeString());
-  }
-  
-  public void onStartYawing()
-  {
-    this.mToolBoxView.showLoadingViewNoProgress("正在计算路线...");
-  }
-  
-  public void onTopStatus()
-  {
-    if (this.mToolBoxView.isLastScrollEvent()) {
-      UserOPController.getInstance().add("3.5.j", "2", null, null);
     }
-    RGEnlargeRoadMapModel.getInstance().setAnyEnlargeRoadMapShowing(false);
-    RouteGuideFSM.getInstance().run("收到放大图隐藏消息");
-  }
-  
-  public void onYawingComplete(boolean paramBoolean)
-  {
-    this.mToolBoxView.hideLoadingViewNoProgress();
-  }
-  
-  public void setOnSubViewClickListener(OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    this.mSubViewListener = paramOnRGSubViewListener;
-  }
-  
-  public void setToolBoxStatus(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      return;
-    case 1: 
-      if (RGRouteSearchModel.getInstance().isRouteSearchMode())
-      {
-        this.mToolBoxView.showClearPoiView(true);
-        return;
-      }
-      this.mToolBoxView.showClearPoiView(false);
-      this.mToolBoxView.setTopBarState(paramInt);
-      return;
+
+    protected void initViewStatus() {
+        LogUtil.m15791e(TAG, "initViewStatus");
+        updateToolBoxItemState(4);
+        updateToolBoxItemState(5);
+        updateToolBoxItemState(6);
+        updateToolBoxItemState(7);
+        onRemainDistTimeUpdate();
     }
-    this.mToolBoxView.showClearPoiView(false);
-    this.mToolBoxView.setTopBarState(paramInt);
-  }
-  
-  public void showLoading(String paramString, RGToolBoxView.LoadingCallback paramLoadingCallback)
-  {
-    this.mToolBoxView.showLoadingViewHasProgress(paramString);
-    this.mLoadingCallback = paramLoadingCallback;
-  }
-  
-  public void showResumeSwitchView()
-  {
-    this.mToolBoxView.showResumeSwitchView(true);
-  }
-  
-  public void updateToolBoxItemState(int paramInt)
-  {
-    LogUtil.e("RGToolBoxPresent", "updateToolBoxItemState index :" + paramInt);
-    switch (paramInt)
-    {
-    default: 
-      return;
-    case 4: 
-      if (BNSettingManager.getMapMode() == 1)
-      {
-        this.mToolBoxView.updateSettingStatus(paramInt, 1);
-        return;
-      }
-      this.mToolBoxView.updateSettingStatus(paramInt, 2);
-      return;
-    case 5: 
-      if (BNSettingManager.getVoiceMode() == 2)
-      {
-        this.mToolBoxView.updateSettingStatus(paramInt, 1);
-        return;
-      }
-      this.mToolBoxView.updateSettingStatus(paramInt, 2);
-      return;
-    case 6: 
-      if (BNSettingManager.getIsShowMapSwitch() == 1)
-      {
-        this.mToolBoxView.updateSettingStatus(paramInt, 2);
-        return;
-      }
-      this.mToolBoxView.updateSettingStatus(paramInt, 1);
-      return;
+
+    public void updateViewStatus() {
+        LogUtil.m15791e(TAG, "updateViewStatus");
+        updateToolBoxItemState(4);
+        updateToolBoxItemState(5);
+        updateToolBoxItemState(6);
+        updateToolBoxItemState(7);
     }
-    if (RGCarPreferSettingController.getInstance().isCarLimitOpen())
-    {
-      String str = BNSettingManager.getPlateFromLocal(this.mToolBoxView.getContext());
-      if (!TextUtils.isEmpty(str))
-      {
-        this.mToolBoxView.mCarNum = str;
-        this.mToolBoxView.updateSettingStatus(paramInt, 1);
-        return;
-      }
+
+    public void updateToolBoxItemState(int index) {
+        LogUtil.m15791e(TAG, "updateToolBoxItemState index :" + index);
+        switch (index) {
+            case 4:
+                if (BNSettingManager.getMapMode() == 1) {
+                    this.mToolBoxView.updateSettingStatus(index, 1);
+                    return;
+                } else {
+                    this.mToolBoxView.updateSettingStatus(index, 2);
+                    return;
+                }
+            case 5:
+                if (BNSettingManager.getVoiceMode() == 2) {
+                    this.mToolBoxView.updateSettingStatus(index, 1);
+                    return;
+                } else {
+                    this.mToolBoxView.updateSettingStatus(index, 2);
+                    return;
+                }
+            case 6:
+                if (BNSettingManager.getIsShowMapSwitch() == 1) {
+                    this.mToolBoxView.updateSettingStatus(index, 2);
+                    return;
+                } else {
+                    this.mToolBoxView.updateSettingStatus(index, 1);
+                    return;
+                }
+            case 7:
+                if (RGCarPreferSettingController.getInstance().isCarLimitOpen()) {
+                    String carNo = BNSettingManager.getPlateFromLocal(this.mToolBoxView.getContext());
+                    if (!TextUtils.isEmpty(carNo)) {
+                        this.mToolBoxView.mCarNum = carNo;
+                        this.mToolBoxView.updateSettingStatus(index, 1);
+                        return;
+                    }
+                }
+                this.mToolBoxView.updateSettingStatus(index, 2);
+                return;
+            default:
+                return;
+        }
     }
-    this.mToolBoxView.updateSettingStatus(paramInt, 2);
-  }
-  
-  public void updateViewStatus()
-  {
-    LogUtil.e("RGToolBoxPresent", "updateViewStatus");
-    updateToolBoxItemState(4);
-    updateToolBoxItemState(5);
-    updateToolBoxItemState(6);
-    updateToolBoxItemState(7);
-  }
+
+    public void setToolBoxStatus(int state) {
+        switch (state) {
+            case 0:
+                this.mToolBoxView.showClearPoiView(false);
+                this.mToolBoxView.setTopBarState(state);
+                return;
+            case 1:
+                if (RGRouteSearchModel.getInstance().isRouteSearchMode()) {
+                    this.mToolBoxView.showClearPoiView(true);
+                    return;
+                }
+                this.mToolBoxView.showClearPoiView(false);
+                this.mToolBoxView.setTopBarState(state);
+                return;
+            default:
+                return;
+        }
+    }
+
+    public void onRemainDistTimeUpdate() {
+        this.mToolBoxView.updateArriveTime(RGSimpleGuideModel.getInstance().getArriveTimeString());
+        this.mToolBoxView.updateRemainTimeAndDist(RGSimpleGuideModel.getInstance().getTotalRemainDistString() + " " + RGSimpleGuideModel.getInstance().getTotalRemainTimeString());
+    }
+
+    public void showResumeSwitchView() {
+        this.mToolBoxView.showResumeSwitchView(true);
+    }
+
+    public void hideResumeSwitchView() {
+        this.mToolBoxView.showResumeSwitchView(false);
+    }
+
+    public void onStartYawing() {
+        this.mToolBoxView.showLoadingViewNoProgress("正在计算路线...");
+    }
+
+    public void onYawingComplete(boolean success) {
+        this.mToolBoxView.hideLoadingViewNoProgress();
+    }
+
+    public void onRPWatting() {
+        this.mToolBoxView.showLoadingViewNoProgress("正在算路，请稍等");
+    }
+
+    public void onRPComplete() {
+        this.mToolBoxView.hideLoadingViewNoProgress();
+    }
+
+    public void closeToolbox() {
+        if (this.mToolBoxView != null && this.mToolBoxView.isOpenStatus()) {
+            this.mToolBoxView.closeToolBox();
+        }
+    }
+
+    public boolean isToolboxOpened() {
+        return this.mToolBoxView != null && this.mToolBoxView.isOpenStatus();
+    }
+
+    public void showLoading(String text, LoadingCallback callback) {
+        this.mToolBoxView.showLoadingViewHasProgress(text);
+        this.mLoadingCallback = callback;
+    }
+
+    public void hideLoading() {
+        this.mToolBoxView.hideLoadingViewHasProgress();
+        this.mLoadingCallback = null;
+    }
+
+    public void onTopStatus() {
+        if (this.mToolBoxView.isLastScrollEvent()) {
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_5_j_1, "2", null, null);
+        }
+        RGEnlargeRoadMapModel.getInstance().setAnyEnlargeRoadMapShowing(false);
+        RouteGuideFSM.getInstance().run(FsmEvent.MSG_ENLARGE_ROADMAP_HIDE);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/toolbox/present/RGToolBoxPresent.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

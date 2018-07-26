@@ -3,31 +3,21 @@ package com.baidu.carlife.broadcast;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.k;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
 
-public class PackageChangeReceiver
-  extends BroadcastReceiver
-{
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    if (paramIntent.getAction().equals("android.intent.action.PACKAGE_ADDED"))
-    {
-      paramContext = paramIntent.getDataString().substring(8);
-      i.b("ouyang", "-----PACKAGE_ADDED----------" + paramContext);
-      k.a(4014, 43990, paramContext);
+public class PackageChangeReceiver extends BroadcastReceiver {
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
+            Object packageName = intent.getDataString().substring(8);
+            C1260i.m4435b("ouyang", "-----PACKAGE_ADDED----------" + packageName);
+            C1261k.m4458a((int) C1253f.gQ, (int) C1253f.iw, packageName);
+        }
+        if (intent.getAction().equals("android.intent.action.PACKAGE_REMOVED")) {
+            packageName = intent.getDataString().substring(8);
+            C1260i.m4435b("ouyang", "-----PACKAGE_REMOVED----------" + packageName);
+            C1261k.m4458a((int) C1253f.gQ, (int) C1253f.ix, packageName);
+        }
     }
-    if (paramIntent.getAction().equals("android.intent.action.PACKAGE_REMOVED"))
-    {
-      paramContext = paramIntent.getDataString().substring(8);
-      i.b("ouyang", "-----PACKAGE_REMOVED----------" + paramContext);
-      k.a(4014, 43991, paramContext);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/broadcast/PackageChangeReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

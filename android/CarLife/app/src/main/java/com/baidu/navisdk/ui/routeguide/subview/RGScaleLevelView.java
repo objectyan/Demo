@@ -2,99 +2,76 @@ package com.baidu.navisdk.ui.routeguide.subview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.routeguide.control.NMapControlProxy;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class RGScaleLevelView
-{
-  private Context mContext;
-  private RelativeLayout mLayout = null;
-  private TextView mScaleIndicator = null;
-  private TextView mScaleTitle = null;
-  
-  public RGScaleLevelView(Context paramContext, View paramView)
-  {
-    this.mContext = paramContext;
-    this.mLayout = ((RelativeLayout)paramView.findViewById(1711866587));
-    this.mScaleTitle = ((TextView)paramView.findViewById(1711866588));
-    this.mScaleIndicator = ((TextView)paramView.findViewById(1711866589));
-  }
-  
-  public void hide()
-  {
-    if (this.mLayout != null) {
-      this.mLayout.setVisibility(4);
+public class RGScaleLevelView {
+    private Context mContext;
+    private RelativeLayout mLayout = null;
+    private TextView mScaleIndicator = null;
+    private TextView mScaleTitle = null;
+
+    public RGScaleLevelView(Context context, View view) {
+        this.mContext = context;
+        this.mLayout = (RelativeLayout) view.findViewById(C4048R.id.bnav_rg_map_scale_layout);
+        this.mScaleTitle = (TextView) view.findViewById(C4048R.id.bnav_rg_scale_title);
+        this.mScaleIndicator = (TextView) view.findViewById(C4048R.id.bnav_rg_scale_indicator);
     }
-  }
-  
-  @SuppressLint({"NewApi"})
-  public void onUpdateStyle(boolean paramBoolean)
-  {
-    int i;
-    TextView localTextView;
-    if (this.mScaleTitle != null)
-    {
-      localObject = this.mScaleTitle;
-      if (paramBoolean)
-      {
-        i = -13223362;
-        ((TextView)localObject).setTextColor(i);
-      }
+
+    public void update() {
+        String txt;
+        int scrWidht = NMapControlProxy.getInstance().getScreenWidth();
+        int level = NMapControlProxy.getInstance().getZoomLevel();
+        double u = NMapControlProxy.getInstance().getZoomUnitsInMeter();
+        int dist = NMapControlProxy.getScaleDis(level);
+        LogUtil.m15791e("Meter", "room updateScale dis=" + dist + " level=" + level + " u=" + u);
+        int pxLen = (int) Math.ceil(((double) dist) / u);
+        while (pxLen > scrWidht / 2 && level >= 3 && level <= 20) {
+            level++;
+            dist = NMapControlProxy.getScaleDis(level);
+            pxLen = (int) Math.ceil(((double) dist) / u);
+        }
+        if (dist >= 1000) {
+            txt = (dist / 1000) + JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_kilometer);
+        } else {
+            txt = dist + JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_meter);
+        }
+        this.mScaleTitle.setText(txt);
+        this.mScaleIndicator.setWidth(pxLen);
     }
-    else if (this.mScaleIndicator != null)
-    {
-      localTextView = this.mScaleIndicator;
-      if (!paramBoolean) {
-        break label63;
-      }
+
+    public void show() {
+        if (this.mLayout != null) {
+            this.mLayout.setVisibility(0);
+        }
     }
-    label63:
-    for (Object localObject = JarUtils.getResources().getDrawable(1711407694);; localObject = JarUtils.getResources().getDrawable(1711407695))
-    {
-      localTextView.setBackgroundDrawable((Drawable)localObject);
-      return;
-      i = -1052432;
-      break;
+
+    public void hide() {
+        if (this.mLayout != null) {
+            this.mLayout.setVisibility(4);
+        }
     }
-  }
-  
-  public void show()
-  {
-    if (this.mLayout != null) {
-      this.mLayout.setVisibility(0);
+
+    @SuppressLint({"NewApi"})
+    public void onUpdateStyle(boolean isDay) {
+        if (this.mScaleTitle != null) {
+            this.mScaleTitle.setTextColor(isDay ? -13223362 : -1052432);
+        }
+        if (this.mScaleIndicator != null) {
+            Drawable drawable;
+            TextView textView = this.mScaleIndicator;
+            if (isDay) {
+                drawable = JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_rg_ic_scale_indicator);
+            } else {
+                drawable = JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_rg_ic_scale_indicator_night);
+            }
+            textView.setBackgroundDrawable(drawable);
+        }
     }
-  }
-  
-  public void update()
-  {
-    int m = NMapControlProxy.getInstance().getScreenWidth();
-    int j = NMapControlProxy.getInstance().getZoomLevel();
-    double d = NMapControlProxy.getInstance().getZoomUnitsInMeter();
-    int i = NMapControlProxy.getScaleDis(j);
-    LogUtil.e("Meter", "room updateScale dis=" + i + " level=" + j + " u=" + d);
-    for (int k = (int)Math.ceil(i / d); (k > m / 2) && (j >= 3) && (j <= 20); k = (int)Math.ceil(i / d))
-    {
-      j += 1;
-      i = NMapControlProxy.getScaleDis(j);
-    }
-    if (i >= 1000) {}
-    for (String str = i / 1000 + JarUtils.getResources().getString(1711669516);; str = i + JarUtils.getResources().getString(1711669517))
-    {
-      this.mScaleTitle.setText(str);
-      this.mScaleIndicator.setWidth(k);
-      return;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/RGScaleLevelView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,5 +1,7 @@
 package com.baidu.entity.pb;
 
+import com.baidu.baidunavis.model.NavCarInfo;
+import com.baidu.carlife.core.C1253f;
 import com.google.protobuf.micro.CodedInputStreamMicro;
 import com.google.protobuf.micro.CodedOutputStreamMicro;
 import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
@@ -7,1221 +9,1106 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class BzList
-  extends MessageMicro
-{
-  public static final int CATER_FIELD_NUMBER = 3;
-  public static final int CIRCLE_NAME_FIELD_NUMBER = 4;
-  public static final int CIRCLE_NAME_RECOMMEND_FIELD_NUMBER = 5;
-  public static final int CONTENT_FIELD_NUMBER = 1;
-  public static final int C_FIELD_NUMBER = 2;
-  public static final int ERROR_FIELD_NUMBER = 8;
-  public static final int INDUSTRY_FIELD_NUMBER = 10;
-  public static final int MORE_FIELD_NUMBER = 9;
-  public static final int PX_FIELD_NUMBER = 6;
-  public static final int PY_FIELD_NUMBER = 7;
-  public static final int TOTAL_COUNT_FIELD_NUMBER = 12;
-  private List<Content> a = Collections.emptyList();
-  private boolean b;
-  private String c = "";
-  private boolean d;
-  private String e = "";
-  private boolean f;
-  private String g = "";
-  private boolean h;
-  private String i = "";
-  private boolean j;
-  private String k = "";
-  private boolean l;
-  private String m = "";
-  private boolean n;
-  private int o = 0;
-  private boolean p;
-  private int q = 0;
-  private boolean r;
-  private String s = "";
-  private boolean t;
-  private int u = 0;
-  private int v = -1;
-  
-  public static BzList parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new BzList().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static BzList parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (BzList)new BzList().mergeFrom(paramArrayOfByte);
-  }
-  
-  public BzList addContent(Content paramContent)
-  {
-    if (paramContent == null) {
-      return this;
-    }
-    if (this.a.isEmpty()) {
-      this.a = new ArrayList();
-    }
-    this.a.add(paramContent);
-    return this;
-  }
-  
-  public final BzList clear()
-  {
-    clearContent();
-    clearC();
-    clearCater();
-    clearCircleName();
-    clearCircleNameRecommend();
-    clearPx();
-    clearPy();
-    clearError();
-    clearMore();
-    clearIndustry();
-    clearTotalCount();
-    this.v = -1;
-    return this;
-  }
-  
-  public BzList clearC()
-  {
-    this.b = false;
-    this.c = "";
-    return this;
-  }
-  
-  public BzList clearCater()
-  {
-    this.d = false;
-    this.e = "";
-    return this;
-  }
-  
-  public BzList clearCircleName()
-  {
-    this.f = false;
-    this.g = "";
-    return this;
-  }
-  
-  public BzList clearCircleNameRecommend()
-  {
-    this.h = false;
-    this.i = "";
-    return this;
-  }
-  
-  public BzList clearContent()
-  {
-    this.a = Collections.emptyList();
-    return this;
-  }
-  
-  public BzList clearError()
-  {
-    this.n = false;
-    this.o = 0;
-    return this;
-  }
-  
-  public BzList clearIndustry()
-  {
-    this.r = false;
-    this.s = "";
-    return this;
-  }
-  
-  public BzList clearMore()
-  {
-    this.p = false;
-    this.q = 0;
-    return this;
-  }
-  
-  public BzList clearPx()
-  {
-    this.j = false;
-    this.k = "";
-    return this;
-  }
-  
-  public BzList clearPy()
-  {
-    this.l = false;
-    this.m = "";
-    return this;
-  }
-  
-  public BzList clearTotalCount()
-  {
-    this.t = false;
-    this.u = 0;
-    return this;
-  }
-  
-  public String getC()
-  {
-    return this.c;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.v < 0) {
-      getSerializedSize();
-    }
-    return this.v;
-  }
-  
-  public String getCater()
-  {
-    return this.e;
-  }
-  
-  public String getCircleName()
-  {
-    return this.g;
-  }
-  
-  public String getCircleNameRecommend()
-  {
-    return this.i;
-  }
-  
-  public Content getContent(int paramInt)
-  {
-    return (Content)this.a.get(paramInt);
-  }
-  
-  public int getContentCount()
-  {
-    return this.a.size();
-  }
-  
-  public List<Content> getContentList()
-  {
-    return this.a;
-  }
-  
-  public int getError()
-  {
-    return this.o;
-  }
-  
-  public String getIndustry()
-  {
-    return this.s;
-  }
-  
-  public int getMore()
-  {
-    return this.q;
-  }
-  
-  public String getPx()
-  {
-    return this.k;
-  }
-  
-  public String getPy()
-  {
-    return this.m;
-  }
-  
-  public int getSerializedSize()
-  {
-    Iterator localIterator = getContentList().iterator();
-    for (int i2 = 0; localIterator.hasNext(); i2 = CodedOutputStreamMicro.computeMessageSize(1, (Content)localIterator.next()) + i2) {}
-    int i1 = i2;
-    if (hasC()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getC());
-    }
-    i2 = i1;
-    if (hasCater()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getCater());
-    }
-    i1 = i2;
-    if (hasCircleName()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getCircleName());
-    }
-    i2 = i1;
-    if (hasCircleNameRecommend()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getCircleNameRecommend());
-    }
-    i1 = i2;
-    if (hasPx()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getPx());
-    }
-    i2 = i1;
-    if (hasPy()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getPy());
-    }
-    i1 = i2;
-    if (hasError()) {
-      i1 = i2 + CodedOutputStreamMicro.computeInt32Size(8, getError());
-    }
-    i2 = i1;
-    if (hasMore()) {
-      i2 = i1 + CodedOutputStreamMicro.computeInt32Size(9, getMore());
-    }
-    i1 = i2;
-    if (hasIndustry()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(10, getIndustry());
-    }
-    i2 = i1;
-    if (hasTotalCount()) {
-      i2 = i1 + CodedOutputStreamMicro.computeInt32Size(12, getTotalCount());
-    }
-    this.v = i2;
-    return i2;
-  }
-  
-  public int getTotalCount()
-  {
-    return this.u;
-  }
-  
-  public boolean hasC()
-  {
-    return this.b;
-  }
-  
-  public boolean hasCater()
-  {
-    return this.d;
-  }
-  
-  public boolean hasCircleName()
-  {
-    return this.f;
-  }
-  
-  public boolean hasCircleNameRecommend()
-  {
-    return this.h;
-  }
-  
-  public boolean hasError()
-  {
-    return this.n;
-  }
-  
-  public boolean hasIndustry()
-  {
-    return this.r;
-  }
-  
-  public boolean hasMore()
-  {
-    return this.p;
-  }
-  
-  public boolean hasPx()
-  {
-    return this.j;
-  }
-  
-  public boolean hasPy()
-  {
-    return this.l;
-  }
-  
-  public boolean hasTotalCount()
-  {
-    return this.t;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public BzList mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
-        return this;
-      case 10: 
-        Content localContent = new Content();
-        paramCodedInputStreamMicro.readMessage(localContent);
-        addContent(localContent);
-        break;
-      case 18: 
-        setC(paramCodedInputStreamMicro.readString());
-        break;
-      case 26: 
-        setCater(paramCodedInputStreamMicro.readString());
-        break;
-      case 34: 
-        setCircleName(paramCodedInputStreamMicro.readString());
-        break;
-      case 42: 
-        setCircleNameRecommend(paramCodedInputStreamMicro.readString());
-        break;
-      case 50: 
-        setPx(paramCodedInputStreamMicro.readString());
-        break;
-      case 58: 
-        setPy(paramCodedInputStreamMicro.readString());
-        break;
-      case 64: 
-        setError(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 72: 
-        setMore(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 82: 
-        setIndustry(paramCodedInputStreamMicro.readString());
-        break;
-      case 96: 
-        setTotalCount(paramCodedInputStreamMicro.readInt32());
-      }
-    }
-  }
-  
-  public BzList setC(String paramString)
-  {
-    this.b = true;
-    this.c = paramString;
-    return this;
-  }
-  
-  public BzList setCater(String paramString)
-  {
-    this.d = true;
-    this.e = paramString;
-    return this;
-  }
-  
-  public BzList setCircleName(String paramString)
-  {
-    this.f = true;
-    this.g = paramString;
-    return this;
-  }
-  
-  public BzList setCircleNameRecommend(String paramString)
-  {
-    this.h = true;
-    this.i = paramString;
-    return this;
-  }
-  
-  public BzList setContent(int paramInt, Content paramContent)
-  {
-    if (paramContent == null) {
-      return this;
-    }
-    this.a.set(paramInt, paramContent);
-    return this;
-  }
-  
-  public BzList setError(int paramInt)
-  {
-    this.n = true;
-    this.o = paramInt;
-    return this;
-  }
-  
-  public BzList setIndustry(String paramString)
-  {
-    this.r = true;
-    this.s = paramString;
-    return this;
-  }
-  
-  public BzList setMore(int paramInt)
-  {
-    this.p = true;
-    this.q = paramInt;
-    return this;
-  }
-  
-  public BzList setPx(String paramString)
-  {
-    this.j = true;
-    this.k = paramString;
-    return this;
-  }
-  
-  public BzList setPy(String paramString)
-  {
-    this.l = true;
-    this.m = paramString;
-    return this;
-  }
-  
-  public BzList setTotalCount(int paramInt)
-  {
-    this.t = true;
-    this.u = paramInt;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    Iterator localIterator = getContentList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(1, (Content)localIterator.next());
-    }
-    if (hasC()) {
-      paramCodedOutputStreamMicro.writeString(2, getC());
-    }
-    if (hasCater()) {
-      paramCodedOutputStreamMicro.writeString(3, getCater());
-    }
-    if (hasCircleName()) {
-      paramCodedOutputStreamMicro.writeString(4, getCircleName());
-    }
-    if (hasCircleNameRecommend()) {
-      paramCodedOutputStreamMicro.writeString(5, getCircleNameRecommend());
-    }
-    if (hasPx()) {
-      paramCodedOutputStreamMicro.writeString(6, getPx());
-    }
-    if (hasPy()) {
-      paramCodedOutputStreamMicro.writeString(7, getPy());
-    }
-    if (hasError()) {
-      paramCodedOutputStreamMicro.writeInt32(8, getError());
-    }
-    if (hasMore()) {
-      paramCodedOutputStreamMicro.writeInt32(9, getMore());
-    }
-    if (hasIndustry()) {
-      paramCodedOutputStreamMicro.writeString(10, getIndustry());
-    }
-    if (hasTotalCount()) {
-      paramCodedOutputStreamMicro.writeInt32(12, getTotalCount());
-    }
-  }
-  
-  public static final class Content
-    extends MessageMicro
-  {
+public final class BzList extends MessageMicro {
+    public static final int CATER_FIELD_NUMBER = 3;
     public static final int CIRCLE_NAME_FIELD_NUMBER = 4;
-    public static final int DIS_FIELD_NUMBER = 15;
-    public static final int FLAG_ON_LEFT_FIELD_NUMBER = 16;
-    public static final int ID_FIELD_NUMBER = 11;
-    public static final int PIC_URL_FIELD_NUMBER = 5;
-    public static final int POI_INDUSTRY_FIELD_NUMBER = 1;
-    public static final int PRICE_FIELD_NUMBER = 8;
-    public static final int PRICE_TEXT_FIELD_NUMBER = 17;
-    public static final int PX_FIELD_NUMBER = 9;
-    public static final int PY_FIELD_NUMBER = 10;
-    public static final int REC_REASON_FIELD_NUMBER = 13;
-    public static final int SCENE_FIELD_NUMBER = 14;
-    public static final int SCORE_FIELD_NUMBER = 6;
-    public static final int STATE_FIELD_NUMBER = 3;
-    public static final int TAG_FIELD_NUMBER = 7;
-    public static final int TITLE_FIELD_NUMBER = 2;
-    public static final int UID_FIELD_NUMBER = 12;
-    private boolean A;
-    private String B = "";
-    private boolean C;
-    private String D = "";
-    private boolean E;
-    private String F = "";
-    private boolean G;
-    private String H = "";
-    private int I = -1;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private String d = "";
-    private boolean e;
-    private String f = "";
-    private boolean g;
-    private String h = "";
-    private boolean i;
-    private String j = "";
-    private boolean k;
-    private String l = "";
-    private boolean m;
-    private String n = "";
-    private boolean o;
-    private String p = "";
-    private boolean q;
-    private String r = "";
-    private boolean s;
-    private String t = "";
-    private boolean u;
-    private String v = "";
-    private boolean w;
-    private String x = "";
-    private boolean y;
-    private String z = "";
-    
-    public static Content parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Content().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Content parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Content)new Content().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Content clear()
-    {
-      clearPoiIndustry();
-      clearTitle();
-      clearState();
-      clearCircleName();
-      clearPicUrl();
-      clearScore();
-      clearTag();
-      clearPrice();
-      clearPx();
-      clearPy();
-      clearId();
-      clearUid();
-      clearRecReason();
-      clearScene();
-      clearDis();
-      clearFlagOnLeft();
-      clearPriceText();
-      this.I = -1;
-      return this;
-    }
-    
-    public Content clearCircleName()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public Content clearDis()
-    {
-      this.C = false;
-      this.D = "";
-      return this;
-    }
-    
-    public Content clearFlagOnLeft()
-    {
-      this.E = false;
-      this.F = "";
-      return this;
-    }
-    
-    public Content clearId()
-    {
-      this.u = false;
-      this.v = "";
-      return this;
-    }
-    
-    public Content clearPicUrl()
-    {
-      this.i = false;
-      this.j = "";
-      return this;
-    }
-    
-    public Content clearPoiIndustry()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public Content clearPrice()
-    {
-      this.o = false;
-      this.p = "";
-      return this;
-    }
-    
-    public Content clearPriceText()
-    {
-      this.G = false;
-      this.H = "";
-      return this;
-    }
-    
-    public Content clearPx()
-    {
-      this.q = false;
-      this.r = "";
-      return this;
-    }
-    
-    public Content clearPy()
-    {
-      this.s = false;
-      this.t = "";
-      return this;
-    }
-    
-    public Content clearRecReason()
-    {
-      this.y = false;
-      this.z = "";
-      return this;
-    }
-    
-    public Content clearScene()
-    {
-      this.A = false;
-      this.B = "";
-      return this;
-    }
-    
-    public Content clearScore()
-    {
-      this.k = false;
-      this.l = "";
-      return this;
-    }
-    
-    public Content clearState()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public Content clearTag()
-    {
-      this.m = false;
-      this.n = "";
-      return this;
-    }
-    
-    public Content clearTitle()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public Content clearUid()
-    {
-      this.w = false;
-      this.x = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.I < 0) {
-        getSerializedSize();
-      }
-      return this.I;
-    }
-    
-    public String getCircleName()
-    {
-      return this.h;
-    }
-    
-    public String getDis()
-    {
-      return this.D;
-    }
-    
-    public String getFlagOnLeft()
-    {
-      return this.F;
-    }
-    
-    public String getId()
-    {
-      return this.v;
-    }
-    
-    public String getPicUrl()
-    {
-      return this.j;
-    }
-    
-    public String getPoiIndustry()
-    {
-      return this.b;
-    }
-    
-    public String getPrice()
-    {
-      return this.p;
-    }
-    
-    public String getPriceText()
-    {
-      return this.H;
-    }
-    
-    public String getPx()
-    {
-      return this.r;
-    }
-    
-    public String getPy()
-    {
-      return this.t;
-    }
-    
-    public String getRecReason()
-    {
-      return this.z;
-    }
-    
-    public String getScene()
-    {
-      return this.B;
-    }
-    
-    public String getScore()
-    {
-      return this.l;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasPoiIndustry()) {
-        i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getPoiIndustry());
-      }
-      int i1 = i2;
-      if (hasTitle()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getTitle());
-      }
-      i2 = i1;
-      if (hasState()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getState());
-      }
-      i1 = i2;
-      if (hasCircleName()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getCircleName());
-      }
-      i2 = i1;
-      if (hasPicUrl()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getPicUrl());
-      }
-      i1 = i2;
-      if (hasScore()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getScore());
-      }
-      i2 = i1;
-      if (hasTag()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getTag());
-      }
-      i1 = i2;
-      if (hasPrice()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getPrice());
-      }
-      i2 = i1;
-      if (hasPx()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getPx());
-      }
-      i1 = i2;
-      if (hasPy()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(10, getPy());
-      }
-      i2 = i1;
-      if (hasId()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(11, getId());
-      }
-      i1 = i2;
-      if (hasUid()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(12, getUid());
-      }
-      i2 = i1;
-      if (hasRecReason()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(13, getRecReason());
-      }
-      i1 = i2;
-      if (hasScene()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(14, getScene());
-      }
-      i2 = i1;
-      if (hasDis()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(15, getDis());
-      }
-      i1 = i2;
-      if (hasFlagOnLeft()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(16, getFlagOnLeft());
-      }
-      i2 = i1;
-      if (hasPriceText()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(17, getPriceText());
-      }
-      this.I = i2;
-      return i2;
-    }
-    
-    public String getState()
-    {
-      return this.f;
-    }
-    
-    public String getTag()
-    {
-      return this.n;
-    }
-    
-    public String getTitle()
-    {
-      return this.d;
-    }
-    
-    public String getUid()
-    {
-      return this.x;
-    }
-    
-    public boolean hasCircleName()
-    {
-      return this.g;
-    }
-    
-    public boolean hasDis()
-    {
-      return this.C;
-    }
-    
-    public boolean hasFlagOnLeft()
-    {
-      return this.E;
-    }
-    
-    public boolean hasId()
-    {
-      return this.u;
-    }
-    
-    public boolean hasPicUrl()
-    {
-      return this.i;
-    }
-    
-    public boolean hasPoiIndustry()
-    {
-      return this.a;
-    }
-    
-    public boolean hasPrice()
-    {
-      return this.o;
-    }
-    
-    public boolean hasPriceText()
-    {
-      return this.G;
-    }
-    
-    public boolean hasPx()
-    {
-      return this.q;
-    }
-    
-    public boolean hasPy()
-    {
-      return this.s;
-    }
-    
-    public boolean hasRecReason()
-    {
-      return this.y;
-    }
-    
-    public boolean hasScene()
-    {
-      return this.A;
-    }
-    
-    public boolean hasScore()
-    {
-      return this.k;
-    }
-    
-    public boolean hasState()
-    {
-      return this.e;
-    }
-    
-    public boolean hasTag()
-    {
-      return this.m;
-    }
-    
-    public boolean hasTitle()
-    {
-      return this.c;
-    }
-    
-    public boolean hasUid()
-    {
-      return this.w;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Content mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setPoiIndustry(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          setTitle(paramCodedInputStreamMicro.readString());
-          break;
-        case 26: 
-          setState(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setCircleName(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          setPicUrl(paramCodedInputStreamMicro.readString());
-          break;
-        case 50: 
-          setScore(paramCodedInputStreamMicro.readString());
-          break;
-        case 58: 
-          setTag(paramCodedInputStreamMicro.readString());
-          break;
-        case 66: 
-          setPrice(paramCodedInputStreamMicro.readString());
-          break;
-        case 74: 
-          setPx(paramCodedInputStreamMicro.readString());
-          break;
-        case 82: 
-          setPy(paramCodedInputStreamMicro.readString());
-          break;
-        case 90: 
-          setId(paramCodedInputStreamMicro.readString());
-          break;
-        case 98: 
-          setUid(paramCodedInputStreamMicro.readString());
-          break;
-        case 106: 
-          setRecReason(paramCodedInputStreamMicro.readString());
-          break;
-        case 114: 
-          setScene(paramCodedInputStreamMicro.readString());
-          break;
-        case 122: 
-          setDis(paramCodedInputStreamMicro.readString());
-          break;
-        case 130: 
-          setFlagOnLeft(paramCodedInputStreamMicro.readString());
-          break;
-        case 138: 
-          setPriceText(paramCodedInputStreamMicro.readString());
+    public static final int CIRCLE_NAME_RECOMMEND_FIELD_NUMBER = 5;
+    public static final int CONTENT_FIELD_NUMBER = 1;
+    public static final int C_FIELD_NUMBER = 2;
+    public static final int ERROR_FIELD_NUMBER = 8;
+    public static final int INDUSTRY_FIELD_NUMBER = 10;
+    public static final int MORE_FIELD_NUMBER = 9;
+    public static final int PX_FIELD_NUMBER = 6;
+    public static final int PY_FIELD_NUMBER = 7;
+    public static final int TOTAL_COUNT_FIELD_NUMBER = 12;
+    /* renamed from: a */
+    private List<Content> f10471a = Collections.emptyList();
+    /* renamed from: b */
+    private boolean f10472b;
+    /* renamed from: c */
+    private String f10473c = "";
+    /* renamed from: d */
+    private boolean f10474d;
+    /* renamed from: e */
+    private String f10475e = "";
+    /* renamed from: f */
+    private boolean f10476f;
+    /* renamed from: g */
+    private String f10477g = "";
+    /* renamed from: h */
+    private boolean f10478h;
+    /* renamed from: i */
+    private String f10479i = "";
+    /* renamed from: j */
+    private boolean f10480j;
+    /* renamed from: k */
+    private String f10481k = "";
+    /* renamed from: l */
+    private boolean f10482l;
+    /* renamed from: m */
+    private String f10483m = "";
+    /* renamed from: n */
+    private boolean f10484n;
+    /* renamed from: o */
+    private int f10485o = 0;
+    /* renamed from: p */
+    private boolean f10486p;
+    /* renamed from: q */
+    private int f10487q = 0;
+    /* renamed from: r */
+    private boolean f10488r;
+    /* renamed from: s */
+    private String f10489s = "";
+    /* renamed from: t */
+    private boolean f10490t;
+    /* renamed from: u */
+    private int f10491u = 0;
+    /* renamed from: v */
+    private int f10492v = -1;
+
+    public static final class Content extends MessageMicro {
+        public static final int CIRCLE_NAME_FIELD_NUMBER = 4;
+        public static final int DIS_FIELD_NUMBER = 15;
+        public static final int FLAG_ON_LEFT_FIELD_NUMBER = 16;
+        public static final int ID_FIELD_NUMBER = 11;
+        public static final int PIC_URL_FIELD_NUMBER = 5;
+        public static final int POI_INDUSTRY_FIELD_NUMBER = 1;
+        public static final int PRICE_FIELD_NUMBER = 8;
+        public static final int PRICE_TEXT_FIELD_NUMBER = 17;
+        public static final int PX_FIELD_NUMBER = 9;
+        public static final int PY_FIELD_NUMBER = 10;
+        public static final int REC_REASON_FIELD_NUMBER = 13;
+        public static final int SCENE_FIELD_NUMBER = 14;
+        public static final int SCORE_FIELD_NUMBER = 6;
+        public static final int STATE_FIELD_NUMBER = 3;
+        public static final int TAG_FIELD_NUMBER = 7;
+        public static final int TITLE_FIELD_NUMBER = 2;
+        public static final int UID_FIELD_NUMBER = 12;
+        /* renamed from: A */
+        private boolean f10436A;
+        /* renamed from: B */
+        private String f10437B = "";
+        /* renamed from: C */
+        private boolean f10438C;
+        /* renamed from: D */
+        private String f10439D = "";
+        /* renamed from: E */
+        private boolean f10440E;
+        /* renamed from: F */
+        private String f10441F = "";
+        /* renamed from: G */
+        private boolean f10442G;
+        /* renamed from: H */
+        private String f10443H = "";
+        /* renamed from: I */
+        private int f10444I = -1;
+        /* renamed from: a */
+        private boolean f10445a;
+        /* renamed from: b */
+        private String f10446b = "";
+        /* renamed from: c */
+        private boolean f10447c;
+        /* renamed from: d */
+        private String f10448d = "";
+        /* renamed from: e */
+        private boolean f10449e;
+        /* renamed from: f */
+        private String f10450f = "";
+        /* renamed from: g */
+        private boolean f10451g;
+        /* renamed from: h */
+        private String f10452h = "";
+        /* renamed from: i */
+        private boolean f10453i;
+        /* renamed from: j */
+        private String f10454j = "";
+        /* renamed from: k */
+        private boolean f10455k;
+        /* renamed from: l */
+        private String f10456l = "";
+        /* renamed from: m */
+        private boolean f10457m;
+        /* renamed from: n */
+        private String f10458n = "";
+        /* renamed from: o */
+        private boolean f10459o;
+        /* renamed from: p */
+        private String f10460p = "";
+        /* renamed from: q */
+        private boolean f10461q;
+        /* renamed from: r */
+        private String f10462r = "";
+        /* renamed from: s */
+        private boolean f10463s;
+        /* renamed from: t */
+        private String f10464t = "";
+        /* renamed from: u */
+        private boolean f10465u;
+        /* renamed from: v */
+        private String f10466v = "";
+        /* renamed from: w */
+        private boolean f10467w;
+        /* renamed from: x */
+        private String f10468x = "";
+        /* renamed from: y */
+        private boolean f10469y;
+        /* renamed from: z */
+        private String f10470z = "";
+
+        public static Content parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Content().mergeFrom(codedInputStreamMicro);
         }
-      }
+
+        public static Content parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Content) new Content().mergeFrom(bArr);
+        }
+
+        public final Content clear() {
+            clearPoiIndustry();
+            clearTitle();
+            clearState();
+            clearCircleName();
+            clearPicUrl();
+            clearScore();
+            clearTag();
+            clearPrice();
+            clearPx();
+            clearPy();
+            clearId();
+            clearUid();
+            clearRecReason();
+            clearScene();
+            clearDis();
+            clearFlagOnLeft();
+            clearPriceText();
+            this.f10444I = -1;
+            return this;
+        }
+
+        public Content clearCircleName() {
+            this.f10451g = false;
+            this.f10452h = "";
+            return this;
+        }
+
+        public Content clearDis() {
+            this.f10438C = false;
+            this.f10439D = "";
+            return this;
+        }
+
+        public Content clearFlagOnLeft() {
+            this.f10440E = false;
+            this.f10441F = "";
+            return this;
+        }
+
+        public Content clearId() {
+            this.f10465u = false;
+            this.f10466v = "";
+            return this;
+        }
+
+        public Content clearPicUrl() {
+            this.f10453i = false;
+            this.f10454j = "";
+            return this;
+        }
+
+        public Content clearPoiIndustry() {
+            this.f10445a = false;
+            this.f10446b = "";
+            return this;
+        }
+
+        public Content clearPrice() {
+            this.f10459o = false;
+            this.f10460p = "";
+            return this;
+        }
+
+        public Content clearPriceText() {
+            this.f10442G = false;
+            this.f10443H = "";
+            return this;
+        }
+
+        public Content clearPx() {
+            this.f10461q = false;
+            this.f10462r = "";
+            return this;
+        }
+
+        public Content clearPy() {
+            this.f10463s = false;
+            this.f10464t = "";
+            return this;
+        }
+
+        public Content clearRecReason() {
+            this.f10469y = false;
+            this.f10470z = "";
+            return this;
+        }
+
+        public Content clearScene() {
+            this.f10436A = false;
+            this.f10437B = "";
+            return this;
+        }
+
+        public Content clearScore() {
+            this.f10455k = false;
+            this.f10456l = "";
+            return this;
+        }
+
+        public Content clearState() {
+            this.f10449e = false;
+            this.f10450f = "";
+            return this;
+        }
+
+        public Content clearTag() {
+            this.f10457m = false;
+            this.f10458n = "";
+            return this;
+        }
+
+        public Content clearTitle() {
+            this.f10447c = false;
+            this.f10448d = "";
+            return this;
+        }
+
+        public Content clearUid() {
+            this.f10467w = false;
+            this.f10468x = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f10444I < 0) {
+                getSerializedSize();
+            }
+            return this.f10444I;
+        }
+
+        public String getCircleName() {
+            return this.f10452h;
+        }
+
+        public String getDis() {
+            return this.f10439D;
+        }
+
+        public String getFlagOnLeft() {
+            return this.f10441F;
+        }
+
+        public String getId() {
+            return this.f10466v;
+        }
+
+        public String getPicUrl() {
+            return this.f10454j;
+        }
+
+        public String getPoiIndustry() {
+            return this.f10446b;
+        }
+
+        public String getPrice() {
+            return this.f10460p;
+        }
+
+        public String getPriceText() {
+            return this.f10443H;
+        }
+
+        public String getPx() {
+            return this.f10462r;
+        }
+
+        public String getPy() {
+            return this.f10464t;
+        }
+
+        public String getRecReason() {
+            return this.f10470z;
+        }
+
+        public String getScene() {
+            return this.f10437B;
+        }
+
+        public String getScore() {
+            return this.f10456l;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasPoiIndustry()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getPoiIndustry());
+            }
+            if (hasTitle()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getTitle());
+            }
+            if (hasState()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getState());
+            }
+            if (hasCircleName()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getCircleName());
+            }
+            if (hasPicUrl()) {
+                i += CodedOutputStreamMicro.computeStringSize(5, getPicUrl());
+            }
+            if (hasScore()) {
+                i += CodedOutputStreamMicro.computeStringSize(6, getScore());
+            }
+            if (hasTag()) {
+                i += CodedOutputStreamMicro.computeStringSize(7, getTag());
+            }
+            if (hasPrice()) {
+                i += CodedOutputStreamMicro.computeStringSize(8, getPrice());
+            }
+            if (hasPx()) {
+                i += CodedOutputStreamMicro.computeStringSize(9, getPx());
+            }
+            if (hasPy()) {
+                i += CodedOutputStreamMicro.computeStringSize(10, getPy());
+            }
+            if (hasId()) {
+                i += CodedOutputStreamMicro.computeStringSize(11, getId());
+            }
+            if (hasUid()) {
+                i += CodedOutputStreamMicro.computeStringSize(12, getUid());
+            }
+            if (hasRecReason()) {
+                i += CodedOutputStreamMicro.computeStringSize(13, getRecReason());
+            }
+            if (hasScene()) {
+                i += CodedOutputStreamMicro.computeStringSize(14, getScene());
+            }
+            if (hasDis()) {
+                i += CodedOutputStreamMicro.computeStringSize(15, getDis());
+            }
+            if (hasFlagOnLeft()) {
+                i += CodedOutputStreamMicro.computeStringSize(16, getFlagOnLeft());
+            }
+            if (hasPriceText()) {
+                i += CodedOutputStreamMicro.computeStringSize(17, getPriceText());
+            }
+            this.f10444I = i;
+            return i;
+        }
+
+        public String getState() {
+            return this.f10450f;
+        }
+
+        public String getTag() {
+            return this.f10458n;
+        }
+
+        public String getTitle() {
+            return this.f10448d;
+        }
+
+        public String getUid() {
+            return this.f10468x;
+        }
+
+        public boolean hasCircleName() {
+            return this.f10451g;
+        }
+
+        public boolean hasDis() {
+            return this.f10438C;
+        }
+
+        public boolean hasFlagOnLeft() {
+            return this.f10440E;
+        }
+
+        public boolean hasId() {
+            return this.f10465u;
+        }
+
+        public boolean hasPicUrl() {
+            return this.f10453i;
+        }
+
+        public boolean hasPoiIndustry() {
+            return this.f10445a;
+        }
+
+        public boolean hasPrice() {
+            return this.f10459o;
+        }
+
+        public boolean hasPriceText() {
+            return this.f10442G;
+        }
+
+        public boolean hasPx() {
+            return this.f10461q;
+        }
+
+        public boolean hasPy() {
+            return this.f10463s;
+        }
+
+        public boolean hasRecReason() {
+            return this.f10469y;
+        }
+
+        public boolean hasScene() {
+            return this.f10436A;
+        }
+
+        public boolean hasScore() {
+            return this.f10455k;
+        }
+
+        public boolean hasState() {
+            return this.f10449e;
+        }
+
+        public boolean hasTag() {
+            return this.f10457m;
+        }
+
+        public boolean hasTitle() {
+            return this.f10447c;
+        }
+
+        public boolean hasUid() {
+            return this.f10467w;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Content mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setPoiIndustry(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        setTitle(codedInputStreamMicro.readString());
+                        continue;
+                    case 26:
+                        setState(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setCircleName(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        setPicUrl(codedInputStreamMicro.readString());
+                        continue;
+                    case 50:
+                        setScore(codedInputStreamMicro.readString());
+                        continue;
+                    case 58:
+                        setTag(codedInputStreamMicro.readString());
+                        continue;
+                    case 66:
+                        setPrice(codedInputStreamMicro.readString());
+                        continue;
+                    case 74:
+                        setPx(codedInputStreamMicro.readString());
+                        continue;
+                    case 82:
+                        setPy(codedInputStreamMicro.readString());
+                        continue;
+                    case 90:
+                        setId(codedInputStreamMicro.readString());
+                        continue;
+                    case 98:
+                        setUid(codedInputStreamMicro.readString());
+                        continue;
+                    case 106:
+                        setRecReason(codedInputStreamMicro.readString());
+                        continue;
+                    case 114:
+                        setScene(codedInputStreamMicro.readString());
+                        continue;
+                    case C1253f.df /*122*/:
+                        setDis(codedInputStreamMicro.readString());
+                        continue;
+                    case 130:
+                        setFlagOnLeft(codedInputStreamMicro.readString());
+                        continue;
+                    case 138:
+                        setPriceText(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Content setCircleName(String str) {
+            this.f10451g = true;
+            this.f10452h = str;
+            return this;
+        }
+
+        public Content setDis(String str) {
+            this.f10438C = true;
+            this.f10439D = str;
+            return this;
+        }
+
+        public Content setFlagOnLeft(String str) {
+            this.f10440E = true;
+            this.f10441F = str;
+            return this;
+        }
+
+        public Content setId(String str) {
+            this.f10465u = true;
+            this.f10466v = str;
+            return this;
+        }
+
+        public Content setPicUrl(String str) {
+            this.f10453i = true;
+            this.f10454j = str;
+            return this;
+        }
+
+        public Content setPoiIndustry(String str) {
+            this.f10445a = true;
+            this.f10446b = str;
+            return this;
+        }
+
+        public Content setPrice(String str) {
+            this.f10459o = true;
+            this.f10460p = str;
+            return this;
+        }
+
+        public Content setPriceText(String str) {
+            this.f10442G = true;
+            this.f10443H = str;
+            return this;
+        }
+
+        public Content setPx(String str) {
+            this.f10461q = true;
+            this.f10462r = str;
+            return this;
+        }
+
+        public Content setPy(String str) {
+            this.f10463s = true;
+            this.f10464t = str;
+            return this;
+        }
+
+        public Content setRecReason(String str) {
+            this.f10469y = true;
+            this.f10470z = str;
+            return this;
+        }
+
+        public Content setScene(String str) {
+            this.f10436A = true;
+            this.f10437B = str;
+            return this;
+        }
+
+        public Content setScore(String str) {
+            this.f10455k = true;
+            this.f10456l = str;
+            return this;
+        }
+
+        public Content setState(String str) {
+            this.f10449e = true;
+            this.f10450f = str;
+            return this;
+        }
+
+        public Content setTag(String str) {
+            this.f10457m = true;
+            this.f10458n = str;
+            return this;
+        }
+
+        public Content setTitle(String str) {
+            this.f10447c = true;
+            this.f10448d = str;
+            return this;
+        }
+
+        public Content setUid(String str) {
+            this.f10467w = true;
+            this.f10468x = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasPoiIndustry()) {
+                codedOutputStreamMicro.writeString(1, getPoiIndustry());
+            }
+            if (hasTitle()) {
+                codedOutputStreamMicro.writeString(2, getTitle());
+            }
+            if (hasState()) {
+                codedOutputStreamMicro.writeString(3, getState());
+            }
+            if (hasCircleName()) {
+                codedOutputStreamMicro.writeString(4, getCircleName());
+            }
+            if (hasPicUrl()) {
+                codedOutputStreamMicro.writeString(5, getPicUrl());
+            }
+            if (hasScore()) {
+                codedOutputStreamMicro.writeString(6, getScore());
+            }
+            if (hasTag()) {
+                codedOutputStreamMicro.writeString(7, getTag());
+            }
+            if (hasPrice()) {
+                codedOutputStreamMicro.writeString(8, getPrice());
+            }
+            if (hasPx()) {
+                codedOutputStreamMicro.writeString(9, getPx());
+            }
+            if (hasPy()) {
+                codedOutputStreamMicro.writeString(10, getPy());
+            }
+            if (hasId()) {
+                codedOutputStreamMicro.writeString(11, getId());
+            }
+            if (hasUid()) {
+                codedOutputStreamMicro.writeString(12, getUid());
+            }
+            if (hasRecReason()) {
+                codedOutputStreamMicro.writeString(13, getRecReason());
+            }
+            if (hasScene()) {
+                codedOutputStreamMicro.writeString(14, getScene());
+            }
+            if (hasDis()) {
+                codedOutputStreamMicro.writeString(15, getDis());
+            }
+            if (hasFlagOnLeft()) {
+                codedOutputStreamMicro.writeString(16, getFlagOnLeft());
+            }
+            if (hasPriceText()) {
+                codedOutputStreamMicro.writeString(17, getPriceText());
+            }
+        }
     }
-    
-    public Content setCircleName(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
+
+    public static BzList parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new BzList().mergeFrom(codedInputStreamMicro);
     }
-    
-    public Content setDis(String paramString)
-    {
-      this.C = true;
-      this.D = paramString;
-      return this;
+
+    public static BzList parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (BzList) new BzList().mergeFrom(bArr);
     }
-    
-    public Content setFlagOnLeft(String paramString)
-    {
-      this.E = true;
-      this.F = paramString;
-      return this;
+
+    public BzList addContent(Content content) {
+        if (content != null) {
+            if (this.f10471a.isEmpty()) {
+                this.f10471a = new ArrayList();
+            }
+            this.f10471a.add(content);
+        }
+        return this;
     }
-    
-    public Content setId(String paramString)
-    {
-      this.u = true;
-      this.v = paramString;
-      return this;
+
+    public final BzList clear() {
+        clearContent();
+        clearC();
+        clearCater();
+        clearCircleName();
+        clearCircleNameRecommend();
+        clearPx();
+        clearPy();
+        clearError();
+        clearMore();
+        clearIndustry();
+        clearTotalCount();
+        this.f10492v = -1;
+        return this;
     }
-    
-    public Content setPicUrl(String paramString)
-    {
-      this.i = true;
-      this.j = paramString;
-      return this;
+
+    public BzList clearC() {
+        this.f10472b = false;
+        this.f10473c = "";
+        return this;
     }
-    
-    public Content setPoiIndustry(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
+
+    public BzList clearCater() {
+        this.f10474d = false;
+        this.f10475e = "";
+        return this;
     }
-    
-    public Content setPrice(String paramString)
-    {
-      this.o = true;
-      this.p = paramString;
-      return this;
+
+    public BzList clearCircleName() {
+        this.f10476f = false;
+        this.f10477g = "";
+        return this;
     }
-    
-    public Content setPriceText(String paramString)
-    {
-      this.G = true;
-      this.H = paramString;
-      return this;
+
+    public BzList clearCircleNameRecommend() {
+        this.f10478h = false;
+        this.f10479i = "";
+        return this;
     }
-    
-    public Content setPx(String paramString)
-    {
-      this.q = true;
-      this.r = paramString;
-      return this;
+
+    public BzList clearContent() {
+        this.f10471a = Collections.emptyList();
+        return this;
     }
-    
-    public Content setPy(String paramString)
-    {
-      this.s = true;
-      this.t = paramString;
-      return this;
+
+    public BzList clearError() {
+        this.f10484n = false;
+        this.f10485o = 0;
+        return this;
     }
-    
-    public Content setRecReason(String paramString)
-    {
-      this.y = true;
-      this.z = paramString;
-      return this;
+
+    public BzList clearIndustry() {
+        this.f10488r = false;
+        this.f10489s = "";
+        return this;
     }
-    
-    public Content setScene(String paramString)
-    {
-      this.A = true;
-      this.B = paramString;
-      return this;
+
+    public BzList clearMore() {
+        this.f10486p = false;
+        this.f10487q = 0;
+        return this;
     }
-    
-    public Content setScore(String paramString)
-    {
-      this.k = true;
-      this.l = paramString;
-      return this;
+
+    public BzList clearPx() {
+        this.f10480j = false;
+        this.f10481k = "";
+        return this;
     }
-    
-    public Content setState(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
+
+    public BzList clearPy() {
+        this.f10482l = false;
+        this.f10483m = "";
+        return this;
     }
-    
-    public Content setTag(String paramString)
-    {
-      this.m = true;
-      this.n = paramString;
-      return this;
+
+    public BzList clearTotalCount() {
+        this.f10490t = false;
+        this.f10491u = 0;
+        return this;
     }
-    
-    public Content setTitle(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
+
+    public String getC() {
+        return this.f10473c;
     }
-    
-    public Content setUid(String paramString)
-    {
-      this.w = true;
-      this.x = paramString;
-      return this;
+
+    public int getCachedSize() {
+        if (this.f10492v < 0) {
+            getSerializedSize();
+        }
+        return this.f10492v;
     }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasPoiIndustry()) {
-        paramCodedOutputStreamMicro.writeString(1, getPoiIndustry());
-      }
-      if (hasTitle()) {
-        paramCodedOutputStreamMicro.writeString(2, getTitle());
-      }
-      if (hasState()) {
-        paramCodedOutputStreamMicro.writeString(3, getState());
-      }
-      if (hasCircleName()) {
-        paramCodedOutputStreamMicro.writeString(4, getCircleName());
-      }
-      if (hasPicUrl()) {
-        paramCodedOutputStreamMicro.writeString(5, getPicUrl());
-      }
-      if (hasScore()) {
-        paramCodedOutputStreamMicro.writeString(6, getScore());
-      }
-      if (hasTag()) {
-        paramCodedOutputStreamMicro.writeString(7, getTag());
-      }
-      if (hasPrice()) {
-        paramCodedOutputStreamMicro.writeString(8, getPrice());
-      }
-      if (hasPx()) {
-        paramCodedOutputStreamMicro.writeString(9, getPx());
-      }
-      if (hasPy()) {
-        paramCodedOutputStreamMicro.writeString(10, getPy());
-      }
-      if (hasId()) {
-        paramCodedOutputStreamMicro.writeString(11, getId());
-      }
-      if (hasUid()) {
-        paramCodedOutputStreamMicro.writeString(12, getUid());
-      }
-      if (hasRecReason()) {
-        paramCodedOutputStreamMicro.writeString(13, getRecReason());
-      }
-      if (hasScene()) {
-        paramCodedOutputStreamMicro.writeString(14, getScene());
-      }
-      if (hasDis()) {
-        paramCodedOutputStreamMicro.writeString(15, getDis());
-      }
-      if (hasFlagOnLeft()) {
-        paramCodedOutputStreamMicro.writeString(16, getFlagOnLeft());
-      }
-      if (hasPriceText()) {
-        paramCodedOutputStreamMicro.writeString(17, getPriceText());
-      }
+
+    public String getCater() {
+        return this.f10475e;
     }
-  }
+
+    public String getCircleName() {
+        return this.f10477g;
+    }
+
+    public String getCircleNameRecommend() {
+        return this.f10479i;
+    }
+
+    public Content getContent(int i) {
+        return (Content) this.f10471a.get(i);
+    }
+
+    public int getContentCount() {
+        return this.f10471a.size();
+    }
+
+    public List<Content> getContentList() {
+        return this.f10471a;
+    }
+
+    public int getError() {
+        return this.f10485o;
+    }
+
+    public String getIndustry() {
+        return this.f10489s;
+    }
+
+    public int getMore() {
+        return this.f10487q;
+    }
+
+    public String getPx() {
+        return this.f10481k;
+    }
+
+    public String getPy() {
+        return this.f10483m;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        for (Content computeMessageSize : getContentList()) {
+            i = CodedOutputStreamMicro.computeMessageSize(1, computeMessageSize) + i;
+        }
+        if (hasC()) {
+            i += CodedOutputStreamMicro.computeStringSize(2, getC());
+        }
+        if (hasCater()) {
+            i += CodedOutputStreamMicro.computeStringSize(3, getCater());
+        }
+        if (hasCircleName()) {
+            i += CodedOutputStreamMicro.computeStringSize(4, getCircleName());
+        }
+        if (hasCircleNameRecommend()) {
+            i += CodedOutputStreamMicro.computeStringSize(5, getCircleNameRecommend());
+        }
+        if (hasPx()) {
+            i += CodedOutputStreamMicro.computeStringSize(6, getPx());
+        }
+        if (hasPy()) {
+            i += CodedOutputStreamMicro.computeStringSize(7, getPy());
+        }
+        if (hasError()) {
+            i += CodedOutputStreamMicro.computeInt32Size(8, getError());
+        }
+        if (hasMore()) {
+            i += CodedOutputStreamMicro.computeInt32Size(9, getMore());
+        }
+        if (hasIndustry()) {
+            i += CodedOutputStreamMicro.computeStringSize(10, getIndustry());
+        }
+        if (hasTotalCount()) {
+            i += CodedOutputStreamMicro.computeInt32Size(12, getTotalCount());
+        }
+        this.f10492v = i;
+        return i;
+    }
+
+    public int getTotalCount() {
+        return this.f10491u;
+    }
+
+    public boolean hasC() {
+        return this.f10472b;
+    }
+
+    public boolean hasCater() {
+        return this.f10474d;
+    }
+
+    public boolean hasCircleName() {
+        return this.f10476f;
+    }
+
+    public boolean hasCircleNameRecommend() {
+        return this.f10478h;
+    }
+
+    public boolean hasError() {
+        return this.f10484n;
+    }
+
+    public boolean hasIndustry() {
+        return this.f10488r;
+    }
+
+    public boolean hasMore() {
+        return this.f10486p;
+    }
+
+    public boolean hasPx() {
+        return this.f10480j;
+    }
+
+    public boolean hasPy() {
+        return this.f10482l;
+    }
+
+    public boolean hasTotalCount() {
+        return this.f10490t;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public BzList mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    MessageMicro content = new Content();
+                    codedInputStreamMicro.readMessage(content);
+                    addContent(content);
+                    continue;
+                case 18:
+                    setC(codedInputStreamMicro.readString());
+                    continue;
+                case 26:
+                    setCater(codedInputStreamMicro.readString());
+                    continue;
+                case 34:
+                    setCircleName(codedInputStreamMicro.readString());
+                    continue;
+                case 42:
+                    setCircleNameRecommend(codedInputStreamMicro.readString());
+                    continue;
+                case 50:
+                    setPx(codedInputStreamMicro.readString());
+                    continue;
+                case 58:
+                    setPy(codedInputStreamMicro.readString());
+                    continue;
+                case 64:
+                    setError(codedInputStreamMicro.readInt32());
+                    continue;
+                case NavCarInfo.CarType_57L /*72*/:
+                    setMore(codedInputStreamMicro.readInt32());
+                    continue;
+                case 82:
+                    setIndustry(codedInputStreamMicro.readString());
+                    continue;
+                case 96:
+                    setTotalCount(codedInputStreamMicro.readInt32());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public BzList setC(String str) {
+        this.f10472b = true;
+        this.f10473c = str;
+        return this;
+    }
+
+    public BzList setCater(String str) {
+        this.f10474d = true;
+        this.f10475e = str;
+        return this;
+    }
+
+    public BzList setCircleName(String str) {
+        this.f10476f = true;
+        this.f10477g = str;
+        return this;
+    }
+
+    public BzList setCircleNameRecommend(String str) {
+        this.f10478h = true;
+        this.f10479i = str;
+        return this;
+    }
+
+    public BzList setContent(int i, Content content) {
+        if (content != null) {
+            this.f10471a.set(i, content);
+        }
+        return this;
+    }
+
+    public BzList setError(int i) {
+        this.f10484n = true;
+        this.f10485o = i;
+        return this;
+    }
+
+    public BzList setIndustry(String str) {
+        this.f10488r = true;
+        this.f10489s = str;
+        return this;
+    }
+
+    public BzList setMore(int i) {
+        this.f10486p = true;
+        this.f10487q = i;
+        return this;
+    }
+
+    public BzList setPx(String str) {
+        this.f10480j = true;
+        this.f10481k = str;
+        return this;
+    }
+
+    public BzList setPy(String str) {
+        this.f10482l = true;
+        this.f10483m = str;
+        return this;
+    }
+
+    public BzList setTotalCount(int i) {
+        this.f10490t = true;
+        this.f10491u = i;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        for (Content writeMessage : getContentList()) {
+            codedOutputStreamMicro.writeMessage(1, writeMessage);
+        }
+        if (hasC()) {
+            codedOutputStreamMicro.writeString(2, getC());
+        }
+        if (hasCater()) {
+            codedOutputStreamMicro.writeString(3, getCater());
+        }
+        if (hasCircleName()) {
+            codedOutputStreamMicro.writeString(4, getCircleName());
+        }
+        if (hasCircleNameRecommend()) {
+            codedOutputStreamMicro.writeString(5, getCircleNameRecommend());
+        }
+        if (hasPx()) {
+            codedOutputStreamMicro.writeString(6, getPx());
+        }
+        if (hasPy()) {
+            codedOutputStreamMicro.writeString(7, getPy());
+        }
+        if (hasError()) {
+            codedOutputStreamMicro.writeInt32(8, getError());
+        }
+        if (hasMore()) {
+            codedOutputStreamMicro.writeInt32(9, getMore());
+        }
+        if (hasIndustry()) {
+            codedOutputStreamMicro.writeString(10, getIndustry());
+        }
+        if (hasTotalCount()) {
+            codedOutputStreamMicro.writeInt32(12, getTotalCount());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/BzList.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -4,193 +4,134 @@ import com.google.zxing.Binarizer;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.NotFoundException;
 
-public class GlobalHistogramBinarizer
-  extends Binarizer
-{
-  private static final int LUMINANCE_BITS = 5;
-  private static final int LUMINANCE_BUCKETS = 32;
-  private static final int LUMINANCE_SHIFT = 3;
-  private final int[] buckets = new int[32];
-  private byte[] luminances = new byte[0];
-  
-  public GlobalHistogramBinarizer(LuminanceSource paramLuminanceSource)
-  {
-    super(paramLuminanceSource);
-  }
-  
-  private static int estimateBlackPoint(int[] paramArrayOfInt)
-    throws NotFoundException
-  {
-    int i3 = paramArrayOfInt.length;
-    int m = 0;
-    int i = 0;
-    int n = 0;
-    int j = 0;
-    int i1;
-    while (j < i3)
-    {
-      k = n;
-      if (paramArrayOfInt[j] > n)
-      {
-        i = j;
-        k = paramArrayOfInt[j];
-      }
-      i1 = m;
-      if (paramArrayOfInt[j] > m) {
-        i1 = paramArrayOfInt[j];
-      }
-      j += 1;
-      n = k;
-      m = i1;
+public class GlobalHistogramBinarizer extends Binarizer {
+    private static final int LUMINANCE_BITS = 5;
+    private static final int LUMINANCE_BUCKETS = 32;
+    private static final int LUMINANCE_SHIFT = 3;
+    private final int[] buckets = new int[32];
+    private byte[] luminances = new byte[0];
+
+    public GlobalHistogramBinarizer(LuminanceSource source) {
+        super(source);
     }
-    j = 0;
-    n = 0;
-    int k = 0;
-    while (k < i3)
-    {
-      i1 = k - i;
-      i2 = paramArrayOfInt[k] * i1 * i1;
-      i1 = n;
-      if (i2 > n)
-      {
-        j = k;
-        i1 = i2;
-      }
-      k += 1;
-      n = i1;
-    }
-    n = i;
-    k = j;
-    if (i > j)
-    {
-      k = i;
-      n = j;
-    }
-    if (k - n <= i3 >> 4) {
-      throw NotFoundException.getNotFoundInstance();
-    }
-    int i2 = k - 1;
-    j = -1;
-    i = k - 1;
-    while (i > n)
-    {
-      i1 = i - n;
-      i3 = i1 * i1 * (k - i) * (m - paramArrayOfInt[i]);
-      i1 = j;
-      if (i3 > j)
-      {
-        i2 = i;
-        i1 = i3;
-      }
-      i -= 1;
-      j = i1;
-    }
-    return i2 << 3;
-  }
-  
-  private void initArrays(int paramInt)
-  {
-    if (this.luminances.length < paramInt) {
-      this.luminances = new byte[paramInt];
-    }
-    paramInt = 0;
-    while (paramInt < 32)
-    {
-      this.buckets[paramInt] = 0;
-      paramInt += 1;
-    }
-  }
-  
-  public Binarizer createBinarizer(LuminanceSource paramLuminanceSource)
-  {
-    return new GlobalHistogramBinarizer(paramLuminanceSource);
-  }
-  
-  public BitMatrix getBlackMatrix()
-    throws NotFoundException
-  {
-    Object localObject = getLuminanceSource();
-    int k = ((LuminanceSource)localObject).getWidth();
-    int m = ((LuminanceSource)localObject).getHeight();
-    BitMatrix localBitMatrix = new BitMatrix(k, m);
-    initArrays(k);
-    int[] arrayOfInt = this.buckets;
-    int i = 1;
-    int j;
-    while (i < 5)
-    {
-      byte[] arrayOfByte = ((LuminanceSource)localObject).getRow(m * i / 5, this.luminances);
-      n = (k << 2) / 5;
-      j = k / 5;
-      while (j < n)
-      {
-        int i1 = (arrayOfByte[j] & 0xFF) >> 3;
-        arrayOfInt[i1] += 1;
-        j += 1;
-      }
-      i += 1;
-    }
-    int n = estimateBlackPoint(arrayOfInt);
-    localObject = ((LuminanceSource)localObject).getMatrix();
-    i = 0;
-    while (i < m)
-    {
-      j = 0;
-      while (j < k)
-      {
-        if ((localObject[(i * k + j)] & 0xFF) < n) {
-          localBitMatrix.set(j, i);
+
+    public BitArray getBlackRow(int y, BitArray row) throws NotFoundException {
+        int x;
+        LuminanceSource source = getLuminanceSource();
+        int width = source.getWidth();
+        if (row == null || row.getSize() < width) {
+            row = new BitArray(width);
+        } else {
+            row.clear();
         }
-        j += 1;
-      }
-      i += 1;
+        initArrays(width);
+        byte[] localLuminances = source.getRow(y, this.luminances);
+        int[] localBuckets = this.buckets;
+        for (x = 0; x < width; x++) {
+            int i = (localLuminances[x] & 255) >> 3;
+            localBuckets[i] = localBuckets[i] + 1;
+        }
+        int blackPoint = estimateBlackPoint(localBuckets);
+        int left = localLuminances[0] & 255;
+        int center = localLuminances[1] & 255;
+        for (x = 1; x < width - 1; x++) {
+            int right = localLuminances[x + 1] & 255;
+            if (((((center << 2) - left) - right) >> 1) < blackPoint) {
+                row.set(x);
+            }
+            left = center;
+            center = right;
+        }
+        return row;
     }
-    return localBitMatrix;
-  }
-  
-  public BitArray getBlackRow(int paramInt, BitArray paramBitArray)
-    throws NotFoundException
-  {
-    Object localObject = getLuminanceSource();
-    int m = ((LuminanceSource)localObject).getWidth();
-    if ((paramBitArray == null) || (paramBitArray.getSize() < m)) {
-      paramBitArray = new BitArray(m);
+
+    public BitMatrix getBlackMatrix() throws NotFoundException {
+        int y;
+        byte[] localLuminances;
+        LuminanceSource source = getLuminanceSource();
+        int width = source.getWidth();
+        int height = source.getHeight();
+        BitMatrix matrix = new BitMatrix(width, height);
+        initArrays(width);
+        int[] localBuckets = this.buckets;
+        for (y = 1; y < 5; y++) {
+            int x;
+            localLuminances = source.getRow((height * y) / 5, this.luminances);
+            int right = (width << 2) / 5;
+            for (x = width / 5; x < right; x++) {
+                int i = (localLuminances[x] & 255) >> 3;
+                localBuckets[i] = localBuckets[i] + 1;
+            }
+        }
+        int blackPoint = estimateBlackPoint(localBuckets);
+        localLuminances = source.getMatrix();
+        for (y = 0; y < height; y++) {
+            int offset = y * width;
+            for (x = 0; x < width; x++) {
+                if ((localLuminances[offset + x] & 255) < blackPoint) {
+                    matrix.set(x, y);
+                }
+            }
+        }
+        return matrix;
     }
-    int[] arrayOfInt;
-    for (;;)
-    {
-      initArrays(m);
-      localObject = ((LuminanceSource)localObject).getRow(paramInt, this.luminances);
-      arrayOfInt = this.buckets;
-      paramInt = 0;
-      while (paramInt < m)
-      {
-        i = (localObject[paramInt] & 0xFF) >> 3;
-        arrayOfInt[i] += 1;
-        paramInt += 1;
-      }
-      paramBitArray.clear();
+
+    public Binarizer createBinarizer(LuminanceSource source) {
+        return new GlobalHistogramBinarizer(source);
     }
-    int n = estimateBlackPoint(arrayOfInt);
-    int j = localObject[0] & 0xFF;
-    paramInt = localObject[1] & 0xFF;
-    int i = 1;
-    while (i < m - 1)
-    {
-      int k = localObject[(i + 1)] & 0xFF;
-      if ((paramInt << 2) - j - k >> 1 < n) {
-        paramBitArray.set(i);
-      }
-      j = paramInt;
-      paramInt = k;
-      i += 1;
+
+    private void initArrays(int luminanceSize) {
+        if (this.luminances.length < luminanceSize) {
+            this.luminances = new byte[luminanceSize];
+        }
+        for (int x = 0; x < 32; x++) {
+            this.buckets[x] = 0;
+        }
     }
-    return paramBitArray;
-  }
+
+    private static int estimateBlackPoint(int[] buckets) throws NotFoundException {
+        int x;
+        int numBuckets = buckets.length;
+        int maxBucketCount = 0;
+        int firstPeak = 0;
+        int firstPeakSize = 0;
+        for (x = 0; x < numBuckets; x++) {
+            if (buckets[x] > firstPeakSize) {
+                firstPeak = x;
+                firstPeakSize = buckets[x];
+            }
+            if (buckets[x] > maxBucketCount) {
+                maxBucketCount = buckets[x];
+            }
+        }
+        int secondPeak = 0;
+        int secondPeakScore = 0;
+        for (x = 0; x < numBuckets; x++) {
+            int distanceToBiggest = x - firstPeak;
+            int score = (buckets[x] * distanceToBiggest) * distanceToBiggest;
+            if (score > secondPeakScore) {
+                secondPeak = x;
+                secondPeakScore = score;
+            }
+        }
+        if (firstPeak > secondPeak) {
+            int temp = firstPeak;
+            firstPeak = secondPeak;
+            secondPeak = temp;
+        }
+        if (secondPeak - firstPeak <= (numBuckets >> 4)) {
+            throw NotFoundException.getNotFoundInstance();
+        }
+        int bestValley = secondPeak - 1;
+        int bestValleyScore = -1;
+        for (x = secondPeak - 1; x > firstPeak; x--) {
+            int fromFirst = x - firstPeak;
+            score = ((fromFirst * fromFirst) * (secondPeak - x)) * (maxBucketCount - buckets[x]);
+            if (score > bestValleyScore) {
+                bestValley = x;
+                bestValleyScore = score;
+            }
+        }
+        return bestValley << 3;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/common/GlobalHistogramBinarizer.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

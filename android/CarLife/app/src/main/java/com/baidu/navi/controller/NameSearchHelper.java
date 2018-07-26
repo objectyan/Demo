@@ -3,21 +3,24 @@ package com.baidu.navi.controller;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import com.baidu.carlife.C0965R;
 import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.a;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.k;
-import com.baidu.carlife.core.screen.BaseDialog.a;
-import com.baidu.carlife.core.screen.b;
-import com.baidu.carlife.core.screen.presentation.a.e;
-import com.baidu.carlife.core.screen.presentation.h;
-import com.baidu.carlife.logic.voice.n;
-import com.baidu.carlife.view.dialog.c;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.carlife.core.screen.BaseDialog.C1265a;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.core.screen.presentation.p071a.C1307e;
+import com.baidu.carlife.logic.voice.C1912n;
+import com.baidu.carlife.view.dialog.C1953c;
 import com.baidu.navi.fragment.BaseFragment;
+import com.baidu.navi.fragment.ContentFragmentManager;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandController;
-import com.baidu.navisdk.logic.ReqData;
+import com.baidu.navisdk.logic.CommandConst;
 import com.baidu.navisdk.logic.RspData;
 import com.baidu.navisdk.model.GeoLocateModel;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
@@ -32,482 +35,421 @@ import com.baidu.navisdk.util.common.NetworkUtils;
 import com.baidu.navisdk.util.db.model.SearchNameHistroyModel;
 import com.baidu.navisdk.util.logic.BNLocationManagerProxy;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
-import java.util.HashMap;
 import java.util.List;
 
-public final class NameSearchHelper
-{
-  public static final String BUNDLE_KEY_INCOMING_TYPE = "incoming_type";
-  public static final String BUNDLE_KEY_POI_CENTER_MODE = "poi_center_mode";
-  public static final int INCOMING_CARLIFE_MAP_PAGE = 6;
-  public static final int INCOMING_INTENT_API_COMMAND = 4;
-  public static final int INCOMING_MORE_CATALOG_SEARCH = 1;
-  public static final int INCOMING_NAME_SEARCH = 2;
-  public static final int INCOMING_REMAIN_OIL_COMMAND = 5;
-  public static final int INCOMING_ROUTE_PLAN_NODE_PAGE = 7;
-  public static final int INCOMING_VOICE_COMMAND = 3;
-  private static final NameSearchHelper INSTANCE = new NameSearchHelper();
-  private static final String TAG = "PoiSearch";
-  private h fragmentManagerCallbackProxy;
-  private boolean hasData = false;
-  private CarlifeActivity mActivity;
-  private BaseFragment mBaseFragment;
-  private GeoPoint mCurrentGeoPoint;
-  private SearchPoi mCurrentPoi;
-  private c mDeleteAlertDlg = null;
-  private DistrictInfo mDistrictInfo;
-  private Handler mHandler = new Handler()
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      RspData localRspData = (RspData)paramAnonymousMessage.obj;
-      SearchPoiPager localSearchPoiPager;
-      if (paramAnonymousMessage.what == 1005)
-      {
-        e.a().c();
-        localSearchPoiPager = (SearchPoiPager)localRspData.mData;
-        if (localSearchPoiPager != null) {
-          break label151;
+public final class NameSearchHelper {
+    public static final String BUNDLE_KEY_INCOMING_TYPE = "incoming_type";
+    public static final String BUNDLE_KEY_POI_CENTER_MODE = "poi_center_mode";
+    public static final int INCOMING_CARLIFE_MAP_PAGE = 6;
+    public static final int INCOMING_INTENT_API_COMMAND = 4;
+    public static final int INCOMING_MORE_CATALOG_SEARCH = 1;
+    public static final int INCOMING_NAME_SEARCH = 2;
+    public static final int INCOMING_REMAIN_OIL_COMMAND = 5;
+    public static final int INCOMING_ROUTE_PLAN_NODE_PAGE = 7;
+    public static final int INCOMING_VOICE_COMMAND = 3;
+    private static final NameSearchHelper INSTANCE = new NameSearchHelper();
+    private static final String TAG = "PoiSearch";
+    private C1328h fragmentManagerCallbackProxy;
+    private boolean hasData = false;
+    private CarlifeActivity mActivity;
+    private BaseFragment mBaseFragment;
+    private GeoPoint mCurrentGeoPoint;
+    private SearchPoi mCurrentPoi;
+    private C1953c mDeleteAlertDlg = null;
+    private DistrictInfo mDistrictInfo;
+    private Handler mHandler = new C37111();
+    private boolean mIsFromVoice;
+    private boolean mIsPoiSearchMod = false;
+    private int mModuleFrom;
+    private C0672b mSearchDialogCancelListener = new C37144();
+    private String mSearchKey;
+    private int netMode = 3;
+
+    /* renamed from: com.baidu.navi.controller.NameSearchHelper$1 */
+    class C37111 extends Handler {
+        C37111() {
         }
-        if ((NameSearchHelper.this.netMode != 1) || (!NameSearchHelper.this.hasData)) {
-          break label91;
-        }
-        paramAnonymousMessage = (SearchPoiPager)localRspData.mReq.mParams.get("param.search.pager");
-        NameSearchHelper.this.handleTimeout(paramAnonymousMessage);
-        NameSearchHelper.access$102(NameSearchHelper.this, false);
-      }
-      for (;;)
-      {
-        return;
-        label91:
-        LogUtil.e("PoiSearch", "search with pager fail");
-        if (NameSearchHelper.this.mIsFromVoice == true) {
-          BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-        }
-        TipTool.onCreateToastDialog(NameSearchHelper.this.mActivity, 2131298915);
-        if (n.a().l())
-        {
-          k.b(4162);
-          return;
-          label151:
-          localSearchPoiPager.setNetMode(BNPoiSearcher.getInstance().getNetModeOfLastResult());
-          switch (localSearchPoiPager.getSearchType())
-          {
-          }
-          while ((NameSearchHelper.this.mIsFromVoice == true) && (paramAnonymousMessage.arg1 != 0))
-          {
-            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-            return;
-            if (paramAnonymousMessage.arg1 == 0)
-            {
-              LogUtil.e("PoiSearch", "onSearchCatalogSucc()");
-              NameSearchHelper.this.handleSpaceCatalogSearchSuc(localSearchPoiPager);
-              k.b(4160);
-            }
-            else
-            {
-              LogUtil.e("PoiSearch", "Space Search fail");
-              TipTool.onCreateToastDialog(NameSearchHelper.this.mActivity, 2131298918);
-              continue;
-              if (paramAnonymousMessage.arg1 == 0)
-              {
-                NameSearchHelper.this.handleNameSearchSuc(localSearchPoiPager);
-                k.b(4160);
-              }
-              else
-              {
-                LogUtil.e("PoiSearch", "Name Search fail");
-                TipTool.onCreateToastDialog(NameSearchHelper.this.mActivity, 2131298915);
-                if (n.a().l())
-                {
-                  k.b(4162);
-                  continue;
-                  if (paramAnonymousMessage.arg1 == 0)
-                  {
-                    LogUtil.e("PoiSearch", "onSearchCatalogSucc()");
-                    NameSearchHelper.this.handleSpaceKeySearchSuc(localSearchPoiPager);
-                    k.b(4160);
-                    return;
-                  }
-                  LogUtil.e("PoiSearch", "Space Search fail");
-                  TipTool.onCreateToastDialog(NameSearchHelper.this.mActivity, 2131298915);
-                  if (n.a().l()) {
-                    k.b(4162);
-                  }
+
+        public void handleMessage(Message msg) {
+            RspData rsp = msg.obj;
+            if (msg.what == 1005) {
+                C1307e.a().c();
+                SearchPoiPager searchPoiPager = rsp.mData;
+                if (searchPoiPager != null) {
+                    searchPoiPager.setNetMode(BNPoiSearcher.getInstance().getNetModeOfLastResult());
+                    switch (searchPoiPager.getSearchType()) {
+                        case 1:
+                            if (msg.arg1 != 0) {
+                                LogUtil.m15791e("PoiSearch", "Name Search fail");
+                                TipTool.onCreateToastDialog(NameSearchHelper.this.mActivity, (int) C0965R.string.search_result_toast_failed);
+                                if (C1912n.a().l()) {
+                                    C1261k.b(4162);
+                                    break;
+                                }
+                            }
+                            NameSearchHelper.this.handleNameSearchSuc(searchPoiPager);
+                            C1261k.b(4160);
+                            break;
+                            break;
+                        case 3:
+                            if (msg.arg1 != 0) {
+                                LogUtil.m15791e("PoiSearch", "Space Search fail");
+                                TipTool.onCreateToastDialog(NameSearchHelper.this.mActivity, (int) C0965R.string.search_result_toast_failed);
+                                if (C1912n.a().l()) {
+                                    C1261k.b(4162);
+                                    break;
+                                }
+                            }
+                            LogUtil.m15791e("PoiSearch", "onSearchCatalogSucc()");
+                            NameSearchHelper.this.handleSpaceKeySearchSuc(searchPoiPager);
+                            C1261k.b(4160);
+                            return;
+                            break;
+                        case 5:
+                            if (msg.arg1 != 0) {
+                                LogUtil.m15791e("PoiSearch", "Space Search fail");
+                                TipTool.onCreateToastDialog(NameSearchHelper.this.mActivity, (int) C0965R.string.search_space_result_failed);
+                                break;
+                            }
+                            LogUtil.m15791e("PoiSearch", "onSearchCatalogSucc()");
+                            NameSearchHelper.this.handleSpaceCatalogSearchSuc(searchPoiPager);
+                            C1261k.b(4160);
+                            break;
+                    }
+                    if (NameSearchHelper.this.mIsFromVoice && msg.arg1 != 0) {
+                        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+                    }
+                } else if (NameSearchHelper.this.netMode == 1 && NameSearchHelper.this.hasData) {
+                    NameSearchHelper.this.handleTimeout((SearchPoiPager) rsp.mReq.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_PAGER));
+                    NameSearchHelper.this.hasData = false;
+                } else {
+                    LogUtil.m15791e("PoiSearch", "search with pager fail");
+                    if (NameSearchHelper.this.mIsFromVoice) {
+                        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+                    }
+                    TipTool.onCreateToastDialog(NameSearchHelper.this.mActivity, (int) C0965R.string.search_result_toast_failed);
+                    if (C1912n.a().l()) {
+                        C1261k.b(4162);
+                    }
                 }
-              }
             }
-          }
         }
-      }
     }
-  };
-  private boolean mIsFromVoice;
-  private boolean mIsPoiSearchMod = false;
-  private int mModuleFrom;
-  private b mSearchDialogCancelListener = new b()
-  {
-    public void onClick()
-    {
-      BNPoiSearcher.getInstance().cancelQuery();
-      k.b(4165);
-    }
-  };
-  private String mSearchKey;
-  private int netMode = 3;
-  
-  public static NameSearchHelper getInstance()
-  {
-    return INSTANCE;
-  }
-  
-  private void handleNameSearchSuc(SearchPoiPager paramSearchPoiPager)
-  {
-    i.b("PoiSearch", "handleNameSearchSuc");
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("search_type", 17);
-    handleSearchSuc(paramSearchPoiPager, localBundle);
-  }
-  
-  private void handleSearchSuc(SearchPoiPager paramSearchPoiPager, Bundle paramBundle)
-  {
-    Object localObject = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSearchPoiPagerList();
-    if (((List)localObject).size() != 1) {
-      resultEmpty(paramSearchPoiPager);
-    }
-    do
-    {
-      return;
-      localObject = ((SearchPoiPager)((List)localObject).get(0)).getPoiList();
-      if ((localObject == null) || (((List)localObject).size() == 0))
-      {
-        resultEmpty(paramSearchPoiPager);
-        return;
-      }
-      SearchNameHistroyModel.getInstance().addSearchName(paramSearchPoiPager.getSearchKey());
-      paramBundle.putString("search_key", paramSearchPoiPager.getSearchKey());
-      paramBundle.putInt("district_id", this.mDistrictInfo.mId);
-      paramBundle.putInt("search_mode", this.netMode);
-      paramBundle.putInt("module_from", this.mModuleFrom);
-      if (this.mIsPoiSearchMod) {
-        paramBundle.putBoolean("poi_center_mode", true);
-      }
-      if (this.mIsFromVoice) {
-        paramBundle.putInt("incoming_type", 35);
-      }
-    } while (!isActivityEnable());
-    this.fragmentManagerCallbackProxy.showFragment(35, paramBundle);
-  }
-  
-  private void handleSpaceCatalogSearchSuc(SearchPoiPager paramSearchPoiPager)
-  {
-    i.b("PoiSearch", "handleSpaceCatalogSearchSuc");
-    Object localObject = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSearchPoiPagerList();
-    if (((List)localObject).size() != 1) {
-      resultEmpty(paramSearchPoiPager);
-    }
-    do
-    {
-      return;
-      localObject = ((SearchPoiPager)((List)localObject).get(0)).getPoiList();
-      if ((localObject == null) || (((List)localObject).size() == 0))
-      {
-        resultEmpty(paramSearchPoiPager);
-        return;
-      }
-      SearchNameHistroyModel.getInstance().addSearchName(paramSearchPoiPager.getSearchKey());
-      paramSearchPoiPager = null;
-      if (0 == 0) {
-        paramSearchPoiPager = new Bundle();
-      }
-      if (this.mIsPoiSearchMod) {
-        paramSearchPoiPager.putBoolean("poi_center_mode", true);
-      }
-      paramSearchPoiPager.putString("search_key", this.mSearchKey);
-      paramSearchPoiPager.putInt("search_mode", this.netMode);
-      if (paramSearchPoiPager.getInt("incoming_type") != 5) {
-        paramSearchPoiPager.putInt("incoming_type", 33);
-      }
-      paramSearchPoiPager.putInt("incoming_type", 33);
-      paramSearchPoiPager.putInt("search_type", 19);
-      paramSearchPoiPager.putInt("district_id", this.mDistrictInfo.mId);
-    } while (!isActivityEnable());
-    this.fragmentManagerCallbackProxy.showFragment(35, paramSearchPoiPager);
-  }
-  
-  private void handleSpaceKeySearchSuc(SearchPoiPager paramSearchPoiPager)
-  {
-    i.b("PoiSearch", "handleSpaceKeySearchSuc");
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("search_type", 18);
-    handleSearchSuc(paramSearchPoiPager, localBundle);
-  }
-  
-  private void handleTimeout(SearchPoiPager paramSearchPoiPager)
-  {
-    if ((this.hasData) && (this.netMode == 1))
-    {
-      this.netMode = 0;
-      if (paramSearchPoiPager != null)
-      {
-        paramSearchPoiPager.setNetMode(this.netMode);
-        BNPoiSearcher.getInstance().asynSearchWithPager(paramSearchPoiPager, this.mHandler);
-        e.a().a(a.a().getString(2131296861), this.mSearchDialogCancelListener);
-      }
-    }
-    do
-    {
-      return;
-      if (this.mIsFromVoice == true) {
-        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-      }
-      TipTool.onCreateToastDialog(this.mActivity, 2131298915);
-    } while (!n.a().l());
-    k.b(4162);
-  }
-  
-  private void init(CarlifeActivity paramCarlifeActivity, BaseFragment paramBaseFragment, String paramString, int paramInt, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    this.mActivity = paramCarlifeActivity;
-    this.mBaseFragment = paramBaseFragment;
-    this.mSearchKey = paramString;
-    this.mModuleFrom = paramInt;
-    this.mIsFromVoice = paramBoolean1;
-    this.mIsPoiSearchMod = paramBoolean2;
-    this.netMode = 3;
-    this.hasData = false;
-    this.mCurrentGeoPoint = null;
-    this.fragmentManagerCallbackProxy = h.a();
-    if (paramBoolean2) {}
-    for (this.mCurrentPoi = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSpaceSearchPoi();; this.mCurrentPoi = null)
-    {
-      this.mDistrictInfo = GeoLocateModel.getInstance().getDistrictByManMade();
-      if (this.mDistrictInfo == null) {
-        this.mDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
-      }
-      SearchStrategyHelper.getInstance(paramCarlifeActivity.getBaseContext()).reloadSearchEngine();
-      return;
-    }
-  }
-  
-  private boolean isActivityEnable()
-  {
-    return (this.mActivity != null) && (!this.mActivity.isFinishing());
-  }
-  
-  private void nameSearch(String paramString)
-  {
-    if (SearchStrategyHelper.getInstance(this.mActivity).checkCanSearchByNetMode(this.netMode))
-    {
-      paramString = new SearchPoiPager(paramString, this.mDistrictInfo, 10, this.netMode);
-      e.a().a(a.a().getString(2131296861), this.mSearchDialogCancelListener);
-      BNPoiSearcher.getInstance().asynSearchWithPager(paramString, this.mHandler);
-    }
-    while (this.mIsFromVoice != true) {
-      return;
-    }
-    BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-  }
-  
-  private boolean resultEmpty(final SearchPoiPager paramSearchPoiPager)
-  {
-    if ((this.netMode == 0) && (this.hasData)) {
-      showTwoBtnDialog(2131298914, new b()new b
-      {
-        public void onClick()
-        {
-          NameSearchHelper.this.dismissTwoBtnDialog();
-          NameSearchHelper.access$002(NameSearchHelper.this, 1);
-          if (SearchStrategyHelper.getInstance(NameSearchHelper.this.mActivity).checkCanSearchByNetMode(NameSearchHelper.this.netMode))
-          {
-            paramSearchPoiPager.setNetMode(NameSearchHelper.this.netMode);
-            BNPoiSearcher.getInstance().asynSearchWithPager(paramSearchPoiPager, NameSearchHelper.this.mHandler);
-            e.a().a(a.a().getString(2131296861), NameSearchHelper.this.mSearchDialogCancelListener);
-          }
+
+    /* renamed from: com.baidu.navi.controller.NameSearchHelper$3 */
+    class C37133 implements C0672b {
+        C37133() {
         }
-      }, new b()
-      {
-        public void onClick()
-        {
-          NameSearchHelper.this.dismissTwoBtnDialog();
+
+        public void onClick() {
+            NameSearchHelper.this.dismissTwoBtnDialog();
         }
-      });
     }
-    do
-    {
-      return true;
-      if (this.netMode == 1)
-      {
-        if (this.hasData)
-        {
-          this.hasData = false;
-          this.netMode = 0;
-          paramSearchPoiPager.setNetMode(this.netMode);
-          BNPoiSearcher.getInstance().asynSearchWithPager(paramSearchPoiPager, this.mHandler);
+
+    /* renamed from: com.baidu.navi.controller.NameSearchHelper$4 */
+    class C37144 implements C0672b {
+        C37144() {
         }
-        for (;;)
-        {
-          return false;
-          if (this.mIsFromVoice == true) {
-            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-          }
-          if (NetworkUtils.isNetworkAvailable(this.mActivity))
-          {
-            TipTool.onCreateToastDialog(this.mActivity, 2131298915);
-            if (n.a().l()) {
-              k.b(4162);
-            }
-          }
-          else
-          {
-            TipTool.onCreateToastDialog(this.mActivity, 2131298924);
-            if (n.a().l()) {
-              k.b(4162);
-            }
-          }
+
+        public void onClick() {
+            BNPoiSearcher.getInstance().cancelQuery();
+            C1261k.b(4165);
         }
-      }
-      if (this.mIsFromVoice == true) {
-        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-      }
-      TipTool.onCreateToastDialog(this.mActivity, 2131298915);
-    } while (!n.a().l());
-    k.b(4162);
-    return true;
-  }
-  
-  private void searchSpace(int paramInt)
-  {
-    Object localObject = new SearchCircle(this.mCurrentGeoPoint, 5000);
-    if (SearchStrategyHelper.getInstance(this.mActivity).checkCanSearchByNetMode(this.netMode))
-    {
-      localObject = new SearchPoiPager(paramInt, this.mDistrictInfo, (SearchCircle)localObject, 10, this.netMode);
-      e.a().a(a.a().getString(2131296861), this.mSearchDialogCancelListener);
-      BNPoiSearcher.getInstance().asynSearchWithPager((SearchPoiPager)localObject, this.mHandler);
     }
-    while (this.mIsFromVoice != true) {
-      return;
+
+    private NameSearchHelper() {
     }
-    BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-  }
-  
-  private void searchSpace(String paramString)
-  {
-    SearchCircle localSearchCircle = new SearchCircle(this.mCurrentGeoPoint, 5000);
-    if (SearchStrategyHelper.getInstance(this.mActivity).checkCanSearchByNetMode(this.netMode))
-    {
-      paramString = new SearchPoiPager(paramString, this.mDistrictInfo, localSearchCircle, 10, this.netMode);
-      e.a().a(a.a().getString(2131296861), this.mSearchDialogCancelListener);
-      BNPoiSearcher.getInstance().asynSearchWithPager(paramString, this.mHandler);
+
+    public static NameSearchHelper getInstance() {
+        return INSTANCE;
     }
-    while (this.mIsFromVoice != true) {
-      return;
-    }
-    BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-  }
-  
-  private void trySearchId(int paramInt)
-  {
-    this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
-    if ((!BNLocationManagerProxy.getInstance().isLocationValid()) && (!this.mIsPoiSearchMod))
-    {
-      if (this.mIsFromVoice == true) {
-        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-      }
-      TipTool.onCreateToastDialog(this.mActivity, 2131298923);
-      return;
-    }
-    if ((this.mIsPoiSearchMod) && (this.mCurrentPoi != null)) {
-      this.mCurrentGeoPoint = this.mCurrentPoi.mViewPoint;
-    }
-    this.netMode = SearchStrategyHelper.getInstance(this.mActivity).getNetModeByPoint(this.mCurrentGeoPoint);
-    BNSettingManager.getPrefSearchMode();
-    this.netMode = getFinalNetMode(this.netMode);
-    searchSpace(paramInt);
-  }
-  
-  private void trySearchKey(String paramString)
-  {
-    this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
-    if ((!BNLocationManagerProxy.getInstance().isLocationValid()) && (!this.mIsPoiSearchMod))
-    {
-      if (this.mIsFromVoice == true) {
-        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-      }
-      TipTool.onCreateToastDialog(this.mActivity, 2131298923);
-      return;
-    }
-    if ((this.mIsPoiSearchMod) && (this.mCurrentPoi != null)) {
-      this.mCurrentGeoPoint = this.mCurrentPoi.mViewPoint;
-    }
-    this.netMode = SearchStrategyHelper.getInstance(this.mActivity).getNetModeByPoint(this.mCurrentGeoPoint);
-    BNSettingManager.getPrefSearchMode();
-    this.netMode = getFinalNetMode(this.netMode);
-    if (this.mIsPoiSearchMod)
-    {
-      searchSpace(paramString);
-      return;
-    }
-    nameSearch(paramString);
-  }
-  
-  public boolean dismissTwoBtnDialog()
-  {
-    this.mBaseFragment.dismissDialog(this.mDeleteAlertDlg);
-    this.mDeleteAlertDlg = null;
-    return true;
-  }
-  
-  public int getFinalNetMode(int paramInt)
-  {
-    int i = BNSettingManager.getPrefSearchMode();
-    if (paramInt == 0) {
-      this.hasData = true;
-    }
-    while (i == 2) {
-      if (this.hasData)
-      {
-        return 0;
+
+    private void init(CarlifeActivity activity, BaseFragment fragment, String searchKey, int moduleFrom, boolean isFromVoice, boolean isPoiSearchMod) {
+        this.mActivity = activity;
+        this.mBaseFragment = fragment;
+        this.mSearchKey = searchKey;
+        this.mModuleFrom = moduleFrom;
+        this.mIsFromVoice = isFromVoice;
+        this.mIsPoiSearchMod = isPoiSearchMod;
+        this.netMode = 3;
         this.hasData = false;
-      }
-      else
-      {
-        return 1;
-      }
+        this.mCurrentGeoPoint = null;
+        this.fragmentManagerCallbackProxy = C1328h.a();
+        if (isPoiSearchMod) {
+            this.mCurrentPoi = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSpaceSearchPoi();
+        } else {
+            this.mCurrentPoi = null;
+        }
+        this.mDistrictInfo = GeoLocateModel.getInstance().getDistrictByManMade();
+        if (this.mDistrictInfo == null) {
+            this.mDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
+        }
+        SearchStrategyHelper.getInstance(activity.getBaseContext()).reloadSearchEngine();
     }
-    if ((!NetworkUtils.isNetworkAvailable(this.mActivity)) && (this.hasData)) {
-      return 0;
+
+    public void search(CarlifeActivity activity, BaseFragment fragment, String searchKey, int searchId, int moduleFrom, boolean isFromVoice, boolean isPoiSearchMod) {
+        init(AddressSettingModel, fragment, searchKey, moduleFrom, isFromVoice, isPoiSearchMod);
+        trySearchId(searchId);
     }
-    return 1;
-  }
-  
-  public void search(CarlifeActivity paramCarlifeActivity, BaseFragment paramBaseFragment, String paramString, int paramInt1, int paramInt2, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    init(paramCarlifeActivity, paramBaseFragment, paramString, paramInt2, paramBoolean1, paramBoolean2);
-    trySearchId(paramInt1);
-  }
-  
-  public void search(CarlifeActivity paramCarlifeActivity, BaseFragment paramBaseFragment, String paramString, int paramInt, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    init(paramCarlifeActivity, paramBaseFragment, paramString, paramInt, paramBoolean1, paramBoolean2);
-    trySearchKey(paramString);
-  }
-  
-  public void showTwoBtnDialog(int paramInt, b paramb1, b paramb2)
-  {
-    dismissTwoBtnDialog();
-    if (this.mDeleteAlertDlg == null)
-    {
-      this.mDeleteAlertDlg = new c(this.mActivity).a(paramInt).g(17).c(2131296264).q().d(2131296259);
-      this.mDeleteAlertDlg.b(paramb1);
-      this.mDeleteAlertDlg.a(paramb2);
+
+    public void search(CarlifeActivity activity, BaseFragment fragment, String searchKey, int moduleFrom, boolean isFromVoice, boolean isPoiSearchMod) {
+        init(activity, fragment, searchKey, moduleFrom, isFromVoice, isPoiSearchMod);
+        trySearchKey(searchKey);
     }
-    this.mBaseFragment.showDialog(this.mDeleteAlertDlg, BaseDialog.a.a);
-  }
+
+    private void trySearchId(int searchId) {
+        this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
+        if (BNLocationManagerProxy.getInstance().isLocationValid() || this.mIsPoiSearchMod) {
+            if (this.mIsPoiSearchMod && this.mCurrentPoi != null) {
+                this.mCurrentGeoPoint = this.mCurrentPoi.mViewPoint;
+            }
+            this.netMode = SearchStrategyHelper.getInstance(this.mActivity).getNetModeByPoint(this.mCurrentGeoPoint);
+            int settingMode = BNSettingManager.getPrefSearchMode();
+            this.netMode = getFinalNetMode(this.netMode);
+            searchSpace(searchId);
+            return;
+        }
+        if (this.mIsFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+        TipTool.onCreateToastDialog(this.mActivity, (int) C0965R.string.space_search_center_error);
+    }
+
+    private void trySearchKey(String searchKey) {
+        this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
+        if (BNLocationManagerProxy.getInstance().isLocationValid() || this.mIsPoiSearchMod) {
+            if (this.mIsPoiSearchMod && this.mCurrentPoi != null) {
+                this.mCurrentGeoPoint = this.mCurrentPoi.mViewPoint;
+            }
+            this.netMode = SearchStrategyHelper.getInstance(this.mActivity).getNetModeByPoint(this.mCurrentGeoPoint);
+            int settingMode = BNSettingManager.getPrefSearchMode();
+            this.netMode = getFinalNetMode(this.netMode);
+            if (this.mIsPoiSearchMod) {
+                searchSpace(searchKey);
+                return;
+            } else {
+                nameSearch(searchKey);
+                return;
+            }
+        }
+        if (this.mIsFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+        TipTool.onCreateToastDialog(this.mActivity, (int) C0965R.string.space_search_center_error);
+    }
+
+    private void searchSpace(int id) {
+        SearchCircle cricle = new SearchCircle(this.mCurrentGeoPoint, 5000);
+        if (SearchStrategyHelper.getInstance(this.mActivity).checkCanSearchByNetMode(this.netMode)) {
+            SearchPoiPager searchPoiPager = new SearchPoiPager(id, this.mDistrictInfo, cricle, 10, this.netMode);
+            C1307e.a().a(C1157a.a().getString(C0965R.string.progress_searching), this.mSearchDialogCancelListener);
+            BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, this.mHandler);
+        } else if (this.mIsFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+    }
+
+    private void searchSpace(String searchKey) {
+        SearchCircle circle = new SearchCircle(this.mCurrentGeoPoint, 5000);
+        if (SearchStrategyHelper.getInstance(this.mActivity).checkCanSearchByNetMode(this.netMode)) {
+            SearchPoiPager searchPoiPager = new SearchPoiPager(searchKey, this.mDistrictInfo, circle, 10, this.netMode);
+            C1307e.a().a(C1157a.a().getString(C0965R.string.progress_searching), this.mSearchDialogCancelListener);
+            BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, this.mHandler);
+        } else if (this.mIsFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+    }
+
+    private void nameSearch(String searchKey) {
+        if (SearchStrategyHelper.getInstance(this.mActivity).checkCanSearchByNetMode(this.netMode)) {
+            SearchPoiPager searchPoiPager = new SearchPoiPager(searchKey, this.mDistrictInfo, 10, this.netMode);
+            C1307e.a().a(C1157a.a().getString(C0965R.string.progress_searching), this.mSearchDialogCancelListener);
+            BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, this.mHandler);
+        } else if (this.mIsFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+    }
+
+    private boolean isActivityEnable() {
+        return (this.mActivity == null || this.mActivity.isFinishing()) ? false : true;
+    }
+
+    public int getFinalNetMode(int mode) {
+        int settingMode = BNSettingManager.getPrefSearchMode();
+        if (mode == 0) {
+            this.hasData = true;
+        } else {
+            this.hasData = false;
+        }
+        if (settingMode == 2) {
+            if (this.hasData) {
+                return 0;
+            }
+            return 1;
+        } else if (NetworkUtils.isNetworkAvailable(this.mActivity) || !this.hasData) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private void handleTimeout(SearchPoiPager searchPoiPager) {
+        if (this.hasData && this.netMode == 1) {
+            this.netMode = 0;
+            if (searchPoiPager != null) {
+                searchPoiPager.setNetMode(this.netMode);
+                BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, this.mHandler);
+                C1307e.a().a(C1157a.a().getString(C0965R.string.progress_searching), this.mSearchDialogCancelListener);
+                return;
+            }
+            return;
+        }
+        if (this.mIsFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+        TipTool.onCreateToastDialog(this.mActivity, (int) C0965R.string.search_result_toast_failed);
+        if (C1912n.a().l()) {
+            C1261k.b(4162);
+        }
+    }
+
+    private void handleSpaceCatalogSearchSuc(SearchPoiPager searchPoiPager) {
+        C1260i.b("PoiSearch", "handleSpaceCatalogSearchSuc");
+        List<SearchPoiPager> searchPoiPagers = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSearchPoiPagerList();
+        if (searchPoiPagers.size() != 1) {
+            resultEmpty(searchPoiPager);
+            return;
+        }
+        List<SearchPoi> poiList = ((SearchPoiPager) searchPoiPagers.get(0)).getPoiList();
+        if (poiList == null || poiList.size() == 0) {
+            resultEmpty(searchPoiPager);
+            return;
+        }
+        SearchNameHistroyModel.getInstance().addSearchName(searchPoiPager.getSearchKey());
+        Bundle bundle = null;
+        if (null == null) {
+            bundle = new Bundle();
+        }
+        if (this.mIsPoiSearchMod) {
+            bundle.putBoolean("poi_center_mode", true);
+        }
+        bundle.putString("search_key", this.mSearchKey);
+        bundle.putInt("search_mode", this.netMode);
+        if (bundle.getInt("incoming_type") != 5) {
+            bundle.putInt("incoming_type", 33);
+        }
+        bundle.putInt("incoming_type", 33);
+        bundle.putInt("search_type", 19);
+        bundle.putInt("district_id", this.mDistrictInfo.mId);
+        if (isActivityEnable()) {
+            this.fragmentManagerCallbackProxy.showFragment(35, bundle);
+        }
+    }
+
+    private boolean resultEmpty(final SearchPoiPager searchPoiPager) {
+        if (this.netMode == 0 && this.hasData) {
+            showTwoBtnDialog(C0965R.string.search_result_empty_offline, new C0672b() {
+                public void onClick() {
+                    NameSearchHelper.this.dismissTwoBtnDialog();
+                    NameSearchHelper.this.netMode = 1;
+                    if (SearchStrategyHelper.getInstance(NameSearchHelper.this.mActivity).checkCanSearchByNetMode(NameSearchHelper.this.netMode)) {
+                        searchPoiPager.setNetMode(NameSearchHelper.this.netMode);
+                        BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, NameSearchHelper.this.mHandler);
+                        C1307e.a().a(C1157a.a().getString(C0965R.string.progress_searching), NameSearchHelper.this.mSearchDialogCancelListener);
+                    }
+                }
+            }, new C37133());
+            return true;
+        } else if (this.netMode == 1) {
+            if (this.hasData) {
+                this.hasData = false;
+                this.netMode = 0;
+                searchPoiPager.setNetMode(this.netMode);
+                BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, this.mHandler);
+            } else {
+                if (this.mIsFromVoice) {
+                    BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+                }
+                if (NetworkUtils.isNetworkAvailable(this.mActivity)) {
+                    TipTool.onCreateToastDialog(this.mActivity, (int) C0965R.string.search_result_toast_failed);
+                    if (C1912n.a().l()) {
+                        C1261k.b(4162);
+                    }
+                } else {
+                    TipTool.onCreateToastDialog(this.mActivity, (int) C0965R.string.space_search_network_unavailable);
+                    if (C1912n.a().l()) {
+                        C1261k.b(4162);
+                    }
+                }
+            }
+            return false;
+        } else {
+            if (this.mIsFromVoice) {
+                BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+            }
+            TipTool.onCreateToastDialog(this.mActivity, (int) C0965R.string.search_result_toast_failed);
+            if (!C1912n.a().l()) {
+                return true;
+            }
+            C1261k.b(4162);
+            return true;
+        }
+    }
+
+    public void showTwoBtnDialog(int contentStr, C0672b confirmListener, C0672b cancleListener) {
+        dismissTwoBtnDialog();
+        if (this.mDeleteAlertDlg == null) {
+            this.mDeleteAlertDlg = new C1953c(this.mActivity).a(contentStr).g(17).c(C0965R.string.alert_confirm).q().d(C0965R.string.alert_cancel);
+            this.mDeleteAlertDlg.b(confirmListener);
+            this.mDeleteAlertDlg.a(cancleListener);
+        }
+        this.mBaseFragment.showDialog(this.mDeleteAlertDlg, C1265a.Center);
+    }
+
+    public boolean dismissTwoBtnDialog() {
+        this.mBaseFragment.dismissDialog(this.mDeleteAlertDlg);
+        this.mDeleteAlertDlg = null;
+        return true;
+    }
+
+    private void handleNameSearchSuc(SearchPoiPager searchPoiPager) {
+        C1260i.b("PoiSearch", "handleNameSearchSuc");
+        Bundle bundle = new Bundle();
+        bundle.putInt("search_type", 17);
+        handleSearchSuc(searchPoiPager, bundle);
+    }
+
+    private void handleSpaceKeySearchSuc(SearchPoiPager searchPoiPager) {
+        C1260i.b("PoiSearch", "handleSpaceKeySearchSuc");
+        Bundle bundle = new Bundle();
+        bundle.putInt("search_type", 18);
+        handleSearchSuc(searchPoiPager, bundle);
+    }
+
+    private void handleSearchSuc(SearchPoiPager searchPoiPager, Bundle bundle) {
+        List<SearchPoiPager> searchPoiPagers = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSearchPoiPagerList();
+        if (searchPoiPagers.size() != 1) {
+            resultEmpty(searchPoiPager);
+            return;
+        }
+        List<SearchPoi> poiList = ((SearchPoiPager) searchPoiPagers.get(0)).getPoiList();
+        if (poiList == null || poiList.size() == 0) {
+            resultEmpty(searchPoiPager);
+            return;
+        }
+        SearchNameHistroyModel.getInstance().addSearchName(searchPoiPager.getSearchKey());
+        bundle.putString("search_key", searchPoiPager.getSearchKey());
+        bundle.putInt("district_id", this.mDistrictInfo.mId);
+        bundle.putInt("search_mode", this.netMode);
+        bundle.putInt(ContentFragmentManager.MODULE_FROM, this.mModuleFrom);
+        if (this.mIsPoiSearchMod) {
+            bundle.putBoolean("poi_center_mode", true);
+        }
+        if (this.mIsFromVoice) {
+            bundle.putInt("incoming_type", 35);
+        }
+        if (isActivityEnable()) {
+            this.fragmentManagerCallbackProxy.showFragment(35, bundle);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/controller/NameSearchHelper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

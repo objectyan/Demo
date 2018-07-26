@@ -6,86 +6,68 @@ import android.os.Build.VERSION;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ExpandableListView;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.AnimationStyle;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Mode;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Orientation;
 import com.baidu.navi.view.pulltorefresh.internal.EmptyViewMethodAccessor;
 
-public class PullToRefreshExpandableListView
-  extends PullToRefreshAdapterViewBase<ExpandableListView>
-{
-  public PullToRefreshExpandableListView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public PullToRefreshExpandableListView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public PullToRefreshExpandableListView(Context paramContext, PullToRefreshBase.Mode paramMode)
-  {
-    super(paramContext, paramMode);
-  }
-  
-  public PullToRefreshExpandableListView(Context paramContext, PullToRefreshBase.Mode paramMode, PullToRefreshBase.AnimationStyle paramAnimationStyle)
-  {
-    super(paramContext, paramMode, paramAnimationStyle);
-  }
-  
-  protected ExpandableListView createRefreshableView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    if (Build.VERSION.SDK_INT >= 9) {}
-    for (paramContext = new InternalExpandableListViewSDK9(paramContext, paramAttributeSet);; paramContext = new InternalExpandableListView(paramContext, paramAttributeSet))
-    {
-      paramContext.setId(16908298);
-      return paramContext;
+public class PullToRefreshExpandableListView extends PullToRefreshAdapterViewBase<ExpandableListView> {
+
+    class InternalExpandableListView extends ExpandableListView implements EmptyViewMethodAccessor {
+        public InternalExpandableListView(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        public void setEmptyView(View emptyView) {
+            PullToRefreshExpandableListView.this.setEmptyView(emptyView);
+        }
+
+        public void setEmptyViewInternal(View emptyView) {
+            super.setEmptyView(emptyView);
+        }
     }
-  }
-  
-  public final PullToRefreshBase.Orientation getPullToRefreshScrollDirection()
-  {
-    return PullToRefreshBase.Orientation.VERTICAL;
-  }
-  
-  class InternalExpandableListView
-    extends ExpandableListView
-    implements EmptyViewMethodAccessor
-  {
-    public InternalExpandableListView(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramAttributeSet);
+
+    @TargetApi(9)
+    final class InternalExpandableListViewSDK9 extends InternalExpandableListView {
+        public InternalExpandableListViewSDK9(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+            boolean returnValue = super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+            OverscrollHelper.overScrollBy(PullToRefreshExpandableListView.this, deltaX, scrollX, deltaY, scrollY, isTouchEvent);
+            return returnValue;
+        }
     }
-    
-    public void setEmptyView(View paramView)
-    {
-      PullToRefreshExpandableListView.this.setEmptyView(paramView);
+
+    public PullToRefreshExpandableListView(Context context) {
+        super(context);
     }
-    
-    public void setEmptyViewInternal(View paramView)
-    {
-      super.setEmptyView(paramView);
+
+    public PullToRefreshExpandableListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-  }
-  
-  @TargetApi(9)
-  final class InternalExpandableListViewSDK9
-    extends PullToRefreshExpandableListView.InternalExpandableListView
-  {
-    public InternalExpandableListViewSDK9(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramContext, paramAttributeSet);
+
+    public PullToRefreshExpandableListView(Context context, Mode mode) {
+        super(context, mode);
     }
-    
-    protected boolean overScrollBy(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, int paramInt6, int paramInt7, int paramInt8, boolean paramBoolean)
-    {
-      boolean bool = super.overScrollBy(paramInt1, paramInt2, paramInt3, paramInt4, paramInt5, paramInt6, paramInt7, paramInt8, paramBoolean);
-      OverscrollHelper.overScrollBy(PullToRefreshExpandableListView.this, paramInt1, paramInt3, paramInt2, paramInt4, paramBoolean);
-      return bool;
+
+    public PullToRefreshExpandableListView(Context context, Mode mode, AnimationStyle style) {
+        super(context, mode, style);
     }
-  }
+
+    public final Orientation getPullToRefreshScrollDirection() {
+        return Orientation.VERTICAL;
+    }
+
+    protected ExpandableListView createRefreshableView(Context context, AttributeSet attrs) {
+        ExpandableListView lv;
+        if (VERSION.SDK_INT >= 9) {
+            lv = new InternalExpandableListViewSDK9(context, attrs);
+        } else {
+            lv = new InternalExpandableListView(context, attrs);
+        }
+        lv.setId(16908298);
+        return lv;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/pulltorefresh/PullToRefreshExpandableListView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

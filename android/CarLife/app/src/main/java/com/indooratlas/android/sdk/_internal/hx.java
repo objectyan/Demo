@@ -1,34 +1,30 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.gm.C5927a;
 import java.io.IOException;
 
-public abstract interface hx
-{
-  public abstract gn a(gm paramgm)
-    throws IOException;
-  
-  public abstract jc a(gk paramgk, long paramLong)
-    throws IOException;
-  
-  public abstract void a();
-  
-  public abstract void a(gk paramgk)
-    throws IOException;
-  
-  public abstract void a(hv paramhv);
-  
-  public abstract void a(ic paramic)
-    throws IOException;
-  
-  public abstract gm.a b()
-    throws IOException;
-  
-  public abstract void c()
-    throws IOException;
+public interface hx {
+    /* renamed from: a */
+    gn m21070a(gm gmVar) throws IOException;
+
+    /* renamed from: a */
+    jc m21071a(gk gkVar, long j) throws IOException;
+
+    /* renamed from: a */
+    void m21072a();
+
+    /* renamed from: a */
+    void m21073a(gk gkVar) throws IOException;
+
+    /* renamed from: a */
+    void m21074a(hv hvVar);
+
+    /* renamed from: a */
+    void m21075a(ic icVar) throws IOException;
+
+    /* renamed from: b */
+    C5927a m21076b() throws IOException;
+
+    /* renamed from: c */
+    void m21077c() throws IOException;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hx.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

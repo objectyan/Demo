@@ -1,10 +1,8 @@
 package com.baidu.navisdk.ui.routeguide.mapmode.subview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AlphaAnimation;
@@ -12,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.routeguide.BNavigator;
 import com.baidu.navisdk.ui.routeguide.model.RGSimpleGuideModel;
 import com.baidu.navisdk.ui.routeguide.subview.OnRGSubViewListener;
@@ -23,240 +22,179 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.listener.BatteryStatusReceiver;
 import com.baidu.navisdk.util.statistic.PerformStatItem;
 
-public class RGMMDeviceStateView
-  extends BNBaseOrientationView
-{
-  private Animation mAnim = null;
-  private BNDigitalClock mBdigClock;
-  private boolean mIsSatelliteIconFlash = false;
-  private ImageView mIvBattery = null;
-  private int mLastSateliteNum = -1;
-  private LinearInterpolator mLinearInterpolator = null;
-  private ImageView mSatelliteIcon = null;
-  private TextView mSatelliteNumTV = null;
-  private TextView mTvBattery = null;
-  private ImageView mVolumeIcon = null;
-  
-  public RGMMDeviceStateView(Context paramContext, ViewGroup paramViewGroup, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext, paramViewGroup, paramOnRGSubViewListener);
-  }
-  
-  private void cancleSatelliteIconAnim()
-  {
-    if ((!PerformStatItem.sIsSatelliteFlashForPerform) || (this.mSatelliteIcon == null)) {
-      return;
+public class RGMMDeviceStateView extends BNBaseOrientationView {
+    private Animation mAnim = null;
+    private BNDigitalClock mBdigClock;
+    private boolean mIsSatelliteIconFlash = false;
+    private ImageView mIvBattery = null;
+    private int mLastSateliteNum = -1;
+    private LinearInterpolator mLinearInterpolator = null;
+    private ImageView mSatelliteIcon = null;
+    private TextView mSatelliteNumTV = null;
+    private TextView mTvBattery = null;
+    private ImageView mVolumeIcon = null;
+
+    public RGMMDeviceStateView(Context c, ViewGroup p, OnRGSubViewListener lis) {
+        super(c, p, lis);
     }
-    this.mSatelliteIcon.clearAnimation();
-    this.mLinearInterpolator = null;
-    this.mAnim = null;
-    this.mIsSatelliteIconFlash = false;
-  }
-  
-  private void startSatelliteIconAnim()
-  {
-    if ((!PerformStatItem.sIsSatelliteFlashForPerform) || (this.mSatelliteIcon == null)) {
-      return;
+
+    public void initViewById() {
+        this.mSatelliteIcon = (ImageView) this.mRootView.findViewById(C4048R.id.bnav_rg_sg_satelite_icon);
+        this.mSatelliteNumTV = (TextView) this.mRootView.findViewById(C4048R.id.bnav_rg_sg_satelite_num);
+        this.mSatelliteIcon.setVisibility(0);
+        this.mBdigClock = (BNDigitalClock) this.mRootView.findViewById(C4048R.id.bnav_rg_sg_current_time);
+        this.mIvBattery = (ImageView) this.mRootView.findViewById(C4048R.id.bnav_rg_sg_battery_icon);
+        this.mTvBattery = (TextView) this.mRootView.findViewById(C4048R.id.bnav_rg_sg_battery_percent);
+        this.mVolumeIcon = (ImageView) this.mRootView.findViewById(C4048R.id.bnav_rg_sg_volume_icon);
     }
-    if (this.mLinearInterpolator == null) {
-      this.mLinearInterpolator = new LinearInterpolator();
-    }
-    if ((this.mAnim == null) && (this.mLinearInterpolator != null))
-    {
-      this.mAnim = new AlphaAnimation(1.0F, 0.0F);
-      this.mAnim.setDuration(1000L);
-      this.mAnim.setInterpolator(new LinearInterpolator());
-      this.mAnim.setRepeatCount(-1);
-      this.mAnim.setRepeatMode(2);
-    }
-    if (this.mAnim != null) {
-      this.mSatelliteIcon.startAnimation(this.mAnim);
-    }
-    this.mIsSatelliteIconFlash = true;
-  }
-  
-  public void dispose()
-  {
-    super.dispose();
-    UIUtils.releaseImageView(this.mSatelliteIcon);
-    UIUtils.releaseImageView(this.mVolumeIcon);
-    cancleSatelliteIconAnim();
-  }
-  
-  public ViewGroup.LayoutParams generalLayoutParams()
-  {
-    return null;
-  }
-  
-  public int getContainerViewId()
-  {
-    return 1711866527;
-  }
-  
-  public int getLandscapeLayoutId()
-  {
-    return 1711472699;
-  }
-  
-  public int getPortraitLayoutId()
-  {
-    return 1711472698;
-  }
-  
-  public void initListener() {}
-  
-  public void initViewById()
-  {
-    this.mSatelliteIcon = ((ImageView)this.mRootView.findViewById(1711866373));
-    this.mSatelliteNumTV = ((TextView)this.mRootView.findViewById(1711866372));
-    this.mSatelliteIcon.setVisibility(0);
-    this.mBdigClock = ((BNDigitalClock)this.mRootView.findViewById(1711866376));
-    this.mIvBattery = ((ImageView)this.mRootView.findViewById(1711865929));
-    this.mTvBattery = ((TextView)this.mRootView.findViewById(1711865928));
-    this.mVolumeIcon = ((ImageView)this.mRootView.findViewById(1711866374));
-  }
-  
-  protected void resetStateBeforOrientation(int paramInt)
-  {
-    cancleSatelliteIconAnim();
-    this.mIsSatelliteIconFlash = false;
-    this.mLastSateliteNum = -1;
-  }
-  
-  public void setBatteryStatus(int paramInt, boolean paramBoolean)
-  {
-    if (this.mTvBattery != null) {
-      this.mTvBattery.setText(paramInt + "%");
-    }
-    if ((paramBoolean) && (this.mIvBattery != null)) {
-      this.mIvBattery.setImageDrawable(JarUtils.getResources().getDrawable(1711407676));
-    }
-    for (;;)
-    {
-      return;
-      int j = -1;
-      int i;
-      if (paramInt <= 35) {
-        i = 1711407677;
-      }
-      while ((this.mIvBattery != null) && (i != -1))
-      {
-        this.mIvBattery.setImageDrawable(JarUtils.getResources().getDrawable(i));
-        return;
-        if ((paramInt > 35) && (paramInt <= 65))
-        {
-          i = 1711407678;
-        }
-        else if ((paramInt > 65) && (paramInt <= 95))
-        {
-          i = 1711407679;
-        }
-        else
-        {
-          i = j;
-          if (paramInt > 95)
-          {
-            i = j;
-            if (paramInt <= 100) {
-              i = 1711407680;
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  public void show(Bundle paramBundle)
-  {
-    if (!BNavigator.getInstance().hasCalcRouteOk()) {
-      return;
-    }
-    super.show(paramBundle);
-  }
-  
-  public void updateData(Bundle paramBundle)
-  {
-    updateSatelliteNum(RGSimpleGuideModel.getInstance().getSatelliteNum());
-    setBatteryStatus(BatteryStatusReceiver.mBatteryLevel, BatteryStatusReceiver.isCharging);
-  }
-  
-  public void updateDataByLast()
-  {
-    updateData(null);
-  }
-  
-  public void updateSatelliteNum(int paramInt)
-  {
-    if (!BNavigator.getInstance().hasCalcRouteOk()) {}
-    do
-    {
-      do
-      {
-        do
-        {
-          return;
-        } while ((this.mSatelliteIcon == null) || (this.mSatelliteNumTV == null));
-        if ((BNavigator.getInstance().mIsGPSDisable) && (paramInt < 3))
-        {
-          this.mLastSateliteNum = -1;
-          this.mSatelliteIcon.setImageDrawable(BNStyleManager.getDrawable(1711407692));
-          cancleSatelliteIconAnim();
-          this.mSatelliteNumTV.setVisibility(8);
-          return;
-        }
-      } while (this.mLastSateliteNum == paramInt);
-      this.mLastSateliteNum = paramInt;
-      paramInt = RGSimpleGuideModel.getInstance().getSatelliteNum();
-      if (paramInt < 3)
-      {
-        this.mSatelliteIcon.setImageDrawable(BNStyleManager.getDrawable(1711407692));
-        if (!this.mIsSatelliteIconFlash) {
-          startSatelliteIconAnim();
-        }
-        this.mSatelliteNumTV.setVisibility(0);
-        this.mSatelliteNumTV.setTextColor(Color.parseColor("#f44335"));
-        this.mSatelliteNumTV.setText("弱");
-        return;
-      }
-      if ((paramInt >= 3) && (paramInt <= 5))
-      {
-        this.mSatelliteIcon.setImageDrawable(BNStyleManager.getDrawable(1711407693));
+
+    protected void resetStateBeforOrientation(int orien) {
         cancleSatelliteIconAnim();
-        this.mSatelliteNumTV.setVisibility(0);
-        this.mSatelliteNumTV.setTextColor(Color.parseColor("#fbe000"));
-        this.mSatelliteNumTV.setText("中");
-        return;
-      }
-    } while (paramInt <= 5);
-    this.mSatelliteIcon.setImageDrawable(BNStyleManager.getDrawable(1711407691));
-    cancleSatelliteIconAnim();
-    this.mSatelliteNumTV.setVisibility(0);
-    this.mSatelliteNumTV.setTextColor(Color.parseColor("#62d336"));
-    this.mSatelliteNumTV.setText("强");
-  }
-  
-  public void updateVolumeView(boolean paramBoolean)
-  {
-    if (this.mVolumeIcon == null) {}
-    do
-    {
-      do
-      {
-        return;
-        if (!paramBoolean) {
-          break;
+        this.mIsSatelliteIconFlash = false;
+        this.mLastSateliteNum = -1;
+    }
+
+    public void initListener() {
+    }
+
+    public int getPortraitLayoutId() {
+        return C4048R.layout.nsdk_layout_rg_device_state;
+    }
+
+    public int getLandscapeLayoutId() {
+        return C4048R.layout.nsdk_layout_rg_device_state_land;
+    }
+
+    public int getContainerViewId() {
+        return C4048R.id.bnav_rg_device_status_container;
+    }
+
+    public LayoutParams generalLayoutParams() {
+        return null;
+    }
+
+    public void updateDataByLast() {
+        updateData(null);
+    }
+
+    public void updateData(Bundle b) {
+        updateSatelliteNum(RGSimpleGuideModel.getInstance().getSatelliteNum());
+        setBatteryStatus(BatteryStatusReceiver.mBatteryLevel, BatteryStatusReceiver.isCharging);
+    }
+
+    public void updateVolumeView(boolean flag) {
+        if (this.mVolumeIcon != null) {
+            if (flag) {
+                RGSimpleGuideModel.getInstance().canSilentIconShow = true;
+                if (this.mVolumeIcon.getVisibility() == 0) {
+                    return;
+                }
+                return;
+            }
+            RGSimpleGuideModel.getInstance().canSilentIconShow = false;
+            if (this.mVolumeIcon.getVisibility() == 0) {
+                this.mVolumeIcon.setVisibility(8);
+            }
         }
-        RGSimpleGuideModel.getInstance().canSilentIconShow = true;
-      } while (this.mVolumeIcon.getVisibility() == 0);
-      return;
-      RGSimpleGuideModel.getInstance().canSilentIconShow = false;
-    } while (this.mVolumeIcon.getVisibility() != 0);
-    this.mVolumeIcon.setVisibility(8);
-  }
+    }
+
+    public void updateSatelliteNum(int num) {
+        if (BNavigator.getInstance().hasCalcRouteOk() && this.mSatelliteIcon != null && this.mSatelliteNumTV != null) {
+            if (BNavigator.getInstance().mIsGPSDisable && num < 3) {
+                this.mLastSateliteNum = -1;
+                this.mSatelliteIcon.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_rg_ic_satellite_red));
+                cancleSatelliteIconAnim();
+                this.mSatelliteNumTV.setVisibility(8);
+            } else if (this.mLastSateliteNum != num) {
+                this.mLastSateliteNum = num;
+                int satelliteNum = RGSimpleGuideModel.getInstance().getSatelliteNum();
+                if (satelliteNum < 3) {
+                    this.mSatelliteIcon.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_rg_ic_satellite_red));
+                    if (!this.mIsSatelliteIconFlash) {
+                        startSatelliteIconAnim();
+                    }
+                    this.mSatelliteNumTV.setVisibility(0);
+                    this.mSatelliteNumTV.setTextColor(Color.parseColor("#f44335"));
+                    this.mSatelliteNumTV.setText("弱");
+                } else if (satelliteNum >= 3 && satelliteNum <= 5) {
+                    this.mSatelliteIcon.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_rg_ic_satellite_yellow));
+                    cancleSatelliteIconAnim();
+                    this.mSatelliteNumTV.setVisibility(0);
+                    this.mSatelliteNumTV.setTextColor(Color.parseColor("#fbe000"));
+                    this.mSatelliteNumTV.setText("中");
+                } else if (satelliteNum > 5) {
+                    this.mSatelliteIcon.setImageDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_rg_ic_satellite_green));
+                    cancleSatelliteIconAnim();
+                    this.mSatelliteNumTV.setVisibility(0);
+                    this.mSatelliteNumTV.setTextColor(Color.parseColor("#62d336"));
+                    this.mSatelliteNumTV.setText("强");
+                }
+            }
+        }
+    }
+
+    public void setBatteryStatus(int batteryLevel, boolean mIsBatteryCharging) {
+        if (this.mTvBattery != null) {
+            this.mTvBattery.setText(batteryLevel + "%");
+        }
+        if (!mIsBatteryCharging || this.mIvBattery == null) {
+            int resId = -1;
+            if (batteryLevel <= 35) {
+                resId = C4048R.drawable.nsdk_drawable_rg_ic_battery_red;
+            } else if (batteryLevel > 35 && batteryLevel <= 65) {
+                resId = C4048R.drawable.nsdk_drawable_rg_ic_battery_white_1;
+            } else if (batteryLevel > 65 && batteryLevel <= 95) {
+                resId = C4048R.drawable.nsdk_drawable_rg_ic_battery_white_2;
+            } else if (batteryLevel > 95 && batteryLevel <= 100) {
+                resId = C4048R.drawable.nsdk_drawable_rg_ic_battery_white_3;
+            }
+            if (this.mIvBattery != null && resId != -1) {
+                this.mIvBattery.setImageDrawable(JarUtils.getResources().getDrawable(resId));
+                return;
+            }
+            return;
+        }
+        this.mIvBattery.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_rg_ic_battery_charging));
+    }
+
+    public void show(Bundle bundle) {
+        if (BNavigator.getInstance().hasCalcRouteOk()) {
+            super.show(bundle);
+        }
+    }
+
+    public void dispose() {
+        super.dispose();
+        UIUtils.releaseImageView(this.mSatelliteIcon);
+        UIUtils.releaseImageView(this.mVolumeIcon);
+        cancleSatelliteIconAnim();
+    }
+
+    private void startSatelliteIconAnim() {
+        if (PerformStatItem.sIsSatelliteFlashForPerform && this.mSatelliteIcon != null) {
+            if (this.mLinearInterpolator == null) {
+                this.mLinearInterpolator = new LinearInterpolator();
+            }
+            if (this.mAnim == null && this.mLinearInterpolator != null) {
+                this.mAnim = new AlphaAnimation(1.0f, 0.0f);
+                this.mAnim.setDuration(1000);
+                this.mAnim.setInterpolator(new LinearInterpolator());
+                this.mAnim.setRepeatCount(-1);
+                this.mAnim.setRepeatMode(2);
+            }
+            if (this.mAnim != null) {
+                this.mSatelliteIcon.startAnimation(this.mAnim);
+            }
+            this.mIsSatelliteIconFlash = true;
+        }
+    }
+
+    private void cancleSatelliteIconAnim() {
+        if (PerformStatItem.sIsSatelliteFlashForPerform && this.mSatelliteIcon != null) {
+            this.mSatelliteIcon.clearAnimation();
+            this.mLinearInterpolator = null;
+            this.mAnim = null;
+            this.mIsSatelliteIconFlash = false;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMDeviceStateView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

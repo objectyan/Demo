@@ -1,226 +1,169 @@
 package com.indooratlas.android.sdk._internal;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.indooratlas.android.sdk.BuildConfig;
+import com.indooratlas.android.sdk.IALocationManager;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public final class bg
-{
-  @NonNull
-  public final String a;
-  @NonNull
-  public final String b;
-  @NonNull
-  public final String c;
-  @Nullable
-  public final String d;
-  public final int e;
-  public final boolean f;
-  @NonNull
-  final Bundle g;
-  
-  private bg(String paramString1, String paramString2, String paramString3, boolean paramBoolean, String paramString4, int paramInt, Bundle paramBundle)
-  {
-    if (paramString1 != null) {}
-    for (;;)
-    {
-      try
-      {
-        new URL(paramString1);
-        i = j;
-        if (!paramBoolean)
-        {
-          i = j;
-          if (paramString4 == null) {}
+public final class bg {
+    @NonNull
+    /* renamed from: a */
+    public final String f23190a;
+    @NonNull
+    /* renamed from: b */
+    public final String f23191b;
+    @NonNull
+    /* renamed from: c */
+    public final String f23192c;
+    @Nullable
+    /* renamed from: d */
+    public final String f23193d;
+    /* renamed from: e */
+    public final int f23194e;
+    /* renamed from: f */
+    public final boolean f23195f;
+    @NonNull
+    /* renamed from: g */
+    final Bundle f23196g;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bg$a */
+    public static class C5819a {
+        /* renamed from: a */
+        public Bundle f23182a;
+        /* renamed from: b */
+        private Context f23183b;
+        /* renamed from: c */
+        private String f23184c;
+        /* renamed from: d */
+        private String f23185d;
+        /* renamed from: e */
+        private String f23186e;
+        /* renamed from: f */
+        private String f23187f;
+        /* renamed from: g */
+        private int f23188g = -1;
+        /* renamed from: h */
+        private boolean f23189h;
+
+        public C5819a(Context context) {
+            this.f23183b = (Context) eg.m20413a((Object) context, "context must be non-null", new Object[0]);
         }
-      }
-      catch (MalformedURLException paramString2)
-      {
-        throw new IllegalArgumentException("invalid service endpoint: " + paramString1);
-      }
-      try
-      {
-        if (!paramString4.startsWith("http://")) {
-          break label152;
+
+        /* renamed from: a */
+        public final bg m20094a() throws bc {
+            Bundle bundle;
+            boolean z = true;
+            Bundle bundle2 = this.f23182a;
+            if (bundle2 == null || bundle2.isEmpty()) {
+                bundle = Bundle.EMPTY;
+            } else {
+                bundle = new Bundle(bundle2);
+                Iterator it = new HashSet(bundle.keySet()).iterator();
+                while (it.hasNext()) {
+                    String str = (String) it.next();
+                    if (str.contains(".debug.")) {
+                        bundle.remove(str);
+                    }
+                }
+            }
+            try {
+                String str2;
+                int i;
+                Bundle bundle3 = this.f23183b.getPackageManager().getApplicationInfo(this.f23183b.getPackageName(), 128).metaData;
+                Object a = ct.m20259a(this.f23184c, ed.m20399a(bundle, IALocationManager.EXTRA_API_KEY), ed.m20399a(bundle3, "com.indooratlas.android.sdk.API_KEY"));
+                Object a2 = ct.m20259a(this.f23185d, ed.m20399a(bundle, IALocationManager.EXTRA_API_SECRET), ed.m20399a(bundle3, "com.indooratlas.android.sdk.API_SECRET"));
+                Object a3 = ct.m20259a(this.f23186e, ed.m20399a(bundle, "com.indooratlas.android.sdk.intent.extras.restEndpoint"), ed.m20399a(bundle3, "com.indooratlas.android.sdk.SERVICE_ENDPOINT"), BuildConfig.ENDPOINT_REST);
+                if (!this.f23189h) {
+                    boolean z2;
+                    if (bundle != null) {
+                        z2 = bundle.getBoolean(IALocationManager.EXTRA_PROXY_DISABLED, false);
+                    } else {
+                        z2 = false;
+                    }
+                    if (!z2 && (bundle3 == null || !bundle3.getBoolean("com.indooratlas.android.sdk.PROXY_DISABLED", false))) {
+                        z = false;
+                    }
+                }
+                if (z) {
+                    str2 = null;
+                    i = -1;
+                } else {
+                    int i2;
+                    String a4 = ct.m20259a(this.f23187f, ed.m20399a(bundle, IALocationManager.EXTRA_PROXY_ADDRESS), ed.m20399a(bundle3, "com.indooratlas.android.sdk.PROXY_ADDRESS"), ct.m20268b("http.proxyHost"));
+                    int[] iArr = new int[4];
+                    iArr[0] = this.f23188g;
+                    if (bundle != null) {
+                        i2 = bundle.getInt(IALocationManager.EXTRA_PROXY_PORT, -1);
+                    } else {
+                        i2 = -1;
+                    }
+                    iArr[1] = i2;
+                    iArr[2] = bundle3 != null ? bundle3.getInt("com.indooratlas.android.sdk.PROXY_PORT", -1) : -1;
+                    iArr[3] = ct.m20270c("http.proxyPort");
+                    i2 = ct.m20251a(iArr);
+                    if (i2 <= 0 || i2 > 65535) {
+                        i2 = -1;
+                    }
+                    str2 = a4;
+                    i = i2;
+                }
+                if (ei.m20418a(a)) {
+                    throw new bc("SDK API key not set, check that manifest contains: com.indooratlas.android.sdk.API_KEY");
+                } else if (ei.m20418a(a2)) {
+                    throw new bc("SDK API secret not set, check that manifest contains: com.indooratlas.android.sdk.API_SECRET");
+                } else if (!ei.m20418a(a3)) {
+                    return new bg(a3, a, a2, z, str2, i, bundle);
+                } else {
+                    throw new bc("Service endpoint empty, cannot proceed");
+                }
+            } catch (NameNotFoundException e) {
+                throw new bc("reading metadata failed: " + e);
+            }
         }
-        str = paramString4;
-        new URL(str);
-        i = 1;
-      }
-      catch (MalformedURLException localMalformedURLException)
-      {
-        ee.a("IACore", "invalid proxy address: " + paramString4, new Object[0]);
-        i = j;
-        continue;
-        paramString4 = null;
-        continue;
-        paramInt = -1;
-        continue;
-      }
-      this.a = paramString1;
-      this.f = paramBoolean;
-      if (i == 0) {
-        break;
-      }
-      this.d = paramString4;
-      if ((i == 0) || (paramInt <= 0) || (paramInt > 65535)) {
-        break label215;
-      }
-      this.e = paramInt;
-      this.b = paramString2;
-      this.c = paramString3;
-      this.g = paramBundle;
-      return;
-      label152:
-      String str = "http://" + paramString4;
     }
-  }
-  
-  public final String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder("SdkEnvironment{restEndpoint='").append(this.a).append('\'').append(", apiKey='").append(this.b).append('\'');
-    localStringBuilder.append(", mExtras=").append(this.g).append('}');
-    return localStringBuilder.toString();
-  }
-  
-  public static final class a
-  {
-    public Bundle a;
-    private Context b;
-    private String c;
-    private String d;
-    private String e;
-    private String f;
-    private int g = -1;
-    private boolean h;
-    
-    public a(Context paramContext)
-    {
-      this.b = ((Context)eg.a(paramContext, "context must be non-null", new Object[0]));
+
+    private bg(String str, String str2, String str3, boolean z, String str4, int i, Bundle bundle) {
+        int i2 = 0;
+        if (str != null) {
+            try {
+                URL url = new URL(str);
+            } catch (MalformedURLException e) {
+                throw new IllegalArgumentException("invalid service endpoint: " + str);
+            }
+        }
+        if (!(z || str4 == null)) {
+            try {
+                URL url2 = new URL(str4.startsWith("http://") ? str4 : "http://" + str4);
+                i2 = 1;
+            } catch (MalformedURLException e2) {
+                ee.m20409a("IACore", "invalid proxy address: " + str4, new Object[0]);
+            }
+        }
+        this.f23190a = str;
+        this.f23195f = z;
+        if (i2 == 0) {
+            str4 = null;
+        }
+        this.f23193d = str4;
+        if (i2 == 0 || i <= 0 || i > 65535) {
+            i = -1;
+        }
+        this.f23194e = i;
+        this.f23191b = str2;
+        this.f23192c = str3;
+        this.f23196g = bundle;
     }
-    
-    public final bg a()
-      throws bc
-    {
-      boolean bool3 = true;
-      Bundle localBundle1 = this.a;
-      if ((localBundle1 == null) || (localBundle1.isEmpty())) {
-        localBundle1 = Bundle.EMPTY;
-      }
-      for (;;)
-      {
-        Object localObject3;
-        String str1;
-        String str2;
-        boolean bool2;
-        boolean bool1;
-        Object localObject2;
-        int i;
-        int j;
-        try
-        {
-          Bundle localBundle2 = this.b.getPackageManager().getApplicationInfo(this.b.getPackageName(), 128).metaData;
-          localObject3 = ct.a(new String[] { this.c, ed.a(localBundle1, "com.indooratlas.android.sdk.intent.extras.apiKey"), ed.a(localBundle2, "com.indooratlas.android.sdk.API_KEY") });
-          str1 = ct.a(new String[] { this.d, ed.a(localBundle1, "com.indooratlas.android.sdk.intent.extras.apiSecret"), ed.a(localBundle2, "com.indooratlas.android.sdk.API_SECRET") });
-          str2 = ct.a(new String[] { this.e, ed.a(localBundle1, "com.indooratlas.android.sdk.intent.extras.restEndpoint"), ed.a(localBundle2, "com.indooratlas.android.sdk.SERVICE_ENDPOINT"), "https://ipsws.indooratlas.com" });
-          bool2 = bool3;
-          if (!this.h)
-          {
-            if (localBundle1 == null) {
-              break label461;
-            }
-            bool1 = localBundle1.getBoolean("com.indooratlas.android.sdk.intent.extras.proxyDisabled", false);
-            bool2 = bool3;
-            if (!bool1)
-            {
-              if ((localBundle2 == null) || (!localBundle2.getBoolean("com.indooratlas.android.sdk.PROXY_DISABLED", false))) {
-                break label467;
-              }
-              bool2 = bool3;
-            }
-          }
-          if (bool2) {
-            break label546;
-          }
-          localObject2 = ct.a(new String[] { this.f, ed.a(localBundle1, "com.indooratlas.android.sdk.intent.extras.proxyAddress"), ed.a(localBundle2, "com.indooratlas.android.sdk.PROXY_ADDRESS"), ct.b("http.proxyHost") });
-          int k = this.g;
-          if (localBundle1 == null) {
-            break label473;
-          }
-          i = localBundle1.getInt("com.indooratlas.android.sdk.intent.extras.proxyPort", -1);
-          if (localBundle2 == null) {
-            break label478;
-          }
-          j = localBundle2.getInt("com.indooratlas.android.sdk.PROXY_PORT", -1);
-          i = ct.a(new int[] { k, i, j, ct.c("http.proxyPort") });
-          if ((i <= 0) || (i > 65535)) {
-            break label483;
-          }
-        }
-        catch (PackageManager.NameNotFoundException localNameNotFoundException)
-        {
-          throw new bc("reading metadata failed: " + localNameNotFoundException);
-        }
-        Object localObject1;
-        if (ei.a((CharSequence)localObject3))
-        {
-          throw new bc("SDK API key not set, check that manifest contains: com.indooratlas.android.sdk.API_KEY");
-          localObject2 = new Bundle(localNameNotFoundException);
-          localObject3 = new HashSet(((Bundle)localObject2).keySet()).iterator();
-          for (;;)
-          {
-            localObject1 = localObject2;
-            if (!((Iterator)localObject3).hasNext()) {
-              break;
-            }
-            localObject1 = (String)((Iterator)localObject3).next();
-            if (((String)localObject1).contains(".debug.")) {
-              ((Bundle)localObject2).remove((String)localObject1);
-            }
-          }
-          label461:
-          bool1 = false;
-          continue;
-          label467:
-          bool2 = false;
-          continue;
-          label473:
-          i = -1;
-          continue;
-          label478:
-          j = -1;
-          continue;
-          label483:
-          i = -1;
-        }
-        else
-        {
-          if (ei.a(str1)) {
-            throw new bc("SDK API secret not set, check that manifest contains: com.indooratlas.android.sdk.API_SECRET");
-          }
-          if (ei.a(str2)) {
-            throw new bc("Service endpoint empty, cannot proceed");
-          }
-          return new bg(str2, (String)localObject3, str1, bool2, (String)localObject2, i, (Bundle)localObject1, (byte)0);
-          label546:
-          localObject2 = null;
-          i = -1;
-        }
-      }
+
+    public final String toString() {
+        StringBuilder append = new StringBuilder("SdkEnvironment{restEndpoint='").append(this.f23190a).append('\'').append(", apiKey='").append(this.f23191b).append('\'');
+        append.append(", mExtras=").append(this.f23196g).append('}');
+        return append.toString();
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/bg.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

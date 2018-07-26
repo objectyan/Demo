@@ -6,110 +6,91 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class TrackShare
-  extends MessageMicro
-{
-  public static final int URL_FIELD_NUMBER = 1;
-  private boolean a;
-  private String b = "";
-  private int c = -1;
-  
-  public static TrackShare parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new TrackShare().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static TrackShare parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (TrackShare)new TrackShare().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final TrackShare clear()
-  {
-    clearUrl();
-    this.c = -1;
-    return this;
-  }
-  
-  public TrackShare clearUrl()
-  {
-    this.a = false;
-    this.b = "";
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.c < 0) {
-      getSerializedSize();
+public final class TrackShare extends MessageMicro {
+    public static final int URL_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private boolean f16372a;
+    /* renamed from: b */
+    private String f16373b = "";
+    /* renamed from: c */
+    private int f16374c = -1;
+
+    public static TrackShare parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new TrackShare().mergeFrom(codedInputStreamMicro);
     }
-    return this.c;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasUrl()) {
-      i = 0 + CodedOutputStreamMicro.computeStringSize(1, getUrl());
+
+    public static TrackShare parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (TrackShare) new TrackShare().mergeFrom(bArr);
     }
-    this.c = i;
-    return i;
-  }
-  
-  public String getUrl()
-  {
-    return this.b;
-  }
-  
-  public boolean hasUrl()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public TrackShare mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public final TrackShare clear() {
+        clearUrl();
+        this.f16374c = -1;
         return this;
-      case 10: 
-        setUrl(paramCodedInputStreamMicro.readString());
-      }
     }
-  }
-  
-  public TrackShare setUrl(String paramString)
-  {
-    this.a = true;
-    this.b = paramString;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasUrl()) {
-      paramCodedOutputStreamMicro.writeString(1, getUrl());
+
+    public TrackShare clearUrl() {
+        this.f16372a = false;
+        this.f16373b = "";
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f16374c < 0) {
+            getSerializedSize();
+        }
+        return this.f16374c;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasUrl()) {
+            i = 0 + CodedOutputStreamMicro.computeStringSize(1, getUrl());
+        }
+        this.f16374c = i;
+        return i;
+    }
+
+    public String getUrl() {
+        return this.f16373b;
+    }
+
+    public boolean hasUrl() {
+        return this.f16372a;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public TrackShare mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    setUrl(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public TrackShare setUrl(String str) {
+        this.f16372a = true;
+        this.f16373b = str;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasUrl()) {
+            codedOutputStreamMicro.writeString(1, getUrl());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/TrackShare.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

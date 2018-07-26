@@ -1,20 +1,17 @@
 package com.baidu.ufosdk.ui;
 
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class ax
-  implements Runnable
-{
-  ax(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void run()
-  {
-    a.a(this.a.getApplicationContext());
-  }
+/* compiled from: FeedbackInputActivity */
+final class ax implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21561a;
+
+    ax(FeedbackInputActivity feedbackInputActivity) {
+        this.f21561a = feedbackInputActivity;
+    }
+
+    public final void run() {
+        C5180a.m17569a(this.f21561a.getApplicationContext());
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ax.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

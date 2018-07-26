@@ -2,22 +2,24 @@ package com.baidu.mobstat;
 
 import android.content.Context;
 
-class cj
-  implements Runnable
-{
-  cj(ch paramch, long paramLong, Context paramContext) {}
-  
-  public void run()
-  {
-    this.c.b(this.a);
-    if (bv.a().c()) {
-      ch.a(this.c, this.b);
+class cj implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ long f19586a;
+    /* renamed from: b */
+    final /* synthetic */ Context f19587b;
+    /* renamed from: c */
+    final /* synthetic */ ch f19588c;
+
+    cj(ch chVar, long j, Context context) {
+        this.f19588c = chVar;
+        this.f19586a = j;
+        this.f19587b = context;
     }
-  }
+
+    public void run() {
+        this.f19588c.m15596b(this.f19586a);
+        if (bv.m15511a().m15520c()) {
+            this.f19588c.m15579c(this.f19587b);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cj.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

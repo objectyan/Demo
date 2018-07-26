@@ -2,40 +2,26 @@ package com.indooratlas.android.sdk._internal;
 
 import java.lang.reflect.Field;
 
-public final class eh
-{
-  public static String a(Class paramClass, Object paramObject)
-  {
-    paramClass = paramClass.getDeclaredFields();
-    try
-    {
-      int j = paramClass.length;
-      int i = 0;
-      while (i < j)
-      {
-        String str = paramClass[i];
-        try
-        {
-          Object localObject = str.get(null);
-          if (((paramObject == null) && (localObject == null)) || (paramObject.equals(localObject)))
-          {
-            str = str.getName();
-            return str;
-          }
+public final class eh {
+    /* renamed from: a */
+    public static String m20416a(Class cls, Object obj) {
+        Field[] declaredFields = cls.getDeclaredFields();
+        try {
+            int length = declaredFields.length;
+            int i = 0;
+            while (i < length) {
+                Field field = declaredFields[i];
+                try {
+                    Object obj2 = field.get(null);
+                    if ((obj == null && obj2 == null) || obj.equals(obj2)) {
+                        return field.getName();
+                    }
+                    i++;
+                } catch (NullPointerException e) {
+                }
+            }
+        } catch (IllegalAccessException e2) {
         }
-        catch (NullPointerException localNullPointerException)
-        {
-          i += 1;
-        }
-      }
-      return String.valueOf(paramObject);
+        return String.valueOf(obj);
     }
-    catch (IllegalAccessException paramClass) {}
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/eh.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

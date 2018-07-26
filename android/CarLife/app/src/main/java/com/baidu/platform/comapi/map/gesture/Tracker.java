@@ -5,78 +5,64 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
-import com.baidu.platform.comapi.c;
+import com.baidu.platform.comapi.C2907c;
+import com.baidu.platform.comapi.map.gesture.Base.Vector;
 
-public class Tracker
-{
-  public final int MAX_FLING_VELOCITY;
-  public final int MIN_FLING_VELOCITY;
-  private VelocityTracker velocityTracker;
-  
-  public Tracker()
-  {
-    ViewConfiguration localViewConfiguration = ViewConfiguration.get(c.f());
-    if (localViewConfiguration == null)
-    {
-      this.MIN_FLING_VELOCITY = ViewConfiguration.getMinimumFlingVelocity();
-      this.MAX_FLING_VELOCITY = ViewConfiguration.getMaximumFlingVelocity();
-      return;
+public class Tracker {
+    public final int MAX_FLING_VELOCITY;
+    public final int MIN_FLING_VELOCITY;
+    private VelocityTracker velocityTracker;
+
+    public Tracker() {
+        ViewConfiguration viewConfig = ViewConfiguration.get(C2907c.f());
+        if (viewConfig == null) {
+            this.MIN_FLING_VELOCITY = ViewConfiguration.getMinimumFlingVelocity();
+            this.MAX_FLING_VELOCITY = ViewConfiguration.getMaximumFlingVelocity();
+            return;
+        }
+        this.MIN_FLING_VELOCITY = viewConfig.getScaledMinimumFlingVelocity();
+        this.MAX_FLING_VELOCITY = viewConfig.getScaledMaximumFlingVelocity();
     }
-    this.MIN_FLING_VELOCITY = localViewConfiguration.getScaledMinimumFlingVelocity();
-    this.MAX_FLING_VELOCITY = localViewConfiguration.getScaledMaximumFlingVelocity();
-  }
-  
-  public void addMovement(MotionEvent paramMotionEvent)
-  {
-    if (this.velocityTracker == null)
-    {
-      this.velocityTracker = VelocityTracker.obtain();
-      return;
+
+    public void init() {
+        this.velocityTracker = VelocityTracker.obtain();
     }
-    this.velocityTracker.addMovement(paramMotionEvent);
-  }
-  
-  public void finish()
-  {
-    if (this.velocityTracker != null)
-    {
-      this.velocityTracker.recycle();
-      this.velocityTracker = null;
+
+    public void finish() {
+        if (this.velocityTracker != null) {
+            this.velocityTracker.recycle();
+            this.velocityTracker = null;
+        }
     }
-  }
-  
-  public void init()
-  {
-    this.velocityTracker = VelocityTracker.obtain();
-  }
-  
-  public Pair<Base.Vector, Base.Vector> velocity()
-  {
-    if (this.velocityTracker == null) {
-      return new Pair(new Base.Vector(0.0D, 0.0D), new Base.Vector(0.0D, 0.0D));
+
+    public Pair<Vector, Vector> velocity() {
+        if (this.velocityTracker == null) {
+            return new Pair(new Vector(0.0d, 0.0d), new Vector(0.0d, 0.0d));
+        }
+        float x1;
+        float y1;
+        float x2;
+        float y2;
+        this.velocityTracker.computeCurrentVelocity(1000, (float) this.MAX_FLING_VELOCITY);
+        if (VERSION.SDK_INT < 8) {
+            x1 = this.velocityTracker.getXVelocity();
+            y1 = this.velocityTracker.getYVelocity();
+            x2 = this.velocityTracker.getXVelocity();
+            y2 = this.velocityTracker.getYVelocity();
+        } else {
+            x1 = this.velocityTracker.getXVelocity(0);
+            y1 = this.velocityTracker.getYVelocity(0);
+            x2 = this.velocityTracker.getXVelocity(1);
+            y2 = this.velocityTracker.getYVelocity(1);
+        }
+        return new Pair(new Vector((double) x1, (double) y1), new Vector((double) x2, (double) y2));
     }
-    this.velocityTracker.computeCurrentVelocity(1000, this.MAX_FLING_VELOCITY);
-    float f1;
-    float f3;
-    float f2;
-    if (Build.VERSION.SDK_INT < 8)
-    {
-      f1 = this.velocityTracker.getXVelocity();
-      f3 = this.velocityTracker.getYVelocity();
-      f2 = this.velocityTracker.getXVelocity();
+
+    public void addMovement(MotionEvent event) {
+        if (this.velocityTracker == null) {
+            this.velocityTracker = VelocityTracker.obtain();
+        } else {
+            this.velocityTracker.addMovement(event);
+        }
     }
-    for (float f4 = this.velocityTracker.getYVelocity();; f4 = this.velocityTracker.getYVelocity(1))
-    {
-      return new Pair(new Base.Vector(f1, f3), new Base.Vector(f2, f4));
-      f1 = this.velocityTracker.getXVelocity(0);
-      f3 = this.velocityTracker.getYVelocity(0);
-      f2 = this.velocityTracker.getXVelocity(1);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/gesture/Tracker.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

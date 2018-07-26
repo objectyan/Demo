@@ -1,7 +1,6 @@
 package com.baidu.mapframework.commonlib.asynchttp;
 
 import android.content.Context;
-import com.baidu.mapframework.commonlib.http.DNSProxy;
 import java.net.URI;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -9,63 +8,47 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HttpContext;
 
-public class SyncHttpClient
-  extends AsyncHttpClient
-{
-  public SyncHttpClient()
-  {
-    super(false, 80, 443);
-  }
-  
-  public SyncHttpClient(int paramInt)
-  {
-    super(false, paramInt, 443);
-  }
-  
-  public SyncHttpClient(int paramInt1, int paramInt2)
-  {
-    super(false, paramInt1, paramInt2);
-  }
-  
-  public SyncHttpClient(SchemeRegistry paramSchemeRegistry)
-  {
-    super(paramSchemeRegistry);
-  }
-  
-  public SyncHttpClient(boolean paramBoolean, int paramInt1, int paramInt2)
-  {
-    super(paramBoolean, paramInt1, paramInt2);
-  }
-  
-  protected RequestHandle sendRequest(DefaultHttpClient paramDefaultHttpClient, HttpContext paramHttpContext, HttpUriRequest paramHttpUriRequest, String paramString, ResponseHandlerInterface paramResponseHandlerInterface, Context paramContext)
-  {
-    if (paramString != null) {
-      paramHttpUriRequest.addHeader("Content-Type", paramString);
+public class SyncHttpClient extends AsyncHttpClient {
+    public SyncHttpClient() {
+        super(false, 80, 443);
     }
-    paramResponseHandlerInterface.setUseSynchronousMode(true);
-    Object localObject = paramHttpUriRequest.getURI();
-    String str1 = ((URI)localObject).toString();
-    localObject = ((URI)localObject).getHost();
-    if (sDNS_PROXY != null)
-    {
-      String str2 = sDNS_PROXY.getIP((String)localObject);
-      if ((str2 != null) && (!str2.equals("")))
-      {
-        sDNS_PROXY.putIP2DomainsRecord(str2, (String)localObject);
-        str1 = str1.replace((CharSequence)localObject, str2);
-        if ((paramHttpUriRequest instanceof HttpRequestBase)) {
-          ((HttpRequestBase)paramHttpUriRequest).setURI(URI.create(str1));
+
+    public SyncHttpClient(int httpPort) {
+        super(false, httpPort, 443);
+    }
+
+    public SyncHttpClient(int httpPort, int httpsPort) {
+        super(false, httpPort, httpsPort);
+    }
+
+    public SyncHttpClient(boolean fixNoHttpResponseException, int httpPort, int httpsPort) {
+        super(fixNoHttpResponseException, httpPort, httpsPort);
+    }
+
+    public SyncHttpClient(SchemeRegistry schemeRegistry) {
+        super(schemeRegistry);
+    }
+
+    protected RequestHandle sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, ResponseHandlerInterface responseHandler, Context context) {
+        if (contentType != null) {
+            uriRequest.addHeader("Content-Type", contentType);
         }
-        paramHttpUriRequest.setHeader("_org_host_", (String)localObject);
-      }
+        responseHandler.setUseSynchronousMode(true);
+        URI uri = uriRequest.getURI();
+        String url = uri.toString();
+        String host = uri.getHost();
+        if (sDNS_PROXY != null) {
+            String ip = sDNS_PROXY.getIP(host);
+            if (!(ip == null || ip.equals(""))) {
+                sDNS_PROXY.putIP2DomainsRecord(ip, host);
+                url = url.replace(host, ip);
+                if (uriRequest instanceof HttpRequestBase) {
+                    ((HttpRequestBase) uriRequest).setURI(URI.create(url));
+                }
+                uriRequest.setHeader(AsyncHttpClient.HEADER_ORG_HOST, host);
+            }
+        }
+        newAsyncHttpRequest(client, httpContext, uriRequest, contentType, responseHandler, context).run();
+        return new RequestHandle(null);
     }
-    newAsyncHttpRequest(paramDefaultHttpClient, paramHttpContext, paramHttpUriRequest, paramString, paramResponseHandlerInterface, paramContext).run();
-    return new RequestHandle(null);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/SyncHttpClient.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

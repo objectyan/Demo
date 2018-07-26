@@ -1,116 +1,131 @@
 package com.indooratlas.android.sdk._internal;
 
 import android.support.annotation.NonNull;
+import com.indooratlas.android.sdk._internal.gk.C5925a;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public final class bq
-{
-  public gh a;
-  public String b;
-  public final List<c> c = new ArrayList();
-  AtomicBoolean d = new AtomicBoolean(false);
-  public b e;
-  public String f;
-  private final gg g;
-  private String h;
-  private final fs i = new fs()
-  {
-    public final void a(fr paramAnonymousfr, IOException paramAnonymousIOException)
-    {
-      ee.a("IACore", "Failed to send: ", new Object[] { paramAnonymousIOException });
-      bq.this.d.set(false);
+public final class bq {
+    /* renamed from: a */
+    public gh f23233a;
+    /* renamed from: b */
+    public String f23234b;
+    /* renamed from: c */
+    public final List<C5826c> f23235c;
+    /* renamed from: d */
+    AtomicBoolean f23236d;
+    /* renamed from: e */
+    public C5793b f23237e;
+    /* renamed from: f */
+    public String f23238f;
+    /* renamed from: g */
+    private final gg f23239g;
+    /* renamed from: h */
+    private String f23240h;
+    /* renamed from: i */
+    private final fs f23241i;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bq$b */
+    public interface C5793b {
     }
-    
-    public final void a(gm arg1)
-      throws IOException
-    {
-      if (???.c())
-      {
-        new StringBuilder("Sent to: ").append(???.a().a()).append("\n\t").append(???.a().a("Authorization")).append("\n\t").append(???.a().a("Content-Range"));
-        synchronized (bq.this.c)
-        {
-          if (!bq.this.c.isEmpty()) {
-            bq.this.c.remove(0);
-          }
-          bq.this.d.set(false);
-          bq.this.a();
-          return;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bq$1 */
+    class C58241 implements fs {
+        /* renamed from: a */
+        final /* synthetic */ bq f23223a;
+
+        C58241(bq bqVar) {
+            this.f23223a = bqVar;
         }
-      }
-      new StringBuilder("Failed to send, statusCode: ").append(???.b()).append(", message: ").append(???.d());
-      bq.this.d.set(false);
-    }
-  };
-  
-  private bq(@NonNull String paramString)
-  {
-    this.h = (paramString + "/cpa-binlogs/v1/");
-    this.g = gg.a("application/x-protobuf");
-  }
-  
-  public final void a()
-  {
-    if (this.d.get()) {
-      return;
-    }
-    synchronized (this.c)
-    {
-      if (!this.c.isEmpty())
-      {
-        Object localObject1 = (c)this.c.get(0);
-        if (this.a != null)
-        {
-          this.d.set(true);
-          String str = "events " + ((c)localObject1).b + "-" + ((c)localObject1).c;
-          localObject1 = new gk.a().a(this.h + ((c)localObject1).d).a(gl.a(this.g, ((c)localObject1).a)).b("Content-Type", "application/x-protobuf").b("Authorization", "IDA-Key " + this.b).b("Content-Range", str).b("Content-Length", String.valueOf(((c)localObject1).a.length)).a(str).a();
-          this.a.a((gk)localObject1).a(this.i);
+
+        /* renamed from: a */
+        public final void mo4590a(fr frVar, IOException iOException) {
+            ee.m20409a("IACore", "Failed to send: ", iOException);
+            this.f23223a.f23236d.set(false);
         }
-      }
-      return;
+
+        /* renamed from: a */
+        public final void mo4591a(gm gmVar) throws IOException {
+            if (gmVar.m20731c()) {
+                new StringBuilder("Sent to: ").append(gmVar.m20728a().m20709a()).append("\n\t").append(gmVar.m20728a().m20710a("Authorization")).append("\n\t").append(gmVar.m20728a().m20710a("Content-Range"));
+                synchronized (this.f23223a.f23235c) {
+                    if (!this.f23223a.f23235c.isEmpty()) {
+                        this.f23223a.f23235c.remove(0);
+                    }
+                }
+                this.f23223a.f23236d.set(false);
+                this.f23223a.m20131a();
+                return;
+            }
+            new StringBuilder("Failed to send, statusCode: ").append(gmVar.m20730b()).append(", message: ").append(gmVar.m20732d());
+            this.f23223a.f23236d.set(false);
+        }
     }
-  }
-  
-  public final void b()
-  {
-    synchronized (this.c)
-    {
-      this.c.clear();
-      return;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bq$a */
+    public static class C5825a {
+        /* renamed from: a */
+        public String f23224a;
+        /* renamed from: b */
+        public C5793b f23225b;
+        /* renamed from: c */
+        public gh f23226c;
+        /* renamed from: d */
+        public String f23227d;
     }
-  }
-  
-  public static final class a
-  {
-    public String a;
-    public bq.b b;
-    public gh c;
-    public String d;
-  }
-  
-  public static abstract interface b {}
-  
-  public final class c
-  {
-    final byte[] a;
-    final long b;
-    final long c;
-    public final String d;
-    
-    public c(byte[] paramArrayOfByte, long paramLong1, long paramLong2, String paramString)
-    {
-      this.a = paramArrayOfByte;
-      this.b = paramLong1;
-      this.c = paramLong2;
-      this.d = paramString;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bq$c */
+    public class C5826c {
+        /* renamed from: a */
+        final byte[] f23228a;
+        /* renamed from: b */
+        final long f23229b;
+        /* renamed from: c */
+        final long f23230c;
+        /* renamed from: d */
+        public final String f23231d;
+        /* renamed from: e */
+        final /* synthetic */ bq f23232e;
+
+        public C5826c(bq bqVar, byte[] bArr, long j, long j2, String str) {
+            this.f23232e = bqVar;
+            this.f23228a = bArr;
+            this.f23229b = j;
+            this.f23230c = j2;
+            this.f23231d = str;
+        }
     }
-  }
+
+    private bq(@NonNull String str) {
+        this.f23235c = new ArrayList();
+        this.f23236d = new AtomicBoolean(false);
+        this.f23241i = new C58241(this);
+        this.f23240h = str + "/cpa-binlogs/v1/";
+        this.f23239g = gg.m20657a("application/x-protobuf");
+    }
+
+    /* renamed from: a */
+    public final void m20131a() {
+        if (!this.f23236d.get()) {
+            synchronized (this.f23235c) {
+                if (!this.f23235c.isEmpty()) {
+                    C5826c c5826c = (C5826c) this.f23235c.get(0);
+                    if (this.f23233a != null) {
+                        this.f23236d.set(true);
+                        Object obj = "events " + c5826c.f23229b + "-" + c5826c.f23230c;
+                        this.f23233a.m20681a(new C5925a().m20702a(this.f23240h + c5826c.f23231d).m20700a(gl.m19807a(this.f23239g, c5826c.f23228a)).m20708b("Content-Type", "application/x-protobuf").m20708b("Authorization", "IDA-Key " + this.f23234b).m20708b("Content-Range", obj).m20708b("Content-Length", String.valueOf(c5826c.f23228a.length)).m20701a(obj).m20706a()).mo4694a(this.f23241i);
+                    }
+                }
+            }
+        }
+    }
+
+    /* renamed from: b */
+    public final void m20132b() {
+        synchronized (this.f23235c) {
+            this.f23235c.clear();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/bq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -9,90 +9,68 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpResponseException;
 
-public abstract class BinaryHttpResponseHandler
-  extends AsyncHttpResponseHandler
-{
-  private static final String LOG_TAG = "BinaryHttpRH";
-  private String[] mAllowedContentTypes = { "application/octet-stream", "image/jpeg", "image/png", "image/gif", "application/octet-stream".concat(";charset=utf-8"), "image/jpeg;charset=utf-8", "image/png;charset=utf-8", "image/gif;charset=utf-8" };
-  
-  public BinaryHttpResponseHandler() {}
-  
-  public BinaryHttpResponseHandler(String[] paramArrayOfString)
-  {
-    if (paramArrayOfString != null)
-    {
-      this.mAllowedContentTypes = paramArrayOfString;
-      return;
+public abstract class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
+    private static final String LOG_TAG = "BinaryHttpRH";
+    private String[] mAllowedContentTypes;
+
+    public abstract void onFailure(int i, Header[] headerArr, byte[] bArr, Throwable th);
+
+    public abstract void onSuccess(int i, Header[] headerArr, byte[] bArr);
+
+    public BinaryHttpResponseHandler() {
+        this.mAllowedContentTypes = new String[]{"application/octet-stream", "image/jpeg", "image/png", "image/gif", "application/octet-stream".concat(";charset=utf-8"), "image/jpeg;charset=utf-8", "image/png;charset=utf-8", "image/gif;charset=utf-8"};
     }
-    AsyncHttpClient.log.e("BinaryHttpRH", "Constructor passed allowedContentTypes was null !");
-  }
-  
-  public BinaryHttpResponseHandler(String[] paramArrayOfString, Looper paramLooper)
-  {
-    super(paramLooper);
-    if (paramArrayOfString != null)
-    {
-      this.mAllowedContentTypes = paramArrayOfString;
-      return;
-    }
-    AsyncHttpClient.log.e("BinaryHttpRH", "Constructor passed allowedContentTypes was null !");
-  }
-  
-  public String[] getAllowedContentTypes()
-  {
-    return this.mAllowedContentTypes;
-  }
-  
-  public abstract void onFailure(int paramInt, Header[] paramArrayOfHeader, byte[] paramArrayOfByte, Throwable paramThrowable);
-  
-  public abstract void onSuccess(int paramInt, Header[] paramArrayOfHeader, byte[] paramArrayOfByte);
-  
-  public final void sendResponseMessage(HttpResponse paramHttpResponse)
-    throws IOException
-  {
-    int i = 0;
-    StatusLine localStatusLine = paramHttpResponse.getStatusLine();
-    Object localObject = paramHttpResponse.getHeaders("Content-Type");
-    if (localObject.length != 1)
-    {
-      sendFailureMessage(localStatusLine.getStatusCode(), paramHttpResponse.getAllHeaders(), null, new HttpResponseException(localStatusLine.getStatusCode(), "None, or more than one, Content-Type Header found!"));
-      return;
-    }
-    localObject = localObject[0];
-    int j = 0;
-    String[] arrayOfString = getAllowedContentTypes();
-    int k = arrayOfString.length;
-    String str;
-    while (i < k)
-    {
-      str = arrayOfString[i];
-      try
-      {
-        boolean bool = Pattern.matches(str, ((Header)localObject).getValue());
-        if (bool) {
-          j = 1;
+
+    public BinaryHttpResponseHandler(String[] allowedContentTypes) {
+        this.mAllowedContentTypes = new String[]{"application/octet-stream", "image/jpeg", "image/png", "image/gif", "application/octet-stream".concat(";charset=utf-8"), "image/jpeg;charset=utf-8", "image/png;charset=utf-8", "image/gif;charset=utf-8"};
+        if (allowedContentTypes != null) {
+            this.mAllowedContentTypes = allowedContentTypes;
+        } else {
+            AsyncHttpClient.log.mo2625e(LOG_TAG, "Constructor passed allowedContentTypes was null !");
         }
-      }
-      catch (PatternSyntaxException localPatternSyntaxException)
-      {
-        for (;;)
-        {
-          AsyncHttpClient.log.e("BinaryHttpRH", "Given pattern is not valid: " + str, localPatternSyntaxException);
+    }
+
+    public BinaryHttpResponseHandler(String[] allowedContentTypes, Looper looper) {
+        super(looper);
+        this.mAllowedContentTypes = new String[]{"application/octet-stream", "image/jpeg", "image/png", "image/gif", "application/octet-stream".concat(";charset=utf-8"), "image/jpeg;charset=utf-8", "image/png;charset=utf-8", "image/gif;charset=utf-8"};
+        if (allowedContentTypes != null) {
+            this.mAllowedContentTypes = allowedContentTypes;
+        } else {
+            AsyncHttpClient.log.mo2625e(LOG_TAG, "Constructor passed allowedContentTypes was null !");
         }
-      }
-      i += 1;
     }
-    if (j == 0)
-    {
-      sendFailureMessage(localStatusLine.getStatusCode(), paramHttpResponse.getAllHeaders(), null, new HttpResponseException(localStatusLine.getStatusCode(), "Content-Type (" + ((Header)localObject).getValue() + ") not allowed!"));
-      return;
+
+    public String[] getAllowedContentTypes() {
+        return this.mAllowedContentTypes;
     }
-    super.sendResponseMessage(paramHttpResponse);
-  }
+
+    public final void sendResponseMessage(HttpResponse response) throws IOException {
+        int i = 0;
+        StatusLine status = response.getStatusLine();
+        Header[] contentTypeHeaders = response.getHeaders("Content-Type");
+        if (contentTypeHeaders.length != 1) {
+            sendFailureMessage(status.getStatusCode(), response.getAllHeaders(), null, new HttpResponseException(status.getStatusCode(), "None, or more than one, Content-Type Header found!"));
+            return;
+        }
+        Header contentTypeHeader = contentTypeHeaders[0];
+        boolean foundAllowedContentType = false;
+        String[] allowedContentTypes = getAllowedContentTypes();
+        int length = allowedContentTypes.length;
+        while (i < length) {
+            String anAllowedContentType = allowedContentTypes[i];
+            try {
+                if (Pattern.matches(anAllowedContentType, contentTypeHeader.getValue())) {
+                    foundAllowedContentType = true;
+                }
+            } catch (PatternSyntaxException e) {
+                AsyncHttpClient.log.mo2626e(LOG_TAG, "Given pattern is not valid: " + anAllowedContentType, e);
+            }
+            i++;
+        }
+        if (foundAllowedContentType) {
+            super.sendResponseMessage(response);
+        } else {
+            sendFailureMessage(status.getStatusCode(), response.getAllHeaders(), null, new HttpResponseException(status.getStatusCode(), "Content-Type (" + contentTypeHeader.getValue() + ") not allowed!"));
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/BinaryHttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

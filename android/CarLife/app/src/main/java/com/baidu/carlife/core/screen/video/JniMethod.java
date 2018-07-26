@@ -1,19 +1,14 @@
 package com.baidu.carlife.core.screen.video;
 
-class JniMethod
-{
-  static
-  {
-    System.loadLibrary("bdpc");
-  }
-  
-  static native void convert(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2, int paramInt1, int paramInt2);
-  
-  static native void prepare(int paramInt1, int paramInt2, int paramInt3, boolean paramBoolean);
+class JniMethod {
+    static native void convert(byte[] bArr, byte[] bArr2, int i, int i2);
+
+    static native void prepare(int i, int i2, int i3, boolean z);
+
+    JniMethod() {
+    }
+
+    static {
+        System.loadLibrary("bdpc");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/core/screen/video/JniMethod.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

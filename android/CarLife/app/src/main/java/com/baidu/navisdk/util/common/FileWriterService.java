@@ -5,58 +5,41 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class FileWriterService
-{
-  private static BufferedWriter fileWriter;
-  private static FileWriterService instance;
-  
-  private FileWriterService(String paramString) {}
-  
-  public static FileWriterService getInstance(String paramString)
-  {
-    if (instance == null) {
-      instance = new FileWriterService(paramString);
+public class FileWriterService {
+    private static BufferedWriter fileWriter;
+    private static FileWriterService instance;
+
+    private FileWriterService(String filePath) {
     }
-    return instance;
-  }
-  
-  private void initFile(String paramString)
-  {
-    paramString = new File(SysOSAPI.getInstance().GetSDCardPath(), paramString);
-    try
-    {
-      fileWriter = new BufferedWriter(new FileWriter(paramString, true));
-      return;
+
+    public static FileWriterService getInstance(String filePath) {
+        if (instance == null) {
+            instance = new FileWriterService(filePath);
+        }
+        return instance;
     }
-    catch (IOException paramString)
-    {
-      paramString.printStackTrace();
+
+    private void initFile(String filePath) {
+        try {
+            fileWriter = new BufferedWriter(new FileWriter(new File(SysOSAPI.getInstance().GetSDCardPath(), filePath), true));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-  }
-  
-  public void uninit()
-  {
-    try
-    {
-      if (fileWriter != null)
-      {
-        fileWriter.flush();
-        fileWriter.close();
-        fileWriter = null;
-      }
-      return;
+
+    public void writeline(String content) {
+        if (fileWriter != null) {
+        }
     }
-    catch (Exception localException) {}
-  }
-  
-  public void writeline(String paramString)
-  {
-    if (fileWriter == null) {}
-  }
+
+    public void uninit() {
+        try {
+            if (fileWriter != null) {
+                fileWriter.flush();
+                fileWriter.close();
+                fileWriter = null;
+            }
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/common/FileWriterService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

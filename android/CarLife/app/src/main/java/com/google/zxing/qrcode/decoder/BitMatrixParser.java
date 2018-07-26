@@ -3,211 +3,146 @@ package com.google.zxing.qrcode.decoder;
 import com.google.zxing.FormatException;
 import com.google.zxing.common.BitMatrix;
 
-final class BitMatrixParser
-{
-  private final BitMatrix bitMatrix;
-  private FormatInformation parsedFormatInfo;
-  private Version parsedVersion;
-  
-  BitMatrixParser(BitMatrix paramBitMatrix)
-    throws FormatException
-  {
-    int i = paramBitMatrix.getHeight();
-    if ((i < 21) || ((i & 0x3) != 1)) {
-      throw FormatException.getFormatInstance();
-    }
-    this.bitMatrix = paramBitMatrix;
-  }
-  
-  private int copyBit(int paramInt1, int paramInt2, int paramInt3)
-  {
-    if (this.bitMatrix.get(paramInt1, paramInt2)) {
-      return paramInt3 << 1 | 0x1;
-    }
-    return paramInt3 << 1;
-  }
-  
-  byte[] readCodewords()
-    throws FormatException
-  {
-    Object localObject = readFormatInformation();
-    Version localVersion = readVersion();
-    localObject = DataMask.forReference(((FormatInformation)localObject).getDataMask());
-    int i6 = this.bitMatrix.getHeight();
-    ((DataMask)localObject).unmaskBitMatrix(this.bitMatrix, i6);
-    localObject = localVersion.buildFunctionPattern();
-    int i2 = 1;
-    byte[] arrayOfByte = new byte[localVersion.getTotalCodewords()];
-    int i = 0;
-    int k = 0;
-    int m = 0;
-    int j = i6 - 1;
-    int i3;
-    label93:
-    int i4;
-    label112:
-    int i5;
-    label115:
-    int i1;
-    int n;
-    if (j > 0)
-    {
-      i3 = j;
-      if (j == 6) {
-        i3 = j - 1;
-      }
-      j = 0;
-      if (j < i6) {
-        if (i2 != 0)
-        {
-          i4 = i6 - 1 - j;
-          i5 = 0;
-          if (i5 >= 2) {
-            break label231;
-          }
-          i1 = m;
-          n = k;
-          if (((BitMatrix)localObject).get(i3 - i5, i4)) {
-            break label268;
-          }
-          m += 1;
-          n = k << 1;
-          k = n;
-          if (this.bitMatrix.get(i3 - i5, i4)) {
-            k = n | 0x1;
-          }
-          i1 = m;
-          n = k;
-          if (m != 8) {
-            break label268;
-          }
-          m = i + 1;
-          arrayOfByte[i] = ((byte)k);
-          n = 0;
-          k = 0;
-          i = m;
-          m = n;
+final class BitMatrixParser {
+    private final BitMatrix bitMatrix;
+    private FormatInformation parsedFormatInfo;
+    private Version parsedVersion;
+
+    BitMatrixParser(BitMatrix bitMatrix) throws FormatException {
+        int dimension = bitMatrix.getHeight();
+        if (dimension < 21 || (dimension & 3) != 1) {
+            throw FormatException.getFormatInstance();
         }
-      }
+        this.bitMatrix = bitMatrix;
     }
-    for (;;)
-    {
-      i5 += 1;
-      break label115;
-      i4 = j;
-      break label112;
-      label231:
-      j += 1;
-      break label93;
-      i2 ^= 0x1;
-      j = i3 - 2;
-      break;
-      if (i != localVersion.getTotalCodewords()) {
+
+    FormatInformation readFormatInformation() throws FormatException {
+        if (this.parsedFormatInfo != null) {
+            return this.parsedFormatInfo;
+        }
+        int i;
+        int j;
+        int formatInfoBits1 = 0;
+        for (i = 0; i < 6; i++) {
+            formatInfoBits1 = copyBit(i, 8, formatInfoBits1);
+        }
+        formatInfoBits1 = copyBit(8, 7, copyBit(8, 8, copyBit(7, 8, formatInfoBits1)));
+        for (j = 5; j >= 0; j--) {
+            formatInfoBits1 = copyBit(8, j, formatInfoBits1);
+        }
+        int dimension = this.bitMatrix.getHeight();
+        int formatInfoBits2 = 0;
+        int jMin = dimension - 7;
+        for (j = dimension - 1; j >= jMin; j--) {
+            formatInfoBits2 = copyBit(8, j, formatInfoBits2);
+        }
+        for (i = dimension - 8; i < dimension; i++) {
+            formatInfoBits2 = copyBit(i, 8, formatInfoBits2);
+        }
+        this.parsedFormatInfo = FormatInformation.decodeFormatInformation(formatInfoBits1, formatInfoBits2);
+        if (this.parsedFormatInfo != null) {
+            return this.parsedFormatInfo;
+        }
         throw FormatException.getFormatInstance();
-      }
-      return arrayOfByte;
-      label268:
-      m = i1;
-      k = n;
     }
-  }
-  
-  FormatInformation readFormatInformation()
-    throws FormatException
-  {
-    if (this.parsedFormatInfo != null) {
-      return this.parsedFormatInfo;
+
+    Version readVersion() throws FormatException {
+        if (this.parsedVersion != null) {
+            return this.parsedVersion;
+        }
+        int dimension = this.bitMatrix.getHeight();
+        int provisionalVersion = (dimension - 17) >> 2;
+        if (provisionalVersion <= 6) {
+            return Version.getVersionForNumber(provisionalVersion);
+        }
+        int j;
+        int versionBits = 0;
+        int ijMin = dimension - 11;
+        for (j = 5; j >= 0; j--) {
+            int i;
+            for (i = dimension - 9; i >= ijMin; i--) {
+                versionBits = copyBit(i, j, versionBits);
+            }
+        }
+        Version theParsedVersion = Version.decodeVersionInformation(versionBits);
+        if (theParsedVersion == null || theParsedVersion.getDimensionForVersion() != dimension) {
+            versionBits = 0;
+            for (i = 5; i >= 0; i--) {
+                for (j = dimension - 9; j >= ijMin; j--) {
+                    versionBits = copyBit(i, j, versionBits);
+                }
+            }
+            theParsedVersion = Version.decodeVersionInformation(versionBits);
+            if (theParsedVersion == null || theParsedVersion.getDimensionForVersion() != dimension) {
+                throw FormatException.getFormatInstance();
+            }
+            this.parsedVersion = theParsedVersion;
+            return theParsedVersion;
+        }
+        this.parsedVersion = theParsedVersion;
+        return theParsedVersion;
     }
-    int j = 0;
-    int i = 0;
-    while (i < 6)
-    {
-      j = copyBit(i, 8, j);
-      i += 1;
+
+    private int copyBit(int i, int j, int versionBits) {
+        return this.bitMatrix.get(i, j) ? (versionBits << 1) | 1 : versionBits << 1;
     }
-    j = copyBit(8, 7, copyBit(8, 8, copyBit(7, 8, j)));
-    i = 5;
-    while (i >= 0)
-    {
-      j = copyBit(8, i, j);
-      i -= 1;
+
+    byte[] readCodewords() throws FormatException {
+        FormatInformation formatInfo = readFormatInformation();
+        Version version = readVersion();
+        DataMask dataMask = DataMask.forReference(formatInfo.getDataMask());
+        int dimension = this.bitMatrix.getHeight();
+        dataMask.unmaskBitMatrix(this.bitMatrix, dimension);
+        BitMatrix functionPattern = version.buildFunctionPattern();
+        boolean readingUp = true;
+        byte[] result = new byte[version.getTotalCodewords()];
+        int resultOffset = 0;
+        int currentByte = 0;
+        int bitsRead = 0;
+        int j = dimension - 1;
+        while (j > 0) {
+            if (j == 6) {
+                j--;
+            }
+            int count = 0;
+            while (count < dimension) {
+                int i;
+                if (readingUp) {
+                    i = (dimension - 1) - count;
+                } else {
+                    i = count;
+                }
+                int col = 0;
+                int resultOffset2 = resultOffset;
+                while (col < 2) {
+                    if (!functionPattern.get(j - col, i)) {
+                        bitsRead++;
+                        currentByte <<= 1;
+                        if (this.bitMatrix.get(j - col, i)) {
+                            currentByte |= 1;
+                        }
+                        if (bitsRead == 8) {
+                            resultOffset = resultOffset2 + 1;
+                            result[resultOffset2] = (byte) currentByte;
+                            bitsRead = 0;
+                            currentByte = 0;
+                            col++;
+                            resultOffset2 = resultOffset;
+                        }
+                    }
+                    resultOffset = resultOffset2;
+                    col++;
+                    resultOffset2 = resultOffset;
+                }
+                count++;
+                resultOffset = resultOffset2;
+            }
+            readingUp ^= 1;
+            j -= 2;
+        }
+        if (resultOffset == version.getTotalCodewords()) {
+            return result;
+        }
+        throw FormatException.getFormatInstance();
     }
-    int m = this.bitMatrix.getHeight();
-    i = 0;
-    int k = m - 1;
-    while (k >= m - 7)
-    {
-      i = copyBit(8, k, i);
-      k -= 1;
-    }
-    k = m - 8;
-    while (k < m)
-    {
-      i = copyBit(k, 8, i);
-      k += 1;
-    }
-    this.parsedFormatInfo = FormatInformation.decodeFormatInformation(j, i);
-    if (this.parsedFormatInfo != null) {
-      return this.parsedFormatInfo;
-    }
-    throw FormatException.getFormatInstance();
-  }
-  
-  Version readVersion()
-    throws FormatException
-  {
-    if (this.parsedVersion != null) {
-      return this.parsedVersion;
-    }
-    int m = this.bitMatrix.getHeight();
-    int i = m - 17 >> 2;
-    if (i <= 6) {
-      return Version.getVersionForNumber(i);
-    }
-    int j = 0;
-    int n = m - 11;
-    i = 5;
-    int k;
-    while (i >= 0)
-    {
-      k = m - 9;
-      while (k >= n)
-      {
-        j = copyBit(k, i, j);
-        k -= 1;
-      }
-      i -= 1;
-    }
-    Version localVersion = Version.decodeVersionInformation(j);
-    if ((localVersion != null) && (localVersion.getDimensionForVersion() == m))
-    {
-      this.parsedVersion = localVersion;
-      return localVersion;
-    }
-    j = 0;
-    i = 5;
-    while (i >= 0)
-    {
-      k = m - 9;
-      while (k >= n)
-      {
-        j = copyBit(i, k, j);
-        k -= 1;
-      }
-      i -= 1;
-    }
-    localVersion = Version.decodeVersionInformation(j);
-    if ((localVersion != null) && (localVersion.getDimensionForVersion() == m))
-    {
-      this.parsedVersion = localVersion;
-      return localVersion;
-    }
-    throw FormatException.getFormatInstance();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/decoder/BitMatrixParser.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

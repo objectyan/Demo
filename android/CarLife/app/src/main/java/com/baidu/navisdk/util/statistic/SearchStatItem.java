@@ -2,139 +2,104 @@ package com.baidu.navisdk.util.statistic;
 
 import android.os.Bundle;
 import com.baidu.navisdk.comapi.statistics.BNStatisticsManager;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
 import com.baidu.navisdk.util.statistic.datacheck.DataCheckCenter;
 import com.baidu.navisdk.util.statistic.datacheck.StatisitcsDataCheck;
 import java.util.ArrayList;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-public class SearchStatItem
-  implements StatisitcsDataCheck
-{
-  private static final String TAG = SearchStatItem.class.getSimpleName();
-  private static SearchStatItem mInstance = null;
-  private Bundle mDataCheckBundle = new Bundle();
-  public long mResponseTime;
-  public int mResultIndex;
-  public boolean mSearchSucc;
-  public String mSearchType;
-  private ArrayList<NameValuePair> mStatPairList = new ArrayList();
-  
-  public static SearchStatItem getInstance()
-  {
-    try
-    {
-      if (mInstance == null) {
-        mInstance = new SearchStatItem();
-      }
-      SearchStatItem localSearchStatItem = mInstance;
-      return localSearchStatItem;
+public class SearchStatItem implements StatisitcsDataCheck {
+    private static final String TAG = SearchStatItem.class.getSimpleName();
+    private static SearchStatItem mInstance = null;
+    private Bundle mDataCheckBundle = new Bundle();
+    public long mResponseTime;
+    public int mResultIndex;
+    public boolean mSearchSucc;
+    public String mSearchType;
+    private ArrayList<NameValuePair> mStatPairList = new ArrayList();
+
+    public static synchronized SearchStatItem getInstance() {
+        SearchStatItem searchStatItem;
+        synchronized (SearchStatItem.class) {
+            if (mInstance == null) {
+                mInstance = new SearchStatItem();
+            }
+            searchStatItem = mInstance;
+        }
+        return searchStatItem;
     }
-    finally {}
-  }
-  
-  public Bundle getDataBundle()
-  {
-    return this.mDataCheckBundle;
-  }
-  
-  public String getID()
-  {
-    return "50001";
-  }
-  
-  public String getSearchType()
-  {
-    return this.mSearchType;
-  }
-  
-  public void init()
-  {
-    this.mSearchType = "1";
-    this.mResultIndex = 0;
-    this.mResponseTime = 0L;
-    this.mSearchSucc = false;
-    this.mStatPairList = new ArrayList();
-    this.mDataCheckBundle.clear();
-  }
-  
-  public void onEvent()
-  {
-    this.mStatPairList.add(new BasicNameValuePair("sea_type", this.mSearchType));
-    this.mDataCheckBundle.putString("sea_type", this.mSearchType);
-    this.mStatPairList.add(new BasicNameValuePair("re_time", Long.toString(this.mResponseTime)));
-    this.mDataCheckBundle.putLong("re_time", this.mResponseTime);
-    Object localObject;
-    if (this.mSearchSucc)
-    {
-      localObject = "1";
-      this.mStatPairList.add(new BasicNameValuePair("sea_ret", (String)localObject));
-      localObject = this.mDataCheckBundle;
-      if (!this.mSearchSucc) {
-        break label152;
-      }
+
+    public void init() {
+        this.mSearchType = "1";
+        this.mResultIndex = 0;
+        this.mResponseTime = 0;
+        this.mSearchSucc = false;
+        this.mStatPairList = new ArrayList();
+        this.mDataCheckBundle.clear();
     }
-    label152:
-    for (int i = 1;; i = 0)
-    {
-      ((Bundle)localObject).putInt("sea_ret", i);
-      BNStatisticsManager.getInstance().onEventWithParam(50001, null, this.mStatPairList);
-      DataCheckCenter.getInstance().check(this);
-      init();
-      return;
-      localObject = "0";
-      break;
+
+    public void setResponseTime(long time) {
+        this.mResponseTime = time;
     }
-  }
-  
-  public void searchStatistics(int paramInt)
-  {
-    getInstance().setResultIndex(paramInt);
-    getInstance().onEvent();
-  }
-  
-  public void setResponseTime(long paramLong)
-  {
-    this.mResponseTime = paramLong;
-  }
-  
-  public void setResultIndex(int paramInt)
-  {
-    this.mResultIndex = (paramInt + 1);
-  }
-  
-  public void setSearchResult(boolean paramBoolean)
-  {
-    this.mSearchSucc = paramBoolean;
-  }
-  
-  public void setSearchType(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      return;
-    case 1: 
-      this.mSearchType = "1";
-      return;
-    case 2: 
-      this.mSearchType = "2";
-      return;
-    case 3: 
-      this.mSearchType = "3";
-      return;
+
+    public void setSearchResult(boolean succ) {
+        this.mSearchSucc = succ;
     }
-    this.mSearchType = "4";
-  }
-  
-  public void setSearchType(String paramString)
-  {
-    this.mSearchType = paramString;
-  }
+
+    public void onEvent() {
+        this.mStatPairList.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_POISEARCH_TYPE, this.mSearchType));
+        this.mDataCheckBundle.putString(NaviStatConstants.K_NSC_KEY_POISEARCH_TYPE, this.mSearchType);
+        this.mStatPairList.add(new BasicNameValuePair("re_time", Long.toString(this.mResponseTime)));
+        this.mDataCheckBundle.putLong("re_time", this.mResponseTime);
+        this.mStatPairList.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_POISEARCH_RET, this.mSearchSucc ? "1" : "0"));
+        this.mDataCheckBundle.putInt(NaviStatConstants.K_NSC_KEY_POISEARCH_RET, this.mSearchSucc ? 1 : 0);
+        BNStatisticsManager.getInstance().onEventWithParam(NaviStatConstants.K_NSC_ACTION_POISEARCH, null, this.mStatPairList);
+        DataCheckCenter.getInstance().check(this);
+        init();
+    }
+
+    public String getSearchType() {
+        return this.mSearchType;
+    }
+
+    public void setResultIndex(int index) {
+        this.mResultIndex = index + 1;
+    }
+
+    public String getID() {
+        return "50001";
+    }
+
+    public Bundle getDataBundle() {
+        return this.mDataCheckBundle;
+    }
+
+    public void searchStatistics(int index) {
+        getInstance().setResultIndex(index);
+        getInstance().onEvent();
+    }
+
+    public void setSearchType(String type) {
+        this.mSearchType = type;
+    }
+
+    public void setSearchType(int netMode) {
+        switch (netMode) {
+            case 1:
+                this.mSearchType = "1";
+                return;
+            case 2:
+                this.mSearchType = "2";
+                return;
+            case 3:
+                this.mSearchType = "3";
+                return;
+            case 4:
+                this.mSearchType = "4";
+                return;
+            default:
+                return;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/statistic/SearchStatItem.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

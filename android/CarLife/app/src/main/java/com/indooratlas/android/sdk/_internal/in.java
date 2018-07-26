@@ -1,1137 +1,934 @@
 package com.indooratlas.android.sdk._internal;
 
+import android.support.v4.media.session.PlaybackStateCompat;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.navisdk.module.offscreen.BNOffScreenParams;
+import com.baidu.navisdk.ui.routeguide.model.RGHUDDataModel;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public final class in
-  implements io, ip, Cloneable
-{
-  private static final byte[] c = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102 };
-  ja a;
-  public long b;
-  
-  private String a(long paramLong, Charset paramCharset)
-    throws EOFException
-  {
-    jf.a(this.b, 0L, paramLong);
-    if (paramCharset == null) {
-      throw new IllegalArgumentException("charset == null");
+public final class in implements io, ip, Cloneable {
+    /* renamed from: c */
+    private static final byte[] f24390c = new byte[]{(byte) 48, (byte) 49, (byte) 50, (byte) 51, (byte) 52, (byte) 53, (byte) 54, (byte) 55, (byte) 56, (byte) 57, (byte) 97, (byte) 98, (byte) 99, (byte) 100, (byte) 101, (byte) 102};
+    /* renamed from: a */
+    ja f24391a;
+    /* renamed from: b */
+    public long f24392b;
+
+    /* renamed from: b */
+    public final /* synthetic */ io mo4742b(iq iqVar) throws IOException {
+        return m21182a(iqVar);
     }
-    if (paramLong > 2147483647L) {
-      throw new IllegalArgumentException("byteCount > Integer.MAX_VALUE: " + paramLong);
+
+    /* renamed from: b */
+    public final /* synthetic */ io mo4743b(String str) throws IOException {
+        return m21183a(str);
     }
-    if (paramLong == 0L) {
-      paramCharset = "";
+
+    /* renamed from: b */
+    public final /* synthetic */ io mo4744b(byte[] bArr) throws IOException {
+        return m21185a(bArr);
     }
-    ja localja;
-    String str;
-    do
-    {
-      return paramCharset;
-      localja = this.a;
-      if (localja.b + paramLong > localja.c) {
-        return new String(e(paramLong), paramCharset);
-      }
-      str = new String(localja.a, localja.b, (int)paramLong, paramCharset);
-      localja.b = ((int)(localja.b + paramLong));
-      this.b -= paramLong;
-      paramCharset = str;
-    } while (localja.b != localja.c);
-    this.a = localja.a();
-    jb.a(localja);
-    return str;
-  }
-  
-  private void c(byte[] paramArrayOfByte)
-    throws EOFException
-  {
-    int j;
-    for (int i = 0; i < paramArrayOfByte.length; i = j + i)
-    {
-      j = paramArrayOfByte.length - i;
-      jf.a(paramArrayOfByte.length, i, j);
-      ja localja = this.a;
-      if (localja == null) {
-        j = -1;
-      }
-      while (j == -1)
-      {
-        throw new EOFException();
-        int k = Math.min(j, localja.c - localja.b);
-        System.arraycopy(localja.a, localja.b, paramArrayOfByte, i, k);
-        localja.b += k;
-        this.b -= k;
-        j = k;
-        if (localja.b == localja.c)
-        {
-          this.a = localja.a();
-          jb.a(localja);
-          j = k;
-        }
-      }
+
+    /* renamed from: b */
+    public final /* synthetic */ io mo4745b(byte[] bArr, int i, int i2) throws IOException {
+        return m21186a(bArr, i, i2);
     }
-  }
-  
-  private String k(long paramLong)
-    throws EOFException
-  {
-    return a(paramLong, jf.a);
-  }
-  
-  private in q()
-  {
-    in localin = new in();
-    if (this.b == 0L) {
-      return localin;
+
+    public final /* synthetic */ Object clone() throws CloneNotSupportedException {
+        return m21175q();
     }
-    localin.a = new ja(this.a);
-    ja localja1 = localin.a;
-    ja localja2 = localin.a;
-    ja localja3 = localin.a;
-    localja2.g = localja3;
-    localja1.f = localja3;
-    for (localja1 = this.a.f; localja1 != this.a; localja1 = localja1.f) {
-      localin.a.g.a(new ja(localja1));
+
+    /* renamed from: g */
+    public final /* synthetic */ io mo4754g(int i) throws IOException {
+        return m21203e(i);
     }
-    localin.b = this.b;
-    return localin;
-  }
-  
-  public final long a(byte paramByte)
-  {
-    return a(paramByte, 0L);
-  }
-  
-  public final long a(byte paramByte, long paramLong)
-  {
-    if (paramLong < 0L) {
-      throw new IllegalArgumentException("fromIndex < 0");
+
+    /* renamed from: h */
+    public final /* synthetic */ io mo4755h(int i) throws IOException {
+        return m21199d(i);
     }
-    Object localObject1 = this.a;
-    if (localObject1 == null) {
-      return -1L;
+
+    /* renamed from: i */
+    public final /* synthetic */ io mo4758i(int i) throws IOException {
+        return m21196c(i);
     }
-    long l = 0L;
-    int j = ((ja)localObject1).c - ((ja)localObject1).b;
-    if (paramLong >= j) {}
-    for (paramLong -= j;; paramLong = 0L)
-    {
-      l += j;
-      Object localObject2 = ((ja)localObject1).f;
-      localObject1 = localObject2;
-      if (localObject2 != this.a) {
-        break;
-      }
-      return -1L;
-      localObject2 = ((ja)localObject1).a;
-      int i = (int)(((ja)localObject1).b + paramLong);
-      int k = ((ja)localObject1).c;
-      while (i < k)
-      {
-        if (localObject2[i] == paramByte) {
-          return l + i - ((ja)localObject1).b;
-        }
-        i += 1;
-      }
+
+    /* renamed from: i */
+    public final /* synthetic */ io mo4759i(long j) throws IOException {
+        return m21211h(j);
     }
-  }
-  
-  public final long a(in paramin, long paramLong)
-  {
-    if (paramin == null) {
-      throw new IllegalArgumentException("sink == null");
+
+    /* renamed from: j */
+    public final /* synthetic */ io mo4761j(int i) throws IOException {
+        return m21191b(i);
     }
-    if (paramLong < 0L) {
-      throw new IllegalArgumentException("byteCount < 0: " + paramLong);
+
+    /* renamed from: j */
+    public final /* synthetic */ io mo4762j(long j) throws IOException {
+        return m21209g(j);
     }
-    if (this.b == 0L) {
-      return -1L;
-    }
-    long l = paramLong;
-    if (paramLong > this.b) {
-      l = this.b;
-    }
-    paramin.a_(this, l);
-    return l;
-  }
-  
-  public final long a(jd paramjd)
-    throws IOException
-  {
-    if (paramjd == null) {
-      throw new IllegalArgumentException("source == null");
-    }
-    long l2;
-    for (long l1 = 0L;; l1 += l2)
-    {
-      l2 = paramjd.a(this, 2048L);
-      if (l2 == -1L) {
-        break;
-      }
-    }
-    return l1;
-  }
-  
-  public final in a(int paramInt)
-  {
-    if (paramInt < 128)
-    {
-      b(paramInt);
-      return this;
-    }
-    if (paramInt < 2048)
-    {
-      b(paramInt >> 6 | 0xC0);
-      b(paramInt & 0x3F | 0x80);
-      return this;
-    }
-    if (paramInt < 65536)
-    {
-      if ((paramInt >= 55296) && (paramInt <= 57343)) {
-        throw new IllegalArgumentException("Unexpected code point: " + Integer.toHexString(paramInt));
-      }
-      b(paramInt >> 12 | 0xE0);
-      b(paramInt >> 6 & 0x3F | 0x80);
-      b(paramInt & 0x3F | 0x80);
-      return this;
-    }
-    if (paramInt <= 1114111)
-    {
-      b(paramInt >> 18 | 0xF0);
-      b(paramInt >> 12 & 0x3F | 0x80);
-      b(paramInt >> 6 & 0x3F | 0x80);
-      b(paramInt & 0x3F | 0x80);
-      return this;
-    }
-    throw new IllegalArgumentException("Unexpected code point: " + Integer.toHexString(paramInt));
-  }
-  
-  public final in a(in paramin, long paramLong1, long paramLong2)
-  {
-    if (paramin == null) {
-      throw new IllegalArgumentException("out == null");
-    }
-    jf.a(this.b, paramLong1, paramLong2);
-    if (paramLong2 == 0L) {
-      return this;
-    }
-    paramin.b += paramLong2;
-    ja localja2;
-    long l1;
-    long l2;
-    for (ja localja1 = this.a;; localja1 = localja1.f)
-    {
-      localja2 = localja1;
-      l1 = paramLong1;
-      l2 = paramLong2;
-      if (paramLong1 < localja1.c - localja1.b) {
-        break;
-      }
-      paramLong1 -= localja1.c - localja1.b;
-    }
-    label103:
-    if (l2 > 0L)
-    {
-      localja1 = new ja(localja2);
-      localja1.b = ((int)(localja1.b + l1));
-      localja1.c = Math.min(localja1.b + (int)l2, localja1.c);
-      if (paramin.a != null) {
-        break label215;
-      }
-      localja1.g = localja1;
-      localja1.f = localja1;
-      paramin.a = localja1;
-    }
-    for (;;)
-    {
-      l2 -= localja1.c - localja1.b;
-      localja2 = localja2.f;
-      l1 = 0L;
-      break label103;
-      break;
-      label215:
-      paramin.a.g.a(localja1);
-    }
-  }
-  
-  public final in a(iq paramiq)
-  {
-    if (paramiq == null) {
-      throw new IllegalArgumentException("byteString == null");
-    }
-    a(paramiq.c, 0, paramiq.c.length);
-    return this;
-  }
-  
-  public final in a(String paramString)
-  {
-    return a(paramString, 0, paramString.length());
-  }
-  
-  public final in a(String paramString, int paramInt1, int paramInt2)
-  {
-    if (paramString == null) {
-      throw new IllegalArgumentException("string == null");
-    }
-    if (paramInt1 < 0) {
-      throw new IllegalAccessError("beginIndex < 0: " + paramInt1);
-    }
-    if (paramInt2 < paramInt1) {
-      throw new IllegalArgumentException("endIndex < beginIndex: " + paramInt2 + " < " + paramInt1);
-    }
-    int k;
-    ja localja;
-    int i;
-    if (paramInt2 > paramString.length())
-    {
-      throw new IllegalArgumentException("endIndex > string.length: " + paramInt2 + " > " + paramString.length());
-      i = paramInt1 + k - localja.c;
-      localja.c += i;
-      this.b += i;
-    }
-    for (;;)
-    {
-      if (paramInt1 >= paramInt2) {
+
+    /* renamed from: p */
+    public final /* bridge */ /* synthetic */ io mo4765p() throws IOException {
         return this;
-      }
-      int j = paramString.charAt(paramInt1);
-      if (j < 128)
-      {
-        localja = f(1);
-        byte[] arrayOfByte = localja.a;
-        k = localja.c - paramInt1;
-        int m = Math.min(paramInt2, 2048 - k);
-        i = paramInt1 + 1;
-        arrayOfByte[(k + paramInt1)] = ((byte)j);
-        paramInt1 = i;
-        for (;;)
-        {
-          if (paramInt1 >= m) {
-            break label270;
-          }
-          i = paramString.charAt(paramInt1);
-          if (i >= 128) {
-            break;
-          }
-          arrayOfByte[(paramInt1 + k)] = ((byte)i);
-          paramInt1 += 1;
+    }
+
+    /* renamed from: b */
+    public final in mo4741b() {
+        return this;
+    }
+
+    /* renamed from: c */
+    public final io mo4746c() {
+        return this;
+    }
+
+    /* renamed from: d */
+    public final boolean mo4748d() {
+        return this.f24392b == 0;
+    }
+
+    /* renamed from: a */
+    public final void mo4740a(long j) throws EOFException {
+        if (this.f24392b < j) {
+            throw new EOFException();
         }
-        label270:
-        break;
-      }
-      if (j < 2048)
-      {
-        b(j >> 6 | 0xC0);
-        b(j & 0x3F | 0x80);
-        paramInt1 += 1;
-      }
-      else if ((j < 55296) || (j > 57343))
-      {
-        b(j >> 12 | 0xE0);
-        b(j >> 6 & 0x3F | 0x80);
-        b(j & 0x3F | 0x80);
-        paramInt1 += 1;
-      }
-      else
-      {
-        if (paramInt1 + 1 < paramInt2) {}
-        for (i = paramString.charAt(paramInt1 + 1);; i = 0)
-        {
-          if ((j <= 56319) && (i >= 56320) && (i <= 57343)) {
-            break label438;
-          }
-          b(63);
-          paramInt1 += 1;
-          break;
+    }
+
+    /* renamed from: a */
+    public final in m21181a(in inVar, long j, long j2) {
+        if (inVar == null) {
+            throw new IllegalArgumentException("out == null");
         }
-        label438:
-        i = (i & 0xFFFF23FF | (j & 0xFFFF27FF) << 10) + 65536;
-        b(i >> 18 | 0xF0);
-        b(i >> 12 & 0x3F | 0x80);
-        b(i >> 6 & 0x3F | 0x80);
-        b(i & 0x3F | 0x80);
-        paramInt1 += 2;
-      }
-    }
-    return this;
-  }
-  
-  public final in a(byte[] paramArrayOfByte)
-  {
-    if (paramArrayOfByte == null) {
-      throw new IllegalArgumentException("source == null");
-    }
-    return a(paramArrayOfByte, 0, paramArrayOfByte.length);
-  }
-  
-  public final in a(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    if (paramArrayOfByte == null) {
-      throw new IllegalArgumentException("source == null");
-    }
-    jf.a(paramArrayOfByte.length, paramInt1, paramInt2);
-    int i = paramInt1 + paramInt2;
-    while (paramInt1 < i)
-    {
-      ja localja = f(1);
-      int j = Math.min(i - paramInt1, 2048 - localja.c);
-      System.arraycopy(paramArrayOfByte, paramInt1, localja.a, localja.c, j);
-      paramInt1 += j;
-      localja.c = (j + localja.c);
-    }
-    this.b += paramInt2;
-    return this;
-  }
-  
-  public final je a()
-  {
-    return je.b;
-  }
-  
-  public final void a(long paramLong)
-    throws EOFException
-  {
-    if (this.b < paramLong) {
-      throw new EOFException();
-    }
-  }
-  
-  public final void a_(in paramin, long paramLong)
-  {
-    if (paramin == null) {
-      throw new IllegalArgumentException("source == null");
-    }
-    if (paramin == this) {
-      throw new IllegalArgumentException("source == this");
-    }
-    jf.a(paramin.b, 0L, paramLong);
-    if (paramLong > 0L)
-    {
-      if (paramLong >= paramin.a.c - paramin.a.b) {
-        break label269;
-      }
-      if (this.a == null) {
-        break label160;
-      }
-      localja1 = this.a.g;
-      if ((localja1 == null) || (!localja1.e)) {
-        break label176;
-      }
-      l = localja1.c;
-      if (!localja1.d) {
-        break label166;
-      }
-    }
-    label160:
-    label166:
-    for (int i = 0;; i = localja1.b)
-    {
-      if (l + paramLong - i > 2048L) {
-        break label176;
-      }
-      paramin.a.a(localja1, (int)paramLong);
-      paramin.b -= paramLong;
-      this.b += paramLong;
-      return;
-      localja1 = null;
-      break;
-    }
-    label176:
-    ja localja1 = paramin.a;
-    i = (int)paramLong;
-    if ((i <= 0) || (i > localja1.c - localja1.b)) {
-      throw new IllegalArgumentException();
-    }
-    ja localja2 = new ja(localja1);
-    localja2.c = (localja2.b + i);
-    localja1.b = (i + localja1.b);
-    localja1.g.a(localja2);
-    paramin.a = localja2;
-    label269:
-    localja1 = paramin.a;
-    long l = localja1.c - localja1.b;
-    paramin.a = localja1.a();
-    if (this.a == null)
-    {
-      this.a = localja1;
-      localja1 = this.a;
-      localja2 = this.a;
-      ja localja3 = this.a;
-      localja2.g = localja3;
-      localja1.f = localja3;
-    }
-    label504:
-    for (;;)
-    {
-      paramin.b -= l;
-      this.b += l;
-      paramLong -= l;
-      break;
-      localja1 = this.a.g.a(localja1);
-      if (localja1.g == localja1) {
-        throw new IllegalStateException();
-      }
-      if (localja1.g.e)
-      {
-        int j = localja1.c - localja1.b;
-        int k = localja1.g.c;
-        if (localja1.g.d) {}
-        for (i = 0;; i = localja1.g.b)
-        {
-          if (j > i + (2048 - k)) {
-            break label504;
-          }
-          localja1.a(localja1.g, j);
-          localja1.a();
-          jb.a(localja1);
-          break;
-        }
-      }
-    }
-  }
-  
-  public final byte b(long paramLong)
-  {
-    jf.a(this.b, paramLong, 1L);
-    for (ja localja = this.a;; localja = localja.f)
-    {
-      int i = localja.c - localja.b;
-      if (paramLong < i) {
-        return localja.a[(localja.b + (int)paramLong)];
-      }
-      paramLong -= i;
-    }
-  }
-  
-  public final in b()
-  {
-    return this;
-  }
-  
-  public final in b(int paramInt)
-  {
-    ja localja = f(1);
-    byte[] arrayOfByte = localja.a;
-    int i = localja.c;
-    localja.c = (i + 1);
-    arrayOfByte[i] = ((byte)paramInt);
-    this.b += 1L;
-    return this;
-  }
-  
-  public final in c(int paramInt)
-  {
-    ja localja = f(2);
-    byte[] arrayOfByte = localja.a;
-    int i = localja.c;
-    int j = i + 1;
-    arrayOfByte[i] = ((byte)(paramInt >>> 8 & 0xFF));
-    arrayOfByte[j] = ((byte)(paramInt & 0xFF));
-    localja.c = (j + 1);
-    this.b += 2L;
-    return this;
-  }
-  
-  public final io c()
-  {
-    return this;
-  }
-  
-  public final iq c(long paramLong)
-    throws EOFException
-  {
-    return new iq(e(paramLong));
-  }
-  
-  public final void close() {}
-  
-  public final in d(int paramInt)
-  {
-    ja localja = f(4);
-    byte[] arrayOfByte = localja.a;
-    int j = localja.c;
-    int i = j + 1;
-    arrayOfByte[j] = ((byte)(paramInt >>> 24 & 0xFF));
-    j = i + 1;
-    arrayOfByte[i] = ((byte)(paramInt >>> 16 & 0xFF));
-    i = j + 1;
-    arrayOfByte[j] = ((byte)(paramInt >>> 8 & 0xFF));
-    arrayOfByte[i] = ((byte)(paramInt & 0xFF));
-    localja.c = (i + 1);
-    this.b += 4L;
-    return this;
-  }
-  
-  final String d(long paramLong)
-    throws EOFException
-  {
-    if ((paramLong > 0L) && (b(paramLong - 1L) == 13))
-    {
-      str = k(paramLong - 1L);
-      f(2L);
-      return str;
-    }
-    String str = k(paramLong);
-    f(1L);
-    return str;
-  }
-  
-  public final boolean d()
-  {
-    return this.b == 0L;
-  }
-  
-  public final byte e()
-  {
-    if (this.b == 0L) {
-      throw new IllegalStateException("size == 0");
-    }
-    ja localja = this.a;
-    int i = localja.b;
-    int j = localja.c;
-    byte[] arrayOfByte = localja.a;
-    int k = i + 1;
-    byte b1 = arrayOfByte[i];
-    this.b -= 1L;
-    if (k == j)
-    {
-      this.a = localja.a();
-      jb.a(localja);
-      return b1;
-    }
-    localja.b = k;
-    return b1;
-  }
-  
-  public final in e(int paramInt)
-  {
-    return d(jf.a(paramInt));
-  }
-  
-  public final byte[] e(long paramLong)
-    throws EOFException
-  {
-    jf.a(this.b, 0L, paramLong);
-    if (paramLong > 2147483647L) {
-      throw new IllegalArgumentException("byteCount > Integer.MAX_VALUE: " + paramLong);
-    }
-    byte[] arrayOfByte = new byte[(int)paramLong];
-    c(arrayOfByte);
-    return arrayOfByte;
-  }
-  
-  public final boolean equals(Object paramObject)
-  {
-    long l1 = 0L;
-    if (this == paramObject) {
-      return true;
-    }
-    if (!(paramObject instanceof in)) {
-      return false;
-    }
-    paramObject = (in)paramObject;
-    if (this.b != ((in)paramObject).b) {
-      return false;
-    }
-    if (this.b == 0L) {
-      return true;
-    }
-    Object localObject2 = this.a;
-    paramObject = ((in)paramObject).a;
-    int j = ((ja)localObject2).b;
-    int i = ((ja)paramObject).b;
-    while (l1 < this.b)
-    {
-      long l2 = Math.min(((ja)localObject2).c - j, ((ja)paramObject).c - i);
-      int k = 0;
-      while (k < l2)
-      {
-        if (localObject2.a[j] != paramObject.a[i]) {
-          return false;
-        }
-        k += 1;
-        i += 1;
-        j += 1;
-      }
-      k = j;
-      Object localObject1 = localObject2;
-      if (j == ((ja)localObject2).c)
-      {
-        localObject1 = ((ja)localObject2).f;
-        k = ((ja)localObject1).b;
-      }
-      j = i;
-      Object localObject3 = paramObject;
-      if (i == ((ja)paramObject).c)
-      {
-        localObject3 = ((ja)paramObject).f;
-        j = ((ja)localObject3).b;
-      }
-      l1 += l2;
-      i = j;
-      j = k;
-      localObject2 = localObject1;
-      paramObject = localObject3;
-    }
-    return true;
-  }
-  
-  final ja f(int paramInt)
-  {
-    if ((paramInt <= 0) || (paramInt > 2048)) {
-      throw new IllegalArgumentException();
-    }
-    ja localja2;
-    ja localja1;
-    if (this.a == null)
-    {
-      this.a = jb.a();
-      localja2 = this.a;
-      ja localja3 = this.a;
-      localja1 = this.a;
-      localja3.g = localja1;
-      localja2.f = localja1;
-    }
-    do
-    {
-      return localja1;
-      localja2 = this.a.g;
-      if (localja2.c + paramInt > 2048) {
-        break;
-      }
-      localja1 = localja2;
-    } while (localja2.e);
-    return localja2.a(jb.a());
-  }
-  
-  public final short f()
-  {
-    if (this.b < 2L) {
-      throw new IllegalStateException("size < 2: " + this.b);
-    }
-    ja localja = this.a;
-    int k = localja.b;
-    int i = localja.c;
-    if (i - k < 2) {
-      return (short)((e() & 0xFF) << 8 | e() & 0xFF);
-    }
-    byte[] arrayOfByte = localja.a;
-    int j = k + 1;
-    k = arrayOfByte[k];
-    int m = j + 1;
-    j = arrayOfByte[j];
-    this.b -= 2L;
-    if (m == i)
-    {
-      this.a = localja.a();
-      jb.a(localja);
-    }
-    for (;;)
-    {
-      return (short)((k & 0xFF) << 8 | j & 0xFF);
-      localja.b = m;
-    }
-  }
-  
-  public final void f(long paramLong)
-    throws EOFException
-  {
-    while (paramLong > 0L)
-    {
-      if (this.a == null) {
-        throw new EOFException();
-      }
-      int i = (int)Math.min(paramLong, this.a.c - this.a.b);
-      this.b -= i;
-      long l = paramLong - i;
-      ja localja = this.a;
-      localja.b = (i + localja.b);
-      paramLong = l;
-      if (this.a.b == this.a.c)
-      {
-        localja = this.a;
-        this.a = localja.a();
-        jb.a(localja);
-        paramLong = l;
-      }
-    }
-  }
-  
-  public final void flush() {}
-  
-  public final int g()
-  {
-    if (this.b < 4L) {
-      throw new IllegalStateException("size < 4: " + this.b);
-    }
-    ja localja = this.a;
-    int j = localja.b;
-    int i = localja.c;
-    if (i - j < 4) {
-      return (e() & 0xFF) << 24 | (e() & 0xFF) << 16 | (e() & 0xFF) << 8 | e() & 0xFF;
-    }
-    byte[] arrayOfByte = localja.a;
-    int k = j + 1;
-    j = arrayOfByte[j];
-    int n = k + 1;
-    k = arrayOfByte[k];
-    int m = n + 1;
-    int i1 = arrayOfByte[n];
-    n = m + 1;
-    j = (j & 0xFF) << 24 | (k & 0xFF) << 16 | (i1 & 0xFF) << 8 | arrayOfByte[m] & 0xFF;
-    this.b -= 4L;
-    if (n == i)
-    {
-      this.a = localja.a();
-      jb.a(localja);
-      return j;
-    }
-    localja.b = n;
-    return j;
-  }
-  
-  public final in g(long paramLong)
-  {
-    if (paramLong == 0L) {
-      return b(48);
-    }
-    if (paramLong < 0L)
-    {
-      paramLong = -paramLong;
-      if (paramLong < 0L) {
-        return a("-9223372036854775808");
-      }
-    }
-    for (int j = 1;; j = 0)
-    {
-      int i;
-      if (paramLong < 100000000L) {
-        if (paramLong < 10000L) {
-          if (paramLong < 100L) {
-            if (paramLong < 10L) {
-              i = 1;
+        jf.m21314a(this.f24392b, j, j2);
+        if (j2 != 0) {
+            inVar.f24392b += j2;
+            ja jaVar = this.f24391a;
+            while (j >= ((long) (jaVar.f24431c - jaVar.f24430b))) {
+                j -= (long) (jaVar.f24431c - jaVar.f24430b);
+                jaVar = jaVar.f24434f;
             }
-          }
-        }
-      }
-      int k;
-      ja localja;
-      byte[] arrayOfByte;
-      for (;;)
-      {
-        k = i;
-        if (j != 0) {
-          k = i + 1;
-        }
-        localja = f(k);
-        arrayOfByte = localja.a;
-        i = localja.c + k;
-        while (paramLong != 0L)
-        {
-          int m = (int)(paramLong % 10L);
-          i -= 1;
-          arrayOfByte[i] = c[m];
-          paramLong /= 10L;
-        }
-        i = 2;
-        continue;
-        if (paramLong < 1000L)
-        {
-          i = 3;
-        }
-        else
-        {
-          i = 4;
-          continue;
-          if (paramLong < 1000000L)
-          {
-            if (paramLong < 100000L) {
-              i = 5;
-            } else {
-              i = 6;
-            }
-          }
-          else if (paramLong < 10000000L)
-          {
-            i = 7;
-          }
-          else
-          {
-            i = 8;
-            continue;
-            if (paramLong < 1000000000000L)
-            {
-              if (paramLong < 10000000000L)
-              {
-                if (paramLong < 1000000000L) {
-                  i = 9;
+            while (j2 > 0) {
+                ja jaVar2 = new ja(jaVar);
+                jaVar2.f24430b = (int) (((long) jaVar2.f24430b) + j);
+                jaVar2.f24431c = Math.min(jaVar2.f24430b + ((int) j2), jaVar2.f24431c);
+                if (inVar.f24391a == null) {
+                    jaVar2.f24435g = jaVar2;
+                    jaVar2.f24434f = jaVar2;
+                    inVar.f24391a = jaVar2;
                 } else {
-                  i = 10;
+                    inVar.f24391a.f24435g.m21305a(jaVar2);
                 }
-              }
-              else if (paramLong < 100000000000L) {
-                i = 11;
-              } else {
-                i = 12;
-              }
+                j2 -= (long) (jaVar2.f24431c - jaVar2.f24430b);
+                jaVar = jaVar.f24434f;
+                j = 0;
             }
-            else if (paramLong < 1000000000000000L)
-            {
-              if (paramLong < 10000000000000L) {
-                i = 13;
-              } else if (paramLong < 100000000000000L) {
-                i = 14;
-              } else {
-                i = 15;
-              }
+        }
+        return this;
+    }
+
+    /* renamed from: e */
+    public final byte mo4749e() {
+        if (this.f24392b == 0) {
+            throw new IllegalStateException("size == 0");
+        }
+        ja jaVar = this.f24391a;
+        int i = jaVar.f24430b;
+        int i2 = jaVar.f24431c;
+        int i3 = i + 1;
+        byte b = jaVar.f24429a[i];
+        this.f24392b--;
+        if (i3 == i2) {
+            this.f24391a = jaVar.m21304a();
+            jb.m21308a(jaVar);
+        } else {
+            jaVar.f24430b = i3;
+        }
+        return b;
+    }
+
+    /* renamed from: b */
+    public final byte m21189b(long j) {
+        jf.m21314a(this.f24392b, j, 1);
+        ja jaVar = this.f24391a;
+        while (true) {
+            int i = jaVar.f24431c - jaVar.f24430b;
+            if (j < ((long) i)) {
+                return jaVar.f24429a[jaVar.f24430b + ((int) j)];
             }
-            else if (paramLong < 100000000000000000L)
-            {
-              if (paramLong < 10000000000000000L) {
-                i = 16;
-              } else {
-                i = 17;
-              }
+            j -= (long) i;
+            jaVar = jaVar.f24434f;
+        }
+    }
+
+    /* renamed from: f */
+    public final short mo4751f() {
+        if (this.f24392b < 2) {
+            throw new IllegalStateException("size < 2: " + this.f24392b);
+        }
+        ja jaVar = this.f24391a;
+        int i = jaVar.f24430b;
+        int i2 = jaVar.f24431c;
+        if (i2 - i < 2) {
+            return (short) (((mo4749e() & 255) << 8) | (mo4749e() & 255));
+        }
+        byte[] bArr = jaVar.f24429a;
+        int i3 = i + 1;
+        int i4 = i3 + 1;
+        i = ((bArr[i] & 255) << 8) | (bArr[i3] & 255);
+        this.f24392b -= 2;
+        if (i4 == i2) {
+            this.f24391a = jaVar.m21304a();
+            jb.m21308a(jaVar);
+        } else {
+            jaVar.f24430b = i4;
+        }
+        return (short) i;
+    }
+
+    /* renamed from: g */
+    public final int mo4753g() {
+        if (this.f24392b < 4) {
+            throw new IllegalStateException("size < 4: " + this.f24392b);
+        }
+        ja jaVar = this.f24391a;
+        int i = jaVar.f24430b;
+        int i2 = jaVar.f24431c;
+        if (i2 - i < 4) {
+            return ((((mo4749e() & 255) << 24) | ((mo4749e() & 255) << 16)) | ((mo4749e() & 255) << 8)) | (mo4749e() & 255);
+        }
+        byte[] bArr = jaVar.f24429a;
+        int i3 = i + 1;
+        int i4 = i3 + 1;
+        i = ((bArr[i] & 255) << 24) | ((bArr[i3] & 255) << 16);
+        i3 = i4 + 1;
+        i |= (bArr[i4] & 255) << 8;
+        i4 = i3 + 1;
+        i |= bArr[i3] & 255;
+        this.f24392b -= 4;
+        if (i4 == i2) {
+            this.f24391a = jaVar.m21304a();
+            jb.m21308a(jaVar);
+            return i;
+        }
+        jaVar.f24430b = i4;
+        return i;
+    }
+
+    /* renamed from: h */
+    public final short mo4756h() {
+        return jf.m21313a(mo4751f());
+    }
+
+    /* renamed from: i */
+    public final int mo4757i() {
+        return jf.m21312a(mo4753g());
+    }
+
+    /* renamed from: j */
+    public final long mo4760j() {
+        if (this.f24392b == 0) {
+            throw new IllegalStateException("size == 0");
+        }
+        long j = 0;
+        int i = 0;
+        Object obj = null;
+        do {
+            ja jaVar = this.f24391a;
+            byte[] bArr = jaVar.f24429a;
+            int i2 = jaVar.f24430b;
+            int i3 = jaVar.f24431c;
+            int i4 = i2;
+            while (i4 < i3) {
+                byte b = bArr[i4];
+                if (b >= (byte) 48 && b <= (byte) 57) {
+                    i2 = b - 48;
+                } else if (b >= (byte) 97 && b <= (byte) 102) {
+                    i2 = (b - 97) + 10;
+                } else if (b < (byte) 65 || b > (byte) 70) {
+                    if (i != 0) {
+                        obj = 1;
+                        if (i4 != i3) {
+                            this.f24391a = jaVar.m21304a();
+                            jb.m21308a(jaVar);
+                        } else {
+                            jaVar.f24430b = i4;
+                        }
+                        if (obj == null) {
+                            break;
+                        }
+                    } else {
+                        throw new NumberFormatException("Expected leading [0-9a-fA-F] character but was 0x" + Integer.toHexString(b));
+                    }
+                } else {
+                    i2 = (b - 65) + 10;
+                }
+                if ((-1152921504606846976L & j) != 0) {
+                    throw new NumberFormatException("Number too large: " + new in().m21211h(j).m21191b((int) b).m21221l());
+                }
+                i++;
+                i4++;
+                j = ((long) i2) | (j << 4);
             }
-            else if (paramLong < 1000000000000000000L) {
-              i = 18;
+            if (i4 != i3) {
+                jaVar.f24430b = i4;
             } else {
-              i = 19;
+                this.f24391a = jaVar.m21304a();
+                jb.m21308a(jaVar);
             }
-          }
+            if (obj == null) {
+                break;
+            }
+        } while (this.f24391a != null);
+        this.f24392b -= (long) i;
+        return j;
+    }
+
+    /* renamed from: k */
+    public final iq m21220k() {
+        return new iq(mo4764n());
+    }
+
+    /* renamed from: c */
+    public final iq mo4747c(long j) throws EOFException {
+        return new iq(mo4750e(j));
+    }
+
+    /* renamed from: l */
+    public final String m21221l() {
+        try {
+            return m21172a(this.f24392b, jf.f24438a);
+        } catch (EOFException e) {
+            throw new AssertionError(e);
         }
-      }
-      if (j != 0) {
-        arrayOfByte[(i - 1)] = 45;
-      }
-      localja.c += k;
-      paramLong = this.b;
-      this.b = (k + paramLong);
-      return this;
     }
-  }
-  
-  public final in h(long paramLong)
-  {
-    if (paramLong == 0L) {
-      return b(48);
+
+    /* renamed from: k */
+    private String m21174k(long j) throws EOFException {
+        return m21172a(j, jf.f24438a);
     }
-    int j = Long.numberOfTrailingZeros(Long.highestOneBit(paramLong)) / 4 + 1;
-    ja localja = f(j);
-    byte[] arrayOfByte = localja.a;
-    int i = localja.c + j - 1;
-    int k = localja.c;
-    while (i >= k)
-    {
-      arrayOfByte[i] = c[((int)(0xF & paramLong))];
-      paramLong >>>= 4;
-      i -= 1;
-    }
-    localja.c += j;
-    paramLong = this.b;
-    this.b = (j + paramLong);
-    return this;
-  }
-  
-  public final short h()
-  {
-    return jf.a(f());
-  }
-  
-  public final int hashCode()
-  {
-    Object localObject = this.a;
-    if (localObject == null) {
-      return 0;
-    }
-    int j = 1;
-    int i;
-    ja localja;
-    do
-    {
-      int k = ((ja)localObject).b;
-      int m = ((ja)localObject).c;
-      for (i = j; k < m; i = j + i * 31)
-      {
-        j = localObject.a[k];
-        k += 1;
-      }
-      localja = ((ja)localObject).f;
-      j = i;
-      localObject = localja;
-    } while (localja != this.a);
-    return i;
-  }
-  
-  public final int i()
-  {
-    return jf.a(g());
-  }
-  
-  public final long j()
-  {
-    if (this.b == 0L) {
-      throw new IllegalStateException("size == 0");
-    }
-    long l2 = 0L;
-    int i = 0;
-    int j = 0;
-    Object localObject = this.a;
-    byte[] arrayOfByte = ((ja)localObject).a;
-    int m = ((ja)localObject).b;
-    int n = ((ja)localObject).c;
-    long l1 = l2;
-    int k = i;
-    label60:
-    i = j;
-    if (m < n)
-    {
-      int i1 = arrayOfByte[m];
-      if ((i1 >= 48) && (i1 <= 57)) {
-        i = i1 - 48;
-      }
-      for (;;)
-      {
-        if ((0xF000000000000000 & l1) == 0L) {
-          break label296;
+
+    /* renamed from: a */
+    private String m21172a(long j, Charset charset) throws EOFException {
+        jf.m21314a(this.f24392b, 0, j);
+        if (charset == null) {
+            throw new IllegalArgumentException("charset == null");
+        } else if (j > 2147483647L) {
+            throw new IllegalArgumentException("byteCount > Integer.MAX_VALUE: " + j);
+        } else if (j == 0) {
+            return "";
+        } else {
+            ja jaVar = this.f24391a;
+            if (((long) jaVar.f24430b) + j > ((long) jaVar.f24431c)) {
+                return new String(mo4750e(j), charset);
+            }
+            String str = new String(jaVar.f24429a, jaVar.f24430b, (int) j, charset);
+            jaVar.f24430b = (int) (((long) jaVar.f24430b) + j);
+            this.f24392b -= j;
+            if (jaVar.f24430b != jaVar.f24431c) {
+                return str;
+            }
+            this.f24391a = jaVar.m21304a();
+            jb.m21308a(jaVar);
+            return str;
         }
-        localObject = new in().h(l1).b(i1);
-        throw new NumberFormatException("Number too large: " + ((in)localObject).l());
-        if ((i1 >= 97) && (i1 <= 102))
-        {
-          i = i1 - 97 + 10;
+    }
+
+    /* renamed from: m */
+    public final String mo4763m() throws EOFException {
+        long a = m21177a((byte) 10, 0);
+        if (a != -1) {
+            return m21200d(a);
         }
-        else
-        {
-          if ((i1 < 65) || (i1 > 70)) {
-            break;
-          }
-          i = i1 - 65 + 10;
+        in inVar = new in();
+        m21181a(inVar, 0, Math.min(32, this.f24392b));
+        throw new EOFException("\\n not found: size=" + this.f24392b + " content=" + inVar.m21220k().m21230b() + "...");
+    }
+
+    /* renamed from: d */
+    final String m21200d(long j) throws EOFException {
+        if (j <= 0 || m21189b(j - 1) != (byte) 13) {
+            String k = m21174k(j);
+            mo4752f(1);
+            return k;
         }
-      }
-      if (k == 0) {
-        throw new NumberFormatException("Expected leading [0-9a-fA-F] character but was 0x" + Integer.toHexString(i1));
-      }
-      i = 1;
+        k = m21174k(j - 1);
+        mo4752f(2);
+        return k;
     }
-    if (m == n)
-    {
-      this.a = ((ja)localObject).a();
-      jb.a((ja)localObject);
-    }
-    for (;;)
-    {
-      if (i == 0)
-      {
-        j = i;
-        i = k;
-        l2 = l1;
-        if (this.a != null) {
-          break;
+
+    /* renamed from: n */
+    public final byte[] mo4764n() {
+        try {
+            return mo4750e(this.f24392b);
+        } catch (EOFException e) {
+            throw new AssertionError(e);
         }
-      }
-      this.b -= k;
-      return l1;
-      label296:
-      l2 = i;
-      k += 1;
-      m += 1;
-      l1 = l2 | l1 << 4;
-      break label60;
-      ((ja)localObject).b = m;
     }
-  }
-  
-  public final iq k()
-  {
-    return new iq(n());
-  }
-  
-  public final String l()
-  {
-    try
-    {
-      String str = a(this.b, jf.a);
-      return str;
+
+    /* renamed from: e */
+    public final byte[] mo4750e(long j) throws EOFException {
+        jf.m21314a(this.f24392b, 0, j);
+        if (j > 2147483647L) {
+            throw new IllegalArgumentException("byteCount > Integer.MAX_VALUE: " + j);
+        }
+        byte[] bArr = new byte[((int) j)];
+        m21173c(bArr);
+        return bArr;
     }
-    catch (EOFException localEOFException)
-    {
-      throw new AssertionError(localEOFException);
+
+    /* renamed from: c */
+    private void m21173c(byte[] bArr) throws EOFException {
+        int i = 0;
+        while (i < bArr.length) {
+            int i2;
+            int length = bArr.length - i;
+            jf.m21314a((long) bArr.length, (long) i, (long) length);
+            ja jaVar = this.f24391a;
+            if (jaVar == null) {
+                i2 = -1;
+            } else {
+                i2 = Math.min(length, jaVar.f24431c - jaVar.f24430b);
+                System.arraycopy(jaVar.f24429a, jaVar.f24430b, bArr, i, i2);
+                jaVar.f24430b += i2;
+                this.f24392b -= (long) i2;
+                if (jaVar.f24430b == jaVar.f24431c) {
+                    this.f24391a = jaVar.m21304a();
+                    jb.m21308a(jaVar);
+                }
+            }
+            if (i2 == -1) {
+                throw new EOFException();
+            }
+            i = i2 + i;
+        }
     }
-  }
-  
-  public final String m()
-    throws EOFException
-  {
-    long l = a((byte)10, 0L);
-    if (l == -1L)
-    {
-      in localin = new in();
-      a(localin, 0L, Math.min(32L, this.b));
-      throw new EOFException("\\n not found: size=" + this.b + " content=" + localin.k().b() + "...");
+
+    /* renamed from: o */
+    public final void m21224o() {
+        try {
+            mo4752f(this.f24392b);
+        } catch (EOFException e) {
+            throw new AssertionError(e);
+        }
     }
-    return d(l);
-  }
-  
-  public final byte[] n()
-  {
-    try
-    {
-      byte[] arrayOfByte = e(this.b);
-      return arrayOfByte;
+
+    /* renamed from: f */
+    public final void mo4752f(long j) throws EOFException {
+        while (j > 0) {
+            if (this.f24391a == null) {
+                throw new EOFException();
+            }
+            int min = (int) Math.min(j, (long) (this.f24391a.f24431c - this.f24391a.f24430b));
+            this.f24392b -= (long) min;
+            j -= (long) min;
+            ja jaVar = this.f24391a;
+            jaVar.f24430b = min + jaVar.f24430b;
+            if (this.f24391a.f24430b == this.f24391a.f24431c) {
+                ja jaVar2 = this.f24391a;
+                this.f24391a = jaVar2.m21304a();
+                jb.m21308a(jaVar2);
+            }
+        }
     }
-    catch (EOFException localEOFException)
-    {
-      throw new AssertionError(localEOFException);
+
+    /* renamed from: a */
+    public final in m21182a(iq iqVar) {
+        if (iqVar == null) {
+            throw new IllegalArgumentException("byteString == null");
+        }
+        m21186a(iqVar.f24395c, 0, iqVar.f24395c.length);
+        return this;
     }
-  }
-  
-  public final void o()
-  {
-    try
-    {
-      f(this.b);
-      return;
+
+    /* renamed from: a */
+    public final in m21183a(String str) {
+        return m21184a(str, 0, str.length());
     }
-    catch (EOFException localEOFException)
-    {
-      throw new AssertionError(localEOFException);
+
+    /* renamed from: a */
+    public final in m21184a(String str, int i, int i2) {
+        if (str == null) {
+            throw new IllegalArgumentException("string == null");
+        } else if (i < 0) {
+            throw new IllegalAccessError("beginIndex < 0: " + i);
+        } else if (i2 < i) {
+            throw new IllegalArgumentException("endIndex < beginIndex: " + i2 + " < " + i);
+        } else if (i2 > str.length()) {
+            throw new IllegalArgumentException("endIndex > string.length: " + i2 + " > " + str.length());
+        } else {
+            while (i < i2) {
+                char charAt = str.charAt(i);
+                int i3;
+                if (charAt < '') {
+                    int i4;
+                    ja f = m21205f(1);
+                    byte[] bArr = f.f24429a;
+                    int i5 = f.f24431c - i;
+                    int min = Math.min(i2, 2048 - i5);
+                    i3 = i + 1;
+                    bArr[i5 + i] = (byte) charAt;
+                    while (i3 < min) {
+                        char charAt2 = str.charAt(i3);
+                        if (charAt2 >= '') {
+                            break;
+                        }
+                        i4 = i3 + 1;
+                        bArr[i3 + i5] = (byte) charAt2;
+                        i3 = i4;
+                    }
+                    i4 = (i3 + i5) - f.f24431c;
+                    f.f24431c += i4;
+                    this.f24392b += (long) i4;
+                    i = i3;
+                } else if (charAt < 'ࠀ') {
+                    m21191b((charAt >> 6) | 192);
+                    m21191b((charAt & 63) | 128);
+                    i++;
+                } else if (charAt < '?' || charAt > '?') {
+                    m21191b((charAt >> 12) | C1253f.dE);
+                    m21191b(((charAt >> 6) & 63) | 128);
+                    m21191b((charAt & 63) | 128);
+                    i++;
+                } else {
+                    i3 = i + 1 < i2 ? str.charAt(i + 1) : 0;
+                    if (charAt > '?' || i3 < 56320 || i3 > 57343) {
+                        m21191b(63);
+                        i++;
+                    } else {
+                        i3 = ((i3 & -56321) | ((charAt & -55297) << 10)) + 65536;
+                        m21191b((i3 >> 18) | RGHUDDataModel.MAX_CAR_SPEED);
+                        m21191b(((i3 >> 12) & 63) | 128);
+                        m21191b(((i3 >> 6) & 63) | 128);
+                        m21191b((i3 & 63) | 128);
+                        i += 2;
+                    }
+                }
+            }
+            return this;
+        }
     }
-  }
-  
-  public final String toString()
-  {
-    if (this.b == 0L) {
-      return "Buffer[size=0]";
+
+    /* renamed from: a */
+    public final in m21180a(int i) {
+        if (i < 128) {
+            m21191b(i);
+        } else if (i < 2048) {
+            m21191b((i >> 6) | 192);
+            m21191b((i & 63) | 128);
+        } else if (i < 65536) {
+            if (i < 55296 || i > 57343) {
+                m21191b((i >> 12) | C1253f.dE);
+                m21191b(((i >> 6) & 63) | 128);
+                m21191b((i & 63) | 128);
+            } else {
+                throw new IllegalArgumentException("Unexpected code point: " + Integer.toHexString(i));
+            }
+        } else if (i <= 1114111) {
+            m21191b((i >> 18) | RGHUDDataModel.MAX_CAR_SPEED);
+            m21191b(((i >> 12) & 63) | 128);
+            m21191b(((i >> 6) & 63) | 128);
+            m21191b((i & 63) | 128);
+        } else {
+            throw new IllegalArgumentException("Unexpected code point: " + Integer.toHexString(i));
+        }
+        return this;
     }
-    Object localObject;
-    if (this.b <= 16L)
-    {
-      localObject = q().k();
-      return String.format("Buffer[size=%s data=%s]", new Object[] { Long.valueOf(this.b), ((iq)localObject).b() });
+
+    /* renamed from: a */
+    public final in m21185a(byte[] bArr) {
+        if (bArr != null) {
+            return m21186a(bArr, 0, bArr.length);
+        }
+        throw new IllegalArgumentException("source == null");
     }
-    try
-    {
-      MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
-      localMessageDigest.update(this.a.a, this.a.b, this.a.c - this.a.b);
-      for (localObject = this.a.f; localObject != this.a; localObject = ((ja)localObject).f) {
-        localMessageDigest.update(((ja)localObject).a, ((ja)localObject).b, ((ja)localObject).c - ((ja)localObject).b);
-      }
-      localObject = String.format("Buffer[size=%s md5=%s]", new Object[] { Long.valueOf(this.b), iq.a(localMessageDigest.digest()).b() });
-      return (String)localObject;
+
+    /* renamed from: a */
+    public final in m21186a(byte[] bArr, int i, int i2) {
+        if (bArr == null) {
+            throw new IllegalArgumentException("source == null");
+        }
+        jf.m21314a((long) bArr.length, (long) i, (long) i2);
+        int i3 = i + i2;
+        while (i < i3) {
+            ja f = m21205f(1);
+            int min = Math.min(i3 - i, 2048 - f.f24431c);
+            System.arraycopy(bArr, i, f.f24429a, f.f24431c, min);
+            i += min;
+            f.f24431c = min + f.f24431c;
+        }
+        this.f24392b += (long) i2;
+        return this;
     }
-    catch (NoSuchAlgorithmException localNoSuchAlgorithmException)
-    {
-      throw new AssertionError();
+
+    /* renamed from: a */
+    public final long mo4739a(jd jdVar) throws IOException {
+        if (jdVar == null) {
+            throw new IllegalArgumentException("source == null");
+        }
+        long j = 0;
+        while (true) {
+            long a = jdVar.mo4730a(this, PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
+            if (a == -1) {
+                return j;
+            }
+            j += a;
+        }
     }
-  }
+
+    /* renamed from: b */
+    public final in m21191b(int i) {
+        ja f = m21205f(1);
+        byte[] bArr = f.f24429a;
+        int i2 = f.f24431c;
+        f.f24431c = i2 + 1;
+        bArr[i2] = (byte) i;
+        this.f24392b++;
+        return this;
+    }
+
+    /* renamed from: c */
+    public final in m21196c(int i) {
+        ja f = m21205f(2);
+        byte[] bArr = f.f24429a;
+        int i2 = f.f24431c;
+        int i3 = i2 + 1;
+        bArr[i2] = (byte) ((i >>> 8) & 255);
+        i2 = i3 + 1;
+        bArr[i3] = (byte) (i & 255);
+        f.f24431c = i2;
+        this.f24392b += 2;
+        return this;
+    }
+
+    /* renamed from: d */
+    public final in m21199d(int i) {
+        ja f = m21205f(4);
+        byte[] bArr = f.f24429a;
+        int i2 = f.f24431c;
+        int i3 = i2 + 1;
+        bArr[i2] = (byte) ((i >>> 24) & 255);
+        i2 = i3 + 1;
+        bArr[i3] = (byte) ((i >>> 16) & 255);
+        i3 = i2 + 1;
+        bArr[i2] = (byte) ((i >>> 8) & 255);
+        i2 = i3 + 1;
+        bArr[i3] = (byte) (i & 255);
+        f.f24431c = i2;
+        this.f24392b += 4;
+        return this;
+    }
+
+    /* renamed from: e */
+    public final in m21203e(int i) {
+        return m21199d(jf.m21312a(i));
+    }
+
+    /* renamed from: g */
+    public final in m21209g(long j) {
+        if (j == 0) {
+            return m21191b(48);
+        }
+        long j2;
+        Object obj;
+        if (j < 0) {
+            j2 = -j;
+            if (j2 < 0) {
+                return m21183a("-9223372036854775808");
+            }
+            obj = 1;
+        } else {
+            obj = null;
+            j2 = j;
+        }
+        int i = j2 < 100000000 ? j2 < BNOffScreenParams.MIN_ENTER_INTERVAL ? j2 < 100 ? j2 < 10 ? 1 : 2 : j2 < 1000 ? 3 : 4 : j2 < 1000000 ? j2 < 100000 ? 5 : 6 : j2 < 10000000 ? 7 : 8 : j2 < 1000000000000L ? j2 < 10000000000L ? j2 < 1000000000 ? 9 : 10 : j2 < 100000000000L ? 11 : 12 : j2 < 1000000000000000L ? j2 < 10000000000000L ? 13 : j2 < 100000000000000L ? 14 : 15 : j2 < 100000000000000000L ? j2 < 10000000000000000L ? 16 : 17 : j2 < 1000000000000000000L ? 18 : 19;
+        if (obj != null) {
+            i++;
+        }
+        ja f = m21205f(i);
+        byte[] bArr = f.f24429a;
+        int i2 = f.f24431c + i;
+        while (j2 != 0) {
+            i2--;
+            bArr[i2] = f24390c[(int) (j2 % 10)];
+            j2 /= 10;
+        }
+        if (obj != null) {
+            bArr[i2 - 1] = (byte) 45;
+        }
+        f.f24431c += i;
+        this.f24392b = ((long) i) + this.f24392b;
+        return this;
+    }
+
+    /* renamed from: h */
+    public final in m21211h(long j) {
+        if (j == 0) {
+            return m21191b(48);
+        }
+        int numberOfTrailingZeros = (Long.numberOfTrailingZeros(Long.highestOneBit(j)) / 4) + 1;
+        ja f = m21205f(numberOfTrailingZeros);
+        byte[] bArr = f.f24429a;
+        int i = f.f24431c;
+        for (int i2 = (f.f24431c + numberOfTrailingZeros) - 1; i2 >= i; i2--) {
+            bArr[i2] = f24390c[(int) (15 & j)];
+            j >>>= 4;
+        }
+        f.f24431c += numberOfTrailingZeros;
+        this.f24392b = ((long) numberOfTrailingZeros) + this.f24392b;
+        return this;
+    }
+
+    /* renamed from: f */
+    final ja m21205f(int i) {
+        if (i <= 0 || i > 2048) {
+            throw new IllegalArgumentException();
+        } else if (this.f24391a == null) {
+            this.f24391a = jb.m21307a();
+            ja jaVar = this.f24391a;
+            ja jaVar2 = this.f24391a;
+            r0 = this.f24391a;
+            jaVar2.f24435g = r0;
+            jaVar.f24434f = r0;
+            return r0;
+        } else {
+            r0 = this.f24391a.f24435g;
+            if (r0.f24431c + i > 2048 || !r0.f24433e) {
+                return r0.m21305a(jb.m21307a());
+            }
+            return r0;
+        }
+    }
+
+    public final void a_(in inVar, long j) {
+        if (inVar == null) {
+            throw new IllegalArgumentException("source == null");
+        } else if (inVar == this) {
+            throw new IllegalArgumentException("source == this");
+        } else {
+            jf.m21314a(inVar.f24392b, 0, j);
+            while (j > 0) {
+                ja jaVar;
+                ja jaVar2;
+                if (j < ((long) (inVar.f24391a.f24431c - inVar.f24391a.f24430b))) {
+                    jaVar = this.f24391a != null ? this.f24391a.f24435g : null;
+                    if (jaVar != null && jaVar.f24433e) {
+                        if ((((long) jaVar.f24431c) + j) - ((long) (jaVar.f24432d ? 0 : jaVar.f24430b)) <= PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH) {
+                            inVar.f24391a.m21306a(jaVar, (int) j);
+                            inVar.f24392b -= j;
+                            this.f24392b += j;
+                            return;
+                        }
+                    }
+                    jaVar2 = inVar.f24391a;
+                    int i = (int) j;
+                    if (i <= 0 || i > jaVar2.f24431c - jaVar2.f24430b) {
+                        throw new IllegalArgumentException();
+                    }
+                    ja jaVar3 = new ja(jaVar2);
+                    jaVar3.f24431c = jaVar3.f24430b + i;
+                    jaVar2.f24430b = i + jaVar2.f24430b;
+                    jaVar2.f24435g.m21305a(jaVar3);
+                    inVar.f24391a = jaVar3;
+                }
+                jaVar2 = inVar.f24391a;
+                long j2 = (long) (jaVar2.f24431c - jaVar2.f24430b);
+                inVar.f24391a = jaVar2.m21304a();
+                if (this.f24391a == null) {
+                    this.f24391a = jaVar2;
+                    jaVar2 = this.f24391a;
+                    jaVar = this.f24391a;
+                    ja jaVar4 = this.f24391a;
+                    jaVar.f24435g = jaVar4;
+                    jaVar2.f24434f = jaVar4;
+                } else {
+                    jaVar = this.f24391a.f24435g.m21305a(jaVar2);
+                    if (jaVar.f24435g == jaVar) {
+                        throw new IllegalStateException();
+                    } else if (jaVar.f24435g.f24433e) {
+                        int i2 = jaVar.f24431c - jaVar.f24430b;
+                        if (i2 <= (jaVar.f24435g.f24432d ? 0 : jaVar.f24435g.f24430b) + (2048 - jaVar.f24435g.f24431c)) {
+                            jaVar.m21306a(jaVar.f24435g, i2);
+                            jaVar.m21304a();
+                            jb.m21308a(jaVar);
+                        }
+                    }
+                }
+                inVar.f24392b -= j2;
+                this.f24392b += j2;
+                j -= j2;
+            }
+        }
+    }
+
+    /* renamed from: a */
+    public final long mo4730a(in inVar, long j) {
+        if (inVar == null) {
+            throw new IllegalArgumentException("sink == null");
+        } else if (j < 0) {
+            throw new IllegalArgumentException("byteCount < 0: " + j);
+        } else if (this.f24392b == 0) {
+            return -1;
+        } else {
+            if (j > this.f24392b) {
+                j = this.f24392b;
+            }
+            inVar.a_(this, j);
+            return j;
+        }
+    }
+
+    /* renamed from: a */
+    public final long mo4738a(byte b) {
+        return m21177a(b, 0);
+    }
+
+    /* renamed from: a */
+    public final long m21177a(byte b, long j) {
+        if (j < 0) {
+            throw new IllegalArgumentException("fromIndex < 0");
+        }
+        ja jaVar = this.f24391a;
+        if (jaVar == null) {
+            return -1;
+        }
+        ja jaVar2 = jaVar;
+        long j2 = 0;
+        do {
+            int i = jaVar2.f24431c - jaVar2.f24430b;
+            if (j >= ((long) i)) {
+                j -= (long) i;
+            } else {
+                byte[] bArr = jaVar2.f24429a;
+                int i2 = jaVar2.f24431c;
+                for (int i3 = (int) (((long) jaVar2.f24430b) + j); i3 < i2; i3++) {
+                    if (bArr[i3] == b) {
+                        return (j2 + ((long) i3)) - ((long) jaVar2.f24430b);
+                    }
+                }
+                j = 0;
+            }
+            j2 += (long) i;
+            jaVar2 = jaVar2.f24434f;
+        } while (jaVar2 != this.f24391a);
+        return -1;
+    }
+
+    public final void flush() {
+    }
+
+    public final void close() {
+    }
+
+    /* renamed from: a */
+    public final je mo4733a() {
+        return je.f24380b;
+    }
+
+    public final boolean equals(Object o) {
+        long j = 0;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof in)) {
+            return false;
+        }
+        in inVar = (in) o;
+        if (this.f24392b != inVar.f24392b) {
+            return false;
+        }
+        if (this.f24392b == 0) {
+            return true;
+        }
+        ja jaVar = this.f24391a;
+        ja jaVar2 = inVar.f24391a;
+        int i = jaVar.f24430b;
+        int i2 = jaVar2.f24430b;
+        while (j < this.f24392b) {
+            long min = (long) Math.min(jaVar.f24431c - i, jaVar2.f24431c - i2);
+            int i3 = 0;
+            while (((long) i3) < min) {
+                int i4 = i + 1;
+                byte b = jaVar.f24429a[i];
+                i = i2 + 1;
+                if (b != jaVar2.f24429a[i2]) {
+                    return false;
+                }
+                i3++;
+                i2 = i;
+                i = i4;
+            }
+            if (i == jaVar.f24431c) {
+                jaVar = jaVar.f24434f;
+                i = jaVar.f24430b;
+            }
+            if (i2 == jaVar2.f24431c) {
+                jaVar2 = jaVar2.f24434f;
+                i2 = jaVar2.f24430b;
+            }
+            j += min;
+        }
+        return true;
+    }
+
+    public final int hashCode() {
+        ja jaVar = this.f24391a;
+        if (jaVar == null) {
+            return 0;
+        }
+        int i = 1;
+        do {
+            int i2 = jaVar.f24430b;
+            while (i2 < jaVar.f24431c) {
+                int i3 = jaVar.f24429a[i2] + (i * 31);
+                i2++;
+                i = i3;
+            }
+            jaVar = jaVar.f24434f;
+        } while (jaVar != this.f24391a);
+        return i;
+    }
+
+    public final String toString() {
+        if (this.f24392b == 0) {
+            return "Buffer[size=0]";
+        }
+        if (this.f24392b <= 16) {
+            iq k = m21175q().m21220k();
+            return String.format("Buffer[size=%s data=%s]", new Object[]{Long.valueOf(this.f24392b), k.m21230b()});
+        }
+        try {
+            MessageDigest instance = MessageDigest.getInstance("MD5");
+            instance.update(this.f24391a.f24429a, this.f24391a.f24430b, this.f24391a.f24431c - this.f24391a.f24430b);
+            for (ja jaVar = this.f24391a.f24434f; jaVar != this.f24391a; jaVar = jaVar.f24434f) {
+                instance.update(jaVar.f24429a, jaVar.f24430b, jaVar.f24431c - jaVar.f24430b);
+            }
+            return String.format("Buffer[size=%s md5=%s]", new Object[]{Long.valueOf(this.f24392b), iq.m21227a(instance.digest()).m21230b()});
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError();
+        }
+    }
+
+    /* renamed from: q */
+    private in m21175q() {
+        in inVar = new in();
+        if (this.f24392b == 0) {
+            return inVar;
+        }
+        inVar.f24391a = new ja(this.f24391a);
+        ja jaVar = inVar.f24391a;
+        ja jaVar2 = inVar.f24391a;
+        ja jaVar3 = inVar.f24391a;
+        jaVar2.f24435g = jaVar3;
+        jaVar.f24434f = jaVar3;
+        for (jaVar = this.f24391a.f24434f; jaVar != this.f24391a; jaVar = jaVar.f24434f) {
+            inVar.f24391a.f24435g.m21305a(new ja(jaVar));
+        }
+        inVar.f24392b = this.f24392b;
+        return inVar;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/in.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

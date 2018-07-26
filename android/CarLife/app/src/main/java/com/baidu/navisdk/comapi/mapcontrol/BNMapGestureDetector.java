@@ -8,69 +8,44 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import com.baidu.navisdk.util.common.LogUtil;
 
-public class BNMapGestureDetector
-  extends GestureDetector
-{
-  private boolean hasLongPressEvent = false;
-  private boolean hasTriggerDoubleTapEvent = false;
-  private GestureDetector.OnGestureListener mListener = null;
-  
-  public BNMapGestureDetector(GestureDetector.OnGestureListener paramOnGestureListener)
-  {
-    super(paramOnGestureListener, new Handler(Looper.getMainLooper()));
-    this.mListener = paramOnGestureListener;
-  }
-  
-  public boolean onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    LogUtil.e("BNMapGestureDetector", "onTouchEvent()");
-    boolean bool2 = super.onTouchEvent(paramMotionEvent);
-    int i = paramMotionEvent.getAction();
-    LogUtil.e("BNMapGestureDetector", (i & 0xFF) + "" + this.hasTriggerDoubleTapEvent + this.hasLongPressEvent + (this.mListener instanceof GestureDetector.OnDoubleTapListener));
-    boolean bool1;
-    if ((i & 0xFF) == 2)
-    {
-      bool1 = bool2;
-      if (this.hasTriggerDoubleTapEvent)
-      {
-        bool1 = bool2;
-        if (this.hasLongPressEvent)
-        {
-          LogUtil.e("BNMapGestureDetector", "onDoubleTapEvent()");
-          bool1 = bool2;
-          if (this.mListener != null)
-          {
-            bool1 = bool2;
-            if ((this.mListener instanceof GestureDetector.OnDoubleTapListener)) {
-              bool1 = ((GestureDetector.OnDoubleTapListener)this.mListener).onDoubleTapEvent(paramMotionEvent);
-            }
-          }
-        }
-      }
+public class BNMapGestureDetector extends GestureDetector {
+    private boolean hasLongPressEvent = false;
+    private boolean hasTriggerDoubleTapEvent = false;
+    private OnGestureListener mListener = null;
+
+    public BNMapGestureDetector(OnGestureListener listener) {
+        super(listener, new Handler(Looper.getMainLooper()));
+        this.mListener = listener;
     }
-    do
-    {
-      return bool1;
-      bool1 = bool2;
-    } while ((i & 0xFF) != 1);
-    this.hasTriggerDoubleTapEvent = false;
-    this.hasLongPressEvent = false;
-    return bool2;
-  }
-  
-  public void setHasLongPressEvent(boolean paramBoolean)
-  {
-    this.hasLongPressEvent = paramBoolean;
-  }
-  
-  public void setHasTriggerDoubleTapEvent(boolean paramBoolean)
-  {
-    this.hasTriggerDoubleTapEvent = paramBoolean;
-  }
+
+    public boolean onTouchEvent(MotionEvent ev) {
+        LogUtil.m15791e("BNMapGestureDetector", "onTouchEvent()");
+        boolean ret = super.onTouchEvent(ev);
+        int action = ev.getAction();
+        LogUtil.m15791e("BNMapGestureDetector", (action & 255) + "" + this.hasTriggerDoubleTapEvent + this.hasLongPressEvent + (this.mListener instanceof OnDoubleTapListener));
+        if ((action & 255) == 2) {
+            if (!this.hasTriggerDoubleTapEvent || !this.hasLongPressEvent) {
+                return ret;
+            }
+            LogUtil.m15791e("BNMapGestureDetector", "onDoubleTapEvent()");
+            if (this.mListener == null || !(this.mListener instanceof OnDoubleTapListener)) {
+                return ret;
+            }
+            return ((OnDoubleTapListener) this.mListener).onDoubleTapEvent(ev);
+        } else if ((action & 255) != 1) {
+            return ret;
+        } else {
+            this.hasTriggerDoubleTapEvent = false;
+            this.hasLongPressEvent = false;
+            return ret;
+        }
+    }
+
+    public void setHasTriggerDoubleTapEvent(boolean flag) {
+        this.hasTriggerDoubleTapEvent = flag;
+    }
+
+    public void setHasLongPressEvent(boolean flag) {
+        this.hasLongPressEvent = flag;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/comapi/mapcontrol/BNMapGestureDetector.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

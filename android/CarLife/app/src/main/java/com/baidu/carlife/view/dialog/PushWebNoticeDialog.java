@@ -1,7 +1,6 @@
 package com.baidu.carlife.view.dialog;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -19,368 +18,401 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.screen.presentation.a.e;
-import com.baidu.carlife.f.g;
-import com.baidu.carlife.push.a;
-import com.baidu.carlife.util.d;
-import com.baidu.carlife.util.r;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.presentation.p071a.C1307e;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.push.C2103a;
+import com.baidu.carlife.util.C2173d;
+import com.baidu.carlife.util.C2188r;
 import com.baidu.carlife.view.CommonTipView;
-import com.baidu.carlife.view.a.b;
+import com.baidu.carlife.view.p104a.C2251b;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navisdk.util.common.PackageUtil;
-import java.io.File;
 
-public class PushWebNoticeDialog
-  extends BaseDialog
-{
-  private static final String A = "/getLocation";
-  private static final String B = "product";
-  private static final String C = "longitude";
-  private static final String D = "latitude";
-  private static final String E = "eventID";
-  private static final String F = "label";
-  public static final String e = "PushWebNoticeDialog";
-  public static CarlifeActivity f;
-  public static final String g = "carlife://";
-  public static final String h = "找不到网页|服务器内部错误";
-  public static final String i = "scheme=alipays";
-  public static final String j = "tel:";
-  public static final String k = "intent://";
-  public static final String l = "http://carlife.baidu.com/static/carlifeweb/problems/android.html";
-  private static final String w = "exit";
-  private static final String x = "navi";
-  private static final String y = "mtj";
-  private static final String z = "registerJSFunction";
-  private String G = "http://carlife.baidu.com/static/carlifeweb/problems/android.html";
-  private String m;
-  private WebView n;
-  private boolean o = true;
-  private boolean p = false;
-  private CommonTipView q;
-  private View r;
-  private TextView s;
-  private View t;
-  private g u;
-  private TextView v;
-  
-  public PushWebNoticeDialog(Context paramContext)
-  {
-    super(paramContext, null, 0);
-    this.c = paramContext;
-  }
-  
-  public PushWebNoticeDialog(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public PushWebNoticeDialog(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    this.c = paramContext;
-  }
-  
-  private void b(String paramString)
-  {
-    if ((this.v != null) && (!TextUtils.isEmpty(paramString))) {
-      this.v.setText(paramString);
-    }
-  }
-  
-  private boolean c(String paramString)
-  {
-    paramString = Uri.parse(paramString);
-    String str1 = paramString.getAuthority();
-    i.e("PushWebNoticeDialog", "dispatchJsMethod: authority=" + str1);
-    if (!TextUtils.isEmpty(str1))
-    {
-      String str2 = paramString.getQueryParameter("product");
-      i.e("PushWebNoticeDialog", "dispatchJsMethod: product=" + str2);
-      if (TextUtils.isEmpty(str2)) {
-        break label167;
-      }
-      if (!"exit".equalsIgnoreCase(str1)) {
-        break label101;
-      }
-      i.e("PushWebNoticeDialog", "Js method: exit");
-      m();
-    }
-    for (;;)
-    {
-      return true;
-      label101:
-      if ("mtj".equalsIgnoreCase(str1))
-      {
-        i.e("PushWebNoticeDialog", "Js method: mtj");
-        str1 = paramString.getQueryParameter("eventID");
-        paramString = paramString.getQueryParameter("label");
-        i.b("PushWebNoticeDialog", "mtj eventID=" + str1 + " label=" + paramString);
-        continue;
-        label167:
-        i.e("PushWebNoticeDialog", "Js invoke parameter product should not be empty.");
-      }
-    }
-  }
-  
-  private void k()
-  {
-    this.r = findViewById(2131624260);
-    this.r.setVisibility(8);
-    Object localObject = (ImageButton)findViewById(2131624258);
-    if (localObject != null) {
-      ((ImageButton)localObject).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (PushWebNoticeDialog.a(PushWebNoticeDialog.this).canGoBack())
-          {
-            PushWebNoticeDialog.a(PushWebNoticeDialog.this).goBack();
-            return;
-          }
-          PushWebNoticeDialog.this.d();
-          i.b("PushWebNoticeDialog", "####### btn back dismiss");
+public class PushWebNoticeDialog extends BaseDialog {
+    /* renamed from: A */
+    private static final String f7381A = "/getLocation";
+    /* renamed from: B */
+    private static final String f7382B = "product";
+    /* renamed from: C */
+    private static final String f7383C = "longitude";
+    /* renamed from: D */
+    private static final String f7384D = "latitude";
+    /* renamed from: E */
+    private static final String f7385E = "eventID";
+    /* renamed from: F */
+    private static final String f7386F = "label";
+    /* renamed from: e */
+    public static final String f7387e = "PushWebNoticeDialog";
+    /* renamed from: f */
+    public static CarlifeActivity f7388f = null;
+    /* renamed from: g */
+    public static final String f7389g = "carlife://";
+    /* renamed from: h */
+    public static final String f7390h = "找不到网页|服务器内部错误";
+    /* renamed from: i */
+    public static final String f7391i = "scheme=alipays";
+    /* renamed from: j */
+    public static final String f7392j = "tel:";
+    /* renamed from: k */
+    public static final String f7393k = "intent://";
+    /* renamed from: l */
+    public static final String f7394l = "http://carlife.baidu.com/static/carlifeweb/problems/android.html";
+    /* renamed from: w */
+    private static final String f7395w = "exit";
+    /* renamed from: x */
+    private static final String f7396x = "navi";
+    /* renamed from: y */
+    private static final String f7397y = "mtj";
+    /* renamed from: z */
+    private static final String f7398z = "registerJSFunction";
+    /* renamed from: G */
+    private String f7399G;
+    /* renamed from: m */
+    private String f7400m;
+    /* renamed from: n */
+    private WebView f7401n;
+    /* renamed from: o */
+    private boolean f7402o;
+    /* renamed from: p */
+    private boolean f7403p;
+    /* renamed from: q */
+    private CommonTipView f7404q;
+    /* renamed from: r */
+    private View f7405r;
+    /* renamed from: s */
+    private TextView f7406s;
+    /* renamed from: t */
+    private View f7407t;
+    /* renamed from: u */
+    private C1443g f7408u;
+    /* renamed from: v */
+    private TextView f7409v;
+
+    /* renamed from: com.baidu.carlife.view.dialog.PushWebNoticeDialog$1 */
+    class C22591 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ PushWebNoticeDialog f7375a;
+
+        C22591(PushWebNoticeDialog this$0) {
+            this.f7375a = this$0;
         }
-      });
-    }
-    localObject = findViewById(2131624261);
-    if (localObject != null) {
-      ((View)localObject).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (PushWebNoticeDialog.a(PushWebNoticeDialog.this).canGoBack())
-          {
-            PushWebNoticeDialog.a(PushWebNoticeDialog.this).goBack();
-            return;
-          }
-          PushWebNoticeDialog.this.d();
-          i.b("PushWebNoticeDialog", "####### hide back dismiss");
+
+        public void onClick(View v) {
+            if (this.f7375a.f7401n.canGoBack()) {
+                this.f7375a.f7401n.goBack();
+                return;
+            }
+            this.f7375a.mo1526d();
+            C1260i.m4435b(PushWebNoticeDialog.f7387e, "####### btn back dismiss");
         }
-      });
     }
-    this.v = ((TextView)findViewById(2131624059));
-    b(this.m);
-  }
-  
-  private void l()
-  {
-    if (f == null) {
-      return;
+
+    /* renamed from: com.baidu.carlife.view.dialog.PushWebNoticeDialog$2 */
+    class C22602 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ PushWebNoticeDialog f7376a;
+
+        C22602(PushWebNoticeDialog this$0) {
+            this.f7376a = this$0;
+        }
+
+        public void onClick(View v) {
+            if (this.f7376a.f7401n.canGoBack()) {
+                this.f7376a.f7401n.goBack();
+                return;
+            }
+            this.f7376a.mo1526d();
+            C1260i.m4435b(PushWebNoticeDialog.f7387e, "####### hide back dismiss");
+        }
     }
-    f.runOnUiThread(new Runnable()
-    {
-      public void run()
-      {
-        e.a().c();
-      }
-    });
-  }
-  
-  private void m()
-  {
-    d();
-  }
-  
-  private void n()
-  {
-    i.b("PushWebNoticeDialog", "showErrorPage !!!");
-    this.p = true;
-    if (this.q != null)
-    {
-      this.q.a(1);
-      this.q.setVisibility(0);
+
+    /* renamed from: com.baidu.carlife.view.dialog.PushWebNoticeDialog$3 */
+    class C22613 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ PushWebNoticeDialog f7377a;
+
+        C22613(PushWebNoticeDialog this$0) {
+            this.f7377a = this$0;
+        }
+
+        public void run() {
+            C1307e.m4686a().mo1467b(StyleManager.getString(C0965R.string.plugin_loading));
+        }
     }
-    this.n.setVisibility(8);
-    if (this.r != null) {
-      this.r.setVisibility(0);
+
+    /* renamed from: com.baidu.carlife.view.dialog.PushWebNoticeDialog$4 */
+    class C22624 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ PushWebNoticeDialog f7378a;
+
+        C22624(PushWebNoticeDialog this$0) {
+            this.f7378a = this$0;
+        }
+
+        public void run() {
+            C1307e.m4686a().mo1468c();
+        }
     }
-  }
-  
-  protected View a()
-  {
-    return LayoutInflater.from(this.c).inflate(2130968727, null);
-  }
-  
-  protected void b()
-  {
-    this.q = ((CommonTipView)findViewById(2131623981));
-    this.q.setVisibility(8);
-    this.m = getResources().getString(2131297144);
-    this.n = ((WebView)findViewById(2131623982));
-    this.n.removeJavascriptInterface("searchBoxJavaBridge_");
-    this.n.removeJavascriptInterface("accessibility");
-    this.n.removeJavascriptInterface("accessibilityTraversal");
-    this.n.setBackgroundColor(getResources().getColor(2131558598));
-    i.b("PushWebNoticeDialog", "Web dialog: " + this.G);
-    i();
-    k();
-    setWebviewSettings(this.n);
-    j();
-    this.G = a.b();
-    if ((this.G == null) || (this.G.isEmpty()))
-    {
-      i.b("PushWebNoticeDialog", "Web dialog: " + this.G);
-      n();
+
+    /* renamed from: com.baidu.carlife.view.dialog.PushWebNoticeDialog$a */
+    public class C2263a extends WebChromeClient {
+        /* renamed from: a */
+        final /* synthetic */ PushWebNoticeDialog f7379a;
+
+        public C2263a(PushWebNoticeDialog this$0) {
+            this.f7379a = this$0;
+        }
+
+        public void onGeolocationPermissionsHidePrompt() {
+            super.onGeolocationPermissionsHidePrompt();
+        }
+
+        public void onGeolocationPermissionsShowPrompt(String origin, Callback callback) {
+            super.onGeolocationPermissionsShowPrompt(origin, callback);
+            callback.invoke(origin, true, false);
+        }
+
+        public void onReceivedTitle(WebView view, String title) {
+            super.onReceivedTitle(view, title);
+            if (!TextUtils.isEmpty(title)) {
+                this.f7379a.m8581b(title);
+            }
+            C1260i.m4435b(PushWebNoticeDialog.f7387e, "onReceivedTitle title=" + title);
+            if (TextUtils.isEmpty(view.getUrl()) || this.f7379a.f7403p) {
+                this.f7379a.m8591n();
+                return;
+            }
+            this.f7379a.f7405r.setVisibility(8);
+            this.f7379a.f7401n.setVisibility(0);
+        }
     }
-    this.n.loadUrl(this.G);
-  }
-  
-  public void f() {}
-  
-  protected void i()
-  {
-    Object localObject = (ImageButton)findViewById(2131624258);
-    if (localObject != null)
-    {
-      ((ImageButton)localObject).setImageDrawable(r.b(2130838256));
-      ((ImageButton)localObject).setBackground(b.a(this.c));
+
+    /* renamed from: com.baidu.carlife.view.dialog.PushWebNoticeDialog$b */
+    public class C2264b extends WebViewClient {
+        /* renamed from: a */
+        final /* synthetic */ PushWebNoticeDialog f7380a;
+
+        public C2264b(PushWebNoticeDialog this$0) {
+            this.f7380a = this$0;
+        }
+
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.cancel();
+        }
+
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (url.startsWith("carlife://") && this.f7380a.m8585c(url)) {
+                view.stopLoading();
+            } else {
+                C1260i.m4435b(PushWebNoticeDialog.f7387e, "shouldOverrideUrlLoading：" + url);
+                if (TextUtils.isEmpty(url)) {
+                    view.loadUrl(url);
+                }
+            }
+            return true;
+        }
+
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            C1260i.m4435b(PushWebNoticeDialog.f7387e, "onPageStarted url=" + url);
+            this.f7380a.f7403p = false;
+        }
+
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            C1260i.m4435b(PushWebNoticeDialog.f7387e, "onPageFinished url=" + url);
+            this.f7380a.m8589l();
+            if (!this.f7380a.f7403p && this.f7380a.f7405r != null) {
+                this.f7380a.f7405r.setVisibility(8);
+                this.f7380a.f7401n.setVisibility(0);
+            }
+        }
+
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            C1260i.m4435b(PushWebNoticeDialog.f7387e, "onReceivedError errorCode=" + errorCode + ", description=" + description);
+            view.stopLoading();
+            this.f7380a.m8589l();
+            this.f7380a.m8591n();
+        }
     }
-    localObject = (TextView)findViewById(2131624059);
-    if (localObject != null) {
-      ((TextView)localObject).setTextColor(r.a(2131558699));
+
+    public PushWebNoticeDialog(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
-  }
-  
-  public void j()
-  {
-    if (f == null) {
-      return;
+
+    public PushWebNoticeDialog(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.f7402o = true;
+        this.f7403p = false;
+        this.f7399G = "http://carlife.baidu.com/static/carlifeweb/problems/android.html";
+        this.c = context;
     }
-    f.runOnUiThread(new Runnable()
-    {
-      public void run()
-      {
-        e.a().b(StyleManager.getString(2131296850));
-      }
-    });
-  }
-  
-  public void setWebviewSettings(WebView paramWebView)
-  {
-    WebSettings localWebSettings = paramWebView.getSettings();
-    localWebSettings.setCacheMode(-1);
-    localWebSettings.setJavaScriptEnabled(true);
-    localWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-    localWebSettings.setLoadsImagesAutomatically(true);
-    localWebSettings.setUseWideViewPort(true);
-    localWebSettings.setLoadWithOverviewMode(true);
-    localWebSettings.setSupportZoom(false);
-    localWebSettings.setUseWideViewPort(true);
-    localWebSettings.setBlockNetworkImage(false);
-    String str = d.a().b().getPath();
-    localWebSettings.setSupportMultipleWindows(true);
-    localWebSettings.setDatabaseEnabled(true);
-    localWebSettings.setDatabasePath(str);
-    localWebSettings.setDomStorageEnabled(true);
-    localWebSettings.setGeolocationEnabled(true);
-    localWebSettings.setGeolocationDatabasePath(str);
-    localWebSettings.setAppCacheEnabled(true);
-    localWebSettings.setAppCachePath(d.a().c().getPath());
-    localWebSettings.setAppCacheMaxSize(8388608L);
-    localWebSettings.setAllowFileAccess(true);
-    str = localWebSettings.getUserAgentString();
-    localWebSettings.setUserAgentString(str + " baiduNavi_ANDR(" + PackageUtil.getVersionName() + ")");
-    if (Build.VERSION.SDK_INT >= 11) {
-      localWebSettings.setAllowContentAccess(true);
+
+    public PushWebNoticeDialog(Context context) {
+        super(context, null, 0);
+        this.f7402o = true;
+        this.f7403p = false;
+        this.f7399G = "http://carlife.baidu.com/static/carlifeweb/problems/android.html";
+        this.c = context;
     }
-    paramWebView.setScrollBarStyle(0);
-    paramWebView.setVerticalFadingEdgeEnabled(false);
-    paramWebView.setFadingEdgeLength(0);
-    paramWebView.setLayerType(1, null);
-    paramWebView.setWebChromeClient(new a());
-    paramWebView.setWebViewClient(new b());
-  }
-  
-  public class a
-    extends WebChromeClient
-  {
-    public a() {}
-    
-    public void onGeolocationPermissionsHidePrompt()
-    {
-      super.onGeolocationPermissionsHidePrompt();
+
+    /* renamed from: a */
+    protected View mo1528a() {
+        return LayoutInflater.from(this.c).inflate(C0965R.layout.dialog_web_view, null);
     }
-    
-    public void onGeolocationPermissionsShowPrompt(String paramString, GeolocationPermissions.Callback paramCallback)
-    {
-      super.onGeolocationPermissionsShowPrompt(paramString, paramCallback);
-      paramCallback.invoke(paramString, true, false);
+
+    /* renamed from: b */
+    protected void mo1529b() {
+        this.f7404q = (CommonTipView) findViewById(C0965R.id.common_tip_view);
+        this.f7404q.setVisibility(8);
+        this.f7400m = getResources().getString(C0965R.string.setting_help);
+        this.f7401n = (WebView) findViewById(C0965R.id.web_view);
+        this.f7401n.removeJavascriptInterface("searchBoxJavaBridge_");
+        this.f7401n.removeJavascriptInterface("accessibility");
+        this.f7401n.removeJavascriptInterface("accessibilityTraversal");
+        this.f7401n.setBackgroundColor(getResources().getColor(C0965R.color.cl_bg_c_main));
+        C1260i.m4435b(f7387e, "Web dialog: " + this.f7399G);
+        mo1630i();
+        m8588k();
+        setWebviewSettings(this.f7401n);
+        m8596j();
+        this.f7399G = C2103a.m7883b();
+        if (this.f7399G == null || this.f7399G.isEmpty()) {
+            C1260i.m4435b(f7387e, "Web dialog: " + this.f7399G);
+            m8591n();
+        }
+        this.f7401n.loadUrl(this.f7399G);
     }
-    
-    public void onReceivedTitle(WebView paramWebView, String paramString)
-    {
-      super.onReceivedTitle(paramWebView, paramString);
-      if (!TextUtils.isEmpty(paramString)) {
-        PushWebNoticeDialog.a(PushWebNoticeDialog.this, paramString);
-      }
-      i.b("PushWebNoticeDialog", "onReceivedTitle title=" + paramString);
-      if ((TextUtils.isEmpty(paramWebView.getUrl())) || (PushWebNoticeDialog.b(PushWebNoticeDialog.this)))
-      {
-        PushWebNoticeDialog.c(PushWebNoticeDialog.this);
-        return;
-      }
-      PushWebNoticeDialog.d(PushWebNoticeDialog.this).setVisibility(8);
-      PushWebNoticeDialog.a(PushWebNoticeDialog.this).setVisibility(0);
+
+    /* renamed from: i */
+    protected void mo1630i() {
+        ImageButton btnBack = (ImageButton) findViewById(C0965R.id.ib_left);
+        if (btnBack != null) {
+            btnBack.setImageDrawable(C2188r.m8331b(C0965R.drawable.com_ic_back));
+            btnBack.setBackground(C2251b.m8527a(this.c));
+        }
+        TextView titleTV = (TextView) findViewById(C0965R.id.tv_title);
+        if (titleTV != null) {
+            titleTV.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a4_title));
+        }
     }
-  }
-  
-  public class b
-    extends WebViewClient
-  {
-    public b() {}
-    
-    public void onPageFinished(WebView paramWebView, String paramString)
-    {
-      super.onPageFinished(paramWebView, paramString);
-      i.b("PushWebNoticeDialog", "onPageFinished url=" + paramString);
-      PushWebNoticeDialog.e(PushWebNoticeDialog.this);
-      if ((!PushWebNoticeDialog.b(PushWebNoticeDialog.this)) && (PushWebNoticeDialog.d(PushWebNoticeDialog.this) != null))
-      {
-        PushWebNoticeDialog.d(PushWebNoticeDialog.this).setVisibility(8);
-        PushWebNoticeDialog.a(PushWebNoticeDialog.this).setVisibility(0);
-      }
+
+    /* renamed from: k */
+    private void m8588k() {
+        this.f7405r = findViewById(C0965R.id.common_top_title);
+        this.f7405r.setVisibility(8);
+        ImageButton btnBack = (ImageButton) findViewById(C0965R.id.ib_left);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(new C22591(this));
+        }
+        View hide = findViewById(C0965R.id.view_hide);
+        if (hide != null) {
+            hide.setOnClickListener(new C22602(this));
+        }
+        this.f7409v = (TextView) findViewById(C0965R.id.tv_title);
+        m8581b(this.f7400m);
     }
-    
-    public void onPageStarted(WebView paramWebView, String paramString, Bitmap paramBitmap)
-    {
-      super.onPageStarted(paramWebView, paramString, paramBitmap);
-      i.b("PushWebNoticeDialog", "onPageStarted url=" + paramString);
-      PushWebNoticeDialog.a(PushWebNoticeDialog.this, false);
+
+    /* renamed from: b */
+    private void m8581b(String title) {
+        if (this.f7409v != null && !TextUtils.isEmpty(title)) {
+            this.f7409v.setText(title);
+        }
     }
-    
-    public void onReceivedError(WebView paramWebView, int paramInt, String paramString1, String paramString2)
-    {
-      i.b("PushWebNoticeDialog", "onReceivedError errorCode=" + paramInt + ", description=" + paramString1);
-      paramWebView.stopLoading();
-      PushWebNoticeDialog.e(PushWebNoticeDialog.this);
-      PushWebNoticeDialog.c(PushWebNoticeDialog.this);
+
+    /* renamed from: f */
+    public void mo1530f() {
     }
-    
-    public void onReceivedSslError(WebView paramWebView, SslErrorHandler paramSslErrorHandler, SslError paramSslError)
-    {
-      paramSslErrorHandler.cancel();
+
+    public void setWebviewSettings(WebView mWebView) {
+        WebSettings settings = mWebView.getSettings();
+        settings.setCacheMode(-1);
+        settings.setJavaScriptEnabled(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setLoadsImagesAutomatically(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setSupportZoom(false);
+        settings.setUseWideViewPort(true);
+        settings.setBlockNetworkImage(false);
+        String dir = C2173d.m8225a().m8228b().getPath();
+        settings.setSupportMultipleWindows(true);
+        settings.setDatabaseEnabled(true);
+        settings.setDatabasePath(dir);
+        settings.setDomStorageEnabled(true);
+        settings.setGeolocationEnabled(true);
+        settings.setGeolocationDatabasePath(dir);
+        settings.setAppCacheEnabled(true);
+        settings.setAppCachePath(C2173d.m8225a().m8229c().getPath());
+        settings.setAppCacheMaxSize(8388608);
+        settings.setAllowFileAccess(true);
+        settings.setUserAgentString(settings.getUserAgentString() + " baiduNavi_ANDR(" + PackageUtil.getVersionName() + ")");
+        if (VERSION.SDK_INT >= 11) {
+            settings.setAllowContentAccess(true);
+        }
+        mWebView.setScrollBarStyle(0);
+        mWebView.setVerticalFadingEdgeEnabled(false);
+        mWebView.setFadingEdgeLength(0);
+        mWebView.setLayerType(1, null);
+        mWebView.setWebChromeClient(new C2263a(this));
+        mWebView.setWebViewClient(new C2264b(this));
     }
-    
-    public boolean shouldOverrideUrlLoading(WebView paramWebView, String paramString)
-    {
-      if ((paramString.startsWith("carlife://")) && (PushWebNoticeDialog.b(PushWebNoticeDialog.this, paramString))) {
-        paramWebView.stopLoading();
-      }
-      do
-      {
+
+    /* renamed from: j */
+    public void m8596j() {
+        if (f7388f != null) {
+            f7388f.runOnUiThread(new C22613(this));
+        }
+    }
+
+    /* renamed from: l */
+    private void m8589l() {
+        if (f7388f != null) {
+            f7388f.runOnUiThread(new C22624(this));
+        }
+    }
+
+    /* renamed from: m */
+    private void m8590m() {
+        mo1526d();
+    }
+
+    /* renamed from: c */
+    private boolean m8585c(String url) {
+        Uri uri = Uri.parse(url);
+        String authority = uri.getAuthority();
+        C1260i.m4445e(f7387e, "dispatchJsMethod: authority=" + authority);
+        if (!TextUtils.isEmpty(authority)) {
+            String product = uri.getQueryParameter(f7382B);
+            C1260i.m4445e(f7387e, "dispatchJsMethod: product=" + product);
+            if (TextUtils.isEmpty(product)) {
+                C1260i.m4445e(f7387e, "Js invoke parameter product should not be empty.");
+            } else if ("exit".equalsIgnoreCase(authority)) {
+                C1260i.m4445e(f7387e, "Js method: exit");
+                m8590m();
+            } else if (f7397y.equalsIgnoreCase(authority)) {
+                C1260i.m4445e(f7387e, "Js method: mtj");
+                String eventID = uri.getQueryParameter(f7385E);
+                C1260i.m4435b(f7387e, "mtj eventID=" + eventID + " label=" + uri.getQueryParameter("label"));
+            }
+        }
         return true;
-        i.b("PushWebNoticeDialog", "shouldOverrideUrlLoading：" + paramString);
-      } while (!TextUtils.isEmpty(paramString));
-      paramWebView.loadUrl(paramString);
-      return true;
     }
-  }
+
+    /* renamed from: n */
+    private void m8591n() {
+        C1260i.m4435b(f7387e, "showErrorPage !!!");
+        this.f7403p = true;
+        if (this.f7404q != null) {
+            this.f7404q.m8397a(1);
+            this.f7404q.setVisibility(0);
+        }
+        this.f7401n.setVisibility(8);
+        if (this.f7405r != null) {
+            this.f7405r.setVisibility(0);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/dialog/PushWebNoticeDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

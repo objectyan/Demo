@@ -1,54 +1,41 @@
 package com.tencent.mm.sdk.modelbiz;
 
 import android.os.Bundle;
-import com.tencent.mm.sdk.b.b;
 import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.p287b.C6094b;
 
-public final class JumpToBizWebview
-{
-  public static class Req
-    extends BaseReq
-  {
-    private static final int EXT_MSG_LENGTH = 1024;
-    private static final String TAG = "MicroMsg.SDK.JumpToBizWebview.Req";
-    public String extMsg;
-    public int scene = 1;
-    public String toUserName;
-    public int webType;
-    
-    public boolean checkArgs()
-    {
-      if ((this.toUserName == null) || (this.toUserName.length() <= 0))
-      {
-        b.b("MicroMsg.SDK.JumpToBizWebview.Req", "checkArgs fail, toUserName is invalid");
-        return false;
-      }
-      if ((this.extMsg != null) && (this.extMsg.length() > 1024))
-      {
-        b.b("MicroMsg.SDK.JumpToBizWebview.Req", "ext msg is not null, while the length exceed 1024 bytes");
-        return false;
-      }
-      return true;
+public final class JumpToBizWebview {
+
+    public static class Req extends BaseReq {
+        private static final int EXT_MSG_LENGTH = 1024;
+        private static final String TAG = "MicroMsg.SDK.JumpToBizWebview.Req";
+        public String extMsg;
+        public int scene = 1;
+        public String toUserName;
+        public int webType;
+
+        public boolean checkArgs() {
+            if (this.toUserName == null || this.toUserName.length() <= 0) {
+                C6094b.m21682b(TAG, "checkArgs fail, toUserName is invalid");
+                return false;
+            } else if (this.extMsg == null || this.extMsg.length() <= 1024) {
+                return true;
+            } else {
+                C6094b.m21682b(TAG, "ext msg is not null, while the length exceed 1024 bytes");
+                return false;
+            }
+        }
+
+        public int getType() {
+            return 8;
+        }
+
+        public void toBundle(Bundle bundle) {
+            super.toBundle(bundle);
+            bundle.putString("_wxapi_jump_to_biz_webview_req_to_user_name", this.toUserName);
+            bundle.putString("_wxapi_jump_to_biz_webview_req_ext_msg", this.extMsg);
+            bundle.putInt("_wxapi_jump_to_biz_webview_req_web_type", this.webType);
+            bundle.putInt("_wxapi_jump_to_biz_webview_req_scene", this.scene);
+        }
     }
-    
-    public int getType()
-    {
-      return 8;
-    }
-    
-    public void toBundle(Bundle paramBundle)
-    {
-      super.toBundle(paramBundle);
-      paramBundle.putString("_wxapi_jump_to_biz_webview_req_to_user_name", this.toUserName);
-      paramBundle.putString("_wxapi_jump_to_biz_webview_req_ext_msg", this.extMsg);
-      paramBundle.putInt("_wxapi_jump_to_biz_webview_req_web_type", this.webType);
-      paramBundle.putInt("_wxapi_jump_to_biz_webview_req_scene", this.scene);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/mm/sdk/modelbiz/JumpToBizWebview.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

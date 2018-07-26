@@ -1,6 +1,5 @@
 package com.baidu.baidunavis.control;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,21 +15,26 @@ import com.baidu.baidunavis.model.TrajectoryGPSData;
 import com.baidu.baidunavis.model.TrajectorySummaryInfo;
 import com.baidu.baidunavis.ui.widget.NavTipTool;
 import com.baidu.baidunavis.wrapper.LogUtil;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.p085i.C1609a;
 import com.baidu.navi.location.LocationChangeListener;
+import com.baidu.navi.track.TrackCarDataSolveModel;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
+import com.baidu.navisdk.CommonParams.Const.ModuleName;
 import com.baidu.navisdk.comapi.geolocate.ILocationChangeListener;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.trajectory.NaviTrajectory;
 import com.baidu.navisdk.comapi.trajectory.NaviTrajectoryGPSData;
 import com.baidu.navisdk.jni.nativeif.JNITrajectoryControl;
-import com.baidu.navisdk.logic.RspData;
 import com.baidu.navisdk.model.datastruct.LocData;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
-import com.baidu.navisdk.model.modelfactory.BusinessActivityModel;
 import com.baidu.navisdk.module.BusinessActivityManager;
+import com.baidu.navisdk.module.offscreen.BNOffScreenParams;
 import com.baidu.navisdk.naviresult.BNNaviResultController;
 import com.baidu.navisdk.naviresult.BNNaviResultModel;
 import com.baidu.navisdk.ui.routeguide.model.RGCacheStatus;
@@ -39,696 +43,544 @@ import com.baidu.navisdk.util.logic.BNSysLocationManager;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class NavTrajectoryController
-{
-  private static final int CAR_DISTANCE_MIN_LIMIT = 200;
-  public static final int CRUISE = 2;
-  public static final int CRUISE_FOLLOW = 3;
-  private static final String DefaultTrackName = "未知路";
-  public static final int END_RECORD_FAIL = 1;
-  public static final int END_RECORD_INVALID = -1;
-  public static final int END_RECORD_SUC = 0;
-  public static final int ROUTE_GUIDE = 1;
-  private static final int SEARCH_POI_TIMEOUT = 120000;
-  private static final String TAG = NavTrajectoryController.class.getSimpleName();
-  public static boolean hasConnected = false;
-  private static NavTrajectoryController mInstance = null;
-  private boolean isEndNaviByOpenAPI = false;
-  private LocationChangeListener mCarNaviLocChangeListener = null;
-  protected HashMap<Handler, String> mEndGeoTrackId = new HashMap();
-  private GeoPoint mFinalGeoPoint = null;
-  private GeoPoint mFirstGeoPoint = null;
-  private boolean mIsNeedRecordTrack = true;
-  private boolean mIsStartRecord = false;
-  public int mLastestRequestID = 0;
-  private ILocationChangeListener mLocChangeListener = null;
-  private boolean mNotInputStartEndGeo = false;
-  protected HashMap<Handler, String> mStartGeoTrackId = new HashMap();
-  private boolean shouldShowNaviResult = false;
-  private String trackKeyUrl = null;
-  
-  private void checkShouldDisplayNaviResultPage(int paramInt)
-  {
-    if (paramInt != 0)
-    {
-      this.shouldShowNaviResult = false;
-      return;
-    }
-    if (BNNaviResultModel.getInstance().isDestArrived())
-    {
-      this.shouldShowNaviResult = true;
-      BNNaviResultModel.getInstance().setNaviCompletePercentage(1.0F);
-      return;
-    }
-    String str = JNITrajectoryControl.sInstance.getCurrentUUID();
-    long l = JNITrajectoryControl.sInstance.getTrajectoryLength(str);
-    paramInt = BNNaviResultModel.getInstance().getEstimatedRemainDist();
-    if (paramInt == 0) {}
-    for (double d = 0.0D;; d = l / paramInt)
-    {
-      NavLogUtils.e(TAG, "checkShouldDisplayNaviResultPage: --> curMilea: " + l + ", planedDist: " + paramInt + ", percentage: " + d);
-      BNNaviResultModel.getInstance().setNaviCompletePercentage((float)d);
-      if (l <= 10000L) {
-        break;
-      }
-      return;
-    }
-  }
-  
-  private TrajectoryGPSData convertTo(NaviTrajectoryGPSData paramNaviTrajectoryGPSData)
-  {
-    if (paramNaviTrajectoryGPSData == null) {
-      return null;
-    }
-    TrajectoryGPSData localTrajectoryGPSData = new TrajectoryGPSData();
-    localTrajectoryGPSData.mLongitude = paramNaviTrajectoryGPSData.mLongitude;
-    localTrajectoryGPSData.mLatitude = paramNaviTrajectoryGPSData.mLatitude;
-    localTrajectoryGPSData.mSpeed = paramNaviTrajectoryGPSData.mSpeed;
-    localTrajectoryGPSData.mBearing = paramNaviTrajectoryGPSData.mBearing;
-    localTrajectoryGPSData.mAccuracy = paramNaviTrajectoryGPSData.mAccuracy;
-    localTrajectoryGPSData.mGpsTime = paramNaviTrajectoryGPSData.mGpsTime;
-    localTrajectoryGPSData.unLimitSpeed = paramNaviTrajectoryGPSData.unLimitSpeed;
-    localTrajectoryGPSData.fMaxSpeed = paramNaviTrajectoryGPSData.fMaxSpeed;
-    localTrajectoryGPSData.bMaxSpeed = paramNaviTrajectoryGPSData.bMaxSpeed;
-    localTrajectoryGPSData.bOverSpeed = paramNaviTrajectoryGPSData.bOverSpeed;
-    localTrajectoryGPSData.bRapidAcc = paramNaviTrajectoryGPSData.bRapidAcc;
-    localTrajectoryGPSData.bBrake = paramNaviTrajectoryGPSData.bBrake;
-    localTrajectoryGPSData.bCurve = paramNaviTrajectoryGPSData.bCurve;
-    localTrajectoryGPSData.bYaw = paramNaviTrajectoryGPSData.bYaw;
-    LogUtil.e("onShowMenu", " NaviTrajectory22 ntd.mGpsTime " + paramNaviTrajectoryGPSData.mGpsTime + " ntd.unLimitSpeed " + paramNaviTrajectoryGPSData.unLimitSpeed + " ntd.fMaxSpeed " + paramNaviTrajectoryGPSData.fMaxSpeed + " ntd.bMaxSpeed " + paramNaviTrajectoryGPSData.bMaxSpeed + " ntd.bOverSpeed " + paramNaviTrajectoryGPSData.bOverSpeed + " ntd.bRapidAcc " + paramNaviTrajectoryGPSData.bRapidAcc + " ntd.bBrake " + paramNaviTrajectoryGPSData.bBrake + " ntd.bCurve " + paramNaviTrajectoryGPSData.bCurve + " ntd.mLongitude " + paramNaviTrajectoryGPSData.mLongitude + " ntd.mLatitude " + paramNaviTrajectoryGPSData.mLatitude + " ntd.mSpeed " + paramNaviTrajectoryGPSData.mSpeed + " ntd.mBearing " + paramNaviTrajectoryGPSData.mBearing + " ntd.mAccuracy " + paramNaviTrajectoryGPSData.mAccuracy);
-    return localTrajectoryGPSData;
-  }
-  
-  private TrajectorySummaryInfo convertTo(NaviTrajectory paramNaviTrajectory)
-  {
-    if (paramNaviTrajectory == null) {
-      return null;
-    }
-    TrajectorySummaryInfo localTrajectorySummaryInfo = new TrajectorySummaryInfo();
-    localTrajectorySummaryInfo.mUUID = paramNaviTrajectory.mUUID;
-    localTrajectorySummaryInfo.mName = paramNaviTrajectory.mName;
-    localTrajectorySummaryInfo.mHasSync = paramNaviTrajectory.mHasSync;
-    localTrajectorySummaryInfo.mDistance = paramNaviTrajectory.mDistance;
-    localTrajectorySummaryInfo.mDate = paramNaviTrajectory.mDate;
-    localTrajectorySummaryInfo.mDuration = paramNaviTrajectory.mDuration;
-    localTrajectorySummaryInfo.mAverageSpeed = paramNaviTrajectory.mAverageSpeed;
-    localTrajectorySummaryInfo.mMaxSpeed = paramNaviTrajectory.mMaxSpeed;
-    localTrajectorySummaryInfo.mFromType = paramNaviTrajectory.mFromType;
-    localTrajectorySummaryInfo.mHasGpsMock = RGCacheStatus.sMockGpsGuide;
-    localTrajectorySummaryInfo.unMileageDist = paramNaviTrajectory.unMileageDist;
-    localTrajectorySummaryInfo.ulCreateTime = paramNaviTrajectory.ulCreateTime;
-    localTrajectorySummaryInfo.bIsChangedKey = paramNaviTrajectory.bIsChangedKey;
-    localTrajectorySummaryInfo.nKeyVersion = paramNaviTrajectory.nKeyVersion;
-    localTrajectorySummaryInfo.clTrackID = paramNaviTrajectory.clTrackID;
-    localTrajectorySummaryInfo.clCUID = paramNaviTrajectory.clCUID;
-    localTrajectorySummaryInfo.clSessionID = paramNaviTrajectory.clSessionID;
-    localTrajectorySummaryInfo.clBduss = paramNaviTrajectory.clBduss;
-    localTrajectorySummaryInfo.clPoiID = paramNaviTrajectory.clPoiID;
-    localTrajectorySummaryInfo.clDataSign = paramNaviTrajectory.clDataSign;
-    localTrajectorySummaryInfo.clSessionSign = paramNaviTrajectory.clSessionSign;
-    localTrajectorySummaryInfo.clUrl = paramNaviTrajectory.clUrl;
-    localTrajectorySummaryInfo.mLastestRequestID = getInstance().mLastestRequestID;
-    Object localObject = NavRoutePlanModel.getInstance().getEndRouteNode();
-    if (localObject != null) {
-      localTrajectorySummaryInfo.mBusinessPoi = ((RouteNode)localObject).mBusinessPoi;
-    }
-    RoutePlanNode localRoutePlanNode = NavCommonFuncModel.getInstance().mEndNode;
-    if (localRoutePlanNode != null)
-    {
-      localObject = localRoutePlanNode;
-      if (!localRoutePlanNode.isNodeSettedData()) {
-        localObject = BNSettingManager.getEndNode();
-      }
-      localTrajectorySummaryInfo.clEndLatitude = String.valueOf(((RoutePlanNode)localObject).getLatitudeE6());
-      localTrajectorySummaryInfo.clEndLongtitude = String.valueOf(((RoutePlanNode)localObject).getLongitudeE6());
-      localTrajectorySummaryInfo.clEndName = ((RoutePlanNode)localObject).mName;
-      NavLogUtils.e("tag", "walk lat ,long " + localTrajectorySummaryInfo.clEndLatitude + "," + localTrajectorySummaryInfo.clEndLongtitude);
-    }
-    LogUtil.e("onShowMenu", " NaviTrajectory11 ntd.unMileageDist " + paramNaviTrajectory.unMileageDist + " ntd.ulCreateTime " + paramNaviTrajectory.ulCreateTime + " ntd.bIsChangedKey " + paramNaviTrajectory.bIsChangedKey + " ntd.nKeyVersion " + paramNaviTrajectory.nKeyVersion + " ntd.clTrackID " + paramNaviTrajectory.clTrackID + " ntd.clCUID " + paramNaviTrajectory.clCUID + " ntd.clSessionID " + paramNaviTrajectory.clSessionID + " ntd.clBduss " + paramNaviTrajectory.clBduss + " ntd.clPoiID " + paramNaviTrajectory.clPoiID + " ntd.clDataSign " + paramNaviTrajectory.clDataSign + " ntd.clSessionSign " + paramNaviTrajectory.clSessionSign + " ntd.clUrl " + paramNaviTrajectory.clUrl + " ret.mBusinessPoi " + localTrajectorySummaryInfo.mBusinessPoi);
-    return localTrajectorySummaryInfo;
-  }
-  
-  public static NavTrajectoryController getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new NavTrajectoryController();
-    }
-    return mInstance;
-  }
-  
-  private void onEndRecord(int paramInt1, int paramInt2)
-  {
-    if (paramInt1 != 0) {}
-    for (;;)
-    {
-      return;
-      try
-      {
-        paramInt1 = (int)getCurrentTrajectorySummaryInfo().mDistance;
-        if (paramInt1 <= 0) {
-          continue;
+public class NavTrajectoryController {
+    private static final int CAR_DISTANCE_MIN_LIMIT = 200;
+    public static final int CRUISE = 2;
+    public static final int CRUISE_FOLLOW = 3;
+    private static final String DefaultTrackName = "未知路";
+    public static final int END_RECORD_FAIL = 1;
+    public static final int END_RECORD_INVALID = -1;
+    public static final int END_RECORD_SUC = 0;
+    public static final int ROUTE_GUIDE = 1;
+    private static final int SEARCH_POI_TIMEOUT = 120000;
+    private static final String TAG = NavTrajectoryController.class.getSimpleName();
+    public static boolean hasConnected = false;
+    private static NavTrajectoryController mInstance = null;
+    private boolean isEndNaviByOpenAPI = false;
+    private LocationChangeListener mCarNaviLocChangeListener = null;
+    protected HashMap<Handler, String> mEndGeoTrackId = new HashMap();
+    private GeoPoint mFinalGeoPoint = null;
+    private GeoPoint mFirstGeoPoint = null;
+    private boolean mIsNeedRecordTrack = true;
+    private boolean mIsStartRecord = false;
+    public int mLastestRequestID = 0;
+    private ILocationChangeListener mLocChangeListener = null;
+    private boolean mNotInputStartEndGeo = false;
+    protected HashMap<Handler, String> mStartGeoTrackId = new HashMap();
+    private boolean shouldShowNaviResult = false;
+    private String trackKeyUrl = null;
+
+    /* renamed from: com.baidu.baidunavis.control.NavTrajectoryController$2 */
+    class C08472 extends ILocationChangeListener {
+        C08472() {
         }
-        if (paramInt2 == 1)
-        {
-          StatisticManager.onEvent("NAVI_0016", "NAVI_0016");
-          StatisticManager.onEventMileage(com.baidu.carlife.core.a.a(), "NAVI_0013", "导航使用距离", paramInt1);
-          if (!hasConnected) {
-            StatisticManager.onEventMileage(com.baidu.carlife.core.a.a(), "NAVI_0030", "导航使用距离", paramInt1);
-          }
-          if (paramInt1 >= 1800000) {
-            StatisticManager.onEvent("NAVI_0014", "NAVI_0014");
-          }
-        }
-        while (paramInt1 > 200)
-        {
-          NavMapAdapter.getInstance().createCarNaviData();
-          return;
-          if (paramInt2 == 3)
-          {
-            StatisticManager.onEventMileage(com.baidu.carlife.core.a.a(), "NAVI_0009", "巡航模式使用距离", paramInt1);
-            if (paramInt1 >= 1800000) {
-              StatisticManager.onEvent("NAVI_0010", "NAVI_0010");
-            }
-          }
-        }
-        return;
-      }
-      catch (Exception localException) {}
-    }
-  }
-  
-  private void setTrackKeyUrl(NaviTrajectory paramNaviTrajectory)
-  {
-    LogUtil.e("onShowMenu", " NaviTrajectory44 trackKeyUrl " + this.trackKeyUrl);
-    if (paramNaviTrajectory == null) {
-      return;
-    }
-    LogUtil.e("onShowMenu", " NaviTrajectory55 nt.clPoiID " + paramNaviTrajectory.clPoiID);
-    if (paramNaviTrajectory.clPoiID != null) {
-      this.trackKeyUrl = paramNaviTrajectory.clUrl;
-    }
-    LogUtil.e("onShowMenu", " NaviTrajectory33 trackKeyUrl " + this.trackKeyUrl);
-  }
-  
-  private void startAntiGeo(GeoPoint paramGeoPoint, SearchHandler paramSearchHandler)
-  {
-    BNPoiSearcher.getInstance().asynGetPoiByPoint(paramGeoPoint, 120000, paramSearchHandler);
-  }
-  
-  public void checkRecordEndName(GeoPoint paramGeoPoint, String paramString)
-  {
-    if ((paramGeoPoint == null) || (paramString == null) || (paramString.length() == 0)) {
-      return;
-    }
-    SearchHandler localSearchHandler = new SearchHandler(Looper.getMainLooper());
-    this.mEndGeoTrackId.put(localSearchHandler, paramString);
-    startAntiGeo(paramGeoPoint, localSearchHandler);
-  }
-  
-  public void checkRecordStartName(GeoPoint paramGeoPoint, String paramString1, String paramString2)
-  {
-    if ((paramGeoPoint == null) || (paramString2 == null) || (paramString2.length() == 0)) {}
-    while ((paramString1 != null) && (paramString1.length() != 0) && (!paramString1.equals("我的位置")) && (!paramString1.equals("地图上的点"))) {
-      return;
-    }
-    paramString1 = new SearchHandler(Looper.getMainLooper());
-    this.mStartGeoTrackId.put(paramString1, paramString2);
-    startAntiGeo(paramGeoPoint, paramString1);
-  }
-  
-  public int delete(String paramString)
-  {
-    return 0;
-  }
-  
-  public int endRecord(String paramString, boolean paramBoolean, int paramInt)
-  {
-    if (paramInt == 1) {
-      StatisticManager.onEvent("NAVI_0015", "NAVI_0015");
-    }
-    this.shouldShowNaviResult = false;
-    if ((!isNeedRecordTrack()) || (NavMapAdapter.sMonkey) || (!this.mIsStartRecord)) {
-      return 0;
-    }
-    this.mIsStartRecord = false;
-    NavLogUtils.e("NavTrajectoryController", "endRecord----" + paramString + " trackRecordOK:" + paramBoolean);
-    if (this.mLocChangeListener != null)
-    {
-      BNSysLocationManager.getInstance().removeLocationListener(this.mLocChangeListener);
-      BNExtGPSLocationManager.getInstance().removeLocationListener(this.mLocChangeListener);
-      this.mLocChangeListener = null;
-    }
-    RouteNode localRouteNode = NavRoutePlanModel.getInstance().getEndRouteNode();
-    Object localObject2 = "";
-    Object localObject1;
-    if (BNRoutePlaner.getInstance().getEntry() == 20) {
-      localObject1 = "1";
-    }
-    for (;;)
-    {
-      int i = -100;
-      localObject2 = new Bundle();
-      try
-      {
-        int j = JNITrajectoryControl.sInstance.endRecord(paramString, (String)localObject1, RGCacheStatus.sMockGpsGuide, (Bundle)localObject2);
-        i = j;
-        if ((localObject2 != null) && (((Bundle)localObject2).containsKey("trajectory_requestid"))) {
-          this.mLastestRequestID = ((Bundle)localObject2).getInt("trajectory_requestid");
-        }
-      }
-      catch (Throwable localThrowable)
-      {
-        try
-        {
-          for (;;)
-          {
-            JNITrajectoryControl.sInstance.updateEndName(getCurrentUUID(), paramString);
-            com.baidu.navi.track.TrackCarDataSolveModel.mFirstGeoPoint = this.mFirstGeoPoint;
-            com.baidu.navi.track.TrackCarDataSolveModel.mFinalGeoPoint = this.mFinalGeoPoint;
-            this.mFirstGeoPoint = null;
-            this.mFinalGeoPoint = null;
-            if ((paramBoolean) && (!NavCommonFuncModel.sIsAnologNavi))
-            {
-              NavLogUtils.e(TAG, "endRecord: NaviResultModel --> " + BNNaviResultModel.getInstance().toString());
-              checkShouldDisplayNaviResultPage(i);
-              NavLogUtils.e(TAG, "endRecord: --> ret: " + i + ", shouldShowNaviResult: " + this.shouldShowNaviResult);
-            }
-            this.shouldShowNaviResult = false;
-            onEndRecord(i, paramInt);
-            return i;
-            if (BNRoutePlaner.getInstance().getEntry() == 21)
-            {
-              localObject1 = "2";
-              break;
-            }
-            localObject1 = localObject2;
-            if (localRouteNode == null) {
-              break;
-            }
-            localObject1 = localObject2;
-            if (localRouteNode.mUID == null) {
-              break;
-            }
-            localObject1 = localObject2;
-            if (localRouteNode.mUID.length() <= 0) {
-              break;
-            }
-            localObject1 = localRouteNode.mUID;
-            break;
-            localThrowable = localThrowable;
-            NavLogUtils.e(TAG, "endRecord: Exception --> ");
-            continue;
-            this.mLastestRequestID = 0;
-          }
-        }
-        catch (Throwable paramString)
-        {
-          for (;;) {}
-        }
-      }
-    }
-  }
-  
-  public ArrayList<TrajectorySummaryInfo> getAllDisplayTrajectory(String paramString1, String paramString2)
-  {
-    if (!isNeedRecordTrack())
-    {
-      paramString1 = null;
-      return paramString1;
-    }
-    ArrayList localArrayList = new ArrayList();
-    JNITrajectoryControl.sInstance.getTrajectoryList(paramString1, paramString2, localArrayList);
-    paramString2 = new ArrayList();
-    int i = 0;
-    for (;;)
-    {
-      paramString1 = paramString2;
-      if (localArrayList == null) {
-        break;
-      }
-      paramString1 = paramString2;
-      if (i >= localArrayList.size()) {
-        break;
-      }
-      paramString2.add(convertTo((NaviTrajectory)localArrayList.get(i)));
-      i += 1;
-    }
-  }
-  
-  public Bitmap getCarNaviBusinessImage()
-  {
-    NavLogUtils.e("Trajectory", "getCarNaviBusinessImage() ");
-    if (BusinessActivityManager.getInstance().getModel() != null) {
-      return BusinessActivityManager.getInstance().getModel().naviendPicBitmap;
-    }
-    return null;
-  }
-  
-  public TrajectorySummaryInfo getCurrentTrajectorySummaryInfo()
-  {
-    if (!isNeedRecordTrack()) {}
-    String str;
-    do
-    {
-      return null;
-      str = getCurrentUUID();
-    } while ((str == null) || (str.length() == 0));
-    return getTrajectoryById(getCurrentUUID());
-  }
-  
-  public String getCurrentUUID()
-  {
-    if (!isNeedRecordTrack()) {
-      return null;
-    }
-    return JNITrajectoryControl.sInstance.getCurrentUUID();
-  }
-  
-  public ArrayList<TrajectoryGPSData> getCurrentUUIDTrajectoryGPSData()
-  {
-    if (!isNeedRecordTrack()) {}
-    String str;
-    do
-    {
-      return null;
-      str = getCurrentUUID();
-    } while ((str == null) || (str.length() == 0));
-    return getTrajectoryGPSList(str);
-  }
-  
-  public String getTrackKeyUrl()
-  {
-    return this.trackKeyUrl;
-  }
-  
-  public TrajectorySummaryInfo getTrajectoryById(String paramString)
-  {
-    if ((!BaiduNaviManager.isNaviSoLoadSuccess()) || (!BaiduNaviManager.sIsBaseEngineInitialized)) {}
-    while (!isNeedRecordTrack()) {
-      return null;
-    }
-    NaviTrajectory localNaviTrajectory = new NaviTrajectory();
-    JNITrajectoryControl.sInstance.getTrajectoryById(paramString, localNaviTrajectory);
-    setTrackKeyUrl(localNaviTrajectory);
-    return convertTo(localNaviTrajectory);
-  }
-  
-  public ArrayList<TrajectoryGPSData> getTrajectoryGPSList(String paramString)
-  {
-    if (!isNeedRecordTrack()) {
-      paramString = null;
-    }
-    for (;;)
-    {
-      return paramString;
-      ArrayList localArrayList2 = new ArrayList();
-      JNITrajectoryControl.sInstance.GetTrajectoryGPSListDirect(paramString, localArrayList2);
-      ArrayList localArrayList1 = new ArrayList();
-      int i = 0;
-      paramString = localArrayList1;
-      if (localArrayList2 != null)
-      {
-        paramString = localArrayList1;
-        try
-        {
-          if (i < localArrayList2.size())
-          {
-            localArrayList1.add(convertTo((NaviTrajectoryGPSData)localArrayList2.get(i)));
-            i += 1;
-          }
-        }
-        catch (Throwable paramString) {}
-      }
-    }
-    return null;
-  }
-  
-  public boolean isNeedRecordTrack()
-  {
-    return this.mIsNeedRecordTrack;
-  }
-  
-  public int logoutCleanUp()
-  {
-    if (!isNeedRecordTrack()) {
-      return 0;
-    }
-    return JNITrajectoryControl.sInstance.logoutCleanUp();
-  }
-  
-  public int patchDelete(ArrayList<String> paramArrayList)
-  {
-    return 0;
-  }
-  
-  public void reInitLocationService()
-  {
-    if (this.mLocChangeListener == null) {
-      return;
-    }
-    if ((com.baidu.carlife.i.a.a().b()) && (BNExtGPSLocationManager.getInstance().isGpsEnabled()) && (BNExtGPSLocationManager.getInstance().isGpsAvailable()))
-    {
-      BNSysLocationManager.getInstance().removeLocationListener(this.mLocChangeListener);
-      BNExtGPSLocationManager.getInstance().addLocationListener(this.mLocChangeListener);
-      return;
-    }
-    BNExtGPSLocationManager.getInstance().removeLocationListener(this.mLocChangeListener);
-    BNSysLocationManager.getInstance().addLocationListener(this.mLocChangeListener);
-  }
-  
-  public int recording(double paramDouble1, double paramDouble2, float paramFloat1, float paramFloat2, float paramFloat3, long paramLong)
-  {
-    if (!isNeedRecordTrack()) {
-      return 0;
-    }
-    return JNITrajectoryControl.sInstance.recording(paramDouble1, paramDouble2, paramFloat1, paramFloat2, paramFloat3, paramLong);
-  }
-  
-  public int rename(String paramString1, String paramString2)
-  {
-    if (!isNeedRecordTrack()) {
-      return 0;
-    }
-    return JNITrajectoryControl.sInstance.rename(paramString1, paramString2);
-  }
-  
-  public void setEndNaviByOpenApi(boolean paramBoolean)
-  {
-    this.isEndNaviByOpenAPI = paramBoolean;
-  }
-  
-  public void setNeedRecordTrack(boolean paramBoolean)
-  {
-    this.mIsNeedRecordTrack = paramBoolean;
-  }
-  
-  public int startRecord(final String paramString1, final String paramString2, final int paramInt, final boolean paramBoolean1, final boolean paramBoolean2)
-  {
-    if ((!isNeedRecordTrack()) || (NavMapAdapter.sMonkey)) {
-      return 0;
-    }
-    Bundle localBundle = new Bundle();
-    if (paramString1 != null) {
-      localBundle.putString("userId", paramString1);
-    }
-    if (paramString2 != null) {
-      localBundle.putString("startPointName", paramString2);
-    }
-    localBundle.putInt("fromType", paramInt);
-    localBundle.putBoolean("selfRegisterLocation", paramBoolean1);
-    localBundle.putBoolean("notInputStartEndGeo", paramBoolean2);
-    BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-StartRecordTraj", null)new BNWorkerConfig
-    {
-      protected String execute()
-      {
-        try
-        {
-          NavTrajectoryController localNavTrajectoryController = NavTrajectoryController.getInstance();
-          String str1;
-          if (paramString1 == null)
-          {
-            str1 = "";
-            if (paramString2 != null) {
-              break label54;
-            }
-          }
-          label54:
-          for (String str2 = "";; str2 = paramString2)
-          {
-            localNavTrajectoryController.startRecordInner(str1, str2, paramInt, paramBoolean1, paramBoolean2);
-            break label63;
-            str1 = paramString1;
-            break;
-          }
-          return null;
-        }
-        catch (Throwable localThrowable) {}
-      }
-    }, new BNWorkerConfig(100, 0));
-    return 1;
-  }
-  
-  public void startRecordForNaviResult(int paramInt)
-  {
-    NavLogUtils.e(TAG, "startRecordForNaviResult: --> naviMode: " + paramInt);
-    BNNaviResultController.getInstance().reset();
-    BNNaviResultController.getInstance().registerVMsgHandler();
-  }
-  
-  int startRecordInner(String paramString1, String paramString2, int paramInt, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    if ((!isNeedRecordTrack()) || (NavMapAdapter.sMonkey)) {
-      return 0;
-    }
-    this.mIsStartRecord = true;
-    NavLogUtils.e("NavTrajectoryController", "startRecord---- " + paramString2 + "," + paramInt);
-    this.mNotInputStartEndGeo = paramBoolean2;
-    String str = NavMapAdapter.getInstance().getNavEnergyPromoteEvent();
-    paramBoolean2 = NavMapAdapter.getInstance().isCloudSwitchOn(str);
-    paramInt = JNITrajectoryControl.sInstance.startRecord(paramString1, paramString2, paramInt, paramBoolean2);
-    if (paramBoolean1)
-    {
-      if (this.mLocChangeListener == null) {
-        this.mLocChangeListener = new ILocationChangeListener()
-        {
-          public void onLocationChange(LocData paramAnonymousLocData)
-          {
-            NavTrajectoryController.this.recording(paramAnonymousLocData.longitude, paramAnonymousLocData.latitude, paramAnonymousLocData.speed, paramAnonymousLocData.direction, paramAnonymousLocData.accuracy, paramAnonymousLocData.time);
-            if (NavTrajectoryController.this.mNotInputStartEndGeo)
-            {
-              if (NavTrajectoryController.this.mFirstGeoPoint == null)
-              {
-                NavTrajectoryController.access$102(NavTrajectoryController.this, paramAnonymousLocData.toGeoPoint());
+
+        public void onLocationChange(LocData locData) {
+            NavTrajectoryController.this.recording(locData.longitude, locData.latitude, locData.speed, locData.direction, locData.accuracy, locData.time);
+            if (!NavTrajectoryController.this.mNotInputStartEndGeo) {
+                NavTrajectoryController.this.mFinalGeoPoint = locData.toGeoPoint();
+            } else if (NavTrajectoryController.this.mFirstGeoPoint == null) {
+                NavTrajectoryController.this.mFirstGeoPoint = locData.toGeoPoint();
                 NavTrajectoryController.this.checkRecordStartName(NavTrajectoryController.this.mFirstGeoPoint, null, NavTrajectoryController.this.getCurrentUUID());
-                return;
-              }
-              NavTrajectoryController.access$202(NavTrajectoryController.this, paramAnonymousLocData.toGeoPoint());
-              return;
+            } else {
+                NavTrajectoryController.this.mFinalGeoPoint = locData.toGeoPoint();
             }
-            NavTrajectoryController.access$202(NavTrajectoryController.this, paramAnonymousLocData.toGeoPoint());
-          }
-          
-          public void onWGS84LocationChange(LocData paramAnonymousLocData1, LocData paramAnonymousLocData2) {}
-        };
-      }
-      reInitLocationService();
+        }
+
+        public void onWGS84LocationChange(LocData locData, LocData gcj02LocData) {
+        }
     }
-    NavLogUtils.e(TAG, "startRecord: ret --> " + paramInt);
-    return paramInt;
-  }
-  
-  public int updateEndName(String paramString1, String paramString2)
-  {
-    if (!isNeedRecordTrack()) {
-      return 0;
-    }
-    try
-    {
-      int i = JNITrajectoryControl.sInstance.updateEndName(paramString1, paramString2);
-      return i;
-    }
-    catch (Throwable paramString1) {}
-    return 0;
-  }
-  
-  public int updateStartName(String paramString1, String paramString2)
-  {
-    if (!isNeedRecordTrack()) {
-      return 0;
-    }
-    return JNITrajectoryControl.sInstance.updateStartName(paramString1, paramString2);
-  }
-  
-  class SearchHandler
-    extends Handler
-  {
-    public SearchHandler(Looper paramLooper)
-    {
-      super();
-    }
-    
-    public void handleMessage(final Message paramMessage)
-    {
-      label24:
-      String str;
-      switch (paramMessage.what)
-      {
-      default: 
-        ;;
-      case 1003: 
-        if (paramMessage.arg1 == 0)
-        {
-          paramMessage = (SearchPoi)((RspData)paramMessage.obj).mData;
-          if (paramMessage != null)
-          {
-            if (!NavTrajectoryController.this.mStartGeoTrackId.containsKey(this)) {
-              break label172;
+
+    class SearchHandler extends Handler {
+        public SearchHandler(Looper mainLooper) {
+            super(mainLooper);
+        }
+
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1003:
+                    if (msg.arg1 == 0) {
+                        SearchPoi searchPoi = msg.obj.mData;
+                        if (searchPoi != null) {
+                            String trackId;
+                            final String tmpName;
+                            if (NavTrajectoryController.this.mStartGeoTrackId.containsKey(this)) {
+                                trackId = (String) NavTrajectoryController.this.mStartGeoTrackId.get(this);
+                                if (TextUtils.isEmpty(searchPoi.mName)) {
+                                    searchPoi.mName = NavTrajectoryController.DefaultTrackName;
+                                }
+                                JNITrajectoryControl.sInstance.updateStartName(trackId, searchPoi.mName);
+                                tmpName = searchPoi.mName;
+                                if (NavLogUtils.LOGGABLE && NavCommonFuncModel.getInstance().getActivity() != null) {
+                                    NavCommonFuncModel.getInstance().getActivity().runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            NavTipTool.onCreateToastDialog(NavCommonFuncModel.getInstance().getActivity(), "trackStartName:" + tmpName);
+                                        }
+                                    });
+                                }
+                            } else if (NavTrajectoryController.this.mEndGeoTrackId.containsKey(this)) {
+                                trackId = (String) NavTrajectoryController.this.mEndGeoTrackId.get(this);
+                                if (TextUtils.isEmpty(searchPoi.mName)) {
+                                    searchPoi.mName = NavTrajectoryController.DefaultTrackName;
+                                }
+                                try {
+                                    JNITrajectoryControl.sInstance.updateEndName(trackId, searchPoi.mName);
+                                } catch (Throwable th) {
+                                }
+                                tmpName = searchPoi.mName;
+                                if (NavLogUtils.LOGGABLE && NavCommonFuncModel.getInstance().getActivity() != null) {
+                                    NavCommonFuncModel.getInstance().getActivity().runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            NavTipTool.onCreateToastDialog(NavCommonFuncModel.getInstance().getActivity(), "trackEndName:" + tmpName);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    if (NavTrajectoryController.this.mStartGeoTrackId.remove(this) == null) {
+                        NavTrajectoryController.this.mEndGeoTrackId.remove(this);
+                        return;
+                    }
+                    return;
+                default:
+                    return;
             }
-            str = (String)NavTrajectoryController.this.mStartGeoTrackId.get(this);
-            if (TextUtils.isEmpty(paramMessage.mName)) {
-              paramMessage.mName = "未知路";
-            }
-            JNITrajectoryControl.sInstance.updateStartName(str, paramMessage.mName);
-            paramMessage = paramMessage.mName;
-            if ((NavLogUtils.LOGGABLE) && (NavCommonFuncModel.getInstance().getActivity() != null)) {
-              NavCommonFuncModel.getInstance().getActivity().runOnUiThread(new Runnable()
-              {
-                public void run()
-                {
-                  NavTipTool.onCreateToastDialog(NavCommonFuncModel.getInstance().getActivity(), "trackStartName:" + paramMessage);
+        }
+    }
+
+    private NavTrajectoryController() {
+    }
+
+    public static NavTrajectoryController getInstance() {
+        if (mInstance == null) {
+            mInstance = new NavTrajectoryController();
+        }
+        return mInstance;
+    }
+
+    public boolean isNeedRecordTrack() {
+        return this.mIsNeedRecordTrack;
+    }
+
+    public void setNeedRecordTrack(boolean record) {
+        this.mIsNeedRecordTrack = record;
+    }
+
+    public String getCurrentUUID() {
+        if (isNeedRecordTrack()) {
+            return JNITrajectoryControl.sInstance.getCurrentUUID();
+        }
+        return null;
+    }
+
+    public TrajectorySummaryInfo getCurrentTrajectorySummaryInfo() {
+        if (!isNeedRecordTrack()) {
+            return null;
+        }
+        String curUUID = getCurrentUUID();
+        if (curUUID == null || curUUID.length() == 0) {
+            return null;
+        }
+        return getTrajectoryById(getCurrentUUID());
+    }
+
+    public ArrayList<TrajectoryGPSData> getCurrentUUIDTrajectoryGPSData() {
+        if (!isNeedRecordTrack()) {
+            return null;
+        }
+        String curUUID = getCurrentUUID();
+        if (curUUID == null || curUUID.length() == 0) {
+            return null;
+        }
+        return getTrajectoryGPSList(curUUID);
+    }
+
+    public int startRecord(String userId, String startPointName, int fromType, boolean selfRegisterLocation, boolean notInputStartEndGeo) {
+        if (!isNeedRecordTrack() || NavMapAdapter.sMonkey) {
+            return 0;
+        }
+        Bundle data = new Bundle();
+        if (userId != null) {
+            data.putString("userId", userId);
+        }
+        if (startPointName != null) {
+            data.putString("startPointName", startPointName);
+        }
+        data.putInt("fromType", fromType);
+        data.putBoolean("selfRegisterLocation", selfRegisterLocation);
+        data.putBoolean("notInputStartEndGeo", notInputStartEndGeo);
+        final String str = userId;
+        final String str2 = startPointName;
+        final int i = fromType;
+        final boolean z = selfRegisterLocation;
+        final boolean z2 = notInputStartEndGeo;
+        BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-StartRecordTraj", null) {
+            protected String execute() {
+                try {
+                    NavTrajectoryController.getInstance().startRecordInner(str == null ? "" : str, str2 == null ? "" : str2, i, z, z2);
+                } catch (Throwable th) {
                 }
-              });
+                return null;
             }
-          }
-        }
-        break;
-      }
-      for (;;)
-      {
-        if (NavTrajectoryController.this.mStartGeoTrackId.remove(this) != null) {
-          break label24;
-        }
-        NavTrajectoryController.this.mEndGeoTrackId.remove(this);
-        return;
-        label172:
-        if (!NavTrajectoryController.this.mEndGeoTrackId.containsKey(this)) {
-          break;
-        }
-        str = (String)NavTrajectoryController.this.mEndGeoTrackId.get(this);
-        if (TextUtils.isEmpty(paramMessage.mName)) {
-          paramMessage.mName = "未知路";
-        }
-        try
-        {
-          JNITrajectoryControl.sInstance.updateEndName(str, paramMessage.mName);
-          paramMessage = paramMessage.mName;
-          if ((!NavLogUtils.LOGGABLE) || (NavCommonFuncModel.getInstance().getActivity() == null)) {
-            continue;
-          }
-          NavCommonFuncModel.getInstance().getActivity().runOnUiThread(new Runnable()
-          {
-            public void run()
-            {
-              NavTipTool.onCreateToastDialog(NavCommonFuncModel.getInstance().getActivity(), "trackEndName:" + paramMessage);
-            }
-          });
-        }
-        catch (Throwable localThrowable)
-        {
-          for (;;) {}
-        }
-      }
+        }, new BNWorkerConfig(100, 0));
+        return 1;
     }
-  }
+
+    int startRecordInner(String userId, String startPointName, int fromType, boolean selfRegisterLocation, boolean notInputStartEndGeo) {
+        if (!isNeedRecordTrack() || NavMapAdapter.sMonkey) {
+            return 0;
+        }
+        this.mIsStartRecord = true;
+        NavLogUtils.m3003e("NavTrajectoryController", "startRecord---- " + startPointName + "," + fromType);
+        this.mNotInputStartEndGeo = notInputStartEndGeo;
+        int ret = JNITrajectoryControl.sInstance.startRecord(userId, startPointName, fromType, NavMapAdapter.getInstance().isCloudSwitchOn(NavMapAdapter.getInstance().getNavEnergyPromoteEvent()));
+        if (selfRegisterLocation) {
+            if (this.mLocChangeListener == null) {
+                this.mLocChangeListener = new C08472();
+            }
+            reInitLocationService();
+        }
+        NavLogUtils.m3003e(TAG, "startRecord: ret --> " + ret);
+        return ret;
+    }
+
+    public void reInitLocationService() {
+        if (this.mLocChangeListener != null) {
+            if (C1609a.m5871a().m5880b() && BNExtGPSLocationManager.getInstance().isGpsEnabled() && BNExtGPSLocationManager.getInstance().isGpsAvailable()) {
+                BNSysLocationManager.getInstance().removeLocationListener(this.mLocChangeListener);
+                BNExtGPSLocationManager.getInstance().addLocationListener(this.mLocChangeListener);
+                return;
+            }
+            BNExtGPSLocationManager.getInstance().removeLocationListener(this.mLocChangeListener);
+            BNSysLocationManager.getInstance().addLocationListener(this.mLocChangeListener);
+        }
+    }
+
+    public void startRecordForNaviResult(int naviMode) {
+        NavLogUtils.m3003e(TAG, "startRecordForNaviResult: --> naviMode: " + naviMode);
+        BNNaviResultController.getInstance().reset();
+        BNNaviResultController.getInstance().registerVMsgHandler();
+    }
+
+    public int endRecord(String endPointName, boolean trackRecordOK, int recordType) {
+        if (recordType == 1) {
+            StatisticManager.onEvent(StatisticConstants.NAVI_0015, StatisticConstants.NAVI_0015);
+        }
+        this.shouldShowNaviResult = false;
+        if (!isNeedRecordTrack() || NavMapAdapter.sMonkey || !this.mIsStartRecord) {
+            return 0;
+        }
+        this.mIsStartRecord = false;
+        NavLogUtils.m3003e("NavTrajectoryController", "endRecord----" + endPointName + " trackRecordOK:" + trackRecordOK);
+        if (this.mLocChangeListener != null) {
+            BNSysLocationManager.getInstance().removeLocationListener(this.mLocChangeListener);
+            BNExtGPSLocationManager.getInstance().removeLocationListener(this.mLocChangeListener);
+            this.mLocChangeListener = null;
+        }
+        RouteNode endNode = NavRoutePlanModel.getInstance().getEndRouteNode();
+        String uid = "";
+        if (BNRoutePlaner.getInstance().getEntry() == 20) {
+            uid = "1";
+        } else if (BNRoutePlaner.getInstance().getEntry() == 21) {
+            uid = "2";
+        } else if (!(endNode == null || endNode.mUID == null || endNode.mUID.length() <= 0)) {
+            uid = endNode.mUID;
+        }
+        int ret = -100;
+        Bundle outBundle = new Bundle();
+        try {
+            ret = JNITrajectoryControl.sInstance.endRecord(endPointName, uid, RGCacheStatus.sMockGpsGuide, outBundle);
+        } catch (Throwable th) {
+            NavLogUtils.m3003e(TAG, "endRecord: Exception --> ");
+        }
+        if (outBundle == null || !outBundle.containsKey("trajectory_requestid")) {
+            this.mLastestRequestID = 0;
+        } else {
+            this.mLastestRequestID = outBundle.getInt("trajectory_requestid");
+        }
+        try {
+            JNITrajectoryControl.sInstance.updateEndName(getCurrentUUID(), endPointName);
+        } catch (Throwable th2) {
+        }
+        TrackCarDataSolveModel.mFirstGeoPoint = this.mFirstGeoPoint;
+        TrackCarDataSolveModel.mFinalGeoPoint = this.mFinalGeoPoint;
+        this.mFirstGeoPoint = null;
+        this.mFinalGeoPoint = null;
+        if (trackRecordOK && !NavCommonFuncModel.sIsAnologNavi) {
+            NavLogUtils.m3003e(TAG, "endRecord: NaviResultModel --> " + BNNaviResultModel.getInstance().toString());
+            checkShouldDisplayNaviResultPage(ret);
+            NavLogUtils.m3003e(TAG, "endRecord: --> ret: " + ret + ", shouldShowNaviResult: " + this.shouldShowNaviResult);
+        }
+        this.shouldShowNaviResult = false;
+        onEndRecord(ret, recordType);
+        return ret;
+    }
+
+    private void onEndRecord(int endRecordState, int recordType) {
+        if (endRecordState == 0) {
+            try {
+                int iDistance = (int) getCurrentTrajectorySummaryInfo().mDistance;
+                if (iDistance > 0) {
+                    if (recordType == 1) {
+                        StatisticManager.onEvent(StatisticConstants.NAVI_0016, StatisticConstants.NAVI_0016);
+                        StatisticManager.onEventMileage(C1157a.m3876a(), StatisticConstants.NAVI_0013, StatisticConstants.HOME_MAP_NAVI_STATUS_DISTANSE, iDistance);
+                        if (!hasConnected) {
+                            StatisticManager.onEventMileage(C1157a.m3876a(), StatisticConstants.NAVI_0030, StatisticConstants.HOME_MAP_NAVI_STATUS_DISTANSE, iDistance);
+                        }
+                        if (iDistance >= 1800000) {
+                            StatisticManager.onEvent(StatisticConstants.NAVI_0014, StatisticConstants.NAVI_0014);
+                        }
+                    } else if (recordType == 3) {
+                        StatisticManager.onEventMileage(C1157a.m3876a(), StatisticConstants.NAVI_0009, StatisticConstants.HOME_MAP_CRUISE_FOLLOW_STATUS_DISTANSE, iDistance);
+                        if (iDistance >= 1800000) {
+                            StatisticManager.onEvent(StatisticConstants.NAVI_0010, StatisticConstants.NAVI_0010);
+                        }
+                    }
+                    if (iDistance > 200) {
+                        NavMapAdapter.getInstance().createCarNaviData();
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private void checkShouldDisplayNaviResultPage(int endRecordState) {
+        if (endRecordState != 0) {
+            this.shouldShowNaviResult = false;
+        } else if (BNNaviResultModel.getInstance().isDestArrived()) {
+            this.shouldShowNaviResult = true;
+            BNNaviResultModel.getInstance().setNaviCompletePercentage(1.0f);
+        } else {
+            double percentage;
+            long curMilea = JNITrajectoryControl.sInstance.getTrajectoryLength(JNITrajectoryControl.sInstance.getCurrentUUID());
+            int planedDist = BNNaviResultModel.getInstance().getEstimatedRemainDist();
+            if (planedDist == 0) {
+                percentage = 0.0d;
+            } else {
+                percentage = ((double) curMilea) / ((double) planedDist);
+            }
+            NavLogUtils.m3003e(TAG, "checkShouldDisplayNaviResultPage: --> curMilea: " + curMilea + ", planedDist: " + planedDist + ", percentage: " + percentage);
+            BNNaviResultModel.getInstance().setNaviCompletePercentage((float) percentage);
+            if (curMilea <= BNOffScreenParams.MIN_ENTER_INTERVAL) {
+            }
+        }
+    }
+
+    public int recording(double longitude, double latitude, float speed, float bearing, float accuracy, long time) {
+        if (isNeedRecordTrack()) {
+            return JNITrajectoryControl.sInstance.recording(longitude, latitude, speed, bearing, accuracy, time);
+        }
+        return 0;
+    }
+
+    public int rename(String uuid, String newname) {
+        if (isNeedRecordTrack()) {
+            return JNITrajectoryControl.sInstance.rename(uuid, newname);
+        }
+        return 0;
+    }
+
+    public int delete(String uuid) {
+        return 0;
+    }
+
+    public int patchDelete(ArrayList<String> arrayList) {
+        return 0;
+    }
+
+    public TrajectorySummaryInfo getTrajectoryById(String uuid) {
+        if (!BaiduNaviManager.isNaviSoLoadSuccess() || !BaiduNaviManager.sIsBaseEngineInitialized || !isNeedRecordTrack()) {
+            return null;
+        }
+        NaviTrajectory nt = new NaviTrajectory();
+        JNITrajectoryControl.sInstance.getTrajectoryById(uuid, nt);
+        setTrackKeyUrl(nt);
+        return convertTo(nt);
+    }
+
+    public ArrayList<TrajectorySummaryInfo> getAllDisplayTrajectory(String bduss, String userId) {
+        if (!isNeedRecordTrack()) {
+            return null;
+        }
+        ArrayList<NaviTrajectory> outList = new ArrayList();
+        JNITrajectoryControl.sInstance.getTrajectoryList(bduss, userId, outList);
+        ArrayList<TrajectorySummaryInfo> ret = new ArrayList();
+        int i = 0;
+        while (outList != null && i < outList.size()) {
+            ret.add(convertTo((NaviTrajectory) outList.get(i)));
+            i++;
+        }
+        return ret;
+    }
+
+    public ArrayList<TrajectoryGPSData> getTrajectoryGPSList(String uuid) {
+        if (!isNeedRecordTrack()) {
+            return null;
+        }
+        ArrayList<NaviTrajectoryGPSData> outList = new ArrayList();
+        JNITrajectoryControl.sInstance.GetTrajectoryGPSListDirect(uuid, outList);
+        ArrayList<TrajectoryGPSData> ret = new ArrayList();
+        int i = 0;
+        while (outList != null) {
+            try {
+                if (i >= outList.size()) {
+                    return ret;
+                }
+                ret.add(convertTo((NaviTrajectoryGPSData) outList.get(i)));
+                i++;
+            } catch (Throwable th) {
+                return null;
+            }
+        }
+        return ret;
+    }
+
+    public int logoutCleanUp() {
+        if (isNeedRecordTrack()) {
+            return JNITrajectoryControl.sInstance.logoutCleanUp();
+        }
+        return 0;
+    }
+
+    public int updateStartName(String uuid, String startName) {
+        if (isNeedRecordTrack()) {
+            return JNITrajectoryControl.sInstance.updateStartName(uuid, startName);
+        }
+        return 0;
+    }
+
+    public int updateEndName(String uuid, String endName) {
+        int i = 0;
+        if (isNeedRecordTrack()) {
+            try {
+                i = JNITrajectoryControl.sInstance.updateEndName(uuid, endName);
+            } catch (Throwable th) {
+            }
+        }
+        return i;
+    }
+
+    private void setTrackKeyUrl(NaviTrajectory nt) {
+        LogUtil.m3004e("onShowMenu", " NaviTrajectory44 trackKeyUrl " + this.trackKeyUrl);
+        if (nt != null) {
+            LogUtil.m3004e("onShowMenu", " NaviTrajectory55 nt.clPoiID " + nt.clPoiID);
+            if (nt.clPoiID != null) {
+                this.trackKeyUrl = nt.clUrl;
+            }
+            LogUtil.m3004e("onShowMenu", " NaviTrajectory33 trackKeyUrl " + this.trackKeyUrl);
+        }
+    }
+
+    public String getTrackKeyUrl() {
+        return this.trackKeyUrl;
+    }
+
+    private TrajectorySummaryInfo convertTo(NaviTrajectory nt) {
+        if (nt == null) {
+            return null;
+        }
+        TrajectorySummaryInfo ret = new TrajectorySummaryInfo();
+        ret.mUUID = nt.mUUID;
+        ret.mName = nt.mName;
+        ret.mHasSync = nt.mHasSync;
+        ret.mDistance = nt.mDistance;
+        ret.mDate = nt.mDate;
+        ret.mDuration = nt.mDuration;
+        ret.mAverageSpeed = nt.mAverageSpeed;
+        ret.mMaxSpeed = nt.mMaxSpeed;
+        ret.mFromType = nt.mFromType;
+        ret.mHasGpsMock = RGCacheStatus.sMockGpsGuide;
+        ret.unMileageDist = nt.unMileageDist;
+        ret.ulCreateTime = nt.ulCreateTime;
+        ret.bIsChangedKey = nt.bIsChangedKey;
+        ret.nKeyVersion = nt.nKeyVersion;
+        ret.clTrackID = nt.clTrackID;
+        ret.clCUID = nt.clCUID;
+        ret.clSessionID = nt.clSessionID;
+        ret.clBduss = nt.clBduss;
+        ret.clPoiID = nt.clPoiID;
+        ret.clDataSign = nt.clDataSign;
+        ret.clSessionSign = nt.clSessionSign;
+        ret.clUrl = nt.clUrl;
+        ret.mLastestRequestID = getInstance().mLastestRequestID;
+        RouteNode endNode = NavRoutePlanModel.getInstance().getEndRouteNode();
+        if (endNode != null) {
+            ret.mBusinessPoi = endNode.mBusinessPoi;
+        }
+        RoutePlanNode node = NavCommonFuncModel.getInstance().mEndNode;
+        if (node != null) {
+            if (!node.isNodeSettedData()) {
+                node = BNSettingManager.getEndNode();
+            }
+            ret.clEndLatitude = String.valueOf(node.getLatitudeE6());
+            ret.clEndLongtitude = String.valueOf(node.getLongitudeE6());
+            ret.clEndName = node.mName;
+            NavLogUtils.m3003e("tag", "walk lat ,long " + ret.clEndLatitude + "," + ret.clEndLongtitude);
+        }
+        LogUtil.m3004e("onShowMenu", " NaviTrajectory11 ntd.unMileageDist " + nt.unMileageDist + " ntd.ulCreateTime " + nt.ulCreateTime + " ntd.bIsChangedKey " + nt.bIsChangedKey + " ntd.nKeyVersion " + nt.nKeyVersion + " ntd.clTrackID " + nt.clTrackID + " ntd.clCUID " + nt.clCUID + " ntd.clSessionID " + nt.clSessionID + " ntd.clBduss " + nt.clBduss + " ntd.clPoiID " + nt.clPoiID + " ntd.clDataSign " + nt.clDataSign + " ntd.clSessionSign " + nt.clSessionSign + " ntd.clUrl " + nt.clUrl + " ret.mBusinessPoi " + ret.mBusinessPoi);
+        return ret;
+    }
+
+    private TrajectoryGPSData convertTo(NaviTrajectoryGPSData ntd) {
+        if (ntd == null) {
+            return null;
+        }
+        TrajectoryGPSData ret = new TrajectoryGPSData();
+        ret.mLongitude = ntd.mLongitude;
+        ret.mLatitude = ntd.mLatitude;
+        ret.mSpeed = ntd.mSpeed;
+        ret.mBearing = ntd.mBearing;
+        ret.mAccuracy = ntd.mAccuracy;
+        ret.mGpsTime = ntd.mGpsTime;
+        ret.unLimitSpeed = ntd.unLimitSpeed;
+        ret.fMaxSpeed = ntd.fMaxSpeed;
+        ret.bMaxSpeed = ntd.bMaxSpeed;
+        ret.bOverSpeed = ntd.bOverSpeed;
+        ret.bRapidAcc = ntd.bRapidAcc;
+        ret.bBrake = ntd.bBrake;
+        ret.bCurve = ntd.bCurve;
+        ret.bYaw = ntd.bYaw;
+        LogUtil.m3004e("onShowMenu", " NaviTrajectory22 ntd.mGpsTime " + ntd.mGpsTime + " ntd.unLimitSpeed " + ntd.unLimitSpeed + " ntd.fMaxSpeed " + ntd.fMaxSpeed + " ntd.bMaxSpeed " + ntd.bMaxSpeed + " ntd.bOverSpeed " + ntd.bOverSpeed + " ntd.bRapidAcc " + ntd.bRapidAcc + " ntd.bBrake " + ntd.bBrake + " ntd.bCurve " + ntd.bCurve + " ntd.mLongitude " + ntd.mLongitude + " ntd.mLatitude " + ntd.mLatitude + " ntd.mSpeed " + ntd.mSpeed + " ntd.mBearing " + ntd.mBearing + " ntd.mAccuracy " + ntd.mAccuracy);
+        return ret;
+    }
+
+    public void checkRecordStartName(GeoPoint startPoint, String curStartName, String trackId) {
+        if (startPoint != null && trackId != null && trackId.length() != 0) {
+            if (curStartName == null || curStartName.length() == 0 || curStartName.equals(RoutePlanParams.MY_LOCATION) || curStartName.equals("地图上的点")) {
+                SearchHandler searchHandler = new SearchHandler(Looper.getMainLooper());
+                this.mStartGeoTrackId.put(searchHandler, trackId);
+                startAntiGeo(startPoint, searchHandler);
+            }
+        }
+    }
+
+    public void checkRecordEndName(GeoPoint geoPoint, String trackId) {
+        if (geoPoint != null && trackId != null && trackId.length() != 0) {
+            SearchHandler searchHandler = new SearchHandler(Looper.getMainLooper());
+            this.mEndGeoTrackId.put(searchHandler, trackId);
+            startAntiGeo(geoPoint, searchHandler);
+        }
+    }
+
+    private void startAntiGeo(GeoPoint geoPoint, SearchHandler handler) {
+        BNPoiSearcher.getInstance().asynGetPoiByPoint(geoPoint, SEARCH_POI_TIMEOUT, handler);
+    }
+
+    public Bitmap getCarNaviBusinessImage() {
+        NavLogUtils.m3003e(ModuleName.TRAJECTORY, "getCarNaviBusinessImage() ");
+        if (BusinessActivityManager.getInstance().getModel() != null) {
+            return BusinessActivityManager.getInstance().getModel().naviendPicBitmap;
+        }
+        return null;
+    }
+
+    public void setEndNaviByOpenApi(boolean endNavByOpenApi) {
+        this.isEndNaviByOpenAPI = endNavByOpenApi;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/control/NavTrajectoryController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,36 +1,34 @@
 package com.baidu.sapi2.utils.enums;
 
-public enum BindType
-{
-  private String a = "";
-  private String b;
-  private String c;
-  
-  private BindType(String paramString1, String paramString2, String paramString3)
-  {
-    this.a = paramString1;
-    this.b = paramString2;
-    this.c = paramString3;
-  }
-  
-  public String getCallbackPage()
-  {
-    return this.b;
-  }
-  
-  public String getFinishBindPage()
-  {
-    return this.c;
-  }
-  
-  public String getName()
-  {
-    return this.a;
-  }
+public enum BindType {
+    EXPLICIT("explicit", "afterauth", "finishbind"),
+    OPTIONAL("optional", "afterauth", "finishbind"),
+    IMPLICIT("implicit", "afterauth", "afterauth"),
+    SMS("sms", "afterauth", "finishbind");
+    
+    /* renamed from: a */
+    private String f20553a;
+    /* renamed from: b */
+    private String f20554b;
+    /* renamed from: c */
+    private String f20555c;
+
+    private BindType(String name, String callbackPage, String finishBindPage) {
+        this.f20553a = "";
+        this.f20553a = name;
+        this.f20554b = callbackPage;
+        this.f20555c = finishBindPage;
+    }
+
+    public String getName() {
+        return this.f20553a;
+    }
+
+    public String getCallbackPage() {
+        return this.f20554b;
+    }
+
+    public String getFinishBindPage() {
+        return this.f20555c;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/sapi2/utils/enums/BindType.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

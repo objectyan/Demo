@@ -1,31 +1,26 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class er
-{
-  public final double a;
-  public final double b;
-  public final double c;
-  public final double d;
-  
-  public er(double paramDouble1, double paramDouble2, double paramDouble3, double paramDouble4)
-  {
-    if ((paramDouble3 < paramDouble1) || (paramDouble4 < paramDouble2)) {
-      throw new IllegalArgumentException(String.format("Invalid values for a rectangle: %f, %f, %f, %f", new Object[] { Double.valueOf(paramDouble1), Double.valueOf(paramDouble2), Double.valueOf(paramDouble3), Double.valueOf(paramDouble4) }));
+public final class er {
+    /* renamed from: a */
+    public final double f23530a;
+    /* renamed from: b */
+    public final double f23531b;
+    /* renamed from: c */
+    public final double f23532c;
+    /* renamed from: d */
+    public final double f23533d;
+
+    public er(double d, double d2, double d3, double d4) {
+        if (d3 < d || d4 < d2) {
+            throw new IllegalArgumentException(String.format("Invalid values for a rectangle: %f, %f, %f, %f", new Object[]{Double.valueOf(d), Double.valueOf(d2), Double.valueOf(d3), Double.valueOf(d4)}));
+        }
+        this.f23530a = d;
+        this.f23532c = d3;
+        this.f23531b = d2;
+        this.f23533d = d4;
     }
-    this.a = paramDouble1;
-    this.c = paramDouble3;
-    this.b = paramDouble2;
-    this.d = paramDouble4;
-  }
-  
-  public final String toString()
-  {
-    return "Rectangle{(" + this.a + ", " + this.b + "), (" + this.c + ", " + this.d + ")}";
-  }
+
+    public final String toString() {
+        return "Rectangle{(" + this.f23530a + ", " + this.f23531b + "), (" + this.f23532c + ", " + this.f23533d + ")}";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/er.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

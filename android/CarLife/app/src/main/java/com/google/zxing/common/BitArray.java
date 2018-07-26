@@ -1,378 +1,237 @@
 package com.google.zxing.common;
 
-public final class BitArray
-{
-  private int[] bits;
-  private int size;
-  
-  public BitArray()
-  {
-    this.size = 0;
-    this.bits = new int[1];
-  }
-  
-  public BitArray(int paramInt)
-  {
-    this.size = paramInt;
-    this.bits = makeArray(paramInt);
-  }
-  
-  private void ensureCapacity(int paramInt)
-  {
-    if (paramInt > this.bits.length << 5)
-    {
-      int[] arrayOfInt = makeArray(paramInt);
-      System.arraycopy(this.bits, 0, arrayOfInt, 0, this.bits.length);
-      this.bits = arrayOfInt;
+public final class BitArray {
+    private int[] bits;
+    private int size;
+
+    public BitArray() {
+        this.size = 0;
+        this.bits = new int[1];
     }
-  }
-  
-  private static int[] makeArray(int paramInt)
-  {
-    return new int[paramInt + 31 >> 5];
-  }
-  
-  public void appendBit(boolean paramBoolean)
-  {
-    ensureCapacity(this.size + 1);
-    if (paramBoolean)
-    {
-      int[] arrayOfInt = this.bits;
-      int i = this.size >> 5;
-      arrayOfInt[i] |= 1 << (this.size & 0x1F);
+
+    public BitArray(int size) {
+        this.size = size;
+        this.bits = makeArray(size);
     }
-    this.size += 1;
-  }
-  
-  public void appendBitArray(BitArray paramBitArray)
-  {
-    int j = paramBitArray.size;
-    ensureCapacity(this.size + j);
-    int i = 0;
-    while (i < j)
-    {
-      appendBit(paramBitArray.get(i));
-      i += 1;
+
+    public int getSize() {
+        return this.size;
     }
-  }
-  
-  public void appendBits(int paramInt1, int paramInt2)
-  {
-    if ((paramInt2 < 0) || (paramInt2 > 32)) {
-      throw new IllegalArgumentException("Num bits must be between 0 and 32");
+
+    public int getSizeInBytes() {
+        return (this.size + 7) >> 3;
     }
-    ensureCapacity(this.size + paramInt2);
-    if (paramInt2 > 0)
-    {
-      if ((paramInt1 >> paramInt2 - 1 & 0x1) == 1) {}
-      for (boolean bool = true;; bool = false)
-      {
-        appendBit(bool);
-        paramInt2 -= 1;
-        break;
-      }
-    }
-  }
-  
-  public void clear()
-  {
-    int j = this.bits.length;
-    int i = 0;
-    while (i < j)
-    {
-      this.bits[i] = 0;
-      i += 1;
-    }
-  }
-  
-  public void flip(int paramInt)
-  {
-    int[] arrayOfInt = this.bits;
-    int i = paramInt >> 5;
-    arrayOfInt[i] ^= 1 << (paramInt & 0x1F);
-  }
-  
-  public boolean get(int paramInt)
-  {
-    return (this.bits[(paramInt >> 5)] & 1 << (paramInt & 0x1F)) != 0;
-  }
-  
-  public int[] getBitArray()
-  {
-    return this.bits;
-  }
-  
-  public int getNextSet(int paramInt)
-  {
-    if (paramInt >= this.size) {
-      paramInt = this.size;
-    }
-    int i;
-    do
-    {
-      return paramInt;
-      int j = paramInt >> 5;
-      i = this.bits[j] & ((1 << (paramInt & 0x1F)) - 1 ^ 0xFFFFFFFF);
-      paramInt = j;
-      while (i == 0)
-      {
-        paramInt += 1;
-        if (paramInt == this.bits.length) {
-          return this.size;
+
+    private void ensureCapacity(int size) {
+        if (size > (this.bits.length << 5)) {
+            int[] newBits = makeArray(size);
+            System.arraycopy(this.bits, 0, newBits, 0, this.bits.length);
+            this.bits = newBits;
         }
-        i = this.bits[paramInt];
-      }
-      i = (paramInt << 5) + Integer.numberOfTrailingZeros(i);
-      paramInt = i;
-    } while (i <= this.size);
-    return this.size;
-  }
-  
-  public int getNextUnset(int paramInt)
-  {
-    if (paramInt >= this.size) {
-      paramInt = this.size;
     }
-    int i;
-    do
-    {
-      return paramInt;
-      int j = paramInt >> 5;
-      i = (this.bits[j] ^ 0xFFFFFFFF) & ((1 << (paramInt & 0x1F)) - 1 ^ 0xFFFFFFFF);
-      paramInt = j;
-      while (i == 0)
-      {
-        paramInt += 1;
-        if (paramInt == this.bits.length) {
-          return this.size;
-        }
-        i = this.bits[paramInt] ^ 0xFFFFFFFF;
-      }
-      i = (paramInt << 5) + Integer.numberOfTrailingZeros(i);
-      paramInt = i;
-    } while (i <= this.size);
-    return this.size;
-  }
-  
-  public int getSize()
-  {
-    return this.size;
-  }
-  
-  public int getSizeInBytes()
-  {
-    return this.size + 7 >> 3;
-  }
-  
-  public boolean isRange(int paramInt1, int paramInt2, boolean paramBoolean)
-  {
-    if (paramInt2 < paramInt1) {
-      throw new IllegalArgumentException();
+
+    public boolean get(int i) {
+        return (this.bits[i >> 5] & (1 << (i & 31))) != 0;
     }
-    if (paramInt2 == paramInt1) {}
-    for (;;)
-    {
-      return true;
-      int i1 = paramInt2 - 1;
-      int n = paramInt1 >> 5;
-      int i2 = i1 >> 5;
-      int j = n;
-      while (j <= i2)
-      {
-        int k;
-        if (j > n)
-        {
-          paramInt2 = 0;
-          if (j >= i2) {
-            break label115;
-          }
-          k = 31;
-          label67:
-          if ((paramInt2 != 0) || (k != 31)) {
-            break label125;
-          }
-          paramInt2 = -1;
-          k = this.bits[j];
-          if (!paramBoolean) {
-            break label159;
-          }
+
+    public void set(int i) {
+        int[] iArr = this.bits;
+        int i2 = i >> 5;
+        iArr[i2] = iArr[i2] | (1 << (i & 31));
+    }
+
+    public void flip(int i) {
+        int[] iArr = this.bits;
+        int i2 = i >> 5;
+        iArr[i2] = iArr[i2] ^ (1 << (i & 31));
+    }
+
+    public int getNextSet(int from) {
+        if (from >= this.size) {
+            return this.size;
         }
-        label115:
-        label125:
-        label159:
-        for (int i = paramInt2;; i = 0)
-        {
-          if ((k & paramInt2) == i) {
-            break label165;
-          }
-          return false;
-          paramInt2 = paramInt1 & 0x1F;
-          break;
-          k = i1 & 0x1F;
-          break label67;
-          i = 0;
-          int m = paramInt2;
-          for (;;)
-          {
-            paramInt2 = i;
-            if (m > k) {
-              break;
+        int bitsOffset = from >> 5;
+        int currentBits = this.bits[bitsOffset] & (((1 << (from & 31)) - 1) ^ -1);
+        while (currentBits == 0) {
+            bitsOffset++;
+            if (bitsOffset == this.bits.length) {
+                return this.size;
             }
-            i |= 1 << m;
-            m += 1;
-          }
+            currentBits = this.bits[bitsOffset];
         }
-        label165:
-        j += 1;
-      }
+        int result = (bitsOffset << 5) + Integer.numberOfTrailingZeros(currentBits);
+        return result > this.size ? this.size : result;
     }
-  }
-  
-  public void reverse()
-  {
-    int[] arrayOfInt = new int[this.bits.length];
-    int j = this.size;
-    int i = 0;
-    while (i < j)
-    {
-      if (get(j - i - 1))
-      {
-        int k = i >> 5;
-        arrayOfInt[k] |= 1 << (i & 0x1F);
-      }
-      i += 1;
-    }
-    this.bits = arrayOfInt;
-  }
-  
-  public void set(int paramInt)
-  {
-    int[] arrayOfInt = this.bits;
-    int i = paramInt >> 5;
-    arrayOfInt[i] |= 1 << (paramInt & 0x1F);
-  }
-  
-  public void setBulk(int paramInt1, int paramInt2)
-  {
-    this.bits[(paramInt1 >> 5)] = paramInt2;
-  }
-  
-  public void setRange(int paramInt1, int paramInt2)
-  {
-    if (paramInt2 < paramInt1) {
-      throw new IllegalArgumentException();
-    }
-    if (paramInt2 == paramInt1) {
-      return;
-    }
-    int i1 = paramInt2 - 1;
-    int n = paramInt1 >> 5;
-    int i2 = i1 >> 5;
-    int i = n;
-    label38:
-    if (i <= i2)
-    {
-      if (i <= n) {
-        break label100;
-      }
-      paramInt2 = 0;
-      label52:
-      if (i >= i2) {
-        break label108;
-      }
-    }
-    label100:
-    label108:
-    for (int j = 31;; j = i1 & 0x1F)
-    {
-      if ((paramInt2 != 0) || (j != 31)) {
-        break label118;
-      }
-      m = -1;
-      int[] arrayOfInt = this.bits;
-      arrayOfInt[i] |= m;
-      i += 1;
-      break label38;
-      break;
-      paramInt2 = paramInt1 & 0x1F;
-      break label52;
-    }
-    label118:
-    int m = 0;
-    int k = paramInt2;
-    paramInt2 = m;
-    for (;;)
-    {
-      m = paramInt2;
-      if (k > j) {
-        break;
-      }
-      paramInt2 |= 1 << k;
-      k += 1;
-    }
-  }
-  
-  public void toBytes(int paramInt1, byte[] paramArrayOfByte, int paramInt2, int paramInt3)
-  {
-    int j = 0;
-    int i = paramInt1;
-    paramInt1 = j;
-    while (paramInt1 < paramInt3)
-    {
-      int k = 0;
-      j = 0;
-      while (j < 8)
-      {
-        int m = k;
-        if (get(i)) {
-          m = k | 1 << 7 - j;
+
+    public int getNextUnset(int from) {
+        if (from >= this.size) {
+            return this.size;
         }
-        i += 1;
-        j += 1;
-        k = m;
-      }
-      paramArrayOfByte[(paramInt2 + paramInt1)] = ((byte)k);
-      paramInt1 += 1;
+        int bitsOffset = from >> 5;
+        int currentBits = (this.bits[bitsOffset] ^ -1) & (((1 << (from & 31)) - 1) ^ -1);
+        while (currentBits == 0) {
+            bitsOffset++;
+            if (bitsOffset == this.bits.length) {
+                return this.size;
+            }
+            currentBits = this.bits[bitsOffset] ^ -1;
+        }
+        int result = (bitsOffset << 5) + Integer.numberOfTrailingZeros(currentBits);
+        return result > this.size ? this.size : result;
     }
-  }
-  
-  public String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder(this.size);
-    int i = 0;
-    if (i < this.size)
-    {
-      if ((i & 0x7) == 0) {
-        localStringBuilder.append(' ');
-      }
-      if (get(i)) {}
-      for (char c = 'X';; c = '.')
-      {
-        localStringBuilder.append(c);
-        i += 1;
-        break;
-      }
+
+    public void setBulk(int i, int newBits) {
+        this.bits[i >> 5] = newBits;
     }
-    return localStringBuilder.toString();
-  }
-  
-  public void xor(BitArray paramBitArray)
-  {
-    if (this.bits.length != paramBitArray.bits.length) {
-      throw new IllegalArgumentException("Sizes don't match");
+
+    public void setRange(int start, int end) {
+        if (end < start) {
+            throw new IllegalArgumentException();
+        } else if (end != start) {
+            end--;
+            int firstInt = start >> 5;
+            int lastInt = end >> 5;
+            int i = firstInt;
+            while (i <= lastInt) {
+                int mask;
+                int firstBit = i > firstInt ? 0 : start & 31;
+                int lastBit = i < lastInt ? 31 : end & 31;
+                if (firstBit == 0 && lastBit == 31) {
+                    mask = -1;
+                } else {
+                    mask = 0;
+                    for (int j = firstBit; j <= lastBit; j++) {
+                        mask |= 1 << j;
+                    }
+                }
+                int[] iArr = this.bits;
+                iArr[i] = iArr[i] | mask;
+                i++;
+            }
+        }
     }
-    int i = 0;
-    while (i < this.bits.length)
-    {
-      int[] arrayOfInt = this.bits;
-      arrayOfInt[i] ^= paramBitArray.bits[i];
-      i += 1;
+
+    public void clear() {
+        int max = this.bits.length;
+        for (int i = 0; i < max; i++) {
+            this.bits[i] = 0;
+        }
     }
-  }
+
+    public boolean isRange(int start, int end, boolean value) {
+        if (end < start) {
+            throw new IllegalArgumentException();
+        } else if (end == start) {
+            return true;
+        } else {
+            end--;
+            int firstInt = start >> 5;
+            int lastInt = end >> 5;
+            int i = firstInt;
+            while (i <= lastInt) {
+                int mask;
+                int firstBit = i > firstInt ? 0 : start & 31;
+                int lastBit = i < lastInt ? 31 : end & 31;
+                if (firstBit == 0 && lastBit == 31) {
+                    mask = -1;
+                } else {
+                    mask = 0;
+                    for (int j = firstBit; j <= lastBit; j++) {
+                        mask |= 1 << j;
+                    }
+                }
+                int i2 = this.bits[i] & mask;
+                if (!value) {
+                    mask = 0;
+                }
+                if (i2 != mask) {
+                    return false;
+                }
+                i++;
+            }
+            return true;
+        }
+    }
+
+    public void appendBit(boolean bit) {
+        ensureCapacity(this.size + 1);
+        if (bit) {
+            int[] iArr = this.bits;
+            int i = this.size >> 5;
+            iArr[i] = iArr[i] | (1 << (this.size & 31));
+        }
+        this.size++;
+    }
+
+    public void appendBits(int value, int numBits) {
+        if (numBits < 0 || numBits > 32) {
+            throw new IllegalArgumentException("Num bits must be between 0 and 32");
+        }
+        ensureCapacity(this.size + numBits);
+        for (int numBitsLeft = numBits; numBitsLeft > 0; numBitsLeft--) {
+            appendBit(((value >> (numBitsLeft + -1)) & 1) == 1);
+        }
+    }
+
+    public void appendBitArray(BitArray other) {
+        int otherSize = other.size;
+        ensureCapacity(this.size + otherSize);
+        for (int i = 0; i < otherSize; i++) {
+            appendBit(other.get(i));
+        }
+    }
+
+    public void xor(BitArray other) {
+        if (this.bits.length != other.bits.length) {
+            throw new IllegalArgumentException("Sizes don't match");
+        }
+        for (int i = 0; i < this.bits.length; i++) {
+            int[] iArr = this.bits;
+            iArr[i] = iArr[i] ^ other.bits[i];
+        }
+    }
+
+    public void toBytes(int bitOffset, byte[] array, int offset, int numBytes) {
+        for (int i = 0; i < numBytes; i++) {
+            int theByte = 0;
+            for (int j = 0; j < 8; j++) {
+                if (get(bitOffset)) {
+                    theByte |= 1 << (7 - j);
+                }
+                bitOffset++;
+            }
+            array[offset + i] = (byte) theByte;
+        }
+    }
+
+    public int[] getBitArray() {
+        return this.bits;
+    }
+
+    public void reverse() {
+        int[] newBits = new int[this.bits.length];
+        int size = this.size;
+        for (int i = 0; i < size; i++) {
+            if (get((size - i) - 1)) {
+                int i2 = i >> 5;
+                newBits[i2] = newBits[i2] | (1 << (i & 31));
+            }
+        }
+        this.bits = newBits;
+    }
+
+    private static int[] makeArray(int size) {
+        return new int[((size + 31) >> 5)];
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder(this.size);
+        for (int i = 0; i < this.size; i++) {
+            if ((i & 7) == 0) {
+                result.append(' ');
+            }
+            result.append(get(i) ? 'X' : '.');
+        }
+        return result.toString();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/common/BitArray.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

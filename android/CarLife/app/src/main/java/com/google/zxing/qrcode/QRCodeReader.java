@@ -15,141 +15,108 @@ import com.google.zxing.common.DecoderResult;
 import com.google.zxing.common.DetectorResult;
 import com.google.zxing.qrcode.decoder.Decoder;
 import com.google.zxing.qrcode.detector.Detector;
+import java.util.List;
 import java.util.Map;
 
-public class QRCodeReader
-  implements Reader
-{
-  private static final ResultPoint[] NO_POINTS = new ResultPoint[0];
-  private final Decoder decoder = new Decoder();
-  
-  private static BitMatrix extractPureBits(BitMatrix paramBitMatrix)
-    throws NotFoundException
-  {
-    Object localObject = paramBitMatrix.getTopLeftOnBit();
-    int[] arrayOfInt = paramBitMatrix.getBottomRightOnBit();
-    if ((localObject == null) || (arrayOfInt == null)) {
-      throw NotFoundException.getNotFoundInstance();
+public class QRCodeReader implements Reader {
+    private static final ResultPoint[] NO_POINTS = new ResultPoint[0];
+    private final Decoder decoder = new Decoder();
+
+    protected Decoder getDecoder() {
+        return this.decoder;
     }
-    float f = moduleSize((int[])localObject, paramBitMatrix);
-    int k = localObject[1];
-    int i1 = arrayOfInt[1];
-    int m = localObject[0];
-    int j = arrayOfInt[0];
-    int i = j;
-    if (i1 - k != j - m) {
-      i = m + (i1 - k);
+
+    public Result decode(BinaryBitmap image) throws NotFoundException, ChecksumException, FormatException {
+        return decode(image, null);
     }
-    int n = Math.round((i - m + 1) / f);
-    i1 = Math.round((i1 - k + 1) / f);
-    if ((n <= 0) || (i1 <= 0)) {
-      throw NotFoundException.getNotFoundInstance();
-    }
-    if (i1 != n) {
-      throw NotFoundException.getNotFoundInstance();
-    }
-    int i2 = Math.round(f / 2.0F);
-    localObject = new BitMatrix(n, i1);
-    i = 0;
-    while (i < i1)
-    {
-      int i3 = (int)(i * f);
-      j = 0;
-      while (j < n)
-      {
-        if (paramBitMatrix.get((int)(j * f) + (m + i2), k + i2 + i3)) {
-          ((BitMatrix)localObject).set(j, i);
+
+    public Result decode(BinaryBitmap image, Map<DecodeHintType, ?> hints) throws NotFoundException, ChecksumException, FormatException {
+        DecoderResult decoderResult;
+        ResultPoint[] points;
+        if (hints == null || !hints.containsKey(DecodeHintType.PURE_BARCODE)) {
+            DetectorResult detectorResult = new Detector(image.getBlackMatrix()).detect(hints);
+            decoderResult = this.decoder.decode(detectorResult.getBits(), (Map) hints);
+            points = detectorResult.getPoints();
+        } else {
+            decoderResult = this.decoder.decode(extractPureBits(image.getBlackMatrix()), (Map) hints);
+            points = NO_POINTS;
         }
-        j += 1;
-      }
-      i += 1;
+        Result result = new Result(decoderResult.getText(), decoderResult.getRawBytes(), points, BarcodeFormat.QR_CODE);
+        List<byte[]> byteSegments = decoderResult.getByteSegments();
+        if (byteSegments != null) {
+            result.putMetadata(ResultMetadataType.BYTE_SEGMENTS, byteSegments);
+        }
+        String ecLevel = decoderResult.getECLevel();
+        if (ecLevel != null) {
+            result.putMetadata(ResultMetadataType.ERROR_CORRECTION_LEVEL, ecLevel);
+        }
+        return result;
     }
-    return (BitMatrix)localObject;
-  }
-  
-  private static float moduleSize(int[] paramArrayOfInt, BitMatrix paramBitMatrix)
-    throws NotFoundException
-  {
-    int n = paramBitMatrix.getHeight();
-    int i1 = paramBitMatrix.getWidth();
-    int j = paramArrayOfInt[0];
-    int i = paramArrayOfInt[1];
-    int i3 = 1;
-    int k = 0;
-    int m;
-    if ((j < i1) && (i < n))
-    {
-      i2 = i3;
-      m = k;
-      if (i3 == paramBitMatrix.get(j, i)) {
-        break label93;
-      }
-      m = k + 1;
-      if (m != 5) {}
+
+    public void reset() {
     }
-    else
-    {
-      if ((j != i1) && (i != n)) {
-        break label118;
-      }
-      throw NotFoundException.getNotFoundInstance();
+
+    private static BitMatrix extractPureBits(BitMatrix image) throws NotFoundException {
+        int[] leftTopBlack = image.getTopLeftOnBit();
+        int[] rightBottomBlack = image.getBottomRightOnBit();
+        if (leftTopBlack == null || rightBottomBlack == null) {
+            throw NotFoundException.getNotFoundInstance();
+        }
+        float moduleSize = moduleSize(leftTopBlack, image);
+        int top = leftTopBlack[1];
+        int bottom = rightBottomBlack[1];
+        int left = leftTopBlack[0];
+        int right = rightBottomBlack[0];
+        if (bottom - top != right - left) {
+            right = left + (bottom - top);
+        }
+        int matrixWidth = Math.round(((float) ((right - left) + 1)) / moduleSize);
+        int matrixHeight = Math.round(((float) ((bottom - top) + 1)) / moduleSize);
+        if (matrixWidth <= 0 || matrixHeight <= 0) {
+            throw NotFoundException.getNotFoundInstance();
+        } else if (matrixHeight != matrixWidth) {
+            throw NotFoundException.getNotFoundInstance();
+        } else {
+            int nudge = Math.round(moduleSize / 2.0f);
+            top += nudge;
+            left += nudge;
+            BitMatrix bits = new BitMatrix(matrixWidth, matrixHeight);
+            for (int y = 0; y < matrixHeight; y++) {
+                int iOffset = top + ((int) (((float) y) * moduleSize));
+                for (int x = 0; x < matrixWidth; x++) {
+                    if (image.get(((int) (((float) x) * moduleSize)) + left, iOffset)) {
+                        bits.set(x, y);
+                    }
+                }
+            }
+            return bits;
+        }
     }
-    if (i3 == 0) {}
-    for (int i2 = 1;; i2 = 0)
-    {
-      label93:
-      j += 1;
-      i += 1;
-      i3 = i2;
-      k = m;
-      break;
+
+    private static float moduleSize(int[] leftTopBlack, BitMatrix image) throws NotFoundException {
+        int height = image.getHeight();
+        int width = image.getWidth();
+        int x = leftTopBlack[0];
+        int y = leftTopBlack[1];
+        boolean inBlack = true;
+        int transitions = 0;
+        while (x < width && y < height) {
+            if (inBlack != image.get(x, y)) {
+                transitions++;
+                if (transitions == 5) {
+                    break;
+                } else if (inBlack) {
+                    inBlack = false;
+                } else {
+                    inBlack = true;
+                }
+            }
+            x++;
+            y++;
+        }
+        if (x != width && y != height) {
+            return ((float) (x - leftTopBlack[0])) / 7.0f;
+        }
+        throw NotFoundException.getNotFoundInstance();
     }
-    label118:
-    return (j - paramArrayOfInt[0]) / 7.0F;
-  }
-  
-  public Result decode(BinaryBitmap paramBinaryBitmap)
-    throws NotFoundException, ChecksumException, FormatException
-  {
-    return decode(paramBinaryBitmap, null);
-  }
-  
-  public Result decode(BinaryBitmap paramBinaryBitmap, Map<DecodeHintType, ?> paramMap)
-    throws NotFoundException, ChecksumException, FormatException
-  {
-    if ((paramMap != null) && (paramMap.containsKey(DecodeHintType.PURE_BARCODE)))
-    {
-      paramBinaryBitmap = extractPureBits(paramBinaryBitmap.getBlackMatrix());
-      paramBinaryBitmap = this.decoder.decode(paramBinaryBitmap, paramMap);
-    }
-    Object localObject;
-    for (paramMap = NO_POINTS;; paramMap = ((DetectorResult)localObject).getPoints())
-    {
-      paramMap = new Result(paramBinaryBitmap.getText(), paramBinaryBitmap.getRawBytes(), paramMap, BarcodeFormat.QR_CODE);
-      localObject = paramBinaryBitmap.getByteSegments();
-      if (localObject != null) {
-        paramMap.putMetadata(ResultMetadataType.BYTE_SEGMENTS, localObject);
-      }
-      paramBinaryBitmap = paramBinaryBitmap.getECLevel();
-      if (paramBinaryBitmap != null) {
-        paramMap.putMetadata(ResultMetadataType.ERROR_CORRECTION_LEVEL, paramBinaryBitmap);
-      }
-      return paramMap;
-      localObject = new Detector(paramBinaryBitmap.getBlackMatrix()).detect(paramMap);
-      paramBinaryBitmap = this.decoder.decode(((DetectorResult)localObject).getBits(), paramMap);
-    }
-  }
-  
-  protected Decoder getDecoder()
-  {
-    return this.decoder;
-  }
-  
-  public void reset() {}
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/QRCodeReader.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

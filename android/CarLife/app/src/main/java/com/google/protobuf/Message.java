@@ -1,121 +1,102 @@
 package com.google.protobuf;
 
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public abstract interface Message
-  extends MessageLite
-{
-  public abstract boolean equals(Object paramObject);
-  
-  public abstract Map<Descriptors.FieldDescriptor, Object> getAllFields();
-  
-  public abstract Message getDefaultInstanceForType();
-  
-  public abstract Descriptors.Descriptor getDescriptorForType();
-  
-  public abstract Object getField(Descriptors.FieldDescriptor paramFieldDescriptor);
-  
-  public abstract Object getRepeatedField(Descriptors.FieldDescriptor paramFieldDescriptor, int paramInt);
-  
-  public abstract int getRepeatedFieldCount(Descriptors.FieldDescriptor paramFieldDescriptor);
-  
-  public abstract UnknownFieldSet getUnknownFields();
-  
-  public abstract boolean hasField(Descriptors.FieldDescriptor paramFieldDescriptor);
-  
-  public abstract int hashCode();
-  
-  public abstract Builder newBuilderForType();
-  
-  public abstract Builder toBuilder();
-  
-  public abstract String toString();
-  
-  public static abstract interface Builder
-    extends MessageLite.Builder
-  {
-    public abstract Builder addRepeatedField(Descriptors.FieldDescriptor paramFieldDescriptor, Object paramObject);
-    
-    public abstract Message build();
-    
-    public abstract Message buildPartial();
-    
-    public abstract Builder clear();
-    
-    public abstract Builder clearField(Descriptors.FieldDescriptor paramFieldDescriptor);
-    
-    public abstract Builder clone();
-    
-    public abstract Map<Descriptors.FieldDescriptor, Object> getAllFields();
-    
-    public abstract Message getDefaultInstanceForType();
-    
-    public abstract Descriptors.Descriptor getDescriptorForType();
-    
-    public abstract Object getField(Descriptors.FieldDescriptor paramFieldDescriptor);
-    
-    public abstract Object getRepeatedField(Descriptors.FieldDescriptor paramFieldDescriptor, int paramInt);
-    
-    public abstract int getRepeatedFieldCount(Descriptors.FieldDescriptor paramFieldDescriptor);
-    
-    public abstract UnknownFieldSet getUnknownFields();
-    
-    public abstract boolean hasField(Descriptors.FieldDescriptor paramFieldDescriptor);
-    
-    public abstract Builder mergeDelimitedFrom(InputStream paramInputStream)
-      throws IOException;
-    
-    public abstract Builder mergeDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException;
-    
-    public abstract Builder mergeFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException;
-    
-    public abstract Builder mergeFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException;
-    
-    public abstract Builder mergeFrom(CodedInputStream paramCodedInputStream)
-      throws IOException;
-    
-    public abstract Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException;
-    
-    public abstract Builder mergeFrom(Message paramMessage);
-    
-    public abstract Builder mergeFrom(InputStream paramInputStream)
-      throws IOException;
-    
-    public abstract Builder mergeFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException;
-    
-    public abstract Builder mergeFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException;
-    
-    public abstract Builder mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-      throws InvalidProtocolBufferException;
-    
-    public abstract Builder mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException;
-    
-    public abstract Builder mergeFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException;
-    
-    public abstract Builder mergeUnknownFields(UnknownFieldSet paramUnknownFieldSet);
-    
-    public abstract Builder newBuilderForField(Descriptors.FieldDescriptor paramFieldDescriptor);
-    
-    public abstract Builder setField(Descriptors.FieldDescriptor paramFieldDescriptor, Object paramObject);
-    
-    public abstract Builder setRepeatedField(Descriptors.FieldDescriptor paramFieldDescriptor, int paramInt, Object paramObject);
-    
-    public abstract Builder setUnknownFields(UnknownFieldSet paramUnknownFieldSet);
-  }
+public interface Message extends MessageLite {
+
+    public interface Builder extends com.google.protobuf.MessageLite.Builder {
+        Builder addRepeatedField(FieldDescriptor fieldDescriptor, Object obj);
+
+        Message build();
+
+        Message buildPartial();
+
+        Builder clear();
+
+        Builder clearField(FieldDescriptor fieldDescriptor);
+
+        Builder clone();
+
+        Map<FieldDescriptor, Object> getAllFields();
+
+        Message getDefaultInstanceForType();
+
+        Descriptor getDescriptorForType();
+
+        Object getField(FieldDescriptor fieldDescriptor);
+
+        Object getRepeatedField(FieldDescriptor fieldDescriptor, int i);
+
+        int getRepeatedFieldCount(FieldDescriptor fieldDescriptor);
+
+        UnknownFieldSet getUnknownFields();
+
+        boolean hasField(FieldDescriptor fieldDescriptor);
+
+        Builder mergeDelimitedFrom(InputStream inputStream) throws IOException;
+
+        Builder mergeDelimitedFrom(InputStream inputStream, ExtensionRegistryLite extensionRegistryLite) throws IOException;
+
+        Builder mergeFrom(ByteString byteString) throws InvalidProtocolBufferException;
+
+        Builder mergeFrom(ByteString byteString, ExtensionRegistryLite extensionRegistryLite) throws InvalidProtocolBufferException;
+
+        Builder mergeFrom(CodedInputStream codedInputStream) throws IOException;
+
+        Builder mergeFrom(CodedInputStream codedInputStream, ExtensionRegistryLite extensionRegistryLite) throws IOException;
+
+        Builder mergeFrom(Message message);
+
+        Builder mergeFrom(InputStream inputStream) throws IOException;
+
+        Builder mergeFrom(InputStream inputStream, ExtensionRegistryLite extensionRegistryLite) throws IOException;
+
+        Builder mergeFrom(byte[] bArr) throws InvalidProtocolBufferException;
+
+        Builder mergeFrom(byte[] bArr, int i, int i2) throws InvalidProtocolBufferException;
+
+        Builder mergeFrom(byte[] bArr, int i, int i2, ExtensionRegistryLite extensionRegistryLite) throws InvalidProtocolBufferException;
+
+        Builder mergeFrom(byte[] bArr, ExtensionRegistryLite extensionRegistryLite) throws InvalidProtocolBufferException;
+
+        Builder mergeUnknownFields(UnknownFieldSet unknownFieldSet);
+
+        Builder newBuilderForField(FieldDescriptor fieldDescriptor);
+
+        Builder setField(FieldDescriptor fieldDescriptor, Object obj);
+
+        Builder setRepeatedField(FieldDescriptor fieldDescriptor, int i, Object obj);
+
+        Builder setUnknownFields(UnknownFieldSet unknownFieldSet);
+    }
+
+    boolean equals(Object obj);
+
+    Map<FieldDescriptor, Object> getAllFields();
+
+    Message getDefaultInstanceForType();
+
+    Descriptor getDescriptorForType();
+
+    Object getField(FieldDescriptor fieldDescriptor);
+
+    Object getRepeatedField(FieldDescriptor fieldDescriptor, int i);
+
+    int getRepeatedFieldCount(FieldDescriptor fieldDescriptor);
+
+    UnknownFieldSet getUnknownFields();
+
+    boolean hasField(FieldDescriptor fieldDescriptor);
+
+    int hashCode();
+
+    Builder newBuilderForType();
+
+    Builder toBuilder();
+
+    String toString();
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/Message.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

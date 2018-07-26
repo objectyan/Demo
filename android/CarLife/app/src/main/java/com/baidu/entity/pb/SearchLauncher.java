@@ -7,855 +7,750 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class SearchLauncher
-  extends MessageMicro
-{
-  public static final int CONTENT_FIELD_NUMBER = 2;
-  public static final int OPTION_FIELD_NUMBER = 1;
-  private boolean a;
-  private Option b = null;
-  private List<Content> c = Collections.emptyList();
-  private int d = -1;
-  
-  public static SearchLauncher parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new SearchLauncher().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static SearchLauncher parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (SearchLauncher)new SearchLauncher().mergeFrom(paramArrayOfByte);
-  }
-  
-  public SearchLauncher addContent(Content paramContent)
-  {
-    if (paramContent == null) {
-      return this;
-    }
-    if (this.c.isEmpty()) {
-      this.c = new ArrayList();
-    }
-    this.c.add(paramContent);
-    return this;
-  }
-  
-  public final SearchLauncher clear()
-  {
-    clearOption();
-    clearContent();
-    this.d = -1;
-    return this;
-  }
-  
-  public SearchLauncher clearContent()
-  {
-    this.c = Collections.emptyList();
-    return this;
-  }
-  
-  public SearchLauncher clearOption()
-  {
-    this.a = false;
-    this.b = null;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.d < 0) {
-      getSerializedSize();
-    }
-    return this.d;
-  }
-  
-  public Content getContent(int paramInt)
-  {
-    return (Content)this.c.get(paramInt);
-  }
-  
-  public int getContentCount()
-  {
-    return this.c.size();
-  }
-  
-  public List<Content> getContentList()
-  {
-    return this.c;
-  }
-  
-  public Option getOption()
-  {
-    return this.b;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasOption()) {
-      i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getOption());
-    }
-    Iterator localIterator = getContentList().iterator();
-    while (localIterator.hasNext()) {
-      i = CodedOutputStreamMicro.computeMessageSize(2, (Content)localIterator.next()) + i;
-    }
-    this.d = i;
-    return i;
-  }
-  
-  public boolean hasOption()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public SearchLauncher mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      Object localObject;
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
-        return this;
-      case 10: 
-        localObject = new Option();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setOption((Option)localObject);
-        break;
-      case 18: 
-        localObject = new Content();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        addContent((Content)localObject);
-      }
-    }
-  }
-  
-  public SearchLauncher setContent(int paramInt, Content paramContent)
-  {
-    if (paramContent == null) {
-      return this;
-    }
-    this.c.set(paramInt, paramContent);
-    return this;
-  }
-  
-  public SearchLauncher setOption(Option paramOption)
-  {
-    if (paramOption == null) {
-      return clearOption();
-    }
-    this.a = true;
-    this.b = paramOption;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasOption()) {
-      paramCodedOutputStreamMicro.writeMessage(1, getOption());
-    }
-    Iterator localIterator = getContentList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(2, (Content)localIterator.next());
-    }
-  }
-  
-  public static final class Content
-    extends MessageMicro
-  {
-    public static final int ACTION_FIELD_NUMBER = 1;
-    public static final int EXT_PARAM_FIELD_NUMBER = 2;
-    private boolean a;
-    private ExtParam b = null;
-    private boolean c;
-    private String d = "";
-    private int e = -1;
-    
-    public static Content parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Content().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Content parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Content)new Content().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Content clear()
-    {
-      clearExtParam();
-      clearAction();
-      this.e = -1;
-      return this;
-    }
-    
-    public Content clearAction()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public Content clearExtParam()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public String getAction()
-    {
-      return this.d;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public ExtParam getExtParam()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasAction()) {
-        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getAction());
-      }
-      int j = i;
-      if (hasExtParam()) {
-        j = i + CodedOutputStreamMicro.computeMessageSize(2, getExtParam());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public boolean hasAction()
-    {
-      return this.c;
-    }
-    
-    public boolean hasExtParam()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Content mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setAction(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          ExtParam localExtParam = new ExtParam();
-          paramCodedInputStreamMicro.readMessage(localExtParam);
-          setExtParam(localExtParam);
+public final class SearchLauncher extends MessageMicro {
+    public static final int CONTENT_FIELD_NUMBER = 2;
+    public static final int OPTION_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private boolean f14454a;
+    /* renamed from: b */
+    private Option f14455b = null;
+    /* renamed from: c */
+    private List<Content> f14456c = Collections.emptyList();
+    /* renamed from: d */
+    private int f14457d = -1;
+
+    public static final class Content extends MessageMicro {
+        public static final int ACTION_FIELD_NUMBER = 1;
+        public static final int EXT_PARAM_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f14444a;
+        /* renamed from: b */
+        private ExtParam f14445b = null;
+        /* renamed from: c */
+        private boolean f14446c;
+        /* renamed from: d */
+        private String f14447d = "";
+        /* renamed from: e */
+        private int f14448e = -1;
+
+        public static final class ExtParam extends MessageMicro {
+            public static final int BROWSER_FIELD_NUMBER = 2;
+            public static final int JUMPTO_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private boolean f14439a;
+            /* renamed from: b */
+            private Jumpto f14440b = null;
+            /* renamed from: c */
+            private boolean f14441c;
+            /* renamed from: d */
+            private Browser f14442d = null;
+            /* renamed from: e */
+            private int f14443e = -1;
+
+            public static final class Browser extends MessageMicro {
+                public static final int URL_FIELD_NUMBER = 1;
+                /* renamed from: a */
+                private boolean f14431a;
+                /* renamed from: b */
+                private String f14432b = "";
+                /* renamed from: c */
+                private int f14433c = -1;
+
+                public static Browser parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                    return new Browser().mergeFrom(codedInputStreamMicro);
+                }
+
+                public static Browser parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                    return (Browser) new Browser().mergeFrom(bArr);
+                }
+
+                public final Browser clear() {
+                    clearUrl();
+                    this.f14433c = -1;
+                    return this;
+                }
+
+                public Browser clearUrl() {
+                    this.f14431a = false;
+                    this.f14432b = "";
+                    return this;
+                }
+
+                public int getCachedSize() {
+                    if (this.f14433c < 0) {
+                        getSerializedSize();
+                    }
+                    return this.f14433c;
+                }
+
+                public int getSerializedSize() {
+                    int i = 0;
+                    if (hasUrl()) {
+                        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getUrl());
+                    }
+                    this.f14433c = i;
+                    return i;
+                }
+
+                public String getUrl() {
+                    return this.f14432b;
+                }
+
+                public boolean hasUrl() {
+                    return this.f14431a;
+                }
+
+                public final boolean isInitialized() {
+                    return true;
+                }
+
+                public Browser mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                    while (true) {
+                        int readTag = codedInputStreamMicro.readTag();
+                        switch (readTag) {
+                            case 0:
+                                break;
+                            case 10:
+                                setUrl(codedInputStreamMicro.readString());
+                                continue;
+                            default:
+                                if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                    break;
+                                }
+                                continue;
+                        }
+                        return this;
+                    }
+                }
+
+                public Browser setUrl(String str) {
+                    this.f14431a = true;
+                    this.f14432b = str;
+                    return this;
+                }
+
+                public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                    if (hasUrl()) {
+                        codedOutputStreamMicro.writeString(1, getUrl());
+                    }
+                }
+            }
+
+            public static final class Jumpto extends MessageMicro {
+                public static final int CF_TAG_FIELD_NUMBER = 1;
+                public static final int PARAMS_FIELD_NUMBER = 2;
+                /* renamed from: a */
+                private boolean f14434a;
+                /* renamed from: b */
+                private String f14435b = "";
+                /* renamed from: c */
+                private boolean f14436c;
+                /* renamed from: d */
+                private String f14437d = "";
+                /* renamed from: e */
+                private int f14438e = -1;
+
+                public static Jumpto parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                    return new Jumpto().mergeFrom(codedInputStreamMicro);
+                }
+
+                public static Jumpto parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                    return (Jumpto) new Jumpto().mergeFrom(bArr);
+                }
+
+                public final Jumpto clear() {
+                    clearCfTag();
+                    clearParams();
+                    this.f14438e = -1;
+                    return this;
+                }
+
+                public Jumpto clearCfTag() {
+                    this.f14434a = false;
+                    this.f14435b = "";
+                    return this;
+                }
+
+                public Jumpto clearParams() {
+                    this.f14436c = false;
+                    this.f14437d = "";
+                    return this;
+                }
+
+                public int getCachedSize() {
+                    if (this.f14438e < 0) {
+                        getSerializedSize();
+                    }
+                    return this.f14438e;
+                }
+
+                public String getCfTag() {
+                    return this.f14435b;
+                }
+
+                public String getParams() {
+                    return this.f14437d;
+                }
+
+                public int getSerializedSize() {
+                    int i = 0;
+                    if (hasCfTag()) {
+                        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getCfTag());
+                    }
+                    if (hasParams()) {
+                        i += CodedOutputStreamMicro.computeStringSize(2, getParams());
+                    }
+                    this.f14438e = i;
+                    return i;
+                }
+
+                public boolean hasCfTag() {
+                    return this.f14434a;
+                }
+
+                public boolean hasParams() {
+                    return this.f14436c;
+                }
+
+                public final boolean isInitialized() {
+                    return true;
+                }
+
+                public Jumpto mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                    while (true) {
+                        int readTag = codedInputStreamMicro.readTag();
+                        switch (readTag) {
+                            case 0:
+                                break;
+                            case 10:
+                                setCfTag(codedInputStreamMicro.readString());
+                                continue;
+                            case 18:
+                                setParams(codedInputStreamMicro.readString());
+                                continue;
+                            default:
+                                if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                    break;
+                                }
+                                continue;
+                        }
+                        return this;
+                    }
+                }
+
+                public Jumpto setCfTag(String str) {
+                    this.f14434a = true;
+                    this.f14435b = str;
+                    return this;
+                }
+
+                public Jumpto setParams(String str) {
+                    this.f14436c = true;
+                    this.f14437d = str;
+                    return this;
+                }
+
+                public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                    if (hasCfTag()) {
+                        codedOutputStreamMicro.writeString(1, getCfTag());
+                    }
+                    if (hasParams()) {
+                        codedOutputStreamMicro.writeString(2, getParams());
+                    }
+                }
+            }
+
+            public static ExtParam parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new ExtParam().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static ExtParam parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (ExtParam) new ExtParam().mergeFrom(bArr);
+            }
+
+            public final ExtParam clear() {
+                clearJumpto();
+                clearBrowser();
+                this.f14443e = -1;
+                return this;
+            }
+
+            public ExtParam clearBrowser() {
+                this.f14441c = false;
+                this.f14442d = null;
+                return this;
+            }
+
+            public ExtParam clearJumpto() {
+                this.f14439a = false;
+                this.f14440b = null;
+                return this;
+            }
+
+            public Browser getBrowser() {
+                return this.f14442d;
+            }
+
+            public int getCachedSize() {
+                if (this.f14443e < 0) {
+                    getSerializedSize();
+                }
+                return this.f14443e;
+            }
+
+            public Jumpto getJumpto() {
+                return this.f14440b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasJumpto()) {
+                    i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getJumpto());
+                }
+                if (hasBrowser()) {
+                    i += CodedOutputStreamMicro.computeMessageSize(2, getBrowser());
+                }
+                this.f14443e = i;
+                return i;
+            }
+
+            public boolean hasBrowser() {
+                return this.f14441c;
+            }
+
+            public boolean hasJumpto() {
+                return this.f14439a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public ExtParam mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    MessageMicro jumpto;
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 10:
+                            jumpto = new Jumpto();
+                            codedInputStreamMicro.readMessage(jumpto);
+                            setJumpto(jumpto);
+                            continue;
+                        case 18:
+                            jumpto = new Browser();
+                            codedInputStreamMicro.readMessage(jumpto);
+                            setBrowser(jumpto);
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public ExtParam setBrowser(Browser browser) {
+                if (browser == null) {
+                    return clearBrowser();
+                }
+                this.f14441c = true;
+                this.f14442d = browser;
+                return this;
+            }
+
+            public ExtParam setJumpto(Jumpto jumpto) {
+                if (jumpto == null) {
+                    return clearJumpto();
+                }
+                this.f14439a = true;
+                this.f14440b = jumpto;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasJumpto()) {
+                    codedOutputStreamMicro.writeMessage(1, getJumpto());
+                }
+                if (hasBrowser()) {
+                    codedOutputStreamMicro.writeMessage(2, getBrowser());
+                }
+            }
         }
-      }
-    }
-    
-    public Content setAction(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public Content setExtParam(ExtParam paramExtParam)
-    {
-      if (paramExtParam == null) {
-        return clearExtParam();
-      }
-      this.a = true;
-      this.b = paramExtParam;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasAction()) {
-        paramCodedOutputStreamMicro.writeString(1, getAction());
-      }
-      if (hasExtParam()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getExtParam());
-      }
-    }
-    
-    public static final class ExtParam
-      extends MessageMicro
-    {
-      public static final int BROWSER_FIELD_NUMBER = 2;
-      public static final int JUMPTO_FIELD_NUMBER = 1;
-      private boolean a;
-      private Jumpto b = null;
-      private boolean c;
-      private Browser d = null;
-      private int e = -1;
-      
-      public static ExtParam parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new ExtParam().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static ExtParam parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (ExtParam)new ExtParam().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final ExtParam clear()
-      {
-        clearJumpto();
-        clearBrowser();
-        this.e = -1;
-        return this;
-      }
-      
-      public ExtParam clearBrowser()
-      {
-        this.c = false;
-        this.d = null;
-        return this;
-      }
-      
-      public ExtParam clearJumpto()
-      {
-        this.a = false;
-        this.b = null;
-        return this;
-      }
-      
-      public Browser getBrowser()
-      {
-        return this.d;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.e < 0) {
-          getSerializedSize();
+
+        public static Content parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Content().mergeFrom(codedInputStreamMicro);
         }
-        return this.e;
-      }
-      
-      public Jumpto getJumpto()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i = 0;
-        if (hasJumpto()) {
-          i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getJumpto());
+
+        public static Content parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Content) new Content().mergeFrom(bArr);
         }
-        int j = i;
-        if (hasBrowser()) {
-          j = i + CodedOutputStreamMicro.computeMessageSize(2, getBrowser());
-        }
-        this.e = j;
-        return j;
-      }
-      
-      public boolean hasBrowser()
-      {
-        return this.c;
-      }
-      
-      public boolean hasJumpto()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public ExtParam mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          Object localObject;
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
+
+        public final Content clear() {
+            clearExtParam();
+            clearAction();
+            this.f14448e = -1;
             return this;
-          case 10: 
-            localObject = new Jumpto();
-            paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-            setJumpto((Jumpto)localObject);
-            break;
-          case 18: 
-            localObject = new Browser();
-            paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-            setBrowser((Browser)localObject);
-          }
         }
-      }
-      
-      public ExtParam setBrowser(Browser paramBrowser)
-      {
-        if (paramBrowser == null) {
-          return clearBrowser();
+
+        public Content clearAction() {
+            this.f14446c = false;
+            this.f14447d = "";
+            return this;
         }
-        this.c = true;
-        this.d = paramBrowser;
-        return this;
-      }
-      
-      public ExtParam setJumpto(Jumpto paramJumpto)
-      {
-        if (paramJumpto == null) {
-          return clearJumpto();
+
+        public Content clearExtParam() {
+            this.f14444a = false;
+            this.f14445b = null;
+            return this;
         }
-        this.a = true;
-        this.b = paramJumpto;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasJumpto()) {
-          paramCodedOutputStreamMicro.writeMessage(1, getJumpto());
+
+        public String getAction() {
+            return this.f14447d;
         }
-        if (hasBrowser()) {
-          paramCodedOutputStreamMicro.writeMessage(2, getBrowser());
-        }
-      }
-      
-      public static final class Browser
-        extends MessageMicro
-      {
-        public static final int URL_FIELD_NUMBER = 1;
-        private boolean a;
-        private String b = "";
-        private int c = -1;
-        
-        public static Browser parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-          throws IOException
-        {
-          return new Browser().mergeFrom(paramCodedInputStreamMicro);
-        }
-        
-        public static Browser parseFrom(byte[] paramArrayOfByte)
-          throws InvalidProtocolBufferMicroException
-        {
-          return (Browser)new Browser().mergeFrom(paramArrayOfByte);
-        }
-        
-        public final Browser clear()
-        {
-          clearUrl();
-          this.c = -1;
-          return this;
-        }
-        
-        public Browser clearUrl()
-        {
-          this.a = false;
-          this.b = "";
-          return this;
-        }
-        
-        public int getCachedSize()
-        {
-          if (this.c < 0) {
-            getSerializedSize();
-          }
-          return this.c;
-        }
-        
-        public int getSerializedSize()
-        {
-          int i = 0;
-          if (hasUrl()) {
-            i = 0 + CodedOutputStreamMicro.computeStringSize(1, getUrl());
-          }
-          this.c = i;
-          return i;
-        }
-        
-        public String getUrl()
-        {
-          return this.b;
-        }
-        
-        public boolean hasUrl()
-        {
-          return this.a;
-        }
-        
-        public final boolean isInitialized()
-        {
-          return true;
-        }
-        
-        public Browser mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-          throws IOException
-        {
-          for (;;)
-          {
-            int i = paramCodedInputStreamMicro.readTag();
-            switch (i)
-            {
-            default: 
-              if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-              break;
-            case 0: 
-              return this;
-            case 10: 
-              setUrl(paramCodedInputStreamMicro.readString());
+
+        public int getCachedSize() {
+            if (this.f14448e < 0) {
+                getSerializedSize();
             }
-          }
+            return this.f14448e;
         }
-        
-        public Browser setUrl(String paramString)
-        {
-          this.a = true;
-          this.b = paramString;
-          return this;
+
+        public ExtParam getExtParam() {
+            return this.f14445b;
         }
-        
-        public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-          throws IOException
-        {
-          if (hasUrl()) {
-            paramCodedOutputStreamMicro.writeString(1, getUrl());
-          }
-        }
-      }
-      
-      public static final class Jumpto
-        extends MessageMicro
-      {
-        public static final int CF_TAG_FIELD_NUMBER = 1;
-        public static final int PARAMS_FIELD_NUMBER = 2;
-        private boolean a;
-        private String b = "";
-        private boolean c;
-        private String d = "";
-        private int e = -1;
-        
-        public static Jumpto parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-          throws IOException
-        {
-          return new Jumpto().mergeFrom(paramCodedInputStreamMicro);
-        }
-        
-        public static Jumpto parseFrom(byte[] paramArrayOfByte)
-          throws InvalidProtocolBufferMicroException
-        {
-          return (Jumpto)new Jumpto().mergeFrom(paramArrayOfByte);
-        }
-        
-        public final Jumpto clear()
-        {
-          clearCfTag();
-          clearParams();
-          this.e = -1;
-          return this;
-        }
-        
-        public Jumpto clearCfTag()
-        {
-          this.a = false;
-          this.b = "";
-          return this;
-        }
-        
-        public Jumpto clearParams()
-        {
-          this.c = false;
-          this.d = "";
-          return this;
-        }
-        
-        public int getCachedSize()
-        {
-          if (this.e < 0) {
-            getSerializedSize();
-          }
-          return this.e;
-        }
-        
-        public String getCfTag()
-        {
-          return this.b;
-        }
-        
-        public String getParams()
-        {
-          return this.d;
-        }
-        
-        public int getSerializedSize()
-        {
-          int i = 0;
-          if (hasCfTag()) {
-            i = 0 + CodedOutputStreamMicro.computeStringSize(1, getCfTag());
-          }
-          int j = i;
-          if (hasParams()) {
-            j = i + CodedOutputStreamMicro.computeStringSize(2, getParams());
-          }
-          this.e = j;
-          return j;
-        }
-        
-        public boolean hasCfTag()
-        {
-          return this.a;
-        }
-        
-        public boolean hasParams()
-        {
-          return this.c;
-        }
-        
-        public final boolean isInitialized()
-        {
-          return true;
-        }
-        
-        public Jumpto mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-          throws IOException
-        {
-          for (;;)
-          {
-            int i = paramCodedInputStreamMicro.readTag();
-            switch (i)
-            {
-            default: 
-              if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-              break;
-            case 0: 
-              return this;
-            case 10: 
-              setCfTag(paramCodedInputStreamMicro.readString());
-              break;
-            case 18: 
-              setParams(paramCodedInputStreamMicro.readString());
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasAction()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getAction());
             }
-          }
+            if (hasExtParam()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getExtParam());
+            }
+            this.f14448e = i;
+            return i;
         }
-        
-        public Jumpto setCfTag(String paramString)
-        {
-          this.a = true;
-          this.b = paramString;
-          return this;
+
+        public boolean hasAction() {
+            return this.f14446c;
         }
-        
-        public Jumpto setParams(String paramString)
-        {
-          this.c = true;
-          this.d = paramString;
-          return this;
+
+        public boolean hasExtParam() {
+            return this.f14444a;
         }
-        
-        public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-          throws IOException
-        {
-          if (hasCfTag()) {
-            paramCodedOutputStreamMicro.writeString(1, getCfTag());
-          }
-          if (hasParams()) {
-            paramCodedOutputStreamMicro.writeString(2, getParams());
-          }
+
+        public final boolean isInitialized() {
+            return true;
         }
-      }
-    }
-  }
-  
-  public static final class Option
-    extends MessageMicro
-  {
-    public static final int ERROR_FIELD_NUMBER = 1;
-    public static final int VERSION_FIELD_NUMBER = 2;
-    private boolean a;
-    private int b = 0;
-    private boolean c;
-    private int d = 0;
-    private int e = -1;
-    
-    public static Option parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Option().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Option parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Option)new Option().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Option clear()
-    {
-      clearError();
-      clearVersion();
-      this.e = -1;
-      return this;
-    }
-    
-    public Option clearError()
-    {
-      this.a = false;
-      this.b = 0;
-      return this;
-    }
-    
-    public Option clearVersion()
-    {
-      this.c = false;
-      this.d = 0;
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public int getError()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasError()) {
-        i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getError());
-      }
-      int j = i;
-      if (hasVersion()) {
-        j = i + CodedOutputStreamMicro.computeInt32Size(2, getVersion());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public int getVersion()
-    {
-      return this.d;
-    }
-    
-    public boolean hasError()
-    {
-      return this.a;
-    }
-    
-    public boolean hasVersion()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Option mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 8: 
-          setError(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 16: 
-          setVersion(paramCodedInputStreamMicro.readInt32());
+
+        public Content mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setAction(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        MessageMicro extParam = new ExtParam();
+                        codedInputStreamMicro.readMessage(extParam);
+                        setExtParam(extParam);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
         }
-      }
+
+        public Content setAction(String str) {
+            this.f14446c = true;
+            this.f14447d = str;
+            return this;
+        }
+
+        public Content setExtParam(ExtParam extParam) {
+            if (extParam == null) {
+                return clearExtParam();
+            }
+            this.f14444a = true;
+            this.f14445b = extParam;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasAction()) {
+                codedOutputStreamMicro.writeString(1, getAction());
+            }
+            if (hasExtParam()) {
+                codedOutputStreamMicro.writeMessage(2, getExtParam());
+            }
+        }
     }
-    
-    public Option setError(int paramInt)
-    {
-      this.a = true;
-      this.b = paramInt;
-      return this;
+
+    public static final class Option extends MessageMicro {
+        public static final int ERROR_FIELD_NUMBER = 1;
+        public static final int VERSION_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f14449a;
+        /* renamed from: b */
+        private int f14450b = 0;
+        /* renamed from: c */
+        private boolean f14451c;
+        /* renamed from: d */
+        private int f14452d = 0;
+        /* renamed from: e */
+        private int f14453e = -1;
+
+        public static Option parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Option().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Option parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Option) new Option().mergeFrom(bArr);
+        }
+
+        public final Option clear() {
+            clearError();
+            clearVersion();
+            this.f14453e = -1;
+            return this;
+        }
+
+        public Option clearError() {
+            this.f14449a = false;
+            this.f14450b = 0;
+            return this;
+        }
+
+        public Option clearVersion() {
+            this.f14451c = false;
+            this.f14452d = 0;
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f14453e < 0) {
+                getSerializedSize();
+            }
+            return this.f14453e;
+        }
+
+        public int getError() {
+            return this.f14450b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasError()) {
+                i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getError());
+            }
+            if (hasVersion()) {
+                i += CodedOutputStreamMicro.computeInt32Size(2, getVersion());
+            }
+            this.f14453e = i;
+            return i;
+        }
+
+        public int getVersion() {
+            return this.f14452d;
+        }
+
+        public boolean hasError() {
+            return this.f14449a;
+        }
+
+        public boolean hasVersion() {
+            return this.f14451c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Option mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 8:
+                        setError(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 16:
+                        setVersion(codedInputStreamMicro.readInt32());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Option setError(int i) {
+            this.f14449a = true;
+            this.f14450b = i;
+            return this;
+        }
+
+        public Option setVersion(int i) {
+            this.f14451c = true;
+            this.f14452d = i;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasError()) {
+                codedOutputStreamMicro.writeInt32(1, getError());
+            }
+            if (hasVersion()) {
+                codedOutputStreamMicro.writeInt32(2, getVersion());
+            }
+        }
     }
-    
-    public Option setVersion(int paramInt)
-    {
-      this.c = true;
-      this.d = paramInt;
-      return this;
+
+    public static SearchLauncher parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new SearchLauncher().mergeFrom(codedInputStreamMicro);
     }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasError()) {
-        paramCodedOutputStreamMicro.writeInt32(1, getError());
-      }
-      if (hasVersion()) {
-        paramCodedOutputStreamMicro.writeInt32(2, getVersion());
-      }
+
+    public static SearchLauncher parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (SearchLauncher) new SearchLauncher().mergeFrom(bArr);
     }
-  }
+
+    public SearchLauncher addContent(Content content) {
+        if (content != null) {
+            if (this.f14456c.isEmpty()) {
+                this.f14456c = new ArrayList();
+            }
+            this.f14456c.add(content);
+        }
+        return this;
+    }
+
+    public final SearchLauncher clear() {
+        clearOption();
+        clearContent();
+        this.f14457d = -1;
+        return this;
+    }
+
+    public SearchLauncher clearContent() {
+        this.f14456c = Collections.emptyList();
+        return this;
+    }
+
+    public SearchLauncher clearOption() {
+        this.f14454a = false;
+        this.f14455b = null;
+        return this;
+    }
+
+    public int getCachedSize() {
+        if (this.f14457d < 0) {
+            getSerializedSize();
+        }
+        return this.f14457d;
+    }
+
+    public Content getContent(int i) {
+        return (Content) this.f14456c.get(i);
+    }
+
+    public int getContentCount() {
+        return this.f14456c.size();
+    }
+
+    public List<Content> getContentList() {
+        return this.f14456c;
+    }
+
+    public Option getOption() {
+        return this.f14455b;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasOption()) {
+            i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getOption());
+        }
+        int i2 = i;
+        for (Content computeMessageSize : getContentList()) {
+            i2 = CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize) + i2;
+        }
+        this.f14457d = i2;
+        return i2;
+    }
+
+    public boolean hasOption() {
+        return this.f14454a;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public SearchLauncher mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            MessageMicro option;
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    option = new Option();
+                    codedInputStreamMicro.readMessage(option);
+                    setOption(option);
+                    continue;
+                case 18:
+                    option = new Content();
+                    codedInputStreamMicro.readMessage(option);
+                    addContent(option);
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public SearchLauncher setContent(int i, Content content) {
+        if (content != null) {
+            this.f14456c.set(i, content);
+        }
+        return this;
+    }
+
+    public SearchLauncher setOption(Option option) {
+        if (option == null) {
+            return clearOption();
+        }
+        this.f14454a = true;
+        this.f14455b = option;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasOption()) {
+            codedOutputStreamMicro.writeMessage(1, getOption());
+        }
+        for (Content writeMessage : getContentList()) {
+            codedOutputStreamMicro.writeMessage(2, writeMessage);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/SearchLauncher.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

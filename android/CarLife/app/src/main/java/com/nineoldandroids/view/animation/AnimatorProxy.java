@@ -10,387 +10,297 @@ import android.view.animation.Transformation;
 import java.lang.ref.WeakReference;
 import java.util.WeakHashMap;
 
-public final class AnimatorProxy
-  extends Animation
-{
-  public static final boolean NEEDS_PROXY;
-  private static final WeakHashMap<View, AnimatorProxy> PROXIES;
-  private final RectF mAfter = new RectF();
-  private float mAlpha = 1.0F;
-  private final RectF mBefore = new RectF();
-  private final Camera mCamera = new Camera();
-  private boolean mHasPivot;
-  private float mPivotX;
-  private float mPivotY;
-  private float mRotationX;
-  private float mRotationY;
-  private float mRotationZ;
-  private float mScaleX = 1.0F;
-  private float mScaleY = 1.0F;
-  private final Matrix mTempMatrix = new Matrix();
-  private float mTranslationX;
-  private float mTranslationY;
-  private final WeakReference<View> mView;
-  
-  static
-  {
-    if (Integer.valueOf(Build.VERSION.SDK).intValue() < 11) {}
-    for (boolean bool = true;; bool = false)
-    {
-      NEEDS_PROXY = bool;
-      PROXIES = new WeakHashMap();
-      return;
+public final class AnimatorProxy extends Animation {
+    public static final boolean NEEDS_PROXY = (Integer.valueOf(VERSION.SDK).intValue() < 11);
+    private static final WeakHashMap<View, AnimatorProxy> PROXIES = new WeakHashMap();
+    private final RectF mAfter = new RectF();
+    private float mAlpha = 1.0f;
+    private final RectF mBefore = new RectF();
+    private final Camera mCamera = new Camera();
+    private boolean mHasPivot;
+    private float mPivotX;
+    private float mPivotY;
+    private float mRotationX;
+    private float mRotationY;
+    private float mRotationZ;
+    private float mScaleX = 1.0f;
+    private float mScaleY = 1.0f;
+    private final Matrix mTempMatrix = new Matrix();
+    private float mTranslationX;
+    private float mTranslationY;
+    private final WeakReference<View> mView;
+
+    public static AnimatorProxy wrap(View view) {
+        Animation proxy = (AnimatorProxy) PROXIES.get(view);
+        if (proxy != null && proxy == view.getAnimation()) {
+            return proxy;
+        }
+        AnimatorProxy proxy2 = new AnimatorProxy(view);
+        PROXIES.put(view, proxy2);
+        return proxy2;
     }
-  }
-  
-  private AnimatorProxy(View paramView)
-  {
-    setDuration(0L);
-    setFillAfter(true);
-    paramView.setAnimation(this);
-    this.mView = new WeakReference(paramView);
-  }
-  
-  private void computeRect(RectF paramRectF, View paramView)
-  {
-    paramRectF.set(0.0F, 0.0F, paramView.getWidth(), paramView.getHeight());
-    Matrix localMatrix = this.mTempMatrix;
-    localMatrix.reset();
-    transformMatrix(localMatrix, paramView);
-    this.mTempMatrix.mapRect(paramRectF);
-    paramRectF.offset(paramView.getLeft(), paramView.getTop());
-    float f;
-    if (paramRectF.right < paramRectF.left)
-    {
-      f = paramRectF.right;
-      paramRectF.right = paramRectF.left;
-      paramRectF.left = f;
+
+    private AnimatorProxy(View view) {
+        setDuration(0);
+        setFillAfter(true);
+        view.setAnimation(this);
+        this.mView = new WeakReference(view);
     }
-    if (paramRectF.bottom < paramRectF.top)
-    {
-      f = paramRectF.top;
-      paramRectF.top = paramRectF.bottom;
-      paramRectF.bottom = f;
+
+    public float getAlpha() {
+        return this.mAlpha;
     }
-  }
-  
-  private void invalidateAfterUpdate()
-  {
-    View localView = (View)this.mView.get();
-    if ((localView == null) || (localView.getParent() == null)) {
-      return;
+
+    public void setAlpha(float alpha) {
+        if (this.mAlpha != alpha) {
+            this.mAlpha = alpha;
+            View view = (View) this.mView.get();
+            if (view != null) {
+                view.invalidate();
+            }
+        }
     }
-    RectF localRectF = this.mAfter;
-    computeRect(localRectF, localView);
-    localRectF.union(this.mBefore);
-    ((View)localView.getParent()).invalidate((int)Math.floor(localRectF.left), (int)Math.floor(localRectF.top), (int)Math.ceil(localRectF.right), (int)Math.ceil(localRectF.bottom));
-  }
-  
-  private void prepareForUpdate()
-  {
-    View localView = (View)this.mView.get();
-    if (localView != null) {
-      computeRect(this.mBefore, localView);
+
+    public float getPivotX() {
+        return this.mPivotX;
     }
-  }
-  
-  private void transformMatrix(Matrix paramMatrix, View paramView)
-  {
-    float f3 = paramView.getWidth();
-    float f4 = paramView.getHeight();
-    boolean bool = this.mHasPivot;
-    float f1;
-    if (bool)
-    {
-      f1 = this.mPivotX;
-      if (!bool) {
-        break label226;
-      }
+
+    public void setPivotX(float pivotX) {
+        if (!this.mHasPivot || this.mPivotX != pivotX) {
+            prepareForUpdate();
+            this.mHasPivot = true;
+            this.mPivotX = pivotX;
+            invalidateAfterUpdate();
+        }
     }
-    label226:
-    for (float f2 = this.mPivotY;; f2 = f4 / 2.0F)
-    {
-      float f5 = this.mRotationX;
-      float f6 = this.mRotationY;
-      float f7 = this.mRotationZ;
-      if ((f5 != 0.0F) || (f6 != 0.0F) || (f7 != 0.0F))
-      {
-        paramView = this.mCamera;
-        paramView.save();
-        paramView.rotateX(f5);
-        paramView.rotateY(f6);
-        paramView.rotateZ(-f7);
-        paramView.getMatrix(paramMatrix);
-        paramView.restore();
-        paramMatrix.preTranslate(-f1, -f2);
-        paramMatrix.postTranslate(f1, f2);
-      }
-      f5 = this.mScaleX;
-      f6 = this.mScaleY;
-      if ((f5 != 1.0F) || (f6 != 1.0F))
-      {
-        paramMatrix.postScale(f5, f6);
-        paramMatrix.postTranslate(-(f1 / f3) * (f5 * f3 - f3), -(f2 / f4) * (f6 * f4 - f4));
-      }
-      paramMatrix.postTranslate(this.mTranslationX, this.mTranslationY);
-      return;
-      f1 = f3 / 2.0F;
-      break;
+
+    public float getPivotY() {
+        return this.mPivotY;
     }
-  }
-  
-  public static AnimatorProxy wrap(View paramView)
-  {
-    AnimatorProxy localAnimatorProxy2 = (AnimatorProxy)PROXIES.get(paramView);
-    AnimatorProxy localAnimatorProxy1;
-    if (localAnimatorProxy2 != null)
-    {
-      localAnimatorProxy1 = localAnimatorProxy2;
-      if (localAnimatorProxy2 == paramView.getAnimation()) {}
+
+    public void setPivotY(float pivotY) {
+        if (!this.mHasPivot || this.mPivotY != pivotY) {
+            prepareForUpdate();
+            this.mHasPivot = true;
+            this.mPivotY = pivotY;
+            invalidateAfterUpdate();
+        }
     }
-    else
-    {
-      localAnimatorProxy1 = new AnimatorProxy(paramView);
-      PROXIES.put(paramView, localAnimatorProxy1);
+
+    public float getRotation() {
+        return this.mRotationZ;
     }
-    return localAnimatorProxy1;
-  }
-  
-  protected void applyTransformation(float paramFloat, Transformation paramTransformation)
-  {
-    View localView = (View)this.mView.get();
-    if (localView != null)
-    {
-      paramTransformation.setAlpha(this.mAlpha);
-      transformMatrix(paramTransformation.getMatrix(), localView);
+
+    public void setRotation(float rotation) {
+        if (this.mRotationZ != rotation) {
+            prepareForUpdate();
+            this.mRotationZ = rotation;
+            invalidateAfterUpdate();
+        }
     }
-  }
-  
-  public float getAlpha()
-  {
-    return this.mAlpha;
-  }
-  
-  public float getPivotX()
-  {
-    return this.mPivotX;
-  }
-  
-  public float getPivotY()
-  {
-    return this.mPivotY;
-  }
-  
-  public float getRotation()
-  {
-    return this.mRotationZ;
-  }
-  
-  public float getRotationX()
-  {
-    return this.mRotationX;
-  }
-  
-  public float getRotationY()
-  {
-    return this.mRotationY;
-  }
-  
-  public float getScaleX()
-  {
-    return this.mScaleX;
-  }
-  
-  public float getScaleY()
-  {
-    return this.mScaleY;
-  }
-  
-  public int getScrollX()
-  {
-    View localView = (View)this.mView.get();
-    if (localView == null) {
-      return 0;
+
+    public float getRotationX() {
+        return this.mRotationX;
     }
-    return localView.getScrollX();
-  }
-  
-  public int getScrollY()
-  {
-    View localView = (View)this.mView.get();
-    if (localView == null) {
-      return 0;
+
+    public void setRotationX(float rotationX) {
+        if (this.mRotationX != rotationX) {
+            prepareForUpdate();
+            this.mRotationX = rotationX;
+            invalidateAfterUpdate();
+        }
     }
-    return localView.getScrollY();
-  }
-  
-  public float getTranslationX()
-  {
-    return this.mTranslationX;
-  }
-  
-  public float getTranslationY()
-  {
-    return this.mTranslationY;
-  }
-  
-  public float getX()
-  {
-    View localView = (View)this.mView.get();
-    if (localView == null) {
-      return 0.0F;
+
+    public float getRotationY() {
+        return this.mRotationY;
     }
-    return localView.getLeft() + this.mTranslationX;
-  }
-  
-  public float getY()
-  {
-    View localView = (View)this.mView.get();
-    if (localView == null) {
-      return 0.0F;
+
+    public void setRotationY(float rotationY) {
+        if (this.mRotationY != rotationY) {
+            prepareForUpdate();
+            this.mRotationY = rotationY;
+            invalidateAfterUpdate();
+        }
     }
-    return localView.getTop() + this.mTranslationY;
-  }
-  
-  public void setAlpha(float paramFloat)
-  {
-    if (this.mAlpha != paramFloat)
-    {
-      this.mAlpha = paramFloat;
-      View localView = (View)this.mView.get();
-      if (localView != null) {
-        localView.invalidate();
-      }
+
+    public float getScaleX() {
+        return this.mScaleX;
     }
-  }
-  
-  public void setPivotX(float paramFloat)
-  {
-    if ((!this.mHasPivot) || (this.mPivotX != paramFloat))
-    {
-      prepareForUpdate();
-      this.mHasPivot = true;
-      this.mPivotX = paramFloat;
-      invalidateAfterUpdate();
+
+    public void setScaleX(float scaleX) {
+        if (this.mScaleX != scaleX) {
+            prepareForUpdate();
+            this.mScaleX = scaleX;
+            invalidateAfterUpdate();
+        }
     }
-  }
-  
-  public void setPivotY(float paramFloat)
-  {
-    if ((!this.mHasPivot) || (this.mPivotY != paramFloat))
-    {
-      prepareForUpdate();
-      this.mHasPivot = true;
-      this.mPivotY = paramFloat;
-      invalidateAfterUpdate();
+
+    public float getScaleY() {
+        return this.mScaleY;
     }
-  }
-  
-  public void setRotation(float paramFloat)
-  {
-    if (this.mRotationZ != paramFloat)
-    {
-      prepareForUpdate();
-      this.mRotationZ = paramFloat;
-      invalidateAfterUpdate();
+
+    public void setScaleY(float scaleY) {
+        if (this.mScaleY != scaleY) {
+            prepareForUpdate();
+            this.mScaleY = scaleY;
+            invalidateAfterUpdate();
+        }
     }
-  }
-  
-  public void setRotationX(float paramFloat)
-  {
-    if (this.mRotationX != paramFloat)
-    {
-      prepareForUpdate();
-      this.mRotationX = paramFloat;
-      invalidateAfterUpdate();
+
+    public int getScrollX() {
+        View view = (View) this.mView.get();
+        if (view == null) {
+            return 0;
+        }
+        return view.getScrollX();
     }
-  }
-  
-  public void setRotationY(float paramFloat)
-  {
-    if (this.mRotationY != paramFloat)
-    {
-      prepareForUpdate();
-      this.mRotationY = paramFloat;
-      invalidateAfterUpdate();
+
+    public void setScrollX(int value) {
+        View view = (View) this.mView.get();
+        if (view != null) {
+            view.scrollTo(value, view.getScrollY());
+        }
     }
-  }
-  
-  public void setScaleX(float paramFloat)
-  {
-    if (this.mScaleX != paramFloat)
-    {
-      prepareForUpdate();
-      this.mScaleX = paramFloat;
-      invalidateAfterUpdate();
+
+    public int getScrollY() {
+        View view = (View) this.mView.get();
+        if (view == null) {
+            return 0;
+        }
+        return view.getScrollY();
     }
-  }
-  
-  public void setScaleY(float paramFloat)
-  {
-    if (this.mScaleY != paramFloat)
-    {
-      prepareForUpdate();
-      this.mScaleY = paramFloat;
-      invalidateAfterUpdate();
+
+    public void setScrollY(int value) {
+        View view = (View) this.mView.get();
+        if (view != null) {
+            view.scrollTo(view.getScrollX(), value);
+        }
     }
-  }
-  
-  public void setScrollX(int paramInt)
-  {
-    View localView = (View)this.mView.get();
-    if (localView != null) {
-      localView.scrollTo(paramInt, localView.getScrollY());
+
+    public float getTranslationX() {
+        return this.mTranslationX;
     }
-  }
-  
-  public void setScrollY(int paramInt)
-  {
-    View localView = (View)this.mView.get();
-    if (localView != null) {
-      localView.scrollTo(localView.getScrollX(), paramInt);
+
+    public void setTranslationX(float translationX) {
+        if (this.mTranslationX != translationX) {
+            prepareForUpdate();
+            this.mTranslationX = translationX;
+            invalidateAfterUpdate();
+        }
     }
-  }
-  
-  public void setTranslationX(float paramFloat)
-  {
-    if (this.mTranslationX != paramFloat)
-    {
-      prepareForUpdate();
-      this.mTranslationX = paramFloat;
-      invalidateAfterUpdate();
+
+    public float getTranslationY() {
+        return this.mTranslationY;
     }
-  }
-  
-  public void setTranslationY(float paramFloat)
-  {
-    if (this.mTranslationY != paramFloat)
-    {
-      prepareForUpdate();
-      this.mTranslationY = paramFloat;
-      invalidateAfterUpdate();
+
+    public void setTranslationY(float translationY) {
+        if (this.mTranslationY != translationY) {
+            prepareForUpdate();
+            this.mTranslationY = translationY;
+            invalidateAfterUpdate();
+        }
     }
-  }
-  
-  public void setX(float paramFloat)
-  {
-    View localView = (View)this.mView.get();
-    if (localView != null) {
-      setTranslationX(paramFloat - localView.getLeft());
+
+    public float getX() {
+        View view = (View) this.mView.get();
+        if (view == null) {
+            return 0.0f;
+        }
+        return ((float) view.getLeft()) + this.mTranslationX;
     }
-  }
-  
-  public void setY(float paramFloat)
-  {
-    View localView = (View)this.mView.get();
-    if (localView != null) {
-      setTranslationY(paramFloat - localView.getTop());
+
+    public void setX(float x) {
+        View view = (View) this.mView.get();
+        if (view != null) {
+            setTranslationX(x - ((float) view.getLeft()));
+        }
     }
-  }
+
+    public float getY() {
+        View view = (View) this.mView.get();
+        if (view == null) {
+            return 0.0f;
+        }
+        return ((float) view.getTop()) + this.mTranslationY;
+    }
+
+    public void setY(float y) {
+        View view = (View) this.mView.get();
+        if (view != null) {
+            setTranslationY(y - ((float) view.getTop()));
+        }
+    }
+
+    private void prepareForUpdate() {
+        View view = (View) this.mView.get();
+        if (view != null) {
+            computeRect(this.mBefore, view);
+        }
+    }
+
+    private void invalidateAfterUpdate() {
+        View view = (View) this.mView.get();
+        if (view != null && view.getParent() != null) {
+            RectF after = this.mAfter;
+            computeRect(after, view);
+            after.union(this.mBefore);
+            ((View) view.getParent()).invalidate((int) Math.floor((double) after.left), (int) Math.floor((double) after.top), (int) Math.ceil((double) after.right), (int) Math.ceil((double) after.bottom));
+        }
+    }
+
+    private void computeRect(RectF r, View view) {
+        r.set(0.0f, 0.0f, (float) view.getWidth(), (float) view.getHeight());
+        Matrix m = this.mTempMatrix;
+        m.reset();
+        transformMatrix(m, view);
+        this.mTempMatrix.mapRect(r);
+        r.offset((float) view.getLeft(), (float) view.getTop());
+        if (r.right < r.left) {
+            float f = r.right;
+            r.right = r.left;
+            r.left = f;
+        }
+        if (r.bottom < r.top) {
+            f = r.top;
+            r.top = r.bottom;
+            r.bottom = f;
+        }
+    }
+
+    private void transformMatrix(Matrix m, View view) {
+        float w = (float) view.getWidth();
+        float h = (float) view.getHeight();
+        boolean hasPivot = this.mHasPivot;
+        float pX = hasPivot ? this.mPivotX : w / 2.0f;
+        float pY = hasPivot ? this.mPivotY : h / 2.0f;
+        float rX = this.mRotationX;
+        float rY = this.mRotationY;
+        float rZ = this.mRotationZ;
+        if (!(rX == 0.0f && rY == 0.0f && rZ == 0.0f)) {
+            Camera camera = this.mCamera;
+            camera.save();
+            camera.rotateX(rX);
+            camera.rotateY(rY);
+            camera.rotateZ(-rZ);
+            camera.getMatrix(m);
+            camera.restore();
+            m.preTranslate(-pX, -pY);
+            m.postTranslate(pX, pY);
+        }
+        float sX = this.mScaleX;
+        float sY = this.mScaleY;
+        if (!(sX == 1.0f && sY == 1.0f)) {
+            m.postScale(sX, sY);
+            m.postTranslate((-(pX / w)) * ((sX * w) - w), (-(pY / h)) * ((sY * h) - h));
+        }
+        m.postTranslate(this.mTranslationX, this.mTranslationY);
+    }
+
+    protected void applyTransformation(float interpolatedTime, Transformation t) {
+        View view = (View) this.mView.get();
+        if (view != null) {
+            t.setAlpha(this.mAlpha);
+            transformMatrix(t.getMatrix(), view);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/view/animation/AnimatorProxy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,7 +3,6 @@ package com.baidu.navi.view.draglistview;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -24,513 +23,426 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import com.baidu.carlife.C0965R;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.navisdk.util.common.LogUtil;
 
-public class DragListView
-  extends ListView
-{
-  private static final int ANIMATION_DURATION = 200;
-  public static final int MSG_DRAG_MOVE = 4098;
-  public static final int MSG_DRAG_STOP = 4097;
-  private static final String TAG = "test";
-  private static final int TOUCH_TAP = 20;
-  private static final int step = 1;
-  private boolean bHasGetSapcing = false;
-  private int clickCount;
-  private int currentStep;
-  private int downScrollBounce;
-  private ImageView dragImageView;
-  private int dragOffset;
-  private int dragPoint;
-  private int dragPosition;
-  DragType dragType = DragType.ITEM_CLICK;
-  private int holdPosition;
-  private boolean isDragEnable;
-  private boolean isLock;
-  private boolean isMove;
-  private boolean isRelease;
-  private boolean isSameDragDirection = true;
-  private int lastDownX;
-  private int lastDownY;
-  private int lastFlag = -1;
-  private int lastPosition;
-  Runnable longClickRunnable = new Runnable()
-  {
-    public void run()
-    {
-      DragListView.access$010(DragListView.this);
-      if ((DragListView.this.clickCount > 0) || (DragListView.this.isRelease) || (DragListView.this.isMove)) {
-        return;
-      }
-      DragListView.access$302(DragListView.this, true);
-      DragListView.this.performDragEvent(DragListView.this.lastDownX, DragListView.this.lastDownY, DragListView.this.offsetY);
-    }
-  };
-  private Context mContext;
-  Handler mHandler = new Handler()
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      switch (paramAnonymousMessage.what)
-      {
-      default: 
-        return;
-      case 4097: 
-        DragListView.this.stopDrag();
-        DragListView.this.onDrop(paramAnonymousMessage.arg1);
-        return;
-      }
-      DragListView.this.onDrag(paramAnonymousMessage.arg1);
-    }
-  };
-  private boolean mIsOccpy;
-  private int mItemVerticalSpacing = 0;
-  private int offsetY;
-  private int startPosition;
-  Rect touchFrame;
-  private int unableDragEndCount = 0;
-  private int unableDragStartCount = 0;
-  private int upScrollBounce;
-  private WindowManager windowManager;
-  private WindowManager.LayoutParams windowParams;
-  
-  public DragListView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    this.mContext = paramContext;
-    init();
-    this.mIsOccpy = false;
-  }
-  
-  private void getSpacing()
-  {
-    this.bHasGetSapcing = true;
-    this.upScrollBounce = (getHeight() / 3);
-    this.downScrollBounce = (getHeight() * 2 / 3);
-    int[] arrayOfInt1 = new int[2];
-    int[] arrayOfInt2 = new int[2];
-    int i = getFirstVisiblePosition();
-    ViewGroup localViewGroup1 = (ViewGroup)getChildAt(i + 0);
-    ViewGroup localViewGroup2 = (ViewGroup)getChildAt(i + 1);
-    if (localViewGroup1 != null)
-    {
-      localViewGroup1.getLocationOnScreen(arrayOfInt1);
-      if (localViewGroup2 != null)
-      {
-        localViewGroup2.getLocationOnScreen(arrayOfInt2);
-        this.mItemVerticalSpacing = Math.abs(arrayOfInt2[1] - arrayOfInt1[1]);
-      }
-    }
-  }
-  
-  private int getUnableDragEndCount()
-  {
-    return this.unableDragEndCount + getFooterViewsCount();
-  }
-  
-  private int getUnableDragStartCount()
-  {
-    return this.unableDragStartCount + getFirstVisiblePosition();
-  }
-  
-  private ListAdapter getWrappedAdapter()
-  {
-    ListAdapter localListAdapter2 = getAdapter();
-    ListAdapter localListAdapter1 = localListAdapter2;
-    if (localListAdapter2 != null)
-    {
-      localListAdapter1 = localListAdapter2;
-      if ((localListAdapter2 instanceof HeaderViewListAdapter)) {
-        localListAdapter1 = ((HeaderViewListAdapter)localListAdapter2).getWrappedAdapter();
-      }
-    }
-    return localListAdapter1;
-  }
-  
-  private void init()
-  {
-    this.dragType = DragType.ITEM_CLICK;
-    this.windowManager = ((WindowManager)getContext().getSystemService("window"));
-  }
-  
-  private boolean isDragPositionValid(int paramInt)
-  {
-    int i = getAdapter().getCount();
-    return (paramInt != -1) && (paramInt + 1 > getUnableDragStartCount()) && (i - paramInt > getUnableDragEndCount());
-  }
-  
-  private void onChangeCopy(int paramInt1, int paramInt2)
-  {
-    ListAdapter localListAdapter = getWrappedAdapter();
-    if ((paramInt1 != paramInt2) && ((localListAdapter instanceof OnDragAdapterListener))) {
-      ((OnDragAdapterListener)localListAdapter).onExchange(paramInt1 - getFirstVisiblePosition(), paramInt2 - getFirstVisiblePosition());
-    }
-  }
-  
-  private void onDrop(int paramInt1, int paramInt2)
-  {
-    ListAdapter localListAdapter = getWrappedAdapter();
-    if ((localListAdapter instanceof OnDragAdapterListener)) {
-      ((BaseAdapter)localListAdapter).notifyDataSetChanged();
-    }
-  }
-  
-  private void performDragEvent(int paramInt1, int paramInt2, int paramInt3)
-  {
-    LogUtil.e("test", "performDragEvent()......................enter");
-    paramInt1 = pointToPosition(paramInt1, paramInt2);
-    this.dragPosition = paramInt1;
-    this.startPosition = paramInt1;
-    this.lastPosition = paramInt1;
-    if (!isDragPositionValid(this.dragPosition)) {
-      this.isDragEnable = false;
-    }
-    if (!this.bHasGetSapcing) {
-      getSpacing();
-    }
-    ViewGroup localViewGroup = (ViewGroup)getChildAt(this.dragPosition - getFirstVisiblePosition());
-    this.dragPoint = (paramInt2 - localViewGroup.getTop());
-    this.dragOffset = paramInt3;
-    Object localObject = new int[2];
-    localViewGroup.getLocationOnScreen((int[])localObject);
-    paramInt1 = localObject[0];
-    localViewGroup.destroyDrawingCache();
-    localViewGroup.setDrawingCacheEnabled(true);
-    if (localViewGroup.getBackground() != null) {
-      localViewGroup.getBackground().setAlpha(80);
-    }
-    localObject = Bitmap.createBitmap(localViewGroup.getDrawingCache(true));
-    localViewGroup.setVisibility(4);
-    startDrag((Bitmap)localObject, paramInt1 - 10, paramInt2);
-  }
-  
-  private void startDrag(Bitmap paramBitmap, int paramInt1, int paramInt2)
-  {
-    this.windowParams = new WindowManager.LayoutParams();
-    this.windowParams.gravity = 48;
-    this.windowParams.x = paramInt1;
-    this.windowParams.y = (paramInt2 - this.dragPoint + this.dragOffset);
-    this.windowParams.width = -2;
-    this.windowParams.height = -2;
-    this.windowParams.flags = 408;
-    this.windowParams.windowAnimations = 0;
-    this.windowParams.alpha = 0.8F;
-    this.windowParams.format = -3;
-    ImageView localImageView = new ImageView(getContext());
-    localImageView.setImageBitmap(paramBitmap);
-    this.windowManager.addView(localImageView, this.windowParams);
-    this.dragImageView = localImageView;
-  }
-  
-  private void testAnimation(int paramInt)
-  {
-    int j = pointToPosition(0, paramInt);
-    if (j == 0) {
-      LogUtil.e("test", "0");
-    }
-    if ((!isDragPositionValid(j)) || (j == this.lastPosition)) {
-      return;
-    }
-    LogUtil.e("test", "Before:position valid");
-    this.dragPosition = j;
-    LogUtil.e("test", "Before:lastPosition=" + this.lastPosition + ", dragPosition=" + this.dragPosition);
-    onChangeCopy(this.lastPosition, this.dragPosition);
-    int k = j - this.lastPosition;
-    int m = Math.abs(k);
-    paramInt = 1;
-    if (paramInt <= m)
-    {
-      label148:
-      label165:
-      int i;
-      ViewGroup localViewGroup;
-      if (k > 0) {
-        if (this.lastFlag == -1)
-        {
-          this.lastFlag = 0;
-          this.isSameDragDirection = true;
-          if (!this.isSameDragDirection) {
-            break label266;
-          }
-          this.holdPosition = (this.lastPosition + 1);
-          i = -this.mItemVerticalSpacing;
-          this.lastPosition += 1;
-          localViewGroup = (ViewGroup)getChildAt(this.holdPosition - getFirstVisiblePosition());
-          if (!this.isSameDragDirection) {
-            break label461;
-          }
+public class DragListView extends ListView {
+    private static final int ANIMATION_DURATION = 200;
+    public static final int MSG_DRAG_MOVE = 4098;
+    public static final int MSG_DRAG_STOP = 4097;
+    private static final String TAG = "test";
+    private static final int TOUCH_TAP = 20;
+    private static final int step = 1;
+    private boolean bHasGetSapcing = false;
+    private int clickCount;
+    private int currentStep;
+    private int downScrollBounce;
+    private ImageView dragImageView;
+    private int dragOffset;
+    private int dragPoint;
+    private int dragPosition;
+    DragType dragType = DragType.ITEM_CLICK;
+    private int holdPosition;
+    private boolean isDragEnable;
+    private boolean isLock;
+    private boolean isMove;
+    private boolean isRelease;
+    private boolean isSameDragDirection = true;
+    private int lastDownX;
+    private int lastDownY;
+    private int lastFlag = -1;
+    private int lastPosition;
+    Runnable longClickRunnable = new C40261();
+    private Context mContext;
+    Handler mHandler = new C40272();
+    private boolean mIsOccpy;
+    private int mItemVerticalSpacing = 0;
+    private int offsetY;
+    private int startPosition;
+    Rect touchFrame;
+    private int unableDragEndCount = 0;
+    private int unableDragStartCount = 0;
+    private int upScrollBounce;
+    private WindowManager windowManager;
+    private LayoutParams windowParams;
+
+    /* renamed from: com.baidu.navi.view.draglistview.DragListView$1 */
+    class C40261 implements Runnable {
+        C40261() {
         }
-      }
-      label266:
-      label360:
-      label407:
-      label461:
-      for (Animation localAnimation = getFromSelfAnimation(0, i);; localAnimation = getToSelfAnimation(0, -i))
-      {
-        localViewGroup.startAnimation(localAnimation);
-        paramInt += 1;
-        break;
-        if (this.lastFlag != 1) {
-          break label148;
-        }
-        this.lastFlag = 0;
-        if (!this.isSameDragDirection) {}
-        for (boolean bool = true;; bool = false)
-        {
-          this.isSameDragDirection = bool;
-          break;
-        }
-        if (this.startPosition < j)
-        {
-          this.holdPosition = (this.lastPosition + 1);
-          if (!this.isSameDragDirection) {}
-          for (bool = true;; bool = false)
-          {
-            this.isSameDragDirection = bool;
-            break;
-          }
-        }
-        this.holdPosition = this.lastPosition;
-        break label165;
-        if (this.lastFlag == -1)
-        {
-          this.lastFlag = 1;
-          this.isSameDragDirection = true;
-        }
-        if (this.lastFlag == 0)
-        {
-          this.lastFlag = 1;
-          if (!this.isSameDragDirection)
-          {
-            bool = true;
-            this.isSameDragDirection = bool;
-          }
-        }
-        else
-        {
-          if (!this.isSameDragDirection) {
-            break label407;
-          }
-          this.holdPosition = (this.lastPosition - 1);
-        }
-        for (;;)
-        {
-          i = this.mItemVerticalSpacing;
-          this.lastPosition -= 1;
-          break;
-          bool = false;
-          break label360;
-          if (this.startPosition > j)
-          {
-            this.holdPosition = (this.lastPosition - 1);
-            if (!this.isSameDragDirection) {}
-            for (bool = true;; bool = false)
-            {
-              this.isSameDragDirection = bool;
-              break;
+
+        public void run() {
+            DragListView.this.clickCount = DragListView.this.clickCount - 1;
+            if (DragListView.this.clickCount <= 0 && !DragListView.this.isRelease && !DragListView.this.isMove) {
+                DragListView.this.isDragEnable = true;
+                DragListView.this.performDragEvent(DragListView.this.lastDownX, DragListView.this.lastDownY, DragListView.this.offsetY);
             }
-          }
-          this.holdPosition = this.lastPosition;
         }
-      }
     }
-    Log.d("test", "After:lastPosition=" + this.lastPosition + ", dragPosition=" + this.dragPosition);
-  }
-  
-  public boolean checkDragListIsOccpuy()
-  {
-    return this.mIsOccpy;
-  }
-  
-  public void doScroller(int paramInt)
-  {
-    if (paramInt < this.upScrollBounce) {
-      this.currentStep = ((this.upScrollBounce - paramInt) / 10 + 1);
+
+    /* renamed from: com.baidu.navi.view.draglistview.DragListView$2 */
+    class C40272 extends Handler {
+        C40272() {
+        }
+
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 4097:
+                    DragListView.this.stopDrag();
+                    DragListView.this.onDrop(msg.arg1);
+                    return;
+                case 4098:
+                    DragListView.this.onDrag(msg.arg1);
+                    return;
+                default:
+                    return;
+            }
+        }
     }
-    for (;;)
-    {
-      View localView = getChildAt(this.dragPosition - getFirstVisiblePosition());
-      setSelectionFromTop(this.dragPosition, localView.getTop() + this.currentStep);
-      return;
-      if (paramInt > this.downScrollBounce) {
-        this.currentStep = (-(paramInt - this.downScrollBounce + 1) / 10);
-      } else {
-        this.currentStep = 0;
-      }
+
+    enum DragType {
+        ITEM_CLICK,
+        LONG_CLICK
     }
-  }
-  
-  public Animation getFromSelfAnimation(int paramInt1, int paramInt2)
-  {
-    TranslateAnimation localTranslateAnimation = new TranslateAnimation(1, 0.0F, 0, paramInt1, 1, 0.0F, 0, paramInt2);
-    localTranslateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-    localTranslateAnimation.setFillAfter(true);
-    localTranslateAnimation.setDuration(200L);
-    localTranslateAnimation.setInterpolator(new AccelerateInterpolator());
-    return localTranslateAnimation;
-  }
-  
-  public Animation getScaleAnimation()
-  {
-    ScaleAnimation localScaleAnimation = new ScaleAnimation(0.0F, 0.0F, 0.0F, 0.0F, 1, 0.5F, 1, 0.5F);
-    localScaleAnimation.setFillAfter(true);
-    return localScaleAnimation;
-  }
-  
-  public Animation getToSelfAnimation(int paramInt1, int paramInt2)
-  {
-    TranslateAnimation localTranslateAnimation = new TranslateAnimation(0, paramInt1, 1, 0.0F, 0, paramInt2, 1, 0.0F);
-    localTranslateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-    localTranslateAnimation.setFillAfter(true);
-    localTranslateAnimation.setDuration(200L);
-    localTranslateAnimation.setInterpolator(new AccelerateInterpolator());
-    return localTranslateAnimation;
-  }
-  
-  public void onDrag(int paramInt)
-  {
-    int i = this.dragPoint;
-    if ((this.dragImageView != null) && (paramInt - i >= 0))
-    {
-      this.windowParams.alpha = 1.0F;
-      this.windowParams.y = (paramInt - this.dragPoint + this.dragOffset);
-      this.windowManager.updateViewLayout(this.dragImageView, this.windowParams);
-    }
-    doScroller(paramInt);
-  }
-  
-  public void onDrop(int paramInt)
-  {
-    onDrop(0, paramInt);
-  }
-  
-  public boolean onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    switch (paramMotionEvent.getAction())
-    {
-    default: 
-      this.mIsOccpy = false;
-      stopDrag();
-    }
-    while ((this.isDragEnable) && (this.dragImageView != null) && (isDragPositionValid(this.dragPosition)))
-    {
-      return true;
-      if ((this.isDragEnable) && (this.dragImageView != null) && (isDragPositionValid(this.dragPosition)))
-      {
-        i = (int)paramMotionEvent.getY();
-        stopDrag();
-        onDrop(i);
-      }
-      for (;;)
-      {
+
+    public DragListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.mContext = context;
+        init();
         this.mIsOccpy = false;
-        break;
-        this.isRelease = true;
-      }
-      int i = (int)paramMotionEvent.getY();
-      if ((this.isMove) && (this.isDragEnable) && (this.dragImageView != null) && (isDragPositionValid(this.dragPosition)))
-      {
-        if (isDragPositionValid(pointToPosition(0, i)))
-        {
-          onDrag(i);
-          testAnimation(i);
-        }
-      }
-      else if ((Math.abs(this.lastDownX - paramMotionEvent.getX()) > 20.0F) || (Math.abs(this.lastDownY - paramMotionEvent.getY()) > 20.0F))
-      {
-        this.isMove = true;
-        continue;
-        this.lastDownX = ((int)paramMotionEvent.getX());
-        this.lastDownY = ((int)paramMotionEvent.getY());
-        i = (int)paramMotionEvent.getRawX();
-        if (isDragPositionValid(pointToPosition(this.lastDownX, this.lastDownY)))
-        {
-          this.offsetY = ((int)(paramMotionEvent.getRawY() - this.lastDownY));
-          this.isMove = false;
-          this.isRelease = false;
-          if (this.dragType == DragType.LONG_CLICK)
-          {
-            this.isDragEnable = false;
-            this.clickCount += 1;
-            postDelayed(this.longClickRunnable, ViewConfiguration.getLongPressTimeout());
-          }
-          else
-          {
-            View localView = findViewById(2131624592);
-            int[] arrayOfInt = new int[2];
-            localView.getLocationOnScreen(arrayOfInt);
-            if ((i > arrayOfInt[0] - 20) && (i < arrayOfInt[0] + localView.getWidth() + 20))
-            {
-              this.mIsOccpy = true;
-              this.isDragEnable = true;
-              performDragEvent(this.lastDownX, this.lastDownY, this.offsetY);
-              StatisticManager.onEvent("410170", "410170");
+    }
+
+    public boolean checkDragListIsOccpuy() {
+        return this.mIsOccpy;
+    }
+
+    public void setLock(boolean isLock) {
+        this.isLock = isLock;
+    }
+
+    private void init() {
+        this.dragType = DragType.ITEM_CLICK;
+        this.windowManager = (WindowManager) getContext().getSystemService("window");
+    }
+
+    private void getSpacing() {
+        this.bHasGetSapcing = true;
+        this.upScrollBounce = getHeight() / 3;
+        this.downScrollBounce = (getHeight() * 2) / 3;
+        int[] tempLocation0 = new int[2];
+        int[] tempLocation1 = new int[2];
+        int headerViewCount = getFirstVisiblePosition();
+        ViewGroup itemView0 = (ViewGroup) getChildAt(headerViewCount + 0);
+        ViewGroup itemView1 = (ViewGroup) getChildAt(headerViewCount + 1);
+        if (itemView0 != null) {
+            itemView0.getLocationOnScreen(tempLocation0);
+            if (itemView1 != null) {
+                itemView1.getLocationOnScreen(tempLocation1);
+                this.mItemVerticalSpacing = Math.abs(tempLocation1[1] - tempLocation0[1]);
             }
-          }
         }
-      }
     }
-    return super.onTouchEvent(paramMotionEvent);
-  }
-  
-  public int pointToPosition(int paramInt1, int paramInt2)
-  {
-    Rect localRect2 = this.touchFrame;
-    Rect localRect1 = localRect2;
-    if (localRect2 == null)
-    {
-      this.touchFrame = new Rect();
-      localRect1 = this.touchFrame;
+
+    private void performDragEvent(int x, int y, int offset) {
+        LogUtil.m15791e(TAG, "performDragEvent()......................enter");
+        int pointToPosition = pointToPosition(x, y);
+        this.dragPosition = pointToPosition;
+        this.startPosition = pointToPosition;
+        this.lastPosition = pointToPosition;
+        if (!isDragPositionValid(this.dragPosition)) {
+            this.isDragEnable = false;
+        }
+        if (!this.bHasGetSapcing) {
+            getSpacing();
+        }
+        ViewGroup dragger = (ViewGroup) getChildAt(this.dragPosition - getFirstVisiblePosition());
+        this.dragPoint = y - dragger.getTop();
+        this.dragOffset = offset;
+        int[] location = new int[2];
+        dragger.getLocationOnScreen(location);
+        int imageX = location[0] - 10;
+        dragger.destroyDrawingCache();
+        dragger.setDrawingCacheEnabled(true);
+        if (dragger.getBackground() != null) {
+            dragger.getBackground().setAlpha(80);
+        }
+        Bitmap bm = Bitmap.createBitmap(dragger.getDrawingCache(true));
+        dragger.setVisibility(4);
+        startDrag(bm, imageX, y);
     }
-    int i = getChildCount() - 1;
-    while (i >= 0)
-    {
-      getChildAt(i).getHitRect(localRect1);
-      if (localRect1.contains(paramInt1, paramInt2)) {
-        return getFirstVisiblePosition() + i;
-      }
-      i -= 1;
+
+    public Animation getScaleAnimation() {
+        Animation scaleAnimation = new ScaleAnimation(0.0f, 0.0f, 0.0f, 0.0f, 1, 0.5f, 1, 0.5f);
+        scaleAnimation.setFillAfter(true);
+        return scaleAnimation;
     }
-    return -1;
-  }
-  
-  public void setLock(boolean paramBoolean)
-  {
-    this.isLock = paramBoolean;
-  }
-  
-  public void setVisibility(int paramInt)
-  {
-    stopDrag();
-    super.setVisibility(paramInt);
-  }
-  
-  public void stopDrag()
-  {
-    if (this.dragImageView != null)
-    {
-      this.windowManager.removeView(this.dragImageView);
-      this.dragImageView = null;
+
+    public boolean onTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case 0:
+                this.lastDownX = (int) ev.getX();
+                this.lastDownY = (int) ev.getY();
+                int absoScreenx = (int) ev.getRawX();
+                if (isDragPositionValid(pointToPosition(this.lastDownX, this.lastDownY))) {
+                    this.offsetY = (int) (ev.getRawY() - ((float) this.lastDownY));
+                    this.isMove = false;
+                    this.isRelease = false;
+                    if (this.dragType != DragType.LONG_CLICK) {
+                        View dragItemView = findViewById(C0965R.id.iv_drag);
+                        int[] location = new int[2];
+                        dragItemView.getLocationOnScreen(location);
+                        if (absoScreenx > location[0] - 20 && absoScreenx < (location[0] + dragItemView.getWidth()) + 20) {
+                            this.mIsOccpy = true;
+                            this.isDragEnable = true;
+                            performDragEvent(this.lastDownX, this.lastDownY, this.offsetY);
+                            StatisticManager.onEvent(StatisticConstants.ROUTE_DRAGSORT, StatisticConstants.ROUTE_DRAGSORT);
+                            break;
+                        }
+                    }
+                    this.isDragEnable = false;
+                    this.clickCount++;
+                    postDelayed(this.longClickRunnable, (long) ViewConfiguration.getLongPressTimeout());
+                    break;
+                }
+                break;
+            case 1:
+                if (this.isDragEnable && this.dragImageView != null && isDragPositionValid(this.dragPosition)) {
+                    int upY = (int) ev.getY();
+                    stopDrag();
+                    onDrop(upY);
+                } else {
+                    this.isRelease = true;
+                }
+                this.mIsOccpy = false;
+                break;
+            case 2:
+                int moveY = (int) ev.getY();
+                if (!this.isMove || !this.isDragEnable || this.dragImageView == null || !isDragPositionValid(this.dragPosition)) {
+                    if (Math.abs(((float) this.lastDownX) - ev.getX()) > 20.0f || Math.abs(((float) this.lastDownY) - ev.getY()) > 20.0f) {
+                        this.isMove = true;
+                        break;
+                    }
+                } else if (isDragPositionValid(pointToPosition(0, moveY))) {
+                    onDrag(moveY);
+                    testAnimation(moveY);
+                    break;
+                }
+                break;
+            default:
+                this.mIsOccpy = false;
+                stopDrag();
+                break;
+        }
+        if (this.isDragEnable && this.dragImageView != null && isDragPositionValid(this.dragPosition)) {
+            return true;
+        }
+        return super.onTouchEvent(ev);
     }
-    this.isSameDragDirection = true;
-    this.lastFlag = -1;
-    ListAdapter localListAdapter = getWrappedAdapter();
-    if ((localListAdapter instanceof BaseAdapter)) {
-      ((BaseAdapter)localListAdapter).notifyDataSetChanged();
+
+    private void onChangeCopy(int last, int current) {
+        ListAdapter adapter = getWrappedAdapter();
+        if (last != current && (adapter instanceof OnDragAdapterListener)) {
+            ((OnDragAdapterListener) adapter).onExchange(last - getFirstVisiblePosition(), current - getFirstVisiblePosition());
+        }
     }
-  }
-  
-  static enum DragType
-  {
-    ITEM_CLICK,  LONG_CLICK;
-    
-    private DragType() {}
-  }
+
+    private void testAnimation(int y) {
+        int tempPosition = pointToPosition(0, y);
+        if (tempPosition == 0) {
+            LogUtil.m15791e(TAG, "0");
+        }
+        if (isDragPositionValid(tempPosition) && tempPosition != this.lastPosition) {
+            LogUtil.m15791e(TAG, "Before:position valid");
+            this.dragPosition = tempPosition;
+            LogUtil.m15791e(TAG, "Before:lastPosition=" + this.lastPosition + ", dragPosition=" + this.dragPosition);
+            onChangeCopy(this.lastPosition, this.dragPosition);
+            int moveNum = tempPosition - this.lastPosition;
+            int count = Math.abs(moveNum);
+            for (int i = 1; i <= count; i++) {
+                int xAbsOffset;
+                int yAbsOffset;
+                Animation animation;
+                if (moveNum > 0) {
+                    if (this.lastFlag == -1) {
+                        this.lastFlag = 0;
+                        this.isSameDragDirection = true;
+                    } else if (this.lastFlag == 1) {
+                        this.lastFlag = 0;
+                        this.isSameDragDirection = !this.isSameDragDirection;
+                    }
+                    if (this.isSameDragDirection) {
+                        this.holdPosition = this.lastPosition + 1;
+                    } else if (this.startPosition < tempPosition) {
+                        this.holdPosition = this.lastPosition + 1;
+                        this.isSameDragDirection = !this.isSameDragDirection;
+                    } else {
+                        this.holdPosition = this.lastPosition;
+                    }
+                    xAbsOffset = 0;
+                    yAbsOffset = -this.mItemVerticalSpacing;
+                    this.lastPosition++;
+                } else {
+                    if (this.lastFlag == -1) {
+                        this.lastFlag = 1;
+                        this.isSameDragDirection = true;
+                    }
+                    if (this.lastFlag == 0) {
+                        boolean z;
+                        this.lastFlag = 1;
+                        if (this.isSameDragDirection) {
+                            z = false;
+                        } else {
+                            z = true;
+                        }
+                        this.isSameDragDirection = z;
+                    }
+                    if (this.isSameDragDirection) {
+                        this.holdPosition = this.lastPosition - 1;
+                    } else if (this.startPosition > tempPosition) {
+                        this.holdPosition = this.lastPosition - 1;
+                        this.isSameDragDirection = !this.isSameDragDirection;
+                    } else {
+                        this.holdPosition = this.lastPosition;
+                    }
+                    xAbsOffset = 0;
+                    yAbsOffset = this.mItemVerticalSpacing;
+                    this.lastPosition--;
+                }
+                ViewGroup moveView = (ViewGroup) getChildAt(this.holdPosition - getFirstVisiblePosition());
+                if (this.isSameDragDirection) {
+                    animation = getFromSelfAnimation(xAbsOffset, yAbsOffset);
+                } else {
+                    animation = getToSelfAnimation(xAbsOffset, -yAbsOffset);
+                }
+                moveView.startAnimation(animation);
+            }
+            Log.d(TAG, "After:lastPosition=" + this.lastPosition + ", dragPosition=" + this.dragPosition);
+        }
+    }
+
+    private boolean isDragPositionValid(int dragPosition) {
+        int count = getAdapter().getCount();
+        if (dragPosition == -1 || dragPosition + 1 <= getUnableDragStartCount() || count - dragPosition <= getUnableDragEndCount()) {
+            return false;
+        }
+        return true;
+    }
+
+    private int getUnableDragStartCount() {
+        return this.unableDragStartCount + getFirstVisiblePosition();
+    }
+
+    private int getUnableDragEndCount() {
+        return this.unableDragEndCount + getFooterViewsCount();
+    }
+
+    public int pointToPosition(int x, int y) {
+        Rect frame = this.touchFrame;
+        if (frame == null) {
+            this.touchFrame = new Rect();
+            frame = this.touchFrame;
+        }
+        for (int i = getChildCount() - 1; i >= 0; i--) {
+            getChildAt(i).getHitRect(frame);
+            if (frame.contains(x, y)) {
+                return getFirstVisiblePosition() + i;
+            }
+        }
+        return -1;
+    }
+
+    private void startDrag(Bitmap bm, int imageX, int y) {
+        this.windowParams = new LayoutParams();
+        this.windowParams.gravity = 48;
+        this.windowParams.x = imageX;
+        this.windowParams.y = (y - this.dragPoint) + this.dragOffset;
+        this.windowParams.width = -2;
+        this.windowParams.height = -2;
+        this.windowParams.flags = 408;
+        this.windowParams.windowAnimations = 0;
+        this.windowParams.alpha = 0.8f;
+        this.windowParams.format = -3;
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageBitmap(bm);
+        this.windowManager.addView(imageView, this.windowParams);
+        this.dragImageView = imageView;
+    }
+
+    public void onDrag(int y) {
+        int dragTop = y - this.dragPoint;
+        if (this.dragImageView != null && dragTop >= 0) {
+            this.windowParams.alpha = 1.0f;
+            this.windowParams.y = (y - this.dragPoint) + this.dragOffset;
+            this.windowManager.updateViewLayout(this.dragImageView, this.windowParams);
+        }
+        doScroller(y);
+    }
+
+    public void doScroller(int y) {
+        if (y < this.upScrollBounce) {
+            this.currentStep = ((this.upScrollBounce - y) / 10) + 1;
+        } else if (y > this.downScrollBounce) {
+            this.currentStep = (-((y - this.downScrollBounce) + 1)) / 10;
+        } else {
+            this.currentStep = 0;
+        }
+        setSelectionFromTop(this.dragPosition, getChildAt(this.dragPosition - getFirstVisiblePosition()).getTop() + this.currentStep);
+    }
+
+    public void stopDrag() {
+        if (this.dragImageView != null) {
+            this.windowManager.removeView(this.dragImageView);
+            this.dragImageView = null;
+        }
+        this.isSameDragDirection = true;
+        this.lastFlag = -1;
+        ListAdapter adapter = getWrappedAdapter();
+        if (adapter instanceof BaseAdapter) {
+            ((BaseAdapter) adapter).notifyDataSetChanged();
+        }
+    }
+
+    public void onDrop(int y) {
+        onDrop(0, y);
+    }
+
+    private void onDrop(int x, int y) {
+        ListAdapter adapter = getWrappedAdapter();
+        if (adapter instanceof OnDragAdapterListener) {
+            ((BaseAdapter) adapter).notifyDataSetChanged();
+        }
+    }
+
+    private ListAdapter getWrappedAdapter() {
+        ListAdapter adapter = getAdapter();
+        if (adapter == null || !(adapter instanceof HeaderViewListAdapter)) {
+            return adapter;
+        }
+        return ((HeaderViewListAdapter) adapter).getWrappedAdapter();
+    }
+
+    public Animation getFromSelfAnimation(int x, int y) {
+        TranslateAnimation go = new TranslateAnimation(1, 0.0f, 0, (float) x, 1, 0.0f, 0, (float) y);
+        go.setInterpolator(new AccelerateDecelerateInterpolator());
+        go.setFillAfter(true);
+        go.setDuration(200);
+        go.setInterpolator(new AccelerateInterpolator());
+        return go;
+    }
+
+    public Animation getToSelfAnimation(int x, int y) {
+        TranslateAnimation go = new TranslateAnimation(0, (float) x, 1, 0.0f, 0, (float) y, 1, 0.0f);
+        go.setInterpolator(new AccelerateDecelerateInterpolator());
+        go.setFillAfter(true);
+        go.setDuration(200);
+        go.setInterpolator(new AccelerateInterpolator());
+        return go;
+    }
+
+    public void setVisibility(int visibility) {
+        stopDrag();
+        super.setVisibility(visibility);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/draglistview/DragListView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -6,160 +6,129 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public final class JsonArray
-  extends JsonElement
-  implements Iterable<JsonElement>
-{
-  private final List<JsonElement> elements = new ArrayList();
-  
-  public void add(JsonElement paramJsonElement)
-  {
-    Object localObject = paramJsonElement;
-    if (paramJsonElement == null) {
-      localObject = JsonNull.INSTANCE;
+public final class JsonArray extends JsonElement implements Iterable<JsonElement> {
+    private final List<JsonElement> elements = new ArrayList();
+
+    JsonArray deepCopy() {
+        JsonArray result = new JsonArray();
+        for (JsonElement element : this.elements) {
+            result.add(element.deepCopy());
+        }
+        return result;
     }
-    this.elements.add(localObject);
-  }
-  
-  public void addAll(JsonArray paramJsonArray)
-  {
-    this.elements.addAll(paramJsonArray.elements);
-  }
-  
-  JsonArray deepCopy()
-  {
-    JsonArray localJsonArray = new JsonArray();
-    Iterator localIterator = this.elements.iterator();
-    while (localIterator.hasNext()) {
-      localJsonArray.add(((JsonElement)localIterator.next()).deepCopy());
+
+    public void add(JsonElement element) {
+        if (element == null) {
+            element = JsonNull.INSTANCE;
+        }
+        this.elements.add(element);
     }
-    return localJsonArray;
-  }
-  
-  public boolean equals(Object paramObject)
-  {
-    return (paramObject == this) || (((paramObject instanceof JsonArray)) && (((JsonArray)paramObject).elements.equals(this.elements)));
-  }
-  
-  public JsonElement get(int paramInt)
-  {
-    return (JsonElement)this.elements.get(paramInt);
-  }
-  
-  public BigDecimal getAsBigDecimal()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsBigDecimal();
+
+    public void addAll(JsonArray array) {
+        this.elements.addAll(array.elements);
     }
-    throw new IllegalStateException();
-  }
-  
-  public BigInteger getAsBigInteger()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsBigInteger();
+
+    public int size() {
+        return this.elements.size();
     }
-    throw new IllegalStateException();
-  }
-  
-  public boolean getAsBoolean()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsBoolean();
+
+    public Iterator<JsonElement> iterator() {
+        return this.elements.iterator();
     }
-    throw new IllegalStateException();
-  }
-  
-  public byte getAsByte()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsByte();
+
+    public JsonElement get(int i) {
+        return (JsonElement) this.elements.get(i);
     }
-    throw new IllegalStateException();
-  }
-  
-  public char getAsCharacter()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsCharacter();
+
+    public Number getAsNumber() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsNumber();
+        }
+        throw new IllegalStateException();
     }
-    throw new IllegalStateException();
-  }
-  
-  public double getAsDouble()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsDouble();
+
+    public String getAsString() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsString();
+        }
+        throw new IllegalStateException();
     }
-    throw new IllegalStateException();
-  }
-  
-  public float getAsFloat()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsFloat();
+
+    public double getAsDouble() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsDouble();
+        }
+        throw new IllegalStateException();
     }
-    throw new IllegalStateException();
-  }
-  
-  public int getAsInt()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsInt();
+
+    public BigDecimal getAsBigDecimal() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsBigDecimal();
+        }
+        throw new IllegalStateException();
     }
-    throw new IllegalStateException();
-  }
-  
-  public long getAsLong()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsLong();
+
+    public BigInteger getAsBigInteger() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsBigInteger();
+        }
+        throw new IllegalStateException();
     }
-    throw new IllegalStateException();
-  }
-  
-  public Number getAsNumber()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsNumber();
+
+    public float getAsFloat() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsFloat();
+        }
+        throw new IllegalStateException();
     }
-    throw new IllegalStateException();
-  }
-  
-  public short getAsShort()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsShort();
+
+    public long getAsLong() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsLong();
+        }
+        throw new IllegalStateException();
     }
-    throw new IllegalStateException();
-  }
-  
-  public String getAsString()
-  {
-    if (this.elements.size() == 1) {
-      return ((JsonElement)this.elements.get(0)).getAsString();
+
+    public int getAsInt() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsInt();
+        }
+        throw new IllegalStateException();
     }
-    throw new IllegalStateException();
-  }
-  
-  public int hashCode()
-  {
-    return this.elements.hashCode();
-  }
-  
-  public Iterator<JsonElement> iterator()
-  {
-    return this.elements.iterator();
-  }
-  
-  public int size()
-  {
-    return this.elements.size();
-  }
+
+    public byte getAsByte() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsByte();
+        }
+        throw new IllegalStateException();
+    }
+
+    public char getAsCharacter() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsCharacter();
+        }
+        throw new IllegalStateException();
+    }
+
+    public short getAsShort() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsShort();
+        }
+        throw new IllegalStateException();
+    }
+
+    public boolean getAsBoolean() {
+        if (this.elements.size() == 1) {
+            return ((JsonElement) this.elements.get(0)).getAsBoolean();
+        }
+        throw new IllegalStateException();
+    }
+
+    public boolean equals(Object o) {
+        return o == this || ((o instanceof JsonArray) && ((JsonArray) o).elements.equals(this.elements));
+    }
+
+    public int hashCode() {
+        return this.elements.hashCode();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/JsonArray.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

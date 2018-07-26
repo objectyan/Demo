@@ -1,14 +1,11 @@
 package com.baidu.navisdk.util.drivertool.view;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
-import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.util.common.NetworkUtils;
@@ -26,106 +24,108 @@ import com.baidu.navisdk.util.common.ScreenUtil;
 import com.baidu.navisdk.util.drivertool.BNDrivingToolManager;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class BNDrivingToolSettingDialog
-  extends Dialog
-{
-  private ToggleButton mToggleBtn;
-  private Button mUploadBtn;
-  
-  public BNDrivingToolSettingDialog(Context paramContext)
-  {
-    super(paramContext);
-    Object localObject = JarUtils.getResources().newTheme();
-    ((Resources.Theme)localObject).applyStyle(1711996937, true);
-    JarUtils.setDialogThemeField(this, (Resources.Theme)localObject);
-    paramContext = JarUtils.inflate((Activity)paramContext, 1711472676, null);
-    setContentView(paramContext);
-    this.mToggleBtn = ((ToggleButton)paramContext.findViewById(1711866120));
-    this.mToggleBtn.setChecked(BNSettingManager.isRecordingHighDefinition());
-    this.mUploadBtn = ((Button)paramContext.findViewById(1711866122));
-    paramContext = getWindow();
-    localObject = paramContext.getAttributes();
-    ((WindowManager.LayoutParams)localObject).width = (ScreenUtil.getInstance().getWidthPixels() / 3 * 2);
-    ((WindowManager.LayoutParams)localObject).height = (ScreenUtil.getInstance().getHeightPixels() / 4);
-    ((WindowManager.LayoutParams)localObject).gravity = 17;
-    paramContext.setAttributes((WindowManager.LayoutParams)localObject);
-    paramContext.setGravity(17);
-    initListener();
-  }
-  
-  private void initListener()
-  {
-    if (this.mToggleBtn != null) {
-      this.mToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-      {
-        public void onCheckedChanged(CompoundButton paramAnonymousCompoundButton, boolean paramAnonymousBoolean)
-        {
-          if (paramAnonymousBoolean)
-          {
-            BNSettingManager.setRecordingHighDefinition(true);
-            return;
-          }
-          BNSettingManager.setRecordingHighDefinition(false);
+public class BNDrivingToolSettingDialog extends Dialog {
+    private ToggleButton mToggleBtn;
+    private Button mUploadBtn;
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolSettingDialog$1 */
+    class C46951 implements OnCheckedChangeListener {
+        C46951() {
         }
-      });
-    }
-    if (this.mUploadBtn != null) {
-      this.mUploadBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(final View paramAnonymousView)
-        {
-          if (!NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext())) {
-            TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), JarUtils.getResources().getString(1711670296));
-          }
-          boolean bool;
-          do
-          {
-            return;
-            BNDrivingToolSettingDialog.this.dismiss();
-            BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(false);
-            bool = NetworkUtils.isWifiConnected();
-            paramAnonymousView = BNaviModuleManager.getNaviActivity();
-          } while (paramAnonymousView == null);
-          if (bool)
-          {
-            BNDrivingToolManager.getInstance().uploadLocalMaterial(paramAnonymousView);
-            return;
-          }
-          AlertDialog.Builder localBuilder = new AlertDialog.Builder(paramAnonymousView);
-          localBuilder.setMessage(JarUtils.getResources().getString(1711670297));
-          localBuilder.setTitle("提示");
-          localBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener()
-          {
-            public void onClick(DialogInterface paramAnonymous2DialogInterface, int paramAnonymous2Int)
-            {
-              paramAnonymous2DialogInterface.dismiss();
-              BNDrivingToolManager.getInstance().uploadLocalMaterial(paramAnonymousView);
+
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                BNSettingManager.setRecordingHighDefinition(true);
+            } else {
+                BNSettingManager.setRecordingHighDefinition(false);
             }
-          });
-          localBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener()
-          {
-            public void onClick(DialogInterface paramAnonymous2DialogInterface, int paramAnonymous2Int)
-            {
-              paramAnonymous2DialogInterface.dismiss();
-              BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
-            }
-          });
-          localBuilder.setOnDismissListener(new DialogInterface.OnDismissListener()
-          {
-            public void onDismiss(DialogInterface paramAnonymous2DialogInterface)
-            {
-              BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
-            }
-          });
-          localBuilder.create().show();
         }
-      });
     }
-  }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolSettingDialog$2 */
+    class C46992 implements OnClickListener {
+
+        /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolSettingDialog$2$2 */
+        class C46972 implements DialogInterface.OnClickListener {
+            C46972() {
+            }
+
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
+            }
+        }
+
+        /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolSettingDialog$2$3 */
+        class C46983 implements OnDismissListener {
+            C46983() {
+            }
+
+            public void onDismiss(DialogInterface dialog) {
+                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
+            }
+        }
+
+        C46992() {
+        }
+
+        public void onClick(View v) {
+            if (NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext())) {
+                BNDrivingToolSettingDialog.this.dismiss();
+                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(false);
+                boolean isWifiAvalible = NetworkUtils.isWifiConnected();
+                final Context ctx = BNaviModuleManager.getNaviActivity();
+                if (ctx == null) {
+                    return;
+                }
+                if (isWifiAvalible) {
+                    BNDrivingToolManager.getInstance().uploadLocalMaterial(ctx);
+                    return;
+                }
+                Builder builder = new Builder(ctx);
+                builder.setMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_driving_tool_no_wifi_upload));
+                builder.setTitle("提示");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        BNDrivingToolManager.getInstance().uploadLocalMaterial(ctx);
+                    }
+                });
+                builder.setNegativeButton("取消", new C46972());
+                builder.setOnDismissListener(new C46983());
+                builder.create().show();
+                return;
+            }
+            TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), JarUtils.getResources().getString(C4048R.string.nsdk_string_driving_tool_no_network));
+        }
+    }
+
+    public BNDrivingToolSettingDialog(Context context) {
+        super(context);
+        Theme theme = JarUtils.getResources().newTheme();
+        theme.applyStyle(C4048R.style.BNDialog, true);
+        JarUtils.setDialogThemeField(this, theme);
+        View view = JarUtils.inflate((Activity) context, C4048R.layout.nsdk_layout_driving_tool_setting, null);
+        setContentView(view);
+        this.mToggleBtn = (ToggleButton) view.findViewById(C4048R.id.video_defination_switch);
+        this.mToggleBtn.setChecked(BNSettingManager.isRecordingHighDefinition());
+        this.mUploadBtn = (Button) view.findViewById(C4048R.id.upload_material_btn);
+        Window window = getWindow();
+        LayoutParams lp = window.getAttributes();
+        lp.width = (ScreenUtil.getInstance().getWidthPixels() / 3) * 2;
+        lp.height = ScreenUtil.getInstance().getHeightPixels() / 4;
+        lp.gravity = 17;
+        window.setAttributes(lp);
+        window.setGravity(17);
+        initListener();
+    }
+
+    private void initListener() {
+        if (this.mToggleBtn != null) {
+            this.mToggleBtn.setOnCheckedChangeListener(new C46951());
+        }
+        if (this.mUploadBtn != null) {
+            this.mUploadBtn.setOnClickListener(new C46992());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/drivertool/view/BNDrivingToolSettingDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

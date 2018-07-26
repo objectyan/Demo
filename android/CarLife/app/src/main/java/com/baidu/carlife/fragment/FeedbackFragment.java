@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -30,733 +28,734 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.custom.a;
-import com.baidu.carlife.k.a.e.a;
-import com.baidu.carlife.k.d;
-import com.baidu.carlife.util.r;
-import com.baidu.carlife.util.w;
-import com.baidu.carlife.view.dialog.c;
-import com.baidu.carlife.view.dialog.h;
-import com.baidu.carlife.view.dialog.h.a;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.p054k.C1643d;
+import com.baidu.carlife.p054k.p055a.C1626e.C0924a;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.carlife.util.C2201w;
+import com.baidu.carlife.view.dialog.C1953c;
+import com.baidu.carlife.view.dialog.C2288h;
+import com.baidu.carlife.view.dialog.C2288h.C1464a;
 import com.baidu.navi.controller.FeedbackController;
 import com.baidu.navi.fragment.BaseFragment;
 import com.baidu.navi.fragment.ContentFragment;
-import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.util.common.NetworkUtils;
 import com.baidu.navisdk.util.common.PreferenceHelper;
 import com.baidu.navisdk.util.common.StringUtils;
+import com.baidu.navisdk.util.drivertool.BNDrivingToolParams;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.UUID;
 
-public class FeedbackFragment
-  extends ContentFragment
-  implements View.OnClickListener
-{
-  private static final int b = 400;
-  private static final int c = 4;
-  private static final String d = "key_content";
-  private static final String e = "key_contact";
-  private static final String f = "key_type";
-  private static final String g = "28170";
-  private static final String h = "28172";
-  private static final String i = "28171";
-  private static final int j = 40;
-  private String A = "28170";
-  private GridView B;
-  private a C;
-  private LayoutInflater D;
-  private String E;
-  private String F;
-  private Animation G;
-  private e.a H = new e.a()
-  {
-    public void onNetWorkResponse(int paramAnonymousInt)
-    {
-      if (!FeedbackFragment.this.isAdded()) {
-        return;
-      }
-      FeedbackFragment.a(FeedbackFragment.this, true);
-      if (paramAnonymousInt == 0)
-      {
-        if (FeedbackFragment.a(FeedbackFragment.this) != null) {
-          FeedbackFragment.a(FeedbackFragment.this).setText("");
+public class FeedbackFragment extends ContentFragment implements OnClickListener {
+    /* renamed from: b */
+    private static final int f4304b = 400;
+    /* renamed from: c */
+    private static final int f4305c = 4;
+    /* renamed from: d */
+    private static final String f4306d = "key_content";
+    /* renamed from: e */
+    private static final String f4307e = "key_contact";
+    /* renamed from: f */
+    private static final String f4308f = "key_type";
+    /* renamed from: g */
+    private static final String f4309g = "28170";
+    /* renamed from: h */
+    private static final String f4310h = "28172";
+    /* renamed from: i */
+    private static final String f4311i = "28171";
+    /* renamed from: j */
+    private static final int f4312j = 40;
+    /* renamed from: A */
+    private String f4313A = f4309g;
+    /* renamed from: B */
+    private GridView f4314B;
+    /* renamed from: C */
+    private C1469a f4315C;
+    /* renamed from: D */
+    private LayoutInflater f4316D;
+    /* renamed from: E */
+    private String f4317E;
+    /* renamed from: F */
+    private String f4318F;
+    /* renamed from: G */
+    private Animation f4319G;
+    /* renamed from: H */
+    private C0924a f4320H = new C14561(this);
+    /* renamed from: I */
+    private C1464a f4321I = new C14659(this);
+    /* renamed from: a */
+    public C0924a f4322a = new C14572(this);
+    /* renamed from: k */
+    private EditText f4323k;
+    /* renamed from: l */
+    private EditText f4324l;
+    /* renamed from: m */
+    private boolean f4325m = false;
+    /* renamed from: n */
+    private RelativeLayout f4326n;
+    /* renamed from: o */
+    private TextView f4327o;
+    /* renamed from: p */
+    private ImageView f4328p;
+    /* renamed from: q */
+    private ImageView f4329q;
+    /* renamed from: r */
+    private ImageButton f4330r;
+    /* renamed from: s */
+    private TextView f4331s;
+    /* renamed from: t */
+    private TextView f4332t;
+    /* renamed from: u */
+    private LinearLayout f4333u;
+    /* renamed from: v */
+    private LinearLayout f4334v;
+    /* renamed from: w */
+    private LinearLayout f4335w;
+    /* renamed from: x */
+    private ImageView f4336x;
+    /* renamed from: y */
+    private ImageView f4337y;
+    /* renamed from: z */
+    private ImageView f4338z;
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$1 */
+    class C14561 implements C0924a {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4287a;
+
+        C14561(FeedbackFragment this$0) {
+            this.f4287a = this$0;
         }
-        if (FeedbackFragment.b(FeedbackFragment.this) != null) {
-          FeedbackFragment.b(FeedbackFragment.this).setText("");
+
+        public void onNetWorkResponse(int responseCode) {
+            if (this.f4287a.isAdded()) {
+                this.f4287a.m5342a(true);
+                if (responseCode == 0) {
+                    if (this.f4287a.f4323k != null) {
+                        this.f4287a.f4323k.setText("");
+                    }
+                    if (this.f4287a.f4324l != null) {
+                        this.f4287a.f4324l.setText("");
+                    }
+                    this.f4287a.f4313A = FeedbackFragment.f4309g;
+                    TipTool.onCreateToastDialog(BaseFragment.mActivity, StyleManager.getString(C0965R.string.feedback_success));
+                    this.f4287a.onBackPressed();
+                    return;
+                }
+                this.f4287a.m5366a(this.f4287a.getStringUtil(C0965R.string.feedback_failure));
+            }
         }
-        FeedbackFragment.a(FeedbackFragment.this, "28170");
-        TipTool.onCreateToastDialog(BaseFragment.mActivity, StyleManager.getString(2131296470));
-        FeedbackFragment.this.onBackPressed();
-        return;
-      }
-      FeedbackFragment.this.a(FeedbackFragment.this.getStringUtil(2131296469));
     }
-  };
-  private h.a I = new h.a()
-  {
-    public void a(int paramAnonymousInt) {}
-    
-    public void b(int paramAnonymousInt) {}
-    
-    public void c(int paramAnonymousInt) {}
-    
-    public void d(int paramAnonymousInt) {}
-    
-    public void e(int paramAnonymousInt)
-    {
-      if (paramAnonymousInt == 0) {
-        FeedbackFragment.this.b();
-      }
-      while (paramAnonymousInt != 1) {
-        return;
-      }
-      FeedbackFragment.this.a();
-    }
-  };
-  public e.a a = new e.a()
-  {
-    public void onNetWorkResponse(int paramAnonymousInt)
-    {
-      if (!FeedbackFragment.this.isAdded()) {
-        return;
-      }
-      if (paramAnonymousInt == 0)
-      {
-        FeedbackController.getInstance().startUploadFeedback(FeedbackFragment.c(FeedbackFragment.this), FeedbackFragment.d(FeedbackFragment.this), FeedbackFragment.e(FeedbackFragment.this), FeedbackFragment.f(FeedbackFragment.this), BaseFragment.getNaviActivity());
-        return;
-      }
-      FeedbackFragment.a(FeedbackFragment.this, true);
-      FeedbackFragment.this.a(FeedbackFragment.this.getStringUtil(2131296469));
-    }
-  };
-  private EditText k;
-  private EditText l;
-  private boolean m = false;
-  private RelativeLayout n;
-  private TextView o;
-  private ImageView p;
-  private ImageView q;
-  private ImageButton r;
-  private TextView s;
-  private TextView t;
-  private LinearLayout u;
-  private LinearLayout v;
-  private LinearLayout w;
-  private ImageView x;
-  private ImageView y;
-  private ImageView z;
-  
-  private void a(View paramView)
-  {
-    this.n = ((RelativeLayout)paramView.findViewById(2131624116));
-    this.o = ((TextView)paramView.findViewById(2131624750));
-    this.p = ((ImageView)paramView.findViewById(2131624749));
-    this.l = ((EditText)paramView.findViewById(2131624102));
-    this.k = ((EditText)paramView.findViewById(2131624115));
-    this.u = ((LinearLayout)paramView.findViewById(2131624739));
-    this.v = ((LinearLayout)paramView.findViewById(2131624741));
-    this.w = ((LinearLayout)paramView.findViewById(2131624743));
-    this.x = ((ImageView)paramView.findViewById(2131624740));
-    this.y = ((ImageView)paramView.findViewById(2131624742));
-    this.z = ((ImageView)paramView.findViewById(2131624744));
-    this.r = ((ImageButton)paramView.findViewById(2131624258));
-    this.s = ((TextView)paramView.findViewById(2131624746));
-    this.t = ((TextView)paramView.findViewById(2131624748));
-    this.B = ((GridView)paramView.findViewById(2131624104));
-    if (FeedbackController.getInstance().getmPicList().isEmpty()) {
-      FeedbackController.getInstance().getmPicList().add(null);
-    }
-    this.C = new a();
-    this.B.setAdapter(this.C);
-    this.k.clearFocus();
-  }
-  
-  private void a(ImageView paramImageView)
-  {
-    this.z.setBackgroundResource(2130838317);
-    this.y.setBackgroundResource(2130838317);
-    this.x.setBackgroundResource(2130838317);
-    paramImageView.setBackgroundResource(2130838316);
-  }
-  
-  private void a(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      this.n.setClickable(true);
-      this.o.setText(getStringUtil(2131296462));
-      this.p.clearAnimation();
-      this.p.setVisibility(8);
-      return;
-    }
-    this.n.setClickable(false);
-    this.o.setText(getStringUtil(2131296463));
-    this.p.startAnimation(this.G);
-    this.p.setVisibility(0);
-  }
-  
-  private boolean a(EditText paramEditText)
-  {
-    int i1 = paramEditText.getScrollY();
-    int i2 = paramEditText.getLayout().getHeight() - (paramEditText.getHeight() - paramEditText.getCompoundPaddingTop() - paramEditText.getCompoundPaddingBottom());
-    if (i2 == 0) {}
-    while ((i1 <= 0) && (i1 >= i2 - 1)) {
-      return false;
-    }
-    return true;
-  }
-  
-  private void b(String paramString)
-  {
-    if ("28172".equals(paramString))
-    {
-      a(this.y);
-      return;
-    }
-    if ("28171".equals(paramString))
-    {
-      a(this.z);
-      return;
-    }
-    a(this.x);
-  }
-  
-  private void c()
-  {
-    View.OnClickListener local3 = new View.OnClickListener()
-    {
-      private long b;
-      
-      public void onClick(View paramAnonymousView)
-      {
-        long l = System.currentTimeMillis() / 1000L;
-        FeedbackFragment.b(FeedbackFragment.this, FeedbackFragment.b(FeedbackFragment.this).getText().toString().trim());
-        FeedbackFragment.c(FeedbackFragment.this, FeedbackFragment.a(FeedbackFragment.this).getText().toString().trim());
-        if (StringUtils.isEmpty(FeedbackFragment.d(FeedbackFragment.this)))
-        {
-          FeedbackFragment.b(FeedbackFragment.this).setText("");
-          FeedbackFragment.this.a(FeedbackFragment.this.getStringUtil(2131296466));
-          return;
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$2 */
+    class C14572 implements C0924a {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4288a;
+
+        C14572(FeedbackFragment this$0) {
+            this.f4288a = this$0;
         }
-        if (FeedbackFragment.d(FeedbackFragment.this).length() > 400)
-        {
-          FeedbackFragment.this.a(FeedbackFragment.this.getStringUtil(2131296467));
-          return;
+
+        public void onNetWorkResponse(int responseCode) {
+            if (!this.f4288a.isAdded()) {
+                return;
+            }
+            if (responseCode == 0) {
+                FeedbackController.getInstance().startUploadFeedback(this.f4288a.f4320H, this.f4288a.f4317E, this.f4288a.f4318F, this.f4288a.f4313A, BaseFragment.getNaviActivity());
+                return;
+            }
+            this.f4288a.m5342a(true);
+            this.f4288a.m5366a(this.f4288a.getStringUtil(C0965R.string.feedback_failure));
         }
-        if (StringUtils.isEmpty(FeedbackFragment.e(FeedbackFragment.this)))
-        {
-          FeedbackFragment.a(FeedbackFragment.this).setText("");
-          FeedbackFragment.this.a(FeedbackFragment.this.getStringUtil(2131296468));
-          return;
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$3 */
+    class C14583 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4289a;
+        /* renamed from: b */
+        private long f4290b;
+
+        C14583(FeedbackFragment this$0) {
+            this.f4289a = this$0;
         }
-        if (FeedbackFragment.e(FeedbackFragment.this).length() > 40)
-        {
-          TipTool.onCreateToastDialog(BaseFragment.mActivity, FeedbackFragment.this.getStringUtil(2131296465));
-          return;
+
+        public void onClick(View v) {
+            long curentTime = System.currentTimeMillis() / 1000;
+            this.f4289a.f4317E = this.f4289a.f4324l.getText().toString().trim();
+            this.f4289a.f4318F = this.f4289a.f4323k.getText().toString().trim();
+            if (StringUtils.isEmpty(this.f4289a.f4317E)) {
+                this.f4289a.f4324l.setText("");
+                this.f4289a.m5366a(this.f4289a.getStringUtil(C0965R.string.feedback_content_error));
+            } else if (this.f4289a.f4317E.length() > 400) {
+                this.f4289a.m5366a(this.f4289a.getStringUtil(C0965R.string.feedback_content_max_length));
+            } else if (StringUtils.isEmpty(this.f4289a.f4318F)) {
+                this.f4289a.f4323k.setText("");
+                this.f4289a.m5366a(this.f4289a.getStringUtil(C0965R.string.feedback_email_hint_carmode));
+            } else if (this.f4289a.f4318F.length() > 40) {
+                TipTool.onCreateToastDialog(BaseFragment.mActivity, this.f4289a.getStringUtil(C0965R.string.feedback_contact_max_length));
+            } else if (NetworkUtils.mConnectState == 0) {
+                TipTool.onCreateToastDialog(BaseFragment.mActivity, StyleManager.getString(C0965R.string.network_unconnected));
+            } else {
+                this.f4290b = curentTime;
+                this.f4289a.m5342a(false);
+                String clientid = PreferenceHelper.getInstance(BaseFragment.getNaviActivity()).getString(C1253f.jE, "");
+                String appid = PreferenceHelper.getInstance(BaseFragment.getNaviActivity()).getString(C1253f.jF, "");
+                String deviceid = PreferenceHelper.getInstance(BaseFragment.getNaviActivity()).getString(C1253f.jG, "");
+                if (TextUtils.isEmpty(clientid) || TextUtils.isEmpty(appid) || TextUtils.isEmpty(deviceid)) {
+                    C1643d feedBackRegisterRequest = new C1643d(this.f4289a.getStringUtil(C0965R.string.app_name), BaseFragment.getNaviActivity());
+                    feedBackRegisterRequest.registerResponseListener(this.f4289a.f4322a);
+                    feedBackRegisterRequest.toPostRequest();
+                    return;
+                }
+                FeedbackController.getInstance().startUploadFeedback(this.f4289a.f4320H, this.f4289a.f4317E, this.f4289a.f4318F, this.f4289a.f4313A, BaseFragment.getNaviActivity());
+            }
         }
-        if (NetworkUtils.mConnectState == 0)
-        {
-          TipTool.onCreateToastDialog(BaseFragment.mActivity, StyleManager.getString(2131296718));
-          return;
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$4 */
+    class C14594 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4291a;
+
+        C14594(FeedbackFragment this$0) {
+            this.f4291a = this$0;
         }
-        this.b = l;
-        FeedbackFragment.a(FeedbackFragment.this, false);
-        paramAnonymousView = PreferenceHelper.getInstance(BaseFragment.getNaviActivity()).getString("feedback_clientid", "");
-        String str1 = PreferenceHelper.getInstance(BaseFragment.getNaviActivity()).getString("feedback_appid", "");
-        String str2 = PreferenceHelper.getInstance(BaseFragment.getNaviActivity()).getString("feedback_deviceid", "");
-        if ((TextUtils.isEmpty(paramAnonymousView)) || (TextUtils.isEmpty(str1)) || (TextUtils.isEmpty(str2)))
-        {
-          paramAnonymousView = new d(FeedbackFragment.this.getStringUtil(2131296296), BaseFragment.getNaviActivity());
-          paramAnonymousView.registerResponseListener(FeedbackFragment.this.a);
-          paramAnonymousView.toPostRequest();
-          return;
+
+        public void onClick(View v) {
+            this.f4291a.onBackPressed();
         }
-        FeedbackController.getInstance().startUploadFeedback(FeedbackFragment.c(FeedbackFragment.this), FeedbackFragment.d(FeedbackFragment.this), FeedbackFragment.e(FeedbackFragment.this), FeedbackFragment.f(FeedbackFragment.this), BaseFragment.getNaviActivity());
-      }
-    };
-    View.OnClickListener local4 = new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        FeedbackFragment.this.onBackPressed();
-      }
-    };
-    this.l.setOnTouchListener(new View.OnTouchListener()
-    {
-      public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-      {
-        if ((paramAnonymousView.getId() == 2131624102) && (FeedbackFragment.a(FeedbackFragment.this, FeedbackFragment.b(FeedbackFragment.this))))
-        {
-          paramAnonymousView.getParent().requestDisallowInterceptTouchEvent(true);
-          if (paramAnonymousMotionEvent.getAction() == 1) {
-            paramAnonymousView.getParent().requestDisallowInterceptTouchEvent(false);
-          }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$5 */
+    class C14605 implements OnTouchListener {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4292a;
+
+        C14605(FeedbackFragment this$0) {
+            this.f4292a = this$0;
+        }
+
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (view.getId() == C0965R.id.edittext_content && this.f4292a.m5343a(this.f4292a.f4324l)) {
+                view.getParent().requestDisallowInterceptTouchEvent(true);
+                if (motionEvent.getAction() == 1) {
+                    view.getParent().requestDisallowInterceptTouchEvent(false);
+                }
+            }
+            return false;
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$6 */
+    class C14616 implements TextWatcher {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4293a;
+
+        C14616(FeedbackFragment this$0) {
+            this.f4293a = this$0;
+        }
+
+        public void afterTextChanged(Editable s) {
+            if (s != null) {
+                this.f4293a.f4331s.setText("" + s.length());
+                if (s.length() > 400) {
+                    this.f4293a.f4331s.setTextColor(C2188r.m8328a((int) C0965R.color.cl_other_a_highlight));
+                } else {
+                    this.f4293a.f4331s.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a1));
+                }
+            }
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$7 */
+    class C14627 implements TextWatcher {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4294a;
+
+        C14627(FeedbackFragment this$0) {
+            this.f4294a = this$0;
+        }
+
+        public void afterTextChanged(Editable s) {
+            if (this.f4294a.f4325m) {
+                this.f4294a.f4325m = false;
+                return;
+            }
+            boolean nOverMaxLength;
+            int nSelStart = this.f4294a.f4323k.getSelectionStart();
+            int nSelEnd = this.f4294a.f4323k.getSelectionEnd();
+            if (s.length() > 40) {
+                nOverMaxLength = true;
+            } else {
+                nOverMaxLength = false;
+            }
+            if (nOverMaxLength) {
+                TipTool.onCreateToastDialog(BaseFragment.mActivity, C0965R.string.feedback_contact_max_length);
+                try {
+                    s.delete(40, nSelEnd);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            String str = s.toString();
+            boolean haveChinese = false;
+            int length = s.length();
+            int offset = 0;
+            for (int i = 0; i < length; i++) {
+                if (str.substring(i, i + 1).matches("[一-龥]")) {
+                    haveChinese = true;
+                    this.f4294a.f4325m = true;
+                    try {
+                        s.delete(i - offset, (i + 1) - offset);
+                        offset++;
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                    }
+                }
+            }
+            if (haveChinese) {
+                TipTool.onCreateToastDialog(BaseFragment.mActivity, C0965R.string.feedback_contact_error);
+            }
+            this.f4294a.f4325m = false;
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$8 */
+    class C14638 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4295a;
+
+        C14638(FeedbackFragment this$0) {
+            this.f4295a = this$0;
+        }
+
+        public void onClick(View v) {
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$9 */
+    class C14659 implements C1464a {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4296a;
+
+        C14659(FeedbackFragment this$0) {
+            this.f4296a = this$0;
+        }
+
+        /* renamed from: a */
+        public void mo1555a(int pos) {
+        }
+
+        /* renamed from: b */
+        public void mo1556b(int pos) {
+        }
+
+        /* renamed from: c */
+        public void mo1557c(int pos) {
+        }
+
+        /* renamed from: d */
+        public void mo1558d(int pos) {
+        }
+
+        /* renamed from: e */
+        public void mo1559e(int pos) {
+            if (pos == 0) {
+                this.f4296a.m5367b();
+            } else if (pos == 1) {
+                this.f4296a.m5365a();
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.FeedbackFragment$a */
+    public class C1469a extends BaseAdapter {
+        /* renamed from: a */
+        final /* synthetic */ FeedbackFragment f4303a;
+
+        public C1469a(FeedbackFragment this$0) {
+            this.f4303a = this$0;
+        }
+
+        public int getCount() {
+            if (FeedbackController.getInstance().getmPicList() == null) {
+                return 0;
+            }
+            this.f4303a.f4332t.setText((FeedbackController.getInstance().getmPicList().size() - 1) + "");
+            return FeedbackController.getInstance().getmPicList().size();
+        }
+
+        public Object getItem(int position) {
+            if (position < FeedbackController.getInstance().getmPicList().size()) {
+                return FeedbackController.getInstance().getmPicList().get(position);
+            }
+            return null;
+        }
+
+        public long getItemId(int position) {
+            return (long) position;
+        }
+
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if (this.f4303a.f4316D == null) {
+                this.f4303a.f4316D = LayoutInflater.from(this.f4303a.getContext());
+            }
+            if (position == FeedbackController.getInstance().getmPicList().size() - 1) {
+                View addView = this.f4303a.f4316D.inflate(C0965R.layout.carlife_feedback_gv_item_add, null);
+                this.f4303a.f4329q = (ImageView) addView.findViewById(C0965R.id.add);
+                if (FeedbackController.getInstance().getmPicList().size() == 4) {
+                    this.f4303a.f4329q.setVisibility(4);
+                }
+                this.f4303a.f4329q.setOnClickListener(new OnClickListener(this) {
+                    /* renamed from: b */
+                    final /* synthetic */ C1469a f4298b;
+
+                    public void onClick(View v) {
+                        if (FeedbackController.getInstance().getmPicList().size() != 4) {
+                            this.f4298b.f4303a.showDialog(new C2288h(BaseFragment.mActivity, 4, position, this.f4298b.f4303a.f4321I));
+                        }
+                    }
+                });
+                return addView;
+            }
+            View picView = this.f4303a.f4316D.inflate(C0965R.layout.carlife_feedback_gv_item_pic, null);
+            ImageView picIBtn = (ImageView) picView.findViewById(C0965R.id.pic);
+            picIBtn.setImageBitmap((Bitmap) FeedbackController.getInstance().getmPicList().get(position));
+            picIBtn.setOnClickListener(new OnClickListener(this) {
+                /* renamed from: b */
+                final /* synthetic */ C1469a f4300b;
+
+                public void onClick(View v) {
+                    FeedbackController.getInstance().openPicSrc(BaseFragment.mActivity, position);
+                }
+            });
+            picView.findViewById(C0965R.id.delete).setOnClickListener(new OnClickListener(this) {
+                /* renamed from: b */
+                final /* synthetic */ C1469a f4302b;
+
+                public void onClick(View v) {
+                    FeedbackController.getInstance().getmPicList().remove(position);
+                    FeedbackController.getInstance().getmPicListPath().remove(position);
+                    this.f4302b.f4303a.f4315C.notifyDataSetChanged();
+                }
+            });
+            return picView;
+        }
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (FeedbackController.getInstance().getmPicList() == null || FeedbackController.getInstance().getmPicListPath() == null) {
+            FeedbackController.getInstance().initPicList();
+        }
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mContentView = inflater.inflate(C0965R.layout.frag_carlife_feedback, null);
+        setCommonTitleBar(this.mContentView, getString(C0965R.string.feedback));
+        m5339a(this.mContentView);
+        return this.mContentView;
+    }
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+        String content;
+        String contact;
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            content = savedInstanceState.getString(f4306d);
+            contact = savedInstanceState.getString(f4307e);
+            if (!(TextUtils.isEmpty(savedInstanceState.getString(f4308f)) || TextUtils.isEmpty(content))) {
+                this.f4313A = savedInstanceState.getString(f4308f);
+            }
+        } else {
+            content = FeedbackController.getInstance().getmContent();
+            contact = FeedbackController.getInstance().getmContact();
+            if (!(TextUtils.isEmpty(FeedbackController.getInstance().getType()) || TextUtils.isEmpty(content))) {
+                this.f4313A = FeedbackController.getInstance().getType();
+            }
+        }
+        if (this.f4323k != null) {
+            this.f4323k.setText(contact);
+        }
+        if (this.f4324l != null) {
+            this.f4324l.setText(content);
+        }
+        if (this.f4331s != null) {
+            if (content == null) {
+                this.f4331s.setText("0");
+            } else {
+                this.f4331s.setText(content.length() + "");
+            }
+        }
+        if (!(this.f4331s == null || content == null)) {
+            if (content.length() > 400) {
+                this.f4331s.setTextColor(C2188r.m8328a((int) C0965R.color.cl_other_a_highlight));
+            } else {
+                this.f4331s.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a1));
+            }
+        }
+        m5347b(this.f4313A);
+        SpannableString contentString = new SpannableString(getStringUtil(C0965R.string.carlife_feedback_content_hint));
+        contentString.setSpan(new AbsoluteSizeSpan(18, true), 0, contentString.length(), 33);
+        this.f4324l.setHint(contentString);
+        SpannableString s = new SpannableString(getStringUtil(C0965R.string.carlife_feedback_email_hint));
+        s.setSpan(new AbsoluteSizeSpan(18, true), 0, s.length(), 33);
+        this.f4323k.setHint(s);
+        this.f4319G = AnimationUtils.loadAnimation(getNaviActivity(), C0965R.anim.feedback_btn_commit);
+        this.f4319G.setInterpolator(new LinearInterpolator());
+    }
+
+    /* renamed from: a */
+    private void m5339a(View view) {
+        this.f4326n = (RelativeLayout) view.findViewById(C0965R.id.feedback_commit);
+        this.f4327o = (TextView) view.findViewById(C0965R.id.feedback_commit_tv);
+        this.f4328p = (ImageView) view.findViewById(C0965R.id.feedback_commit_iv);
+        this.f4324l = (EditText) view.findViewById(C0965R.id.edittext_content);
+        this.f4323k = (EditText) view.findViewById(C0965R.id.edittext_email);
+        this.f4333u = (LinearLayout) view.findViewById(C0965R.id.feedback_linear_function_exection);
+        this.f4334v = (LinearLayout) view.findViewById(C0965R.id.feedback_linear_function_suggest);
+        this.f4335w = (LinearLayout) view.findViewById(C0965R.id.feedback_linear_other_question);
+        this.f4336x = (ImageView) view.findViewById(C0965R.id.feedback_iv_function_exection);
+        this.f4337y = (ImageView) view.findViewById(C0965R.id.feedback_iv_function_suggest);
+        this.f4338z = (ImageView) view.findViewById(C0965R.id.feedback_iv_other_question);
+        this.f4330r = (ImageButton) view.findViewById(C0965R.id.ib_left);
+        this.f4331s = (TextView) view.findViewById(C0965R.id.calife_edittext_content_num_count);
+        this.f4332t = (TextView) view.findViewById(C0965R.id.feedback_image_count);
+        this.f4314B = (GridView) view.findViewById(C0965R.id.gridView);
+        if (FeedbackController.getInstance().getmPicList().isEmpty()) {
+            FeedbackController.getInstance().getmPicList().add(null);
+        }
+        this.f4315C = new C1469a(this);
+        this.f4314B.setAdapter(this.f4315C);
+        this.f4323k.clearFocus();
+    }
+
+    protected void onInitView() {
+        m5351c();
+        m5355e();
+    }
+
+    /* renamed from: c */
+    private void m5351c() {
+        OnClickListener commitBtnListener = new C14583(this);
+        OnClickListener backBtnListener = new C14594(this);
+        this.f4324l.setOnTouchListener(new C14605(this));
+        this.f4330r.setOnClickListener(backBtnListener);
+        this.f4326n.setOnClickListener(commitBtnListener);
+        this.f4333u.setOnClickListener(this);
+        this.f4334v.setOnClickListener(this);
+        this.f4335w.setOnClickListener(this);
+    }
+
+    /* renamed from: a */
+    private void m5342a(boolean clickable) {
+        if (clickable) {
+            this.f4326n.setClickable(true);
+            this.f4327o.setText(getStringUtil(C0965R.string.feedback_commit));
+            this.f4328p.clearAnimation();
+            this.f4328p.setVisibility(8);
+            return;
+        }
+        this.f4326n.setClickable(false);
+        this.f4327o.setText(getStringUtil(C0965R.string.feedback_commiting));
+        this.f4328p.startAnimation(this.f4319G);
+        this.f4328p.setVisibility(0);
+    }
+
+    protected void onUpdateSkin() {
+        super.onUpdateSkin();
+        updateCommonSkin();
+        this.mContentView.findViewById(C0965R.id.edittext_content_layout).setBackground(C2188r.m8331b(C0965R.drawable.bnav_feedback_bg));
+        EditText contentET = (EditText) this.mContentView.findViewById(C0965R.id.edittext_content);
+        contentET.setHintTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a1));
+        contentET.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a5_content));
+        ((TextView) this.mContentView.findViewById(C0965R.id.calife_edittext_content_num_amount)).setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a1));
+        if (FeedbackController.getInstance().getmContent() == null || FeedbackController.getInstance().getmContent().length() <= 400) {
+            this.f4331s.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a1));
+        } else {
+            this.f4331s.setTextColor(C2188r.m8328a((int) C0965R.color.cl_other_a_highlight));
+        }
+        this.mContentView.findViewById(C0965R.id.pic_layout).setBackground(C2188r.m8331b(C0965R.drawable.bnav_feedback_bg));
+        EditText contactET = (EditText) this.mContentView.findViewById(C0965R.id.edittext_email);
+        contactET.setBackground(C2188r.m8331b(C0965R.drawable.bnav_feedback_bg));
+        contactET.setHintTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a1));
+        contactET.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a5_content));
+        ((RelativeLayout) this.mContentView.findViewById(C0965R.id.feedback_commit)).setBackground(C2188r.m8331b(C0965R.drawable.com_bg_btn_submit_selector));
+        ((TextView) this.mContentView.findViewById(C0965R.id.feedback_commit_tv)).setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a5_bgtext));
+    }
+
+    public boolean onBackPressed() {
+        mActivity.m3117m();
+        m5353d();
+        m5357f();
+        back(null);
+        return true;
+    }
+
+    /* renamed from: d */
+    private void m5353d() {
+        if (this.f4324l != null) {
+            FeedbackController.getInstance().setmContent(this.f4324l.getText().toString().trim());
+        }
+        if (this.f4323k != null) {
+            FeedbackController.getInstance().setmContact(this.f4323k.getText().toString().trim());
+        }
+        FeedbackController.getInstance().setType(this.f4313A);
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        if (!(this.f4323k == null || this.f4324l == null)) {
+            outState.putString(f4306d, this.f4324l.getText().toString().trim());
+            outState.putString(f4307e, this.f4323k.getText().toString().trim());
+            outState.putString(f4308f, this.f4313A);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    /* renamed from: e */
+    private void m5355e() {
+        TextWatcher mContentTextWatcher = new C14616(this);
+        TextWatcher mContactTextWatcher = new C14627(this);
+        this.f4324l.addTextChangedListener(mContentTextWatcher);
+        this.f4323k.addTextChangedListener(mContactTextWatcher);
+        this.f4323k.setOnClickListener(new C14638(this));
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+        if (mActivity != null) {
+        }
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    /* renamed from: a */
+    public void m5365a() {
+        Intent intent = new Intent("android.intent.action.PICK");
+        intent.setType("image/*");
+        try {
+            startActivityForResult(intent, 4610);
+        } catch (ActivityNotFoundException e) {
+            C2201w.m8373a("您的手机没有图库应用", 0);
+        }
+    }
+
+    /* renamed from: b */
+    public void m5367b() {
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        if (FeedbackController.getInstance().hasSdcard()) {
+            FeedbackController.getInstance().setTempFile(new File(Environment.getExternalStorageDirectory(), UUID.randomUUID().toString() + BNDrivingToolParams.RESOURCE_PICTURE_SUFFIX));
+            intent.putExtra("output", FileProvider.getUriForFile(getNaviActivity(), "com.baidu.carlife.fileprovider", FeedbackController.getInstance().getTempFile()));
+        }
+        try {
+            startActivityForResult(intent, 4609);
+        } catch (ActivityNotFoundException e) {
+            C2201w.m8373a("您的手机没有摄像应用", 0);
+        }
+    }
+
+    /* renamed from: f */
+    private void m5357f() {
+        FeedbackController.getInstance().getmPicList().clear();
+        FeedbackController.getInstance().getmPicList().add(null);
+        FeedbackController.getInstance().getmPicListPath().clear();
+        if (this.f4315C != null) {
+            this.f4315C.notifyDataSetChanged();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String picturePath = FeedbackController.getInstance().getBitmapFilePath(mActivity, requestCode, resultCode, data);
+        Bitmap bmp = FeedbackController.getInstance().getBitmapByOpt(picturePath);
+        if (bmp != null) {
+            FeedbackController.getInstance().getmPicList().add(0, bmp);
+            FeedbackController.getInstance().getmPicListPath().add(0, picturePath);
+            this.f4315C.notifyDataSetChanged();
+        }
+    }
+
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case C0965R.id.feedback_linear_function_exection:
+                this.f4313A = f4309g;
+                m5340a(this.f4336x);
+                return;
+            case C0965R.id.feedback_linear_function_suggest:
+                this.f4313A = f4310h;
+                m5340a(this.f4337y);
+                return;
+            case C0965R.id.feedback_linear_other_question:
+                this.f4313A = f4311i;
+                m5340a(this.f4338z);
+                return;
+            default:
+                return;
+        }
+    }
+
+    /* renamed from: b */
+    private void m5347b(String type) {
+        if (f4310h.equals(type)) {
+            m5340a(this.f4337y);
+        } else if (f4311i.equals(type)) {
+            m5340a(this.f4338z);
+        } else {
+            m5340a(this.f4336x);
+        }
+    }
+
+    /* renamed from: a */
+    private void m5340a(ImageView imageView) {
+        this.f4338z.setBackgroundResource(C0965R.drawable.com_ic_radiobuttion_unselected);
+        this.f4337y.setBackgroundResource(C0965R.drawable.com_ic_radiobuttion_unselected);
+        this.f4336x.setBackgroundResource(C0965R.drawable.com_ic_radiobuttion_unselected);
+        imageView.setBackgroundResource(C0965R.drawable.com_ic_radiobuttion_selected);
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "FeedbackFragment driving");
+        getNaviFragmentManager().back();
+        getNaviFragmentManager().back();
+        C1342a.m4926a().m4931d();
+    }
+
+    /* renamed from: a */
+    public void m5366a(String msg) {
+        showDialog(new C1953c(mActivity).m7444b(msg).m7457g(17).m7447c((int) C0965R.string.alert_close));
+    }
+
+    public void stopDriving() {
+    }
+
+    /* renamed from: a */
+    private boolean m5343a(EditText editText) {
+        int scrollY = editText.getScrollY();
+        int scrollDifference = editText.getLayout().getHeight() - ((editText.getHeight() - editText.getCompoundPaddingTop()) - editText.getCompoundPaddingBottom());
+        if (scrollDifference == 0) {
+            return false;
+        }
+        if (scrollY > 0 || scrollY < scrollDifference - 1) {
+            return true;
         }
         return false;
-      }
-    });
-    this.r.setOnClickListener(local4);
-    this.n.setOnClickListener(local3);
-    this.u.setOnClickListener(this);
-    this.v.setOnClickListener(this);
-    this.w.setOnClickListener(this);
-  }
-  
-  private void d()
-  {
-    if (this.l != null) {
-      FeedbackController.getInstance().setmContent(this.l.getText().toString().trim());
     }
-    if (this.k != null) {
-      FeedbackController.getInstance().setmContact(this.k.getText().toString().trim());
-    }
-    FeedbackController.getInstance().setType(this.A);
-  }
-  
-  private void e()
-  {
-    TextWatcher local6 = new TextWatcher()
-    {
-      public void afterTextChanged(Editable paramAnonymousEditable)
-      {
-        if (paramAnonymousEditable != null)
-        {
-          FeedbackFragment.g(FeedbackFragment.this).setText("" + paramAnonymousEditable.length());
-          if (paramAnonymousEditable.length() > 400) {
-            FeedbackFragment.g(FeedbackFragment.this).setTextColor(r.a(2131558641));
-          }
-        }
-        else
-        {
-          return;
-        }
-        FeedbackFragment.g(FeedbackFragment.this).setTextColor(r.a(2131558685));
-      }
-      
-      public void beforeTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3) {}
-      
-      public void onTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3) {}
-    };
-    TextWatcher local7 = new TextWatcher()
-    {
-      public void afterTextChanged(Editable paramAnonymousEditable)
-      {
-        if (FeedbackFragment.h(FeedbackFragment.this))
-        {
-          FeedbackFragment.b(FeedbackFragment.this, false);
-          return;
-        }
-        FeedbackFragment.a(FeedbackFragment.this).getSelectionStart();
-        int j = FeedbackFragment.a(FeedbackFragment.this).getSelectionEnd();
-        int i;
-        if (paramAnonymousEditable.length() > 40) {
-          i = 1;
-        }
-        for (;;)
-        {
-          if (i != 0) {
-            TipTool.onCreateToastDialog(BaseFragment.mActivity, 2131296465);
-          }
-          try
-          {
-            paramAnonymousEditable.delete(40, j);
-            String str = paramAnonymousEditable.toString();
-            m = 0;
-            int n = paramAnonymousEditable.length();
-            j = 0;
-            i = 0;
-            for (;;)
-            {
-              if (i < n)
-              {
-                k = j;
-                if (str.substring(i, i + 1).matches("[一-龥]"))
-                {
-                  m = 1;
-                  FeedbackFragment.b(FeedbackFragment.this, true);
-                }
-                try
-                {
-                  paramAnonymousEditable.delete(i - j, i + 1 - j);
-                  k = j + 1;
-                }
-                catch (Exception localException2)
-                {
-                  for (;;)
-                  {
-                    localException2.printStackTrace();
-                    k = j;
-                  }
-                }
-                i += 1;
-                j = k;
-                continue;
-                i = 0;
-              }
-            }
-          }
-          catch (Exception localException1)
-          {
-            int m;
-            int k;
-            for (;;)
-            {
-              localException1.printStackTrace();
-            }
-            if (m != 0) {
-              TipTool.onCreateToastDialog(BaseFragment.mActivity, 2131296464);
-            }
-            FeedbackFragment.b(FeedbackFragment.this, false);
-          }
-        }
-      }
-      
-      public void beforeTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3) {}
-      
-      public void onTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3) {}
-    };
-    this.l.addTextChangedListener(local6);
-    this.k.addTextChangedListener(local7);
-    this.k.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView) {}
-    });
-  }
-  
-  private void f()
-  {
-    FeedbackController.getInstance().getmPicList().clear();
-    FeedbackController.getInstance().getmPicList().add(null);
-    FeedbackController.getInstance().getmPicListPath().clear();
-    if (this.C != null) {
-      this.C.notifyDataSetChanged();
-    }
-  }
-  
-  public void a()
-  {
-    Intent localIntent = new Intent("android.intent.action.PICK");
-    localIntent.setType("image/*");
-    try
-    {
-      startActivityForResult(localIntent, 4610);
-      return;
-    }
-    catch (ActivityNotFoundException localActivityNotFoundException)
-    {
-      w.a("您的手机没有图库应用", 0);
-    }
-  }
-  
-  public void a(String paramString)
-  {
-    showDialog(new c(mActivity).b(paramString).g(17).c(2131296262));
-  }
-  
-  public void b()
-  {
-    Intent localIntent = new Intent("android.media.action.IMAGE_CAPTURE");
-    if (FeedbackController.getInstance().hasSdcard())
-    {
-      FeedbackController.getInstance().setTempFile(new File(Environment.getExternalStorageDirectory(), UUID.randomUUID().toString() + ".png"));
-      localIntent.putExtra("output", FileProvider.getUriForFile(getNaviActivity(), "com.baidu.carlife.fileprovider", FeedbackController.getInstance().getTempFile()));
-    }
-    try
-    {
-      startActivityForResult(localIntent, 4609);
-      return;
-    }
-    catch (ActivityNotFoundException localActivityNotFoundException)
-    {
-      w.a("您的手机没有摄像应用", 0);
-    }
-  }
-  
-  public void driving()
-  {
-    i.b("yftech", "FeedbackFragment driving");
-    getNaviFragmentManager().back();
-    getNaviFragmentManager().back();
-    a.a().d();
-  }
-  
-  public void onActivityCreated(Bundle paramBundle)
-  {
-    super.onActivityCreated(paramBundle);
-    String str2;
-    String str1;
-    Object localObject;
-    if (paramBundle != null)
-    {
-      str2 = paramBundle.getString("key_content");
-      String str3 = paramBundle.getString("key_contact");
-      str1 = str3;
-      localObject = str2;
-      if (!TextUtils.isEmpty(paramBundle.getString("key_type")))
-      {
-        str1 = str3;
-        localObject = str2;
-        if (!TextUtils.isEmpty(str2))
-        {
-          this.A = paramBundle.getString("key_type");
-          localObject = str2;
-          str1 = str3;
-        }
-      }
-      if (this.k != null) {
-        this.k.setText(str1);
-      }
-      if (this.l != null) {
-        this.l.setText((CharSequence)localObject);
-      }
-      if (this.s != null)
-      {
-        if (localObject != null) {
-          break label346;
-        }
-        this.s.setText("0");
-      }
-      label124:
-      if ((this.s != null) && (localObject != null))
-      {
-        if (((String)localObject).length() <= 400) {
-          break label379;
-        }
-        this.s.setTextColor(r.a(2131558641));
-      }
-    }
-    for (;;)
-    {
-      b(this.A);
-      paramBundle = new SpannableString(getStringUtil(2131296314));
-      paramBundle.setSpan(new AbsoluteSizeSpan(18, true), 0, paramBundle.length(), 33);
-      this.l.setHint(paramBundle);
-      paramBundle = new SpannableString(getStringUtil(2131296316));
-      paramBundle.setSpan(new AbsoluteSizeSpan(18, true), 0, paramBundle.length(), 33);
-      this.k.setHint(paramBundle);
-      this.G = AnimationUtils.loadAnimation(getNaviActivity(), 2131034132);
-      paramBundle = new LinearInterpolator();
-      this.G.setInterpolator(paramBundle);
-      return;
-      paramBundle = FeedbackController.getInstance().getmContent();
-      str2 = FeedbackController.getInstance().getmContact();
-      str1 = str2;
-      localObject = paramBundle;
-      if (TextUtils.isEmpty(FeedbackController.getInstance().getType())) {
-        break;
-      }
-      str1 = str2;
-      localObject = paramBundle;
-      if (TextUtils.isEmpty(paramBundle)) {
-        break;
-      }
-      this.A = FeedbackController.getInstance().getType();
-      str1 = str2;
-      localObject = paramBundle;
-      break;
-      label346:
-      this.s.setText(((String)localObject).length() + "");
-      break label124;
-      label379:
-      this.s.setTextColor(r.a(2131558685));
-    }
-  }
-  
-  public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent)
-  {
-    super.onActivityResult(paramInt1, paramInt2, paramIntent);
-    paramIntent = FeedbackController.getInstance().getBitmapFilePath(mActivity, paramInt1, paramInt2, paramIntent);
-    Bitmap localBitmap = FeedbackController.getInstance().getBitmapByOpt(paramIntent);
-    if (localBitmap != null)
-    {
-      FeedbackController.getInstance().getmPicList().add(0, localBitmap);
-      FeedbackController.getInstance().getmPicListPath().add(0, paramIntent);
-      this.C.notifyDataSetChanged();
-    }
-  }
-  
-  public boolean onBackPressed()
-  {
-    mActivity.m();
-    d();
-    f();
-    back(null);
-    return true;
-  }
-  
-  public void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    case 2131624740: 
-    case 2131624742: 
-    default: 
-      return;
-    case 2131624739: 
-      this.A = "28170";
-      a(this.x);
-      return;
-    case 2131624741: 
-      this.A = "28172";
-      a(this.y);
-      return;
-    }
-    this.A = "28171";
-    a(this.z);
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    if ((FeedbackController.getInstance().getmPicList() == null) || (FeedbackController.getInstance().getmPicListPath() == null)) {
-      FeedbackController.getInstance().initPicList();
-    }
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = paramLayoutInflater.inflate(2130968742, null);
-    setCommonTitleBar(this.mContentView, getString(2131296461));
-    a(this.mContentView);
-    return this.mContentView;
-  }
-  
-  protected void onInitView()
-  {
-    c();
-    e();
-  }
-  
-  public void onSaveInstanceState(Bundle paramBundle)
-  {
-    if ((this.k != null) && (this.l != null))
-    {
-      paramBundle.putString("key_content", this.l.getText().toString().trim());
-      paramBundle.putString("key_contact", this.k.getText().toString().trim());
-      paramBundle.putString("key_type", this.A);
-    }
-    super.onSaveInstanceState(paramBundle);
-  }
-  
-  protected void onUpdateOrientation(int paramInt)
-  {
-    if (mActivity == null) {}
-  }
-  
-  protected void onUpdateSkin()
-  {
-    super.onUpdateSkin();
-    updateCommonSkin();
-    this.mContentView.findViewById(2131624132).setBackground(r.b(2130837853));
-    EditText localEditText = (EditText)this.mContentView.findViewById(2131624102);
-    localEditText.setHintTextColor(r.a(2131558685));
-    localEditText.setTextColor(r.a(2131558702));
-    ((TextView)this.mContentView.findViewById(2131624745)).setTextColor(r.a(2131558685));
-    if ((FeedbackController.getInstance().getmContent() != null) && (FeedbackController.getInstance().getmContent().length() > 400)) {
-      this.s.setTextColor(r.a(2131558641));
-    }
-    for (;;)
-    {
-      this.mContentView.findViewById(2131624747).setBackground(r.b(2130837853));
-      localEditText = (EditText)this.mContentView.findViewById(2131624115);
-      localEditText.setBackground(r.b(2130837853));
-      localEditText.setHintTextColor(r.a(2131558685));
-      localEditText.setTextColor(r.a(2131558702));
-      ((RelativeLayout)this.mContentView.findViewById(2131624116)).setBackground(r.b(2130838217));
-      ((TextView)this.mContentView.findViewById(2131624750)).setTextColor(r.a(2131558701));
-      return;
-      this.s.setTextColor(r.a(2131558685));
-    }
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public void stopDriving() {}
-  
-  public class a
-    extends BaseAdapter
-  {
-    public a() {}
-    
-    public int getCount()
-    {
-      if (FeedbackController.getInstance().getmPicList() == null) {
-        return 0;
-      }
-      int i = FeedbackController.getInstance().getmPicList().size();
-      FeedbackFragment.i(FeedbackFragment.this).setText(i - 1 + "");
-      return FeedbackController.getInstance().getmPicList().size();
-    }
-    
-    public Object getItem(int paramInt)
-    {
-      if (paramInt < FeedbackController.getInstance().getmPicList().size()) {
-        return FeedbackController.getInstance().getmPicList().get(paramInt);
-      }
-      return null;
-    }
-    
-    public long getItemId(int paramInt)
-    {
-      return paramInt;
-    }
-    
-    public View getView(final int paramInt, View paramView, ViewGroup paramViewGroup)
-    {
-      if (FeedbackFragment.j(FeedbackFragment.this) == null) {
-        FeedbackFragment.a(FeedbackFragment.this, LayoutInflater.from(FeedbackFragment.this.getContext()));
-      }
-      if (paramInt == FeedbackController.getInstance().getmPicList().size() - 1)
-      {
-        paramView = FeedbackFragment.j(FeedbackFragment.this).inflate(2130968628, null);
-        FeedbackFragment.a(FeedbackFragment.this, (ImageView)paramView.findViewById(2131624098));
-        if (FeedbackController.getInstance().getmPicList().size() == 4) {
-          FeedbackFragment.k(FeedbackFragment.this).setVisibility(4);
-        }
-        FeedbackFragment.k(FeedbackFragment.this).setOnClickListener(new View.OnClickListener()
-        {
-          public void onClick(View paramAnonymousView)
-          {
-            if (FeedbackController.getInstance().getmPicList().size() == 4) {
-              return;
-            }
-            paramAnonymousView = new h(BaseFragment.mActivity, 4, paramInt, FeedbackFragment.l(FeedbackFragment.this));
-            FeedbackFragment.this.showDialog(paramAnonymousView);
-          }
-        });
-        return paramView;
-      }
-      paramView = FeedbackFragment.j(FeedbackFragment.this).inflate(2130968629, null);
-      paramViewGroup = (ImageView)paramView.findViewById(2131624099);
-      paramViewGroup.setImageBitmap((Bitmap)FeedbackController.getInstance().getmPicList().get(paramInt));
-      paramViewGroup.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          FeedbackController.getInstance().openPicSrc(BaseFragment.mActivity, paramInt);
-        }
-      });
-      paramView.findViewById(2131624100).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          FeedbackController.getInstance().getmPicList().remove(paramInt);
-          FeedbackController.getInstance().getmPicListPath().remove(paramInt);
-          FeedbackFragment.m(FeedbackFragment.this).notifyDataSetChanged();
-        }
-      });
-      return paramView;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/FeedbackFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

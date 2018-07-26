@@ -1,207 +1,200 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.facebook.common.p141m.C2924g;
+import com.indooratlas.android.sdk._internal.gd.C5917a;
 import java.net.URL;
 
-public final class gk
-{
-  public final ge a;
-  public final String b;
-  public final gd c;
-  public final gl d;
-  final Object e;
-  private volatile fq f;
-  
-  private gk(a parama)
-  {
-    this.a = parama.a;
-    this.b = parama.b;
-    this.c = parama.c.a();
-    this.d = parama.d;
-    if (parama.e != null) {}
-    for (parama = parama.e;; parama = this)
-    {
-      this.e = parama;
-      return;
-    }
-  }
-  
-  public final ge a()
-  {
-    return this.a;
-  }
-  
-  public final String a(String paramString)
-  {
-    return this.c.a(paramString);
-  }
-  
-  public final String b()
-  {
-    return this.b;
-  }
-  
-  public final gd c()
-  {
-    return this.c;
-  }
-  
-  public final gl d()
-  {
-    return this.d;
-  }
-  
-  public final a e()
-  {
-    return new a(this, (byte)0);
-  }
-  
-  public final fq f()
-  {
-    fq localfq = this.f;
-    if (localfq != null) {
-      return localfq;
-    }
-    localfq = fq.a(this.c);
-    this.f = localfq;
-    return localfq;
-  }
-  
-  public final boolean g()
-  {
-    return this.a.a.equals("https");
-  }
-  
-  public final String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder("Request{method=").append(this.b).append(", url=").append(this.a).append(", tag=");
-    if (this.e != this) {}
-    for (Object localObject = this.e;; localObject = null) {
-      return localObject + '}';
-    }
-  }
-  
-  public static final class a
-  {
-    ge a;
-    String b;
-    gd.a c;
-    gl d;
-    Object e;
-    
-    public a()
-    {
-      this.b = "GET";
-      this.c = new gd.a();
-    }
-    
-    private a(gk paramgk)
-    {
-      this.a = paramgk.a;
-      this.b = paramgk.b;
-      this.d = paramgk.d;
-      this.e = paramgk.e;
-      this.c = paramgk.c.a();
-    }
-    
-    public final a a(ge paramge)
-    {
-      if (paramge == null) {
-        throw new IllegalArgumentException("url == null");
-      }
-      this.a = paramge;
-      return this;
-    }
-    
-    public final a a(gl paramgl)
-    {
-      return a("PUT", paramgl);
-    }
-    
-    public final a a(Object paramObject)
-    {
-      this.e = paramObject;
-      return this;
-    }
-    
-    public final a a(String paramString)
-    {
-      if (paramString == null) {
-        throw new IllegalArgumentException("url == null");
-      }
-      String str;
-      if (paramString.regionMatches(true, 0, "ws:", 0, 3)) {
-        str = "http:" + paramString.substring(3);
-      }
-      for (;;)
-      {
-        paramString = ge.d(str);
-        if (paramString != null) {
-          break;
+public final class gk {
+    /* renamed from: a */
+    public final ge f23952a;
+    /* renamed from: b */
+    public final String f23953b;
+    /* renamed from: c */
+    public final gd f23954c;
+    /* renamed from: d */
+    public final gl f23955d;
+    /* renamed from: e */
+    final Object f23956e;
+    /* renamed from: f */
+    private volatile fq f23957f;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.gk$a */
+    public static class C5925a {
+        /* renamed from: a */
+        ge f23947a;
+        /* renamed from: b */
+        String f23948b;
+        /* renamed from: c */
+        C5917a f23949c;
+        /* renamed from: d */
+        gl f23950d;
+        /* renamed from: e */
+        Object f23951e;
+
+        public C5925a() {
+            this.f23948b = "GET";
+            this.f23949c = new C5917a();
         }
-        throw new IllegalArgumentException("unexpected url: " + str);
-        str = paramString;
-        if (paramString.regionMatches(true, 0, "wss:", 0, 4)) {
-          str = "https:" + paramString.substring(4);
+
+        private C5925a(gk gkVar) {
+            this.f23947a = gkVar.f23952a;
+            this.f23948b = gkVar.f23953b;
+            this.f23950d = gkVar.f23955d;
+            this.f23951e = gkVar.f23956e;
+            this.f23949c = gkVar.f23954c.m20616a();
         }
-      }
-      return a(paramString);
+
+        /* renamed from: a */
+        public final C5925a m20699a(ge geVar) {
+            if (geVar == null) {
+                throw new IllegalArgumentException("url == null");
+            }
+            this.f23947a = geVar;
+            return this;
+        }
+
+        /* renamed from: a */
+        public final C5925a m20702a(String str) {
+            if (str == null) {
+                throw new IllegalArgumentException("url == null");
+            }
+            if (str.regionMatches(true, 0, "ws:", 0, 3)) {
+                str = "http:" + str.substring(3);
+            } else {
+                if (str.regionMatches(true, 0, "wss:", 0, 4)) {
+                    str = "https:" + str.substring(4);
+                }
+            }
+            ge d = ge.m20645d(str);
+            if (d != null) {
+                return m20699a(d);
+            }
+            throw new IllegalArgumentException("unexpected url: " + str);
+        }
+
+        /* renamed from: a */
+        public final C5925a m20705a(URL url) {
+            ge a = ge.m20632a(url);
+            if (a != null) {
+                return m20699a(a);
+            }
+            throw new IllegalArgumentException("unexpected url: " + url);
+        }
+
+        /* renamed from: a */
+        public final C5925a m20704a(String str, String str2) {
+            this.f23949c.m20615c(str, str2);
+            return this;
+        }
+
+        /* renamed from: b */
+        public final C5925a m20708b(String str, String str2) {
+            this.f23949c.m20612a(str, str2);
+            return this;
+        }
+
+        /* renamed from: b */
+        public final C5925a m20707b(String str) {
+            this.f23949c.m20611a(str);
+            return this;
+        }
+
+        /* renamed from: a */
+        public final C5925a m20700a(gl glVar) {
+            return m20703a("PUT", glVar);
+        }
+
+        /* renamed from: a */
+        public final C5925a m20703a(String str, gl glVar) {
+            if (str == null || str.length() == 0) {
+                throw new IllegalArgumentException("method == null || method.length() == 0");
+            } else if (glVar != null && !hw.b(str)) {
+                throw new IllegalArgumentException("method " + str + " must not have a request body.");
+            } else if (glVar == null && hw.a(str)) {
+                throw new IllegalArgumentException("method " + str + " must have a request body.");
+            } else {
+                this.f23948b = str;
+                this.f23950d = glVar;
+                return this;
+            }
+        }
+
+        /* renamed from: a */
+        public final C5925a m20701a(Object obj) {
+            this.f23951e = obj;
+            return this;
+        }
+
+        /* renamed from: a */
+        public final gk m20706a() {
+            if (this.f23947a != null) {
+                return new gk();
+            }
+            throw new IllegalStateException("url == null");
+        }
     }
-    
-    public final a a(String paramString, gl paramgl)
-    {
-      if ((paramString == null) || (paramString.length() == 0)) {
-        throw new IllegalArgumentException("method == null || method.length() == 0");
-      }
-      if ((paramgl != null) && (!hw.b(paramString))) {
-        throw new IllegalArgumentException("method " + paramString + " must not have a request body.");
-      }
-      if ((paramgl == null) && (hw.a(paramString))) {
-        throw new IllegalArgumentException("method " + paramString + " must have a request body.");
-      }
-      this.b = paramString;
-      this.d = paramgl;
-      return this;
+
+    private gk(C5925a c5925a) {
+        Object obj;
+        this.f23952a = c5925a.f23947a;
+        this.f23953b = c5925a.f23948b;
+        this.f23954c = c5925a.f23949c.m20613a();
+        this.f23955d = c5925a.f23950d;
+        if (c5925a.f23951e != null) {
+            obj = c5925a.f23951e;
+        } else {
+            gk gkVar = this;
+        }
+        this.f23956e = obj;
     }
-    
-    public final a a(String paramString1, String paramString2)
-    {
-      this.c.c(paramString1, paramString2);
-      return this;
+
+    /* renamed from: a */
+    public final ge m20709a() {
+        return this.f23952a;
     }
-    
-    public final a a(URL paramURL)
-    {
-      ge localge = ge.a(paramURL);
-      if (localge == null) {
-        throw new IllegalArgumentException("unexpected url: " + paramURL);
-      }
-      return a(localge);
+
+    /* renamed from: b */
+    public final String m20711b() {
+        return this.f23953b;
     }
-    
-    public final gk a()
-    {
-      if (this.a == null) {
-        throw new IllegalStateException("url == null");
-      }
-      return new gk(this, (byte)0);
+
+    /* renamed from: c */
+    public final gd m20712c() {
+        return this.f23954c;
     }
-    
-    public final a b(String paramString)
-    {
-      this.c.a(paramString);
-      return this;
+
+    /* renamed from: a */
+    public final String m20710a(String str) {
+        return this.f23954c.m20618a(str);
     }
-    
-    public final a b(String paramString1, String paramString2)
-    {
-      this.c.a(paramString1, paramString2);
-      return this;
+
+    /* renamed from: d */
+    public final gl m20713d() {
+        return this.f23955d;
     }
-  }
+
+    /* renamed from: e */
+    public final C5925a m20714e() {
+        return new C5925a();
+    }
+
+    /* renamed from: f */
+    public final fq m20715f() {
+        fq fqVar = this.f23957f;
+        if (fqVar != null) {
+            return fqVar;
+        }
+        fqVar = fq.m20565a(this.f23954c);
+        this.f23957f = fqVar;
+        return fqVar;
+    }
+
+    /* renamed from: g */
+    public final boolean m20716g() {
+        return this.f23952a.f23861a.equals(C2924g.f12888b);
+    }
+
+    public final String toString() {
+        return "Request{method=" + this.f23953b + ", url=" + this.f23952a + ", tag=" + (this.f23956e != this ? this.f23956e : null) + '}';
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gk.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

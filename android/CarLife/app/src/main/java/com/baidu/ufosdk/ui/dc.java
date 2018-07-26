@@ -1,21 +1,17 @@
 package com.baidu.ufosdk.ui;
 
-public final class dc
-{
-  String a = "";
-  String b = "";
-  String c = "";
-  
-  public dc(String paramString1, String paramString2, String paramString3)
-  {
-    this.a = paramString1;
-    this.b = paramString2;
-    this.c = paramString3;
-  }
+/* compiled from: SearchProblemBean */
+public final class dc {
+    /* renamed from: a */
+    String f21660a = "";
+    /* renamed from: b */
+    String f21661b = "";
+    /* renamed from: c */
+    String f21662c = "";
+
+    public dc(String str, String str2, String str3) {
+        this.f21660a = str;
+        this.f21661b = str2;
+        this.f21662c = str3;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/dc.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

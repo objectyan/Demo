@@ -1,33 +1,30 @@
 package com.baidu.ufosdk.ui;
 
-import android.text.Editable;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
+import com.baidu.carlife.C0965R;
 
-final class cz
-  implements View.OnClickListener
-{
-  private cz(cx paramcx) {}
-  
-  public final void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    default: 
-      return;
-    case 2131165189: 
-      paramView = cx.a(this.a);
-      cx.b(this.a).getText().toString();
-      paramView.a();
-      return;
+/* compiled from: InputContactDialog */
+final class cz implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ cx f21654a;
+
+    private cz(cx cxVar) {
+        this.f21654a = cxVar;
     }
-    cx.a(this.a).a(cx.b(this.a).getText().toString());
-  }
+
+    public final void onClick(View view) {
+        switch (view.getId()) {
+            case C0965R.raw.bdspeech_speech_end:
+                da a = this.f21654a.f21650i;
+                this.f21654a.f21651j.getText().toString();
+                a.mo3928a();
+                return;
+            case C0965R.raw.cruiser_pass:
+                this.f21654a.f21650i.mo3929a(this.f21654a.f21651j.getText().toString());
+                return;
+            default:
+                return;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/cz.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

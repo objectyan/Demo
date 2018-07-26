@@ -1,137 +1,102 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.es.C5870a;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
-public final class en<K, V>
-{
-  public HashMap<et, Collection<a<V>>> a = new HashMap();
-  public HashMap<K, Collection<a<V>>> b = new HashMap();
-  
-  private static Collection<et> a(em paramem)
-  {
-    Object localObject2 = paramem.a.b;
-    paramem = null;
-    int i = 19;
-    while (i >= 15)
-    {
-      localObject1 = new es.a((er)localObject2, i);
-      paramem = (em)localObject1;
-      if ((((es.a)localObject1).b - ((es.a)localObject1).a + 1) * (((es.a)localObject1).d - ((es.a)localObject1).c + 1) <= 4L) {
-        break;
-      }
-      i -= 1;
-      paramem = (em)localObject1;
-    }
-    Object localObject1 = new ArrayList();
-    i = paramem.a;
-    while (i < paramem.b + 1)
-    {
-      int j = paramem.c;
-      while (j < paramem.d + 1)
-      {
-        localObject2 = new et((paramem.f + i) % paramem.f, j, paramem.e);
-        if (!((ArrayList)localObject1).contains(localObject2)) {
-          ((ArrayList)localObject1).add(localObject2);
+public final class en<K, V> {
+    /* renamed from: a */
+    public HashMap<et, Collection<C5869a<V>>> f23522a = new HashMap();
+    /* renamed from: b */
+    public HashMap<K, Collection<C5869a<V>>> f23523b = new HashMap();
+
+    /* renamed from: com.indooratlas.android.sdk._internal.en$a */
+    public static class C5869a<V> {
+        /* renamed from: a */
+        final em f23520a;
+        /* renamed from: b */
+        final V f23521b;
+
+        public C5869a(em emVar, V v) {
+            this.f23520a = emVar;
+            this.f23521b = v;
         }
-        j += 1;
-      }
-      i += 1;
     }
-    return (Collection<et>)localObject1;
-  }
-  
-  public final Collection<V> a(ep paramep)
-  {
-    ArrayList localArrayList = new ArrayList();
-    int i = 15;
-    while (i <= 19)
-    {
-      Object localObject = et.a(paramep.a, paramep.b, i);
-      localObject = (Collection)this.a.get(localObject);
-      if (localObject != null)
-      {
-        localObject = ((Collection)localObject).iterator();
-        while (((Iterator)localObject).hasNext())
-        {
-          a locala = (a)((Iterator)localObject).next();
-          if (locala.a.a(paramep)) {
-            localArrayList.add(locala.b);
-          }
+
+    /* renamed from: a */
+    public final Collection<V> m20425a(ep epVar) {
+        Collection<V> arrayList = new ArrayList();
+        for (int i = 15; i <= 19; i++) {
+            Collection<C5869a> collection = (Collection) this.f23522a.get(et.m20429a(epVar.f23525a, epVar.f23526b, i));
+            if (collection != null) {
+                for (C5869a c5869a : collection) {
+                    if (c5869a.f23520a.m20423a(epVar)) {
+                        arrayList.add(c5869a.f23521b);
+                    }
+                }
+            }
         }
-      }
-      i += 1;
+        return arrayList;
     }
-    return localArrayList;
-  }
-  
-  public final void a(K paramK, em paramem, V paramV)
-  {
-    a locala = new a(paramem, paramV);
-    Iterator localIterator = a(paramem).iterator();
-    while (localIterator.hasNext())
-    {
-      et localet = (et)localIterator.next();
-      paramV = (Collection)this.a.get(localet);
-      paramem = paramV;
-      if (paramV == null)
-      {
-        paramem = new ArrayList();
-        this.a.put(localet, paramem);
-      }
-      paramem.add(locala);
-    }
-    paramV = (Collection)this.b.get(paramK);
-    paramem = paramV;
-    if (paramV == null)
-    {
-      paramem = new ArrayList();
-      this.b.put(paramK, paramem);
-    }
-    paramem.add(locala);
-  }
-  
-  public final boolean a(K paramK)
-  {
-    paramK = (Collection)this.b.remove(paramK);
-    if (paramK == null) {
-      return false;
-    }
-    paramK = paramK.iterator();
-    while (paramK.hasNext())
-    {
-      a locala = (a)paramK.next();
-      Iterator localIterator = a(locala.a).iterator();
-      while (localIterator.hasNext())
-      {
-        et localet = (et)localIterator.next();
-        Collection localCollection = (Collection)this.a.get(localet);
-        localCollection.remove(locala);
-        if (localCollection.isEmpty()) {
-          this.a.remove(localet);
+
+    /* renamed from: a */
+    public final void m20426a(K k, em emVar, V v) {
+        C5869a c5869a = new C5869a(emVar, v);
+        for (et etVar : m20424a(emVar)) {
+            Collection collection = (Collection) this.f23522a.get(etVar);
+            if (collection == null) {
+                collection = new ArrayList();
+                this.f23522a.put(etVar, collection);
+            }
+            collection.add(c5869a);
         }
-      }
+        Collection collection2 = (Collection) this.f23523b.get(k);
+        if (collection2 == null) {
+            collection2 = new ArrayList();
+            this.f23523b.put(k, collection2);
+        }
+        collection2.add(c5869a);
     }
-    return true;
-  }
-  
-  public static final class a<V>
-  {
-    final em a;
-    final V b;
-    
-    public a(em paramem, V paramV)
-    {
-      this.a = paramem;
-      this.b = paramV;
+
+    /* renamed from: a */
+    public final boolean m20427a(K k) {
+        Collection<C5869a> collection = (Collection) this.f23523b.remove(k);
+        if (collection == null) {
+            return false;
+        }
+        for (C5869a c5869a : collection) {
+            for (et etVar : m20424a(c5869a.f23520a)) {
+                Collection collection2 = (Collection) this.f23522a.get(etVar);
+                collection2.remove(c5869a);
+                if (collection2.isEmpty()) {
+                    this.f23522a.remove(etVar);
+                }
+            }
+        }
+        return true;
     }
-  }
+
+    /* renamed from: a */
+    private static Collection<et> m20424a(em emVar) {
+        int i;
+        er erVar = emVar.f23518a.f23529b;
+        C5870a c5870a = null;
+        for (i = 19; i >= 15; i--) {
+            c5870a = new C5870a(erVar, i);
+            if (((long) ((c5870a.f23535b - c5870a.f23534a) + 1)) * ((long) ((c5870a.f23537d - c5870a.f23536c) + 1)) <= 4) {
+                break;
+            }
+        }
+        Collection arrayList = new ArrayList();
+        for (i = c5870a.f23534a; i < c5870a.f23535b + 1; i++) {
+            for (int i2 = c5870a.f23536c; i2 < c5870a.f23537d + 1; i2++) {
+                et etVar = new et((c5870a.f23539f + i) % c5870a.f23539f, i2, c5870a.f23538e);
+                if (!arrayList.contains(etVar)) {
+                    arrayList.add(etVar);
+                }
+            }
+        }
+        return arrayList;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/en.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

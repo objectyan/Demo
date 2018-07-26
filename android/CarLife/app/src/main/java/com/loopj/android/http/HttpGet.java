@@ -1,33 +1,20 @@
 package com.loopj.android.http;
 
-import cz.msebera.android.httpclient.b.d.f;
+import cz.msebera.android.httpclient.p158b.p159d.C6037f;
 import java.net.URI;
 
-public final class HttpGet
-  extends f
-{
-  public static final String METHOD_NAME = "GET";
-  
-  public HttpGet() {}
-  
-  public HttpGet(String paramString)
-  {
-    setURI(URI.create(paramString));
-  }
-  
-  public HttpGet(URI paramURI)
-  {
-    setURI(paramURI);
-  }
-  
-  public String getMethod()
-  {
-    return "GET";
-  }
+public final class HttpGet extends C6037f {
+    public static final String METHOD_NAME = "GET";
+
+    public HttpGet(URI uri) {
+        setURI(uri);
+    }
+
+    public HttpGet(String uri) {
+        setURI(URI.create(uri));
+    }
+
+    public String getMethod() {
+        return "GET";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/loopj/android/http/HttpGet.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

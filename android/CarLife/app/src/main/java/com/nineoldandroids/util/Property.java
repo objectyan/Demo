@@ -1,46 +1,33 @@
 package com.nineoldandroids.util;
 
-public abstract class Property<T, V>
-{
-  private final String mName;
-  private final Class<V> mType;
-  
-  public Property(Class<V> paramClass, String paramString)
-  {
-    this.mName = paramString;
-    this.mType = paramClass;
-  }
-  
-  public static <T, V> Property<T, V> of(Class<T> paramClass, Class<V> paramClass1, String paramString)
-  {
-    return new ReflectiveProperty(paramClass, paramClass1, paramString);
-  }
-  
-  public abstract V get(T paramT);
-  
-  public String getName()
-  {
-    return this.mName;
-  }
-  
-  public Class<V> getType()
-  {
-    return this.mType;
-  }
-  
-  public boolean isReadOnly()
-  {
-    return false;
-  }
-  
-  public void set(T paramT, V paramV)
-  {
-    throw new UnsupportedOperationException("Property " + getName() + " is read-only");
-  }
+public abstract class Property<T, V> {
+    private final String mName;
+    private final Class<V> mType;
+
+    public abstract V get(T t);
+
+    public static <T, V> Property<T, V> of(Class<T> hostType, Class<V> valueType, String name) {
+        return new ReflectiveProperty(hostType, valueType, name);
+    }
+
+    public Property(Class<V> type, String name) {
+        this.mName = name;
+        this.mType = type;
+    }
+
+    public boolean isReadOnly() {
+        return false;
+    }
+
+    public void set(T t, V v) {
+        throw new UnsupportedOperationException("Property " + getName() + " is read-only");
+    }
+
+    public String getName() {
+        return this.mName;
+    }
+
+    public Class<V> getType() {
+        return this.mType;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/util/Property.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

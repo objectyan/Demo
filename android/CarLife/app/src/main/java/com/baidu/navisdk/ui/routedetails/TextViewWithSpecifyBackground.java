@@ -10,68 +10,52 @@ import android.widget.TextView;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.ScreenUtil;
 
-public class TextViewWithSpecifyBackground
-  extends TextView
-{
-  private static final String TAG = TextViewWithSpecifyBackground.class.getName();
-  private int mColor;
-  private ShapeDrawable mShapeDrawable;
-  
-  public TextViewWithSpecifyBackground(Context paramContext)
-  {
-    super(paramContext);
-    setWillNotDraw(false);
-    drawDefaultBGColor();
-    setSingleLine(true);
-  }
-  
-  public TextViewWithSpecifyBackground(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    setWillNotDraw(false);
-    drawDefaultBGColor();
-    setSingleLine(true);
-  }
-  
-  public void drawDefaultBGColor()
-  {
-    if (this.mShapeDrawable == null) {
-      this.mShapeDrawable = new ShapeDrawable();
+public class TextViewWithSpecifyBackground extends TextView {
+    private static final String TAG = TextViewWithSpecifyBackground.class.getName();
+    private int mColor;
+    private ShapeDrawable mShapeDrawable;
+
+    private class MyShape extends Shape {
+        TextViewWithSpecifyBackground pn;
+
+        public MyShape(TextViewWithSpecifyBackground pn) {
+            this.pn = pn;
+        }
+
+        public void draw(Canvas canvas, Paint paint) {
+            paint.setColor(TextViewWithSpecifyBackground.this.mColor);
+            int starty = ScreenUtil.getInstance().dip2px(1);
+            int num = (this.pn.getHeight() - starty) / 2;
+            canvas.drawRect((float) num, (float) starty, (float) (this.pn.getWidth() - num), (float) this.pn.getHeight(), paint);
+            canvas.drawCircle((float) num, (float) (num + starty), (float) num, paint);
+            canvas.drawCircle((float) (this.pn.getWidth() - num), (float) (num + starty), (float) num, paint);
+            LogUtil.m15791e(TextViewWithSpecifyBackground.TAG, "pain Rect And Circle");
+        }
     }
-    this.mShapeDrawable.setShape(new MyShape(this));
-    setBackgroundDrawable(this.mShapeDrawable);
-  }
-  
-  public void setViewBGColor(int paramInt)
-  {
-    this.mColor = paramInt;
-  }
-  
-  private class MyShape
-    extends Shape
-  {
-    TextViewWithSpecifyBackground pn;
-    
-    public MyShape(TextViewWithSpecifyBackground paramTextViewWithSpecifyBackground)
-    {
-      this.pn = paramTextViewWithSpecifyBackground;
+
+    public TextViewWithSpecifyBackground(Context context) {
+        super(context);
+        setWillNotDraw(false);
+        drawDefaultBGColor();
+        setSingleLine(true);
     }
-    
-    public void draw(Canvas paramCanvas, Paint paramPaint)
-    {
-      paramPaint.setColor(TextViewWithSpecifyBackground.this.mColor);
-      int i = ScreenUtil.getInstance().dip2px(1);
-      int j = (this.pn.getHeight() - i) / 2;
-      paramCanvas.drawRect(j, i, this.pn.getWidth() - j, this.pn.getHeight(), paramPaint);
-      paramCanvas.drawCircle(j, j + i, j, paramPaint);
-      paramCanvas.drawCircle(this.pn.getWidth() - j, j + i, j, paramPaint);
-      LogUtil.e(TextViewWithSpecifyBackground.TAG, "pain Rect And Circle");
+
+    public TextViewWithSpecifyBackground(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setWillNotDraw(false);
+        drawDefaultBGColor();
+        setSingleLine(true);
     }
-  }
+
+    public void drawDefaultBGColor() {
+        if (this.mShapeDrawable == null) {
+            this.mShapeDrawable = new ShapeDrawable();
+        }
+        this.mShapeDrawable.setShape(new MyShape(this));
+        setBackgroundDrawable(this.mShapeDrawable);
+    }
+
+    public void setViewBGColor(int color) {
+        this.mColor = color;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routedetails/TextViewWithSpecifyBackground.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,144 +5,115 @@ import android.util.SparseArray;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SapiResult
-{
-  public static final int ERROR_CODE_NETWORK_UNAVAILABLE = -201;
-  public static final int ERROR_CODE_UNKNOWN = -202;
-  public static final String ERROR_MSG_NETWORK_UNAVAILABLE = "网络连接不可用，请检查网络设置";
-  public static final String ERROR_MSG_UNKNOWN = "网络连接失败，请检查网络设置";
-  public static final int RESULT_CODE_SUCCESS = 0;
-  public static final int RESULT_CODE_WAPPASS_SUCCESS = 110000;
-  public static final String RESULT_MSG_SUCCESS = "成功";
-  protected SparseArray<String> msgMap = new SparseArray();
-  protected int resultCode = 65334;
-  protected String resultMsg;
-  
-  public SapiResult()
-  {
-    this.msgMap.put(0, "成功");
-    this.msgMap.put(110000, "成功");
-    this.msgMap.put(65335, "网络连接不可用，请检查网络设置");
-    this.msgMap.put(65334, "网络连接失败，请检查网络设置");
-  }
-  
-  public int getResultCode()
-  {
-    return this.resultCode;
-  }
-  
-  public String getResultMsg()
-  {
-    if (!TextUtils.isEmpty(this.resultMsg)) {
-      return this.resultMsg;
+public class SapiResult {
+    public static final int ERROR_CODE_NETWORK_UNAVAILABLE = -201;
+    public static final int ERROR_CODE_UNKNOWN = -202;
+    public static final String ERROR_MSG_NETWORK_UNAVAILABLE = "网络连接不可用，请检查网络设置";
+    public static final String ERROR_MSG_UNKNOWN = "网络连接失败，请检查网络设置";
+    public static final int RESULT_CODE_SUCCESS = 0;
+    public static final int RESULT_CODE_WAPPASS_SUCCESS = 110000;
+    public static final String RESULT_MSG_SUCCESS = "成功";
+    protected SparseArray<String> msgMap = new SparseArray();
+    protected int resultCode = ERROR_CODE_UNKNOWN;
+    protected String resultMsg;
+
+    public static class Action {
+        public ActionMode actionMode;
+        public String actionTitle;
+        public ActionType actionType;
+        public String actionUrl;
     }
-    if (this.msgMap.get(this.resultCode) != null) {
-      return (String)this.msgMap.get(this.resultCode);
+
+    public enum ActionMode {
+        MSG("msg"),
+        URL("url");
+        
+        /* renamed from: a */
+        private static final Map<String, ActionMode> f20452a = null;
+        /* renamed from: b */
+        private String f20454b;
+
+        static {
+            f20452a = new HashMap();
+            for (ActionMode actionMode : values()) {
+                f20452a.put(actionMode.toString(), actionMode);
+            }
+        }
+
+        private ActionMode(String actionMode) {
+            this.f20454b = actionMode;
+        }
+
+        public String getValue() {
+            return this.f20454b;
+        }
+
+        public static ActionMode fromString(String actionMode) {
+            return (ActionMode) f20452a.get(actionMode);
+        }
+
+        public String toString() {
+            return this.f20454b;
+        }
     }
-    return (String)this.msgMap.get(65334);
-  }
-  
-  public void setResultCode(int paramInt)
-  {
-    this.resultCode = paramInt;
-  }
-  
-  public void setResultMsg(String paramString)
-  {
-    this.resultMsg = paramString;
-  }
-  
-  public static class Action
-  {
-    public SapiResult.ActionMode actionMode;
-    public String actionTitle;
-    public SapiResult.ActionType actionType;
-    public String actionUrl;
-  }
-  
-  public static enum ActionMode
-  {
-    private static final Map<String, ActionMode> a;
-    private String b;
-    
-    static
-    {
-      a = new HashMap();
-      ActionMode[] arrayOfActionMode = values();
-      int j = arrayOfActionMode.length;
-      int i = 0;
-      while (i < j)
-      {
-        ActionMode localActionMode = arrayOfActionMode[i];
-        a.put(localActionMode.toString(), localActionMode);
-        i += 1;
-      }
+
+    public enum ActionType {
+        FORCE("force"),
+        OPTIONAL("optional");
+        
+        /* renamed from: a */
+        private static final Map<String, ActionType> f20455a = null;
+        /* renamed from: b */
+        private String f20457b;
+
+        static {
+            f20455a = new HashMap();
+            for (ActionType actionType : values()) {
+                f20455a.put(actionType.toString(), actionType);
+            }
+        }
+
+        private ActionType(String actionType) {
+            this.f20457b = actionType;
+        }
+
+        public String getValue() {
+            return this.f20457b;
+        }
+
+        public static ActionType fromString(String actionType) {
+            return (ActionType) f20455a.get(actionType);
+        }
+
+        public String toString() {
+            return this.f20457b;
+        }
     }
-    
-    private ActionMode(String paramString)
-    {
-      this.b = paramString;
+
+    public SapiResult() {
+        this.msgMap.put(0, RESULT_MSG_SUCCESS);
+        this.msgMap.put(110000, RESULT_MSG_SUCCESS);
+        this.msgMap.put(ERROR_CODE_NETWORK_UNAVAILABLE, ERROR_MSG_NETWORK_UNAVAILABLE);
+        this.msgMap.put(ERROR_CODE_UNKNOWN, "网络连接失败，请检查网络设置");
     }
-    
-    public static ActionMode fromString(String paramString)
-    {
-      return (ActionMode)a.get(paramString);
+
+    public int getResultCode() {
+        return this.resultCode;
     }
-    
-    public String getValue()
-    {
-      return this.b;
+
+    public void setResultCode(int resultCode) {
+        this.resultCode = resultCode;
     }
-    
-    public String toString()
-    {
-      return this.b;
+
+    public void setResultMsg(String resultMsg) {
+        this.resultMsg = resultMsg;
     }
-  }
-  
-  public static enum ActionType
-  {
-    private static final Map<String, ActionType> a;
-    private String b;
-    
-    static
-    {
-      a = new HashMap();
-      ActionType[] arrayOfActionType = values();
-      int j = arrayOfActionType.length;
-      int i = 0;
-      while (i < j)
-      {
-        ActionType localActionType = arrayOfActionType[i];
-        a.put(localActionType.toString(), localActionType);
-        i += 1;
-      }
+
+    public String getResultMsg() {
+        if (TextUtils.isEmpty(this.resultMsg)) {
+            return this.msgMap.get(this.resultCode) != null ? (String) this.msgMap.get(this.resultCode) : (String) this.msgMap.get(ERROR_CODE_UNKNOWN);
+        } else {
+            return this.resultMsg;
+        }
     }
-    
-    private ActionType(String paramString)
-    {
-      this.b = paramString;
-    }
-    
-    public static ActionType fromString(String paramString)
-    {
-      return (ActionType)a.get(paramString);
-    }
-    
-    public String getValue()
-    {
-      return this.b;
-    }
-    
-    public String toString()
-    {
-      return this.b;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/sapi2/result/SapiResult.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

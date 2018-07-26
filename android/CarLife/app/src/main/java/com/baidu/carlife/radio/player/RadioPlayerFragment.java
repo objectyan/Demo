@@ -10,625 +10,675 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.logic.music.b.c;
-import com.baidu.carlife.logic.music.c;
-import com.baidu.carlife.logic.music.p;
-import com.baidu.carlife.logic.voice.m;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C0936j;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.logic.C1772k;
+import com.baidu.carlife.logic.music.C1790b.C1539c;
+import com.baidu.carlife.logic.music.C1795c;
+import com.baidu.carlife.logic.music.C1818h;
+import com.baidu.carlife.logic.music.C1834p;
+import com.baidu.carlife.logic.p088a.C1681a;
+import com.baidu.carlife.logic.p088a.C1702j;
+import com.baidu.carlife.logic.voice.C1903m;
 import com.baidu.carlife.model.MusicSongModel;
-import com.baidu.carlife.util.w;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.p083g.C1605a;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.carlife.util.C2201w;
+import com.baidu.carlife.view.C2342g;
 import com.baidu.carlife.view.CommonTipView;
-import com.baidu.carlife.view.CommonTipView.a;
+import com.baidu.carlife.view.CommonTipView.C1526a;
 import com.baidu.carlife.view.HomeCardMusicMelodyView;
 import com.baidu.carlife.view.RadioPlayerCircleProgressView;
-import com.baidu.carlife.view.a.b;
+import com.baidu.carlife.view.p104a.C2251b;
 import com.baidu.navi.fragment.ContentFragment;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.Random;
 
-public class RadioPlayerFragment
-  extends ContentFragment
-{
-  private static final String a = "CarLifeRadio";
-  private ImageButton b;
-  private CommonTipView c;
-  private RadioPlayerCircleProgressView d;
-  private ImageButton e;
-  private ImageButton f;
-  private ImageButton g;
-  private ImageButton h;
-  private ImageButton i;
-  private TextView j;
-  private TextView k;
-  private LinearLayout l;
-  private SimpleDraweeView m;
-  private HomeCardMusicMelodyView n;
-  private com.baidu.carlife.logic.music.h o = null;
-  private MusicSongModel p;
-  private int q = 0;
-  private boolean r = false;
-  private b.c s = new b.c()
-  {
-    public void a()
-    {
-      RadioPlayerFragment.a(RadioPlayerFragment.this);
-    }
-    
-    public void a(int paramAnonymousInt)
-    {
-      RadioPlayerFragment.a(RadioPlayerFragment.this, paramAnonymousInt);
-    }
-    
-    public void a(String paramAnonymousString)
-    {
-      c();
-      RadioPlayerFragment.a(RadioPlayerFragment.this, com.baidu.carlife.logic.a.j.a().c().p());
-      if (RadioPlayerFragment.b(RadioPlayerFragment.this)) {
-        RadioPlayerFragment.d(RadioPlayerFragment.this).e(RadioPlayerFragment.c(RadioPlayerFragment.this));
-      }
-      RadioPlayerFragment.e(RadioPlayerFragment.this);
-    }
-    
-    public void b()
-    {
-      RadioPlayerFragment.f(RadioPlayerFragment.this);
-    }
-    
-    public void c()
-    {
-      RadioPlayerFragment.g(RadioPlayerFragment.this);
-    }
-    
-    public void d() {}
-    
-    public void e()
-    {
-      RadioPlayerFragment.h(RadioPlayerFragment.this);
-    }
-  };
-  private View.OnClickListener t = new com.baidu.carlife.logic.a.a()
-  {
-    protected void a(View paramAnonymousView)
-    {
-      if (com.baidu.carlife.logic.k.a().c() != 0)
-      {
-        w.a(2131296842, 1);
-        return;
-      }
-      switch (paramAnonymousView.getId())
-      {
-      default: 
-        return;
-      case 2131624258: 
-        RadioPlayerFragment.k(RadioPlayerFragment.this);
-        return;
-      case 2131625096: 
-        m.a().b();
-        StatisticManager.onEvent("CONTENT_CONTROl_0001");
-        if (!RadioPlayerFragment.d(RadioPlayerFragment.this).q()) {
-          RadioPlayerFragment.i(RadioPlayerFragment.this);
+public class RadioPlayerFragment extends ContentFragment {
+    /* renamed from: a */
+    private static final String f6871a = "CarLifeRadio";
+    /* renamed from: b */
+    private ImageButton f6872b;
+    /* renamed from: c */
+    private CommonTipView f6873c;
+    /* renamed from: d */
+    private RadioPlayerCircleProgressView f6874d;
+    /* renamed from: e */
+    private ImageButton f6875e;
+    /* renamed from: f */
+    private ImageButton f6876f;
+    /* renamed from: g */
+    private ImageButton f6877g;
+    /* renamed from: h */
+    private ImageButton f6878h;
+    /* renamed from: i */
+    private ImageButton f6879i;
+    /* renamed from: j */
+    private TextView f6880j;
+    /* renamed from: k */
+    private TextView f6881k;
+    /* renamed from: l */
+    private LinearLayout f6882l;
+    /* renamed from: m */
+    private SimpleDraweeView f6883m;
+    /* renamed from: n */
+    private HomeCardMusicMelodyView f6884n;
+    /* renamed from: o */
+    private C1818h f6885o = null;
+    /* renamed from: p */
+    private MusicSongModel f6886p;
+    /* renamed from: q */
+    private int f6887q = 0;
+    /* renamed from: r */
+    private boolean f6888r = false;
+    /* renamed from: s */
+    private C1539c f6889s = new C21571(this);
+    /* renamed from: t */
+    private OnClickListener f6890t = new C21582(this);
+    /* renamed from: u */
+    private C0936j f6891u = new C21593(this);
+    /* renamed from: v */
+    private Runnable f6892v = new C21615(this);
+    /* renamed from: w */
+    private C1443g f6893w;
+    /* renamed from: x */
+    private C1443g f6894x;
+
+    /* renamed from: com.baidu.carlife.radio.player.RadioPlayerFragment$1 */
+    class C21571 implements C1539c {
+        /* renamed from: a */
+        final /* synthetic */ RadioPlayerFragment f6865a;
+
+        C21571(RadioPlayerFragment this$0) {
+            this.f6865a = this$0;
         }
-        RadioPlayerFragment.d(RadioPlayerFragment.this).a(false, true);
-        return;
-      case 2131625098: 
-        m.a().b();
-        if (RadioPlayerFragment.j(RadioPlayerFragment.this))
-        {
-          RadioPlayerFragment.d(RadioPlayerFragment.this).y();
-          return;
+
+        /* renamed from: a */
+        public void mo1585a(int status) {
+            this.f6865a.m8135a(status);
         }
-        RadioPlayerFragment.i(RadioPlayerFragment.this);
-        return;
-      case 2131625100: 
-        m.a().b();
-        StatisticManager.onEvent("CONTENT_CONTROl_0002");
-        if (!RadioPlayerFragment.d(RadioPlayerFragment.this).q()) {
-          RadioPlayerFragment.i(RadioPlayerFragment.this);
+
+        /* renamed from: a */
+        public void mo1584a() {
+            this.f6865a.m8154i();
         }
-        RadioPlayerFragment.d(RadioPlayerFragment.this).a(true, true);
-        return;
-      case 2131625095: 
-        if (!RadioPlayerFragment.d(RadioPlayerFragment.this).I())
-        {
-          RadioPlayerFragment.d(RadioPlayerFragment.this).y();
-          return;
+
+        /* renamed from: a */
+        public void mo1586a(String albumId) {
+            mo1588c();
+            this.f6865a.m8136a(C1702j.m6181a().m6188c().mo1696p());
+            if (this.f6865a.f6888r) {
+                this.f6865a.f6885o.m6806e(this.f6865a.f6886p);
+            }
+            this.f6865a.m8140b();
         }
-        RadioPlayerFragment.l(RadioPlayerFragment.this);
-        return;
-      }
-      if (!RadioPlayerFragment.d(RadioPlayerFragment.this).I())
-      {
-        RadioPlayerFragment.d(RadioPlayerFragment.this).y();
-        return;
-      }
-      RadioPlayerFragment.m(RadioPlayerFragment.this);
+
+        /* renamed from: b */
+        public void mo1587b() {
+            this.f6865a.m8134a();
+        }
+
+        /* renamed from: c */
+        public void mo1588c() {
+            this.f6865a.m8156j();
+        }
+
+        /* renamed from: d */
+        public void mo1589d() {
+        }
+
+        /* renamed from: e */
+        public void mo1590e() {
+            this.f6865a.m8170q();
+        }
     }
-  };
-  private com.baidu.carlife.core.j u = new com.baidu.carlife.core.j()
-  {
-    public void careAbout()
-    {
-      addMsg(307);
-      addMsg(226);
-      addMsg(225);
-      addMsg(227);
-      addMsg(218);
-      addMsg(249);
-    }
-    
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if (com.baidu.carlife.logic.a.j.a().c() == null) {
-        sendMessageDelayed(Message.obtain(paramAnonymousMessage), 1000L);
-      }
-      switch (paramAnonymousMessage.what)
-      {
-      }
-      do
-      {
-        do
-        {
-          do
-          {
-            do
-            {
-              do
-              {
-                do
-                {
-                  do
-                  {
+
+    /* renamed from: com.baidu.carlife.radio.player.RadioPlayerFragment$2 */
+    class C21582 extends C1681a {
+        /* renamed from: a */
+        final /* synthetic */ RadioPlayerFragment f6866a;
+
+        C21582(RadioPlayerFragment this$0) {
+            this.f6866a = this$0;
+        }
+
+        /* renamed from: a */
+        protected void mo1784a(View v) {
+            if (C1772k.m6480a().m6489c() != 0) {
+                C2201w.m8371a((int) C0965R.string.phone_status_busy_music, 1);
+                return;
+            }
+            switch (v.getId()) {
+                case C0965R.id.ib_left:
+                    this.f6866a.m8148f();
                     return;
-                  } while (paramAnonymousMessage.arg1 != com.baidu.carlife.logic.a.j.a().c().s());
-                  com.baidu.carlife.logic.a.j.a().c().a((Pair)paramAnonymousMessage.obj);
-                  return;
-                } while (paramAnonymousMessage.arg1 != com.baidu.carlife.logic.a.j.a().c().s());
-                RadioPlayerFragment.g(RadioPlayerFragment.this);
-              } while ((paramAnonymousMessage.arg1 < 3) || (paramAnonymousMessage.arg2 == -1));
-              w.a(RadioPlayerFragment.this.getString(2131296619), 1);
-              return;
-            } while (paramAnonymousMessage.arg1 != com.baidu.carlife.logic.a.j.a().c().s());
-            RadioPlayerFragment.d(RadioPlayerFragment.this).a(RadioPlayerFragment.c(RadioPlayerFragment.this));
-            com.baidu.carlife.logic.a.j.a().c().i(3);
+                case C0965R.id.radio_favorite:
+                    if (this.f6866a.f6885o.m6775I()) {
+                        this.f6866a.m8150g();
+                        return;
+                    } else {
+                        this.f6866a.f6885o.m6837y();
+                        return;
+                    }
+                case C0965R.id.radio_prev:
+                    C1903m.m7252a().m7255b();
+                    StatisticManager.onEvent(StatisticConstants.CONTENT_CONTROl_0001);
+                    if (!this.f6866a.f6885o.m6829q()) {
+                        this.f6866a.m8145d();
+                    }
+                    this.f6866a.f6885o.m6790a(false, true);
+                    return;
+                case C0965R.id.radio_play:
+                    C1903m.m7252a().m7255b();
+                    if (this.f6866a.m8161l()) {
+                        this.f6866a.f6885o.m6837y();
+                        return;
+                    } else {
+                        this.f6866a.m8145d();
+                        return;
+                    }
+                case C0965R.id.radio_next:
+                    C1903m.m7252a().m7255b();
+                    StatisticManager.onEvent(StatisticConstants.CONTENT_CONTROl_0002);
+                    if (!this.f6866a.f6885o.m6829q()) {
+                        this.f6866a.m8145d();
+                    }
+                    this.f6866a.f6885o.m6790a(true, true);
+                    return;
+                case C0965R.id.radio_delete:
+                    if (this.f6866a.f6885o.m6775I()) {
+                        this.f6866a.m8152h();
+                        return;
+                    } else {
+                        this.f6866a.f6885o.m6837y();
+                        return;
+                    }
+                default:
+                    return;
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.radio.player.RadioPlayerFragment$3 */
+    class C21593 extends C0936j {
+        /* renamed from: a */
+        final /* synthetic */ RadioPlayerFragment f6867a;
+
+        C21593(RadioPlayerFragment this$0) {
+            this.f6867a = this$0;
+        }
+
+        public void careAbout() {
+            addMsg(307);
+            addMsg(C1253f.dG);
+            addMsg(225);
+            addMsg(C1253f.dH);
+            addMsg(218);
+            addMsg(C1253f.dR);
+        }
+
+        public void handleMessage(Message msg) {
+            if (C1702j.m6181a().m6188c() == null) {
+                sendMessageDelayed(Message.obtain(msg), 1000);
+            }
+            switch (msg.what) {
+                case 218:
+                    if (msg.arg1 == C1702j.m6181a().m6188c().m6649s()) {
+                        C1702j.m6181a().m6188c().m6602a((Pair) msg.obj);
+                        return;
+                    }
+                    return;
+                case 225:
+                    if (msg.arg1 == C1702j.m6181a().m6188c().m6649s() && this.f6867a.f6877g != null) {
+                        if (this.f6867a.f6886p == null || !this.f6867a.f6886p.f5919k) {
+                            this.f6867a.f6877g.setImageDrawable(C2188r.m8331b(C0965R.drawable.radio_ic_play));
+                            this.f6867a.m8168p();
+                            return;
+                        }
+                        this.f6867a.f6877g.setImageDrawable(C2188r.m8331b(C0965R.drawable.radio_ic_pause));
+                        this.f6867a.m8167o();
+                        return;
+                    }
+                    return;
+                case C1253f.dG /*226*/:
+                    if (msg.arg1 == C1702j.m6181a().m6188c().m6649s()) {
+                        removeMessages(307);
+                        C1702j.m6181a().m6188c().m6634i(2);
+                        if (this.f6867a.f6885o.m6829q()) {
+                            this.f6867a.m8136a(C1818h.m6730b().m6817i());
+                        }
+                        this.f6867a.m8140b();
+                        return;
+                    }
+                    return;
+                case C1253f.dH /*227*/:
+                    if (msg.arg1 == C1702j.m6181a().m6188c().m6649s()) {
+                        this.f6867a.f6885o.m6787a(this.f6867a.f6886p);
+                        C1702j.m6181a().m6188c().m6634i(3);
+                        return;
+                    }
+                    return;
+                case C1253f.dR /*249*/:
+                    if (msg.arg1 == C1702j.m6181a().m6188c().m6649s()) {
+                        this.f6867a.m8156j();
+                        if (msg.arg1 >= 3 && msg.arg2 != -1) {
+                            C2201w.m8373a(this.f6867a.getString(C0965R.string.module_music_thirdparty_null_list), 1);
+                            return;
+                        }
+                        return;
+                    }
+                    return;
+                case 307:
+                    if (this.f6867a.m8161l()) {
+                        this.f6867a.f6885o.m6837y();
+                        this.f6867a.f6885o.m6811f(true);
+                        C1261k.m4452a(307);
+                        return;
+                    } else if (this.f6867a.f6874d != null && msg.arg2 == C1702j.m6181a().m6188c().m6649s()) {
+                        if (msg.arg1 < 3 || msg.arg1 % 3 == 0) {
+                            this.f6867a.f6874d.setProgress(msg.arg1);
+                            return;
+                        }
+                        return;
+                    } else {
+                        return;
+                    }
+                default:
+                    return;
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.radio.player.RadioPlayerFragment$4 */
+    class C21604 implements C1526a {
+        /* renamed from: a */
+        final /* synthetic */ RadioPlayerFragment f6868a;
+
+        C21604(RadioPlayerFragment this$0) {
+            this.f6868a = this$0;
+        }
+
+        /* renamed from: a */
+        public void mo1575a() {
+            if (C1772k.m6480a().m6489c() != 0) {
+                C2201w.m8371a((int) C0965R.string.phone_status_busy_music, 1);
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.radio.player.RadioPlayerFragment$5 */
+    class C21615 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ RadioPlayerFragment f6869a;
+
+        C21615(RadioPlayerFragment this$0) {
+            this.f6869a = this$0;
+        }
+
+        public void run() {
+            this.f6869a.f6884n.setStartIndex(new Random().nextInt(20));
+            this.f6869a.f6884n.invalidate();
+            if (this.f6869a.f6891u != null) {
+                this.f6869a.f6891u.postDelayed(this.f6869a.f6892v, 150);
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.radio.player.RadioPlayerFragment$6 */
+    class C21626 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ RadioPlayerFragment f6870a;
+
+        C21626(RadioPlayerFragment this$0) {
+            this.f6870a = this$0;
+        }
+
+        public void run() {
+            this.f6870a.f6877g.setImageDrawable(C2188r.m8331b(C0965R.drawable.radio_ic_play));
+            this.f6870a.f6874d.setProgress(0);
+        }
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.f6885o = C1818h.m6730b();
+        C1261k.m4460a(this.f6891u);
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    public void onStart() {
+        m8162m();
+        super.onStart();
+        C1260i.m4435b(f6871a, "------onStart()------");
+    }
+
+    public void onResume() {
+        if (this.f6886p != null && this.f6886p.f5920l) {
+            m8154i();
+        }
+        m8140b();
+        C1261k.m4461b((int) C1253f.gS);
+        super.onResume();
+        onInitFocusAreas();
+        if (this.f6886p == null || !this.f6886p.m7369j()) {
+            m8168p();
+        } else {
+            m8167o();
+        }
+    }
+
+    public void onPause() {
+        super.onPause();
+        m8168p();
+    }
+
+    public void onDestroyView() {
+        dismissDialog();
+        m8158k();
+        super.onDestroyView();
+    }
+
+    public void onDetach() {
+        this.f6891u.removeMessages(307);
+        C1261k.m4464b(this.f6891u);
+        this.f6891u = null;
+        C1702j.m6181a().m6188c().m6604a(null);
+        super.onDetach();
+    }
+
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        C1260i.m4434b(f6871a);
+        if (hidden) {
+            m8158k();
+            m8168p();
+        } else if (this.f6886p != null) {
+            if (this.f6886p.f5920l) {
+                m8154i();
+            }
+            if (this.f6886p.m7369j()) {
+                m8167o();
+            }
+        }
+    }
+
+    public boolean onBackPressed() {
+        m8148f();
+        return true;
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mContentView = inflater.inflate(C0965R.layout.frag_radio_player, null);
+        m8165n();
+        return this.mContentView;
+    }
+
+    @Deprecated
+    protected void onInitView() {
+    }
+
+    @Deprecated
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    @Deprecated
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    protected void onUpdateSkin() {
+    }
+
+    /* renamed from: a */
+    private void m8134a() {
+        m8136a(C1702j.m6181a().m6188c().mo1696p());
+        if (this.f6886p == null) {
+            this.f6885o.m6811f(true);
+            m8170q();
+            C1702j.m6181a().m6188c().m6626f();
+        } else if (!this.f6885o.m6814g(C1702j.m6181a().m6188c().m6649s()) || this.f6886p.f5918j <= 0) {
+            this.f6885o.m6811f(true);
+            this.f6885o.m6806e(this.f6886p);
+        } else {
+            m8140b();
+            this.f6885o.m6807e(true);
+            this.f6885o.m6774H();
+        }
+    }
+
+    /* renamed from: a */
+    private void m8135a(int status) {
+        if (C1702j.m6181a().m6188c().m6649s() == 101) {
+            this.f6872b.setVisibility(0);
+            this.f6873c.m8398a((int) C0965R.string.module_music_content_no_network, (int) C0965R.string.module_music_content_reconnect);
+            this.f6873c.m8401a(true);
+        }
+        switch (status) {
+            case 2:
+                this.f6882l.setVisibility(0);
+                this.f6873c.setVisibility(8);
+                break;
+            case 3:
+                this.f6882l.setVisibility(8);
+                this.f6873c.setVisibility(0);
+                break;
+            case 6:
+                String appName = this.f6885o.m6779a(C1702j.m6181a().m6188c().m6647q());
+                this.f6873c.m8398a((int) C0965R.string.module_music_thirdparty_downlist_empty2, (int) C0965R.string.module_music_content_reconnect);
+                this.f6873c.m8401a(true);
+                this.f6882l.setVisibility(8);
+                this.f6873c.setVisibility(0);
+                break;
+        }
+        onInitFocusAreas();
+    }
+
+    /* renamed from: b */
+    private void m8140b() {
+        if (this.f6886p == null) {
+            m8143c();
             return;
-          } while (paramAnonymousMessage.arg1 != com.baidu.carlife.logic.a.j.a().c().s());
-          removeMessages(307);
-          com.baidu.carlife.logic.a.j.a().c().i(2);
-          if (RadioPlayerFragment.d(RadioPlayerFragment.this).q()) {
-            RadioPlayerFragment.a(RadioPlayerFragment.this, com.baidu.carlife.logic.music.h.b().i());
-          }
-          RadioPlayerFragment.e(RadioPlayerFragment.this);
-          return;
-          if (RadioPlayerFragment.j(RadioPlayerFragment.this))
-          {
-            RadioPlayerFragment.d(RadioPlayerFragment.this).y();
-            RadioPlayerFragment.d(RadioPlayerFragment.this).f(true);
-            com.baidu.carlife.core.k.a(307);
-            return;
-          }
-        } while ((RadioPlayerFragment.n(RadioPlayerFragment.this) == null) || (paramAnonymousMessage.arg2 != com.baidu.carlife.logic.a.j.a().c().s()) || ((paramAnonymousMessage.arg1 >= 3) && (paramAnonymousMessage.arg1 % 3 != 0)));
-        RadioPlayerFragment.n(RadioPlayerFragment.this).setProgress(paramAnonymousMessage.arg1);
-        return;
-      } while ((paramAnonymousMessage.arg1 != com.baidu.carlife.logic.a.j.a().c().s()) || (RadioPlayerFragment.o(RadioPlayerFragment.this) == null));
-      if ((RadioPlayerFragment.c(RadioPlayerFragment.this) != null) && (RadioPlayerFragment.c(RadioPlayerFragment.this).k))
-      {
-        RadioPlayerFragment.o(RadioPlayerFragment.this).setImageDrawable(com.baidu.carlife.util.r.b(2130839334));
-        RadioPlayerFragment.p(RadioPlayerFragment.this);
-        return;
-      }
-      RadioPlayerFragment.o(RadioPlayerFragment.this).setImageDrawable(com.baidu.carlife.util.r.b(2130839335));
-      RadioPlayerFragment.q(RadioPlayerFragment.this);
-    }
-  };
-  private Runnable v = new Runnable()
-  {
-    public void run()
-    {
-      RadioPlayerFragment.r(RadioPlayerFragment.this).setStartIndex(new Random().nextInt(20));
-      RadioPlayerFragment.r(RadioPlayerFragment.this).invalidate();
-      if (RadioPlayerFragment.s(RadioPlayerFragment.this) != null) {
-        RadioPlayerFragment.s(RadioPlayerFragment.this).postDelayed(RadioPlayerFragment.t(RadioPlayerFragment.this), 150L);
-      }
-    }
-  };
-  private com.baidu.carlife.f.g w;
-  private com.baidu.carlife.f.g x;
-  
-  private void a()
-  {
-    a(com.baidu.carlife.logic.a.j.a().c().p());
-    if (this.p == null)
-    {
-      this.o.f(true);
-      q();
-      com.baidu.carlife.logic.a.j.a().c().f();
-      return;
-    }
-    if ((this.o.g(com.baidu.carlife.logic.a.j.a().c().s())) && (this.p.j > 0))
-    {
-      b();
-      this.o.e(true);
-      this.o.H();
-      return;
-    }
-    this.o.f(true);
-    this.o.e(this.p);
-  }
-  
-  private void a(int paramInt)
-  {
-    if (com.baidu.carlife.logic.a.j.a().c().s() == 101)
-    {
-      this.b.setVisibility(0);
-      this.c.a(2131296598, 2131296600);
-      this.c.a(true);
-    }
-    switch (paramInt)
-    {
-    }
-    for (;;)
-    {
-      onInitFocusAreas();
-      return;
-      this.l.setVisibility(0);
-      this.c.setVisibility(8);
-      continue;
-      this.l.setVisibility(8);
-      this.c.setVisibility(0);
-      continue;
-      this.o.a(com.baidu.carlife.logic.a.j.a().c().q());
-      this.c.a(2131296614, 2131296600);
-      this.c.a(true);
-      this.l.setVisibility(8);
-      this.c.setVisibility(0);
-    }
-  }
-  
-  private void a(MusicSongModel paramMusicSongModel)
-  {
-    this.p = paramMusicSongModel;
-  }
-  
-  private void b()
-  {
-    if (this.p == null)
-    {
-      c();
-      return;
-    }
-    this.r = false;
-    try
-    {
-      this.q = (Integer.parseInt(this.p.i) / 1000);
-      this.d.setMax(this.q);
-      this.d.setProgress(this.p.j);
-      if (this.p.k)
-      {
-        this.g.setImageDrawable(com.baidu.carlife.util.r.b(2130839334));
-        this.j.setText(this.p.b);
-        this.k.setText(this.p.f);
-        if (this.p.g != null)
-        {
-          com.facebook.drawee.c.a locala = com.baidu.carlife.g.a.a(this.m, this.p.g, 200, 200);
-          this.m.setController(locala);
         }
-        if (this.p.s != 1) {
-          break label194;
+        this.f6888r = false;
+        try {
+            this.f6887q = Integer.parseInt(this.f6886p.f5917i) / 1000;
+        } catch (NumberFormatException e) {
+            this.f6887q = 1;
         }
-        this.e.setImageResource(2130839332);
-      }
-    }
-    catch (NumberFormatException localNumberFormatException)
-    {
-      for (;;)
-      {
-        this.q = 1;
-        continue;
-        this.g.setImageDrawable(com.baidu.carlife.util.r.b(2130839335));
-      }
-      label194:
-      this.e.setImageResource(2130839331);
-    }
-  }
-  
-  private void c()
-  {
-    this.d.setMax(1);
-    this.d.setProgress(0);
-    this.k.setText("");
-    this.j.setText("");
-    this.m.setImageURI("");
-    this.e.setImageResource(2130839331);
-  }
-  
-  private void d()
-  {
-    if (this.p == null) {
-      return;
-    }
-    if (this.p.l)
-    {
-      w.a("正在缓冲", 0);
-      return;
-    }
-    e();
-  }
-  
-  private void e()
-  {
-    if (!this.o.q())
-    {
-      this.o.t();
-      this.o.u();
-      this.o.e(this.p);
-      return;
-    }
-    if (this.p.k)
-    {
-      p.a().c();
-      this.o.f(true);
-      return;
-    }
-    p.a().d();
-    this.o.e(true);
-  }
-  
-  private void f()
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putBoolean("is_from_player", true);
-    com.baidu.carlife.core.screen.presentation.h.a().back(localBundle);
-  }
-  
-  private void g()
-  {
-    if (this.p != null)
-    {
-      if (this.p.s != 1) {
-        break label46;
-      }
-      this.p.s = 0;
-      this.e.setImageResource(2130839331);
-    }
-    label46:
-    do
-    {
-      c.a().a(this.p);
-      return;
-      StatisticManager.onEvent("CONTENT_LIKE_0001");
-      this.p.s = 1;
-      this.e.setImageResource(2130839332);
-    } while (this.p.r != 999);
-  }
-  
-  private void h()
-  {
-    if (this.p == null) {}
-    do
-    {
-      return;
-      StatisticManager.onEvent("CONTENT_LIKE_0002");
-      if ((this.o.q()) && (this.p.k)) {
-        this.o.f(true);
-      }
-      this.p.s = 2;
-      c.a().a(this.p);
-    } while (this.p.r == 999);
-    this.r = true;
-    com.baidu.carlife.logic.a.j.a().e();
-  }
-  
-  private void i()
-  {
-    this.o.B();
-  }
-  
-  private void j()
-  {
-    this.o.A();
-  }
-  
-  private void k()
-  {
-    com.baidu.carlife.view.g.e().f();
-  }
-  
-  private boolean l()
-  {
-    return (!this.o.I()) && (this.p != null) && ((this.p.n < this.p.o) || (this.p.n < 0L) || (this.p.o <= 0L));
-  }
-  
-  private void m()
-  {
-    com.baidu.carlife.logic.a.j.a().c().a(this.s);
-    com.baidu.carlife.logic.a.j.a().c().a(getArguments());
-    this.p = com.baidu.carlife.logic.a.j.a().c().p();
-  }
-  
-  private void n()
-  {
-    this.b = ((ImageButton)this.mContentView.findViewById(2131624258));
-    this.b.setBackground(b.b(getContext()));
-    this.j = ((TextView)this.mContentView.findViewById(2131625092));
-    this.k = ((TextView)this.mContentView.findViewById(2131625093));
-    this.e = ((ImageButton)this.mContentView.findViewById(2131625095));
-    this.f = ((ImageButton)this.mContentView.findViewById(2131625096));
-    this.g = ((ImageButton)this.mContentView.findViewById(2131625098));
-    this.h = ((ImageButton)this.mContentView.findViewById(2131625100));
-    this.i = ((ImageButton)this.mContentView.findViewById(2131625101));
-    this.d = ((RadioPlayerCircleProgressView)this.mContentView.findViewById(2131625099));
-    this.m = ((SimpleDraweeView)this.mContentView.findViewById(2131625097));
-    this.c = ((CommonTipView)this.mContentView.findViewById(2131623981));
-    this.c.setCommonTipCallBack(new CommonTipView.a()
-    {
-      public void a()
-      {
-        if (com.baidu.carlife.logic.k.a().c() != 0) {
-          w.a(2131296842, 1);
+        this.f6874d.setMax(this.f6887q);
+        this.f6874d.setProgress(this.f6886p.f5918j);
+        if (this.f6886p.f5919k) {
+            this.f6877g.setImageDrawable(C2188r.m8331b(C0965R.drawable.radio_ic_pause));
+        } else {
+            this.f6877g.setImageDrawable(C2188r.m8331b(C0965R.drawable.radio_ic_play));
         }
-      }
-    });
-    this.l = ((LinearLayout)this.mContentView.findViewById(2131625094));
-    this.f.setOnClickListener(this.t);
-    this.g.setOnClickListener(this.t);
-    this.h.setOnClickListener(this.t);
-    this.e.setOnClickListener(this.t);
-    this.i.setOnClickListener(this.t);
-    this.b.setOnClickListener(this.t);
-    this.n = ((HomeCardMusicMelodyView)this.mContentView.findViewById(2131625090));
-    this.n.setVisibility(4);
-  }
-  
-  private void o() {}
-  
-  private void p()
-  {
-    this.n.setVisibility(4);
-    if (this.u != null) {
-      this.u.removeCallbacks(this.v);
-    }
-  }
-  
-  private void q()
-  {
-    if (this.d != null) {
-      this.d.post(new Runnable()
-      {
-        public void run()
-        {
-          RadioPlayerFragment.o(RadioPlayerFragment.this).setImageDrawable(com.baidu.carlife.util.r.b(2130839335));
-          RadioPlayerFragment.n(RadioPlayerFragment.this).setProgress(0);
+        this.f6880j.setText(this.f6886p.f5910b);
+        this.f6881k.setText(this.f6886p.f5914f);
+        if (this.f6886p.f5915g != null) {
+            this.f6883m.setController(C1605a.m5867a(this.f6883m, this.f6886p.f5915g, 200, 200));
         }
-      });
+        if (this.f6886p.f5927s == 1) {
+            this.f6875e.setImageResource(C0965R.drawable.radio_ic_like_on);
+        } else {
+            this.f6875e.setImageResource(C0965R.drawable.radio_ic_like_off);
+        }
     }
-  }
-  
-  public boolean onBackPressed()
-  {
-    f();
-    return true;
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    this.o = com.baidu.carlife.logic.music.h.b();
-    com.baidu.carlife.core.k.a(this.u);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = paramLayoutInflater.inflate(2130968797, null);
-    n();
-    return this.mContentView;
-  }
-  
-  public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle)
-  {
-    return super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-  }
-  
-  public void onDestroyView()
-  {
-    dismissDialog();
-    k();
-    super.onDestroyView();
-  }
-  
-  public void onDetach()
-  {
-    this.u.removeMessages(307);
-    com.baidu.carlife.core.k.b(this.u);
-    this.u = null;
-    com.baidu.carlife.logic.a.j.a().c().a(null);
-    super.onDetach();
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    super.onHiddenChanged(paramBoolean);
-    i.b("CarLifeRadio");
-    if (paramBoolean)
-    {
-      k();
-      p();
+
+    /* renamed from: c */
+    private void m8143c() {
+        this.f6874d.setMax(1);
+        this.f6874d.setProgress(0);
+        this.f6881k.setText("");
+        this.f6880j.setText("");
+        this.f6883m.setImageURI("");
+        this.f6875e.setImageResource(C0965R.drawable.radio_ic_like_off);
     }
-    do
-    {
-      do
-      {
-        return;
-      } while (this.p == null);
-      if (this.p.l) {
-        i();
-      }
-    } while (!this.p.j());
-    o();
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.w == null)
-    {
-      this.w = new com.baidu.carlife.f.g(this.mContentView, 2, true);
-      this.w.d(this.b);
+
+    /* renamed from: d */
+    private void m8145d() {
+        if (this.f6886p != null) {
+            if (this.f6886p.f5920l) {
+                C2201w.m8373a("正在缓冲", 0);
+            } else {
+                m8146e();
+            }
+        }
     }
-    if (this.x == null)
-    {
-      this.x = new com.baidu.carlife.f.g(this.mContentView, 4, true);
-      this.x.d(this.e).d(this.f).d(this.g).d(this.h).d(this.i);
-      this.x.b(this.g);
+
+    /* renamed from: e */
+    private void m8146e() {
+        if (!this.f6885o.m6829q()) {
+            this.f6885o.m6832t();
+            this.f6885o.m6833u();
+            this.f6885o.m6806e(this.f6886p);
+        } else if (this.f6886p.f5919k) {
+            C1834p.m6925a().m6927c();
+            this.f6885o.m6811f(true);
+        } else {
+            C1834p.m6925a().m6928d();
+            this.f6885o.m6807e(true);
+        }
     }
-    d.a().b(new com.baidu.carlife.f.a[] { this.w, this.x });
-    d.a().h(this.x);
-  }
-  
-  @Deprecated
-  protected void onInitView() {}
-  
-  public void onPause()
-  {
-    super.onPause();
-    p();
-  }
-  
-  public void onResume()
-  {
-    if ((this.p != null) && (this.p.l)) {
-      i();
+
+    /* renamed from: f */
+    private void m8148f() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("is_from_player", true);
+        C1328h.m4757a().back(bundle);
     }
-    b();
-    com.baidu.carlife.core.k.b(4023);
-    super.onResume();
-    onInitFocusAreas();
-    if ((this.p != null) && (this.p.j()))
-    {
-      o();
-      return;
+
+    /* renamed from: g */
+    private void m8150g() {
+        if (this.f6886p != null) {
+            if (this.f6886p.f5927s == 1) {
+                this.f6886p.f5927s = 0;
+                this.f6875e.setImageResource(C0965R.drawable.radio_ic_like_off);
+            } else {
+                StatisticManager.onEvent(StatisticConstants.CONTENT_LIKE_0001);
+                this.f6886p.f5927s = 1;
+                this.f6875e.setImageResource(C0965R.drawable.radio_ic_like_on);
+                if (this.f6886p.f5926r == 999) {
+                    return;
+                }
+            }
+            C1795c.m6660a().m6667a(this.f6886p);
+        }
     }
-    p();
-  }
-  
-  public void onStart()
-  {
-    m();
-    super.onStart();
-    i.b("CarLifeRadio", "------onStart()------");
-  }
-  
-  @Deprecated
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin() {}
-  
-  @Deprecated
-  protected void onUpdateStyle(boolean paramBoolean) {}
+
+    /* renamed from: h */
+    private void m8152h() {
+        if (this.f6886p != null) {
+            StatisticManager.onEvent(StatisticConstants.CONTENT_LIKE_0002);
+            if (this.f6885o.m6829q() && this.f6886p.f5919k) {
+                this.f6885o.m6811f(true);
+            }
+            this.f6886p.f5927s = 2;
+            C1795c.m6660a().m6667a(this.f6886p);
+            if (this.f6886p.f5926r != 999) {
+                this.f6888r = true;
+                C1702j.m6181a().m6190e();
+            }
+        }
+    }
+
+    /* renamed from: a */
+    private void m8136a(MusicSongModel song) {
+        this.f6886p = song;
+    }
+
+    /* renamed from: i */
+    private void m8154i() {
+        this.f6885o.m6768B();
+    }
+
+    /* renamed from: j */
+    private void m8156j() {
+        this.f6885o.m6767A();
+    }
+
+    /* renamed from: k */
+    private void m8158k() {
+        C2342g.m8864e().m8895f();
+    }
+
+    /* renamed from: l */
+    private boolean m8161l() {
+        return (this.f6885o.m6775I() || this.f6886p == null || (this.f6886p.f5922n >= this.f6886p.f5923o && this.f6886p.f5922n >= 0 && this.f6886p.f5923o > 0)) ? false : true;
+    }
+
+    /* renamed from: m */
+    private void m8162m() {
+        C1702j.m6181a().m6188c().m6604a(this.f6889s);
+        C1702j.m6181a().m6188c().mo1689a(getArguments());
+        this.f6886p = C1702j.m6181a().m6188c().mo1696p();
+    }
+
+    /* renamed from: n */
+    private void m8165n() {
+        this.f6872b = (ImageButton) this.mContentView.findViewById(C0965R.id.ib_left);
+        this.f6872b.setBackground(C2251b.m8528b(getContext()));
+        this.f6880j = (TextView) this.mContentView.findViewById(C0965R.id.radio_channel_name);
+        this.f6881k = (TextView) this.mContentView.findViewById(C0965R.id.radio_content_name);
+        this.f6875e = (ImageButton) this.mContentView.findViewById(C0965R.id.radio_favorite);
+        this.f6876f = (ImageButton) this.mContentView.findViewById(C0965R.id.radio_prev);
+        this.f6877g = (ImageButton) this.mContentView.findViewById(C0965R.id.radio_play);
+        this.f6878h = (ImageButton) this.mContentView.findViewById(C0965R.id.radio_next);
+        this.f6879i = (ImageButton) this.mContentView.findViewById(C0965R.id.radio_delete);
+        this.f6874d = (RadioPlayerCircleProgressView) this.mContentView.findViewById(C0965R.id.cp_progress);
+        this.f6883m = (SimpleDraweeView) this.mContentView.findViewById(C0965R.id.frag_radio_player_img);
+        this.f6873c = (CommonTipView) this.mContentView.findViewById(C0965R.id.common_tip_view);
+        this.f6873c.setCommonTipCallBack(new C21604(this));
+        this.f6882l = (LinearLayout) this.mContentView.findViewById(C0965R.id.ll_radio_control);
+        this.f6876f.setOnClickListener(this.f6890t);
+        this.f6877g.setOnClickListener(this.f6890t);
+        this.f6878h.setOnClickListener(this.f6890t);
+        this.f6875e.setOnClickListener(this.f6890t);
+        this.f6879i.setOnClickListener(this.f6890t);
+        this.f6872b.setOnClickListener(this.f6890t);
+        this.f6884n = (HomeCardMusicMelodyView) this.mContentView.findViewById(C0965R.id.radio_player_melody_view);
+        this.f6884n.setVisibility(4);
+    }
+
+    /* renamed from: o */
+    private void m8167o() {
+    }
+
+    /* renamed from: p */
+    private void m8168p() {
+        this.f6884n.setVisibility(4);
+        if (this.f6891u != null) {
+            this.f6891u.removeCallbacks(this.f6892v);
+        }
+    }
+
+    /* renamed from: q */
+    private void m8170q() {
+        if (this.f6874d != null) {
+            this.f6874d.post(new C21626(this));
+        }
+    }
+
+    public void onInitFocusAreas() {
+        if (this.f6893w == null) {
+            this.f6893w = new C1443g(this.mContentView, 2, true);
+            this.f6893w.m5300d(this.f6872b);
+        }
+        if (this.f6894x == null) {
+            this.f6894x = new C1443g(this.mContentView, 4, true);
+            this.f6894x.m5300d(this.f6875e).m5300d(this.f6876f).m5300d(this.f6877g).m5300d(this.f6878h).m5300d(this.f6879i);
+            this.f6894x.m5297b(this.f6877g);
+        }
+        C1440d.m5251a().m5256b(this.f6893w, this.f6894x);
+        C1440d.m5251a().m5268h(this.f6894x);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/radio/player/RadioPlayerFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -22,533 +22,433 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Scroller;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
-public class XScrollView
-  extends ScrollView
-  implements AbsListView.OnScrollListener
-{
-  private static final float OFFSET_RADIO = 1.8F;
-  private static final int PULL_LOAD_MORE_DELTA = 50;
-  private static final int SCROLL_BACK_FOOTER = 1;
-  private static final int SCROLL_BACK_HEADER = 0;
-  private static final int SCROLL_DURATION = 400;
-  private Activity mActivity;
-  private LinearLayout mContentLayout;
-  private boolean mEnableAutoLoad = false;
-  private boolean mEnablePullLoad = false;
-  private boolean mEnablePullRefresh = false;
-  private XFooterView mFooterView;
-  private XHeaderView mHeader;
-  private RelativeLayout mHeaderContent;
-  private int mHeaderHeight;
-  private TextView mHeaderTime;
-  private float mLastY = -1.0F;
-  private IXScrollViewListener mListener;
-  private boolean mPullLoading = false;
-  private boolean mPullRefreshing = false;
-  private int mScrollBack;
-  private AbsListView.OnScrollListener mScrollListener;
-  private Scroller mScroller;
-  private ViewGroup mViewGroup;
-  
-  public XScrollView(Context paramContext)
-  {
-    super(paramContext);
-    initWithContext((Activity)paramContext);
-  }
-  
-  public XScrollView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    initWithContext((Activity)paramContext);
-  }
-  
-  public XScrollView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    initWithContext((Activity)paramContext);
-  }
-  
-  private void disableEdgeEffect()
-  {
-    try
-    {
-      Object localObject2 = Class.forName("android.widget.AbsListView");
-      if (localObject2 != null)
-      {
-        Object localObject4 = Class.forName("android.widget.EdgeEffect");
-        Object localObject3 = ((Class)localObject4).getConstructor(new Class[] { Context.class });
-        Object localObject1 = ((Constructor)localObject3).newInstance(new Object[] { getContext() });
-        localObject3 = ((Constructor)localObject3).newInstance(new Object[] { getContext() });
-        Field localField = ((Class)localObject4).getDeclaredField("mEdge");
-        localObject4 = ((Class)localObject4).getDeclaredField("mGlow");
-        localField.setAccessible(true);
-        ((Field)localObject4).setAccessible(true);
-        localField.set(localObject1, new ColorDrawable(17170445));
-        localField.set(localObject3, new ColorDrawable(17170445));
-        ((Field)localObject4).set(localObject1, new ColorDrawable(17170445));
-        ((Field)localObject4).set(localObject3, new ColorDrawable(17170445));
-        localObject4 = ((Class)localObject2).getDeclaredField("mEdgeGlowTop");
-        localObject2 = ((Class)localObject2).getDeclaredField("mEdgeGlowBottom");
-        if (localObject4 != null)
-        {
-          ((Field)localObject4).setAccessible(true);
-          ((Field)localObject4).set(this, localObject1);
+public class XScrollView extends ScrollView implements OnScrollListener {
+    private static final float OFFSET_RADIO = 1.8f;
+    private static final int PULL_LOAD_MORE_DELTA = 50;
+    private static final int SCROLL_BACK_FOOTER = 1;
+    private static final int SCROLL_BACK_HEADER = 0;
+    private static final int SCROLL_DURATION = 400;
+    private Activity mActivity;
+    private LinearLayout mContentLayout;
+    private boolean mEnableAutoLoad = false;
+    private boolean mEnablePullLoad = false;
+    private boolean mEnablePullRefresh = false;
+    private XFooterView mFooterView;
+    private XHeaderView mHeader;
+    private RelativeLayout mHeaderContent;
+    private int mHeaderHeight;
+    private TextView mHeaderTime;
+    private float mLastY = -1.0f;
+    private IXScrollViewListener mListener;
+    private boolean mPullLoading = false;
+    private boolean mPullRefreshing = false;
+    private int mScrollBack;
+    private OnScrollListener mScrollListener;
+    private Scroller mScroller;
+    private ViewGroup mViewGroup;
+
+    /* renamed from: com.baidu.navisdk.ui.search.xpulltorefresh.XScrollView$1 */
+    class C44871 implements OnGlobalLayoutListener {
+        C44871() {
         }
-        if (localObject2 != null)
-        {
-          ((Field)localObject2).setAccessible(true);
-          ((Field)localObject2).set(this, localObject3);
-        }
-      }
-      return;
-    }
-    catch (Exception localException) {}
-  }
-  
-  private void disableEdgeGlow()
-  {
-    try
-    {
-      Object localObject2 = Class.forName("android.widget.AbsListView");
-      if (localObject2 != null)
-      {
-        Object localObject3 = Class.forName("android.widget.EdgeGlow").getConstructor(new Class[] { Drawable.class, Drawable.class });
-        Object localObject1 = ((Constructor)localObject3).newInstance(new Object[] { new ColorDrawable(17170445), new ColorDrawable(17170445) });
-        localObject3 = ((Constructor)localObject3).newInstance(new Object[] { new ColorDrawable(17170445), new ColorDrawable(17170445) });
-        Field localField = ((Class)localObject2).getDeclaredField("mEdgeGlowTop");
-        localObject2 = ((Class)localObject2).getDeclaredField("mEdgeGlowBottom");
-        if (localField != null)
-        {
-          localField.setAccessible(true);
-          localField.set(this, localObject1);
-        }
-        if (localObject2 != null)
-        {
-          ((Field)localObject2).setAccessible(true);
-          ((Field)localObject2).set(this, localObject3);
-        }
-      }
-      return;
-    }
-    catch (Exception localException) {}
-  }
-  
-  private void initWithContext(Activity paramActivity)
-  {
-    disableEdgeEffect();
-    disableEdgeGlow();
-    this.mViewGroup = ((ViewGroup)JarUtils.inflate(paramActivity, 1711472646, null));
-    this.mContentLayout = ((LinearLayout)this.mViewGroup.findViewById(1711865866));
-    this.mScroller = new Scroller(paramActivity, new DecelerateInterpolator());
-    setOnScrollListener(this);
-    this.mHeader = new XHeaderView(paramActivity);
-    this.mHeaderContent = ((RelativeLayout)this.mHeader.findViewById(1711865870));
-    this.mHeaderTime = ((TextView)this.mHeader.findViewById(1711865873));
-    LinearLayout localLinearLayout = (LinearLayout)this.mViewGroup.findViewById(1711865865);
-    if (localLinearLayout != null) {
-      localLinearLayout.addView(this.mHeader);
-    }
-    this.mFooterView = new XFooterView(paramActivity);
-    paramActivity = new LinearLayout.LayoutParams(-1, -1);
-    paramActivity.gravity = 17;
-    localLinearLayout = (LinearLayout)this.mViewGroup.findViewById(1711865867);
-    if (localLinearLayout != null) {
-      localLinearLayout.addView(this.mFooterView, paramActivity);
-    }
-    paramActivity = this.mHeader.getViewTreeObserver();
-    if (paramActivity != null) {
-      paramActivity.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
-      {
+
         @TargetApi(16)
-        public void onGlobalLayout()
-        {
-          XScrollView.access$002(XScrollView.this, XScrollView.this.mHeaderContent.getHeight());
-          ViewTreeObserver localViewTreeObserver = XScrollView.this.getViewTreeObserver();
-          if (localViewTreeObserver != null)
-          {
-            if (Build.VERSION.SDK_INT < 16) {
-              localViewTreeObserver.removeGlobalOnLayoutListener(this);
+        public void onGlobalLayout() {
+            XScrollView.this.mHeaderHeight = XScrollView.this.mHeaderContent.getHeight();
+            ViewTreeObserver observer = XScrollView.this.getViewTreeObserver();
+            if (observer == null) {
+                return;
             }
-          }
-          else {
-            return;
-          }
-          localViewTreeObserver.removeOnGlobalLayoutListener(this);
+            if (VERSION.SDK_INT < 16) {
+                observer.removeGlobalOnLayoutListener(this);
+            } else {
+                observer.removeOnGlobalLayoutListener(this);
+            }
         }
-      });
     }
-    addView(this.mViewGroup);
-  }
-  
-  private void invokeOnScrolling()
-  {
-    if ((this.mScrollListener instanceof OnXScrollListener)) {
-      ((OnXScrollListener)this.mScrollListener).onXScrolling(this);
+
+    /* renamed from: com.baidu.navisdk.ui.search.xpulltorefresh.XScrollView$2 */
+    class C44882 implements OnClickListener {
+        C44882() {
+        }
+
+        public void onClick(View v) {
+            XScrollView.this.startLoadMore();
+        }
     }
-  }
-  
-  private boolean isBottom()
-  {
-    return (Math.abs(getScrollY() + getHeight() - computeVerticalScrollRange()) <= 5) || ((getScrollY() > 0) && (this.mFooterView != null) && (this.mFooterView.getBottomMargin() > 0));
-  }
-  
-  private boolean isTop()
-  {
-    return (getScrollY() <= 0) || (this.mHeader.getVisibleHeight() > this.mHeaderHeight);
-  }
-  
-  private void loadMore()
-  {
-    if ((this.mEnablePullLoad) && (this.mListener != null)) {
-      this.mListener.onLoadMore();
+
+    public interface IXScrollViewListener {
+        void onLoadMore();
+
+        void onRefresh();
     }
-  }
-  
-  private void refresh()
-  {
-    if ((this.mEnablePullRefresh) && (this.mListener != null)) {
-      this.mListener.onRefresh();
+
+    public interface OnXScrollListener extends OnScrollListener {
+        void onXScrolling(View view);
     }
-  }
-  
-  private void resetFooterHeight()
-  {
-    int i = this.mFooterView.getBottomMargin();
-    if (i > 0)
-    {
-      this.mScrollBack = 1;
-      this.mScroller.startScroll(0, i, 0, -i, 400);
-      invalidate();
+
+    public XScrollView(Context context) {
+        super(context);
+        initWithContext((Activity) context);
     }
-  }
-  
-  private void resetHeaderHeight()
-  {
-    int k = this.mHeader.getVisibleHeight();
-    if (k == 0) {}
-    while ((this.mPullRefreshing) && (k <= this.mHeaderHeight)) {
-      return;
+
+    public XScrollView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initWithContext((Activity) context);
     }
-    int j = 0;
-    int i = j;
-    if (this.mPullRefreshing)
-    {
-      i = j;
-      if (k > this.mHeaderHeight) {
-        i = this.mHeaderHeight;
-      }
+
+    public XScrollView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initWithContext((Activity) context);
     }
-    this.mScrollBack = 0;
-    this.mScroller.startScroll(0, k, 0, i - k, 400);
-    invalidate();
-  }
-  
-  private void resetHeaderOrBottom()
-  {
-    if (isTop())
-    {
-      if ((this.mEnablePullRefresh) && (this.mHeader.getVisibleHeight() > this.mHeaderHeight))
-      {
+
+    private void initWithContext(Activity mActivity) {
+        disableEdgeEffect();
+        disableEdgeGlow();
+        this.mViewGroup = (ViewGroup) JarUtils.inflate(mActivity, C4048R.layout.layout_xpulltorefresh_crollview, null);
+        this.mContentLayout = (LinearLayout) this.mViewGroup.findViewById(C4048R.id.content_layout);
+        this.mScroller = new Scroller(mActivity, new DecelerateInterpolator());
+        setOnScrollListener(this);
+        this.mHeader = new XHeaderView(mActivity);
+        this.mHeaderContent = (RelativeLayout) this.mHeader.findViewById(C4048R.id.header_content);
+        this.mHeaderTime = (TextView) this.mHeader.findViewById(C4048R.id.header_hint_time);
+        LinearLayout headerLayout = (LinearLayout) this.mViewGroup.findViewById(C4048R.id.header_layout);
+        if (headerLayout != null) {
+            headerLayout.addView(this.mHeader);
+        }
+        this.mFooterView = new XFooterView(mActivity);
+        LayoutParams params = new LayoutParams(-1, -1);
+        params.gravity = 17;
+        LinearLayout footLayout = (LinearLayout) this.mViewGroup.findViewById(C4048R.id.footer_layout);
+        if (footLayout != null) {
+            footLayout.addView(this.mFooterView, params);
+        }
+        ViewTreeObserver observer = this.mHeader.getViewTreeObserver();
+        if (observer != null) {
+            observer.addOnGlobalLayoutListener(new C44871());
+        }
+        addView(this.mViewGroup);
+    }
+
+    public void setContentView(ViewGroup content) {
+        if (this.mViewGroup != null) {
+            if (this.mContentLayout == null) {
+                this.mContentLayout = (LinearLayout) this.mViewGroup.findViewById(C4048R.id.content_layout);
+            }
+            if (this.mContentLayout != null && this.mContentLayout.getChildCount() > 0) {
+                this.mContentLayout.removeAllViews();
+            }
+            if (this.mContentLayout != null) {
+                this.mContentLayout.addView(content);
+            }
+        }
+    }
+
+    public void setView(View content) {
+        if (this.mViewGroup != null) {
+            if (this.mContentLayout == null) {
+                this.mContentLayout = (LinearLayout) this.mViewGroup.findViewById(C4048R.id.content_layout);
+            }
+            if (this.mContentLayout != null) {
+                this.mContentLayout.addView(content);
+            }
+        }
+    }
+
+    public void setPullRefreshEnable(boolean enable) {
+        this.mEnablePullRefresh = enable;
+        this.mHeaderContent.setVisibility(enable ? 0 : 4);
+    }
+
+    public void setPullLoadEnable(boolean enable) {
+        this.mEnablePullLoad = enable;
+        if (this.mEnablePullLoad) {
+            this.mPullLoading = false;
+            this.mFooterView.setPadding(0, 0, 0, 0);
+            this.mFooterView.show();
+            this.mFooterView.setState(0);
+            this.mFooterView.setOnClickListener(new C44882());
+            return;
+        }
+        this.mFooterView.setBottomMargin(0);
+        this.mFooterView.hide();
+        this.mFooterView.setPadding(0, 0, 0, this.mFooterView.getHeight() * -1);
+        this.mFooterView.setOnClickListener(null);
+    }
+
+    public void setAutoLoadEnable(boolean enable) {
+        this.mEnableAutoLoad = enable;
+    }
+
+    public void stopRefresh() {
+        if (this.mPullRefreshing) {
+            this.mPullRefreshing = false;
+            resetHeaderHeight();
+        }
+    }
+
+    public void stopLoadMore() {
+        if (this.mPullLoading) {
+            this.mPullLoading = false;
+            this.mFooterView.setState(0);
+        }
+    }
+
+    public void setRefreshTime(String time) {
+        this.mHeaderTime.setText(time);
+    }
+
+    public void setIXScrollViewListener(IXScrollViewListener listener) {
+        this.mListener = listener;
+    }
+
+    public void autoRefresh() {
+        this.mHeader.setVisibleHeight(this.mHeaderHeight);
+        if (this.mEnablePullRefresh && !this.mPullRefreshing) {
+            if (this.mHeader.getVisibleHeight() > this.mHeaderHeight) {
+                this.mHeader.setState(1);
+            } else {
+                this.mHeader.setState(0);
+            }
+        }
         this.mPullRefreshing = true;
         this.mHeader.setState(2);
         refresh();
-      }
-      resetHeaderHeight();
     }
-    while (!isBottom()) {
-      return;
-    }
-    if ((this.mEnablePullLoad) && (this.mFooterView.getBottomMargin() > 50)) {
-      startLoadMore();
-    }
-    resetFooterHeight();
-  }
-  
-  private void startLoadMore()
-  {
-    if (!this.mPullLoading)
-    {
-      this.mPullLoading = true;
-      this.mFooterView.setState(2);
-      loadMore();
-    }
-  }
-  
-  private void updateFooterHeight(float paramFloat)
-  {
-    int i = this.mFooterView.getBottomMargin() + (int)paramFloat;
-    if ((this.mEnablePullLoad) && (!this.mPullLoading))
-    {
-      if (i <= 50) {
-        break label101;
-      }
-      this.mFooterView.setState(1);
-    }
-    for (;;)
-    {
-      this.mFooterView.setBottomMargin(i);
-      BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("updateFooterHeight-" + getClass().getSimpleName(), null)new BNWorkerConfig
-      {
-        protected String execute()
-        {
-          XScrollView.this.fullScroll(130);
-          return null;
+
+    private void invokeOnScrolling() {
+        if (this.mScrollListener instanceof OnXScrollListener) {
+            this.mScrollListener.onXScrolling(this);
         }
-      }, new BNWorkerConfig(100, 0));
-      return;
-      label101:
-      this.mFooterView.setState(0);
     }
-  }
-  
-  private void updateHeaderHeight(float paramFloat)
-  {
-    this.mHeader.setVisibleHeight((int)paramFloat + this.mHeader.getVisibleHeight());
-    if ((this.mEnablePullRefresh) && (!this.mPullRefreshing))
-    {
-      if (this.mHeader.getVisibleHeight() <= this.mHeaderHeight) {
-        break label107;
-      }
-      this.mHeader.setState(1);
-    }
-    for (;;)
-    {
-      BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("updateHeaderHeight-" + getClass().getSimpleName(), null)new BNWorkerConfig
-      {
-        protected String execute()
-        {
-          XScrollView.this.fullScroll(33);
-          return null;
+
+    private void updateHeaderHeight(float delta) {
+        this.mHeader.setVisibleHeight(((int) delta) + this.mHeader.getVisibleHeight());
+        if (this.mEnablePullRefresh && !this.mPullRefreshing) {
+            if (this.mHeader.getVisibleHeight() > this.mHeaderHeight) {
+                this.mHeader.setState(1);
+            } else {
+                this.mHeader.setState(0);
+            }
         }
-      }, new BNWorkerConfig(100, 0));
-      return;
-      label107:
-      this.mHeader.setState(0);
+        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("updateHeaderHeight-" + getClass().getSimpleName(), null) {
+            protected String execute() {
+                XScrollView.this.fullScroll(33);
+                return null;
+            }
+        }, new BNWorkerConfig(100, 0));
     }
-  }
-  
-  public void autoRefresh()
-  {
-    this.mHeader.setVisibleHeight(this.mHeaderHeight);
-    if ((this.mEnablePullRefresh) && (!this.mPullRefreshing))
-    {
-      if (this.mHeader.getVisibleHeight() <= this.mHeaderHeight) {
-        break label65;
-      }
-      this.mHeader.setState(1);
+
+    private void resetHeaderHeight() {
+        int height = this.mHeader.getVisibleHeight();
+        if (height != 0) {
+            if (!this.mPullRefreshing || height > this.mHeaderHeight) {
+                int finalHeight = 0;
+                if (this.mPullRefreshing && height > this.mHeaderHeight) {
+                    finalHeight = this.mHeaderHeight;
+                }
+                this.mScrollBack = 0;
+                this.mScroller.startScroll(0, height, 0, finalHeight - height, 400);
+                invalidate();
+            }
+        }
     }
-    for (;;)
-    {
-      this.mPullRefreshing = true;
-      this.mHeader.setState(2);
-      refresh();
-      return;
-      label65:
-      this.mHeader.setState(0);
+
+    private void updateFooterHeight(float delta) {
+        int height = this.mFooterView.getBottomMargin() + ((int) delta);
+        if (this.mEnablePullLoad && !this.mPullLoading) {
+            if (height > 50) {
+                this.mFooterView.setState(1);
+            } else {
+                this.mFooterView.setState(0);
+            }
+        }
+        this.mFooterView.setBottomMargin(height);
+        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("updateFooterHeight-" + getClass().getSimpleName(), null) {
+            protected String execute() {
+                XScrollView.this.fullScroll(130);
+                return null;
+            }
+        }, new BNWorkerConfig(100, 0));
     }
-  }
-  
-  public void computeScroll()
-  {
-    if (this.mScroller.computeScrollOffset())
-    {
-      if (this.mScrollBack != 0) {
-        break label44;
-      }
-      this.mHeader.setVisibleHeight(this.mScroller.getCurrY());
+
+    private void resetFooterHeight() {
+        int bottomMargin = this.mFooterView.getBottomMargin();
+        if (bottomMargin > 0) {
+            this.mScrollBack = 1;
+            this.mScroller.startScroll(0, bottomMargin, 0, -bottomMargin, 400);
+            invalidate();
+        }
     }
-    for (;;)
-    {
-      postInvalidate();
-      invokeOnScrolling();
-      super.computeScroll();
-      return;
-      label44:
-      this.mFooterView.setBottomMargin(this.mScroller.getCurrY());
+
+    private void startLoadMore() {
+        if (!this.mPullLoading) {
+            this.mPullLoading = true;
+            this.mFooterView.setState(2);
+            loadMore();
+        }
     }
-  }
-  
-  public void onScroll(AbsListView paramAbsListView, int paramInt1, int paramInt2, int paramInt3)
-  {
-    if (this.mScrollListener != null) {
-      this.mScrollListener.onScroll(paramAbsListView, paramInt1, paramInt2, paramInt3);
+
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (this.mLastY == -1.0f) {
+            this.mLastY = ev.getRawY();
+        }
+        switch (ev.getAction()) {
+            case 0:
+                this.mLastY = ev.getRawY();
+                break;
+            case 2:
+                float deltaY = ev.getRawY() - this.mLastY;
+                this.mLastY = ev.getRawY();
+                if (!isTop() || (this.mHeader.getVisibleHeight() <= 0 && deltaY <= 0.0f)) {
+                    if (isBottom() && (this.mFooterView.getBottomMargin() > 0 || deltaY < 0.0f)) {
+                        updateFooterHeight((-deltaY) / OFFSET_RADIO);
+                        break;
+                    }
+                }
+                updateHeaderHeight(deltaY / OFFSET_RADIO);
+                invokeOnScrolling();
+                break;
+                break;
+            default:
+                this.mLastY = -1.0f;
+                resetHeaderOrBottom();
+                break;
+        }
+        return super.onTouchEvent(ev);
     }
-  }
-  
-  protected void onScrollChanged(int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    View localView = getChildAt(getChildCount() - 1);
-    if ((localView != null) && (localView.getBottom() - (localView.getHeight() + localView.getScrollY()) == 0) && (this.mEnableAutoLoad)) {
-      startLoadMore();
+
+    private void resetHeaderOrBottom() {
+        if (isTop()) {
+            if (this.mEnablePullRefresh && this.mHeader.getVisibleHeight() > this.mHeaderHeight) {
+                this.mPullRefreshing = true;
+                this.mHeader.setState(2);
+                refresh();
+            }
+            resetHeaderHeight();
+        } else if (isBottom()) {
+            if (this.mEnablePullLoad && this.mFooterView.getBottomMargin() > 50) {
+                startLoadMore();
+            }
+            resetFooterHeight();
+        }
     }
-    super.onScrollChanged(paramInt1, paramInt2, paramInt3, paramInt4);
-  }
-  
-  public void onScrollStateChanged(AbsListView paramAbsListView, int paramInt)
-  {
-    if (this.mScrollListener != null) {
-      this.mScrollListener.onScrollStateChanged(paramAbsListView, paramInt);
+
+    private boolean isTop() {
+        return getScrollY() <= 0 || this.mHeader.getVisibleHeight() > this.mHeaderHeight;
     }
-  }
-  
-  public boolean onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    if (this.mLastY == -1.0F) {
-      this.mLastY = paramMotionEvent.getRawY();
+
+    private boolean isBottom() {
+        return Math.abs((getScrollY() + getHeight()) - computeVerticalScrollRange()) <= 5 || (getScrollY() > 0 && this.mFooterView != null && this.mFooterView.getBottomMargin() > 0);
     }
-    switch (paramMotionEvent.getAction())
-    {
-    case 1: 
-    default: 
-      this.mLastY = -1.0F;
-      resetHeaderOrBottom();
+
+    public void computeScroll() {
+        if (this.mScroller.computeScrollOffset()) {
+            if (this.mScrollBack == 0) {
+                this.mHeader.setVisibleHeight(this.mScroller.getCurrY());
+            } else {
+                this.mFooterView.setBottomMargin(this.mScroller.getCurrY());
+            }
+            postInvalidate();
+            invokeOnScrolling();
+        }
+        super.computeScroll();
     }
-    for (;;)
-    {
-      return super.onTouchEvent(paramMotionEvent);
-      this.mLastY = paramMotionEvent.getRawY();
-      continue;
-      float f = paramMotionEvent.getRawY() - this.mLastY;
-      this.mLastY = paramMotionEvent.getRawY();
-      if ((isTop()) && ((this.mHeader.getVisibleHeight() > 0) || (f > 0.0F)))
-      {
-        updateHeaderHeight(f / 1.8F);
-        invokeOnScrolling();
-      }
-      else if ((isBottom()) && ((this.mFooterView.getBottomMargin() > 0) || (f < 0.0F)))
-      {
-        updateFooterHeight(-f / 1.8F);
-      }
+
+    public void setOnScrollListener(OnScrollListener l) {
+        this.mScrollListener = l;
     }
-  }
-  
-  public void setAutoLoadEnable(boolean paramBoolean)
-  {
-    this.mEnableAutoLoad = paramBoolean;
-  }
-  
-  public void setContentView(ViewGroup paramViewGroup)
-  {
-    if (this.mViewGroup == null) {}
-    do
-    {
-      return;
-      if (this.mContentLayout == null) {
-        this.mContentLayout = ((LinearLayout)this.mViewGroup.findViewById(1711865866));
-      }
-      if ((this.mContentLayout != null) && (this.mContentLayout.getChildCount() > 0)) {
-        this.mContentLayout.removeAllViews();
-      }
-    } while (this.mContentLayout == null);
-    this.mContentLayout.addView(paramViewGroup);
-  }
-  
-  public void setIXScrollViewListener(IXScrollViewListener paramIXScrollViewListener)
-  {
-    this.mListener = paramIXScrollViewListener;
-  }
-  
-  public void setOnScrollListener(AbsListView.OnScrollListener paramOnScrollListener)
-  {
-    this.mScrollListener = paramOnScrollListener;
-  }
-  
-  public void setPullLoadEnable(boolean paramBoolean)
-  {
-    this.mEnablePullLoad = paramBoolean;
-    if (!this.mEnablePullLoad)
-    {
-      this.mFooterView.setBottomMargin(0);
-      this.mFooterView.hide();
-      this.mFooterView.setPadding(0, 0, 0, this.mFooterView.getHeight() * -1);
-      this.mFooterView.setOnClickListener(null);
-      return;
+
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (this.mScrollListener != null) {
+            this.mScrollListener.onScrollStateChanged(view, scrollState);
+        }
     }
-    this.mPullLoading = false;
-    this.mFooterView.setPadding(0, 0, 0, 0);
-    this.mFooterView.show();
-    this.mFooterView.setState(0);
-    this.mFooterView.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        XScrollView.this.startLoadMore();
-      }
-    });
-  }
-  
-  public void setPullRefreshEnable(boolean paramBoolean)
-  {
-    this.mEnablePullRefresh = paramBoolean;
-    RelativeLayout localRelativeLayout = this.mHeaderContent;
-    if (paramBoolean) {}
-    for (int i = 0;; i = 4)
-    {
-      localRelativeLayout.setVisibility(i);
-      return;
+
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        View view = getChildAt(getChildCount() - 1);
+        if (view != null && view.getBottom() - (view.getHeight() + view.getScrollY()) == 0 && this.mEnableAutoLoad) {
+            startLoadMore();
+        }
+        super.onScrollChanged(l, t, oldl, oldt);
     }
-  }
-  
-  public void setRefreshTime(String paramString)
-  {
-    this.mHeaderTime.setText(paramString);
-  }
-  
-  public void setView(View paramView)
-  {
-    if (this.mViewGroup == null) {}
-    do
-    {
-      return;
-      if (this.mContentLayout == null) {
-        this.mContentLayout = ((LinearLayout)this.mViewGroup.findViewById(1711865866));
-      }
-    } while (this.mContentLayout == null);
-    this.mContentLayout.addView(paramView);
-  }
-  
-  public void stopLoadMore()
-  {
-    if (this.mPullLoading)
-    {
-      this.mPullLoading = false;
-      this.mFooterView.setState(0);
+
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (this.mScrollListener != null) {
+            this.mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+        }
     }
-  }
-  
-  public void stopRefresh()
-  {
-    if (this.mPullRefreshing)
-    {
-      this.mPullRefreshing = false;
-      resetHeaderHeight();
+
+    private void refresh() {
+        if (this.mEnablePullRefresh && this.mListener != null) {
+            this.mListener.onRefresh();
+        }
     }
-  }
-  
-  public static abstract interface IXScrollViewListener
-  {
-    public abstract void onLoadMore();
-    
-    public abstract void onRefresh();
-  }
-  
-  public static abstract interface OnXScrollListener
-    extends AbsListView.OnScrollListener
-  {
-    public abstract void onXScrolling(View paramView);
-  }
+
+    private void loadMore() {
+        if (this.mEnablePullLoad && this.mListener != null) {
+            this.mListener.onLoadMore();
+        }
+    }
+
+    private void disableEdgeGlow() {
+        try {
+            Class absListView = Class.forName("android.widget.AbsListView");
+            if (absListView != null) {
+                Constructor constructor = Class.forName("android.widget.EdgeGlow").getConstructor(new Class[]{Drawable.class, Drawable.class});
+                Object mTop = constructor.newInstance(new Object[]{new ColorDrawable(17170445), new ColorDrawable(17170445)});
+                Object mBottom = constructor.newInstance(new Object[]{new ColorDrawable(17170445), new ColorDrawable(17170445)});
+                Field mEdgeGlowTop = absListView.getDeclaredField("mEdgeGlowTop");
+                Field mEdgeGlowBottom = absListView.getDeclaredField("mEdgeGlowBottom");
+                if (mEdgeGlowTop != null) {
+                    mEdgeGlowTop.setAccessible(true);
+                    mEdgeGlowTop.set(this, mTop);
+                }
+                if (mEdgeGlowBottom != null) {
+                    mEdgeGlowBottom.setAccessible(true);
+                    mEdgeGlowBottom.set(this, mBottom);
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    private void disableEdgeEffect() {
+        try {
+            Class absListView = Class.forName("android.widget.AbsListView");
+            if (absListView != null) {
+                Class edageEffectClass = Class.forName("android.widget.EdgeEffect");
+                Constructor constructor = edageEffectClass.getConstructor(new Class[]{Context.class});
+                Object mTop = constructor.newInstance(new Object[]{getContext()});
+                Object mBottom = constructor.newInstance(new Object[]{getContext()});
+                Field mEdge = edageEffectClass.getDeclaredField("mEdge");
+                Field mGlow = edageEffectClass.getDeclaredField("mGlow");
+                mEdge.setAccessible(true);
+                mGlow.setAccessible(true);
+                mEdge.set(mTop, new ColorDrawable(17170445));
+                mEdge.set(mBottom, new ColorDrawable(17170445));
+                mGlow.set(mTop, new ColorDrawable(17170445));
+                mGlow.set(mBottom, new ColorDrawable(17170445));
+                Field mEdgeGlowTop = absListView.getDeclaredField("mEdgeGlowTop");
+                Field mEdgeGlowBottom = absListView.getDeclaredField("mEdgeGlowBottom");
+                if (mEdgeGlowTop != null) {
+                    mEdgeGlowTop.setAccessible(true);
+                    mEdgeGlowTop.set(this, mTop);
+                }
+                if (mEdgeGlowBottom != null) {
+                    mEdgeGlowBottom.setAccessible(true);
+                    mEdgeGlowBottom.set(this, mBottom);
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/search/xpulltorefresh/XScrollView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

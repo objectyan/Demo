@@ -2,19 +2,15 @@ package com.tencent.wxop.stat;
 
 import android.content.Context;
 
-final class bc
-  implements Runnable
-{
-  bc(Context paramContext) {}
-  
-  public final void run()
-  {
-    j.i(this.a);
-  }
+final class bc implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ Context f24971a;
+
+    bc(Context context) {
+        this.f24971a = context;
+    }
+
+    public final void run() {
+        C6160j.m22143i(this.f24971a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/bc.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

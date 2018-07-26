@@ -1,36 +1,25 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class eg
-{
-  public static <T> T a(T paramT, String paramString, Object... paramVarArgs)
-  {
-    if (paramT == null) {
-      throw new IllegalArgumentException(a(paramString, paramVarArgs));
+public final class eg {
+    /* renamed from: a */
+    public static <T> T m20413a(T t, String str, Object... objArr) {
+        if (t != null) {
+            return t;
+        }
+        throw new IllegalArgumentException(m20415a(str, objArr));
     }
-    return paramT;
-  }
-  
-  public static String a(String paramString1, String paramString2, Object... paramVarArgs)
-  {
-    if ((paramString1 == null) || ("".equals(paramString1.trim()))) {
-      throw new IllegalArgumentException(a(paramString2, paramVarArgs));
+
+    /* renamed from: a */
+    public static String m20414a(String str, String str2, Object... objArr) {
+        if (str != null && !"".equals(str.trim())) {
+            return str;
+        }
+        throw new IllegalArgumentException(m20415a(str2, objArr));
     }
-    return paramString1;
-  }
-  
-  private static String a(String paramString, Object... paramVarArgs)
-  {
-    String str = String.valueOf(paramString);
-    paramString = str;
-    if (paramVarArgs != null) {
-      paramString = String.format(str, paramVarArgs);
+
+    /* renamed from: a */
+    private static String m20415a(String str, Object... objArr) {
+        String valueOf = String.valueOf(str);
+        return objArr != null ? String.format(valueOf, objArr) : valueOf;
     }
-    return paramString;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/eg.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

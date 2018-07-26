@@ -7,93 +7,59 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class HttpProxy
-{
-  private Map<Class<?>, Object> a = new ConcurrentHashMap();
-  
-  private <T> T a(Class<T> paramClass)
-  {
-    String str1 = paramClass.getName();
-    String str2 = paramClass.getSimpleName();
-    str1 = str1.replace("." + str2, ".generate." + str2 + "Impl");
-    try
-    {
-      paramClass = paramClass.getClassLoader().loadClass(str1).getMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
-      return paramClass;
-    }
-    catch (ClassNotFoundException paramClass)
-    {
-      paramClass.printStackTrace();
-      return null;
-    }
-    catch (NoSuchMethodException paramClass)
-    {
-      paramClass.printStackTrace();
-      return null;
-    }
-    catch (IllegalAccessException paramClass)
-    {
-      paramClass.printStackTrace();
-      return null;
-    }
-    catch (InvocationTargetException paramClass)
-    {
-      paramClass.printStackTrace();
-    }
-    return null;
-  }
-  
-  public static HttpProxy getDefault()
-  {
-    return Holder.a;
-  }
-  
-  public <T> T create(final Class<T> paramClass)
-  {
-    try
-    {
-      ClassLoader localClassLoader = paramClass.getClassLoader();
-      InvocationHandler local1 = new InvocationHandler()
-      {
-        public Object invoke(Object paramAnonymousObject, Method paramAnonymousMethod, Object... paramAnonymousVarArgs)
-          throws Throwable
-        {
-          Object localObject = HttpProxy.a(HttpProxy.this).get(paramClass);
-          paramAnonymousObject = localObject;
-          if (localObject == null)
-          {
-            localObject = HttpProxy.a(HttpProxy.this, paramClass);
-            paramAnonymousObject = localObject;
-            if (localObject != null)
-            {
-              HttpProxy.a(HttpProxy.this).put(paramClass, localObject);
-              paramAnonymousObject = localObject;
-            }
-          }
-          if (paramAnonymousObject != null) {
-            return paramAnonymousMethod.invoke(paramAnonymousObject, paramAnonymousVarArgs);
-          }
-          return null;
+public class HttpProxy {
+    /* renamed from: a */
+    private Map<Class<?>, Object> f19235a = new ConcurrentHashMap();
+
+    static class Holder {
+        /* renamed from: a */
+        static HttpProxy f19234a = new HttpProxy();
+
+        Holder() {
         }
-      };
-      paramClass = Proxy.newProxyInstance(localClassLoader, new Class[] { paramClass }, local1);
-      return paramClass;
     }
-    finally
-    {
-      paramClass = finally;
-      throw paramClass;
+
+    public static HttpProxy getDefault() {
+        return Holder.f19234a;
     }
-  }
-  
-  static class Holder
-  {
-    static HttpProxy a = new HttpProxy();
-  }
+
+    public synchronized <T> T create(final Class<T> service) {
+        return Proxy.newProxyInstance(service.getClassLoader(), new Class[]{service}, new InvocationHandler(this) {
+            /* renamed from: b */
+            final /* synthetic */ HttpProxy f19233b;
+
+            public Object invoke(Object proxy, Method method, Object... args) throws Throwable {
+                T serviceImpl = this.f19233b.f19235a.get(service);
+                if (serviceImpl == null) {
+                    serviceImpl = this.f19233b.m15217a(service);
+                    if (serviceImpl != null) {
+                        this.f19233b.f19235a.put(service, serviceImpl);
+                    }
+                }
+                if (serviceImpl != null) {
+                    return method.invoke(serviceImpl, args);
+                }
+                return null;
+            }
+        });
+    }
+
+    /* renamed from: a */
+    private <T> T m15217a(Class<T> service) {
+        T t = null;
+        String name = service.getName();
+        String simpleName = service.getSimpleName();
+        try {
+            t = service.getClassLoader().loadClass(name.replace("." + simpleName, ".generate." + simpleName + "Impl")).getMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e2) {
+            e2.printStackTrace();
+        } catch (IllegalAccessException e3) {
+            e3.printStackTrace();
+        } catch (InvocationTargetException e4) {
+            e4.printStackTrace();
+        }
+        return t;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/runtime/http/HttpProxy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

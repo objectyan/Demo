@@ -3,128 +3,109 @@ package com.baidu.navi.routedetails.proxy;
 import android.app.Activity;
 import android.content.Context;
 import android.view.ViewGroup;
-import com.baidu.carlife.core.screen.e;
-import com.baidu.carlife.f.g;
+import com.baidu.carlife.core.screen.C1277e;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.navi.routedetails.proxy.BNRouteDetail.BNRouteDetailNavListener;
 
-public class RGRouteDetailsViewController
-{
-  private static RGRouteDetailsViewController sInstance;
-  private Activity mActivity;
-  private Context mContext;
-  private boolean mIsRouteDetail;
-  private ViewGroup mParentView;
-  private RouteDetailMapView mRouteDetailMapView;
-  
-  public static RGRouteDetailsViewController getInstance()
-  {
-    if (sInstance == null) {}
-    try
-    {
-      if (sInstance == null) {
-        sInstance = new RGRouteDetailsViewController();
-      }
-      return sInstance;
+public class RGRouteDetailsViewController {
+    private static RGRouteDetailsViewController sInstance;
+    private Activity mActivity;
+    private Context mContext;
+    private boolean mIsRouteDetail;
+    private ViewGroup mParentView;
+    private RouteDetailMapView mRouteDetailMapView;
+
+    private RGRouteDetailsViewController() {
     }
-    finally {}
-  }
-  
-  public void cancleCountDownTask()
-  {
-    if (this.mRouteDetailMapView != null) {
-      this.mRouteDetailMapView.cancleCountDownTask();
+
+    public boolean isRouteDetail() {
+        return this.mIsRouteDetail;
     }
-  }
-  
-  public void initFocus(g paramg1, g paramg2, boolean paramBoolean)
-  {
-    if (this.mRouteDetailMapView == null) {
-      return;
+
+    public void setIsRouteDetail(boolean mIsRouteDetail) {
+        this.mIsRouteDetail = mIsRouteDetail;
     }
-    this.mRouteDetailMapView.initFocus(paramg1, paramg2, paramBoolean);
-  }
-  
-  public void initView(Activity paramActivity, ViewGroup paramViewGroup, e parame)
-  {
-    this.mActivity = paramActivity;
-    this.mContext = paramActivity.getApplicationContext();
-    this.mParentView = paramViewGroup;
-    setIsRouteDetail(true);
-    this.mRouteDetailMapView = new RouteDetailMapView(this.mActivity, this.mParentView, parame);
-  }
-  
-  public boolean isRouteDetail()
-  {
-    return this.mIsRouteDetail;
-  }
-  
-  public boolean onBackPressed()
-  {
-    if (this.mRouteDetailMapView != null) {
-      return this.mRouteDetailMapView.onBackPressed();
+
+    public static RGRouteDetailsViewController getInstance() {
+        if (sInstance == null) {
+            synchronized (RGRouteDetailsViewController.class) {
+                if (sInstance == null) {
+                    sInstance = new RGRouteDetailsViewController();
+                }
+            }
+        }
+        return sInstance;
     }
-    return false;
-  }
-  
-  public void onDestory()
-  {
-    if (this.mRouteDetailMapView != null) {
-      this.mRouteDetailMapView.onDestory();
+
+    public void initView(Activity activity, ViewGroup viewGroup, C1277e listener) {
+        this.mActivity = activity;
+        this.mContext = activity.getApplicationContext();
+        this.mParentView = viewGroup;
+        setIsRouteDetail(true);
+        this.mRouteDetailMapView = new RouteDetailMapView(this.mActivity, this.mParentView, listener);
     }
-    setIsRouteDetail(false);
-    this.mActivity = null;
-  }
-  
-  public void onPause()
-  {
-    if (this.mRouteDetailMapView != null) {
-      this.mRouteDetailMapView.onPause();
+
+    public void onResume() {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.onResume();
+        }
     }
-  }
-  
-  public void onResume()
-  {
-    if (this.mRouteDetailMapView != null) {
-      this.mRouteDetailMapView.onResume();
+
+    public void onPause() {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.onPause();
+        }
     }
-  }
-  
-  public void onUpdateOrientation(int paramInt)
-  {
-    if (this.mRouteDetailMapView != null) {
-      this.mRouteDetailMapView.onUpdateOrientation(paramInt);
+
+    public void onUpdateStyle(boolean dayStyle) {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.onUpdateStyle(dayStyle);
+        }
     }
-  }
-  
-  public void onUpdateStyle(boolean paramBoolean)
-  {
-    if (this.mRouteDetailMapView != null) {
-      this.mRouteDetailMapView.onUpdateStyle(paramBoolean);
+
+    public void onUpdateOrientation(int orientation) {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.onUpdateOrientation(orientation);
+        }
     }
-  }
-  
-  public boolean onVoiceCommand(int paramInt1, int paramInt2, int paramInt3, Object paramObject, boolean paramBoolean)
-  {
-    if (this.mRouteDetailMapView != null) {
-      this.mRouteDetailMapView.onVoiceCommand(paramInt1, paramInt2, paramInt3, paramObject, paramBoolean);
+
+    public void onDestory() {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.onDestory();
+        }
+        setIsRouteDetail(false);
+        this.mActivity = null;
     }
-    return false;
-  }
-  
-  public void setIsRouteDetail(boolean paramBoolean)
-  {
-    this.mIsRouteDetail = paramBoolean;
-  }
-  
-  public void setNaviListener(BNRouteDetail.BNRouteDetailNavListener paramBNRouteDetailNavListener)
-  {
-    if (this.mRouteDetailMapView != null) {
-      this.mRouteDetailMapView.setNaviListener(paramBNRouteDetailNavListener);
+
+    public boolean onBackPressed() {
+        if (this.mRouteDetailMapView != null) {
+            return this.mRouteDetailMapView.onBackPressed();
+        }
+        return false;
     }
-  }
+
+    public void setNaviListener(BNRouteDetailNavListener listener) {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.setNaviListener(listener);
+        }
+    }
+
+    public void cancleCountDownTask() {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.cancleCountDownTask();
+        }
+    }
+
+    public void initFocus(C1443g leftArea, C1443g rightArea, boolean isReSet) {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.initFocus(leftArea, rightArea, isReSet);
+        }
+    }
+
+    public boolean onVoiceCommand(int type, int subType, int arg1, Object arg2, boolean needResponse) {
+        if (this.mRouteDetailMapView != null) {
+            this.mRouteDetailMapView.onVoiceCommand(type, subType, arg1, arg2, needResponse);
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/routedetails/proxy/RGRouteDetailsViewController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

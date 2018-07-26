@@ -1,18 +1,14 @@
 package com.baidu.mobstat;
 
-class ck
-  implements Runnable
-{
-  ck(ch paramch) {}
-  
-  public void run()
-  {
-    bv.a().d();
-  }
+class ck implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ ch f19589a;
+
+    ck(ch chVar) {
+        this.f19589a = chVar;
+    }
+
+    public void run() {
+        bv.m15511a().m15521d();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ck.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

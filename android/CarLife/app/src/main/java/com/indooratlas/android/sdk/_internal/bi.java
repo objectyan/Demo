@@ -4,35 +4,40 @@ import android.os.Bundle;
 import com.indooratlas.android.sdk.IALocation;
 import org.json.JSONObject;
 
-public abstract interface bi
-{
-  public abstract void a(int paramInt);
-  
-  public abstract void a(long paramLong, double paramDouble);
-  
-  public abstract void a(long paramLong, double[] paramArrayOfDouble);
-  
-  public abstract void a(Bundle paramBundle);
-  
-  public abstract void a(IALocation paramIALocation);
-  
-  public abstract void a(ax paramax);
-  
-  public abstract void a(bh parambh);
-  
-  public abstract void a(bp parambp);
-  
-  public abstract void a(String paramString);
-  
-  public abstract void a(JSONObject paramJSONObject);
-  
-  public abstract void b(Bundle paramBundle);
-  
-  public abstract void b(String paramString);
+public interface bi {
+    /* renamed from: a */
+    void mo4560a(int i);
+
+    /* renamed from: a */
+    void mo4561a(long j, double d);
+
+    /* renamed from: a */
+    void mo4562a(long j, double[] dArr);
+
+    /* renamed from: a */
+    void mo4563a(Bundle bundle);
+
+    /* renamed from: a */
+    void mo4564a(IALocation iALocation);
+
+    /* renamed from: a */
+    void mo4565a(ax axVar);
+
+    /* renamed from: a */
+    void mo4566a(bh bhVar);
+
+    /* renamed from: a */
+    void mo4567a(bp bpVar);
+
+    /* renamed from: a */
+    void mo4568a(String str);
+
+    /* renamed from: a */
+    void mo4569a(JSONObject jSONObject);
+
+    /* renamed from: b */
+    void mo4570b(Bundle bundle);
+
+    /* renamed from: b */
+    void mo4571b(String str);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/bi.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

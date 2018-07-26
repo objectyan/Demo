@@ -2,82 +2,72 @@ package com.baidu.tts.aop.tts;
 
 import com.baidu.tts.aop.AInterceptor;
 import com.baidu.tts.aop.AInterceptorHandler;
-import com.baidu.tts.auth.a;
-import com.baidu.tts.auth.b.a;
+import com.baidu.tts.auth.C4974a;
+import com.baidu.tts.auth.C4978b.C4976a;
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy;
-import com.baidu.tts.m.i;
-import com.baidu.tts.m.j;
-import com.baidu.tts.o.a.c;
+import com.baidu.tts.p225m.C5146i;
+import com.baidu.tts.p225m.C5148j;
+import com.baidu.tts.p233f.C5095m;
+import com.baidu.tts.p243o.p244a.C5152c;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class OfflineAuthNotificationInterceptor
-  extends AInterceptor
-{
-  private AtomicInteger b = new AtomicInteger(-1);
-  
-  private Object a(c paramc, j paramj, i parami)
-  {
-    a(a.a().a(paramj.d()), parami);
-    return AInterceptorHandler.DEFAULT;
-  }
-  
-  private void a(b.a parama, i parami)
-  {
-    if (parama.d())
-    {
-      int i = parama.a();
-      parami.a(String.format(Locale.US, "百度语音试用服务%d天后到期，", new Object[] { Integer.valueOf(i) }));
+public class OfflineAuthNotificationInterceptor extends AInterceptor {
+    /* renamed from: b */
+    private AtomicInteger f20652b = new AtomicInteger(-1);
+
+    /* renamed from: a */
+    protected void mo3796a() {
+        this.a.add("speak");
     }
-    if (parama.f()) {
-      parami.a("百度语音试用服务已经到期，请及时更新授权，");
-    }
-    parami.a();
-  }
-  
-  protected Object a(Object paramObject, Method paramMethod, Object[] paramArrayOfObject)
-  {
-    paramObject = (c)paramObject;
-    if (((c)paramObject).q())
-    {
-      paramMethod = ((c)paramObject).getMode();
-      if (paramMethod == null)
-      {
-        ((c)paramObject).p();
+
+    /* renamed from: a */
+    protected Object mo3795a(Object obj, Method method, Object[] objArr) {
+        C5152c c5152c = (C5152c) obj;
+        if (c5152c.m17492q()) {
+            C5095m mode = c5152c.getMode();
+            if (mode == null) {
+                c5152c.m17491p();
+                return AInterceptorHandler.END;
+            }
+            switch (mode) {
+                case MIX:
+                case OFFLINE:
+                    int incrementAndGet = this.f20652b.incrementAndGet();
+                    LoggerProxy.m17001d("OfflineAuthNotificationInterceptor", "currentCount=" + incrementAndGet);
+                    if (incrementAndGet % 20 == 0) {
+                        C5146i c5146i = (C5146i) objArr[0];
+                        C5148j ttsParams = c5152c.getTtsParams();
+                        if (ttsParams != null) {
+                            return m16554a(c5152c, ttsParams, c5146i);
+                        }
+                        c5152c.m17491p();
+                        return AInterceptorHandler.END;
+                    }
+                    break;
+            }
+            return AInterceptorHandler.DEFAULT;
+        }
+        c5152c.m17491p();
         return AInterceptorHandler.END;
-      }
-      switch (1.a[paramMethod.ordinal()])
-      {
-      }
-      int i;
-      do
-      {
-        return AInterceptorHandler.DEFAULT;
-        i = this.b.incrementAndGet();
-        LoggerProxy.d("OfflineAuthNotificationInterceptor", "currentCount=" + i);
-      } while (i % 20 != 0);
-      paramMethod = (i)paramArrayOfObject[0];
-      paramArrayOfObject = ((c)paramObject).getTtsParams();
-      if (paramArrayOfObject != null) {
-        return a((c)paramObject, paramArrayOfObject, paramMethod);
-      }
-      ((c)paramObject).p();
-      return AInterceptorHandler.END;
     }
-    ((c)paramObject).p();
-    return AInterceptorHandler.END;
-  }
-  
-  protected void a()
-  {
-    this.a.add("speak");
-  }
+
+    /* renamed from: a */
+    private Object m16554a(C5152c c5152c, C5148j c5148j, C5146i c5146i) {
+        m16555a(C4974a.m16566a().m16573a(c5148j.m17452d()), c5146i);
+        return AInterceptorHandler.DEFAULT;
+    }
+
+    /* renamed from: a */
+    private void m16555a(C4976a c4976a, C5146i c5146i) {
+        if (c4976a.m16584d()) {
+            int a = c4976a.m16577a();
+            c5146i.m17437a(String.format(Locale.US, "百度语音试用服务%d天后到期，", new Object[]{Integer.valueOf(a)}));
+        }
+        if (c4976a.m16586f()) {
+            c5146i.m17437a("百度语音试用服务已经到期，请及时更新授权，");
+        }
+        c5146i.m17435a();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/aop/tts/OfflineAuthNotificationInterceptor.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

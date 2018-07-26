@@ -4,30 +4,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
 import com.baidu.carlife.CarlifeActivity;
+import com.baidu.carlife.platform.C1984a;
 
-public class StartActivityBroadReceiver
-  extends BroadcastReceiver
-{
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    paramIntent = paramIntent.getAction();
-    if (TextUtils.equals("com.baidu.carlife.Action.StartActivityBroadReceiver", paramIntent))
-    {
-      paramIntent = new Intent("com.baidu.carlife.Action.CarlifePlatform");
-      paramIntent.setFlags(268435456);
-      paramContext.startActivity(paramIntent);
-      return;
+public class StartActivityBroadReceiver extends BroadcastReceiver {
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        if (TextUtils.equals("com.baidu.carlife.Action.StartActivityBroadReceiver", action)) {
+            Intent i = new Intent(C1984a.f6383b);
+            i.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+            context.startActivity(i);
+            return;
+        }
+        Intent mainIntent = new Intent(context, CarlifeActivity.class);
+        mainIntent.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+        mainIntent.setAction(action);
+        context.startActivity(mainIntent);
     }
-    Intent localIntent = new Intent(paramContext, CarlifeActivity.class);
-    localIntent.setFlags(268435456);
-    localIntent.setAction(paramIntent);
-    paramContext.startActivity(localIntent);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/broadcast/StartActivityBroadReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

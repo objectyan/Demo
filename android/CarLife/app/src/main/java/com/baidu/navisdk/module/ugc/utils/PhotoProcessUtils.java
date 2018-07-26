@@ -9,204 +9,154 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import com.baidu.mapframework.nirvana.runtime.http.Constants;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.SysOSAPI;
+import com.baidu.platform.comapi.util.C4820d;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
-public class PhotoProcessUtils
-{
-  public static final int COMPRESSED_HEIGHT = 800;
-  public static final int COMPRESSED_WIDTH = 640;
-  
-  private Bitmap compressBitmap(ContentResolver paramContentResolver, Uri paramUri)
-    throws IOException
-  {
-    BitmapFactory.Options localOptions = new BitmapFactory.Options();
-    localOptions.inJustDecodeBounds = true;
-    InputStream localInputStream = paramContentResolver.openInputStream(paramUri);
-    BitmapFactory.decodeStream(localInputStream, null, localOptions);
-    localOptions.inJustDecodeBounds = false;
-    int i = localOptions.outWidth;
-    int m = localOptions.outHeight;
-    int k = m;
-    int j = i;
-    if (i > m)
-    {
-      j = localOptions.outHeight;
-      k = localOptions.outWidth;
+public class PhotoProcessUtils {
+    public static final int COMPRESSED_HEIGHT = 800;
+    public static final int COMPRESSED_WIDTH = 640;
+
+    public static class PicProcessResInfo {
+        public Bitmap bitmap = null;
+        public String filePath = null;
     }
-    localOptions.inPreferredConfig = Bitmap.Config.RGB_565;
-    m = 1;
-    i = m;
-    if (j > 640)
-    {
-      i = m;
-      if (k > 800) {
-        i = Math.min((int)Math.round(j * 1.0D / 640.0D), (int)Math.round(k * 1.0D / 800.0D));
-      }
+
+    public PicProcessResInfo processCameraPic(ContentResolver cr, Uri uri, String originFilePath) throws Exception {
+        PicProcessResInfo mPicProcessResInfo = new PicProcessResInfo();
+        Bitmap mBitmap = rotateBitmapByDegree(compressBitmap(cr, uri), getBitmapDegree(originFilePath));
+        String saveFilePath = setBitmapToFile(mBitmap);
+        mPicProcessResInfo.bitmap = mBitmap;
+        mPicProcessResInfo.filePath = saveFilePath;
+        return mPicProcessResInfo;
     }
-    LogUtil.e("UGC", "compressBitmap() be=" + i);
-    j = i;
-    if (i <= 0) {
-      j = 1;
+
+    public PicProcessResInfo processAlbumPic(ContentResolver cr, Uri uri) throws Exception {
+        PicProcessResInfo mPicProcessResInfo = new PicProcessResInfo();
+        Bitmap mBitmap = compressBitmap(cr, uri);
+        String saveFilePath = setBitmapToFile(mBitmap);
+        mPicProcessResInfo.bitmap = mBitmap;
+        mPicProcessResInfo.filePath = saveFilePath;
+        return mPicProcessResInfo;
     }
-    if (localInputStream != null) {
-      localInputStream.close();
+
+    private Bitmap compressBitmap(ContentResolver cr, Uri uri) throws IOException {
+        Options newOpts = new Options();
+        newOpts.inJustDecodeBounds = true;
+        InputStream in = cr.openInputStream(uri);
+        BitmapFactory.decodeStream(in, null, newOpts);
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        if (w > h) {
+            w = newOpts.outHeight;
+            h = newOpts.outWidth;
+        }
+        newOpts.inPreferredConfig = Config.RGB_565;
+        int be = 1;
+        if (w > 640 && h > 800) {
+            be = Math.min((int) Math.round((((double) w) * 1.0d) / 640.0d), (int) Math.round((((double) h) * 1.0d) / 800.0d));
+        }
+        LogUtil.m15791e(Constants.UGC_TOKEN, "compressBitmap() be=" + be);
+        if (be <= 0) {
+            be = 1;
+        }
+        if (in != null) {
+            in.close();
+        }
+        newOpts.inSampleSize = be;
+        in = cr.openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(in, null, newOpts);
+        if (in != null) {
+            in.close();
+        }
+        return bitmap;
     }
-    localOptions.inSampleSize = j;
-    paramContentResolver = paramContentResolver.openInputStream(paramUri);
-    paramUri = BitmapFactory.decodeStream(paramContentResolver, null, localOptions);
-    if (paramContentResolver != null) {
-      paramContentResolver.close();
+
+    public String setBitmapToFile(Bitmap bitmap) throws IOException {
+        String filePath = getUniqueFilePath();
+        if (bitmap == null || filePath == null) {
+            return null;
+        }
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        FileOutputStream fos = new FileOutputStream(file);
+        bitmap.compress(CompressFormat.JPEG, 80, fos);
+        fos.flush();
+        fos.close();
+        return filePath;
     }
-    return paramUri;
-  }
-  
-  private int getBitmapDegree(String paramString)
-  {
-    try
-    {
-      int i = new ExifInterface(paramString).getAttributeInt("Orientation", 1);
-      switch (i)
-      {
-      case 4: 
-      case 5: 
-      case 7: 
-      default: 
-        return 0;
-      case 6: 
-        return 90;
-      case 3: 
-        return 180;
-      }
-      return 270;
+
+    private int getBitmapDegree(String path) {
+        try {
+            switch (new ExifInterface(path).getAttributeInt("Orientation", 1)) {
+                case 3:
+                    return C4820d.f19955a;
+                case 6:
+                    return 90;
+                case 8:
+                    return 270;
+                default:
+                    return 0;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
-    catch (IOException paramString)
-    {
-      paramString.printStackTrace();
+
+    private Bitmap rotateBitmapByDegree(Bitmap bm, int degree) {
+        if (degree == 0) {
+            return bm;
+        }
+        Bitmap returnBm = null;
+        Matrix matrix = new Matrix();
+        matrix.postRotate((float) degree);
+        try {
+            returnBm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+        }
+        if (returnBm == null) {
+            returnBm = bm;
+        }
+        if (bm != returnBm) {
+            bm.recycle();
+        }
+        return returnBm;
     }
-    return 0;
-  }
-  
-  private String getUniqueFilePath()
-  {
-    return SysOSAPI.getInstance().GetSDCardCachePath() + "/" + new Object().hashCode();
-  }
-  
-  private Bitmap rotateBitmapByDegree(Bitmap paramBitmap, int paramInt)
-  {
-    if (paramInt == 0) {
-      return paramBitmap;
+
+    public Bitmap compress(Bitmap bitmap, int maxH, int maxW) {
+        if (bitmap == null) {
+            return null;
+        }
+        int rawHeight = bitmap.getHeight();
+        int rawWidth = bitmap.getWidth();
+        if (rawHeight < maxH && rawWidth < maxW) {
+            return bitmap;
+        }
+        float heightScale;
+        float widthScale;
+        if (rawHeight > rawWidth) {
+            heightScale = ((float) maxH) / ((float) rawHeight);
+            widthScale = ((float) maxH) / ((float) rawHeight);
+        } else {
+            heightScale = ((float) maxW) / ((float) rawWidth);
+            widthScale = ((float) maxW) / ((float) rawWidth);
+        }
+        Matrix matrix = new Matrix();
+        matrix.postScale(widthScale, heightScale);
+        return Bitmap.createBitmap(bitmap, 0, 0, rawWidth, rawHeight, matrix, true);
     }
-    Object localObject1 = null;
-    Object localObject2 = new Matrix();
-    ((Matrix)localObject2).postRotate(paramInt);
-    try
-    {
-      localObject2 = Bitmap.createBitmap(paramBitmap, 0, 0, paramBitmap.getWidth(), paramBitmap.getHeight(), (Matrix)localObject2, true);
-      localObject1 = localObject2;
+
+    private String getUniqueFilePath() {
+        return SysOSAPI.getInstance().GetSDCardCachePath() + "/" + new Object().hashCode();
     }
-    catch (OutOfMemoryError localOutOfMemoryError)
-    {
-      for (;;)
-      {
-        localOutOfMemoryError.printStackTrace();
-      }
-    }
-    localObject2 = localObject1;
-    if (localObject1 == null) {
-      localObject2 = paramBitmap;
-    }
-    if (paramBitmap != localObject2) {
-      paramBitmap.recycle();
-    }
-    return (Bitmap)localObject2;
-  }
-  
-  public Bitmap compress(Bitmap paramBitmap, int paramInt1, int paramInt2)
-  {
-    Object localObject;
-    if (paramBitmap == null) {
-      localObject = null;
-    }
-    int i;
-    int j;
-    do
-    {
-      return (Bitmap)localObject;
-      i = paramBitmap.getHeight();
-      j = paramBitmap.getWidth();
-      if (i >= paramInt1) {
-        break;
-      }
-      localObject = paramBitmap;
-    } while (j < paramInt2);
-    float f1;
-    if (i > j) {
-      f1 = paramInt1 / i;
-    }
-    for (float f2 = paramInt1 / i;; f2 = paramInt2 / j)
-    {
-      localObject = new Matrix();
-      ((Matrix)localObject).postScale(f2, f1);
-      return Bitmap.createBitmap(paramBitmap, 0, 0, j, i, (Matrix)localObject, true);
-      f1 = paramInt2 / j;
-    }
-  }
-  
-  public PicProcessResInfo processAlbumPic(ContentResolver paramContentResolver, Uri paramUri)
-    throws Exception
-  {
-    PicProcessResInfo localPicProcessResInfo = new PicProcessResInfo();
-    paramContentResolver = compressBitmap(paramContentResolver, paramUri);
-    paramUri = setBitmapToFile(paramContentResolver);
-    localPicProcessResInfo.bitmap = paramContentResolver;
-    localPicProcessResInfo.filePath = paramUri;
-    return localPicProcessResInfo;
-  }
-  
-  public PicProcessResInfo processCameraPic(ContentResolver paramContentResolver, Uri paramUri, String paramString)
-    throws Exception
-  {
-    PicProcessResInfo localPicProcessResInfo = new PicProcessResInfo();
-    paramContentResolver = rotateBitmapByDegree(compressBitmap(paramContentResolver, paramUri), getBitmapDegree(paramString));
-    paramUri = setBitmapToFile(paramContentResolver);
-    localPicProcessResInfo.bitmap = paramContentResolver;
-    localPicProcessResInfo.filePath = paramUri;
-    return localPicProcessResInfo;
-  }
-  
-  public String setBitmapToFile(Bitmap paramBitmap)
-    throws IOException
-  {
-    String str = getUniqueFilePath();
-    if ((paramBitmap == null) || (str == null)) {
-      return null;
-    }
-    Object localObject = new File(str);
-    if (!((File)localObject).exists()) {
-      ((File)localObject).createNewFile();
-    }
-    localObject = new FileOutputStream((File)localObject);
-    paramBitmap.compress(Bitmap.CompressFormat.JPEG, 80, (OutputStream)localObject);
-    ((FileOutputStream)localObject).flush();
-    ((FileOutputStream)localObject).close();
-    return str;
-  }
-  
-  public static class PicProcessResInfo
-  {
-    public Bitmap bitmap = null;
-    public String filePath = null;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/module/ugc/utils/PhotoProcessUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

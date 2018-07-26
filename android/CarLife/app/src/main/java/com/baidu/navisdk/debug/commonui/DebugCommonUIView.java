@@ -10,203 +10,182 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.util.jar.JarUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DebugCommonUIView
-{
-  private DebugListViewAdapter mAdapter = null;
-  private DebugCommonUICallback mCallback = null;
-  private int mIndex = 1;
-  private TextView mInfoTV = null;
-  private ListView mKeyValueLV = null;
-  private String mOldInfo = "";
-  private Button mRefreshBtn = null;
-  private View mRootView = null;
-  
-  public DebugCommonUIView(DebugCommonUICallback paramDebugCommonUICallback)
-  {
-    this.mCallback = paramDebugCommonUICallback;
-    init();
-  }
-  
-  private void init()
-  {
-    this.mRootView = JarUtils.inflate(BNaviModuleManager.getActivity(), 1711472642, null);
-    this.mRefreshBtn = ((Button)this.mRootView.findViewById(1711865860));
-    this.mInfoTV = ((TextView)this.mRootView.findViewById(1711865861));
-    this.mKeyValueLV = ((ListView)this.mRootView.findViewById(1711865862));
-    if (this.mRefreshBtn != null) {
-      this.mRefreshBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          DebugCommonUIView.this.refresh();
+public class DebugCommonUIView {
+    private DebugListViewAdapter mAdapter = null;
+    private DebugCommonUICallback mCallback = null;
+    private int mIndex = 1;
+    private TextView mInfoTV = null;
+    private ListView mKeyValueLV = null;
+    private String mOldInfo = "";
+    private Button mRefreshBtn = null;
+    private View mRootView = null;
+
+    /* renamed from: com.baidu.navisdk.debug.commonui.DebugCommonUIView$1 */
+    class C40891 implements OnClickListener {
+        C40891() {
         }
-      });
-    }
-    if (this.mKeyValueLV != null)
-    {
-      this.mAdapter = new DebugListViewAdapter();
-      this.mKeyValueLV.setAdapter(this.mAdapter);
-      this.mKeyValueLV.setOnTouchListener(new View.OnTouchListener()
-      {
-        public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-        {
-          return false;
+
+        public void onClick(View v) {
+            DebugCommonUIView.this.refresh();
         }
-      });
     }
-  }
-  
-  public View getView()
-  {
-    return this.mRootView;
-  }
-  
-  public void hide()
-  {
-    this.mRootView.setVisibility(8);
-  }
-  
-  public void refresh()
-  {
-    if (this.mCallback != null)
-    {
-      updateKeyValueData(this.mCallback.getKeyValues());
-      updateInfo(this.mCallback.getInfo(), false);
-    }
-  }
-  
-  public void show()
-  {
-    if (this.mRootView != null) {
-      this.mRootView.setVisibility(0);
-    }
-  }
-  
-  public void updateInfo(String paramString, boolean paramBoolean)
-  {
-    if ((this.mInfoTV != null) && (paramString != null))
-    {
-      if (paramBoolean) {
-        this.mOldInfo = "";
-      }
-      StringBuilder localStringBuilder = new StringBuilder();
-      int i = this.mIndex;
-      this.mIndex = (i + 1);
-      this.mOldInfo = (String.valueOf(i) + "-" + paramString + "\n" + this.mOldInfo);
-      this.mInfoTV.setText(this.mOldInfo);
-      if (this.mIndex > 9) {
-        this.mIndex = 1;
-      }
-    }
-  }
-  
-  public void updateKeyValueData(List<DebugViewKeyValueData> paramList)
-  {
-    if (this.mAdapter != null)
-    {
-      this.mAdapter.updateData(paramList);
-      this.mAdapter.notifyDataSetChanged();
-    }
-  }
-  
-  private static class DebugListItemHolder
-  {
-    public TextView mKeyTV = null;
-    public TextView mValueTV = null;
-  }
-  
-  public static class DebugListViewAdapter
-    extends BaseAdapter
-  {
-    private List<DebugCommonUIView.DebugViewKeyValueData> mData = new ArrayList();
-    
-    public boolean areAllItemsEnabled()
-    {
-      return false;
-    }
-    
-    public int getCount()
-    {
-      return this.mData.size();
-    }
-    
-    public DebugCommonUIView.DebugViewKeyValueData getDataItem(int paramInt)
-    {
-      if ((paramInt >= 0) && (paramInt < this.mData.size())) {
-        return (DebugCommonUIView.DebugViewKeyValueData)this.mData.get(paramInt);
-      }
-      return null;
-    }
-    
-    public Object getItem(int paramInt)
-    {
-      return null;
-    }
-    
-    public long getItemId(int paramInt)
-    {
-      return 0L;
-    }
-    
-    public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-    {
-      if (paramView == null)
-      {
-        paramView = JarUtils.inflate(BNaviModuleManager.getActivity(), 1711472643, null);
-        paramViewGroup = new DebugCommonUIView.DebugListItemHolder(null);
-        paramViewGroup.mKeyTV = ((TextView)paramView.findViewById(1711865863));
-        paramViewGroup.mValueTV = ((TextView)paramView.findViewById(1711865864));
-        paramView.setTag(paramViewGroup);
-      }
-      for (;;)
-      {
-        DebugCommonUIView.DebugViewKeyValueData localDebugViewKeyValueData = getDataItem(paramInt);
-        if (localDebugViewKeyValueData == null) {
-          break;
+
+    /* renamed from: com.baidu.navisdk.debug.commonui.DebugCommonUIView$2 */
+    class C40902 implements OnTouchListener {
+        C40902() {
         }
-        paramViewGroup.mKeyTV.setText(localDebugViewKeyValueData.key);
-        paramViewGroup.mValueTV.setText(localDebugViewKeyValueData.value);
-        return paramView;
-        paramViewGroup = (DebugCommonUIView.DebugListItemHolder)paramView.getTag();
-      }
-      paramViewGroup.mKeyTV.setText("");
-      paramViewGroup.mValueTV.setText("");
-      return paramView;
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return false;
+        }
     }
-    
-    public boolean isEnabled(int paramInt)
-    {
-      return false;
+
+    private static class DebugListItemHolder {
+        public TextView mKeyTV;
+        public TextView mValueTV;
+
+        private DebugListItemHolder() {
+            this.mKeyTV = null;
+            this.mValueTV = null;
+        }
     }
-    
-    public void updateData(List<DebugCommonUIView.DebugViewKeyValueData> paramList)
-    {
-      this.mData.clear();
-      if (paramList != null) {
-        this.mData.addAll(paramList);
-      }
+
+    public static class DebugListViewAdapter extends BaseAdapter {
+        private List<DebugViewKeyValueData> mData = new ArrayList();
+
+        public void updateData(List<DebugViewKeyValueData> data) {
+            this.mData.clear();
+            if (data != null) {
+                this.mData.addAll(data);
+            }
+        }
+
+        public int getCount() {
+            return this.mData.size();
+        }
+
+        public DebugViewKeyValueData getDataItem(int position) {
+            if (position < 0 || position >= this.mData.size()) {
+                return null;
+            }
+            return (DebugViewKeyValueData) this.mData.get(position);
+        }
+
+        public Object getItem(int position) {
+            return null;
+        }
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        public boolean areAllItemsEnabled() {
+            return false;
+        }
+
+        public boolean isEnabled(int position) {
+            return false;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            DebugListItemHolder holder;
+            if (convertView == null) {
+                convertView = JarUtils.inflate(BNaviModuleManager.getActivity(), C4048R.layout.debug_common_listview_item, null);
+                holder = new DebugListItemHolder();
+                holder.mKeyTV = (TextView) convertView.findViewById(C4048R.id.debug_key_tv);
+                holder.mValueTV = (TextView) convertView.findViewById(C4048R.id.debug_value_tv);
+                convertView.setTag(holder);
+            } else {
+                holder = (DebugListItemHolder) convertView.getTag();
+            }
+            DebugViewKeyValueData data = getDataItem(position);
+            if (data != null) {
+                holder.mKeyTV.setText(data.key);
+                holder.mValueTV.setText(data.value);
+            } else {
+                holder.mKeyTV.setText("");
+                holder.mValueTV.setText("");
+            }
+            return convertView;
+        }
     }
-  }
-  
-  public static class DebugViewKeyValueData
-  {
-    public String key;
-    public String value;
-    
-    public DebugViewKeyValueData(String paramString1, String paramString2)
-    {
-      this.key = paramString1;
-      this.value = paramString2;
+
+    public static class DebugViewKeyValueData {
+        public String key;
+        public String value;
+
+        public DebugViewKeyValueData(String k, String v) {
+            this.key = k;
+            this.value = v;
+        }
     }
-  }
+
+    public DebugCommonUIView(DebugCommonUICallback callback) {
+        this.mCallback = callback;
+        init();
+    }
+
+    private void init() {
+        this.mRootView = JarUtils.inflate(BNaviModuleManager.getActivity(), C4048R.layout.debug_common_layout, null);
+        this.mRefreshBtn = (Button) this.mRootView.findViewById(C4048R.id.debug_refresh_btn);
+        this.mInfoTV = (TextView) this.mRootView.findViewById(C4048R.id.debug_info_tv);
+        this.mKeyValueLV = (ListView) this.mRootView.findViewById(C4048R.id.debug_key_value_lv);
+        if (this.mRefreshBtn != null) {
+            this.mRefreshBtn.setOnClickListener(new C40891());
+        }
+        if (this.mKeyValueLV != null) {
+            this.mAdapter = new DebugListViewAdapter();
+            this.mKeyValueLV.setAdapter(this.mAdapter);
+            this.mKeyValueLV.setOnTouchListener(new C40902());
+        }
+    }
+
+    public View getView() {
+        return this.mRootView;
+    }
+
+    public void show() {
+        if (this.mRootView != null) {
+            this.mRootView.setVisibility(0);
+        }
+    }
+
+    public void hide() {
+        this.mRootView.setVisibility(8);
+    }
+
+    public void refresh() {
+        if (this.mCallback != null) {
+            updateKeyValueData(this.mCallback.getKeyValues());
+            updateInfo(this.mCallback.getInfo(), false);
+        }
+    }
+
+    public void updateKeyValueData(List<DebugViewKeyValueData> data) {
+        if (this.mAdapter != null) {
+            this.mAdapter.updateData(data);
+            this.mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void updateInfo(String info, boolean clearOld) {
+        if (this.mInfoTV != null && info != null) {
+            if (clearOld) {
+                this.mOldInfo = "";
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            int i = this.mIndex;
+            this.mIndex = i + 1;
+            this.mOldInfo = stringBuilder.append(String.valueOf(i)).append("-").append(info).append("\n").append(this.mOldInfo).toString();
+            this.mInfoTV.setText(this.mOldInfo);
+            if (this.mIndex > 9) {
+                this.mIndex = 1;
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/debug/commonui/DebugCommonUIView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

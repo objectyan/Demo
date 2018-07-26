@@ -9,237 +9,190 @@ import android.hardware.scontext.SContextManager;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Handler;
+import android.os.Parcelable;
 import com.samsung.android.sdk.SsdkInterface;
 import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.SsdkVendorCheck;
-import java.lang.reflect.Method;
 
-public class Smotion
-  implements SsdkInterface
-{
-  public static final int TYPE_ACTIVITY = 3;
-  public static final int TYPE_ACTIVITY_NOTIFICATION = 4;
-  public static final int TYPE_CALL = 0;
-  public static final int TYPE_PEDOMETER = 1;
-  public static final int TYPE_PEDOMETER_WITH_UPDOWN_STEP = 2;
-  static boolean b = false;
-  static boolean c = false;
-  boolean a = false;
-  Context d;
-  private boolean e = false;
-  private boolean f = false;
-  private boolean g = false;
-  private boolean h = false;
-  private boolean i = false;
-  private boolean j = false;
-  
-  private static boolean a()
-  {
-    try
-    {
-      Class localClass = Class.forName("com.samsung.android.feature.FloatingFeature");
-      Object localObject = localClass.getMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
-      boolean bool = ((Boolean)localClass.getMethod("getEnableStatus", new Class[] { String.class }).invoke(localObject, new Object[] { "SEC_FLOATING_FEATURE_CONTEXTSERVICE_ENABLE_SURVEY_MODE" })).booleanValue();
-      return bool;
-    }
-    catch (RuntimeException localRuntimeException)
-    {
-      return false;
-    }
-    catch (Exception localException) {}
-    return false;
-  }
-  
-  final void a(Context paramContext, String paramString)
-  {
-    if (a())
-    {
-      try
-      {
-        if (paramContext.checkCallingOrSelfPermission("com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY") != 0) {
-          throw new SecurityException();
+public class Smotion implements SsdkInterface {
+    public static final int TYPE_ACTIVITY = 3;
+    public static final int TYPE_ACTIVITY_NOTIFICATION = 4;
+    public static final int TYPE_CALL = 0;
+    public static final int TYPE_PEDOMETER = 1;
+    public static final int TYPE_PEDOMETER_WITH_UPDOWN_STEP = 2;
+    /* renamed from: b */
+    static boolean f24652b = false;
+    /* renamed from: c */
+    static boolean f24653c = false;
+    /* renamed from: a */
+    boolean f24654a = false;
+    /* renamed from: d */
+    Context f24655d;
+    /* renamed from: e */
+    private boolean f24656e = false;
+    /* renamed from: f */
+    private boolean f24657f = false;
+    /* renamed from: g */
+    private boolean f24658g = false;
+    /* renamed from: h */
+    private boolean f24659h = false;
+    /* renamed from: i */
+    private boolean f24660i = false;
+    /* renamed from: j */
+    private boolean f24661j = false;
+
+    /* renamed from: a */
+    private static boolean m21597a() {
+        try {
+            Class cls = Class.forName("com.samsung.android.feature.FloatingFeature");
+            Object invoke = cls.getMethod("getInstance", new Class[0]).invoke(null, new Object[0]);
+            return ((Boolean) cls.getMethod("getEnableStatus", new Class[]{String.class}).invoke(invoke, new Object[]{"SEC_FLOATING_FEATURE_CONTEXTSERVICE_ENABLE_SURVEY_MODE"})).booleanValue();
+        } catch (RuntimeException e) {
+            return false;
+        } catch (Exception e2) {
+            return false;
         }
-      }
-      catch (NullPointerException paramContext)
-      {
-        throw new IllegalArgumentException("Smotion : Context is wrong. ");
-      }
-      ContentValues localContentValues = new ContentValues();
-      String str1 = getClass().getPackage().getName();
-      String str2 = paramContext.getPackageName() + "#" + getVersionCode();
-      localContentValues.put("app_id", str1);
-      localContentValues.put("feature", str2);
-      if (!paramString.equals("initialize()")) {
-        localContentValues.put("extra", paramString);
-      }
-      paramString = new Intent();
-      paramString.setAction("com.samsung.android.providers.context.log.action.USE_APP_FEATURE_SURVEY");
-      paramString.putExtra("data", localContentValues);
-      paramString.setPackage("com.samsung.android.providers.context");
-      paramContext.sendBroadcast(paramString);
     }
-  }
-  
-  public int getVersionCode()
-  {
-    return 9;
-  }
-  
-  public String getVersionName()
-  {
-    return "2.2.1";
-  }
-  
-  public void initialize(Context paramContext)
-    throws SsdkUnsupportedException
-  {
-    if (this.a) {
-      throw new IllegalStateException("Smotion : initialize() is already called. ");
-    }
-    this.a = false;
-    if (paramContext == null) {
-      throw new IllegalArgumentException("Smotion : Context is null. ");
-    }
-    try
-    {
-      a(paramContext, "initialize()");
-      if (!SsdkVendorCheck.isSamsungDevice()) {
-        throw new SsdkUnsupportedException(Build.BRAND + " is not supported.", 0);
-      }
-    }
-    catch (SecurityException paramContext)
-    {
-      throw new SecurityException("com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY permission is required.");
-    }
-    this.d = paramContext;
-    try
-    {
-      if (this.d == null) {
-        throw new NullPointerException("Smotion : Context is null. ");
-      }
-    }
-    catch (NoSuchMethodException paramContext)
-    {
-      paramContext.printStackTrace();
-      boolean bool1;
-      do
-      {
-        this.a = true;
-        if ((isFeatureEnabled(0)) || (isFeatureEnabled(1)) || (isFeatureEnabled(3)) || (isFeatureEnabled(4))) {
-          break;
-        }
-        this.a = false;
-        throw new SsdkUnsupportedException("Smotion : This Device is not supported.", 1);
-        bool1 = this.e;
-      } while (bool1);
-      for (;;)
-      {
-        try
-        {
-          paramContext = this.d.getPackageManager();
-          if (paramContext == null) {
-            break;
-          }
-        }
-        catch (NullPointerException paramContext)
-        {
-          boolean bool2;
-          boolean bool3;
-          throw new IllegalArgumentException("Smotion : Context is wrong. ");
-        }
-        try
-        {
-          if ((Class.forName("android.hardware.scontext.SContextManager").getMethod("getFeatureLevel", new Class[] { Integer.TYPE }) != null) && ((paramContext.hasSystemFeature("com.sec.feature.sensorhub")) || (paramContext.hasSystemFeature("com.sec.feature.scontext_lite"))))
-          {
-            SContextManager localSContextManager = (SContextManager)this.d.getSystemService("scontext");
-            if (localSContextManager != null)
-            {
-              if (localSContextManager.getFeatureLevel(2) > 0)
-              {
-                this.f = true;
-                if (paramContext.hasSystemFeature("android.hardware.sensor.barometer")) {
-                  this.g = true;
+
+    /* renamed from: a */
+    final void m21598a(Context context, String str) {
+        if (m21597a()) {
+            try {
+                if (context.checkCallingOrSelfPermission("com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY") != 0) {
+                    throw new SecurityException();
                 }
-              }
-              if (localSContextManager.getFeatureLevel(25) > 0)
-              {
-                this.i = true;
-                if (localSContextManager.isAvailableService(26))
-                {
-                  if (((paramContext.getSystemFeatureLevel("com.sec.feature.sensorhub") != 7) && (paramContext.getSystemFeatureLevel("com.sec.feature.sensorhub") != 9)) || (Build.VERSION.SDK_INT > 19)) {
-                    break label490;
-                  }
-                  b = false;
+                Parcelable contentValues = new ContentValues();
+                String name = getClass().getPackage().getName();
+                String str2 = context.getPackageName() + "#" + getVersionCode();
+                contentValues.put("app_id", name);
+                contentValues.put("feature", str2);
+                if (!str.equals("initialize()")) {
+                    contentValues.put("extra", str);
                 }
-              }
-              if (localSContextManager.getFeatureLevel(27) > 0) {
-                this.j = true;
-              }
-              if ((this.i) && (this.j)) {
-                c = true;
-              }
+                Intent intent = new Intent();
+                intent.setAction("com.samsung.android.providers.context.log.action.USE_APP_FEATURE_SURVEY");
+                intent.putExtra("data", contentValues);
+                intent.setPackage("com.samsung.android.providers.context");
+                context.sendBroadcast(intent);
+            } catch (NullPointerException e) {
+                throw new IllegalArgumentException("Smotion : Context is wrong. ");
             }
-          }
         }
-        catch (ClassNotFoundException localClassNotFoundException)
-        {
-          localClassNotFoundException.printStackTrace();
-          continue;
+    }
+
+    public int getVersionCode() {
+        return 9;
+    }
+
+    public String getVersionName() {
+        return "2.2.1";
+    }
+
+    public void initialize(Context context) throws SsdkUnsupportedException {
+        if (this.f24654a) {
+            throw new IllegalStateException("Smotion : initialize() is already called. ");
         }
-        try
-        {
-          if (Class.forName("android.hardware.motion.MotionRecognitionManager").getMethod("registerListenerEvent", new Class[] { MRListener.class, Integer.TYPE, Integer.TYPE, Handler.class }) == null) {
-            break;
-          }
-          bool1 = paramContext.hasSystemFeature("android.hardware.sensor.accelerometer");
-          bool2 = paramContext.hasSystemFeature("android.hardware.sensor.gyroscope");
-          bool3 = paramContext.hasSystemFeature("android.hardware.sensor.proximity");
-          if ((bool1) && (bool2) && (bool3)) {
-            this.h = true;
-          }
-          this.e = true;
+        this.f24654a = false;
+        if (context == null) {
+            throw new IllegalArgumentException("Smotion : Context is null. ");
         }
-        catch (ClassNotFoundException paramContext)
-        {
-          paramContext.printStackTrace();
+        try {
+            m21598a(context, "initialize()");
+            if (SsdkVendorCheck.isSamsungDevice()) {
+                this.f24655d = context;
+                try {
+                    if (this.f24655d == null) {
+                        throw new NullPointerException("Smotion : Context is null. ");
+                    }
+                    if (!this.f24656e) {
+                        PackageManager packageManager = this.f24655d.getPackageManager();
+                        if (packageManager != null) {
+                            try {
+                                if (Class.forName("android.hardware.scontext.SContextManager").getMethod("getFeatureLevel", new Class[]{Integer.TYPE}) != null && (packageManager.hasSystemFeature("com.sec.feature.sensorhub") || packageManager.hasSystemFeature("com.sec.feature.scontext_lite"))) {
+                                    SContextManager sContextManager = (SContextManager) this.f24655d.getSystemService("scontext");
+                                    if (sContextManager != null) {
+                                        if (sContextManager.getFeatureLevel(2) > 0) {
+                                            this.f24657f = true;
+                                            if (packageManager.hasSystemFeature("android.hardware.sensor.barometer")) {
+                                                this.f24658g = true;
+                                            }
+                                        }
+                                        if (sContextManager.getFeatureLevel(25) > 0) {
+                                            this.f24660i = true;
+                                            if (sContextManager.isAvailableService(26)) {
+                                                if ((packageManager.getSystemFeatureLevel("com.sec.feature.sensorhub") == 7 || packageManager.getSystemFeatureLevel("com.sec.feature.sensorhub") == 9) && VERSION.SDK_INT <= 19) {
+                                                    f24652b = false;
+                                                } else {
+                                                    f24652b = true;
+                                                }
+                                            }
+                                        }
+                                        if (sContextManager.getFeatureLevel(27) > 0) {
+                                            this.f24661j = true;
+                                        }
+                                        if (this.f24660i && this.f24661j) {
+                                            f24653c = true;
+                                        }
+                                    }
+                                }
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                if (Class.forName("android.hardware.motion.MotionRecognitionManager").getMethod("registerListenerEvent", new Class[]{MRListener.class, Integer.TYPE, Integer.TYPE, Handler.class}) != null) {
+                                    boolean hasSystemFeature = packageManager.hasSystemFeature("android.hardware.sensor.accelerometer");
+                                    boolean hasSystemFeature2 = packageManager.hasSystemFeature("android.hardware.sensor.gyroscope");
+                                    boolean hasSystemFeature3 = packageManager.hasSystemFeature("android.hardware.sensor.proximity");
+                                    if (hasSystemFeature && hasSystemFeature2 && hasSystemFeature3) {
+                                        this.f24659h = true;
+                                    }
+                                    this.f24656e = true;
+                                }
+                            } catch (ClassNotFoundException e2) {
+                                e2.printStackTrace();
+                            }
+                        }
+                    }
+                    this.f24654a = true;
+                    if (!isFeatureEnabled(0) && !isFeatureEnabled(1) && !isFeatureEnabled(3) && !isFeatureEnabled(4)) {
+                        this.f24654a = false;
+                        throw new SsdkUnsupportedException("Smotion : This Device is not supported.", 1);
+                    }
+                } catch (NullPointerException e3) {
+                    throw new IllegalArgumentException("Smotion : Context is wrong. ");
+                } catch (NoSuchMethodException e4) {
+                    e4.printStackTrace();
+                }
+            } else {
+                throw new SsdkUnsupportedException(Build.BRAND + " is not supported.", 0);
+            }
+        } catch (SecurityException e5) {
+            throw new SecurityException("com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY permission is required.");
         }
-        break;
-        label490:
-        b = true;
-      }
     }
-  }
-  
-  public boolean isFeatureEnabled(int paramInt)
-  {
-    if ((paramInt < 0) || (paramInt > 4)) {
-      throw new IllegalArgumentException("Smotion : Type value is wrong. ");
+
+    public boolean isFeatureEnabled(int i) {
+        if (i < 0 || i > 4) {
+            throw new IllegalArgumentException("Smotion : Type value is wrong. ");
+        } else if (this.f24655d == null) {
+            throw new IllegalStateException("Smotion : initialize() is not called. ");
+        } else if (this.f24654a) {
+            switch (i) {
+                case 0:
+                    return this.f24659h;
+                case 1:
+                    return this.f24657f;
+                case 2:
+                    return this.f24658g;
+                case 3:
+                    return this.f24660i;
+                case 4:
+                    return this.f24661j;
+                default:
+                    return false;
+            }
+        } else {
+            throw new IllegalStateException("Smotion : initialize() is not successful. ");
+        }
     }
-    if (this.d == null) {
-      throw new IllegalStateException("Smotion : initialize() is not called. ");
-    }
-    if (!this.a) {
-      throw new IllegalStateException("Smotion : initialize() is not successful. ");
-    }
-    switch (paramInt)
-    {
-    default: 
-      return false;
-    case 0: 
-      return this.h;
-    case 1: 
-      return this.f;
-    case 2: 
-      return this.g;
-    case 3: 
-      return this.i;
-    }
-    return this.j;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/samsung/android/sdk/motion/Smotion.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,198 +2,141 @@ package com.baidu.tts.tools;
 
 import java.io.UnsupportedEncodingException;
 
-public final class Base64
-{
-  private static final byte[] a = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 43, 47 };
-  
-  public static byte[] decode(byte[] paramArrayOfByte)
-  {
-    return decode(paramArrayOfByte, paramArrayOfByte.length);
-  }
-  
-  public static byte[] decode(byte[] paramArrayOfByte, int paramInt)
-  {
-    int i = paramInt / 4 * 3;
-    if (i == 0) {
-      return new byte[0];
+public final class Base64 {
+    /* renamed from: a */
+    private static final byte[] f21300a = new byte[]{(byte) 65, (byte) 66, (byte) 67, (byte) 68, (byte) 69, (byte) 70, (byte) 71, (byte) 72, (byte) 73, (byte) 74, (byte) 75, (byte) 76, (byte) 77, (byte) 78, (byte) 79, (byte) 80, (byte) 81, (byte) 82, (byte) 83, (byte) 84, (byte) 85, (byte) 86, (byte) 87, (byte) 88, (byte) 89, (byte) 90, (byte) 97, (byte) 98, (byte) 99, (byte) 100, (byte) 101, (byte) 102, (byte) 103, (byte) 104, (byte) 105, (byte) 106, (byte) 107, (byte) 108, (byte) 109, (byte) 110, (byte) 111, (byte) 112, (byte) 113, (byte) 114, (byte) 115, (byte) 116, (byte) 117, (byte) 118, (byte) 119, (byte) 120, (byte) 121, (byte) 122, (byte) 48, (byte) 49, (byte) 50, (byte) 51, (byte) 52, (byte) 53, (byte) 54, (byte) 55, (byte) 56, (byte) 57, (byte) 43, (byte) 47};
+
+    public static byte[] decode(byte[] paramArrayOfByte) {
+        return decode(paramArrayOfByte, paramArrayOfByte.length);
     }
-    byte[] arrayOfByte = new byte[i];
-    int m = 0;
-    int n = paramInt;
-    i = paramArrayOfByte[(n - 1)];
-    paramInt = m;
-    int i1;
-    int k;
-    int j;
-    if (i != 10)
-    {
-      paramInt = m;
-      if (i != 13)
-      {
-        paramInt = m;
-        if (i != 32)
-        {
-          paramInt = m;
-          if (i != 9) {
-            if (i != 61)
-            {
-              i1 = 0;
-              k = 0;
-              j = 0;
-              paramInt = 0;
-              label84:
-              if (i1 >= n) {
-                break label311;
-              }
-              i = paramArrayOfByte[i1];
-              if ((i == 10) || (i == 13) || (i == 32) || (i == 9)) {
-                break label388;
-              }
-              if ((i < 65) || (i > 90)) {
-                break label246;
-              }
-              i -= 65;
-              label137:
-              k = k << 6 | (byte)i;
-              if (j % 4 != 3) {
-                break label385;
-              }
-              i = paramInt + 1;
-              arrayOfByte[paramInt] = ((byte)((0xFF0000 & k) >> 16));
-              int i2 = i + 1;
-              arrayOfByte[i] = ((byte)((0xFF00 & k) >> 8));
-              paramInt = i2 + 1;
-              arrayOfByte[i2] = ((byte)(k & 0xFF));
-              label206:
-              j += 1;
-              i = paramInt;
+
+    public static byte[] decode(byte[] paramArrayOfByte, int paramInt) {
+        int i = (paramInt / 4) * 3;
+        if (i == 0) {
+            return new byte[0];
+        }
+        int i2;
+        Object obj = new byte[i];
+        i = 0;
+        while (true) {
+            byte b = paramArrayOfByte[paramInt - 1];
+            if (!(b == (byte) 10 || b == (byte) 13 || b == (byte) 32 || b == (byte) 9)) {
+                if (b != (byte) 61) {
+                    break;
+                }
+                i++;
             }
-          }
+            paramInt--;
         }
-      }
-    }
-    for (paramInt = k;; paramInt = k)
-    {
-      i1 += 1;
-      k = paramInt;
-      paramInt = i;
-      break label84;
-      paramInt = m + 1;
-      n -= 1;
-      m = paramInt;
-      break;
-      label246:
-      if ((i >= 97) && (i <= 122))
-      {
-        i -= 71;
-        break label137;
-      }
-      if ((i >= 48) && (i <= 57))
-      {
-        i += 4;
-        break label137;
-      }
-      if (i == 43)
-      {
-        i = 62;
-        break label137;
-      }
-      if (i == 47)
-      {
-        i = 63;
-        break label137;
-      }
-      return null;
-      label311:
-      i = paramInt;
-      if (m > 0)
-      {
-        j = k << m * 6;
-        i = paramInt + 1;
-        arrayOfByte[paramInt] = ((byte)((0xFF0000 & j) >> 16));
-        if (m != 1) {
-          break label382;
+        int i3 = 0;
+        int i4 = 0;
+        int i5 = 0;
+        int i6 = 0;
+        while (i3 < paramInt) {
+            b = paramArrayOfByte[i3];
+            if (b == (byte) 10 || b == (byte) 13 || b == (byte) 32 || b == (byte) 9) {
+                i2 = i4;
+                i4 = i6;
+                i6 = i5;
+            } else {
+                if (b >= (byte) 65 && b <= (byte) 90) {
+                    i2 = b - 65;
+                } else if (b >= (byte) 97 && b <= (byte) 122) {
+                    i2 = b - 71;
+                } else if (b >= (byte) 48 && b <= (byte) 57) {
+                    i2 = b + 4;
+                } else if (b == (byte) 43) {
+                    i2 = 62;
+                } else if (b != (byte) 47) {
+                    return null;
+                } else {
+                    i2 = 63;
+                }
+                i4 = (i4 << 6) | ((byte) i2);
+                if (i5 % 4 == 3) {
+                    i2 = i6 + 1;
+                    obj[i6] = (byte) ((16711680 & i4) >> 16);
+                    i6 = i2 + 1;
+                    obj[i2] = (byte) ((65280 & i4) >> 8);
+                    i2 = i6 + 1;
+                    obj[i6] = (byte) (i4 & 255);
+                } else {
+                    i2 = i6;
+                }
+                i6 = i5 + 1;
+                int i7 = i4;
+                i4 = i2;
+                i2 = i7;
+            }
+            i3++;
+            i5 = i6;
+            i6 = i4;
+            i4 = i2;
         }
-        paramInt = i + 1;
-        arrayOfByte[i] = ((byte)((0xFF00 & j) >> 8));
-        i = paramInt;
-      }
-      label382:
-      for (;;)
-      {
-        paramArrayOfByte = new byte[i];
-        System.arraycopy(arrayOfByte, 0, paramArrayOfByte, 0, i);
-        return paramArrayOfByte;
-      }
-      label385:
-      break label206;
-      label388:
-      i = paramInt;
+        if (i > 0) {
+            i4 <<= i * 6;
+            i2 = i6 + 1;
+            obj[i6] = (byte) ((16711680 & i4) >> 16);
+            if (i == 1) {
+                i6 = i2 + 1;
+                obj[i2] = (byte) ((65280 & i4) >> 8);
+            } else {
+                i6 = i2;
+            }
+        }
+        byte[] bArr = new byte[i6];
+        System.arraycopy(obj, 0, bArr, 0, i6);
+        return bArr;
     }
-  }
-  
-  public static String encode(byte[] paramArrayOfByte, String paramString)
-    throws UnsupportedEncodingException
-  {
-    int i = paramArrayOfByte.length * 4 / 3;
-    byte[] arrayOfByte = new byte[i + (i / 76 + 3)];
-    int n = paramArrayOfByte.length - paramArrayOfByte.length % 3;
-    int j = 0;
-    int k = 0;
-    i = 0;
-    if (j < n)
-    {
-      int m = i + 1;
-      arrayOfByte[i] = a[((paramArrayOfByte[j] & 0xFF) >> 2)];
-      i = m + 1;
-      arrayOfByte[m] = a[((paramArrayOfByte[j] & 0x3) << 4 | (paramArrayOfByte[(j + 1)] & 0xFF) >> 4)];
-      m = i + 1;
-      arrayOfByte[i] = a[((paramArrayOfByte[(j + 1)] & 0xF) << 2 | (paramArrayOfByte[(j + 2)] & 0xFF) >> 6)];
-      i = m + 1;
-      arrayOfByte[m] = a[(paramArrayOfByte[(j + 2)] & 0x3F)];
-      if (((i - k) % 76 != 0) || (i == 0)) {
-        break label389;
-      }
-      m = i + 1;
-      arrayOfByte[i] = 10;
-      k += 1;
-      i = m;
+
+    public static String encode(byte[] paramArrayOfByte, String paramString) throws UnsupportedEncodingException {
+        int length = (paramArrayOfByte.length * 4) / 3;
+        byte[] bArr = new byte[(length + ((length / 76) + 3))];
+        int length2 = paramArrayOfByte.length - (paramArrayOfByte.length % 3);
+        length = 0;
+        int i = 0;
+        for (int i2 = 0; i2 < length2; i2 += 3) {
+            int i3 = i + 1;
+            bArr[i] = f21300a[(paramArrayOfByte[i2] & 255) >> 2];
+            i = i3 + 1;
+            bArr[i3] = f21300a[((paramArrayOfByte[i2] & 3) << 4) | ((paramArrayOfByte[i2 + 1] & 255) >> 4)];
+            int i4 = i + 1;
+            bArr[i] = f21300a[((paramArrayOfByte[i2 + 1] & 15) << 2) | ((paramArrayOfByte[i2 + 2] & 255) >> 6)];
+            i3 = i4 + 1;
+            bArr[i4] = f21300a[paramArrayOfByte[i2 + 2] & 63];
+            if ((i3 - length) % 76 != 0 || i3 == 0) {
+                i = i3;
+            } else {
+                i = i3 + 1;
+                bArr[i3] = (byte) 10;
+                length++;
+            }
+        }
+        switch (paramArrayOfByte.length % 3) {
+            case 1:
+                length = i + 1;
+                bArr[i] = f21300a[(paramArrayOfByte[length2] & 255) >> 2];
+                i = length + 1;
+                bArr[length] = f21300a[(paramArrayOfByte[length2] & 3) << 4];
+                i3 = i + 1;
+                bArr[i] = (byte) 61;
+                length = i3 + 1;
+                bArr[i3] = (byte) 61;
+                break;
+            case 2:
+                length = i + 1;
+                bArr[i] = f21300a[(paramArrayOfByte[length2] & 255) >> 2];
+                i = length + 1;
+                bArr[length] = f21300a[((paramArrayOfByte[length2] & 3) << 4) | ((paramArrayOfByte[length2 + 1] & 255) >> 4)];
+                i3 = i + 1;
+                bArr[i] = f21300a[(paramArrayOfByte[length2 + 1] & 15) << 2];
+                length = i3 + 1;
+                bArr[i3] = (byte) 61;
+                break;
+            default:
+                length = i;
+                break;
+        }
+        return new String(bArr, 0, length, paramString);
     }
-    label389:
-    for (;;)
-    {
-      j += 3;
-      break;
-      switch (paramArrayOfByte.length % 3)
-      {
-      }
-      for (;;)
-      {
-        return new String(arrayOfByte, 0, i, paramString);
-        j = i + 1;
-        arrayOfByte[i] = a[((paramArrayOfByte[n] & 0xFF) >> 2)];
-        i = j + 1;
-        arrayOfByte[j] = a[((paramArrayOfByte[n] & 0x3) << 4)];
-        j = i + 1;
-        arrayOfByte[i] = 61;
-        i = j + 1;
-        arrayOfByte[j] = 61;
-        continue;
-        j = i + 1;
-        arrayOfByte[i] = a[((paramArrayOfByte[n] & 0xFF) >> 2)];
-        i = j + 1;
-        arrayOfByte[j] = a[((paramArrayOfByte[n] & 0x3) << 4 | (paramArrayOfByte[(n + 1)] & 0xFF) >> 4)];
-        j = i + 1;
-        arrayOfByte[i] = a[((paramArrayOfByte[(n + 1)] & 0xF) << 2)];
-        i = j + 1;
-        arrayOfByte[j] = 61;
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/tools/Base64.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

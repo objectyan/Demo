@@ -2,23 +2,20 @@ package com.baidu.ufosdk.ui;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import com.baidu.ufosdk.util.h;
+import com.baidu.ufosdk.util.C5215h;
 
-final class bn
-  implements View.OnClickListener
-{
-  bn(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void onClick(View paramView)
-  {
-    if (!h.a()) {
-      FeedbackInputActivity.J(this.a);
+/* compiled from: FeedbackInputActivity */
+final class bn implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21582a;
+
+    bn(FeedbackInputActivity feedbackInputActivity) {
+        this.f21582a = feedbackInputActivity;
     }
-  }
+
+    public final void onClick(View view) {
+        if (!C5215h.m17755a()) {
+            FeedbackInputActivity.m17630J(this.f21582a);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bn.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

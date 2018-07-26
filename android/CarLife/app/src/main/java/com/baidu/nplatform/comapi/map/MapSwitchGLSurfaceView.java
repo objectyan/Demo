@@ -7,93 +7,67 @@ import com.baidu.navisdk.util.common.EglConfigUtils;
 import com.baidu.navisdk.util.common.LogUtil;
 import java.lang.ref.WeakReference;
 
-public class MapSwitchGLSurfaceView
-  extends BaiduGLSurfaceView
-{
-  private static final String TAG = "MapSwitchGLSurfaceView";
-  public MapSwitchRendererVer2 mRenderer;
-  
-  public MapSwitchGLSurfaceView(Context paramContext)
-  {
-    super(paramContext);
-    setRestartGLThreadOnAttach(false);
-    LogUtil.e("MapSwitchGLSurfaceView", "MapSwitchGLSurfaceView: --> create instance");
-    setEGLContextClientVersion(2);
-    getHolder().setFormat(-2);
-    setZOrderMediaOverlay(true);
-    try
-    {
-      if (EglConfigUtils.isSupportConfig(8, 8, 8, 8, 24, 0)) {
-        setEGLConfigChooser(8, 8, 8, 8, 24, 0);
-      }
-      for (;;)
-      {
+public class MapSwitchGLSurfaceView extends BaiduGLSurfaceView {
+    private static final String TAG = "MapSwitchGLSurfaceView";
+    public MapSwitchRendererVer2 mRenderer;
+
+    public MapSwitchGLSurfaceView(Context context) {
+        super(context);
+        setRestartGLThreadOnAttach(false);
+        LogUtil.m15791e(TAG, "MapSwitchGLSurfaceView: --> create instance");
+        setEGLContextClientVersion(2);
+        getHolder().setFormat(-2);
+        setZOrderMediaOverlay(true);
+        try {
+            if (EglConfigUtils.isSupportConfig(8, 8, 8, 8, 24, 0)) {
+                setEGLConfigChooser(8, 8, 8, 8, 24, 0);
+            } else {
+                setEGLConfigChooser(true);
+            }
+        } catch (IllegalArgumentException e) {
+            setEGLConfigChooser(true);
+        }
         Init();
-        return;
-        setEGLConfigChooser(true);
-      }
     }
-    catch (IllegalArgumentException paramContext)
-    {
-      for (;;)
-      {
-        setEGLConfigChooser(true);
-      }
+
+    public void Init() {
+        this.mRenderer = new MapSwitchRendererVer2(new WeakReference(this));
+        setRenderer(this.mRenderer);
+        setRenderMode(0);
     }
-  }
-  
-  public void Init()
-  {
-    this.mRenderer = new MapSwitchRendererVer2(new WeakReference(this));
-    setRenderer(this.mRenderer);
-    setRenderMode(0);
-  }
-  
-  public void onPause()
-  {
-    LogUtil.e("MapSwitchGLSurfaceView", "MapSwitchGLSurfaceView --> onPause");
-    super.onPause();
-  }
-  
-  public void onResume()
-  {
-    LogUtil.e("MapSwitchGLSurfaceView", "MapSwitchGLSurfaceView --> onResume");
-    try
-    {
-      super.onResume();
-      return;
+
+    public void unInit() {
+        releaseGLThread();
+        this.mRenderer = null;
     }
-    catch (Exception localException) {}
-  }
-  
-  public void surfaceChanged(SurfaceHolder paramSurfaceHolder, int paramInt1, int paramInt2, int paramInt3)
-  {
-    LogUtil.e("MapSwitchGLSurfaceView", "MapSwitchGLSurfaceView --> surfaceChanged");
-    if (this.mRenderer != null) {
-      this.mRenderer.setGLResizeParams(paramInt2, paramInt3, 0);
+
+    public void surfaceCreated(SurfaceHolder holder) {
+        super.surfaceCreated(holder);
+        LogUtil.m15791e(TAG, "MapSwitchGLSurfaceView: --> surfaceCreated");
+        BNMapController.getInstance().updateLayer(9);
+        BNMapController.getInstance().updateLayer(10);
+        BNMapController.getInstance().updateLayer(0);
+        BNMapController.getInstance().updateLayer(8);
     }
-    super.surfaceChanged(paramSurfaceHolder, paramInt1, paramInt2, paramInt3);
-  }
-  
-  public void surfaceCreated(SurfaceHolder paramSurfaceHolder)
-  {
-    super.surfaceCreated(paramSurfaceHolder);
-    LogUtil.e("MapSwitchGLSurfaceView", "MapSwitchGLSurfaceView: --> surfaceCreated");
-    BNMapController.getInstance().updateLayer(9);
-    BNMapController.getInstance().updateLayer(10);
-    BNMapController.getInstance().updateLayer(0);
-    BNMapController.getInstance().updateLayer(8);
-  }
-  
-  public void unInit()
-  {
-    releaseGLThread();
-    this.mRenderer = null;
-  }
+
+    public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+        LogUtil.m15791e(TAG, "MapSwitchGLSurfaceView --> surfaceChanged");
+        if (this.mRenderer != null) {
+            this.mRenderer.setGLResizeParams(w, h, 0);
+        }
+        super.surfaceChanged(holder, format, w, h);
+    }
+
+    public void onResume() {
+        LogUtil.m15791e(TAG, "MapSwitchGLSurfaceView --> onResume");
+        try {
+            super.onResume();
+        } catch (Exception e) {
+        }
+    }
+
+    public void onPause() {
+        LogUtil.m15791e(TAG, "MapSwitchGLSurfaceView --> onPause");
+        super.onPause();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/nplatform/comapi/map/MapSwitchGLSurfaceView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

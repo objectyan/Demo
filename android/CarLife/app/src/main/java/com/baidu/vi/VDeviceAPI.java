@@ -5,7 +5,6 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -20,13 +19,19 @@ import android.os.PowerManager.WakeLock;
 import android.os.StatFs;
 import android.provider.Settings.SettingNotFoundException;
 import android.provider.Settings.System;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.telephony.CellLocation;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
+import com.baidu.baidumaps.common.network.NetworkListener;
+import com.baidu.che.codriver.platform.NaviCmdConstants;
+import com.baidu.che.codriver.sdk.p081a.C2602k.C1981b;
+import com.baidu.navi.util.ShareTools;
+import com.baidu.navisdk.module.BusinessActivityManager;
 import com.baidu.platform.comapi.util.NetworkUtil;
 import com.baidu.platform.comapi.util.SysOSAPIv2;
 import java.io.BufferedReader;
@@ -35,394 +40,316 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-public class VDeviceAPI
-{
-  private static final int ERROR_INVALID_ADDRESS = 1;
-  private static final int ERROR_INVALID_FILE_FORMAT = 2;
-  private static final int NETWORK_TYPE_BLUETOOTH = 4;
-  private static final int NETWORK_TYPE_MOBILE = 3;
-  private static final int NETWORK_TYPE_NONE = 0;
-  private static final int NETWORK_TYPE_UNKNOWN = 1;
-  private static final int NETWORK_TYPE_WIFI = 2;
-  private static final String TAG = "VDeviceAPI in java";
-  private static BroadcastReceiver mNetworkStateReceiver = null;
-  private static PowerManager.WakeLock mWakeLock = null;
-  
-  public static String getAppVersion()
-  {
-    return "10.1.0";
-  }
-  
-  public static long getAvailableMemory()
-  {
-    ActivityManager localActivityManager = (ActivityManager)VIContext.getContext().getSystemService("activity");
-    ActivityManager.MemoryInfo localMemoryInfo = new ActivityManager.MemoryInfo();
-    localActivityManager.getMemoryInfo(localMemoryInfo);
-    return localMemoryInfo.availMem / 1024L;
-  }
-  
-  public static String getCachePath()
-  {
-    return Environment.getDataDirectory().getAbsolutePath();
-  }
-  
-  public static String getCellId()
-  {
-    Object localObject = (TelephonyManager)VIContext.getContext().getSystemService("phone");
-    if (localObject == null) {
-      return null;
+public class VDeviceAPI {
+    private static final int ERROR_INVALID_ADDRESS = 1;
+    private static final int ERROR_INVALID_FILE_FORMAT = 2;
+    private static final int NETWORK_TYPE_BLUETOOTH = 4;
+    private static final int NETWORK_TYPE_MOBILE = 3;
+    private static final int NETWORK_TYPE_NONE = 0;
+    private static final int NETWORK_TYPE_UNKNOWN = 1;
+    private static final int NETWORK_TYPE_WIFI = 2;
+    private static final String TAG = "VDeviceAPI in java";
+    private static BroadcastReceiver mNetworkStateReceiver = null;
+    private static WakeLock mWakeLock = null;
+
+    public static native void onNetworkStateChanged();
+
+    public static long getTotalSpace() {
+        StatFs sf = new StatFs(Environment.getRootDirectory().getPath());
+        return (((long) sf.getBlockSize()) * ((long) sf.getBlockCount())) / PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID;
     }
-    localObject = ((TelephonyManager)localObject).getCellLocation();
-    if ((localObject instanceof GsmCellLocation)) {
-      return " " + ((GsmCellLocation)localObject).getCid();
+
+    public static long getFreeSpace() {
+        StatFs sf = new StatFs(Environment.getRootDirectory().getPath());
+        return (((long) sf.getBlockSize()) * ((long) sf.getAvailableBlocks())) / PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID;
     }
-    return " ";
-  }
-  
-  public static String getCuid()
-  {
-    return SysOSAPIv2.getInstance().getCuid();
-  }
-  
-  public static int getCurrentNetworkType()
-  {
-    try
-    {
-      int i = Integer.parseInt(NetworkUtil.getCurrentNetMode(VIContext.getContext()));
-      return i;
+
+    public static long getSdcardTotalSpace() {
+        StatFs sf = new StatFs(Environment.getExternalStorageDirectory().getPath());
+        return (((long) sf.getBlockSize()) * ((long) sf.getBlockCount())) / PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID;
     }
-    catch (Exception localException) {}
-    return -1;
-  }
-  
-  public static long getFreeSpace()
-  {
-    StatFs localStatFs = new StatFs(Environment.getRootDirectory().getPath());
-    return localStatFs.getBlockSize() * localStatFs.getAvailableBlocks() / 1024L;
-  }
-  
-  public static String getImei()
-  {
-    TelephonyManager localTelephonyManager = (TelephonyManager)VIContext.getContext().getSystemService("phone");
-    if (localTelephonyManager != null) {
-      return localTelephonyManager.getDeviceId();
+
+    public static long getSdcardFreeSpace() {
+        StatFs sf = new StatFs(Environment.getExternalStorageDirectory().getPath());
+        return (((long) sf.getBlockSize()) * ((long) sf.getAvailableBlocks())) / PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID;
     }
-    return null;
-  }
-  
-  public static String getImsi()
-  {
-    TelephonyManager localTelephonyManager = (TelephonyManager)VIContext.getContext().getSystemService("phone");
-    if (localTelephonyManager != null) {
-      return localTelephonyManager.getSubscriberId();
+
+    public static long getTotalMemory() {
+        long initial_memory = 0;
+        try {
+            FileReader localFileReader = new FileReader("/proc/meminfo");
+            BufferedReader localBufferedReader = new BufferedReader(localFileReader, 8192);
+            String str2 = localBufferedReader.readLine();
+            if (str2 != null) {
+                initial_memory = (long) Integer.valueOf(str2.split("\\s+")[1]).intValue();
+            }
+            localBufferedReader.close();
+            if (localFileReader != null) {
+                localFileReader.close();
+            }
+        } catch (IOException e) {
+        }
+        return initial_memory;
     }
-    return null;
-  }
-  
-  public static String getLac()
-  {
-    Object localObject = (TelephonyManager)VIContext.getContext().getSystemService("phone");
-    if (localObject == null) {
-      return null;
+
+    public static long getAvailableMemory() {
+        ActivityManager am = (ActivityManager) VIContext.getContext().getSystemService(BusinessActivityManager.AUDIO_DIR);
+        MemoryInfo mi = new MemoryInfo();
+        am.getMemoryInfo(mi);
+        return mi.availMem / PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID;
     }
-    localObject = ((TelephonyManager)localObject).getCellLocation();
-    if ((localObject instanceof GsmCellLocation)) {
-      return "" + ((GsmCellLocation)localObject).getLac();
+
+    public static String getOsVersion() {
+        return "android";
     }
-    return "";
-  }
-  
-  public static String getModuleFileName()
-  {
-    return VIContext.getContext().getFilesDir().getAbsolutePath();
-  }
-  
-  public static VNetworkInfo getNetworkInfo(int paramInt)
-  {
-    ConnectivityManager localConnectivityManager = (ConnectivityManager)VIContext.getContext().getSystemService("connectivity");
-    NetworkInfo localNetworkInfo = null;
-    switch (paramInt)
-    {
+
+    public static void setupSoftware(String apkPath) {
+        Intent install = new Intent("android.intent.action.VIEW");
+        install.setDataAndType(Uri.fromFile(new File(apkPath)), "application/vnd.android.package-archive");
+        VIContext.getContext().startActivity(install);
     }
-    while (localNetworkInfo != null)
-    {
-      return new VNetworkInfo(localNetworkInfo);
-      localNetworkInfo = localConnectivityManager.getNetworkInfo(1);
-      continue;
-      localNetworkInfo = localConnectivityManager.getNetworkInfo(0);
+
+    public static String getModuleFileName() {
+        return VIContext.getContext().getFilesDir().getAbsolutePath();
     }
-    return null;
-  }
-  
-  public static String getOsVersion()
-  {
-    return "android";
-  }
-  
-  @TargetApi(8)
-  public static int getScreenBrightness()
-  {
-    ContentResolver localContentResolver = VIContext.getContext().getContentResolver();
-    int j = 0;
-    int i = j;
-    if (8 <= Build.VERSION.SDK_INT) {}
-    try
-    {
-      i = Settings.System.getInt(localContentResolver, "screen_brightness_mode");
-      if (i == 1) {
+
+    public static String getSdcardPath() {
+        File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        return externalStorageDirectory != null ? externalStorageDirectory.getAbsolutePath() : null;
+    }
+
+    public static String getCachePath() {
+        return Environment.getDataDirectory().getAbsolutePath();
+    }
+
+    public static String getAppVersion() {
+        return "10.1.0";
+    }
+
+    public static int getCurrentNetworkType() {
+        int netType = -1;
+        try {
+            netType = Integer.parseInt(NetworkUtil.getCurrentNetMode(VIContext.getContext()));
+        } catch (Exception e) {
+        }
+        return netType;
+    }
+
+    public static boolean isWifiConnected() {
+        NetworkInfo info = ((ConnectivityManager) VIContext.getContext().getSystemService("connectivity")).getNetworkInfo(1);
+        if (info == null || !info.isConnected()) {
+            return false;
+        }
+        return true;
+    }
+
+    public static VNetworkInfo getNetworkInfo(int type) {
+        ConnectivityManager cm = (ConnectivityManager) VIContext.getContext().getSystemService("connectivity");
+        NetworkInfo info = null;
+        switch (type) {
+            case 2:
+                info = cm.getNetworkInfo(1);
+                break;
+            case 3:
+                info = cm.getNetworkInfo(0);
+                break;
+        }
+        if (info != null) {
+            return new VNetworkInfo(info);
+        }
+        return null;
+    }
+
+    @Deprecated
+    public static int getTelecomInfo() {
+        String imsi = ((TelephonyManager) VIContext.getContext().getSystemService("phone")).getSubscriberId();
+        if (imsi == null) {
+            return -1;
+        }
+        if (imsi.startsWith("46000") || imsi.startsWith("46002")) {
+            return 0;
+        }
+        if (imsi.startsWith("46001")) {
+            return 1;
+        }
+        if (imsi.startsWith("46003")) {
+            return 2;
+        }
         return -1;
-      }
-      try
-      {
-        i = Settings.System.getInt(localContentResolver, "screen_brightness");
-        return i;
-      }
-      catch (Settings.SettingNotFoundException localSettingNotFoundException)
-      {
-        return -1;
-      }
     }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        i = j;
-      }
+
+    public static void setNetworkChangedCallback() {
+        unsetNetworkChangedCallback();
+        mNetworkStateReceiver = new VDeviceAPI$1();
+        VIContext.getContext().registerReceiver(mNetworkStateReceiver, new IntentFilter(NetworkListener.f2257d));
     }
-  }
-  
-  public static float getScreenDensity()
-  {
-    if (VIContext.getContext() == null) {
-      return 0.0F;
+
+    public static void unsetNetworkChangedCallback() {
+        if (mNetworkStateReceiver != null) {
+            VIContext.getContext().unregisterReceiver(mNetworkStateReceiver);
+            mNetworkStateReceiver = null;
+        }
     }
-    DisplayMetrics localDisplayMetrics = new DisplayMetrics();
-    WindowManager localWindowManager = (WindowManager)VIContext.getContext().getSystemService("window");
-    if (localWindowManager != null) {
-      localWindowManager.getDefaultDisplay().getMetrics(localDisplayMetrics);
+
+    public static ScanResult[] getWifiHotpot() {
+        List<ScanResult> results = ((WifiManager) VIContext.getContext().getSystemService(C1981b.f6365e)).getScanResults();
+        return (ScanResult[]) results.toArray(new ScanResult[results.size()]);
     }
-    return localDisplayMetrics.density;
-  }
-  
-  public static int getScreenDensityDpi()
-  {
-    if (VIContext.getContext() == null) {
-      return 0;
+
+    public static float getSystemMetricsX() {
+        if (VIContext.getContext() == null) {
+            return 0.0f;
+        }
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wmgr = (WindowManager) VIContext.getContext().getSystemService("window");
+        if (wmgr != null) {
+            wmgr.getDefaultDisplay().getMetrics(metrics);
+        }
+        return (float) metrics.widthPixels;
     }
-    DisplayMetrics localDisplayMetrics = new DisplayMetrics();
-    WindowManager localWindowManager = (WindowManager)VIContext.getContext().getSystemService("window");
-    if ((localWindowManager != null) && (localWindowManager.getDefaultDisplay() != null)) {
-      localWindowManager.getDefaultDisplay().getMetrics(localDisplayMetrics);
+
+    public static float getSystemMetricsY() {
+        if (VIContext.getContext() == null) {
+            return 0.0f;
+        }
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wmgr = (WindowManager) VIContext.getContext().getSystemService("window");
+        if (wmgr != null) {
+            wmgr.getDefaultDisplay().getMetrics(metrics);
+        }
+        return (float) metrics.heightPixels;
     }
-    return localDisplayMetrics.densityDpi;
-  }
-  
-  public static long getSdcardFreeSpace()
-  {
-    StatFs localStatFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
-    return localStatFs.getBlockSize() * localStatFs.getAvailableBlocks() / 1024L;
-  }
-  
-  public static String getSdcardPath()
-  {
-    File localFile = Environment.getExternalStorageDirectory();
-    if (localFile != null) {
-      return localFile.getAbsolutePath();
+
+    public static float getScreenDensity() {
+        if (VIContext.getContext() == null) {
+            return 0.0f;
+        }
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wmgr = (WindowManager) VIContext.getContext().getSystemService("window");
+        if (wmgr != null) {
+            wmgr.getDefaultDisplay().getMetrics(metrics);
+        }
+        return metrics.density;
     }
-    return null;
-  }
-  
-  public static long getSdcardTotalSpace()
-  {
-    StatFs localStatFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
-    return localStatFs.getBlockSize() * localStatFs.getBlockCount() / 1024L;
-  }
-  
-  public static float getSystemMetricsX()
-  {
-    if (VIContext.getContext() == null) {
-      return 0.0F;
+
+    public static int getScreenDensityDpi() {
+        if (VIContext.getContext() == null) {
+            return 0;
+        }
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wmgr = (WindowManager) VIContext.getContext().getSystemService("window");
+        if (!(wmgr == null || wmgr.getDefaultDisplay() == null)) {
+            wmgr.getDefaultDisplay().getMetrics(metrics);
+        }
+        return metrics.densityDpi;
     }
-    DisplayMetrics localDisplayMetrics = new DisplayMetrics();
-    WindowManager localWindowManager = (WindowManager)VIContext.getContext().getSystemService("window");
-    if (localWindowManager != null) {
-      localWindowManager.getDefaultDisplay().getMetrics(localDisplayMetrics);
+
+    public static void setScreenAlwaysOn(boolean setValue) {
+        if (setValue) {
+            if (mWakeLock == null) {
+                mWakeLock = ((PowerManager) VIContext.getContext().getSystemService("power")).newWakeLock(10, "VDeviceAPI");
+            }
+            mWakeLock.acquire();
+        } else if (mWakeLock != null && mWakeLock.isHeld()) {
+            mWakeLock.release();
+            mWakeLock = null;
+        }
     }
-    return localDisplayMetrics.widthPixels;
-  }
-  
-  public static float getSystemMetricsY()
-  {
-    if (VIContext.getContext() == null) {
-      return 0.0F;
+
+    @TargetApi(8)
+    public static int getScreenBrightness() {
+        ContentResolver cr = VIContext.getContext().getContentResolver();
+        int brightnessmode = 0;
+        if (8 <= VERSION.SDK_INT) {
+            try {
+                brightnessmode = System.getInt(cr, "screen_brightness_mode");
+            } catch (Exception e) {
+            }
+        }
+        if (brightnessmode == 1) {
+            return -1;
+        }
+        try {
+            return System.getInt(cr, "screen_brightness");
+        } catch (SettingNotFoundException e2) {
+            return -1;
+        }
     }
-    DisplayMetrics localDisplayMetrics = new DisplayMetrics();
-    WindowManager localWindowManager = (WindowManager)VIContext.getContext().getSystemService("window");
-    if (localWindowManager != null) {
-      localWindowManager.getDefaultDisplay().getMetrics(localDisplayMetrics);
+
+    public static void makeCall(String number) {
+        VIContext.getContext().startActivity(new Intent("android.intent.action.DIAL", Uri.parse("tel:" + number)));
     }
-    return localDisplayMetrics.heightPixels;
-  }
-  
-  @Deprecated
-  public static int getTelecomInfo()
-  {
-    String str = ((TelephonyManager)VIContext.getContext().getSystemService("phone")).getSubscriberId();
-    int j = -1;
-    int i = j;
-    if (str != null)
-    {
-      if ((!str.startsWith("46000")) && (!str.startsWith("46002"))) {
-        break label47;
-      }
-      i = 0;
+
+    public static void sendSMS(String number, String content) {
+        Intent sendIntent = new Intent("android.intent.action.SENDTO", Uri.parse("smsto:" + number));
+        sendIntent.putExtra("sms_body", content);
+        VIContext.getContext().startActivity(sendIntent);
     }
-    label47:
-    do
-    {
-      return i;
-      if (str.startsWith("46001")) {
-        return 1;
-      }
-      i = j;
-    } while (!str.startsWith("46003"));
-    return 2;
-  }
-  
-  public static long getTotalMemory()
-  {
-    long l3 = 0L;
-    long l2 = l3;
-    try
-    {
-      FileReader localFileReader = new FileReader("/proc/meminfo");
-      l2 = l3;
-      BufferedReader localBufferedReader = new BufferedReader(localFileReader, 8192);
-      l2 = l3;
-      String str = localBufferedReader.readLine();
-      long l1 = l3;
-      if (str != null)
-      {
-        l2 = l3;
-        l1 = Integer.valueOf(str.split("\\s+")[1]).intValue();
-      }
-      l2 = l1;
-      localBufferedReader.close();
-      if (localFileReader != null)
-      {
-        l2 = l1;
-        localFileReader.close();
-      }
-      return l1;
+
+    public static int sendMMS(String number, String subject, String content, String extFile) {
+        if (!PhoneNumberUtils.isWellFormedSmsAddress(number)) {
+            return 1;
+        }
+        try {
+            String mimetype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(new File(extFile)).toString()));
+            Intent intent = new Intent("android.intent.action.SEND");
+            intent.putExtra(NaviCmdConstants.KEY_NAVI_CMD_DEST_ADDRESS, number);
+            intent.putExtra(ShareTools.BUNDLE_KEY_SUBJECT, subject);
+            intent.putExtra("sms_body", content);
+            intent.putExtra("android.intent.extra.STREAM", Uri.parse("file://" + extFile));
+            intent.setType(mimetype);
+            VIContext.getContext().startActivity(intent);
+            return 0;
+        } catch (Exception e) {
+            return 2;
+        }
     }
-    catch (IOException localIOException) {}
-    return l2;
-  }
-  
-  public static long getTotalSpace()
-  {
-    StatFs localStatFs = new StatFs(Environment.getRootDirectory().getPath());
-    return localStatFs.getBlockSize() * localStatFs.getBlockCount() / 1024L;
-  }
-  
-  public static ScanResult[] getWifiHotpot()
-  {
-    List localList = ((WifiManager)VIContext.getContext().getSystemService("wifi")).getScanResults();
-    return (ScanResult[])localList.toArray(new ScanResult[localList.size()]);
-  }
-  
-  public static boolean isWifiConnected()
-  {
-    NetworkInfo localNetworkInfo = ((ConnectivityManager)VIContext.getContext().getSystemService("connectivity")).getNetworkInfo(1);
-    return (localNetworkInfo != null) && (localNetworkInfo.isConnected());
-  }
-  
-  public static void makeCall(String paramString)
-  {
-    paramString = new Intent("android.intent.action.DIAL", Uri.parse("tel:" + paramString));
-    VIContext.getContext().startActivity(paramString);
-  }
-  
-  public static native void onNetworkStateChanged();
-  
-  public static void openUrl(String paramString)
-  {
-    paramString = new Intent("android.intent.action.VIEW", Uri.parse(paramString));
-    VIContext.getContext().startActivity(paramString);
-  }
-  
-  public static int sendMMS(String paramString1, String paramString2, String paramString3, String paramString4)
-  {
-    if (!PhoneNumberUtils.isWellFormedSmsAddress(paramString1)) {
-      return 1;
+
+    public static void openUrl(String url) {
+        VIContext.getContext().startActivity(new Intent("android.intent.action.VIEW", Uri.parse(url)));
     }
-    try
-    {
-      String str = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(new File(paramString4)).toString());
-      str = MimeTypeMap.getSingleton().getMimeTypeFromExtension(str);
-      Intent localIntent = new Intent("android.intent.action.SEND");
-      localIntent.putExtra("address", paramString1);
-      localIntent.putExtra("subject", paramString2);
-      localIntent.putExtra("sms_body", paramString3);
-      localIntent.putExtra("android.intent.extra.STREAM", Uri.parse("file://" + paramString4));
-      localIntent.setType(str);
-      VIContext.getContext().startActivity(localIntent);
-      return 0;
+
+    public static String getCellId() {
+        TelephonyManager manager = (TelephonyManager) VIContext.getContext().getSystemService("phone");
+        if (manager == null) {
+            return null;
+        }
+        CellLocation cellloc = manager.getCellLocation();
+        if (cellloc instanceof GsmCellLocation) {
+            return " " + ((GsmCellLocation) cellloc).getCid();
+        }
+        return " ";
     }
-    catch (Exception paramString1) {}
-    return 2;
-  }
-  
-  public static void sendSMS(String paramString1, String paramString2)
-  {
-    paramString1 = new Intent("android.intent.action.SENDTO", Uri.parse("smsto:" + paramString1));
-    paramString1.putExtra("sms_body", paramString2);
-    VIContext.getContext().startActivity(paramString1);
-  }
-  
-  public static void setNetworkChangedCallback()
-  {
-    unsetNetworkChangedCallback();
-    mNetworkStateReceiver = new VDeviceAPI.1();
-    IntentFilter localIntentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-    VIContext.getContext().registerReceiver(mNetworkStateReceiver, localIntentFilter);
-  }
-  
-  public static void setScreenAlwaysOn(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      if (mWakeLock == null) {
-        mWakeLock = ((PowerManager)VIContext.getContext().getSystemService("power")).newWakeLock(10, "VDeviceAPI");
-      }
-      mWakeLock.acquire();
+
+    public static String getLac() {
+        TelephonyManager manager = (TelephonyManager) VIContext.getContext().getSystemService("phone");
+        if (manager == null) {
+            return null;
+        }
+        CellLocation cellloc = manager.getCellLocation();
+        if (cellloc instanceof GsmCellLocation) {
+            return "" + ((GsmCellLocation) cellloc).getLac();
+        }
+        return "";
     }
-    while ((mWakeLock == null) || (!mWakeLock.isHeld())) {
-      return;
+
+    public static String getImei() {
+        TelephonyManager manager = (TelephonyManager) VIContext.getContext().getSystemService("phone");
+        if (manager != null) {
+            return manager.getDeviceId();
+        }
+        return null;
     }
-    mWakeLock.release();
-    mWakeLock = null;
-  }
-  
-  public static void setupSoftware(String paramString)
-  {
-    Intent localIntent = new Intent("android.intent.action.VIEW");
-    localIntent.setDataAndType(Uri.fromFile(new File(paramString)), "application/vnd.android.package-archive");
-    VIContext.getContext().startActivity(localIntent);
-  }
-  
-  public static void unsetNetworkChangedCallback()
-  {
-    if (mNetworkStateReceiver != null)
-    {
-      VIContext.getContext().unregisterReceiver(mNetworkStateReceiver);
-      mNetworkStateReceiver = null;
+
+    public static String getImsi() {
+        TelephonyManager manager = (TelephonyManager) VIContext.getContext().getSystemService("phone");
+        if (manager != null) {
+            return manager.getSubscriberId();
+        }
+        return null;
     }
-  }
+
+    public static String getCuid() {
+        return SysOSAPIv2.getInstance().getCuid();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/vi/VDeviceAPI.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

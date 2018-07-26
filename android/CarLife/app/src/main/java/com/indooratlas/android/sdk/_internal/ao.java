@@ -1,77 +1,54 @@
 package com.indooratlas.android.sdk._internal;
 
 import android.text.TextUtils;
+import com.indooratlas.android.sdk._internal.ah.C5759a;
+import com.indooratlas.android.sdk._internal.ah.C5760b;
 import java.util.ArrayList;
 import org.json.JSONObject;
 
-public final class ao
-  extends an
-  implements ac
-{
-  public ao(String paramString1, String paramString2)
-  {
-    super(paramString1, paramString2);
-  }
-  
-  public final <R> aa<R> a(z<R> paramz, String paramString)
-  {
-    Object localObject = eg.a(paramString, "contextId must be non null", new Object[0]);
-    paramString = (String)localObject;
-    if (((String)localObject).indexOf('.') == -1) {
-      paramString = "floorplan." + (String)localObject;
+public final class ao extends an implements ac {
+    public ao(String str, String str2) {
+        super(str, str2);
     }
-    int i;
-    if (!TextUtils.isEmpty(null))
-    {
-      i = 1;
-      paramString = a(ah.a.d).a("/%s/raster_images", new Object[] { paramString });
-      if (i != 0)
-      {
-        eg.a("ida-key", "query parameter name must be non empty", new Object[0]);
-        if (af.a(null)) {
-          break label195;
+
+    /* renamed from: a */
+    public final <R> aa<R> mo4597a(C6015z<R> c6015z, JSONObject jSONObject) {
+        b();
+        return new am(this.e.m20681a(m19837b(a(C5759a.SDK_V1).m19803a("/init", new Object[0]).m19804a(), jSONObject.toString().getBytes(f))), c6015z);
+    }
+
+    /* renamed from: a */
+    public final <R> aa<R> mo4596a(C6015z<R> c6015z, String str) {
+        String str2;
+        String a = eg.m20414a(str, "contextId must be non null", new Object[0]);
+        if (a.indexOf(46) == -1) {
+            a = "floorplan." + a;
         }
-        if (paramString.c == null) {
-          paramString.c = new ArrayList();
+        int i = !TextUtils.isEmpty(null) ? 1 : 0;
+        ah a2 = a(C5759a.CONTEXTS_V1).m19803a("/%s/raster_images", a);
+        if (i != 0) {
+            str2 = "ida-key";
+            eg.m20414a(str2, "query parameter name must be non empty", new Object[0]);
+            if (af.m19798a(null)) {
+                throw new IllegalArgumentException("query param value for " + str2 + " must be non empty");
+            }
+            if (a2.f22943c == null) {
+                a2.f22943c = new ArrayList();
+            }
+            a2.f22943c.add(new C5760b(str2));
         }
-        localObject = new ah.b("ida-key");
-        paramString.c.add(localObject);
-      }
-      localObject = paramString.a();
-      if (i == 0) {
-        break label225;
-      }
+        str2 = a2.m19804a();
+        String str3 = "GET";
+        String[] strArr = new String[2];
+        strArr[0] = "X-IA-Skip-Signature";
+        strArr[1] = i != 0 ? "true" : "false";
+        return new am(this.e.m20681a(m19835a(str2, str3, null, null, strArr)), c6015z);
     }
-    label195:
-    label225:
-    for (paramString = "true";; paramString = "false")
-    {
-      paramString = a((String)localObject, "GET", null, null, new String[] { "X-IA-Skip-Signature", paramString });
-      return new am(this.e.a(paramString), paramz);
-      i = 0;
-      break;
-      throw new IllegalArgumentException("query param value for " + "ida-key" + " must be non empty");
+
+    /* renamed from: a */
+    public final aa<Void> mo4598a(String str, byte[] bArr) {
+        b();
+        new Object[1][0] = new String(bArr, f);
+        return new am(this.e.m20681a(m19837b(a(C5759a.SDK_V1).m19803a("/events/%s", str).m19804a(), bArr)), C6015z.f24590a);
     }
-  }
-  
-  public final <R> aa<R> a(z<R> paramz, JSONObject paramJSONObject)
-  {
-    b();
-    paramJSONObject = b(a(ah.a.c).a("/init", new Object[0]).a(), paramJSONObject.toString().getBytes(f));
-    return new am(this.e.a(paramJSONObject), paramz);
-  }
-  
-  public final aa<Void> a(String paramString, byte[] paramArrayOfByte)
-  {
-    b();
-    new String(paramArrayOfByte, f);
-    paramString = b(a(ah.a.c).a("/events/%s", new Object[] { paramString }).a(), paramArrayOfByte);
-    return new am(this.e.a(paramString), z.a);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ao.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,100 +1,79 @@
 package com.tencent.mm.sdk.modelmsg;
 
 import android.os.Bundle;
-import com.tencent.mm.sdk.b.b;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage.IMediaObject;
+import com.tencent.mm.sdk.p287b.C6094b;
 import java.io.File;
 
-public class WXFileObject
-  implements WXMediaMessage.IMediaObject
-{
-  private static final int CONTENT_LENGTH_LIMIT = 10485760;
-  private static final String TAG = "MicroMsg.SDK.WXFileObject";
-  private int contentLengthLimit = 10485760;
-  public byte[] fileData;
-  public String filePath;
-  
-  public WXFileObject()
-  {
-    this.fileData = null;
-    this.filePath = null;
-  }
-  
-  public WXFileObject(String paramString)
-  {
-    this.filePath = paramString;
-  }
-  
-  public WXFileObject(byte[] paramArrayOfByte)
-  {
-    this.fileData = paramArrayOfByte;
-  }
-  
-  private int getFileSize(String paramString)
-  {
-    if ((paramString == null) || (paramString.length() == 0)) {}
-    do
-    {
-      return 0;
-      paramString = new File(paramString);
-    } while (!paramString.exists());
-    return (int)paramString.length();
-  }
-  
-  public boolean checkArgs()
-  {
-    if (((this.fileData == null) || (this.fileData.length == 0)) && ((this.filePath == null) || (this.filePath.length() == 0)))
-    {
-      b.b("MicroMsg.SDK.WXFileObject", "checkArgs fail, both arguments is null");
-      return false;
+public class WXFileObject implements IMediaObject {
+    private static final int CONTENT_LENGTH_LIMIT = 10485760;
+    private static final String TAG = "MicroMsg.SDK.WXFileObject";
+    private int contentLengthLimit;
+    public byte[] fileData;
+    public String filePath;
+
+    public WXFileObject() {
+        this.contentLengthLimit = 10485760;
+        this.fileData = null;
+        this.filePath = null;
     }
-    if ((this.fileData != null) && (this.fileData.length > this.contentLengthLimit))
-    {
-      b.b("MicroMsg.SDK.WXFileObject", "checkArgs fail, fileData is too large");
-      return false;
+
+    public WXFileObject(String str) {
+        this.contentLengthLimit = 10485760;
+        this.filePath = str;
     }
-    if ((this.filePath != null) && (getFileSize(this.filePath) > this.contentLengthLimit))
-    {
-      b.b("MicroMsg.SDK.WXFileObject", "checkArgs fail, fileSize is too large");
-      return false;
+
+    public WXFileObject(byte[] bArr) {
+        this.contentLengthLimit = 10485760;
+        this.fileData = bArr;
     }
-    return true;
-  }
-  
-  public void serialize(Bundle paramBundle)
-  {
-    paramBundle.putByteArray("_wxfileobject_fileData", this.fileData);
-    paramBundle.putString("_wxfileobject_filePath", this.filePath);
-  }
-  
-  public void setContentLengthLimit(int paramInt)
-  {
-    this.contentLengthLimit = paramInt;
-  }
-  
-  public void setFileData(byte[] paramArrayOfByte)
-  {
-    this.fileData = paramArrayOfByte;
-  }
-  
-  public void setFilePath(String paramString)
-  {
-    this.filePath = paramString;
-  }
-  
-  public int type()
-  {
-    return 6;
-  }
-  
-  public void unserialize(Bundle paramBundle)
-  {
-    this.fileData = paramBundle.getByteArray("_wxfileobject_fileData");
-    this.filePath = paramBundle.getString("_wxfileobject_filePath");
-  }
+
+    private int getFileSize(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        File file = new File(str);
+        return file.exists() ? (int) file.length() : 0;
+    }
+
+    public boolean checkArgs() {
+        if ((this.fileData == null || this.fileData.length == 0) && (this.filePath == null || this.filePath.length() == 0)) {
+            C6094b.m21682b(TAG, "checkArgs fail, both arguments is null");
+            return false;
+        } else if (this.fileData != null && this.fileData.length > this.contentLengthLimit) {
+            C6094b.m21682b(TAG, "checkArgs fail, fileData is too large");
+            return false;
+        } else if (this.filePath == null || getFileSize(this.filePath) <= this.contentLengthLimit) {
+            return true;
+        } else {
+            C6094b.m21682b(TAG, "checkArgs fail, fileSize is too large");
+            return false;
+        }
+    }
+
+    public void serialize(Bundle bundle) {
+        bundle.putByteArray("_wxfileobject_fileData", this.fileData);
+        bundle.putString("_wxfileobject_filePath", this.filePath);
+    }
+
+    public void setContentLengthLimit(int i) {
+        this.contentLengthLimit = i;
+    }
+
+    public void setFileData(byte[] bArr) {
+        this.fileData = bArr;
+    }
+
+    public void setFilePath(String str) {
+        this.filePath = str;
+    }
+
+    public int type() {
+        return 6;
+    }
+
+    public void unserialize(Bundle bundle) {
+        this.fileData = bundle.getByteArray("_wxfileobject_fileData");
+        this.filePath = bundle.getString("_wxfileobject_filePath");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/mm/sdk/modelmsg/WXFileObject.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

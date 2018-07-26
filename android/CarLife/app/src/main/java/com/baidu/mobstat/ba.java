@@ -1,401 +1,353 @@
 package com.baidu.mobstat;
 
 import android.content.Context;
-import java.util.Iterator;
+import com.baidu.carlife.core.audio.C1163a;
 import java.util.List;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ba
-{
-  public static final ba a = new ba();
-  
-  private void a(JSONObject paramJSONObject)
-  {
-    paramJSONObject = new be(paramJSONObject);
-    bc.b = paramJSONObject.a;
-    bc.c = paramJSONObject.b;
-    bc.d = paramJSONObject.c;
-  }
-  
-  private boolean a()
-  {
-    if (!y.a.b()) {}
-    while ((!y.b.b()) || (!y.c.b()) || (!y.d.b()) || (!y.e.b())) {
-      return true;
+public class ba {
+    /* renamed from: a */
+    public static final ba f19429a = new ba();
+
+    /* renamed from: a */
+    public void m15422a(Context context, JSONObject jSONObject) {
+        bd.m15428a("startDataAnynalyzed start");
+        m15412a(jSONObject);
+        az a = az.m15388a(context);
+        boolean a2 = a.m15394a();
+        bd.m15428a("is data collect closed:" + a2);
+        if (!a2) {
+            if (!C3585y.AP_LIST.m15295b(10000)) {
+                m15415c(context);
+            }
+            if (!C3585y.APP_LIST.m15295b(10000)) {
+                m15416d(context);
+            }
+            if (!C3585y.APP_TRACE.m15295b(10000)) {
+                m15417e(context);
+            }
+            if (bc.f19437e && !C3585y.APP_APK.m15295b(10000)) {
+                m15418f(context);
+            }
+            a2 = de.m15703n(context);
+            if (a2 && a.m15408l()) {
+                bd.m15428a("sendLog");
+                m15419g(context);
+            } else if (a2) {
+                bd.m15428a("can not sendLog due to time stratergy");
+            } else {
+                bd.m15428a("isWifiAvailable = false, will not sendLog");
+            }
+        }
+        bd.m15428a("startDataAnynalyzed finished");
     }
-    return false;
-  }
-  
-  private void b(Context paramContext, JSONObject paramJSONObject)
-  {
-    int i = 0;
-    JSONObject localJSONObject = new JSONObject();
-    int j;
-    Object localObject;
-    try
-    {
-      localJSONObject.put("he", paramJSONObject);
-      j = paramJSONObject.toString().length();
-      i = 0 + j;
+
+    /* renamed from: a */
+    private void m15412a(JSONObject jSONObject) {
+        be beVar = new be(jSONObject);
+        bc.f19434b = beVar.f19439a;
+        bc.f19435c = beVar.f19440b;
+        bc.f19436d = beVar.f19441c;
     }
-    catch (JSONException paramJSONObject)
-    {
-      for (;;)
-      {
-        try
-        {
-          localJSONObject.put("app_mem3", localObject);
-          j = ((JSONArray)localObject).toString().length();
-          j = i + j;
-          bd.a("APP_APK");
-          localObject = y.e.a(20480);
-          paramJSONObject = new JSONArray();
-          localObject = ((List)localObject).iterator();
-          if (!((Iterator)localObject).hasNext()) {
-            break;
-          }
-          str = (String)((Iterator)localObject).next();
-          bd.a(str);
-          paramJSONObject.put(str);
-          continue;
-          paramJSONObject = paramJSONObject;
-          bd.a(paramJSONObject);
+
+    /* renamed from: c */
+    private void m15415c(Context context) {
+        bd.m15428a("collectAPWithStretegy 1");
+        az a = az.m15388a(context);
+        long a2 = a.m15391a(C3606u.AP_LIST);
+        long currentTimeMillis = System.currentTimeMillis();
+        long e = a.m15401e();
+        bd.m15428a("now time: " + currentTimeMillis + ": last time: " + a2 + "; time interval: " + e);
+        if (a2 == 0 || currentTimeMillis - a2 > e) {
+            bd.m15428a("collectAPWithStretegy 2");
+            C3599n.m15752a(context);
         }
-        catch (JSONException paramJSONObject)
-        {
-          bd.a(paramJSONObject);
+    }
+
+    /* renamed from: d */
+    private void m15416d(Context context) {
+        bd.m15428a("collectAPPListWithStretegy 1");
+        long currentTimeMillis = System.currentTimeMillis();
+        az a = az.m15388a(context);
+        long a2 = a.m15391a(C3606u.APP_USER_LIST);
+        long f = a.m15402f();
+        bd.m15428a("now time: " + currentTimeMillis + ": last time: " + a2 + "; userInterval : " + f);
+        if (a2 == 0 || currentTimeMillis - a2 > f || !a.m15395a(a2)) {
+            bd.m15428a("collectUserAPPListWithStretegy 2");
+            C3599n.m15754a(context, false);
         }
-        j = i;
-      }
-      i = j;
-      if (paramJSONObject.length() <= 0) {
-        break label229;
-      }
-      try
-      {
-        localJSONObject.put("app_apk3", paramJSONObject);
-        i = paramJSONObject.toString().length();
-        i = j + i;
-      }
-      catch (JSONException paramJSONObject)
-      {
-        for (;;)
-        {
-          label229:
-          bd.a(paramJSONObject);
-          i = j;
+        a2 = a.m15391a(C3606u.APP_SYS_LIST);
+        long g = a.m15403g();
+        bd.m15428a("now time: " + currentTimeMillis + ": last time: " + a2 + "; sysInterval : " + g);
+        if (a2 == 0 || currentTimeMillis - a2 > g) {
+            bd.m15428a("collectSysAPPListWithStretegy 2");
+            C3599n.m15754a(context, true);
         }
-        j = i;
-        if (paramJSONObject.length() <= 0) {
-          break label344;
+    }
+
+    /* renamed from: e */
+    private void m15417e(Context context) {
+        bd.m15428a("collectAPPTraceWithStretegy 1");
+        long currentTimeMillis = System.currentTimeMillis();
+        az a = az.m15388a(context);
+        long a2 = a.m15391a(C3606u.APP_TRACE_HIS);
+        long i = a.m15405i();
+        bd.m15428a("now time: " + currentTimeMillis + ": last time: " + a2 + "; time interval: " + i);
+        if (a2 == 0 || currentTimeMillis - a2 > i) {
+            bd.m15428a("collectAPPTraceWithStretegy 2");
+            C3599n.m15756b(context, false);
         }
-        try
-        {
-          localJSONObject.put("app_change3", paramJSONObject);
-          j = paramJSONObject.toString().length();
-          j = i + j;
+    }
+
+    /* renamed from: f */
+    private void m15418f(Context context) {
+        bd.m15428a("collectAPKWithStretegy 1");
+        long currentTimeMillis = System.currentTimeMillis();
+        az a = az.m15388a(context);
+        long a2 = a.m15391a(C3606u.APP_APK);
+        long h = a.m15404h();
+        bd.m15428a("now time: " + currentTimeMillis + ": last time: " + a2 + "; interval : " + h);
+        if (a2 == 0 || currentTimeMillis - a2 > h) {
+            bd.m15428a("collectAPKWithStretegy 2");
+            C3599n.m15755b(context);
         }
-        catch (JSONException paramJSONObject)
-        {
-          for (;;)
-          {
-            bd.a(paramJSONObject);
-            j = i;
-          }
-          i = j;
-          if (paramJSONObject.length() <= 0) {
-            break label457;
-          }
-          try
-          {
-            localJSONObject.put("app_trace3", paramJSONObject);
-            i = paramJSONObject.toString().length();
-            i = j + i;
-          }
-          catch (JSONException paramJSONObject)
-          {
-            for (;;)
-            {
-              bd.a(paramJSONObject);
-              i = j;
+    }
+
+    /* renamed from: a */
+    public void m15421a(Context context, String str) {
+        az.m15388a(context).m15393a(str);
+    }
+
+    /* renamed from: b */
+    public void m15424b(Context context, String str) {
+        az.m15388a(context).m15396b(str);
+    }
+
+    /* renamed from: a */
+    public void m15420a(Context context, long j) {
+        az.m15388a(context).m15392a(C3606u.LAST_UPDATE, j);
+    }
+
+    /* renamed from: g */
+    private void m15419g(Context context) {
+        az.m15388a(context).m15392a(C3606u.LAST_SEND, System.currentTimeMillis());
+        JSONObject a = C3607v.m15780a(context);
+        bd.m15428a("header: " + a);
+        int i = 0;
+        while (m15413a()) {
+            int i2 = i + 1;
+            if (i > 0) {
+                C3607v.m15783c(a);
             }
-            j = i;
-            if (paramJSONObject.length() <= 0) {
-              break label571;
-            }
-            try
-            {
-              localJSONObject.put("app_list3", paramJSONObject);
-              j = paramJSONObject.toString().length();
-              j = i + j;
-            }
-            catch (JSONException paramJSONObject)
-            {
-              for (;;)
-              {
-                bd.a(paramJSONObject);
-                j = i;
-              }
-              i = j;
-              if (paramJSONObject.length() <= 0) {
-                break label686;
-              }
-              try
-              {
-                localJSONObject.put("ap_list3", paramJSONObject);
-                i = paramJSONObject.toString().length();
-                i = j + i;
-              }
-              catch (JSONException paramJSONObject)
-              {
-                for (;;)
-                {
-                  try
-                  {
-                    localJSONObject.put("payload", paramJSONObject);
-                    al.a().a(paramContext, localJSONObject.toString());
-                    return;
-                  }
-                  catch (Exception paramContext)
-                  {
-                    bd.a(paramContext);
-                  }
-                  paramJSONObject = paramJSONObject;
-                  bd.a(paramJSONObject);
-                  i = j;
+            m15414b(context, a);
+            i = i2;
+        }
+    }
+
+    /* renamed from: a */
+    private boolean m15413a() {
+        if (C3585y.AP_LIST.m15294b() && C3585y.APP_LIST.m15294b() && C3585y.APP_TRACE.m15294b() && C3585y.APP_CHANGE.m15294b() && C3585y.APP_APK.m15294b()) {
+            return false;
+        }
+        return true;
+    }
+
+    /* renamed from: b */
+    private void m15414b(Context context, JSONObject jSONObject) {
+        JSONArray jSONArray;
+        int length;
+        List<String> a;
+        JSONArray jSONArray2;
+        JSONObject jSONObject2;
+        int i = 0;
+        JSONObject jSONObject3 = new JSONObject();
+        try {
+            jSONObject3.put(Config.HEADER_PART, jSONObject);
+            i = 0 + jSONObject.toString().length();
+        } catch (Throwable e) {
+            bd.m15429a(e);
+        }
+        bd.m15428a("APP_MEM");
+        if (!az.m15388a(context).m15397b()) {
+            String t = de.m15709t(context);
+            jSONArray = new JSONArray();
+            bd.m15428a(t);
+            jSONArray.put(t);
+            if (jSONArray.length() > 0) {
+                try {
+                    jSONObject3.put("app_mem3", jSONArray);
+                    length = i + jSONArray.toString().length();
+                } catch (Throwable e2) {
+                    bd.m15429a(e2);
                 }
-              }
-              bd.a("log in bytes is almost :" + i);
-              paramJSONObject = new JSONArray();
-              paramJSONObject.put(localJSONObject);
-              localJSONObject = new JSONObject();
+                bd.m15428a("APP_APK");
+                a = C3585y.APP_APK.m15293a((int) C1163a.f3005i);
+                jSONArray = new JSONArray();
+                for (String str : a) {
+                    bd.m15428a(str);
+                    jSONArray.put(str);
+                }
+                if (jSONArray.length() > 0) {
+                    try {
+                        jSONObject3.put("app_apk3", jSONArray);
+                        length += jSONArray.toString().length();
+                    } catch (Throwable e3) {
+                        bd.m15429a(e3);
+                    }
+                }
+                bd.m15428a("APP_CHANGE");
+                a = C3585y.APP_CHANGE.m15293a(10240);
+                jSONArray = new JSONArray();
+                for (String str2 : a) {
+                    bd.m15428a(str2);
+                    jSONArray.put(str2);
+                }
+                if (jSONArray.length() > 0) {
+                    try {
+                        jSONObject3.put("app_change3", jSONArray);
+                        length += jSONArray.toString().length();
+                    } catch (Throwable e32) {
+                        bd.m15429a(e32);
+                    }
+                }
+                bd.m15428a("APP_TRACE");
+                a = C3585y.APP_TRACE.m15293a(15360);
+                jSONArray = new JSONArray();
+                for (String str22 : a) {
+                    bd.m15428a(str22);
+                    jSONArray.put(str22);
+                }
+                if (jSONArray.length() > 0) {
+                    try {
+                        jSONObject3.put("app_trace3", jSONArray);
+                        length += jSONArray.toString().length();
+                    } catch (Throwable e322) {
+                        bd.m15429a(e322);
+                    }
+                }
+                bd.m15428a("APP_LIST");
+                a = C3585y.APP_LIST.m15293a(46080);
+                jSONArray = new JSONArray();
+                for (String str222 : a) {
+                    bd.m15428a(str222);
+                    jSONArray.put(str222);
+                }
+                if (jSONArray.length() > 0) {
+                    try {
+                        jSONObject3.put("app_list3", jSONArray);
+                        length += jSONArray.toString().length();
+                    } catch (Throwable e3222) {
+                        bd.m15429a(e3222);
+                    }
+                }
+                bd.m15428a("AP_LIST");
+                a = C3585y.AP_LIST.m15293a(184320 - length);
+                jSONArray = new JSONArray();
+                for (String str2222 : a) {
+                    bd.m15428a(str2222);
+                    jSONArray.put(str2222);
+                }
+                if (jSONArray.length() > 0) {
+                    try {
+                        jSONObject3.put("ap_list3", jSONArray);
+                        length += jSONArray.toString().length();
+                    } catch (Throwable e32222) {
+                        bd.m15429a(e32222);
+                    }
+                }
+                bd.m15428a("log in bytes is almost :" + length);
+                jSONArray2 = new JSONArray();
+                jSONArray2.put(jSONObject3);
+                jSONObject2 = new JSONObject();
+                jSONObject2.put("payload", jSONArray2);
+                al.m15336a().m15345a(context, jSONObject2.toString());
             }
-            bd.a("AP_LIST");
-            localObject = y.a.a(184320 - j);
-            paramJSONObject = new JSONArray();
-            localObject = ((List)localObject).iterator();
-            while (((Iterator)localObject).hasNext())
-            {
-              str = (String)((Iterator)localObject).next();
-              bd.a(str);
-              paramJSONObject.put(str);
-            }
-          }
-          bd.a("APP_LIST");
-          localObject = y.b.a(46080);
-          paramJSONObject = new JSONArray();
-          localObject = ((List)localObject).iterator();
-          while (((Iterator)localObject).hasNext())
-          {
-            str = (String)((Iterator)localObject).next();
-            bd.a(str);
-            paramJSONObject.put(str);
-          }
         }
-        bd.a("APP_TRACE");
-        localObject = y.c.a(15360);
-        paramJSONObject = new JSONArray();
-        localObject = ((List)localObject).iterator();
-        while (((Iterator)localObject).hasNext())
-        {
-          str = (String)((Iterator)localObject).next();
-          bd.a(str);
-          paramJSONObject.put(str);
+        length = i;
+        bd.m15428a("APP_APK");
+        a = C3585y.APP_APK.m15293a((int) C1163a.f3005i);
+        jSONArray = new JSONArray();
+        for (String str22222 : a) {
+            bd.m15428a(str22222);
+            jSONArray.put(str22222);
         }
-      }
-      bd.a("APP_CHANGE");
-      localObject = y.d.a(10240);
-      paramJSONObject = new JSONArray();
-      localObject = ((List)localObject).iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        str = (String)((Iterator)localObject).next();
-        bd.a(str);
-        paramJSONObject.put(str);
-      }
+        if (jSONArray.length() > 0) {
+            jSONObject3.put("app_apk3", jSONArray);
+            length += jSONArray.toString().length();
+        }
+        bd.m15428a("APP_CHANGE");
+        a = C3585y.APP_CHANGE.m15293a(10240);
+        jSONArray = new JSONArray();
+        for (String str222222 : a) {
+            bd.m15428a(str222222);
+            jSONArray.put(str222222);
+        }
+        if (jSONArray.length() > 0) {
+            jSONObject3.put("app_change3", jSONArray);
+            length += jSONArray.toString().length();
+        }
+        bd.m15428a("APP_TRACE");
+        a = C3585y.APP_TRACE.m15293a(15360);
+        jSONArray = new JSONArray();
+        for (String str2222222 : a) {
+            bd.m15428a(str2222222);
+            jSONArray.put(str2222222);
+        }
+        if (jSONArray.length() > 0) {
+            jSONObject3.put("app_trace3", jSONArray);
+            length += jSONArray.toString().length();
+        }
+        bd.m15428a("APP_LIST");
+        a = C3585y.APP_LIST.m15293a(46080);
+        jSONArray = new JSONArray();
+        for (String str22222222 : a) {
+            bd.m15428a(str22222222);
+            jSONArray.put(str22222222);
+        }
+        if (jSONArray.length() > 0) {
+            jSONObject3.put("app_list3", jSONArray);
+            length += jSONArray.toString().length();
+        }
+        bd.m15428a("AP_LIST");
+        a = C3585y.AP_LIST.m15293a(184320 - length);
+        jSONArray = new JSONArray();
+        for (String str222222222 : a) {
+            bd.m15428a(str222222222);
+            jSONArray.put(str222222222);
+        }
+        if (jSONArray.length() > 0) {
+            jSONObject3.put("ap_list3", jSONArray);
+            length += jSONArray.toString().length();
+        }
+        bd.m15428a("log in bytes is almost :" + length);
+        jSONArray2 = new JSONArray();
+        jSONArray2.put(jSONObject3);
+        jSONObject2 = new JSONObject();
+        try {
+            jSONObject2.put("payload", jSONArray2);
+            al.m15336a().m15345a(context, jSONObject2.toString());
+        } catch (Throwable e322222) {
+            bd.m15429a(e322222);
+        }
     }
-    bd.a("APP_MEM");
-    if (!az.a(paramContext).b())
-    {
-      paramJSONObject = de.t(paramContext);
-      localObject = new JSONArray();
-      bd.a(paramJSONObject);
-      ((JSONArray)localObject).put(paramJSONObject);
-      if (((JSONArray)localObject).length() <= 0) {}
+
+    /* renamed from: a */
+    public boolean m15423a(Context context) {
+        az a = az.m15388a(context);
+        long a2 = a.m15391a(C3606u.LAST_UPDATE);
+        long c = a.m15398c();
+        long currentTimeMillis = System.currentTimeMillis();
+        if (currentTimeMillis - a2 > c) {
+            bd.m15428a("need to update, checkWithLastUpdateTime lastUpdateTime =" + a2 + "nowTime=" + currentTimeMillis + ";timeInteveral=" + c);
+            return true;
+        }
+        bd.m15428a("no need to update, checkWithLastUpdateTime lastUpdateTime =" + a2 + "nowTime=" + currentTimeMillis + ";timeInteveral=" + c);
+        return false;
     }
-    String str;
-    label344:
-    label457:
-    label571:
-    label686:
-    return;
-  }
-  
-  private void c(Context paramContext)
-  {
-    bd.a("collectAPWithStretegy 1");
-    az localaz = az.a(paramContext);
-    long l1 = localaz.a(u.a);
-    long l2 = System.currentTimeMillis();
-    long l3 = localaz.e();
-    bd.a("now time: " + l2 + ": last time: " + l1 + "; time interval: " + l3);
-    if ((l1 == 0L) || (l2 - l1 > l3))
-    {
-      bd.a("collectAPWithStretegy 2");
-      n.a(paramContext);
+
+    /* renamed from: b */
+    public boolean m15425b(Context context) {
+        return !az.m15388a(context).m15394a() || m15423a(context);
     }
-  }
-  
-  private void d(Context paramContext)
-  {
-    bd.a("collectAPPListWithStretegy 1");
-    long l1 = System.currentTimeMillis();
-    az localaz = az.a(paramContext);
-    long l2 = localaz.a(u.b);
-    long l3 = localaz.f();
-    bd.a("now time: " + l1 + ": last time: " + l2 + "; userInterval : " + l3);
-    if ((l2 == 0L) || (l1 - l2 > l3) || (!localaz.a(l2)))
-    {
-      bd.a("collectUserAPPListWithStretegy 2");
-      n.a(paramContext, false);
-    }
-    l2 = localaz.a(u.c);
-    l3 = localaz.g();
-    bd.a("now time: " + l1 + ": last time: " + l2 + "; sysInterval : " + l3);
-    if ((l2 == 0L) || (l1 - l2 > l3))
-    {
-      bd.a("collectSysAPPListWithStretegy 2");
-      n.a(paramContext, true);
-    }
-  }
-  
-  private void e(Context paramContext)
-  {
-    bd.a("collectAPPTraceWithStretegy 1");
-    long l1 = System.currentTimeMillis();
-    az localaz = az.a(paramContext);
-    long l2 = localaz.a(u.e);
-    long l3 = localaz.i();
-    bd.a("now time: " + l1 + ": last time: " + l2 + "; time interval: " + l3);
-    if ((l2 == 0L) || (l1 - l2 > l3))
-    {
-      bd.a("collectAPPTraceWithStretegy 2");
-      n.b(paramContext, false);
-    }
-  }
-  
-  private void f(Context paramContext)
-  {
-    bd.a("collectAPKWithStretegy 1");
-    long l1 = System.currentTimeMillis();
-    az localaz = az.a(paramContext);
-    long l2 = localaz.a(u.g);
-    long l3 = localaz.h();
-    bd.a("now time: " + l1 + ": last time: " + l2 + "; interval : " + l3);
-    if ((l2 == 0L) || (l1 - l2 > l3))
-    {
-      bd.a("collectAPKWithStretegy 2");
-      n.b(paramContext);
-    }
-  }
-  
-  private void g(Context paramContext)
-  {
-    az.a(paramContext).a(u.h, System.currentTimeMillis());
-    JSONObject localJSONObject = v.a(paramContext);
-    bd.a("header: " + localJSONObject);
-    int i = 0;
-    while (a())
-    {
-      if (i > 0) {
-        v.c(localJSONObject);
-      }
-      b(paramContext, localJSONObject);
-      i += 1;
-    }
-  }
-  
-  public void a(Context paramContext, long paramLong)
-  {
-    az.a(paramContext).a(u.i, paramLong);
-  }
-  
-  public void a(Context paramContext, String paramString)
-  {
-    az.a(paramContext).a(paramString);
-  }
-  
-  public void a(Context paramContext, JSONObject paramJSONObject)
-  {
-    bd.a("startDataAnynalyzed start");
-    a(paramJSONObject);
-    paramJSONObject = az.a(paramContext);
-    boolean bool = paramJSONObject.a();
-    bd.a("is data collect closed:" + bool);
-    if (!bool)
-    {
-      if (!y.a.b(10000)) {
-        c(paramContext);
-      }
-      if (!y.b.b(10000)) {
-        d(paramContext);
-      }
-      if (!y.c.b(10000)) {
-        e(paramContext);
-      }
-      if ((bc.e) && (!y.e.b(10000))) {
-        f(paramContext);
-      }
-      bool = de.n(paramContext);
-      if ((!bool) || (!paramJSONObject.l())) {
-        break label156;
-      }
-      bd.a("sendLog");
-      g(paramContext);
-    }
-    for (;;)
-    {
-      bd.a("startDataAnynalyzed finished");
-      return;
-      label156:
-      if (!bool) {
-        bd.a("isWifiAvailable = false, will not sendLog");
-      } else {
-        bd.a("can not sendLog due to time stratergy");
-      }
-    }
-  }
-  
-  public boolean a(Context paramContext)
-  {
-    paramContext = az.a(paramContext);
-    long l1 = paramContext.a(u.i);
-    long l2 = paramContext.c();
-    long l3 = System.currentTimeMillis();
-    if (l3 - l1 > l2)
-    {
-      bd.a("need to update, checkWithLastUpdateTime lastUpdateTime =" + l1 + "nowTime=" + l3 + ";timeInteveral=" + l2);
-      return true;
-    }
-    bd.a("no need to update, checkWithLastUpdateTime lastUpdateTime =" + l1 + "nowTime=" + l3 + ";timeInteveral=" + l2);
-    return false;
-  }
-  
-  public void b(Context paramContext, String paramString)
-  {
-    az.a(paramContext).b(paramString);
-  }
-  
-  public boolean b(Context paramContext)
-  {
-    return (!az.a(paramContext).a()) || (a(paramContext));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ba.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

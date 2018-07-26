@@ -3,7 +3,7 @@ package com.google.gson.internal.bind;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
-import com.google.gson.internal..Gson.Types;
+import com.google.gson.internal.C$Gson$Types;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -11,84 +11,63 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ArrayTypeAdapter<E>
-  extends TypeAdapter<Object>
-{
-  public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory()
-  {
-    public <T> TypeAdapter<T> create(Gson paramAnonymousGson, TypeToken<T> paramAnonymousTypeToken)
-    {
-      paramAnonymousTypeToken = paramAnonymousTypeToken.getType();
-      if ((!(paramAnonymousTypeToken instanceof GenericArrayType)) && ((!(paramAnonymousTypeToken instanceof Class)) || (!((Class)paramAnonymousTypeToken).isArray()))) {
-        return null;
-      }
-      paramAnonymousTypeToken = .Gson.Types.getArrayComponentType(paramAnonymousTypeToken);
-      return new ArrayTypeAdapter(paramAnonymousGson, paramAnonymousGson.getAdapter(TypeToken.get(paramAnonymousTypeToken)), .Gson.Types.getRawType(paramAnonymousTypeToken));
+public final class ArrayTypeAdapter<E> extends TypeAdapter<Object> {
+    public static final TypeAdapterFactory FACTORY = new C57071();
+    private final Class<E> componentType;
+    private final TypeAdapter<E> componentTypeAdapter;
+
+    /* renamed from: com.google.gson.internal.bind.ArrayTypeAdapter$1 */
+    static class C57071 implements TypeAdapterFactory {
+        C57071() {
+        }
+
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+            Type type = typeToken.getType();
+            if (!(type instanceof GenericArrayType) && (!(type instanceof Class) || !((Class) type).isArray())) {
+                return null;
+            }
+            Type componentType = C$Gson$Types.getArrayComponentType(type);
+            return new ArrayTypeAdapter(gson, gson.getAdapter(TypeToken.get(componentType)), C$Gson$Types.getRawType(componentType));
+        }
     }
-  };
-  private final Class<E> componentType;
-  private final TypeAdapter<E> componentTypeAdapter;
-  
-  public ArrayTypeAdapter(Gson paramGson, TypeAdapter<E> paramTypeAdapter, Class<E> paramClass)
-  {
-    this.componentTypeAdapter = new TypeAdapterRuntimeTypeWrapper(paramGson, paramTypeAdapter, paramClass);
-    this.componentType = paramClass;
-  }
-  
-  public Object read(JsonReader paramJsonReader)
-    throws IOException
-  {
-    if (paramJsonReader.peek() == JsonToken.NULL)
-    {
-      paramJsonReader.nextNull();
-      paramJsonReader = null;
-      return paramJsonReader;
+
+    public ArrayTypeAdapter(Gson context, TypeAdapter<E> componentTypeAdapter, Class<E> componentType) {
+        this.componentTypeAdapter = new TypeAdapterRuntimeTypeWrapper(context, componentTypeAdapter, componentType);
+        this.componentType = componentType;
     }
-    ArrayList localArrayList = new ArrayList();
-    paramJsonReader.beginArray();
-    while (paramJsonReader.hasNext()) {
-      localArrayList.add(this.componentTypeAdapter.read(paramJsonReader));
+
+    public Object read(JsonReader in) throws IOException {
+        if (in.peek() == JsonToken.NULL) {
+            in.nextNull();
+            return null;
+        }
+        List<E> list = new ArrayList();
+        in.beginArray();
+        while (in.hasNext()) {
+            list.add(this.componentTypeAdapter.read(in));
+        }
+        in.endArray();
+        Object array = Array.newInstance(this.componentType, list.size());
+        for (int i = 0; i < list.size(); i++) {
+            Array.set(array, i, list.get(i));
+        }
+        return array;
     }
-    paramJsonReader.endArray();
-    Object localObject = Array.newInstance(this.componentType, localArrayList.size());
-    int i = 0;
-    for (;;)
-    {
-      paramJsonReader = (JsonReader)localObject;
-      if (i >= localArrayList.size()) {
-        break;
-      }
-      Array.set(localObject, i, localArrayList.get(i));
-      i += 1;
+
+    public void write(JsonWriter out, Object array) throws IOException {
+        if (array == null) {
+            out.nullValue();
+            return;
+        }
+        out.beginArray();
+        int length = Array.getLength(array);
+        for (int i = 0; i < length; i++) {
+            this.componentTypeAdapter.write(out, Array.get(array, i));
+        }
+        out.endArray();
     }
-  }
-  
-  public void write(JsonWriter paramJsonWriter, Object paramObject)
-    throws IOException
-  {
-    if (paramObject == null)
-    {
-      paramJsonWriter.nullValue();
-      return;
-    }
-    paramJsonWriter.beginArray();
-    int i = 0;
-    int j = Array.getLength(paramObject);
-    while (i < j)
-    {
-      Object localObject = Array.get(paramObject, i);
-      this.componentTypeAdapter.write(paramJsonWriter, localObject);
-      i += 1;
-    }
-    paramJsonWriter.endArray();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/bind/ArrayTypeAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

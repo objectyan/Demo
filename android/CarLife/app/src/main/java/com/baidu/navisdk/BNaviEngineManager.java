@@ -17,363 +17,213 @@ import com.baidu.navisdk.util.statistic.RespTimeStatItem;
 import com.baidu.navisdk.vi.VDeviceAPI;
 import com.baidu.nplatform.comjni.engine.AppEngine;
 
-public class BNaviEngineManager
-{
-  private static final String TAG = "Common";
-  private static EngineCommonConfig mEngineCommonConfig;
-  private static volatile BNaviEngineManager mInstance = null;
-  public boolean mIsEngineInitSucc = false;
-  private JNINaviManager mJNINaviManager = null;
-  
-  /* Error */
-  public static BNaviEngineManager getInstance()
-  {
-    // Byte code:
-    //   0: ldc 2
-    //   2: monitorenter
-    //   3: getstatic 20	com/baidu/navisdk/BNaviEngineManager:mInstance	Lcom/baidu/navisdk/BNaviEngineManager;
-    //   6: ifnonnull +25 -> 31
-    //   9: ldc 2
-    //   11: monitorenter
-    //   12: getstatic 20	com/baidu/navisdk/BNaviEngineManager:mInstance	Lcom/baidu/navisdk/BNaviEngineManager;
-    //   15: ifnonnull +13 -> 28
-    //   18: new 2	com/baidu/navisdk/BNaviEngineManager
-    //   21: dup
-    //   22: invokespecial 36	com/baidu/navisdk/BNaviEngineManager:<init>	()V
-    //   25: putstatic 20	com/baidu/navisdk/BNaviEngineManager:mInstance	Lcom/baidu/navisdk/BNaviEngineManager;
-    //   28: ldc 2
-    //   30: monitorexit
-    //   31: getstatic 20	com/baidu/navisdk/BNaviEngineManager:mInstance	Lcom/baidu/navisdk/BNaviEngineManager;
-    //   34: astore_0
-    //   35: ldc 2
-    //   37: monitorexit
-    //   38: aload_0
-    //   39: areturn
-    //   40: astore_0
-    //   41: ldc 2
-    //   43: monitorexit
-    //   44: aload_0
-    //   45: athrow
-    //   46: astore_0
-    //   47: ldc 2
-    //   49: monitorexit
-    //   50: aload_0
-    //   51: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   34	5	0	localBNaviEngineManager	BNaviEngineManager
-    //   40	5	0	localObject1	Object
-    //   46	5	0	localObject2	Object
-    // Exception table:
-    //   from	to	target	type
-    //   12	28	40	finally
-    //   28	31	40	finally
-    //   41	44	40	finally
-    //   3	12	46	finally
-    //   31	35	46	finally
-    //   44	46	46	finally
-  }
-  
-  public void changeNaviStatisticsNetworkStatus(int paramInt)
-  {
-    try
-    {
-      if (isEngineInitSucc()) {
-        this.mJNINaviManager.initNaviStatistics(paramInt);
-      }
-      return;
+public class BNaviEngineManager {
+    private static final String TAG = "Common";
+    private static EngineCommonConfig mEngineCommonConfig;
+    private static volatile BNaviEngineManager mInstance = null;
+    public boolean mIsEngineInitSucc;
+    private JNINaviManager mJNINaviManager;
+
+    private BNaviEngineManager() {
+        this.mJNINaviManager = null;
+        this.mIsEngineInitSucc = false;
+        this.mJNINaviManager = JNINaviManager.sInstance;
     }
-    catch (Throwable localThrowable) {}
-  }
-  
-  public int getFavoriteHandle()
-  {
-    return 1000;
-  }
-  
-  public String getIPByHost(String paramString)
-  {
-    try
-    {
-      paramString = this.mJNINaviManager.getIPByHost(paramString);
-      return paramString;
+
+    public static synchronized BNaviEngineManager getInstance() {
+        BNaviEngineManager bNaviEngineManager;
+        synchronized (BNaviEngineManager.class) {
+            if (mInstance == null) {
+                synchronized (BNaviEngineManager.class) {
+                    if (mInstance == null) {
+                        mInstance = new BNaviEngineManager();
+                    }
+                }
+            }
+            bNaviEngineManager = mInstance;
+        }
+        return bNaviEngineManager;
     }
-    catch (Throwable paramString) {}
-    return null;
-  }
-  
-  public boolean initEngine(EngineCommonConfig paramEngineCommonConfig, Handler paramHandler)
-  {
-    return initEngineBySync(paramEngineCommonConfig);
-  }
-  
-  public boolean initEngineBySync(EngineCommonConfig paramEngineCommonConfig)
-  {
-    LogUtil.e("Common", "initEngineBySync");
-    if (PerformStatItem.sUserTest) {
-      PerformStatisticsController.peByType(3, "sdk_initEngineBySync_start", System.currentTimeMillis());
+
+    public boolean initEngine(EngineCommonConfig engineCommonConfig, Handler handler) {
+        return initEngineBySync(engineCommonConfig);
     }
-    RespTimeStatItem.getInstance().setStartEngineTime();
-    SysOSAPI.getInstance().setAppFolderName(paramEngineCommonConfig.mStrAppFolderName);
-    paramEngineCommonConfig.mStrPath = SysOSAPI.getInstance().GetSDCardPath();
-    SysOSAPI.getInstance().initEngineRes(BNaviModuleManager.getContext());
-    Object localObject = SysOSAPI.getInstance().initPhoneInfo();
-    ((Bundle)localObject).putBoolean("showlog", BNSettingManager.isShowNativeLog());
-    if (PerformStatItem.sUserTest) {
-      PerformStatisticsController.peByType(3, "sdk_initEngineBySync_lib_start", System.currentTimeMillis());
+
+    public boolean initEngineBySync(EngineCommonConfig engineCommonConfig) {
+        LogUtil.m15791e("Common", "initEngineBySync");
+        if (PerformStatItem.sUserTest) {
+            PerformStatisticsController.peByType(3, "sdk_initEngineBySync_start", System.currentTimeMillis());
+        }
+        RespTimeStatItem.getInstance().setStartEngineTime();
+        SysOSAPI.getInstance().setAppFolderName(engineCommonConfig.mStrAppFolderName);
+        engineCommonConfig.mStrPath = SysOSAPI.getInstance().GetSDCardPath();
+        SysOSAPI.getInstance().initEngineRes(BNaviModuleManager.getContext());
+        Bundle bundle = SysOSAPI.getInstance().initPhoneInfo();
+        bundle.putBoolean("showlog", BNSettingManager.isShowNativeLog());
+        if (PerformStatItem.sUserTest) {
+            PerformStatisticsController.peByType(3, "sdk_initEngineBySync_lib_start", System.currentTimeMillis());
+        }
+        LogUtil.m15791e("Common", "initEngineBySync InitEngine start");
+        boolean flag = AppEngine.InitEngine(bundle);
+        LogUtil.m15791e("Common", "initEngineBySync InitEngine flag :" + flag);
+        if (flag) {
+            LogUtil.m15791e("Common", "NaviEngineManager initNaviManager");
+            if (PerformStatItem.sUserTest) {
+                PerformStatisticsController.peByType(3, "sdk_initEngineBySync.3", System.currentTimeMillis());
+            }
+            int ret = JNINaviManager.sInstance.initNaviManager(engineCommonConfig);
+            LogUtil.m15791e("Common", "NaviEngineManager initNaviManager ret : " + ret);
+            if (PerformStatItem.sUserTest) {
+                PerformStatisticsController.peByType(3, "sdk_initEngineBySync_lib_end", System.currentTimeMillis());
+            }
+            if (ret == 0) {
+                getInstance().mIsEngineInitSucc = true;
+                LogUtil.m15791e("Common", "NaviEngineManager initSubSysHandle GUIDANCE");
+                getInstance().initSubSysHandle(1);
+                LogUtil.m15791e("Common", "NaviEngineManager initSubSysHandle VOICE_TTS");
+                getInstance().initSubSysHandle(8);
+                LogUtil.m15791e("Common", "NaviEngineManager mMengMengDa");
+                if (engineCommonConfig.mMengMengDaTTSPath != null && engineCommonConfig.mMengMengDaTTSPath.length() > 0) {
+                    LogUtil.m15791e("", "NaviEngineManager copy mengmengda.path=" + engineCommonConfig.mMengMengDaTTSPath);
+                    long curTime = SystemClock.elapsedRealtime();
+                    LogUtil.m15791e("", "NaviEngineManager copy mengmengda.copyOK=" + JNIVoicePersonalityControl.sInstance.CopyMaiDouPath(engineCommonConfig.mMengMengDaTTSPath) + ", time=" + (SystemClock.elapsedRealtime() - curTime) + "ms");
+                }
+                LogUtil.m15791e("Common", "NaviEngineManager setSpecVoiceTaskId");
+                int mode = BNSettingManager.getVoicePersonality();
+                String taskId = null;
+                if (mode != 0) {
+                    taskId = BNSettingManager.getVoiceTaskId();
+                }
+                BNRouteGuider instance;
+                if (mode == 4) {
+                    instance = BNRouteGuider.getInstance();
+                    if (taskId == null) {
+                        taskId = "0";
+                    }
+                    instance.setSpecVoiceTaskId(taskId, true);
+                } else {
+                    instance = BNRouteGuider.getInstance();
+                    if (taskId == null) {
+                        taskId = "0";
+                    }
+                    instance.setSpecVoiceTaskId(taskId);
+                }
+                LogUtil.m15791e("Common", "NaviEngineManager after init Engine");
+                BNRoutePlaner.destory();
+                BNRoutePlaner.getInstance();
+            }
+            RespTimeStatItem.getInstance().setEndEngineTime();
+            if (PerformStatItem.sUserTest) {
+                PerformStatisticsController.peByType(3, "sdk_initEngineBySync_end", System.currentTimeMillis());
+            }
+            if (ret == 0) {
+                return true;
+            }
+            return false;
+        }
+        AppEngine.UnInitEngine();
+        return false;
     }
-    LogUtil.e("Common", "initEngineBySync InitEngine start");
-    boolean bool = AppEngine.InitEngine((Bundle)localObject);
-    LogUtil.e("Common", "initEngineBySync InitEngine flag :" + bool);
-    if (!bool)
-    {
-      AppEngine.UnInitEngine();
-      return false;
+
+    public synchronized boolean uninit() {
+        boolean ret;
+        ret = this.mJNINaviManager.uninitNaviManager() == 0;
+        this.mJNINaviManager = null;
+        mInstance = null;
+        return ret;
     }
-    LogUtil.e("Common", "NaviEngineManager initNaviManager");
-    if (PerformStatItem.sUserTest) {
-      PerformStatisticsController.peByType(3, "sdk_initEngineBySync.3", System.currentTimeMillis());
+
+    public boolean reload() {
+        uninitSubSysHandle(1);
+        initSubSysHandle(1);
+        if (0 == 0) {
+            return true;
+        }
+        return false;
     }
-    int i = JNINaviManager.sInstance.initNaviManager(paramEngineCommonConfig);
-    LogUtil.e("Common", "NaviEngineManager initNaviManager ret : " + i);
-    if (PerformStatItem.sUserTest) {
-      PerformStatisticsController.peByType(3, "sdk_initEngineBySync_lib_end", System.currentTimeMillis());
+
+    public synchronized boolean reloadSubSystem(int subSytemType) {
+        uninitSubSysHandle(subSytemType);
+        initSubSysHandle(subSytemType);
+        return 0 == 0;
     }
-    BNRouteGuider localBNRouteGuider;
-    if (i == 0)
-    {
-      getInstance().mIsEngineInitSucc = true;
-      LogUtil.e("Common", "NaviEngineManager initSubSysHandle GUIDANCE");
-      getInstance().initSubSysHandle(1);
-      LogUtil.e("Common", "NaviEngineManager initSubSysHandle VOICE_TTS");
-      getInstance().initSubSysHandle(8);
-      LogUtil.e("Common", "NaviEngineManager mMengMengDa");
-      if ((paramEngineCommonConfig.mMengMengDaTTSPath != null) && (paramEngineCommonConfig.mMengMengDaTTSPath.length() > 0))
-      {
-        LogUtil.e("", "NaviEngineManager copy mengmengda.path=" + paramEngineCommonConfig.mMengMengDaTTSPath);
-        long l = SystemClock.elapsedRealtime();
-        bool = JNIVoicePersonalityControl.sInstance.CopyMaiDouPath(paramEngineCommonConfig.mMengMengDaTTSPath);
-        LogUtil.e("", "NaviEngineManager copy mengmengda.copyOK=" + bool + ", time=" + (SystemClock.elapsedRealtime() - l) + "ms");
-      }
-      LogUtil.e("Common", "NaviEngineManager setSpecVoiceTaskId");
-      int j = BNSettingManager.getVoicePersonality();
-      paramEngineCommonConfig = null;
-      if (j != 0) {
-        paramEngineCommonConfig = BNSettingManager.getVoiceTaskId();
-      }
-      if (j != 4) {
-        break label456;
-      }
-      localBNRouteGuider = BNRouteGuider.getInstance();
-      localObject = paramEngineCommonConfig;
-      if (paramEngineCommonConfig == null) {
-        localObject = "0";
-      }
-      localBNRouteGuider.setSpecVoiceTaskId((String)localObject, true);
+
+    public int getFavoriteHandle() {
+        return 1000;
     }
-    for (;;)
-    {
-      LogUtil.e("Common", "NaviEngineManager after init Engine");
-      BNRoutePlaner.destory();
-      BNRoutePlaner.getInstance();
-      RespTimeStatItem.getInstance().setEndEngineTime();
-      if (PerformStatItem.sUserTest) {
-        PerformStatisticsController.peByType(3, "sdk_initEngineBySync_end", System.currentTimeMillis());
-      }
-      if (i != 0) {
-        break;
-      }
-      return true;
-      label456:
-      localBNRouteGuider = BNRouteGuider.getInstance();
-      localObject = paramEngineCommonConfig;
-      if (paramEngineCommonConfig == null) {
-        localObject = "0";
-      }
-      localBNRouteGuider.setSpecVoiceTaskId((String)localObject);
+
+    public void initNaviStatistics() {
+        if (VDeviceAPI.isWifiConnected() == 1) {
+            try {
+                this.mJNINaviManager.initNaviStatistics(2);
+            } catch (Throwable th) {
+            }
+        }
     }
-    return false;
-  }
-  
-  public void initNaviStatistics()
-  {
-    if (VDeviceAPI.isWifiConnected() == 1) {}
-    try
-    {
-      this.mJNINaviManager.initNaviStatistics(2);
-      return;
+
+    public void changeNaviStatisticsNetworkStatus(int networkStatus) {
+        try {
+            if (isEngineInitSucc()) {
+                this.mJNINaviManager.initNaviStatistics(networkStatus);
+            }
+        } catch (Throwable th) {
+        }
     }
-    catch (Throwable localThrowable) {}
-  }
-  
-  public int initSubSysHandle(int paramInt)
-  {
-    if (this.mJNINaviManager == null) {
-      return 0;
+
+    public void uninitNaviStatistics() {
+        this.mJNINaviManager.uninitNaviStatistics();
     }
-    try
-    {
-      this.mJNINaviManager.initSubSystem(paramInt);
-      return 0;
+
+    public synchronized boolean uninitEngine() {
+        if (this.mJNINaviManager != null) {
+            this.mJNINaviManager.uninitNaviManager();
+        }
+        this.mJNINaviManager = null;
+        mInstance = null;
+        return true;
     }
-    catch (Throwable localThrowable) {}
-    return 0;
-  }
-  
-  public boolean isEngineInitSucc()
-  {
-    return this.mIsEngineInitSucc;
-  }
-  
-  public boolean reload()
-  {
-    uninitSubSysHandle(1);
-    initSubSysHandle(1);
-    return 0 == 0;
-  }
-  
-  /* Error */
-  public boolean reloadSubSystem(int paramInt)
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: aload_0
-    //   3: iload_1
-    //   4: invokevirtual 279	com/baidu/navisdk/BNaviEngineManager:uninitSubSysHandle	(I)V
-    //   7: aload_0
-    //   8: iload_1
-    //   9: invokevirtual 192	com/baidu/navisdk/BNaviEngineManager:initSubSysHandle	(I)I
-    //   12: pop
-    //   13: iconst_0
-    //   14: ifne +9 -> 23
-    //   17: iconst_1
-    //   18: istore_2
-    //   19: aload_0
-    //   20: monitorexit
-    //   21: iload_2
-    //   22: ireturn
-    //   23: iconst_0
-    //   24: istore_2
-    //   25: goto -6 -> 19
-    //   28: astore_3
-    //   29: aload_0
-    //   30: monitorexit
-    //   31: aload_3
-    //   32: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	33	0	this	BNaviEngineManager
-    //   0	33	1	paramInt	int
-    //   18	7	2	bool	boolean
-    //   28	4	3	localObject	Object
-    // Exception table:
-    //   from	to	target	type
-    //   2	13	28	finally
-  }
-  
-  /* Error */
-  public boolean uninit()
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: aload_0
-    //   3: getfield 26	com/baidu/navisdk/BNaviEngineManager:mJNINaviManager	Lcom/baidu/navisdk/jni/nativeif/JNINaviManager;
-    //   6: invokevirtual 285	com/baidu/navisdk/jni/nativeif/JNINaviManager:uninitNaviManager	()I
-    //   9: ifne +18 -> 27
-    //   12: iconst_1
-    //   13: istore_1
-    //   14: aload_0
-    //   15: aconst_null
-    //   16: putfield 26	com/baidu/navisdk/BNaviEngineManager:mJNINaviManager	Lcom/baidu/navisdk/jni/nativeif/JNINaviManager;
-    //   19: aconst_null
-    //   20: putstatic 20	com/baidu/navisdk/BNaviEngineManager:mInstance	Lcom/baidu/navisdk/BNaviEngineManager;
-    //   23: aload_0
-    //   24: monitorexit
-    //   25: iload_1
-    //   26: ireturn
-    //   27: iconst_0
-    //   28: istore_1
-    //   29: goto -15 -> 14
-    //   32: astore_2
-    //   33: aload_0
-    //   34: monitorexit
-    //   35: aload_2
-    //   36: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	37	0	this	BNaviEngineManager
-    //   13	16	1	bool	boolean
-    //   32	4	2	localObject	Object
-    // Exception table:
-    //   from	to	target	type
-    //   2	12	32	finally
-    //   14	23	32	finally
-  }
-  
-  public boolean uninitEngine()
-  {
-    try
-    {
-      if (this.mJNINaviManager != null) {
-        this.mJNINaviManager.uninitNaviManager();
-      }
-      this.mJNINaviManager = null;
-      mInstance = null;
-      return true;
+
+    public synchronized void uninitGuidanceEngine() {
+        uninitSubSysHandle(1);
     }
-    finally {}
-  }
-  
-  public void uninitGuidanceEngine()
-  {
-    try
-    {
-      uninitSubSysHandle(1);
-      return;
+
+    public boolean isEngineInitSucc() {
+        return this.mIsEngineInitSucc;
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public int initSubSysHandle(int sysType) {
+        if (this.mJNINaviManager != null) {
+            try {
+                this.mJNINaviManager.initSubSystem(sysType);
+            } catch (Throwable th) {
+            }
+        }
+        return 0;
     }
-  }
-  
-  public void uninitNaviStatistics()
-  {
-    this.mJNINaviManager.uninitNaviStatistics();
-  }
-  
-  public void uninitSubSysHandle(int paramInt)
-  {
-    if (this.mJNINaviManager == null) {
-      return;
+
+    public void uninitSubSysHandle(int sysType) {
+        if (this.mJNINaviManager != null) {
+            try {
+                this.mJNINaviManager.uninitSubSystem(sysType);
+            } catch (Throwable th) {
+            }
+        }
     }
-    try
-    {
-      this.mJNINaviManager.uninitSubSystem(paramInt);
-      return;
+
+    public void updateAppSource(int appSource) {
+        if (this.mJNINaviManager != null) {
+            try {
+                this.mJNINaviManager.updateAppSource(appSource);
+            } catch (Throwable th) {
+            }
+        }
     }
-    catch (Throwable localThrowable) {}
-  }
-  
-  public void updateAppSource(int paramInt)
-  {
-    if (this.mJNINaviManager == null) {
-      return;
+
+    public String getIPByHost(String strHost) {
+        try {
+            return this.mJNINaviManager.getIPByHost(strHost);
+        } catch (Throwable th) {
+            return null;
+        }
     }
-    try
-    {
-      this.mJNINaviManager.updateAppSource(paramInt);
-      return;
-    }
-    catch (Throwable localThrowable) {}
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/BNaviEngineManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,5 +1,8 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.baidu.navi.fragment.NaviFragmentManager;
+import com.facebook.common.p141m.C2924g;
+import com.indooratlas.android.sdk._internal.ge.C5919a;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.util.List;
@@ -7,178 +10,124 @@ import javax.net.SocketFactory;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
-public final class fn
-{
-  public final ge a;
-  public final gb b;
-  public final SocketFactory c;
-  public final fo d;
-  public final List<gi> e;
-  public final List<fx> f;
-  public final ProxySelector g;
-  public final Proxy h;
-  public final SSLSocketFactory i;
-  public final HostnameVerifier j;
-  public final ft k;
-  
-  public fn(String paramString, int paramInt, gb paramgb, SocketFactory paramSocketFactory, SSLSocketFactory paramSSLSocketFactory, HostnameVerifier paramHostnameVerifier, ft paramft, fo paramfo, Proxy paramProxy, List<gi> paramList, List<fx> paramList1, ProxySelector paramProxySelector)
-  {
-    ge.a locala = new ge.a();
-    if (paramSSLSocketFactory != null)
-    {
-      str = "https";
-      if (!str.equalsIgnoreCase("http")) {
-        break label60;
-      }
-      locala.a = "http";
-    }
-    for (;;)
-    {
-      if (paramString == null)
-      {
-        throw new IllegalArgumentException("host == null");
-        str = "http";
-        break;
-        label60:
-        if (str.equalsIgnoreCase("https")) {
-          locala.a = "https";
+public final class fn {
+    /* renamed from: a */
+    public final ge f23707a;
+    /* renamed from: b */
+    public final gb f23708b;
+    /* renamed from: c */
+    public final SocketFactory f23709c;
+    /* renamed from: d */
+    public final fo f23710d;
+    /* renamed from: e */
+    public final List<gi> f23711e;
+    /* renamed from: f */
+    public final List<fx> f23712f;
+    /* renamed from: g */
+    public final ProxySelector f23713g;
+    /* renamed from: h */
+    public final Proxy f23714h;
+    /* renamed from: i */
+    public final SSLSocketFactory f23715i;
+    /* renamed from: j */
+    public final HostnameVerifier f23716j;
+    /* renamed from: k */
+    public final ft f23717k;
+
+    public fn(String str, int i, gb gbVar, SocketFactory socketFactory, SSLSocketFactory sSLSocketFactory, HostnameVerifier hostnameVerifier, ft ftVar, fo foVar, Proxy proxy, List<gi> list, List<fx> list2, ProxySelector proxySelector) {
+        String str2;
+        C5919a c5919a = new C5919a();
+        if (sSLSocketFactory != null) {
+            str2 = C2924g.f12888b;
         } else {
-          throw new IllegalArgumentException("unexpected scheme: " + str);
+            str2 = "http";
         }
-      }
-    }
-    String str = ge.a.a(paramString, 0, paramString.length());
-    if (str == null) {
-      throw new IllegalArgumentException("unexpected host: " + paramString);
-    }
-    locala.d = str;
-    if ((paramInt <= 0) || (paramInt > 65535)) {
-      throw new IllegalArgumentException("unexpected port: " + paramInt);
-    }
-    locala.e = paramInt;
-    this.a = locala.b();
-    if (paramgb == null) {
-      throw new IllegalArgumentException("dns == null");
-    }
-    this.b = paramgb;
-    if (paramSocketFactory == null) {
-      throw new IllegalArgumentException("socketFactory == null");
-    }
-    this.c = paramSocketFactory;
-    if (paramfo == null) {
-      throw new IllegalArgumentException("proxyAuthenticator == null");
-    }
-    this.d = paramfo;
-    if (paramList == null) {
-      throw new IllegalArgumentException("protocols == null");
-    }
-    this.e = gy.a(paramList);
-    if (paramList1 == null) {
-      throw new IllegalArgumentException("connectionSpecs == null");
-    }
-    this.f = gy.a(paramList1);
-    if (paramProxySelector == null) {
-      throw new IllegalArgumentException("proxySelector == null");
-    }
-    this.g = paramProxySelector;
-    this.h = paramProxy;
-    this.i = paramSSLSocketFactory;
-    this.j = paramHostnameVerifier;
-    this.k = paramft;
-  }
-  
-  public final boolean equals(Object paramObject)
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if ((paramObject instanceof fn))
-    {
-      paramObject = (fn)paramObject;
-      bool1 = bool2;
-      if (this.a.equals(((fn)paramObject).a))
-      {
-        bool1 = bool2;
-        if (this.b.equals(((fn)paramObject).b))
-        {
-          bool1 = bool2;
-          if (this.d.equals(((fn)paramObject).d))
-          {
-            bool1 = bool2;
-            if (this.e.equals(((fn)paramObject).e))
-            {
-              bool1 = bool2;
-              if (this.f.equals(((fn)paramObject).f))
-              {
-                bool1 = bool2;
-                if (this.g.equals(((fn)paramObject).g))
-                {
-                  bool1 = bool2;
-                  if (gy.a(this.h, ((fn)paramObject).h))
-                  {
-                    bool1 = bool2;
-                    if (gy.a(this.i, ((fn)paramObject).i))
-                    {
-                      bool1 = bool2;
-                      if (gy.a(this.j, ((fn)paramObject).j))
-                      {
-                        bool1 = bool2;
-                        if (gy.a(this.k, ((fn)paramObject).k)) {
-                          bool1 = true;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+        if (str2.equalsIgnoreCase("http")) {
+            c5919a.f23852a = "http";
+        } else if (str2.equalsIgnoreCase(C2924g.f12888b)) {
+            c5919a.f23852a = C2924g.f12888b;
+        } else {
+            throw new IllegalArgumentException("unexpected scheme: " + str2);
         }
-      }
+        if (str == null) {
+            throw new IllegalArgumentException("host == null");
+        }
+        str2 = C5919a.m20621a(str, 0, str.length());
+        if (str2 == null) {
+            throw new IllegalArgumentException("unexpected host: " + str);
+        }
+        c5919a.f23855d = str2;
+        if (i <= 0 || i > 65535) {
+            throw new IllegalArgumentException("unexpected port: " + i);
+        }
+        c5919a.f23856e = i;
+        this.f23707a = c5919a.m20629b();
+        if (gbVar == null) {
+            throw new IllegalArgumentException("dns == null");
+        }
+        this.f23708b = gbVar;
+        if (socketFactory == null) {
+            throw new IllegalArgumentException("socketFactory == null");
+        }
+        this.f23709c = socketFactory;
+        if (foVar == null) {
+            throw new IllegalArgumentException("proxyAuthenticator == null");
+        }
+        this.f23710d = foVar;
+        if (list == null) {
+            throw new IllegalArgumentException("protocols == null");
+        }
+        this.f23711e = gy.m20785a((List) list);
+        if (list2 == null) {
+            throw new IllegalArgumentException("connectionSpecs == null");
+        }
+        this.f23712f = gy.m20785a((List) list2);
+        if (proxySelector == null) {
+            throw new IllegalArgumentException("proxySelector == null");
+        }
+        this.f23713g = proxySelector;
+        this.f23714h = proxy;
+        this.f23715i = sSLSocketFactory;
+        this.f23716j = hostnameVerifier;
+        this.f23717k = ftVar;
     }
-    return bool1;
-  }
-  
-  public final int hashCode()
-  {
-    int i2 = 0;
-    int i3 = this.a.hashCode();
-    int i4 = this.b.hashCode();
-    int i5 = this.d.hashCode();
-    int i6 = this.e.hashCode();
-    int i7 = this.f.hashCode();
-    int i8 = this.g.hashCode();
-    int m;
-    int n;
-    if (this.h != null)
-    {
-      m = this.h.hashCode();
-      if (this.i == null) {
-        break label185;
-      }
-      n = this.i.hashCode();
-      label91:
-      if (this.j == null) {
-        break label190;
-      }
+
+    public final boolean equals(Object other) {
+        if (!(other instanceof fn)) {
+            return false;
+        }
+        fn fnVar = (fn) other;
+        if (this.f23707a.equals(fnVar.f23707a) && this.f23708b.equals(fnVar.f23708b) && this.f23710d.equals(fnVar.f23710d) && this.f23711e.equals(fnVar.f23711e) && this.f23712f.equals(fnVar.f23712f) && this.f23713g.equals(fnVar.f23713g) && gy.m20796a(this.f23714h, fnVar.f23714h) && gy.m20796a(this.f23715i, fnVar.f23715i) && gy.m20796a(this.f23716j, fnVar.f23716j) && gy.m20796a(this.f23717k, fnVar.f23717k)) {
+            return true;
+        }
+        return false;
     }
-    label185:
-    label190:
-    for (int i1 = this.j.hashCode();; i1 = 0)
-    {
-      if (this.k != null) {
-        i2 = this.k.hashCode();
-      }
-      return (i1 + (n + (m + ((((((i3 + 527) * 31 + i4) * 31 + i5) * 31 + i6) * 31 + i7) * 31 + i8) * 31) * 31) * 31) * 31 + i2;
-      m = 0;
-      break;
-      n = 0;
-      break label91;
+
+    public final int hashCode() {
+        int hashCode;
+        int i = 0;
+        int hashCode2 = (((((((((((this.f23707a.hashCode() + NaviFragmentManager.TYPE_PHONE_END) * 31) + this.f23708b.hashCode()) * 31) + this.f23710d.hashCode()) * 31) + this.f23711e.hashCode()) * 31) + this.f23712f.hashCode()) * 31) + this.f23713g.hashCode()) * 31;
+        if (this.f23714h != null) {
+            hashCode = this.f23714h.hashCode();
+        } else {
+            hashCode = 0;
+        }
+        hashCode2 = (hashCode + hashCode2) * 31;
+        if (this.f23715i != null) {
+            hashCode = this.f23715i.hashCode();
+        } else {
+            hashCode = 0;
+        }
+        hashCode2 = (hashCode + hashCode2) * 31;
+        if (this.f23716j != null) {
+            hashCode = this.f23716j.hashCode();
+        } else {
+            hashCode = 0;
+        }
+        hashCode = (hashCode + hashCode2) * 31;
+        if (this.f23717k != null) {
+            i = this.f23717k.hashCode();
+        }
+        return hashCode + i;
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/fn.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

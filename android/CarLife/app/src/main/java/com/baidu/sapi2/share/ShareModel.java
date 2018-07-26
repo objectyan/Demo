@@ -8,158 +8,163 @@ import android.text.TextUtils;
 import com.baidu.sapi2.SapiAccount;
 import com.baidu.sapi2.utils.enums.LoginShareStrategy;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-class ShareModel
-  implements Parcelable
-{
-  public static final Parcelable.Creator<ShareModel> CREATOR = new Parcelable.Creator()
-  {
-    public ShareModel a(Parcel paramAnonymousParcel)
-    {
-      return new ShareModel(paramAnonymousParcel);
+class ShareModel implements Parcelable {
+    public static final Creator<ShareModel> CREATOR = new C48951();
+    /* renamed from: a */
+    private SapiAccount f20459a;
+    /* renamed from: b */
+    private List<SapiAccount> f20460b;
+    /* renamed from: c */
+    private ShareEvent f20461c;
+    /* renamed from: d */
+    private String f20462d;
+    /* renamed from: e */
+    private LoginShareStrategy f20463e;
+
+    /* renamed from: com.baidu.sapi2.share.ShareModel$1 */
+    static class C48951 implements Creator<ShareModel> {
+        C48951() {
+        }
+
+        public /* synthetic */ Object createFromParcel(Parcel x0) {
+            return m16321a(x0);
+        }
+
+        public /* synthetic */ Object[] newArray(int x0) {
+            return m16322a(x0);
+        }
+
+        /* renamed from: a */
+        public ShareModel m16321a(Parcel source) {
+            return new ShareModel(source);
+        }
+
+        /* renamed from: a */
+        public ShareModel[] m16322a(int size) {
+            return new ShareModel[size];
+        }
     }
-    
-    public ShareModel[] a(int paramAnonymousInt)
-    {
-      return new ShareModel[paramAnonymousInt];
+
+    ShareModel() {
+        this.f20460b = new ArrayList();
     }
-  };
-  private SapiAccount a;
-  private List<SapiAccount> b = new ArrayList();
-  private ShareEvent c;
-  private String d;
-  private LoginShareStrategy e;
-  
-  ShareModel() {}
-  
-  ShareModel(Parcel paramParcel)
-  {
-    a(paramParcel);
-  }
-  
-  ShareModel(ShareEvent paramShareEvent)
-  {
-    this.c = paramShareEvent;
-  }
-  
-  ShareModel(ShareEvent paramShareEvent, SapiAccount paramSapiAccount)
-  {
-    this(paramShareEvent);
-    this.a = paramSapiAccount;
-  }
-  
-  ShareModel(ShareEvent paramShareEvent, SapiAccount paramSapiAccount, List<SapiAccount> paramList)
-  {
-    this(paramShareEvent, paramSapiAccount);
-  }
-  
-  private void a(Parcel paramParcel)
-  {
-    this.c = ((ShareEvent)paramParcel.readSerializable());
-    paramParcel.readTypedList(this.b, SapiAccount.CREATOR);
-    this.a = ((SapiAccount)paramParcel.readParcelable(SapiAccount.class.getClassLoader()));
-    this.e = ((LoginShareStrategy)paramParcel.readSerializable());
-    this.d = paramParcel.readString();
-  }
-  
-  List<SapiAccount> a()
-  {
-    return this.b;
-  }
-  
-  void a(Context paramContext)
-  {
-    ArrayList localArrayList = new ArrayList();
-    Iterator localIterator = a().iterator();
-    while (localIterator.hasNext()) {
-      localArrayList.add(b.a(paramContext, (SapiAccount)localIterator.next()));
+
+    ShareModel(Parcel parcel) {
+        this.f20460b = new ArrayList();
+        m16323a(parcel);
     }
-    a(localArrayList);
-    if (this.a != null) {
-      this.a = b.a(paramContext, this.a);
+
+    ShareModel(ShareEvent event) {
+        this.f20460b = new ArrayList();
+        this.f20461c = event;
     }
-    if (!TextUtils.isEmpty(this.d)) {
-      this.d = b.a(paramContext, this.d);
+
+    ShareModel(ShareEvent event, SapiAccount currentAccount) {
+        this(event);
+        this.f20459a = currentAccount;
     }
-  }
-  
-  void a(SapiAccount paramSapiAccount)
-  {
-    this.a = paramSapiAccount;
-  }
-  
-  void a(ShareEvent paramShareEvent)
-  {
-    this.c = paramShareEvent;
-  }
-  
-  void a(LoginShareStrategy paramLoginShareStrategy)
-  {
-    this.e = paramLoginShareStrategy;
-  }
-  
-  void a(String paramString)
-  {
-    this.d = paramString;
-  }
-  
-  void a(List<SapiAccount> paramList)
-  {
-    if (paramList != null) {
-      this.b = paramList;
+
+    ShareModel(ShareEvent event, SapiAccount currentAccount, List<SapiAccount> shareAccounts) {
+        this(event, currentAccount);
+        this.f20460b = shareAccounts;
     }
-  }
-  
-  ShareEvent b()
-  {
-    return this.c;
-  }
-  
-  void b(Context paramContext)
-  {
-    ArrayList localArrayList = new ArrayList();
-    Iterator localIterator = a().iterator();
-    while (localIterator.hasNext()) {
-      localArrayList.add(b.b(paramContext, (SapiAccount)localIterator.next()));
+
+    /* renamed from: a */
+    List<SapiAccount> m16324a() {
+        return this.f20460b;
     }
-    a(localArrayList);
-    if (this.a != null) {
-      this.a = b.b(paramContext, this.a);
+
+    /* renamed from: a */
+    void m16330a(List<SapiAccount> shareAccounts) {
+        if (shareAccounts != null) {
+            this.f20460b = shareAccounts;
+        }
     }
-    if (!TextUtils.isEmpty(this.d)) {
-      this.d = b.b(paramContext, this.d);
+
+    /* renamed from: a */
+    void m16328a(LoginShareStrategy senderStrategy) {
+        this.f20463e = senderStrategy;
     }
-  }
-  
-  String c()
-  {
-    return this.d;
-  }
-  
-  public int describeContents()
-  {
-    return 0;
-  }
-  
-  public String toString()
-  {
-    return "ShareModel{currentAccount=" + this.a + ", shareAccounts=" + this.b + ", event=" + this.c + ", from='" + this.d + '\'' + ", senderStrategy=" + this.e + '}';
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeSerializable(this.c);
-    paramParcel.writeTypedList(this.b);
-    paramParcel.writeParcelable(this.a, paramInt);
-    paramParcel.writeSerializable(this.e);
-    paramParcel.writeString(this.d);
-  }
+
+    /* renamed from: a */
+    void m16327a(ShareEvent event) {
+        this.f20461c = event;
+    }
+
+    /* renamed from: b */
+    ShareEvent m16331b() {
+        return this.f20461c;
+    }
+
+    /* renamed from: a */
+    void m16326a(SapiAccount currentAccount) {
+        this.f20459a = currentAccount;
+    }
+
+    /* renamed from: c */
+    String m16333c() {
+        return this.f20462d;
+    }
+
+    /* renamed from: a */
+    void m16329a(String from) {
+        this.f20462d = from;
+    }
+
+    /* renamed from: a */
+    private void m16323a(Parcel parcel) {
+        this.f20461c = (ShareEvent) parcel.readSerializable();
+        parcel.readTypedList(this.f20460b, SapiAccount.CREATOR);
+        this.f20459a = (SapiAccount) parcel.readParcelable(SapiAccount.class.getClassLoader());
+        this.f20463e = (LoginShareStrategy) parcel.readSerializable();
+        this.f20462d = parcel.readString();
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(this.f20461c);
+        dest.writeTypedList(this.f20460b);
+        dest.writeParcelable(this.f20459a, flags);
+        dest.writeSerializable(this.f20463e);
+        dest.writeString(this.f20462d);
+    }
+
+    /* renamed from: a */
+    void m16325a(Context context) {
+        List encryptedAccounts = new ArrayList();
+        for (SapiAccount account : m16324a()) {
+            encryptedAccounts.add(C4909b.m16352a(context, account));
+        }
+        m16330a(encryptedAccounts);
+        if (this.f20459a != null) {
+            this.f20459a = C4909b.m16352a(context, this.f20459a);
+        }
+        if (!TextUtils.isEmpty(this.f20462d)) {
+            this.f20462d = C4909b.m16354a(context, this.f20462d);
+        }
+    }
+
+    /* renamed from: b */
+    void m16332b(Context context) {
+        List decryptedAccounts = new ArrayList();
+        for (SapiAccount account : m16324a()) {
+            decryptedAccounts.add(C4909b.m16355b(context, account));
+        }
+        m16330a(decryptedAccounts);
+        if (this.f20459a != null) {
+            this.f20459a = C4909b.m16355b(context, this.f20459a);
+        }
+        if (!TextUtils.isEmpty(this.f20462d)) {
+            this.f20462d = C4909b.m16356b(context, this.f20462d);
+        }
+    }
+
+    public String toString() {
+        return "ShareModel{currentAccount=" + this.f20459a + ", shareAccounts=" + this.f20460b + ", event=" + this.f20461c + ", from='" + this.f20462d + '\'' + ", senderStrategy=" + this.f20463e + '}';
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/sapi2/share/ShareModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

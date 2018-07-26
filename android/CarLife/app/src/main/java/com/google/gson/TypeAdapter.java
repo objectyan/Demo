@@ -11,99 +11,71 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-public abstract class TypeAdapter<T>
-{
-  public final T fromJson(Reader paramReader)
-    throws IOException
-  {
-    return (T)read(new JsonReader(paramReader));
-  }
-  
-  public final T fromJson(String paramString)
-    throws IOException
-  {
-    return (T)fromJson(new StringReader(paramString));
-  }
-  
-  public final T fromJsonTree(JsonElement paramJsonElement)
-  {
-    try
-    {
-      paramJsonElement = read(new JsonTreeReader(paramJsonElement));
-      return paramJsonElement;
-    }
-    catch (IOException paramJsonElement)
-    {
-      throw new JsonIOException(paramJsonElement);
-    }
-  }
-  
-  public final TypeAdapter<T> nullSafe()
-  {
-    new TypeAdapter()
-    {
-      public T read(JsonReader paramAnonymousJsonReader)
-        throws IOException
-      {
-        if (paramAnonymousJsonReader.peek() == JsonToken.NULL)
-        {
-          paramAnonymousJsonReader.nextNull();
-          return null;
+public abstract class TypeAdapter<T> {
+
+    /* renamed from: com.google.gson.TypeAdapter$1 */
+    class C56881 extends TypeAdapter<T> {
+        C56881() {
         }
-        return (T)TypeAdapter.this.read(paramAnonymousJsonReader);
-      }
-      
-      public void write(JsonWriter paramAnonymousJsonWriter, T paramAnonymousT)
-        throws IOException
-      {
-        if (paramAnonymousT == null)
-        {
-          paramAnonymousJsonWriter.nullValue();
-          return;
+
+        public void write(JsonWriter out, T value) throws IOException {
+            if (value == null) {
+                out.nullValue();
+            } else {
+                TypeAdapter.this.write(out, value);
+            }
         }
-        TypeAdapter.this.write(paramAnonymousJsonWriter, paramAnonymousT);
-      }
-    };
-  }
-  
-  public abstract T read(JsonReader paramJsonReader)
-    throws IOException;
-  
-  public final String toJson(T paramT)
-    throws IOException
-  {
-    StringWriter localStringWriter = new StringWriter();
-    toJson(localStringWriter, paramT);
-    return localStringWriter.toString();
-  }
-  
-  public final void toJson(Writer paramWriter, T paramT)
-    throws IOException
-  {
-    write(new JsonWriter(paramWriter), paramT);
-  }
-  
-  public final JsonElement toJsonTree(T paramT)
-  {
-    try
-    {
-      JsonTreeWriter localJsonTreeWriter = new JsonTreeWriter();
-      write(localJsonTreeWriter, paramT);
-      paramT = localJsonTreeWriter.get();
-      return paramT;
+
+        public T read(JsonReader reader) throws IOException {
+            if (reader.peek() != JsonToken.NULL) {
+                return TypeAdapter.this.read(reader);
+            }
+            reader.nextNull();
+            return null;
+        }
     }
-    catch (IOException paramT)
-    {
-      throw new JsonIOException(paramT);
+
+    public abstract T read(JsonReader jsonReader) throws IOException;
+
+    public abstract void write(JsonWriter jsonWriter, T t) throws IOException;
+
+    public final void toJson(Writer out, T value) throws IOException {
+        write(new JsonWriter(out), value);
     }
-  }
-  
-  public abstract void write(JsonWriter paramJsonWriter, T paramT)
-    throws IOException;
+
+    public final TypeAdapter<T> nullSafe() {
+        return new C56881();
+    }
+
+    public final String toJson(T value) throws IOException {
+        StringWriter stringWriter = new StringWriter();
+        toJson(stringWriter, value);
+        return stringWriter.toString();
+    }
+
+    public final JsonElement toJsonTree(T value) {
+        try {
+            JsonTreeWriter jsonWriter = new JsonTreeWriter();
+            write(jsonWriter, value);
+            return jsonWriter.get();
+        } catch (Throwable e) {
+            throw new JsonIOException(e);
+        }
+    }
+
+    public final T fromJson(Reader in) throws IOException {
+        return read(new JsonReader(in));
+    }
+
+    public final T fromJson(String json) throws IOException {
+        return fromJson(new StringReader(json));
+    }
+
+    public final T fromJsonTree(JsonElement jsonTree) {
+        try {
+            return read(new JsonTreeReader(jsonTree));
+        } catch (Throwable e) {
+            throw new JsonIOException(e);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/TypeAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

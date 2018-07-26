@@ -6,83 +6,45 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Cache
-{
-  private final int MAX_QUEUE_SIZE = 200;
-  private INotify mNotify;
-  private Queue<TrackModel> mQueue = new LinkedBlockingQueue();
-  
-  public int getSize()
-  {
-    try
-    {
-      int i = this.mQueue.size();
-      return i;
+public class Cache {
+    private final int MAX_QUEUE_SIZE = 200;
+    private INotify mNotify;
+    private Queue<TrackModel> mQueue = new LinkedBlockingQueue();
+
+    public void initNotify(INotify notify) {
+        this.mNotify = notify;
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public synchronized int getSize() {
+        return this.mQueue.size();
     }
-  }
-  
-  public void initNotify(INotify paramINotify)
-  {
-    this.mNotify = paramINotify;
-  }
-  
-  public void insert(TrackModel paramTrackModel)
-  {
-    try
-    {
-      if (this.mQueue.size() == 200) {
-        this.mQueue.remove();
-      }
-      this.mQueue.add(paramTrackModel);
-      if ((this.mQueue.size() >= 4) && (this.mNotify != null)) {
-        this.mNotify.dataChangeNotify();
-      }
-      return;
+
+    public synchronized void insert(TrackModel model) {
+        if (this.mQueue.size() == 200) {
+            this.mQueue.remove();
+        }
+        this.mQueue.add(model);
+        if (this.mQueue.size() >= 4 && this.mNotify != null) {
+            this.mNotify.dataChangeNotify();
+        }
     }
-    finally {}
-  }
-  
-  public List<TrackModel> take(int paramInt)
-  {
-    try
-    {
-      LinkedList localLinkedList = new LinkedList();
-      int i = 0;
-      while (i < paramInt)
-      {
-        localLinkedList.add(this.mQueue.poll());
-        i += 1;
-      }
-      return localLinkedList;
+
+    public synchronized List<TrackModel> take(int num) {
+        List<TrackModel> list;
+        list = new LinkedList();
+        for (int i = 0; i < num; i++) {
+            list.add(this.mQueue.poll());
+        }
+        return list;
     }
-    finally {}
-  }
-  
-  public List<TrackModel> takeAll()
-  {
-    try
-    {
-      LinkedList localLinkedList = new LinkedList();
-      int j = this.mQueue.size();
-      int i = 0;
-      while (i < j)
-      {
-        localLinkedList.add(this.mQueue.poll());
-        i += 1;
-      }
-      return localLinkedList;
+
+    public synchronized List<TrackModel> takeAll() {
+        List<TrackModel> list;
+        list = new LinkedList();
+        int queueSize = this.mQueue.size();
+        for (int i = 0; i < queueSize; i++) {
+            list.add(this.mQueue.poll());
+        }
+        return list;
     }
-    finally {}
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/driveanalysis/cache/Cache.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

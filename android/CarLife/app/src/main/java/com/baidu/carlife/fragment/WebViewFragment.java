@@ -1,11 +1,8 @@
 package com.baidu.carlife.fragment;
 
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -26,672 +23,680 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import com.baidu.baidunavis.control.NavRouteGuideController;
 import com.baidu.baidunavis.control.NavRouteGuideController.BNavigatorListener;
-import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.screen.presentation.a.e;
-import com.baidu.carlife.core.screen.presentation.a.f;
-import com.baidu.carlife.core.screen.presentation.a.g;
-import com.baidu.carlife.logic.o;
-import com.baidu.carlife.logic.q;
-import com.baidu.carlife.util.d;
-import com.baidu.carlife.util.m;
-import com.baidu.carlife.util.m.a;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.C1269a;
+import com.baidu.carlife.core.screen.presentation.p071a.C1307e;
+import com.baidu.carlife.core.screen.presentation.p071a.C1309g;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.custom.C1343b;
+import com.baidu.carlife.logic.C1856o;
+import com.baidu.carlife.logic.C1868q;
+import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.util.C2173d;
+import com.baidu.carlife.util.C2183m;
+import com.baidu.carlife.util.C2183m.C2182a;
 import com.baidu.carlife.view.CommonTipView;
-import com.baidu.carlife.view.dialog.c;
+import com.baidu.carlife.view.dialog.C1953c;
 import com.baidu.navi.BaiduNaviSDKManager;
 import com.baidu.navi.fragment.ContentFragment;
 import com.baidu.navi.style.StyleManager;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.navisdk.util.common.PackageUtil;
 import com.baidu.navisdk.util.common.WebviewUtils;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebViewFragment
-  extends ContentFragment
-{
-  private static final String A = "eventID";
-  private static final String B = "label";
-  private static List<String> C = new ArrayList();
-  public static final String a = "bundle_title_key";
-  public static final String b = "bundle_url_key";
-  public static final String c = "bundle_type";
-  public static final int d = 0;
-  public static final int e = 1;
-  public static final int f = 2;
-  public static final int g = 3;
-  public static final int h = 4;
-  public static final String i = "https://jyb.jyblife.com/buy/clBuyPage";
-  public static final String j = "http://carlife.etcp.cn/index/index";
-  public static final String k = "http://carlife.baidu.com/carlife/act";
-  public static final String l = "http://119.147.84.47:886/baidu/login.html";
-  public static final String m = "http://carlife.baidu.com/static/carlifeweb/problems/android.html";
-  public static final String n = "找不到网页|服务器内部错误";
-  public static final String o = "scheme=alipays";
-  public static final String p = "tel:";
-  public static final String q = "intent://";
-  public static final String r = "carlife://";
-  private static final String s = "exit";
-  private static final String t = "navi";
-  private static final String u = "mtj";
-  private static final String v = "registerJSFunction";
-  private static final String w = "/getLocation";
-  private static final String x = "product";
-  private static final String y = "longitude";
-  private static final String z = "latitude";
-  private int D = 0;
-  private String E;
-  private WebView F;
-  private boolean G = true;
-  private boolean H = false;
-  private String I;
-  private CommonTipView J;
-  private View K;
-  private TextView L;
-  
-  static
-  {
-    C.add("http://carlife.etcp.cn/index/parkingFee");
-  }
-  
-  private void a(double paramDouble1, double paramDouble2)
-  {
-    if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
-      NavRouteGuideController.getInstance().setNewGuideIsThirdServer(true);
-    }
-    for (;;)
-    {
-      NavRouteGuideController.getInstance().setBNavigatorListener(new NavRouteGuideController.BNavigatorListener()
-      {
-        public void onPageJump(int paramAnonymousInt, Object paramAnonymousObject)
-        {
-          if (!NavRouteGuideController.getInstance().newGuideIsThirdServer())
-          {
-            g.a().b().performOpenHome();
-            NavRouteGuideController.getInstance().setBNavigatorListener(null);
-          }
-          NavRouteGuideController.getInstance().setNewGuideIsThirdServer(false);
+public class WebViewFragment extends ContentFragment {
+    /* renamed from: A */
+    private static final String f4858A = "eventID";
+    /* renamed from: B */
+    private static final String f4859B = "label";
+    /* renamed from: C */
+    private static List<String> f4860C = new ArrayList();
+    /* renamed from: a */
+    public static final String f4861a = "bundle_title_key";
+    /* renamed from: b */
+    public static final String f4862b = "bundle_url_key";
+    /* renamed from: c */
+    public static final String f4863c = "bundle_type";
+    /* renamed from: d */
+    public static final int f4864d = 0;
+    /* renamed from: e */
+    public static final int f4865e = 1;
+    /* renamed from: f */
+    public static final int f4866f = 2;
+    /* renamed from: g */
+    public static final int f4867g = 3;
+    /* renamed from: h */
+    public static final int f4868h = 4;
+    /* renamed from: i */
+    public static final String f4869i = "https://jyb.jyblife.com/buy/clBuyPage";
+    /* renamed from: j */
+    public static final String f4870j = "http://carlife.etcp.cn/index/index";
+    /* renamed from: k */
+    public static final String f4871k = "http://carlife.baidu.com/carlife/act";
+    /* renamed from: l */
+    public static final String f4872l = "http://119.147.84.47:886/baidu/login.html";
+    /* renamed from: m */
+    public static final String f4873m = "http://carlife.baidu.com/static/carlifeweb/problems/android.html";
+    /* renamed from: n */
+    public static final String f4874n = "找不到网页|服务器内部错误";
+    /* renamed from: o */
+    public static final String f4875o = "scheme=alipays";
+    /* renamed from: p */
+    public static final String f4876p = "tel:";
+    /* renamed from: q */
+    public static final String f4877q = "intent://";
+    /* renamed from: r */
+    public static final String f4878r = "carlife://";
+    /* renamed from: s */
+    private static final String f4879s = "exit";
+    /* renamed from: t */
+    private static final String f4880t = "navi";
+    /* renamed from: u */
+    private static final String f4881u = "mtj";
+    /* renamed from: v */
+    private static final String f4882v = "registerJSFunction";
+    /* renamed from: w */
+    private static final String f4883w = "/getLocation";
+    /* renamed from: x */
+    private static final String f4884x = "product";
+    /* renamed from: y */
+    private static final String f4885y = "longitude";
+    /* renamed from: z */
+    private static final String f4886z = "latitude";
+    /* renamed from: D */
+    private int f4887D = 0;
+    /* renamed from: E */
+    private String f4888E;
+    /* renamed from: F */
+    private WebView f4889F;
+    /* renamed from: G */
+    private boolean f4890G = true;
+    /* renamed from: H */
+    private boolean f4891H = false;
+    /* renamed from: I */
+    private String f4892I;
+    /* renamed from: J */
+    private CommonTipView f4893J;
+    /* renamed from: K */
+    private View f4894K;
+    /* renamed from: L */
+    private TextView f4895L;
+
+    /* renamed from: com.baidu.carlife.fragment.WebViewFragment$1 */
+    class C15901 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ WebViewFragment f4845a;
+
+        C15901(WebViewFragment this$0) {
+            this.f4845a = this$0;
         }
-      });
-      i.b("Framework", "handleJsNavi navi longitude=" + paramDouble1 + ", latitude=" + paramDouble2);
-      startCalcRoute(new com.baidu.carlife.core.screen.a(paramDouble1, paramDouble2));
-      if (this.D == 1) {
-        StatisticManager.onEvent("DISCOVER_ETCP_0004");
-      }
-      return;
-      NavRouteGuideController.getInstance().setNewGuideIsThirdServer(false);
+
+        public void onClick(View v) {
+            if (!this.f4845a.f4889F.canGoBack() || this.f4845a.m5846d()) {
+                Bundle bundle;
+                if (this.f4845a.f4887D == 1) {
+                    bundle = new Bundle();
+                    bundle.putInt(WebViewFragment.f4863c, this.f4845a.f4887D);
+                    this.f4845a.back(bundle);
+                } else {
+                    this.f4845a.back(null);
+                }
+                if (this.f4845a.f4887D == 2) {
+                    bundle = new Bundle();
+                    bundle.putInt(WebViewFragment.f4863c, this.f4845a.f4887D);
+                    this.f4845a.openNavi(bundle);
+                    return;
+                }
+                return;
+            }
+            this.f4845a.f4889F.goBack();
+        }
     }
-  }
-  
-  private void a(WebView paramWebView, final SslErrorHandler paramSslErrorHandler, SslError paramSslError)
-  {
-    i.e("Framework", "onReceivedSslError：error" + paramSslError);
-    paramWebView = new AlertDialog.Builder(getContext());
-    paramSslError.getPrimaryError();
-    paramWebView.setMessage(2131297230);
-    paramWebView.setPositiveButton("continue", new DialogInterface.OnClickListener()
-    {
-      public void onClick(DialogInterface paramAnonymousDialogInterface, int paramAnonymousInt)
-      {
-        paramSslErrorHandler.proceed();
-      }
-    });
-    paramWebView.setNegativeButton("cancel", new DialogInterface.OnClickListener()
-    {
-      public void onClick(DialogInterface paramAnonymousDialogInterface, int paramAnonymousInt)
-      {
-        paramSslErrorHandler.cancel();
-      }
-    });
-    paramWebView.create().show();
-  }
-  
-  private void a(String paramString)
-  {
-    if ((this.L != null) && (!TextUtils.isEmpty(paramString))) {
-      this.L.setText(paramString);
+
+    /* renamed from: com.baidu.carlife.fragment.WebViewFragment$2 */
+    class C15912 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ WebViewFragment f4846a;
+
+        C15912(WebViewFragment this$0) {
+            this.f4846a = this$0;
+        }
+
+        public void onClick(View v) {
+            if (!this.f4846a.f4889F.canGoBack() || this.f4846a.m5846d()) {
+                Bundle bundle;
+                if (this.f4846a.f4887D == 1) {
+                    bundle = new Bundle();
+                    bundle.putInt(WebViewFragment.f4863c, this.f4846a.f4887D);
+                    this.f4846a.back(bundle);
+                } else {
+                    this.f4846a.back(null);
+                }
+                if (this.f4846a.f4887D == 2) {
+                    bundle = new Bundle();
+                    bundle.putInt(WebViewFragment.f4863c, this.f4846a.f4887D);
+                    this.f4846a.openNavi(bundle);
+                    return;
+                }
+                return;
+            }
+            this.f4846a.f4889F.goBack();
+        }
     }
-  }
-  
-  private void a(String paramString1, String paramString2)
-  {
-    StatisticManager.onEvent(paramString1, paramString2);
-  }
-  
-  private void b()
-  {
-    this.K = this.mContentView.findViewById(2131624260);
-    this.K.setVisibility(8);
-    Object localObject = (ImageButton)this.mContentView.findViewById(2131624258);
-    if (localObject != null) {
-      ((ImageButton)localObject).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if ((WebViewFragment.a(WebViewFragment.this).canGoBack()) && (!WebViewFragment.b(WebViewFragment.this))) {
-            WebViewFragment.a(WebViewFragment.this).goBack();
-          }
-          for (;;)
-          {
+
+    /* renamed from: com.baidu.carlife.fragment.WebViewFragment$5 */
+    class C15945 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ WebViewFragment f4851a;
+
+        C15945(WebViewFragment this$0) {
+            this.f4851a = this$0;
+        }
+
+        public void run() {
+            C1307e.m4686a().mo1467b(StyleManager.getString(C0965R.string.plugin_loading));
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.WebViewFragment$6 */
+    class C15956 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ WebViewFragment f4852a;
+
+        C15956(WebViewFragment this$0) {
+            this.f4852a = this$0;
+        }
+
+        public void run() {
+            C1307e.m4686a().mo1468c();
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.WebViewFragment$8 */
+    class C15978 implements BNavigatorListener {
+        /* renamed from: a */
+        final /* synthetic */ WebViewFragment f4855a;
+
+        C15978(WebViewFragment this$0) {
+            this.f4855a = this$0;
+        }
+
+        public void onPageJump(int jumpTiming, Object arg) {
+            if (!NavRouteGuideController.getInstance().newGuideIsThirdServer()) {
+                C1309g.m4699a().m4701b().performOpenHome();
+                NavRouteGuideController.getInstance().setBNavigatorListener(null);
+            }
+            NavRouteGuideController.getInstance().setNewGuideIsThirdServer(false);
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.WebViewFragment$a */
+    public class C1598a extends WebChromeClient {
+        /* renamed from: a */
+        final /* synthetic */ WebViewFragment f4856a;
+
+        public C1598a(WebViewFragment this$0) {
+            this.f4856a = this$0;
+        }
+
+        public void onGeolocationPermissionsHidePrompt() {
+            super.onGeolocationPermissionsHidePrompt();
+        }
+
+        public void onGeolocationPermissionsShowPrompt(String origin, Callback callback) {
+            super.onGeolocationPermissionsShowPrompt(origin, callback);
+            callback.invoke(origin, true, false);
+        }
+
+        public void onReceivedTitle(WebView view, String title) {
+            super.onReceivedTitle(view, title);
+            C1260i.m4435b("Framework", "onReceivedTitle title=" + title);
+            if (this.f4856a.m5839b(title) || this.f4856a.f4887D != 3) {
+                this.f4856a.m5832a(title);
+            }
+            String url = view.getUrl();
+            if ((TextUtils.isEmpty(url) || url.startsWith("carlife://") || !this.f4856a.m5839b(title)) && !this.f4856a.f4891H) {
+                if (this.f4856a.f4887D != 3) {
+                    this.f4856a.f4894K.setVisibility(8);
+                }
+                this.f4856a.f4889F.setVisibility(0);
+                return;
+            }
+            this.f4856a.m5848e();
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.WebViewFragment$b */
+    public class C1599b extends WebViewClient {
+        /* renamed from: a */
+        final /* synthetic */ WebViewFragment f4857a;
+
+        public C1599b(WebViewFragment this$0) {
+            this.f4857a = this$0;
+        }
+
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.cancel();
+        }
+
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            C1260i.m4435b("Framework", "shouldOverrideUrlLoading：" + url);
+            if (!TextUtils.isEmpty(url)) {
+                if (url.startsWith("intent://") || (this.f4857a.f4887D == 1 && url.contains("scheme=alipays"))) {
+                    try {
+                        Intent intent = Intent.parseUri(url, 1);
+                        intent.addCategory("android.intent.category.BROWSABLE");
+                        intent.setComponent(null);
+                        this.f4857a.startActivityForResult(intent, 2);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+                if (url.startsWith("carlife://") && this.f4857a.m5847d(url)) {
+                    view.stopLoading();
+                    return true;
+                } else if (url.startsWith("tel:")) {
+                    String number = url.replace("tel:", "");
+                    if (!TextUtils.isEmpty(number)) {
+                        this.f4857a.m5842c(number);
+                    }
+                    return true;
+                }
+            }
+            view.loadUrl(url);
+            return true;
+        }
+
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            C1260i.m4435b("Framework", "onPageStarted url=" + url);
+            this.f4857a.f4891H = false;
+        }
+
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            C1260i.m4435b("Framework", "onPageFinished url=" + url);
+            this.f4857a.m5851f();
+            if (!((this.f4857a.f4887D != 1 && this.f4857a.f4887D != 4 && this.f4857a.f4887D != 2 && this.f4857a.f4887D != 3) || this.f4857a.f4891H || this.f4857a.f4894K == null)) {
+                if (this.f4857a.f4887D != 3) {
+                    this.f4857a.f4894K.setVisibility(8);
+                }
+                this.f4857a.f4889F.setVisibility(0);
+            }
+            if (this.f4857a.f4887D == 3 && C1856o.m7042a().m7045b()) {
+                C1856o.m7042a().m7047d();
+            }
+        }
+
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            C1260i.m4435b("Framework", "onReceivedError errorCode=" + errorCode + ", description=" + description);
+            view.stopLoading();
+            this.f4857a.m5851f();
+            this.f4857a.m5848e();
+        }
+    }
+
+    static {
+        f4860C.add("http://carlife.etcp.cn/index/parkingFee");
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mContentView = inflater.inflate(C0965R.layout.about_web_view, null);
+        if (this.mShowBundle != null) {
+            this.f4888E = this.mShowBundle.getString(f4861a);
+            this.f4887D = this.mShowBundle.getInt(f4863c, 0);
+            this.f4892I = this.mShowBundle.getString(f4862b);
+        }
+        this.f4893J = (CommonTipView) this.mContentView.findViewById(C0965R.id.common_tip_view);
+        this.f4893J.setVisibility(8);
+        this.f4889F = (WebView) this.mContentView.findViewById(C0965R.id.web_view);
+        this.f4889F.removeJavascriptInterface("searchBoxJavaBridge_");
+        this.f4889F.removeJavascriptInterface("accessibility");
+        this.f4889F.removeJavascriptInterface("accessibilityTraversal");
+        m5836b();
+        m5855a(this.f4889F);
+        onUpdateStyle(true);
+        return this.mContentView;
+    }
+
+    /* renamed from: b */
+    private void m5836b() {
+        this.f4894K = this.mContentView.findViewById(C0965R.id.common_top_title);
+        this.f4894K.setVisibility(8);
+        ImageButton btnBack = (ImageButton) this.mContentView.findViewById(C0965R.id.ib_left);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(new C15901(this));
+        }
+        View hide = this.mContentView.findViewById(C0965R.id.view_hide);
+        if (hide != null) {
+            hide.setOnClickListener(new C15912(this));
+        }
+        this.f4895L = (TextView) this.mContentView.findViewById(C0965R.id.tv_title);
+        m5832a(this.f4888E);
+    }
+
+    /* renamed from: a */
+    private void m5832a(String title) {
+        if (this.f4895L != null && !TextUtils.isEmpty(title)) {
+            this.f4895L.setText(title);
+        }
+    }
+
+    protected void onInitView() {
+        m5841c();
+    }
+
+    /* renamed from: c */
+    private void m5841c() {
+        if (!TextUtils.isEmpty(this.f4892I)) {
+            C1260i.m4435b("Framework", "loadUrl mUrl=" + this.f4892I);
+            if (this.f4890G || this.f4891H) {
+                if (this.f4894K != null) {
+                    if (this.f4887D == 1 || this.f4887D == 2 || this.f4887D == 3 || this.f4887D == 4) {
+                        this.f4894K.setVisibility(0);
+                        this.f4889F.setVisibility(8);
+                    } else {
+                        this.f4894K.setVisibility(8);
+                    }
+                }
+                m5854a();
+                this.f4889F.loadUrl(this.f4892I);
+            }
+            this.f4890G = false;
+        }
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+        updateCommonSkin();
+        this.f4889F.setBackgroundColor(getResources().getColor(C0965R.color.cl_bg_c_main));
+    }
+
+    public void onResume() {
+        super.onResume();
+        WebviewUtils.resumeWebview(this.f4889F);
+    }
+
+    public void onPause() {
+        super.onPause();
+        WebviewUtils.pauseWebview(this.f4889F);
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        NavRouteGuideController.getInstance().setBNavigatorListener(null);
+    }
+
+    public void back() {
+        if (this.f4887D == 2) {
+            super.back();
+            showLatestNaviFragment();
             return;
-            if (WebViewFragment.c(WebViewFragment.this) == 1)
-            {
-              paramAnonymousView = new Bundle();
-              paramAnonymousView.putInt("bundle_type", WebViewFragment.c(WebViewFragment.this));
-              WebViewFragment.this.back(paramAnonymousView);
-            }
-            while (WebViewFragment.c(WebViewFragment.this) == 2)
-            {
-              paramAnonymousView = new Bundle();
-              paramAnonymousView.putInt("bundle_type", WebViewFragment.c(WebViewFragment.this));
-              WebViewFragment.this.openNavi(paramAnonymousView);
-              return;
-              WebViewFragment.this.back(null);
-            }
-          }
         }
-      });
+        super.back();
     }
-    localObject = this.mContentView.findViewById(2131624261);
-    if (localObject != null) {
-      ((View)localObject).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if ((WebViewFragment.a(WebViewFragment.this).canGoBack()) && (!WebViewFragment.b(WebViewFragment.this))) {
-            WebViewFragment.a(WebViewFragment.this).goBack();
-          }
-          for (;;)
-          {
-            return;
-            if (WebViewFragment.c(WebViewFragment.this) == 1)
-            {
-              paramAnonymousView = new Bundle();
-              paramAnonymousView.putInt("bundle_type", WebViewFragment.c(WebViewFragment.this));
-              WebViewFragment.this.back(paramAnonymousView);
-            }
-            while (WebViewFragment.c(WebViewFragment.this) == 2)
-            {
-              paramAnonymousView = new Bundle();
-              paramAnonymousView.putInt("bundle_type", WebViewFragment.c(WebViewFragment.this));
-              WebViewFragment.this.openNavi(paramAnonymousView);
-              return;
-              WebViewFragment.this.back(null);
-            }
-          }
-        }
-      });
-    }
-    this.L = ((TextView)this.mContentView.findViewById(2131624059));
-    a(this.E);
-  }
-  
-  private boolean b(String paramString)
-  {
-    return (!TextUtils.isEmpty(paramString)) && ("找不到网页|服务器内部错误".contains(paramString));
-  }
-  
-  private void c()
-  {
-    if (!TextUtils.isEmpty(this.I))
-    {
-      i.b("Framework", "loadUrl mUrl=" + this.I);
-      if ((this.G) || (this.H)) {
-        if (this.K != null)
-        {
-          if ((this.D != 1) && (this.D != 2) && (this.D != 3) && (this.D != 4)) {
-            break label129;
-          }
-          this.K.setVisibility(0);
-          this.F.setVisibility(8);
-        }
-      }
-    }
-    for (;;)
-    {
-      a();
-      this.F.loadUrl(this.I);
-      this.G = false;
-      return;
-      label129:
-      this.K.setVisibility(8);
-    }
-  }
-  
-  private void c(final String paramString)
-  {
-    showDialog(new c(getContext()).b(paramString).d(2131296259).q().a(new com.baidu.carlife.core.screen.b()
-    {
-      public void onClick()
-      {
-        q.f().a(WebViewFragment.this.getContext(), paramString);
-      }
-    }));
-  }
-  
-  private boolean d()
-  {
-    String str = this.F.getUrl();
-    WebBackForwardList localWebBackForwardList = this.F.copyBackForwardList();
-    return (!TextUtils.isEmpty(str)) && (C.contains(str)) && (localWebBackForwardList.getSize() > 1);
-  }
-  
-  private boolean d(String paramString)
-  {
-    paramString = Uri.parse(paramString);
-    String str1 = paramString.getAuthority();
-    i.e("Framework", "dispatchJsMethod: authority=" + str1);
-    if (!TextUtils.isEmpty(str1))
-    {
-      String str2 = paramString.getQueryParameter("product");
-      i.e("Framework", "dispatchJsMethod: product=" + str2);
-      if (TextUtils.isEmpty(str2)) {
-        break label413;
-      }
-      if (!"exit".equalsIgnoreCase(str1)) {
-        break label104;
-      }
-      i.e("Framework", "Js method: exit");
-      g();
-    }
-    for (;;)
-    {
-      return true;
-      label104:
-      if ("navi".equalsIgnoreCase(str1))
-      {
-        i.e("Framework", "Js method: navi");
-        str1 = paramString.getQueryParameter("longitude");
-        paramString = paramString.getQueryParameter("latitude");
-        i.b("Framework", "navi longitude=" + str1 + ", latitude=" + paramString);
-        a(Double.valueOf(str1).doubleValue(), Double.valueOf(paramString).doubleValue());
-      }
-      else if ("registerJSFunction".equalsIgnoreCase(str1))
-      {
-        i.e("Framework", "Js method: registerJSFunction");
-        paramString = paramString.getPath();
-        i.b("Framework", "path=" + paramString);
-        if ("/getLocation".equalsIgnoreCase(paramString))
-        {
-          paramString = m.a().b();
-          if (paramString == null) {
+
+    public boolean onBackPressed() {
+        if (this.f4889F.canGoBack() && !m5846d()) {
+            this.f4889F.goBack();
             return true;
-          }
-          paramString = "javascript:getLocation('{\"longitude\":" + paramString.a() + ",\"latitude\":" + paramString.b() + "}')";
-          i.b("Framework", "jsFun=" + paramString);
-          this.F.loadUrl(paramString);
-        }
-      }
-      else if ("mtj".equalsIgnoreCase(str1))
-      {
-        i.e("Framework", "Js method: mtj");
-        str1 = paramString.getQueryParameter("eventID");
-        paramString = paramString.getQueryParameter("label");
-        i.b("Framework", "mtj eventID=" + str1 + " label=" + paramString);
-        a(str1, paramString);
-        continue;
-        label413:
-        i.e("Framework", "Js invoke parameter product should not be empty.");
-      }
-    }
-  }
-  
-  private void e()
-  {
-    this.H = true;
-    this.J.a(1);
-    this.J.setVisibility(0);
-    this.F.setVisibility(8);
-    this.K.setVisibility(0);
-  }
-  
-  private void f()
-  {
-    mActivity.runOnUiThread(new Runnable()
-    {
-      public void run()
-      {
-        e.a().c();
-      }
-    });
-  }
-  
-  private void g()
-  {
-    mActivity.m();
-    Bundle localBundle;
-    if (this.D == 1)
-    {
-      localBundle = new Bundle();
-      localBundle.putInt("bundle_type", this.D);
-      back(localBundle);
-    }
-    for (;;)
-    {
-      if (this.D == 2)
-      {
-        localBundle = new Bundle();
-        localBundle.putInt("bundle_type", this.D);
-        openNavi(localBundle);
-      }
-      return;
-      back(null);
-    }
-  }
-  
-  public void a()
-  {
-    mActivity.runOnUiThread(new Runnable()
-    {
-      public void run()
-      {
-        e.a().b(StyleManager.getString(2131296850));
-      }
-    });
-  }
-  
-  public void a(WebView paramWebView)
-  {
-    WebSettings localWebSettings = paramWebView.getSettings();
-    localWebSettings.setCacheMode(-1);
-    localWebSettings.setJavaScriptEnabled(true);
-    localWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-    localWebSettings.setLoadsImagesAutomatically(true);
-    localWebSettings.setUseWideViewPort(true);
-    localWebSettings.setLoadWithOverviewMode(true);
-    localWebSettings.setSupportZoom(false);
-    localWebSettings.setUseWideViewPort(true);
-    localWebSettings.setBlockNetworkImage(false);
-    String str = d.a().b().getPath();
-    localWebSettings.setSupportMultipleWindows(true);
-    localWebSettings.setDatabaseEnabled(true);
-    localWebSettings.setDatabasePath(str);
-    localWebSettings.setDomStorageEnabled(true);
-    localWebSettings.setGeolocationEnabled(true);
-    localWebSettings.setGeolocationDatabasePath(str);
-    localWebSettings.setAppCacheEnabled(true);
-    localWebSettings.setAppCachePath(d.a().c().getPath());
-    localWebSettings.setAppCacheMaxSize(8388608L);
-    localWebSettings.setAllowFileAccess(true);
-    str = localWebSettings.getUserAgentString();
-    localWebSettings.setUserAgentString(str + " baiduNavi_ANDR(" + PackageUtil.getVersionName() + ")");
-    if (Build.VERSION.SDK_INT >= 11) {
-      localWebSettings.setAllowContentAccess(true);
-    }
-    paramWebView.setScrollBarStyle(0);
-    paramWebView.setVerticalFadingEdgeEnabled(false);
-    paramWebView.setFadingEdgeLength(0);
-    paramWebView.setLayerType(1, null);
-    paramWebView.setWebChromeClient(new a());
-    paramWebView.setWebViewClient(new b());
-  }
-  
-  public void back()
-  {
-    if (this.D == 2)
-    {
-      super.back();
-      showLatestNaviFragment();
-      return;
-    }
-    super.back();
-  }
-  
-  public void driving()
-  {
-    i.b("yftech", "WebViewFragment driving");
-    f();
-    Bundle localBundle;
-    if (this.D == 1)
-    {
-      localBundle = new Bundle();
-      localBundle.putInt("bundle_type", this.D);
-      back(localBundle);
-    }
-    for (;;)
-    {
-      if (this.D == 2)
-      {
-        localBundle = new Bundle();
-        localBundle.putInt("bundle_type", this.D);
-        openNavi(localBundle);
-      }
-      com.baidu.carlife.custom.a.a().d();
-      return;
-      back(null);
-      if (com.baidu.carlife.custom.b.a().b()) {
-        back(null);
-      }
-    }
-  }
-  
-  public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent)
-  {
-    super.onActivityResult(paramInt1, paramInt2, paramIntent);
-    if (paramInt1 == 2) {
-      this.F.loadUrl(this.I);
-    }
-  }
-  
-  public boolean onBackPressed()
-  {
-    if ((this.F.canGoBack()) && (!d()))
-    {
-      this.F.goBack();
-      return true;
-    }
-    Bundle localBundle;
-    if (this.D == 1)
-    {
-      localBundle = new Bundle();
-      localBundle.putInt("bundle_type", this.D);
-      back(localBundle);
-      return true;
-    }
-    if (this.D == 2)
-    {
-      back();
-      localBundle = new Bundle();
-      localBundle.putInt("bundle_type", this.D);
-      openNavi(localBundle);
-      return true;
-    }
-    return false;
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = paramLayoutInflater.inflate(2130968576, null);
-    if (this.mShowBundle != null)
-    {
-      this.E = this.mShowBundle.getString("bundle_title_key");
-      this.D = this.mShowBundle.getInt("bundle_type", 0);
-      this.I = this.mShowBundle.getString("bundle_url_key");
-    }
-    this.J = ((CommonTipView)this.mContentView.findViewById(2131623981));
-    this.J.setVisibility(8);
-    this.F = ((WebView)this.mContentView.findViewById(2131623982));
-    this.F.removeJavascriptInterface("searchBoxJavaBridge_");
-    this.F.removeJavascriptInterface("accessibility");
-    this.F.removeJavascriptInterface("accessibilityTraversal");
-    b();
-    a(this.F);
-    onUpdateStyle(true);
-    return this.mContentView;
-  }
-  
-  public void onDestroy()
-  {
-    super.onDestroy();
-    NavRouteGuideController.getInstance().setBNavigatorListener(null);
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    if (!paramBoolean) {
-      setBottomBarStatus(false);
-    }
-    super.onHiddenChanged(paramBoolean);
-    if ((!paramBoolean) && (com.baidu.carlife.l.a.a().N())) {
-      g();
-    }
-  }
-  
-  protected void onInitView()
-  {
-    c();
-  }
-  
-  public void onPause()
-  {
-    super.onPause();
-    WebviewUtils.pauseWebview(this.F);
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    WebviewUtils.resumeWebview(this.F);
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateStyle(boolean paramBoolean)
-  {
-    updateCommonSkin();
-    this.F.setBackgroundColor(getResources().getColor(2131558598));
-  }
-  
-  public void stopDriving()
-  {
-    i.b("yftech", "WebViewFragment stopDriving");
-  }
-  
-  public class a
-    extends WebChromeClient
-  {
-    public a() {}
-    
-    public void onGeolocationPermissionsHidePrompt()
-    {
-      super.onGeolocationPermissionsHidePrompt();
-    }
-    
-    public void onGeolocationPermissionsShowPrompt(String paramString, GeolocationPermissions.Callback paramCallback)
-    {
-      super.onGeolocationPermissionsShowPrompt(paramString, paramCallback);
-      paramCallback.invoke(paramString, true, false);
-    }
-    
-    public void onReceivedTitle(WebView paramWebView, String paramString)
-    {
-      super.onReceivedTitle(paramWebView, paramString);
-      i.b("Framework", "onReceivedTitle title=" + paramString);
-      if ((WebViewFragment.c(WebViewFragment.this, paramString)) || (WebViewFragment.c(WebViewFragment.this) != 3)) {
-        WebViewFragment.d(WebViewFragment.this, paramString);
-      }
-      paramWebView = paramWebView.getUrl();
-      if (((!TextUtils.isEmpty(paramWebView)) && (!paramWebView.startsWith("carlife://")) && (WebViewFragment.c(WebViewFragment.this, paramString))) || (WebViewFragment.e(WebViewFragment.this)))
-      {
-        WebViewFragment.g(WebViewFragment.this);
-        return;
-      }
-      if (WebViewFragment.c(WebViewFragment.this) != 3) {
-        WebViewFragment.f(WebViewFragment.this).setVisibility(8);
-      }
-      WebViewFragment.a(WebViewFragment.this).setVisibility(0);
-    }
-  }
-  
-  public class b
-    extends WebViewClient
-  {
-    public b() {}
-    
-    public void onPageFinished(WebView paramWebView, String paramString)
-    {
-      super.onPageFinished(paramWebView, paramString);
-      i.b("Framework", "onPageFinished url=" + paramString);
-      WebViewFragment.d(WebViewFragment.this);
-      if (((WebViewFragment.c(WebViewFragment.this) == 1) || (WebViewFragment.c(WebViewFragment.this) == 4) || (WebViewFragment.c(WebViewFragment.this) == 2) || (WebViewFragment.c(WebViewFragment.this) == 3)) && (!WebViewFragment.e(WebViewFragment.this)) && (WebViewFragment.f(WebViewFragment.this) != null))
-      {
-        if (WebViewFragment.c(WebViewFragment.this) != 3) {
-          WebViewFragment.f(WebViewFragment.this).setVisibility(8);
-        }
-        WebViewFragment.a(WebViewFragment.this).setVisibility(0);
-      }
-      if ((WebViewFragment.c(WebViewFragment.this) == 3) && (o.a().b())) {
-        o.a().d();
-      }
-    }
-    
-    public void onPageStarted(WebView paramWebView, String paramString, Bitmap paramBitmap)
-    {
-      super.onPageStarted(paramWebView, paramString, paramBitmap);
-      i.b("Framework", "onPageStarted url=" + paramString);
-      WebViewFragment.a(WebViewFragment.this, false);
-    }
-    
-    public void onReceivedError(WebView paramWebView, int paramInt, String paramString1, String paramString2)
-    {
-      i.b("Framework", "onReceivedError errorCode=" + paramInt + ", description=" + paramString1);
-      paramWebView.stopLoading();
-      WebViewFragment.d(WebViewFragment.this);
-      WebViewFragment.g(WebViewFragment.this);
-    }
-    
-    public void onReceivedSslError(WebView paramWebView, SslErrorHandler paramSslErrorHandler, SslError paramSslError)
-    {
-      paramSslErrorHandler.cancel();
-    }
-    
-    public boolean shouldOverrideUrlLoading(WebView paramWebView, String paramString)
-    {
-      i.b("Framework", "shouldOverrideUrlLoading：" + paramString);
-      if (!TextUtils.isEmpty(paramString))
-      {
-        if ((paramString.startsWith("intent://")) || ((WebViewFragment.c(WebViewFragment.this) == 1) && (paramString.contains("scheme=alipays")))) {}
-        do
-        {
-          try
-          {
-            Intent localIntent = Intent.parseUri(paramString, 1);
-            localIntent.addCategory("android.intent.category.BROWSABLE");
-            localIntent.setComponent(null);
-            WebViewFragment.this.startActivityForResult(localIntent, 2);
+        } else if (this.f4887D == 1) {
+            bundle = new Bundle();
+            bundle.putInt(f4863c, this.f4887D);
+            back(bundle);
             return true;
-          }
-          catch (Exception localException)
-          {
-            localException.printStackTrace();
-          }
-          if ((paramString.startsWith("carlife://")) && (WebViewFragment.a(WebViewFragment.this, paramString)))
-          {
-            paramWebView.stopLoading();
+        } else if (this.f4887D != 2) {
+            return false;
+        } else {
+            back();
+            bundle = new Bundle();
+            bundle.putInt(f4863c, this.f4887D);
+            openNavi(bundle);
             return true;
-          }
-          if (!paramString.startsWith("tel:")) {
-            break;
-          }
-          paramWebView = paramString.replace("tel:", "");
-        } while (TextUtils.isEmpty(paramWebView));
-        WebViewFragment.b(WebViewFragment.this, paramWebView);
+        }
+    }
+
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            setBottomBarStatus(false);
+        }
+        super.onHiddenChanged(hidden);
+        if (!hidden && C1663a.m5979a().m5993N()) {
+            m5852g();
+        }
+    }
+
+    /* renamed from: d */
+    private boolean m5846d() {
+        String currentUrl = this.f4889F.getUrl();
+        WebBackForwardList backForwardList = this.f4889F.copyBackForwardList();
+        if (TextUtils.isEmpty(currentUrl) || !f4860C.contains(currentUrl) || backForwardList.getSize() <= 1) {
+            return false;
+        }
         return true;
-      }
-      paramWebView.loadUrl(paramString);
-      return true;
     }
-  }
+
+    /* renamed from: a */
+    public void m5855a(WebView mWebView) {
+        WebSettings settings = mWebView.getSettings();
+        settings.setCacheMode(-1);
+        settings.setJavaScriptEnabled(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setLoadsImagesAutomatically(true);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setSupportZoom(false);
+        settings.setUseWideViewPort(true);
+        settings.setBlockNetworkImage(false);
+        String dir = C2173d.m8225a().m8228b().getPath();
+        settings.setSupportMultipleWindows(true);
+        settings.setDatabaseEnabled(true);
+        settings.setDatabasePath(dir);
+        settings.setDomStorageEnabled(true);
+        settings.setGeolocationEnabled(true);
+        settings.setGeolocationDatabasePath(dir);
+        settings.setAppCacheEnabled(true);
+        settings.setAppCachePath(C2173d.m8225a().m8229c().getPath());
+        settings.setAppCacheMaxSize(8388608);
+        settings.setAllowFileAccess(true);
+        settings.setUserAgentString(settings.getUserAgentString() + " baiduNavi_ANDR(" + PackageUtil.getVersionName() + ")");
+        if (VERSION.SDK_INT >= 11) {
+            settings.setAllowContentAccess(true);
+        }
+        mWebView.setScrollBarStyle(0);
+        mWebView.setVerticalFadingEdgeEnabled(false);
+        mWebView.setFadingEdgeLength(0);
+        mWebView.setLayerType(1, null);
+        mWebView.setWebChromeClient(new C1598a(this));
+        mWebView.setWebViewClient(new C1599b(this));
+    }
+
+    /* renamed from: a */
+    private void m5831a(WebView view, SslErrorHandler handler, SslError error) {
+        final SslErrorHandler handlerFinal = handler;
+        C1260i.m4445e("Framework", "onReceivedSslError：error" + error);
+        Builder builder = new Builder(getContext());
+        error.getPrimaryError();
+        builder.setMessage(C0965R.string.web_view_ssl_error);
+        builder.setPositiveButton("continue", new DialogInterface.OnClickListener(this) {
+            /* renamed from: b */
+            final /* synthetic */ WebViewFragment f4848b;
+
+            public void onClick(DialogInterface dialog, int which) {
+                handlerFinal.proceed();
+            }
+        });
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener(this) {
+            /* renamed from: b */
+            final /* synthetic */ WebViewFragment f4850b;
+
+            public void onClick(DialogInterface dialog, int which) {
+                handlerFinal.cancel();
+            }
+        });
+        builder.create().show();
+    }
+
+    /* renamed from: e */
+    private void m5848e() {
+        this.f4891H = true;
+        this.f4893J.m8397a(1);
+        this.f4893J.setVisibility(0);
+        this.f4889F.setVisibility(8);
+        this.f4894K.setVisibility(0);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2) {
+            this.f4889F.loadUrl(this.f4892I);
+        }
+    }
+
+    /* renamed from: b */
+    private boolean m5839b(String title) {
+        if (TextUtils.isEmpty(title) || !"找不到网页|服务器内部错误".contains(title)) {
+            return false;
+        }
+        return true;
+    }
+
+    /* renamed from: a */
+    public void m5854a() {
+        mActivity.runOnUiThread(new C15945(this));
+    }
+
+    /* renamed from: f */
+    private void m5851f() {
+        mActivity.runOnUiThread(new C15956(this));
+    }
+
+    /* renamed from: c */
+    private void m5842c(final String number) {
+        showDialog(new C1953c(getContext()).m7444b(number).m7450d((int) C0965R.string.alert_cancel).m7458q().m7438a(new C0672b(this) {
+            /* renamed from: b */
+            final /* synthetic */ WebViewFragment f4854b;
+
+            public void onClick() {
+                C1868q.m7089f().m7107a(this.f4854b.getContext(), number);
+            }
+        }));
+    }
+
+    /* renamed from: d */
+    private boolean m5847d(String url) {
+        Uri uri = Uri.parse(url);
+        String authority = uri.getAuthority();
+        C1260i.m4445e("Framework", "dispatchJsMethod: authority=" + authority);
+        if (!TextUtils.isEmpty(authority)) {
+            String product = uri.getQueryParameter(f4884x);
+            C1260i.m4445e("Framework", "dispatchJsMethod: product=" + product);
+            if (TextUtils.isEmpty(product)) {
+                C1260i.m4445e("Framework", "Js invoke parameter product should not be empty.");
+            } else if ("exit".equalsIgnoreCase(authority)) {
+                C1260i.m4445e("Framework", "Js method: exit");
+                m5852g();
+            } else if ("navi".equalsIgnoreCase(authority)) {
+                C1260i.m4445e("Framework", "Js method: navi");
+                String longitude = uri.getQueryParameter("longitude");
+                String latitude = uri.getQueryParameter("latitude");
+                C1260i.m4435b("Framework", "navi longitude=" + longitude + ", latitude=" + latitude);
+                m5830a(Double.valueOf(longitude).doubleValue(), Double.valueOf(latitude).doubleValue());
+            } else if (f4882v.equalsIgnoreCase(authority)) {
+                C1260i.m4445e("Framework", "Js method: registerJSFunction");
+                String path = uri.getPath();
+                C1260i.m4435b("Framework", "path=" + path);
+                if (f4883w.equalsIgnoreCase(path)) {
+                    C2182a positionInfo = C2183m.m8293a().m8294b();
+                    if (positionInfo == null) {
+                        return true;
+                    }
+                    String jsFun = "javascript:getLocation('{\"longitude\":" + positionInfo.m8289a() + ",\"latitude\":" + positionInfo.m8291b() + "}')";
+                    C1260i.m4435b("Framework", "jsFun=" + jsFun);
+                    this.f4889F.loadUrl(jsFun);
+                }
+            } else if (f4881u.equalsIgnoreCase(authority)) {
+                C1260i.m4445e("Framework", "Js method: mtj");
+                String eventID = uri.getQueryParameter(f4858A);
+                String label = uri.getQueryParameter("label");
+                C1260i.m4435b("Framework", "mtj eventID=" + eventID + " label=" + label);
+                m5833a(eventID, label);
+            }
+        }
+        return true;
+    }
+
+    /* renamed from: a */
+    private void m5833a(String eventID, String label) {
+        StatisticManager.onEvent(eventID, label);
+    }
+
+    /* renamed from: g */
+    private void m5852g() {
+        mActivity.m3117m();
+        if (this.f4887D == 1) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(f4863c, this.f4887D);
+            back(bundle);
+        } else {
+            back(null);
+        }
+        if (this.f4887D == 2) {
+            bundle = new Bundle();
+            bundle.putInt(f4863c, this.f4887D);
+            openNavi(bundle);
+        }
+    }
+
+    /* renamed from: a */
+    private void m5830a(double longitude, double latitude) {
+        if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
+            NavRouteGuideController.getInstance().setNewGuideIsThirdServer(true);
+        } else {
+            NavRouteGuideController.getInstance().setNewGuideIsThirdServer(false);
+        }
+        NavRouteGuideController.getInstance().setBNavigatorListener(new C15978(this));
+        C1260i.m4435b("Framework", "handleJsNavi navi longitude=" + longitude + ", latitude=" + latitude);
+        startCalcRoute(new C1269a(longitude, latitude));
+        if (this.f4887D == 1) {
+            StatisticManager.onEvent(StatisticConstants.DISCOVER_ETCP_0004);
+        }
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "WebViewFragment driving");
+        m5851f();
+        if (this.f4887D == 1) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(f4863c, this.f4887D);
+            back(bundle);
+        } else {
+            back(null);
+            if (C1343b.m4932a().m4935b()) {
+                back(null);
+            }
+        }
+        if (this.f4887D == 2) {
+            bundle = new Bundle();
+            bundle.putInt(f4863c, this.f4887D);
+            openNavi(bundle);
+        }
+        C1342a.m4926a().m4931d();
+    }
+
+    public void stopDriving() {
+        C1260i.m4435b("yftech", "WebViewFragment stopDriving");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/WebViewFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

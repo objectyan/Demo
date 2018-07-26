@@ -4,133 +4,111 @@ import android.os.Bundle;
 import com.baidu.mapframework.nirvana.looper.MainLooperHandler;
 import com.baidu.mapframework.nirvana.module.Module;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
+import com.baidu.platform.comapi.UIMsg.m_AppUI;
 import com.baidu.platform.comjni.engine.MessageProxy;
 import com.baidu.platform.comjni.map.dataengine.NADataEngine;
 
-public class MapDataEngine
-{
-  private static MapDataEngine b = null;
-  private static MainLooperHandler d = null;
-  private NADataEngine a = null;
-  private a c = null;
-  
-  public static void destroy()
-  {
-    if (b != null)
-    {
-      if (b.a != null)
-      {
-        b.a.release();
-        b.a = null;
-        MessageProxy.unRegisterMessageHandler(65289, d);
-        d = null;
-        b.c = null;
-      }
-      b = null;
+public class MapDataEngine {
+    /* renamed from: b */
+    private static MapDataEngine f12703b = null;
+    /* renamed from: d */
+    private static MainLooperHandler f12704d = null;
+    /* renamed from: a */
+    private NADataEngine f12705a = null;
+    /* renamed from: c */
+    private C4769a f12706c = null;
+
+    public static MapDataEngine getInstance() {
+        if (f12703b == null) {
+            f12703b = new MapDataEngine();
+            if (!f12703b.m10988a()) {
+                f12703b = null;
+                return null;
+            }
+        }
+        return f12703b;
     }
-  }
-  
-  public static MapDataEngine getInstance()
-  {
-    if (b == null)
-    {
-      b = new MapDataEngine();
-      if (!b.a())
-      {
-        b = null;
-        return null;
-      }
+
+    private MapDataEngine() {
     }
-    return b;
-  }
-  
-  boolean a()
-  {
-    if (this.a == null)
-    {
-      this.a = new NADataEngine();
-      if (this.a.create() == 0)
-      {
-        this.a = null;
-        return false;
-      }
-      this.c = new a();
-      d = new MapDataEngine.1(this, Module.MAP_ENGINE, ScheduleConfig.forData());
-      MessageProxy.registerMessageHandler(65289, d);
+
+    /* renamed from: a */
+    boolean m10988a() {
+        if (this.f12705a == null) {
+            this.f12705a = new NADataEngine();
+            if (this.f12705a.create() == 0) {
+                this.f12705a = null;
+                return false;
+            }
+            this.f12706c = new C4769a();
+            f12704d = new MapDataEngine$1(this, Module.MAP_ENGINE, ScheduleConfig.forData());
+            MessageProxy.registerMessageHandler(m_AppUI.V_WM_VDATAENGINE, f12704d);
+        }
+        return true;
     }
-    return true;
-  }
-  
-  public void cancelThumbImageRequest()
-  {
-    this.a.cancelThumbImageRequest();
-  }
-  
-  public String getCurrentStreetId()
-  {
-    return this.a.getCurrentStreetId();
-  }
-  
-  public String getCurrentStreetInfo(Bundle paramBundle)
-  {
-    return this.a.getCurrentStreetInfo(paramBundle);
-  }
-  
-  public boolean getHotMapCityInfo()
-  {
-    Bundle localBundle = new Bundle();
-    return this.a.getHotMapCityInfo(localBundle);
-  }
-  
-  public boolean getStreetCityInfo()
-  {
-    Bundle localBundle = new Bundle();
-    return this.a.getStreetCityInfo(localBundle);
-  }
-  
-  public boolean queryThumbImage(String paramString)
-  {
-    return this.a.queryThumbImage(paramString);
-  }
-  
-  public void registDataEngineListener(MapDataEngineListener paramMapDataEngineListener)
-  {
-    this.c.a(paramMapDataEngineListener);
-  }
-  
-  public void removeDataEngineListener(MapDataEngineListener paramMapDataEngineListener)
-  {
-    this.c.b(paramMapDataEngineListener);
-  }
-  
-  public void setStreetPOIUID(String paramString)
-  {
-    this.a.setStreetPOIUID(paramString);
-  }
-  
-  public boolean setStreetSwitchByUID(String paramString1, String paramString2)
-  {
-    return this.a.streetSwitchByUID(paramString1, paramString2);
-  }
-  
-  public boolean setStreetSwitchToIID(String paramString1, String paramString2, boolean paramBoolean)
-  {
-    return this.a.streetSwitchToIID(paramString1, paramString2, paramBoolean);
-  }
-  
-  public boolean setStreetSwitchToId(String paramString, int paramInt)
-  {
-    return this.a.streetSwitchToId(paramString, paramInt);
-  }
-  
-  public boolean setStreetSwitchToId(String paramString1, String paramString2, long paramLong1, long paramLong2)
-  {
-    return this.a.streetSwitchToId(paramString1, paramString2, paramLong1, paramLong2);
-  }
+
+    public static void destroy() {
+        if (f12703b != null) {
+            if (f12703b.f12705a != null) {
+                f12703b.f12705a.release();
+                f12703b.f12705a = null;
+                MessageProxy.unRegisterMessageHandler(m_AppUI.V_WM_VDATAENGINE, f12704d);
+                f12704d = null;
+                f12703b.f12706c = null;
+            }
+            f12703b = null;
+        }
+    }
+
+    public void registDataEngineListener(MapDataEngineListener listener) {
+        this.f12706c.a(listener);
+    }
+
+    public void removeDataEngineListener(MapDataEngineListener listener) {
+        this.f12706c.b(listener);
+    }
+
+    public boolean getHotMapCityInfo() {
+        return this.f12705a.getHotMapCityInfo(new Bundle());
+    }
+
+    public boolean getStreetCityInfo() {
+        return this.f12705a.getStreetCityInfo(new Bundle());
+    }
+
+    public boolean setStreetSwitchToId(String switchId, int type) {
+        return this.f12705a.streetSwitchToId(switchId, type);
+    }
+
+    public boolean setStreetSwitchToId(String switchId, String name, long geoX, long geoY) {
+        return this.f12705a.streetSwitchToId(switchId, name, geoX, geoY);
+    }
+
+    public boolean setStreetSwitchByUID(String uid, String type) {
+        return this.f12705a.streetSwitchByUID(uid, type);
+    }
+
+    public boolean setStreetSwitchToIID(String iid, String pid, boolean refreshMap) {
+        return this.f12705a.streetSwitchToIID(iid, pid, refreshMap);
+    }
+
+    public String getCurrentStreetInfo(Bundle b) {
+        return this.f12705a.getCurrentStreetInfo(b);
+    }
+
+    public String getCurrentStreetId() {
+        return this.f12705a.getCurrentStreetId();
+    }
+
+    public boolean queryThumbImage(String panoId) {
+        return this.f12705a.queryThumbImage(panoId);
+    }
+
+    public void cancelThumbImageRequest() {
+        this.f12705a.cancelThumbImageRequest();
+    }
+
+    public void setStreetPOIUID(String strPoiUid) {
+        this.f12705a.setStreetPOIUID(strPoiUid);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/platform/comapi/dataengine/MapDataEngine.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

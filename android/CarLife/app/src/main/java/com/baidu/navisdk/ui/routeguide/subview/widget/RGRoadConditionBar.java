@@ -14,204 +14,212 @@ import com.baidu.navisdk.util.common.ScreenUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RGRoadConditionBar
-  extends View
-{
-  public static int EDGE_WIDTH = 4;
-  public static final int EDGE_WIDTH_DP = 2;
-  private Paint mBGPaint = null;
-  private Bitmap mCacheBitmap = null;
-  private Canvas mCacheCanvas = null;
-  private Paint mCarGreaterPaint = null;
-  private int mCarHeight = 0;
-  private Paint mCarLitterPaint = null;
-  private Paint mCarPaint = null;
-  private Path mCarPath = new Path();
-  private int mCarWidth = 0;
-  private double mCurCarProgress = 0.0D;
-  private int mItemTotalIndex = 0;
-  private int mLastH = 0;
-  private int mLastW = 0;
-  private Paint[] mPaints = new Paint[5];
-  private Paint mPassPaint = null;
-  private List<RoadConditionItem> mRoadConditionItems = new ArrayList();
-  
-  public RGRoadConditionBar(Context paramContext)
-  {
-    super(paramContext);
-    initPaints();
-    EDGE_WIDTH = ScreenUtil.getInstance().dip2px(2);
-    this.mCurCarProgress = RGAssistGuideModel.getInstance().getCarProgress();
-  }
-  
-  public RGRoadConditionBar(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    initPaints();
-    EDGE_WIDTH = ScreenUtil.getInstance().dip2px(2);
-    this.mCurCarProgress = RGAssistGuideModel.getInstance().getCarProgress();
-  }
-  
-  public RGRoadConditionBar(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    initPaints();
-    EDGE_WIDTH = ScreenUtil.getInstance().dip2px(2);
-    this.mCurCarProgress = RGAssistGuideModel.getInstance().getCarProgress();
-  }
-  
-  private void drawCar(Canvas paramCanvas, int paramInt1, int paramInt2, int paramInt3)
-  {
-    paramInt1 -= this.mCarHeight / 2;
-    int j = paramInt1;
-    int k = paramInt1 + this.mCarHeight;
-    int i = k;
-    paramInt1 = j;
-    if (k > paramInt3)
-    {
-      paramInt1 = j - (k - paramInt3);
-      i = k - (k - paramInt3);
+public class RGRoadConditionBar extends View {
+    public static int EDGE_WIDTH = 4;
+    public static final int EDGE_WIDTH_DP = 2;
+    private Paint mBGPaint;
+    private Bitmap mCacheBitmap;
+    private Canvas mCacheCanvas;
+    private Paint mCarGreaterPaint;
+    private int mCarHeight;
+    private Paint mCarLitterPaint;
+    private Paint mCarPaint;
+    private Path mCarPath;
+    private int mCarWidth;
+    private double mCurCarProgress;
+    private int mItemTotalIndex;
+    private int mLastH;
+    private int mLastW;
+    private Paint[] mPaints;
+    private Paint mPassPaint;
+    private List<RoadConditionItem> mRoadConditionItems;
+
+    public RGRoadConditionBar(Context context) {
+        super(context);
+        this.mCurCarProgress = 0.0d;
+        this.mCarHeight = 0;
+        this.mCarWidth = 0;
+        this.mCarPath = new Path();
+        this.mRoadConditionItems = new ArrayList();
+        this.mItemTotalIndex = 0;
+        this.mBGPaint = null;
+        this.mPaints = new Paint[5];
+        this.mPassPaint = null;
+        this.mCarPaint = null;
+        this.mCarGreaterPaint = null;
+        this.mCarLitterPaint = null;
+        this.mCacheBitmap = null;
+        this.mCacheCanvas = null;
+        this.mLastW = 0;
+        this.mLastH = 0;
+        initPaints();
+        EDGE_WIDTH = ScreenUtil.getInstance().dip2px(2);
+        this.mCurCarProgress = RGAssistGuideModel.getInstance().getCarProgress();
     }
-    paramInt3 = paramInt2 / 4;
-    j = paramInt2 / 2;
-    paramCanvas.drawCircle(paramInt2 / 2, (paramInt1 + i) / 2, j, this.mCarGreaterPaint);
-    paramCanvas.drawCircle(paramInt2 / 2, (paramInt1 + i) / 2, paramInt3, this.mCarLitterPaint);
-  }
-  
-  private int getRoadConditionItemDrawHeight(int paramInt1, int paramInt2, int paramInt3)
-  {
-    if (this.mItemTotalIndex <= 0) {
-      return 0;
+
+    public RGRoadConditionBar(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.mCurCarProgress = 0.0d;
+        this.mCarHeight = 0;
+        this.mCarWidth = 0;
+        this.mCarPath = new Path();
+        this.mRoadConditionItems = new ArrayList();
+        this.mItemTotalIndex = 0;
+        this.mBGPaint = null;
+        this.mPaints = new Paint[5];
+        this.mPassPaint = null;
+        this.mCarPaint = null;
+        this.mCarGreaterPaint = null;
+        this.mCarLitterPaint = null;
+        this.mCacheBitmap = null;
+        this.mCacheCanvas = null;
+        this.mLastW = 0;
+        this.mLastH = 0;
+        initPaints();
+        EDGE_WIDTH = ScreenUtil.getInstance().dip2px(2);
+        this.mCurCarProgress = RGAssistGuideModel.getInstance().getCarProgress();
     }
-    return (int)(1.0D * paramInt3 * (paramInt2 - paramInt1) / this.mItemTotalIndex);
-  }
-  
-  private void initPaints()
-  {
-    this.mBGPaint = new Paint();
-    this.mBGPaint.setColor(0);
-    this.mPassPaint = new Paint();
-    this.mPassPaint.setColor(-3158065);
-    this.mCarPaint = new Paint();
-    this.mCarPaint.setColor(-1);
-    this.mCarGreaterPaint = new Paint();
-    this.mCarGreaterPaint.setColor(-1);
-    this.mCarGreaterPaint.setAntiAlias(true);
-    this.mCarLitterPaint = new Paint();
-    this.mCarLitterPaint.setColor(-16776961);
-    this.mCarLitterPaint.setAntiAlias(true);
-    this.mPaints[0] = new Paint();
-    this.mPaints[0].setColor(RoadConditionItem.getRoadConditionColor(0));
-    this.mPaints[1] = new Paint();
-    this.mPaints[1].setColor(RoadConditionItem.getRoadConditionColor(1));
-    this.mPaints[2] = new Paint();
-    this.mPaints[2].setColor(RoadConditionItem.getRoadConditionColor(2));
-    this.mPaints[3] = new Paint();
-    this.mPaints[3].setColor(RoadConditionItem.getRoadConditionColor(3));
-    this.mPaints[4] = new Paint();
-    this.mPaints[4].setColor(RoadConditionItem.getRoadConditionColor(4));
-  }
-  
-  private boolean isRoadConditionDataValid()
-  {
-    return (this.mRoadConditionItems != null) && (this.mRoadConditionItems.size() > 0);
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    int i1 = getMeasuredWidth();
-    int m = getMeasuredHeight();
-    if ((i1 <= 0) || (m <= 0)) {}
-    do
-    {
-      return;
-      if ((this.mCacheBitmap == null) || (this.mCacheCanvas == null) || (i1 != this.mLastW) || (m != this.mLastH))
-      {
-        if (this.mCacheBitmap != null)
-        {
-          this.mCacheBitmap.recycle();
-          this.mCacheBitmap = null;
+
+    public RGRoadConditionBar(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.mCurCarProgress = 0.0d;
+        this.mCarHeight = 0;
+        this.mCarWidth = 0;
+        this.mCarPath = new Path();
+        this.mRoadConditionItems = new ArrayList();
+        this.mItemTotalIndex = 0;
+        this.mBGPaint = null;
+        this.mPaints = new Paint[5];
+        this.mPassPaint = null;
+        this.mCarPaint = null;
+        this.mCarGreaterPaint = null;
+        this.mCarLitterPaint = null;
+        this.mCacheBitmap = null;
+        this.mCacheCanvas = null;
+        this.mLastW = 0;
+        this.mLastH = 0;
+        initPaints();
+        EDGE_WIDTH = ScreenUtil.getInstance().dip2px(2);
+        this.mCurCarProgress = RGAssistGuideModel.getInstance().getCarProgress();
+    }
+
+    private void initPaints() {
+        this.mBGPaint = new Paint();
+        this.mBGPaint.setColor(0);
+        this.mPassPaint = new Paint();
+        this.mPassPaint.setColor(RoadConditionItem.Color_Of_Pass_Road);
+        this.mCarPaint = new Paint();
+        this.mCarPaint.setColor(-1);
+        this.mCarGreaterPaint = new Paint();
+        this.mCarGreaterPaint.setColor(-1);
+        this.mCarGreaterPaint.setAntiAlias(true);
+        this.mCarLitterPaint = new Paint();
+        this.mCarLitterPaint.setColor(-16776961);
+        this.mCarLitterPaint.setAntiAlias(true);
+        this.mPaints[0] = new Paint();
+        this.mPaints[0].setColor(RoadConditionItem.getRoadConditionColor(0));
+        this.mPaints[1] = new Paint();
+        this.mPaints[1].setColor(RoadConditionItem.getRoadConditionColor(1));
+        this.mPaints[2] = new Paint();
+        this.mPaints[2].setColor(RoadConditionItem.getRoadConditionColor(2));
+        this.mPaints[3] = new Paint();
+        this.mPaints[3].setColor(RoadConditionItem.getRoadConditionColor(3));
+        this.mPaints[4] = new Paint();
+        this.mPaints[4].setColor(RoadConditionItem.getRoadConditionColor(4));
+    }
+
+    public void resetRoadConditionData() {
+        if (this.mRoadConditionItems != null) {
+            this.mRoadConditionItems.clear();
         }
-        this.mLastW = i1;
-        this.mLastH = m;
-        this.mCacheBitmap = Bitmap.createBitmap(i1, m, Bitmap.Config.ARGB_4444);
-        this.mCacheBitmap.eraseColor(0);
-        this.mCacheCanvas = new Canvas(this.mCacheBitmap);
-        this.mCarWidth = i1;
-        this.mCarHeight = i1;
-      }
-    } while ((this.mCacheBitmap == null) || (this.mCacheCanvas == null));
-    int k = m;
-    int i = 0;
-    this.mCacheCanvas.drawRect(EDGE_WIDTH, EDGE_WIDTH, i1 - EDGE_WIDTH, k - EDGE_WIDTH, this.mPaints[0]);
-    if (isRoadConditionDataValid())
-    {
-      int j = 0;
-      if (j < this.mRoadConditionItems.size())
-      {
-        RoadConditionItem localRoadConditionItem = (RoadConditionItem)this.mRoadConditionItems.get(j);
-        i = k - getRoadConditionItemDrawHeight(i, localRoadConditionItem.curItemEndIndex, m);
-        if (j == this.mRoadConditionItems.size() - 1) {
-          i = 0;
+    }
+
+    public void updateRoadConditionData(List<RoadConditionItem> data) {
+        if (data != null && data.size() != 0) {
+            if (this.mRoadConditionItems != null) {
+                this.mRoadConditionItems.clear();
+            }
+            this.mRoadConditionItems.addAll(data);
+            this.mItemTotalIndex = ((RoadConditionItem) this.mRoadConditionItems.get(this.mRoadConditionItems.size() - 1)).curItemEndIndex;
         }
-        if (this.mRoadConditionItems.size() != 1) {
-          if (j == 0) {
-            this.mCacheCanvas.drawRect(EDGE_WIDTH, i, i1 - EDGE_WIDTH, k - EDGE_WIDTH, this.mPaints[localRoadConditionItem.roadConditionType]);
-          }
+    }
+
+    private boolean isRoadConditionDataValid() {
+        if (this.mRoadConditionItems == null || this.mRoadConditionItems.size() <= 0) {
+            return false;
         }
-        for (;;)
-        {
-          int n = localRoadConditionItem.curItemEndIndex;
-          j += 1;
-          k = i;
-          i = n;
-          break;
-          if (j == this.mRoadConditionItems.size() - 1)
-          {
-            this.mCacheCanvas.drawRect(EDGE_WIDTH, EDGE_WIDTH + i, i1 - EDGE_WIDTH, k, this.mPaints[localRoadConditionItem.roadConditionType]);
-          }
-          else
-          {
-            this.mCacheCanvas.drawRect(EDGE_WIDTH, i, i1 - EDGE_WIDTH, k, this.mPaints[localRoadConditionItem.roadConditionType]);
-            continue;
-            this.mCacheCanvas.drawRect(EDGE_WIDTH, EDGE_WIDTH + i, i1 - EDGE_WIDTH, k - EDGE_WIDTH, this.mPaints[localRoadConditionItem.roadConditionType]);
-          }
+        return true;
+    }
+
+    public void updateCarProgress(double carProgress) {
+        this.mCurCarProgress = carProgress;
+    }
+
+    private int getRoadConditionItemDrawHeight(int itemStartIndex, int itemEndIndex, int h) {
+        if (this.mItemTotalIndex <= 0) {
+            return 0;
         }
-      }
+        return (int) (((1.0d * ((double) h)) * ((double) (itemEndIndex - itemStartIndex))) / ((double) this.mItemTotalIndex));
     }
-    i = (int)(m - m * this.mCurCarProgress);
-    this.mCacheCanvas.drawRect(EDGE_WIDTH, i, i1 - EDGE_WIDTH, m - EDGE_WIDTH, this.mPassPaint);
-    paramCanvas.drawBitmap(this.mCacheBitmap, 0.0F, 0.0F, null);
-  }
-  
-  public void resetRoadConditionData()
-  {
-    if (this.mRoadConditionItems != null) {
-      this.mRoadConditionItems.clear();
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        int w = getMeasuredWidth();
+        int h = getMeasuredHeight();
+        if (w > 0 && h > 0) {
+            if (this.mCacheBitmap == null || this.mCacheCanvas == null || w != this.mLastW || h != this.mLastH) {
+                if (this.mCacheBitmap != null) {
+                    this.mCacheBitmap.recycle();
+                    this.mCacheBitmap = null;
+                }
+                this.mLastW = w;
+                this.mLastH = h;
+                this.mCacheBitmap = Bitmap.createBitmap(w, h, Config.ARGB_4444);
+                this.mCacheBitmap.eraseColor(0);
+                this.mCacheCanvas = new Canvas(this.mCacheBitmap);
+                this.mCarWidth = w;
+                this.mCarHeight = w;
+            }
+            if (this.mCacheBitmap != null && this.mCacheCanvas != null) {
+                int drawRectBottom = h;
+                int itemStartIndex = 0;
+                this.mCacheCanvas.drawRect((float) EDGE_WIDTH, (float) EDGE_WIDTH, (float) (w - EDGE_WIDTH), (float) (drawRectBottom - EDGE_WIDTH), this.mPaints[0]);
+                if (isRoadConditionDataValid()) {
+                    for (int i = 0; i < this.mRoadConditionItems.size(); i++) {
+                        RoadConditionItem item = (RoadConditionItem) this.mRoadConditionItems.get(i);
+                        int drawRectTop = drawRectBottom - getRoadConditionItemDrawHeight(itemStartIndex, item.curItemEndIndex, h);
+                        if (i == this.mRoadConditionItems.size() - 1) {
+                            drawRectTop = 0;
+                        }
+                        if (this.mRoadConditionItems.size() == 1) {
+                            this.mCacheCanvas.drawRect((float) EDGE_WIDTH, (float) (EDGE_WIDTH + drawRectTop), (float) (w - EDGE_WIDTH), (float) (drawRectBottom - EDGE_WIDTH), this.mPaints[item.roadConditionType]);
+                        } else if (i == 0) {
+                            this.mCacheCanvas.drawRect((float) EDGE_WIDTH, (float) drawRectTop, (float) (w - EDGE_WIDTH), (float) (drawRectBottom - EDGE_WIDTH), this.mPaints[item.roadConditionType]);
+                        } else if (i == this.mRoadConditionItems.size() - 1) {
+                            this.mCacheCanvas.drawRect((float) EDGE_WIDTH, (float) (EDGE_WIDTH + drawRectTop), (float) (w - EDGE_WIDTH), (float) drawRectBottom, this.mPaints[item.roadConditionType]);
+                        } else {
+                            this.mCacheCanvas.drawRect((float) EDGE_WIDTH, (float) drawRectTop, (float) (w - EDGE_WIDTH), (float) drawRectBottom, this.mPaints[item.roadConditionType]);
+                        }
+                        itemStartIndex = item.curItemEndIndex;
+                        drawRectBottom = drawRectTop;
+                    }
+                }
+                this.mCacheCanvas.drawRect((float) EDGE_WIDTH, (float) ((int) (((double) h) - (((double) h) * this.mCurCarProgress))), (float) (w - EDGE_WIDTH), (float) (h - EDGE_WIDTH), this.mPassPaint);
+                canvas.drawBitmap(this.mCacheBitmap, 0.0f, 0.0f, null);
+            }
+        }
     }
-  }
-  
-  public void updateCarProgress(double paramDouble)
-  {
-    this.mCurCarProgress = paramDouble;
-  }
-  
-  public void updateRoadConditionData(List<RoadConditionItem> paramList)
-  {
-    if ((paramList == null) || (paramList.size() == 0)) {
-      return;
+
+    private void drawCar(Canvas cv, int curCarPointH, int w, int h) {
+        curCarPointH -= this.mCarHeight / 2;
+        int carTop = curCarPointH;
+        int carBottom = curCarPointH + this.mCarHeight;
+        if (carBottom > h) {
+            carTop -= carBottom - h;
+            carBottom -= carBottom - h;
+        }
+        int litterRadius = w / 4;
+        cv.drawCircle((float) (w / 2), (float) ((carTop + carBottom) / 2), (float) (w / 2), this.mCarGreaterPaint);
+        cv.drawCircle((float) (w / 2), (float) ((carTop + carBottom) / 2), (float) litterRadius, this.mCarLitterPaint);
     }
-    if (this.mRoadConditionItems != null) {
-      this.mRoadConditionItems.clear();
-    }
-    this.mRoadConditionItems.addAll(paramList);
-    this.mItemTotalIndex = ((RoadConditionItem)this.mRoadConditionItems.get(this.mRoadConditionItems.size() - 1)).curItemEndIndex;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/widget/RGRoadConditionBar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

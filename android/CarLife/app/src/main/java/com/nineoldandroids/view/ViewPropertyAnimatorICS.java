@@ -2,301 +2,260 @@ package com.nineoldandroids.view;
 
 import android.animation.Animator;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.Interpolator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
 import java.lang.ref.WeakReference;
 
-class ViewPropertyAnimatorICS
-  extends ViewPropertyAnimator
-{
-  private static final long RETURN_WHEN_NULL = -1L;
-  private final WeakReference<android.view.ViewPropertyAnimator> mNative;
-  
-  ViewPropertyAnimatorICS(View paramView)
-  {
-    this.mNative = new WeakReference(paramView.animate());
-  }
-  
-  public ViewPropertyAnimator alpha(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.alpha(paramFloat);
+class ViewPropertyAnimatorICS extends ViewPropertyAnimator {
+    private static final long RETURN_WHEN_NULL = -1;
+    private final WeakReference<ViewPropertyAnimator> mNative;
+
+    ViewPropertyAnimatorICS(View view) {
+        this.mNative = new WeakReference(view.animate());
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator alphaBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.alphaBy(paramFloat);
+
+    public ViewPropertyAnimator setDuration(long duration) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.setDuration(duration);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public void cancel()
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.cancel();
+
+    public long getDuration() {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            return n.getDuration();
+        }
+        return -1;
     }
-  }
-  
-  public long getDuration()
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      return localViewPropertyAnimator.getDuration();
+
+    public ViewPropertyAnimator setStartDelay(long startDelay) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.setStartDelay(startDelay);
+        }
+        return this;
     }
-    return -1L;
-  }
-  
-  public long getStartDelay()
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      return localViewPropertyAnimator.getStartDelay();
+
+    public long getStartDelay() {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            return n.getStartDelay();
+        }
+        return -1;
     }
-    return -1L;
-  }
-  
-  public ViewPropertyAnimator rotation(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.rotation(paramFloat);
+
+    public ViewPropertyAnimator setInterpolator(Interpolator interpolator) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.setInterpolator(interpolator);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator rotationBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.rotationBy(paramFloat);
+
+    public ViewPropertyAnimator setListener(final AnimatorListener listener) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            if (listener == null) {
+                n.setListener(null);
+            } else {
+                n.setListener(new Animator.AnimatorListener() {
+                    public void onAnimationStart(Animator animation) {
+                        listener.onAnimationStart(null);
+                    }
+
+                    public void onAnimationRepeat(Animator animation) {
+                        listener.onAnimationRepeat(null);
+                    }
+
+                    public void onAnimationEnd(Animator animation) {
+                        listener.onAnimationEnd(null);
+                    }
+
+                    public void onAnimationCancel(Animator animation) {
+                        listener.onAnimationCancel(null);
+                    }
+                });
+            }
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator rotationX(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.rotationX(paramFloat);
+
+    public void start() {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.start();
+        }
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator rotationXBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.rotationXBy(paramFloat);
+
+    public void cancel() {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.cancel();
+        }
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator rotationY(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.rotationY(paramFloat);
+
+    /* renamed from: x */
+    public ViewPropertyAnimator mo4969x(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.x(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator rotationYBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.rotationYBy(paramFloat);
+
+    public ViewPropertyAnimator xBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.xBy(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator scaleX(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.scaleX(paramFloat);
+
+    /* renamed from: y */
+    public ViewPropertyAnimator mo4971y(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.y(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator scaleXBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.scaleXBy(paramFloat);
+
+    public ViewPropertyAnimator yBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.yBy(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator scaleY(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.scaleY(paramFloat);
+
+    public ViewPropertyAnimator rotation(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.rotation(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator scaleYBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.scaleYBy(paramFloat);
+
+    public ViewPropertyAnimator rotationBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.rotationBy(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator setDuration(long paramLong)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.setDuration(paramLong);
+
+    public ViewPropertyAnimator rotationX(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.rotationX(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator setInterpolator(Interpolator paramInterpolator)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.setInterpolator(paramInterpolator);
+
+    public ViewPropertyAnimator rotationXBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.rotationXBy(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator setListener(final com.nineoldandroids.animation.Animator.AnimatorListener paramAnimatorListener)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null)
-    {
-      if (paramAnimatorListener == null) {
-        localViewPropertyAnimator.setListener(null);
-      }
+
+    public ViewPropertyAnimator rotationY(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.rotationY(value);
+        }
+        return this;
     }
-    else {
-      return this;
+
+    public ViewPropertyAnimator rotationYBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.rotationYBy(value);
+        }
+        return this;
     }
-    localViewPropertyAnimator.setListener(new android.animation.Animator.AnimatorListener()
-    {
-      public void onAnimationCancel(Animator paramAnonymousAnimator)
-      {
-        paramAnimatorListener.onAnimationCancel(null);
-      }
-      
-      public void onAnimationEnd(Animator paramAnonymousAnimator)
-      {
-        paramAnimatorListener.onAnimationEnd(null);
-      }
-      
-      public void onAnimationRepeat(Animator paramAnonymousAnimator)
-      {
-        paramAnimatorListener.onAnimationRepeat(null);
-      }
-      
-      public void onAnimationStart(Animator paramAnonymousAnimator)
-      {
-        paramAnimatorListener.onAnimationStart(null);
-      }
-    });
-    return this;
-  }
-  
-  public ViewPropertyAnimator setStartDelay(long paramLong)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.setStartDelay(paramLong);
+
+    public ViewPropertyAnimator translationX(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.translationX(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public void start()
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.start();
+
+    public ViewPropertyAnimator translationXBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.translationXBy(value);
+        }
+        return this;
     }
-  }
-  
-  public ViewPropertyAnimator translationX(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.translationX(paramFloat);
+
+    public ViewPropertyAnimator translationY(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.translationY(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator translationXBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.translationXBy(paramFloat);
+
+    public ViewPropertyAnimator translationYBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.translationYBy(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator translationY(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.translationY(paramFloat);
+
+    public ViewPropertyAnimator scaleX(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.scaleX(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator translationYBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.translationYBy(paramFloat);
+
+    public ViewPropertyAnimator scaleXBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.scaleXBy(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator x(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.x(paramFloat);
+
+    public ViewPropertyAnimator scaleY(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.scaleY(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator xBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.xBy(paramFloat);
+
+    public ViewPropertyAnimator scaleYBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.scaleYBy(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator y(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.y(paramFloat);
+
+    public ViewPropertyAnimator alpha(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.alpha(value);
+        }
+        return this;
     }
-    return this;
-  }
-  
-  public ViewPropertyAnimator yBy(float paramFloat)
-  {
-    android.view.ViewPropertyAnimator localViewPropertyAnimator = (android.view.ViewPropertyAnimator)this.mNative.get();
-    if (localViewPropertyAnimator != null) {
-      localViewPropertyAnimator.yBy(paramFloat);
+
+    public ViewPropertyAnimator alphaBy(float value) {
+        ViewPropertyAnimator n = (ViewPropertyAnimator) this.mNative.get();
+        if (n != null) {
+            n.alphaBy(value);
+        }
+        return this;
     }
-    return this;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/view/ViewPropertyAnimatorICS.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

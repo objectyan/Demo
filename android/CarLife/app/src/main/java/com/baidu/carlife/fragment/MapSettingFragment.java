@@ -1,32 +1,30 @@
 package com.baidu.carlife.fragment;
 
-public class MapSettingFragment
-  extends BaseSettingFragment<com.baidu.carlife.logic.b.b.a>
-{
-  protected String a()
-  {
-    return getStringUtil(2131296358);
-  }
-  
-  protected com.baidu.carlife.c.b.a<com.baidu.carlife.logic.b.b.a> b()
-  {
-    return new com.baidu.carlife.logic.b.a.b();
-  }
-  
-  protected com.baidu.carlife.c.e.b<com.baidu.carlife.logic.b.b.a> c()
-  {
-    return new com.baidu.carlife.logic.b.c.b.b();
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    setBottomBarStatus(true);
-  }
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.logic.p082b.p089a.C1714b;
+import com.baidu.carlife.logic.p082b.p090b.C1717a;
+import com.baidu.carlife.logic.p082b.p091c.p093b.C1741b;
+import com.baidu.carlife.p059c.p062b.C1100a;
+import com.baidu.carlife.p059c.p066e.C1135b;
+
+public class MapSettingFragment extends BaseSettingFragment<C1717a> {
+    /* renamed from: a */
+    protected String mo1568a() {
+        return getStringUtil(C0965R.string.carlife_person_ctrl_map_setting);
+    }
+
+    /* renamed from: b */
+    protected C1100a<C1717a> mo1569b() {
+        return new C1714b();
+    }
+
+    /* renamed from: c */
+    protected C1135b<C1717a> mo1570c() {
+        return new C1741b();
+    }
+
+    public void onResume() {
+        super.onResume();
+        setBottomBarStatus(true);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/MapSettingFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

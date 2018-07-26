@@ -1,30 +1,28 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class cx
-{
-  public cw a;
-  public long b;
-  public Object c;
-  public long d;
-  
-  public final boolean a()
-  {
-    return (this.a != null) && (this.a.a() == 65336);
-  }
-  
-  public final boolean b()
-  {
-    return (this.a != null) && ((this.a.a() == 65236) || (this.a.a() == 65235) || (this.a.a() == 65234));
-  }
-  
-  public final String toString()
-  {
-    return "IASensorEvent{sensor=" + this.a + ", timestamp=" + this.b + ", data=" + this.c + '}';
-  }
+import com.baidu.sapi2.shell.SapiErrorCode;
+
+public final class cx {
+    /* renamed from: a */
+    public cw f23358a;
+    /* renamed from: b */
+    public long f23359b;
+    /* renamed from: c */
+    public Object f23360c;
+    /* renamed from: d */
+    public long f23361d;
+
+    /* renamed from: a */
+    public final boolean m20276a() {
+        return this.f23358a != null && this.f23358a.mo4658a() == SapiErrorCode.NETWORK_FAILED;
+    }
+
+    /* renamed from: b */
+    public final boolean m20277b() {
+        return this.f23358a != null && (this.f23358a.mo4658a() == -300 || this.f23358a.mo4658a() == -301 || this.f23358a.mo4658a() == -302);
+    }
+
+    public final String toString() {
+        return "IASensorEvent{sensor=" + this.f23358a + ", timestamp=" + this.f23359b + ", data=" + this.f23360c + '}';
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/cx.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

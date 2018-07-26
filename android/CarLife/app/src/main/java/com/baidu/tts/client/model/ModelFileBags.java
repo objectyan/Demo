@@ -4,125 +4,96 @@ import android.content.Context;
 import com.baidu.tts.aop.tts.TtsError;
 import com.baidu.tts.tools.DataTool;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ModelFileBags
-{
-  private TtsError a;
-  private List<ModelFileInfo> b;
-  
-  public void addFileInfo(ModelFileInfo paramModelFileInfo)
-  {
-    if (this.b == null) {
-      this.b = new ArrayList();
+public class ModelFileBags {
+    /* renamed from: a */
+    private TtsError f20865a;
+    /* renamed from: b */
+    private List<ModelFileInfo> f20866b;
+
+    public List<ModelFileInfo> getModelFileInfos() {
+        return this.f20866b;
     }
-    this.b.add(paramModelFileInfo);
-  }
-  
-  public void generateAbsPath(Context paramContext)
-  {
-    if (this.b != null)
-    {
-      Iterator localIterator = this.b.iterator();
-      while (localIterator.hasNext()) {
-        ((ModelFileInfo)localIterator.next()).generateAbsPath(paramContext);
-      }
+
+    public TtsError getTtsError() {
+        return this.f20865a;
     }
-  }
-  
-  public ModelFileInfo getModelFileInfo(int paramInt)
-  {
-    if (this.b != null) {
-      return (ModelFileInfo)this.b.get(paramInt);
+
+    public void setTtsError(TtsError ttsError) {
+        this.f20865a = ttsError;
     }
-    return null;
-  }
-  
-  public List<ModelFileInfo> getModelFileInfos()
-  {
-    return this.b;
-  }
-  
-  public TtsError getTtsError()
-  {
-    return this.a;
-  }
-  
-  public String getUrl(int paramInt)
-  {
-    ModelFileInfo localModelFileInfo = getModelFileInfo(paramInt);
-    if (localModelFileInfo != null) {
-      return localModelFileInfo.getUrl();
+
+    public void setModelFileInfos(List<ModelFileInfo> modelFileInfos) {
+        this.f20866b = modelFileInfos;
     }
-    return null;
-  }
-  
-  public boolean isEmpty()
-  {
-    return DataTool.isListEmpty(this.b);
-  }
-  
-  public void parseJson(JSONArray paramJSONArray)
-  {
-    int j = paramJSONArray.length();
-    int i = 0;
-    while (i < j)
-    {
-      JSONObject localJSONObject = paramJSONArray.optJSONObject(i);
-      ModelFileInfo localModelFileInfo = new ModelFileInfo();
-      localModelFileInfo.parseJson(localJSONObject);
-      addFileInfo(localModelFileInfo);
-      i += 1;
+
+    public void addFileInfo(ModelFileInfo fileInfo) {
+        if (this.f20866b == null) {
+            this.f20866b = new ArrayList();
+        }
+        this.f20866b.add(fileInfo);
     }
-  }
-  
-  public void setList(List<Map<String, String>> paramList)
-  {
-    if ((paramList == null) || (paramList.isEmpty())) {
-      return;
+
+    public void setList(List<Map<String, String>> list) {
+        if (list != null && !list.isEmpty()) {
+            List arrayList = new ArrayList();
+            for (Map map : list) {
+                ModelFileInfo modelFileInfo = new ModelFileInfo();
+                modelFileInfo.setMap(map);
+                arrayList.add(modelFileInfo);
+            }
+            this.f20866b = arrayList;
+        }
     }
-    ArrayList localArrayList = new ArrayList();
-    paramList = paramList.iterator();
-    while (paramList.hasNext())
-    {
-      Map localMap = (Map)paramList.next();
-      ModelFileInfo localModelFileInfo = new ModelFileInfo();
-      localModelFileInfo.setMap(localMap);
-      localArrayList.add(localModelFileInfo);
+
+    public void generateAbsPath(Context context) {
+        if (this.f20866b != null) {
+            for (ModelFileInfo generateAbsPath : this.f20866b) {
+                generateAbsPath.generateAbsPath(context);
+            }
+        }
     }
-    this.b = localArrayList;
-  }
-  
-  public void setModelFileInfos(List<ModelFileInfo> paramList)
-  {
-    this.b = paramList;
-  }
-  
-  public void setTtsError(TtsError paramTtsError)
-  {
-    this.a = paramTtsError;
-  }
-  
-  public JSONArray toJson()
-  {
-    JSONArray localJSONArray = new JSONArray();
-    if (!isEmpty())
-    {
-      Iterator localIterator = this.b.iterator();
-      while (localIterator.hasNext()) {
-        localJSONArray.put(((ModelFileInfo)localIterator.next()).toJson());
-      }
+
+    public ModelFileInfo getModelFileInfo(int index) {
+        if (this.f20866b != null) {
+            return (ModelFileInfo) this.f20866b.get(index);
+        }
+        return null;
     }
-    return localJSONArray;
-  }
+
+    public String getUrl(int index) {
+        ModelFileInfo modelFileInfo = getModelFileInfo(index);
+        if (modelFileInfo != null) {
+            return modelFileInfo.getUrl();
+        }
+        return null;
+    }
+
+    public boolean isEmpty() {
+        return DataTool.isListEmpty(this.f20866b);
+    }
+
+    public JSONArray toJson() {
+        JSONArray jSONArray = new JSONArray();
+        if (!isEmpty()) {
+            for (ModelFileInfo toJson : this.f20866b) {
+                jSONArray.put(toJson.toJson());
+            }
+        }
+        return jSONArray;
+    }
+
+    public void parseJson(JSONArray ja) {
+        int length = ja.length();
+        for (int i = 0; i < length; i++) {
+            JSONObject optJSONObject = ja.optJSONObject(i);
+            ModelFileInfo modelFileInfo = new ModelFileInfo();
+            modelFileInfo.parseJson(optJSONObject);
+            addFileInfo(modelFileInfo);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/client/model/ModelFileBags.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,8 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.widget.RemoteViews;
+import com.baidu.mobstat.Config;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.base.BNSubject;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataObserver;
@@ -14,198 +15,165 @@ import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataObserver.DownloadArg;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class BNDownloadNotifyManager
-{
-  public static final int MERGE_NOTIFY_NO_PROGRESS = -1;
-  private static final int REQ_CODE = 10;
-  private static final String TAG = "!#BNDownloadNotifyManager";
-  private static BNDownloadNotifyManager mInstance;
-  private BNOfflineDataObserver mDataObserver = new BNOfflineDataObserver()
-  {
-    public void update(BNSubject paramAnonymousBNSubject, int paramAnonymousInt1, int paramAnonymousInt2, Object paramAnonymousObject)
-    {
-      switch (paramAnonymousInt1)
-      {
-      default: 
-        return;
-      case 2: 
-        String str = "Observer recved: TYPE_DOWNLOAD_INFOR, event " + paramAnonymousInt2;
-        switch (paramAnonymousInt2)
-        {
-        case 260: 
-        case 261: 
-        case 265: 
-        case 266: 
-        default: 
-        case 258: 
-        case 259: 
-        case 262: 
-        case 263: 
-        case 267: 
-        case 268: 
-          for (;;)
-          {
-            paramAnonymousBNSubject = str;
-            if (paramAnonymousObject != null)
-            {
-              paramAnonymousBNSubject = str;
-              if ((paramAnonymousObject instanceof BNOfflineDataObserver.DownloadArg))
-              {
-                paramAnonymousObject = (BNOfflineDataObserver.DownloadArg)paramAnonymousObject;
-                paramAnonymousBNSubject = str + ", " + ((BNOfflineDataObserver.DownloadArg)paramAnonymousObject).mName + ":" + ((BNOfflineDataObserver.DownloadArg)paramAnonymousObject).mProgress;
-                BNDownloadNotifyManager.this.updateNotificationByName(((BNOfflineDataObserver.DownloadArg)paramAnonymousObject).mName, ((BNOfflineDataObserver.DownloadArg)paramAnonymousObject).mProgress);
-              }
-            }
-            LogUtil.e("!#BNDownloadNotifyManager", paramAnonymousBNSubject);
-            return;
-            BNDownloadNotifyManager.access$010(BNDownloadNotifyManager.this);
-          }
+public class BNDownloadNotifyManager {
+    public static final int MERGE_NOTIFY_NO_PROGRESS = -1;
+    private static final int REQ_CODE = 10;
+    private static final String TAG = "!#BNDownloadNotifyManager";
+    private static BNDownloadNotifyManager mInstance;
+    private BNOfflineDataObserver mDataObserver = new C42961();
+    private Intent mIntent;
+    private boolean mIsNotificationShown = false;
+    private boolean mIsObserving = false;
+    private Notification mNotification;
+    private NotificationManager mNotifyManager;
+    private int mProgressBarResId;
+    private int mProgressTxtResId;
+    private int mTitleTxtResId;
+    private OnUpdateListener mUpdateListener;
+    private int mWaitingTaskCount;
+
+    /* renamed from: com.baidu.navisdk.ui.download.BNDownloadNotifyManager$1 */
+    class C42961 implements BNOfflineDataObserver {
+        C42961() {
         }
-        BNDownloadNotifyManager.access$002(BNDownloadNotifyManager.this, 0);
-        BNDownloadNotifyManager.this.clearNotification();
-        return;
-      }
-      switch (paramAnonymousInt2)
-      {
-      default: 
-        return;
-      }
-      BNDownloadNotifyManager.this.clearNotification();
+
+        public void update(BNSubject o, int type, int event, Object obj) {
+            switch (type) {
+                case 2:
+                    String log = "Observer recved: TYPE_DOWNLOAD_INFOR, event " + event;
+                    switch (event) {
+                        case 258:
+                        case 259:
+                        case 262:
+                        case 263:
+                        case BNOfflineDataObserver.EVENT_UPDATE_FINISH /*267*/:
+                        case BNOfflineDataObserver.EVENT_UPDATE_SUSPEND /*268*/:
+                            BNDownloadNotifyManager.this.mWaitingTaskCount = BNDownloadNotifyManager.this.mWaitingTaskCount - 1;
+                            break;
+                        case 264:
+                            BNDownloadNotifyManager.this.mWaitingTaskCount = 0;
+                            BNDownloadNotifyManager.this.clearNotification();
+                            return;
+                    }
+                    if (obj != null && (obj instanceof DownloadArg)) {
+                        DownloadArg arg = (DownloadArg) obj;
+                        log = log + ", " + arg.mName + Config.TRACE_TODAY_VISIT_SPLIT + arg.mProgress;
+                        BNDownloadNotifyManager.this.updateNotificationByName(arg.mName, arg.mProgress);
+                    }
+                    LogUtil.m15791e(BNDownloadNotifyManager.TAG, log);
+                    return;
+                case 3:
+                    switch (event) {
+                        case 270:
+                        case BNOfflineDataObserver.EVENT_ERROR_SD_FULL /*271*/:
+                            BNDownloadNotifyManager.this.clearNotification();
+                            return;
+                        default:
+                            return;
+                    }
+                default:
+                    return;
+            }
+        }
     }
-  };
-  private Intent mIntent;
-  private boolean mIsNotificationShown = false;
-  private boolean mIsObserving = false;
-  private Notification mNotification;
-  private NotificationManager mNotifyManager;
-  private int mProgressBarResId;
-  private int mProgressTxtResId;
-  private int mTitleTxtResId;
-  private OnUpdateListener mUpdateListener;
-  private int mWaitingTaskCount;
-  
-  public static BNDownloadNotifyManager getInstance()
-  {
-    if (mInstance == null) {}
-    try
-    {
-      if (mInstance == null) {
-        mInstance = new BNDownloadNotifyManager();
-      }
-      return mInstance;
+
+    public interface OnUpdateListener {
+        void onUpdate(RemoteViews remoteViews, String str, int i);
     }
-    finally {}
-  }
-  
-  private void updateNotificationByName(String paramString, int paramInt)
-  {
-    if (this.mWaitingTaskCount + 1 > 0) {
-      updateNotification(JarUtils.getResources().getString(1711669834, new Object[] { paramString, Integer.valueOf(this.mWaitingTaskCount + 1) }), paramInt);
+
+    public static BNDownloadNotifyManager getInstance() {
+        if (mInstance == null) {
+            synchronized (BNDownloadNotifyManager.class) {
+                if (mInstance == null) {
+                    mInstance = new BNDownloadNotifyManager();
+                }
+            }
+        }
+        return mInstance;
     }
-  }
-  
-  public void clearNotification()
-  {
-    if (this.mNotifyManager != null) {
-      this.mNotifyManager.cancel(10);
+
+    private BNDownloadNotifyManager() {
     }
-    this.mIsNotificationShown = false;
-  }
-  
-  public void init(Context paramContext, Intent paramIntent, int paramInt1, RemoteViews paramRemoteViews, int paramInt2, int paramInt3, int paramInt4)
-  {
-    if ((paramContext != null) && (paramIntent != null) && (paramRemoteViews != null))
-    {
-      this.mNotifyManager = ((NotificationManager)paramContext.getSystemService("notification"));
-      this.mNotification = new Notification();
-      this.mNotification.icon = paramInt1;
-      this.mNotification.contentView = paramRemoteViews;
-      this.mNotification.flags = 16;
-      this.mNotification.contentIntent = PendingIntent.getActivity(paramContext, 10, paramIntent, 0);
-      this.mTitleTxtResId = paramInt2;
-      this.mProgressBarResId = paramInt3;
-      this.mProgressTxtResId = paramInt4;
+
+    public void startObserving() {
+        if (!this.mIsObserving) {
+            BNOfflineDataManager.getInstance().addObserver(this.mDataObserver);
+            this.mIsObserving = true;
+        }
     }
-  }
-  
-  public void init(Context paramContext, Intent paramIntent, int paramInt, RemoteViews paramRemoteViews, OnUpdateListener paramOnUpdateListener)
-  {
-    if ((paramContext != null) && (paramIntent != null) && (paramRemoteViews != null))
-    {
-      this.mNotifyManager = ((NotificationManager)paramContext.getSystemService("notification"));
-      this.mNotification = new Notification();
-      this.mNotification.icon = paramInt;
-      this.mNotification.contentView = paramRemoteViews;
-      this.mNotification.flags = 16;
-      this.mNotification.contentIntent = PendingIntent.getActivity(paramContext, 10, paramIntent, 0);
-      this.mUpdateListener = paramOnUpdateListener;
+
+    public void stopObserving() {
+        if (this.mIsObserving) {
+            BNOfflineDataManager.getInstance().deleteObserver(this.mDataObserver);
+            this.mIsObserving = false;
+        }
     }
-  }
-  
-  public boolean isNotificationShown()
-  {
-    return this.mIsNotificationShown;
-  }
-  
-  public void startObserving()
-  {
-    if (!this.mIsObserving)
-    {
-      BNOfflineDataManager.getInstance().addObserver(this.mDataObserver);
-      this.mIsObserving = true;
+
+    public void init(Context context, Intent intent, int icon, RemoteViews contentView, OnUpdateListener listener) {
+        if (context != null && intent != null && contentView != null) {
+            this.mNotifyManager = (NotificationManager) context.getSystemService("notification");
+            this.mNotification = new Notification();
+            this.mNotification.icon = icon;
+            this.mNotification.contentView = contentView;
+            this.mNotification.flags = 16;
+            this.mNotification.contentIntent = PendingIntent.getActivity(context, 10, intent, 0);
+            this.mUpdateListener = listener;
+        }
     }
-  }
-  
-  public void stopObserving()
-  {
-    if (this.mIsObserving)
-    {
-      BNOfflineDataManager.getInstance().deleteObserver(this.mDataObserver);
-      this.mIsObserving = false;
+
+    public void init(Context context, Intent intent, int icon, RemoteViews contentView, int titleTxtResId, int progressBarResId, int progressTxtResId) {
+        if (context != null && intent != null && contentView != null) {
+            this.mNotifyManager = (NotificationManager) context.getSystemService("notification");
+            this.mNotification = new Notification();
+            this.mNotification.icon = icon;
+            this.mNotification.contentView = contentView;
+            this.mNotification.flags = 16;
+            this.mNotification.contentIntent = PendingIntent.getActivity(context, 10, intent, 0);
+            this.mTitleTxtResId = titleTxtResId;
+            this.mProgressBarResId = progressBarResId;
+            this.mProgressTxtResId = progressTxtResId;
+        }
     }
-  }
-  
-  public void updateNotification(String paramString, int paramInt)
-  {
-    LogUtil.e("!#BNDownloadNotifyManager", "updateNotification: " + paramString + ", progress " + paramInt);
-    if ((this.mNotifyManager != null) && (this.mNotification != null))
-    {
-      if (this.mUpdateListener != null) {
-        this.mUpdateListener.onUpdate(this.mNotification.contentView, paramString, paramInt);
-      }
-      if (paramInt != -1) {
-        break label143;
-      }
-      this.mNotification.contentView.setViewVisibility(this.mProgressBarResId, 8);
-      this.mNotification.contentView.setViewVisibility(this.mProgressTxtResId, 8);
-      this.mNotification.contentView.setTextViewText(this.mTitleTxtResId, paramString);
+
+    public void updateNotification(String title, int progress) {
+        LogUtil.m15791e(TAG, "updateNotification: " + title + ", progress " + progress);
+        if (this.mNotifyManager != null && this.mNotification != null) {
+            if (this.mUpdateListener != null) {
+                this.mUpdateListener.onUpdate(this.mNotification.contentView, title, progress);
+            }
+            if (progress == -1) {
+                this.mNotification.contentView.setViewVisibility(this.mProgressBarResId, 8);
+                this.mNotification.contentView.setViewVisibility(this.mProgressTxtResId, 8);
+                this.mNotification.contentView.setTextViewText(this.mTitleTxtResId, title);
+            } else {
+                this.mNotification.contentView.setViewVisibility(this.mProgressBarResId, 0);
+                this.mNotification.contentView.setViewVisibility(this.mProgressTxtResId, 0);
+                this.mNotification.contentView.setProgressBar(this.mProgressBarResId, 100, progress, false);
+                this.mNotification.contentView.setTextViewText(this.mTitleTxtResId, title);
+                this.mNotification.contentView.setTextViewText(this.mProgressTxtResId, progress + "%");
+            }
+            try {
+                this.mNotifyManager.notify(10, this.mNotification);
+                this.mIsNotificationShown = true;
+            } catch (Exception e) {
+            }
+        }
     }
-    for (;;)
-    {
-      label143:
-      try
-      {
-        this.mNotifyManager.notify(10, this.mNotification);
-        this.mIsNotificationShown = true;
-        return;
-      }
-      catch (Exception paramString) {}
-      this.mNotification.contentView.setViewVisibility(this.mProgressBarResId, 0);
-      this.mNotification.contentView.setViewVisibility(this.mProgressTxtResId, 0);
-      this.mNotification.contentView.setProgressBar(this.mProgressBarResId, 100, paramInt, false);
-      this.mNotification.contentView.setTextViewText(this.mTitleTxtResId, paramString);
-      this.mNotification.contentView.setTextViewText(this.mProgressTxtResId, paramInt + "%");
+
+    public void clearNotification() {
+        if (this.mNotifyManager != null) {
+            this.mNotifyManager.cancel(10);
+        }
+        this.mIsNotificationShown = false;
     }
-  }
-  
-  public static abstract interface OnUpdateListener
-  {
-    public abstract void onUpdate(RemoteViews paramRemoteViews, String paramString, int paramInt);
-  }
+
+    public boolean isNotificationShown() {
+        return this.mIsNotificationShown;
+    }
+
+    private void updateNotificationByName(String name, int progress) {
+        if (this.mWaitingTaskCount + 1 > 0) {
+            updateNotification(JarUtils.getResources().getString(C4048R.string.nsdk_string_dl_notify_title, new Object[]{name, Integer.valueOf(this.mWaitingTaskCount + 1)}), progress);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/download/BNDownloadNotifyManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

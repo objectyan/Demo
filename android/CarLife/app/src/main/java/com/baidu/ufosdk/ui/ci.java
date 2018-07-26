@@ -1,21 +1,24 @@
 package com.baidu.ufosdk.ui;
 
 import android.content.Context;
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class ci
-  implements Runnable
-{
-  ci(ch paramch, Context paramContext, String paramString) {}
-  
-  public final void run()
-  {
-    a.a(this.b, this.c);
-  }
+/* compiled from: FeedbackListActivity */
+final class ci implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ ch f21619a;
+    /* renamed from: b */
+    private final /* synthetic */ Context f21620b;
+    /* renamed from: c */
+    private final /* synthetic */ String f21621c;
+
+    ci(ch chVar, Context context, String str) {
+        this.f21619a = chVar;
+        this.f21620b = context;
+        this.f21621c = str;
+    }
+
+    public final void run() {
+        C5180a.m17570a(this.f21620b, this.f21621c);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ci.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

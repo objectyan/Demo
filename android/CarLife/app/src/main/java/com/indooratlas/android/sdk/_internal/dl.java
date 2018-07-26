@@ -12,251 +12,223 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public final class dl
-{
-  private static final ParcelUuid a = ParcelUuid.fromString("00000000-0000-1000-8000-00805F9B34FB");
-  private static final byte[] b = { 76, 0, 2, 21 };
-  
-  private static int a(byte[] paramArrayOfByte, int paramInt1, int paramInt2, int paramInt3, List<ParcelUuid> paramList)
-  {
-    while (paramInt2 > 0)
-    {
-      paramList.add(a(a(paramArrayOfByte, paramInt1, paramInt3)));
-      paramInt2 -= paramInt3;
-      paramInt1 += paramInt3;
-    }
-    return paramInt1;
-  }
-  
-  private static ParcelUuid a(byte[] paramArrayOfByte)
-  {
-    if (paramArrayOfByte == null) {
-      throw new IllegalArgumentException("uuidBytes cannot be null");
-    }
-    int i = paramArrayOfByte.length;
-    if ((i != 2) && (i != 4) && (i != 16)) {
-      throw new IllegalArgumentException("uuidBytes length invalid - " + i);
-    }
-    if (i == 16)
-    {
-      paramArrayOfByte = ByteBuffer.wrap(paramArrayOfByte).order(ByteOrder.LITTLE_ENDIAN);
-      return new ParcelUuid(new UUID(paramArrayOfByte.getLong(8), paramArrayOfByte.getLong(0)));
-    }
-    if (i == 2) {}
-    for (long l = (paramArrayOfByte[0] & 0xFF) + ((paramArrayOfByte[1] & 0xFF) << 8);; l = (paramArrayOfByte[0] & 0xFF) + ((paramArrayOfByte[1] & 0xFF) << 8) + ((paramArrayOfByte[2] & 0xFF) << 16) + ((paramArrayOfByte[3] & 0xFF) << 24)) {
-      return new ParcelUuid(new UUID(a.getUuid().getMostSignificantBits() + (l << 32), a.getUuid().getLeastSignificantBits()));
-    }
-  }
-  
-  public static dh a(String paramString1, String paramString2, int paramInt, byte[] paramArrayOfByte)
-  {
-    if ((paramArrayOfByte == null) || (paramString2 == null)) {
-      paramString1 = null;
-    }
-    int k;
-    int j;
-    Object localObject;
-    int i;
-    int m;
-    label383:
-    do
-    {
-      return paramString1;
-      k = 0;
-      j = -1;
-      ArrayList localArrayList2 = new ArrayList();
-      localObject = null;
-      i = Integer.MIN_VALUE;
-      SparseArray localSparseArray = new SparseArray();
-      HashMap localHashMap = new HashMap();
-      try
-      {
-        if (k >= paramArrayOfByte.length) {
-          break label383;
+public final class dl {
+    /* renamed from: a */
+    private static final ParcelUuid f23413a = ParcelUuid.fromString("00000000-0000-1000-8000-00805F9B34FB");
+    /* renamed from: b */
+    private static final byte[] f23414b = new byte[]{(byte) 76, (byte) 0, (byte) 2, (byte) 21};
+
+    /* renamed from: a */
+    public static dh m20330a(String str, String str2, int i, byte[] bArr) {
+        if (bArr == null || str2 == null) {
+            return null;
         }
-        int n = k + 1;
-        k = paramArrayOfByte[k] & 0xFF;
-        if (k == 0) {
-          break label383;
-        }
-        k -= 1;
-        m = n + 1;
-        switch (paramArrayOfByte[n] & 0xFF)
-        {
-        case 2: 
-        case 3: 
-          a(paramArrayOfByte, m, k, 2, localArrayList2);
-        }
-      }
-      catch (Exception paramString1)
-      {
-        ee.a(cz.a, "unable to parse scan record: " + Arrays.toString(paramArrayOfByte), new Object[0]);
-        return null;
-      }
-      a(paramArrayOfByte, m, k, 4, localArrayList2);
-      break;
-      a(paramArrayOfByte, m, k, 16, localArrayList2);
-      break;
-      localObject = new String(a(paramArrayOfByte, m, k), "UTF-8");
-      break;
-      localHashMap.put(a(a(paramArrayOfByte, m, 2)), a(paramArrayOfByte, m + 2, k - 2));
-      break;
-      localSparseArray.put(((paramArrayOfByte[(m + 1)] & 0xFF) << 8) + (paramArrayOfByte[m] & 0xFF), a(paramArrayOfByte, m + 2, k - 2));
-      break;
-      ArrayList localArrayList1 = localArrayList2;
-      if (localArrayList2.isEmpty()) {
-        localArrayList1 = null;
-      }
-      paramString2 = new dh(paramString2, paramString1, SystemClock.elapsedRealtime() * 1000L, paramInt, localArrayList1, localSparseArray, localHashMap, j, i, (String)localObject);
-      localObject = a(paramArrayOfByte, paramInt);
-      paramString1 = paramString2;
-    } while (localObject == null);
-    paramString2.h = ((di)localObject).e;
-    paramString2.k = ((di)localObject);
-    return paramString2;
-    for (;;)
-    {
-      k += m;
-      break;
-      j = paramArrayOfByte[m] & 0xFF;
-      continue;
-      i = paramArrayOfByte[m];
-    }
-  }
-  
-  public static di a(byte[] paramArrayOfByte, int paramInt)
-  {
-    Object localObject2;
-    if (paramArrayOfByte == null)
-    {
-      localObject2 = null;
-      return (di)localObject2;
-    }
-    int i = 0;
-    label13:
-    int j;
-    int k;
-    Object localObject1;
-    if (i < paramArrayOfByte.length)
-    {
-      j = paramArrayOfByte[i] & 0xFF;
-      k = i + 1;
-      if (j != 0)
-      {
-        i = paramArrayOfByte[k] & 0xFF;
-        k += 1;
-        if (i != 0) {
-          if (i == 255)
-          {
-            localObject1 = Arrays.copyOfRange(paramArrayOfByte, k, k + j - 1);
-            if (localObject1.length >= 25) {
-              break label117;
+        dh dhVar;
+        di a;
+        int i2 = 0;
+        int i3 = -1;
+        List arrayList = new ArrayList();
+        String str3 = null;
+        int i4 = Integer.MIN_VALUE;
+        SparseArray sparseArray = new SparseArray();
+        Map hashMap = new HashMap();
+        while (i2 < bArr.length) {
+            int i5 = i2 + 1;
+            i2 = bArr[i2] & 255;
+            if (i2 != 0) {
+                i2--;
+                int i6 = i5 + 1;
+                switch (bArr[i5] & 255) {
+                    case 1:
+                        i3 = bArr[i6] & 255;
+                        break;
+                    case 2:
+                    case 3:
+                        m20328a(bArr, i6, i2, 2, arrayList);
+                        break;
+                    case 4:
+                    case 5:
+                        try {
+                            m20328a(bArr, i6, i2, 4, arrayList);
+                            break;
+                        } catch (Exception e) {
+                            ee.m20409a(cz.f23362a, "unable to parse scan record: " + Arrays.toString(bArr), new Object[0]);
+                            return null;
+                        }
+                    case 6:
+                    case 7:
+                        m20328a(bArr, i6, i2, 16, arrayList);
+                        break;
+                    case 8:
+                    case 9:
+                        str3 = new String(m20332a(bArr, i6, i2), "UTF-8");
+                        break;
+                    case 10:
+                        i4 = bArr[i6];
+                        break;
+                    case 22:
+                        hashMap.put(m20329a(m20332a(bArr, i6, 2)), m20332a(bArr, i6 + 2, i2 - 2));
+                        break;
+                    case 255:
+                        sparseArray.put(((bArr[i6 + 1] & 255) << 8) + (bArr[i6] & 255), m20332a(bArr, i6 + 2, i2 - 2));
+                        break;
+                    default:
+                        break;
+                }
+                i2 += i6;
+            } else {
+                if (arrayList.isEmpty()) {
+                    arrayList = null;
+                }
+                dhVar = new dh(str2, str, SystemClock.elapsedRealtime() * 1000, i, arrayList, sparseArray, hashMap, i3, i4, str3);
+                a = m20331a(bArr, i);
+                if (a != null) {
+                    return dhVar;
+                }
+                dhVar.f23401h = a.f23409e;
+                dhVar.f23404k = a;
+                return dhVar;
             }
-            localObject1 = null;
-          }
         }
-      }
+        if (arrayList.isEmpty()) {
+            arrayList = null;
+        }
+        dhVar = new dh(str2, str, SystemClock.elapsedRealtime() * 1000, i, arrayList, sparseArray, hashMap, i3, i4, str3);
+        a = m20331a(bArr, i);
+        if (a != null) {
+            return dhVar;
+        }
+        dhVar.f23401h = a.f23409e;
+        dhVar.f23404k = a;
+        return dhVar;
     }
-    for (;;)
-    {
-      localObject2 = localObject1;
-      if (localObject1 != null) {
-        break;
-      }
-      i = j - 1 + k;
-      break label13;
-      label117:
-      localObject2 = b;
-      StringBuilder localStringBuilder;
-      if (localObject1.length < localObject2.length)
-      {
-        i = 0;
-        if (i == 0) {
-          break label445;
+
+    /* renamed from: a */
+    private static int m20328a(byte[] bArr, int i, int i2, int i3, List<ParcelUuid> list) {
+        while (i2 > 0) {
+            list.add(m20329a(m20332a(bArr, i, i3)));
+            i2 -= i3;
+            i += i3;
         }
-        localObject2 = Arrays.copyOfRange((byte[])localObject1, 4, 20);
-        localStringBuilder = new StringBuilder();
-        i = 0;
-        label161:
-        if (i >= localObject2.length) {
-          break label314;
+        return i;
+    }
+
+    /* renamed from: a */
+    private static byte[] m20332a(byte[] bArr, int i, int i2) {
+        Object obj = new byte[i2];
+        System.arraycopy(bArr, i, obj, 0, i2);
+        return obj;
+    }
+
+    /* renamed from: a */
+    private static ParcelUuid m20329a(byte[] bArr) {
+        if (bArr == null) {
+            throw new IllegalArgumentException("uuidBytes cannot be null");
         }
-        switch (i)
-        {
+        int length = bArr.length;
+        if (length != 2 && length != 4 && length != 16) {
+            throw new IllegalArgumentException("uuidBytes length invalid - " + length);
+        } else if (length == 16) {
+            ByteBuffer order = ByteBuffer.wrap(bArr).order(ByteOrder.LITTLE_ENDIAN);
+            return new ParcelUuid(new UUID(order.getLong(8), order.getLong(0)));
+        } else {
+            long j;
+            if (length == 2) {
+                j = ((long) (bArr[0] & 255)) + ((long) ((bArr[1] & 255) << 8));
+            } else {
+                j = ((((long) (bArr[0] & 255)) + ((long) ((bArr[1] & 255) << 8))) + ((long) ((bArr[2] & 255) << 16))) + ((long) ((bArr[3] & 255) << 24));
+            }
+            return new ParcelUuid(new UUID(f23413a.getUuid().getMostSignificantBits() + (j << 32), f23413a.getUuid().getLeastSignificantBits()));
         }
-      }
-      int m;
-      for (;;)
-      {
-        m = localObject2[i] & 0xFF;
-        if (m <= 15) {
-          localStringBuilder.append('0');
+    }
+
+    /* renamed from: a */
+    public static di m20331a(byte[] bArr, int i) {
+        if (bArr == null) {
+            return null;
         }
-        localStringBuilder.append(Integer.toHexString(m));
-        i += 1;
-        break label161;
-        i = 0;
-        for (;;)
-        {
-          if (i >= localObject2.length) {
-            break label297;
-          }
-          if (localObject1[i] != localObject2[i])
-          {
-            i = 0;
-            break;
-          }
-          i += 1;
-        }
-        label297:
-        i = 1;
-        break;
-        localStringBuilder.append('-');
-      }
-      label314:
-      localObject2 = localStringBuilder.toString();
-      if (!ei.a((CharSequence)localObject2))
-      {
-        i = b(Arrays.copyOfRange((byte[])localObject1, 20, 22));
-        m = b(Arrays.copyOfRange((byte[])localObject1, 22, 24));
-        int n = localObject1[24];
-        double d = paramInt;
-        if (d == 0.0D) {
-          d = -1.0D;
-        }
-        for (;;)
-        {
-          localObject1 = new di((String)localObject2, i, m, paramInt, n, d);
-          break;
-          d = d * 1.0D / n;
-          if (d < 1.0D) {
-            d = Math.pow(d, 10.0D);
-          } else {
-            d = Math.pow(d, 7.7095D) * 0.89976D + 0.111D;
-          }
+        int i2 = 0;
+        while (i2 < bArr.length) {
+            int i3 = bArr[i2] & 255;
+            i2++;
+            if (i3 != 0) {
+                int i4 = bArr[i2] & 255;
+                int i5 = i2 + 1;
+                if (i4 != 0) {
+                    if (i4 == 255) {
+                        di diVar;
+                        byte[] copyOfRange = Arrays.copyOfRange(bArr, i5, (i5 + i3) - 1);
+                        if (copyOfRange.length < 25) {
+                            diVar = null;
+                        } else {
+                            Object obj;
+                            byte[] bArr2 = f23414b;
+                            if (copyOfRange.length < bArr2.length) {
+                                obj = null;
+                            } else {
+                                i2 = 0;
+                                while (i2 < bArr2.length) {
+                                    if (copyOfRange[i2] != bArr2[i2]) {
+                                        obj = null;
+                                    } else {
+                                        i2++;
+                                    }
+                                }
+                                obj = 1;
+                            }
+                            if (obj != null) {
+                                bArr2 = Arrays.copyOfRange(copyOfRange, 4, 20);
+                                StringBuilder stringBuilder = new StringBuilder();
+                                for (i2 = 0; i2 < bArr2.length; i2++) {
+                                    switch (i2) {
+                                        case 4:
+                                        case 6:
+                                        case 8:
+                                        case 10:
+                                            stringBuilder.append('-');
+                                            break;
+                                    }
+                                    int i6 = bArr2[i2] & 255;
+                                    if (i6 <= 15) {
+                                        stringBuilder.append('0');
+                                    }
+                                    stringBuilder.append(Integer.toHexString(i6));
+                                }
+                                Object stringBuilder2 = stringBuilder.toString();
+                                if (!ei.m20418a(stringBuilder2)) {
+                                    int b = m20333b(Arrays.copyOfRange(copyOfRange, 20, 22));
+                                    int b2 = m20333b(Arrays.copyOfRange(copyOfRange, 22, 24));
+                                    byte b3 = copyOfRange[24];
+                                    double d = (double) i;
+                                    if (d == 0.0d) {
+                                        d = -1.0d;
+                                    } else {
+                                        d = (d * 1.0d) / ((double) b3);
+                                        if (d < 1.0d) {
+                                            d = Math.pow(d, 10.0d);
+                                        } else {
+                                            d = (Math.pow(d, 7.7095d) * 0.89976d) + 0.111d;
+                                        }
+                                    }
+                                    diVar = new di(stringBuilder2, b, b2, i, b3, d);
+                                }
+                            }
+                            diVar = null;
+                        }
+                        if (diVar != null) {
+                            return diVar;
+                        }
+                    }
+                    i2 = (i3 - 1) + i5;
+                }
+            }
+            return null;
         }
         return null;
-      }
-      label445:
-      localObject1 = null;
     }
-  }
-  
-  private static byte[] a(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    byte[] arrayOfByte = new byte[paramInt2];
-    System.arraycopy(paramArrayOfByte, paramInt1, arrayOfByte, 0, paramInt2);
-    return arrayOfByte;
-  }
-  
-  private static int b(byte[] paramArrayOfByte)
-  {
-    return ByteBuffer.wrap(new byte[] { 0, 0, paramArrayOfByte[0], paramArrayOfByte[1] }).getInt();
-  }
+
+    /* renamed from: b */
+    private static int m20333b(byte[] bArr) {
+        return ByteBuffer.wrap(new byte[]{(byte) 0, (byte) 0, bArr[0], bArr[1]}).getInt();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

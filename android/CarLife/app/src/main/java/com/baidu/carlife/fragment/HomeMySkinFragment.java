@@ -1,163 +1,174 @@
 package com.baidu.carlife.fragment;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import com.baidu.carlife.adpter.f;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.f.b;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.g;
-import com.baidu.carlife.k.a.e.a;
-import com.baidu.carlife.k.m;
-import com.baidu.carlife.logic.t;
-import com.baidu.carlife.logic.t.b;
-import com.baidu.carlife.model.l;
-import com.baidu.carlife.util.w;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.adpter.C0982f;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.logic.C1872t;
+import com.baidu.carlife.logic.C1872t.C1318b;
+import com.baidu.carlife.model.C1934l;
+import com.baidu.carlife.p054k.C1652m;
+import com.baidu.carlife.p054k.p055a.C1626e.C0924a;
+import com.baidu.carlife.p078f.C1437b;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.util.C2201w;
 import com.baidu.navi.fragment.ContentFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeMySkinFragment
-  extends ContentFragment
-  implements e.a, t.b
-{
-  private static final int a = 100;
-  private f b;
-  private m c;
-  private List<l> d;
-  private t e;
-  private g f;
-  private b g;
-  
-  private void a()
-  {
-    String[] arrayOfString = getResources().getStringArray(2131230729);
-    this.d = new ArrayList();
-    l locall1 = new l();
-    locall1.d = arrayOfString[0];
-    locall1.j = 0;
-    locall1.k = 2130838595;
-    locall1.h = "DefaultSkin";
-    l locall2 = new l();
-    locall2.j = 1;
-    locall2.d = arrayOfString[1];
-    locall2.h = "CLS_Blue.cls";
-    locall2.k = 2130838596;
-    locall2.e = 3;
-    this.d.add(locall1);
-    this.d.add(locall2);
-  }
-  
-  public void b(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      onUpdateSkin();
-      return;
+public class HomeMySkinFragment extends ContentFragment implements C0924a, C1318b {
+    /* renamed from: a */
+    private static final int f4503a = 100;
+    /* renamed from: b */
+    private C0982f f4504b;
+    /* renamed from: c */
+    private C1652m f4505c;
+    /* renamed from: d */
+    private List<C1934l> f4506d;
+    /* renamed from: e */
+    private C1872t f4507e;
+    /* renamed from: f */
+    private C1443g f4508f;
+    /* renamed from: g */
+    private C1437b f4509g;
+
+    /* renamed from: com.baidu.carlife.fragment.HomeMySkinFragment$1 */
+    class C15121 implements OnItemClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeMySkinFragment f4501a;
+
+        C15121(HomeMySkinFragment this$0) {
+            this.f4501a = this$0;
+        }
+
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            C1260i.m4435b("Framework", "position = " + position + ", id = " + id);
+            view.performClick();
+        }
     }
-    w.a(2131296533, 0);
-  }
-  
-  public void driving()
-  {
-    i.b("yftech", "HomeMySkinFragment driving");
-    back();
-    com.baidu.carlife.custom.a.a().d();
-  }
-  
-  public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent)
-  {
-    super.onActivityResult(paramInt1, paramInt2, paramIntent);
-    onUpdateSkin();
-    this.e.a(this);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    paramLayoutInflater = paramLayoutInflater.inflate(2130968839, null);
-    setCommonTitleBar(paramLayoutInflater, getString(2131296532));
-    GridView localGridView = (GridView)paramLayoutInflater.findViewById(2131625262);
-    localGridView.setOverScrollMode(2);
-    this.e = t.a();
-    this.e.a(this);
-    a();
-    this.b = new f(getContext(), this.d);
-    localGridView.setAdapter(this.b);
-    localGridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-    {
-      public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-      {
-        i.b("Framework", "position = " + paramAnonymousInt + ", id = " + paramAnonymousLong);
-        paramAnonymousView.performClick();
-      }
-    });
-    paramLayoutInflater.findViewById(2131624059).setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView) {}
-    });
-    return paramLayoutInflater;
-  }
-  
-  public void onDestroyView()
-  {
-    super.onDestroyView();
-    this.e.b(this);
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.f == null)
-    {
-      this.f = new g(this.mContentView.findViewById(2131624259), 2);
-      this.f.d(this.mContentView.findViewById(2131624258));
+
+    /* renamed from: com.baidu.carlife.fragment.HomeMySkinFragment$2 */
+    class C15132 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeMySkinFragment f4502a;
+
+        C15132(HomeMySkinFragment this$0) {
+            this.f4502a = this$0;
+        }
+
+        public void onClick(View v) {
+        }
     }
-    if (this.g == null) {
-      this.g = new b((GridView)this.mContentView.findViewById(2131625262), 6);
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        View contentView = inflater.inflate(C0965R.layout.home_my_skin, null);
+        setCommonTitleBar(contentView, getString(C0965R.string.home_my_skin));
+        GridView gridView = (GridView) contentView.findViewById(C0965R.id.skin_gv);
+        gridView.setOverScrollMode(2);
+        this.f4507e = C1872t.m7136a();
+        this.f4507e.m7151a((C1318b) this);
+        m5528a();
+        this.f4504b = new C0982f(getContext(), this.f4506d);
+        gridView.setAdapter(this.f4504b);
+        gridView.setOnItemClickListener(new C15121(this));
+        contentView.findViewById(C0965R.id.tv_title).setOnClickListener(new C15132(this));
+        return contentView;
     }
-    d.a().b(new com.baidu.carlife.f.a[] { this.f, this.g });
-    d.a().h(this.f);
-  }
-  
-  protected void onInitView() {}
-  
-  public void onNetWorkResponse(int paramInt)
-  {
-    if (!isAdded()) {
-      return;
+
+    /* renamed from: a */
+    private void m5528a() {
+        String[] skinNames = getResources().getStringArray(C0965R.array.home_my_skin);
+        this.f4506d = new ArrayList();
+        C1934l defaultSkin = new C1934l();
+        defaultSkin.f6089d = skinNames[0];
+        defaultSkin.f6095j = 0;
+        defaultSkin.f6096k = C0965R.drawable.home_ic_my_skin_black;
+        defaultSkin.f6093h = C1872t.f5805b;
+        C1934l blueSkin = new C1934l();
+        blueSkin.f6095j = 1;
+        blueSkin.f6089d = skinNames[1];
+        blueSkin.f6093h = C1253f.jk;
+        blueSkin.f6096k = C0965R.drawable.home_ic_my_skin_blue;
+        blueSkin.f6090e = 3;
+        this.f4506d.add(defaultSkin);
+        this.f4506d.add(blueSkin);
     }
-    switch (paramInt)
-    {
-    default: 
-      return;
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        onUpdateSkin();
+        this.f4507e.m7151a((C1318b) this);
     }
-    this.d.addAll(this.c.a());
-    this.b.notifyDataSetChanged();
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    updateCommonSkin();
-    this.b.notifyDataSetChanged();
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public void stopDriving()
-  {
-    i.b("yftech", "HomeMySkinFragment stopDriving");
-  }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    protected void onUpdateSkin() {
+        updateCommonSkin();
+        this.f4504b.notifyDataSetChanged();
+    }
+
+    /* renamed from: b */
+    public void mo1481b(boolean isSuccess) {
+        if (isSuccess) {
+            onUpdateSkin();
+        } else {
+            C2201w.m8371a((int) C0965R.string.home_my_skin_fail, 0);
+        }
+    }
+
+    public void onNetWorkResponse(int responseCode) {
+        if (isAdded()) {
+            switch (responseCode) {
+                case 0:
+                    this.f4506d.addAll(this.f4505c.m5962a());
+                    this.f4504b.notifyDataSetChanged();
+                    return;
+                default:
+                    return;
+            }
+        }
+    }
+
+    public void onInitFocusAreas() {
+        if (this.f4508f == null) {
+            this.f4508f = new C1443g(this.mContentView.findViewById(C0965R.id.ll_title), 2);
+            this.f4508f.m5300d(this.mContentView.findViewById(C0965R.id.ib_left));
+        }
+        if (this.f4509g == null) {
+            this.f4509g = new C1437b((GridView) this.mContentView.findViewById(C0965R.id.skin_gv), 6);
+        }
+        C1440d.m5251a().m5256b(this.f4508f, this.f4509g);
+        C1440d.m5251a().m5268h(this.f4508f);
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        this.f4507e.m7158b((C1318b) this);
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "HomeMySkinFragment driving");
+        back();
+        C1342a.m4926a().m4931d();
+    }
+
+    public void stopDriving() {
+        C1260i.m4435b("yftech", "HomeMySkinFragment stopDriving");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/HomeMySkinFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

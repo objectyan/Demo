@@ -1,60 +1,42 @@
 package com.baidu.tts.loopj;
 
-import java.io.UnsupportedEncodingException;
 import org.apache.http.Header;
 
-public abstract class TextHttpResponseHandler
-  extends AsyncHttpResponseHandler
-{
-  private static final String LOG_TAG = "TextHttpRH";
-  
-  public TextHttpResponseHandler()
-  {
-    this("UTF-8");
-  }
-  
-  public TextHttpResponseHandler(String paramString)
-  {
-    setCharset(paramString);
-  }
-  
-  public static String getResponseString(byte[] paramArrayOfByte, String paramString)
-  {
-    if (paramArrayOfByte == null) {}
-    for (paramArrayOfByte = null; paramArrayOfByte != null; paramArrayOfByte = new String(paramArrayOfByte, paramString)) {
-      try
-      {
-        if (!paramArrayOfByte.startsWith("﻿")) {
-          break;
-        }
-        return paramArrayOfByte.substring(1);
-      }
-      catch (UnsupportedEncodingException paramArrayOfByte)
-      {
-        AsyncHttpClient.log.e("TextHttpRH", "Encoding response into string failed", paramArrayOfByte);
-        return null;
-      }
+public abstract class TextHttpResponseHandler extends AsyncHttpResponseHandler {
+    private static final String LOG_TAG = "TextHttpRH";
+
+    public abstract void onFailure(int i, Header[] headerArr, String str, Throwable th);
+
+    public abstract void onSuccess(int i, Header[] headerArr, String str);
+
+    public TextHttpResponseHandler() {
+        this("UTF-8");
     }
-    return paramArrayOfByte;
-  }
-  
-  public abstract void onFailure(int paramInt, Header[] paramArrayOfHeader, String paramString, Throwable paramThrowable);
-  
-  public void onFailure(int paramInt, Header[] paramArrayOfHeader, byte[] paramArrayOfByte, Throwable paramThrowable)
-  {
-    onFailure(paramInt, paramArrayOfHeader, getResponseString(paramArrayOfByte, getCharset()), paramThrowable);
-  }
-  
-  public abstract void onSuccess(int paramInt, Header[] paramArrayOfHeader, String paramString);
-  
-  public void onSuccess(int paramInt, Header[] paramArrayOfHeader, byte[] paramArrayOfByte)
-  {
-    onSuccess(paramInt, paramArrayOfHeader, getResponseString(paramArrayOfByte, getCharset()));
-  }
+
+    public TextHttpResponseHandler(String encoding) {
+        setCharset(encoding);
+    }
+
+    public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
+        onSuccess(statusCode, headers, getResponseString(responseBytes, getCharset()));
+    }
+
+    public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
+        onFailure(statusCode, headers, getResponseString(responseBytes, getCharset()), throwable);
+    }
+
+    public static String getResponseString(byte[] stringBytes, String charset) {
+        String str = stringBytes == null ? null : new String(stringBytes, charset);
+        if (str != null) {
+            try {
+                if (str.startsWith("﻿")) {
+                    return str.substring(1);
+                }
+            } catch (Throwable e) {
+                AsyncHttpClient.log.mo3897e(LOG_TAG, "Encoding response into string failed", e);
+                return null;
+            }
+        }
+        return str;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/loopj/TextHttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

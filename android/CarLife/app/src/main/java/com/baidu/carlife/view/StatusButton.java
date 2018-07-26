@@ -10,275 +10,281 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import com.baidu.carlife.C0965R;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 
-public class StatusButton
-  extends LinearLayout
-{
-  private RadioGroup a;
-  private RadioButton b;
-  private RadioButton c;
-  private RadioButton d;
-  private View.OnClickListener e;
-  private View.OnClickListener f;
-  private View.OnClickListener g;
-  private a h;
-  private Context i;
-  private int j;
-  private boolean k = true;
-  
-  public StatusButton(Context paramContext)
-  {
-    super(paramContext);
-    this.i = paramContext;
-    e();
-  }
-  
-  public StatusButton(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    this.i = paramContext;
-    e();
-  }
-  
-  private ColorStateList b(int paramInt1, int paramInt2, int paramInt3)
-  {
-    return new ColorStateList(new int[][] { { 16842919 }, { 16842912 }, new int[0] }, new int[] { paramInt2, paramInt3, paramInt1 });
-  }
-  
-  private void e()
-  {
-    this.k = BNSettingManager.isUsingMapMode();
-    if (this.k) {
-      LayoutInflater.from(this.i).inflate(2130968976, this);
+public class StatusButton extends LinearLayout {
+    /* renamed from: a */
+    private RadioGroup f7247a;
+    /* renamed from: b */
+    private RadioButton f7248b;
+    /* renamed from: c */
+    private RadioButton f7249c;
+    /* renamed from: d */
+    private RadioButton f7250d;
+    /* renamed from: e */
+    private OnClickListener f7251e;
+    /* renamed from: f */
+    private OnClickListener f7252f;
+    /* renamed from: g */
+    private OnClickListener f7253g;
+    /* renamed from: h */
+    private C1550a f7254h;
+    /* renamed from: i */
+    private Context f7255i;
+    /* renamed from: j */
+    private int f7256j;
+    /* renamed from: k */
+    private boolean f7257k = true;
+
+    /* renamed from: com.baidu.carlife.view.StatusButton$a */
+    public interface C1550a {
+        /* renamed from: a */
+        void mo1592a(StatusButton statusButton, C2237b c2237b);
     }
-    for (;;)
-    {
-      this.a = ((RadioGroup)findViewById(2131625956));
-      this.b = ((RadioButton)this.a.getChildAt(0));
-      this.c = ((RadioButton)this.a.getChildAt(1));
-      this.d = ((RadioButton)this.a.getChildAt(2));
-      if (!BNStyleManager.getDayStyle()) {
-        d();
-      }
-      this.a.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-      {
-        public void onCheckedChanged(RadioGroup paramAnonymousRadioGroup, int paramAnonymousInt)
-        {
-          if ((paramAnonymousInt == StatusButton.a(StatusButton.this).getId()) && (StatusButton.b(StatusButton.this) != 1))
-          {
-            StatusButton.a(StatusButton.this, 1);
-            if (StatusButton.e(StatusButton.this) == null) {
-              break label211;
-            }
-            switch (StatusButton.b(StatusButton.this))
-            {
-            }
-          }
-          label211:
-          do
-          {
-            do
-            {
-              do
-              {
-                do
-                {
-                  return;
-                  if ((paramAnonymousInt == StatusButton.c(StatusButton.this).getId()) && (StatusButton.b(StatusButton.this) != 2))
-                  {
-                    StatusButton.a(StatusButton.this, 2);
-                    break;
-                  }
-                } while ((paramAnonymousInt != StatusButton.d(StatusButton.this).getId()) || (StatusButton.b(StatusButton.this) == 3));
-                StatusButton.a(StatusButton.this, 3);
-                break;
-                StatusButton.e(StatusButton.this).a(StatusButton.this, StatusButton.b.a);
-                return;
-                StatusButton.e(StatusButton.this).a(StatusButton.this, StatusButton.b.b);
-                return;
-                StatusButton.e(StatusButton.this).a(StatusButton.this, StatusButton.b.c);
-                return;
-                switch (StatusButton.b(StatusButton.this))
-                {
-                default: 
-                  return;
-                }
-              } while (StatusButton.f(StatusButton.this) == null);
-              StatusButton.f(StatusButton.this).onClick(StatusButton.a(StatusButton.this));
-              return;
-            } while (StatusButton.g(StatusButton.this) == null);
-            StatusButton.g(StatusButton.this).onClick(StatusButton.c(StatusButton.this));
-            return;
-          } while (StatusButton.h(StatusButton.this) == null);
-          StatusButton.h(StatusButton.this).onClick(StatusButton.d(StatusButton.this));
+
+    /* renamed from: com.baidu.carlife.view.StatusButton$1 */
+    class C22361 implements OnCheckedChangeListener {
+        /* renamed from: a */
+        final /* synthetic */ StatusButton f7242a;
+
+        C22361(StatusButton this$0) {
+            this.f7242a = this$0;
         }
-      });
-      return;
-      LayoutInflater.from(this.i).inflate(2130968977, this);
+
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            if (checkedId == this.f7242a.f7248b.getId() && this.f7242a.f7256j != 1) {
+                this.f7242a.f7256j = 1;
+            } else if (checkedId == this.f7242a.f7249c.getId() && this.f7242a.f7256j != 2) {
+                this.f7242a.f7256j = 2;
+            } else if (checkedId == this.f7242a.f7250d.getId() && this.f7242a.f7256j != 3) {
+                this.f7242a.f7256j = 3;
+            } else {
+                return;
+            }
+            if (this.f7242a.f7254h != null) {
+                switch (this.f7242a.f7256j) {
+                    case 1:
+                        this.f7242a.f7254h.mo1592a(this.f7242a, C2237b.LEFT);
+                        return;
+                    case 2:
+                        this.f7242a.f7254h.mo1592a(this.f7242a, C2237b.MID);
+                        return;
+                    case 3:
+                        this.f7242a.f7254h.mo1592a(this.f7242a, C2237b.RIGHT);
+                        return;
+                    default:
+                        return;
+                }
+            }
+            switch (this.f7242a.f7256j) {
+                case 1:
+                    if (this.f7242a.f7251e != null) {
+                        this.f7242a.f7251e.onClick(this.f7242a.f7248b);
+                        return;
+                    }
+                    return;
+                case 2:
+                    if (this.f7242a.f7252f != null) {
+                        this.f7242a.f7252f.onClick(this.f7242a.f7249c);
+                        return;
+                    }
+                    return;
+                case 3:
+                    if (this.f7242a.f7253g != null) {
+                        this.f7242a.f7253g.onClick(this.f7242a.f7250d);
+                        return;
+                    }
+                    return;
+                default:
+                    return;
+            }
+        }
     }
-  }
-  
-  public StatusButton a()
-  {
-    this.b.setChecked(true);
-    this.j = 1;
-    return this;
-  }
-  
-  public StatusButton a(int paramInt)
-  {
-    this.b.setText(paramInt);
-    return this;
-  }
-  
-  public StatusButton a(int paramInt1, int paramInt2)
-  {
-    this.b.setText(paramInt1);
-    this.c.setVisibility(8);
-    this.d.setText(paramInt2);
-    return this;
-  }
-  
-  public StatusButton a(int paramInt1, int paramInt2, int paramInt3)
-  {
-    this.b.setText(paramInt1);
-    this.c.setText(paramInt2);
-    this.d.setText(paramInt3);
-    return this;
-  }
-  
-  public StatusButton a(View.OnClickListener paramOnClickListener)
-  {
-    this.e = paramOnClickListener;
-    return this;
-  }
-  
-  public StatusButton a(a parama)
-  {
-    this.h = parama;
-    return this;
-  }
-  
-  public StatusButton a(String paramString)
-  {
-    this.b.setText(paramString);
-    return this;
-  }
-  
-  public StatusButton a(String paramString1, String paramString2)
-  {
-    this.b.setText(paramString1);
-    this.c.setVisibility(8);
-    this.d.setText(paramString2);
-    return this;
-  }
-  
-  public StatusButton a(String paramString1, String paramString2, String paramString3)
-  {
-    this.b.setText(paramString1);
-    this.c.setText(paramString2);
-    this.d.setText(paramString3);
-    return this;
-  }
-  
-  public StatusButton a(boolean paramBoolean)
-  {
-    this.c.setVisibility(8);
-    return this;
-  }
-  
-  public StatusButton b()
-  {
-    this.c.setChecked(true);
-    this.j = 2;
-    return this;
-  }
-  
-  public StatusButton b(int paramInt)
-  {
-    this.c.setText(paramInt);
-    return this;
-  }
-  
-  public StatusButton b(View.OnClickListener paramOnClickListener)
-  {
-    this.f = paramOnClickListener;
-    return this;
-  }
-  
-  public StatusButton b(String paramString)
-  {
-    this.c.setText(paramString);
-    return this;
-  }
-  
-  public StatusButton c()
-  {
-    this.d.setChecked(true);
-    this.j = 3;
-    return this;
-  }
-  
-  public StatusButton c(int paramInt)
-  {
-    this.d.setText(paramInt);
-    return this;
-  }
-  
-  public StatusButton c(View.OnClickListener paramOnClickListener)
-  {
-    this.g = paramOnClickListener;
-    return this;
-  }
-  
-  public StatusButton c(String paramString)
-  {
-    this.d.setText(paramString);
-    return this;
-  }
-  
-  public void d()
-  {
-    if (this.k)
-    {
-      ColorStateList localColorStateList = b(StyleManager.getColor(2131559070, false), StyleManager.getColor(2131559072, false), StyleManager.getColor(2131559072, false));
-      this.b.setTextColor(localColorStateList);
-      localColorStateList = b(StyleManager.getColor(2131559070, false), StyleManager.getColor(2131559072, false), StyleManager.getColor(2131559072, false));
-      this.c.setTextColor(localColorStateList);
-      localColorStateList = b(StyleManager.getColor(2131559070, false), StyleManager.getColor(2131559072, false), StyleManager.getColor(2131559072, false));
-      this.d.setTextColor(localColorStateList);
-      if (Build.VERSION.SDK_INT > 15)
-      {
-        this.b.setBackground(StyleManager.getDrawable(2130839231, false));
-        this.c.setBackground(StyleManager.getDrawable(2130839234, false));
-        this.d.setBackground(StyleManager.getDrawable(2130839237, false));
-      }
+
+    /* renamed from: com.baidu.carlife.view.StatusButton$b */
+    public enum C2237b {
+        LEFT,
+        MID,
+        RIGHT
     }
-    else
-    {
-      return;
+
+    public StatusButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.f7255i = context;
+        m8485e();
     }
-    this.b.setBackgroundDrawable(StyleManager.getDrawable(2130839231, false));
-    this.c.setBackgroundDrawable(StyleManager.getDrawable(2130839234, false));
-    this.d.setBackgroundDrawable(StyleManager.getDrawable(2130839237, false));
-  }
-  
-  public static abstract interface a
-  {
-    public abstract void a(StatusButton paramStatusButton, StatusButton.b paramb);
-  }
-  
-  public static enum b
-  {
-    private b() {}
-  }
+
+    public StatusButton(Context context) {
+        super(context);
+        this.f7255i = context;
+        m8485e();
+    }
+
+    /* renamed from: a */
+    public StatusButton m8495a(String content) {
+        this.f7248b.setText(content);
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8490a(int resid) {
+        this.f7248b.setText(resid);
+        return this;
+    }
+
+    /* renamed from: b */
+    public StatusButton m8502b(String content) {
+        this.f7249c.setText(content);
+        return this;
+    }
+
+    /* renamed from: b */
+    public StatusButton m8500b(int resid) {
+        this.f7249c.setText(resid);
+        return this;
+    }
+
+    /* renamed from: c */
+    public StatusButton m8506c(String content) {
+        this.f7250d.setText(content);
+        return this;
+    }
+
+    /* renamed from: c */
+    public StatusButton m8504c(int resid) {
+        this.f7250d.setText(resid);
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8497a(String content1, String content2, String content3) {
+        this.f7248b.setText(content1);
+        this.f7249c.setText(content2);
+        this.f7250d.setText(content3);
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8492a(int resId1, int resId2, int resId3) {
+        this.f7248b.setText(resId1);
+        this.f7249c.setText(resId2);
+        this.f7250d.setText(resId3);
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8496a(String contentLeft, String contentRight) {
+        this.f7248b.setText(contentLeft);
+        this.f7249c.setVisibility(8);
+        this.f7250d.setText(contentRight);
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8491a(int resIdLeft, int resIdRight) {
+        this.f7248b.setText(resIdLeft);
+        this.f7249c.setVisibility(8);
+        this.f7250d.setText(resIdRight);
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8489a() {
+        this.f7248b.setChecked(true);
+        this.f7256j = 1;
+        return this;
+    }
+
+    /* renamed from: b */
+    public StatusButton m8499b() {
+        this.f7249c.setChecked(true);
+        this.f7256j = 2;
+        return this;
+    }
+
+    /* renamed from: c */
+    public StatusButton m8503c() {
+        this.f7250d.setChecked(true);
+        this.f7256j = 3;
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8493a(OnClickListener leftCL) {
+        this.f7251e = leftCL;
+        return this;
+    }
+
+    /* renamed from: b */
+    public StatusButton m8501b(OnClickListener midCL) {
+        this.f7252f = midCL;
+        return this;
+    }
+
+    /* renamed from: c */
+    public StatusButton m8505c(OnClickListener rightCL) {
+        this.f7253g = rightCL;
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8494a(C1550a allListener) {
+        this.f7254h = allListener;
+        return this;
+    }
+
+    /* renamed from: a */
+    public StatusButton m8498a(boolean isGone) {
+        this.f7249c.setVisibility(8);
+        return this;
+    }
+
+    /* renamed from: d */
+    public void m8507d() {
+        if (this.f7257k) {
+            this.f7248b.setTextColor(m8481b(StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_default_night, false), StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_pressed_night, false), StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_pressed_night, false)));
+            this.f7249c.setTextColor(m8481b(StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_default_night, false), StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_pressed_night, false), StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_pressed_night, false)));
+            this.f7250d.setTextColor(m8481b(StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_default_night, false), StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_pressed_night, false), StyleManager.getColor(C0965R.color.nsdk_statusbutton_tc_pressed_night, false)));
+            if (VERSION.SDK_INT > 15) {
+                this.f7248b.setBackground(StyleManager.getDrawable(C0965R.drawable.nsdk_drawable_statusbutton_left_button_night, false));
+                this.f7249c.setBackground(StyleManager.getDrawable(C0965R.drawable.nsdk_drawable_statusbutton_mid_button_night, false));
+                this.f7250d.setBackground(StyleManager.getDrawable(C0965R.drawable.nsdk_drawable_statusbutton_right_button_night, false));
+                return;
+            }
+            this.f7248b.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.nsdk_drawable_statusbutton_left_button_night, false));
+            this.f7249c.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.nsdk_drawable_statusbutton_mid_button_night, false));
+            this.f7250d.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.nsdk_drawable_statusbutton_right_button_night, false));
+        }
+    }
+
+    /* renamed from: e */
+    private void m8485e() {
+        this.f7257k = BNSettingManager.isUsingMapMode();
+        if (this.f7257k) {
+            LayoutInflater.from(this.f7255i).inflate(C0965R.layout.nsdk_layout_statusbutton, this);
+        } else {
+            LayoutInflater.from(this.f7255i).inflate(C0965R.layout.nsdk_layout_statusbutton_carmode, this);
+        }
+        this.f7247a = (RadioGroup) findViewById(C0965R.id.rbtngroup);
+        this.f7248b = (RadioButton) this.f7247a.getChildAt(0);
+        this.f7249c = (RadioButton) this.f7247a.getChildAt(1);
+        this.f7250d = (RadioButton) this.f7247a.getChildAt(2);
+        if (!BNStyleManager.getDayStyle()) {
+            m8507d();
+        }
+        this.f7247a.setOnCheckedChangeListener(new C22361(this));
+    }
+
+    /* renamed from: b */
+    private ColorStateList m8481b(int normal, int pressed, int checked) {
+        int[] colors = new int[]{pressed, checked, normal};
+        states = new int[3][];
+        states[0] = new int[]{16842919};
+        states[1] = new int[]{16842912};
+        states[2] = new int[0];
+        return new ColorStateList(states, colors);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/StatusButton.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

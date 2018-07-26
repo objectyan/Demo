@@ -1,23 +1,23 @@
 package com.tencent.wxop.stat;
 
-class ad
-  implements av
-{
-  ad(ac paramac) {}
-  
-  public void a()
-  {
-    
-    if (ag.b().a() >= f.f()) {
-      ag.b().a(f.f());
+class ad implements av {
+    /* renamed from: a */
+    final /* synthetic */ ac f24807a;
+
+    ad(ac acVar) {
+        this.f24807a = acVar;
     }
-  }
-  
-  public void b() {}
+
+    /* renamed from: a */
+    public void mo5017a() {
+        C6160j.m22129d();
+        if (ag.m21774b().m21787a() >= C6156f.m22016f()) {
+            ag.m21774b().m21788a(C6156f.m22016f());
+        }
+    }
+
+    /* renamed from: b */
+    public void mo5018b() {
+        C6160j.m22134e();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/ad.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

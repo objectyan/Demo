@@ -1,495 +1,447 @@
 package com.baidu.entity.pb;
 
+import com.baidu.baidunavis.model.NavCarInfo;
 import com.google.protobuf.micro.CodedInputStreamMicro;
 import com.google.protobuf.micro.CodedOutputStreamMicro;
 import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class WayPoints
-  extends MessageMicro
-{
-  public static final int ADDR_FIELD_NUMBER = 5;
-  public static final int CODE_FIELD_NUMBER = 1;
-  public static final int DESCRIBE_FIELD_NUMBER = 11;
-  public static final int DIRECTION_FIELD_NUMBER = 10;
-  public static final int DIST_FIELD_NUMBER = 9;
-  public static final int GEO_FIELD_NUMBER = 6;
-  public static final int INDOOR_FLOOR_FIELD_NUMBER = 7;
-  public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 8;
-  public static final int NAME_FIELD_NUMBER = 2;
-  public static final int NUM_FIELD_NUMBER = 3;
-  public static final int UID_FIELD_NUMBER = 4;
-  private boolean a;
-  private int b = 0;
-  private boolean c;
-  private String d = "";
-  private boolean e;
-  private int f = 0;
-  private boolean g;
-  private String h = "";
-  private boolean i;
-  private String j = "";
-  private boolean k;
-  private String l = "";
-  private boolean m;
-  private String n = "";
-  private boolean o;
-  private String p = "";
-  private boolean q;
-  private int r = 0;
-  private boolean s;
-  private int t = 0;
-  private boolean u;
-  private String v = "";
-  private int w = -1;
-  
-  public static WayPoints parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new WayPoints().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static WayPoints parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (WayPoints)new WayPoints().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final WayPoints clear()
-  {
-    clearCode();
-    clearName();
-    clearNum();
-    clearUid();
-    clearAddr();
-    clearGeo();
-    clearIndoorFloor();
-    clearIndoorParentUid();
-    clearDist();
-    clearDirection();
-    clearDescribe();
-    this.w = -1;
-    return this;
-  }
-  
-  public WayPoints clearAddr()
-  {
-    this.i = false;
-    this.j = "";
-    return this;
-  }
-  
-  public WayPoints clearCode()
-  {
-    this.a = false;
-    this.b = 0;
-    return this;
-  }
-  
-  public WayPoints clearDescribe()
-  {
-    this.u = false;
-    this.v = "";
-    return this;
-  }
-  
-  public WayPoints clearDirection()
-  {
-    this.s = false;
-    this.t = 0;
-    return this;
-  }
-  
-  public WayPoints clearDist()
-  {
-    this.q = false;
-    this.r = 0;
-    return this;
-  }
-  
-  public WayPoints clearGeo()
-  {
-    this.k = false;
-    this.l = "";
-    return this;
-  }
-  
-  public WayPoints clearIndoorFloor()
-  {
-    this.m = false;
-    this.n = "";
-    return this;
-  }
-  
-  public WayPoints clearIndoorParentUid()
-  {
-    this.o = false;
-    this.p = "";
-    return this;
-  }
-  
-  public WayPoints clearName()
-  {
-    this.c = false;
-    this.d = "";
-    return this;
-  }
-  
-  public WayPoints clearNum()
-  {
-    this.e = false;
-    this.f = 0;
-    return this;
-  }
-  
-  public WayPoints clearUid()
-  {
-    this.g = false;
-    this.h = "";
-    return this;
-  }
-  
-  public String getAddr()
-  {
-    return this.j;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.w < 0) {
-      getSerializedSize();
+public final class WayPoints extends MessageMicro {
+    public static final int ADDR_FIELD_NUMBER = 5;
+    public static final int CODE_FIELD_NUMBER = 1;
+    public static final int DESCRIBE_FIELD_NUMBER = 11;
+    public static final int DIRECTION_FIELD_NUMBER = 10;
+    public static final int DIST_FIELD_NUMBER = 9;
+    public static final int GEO_FIELD_NUMBER = 6;
+    public static final int INDOOR_FLOOR_FIELD_NUMBER = 7;
+    public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 8;
+    public static final int NAME_FIELD_NUMBER = 2;
+    public static final int NUM_FIELD_NUMBER = 3;
+    public static final int UID_FIELD_NUMBER = 4;
+    /* renamed from: a */
+    private boolean f17083a;
+    /* renamed from: b */
+    private int f17084b = 0;
+    /* renamed from: c */
+    private boolean f17085c;
+    /* renamed from: d */
+    private String f17086d = "";
+    /* renamed from: e */
+    private boolean f17087e;
+    /* renamed from: f */
+    private int f17088f = 0;
+    /* renamed from: g */
+    private boolean f17089g;
+    /* renamed from: h */
+    private String f17090h = "";
+    /* renamed from: i */
+    private boolean f17091i;
+    /* renamed from: j */
+    private String f17092j = "";
+    /* renamed from: k */
+    private boolean f17093k;
+    /* renamed from: l */
+    private String f17094l = "";
+    /* renamed from: m */
+    private boolean f17095m;
+    /* renamed from: n */
+    private String f17096n = "";
+    /* renamed from: o */
+    private boolean f17097o;
+    /* renamed from: p */
+    private String f17098p = "";
+    /* renamed from: q */
+    private boolean f17099q;
+    /* renamed from: r */
+    private int f17100r = 0;
+    /* renamed from: s */
+    private boolean f17101s;
+    /* renamed from: t */
+    private int f17102t = 0;
+    /* renamed from: u */
+    private boolean f17103u;
+    /* renamed from: v */
+    private String f17104v = "";
+    /* renamed from: w */
+    private int f17105w = -1;
+
+    public static WayPoints parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new WayPoints().mergeFrom(codedInputStreamMicro);
     }
-    return this.w;
-  }
-  
-  public int getCode()
-  {
-    return this.b;
-  }
-  
-  public String getDescribe()
-  {
-    return this.v;
-  }
-  
-  public int getDirection()
-  {
-    return this.t;
-  }
-  
-  public int getDist()
-  {
-    return this.r;
-  }
-  
-  public String getGeo()
-  {
-    return this.l;
-  }
-  
-  public String getIndoorFloor()
-  {
-    return this.n;
-  }
-  
-  public String getIndoorParentUid()
-  {
-    return this.p;
-  }
-  
-  public String getName()
-  {
-    return this.d;
-  }
-  
-  public int getNum()
-  {
-    return this.f;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i2 = 0;
-    if (hasCode()) {
-      i2 = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+
+    public static WayPoints parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (WayPoints) new WayPoints().mergeFrom(bArr);
     }
-    int i1 = i2;
-    if (hasName()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getName());
-    }
-    i2 = i1;
-    if (hasNum()) {
-      i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getNum());
-    }
-    i1 = i2;
-    if (hasUid()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getUid());
-    }
-    i2 = i1;
-    if (hasAddr()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getAddr());
-    }
-    i1 = i2;
-    if (hasGeo()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getGeo());
-    }
-    i2 = i1;
-    if (hasIndoorFloor()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getIndoorFloor());
-    }
-    i1 = i2;
-    if (hasIndoorParentUid()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getIndoorParentUid());
-    }
-    i2 = i1;
-    if (hasDist()) {
-      i2 = i1 + CodedOutputStreamMicro.computeInt32Size(9, getDist());
-    }
-    i1 = i2;
-    if (hasDirection()) {
-      i1 = i2 + CodedOutputStreamMicro.computeInt32Size(10, getDirection());
-    }
-    i2 = i1;
-    if (hasDescribe()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(11, getDescribe());
-    }
-    this.w = i2;
-    return i2;
-  }
-  
-  public String getUid()
-  {
-    return this.h;
-  }
-  
-  public boolean hasAddr()
-  {
-    return this.i;
-  }
-  
-  public boolean hasCode()
-  {
-    return this.a;
-  }
-  
-  public boolean hasDescribe()
-  {
-    return this.u;
-  }
-  
-  public boolean hasDirection()
-  {
-    return this.s;
-  }
-  
-  public boolean hasDist()
-  {
-    return this.q;
-  }
-  
-  public boolean hasGeo()
-  {
-    return this.k;
-  }
-  
-  public boolean hasIndoorFloor()
-  {
-    return this.m;
-  }
-  
-  public boolean hasIndoorParentUid()
-  {
-    return this.o;
-  }
-  
-  public boolean hasName()
-  {
-    return this.c;
-  }
-  
-  public boolean hasNum()
-  {
-    return this.e;
-  }
-  
-  public boolean hasUid()
-  {
-    return this.g;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public WayPoints mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
+
+    public final WayPoints clear() {
+        clearCode();
+        clearName();
+        clearNum();
+        clearUid();
+        clearAddr();
+        clearGeo();
+        clearIndoorFloor();
+        clearIndoorParentUid();
+        clearDist();
+        clearDirection();
+        clearDescribe();
+        this.f17105w = -1;
         return this;
-      case 8: 
-        setCode(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 18: 
-        setName(paramCodedInputStreamMicro.readString());
-        break;
-      case 24: 
-        setNum(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 34: 
-        setUid(paramCodedInputStreamMicro.readString());
-        break;
-      case 42: 
-        setAddr(paramCodedInputStreamMicro.readString());
-        break;
-      case 50: 
-        setGeo(paramCodedInputStreamMicro.readString());
-        break;
-      case 58: 
-        setIndoorFloor(paramCodedInputStreamMicro.readString());
-        break;
-      case 66: 
-        setIndoorParentUid(paramCodedInputStreamMicro.readString());
-        break;
-      case 72: 
-        setDist(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 80: 
-        setDirection(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 90: 
-        setDescribe(paramCodedInputStreamMicro.readString());
-      }
     }
-  }
-  
-  public WayPoints setAddr(String paramString)
-  {
-    this.i = true;
-    this.j = paramString;
-    return this;
-  }
-  
-  public WayPoints setCode(int paramInt)
-  {
-    this.a = true;
-    this.b = paramInt;
-    return this;
-  }
-  
-  public WayPoints setDescribe(String paramString)
-  {
-    this.u = true;
-    this.v = paramString;
-    return this;
-  }
-  
-  public WayPoints setDirection(int paramInt)
-  {
-    this.s = true;
-    this.t = paramInt;
-    return this;
-  }
-  
-  public WayPoints setDist(int paramInt)
-  {
-    this.q = true;
-    this.r = paramInt;
-    return this;
-  }
-  
-  public WayPoints setGeo(String paramString)
-  {
-    this.k = true;
-    this.l = paramString;
-    return this;
-  }
-  
-  public WayPoints setIndoorFloor(String paramString)
-  {
-    this.m = true;
-    this.n = paramString;
-    return this;
-  }
-  
-  public WayPoints setIndoorParentUid(String paramString)
-  {
-    this.o = true;
-    this.p = paramString;
-    return this;
-  }
-  
-  public WayPoints setName(String paramString)
-  {
-    this.c = true;
-    this.d = paramString;
-    return this;
-  }
-  
-  public WayPoints setNum(int paramInt)
-  {
-    this.e = true;
-    this.f = paramInt;
-    return this;
-  }
-  
-  public WayPoints setUid(String paramString)
-  {
-    this.g = true;
-    this.h = paramString;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasCode()) {
-      paramCodedOutputStreamMicro.writeInt32(1, getCode());
+
+    public WayPoints clearAddr() {
+        this.f17091i = false;
+        this.f17092j = "";
+        return this;
     }
-    if (hasName()) {
-      paramCodedOutputStreamMicro.writeString(2, getName());
+
+    public WayPoints clearCode() {
+        this.f17083a = false;
+        this.f17084b = 0;
+        return this;
     }
-    if (hasNum()) {
-      paramCodedOutputStreamMicro.writeInt32(3, getNum());
+
+    public WayPoints clearDescribe() {
+        this.f17103u = false;
+        this.f17104v = "";
+        return this;
     }
-    if (hasUid()) {
-      paramCodedOutputStreamMicro.writeString(4, getUid());
+
+    public WayPoints clearDirection() {
+        this.f17101s = false;
+        this.f17102t = 0;
+        return this;
     }
-    if (hasAddr()) {
-      paramCodedOutputStreamMicro.writeString(5, getAddr());
+
+    public WayPoints clearDist() {
+        this.f17099q = false;
+        this.f17100r = 0;
+        return this;
     }
-    if (hasGeo()) {
-      paramCodedOutputStreamMicro.writeString(6, getGeo());
+
+    public WayPoints clearGeo() {
+        this.f17093k = false;
+        this.f17094l = "";
+        return this;
     }
-    if (hasIndoorFloor()) {
-      paramCodedOutputStreamMicro.writeString(7, getIndoorFloor());
+
+    public WayPoints clearIndoorFloor() {
+        this.f17095m = false;
+        this.f17096n = "";
+        return this;
     }
-    if (hasIndoorParentUid()) {
-      paramCodedOutputStreamMicro.writeString(8, getIndoorParentUid());
+
+    public WayPoints clearIndoorParentUid() {
+        this.f17097o = false;
+        this.f17098p = "";
+        return this;
     }
-    if (hasDist()) {
-      paramCodedOutputStreamMicro.writeInt32(9, getDist());
+
+    public WayPoints clearName() {
+        this.f17085c = false;
+        this.f17086d = "";
+        return this;
     }
-    if (hasDirection()) {
-      paramCodedOutputStreamMicro.writeInt32(10, getDirection());
+
+    public WayPoints clearNum() {
+        this.f17087e = false;
+        this.f17088f = 0;
+        return this;
     }
-    if (hasDescribe()) {
-      paramCodedOutputStreamMicro.writeString(11, getDescribe());
+
+    public WayPoints clearUid() {
+        this.f17089g = false;
+        this.f17090h = "";
+        return this;
     }
-  }
+
+    public String getAddr() {
+        return this.f17092j;
+    }
+
+    public int getCachedSize() {
+        if (this.f17105w < 0) {
+            getSerializedSize();
+        }
+        return this.f17105w;
+    }
+
+    public int getCode() {
+        return this.f17084b;
+    }
+
+    public String getDescribe() {
+        return this.f17104v;
+    }
+
+    public int getDirection() {
+        return this.f17102t;
+    }
+
+    public int getDist() {
+        return this.f17100r;
+    }
+
+    public String getGeo() {
+        return this.f17094l;
+    }
+
+    public String getIndoorFloor() {
+        return this.f17096n;
+    }
+
+    public String getIndoorParentUid() {
+        return this.f17098p;
+    }
+
+    public String getName() {
+        return this.f17086d;
+    }
+
+    public int getNum() {
+        return this.f17088f;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasCode()) {
+            i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+        }
+        if (hasName()) {
+            i += CodedOutputStreamMicro.computeStringSize(2, getName());
+        }
+        if (hasNum()) {
+            i += CodedOutputStreamMicro.computeInt32Size(3, getNum());
+        }
+        if (hasUid()) {
+            i += CodedOutputStreamMicro.computeStringSize(4, getUid());
+        }
+        if (hasAddr()) {
+            i += CodedOutputStreamMicro.computeStringSize(5, getAddr());
+        }
+        if (hasGeo()) {
+            i += CodedOutputStreamMicro.computeStringSize(6, getGeo());
+        }
+        if (hasIndoorFloor()) {
+            i += CodedOutputStreamMicro.computeStringSize(7, getIndoorFloor());
+        }
+        if (hasIndoorParentUid()) {
+            i += CodedOutputStreamMicro.computeStringSize(8, getIndoorParentUid());
+        }
+        if (hasDist()) {
+            i += CodedOutputStreamMicro.computeInt32Size(9, getDist());
+        }
+        if (hasDirection()) {
+            i += CodedOutputStreamMicro.computeInt32Size(10, getDirection());
+        }
+        if (hasDescribe()) {
+            i += CodedOutputStreamMicro.computeStringSize(11, getDescribe());
+        }
+        this.f17105w = i;
+        return i;
+    }
+
+    public String getUid() {
+        return this.f17090h;
+    }
+
+    public boolean hasAddr() {
+        return this.f17091i;
+    }
+
+    public boolean hasCode() {
+        return this.f17083a;
+    }
+
+    public boolean hasDescribe() {
+        return this.f17103u;
+    }
+
+    public boolean hasDirection() {
+        return this.f17101s;
+    }
+
+    public boolean hasDist() {
+        return this.f17099q;
+    }
+
+    public boolean hasGeo() {
+        return this.f17093k;
+    }
+
+    public boolean hasIndoorFloor() {
+        return this.f17095m;
+    }
+
+    public boolean hasIndoorParentUid() {
+        return this.f17097o;
+    }
+
+    public boolean hasName() {
+        return this.f17085c;
+    }
+
+    public boolean hasNum() {
+        return this.f17087e;
+    }
+
+    public boolean hasUid() {
+        return this.f17089g;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public WayPoints mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 8:
+                    setCode(codedInputStreamMicro.readInt32());
+                    continue;
+                case 18:
+                    setName(codedInputStreamMicro.readString());
+                    continue;
+                case 24:
+                    setNum(codedInputStreamMicro.readInt32());
+                    continue;
+                case 34:
+                    setUid(codedInputStreamMicro.readString());
+                    continue;
+                case 42:
+                    setAddr(codedInputStreamMicro.readString());
+                    continue;
+                case 50:
+                    setGeo(codedInputStreamMicro.readString());
+                    continue;
+                case 58:
+                    setIndoorFloor(codedInputStreamMicro.readString());
+                    continue;
+                case 66:
+                    setIndoorParentUid(codedInputStreamMicro.readString());
+                    continue;
+                case NavCarInfo.CarType_57L /*72*/:
+                    setDist(codedInputStreamMicro.readInt32());
+                    continue;
+                case 80:
+                    setDirection(codedInputStreamMicro.readInt32());
+                    continue;
+                case 90:
+                    setDescribe(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public WayPoints setAddr(String str) {
+        this.f17091i = true;
+        this.f17092j = str;
+        return this;
+    }
+
+    public WayPoints setCode(int i) {
+        this.f17083a = true;
+        this.f17084b = i;
+        return this;
+    }
+
+    public WayPoints setDescribe(String str) {
+        this.f17103u = true;
+        this.f17104v = str;
+        return this;
+    }
+
+    public WayPoints setDirection(int i) {
+        this.f17101s = true;
+        this.f17102t = i;
+        return this;
+    }
+
+    public WayPoints setDist(int i) {
+        this.f17099q = true;
+        this.f17100r = i;
+        return this;
+    }
+
+    public WayPoints setGeo(String str) {
+        this.f17093k = true;
+        this.f17094l = str;
+        return this;
+    }
+
+    public WayPoints setIndoorFloor(String str) {
+        this.f17095m = true;
+        this.f17096n = str;
+        return this;
+    }
+
+    public WayPoints setIndoorParentUid(String str) {
+        this.f17097o = true;
+        this.f17098p = str;
+        return this;
+    }
+
+    public WayPoints setName(String str) {
+        this.f17085c = true;
+        this.f17086d = str;
+        return this;
+    }
+
+    public WayPoints setNum(int i) {
+        this.f17087e = true;
+        this.f17088f = i;
+        return this;
+    }
+
+    public WayPoints setUid(String str) {
+        this.f17089g = true;
+        this.f17090h = str;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasCode()) {
+            codedOutputStreamMicro.writeInt32(1, getCode());
+        }
+        if (hasName()) {
+            codedOutputStreamMicro.writeString(2, getName());
+        }
+        if (hasNum()) {
+            codedOutputStreamMicro.writeInt32(3, getNum());
+        }
+        if (hasUid()) {
+            codedOutputStreamMicro.writeString(4, getUid());
+        }
+        if (hasAddr()) {
+            codedOutputStreamMicro.writeString(5, getAddr());
+        }
+        if (hasGeo()) {
+            codedOutputStreamMicro.writeString(6, getGeo());
+        }
+        if (hasIndoorFloor()) {
+            codedOutputStreamMicro.writeString(7, getIndoorFloor());
+        }
+        if (hasIndoorParentUid()) {
+            codedOutputStreamMicro.writeString(8, getIndoorParentUid());
+        }
+        if (hasDist()) {
+            codedOutputStreamMicro.writeInt32(9, getDist());
+        }
+        if (hasDirection()) {
+            codedOutputStreamMicro.writeInt32(10, getDirection());
+        }
+        if (hasDescribe()) {
+            codedOutputStreamMicro.writeString(11, getDescribe());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/WayPoints.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

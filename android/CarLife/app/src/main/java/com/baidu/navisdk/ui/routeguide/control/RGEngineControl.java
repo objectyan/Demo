@@ -1,7 +1,8 @@
 package com.baidu.navisdk.ui.routeguide.control;
 
 import android.content.Context;
-import android.content.res.Resources;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.routeguide.BNRouteGuider;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
@@ -18,369 +19,276 @@ import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class RGEngineControl
-{
-  private static final String TAG = "RouteGuide";
-  private static volatile RGEngineControl me = null;
-  private boolean mManualSound;
-  private boolean mbForbidManualSoundWhenSilence = false;
-  
-  public static void destory()
-  {
-    if (me != null) {}
-    try
-    {
-      if (me != null) {
-        me.dispose();
-      }
-      me = null;
-      return;
-    }
-    finally {}
-  }
-  
-  private void dispose() {}
-  
-  public static RGEngineControl getInstance()
-  {
-    if (me == null) {}
-    try
-    {
-      if (me == null) {
-        me = new RGEngineControl();
-      }
-      return me;
-    }
-    finally {}
-  }
-  
-  private boolean reCalcRoute(int paramInt)
-  {
-    LogUtil.e("RouteGuide", "reCalcRoute");
-    BNavigator.getInstance().resetWithReCalcRoute();
-    Object localObject = getCurrentGeoPoint();
-    if ((localObject == null) || (!((GeoPoint)localObject).isValid())) {
-      return false;
-    }
-    RoutePlanNode localRoutePlanNode2 = new RoutePlanNode((GeoPoint)localObject, 3, null, null);
-    localRoutePlanNode2.mNodeType = 3;
-    localObject = RoutePlanModel.sNavNodeList;
-    RoutePlanNode localRoutePlanNode1 = ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getEndNode();
-    if (localRoutePlanNode1 == null) {
-      return false;
-    }
-    localRoutePlanNode1.mNodeType = 1;
-    ArrayList localArrayList = new ArrayList();
-    localArrayList.add(localRoutePlanNode2);
-    if ((localObject != null) && (((ArrayList)localObject).size() >= 3))
-    {
-      int i = 1;
-      while (i < ((ArrayList)localObject).size() - 1)
-      {
-        localRoutePlanNode2 = (RoutePlanNode)((ArrayList)localObject).get(i);
-        if (localRoutePlanNode2 != null) {
-          localArrayList.add(localRoutePlanNode2);
-        }
-        i += 1;
-      }
-    }
-    localArrayList.add(localRoutePlanNode1);
-    BNRoutePlaner.getInstance().setComeFrom(2);
-    BNRoutePlaner.getInstance().setEntry(2);
-    BNRoutePlaner.getInstance().setGuideEndType(1);
-    BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, paramInt);
-    RGNotificationController.getInstance().hideAllView(false, false);
-    return true;
-  }
-  
-  public boolean addViaPtToCalcRoute(GeoPoint paramGeoPoint, String paramString)
-  {
-    Object localObject = getCurrentGeoPoint();
-    if ((localObject == null) || (!((GeoPoint)localObject).isValid())) {
-      return false;
-    }
-    localObject = new RoutePlanNode((GeoPoint)localObject, 3, null, null);
-    paramGeoPoint = new RoutePlanNode(paramGeoPoint, 1, null, null);
-    paramGeoPoint.mName = paramString;
-    paramString = ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getEndNode();
-    ArrayList localArrayList = new ArrayList();
-    localArrayList.add(localObject);
-    localArrayList.add(paramGeoPoint);
-    localArrayList.add(paramString);
-    ((RoutePlanNode)localObject).mNodeType = 3;
-    paramGeoPoint.mNodeType = 1;
-    if (paramString != null) {
-      paramString.mNodeType = 1;
-    }
-    BNRoutePlaner.getInstance().setGuideEndType(1);
-    BNRoutePlaner.getInstance().setComeFrom(2);
-    BNRoutePlaner.getInstance().setEntry(2);
-    BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, 0);
-    return true;
-  }
-  
-  public void disableManuSound()
-  {
-    this.mManualSound = false;
-  }
-  
-  public void enableManualSound()
-  {
-    this.mManualSound = true;
-  }
-  
-  public GeoPoint getCarGeoPoint()
-  {
-    GeoPoint localGeoPoint = new GeoPoint();
-    Object localObject = new int[1];
-    localObject[0] = 0;
-    int[] arrayOfInt = new int[1];
-    arrayOfInt[0] = 0;
-    if ((BNRouteGuider.getInstance().getCarPoint((int[])localObject, arrayOfInt)) && (localObject[0] != 0) && (arrayOfInt[0] != 0))
-    {
-      LogUtil.e("RouteGuide", "getCarGeoPoint. Engine(guidance_control) value is valid");
-      localGeoPoint.setLongitudeE6(localObject[0]);
-      localGeoPoint.setLatitudeE6(arrayOfInt[0]);
-    }
-    for (;;)
-    {
-      if (localGeoPoint != null)
-      {
-        localObject = localGeoPoint;
-        if (localGeoPoint.isValid()) {}
-      }
-      else
-      {
-        localObject = BNLocationManagerProxy.getInstance().getLastValidLocation();
-      }
-      return (GeoPoint)localObject;
-      LogUtil.e("RouteGuide", "getCarGeoPoint. Engine(guidance_control) value is valid, set LastValidLocation as car point.");
-      localGeoPoint = BNSysLocationManager.getInstance().getLastValidLocation();
-    }
-  }
-  
-  public GeoPoint getCurrentGeoPoint()
-  {
-    new GeoPoint();
-    Object localObject2 = BNSysLocationManager.getInstance().getLastValidLocation();
-    Object localObject1;
-    if (localObject2 != null)
-    {
-      localObject1 = localObject2;
-      if (((GeoPoint)localObject2).isValid()) {}
-    }
-    else
-    {
-      localObject1 = BNLocationManagerProxy.getInstance().getLastValidLocation();
-    }
-    if (localObject1 != null)
-    {
-      localObject2 = localObject1;
-      if (((GeoPoint)localObject1).isValid()) {}
-    }
-    else
-    {
-      int[] arrayOfInt1 = new int[1];
-      arrayOfInt1[0] = 0;
-      int[] arrayOfInt2 = new int[1];
-      arrayOfInt2[0] = 0;
-      localObject2 = localObject1;
-      if (BNRouteGuider.getInstance().getCarPoint(arrayOfInt1, arrayOfInt2))
-      {
-        localObject2 = localObject1;
-        if (arrayOfInt1[0] != 0)
-        {
-          localObject2 = localObject1;
-          if (arrayOfInt2[0] != 0)
-          {
-            LogUtil.e("RouteGuide", "getCarGeoPoint. Engine(guidance_control) value is valid");
-            localObject2 = localObject1;
-            if (localObject1 == null) {
-              localObject2 = new GeoPoint();
+public class RGEngineControl {
+    private static final String TAG = "RouteGuide";
+    private static volatile RGEngineControl me = null;
+    private boolean mManualSound;
+    private boolean mbForbidManualSoundWhenSilence = false;
+
+    public static RGEngineControl getInstance() {
+        if (me == null) {
+            synchronized (RGEngineControl.class) {
+                if (me == null) {
+                    me = new RGEngineControl();
+                }
             }
-            ((GeoPoint)localObject2).setLongitudeE6(arrayOfInt1[0]);
-            ((GeoPoint)localObject2).setLatitudeE6(arrayOfInt2[0]);
-          }
         }
-      }
+        return me;
     }
-    return (GeoPoint)localObject2;
-  }
-  
-  public int getFirstRemainDist()
-  {
-    return ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getFirstRemainDist();
-  }
-  
-  public String getFirstRoadName()
-  {
-    String str2 = ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getFirstRoadName();
-    String str1;
-    if (str2 != null)
-    {
-      str1 = str2;
-      if (!StringUtils.isEmpty(str2)) {}
-    }
-    else
-    {
-      LogUtil.e("RouteGuide", "ERROR: current RoadName = null");
-      str1 = JarUtils.getResources().getString(1711669364);
-    }
-    return str1;
-  }
-  
-  public int getFirstTurnType()
-  {
-    return ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getFirstTurnType();
-  }
-  
-  public int getNodeNum()
-  {
-    return ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getNodeNum();
-  }
-  
-  public int getTotalDistance()
-  {
-    return ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getTotalDistanceInt();
-  }
-  
-  public int getTotalTime()
-  {
-    return ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getTotalTimeInt();
-  }
-  
-  public boolean isViaPoint(GeoPoint paramGeoPoint)
-  {
-    if (paramGeoPoint == null) {}
-    RoutePlanNode localRoutePlanNode;
-    do
-    {
-      Object localObject;
-      while (!((Iterator)localObject).hasNext())
-      {
-        do
-        {
-          return false;
-          localObject = ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getViaNodeList();
-        } while ((localObject == null) || (((ArrayList)localObject).size() < 1));
-        localObject = ((ArrayList)localObject).iterator();
-      }
-      localRoutePlanNode = (RoutePlanNode)((Iterator)localObject).next();
-    } while ((localRoutePlanNode.mGeoPoint == null) || (!localRoutePlanNode.mGeoPoint.equals(paramGeoPoint)));
-    return true;
-  }
-  
-  public boolean manualPlaySound(Context paramContext)
-  {
-    if ((this.mManualSound) && (!this.mbForbidManualSoundWhenSilence))
-    {
-      LogUtil.e("RouteGuide", "manualPlaySound");
-      return BNRoutePlaner.getInstance().ManualPlaySound();
-    }
-    return false;
-  }
-  
-  public boolean reCalcRoute()
-  {
-    return reCalcRoute(0);
-  }
-  
-  public boolean reCalcRouteWhenFail()
-  {
-    LogUtil.e("RouteGuide", "reCalcRouteWhenFail");
-    BNavigator.getInstance().resetWithReCalcRoute();
-    ArrayList localArrayList = RoutePlanModel.sNavNodeList;
-    RoutePlanModel localRoutePlanModel = (RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel");
-    RoutePlanNode localRoutePlanNode = localRoutePlanModel.getEndNode();
-    Object localObject2 = null;
-    GeoPoint localGeoPoint = getCurrentGeoPoint();
-    Object localObject1 = localObject2;
-    if (localGeoPoint != null)
-    {
-      localObject1 = localObject2;
-      if (localGeoPoint.isValid()) {
-        localObject1 = new RoutePlanNode(localGeoPoint, 3, null, null);
-      }
-    }
-    localObject2 = localObject1;
-    if (localObject1 == null) {
-      localObject2 = localRoutePlanModel.getStartNode();
-    }
-    localObject1 = new ArrayList();
-    ((ArrayList)localObject1).add(localObject2);
-    if ((localArrayList != null) && (localArrayList.size() >= 3))
-    {
-      int i = 1;
-      while (i < localArrayList.size() - 1)
-      {
-        localObject2 = (RoutePlanNode)localArrayList.get(i);
-        if (localObject2 != null) {
-          ((ArrayList)localObject1).add(localObject2);
+
+    public static void destory() {
+        if (me != null) {
+            synchronized (RGEngineControl.class) {
+                if (me != null) {
+                    me.dispose();
+                }
+            }
         }
-        i += 1;
-      }
+        me = null;
     }
-    ((ArrayList)localObject1).add(localRoutePlanNode);
-    BNRoutePlaner.getInstance().setComeFrom(2);
-    BNRoutePlaner.getInstance().setEntry(2);
-    BNRoutePlaner.getInstance().setGuideEndType(1);
-    BNRoutePlaner.getInstance().setPointsToCalcRoute((ArrayList)localObject1, 0);
-    RGNotificationController.getInstance().hideAllView(false, false);
-    return true;
-  }
-  
-  public boolean setEndPtToCalcRoute(GeoPoint paramGeoPoint)
-  {
-    Object localObject = getCurrentGeoPoint();
-    if ((localObject == null) || (!((GeoPoint)localObject).isValid())) {
-      return false;
+
+    private void dispose() {
     }
-    RoutePlanNode localRoutePlanNode = new RoutePlanNode((GeoPoint)localObject, 3, null, null);
-    localRoutePlanNode.mNodeType = 3;
-    localObject = new RoutePlanNode(paramGeoPoint, 1, null, null);
-    ArrayList localArrayList = new ArrayList();
-    ((RoutePlanNode)localObject).mNodeType = 1;
-    localArrayList.add(localRoutePlanNode);
-    paramGeoPoint = null;
-    if (RoutePlanModel.sNavNodeList.size() >= 3) {
-      paramGeoPoint = (RoutePlanNode)RoutePlanModel.sNavNodeList.get(1);
+
+    public void setVoiceMode(int voiceMode) {
+        if (voiceMode == 2) {
+            this.mbForbidManualSoundWhenSilence = true;
+        } else {
+            this.mbForbidManualSoundWhenSilence = false;
+        }
+        BNRouteGuider.getInstance().setVoiceMode(voiceMode);
     }
-    if (paramGeoPoint != null) {
-      localArrayList.add(paramGeoPoint);
+
+    public int getNodeNum() {
+        return ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getNodeNum();
     }
-    localArrayList.add(localObject);
-    BNRoutePlaner.getInstance().mEndNode = ((RoutePlanNode)localObject);
-    BNSettingManager.setEndNode((RoutePlanNode)localObject);
-    LogUtil.e("RouteGuide", "endNode route " + BNRoutePlaner.getInstance().mEndNode.toString());
-    if (BNRoutePlaner.getInstance().getGuideSceneType() != 4)
-    {
-      BNRoutePlaner.getInstance().setGuideSceneType(1);
-      BNRoutePlaner.getInstance().setGuideEndType(0);
+
+    public int getTotalDistance() {
+        return ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getTotalDistanceInt();
     }
-    for (;;)
-    {
-      BNRoutePlaner.getInstance().setComeFrom(2);
-      BNRoutePlaner.getInstance().setEntry(2);
-      BNRoutePlaner.getInstance().setPointsToCalcRoute(localArrayList, 0);
-      return true;
-      BNRoutePlaner.getInstance().setGuideSceneType(4);
-      BNRoutePlaner.getInstance().setGuideEndType(2);
+
+    public int getTotalTime() {
+        return ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getTotalTimeInt();
     }
-  }
-  
-  public void setVoiceMode(int paramInt)
-  {
-    if (paramInt == 2) {}
-    for (this.mbForbidManualSoundWhenSilence = true;; this.mbForbidManualSoundWhenSilence = false)
-    {
-      BNRouteGuider.getInstance().setVoiceMode(paramInt);
-      return;
+
+    public int getFirstTurnType() {
+        return ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getFirstTurnType();
     }
-  }
+
+    public int getFirstRemainDist() {
+        return ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getFirstRemainDist();
+    }
+
+    public String getFirstRoadName() {
+        String roadName = ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getFirstRoadName();
+        if (roadName != null && !StringUtils.isEmpty(roadName)) {
+            return roadName;
+        }
+        LogUtil.m15791e("RouteGuide", "ERROR: current RoadName = null");
+        return JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_no_name_road);
+    }
+
+    public GeoPoint getCarGeoPoint() {
+        GeoPoint carGeoPt = new GeoPoint();
+        int[] outX = new int[]{0};
+        int[] outY = new int[]{0};
+        if (!BNRouteGuider.getInstance().getCarPoint(outX, outY) || outX[0] == 0 || outY[0] == 0) {
+            LogUtil.m15791e("RouteGuide", "getCarGeoPoint. Engine(guidance_control) value is valid, set LastValidLocation as car point.");
+            carGeoPt = BNSysLocationManager.getInstance().getLastValidLocation();
+        } else {
+            LogUtil.m15791e("RouteGuide", "getCarGeoPoint. Engine(guidance_control) value is valid");
+            carGeoPt.setLongitudeE6(outX[0]);
+            carGeoPt.setLatitudeE6(outY[0]);
+        }
+        if (carGeoPt == null || !carGeoPt.isValid()) {
+            return BNLocationManagerProxy.getInstance().getLastValidLocation();
+        }
+        return carGeoPt;
+    }
+
+    public GeoPoint getCurrentGeoPoint() {
+        GeoPoint carGeoPt = new GeoPoint();
+        carGeoPt = BNSysLocationManager.getInstance().getLastValidLocation();
+        if (carGeoPt == null || !carGeoPt.isValid()) {
+            carGeoPt = BNLocationManagerProxy.getInstance().getLastValidLocation();
+        }
+        if (carGeoPt == null || !carGeoPt.isValid()) {
+            int[] outX = new int[]{0};
+            int[] outY = new int[]{0};
+            if (!(!BNRouteGuider.getInstance().getCarPoint(outX, outY) || outX[0] == 0 || outY[0] == 0)) {
+                LogUtil.m15791e("RouteGuide", "getCarGeoPoint. Engine(guidance_control) value is valid");
+                if (carGeoPt == null) {
+                    carGeoPt = new GeoPoint();
+                }
+                carGeoPt.setLongitudeE6(outX[0]);
+                carGeoPt.setLatitudeE6(outY[0]);
+            }
+        }
+        return carGeoPt;
+    }
+
+    public boolean manualPlaySound(Context context) {
+        if (!this.mManualSound || this.mbForbidManualSoundWhenSilence) {
+            return false;
+        }
+        LogUtil.m15791e("RouteGuide", "manualPlaySound");
+        return BNRoutePlaner.getInstance().ManualPlaySound();
+    }
+
+    public void enableManualSound() {
+        this.mManualSound = true;
+    }
+
+    public void disableManuSound() {
+        this.mManualSound = false;
+    }
+
+    public boolean addViaPtToCalcRoute(GeoPoint geoPoint, String name) {
+        GeoPoint carPt = getCurrentGeoPoint();
+        if (carPt == null || !carPt.isValid()) {
+            return false;
+        }
+        RoutePlanNode myPostionNode = new RoutePlanNode(carPt, 3, null, null);
+        RoutePlanNode viaNode = new RoutePlanNode(geoPoint, 1, null, null);
+        viaNode.mName = name;
+        RoutePlanNode endNode = ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getEndNode();
+        ArrayList<RoutePlanNode> nodeList = new ArrayList();
+        nodeList.add(myPostionNode);
+        nodeList.add(viaNode);
+        nodeList.add(endNode);
+        myPostionNode.mNodeType = 3;
+        viaNode.mNodeType = 1;
+        if (endNode != null) {
+            endNode.mNodeType = 1;
+        }
+        BNRoutePlaner.getInstance().setGuideEndType(1);
+        BNRoutePlaner.getInstance().setComeFrom(2);
+        BNRoutePlaner.getInstance().setEntry(2);
+        BNRoutePlaner.getInstance().setPointsToCalcRoute(nodeList, 0);
+        return true;
+    }
+
+    public boolean setEndPtToCalcRoute(GeoPoint geoPoint) {
+        GeoPoint carPt = getCurrentGeoPoint();
+        if (carPt == null || !carPt.isValid()) {
+            return false;
+        }
+        RoutePlanNode myPostionNode = new RoutePlanNode(carPt, 3, null, null);
+        myPostionNode.mNodeType = 3;
+        RoutePlanNode endNode = new RoutePlanNode(geoPoint, 1, null, null);
+        ArrayList<RoutePlanNode> nodeList = new ArrayList();
+        endNode.mNodeType = 1;
+        nodeList.add(myPostionNode);
+        RoutePlanNode viaNode = null;
+        if (RoutePlanModel.sNavNodeList.size() >= 3) {
+            viaNode = (RoutePlanNode) RoutePlanModel.sNavNodeList.get(1);
+        }
+        if (viaNode != null) {
+            nodeList.add(viaNode);
+        }
+        nodeList.add(endNode);
+        BNRoutePlaner.getInstance().mEndNode = endNode;
+        BNSettingManager.setEndNode(endNode);
+        LogUtil.m15791e("RouteGuide", "endNode route " + BNRoutePlaner.getInstance().mEndNode.toString());
+        if (BNRoutePlaner.getInstance().getGuideSceneType() != 4) {
+            BNRoutePlaner.getInstance().setGuideSceneType(1);
+            BNRoutePlaner.getInstance().setGuideEndType(0);
+        } else {
+            BNRoutePlaner.getInstance().setGuideSceneType(4);
+            BNRoutePlaner.getInstance().setGuideEndType(2);
+        }
+        BNRoutePlaner.getInstance().setComeFrom(2);
+        BNRoutePlaner.getInstance().setEntry(2);
+        BNRoutePlaner.getInstance().setPointsToCalcRoute(nodeList, 0);
+        return true;
+    }
+
+    public boolean reCalcRoute() {
+        return reCalcRoute(0);
+    }
+
+    private boolean reCalcRoute(int source) {
+        LogUtil.m15791e("RouteGuide", "reCalcRoute");
+        BNavigator.getInstance().resetWithReCalcRoute();
+        GeoPoint carPt = getCurrentGeoPoint();
+        if (carPt == null || !carPt.isValid()) {
+            return false;
+        }
+        RoutePlanNode myPostionNode = new RoutePlanNode(carPt, 3, null, null);
+        myPostionNode.mNodeType = 3;
+        ArrayList<RoutePlanNode> navNodeList = RoutePlanModel.sNavNodeList;
+        RoutePlanNode endNode = ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getEndNode();
+        if (endNode == null) {
+            return false;
+        }
+        endNode.mNodeType = 1;
+        ArrayList<RoutePlanNode> nodeList = new ArrayList();
+        nodeList.add(myPostionNode);
+        if (navNodeList != null && navNodeList.size() >= 3) {
+            for (int i = 1; i < navNodeList.size() - 1; i++) {
+                RoutePlanNode viaNode = (RoutePlanNode) navNodeList.get(i);
+                if (viaNode != null) {
+                    nodeList.add(viaNode);
+                }
+            }
+        }
+        nodeList.add(endNode);
+        BNRoutePlaner.getInstance().setComeFrom(2);
+        BNRoutePlaner.getInstance().setEntry(2);
+        BNRoutePlaner.getInstance().setGuideEndType(1);
+        BNRoutePlaner.getInstance().setPointsToCalcRoute(nodeList, source);
+        RGNotificationController.getInstance().hideAllView(false, false);
+        return true;
+    }
+
+    public boolean reCalcRouteWhenFail() {
+        LogUtil.m15791e("RouteGuide", "reCalcRouteWhenFail");
+        BNavigator.getInstance().resetWithReCalcRoute();
+        ArrayList<RoutePlanNode> navNodeList = RoutePlanModel.sNavNodeList;
+        RoutePlanModel routePlanModel = (RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN);
+        RoutePlanNode endNode = routePlanModel.getEndNode();
+        RoutePlanNode myPostionNode = null;
+        GeoPoint carPt = getCurrentGeoPoint();
+        if (carPt != null && carPt.isValid()) {
+            myPostionNode = new RoutePlanNode(carPt, 3, null, null);
+        }
+        if (myPostionNode == null) {
+            myPostionNode = routePlanModel.getStartNode();
+        }
+        ArrayList<RoutePlanNode> nodeList = new ArrayList();
+        nodeList.add(myPostionNode);
+        if (navNodeList != null && navNodeList.size() >= 3) {
+            for (int i = 1; i < navNodeList.size() - 1; i++) {
+                RoutePlanNode viaNode = (RoutePlanNode) navNodeList.get(i);
+                if (viaNode != null) {
+                    nodeList.add(viaNode);
+                }
+            }
+        }
+        nodeList.add(endNode);
+        BNRoutePlaner.getInstance().setComeFrom(2);
+        BNRoutePlaner.getInstance().setEntry(2);
+        BNRoutePlaner.getInstance().setGuideEndType(1);
+        BNRoutePlaner.getInstance().setPointsToCalcRoute(nodeList, 0);
+        RGNotificationController.getInstance().hideAllView(false, false);
+        return true;
+    }
+
+    public boolean isViaPoint(GeoPoint geoPoint) {
+        if (geoPoint == null) {
+            return false;
+        }
+        ArrayList<RoutePlanNode> viaList = ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getViaNodeList();
+        if (viaList == null || viaList.size() < 1) {
+            return false;
+        }
+        Iterator it = viaList.iterator();
+        while (it.hasNext()) {
+            RoutePlanNode node = (RoutePlanNode) it.next();
+            if (node.mGeoPoint != null && node.mGeoPoint.equals(geoPoint)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/control/RGEngineControl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

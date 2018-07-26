@@ -2,36 +2,27 @@ package com.google.android.support.v4.view;
 
 import android.view.MotionEvent;
 
-class MotionEventCompatEclair
-{
-  public static int findPointerIndex(MotionEvent paramMotionEvent, int paramInt)
-  {
-    return paramMotionEvent.findPointerIndex(paramInt);
-  }
-  
-  public static int getPointerCount(MotionEvent paramMotionEvent)
-  {
-    return paramMotionEvent.getPointerCount();
-  }
-  
-  public static int getPointerId(MotionEvent paramMotionEvent, int paramInt)
-  {
-    return paramMotionEvent.getPointerId(paramInt);
-  }
-  
-  public static float getX(MotionEvent paramMotionEvent, int paramInt)
-  {
-    return paramMotionEvent.getX(paramInt);
-  }
-  
-  public static float getY(MotionEvent paramMotionEvent, int paramInt)
-  {
-    return paramMotionEvent.getY(paramInt);
-  }
+class MotionEventCompatEclair {
+    MotionEventCompatEclair() {
+    }
+
+    public static int findPointerIndex(MotionEvent event, int pointerId) {
+        return event.findPointerIndex(pointerId);
+    }
+
+    public static int getPointerId(MotionEvent event, int pointerIndex) {
+        return event.getPointerId(pointerIndex);
+    }
+
+    public static float getX(MotionEvent event, int pointerIndex) {
+        return event.getX(pointerIndex);
+    }
+
+    public static float getY(MotionEvent event, int pointerIndex) {
+        return event.getY(pointerIndex);
+    }
+
+    public static int getPointerCount(MotionEvent event) {
+        return event.getPointerCount();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/MotionEventCompatEclair.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

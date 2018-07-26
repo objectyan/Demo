@@ -2,93 +2,91 @@ package com.indooratlas.android.sdk._internal;
 
 import java.util.Arrays;
 
-public abstract class ji
-{
-  private final int a = 3;
-  protected final byte b = 61;
-  protected final int c = 0;
-  private final int d = 4;
-  private final int e;
-  
-  protected ji(int paramInt)
-  {
-    this.e = paramInt;
-  }
-  
-  protected static byte[] a(int paramInt, a parama)
-  {
-    if ((parama.c == null) || (parama.c.length < parama.d + paramInt))
-    {
-      if (parama.c == null)
-      {
-        parama.c = new byte[' '];
-        parama.d = 0;
-        parama.e = 0;
-      }
-      for (;;)
-      {
-        return parama.c;
-        byte[] arrayOfByte = new byte[parama.c.length * 2];
-        System.arraycopy(parama.c, 0, arrayOfByte, 0, parama.c.length);
-        parama.c = arrayOfByte;
-      }
-    }
-    return parama.c;
-  }
-  
-  abstract void a(byte[] paramArrayOfByte, int paramInt1, int paramInt2, a parama);
-  
-  protected abstract boolean a(byte paramByte);
-  
-  protected final boolean b(byte[] paramArrayOfByte)
-  {
-    if (paramArrayOfByte == null) {}
-    for (;;)
-    {
-      return false;
-      int j = paramArrayOfByte.length;
-      int i = 0;
-      while (i < j)
-      {
-        byte b1 = paramArrayOfByte[i];
-        if ((61 == b1) || (a(b1))) {
-          return true;
+public abstract class ji {
+    /* renamed from: a */
+    private final int f24445a = 3;
+    /* renamed from: b */
+    protected final byte f24446b = (byte) 61;
+    /* renamed from: c */
+    protected final int f24447c = 0;
+    /* renamed from: d */
+    private final int f24448d = 4;
+    /* renamed from: e */
+    private final int f24449e;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ji$a */
+    static class C5989a {
+        /* renamed from: a */
+        int f24459a;
+        /* renamed from: b */
+        long f24460b;
+        /* renamed from: c */
+        byte[] f24461c;
+        /* renamed from: d */
+        int f24462d;
+        /* renamed from: e */
+        int f24463e;
+        /* renamed from: f */
+        boolean f24464f;
+        /* renamed from: g */
+        int f24465g;
+        /* renamed from: h */
+        int f24466h;
+
+        C5989a() {
         }
-        i += 1;
-      }
+
+        public final String toString() {
+            return String.format("%s[buffer=%s, currentLinePos=%s, eof=%s, ibitWorkArea=%s, lbitWorkArea=%s, modulus=%s, pos=%s, readPos=%s]", new Object[]{getClass().getSimpleName(), Arrays.toString(this.f24461c), Integer.valueOf(this.f24465g), Boolean.valueOf(this.f24464f), Integer.valueOf(this.f24459a), Long.valueOf(this.f24460b), Integer.valueOf(this.f24466h), Integer.valueOf(this.f24462d), Integer.valueOf(this.f24463e)});
+        }
     }
-  }
-  
-  public final long c(byte[] paramArrayOfByte)
-  {
-    long l2 = (paramArrayOfByte.length + this.a - 1) / this.a * this.d;
-    long l1 = l2;
-    if (this.c > 0) {
-      l1 = l2 + (this.c + l2 - 1L) / this.c * this.e;
+
+    /* renamed from: a */
+    abstract void mo4776a(byte[] bArr, int i, int i2, C5989a c5989a);
+
+    /* renamed from: a */
+    protected abstract boolean mo4777a(byte b);
+
+    protected ji(int i) {
+        this.f24449e = i;
     }
-    return l1;
-  }
-  
-  static final class a
-  {
-    int a;
-    long b;
-    byte[] c;
-    int d;
-    int e;
-    boolean f;
-    int g;
-    int h;
-    
-    public final String toString()
-    {
-      return String.format("%s[buffer=%s, currentLinePos=%s, eof=%s, ibitWorkArea=%s, lbitWorkArea=%s, modulus=%s, pos=%s, readPos=%s]", new Object[] { getClass().getSimpleName(), Arrays.toString(this.c), Integer.valueOf(this.g), Boolean.valueOf(this.f), Integer.valueOf(this.a), Long.valueOf(this.b), Integer.valueOf(this.h), Integer.valueOf(this.d), Integer.valueOf(this.e) });
+
+    /* renamed from: a */
+    protected static byte[] m21317a(int i, C5989a c5989a) {
+        if (c5989a.f24461c != null && c5989a.f24461c.length >= c5989a.f24462d + i) {
+            return c5989a.f24461c;
+        }
+        if (c5989a.f24461c == null) {
+            c5989a.f24461c = new byte[8192];
+            c5989a.f24462d = 0;
+            c5989a.f24463e = 0;
+        } else {
+            Object obj = new byte[(c5989a.f24461c.length * 2)];
+            System.arraycopy(c5989a.f24461c, 0, obj, 0, c5989a.f24461c.length);
+            c5989a.f24461c = obj;
+        }
+        return c5989a.f24461c;
     }
-  }
+
+    /* renamed from: b */
+    protected final boolean m21320b(byte[] bArr) {
+        if (bArr == null) {
+            return false;
+        }
+        for (byte b : bArr) {
+            if ((byte) 61 == b || mo4777a(b)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* renamed from: c */
+    public final long m21321c(byte[] bArr) {
+        long length = ((long) (((bArr.length + this.f24445a) - 1) / this.f24445a)) * ((long) this.f24448d);
+        if (this.f24447c > 0) {
+            return length + ((((((long) this.f24447c) + length) - 1) / ((long) this.f24447c)) * ((long) this.f24449e));
+        }
+        return length;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ji.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

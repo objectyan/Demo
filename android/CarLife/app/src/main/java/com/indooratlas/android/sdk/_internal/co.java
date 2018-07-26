@@ -4,118 +4,114 @@ import android.support.annotation.NonNull;
 import com.indooratlas.android.sdk.IALocation;
 import com.indooratlas.android.sdk.IALocation.Builder;
 import com.indooratlas.android.sdk.IARegion;
+import com.indooratlas.android.sdk._internal.ex.C5877a;
+import com.indooratlas.android.sdk._internal.fc.C5891c;
 import java.util.Collection;
 import java.util.Comparator;
 
-public final class co
-{
-  public static Comparator<a> g = new Comparator() {};
-  public fc.c a = null;
-  public IARegion b = null;
-  public IARegion c = null;
-  public IARegion d = null;
-  public IARegion e = null;
-  public IALocation f = null;
-  private final bi h;
-  
-  public co(@NonNull bi parambi)
-  {
-    eg.a(parambi, "listener cannot be null", new Object[0]);
-    this.h = parambi;
-  }
-  
-  public static void a(IARegion paramIARegion1, IARegion paramIARegion2, Collection<a> paramCollection, boolean paramBoolean)
-  {
-    if (paramIARegion1 == null) {
-      if (paramIARegion2 != null) {
-        paramCollection.add(new a(paramBoolean, paramIARegion2));
-      }
-    }
-    do
-    {
-      return;
-      if (paramIARegion2 == null)
-      {
-        paramCollection.add(new a(paramBoolean, null));
-        return;
-      }
-    } while (paramIARegion1.equals(paramIARegion2));
-    paramCollection.add(new a(paramBoolean, null));
-    paramCollection.add(new a(paramBoolean, paramIARegion2));
-  }
-  
-  public final void a(double paramDouble1, double paramDouble2, double paramDouble3, double paramDouble4)
-  {
-    float f1 = (float)paramDouble4;
-    Object localObject1;
-    if (this.e != null) {
-      localObject1 = this.e;
-    }
-    for (;;)
-    {
-      Object localObject2 = this.a;
-      long l = System.currentTimeMillis();
-      localObject1 = new IALocation.Builder("IndoorAtlas").withLatitude(paramDouble1).withLongitude(paramDouble2).withAccuracy(f1).withRegion((IARegion)localObject1).withTime(l);
-      if (paramDouble3 != 0.0D) {
-        ((IALocation.Builder)localObject1).withBearing((float)paramDouble3);
-      }
-      if (cp.a((fc.c)localObject2))
-      {
-        localObject2 = ((fc.c)localObject2).b.b;
-        if (((ex.a)localObject2).g != null) {
-          ((IALocation.Builder)localObject1).withFloorLevel(((ex.a)localObject2).g.b);
+public final class co {
+    /* renamed from: g */
+    public static Comparator<C5842a> f23337g = new C58411();
+    /* renamed from: a */
+    public C5891c f23338a = null;
+    /* renamed from: b */
+    public IARegion f23339b = null;
+    /* renamed from: c */
+    public IARegion f23340c = null;
+    /* renamed from: d */
+    public IARegion f23341d = null;
+    /* renamed from: e */
+    public IARegion f23342e = null;
+    /* renamed from: f */
+    public IALocation f23343f = null;
+    /* renamed from: h */
+    private final bi f23344h;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.co$1 */
+    static class C58411 implements Comparator<C5842a> {
+        C58411() {
         }
-        if (((ex.a)localObject2).l != null) {
-          ((IALocation.Builder)localObject1).withFloorCertainty(((ex.a)localObject2).l.b);
+
+        public final /* bridge */ /* synthetic */ int compare(Object obj, Object obj2) {
+            return ((C5842a) obj).f23336c - ((C5842a) obj2).f23336c;
         }
-        if (((ex.a)localObject2).f != null) {
-          ((IALocation.Builder)localObject1).withAltitude(((ex.a)localObject2).f.b);
-        }
-      }
-      localObject1 = ((IALocation.Builder)localObject1).build();
-      this.f = ((IALocation)localObject1);
-      this.h.a((IALocation)localObject1);
-      return;
-      if (this.d != null) {
-        localObject1 = this.d;
-      } else {
-        localObject1 = null;
-      }
     }
-  }
-  
-  public static final class a
-  {
-    public boolean a;
-    public IARegion b;
-    final int c;
-    
-    a(boolean paramBoolean, IARegion paramIARegion)
-    {
-      this.a = paramBoolean;
-      this.b = paramIARegion;
-      if (this.b == null)
-      {
-        if (!this.a)
-        {
-          this.c = 1;
-          return;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.co$a */
+    public static class C5842a {
+        /* renamed from: a */
+        public boolean f23334a;
+        /* renamed from: b */
+        public IARegion f23335b;
+        /* renamed from: c */
+        final int f23336c;
+
+        C5842a(boolean z, IARegion iARegion) {
+            this.f23334a = z;
+            this.f23335b = iARegion;
+            if (this.f23335b == null) {
+                if (this.f23334a) {
+                    this.f23336c = 2;
+                } else {
+                    this.f23336c = 1;
+                }
+            } else if (this.f23334a) {
+                this.f23336c = 3;
+            } else {
+                this.f23336c = 4;
+            }
         }
-        this.c = 2;
-        return;
-      }
-      if (this.a)
-      {
-        this.c = 3;
-        return;
-      }
-      this.c = 4;
     }
-  }
+
+    public co(@NonNull bi biVar) {
+        eg.m20413a((Object) biVar, "listener cannot be null", new Object[0]);
+        this.f23344h = biVar;
+    }
+
+    /* renamed from: a */
+    public final void m20235a(double d, double d2, double d3, double d4) {
+        IARegion iARegion;
+        float f = (float) d4;
+        if (this.f23342e != null) {
+            iARegion = this.f23342e;
+        } else if (this.f23341d != null) {
+            iARegion = this.f23341d;
+        } else {
+            iARegion = null;
+        }
+        C5891c c5891c = this.f23338a;
+        Builder withTime = new Builder("IndoorAtlas").withLatitude(d).withLongitude(d2).withAccuracy(f).withRegion(iARegion).withTime(System.currentTimeMillis());
+        if (d3 != 0.0d) {
+            withTime.withBearing((float) d3);
+        }
+        if (cp.m20240a(c5891c)) {
+            C5877a c5877a = c5891c.f23625b.f23623b;
+            if (c5877a.f23575g != null) {
+                withTime.withFloorLevel(c5877a.f23575g.f24067b);
+            }
+            if (c5877a.f23580l != null) {
+                withTime.withFloorCertainty(c5877a.f23580l.f23832b);
+            }
+            if (c5877a.f23574f != null) {
+                withTime.withAltitude((double) c5877a.f23574f.f23832b);
+            }
+        }
+        IALocation build = withTime.build();
+        this.f23343f = build;
+        this.f23344h.mo4564a(build);
+    }
+
+    /* renamed from: a */
+    public static void m20234a(IARegion iARegion, IARegion iARegion2, Collection<C5842a> collection, boolean z) {
+        if (iARegion == null) {
+            if (iARegion2 != null) {
+                collection.add(new C5842a(z, iARegion2));
+            }
+        } else if (iARegion2 == null) {
+            collection.add(new C5842a(z, null));
+        } else if (!iARegion.equals(iARegion2)) {
+            collection.add(new C5842a(z, null));
+            collection.add(new C5842a(z, iARegion2));
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/co.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

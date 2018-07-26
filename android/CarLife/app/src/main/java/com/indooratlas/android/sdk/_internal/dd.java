@@ -2,51 +2,46 @@ package com.indooratlas.android.sdk._internal;
 
 import android.os.Bundle;
 
-public final class dd
-  implements cy
-{
-  public int a;
-  public dc[] b = new dc[0];
-  public Bundle c = new Bundle();
-  private int d;
-  
-  public final void a(cx paramcx)
-  {
-    this.d = 0;
-    b((cx)eg.a(paramcx, "event must not be null", new Object[0]));
-  }
-  
-  public final void a(dc paramdc)
-  {
-    if (this.a == this.b.length)
-    {
-      arrayOfdc = new dc[this.a + 1];
-      System.arraycopy(this.b, 0, arrayOfdc, 0, this.a);
-      this.b = arrayOfdc;
+public final class dd implements cy {
+    /* renamed from: a */
+    public int f23375a;
+    /* renamed from: b */
+    public dc[] f23376b = new dc[0];
+    /* renamed from: c */
+    public Bundle f23377c = new Bundle();
+    /* renamed from: d */
+    private int f23378d;
+
+    /* renamed from: a */
+    public final void mo4657a(cx cxVar) {
+        this.f23378d = 0;
+        m20302b((cx) eg.m20413a((Object) cxVar, "event must not be null", new Object[0]));
     }
-    dc[] arrayOfdc = this.b;
-    int i = this.a;
-    this.a = (i + 1);
-    arrayOfdc[i] = paramdc;
-  }
-  
-  public final void b(cx paramcx)
-  {
-    while (this.d < this.a)
-    {
-      Object localObject = this.b;
-      int i = this.d;
-      this.d = (i + 1);
-      localObject = localObject[i];
-      if (((dc)localObject).a()) {
-        ((dc)localObject).a(paramcx, this);
-      }
+
+    /* renamed from: a */
+    public final void m20301a(dc dcVar) {
+        if (this.f23375a == this.f23376b.length) {
+            Object obj = new dc[(this.f23375a + 1)];
+            System.arraycopy(this.f23376b, 0, obj, 0, this.f23375a);
+            this.f23376b = obj;
+        }
+        dc[] dcVarArr = this.f23376b;
+        int i = this.f23375a;
+        this.f23375a = i + 1;
+        dcVarArr[i] = dcVar;
     }
-  }
+
+    /* renamed from: b */
+    public final void m20302b(cx cxVar) {
+        while (this.f23378d < this.f23375a) {
+            dc[] dcVarArr = this.f23376b;
+            int i = this.f23378d;
+            this.f23378d = i + 1;
+            dc dcVar = dcVarArr[i];
+            if (dcVar.mo4617a()) {
+                dcVar.mo4616a(cxVar, this);
+                return;
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dd.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

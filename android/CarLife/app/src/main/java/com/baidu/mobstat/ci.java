@@ -1,18 +1,17 @@
 package com.baidu.mobstat;
 
-class ci
-  implements Runnable
-{
-  ci(ch paramch, long paramLong) {}
-  
-  public void run()
-  {
-    this.b.a(this.a);
-  }
+class ci implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ long f19584a;
+    /* renamed from: b */
+    final /* synthetic */ ch f19585b;
+
+    ci(ch chVar, long j) {
+        this.f19585b = chVar;
+        this.f19584a = j;
+    }
+
+    public void run() {
+        this.f19585b.m15585a(this.f19584a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ci.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,60 +1,52 @@
 package com.google.android.support.v4.view;
 
-import android.content.Context;
 import android.os.Build.VERSION;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 
-public class ViewParentCompat
-{
-  static final ViewParentCompatImpl IMPL = new ViewParentCompatStubImpl();
-  
-  static
-  {
-    if (Build.VERSION.SDK_INT >= 14)
-    {
-      IMPL = new ViewParentCompatICSImpl();
-      return;
+public class ViewParentCompat {
+    static final ViewParentCompatImpl IMPL;
+
+    interface ViewParentCompatImpl {
+        boolean requestSendAccessibilityEvent(ViewParent viewParent, View view, AccessibilityEvent accessibilityEvent);
     }
-  }
-  
-  public static boolean requestSendAccessibilityEvent(ViewParent paramViewParent, View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    return IMPL.requestSendAccessibilityEvent(paramViewParent, paramView, paramAccessibilityEvent);
-  }
-  
-  static class ViewParentCompatICSImpl
-    extends ViewParentCompat.ViewParentCompatStubImpl
-  {
-    public boolean requestSendAccessibilityEvent(ViewParent paramViewParent, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      return ViewParentCompatICS.requestSendAccessibilityEvent(paramViewParent, paramView, paramAccessibilityEvent);
+
+    static class ViewParentCompatStubImpl implements ViewParentCompatImpl {
+        ViewParentCompatStubImpl() {
+        }
+
+        public boolean requestSendAccessibilityEvent(ViewParent parent, View child, AccessibilityEvent event) {
+            if (child == null) {
+                return false;
+            }
+            ((AccessibilityManager) child.getContext().getSystemService("accessibility")).sendAccessibilityEvent(event);
+            return true;
+        }
     }
-  }
-  
-  static abstract interface ViewParentCompatImpl
-  {
-    public abstract boolean requestSendAccessibilityEvent(ViewParent paramViewParent, View paramView, AccessibilityEvent paramAccessibilityEvent);
-  }
-  
-  static class ViewParentCompatStubImpl
-    implements ViewParentCompat.ViewParentCompatImpl
-  {
-    public boolean requestSendAccessibilityEvent(ViewParent paramViewParent, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      if (paramView == null) {
-        return false;
-      }
-      ((AccessibilityManager)paramView.getContext().getSystemService("accessibility")).sendAccessibilityEvent(paramAccessibilityEvent);
-      return true;
+
+    static class ViewParentCompatICSImpl extends ViewParentCompatStubImpl {
+        ViewParentCompatICSImpl() {
+        }
+
+        public boolean requestSendAccessibilityEvent(ViewParent parent, View child, AccessibilityEvent event) {
+            return ViewParentCompatICS.requestSendAccessibilityEvent(parent, child, event);
+        }
     }
-  }
+
+    static {
+        if (VERSION.SDK_INT >= 14) {
+            IMPL = new ViewParentCompatICSImpl();
+        } else {
+            IMPL = new ViewParentCompatStubImpl();
+        }
+    }
+
+    private ViewParentCompat() {
+    }
+
+    public static boolean requestSendAccessibilityEvent(ViewParent parent, View child, AccessibilityEvent event) {
+        return IMPL.requestSendAccessibilityEvent(parent, child, event);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/ViewParentCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,42 +2,32 @@ package com.baidu.ufosdk.ui;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebView;
-import android.widget.LinearLayout;
-import com.baidu.ufosdk.b.c;
-import com.baidu.ufosdk.util.h;
-import com.baidu.ufosdk.util.i;
+import com.baidu.ufosdk.p248b.C5170c;
+import com.baidu.ufosdk.util.C5215h;
+import com.baidu.ufosdk.util.C5216i;
 
-final class ad
-  implements View.OnClickListener
-{
-  ad(FeedbackHotActivity paramFeedbackHotActivity) {}
-  
-  public final void onClick(View paramView)
-  {
-    if (!h.a())
-    {
-      FeedbackHotActivity.b(this.a).setVisibility(0);
-      FeedbackHotActivity.d(this.a).setVisibility(8);
-      if ((c.b(this.a.getApplicationContext()).contains("UNKNOWN")) || (c.b(this.a.getApplicationContext()).contains("NONE")))
-      {
-        FeedbackHotActivity.b(this.a).setVisibility(8);
-        i.a(this.a.getApplicationContext(), FeedbackHotActivity.c(this.a));
-        FeedbackHotActivity.d(this.a).setVisibility(0);
-      }
+/* compiled from: FeedbackHotActivity */
+final class ad implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackHotActivity f21540a;
+
+    ad(FeedbackHotActivity feedbackHotActivity) {
+        this.f21540a = feedbackHotActivity;
     }
-    else
-    {
-      return;
+
+    public final void onClick(View view) {
+        if (!C5215h.m17755a()) {
+            this.f21540a.f21446k.setVisibility(0);
+            this.f21540a.f21442g.setVisibility(8);
+            if (C5170c.m17557b(this.f21540a.getApplicationContext()).contains("UNKNOWN") || C5170c.m17557b(this.f21540a.getApplicationContext()).contains("NONE")) {
+                this.f21540a.f21446k.setVisibility(8);
+                C5216i.m17762a(this.f21540a.getApplicationContext(), this.f21540a.f21447l);
+                this.f21540a.f21442g.setVisibility(0);
+                return;
+            }
+            this.f21540a.m17612a();
+            this.f21540a.f21442g.setVisibility(8);
+            this.f21540a.f21444i.setVisibility(0);
+        }
     }
-    FeedbackHotActivity.h(this.a);
-    FeedbackHotActivity.d(this.a).setVisibility(8);
-    FeedbackHotActivity.a(this.a).setVisibility(0);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ad.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

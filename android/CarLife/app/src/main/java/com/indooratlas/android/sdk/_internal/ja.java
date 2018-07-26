@@ -1,84 +1,78 @@
 package com.indooratlas.android.sdk._internal;
 
-final class ja
-{
-  final byte[] a;
-  int b;
-  int c;
-  boolean d;
-  boolean e;
-  ja f;
-  ja g;
-  
-  ja()
-  {
-    this.a = new byte['ࠀ'];
-    this.e = true;
-    this.d = false;
-  }
-  
-  ja(ja paramja)
-  {
-    this(paramja.a, paramja.b, paramja.c);
-    paramja.d = true;
-  }
-  
-  private ja(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    this.a = paramArrayOfByte;
-    this.b = paramInt1;
-    this.c = paramInt2;
-    this.e = false;
-    this.d = true;
-  }
-  
-  public final ja a()
-  {
-    if (this.f != this) {}
-    for (ja localja = this.f;; localja = null)
-    {
-      this.g.f = this.f;
-      this.f.g = this.g;
-      this.f = null;
-      this.g = null;
-      return localja;
+final class ja {
+    /* renamed from: a */
+    final byte[] f24429a;
+    /* renamed from: b */
+    int f24430b;
+    /* renamed from: c */
+    int f24431c;
+    /* renamed from: d */
+    boolean f24432d;
+    /* renamed from: e */
+    boolean f24433e;
+    /* renamed from: f */
+    ja f24434f;
+    /* renamed from: g */
+    ja f24435g;
+
+    ja() {
+        this.f24429a = new byte[2048];
+        this.f24433e = true;
+        this.f24432d = false;
     }
-  }
-  
-  public final ja a(ja paramja)
-  {
-    paramja.g = this;
-    paramja.f = this.f;
-    this.f.g = paramja;
-    this.f = paramja;
-    return paramja;
-  }
-  
-  public final void a(ja paramja, int paramInt)
-  {
-    if (!paramja.e) {
-      throw new IllegalArgumentException();
+
+    ja(ja jaVar) {
+        this(jaVar.f24429a, jaVar.f24430b, jaVar.f24431c);
+        jaVar.f24432d = true;
     }
-    if (paramja.c + paramInt > 2048)
-    {
-      if (paramja.d) {
+
+    private ja(byte[] bArr, int i, int i2) {
+        this.f24429a = bArr;
+        this.f24430b = i;
+        this.f24431c = i2;
+        this.f24433e = false;
+        this.f24432d = true;
+    }
+
+    /* renamed from: a */
+    public final ja m21304a() {
+        ja jaVar = this.f24434f != this ? this.f24434f : null;
+        this.f24435g.f24434f = this.f24434f;
+        this.f24434f.f24435g = this.f24435g;
+        this.f24434f = null;
+        this.f24435g = null;
+        return jaVar;
+    }
+
+    /* renamed from: a */
+    public final ja m21305a(ja jaVar) {
+        jaVar.f24435g = this;
+        jaVar.f24434f = this.f24434f;
+        this.f24434f.f24435g = jaVar;
+        this.f24434f = jaVar;
+        return jaVar;
+    }
+
+    /* renamed from: a */
+    public final void m21306a(ja jaVar, int i) {
+        if (jaVar.f24433e) {
+            if (jaVar.f24431c + i > 2048) {
+                if (jaVar.f24432d) {
+                    throw new IllegalArgumentException();
+                } else if ((jaVar.f24431c + i) - jaVar.f24430b > 2048) {
+                    throw new IllegalArgumentException();
+                } else {
+                    System.arraycopy(jaVar.f24429a, jaVar.f24430b, jaVar.f24429a, 0, jaVar.f24431c - jaVar.f24430b);
+                    jaVar.f24431c -= jaVar.f24430b;
+                    jaVar.f24430b = 0;
+                }
+            }
+            System.arraycopy(this.f24429a, this.f24430b, jaVar.f24429a, jaVar.f24431c, i);
+            jaVar.f24431c += i;
+            this.f24430b += i;
+            return;
+        }
         throw new IllegalArgumentException();
-      }
-      if (paramja.c + paramInt - paramja.b > 2048) {
-        throw new IllegalArgumentException();
-      }
-      System.arraycopy(paramja.a, paramja.b, paramja.a, 0, paramja.c - paramja.b);
-      paramja.c -= paramja.b;
-      paramja.b = 0;
     }
-    System.arraycopy(this.a, this.b, paramja.a, paramja.c, paramInt);
-    paramja.c += paramInt;
-    this.b += paramInt;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ja.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

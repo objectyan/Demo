@@ -1,22 +1,15 @@
 package com.baidu.mapframework.nirvana.concurrent;
 
-public class QueueToken
-{
-  private final ConcurrentQueueRunner a;
-  
-  QueueToken(ConcurrentQueueRunner paramConcurrentQueueRunner)
-  {
-    this.a = paramConcurrentQueueRunner;
-  }
-  
-  ConcurrentQueueRunner a()
-  {
-    return this.a;
-  }
+public class QueueToken {
+    /* renamed from: a */
+    private final ConcurrentQueueRunner f19151a;
+
+    QueueToken(ConcurrentQueueRunner runner) {
+        this.f19151a = runner;
+    }
+
+    /* renamed from: a */
+    ConcurrentQueueRunner m15163a() {
+        return this.f19151a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/concurrent/QueueToken.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

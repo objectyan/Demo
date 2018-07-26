@@ -1,7 +1,6 @@
 package com.baidu.navisdk.util.listener;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -12,113 +11,82 @@ import android.os.Looper;
 import android.provider.Settings.System;
 import com.baidu.navisdk.BNaviModuleManager;
 import com.baidu.navisdk.ui.routeguide.control.RGViewController;
-import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
 import com.baidu.navisdk.util.common.AudioUtils;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.PackageUtil;
 
-public class RingModeStatusReceiver
-  extends BroadcastReceiver
-{
-  private static final String TAG = "RingModeStatusReceiver";
-  private static boolean hasRegistered = false;
-  private static ContentObserver mMuteChangeObserver = new ContentObserver(new Handler(Looper.getMainLooper()))
-  {
-    public boolean deliverSelfNotifications()
-    {
-      LogUtil.e("RingModeStatusReceiver", "deliverSelfNotifications");
-      return super.deliverSelfNotifications();
+public class RingModeStatusReceiver extends BroadcastReceiver {
+    private static final String TAG = "RingModeStatusReceiver";
+    private static boolean hasRegistered = false;
+    private static ContentObserver mMuteChangeObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+        public boolean deliverSelfNotifications() {
+            LogUtil.m15791e(RingModeStatusReceiver.TAG, "deliverSelfNotifications");
+            return super.deliverSelfNotifications();
+        }
+
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            LogUtil.m15791e(RingModeStatusReceiver.TAG, "onChange selfChange:" + selfChange);
+        }
+
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            LogUtil.m15791e(RingModeStatusReceiver.TAG, "onChange selfChange:" + selfChange + ", Uri:" + uri.toString());
+            if (AudioUtils.getCurrentVolume(BNaviModuleManager.getContext()) > 0) {
+                RGViewController.getInstance().updateLowVolumeView(false);
+            } else {
+                RGViewController.getInstance().updateLowVolumeView(true);
+            }
+        }
+    };
+    private static RingModeStatusReceiver sInstance = new RingModeStatusReceiver();
+
+    private RingModeStatusReceiver() {
     }
-    
-    public void onChange(boolean paramAnonymousBoolean)
-    {
-      super.onChange(paramAnonymousBoolean);
-      LogUtil.e("RingModeStatusReceiver", "onChange selfChange:" + paramAnonymousBoolean);
+
+    public static void initRingModeStatusReceiver(Context context) {
+        LogUtil.m15791e(TAG, "initRingModeStatusReceiver");
+        if (context != null && !hasRegistered) {
+            IntentFilter filter = new IntentFilter("android.media.RINGER_MODE_CHANGED");
+            filter.setPriority(Integer.MAX_VALUE);
+            try {
+                context.registerReceiver(sInstance, filter);
+                hasRegistered = true;
+            } catch (Exception e) {
+                LogUtil.m15791e(TAG, "initRingModeStatusReceiver cause :" + e.getCause());
+                LogUtil.m15791e(TAG, "initRingModeStatusReceiver crash :" + e.getMessage());
+            }
+            if (PackageUtil.isSmartisanPhone()) {
+                context.getContentResolver().registerContentObserver(System.getUriFor("volume_panel_mute_enable"), true, mMuteChangeObserver);
+            }
+        }
     }
-    
-    public void onChange(boolean paramAnonymousBoolean, Uri paramAnonymousUri)
-    {
-      super.onChange(paramAnonymousBoolean, paramAnonymousUri);
-      LogUtil.e("RingModeStatusReceiver", "onChange selfChange:" + paramAnonymousBoolean + ", Uri:" + paramAnonymousUri.toString());
-      if (AudioUtils.getCurrentVolume(BNaviModuleManager.getContext()) > 0)
-      {
-        RGViewController.getInstance().updateLowVolumeView(false);
-        return;
-      }
-      RGViewController.getInstance().updateLowVolumeView(true);
+
+    public static void uninitRingModeStatusReceiver(Context context) {
+        LogUtil.m15791e(TAG, "uninitRingModeStatusReceiver");
+        if (context != null && hasRegistered) {
+            hasRegistered = false;
+            try {
+                context.unregisterReceiver(sInstance);
+            } catch (Exception e) {
+                LogUtil.m15791e(TAG, "uninitRingModeStatusReceiver crash :" + e.getMessage());
+            }
+            if (PackageUtil.isSmartisanPhone()) {
+                context.getContentResolver().unregisterContentObserver(mMuteChangeObserver);
+            }
+        }
     }
-  };
-  private static RingModeStatusReceiver sInstance = new RingModeStatusReceiver();
-  
-  public static void initRingModeStatusReceiver(Context paramContext)
-  {
-    LogUtil.e("RingModeStatusReceiver", "initRingModeStatusReceiver");
-    IntentFilter localIntentFilter;
-    if ((paramContext != null) && (!hasRegistered))
-    {
-      localIntentFilter = new IntentFilter("android.media.RINGER_MODE_CHANGED");
-      localIntentFilter.setPriority(Integer.MAX_VALUE);
+
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        LogUtil.m15791e(TAG, "action:" + action);
+        if (!"android.media.RINGER_MODE_CHANGED".equals(action)) {
+            return;
+        }
+        if (AudioUtils.getCurrentVolume(context) > 0) {
+            RGViewController.getInstance().updateLowVolumeView(false);
+        } else {
+            RGViewController.getInstance().updateLowVolumeView(true);
+        }
     }
-    try
-    {
-      paramContext.registerReceiver(sInstance, localIntentFilter);
-      hasRegistered = true;
-      if (PackageUtil.isSmartisanPhone()) {
-        paramContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("volume_panel_mute_enable"), true, mMuteChangeObserver);
-      }
-      return;
-    }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        LogUtil.e("RingModeStatusReceiver", "initRingModeStatusReceiver cause :" + localException.getCause());
-        LogUtil.e("RingModeStatusReceiver", "initRingModeStatusReceiver crash :" + localException.getMessage());
-      }
-    }
-  }
-  
-  public static void uninitRingModeStatusReceiver(Context paramContext)
-  {
-    LogUtil.e("RingModeStatusReceiver", "uninitRingModeStatusReceiver");
-    if ((paramContext != null) && (hasRegistered)) {
-      hasRegistered = false;
-    }
-    try
-    {
-      paramContext.unregisterReceiver(sInstance);
-      if (PackageUtil.isSmartisanPhone()) {
-        paramContext.getContentResolver().unregisterContentObserver(mMuteChangeObserver);
-      }
-      return;
-    }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        LogUtil.e("RingModeStatusReceiver", "uninitRingModeStatusReceiver crash :" + localException.getMessage());
-      }
-    }
-  }
-  
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    paramIntent = paramIntent.getAction();
-    LogUtil.e("RingModeStatusReceiver", "action:" + paramIntent);
-    if (!"android.media.RINGER_MODE_CHANGED".equals(paramIntent)) {
-      return;
-    }
-    if (AudioUtils.getCurrentVolume(paramContext) > 0)
-    {
-      RGViewController.getInstance().updateLowVolumeView(false);
-      return;
-    }
-    RGViewController.getInstance().updateLowVolumeView(true);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/listener/RingModeStatusReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

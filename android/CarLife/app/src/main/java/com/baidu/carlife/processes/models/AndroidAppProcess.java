@@ -2,146 +2,123 @@ package com.baidu.carlife.processes.models;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build.VERSION;
 import android.os.Parcel;
 import android.os.Parcelable.Creator;
+import com.baidu.mobstat.Config;
 import java.io.File;
 import java.io.IOException;
 
-public class AndroidAppProcess
-  extends AndroidProcess
-{
-  public static final Parcelable.Creator<AndroidAppProcess> CREATOR = new Parcelable.Creator()
-  {
-    public AndroidAppProcess a(Parcel paramAnonymousParcel)
-    {
-      return new AndroidAppProcess(paramAnonymousParcel);
-    }
-    
-    public AndroidAppProcess[] a(int paramAnonymousInt)
-    {
-      return new AndroidAppProcess[paramAnonymousInt];
-    }
-  };
-  private static final boolean e = new File("/dev/cpuctl/tasks").exists();
-  public final boolean a;
-  public final int b;
-  
-  public AndroidAppProcess(int paramInt)
-    throws IOException, AndroidAppProcess.a
-  {
-    super(paramInt);
-    if (e)
-    {
-      localObject = d();
-      ControlGroup localControlGroup = ((Cgroup)localObject).a("cpuacct");
-      localObject = ((Cgroup)localObject).a("cpu");
-      if (Build.VERSION.SDK_INT >= 21)
-      {
-        if ((localObject == null) || (localControlGroup == null) || (!localControlGroup.c.contains("pid_"))) {
-          throw new a(paramInt);
+public class AndroidAppProcess extends AndroidProcess {
+    public static final Creator<AndroidAppProcess> CREATOR = new C20291();
+    /* renamed from: e */
+    private static final boolean f6564e = new File("/dev/cpuctl/tasks").exists();
+    /* renamed from: a */
+    public final boolean f6565a;
+    /* renamed from: b */
+    public final int f6566b;
+
+    /* renamed from: com.baidu.carlife.processes.models.AndroidAppProcess$1 */
+    static class C20291 implements Creator<AndroidAppProcess> {
+        C20291() {
         }
-        if (((ControlGroup)localObject).c.contains("bg_non_interactive")) {}
-      }
-      for (;;)
-      {
-        try
-        {
-          paramInt = Integer.parseInt(localControlGroup.c.split("/")[1].replace("uid_", ""));
-          this.a = bool1;
-          this.b = paramInt;
-          return;
-          bool1 = false;
-          continue;
+
+        public /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return m7787a(parcel);
         }
-        catch (Exception localException1)
-        {
-          paramInt = j().a();
-          continue;
+
+        public /* synthetic */ Object[] newArray(int i) {
+            return m7788a(i);
         }
-        if ((localObject == null) || (localException1 == null) || (!((ControlGroup)localObject).c.contains("apps"))) {
-          throw new a(paramInt);
+
+        /* renamed from: a */
+        public AndroidAppProcess m7787a(Parcel source) {
+            return new AndroidAppProcess(source);
         }
-        if (!((ControlGroup)localObject).c.contains("bg_non_interactive")) {}
-        for (bool1 = bool2;; bool1 = false) {
-          try
-          {
-            paramInt = Integer.parseInt(localException1.c.substring(localException1.c.lastIndexOf("/") + 1));
-          }
-          catch (Exception localException2)
-          {
-            paramInt = j().a();
-          }
+
+        /* renamed from: a */
+        public AndroidAppProcess[] m7788a(int size) {
+            return new AndroidAppProcess[size];
         }
-      }
     }
-    if ((this.c.startsWith("/")) || (!new File("/data/data", a()).exists())) {
-      throw new a(paramInt);
+
+    /* renamed from: com.baidu.carlife.processes.models.AndroidAppProcess$a */
+    public static final class C2030a extends Exception {
+        public C2030a(int pid) {
+            super(String.format("The process %d does not belong to any application", new Object[]{Integer.valueOf(pid)}));
+        }
     }
-    Stat localStat = h();
-    Object localObject = j();
-    if (localStat.O() == 0) {}
-    for (bool1 = bool3;; bool1 = false)
-    {
-      paramInt = ((Status)localObject).a();
-      break;
+
+    public AndroidAppProcess(int pid) throws IOException, C2030a {
+        int uid;
+        boolean foreground = true;
+        super(pid);
+        if (f6564e) {
+            Cgroup cgroup = m7793d();
+            ControlGroup cpuacct = cgroup.m7809a("cpuacct");
+            ControlGroup cpu = cgroup.m7809a("cpu");
+            if (VERSION.SDK_INT >= 21) {
+                if (cpu == null || cpuacct == null || !cpuacct.f6571c.contains("pid_")) {
+                    throw new C2030a(pid);
+                }
+                if (cpu.f6571c.contains("bg_non_interactive")) {
+                    foreground = false;
+                }
+                try {
+                    uid = Integer.parseInt(cpuacct.f6571c.split("/")[1].replace("uid_", ""));
+                } catch (Exception e) {
+                    uid = m7799j().m7877a();
+                }
+            } else if (cpu == null || cpuacct == null || !cpu.f6571c.contains("apps")) {
+                throw new C2030a(pid);
+            } else {
+                if (cpu.f6571c.contains("bg_non_interactive")) {
+                    foreground = false;
+                }
+                try {
+                    uid = Integer.parseInt(cpuacct.f6571c.substring(cpuacct.f6571c.lastIndexOf("/") + 1));
+                } catch (Exception e2) {
+                    uid = m7799j().m7877a();
+                }
+            }
+        } else if (this.c.startsWith("/") || !new File("/data/data", m7802a()).exists()) {
+            throw new C2030a(pid);
+        } else {
+            Stat stat = m7797h();
+            Status status = m7799j();
+            if (stat.m7831O() != 0) {
+                foreground = false;
+            }
+            uid = status.m7877a();
+        }
+        this.f6565a = foreground;
+        this.f6566b = uid;
     }
-  }
-  
-  protected AndroidAppProcess(Parcel paramParcel)
-  {
-    super(paramParcel);
-    if (paramParcel.readByte() != 0) {}
-    for (boolean bool = true;; bool = false)
-    {
-      this.a = bool;
-      this.b = paramParcel.readInt();
-      return;
+
+    protected AndroidAppProcess(Parcel in) {
+        super(in);
+        this.f6565a = in.readByte() != (byte) 0;
+        this.f6566b = in.readInt();
     }
-  }
-  
-  public PackageInfo a(Context paramContext, int paramInt)
-    throws PackageManager.NameNotFoundException
-  {
-    return paramContext.getPackageManager().getPackageInfo(a(), paramInt);
-  }
-  
-  public String a()
-  {
-    return this.c.split(":")[0];
-  }
-  
-  public String toString()
-  {
-    return "AndroidAppProcess{foreground=" + this.a + ", uid=" + this.b + ", name=" + this.c + ", pid=" + this.d + '}';
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    super.writeToParcel(paramParcel, paramInt);
-    if (this.a) {}
-    for (paramInt = 1;; paramInt = 0)
-    {
-      paramParcel.writeByte((byte)paramInt);
-      paramParcel.writeInt(this.b);
-      return;
+
+    /* renamed from: a */
+    public String m7802a() {
+        return this.c.split(Config.TRACE_TODAY_VISIT_SPLIT)[0];
     }
-  }
-  
-  public static final class a
-    extends Exception
-  {
-    public a(int paramInt)
-    {
-      super();
+
+    /* renamed from: a */
+    public PackageInfo m7801a(Context context, int flags) throws NameNotFoundException {
+        return context.getPackageManager().getPackageInfo(m7802a(), flags);
     }
-  }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeByte((byte) (this.f6565a ? 1 : 0));
+        dest.writeInt(this.f6566b);
+    }
+
+    public String toString() {
+        return "AndroidAppProcess{foreground=" + this.f6565a + ", uid=" + this.f6566b + ", name=" + this.c + ", pid=" + this.d + '}';
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/processes/models/AndroidAppProcess.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

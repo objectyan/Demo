@@ -2,54 +2,50 @@ package com.indooratlas.android.sdk._internal;
 
 import java.io.IOException;
 
-public final class ad
-  extends RuntimeException
-{
-  public a a;
-  public x b;
-  private String c;
-  
-  private ad(a parama, String paramString, Throwable paramThrowable, x paramx)
-  {
-    super(paramThrowable);
-    this.c = paramString;
-    this.a = parama;
-    this.b = paramx;
-  }
-  
-  public static ad a(String paramString, x paramx)
-  {
-    return new ad(a.b, paramString, null, paramx);
-  }
-  
-  public static ad a(String paramString, x paramx, Throwable paramThrowable)
-  {
-    return new ad(a.a, paramString, paramThrowable, paramx);
-  }
-  
-  public static ad a(String paramString, IOException paramIOException)
-  {
-    return new ad(a.c, paramString, paramIOException, null);
-  }
-  
-  public final String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder("RestError{mKind=").append(this.a).append(", mUrl='").append(this.c).append('\'').append(", mHttpResponse=").append(this.b);
-    if (getCause() != null) {
-      localStringBuilder.append(", cause=").append(getCause());
+public final class ad extends RuntimeException {
+    /* renamed from: a */
+    public C5758a f22924a;
+    /* renamed from: b */
+    public C6013x f22925b;
+    /* renamed from: c */
+    private String f22926c;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ad$a */
+    public enum C5758a {
+        CONVERSION,
+        HTTP,
+        NETWORK,
+        UNEXPECTED
     }
-    localStringBuilder.append('}');
-    return localStringBuilder.toString();
-  }
-  
-  public static enum a
-  {
-    private a() {}
-  }
+
+    private ad(C5758a c5758a, String str, Throwable th, C6013x c6013x) {
+        super(th);
+        this.f22926c = str;
+        this.f22924a = c5758a;
+        this.f22925b = c6013x;
+    }
+
+    /* renamed from: a */
+    public static ad m19793a(String str, IOException iOException) {
+        return new ad(C5758a.NETWORK, str, iOException, null);
+    }
+
+    /* renamed from: a */
+    public static ad m19791a(String str, C6013x c6013x) {
+        return new ad(C5758a.HTTP, str, null, c6013x);
+    }
+
+    /* renamed from: a */
+    public static ad m19792a(String str, C6013x c6013x, Throwable th) {
+        return new ad(C5758a.CONVERSION, str, th, c6013x);
+    }
+
+    public final String toString() {
+        StringBuilder append = new StringBuilder("RestError{mKind=").append(this.f22924a).append(", mUrl='").append(this.f22926c).append('\'').append(", mHttpResponse=").append(this.f22925b);
+        if (getCause() != null) {
+            append.append(", cause=").append(getCause());
+        }
+        append.append('}');
+        return append.toString();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ad.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

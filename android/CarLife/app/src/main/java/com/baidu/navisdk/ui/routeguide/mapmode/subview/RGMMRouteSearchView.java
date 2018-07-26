@@ -2,7 +2,6 @@ package com.baidu.navisdk.ui.routeguide.mapmode.subview;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -10,9 +9,11 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.routeguide.control.RGViewController;
-import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
+import com.baidu.navisdk.ui.routeguide.model.RGControlPanelModel;
 import com.baidu.navisdk.ui.routeguide.subview.OnRGSubViewListener;
+import com.baidu.navisdk.ui.routeguide.subview.OnRGSubViewListener.ActionTypeSearchParams;
 import com.baidu.navisdk.ui.routeguide.subview.util.RightHandResourcesProvider;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.ui.widget.BNBaseView;
@@ -20,249 +21,215 @@ import com.baidu.navisdk.util.common.AnimationUtil;
 import com.baidu.navisdk.util.common.AnimationUtil.AnimationType;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class RGMMRouteSearchView
-  extends BNBaseView
-{
-  private static final int MSG_COUNT_DOWN_DELAY_MILLIS = 1000;
-  private static final int MSG_WHAT_COUNT_DOWN = 1;
-  private View mBankView;
-  private final int[] mDrawableResId = { 1711407785, 1711407783, 1711407797, 1711407793, 1711407790, 1711407787 };
-  private View mGasStationView;
-  private final int[] mHLineViewId = { 1711866923, 1711866936 };
-  private View mHotelView;
-  private final int[] mImgViewId = { 1711866926, 1711866930, 1711866934, 1711866760, 1711866938, 1711866942 };
-  private View mMenuClosePanel = null;
-  private final int[] mNameResId = { 1711670075, 1711670077, 1711670078, 1711670073, 1711670076, 1711670074, 1711670079, 1711670080, 1711669887 };
-  private View mRestaurantView;
-  private ViewGroup mRouteSearchContainer;
-  private ViewGroup mRouteSearchInnerPanel;
-  private ViewGroup mRouteSearchPanel;
-  private ViewGroup mRouteSearchView;
-  private View mSpotsView;
-  private final int[] mTextViewId = { 1711866927, 1711866931, 1711866935, 1711866761, 1711866939, 1711866943 };
-  private View mToiletView;
-  private TextView mTvTitle;
-  private final int[] mVLineViewId = { 1711866928, 1711866932, 1711866940, 1711866944 };
-  
-  public RGMMRouteSearchView(Context paramContext, ViewGroup paramViewGroup, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext, paramViewGroup, paramOnRGSubViewListener);
-    initViews();
-    updateStyle(BNStyleManager.getDayStyle());
-    initListener();
-  }
-  
-  private void initListener()
-  {
-    View.OnClickListener local1 = new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if ((RGMMRouteSearchView.this.mSubViewListener == null) || (paramAnonymousView == null)) {
-          return;
+public class RGMMRouteSearchView extends BNBaseView {
+    private static final int MSG_COUNT_DOWN_DELAY_MILLIS = 1000;
+    private static final int MSG_WHAT_COUNT_DOWN = 1;
+    private View mBankView;
+    private final int[] mDrawableResId = new int[]{C4048R.drawable.nsdk_drawable_rg_route_search_gas_station, C4048R.drawable.nsdk_drawable_rg_route_search_bank, C4048R.drawable.nsdk_drawable_rg_route_search_toilet, C4048R.drawable.nsdk_drawable_rg_route_search_spots, C4048R.drawable.nsdk_drawable_rg_route_search_restaurant, C4048R.drawable.nsdk_drawable_rg_route_search_hotel};
+    private View mGasStationView;
+    private final int[] mHLineViewId = new int[]{C4048R.id.iv_h_divider_1, C4048R.id.iv_h_divider_2};
+    private View mHotelView;
+    private final int[] mImgViewId = new int[]{C4048R.id.bnav_rs_gas_station_iv, C4048R.id.bnav_rs_bank_iv, C4048R.id.bnav_rs_toilet_iv, C4048R.id.bnav_rs_spots_iv, C4048R.id.bnav_rs_restaurant_iv, C4048R.id.bnav_rs_hotel_iv};
+    private View mMenuClosePanel = null;
+    private final int[] mNameResId = new int[]{C4048R.string.nsdk_string_rg_as_gas_station, C4048R.string.nsdk_string_rg_as_bank, C4048R.string.nsdk_string_rg_as_toilet, C4048R.string.nsdk_string_rg_as_spots, C4048R.string.nsdk_string_rg_as_restaurant, C4048R.string.nsdk_string_rg_as_hotel, C4048R.string.nsdk_string_rg_as_car_service, C4048R.string.nsdk_string_rg_as_park, C4048R.string.nsdk_string_close};
+    private View mRestaurantView;
+    private ViewGroup mRouteSearchContainer;
+    private ViewGroup mRouteSearchInnerPanel;
+    private ViewGroup mRouteSearchPanel;
+    private ViewGroup mRouteSearchView;
+    private View mSpotsView;
+    private final int[] mTextViewId = new int[]{C4048R.id.bnav_rs_gas_station_tv, C4048R.id.bnav_rs_bank_tv, C4048R.id.bnav_rs_toilet_tv, C4048R.id.bnav_rs_spots_tv, C4048R.id.bnav_rs_restaurant_tv, C4048R.id.bnav_rs_hotel_tv};
+    private View mToiletView;
+    private TextView mTvTitle;
+    private final int[] mVLineViewId = new int[]{C4048R.id.iv_v_divider_1, C4048R.id.iv_v_divider_2, C4048R.id.iv_v_divider_3, C4048R.id.iv_v_divider_4};
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMRouteSearchView$1 */
+    class C44251 implements OnClickListener {
+        C44251() {
         }
-        if (paramAnonymousView == RGMMRouteSearchView.this.mRouteSearchPanel)
-        {
-          RGViewController.getInstance().hideRouteSearchView();
-          return;
+
+        public void onClick(View v) {
+            if (RGMMRouteSearchView.this.mSubViewListener != null && v != null) {
+                if (v == RGMMRouteSearchView.this.mRouteSearchPanel) {
+                    RGViewController.getInstance().hideRouteSearchView();
+                    return;
+                }
+                if (!RightHandResourcesProvider.isInternationalWithToast(RGMMRouteSearchView.this.mContext)) {
+                    if (v == RGMMRouteSearchView.this.mGasStationView) {
+                        RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, ActionTypeSearchParams.Gas_Station);
+                    } else if (v == RGMMRouteSearchView.this.mToiletView) {
+                        RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, ActionTypeSearchParams.Toilet);
+                    } else if (v == RGMMRouteSearchView.this.mBankView) {
+                        RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, ActionTypeSearchParams.Bank);
+                    } else if (v == RGMMRouteSearchView.this.mSpotsView) {
+                        RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, ActionTypeSearchParams.Spots);
+                    } else if (v == RGMMRouteSearchView.this.mRestaurantView) {
+                        RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, ActionTypeSearchParams.Restaurant);
+                    } else if (v == RGMMRouteSearchView.this.mHotelView) {
+                        RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, ActionTypeSearchParams.Hotel);
+                    }
+                }
+                RGControlPanelModel.mIsRouteSearchVisible = false;
+                RGMMRouteSearchView.this.hide();
+            }
         }
-        if (!RightHandResourcesProvider.isInternationalWithToast(RGMMRouteSearchView.this.mContext))
-        {
-          if (paramAnonymousView != RGMMRouteSearchView.this.mGasStationView) {
-            break label87;
-          }
-          RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, "加油站");
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMRouteSearchView$2 */
+    class C44262 implements AnimationListener {
+        C44262() {
         }
-        for (;;)
-        {
-          com.baidu.navisdk.ui.routeguide.model.RGControlPanelModel.mIsRouteSearchVisible = false;
-          RGMMRouteSearchView.this.hide();
-          return;
-          label87:
-          if (paramAnonymousView == RGMMRouteSearchView.this.mToiletView) {
-            RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, "厕所");
-          } else if (paramAnonymousView == RGMMRouteSearchView.this.mBankView) {
-            RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, "银行");
-          } else if (paramAnonymousView == RGMMRouteSearchView.this.mSpotsView) {
-            RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, "景点");
-          } else if (paramAnonymousView == RGMMRouteSearchView.this.mRestaurantView) {
-            RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, "餐饮");
-          } else if (paramAnonymousView == RGMMRouteSearchView.this.mHotelView) {
-            RGMMRouteSearchView.this.mSubViewListener.onOtherAction(9, 0, 0, "酒店");
-          }
+
+        public void onAnimationStart(Animation animation) {
         }
-      }
-    };
-    this.mGasStationView.setOnClickListener(local1);
-    this.mToiletView.setOnClickListener(local1);
-    this.mBankView.setOnClickListener(local1);
-    this.mSpotsView.setOnClickListener(local1);
-    this.mRestaurantView.setOnClickListener(local1);
-    this.mHotelView.setOnClickListener(local1);
-    this.mRouteSearchPanel.setOnClickListener(local1);
-  }
-  
-  private void initViews()
-  {
-    if (this.mRootViewGroup == null) {}
-    do
-    {
-      return;
-      this.mRouteSearchPanel = ((ViewGroup)this.mRootViewGroup.findViewById(1711866538));
-      this.mRouteSearchContainer = ((ViewGroup)this.mRootViewGroup.findViewById(1711866539));
-      if (this.mRouteSearchContainer != null) {
-        this.mRouteSearchContainer.removeAllViews();
-      }
-      this.mRouteSearchView = ((ViewGroup)JarUtils.inflate((Activity)this.mContext, 1711472736, null));
-    } while ((this.mRouteSearchContainer == null) || (this.mRouteSearchView == null));
-    this.mRouteSearchContainer.addView(this.mRouteSearchView);
-    this.mRouteSearchInnerPanel = ((ViewGroup)this.mRouteSearchView.findViewById(1711866921));
-    this.mTvTitle = ((TextView)this.mRouteSearchView.findViewById(1711866922));
-    this.mGasStationView = this.mRouteSearchView.findViewById(1711866925);
-    this.mToiletView = this.mRouteSearchView.findViewById(1711866933);
-    this.mBankView = this.mRouteSearchView.findViewById(1711866929);
-    this.mSpotsView = this.mRouteSearchView.findViewById(1711866759);
-    this.mRestaurantView = this.mRouteSearchView.findViewById(1711866937);
-    this.mHotelView = this.mRouteSearchView.findViewById(1711866941);
-    this.mMenuClosePanel = this.mRouteSearchView.findViewById(1711866975);
-  }
-  
-  public void hide()
-  {
-    super.hide();
-    cancelAutoHide();
-    Animation localAnimation = AnimationUtil.getAnimation(AnimationUtil.AnimationType.ANIM_DOWN_OUT, 0L, 300L);
-    localAnimation.setFillAfter(true);
-    localAnimation.setAnimationListener(new Animation.AnimationListener()
-    {
-      public void onAnimationEnd(Animation paramAnonymousAnimation)
-      {
-        RGMMRouteSearchView.this.onHide();
-      }
-      
-      public void onAnimationRepeat(Animation paramAnonymousAnimation) {}
-      
-      public void onAnimationStart(Animation paramAnonymousAnimation) {}
-    });
-    this.mRouteSearchInnerPanel.startAnimation(localAnimation);
-  }
-  
-  protected void hiedByTimeOut()
-  {
-    RGViewController.getInstance().hideRouteSearchView();
-  }
-  
-  protected void onHide()
-  {
-    if (this.mRouteSearchInnerPanel != null) {
-      this.mRouteSearchInnerPanel.setVisibility(8);
-    }
-    if (this.mRouteSearchPanel != null) {
-      this.mRouteSearchPanel.setVisibility(8);
-    }
-    if (this.mRouteSearchContainer != null) {
-      this.mRouteSearchContainer.setVisibility(8);
-    }
-  }
-  
-  public void show()
-  {
-    super.show();
-    startAutoHide(10000);
-    if (this.mRouteSearchContainer != null) {
-      this.mRouteSearchContainer.setVisibility(0);
-    }
-    if (this.mRouteSearchPanel != null) {
-      this.mRouteSearchPanel.setVisibility(0);
-    }
-    if (this.mRouteSearchInnerPanel != null)
-    {
-      Animation localAnimation = AnimationUtil.getAnimation(AnimationUtil.AnimationType.ANIM_DOWN_IN, 0L, 300L);
-      this.mRouteSearchInnerPanel.startAnimation(localAnimation);
-      this.mRouteSearchInnerPanel.setVisibility(0);
-    }
-  }
-  
-  public void updateStyle(boolean paramBoolean)
-  {
-    super.updateStyle(paramBoolean);
-    Object localObject;
-    if (this.mTvTitle != null)
-    {
-      this.mTvTitle.setTextColor(BNStyleManager.getColor(1711800793));
-      localObject = BNStyleManager.getDrawable(1711407795);
-      this.mTvTitle.setCompoundDrawablesWithIntrinsicBounds((Drawable)localObject, null, null, null);
-    }
-    if (this.mRouteSearchInnerPanel != null) {
-      this.mRouteSearchInnerPanel.setBackgroundColor(BNStyleManager.getColor(1711800694));
-    }
-    if (this.mMenuClosePanel != null) {
-      this.mMenuClosePanel.setBackgroundColor(BNStyleManager.getColor(1711800694));
-    }
-    if (this.mRouteSearchView != null)
-    {
-      int i = 0;
-      while (i < this.mHLineViewId.length)
-      {
-        localObject = this.mRouteSearchView.findViewById(this.mHLineViewId[i]);
-        if (localObject != null) {
-          ((View)localObject).setBackgroundColor(BNStyleManager.getColor(1711800789));
+
+        public void onAnimationEnd(Animation animation) {
+            RGMMRouteSearchView.this.onHide();
         }
-        i += 1;
-      }
-      i = 0;
-      while (i < this.mVLineViewId.length)
-      {
-        localObject = this.mRouteSearchView.findViewById(this.mVLineViewId[i]);
-        if (localObject != null) {
-          ((View)localObject).setBackgroundColor(BNStyleManager.getColor(1711800789));
+
+        public void onAnimationRepeat(Animation animation) {
         }
-        i += 1;
-      }
-      i = 0;
-      while (i < this.mTextViewId.length)
-      {
-        localObject = (TextView)this.mRouteSearchView.findViewById(this.mTextViewId[i]);
-        if (localObject != null)
-        {
-          ((TextView)localObject).setText(BNStyleManager.getString(this.mNameResId[i]));
-          ((TextView)localObject).setTextColor(BNStyleManager.getColor(1711800793));
+    }
+
+    public RGMMRouteSearchView(Context c, ViewGroup p, OnRGSubViewListener lis) {
+        super(c, p, lis);
+        initViews();
+        updateStyle(BNStyleManager.getDayStyle());
+        initListener();
+    }
+
+    private void initViews() {
+        if (this.mRootViewGroup != null) {
+            this.mRouteSearchPanel = (ViewGroup) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_route_search_panel);
+            this.mRouteSearchContainer = (ViewGroup) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_route_search_container);
+            if (this.mRouteSearchContainer != null) {
+                this.mRouteSearchContainer.removeAllViews();
+            }
+            this.mRouteSearchView = (ViewGroup) JarUtils.inflate((Activity) this.mContext, C4048R.layout.nsdk_layout_rg_mapmode_route_search, null);
+            if (this.mRouteSearchContainer != null && this.mRouteSearchView != null) {
+                this.mRouteSearchContainer.addView(this.mRouteSearchView);
+                this.mRouteSearchInnerPanel = (ViewGroup) this.mRouteSearchView.findViewById(C4048R.id.route_search_inner_panel);
+                this.mTvTitle = (TextView) this.mRouteSearchView.findViewById(C4048R.id.tv_route_search_title);
+                this.mGasStationView = this.mRouteSearchView.findViewById(C4048R.id.bnav_rs_gas_station);
+                this.mToiletView = this.mRouteSearchView.findViewById(C4048R.id.bnav_rs_toilet);
+                this.mBankView = this.mRouteSearchView.findViewById(C4048R.id.bnav_rs_bank);
+                this.mSpotsView = this.mRouteSearchView.findViewById(C4048R.id.bnav_rs_spots);
+                this.mRestaurantView = this.mRouteSearchView.findViewById(C4048R.id.bnav_rs_restaurant);
+                this.mHotelView = this.mRouteSearchView.findViewById(C4048R.id.bnav_rs_hotel);
+                this.mMenuClosePanel = this.mRouteSearchView.findViewById(C4048R.id.bnav_rg_close_content_panel);
+            }
         }
-        i += 1;
-      }
-      i = 0;
-      while (i < this.mImgViewId.length)
-      {
-        localObject = (ImageView)this.mRouteSearchView.findViewById(this.mImgViewId[i]);
-        if (localObject != null) {
-          ((ImageView)localObject).setImageDrawable(BNStyleManager.getDrawable(this.mDrawableResId[i]));
+    }
+
+    private void initListener() {
+        OnClickListener onClickListener = new C44251();
+        this.mGasStationView.setOnClickListener(onClickListener);
+        this.mToiletView.setOnClickListener(onClickListener);
+        this.mBankView.setOnClickListener(onClickListener);
+        this.mSpotsView.setOnClickListener(onClickListener);
+        this.mRestaurantView.setOnClickListener(onClickListener);
+        this.mHotelView.setOnClickListener(onClickListener);
+        this.mRouteSearchPanel.setOnClickListener(onClickListener);
+    }
+
+    public void updateStyle(boolean day) {
+        super.updateStyle(day);
+        if (this.mTvTitle != null) {
+            this.mTvTitle.setTextColor(BNStyleManager.getColor(C4048R.color.cl_text_b_mm));
+            this.mTvTitle.setCompoundDrawablesWithIntrinsicBounds(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_rg_route_search_title_icon), null, null, null);
         }
-        i += 1;
-      }
+        if (this.mRouteSearchInnerPanel != null) {
+            this.mRouteSearchInnerPanel.setBackgroundColor(BNStyleManager.getColor(C4048R.color.cl_bg_d));
+        }
+        if (this.mMenuClosePanel != null) {
+            this.mMenuClosePanel.setBackgroundColor(BNStyleManager.getColor(C4048R.color.cl_bg_d));
+        }
+        if (this.mRouteSearchView != null) {
+            int i;
+            View hl;
+            for (int findViewById : this.mHLineViewId) {
+                hl = this.mRouteSearchView.findViewById(findViewById);
+                if (hl != null) {
+                    hl.setBackgroundColor(BNStyleManager.getColor(C4048R.color.cl_bg_d_mm));
+                }
+            }
+            for (int findViewById2 : this.mVLineViewId) {
+                hl = this.mRouteSearchView.findViewById(findViewById2);
+                if (hl != null) {
+                    hl.setBackgroundColor(BNStyleManager.getColor(C4048R.color.cl_bg_d_mm));
+                }
+            }
+            for (i = 0; i < this.mTextViewId.length; i++) {
+                TextView text = (TextView) this.mRouteSearchView.findViewById(this.mTextViewId[i]);
+                if (text != null) {
+                    text.setText(BNStyleManager.getString(this.mNameResId[i]));
+                    text.setTextColor(BNStyleManager.getColor(C4048R.color.cl_text_b_mm));
+                }
+            }
+            for (i = 0; i < this.mImgViewId.length; i++) {
+                ImageView imageView = (ImageView) this.mRouteSearchView.findViewById(this.mImgViewId[i]);
+                if (imageView != null) {
+                    imageView.setImageDrawable(BNStyleManager.getDrawable(this.mDrawableResId[i]));
+                }
+            }
+        }
+        if (this.mGasStationView != null) {
+            this.mGasStationView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_pressed_mask_selector));
+        }
+        if (this.mToiletView != null) {
+            this.mToiletView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_pressed_mask_selector));
+        }
+        if (this.mBankView != null) {
+            this.mBankView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_pressed_mask_selector));
+        }
+        if (this.mSpotsView != null) {
+            this.mSpotsView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_pressed_mask_selector));
+        }
+        if (this.mRestaurantView != null) {
+            this.mRestaurantView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_pressed_mask_selector));
+        }
+        if (this.mHotelView != null) {
+            this.mHotelView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_common_bg_pressed_mask_selector));
+        }
     }
-    if (this.mGasStationView != null) {
-      this.mGasStationView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407444));
+
+    protected void hiedByTimeOut() {
+        RGViewController.getInstance().hideRouteSearchView();
     }
-    if (this.mToiletView != null) {
-      this.mToiletView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407444));
+
+    public void hide() {
+        super.hide();
+        cancelAutoHide();
+        Animation animOut = AnimationUtil.getAnimation(AnimationType.ANIM_DOWN_OUT, 0, 300);
+        animOut.setFillAfter(true);
+        animOut.setAnimationListener(new C44262());
+        this.mRouteSearchInnerPanel.startAnimation(animOut);
     }
-    if (this.mBankView != null) {
-      this.mBankView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407444));
+
+    protected void onHide() {
+        if (this.mRouteSearchInnerPanel != null) {
+            this.mRouteSearchInnerPanel.setVisibility(8);
+        }
+        if (this.mRouteSearchPanel != null) {
+            this.mRouteSearchPanel.setVisibility(8);
+        }
+        if (this.mRouteSearchContainer != null) {
+            this.mRouteSearchContainer.setVisibility(8);
+        }
     }
-    if (this.mSpotsView != null) {
-      this.mSpotsView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407444));
+
+    public void show() {
+        super.show();
+        startAutoHide(10000);
+        if (this.mRouteSearchContainer != null) {
+            this.mRouteSearchContainer.setVisibility(0);
+        }
+        if (this.mRouteSearchPanel != null) {
+            this.mRouteSearchPanel.setVisibility(0);
+        }
+        if (this.mRouteSearchInnerPanel != null) {
+            this.mRouteSearchInnerPanel.startAnimation(AnimationUtil.getAnimation(AnimationType.ANIM_DOWN_IN, 0, 300));
+            this.mRouteSearchInnerPanel.setVisibility(0);
+        }
     }
-    if (this.mRestaurantView != null) {
-      this.mRestaurantView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407444));
-    }
-    if (this.mHotelView != null) {
-      this.mHotelView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407444));
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMRouteSearchView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

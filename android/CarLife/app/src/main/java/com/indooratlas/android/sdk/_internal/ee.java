@@ -4,92 +4,77 @@ import android.util.Log;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 
-public final class ee
-{
-  private static a a = new b();
-  
-  public static final String a(Class paramClass)
-  {
-    return a(paramClass.getSimpleName());
-  }
-  
-  public static final String a(String paramString)
-  {
-    if (paramString.startsWith("IA")) {}
-    for (;;)
-    {
-      String str = paramString;
-      if (paramString.length() > 23) {
-        str = paramString.substring(0, 23);
-      }
-      return str;
-      paramString = "IA" + paramString;
+public final class ee {
+    /* renamed from: a */
+    private static C5866a f23513a = new C5867b();
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ee$a */
+    public static abstract class C5866a {
+        /* renamed from: a */
+        public abstract void mo4671a(String str, String str2, Object... objArr);
+
+        /* renamed from: a */
+        public abstract void mo4672a(String str, Throwable th, String str2, Object... objArr);
+
+        /* renamed from: a */
+        public abstract boolean mo4673a(String str, int i);
     }
-  }
-  
-  public static void a(String paramString1, String paramString2, Object... paramVarArgs)
-  {
-    a.a(paramString1, paramString2, paramVarArgs);
-  }
-  
-  public static void a(String paramString1, Throwable paramThrowable, String paramString2, Object... paramVarArgs)
-  {
-    a.a(paramString1, paramThrowable, paramString2, paramVarArgs);
-  }
-  
-  public static boolean a(String paramString, int paramInt)
-  {
-    return a.a(paramString, paramInt);
-  }
-  
-  private static String b(String paramString, Object... paramVarArgs)
-  {
-    if (paramVarArgs == null) {
-      return paramString;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ee$b */
+    public static class C5867b extends C5866a {
+        /* renamed from: a */
+        public final void mo4671a(String str, String str2, Object... objArr) {
+            Log.e(str, ee.m20412b(str2, objArr));
+        }
+
+        /* renamed from: a */
+        public final void mo4672a(String str, Throwable th, String str2, Object... objArr) {
+            Log.e(str, ee.m20412b(str2, objArr), th);
+        }
+
+        /* renamed from: a */
+        public final boolean mo4673a(String str, int i) {
+            return Log.isLoggable(str, i);
+        }
     }
-    try
-    {
-      paramVarArgs = String.format(Locale.US, paramString, paramVarArgs);
-      return paramVarArgs;
+
+    /* renamed from: a */
+    public static void m20409a(String str, String str2, Object... objArr) {
+        f23513a.mo4671a(str, str2, objArr);
     }
-    catch (IllegalFormatException paramVarArgs)
-    {
-      Log.e(a("Logger"), "formatting message failed: " + paramString);
+
+    /* renamed from: a */
+    public static void m20410a(String str, Throwable th, String str2, Object... objArr) {
+        f23513a.mo4672a(str, th, str2, objArr);
     }
-    return paramString;
-  }
-  
-  public static abstract class a
-  {
-    public abstract void a(String paramString1, String paramString2, Object... paramVarArgs);
-    
-    public abstract void a(String paramString1, Throwable paramThrowable, String paramString2, Object... paramVarArgs);
-    
-    public abstract boolean a(String paramString, int paramInt);
-  }
-  
-  public static final class b
-    extends ee.a
-  {
-    public final void a(String paramString1, String paramString2, Object... paramVarArgs)
-    {
-      Log.e(paramString1, ee.a(paramString2, paramVarArgs));
+
+    /* renamed from: b */
+    private static String m20412b(String str, Object... objArr) {
+        if (objArr != null) {
+            try {
+                str = String.format(Locale.US, str, objArr);
+            } catch (IllegalFormatException e) {
+                Log.e(m20407a("Logger"), "formatting message failed: " + str);
+            }
+        }
+        return str;
     }
-    
-    public final void a(String paramString1, Throwable paramThrowable, String paramString2, Object... paramVarArgs)
-    {
-      Log.e(paramString1, ee.a(paramString2, paramVarArgs), paramThrowable);
+
+    /* renamed from: a */
+    public static boolean m20411a(String str, int i) {
+        return f23513a.mo4673a(str, i);
     }
-    
-    public final boolean a(String paramString, int paramInt)
-    {
-      return Log.isLoggable(paramString, paramInt);
+
+    /* renamed from: a */
+    public static final String m20406a(Class cls) {
+        return m20407a(cls.getSimpleName());
     }
-  }
+
+    /* renamed from: a */
+    public static final String m20407a(String str) {
+        if (!str.startsWith("IA")) {
+            str = "IA" + str;
+        }
+        return str.length() > 23 ? str.substring(0, 23) : str;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ee.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

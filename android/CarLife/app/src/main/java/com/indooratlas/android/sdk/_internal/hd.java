@@ -6,743 +6,519 @@ import java.io.InterruptedIOException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 
-public final class hd
-{
-  long a = 0L;
-  long b;
-  final int c;
-  final hc d;
-  List<he> e;
-  public final b f;
-  final a g;
-  public final c h = new c();
-  public final c i = new c();
-  private final List<he> k;
-  private gz l = null;
-  
-  static
-  {
-    if (!hd.class.desiredAssertionStatus()) {}
-    for (boolean bool = true;; bool = false)
-    {
-      j = bool;
-      return;
-    }
-  }
-  
-  hd(int paramInt, hc paramhc, boolean paramBoolean1, boolean paramBoolean2, List<he> paramList)
-  {
-    if (paramhc == null) {
-      throw new NullPointerException("connection == null");
-    }
-    if (paramList == null) {
-      throw new NullPointerException("requestHeaders == null");
-    }
-    this.c = paramInt;
-    this.d = paramhc;
-    this.b = paramhc.f.b();
-    this.f = new b(paramhc.e.b(), (byte)0);
-    this.g = new a();
-    b.a(this.f, paramBoolean2);
-    a.a(this.g, paramBoolean1);
-    this.k = paramList;
-  }
-  
-  private boolean d(gz paramgz)
-  {
-    if ((!j) && (Thread.holdsLock(this))) {
-      throw new AssertionError();
-    }
-    try
-    {
-      if (this.l != null) {
-        return false;
-      }
-      if ((b.a(this.f)) && (a.a(this.g))) {
-        return false;
-      }
-    }
-    finally {}
-    this.l = paramgz;
-    notifyAll();
-    this.d.b(this.c);
-    return true;
-  }
-  
-  private void f()
-    throws InterruptedIOException
-  {
-    try
-    {
-      wait();
-      return;
-    }
-    catch (InterruptedException localInterruptedException)
-    {
-      throw new InterruptedIOException();
-    }
-  }
-  
-  final void a(long paramLong)
-  {
-    this.b += paramLong;
-    if (paramLong > 0L) {
-      notifyAll();
-    }
-  }
-  
-  public final void a(gz paramgz)
-    throws IOException
-  {
-    if (!d(paramgz)) {
-      return;
-    }
-    this.d.b(this.c, paramgz);
-  }
-  
-  /* Error */
-  public final boolean a()
-  {
-    // Byte code:
-    //   0: iconst_0
-    //   1: istore_1
-    //   2: aload_0
-    //   3: monitorenter
-    //   4: aload_0
-    //   5: getfield 58	com/indooratlas/android/sdk/_internal/hd:l	Lcom/indooratlas/android/sdk/_internal/gz;
-    //   8: astore_2
-    //   9: aload_2
-    //   10: ifnull +7 -> 17
-    //   13: aload_0
-    //   14: monitorexit
-    //   15: iload_1
-    //   16: ireturn
-    //   17: aload_0
-    //   18: getfield 90	com/indooratlas/android/sdk/_internal/hd:f	Lcom/indooratlas/android/sdk/_internal/hd$b;
-    //   21: invokestatic 120	com/indooratlas/android/sdk/_internal/hd$b:a	(Lcom/indooratlas/android/sdk/_internal/hd$b;)Z
-    //   24: ifne +13 -> 37
-    //   27: aload_0
-    //   28: getfield 90	com/indooratlas/android/sdk/_internal/hd:f	Lcom/indooratlas/android/sdk/_internal/hd$b;
-    //   31: invokestatic 144	com/indooratlas/android/sdk/_internal/hd$b:b	(Lcom/indooratlas/android/sdk/_internal/hd$b;)Z
-    //   34: ifeq +32 -> 66
-    //   37: aload_0
-    //   38: getfield 93	com/indooratlas/android/sdk/_internal/hd:g	Lcom/indooratlas/android/sdk/_internal/hd$a;
-    //   41: invokestatic 123	com/indooratlas/android/sdk/_internal/hd$a:a	(Lcom/indooratlas/android/sdk/_internal/hd$a;)Z
-    //   44: ifne +13 -> 57
-    //   47: aload_0
-    //   48: getfield 93	com/indooratlas/android/sdk/_internal/hd:g	Lcom/indooratlas/android/sdk/_internal/hd$a;
-    //   51: invokestatic 146	com/indooratlas/android/sdk/_internal/hd$a:b	(Lcom/indooratlas/android/sdk/_internal/hd$a;)Z
-    //   54: ifeq +12 -> 66
-    //   57: aload_0
-    //   58: getfield 180	com/indooratlas/android/sdk/_internal/hd:e	Ljava/util/List;
-    //   61: astore_2
-    //   62: aload_2
-    //   63: ifnonnull -50 -> 13
-    //   66: iconst_1
-    //   67: istore_1
-    //   68: goto -55 -> 13
-    //   71: astore_2
-    //   72: aload_0
-    //   73: monitorexit
-    //   74: aload_2
-    //   75: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	76	0	this	hd
-    //   1	67	1	bool	boolean
-    //   8	55	2	localObject1	Object
-    //   71	4	2	localObject2	Object
-    // Exception table:
-    //   from	to	target	type
-    //   4	9	71	finally
-    //   17	37	71	finally
-    //   37	57	71	finally
-    //   57	62	71	finally
-  }
-  
-  public final void b(gz paramgz)
-  {
-    if (!d(paramgz)) {
-      return;
-    }
-    this.d.a(this.c, paramgz);
-  }
-  
-  public final boolean b()
-  {
-    if ((this.c & 0x1) == 1) {}
-    for (int m = 1; this.d.b == m; m = 0) {
-      return true;
-    }
-    return false;
-  }
-  
-  /* Error */
-  public final List<he> c()
-    throws IOException
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: aload_0
-    //   3: getfield 54	com/indooratlas/android/sdk/_internal/hd:h	Lcom/indooratlas/android/sdk/_internal/hd$c;
-    //   6: invokevirtual 188	com/indooratlas/android/sdk/_internal/hd$c:a_	()V
-    //   9: aload_0
-    //   10: getfield 180	com/indooratlas/android/sdk/_internal/hd:e	Ljava/util/List;
-    //   13: ifnonnull +32 -> 45
-    //   16: aload_0
-    //   17: getfield 58	com/indooratlas/android/sdk/_internal/hd:l	Lcom/indooratlas/android/sdk/_internal/gz;
-    //   20: ifnonnull +25 -> 45
-    //   23: aload_0
-    //   24: invokespecial 133	com/indooratlas/android/sdk/_internal/hd:f	()V
-    //   27: goto -18 -> 9
-    //   30: astore_1
-    //   31: aload_0
-    //   32: getfield 54	com/indooratlas/android/sdk/_internal/hd:h	Lcom/indooratlas/android/sdk/_internal/hd$c;
-    //   35: invokevirtual 190	com/indooratlas/android/sdk/_internal/hd$c:b	()V
-    //   38: aload_1
-    //   39: athrow
-    //   40: astore_1
-    //   41: aload_0
-    //   42: monitorexit
-    //   43: aload_1
-    //   44: athrow
-    //   45: aload_0
-    //   46: getfield 54	com/indooratlas/android/sdk/_internal/hd:h	Lcom/indooratlas/android/sdk/_internal/hd$c;
-    //   49: invokevirtual 190	com/indooratlas/android/sdk/_internal/hd$c:b	()V
-    //   52: aload_0
-    //   53: getfield 180	com/indooratlas/android/sdk/_internal/hd:e	Ljava/util/List;
-    //   56: ifnull +12 -> 68
-    //   59: aload_0
-    //   60: getfield 180	com/indooratlas/android/sdk/_internal/hd:e	Ljava/util/List;
-    //   63: astore_1
-    //   64: aload_0
-    //   65: monitorexit
-    //   66: aload_1
-    //   67: areturn
-    //   68: new 142	java/io/IOException
-    //   71: dup
-    //   72: new 161	java/lang/StringBuilder
-    //   75: dup
-    //   76: ldc -93
-    //   78: invokespecial 164	java/lang/StringBuilder:<init>	(Ljava/lang/String;)V
-    //   81: aload_0
-    //   82: getfield 58	com/indooratlas/android/sdk/_internal/hd:l	Lcom/indooratlas/android/sdk/_internal/gz;
-    //   85: invokevirtual 168	java/lang/StringBuilder:append	(Ljava/lang/Object;)Ljava/lang/StringBuilder;
-    //   88: invokevirtual 172	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   91: invokespecial 157	java/io/IOException:<init>	(Ljava/lang/String;)V
-    //   94: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	95	0	this	hd
-    //   30	9	1	localObject1	Object
-    //   40	4	1	localObject2	Object
-    //   63	4	1	localList	List
-    // Exception table:
-    //   from	to	target	type
-    //   9	27	30	finally
-    //   2	9	40	finally
-    //   31	40	40	finally
-    //   45	64	40	finally
-    //   68	95	40	finally
-  }
-  
-  final void c(gz paramgz)
-  {
-    try
-    {
-      if (this.l == null)
-      {
-        this.l = paramgz;
-        notifyAll();
-      }
-      return;
-    }
-    finally
-    {
-      paramgz = finally;
-      throw paramgz;
-    }
-  }
-  
-  public final jc d()
-  {
-    try
-    {
-      if ((this.e == null) && (!b())) {
-        throw new IllegalStateException("reply before requesting the sink");
-      }
-    }
-    finally {}
-    return this.g;
-  }
-  
-  final void e()
-  {
-    if ((!j) && (Thread.holdsLock(this))) {
-      throw new AssertionError();
-    }
-    try
-    {
-      b.a(this.f, true);
-      boolean bool = a();
-      notifyAll();
-      if (!bool) {
-        this.d.b(this.c);
-      }
-      return;
-    }
-    finally {}
-  }
-  
-  final class a
-    implements jc
-  {
-    private final in c = new in();
-    private boolean d;
-    private boolean e;
-    
-    static
-    {
-      if (!hd.class.desiredAssertionStatus()) {}
-      for (boolean bool = true;; bool = false)
-      {
-        a = bool;
-        return;
-      }
-    }
-    
-    a() {}
-    
-    /* Error */
-    private void a(boolean paramBoolean)
-      throws IOException
-    {
-      // Byte code:
-      //   0: aload_0
-      //   1: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   4: astore 5
-      //   6: aload 5
-      //   8: monitorenter
-      //   9: aload_0
-      //   10: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   13: invokestatic 45	com/indooratlas/android/sdk/_internal/hd:g	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   16: invokevirtual 50	com/indooratlas/android/sdk/_internal/hd$c:a_	()V
-      //   19: aload_0
-      //   20: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   23: getfield 53	com/indooratlas/android/sdk/_internal/hd:b	J
-      //   26: lconst_0
-      //   27: lcmp
-      //   28: ifgt +60 -> 88
-      //   31: aload_0
-      //   32: getfield 55	com/indooratlas/android/sdk/_internal/hd$a:e	Z
-      //   35: ifne +53 -> 88
-      //   38: aload_0
-      //   39: getfield 57	com/indooratlas/android/sdk/_internal/hd$a:d	Z
-      //   42: ifne +46 -> 88
-      //   45: aload_0
-      //   46: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   49: invokestatic 60	com/indooratlas/android/sdk/_internal/hd:d	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/gz;
-      //   52: ifnonnull +36 -> 88
-      //   55: aload_0
-      //   56: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   59: invokestatic 62	com/indooratlas/android/sdk/_internal/hd:e	(Lcom/indooratlas/android/sdk/_internal/hd;)V
-      //   62: goto -43 -> 19
-      //   65: astore 6
-      //   67: aload_0
-      //   68: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   71: invokestatic 45	com/indooratlas/android/sdk/_internal/hd:g	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   74: invokevirtual 64	com/indooratlas/android/sdk/_internal/hd$c:b	()V
-      //   77: aload 6
-      //   79: athrow
-      //   80: astore 6
-      //   82: aload 5
-      //   84: monitorexit
-      //   85: aload 6
-      //   87: athrow
-      //   88: aload_0
-      //   89: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   92: invokestatic 45	com/indooratlas/android/sdk/_internal/hd:g	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   95: invokevirtual 64	com/indooratlas/android/sdk/_internal/hd$c:b	()V
-      //   98: aload_0
-      //   99: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   102: invokestatic 67	com/indooratlas/android/sdk/_internal/hd:h	(Lcom/indooratlas/android/sdk/_internal/hd;)V
-      //   105: aload_0
-      //   106: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   109: getfield 53	com/indooratlas/android/sdk/_internal/hd:b	J
-      //   112: aload_0
-      //   113: getfield 38	com/indooratlas/android/sdk/_internal/hd$a:c	Lcom/indooratlas/android/sdk/_internal/in;
-      //   116: getfield 68	com/indooratlas/android/sdk/_internal/in:b	J
-      //   119: invokestatic 74	java/lang/Math:min	(JJ)J
-      //   122: lstore_3
-      //   123: aload_0
-      //   124: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   127: astore 6
-      //   129: aload 6
-      //   131: aload 6
-      //   133: getfield 53	com/indooratlas/android/sdk/_internal/hd:b	J
-      //   136: lload_3
-      //   137: lsub
-      //   138: putfield 53	com/indooratlas/android/sdk/_internal/hd:b	J
-      //   141: aload 5
-      //   143: monitorexit
-      //   144: aload_0
-      //   145: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   148: invokestatic 45	com/indooratlas/android/sdk/_internal/hd:g	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   151: invokevirtual 50	com/indooratlas/android/sdk/_internal/hd$c:a_	()V
-      //   154: aload_0
-      //   155: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   158: invokestatic 77	com/indooratlas/android/sdk/_internal/hd:a	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hc;
-      //   161: astore 5
-      //   163: aload_0
-      //   164: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   167: invokestatic 80	com/indooratlas/android/sdk/_internal/hd:b	(Lcom/indooratlas/android/sdk/_internal/hd;)I
-      //   170: istore_2
-      //   171: iload_1
-      //   172: ifeq +40 -> 212
-      //   175: lload_3
-      //   176: aload_0
-      //   177: getfield 38	com/indooratlas/android/sdk/_internal/hd$a:c	Lcom/indooratlas/android/sdk/_internal/in;
-      //   180: getfield 68	com/indooratlas/android/sdk/_internal/in:b	J
-      //   183: lcmp
-      //   184: ifne +28 -> 212
-      //   187: iconst_1
-      //   188: istore_1
-      //   189: aload 5
-      //   191: iload_2
-      //   192: iload_1
-      //   193: aload_0
-      //   194: getfield 38	com/indooratlas/android/sdk/_internal/hd$a:c	Lcom/indooratlas/android/sdk/_internal/in;
-      //   197: lload_3
-      //   198: invokevirtual 85	com/indooratlas/android/sdk/_internal/hc:a	(IZLcom/indooratlas/android/sdk/_internal/in;J)V
-      //   201: aload_0
-      //   202: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   205: invokestatic 45	com/indooratlas/android/sdk/_internal/hd:g	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   208: invokevirtual 64	com/indooratlas/android/sdk/_internal/hd$c:b	()V
-      //   211: return
-      //   212: iconst_0
-      //   213: istore_1
-      //   214: goto -25 -> 189
-      //   217: astore 5
-      //   219: aload_0
-      //   220: getfield 31	com/indooratlas/android/sdk/_internal/hd$a:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   223: invokestatic 45	com/indooratlas/android/sdk/_internal/hd:g	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   226: invokevirtual 64	com/indooratlas/android/sdk/_internal/hd$c:b	()V
-      //   229: aload 5
-      //   231: athrow
-      // Local variable table:
-      //   start	length	slot	name	signature
-      //   0	232	0	this	a
-      //   0	232	1	paramBoolean	boolean
-      //   170	22	2	i	int
-      //   122	76	3	l	long
-      //   4	186	5	localObject1	Object
-      //   217	13	5	localObject2	Object
-      //   65	13	6	localObject3	Object
-      //   80	6	6	localObject4	Object
-      //   127	5	6	localhd	hd
-      // Exception table:
-      //   from	to	target	type
-      //   19	62	65	finally
-      //   9	19	80	finally
-      //   67	80	80	finally
-      //   82	85	80	finally
-      //   88	144	80	finally
-      //   154	171	217	finally
-      //   175	187	217	finally
-      //   189	201	217	finally
-    }
-    
-    public final je a()
-    {
-      return hd.g(hd.this);
-    }
-    
-    public final void a_(in paramin, long paramLong)
-      throws IOException
-    {
-      if ((!a) && (Thread.holdsLock(hd.this))) {
-        throw new AssertionError();
-      }
-      this.c.a_(paramin, paramLong);
-      while (this.c.b >= 16384L) {
-        a(false);
-      }
-    }
-    
-    public final void close()
-      throws IOException
-    {
-      if ((!a) && (Thread.holdsLock(hd.this))) {
-        throw new AssertionError();
-      }
-      synchronized (hd.this)
-      {
-        if (this.d) {
-          return;
+public final class hd {
+    /* renamed from: j */
+    static final /* synthetic */ boolean f24148j = (!hd.class.desiredAssertionStatus());
+    /* renamed from: a */
+    long f24149a = 0;
+    /* renamed from: b */
+    long f24150b;
+    /* renamed from: c */
+    final int f24151c;
+    /* renamed from: d */
+    final hc f24152d;
+    /* renamed from: e */
+    List<he> f24153e;
+    /* renamed from: f */
+    public final C5952b f24154f;
+    /* renamed from: g */
+    final C5951a f24155g;
+    /* renamed from: h */
+    public final C5953c f24156h = new C5953c(this);
+    /* renamed from: i */
+    public final C5953c f24157i = new C5953c(this);
+    /* renamed from: k */
+    private final List<he> f24158k;
+    /* renamed from: l */
+    private gz f24159l = null;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hd$a */
+    final class C5951a implements jc {
+        /* renamed from: a */
+        static final /* synthetic */ boolean f24135a = (!hd.class.desiredAssertionStatus());
+        /* renamed from: b */
+        final /* synthetic */ hd f24136b;
+        /* renamed from: c */
+        private final in f24137c = new in();
+        /* renamed from: d */
+        private boolean f24138d;
+        /* renamed from: e */
+        private boolean f24139e;
+
+        C5951a(hd hdVar) {
+            this.f24136b = hdVar;
         }
-        if (hd.this.g.e) {
-          break label113;
-        }
-        if (this.c.b > 0L)
-        {
-          if (this.c.b <= 0L) {
-            break label113;
-          }
-          a(true);
-        }
-      }
-      hd.a(hd.this).a(hd.b(hd.this), true, null, 0L);
-      label113:
-      synchronized (hd.this)
-      {
-        this.d = true;
-        hd.a(hd.this).b();
-        hd.f(hd.this);
-        return;
-      }
-    }
-    
-    public final void flush()
-      throws IOException
-    {
-      if ((!a) && (Thread.holdsLock(hd.this))) {
-        throw new AssertionError();
-      }
-      synchronized (hd.this)
-      {
-        hd.h(hd.this);
-        if (this.c.b > 0L)
-        {
-          a(false);
-          hd.a(hd.this).b();
-        }
-      }
-    }
-  }
-  
-  final class b
-    implements jd
-  {
-    private final in c = new in();
-    private final in d = new in();
-    private final long e;
-    private boolean f;
-    private boolean g;
-    
-    static
-    {
-      if (!hd.class.desiredAssertionStatus()) {}
-      for (boolean bool = true;; bool = false)
-      {
-        a = bool;
-        return;
-      }
-    }
-    
-    private b(long paramLong)
-    {
-      this.e = paramLong;
-    }
-    
-    /* Error */
-    private void b()
-      throws IOException
-    {
-      // Byte code:
-      //   0: aload_0
-      //   1: getfield 34	com/indooratlas/android/sdk/_internal/hd$b:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   4: invokestatic 57	com/indooratlas/android/sdk/_internal/hd:c	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   7: invokevirtual 62	com/indooratlas/android/sdk/_internal/hd$c:a_	()V
-      //   10: aload_0
-      //   11: getfield 43	com/indooratlas/android/sdk/_internal/hd$b:d	Lcom/indooratlas/android/sdk/_internal/in;
-      //   14: getfield 64	com/indooratlas/android/sdk/_internal/in:b	J
-      //   17: lconst_0
-      //   18: lcmp
-      //   19: ifne +50 -> 69
-      //   22: aload_0
-      //   23: getfield 51	com/indooratlas/android/sdk/_internal/hd$b:g	Z
-      //   26: ifne +43 -> 69
-      //   29: aload_0
-      //   30: getfield 66	com/indooratlas/android/sdk/_internal/hd$b:f	Z
-      //   33: ifne +36 -> 69
-      //   36: aload_0
-      //   37: getfield 34	com/indooratlas/android/sdk/_internal/hd$b:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   40: invokestatic 69	com/indooratlas/android/sdk/_internal/hd:d	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/gz;
-      //   43: ifnonnull +26 -> 69
-      //   46: aload_0
-      //   47: getfield 34	com/indooratlas/android/sdk/_internal/hd$b:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   50: invokestatic 72	com/indooratlas/android/sdk/_internal/hd:e	(Lcom/indooratlas/android/sdk/_internal/hd;)V
-      //   53: goto -43 -> 10
-      //   56: astore_1
-      //   57: aload_0
-      //   58: getfield 34	com/indooratlas/android/sdk/_internal/hd$b:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   61: invokestatic 57	com/indooratlas/android/sdk/_internal/hd:c	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   64: invokevirtual 74	com/indooratlas/android/sdk/_internal/hd$c:b	()V
-      //   67: aload_1
-      //   68: athrow
-      //   69: aload_0
-      //   70: getfield 34	com/indooratlas/android/sdk/_internal/hd$b:b	Lcom/indooratlas/android/sdk/_internal/hd;
-      //   73: invokestatic 57	com/indooratlas/android/sdk/_internal/hd:c	(Lcom/indooratlas/android/sdk/_internal/hd;)Lcom/indooratlas/android/sdk/_internal/hd$c;
-      //   76: invokevirtual 74	com/indooratlas/android/sdk/_internal/hd$c:b	()V
-      //   79: return
-      // Local variable table:
-      //   start	length	slot	name	signature
-      //   0	80	0	this	b
-      //   56	12	1	localObject	Object
-      // Exception table:
-      //   from	to	target	type
-      //   10	53	56	finally
-    }
-    
-    public final long a(in arg1, long paramLong)
-      throws IOException
-    {
-      if (paramLong < 0L) {
-        throw new IllegalArgumentException("byteCount < 0: " + paramLong);
-      }
-      synchronized (hd.this)
-      {
-        b();
-        if (this.f) {
-          throw new IOException("stream closed");
-        }
-      }
-      if (hd.d(hd.this) != null) {
-        throw new IOException("stream was reset: " + hd.d(hd.this));
-      }
-      if (this.d.b == 0L) {
-        return -1L;
-      }
-      paramLong = this.d.a(???, Math.min(paramLong, this.d.b));
-      ??? = hd.this;
-      ???.a += paramLong;
-      if (hd.this.a >= hd.a(hd.this).e.b() / 2)
-      {
-        hd.a(hd.this).a(hd.b(hd.this), hd.this.a);
-        hd.this.a = 0L;
-      }
-      synchronized (hd.a(hd.this))
-      {
-        ??? = hd.a(hd.this);
-        ((hc)???).c += paramLong;
-        if (hd.a(hd.this).c >= hd.a(hd.this).e.b() / 2)
-        {
-          hd.a(hd.this).a(0, hd.a(hd.this).c);
-          hd.a(hd.this).c = 0L;
-        }
-        return paramLong;
-      }
-    }
-    
-    public final je a()
-    {
-      return hd.c(hd.this);
-    }
-    
-    final void a(ip paramip, long paramLong)
-      throws IOException
-    {
-      long l = paramLong;
-      if (!a)
-      {
-        l = paramLong;
-        if (Thread.holdsLock(hd.this)) {
-          throw new AssertionError();
-        }
-      }
-      for (;;)
-      {
-        l -= paramLong;
-        synchronized (hd.this)
-        {
-          if (this.d.b == 0L)
-          {
-            i = 1;
-            this.d.a(this.c);
-            if (i != 0) {
-              hd.this.notifyAll();
-            }
-            if (l > 0L) {}
-            boolean bool;
-            synchronized (hd.this)
-            {
-              bool = this.g;
-              if (this.d.b + l > this.e)
-              {
-                i = 1;
-                if (i != 0)
-                {
-                  paramip.f(l);
-                  hd.this.b(gz.h);
+
+        public final void a_(in inVar, long j) throws IOException {
+            if (f24135a || !Thread.holdsLock(this.f24136b)) {
+                this.f24137c.a_(inVar, j);
+                while (this.f24137c.f24392b >= 16384) {
+                    m20886a(false);
                 }
-              }
-              else
-              {
-                i = 0;
-              }
+                return;
             }
-            if (bool)
-            {
-              paramip.f(l);
-              return;
-            }
-            paramLong = paramip.a(this.c, l);
-            if (paramLong != -1L) {
-              continue;
-            }
-            throw new EOFException();
-          }
-          int i = 0;
+            throw new AssertionError();
         }
-      }
+
+        /* renamed from: a */
+        private void m20886a(boolean z) throws IOException {
+            synchronized (this.f24136b) {
+                this.f24136b.f24157i.a_();
+                while (this.f24136b.f24150b <= 0 && !this.f24139e && !this.f24138d && this.f24136b.f24159l == null) {
+                    try {
+                        this.f24136b.m20907f();
+                    } catch (Throwable th) {
+                        this.f24136b.f24157i.m20900b();
+                    }
+                }
+                this.f24136b.f24157i.m20900b();
+                hd.m20910h(this.f24136b);
+                long min = Math.min(this.f24136b.f24150b, this.f24137c.f24392b);
+                hd hdVar = this.f24136b;
+                hdVar.f24150b -= min;
+            }
+            this.f24136b.f24157i.a_();
+            try {
+                hc a = this.f24136b.f24152d;
+                int b = this.f24136b.f24151c;
+                boolean z2 = z && min == this.f24137c.f24392b;
+                a.m20882a(b, z2, this.f24137c, min);
+            } finally {
+                this.f24136b.f24157i.m20900b();
+            }
+        }
+
+        public final void flush() throws IOException {
+            if (f24135a || !Thread.holdsLock(this.f24136b)) {
+                synchronized (this.f24136b) {
+                    hd.m20910h(this.f24136b);
+                }
+                while (this.f24137c.f24392b > 0) {
+                    m20886a(false);
+                    this.f24136b.f24152d.m20884b();
+                }
+                return;
+            }
+            throw new AssertionError();
+        }
+
+        /* renamed from: a */
+        public final je m20890a() {
+            return this.f24136b.f24157i;
+        }
+
+        /* JADX WARNING: inconsistent code. */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public final void close() throws java.io.IOException {
+            /*
+            r6 = this;
+            r4 = 0;
+            r2 = 1;
+            r0 = f24135a;
+            if (r0 != 0) goto L_0x0015;
+        L_0x0007:
+            r0 = r6.f24136b;
+            r0 = java.lang.Thread.holdsLock(r0);
+            if (r0 == 0) goto L_0x0015;
+        L_0x000f:
+            r0 = new java.lang.AssertionError;
+            r0.<init>();
+            throw r0;
+        L_0x0015:
+            r1 = r6.f24136b;
+            monitor-enter(r1);
+            r0 = r6.f24138d;	 Catch:{ all -> 0x003b }
+            if (r0 == 0) goto L_0x001e;
+        L_0x001c:
+            monitor-exit(r1);	 Catch:{ all -> 0x003b }
+        L_0x001d:
+            return;
+        L_0x001e:
+            monitor-exit(r1);	 Catch:{ all -> 0x003b }
+            r0 = r6.f24136b;
+            r0 = r0.f24155g;
+            r0 = r0.f24139e;
+            if (r0 != 0) goto L_0x004e;
+        L_0x0027:
+            r0 = r6.f24137c;
+            r0 = r0.f24392b;
+            r0 = (r0 > r4 ? 1 : (r0 == r4 ? 0 : -1));
+            if (r0 <= 0) goto L_0x003e;
+        L_0x002f:
+            r0 = r6.f24137c;
+            r0 = r0.f24392b;
+            r0 = (r0 > r4 ? 1 : (r0 == r4 ? 0 : -1));
+            if (r0 <= 0) goto L_0x004e;
+        L_0x0037:
+            r6.m20886a(r2);
+            goto L_0x002f;
+        L_0x003b:
+            r0 = move-exception;
+            monitor-exit(r1);	 Catch:{ all -> 0x003b }
+            throw r0;
+        L_0x003e:
+            r0 = r6.f24136b;
+            r0 = r0.f24152d;
+            r1 = r6.f24136b;
+            r1 = r1.f24151c;
+            r3 = 0;
+            r0.m20882a(r1, r2, r3, r4);
+        L_0x004e:
+            r1 = r6.f24136b;
+            monitor-enter(r1);
+            r0 = 1;
+            r6.f24138d = r0;	 Catch:{ all -> 0x0064 }
+            monitor-exit(r1);	 Catch:{ all -> 0x0064 }
+            r0 = r6.f24136b;
+            r0 = r0.f24152d;
+            r0.m20884b();
+            r0 = r6.f24136b;
+            com.indooratlas.android.sdk._internal.hd.m20908f(r0);
+            goto L_0x001d;
+        L_0x0064:
+            r0 = move-exception;
+            monitor-exit(r1);	 Catch:{ all -> 0x0064 }
+            throw r0;
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.indooratlas.android.sdk._internal.hd.a.close():void");
+        }
     }
-    
-    public final void close()
-      throws IOException
-    {
-      synchronized (hd.this)
-      {
-        this.f = true;
-        this.d.o();
-        hd.this.notifyAll();
-        hd.f(hd.this);
-        return;
-      }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hd$b */
+    final class C5952b implements jd {
+        /* renamed from: a */
+        static final /* synthetic */ boolean f24140a = (!hd.class.desiredAssertionStatus());
+        /* renamed from: b */
+        final /* synthetic */ hd f24141b;
+        /* renamed from: c */
+        private final in f24142c;
+        /* renamed from: d */
+        private final in f24143d;
+        /* renamed from: e */
+        private final long f24144e;
+        /* renamed from: f */
+        private boolean f24145f;
+        /* renamed from: g */
+        private boolean f24146g;
+
+        private C5952b(hd hdVar, long j) {
+            this.f24141b = hdVar;
+            this.f24142c = new in();
+            this.f24143d = new in();
+            this.f24144e = j;
+        }
+
+        /* renamed from: a */
+        public final long m20895a(in inVar, long j) throws IOException {
+            if (j < 0) {
+                throw new IllegalArgumentException("byteCount < 0: " + j);
+            }
+            long j2;
+            synchronized (this.f24141b) {
+                m20893b();
+                if (this.f24145f) {
+                    throw new IOException("stream closed");
+                } else if (this.f24141b.f24159l != null) {
+                    throw new IOException("stream was reset: " + this.f24141b.f24159l);
+                } else if (this.f24143d.f24392b == 0) {
+                    j2 = -1;
+                } else {
+                    j2 = this.f24143d.a(inVar, Math.min(j, this.f24143d.f24392b));
+                    hd hdVar = this.f24141b;
+                    hdVar.f24149a += j2;
+                    if (this.f24141b.f24149a >= ((long) (this.f24141b.f24152d.f24116e.m20984b() / 2))) {
+                        this.f24141b.f24152d.m20880a(this.f24141b.f24151c, this.f24141b.f24149a);
+                        this.f24141b.f24149a = 0;
+                    }
+                    synchronized (this.f24141b.f24152d) {
+                        hc a = this.f24141b.f24152d;
+                        a.f24114c += j2;
+                        if (this.f24141b.f24152d.f24114c >= ((long) (this.f24141b.f24152d.f24116e.m20984b() / 2))) {
+                            this.f24141b.f24152d.m20880a(0, this.f24141b.f24152d.f24114c);
+                            this.f24141b.f24152d.f24114c = 0;
+                        }
+                    }
+                }
+            }
+            return j2;
+        }
+
+        /* renamed from: b */
+        private void m20893b() throws IOException {
+            this.f24141b.f24156h.a_();
+            while (this.f24143d.f24392b == 0 && !this.f24146g && !this.f24145f && this.f24141b.f24159l == null) {
+                try {
+                    this.f24141b.m20907f();
+                } catch (Throwable th) {
+                    this.f24141b.f24156h.m20900b();
+                }
+            }
+            this.f24141b.f24156h.m20900b();
+        }
+
+        /* renamed from: a */
+        final void m20897a(ip ipVar, long j) throws IOException {
+            if (f24140a || !Thread.holdsLock(this.f24141b)) {
+                while (j > 0) {
+                    boolean z;
+                    Object obj;
+                    synchronized (this.f24141b) {
+                        z = this.f24146g;
+                        obj = this.f24143d.f24392b + j > this.f24144e ? 1 : null;
+                    }
+                    if (obj != null) {
+                        ipVar.f(j);
+                        this.f24141b.m20914b(gz.FLOW_CONTROL_ERROR);
+                        return;
+                    } else if (z) {
+                        ipVar.f(j);
+                        return;
+                    } else {
+                        long a = ipVar.a(this.f24142c, j);
+                        if (a == -1) {
+                            throw new EOFException();
+                        }
+                        j -= a;
+                        synchronized (this.f24141b) {
+                            if (this.f24143d.f24392b == 0) {
+                                obj = 1;
+                            } else {
+                                obj = null;
+                            }
+                            this.f24143d.a(this.f24142c);
+                            if (obj != null) {
+                                this.f24141b.notifyAll();
+                            }
+                        }
+                    }
+                }
+                return;
+            }
+            throw new AssertionError();
+        }
+
+        /* renamed from: a */
+        public final je m20896a() {
+            return this.f24141b.f24156h;
+        }
+
+        public final void close() throws IOException {
+            synchronized (this.f24141b) {
+                this.f24145f = true;
+                this.f24143d.o();
+                this.f24141b.notifyAll();
+            }
+            hd.m20908f(this.f24141b);
+        }
     }
-  }
-  
-  final class c
-    extends il
-  {
-    c() {}
-    
-    protected final IOException a(IOException paramIOException)
-    {
-      SocketTimeoutException localSocketTimeoutException = new SocketTimeoutException("timeout");
-      if (paramIOException != null) {
-        localSocketTimeoutException.initCause(paramIOException);
-      }
-      return localSocketTimeoutException;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hd$c */
+    class C5953c extends il {
+        /* renamed from: a */
+        final /* synthetic */ hd f24147a;
+
+        C5953c(hd hdVar) {
+            this.f24147a = hdVar;
+        }
+
+        /* renamed from: a */
+        protected final void m20899a() {
+            this.f24147a.m20914b(gz.CANCEL);
+        }
+
+        /* renamed from: a */
+        protected final IOException m20898a(IOException iOException) {
+            IOException socketTimeoutException = new SocketTimeoutException("timeout");
+            if (iOException != null) {
+                socketTimeoutException.initCause(iOException);
+            }
+            return socketTimeoutException;
+        }
+
+        /* renamed from: b */
+        public final void m20900b() throws IOException {
+            if (b_()) {
+                throw m20898a(null);
+            }
+        }
     }
-    
-    protected final void a()
-    {
-      hd.this.b(gz.l);
+
+    hd(int i, hc hcVar, boolean z, boolean z2, List<he> list) {
+        if (hcVar == null) {
+            throw new NullPointerException("connection == null");
+        } else if (list == null) {
+            throw new NullPointerException("requestHeaders == null");
+        } else {
+            this.f24151c = i;
+            this.f24152d = hcVar;
+            this.f24150b = (long) hcVar.f24117f.m20984b();
+            this.f24154f = new C5952b((long) hcVar.f24116e.m20984b());
+            this.f24155g = new C5951a(this);
+            this.f24154f.f24146g = z2;
+            this.f24155g.f24139e = z;
+            this.f24158k = list;
+        }
     }
-    
-    public final void b()
-      throws IOException
-    {
-      if (b_()) {
-        throw a(null);
-      }
+
+    /* renamed from: a */
+    public final synchronized boolean m20913a() {
+        boolean z = false;
+        synchronized (this) {
+            if (this.f24159l == null) {
+                if (!(this.f24154f.f24146g || this.f24154f.f24145f) || (!(this.f24155g.f24139e || this.f24155g.f24138d) || this.f24153e == null)) {
+                    z = true;
+                }
+            }
+        }
+        return z;
     }
-  }
+
+    /* renamed from: b */
+    public final boolean m20915b() {
+        boolean z;
+        if ((this.f24151c & 1) == 1) {
+            z = true;
+        } else {
+            z = false;
+        }
+        return this.f24152d.f24113b == z;
+    }
+
+    /* renamed from: c */
+    public final synchronized List<he> m20916c() throws IOException {
+        this.f24156h.a_();
+        while (this.f24153e == null && this.f24159l == null) {
+            try {
+                m20907f();
+            } catch (Throwable th) {
+                this.f24156h.m20900b();
+            }
+        }
+        this.f24156h.m20900b();
+        if (this.f24153e != null) {
+        } else {
+            throw new IOException("stream was reset: " + this.f24159l);
+        }
+        return this.f24153e;
+    }
+
+    /* renamed from: d */
+    public final jc m20918d() {
+        synchronized (this) {
+            if (this.f24153e != null || m20915b()) {
+            } else {
+                throw new IllegalStateException("reply before requesting the sink");
+            }
+        }
+        return this.f24155g;
+    }
+
+    /* renamed from: a */
+    public final void m20912a(gz gzVar) throws IOException {
+        if (m20905d(gzVar)) {
+            this.f24152d.m20885b(this.f24151c, gzVar);
+        }
+    }
+
+    /* renamed from: b */
+    public final void m20914b(gz gzVar) {
+        if (m20905d(gzVar)) {
+            this.f24152d.m20881a(this.f24151c, gzVar);
+        }
+    }
+
+    /* renamed from: d */
+    private boolean m20905d(gz gzVar) {
+        if (f24148j || !Thread.holdsLock(this)) {
+            synchronized (this) {
+                if (this.f24159l != null) {
+                    return false;
+                } else if (this.f24154f.f24146g && this.f24155g.f24139e) {
+                    return false;
+                } else {
+                    this.f24159l = gzVar;
+                    notifyAll();
+                    this.f24152d.m20883b(this.f24151c);
+                    return true;
+                }
+            }
+        }
+        throw new AssertionError();
+    }
+
+    /* renamed from: e */
+    final void m20919e() {
+        if (f24148j || !Thread.holdsLock(this)) {
+            boolean a;
+            synchronized (this) {
+                this.f24154f.f24146g = true;
+                a = m20913a();
+                notifyAll();
+            }
+            if (!a) {
+                this.f24152d.m20883b(this.f24151c);
+                return;
+            }
+            return;
+        }
+        throw new AssertionError();
+    }
+
+    /* renamed from: c */
+    final synchronized void m20917c(gz gzVar) {
+        if (this.f24159l == null) {
+            this.f24159l = gzVar;
+            notifyAll();
+        }
+    }
+
+    /* renamed from: a */
+    final void m20911a(long j) {
+        this.f24150b += j;
+        if (j > 0) {
+            notifyAll();
+        }
+    }
+
+    /* renamed from: f */
+    private void m20907f() throws InterruptedIOException {
+        try {
+            wait();
+        } catch (InterruptedException e) {
+            throw new InterruptedIOException();
+        }
+    }
+
+    /* renamed from: f */
+    static /* synthetic */ void m20908f(hd hdVar) throws IOException {
+        if (f24148j || !Thread.holdsLock(hdVar)) {
+            Object obj;
+            boolean a;
+            synchronized (hdVar) {
+                obj = (!hdVar.f24154f.f24146g && hdVar.f24154f.f24145f && (hdVar.f24155g.f24139e || hdVar.f24155g.f24138d)) ? 1 : null;
+                a = hdVar.m20913a();
+            }
+            if (obj != null) {
+                hdVar.m20912a(gz.CANCEL);
+                return;
+            } else if (!a) {
+                hdVar.f24152d.m20883b(hdVar.f24151c);
+                return;
+            } else {
+                return;
+            }
+        }
+        throw new AssertionError();
+    }
+
+    /* renamed from: h */
+    static /* synthetic */ void m20910h(hd hdVar) throws IOException {
+        if (hdVar.f24155g.f24138d) {
+            throw new IOException("stream closed");
+        } else if (hdVar.f24155g.f24139e) {
+            throw new IOException("stream finished");
+        } else if (hdVar.f24159l != null) {
+            throw new IOException("stream was reset: " + hdVar.f24159l);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hd.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

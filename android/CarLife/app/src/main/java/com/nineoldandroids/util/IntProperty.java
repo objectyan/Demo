@@ -1,23 +1,13 @@
 package com.nineoldandroids.util;
 
-public abstract class IntProperty<T>
-  extends Property<T, Integer>
-{
-  public IntProperty(String paramString)
-  {
-    super(Integer.class, paramString);
-  }
-  
-  public final void set(T paramT, Integer paramInteger)
-  {
-    set(paramT, Integer.valueOf(paramInteger.intValue()));
-  }
-  
-  public abstract void setValue(T paramT, int paramInt);
+public abstract class IntProperty<T> extends Property<T, Integer> {
+    public abstract void setValue(T t, int i);
+
+    public IntProperty(String name) {
+        super(Integer.class, name);
+    }
+
+    public final void set(T object, Integer value) {
+        set((Object) object, Integer.valueOf(value.intValue()));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/util/IntProperty.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

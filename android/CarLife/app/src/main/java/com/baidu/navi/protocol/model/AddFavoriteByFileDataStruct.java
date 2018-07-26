@@ -1,21 +1,14 @@
 package com.baidu.navi.protocol.model;
 
-public class AddFavoriteByFileDataStruct
-  extends DataStruct
-{
-  public static String KEY_FAVFILEPATH = "favFilePath";
-  public static String KEY_FAVNUM = "favNum";
-  public String mFavFile;
-  public int mFavNum;
-  
-  public AddFavoriteByFileDataStruct()
-  {
-    this.mCmd = "addFavoriteByFile";
-  }
+import com.baidu.navi.protocol.util.BNaviProtocolDef;
+
+public class AddFavoriteByFileDataStruct extends DataStruct {
+    public static String KEY_FAVFILEPATH = "favFilePath";
+    public static String KEY_FAVNUM = "favNum";
+    public String mFavFile;
+    public int mFavNum;
+
+    public AddFavoriteByFileDataStruct() {
+        this.mCmd = BNaviProtocolDef.COMMAND_ADD_FAVORITE_BY_FILE;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/protocol/model/AddFavoriteByFileDataStruct.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

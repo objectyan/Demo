@@ -3,68 +3,56 @@ package com.indooratlas.android.sdk._internal;
 import java.io.IOException;
 import java.net.ProtocolException;
 
-public final class ic
-  implements jc
-{
-  public final in a = new in();
-  private boolean b;
-  private final int c;
-  
-  public ic()
-  {
-    this(-1);
-  }
-  
-  public ic(int paramInt)
-  {
-    this.c = paramInt;
-  }
-  
-  public final je a()
-  {
-    return je.b;
-  }
-  
-  public final void a(jc paramjc)
-    throws IOException
-  {
-    in localin = new in();
-    this.a.a(localin, 0L, this.a.b);
-    paramjc.a_(localin, localin.b);
-  }
-  
-  public final void a_(in paramin, long paramLong)
-    throws IOException
-  {
-    if (this.b) {
-      throw new IllegalStateException("closed");
+public final class ic implements jc {
+    /* renamed from: a */
+    public final in f24330a;
+    /* renamed from: b */
+    private boolean f24331b;
+    /* renamed from: c */
+    private final int f24332c;
+
+    public ic(int i) {
+        this.f24330a = new in();
+        this.f24332c = i;
     }
-    gy.a(paramin.b, paramLong);
-    if ((this.c != -1) && (this.a.b > this.c - paramLong)) {
-      throw new ProtocolException("exceeded content-length limit of " + this.c + " bytes");
+
+    public ic() {
+        this(-1);
     }
-    this.a.a_(paramin, paramLong);
-  }
-  
-  public final void close()
-    throws IOException
-  {
-    if (this.b) {}
-    do
-    {
-      return;
-      this.b = true;
-    } while (this.a.b >= this.c);
-    throw new ProtocolException("content-length promised " + this.c + " bytes, but received " + this.a.b);
-  }
-  
-  public final void flush()
-    throws IOException
-  {}
+
+    public final void close() throws IOException {
+        if (!this.f24331b) {
+            this.f24331b = true;
+            if (this.f24330a.f24392b < ((long) this.f24332c)) {
+                throw new ProtocolException("content-length promised " + this.f24332c + " bytes, but received " + this.f24330a.f24392b);
+            }
+        }
+    }
+
+    public final void a_(in inVar, long j) throws IOException {
+        if (this.f24331b) {
+            throw new IllegalStateException("closed");
+        }
+        gy.a(inVar.f24392b, j);
+        if (this.f24332c == -1 || this.f24330a.f24392b <= ((long) this.f24332c) - j) {
+            this.f24330a.a_(inVar, j);
+            return;
+        }
+        throw new ProtocolException("exceeded content-length limit of " + this.f24332c + " bytes");
+    }
+
+    public final void flush() throws IOException {
+    }
+
+    /* renamed from: a */
+    public final je mo4733a() {
+        return je.f24380b;
+    }
+
+    /* renamed from: a */
+    public final void m21094a(jc jcVar) throws IOException {
+        in inVar = new in();
+        this.f24330a.m21181a(inVar, 0, this.f24330a.f24392b);
+        jcVar.a_(inVar, inVar.f24392b);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ic.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

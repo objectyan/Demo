@@ -4,58 +4,48 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
 
-public class CLAlbum
-  implements Parcelable
-{
-  public static final Parcelable.Creator<CLAlbum> CREATOR = new Parcelable.Creator()
-  {
-    public CLAlbum createFromParcel(Parcel paramAnonymousParcel)
-    {
-      return new CLAlbum(paramAnonymousParcel);
+public class CLAlbum implements Parcelable {
+    public static final Creator<CLAlbum> CREATOR = new C20071();
+    public String albumId;
+    public String albumName;
+    public String artistId;
+    public String artistName;
+    public String coverUrl;
+    public int songCount;
+
+    /* renamed from: com.baidu.carlife.platform.model.CLAlbum$1 */
+    static class C20071 implements Creator<CLAlbum> {
+        C20071() {
+        }
+
+        public CLAlbum[] newArray(int size) {
+            return new CLAlbum[size];
+        }
+
+        public CLAlbum createFromParcel(Parcel source) {
+            return new CLAlbum(source);
+        }
     }
-    
-    public CLAlbum[] newArray(int paramAnonymousInt)
-    {
-      return new CLAlbum[paramAnonymousInt];
+
+    public CLAlbum(Parcel p) {
+        this.albumId = p.readString();
+        this.albumName = p.readString();
+        this.artistId = p.readString();
+        this.artistName = p.readString();
+        this.coverUrl = p.readString();
+        this.songCount = p.readInt();
     }
-  };
-  public String albumId;
-  public String albumName;
-  public String artistId;
-  public String artistName;
-  public String coverUrl;
-  public int songCount;
-  
-  public CLAlbum() {}
-  
-  public CLAlbum(Parcel paramParcel)
-  {
-    this.albumId = paramParcel.readString();
-    this.albumName = paramParcel.readString();
-    this.artistId = paramParcel.readString();
-    this.artistName = paramParcel.readString();
-    this.coverUrl = paramParcel.readString();
-    this.songCount = paramParcel.readInt();
-  }
-  
-  public int describeContents()
-  {
-    return 0;
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeString(this.albumId);
-    paramParcel.writeString(this.albumName);
-    paramParcel.writeString(this.artistId);
-    paramParcel.writeString(this.artistName);
-    paramParcel.writeString(this.coverUrl);
-    paramParcel.writeInt(this.songCount);
-  }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.albumId);
+        dest.writeString(this.albumName);
+        dest.writeString(this.artistId);
+        dest.writeString(this.artistName);
+        dest.writeString(this.coverUrl);
+        dest.writeInt(this.songCount);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/platform/model/CLAlbum.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

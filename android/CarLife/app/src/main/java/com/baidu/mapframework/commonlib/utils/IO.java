@@ -1,6 +1,7 @@
 package com.baidu.mapframework.commonlib.utils;
 
-import com.baidu.platform.comapi.util.f;
+import android.support.v4.media.session.PlaybackStateCompat;
+import com.baidu.platform.comapi.util.C2911f;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,588 +16,394 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class IO
-{
-  private static final String a = IO.class.getName();
-  private static final int b = 8192;
-  
-  private static void a(File paramFile1, File paramFile2, FileFilter paramFileFilter, boolean paramBoolean, List<String> paramList)
-    throws IOException
-  {
-    if (paramFileFilter == null) {}
-    for (File[] arrayOfFile = paramFile1.listFiles(); arrayOfFile == null; arrayOfFile = paramFile1.listFiles(paramFileFilter)) {
-      throw new IOException("Failed to list contents of " + paramFile1);
-    }
-    if (paramFile2.exists())
-    {
-      if (!paramFile2.isDirectory()) {
-        throw new IOException("Destination '" + paramFile2 + "' exists but is not a directory");
-      }
-    }
-    else if ((!paramFile2.mkdirs()) && (!paramFile2.isDirectory())) {
-      throw new IOException("Destination '" + paramFile2 + "' directory cannot be created");
-    }
-    if (!paramFile2.canWrite()) {
-      throw new IOException("Destination '" + paramFile2 + "' cannot be written to");
-    }
-    int j = arrayOfFile.length;
-    int i = 0;
-    if (i < j)
-    {
-      File localFile1 = arrayOfFile[i];
-      File localFile2 = new File(paramFile2, localFile1.getName());
-      if ((paramList == null) || (!paramList.contains(localFile1.getCanonicalPath())))
-      {
-        if (!localFile1.isDirectory()) {
-          break label268;
+public class IO {
+    /* renamed from: a */
+    private static final String f12684a = IO.class.getName();
+    /* renamed from: b */
+    private static final int f12685b = 8192;
+
+    @NotNull
+    public static byte[] inputStreamToBytes(@Nullable InputStream in) throws IOException {
+        if (in == null) {
+            C2911f.m11019c(f12684a, "inputStreamToBytes : inputStream is null", new Throwable());
+            throw new IOException("inputStreamToBytes : inputStream is null");
         }
-        a(localFile1, localFile2, paramFileFilter, paramBoolean, paramList);
-      }
-      for (;;)
-      {
-        i += 1;
-        break;
-        label268:
-        a(localFile1, localFile2, paramBoolean);
-      }
+        C2911f.m11015b(f12684a, "inputStreamToBytes");
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        copyStream(in, byteOut);
+        return byteOut.toByteArray();
     }
-    if (paramBoolean) {
-      paramFile2.setLastModified(paramFile1.lastModified());
-    }
-  }
-  
-  private static void a(File paramFile1, File paramFile2, boolean paramBoolean)
-    throws IOException
-  {
-    if ((paramFile2.exists()) && (paramFile2.isDirectory())) {
-      throw new IOException("Destination '" + paramFile2 + "' exists but is a directory");
-    }
-    localFileOutputStream = null;
-    localFileChannel2 = null;
-    Object localObject5 = null;
-    Object localObject2 = null;
-    FileChannel localFileChannel3 = null;
-    FileChannel localFileChannel1 = null;
-    for (;;)
-    {
-      try
-      {
-        localObject3 = new FileInputStream(paramFile1);
-      }
-      finally
-      {
-        Object localObject1;
-        localObject3 = localFileChannel2;
-        paramFile1 = localFileOutputStream;
-        closeQuietly(localFileChannel1);
-        closeQuietly((Closeable)localObject3);
-        closeQuietly((Closeable)localObject2);
-        closeQuietly(paramFile1);
-      }
-      try
-      {
-        localFileOutputStream = new FileOutputStream(paramFile2);
-        localFileChannel1 = localFileChannel3;
-        localObject2 = localObject5;
-      }
-      finally
-      {
-        paramFile1 = (File)localObject3;
-        localObject3 = localFileChannel2;
-        continue;
-      }
-      try
-      {
-        localFileChannel2 = ((FileInputStream)localObject3).getChannel();
-        localFileChannel1 = localFileChannel3;
-        localObject2 = localFileChannel2;
-        localFileChannel3 = localFileOutputStream.getChannel();
-        localFileChannel1 = localFileChannel3;
-        localObject2 = localFileChannel2;
-        l3 = localFileChannel2.size();
-        l1 = 0L;
-      }
-      finally
-      {
-        paramFile2 = localFileOutputStream;
-        paramFile1 = (File)localObject3;
-        localObject3 = paramFile2;
-        paramFile2 = (File)localObject4;
-        continue;
-        if (l1 >= l3) {
-          continue;
+
+    public static void writeToFile(@Nullable File file, @Nullable InputStream inputStream) throws IOException {
+        if (file == null || inputStream == null) {
+            C2911f.m11019c(f12684a, "writeToFile : file or inputStream is null", new Throwable());
+            throw new IOException("writeToFile : file or inputStream is null");
         }
-        if (l3 - l1 <= 8192L) {
-          continue;
+        C2911f.m11015b(f12684a, "writeToFile " + file.getAbsolutePath());
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
         }
-        l2 = 8192L;
-        continue;
-      }
-      localFileChannel1 = localFileChannel3;
-      localObject2 = localFileChannel2;
-      l2 = localFileChannel3.transferFrom(localFileChannel2, l1, localObject1);
-      l1 += l2;
-      break label315;
-      l2 = l3 - l1;
-      continue;
-      closeQuietly(localFileChannel3);
-      closeQuietly(localFileOutputStream);
-      closeQuietly(localFileChannel2);
-      closeQuietly((Closeable)localObject3);
-      if (paramFile1.length() != paramFile2.length()) {
-        throw new IOException("Failed to copy full contents from '" + paramFile1 + "' to '" + paramFile2 + "'");
-      }
-    }
-    if (paramBoolean) {
-      paramFile2.setLastModified(paramFile1.lastModified());
-    }
-  }
-  
-  public static void cleanDirectory(File paramFile)
-    throws IOException
-  {
-    if (!paramFile.exists()) {
-      throw new IllegalArgumentException(paramFile + " does not exist");
-    }
-    if (!paramFile.isDirectory()) {
-      throw new IllegalArgumentException(paramFile + " is not a directory");
-    }
-    File[] arrayOfFile = paramFile.listFiles();
-    if (arrayOfFile == null) {
-      throw new IOException("Failed to list contents of " + paramFile);
-    }
-    paramFile = null;
-    int j = arrayOfFile.length;
-    int i = 0;
-    for (;;)
-    {
-      if (i < j)
-      {
-        File localFile = arrayOfFile[i];
-        try
-        {
-          forceDelete(localFile);
-          i += 1;
+        if (parent.exists()) {
+            copyStream(inputStream, new FileOutputStream(file));
+            return;
         }
-        catch (IOException paramFile)
-        {
-          for (;;) {}
+        throw new IOException("Can't create dir " + parent.getAbsolutePath());
+    }
+
+    public static byte[] readFile(@Nullable File file) throws IOException {
+        if (file == null) {
+            C2911f.m11019c(f12684a, "readFile : file is null", new Throwable());
+            throw new IOException("readFile : file is null");
         }
-      }
-    }
-    if (paramFile != null) {
-      throw paramFile;
-    }
-  }
-  
-  public static void closeQuietly(@Nullable Closeable paramCloseable)
-  {
-    if (paramCloseable == null)
-    {
-      f.e(a, "closeQuietly closeable is null");
-      return;
-    }
-    f.b(a, "closeQuietly " + paramCloseable);
-    try
-    {
-      paramCloseable.close();
-      return;
-    }
-    catch (Exception paramCloseable)
-    {
-      f.e(a, "closeQuietly closeable failed");
-    }
-  }
-  
-  public static void copyDirectory(File paramFile1, File paramFile2)
-    throws IOException
-  {
-    copyDirectory(paramFile1, paramFile2, true);
-  }
-  
-  public static void copyDirectory(File paramFile1, File paramFile2, FileFilter paramFileFilter)
-    throws IOException
-  {
-    copyDirectory(paramFile1, paramFile2, paramFileFilter, true);
-  }
-  
-  public static void copyDirectory(File paramFile1, File paramFile2, FileFilter paramFileFilter, boolean paramBoolean)
-    throws IOException
-  {
-    if (paramFile1 == null) {
-      throw new NullPointerException("Source must not be null");
-    }
-    if (paramFile2 == null) {
-      throw new NullPointerException("Destination must not be null");
-    }
-    if (!paramFile1.exists()) {
-      throw new FileNotFoundException("Source '" + paramFile1 + "' does not exist");
-    }
-    if (!paramFile1.isDirectory()) {
-      throw new IOException("Source '" + paramFile1 + "' exists but is not a directory");
-    }
-    if (paramFile1.getCanonicalPath().equals(paramFile2.getCanonicalPath())) {
-      throw new IOException("Source '" + paramFile1 + "' and destination '" + paramFile2 + "' are the same");
-    }
-    ArrayList localArrayList2 = null;
-    ArrayList localArrayList1 = localArrayList2;
-    if (paramFile2.getCanonicalPath().startsWith(paramFile1.getCanonicalPath()))
-    {
-      if (paramFileFilter == null) {}
-      for (File[] arrayOfFile = paramFile1.listFiles();; arrayOfFile = paramFile1.listFiles(paramFileFilter))
-      {
-        localArrayList1 = localArrayList2;
-        if (arrayOfFile == null) {
-          break;
+        C2911f.m11015b(f12684a, "readFile " + file.getAbsolutePath());
+        if (file.isFile()) {
+            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+            copyStream(new FileInputStream(file), byteOut);
+            return byteOut.toByteArray();
         }
-        localArrayList1 = localArrayList2;
-        if (arrayOfFile.length <= 0) {
-          break;
+        throw new IOException(file.getAbsolutePath() + " is not a File");
+    }
+
+    public static void copyStream(@Nullable InputStream inputStream, @Nullable OutputStream outputStream) throws IOException {
+        if (inputStream == null || outputStream == null) {
+            C2911f.m11019c(f12684a, "copyStream : outputStream or inputStream is null", new Throwable());
+            throw new IOException("copyStream : outputStream or inputStream is null");
         }
-        localArrayList2 = new ArrayList(arrayOfFile.length);
-        int j = arrayOfFile.length;
-        int i = 0;
-        for (;;)
-        {
-          localArrayList1 = localArrayList2;
-          if (i >= j) {
-            break;
-          }
-          localArrayList2.add(new File(paramFile2, arrayOfFile[i].getName()).getCanonicalPath());
-          i += 1;
-        }
-      }
-    }
-    a(paramFile1, paramFile2, paramFileFilter, paramBoolean, localArrayList1);
-  }
-  
-  public static void copyDirectory(File paramFile1, File paramFile2, boolean paramBoolean)
-    throws IOException
-  {
-    copyDirectory(paramFile1, paramFile2, null, paramBoolean);
-  }
-  
-  public static void copyFile(File paramFile1, File paramFile2)
-    throws IOException
-  {
-    copyFile(paramFile1, paramFile2, true);
-  }
-  
-  public static void copyFile(File paramFile1, File paramFile2, boolean paramBoolean)
-    throws IOException
-  {
-    if (paramFile1 == null) {
-      throw new NullPointerException("Source must not be null");
-    }
-    if (paramFile2 == null) {
-      throw new NullPointerException("Destination must not be null");
-    }
-    if (!paramFile1.exists()) {
-      throw new FileNotFoundException("Source '" + paramFile1 + "' does not exist");
-    }
-    if (paramFile1.isDirectory()) {
-      throw new IOException("Source '" + paramFile1 + "' exists but is a directory");
-    }
-    if (paramFile1.getCanonicalPath().equals(paramFile2.getCanonicalPath())) {
-      throw new IOException("Source '" + paramFile1 + "' and destination '" + paramFile2 + "' are the same");
-    }
-    File localFile = paramFile2.getParentFile();
-    if ((localFile != null) && (!localFile.mkdirs()) && (!localFile.isDirectory())) {
-      throw new IOException("Destination '" + localFile + "' directory cannot be created");
-    }
-    if ((paramFile2.exists()) && (!paramFile2.canWrite())) {
-      throw new IOException("Destination '" + paramFile2 + "' exists but is read-only");
-    }
-    a(paramFile1, paramFile2, paramBoolean);
-  }
-  
-  public static void copyStream(@Nullable InputStream paramInputStream, @Nullable OutputStream paramOutputStream)
-    throws IOException
-  {
-    if ((paramInputStream == null) || (paramOutputStream == null))
-    {
-      f.c(a, "copyStream : outputStream or inputStream is null", new Throwable());
-      throw new IOException("copyStream : outputStream or inputStream is null");
-    }
-    f.b(a, "copyStream");
-    Object localObject1 = paramInputStream;
-    Object localObject2 = paramInputStream;
-    Object localObject3 = paramOutputStream;
-    try
-    {
-      if (!(paramInputStream instanceof BufferedInputStream))
-      {
-        localObject2 = paramInputStream;
-        localObject3 = paramOutputStream;
-        localObject1 = new BufferedInputStream(paramInputStream);
-      }
-      paramInputStream = paramOutputStream;
-      localObject2 = localObject1;
-      localObject3 = paramOutputStream;
-      if (!(paramOutputStream instanceof BufferedOutputStream))
-      {
-        localObject2 = localObject1;
-        localObject3 = paramOutputStream;
-        paramInputStream = new BufferedOutputStream(paramOutputStream);
-      }
-      localObject2 = localObject1;
-      localObject3 = paramInputStream;
-      paramOutputStream = new byte[' '];
-      for (;;)
-      {
-        localObject2 = localObject1;
-        localObject3 = paramInputStream;
-        int i = ((InputStream)localObject1).read(paramOutputStream);
-        if (i == -1) {
-          break;
-        }
-        localObject2 = localObject1;
-        localObject3 = paramInputStream;
-        paramInputStream.write(paramOutputStream, 0, i);
-      }
-      localObject2 = localObject1;
-    }
-    finally
-    {
-      closeQuietly((Closeable)localObject2);
-      closeQuietly((Closeable)localObject3);
-    }
-    localObject3 = paramInputStream;
-    paramInputStream.flush();
-    closeQuietly((Closeable)localObject1);
-    closeQuietly(paramInputStream);
-  }
-  
-  public static void deleteDirectory(File paramFile)
-    throws IOException
-  {
-    if (!paramFile.exists()) {}
-    do
-    {
-      return;
-      cleanDirectory(paramFile);
-    } while (paramFile.delete());
-    throw new IOException("Unable to delete directory " + paramFile + ".");
-  }
-  
-  @Deprecated
-  public static void deleteFile(@Nullable File paramFile)
-  {
-    if ((paramFile == null) || (!paramFile.exists()))
-    {
-      f.e(a, "deleteFile the file is null");
-      return;
-    }
-    f.b(a, "deleteFile " + paramFile.getAbsolutePath());
-    try
-    {
-      if (paramFile.isDirectory())
-      {
-        File[] arrayOfFile = paramFile.listFiles();
-        if (arrayOfFile != null)
-        {
-          int j = arrayOfFile.length;
-          int i = 0;
-          while (i < j)
-          {
-            deleteFile(arrayOfFile[i]);
-            i += 1;
-          }
-        }
-      }
-      paramFile.delete();
-      return;
-    }
-    catch (Exception localException)
-    {
-      f.e(a, "deleteFile fail " + paramFile.getAbsolutePath());
-    }
-  }
-  
-  public static boolean deleteQuietly(File paramFile)
-  {
-    if (paramFile == null) {
-      return false;
-    }
-    try
-    {
-      if (paramFile.isDirectory()) {
-        cleanDirectory(paramFile);
-      }
-      try
-      {
-        boolean bool = paramFile.delete();
-        return bool;
-      }
-      catch (Exception paramFile)
-      {
-        return false;
-      }
-    }
-    catch (Exception localException)
-    {
-      for (;;) {}
-    }
-  }
-  
-  public static void forceDelete(File paramFile)
-    throws IOException
-  {
-    if (paramFile.isDirectory()) {
-      deleteDirectory(paramFile);
-    }
-    boolean bool;
-    do
-    {
-      return;
-      bool = paramFile.exists();
-    } while (paramFile.delete());
-    if (!bool) {
-      throw new FileNotFoundException("File does not exist: " + paramFile);
-    }
-    throw new IOException("Unable to delete file: " + paramFile);
-  }
-  
-  public static void forceMkDir(@Nullable File paramFile)
-    throws IOException
-  {
-    if (paramFile == null) {}
-    do
-    {
-      do
-      {
-        return;
-        if (!paramFile.exists()) {
-          break;
-        }
-      } while (paramFile.isDirectory());
-      throw new IOException("File " + paramFile + " exists and is not a directory. Unable to create directory.");
-    } while ((paramFile.mkdirs()) || (paramFile.isDirectory()));
-    throw new IOException("Unable to create directory " + paramFile);
-  }
-  
-  @NotNull
-  public static byte[] inputStreamToBytes(@Nullable InputStream paramInputStream)
-    throws IOException
-  {
-    if (paramInputStream == null)
-    {
-      f.c(a, "inputStreamToBytes : inputStream is null", new Throwable());
-      throw new IOException("inputStreamToBytes : inputStream is null");
-    }
-    f.b(a, "inputStreamToBytes");
-    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
-    copyStream(paramInputStream, localByteArrayOutputStream);
-    return localByteArrayOutputStream.toByteArray();
-  }
-  
-  @NotNull
-  public static List<File> listFiles(@Nullable File paramFile)
-  {
-    LinkedList localLinkedList = new LinkedList();
-    if (paramFile == null) {}
-    for (;;)
-    {
-      return localLinkedList;
-      paramFile = paramFile.listFiles();
-      if (paramFile != null)
-      {
-        int j = paramFile.length;
-        int i = 0;
-        while (i < j)
-        {
-          Object localObject = paramFile[i];
-          localLinkedList.add(localObject);
-          if (((File)localObject).isDirectory())
-          {
-            localObject = listFiles((File)localObject).iterator();
-            while (((Iterator)localObject).hasNext()) {
-              localLinkedList.add((File)((Iterator)localObject).next());
+        C2911f.m11015b(f12684a, "copyStream");
+        try {
+            if (!(inputStream instanceof BufferedInputStream)) {
+                inputStream = new BufferedInputStream(inputStream);
             }
-          }
-          i += 1;
+            if (!(outputStream instanceof BufferedOutputStream)) {
+                outputStream = new BufferedOutputStream(outputStream);
+            }
+            byte[] buffer = new byte[8192];
+            while (true) {
+                int count = inputStream.read(buffer);
+                if (count == -1) {
+                    break;
+                }
+                outputStream.write(buffer, 0, count);
+            }
+            outputStream.flush();
+        } finally {
+            closeQuietly(inputStream);
+            closeQuietly(outputStream);
         }
-      }
     }
-  }
-  
-  public static void moveFile(File paramFile1, File paramFile2)
-    throws IOException
-  {
-    if (paramFile1 == null) {
-      throw new NullPointerException("Source must not be null");
+
+    @Deprecated
+    public static void deleteFile(@Nullable File file) {
+        if (file == null || !file.exists()) {
+            C2911f.m11023e(f12684a, "deleteFile the file is null");
+            return;
+        }
+        C2911f.m11015b(f12684a, "deleteFile " + file.getAbsolutePath());
+        try {
+            if (file.isDirectory()) {
+                File[] files = file.listFiles();
+                if (files != null) {
+                    for (File subFile : files) {
+                        deleteFile(subFile);
+                    }
+                }
+            }
+            file.delete();
+        } catch (Exception e) {
+            C2911f.m11023e(f12684a, "deleteFile fail " + file.getAbsolutePath());
+        }
     }
-    if (paramFile2 == null) {
-      throw new NullPointerException("Destination must not be null");
+
+    public static void closeQuietly(@Nullable Closeable closeable) {
+        if (closeable == null) {
+            C2911f.m11023e(f12684a, "closeQuietly closeable is null");
+            return;
+        }
+        C2911f.m11015b(f12684a, "closeQuietly " + closeable);
+        try {
+            closeable.close();
+        } catch (Exception e) {
+            C2911f.m11023e(f12684a, "closeQuietly closeable failed");
+        }
     }
-    if (!paramFile1.exists()) {
-      throw new FileNotFoundException("Source '" + paramFile1 + "' does not exist");
+
+    @NotNull
+    public static List<File> listFiles(@Nullable File target) {
+        List<File> result = new LinkedList();
+        if (target != null) {
+            File[] files = target.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    result.add(file);
+                    if (file.isDirectory()) {
+                        for (File subFile : listFiles(file)) {
+                            result.add(subFile);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
     }
-    if (paramFile1.isDirectory()) {
-      throw new IOException("Source '" + paramFile1 + "' is a directory");
+
+    public static void forceMkDir(@Nullable File directory) throws IOException {
+        if (directory != null) {
+            if (directory.exists()) {
+                if (!directory.isDirectory()) {
+                    throw new IOException("File " + directory + " exists and is not a directory. Unable to create directory.");
+                }
+            } else if (!directory.mkdirs() && !directory.isDirectory()) {
+                throw new IOException("Unable to create directory " + directory);
+            }
+        }
     }
-    if (paramFile2.exists()) {
-      throw new IOException("Destination '" + paramFile2 + "' already exists");
+
+    public static void copyFile(File srcFile, File destFile) throws IOException {
+        copyFile(srcFile, destFile, true);
     }
-    if (paramFile2.isDirectory()) {
-      throw new IOException("Destination '" + paramFile2 + "' is a directory");
+
+    public static void copyFile(File srcFile, File destFile, boolean preserveFileDate) throws IOException {
+        if (srcFile == null) {
+            throw new NullPointerException("Source must not be null");
+        } else if (destFile == null) {
+            throw new NullPointerException("Destination must not be null");
+        } else if (!srcFile.exists()) {
+            throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
+        } else if (srcFile.isDirectory()) {
+            throw new IOException("Source '" + srcFile + "' exists but is a directory");
+        } else if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
+            throw new IOException("Source '" + srcFile + "' and destination '" + destFile + "' are the same");
+        } else {
+            File parentFile = destFile.getParentFile();
+            if (parentFile != null && !parentFile.mkdirs() && !parentFile.isDirectory()) {
+                throw new IOException("Destination '" + parentFile + "' directory cannot be created");
+            } else if (!destFile.exists() || destFile.canWrite()) {
+                m10943a(srcFile, destFile, preserveFileDate);
+            } else {
+                throw new IOException("Destination '" + destFile + "' exists but is read-only");
+            }
+        }
     }
-    if (!paramFile1.renameTo(paramFile2))
-    {
-      copyFile(paramFile1, paramFile2);
-      if (!paramFile1.delete())
-      {
-        deleteQuietly(paramFile2);
-        throw new IOException("Failed to delete original file '" + paramFile1 + "' after copy to '" + paramFile2 + "'");
-      }
+
+    /* renamed from: a */
+    private static void m10943a(File srcFile, File destFile, boolean preserveFileDate) throws IOException {
+        Throwable th;
+        if (destFile.exists() && destFile.isDirectory()) {
+            throw new IOException("Destination '" + destFile + "' exists but is a directory");
+        }
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try {
+            FileOutputStream fos2;
+            FileInputStream fis2 = new FileInputStream(srcFile);
+            try {
+                fos2 = new FileOutputStream(destFile);
+            } catch (Throwable th2) {
+                th = th2;
+                fis = fis2;
+                closeQuietly(null);
+                closeQuietly(fos);
+                closeQuietly(null);
+                closeQuietly(fis);
+                throw th;
+            }
+            try {
+                FileChannel input = fis2.getChannel();
+                FileChannel output = fos2.getChannel();
+                long size = input.size();
+                long pos = 0;
+                while (pos < size) {
+                    pos += output.transferFrom(input, pos, size - pos > PlaybackStateCompat.ACTION_PLAY_FROM_URI ? PlaybackStateCompat.ACTION_PLAY_FROM_URI : size - pos);
+                }
+                closeQuietly(output);
+                closeQuietly(fos2);
+                closeQuietly(input);
+                closeQuietly(fis2);
+                if (srcFile.length() != destFile.length()) {
+                    throw new IOException("Failed to copy full contents from '" + srcFile + "' to '" + destFile + "'");
+                } else if (preserveFileDate) {
+                    destFile.setLastModified(srcFile.lastModified());
+                }
+            } catch (Throwable th3) {
+                th = th3;
+                fos = fos2;
+                fis = fis2;
+                closeQuietly(null);
+                closeQuietly(fos);
+                closeQuietly(null);
+                closeQuietly(fis);
+                throw th;
+            }
+        } catch (Throwable th4) {
+            th = th4;
+            closeQuietly(null);
+            closeQuietly(fos);
+            closeQuietly(null);
+            closeQuietly(fis);
+            throw th;
+        }
     }
-  }
-  
-  public static byte[] readFile(@Nullable File paramFile)
-    throws IOException
-  {
-    if (paramFile == null)
-    {
-      f.c(a, "readFile : file is null", new Throwable());
-      throw new IOException("readFile : file is null");
+
+    public static void copyDirectory(File srcDir, File destDir) throws IOException {
+        copyDirectory(srcDir, destDir, true);
     }
-    f.b(a, "readFile " + paramFile.getAbsolutePath());
-    if (!paramFile.isFile()) {
-      throw new IOException(paramFile.getAbsolutePath() + " is not a File");
+
+    public static void copyDirectory(File srcDir, File destDir, boolean preserveFileDate) throws IOException {
+        copyDirectory(srcDir, destDir, null, preserveFileDate);
     }
-    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
-    copyStream(new FileInputStream(paramFile), localByteArrayOutputStream);
-    return localByteArrayOutputStream.toByteArray();
-  }
-  
-  public static void writeToFile(@Nullable File paramFile, @Nullable InputStream paramInputStream)
-    throws IOException
-  {
-    if ((paramFile == null) || (paramInputStream == null))
-    {
-      f.c(a, "writeToFile : file or inputStream is null", new Throwable());
-      throw new IOException("writeToFile : file or inputStream is null");
+
+    public static void copyDirectory(File srcDir, File destDir, FileFilter filter) throws IOException {
+        copyDirectory(srcDir, destDir, filter, true);
     }
-    f.b(a, "writeToFile " + paramFile.getAbsolutePath());
-    File localFile = paramFile.getParentFile();
-    if (!localFile.exists()) {
-      localFile.mkdirs();
+
+    public static void copyDirectory(File srcDir, File destDir, FileFilter filter, boolean preserveFileDate) throws IOException {
+        if (srcDir == null) {
+            throw new NullPointerException("Source must not be null");
+        } else if (destDir == null) {
+            throw new NullPointerException("Destination must not be null");
+        } else if (!srcDir.exists()) {
+            throw new FileNotFoundException("Source '" + srcDir + "' does not exist");
+        } else if (!srcDir.isDirectory()) {
+            throw new IOException("Source '" + srcDir + "' exists but is not a directory");
+        } else if (srcDir.getCanonicalPath().equals(destDir.getCanonicalPath())) {
+            throw new IOException("Source '" + srcDir + "' and destination '" + destDir + "' are the same");
+        } else {
+            List<String> exclusionList = null;
+            if (destDir.getCanonicalPath().startsWith(srcDir.getCanonicalPath())) {
+                File[] srcFiles = filter == null ? srcDir.listFiles() : srcDir.listFiles(filter);
+                if (srcFiles != null && srcFiles.length > 0) {
+                    exclusionList = new ArrayList(srcFiles.length);
+                    for (File srcFile : srcFiles) {
+                        exclusionList.add(new File(destDir, srcFile.getName()).getCanonicalPath());
+                    }
+                }
+            }
+            m10942a(srcDir, destDir, filter, preserveFileDate, exclusionList);
+        }
     }
-    if (!localFile.exists()) {
-      throw new IOException("Can't create dir " + localFile.getAbsolutePath());
+
+    /* renamed from: a */
+    private static void m10942a(File srcDir, File destDir, FileFilter filter, boolean preserveFileDate, List<String> exclusionList) throws IOException {
+        File[] srcFiles = filter == null ? srcDir.listFiles() : srcDir.listFiles(filter);
+        if (srcFiles == null) {
+            throw new IOException("Failed to list contents of " + srcDir);
+        }
+        if (destDir.exists()) {
+            if (!destDir.isDirectory()) {
+                throw new IOException("Destination '" + destDir + "' exists but is not a directory");
+            }
+        } else if (!(destDir.mkdirs() || destDir.isDirectory())) {
+            throw new IOException("Destination '" + destDir + "' directory cannot be created");
+        }
+        if (destDir.canWrite()) {
+            for (File srcFile : srcFiles) {
+                File dstFile = new File(destDir, srcFile.getName());
+                if (exclusionList == null || !exclusionList.contains(srcFile.getCanonicalPath())) {
+                    if (srcFile.isDirectory()) {
+                        m10942a(srcFile, dstFile, filter, preserveFileDate, exclusionList);
+                    } else {
+                        m10943a(srcFile, dstFile, preserveFileDate);
+                    }
+                }
+            }
+            if (preserveFileDate) {
+                destDir.setLastModified(srcDir.lastModified());
+                return;
+            }
+            return;
+        }
+        throw new IOException("Destination '" + destDir + "' cannot be written to");
     }
-    copyStream(paramInputStream, new FileOutputStream(paramFile));
-  }
+
+    public static void moveFile(File srcFile, File destFile) throws IOException {
+        if (srcFile == null) {
+            throw new NullPointerException("Source must not be null");
+        } else if (destFile == null) {
+            throw new NullPointerException("Destination must not be null");
+        } else if (!srcFile.exists()) {
+            throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
+        } else if (srcFile.isDirectory()) {
+            throw new IOException("Source '" + srcFile + "' is a directory");
+        } else if (destFile.exists()) {
+            throw new IOException("Destination '" + destFile + "' already exists");
+        } else if (destFile.isDirectory()) {
+            throw new IOException("Destination '" + destFile + "' is a directory");
+        } else if (!srcFile.renameTo(destFile)) {
+            copyFile(srcFile, destFile);
+            if (!srcFile.delete()) {
+                deleteQuietly(destFile);
+                throw new IOException("Failed to delete original file '" + srcFile + "' after copy to '" + destFile + "'");
+            }
+        }
+    }
+
+    public static boolean deleteQuietly(File file) {
+        boolean z = false;
+        if (file != null) {
+            try {
+                if (file.isDirectory()) {
+                    cleanDirectory(file);
+                }
+            } catch (Exception e) {
+            }
+            try {
+                z = file.delete();
+            } catch (Exception e2) {
+            }
+        }
+        return z;
+    }
+
+    public static void cleanDirectory(File directory) throws IOException {
+        if (!directory.exists()) {
+            throw new IllegalArgumentException(directory + " does not exist");
+        } else if (directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files == null) {
+                throw new IOException("Failed to list contents of " + directory);
+            }
+            IOException exception = null;
+            for (File file : files) {
+                try {
+                    forceDelete(file);
+                } catch (IOException ioe) {
+                    exception = ioe;
+                }
+            }
+            if (exception != null) {
+                throw exception;
+            }
+        } else {
+            throw new IllegalArgumentException(directory + " is not a directory");
+        }
+    }
+
+    public static void forceDelete(File file) throws IOException {
+        if (file.isDirectory()) {
+            deleteDirectory(file);
+            return;
+        }
+        boolean filePresent = file.exists();
+        if (!file.delete()) {
+            if (filePresent) {
+                throw new IOException("Unable to delete file: " + file);
+            }
+            throw new FileNotFoundException("File does not exist: " + file);
+        }
+    }
+
+    public static void deleteDirectory(File directory) throws IOException {
+        if (directory.exists()) {
+            cleanDirectory(directory);
+            if (!directory.delete()) {
+                throw new IOException("Unable to delete directory " + directory + ".");
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/mapframework/commonlib/utils/IO.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

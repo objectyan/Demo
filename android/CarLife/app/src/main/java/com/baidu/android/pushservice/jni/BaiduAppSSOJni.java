@@ -1,124 +1,88 @@
 package com.baidu.android.pushservice.jni;
 
 import android.content.Context;
-import com.baidu.android.pushservice.j.p;
-import com.baidu.android.pushservice.k.a;
-import com.baidu.android.pushservice.k.b;
+import com.baidu.android.pushservice.p031j.C0578p;
+import com.baidu.android.pushservice.p032k.C0581a;
+import com.baidu.android.pushservice.p032k.C0582b;
 
-public class BaiduAppSSOJni
-{
-  private static final String TAG = "BaiduAppSSOJni";
-  
-  static
-  {
-    try
-    {
-      System.loadLibrary("bdpush_V2_9");
-      return;
+public class BaiduAppSSOJni {
+    private static final String TAG = "BaiduAppSSOJni";
+
+    static {
+        try {
+            System.loadLibrary("bdpush_V2_9");
+        } catch (UnsatisfiedLinkError e) {
+        }
     }
-    catch (UnsatisfiedLinkError localUnsatisfiedLinkError) {}
-  }
-  
-  public static native byte[] decryptAES(byte[] paramArrayOfByte, int paramInt1, int paramInt2);
-  
-  public static native byte[] decryptR(byte[] paramArrayOfByte, int paramInt);
-  
-  public static native byte[] encryptAES(String paramString, int paramInt);
-  
-  public static native byte[] encryptR(byte[] paramArrayOfByte, int paramInt);
-  
-  public static String getDecrypted(Context paramContext, String paramString1, String paramString2)
-  {
-    try
-    {
-      paramContext = getDecrypted(paramContext, paramString1, b.a(paramString2.getBytes()));
-      if ((paramContext != null) && (paramContext.length > 0))
-      {
-        paramContext = new String(paramContext, "utf-8");
-        return paramContext;
-      }
-    }
-    catch (Exception paramContext) {}
-    return null;
-  }
-  
-  public static byte[] getDecrypted(Context paramContext, String paramString, byte[] paramArrayOfByte)
-  {
-    String str = paramString;
-    if (paramString == null) {
-      str = "";
-    }
-    try
-    {
-      paramString = getKey(str);
-      if (paramString == null) {
+
+    public static native byte[] decryptAES(byte[] bArr, int i, int i2);
+
+    public static native byte[] decryptR(byte[] bArr, int i);
+
+    public static native byte[] encryptAES(String str, int i);
+
+    public static native byte[] encryptR(byte[] bArr, int i);
+
+    public static String getDecrypted(Context context, String str, String str2) {
+        try {
+            byte[] decrypted = getDecrypted(context, str, C0582b.m2630a(str2.getBytes()));
+            if (decrypted != null && decrypted.length > 0) {
+                return new String(decrypted, "utf-8");
+            }
+        } catch (Exception e) {
+        }
         return null;
-      }
-      paramString = new String(paramString, "utf-8");
-      if (paramString.length() > 0)
-      {
-        str = paramString.substring(0, 16);
-        paramString = a.b(paramString.substring(16), str, paramArrayOfByte);
-        return paramString;
-      }
     }
-    catch (UnsatisfiedLinkError paramString)
-    {
-      p.b("UnsatisfiedLinkError getDecrypted ", paramContext);
-      return null;
+
+    public static byte[] getDecrypted(Context context, String str, byte[] bArr) {
+        byte[] bArr2 = null;
+        if (str == null) {
+            try {
+                str = "";
+            } catch (Exception e) {
+            } catch (UnsatisfiedLinkError e2) {
+                C0578p.m2546b("UnsatisfiedLinkError getDecrypted ", context);
+            }
+        }
+        byte[] key = getKey(str);
+        if (key != null) {
+            String str2 = new String(key, "utf-8");
+            if (str2.length() > 0) {
+                bArr2 = C0581a.m2628b(str2.substring(16), str2.substring(0, 16), bArr);
+            }
+        }
+        return bArr2;
     }
-    catch (Exception paramContext) {}
-    return null;
-  }
-  
-  public static String getEncrypted(Context paramContext, String paramString1, String paramString2)
-  {
-    paramContext = getEncrypted(paramContext, paramString1, paramString2.getBytes());
-    try
-    {
-      paramContext = b.a(paramContext, "utf-8");
-      return paramContext;
+
+    public static String getEncrypted(Context context, String str, String str2) {
+        try {
+            return C0582b.m2629a(getEncrypted(context, str, str2.getBytes()), "utf-8");
+        } catch (Exception e) {
+            return null;
+        }
     }
-    catch (Exception paramContext) {}
-    return null;
-  }
-  
-  public static byte[] getEncrypted(Context paramContext, String paramString, byte[] paramArrayOfByte)
-  {
-    String str = paramString;
-    if (paramString == null) {
-      str = "";
+
+    public static byte[] getEncrypted(Context context, String str, byte[] bArr) {
+        byte[] bArr2 = null;
+        if (str == null) {
+            try {
+                str = "";
+            } catch (Exception e) {
+            } catch (UnsatisfiedLinkError e2) {
+                C0578p.m2546b("UnsatisfiedLinkError getEncrypted " + bArr, context);
+            }
+        }
+        byte[] key = getKey(str);
+        if (key != null) {
+            String str2 = new String(key, "utf-8");
+            if (str2.length() > 0) {
+                bArr2 = C0581a.m2627a(str2.substring(16), str2.substring(0, 16), bArr);
+            }
+        }
+        return bArr2;
     }
-    try
-    {
-      paramString = getKey(str);
-      if (paramString == null) {
-        return null;
-      }
-      paramString = new String(paramString, "utf-8");
-      if (paramString.length() > 0)
-      {
-        str = paramString.substring(0, 16);
-        paramString = a.a(paramString.substring(16), str, paramArrayOfByte);
-        return paramString;
-      }
-    }
-    catch (UnsatisfiedLinkError paramString)
-    {
-      p.b("UnsatisfiedLinkError getEncrypted " + paramArrayOfByte, paramContext);
-      return null;
-    }
-    catch (Exception paramContext) {}
-    return null;
-  }
-  
-  private static native byte[] getKey(String paramString);
-  
-  public static native boolean verify(byte[] paramArrayOfByte, String paramString, int paramInt);
+
+    private static native byte[] getKey(String str);
+
+    public static native boolean verify(byte[] bArr, String str, int i);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/jni/BaiduAppSSOJni.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

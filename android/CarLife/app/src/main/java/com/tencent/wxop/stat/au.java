@@ -1,20 +1,18 @@
 package com.tencent.wxop.stat;
 
-public abstract interface au
-{
-  public abstract void a(Object paramObject);
-  
-  public abstract void b(Object paramObject);
-  
-  public abstract void c(Object paramObject);
-  
-  public abstract void d(Object paramObject);
-  
-  public abstract void e(Object paramObject);
+public interface au {
+    /* renamed from: a */
+    void m21805a(Object obj);
+
+    /* renamed from: b */
+    void m21806b(Object obj);
+
+    /* renamed from: c */
+    void m21807c(Object obj);
+
+    /* renamed from: d */
+    void m21808d(Object obj);
+
+    /* renamed from: e */
+    void m21809e(Object obj);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/au.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

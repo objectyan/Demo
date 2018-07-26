@@ -1,35 +1,23 @@
 package com.indooratlas.android.sdk._internal;
 
-public abstract class gu
-  implements Runnable
-{
-  protected final String b;
-  
-  public gu(String paramString, Object... paramVarArgs)
-  {
-    this.b = String.format(paramString, paramVarArgs);
-  }
-  
-  public abstract void b();
-  
-  public final void run()
-  {
-    String str = Thread.currentThread().getName();
-    Thread.currentThread().setName(this.b);
-    try
-    {
-      b();
-      return;
+public abstract class gu implements Runnable {
+    /* renamed from: b */
+    protected final String f23938b;
+
+    /* renamed from: b */
+    public abstract void mo4692b();
+
+    public gu(String str, Object... objArr) {
+        this.f23938b = String.format(str, objArr);
     }
-    finally
-    {
-      Thread.currentThread().setName(str);
+
+    public final void run() {
+        String name = Thread.currentThread().getName();
+        Thread.currentThread().setName(this.f23938b);
+        try {
+            mo4692b();
+        } finally {
+            Thread.currentThread().setName(name);
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gu.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

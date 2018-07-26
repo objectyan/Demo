@@ -6,6 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.util.cache.ImageCache;
 import com.baidu.navisdk.util.cache.ImageTools;
@@ -15,176 +16,138 @@ import com.baidu.navisdk.util.http.BaseHttpClient;
 import com.baidu.navisdk.util.http.BitmapRspHandler;
 import java.util.HashMap;
 
-public class UrlDrawbleContainDefaultPic
-  extends Drawable
-{
-  private static final int K_CACHE_CAPACITY = 80;
-  private static final String K_DEFAULT_CACHE_PATH = SysOSAPI.getInstance().GetSDCardCachePath() + "/ImageCache/ugcurlpic";
-  private static boolean mHasInit = false;
-  private static HashMap<String, UrlDrawbleContainDefaultPic> mLoadingMap = new HashMap();
-  public static ImageCache sUrlCache;
-  private Drawable mCurrent;
-  private boolean mNeedSqureBound = true;
-  
-  private UrlDrawbleContainDefaultPic(final String paramString1, final String paramString2, int paramInt)
-  {
-    this.mCurrent = BNStyleManager.getDrawable(paramInt);
-    this.mNeedSqureBound = true;
-    if (this.mCurrent == null) {
-      this.mCurrent = new BitmapDrawable(ImageTools.getBitmapFromResId(1711408123));
-    }
-    new UserTask()
-    {
-      Bitmap mBmp;
-      
-      public Bitmap doInBackground(String... paramAnonymousVarArgs)
-      {
-        this.mBmp = ImageTools.getBitmapFromPath(paramString2);
-        if (this.mBmp != null) {
-          return this.mBmp;
+public class UrlDrawbleContainDefaultPic extends Drawable {
+    private static final int K_CACHE_CAPACITY = 80;
+    private static final String K_DEFAULT_CACHE_PATH = (SysOSAPI.getInstance().GetSDCardCachePath() + "/ImageCache/ugcurlpic");
+    private static boolean mHasInit = false;
+    private static HashMap<String, UrlDrawbleContainDefaultPic> mLoadingMap = new HashMap();
+    public static ImageCache sUrlCache;
+    private Drawable mCurrent;
+    private boolean mNeedSqureBound = true;
+
+    private UrlDrawbleContainDefaultPic(final String url, final String keyPath, int defaultDrawableId) {
+        this.mCurrent = BNStyleManager.getDrawable(defaultDrawableId);
+        this.mNeedSqureBound = true;
+        if (this.mCurrent == null) {
+            this.mCurrent = new BitmapDrawable(ImageTools.getBitmapFromResId(C4048R.drawable.ugc_default_pic));
         }
-        try
-        {
-          new BaseHttpClient().get(paramString1, new BitmapRspHandler()
-          {
-            public void onFailure(Throwable paramAnonymous2Throwable)
-            {
-              UrlDrawbleContainDefaultPic.1.this.mBmp = null;
+        new UserTask<String, String, Bitmap>() {
+            Bitmap mBmp;
+
+            /* renamed from: com.baidu.navisdk.util.drawable.UrlDrawbleContainDefaultPic$1$1 */
+            class C46541 extends BitmapRspHandler {
+                C46541() {
+                }
+
+                public void onRevBitmap(Bitmap retBmp) {
+                    C46551.this.mBmp = retBmp;
+                    if (C46551.this.mBmp != null) {
+                        UrlDrawbleContainDefaultPic.sUrlCache.cache2Disk(keyPath, C46551.this.mBmp);
+                    }
+                }
+
+                public void onFailure(Throwable error) {
+                    C46551.this.mBmp = null;
+                }
             }
-            
-            public void onRevBitmap(Bitmap paramAnonymous2Bitmap)
-            {
-              UrlDrawbleContainDefaultPic.1.this.mBmp = paramAnonymous2Bitmap;
-              if (UrlDrawbleContainDefaultPic.1.this.mBmp != null) {
-                UrlDrawbleContainDefaultPic.sUrlCache.cache2Disk(UrlDrawbleContainDefaultPic.1.this.val$keyPath, UrlDrawbleContainDefaultPic.1.this.mBmp);
-              }
+
+            public Bitmap doInBackground(String... params) {
+                this.mBmp = ImageTools.getBitmapFromPath(keyPath);
+                if (this.mBmp != null) {
+                    return this.mBmp;
+                }
+                try {
+                    new BaseHttpClient().get(url, new C46541());
+                } catch (Exception e) {
+                    this.mBmp = null;
+                }
+                return this.mBmp;
             }
-          });
-          return this.mBmp;
+
+            public void onPostExecute(Bitmap bmp) {
+                if (bmp != null) {
+                    UrlDrawbleContainDefaultPic.sUrlCache.put(keyPath, this.mBmp);
+                    UrlDrawbleContainDefaultPic d = (UrlDrawbleContainDefaultPic) UrlDrawbleContainDefaultPic.mLoadingMap.remove(keyPath);
+                    if (d != null) {
+                        UrlDrawbleContainDefaultPic.this.mNeedSqureBound = false;
+                        Drawable draw = PathDrawable.getDrawable(keyPath, bmp, UrlDrawbleContainDefaultPic.sUrlCache);
+                        draw.setBounds(d.mCurrent.getBounds());
+                        d.mCurrent = draw;
+                        d.invalidateSelf();
+                        return;
+                    }
+                    return;
+                }
+                UrlDrawbleContainDefaultPic.mLoadingMap.remove(keyPath);
+            }
+        }.execute("");
+    }
+
+    private static synchronized void init() {
+        synchronized (UrlDrawbleContainDefaultPic.class) {
+            if (!mHasInit) {
+                sUrlCache = new ImageCache(K_DEFAULT_CACHE_PATH, 80);
+            }
+            mHasInit = true;
         }
-        catch (Exception paramAnonymousVarArgs)
-        {
-          for (;;)
-          {
-            this.mBmp = null;
-          }
+    }
+
+    public static Drawable getDrawable(String url, int defaultDrawableId) {
+        init();
+        if (url == null) {
+            return BNStyleManager.getDrawable(defaultDrawableId);
         }
-      }
-      
-      public void onPostExecute(Bitmap paramAnonymousBitmap)
-      {
-        if (paramAnonymousBitmap != null)
-        {
-          UrlDrawbleContainDefaultPic.sUrlCache.put(paramString2, this.mBmp);
-          UrlDrawbleContainDefaultPic localUrlDrawbleContainDefaultPic = (UrlDrawbleContainDefaultPic)UrlDrawbleContainDefaultPic.mLoadingMap.remove(paramString2);
-          if (localUrlDrawbleContainDefaultPic == null) {
-            return;
-          }
-          UrlDrawbleContainDefaultPic.access$102(UrlDrawbleContainDefaultPic.this, false);
-          paramAnonymousBitmap = PathDrawable.getDrawable(paramString2, paramAnonymousBitmap, UrlDrawbleContainDefaultPic.sUrlCache);
-          paramAnonymousBitmap.setBounds(localUrlDrawbleContainDefaultPic.mCurrent.getBounds());
-          UrlDrawbleContainDefaultPic.access$202(localUrlDrawbleContainDefaultPic, paramAnonymousBitmap);
-          localUrlDrawbleContainDefaultPic.invalidateSelf();
-          return;
+        Object key = sUrlCache.getCachePath(url);
+        Bitmap bmp = sUrlCache.get(key);
+        if (bmp != null) {
+            return PathDrawable.getDrawable(key, bmp, sUrlCache);
         }
-        UrlDrawbleContainDefaultPic.mLoadingMap.remove(paramString2);
-      }
-    }.execute(new String[] { "" });
-  }
-  
-  public static Drawable getDrawable(String paramString, int paramInt)
-  {
-    
-    Object localObject;
-    if (paramString == null) {
-      localObject = BNStyleManager.getDrawable(paramInt);
+        UrlDrawbleContainDefaultPic d = (UrlDrawbleContainDefaultPic) mLoadingMap.get(key);
+        if (d != null) {
+            return d;
+        }
+        Drawable d2 = new UrlDrawbleContainDefaultPic(url, key, defaultDrawableId);
+        mLoadingMap.put(key, d2);
+        return d2;
     }
-    String str;
-    UrlDrawbleContainDefaultPic localUrlDrawbleContainDefaultPic;
-    do
-    {
-      return (Drawable)localObject;
-      str = sUrlCache.getCachePath(paramString);
-      localObject = sUrlCache.get(str);
-      if (localObject != null) {
-        return PathDrawable.getDrawable(str, (Bitmap)localObject, sUrlCache);
-      }
-      localUrlDrawbleContainDefaultPic = (UrlDrawbleContainDefaultPic)mLoadingMap.get(str);
-      localObject = localUrlDrawbleContainDefaultPic;
-    } while (localUrlDrawbleContainDefaultPic != null);
-    paramString = new UrlDrawbleContainDefaultPic(paramString, str, paramInt);
-    mLoadingMap.put(str, paramString);
-    return paramString;
-  }
-  
-  private static void init()
-  {
-    try
-    {
-      if (!mHasInit) {
-        sUrlCache = new ImageCache(K_DEFAULT_CACHE_PATH, 80);
-      }
-      mHasInit = true;
-      return;
+
+    public Drawable getCurrent() {
+        return this.mCurrent;
     }
-    finally {}
-  }
-  
-  public void draw(Canvas paramCanvas)
-  {
-    if (this.mCurrent != null) {
-      this.mCurrent.draw(paramCanvas);
+
+    public void draw(Canvas canvas) {
+        if (this.mCurrent != null) {
+            this.mCurrent.draw(canvas);
+        }
     }
-  }
-  
-  public Drawable getCurrent()
-  {
-    return this.mCurrent;
-  }
-  
-  public int getOpacity()
-  {
-    if (this.mCurrent != null) {
-      return this.mCurrent.getOpacity();
+
+    public int getOpacity() {
+        if (this.mCurrent != null) {
+            return this.mCurrent.getOpacity();
+        }
+        return -2;
     }
-    return -2;
-  }
-  
-  public void onBoundsChange(Rect paramRect)
-  {
-    if (this.mCurrent != null)
-    {
-      if (!this.mNeedSqureBound) {
-        break label31;
-      }
-      this.mCurrent.setBounds(ImageTools.calcSquareRect(paramRect));
+
+    public void setAlpha(int alpha) {
+        if (this.mCurrent != null) {
+            this.mCurrent.setAlpha(alpha);
+        }
     }
-    for (;;)
-    {
-      super.onBoundsChange(paramRect);
-      return;
-      label31:
-      this.mCurrent.setBounds(paramRect);
+
+    public void setColorFilter(ColorFilter cf) {
+        if (this.mCurrent != null) {
+            this.mCurrent.setColorFilter(cf);
+        }
     }
-  }
-  
-  public void setAlpha(int paramInt)
-  {
-    if (this.mCurrent != null) {
-      this.mCurrent.setAlpha(paramInt);
+
+    public void onBoundsChange(Rect bounds) {
+        if (this.mCurrent != null) {
+            if (this.mNeedSqureBound) {
+                this.mCurrent.setBounds(ImageTools.calcSquareRect(bounds));
+            } else {
+                this.mCurrent.setBounds(bounds);
+            }
+        }
+        super.onBoundsChange(bounds);
     }
-  }
-  
-  public void setColorFilter(ColorFilter paramColorFilter)
-  {
-    if (this.mCurrent != null) {
-      this.mCurrent.setColorFilter(paramColorFilter);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/drawable/UrlDrawbleContainDefaultPic.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

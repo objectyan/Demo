@@ -1,7 +1,8 @@
 package com.baidu.mobstat;
 
+import com.baidu.android.common.security.RSAUtil;
+import com.baidu.carlife.core.connect.p070a.C1204d;
 import java.io.ByteArrayOutputStream;
-import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.interfaces.RSAKey;
@@ -11,67 +12,52 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 
-public class dc
-{
-  public static String a(byte[] paramArrayOfByte)
-  {
-    try
-    {
-      paramArrayOfByte = cv.b(a(false, cw.a(), paramArrayOfByte));
-      return paramArrayOfByte;
+public class dc {
+    /* renamed from: a */
+    public static String m15666a(byte[] bArr) {
+        try {
+            return cv.m15642b(m15669a(false, cw.m15643a(), bArr));
+        } catch (Throwable e) {
+            db.m15662b(e);
+            return "";
+        }
     }
-    catch (Exception paramArrayOfByte)
-    {
-      db.b(paramArrayOfByte);
+
+    /* renamed from: a */
+    public static byte[] m15669a(boolean z, byte[] bArr, byte[] bArr2) {
+        RSAKey a = m15667a(z, bArr);
+        return m15668a(1, (Key) a, ((a.getModulus().bitLength() + 1) / 8) - 11, bArr2);
     }
-    return "";
-  }
-  
-  private static RSAKey a(boolean paramBoolean, byte[] paramArrayOfByte)
-  {
-    KeyFactory localKeyFactory = KeyFactory.getInstance("RSA");
-    if (paramBoolean) {
-      return (RSAPrivateKey)localKeyFactory.generatePrivate(new PKCS8EncodedKeySpec(paramArrayOfByte));
+
+    /* renamed from: b */
+    public static byte[] m15670b(boolean z, byte[] bArr, byte[] bArr2) {
+        RSAKey a = m15667a(z, bArr);
+        return m15668a(2, (Key) a, (a.getModulus().bitLength() + 1) / 8, bArr2);
     }
-    return (RSAPublicKey)localKeyFactory.generatePublic(new X509EncodedKeySpec(paramArrayOfByte));
-  }
-  
-  private static byte[] a(int paramInt1, Key paramKey, int paramInt2, byte[] paramArrayOfByte)
-  {
-    Cipher localCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-    localCipher.init(paramInt1, paramKey);
-    paramKey = new ByteArrayOutputStream();
-    paramInt1 = 0;
-    while (paramInt1 < paramArrayOfByte.length)
-    {
-      int j = paramArrayOfByte.length - paramInt1;
-      int i = j;
-      if (j > paramInt2) {
-        i = paramInt2;
-      }
-      paramKey.write(localCipher.doFinal(paramArrayOfByte, paramInt1, i));
-      paramInt1 += paramInt2;
+
+    /* renamed from: a */
+    private static RSAKey m15667a(boolean z, byte[] bArr) {
+        KeyFactory instance = KeyFactory.getInstance(RSAUtil.ALGORITHM_RSA);
+        if (z) {
+            return (RSAPrivateKey) instance.generatePrivate(new PKCS8EncodedKeySpec(bArr));
+        }
+        return (RSAPublicKey) instance.generatePublic(new X509EncodedKeySpec(bArr));
     }
-    return paramKey.toByteArray();
-  }
-  
-  public static byte[] a(boolean paramBoolean, byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
-  {
-    paramArrayOfByte1 = a(paramBoolean, paramArrayOfByte1);
-    int i = (paramArrayOfByte1.getModulus().bitLength() + 1) / 8;
-    return a(1, (Key)paramArrayOfByte1, i - 11, paramArrayOfByte2);
-  }
-  
-  public static byte[] b(boolean paramBoolean, byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
-  {
-    paramArrayOfByte1 = a(paramBoolean, paramArrayOfByte1);
-    int i = (paramArrayOfByte1.getModulus().bitLength() + 1) / 8;
-    return a(2, (Key)paramArrayOfByte1, i, paramArrayOfByte2);
-  }
+
+    /* renamed from: a */
+    private static byte[] m15668a(int i, Key key, int i2, byte[] bArr) {
+        Cipher instance = Cipher.getInstance(C1204d.f3244d);
+        instance.init(i, key);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        int i3 = 0;
+        while (i3 < bArr.length) {
+            int length = bArr.length - i3;
+            if (length > i2) {
+                length = i2;
+            }
+            byteArrayOutputStream.write(instance.doFinal(bArr, i3, length));
+            i3 += i2;
+        }
+        return byteArrayOutputStream.toByteArray();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/dc.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

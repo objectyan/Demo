@@ -9,6 +9,7 @@ import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.statistics.BNStatisticsManager;
 import com.baidu.navisdk.comapi.statistics.NaviStatHelper;
+import com.baidu.navisdk.module.offscreen.BNOffScreenManager;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.PackageUtil;
 import com.baidu.navisdk.util.common.SDKDebugUtil;
@@ -20,671 +21,532 @@ import com.baidu.navisdk.util.logic.BNSysLocationManager;
 import com.baidu.navisdk.util.statistic.RespTimeStatItem;
 import com.baidu.navisdk.util.statistic.datacheck.DataCheckCenter;
 import com.baidu.navisdk.vi.VDeviceAPI;
+import com.facebook.common.p141m.C2924g;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class BNaviModuleManager
-{
-  public static final String KEY_OUTCHINA_CITYID = "key.outchina.cityid";
-  private static final String RES_ID = "52";
-  private static NaviCommonCallBackListener mNaviCommonCallBackListener;
-  private static NetworkListener mNetworkListener;
-  private static SDCardListener mSDCardListener;
-  public static String sAppSourceStr = "others";
-  private static Activity sCachedActivity;
-  private static Context sCachedContext;
-  private static GetOuterActivityListener sGetOuterActivityListener = null;
-  
-  public static void addOrRemoveSensorListener(int paramInt, ISensorChangeListener paramISensorChangeListener)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(paramInt, 0, paramISensorChangeListener);
+public class BNaviModuleManager {
+    public static final String KEY_OUTCHINA_CITYID = "key.outchina.cityid";
+    private static final String RES_ID = "52";
+    private static NaviCommonCallBackListener mNaviCommonCallBackListener;
+    private static NetworkListener mNetworkListener;
+    private static SDCardListener mSDCardListener;
+    public static String sAppSourceStr = AppSourceDefine.DEFAULT_SOURCE;
+    private static Activity sCachedActivity;
+    private static Context sCachedContext;
+    private static GetOuterActivityListener sGetOuterActivityListener = null;
+
+    public static class AppSourceDefine {
+        public static final String DEFAULT_SOURCE = "others";
+        public static final int DEFAULT_SOURCE_INT = 0;
+        public static final String HUAWEI_SOURCE = "huawei";
+        public static final int HUAWEI_SOURCE_INT = 1;
+        public static final String LESHI_SOURCE = "leshi";
+        public static final int LESHI_SOURCE_INT = 2;
     }
-  }
-  
-  public static boolean buttomNaviTabHasFocus()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      return mNaviCommonCallBackListener.buttomNaviTabHasFocus();
+
+    public interface GetOuterActivityListener {
+        Activity getNaviActivity();
+
+        Activity getOuterActivity();
     }
-    return false;
-  }
-  
-  public static boolean checkBaseMapDataExit(int paramInt)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(28, paramInt, null);
+
+    public interface NaviCommonCallBackListener {
+        public static final String KEY_BDUSS = "bduss";
+        public static final String KEY_ICON_ID = "KEY_ICON_ID";
+        public static final String KEY_PREFER_VALUE = "KEY_PREFER_VALUE";
+        public static final int NAVI_DOWNLOAD_XIJIANG_SWITCH = 36;
+        public static final int NAVI_DRIVING_TOOL = 14;
+        public static final int NAVI_EVENT_NOTIFY_INIT = 0;
+        public static final int NAVI_EVENT_NOTIFY_UNINIT = 2;
+        public static final int NAVI_EVENT_NOTIFY_UPDATE = 1;
+        public static final int NAVI_REMOVE_IPO = 3;
+        public static final int NAVI_SET_TTS_STREAM_TYPE = 4;
+        public static final int NAVI_TYPE_CHECK_PERMISSION = 18;
+        public static final int NAVI_TYPE_DESTORY_MAP = 0;
+        public static final int NAVI_TYPE_DRIVING_CAR = 13;
+        public static final int NAVI_TYPE_FETCH_CAR_OWNER_DATA = 34;
+        public static final int NAVI_TYPE_GET_BDUSS = 1;
+        public static final int NAVI_TYPE_GET_CITY_ID_OUTCHINA = 30;
+        public static final int NAVI_TYPE_GET_ICON_ID = 8;
+        public static final int NAVI_TYPE_GET_LAST_ROUTE_SEARCH_MCAR_PREFER = 22;
+        public static final int NAVI_TYPE_INIT_URL = 27;
+        public static final int NAVI_TYPE_IS_APP_FOREGROUND = 2;
+        public static final int NAVI_TYPE_IS_CAR_PLATE_NUM_COMPLETE = 17;
+        public static final int NAVI_TYPE_IS_COLLADA_INIT_SUCCESS = 15;
+        public static final int NAVI_TYPE_IS_GooglePlay_Channel = 10;
+        public static final int NAVI_TYPE_IS_INTERNATIONAL = 31;
+        public static final int NAVI_TYPE_IS_SETTING_CAR_PLATE = 16;
+        public static final int NAVI_TYPE_Init_Collada = 25;
+        public static final int NAVI_TYPE_LAUNCH_MAPSACTIVITY_TO_FRONT = 19;
+        public static final int NAVI_TYPE_MAP_SENSOR_ADD = 6;
+        public static final int NAVI_TYPE_MAP_SENSOR_REMOVE = 7;
+        public static final int NAVI_TYPE_OFFLINE_DATA_CLEAR = 29;
+        public static final int NAVI_TYPE_OFFLINE_DATA_DOWNLOAD = 28;
+        public static final int NAVI_TYPE_OPEN_CAR_PLATE_EXPLAIN_PAGE = 32;
+        public static final int NAVI_TYPE_OPEN_DOWNLOAD_PAGE = 11;
+        public static final int NAVI_TYPE_PLATE_LIMIT_RESET = 33;
+        public static final int NAVI_TYPE_RELEASE_AUDIO_FOCUS = 21;
+        public static final int NAVI_TYPE_REQUEST_PERMISSION = 20;
+        public static final int NAVI_TYPE_SET_IPO_RC = 12;
+        public static final int NAVI_TYPE_SET_LAST_ROUTE_SEARCH_MCAR_PREFER = 23;
+        public static final int NAVI_TYPE_SET_SAVEMODE = 35;
+        public static final int NAVI_TYPE_Share_Safety = 26;
+        public static final int NAVI_TYPE_UNREGISTER_SENSOR = 5;
+        public static final int NAVI_TYPE_putIP2DomainsRecord = 24;
+
+        boolean buttomNaviTabHasFocus();
+
+        boolean isFocusUIenable();
+
+        boolean isMapModuleFragment();
+
+        Bundle onNaviCommonMsg(int i, int i2, Object obj);
+
+        boolean onNaviCommonMsgForBoolean(int i, int i2, Object obj);
+
+        void showBottomBar(boolean z);
     }
-    return true;
-  }
-  
-  public static void destory()
-  {
-    unRegister();
-    RespTimeStatItem.getInstance().onEvent();
-    BNStatisticsManager.getInstance().saveStatistics();
-    BNStatisticsManager.getInstance().exit();
-    SDKDebugUtil.getInstance().destory();
-    DataCheckCenter.getInstance().uninit();
-  }
-  
-  public static void detoryMapView()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(0, 0, null);
+
+    public interface NaviCommonConstant {
+        public static final String OVERLAY_PERMISSION = "android.settings.action.MANAGE_OVERLAY_PERMISSION";
+        public static final int REQUST_CODE_JUMP_VOICE_SETTING = 3002;
+        public static final int REQUST_CODE_OVERLAY_PERMISSION = 3001;
     }
-  }
-  
-  public static void fetchCarOwnerData(Context paramContext)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(34, 0, paramContext);
-    }
-  }
-  
-  public static Activity getActivity()
-  {
-    if ((sGetOuterActivityListener != null) && (sGetOuterActivityListener.getOuterActivity() != null)) {
-      return sGetOuterActivityListener.getOuterActivity();
-    }
-    return sCachedActivity;
-  }
-  
-  public static int getAppIconId()
-  {
-    if (mNaviCommonCallBackListener != null)
-    {
-      Bundle localBundle = mNaviCommonCallBackListener.onNaviCommonMsg(8, 0, null);
-      if ((localBundle != null) && (localBundle.containsKey("KEY_ICON_ID"))) {
-        return localBundle.getInt("KEY_ICON_ID");
-      }
-    }
-    return -1;
-  }
-  
-  public static String getBduss()
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (mNaviCommonCallBackListener != null)
-    {
-      Bundle localBundle = mNaviCommonCallBackListener.onNaviCommonMsg(1, 0, null);
-      localObject1 = localObject2;
-      if (localBundle != null)
-      {
-        localObject1 = localObject2;
-        if (localBundle.containsKey("bduss")) {
-          localObject1 = localBundle.getString("bduss");
+
+    public static boolean isMapModuleFragment() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.isMapModuleFragment();
         }
-      }
+        return true;
     }
-    return (String)localObject1;
-  }
-  
-  public static Context getContext()
-  {
-    if ((sGetOuterActivityListener != null) && (sGetOuterActivityListener.getOuterActivity() != null)) {
-      return sGetOuterActivityListener.getOuterActivity();
-    }
-    return sCachedContext;
-  }
-  
-  public static int getLastPreferValue()
-  {
-    if (mNaviCommonCallBackListener != null)
-    {
-      Bundle localBundle = mNaviCommonCallBackListener.onNaviCommonMsg(22, 0, null);
-      if ((localBundle != null) && (localBundle.containsKey("KEY_PREFER_VALUE"))) {
-        return localBundle.getInt("KEY_PREFER_VALUE");
-      }
-    }
-    return 1;
-  }
-  
-  public static Activity getNaviActivity()
-  {
-    if ((sGetOuterActivityListener != null) && (sGetOuterActivityListener.getNaviActivity() != null)) {
-      return sGetOuterActivityListener.getNaviActivity();
-    }
-    return sCachedActivity;
-  }
-  
-  public static int getOutChinaCurrentCityId()
-  {
-    int j = -1;
-    int i = j;
-    if (mNaviCommonCallBackListener != null)
-    {
-      Bundle localBundle = mNaviCommonCallBackListener.onNaviCommonMsg(30, -1, null);
-      i = j;
-      if (localBundle != null)
-      {
-        i = j;
-        if (localBundle.containsKey("key.outchina.cityid")) {
-          i = localBundle.getInt("key.outchina.cityid", -1);
+
+    public static void showBottomBar(boolean show) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.showBottomBar(show);
         }
-      }
     }
-    return i;
-  }
-  
-  public static boolean hasPermission(String paramString)
-  {
-    boolean bool = false;
-    if (mNaviCommonCallBackListener != null) {
-      bool = mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(18, 0, paramString);
+
+    public static boolean buttomNaviTabHasFocus() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.buttomNaviTabHasFocus();
+        }
+        return false;
     }
-    return bool;
-  }
-  
-  public static void initCollada()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(25, 0, null);
+
+    public static boolean isFocusUIenable() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.isFocusUIenable();
+        }
+        return false;
     }
-  }
-  
-  public static void initContext(Context paramContext)
-  {
-    if (1 != 0) {
-      JarUtils.setAsJar(paramContext);
+
+    public static boolean isInternational(long x, long y, int cityId) {
+        if (mNaviCommonCallBackListener == null) {
+            return false;
+        }
+        Bundle request = new Bundle();
+        request.putLong("x", x);
+        request.putLong("y", y);
+        request.putInt("cityId", cityId);
+        return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(31, -1, request);
     }
-    PackageUtil.readSDKBuildNumber();
-  }
-  
-  public static void initListenersForMap(Context paramContext)
-  {
-    unRegister();
-    sCachedContext = paramContext.getApplicationContext();
-    unRegister();
-    PackageUtil.init(paramContext);
-    initNetworkListener(paramContext);
-    initSDCardListener(paramContext);
-    initPhoneStateListener(paramContext);
-  }
-  
-  public static void initNetworkListener(Context paramContext)
-  {
-    mNetworkListener = new NetworkListener(true);
-    IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-    localIntentFilter.addAction("android.net.wifi.STATE_CHANGE");
-    localIntentFilter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
-    localIntentFilter.addAction("android.net.wifi.SCAN_RESULTS");
-    if (paramContext != null) {}
-    try
-    {
-      paramContext.getApplicationContext().registerReceiver(mNetworkListener, localIntentFilter, null, null);
-      return;
+
+    public static int getOutChinaCurrentCityId() {
+        if (mNaviCommonCallBackListener == null) {
+            return -1;
+        }
+        Bundle bd = mNaviCommonCallBackListener.onNaviCommonMsg(30, -1, null);
+        if (bd == null || !bd.containsKey(KEY_OUTCHINA_CITYID)) {
+            return -1;
+        }
+        return bd.getInt(KEY_OUTCHINA_CITYID, -1);
     }
-    catch (Exception paramContext) {}
-  }
-  
-  public static void initPhoneStateListener(Context paramContext)
-  {
-    PhoneStatusReceiver.initPhoneStatusReceiver(getContext().getApplicationContext());
-  }
-  
-  public static void initSDCardListener(Context paramContext)
-  {
-    mSDCardListener = new SDCardListener();
-    IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction("android.intent.action.MEDIA_REMOVED");
-    localIntentFilter.addAction("android.intent.action.MEDIA_UNMOUNTED");
-    localIntentFilter.addAction("android.intent.action.MEDIA_EJECT");
-    localIntentFilter.addAction("android.intent.action.MEDIA_MOUNTED");
-    localIntentFilter.addDataScheme("file");
-    if (paramContext != null) {}
-    try
-    {
-      paramContext.getApplicationContext().registerReceiver(mSDCardListener, localIntentFilter);
-      return;
+
+    public static boolean checkBaseMapDataExit(int cityId) {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(28, cityId, null);
+        }
+        return true;
     }
-    catch (Exception paramContext) {}
-  }
-  
-  public static void initUrl()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(27, 0, null);
+
+    public static void updateMapDataStutas() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(29, -1, null);
+        }
     }
-  }
-  
-  public static boolean isAppForeground()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(2, 0, null);
+
+    public static void setupNaviCommonCallBackListener(NaviCommonCallBackListener mListener) {
+        mNaviCommonCallBackListener = mListener;
     }
-    return true;
-  }
-  
-  public static boolean isCarPlateNumComplete()
-  {
-    boolean bool = false;
-    if (mNaviCommonCallBackListener != null) {
-      bool = mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(17, 0, null);
+
+    public static boolean isColladaInitSuccess() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(15, 0, null);
+        }
+        return false;
     }
-    return bool;
-  }
-  
-  public static boolean isColladaInitSuccess()
-  {
-    boolean bool = false;
-    if (mNaviCommonCallBackListener != null) {
-      bool = mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(15, 0, null);
+
+    public static boolean isSettingCarPlate() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(16, 0, null);
+        }
+        return false;
     }
-    return bool;
-  }
-  
-  public static boolean isDrivingCar()
-  {
-    boolean bool = false;
-    if (mNaviCommonCallBackListener != null) {
-      bool = mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(13, 0, null);
+
+    public static boolean isCarPlateNumComplete() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(17, 0, null);
+        }
+        return false;
     }
-    return bool;
-  }
-  
-  public static boolean isFocusUIenable()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      return mNaviCommonCallBackListener.isFocusUIenable();
+
+    public static void detoryMapView() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(0, 0, null);
+        }
     }
-    return false;
-  }
-  
-  public static boolean isGooglePlayChannel()
-  {
-    boolean bool = false;
-    if (mNaviCommonCallBackListener != null) {
-      bool = mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(10, 0, null);
+
+    public static void putIP2DomainsRecord(Bundle bd) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(24, 0, bd);
+        }
     }
-    return bool;
-  }
-  
-  public static boolean isInternational(long paramLong1, long paramLong2, int paramInt)
-  {
-    if (mNaviCommonCallBackListener != null)
-    {
-      Bundle localBundle = new Bundle();
-      localBundle.putLong("x", paramLong1);
-      localBundle.putLong("y", paramLong2);
-      localBundle.putInt("cityId", paramInt);
-      return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(31, -1, localBundle);
+
+    public static void resetPlateLimitCounter(boolean isOpen) {
+        if (mNaviCommonCallBackListener != null) {
+            Bundle bd = new Bundle();
+            bd.putBoolean("isOpen", isOpen);
+            mNaviCommonCallBackListener.onNaviCommonMsg(33, 0, bd);
+        }
     }
-    return false;
-  }
-  
-  public static boolean isMapModuleFragment()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      return mNaviCommonCallBackListener.isMapModuleFragment();
+
+    public static String getBduss() {
+        if (mNaviCommonCallBackListener == null) {
+            return null;
+        }
+        Bundle bd = mNaviCommonCallBackListener.onNaviCommonMsg(1, 0, null);
+        if (bd == null || !bd.containsKey("bduss")) {
+            return null;
+        }
+        return bd.getString("bduss");
     }
-    return true;
-  }
-  
-  public static boolean isSettingCarPlate()
-  {
-    boolean bool = false;
-    if (mNaviCommonCallBackListener != null) {
-      bool = mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(16, 0, null);
+
+    public static boolean isAppForeground() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(2, 0, null);
+        }
+        return true;
     }
-    return bool;
-  }
-  
-  public static void launchDownloadPage()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(11, 0, null);
+
+    public static boolean releaseAudioFocus() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(21, 0, null);
+        }
+        return true;
     }
-  }
-  
-  public static void launchMapsActivityToFront()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(19, 0, null);
+
+    public static boolean isGooglePlayChannel() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(10, 0, null);
+        }
+        return false;
     }
-  }
-  
-  public static void mapToNaviSaveMode(Context paramContext, int paramInt)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(35, paramInt, paramContext);
+
+    public static void shareDrivingToolUrl(String url) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(14, 0, url);
+        }
     }
-  }
-  
-  public static void naviDownloadXiJiangSwitch()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(36, 0, null);
+
+    public static void initCollada() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(25, 0, null);
+        }
     }
-  }
-  
-  public static void openCarPlateExplainPage(Context paramContext)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(32, 0, paramContext);
+
+    public static void initUrl() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(27, 0, null);
+        }
     }
-  }
-  
-  public static void putIP2DomainsRecord(Bundle paramBundle)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(24, 0, paramBundle);
+
+    public static void shareSafety(Bundle bd) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(26, 0, bd);
+        }
     }
-  }
-  
-  public static boolean releaseAudioFocus()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(21, 0, null);
+
+    public static boolean isDrivingCar() {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(13, 0, null);
+        }
+        return false;
     }
-    return true;
-  }
-  
-  public static void removeIPO()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(3, 0, null);
+
+    public static int getAppIconId() {
+        if (mNaviCommonCallBackListener != null) {
+            Bundle bd = mNaviCommonCallBackListener.onNaviCommonMsg(8, 0, null);
+            if (bd != null && bd.containsKey(NaviCommonCallBackListener.KEY_ICON_ID)) {
+                return bd.getInt(NaviCommonCallBackListener.KEY_ICON_ID);
+            }
+        }
+        return -1;
     }
-  }
-  
-  public static boolean requstPermission(String paramString)
-  {
-    boolean bool = false;
-    if (mNaviCommonCallBackListener != null) {
-      bool = mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(20, 0, paramString);
+
+    public static int getLastPreferValue() {
+        if (mNaviCommonCallBackListener != null) {
+            Bundle bd = mNaviCommonCallBackListener.onNaviCommonMsg(22, 0, null);
+            if (bd != null && bd.containsKey(NaviCommonCallBackListener.KEY_PREFER_VALUE)) {
+                return bd.getInt(NaviCommonCallBackListener.KEY_PREFER_VALUE);
+            }
+        }
+        return 1;
     }
-    return bool;
-  }
-  
-  public static void resetPlateLimitCounter(boolean paramBoolean)
-  {
-    if (mNaviCommonCallBackListener != null)
-    {
-      Bundle localBundle = new Bundle();
-      localBundle.putBoolean("isOpen", paramBoolean);
-      mNaviCommonCallBackListener.onNaviCommonMsg(33, 0, localBundle);
+
+    public static void setLastPreferValue(int prefer) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(23, 0, Integer.valueOf(prefer));
+        }
     }
-  }
-  
-  public static void setActivity(Activity paramActivity) {}
-  
-  public static void setContext(Context paramContext) {}
-  
-  public static void setGetOuterActivityListener(GetOuterActivityListener paramGetOuterActivityListener)
-  {
-    sGetOuterActivityListener = paramGetOuterActivityListener;
-  }
-  
-  public static void setIPORCToMap(boolean paramBoolean)
-  {
-    NaviCommonCallBackListener localNaviCommonCallBackListener;
-    if (mNaviCommonCallBackListener != null)
-    {
-      localNaviCommonCallBackListener = mNaviCommonCallBackListener;
-      if (!paramBoolean) {
-        break label28;
-      }
+
+    public static void removeIPO() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(3, 0, null);
+        }
     }
-    label28:
-    for (int i = 1;; i = 0)
-    {
-      localNaviCommonCallBackListener.onNaviCommonMsgForBoolean(12, i, null);
-      return;
+
+    public static void setTTSStreamType(int streamType) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(4, streamType, null);
+        }
     }
-  }
-  
-  public static void setLastPreferValue(int paramInt)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(23, 0, Integer.valueOf(paramInt));
+
+    public static void unregisterMapSensorListener() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(5, 0, null);
+        }
     }
-  }
-  
-  private static void setRoutePlanStatistcsUrl()
-  {
-    Object localObject2 = "";
-    Object localObject1 = localObject2;
-    try
-    {
-      String str = "&mb=" + URLEncoder.encode(VDeviceAPI.getPhoneType(), "UTF-8");
-      localObject1 = str;
-      localObject2 = str;
-      str = str + "&sv=" + URLEncoder.encode(VDeviceAPI.getAppPackageVersion(), "UTF-8");
-      localObject1 = str;
-      localObject2 = str;
-      str = str + "&pcn=" + URLEncoder.encode(VDeviceAPI.getAppPackageName(), "UTF-8");
-      localObject1 = str;
-      localObject2 = str;
-      str = str + "&kv=" + URLEncoder.encode(VDeviceAPI.getDataVersion(), "UTF-8");
-      localObject1 = str;
+
+    public static void addOrRemoveSensorListener(int isAdd, ISensorChangeListener listener) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(isAdd, 0, listener);
+        }
     }
-    catch (Exception localException2)
-    {
-      for (;;)
-      {
-        localException2.printStackTrace();
-      }
+
+    public static void launchDownloadPage() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(11, 0, null);
+        }
     }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      for (;;)
-      {
-        Exception localException1 = localException2;
-      }
+
+    public static void setIPORCToMap(boolean on) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(12, on ? 1 : 0, null);
+        }
     }
-    localObject1 = (String)localObject1 + "&os=android";
-    localObject1 = (String)localObject1 + "&net=" + VDeviceAPI.getCurrentNetworkType();
-    localObject1 = (String)localObject1 + "&resid=52";
-    new StringBuilder().append((String)localObject1).append("&channel=").append(PackageUtil.getChannel()).toString();
-  }
-  
-  public static void setTTSStreamType(int paramInt)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(4, paramInt, null);
+
+    public static boolean hasPermission(String permission) {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(18, 0, permission);
+        }
+        return false;
     }
-  }
-  
-  public static void setup(boolean paramBoolean)
-  {
-    BNStatisticsManager.getInstance().upLoadStatistics();
-    BNSysLocationManager.getInstance().init(getContext());
-    BNOfflineDataManager.getInstance().initDownloadInfo(paramBoolean);
-    BNRoutePlaner.getInstance().init(getContext());
-    statistics();
-  }
-  
-  public static void setupBase(boolean paramBoolean)
-  {
-    BNOfflineDataManager.getInstance().isProvinceDataDownload(0);
-    NaviStatHelper.initNaviStatHelper();
-  }
-  
-  public static void setupGuidance(int paramInt)
-  {
-    BNSysLocationManager.getInstance().init(getContext());
-    BNRoutePlaner.getInstance().init(getContext());
-  }
-  
-  public static void setupNaviCommonCallBackListener(NaviCommonCallBackListener paramNaviCommonCallBackListener)
-  {
-    mNaviCommonCallBackListener = paramNaviCommonCallBackListener;
-  }
-  
-  public static void shareDrivingToolUrl(String paramString)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(14, 0, paramString);
+
+    public static boolean requstPermission(String permission) {
+        if (mNaviCommonCallBackListener != null) {
+            return mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(20, 0, permission);
+        }
+        return false;
     }
-  }
-  
-  public static void shareSafety(Bundle paramBundle)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsg(26, 0, paramBundle);
+
+    public static void launchMapsActivityToFront() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(19, 0, null);
+        }
     }
-  }
-  
-  public static void showBottomBar(boolean paramBoolean)
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.showBottomBar(paramBoolean);
+
+    public static void initContext(Context context) {
+        if (true) {
+            JarUtils.setAsJar(context);
+        }
+        PackageUtil.readSDKBuildNumber();
     }
-  }
-  
-  public static void statistics() {}
-  
-  private static void unRegister()
-  {
-    if ((mNetworkListener != null) && (getContext() != null)) {}
-    try
-    {
-      getContext().getApplicationContext().unregisterReceiver(mNetworkListener);
-      mNetworkListener = null;
-      if ((mSDCardListener != null) && (getContext() != null)) {}
-      try
-      {
-        getContext().getApplicationContext().unregisterReceiver(mSDCardListener);
-        mSDCardListener = null;
+
+    public static void initListenersForMap(Context context) {
+        unRegister();
+        sCachedContext = context.getApplicationContext();
+        unRegister();
+        PackageUtil.init(context);
+        initNetworkListener(context);
+        initSDCardListener(context);
+        initPhoneStateListener(context);
+    }
+
+    public static void setContext(Context c) {
+    }
+
+    public static void setActivity(Activity a) {
+    }
+
+    public static Activity getActivity() {
+        if (sGetOuterActivityListener == null || sGetOuterActivityListener.getOuterActivity() == null) {
+            return sCachedActivity;
+        }
+        return sGetOuterActivityListener.getOuterActivity();
+    }
+
+    public static Activity getNaviActivity() {
+        if (sGetOuterActivityListener == null || sGetOuterActivityListener.getNaviActivity() == null) {
+            return sCachedActivity;
+        }
+        return sGetOuterActivityListener.getNaviActivity();
+    }
+
+    public static void setGetOuterActivityListener(GetOuterActivityListener lis) {
+        sGetOuterActivityListener = lis;
+    }
+
+    public static void setupBase(boolean checkNewData) {
+        BNOfflineDataManager.getInstance().isProvinceDataDownload(0);
+        NaviStatHelper.initNaviStatHelper();
+    }
+
+    public static void setupGuidance(int ttsInitId) {
+        BNSysLocationManager.getInstance().init(getContext());
+        BNRoutePlaner.getInstance().init(getContext());
+    }
+
+    public static void setup(boolean checkNewData) {
+        BNStatisticsManager.getInstance().upLoadStatistics();
+        BNSysLocationManager.getInstance().init(getContext());
+        BNOfflineDataManager.getInstance().initDownloadInfo(checkNewData);
+        BNRoutePlaner.getInstance().init(getContext());
+        statistics();
+    }
+
+    public static Context getContext() {
+        if (sGetOuterActivityListener == null || sGetOuterActivityListener.getOuterActivity() == null) {
+            return sCachedContext;
+        }
+        return sGetOuterActivityListener.getOuterActivity();
+    }
+
+    private static void setRoutePlanStatistcsUrl() {
+        String strUrl = "";
+        try {
+            strUrl = ((("&mb=" + URLEncoder.encode(VDeviceAPI.getPhoneType(), "UTF-8")) + "&sv=" + URLEncoder.encode(VDeviceAPI.getAppPackageVersion(), "UTF-8")) + "&pcn=" + URLEncoder.encode(VDeviceAPI.getAppPackageName(), "UTF-8")) + "&kv=" + URLEncoder.encode(VDeviceAPI.getDataVersion(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e2) {
+            e2.printStackTrace();
+        }
+        strUrl = (((strUrl + "&os=android") + "&net=" + VDeviceAPI.getCurrentNetworkType()) + "&resid=52") + "&channel=" + PackageUtil.getChannel();
+    }
+
+    public static void initNetworkListener(Context context) {
+        mNetworkListener = new NetworkListener(true);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(com.baidu.baidumaps.common.network.NetworkListener.f2257d);
+        filter.addAction("android.net.wifi.STATE_CHANGE");
+        filter.addAction(com.baidu.baidumaps.common.network.NetworkListener.f2258e);
+        filter.addAction("android.net.wifi.SCAN_RESULTS");
+        if (context != null) {
+            try {
+                context.getApplicationContext().registerReceiver(mNetworkListener, filter, null, null);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public static void initSDCardListener(Context context) {
+        mSDCardListener = new SDCardListener();
+        IntentFilter sdcardfilter = new IntentFilter();
+        sdcardfilter.addAction("android.intent.action.MEDIA_REMOVED");
+        sdcardfilter.addAction("android.intent.action.MEDIA_UNMOUNTED");
+        sdcardfilter.addAction("android.intent.action.MEDIA_EJECT");
+        sdcardfilter.addAction("android.intent.action.MEDIA_MOUNTED");
+        sdcardfilter.addDataScheme(C2924g.f12889c);
+        if (context != null) {
+            try {
+                context.getApplicationContext().registerReceiver(mSDCardListener, sdcardfilter);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public static void initPhoneStateListener(Context context) {
+        PhoneStatusReceiver.initPhoneStatusReceiver(getContext().getApplicationContext());
+    }
+
+    private static void unRegister() {
+        if (!(mNetworkListener == null || getContext() == null)) {
+            try {
+                getContext().getApplicationContext().unregisterReceiver(mNetworkListener);
+            } catch (Exception e) {
+            }
+            mNetworkListener = null;
+        }
+        if (!(mSDCardListener == null || getContext() == null)) {
+            try {
+                getContext().getApplicationContext().unregisterReceiver(mSDCardListener);
+            } catch (Exception e2) {
+            }
+            mSDCardListener = null;
+        }
         PhoneStatusReceiver.uninitPhoneStatusReceiver();
-        return;
-      }
-      catch (Exception localException1)
-      {
-        for (;;) {}
-      }
     }
-    catch (Exception localException2)
-    {
-      for (;;) {}
+
+    public static void destory() {
+        unRegister();
+        RespTimeStatItem.getInstance().onEvent();
+        BNStatisticsManager.getInstance().saveStatistics();
+        BNStatisticsManager.getInstance().exit();
+        SDKDebugUtil.getInstance().destory();
+        DataCheckCenter.getInstance().uninit();
     }
-  }
-  
-  public static void unregisterMapSensorListener()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(5, 0, null);
+
+    public static void statistics() {
     }
-  }
-  
-  public static void updateAppSource()
-  {
-    LogUtil.e("dingbin", "updateAppSource is " + sAppSourceStr);
-    if ("huawei".equals(sAppSourceStr))
-    {
-      com.baidu.navisdk.module.offscreen.BNOffScreenManager.sIsModelueActive = true;
-      updateAppSource(1);
-      return;
+
+    public static void updateAppSource() {
+        LogUtil.m15791e("dingbin", "updateAppSource is " + sAppSourceStr);
+        if (AppSourceDefine.HUAWEI_SOURCE.equals(sAppSourceStr)) {
+            BNOffScreenManager.sIsModelueActive = true;
+            updateAppSource(1);
+        } else if (AppSourceDefine.LESHI_SOURCE.equals(sAppSourceStr)) {
+            BNOffScreenManager.sIsModelueActive = true;
+            updateAppSource(2);
+        } else {
+            BNOffScreenManager.sIsModelueActive = false;
+            updateAppSource(0);
+        }
     }
-    if ("leshi".equals(sAppSourceStr))
-    {
-      com.baidu.navisdk.module.offscreen.BNOffScreenManager.sIsModelueActive = true;
-      updateAppSource(2);
-      return;
+
+    private static void updateAppSource(int appSource) {
+        BNaviEngineManager.getInstance().updateAppSource(appSource);
     }
-    com.baidu.navisdk.module.offscreen.BNOffScreenManager.sIsModelueActive = false;
-    updateAppSource(0);
-  }
-  
-  private static void updateAppSource(int paramInt)
-  {
-    BNaviEngineManager.getInstance().updateAppSource(paramInt);
-  }
-  
-  public static void updateMapDataStutas()
-  {
-    if (mNaviCommonCallBackListener != null) {
-      mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(29, -1, null);
+
+    public static void openCarPlateExplainPage(Context context) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(32, 0, context);
+        }
     }
-  }
-  
-  public static class AppSourceDefine
-  {
-    public static final String DEFAULT_SOURCE = "others";
-    public static final int DEFAULT_SOURCE_INT = 0;
-    public static final String HUAWEI_SOURCE = "huawei";
-    public static final int HUAWEI_SOURCE_INT = 1;
-    public static final String LESHI_SOURCE = "leshi";
-    public static final int LESHI_SOURCE_INT = 2;
-  }
-  
-  public static abstract interface GetOuterActivityListener
-  {
-    public abstract Activity getNaviActivity();
-    
-    public abstract Activity getOuterActivity();
-  }
-  
-  public static abstract interface NaviCommonCallBackListener
-  {
-    public static final String KEY_BDUSS = "bduss";
-    public static final String KEY_ICON_ID = "KEY_ICON_ID";
-    public static final String KEY_PREFER_VALUE = "KEY_PREFER_VALUE";
-    public static final int NAVI_DOWNLOAD_XIJIANG_SWITCH = 36;
-    public static final int NAVI_DRIVING_TOOL = 14;
-    public static final int NAVI_EVENT_NOTIFY_INIT = 0;
-    public static final int NAVI_EVENT_NOTIFY_UNINIT = 2;
-    public static final int NAVI_EVENT_NOTIFY_UPDATE = 1;
-    public static final int NAVI_REMOVE_IPO = 3;
-    public static final int NAVI_SET_TTS_STREAM_TYPE = 4;
-    public static final int NAVI_TYPE_CHECK_PERMISSION = 18;
-    public static final int NAVI_TYPE_DESTORY_MAP = 0;
-    public static final int NAVI_TYPE_DRIVING_CAR = 13;
-    public static final int NAVI_TYPE_FETCH_CAR_OWNER_DATA = 34;
-    public static final int NAVI_TYPE_GET_BDUSS = 1;
-    public static final int NAVI_TYPE_GET_CITY_ID_OUTCHINA = 30;
-    public static final int NAVI_TYPE_GET_ICON_ID = 8;
-    public static final int NAVI_TYPE_GET_LAST_ROUTE_SEARCH_MCAR_PREFER = 22;
-    public static final int NAVI_TYPE_INIT_URL = 27;
-    public static final int NAVI_TYPE_IS_APP_FOREGROUND = 2;
-    public static final int NAVI_TYPE_IS_CAR_PLATE_NUM_COMPLETE = 17;
-    public static final int NAVI_TYPE_IS_COLLADA_INIT_SUCCESS = 15;
-    public static final int NAVI_TYPE_IS_GooglePlay_Channel = 10;
-    public static final int NAVI_TYPE_IS_INTERNATIONAL = 31;
-    public static final int NAVI_TYPE_IS_SETTING_CAR_PLATE = 16;
-    public static final int NAVI_TYPE_Init_Collada = 25;
-    public static final int NAVI_TYPE_LAUNCH_MAPSACTIVITY_TO_FRONT = 19;
-    public static final int NAVI_TYPE_MAP_SENSOR_ADD = 6;
-    public static final int NAVI_TYPE_MAP_SENSOR_REMOVE = 7;
-    public static final int NAVI_TYPE_OFFLINE_DATA_CLEAR = 29;
-    public static final int NAVI_TYPE_OFFLINE_DATA_DOWNLOAD = 28;
-    public static final int NAVI_TYPE_OPEN_CAR_PLATE_EXPLAIN_PAGE = 32;
-    public static final int NAVI_TYPE_OPEN_DOWNLOAD_PAGE = 11;
-    public static final int NAVI_TYPE_PLATE_LIMIT_RESET = 33;
-    public static final int NAVI_TYPE_RELEASE_AUDIO_FOCUS = 21;
-    public static final int NAVI_TYPE_REQUEST_PERMISSION = 20;
-    public static final int NAVI_TYPE_SET_IPO_RC = 12;
-    public static final int NAVI_TYPE_SET_LAST_ROUTE_SEARCH_MCAR_PREFER = 23;
-    public static final int NAVI_TYPE_SET_SAVEMODE = 35;
-    public static final int NAVI_TYPE_Share_Safety = 26;
-    public static final int NAVI_TYPE_UNREGISTER_SENSOR = 5;
-    public static final int NAVI_TYPE_putIP2DomainsRecord = 24;
-    
-    public abstract boolean buttomNaviTabHasFocus();
-    
-    public abstract boolean isFocusUIenable();
-    
-    public abstract boolean isMapModuleFragment();
-    
-    public abstract Bundle onNaviCommonMsg(int paramInt1, int paramInt2, Object paramObject);
-    
-    public abstract boolean onNaviCommonMsgForBoolean(int paramInt1, int paramInt2, Object paramObject);
-    
-    public abstract void showBottomBar(boolean paramBoolean);
-  }
-  
-  public static abstract interface NaviCommonConstant
-  {
-    public static final String OVERLAY_PERMISSION = "android.settings.action.MANAGE_OVERLAY_PERMISSION";
-    public static final int REQUST_CODE_JUMP_VOICE_SETTING = 3002;
-    public static final int REQUST_CODE_OVERLAY_PERMISSION = 3001;
-  }
+
+    public static void fetchCarOwnerData(Context context) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(34, 0, context);
+        }
+    }
+
+    public static void mapToNaviSaveMode(Context context, int event) {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsg(35, event, context);
+        }
+    }
+
+    public static void naviDownloadXiJiangSwitch() {
+        if (mNaviCommonCallBackListener != null) {
+            mNaviCommonCallBackListener.onNaviCommonMsgForBoolean(36, 0, null);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/BNaviModuleManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

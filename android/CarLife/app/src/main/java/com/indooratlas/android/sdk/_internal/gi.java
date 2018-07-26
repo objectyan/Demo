@@ -2,41 +2,37 @@ package com.indooratlas.android.sdk._internal;
 
 import java.io.IOException;
 
-public enum gi
-{
-  private final String e;
-  
-  private gi(String paramString)
-  {
-    this.e = paramString;
-  }
-  
-  public static gi a(String paramString)
-    throws IOException
-  {
-    if (paramString.equals(a.e)) {
-      return a;
+public enum gi {
+    HTTP_1_0("http/1.0"),
+    HTTP_1_1("http/1.1"),
+    SPDY_3("spdy/3.1"),
+    HTTP_2("h2");
+    
+    /* renamed from: e */
+    private final String f23933e;
+
+    private gi(String str) {
+        this.f23933e = str;
     }
-    if (paramString.equals(b.e)) {
-      return b;
+
+    /* renamed from: a */
+    public static gi m20684a(String str) throws IOException {
+        if (str.equals(HTTP_1_0.f23933e)) {
+            return HTTP_1_0;
+        }
+        if (str.equals(HTTP_1_1.f23933e)) {
+            return HTTP_1_1;
+        }
+        if (str.equals(HTTP_2.f23933e)) {
+            return HTTP_2;
+        }
+        if (str.equals(SPDY_3.f23933e)) {
+            return SPDY_3;
+        }
+        throw new IOException("Unexpected protocol: " + str);
     }
-    if (paramString.equals(d.e)) {
-      return d;
+
+    public final String toString() {
+        return this.f23933e;
     }
-    if (paramString.equals(c.e)) {
-      return c;
-    }
-    throw new IOException("Unexpected protocol: " + paramString);
-  }
-  
-  public final String toString()
-  {
-    return this.e;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gi.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

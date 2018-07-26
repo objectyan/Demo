@@ -9,100 +9,84 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.model.b;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.model.C1921b;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarlifeViewPagerAdapter
-  extends PagerAdapter
-{
-  private static final String a = "CarLifeViewPagerAdapter";
-  private static final int c = 4;
-  private List<View> b = null;
-  private Context d;
-  
-  public CarlifeViewPagerAdapter(Context paramContext, List<b> paramList)
-  {
-    this.d = paramContext;
-    this.b = a(paramContext, paramList);
-  }
-  
-  private View a()
-  {
-    View localView = LayoutInflater.from(this.d).inflate(2130968622, null);
-    Button localButton = (Button)localView.findViewById(2131624242);
-    localButton.setTextSize(20.0F);
-    localButton.setText("待添加");
-    return localView;
-  }
-  
-  private List<View> a(Context paramContext, List<b> paramList)
-  {
-    Object localObject1 = b();
-    ArrayList localArrayList = new ArrayList();
-    int i = 0;
-    while (i < paramList.size())
-    {
-      Object localObject2 = LayoutInflater.from(paramContext).inflate(2130968622, null);
-      Button localButton = (Button)((View)localObject2).findViewById(2131624242);
-      localButton.setTextSize(20.0F);
-      localButton.setText(((b)paramList.get(i)).g);
-      ((LinearLayout)localObject1).addView((View)localObject2);
-      if (i % 4 != 3)
-      {
-        localObject2 = localObject1;
-        if (i != paramList.size() - 1) {}
-      }
-      else
-      {
-        ((LinearLayout)localObject1).addView(a());
-        localArrayList.add(localObject1);
-        localObject2 = b();
-      }
-      i += 1;
-      localObject1 = localObject2;
+public class CarlifeViewPagerAdapter extends PagerAdapter {
+    /* renamed from: a */
+    private static final String f2444a = "CarLifeViewPagerAdapter";
+    /* renamed from: c */
+    private static final int f2445c = 4;
+    /* renamed from: b */
+    private List<View> f2446b = null;
+    /* renamed from: d */
+    private Context f2447d;
+
+    public CarlifeViewPagerAdapter(Context context, List<C1921b> list) {
+        this.f2447d = context;
+        this.f2446b = m3171a(context, list);
     }
-    return localArrayList;
-  }
-  
-  private LinearLayout b()
-  {
-    LinearLayout.LayoutParams localLayoutParams = new LinearLayout.LayoutParams(-1, -2);
-    LinearLayout localLinearLayout = new LinearLayout(this.d);
-    localLinearLayout.setOrientation(0);
-    localLinearLayout.setLayoutParams(localLayoutParams);
-    return localLinearLayout;
-  }
-  
-  public void destroyItem(ViewGroup paramViewGroup, int paramInt, Object paramObject)
-  {
-    ((ViewPager)paramViewGroup).removeView((View)this.b.get(paramInt));
-  }
-  
-  public int getCount()
-  {
-    if (this.b == null) {
-      return 0;
+
+    public int getCount() {
+        if (this.f2446b == null) {
+            return 0;
+        }
+        return this.f2446b.size();
     }
-    return this.b.size();
-  }
-  
-  public Object instantiateItem(ViewGroup paramViewGroup, int paramInt)
-  {
-    i.e("CarLifeViewPagerAdapter", "-----------instantiateItem----------POS5:" + paramInt);
-    ((ViewPager)paramViewGroup).addView((View)this.b.get(paramInt));
-    return this.b.get(paramInt);
-  }
-  
-  public boolean isViewFromObject(View paramView, Object paramObject)
-  {
-    return paramView == paramObject;
-  }
+
+    public boolean isViewFromObject(View arg0, Object arg1) {
+        return arg0 == arg1;
+    }
+
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        ((ViewPager) container).removeView((View) this.f2446b.get(position));
+    }
+
+    public Object instantiateItem(ViewGroup container, int position) {
+        C1260i.m4445e(f2444a, "-----------instantiateItem----------POS5:" + position);
+        ((ViewPager) container).addView((View) this.f2446b.get(position));
+        return this.f2446b.get(position);
+    }
+
+    /* renamed from: a */
+    private List<View> m3171a(Context context, List<C1921b> list) {
+        LinearLayout pageView = m3172b();
+        List<View> result = new ArrayList();
+        int i = 0;
+        while (i < list.size()) {
+            View itemView = LayoutInflater.from(context).inflate(C0965R.layout.carlife_apps_list_item, null);
+            Button b = (Button) itemView.findViewById(C0965R.id.btn_start_app);
+            b.setTextSize(20.0f);
+            b.setText(((C1921b) list.get(i)).f5932g);
+            pageView.addView(itemView);
+            if (i % 4 == 3 || i == list.size() - 1) {
+                pageView.addView(m3170a());
+                result.add(pageView);
+                pageView = m3172b();
+            }
+            i++;
+        }
+        return result;
+    }
+
+    /* renamed from: a */
+    private View m3170a() {
+        View itemView = LayoutInflater.from(this.f2447d).inflate(C0965R.layout.carlife_apps_list_item, null);
+        Button b = (Button) itemView.findViewById(C0965R.id.btn_start_app);
+        b.setTextSize(20.0f);
+        b.setText("待添加");
+        return itemView;
+    }
+
+    /* renamed from: b */
+    private LinearLayout m3172b() {
+        LayoutParams param = new LayoutParams(-1, -2);
+        LinearLayout pageView = new LinearLayout(this.f2447d);
+        pageView.setOrientation(0);
+        pageView.setLayoutParams(param);
+        return pageView;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/adpter/CarlifeViewPagerAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

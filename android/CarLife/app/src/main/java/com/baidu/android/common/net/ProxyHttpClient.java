@@ -9,121 +9,89 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
-public class ProxyHttpClient
-  extends DefaultHttpClient
-{
-  private static final boolean DEBUG = false;
-  private static final int HTTP_TIMEOUT_MS = 30000;
-  private static final String TAG = ProxyHttpClient.class.getSimpleName();
-  private RuntimeException mLeakedException = new IllegalStateException("ProxyHttpClient created and never closed");
-  private String mPort;
-  private String mProxy;
-  private boolean mUseWap;
-  
-  public ProxyHttpClient(Context paramContext)
-  {
-    this(paramContext, null, null);
-  }
-  
-  public ProxyHttpClient(Context paramContext, ConnectManager paramConnectManager)
-  {
-    this(paramContext, null, paramConnectManager);
-  }
-  
-  public ProxyHttpClient(Context paramContext, String paramString)
-  {
-    this(paramContext, paramString, null);
-  }
-  
-  public ProxyHttpClient(Context paramContext, String paramString, ConnectManager paramConnectManager)
-  {
-    ConnectManager localConnectManager = paramConnectManager;
-    if (paramConnectManager == null) {
-      localConnectManager = new ConnectManager(paramContext);
+public class ProxyHttpClient extends DefaultHttpClient {
+    private static final boolean DEBUG = false;
+    private static final int HTTP_TIMEOUT_MS = 30000;
+    private static final String TAG = ProxyHttpClient.class.getSimpleName();
+    private RuntimeException mLeakedException;
+    private String mPort;
+    private String mProxy;
+    private boolean mUseWap;
+
+    public ProxyHttpClient(Context context) {
+        this(context, null, null);
     }
-    this.mUseWap = localConnectManager.isWapNetwork();
-    this.mProxy = localConnectManager.getProxy();
-    this.mPort = localConnectManager.getProxyPort();
-    if ((this.mProxy != null) && (this.mProxy.length() > 0))
-    {
-      paramContext = new HttpHost(this.mProxy, Integer.valueOf(this.mPort).intValue());
-      getParams().setParameter("http.route.default-proxy", paramContext);
+
+    public ProxyHttpClient(Context context, ConnectManager connectManager) {
+        this(context, null, connectManager);
     }
-    HttpConnectionParams.setConnectionTimeout(getParams(), 30000);
-    HttpConnectionParams.setSoTimeout(getParams(), 30000);
-    HttpConnectionParams.setSocketBufferSize(getParams(), 8192);
-    if (!TextUtils.isEmpty(paramString)) {
-      HttpProtocolParams.setUserAgent(getParams(), paramString);
+
+    public ProxyHttpClient(Context context, String str) {
+        this(context, str, null);
     }
-  }
-  
-  public void close()
-  {
-    if (this.mLeakedException != null)
-    {
-      getConnectionManager().shutdown();
-      this.mLeakedException = null;
+
+    public ProxyHttpClient(Context context, String str, ConnectManager connectManager) {
+        this.mLeakedException = new IllegalStateException("ProxyHttpClient created and never closed");
+        if (connectManager == null) {
+            connectManager = new ConnectManager(context);
+        }
+        this.mUseWap = connectManager.isWapNetwork();
+        this.mProxy = connectManager.getProxy();
+        this.mPort = connectManager.getProxyPort();
+        if (this.mProxy != null && this.mProxy.length() > 0) {
+            getParams().setParameter("http.route.default-proxy", new HttpHost(this.mProxy, Integer.valueOf(this.mPort).intValue()));
+        }
+        HttpConnectionParams.setConnectionTimeout(getParams(), 30000);
+        HttpConnectionParams.setSoTimeout(getParams(), 30000);
+        HttpConnectionParams.setSocketBufferSize(getParams(), 8192);
+        if (!TextUtils.isEmpty(str)) {
+            HttpProtocolParams.setUserAgent(getParams(), str);
+        }
     }
-  }
-  
-  protected HttpParams createHttpParams()
-  {
-    try
-    {
-      HttpParams localHttpParams = super.createHttpParams();
-      HttpProtocolParams.setUseExpectContinue(localHttpParams, false);
-      return localHttpParams;
+
+    public void close() {
+        if (this.mLeakedException != null) {
+            getConnectionManager().shutdown();
+            this.mLeakedException = null;
+        }
     }
-    catch (ArrayIndexOutOfBoundsException localArrayIndexOutOfBoundsException)
-    {
-      for (;;)
-      {
-        BasicHttpParams localBasicHttpParams = new BasicHttpParams();
-        HttpProtocolParams.setVersion(localBasicHttpParams, HttpVersion.HTTP_1_1);
-        HttpProtocolParams.setContentCharset(localBasicHttpParams, "ISO-8859-1");
-        HttpProtocolParams.setUserAgent(localBasicHttpParams, "Apache-HttpClient/UNAVAILABLE (java 1.4)");
-      }
+
+    protected HttpParams createHttpParams() {
+        HttpParams createHttpParams;
+        try {
+            createHttpParams = super.createHttpParams();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            createHttpParams = new BasicHttpParams();
+            HttpProtocolParams.setVersion(createHttpParams, HttpVersion.HTTP_1_1);
+            HttpProtocolParams.setContentCharset(createHttpParams, "ISO-8859-1");
+            HttpProtocolParams.setUserAgent(createHttpParams, "Apache-HttpClient/UNAVAILABLE (java 1.4)");
+        }
+        HttpProtocolParams.setUseExpectContinue(createHttpParams, false);
+        return createHttpParams;
     }
-  }
-  
-  public HttpResponse executeSafely(HttpUriRequest paramHttpUriRequest)
-    throws ClientProtocolException, IOException
-  {
-    try
-    {
-      paramHttpUriRequest = execute(paramHttpUriRequest);
-      return paramHttpUriRequest;
+
+    public HttpResponse executeSafely(HttpUriRequest httpUriRequest) throws ClientProtocolException, IOException {
+        try {
+            return execute(httpUriRequest);
+        } catch (Throwable e) {
+            throw new ClientProtocolException(e);
+        }
     }
-    catch (NullPointerException paramHttpUriRequest)
-    {
-      throw new ClientProtocolException(paramHttpUriRequest);
+
+    protected void finalize() throws Throwable {
+        super.finalize();
+        if (this.mLeakedException != null) {
+            Log.m1731e(TAG, "Leak found", this.mLeakedException);
+        }
     }
-  }
-  
-  protected void finalize()
-    throws Throwable
-  {
-    super.finalize();
-    if (this.mLeakedException != null) {
-      Log.e(TAG, "Leak found", this.mLeakedException);
+
+    public boolean isWap() {
+        return this.mUseWap;
     }
-  }
-  
-  public boolean isWap()
-  {
-    return this.mUseWap;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/common/net/ProxyHttpClient.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,154 +2,110 @@ package com.google.zxing.qrcode.decoder;
 
 import com.google.zxing.common.BitMatrix;
 
-abstract class DataMask
-{
-  private static final DataMask[] DATA_MASKS = { new DataMask000(null), new DataMask001(null), new DataMask010(null), new DataMask011(null), new DataMask100(null), new DataMask101(null), new DataMask110(null), new DataMask111(null) };
-  
-  static DataMask forReference(int paramInt)
-  {
-    if ((paramInt < 0) || (paramInt > 7)) {
-      throw new IllegalArgumentException();
-    }
-    return DATA_MASKS[paramInt];
-  }
-  
-  abstract boolean isMasked(int paramInt1, int paramInt2);
-  
-  final void unmaskBitMatrix(BitMatrix paramBitMatrix, int paramInt)
-  {
-    int i = 0;
-    while (i < paramInt)
-    {
-      int j = 0;
-      while (j < paramInt)
-      {
-        if (isMasked(i, j)) {
-          paramBitMatrix.flip(j, i);
+abstract class DataMask {
+    private static final DataMask[] DATA_MASKS = new DataMask[]{new DataMask000(), new DataMask001(), new DataMask010(), new DataMask011(), new DataMask100(), new DataMask101(), new DataMask110(), new DataMask111()};
+
+    private static class DataMask000 extends DataMask {
+        private DataMask000() {
+            super();
         }
-        j += 1;
-      }
-      i += 1;
+
+        boolean isMasked(int i, int j) {
+            return ((i + j) & 1) == 0;
+        }
     }
-  }
-  
-  private static class DataMask000
-    extends DataMask
-  {
-    private DataMask000()
-    {
-      super();
+
+    private static class DataMask001 extends DataMask {
+        private DataMask001() {
+            super();
+        }
+
+        boolean isMasked(int i, int j) {
+            return (i & 1) == 0;
+        }
     }
-    
-    boolean isMasked(int paramInt1, int paramInt2)
-    {
-      return (paramInt1 + paramInt2 & 0x1) == 0;
+
+    private static class DataMask010 extends DataMask {
+        private DataMask010() {
+            super();
+        }
+
+        boolean isMasked(int i, int j) {
+            return j % 3 == 0;
+        }
     }
-  }
-  
-  private static class DataMask001
-    extends DataMask
-  {
-    private DataMask001()
-    {
-      super();
+
+    private static class DataMask011 extends DataMask {
+        private DataMask011() {
+            super();
+        }
+
+        boolean isMasked(int i, int j) {
+            return (i + j) % 3 == 0;
+        }
     }
-    
-    boolean isMasked(int paramInt1, int paramInt2)
-    {
-      return (paramInt1 & 0x1) == 0;
+
+    private static class DataMask100 extends DataMask {
+        private DataMask100() {
+            super();
+        }
+
+        boolean isMasked(int i, int j) {
+            return (((i >>> 1) + (j / 3)) & 1) == 0;
+        }
     }
-  }
-  
-  private static class DataMask010
-    extends DataMask
-  {
-    private DataMask010()
-    {
-      super();
+
+    private static class DataMask101 extends DataMask {
+        private DataMask101() {
+            super();
+        }
+
+        boolean isMasked(int i, int j) {
+            int temp = i * j;
+            return (temp & 1) + (temp % 3) == 0;
+        }
     }
-    
-    boolean isMasked(int paramInt1, int paramInt2)
-    {
-      return paramInt2 % 3 == 0;
+
+    private static class DataMask110 extends DataMask {
+        private DataMask110() {
+            super();
+        }
+
+        boolean isMasked(int i, int j) {
+            int temp = i * j;
+            return (((temp & 1) + (temp % 3)) & 1) == 0;
+        }
     }
-  }
-  
-  private static class DataMask011
-    extends DataMask
-  {
-    private DataMask011()
-    {
-      super();
+
+    private static class DataMask111 extends DataMask {
+        private DataMask111() {
+            super();
+        }
+
+        boolean isMasked(int i, int j) {
+            return ((((i + j) & 1) + ((i * j) % 3)) & 1) == 0;
+        }
     }
-    
-    boolean isMasked(int paramInt1, int paramInt2)
-    {
-      return (paramInt1 + paramInt2) % 3 == 0;
+
+    abstract boolean isMasked(int i, int i2);
+
+    private DataMask() {
     }
-  }
-  
-  private static class DataMask100
-    extends DataMask
-  {
-    private DataMask100()
-    {
-      super();
+
+    final void unmaskBitMatrix(BitMatrix bits, int dimension) {
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                if (isMasked(i, j)) {
+                    bits.flip(j, i);
+                }
+            }
+        }
     }
-    
-    boolean isMasked(int paramInt1, int paramInt2)
-    {
-      return ((paramInt1 >>> 1) + paramInt2 / 3 & 0x1) == 0;
+
+    static DataMask forReference(int reference) {
+        if (reference >= 0 && reference <= 7) {
+            return DATA_MASKS[reference];
+        }
+        throw new IllegalArgumentException();
     }
-  }
-  
-  private static class DataMask101
-    extends DataMask
-  {
-    private DataMask101()
-    {
-      super();
-    }
-    
-    boolean isMasked(int paramInt1, int paramInt2)
-    {
-      paramInt1 *= paramInt2;
-      return (paramInt1 & 0x1) + paramInt1 % 3 == 0;
-    }
-  }
-  
-  private static class DataMask110
-    extends DataMask
-  {
-    private DataMask110()
-    {
-      super();
-    }
-    
-    boolean isMasked(int paramInt1, int paramInt2)
-    {
-      paramInt1 *= paramInt2;
-      return ((paramInt1 & 0x1) + paramInt1 % 3 & 0x1) == 0;
-    }
-  }
-  
-  private static class DataMask111
-    extends DataMask
-  {
-    private DataMask111()
-    {
-      super();
-    }
-    
-    boolean isMasked(int paramInt1, int paramInt2)
-    {
-      return ((paramInt1 + paramInt2 & 0x1) + paramInt1 * paramInt2 % 3 & 0x1) == 0;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/decoder/DataMask.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

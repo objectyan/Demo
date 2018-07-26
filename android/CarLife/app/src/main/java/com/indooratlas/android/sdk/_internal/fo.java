@@ -2,22 +2,21 @@ package com.indooratlas.android.sdk._internal;
 
 import java.io.IOException;
 
-public abstract interface fo
-{
-  public static final fo a = new fo()
-  {
-    public final gk a()
-    {
-      return null;
+public interface fo {
+    /* renamed from: a */
+    public static final fo f23718a = new C59091();
+
+    /* renamed from: com.indooratlas.android.sdk._internal.fo$1 */
+    static class C59091 implements fo {
+        C59091() {
+        }
+
+        /* renamed from: a */
+        public final gk mo4678a() {
+            return null;
+        }
     }
-  };
-  
-  public abstract gk a()
-    throws IOException;
+
+    /* renamed from: a */
+    gk mo4678a() throws IOException;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/fo.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

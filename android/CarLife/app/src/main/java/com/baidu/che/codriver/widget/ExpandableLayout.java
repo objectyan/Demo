@@ -7,103 +7,87 @@ import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ExpandableLayout
-  extends ViewGroup
-{
-  private int a = 10;
-  private a b;
-  private int c;
-  private int d;
-  private View e;
-  private AdapterView.OnItemClickListener f;
-  
-  public ExpandableLayout(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public ExpandableLayout(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public ExpandableLayout(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  private void a()
-  {
-    this.d = Math.min(this.c, this.a);
-  }
-  
-  public void a(View paramView)
-  {
-    this.e = paramView;
-    addView(this.e, 0);
-    invalidate();
-    requestLayout();
-  }
-  
-  protected void onLayout(boolean paramBoolean, int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    paramInt2 = 0;
-    paramInt1 = 0;
-    while (paramInt1 < getChildCount())
-    {
-      View localView = getChildAt(paramInt1);
-      localView.layout(0, paramInt2, paramInt3, localView.getMeasuredHeight() + paramInt2);
-      paramInt2 += localView.getMeasuredHeight();
-      paramInt1 += 1;
+public class ExpandableLayout extends ViewGroup {
+    /* renamed from: a */
+    private int f9442a = 10;
+    /* renamed from: b */
+    private C2876a f9443b;
+    /* renamed from: c */
+    private int f9444c;
+    /* renamed from: d */
+    private int f9445d;
+    /* renamed from: e */
+    private View f9446e;
+    /* renamed from: f */
+    private OnItemClickListener f9447f;
+
+    /* renamed from: com.baidu.che.codriver.widget.ExpandableLayout$a */
+    public interface C2876a {
+        /* renamed from: a */
+        int m10883a();
+
+        /* renamed from: a */
+        View m10884a(int i);
     }
-  }
-  
-  protected void onMeasure(int paramInt1, int paramInt2)
-  {
-    super.onMeasure(paramInt1, paramInt2);
-    measureChildren(paramInt1, paramInt2);
-    int i = View.MeasureSpec.getSize(paramInt1);
-    paramInt2 = 0;
-    paramInt1 = 0;
-    while (paramInt1 < getChildCount())
-    {
-      paramInt2 += getChildAt(paramInt1).getMeasuredHeight();
-      paramInt1 += 1;
+
+    public ExpandableLayout(Context context) {
+        super(context);
     }
-    setMeasuredDimension(i, paramInt2);
-  }
-  
-  public void setAdapter(a parama)
-  {
-    this.b = parama;
-    this.c = this.b.a();
-    removeAllViews();
-    a();
-    int i = 0;
-    while (i < this.d)
-    {
-      addView(this.b.a(i));
-      i += 1;
+
+    public ExpandableLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-    invalidate();
-    requestLayout();
-  }
-  
-  public void setMaxShowNum(int paramInt)
-  {
-    this.a = paramInt;
-  }
-  
-  public static abstract interface a
-  {
-    public abstract int a();
-    
-    public abstract View a(int paramInt);
-  }
+
+    public ExpandableLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        int totalHeight = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            child.layout(0, totalHeight, r, child.getMeasuredHeight() + totalHeight);
+            totalHeight += child.getMeasuredHeight();
+        }
+    }
+
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        measureChildren(widthMeasureSpec, heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            height += getChildAt(i).getMeasuredHeight();
+        }
+        setMeasuredDimension(width, height);
+    }
+
+    /* renamed from: a */
+    public void m10886a(View view) {
+        this.f9446e = view;
+        addView(this.f9446e, 0);
+        invalidate();
+        requestLayout();
+    }
+
+    public void setAdapter(C2876a adapter) {
+        this.f9443b = adapter;
+        this.f9444c = this.f9443b.m10883a();
+        removeAllViews();
+        m10885a();
+        for (int i = 0; i < this.f9445d; i++) {
+            addView(this.f9443b.m10884a(i));
+        }
+        invalidate();
+        requestLayout();
+    }
+
+    public void setMaxShowNum(int max) {
+        this.f9442a = max;
+    }
+
+    /* renamed from: a */
+    private void m10885a() {
+        this.f9445d = Math.min(this.f9444c, this.f9442a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/widget/ExpandableLayout.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

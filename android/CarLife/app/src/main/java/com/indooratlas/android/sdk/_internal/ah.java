@@ -1,103 +1,100 @@
 package com.indooratlas.android.sdk._internal;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public final class ah
-{
-  String a;
-  a b;
-  public ArrayList<b> c;
-  private StringBuilder d = new StringBuilder();
-  private String e;
-  
-  static String b()
-  {
-    try
-    {
-      String str = URLEncoder.encode(null, "UTF-8");
-      return str;
-    }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      throw new IllegalStateException("cannot encode query param, UTF-8 missing", localUnsupportedEncodingException);
-    }
-  }
-  
-  public final ah a(String paramString, Object... paramVarArgs)
-  {
-    String str = eg.a(paramString, "path cannot be null", new Object[0]);
-    paramString = str;
-    if (!str.startsWith("/")) {
-      paramString = "/" + str;
-    }
-    this.e = String.format(Locale.US, paramString, paramVarArgs);
-    return this;
-  }
-  
-  public final String a()
-  {
-    int i = 0;
-    eg.a(this.b, "url version was never set", new Object[0]);
-    eg.a(this.a, "endpoint must be non empty", new Object[0]);
-    this.d.setLength(0);
-    StringBuilder localStringBuilder = this.d;
-    Object localObject2 = this.a;
-    Object localObject1 = localObject2;
-    if (((String)localObject2).endsWith("/")) {
-      localObject1 = ((String)localObject2).substring(0, ((String)localObject2).length() - 1);
-    }
-    localStringBuilder.append((String)localObject1);
-    this.d.append(this.b.f);
-    this.d.append(this.e);
-    localObject1 = this.d;
-    if ((this.c == null) || (this.c.isEmpty())) {}
-    for (;;)
-    {
-      return this.d.toString();
-      if (((StringBuilder)localObject1).indexOf("?") == -1) {
-        ((StringBuilder)localObject1).append('?');
-      }
-      int j = this.c.size();
-      while (i < j)
-      {
-        localObject2 = (b)this.c.get(i);
-        ((StringBuilder)localObject1).append(((b)localObject2).a).append('=').append(((b)localObject2).b);
-        if (i < j - 1) {
-          ((StringBuilder)localObject1).append('&');
+public final class ah {
+    /* renamed from: a */
+    String f22941a;
+    /* renamed from: b */
+    C5759a f22942b;
+    /* renamed from: c */
+    public ArrayList<C5760b> f22943c;
+    /* renamed from: d */
+    private StringBuilder f22944d = new StringBuilder();
+    /* renamed from: e */
+    private String f22945e;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ah$a */
+    public enum C5759a {
+        V1("/atlas"),
+        V2("/v2"),
+        SDK_V1("/sdk/v1"),
+        CONTEXTS_V1("/contexts/v1"),
+        MAPPING_V1("/mapping/v1");
+        
+        /* renamed from: f */
+        final String f22938f;
+
+        private C5759a(String str) {
+            this.f22938f = str;
         }
-        i += 1;
-      }
     }
-  }
-  
-  public static enum a
-  {
-    final String f;
-    
-    private a(String paramString)
-    {
-      this.f = paramString;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ah$b */
+    public static class C5760b {
+        /* renamed from: a */
+        String f22939a;
+        /* renamed from: b */
+        String f22940b = ah.m19802b();
+
+        public C5760b(String str) {
+            this.f22939a = str;
+        }
     }
-  }
-  
-  public static final class b
-  {
-    String a;
-    String b;
-    
-    public b(String paramString)
-    {
-      this.a = paramString;
-      this.b = ah.b();
+
+    ah() {
     }
-  }
+
+    /* renamed from: a */
+    public final ah m19803a(String str, Object... objArr) {
+        String a = eg.m20414a(str, "path cannot be null", new Object[0]);
+        if (!a.startsWith("/")) {
+            a = this.f22944d.append("/").append(a).toString();
+        }
+        this.f22945e = String.format(Locale.US, a, objArr);
+        return this;
+    }
+
+    /* renamed from: a */
+    public final String m19804a() {
+        int i = 0;
+        eg.m20413a(this.f22942b, "url version was never set", new Object[0]);
+        eg.m20414a(this.f22941a, "endpoint must be non empty", new Object[0]);
+        this.f22944d.setLength(0);
+        StringBuilder stringBuilder = this.f22944d;
+        String str = this.f22941a;
+        if (str.endsWith("/")) {
+            str = str.substring(0, str.length() - 1);
+        }
+        stringBuilder.append(str);
+        this.f22944d.append(this.f22942b.f22938f);
+        this.f22944d.append(this.f22945e);
+        stringBuilder = this.f22944d;
+        if (!(this.f22943c == null || this.f22943c.isEmpty())) {
+            if (stringBuilder.indexOf("?") == -1) {
+                stringBuilder.append('?');
+            }
+            int size = this.f22943c.size();
+            while (i < size) {
+                C5760b c5760b = (C5760b) this.f22943c.get(i);
+                stringBuilder.append(c5760b.f22939a).append('=').append(c5760b.f22940b);
+                if (i < size - 1) {
+                    stringBuilder.append('&');
+                }
+                i++;
+            }
+        }
+        return this.f22944d.toString();
+    }
+
+    /* renamed from: b */
+    static String m19802b() {
+        try {
+            return URLEncoder.encode(null, "UTF-8");
+        } catch (Throwable e) {
+            throw new IllegalStateException("cannot encode query param, UTF-8 missing", e);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ah.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

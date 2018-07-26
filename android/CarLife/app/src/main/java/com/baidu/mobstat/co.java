@@ -1,195 +1,164 @@
 package com.baidu.mobstat;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import java.lang.ref.WeakReference;
 
-class co
-  implements Runnable
-{
-  private long b;
-  private WeakReference<Context> c;
-  private WeakReference<android.support.v4.app.Fragment> d;
-  private WeakReference<Object> e;
-  private long f;
-  private WeakReference<Context> g;
-  private WeakReference<android.support.v4.app.Fragment> h;
-  private WeakReference<Object> i;
-  private int j;
-  private String k;
-  private String l;
-  private boolean m;
-  private ExtraInfo n;
-  private cm o;
-  
-  public co(ch paramch, long paramLong1, Context paramContext1, android.support.v4.app.Fragment paramFragment1, long paramLong2, Context paramContext2, android.support.v4.app.Fragment paramFragment2, int paramInt, String paramString1, Object paramObject1, Object paramObject2, String paramString2, boolean paramBoolean, ExtraInfo paramExtraInfo, cm paramcm)
-  {
-    this.b = paramLong1;
-    this.f = paramLong2;
-    this.c = new WeakReference(paramContext1);
-    this.g = new WeakReference(paramContext2);
-    this.d = new WeakReference(paramFragment1);
-    this.h = new WeakReference(paramFragment2);
-    this.i = new WeakReference(paramObject1);
-    this.e = new WeakReference(paramObject2);
-    this.j = paramInt;
-    this.k = paramString1;
-    this.l = paramString2;
-    this.m = paramBoolean;
-    this.n = paramExtraInfo;
-    this.o = paramcm;
-  }
-  
-  public void run()
-  {
-    if (this.j == 1)
-    {
-      localObject3 = (Context)this.c.get();
-      localObject1 = (Context)this.g.get();
-      if ((localObject3 == null) || (localObject1 == null)) {
-        db.c("onPause, WeakReference is already been released");
-      }
+class co implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ ch f19599a;
+    /* renamed from: b */
+    private long f19600b;
+    /* renamed from: c */
+    private WeakReference<Context> f19601c;
+    /* renamed from: d */
+    private WeakReference<Fragment> f19602d;
+    /* renamed from: e */
+    private WeakReference<Object> f19603e;
+    /* renamed from: f */
+    private long f19604f;
+    /* renamed from: g */
+    private WeakReference<Context> f19605g;
+    /* renamed from: h */
+    private WeakReference<Fragment> f19606h;
+    /* renamed from: i */
+    private WeakReference<Object> f19607i;
+    /* renamed from: j */
+    private int f19608j;
+    /* renamed from: k */
+    private String f19609k;
+    /* renamed from: l */
+    private String f19610l;
+    /* renamed from: m */
+    private boolean f19611m;
+    /* renamed from: n */
+    private ExtraInfo f19612n;
+    /* renamed from: o */
+    private cm f19613o;
+
+    public co(ch chVar, long j, Context context, Fragment fragment, long j2, Context context2, Fragment fragment2, int i, String str, Object obj, Object obj2, String str2, boolean z, ExtraInfo extraInfo, cm cmVar) {
+        this.f19599a = chVar;
+        this.f19600b = j;
+        this.f19604f = j2;
+        this.f19601c = new WeakReference(context);
+        this.f19605g = new WeakReference(context2);
+        this.f19602d = new WeakReference(fragment);
+        this.f19606h = new WeakReference(fragment2);
+        this.f19607i = new WeakReference(obj);
+        this.f19603e = new WeakReference(obj2);
+        this.f19608j = i;
+        this.f19609k = str;
+        this.f19610l = str2;
+        this.f19611m = z;
+        this.f19612n = extraInfo;
+        this.f19613o = cmVar;
     }
-    do
-    {
-      do
-      {
-        return;
-        if (localObject3 != localObject1)
-        {
-          if (this.k != null)
-          {
-            db.b("onPageStart() or onPageEnd() install error.");
-            return;
-          }
-          db.b("onPause() or onResume() install error.");
-          return;
-        }
-        localObject2 = "";
-        long l2 = this.b - this.f;
-        localObject4 = new StringBuilder();
-        if (this.k != null)
-        {
-          ((StringBuilder)localObject4).append(this.k);
-          l1 = l2;
-          if (this.o != null)
-          {
-            l2 = this.o.d - this.o.c;
-            db.c("page time = " + this.o.a + "; time = " + l2);
-            l1 = l2;
-            if (l2 < 20L) {
-              db.c("page time little than 20 mills.");
+
+    public void run() {
+        Context context;
+        String str;
+        long j;
+        String stringBuilder;
+        if (this.f19608j == 1) {
+            context = (Context) this.f19601c.get();
+            Context context2 = (Context) this.f19605g.get();
+            if (context == null || context2 == null) {
+                db.m15663c("onPause, WeakReference is already been released");
+            } else if (context == context2) {
+                str = "";
+                j = this.f19600b - this.f19604f;
+                StringBuilder stringBuilder2 = new StringBuilder();
+                if (this.f19609k != null) {
+                    stringBuilder2.append(this.f19609k);
+                    if (this.f19613o != null) {
+                        j = this.f19613o.f19595d - this.f19613o.f19594c;
+                        db.m15663c("page time = " + this.f19613o.f19592a + "; time = " + j);
+                        if (j < 20) {
+                            db.m15663c("page time little than 20 mills.");
+                            return;
+                        }
+                    }
+                } else if (context instanceof Activity) {
+                    stringBuilder2.append(((Activity) context).getComponentName().getShortClassName());
+                    if (stringBuilder2.charAt(0) == '.') {
+                        stringBuilder2.deleteCharAt(0);
+                    }
+                } else {
+                    db.m15663c("onPause, pause is not a Activity");
+                    return;
+                }
+                if (context instanceof Activity) {
+                    CharSequence title = ((Activity) context).getTitle();
+                    if (title != null) {
+                        str = title.toString();
+                    }
+                }
+                db.m15657a("new page view, page name = " + stringBuilder2.toString() + ", stay time = " + j + "(ms)");
+                stringBuilder = stringBuilder2.toString();
+                if (this.f19609k == null) {
+                    this.f19610l = stringBuilder;
+                }
+                this.f19599a.f19578i.m15553a(new cg(stringBuilder, str, this.f19610l, j, this.f19604f, this.f19611m, this.f19612n));
+                if (this.f19609k == null) {
+                    this.f19599a.f19578i.m15559d(this.f19600b);
+                    this.f19599a.m15579c(context);
+                } else if (this.f19613o != null) {
+                    this.f19599a.f19578i.m15559d(this.f19613o.f19595d);
+                    this.f19599a.m15579c(context);
+                }
+            } else if (this.f19609k != null) {
+                db.m15661b("onPageStart() or onPageEnd() install error.");
+            } else {
+                db.m15661b("onPause() or onResume() install error.");
             }
-          }
+        } else if (this.f19608j == 2) {
+            Fragment fragment = (Fragment) this.f19602d.get();
+            Fragment fragment2 = (Fragment) this.f19606h.get();
+            if (fragment == null || fragment2 == null) {
+                db.m15663c("onPause, WeakReference is already been released");
+            } else if (fragment != fragment2) {
+                db.m15663c("onPause() or onResume() install error.");
+            } else {
+                str = "";
+                Activity activity = fragment.getActivity();
+                if (activity != null) {
+                    str = activity.getTitle().toString();
+                }
+                j = this.f19600b - this.f19604f;
+                r0 = fragment.getClass().getName();
+                stringBuilder = r0.substring(r0.lastIndexOf(".") + 1);
+                db.m15657a("Fragment new page view, page name = " + r0.toString() + ", stay time = " + j + "(ms)");
+                this.f19599a.f19578i.m15553a(new cg(stringBuilder, str, stringBuilder, j, this.f19604f, this.f19611m, this.f19612n));
+                this.f19599a.f19578i.m15559d(this.f19600b);
+                this.f19599a.m15579c(fragment.getActivity());
+            }
+        } else if (this.f19608j == 3) {
+            Object obj = (android.app.Fragment) this.f19603e.get();
+            android.app.Fragment fragment3 = (android.app.Fragment) this.f19607i.get();
+            if (obj == null || fragment3 == null) {
+                db.m15663c("onPause, WeakReference is already been released");
+            } else if (obj != fragment3) {
+                db.m15663c("onPause() or onResume() install error.");
+            } else {
+                str = "";
+                Activity activity2 = obj.getActivity();
+                if (activity2 != null) {
+                    str = activity2.getTitle().toString();
+                }
+                j = this.f19600b - this.f19604f;
+                context = ch.m15569a(obj);
+                if (context == null) {
+                    db.m15663c("getContxtFromReverse faild.");
+                    return;
+                }
+                r0 = obj.getClass().getName();
+                stringBuilder = r0.substring(r0.lastIndexOf(".") + 1);
+                db.m15657a("android.app.Fragment new page view, page name = " + r0.toString() + "; stay time = " + j + "(ms)");
+                this.f19599a.f19578i.m15553a(new cg(stringBuilder, str, stringBuilder, j, this.f19604f, this.f19611m, this.f19612n));
+                this.f19599a.f19578i.m15559d(this.f19600b);
+                this.f19599a.m15579c(context);
+            }
         }
-        else
-        {
-          if (!(localObject3 instanceof Activity))
-          {
-            db.c("onPause, pause is not a Activity");
-            return;
-          }
-          ((StringBuilder)localObject4).append(((Activity)localObject3).getComponentName().getShortClassName());
-          l1 = l2;
-          if (((StringBuilder)localObject4).charAt(0) == '.')
-          {
-            ((StringBuilder)localObject4).deleteCharAt(0);
-            l1 = l2;
-          }
-        }
-        localObject1 = localObject2;
-        if ((localObject3 instanceof Activity))
-        {
-          CharSequence localCharSequence = ((Activity)localObject3).getTitle();
-          localObject1 = localObject2;
-          if (localCharSequence != null) {
-            localObject1 = localCharSequence.toString();
-          }
-        }
-        db.a("new page view, page name = " + ((StringBuilder)localObject4).toString() + ", stay time = " + l1 + "(ms)");
-        localObject2 = ((StringBuilder)localObject4).toString();
-        if (this.k == null) {
-          this.l = ((String)localObject2);
-        }
-        localObject1 = new cg((String)localObject2, (String)localObject1, this.l, l1, this.f, this.m, this.n);
-        ch.a(this.a).a((cg)localObject1);
-        if (this.k == null) {
-          break;
-        }
-      } while (this.o == null);
-      ch.a(this.a).d(this.o.d);
-      ch.a(this.a, (Context)localObject3);
-      return;
-      ch.a(this.a).d(this.b);
-      ch.a(this.a, (Context)localObject3);
-      return;
-      if (this.j == 2)
-      {
-        localObject2 = (android.support.v4.app.Fragment)this.d.get();
-        localObject1 = (android.support.v4.app.Fragment)this.h.get();
-        if ((localObject2 == null) || (localObject1 == null))
-        {
-          db.c("onPause, WeakReference is already been released");
-          return;
-        }
-        if (localObject2 != localObject1)
-        {
-          db.c("onPause() or onResume() install error.");
-          return;
-        }
-        localObject1 = "";
-        localObject3 = ((android.support.v4.app.Fragment)localObject2).getActivity();
-        if (localObject3 != null) {
-          localObject1 = ((Activity)localObject3).getTitle().toString();
-        }
-        l1 = this.b - this.f;
-        localObject3 = localObject2.getClass().getName();
-        localObject4 = ((String)localObject3).substring(((String)localObject3).lastIndexOf(".") + 1);
-        db.a("Fragment new page view, page name = " + ((String)localObject3).toString() + ", stay time = " + l1 + "(ms)");
-        localObject1 = new cg((String)localObject4, (String)localObject1, (String)localObject4, l1, this.f, this.m, this.n);
-        ch.a(this.a).a((cg)localObject1);
-        ch.a(this.a).d(this.b);
-        ch.a(this.a, ((android.support.v4.app.Fragment)localObject2).getActivity());
-        return;
-      }
-    } while (this.j != 3);
-    Object localObject2 = (android.app.Fragment)this.e.get();
-    Object localObject1 = (android.app.Fragment)this.i.get();
-    if ((localObject2 == null) || (localObject1 == null))
-    {
-      db.c("onPause, WeakReference is already been released");
-      return;
     }
-    if (localObject2 != localObject1)
-    {
-      db.c("onPause() or onResume() install error.");
-      return;
-    }
-    localObject1 = "";
-    Object localObject3 = ((android.app.Fragment)localObject2).getActivity();
-    if (localObject3 != null) {
-      localObject1 = ((Activity)localObject3).getTitle().toString();
-    }
-    long l1 = this.b - this.f;
-    localObject3 = ch.a(localObject2);
-    if (localObject3 == null)
-    {
-      db.c("getContxtFromReverse faild.");
-      return;
-    }
-    localObject2 = localObject2.getClass().getName();
-    Object localObject4 = ((String)localObject2).substring(((String)localObject2).lastIndexOf(".") + 1);
-    db.a("android.app.Fragment new page view, page name = " + ((String)localObject2).toString() + "; stay time = " + l1 + "(ms)");
-    localObject1 = new cg((String)localObject4, (String)localObject1, (String)localObject4, l1, this.f, this.m, this.n);
-    ch.a(this.a).a((cg)localObject1);
-    ch.a(this.a).d(this.b);
-    ch.a(this.a, (Context)localObject3);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/co.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

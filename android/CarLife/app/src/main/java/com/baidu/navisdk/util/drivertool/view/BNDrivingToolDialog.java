@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +15,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.ui.util.BNStyleManager;
@@ -32,253 +32,247 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 
-public class BNDrivingToolDialog
-  extends Dialog
-{
-  public static final int UPDATE_ROUTE_MSG = 100;
-  private String[] mDrivingTestNames = null;
-  private Handler mHandler = new Handler()
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if ((paramAnonymousMessage.what == 100) && (BNDrivingToolDialog.this.mRouteSp != null))
-      {
-        if (BNDrivingToolManager.getInstance().isSinglePerson) {
-          BNDrivingToolDialog.this.mRouteSp.setText(BNStyleManager.getString(1711670295));
+public class BNDrivingToolDialog extends Dialog {
+    public static final int UPDATE_ROUTE_MSG = 100;
+    private String[] mDrivingTestNames = null;
+    private Handler mHandler = new C46741();
+    private Button mIssueListBtn;
+    private Button mNewIssueBtn;
+    private TextView mRouteSp;
+    private Button mScreenShotBtn;
+    private Button mSettingBtn;
+    private Button mShortVideoBtn;
+    private Button mTakePhotoBtn;
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$1 */
+    class C46741 extends Handler {
+        C46741() {
         }
-      }
-      else {
-        return;
-      }
-      BNDrivingToolDialog.this.mRouteSp.setVisibility(0);
-      paramAnonymousMessage = BNDrivingToolManager.getInstance().mRouteName;
-      BNDrivingToolDialog.this.mRouteSp.setText(paramAnonymousMessage);
-    }
-  };
-  private Button mIssueListBtn;
-  private Button mNewIssueBtn;
-  private TextView mRouteSp;
-  private Button mScreenShotBtn;
-  private Button mSettingBtn;
-  private Button mShortVideoBtn;
-  private Button mTakePhotoBtn;
-  
-  public BNDrivingToolDialog(Context paramContext)
-  {
-    super(paramContext);
-    Object localObject = JarUtils.getResources().newTheme();
-    ((Resources.Theme)localObject).applyStyle(1711996937, true);
-    JarUtils.setDialogThemeField(this, (Resources.Theme)localObject);
-    paramContext = JarUtils.inflate((Activity)paramContext, 1711472672, null);
-    setContentView(paramContext);
-    this.mRouteSp = ((TextView)paramContext.findViewById(1711866083));
-    this.mTakePhotoBtn = ((Button)paramContext.findViewById(1711866085));
-    this.mScreenShotBtn = ((Button)paramContext.findViewById(1711866086));
-    this.mShortVideoBtn = ((Button)paramContext.findViewById(1711866088));
-    this.mSettingBtn = ((Button)paramContext.findViewById(1711866089));
-    this.mNewIssueBtn = ((Button)paramContext.findViewById(1711866090));
-    this.mIssueListBtn = ((Button)paramContext.findViewById(1711866091));
-    if (this.mIssueListBtn != null)
-    {
-      paramContext = this.mIssueListBtn;
-      if (!BNaviModuleManager.isGooglePlayChannel()) {
-        break label234;
-      }
-    }
-    label234:
-    for (int i = 8;; i = 0)
-    {
-      paramContext.setVisibility(i);
-      paramContext = getWindow();
-      localObject = paramContext.getAttributes();
-      ((WindowManager.LayoutParams)localObject).width = (ScreenUtil.getInstance().getWidthPixels() / 8 * 5);
-      ((WindowManager.LayoutParams)localObject).height = (ScreenUtil.getInstance().getHeightPixels() / 9 * 4);
-      paramContext.setAttributes((WindowManager.LayoutParams)localObject);
-      paramContext.setGravity(17);
-      initData();
-      initListener();
-      return;
-    }
-  }
-  
-  private void initData()
-  {
-    pullDrivingTestNames();
-    this.mHandler.sendEmptyMessage(100);
-  }
-  
-  private void initListener()
-  {
-    if (this.mTakePhotoBtn != null) {
-      this.mTakePhotoBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (!SystemAuth.checkAuth("android.permission.CAMERA", true, "没有照相机权限，请打开后重试"))
-          {
-            TipTool.onCreateToastDialog(BNaviModuleManager.getNaviActivity(), "没有照相机权限，请打开后重试");
-            return;
-          }
-          BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
-          BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
-          long l = System.currentTimeMillis();
-          BNDrivingToolManager.getInstance().getIssueInfo().mIssueTime = String.valueOf(l);
-          BNDrivingToolManager.getInstance().getIssueInfo().mBduss = BNaviModuleManager.getBduss();
-          BNDrivingToolManager.getInstance().getIssueInfo().mStoreType = String.valueOf(2);
-          BNDrivingToolManager.getInstance().getIssueInfo().mIssueLocation = BNDrivingToolUtils.getCarPointString();
-          BNDrivingToolManager.getInstance().getIssueInfo().mSessionID = BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl("", "");
-          BNTakePhotoManager.getInstance().takePhoto();
+
+        public void handleMessage(Message msg) {
+            if (msg.what == 100 && BNDrivingToolDialog.this.mRouteSp != null) {
+                if (BNDrivingToolManager.getInstance().isSinglePerson) {
+                    BNDrivingToolDialog.this.mRouteSp.setText(BNStyleManager.getString(C4048R.string.nsdk_string_driving_tool_single_route));
+                    return;
+                }
+                BNDrivingToolDialog.this.mRouteSp.setVisibility(0);
+                BNDrivingToolDialog.this.mRouteSp.setText(BNDrivingToolManager.getInstance().mRouteName);
+            }
         }
-      });
     }
-    if (this.mScreenShotBtn != null) {
-      this.mScreenShotBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(final View paramAnonymousView)
-        {
-          if (BNScreentShotManager.sIsInThread) {
-            TipTool.onCreateToastDialog(BNaviModuleManager.getNaviActivity(), "截图正在处理中...请稍候再试");
-          }
-          for (;;)
-          {
-            return;
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$2 */
+    class C46752 implements OnClickListener {
+        C46752() {
+        }
+
+        public void onClick(View v) {
+            if (SystemAuth.checkAuth(SystemAuth.PHOTO_CAPTURE_AUTH, true, SystemAuth.PHOTO_CAPTURE_MSG)) {
+                BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
+                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
+                long time = System.currentTimeMillis();
+                BNDrivingToolManager.getInstance().getIssueInfo().mIssueTime = String.valueOf(time);
+                BNDrivingToolManager.getInstance().getIssueInfo().mBduss = BNaviModuleManager.getBduss();
+                BNDrivingToolManager.getInstance().getIssueInfo().mStoreType = String.valueOf(2);
+                BNDrivingToolManager.getInstance().getIssueInfo().mIssueLocation = BNDrivingToolUtils.getCarPointString();
+                BNDrivingToolManager.getInstance().getIssueInfo().mSessionID = BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl("", "");
+                BNTakePhotoManager.getInstance().takePhoto();
+                return;
+            }
+            TipTool.onCreateToastDialog(BNaviModuleManager.getNaviActivity(), SystemAuth.PHOTO_CAPTURE_MSG);
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$3 */
+    class C46773 implements OnClickListener {
+        C46773() {
+        }
+
+        public void onClick(View v) {
+            if (BNScreentShotManager.sIsInThread) {
+                TipTool.onCreateToastDialog(BNaviModuleManager.getNaviActivity(), BNScreentShotManager.SCREEN_IN_HANDLE);
+                return;
+            }
             BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
             BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(false);
-            long l = System.currentTimeMillis();
-            BNDrivingToolManager.getInstance().getIssueInfo().mIssueTime = String.valueOf(l);
+            long time = System.currentTimeMillis();
+            BNDrivingToolManager.getInstance().getIssueInfo().mIssueTime = String.valueOf(time);
             BNDrivingToolManager.getInstance().getIssueInfo().mStoreType = String.valueOf(3);
             BNDrivingToolManager.getInstance().getIssueInfo().mBduss = BNaviModuleManager.getBduss();
             BNDrivingToolManager.getInstance().getIssueInfo().mIssueLocation = BNDrivingToolUtils.getCarPointString();
             BNDrivingToolManager.getInstance().getIssueInfo().mSessionID = BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl("", "");
-            paramAnonymousView = BNScreentShotManager.getInstance();
-            if ((BNDrivingToolUtils.isMobileRoot()) && (BNSettingManager.isRootScreenshotPermitted()))
-            {
-              BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("notifyDayNightObservers-" + getClass().getSimpleName(), null)new BNWorkerConfig
-              {
-                protected String execute()
-                {
-                  paramAnonymousView.rootScreenShot();
-                  return null;
-                }
-              }, new BNWorkerConfig(2, 0));
-              return;
-            }
-            paramAnonymousView.initParams();
-            try
-            {
-              if ((BNDrivingToolUtils.sCanShow) && (BNDrivingToolUtils.sMapRenderShow))
-              {
-                BNScreentShotManager.getInstance().captureSurfaceView(0, 0, 1);
+            final BNScreentShotManager screenShotMng = BNScreentShotManager.getInstance();
+            if (BNDrivingToolUtils.isMobileRoot() && BNSettingManager.isRootScreenshotPermitted()) {
+                BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("notifyDayNightObservers-" + getClass().getSimpleName(), null) {
+                    protected String execute() {
+                        screenShotMng.rootScreenShot();
+                        return null;
+                    }
+                }, new BNWorkerConfig(2, 0));
                 return;
-              }
             }
-            catch (Exception paramAnonymousView)
-            {
-              BNDrivingToolUtils.setSurfaceViewState(false);
-              paramAnonymousView.printStackTrace();
+            screenShotMng.initParams();
+            try {
+                if (BNDrivingToolUtils.sCanShow && BNDrivingToolUtils.sMapRenderShow) {
+                    BNScreentShotManager.getInstance().captureSurfaceView(0, 0, 1);
+                }
+            } catch (Exception e) {
+                BNDrivingToolUtils.setSurfaceViewState(false);
+                e.printStackTrace();
             }
-          }
         }
-      });
     }
-    if (this.mShortVideoBtn != null) {
-      this.mShortVideoBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (!BNVideoRecordManager.getInstance().hasRecordAuth())
-          {
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$4 */
+    class C46784 implements OnClickListener {
+        C46784() {
+        }
+
+        public void onClick(View v) {
+            if (BNVideoRecordManager.getInstance().hasRecordAuth()) {
+                BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
+                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(false);
+                long time = System.currentTimeMillis();
+                BNDrivingToolManager.getInstance().getIssueInfo().mIssueTime = String.valueOf(time);
+                BNDrivingToolManager.getInstance().getIssueInfo().mBduss = BNaviModuleManager.getBduss();
+                BNDrivingToolManager.getInstance().getIssueInfo().mIssueLocation = BNDrivingToolUtils.getCarPointString();
+                BNDrivingToolManager.getInstance().getIssueInfo().mSessionID = BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl("", "");
+                BNVideoRecordManager.getInstance().recordVideo();
+                return;
+            }
             TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), BNVideoRecordManager.NO_RECORD_AUTH_MSG);
-            return;
-          }
-          BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
-          BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(false);
-          long l = System.currentTimeMillis();
-          BNDrivingToolManager.getInstance().getIssueInfo().mIssueTime = String.valueOf(l);
-          BNDrivingToolManager.getInstance().getIssueInfo().mBduss = BNaviModuleManager.getBduss();
-          BNDrivingToolManager.getInstance().getIssueInfo().mIssueLocation = BNDrivingToolUtils.getCarPointString();
-          BNDrivingToolManager.getInstance().getIssueInfo().mSessionID = BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl("", "");
-          BNVideoRecordManager.getInstance().recordVideo();
         }
-      });
     }
-    if (this.mSettingBtn != null) {
-      this.mSettingBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
-          BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(false);
-          paramAnonymousView = BNaviModuleManager.getNaviActivity();
-          if (paramAnonymousView != null)
-          {
-            paramAnonymousView = new BNDrivingToolSettingDialog(paramAnonymousView);
-            paramAnonymousView.setOnCancelListener(new DialogInterface.OnCancelListener()
-            {
-              public void onCancel(DialogInterface paramAnonymous2DialogInterface)
-              {
-                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
-              }
-            });
-            paramAnonymousView.show();
-          }
-        }
-      });
-    }
-    if (this.mNewIssueBtn != null) {
-      this.mNewIssueBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
-          BNDrivingToolManager.getInstance().getIssueInfo().mBduss = BNaviModuleManager.getBduss();
-          BNDrivingToolManager.getInstance().getIssueInfo().mSessionID = BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl("", "");
-          paramAnonymousView = BNDrivingToolManager.getInstance().getIssueStoreDialog(4);
-          paramAnonymousView.setOnCancelListener(new DialogInterface.OnCancelListener()
-          {
-            public void onCancel(DialogInterface paramAnonymous2DialogInterface)
-            {
-              BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$5 */
+    class C46805 implements OnClickListener {
+
+        /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$5$1 */
+        class C46791 implements OnCancelListener {
+            C46791() {
             }
-          });
-          paramAnonymousView.show();
+
+            public void onCancel(DialogInterface dialog) {
+                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
+            }
         }
-      });
-    }
-    if (this.mIssueListBtn != null) {
-      this.mIssueListBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(final View paramAnonymousView)
-        {
-          if (NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext()))
-          {
-            paramAnonymousView = new BNIssueViewDialog(BNaviModuleManager.getNaviActivity(), 16973833);
-            paramAnonymousView.show();
-            paramAnonymousView.setOnCancelListener(new DialogInterface.OnCancelListener()
-            {
-              public void onCancel(DialogInterface paramAnonymous2DialogInterface)
-              {
-                paramAnonymousView.releaseResource();
-              }
-            });
-            return;
-          }
-          TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), JarUtils.getResources().getString(1711669729));
+
+        C46805() {
         }
-      });
+
+        public void onClick(View v) {
+            BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
+            BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(false);
+            Context ctx = BNaviModuleManager.getNaviActivity();
+            if (ctx != null) {
+                BNDrivingToolSettingDialog settingDialog = new BNDrivingToolSettingDialog(ctx);
+                settingDialog.setOnCancelListener(new C46791());
+                settingDialog.show();
+            }
+        }
     }
-  }
-  
-  private void pullDrivingTestNames()
-  {
-    this.mDrivingTestNames = new String[] { "hello, 我是一个路测" };
-  }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$6 */
+    class C46826 implements OnClickListener {
+
+        /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$6$1 */
+        class C46811 implements OnCancelListener {
+            C46811() {
+            }
+
+            public void onCancel(DialogInterface dialog) {
+                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
+            }
+        }
+
+        C46826() {
+        }
+
+        public void onClick(View v) {
+            BNDrivingToolManager.getInstance().dismissDrvingToolDialog();
+            BNDrivingToolManager.getInstance().getIssueInfo().mBduss = BNaviModuleManager.getBduss();
+            BNDrivingToolManager.getInstance().getIssueInfo().mSessionID = BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl("", "");
+            BNDrivingToolIssueStoreDialog mIssueDialog = BNDrivingToolManager.getInstance().getIssueStoreDialog(4);
+            mIssueDialog.setOnCancelListener(new C46811());
+            mIssueDialog.show();
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolDialog$7 */
+    class C46847 implements OnClickListener {
+        C46847() {
+        }
+
+        public void onClick(View v) {
+            if (NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext())) {
+                final BNIssueViewDialog viewDialog = new BNIssueViewDialog(BNaviModuleManager.getNaviActivity(), 16973833);
+                viewDialog.show();
+                viewDialog.setOnCancelListener(new OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                        viewDialog.releaseResource();
+                    }
+                });
+                return;
+            }
+            TipTool.onCreateToastDialog(BNaviModuleManager.getContext(), JarUtils.getResources().getString(C4048R.string.nsdk_string_cruise_no_network));
+        }
+    }
+
+    public BNDrivingToolDialog(Context context) {
+        super(context);
+        Theme theme = JarUtils.getResources().newTheme();
+        theme.applyStyle(C4048R.style.BNDialog, true);
+        JarUtils.setDialogThemeField(this, theme);
+        View view = JarUtils.inflate((Activity) context, C4048R.layout.nsdk_layout_driving_tool, null);
+        setContentView(view);
+        this.mRouteSp = (TextView) view.findViewById(C4048R.id.dt_name_sp);
+        this.mTakePhotoBtn = (Button) view.findViewById(C4048R.id.take_picture_btn);
+        this.mScreenShotBtn = (Button) view.findViewById(C4048R.id.screen_shot_btn);
+        this.mShortVideoBtn = (Button) view.findViewById(C4048R.id.short_video_btn);
+        this.mSettingBtn = (Button) view.findViewById(C4048R.id.setting_btn);
+        this.mNewIssueBtn = (Button) view.findViewById(C4048R.id.new_issue_btn);
+        this.mIssueListBtn = (Button) view.findViewById(C4048R.id.issue_view_btn);
+        if (this.mIssueListBtn != null) {
+            this.mIssueListBtn.setVisibility(BNaviModuleManager.isGooglePlayChannel() ? 8 : 0);
+        }
+        Window window = getWindow();
+        LayoutParams lp = window.getAttributes();
+        lp.width = (ScreenUtil.getInstance().getWidthPixels() / 8) * 5;
+        lp.height = (ScreenUtil.getInstance().getHeightPixels() / 9) * 4;
+        window.setAttributes(lp);
+        window.setGravity(17);
+        initData();
+        initListener();
+    }
+
+    private void initListener() {
+        if (this.mTakePhotoBtn != null) {
+            this.mTakePhotoBtn.setOnClickListener(new C46752());
+        }
+        if (this.mScreenShotBtn != null) {
+            this.mScreenShotBtn.setOnClickListener(new C46773());
+        }
+        if (this.mShortVideoBtn != null) {
+            this.mShortVideoBtn.setOnClickListener(new C46784());
+        }
+        if (this.mSettingBtn != null) {
+            this.mSettingBtn.setOnClickListener(new C46805());
+        }
+        if (this.mNewIssueBtn != null) {
+            this.mNewIssueBtn.setOnClickListener(new C46826());
+        }
+        if (this.mIssueListBtn != null) {
+            this.mIssueListBtn.setOnClickListener(new C46847());
+        }
+    }
+
+    private void pullDrivingTestNames() {
+        this.mDrivingTestNames = new String[]{"hello, 我是一个路测"};
+    }
+
+    private void initData() {
+        pullDrivingTestNames();
+        this.mHandler.sendEmptyMessage(100);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/drivertool/view/BNDrivingToolDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

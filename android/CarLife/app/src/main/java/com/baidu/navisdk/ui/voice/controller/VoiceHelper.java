@@ -1,13 +1,15 @@
 package com.baidu.navisdk.ui.voice.controller;
 
 import android.os.Bundle;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
+import com.baidu.che.codriver.p121g.C2536a;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.jni.nativeif.JNIVoicePersonalityControl;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.ui.voice.BNVoice;
 import com.baidu.navisdk.ui.voice.BNVoiceParams;
-import com.baidu.navisdk.ui.voice.VoiceShareListener;
 import com.baidu.navisdk.ui.voice.model.VoiceDataStatus;
 import com.baidu.navisdk.ui.voice.model.VoiceInfo;
 import com.baidu.navisdk.ui.voice.model.VoiceShareData;
@@ -18,347 +20,285 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class VoiceHelper
-{
-  private VoiceInfo mShareVoiceInfo = null;
-  
-  public static VoiceHelper getInstance()
-  {
-    return LazyHolder.sInstance;
-  }
-  
-  public boolean cancelUpdateToServer(String paramString)
-  {
-    return JNIVoicePersonalityControl.sInstance.removeUpdateTask(paramString);
-  }
-  
-  public String generateRandTaskId()
-  {
-    return UUID.randomUUID().toString();
-  }
-  
-  public String getCurrentUsedTTSId()
-  {
-    int i = BNSettingManager.getVoicePersonality();
-    if (i == 0) {
-      return null;
-    }
-    if (i == 1) {
-      return "9999";
-    }
-    return BNSettingManager.getVoiceTaskId();
-  }
-  
-  public int getDownloadProgress(String paramString)
-  {
-    VoiceDataStatus localVoiceDataStatus = VoiceDownloadController.getInstance().getTaskDownStausFromEngine(paramString);
-    if ("9999".equals(paramString)) {
-      LogUtil.e("BNVoice", "getDownloadProgress status = " + localVoiceDataStatus.status + " download = " + localVoiceDataStatus.unDwonloadSize);
-    }
-    int i = 0;
-    if ((localVoiceDataStatus.status == VoiceDataStatus.VOICE_DATA_DOWN_DOWNING) || (localVoiceDataStatus.status == VoiceDataStatus.VOICE_DATA_DOWN_UNSTART))
-    {
-      j = (int)localVoiceDataStatus.unTotalSize;
-      k = (int)localVoiceDataStatus.unDwonloadSize;
-      if (j != 0) {
-        i = (int)(k / j * 100.0D);
-      }
-    }
-    while (localVoiceDataStatus.status != VoiceDataStatus.VOICE_DATA_DOWN_END)
-    {
-      int j;
-      int k;
-      return i;
-    }
-    return 100;
-  }
-  
-  public Map<String, String> getRecordVoiceDetailInfo(String paramString)
-  {
-    HashMap localHashMap = new HashMap();
-    Object localObject = new ArrayList();
-    if (JNIVoicePersonalityControl.sInstance.getRecordVoiceItems(paramString, (ArrayList)localObject))
-    {
-      paramString = ((ArrayList)localObject).iterator();
-      while (paramString.hasNext())
-      {
-        localObject = (Bundle)paramString.next();
-        if ((((Bundle)localObject).containsKey("ORGWORD")) && (((Bundle)localObject).containsKey("VOICEPATH"))) {
-          localHashMap.put(((Bundle)localObject).getString("ORGWORD"), ((Bundle)localObject).getString("VOICEPATH"));
+public class VoiceHelper {
+    private VoiceInfo mShareVoiceInfo;
+
+    private static class LazyHolder {
+        public static final VoiceHelper sInstance = new VoiceHelper();
+
+        private LazyHolder() {
         }
-      }
     }
-    return localHashMap;
-  }
-  
-  public String getSuperStarById(String paramString)
-  {
-    String str = "未知";
-    if ("9998".equals(paramString)) {
-      str = "鹿晗";
+
+    private VoiceHelper() {
+        this.mShareVoiceInfo = null;
     }
-    do
-    {
-      return str;
-      if ("10001".equals(paramString)) {
-        return "陈楚生";
-      }
-      if ("10002".equals(paramString)) {
-        return "何洁";
-      }
-      if ("10003".equals(paramString)) {
-        return "吉克隽逸";
-      }
-      if ("10004".equals(paramString)) {
-        return "金莎";
-      }
-      if ("10005".equals(paramString)) {
-        return "谭维维";
-      }
-      if ("10006".equals(paramString)) {
-        return "杨坤";
-      }
-    } while (!"10007".equals(paramString));
-    return "牛奶咖啡";
-  }
-  
-  public VoiceInfo getVoiceInfo(String paramString)
-  {
-    Bundle localBundle = new Bundle();
-    try
-    {
-      if (JNIVoicePersonalityControl.sInstance.getVoiceInfo(paramString, localBundle))
-      {
-        paramString = VoiceInfo.getVoiceInfo(localBundle);
-        return paramString;
-      }
+
+    public static VoiceHelper getInstance() {
+        return LazyHolder.sInstance;
     }
-    catch (Throwable paramString) {}
-    return null;
-  }
-  
-  public String getVoiceItemPath(String paramString1, String paramString2)
-  {
-    return JNIVoicePersonalityControl.sInstance.getTaskFilePathWithWord(paramString1, paramString2);
-  }
-  
-  public String getVoiceSetPath(String paramString)
-  {
-    return JNIVoicePersonalityControl.sInstance.getTaskFilePath(paramString, true);
-  }
-  
-  public String getVoiceSetPath(String paramString, boolean paramBoolean)
-  {
-    return JNIVoicePersonalityControl.sInstance.getTaskFilePath(paramString, paramBoolean);
-  }
-  
-  public String getVoiceShowDownCnt(int paramInt)
-  {
-    if (paramInt <= 10000) {
-      return "" + paramInt + "次";
+
+    public String generateRandTaskId() {
+        return UUID.randomUUID().toString();
     }
-    if (paramInt > 10000) {
-      return "" + paramInt / 10000 + "万次";
+
+    public boolean cancelUpdateToServer(String taskId) {
+        return JNIVoicePersonalityControl.sInstance.removeUpdateTask(taskId);
     }
-    return "" + paramInt / 100000000 + "亿次";
-  }
-  
-  public String getVoiceShowSize(long paramLong)
-  {
-    DecimalFormat localDecimalFormat = new DecimalFormat();
-    if (paramLong < 1024L) {
-      return paramLong + "B";
+
+    public void shareTopic(String mTopicShareParam) throws JSONException {
+        VoiceInfo shareInfo = new VoiceInfo();
+        JSONObject obj = new JSONObject(mTopicShareParam);
+        shareInfo.imageUrl = obj.optString("img");
+        shareInfo.voiceUrl = obj.optString("url");
+        shareInfo.name = obj.optString("title");
+        shareInfo.status = 3;
+        share(shareInfo);
     }
-    if (paramLong < 1048576L)
-    {
-      localDecimalFormat.applyPattern("0");
-      d = paramLong / 1024.0D;
-      return localDecimalFormat.format(d) + "K";
+
+    public boolean share(VoiceInfo info) {
+        if (info == null) {
+            return false;
+        }
+        this.mShareVoiceInfo = info;
+        if (info.status == 0) {
+            return getInstance().updateTaskToServer(info.taskId, BNVoice.getInstance().getBduss());
+        }
+        shareWithoutUpload(info);
+        return true;
     }
-    if (paramLong < 1073741824L)
-    {
-      localDecimalFormat.applyPattern("0.0");
-      d = paramLong / 1048576.0D;
-      return localDecimalFormat.format(d) + "M";
+
+    public void shareWithoutUpload(VoiceInfo sharedInfo) {
+        if (sharedInfo != null) {
+            boolean isMyVoice;
+            this.mShareVoiceInfo = sharedInfo;
+            if (sharedInfo.status == 0 || sharedInfo.status == 1) {
+                isMyVoice = true;
+            } else {
+                isMyVoice = false;
+            }
+            if (TextUtils.isEmpty(this.mShareVoiceInfo.imageUrl) || !this.mShareVoiceInfo.imageUrl.startsWith("http")) {
+                this.mShareVoiceInfo.imageUrl = BNVoiceParams.VOICE_DEFUALT_IMAGE_URL;
+            }
+            String appname = BNStyleManager.getString(C4048R.string.nsdk_string_baidumap_name);
+            String voiceName = this.mShareVoiceInfo.name;
+            if (voiceName == null || voiceName.length() == 0) {
+                voiceName = "";
+            }
+            String subject = String.format(BNStyleManager.getString(isMyVoice ? C4048R.string.nsdk_string_my_voice_share_subject : C4048R.string.nsdk_string_star_voice_share_subject), new Object[]{appname, voiceName});
+            String content = String.format(BNStyleManager.getString(isMyVoice ? C4048R.string.nsdk_string_my_voice_share_weixin_content : C4048R.string.nsdk_string_star_voice_share_weixin_content), new Object[]{voiceName});
+            ArrayList<VoiceShareData> list = new ArrayList();
+            VoiceShareData shareData = new VoiceShareData();
+            shareData.shareType = 0;
+            shareData.subject = subject;
+            shareData.content = content;
+            shareData.shareUrl = this.mShareVoiceInfo.voiceUrl.replace("/voice_market_details/", "/voice_market_details_v2/");
+            shareData.imageUrl = this.mShareVoiceInfo.imageUrl;
+            list.add(shareData);
+            shareData = new VoiceShareData();
+            shareData.shareType = 1;
+            shareData.subject = subject;
+            shareData.content = content;
+            shareData.shareUrl = this.mShareVoiceInfo.voiceUrl;
+            shareData.imageUrl = this.mShareVoiceInfo.imageUrl;
+            list.add(shareData);
+            shareData = new VoiceShareData();
+            shareData.shareType = 2;
+            shareData.subject = content;
+            shareData.content = content;
+            shareData.shareUrl = this.mShareVoiceInfo.voiceUrl;
+            shareData.imageUrl = this.mShareVoiceInfo.imageUrl;
+            list.add(shareData);
+            shareData = new VoiceShareData();
+            shareData.shareType = 3;
+            shareData.subject = subject;
+            shareData.content = content + " " + this.mShareVoiceInfo.voiceUrl;
+            shareData.shareUrl = this.mShareVoiceInfo.voiceUrl;
+            shareData.imageUrl = null;
+            list.add(shareData);
+            if (BNVoice.getInstance().getVoiceShareListener() != null) {
+                BNVoice.getInstance().getVoiceShareListener().share(list);
+            }
+        }
     }
-    localDecimalFormat.applyPattern("0.0");
-    double d = paramLong / 1.073741824E9D;
-    return localDecimalFormat.format(d) + "G";
-  }
-  
-  public boolean isTaskDownloadFinish(String paramString)
-  {
-    VoiceDataStatus localVoiceDataStatus = new VoiceDataStatus();
-    return (JNIVoicePersonalityControl.sInstance.isTaskDowned(paramString, localVoiceDataStatus)) && (localVoiceDataStatus.status == VoiceDataStatus.VOICE_DATA_DOWN_END);
-  }
-  
-  public boolean share(VoiceInfo paramVoiceInfo)
-  {
-    if (paramVoiceInfo == null) {
-      return false;
+
+    public void shareFromSquare() {
+        String subject = BNStyleManager.getString(C4048R.string.nsdk_string_square_share_subject);
+        String content = BNStyleManager.getString(C4048R.string.nsdk_string_square_share_content);
+        ArrayList<VoiceShareData> list = new ArrayList();
+        VoiceShareData shareData = new VoiceShareData();
+        shareData.shareType = 0;
+        shareData.subject = subject;
+        shareData.content = content;
+        shareData.shareUrl = HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_VOICE_SQUARE);
+        shareData.imageUrl = BNVoiceParams.VOICE_SQUARE_DEFAULT_IMAGE_URL;
+        list.add(shareData);
+        shareData = new VoiceShareData();
+        shareData.shareType = 1;
+        shareData.subject = subject;
+        shareData.content = content;
+        shareData.shareUrl = HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_VOICE_SQUARE);
+        shareData.imageUrl = BNVoiceParams.VOICE_SQUARE_DEFAULT_IMAGE_URL;
+        list.add(shareData);
+        shareData = new VoiceShareData();
+        shareData.shareType = 2;
+        shareData.subject = content;
+        shareData.content = content;
+        shareData.shareUrl = HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_VOICE_SQUARE);
+        shareData.imageUrl = BNVoiceParams.VOICE_SQUARE_DEFAULT_IMAGE_URL;
+        list.add(shareData);
+        shareData = new VoiceShareData();
+        shareData.shareType = 3;
+        shareData.subject = subject;
+        shareData.content = content + " " + HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_VOICE_SQUARE);
+        shareData.shareUrl = HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_VOICE_SQUARE);
+        shareData.imageUrl = null;
+        list.add(shareData);
+        if (BNVoice.getInstance().getVoiceShareListener() != null) {
+            BNVoice.getInstance().getVoiceShareListener().share(list);
+        }
     }
-    this.mShareVoiceInfo = paramVoiceInfo;
-    if (paramVoiceInfo.status == 0)
-    {
-      String str = BNVoice.getInstance().getBduss();
-      return getInstance().updateTaskToServer(paramVoiceInfo.taskId, str);
+
+    public String getVoiceShowSize(long nSize) {
+        DecimalFormat df = new DecimalFormat();
+        String strSize = "未知大小";
+        if (nSize < PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID) {
+            return nSize + "B";
+        }
+        if (nSize < 1048576) {
+            df.applyPattern("0");
+            return df.format(((double) nSize) / 1024.0d) + "K";
+        } else if (nSize < 1073741824) {
+            df.applyPattern("0.0");
+            return df.format(((double) nSize) / 1048576.0d) + "M";
+        } else {
+            df.applyPattern("0.0");
+            return df.format(((double) nSize) / 1.073741824E9d) + "G";
+        }
     }
-    shareWithoutUpload(paramVoiceInfo);
-    return true;
-  }
-  
-  public void shareFromSquare()
-  {
-    String str1 = BNStyleManager.getString(1711670150);
-    String str2 = BNStyleManager.getString(1711670151);
-    ArrayList localArrayList = new ArrayList();
-    VoiceShareData localVoiceShareData = new VoiceShareData();
-    localVoiceShareData.shareType = 0;
-    localVoiceShareData.subject = str1;
-    localVoiceShareData.content = str2;
-    localVoiceShareData.shareUrl = HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_VOICE_SQUARE);
-    localVoiceShareData.imageUrl = BNVoiceParams.VOICE_SQUARE_DEFAULT_IMAGE_URL;
-    localArrayList.add(localVoiceShareData);
-    localVoiceShareData = new VoiceShareData();
-    localVoiceShareData.shareType = 1;
-    localVoiceShareData.subject = str1;
-    localVoiceShareData.content = str2;
-    localVoiceShareData.shareUrl = HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_VOICE_SQUARE);
-    localVoiceShareData.imageUrl = BNVoiceParams.VOICE_SQUARE_DEFAULT_IMAGE_URL;
-    localArrayList.add(localVoiceShareData);
-    localVoiceShareData = new VoiceShareData();
-    localVoiceShareData.shareType = 2;
-    localVoiceShareData.subject = str2;
-    localVoiceShareData.content = str2;
-    localVoiceShareData.shareUrl = HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_VOICE_SQUARE);
-    localVoiceShareData.imageUrl = BNVoiceParams.VOICE_SQUARE_DEFAULT_IMAGE_URL;
-    localArrayList.add(localVoiceShareData);
-    localVoiceShareData = new VoiceShareData();
-    localVoiceShareData.shareType = 3;
-    localVoiceShareData.subject = str1;
-    localVoiceShareData.content = (str2 + " " + HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_VOICE_SQUARE));
-    localVoiceShareData.shareUrl = HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_VOICE_SQUARE);
-    localVoiceShareData.imageUrl = null;
-    localArrayList.add(localVoiceShareData);
-    if (BNVoice.getInstance().getVoiceShareListener() != null) {
-      BNVoice.getInstance().getVoiceShareListener().share(localArrayList);
+
+    public String getVoiceShowDownCnt(int downloadCnt) {
+        String strCnt = "";
+        if (downloadCnt <= 10000) {
+            return strCnt + downloadCnt + "次";
+        }
+        if (downloadCnt > 10000) {
+            return strCnt + (downloadCnt / 10000) + "万次";
+        }
+        return strCnt + (downloadCnt / 100000000) + "亿次";
     }
-  }
-  
-  public void shareTopic(String paramString)
-    throws JSONException
-  {
-    VoiceInfo localVoiceInfo = new VoiceInfo();
-    paramString = new JSONObject(paramString);
-    localVoiceInfo.imageUrl = paramString.optString("img");
-    localVoiceInfo.voiceUrl = paramString.optString("url");
-    localVoiceInfo.name = paramString.optString("title");
-    localVoiceInfo.status = 3;
-    share(localVoiceInfo);
-  }
-  
-  public void shareWithoutUpload(VoiceInfo paramVoiceInfo)
-  {
-    if (paramVoiceInfo == null) {
-      return;
+
+    public int getDownloadProgress(String taskId) {
+        VoiceDataStatus dataStatus = VoiceDownloadController.getInstance().getTaskDownStausFromEngine(taskId);
+        if ("9999".equals(taskId)) {
+            LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "getDownloadProgress status = " + dataStatus.status + " download = " + dataStatus.unDwonloadSize);
+        }
+        if (dataStatus.status == VoiceDataStatus.VOICE_DATA_DOWN_DOWNING || dataStatus.status == VoiceDataStatus.VOICE_DATA_DOWN_UNSTART) {
+            int totalSize = (int) dataStatus.unTotalSize;
+            int downSize = (int) dataStatus.unDwonloadSize;
+            if (totalSize != 0) {
+                return (int) ((((double) downSize) / ((double) totalSize)) * 100.0d);
+            }
+            return 0;
+        } else if (dataStatus.status == VoiceDataStatus.VOICE_DATA_DOWN_END) {
+            return 100;
+        } else {
+            return 0;
+        }
     }
-    this.mShareVoiceInfo = paramVoiceInfo;
-    label27:
-    Object localObject;
-    String str;
-    int j;
-    if ((paramVoiceInfo.status == 0) || (paramVoiceInfo.status == 1))
-    {
-      i = 1;
-      if ((TextUtils.isEmpty(this.mShareVoiceInfo.imageUrl)) || (!this.mShareVoiceInfo.imageUrl.startsWith("http"))) {
-        this.mShareVoiceInfo.imageUrl = BNVoiceParams.VOICE_DEFUALT_IMAGE_URL;
-      }
-      localObject = BNStyleManager.getString(1711670140);
-      str = this.mShareVoiceInfo.name;
-      if (str != null)
-      {
-        paramVoiceInfo = str;
-        if (str.length() != 0) {}
-      }
-      else
-      {
-        paramVoiceInfo = "";
-      }
-      if (i == 0) {
-        break label464;
-      }
-      j = 1711670146;
-      label110:
-      str = String.format(BNStyleManager.getString(j), new Object[] { localObject, paramVoiceInfo });
-      if (i == 0) {
-        break label471;
-      }
+
+    public String getCurrentUsedTTSId() {
+        int mode = BNSettingManager.getVoicePersonality();
+        if (mode == 0) {
+            return null;
+        }
+        if (mode == 1) {
+            return "9999";
+        }
+        return BNSettingManager.getVoiceTaskId();
     }
-    label464:
-    label471:
-    for (int i = 1711670147;; i = 1711670143)
-    {
-      paramVoiceInfo = String.format(BNStyleManager.getString(i), new Object[] { paramVoiceInfo });
-      localObject = new ArrayList();
-      VoiceShareData localVoiceShareData = new VoiceShareData();
-      localVoiceShareData.shareType = 0;
-      localVoiceShareData.subject = str;
-      localVoiceShareData.content = paramVoiceInfo;
-      localVoiceShareData.shareUrl = this.mShareVoiceInfo.voiceUrl.replace("/voice_market_details/", "/voice_market_details_v2/");
-      localVoiceShareData.imageUrl = this.mShareVoiceInfo.imageUrl;
-      ((ArrayList)localObject).add(localVoiceShareData);
-      localVoiceShareData = new VoiceShareData();
-      localVoiceShareData.shareType = 1;
-      localVoiceShareData.subject = str;
-      localVoiceShareData.content = paramVoiceInfo;
-      localVoiceShareData.shareUrl = this.mShareVoiceInfo.voiceUrl;
-      localVoiceShareData.imageUrl = this.mShareVoiceInfo.imageUrl;
-      ((ArrayList)localObject).add(localVoiceShareData);
-      localVoiceShareData = new VoiceShareData();
-      localVoiceShareData.shareType = 2;
-      localVoiceShareData.subject = paramVoiceInfo;
-      localVoiceShareData.content = paramVoiceInfo;
-      localVoiceShareData.shareUrl = this.mShareVoiceInfo.voiceUrl;
-      localVoiceShareData.imageUrl = this.mShareVoiceInfo.imageUrl;
-      ((ArrayList)localObject).add(localVoiceShareData);
-      localVoiceShareData = new VoiceShareData();
-      localVoiceShareData.shareType = 3;
-      localVoiceShareData.subject = str;
-      localVoiceShareData.content = (paramVoiceInfo + " " + this.mShareVoiceInfo.voiceUrl);
-      localVoiceShareData.shareUrl = this.mShareVoiceInfo.voiceUrl;
-      localVoiceShareData.imageUrl = null;
-      ((ArrayList)localObject).add(localVoiceShareData);
-      if (BNVoice.getInstance().getVoiceShareListener() == null) {
-        break;
-      }
-      BNVoice.getInstance().getVoiceShareListener().share((List)localObject);
-      return;
-      i = 0;
-      break label27;
-      j = 1711670142;
-      break label110;
+
+    public Map<String, String> getRecordVoiceDetailInfo(String taskId) {
+        Map<String, String> voiceItem = new HashMap();
+        ArrayList<Bundle> bundleList = new ArrayList();
+        if (JNIVoicePersonalityControl.sInstance.getRecordVoiceItems(taskId, bundleList)) {
+            Iterator it = bundleList.iterator();
+            while (it.hasNext()) {
+                Bundle bundle = (Bundle) it.next();
+                if (bundle.containsKey("ORGWORD") && bundle.containsKey("VOICEPATH")) {
+                    voiceItem.put(bundle.getString("ORGWORD"), bundle.getString("VOICEPATH"));
+                }
+            }
+        }
+        return voiceItem;
     }
-  }
-  
-  public boolean updateTaskToServer(String paramString1, String paramString2)
-  {
-    return JNIVoicePersonalityControl.sInstance.updateTaskToServer(paramString1, paramString2);
-  }
-  
-  private static class LazyHolder
-  {
-    public static final VoiceHelper sInstance = new VoiceHelper(null);
-  }
+
+    public String getVoiceSetPath(String taskId) {
+        return JNIVoicePersonalityControl.sInstance.getTaskFilePath(taskId, true);
+    }
+
+    public String getVoiceSetPath(String taskId, boolean isMainPath) {
+        return JNIVoicePersonalityControl.sInstance.getTaskFilePath(taskId, isMainPath);
+    }
+
+    public String getVoiceItemPath(String taskId, String orgWord) {
+        return JNIVoicePersonalityControl.sInstance.getTaskFilePathWithWord(taskId, orgWord);
+    }
+
+    public boolean updateTaskToServer(String taskId, String bduss) {
+        return JNIVoicePersonalityControl.sInstance.updateTaskToServer(taskId, bduss);
+    }
+
+    public boolean isTaskDownloadFinish(String taskId) {
+        VoiceDataStatus status = new VoiceDataStatus();
+        if (JNIVoicePersonalityControl.sInstance.isTaskDowned(taskId, status) && status.status == VoiceDataStatus.VOICE_DATA_DOWN_END) {
+            return true;
+        }
+        return false;
+    }
+
+    public VoiceInfo getVoiceInfo(String taskId) {
+        Bundle bundle = new Bundle();
+        try {
+            if (JNIVoicePersonalityControl.sInstance.getVoiceInfo(taskId, bundle)) {
+                return VoiceInfo.getVoiceInfo(bundle);
+            }
+        } catch (Throwable th) {
+        }
+        return null;
+    }
+
+    public String getSuperStarById(String taskId) {
+        String name = "未知";
+        if ("9998".equals(taskId)) {
+            return "鹿晗";
+        }
+        if (C2536a.f8300a.equals(taskId)) {
+            return "陈楚生";
+        }
+        if (C2536a.f8304e.equals(taskId)) {
+            return "何洁";
+        }
+        if ("10003".equals(taskId)) {
+            return "吉克隽逸";
+        }
+        if ("10004".equals(taskId)) {
+            return "金莎";
+        }
+        if ("10005".equals(taskId)) {
+            return "谭维维";
+        }
+        if (C2536a.f8310k.equals(taskId)) {
+            return "杨坤";
+        }
+        if (C2536a.f8311l.equals(taskId)) {
+            return "牛奶咖啡";
+        }
+        return name;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/voice/controller/VoiceHelper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

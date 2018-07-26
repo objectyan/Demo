@@ -1,127 +1,103 @@
 package com.baidu.navisdk.logic.commandparser;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import com.baidu.navisdk.jni.nativeif.JNISearchControl;
 import com.baidu.navisdk.logic.CommandBase;
+import com.baidu.navisdk.logic.CommandConst;
 import com.baidu.navisdk.logic.CommandResult;
 import com.baidu.navisdk.logic.ReqData;
 import com.baidu.navisdk.logic.RspData;
 import com.baidu.navisdk.model.datastruct.SearchCircle;
 import com.baidu.navisdk.util.common.LogUtil;
-import com.baidu.nplatform.comapi.basestruct.GeoPoint;
-import java.util.HashMap;
 import java.util.Locale;
 
-public class CmdSearchByCircleForMapPoiResultPB
-  extends CommandBase
-  implements JNISearchConst
-{
-  SearchCircle mCircle;
-  Bundle mDataBundle = null;
-  int mDistrictID;
-  String mName;
-  int mPageNumber;
-  int mPoiCount;
-  
-  public static void packetParams(ReqData paramReqData, String paramString, int paramInt1, SearchCircle paramSearchCircle, int paramInt2, int paramInt3)
-  {
-    paramReqData.mParams.put("param.search.key", paramString);
-    paramReqData.mParams.put("param.search.districtid", Integer.valueOf(paramInt1));
-    if (paramSearchCircle != null) {
-      paramReqData.mParams.put("param.search.circle", paramSearchCircle);
+public class CmdSearchByCircleForMapPoiResultPB extends CommandBase implements JNISearchConst {
+    SearchCircle mCircle;
+    Bundle mDataBundle = null;
+    int mDistrictID;
+    String mName;
+    int mPageNumber;
+    int mPoiCount;
+
+    public static void packetParams(ReqData reqdata, String name, int districtID, SearchCircle circle, int poiCount, int pageNumber) {
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_KEY, name);
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_DISTID, Integer.valueOf(districtID));
+        if (circle != null) {
+            reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_CIRCLE, circle);
+        }
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_POICNT, Integer.valueOf(poiCount));
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_PAGERNUM, Integer.valueOf(pageNumber));
     }
-    paramReqData.mParams.put("param.search.poicount", Integer.valueOf(paramInt2));
-    paramReqData.mParams.put("param.search.pagernum", Integer.valueOf(paramInt3));
-  }
-  
-  protected CommandResult exec()
-  {
-    this.mDataBundle = new Bundle();
-    int i = searchByCircleForMapPoiResultPB(this.mName, this.mDistrictID, this.mCircle, this.mPoiCount, this.mPageNumber, this.mDataBundle);
-    if (i >= 0) {
-      this.mRet.setSuccess();
+
+    protected void unpacketParams(ReqData reqdata) {
+        this.mName = (String) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_KEY);
+        this.mDistrictID = ((Integer) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_DISTID)).intValue();
+        if (reqdata.mParams.containsKey(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_CIRCLE)) {
+            this.mCircle = (SearchCircle) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_CIRCLE);
+        } else {
+            this.mCircle = null;
+        }
+        this.mPoiCount = ((Integer) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_POICNT)).intValue();
+        this.mPageNumber = ((Integer) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_PAGERNUM)).intValue();
     }
-    for (;;)
-    {
-      return this.mRet;
-      this.mRet.set(i);
+
+    protected CommandResult exec() {
+        this.mDataBundle = new Bundle();
+        int ret = searchByCircleForMapPoiResultPB(this.mName, this.mDistrictID, this.mCircle, this.mPoiCount, this.mPageNumber, this.mDataBundle);
+        if (ret >= 0) {
+            this.mRet.setSuccess();
+        } else {
+            this.mRet.set(ret);
+        }
+        return this.mRet;
     }
-  }
-  
-  protected void handleError()
-  {
-    super.handleError();
-    if (!this.mReqData.mHasMsgSent)
-    {
-      Message localMessage = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
-      localMessage.arg1 = -1;
-      localMessage.obj = new RspData(this.mReqData, this.mDataBundle);
-      localMessage.sendToTarget();
-      this.mReqData.mHasMsgSent = true;
+
+    protected void handleSuccess() {
+        if (!this.mReqData.mHasMsgSent) {
+            Message msg = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
+            msg.arg1 = 0;
+            msg.obj = new RspData(this.mReqData, this.mDataBundle);
+            msg.sendToTarget();
+            this.mReqData.mHasMsgSent = true;
+        }
     }
-  }
-  
-  protected void handleSuccess()
-  {
-    if (!this.mReqData.mHasMsgSent)
-    {
-      Message localMessage = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
-      localMessage.arg1 = 0;
-      localMessage.obj = new RspData(this.mReqData, this.mDataBundle);
-      localMessage.sendToTarget();
-      this.mReqData.mHasMsgSent = true;
+
+    protected void handleError() {
+        super.handleError();
+        if (!this.mReqData.mHasMsgSent) {
+            Message msg = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
+            msg.arg1 = -1;
+            msg.obj = new RspData(this.mReqData, this.mDataBundle);
+            msg.sendToTarget();
+            this.mReqData.mHasMsgSent = true;
+        }
     }
-  }
-  
-  public int searchByCircleForMapPoiResultPB(String paramString, int paramInt1, SearchCircle paramSearchCircle, int paramInt2, int paramInt3, Bundle paramBundle)
-  {
-    if (paramString == null) {
-      paramInt1 = -1;
+
+    public int searchByCircleForMapPoiResultPB(String key, int districtId, SearchCircle circle, int poiCount, int pageNumber, Bundle data) {
+        if (key == null) {
+            return -1;
+        }
+        if (key.length() <= 0) {
+            return -2;
+        }
+        Bundle input = new Bundle();
+        input.putString("Name", key.toUpperCase(Locale.getDefault()));
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(districtId));
+        if (circle != null) {
+            input.putInt("HasCircle", 1);
+            input.putInt("CenterX", circle.mCenter.getLongitudeE6());
+            input.putInt("CenterY", circle.mCenter.getLatitudeE6());
+            input.putInt("Radius", circle.mRadius);
+        }
+        input.putInt("PoiCount", poiCount);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, pageNumber);
+        int ret = JNISearchControl.sInstance.searchByCircleForMapPoiResultPB(input, data);
+        LogUtil.m15791e("", "searchByCircleForMapPoiResultPB() ret: " + ret);
+        if (ret < 0) {
+            return -4;
+        }
+        return ret;
     }
-    do
-    {
-      return paramInt1;
-      if (paramString.length() <= 0) {
-        return -2;
-      }
-      Bundle localBundle = new Bundle();
-      localBundle.putString("Name", paramString.toUpperCase(Locale.getDefault()));
-      localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramInt1));
-      if (paramSearchCircle != null)
-      {
-        localBundle.putInt("HasCircle", 1);
-        localBundle.putInt("CenterX", paramSearchCircle.mCenter.getLongitudeE6());
-        localBundle.putInt("CenterY", paramSearchCircle.mCenter.getLatitudeE6());
-        localBundle.putInt("Radius", paramSearchCircle.mRadius);
-      }
-      localBundle.putInt("PoiCount", paramInt2);
-      localBundle.putInt("PoiPagerNum", paramInt3);
-      paramInt2 = JNISearchControl.sInstance.searchByCircleForMapPoiResultPB(localBundle, paramBundle);
-      LogUtil.e("", "searchByCircleForMapPoiResultPB() ret: " + paramInt2);
-      paramInt1 = paramInt2;
-    } while (paramInt2 >= 0);
-    return -4;
-  }
-  
-  protected void unpacketParams(ReqData paramReqData)
-  {
-    this.mName = ((String)paramReqData.mParams.get("param.search.key"));
-    this.mDistrictID = ((Integer)paramReqData.mParams.get("param.search.districtid")).intValue();
-    if (paramReqData.mParams.containsKey("param.search.circle")) {}
-    for (this.mCircle = ((SearchCircle)paramReqData.mParams.get("param.search.circle"));; this.mCircle = null)
-    {
-      this.mPoiCount = ((Integer)paramReqData.mParams.get("param.search.poicount")).intValue();
-      this.mPageNumber = ((Integer)paramReqData.mParams.get("param.search.pagernum")).intValue();
-      return;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/logic/commandparser/CmdSearchByCircleForMapPoiResultPB.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

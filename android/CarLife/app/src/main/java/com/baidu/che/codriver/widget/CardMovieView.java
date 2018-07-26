@@ -5,131 +5,103 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
+import com.baidu.carlife.C0965R;
 import com.baidu.che.codriver.protocol.data.nlp.CardMovieData;
-import com.baidu.che.codriver.ui.d.b;
-import com.baidu.che.codriver.util.h;
-import java.util.List;
+import com.baidu.che.codriver.ui.p124d.C2549b;
+import com.baidu.che.codriver.ui.p124d.C2694a;
+import com.baidu.che.codriver.util.C2714a;
+import com.baidu.che.codriver.util.C2725h;
 
-public class CardMovieView
-  extends LinearLayout
-{
-  public static final String a = CardMovieView.class.getSimpleName();
-  private TextView b;
-  private TextView c;
-  private TextView d;
-  private TextView e;
-  private TextView f;
-  private NetworkImageView g;
-  private Context h;
-  
-  public CardMovieView(Context paramContext)
-  {
-    super(paramContext, null);
-    this.h = paramContext;
-  }
-  
-  public CardMovieView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-    this.h = paramContext;
-  }
-  
-  public CardMovieView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    this.h = paramContext;
-  }
-  
-  private void a()
-  {
-    this.b = ((TextView)findViewById(2131625284));
-    this.c = ((TextView)findViewById(2131625288));
-    this.d = ((TextView)findViewById(2131625291));
-    this.e = ((TextView)findViewById(2131625294));
-    this.f = ((TextView)findViewById(2131625297));
-    this.g = ((NetworkImageView)findViewById(2131625285));
-  }
-  
-  public void a(b paramb)
-  {
-    h.b(a, "updateCardMovieInfo");
-    CardMovieData localCardMovieData = ((com.baidu.che.codriver.ui.d.a)paramb).a;
-    for (;;)
-    {
-      try
-      {
-        if (localCardMovieData.name != null) {
-          this.b.setText(localCardMovieData.name);
-        }
-        if (localCardMovieData.showTime != null) {
-          this.c.setText(localCardMovieData.showTime);
-        }
-        paramb = "";
-        if (localCardMovieData.type != null)
-        {
-          int i = 0;
-          localObject = paramb;
-          if (i < localCardMovieData.type.size())
-          {
-            paramb = paramb + (String)localCardMovieData.type.get(i) + "/";
-            i += 1;
-            continue;
-          }
-          this.d.setText((CharSequence)localObject);
-          if (localCardMovieData.director == null) {
-            break label336;
-          }
-          paramb = "";
-          i = 0;
-          localObject = paramb;
-          if (i < localCardMovieData.director.size())
-          {
-            paramb = paramb + (String)localCardMovieData.director.get(i) + "/";
-            i += 1;
-            continue;
-          }
-          this.e.setText((CharSequence)localObject);
-          if (localCardMovieData.actor == null) {
-            break label342;
-          }
-          paramb = "";
-          i = 0;
-          localObject = paramb;
-          if (i < localCardMovieData.actor.size())
-          {
-            paramb = paramb + (String)localCardMovieData.actor.get(i) + "/";
-            i += 1;
-            continue;
-          }
-          this.f.setText((CharSequence)localObject);
-          this.g.setImageUrl(localCardMovieData.post, com.baidu.che.codriver.util.a.a());
-          return;
-        }
-      }
-      catch (NullPointerException paramb)
-      {
-        h.e("ConversationAdapter", paramb.getMessage().toString());
-        return;
-      }
-      Object localObject = "暂无数据";
-      continue;
-      label336:
-      localObject = "暂无数据";
-      continue;
-      label342:
-      localObject = "暂无数据";
+public class CardMovieView extends LinearLayout {
+    /* renamed from: a */
+    public static final String f9389a = CardMovieView.class.getSimpleName();
+    /* renamed from: b */
+    private TextView f9390b;
+    /* renamed from: c */
+    private TextView f9391c;
+    /* renamed from: d */
+    private TextView f9392d;
+    /* renamed from: e */
+    private TextView f9393e;
+    /* renamed from: f */
+    private TextView f9394f;
+    /* renamed from: g */
+    private NetworkImageView f9395g;
+    /* renamed from: h */
+    private Context f9396h;
+
+    public CardMovieView(Context context) {
+        super(context, null);
+        this.f9396h = context;
     }
-  }
-  
-  protected void onFinishInflate()
-  {
-    super.onFinishInflate();
-    a();
-  }
+
+    public CardMovieView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+        this.f9396h = context;
+    }
+
+    public CardMovieView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.f9396h = context;
+    }
+
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        m10845a();
+    }
+
+    /* renamed from: a */
+    private void m10845a() {
+        this.f9390b = (TextView) findViewById(C0965R.id.movie_title);
+        this.f9391c = (TextView) findViewById(C0965R.id.movie_time);
+        this.f9392d = (TextView) findViewById(C0965R.id.movie_type_content);
+        this.f9393e = (TextView) findViewById(C0965R.id.movie_direct_content);
+        this.f9394f = (TextView) findViewById(C0965R.id.movie_actor_content);
+        this.f9395g = (NetworkImageView) findViewById(C0965R.id.movie_post);
+    }
+
+    /* renamed from: a */
+    public void m10846a(C2549b model) {
+        C2725h.m10207b(f9389a, "updateCardMovieInfo");
+        CardMovieData cardMovieResult = ((C2694a) model).f8810a;
+        try {
+            int i;
+            if (cardMovieResult.name != null) {
+                this.f9390b.setText(cardMovieResult.name);
+            }
+            if (cardMovieResult.showTime != null) {
+                this.f9391c.setText(cardMovieResult.showTime);
+            }
+            String movieTemp = "";
+            if (cardMovieResult.type != null) {
+                for (i = 0; i < cardMovieResult.type.size(); i++) {
+                    movieTemp = movieTemp + ((String) cardMovieResult.type.get(i)) + "/";
+                }
+            } else {
+                movieTemp = "暂无数据";
+            }
+            this.f9392d.setText(movieTemp);
+            if (cardMovieResult.director != null) {
+                movieTemp = "";
+                for (i = 0; i < cardMovieResult.director.size(); i++) {
+                    movieTemp = movieTemp + ((String) cardMovieResult.director.get(i)) + "/";
+                }
+            } else {
+                movieTemp = "暂无数据";
+            }
+            this.f9393e.setText(movieTemp);
+            if (cardMovieResult.actor != null) {
+                movieTemp = "";
+                for (i = 0; i < cardMovieResult.actor.size(); i++) {
+                    movieTemp = movieTemp + ((String) cardMovieResult.actor.get(i)) + "/";
+                }
+            } else {
+                movieTemp = "暂无数据";
+            }
+            this.f9394f.setText(movieTemp);
+            this.f9395g.setImageUrl(cardMovieResult.post, C2714a.m10135a());
+        } catch (NullPointerException mNull) {
+            C2725h.m10214e("ConversationAdapter", mNull.getMessage().toString());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/widget/CardMovieView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

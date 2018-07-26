@@ -3,196 +3,146 @@ package com.android.volley.toolbox;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 
-public class NetworkImageView
-  extends ImageView
-{
-  private int mDefaultImageId;
-  private int mErrorImageId;
-  private ImageLoader.ImageContainer mImageContainer;
-  private ImageLoader mImageLoader;
-  private String mUrl;
-  
-  public NetworkImageView(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public NetworkImageView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public NetworkImageView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  private void setDefaultImageOrNull()
-  {
-    if (this.mDefaultImageId != 0)
-    {
-      setImageResource(this.mDefaultImageId);
-      return;
+public class NetworkImageView extends ImageView {
+    private int mDefaultImageId;
+    private int mErrorImageId;
+    private ImageContainer mImageContainer;
+    private ImageLoader mImageLoader;
+    private String mUrl;
+
+    public NetworkImageView(Context context) {
+        this(context, null);
     }
-    setImageBitmap(null);
-  }
-  
-  protected void drawableStateChanged()
-  {
-    super.drawableStateChanged();
-    invalidate();
-  }
-  
-  void loadImageIfNecessary(final boolean paramBoolean)
-  {
-    int n = getWidth();
-    int m = getHeight();
-    ImageView.ScaleType localScaleType = getScaleType();
-    int j = 0;
-    int i = 0;
-    label57:
-    int k;
-    if (getLayoutParams() != null)
-    {
-      if (getLayoutParams().width == -2)
-      {
-        j = 1;
-        if (getLayoutParams().height != -2) {
-          break label89;
-        }
-        i = 1;
-      }
+
+    public NetworkImageView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
-    else
-    {
-      if ((j == 0) || (i == 0)) {
-        break label94;
-      }
-      k = 1;
-      label68:
-      if ((n != 0) || (m != 0) || (k != 0)) {
-        break label100;
-      }
+
+    public NetworkImageView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
     }
-    label89:
-    label94:
-    label100:
-    do
-    {
-      return;
-      j = 0;
-      break;
-      i = 0;
-      break label57;
-      k = 0;
-      break label68;
-      if (TextUtils.isEmpty(this.mUrl))
-      {
-        if (this.mImageContainer != null)
-        {
-          this.mImageContainer.cancelRequest();
-          this.mImageContainer = null;
-        }
-        setDefaultImageOrNull();
-        return;
-      }
-      if ((this.mImageContainer == null) || (this.mImageContainer.getRequestUrl() == null)) {
-        break label179;
-      }
-    } while (this.mImageContainer.getRequestUrl().equals(this.mUrl));
-    this.mImageContainer.cancelRequest();
-    setDefaultImageOrNull();
-    label179:
-    if (j != 0)
-    {
-      j = 0;
-      if (i == 0) {
-        break label226;
-      }
+
+    public void setImageUrl(String url, ImageLoader imageLoader) {
+        this.mUrl = url;
+        this.mImageLoader = imageLoader;
+        loadImageIfNecessary(false);
     }
-    label226:
-    for (i = 0;; i = m)
-    {
-      this.mImageContainer = this.mImageLoader.get(this.mUrl, new ImageLoader.ImageListener()
-      {
-        public void onErrorResponse(VolleyError paramAnonymousVolleyError)
-        {
-          if (NetworkImageView.this.mErrorImageId != 0) {
-            NetworkImageView.this.setImageResource(NetworkImageView.this.mErrorImageId);
-          }
-        }
-        
-        public void onResponse(final ImageLoader.ImageContainer paramAnonymousImageContainer, boolean paramAnonymousBoolean)
-        {
-          if ((paramAnonymousBoolean) && (paramBoolean)) {
-            NetworkImageView.this.post(new Runnable()
-            {
-              public void run()
-              {
-                NetworkImageView.1.this.onResponse(paramAnonymousImageContainer, false);
-              }
-            });
-          }
-          do
-          {
-            return;
-            if (paramAnonymousImageContainer.getBitmap() != null)
-            {
-              NetworkImageView.this.setImageBitmap(paramAnonymousImageContainer.getBitmap());
-              return;
+
+    public void setDefaultImageResId(int defaultImage) {
+        this.mDefaultImageId = defaultImage;
+    }
+
+    public void setErrorImageResId(int errorImage) {
+        this.mErrorImageId = errorImage;
+    }
+
+    void loadImageIfNecessary(final boolean isInLayoutPass) {
+        int width = getWidth();
+        int height = getHeight();
+        ScaleType scaleType = getScaleType();
+        boolean wrapWidth = false;
+        boolean wrapHeight = false;
+        if (getLayoutParams() != null) {
+            if (getLayoutParams().width == -2) {
+                wrapWidth = true;
+            } else {
+                wrapWidth = false;
             }
-          } while (NetworkImageView.this.mDefaultImageId == 0);
-          NetworkImageView.this.setImageResource(NetworkImageView.this.mDefaultImageId);
+            if (getLayoutParams().height == -2) {
+                wrapHeight = true;
+            } else {
+                wrapHeight = false;
+            }
         }
-      }, j, i, localScaleType);
-      return;
-      j = n;
-      break;
+        boolean isFullyWrapContent;
+        if (wrapWidth && wrapHeight) {
+            isFullyWrapContent = true;
+        } else {
+            isFullyWrapContent = false;
+        }
+        if (width != 0 || height != 0 || isFullyWrapContent) {
+            if (TextUtils.isEmpty(this.mUrl)) {
+                if (this.mImageContainer != null) {
+                    this.mImageContainer.cancelRequest();
+                    this.mImageContainer = null;
+                }
+                setDefaultImageOrNull();
+                return;
+            }
+            int maxWidth;
+            int maxHeight;
+            if (!(this.mImageContainer == null || this.mImageContainer.getRequestUrl() == null)) {
+                if (!this.mImageContainer.getRequestUrl().equals(this.mUrl)) {
+                    this.mImageContainer.cancelRequest();
+                    setDefaultImageOrNull();
+                } else {
+                    return;
+                }
+            }
+            if (wrapWidth) {
+                maxWidth = 0;
+            } else {
+                maxWidth = width;
+            }
+            if (wrapHeight) {
+                maxHeight = 0;
+            } else {
+                maxHeight = height;
+            }
+            this.mImageContainer = this.mImageLoader.get(this.mUrl, new ImageListener() {
+                public void onErrorResponse(VolleyError error) {
+                    if (NetworkImageView.this.mErrorImageId != 0) {
+                        NetworkImageView.this.setImageResource(NetworkImageView.this.mErrorImageId);
+                    }
+                }
+
+                public void onResponse(final ImageContainer response, boolean isImmediate) {
+                    if (isImmediate && isInLayoutPass) {
+                        NetworkImageView.this.post(new Runnable() {
+                            public void run() {
+                                C03991.this.onResponse(response, false);
+                            }
+                        });
+                    } else if (response.getBitmap() != null) {
+                        NetworkImageView.this.setImageBitmap(response.getBitmap());
+                    } else if (NetworkImageView.this.mDefaultImageId != 0) {
+                        NetworkImageView.this.setImageResource(NetworkImageView.this.mDefaultImageId);
+                    }
+                }
+            }, maxWidth, maxHeight, scaleType);
+        }
     }
-  }
-  
-  protected void onDetachedFromWindow()
-  {
-    if (this.mImageContainer != null)
-    {
-      this.mImageContainer.cancelRequest();
-      setImageBitmap(null);
-      this.mImageContainer = null;
+
+    private void setDefaultImageOrNull() {
+        if (this.mDefaultImageId != 0) {
+            setImageResource(this.mDefaultImageId);
+        } else {
+            setImageBitmap(null);
+        }
     }
-    super.onDetachedFromWindow();
-  }
-  
-  protected void onLayout(boolean paramBoolean, int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    super.onLayout(paramBoolean, paramInt1, paramInt2, paramInt3, paramInt4);
-    loadImageIfNecessary(true);
-  }
-  
-  public void setDefaultImageResId(int paramInt)
-  {
-    this.mDefaultImageId = paramInt;
-  }
-  
-  public void setErrorImageResId(int paramInt)
-  {
-    this.mErrorImageId = paramInt;
-  }
-  
-  public void setImageUrl(String paramString, ImageLoader paramImageLoader)
-  {
-    this.mUrl = paramString;
-    this.mImageLoader = paramImageLoader;
-    loadImageIfNecessary(false);
-  }
+
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        loadImageIfNecessary(true);
+    }
+
+    protected void onDetachedFromWindow() {
+        if (this.mImageContainer != null) {
+            this.mImageContainer.cancelRequest();
+            setImageBitmap(null);
+            this.mImageContainer = null;
+        }
+        super.onDetachedFromWindow();
+    }
+
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
+        invalidate();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/toolbox/NetworkImageView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

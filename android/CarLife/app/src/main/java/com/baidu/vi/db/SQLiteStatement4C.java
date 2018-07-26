@@ -6,120 +6,86 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
-public class SQLiteStatement4C
-{
-  private SQLiteDatabase database;
-  private HashMap<Integer, Object> parameterMap;
-  private String strSQL;
-  
-  public SQLiteStatement4C(SQLiteDatabase paramSQLiteDatabase, String paramString)
-  {
-    this.database = paramSQLiteDatabase;
-    this.strSQL = paramString;
-    this.parameterMap = new HashMap();
-  }
-  
-  private Object[] extractParameters()
-  {
-    ArrayList localArrayList = new ArrayList();
-    Object localObject = new ArrayList(this.parameterMap.keySet());
-    Collections.sort((List)localObject);
-    localObject = ((ArrayList)localObject).iterator();
-    while (((Iterator)localObject).hasNext())
-    {
-      Integer localInteger = (Integer)((Iterator)localObject).next();
-      localArrayList.add(this.parameterMap.get(localInteger));
+public class SQLiteStatement4C {
+    private SQLiteDatabase database;
+    private HashMap<Integer, Object> parameterMap = new HashMap();
+    private String strSQL;
+
+    public SQLiteStatement4C(SQLiteDatabase db, String sql) {
+        this.database = db;
+        this.strSQL = sql;
     }
-    return localArrayList.toArray();
-  }
-  
-  private String[] extractStringParameters()
-  {
-    Object[] arrayOfObject = extractParameters();
-    String[] arrayOfString = new String[arrayOfObject.length];
-    int i = 0;
-    for (;;)
-    {
-      if (i < arrayOfObject.length) {}
-      try
-      {
-        arrayOfString[i] = arrayOfObject[i].toString();
-        i += 1;
-        continue;
-        return arrayOfString;
-      }
-      catch (Exception localException)
-      {
-        for (;;) {}
-      }
+
+    public void bindNull(int index) {
+        this.parameterMap.put(Integer.valueOf(index), null);
     }
-  }
-  
-  public void Close() {}
-  
-  public void bind(int paramInt, double paramDouble)
-  {
-    this.parameterMap.put(Integer.valueOf(paramInt), Double.valueOf(paramDouble));
-  }
-  
-  public void bind(int paramInt1, int paramInt2)
-  {
-    this.parameterMap.put(Integer.valueOf(paramInt1), Integer.valueOf(paramInt2));
-  }
-  
-  public void bind(int paramInt, String paramString)
-  {
-    if ((paramString == null) || (paramString.length() == 0))
-    {
-      bindNull(paramInt);
-      return;
+
+    public void bind(int index, String value) {
+        if (value == null || value.length() == 0) {
+            bindNull(index);
+        } else {
+            this.parameterMap.put(Integer.valueOf(index), value);
+        }
     }
-    this.parameterMap.put(Integer.valueOf(paramInt), paramString);
-  }
-  
-  public void bind(int paramInt, byte[] paramArrayOfByte)
-  {
-    if (paramArrayOfByte.length == 0)
-    {
-      bindNull(paramInt);
-      return;
+
+    public void bind(int index, int value) {
+        this.parameterMap.put(Integer.valueOf(index), Integer.valueOf(value));
     }
-    this.parameterMap.put(Integer.valueOf(paramInt), paramArrayOfByte);
-  }
-  
-  public void bindNull(int paramInt)
-  {
-    this.parameterMap.put(Integer.valueOf(paramInt), null);
-  }
-  
-  public void clearBinds()
-  {
-    this.parameterMap.clear();
-  }
-  
-  public boolean execUpdate()
-  {
-    try
-    {
-      Object[] arrayOfObject = extractParameters();
-      if ((arrayOfObject == null) || (arrayOfObject.length == 0)) {
-        this.database.execSQL(this.strSQL);
-      } else {
-        this.database.execSQL(this.strSQL, arrayOfObject);
-      }
+
+    public void bind(int index, double value) {
+        this.parameterMap.put(Integer.valueOf(index), Double.valueOf(value));
     }
-    catch (SQLException localSQLException)
-    {
-      return false;
+
+    public void bind(int index, byte[] value) {
+        if (value.length == 0) {
+            bindNull(index);
+        } else {
+            this.parameterMap.put(Integer.valueOf(index), value);
+        }
     }
-    return true;
-  }
+
+    public boolean execUpdate() {
+        try {
+            Object[] bindArgs = extractParameters();
+            if (bindArgs == null || bindArgs.length == 0) {
+                this.database.execSQL(this.strSQL);
+            } else {
+                this.database.execSQL(this.strSQL, bindArgs);
+            }
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    private Object[] extractParameters() {
+        ArrayList<Object> valuelist = new ArrayList();
+        ArrayList<Integer> keyList = new ArrayList(this.parameterMap.keySet());
+        Collections.sort(keyList);
+        Iterator it = keyList.iterator();
+        while (it.hasNext()) {
+            valuelist.add(this.parameterMap.get((Integer) it.next()));
+        }
+        return valuelist.toArray();
+    }
+
+    private String[] extractStringParameters() {
+        Object[] objArr = extractParameters();
+        String[] strArr = new String[objArr.length];
+        for (int i = 0; i < objArr.length; i++) {
+            try {
+                strArr[i] = objArr[i].toString();
+            } catch (Exception e) {
+            }
+        }
+        return strArr;
+    }
+
+    public void clearBinds() {
+        this.parameterMap.clear();
+    }
+
+    public void Close() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/vi/db/SQLiteStatement4C.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

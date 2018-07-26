@@ -3,81 +3,61 @@ package com.baidu.mapframework.commonlib.asynchttp;
 import android.os.Looper;
 import java.lang.ref.WeakReference;
 
-public class RequestHandle
-{
-  private final WeakReference<AsyncHttpRequest> a;
-  
-  public RequestHandle(AsyncHttpRequest paramAsyncHttpRequest)
-  {
-    this.a = new WeakReference(paramAsyncHttpRequest);
-  }
-  
-  public boolean cancel(final boolean paramBoolean)
-  {
-    final AsyncHttpRequest localAsyncHttpRequest = (AsyncHttpRequest)this.a.get();
-    if (localAsyncHttpRequest != null)
-    {
-      if (Looper.myLooper() == Looper.getMainLooper())
-      {
-        new Thread(new Runnable()
-        {
-          public void run()
-          {
-            localAsyncHttpRequest.cancel(paramBoolean);
-          }
+public class RequestHandle {
+    /* renamed from: a */
+    private final WeakReference<AsyncHttpRequest> f18904a;
+
+    public RequestHandle(AsyncHttpRequest request) {
+        this.f18904a = new WeakReference(request);
+    }
+
+    public boolean cancel(final boolean mayInterruptIfRunning) {
+        final AsyncHttpRequest _request = (AsyncHttpRequest) this.f18904a.get();
+        if (_request == null) {
+            return false;
+        }
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            return _request.cancel(mayInterruptIfRunning);
+        }
+        new Thread(new Runnable(this) {
+            /* renamed from: c */
+            final /* synthetic */ RequestHandle f18903c;
+
+            public void run() {
+                _request.cancel(mayInterruptIfRunning);
+            }
         }).start();
         return true;
-      }
-      return localAsyncHttpRequest.cancel(paramBoolean);
     }
-    return false;
-  }
-  
-  public Object getTag()
-  {
-    AsyncHttpRequest localAsyncHttpRequest = (AsyncHttpRequest)this.a.get();
-    if (localAsyncHttpRequest == null) {
-      return null;
+
+    public boolean isFinished() {
+        AsyncHttpRequest _request = (AsyncHttpRequest) this.f18904a.get();
+        return _request == null || _request.isDone();
     }
-    return localAsyncHttpRequest.getTag();
-  }
-  
-  public boolean isCancelled()
-  {
-    AsyncHttpRequest localAsyncHttpRequest = (AsyncHttpRequest)this.a.get();
-    return (localAsyncHttpRequest == null) || (localAsyncHttpRequest.isCancelled());
-  }
-  
-  public boolean isFinished()
-  {
-    AsyncHttpRequest localAsyncHttpRequest = (AsyncHttpRequest)this.a.get();
-    return (localAsyncHttpRequest == null) || (localAsyncHttpRequest.isDone());
-  }
-  
-  public RequestHandle setTag(Object paramObject)
-  {
-    AsyncHttpRequest localAsyncHttpRequest = (AsyncHttpRequest)this.a.get();
-    if (localAsyncHttpRequest != null) {
-      localAsyncHttpRequest.setRequestTag(paramObject);
+
+    public boolean isCancelled() {
+        AsyncHttpRequest _request = (AsyncHttpRequest) this.f18904a.get();
+        return _request == null || _request.isCancelled();
     }
-    return this;
-  }
-  
-  public boolean shouldBeGarbageCollected()
-  {
-    if ((isCancelled()) || (isFinished())) {}
-    for (boolean bool = true;; bool = false)
-    {
-      if (bool) {
-        this.a.clear();
-      }
-      return bool;
+
+    public boolean shouldBeGarbageCollected() {
+        boolean should = isCancelled() || isFinished();
+        if (should) {
+            this.f18904a.clear();
+        }
+        return should;
     }
-  }
+
+    public Object getTag() {
+        AsyncHttpRequest _request = (AsyncHttpRequest) this.f18904a.get();
+        return _request == null ? null : _request.getTag();
+    }
+
+    public RequestHandle setTag(Object tag) {
+        AsyncHttpRequest _request = (AsyncHttpRequest) this.f18904a.get();
+        if (_request != null) {
+            _request.setRequestTag(tag);
+        }
+        return this;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/RequestHandle.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

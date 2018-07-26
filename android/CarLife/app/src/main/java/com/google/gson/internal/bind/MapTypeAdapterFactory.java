@@ -6,7 +6,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
-import com.google.gson.internal..Gson.Types;
+import com.google.gson.internal.C$Gson$Types;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.JsonReaderInternalAccess;
 import com.google.gson.internal.ObjectConstructor;
@@ -18,188 +18,136 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
-public final class MapTypeAdapterFactory
-  implements TypeAdapterFactory
-{
-  private final boolean complexMapKeySerialization;
-  private final ConstructorConstructor constructorConstructor;
-  
-  public MapTypeAdapterFactory(ConstructorConstructor paramConstructorConstructor, boolean paramBoolean)
-  {
-    this.constructorConstructor = paramConstructorConstructor;
-    this.complexMapKeySerialization = paramBoolean;
-  }
-  
-  private TypeAdapter<?> getKeyAdapter(Gson paramGson, Type paramType)
-  {
-    if ((paramType == Boolean.TYPE) || (paramType == Boolean.class)) {
-      return TypeAdapters.BOOLEAN_AS_STRING;
+public final class MapTypeAdapterFactory implements TypeAdapterFactory {
+    private final boolean complexMapKeySerialization;
+    private final ConstructorConstructor constructorConstructor;
+
+    private final class Adapter<K, V> extends TypeAdapter<Map<K, V>> {
+        private final ObjectConstructor<? extends Map<K, V>> constructor;
+        private final TypeAdapter<K> keyTypeAdapter;
+        private final TypeAdapter<V> valueTypeAdapter;
+
+        public Adapter(Gson context, Type keyType, TypeAdapter<K> keyTypeAdapter, Type valueType, TypeAdapter<V> valueTypeAdapter, ObjectConstructor<? extends Map<K, V>> constructor) {
+            this.keyTypeAdapter = new TypeAdapterRuntimeTypeWrapper(context, keyTypeAdapter, keyType);
+            this.valueTypeAdapter = new TypeAdapterRuntimeTypeWrapper(context, valueTypeAdapter, valueType);
+            this.constructor = constructor;
+        }
+
+        public Map<K, V> read(JsonReader in) throws IOException {
+            JsonToken peek = in.peek();
+            if (peek == JsonToken.NULL) {
+                in.nextNull();
+                return null;
+            }
+            Map<K, V> map = (Map) this.constructor.construct();
+            K key;
+            if (peek == JsonToken.BEGIN_ARRAY) {
+                in.beginArray();
+                while (in.hasNext()) {
+                    in.beginArray();
+                    key = this.keyTypeAdapter.read(in);
+                    if (map.put(key, this.valueTypeAdapter.read(in)) != null) {
+                        throw new JsonSyntaxException("duplicate key: " + key);
+                    }
+                    in.endArray();
+                }
+                in.endArray();
+                return map;
+            }
+            in.beginObject();
+            while (in.hasNext()) {
+                JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
+                key = this.keyTypeAdapter.read(in);
+                if (map.put(key, this.valueTypeAdapter.read(in)) != null) {
+                    throw new JsonSyntaxException("duplicate key: " + key);
+                }
+            }
+            in.endObject();
+            return map;
+        }
+
+        public void write(JsonWriter out, Map<K, V> map) throws IOException {
+            if (map == null) {
+                out.nullValue();
+            } else if (MapTypeAdapterFactory.this.complexMapKeySerialization) {
+                boolean hasComplexKeys = false;
+                List<JsonElement> keys = new ArrayList(map.size());
+                List<V> values = new ArrayList(map.size());
+                for (Entry<K, V> entry : map.entrySet()) {
+                    JsonElement keyElement = this.keyTypeAdapter.toJsonTree(entry.getKey());
+                    keys.add(keyElement);
+                    values.add(entry.getValue());
+                    int i = (keyElement.isJsonArray() || keyElement.isJsonObject()) ? 1 : 0;
+                    hasComplexKeys |= i;
+                }
+                int i2;
+                if (hasComplexKeys) {
+                    out.beginArray();
+                    for (i2 = 0; i2 < keys.size(); i2++) {
+                        out.beginArray();
+                        Streams.write((JsonElement) keys.get(i2), out);
+                        this.valueTypeAdapter.write(out, values.get(i2));
+                        out.endArray();
+                    }
+                    out.endArray();
+                    return;
+                }
+                out.beginObject();
+                for (i2 = 0; i2 < keys.size(); i2++) {
+                    out.name(keyToString((JsonElement) keys.get(i2)));
+                    this.valueTypeAdapter.write(out, values.get(i2));
+                }
+                out.endObject();
+            } else {
+                out.beginObject();
+                for (Entry<K, V> entry2 : map.entrySet()) {
+                    out.name(String.valueOf(entry2.getKey()));
+                    this.valueTypeAdapter.write(out, entry2.getValue());
+                }
+                out.endObject();
+            }
+        }
+
+        private String keyToString(JsonElement keyElement) {
+            if (keyElement.isJsonPrimitive()) {
+                JsonPrimitive primitive = keyElement.getAsJsonPrimitive();
+                if (primitive.isNumber()) {
+                    return String.valueOf(primitive.getAsNumber());
+                }
+                if (primitive.isBoolean()) {
+                    return Boolean.toString(primitive.getAsBoolean());
+                }
+                if (primitive.isString()) {
+                    return primitive.getAsString();
+                }
+                throw new AssertionError();
+            } else if (keyElement.isJsonNull()) {
+                return "null";
+            } else {
+                throw new AssertionError();
+            }
+        }
     }
-    return paramGson.getAdapter(TypeToken.get(paramType));
-  }
-  
-  public <T> TypeAdapter<T> create(Gson paramGson, TypeToken<T> paramTypeToken)
-  {
-    Object localObject = paramTypeToken.getType();
-    if (!Map.class.isAssignableFrom(paramTypeToken.getRawType())) {
-      return null;
+
+    public MapTypeAdapterFactory(ConstructorConstructor constructorConstructor, boolean complexMapKeySerialization) {
+        this.constructorConstructor = constructorConstructor;
+        this.complexMapKeySerialization = complexMapKeySerialization;
     }
-    localObject = .Gson.Types.getMapKeyAndValueTypes((Type)localObject, .Gson.Types.getRawType((Type)localObject));
-    TypeAdapter localTypeAdapter1 = getKeyAdapter(paramGson, localObject[0]);
-    TypeAdapter localTypeAdapter2 = paramGson.getAdapter(TypeToken.get(localObject[1]));
-    paramTypeToken = this.constructorConstructor.get(paramTypeToken);
-    return new Adapter(paramGson, localObject[0], localTypeAdapter1, localObject[1], localTypeAdapter2, paramTypeToken);
-  }
-  
-  private final class Adapter<K, V>
-    extends TypeAdapter<Map<K, V>>
-  {
-    private final ObjectConstructor<? extends Map<K, V>> constructor;
-    private final TypeAdapter<K> keyTypeAdapter;
-    private final TypeAdapter<V> valueTypeAdapter;
-    
-    public Adapter(Type paramType1, TypeAdapter<K> paramTypeAdapter, Type paramType2, TypeAdapter<V> paramTypeAdapter1, ObjectConstructor<? extends Map<K, V>> paramObjectConstructor)
-    {
-      this.keyTypeAdapter = new TypeAdapterRuntimeTypeWrapper(paramType1, paramType2, paramTypeAdapter);
-      this.valueTypeAdapter = new TypeAdapterRuntimeTypeWrapper(paramType1, paramObjectConstructor, paramTypeAdapter1);
-      ObjectConstructor localObjectConstructor;
-      this.constructor = localObjectConstructor;
+
+    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+        Type type = typeToken.getType();
+        if (!Map.class.isAssignableFrom(typeToken.getRawType())) {
+            return null;
+        }
+        Type[] keyAndValueTypes = C$Gson$Types.getMapKeyAndValueTypes(type, C$Gson$Types.getRawType(type));
+        return new Adapter(gson, keyAndValueTypes[0], getKeyAdapter(gson, keyAndValueTypes[0]), keyAndValueTypes[1], gson.getAdapter(TypeToken.get(keyAndValueTypes[1])), this.constructorConstructor.get(typeToken));
     }
-    
-    private String keyToString(JsonElement paramJsonElement)
-    {
-      if (paramJsonElement.isJsonPrimitive())
-      {
-        paramJsonElement = paramJsonElement.getAsJsonPrimitive();
-        if (paramJsonElement.isNumber()) {
-          return String.valueOf(paramJsonElement.getAsNumber());
-        }
-        if (paramJsonElement.isBoolean()) {
-          return Boolean.toString(paramJsonElement.getAsBoolean());
-        }
-        if (paramJsonElement.isString()) {
-          return paramJsonElement.getAsString();
-        }
-        throw new AssertionError();
-      }
-      if (paramJsonElement.isJsonNull()) {
-        return "null";
-      }
-      throw new AssertionError();
+
+    private TypeAdapter<?> getKeyAdapter(Gson context, Type keyType) {
+        return (keyType == Boolean.TYPE || keyType == Boolean.class) ? TypeAdapters.BOOLEAN_AS_STRING : context.getAdapter(TypeToken.get(keyType));
     }
-    
-    public Map<K, V> read(JsonReader paramJsonReader)
-      throws IOException
-    {
-      Object localObject = paramJsonReader.peek();
-      if (localObject == JsonToken.NULL)
-      {
-        paramJsonReader.nextNull();
-        return null;
-      }
-      Map localMap = (Map)this.constructor.construct();
-      if (localObject == JsonToken.BEGIN_ARRAY)
-      {
-        paramJsonReader.beginArray();
-        while (paramJsonReader.hasNext())
-        {
-          paramJsonReader.beginArray();
-          localObject = this.keyTypeAdapter.read(paramJsonReader);
-          if (localMap.put(localObject, this.valueTypeAdapter.read(paramJsonReader)) != null) {
-            throw new JsonSyntaxException("duplicate key: " + localObject);
-          }
-          paramJsonReader.endArray();
-        }
-        paramJsonReader.endArray();
-        return localMap;
-      }
-      paramJsonReader.beginObject();
-      while (paramJsonReader.hasNext())
-      {
-        JsonReaderInternalAccess.INSTANCE.promoteNameToValue(paramJsonReader);
-        localObject = this.keyTypeAdapter.read(paramJsonReader);
-        if (localMap.put(localObject, this.valueTypeAdapter.read(paramJsonReader)) != null) {
-          throw new JsonSyntaxException("duplicate key: " + localObject);
-        }
-      }
-      paramJsonReader.endObject();
-      return localMap;
-    }
-    
-    public void write(JsonWriter paramJsonWriter, Map<K, V> paramMap)
-      throws IOException
-    {
-      if (paramMap == null)
-      {
-        paramJsonWriter.nullValue();
-        return;
-      }
-      if (!MapTypeAdapterFactory.this.complexMapKeySerialization)
-      {
-        paramJsonWriter.beginObject();
-        paramMap = paramMap.entrySet().iterator();
-        while (paramMap.hasNext())
-        {
-          localObject = (Map.Entry)paramMap.next();
-          paramJsonWriter.name(String.valueOf(((Map.Entry)localObject).getKey()));
-          this.valueTypeAdapter.write(paramJsonWriter, ((Map.Entry)localObject).getValue());
-        }
-        paramJsonWriter.endObject();
-        return;
-      }
-      int i = 0;
-      Object localObject = new ArrayList(paramMap.size());
-      ArrayList localArrayList = new ArrayList(paramMap.size());
-      paramMap = paramMap.entrySet().iterator();
-      if (paramMap.hasNext())
-      {
-        Map.Entry localEntry = (Map.Entry)paramMap.next();
-        JsonElement localJsonElement = this.keyTypeAdapter.toJsonTree(localEntry.getKey());
-        ((List)localObject).add(localJsonElement);
-        localArrayList.add(localEntry.getValue());
-        if ((localJsonElement.isJsonArray()) || (localJsonElement.isJsonObject())) {}
-        for (int j = 1;; j = 0)
-        {
-          i |= j;
-          break;
-        }
-      }
-      if (i != 0)
-      {
-        paramJsonWriter.beginArray();
-        i = 0;
-        while (i < ((List)localObject).size())
-        {
-          paramJsonWriter.beginArray();
-          Streams.write((JsonElement)((List)localObject).get(i), paramJsonWriter);
-          this.valueTypeAdapter.write(paramJsonWriter, localArrayList.get(i));
-          paramJsonWriter.endArray();
-          i += 1;
-        }
-        paramJsonWriter.endArray();
-        return;
-      }
-      paramJsonWriter.beginObject();
-      i = 0;
-      while (i < ((List)localObject).size())
-      {
-        paramJsonWriter.name(keyToString((JsonElement)((List)localObject).get(i)));
-        this.valueTypeAdapter.write(paramJsonWriter, localArrayList.get(i));
-        i += 1;
-      }
-      paramJsonWriter.endObject();
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/bind/MapTypeAdapterFactory.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

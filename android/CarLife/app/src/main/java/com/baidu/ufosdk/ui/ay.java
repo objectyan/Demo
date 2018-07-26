@@ -1,18 +1,15 @@
 package com.baidu.ufosdk.ui;
 
-final class ay
-  implements Runnable
-{
-  ay(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void run()
-  {
-    FeedbackInputActivity.P(this.a);
-  }
+/* compiled from: FeedbackInputActivity */
+final class ay implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21562a;
+
+    ay(FeedbackInputActivity feedbackInputActivity) {
+        this.f21562a = feedbackInputActivity;
+    }
+
+    public final void run() {
+        FeedbackInputActivity.m17636P(this.f21562a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

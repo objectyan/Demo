@@ -4,55 +4,43 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.widget.EdgeEffect;
 
-class EdgeEffectCompatIcs
-{
-  public static boolean draw(Object paramObject, Canvas paramCanvas)
-  {
-    return ((EdgeEffect)paramObject).draw(paramCanvas);
-  }
-  
-  public static void finish(Object paramObject)
-  {
-    ((EdgeEffect)paramObject).finish();
-  }
-  
-  public static boolean isFinished(Object paramObject)
-  {
-    return ((EdgeEffect)paramObject).isFinished();
-  }
-  
-  public static Object newEdgeEffect(Context paramContext)
-  {
-    return new EdgeEffect(paramContext);
-  }
-  
-  public static boolean onAbsorb(Object paramObject, int paramInt)
-  {
-    ((EdgeEffect)paramObject).onAbsorb(paramInt);
-    return true;
-  }
-  
-  public static boolean onPull(Object paramObject, float paramFloat)
-  {
-    ((EdgeEffect)paramObject).onPull(paramFloat);
-    return true;
-  }
-  
-  public static boolean onRelease(Object paramObject)
-  {
-    paramObject = (EdgeEffect)paramObject;
-    ((EdgeEffect)paramObject).onRelease();
-    return ((EdgeEffect)paramObject).isFinished();
-  }
-  
-  public static void setSize(Object paramObject, int paramInt1, int paramInt2)
-  {
-    ((EdgeEffect)paramObject).setSize(paramInt1, paramInt2);
-  }
+class EdgeEffectCompatIcs {
+    EdgeEffectCompatIcs() {
+    }
+
+    public static Object newEdgeEffect(Context context) {
+        return new EdgeEffect(context);
+    }
+
+    public static void setSize(Object edgeEffect, int width, int height) {
+        ((EdgeEffect) edgeEffect).setSize(width, height);
+    }
+
+    public static boolean isFinished(Object edgeEffect) {
+        return ((EdgeEffect) edgeEffect).isFinished();
+    }
+
+    public static void finish(Object edgeEffect) {
+        ((EdgeEffect) edgeEffect).finish();
+    }
+
+    public static boolean onPull(Object edgeEffect, float deltaDistance) {
+        ((EdgeEffect) edgeEffect).onPull(deltaDistance);
+        return true;
+    }
+
+    public static boolean onRelease(Object edgeEffect) {
+        EdgeEffect eff = (EdgeEffect) edgeEffect;
+        eff.onRelease();
+        return eff.isFinished();
+    }
+
+    public static boolean onAbsorb(Object edgeEffect, int velocity) {
+        ((EdgeEffect) edgeEffect).onAbsorb(velocity);
+        return true;
+    }
+
+    public static boolean draw(Object edgeEffect, Canvas canvas) {
+        return ((EdgeEffect) edgeEffect).draw(canvas);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/widget/EdgeEffectCompatIcs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,7 +1,6 @@
 package com.baidu.carlife.fragment;
 
 import android.os.Build.VERSION;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,408 +17,402 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.c;
-import com.baidu.carlife.core.e;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.h;
-import com.baidu.carlife.logic.u;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1192c;
+import com.baidu.carlife.core.C1251e;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.presentation.p071a.C1309g;
+import com.baidu.carlife.logic.C1877u;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.p078f.C1444h;
+import com.baidu.carlife.p087l.C1663a;
 import com.baidu.carlife.view.UserGuideViewPager;
-import com.baidu.carlife.view.a.b;
+import com.baidu.carlife.view.p104a.C2251b;
 import com.baidu.navi.fragment.BaseFragment;
 import com.baidu.navi.fragment.ContentFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewUserGuideFragment
-  extends ContentFragment
-  implements View.OnClickListener, View.OnTouchListener
-{
-  public static final String a = "firstEnter";
-  public static final String b = "index";
-  private boolean c;
-  private int d = 0;
-  private RelativeLayout e;
-  private ImageView f;
-  private ImageView g;
-  private ImageView h;
-  private RelativeLayout i;
-  private RelativeLayout j;
-  private UserGuideViewPager k;
-  private List<View> l;
-  private TextView m;
-  private com.baidu.carlife.f.g n;
-  private h o;
-  
-  private void a()
-  {
-    if (this.o == null)
-    {
-      this.o = new h((ViewPager)this.mContentView.findViewById(2131624834), 4);
-      this.o.a(new View.OnKeyListener()
-      {
-        public boolean onKey(View paramAnonymousView, int paramAnonymousInt, KeyEvent paramAnonymousKeyEvent)
-        {
-          if ((paramAnonymousKeyEvent.getAction() == 0) && (paramAnonymousInt == 23))
-          {
-            if ((com.baidu.carlife.core.screen.presentation.a.g.a().isDialogShown()) && (!d.a().i())) {}
-            while (!NewUserGuideFragment.g(NewUserGuideFragment.this)) {
-              return true;
+public class NewUserGuideFragment extends ContentFragment implements OnClickListener, OnTouchListener {
+    /* renamed from: a */
+    public static final String f4663a = "firstEnter";
+    /* renamed from: b */
+    public static final String f4664b = "index";
+    /* renamed from: c */
+    private boolean f4665c;
+    /* renamed from: d */
+    private int f4666d = 0;
+    /* renamed from: e */
+    private RelativeLayout f4667e;
+    /* renamed from: f */
+    private ImageView f4668f;
+    /* renamed from: g */
+    private ImageView f4669g;
+    /* renamed from: h */
+    private ImageView f4670h;
+    /* renamed from: i */
+    private RelativeLayout f4671i;
+    /* renamed from: j */
+    private RelativeLayout f4672j;
+    /* renamed from: k */
+    private UserGuideViewPager f4673k;
+    /* renamed from: l */
+    private List<View> f4674l;
+    /* renamed from: m */
+    private TextView f4675m;
+    /* renamed from: n */
+    private C1443g f4676n;
+    /* renamed from: o */
+    private C1444h f4677o;
+
+    /* renamed from: com.baidu.carlife.fragment.NewUserGuideFragment$1 */
+    class C15521 implements OnPageChangeListener {
+        /* renamed from: a */
+        final /* synthetic */ NewUserGuideFragment f4659a;
+
+        C15521(NewUserGuideFragment this$0) {
+            this.f4659a = this$0;
+        }
+
+        public void onPageScrolled(int i, float v, int i1) {
+        }
+
+        public void onPageSelected(int pos) {
+            m5702a(pos);
+        }
+
+        /* renamed from: a */
+        private void m5702a(int pos) {
+            if (this.f4659a.f4665c) {
+                if (pos == 0) {
+                    this.f4659a.m5704a(8, 0, 8);
+                    this.f4659a.f4675m.setVisibility(8);
+                } else if (pos == this.f4659a.f4674l.size() - 1) {
+                    this.f4659a.m5704a(0, 8, 0);
+                    this.f4659a.f4675m.setVisibility(0);
+                }
+            } else if (pos == 0) {
+                this.f4659a.f4668f.setVisibility(8);
+            } else {
+                this.f4659a.f4668f.setVisibility(0);
+                this.f4659a.f4669g.setVisibility(0);
             }
-            NewUserGuideFragment.h(NewUserGuideFragment.this);
+        }
+
+        public void onPageScrollStateChanged(int i) {
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.NewUserGuideFragment$2 */
+    class C15532 implements OnFocusChangeListener {
+        /* renamed from: a */
+        final /* synthetic */ NewUserGuideFragment f4660a;
+
+        C15532(NewUserGuideFragment this$0) {
+            this.f4660a = this$0;
+        }
+
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                this.f4660a.f4670h.setBackground(ContextCompat.getDrawable(BaseFragment.mActivity, C0965R.drawable.guide_btn_start_hover));
+            } else {
+                this.f4660a.f4670h.setBackground(ContextCompat.getDrawable(BaseFragment.mActivity, C0965R.drawable.guide_btn_start));
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.NewUserGuideFragment$3 */
+    class C15543 implements OnKeyListener {
+        /* renamed from: a */
+        final /* synthetic */ NewUserGuideFragment f4661a;
+
+        C15543(NewUserGuideFragment this$0) {
+            this.f4661a = this$0;
+        }
+
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getAction() != 0 || keyCode != 23) {
+                return false;
+            }
+            if ((C1309g.m4699a().isDialogShown() && !C1440d.m5251a().m5270i()) || !this.f4661a.m5717c()) {
+                return true;
+            }
+            this.f4661a.m5719d();
             return true;
-          }
-          return false;
         }
-      });
     }
-  }
-  
-  private void a(int paramInt1, int paramInt2, int paramInt3)
-  {
-    this.f.setVisibility(paramInt1);
-    this.h.setVisibility(paramInt3);
-    this.g.setVisibility(paramInt2);
-  }
-  
-  private void a(LayoutInflater paramLayoutInflater)
-  {
-    View localView = paramLayoutInflater.inflate(2130969047, null);
-    paramLayoutInflater = paramLayoutInflater.inflate(2130969049, null);
-    this.l = new ArrayList();
-    this.l.add(localView);
-    this.l.add(paramLayoutInflater);
-  }
-  
-  private void a(MotionEvent paramMotionEvent)
-  {
-    if (paramMotionEvent.getAction() == 0) {
-      if (c()) {
-        this.h.setBackground(ContextCompat.getDrawable(mActivity, 2130838542));
-      }
+
+    /* renamed from: com.baidu.carlife.fragment.NewUserGuideFragment$a */
+    private class C1555a extends PagerAdapter {
+        /* renamed from: a */
+        final /* synthetic */ NewUserGuideFragment f4662a;
+
+        private C1555a(NewUserGuideFragment newUserGuideFragment) {
+            this.f4662a = newUserGuideFragment;
+        }
+
+        public int getCount() {
+            if (this.f4662a.f4665c) {
+                return this.f4662a.f4674l.size();
+            }
+            return this.f4662a.f4674l.size() - 1;
+        }
+
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        public void destroyItem(View arg0, int arg1, Object arg2) {
+            ((ViewPager) arg0).removeView((View) this.f4662a.f4674l.get(arg1));
+        }
+
+        public Object instantiateItem(View arg0, int arg1) {
+            ((ViewPager) arg0).addView((View) this.f4662a.f4674l.get(arg1));
+            return this.f4662a.f4674l.get(arg1);
+        }
     }
-    while (paramMotionEvent.getAction() != 1)
-    {
-      return;
-      this.g.setBackground(ContextCompat.getDrawable(mActivity, 2130838536));
-      return;
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        setBottomBarStatus(false);
+        if (this.mShowBundle != null) {
+            this.f4665c = this.mShowBundle.getBoolean("firstEnter", false);
+            this.f4666d = this.mShowBundle.getInt("index", 0);
+        }
+        View contentView = inflater.inflate(C0965R.layout.frag_guid_new, null);
+        m5707a(contentView);
+        m5720d(contentView);
+        m5705a(inflater);
+        m5723e(contentView);
+        m5714b(contentView);
+        m5716c(contentView);
+        this.f4673k.setCurrentItem(this.f4666d);
+        return contentView;
     }
-    if (c()) {
-      if (this.c) {
-        d();
-      }
+
+    public void onResume() {
+        super.onResume();
+        m5712b();
     }
-    for (;;)
-    {
-      f();
-      return;
-      this.g.setBackground(ContextCompat.getDrawable(mActivity, 2130839534));
+
+    /* renamed from: a */
+    private void m5707a(View contentView) {
+        this.f4675m = (TextView) contentView.findViewById(C0965R.id.tv_legacy);
+        this.f4675m.setText(C1877u.m7165a(getStringUtil(C0965R.string.legacy_content)));
+        this.f4675m.setMovementMethod(LinkMovementMethod.getInstance());
     }
-  }
-  
-  private void a(View paramView)
-  {
-    this.m = ((TextView)paramView.findViewById(2131624842));
-    this.m.setText(u.a(getStringUtil(2131296550)));
-    this.m.setMovementMethod(LinkMovementMethod.getInstance());
-  }
-  
-  private boolean a(View paramView, MotionEvent paramMotionEvent)
-  {
-    switch (paramView.getId())
-    {
-    case 2131624838: 
-    default: 
-      return false;
-    case 2131624837: 
-      b(paramMotionEvent);
-      return true;
+
+    /* renamed from: b */
+    private void m5714b(View contentView) {
+        this.f4671i = (RelativeLayout) contentView.findViewById(C0965R.id.rl_left_touch);
+        this.f4671i.setOnTouchListener(this);
+        this.f4672j = (RelativeLayout) contentView.findViewById(C0965R.id.rl_right_touch);
+        this.f4672j.setOnTouchListener(this);
     }
-    a(paramMotionEvent);
-    return true;
-  }
-  
-  private void b()
-  {
-    if (this.c)
-    {
-      d.a().b(new com.baidu.carlife.f.a[] { this.o });
-      d.a().h(this.o);
-      return;
+
+    /* renamed from: c */
+    private void m5716c(View contentView) {
+        this.f4668f = (ImageView) contentView.findViewById(C0965R.id.iv_left);
+        this.f4668f.setOnClickListener(this);
+        this.f4669g = (ImageView) contentView.findViewById(C0965R.id.iv_right);
+        this.f4669g.setOnClickListener(this);
+        this.f4670h = (ImageView) contentView.findViewById(C0965R.id.iv_enter);
+        this.f4670h.setOnClickListener(this);
     }
-    d.a().b(new com.baidu.carlife.f.a[] { this.n, this.o });
-    d.a().h(this.n);
-  }
-  
-  private void b(MotionEvent paramMotionEvent)
-  {
-    if (paramMotionEvent.getAction() == 0) {
-      this.f.setBackground(ContextCompat.getDrawable(mActivity, 2130838539));
-    }
-    while (paramMotionEvent.getAction() != 1) {
-      return;
-    }
-    this.f.setBackground(ContextCompat.getDrawable(mActivity, 2130839531));
-    e();
-  }
-  
-  private void b(View paramView)
-  {
-    this.i = ((RelativeLayout)paramView.findViewById(2131624837));
-    this.i.setOnTouchListener(this);
-    this.j = ((RelativeLayout)paramView.findViewById(2131624839));
-    this.j.setOnTouchListener(this);
-  }
-  
-  private void c(View paramView)
-  {
-    this.f = ((ImageView)paramView.findViewById(2131624838));
-    this.f.setOnClickListener(this);
-    this.g = ((ImageView)paramView.findViewById(2131624840));
-    this.g.setOnClickListener(this);
-    this.h = ((ImageView)paramView.findViewById(2131624841));
-    this.h.setOnClickListener(this);
-  }
-  
-  private boolean c()
-  {
-    return this.k.getCurrentItem() == this.l.size() - 1;
-  }
-  
-  private void d()
-  {
-    i.b("Framework", "onEnterCarlife");
-    c.a().a(false);
-    if ((!e.a().x()) && (!com.baidu.carlife.l.a.a().N()))
-    {
-      showFragment(513, null);
-      return;
-    }
-    showFragment(515, null);
-  }
-  
-  private void d(View paramView)
-  {
-    this.e = ((RelativeLayout)paramView.findViewById(2131624835));
-    if (this.c)
-    {
-      this.e.setVisibility(8);
-      return;
-    }
-    this.e.setVisibility(0);
-    this.e.setOnClickListener(this);
-  }
-  
-  private void e()
-  {
-    if (this.d <= 0) {
-      return;
-    }
-    this.d -= 1;
-    this.k.setCurrentItem(this.d);
-  }
-  
-  private void e(View paramView)
-  {
-    this.k = ((UserGuideViewPager)paramView.findViewById(2131624834));
-    this.k.setScrollOperationFlag(false);
-    this.k.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
-    {
-      private void a(int paramAnonymousInt)
-      {
-        if (NewUserGuideFragment.a(NewUserGuideFragment.this))
-        {
-          if (paramAnonymousInt == 0)
-          {
-            NewUserGuideFragment.a(NewUserGuideFragment.this, 8, 0, 8);
-            NewUserGuideFragment.b(NewUserGuideFragment.this).setVisibility(8);
-          }
-          while (paramAnonymousInt != NewUserGuideFragment.c(NewUserGuideFragment.this).size() - 1) {
+
+    /* renamed from: d */
+    private void m5720d(View contentView) {
+        this.f4667e = (RelativeLayout) contentView.findViewById(C0965R.id.rl_left_back_btn);
+        if (this.f4665c) {
+            this.f4667e.setVisibility(8);
             return;
-          }
-          NewUserGuideFragment.a(NewUserGuideFragment.this, 0, 8, 0);
-          NewUserGuideFragment.b(NewUserGuideFragment.this).setVisibility(0);
-          return;
         }
-        if (paramAnonymousInt == 0)
-        {
-          NewUserGuideFragment.d(NewUserGuideFragment.this).setVisibility(8);
-          return;
+        this.f4667e.setVisibility(0);
+        this.f4667e.setOnClickListener(this);
+    }
+
+    /* renamed from: e */
+    private void m5723e(View contentView) {
+        this.f4673k = (UserGuideViewPager) contentView.findViewById(C0965R.id.viewpager);
+        this.f4673k.setScrollOperationFlag(false);
+        this.f4673k.setOnPageChangeListener(new C15521(this));
+        this.f4673k.setAdapter(new C1555a());
+        this.f4673k.setOnFocusChangeListener(new C15532(this));
+    }
+
+    /* renamed from: a */
+    private void m5705a(LayoutInflater inflater) {
+        View view1 = inflater.inflate(C0965R.layout.user_guide1, null);
+        View view3 = inflater.inflate(C0965R.layout.user_guide3, null);
+        this.f4674l = new ArrayList();
+        this.f4674l.add(view1);
+        this.f4674l.add(view3);
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (VERSION.SDK_INT <= 16) {
+            removeAllFragmentByType(516);
+        } else if (mActivity != null && !mActivity.isDestroyed()) {
+            removeAllFragmentByType(516);
         }
-        NewUserGuideFragment.d(NewUserGuideFragment.this).setVisibility(0);
-        NewUserGuideFragment.e(NewUserGuideFragment.this).setVisibility(0);
-      }
-      
-      public void onPageScrollStateChanged(int paramAnonymousInt) {}
-      
-      public void onPageScrolled(int paramAnonymousInt1, float paramAnonymousFloat, int paramAnonymousInt2) {}
-      
-      public void onPageSelected(int paramAnonymousInt)
-      {
-        a(paramAnonymousInt);
-      }
-    });
-    this.k.setAdapter(new a(null));
-    this.k.setOnFocusChangeListener(new View.OnFocusChangeListener()
-    {
-      public void onFocusChange(View paramAnonymousView, boolean paramAnonymousBoolean)
-      {
-        if (paramAnonymousBoolean)
-        {
-          NewUserGuideFragment.f(NewUserGuideFragment.this).setBackground(ContextCompat.getDrawable(BaseFragment.mActivity, 2130838541));
-          return;
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateSkin() {
+        super.onUpdateSkin();
+        this.f4667e.setBackground(C2251b.m8527a(mActivity));
+    }
+
+    public boolean onBackPressed() {
+        if (this.f4665c) {
+            mActivity.m3108d();
+            return true;
         }
-        NewUserGuideFragment.f(NewUserGuideFragment.this).setBackground(ContextCompat.getDrawable(BaseFragment.mActivity, 2130838540));
-      }
-    });
-  }
-  
-  private void f()
-  {
-    if (this.d >= this.l.size() - 1) {
-      return;
+        setBottomBarStatus(true);
+        return false;
     }
-    this.d += 1;
-    this.k.setCurrentItem(this.d);
-  }
-  
-  public boolean onBackPressed()
-  {
-    if (this.c)
-    {
-      mActivity.d();
-      return true;
+
+    protected void onInitView() {
     }
-    setBottomBarStatus(true);
-    return false;
-  }
-  
-  public void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    case 2131624836: 
-    case 2131624837: 
-    case 2131624839: 
-    default: 
-      return;
-    case 2131624835: 
-      back();
-      setBottomBarStatus(true);
-      return;
-    case 2131624838: 
-      e();
-      return;
-    case 2131624840: 
-      f();
-      return;
+
+    protected void onUpdateStyle(boolean dayStyle) {
     }
-    d();
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    setBottomBarStatus(false);
-    if (this.mShowBundle != null)
-    {
-      this.c = this.mShowBundle.getBoolean("firstEnter", false);
-      this.d = this.mShowBundle.getInt("index", 0);
+
+    public void onInitFocusAreas() {
+        if (this.mContentView != null) {
+            if (this.f4676n == null) {
+                this.f4676n = new C1443g(this.mContentView.findViewById(C0965R.id.frag_guid_new), 2);
+                this.f4676n.m5300d(this.mContentView.findViewById(C0965R.id.rl_left_back_btn));
+            }
+            m5703a();
+            m5712b();
+        }
     }
-    View localView = paramLayoutInflater.inflate(2130968759, null);
-    a(localView);
-    d(localView);
-    a(paramLayoutInflater);
-    e(localView);
-    b(localView);
-    c(localView);
-    this.k.setCurrentItem(this.d);
-    return localView;
-  }
-  
-  public void onDestroyView()
-  {
-    super.onDestroyView();
-    if (Build.VERSION.SDK_INT > 16)
-    {
-      if ((mActivity != null) && (!mActivity.isDestroyed())) {
-        removeAllFragmentByType(516);
-      }
-      return;
+
+    /* renamed from: a */
+    private void m5704a(int leftBtnVisibility, int rightBtnVisibility, int enterBtnVisibility) {
+        this.f4668f.setVisibility(leftBtnVisibility);
+        this.f4670h.setVisibility(enterBtnVisibility);
+        this.f4669g.setVisibility(rightBtnVisibility);
     }
-    removeAllFragmentByType(516);
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.mContentView == null) {
-      return;
+
+    /* renamed from: a */
+    private void m5703a() {
+        if (this.f4677o == null) {
+            this.f4677o = new C1444h((ViewPager) this.mContentView.findViewById(C0965R.id.viewpager), 4);
+            this.f4677o.m5307a(new C15543(this));
+        }
     }
-    if (this.n == null)
-    {
-      this.n = new com.baidu.carlife.f.g(this.mContentView.findViewById(2131624833), 2);
-      this.n.d(this.mContentView.findViewById(2131624835));
+
+    /* renamed from: b */
+    private void m5712b() {
+        if (this.f4665c) {
+            C1440d.m5251a().m5256b(this.f4677o);
+            C1440d.m5251a().m5268h(this.f4677o);
+            return;
+        }
+        C1440d.m5251a().m5256b(this.f4676n, this.f4677o);
+        C1440d.m5251a().m5268h(this.f4676n);
     }
-    a();
-    b();
-  }
-  
-  protected void onInitView() {}
-  
-  public void onResume()
-  {
-    super.onResume();
-    b();
-  }
-  
-  public boolean onTouch(View paramView, MotionEvent paramMotionEvent)
-  {
-    return a(paramView, paramMotionEvent);
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    super.onUpdateSkin();
-    this.e.setBackground(b.a(mActivity));
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  private class a
-    extends PagerAdapter
-  {
-    private a() {}
-    
-    public void destroyItem(View paramView, int paramInt, Object paramObject)
-    {
-      ((ViewPager)paramView).removeView((View)NewUserGuideFragment.c(NewUserGuideFragment.this).get(paramInt));
+
+    public boolean onTouch(View v, MotionEvent event) {
+        return m5709a(v, event);
     }
-    
-    public int getCount()
-    {
-      if (NewUserGuideFragment.a(NewUserGuideFragment.this)) {
-        return NewUserGuideFragment.c(NewUserGuideFragment.this).size();
-      }
-      return NewUserGuideFragment.c(NewUserGuideFragment.this).size() - 1;
+
+    /* renamed from: a */
+    private boolean m5709a(View v, MotionEvent event) {
+        switch (v.getId()) {
+            case C0965R.id.rl_left_touch:
+                m5713b(event);
+                return true;
+            case C0965R.id.rl_right_touch:
+                m5706a(event);
+                return true;
+            default:
+                return false;
+        }
     }
-    
-    public Object instantiateItem(View paramView, int paramInt)
-    {
-      ((ViewPager)paramView).addView((View)NewUserGuideFragment.c(NewUserGuideFragment.this).get(paramInt));
-      return NewUserGuideFragment.c(NewUserGuideFragment.this).get(paramInt);
+
+    /* renamed from: a */
+    private void m5706a(MotionEvent event) {
+        if (event.getAction() == 0) {
+            if (m5717c()) {
+                this.f4670h.setBackground(ContextCompat.getDrawable(mActivity, C0965R.drawable.guide_btn_start_press));
+            } else {
+                this.f4669g.setBackground(ContextCompat.getDrawable(mActivity, C0965R.drawable.guide_btn_next_press));
+            }
+        } else if (event.getAction() == 1) {
+            if (!m5717c()) {
+                this.f4669g.setBackground(ContextCompat.getDrawable(mActivity, C0965R.drawable.user_guide_right_btn_selector));
+            } else if (this.f4665c) {
+                m5719d();
+            }
+            m5725f();
+        }
     }
-    
-    public boolean isViewFromObject(View paramView, Object paramObject)
-    {
-      return paramView == paramObject;
+
+    /* renamed from: c */
+    private boolean m5717c() {
+        return this.f4673k.getCurrentItem() == this.f4674l.size() + -1;
     }
-  }
+
+    /* renamed from: b */
+    private void m5713b(MotionEvent event) {
+        if (event.getAction() == 0) {
+            this.f4668f.setBackground(ContextCompat.getDrawable(mActivity, C0965R.drawable.guide_btn_prev_prss));
+        } else if (event.getAction() == 1) {
+            this.f4668f.setBackground(ContextCompat.getDrawable(mActivity, C0965R.drawable.user_guide_left_btn_selector));
+            m5722e();
+        }
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case C0965R.id.rl_left_back_btn:
+                back();
+                setBottomBarStatus(true);
+                return;
+            case C0965R.id.iv_left:
+                m5722e();
+                return;
+            case C0965R.id.iv_right:
+                m5725f();
+                return;
+            case C0965R.id.iv_enter:
+                m5719d();
+                return;
+            default:
+                return;
+        }
+    }
+
+    /* renamed from: d */
+    private void m5719d() {
+        C1260i.m4435b("Framework", "onEnterCarlife");
+        C1192c.m4069a().m4074a(false);
+        if (C1251e.m4358a().m4402x() || C1663a.m5979a().m5993N()) {
+            showFragment(515, null);
+        } else {
+            showFragment(513, null);
+        }
+    }
+
+    /* renamed from: e */
+    private void m5722e() {
+        if (this.f4666d > 0) {
+            this.f4666d--;
+            this.f4673k.setCurrentItem(this.f4666d);
+        }
+    }
+
+    /* renamed from: f */
+    private void m5725f() {
+        if (this.f4666d < this.f4674l.size() - 1) {
+            this.f4666d++;
+            this.f4673k.setCurrentItem(this.f4666d);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/NewUserGuideFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

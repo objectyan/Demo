@@ -5,163 +5,136 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.baidu.baidumaps.p042f.p043a.p044a.C0705a;
 import com.baidu.baidunavis.NavMapAdapter;
 import com.baidu.baidunavis.control.NavMapManager;
 import com.baidu.baidunavis.wrapper.BNRouteDetailActivityWrapper;
-import com.baidu.carlife.custom.b;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.custom.C1343b;
+import com.baidu.carlife.p052m.C1915a;
+import com.baidu.carlife.p087l.C1663a;
+import com.baidu.navi.fragment.BaseFragment;
 import com.baidu.navi.fragment.ContentFragment;
 import com.baidu.navi.routedetails.proxy.BNRouteDetail;
 
-public class BNRouteDetailFragment
-  extends ContentFragment
-{
-  public static final String BACK_FROM_ANOLOG_NAVI = "BACK_FROM_ANOLOG_NAVI";
-  private BNRouteDetailActivityWrapper mBnRouteDetailActivityWrapper;
-  
-  public void driving()
-  {
-    if (b.a().b()) {
-      return;
+public class BNRouteDetailFragment extends ContentFragment {
+    public static final String BACK_FROM_ANOLOG_NAVI = "BACK_FROM_ANOLOG_NAVI";
+    private BNRouteDetailActivityWrapper mBnRouteDetailActivityWrapper;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        BaseFragment.mResumeMapView = true;
+        if (!NavMapAdapter.getInstance().isNaviInjectSuccess()) {
+            NavMapAdapter.getInstance().navigateTo(C1157a.m3876a(), NavMapAdapter.getInstance().getMapFramePageClassName());
+        } else if (this.mBnRouteDetailActivityWrapper == null) {
+            this.mBnRouteDetailActivityWrapper = new BNRouteDetailActivityWrapper(this);
+        }
     }
-    backTo(17, null);
-    com.baidu.carlife.custom.a.a().d();
-  }
-  
-  public boolean isMapPage()
-  {
-    return true;
-  }
-  
-  public boolean onBackPressed()
-  {
-    if ((NavMapAdapter.getInstance().isNaviInjectSuccess()) && (this.mBnRouteDetailActivityWrapper != null)) {
-      if (!this.mBnRouteDetailActivityWrapper.onBackPressed()) {
-        super.onBackPressed();
-      }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (NavMapManager.getInstance().getNaviMapMode() == 5) {
+            NavMapManager.getInstance().showCarResultLayer(true);
+        } else {
+            C0705a.m2962a().m2979d();
+            C0705a.m2962a().m2970a(false, null);
+        }
+        NavMapManager.getInstance().set3DGestureEnable(false);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
-    for (;;)
-    {
-      return true;
-      super.onBackPressed();
+
+    public void onDestroyView() {
+        super.onDestroyView();
     }
-  }
-  
-  public void onConfigurationChanged(Configuration paramConfiguration)
-  {
-    if ((NavMapAdapter.getInstance().isNaviInjectSuccess()) && (this.mBnRouteDetailActivityWrapper != null)) {
-      this.mBnRouteDetailActivityWrapper.onConfigurationChanged(paramConfiguration);
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        if (!NavMapAdapter.getInstance().isNaviInjectSuccess() || this.mBnRouteDetailActivityWrapper == null) {
+            return null;
+        }
+        return this.mBnRouteDetailActivityWrapper.onCreateContentView(this);
     }
-    super.onConfigurationChanged(paramConfiguration);
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    com.baidu.navi.fragment.BaseFragment.mResumeMapView = true;
-    if (NavMapAdapter.getInstance().isNaviInjectSuccess())
-    {
-      if (this.mBnRouteDetailActivityWrapper == null) {
-        this.mBnRouteDetailActivityWrapper = new BNRouteDetailActivityWrapper(this);
-      }
-      return;
+
+    public boolean isMapPage() {
+        return true;
     }
-    NavMapAdapter.getInstance().navigateTo(com.baidu.carlife.core.a.a(), NavMapAdapter.getInstance().getMapFramePageClassName());
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    if ((NavMapAdapter.getInstance().isNaviInjectSuccess()) && (this.mBnRouteDetailActivityWrapper != null)) {
-      return this.mBnRouteDetailActivityWrapper.onCreateContentView(this);
+
+    protected void onInitView() {
     }
-    return null;
-  }
-  
-  public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle)
-  {
-    if (NavMapManager.getInstance().getNaviMapMode() == 5) {
-      NavMapManager.getInstance().showCarResultLayer(true);
+
+    public void onResume() {
+        if (NavMapAdapter.getInstance().isNaviInjectSuccess() && this.mBnRouteDetailActivityWrapper != null) {
+            this.mBnRouteDetailActivityWrapper.onResume();
+        }
+        if (C1663a.m5979a().m5993N()) {
+            C1915a.m7321a().m7327a(true);
+        } else {
+            C1915a.m7321a().m7327a(false);
+        }
+        super.onResume();
     }
-    for (;;)
-    {
-      NavMapManager.getInstance().set3DGestureEnable(false);
-      return super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-      com.baidu.baidumaps.f.a.a.a.a().d();
-      com.baidu.baidumaps.f.a.a.a.a().a(false, null);
+
+    public void onPause() {
+        if (NavMapAdapter.getInstance().isNaviInjectSuccess() && this.mBnRouteDetailActivityWrapper != null) {
+            this.mBnRouteDetailActivityWrapper.onPause();
+        }
+        super.onPause();
     }
-  }
-  
-  public void onDestroy()
-  {
-    if ((NavMapAdapter.getInstance().isNaviInjectSuccess()) && (this.mBnRouteDetailActivityWrapper != null)) {
-      this.mBnRouteDetailActivityWrapper.onDestroy();
+
+    public void onDestroy() {
+        if (NavMapAdapter.getInstance().isNaviInjectSuccess() && this.mBnRouteDetailActivityWrapper != null) {
+            this.mBnRouteDetailActivityWrapper.onDestroy();
+        }
+        super.onDestroy();
     }
-    super.onDestroy();
-  }
-  
-  public void onDestroyView()
-  {
-    super.onDestroyView();
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    BNRouteDetail.getInstance().cancleCountDownTask();
-    super.onHiddenChanged(paramBoolean);
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if ((NavMapAdapter.getInstance().isNaviInjectSuccess()) && (this.mBnRouteDetailActivityWrapper != null)) {
-      this.mBnRouteDetailActivityWrapper.onInitFocus();
+
+    public void driving() {
+        if (!C1343b.m4932a().m4935b()) {
+            backTo(17, null);
+            C1342a.m4926a().m4931d();
+        }
     }
-  }
-  
-  protected void onInitView() {}
-  
-  public void onPause()
-  {
-    if ((NavMapAdapter.getInstance().isNaviInjectSuccess()) && (this.mBnRouteDetailActivityWrapper != null)) {
-      this.mBnRouteDetailActivityWrapper.onPause();
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (NavMapAdapter.getInstance().isNaviInjectSuccess() && this.mBnRouteDetailActivityWrapper != null) {
+            this.mBnRouteDetailActivityWrapper.onConfigurationChanged(newConfig);
+        }
+        super.onConfigurationChanged(newConfig);
     }
-    super.onPause();
-  }
-  
-  public void onResume()
-  {
-    if ((NavMapAdapter.getInstance().isNaviInjectSuccess()) && (this.mBnRouteDetailActivityWrapper != null)) {
-      this.mBnRouteDetailActivityWrapper.onResume();
+
+    public boolean onBackPressed() {
+        if (!NavMapAdapter.getInstance().isNaviInjectSuccess() || this.mBnRouteDetailActivityWrapper == null) {
+            super.onBackPressed();
+        } else if (!this.mBnRouteDetailActivityWrapper.onBackPressed()) {
+            super.onBackPressed();
+        }
+        return true;
     }
-    if (com.baidu.carlife.l.a.a().N()) {
-      com.baidu.carlife.m.a.a().a(true);
+
+    protected void onUpdateOrientation(int orientation) {
     }
-    for (;;)
-    {
-      super.onResume();
-      return;
-      com.baidu.carlife.m.a.a().a(false);
+
+    protected void onUpdateStyle(boolean dayStyle) {
     }
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public boolean onVoiceCommand(int paramInt1, int paramInt2, int paramInt3, Object paramObject, boolean paramBoolean)
-  {
-    if ((paramInt1 == 2) && (paramInt2 == 38))
-    {
-      back();
-      return true;
+
+    public void onHiddenChanged(boolean hidden) {
+        BNRouteDetail.getInstance().cancleCountDownTask();
+        super.onHiddenChanged(hidden);
     }
-    if (this.mBnRouteDetailActivityWrapper != null) {
-      return this.mBnRouteDetailActivityWrapper.onVoiceCommand(paramInt1, paramInt2, paramInt3, paramObject, paramBoolean);
+
+    public void onInitFocusAreas() {
+        if (NavMapAdapter.getInstance().isNaviInjectSuccess() && this.mBnRouteDetailActivityWrapper != null) {
+            this.mBnRouteDetailActivityWrapper.onInitFocus();
+        }
     }
-    return false;
-  }
+
+    public boolean onVoiceCommand(int type, int subType, int arg1, Object arg2, boolean needResponse) {
+        if (type == 2 && subType == 38) {
+            back();
+            return true;
+        } else if (this.mBnRouteDetailActivityWrapper != null) {
+            return this.mBnRouteDetailActivityWrapper.onVoiceCommand(type, subType, arg1, arg2, needResponse);
+        } else {
+            return false;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/ui/BNRouteDetailFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -8,37 +8,23 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class RoundCornerImageView
-  extends ImageView
-{
-  public RoundCornerImageView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public RoundCornerImageView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public RoundCornerImageView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    Path localPath = new Path();
-    int i = getWidth();
-    int j = getHeight();
-    localPath.addRoundRect(new RectF(0.0F, 0.0F, i, j), 20.0F, 20.0F, Path.Direction.CW);
-    paramCanvas.clipPath(localPath);
-    super.onDraw(paramCanvas);
-  }
+public class RoundCornerImageView extends ImageView {
+    public RoundCornerImageView(Context context) {
+        super(context);
+    }
+
+    public RoundCornerImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public RoundCornerImageView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    protected void onDraw(Canvas canvas) {
+        Path clipPath = new Path();
+        clipPath.addRoundRect(new RectF(0.0f, 0.0f, (float) getWidth(), (float) getHeight()), 20.0f, 20.0f, Direction.CW);
+        canvas.clipPath(clipPath);
+        super.onDraw(canvas);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/RoundCornerImageView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -9,389 +9,294 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.support.v4.media.TransportMediator;
 import android.util.AttributeSet;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
 import android.widget.CheckBox;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.routeguide.subview.widget.FrameAnimationController;
 import com.baidu.navisdk.util.common.ScreenUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 
-public class SwitchButton
-  extends CheckBox
-{
-  private static final float EXTENDED_OFFSET_Y = 15.0F;
-  private static final int MAX_ALPHA = 255;
-  private static final float VELOCITY = 350.0F;
-  private int mAlpha = 255;
-  private float mAnimatedVelocity;
-  private boolean mAnimating;
-  private float mAnimationPosition;
-  private Bitmap mBottom;
-  private boolean mBroadcasting;
-  private Bitmap mBtnNormal;
-  private float mBtnOffPos;
-  private float mBtnOnPos;
-  private float mBtnPos;
-  private Bitmap mBtnPressed;
-  private float mBtnWidth;
-  private boolean mChecked = false;
-  private int mClickTimeout;
-  private Context mContext;
-  private Bitmap mCurBtnPic;
-  private boolean mDayStyle = true;
-  private float mExtendOffsetY;
-  private float mFirstDownX;
-  private float mFirstDownY;
-  private Bitmap mFrame;
-  private Bitmap mMask;
-  private float mMaskHeight;
-  private float mMaskWidth;
-  private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
-  private CompoundButton.OnCheckedChangeListener mOnCheckedChangeWidgetListener;
-  private Paint mPaint;
-  private ViewParent mParent;
-  private float mRealPos;
-  private RectF mSaveLayerRectF;
-  private int mTouchSlop;
-  private float mVelocity;
-  private PorterDuffXfermode mXfermode;
-  
-  public SwitchButton(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public SwitchButton(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 16842860);
-  }
-  
-  public SwitchButton(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    initView(paramContext);
-  }
-  
-  private void attemptClaimDrag()
-  {
-    this.mParent = getParent();
-    if (this.mParent != null) {
-      this.mParent.requestDisallowInterceptTouchEvent(true);
-    }
-  }
-  
-  private void doAnimation()
-  {
-    this.mAnimationPosition += this.mAnimatedVelocity * 16.0F / 1000.0F;
-    if (this.mAnimationPosition <= this.mBtnOnPos - 8.0F)
-    {
-      stopAnimation();
-      this.mAnimationPosition = (this.mBtnOnPos - 8.0F);
-      setCheckedDelayed(true);
-    }
-    for (;;)
-    {
-      moveView(this.mAnimationPosition);
-      return;
-      if (this.mAnimationPosition >= this.mBtnOffPos + 8.0F)
-      {
-        stopAnimation();
-        this.mAnimationPosition = (this.mBtnOffPos + 8.0F);
-        setCheckedDelayed(false);
-      }
-    }
-  }
-  
-  private float getRealPos(float paramFloat)
-  {
-    return paramFloat - this.mBtnWidth / 2.0F;
-  }
-  
-  private void initView(Context paramContext)
-  {
-    this.mContext = paramContext;
-    this.mPaint = new Paint();
-    this.mPaint.setColor(-1);
-    Resources localResources = JarUtils.getResources();
-    this.mClickTimeout = (ViewConfiguration.getPressedStateDuration() + ViewConfiguration.getTapTimeout());
-    this.mTouchSlop = ViewConfiguration.get(paramContext).getScaledTouchSlop();
-    if (this.mDayStyle)
-    {
-      this.mBottom = BitmapFactory.decodeResource(localResources, 1711407804);
-      if (this.mChecked)
-      {
-        this.mBtnPressed = BitmapFactory.decodeResource(localResources, 1711407572);
-        this.mBtnNormal = BitmapFactory.decodeResource(localResources, 1711407570);
-        this.mFrame = BitmapFactory.decodeResource(localResources, 1711407806);
-        this.mMask = BitmapFactory.decodeResource(localResources, 1711407808);
-        this.mCurBtnPic = this.mBtnNormal;
-        this.mBtnWidth = this.mBtnPressed.getWidth();
-        this.mMaskWidth = this.mMask.getWidth();
-        this.mMaskHeight = this.mMask.getHeight();
-        this.mBtnOffPos = (this.mBtnWidth / 2.0F);
-        this.mBtnOnPos = (this.mMaskWidth - this.mBtnWidth / 2.0F);
-        if (!this.mChecked) {
-          break label397;
+public class SwitchButton extends CheckBox {
+    private static final float EXTENDED_OFFSET_Y = 15.0f;
+    private static final int MAX_ALPHA = 255;
+    private static final float VELOCITY = 350.0f;
+    private int mAlpha;
+    private float mAnimatedVelocity;
+    private boolean mAnimating;
+    private float mAnimationPosition;
+    private Bitmap mBottom;
+    private boolean mBroadcasting;
+    private Bitmap mBtnNormal;
+    private float mBtnOffPos;
+    private float mBtnOnPos;
+    private float mBtnPos;
+    private Bitmap mBtnPressed;
+    private float mBtnWidth;
+    private boolean mChecked;
+    private int mClickTimeout;
+    private Context mContext;
+    private Bitmap mCurBtnPic;
+    private boolean mDayStyle;
+    private float mExtendOffsetY;
+    private float mFirstDownX;
+    private float mFirstDownY;
+    private Bitmap mFrame;
+    private Bitmap mMask;
+    private float mMaskHeight;
+    private float mMaskWidth;
+    private OnCheckedChangeListener mOnCheckedChangeListener;
+    private OnCheckedChangeListener mOnCheckedChangeWidgetListener;
+    private Paint mPaint;
+    private ViewParent mParent;
+    private float mRealPos;
+    private RectF mSaveLayerRectF;
+    private int mTouchSlop;
+    private float mVelocity;
+    private PorterDuffXfermode mXfermode;
+
+    private final class PerformClick implements Runnable {
+        private PerformClick() {
         }
-      }
+
+        public void run() {
+            SwitchButton.this.performClick();
+        }
     }
-    label397:
-    for (float f = this.mBtnOnPos;; f = this.mBtnOffPos)
-    {
-      this.mBtnPos = f;
-      this.mRealPos = getRealPos(this.mBtnPos);
-      this.mVelocity = ScreenUtil.getInstance().dip2px(350.0F);
-      this.mExtendOffsetY = ScreenUtil.getInstance().dip2px(15.0F);
-      this.mSaveLayerRectF = new RectF(0.0F, this.mExtendOffsetY, this.mMask.getWidth(), this.mMask.getHeight() + this.mExtendOffsetY);
-      this.mXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
-      return;
-      this.mBtnPressed = BitmapFactory.decodeResource(localResources, 1711407576);
-      this.mBtnNormal = BitmapFactory.decodeResource(localResources, 1711407574);
-      break;
-      this.mBottom = BitmapFactory.decodeResource(localResources, 1711407805);
-      if (this.mChecked) {
-        this.mBtnPressed = BitmapFactory.decodeResource(localResources, 1711407573);
-      }
-      for (this.mBtnNormal = BitmapFactory.decodeResource(localResources, 1711407571);; this.mBtnNormal = BitmapFactory.decodeResource(localResources, 1711407575))
-      {
-        this.mFrame = BitmapFactory.decodeResource(localResources, 1711407807);
-        this.mMask = BitmapFactory.decodeResource(localResources, 1711407809);
-        break;
-        this.mBtnPressed = BitmapFactory.decodeResource(localResources, 1711407577);
-      }
+
+    private final class SwitchAnimation implements Runnable {
+        private SwitchAnimation() {
+        }
+
+        public void run() {
+            if (SwitchButton.this.mAnimating) {
+                SwitchButton.this.doAnimation();
+                FrameAnimationController.requestAnimationFrame(this);
+            }
+        }
     }
-  }
-  
-  private void moveView(float paramFloat)
-  {
-    this.mBtnPos = paramFloat;
-    this.mRealPos = getRealPos(this.mBtnPos);
-    invalidate();
-  }
-  
-  private void setCheckedDelayed(final boolean paramBoolean)
-  {
-    BNWorkerCenter.getInstance().submitMainThreadTaskDelay(new BNWorkerNormalTask("setCheckedDelayed-" + getClass().getSimpleName(), null)new BNWorkerConfig
-    {
-      protected String execute()
-      {
-        SwitchButton.this.setInternalChecked(paramBoolean);
-        return null;
-      }
-    }, new BNWorkerConfig(100, 0), 10L);
-  }
-  
-  private void setInternalChecked(boolean paramBoolean)
-  {
-    this.mChecked = paramBoolean;
-    if (paramBoolean) {}
-    for (float f = this.mBtnOnPos;; f = this.mBtnOffPos)
-    {
-      this.mBtnPos = f;
-      this.mRealPos = getRealPos(this.mBtnPos);
-      invalidate();
-      if (!this.mBroadcasting) {
-        break;
-      }
-      return;
+
+    public SwitchButton(Context context, AttributeSet attrs) {
+        this(context, attrs, 16842860);
     }
-    this.mBroadcasting = true;
-    Object localObject = JarUtils.getResources();
-    if (this.mDayStyle) {
-      if (this.mChecked)
-      {
-        this.mBtnPressed = BitmapFactory.decodeResource((Resources)localObject, 1711407572);
-        this.mBtnNormal = BitmapFactory.decodeResource((Resources)localObject, 1711407570);
+
+    public SwitchButton(Context context) {
+        this(context, null);
+    }
+
+    public SwitchButton(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.mAlpha = 255;
+        this.mChecked = false;
+        this.mDayStyle = true;
+        initView(context);
+    }
+
+    private void initView(Context context) {
+        this.mContext = context;
+        this.mPaint = new Paint();
+        this.mPaint.setColor(-1);
+        Resources resources = JarUtils.getResources();
+        this.mClickTimeout = ViewConfiguration.getPressedStateDuration() + ViewConfiguration.getTapTimeout();
+        this.mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+        if (this.mDayStyle) {
+            this.mBottom = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_switch_bottom);
+            if (this.mChecked) {
+                this.mBtnPressed = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_off_pressed);
+                this.mBtnNormal = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_off_normal);
+            } else {
+                this.mBtnPressed = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_on_pressed);
+                this.mBtnNormal = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_on_normal);
+            }
+            this.mFrame = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_switch_frame);
+            this.mMask = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_switch_mask);
+        } else {
+            this.mBottom = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_switch_bottom_night);
+            if (this.mChecked) {
+                this.mBtnPressed = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_off_pressed_night);
+                this.mBtnNormal = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_off_normal_night);
+            } else {
+                this.mBtnPressed = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_on_pressed_night);
+                this.mBtnNormal = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_on_normal_night);
+            }
+            this.mFrame = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_switch_frame_night);
+            this.mMask = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_switch_mask_night);
+        }
         this.mCurBtnPic = this.mBtnNormal;
+        this.mBtnWidth = (float) this.mBtnPressed.getWidth();
+        this.mMaskWidth = (float) this.mMask.getWidth();
+        this.mMaskHeight = (float) this.mMask.getHeight();
+        this.mBtnOffPos = this.mBtnWidth / 2.0f;
+        this.mBtnOnPos = this.mMaskWidth - (this.mBtnWidth / 2.0f);
+        this.mBtnPos = this.mChecked ? this.mBtnOnPos : this.mBtnOffPos;
+        this.mRealPos = getRealPos(this.mBtnPos);
+        this.mVelocity = (float) ScreenUtil.getInstance().dip2px(VELOCITY);
+        this.mExtendOffsetY = (float) ScreenUtil.getInstance().dip2px(EXTENDED_OFFSET_Y);
+        this.mSaveLayerRectF = new RectF(0.0f, this.mExtendOffsetY, (float) this.mMask.getWidth(), ((float) this.mMask.getHeight()) + this.mExtendOffsetY);
+        this.mXfermode = new PorterDuffXfermode(Mode.SRC_IN);
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.mAlpha = enabled ? 255 : TransportMediator.KEYCODE_MEDIA_PAUSE;
+        super.setEnabled(enabled);
+    }
+
+    public boolean isChecked() {
+        return this.mChecked;
+    }
+
+    public void toggle() {
+        setInternalChecked(!this.mChecked);
+    }
+
+    private void setCheckedDelayed(final boolean checked) {
+        BNWorkerCenter.getInstance().submitMainThreadTaskDelay(new BNWorkerNormalTask<String, String>("setCheckedDelayed-" + getClass().getSimpleName(), null) {
+            protected String execute() {
+                SwitchButton.this.setInternalChecked(checked);
+                return null;
+            }
+        }, new BNWorkerConfig(100, 0), 10);
+    }
+
+    public void setChecked(boolean checked) {
+        setInternalChecked(!checked);
+    }
+
+    private void setInternalChecked(boolean checked) {
+        this.mChecked = checked;
+        this.mBtnPos = checked ? this.mBtnOnPos : this.mBtnOffPos;
+        this.mRealPos = getRealPos(this.mBtnPos);
         invalidate();
-        if (this.mOnCheckedChangeListener != null)
-        {
-          localObject = this.mOnCheckedChangeListener;
-          if (this.mChecked) {
-            break label263;
-          }
+        if (!this.mBroadcasting) {
+            this.mBroadcasting = true;
+            Resources resources = JarUtils.getResources();
+            if (this.mDayStyle) {
+                if (this.mChecked) {
+                    this.mBtnPressed = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_off_pressed);
+                    this.mBtnNormal = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_off_normal);
+                    this.mCurBtnPic = this.mBtnNormal;
+                } else {
+                    this.mBtnPressed = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_on_pressed);
+                    this.mBtnNormal = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_on_normal);
+                    this.mCurBtnPic = this.mBtnNormal;
+                }
+            } else if (this.mChecked) {
+                this.mBtnPressed = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_off_pressed_night);
+                this.mBtnNormal = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_off_normal_night);
+                this.mCurBtnPic = this.mBtnNormal;
+            } else {
+                this.mBtnPressed = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_on_pressed_night);
+                this.mBtnNormal = BitmapFactory.decodeResource(resources, C4048R.drawable.nsdk_drawable_rg_btn_switch_on_normal_night);
+                this.mCurBtnPic = this.mBtnNormal;
+            }
+            invalidate();
+            if (this.mOnCheckedChangeListener != null) {
+                boolean z;
+                OnCheckedChangeListener onCheckedChangeListener = this.mOnCheckedChangeListener;
+                if (this.mChecked) {
+                    z = false;
+                } else {
+                    z = true;
+                }
+                onCheckedChangeListener.onCheckedChanged(this, z);
+            }
+            if (this.mOnCheckedChangeWidgetListener != null) {
+                this.mOnCheckedChangeWidgetListener.onCheckedChanged(this, this.mChecked);
+            }
+            this.mBroadcasting = false;
         }
-      }
     }
-    label263:
-    for (paramBoolean = true;; paramBoolean = false)
-    {
-      ((CompoundButton.OnCheckedChangeListener)localObject).onCheckedChanged(this, paramBoolean);
-      if (this.mOnCheckedChangeWidgetListener != null) {
-        this.mOnCheckedChangeWidgetListener.onCheckedChanged(this, this.mChecked);
-      }
-      this.mBroadcasting = false;
-      return;
-      this.mBtnPressed = BitmapFactory.decodeResource((Resources)localObject, 1711407576);
-      this.mBtnNormal = BitmapFactory.decodeResource((Resources)localObject, 1711407574);
-      this.mCurBtnPic = this.mBtnNormal;
-      break;
-      if (this.mChecked)
-      {
-        this.mBtnPressed = BitmapFactory.decodeResource((Resources)localObject, 1711407573);
-        this.mBtnNormal = BitmapFactory.decodeResource((Resources)localObject, 1711407571);
-        this.mCurBtnPic = this.mBtnNormal;
-        break;
-      }
-      this.mBtnPressed = BitmapFactory.decodeResource((Resources)localObject, 1711407577);
-      this.mBtnNormal = BitmapFactory.decodeResource((Resources)localObject, 1711407575);
-      this.mCurBtnPic = this.mBtnNormal;
-      break;
+
+    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
+        this.mOnCheckedChangeListener = listener;
     }
-  }
-  
-  private void startAnimation(boolean paramBoolean)
-  {
-    this.mAnimating = true;
-    if (paramBoolean) {}
-    for (float f = -this.mVelocity;; f = this.mVelocity)
-    {
-      this.mAnimatedVelocity = f;
-      this.mAnimationPosition = this.mBtnPos;
-      new SwitchAnimation(null).run();
-      return;
+
+    void setOnCheckedChangeWidgetListener(OnCheckedChangeListener listener) {
+        this.mOnCheckedChangeWidgetListener = listener;
     }
-  }
-  
-  private void stopAnimation()
-  {
-    this.mAnimating = false;
-  }
-  
-  public boolean isChecked()
-  {
-    return this.mChecked;
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    paramCanvas.saveLayerAlpha(this.mSaveLayerRectF, this.mAlpha, 31);
-    paramCanvas.drawBitmap(this.mMask, 0.0F, this.mExtendOffsetY, this.mPaint);
-    this.mPaint.setXfermode(this.mXfermode);
-    if (this.mChecked)
-    {
-      paramCanvas.drawBitmap(this.mBottom, this.mRealPos - 4.0F, this.mExtendOffsetY, this.mPaint);
-      this.mPaint.setXfermode(null);
-      paramCanvas.drawBitmap(this.mFrame, 0.0F, this.mExtendOffsetY, this.mPaint);
-      if (!this.mChecked) {
-        break label164;
-      }
-      paramCanvas.drawBitmap(this.mCurBtnPic, this.mRealPos - 4.0F, this.mExtendOffsetY, this.mPaint);
+
+    public boolean performClick() {
+        startAnimation(!this.mChecked);
+        return true;
     }
-    for (;;)
-    {
-      paramCanvas.restore();
-      return;
-      paramCanvas.drawBitmap(this.mBottom, this.mRealPos + 4.0F, this.mExtendOffsetY, this.mPaint);
-      break;
-      label164:
-      paramCanvas.drawBitmap(this.mCurBtnPic, this.mRealPos + 4.0F, this.mExtendOffsetY, this.mPaint);
+
+    private void attemptClaimDrag() {
+        this.mParent = getParent();
+        if (this.mParent != null) {
+            this.mParent.requestDisallowInterceptTouchEvent(true);
+        }
     }
-  }
-  
-  protected void onMeasure(int paramInt1, int paramInt2)
-  {
-    setMeasuredDimension((int)this.mMaskWidth, (int)(this.mMaskHeight + 2.0F * this.mExtendOffsetY));
-  }
-  
-  public boolean performClick()
-  {
-    if (!this.mChecked) {}
-    for (boolean bool = true;; bool = false)
-    {
-      startAnimation(bool);
-      return true;
+
+    private float getRealPos(float btnPos) {
+        return btnPos - (this.mBtnWidth / 2.0f);
     }
-  }
-  
-  public void setChecked(boolean paramBoolean)
-  {
-    if (!paramBoolean) {}
-    for (paramBoolean = true;; paramBoolean = false)
-    {
-      setInternalChecked(paramBoolean);
-      return;
+
+    protected void onDraw(Canvas canvas) {
+        canvas.saveLayerAlpha(this.mSaveLayerRectF, this.mAlpha, 31);
+        canvas.drawBitmap(this.mMask, 0.0f, this.mExtendOffsetY, this.mPaint);
+        this.mPaint.setXfermode(this.mXfermode);
+        if (this.mChecked) {
+            canvas.drawBitmap(this.mBottom, this.mRealPos - 4.0f, this.mExtendOffsetY, this.mPaint);
+        } else {
+            canvas.drawBitmap(this.mBottom, this.mRealPos + 4.0f, this.mExtendOffsetY, this.mPaint);
+        }
+        this.mPaint.setXfermode(null);
+        canvas.drawBitmap(this.mFrame, 0.0f, this.mExtendOffsetY, this.mPaint);
+        if (this.mChecked) {
+            canvas.drawBitmap(this.mCurBtnPic, this.mRealPos - 4.0f, this.mExtendOffsetY, this.mPaint);
+        } else {
+            canvas.drawBitmap(this.mCurBtnPic, this.mRealPos + 4.0f, this.mExtendOffsetY, this.mPaint);
+        }
+        canvas.restore();
     }
-  }
-  
-  public void setDayStyle(boolean paramBoolean)
-  {
-    this.mDayStyle = paramBoolean;
-    try
-    {
-      initView(this.mContext);
-      invalidate();
-      return;
+
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        setMeasuredDimension((int) this.mMaskWidth, (int) (this.mMaskHeight + (2.0f * this.mExtendOffsetY)));
     }
-    catch (Exception localException) {}
-  }
-  
-  public void setEnabled(boolean paramBoolean)
-  {
-    if (paramBoolean) {}
-    for (int i = 255;; i = 127)
-    {
-      this.mAlpha = i;
-      super.setEnabled(paramBoolean);
-      return;
+
+    private void startAnimation(boolean turnOn) {
+        this.mAnimating = true;
+        this.mAnimatedVelocity = turnOn ? -this.mVelocity : this.mVelocity;
+        this.mAnimationPosition = this.mBtnPos;
+        new SwitchAnimation().run();
     }
-  }
-  
-  public void setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener paramOnCheckedChangeListener)
-  {
-    this.mOnCheckedChangeListener = paramOnCheckedChangeListener;
-  }
-  
-  void setOnCheckedChangeWidgetListener(CompoundButton.OnCheckedChangeListener paramOnCheckedChangeListener)
-  {
-    this.mOnCheckedChangeWidgetListener = paramOnCheckedChangeListener;
-  }
-  
-  public void toggle()
-  {
-    if (!this.mChecked) {}
-    for (boolean bool = true;; bool = false)
-    {
-      setInternalChecked(bool);
-      return;
+
+    private void stopAnimation() {
+        this.mAnimating = false;
     }
-  }
-  
-  private final class PerformClick
-    implements Runnable
-  {
-    private PerformClick() {}
-    
-    public void run()
-    {
-      SwitchButton.this.performClick();
+
+    private void doAnimation() {
+        this.mAnimationPosition += (this.mAnimatedVelocity * 16.0f) / 1000.0f;
+        if (this.mAnimationPosition <= this.mBtnOnPos - 8.0f) {
+            stopAnimation();
+            this.mAnimationPosition = this.mBtnOnPos - 8.0f;
+            setCheckedDelayed(true);
+        } else if (this.mAnimationPosition >= this.mBtnOffPos + 8.0f) {
+            stopAnimation();
+            this.mAnimationPosition = this.mBtnOffPos + 8.0f;
+            setCheckedDelayed(false);
+        }
+        moveView(this.mAnimationPosition);
     }
-  }
-  
-  private final class SwitchAnimation
-    implements Runnable
-  {
-    private SwitchAnimation() {}
-    
-    public void run()
-    {
-      if (!SwitchButton.this.mAnimating) {
-        return;
-      }
-      SwitchButton.this.doAnimation();
-      FrameAnimationController.requestAnimationFrame(this);
+
+    private void moveView(float position) {
+        this.mBtnPos = position;
+        this.mRealPos = getRealPos(this.mBtnPos);
+        invalidate();
     }
-  }
+
+    public void setDayStyle(boolean dayStyle) {
+        this.mDayStyle = dayStyle;
+        try {
+            initView(this.mContext);
+            invalidate();
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/widget/SwitchButton.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

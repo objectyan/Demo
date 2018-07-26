@@ -7,74 +7,59 @@ import com.baidu.baidunavis.control.NavHttpCenterImpl;
 import com.baidu.mapframework.commonlib.asynchttp.NirvanaResponseHandlerInterface;
 import com.baidu.mapframework.nirvana.annotation.UrlEncode.UrlEncodeType;
 import com.baidu.mapframework.nirvana.runtime.http.BMRetrofit;
-import com.baidu.mapframework.nirvana.runtime.http.HttpRequestManager;
 import com.baidu.mapframework.nirvana.runtime.http.URLEncodeUtils;
 import java.io.File;
 import java.util.HashMap;
 import org.apache.http.client.CookieStore;
 
 @Keep
-public final class NavHttpCenterImplImpl
-  implements NavHttpCenterImpl
-{
-  private BMRetrofit mRetrofit = new BMRetrofit();
-  
-  public static NavHttpCenterImpl getInstance()
-  {
-    return HOLDER.INSTANCE;
-  }
-  
-  public void get(boolean paramBoolean, String paramString, HashMap<String, String> paramHashMap, CookieStore paramCookieStore, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    HashMap localHashMap = new HashMap();
-    if (paramHashMap != null) {
-      localHashMap.putAll(paramHashMap);
+public final class NavHttpCenterImplImpl implements NavHttpCenterImpl {
+    private BMRetrofit mRetrofit;
+
+    private static final class HOLDER {
+        static final NavHttpCenterImpl INSTANCE = new NavHttpCenterImplImpl();
+
+        private HOLDER() {
+        }
     }
-    this.mRetrofit.build().setCookieStore(paramCookieStore);
-    paramHashMap = paramString;
-    if (localHashMap != null)
-    {
-      paramHashMap = new StringBuilder(paramString);
-      if (paramString.contains("?")) {
-        break label99;
-      }
-      paramHashMap.append("?");
+
+    private NavHttpCenterImplImpl() {
+        this.mRetrofit = new BMRetrofit();
     }
-    for (;;)
-    {
-      paramHashMap.append(URLEncodeUtils.getUrlQueryString(localHashMap, UrlEncode.UrlEncodeType.JAVA));
-      paramHashMap = paramHashMap.toString();
-      this.mRetrofit.build().getRequest(paramBoolean, paramHashMap, null, localHashMap, paramNirvanaResponseHandlerInterface);
-      return;
-      label99:
-      if (!TextUtils.isEmpty(Uri.parse(paramString).getQuery())) {
-        paramHashMap.append("&");
-      }
+
+    public static NavHttpCenterImpl getInstance() {
+        return HOLDER.INSTANCE;
     }
-  }
-  
-  public void uploadFile(boolean paramBoolean, String paramString, HashMap<String, String> paramHashMap, HashMap<String, File> paramHashMap1, CookieStore paramCookieStore, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    HashMap localHashMap = new HashMap();
-    if (paramHashMap != null) {
-      localHashMap.putAll(paramHashMap);
+
+    public void get(boolean isSync, String url, HashMap<String, String> getMethodParams, CookieStore cookieStore, NirvanaResponseHandlerInterface handler) {
+        HashMap<String, String> _urlParams = new HashMap();
+        if (getMethodParams != null) {
+            _urlParams.putAll(getMethodParams);
+        }
+        this.mRetrofit.build().setCookieStore(cookieStore);
+        if (_urlParams != null) {
+            StringBuilder _urlBuilder = new StringBuilder(url);
+            if (!url.contains("?")) {
+                _urlBuilder.append("?");
+            } else if (!TextUtils.isEmpty(Uri.parse(url).getQuery())) {
+                _urlBuilder.append("&");
+            }
+            _urlBuilder.append(URLEncodeUtils.getUrlQueryString(_urlParams, UrlEncodeType.JAVA));
+            url = _urlBuilder.toString();
+        }
+        this.mRetrofit.build().getRequest(isSync, url, null, _urlParams, handler);
     }
-    paramHashMap = new HashMap();
-    if (paramHashMap1 != null) {
-      paramHashMap.putAll(paramHashMap1);
+
+    public void uploadFile(boolean isSync, String url, HashMap<String, String> postMethodParams, HashMap<String, File> postFileMap, CookieStore cookieStore, NirvanaResponseHandlerInterface handler) {
+        HashMap<String, String> _postParams = new HashMap();
+        if (postMethodParams != null) {
+            _postParams.putAll(postMethodParams);
+        }
+        HashMap<String, File> _fileParams = new HashMap();
+        if (postFileMap != null) {
+            _fileParams.putAll(postFileMap);
+        }
+        this.mRetrofit.build().setCookieStore(cookieStore);
+        this.mRetrofit.build().postRequest(isSync, url, null, _postParams, _fileParams, null, handler);
     }
-    this.mRetrofit.build().setCookieStore(paramCookieStore);
-    this.mRetrofit.build().postRequest(paramBoolean, paramString, null, localHashMap, paramHashMap, null, paramNirvanaResponseHandlerInterface);
-  }
-  
-  private static final class HOLDER
-  {
-    static final NavHttpCenterImpl INSTANCE = new NavHttpCenterImplImpl(null);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/control/generate/NavHttpCenterImplImpl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -8,15 +8,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
 import com.baidu.baidunavis.control.NavPoiController;
 import com.baidu.carlife.BaiduNaviApplication;
-import com.baidu.carlife.core.screen.e;
-import com.baidu.carlife.core.screen.presentation.h;
-import com.baidu.carlife.logic.q;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.screen.C1277e;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.logic.C1868q;
 import com.baidu.mapframework.common.mapview.MapViewFactory;
+import com.baidu.navi.fragment.ContentFragmentManager;
+import com.baidu.navi.fragment.RoutePlanFragment;
 import com.baidu.navi.style.StyleManager;
+import com.baidu.navi.util.SearchParamKey;
 import com.baidu.navi.util.ShareTools;
 import com.baidu.navi.utils.StatisticUtils;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.mapcontrol.BNMapController;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
@@ -35,659 +41,571 @@ import com.baidu.navisdk.util.common.StringUtils;
 import com.baidu.navisdk.util.logic.BNLocationManagerProxy;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import com.baidu.nplatform.comapi.map.ItemizedOverlayUtil;
-import com.baidu.platform.comapi.map.MapGLSurfaceView;
 import com.baidu.platform.comapi.map.MapStatus;
 import java.util.ArrayList;
 
-public class PoiController
-{
-  private static final int K_TIMEOUT = 8000;
-  private static final String TAG = "PoiController";
-  private Context mContext = BaiduNaviApplication.getInstance();
-  private int mDistrictId;
-  private int mId;
-  private int mModuleFrom;
-  private Handler mRPHandler = new Handler(Looper.getMainLooper())
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      switch (paramAnonymousMessage.what)
-      {
-      default: 
-        return;
-      case 4: 
-        paramAnonymousMessage = new Bundle();
-        paramAnonymousMessage.putInt("module_from", PoiController.this.mModuleFrom);
-        h.a().showFragment(52, paramAnonymousMessage);
-        BNRoutePlaner.getInstance().removeRouteResultHandler(PoiController.this.mRPHandler);
-        return;
-      case 7: 
-        BNRoutePlaner.getInstance().removeRouteResultHandler(PoiController.this.mRPHandler);
-        return;
-      case 32: 
-        BNRoutePlaner.getInstance().removeRouteResultHandler(PoiController.this.mRPHandler);
-        return;
-      }
-      StatisticUtils.statSetDestFromPoi();
+public class PoiController {
+    private static final int K_TIMEOUT = 8000;
+    private static final String TAG = "PoiController";
+    private Context mContext;
+    private int mDistrictId;
+    private int mId;
+    private int mModuleFrom;
+    private Handler mRPHandler;
+    private String mSearchKey;
+    private int mSearchRsultNetMode;
+    private ShareTools mShareTool;
+    private SearchPoi mStreetViewPoi;
+    private Handler mUIHandler;
+    private Handler mWorkHandler;
+
+    public interface AntiGeoCallBack {
+        void onFail();
+
+        void onRevSearchPoi(SearchPoi searchPoi);
+
+        void onStart();
     }
-  };
-  private String mSearchKey;
-  private int mSearchRsultNetMode = 1;
-  private ShareTools mShareTool = null;
-  private SearchPoi mStreetViewPoi;
-  private Handler mUIHandler = new Handler(Looper.getMainLooper());
-  private Handler mWorkHandler;
-  
-  private PoiController()
-  {
-    FavoriteDestinationController.getInstance().queryAllFavoriteDestFromDB(null);
-  }
-  
-  private RoutePlanNode createRoutePlanNode(SearchPoi paramSearchPoi)
-  {
-    return new RoutePlanNode(paramSearchPoi.mGuidePoint, paramSearchPoi.mViewPoint, 8, paramSearchPoi.mName, paramSearchPoi.mAddress, paramSearchPoi.mOriginUID);
-  }
-  
-  public static PoiController getInstance()
-  {
-    return InnerHolder.mInstance;
-  }
-  
-  private Bundle getOpenSharePoiBundle(SearchPoi paramSearchPoi, String paramString)
-  {
-    if (paramString != null)
-    {
-      StringBuffer localStringBuffer = new StringBuffer(128);
-      Bundle localBundle = new Bundle();
-      localStringBuffer.append("这里是：");
-      if (paramSearchPoi != null)
-      {
-        localStringBuffer.append(paramSearchPoi.mName);
-        int i = paramSearchPoi.mType;
-        localBundle.putString("poi_name", paramSearchPoi.mName);
-        localBundle.putString("uid", paramSearchPoi.mOriginUID);
-      }
-      String str = paramSearchPoi.mAddress;
-      if (!TextUtils.isEmpty(str))
-      {
-        if (!localStringBuffer.toString().equals("这里是：")) {
-          localStringBuffer.append("，");
-        }
-        localStringBuffer.append(str);
-      }
-      localStringBuffer.append("，详情：");
-      localStringBuffer.append(paramString);
-      localStringBuffer.append(" -[百度导航]");
-      localBundle.putString("poi_addr", str);
-      localBundle.putString("subject", "百度导航");
-      localBundle.putString("content", localStringBuffer.toString());
-      localBundle.putString("filepath", "");
-      localBundle.putString("img_url", "http://client.map.baidu.com/imap/cfg/static/share_poi_wx.png");
-      localBundle.putString("share_url", paramString);
-      localBundle.putString("tel", paramSearchPoi.mPhone);
-      localBundle.putInt("poi_x", paramSearchPoi.mViewPoint.getLatitudeE6());
-      localBundle.putInt("poi_y", paramSearchPoi.mViewPoint.getLongitudeE6());
-      return localBundle;
-    }
-    return null;
-  }
-  
-  public void addFavorite(SearchPoi paramSearchPoi, FavoriteResultCallBack paramFavoriteResultCallBack) {}
-  
-  public void animationByFrogleap(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    animationByFrogleap(paramSearchPoi.mViewPoint);
-  }
-  
-  public void animationByFrogleap(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return;
-    }
-    MapStatus localMapStatus = MapViewFactory.getInstance().getMapView().getMapStatus();
-    paramGeoPoint = CoordinateTransformUtil.LLE62MC(paramGeoPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6());
-    localMapStatus.centerPtX = paramGeoPoint.getInt("MCx");
-    localMapStatus.centerPtY = paramGeoPoint.getInt("MCy");
-    MapViewFactory.getInstance().getMapView().animateTo(localMapStatus, 0);
-  }
-  
-  public void animationTo(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    animationTo(paramSearchPoi.mViewPoint);
-  }
-  
-  public void animationTo(SearchPoi paramSearchPoi, long paramLong1, long paramLong2)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    animationTo(paramSearchPoi.mViewPoint, paramLong1, paramLong2, -1);
-  }
-  
-  public void animationTo(SearchPoi paramSearchPoi, long paramLong1, long paramLong2, int paramInt)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    animationTo(paramSearchPoi.mViewPoint, paramLong1, paramLong2, paramInt);
-  }
-  
-  public void animationTo(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {}
-    MapStatus localMapStatus;
-    do
-    {
-      return;
-      localMapStatus = MapViewFactory.getInstance().getMapView().getMapStatus();
-      paramGeoPoint = CoordinateTransformUtil.LLE62MC(paramGeoPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6());
-    } while ((localMapStatus == null) || (paramGeoPoint == null));
-    localMapStatus.centerPtX = paramGeoPoint.getInt("MCx");
-    localMapStatus.centerPtY = paramGeoPoint.getInt("MCy");
-    MapViewFactory.getInstance().getMapView().animateTo(localMapStatus, 0);
-  }
-  
-  public void animationTo(GeoPoint paramGeoPoint, long paramLong1, long paramLong2)
-  {
-    animationTo(paramGeoPoint, paramLong1, paramLong2, -1);
-  }
-  
-  public void animationTo(GeoPoint paramGeoPoint, long paramLong1, long paramLong2, int paramInt)
-  {
-    animationTo(paramGeoPoint, paramLong1, paramLong2, paramInt, true);
-  }
-  
-  public void animationTo(GeoPoint paramGeoPoint, long paramLong1, long paramLong2, int paramInt, boolean paramBoolean)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {}
-    MapStatus localMapStatus;
-    do
-    {
-      return;
-      localMapStatus = MapViewFactory.getInstance().getMapView().getMapStatus();
-    } while (localMapStatus == null);
-    paramGeoPoint = CoordinateTransformUtil.LLE62MC(paramGeoPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6());
-    localMapStatus.centerPtX = paramGeoPoint.getInt("MCx");
-    localMapStatus.centerPtY = paramGeoPoint.getInt("MCy");
-    localMapStatus.xOffset = ((float)paramLong1);
-    localMapStatus.yOffset = ((float)paramLong2);
-    if (paramInt > 0) {
-      localMapStatus.level = paramInt;
-    }
-    MapViewFactory.getInstance().getMapView().animateTo(localMapStatus, 0);
-  }
-  
-  public boolean antiGeo(SearchPoi paramSearchPoi, int paramInt, Handler paramHandler)
-  {
-    if (paramSearchPoi == null) {
-      return false;
-    }
-    return BNPoiSearcher.getInstance().asynGetPoiByPoint(paramSearchPoi.mViewPoint, paramInt, 10000, paramHandler);
-  }
-  
-  public void backFragment()
-  {
-    h.a().back();
-  }
-  
-  public void callPhone(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    q.f().a(this.mContext, paramSearchPoi.mPhone);
-  }
-  
-  public void checkFavorite(SearchPoi paramSearchPoi, FavoriteResultCallBack paramFavoriteResultCallBack) {}
-  
-  public void checkFavorite(GeoPoint paramGeoPoint, FavoriteResultCallBack paramFavoriteResultCallBack) {}
-  
-  public void clearPoiCache()
-  {
-    ItemizedOverlayUtil.getInstance().removeAllItems();
-    ItemizedOverlayUtil.getInstance().hide();
-    ItemizedOverlayUtil.getInstance().refresh();
-  }
-  
-  public void focusItem(boolean paramBoolean)
-  {
-    BNMapController.getInstance().focusItem(3, this.mId, paramBoolean);
-  }
-  
-  public void focusPoi(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    focusPoi(paramSearchPoi.mViewPoint);
-  }
-  
-  public void focusPoi(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return;
-    }
-    this.mId = 0;
-    BNPoiSearcher.getInstance().clearPoiCache();
-    BNPoiSearcher.getInstance().updatePoiCache(paramGeoPoint);
-    BNMapController.getInstance().showLayer(3, true);
-    BNMapController.getInstance().updateLayer(3);
-    ItemizedOverlayUtil.getInstance().removeAllItems();
-    Bundle localBundle = CoordinateTransformUtil.LL2MC(paramGeoPoint.getLongitudeE6() / 100000.0D, paramGeoPoint.getLatitudeE6() / 100000.0D);
-    paramGeoPoint = null;
-    if (localBundle != null) {
-      paramGeoPoint = new GeoPoint(localBundle.getInt("MCx"), localBundle.getInt("MCy"));
-    }
-    paramGeoPoint = ItemizedOverlayUtil.getInstance().getOverlayItem(paramGeoPoint, StyleManager.getDrawable(2130837889));
-    ItemizedOverlayUtil.getInstance().addMapItem(paramGeoPoint);
-    ItemizedOverlayUtil.getInstance().show();
-    ItemizedOverlayUtil.getInstance().refresh();
-    ItemizedOverlayUtil.getInstance().setOnTapListener(null);
-  }
-  
-  public void focusPoi(ArrayList<SearchPoi> paramArrayList, int paramInt)
-  {
-    if (paramArrayList == null) {
-      return;
-    }
-    this.mId = paramInt;
-    BNPoiSearcher.getInstance().clearPoiCache();
-    BNPoiSearcher.getInstance().updatePoiCacheWithList(paramArrayList);
-    BNMapController.getInstance().showLayer(3, true);
-    BNMapController.getInstance().updateLayer(3);
-  }
-  
-  public int getAntiPoiNetMode(GeoPoint paramGeoPoint)
-  {
-    int i = -1;
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return -1;
-    }
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (BNOfflineDataManager.getInstance().isProvinceDataDownload(0))
-    {
-      paramGeoPoint = BNPoiSearcher.getInstance().getDistrictByPoint(paramGeoPoint, 0);
-      bool1 = bool2;
-      if (paramGeoPoint != null)
-      {
-        paramGeoPoint = BNPoiSearcher.getInstance().getParentDistrict(paramGeoPoint.mId);
-        bool1 = bool2;
-        if (paramGeoPoint != null) {
-          bool1 = BNOfflineDataManager.getInstance().isProvinceDataDownload(paramGeoPoint.mId);
-        }
-      }
-    }
-    if (bool1) {
-      i = 0;
-    }
-    for (;;)
-    {
-      return i;
-      if (NetworkUtils.getConnectStatus()) {
-        i = 1;
-      }
-    }
-  }
-  
-  public String getDistance2CurrentPoint(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return StyleManager.getString(2131298908);
-    }
-    return getDistance2CurrentPoint(paramSearchPoi.mViewPoint);
-  }
-  
-  public String getDistance2CurrentPoint(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return "";
-    }
-    GeoPoint localGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
-    if ((localGeoPoint == null) || (!localGeoPoint.isValid())) {
-      return "";
-    }
-    return StringUtils.getDistance(paramGeoPoint.getLongitudeE6() - localGeoPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6() - localGeoPoint.getLatitudeE6());
-  }
-  
-  public int getDistrictId()
-  {
-    return this.mDistrictId;
-  }
-  
-  public int getSearchNetMode()
-  {
-    return this.mSearchRsultNetMode;
-  }
-  
-  public SearchPoi getStreetViewPoi()
-  {
-    return this.mStreetViewPoi;
-  }
-  
-  public void handleSinaCallback(Context paramContext, int paramInt1, int paramInt2, Intent paramIntent)
-  {
-    if (this.mShareTool == null) {
-      this.mShareTool = new ShareTools(paramContext, 2);
-    }
-    this.mShareTool.onSinaAuthorizeCallback(paramInt1, paramInt2, paramIntent);
-  }
-  
-  public void removeFavorite(SearchPoi paramSearchPoi, FavoriteResultCallBack paramFavoriteResultCallBack) {}
-  
-  public void searchSpace(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("incoming_type", 1);
-    ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).setSpaceSearchPoi(paramSearchPoi);
-    h.a().showFragment(38, localBundle);
-  }
-  
-  public void setDistrictId(int paramInt)
-  {
-    this.mDistrictId = paramInt;
-  }
-  
-  public void setEnd(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    Bundle localBundle = new Bundle();
-    localBundle.putBoolean("from_poi_detail", true);
-    localBundle.putInt("set_poi_type", 2);
-    paramSearchPoi = createRoutePlanNode(paramSearchPoi);
-    ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).setPointPoiDetail(paramSearchPoi);
-    h.a().showFragment(50, localBundle);
-  }
-  
-  public void setMapffset(long paramLong1, long paramLong2)
-  {
-    MapStatus localMapStatus = MapViewFactory.getInstance().getMapView().getMapStatus();
-    if (localMapStatus != null)
-    {
-      localMapStatus.xOffset = ((float)paramLong1);
-      localMapStatus.yOffset = ((float)paramLong2);
-      MapViewFactory.getInstance().getMapView().animateTo(localMapStatus, 0);
-    }
-  }
-  
-  public void setSearchKey(String paramString)
-  {
-    this.mSearchKey = paramString;
-  }
-  
-  public void setSearchNetMode(int paramInt)
-  {
-    this.mSearchRsultNetMode = paramInt;
-  }
-  
-  public void setStart(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    Bundle localBundle = new Bundle();
-    localBundle.putBoolean("from_poi_detail", true);
-    localBundle.putInt("set_poi_type", 0);
-    paramSearchPoi = createRoutePlanNode(paramSearchPoi);
-    ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).setPointPoiDetail(paramSearchPoi);
-    h.a().showFragment(50, localBundle);
-  }
-  
-  public void setVia(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    Bundle localBundle = new Bundle();
-    localBundle.putBoolean("from_poi_detail", true);
-    localBundle.putInt("set_poi_type", 1);
-    paramSearchPoi = createRoutePlanNode(paramSearchPoi);
-    ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).setPointPoiDetail(paramSearchPoi);
-    h.a().showFragment(50, localBundle);
-  }
-  
-  public void sharePoi(Context paramContext, SearchPoi paramSearchPoi, String paramString, Activity paramActivity, ShareEventCallBack paramShareEventCallBack)
-  {
-    paramString = new Intent("android.intent.action.SEND");
-    paramString.setType("text/plain");
-    paramString.putExtra("android.intent.extra.SUBJECT", "分享");
-    paramString.putExtra("android.intent.extra.TEXT", paramSearchPoi.mName);
-    paramString.setFlags(268435456);
-    paramContext.startActivity(Intent.createChooser(paramString, "分享方式"));
-  }
-  
-  public void sharePoi(SearchPoi paramSearchPoi, String paramString, Activity paramActivity, ShareEventCallBack paramShareEventCallBack)
-  {
-    if ((paramSearchPoi == null) || (TextUtils.isEmpty(paramSearchPoi.mName)) || (paramActivity == null) || (paramActivity.isFinishing())) {
-      return;
-    }
-    if (paramShareEventCallBack != null) {
-      paramShareEventCallBack.onStart();
-    }
-    new StringBuilder().append(paramSearchPoi.mName).append("\r\n").toString();
-    if (this.mShareTool == null) {
-      this.mShareTool = new ShareTools(paramActivity, 2);
-    }
-    this.mShareTool.share(getOpenSharePoiBundle(paramSearchPoi, paramString));
-  }
-  
-  public void sharePoiGetShortUrl(SearchPoi paramSearchPoi, Handler paramHandler) {}
-  
-  public void sharePoiParseShortUrl(String paramString, Handler paramHandler) {}
-  
-  public void startCalcRoute(SearchPoi paramSearchPoi, e parame)
-  {
-    NavPoiController.getInstance().startCalcRoute(paramSearchPoi);
-  }
-  
-  public void startRef(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    if (!NetworkUtils.getConnectStatus())
-    {
-      TipTool.onCreateToastDialog(this.mContext, 2131296542);
-      return;
-    }
-    RoutePlanNode localRoutePlanNode = BNLocationManagerProxy.getInstance().getCurLocationNode();
-    if ((localRoutePlanNode == null) || (!BNLocationManagerProxy.getInstance().isLocationValid()))
-    {
-      TipTool.onCreateToastDialog(this.mContext, 2131297228);
-      return;
-    }
-    paramSearchPoi = createRoutePlanNode(paramSearchPoi);
-    ArrayList localArrayList = new ArrayList(2);
-    localArrayList.add(localRoutePlanNode);
-    localArrayList.add(paramSearchPoi);
-  }
-  
-  public void updatePoiBkgLayer(ArrayList<SearchPoi> paramArrayList)
-  {
-    if (paramArrayList == null) {
-      return;
-    }
-    BNPoiSearcher.getInstance().clearBkgCache();
-    ArrayList localArrayList = new ArrayList(paramArrayList.size());
-    int i = 0;
-    if (i < paramArrayList.size())
-    {
-      SearchPoi localSearchPoi = (SearchPoi)paramArrayList.get(i);
-      if (localSearchPoi == null) {}
-      for (;;)
-      {
-        i += 1;
-        break;
-        localArrayList.add(localSearchPoi.mViewPoint);
-      }
-    }
-    BNPoiSearcher.getInstance().updateBkgCache(localArrayList, -1);
-    BNMapController.getInstance().updateLayer(4);
-    BNMapController.getInstance().updateLayer(3);
-  }
-  
-  public void viewStreet(SearchPoi paramSearchPoi, Context paramContext, e parame) {}
-  
-  public static abstract interface AntiGeoCallBack
-  {
-    public abstract void onFail();
-    
-    public abstract void onRevSearchPoi(SearchPoi paramSearchPoi);
-    
-    public abstract void onStart();
-  }
-  
-  class FavoriteJob
-    implements Runnable
-  {
-    public static final int ADD_EVENT = 0;
-    public static final int CANCLE_EVENT = 2;
-    public static final int CHECK_EVENT = 1;
-    private int mEvent = -1;
-    private PoiController.FavoriteResultCallBack mFavoriteResultCallBack;
-    private GeoPoint mPoint;
-    private SearchPoi mSearchPoi;
-    
-    public FavoriteJob(SearchPoi paramSearchPoi, PoiController.FavoriteResultCallBack paramFavoriteResultCallBack)
-    {
-      this.mFavoriteResultCallBack = paramFavoriteResultCallBack;
-      this.mSearchPoi = paramSearchPoi;
-    }
-    
-    public FavoriteJob(GeoPoint paramGeoPoint, PoiController.FavoriteResultCallBack paramFavoriteResultCallBack)
-    {
-      this.mFavoriteResultCallBack = paramFavoriteResultCallBack;
-      this.mPoint = paramGeoPoint;
-    }
-    
-    public void run()
-    {
-      if (this.mFavoriteResultCallBack == null) {
-        return;
-      }
-      PoiController.this.mUIHandler.post(new Runnable()
-      {
-        public void run()
-        {
-          PoiController.FavoriteJob.this.mFavoriteResultCallBack.onFavoritEventStart();
-        }
-      });
-      switch (this.mEvent)
-      {
-      default: 
-        return;
-      case 0: 
-        bool = false;
-        switch (BNFavoriteManager.getInstance().addNewPoiToFavorite(this.mSearchPoi))
-        {
-        }
-      case 1: 
-        for (;;)
-        {
-          PoiController.this.mUIHandler.post(new Runnable()
-          {
-            public void run()
-            {
-              PoiController.FavoriteJob.this.mFavoriteResultCallBack.onAddResult(bool);
+
+    class FavoriteJob implements Runnable {
+        public static final int ADD_EVENT = 0;
+        public static final int CANCLE_EVENT = 2;
+        public static final int CHECK_EVENT = 1;
+        private int mEvent = -1;
+        private FavoriteResultCallBack mFavoriteResultCallBack;
+        private GeoPoint mPoint;
+        private SearchPoi mSearchPoi;
+
+        /* renamed from: com.baidu.navi.controller.PoiController$FavoriteJob$1 */
+        class C37161 implements Runnable {
+            C37161() {
             }
-          });
-          return;
-          if (this.mPoint == null) {}
-          for (bool = BNFavoriteManager.getInstance().isPoiExistInFavByPoint(this.mSearchPoi);; bool = BNFavoriteManager.getInstance().isPoiExistInFavByPoint(this.mPoint))
-          {
-            PoiController.this.mUIHandler.post(new Runnable()
-            {
-              public void run()
-              {
-                PoiController.FavoriteJob.this.mFavoriteResultCallBack.onCheckResult(bool);
-              }
-            });
-            return;
-          }
-          TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(2131296424));
-          BNMapController.getInstance().updateLayer(16);
-          bool = true;
-          continue;
-          TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(2131296419));
-          continue;
-          TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(2131296422));
-          continue;
-          TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(2131296423));
+
+            public void run() {
+                FavoriteJob.this.mFavoriteResultCallBack.onFavoritEventStart();
+            }
         }
-      }
-      final boolean bool = BNFavoriteManager.getInstance().removePoiFromFavorite(this.mSearchPoi);
-      if (bool)
-      {
-        BNMapController.getInstance().updateLayer(16);
-        TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(2131296420));
-      }
-      for (;;)
-      {
-        PoiController.this.mUIHandler.post(new Runnable()
-        {
-          public void run()
-          {
-            PoiController.FavoriteJob.this.mFavoriteResultCallBack.onRemoveResult(bool);
-          }
-        });
-        return;
-        TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(2131296421));
-      }
+
+        public FavoriteJob(GeoPoint point, FavoriteResultCallBack favoriteResultCallBack) {
+            this.mFavoriteResultCallBack = favoriteResultCallBack;
+            this.mPoint = point;
+        }
+
+        public FavoriteJob(SearchPoi searchPoi, FavoriteResultCallBack favoriteResultCallBack) {
+            this.mFavoriteResultCallBack = favoriteResultCallBack;
+            this.mSearchPoi = searchPoi;
+        }
+
+        public FavoriteJob setEvent(int event) {
+            this.mEvent = event;
+            return this;
+        }
+
+        public void run() {
+            if (this.mFavoriteResultCallBack != null) {
+                PoiController.this.mUIHandler.post(new C37161());
+                switch (this.mEvent) {
+                    case 0:
+                        boolean isAddSuccess = false;
+                        switch (BNFavoriteManager.getInstance().addNewPoiToFavorite(this.mSearchPoi)) {
+                            case -2:
+                                TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(C0965R.string.detail_fav_full));
+                                break;
+                            case -1:
+                                TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(C0965R.string.detail_fav_add_duplicate_or_null));
+                                break;
+                            case 0:
+                                TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(C0965R.string.detail_fav_fail));
+                                break;
+                            case 1:
+                                TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(C0965R.string.detail_favorite));
+                                BNMapController.getInstance().updateLayer(16);
+                                isAddSuccess = true;
+                                break;
+                        }
+                        final boolean addSuccess = isAddSuccess;
+                        PoiController.this.mUIHandler.post(new Runnable() {
+                            public void run() {
+                                FavoriteJob.this.mFavoriteResultCallBack.onAddResult(addSuccess);
+                            }
+                        });
+                        return;
+                    case 1:
+                        boolean isFavorite;
+                        if (this.mPoint == null) {
+                            isFavorite = BNFavoriteManager.getInstance().isPoiExistInFavByPoint(this.mSearchPoi);
+                        } else {
+                            isFavorite = BNFavoriteManager.getInstance().isPoiExistInFavByPoint(this.mPoint);
+                        }
+                        final boolean favoriteRet = isFavorite;
+                        PoiController.this.mUIHandler.post(new Runnable() {
+                            public void run() {
+                                FavoriteJob.this.mFavoriteResultCallBack.onCheckResult(favoriteRet);
+                            }
+                        });
+                        return;
+                    case 2:
+                        boolean favSuccess = BNFavoriteManager.getInstance().removePoiFromFavorite(this.mSearchPoi);
+                        if (favSuccess) {
+                            BNMapController.getInstance().updateLayer(16);
+                            TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(C0965R.string.detail_fav_cancle));
+                        } else {
+                            TipTool.onCreateToastDialog(PoiController.this.mContext, PoiController.this.mContext.getString(C0965R.string.detail_fav_cancle_fail));
+                        }
+                        final boolean isSuccess = favSuccess;
+                        PoiController.this.mUIHandler.post(new Runnable() {
+                            public void run() {
+                                FavoriteJob.this.mFavoriteResultCallBack.onRemoveResult(isSuccess);
+                            }
+                        });
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
     }
-    
-    public FavoriteJob setEvent(int paramInt)
-    {
-      this.mEvent = paramInt;
-      return this;
+
+    public interface FavoriteResultCallBack {
+        void onAddResult(boolean z);
+
+        void onCheckResult(boolean z);
+
+        void onFavoritEventStart();
+
+        void onRemoveResult(boolean z);
     }
-  }
-  
-  public static abstract interface FavoriteResultCallBack
-  {
-    public abstract void onAddResult(boolean paramBoolean);
-    
-    public abstract void onCheckResult(boolean paramBoolean);
-    
-    public abstract void onFavoritEventStart();
-    
-    public abstract void onRemoveResult(boolean paramBoolean);
-  }
-  
-  static class InnerHolder
-  {
-    static PoiController mInstance = new PoiController(null);
-  }
-  
-  public static abstract interface ShareEventCallBack
-  {
-    public abstract void onEnd();
-    
-    public abstract void onStart();
-  }
-  
-  public static abstract interface StreetSearchCallBack
-  {
-    public abstract void onFail();
-    
-    public abstract void onRevStreetId(String paramString);
-    
-    public abstract void onStart();
-  }
+
+    static class InnerHolder {
+        static PoiController mInstance = new PoiController();
+
+        InnerHolder() {
+        }
+    }
+
+    public interface ShareEventCallBack {
+        void onEnd();
+
+        void onStart();
+    }
+
+    public interface StreetSearchCallBack {
+        void onFail();
+
+        void onRevStreetId(String str);
+
+        void onStart();
+    }
+
+    private PoiController() {
+        this.mSearchRsultNetMode = 1;
+        this.mShareTool = null;
+        this.mRPHandler = new Handler(Looper.getMainLooper()) {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 4:
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(ContentFragmentManager.MODULE_FROM, PoiController.this.mModuleFrom);
+                        C1328h.a().showFragment(52, bundle);
+                        BNRoutePlaner.getInstance().removeRouteResultHandler(PoiController.this.mRPHandler);
+                        return;
+                    case 7:
+                        BNRoutePlaner.getInstance().removeRouteResultHandler(PoiController.this.mRPHandler);
+                        return;
+                    case 8:
+                        StatisticUtils.statSetDestFromPoi();
+                        return;
+                    case 32:
+                        BNRoutePlaner.getInstance().removeRouteResultHandler(PoiController.this.mRPHandler);
+                        return;
+                    default:
+                        return;
+                }
+            }
+        };
+        this.mUIHandler = new Handler(Looper.getMainLooper());
+        this.mContext = BaiduNaviApplication.getInstance();
+        FavoriteDestinationController.getInstance().queryAllFavoriteDestFromDB(null);
+    }
+
+    public static PoiController getInstance() {
+        return InnerHolder.mInstance;
+    }
+
+    public void setSearchKey(String key) {
+        this.mSearchKey = key;
+    }
+
+    public SearchPoi getStreetViewPoi() {
+        return this.mStreetViewPoi;
+    }
+
+    public String getDistance2CurrentPoint(SearchPoi searchPoi) {
+        if (searchPoi == null) {
+            return StyleManager.getString(C0965R.string.search_empty_data);
+        }
+        return getDistance2CurrentPoint(searchPoi.mViewPoint);
+    }
+
+    public String getDistance2CurrentPoint(GeoPoint point) {
+        if (point == null || !point.isValid()) {
+            return "";
+        }
+        GeoPoint center = BNLocationManagerProxy.getInstance().getLastValidLocation();
+        if (center == null || !center.isValid()) {
+            return "";
+        }
+        return StringUtils.getDistance((double) (point.getLongitudeE6() - center.getLongitudeE6()), (double) (point.getLatitudeE6() - center.getLatitudeE6()));
+    }
+
+    public void backFragment() {
+        C1328h.a().back();
+    }
+
+    public void checkFavorite(GeoPoint point, FavoriteResultCallBack favoriteResultCallBack) {
+    }
+
+    public void checkFavorite(SearchPoi point, FavoriteResultCallBack favoriteResultCallBack) {
+    }
+
+    public void removeFavorite(SearchPoi point, FavoriteResultCallBack favoriteResultCallBack) {
+    }
+
+    public void addFavorite(SearchPoi point, FavoriteResultCallBack favoriteResultCallBack) {
+    }
+
+    public void setSearchNetMode(int searchNetMode) {
+        this.mSearchRsultNetMode = searchNetMode;
+    }
+
+    public int getSearchNetMode() {
+        return this.mSearchRsultNetMode;
+    }
+
+    public void updatePoiBkgLayer(ArrayList<SearchPoi> searchPois) {
+        if (searchPois != null) {
+            BNPoiSearcher.getInstance().clearBkgCache();
+            ArrayList<GeoPoint> geoList = new ArrayList(searchPois.size());
+            for (int i = 0; i < searchPois.size(); i++) {
+                SearchPoi poi = (SearchPoi) searchPois.get(i);
+                if (poi != null) {
+                    geoList.add(poi.mViewPoint);
+                }
+            }
+            BNPoiSearcher.getInstance().updateBkgCache(geoList, -1);
+            BNMapController.getInstance().updateLayer(4);
+            BNMapController.getInstance().updateLayer(3);
+        }
+    }
+
+    public void focusPoi(SearchPoi poi) {
+        if (poi != null) {
+            focusPoi(poi.mViewPoint);
+        }
+    }
+
+    public void focusPoi(ArrayList<SearchPoi> mPoiList, int id) {
+        if (mPoiList != null) {
+            this.mId = id;
+            BNPoiSearcher.getInstance().clearPoiCache();
+            BNPoiSearcher.getInstance().updatePoiCacheWithList(mPoiList);
+            BNMapController.getInstance().showLayer(3, true);
+            BNMapController.getInstance().updateLayer(3);
+        }
+    }
+
+    public void focusPoi(GeoPoint geoPoint) {
+        if (geoPoint != null && geoPoint.isValid()) {
+            this.mId = 0;
+            BNPoiSearcher.getInstance().clearPoiCache();
+            BNPoiSearcher.getInstance().updatePoiCache(geoPoint);
+            BNMapController.getInstance().showLayer(3, true);
+            BNMapController.getInstance().updateLayer(3);
+            ItemizedOverlayUtil.getInstance().removeAllItems();
+            Bundle mBundle = CoordinateTransformUtil.LL2MC(((double) geoPoint.getLongitudeE6()) / 100000.0d, ((double) geoPoint.getLatitudeE6()) / 100000.0d);
+            GeoPoint pointMc = null;
+            if (mBundle != null) {
+                pointMc = new GeoPoint(mBundle.getInt("MCx"), mBundle.getInt("MCy"));
+            }
+            ItemizedOverlayUtil.getInstance().addMapItem(ItemizedOverlayUtil.getInstance().getOverlayItem(pointMc, StyleManager.getDrawable(C0965R.drawable.bnav_pick_in_map_centerpoint)));
+            ItemizedOverlayUtil.getInstance().show();
+            ItemizedOverlayUtil.getInstance().refresh();
+            ItemizedOverlayUtil.getInstance().setOnTapListener(null);
+        }
+    }
+
+    public void focusItem(boolean focusFlag) {
+        BNMapController.getInstance().focusItem(3, this.mId, focusFlag);
+    }
+
+    public void clearPoiCache() {
+        ItemizedOverlayUtil.getInstance().removeAllItems();
+        ItemizedOverlayUtil.getInstance().hide();
+        ItemizedOverlayUtil.getInstance().refresh();
+    }
+
+    public void setMapffset(long xOffset, long yOffset) {
+        MapStatus curMapStatus = MapViewFactory.getInstance().getMapView().getMapStatus();
+        if (curMapStatus != null) {
+            curMapStatus.xOffset = (float) xOffset;
+            curMapStatus.yOffset = (float) yOffset;
+            MapViewFactory.getInstance().getMapView().animateTo(curMapStatus, 0);
+        }
+    }
+
+    public void animationByFrogleap(GeoPoint geopoint) {
+        if (geopoint != null && geopoint.isValid()) {
+            MapStatus curMapStatus = MapViewFactory.getInstance().getMapView().getMapStatus();
+            Bundle b = CoordinateTransformUtil.LLE62MC(geopoint.getLongitudeE6(), geopoint.getLatitudeE6());
+            curMapStatus.centerPtX = (double) b.getInt("MCx");
+            curMapStatus.centerPtY = (double) b.getInt("MCy");
+            MapViewFactory.getInstance().getMapView().animateTo(curMapStatus, 0);
+        }
+    }
+
+    public void animationByFrogleap(SearchPoi searchPoi) {
+        if (searchPoi != null) {
+            animationByFrogleap(searchPoi.mViewPoint);
+        }
+    }
+
+    public void setDistrictId(int districtid) {
+        this.mDistrictId = districtid;
+    }
+
+    public int getDistrictId() {
+        return this.mDistrictId;
+    }
+
+    public void animationTo(GeoPoint geopoint) {
+        if (geopoint != null && geopoint.isValid()) {
+            MapStatus curMapStatus = MapViewFactory.getInstance().getMapView().getMapStatus();
+            Bundle b = CoordinateTransformUtil.LLE62MC(geopoint.getLongitudeE6(), geopoint.getLatitudeE6());
+            if (curMapStatus != null && b != null) {
+                curMapStatus.centerPtX = (double) b.getInt("MCx");
+                curMapStatus.centerPtY = (double) b.getInt("MCy");
+                MapViewFactory.getInstance().getMapView().animateTo(curMapStatus, 0);
+            }
+        }
+    }
+
+    public void animationTo(GeoPoint geopoint, long xOffset, long yOffset, int level) {
+        animationTo(geopoint, xOffset, yOffset, level, true);
+    }
+
+    public void animationTo(GeoPoint geopoint, long xOffset, long yOffset, int level, boolean anim) {
+        if (geopoint != null && geopoint.isValid()) {
+            MapStatus curMapStatus = MapViewFactory.getInstance().getMapView().getMapStatus();
+            if (curMapStatus != null) {
+                Bundle b = CoordinateTransformUtil.LLE62MC(geopoint.getLongitudeE6(), geopoint.getLatitudeE6());
+                curMapStatus.centerPtX = (double) b.getInt("MCx");
+                curMapStatus.centerPtY = (double) b.getInt("MCy");
+                curMapStatus.xOffset = (float) xOffset;
+                curMapStatus.yOffset = (float) yOffset;
+                if (level > 0) {
+                    curMapStatus.level = (float) level;
+                }
+                MapViewFactory.getInstance().getMapView().animateTo(curMapStatus, 0);
+            }
+        }
+    }
+
+    public void animationTo(GeoPoint geopoint, long xOffset, long yOffset) {
+        animationTo(geopoint, xOffset, yOffset, -1);
+    }
+
+    public void animationTo(SearchPoi searchPoi, long xOffset, long yOffset) {
+        if (searchPoi != null) {
+            animationTo(searchPoi.mViewPoint, xOffset, yOffset, -1);
+        }
+    }
+
+    public void animationTo(SearchPoi searchPoi, long xOffset, long yOffset, int level) {
+        if (searchPoi != null) {
+            animationTo(searchPoi.mViewPoint, xOffset, yOffset, level);
+        }
+    }
+
+    public void animationTo(SearchPoi searchPoi) {
+        if (searchPoi != null) {
+            animationTo(searchPoi.mViewPoint);
+        }
+    }
+
+    public void searchSpace(SearchPoi poi) {
+        if (poi != null) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("incoming_type", 1);
+            ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).setSpaceSearchPoi(poi);
+            C1328h.a().showFragment(38, bundle);
+        }
+    }
+
+    public void callPhone(SearchPoi poi) {
+        if (poi != null) {
+            C1868q.f().a(this.mContext, poi.mPhone);
+        }
+    }
+
+    public void setEnd(SearchPoi node) {
+        if (node != null) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(RoutePlanFragment.KEY_FROM_POI_DETAIL, true);
+            bundle.putInt(RoutePlanFragment.KEY_SET_POI_TYPE, 2);
+            ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).setPointPoiDetail(createRoutePlanNode(node));
+            C1328h.a().showFragment(50, bundle);
+        }
+    }
+
+    public void setStart(SearchPoi node) {
+        if (node != null) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(RoutePlanFragment.KEY_FROM_POI_DETAIL, true);
+            bundle.putInt(RoutePlanFragment.KEY_SET_POI_TYPE, 0);
+            ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).setPointPoiDetail(createRoutePlanNode(node));
+            C1328h.a().showFragment(50, bundle);
+        }
+    }
+
+    public void setVia(SearchPoi node) {
+        if (node != null) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(RoutePlanFragment.KEY_FROM_POI_DETAIL, true);
+            bundle.putInt(RoutePlanFragment.KEY_SET_POI_TYPE, 1);
+            ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).setPointPoiDetail(createRoutePlanNode(node));
+            C1328h.a().showFragment(50, bundle);
+        }
+    }
+
+    public void viewStreet(SearchPoi poi, Context context, C1277e listener) {
+    }
+
+    public void startRef(SearchPoi poi) {
+        if (poi != null) {
+            if (NetworkUtils.getConnectStatus()) {
+                RoutePlanNode startNode = BNLocationManagerProxy.getInstance().getCurLocationNode();
+                if (startNode == null || !BNLocationManagerProxy.getInstance().isLocationValid()) {
+                    TipTool.onCreateToastDialog(this.mContext, (int) C0965R.string.wait_for_loacte);
+                    return;
+                }
+                RoutePlanNode endNode = createRoutePlanNode(poi);
+                ArrayList<RoutePlanNode> nodeList = new ArrayList(2);
+                nodeList.add(startNode);
+                nodeList.add(endNode);
+                return;
+            }
+            TipTool.onCreateToastDialog(this.mContext, (int) C0965R.string.its_switch_to_history);
+        }
+    }
+
+    private RoutePlanNode createRoutePlanNode(SearchPoi node) {
+        return new RoutePlanNode(node.mGuidePoint, node.mViewPoint, 8, node.mName, node.mAddress, node.mOriginUID);
+    }
+
+    public void startCalcRoute(SearchPoi poi, C1277e listener) {
+        NavPoiController.getInstance().startCalcRoute(poi);
+    }
+
+    public boolean antiGeo(SearchPoi poi, int netMode, Handler handler) {
+        if (poi == null) {
+            return false;
+        }
+        return BNPoiSearcher.getInstance().asynGetPoiByPoint(poi.mViewPoint, netMode, 10000, handler);
+    }
+
+    public void sharePoi(Context context, SearchPoi poi, String shortUrl, Activity activity, ShareEventCallBack shareEventCallBack) {
+        Intent intent = new Intent("android.intent.action.SEND");
+        intent.setType("text/plain");
+        intent.putExtra("android.intent.extra.SUBJECT", "分享");
+        intent.putExtra("android.intent.extra.TEXT", poi.mName);
+        intent.setFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+        context.startActivity(Intent.createChooser(intent, "分享方式"));
+    }
+
+    public void sharePoi(SearchPoi poi, String shortUrl, Activity activity, ShareEventCallBack shareEventCallBack) {
+        if (poi != null && !TextUtils.isEmpty(poi.mName) && activity != null && !activity.isFinishing()) {
+            if (shareEventCallBack != null) {
+                shareEventCallBack.onStart();
+            }
+            String shareContent = poi.mName + "\r\n";
+            if (this.mShareTool == null) {
+                this.mShareTool = new ShareTools(activity, 2);
+            }
+            this.mShareTool.share(getOpenSharePoiBundle(poi, shortUrl));
+        }
+    }
+
+    public void handleSinaCallback(Context context, int requestCode, int resultCode, Intent data) {
+        if (this.mShareTool == null) {
+            this.mShareTool = new ShareTools(context, 2);
+        }
+        this.mShareTool.onSinaAuthorizeCallback(requestCode, resultCode, data);
+    }
+
+    public void sharePoiGetShortUrl(SearchPoi poi, Handler handler) {
+    }
+
+    public void sharePoiParseShortUrl(String shortUri, Handler handler) {
+    }
+
+    public int getAntiPoiNetMode(GeoPoint geopoint) {
+        int finalNetMode = -1;
+        if (geopoint == null || !geopoint.isValid()) {
+            return -1;
+        }
+        boolean hasDownloadData = false;
+        if (BNOfflineDataManager.getInstance().isProvinceDataDownload(0)) {
+            DistrictInfo childDistrictInfo = BNPoiSearcher.getInstance().getDistrictByPoint(geopoint, 0);
+            if (childDistrictInfo != null) {
+                DistrictInfo parentDistrict = BNPoiSearcher.getInstance().getParentDistrict(childDistrictInfo.mId);
+                if (parentDistrict != null) {
+                    hasDownloadData = BNOfflineDataManager.getInstance().isProvinceDataDownload(parentDistrict.mId);
+                }
+            }
+        }
+        if (hasDownloadData) {
+            finalNetMode = 0;
+        } else if (NetworkUtils.getConnectStatus()) {
+            finalNetMode = 1;
+        }
+        return finalNetMode;
+    }
+
+    private Bundle getOpenSharePoiBundle(SearchPoi poiDetail, String shortUrl) {
+        String shareUrl = shortUrl;
+        if (shareUrl == null) {
+            return null;
+        }
+        StringBuffer sb = new StringBuffer(128);
+        Bundle shareBundle = new Bundle();
+        String subject = "百度导航";
+        String filepath = "";
+        sb.append("这里是：");
+        if (poiDetail != null) {
+            sb.append(poiDetail.mName);
+            int i = poiDetail.mType;
+            shareBundle.putString(SearchParamKey.POI_NAME, poiDetail.mName);
+            shareBundle.putString("uid", poiDetail.mOriginUID);
+        }
+        String address = poiDetail.mAddress;
+        if (!TextUtils.isEmpty(address)) {
+            if (!sb.toString().equals("这里是：")) {
+                sb.append("，");
+            }
+            sb.append(address);
+        }
+        sb.append("，详情：");
+        sb.append(shareUrl);
+        sb.append(" -[百度导航]");
+        shareBundle.putString(SearchParamKey.POI_ADDR, address);
+        shareBundle.putString(ShareTools.BUNDLE_KEY_SUBJECT, subject);
+        shareBundle.putString("content", sb.toString());
+        shareBundle.putString(ShareTools.BUNDLE_KEY_FILEPATH, filepath);
+        shareBundle.putString(ShareTools.BUNDLE_KEY_IMG_URL, ShareTools.DEFAULT_POI_WEIXIN_IMG);
+        shareBundle.putString(ShareTools.BUNDLE_KEY_SHARE_URL, shareUrl);
+        shareBundle.putString(SearchParamKey.TEL, poiDetail.mPhone);
+        shareBundle.putInt(SearchParamKey.POI_GEO_X, poiDetail.mViewPoint.getLatitudeE6());
+        shareBundle.putInt(SearchParamKey.POI_GEO_Y, poiDetail.mViewPoint.getLongitudeE6());
+        return shareBundle;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/controller/PoiController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

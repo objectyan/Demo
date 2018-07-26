@@ -4,16 +4,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-public class DebugGate
-{
-  private static final boolean DEBUG_OPEN = false;
-  private static boolean checked = false;
-  
-  public static void debug(ViewGroup paramViewGroup) {}
+public class DebugGate {
+    private static final boolean DEBUG_OPEN = false;
+    private static boolean checked = false;
+
+    /* renamed from: com.baidu.navisdk.ui.util.DebugGate$1 */
+    static class C45191 implements OnClickListener {
+        C45191() {
+        }
+
+        public void onClick(View v) {
+        }
+    }
+
+    public static void debug(ViewGroup parent) {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/util/DebugGate.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

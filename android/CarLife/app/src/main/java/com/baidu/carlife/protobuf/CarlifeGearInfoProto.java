@@ -9,349 +9,297 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeGearInfoProto
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_com_baidu_carlife_protobuf_CarlifeGearInfo_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_com_baidu_carlife_protobuf_CarlifeGearInfo_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeGearInfoProto.access$702(paramAnonymousFileDescriptor);
-        CarlifeGearInfoProto.access$002((Descriptors.Descriptor)CarlifeGearInfoProto.getDescriptor().getMessageTypes().get(0));
-        CarlifeGearInfoProto.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeGearInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeGearInfo_descriptor, new String[] { "Gear" }, CarlifeGearInfoProto.CarlifeGearInfo.class, CarlifeGearInfoProto.CarlifeGearInfo.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n\032CarlifeGearInfoProto.proto\022\032com.baidu.carlife.protobuf\"\037\n\017CarlifeGearInfo\022\f\n\004gear\030\001 \002(\005" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeGearInfo
-    extends GeneratedMessage
-  {
-    public static final int GEAR_FIELD_NUMBER = 1;
-    private static final CarlifeGearInfo defaultInstance = new CarlifeGearInfo();
-    private int gear_ = 0;
-    private boolean hasGear;
-    private int memoizedSerializedSize = -1;
-    
-    static
-    {
-      CarlifeGearInfoProto.getDescriptor();
-      CarlifeGearInfoProto.internalForceInit();
-    }
-    
-    public static CarlifeGearInfo getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeGearInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeGearInfo_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeGearInfo paramCarlifeGearInfo)
-    {
-      return newBuilder().mergeFrom(paramCarlifeGearInfo);
-    }
-    
-    public static CarlifeGearInfo parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeGearInfo parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public CarlifeGearInfo getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public int getGear()
-    {
-      return this.gear_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      i = 0;
-      if (hasGear()) {
-        i = 0 + CodedOutputStream.computeInt32Size(1, getGear());
-      }
-      i += getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public boolean hasGear()
-    {
-      return this.hasGear;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeGearInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeGearInfo_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return this.hasGear;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasGear()) {
-        paramCodedOutputStream.writeInt32(1, getGear());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeGearInfoProto.CarlifeGearInfo result;
-      
-      private CarlifeGearInfoProto.CarlifeGearInfo buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeGearInfoProto {
+    private static FileDescriptor descriptor;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeGearInfo_descriptor */
+    private static Descriptor f6621x8a18c55;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeGearInfo_fieldAccessorTable */
+    private static FieldAccessorTable f6622xa27d8dd3;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeGearInfoProto$1 */
+    static class C20651 implements InternalDescriptorAssigner {
+        C20651() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeGearInfoProto.CarlifeGearInfo(null);
-        return localBuilder;
-      }
-      
-      public CarlifeGearInfoProto.CarlifeGearInfo build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeGearInfoProto.descriptor = root;
+            CarlifeGearInfoProto.f6621x8a18c55 = (Descriptor) CarlifeGearInfoProto.getDescriptor().getMessageTypes().get(0);
+            CarlifeGearInfoProto.f6622xa27d8dd3 = new FieldAccessorTable(CarlifeGearInfoProto.f6621x8a18c55, new String[]{"Gear"}, CarlifeGearInfo.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeGearInfoProto.CarlifeGearInfo buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeGearInfoProto.CarlifeGearInfo localCarlifeGearInfo = this.result;
-        this.result = null;
-        return localCarlifeGearInfo;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeGearInfoProto.CarlifeGearInfo(null);
-        return this;
-      }
-      
-      public Builder clearGear()
-      {
-        CarlifeGearInfoProto.CarlifeGearInfo.access$502(this.result, false);
-        CarlifeGearInfoProto.CarlifeGearInfo.access$602(this.result, 0);
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public CarlifeGearInfoProto.CarlifeGearInfo getDefaultInstanceForType()
-      {
-        return CarlifeGearInfoProto.CarlifeGearInfo.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeGearInfoProto.CarlifeGearInfo.getDescriptor();
-      }
-      
-      public int getGear()
-      {
-        return this.result.getGear();
-      }
-      
-      public boolean hasGear()
-      {
-        return this.result.hasGear();
-      }
-      
-      protected CarlifeGearInfoProto.CarlifeGearInfo internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeGearInfoProto.CarlifeGearInfo paramCarlifeGearInfo)
-      {
-        if (paramCarlifeGearInfo == CarlifeGearInfoProto.CarlifeGearInfo.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeGearInfo.hasGear()) {
-          setGear(paramCarlifeGearInfo.getGear());
-        }
-        mergeUnknownFields(paramCarlifeGearInfo.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeGearInfo extends GeneratedMessage {
+        public static final int GEAR_FIELD_NUMBER = 1;
+        private static final CarlifeGearInfo defaultInstance = new CarlifeGearInfo();
+        private int gear_;
+        private boolean hasGear;
+        private int memoizedSerializedSize;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeGearInfo result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setGear(paramCodedInputStream.readInt32());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeGearInfo();
+                return builder;
+            }
+
+            protected CarlifeGearInfo internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeGearInfo();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeGearInfo.getDescriptor();
+            }
+
+            public CarlifeGearInfo getDefaultInstanceForType() {
+                return CarlifeGearInfo.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeGearInfo build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeGearInfo buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeGearInfo buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeGearInfo returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeGearInfo) {
+                    return mergeFrom((CarlifeGearInfo) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeGearInfo other) {
+                if (other != CarlifeGearInfo.getDefaultInstance()) {
+                    if (other.hasGear()) {
+                        setGear(other.getGear());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setGear(input.readInt32());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasGear() {
+                return this.result.hasGear();
+            }
+
+            public int getGear() {
+                return this.result.getGear();
+            }
+
+            public Builder setGear(int value) {
+                this.result.hasGear = true;
+                this.result.gear_ = value;
+                return this;
+            }
+
+            public Builder clearGear() {
+                this.result.hasGear = false;
+                this.result.gear_ = 0;
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeGearInfoProto.CarlifeGearInfo)) {
-          return mergeFrom((CarlifeGearInfoProto.CarlifeGearInfo)paramMessage);
+
+        private CarlifeGearInfo() {
+            this.gear_ = 0;
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setGear(int paramInt)
-      {
-        CarlifeGearInfoProto.CarlifeGearInfo.access$502(this.result, true);
-        CarlifeGearInfoProto.CarlifeGearInfo.access$602(this.result, paramInt);
-        return this;
-      }
+
+        static {
+            CarlifeGearInfoProto.getDescriptor();
+            CarlifeGearInfoProto.internalForceInit();
+        }
+
+        public static CarlifeGearInfo getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public CarlifeGearInfo getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeGearInfoProto.f6621x8a18c55;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeGearInfoProto.f6622xa27d8dd3;
+        }
+
+        public boolean hasGear() {
+            return this.hasGear;
+        }
+
+        public int getGear() {
+            return this.gear_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasGear) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasGear()) {
+                output.writeInt32(1, getGear());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasGear()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getGear());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeGearInfo parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeGearInfo parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeGearInfo prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeGearInfoProto() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n\u001aCarlifeGearInfoProto.proto\u0012\u001acom.baidu.carlife.protobuf\"\u001f\n\u000fCarlifeGearInfo\u0012\f\n\u0004gear\u0018\u0001 \u0002(\u0005"}, new FileDescriptor[0], new C20651());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeGearInfoProto.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,201 +2,151 @@ package com.baidu.platform.comapi.map;
 
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
-import java.util.Iterator;
+import com.baidu.platform.comapi.map.MapController.MapControlMode;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-public class SimpleGestureAdapter
-  extends GestureDetector.SimpleOnGestureListener
-{
-  private Object lock = new Object();
-  private MapController mMapController;
-  private OnLongPressListener mOnLongPressListener;
-  private volatile Set<GestureDetector.SimpleOnGestureListener> mUserListeners = new CopyOnWriteArraySet();
-  
-  public void addSimpleOnGestureListener(GestureDetector.SimpleOnGestureListener paramSimpleOnGestureListener)
-  {
-    synchronized (this.lock)
-    {
-      this.mUserListeners.add(paramSimpleOnGestureListener);
-      return;
+public class SimpleGestureAdapter extends SimpleOnGestureListener {
+    private Object lock = new Object();
+    private MapController mMapController;
+    private OnLongPressListener mOnLongPressListener;
+    private volatile Set<SimpleOnGestureListener> mUserListeners = new CopyOnWriteArraySet();
+
+    public void setMapController(MapController mapController) {
+        this.mMapController = mapController;
     }
-  }
-  
-  OnLongPressListener getOnLongPressListener()
-  {
-    return this.mOnLongPressListener;
-  }
-  
-  public boolean onDoubleTap(MotionEvent paramMotionEvent)
-  {
-    synchronized (this.lock)
-    {
-      Object localObject2 = this.mUserListeners;
-      if (localObject2 != null)
-      {
-        localObject2 = ((Set)localObject2).iterator();
-        if (((Iterator)localObject2).hasNext()) {
-          ((GestureDetector.SimpleOnGestureListener)((Iterator)localObject2).next()).onDoubleTap(paramMotionEvent);
+
+    OnLongPressListener getOnLongPressListener() {
+        return this.mOnLongPressListener;
+    }
+
+    void setOnLongPressListener(OnLongPressListener mOnLongPressListener) {
+        this.mOnLongPressListener = mOnLongPressListener;
+    }
+
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        if (this.mMapController == null) {
+            return false;
         }
-      }
-    }
-    if (this.mMapController != null) {
-      this.mMapController.handleDoubleDownClick(paramMotionEvent);
-    }
-    return true;
-  }
-  
-  public boolean onDoubleTapEvent(MotionEvent paramMotionEvent)
-  {
-    synchronized (this.lock)
-    {
-      Object localObject2 = this.mUserListeners;
-      if (localObject2 != null)
-      {
-        localObject2 = ((Set)localObject2).iterator();
-        if (((Iterator)localObject2).hasNext()) {
-          ((GestureDetector.SimpleOnGestureListener)((Iterator)localObject2).next()).onDoubleTapEvent(paramMotionEvent);
+        if (this.mMapController.getMapControlMode() == MapControlMode.STREET) {
+            this.mMapController.handleTouchUp(e2);
         }
-      }
+        return this.mMapController.handleFling(e1, e2, velocityX, velocityY);
     }
-    if ((paramMotionEvent.getAction() == 1) && (this.mMapController != null)) {
-      this.mMapController.handleDoubleTouch(paramMotionEvent);
-    }
-    return super.onDoubleTapEvent(paramMotionEvent);
-  }
-  
-  public boolean onDown(MotionEvent paramMotionEvent)
-  {
-    synchronized (this.lock)
-    {
-      Object localObject2 = this.mUserListeners;
-      if (localObject2 != null)
-      {
-        localObject2 = ((Set)localObject2).iterator();
-        if (((Iterator)localObject2).hasNext()) {
-          ((GestureDetector.SimpleOnGestureListener)((Iterator)localObject2).next()).onDown(paramMotionEvent);
+
+    public void addSimpleOnGestureListener(SimpleOnGestureListener listener) {
+        synchronized (this.lock) {
+            this.mUserListeners.add(listener);
         }
-      }
     }
-    return super.onDown(paramMotionEvent);
-  }
-  
-  public boolean onFling(MotionEvent paramMotionEvent1, MotionEvent paramMotionEvent2, float paramFloat1, float paramFloat2)
-  {
-    if (this.mMapController == null) {
-      return false;
-    }
-    if (this.mMapController.getMapControlMode() == MapController.MapControlMode.STREET) {
-      this.mMapController.handleTouchUp(paramMotionEvent2);
-    }
-    return this.mMapController.handleFling(paramMotionEvent1, paramMotionEvent2, paramFloat1, paramFloat2);
-  }
-  
-  public void onLongPress(MotionEvent paramMotionEvent)
-  {
-    synchronized (this.lock)
-    {
-      Object localObject2 = this.mUserListeners;
-      if (localObject2 != null)
-      {
-        localObject2 = ((Set)localObject2).iterator();
-        if (((Iterator)localObject2).hasNext()) {
-          ((GestureDetector.SimpleOnGestureListener)((Iterator)localObject2).next()).onLongPress(paramMotionEvent);
+
+    public void removeSimpleOnGestureListener(SimpleOnGestureListener listener) {
+        synchronized (this.lock) {
+            this.mUserListeners.remove(listener);
         }
-      }
     }
-    if ((this.mMapController != null) && (!this.mMapController.isEnableDMoveZoom()) && (!this.mMapController.isNaviMode()) && (this.mOnLongPressListener != null)) {
-      this.mOnLongPressListener.onLongPress(paramMotionEvent);
-    }
-  }
-  
-  public boolean onScroll(MotionEvent paramMotionEvent1, MotionEvent paramMotionEvent2, float paramFloat1, float paramFloat2)
-  {
-    synchronized (this.lock)
-    {
-      Object localObject2 = this.mUserListeners;
-      if (localObject2 != null)
-      {
-        localObject2 = ((Set)localObject2).iterator();
-        if (((Iterator)localObject2).hasNext()) {
-          ((GestureDetector.SimpleOnGestureListener)((Iterator)localObject2).next()).onScroll(paramMotionEvent1, paramMotionEvent2, paramFloat1, paramFloat2);
+
+    public boolean onSingleTapUp(MotionEvent e) {
+        synchronized (this.lock) {
+            Set<SimpleOnGestureListener> listeners = this.mUserListeners;
+            if (listeners != null) {
+                for (SimpleOnGestureListener listener : listeners) {
+                    listener.onSingleTapUp(e);
+                }
+            }
         }
-      }
+        return super.onSingleTapUp(e);
     }
-    return super.onScroll(paramMotionEvent1, paramMotionEvent2, paramFloat1, paramFloat2);
-  }
-  
-  public void onShowPress(MotionEvent paramMotionEvent)
-  {
-    synchronized (this.lock)
-    {
-      Object localObject2 = this.mUserListeners;
-      if (localObject2 != null)
-      {
-        localObject2 = ((Set)localObject2).iterator();
-        if (((Iterator)localObject2).hasNext()) {
-          ((GestureDetector.SimpleOnGestureListener)((Iterator)localObject2).next()).onShowPress(paramMotionEvent);
+
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        synchronized (this.lock) {
+            Set<SimpleOnGestureListener> listeners = this.mUserListeners;
+            if (listeners != null) {
+                for (SimpleOnGestureListener listener : listeners) {
+                    listener.onScroll(e1, e2, distanceX, distanceY);
+                }
+            }
         }
-      }
+        return super.onScroll(e1, e2, distanceX, distanceY);
     }
-    super.onShowPress(paramMotionEvent);
-  }
-  
-  public boolean onSingleTapConfirmed(MotionEvent paramMotionEvent)
-  {
-    synchronized (this.lock)
-    {
-      Object localObject2 = this.mUserListeners;
-      if (localObject2 != null)
-      {
-        localObject2 = ((Set)localObject2).iterator();
-        if (((Iterator)localObject2).hasNext()) {
-          ((GestureDetector.SimpleOnGestureListener)((Iterator)localObject2).next()).onSingleTapConfirmed(paramMotionEvent);
+
+    public void onShowPress(MotionEvent e) {
+        synchronized (this.lock) {
+            Set<SimpleOnGestureListener> listeners = this.mUserListeners;
+            if (listeners != null) {
+                for (SimpleOnGestureListener listener : listeners) {
+                    listener.onShowPress(e);
+                }
+            }
         }
-      }
+        super.onShowPress(e);
     }
-    return (this.mMapController != null) && (this.mMapController.handleTouchSingleClick(paramMotionEvent));
-  }
-  
-  public boolean onSingleTapUp(MotionEvent paramMotionEvent)
-  {
-    synchronized (this.lock)
-    {
-      Object localObject2 = this.mUserListeners;
-      if (localObject2 != null)
-      {
-        localObject2 = ((Set)localObject2).iterator();
-        if (((Iterator)localObject2).hasNext()) {
-          ((GestureDetector.SimpleOnGestureListener)((Iterator)localObject2).next()).onSingleTapUp(paramMotionEvent);
+
+    public boolean onDown(MotionEvent e) {
+        synchronized (this.lock) {
+            Set<SimpleOnGestureListener> listeners = this.mUserListeners;
+            if (listeners != null) {
+                for (SimpleOnGestureListener listener : listeners) {
+                    listener.onDown(e);
+                }
+            }
         }
-      }
+        return super.onDown(e);
     }
-    return super.onSingleTapUp(paramMotionEvent);
-  }
-  
-  public void removeSimpleOnGestureListener(GestureDetector.SimpleOnGestureListener paramSimpleOnGestureListener)
-  {
-    synchronized (this.lock)
-    {
-      this.mUserListeners.remove(paramSimpleOnGestureListener);
-      return;
+
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        synchronized (this.lock) {
+            Set<SimpleOnGestureListener> listeners = this.mUserListeners;
+            if (listeners != null) {
+                for (SimpleOnGestureListener listener : listeners) {
+                    listener.onDoubleTapEvent(e);
+                }
+            }
+        }
+        if (e.getAction() == 1 && this.mMapController != null) {
+            this.mMapController.handleDoubleTouch(e);
+        }
+        return super.onDoubleTapEvent(e);
     }
-  }
-  
-  public void setMapController(MapController paramMapController)
-  {
-    this.mMapController = paramMapController;
-  }
-  
-  void setOnLongPressListener(OnLongPressListener paramOnLongPressListener)
-  {
-    this.mOnLongPressListener = paramOnLongPressListener;
-  }
+
+    public boolean onSingleTapConfirmed(MotionEvent event) {
+        synchronized (this.lock) {
+            Set<SimpleOnGestureListener> listeners = this.mUserListeners;
+            if (listeners != null) {
+                for (SimpleOnGestureListener listener : listeners) {
+                    listener.onSingleTapConfirmed(event);
+                }
+            }
+        }
+        return this.mMapController != null && this.mMapController.handleTouchSingleClick(event);
+    }
+
+    public boolean onDoubleTap(MotionEvent e) {
+        synchronized (this.lock) {
+            Set<SimpleOnGestureListener> listeners = this.mUserListeners;
+            if (listeners != null) {
+                for (SimpleOnGestureListener listener : listeners) {
+                    listener.onDoubleTap(e);
+                }
+            }
+        }
+        if (this.mMapController != null) {
+            this.mMapController.handleDoubleDownClick(e);
+        }
+        return true;
+    }
+
+    public void onLongPress(MotionEvent e) {
+        synchronized (this.lock) {
+            Set<SimpleOnGestureListener> listeners = this.mUserListeners;
+            if (listeners != null) {
+                for (SimpleOnGestureListener listener : listeners) {
+                    listener.onLongPress(e);
+                }
+            }
+        }
+        if (this.mMapController != null && !this.mMapController.isEnableDMoveZoom() && !this.mMapController.isNaviMode() && this.mOnLongPressListener != null) {
+            this.mOnLongPressListener.onLongPress(e);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/SimpleGestureAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

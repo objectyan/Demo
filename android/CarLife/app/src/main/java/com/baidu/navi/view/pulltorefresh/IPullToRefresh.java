@@ -2,62 +2,60 @@ package com.baidu.navi.view.pulltorefresh;
 
 import android.view.View;
 import android.view.animation.Interpolator;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Mode;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.OnPullEventListener;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.OnRefreshListener2;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.State;
 
-public abstract interface IPullToRefresh<T extends View>
-{
-  public abstract boolean demo();
-  
-  public abstract PullToRefreshBase.Mode getCurrentMode();
-  
-  public abstract boolean getFilterTouchEvents();
-  
-  public abstract ILoadingLayout getLoadingLayoutProxy();
-  
-  public abstract ILoadingLayout getLoadingLayoutProxy(boolean paramBoolean1, boolean paramBoolean2);
-  
-  public abstract PullToRefreshBase.Mode getMode();
-  
-  public abstract T getRefreshableView();
-  
-  public abstract boolean getShowViewWhileRefreshing();
-  
-  public abstract PullToRefreshBase.State getState();
-  
-  public abstract boolean isPullToRefreshEnabled();
-  
-  public abstract boolean isPullToRefreshOverScrollEnabled();
-  
-  public abstract boolean isRefreshing();
-  
-  public abstract boolean isScrollingWhileRefreshingEnabled();
-  
-  public abstract void onRefreshComplete();
-  
-  public abstract void setFilterTouchEvents(boolean paramBoolean);
-  
-  public abstract void setMode(PullToRefreshBase.Mode paramMode);
-  
-  public abstract void setOnPullEventListener(PullToRefreshBase.OnPullEventListener<T> paramOnPullEventListener);
-  
-  public abstract void setOnRefreshListener(PullToRefreshBase.OnRefreshListener2<T> paramOnRefreshListener2);
-  
-  public abstract void setOnRefreshListener(PullToRefreshBase.OnRefreshListener<T> paramOnRefreshListener);
-  
-  public abstract void setPullToRefreshOverScrollEnabled(boolean paramBoolean);
-  
-  public abstract void setRefreshing();
-  
-  public abstract void setRefreshing(boolean paramBoolean);
-  
-  public abstract void setScrollAnimationInterpolator(Interpolator paramInterpolator);
-  
-  public abstract void setScrollingWhileRefreshingEnabled(boolean paramBoolean);
-  
-  public abstract void setShowViewWhileRefreshing(boolean paramBoolean);
+public interface IPullToRefresh<T extends View> {
+    boolean demo();
+
+    Mode getCurrentMode();
+
+    boolean getFilterTouchEvents();
+
+    ILoadingLayout getLoadingLayoutProxy();
+
+    ILoadingLayout getLoadingLayoutProxy(boolean z, boolean z2);
+
+    Mode getMode();
+
+    T getRefreshableView();
+
+    boolean getShowViewWhileRefreshing();
+
+    State getState();
+
+    boolean isPullToRefreshEnabled();
+
+    boolean isPullToRefreshOverScrollEnabled();
+
+    boolean isRefreshing();
+
+    boolean isScrollingWhileRefreshingEnabled();
+
+    void onRefreshComplete();
+
+    void setFilterTouchEvents(boolean z);
+
+    void setMode(Mode mode);
+
+    void setOnPullEventListener(OnPullEventListener<T> onPullEventListener);
+
+    void setOnRefreshListener(OnRefreshListener2<T> onRefreshListener2);
+
+    void setOnRefreshListener(OnRefreshListener<T> onRefreshListener);
+
+    void setPullToRefreshOverScrollEnabled(boolean z);
+
+    void setRefreshing();
+
+    void setRefreshing(boolean z);
+
+    void setScrollAnimationInterpolator(Interpolator interpolator);
+
+    void setScrollingWhileRefreshingEnabled(boolean z);
+
+    void setShowViewWhileRefreshing(boolean z);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/pulltorefresh/IPullToRefresh.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

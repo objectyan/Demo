@@ -1,67 +1,61 @@
 package com.baidu.platform.comapi.map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.View;
 import android.view.View.MeasureSpec;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.baidu.platform.comapi.c;
+import com.baidu.navi.fragment.NaviFragmentManager;
+import com.baidu.navisdk.util.common.CommonHandlerThread;
+import com.baidu.platform.comapi.C2907c;
 import com.baidu.platform.comapi.map.provider.ProviderUtils;
 
-public class RtPopupOverlayItem
-{
-  public int bgresid = 131;
-  public String id;
-  public Drawable imgdata;
-  public int imgindex;
-  public int showLevelMax = 100;
-  public int showLevelMin = 0;
-  public int x;
-  public int y;
-  
-  public static RtPopupOverlayItem getPoiDetailRtBusTipOverlayItem(double paramDouble1, double paramDouble2, String paramString, int paramInt1, int paramInt2, int paramInt3)
-  {
-    Object localObject = c.f();
-    RtPopupOverlayItem localRtPopupOverlayItem = new RtPopupOverlayItem();
-    localRtPopupOverlayItem.bgresid = paramInt2;
-    localRtPopupOverlayItem.x = ((int)paramDouble1);
-    localRtPopupOverlayItem.y = ((int)paramDouble2);
-    localRtPopupOverlayItem.showLevelMin = paramInt3;
-    LinearLayout localLinearLayout = new LinearLayout((Context)localObject);
-    localLinearLayout.setOrientation(1);
-    localObject = new TextView((Context)localObject);
-    ((TextView)localObject).setMaxWidth(ProviderUtils.dip2px(150));
-    ((TextView)localObject).setSingleLine(true);
-    ((TextView)localObject).setTextColor(paramInt1);
-    ((TextView)localObject).setText(paramString);
-    localLinearLayout.addView((View)localObject);
-    localLinearLayout.measure(View.MeasureSpec.makeMeasureSpec(0, 0), View.MeasureSpec.makeMeasureSpec(0, 0));
-    localLinearLayout.layout(0, 0, localLinearLayout.getMeasuredWidth(), localLinearLayout.getMeasuredHeight());
-    localLinearLayout.buildDrawingCache();
-    paramString = localLinearLayout.getDrawingCache();
-    if (paramString != null)
-    {
-      paramString = new BitmapDrawable(paramString);
-      localLinearLayout.setDrawingCacheEnabled(false);
-      localRtPopupOverlayItem.imgdata = paramString;
-      return localRtPopupOverlayItem;
+public class RtPopupOverlayItem {
+    public int bgresid = NaviFragmentManager.TYPE_CAR_DRV_LIST;
+    public String id;
+    public Drawable imgdata;
+    public int imgindex;
+    public int showLevelMax = 100;
+    public int showLevelMin = 0;
+    /* renamed from: x */
+    public int f19854x;
+    /* renamed from: y */
+    public int f19855y;
+
+    public int getResId() {
+        if (this.imgdata == null) {
+            return -1;
+        }
+        return this.imgdata.hashCode();
     }
-    return null;
-  }
-  
-  public int getResId()
-  {
-    if (this.imgdata == null) {
-      return -1;
+
+    public static RtPopupOverlayItem getPoiDetailRtBusTipOverlayItem(double x, double y, String tip, int color, int bgresid, int showLevel) {
+        Context context = C2907c.f();
+        RtPopupOverlayItem item = new RtPopupOverlayItem();
+        item.bgresid = bgresid;
+        item.f19854x = (int) x;
+        item.f19855y = (int) y;
+        item.showLevelMin = showLevel;
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(1);
+        TextView tvTip = new TextView(context);
+        tvTip.setMaxWidth(ProviderUtils.dip2px(CommonHandlerThread.MSG_START_RECORD_TRAJECTORY));
+        tvTip.setSingleLine(true);
+        tvTip.setTextColor(color);
+        tvTip.setText(tip);
+        layout.addView(tvTip);
+        layout.measure(MeasureSpec.makeMeasureSpec(0, 0), MeasureSpec.makeMeasureSpec(0, 0));
+        layout.layout(0, 0, layout.getMeasuredWidth(), layout.getMeasuredHeight());
+        layout.buildDrawingCache();
+        Bitmap bitmap = layout.getDrawingCache();
+        if (bitmap == null) {
+            return null;
+        }
+        Drawable drawable = new BitmapDrawable(bitmap);
+        layout.setDrawingCacheEnabled(false);
+        item.imgdata = drawable;
+        return item;
     }
-    return this.imgdata.hashCode();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/RtPopupOverlayItem.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

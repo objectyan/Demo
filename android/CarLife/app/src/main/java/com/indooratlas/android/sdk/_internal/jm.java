@@ -3,40 +3,43 @@ package com.indooratlas.android.sdk._internal;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
-public abstract interface jm
-{
-  public abstract String a(jj paramjj)
-    throws ju;
-  
-  public abstract void a(jj paramjj, int paramInt, String paramString, boolean paramBoolean);
-  
-  public abstract void a(jj paramjj, kd paramkd);
-  
-  public abstract void a(jj paramjj, kf paramkf)
-    throws ju;
-  
-  public abstract void a(kk paramkk);
-  
-  public abstract void b(int paramInt, String paramString, boolean paramBoolean);
-  
-  public abstract void b(jj paramjj, kd paramkd);
-  
-  public abstract void b(Exception paramException);
-  
-  public abstract void b(ByteBuffer paramByteBuffer);
-  
-  public abstract void c(kd paramkd);
-  
-  public abstract kn g()
-    throws ju;
-  
-  public abstract void h();
-  
-  public abstract InetSocketAddress i();
+public interface jm {
+    /* renamed from: a */
+    String mo4778a(jj jjVar) throws ju;
+
+    /* renamed from: a */
+    void mo4789a(jj jjVar, int i, String str, boolean z);
+
+    /* renamed from: a */
+    void mo4779a(jj jjVar, kd kdVar);
+
+    /* renamed from: a */
+    void mo4780a(jj jjVar, kf kfVar) throws ju;
+
+    /* renamed from: a */
+    void mo4790a(kk kkVar);
+
+    /* renamed from: b */
+    void mo4791b(int i, String str, boolean z);
+
+    /* renamed from: b */
+    void mo4781b(jj jjVar, kd kdVar);
+
+    /* renamed from: b */
+    void mo4792b(Exception exception);
+
+    /* renamed from: b */
+    void mo4793b(ByteBuffer byteBuffer);
+
+    /* renamed from: c */
+    void mo4782c(kd kdVar);
+
+    /* renamed from: g */
+    kn mo4783g() throws ju;
+
+    /* renamed from: h */
+    void mo4794h();
+
+    /* renamed from: i */
+    InetSocketAddress mo4795i();
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/jm.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

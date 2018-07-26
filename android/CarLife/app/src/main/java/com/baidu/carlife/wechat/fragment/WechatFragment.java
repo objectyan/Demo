@@ -11,187 +11,209 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.baidu.carlife.core.e;
-import com.baidu.carlife.logic.voice.n;
-import com.baidu.carlife.wechat.b.i;
-import com.baidu.carlife.wechat.b.k;
-import com.baidu.carlife.wechat.b.k.b;
-import com.baidu.carlife.wechat.f.d;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1251e;
+import com.baidu.carlife.core.p069b.C1190a;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.logic.voice.C1912n;
+import com.baidu.carlife.view.dialog.C1953c;
+import com.baidu.carlife.view.p104a.C2251b;
+import com.baidu.carlife.wechat.p105a.p107b.C2372c;
+import com.baidu.carlife.wechat.p108b.C2380c;
+import com.baidu.carlife.wechat.p108b.C2398k;
+import com.baidu.carlife.wechat.p108b.C2398k.C2397b;
+import com.baidu.carlife.wechat.p109c.C2415a;
+import com.baidu.carlife.wechat.p110e.C2436c;
+import com.baidu.carlife.wechat.p111d.C2416a;
+import com.baidu.carlife.wechat.p112f.C2454d;
+import com.baidu.carlife.wechat.p113g.C2498b;
+import com.baidu.navi.fragment.NaviFragmentManager;
 import com.facebook.drawee.view.SimpleDraweeView;
-import java.util.List;
 
-public class WechatFragment
-  extends a
-  implements AdapterView.OnItemClickListener, k.b
-{
-  public static String b = WechatFragment.class.getSimpleName();
-  private TextView c;
-  private ImageButton d;
-  private GridView e;
-  private com.baidu.carlife.wechat.d.a f;
-  private SimpleDraweeView g;
-  private FrameLayout h;
-  
-  private void a(View paramView)
-  {
-    this.h = ((FrameLayout)paramView.findViewById(2131625247));
-    this.h.setBackground(com.baidu.carlife.view.a.b.a(getActivity()));
-    this.h.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        WechatFragment.this.showFragment(591, null);
-      }
-    });
-    this.g = ((SimpleDraweeView)paramView.findViewById(2131625248));
-    this.e = ((GridView)paramView.findViewById(2131625249));
-    this.f = new com.baidu.carlife.wechat.d.a(getActivity());
-    this.e.setAdapter(this.f);
-    this.e.setOnItemClickListener(this);
-    this.d = ((ImageButton)paramView.findViewById(2131625245));
-    this.d.setBackground(com.baidu.carlife.view.a.b.a(getActivity()));
-    this.d.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        WechatFragment.this.back();
-      }
-    });
-    this.c = ((TextView)paramView.findViewById(2131625246));
-    this.c.setText(com.baidu.carlife.core.b.a.d());
-  }
-  
-  private void b()
-  {
-    if (com.baidu.carlife.wechat.b.c.a().h().size() > 0)
-    {
-      com.baidu.carlife.wechat.a.b.c.c("wechat contact loaded !");
-      return;
+public class WechatFragment extends C2461a implements OnItemClickListener, C2397b {
+    /* renamed from: b */
+    public static String f8087b = WechatFragment.class.getSimpleName();
+    /* renamed from: c */
+    private TextView f8088c;
+    /* renamed from: d */
+    private ImageButton f8089d;
+    /* renamed from: e */
+    private GridView f8090e;
+    /* renamed from: f */
+    private C2416a f8091f;
+    /* renamed from: g */
+    private SimpleDraweeView f8092g;
+    /* renamed from: h */
+    private FrameLayout f8093h;
+
+    /* renamed from: com.baidu.carlife.wechat.fragment.WechatFragment$1 */
+    class C24801 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ WechatFragment f8080a;
+
+        C24801(WechatFragment this$0) {
+            this.f8080a = this$0;
+        }
+
+        public void onClick(View v) {
+            this.f8080a.showFragment(NaviFragmentManager.TYPE_WECHAT_LOGOUT, null);
+        }
     }
-    com.baidu.carlife.wechat.c.a.a().c();
-    com.baidu.carlife.wechat.c.a.a().a(null);
-    com.baidu.carlife.wechat.c.a.a().a("0");
-  }
-  
-  private void c()
-  {
-    String str = com.baidu.carlife.wechat.e.c.i() + com.baidu.carlife.wechat.b.c.a().f().d();
-    this.g.setImageURI(str);
-  }
-  
-  private void d()
-  {
-    if (e.a().o()) {
-      return;
+
+    /* renamed from: com.baidu.carlife.wechat.fragment.WechatFragment$2 */
+    class C24812 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ WechatFragment f8081a;
+
+        C24812(WechatFragment this$0) {
+            this.f8081a = this$0;
+        }
+
+        public void onClick(View v) {
+            this.f8081a.back();
+        }
     }
-    final com.baidu.carlife.view.dialog.c localc = new com.baidu.carlife.view.dialog.c(com.baidu.carlife.core.a.a());
-    localc.c("提示").b("使用微信需开启“小度小度，语音唤醒”，是否确认开启？").d("开启").e("取消").a(new com.baidu.carlife.core.screen.b()
-    {
-      public void onClick()
-      {
-        e.a().a(true);
-        n.a().a(true);
-        n.a().g();
-        WechatFragment.this.dismissDialog(localc);
-      }
-    }).b(new com.baidu.carlife.core.screen.b()
-    {
-      public void onClick()
-      {
-        WechatFragment.this.dismissDialog(localc);
-      }
-    });
-    showDialog(localc);
-  }
-  
-  public void a()
-  {
-    this.f.notifyDataSetChanged();
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    paramLayoutInflater = paramLayoutInflater.inflate(2130968830, null);
-    a(paramLayoutInflater);
-    return paramLayoutInflater;
-  }
-  
-  protected void onInitView() {}
-  
-  public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong)
-  {
-    switch (5.a[this.f.a(paramInt).ordinal()])
-    {
-    default: 
-      return;
-    case 1: 
-      showFragment(586, null);
-      return;
-    case 2: 
-      showFragment(588, null);
-      return;
-    case 3: 
-      if (!com.baidu.carlife.wechat.g.b.a()) {}
-      for (boolean bool = true;; bool = false)
-      {
-        com.baidu.carlife.wechat.g.b.a(bool);
-        this.f.notifyDataSetChanged();
-        return;
-      }
+
+    public /* bridge */ /* synthetic */ void onStop() {
+        super.onStop();
     }
-    showFragment(589, null);
-  }
-  
-  public void onPause()
-  {
-    super.onPause();
-    k.a().b(this);
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    if (!TextUtils.isEmpty(com.baidu.carlife.wechat.b.c.a().f().d())) {}
-    for (boolean bool = true;; bool = false)
-    {
-      com.baidu.carlife.wechat.a.b.c.c("isLogin = " + bool + " ; firstOpenFlag = " + com.baidu.carlife.wechat.b.c.a().c());
-      if (bool) {
-        break;
-      }
-      showFragment(585, null);
-      return;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
-    if (com.baidu.carlife.wechat.b.c.a().c())
-    {
-      d.a("微信登录成功");
-      com.baidu.carlife.wechat.c.a.a().b();
-      com.baidu.carlife.wechat.c.a.a().a(0);
-      b();
-      com.baidu.carlife.wechat.b.c.a().a(false);
-      d();
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        View view = inflater.inflate(C0965R.layout.fragment_wechat, null);
+        m9415a(view);
+        return view;
     }
-    k.a().a(this);
-    a();
-    c();
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    super.onUpdateSkin();
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
+
+    public void onResume() {
+        boolean isLogin;
+        super.onResume();
+        if (TextUtils.isEmpty(C2380c.m9070a().m9085f().m9135d())) {
+            isLogin = false;
+        } else {
+            isLogin = true;
+        }
+        C2372c.m9030c("isLogin = " + isLogin + " ; firstOpenFlag = " + C2380c.m9070a().m9082c());
+        if (isLogin) {
+            if (C2380c.m9070a().m9082c()) {
+                C2454d.m9369a("微信登录成功");
+                C2415a.m9228a().m9242b();
+                C2415a.m9228a().m9237a(0);
+                m9416b();
+                C2380c.m9070a().m9076a(false);
+                m9418d();
+            }
+            C2398k.m9160a().m9176a((C2397b) this);
+            mo1856a();
+            m9417c();
+            return;
+        }
+        showFragment(NaviFragmentManager.TYPE_WECHAT_LOGIN, null);
+    }
+
+    public void onPause() {
+        super.onPause();
+        C2398k.m9160a().m9183b((C2397b) this);
+    }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateSkin() {
+        super.onUpdateSkin();
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    /* renamed from: a */
+    private void m9415a(View view) {
+        this.f8093h = (FrameLayout) view.findViewById(C0965R.id.fragment_wechat_layout_usericon);
+        this.f8093h.setBackground(C2251b.m8527a(getActivity()));
+        this.f8093h.setOnClickListener(new C24801(this));
+        this.f8092g = (SimpleDraweeView) view.findViewById(C0965R.id.fragment_wechat_img_usericon);
+        this.f8090e = (GridView) view.findViewById(C0965R.id.fragment_wechat_gridview);
+        this.f8091f = new C2416a(getActivity());
+        this.f8090e.setAdapter(this.f8091f);
+        this.f8090e.setOnItemClickListener(this);
+        this.f8089d = (ImageButton) view.findViewById(C0965R.id.fragment_wechat_back);
+        this.f8089d.setBackground(C2251b.m8527a(getActivity()));
+        this.f8089d.setOnClickListener(new C24812(this));
+        this.f8088c = (TextView) view.findViewById(C0965R.id.fragment_wechat_title_desc);
+        this.f8088c.setText(C1190a.m4068d());
+    }
+
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        switch (this.f8091f.m9248a(position)) {
+            case Session:
+                showFragment(NaviFragmentManager.TYPE_WECHAT_SESSION, null);
+                return;
+            case Contact:
+                showFragment(NaviFragmentManager.TYPE_WECHAT_CONTACT, null);
+                return;
+            case Mute:
+                C2498b.m9482a(!C2498b.m9483a());
+                this.f8091f.notifyDataSetChanged();
+                return;
+            case Setting:
+                showFragment(NaviFragmentManager.TYPE_WECHAT_SETTING, null);
+                return;
+            default:
+                return;
+        }
+    }
+
+    /* renamed from: a */
+    public void mo1856a() {
+        this.f8091f.notifyDataSetChanged();
+    }
+
+    /* renamed from: b */
+    private void m9416b() {
+        if (C2380c.m9070a().m9087h().size() > 0) {
+            C2372c.m9030c("wechat contact loaded !");
+            return;
+        }
+        C2415a.m9228a().m9243c();
+        C2415a.m9228a().m9240a(null);
+        C2415a.m9228a().m9241a("0");
+    }
+
+    /* renamed from: c */
+    private void m9417c() {
+        this.f8092g.setImageURI(C2436c.m9320i() + C2380c.m9070a().m9085f().m9135d());
+    }
+
+    /* renamed from: d */
+    private void m9418d() {
+        if (!C1251e.m4358a().m4398o()) {
+            final C1953c commonDialog = new C1953c(C1157a.m3876a());
+            commonDialog.m7448c("提示").m7444b("使用微信需开启“小度小度，语音唤醒”，是否确认开启？").m7451d("开启").m7454e("取消").m7438a(new C0672b(this) {
+                /* renamed from: b */
+                final /* synthetic */ WechatFragment f8085b;
+
+                public void onClick() {
+                    C1251e.m4358a().m4390a(true);
+                    C1912n.m7270a().m7299a(true);
+                    C1912n.m7270a().m7308g();
+                    this.f8085b.dismissDialog(commonDialog);
+                }
+            }).m7443b(new C0672b(this) {
+                /* renamed from: b */
+                final /* synthetic */ WechatFragment f8083b;
+
+                public void onClick() {
+                    this.f8083b.dismissDialog(commonDialog);
+                }
+            });
+            showDialog(commonDialog);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/wechat/fragment/WechatFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,13 +1,16 @@
 package com.baidu.navisdk.logic.commandparser;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
 import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import com.baidu.navisdk.jni.nativeif.JNISearchControl;
 import com.baidu.navisdk.logic.CommandBase;
+import com.baidu.navisdk.logic.CommandConst;
 import com.baidu.navisdk.logic.CommandResult;
+import com.baidu.navisdk.logic.NaviErrCode;
 import com.baidu.navisdk.logic.ReqData;
 import com.baidu.navisdk.logic.RspData;
 import com.baidu.navisdk.model.GeoLocateModel;
@@ -17,176 +20,136 @@ import com.baidu.navisdk.model.modelfactory.NaviDataEngine;
 import com.baidu.navisdk.model.modelfactory.PoiSearchModel;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
-import java.util.HashMap;
 
-public class CmdSearchByPoint
-  extends CommandBase
-  implements JNISearchConst
-{
-  int mCityId = -1;
-  DistrictInfo mDistrict;
-  Integer mNetmode = Integer.valueOf(3);
-  SearchPoi mPOI;
-  GeoPoint mPoint;
-  int mProviceId = -1;
-  Integer mSubType;
-  
-  public static void packetParams(ReqData paramReqData, int paramInt, GeoPoint paramGeoPoint)
-  {
-    paramReqData.mParams.put("param.search.subtype", Integer.valueOf(paramInt));
-    paramReqData.mParams.put("param.search.point", paramGeoPoint);
-  }
-  
-  public static void packetParams(ReqData paramReqData, int paramInt1, GeoPoint paramGeoPoint, int paramInt2)
-  {
-    paramReqData.mParams.put("param.search.subtype", Integer.valueOf(paramInt1));
-    paramReqData.mParams.put("param.search.point", paramGeoPoint);
-    paramReqData.mParams.put("param.search.netmode", Integer.valueOf(paramInt2));
-  }
-  
-  protected CommandResult exec()
-  {
-    if (this.mSubType.intValue() == 1) {
-      if (this.mNetmode != null)
-      {
-        this.mPOI = getPoiByPoint(this.mPoint, this.mNetmode.intValue());
-        if (this.mPOI != null) {
-          this.mRet.setSuccess();
-        }
-      }
+public class CmdSearchByPoint extends CommandBase implements JNISearchConst {
+    int mCityId = -1;
+    DistrictInfo mDistrict;
+    Integer mNetmode = Integer.valueOf(3);
+    SearchPoi mPOI;
+    GeoPoint mPoint;
+    int mProviceId = -1;
+    Integer mSubType;
+
+    public static void packetParams(ReqData reqdata, int subtype, GeoPoint point) {
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_SUBTYPE, Integer.valueOf(subtype));
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_POINT, point);
     }
-    for (;;)
-    {
-      return this.mRet;
-      DistrictInfo[] arrayOfDistrictInfo = JNISearchControl.sInstance.getDistrictsByPoint(this.mPoint);
-      if ((arrayOfDistrictInfo == null) || (arrayOfDistrictInfo.length <= 1)) {
-        break;
-      }
-      DistrictInfo localDistrictInfo = arrayOfDistrictInfo[1];
-      if ((localDistrictInfo == null) || ((localDistrictInfo.mType != 2) && (localDistrictInfo.mType != 3))) {
+
+    public static void packetParams(ReqData reqdata, int subtype, GeoPoint point, int netmode) {
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_SUBTYPE, Integer.valueOf(subtype));
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_POINT, point);
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_NETMODE, Integer.valueOf(netmode));
+    }
+
+    protected void unpacketParams(ReqData reqdata) {
+        this.mPoint = (GeoPoint) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_POINT);
+        this.mSubType = (Integer) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_SUBTYPE);
+        this.mNetmode = (Integer) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_NETMODE);
+    }
+
+    protected CommandResult exec() {
+        DistrictInfo[] districts;
+        if (this.mSubType.intValue() == 1) {
+            if (this.mNetmode != null) {
+                this.mPOI = getPoiByPoint(this.mPoint, this.mNetmode.intValue());
+            } else {
+                districts = JNISearchControl.sInstance.getDistrictsByPoint(this.mPoint);
+                if (districts != null && districts.length > 1) {
+                    DistrictInfo district = districts[1];
+                    if (district == null || (district.mType != 2 && district.mType != 3)) {
+                        return this.mRet;
+                    }
+                    int netMode = 1;
+                    if (district.mType == 2 && BNOfflineDataManager.getInstance().isProvinceDataDownload(district.mId)) {
+                        netMode = 0;
+                    }
+                    GeoLocateModel.getInstance().updateDistrict(this.mPoint, districts[0], districts[1]);
+                    this.mPOI = getPoiByPoint(this.mPoint, netMode, district.mId);
+                }
+            }
+            if (this.mPOI != null) {
+                this.mRet.setSuccess();
+            }
+        } else if (this.mSubType.intValue() == 2) {
+            districts = JNISearchControl.sInstance.getDistrictsByPoint(this.mPoint);
+            if (districts == null || districts.length <= 1) {
+                this.mRet.set((int) NaviErrCode.RET_BUG);
+            } else {
+                for (int i = 0; i < 2; i++) {
+                    if (districts[i] == null) {
+                        return this.mRet;
+                    }
+                    if (districts[i].mType == 3) {
+                        this.mCityId = districts[i].mId;
+                    } else if (districts[i].mType == 2) {
+                        this.mProviceId = districts[i].mId;
+                    }
+                }
+                GeoLocateModel.getInstance().updateDistrict(this.mPoint, districts[0], districts[1]);
+                this.mRet.setSuccess();
+            }
+        }
         return this.mRet;
-      }
-      int j = 1;
-      int i = j;
-      if (localDistrictInfo.mType == 2)
-      {
-        i = j;
-        if (BNOfflineDataManager.getInstance().isProvinceDataDownload(localDistrictInfo.mId)) {
-          i = 0;
-        }
-      }
-      GeoLocateModel.getInstance().updateDistrict(this.mPoint, arrayOfDistrictInfo[0], arrayOfDistrictInfo[1]);
-      this.mPOI = getPoiByPoint(this.mPoint, i, localDistrictInfo.mId);
-      break;
-      if (this.mSubType.intValue() == 2)
-      {
-        arrayOfDistrictInfo = JNISearchControl.sInstance.getDistrictsByPoint(this.mPoint);
-        if ((arrayOfDistrictInfo != null) && (arrayOfDistrictInfo.length > 1))
-        {
-          i = 0;
-          if (i < 2)
-          {
-            if (arrayOfDistrictInfo[i] == null) {
-              return this.mRet;
+    }
+
+    protected void handleSuccess() {
+        Message msg;
+        if (this.mSubType.intValue() != 2) {
+            PoiSearchModel poiSearchModel = (PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH);
+            if (poiSearchModel != null) {
+                poiSearchModel.setAntiGeoPoi(this.mPOI);
             }
-            if (arrayOfDistrictInfo[i].mType == 3) {
-              this.mCityId = arrayOfDistrictInfo[i].mId;
+            if (!this.mReqData.mHasMsgSent) {
+                msg = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
+                msg.arg1 = 0;
+                msg.obj = new RspData(this.mReqData, this.mPOI);
+                msg.sendToTarget();
+                this.mReqData.mHasMsgSent = true;
             }
-            for (;;)
-            {
-              i += 1;
-              break;
-              if (arrayOfDistrictInfo[i].mType == 2) {
-                this.mProviceId = arrayOfDistrictInfo[i].mId;
-              }
-            }
-          }
-          GeoLocateModel.getInstance().updateDistrict(this.mPoint, arrayOfDistrictInfo[0], arrayOfDistrictInfo[1]);
-          this.mRet.setSuccess();
+        } else if (!this.mReqData.mHasMsgSent) {
+            msg = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
+            msg.arg1 = 0;
+            Bundle bundle = new Bundle();
+            bundle.putInt(NaviStatConstants.K_NSC_KEY_FINISHNAVI_CITY, this.mCityId);
+            bundle.putInt("provice", this.mProviceId);
+            bundle.putInt("LatitudeE6", this.mPoint.getLatitudeE6());
+            bundle.putInt("LongitudeE6", this.mPoint.getLongitudeE6());
+            msg.obj = new RspData(this.mReqData, bundle);
+            msg.sendToTarget();
+            this.mReqData.mHasMsgSent = true;
         }
-        else
-        {
-          this.mRet.set(55537);
+    }
+
+    public SearchPoi getPoiByPoint(GeoPoint point, int netMode) {
+        if (point == null) {
+            return null;
         }
-      }
+        DistrictInfo district = JNISearchControl.sInstance.getDistrictByPoint(point, netMode);
+        if (district == null) {
+            return null;
+        }
+        if (district.mType == 2 || district.mType == 3) {
+            return getPoiByPoint(point, netMode, district.mId);
+        }
+        return null;
     }
-  }
-  
-  public SearchPoi getPoiByPoint(GeoPoint paramGeoPoint, int paramInt)
-  {
-    if (paramGeoPoint == null) {}
-    DistrictInfo localDistrictInfo;
-    do
-    {
-      return null;
-      localDistrictInfo = JNISearchControl.sInstance.getDistrictByPoint(paramGeoPoint, paramInt);
-    } while ((localDistrictInfo == null) || ((localDistrictInfo.mType != 2) && (localDistrictInfo.mType != 3)));
-    return getPoiByPoint(paramGeoPoint, paramInt, localDistrictInfo.mId);
-  }
-  
-  public SearchPoi getPoiByPoint(GeoPoint paramGeoPoint, int paramInt1, int paramInt2)
-  {
-    if ((paramGeoPoint == null) || (paramInt2 == 0)) {
-      LogUtil.e("", "getPoiByPoint: invalid args!");
+
+    public SearchPoi getPoiByPoint(GeoPoint point, int netMode, int districtId) {
+        if (point == null || districtId == 0) {
+            LogUtil.m15791e("", "getPoiByPoint: invalid args!");
+            return null;
+        }
+        Bundle input = new Bundle();
+        input.putInt("CenterX", point.getLongitudeE6());
+        input.putInt("CenterY", point.getLatitudeE6());
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(districtId));
+        Bundle poiBundle = new Bundle();
+        if (JNISearchControl.sInstance.getNearestPoiByPoint(input, poiBundle) != 0) {
+            return null;
+        }
+        if (!poiBundle.containsKey("DistrictId") || poiBundle.getInt("DistrictId", 0) == 0) {
+            poiBundle.putInt("DistrictId", districtId);
+        }
+        return JNISearchControl.sInstance.parsePoiBundle(poiBundle);
     }
-    Bundle localBundle;
-    do
-    {
-      return null;
-      localBundle = new Bundle();
-      localBundle.putInt("CenterX", paramGeoPoint.getLongitudeE6());
-      localBundle.putInt("CenterY", paramGeoPoint.getLatitudeE6());
-      localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramInt2));
-      paramGeoPoint = new Bundle();
-    } while (JNISearchControl.sInstance.getNearestPoiByPoint(localBundle, paramGeoPoint) != 0);
-    if ((!paramGeoPoint.containsKey("DistrictId")) || (paramGeoPoint.getInt("DistrictId", 0) == 0)) {
-      paramGeoPoint.putInt("DistrictId", paramInt2);
-    }
-    return JNISearchControl.sInstance.parsePoiBundle(paramGeoPoint);
-  }
-  
-  protected void handleSuccess()
-  {
-    if (this.mSubType.intValue() == 2) {
-      if (!this.mReqData.mHasMsgSent)
-      {
-        localObject = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
-        ((Message)localObject).arg1 = 0;
-        Bundle localBundle = new Bundle();
-        localBundle.putInt("city", this.mCityId);
-        localBundle.putInt("provice", this.mProviceId);
-        localBundle.putInt("LatitudeE6", this.mPoint.getLatitudeE6());
-        localBundle.putInt("LongitudeE6", this.mPoint.getLongitudeE6());
-        ((Message)localObject).obj = new RspData(this.mReqData, localBundle);
-        ((Message)localObject).sendToTarget();
-        this.mReqData.mHasMsgSent = true;
-      }
-    }
-    do
-    {
-      return;
-      localObject = (PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel");
-      if (localObject != null) {
-        ((PoiSearchModel)localObject).setAntiGeoPoi(this.mPOI);
-      }
-    } while (this.mReqData.mHasMsgSent);
-    Object localObject = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
-    ((Message)localObject).arg1 = 0;
-    ((Message)localObject).obj = new RspData(this.mReqData, this.mPOI);
-    ((Message)localObject).sendToTarget();
-    this.mReqData.mHasMsgSent = true;
-  }
-  
-  protected void unpacketParams(ReqData paramReqData)
-  {
-    this.mPoint = ((GeoPoint)paramReqData.mParams.get("param.search.point"));
-    this.mSubType = ((Integer)paramReqData.mParams.get("param.search.subtype"));
-    this.mNetmode = ((Integer)paramReqData.mParams.get("param.search.netmode"));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/logic/commandparser/CmdSearchByPoint.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

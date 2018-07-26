@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 import com.baidu.carlife.view.SwitchButton;
 import com.baidu.navi.favorite.FavoritePois;
 import com.baidu.navi.style.StyleManager;
@@ -14,113 +15,91 @@ import com.baidu.navi.util.NaviAccountUtils;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import java.util.List;
 
-public class MapControlPanelAdapter
-  extends BaseAdapter
-{
-  private String[] items;
-  private Activity mActivity;
-  private boolean mHasFavorite = false;
-  
-  public MapControlPanelAdapter(Activity paramActivity)
-  {
-    this.mActivity = paramActivity;
-    this.items = StyleManager.getStringArray(2131230730);
-  }
-  
-  private boolean isClickEnabled(int paramInt)
-  {
-    return true;
-  }
-  
-  public int getCount()
-  {
-    return this.items.length;
-  }
-  
-  public String getItem(int paramInt)
-  {
-    return this.items[paramInt];
-  }
-  
-  public long getItemId(int paramInt)
-  {
-    return paramInt;
-  }
-  
-  public int getItemViewType(int paramInt)
-  {
-    if (paramInt == 1) {
-      return 1;
-    }
-    return 0;
-  }
-  
-  public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    if (getItemViewType(paramInt) == 0)
-    {
-      paramView = LayoutInflater.from(this.mActivity).inflate(2130968920, paramViewGroup, false);
-      ((TextView)paramView.findViewById(2131625613)).setText(getItem(paramInt));
-      return paramView;
-    }
-    paramView = LayoutInflater.from(this.mActivity).inflate(2130968921, paramViewGroup, false);
-    ((TextView)paramView.findViewById(2131625614)).setText(getItem(paramInt));
-    paramViewGroup = (SwitchButton)paramView.findViewById(2131624581);
-    paramViewGroup.setChecked(BNSettingManager.isRoadCondOnOrOff());
-    paramViewGroup.setClickable(false);
-    return paramView;
-  }
-  
-  public int getViewTypeCount()
-  {
-    return 2;
-  }
-  
-  public boolean isEnabled(int paramInt)
-  {
-    return isClickEnabled(paramInt);
-  }
-  
-  public void updateFavoriteItem()
-  {
-    new CheckFavoriteCountTask(null).execute(new Void[0]);
-  }
-  
-  private class CheckFavoriteCountTask
-    extends AsyncTask<Void, Void, Boolean>
-  {
-    private CheckFavoriteCountTask() {}
-    
-    protected Boolean doInBackground(Void... paramVarArgs)
-    {
-      paramVarArgs = FavoritePois.getPoiInstance().getFavPoiValidGenInfo(NaviAccountUtils.getInstance().getUid());
-      if ((paramVarArgs != null) && (paramVarArgs.size() > 0))
-      {
-        MapControlPanelAdapter.access$102(MapControlPanelAdapter.this, true);
-        return Boolean.valueOf(true);
-      }
-      MapControlPanelAdapter.access$102(MapControlPanelAdapter.this, false);
-      return Boolean.valueOf(false);
-    }
-    
-    protected void onPostExecute(Boolean paramBoolean)
-    {
-      if (MapControlPanelAdapter.this.mActivity == null) {
-        return;
-      }
-      MapControlPanelAdapter.this.mActivity.runOnUiThread(new Runnable()
-      {
-        public void run()
-        {
-          MapControlPanelAdapter.this.notifyDataSetChanged();
+public class MapControlPanelAdapter extends BaseAdapter {
+    private String[] items;
+    private Activity mActivity;
+    private boolean mHasFavorite = false;
+
+    private class CheckFavoriteCountTask extends AsyncTask<Void, Void, Boolean> {
+
+        /* renamed from: com.baidu.navi.adapter.MapControlPanelAdapter$CheckFavoriteCountTask$1 */
+        class C36441 implements Runnable {
+            C36441() {
+            }
+
+            public void run() {
+                MapControlPanelAdapter.this.notifyDataSetChanged();
+            }
         }
-      });
+
+        private CheckFavoriteCountTask() {
+        }
+
+        protected Boolean doInBackground(Void... params) {
+            List<String> data = FavoritePois.getPoiInstance().getFavPoiValidGenInfo(NaviAccountUtils.getInstance().getUid());
+            if (data == null || data.size() <= 0) {
+                MapControlPanelAdapter.this.mHasFavorite = false;
+                return Boolean.valueOf(false);
+            }
+            MapControlPanelAdapter.this.mHasFavorite = true;
+            return Boolean.valueOf(true);
+        }
+
+        protected void onPostExecute(Boolean flag) {
+            if (MapControlPanelAdapter.this.mActivity != null) {
+                MapControlPanelAdapter.this.mActivity.runOnUiThread(new C36441());
+            }
+        }
     }
-  }
+
+    public MapControlPanelAdapter(Activity activity) {
+        this.mActivity = activity;
+        this.items = StyleManager.getStringArray(C0965R.array.map_ctrl_menu_item);
+    }
+
+    public int getCount() {
+        return this.items.length;
+    }
+
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    public int getItemViewType(int position) {
+        return position == 1 ? 1 : 0;
+    }
+
+    public long getItemId(int position) {
+        return (long) position;
+    }
+
+    public String getItem(int position) {
+        return this.items[position];
+    }
+
+    public View getView(int position, View convertView, ViewGroup root) {
+        if (getItemViewType(position) == 0) {
+            convertView = LayoutInflater.from(this.mActivity).inflate(C0965R.layout.map_control_panel_list_item, root, false);
+            ((TextView) convertView.findViewById(C0965R.id.map_control_panel_list_item_tv)).setText(getItem(position));
+            return convertView;
+        }
+        convertView = LayoutInflater.from(this.mActivity).inflate(C0965R.layout.map_control_panel_list_item_its, root, false);
+        ((TextView) convertView.findViewById(C0965R.id.map_control_panel_list_item_its_tv)).setText(getItem(position));
+        SwitchButton switchButton = (SwitchButton) convertView.findViewById(C0965R.id.map_control_panel_list_item_its_checkbox);
+        switchButton.setChecked(BNSettingManager.isRoadCondOnOrOff());
+        switchButton.setClickable(false);
+        return convertView;
+    }
+
+    public boolean isEnabled(int position) {
+        return isClickEnabled(position);
+    }
+
+    private boolean isClickEnabled(int position) {
+        return true;
+    }
+
+    public void updateFavoriteItem() {
+        new CheckFavoriteCountTask().execute(new Void[0]);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/adapter/MapControlPanelAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

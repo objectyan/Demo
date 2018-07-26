@@ -13,451 +13,388 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.baidu.carlife.core.screen.e;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.screen.C1277e;
 import com.baidu.navi.controller.PoiController;
 import com.baidu.navi.controller.PoiDetailViewController;
 import com.baidu.navi.controller.PoiDetailViewController.IPoiDetailViewCallBack;
 import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.style.StyleManager;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
 import com.baidu.navisdk.model.modelfactory.NaviDataEngine;
 import com.baidu.navisdk.model.modelfactory.PoiSearchModel;
 import com.baidu.navisdk.ui.util.ForbidDaulClickUtils;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 
-public class CarmodePoiDetailView
-  extends FrameLayout
-{
-  private boolean isMyPosition = false;
-  private boolean isPickPoi = false;
-  private TextView mAddrTextView;
-  private View.OnClickListener mBtnClickListener = new View.OnClickListener()
-  {
-    public void onClick(View paramAnonymousView)
-    {
-      if (ForbidDaulClickUtils.isFastDoubleClick()) {}
-      while (paramAnonymousView.getId() != 2131624069) {
-        return;
-      }
-      CarmodePoiDetailView.this.mPoiController.startCalcRoute(CarmodePoiDetailView.this.mCurrentPoi, CarmodePoiDetailView.this.mOnDialogListener);
-    }
-  };
-  private PoiDetailViewController.IPoiDetailViewCallBack mCallBack = new PoiDetailViewController.IPoiDetailViewCallBack()
-  {
-    public void onFavSyncDone(String paramAnonymousString)
-    {
-      CarmodePoiDetailView.this.updateFavBtnBackground();
-    }
-  };
-  private int mComeFrom;
-  private View mContentLayout;
-  private Context mContext;
-  private SearchPoi mCurrentPoi;
-  private View mDistanceLayout;
-  private TextView mDistanceTextView;
-  private ImageView mFavBtn;
-  private int mIndex;
-  private View mNameAddrLayout;
-  private TextView mNameTextView;
-  private e mOnDialogListener;
-  private View mPhoneLayout;
-  private TextView mPhoneNumberTextView;
-  private PoiController mPoiController;
-  private PoiDetailViewController mPoiDetailViewController = new PoiDetailViewController();
-  private Handler mUIHandler;
-  
-  public CarmodePoiDetailView(Context paramContext)
-  {
-    super(paramContext);
-    this.mContext = paramContext;
-    findViews(paramContext);
-    initSkins();
-    initHandler();
-  }
-  
-  public CarmodePoiDetailView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    findViews(paramContext);
-    initSkins();
-    initHandler();
-  }
-  
-  public CarmodePoiDetailView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    findViews(paramContext);
-    initSkins();
-    initHandler();
-  }
-  
-  private void findViews(Context paramContext)
-  {
-    this.mContentLayout = LayoutInflater.from(paramContext).inflate(2130968672, null);
-    addView(this.mContentLayout);
-    this.mNameTextView = ((TextView)this.mContentLayout.findViewById(2131624538));
-    this.mAddrTextView = ((TextView)this.mContentLayout.findViewById(2131624539));
-    this.mPhoneNumberTextView = ((TextView)this.mContentLayout.findViewById(2131624542));
-    this.mDistanceTextView = ((TextView)this.mContentLayout.findViewById(2131624544));
-    this.mNameAddrLayout = this.mContentLayout.findViewById(2131624537);
-    this.mPhoneLayout = this.mContentLayout.findViewById(2131624541);
-    this.mDistanceLayout = this.mContentLayout.findViewById(2131624543);
-    this.mFavBtn = ((ImageView)this.mContentLayout.findViewById(2131624540));
-    this.mPhoneLayout.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        CarmodePoiDetailView.this.startPhoneCall();
-      }
-    });
-    this.mDistanceLayout.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        CarmodePoiDetailView.this.startCalcRoute();
-      }
-    });
-    this.mNameAddrLayout.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        CarmodePoiDetailView.this.clickFavBtn();
-      }
-    });
-  }
-  
-  private void initContents()
-  {
-    poiDetailViewControllerInit();
-    if ((this.mCurrentPoi == null) || (this.mCurrentPoi.mName == null) || (this.mCurrentPoi.mName.isEmpty())) {
-      return;
-    }
-    this.mNameTextView.setText(this.mCurrentPoi.mName);
-    this.mAddrTextView.setText(this.mCurrentPoi.mAddress);
-    int i;
-    if ((TextUtils.isEmpty(this.mCurrentPoi.mPhone)) || (this.mCurrentPoi.mPhone.equals("null")))
-    {
-      this.mPhoneNumberTextView.setText(2131296726);
-      this.mPhoneLayout.setClickable(false);
-      Object localObject = this.mDistanceLayout;
-      if (!this.isMyPosition) {
-        break label276;
-      }
-      i = 8;
-      label123:
-      ((View)localObject).setVisibility(i);
-      localObject = this.mDistanceTextView;
-      StringBuilder localStringBuilder = new StringBuilder().append("距离");
-      PoiController localPoiController = this.mPoiController;
-      ((TextView)localObject).setText(PoiController.getInstance().getDistance2CurrentPoint(this.mCurrentPoi));
-      if (!this.mCurrentPoi.mName.equals(StyleManager.getString(2131296852))) {
-        break label281;
-      }
-      this.mNameAddrLayout.setClickable(false);
-      label200:
-      if (!this.mCurrentPoi.mName.equals(StyleManager.getString(2131296852))) {
-        break label292;
-      }
-      this.mNameAddrLayout.setClickable(false);
-    }
-    for (;;)
-    {
-      updateFavBtnBackground();
-      return;
-      this.mPhoneNumberTextView.setText(this.mCurrentPoi.mPhone + "　");
-      this.mPhoneLayout.setClickable(true);
-      break;
-      label276:
-      i = 0;
-      break label123;
-      label281:
-      this.mNameAddrLayout.setClickable(true);
-      break label200;
-      label292:
-      this.mNameAddrLayout.setClickable(true);
-    }
-  }
-  
-  private void initHandler()
-  {
-    this.mUIHandler = new Handler(Looper.getMainLooper())
-    {
-      public void handleMessage(Message paramAnonymousMessage)
-      {
-        switch (paramAnonymousMessage.what)
-        {
+public class CarmodePoiDetailView extends FrameLayout {
+    private boolean isMyPosition = false;
+    private boolean isPickPoi = false;
+    private TextView mAddrTextView;
+    private OnClickListener mBtnClickListener = new C39926();
+    private IPoiDetailViewCallBack mCallBack = new C39871();
+    private int mComeFrom;
+    private View mContentLayout;
+    private Context mContext;
+    private SearchPoi mCurrentPoi;
+    private View mDistanceLayout;
+    private TextView mDistanceTextView;
+    private ImageView mFavBtn;
+    private int mIndex;
+    private View mNameAddrLayout;
+    private TextView mNameTextView;
+    private C1277e mOnDialogListener;
+    private View mPhoneLayout;
+    private TextView mPhoneNumberTextView;
+    private PoiController mPoiController;
+    private PoiDetailViewController mPoiDetailViewController = new PoiDetailViewController();
+    private Handler mUIHandler;
+
+    /* renamed from: com.baidu.navi.view.CarmodePoiDetailView$1 */
+    class C39871 implements IPoiDetailViewCallBack {
+        C39871() {
         }
-        do
-        {
-          do
-          {
-            return;
-            if (paramAnonymousMessage.arg1 == 0)
-            {
-              paramAnonymousMessage = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getAntiGeoPoi();
-              CarmodePoiDetailView.this.mNameAddrLayout.setVisibility(0);
-              CarmodePoiDetailView.this.updatePoiByAntiPoi(paramAnonymousMessage);
-              return;
+
+        public void onFavSyncDone(String msg) {
+            CarmodePoiDetailView.this.updateFavBtnBackground();
+        }
+    }
+
+    /* renamed from: com.baidu.navi.view.CarmodePoiDetailView$3 */
+    class C39893 implements OnClickListener {
+        C39893() {
+        }
+
+        public void onClick(View v) {
+            CarmodePoiDetailView.this.startPhoneCall();
+        }
+    }
+
+    /* renamed from: com.baidu.navi.view.CarmodePoiDetailView$4 */
+    class C39904 implements OnClickListener {
+        C39904() {
+        }
+
+        public void onClick(View v) {
+            CarmodePoiDetailView.this.startCalcRoute();
+        }
+    }
+
+    /* renamed from: com.baidu.navi.view.CarmodePoiDetailView$5 */
+    class C39915 implements OnClickListener {
+        C39915() {
+        }
+
+        public void onClick(View v) {
+            CarmodePoiDetailView.this.clickFavBtn();
+        }
+    }
+
+    /* renamed from: com.baidu.navi.view.CarmodePoiDetailView$6 */
+    class C39926 implements OnClickListener {
+        C39926() {
+        }
+
+        public void onClick(View v) {
+            if (!ForbidDaulClickUtils.isFastDoubleClick() && v.getId() == C0965R.id.info_layout) {
+                CarmodePoiDetailView.this.mPoiController.startCalcRoute(CarmodePoiDetailView.this.mCurrentPoi, CarmodePoiDetailView.this.mOnDialogListener);
             }
-          } while (CarmodePoiDetailView.this.isPickPoi);
-          CarmodePoiDetailView.this.mNameTextView.setVisibility(0);
-          CarmodePoiDetailView.this.mAddrTextView.setVisibility(8);
-          CarmodePoiDetailView.this.mNameTextView.setText(2131296852);
-        } while (CarmodePoiDetailView.this.mCurrentPoi == null);
-        CarmodePoiDetailView.this.mCurrentPoi.mName = StyleManager.getString(2131296852);
-      }
-    };
-  }
-  
-  private void initSkins() {}
-  
-  private void poiDetailViewControllerInit()
-  {
-    this.mPoiDetailViewController.init(this.mCurrentPoi);
-    this.mPoiDetailViewController.setCallBack(this.mCallBack);
-  }
-  
-  private void startAntiGeo() {}
-  
-  private void startPhoneCall()
-  {
-    if (ForbidDaulClickUtils.isFastDoubleClick()) {}
-    while ((this.mPoiController == null) || (this.mCurrentPoi == null)) {
-      return;
+        }
     }
-    this.mPoiController.callPhone(this.mCurrentPoi);
-  }
-  
-  private void updateFavBtn(boolean paramBoolean)
-  {
-    if (this.mFavBtn == null) {
-      return;
+
+    private class HaveFavTask extends AsyncTask<Void, Void, Boolean> {
+        private HaveFavTask() {
+        }
+
+        protected Boolean doInBackground(Void... params) {
+            return Boolean.valueOf(CarmodePoiDetailView.this.mPoiDetailViewController.isHaveFav());
+        }
+
+        protected void onPostExecute(Boolean result) {
+            CarmodePoiDetailView.this.updateFavBtn(result.booleanValue());
+        }
     }
-    if (paramBoolean)
-    {
-      this.mFavBtn.setImageDrawable(StyleManager.getDrawable(2130838866));
-      return;
+
+    private void poiDetailViewControllerInit() {
+        this.mPoiDetailViewController.init(this.mCurrentPoi);
+        this.mPoiDetailViewController.setCallBack(this.mCallBack);
     }
-    this.mFavBtn.setImageDrawable(StyleManager.getDrawable(2130838865));
-  }
-  
-  private void updateFavBtnBackground()
-  {
-    new HaveFavTask(null).execute(new Void[0]);
-  }
-  
-  private void updatePoiByAntiPoi(SearchPoi paramSearchPoi)
-  {
-    if ((paramSearchPoi == null) || (this.mCurrentPoi == null)) {
-      return;
+
+    public CarmodePoiDetailView(Context context) {
+        super(context);
+        this.mContext = context;
+        findViews(context);
+        initSkins();
+        initHandler();
     }
-    if (this.isPickPoi)
-    {
-      String str = this.mCurrentPoi.mName;
-      paramSearchPoi.mOriginUID = this.mCurrentPoi.mOriginUID;
-      this.mCurrentPoi = paramSearchPoi;
-      this.mCurrentPoi.mName = str;
+
+    public CarmodePoiDetailView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        findViews(context);
+        initSkins();
+        initHandler();
     }
-    for (;;)
-    {
-      initContents();
-      return;
-      this.mCurrentPoi = paramSearchPoi;
-      if (paramSearchPoi.mType == 0) {
-        this.mCurrentPoi.mName = String.format(StyleManager.getString(2131298912), new Object[] { this.mCurrentPoi.mName });
-      }
+
+    public CarmodePoiDetailView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        findViews(context);
+        initSkins();
+        initHandler();
     }
-  }
-  
-  public void antiPoi(GeoPoint paramGeoPoint, long paramLong1, long paramLong2)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return;
+
+    public void setComeFrom(int comeFrom) {
+        this.mComeFrom = comeFrom;
     }
-    this.isPickPoi = false;
-    SearchPoi localSearchPoi = new SearchPoi();
-    localSearchPoi.mViewPoint = paramGeoPoint;
-    localSearchPoi.mGuidePoint = paramGeoPoint;
-    int i;
-    if (!this.isMyPosition)
-    {
-      this.mPoiController.focusPoi(localSearchPoi);
-      i = this.mPoiController.getAntiPoiNetMode(paramGeoPoint);
-      if (i != -1) {
-        break label98;
-      }
-      localSearchPoi.mName = StyleManager.getString(2131296852);
+
+    private void initHandler() {
+        this.mUIHandler = new Handler(Looper.getMainLooper()) {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 1003:
+                        if (msg.arg1 == 0) {
+                            SearchPoi poi = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getAntiGeoPoi();
+                            CarmodePoiDetailView.this.mNameAddrLayout.setVisibility(0);
+                            CarmodePoiDetailView.this.updatePoiByAntiPoi(poi);
+                            return;
+                        } else if (!CarmodePoiDetailView.this.isPickPoi) {
+                            CarmodePoiDetailView.this.mNameTextView.setVisibility(0);
+                            CarmodePoiDetailView.this.mAddrTextView.setVisibility(8);
+                            CarmodePoiDetailView.this.mNameTextView.setText(C0965R.string.poi_on_map);
+                            if (CarmodePoiDetailView.this.mCurrentPoi != null) {
+                                CarmodePoiDetailView.this.mCurrentPoi.mName = StyleManager.getString(C0965R.string.poi_on_map);
+                                return;
+                            }
+                            return;
+                        } else {
+                            return;
+                        }
+                    default:
+                        return;
+                }
+            }
+        };
     }
-    for (;;)
-    {
-      setSearchPoi(localSearchPoi);
-      return;
-      this.mPoiController.clearPoiCache();
-      break;
-      label98:
-      if (this.mPoiController.antiGeo(localSearchPoi, i, this.mUIHandler)) {
-        startAntiGeo();
-      }
-      this.mPoiController.animationTo(paramGeoPoint, paramLong1, paramLong2);
+
+    public void setController(PoiController controller) {
+        this.mPoiController = controller;
     }
-  }
-  
-  public void clickFavBtn()
-  {
-    if (ForbidDaulClickUtils.isFastDoubleClick()) {
-      return;
+
+    public void setSearchPoi(SearchPoi poi) {
+        if (poi != null) {
+            this.mCurrentPoi = poi;
+            initContents();
+        }
     }
-    poiDetailViewControllerInit();
-    this.mPoiDetailViewController.addOrDelFav();
-  }
-  
-  public int getIndex()
-  {
-    return this.mIndex;
-  }
-  
-  public SearchPoi getSearchPoi()
-  {
-    return this.mCurrentPoi;
-  }
-  
-  public void handleShortUri(String paramString)
-  {
-    if (this.mContext == null) {
-      return;
+
+    public void setFromBrowseMapFragment(boolean isFromBrowseMapFragment, NaviFragmentManager naviFragmentManager) {
     }
-    this.mPoiController.sharePoiParseShortUrl(paramString, this.mUIHandler);
-  }
-  
-  public void hide()
-  {
-    setVisibility(8);
-  }
-  
-  public boolean isVisible()
-  {
-    return getVisibility() == 0;
-  }
-  
-  public void pickPoi(SearchPoi paramSearchPoi, long paramLong1, long paramLong2)
-  {
-    if ((paramSearchPoi == null) || (paramSearchPoi.mViewPoint == null) || (!paramSearchPoi.mViewPoint.isValid())) {
-      return;
+
+    public void setFavSearchPoi(SearchPoi poi) {
+        if (poi != null) {
+            this.mCurrentPoi = poi;
+            initContents();
+        }
     }
-    this.isPickPoi = true;
-    if (!this.isMyPosition)
-    {
-      this.mPoiController.focusPoi(paramSearchPoi);
-      this.mPoiController.animationTo(paramSearchPoi, paramLong1, paramLong2);
+
+    private void updatePoiByAntiPoi(SearchPoi poi) {
+        if (poi != null && this.mCurrentPoi != null) {
+            if (this.isPickPoi) {
+                String orgpoiName = this.mCurrentPoi.mName;
+                poi.mOriginUID = this.mCurrentPoi.mOriginUID;
+                this.mCurrentPoi = poi;
+                this.mCurrentPoi.mName = orgpoiName;
+            } else {
+                this.mCurrentPoi = poi;
+                if (poi.mType == 0) {
+                    this.mCurrentPoi.mName = String.format(StyleManager.getString(C0965R.string.search_poi_fix), new Object[]{this.mCurrentPoi.mName});
+                }
+            }
+            initContents();
+        }
     }
-    for (;;)
-    {
-      int i = this.mPoiController.getAntiPoiNetMode(paramSearchPoi.mViewPoint);
-      if ((i != -1) && (this.mPoiController.antiGeo(paramSearchPoi, i, this.mUIHandler))) {
-        startAntiGeo();
-      }
-      setSearchPoi(paramSearchPoi);
-      return;
-      this.mPoiController.clearPoiCache();
+
+    public void setSearchPoiIndex(int index, int FcType) {
+        this.mIndex = index;
     }
-  }
-  
-  public void setComeFrom(int paramInt)
-  {
-    this.mComeFrom = paramInt;
-  }
-  
-  public void setController(PoiController paramPoiController)
-  {
-    this.mPoiController = paramPoiController;
-  }
-  
-  public void setFavSearchPoi(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
+
+    public int getIndex() {
+        return this.mIndex;
     }
-    this.mCurrentPoi = paramSearchPoi;
-    initContents();
-  }
-  
-  public void setFromBrowseMapFragment(boolean paramBoolean, NaviFragmentManager paramNaviFragmentManager) {}
-  
-  public void setMyPositionMode(boolean paramBoolean)
-  {
-    this.isMyPosition = paramBoolean;
-    View localView = this.mDistanceLayout;
-    if (paramBoolean) {}
-    for (int i = 8;; i = 0)
-    {
-      localView.setVisibility(i);
-      return;
+
+    public SearchPoi getSearchPoi() {
+        return this.mCurrentPoi;
     }
-  }
-  
-  public void setOnDialogListener(e parame)
-  {
-    this.mOnDialogListener = parame;
-  }
-  
-  public void setSearchPoi(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
+
+    private void findViews(Context context) {
+        this.mContentLayout = LayoutInflater.from(context).inflate(C0965R.layout.carmode_map_poi_panel_right, null);
+        addView(this.mContentLayout);
+        this.mNameTextView = (TextView) this.mContentLayout.findViewById(C0965R.id.carmode_map_poi_panel_right_place);
+        this.mAddrTextView = (TextView) this.mContentLayout.findViewById(C0965R.id.carmode_map_poi_panel_right_addr);
+        this.mPhoneNumberTextView = (TextView) this.mContentLayout.findViewById(C0965R.id.carmode_map_poi_panel_right_phone);
+        this.mDistanceTextView = (TextView) this.mContentLayout.findViewById(C0965R.id.carmode_map_poi_panel_right_distance);
+        this.mNameAddrLayout = this.mContentLayout.findViewById(C0965R.id.carmode_map_poi_panel_right_place_layout);
+        this.mPhoneLayout = this.mContentLayout.findViewById(C0965R.id.carmode_map_poi_panel_right_phone_layout);
+        this.mDistanceLayout = this.mContentLayout.findViewById(C0965R.id.carmode_map_poi_panel_right_distance_layout);
+        this.mFavBtn = (ImageView) this.mContentLayout.findViewById(C0965R.id.carmode_map_poi_panel_right_fav_btn);
+        this.mPhoneLayout.setOnClickListener(new C39893());
+        this.mDistanceLayout.setOnClickListener(new C39904());
+        this.mNameAddrLayout.setOnClickListener(new C39915());
     }
-    this.mCurrentPoi = paramSearchPoi;
-    initContents();
-  }
-  
-  public void setSearchPoiIndex(int paramInt1, int paramInt2)
-  {
-    this.mIndex = paramInt1;
-  }
-  
-  public void show()
-  {
-    setVisibility(0);
-  }
-  
-  public void startCalcRoute()
-  {
-    if (ForbidDaulClickUtils.isFastDoubleClick()) {}
-    while ((this.mPoiController == null) || (this.mCurrentPoi == null)) {
-      return;
+
+    private void initSkins() {
     }
-    if (this.mComeFrom == 8) {
-      StatisticManager.onEvent("DISCOVER_QJY_0002", "DISCOVER_QJY_0002");
+
+    public void updateStyle() {
     }
-    this.mPoiController.startCalcRoute(this.mCurrentPoi, this.mOnDialogListener);
-  }
-  
-  public void updateContent()
-  {
-    initContents();
-  }
-  
-  public void updateStyle() {}
-  
-  private class HaveFavTask
-    extends AsyncTask<Void, Void, Boolean>
-  {
-    private HaveFavTask() {}
-    
-    protected Boolean doInBackground(Void... paramVarArgs)
-    {
-      return Boolean.valueOf(CarmodePoiDetailView.this.mPoiDetailViewController.isHaveFav());
+
+    public void updateContent() {
+        initContents();
     }
-    
-    protected void onPostExecute(Boolean paramBoolean)
-    {
-      CarmodePoiDetailView.this.updateFavBtn(paramBoolean.booleanValue());
+
+    private void updateFavBtnBackground() {
+        new HaveFavTask().execute(new Void[0]);
     }
-  }
+
+    private void updateFavBtn(boolean isFav) {
+        if (this.mFavBtn != null) {
+            if (isFav) {
+                this.mFavBtn.setImageDrawable(StyleManager.getDrawable(C0965R.drawable.map_ic_address_collect_on));
+            } else {
+                this.mFavBtn.setImageDrawable(StyleManager.getDrawable(C0965R.drawable.map_ic_address_collect_off));
+            }
+        }
+    }
+
+    private void initContents() {
+        poiDetailViewControllerInit();
+        if (this.mCurrentPoi != null && this.mCurrentPoi.mName != null && !this.mCurrentPoi.mName.isEmpty()) {
+            int i;
+            this.mNameTextView.setText(this.mCurrentPoi.mName);
+            this.mAddrTextView.setText(this.mCurrentPoi.mAddress);
+            if (TextUtils.isEmpty(this.mCurrentPoi.mPhone) || this.mCurrentPoi.mPhone.equals("null")) {
+                this.mPhoneNumberTextView.setText(C0965R.string.no_phone);
+                this.mPhoneLayout.setClickable(false);
+            } else {
+                this.mPhoneNumberTextView.setText(this.mCurrentPoi.mPhone + "　");
+                this.mPhoneLayout.setClickable(true);
+            }
+            View view = this.mDistanceLayout;
+            if (this.isMyPosition) {
+                i = 8;
+            } else {
+                i = 0;
+            }
+            view.setVisibility(i);
+            TextView textView = this.mDistanceTextView;
+            StringBuilder append = new StringBuilder().append("距离");
+            PoiController poiController = this.mPoiController;
+            textView.setText(append.append(PoiController.getInstance().getDistance2CurrentPoint(this.mCurrentPoi)).toString());
+            if (this.mCurrentPoi.mName.equals(StyleManager.getString(C0965R.string.poi_on_map))) {
+                this.mNameAddrLayout.setClickable(false);
+            } else {
+                this.mNameAddrLayout.setClickable(true);
+            }
+            if (this.mCurrentPoi.mName.equals(StyleManager.getString(C0965R.string.poi_on_map))) {
+                this.mNameAddrLayout.setClickable(false);
+            } else {
+                this.mNameAddrLayout.setClickable(true);
+            }
+            updateFavBtnBackground();
+        }
+    }
+
+    public void antiPoi(GeoPoint geopoint, long xOffset, long yOffset) {
+        if (geopoint != null && geopoint.isValid()) {
+            this.isPickPoi = false;
+            SearchPoi poi = new SearchPoi();
+            poi.mViewPoint = geopoint;
+            poi.mGuidePoint = geopoint;
+            if (this.isMyPosition) {
+                this.mPoiController.clearPoiCache();
+            } else {
+                this.mPoiController.focusPoi(poi);
+            }
+            int netMode = this.mPoiController.getAntiPoiNetMode(geopoint);
+            if (netMode == -1) {
+                poi.mName = StyleManager.getString(C0965R.string.poi_on_map);
+            } else {
+                if (this.mPoiController.antiGeo(poi, netMode, this.mUIHandler)) {
+                    startAntiGeo();
+                }
+                this.mPoiController.animationTo(geopoint, xOffset, yOffset);
+            }
+            setSearchPoi(poi);
+        }
+    }
+
+    public void pickPoi(SearchPoi searchPoi, long xOffset, long yOffset) {
+        if (searchPoi != null && searchPoi.mViewPoint != null && searchPoi.mViewPoint.isValid()) {
+            this.isPickPoi = true;
+            if (this.isMyPosition) {
+                this.mPoiController.clearPoiCache();
+            } else {
+                this.mPoiController.focusPoi(searchPoi);
+                this.mPoiController.animationTo(searchPoi, xOffset, yOffset);
+            }
+            int netMode = this.mPoiController.getAntiPoiNetMode(searchPoi.mViewPoint);
+            if (netMode != -1 && this.mPoiController.antiGeo(searchPoi, netMode, this.mUIHandler)) {
+                startAntiGeo();
+            }
+            setSearchPoi(searchPoi);
+        }
+    }
+
+    private void startAntiGeo() {
+    }
+
+    public void setMyPositionMode(boolean isMyPosition) {
+        this.isMyPosition = isMyPosition;
+        this.mDistanceLayout.setVisibility(isMyPosition ? 8 : 0);
+    }
+
+    public boolean isVisible() {
+        return getVisibility() == 0;
+    }
+
+    public void hide() {
+        setVisibility(8);
+    }
+
+    public void show() {
+        setVisibility(0);
+    }
+
+    public void handleShortUri(String shortUri) {
+        if (this.mContext != null) {
+            this.mPoiController.sharePoiParseShortUrl(shortUri, this.mUIHandler);
+        }
+    }
+
+    public void clickFavBtn() {
+        if (!ForbidDaulClickUtils.isFastDoubleClick()) {
+            poiDetailViewControllerInit();
+            this.mPoiDetailViewController.addOrDelFav();
+        }
+    }
+
+    public void startCalcRoute() {
+        if (!ForbidDaulClickUtils.isFastDoubleClick() && this.mPoiController != null && this.mCurrentPoi != null) {
+            if (this.mComeFrom == 8) {
+                StatisticManager.onEvent(StatisticConstants.DISCOVER_QJY_0002, StatisticConstants.DISCOVER_QJY_0002);
+            }
+            this.mPoiController.startCalcRoute(this.mCurrentPoi, this.mOnDialogListener);
+        }
+    }
+
+    private void startPhoneCall() {
+        if (!ForbidDaulClickUtils.isFastDoubleClick() && this.mPoiController != null && this.mCurrentPoi != null) {
+            this.mPoiController.callPhone(this.mCurrentPoi);
+        }
+    }
+
+    public void setOnDialogListener(C1277e listener) {
+        this.mOnDialogListener = listener;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/CarmodePoiDetailView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

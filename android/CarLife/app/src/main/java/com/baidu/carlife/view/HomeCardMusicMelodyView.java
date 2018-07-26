@@ -5,73 +5,71 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-import com.baidu.carlife.core.d;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1249d;
+import com.baidu.carlife.core.C1260i;
 
-public class HomeCardMusicMelodyView
-  extends View
-{
-  private Paint a = new Paint();
-  private final int b = d.a().c(2);
-  private final int c = d.a().a(3.6F);
-  private int d;
-  private int e;
-  private int f = 0;
-  private int g = 0;
-  private int h = 0;
-  private int i;
-  private int j;
-  private boolean k = true;
-  private int[] l = { 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 6, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 6, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 9, 4, 6, 5, 7, 7, 6, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 9, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 6, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 6, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 9, 4, 6, 5, 7, 7, 6, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 9, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9 };
-  
-  public HomeCardMusicMelodyView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    this.a.setColor(1728053247);
-    this.a.setStrokeWidth(0.0F);
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    if (this.k)
-    {
-      this.k = false;
-      this.d = getWidth();
-      this.e = getHeight();
-      this.g = ((this.d - this.b) / (this.b + this.c));
-      this.h = (this.d - this.g * (this.b + this.c));
-      if (this.h >= this.b)
-      {
-        this.g += 1;
-        this.h -= this.b;
-      }
-      this.h /= 2;
-      i.b("HomeCardMusicMelodyView", "width = " + this.b);
-      i.b("HomeCardMusicMelodyView", "padding = " + this.c);
-      i.b("HomeCardMusicMelodyView", "margin = " + this.h);
-      i.b("HomeCardMusicMelodyView", "parentwidth = " + this.d);
+public class HomeCardMusicMelodyView extends View {
+    /* renamed from: a */
+    private Paint f7109a = new Paint();
+    /* renamed from: b */
+    private final int f7110b = C1249d.m4331a().m4343c(2);
+    /* renamed from: c */
+    private final int f7111c = C1249d.m4331a().m4335a(3.6f);
+    /* renamed from: d */
+    private int f7112d;
+    /* renamed from: e */
+    private int f7113e;
+    /* renamed from: f */
+    private int f7114f = 0;
+    /* renamed from: g */
+    private int f7115g = 0;
+    /* renamed from: h */
+    private int f7116h = 0;
+    /* renamed from: i */
+    private int f7117i;
+    /* renamed from: j */
+    private int f7118j;
+    /* renamed from: k */
+    private boolean f7119k = true;
+    /* renamed from: l */
+    private int[] f7120l = new int[]{4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 6, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 6, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 9, 4, 6, 5, 7, 7, 6, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 9, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 6, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 6, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 9, 4, 6, 5, 7, 7, 6, 6, 7, 8, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9, 9, 6, 5, 4, 3, 4, 5, 6, 7, 8, 9, 4, 6, 5, 7, 7, 6, 6, 5, 5, 6, 7, 8, 8, 7, 9};
+
+    public HomeCardMusicMelodyView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.f7109a.setColor(1728053247);
+        this.f7109a.setStrokeWidth(0.0f);
     }
-    int m = 0;
-    while ((m < this.l.length) && (m < this.g))
-    {
-      this.i = ((this.c + this.b) * m + this.h);
-      this.j = (this.e - (int)(this.e * 0.1D * this.l[(this.f + m)]));
-      paramCanvas.drawRect(this.i, this.j, this.i + this.b, this.e, this.a);
-      m += 1;
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (this.f7119k) {
+            this.f7119k = false;
+            this.f7112d = getWidth();
+            this.f7113e = getHeight();
+            this.f7115g = (this.f7112d - this.f7110b) / (this.f7110b + this.f7111c);
+            this.f7116h = this.f7112d - (this.f7115g * (this.f7110b + this.f7111c));
+            if (this.f7116h >= this.f7110b) {
+                this.f7115g++;
+                this.f7116h -= this.f7110b;
+            }
+            this.f7116h /= 2;
+            C1260i.m4435b("HomeCardMusicMelodyView", "width = " + this.f7110b);
+            C1260i.m4435b("HomeCardMusicMelodyView", "padding = " + this.f7111c);
+            C1260i.m4435b("HomeCardMusicMelodyView", "margin = " + this.f7116h);
+            C1260i.m4435b("HomeCardMusicMelodyView", "parentwidth = " + this.f7112d);
+        }
+        int i = 0;
+        while (i < this.f7120l.length && i < this.f7115g) {
+            this.f7117i = ((this.f7111c + this.f7110b) * i) + this.f7116h;
+            this.f7118j = this.f7113e - ((int) ((((double) this.f7113e) * 0.1d) * ((double) this.f7120l[this.f7114f + i])));
+            canvas.drawRect((float) this.f7117i, (float) this.f7118j, (float) (this.f7117i + this.f7110b), (float) this.f7113e, this.f7109a);
+            i++;
+        }
     }
-  }
-  
-  public void setStartIndex(int paramInt)
-  {
-    if (this.g + paramInt < this.l.length) {
-      this.f = paramInt;
+
+    public void setStartIndex(int index) {
+        if (this.f7115g + index < this.f7120l.length) {
+            this.f7114f = index;
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/HomeCardMusicMelodyView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

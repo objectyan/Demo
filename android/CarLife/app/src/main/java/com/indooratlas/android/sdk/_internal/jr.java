@@ -1,167 +1,145 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.jo.C5993a;
+import com.indooratlas.android.sdk._internal.jo.C5994b;
+import com.indooratlas.android.sdk._internal.kd.C5997a;
+import cz.msebera.android.httpclient.C6591q;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class jr
-  extends jo
-{
-  protected boolean f = false;
-  protected List<kd> g = new LinkedList();
-  protected ByteBuffer h;
-  private final Random i = new Random();
-  
-  public int a(kf paramkf)
-  {
-    if ((paramkf.c("Origin")) && (a(paramkf))) {
-      return jo.b.a;
+public class jr extends jo {
+    /* renamed from: f */
+    protected boolean f24529f = false;
+    /* renamed from: g */
+    protected List<kd> f24530g = new LinkedList();
+    /* renamed from: h */
+    protected ByteBuffer f24531h;
+    /* renamed from: i */
+    private final Random f24532i = new Random();
+
+    /* renamed from: a */
+    public int mo4797a(kf kfVar, km kmVar) {
+        return (kfVar.mo4821b("WebSocket-Origin").equals(kmVar.mo4821b("Origin")) && jo.m21391a((kk) kmVar)) ? C5994b.f24515a : C5994b.f24516b;
     }
-    return jo.b.b;
-  }
-  
-  public int a(kf paramkf, km paramkm)
-  {
-    if ((paramkf.b("WebSocket-Origin").equals(paramkm.b("Origin"))) && (a(paramkm))) {
-      return jo.b.a;
+
+    /* renamed from: a */
+    public int mo4796a(kf kfVar) {
+        if (kfVar.mo4823c("Origin") && jo.m21391a((kk) kfVar)) {
+            return C5994b.f24515a;
+        }
+        return C5994b.f24516b;
     }
-    return jo.b.b;
-  }
-  
-  public kg a(kg paramkg)
-    throws jw
-  {
-    paramkg.a("Upgrade", "WebSocket");
-    paramkg.a("Connection", "Upgrade");
-    if (!paramkg.c("Origin")) {
-      paramkg.a("Origin", "random" + this.i.nextInt());
+
+    /* renamed from: a */
+    public ByteBuffer mo4800a(kd kdVar) {
+        if (kdVar.mo4815f() != C5997a.TEXT) {
+            throw new RuntimeException("only text frames supported");
+        }
+        ByteBuffer c = kdVar.mo4812c();
+        ByteBuffer allocate = ByteBuffer.allocate(c.remaining() + 2);
+        allocate.put((byte) 0);
+        c.mark();
+        allocate.put(c);
+        c.reset();
+        allocate.put((byte) -1);
+        allocate.flip();
+        return allocate;
     }
-    return paramkg;
-  }
-  
-  public kh a(kf paramkf, kn paramkn)
-    throws jw
-  {
-    paramkn.a("Web Socket Protocol Handshake");
-    paramkn.a("Upgrade", "WebSocket");
-    paramkn.a("Connection", paramkf.b("Connection"));
-    paramkn.a("WebSocket-Origin", paramkf.b("Origin"));
-    paramkn.a("WebSocket-Location", "ws://" + paramkf.b("Host") + paramkf.a());
-    return paramkn;
-  }
-  
-  public ByteBuffer a(kd paramkd)
-  {
-    if (paramkd.f() != kd.a.b) {
-      throw new RuntimeException("only text frames supported");
+
+    /* renamed from: a */
+    public final List<kd> mo4802a(ByteBuffer byteBuffer, boolean z) {
+        throw new RuntimeException("not yet implemented");
     }
-    paramkd = paramkd.c();
-    ByteBuffer localByteBuffer = ByteBuffer.allocate(paramkd.remaining() + 2);
-    localByteBuffer.put((byte)0);
-    paramkd.mark();
-    localByteBuffer.put(paramkd);
-    paramkd.reset();
-    localByteBuffer.put((byte)-1);
-    localByteBuffer.flip();
-    return localByteBuffer;
-  }
-  
-  public List<kd> a(ByteBuffer paramByteBuffer)
-    throws ju
-  {
-    paramByteBuffer = c(paramByteBuffer);
-    if (paramByteBuffer == null) {
-      throw new ju(1002);
+
+    /* renamed from: a */
+    public kg mo4798a(kg kgVar) throws jw {
+        kgVar.mo4819a(C6591q.f26541X, "WebSocket");
+        kgVar.mo4819a("Connection", C6591q.f26541X);
+        if (!kgVar.mo4823c("Origin")) {
+            kgVar.mo4819a("Origin", "random" + this.f24532i.nextInt());
+        }
+        return kgVar;
     }
-    return paramByteBuffer;
-  }
-  
-  public final List<kd> a(ByteBuffer paramByteBuffer, boolean paramBoolean)
-  {
-    throw new RuntimeException("not yet implemented");
-  }
-  
-  public final void a()
-  {
-    this.f = false;
-    this.h = null;
-  }
-  
-  public int b()
-  {
-    return jo.a.a;
-  }
-  
-  public jo c()
-  {
-    return new jr();
-  }
-  
-  protected final List<kd> c(ByteBuffer paramByteBuffer)
-    throws ju
-  {
-    Object localObject2 = null;
-    while (paramByteBuffer.hasRemaining())
-    {
-      byte b = paramByteBuffer.get();
-      if (b == 0)
-      {
-        if (this.f) {
-          throw new jv("unexpected START_OF_FRAME");
-        }
-        this.f = true;
-      }
-      else if (b == -1)
-      {
-        if (!this.f) {
-          throw new jv("unexpected END_OF_FRAME");
-        }
-        if (this.h != null)
-        {
-          this.h.flip();
-          localObject1 = new ke();
-          ((ke)localObject1).a(this.h);
-          ((ke)localObject1).a(true);
-          ((ke)localObject1).a(kd.a.b);
-          this.g.add(localObject1);
-          this.h = null;
-          paramByteBuffer.mark();
-        }
-        this.f = false;
-      }
-      else
-      {
-        localObject1 = localObject2;
-        if (!this.f) {
-          return localObject1;
-        }
-        if (this.h == null) {
-          this.h = ByteBuffer.allocate(b);
-        }
-        for (;;)
-        {
-          this.h.put(b);
-          break;
-          if (!this.h.hasRemaining())
-          {
-            localObject1 = this.h;
-            ((ByteBuffer)localObject1).flip();
-            ByteBuffer localByteBuffer = ByteBuffer.allocate(a(((ByteBuffer)localObject1).capacity() * 2));
-            localByteBuffer.put((ByteBuffer)localObject1);
-            this.h = localByteBuffer;
-          }
-        }
-      }
+
+    /* renamed from: a */
+    public kh mo4799a(kf kfVar, kn knVar) throws jw {
+        knVar.mo4828a("Web Socket Protocol Handshake");
+        knVar.mo4819a(C6591q.f26541X, "WebSocket");
+        knVar.mo4819a("Connection", kfVar.mo4821b("Connection"));
+        knVar.mo4819a("WebSocket-Origin", kfVar.mo4821b("Origin"));
+        knVar.mo4819a("WebSocket-Location", "ws://" + kfVar.mo4821b("Host") + kfVar.mo4825a());
+        return knVar;
     }
-    Object localObject1 = this.g;
-    this.g = new LinkedList();
-    return (List<kd>)localObject1;
-  }
+
+    /* renamed from: c */
+    protected final List<kd> mo4806c(ByteBuffer byteBuffer) throws ju {
+        while (byteBuffer.hasRemaining()) {
+            byte b = byteBuffer.get();
+            if (b == (byte) 0) {
+                if (this.f24529f) {
+                    throw new jv("unexpected START_OF_FRAME");
+                }
+                this.f24529f = true;
+            } else if (b == (byte) -1) {
+                if (this.f24529f) {
+                    if (this.f24531h != null) {
+                        this.f24531h.flip();
+                        ke keVar = new ke();
+                        keVar.mo4809a(this.f24531h);
+                        keVar.mo4810a(true);
+                        keVar.mo4808a(C5997a.TEXT);
+                        this.f24530g.add(keVar);
+                        this.f24531h = null;
+                        byteBuffer.mark();
+                    }
+                    this.f24529f = false;
+                } else {
+                    throw new jv("unexpected END_OF_FRAME");
+                }
+            } else if (!this.f24529f) {
+                return null;
+            } else {
+                if (this.f24531h == null) {
+                    this.f24531h = ByteBuffer.allocate(b);
+                } else if (!this.f24531h.hasRemaining()) {
+                    ByteBuffer byteBuffer2 = this.f24531h;
+                    byteBuffer2.flip();
+                    ByteBuffer allocate = ByteBuffer.allocate(jo.m21389a(byteBuffer2.capacity() * 2));
+                    allocate.put(byteBuffer2);
+                    this.f24531h = allocate;
+                }
+                this.f24531h.put(b);
+            }
+        }
+        List<kd> list = this.f24530g;
+        this.f24530g = new LinkedList();
+        return list;
+    }
+
+    /* renamed from: a */
+    public List<kd> mo4801a(ByteBuffer byteBuffer) throws ju {
+        List<kd> c = mo4806c(byteBuffer);
+        if (c != null) {
+            return c;
+        }
+        throw new ju(1002);
+    }
+
+    /* renamed from: a */
+    public final void mo4803a() {
+        this.f24529f = false;
+        this.f24531h = null;
+    }
+
+    /* renamed from: b */
+    public int mo4804b() {
+        return C5993a.f24511a;
+    }
+
+    /* renamed from: c */
+    public jo mo4805c() {
+        return new jr();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/jr.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

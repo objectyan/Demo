@@ -2,15 +2,14 @@ package com.baidu.cloudsdk.common.http;
 
 import android.content.Context;
 import com.baidu.android.common.net.ConnectManager;
+import com.facebook.common.p141m.C2924g;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -32,6 +31,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ClientConnectionManagerFactory;
@@ -41,6 +41,7 @@ import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -53,390 +54,301 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 
-public class AsyncHttpClient
-  extends DefaultHttpClient
-{
-  private static final int DEFAULT_CHECK_INTERVAL = 10000;
-  private static final int DEFAULT_CONNECT_TIMEOUT = 15000;
-  private static final int DEFAULT_MAX_CONNECTIONS = 10;
-  private static final int DEFAULT_MAX_RETRIES = 3;
-  private static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
-  private static final String DEFAULT_USER_AGENT = "Baidu-Android-Lib-V1.0";
-  private static final String ENCODING_GZIP = "gzip";
-  private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-  protected static final ThreadPoolExecutor sThreadPool = (ThreadPoolExecutor)Executors.newCachedThreadPool();
-  protected long mLastCheckTime = 0L;
-  protected int mNetworkCheckInterval = 10000;
-  protected final WeakHashMap<Context, List<WeakReference<Future<?>>>> mRequestMap;
-  
-  public AsyncHttpClient()
-  {
-    HttpParams localHttpParams = getParams();
-    ConnManagerParams.setTimeout(localHttpParams, 15000L);
-    ConnManagerParams.setMaxConnectionsPerRoute(localHttpParams, new ConnPerRouteBean(10));
-    ConnManagerParams.setMaxTotalConnections(localHttpParams, 10);
-    HttpConnectionParams.setSoTimeout(localHttpParams, 15000);
-    HttpConnectionParams.setConnectionTimeout(localHttpParams, 15000);
-    HttpConnectionParams.setTcpNoDelay(localHttpParams, true);
-    HttpConnectionParams.setSocketBufferSize(localHttpParams, 8192);
-    HttpProtocolParams.setUserAgent(localHttpParams, "Baidu-Android-Lib-V1.0");
-    HttpClientParams.setCookiePolicy(localHttpParams, "compatibility");
-    localHttpParams.setParameter("http.connection-manager.factory-object", new ClientConnectionManagerFactory()
-    {
-      public ClientConnectionManager newInstance(HttpParams paramAnonymousHttpParams, SchemeRegistry paramAnonymousSchemeRegistry)
-      {
-        SSLSocketFactory localSSLSocketFactory = SSLSocketFactory.getSocketFactory();
-        paramAnonymousSchemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        paramAnonymousSchemeRegistry.register(new Scheme("https", localSSLSocketFactory, 443));
-        return new ThreadSafeClientConnManager(paramAnonymousHttpParams, paramAnonymousSchemeRegistry);
-      }
-    });
-    addRequestInterceptor(new HttpRequestInterceptor()
-    {
-      public void process(HttpRequest paramAnonymousHttpRequest, HttpContext paramAnonymousHttpContext)
-        throws HttpException, IOException
-      {
-        if (!paramAnonymousHttpRequest.containsHeader("Accept-Encoding")) {
-          paramAnonymousHttpRequest.addHeader("Accept-Encoding", "gzip");
+public class AsyncHttpClient extends DefaultHttpClient {
+    private static final int DEFAULT_CHECK_INTERVAL = 10000;
+    private static final int DEFAULT_CONNECT_TIMEOUT = 15000;
+    private static final int DEFAULT_MAX_CONNECTIONS = 10;
+    private static final int DEFAULT_MAX_RETRIES = 3;
+    private static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
+    private static final String DEFAULT_USER_AGENT = "Baidu-Android-Lib-V1.0";
+    private static final String ENCODING_GZIP = "gzip";
+    private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+    protected static final ThreadPoolExecutor sThreadPool = ((ThreadPoolExecutor) Executors.newCachedThreadPool());
+    protected long mLastCheckTime = 0;
+    protected int mNetworkCheckInterval = 10000;
+    protected final WeakHashMap<Context, List<WeakReference<Future<?>>>> mRequestMap;
+
+    /* renamed from: com.baidu.cloudsdk.common.http.AsyncHttpClient$1 */
+    class C28871 implements ClientConnectionManagerFactory {
+        C28871() {
         }
-      }
-    });
-    addResponseInterceptor(new HttpResponseInterceptor()
-    {
-      public void process(HttpResponse paramAnonymousHttpResponse, HttpContext paramAnonymousHttpContext)
-        throws HttpException, IOException
-      {
-        paramAnonymousHttpContext = paramAnonymousHttpResponse.getEntity();
-        int j;
-        int i;
-        if (paramAnonymousHttpContext != null)
-        {
-          paramAnonymousHttpContext = paramAnonymousHttpContext.getContentEncoding();
-          if (paramAnonymousHttpContext != null)
-          {
-            paramAnonymousHttpContext = paramAnonymousHttpContext.getElements();
-            j = paramAnonymousHttpContext.length;
-            i = 0;
-          }
+
+        public ClientConnectionManager newInstance(HttpParams httpparams, SchemeRegistry schemeregistry) {
+            SocketFactory sf = SSLSocketFactory.getSocketFactory();
+            schemeregistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+            schemeregistry.register(new Scheme(C2924g.f12888b, sf, 443));
+            return new ThreadSafeClientConnManager(httpparams, schemeregistry);
         }
-        for (;;)
-        {
-          if (i < j)
-          {
-            if (paramAnonymousHttpContext[i].getName().equalsIgnoreCase("gzip")) {
-              paramAnonymousHttpResponse.setEntity(new AsyncHttpClient.InflatingEntity(paramAnonymousHttpResponse.getEntity()));
+    }
+
+    /* renamed from: com.baidu.cloudsdk.common.http.AsyncHttpClient$2 */
+    class C28882 implements HttpRequestInterceptor {
+        C28882() {
+        }
+
+        public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+            if (!request.containsHeader("Accept-Encoding")) {
+                request.addHeader("Accept-Encoding", "gzip");
             }
-          }
-          else {
-            return;
-          }
-          i += 1;
         }
-      }
-    });
-    this.mRequestMap = new WeakHashMap();
-  }
-  
-  private void checkNetworkStateAndAdjust(Context paramContext)
-  {
-    long l;
-    if (paramContext != null)
-    {
-      l = System.currentTimeMillis();
-      if (l - this.mLastCheckTime > this.mNetworkCheckInterval)
-      {
-        paramContext = new ConnectManager(paramContext);
-        if (!paramContext.isWapNetwork()) {
-          break label89;
-        }
-        String str = paramContext.getProxy();
-        int i = Integer.parseInt(paramContext.getProxyPort());
-        if ((str != null) && (str.length() > 0)) {
-          ConnRouteParams.setDefaultProxy(getParams(), new HttpHost(str, i));
-        }
-      }
     }
-    for (;;)
-    {
-      this.mLastCheckTime = l;
-      return;
-      label89:
-      ConnRouteParams.setDefaultProxy(getParams(), null);
-    }
-  }
-  
-  public static void endEntityViaReflection(HttpEntity paramHttpEntity)
-  {
-    Object localObject2;
-    if ((paramHttpEntity instanceof HttpEntityWrapper)) {
-      localObject2 = null;
-    }
-    try
-    {
-      Field[] arrayOfField = HttpEntityWrapper.class.getDeclaredFields();
-      int j = arrayOfField.length;
-      int i = 0;
-      for (;;)
-      {
-        Object localObject1 = localObject2;
-        if (i < j)
-        {
-          localObject1 = arrayOfField[i];
-          if (!((Field)localObject1).getName().equals("wrappedEntity")) {}
+
+    /* renamed from: com.baidu.cloudsdk.common.http.AsyncHttpClient$3 */
+    class C28893 implements HttpResponseInterceptor {
+        C28893() {
         }
-        else
-        {
-          if (localObject1 != null)
-          {
-            ((Field)localObject1).setAccessible(true);
-            paramHttpEntity = (HttpEntity)((Field)localObject1).get(paramHttpEntity);
-            if (paramHttpEntity != null) {
-              paramHttpEntity.consumeContent();
+
+        public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                Header encoding = entity.getContentEncoding();
+                if (encoding != null) {
+                    for (HeaderElement element : encoding.getElements()) {
+                        if (element.getName().equalsIgnoreCase("gzip")) {
+                            response.setEntity(new InflatingEntity(response.getEntity()));
+                            return;
+                        }
+                    }
+                }
             }
-          }
-          return;
         }
-        i += 1;
-      }
-      return;
     }
-    catch (Throwable paramHttpEntity) {}
-  }
-  
-  public static String getUrlWithQueryString(String paramString, RequestParams paramRequestParams)
-  {
-    String str = paramString;
-    if (paramString != null)
-    {
-      str = paramString;
-      if (paramRequestParams != null)
-      {
-        paramRequestParams = paramRequestParams.getQueryString();
-        if (paramString.contains("?")) {
-          break label52;
+
+    private static class InflatingEntity extends HttpEntityWrapper {
+        GZIPInputStream gzipStream;
+        InputStream wrappedStream;
+
+        public InflatingEntity(HttpEntity wrapped) {
+            super(wrapped);
         }
-        str = paramString + "?" + paramRequestParams;
-      }
-    }
-    return str;
-    label52:
-    return paramString + "&" + paramRequestParams;
-  }
-  
-  public static void silentCloseInputStream(InputStream paramInputStream)
-  {
-    if (paramInputStream != null) {}
-    try
-    {
-      paramInputStream.close();
-      return;
-    }
-    catch (IOException paramInputStream) {}
-  }
-  
-  public void cancelRequests(Context paramContext, boolean paramBoolean)
-  {
-    Object localObject = (List)this.mRequestMap.get(paramContext);
-    if (localObject != null)
-    {
-      localObject = ((List)localObject).iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        Future localFuture = (Future)((WeakReference)((Iterator)localObject).next()).get();
-        if (localFuture != null) {
-          localFuture.cancel(paramBoolean);
+
+        public InputStream getContent() throws IOException {
+            this.wrappedStream = this.wrappedEntity.getContent();
+            this.gzipStream = new GZIPInputStream(this.wrappedStream);
+            return this.gzipStream;
         }
-      }
-    }
-    this.mRequestMap.remove(paramContext);
-  }
-  
-  public void delete(Context paramContext, String paramString, HttpResponseHandler paramHttpResponseHandler)
-  {
-    delete(paramContext, paramString, null, null, paramHttpResponseHandler);
-  }
-  
-  public void delete(Context paramContext, String paramString, RequestParams paramRequestParams, HttpResponseHandler paramHttpResponseHandler)
-  {
-    delete(paramContext, paramString, paramRequestParams, null, paramHttpResponseHandler);
-  }
-  
-  public void delete(Context paramContext, String paramString, RequestParams paramRequestParams, Header[] paramArrayOfHeader, HttpResponseHandler paramHttpResponseHandler)
-  {
-    paramString = new HttpDelete(getUrlWithQueryString(paramString, paramRequestParams));
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
-    }
-    sendRequest(paramString, paramHttpResponseHandler, paramContext);
-  }
-  
-  protected void finalize()
-    throws Throwable
-  {
-    Iterator localIterator = this.mRequestMap.entrySet().iterator();
-    while (localIterator.hasNext()) {
-      cancelRequests((Context)((Map.Entry)localIterator.next()).getKey(), true);
-    }
-    super.finalize();
-  }
-  
-  public void get(Context paramContext, String paramString, HttpResponseHandler paramHttpResponseHandler)
-  {
-    get(paramContext, paramString, null, null, paramHttpResponseHandler);
-  }
-  
-  public void get(Context paramContext, String paramString, RequestParams paramRequestParams, HttpResponseHandler paramHttpResponseHandler)
-  {
-    get(paramContext, paramString, paramRequestParams, null, paramHttpResponseHandler);
-  }
-  
-  public void get(Context paramContext, String paramString, RequestParams paramRequestParams, Header[] paramArrayOfHeader, HttpResponseHandler paramHttpResponseHandler)
-  {
-    paramString = new HttpGet(getUrlWithQueryString(paramString, paramRequestParams));
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
-    }
-    sendRequest(paramString, paramHttpResponseHandler, paramContext);
-  }
-  
-  public void post(Context paramContext, String paramString, HttpResponseHandler paramHttpResponseHandler)
-  {
-    post(paramContext, paramString, null, null, paramHttpResponseHandler);
-  }
-  
-  public void post(Context paramContext, String paramString, RequestParams paramRequestParams, HttpResponseHandler paramHttpResponseHandler)
-  {
-    post(paramContext, paramString, paramRequestParams, null, paramHttpResponseHandler);
-  }
-  
-  public void post(Context paramContext, String paramString, RequestParams paramRequestParams, Header[] paramArrayOfHeader, HttpResponseHandler paramHttpResponseHandler)
-  {
-    paramString = new HttpPost(paramString);
-    if (paramRequestParams != null) {
-      paramString.setEntity(paramRequestParams.getHttpEntity());
-    }
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
-    }
-    sendRequest(paramString, paramHttpResponseHandler, paramContext);
-  }
-  
-  public void put(Context paramContext, String paramString, HttpResponseHandler paramHttpResponseHandler)
-  {
-    put(paramContext, paramString, null, null, paramHttpResponseHandler);
-  }
-  
-  public void put(Context paramContext, String paramString, RequestParams paramRequestParams, HttpResponseHandler paramHttpResponseHandler)
-  {
-    put(paramContext, paramString, paramRequestParams, null, paramHttpResponseHandler);
-  }
-  
-  public void put(Context paramContext, String paramString, RequestParams paramRequestParams, Header[] paramArrayOfHeader, HttpResponseHandler paramHttpResponseHandler)
-  {
-    paramString = new HttpPut(paramString);
-    if (paramRequestParams != null) {
-      paramString.setEntity(paramRequestParams.getHttpEntity());
-    }
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
-    }
-    sendRequest(paramString, paramHttpResponseHandler, paramContext);
-  }
-  
-  protected void sendRequest(HttpUriRequest paramHttpUriRequest, HttpResponseHandler paramHttpResponseHandler, Context paramContext)
-  {
-    try
-    {
-      checkNetworkStateAndAdjust(paramContext);
-      paramHttpUriRequest = new AsyncHttpRequest(this, new SyncBasicHttpContext(new BasicHttpContext()), paramHttpUriRequest, paramHttpResponseHandler);
-      Future localFuture = sThreadPool.submit(paramHttpUriRequest);
-      if (paramContext != null)
-      {
-        paramHttpResponseHandler = (List)this.mRequestMap.get(paramContext);
-        paramHttpUriRequest = paramHttpResponseHandler;
-        if (paramHttpResponseHandler == null)
-        {
-          paramHttpUriRequest = new LinkedList();
-          this.mRequestMap.put(paramContext, paramHttpUriRequest);
+
+        public long getContentLength() {
+            return -1;
         }
-        paramHttpUriRequest.add(new WeakReference(localFuture));
-      }
-      return;
+
+        public void consumeContent() throws IOException {
+            AsyncHttpClient.silentCloseInputStream(this.wrappedStream);
+            AsyncHttpClient.silentCloseInputStream(this.gzipStream);
+            super.consumeContent();
+        }
     }
-    catch (NullPointerException paramHttpUriRequest) {}catch (RejectedExecutionException paramHttpUriRequest) {}
-  }
-  
-  public void setMaxRetries(int paramInt)
-  {
-    int i = paramInt;
-    if (paramInt <= 0) {
-      i = 3;
+
+    public AsyncHttpClient() {
+        HttpParams params = getParams();
+        ConnManagerParams.setTimeout(params, 15000);
+        ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(10));
+        ConnManagerParams.setMaxTotalConnections(params, 10);
+        HttpConnectionParams.setSoTimeout(params, 15000);
+        HttpConnectionParams.setConnectionTimeout(params, 15000);
+        HttpConnectionParams.setTcpNoDelay(params, true);
+        HttpConnectionParams.setSocketBufferSize(params, 8192);
+        HttpProtocolParams.setUserAgent(params, DEFAULT_USER_AGENT);
+        HttpClientParams.setCookiePolicy(params, "compatibility");
+        params.setParameter(ClientPNames.CONNECTION_MANAGER_FACTORY, new C28871());
+        addRequestInterceptor(new C28882());
+        addResponseInterceptor(new C28893());
+        this.mRequestMap = new WeakHashMap();
     }
-    setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(i, false));
-  }
-  
-  public void setNetworkCheckInterval(int paramInt)
-  {
-    int i = paramInt;
-    if (paramInt <= 10000) {
-      i = 10000;
+
+    protected void finalize() throws Throwable {
+        for (Entry<Context, List<WeakReference<Future<?>>>> entry : this.mRequestMap.entrySet()) {
+            cancelRequests((Context) entry.getKey(), true);
+        }
+        super.finalize();
     }
-    this.mNetworkCheckInterval = i;
-  }
-  
-  public void setTimeout(int paramInt)
-  {
-    int i = paramInt;
-    if (paramInt <= 0) {
-      i = 15000;
+
+    public void setTimeout(int timeout) {
+        if (timeout <= 0) {
+            timeout = 15000;
+        }
+        HttpParams params = getParams();
+        ConnManagerParams.setTimeout(params, (long) timeout);
+        HttpConnectionParams.setSoTimeout(params, timeout);
+        HttpConnectionParams.setConnectionTimeout(params, timeout);
     }
-    HttpParams localHttpParams = getParams();
-    ConnManagerParams.setTimeout(localHttpParams, i);
-    HttpConnectionParams.setSoTimeout(localHttpParams, i);
-    HttpConnectionParams.setConnectionTimeout(localHttpParams, i);
-  }
-  
-  public void setUserAgent(String paramString)
-  {
-    HttpProtocolParams.setUserAgent(getParams(), paramString);
-  }
-  
-  private static class InflatingEntity
-    extends HttpEntityWrapper
-  {
-    GZIPInputStream gzipStream;
-    InputStream wrappedStream;
-    
-    public InflatingEntity(HttpEntity paramHttpEntity)
-    {
-      super();
+
+    public void setUserAgent(String userAgent) {
+        HttpProtocolParams.setUserAgent(getParams(), userAgent);
     }
-    
-    public void consumeContent()
-      throws IOException
-    {
-      AsyncHttpClient.silentCloseInputStream(this.wrappedStream);
-      AsyncHttpClient.silentCloseInputStream(this.gzipStream);
-      super.consumeContent();
+
+    public void setNetworkCheckInterval(int interval) {
+        if (interval <= 10000) {
+            interval = 10000;
+        }
+        this.mNetworkCheckInterval = interval;
     }
-    
-    public InputStream getContent()
-      throws IOException
-    {
-      this.wrappedStream = this.wrappedEntity.getContent();
-      this.gzipStream = new GZIPInputStream(this.wrappedStream);
-      return this.gzipStream;
+
+    public void setMaxRetries(int maxRetries) {
+        if (maxRetries <= 0) {
+            maxRetries = 3;
+        }
+        setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(maxRetries, false));
     }
-    
-    public long getContentLength()
-    {
-      return -1L;
+
+    public void get(Context context, String url, HttpResponseHandler responseHandler) {
+        get(context, url, null, null, responseHandler);
     }
-  }
+
+    public void get(Context context, String url, RequestParams params, HttpResponseHandler responseHandler) {
+        get(context, url, params, null, responseHandler);
+    }
+
+    public void get(Context context, String url, RequestParams params, Header[] headers, HttpResponseHandler responseHandler) {
+        HttpUriRequest request = new HttpGet(getUrlWithQueryString(url, params));
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        sendRequest(request, responseHandler, context);
+    }
+
+    public void post(Context context, String url, HttpResponseHandler responseHandler) {
+        post(context, url, null, null, responseHandler);
+    }
+
+    public void post(Context context, String url, RequestParams params, HttpResponseHandler responseHandler) {
+        post(context, url, params, null, responseHandler);
+    }
+
+    public void post(Context context, String url, RequestParams params, Header[] headers, HttpResponseHandler responseHandler) {
+        HttpEntityEnclosingRequestBase request = new HttpPost(url);
+        if (params != null) {
+            request.setEntity(params.getHttpEntity());
+        }
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        sendRequest(request, responseHandler, context);
+    }
+
+    public void delete(Context context, String url, HttpResponseHandler responseHandler) {
+        delete(context, url, null, null, responseHandler);
+    }
+
+    public void delete(Context context, String url, RequestParams params, HttpResponseHandler responseHandler) {
+        delete(context, url, params, null, responseHandler);
+    }
+
+    public void delete(Context context, String url, RequestParams params, Header[] headers, HttpResponseHandler responseHandler) {
+        HttpUriRequest request = new HttpDelete(getUrlWithQueryString(url, params));
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        sendRequest(request, responseHandler, context);
+    }
+
+    public void put(Context context, String url, HttpResponseHandler responseHandler) {
+        put(context, url, null, null, responseHandler);
+    }
+
+    public void put(Context context, String url, RequestParams params, HttpResponseHandler responseHandler) {
+        put(context, url, params, null, responseHandler);
+    }
+
+    public void put(Context context, String url, RequestParams params, Header[] headers, HttpResponseHandler responseHandler) {
+        HttpEntityEnclosingRequestBase request = new HttpPut(url);
+        if (params != null) {
+            request.setEntity(params.getHttpEntity());
+        }
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        sendRequest(request, responseHandler, context);
+    }
+
+    public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
+        List<WeakReference<Future<?>>> requestList = (List) this.mRequestMap.get(context);
+        if (requestList != null) {
+            for (WeakReference<Future<?>> requestRef : requestList) {
+                Future<?> request = (Future) requestRef.get();
+                if (request != null) {
+                    request.cancel(mayInterruptIfRunning);
+                }
+            }
+        }
+        this.mRequestMap.remove(context);
+    }
+
+    public static String getUrlWithQueryString(String url, RequestParams params) {
+        if (url == null || params == null) {
+            return url;
+        }
+        String queryString = params.getQueryString();
+        if (url.contains("?")) {
+            return url + "&" + queryString;
+        }
+        return url + "?" + queryString;
+    }
+
+    public static void silentCloseInputStream(InputStream is) {
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException e) {
+            }
+        }
+    }
+
+    protected void sendRequest(HttpUriRequest request, HttpResponseHandler responseHandler, Context context) {
+        try {
+            checkNetworkStateAndAdjust(context);
+            Future<?> future = sThreadPool.submit(new AsyncHttpRequest(this, new SyncBasicHttpContext(new BasicHttpContext()), request, responseHandler));
+            if (context != null) {
+                List<WeakReference<Future<?>>> requestList = (List) this.mRequestMap.get(context);
+                if (requestList == null) {
+                    requestList = new LinkedList();
+                    this.mRequestMap.put(context, requestList);
+                }
+                requestList.add(new WeakReference(future));
+            }
+        } catch (RejectedExecutionException e) {
+        } catch (NullPointerException e2) {
+        }
+    }
+
+    private void checkNetworkStateAndAdjust(Context context) {
+        if (context != null) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - this.mLastCheckTime > ((long) this.mNetworkCheckInterval)) {
+                ConnectManager conman = new ConnectManager(context);
+                if (conman.isWapNetwork()) {
+                    String host = conman.getProxy();
+                    int port = Integer.parseInt(conman.getProxyPort());
+                    if (host != null && host.length() > 0) {
+                        ConnRouteParams.setDefaultProxy(getParams(), new HttpHost(host, port));
+                    }
+                } else {
+                    ConnRouteParams.setDefaultProxy(getParams(), null);
+                }
+                this.mLastCheckTime = currentTime;
+            }
+        }
+    }
+
+    public static void endEntityViaReflection(HttpEntity entity) {
+        if (entity instanceof HttpEntityWrapper) {
+            Field f = null;
+            try {
+                for (Field ff : HttpEntityWrapper.class.getDeclaredFields()) {
+                    if (ff.getName().equals("wrappedEntity")) {
+                        f = ff;
+                        break;
+                    }
+                }
+                if (f != null) {
+                    f.setAccessible(true);
+                    HttpEntity wrapped = (HttpEntity) f.get(entity);
+                    if (wrapped != null) {
+                        wrapped.consumeContent();
+                    }
+                }
+            } catch (Throwable th) {
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/cloudsdk/common/http/AsyncHttpClient.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

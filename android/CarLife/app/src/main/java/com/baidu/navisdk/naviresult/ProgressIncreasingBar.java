@@ -1,7 +1,6 @@
 package com.baidu.navisdk.naviresult;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -18,315 +17,236 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 
-public class ProgressIncreasingBar
-  extends View
-{
-  private static final String TAG = ProgressIncreasingBar.class.getSimpleName();
-  private int animRate = 3;
-  private int animTime = 1;
-  private boolean animationFinish = false;
-  private Canvas canvas;
-  private int comHeight;
-  private int comWidth;
-  private Handler handler = new Handler();
-  private boolean isAnim = true;
-  private boolean isHasRateTopView;
-  private OnAnimationStateListener listener = null;
-  BNWorkerNormalTask<String, String> mRefreshViewTask = new BNWorkerNormalTask("mRefreshViewTask-" + getClass().getSimpleName(), null)
-  {
-    protected String execute()
-    {
-      if ((ProgressIncreasingBar.this.orientation == 0) && (ProgressIncreasingBar.this.rateAnimValue <= ProgressIncreasingBar.this.rateWidth))
-      {
-        ProgressIncreasingBar.access$102(ProgressIncreasingBar.this, ProgressIncreasingBar.this.rateAnimValue + ProgressIncreasingBar.this.animRate);
-        ProgressIncreasingBar.this.invalidate();
-      }
-      for (;;)
-      {
-        return null;
-        if ((ProgressIncreasingBar.this.orientation == 1) && (ProgressIncreasingBar.this.rateAnimValue <= ProgressIncreasingBar.this.rateHeight))
-        {
-          ProgressIncreasingBar.access$102(ProgressIncreasingBar.this, ProgressIncreasingBar.this.rateAnimValue + ProgressIncreasingBar.this.animRate);
-          ProgressIncreasingBar.this.invalidate();
+public class ProgressIncreasingBar extends View {
+    private static final String TAG = ProgressIncreasingBar.class.getSimpleName();
+    private int animRate = 3;
+    private int animTime = 1;
+    private boolean animationFinish = false;
+    private Canvas canvas;
+    private int comHeight;
+    private int comWidth;
+    private Handler handler = new Handler();
+    private boolean isAnim = true;
+    private boolean isHasRateTopView;
+    private OnAnimationStateListener listener = null;
+    BNWorkerNormalTask<String, String> mRefreshViewTask = new BNWorkerNormalTask<String, String>("mRefreshViewTask-" + getClass().getSimpleName(), null) {
+        protected String execute() {
+            if (ProgressIncreasingBar.this.orientation == 0 && ProgressIncreasingBar.this.rateAnimValue <= ProgressIncreasingBar.this.rateWidth) {
+                ProgressIncreasingBar.this.rateAnimValue = ProgressIncreasingBar.this.rateAnimValue + ProgressIncreasingBar.this.animRate;
+                ProgressIncreasingBar.this.invalidate();
+            } else if (ProgressIncreasingBar.this.orientation != 1 || ProgressIncreasingBar.this.rateAnimValue > ProgressIncreasingBar.this.rateHeight) {
+                ProgressIncreasingBar.this.rateAnimValue = 0;
+                if (ProgressIncreasingBar.this.listener != null) {
+                    ProgressIncreasingBar.this.animationFinish = true;
+                    ProgressIncreasingBar.this.listener.onAnimationFinish(true);
+                }
+            } else {
+                ProgressIncreasingBar.this.rateAnimValue = ProgressIncreasingBar.this.rateAnimValue + ProgressIncreasingBar.this.animRate;
+                ProgressIncreasingBar.this.invalidate();
+            }
+            return null;
         }
-        else
-        {
-          ProgressIncreasingBar.access$102(ProgressIncreasingBar.this, 0);
-          if (ProgressIncreasingBar.this.listener != null)
-          {
-            ProgressIncreasingBar.access$602(ProgressIncreasingBar.this, true);
-            ProgressIncreasingBar.this.listener.onAnimationFinish(true);
-          }
+    };
+    private int orientation;
+    private Paint paint;
+    private double progress;
+    private Bitmap rataBackgroundBitmap;
+    private int rateAnimValue;
+    private String rateBackgroundColor;
+    private int rateBackgroundId;
+    private int rateHeight;
+    private View rateTopView;
+    private View rateView;
+    private int rateWidth;
+
+    public interface OnAnimationStateListener {
+        void onAnimationFinish(boolean z);
+    }
+
+    public ProgressIncreasingBar(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    public ProgressIncreasingBar(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public ProgressIncreasingBar(Context context) {
+        super(context);
+    }
+
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        this.comWidth = w;
+        this.comHeight = h;
+        if (this.orientation == 0) {
+            this.rateWidth = (int) (((double) w) * this.progress);
+            this.rateHeight = h;
+            return;
         }
-      }
+        this.rateHeight = (int) (((double) h) * this.progress);
+        this.rateWidth = w;
     }
-  };
-  private int orientation;
-  private Paint paint;
-  private double progress;
-  private Bitmap rataBackgroundBitmap;
-  private int rateAnimValue;
-  private String rateBackgroundColor;
-  private int rateBackgroundId;
-  private int rateHeight;
-  private View rateTopView;
-  private View rateView;
-  private int rateWidth;
-  
-  public ProgressIncreasingBar(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public ProgressIncreasingBar(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public ProgressIncreasingBar(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  private void drawViewWithBitmap(Paint paramPaint, boolean paramBoolean)
-  {
-    if (this.rataBackgroundBitmap == null) {
-      return;
+
+    protected void onDraw(Canvas canvas) {
+        boolean z = true;
+        super.onDraw(canvas);
+        this.canvas = canvas;
+        if (this.paint == null) {
+            this.paint = new Paint();
+        }
+        this.paint.setAntiAlias(true);
+        this.paint.setStyle(Style.FILL);
+        Paint paint;
+        if (this.rateBackgroundColor != null) {
+            paint = this.paint;
+            if (!this.isAnim || this.animationFinish) {
+                z = false;
+            }
+            drawViewWithColor(paint, z);
+        } else if (this.rateBackgroundId != -1) {
+            paint = this.paint;
+            if (!this.isAnim || this.animationFinish) {
+                z = false;
+            }
+            drawViewWithBitmap(paint, z);
+        }
     }
-    if (paramBoolean)
-    {
-      BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mRefreshViewTask, new BNWorkerConfig(2, 0), this.animTime);
-      if (this.orientation == 0)
-      {
-        localRectF = new RectF(0.0F, 0.0F, this.rateAnimValue, this.comHeight);
-        this.canvas.drawBitmap(this.rataBackgroundBitmap, null, localRectF, paramPaint);
-        return;
-      }
-      localRectF = new RectF(0.0F, this.comHeight - this.rateAnimValue, this.comWidth, this.comHeight);
-      this.canvas.drawBitmap(this.rataBackgroundBitmap, null, localRectF, paramPaint);
-      return;
+
+    private void drawViewWithColor(Paint paint, boolean isAnim) {
+        paint.setColor(Color.parseColor(this.rateBackgroundColor));
+        if (isAnim) {
+            BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mRefreshViewTask, new BNWorkerConfig(2, 0), (long) this.animTime);
+            if (this.orientation == 0) {
+                this.canvas.drawRect(0.0f, 0.0f, (float) this.rateAnimValue, (float) this.comHeight, paint);
+                return;
+            }
+            this.canvas.drawRect(0.0f, (float) (this.comHeight - this.rateAnimValue), (float) this.comWidth, (float) this.comHeight, paint);
+        } else if (this.orientation == 0) {
+            this.canvas.drawRect(0.0f, 0.0f, (float) this.rateWidth, (float) this.comHeight, paint);
+        } else {
+            this.canvas.drawRect(0.0f, (float) (this.comHeight - this.rateHeight), (float) this.comWidth, (float) this.comHeight, paint);
+        }
     }
-    if (this.orientation == 0)
-    {
-      localRectF = new RectF(0.0F, 0.0F, this.rateWidth, this.comHeight);
-      this.canvas.drawBitmap(this.rataBackgroundBitmap, null, localRectF, paramPaint);
-      return;
+
+    private void drawViewWithBitmap(Paint paint, boolean isAnim) {
+        if (this.rataBackgroundBitmap != null) {
+            if (isAnim) {
+                BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mRefreshViewTask, new BNWorkerConfig(2, 0), (long) this.animTime);
+                if (this.orientation == 0) {
+                    this.canvas.drawBitmap(this.rataBackgroundBitmap, null, new RectF(0.0f, 0.0f, (float) this.rateAnimValue, (float) this.comHeight), paint);
+                    return;
+                }
+                this.canvas.drawBitmap(this.rataBackgroundBitmap, null, new RectF(0.0f, (float) (this.comHeight - this.rateAnimValue), (float) this.comWidth, (float) this.comHeight), paint);
+            } else if (this.orientation == 0) {
+                this.canvas.drawBitmap(this.rataBackgroundBitmap, null, new RectF(0.0f, 0.0f, (float) this.rateWidth, (float) this.comHeight), paint);
+            } else {
+                this.canvas.drawBitmap(this.rataBackgroundBitmap, null, new RectF(0.0f, (float) (this.comHeight - this.rateHeight), (float) this.comWidth, (float) this.comHeight), paint);
+            }
+        }
     }
-    RectF localRectF = new RectF(0.0F, this.comHeight - this.rateHeight, this.comWidth, this.comHeight);
-    this.canvas.drawBitmap(this.rataBackgroundBitmap, null, localRectF, paramPaint);
-  }
-  
-  private void drawViewWithColor(Paint paramPaint, boolean paramBoolean)
-  {
-    paramPaint.setColor(Color.parseColor(this.rateBackgroundColor));
-    if (paramBoolean)
-    {
-      BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mRefreshViewTask, new BNWorkerConfig(2, 0), this.animTime);
-      if (this.orientation == 0)
-      {
-        this.canvas.drawRect(0.0F, 0.0F, this.rateAnimValue, this.comHeight, paramPaint);
-        return;
-      }
-      this.canvas.drawRect(0.0F, this.comHeight - this.rateAnimValue, this.comWidth, this.comHeight, paramPaint);
-      return;
+
+    public double getProgress() {
+        return this.progress;
     }
-    if (this.orientation == 0)
-    {
-      this.canvas.drawRect(0.0F, 0.0F, this.rateWidth, this.comHeight, paramPaint);
-      return;
+
+    public void setProgress(double progress) {
+        this.progress = progress;
     }
-    this.canvas.drawRect(0.0F, this.comHeight - this.rateHeight, this.comWidth, this.comHeight, paramPaint);
-  }
-  
-  private Bitmap drawableToBitmap(Drawable paramDrawable, int paramInt1, int paramInt2)
-  {
-    if ((paramInt1 > 0) && (paramInt2 > 0) && (paramDrawable != null))
-    {
-      if (paramDrawable.getOpacity() != -1) {}
-      for (Object localObject = Bitmap.Config.ARGB_8888;; localObject = Bitmap.Config.RGB_565)
-      {
-        localObject = Bitmap.createBitmap(paramInt1, paramInt2, (Bitmap.Config)localObject);
-        Canvas localCanvas = new Canvas((Bitmap)localObject);
-        paramDrawable.setBounds(0, 0, paramInt1, paramInt2);
-        paramDrawable.draw(localCanvas);
-        return (Bitmap)localObject;
-      }
+
+    public View getRateView() {
+        return this.rateView;
     }
-    return null;
-  }
-  
-  public int getAnimRate()
-  {
-    return this.animRate;
-  }
-  
-  public OnAnimationStateListener getListener()
-  {
-    return this.listener;
-  }
-  
-  public int getOrientation()
-  {
-    return this.orientation;
-  }
-  
-  public double getProgress()
-  {
-    return this.progress;
-  }
-  
-  public String getRateBackgroundColor()
-  {
-    return this.rateBackgroundColor;
-  }
-  
-  public int getRateBackgroundId()
-  {
-    return this.rateBackgroundId;
-  }
-  
-  public int getRateHeight()
-  {
-    return this.rateHeight;
-  }
-  
-  public View getRateView()
-  {
-    return this.rateView;
-  }
-  
-  public int getRateWidth()
-  {
-    return this.rateWidth;
-  }
-  
-  public boolean isAnim()
-  {
-    return this.isAnim;
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    boolean bool2 = true;
-    boolean bool1 = true;
-    super.onDraw(paramCanvas);
-    this.canvas = paramCanvas;
-    if (this.paint == null) {
-      this.paint = new Paint();
+
+    public void setRateView(View rateView) {
+        this.rateView = rateView;
     }
-    this.paint.setAntiAlias(true);
-    this.paint.setStyle(Paint.Style.FILL);
-    if (this.rateBackgroundColor != null)
-    {
-      paramCanvas = this.paint;
-      if ((this.isAnim) && (!this.animationFinish)) {
-        drawViewWithColor(paramCanvas, bool1);
-      }
+
+    public int getRateHeight() {
+        return this.rateHeight;
     }
-    while (this.rateBackgroundId == -1) {
-      for (;;)
-      {
-        return;
-        bool1 = false;
-      }
+
+    public void setRateHeight(int rateHeight) {
+        this.rateHeight = rateHeight;
     }
-    paramCanvas = this.paint;
-    if ((this.isAnim) && (!this.animationFinish)) {}
-    for (bool1 = bool2;; bool1 = false)
-    {
-      drawViewWithBitmap(paramCanvas, bool1);
-      return;
+
+    public int getRateWidth() {
+        return this.rateWidth;
     }
-  }
-  
-  protected void onSizeChanged(int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    super.onSizeChanged(paramInt1, paramInt2, paramInt3, paramInt4);
-    this.comWidth = paramInt1;
-    this.comHeight = paramInt2;
-    if (this.orientation == 0)
-    {
-      this.rateWidth = ((int)(paramInt1 * this.progress));
-      this.rateHeight = paramInt2;
-      return;
+
+    public void setRateWidth(int rateWidth) {
+        this.rateWidth = rateWidth;
     }
-    this.rateHeight = ((int)(paramInt2 * this.progress));
-    this.rateWidth = paramInt1;
-  }
-  
-  public void setAnim(boolean paramBoolean)
-  {
-    this.isAnim = paramBoolean;
-  }
-  
-  public void setAnimRate(int paramInt)
-  {
-    this.animRate = paramInt;
-  }
-  
-  public void setListener(OnAnimationStateListener paramOnAnimationStateListener)
-  {
-    this.listener = paramOnAnimationStateListener;
-  }
-  
-  public void setOrientation(int paramInt)
-  {
-    this.orientation = paramInt;
-  }
-  
-  public void setProgress(double paramDouble)
-  {
-    this.progress = paramDouble;
-  }
-  
-  public void setRateBackgroundColor(String paramString)
-  {
-    this.rateBackgroundColor = paramString;
-    this.rateBackgroundId = -1;
-    this.rataBackgroundBitmap = null;
-  }
-  
-  public void setRateBackgroundId(int paramInt)
-  {
-    this.rateBackgroundId = paramInt;
-    this.rataBackgroundBitmap = BitmapFactory.decodeResource(getResources(), this.rateBackgroundId);
-    this.rateBackgroundColor = null;
-  }
-  
-  public void setRateBackgroundId(int paramInt1, boolean paramBoolean, int paramInt2, int paramInt3)
-  {
-    this.rateBackgroundId = paramInt1;
-    if (paramBoolean) {
-      this.rataBackgroundBitmap = drawableToBitmap(JarUtils.getResources().getDrawable(paramInt1), paramInt2, paramInt3);
+
+    public int getOrientation() {
+        return this.orientation;
     }
-    this.rateBackgroundColor = null;
-  }
-  
-  public void setRateHeight(int paramInt)
-  {
-    this.rateHeight = paramInt;
-  }
-  
-  public void setRateView(View paramView)
-  {
-    this.rateView = paramView;
-  }
-  
-  public void setRateWidth(int paramInt)
-  {
-    this.rateWidth = paramInt;
-  }
-  
-  public static abstract interface OnAnimationStateListener
-  {
-    public abstract void onAnimationFinish(boolean paramBoolean);
-  }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    public boolean isAnim() {
+        return this.isAnim;
+    }
+
+    public void setAnim(boolean isAnim) {
+        this.isAnim = isAnim;
+    }
+
+    public int getAnimRate() {
+        return this.animRate;
+    }
+
+    public void setAnimRate(int animRate) {
+        this.animRate = animRate;
+    }
+
+    public String getRateBackgroundColor() {
+        return this.rateBackgroundColor;
+    }
+
+    public void setRateBackgroundColor(String rateBackgroundColor) {
+        this.rateBackgroundColor = rateBackgroundColor;
+        this.rateBackgroundId = -1;
+        this.rataBackgroundBitmap = null;
+    }
+
+    public int getRateBackgroundId() {
+        return this.rateBackgroundId;
+    }
+
+    public void setRateBackgroundId(int rateBackground) {
+        this.rateBackgroundId = rateBackground;
+        this.rataBackgroundBitmap = BitmapFactory.decodeResource(getResources(), this.rateBackgroundId);
+        this.rateBackgroundColor = null;
+    }
+
+    public void setRateBackgroundId(int rateBackground, boolean naviSdk, int imgWidth, int imgHeight) {
+        this.rateBackgroundId = rateBackground;
+        if (naviSdk) {
+            this.rataBackgroundBitmap = drawableToBitmap(JarUtils.getResources().getDrawable(rateBackground), imgWidth, imgHeight);
+        }
+        this.rateBackgroundColor = null;
+    }
+
+    private Bitmap drawableToBitmap(Drawable drawable, int imgWidth, int imgHeight) {
+        if (imgWidth <= 0 || imgHeight <= 0 || drawable == null) {
+            return null;
+        }
+        Bitmap bitmap = Bitmap.createBitmap(imgWidth, imgHeight, drawable.getOpacity() != -1 ? Config.ARGB_8888 : Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, imgWidth, imgHeight);
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    public OnAnimationStateListener getListener() {
+        return this.listener;
+    }
+
+    public void setListener(OnAnimationStateListener listener) {
+        this.listener = listener;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/naviresult/ProgressIncreasingBar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

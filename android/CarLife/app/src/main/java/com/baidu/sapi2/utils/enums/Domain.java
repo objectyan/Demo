@@ -1,63 +1,59 @@
 package com.baidu.sapi2.utils.enums;
 
-public enum Domain
-{
-  private String a;
-  private String b;
-  private String c;
-  private String d;
-  private String e;
-  private boolean f;
-  
-  private Domain(String paramString1, String paramString2, String paramString3, String paramString4, String paramString5)
-  {
-    this.a = paramString1;
-    this.b = paramString2;
-    this.c = paramString3;
-    this.d = paramString4;
-    this.e = paramString5;
-  }
-  
-  public Domain forceHttps(boolean paramBoolean)
-  {
-    this.f = paramBoolean;
-    return this;
-  }
-  
-  public String getConfigUrl()
-  {
-    return this.d;
-  }
-  
-  public String getDeviceUrl()
-  {
-    return this.c;
-  }
-  
-  public String getPortraitUrl()
-  {
-    return this.e;
-  }
-  
-  public String getURL()
-  {
-    if (this.f) {
-      return this.a.replace("http://", "https://");
+public enum Domain {
+    DOMAIN_ONLINE("http://passport.baidu.com", "http://wappass.baidu.com", "https://openapi.baidu.com", "http://wappass.bdimg.com", "http://himg.baidu.com"),
+    DOMAIN_RD("http://passport.rdtest.baidu.com", "http://passport.rdtest.baidu.com:8000", "http://dbl-dev-rd23.vm.baidu.com:8080", "http://passport.rdtest.baidu.com:8000", "http://passport.baidu.com"),
+    DOMAIN_QA("http://passport.qatest.baidu.com", "http://wappass.qatest.baidu.com", "http://db-infbk-online-17.db01.baidu.com:8080", "http://wappass.qatest.baidu.com", "http://passport.baidu.com");
+    
+    /* renamed from: a */
+    private String f20560a;
+    /* renamed from: b */
+    private String f20561b;
+    /* renamed from: c */
+    private String f20562c;
+    /* renamed from: d */
+    private String f20563d;
+    /* renamed from: e */
+    private String f20564e;
+    /* renamed from: f */
+    private boolean f20565f;
+
+    private Domain(String url, String wap, String deviceUrl, String configUrl, String portraitUrl) {
+        this.f20560a = url;
+        this.f20561b = wap;
+        this.f20562c = deviceUrl;
+        this.f20563d = configUrl;
+        this.f20564e = portraitUrl;
     }
-    return this.a;
-  }
-  
-  public String getWap()
-  {
-    if (this.f) {
-      return this.b.replace("http://", "https://");
+
+    public String getURL() {
+        if (this.f20565f) {
+            return this.f20560a.replace("http://", "https://");
+        }
+        return this.f20560a;
     }
-    return this.b;
-  }
+
+    public String getWap() {
+        if (this.f20565f) {
+            return this.f20561b.replace("http://", "https://");
+        }
+        return this.f20561b;
+    }
+
+    public String getDeviceUrl() {
+        return this.f20562c;
+    }
+
+    public String getConfigUrl() {
+        return this.f20563d;
+    }
+
+    public String getPortraitUrl() {
+        return this.f20564e;
+    }
+
+    public Domain forceHttps(boolean forceHttps) {
+        this.f20565f = forceHttps;
+        return this;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/sapi2/utils/enums/Domain.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

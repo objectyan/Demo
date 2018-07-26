@@ -2,59 +2,39 @@ package com.google.zxing.common;
 
 import com.google.zxing.NotFoundException;
 
-public final class DefaultGridSampler
-  extends GridSampler
-{
-  public BitMatrix sampleGrid(BitMatrix paramBitMatrix, int paramInt1, int paramInt2, float paramFloat1, float paramFloat2, float paramFloat3, float paramFloat4, float paramFloat5, float paramFloat6, float paramFloat7, float paramFloat8, float paramFloat9, float paramFloat10, float paramFloat11, float paramFloat12, float paramFloat13, float paramFloat14, float paramFloat15, float paramFloat16)
-    throws NotFoundException
-  {
-    return sampleGrid(paramBitMatrix, paramInt1, paramInt2, PerspectiveTransform.quadrilateralToQuadrilateral(paramFloat1, paramFloat2, paramFloat3, paramFloat4, paramFloat5, paramFloat6, paramFloat7, paramFloat8, paramFloat9, paramFloat10, paramFloat11, paramFloat12, paramFloat13, paramFloat14, paramFloat15, paramFloat16));
-  }
-  
-  public BitMatrix sampleGrid(BitMatrix paramBitMatrix, int paramInt1, int paramInt2, PerspectiveTransform paramPerspectiveTransform)
-    throws NotFoundException
-  {
-    if ((paramInt1 <= 0) || (paramInt2 <= 0)) {
-      throw NotFoundException.getNotFoundInstance();
+public final class DefaultGridSampler extends GridSampler {
+    public BitMatrix sampleGrid(BitMatrix image, int dimensionX, int dimensionY, float p1ToX, float p1ToY, float p2ToX, float p2ToY, float p3ToX, float p3ToY, float p4ToX, float p4ToY, float p1FromX, float p1FromY, float p2FromX, float p2FromY, float p3FromX, float p3FromY, float p4FromX, float p4FromY) throws NotFoundException {
+        return sampleGrid(image, dimensionX, dimensionY, PerspectiveTransform.quadrilateralToQuadrilateral(p1ToX, p1ToY, p2ToX, p2ToY, p3ToX, p3ToY, p4ToX, p4ToY, p1FromX, p1FromY, p2FromX, p2FromY, p3FromX, p3FromY, p4FromX, p4FromY));
     }
-    BitMatrix localBitMatrix = new BitMatrix(paramInt1, paramInt2);
-    float[] arrayOfFloat = new float[paramInt1 << 1];
-    paramInt1 = 0;
-    while (paramInt1 < paramInt2)
-    {
-      int j = arrayOfFloat.length;
-      float f = paramInt1;
-      int i = 0;
-      while (i < j)
-      {
-        arrayOfFloat[i] = ((i >> 1) + 0.5F);
-        arrayOfFloat[(i + 1)] = (f + 0.5F);
-        i += 2;
-      }
-      paramPerspectiveTransform.transformPoints(arrayOfFloat);
-      checkAndNudgePoints(paramBitMatrix, arrayOfFloat);
-      i = 0;
-      while (i < j) {
-        try
-        {
-          if (paramBitMatrix.get((int)arrayOfFloat[i], (int)arrayOfFloat[(i + 1)])) {
-            localBitMatrix.set(i >> 1, paramInt1);
-          }
-          i += 2;
+
+    public BitMatrix sampleGrid(BitMatrix image, int dimensionX, int dimensionY, PerspectiveTransform transform) throws NotFoundException {
+        if (dimensionX <= 0 || dimensionY <= 0) {
+            throw NotFoundException.getNotFoundInstance();
         }
-        catch (ArrayIndexOutOfBoundsException paramBitMatrix)
-        {
-          throw NotFoundException.getNotFoundInstance();
+        BitMatrix bits = new BitMatrix(dimensionX, dimensionY);
+        float[] points = new float[(dimensionX << 1)];
+        for (int y = 0; y < dimensionY; y++) {
+            int x;
+            int max = points.length;
+            float iValue = ((float) y) + 0.5f;
+            for (x = 0; x < max; x += 2) {
+                points[x] = ((float) (x >> 1)) + 0.5f;
+                points[x + 1] = iValue;
+            }
+            transform.transformPoints(points);
+            GridSampler.checkAndNudgePoints(image, points);
+            x = 0;
+            while (x < max) {
+                try {
+                    if (image.get((int) points[x], (int) points[x + 1])) {
+                        bits.set(x >> 1, y);
+                    }
+                    x += 2;
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw NotFoundException.getNotFoundInstance();
+                }
+            }
         }
-      }
-      paramInt1 += 1;
+        return bits;
     }
-    return localBitMatrix;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/common/DefaultGridSampler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,186 +1,129 @@
 package com.google.zxing.common.reedsolomon;
 
-public final class ReedSolomonDecoder
-{
-  private final GenericGF field;
-  
-  public ReedSolomonDecoder(GenericGF paramGenericGF)
-  {
-    this.field = paramGenericGF;
-  }
-  
-  private int[] findErrorLocations(GenericGFPoly paramGenericGFPoly)
-    throws ReedSolomonException
-  {
-    int m = paramGenericGFPoly.getDegree();
-    int[] arrayOfInt;
-    if (m == 1)
-    {
-      arrayOfInt = new int[1];
-      arrayOfInt[0] = paramGenericGFPoly.getCoefficient(1);
-      paramGenericGFPoly = arrayOfInt;
+public final class ReedSolomonDecoder {
+    private final GenericGF field;
+
+    public ReedSolomonDecoder(GenericGF field) {
+        this.field = field;
     }
-    int j;
-    do
-    {
-      return paramGenericGFPoly;
-      arrayOfInt = new int[m];
-      j = 0;
-      int i = 1;
-      while ((i < this.field.getSize()) && (j < m))
-      {
-        int k = j;
-        if (paramGenericGFPoly.evaluateAt(i) == 0)
-        {
-          arrayOfInt[j] = this.field.inverse(i);
-          k = j + 1;
+
+    public void decode(int[] received, int twoS) throws ReedSolomonException {
+        int i;
+        GenericGFPoly poly = new GenericGFPoly(this.field, received);
+        int[] syndromeCoefficients = new int[twoS];
+        boolean dataMatrix = this.field.equals(GenericGF.DATA_MATRIX_FIELD_256);
+        boolean noError = true;
+        for (i = 0; i < twoS; i++) {
+            int i2;
+            GenericGF genericGF = this.field;
+            if (dataMatrix) {
+                i2 = i + 1;
+            } else {
+                i2 = i;
+            }
+            int eval = poly.evaluateAt(genericGF.exp(i2));
+            syndromeCoefficients[(syndromeCoefficients.length - 1) - i] = eval;
+            if (eval != 0) {
+                noError = false;
+            }
         }
-        i += 1;
-        j = k;
-      }
-      paramGenericGFPoly = arrayOfInt;
-    } while (j == m);
-    throw new ReedSolomonException("Error locator degree does not match number of roots");
-  }
-  
-  private int[] findErrorMagnitudes(GenericGFPoly paramGenericGFPoly, int[] paramArrayOfInt, boolean paramBoolean)
-  {
-    int n = paramArrayOfInt.length;
-    int[] arrayOfInt = new int[n];
-    int i = 0;
-    while (i < n)
-    {
-      int i1 = this.field.inverse(paramArrayOfInt[i]);
-      int k = 1;
-      int j = 0;
-      if (j < n)
-      {
-        int m = k;
-        if (i != j)
-        {
-          m = this.field.multiply(paramArrayOfInt[j], i1);
-          if ((m & 0x1) != 0) {
-            break label111;
-          }
-          m |= 0x1;
+        if (!noError) {
+            GenericGFPoly syndrome = new GenericGFPoly(this.field, syndromeCoefficients);
+            GenericGFPoly[] sigmaOmega = runEuclideanAlgorithm(this.field.buildMonomial(twoS, 1), syndrome, twoS);
+            GenericGFPoly sigma = sigmaOmega[0];
+            GenericGFPoly omega = sigmaOmega[1];
+            int[] errorLocations = findErrorLocations(sigma);
+            int[] errorMagnitudes = findErrorMagnitudes(omega, errorLocations, dataMatrix);
+            for (i = 0; i < errorLocations.length; i++) {
+                int position = (received.length - 1) - this.field.log(errorLocations[i]);
+                if (position < 0) {
+                    throw new ReedSolomonException("Bad error location");
+                }
+                received[position] = GenericGF.addOrSubtract(received[position], errorMagnitudes[i]);
+            }
         }
-        for (;;)
-        {
-          m = this.field.multiply(k, m);
-          j += 1;
-          k = m;
-          break;
-          label111:
-          m &= 0xFFFFFFFE;
+    }
+
+    private GenericGFPoly[] runEuclideanAlgorithm(GenericGFPoly a, GenericGFPoly b, int R) throws ReedSolomonException {
+        if (a.getDegree() < b.getDegree()) {
+            GenericGFPoly temp = a;
+            a = b;
+            b = temp;
         }
-      }
-      arrayOfInt[i] = this.field.multiply(paramGenericGFPoly.evaluateAt(i1), this.field.inverse(k));
-      if (paramBoolean) {
-        arrayOfInt[i] = this.field.multiply(arrayOfInt[i], i1);
-      }
-      i += 1;
-    }
-    return arrayOfInt;
-  }
-  
-  private GenericGFPoly[] runEuclideanAlgorithm(GenericGFPoly paramGenericGFPoly1, GenericGFPoly paramGenericGFPoly2, int paramInt)
-    throws ReedSolomonException
-  {
-    Object localObject2 = paramGenericGFPoly1;
-    Object localObject1 = paramGenericGFPoly2;
-    if (paramGenericGFPoly1.getDegree() < paramGenericGFPoly2.getDegree())
-    {
-      localObject1 = paramGenericGFPoly1;
-      localObject2 = paramGenericGFPoly2;
-    }
-    GenericGFPoly localGenericGFPoly1 = this.field.getOne();
-    paramGenericGFPoly2 = this.field.getZero();
-    GenericGFPoly localGenericGFPoly2 = this.field.getZero();
-    GenericGFPoly localGenericGFPoly3;
-    for (paramGenericGFPoly1 = this.field.getOne();; paramGenericGFPoly1 = paramGenericGFPoly1.multiply(localGenericGFPoly2).addOrSubtract(localGenericGFPoly3))
-    {
-      localGenericGFPoly3 = localGenericGFPoly2;
-      GenericGFPoly localGenericGFPoly4 = localGenericGFPoly1;
-      Object localObject3 = localObject2;
-      if (((GenericGFPoly)localObject1).getDegree() < paramInt / 2) {
-        break;
-      }
-      localObject2 = localObject1;
-      localGenericGFPoly1 = paramGenericGFPoly2;
-      localGenericGFPoly2 = paramGenericGFPoly1;
-      if (((GenericGFPoly)localObject2).isZero()) {
-        throw new ReedSolomonException("r_{i-1} was zero");
-      }
-      localObject1 = localObject3;
-      paramGenericGFPoly1 = this.field.getZero();
-      int i = ((GenericGFPoly)localObject2).getCoefficient(((GenericGFPoly)localObject2).getDegree());
-      i = this.field.inverse(i);
-      while ((((GenericGFPoly)localObject1).getDegree() >= ((GenericGFPoly)localObject2).getDegree()) && (!((GenericGFPoly)localObject1).isZero()))
-      {
-        int j = ((GenericGFPoly)localObject1).getDegree() - ((GenericGFPoly)localObject2).getDegree();
-        int k = this.field.multiply(((GenericGFPoly)localObject1).getCoefficient(((GenericGFPoly)localObject1).getDegree()), i);
-        paramGenericGFPoly1 = paramGenericGFPoly1.addOrSubtract(this.field.buildMonomial(j, k));
-        localObject1 = ((GenericGFPoly)localObject1).addOrSubtract(((GenericGFPoly)localObject2).multiplyByMonomial(j, k));
-      }
-      paramGenericGFPoly2 = paramGenericGFPoly1.multiply(localGenericGFPoly1).addOrSubtract(localGenericGFPoly4);
-    }
-    paramInt = paramGenericGFPoly1.getCoefficient(0);
-    if (paramInt == 0) {
-      throw new ReedSolomonException("sigmaTilde(0) was zero");
-    }
-    paramInt = this.field.inverse(paramInt);
-    return new GenericGFPoly[] { paramGenericGFPoly1.multiply(paramInt), ((GenericGFPoly)localObject1).multiply(paramInt) };
-  }
-  
-  public void decode(int[] paramArrayOfInt, int paramInt)
-    throws ReedSolomonException
-  {
-    Object localObject1 = new GenericGFPoly(this.field, paramArrayOfInt);
-    Object localObject2 = new int[paramInt];
-    boolean bool = this.field.equals(GenericGF.DATA_MATRIX_FIELD_256);
-    int j = 1;
-    int i = 0;
-    if (i < paramInt)
-    {
-      GenericGF localGenericGF = this.field;
-      if (bool) {}
-      for (int k = i + 1;; k = i)
-      {
-        k = ((GenericGFPoly)localObject1).evaluateAt(localGenericGF.exp(k));
-        localObject2[(localObject2.length - 1 - i)] = k;
-        if (k != 0) {
-          j = 0;
+        GenericGFPoly rLast = a;
+        GenericGFPoly r = b;
+        GenericGFPoly sLast = this.field.getOne();
+        GenericGFPoly s = this.field.getZero();
+        GenericGFPoly tLast = this.field.getZero();
+        GenericGFPoly t = this.field.getOne();
+        while (r.getDegree() >= R / 2) {
+            GenericGFPoly rLastLast = rLast;
+            GenericGFPoly sLastLast = sLast;
+            GenericGFPoly tLastLast = tLast;
+            rLast = r;
+            sLast = s;
+            tLast = t;
+            if (rLast.isZero()) {
+                throw new ReedSolomonException("r_{i-1} was zero");
+            }
+            r = rLastLast;
+            GenericGFPoly q = this.field.getZero();
+            int dltInverse = this.field.inverse(rLast.getCoefficient(rLast.getDegree()));
+            while (r.getDegree() >= rLast.getDegree() && !r.isZero()) {
+                int degreeDiff = r.getDegree() - rLast.getDegree();
+                int scale = this.field.multiply(r.getCoefficient(r.getDegree()), dltInverse);
+                q = q.addOrSubtract(this.field.buildMonomial(degreeDiff, scale));
+                r = r.addOrSubtract(rLast.multiplyByMonomial(degreeDiff, scale));
+            }
+            s = q.multiply(sLast).addOrSubtract(sLastLast);
+            t = q.multiply(tLast).addOrSubtract(tLastLast);
         }
-        i += 1;
-        break;
-      }
-    }
-    if (j != 0) {}
-    for (;;)
-    {
-      return;
-      localObject1 = new GenericGFPoly(this.field, (int[])localObject2);
-      localObject2 = runEuclideanAlgorithm(this.field.buildMonomial(paramInt, 1), (GenericGFPoly)localObject1, paramInt);
-      localObject1 = localObject2[0];
-      localObject2 = localObject2[1];
-      localObject1 = findErrorLocations((GenericGFPoly)localObject1);
-      localObject2 = findErrorMagnitudes((GenericGFPoly)localObject2, (int[])localObject1, bool);
-      paramInt = 0;
-      while (paramInt < localObject1.length)
-      {
-        i = paramArrayOfInt.length - 1 - this.field.log(localObject1[paramInt]);
-        if (i < 0) {
-          throw new ReedSolomonException("Bad error location");
+        int sigmaTildeAtZero = t.getCoefficient(0);
+        if (sigmaTildeAtZero == 0) {
+            throw new ReedSolomonException("sigmaTilde(0) was zero");
         }
-        paramArrayOfInt[i] = GenericGF.addOrSubtract(paramArrayOfInt[i], localObject2[paramInt]);
-        paramInt += 1;
-      }
+        int inverse = this.field.inverse(sigmaTildeAtZero);
+        GenericGFPoly sigma = t.multiply(inverse);
+        GenericGFPoly omega = r.multiply(inverse);
+        return new GenericGFPoly[]{sigma, omega};
     }
-  }
+
+    private int[] findErrorLocations(GenericGFPoly errorLocator) throws ReedSolomonException {
+        int numErrors = errorLocator.getDegree();
+        if (numErrors == 1) {
+            return new int[]{errorLocator.getCoefficient(1)};
+        }
+        int[] result = new int[numErrors];
+        int e = 0;
+        for (int i = 1; i < this.field.getSize() && e < numErrors; i++) {
+            if (errorLocator.evaluateAt(i) == 0) {
+                result[e] = this.field.inverse(i);
+                e++;
+            }
+        }
+        if (e == numErrors) {
+            return result;
+        }
+        throw new ReedSolomonException("Error locator degree does not match number of roots");
+    }
+
+    private int[] findErrorMagnitudes(GenericGFPoly errorEvaluator, int[] errorLocations, boolean dataMatrix) {
+        int s = errorLocations.length;
+        int[] result = new int[s];
+        for (int i = 0; i < s; i++) {
+            int xiInverse = this.field.inverse(errorLocations[i]);
+            int denominator = 1;
+            for (int j = 0; j < s; j++) {
+                if (i != j) {
+                    int term = this.field.multiply(errorLocations[j], xiInverse);
+                    denominator = this.field.multiply(denominator, (term & 1) == 0 ? term | 1 : term & -2);
+                }
+            }
+            result[i] = this.field.multiply(errorEvaluator.evaluateAt(xiInverse), this.field.inverse(denominator));
+            if (dataMatrix) {
+                result[i] = this.field.multiply(result[i], xiInverse);
+            }
+        }
+        return result;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/common/reedsolomon/ReedSolomonDecoder.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

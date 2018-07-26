@@ -3,36 +3,27 @@ package com.google.android.support.v4.view;
 import android.graphics.Paint;
 import android.view.View;
 
-class ViewCompatJellybeanMr1
-{
-  public static int getLabelFor(View paramView)
-  {
-    return paramView.getLabelFor();
-  }
-  
-  public static int getLayoutDirection(View paramView)
-  {
-    return paramView.getLayoutDirection();
-  }
-  
-  public static void setLabelFor(View paramView, int paramInt)
-  {
-    paramView.setLabelFor(paramInt);
-  }
-  
-  public static void setLayerPaint(View paramView, Paint paramPaint)
-  {
-    paramView.setLayerPaint(paramPaint);
-  }
-  
-  public static void setLayoutDirection(View paramView, int paramInt)
-  {
-    paramView.setLayoutDirection(paramInt);
-  }
+class ViewCompatJellybeanMr1 {
+    ViewCompatJellybeanMr1() {
+    }
+
+    public static int getLabelFor(View view) {
+        return view.getLabelFor();
+    }
+
+    public static void setLabelFor(View view, int id) {
+        view.setLabelFor(id);
+    }
+
+    public static void setLayerPaint(View view, Paint paint) {
+        view.setLayerPaint(paint);
+    }
+
+    public static int getLayoutDirection(View view) {
+        return view.getLayoutDirection();
+    }
+
+    public static void setLayoutDirection(View view, int layoutDirection) {
+        view.setLayoutDirection(layoutDirection);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/ViewCompatJellybeanMr1.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

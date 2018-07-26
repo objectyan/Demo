@@ -7,195 +7,168 @@ import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import com.indooratlas.android.sensors.wifi.AbstractWifiScanSensor;
+import com.baidu.che.codriver.sdk.p081a.C2602k.C1981b;
+import com.indooratlas.android.sdk._internal.de.C5847a;
+import com.indooratlas.android.sdk._internal.ea.C5863a;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class eb
-  implements db
-{
-  public static final String a = eb.class.getSimpleName() + ".scanCacheSize";
-  public static final String b = eb.class.getSimpleName() + ".getLatestScanResults";
-  private static cw g = new de.a().a(-100).a();
-  private static cw h = new de.a().a(-101).a();
-  dz c;
-  dy d;
-  public final dw e = new dw();
-  public Context f;
-  private ea i;
-  private WifiManager j;
-  
-  public eb(Context paramContext)
-  {
-    this(paramContext, (WifiManager)paramContext.getSystemService("wifi"), new ea.a());
-  }
-  
-  private eb(Context paramContext, @NonNull WifiManager paramWifiManager, @NonNull ea paramea)
-  {
-    this.f = paramContext;
-    this.i = paramea;
-    this.j = paramWifiManager;
-  }
-  
-  private void a(boolean paramBoolean, cy paramcy, cw paramcw, da paramda)
-  {
-    Object localObject = null;
-    int k;
-    int m;
-    int n;
-    int i1;
-    for (;;)
-    {
-      dv localdv;
-      synchronized (this.e)
-      {
-        k = this.e.a(g);
-        m = this.e.a(h);
-        if (paramBoolean)
-        {
-          localdv = this.e.a(paramcy, paramcw, paramda);
-          paramcy = (cy)localObject;
-          n = this.e.a(g);
-          i1 = this.e.a(h);
-          if (localdv != null)
-          {
-            localdv.a();
-            paramda = paramda.b;
-            if ((paramda != null) && (paramda.getBoolean(b, false))) {
-              localdv.a(a(paramcw.a(), this.j.getScanResults()));
+public class eb implements db {
+    /* renamed from: a */
+    public static final String f23502a = (eb.class.getSimpleName() + ".scanCacheSize");
+    /* renamed from: b */
+    public static final String f23503b = (eb.class.getSimpleName() + ".getLatestScanResults");
+    /* renamed from: g */
+    private static cw f23504g = new C5847a().m20303a(-100).m20304a();
+    /* renamed from: h */
+    private static cw f23505h = new C5847a().m20303a(-101).m20304a();
+    /* renamed from: c */
+    dz f23506c;
+    /* renamed from: d */
+    dy f23507d;
+    /* renamed from: e */
+    public final dw f23508e;
+    /* renamed from: f */
+    public Context f23509f;
+    /* renamed from: i */
+    private ea f23510i;
+    /* renamed from: j */
+    private WifiManager f23511j;
+
+    private eb(Context context, @NonNull WifiManager wifiManager, @NonNull ea eaVar) {
+        this.f23508e = new dw();
+        this.f23509f = context;
+        this.f23510i = eaVar;
+        this.f23511j = wifiManager;
+    }
+
+    /* renamed from: a */
+    public final cw mo4660a(int i) {
+        switch (i) {
+            case -101:
+                return f23505h;
+            case -100:
+                return f23504g;
+            default:
+                return null;
+        }
+    }
+
+    /* renamed from: a */
+    public final List<cw> mo4661a() {
+        List arrayList = new ArrayList(1);
+        arrayList.add(f23504g);
+        arrayList.add(f23505h);
+        return arrayList;
+    }
+
+    /* renamed from: a */
+    public final void mo4665a(cy cyVar, cw cwVar, da daVar) {
+        m20388a(true, cyVar, cwVar, daVar);
+    }
+
+    /* renamed from: a */
+    public final void mo4663a(cy cyVar) {
+        m20388a(false, cyVar, null, null);
+    }
+
+    /* renamed from: a */
+    public final void mo4664a(cy cyVar, cw cwVar) {
+        m20388a(false, cyVar, cwVar, null);
+    }
+
+    /* renamed from: a */
+    private void m20388a(boolean z, cy cyVar, cw cwVar, da daVar) {
+        ArrayList arrayList = null;
+        synchronized (this.f23508e) {
+            dv a;
+            int a2 = this.f23508e.m20367a(f23504g);
+            int a3 = this.f23508e.m20367a(f23505h);
+            if (z) {
+                a = this.f23508e.m20368a(cyVar, cwVar, daVar);
+            } else if (cwVar == null) {
+                a = null;
+                arrayList = this.f23508e.m20369a(cyVar);
+            } else {
+                a = null;
+                arrayList = this.f23508e.m20370a(cyVar, cwVar);
             }
-          }
-          if (paramcy == null) {
-            break;
-          }
-          paramcy = paramcy.iterator();
-          if (!paramcy.hasNext()) {
-            break;
-          }
-          ((dv)paramcy.next()).b();
+            int a4 = this.f23508e.m20367a(f23504g);
+            int a5 = this.f23508e.m20367a(f23505h);
+            if (a != null) {
+                a.m20362a();
+                Bundle bundle = daVar.f23373b;
+                if (bundle != null && bundle.getBoolean(f23503b, false)) {
+                    a.m20363a(m20390a(cwVar.mo4658a(), this.f23511j.getScanResults()));
+                }
+            }
+            if (arrayList != null) {
+                Iterator it = arrayList.iterator();
+                while (it.hasNext()) {
+                    ((dv) it.next()).m20364b();
+                }
+            }
+            if (a4 > 0 && a4 != a2) {
+                int a6 = this.f23508e.m20366a(-100);
+                if (this.f23506c == null) {
+                    this.f23506c = new dz(this, this.f23511j);
+                }
+                this.f23506c.a((long) (a6 / 1000));
+            }
+            if (a5 > 0 && a3 == 0) {
+                if (this.f23507d == null) {
+                    this.f23507d = new dy(this, this.f23511j);
+                }
+                this.f23507d.a(0);
+            }
+            if (a4 == 0 && a2 > 0) {
+                this.f23506c.m20377a();
+            }
+            if (a5 == 0 && a3 > 0) {
+                this.f23507d.a();
+            }
         }
-      }
-      if (paramcw == null)
-      {
-        paramcy = this.e.a(paramcy);
-        localdv = null;
-      }
-      else
-      {
-        paramcy = this.e.a(paramcy, paramcw);
-        localdv = null;
-      }
     }
-    if ((n > 0) && (n != k))
-    {
-      int i2 = this.e.a(-100);
-      if (this.c == null) {
-        this.c = new dz(this, this.j);
-      }
-      this.c.a(i2 / 1000);
+
+    /* renamed from: a */
+    public final List<cx> mo4662a(cw cwVar) {
+        return null;
     }
-    if ((i1 > 0) && (m == 0))
-    {
-      if (this.d == null) {
-        this.d = new dy(this, this.j);
-      }
-      this.d.a(0L);
-    }
-    if ((n == 0) && (k > 0)) {
-      this.c.a();
-    }
-    if ((i1 == 0) && (m > 0)) {
-      this.d.a();
-    }
-  }
-  
-  public final cw a(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      return null;
-    case -100: 
-      return g;
-    }
-    return h;
-  }
-  
-  public final cx a(int paramInt, List<ScanResult> paramList)
-  {
-    Object localObject1;
-    Object localObject2;
-    if (paramList.isEmpty())
-    {
-      localObject1 = paramList;
-      localObject2 = new cx();
-      ((cx)localObject2).d = SystemClock.elapsedRealtime();
-      if (paramInt != -100) {
-        break label166;
-      }
-    }
-    for (((cx)localObject2).a = g;; ((cx)localObject2).a = h)
-    {
-      ((cx)localObject2).c = dx.a((List)localObject1);
-      if ((Build.VERSION.SDK_INT < 17) || (paramList.isEmpty())) {
-        break label207;
-      }
-      ((cx)localObject2).b = ((ScanResult)paramList.get(0)).timestamp;
-      return (cx)localObject2;
-      localObject1 = new ArrayList(paramList.size());
-      localObject2 = paramList.iterator();
-      while (((Iterator)localObject2).hasNext())
-      {
-        ScanResult localScanResult = (ScanResult)((Iterator)localObject2).next();
-        if ((Build.VERSION.SDK_INT < 17) || (this.i.a(localScanResult) > 0)) {
-          ((ArrayList)localObject1).add(localScanResult);
+
+    /* renamed from: a */
+    public final cx m20390a(int i, List<ScanResult> list) {
+        List list2;
+        if (list.isEmpty()) {
+            list2 = list;
+        } else {
+            ArrayList arrayList = new ArrayList(list.size());
+            for (ScanResult scanResult : list) {
+                if (VERSION.SDK_INT < 17 || this.f23510i.mo4669a(scanResult) > 0) {
+                    arrayList.add(scanResult);
+                }
+            }
+            Object obj = arrayList;
         }
-      }
-      break;
-      label166:
-      if (paramInt != -101) {
-        break label183;
-      }
+        cx cxVar = new cx();
+        cxVar.f23361d = SystemClock.elapsedRealtime();
+        if (i == -100) {
+            cxVar.f23358a = f23504g;
+        } else if (i == -101) {
+            cxVar.f23358a = f23505h;
+        } else {
+            throw new IllegalArgumentException("Unknown sensor integer type: " + i);
+        }
+        cxVar.f23360c = dx.m20374a(list2);
+        if (VERSION.SDK_INT < 17 || list.isEmpty()) {
+            cxVar.f23359b = SystemClock.elapsedRealtime() * 1000;
+        } else {
+            cxVar.f23359b = ((ScanResult) list.get(0)).timestamp;
+        }
+        return cxVar;
     }
-    label183:
-    throw new IllegalArgumentException("Unknown sensor integer type: " + paramInt);
-    label207:
-    ((cx)localObject2).b = (SystemClock.elapsedRealtime() * 1000L);
-    return (cx)localObject2;
-  }
-  
-  public final List<cw> a()
-  {
-    ArrayList localArrayList = new ArrayList(1);
-    localArrayList.add(g);
-    localArrayList.add(h);
-    return localArrayList;
-  }
-  
-  public final List<cx> a(cw paramcw)
-  {
-    return null;
-  }
-  
-  public final void a(cy paramcy)
-  {
-    a(false, paramcy, null, null);
-  }
-  
-  public final void a(cy paramcy, cw paramcw)
-  {
-    a(false, paramcy, paramcw, null);
-  }
-  
-  public final void a(cy paramcy, cw paramcw, da paramda)
-  {
-    a(true, paramcy, paramcw, paramda);
-  }
+
+    public eb(Context context) {
+        this(context, (WifiManager) context.getSystemService(C1981b.f6365e), new C5863a());
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/eb.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,287 +5,198 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Iterator;
 
-public abstract class AbstractMessageLite
-  implements MessageLite
-{
-  public byte[] toByteArray()
-  {
-    try
-    {
-      byte[] arrayOfByte = new byte[getSerializedSize()];
-      CodedOutputStream localCodedOutputStream = CodedOutputStream.newInstance(arrayOfByte);
-      writeTo(localCodedOutputStream);
-      localCodedOutputStream.checkNoSpaceLeft();
-      return arrayOfByte;
-    }
-    catch (IOException localIOException)
-    {
-      throw new RuntimeException("Serializing to a byte array threw an IOException (should never happen).", localIOException);
-    }
-  }
-  
-  public ByteString toByteString()
-  {
-    try
-    {
-      Object localObject = ByteString.newCodedBuilder(getSerializedSize());
-      writeTo(((ByteString.CodedBuilder)localObject).getCodedOutput());
-      localObject = ((ByteString.CodedBuilder)localObject).build();
-      return (ByteString)localObject;
-    }
-    catch (IOException localIOException)
-    {
-      throw new RuntimeException("Serializing to a ByteString threw an IOException (should never happen).", localIOException);
-    }
-  }
-  
-  public void writeDelimitedTo(OutputStream paramOutputStream)
-    throws IOException
-  {
-    paramOutputStream = CodedOutputStream.newInstance(paramOutputStream);
-    paramOutputStream.writeRawVarint32(getSerializedSize());
-    writeTo(paramOutputStream);
-    paramOutputStream.flush();
-  }
-  
-  public void writeTo(OutputStream paramOutputStream)
-    throws IOException
-  {
-    paramOutputStream = CodedOutputStream.newInstance(paramOutputStream);
-    writeTo(paramOutputStream);
-    paramOutputStream.flush();
-  }
-  
-  public static abstract class Builder<BuilderType extends Builder>
-    implements MessageLite.Builder
-  {
-    protected static <T> void addAll(Iterable<T> paramIterable, Collection<? super T> paramCollection)
-    {
-      Iterator localIterator = paramIterable.iterator();
-      while (localIterator.hasNext()) {
-        if (localIterator.next() == null) {
-          throw new NullPointerException();
+public abstract class AbstractMessageLite implements MessageLite {
+
+    public static abstract class Builder<BuilderType extends Builder> implements com.google.protobuf.MessageLite.Builder {
+
+        static final class LimitedInputStream extends FilterInputStream {
+            private int limit;
+
+            LimitedInputStream(InputStream in, int limit) {
+                super(in);
+                this.limit = limit;
+            }
+
+            public int available() throws IOException {
+                return Math.min(super.available(), this.limit);
+            }
+
+            public int read() throws IOException {
+                if (this.limit <= 0) {
+                    return -1;
+                }
+                int result = super.read();
+                if (result < 0) {
+                    return result;
+                }
+                this.limit--;
+                return result;
+            }
+
+            public int read(byte[] b, int off, int len) throws IOException {
+                if (this.limit <= 0) {
+                    return -1;
+                }
+                int result = super.read(b, off, Math.min(len, this.limit));
+                if (result < 0) {
+                    return result;
+                }
+                this.limit -= result;
+                return result;
+            }
+
+            public long skip(long n) throws IOException {
+                long result = super.skip(Math.min(n, (long) this.limit));
+                if (result >= 0) {
+                    this.limit = (int) (((long) this.limit) - result);
+                }
+                return result;
+            }
         }
-      }
-      if ((paramIterable instanceof Collection)) {
-        paramCollection.addAll((Collection)paramIterable);
-      }
-      for (;;)
-      {
-        return;
-        paramIterable = paramIterable.iterator();
-        while (paramIterable.hasNext()) {
-          paramCollection.add(paramIterable.next());
+
+        public abstract BuilderType clone();
+
+        public abstract BuilderType mergeFrom(CodedInputStream codedInputStream, ExtensionRegistryLite extensionRegistryLite) throws IOException;
+
+        public BuilderType mergeFrom(CodedInputStream input) throws IOException {
+            return mergeFrom(input, null);
         }
-      }
-    }
-    
-    protected static UninitializedMessageException newUninitializedMessageException(MessageLite paramMessageLite)
-    {
-      return new UninitializedMessageException(paramMessageLite);
-    }
-    
-    public abstract BuilderType clone();
-    
-    public BuilderType mergeDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return mergeFrom(new LimitedInputStream(paramInputStream, CodedInputStream.readRawVarint32(paramInputStream)));
-    }
-    
-    public BuilderType mergeDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return mergeFrom(new LimitedInputStream(paramInputStream, CodedInputStream.readRawVarint32(paramInputStream)), paramExtensionRegistryLite);
-    }
-    
-    public BuilderType mergeFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      try
-      {
-        paramByteString = paramByteString.newCodedInput();
-        mergeFrom(paramByteString);
-        paramByteString.checkLastTagWas(0);
-        return this;
-      }
-      catch (InvalidProtocolBufferException paramByteString)
-      {
-        throw paramByteString;
-      }
-      catch (IOException paramByteString)
-      {
-        throw new RuntimeException("Reading from a ByteString threw an IOException (should never happen).", paramByteString);
-      }
-    }
-    
-    public BuilderType mergeFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      try
-      {
-        paramByteString = paramByteString.newCodedInput();
-        mergeFrom(paramByteString, paramExtensionRegistryLite);
-        paramByteString.checkLastTagWas(0);
-        return this;
-      }
-      catch (InvalidProtocolBufferException paramByteString)
-      {
-        throw paramByteString;
-      }
-      catch (IOException paramByteString)
-      {
-        throw new RuntimeException("Reading from a ByteString threw an IOException (should never happen).", paramByteString);
-      }
-    }
-    
-    public BuilderType mergeFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return mergeFrom(paramCodedInputStream, null);
-    }
-    
-    public abstract BuilderType mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException;
-    
-    public BuilderType mergeFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      paramInputStream = CodedInputStream.newInstance(paramInputStream);
-      mergeFrom(paramInputStream);
-      paramInputStream.checkLastTagWas(0);
-      return this;
-    }
-    
-    public BuilderType mergeFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      paramInputStream = CodedInputStream.newInstance(paramInputStream);
-      mergeFrom(paramInputStream, paramExtensionRegistryLite);
-      paramInputStream.checkLastTagWas(0);
-      return this;
-    }
-    
-    public BuilderType mergeFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return mergeFrom(paramArrayOfByte, 0, paramArrayOfByte.length);
-    }
-    
-    public BuilderType mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-      throws InvalidProtocolBufferException
-    {
-      try
-      {
-        paramArrayOfByte = CodedInputStream.newInstance(paramArrayOfByte, paramInt1, paramInt2);
-        mergeFrom(paramArrayOfByte);
-        paramArrayOfByte.checkLastTagWas(0);
-        return this;
-      }
-      catch (InvalidProtocolBufferException paramArrayOfByte)
-      {
-        throw paramArrayOfByte;
-      }
-      catch (IOException paramArrayOfByte)
-      {
-        throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).", paramArrayOfByte);
-      }
-    }
-    
-    public BuilderType mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      try
-      {
-        paramArrayOfByte = CodedInputStream.newInstance(paramArrayOfByte, paramInt1, paramInt2);
-        mergeFrom(paramArrayOfByte, paramExtensionRegistryLite);
-        paramArrayOfByte.checkLastTagWas(0);
-        return this;
-      }
-      catch (InvalidProtocolBufferException paramArrayOfByte)
-      {
-        throw paramArrayOfByte;
-      }
-      catch (IOException paramArrayOfByte)
-      {
-        throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).", paramArrayOfByte);
-      }
-    }
-    
-    public BuilderType mergeFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return mergeFrom(paramArrayOfByte, 0, paramArrayOfByte.length, paramExtensionRegistryLite);
-    }
-    
-    static final class LimitedInputStream
-      extends FilterInputStream
-    {
-      private int limit;
-      
-      LimitedInputStream(InputStream paramInputStream, int paramInt)
-      {
-        super();
-        this.limit = paramInt;
-      }
-      
-      public int available()
-        throws IOException
-      {
-        return Math.min(super.available(), this.limit);
-      }
-      
-      public int read()
-        throws IOException
-      {
-        int i;
-        if (this.limit <= 0) {
-          i = -1;
+
+        public BuilderType mergeFrom(ByteString data) throws InvalidProtocolBufferException {
+            try {
+                CodedInputStream input = data.newCodedInput();
+                mergeFrom(input);
+                input.checkLastTagWas(0);
+                return this;
+            } catch (InvalidProtocolBufferException e) {
+                throw e;
+            } catch (IOException e2) {
+                throw new RuntimeException("Reading from a ByteString threw an IOException (should never happen).", e2);
+            }
         }
-        int j;
-        do
-        {
-          return i;
-          j = super.read();
-          i = j;
-        } while (j < 0);
-        this.limit -= 1;
-        return j;
-      }
-      
-      public int read(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-        throws IOException
-      {
-        if (this.limit <= 0) {
-          paramInt1 = -1;
+
+        public BuilderType mergeFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            try {
+                CodedInputStream input = data.newCodedInput();
+                mergeFrom(input, extensionRegistry);
+                input.checkLastTagWas(0);
+                return this;
+            } catch (InvalidProtocolBufferException e) {
+                throw e;
+            } catch (IOException e2) {
+                throw new RuntimeException("Reading from a ByteString threw an IOException (should never happen).", e2);
+            }
         }
-        do
-        {
-          return paramInt1;
-          paramInt2 = super.read(paramArrayOfByte, paramInt1, Math.min(paramInt2, this.limit));
-          paramInt1 = paramInt2;
-        } while (paramInt2 < 0);
-        this.limit -= paramInt2;
-        return paramInt2;
-      }
-      
-      public long skip(long paramLong)
-        throws IOException
-      {
-        paramLong = super.skip(Math.min(paramLong, this.limit));
-        if (paramLong >= 0L) {
-          this.limit = ((int)(this.limit - paramLong));
+
+        public BuilderType mergeFrom(byte[] data) throws InvalidProtocolBufferException {
+            return mergeFrom(data, 0, data.length);
         }
-        return paramLong;
-      }
+
+        public BuilderType mergeFrom(byte[] data, int off, int len) throws InvalidProtocolBufferException {
+            try {
+                CodedInputStream input = CodedInputStream.newInstance(data, off, len);
+                mergeFrom(input);
+                input.checkLastTagWas(0);
+                return this;
+            } catch (InvalidProtocolBufferException e) {
+                throw e;
+            } catch (IOException e2) {
+                throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).", e2);
+            }
+        }
+
+        public BuilderType mergeFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return mergeFrom(data, 0, data.length, extensionRegistry);
+        }
+
+        public BuilderType mergeFrom(byte[] data, int off, int len, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            try {
+                CodedInputStream input = CodedInputStream.newInstance(data, off, len);
+                mergeFrom(input, extensionRegistry);
+                input.checkLastTagWas(0);
+                return this;
+            } catch (InvalidProtocolBufferException e) {
+                throw e;
+            } catch (IOException e2) {
+                throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).", e2);
+            }
+        }
+
+        public BuilderType mergeFrom(InputStream input) throws IOException {
+            CodedInputStream codedInput = CodedInputStream.newInstance(input);
+            mergeFrom(codedInput);
+            codedInput.checkLastTagWas(0);
+            return this;
+        }
+
+        public BuilderType mergeFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            CodedInputStream codedInput = CodedInputStream.newInstance(input);
+            mergeFrom(codedInput, extensionRegistry);
+            codedInput.checkLastTagWas(0);
+            return this;
+        }
+
+        public BuilderType mergeDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return mergeFrom(new LimitedInputStream(input, CodedInputStream.readRawVarint32(input)), extensionRegistry);
+        }
+
+        public BuilderType mergeDelimitedFrom(InputStream input) throws IOException {
+            return mergeFrom(new LimitedInputStream(input, CodedInputStream.readRawVarint32(input)));
+        }
+
+        protected static UninitializedMessageException newUninitializedMessageException(MessageLite message) {
+            return new UninitializedMessageException(message);
+        }
+
+        protected static <T> void addAll(Iterable<T> values, Collection<? super T> list) {
+            for (T value : values) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+            }
+            if (values instanceof Collection) {
+                list.addAll((Collection) values);
+                return;
+            }
+            for (T value2 : values) {
+                list.add(value2);
+            }
+        }
     }
-  }
+
+    public ByteString toByteString() {
+        try {
+            CodedBuilder out = ByteString.newCodedBuilder(getSerializedSize());
+            writeTo(out.getCodedOutput());
+            return out.build();
+        } catch (IOException e) {
+            throw new RuntimeException("Serializing to a ByteString threw an IOException (should never happen).", e);
+        }
+    }
+
+    public byte[] toByteArray() {
+        try {
+            byte[] result = new byte[getSerializedSize()];
+            CodedOutputStream output = CodedOutputStream.newInstance(result);
+            writeTo(output);
+            output.checkNoSpaceLeft();
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException("Serializing to a byte array threw an IOException (should never happen).", e);
+        }
+    }
+
+    public void writeTo(OutputStream output) throws IOException {
+        CodedOutputStream codedOutput = CodedOutputStream.newInstance(output);
+        writeTo(codedOutput);
+        codedOutput.flush();
+    }
+
+    public void writeDelimitedTo(OutputStream output) throws IOException {
+        CodedOutputStream codedOutput = CodedOutputStream.newInstance(output);
+        codedOutput.writeRawVarint32(getSerializedSize());
+        writeTo(codedOutput);
+        codedOutput.flush();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/AbstractMessageLite.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

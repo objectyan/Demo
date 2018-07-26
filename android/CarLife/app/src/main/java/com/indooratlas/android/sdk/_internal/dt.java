@@ -1,87 +1,81 @@
 package com.indooratlas.android.sdk._internal;
 
-public abstract class dt
-{
-  protected String a = "SensorTimestampFix";
-  
-  public abstract long a(int paramInt, long paramLong);
-  
-  public static final class a
-    extends dt
-  {
-    private dt.b b;
-    
-    public a()
-    {
-      this(new dt.b());
+public abstract class dt {
+    /* renamed from: a */
+    protected String f23449a = "SensorTimestampFix";
+
+    /* renamed from: com.indooratlas.android.sdk._internal.dt$a */
+    public static class C5853a extends dt {
+        /* renamed from: b */
+        private C5854b f23450b;
+
+        public C5853a() {
+            this(new C5854b());
+        }
+
+        private C5853a(C5854b c5854b) {
+            this.f23450b = c5854b;
+        }
+
+        /* renamed from: a */
+        public final long mo4668a(int i, long j) {
+            return System.nanoTime();
+        }
     }
-    
-    private a(dt.b paramb)
-    {
-      this.b = paramb;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.dt$b */
+    static class C5854b {
+        C5854b() {
+        }
     }
-    
-    public final long a(int paramInt, long paramLong)
-    {
-      return System.nanoTime();
+
+    /* renamed from: com.indooratlas.android.sdk._internal.dt$c */
+    public static class C5855c extends dt {
+        /* renamed from: b */
+        C5854b f23451b = new C5854b();
+        /* renamed from: c */
+        private int f23452c;
+        /* renamed from: d */
+        private int f23453d;
+        /* renamed from: e */
+        private long f23454e;
+        /* renamed from: f */
+        private long f23455f;
+        /* renamed from: g */
+        private long f23456g;
+
+        public C5855c(int i, int i2, long j, long j2) {
+            this.f23452c = i;
+            this.f23453d = i2;
+            this.f23455f = j2;
+            this.f23454e = j;
+        }
+
+        /* renamed from: a */
+        public final long mo4668a(int i, long j) {
+            if (i == this.f23452c) {
+                this.f23454e = j;
+                this.f23455f = System.nanoTime();
+                return j;
+            } else if (i != this.f23453d || this.f23455f == 0) {
+                return j;
+            } else {
+                long nanoTime = this.f23454e + (System.nanoTime() - this.f23455f);
+                if (nanoTime < this.f23456g) {
+                    Object[] objArr = new Object[]{Long.valueOf(nanoTime), Long.valueOf(this.f23456g), Long.valueOf(this.f23454e), Long.valueOf(this.f23455f), Long.valueOf(r2)};
+                    nanoTime = this.f23456g;
+                } else {
+                    this.f23456g = nanoTime;
+                }
+                return nanoTime;
+            }
+        }
+
+        public final String toString() {
+            return "{mBaseSensorType: " + this.f23452c + ", mAdjustSensorType: " + this.f23453d + ", mLastBaseSensorSystemTime: " + this.f23454e + "}";
+        }
     }
-  }
-  
-  static final class b {}
-  
-  public static final class c
-    extends dt
-  {
-    dt.b b = new dt.b();
-    private int c;
-    private int d;
-    private long e;
-    private long f;
-    private long g;
-    
-    public c(int paramInt1, int paramInt2, long paramLong1, long paramLong2)
-    {
-      this.c = paramInt1;
-      this.d = paramInt2;
-      this.f = paramLong2;
-      this.e = paramLong1;
-    }
-    
-    public final long a(int paramInt, long paramLong)
-    {
-      if (paramInt == this.c)
-      {
-        this.e = paramLong;
-        this.f = System.nanoTime();
-      }
-      while ((paramInt != this.d) || (this.f == 0L)) {
-        return paramLong;
-      }
-      paramLong = System.nanoTime();
-      paramLong = this.e + (paramLong - this.f);
-      if (paramLong < this.g)
-      {
-        paramLong = this.g;
-        paramLong = this.e;
-        paramLong = this.f;
-        paramLong = this.g;
-      }
-      for (;;)
-      {
-        return paramLong;
-        this.g = paramLong;
-      }
-    }
-    
-    public final String toString()
-    {
-      return "{mBaseSensorType: " + this.c + ", mAdjustSensorType: " + this.d + ", mLastBaseSensorSystemTime: " + this.e + "}";
-    }
-  }
+
+    /* renamed from: a */
+    public abstract long mo4668a(int i, long j);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dt.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

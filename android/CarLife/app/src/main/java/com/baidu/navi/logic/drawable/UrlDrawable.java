@@ -6,6 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import com.baidu.carlife.C0965R;
 import com.baidu.navi.utils.Tools;
 import com.baidu.navi.utils.cache.ImageCache;
 import com.baidu.navi.utils.http.BaseHttpClient;
@@ -14,175 +15,146 @@ import com.baidu.navisdk.util.common.SysOSAPI;
 import com.baidu.navisdk.util.common.UserTask;
 import java.util.HashMap;
 
-public class UrlDrawable
-  extends Drawable
-{
-  private static final int K_CACHE_CAPACITY = 80;
-  private static final String K_DEFAULT_CACHE_PATH = SysOSAPI.getInstance().GetSDCardCachePath() + "/ImageCache/urlpic";
-  private static final int K_DEFAULT_HEIGHT = 100;
-  private static final int K_DEFAULT_WIDTH = 100;
-  public static Bitmap mDefaultBitmap;
-  public static Bitmap mFailedBitmap;
-  private static boolean mHasInit = false;
-  private static HashMap<String, UrlDrawable> mLoadingMap = new HashMap();
-  public static ImageCache sUrlCache;
-  private Drawable mCurrent = new BitmapDrawable(mDefaultBitmap);
-  private boolean mNeedSqureBound = true;
-  
-  private UrlDrawable(final String paramString1, final String paramString2)
-  {
-    new UserTask()
-    {
-      Bitmap mBmp;
-      
-      public Bitmap doInBackground(String... paramAnonymousVarArgs)
-      {
-        this.mBmp = Tools.getBitmapFromPath(paramString2);
-        if (this.mBmp != null) {
-          return this.mBmp;
-        }
-        new BaseHttpClient().get(paramString1, new BitmapRspHandler()
-        {
-          public void onFailure(Throwable paramAnonymous2Throwable)
-          {
-            UrlDrawable.1.this.mBmp = null;
-          }
-          
-          public void onRevBitmap(Bitmap paramAnonymous2Bitmap)
-          {
-            UrlDrawable.1.this.mBmp = paramAnonymous2Bitmap;
-            if (UrlDrawable.1.this.mBmp != null) {
-              UrlDrawable.sUrlCache.cache2Disk(UrlDrawable.1.this.val$keyPath, UrlDrawable.1.this.mBmp);
+public class UrlDrawable extends Drawable {
+    private static final int K_CACHE_CAPACITY = 80;
+    private static final String K_DEFAULT_CACHE_PATH = (SysOSAPI.getInstance().GetSDCardCachePath() + "/ImageCache/urlpic");
+    private static final int K_DEFAULT_HEIGHT = 100;
+    private static final int K_DEFAULT_WIDTH = 100;
+    public static Bitmap mDefaultBitmap;
+    public static Bitmap mFailedBitmap;
+    private static boolean mHasInit = false;
+    private static HashMap<String, UrlDrawable> mLoadingMap = new HashMap();
+    public static ImageCache sUrlCache;
+    private Drawable mCurrent;
+    private boolean mNeedSqureBound;
+
+    private UrlDrawable(final String url, final String keyPath) {
+        this.mNeedSqureBound = true;
+        this.mCurrent = new BitmapDrawable(mDefaultBitmap);
+        this.mNeedSqureBound = true;
+        new UserTask<String, String, Bitmap>() {
+            Bitmap mBmp;
+
+            /* renamed from: com.baidu.navi.logic.drawable.UrlDrawable$1$1 */
+            class C39381 extends BitmapRspHandler {
+                C39381() {
+                }
+
+                public void onRevBitmap(Bitmap retBmp) {
+                    C39391.this.mBmp = retBmp;
+                    if (C39391.this.mBmp != null) {
+                        UrlDrawable.sUrlCache.cache2Disk(keyPath, C39391.this.mBmp);
+                    }
+                }
+
+                public void onFailure(Throwable error) {
+                    C39391.this.mBmp = null;
+                }
             }
-          }
-        });
-        return this.mBmp;
-      }
-      
-      public void onPostExecute(Bitmap paramAnonymousBitmap)
-      {
-        if (paramAnonymousBitmap != null)
-        {
-          UrlDrawable.sUrlCache.put(paramString2, this.mBmp);
-          localObject = (UrlDrawable)UrlDrawable.mLoadingMap.remove(paramString2);
-          if (localObject != null) {}
+
+            public Bitmap doInBackground(String... params) {
+                this.mBmp = Tools.getBitmapFromPath(keyPath);
+                if (this.mBmp != null) {
+                    return this.mBmp;
+                }
+                new BaseHttpClient().get(url, new C39381());
+                return this.mBmp;
+            }
+
+            public void onPostExecute(Bitmap bmp) {
+                UrlDrawable d;
+                if (bmp != null) {
+                    UrlDrawable.sUrlCache.put(keyPath, this.mBmp);
+                    d = (UrlDrawable) UrlDrawable.mLoadingMap.remove(keyPath);
+                    if (d != null) {
+                        UrlDrawable.this.mNeedSqureBound = false;
+                        Drawable draw = PathDrawable.getDrawable(keyPath, bmp, UrlDrawable.sUrlCache);
+                        draw.setBounds(d.mCurrent.getBounds());
+                        d.mCurrent = draw;
+                        d.invalidateSelf();
+                        return;
+                    }
+                    return;
+                }
+                d = (UrlDrawable) UrlDrawable.mLoadingMap.remove(keyPath);
+                if (d != null) {
+                    UrlDrawable.this.mNeedSqureBound = true;
+                    draw = new BitmapDrawable(UrlDrawable.mFailedBitmap);
+                    draw.setBounds(Tools.calcSquareRect(d.mCurrent.getBounds()));
+                    d.mCurrent = draw;
+                    d.invalidateSelf();
+                }
+            }
+        }.execute("");
+    }
+
+    private static synchronized void init() {
+        synchronized (UrlDrawable.class) {
+            if (!mHasInit) {
+                sUrlCache = new ImageCache(K_DEFAULT_CACHE_PATH, 80);
+                mDefaultBitmap = Tools.getBitmapFromResId(C0965R.drawable.ic_launcher);
+                mFailedBitmap = Tools.getBitmapFromResId(C0965R.drawable.icon_fail);
+            }
+            mHasInit = true;
         }
-        do
-        {
-          return;
-          UrlDrawable.access$102(UrlDrawable.this, false);
-          paramAnonymousBitmap = PathDrawable.getDrawable(paramString2, paramAnonymousBitmap, UrlDrawable.sUrlCache);
-          paramAnonymousBitmap.setBounds(((UrlDrawable)localObject).mCurrent.getBounds());
-          UrlDrawable.access$202((UrlDrawable)localObject, paramAnonymousBitmap);
-          ((UrlDrawable)localObject).invalidateSelf();
-          return;
-          paramAnonymousBitmap = (UrlDrawable)UrlDrawable.mLoadingMap.remove(paramString2);
-        } while (paramAnonymousBitmap == null);
-        UrlDrawable.access$102(UrlDrawable.this, true);
-        Object localObject = new BitmapDrawable(UrlDrawable.mFailedBitmap);
-        ((Drawable)localObject).setBounds(Tools.calcSquareRect(paramAnonymousBitmap.mCurrent.getBounds()));
-        UrlDrawable.access$202(paramAnonymousBitmap, (Drawable)localObject);
-        paramAnonymousBitmap.invalidateSelf();
-      }
-    }.execute(new String[] { "" });
-  }
-  
-  public static Drawable getDrawable(String paramString)
-  {
-    
-    Object localObject;
-    if (paramString == null) {
-      localObject = new BitmapDrawable(mDefaultBitmap);
     }
-    String str;
-    UrlDrawable localUrlDrawable;
-    do
-    {
-      return (Drawable)localObject;
-      str = sUrlCache.getCachePath(paramString);
-      localObject = sUrlCache.get(str);
-      if (localObject != null) {
-        return PathDrawable.getDrawable(str, (Bitmap)localObject, sUrlCache);
-      }
-      localUrlDrawable = (UrlDrawable)mLoadingMap.get(str);
-      localObject = localUrlDrawable;
-    } while (localUrlDrawable != null);
-    paramString = new UrlDrawable(paramString, str);
-    mLoadingMap.put(str, paramString);
-    return paramString;
-  }
-  
-  private static void init()
-  {
-    try
-    {
-      if (!mHasInit)
-      {
-        sUrlCache = new ImageCache(K_DEFAULT_CACHE_PATH, 80);
-        mDefaultBitmap = Tools.getBitmapFromResId(2130838698);
-        mFailedBitmap = Tools.getBitmapFromResId(2130838733);
-      }
-      mHasInit = true;
-      return;
+
+    public static Drawable getDrawable(String url) {
+        init();
+        if (url == null) {
+            return new BitmapDrawable(mDefaultBitmap);
+        }
+        Object key = sUrlCache.getCachePath(url);
+        Bitmap bmp = sUrlCache.get(key);
+        if (bmp != null) {
+            return PathDrawable.getDrawable(key, bmp, sUrlCache);
+        }
+        UrlDrawable d = (UrlDrawable) mLoadingMap.get(key);
+        if (d != null) {
+            return d;
+        }
+        Drawable d2 = new UrlDrawable(url, key);
+        mLoadingMap.put(key, d2);
+        return d2;
     }
-    finally {}
-  }
-  
-  public void draw(Canvas paramCanvas)
-  {
-    if (this.mCurrent != null) {
-      this.mCurrent.draw(paramCanvas);
+
+    public Drawable getCurrent() {
+        return this.mCurrent;
     }
-  }
-  
-  public Drawable getCurrent()
-  {
-    return this.mCurrent;
-  }
-  
-  public int getOpacity()
-  {
-    if (this.mCurrent != null) {
-      return this.mCurrent.getOpacity();
+
+    public void draw(Canvas canvas) {
+        if (this.mCurrent != null) {
+            this.mCurrent.draw(canvas);
+        }
     }
-    return -2;
-  }
-  
-  public void onBoundsChange(Rect paramRect)
-  {
-    if (this.mCurrent != null)
-    {
-      if (!this.mNeedSqureBound) {
-        break label31;
-      }
-      this.mCurrent.setBounds(Tools.calcSquareRect(paramRect));
+
+    public int getOpacity() {
+        if (this.mCurrent != null) {
+            return this.mCurrent.getOpacity();
+        }
+        return -2;
     }
-    for (;;)
-    {
-      super.onBoundsChange(paramRect);
-      return;
-      label31:
-      this.mCurrent.setBounds(paramRect);
+
+    public void setAlpha(int alpha) {
+        if (this.mCurrent != null) {
+            this.mCurrent.setAlpha(alpha);
+        }
     }
-  }
-  
-  public void setAlpha(int paramInt)
-  {
-    if (this.mCurrent != null) {
-      this.mCurrent.setAlpha(paramInt);
+
+    public void setColorFilter(ColorFilter cf) {
+        if (this.mCurrent != null) {
+            this.mCurrent.setColorFilter(cf);
+        }
     }
-  }
-  
-  public void setColorFilter(ColorFilter paramColorFilter)
-  {
-    if (this.mCurrent != null) {
-      this.mCurrent.setColorFilter(paramColorFilter);
+
+    public void onBoundsChange(Rect bounds) {
+        if (this.mCurrent != null) {
+            if (this.mNeedSqureBound) {
+                this.mCurrent.setBounds(Tools.calcSquareRect(bounds));
+            } else {
+                this.mCurrent.setBounds(bounds);
+            }
+        }
+        super.onBoundsChange(bounds);
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/logic/drawable/UrlDrawable.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

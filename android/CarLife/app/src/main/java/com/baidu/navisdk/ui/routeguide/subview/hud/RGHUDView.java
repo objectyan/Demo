@@ -2,7 +2,6 @@ package com.baidu.navisdk.ui.routeguide.subview.hud;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
@@ -12,8 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.routeguide.control.RGViewController;
-import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
 import com.baidu.navisdk.ui.routeguide.model.RGAssistGuideModel;
 import com.baidu.navisdk.ui.routeguide.model.RGHUDDataModel;
 import com.baidu.navisdk.ui.routeguide.model.RGHighwayModel;
@@ -23,361 +22,284 @@ import com.baidu.navisdk.ui.routeguide.subview.widget.CircleProgressImageView;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.util.jar.JarUtils;
 
-public class RGHUDView
-  extends LinearLayout
-{
-  private View gpsView;
-  private boolean isMirror;
-  private TextView mAlongDistance;
-  private TextView mArrivingTime;
-  private TextView mCarSpeed;
-  private CircleProgressImageView mCarSpeedProgress;
-  private TextView mDirectCurrentRoad;
-  private RelativeLayout mDirectRoadLayout;
-  private TextView mHighWayEnter;
-  private TextView mHighWayExitCode;
-  private TextView mHighWayGoTo;
-  private TextView mHighWayGoWhere;
-  private RelativeLayout mHighWayLayout;
-  private TextView mHighWayLeftDistance;
-  private TextView mHighWayLeftDistanceLable;
-  private ImageView mHighWayTurnIcon;
-  private RelativeLayout mHudLayout;
-  private int mLastResId = -1;
-  private RelativeLayout mLeftDistanceLayout;
-  private CircleProgressImageView mLeftDistanceProgress;
-  private TextView mLeftTotalDistance;
-  private TextView mNormalCurrentRoad;
-  private TextView mNormalGoMeters;
-  private TextView mNormalGoMetersLable;
-  private RelativeLayout mNormalLayout;
-  private ImageView mNormalTurnIcon;
-  private RelativeLayout mSpeedLayout;
-  private int mTextSizeFirst = 42;
-  private int mTextSizeSecond = 38;
-  private ViewGroup mViewGroup;
-  private RelativeLayout mYawLayout;
-  private View uiView;
-  
-  public RGHUDView(Context paramContext)
-  {
-    super(paramContext);
-    initView();
-  }
-  
-  public RGHUDView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    initView();
-  }
-  
-  private int getCurrentOrientation()
-  {
-    return RGViewController.getInstance().getOrientation();
-  }
-  
-  private void initView()
-  {
-    if (this.mViewGroup != null) {
-      this.mViewGroup.removeAllViews();
+public class RGHUDView extends LinearLayout {
+    private View gpsView;
+    private boolean isMirror;
+    private TextView mAlongDistance;
+    private TextView mArrivingTime;
+    private TextView mCarSpeed;
+    private CircleProgressImageView mCarSpeedProgress;
+    private TextView mDirectCurrentRoad;
+    private RelativeLayout mDirectRoadLayout;
+    private TextView mHighWayEnter;
+    private TextView mHighWayExitCode;
+    private TextView mHighWayGoTo;
+    private TextView mHighWayGoWhere;
+    private RelativeLayout mHighWayLayout;
+    private TextView mHighWayLeftDistance;
+    private TextView mHighWayLeftDistanceLable;
+    private ImageView mHighWayTurnIcon;
+    private RelativeLayout mHudLayout;
+    private int mLastResId = -1;
+    private RelativeLayout mLeftDistanceLayout;
+    private CircleProgressImageView mLeftDistanceProgress;
+    private TextView mLeftTotalDistance;
+    private TextView mNormalCurrentRoad;
+    private TextView mNormalGoMeters;
+    private TextView mNormalGoMetersLable;
+    private RelativeLayout mNormalLayout;
+    private ImageView mNormalTurnIcon;
+    private RelativeLayout mSpeedLayout;
+    private int mTextSizeFirst = 42;
+    private int mTextSizeSecond = 38;
+    private ViewGroup mViewGroup;
+    private RelativeLayout mYawLayout;
+    private View uiView;
+
+    public RGHUDView(Context context) {
+        super(context);
+        initView();
     }
-    if (1 == RGViewController.getInstance().getOrientation()) {}
-    for (this.mViewGroup = ((ViewGroup)JarUtils.inflate((Activity)getContext(), 1711472701, null)); this.mViewGroup == null; this.mViewGroup = ((ViewGroup)JarUtils.inflate((Activity)getContext(), 1711472702, null))) {
-      return;
+
+    public RGHUDView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initView();
     }
-    addView(this.mViewGroup, new LinearLayout.LayoutParams(-1, -1));
-    findView();
-  }
-  
-  protected void dispatchDraw(Canvas paramCanvas)
-  {
-    if (this.isMirror)
-    {
-      paramCanvas.translate(0.0F, getMeasuredHeight());
-      paramCanvas.scale(1.0F, -1.0F);
+
+    private void initView() {
+        if (this.mViewGroup != null) {
+            this.mViewGroup.removeAllViews();
+        }
+        if (1 == RGViewController.getInstance().getOrientation()) {
+            this.mViewGroup = (ViewGroup) JarUtils.inflate((Activity) getContext(), C4048R.layout.nsdk_layout_rg_hud_view, null);
+        } else {
+            this.mViewGroup = (ViewGroup) JarUtils.inflate((Activity) getContext(), C4048R.layout.nsdk_layout_rg_hud_view_land, null);
+        }
+        if (this.mViewGroup != null) {
+            addView(this.mViewGroup, new LayoutParams(-1, -1));
+            findView();
+        }
     }
-    super.dispatchDraw(paramCanvas);
-  }
-  
-  public void findView()
-  {
-    this.mHudLayout = ((RelativeLayout)this.mViewGroup.findViewById(1711866383));
-    this.mNormalLayout = ((RelativeLayout)this.mViewGroup.findViewById(1711866385));
-    this.mNormalTurnIcon = ((ImageView)this.mViewGroup.findViewById(1711866386));
-    this.mNormalGoMeters = ((TextView)this.mViewGroup.findViewById(1711866388));
-    this.mNormalGoMetersLable = ((TextView)this.mViewGroup.findViewById(1711866389));
-    this.mNormalCurrentRoad = ((TextView)this.mViewGroup.findViewById(1711866391));
-    this.mDirectRoadLayout = ((RelativeLayout)this.mViewGroup.findViewById(1711866392));
-    this.mAlongDistance = ((TextView)this.mViewGroup.findViewById(1711866398));
-    this.mDirectCurrentRoad = ((TextView)this.mViewGroup.findViewById(1711866396));
-    this.mHighWayLayout = ((RelativeLayout)this.mViewGroup.findViewById(1711866399));
-    this.mHighWayTurnIcon = ((ImageView)this.mViewGroup.findViewById(1711866400));
-    this.mHighWayLeftDistance = ((TextView)this.mViewGroup.findViewById(1711866402));
-    this.mHighWayExitCode = ((TextView)this.mViewGroup.findViewById(1711866405));
-    this.mHighWayGoTo = ((TextView)this.mViewGroup.findViewById(1711866406));
-    this.mHighWayEnter = ((TextView)this.mViewGroup.findViewById(1711866407));
-    this.mHighWayGoWhere = ((TextView)this.mViewGroup.findViewById(1711866409));
-    this.mHighWayLeftDistanceLable = ((TextView)this.mViewGroup.findViewById(1711866403));
-    this.mCarSpeedProgress = ((CircleProgressImageView)this.mViewGroup.findViewById(1711866413));
-    this.mLeftDistanceProgress = ((CircleProgressImageView)this.mViewGroup.findViewById(1711866416));
-    this.mCarSpeed = ((TextView)this.mViewGroup.findViewById(1711866414));
-    this.mLeftTotalDistance = ((TextView)this.mViewGroup.findViewById(1711866417));
-    this.mArrivingTime = ((TextView)this.mViewGroup.findViewById(1711866418));
-    if (getCurrentOrientation() == 2)
-    {
-      this.mSpeedLayout = ((RelativeLayout)this.mViewGroup.findViewById(1711866424));
-      this.mLeftDistanceLayout = ((RelativeLayout)this.mViewGroup.findViewById(1711866426));
+
+    public void findView() {
+        this.mHudLayout = (RelativeLayout) this.mViewGroup.findViewById(C4048R.id.nav_hud_ui);
+        this.mNormalLayout = (RelativeLayout) this.mViewGroup.findViewById(C4048R.id.rl_bnav_simle_not_along);
+        this.mNormalTurnIcon = (ImageView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_sg_turn_icon);
+        this.mNormalGoMeters = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_sg_after_meters_info);
+        this.mNormalGoMetersLable = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_sg_after_label_info);
+        this.mNormalCurrentRoad = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_sg_go_where_info);
+        this.mDirectRoadLayout = (RelativeLayout) this.mViewGroup.findViewById(C4048R.id.bnav_rg_sg_along_road);
+        this.mAlongDistance = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_sg_cur_road_remain_dist_tv);
+        this.mDirectCurrentRoad = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_sg_cur_road_name_tv);
+        this.mHighWayLayout = (RelativeLayout) this.mViewGroup.findViewById(C4048R.id.ll_bnav_hw);
+        this.mHighWayTurnIcon = (ImageView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_hw_turn_icon);
+        this.mHighWayLeftDistance = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_hw_after_meters_info);
+        this.mHighWayExitCode = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_hw_ic_code);
+        this.mHighWayGoTo = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_hw_go_to_word);
+        this.mHighWayEnter = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_hw_enter_word);
+        this.mHighWayGoWhere = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_hw_go_where_multi_tv);
+        this.mHighWayLeftDistanceLable = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_hw_after_meters_lable);
+        this.mCarSpeedProgress = (CircleProgressImageView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_cur_car_speed_progress);
+        this.mLeftDistanceProgress = (CircleProgressImageView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_left_distance_progress);
+        this.mCarSpeed = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_current_speed);
+        this.mLeftTotalDistance = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_left_distance);
+        this.mArrivingTime = (TextView) this.mViewGroup.findViewById(C4048R.id.bnav_rg_about_reach_time);
+        if (getCurrentOrientation() == 2) {
+            this.mSpeedLayout = (RelativeLayout) this.mViewGroup.findViewById(C4048R.id.rl_bnav_rg_hud_speed);
+            this.mLeftDistanceLayout = (RelativeLayout) this.mViewGroup.findViewById(C4048R.id.rl_nsdk_rg_hud_left_distance);
+        }
+        this.mYawLayout = (RelativeLayout) this.mViewGroup.findViewById(C4048R.id.rl_bnav_rg_hud_yaw);
+        this.gpsView = this.mViewGroup.findViewById(C4048R.id.nav_hud_gps_status);
+        this.uiView = this.mViewGroup.findViewById(C4048R.id.nav_hud_ui);
     }
-    this.mYawLayout = ((RelativeLayout)this.mViewGroup.findViewById(1711866422));
-    this.gpsView = this.mViewGroup.findViewById(1711866419);
-    this.uiView = this.mViewGroup.findViewById(1711866383);
-  }
-  
-  public void gpsSignalRecover()
-  {
-    this.uiView.setVisibility(0);
-    this.gpsView.setVisibility(8);
-  }
-  
-  public boolean isMirror()
-  {
-    return this.isMirror;
-  }
-  
-  public void lostGPSSignal()
-  {
-    this.gpsView.setVisibility(0);
-    this.uiView.setVisibility(8);
-  }
-  
-  public void onOrientationChanged()
-  {
-    if (this.mViewGroup != null) {
-      this.mViewGroup.removeAllViews();
+
+    private int getCurrentOrientation() {
+        return RGViewController.getInstance().getOrientation();
     }
-    if (getCurrentOrientation() == 1)
-    {
-      JarUtils.inflate((Activity)getContext(), 1711472701, this.mViewGroup);
-      findView();
-      return;
+
+    public void setDirection(String dirction) {
     }
-    JarUtils.inflate((Activity)getContext(), 1711472702, this.mViewGroup);
-    findView();
-  }
-  
-  public void setDirectCurrentRoad(String paramString)
-  {
-    if (!paramString.equals(this.mDirectCurrentRoad.getText().toString())) {
-      this.mDirectCurrentRoad.setText(paramString);
+
+    public void setNormalTurnIcon(int resId) {
+        if (RightHandResourcesProvider.getEnNaviType() == 0) {
+            this.mNormalTurnIcon.setImageDrawable(JarUtils.getResources().getDrawable(resId));
+        } else {
+            this.mNormalTurnIcon.setImageDrawable(RightHandResourcesProvider.getDrawableIncludeRightHandIcon(resId));
+        }
     }
-  }
-  
-  public void setDirectDistance(String paramString)
-  {
-    if (!paramString.equals(this.mAlongDistance.getText().toString())) {
-      this.mAlongDistance.setText(paramString);
+
+    public void setNormalGoMeters(String goMeters) {
+        if ("0米".equals(goMeters)) {
+            this.mNormalGoMeters.setText("现在");
+            this.mNormalGoMetersLable.setText("");
+            return;
+        }
+        this.mNormalGoMeters.setText(goMeters);
+        this.mNormalGoMetersLable.setText("后");
     }
-  }
-  
-  public void setDirection(String paramString) {}
-  
-  public void setHighWayExitCode(String paramString)
-  {
-    if (!paramString.equals(this.mHighWayExitCode.getText().toString())) {
-      this.mHighWayExitCode.setText(paramString);
+
+    public void setHighWayExitCode(String exitCode) {
+        if (!exitCode.equals(this.mHighWayExitCode.getText().toString())) {
+            this.mHighWayExitCode.setText(exitCode);
+        }
     }
-  }
-  
-  public void setHighWayExitRoad(String paramString)
-  {
-    if (!paramString.equals(this.mHighWayGoWhere.getText().toString())) {
-      this.mHighWayGoWhere.setText(paramString);
+
+    public void setHighWayTurnIcon(int resId) {
+        if (resId != this.mLastResId) {
+            this.mLastResId = resId;
+            this.mHighWayTurnIcon.setImageDrawable(RGHighwayModel.getInstance().getTurnIconDrawable(resId, true));
+        }
     }
-  }
-  
-  public void setHighWayRemainDistance(String paramString)
-  {
-    if (!paramString.equals(this.mHighWayLeftDistance))
-    {
-      if ("0米".equals(paramString))
-      {
-        this.mHighWayLeftDistance.setText("现在");
-        this.mHighWayLeftDistanceLable.setText("");
-      }
+
+    public void setNormalCurrentRoad(String currentRoad) {
+        if (!currentRoad.equals(this.mNormalCurrentRoad.getText().toString())) {
+            this.mNormalCurrentRoad.setText(currentRoad);
+        }
     }
-    else {
-      return;
+
+    public void setDirectDistance(String distance) {
+        if (!distance.equals(this.mAlongDistance.getText().toString())) {
+            this.mAlongDistance.setText(distance);
+        }
     }
-    this.mHighWayLeftDistance.setText(paramString);
-    this.mHighWayLeftDistanceLable.setText("后");
-  }
-  
-  public void setHighWayTurnIcon(int paramInt)
-  {
-    if (paramInt != this.mLastResId)
-    {
-      this.mLastResId = paramInt;
-      this.mHighWayTurnIcon.setImageDrawable(RGHighwayModel.getInstance().getTurnIconDrawable(paramInt, true));
+
+    public void setDirectCurrentRoad(String name) {
+        if (!name.equals(this.mDirectCurrentRoad.getText().toString())) {
+            this.mDirectCurrentRoad.setText(name);
+        }
     }
-  }
-  
-  public void setMirror(boolean paramBoolean)
-  {
-    this.isMirror = paramBoolean;
-  }
-  
-  public void setNormalCurrentRoad(String paramString)
-  {
-    if (!paramString.equals(this.mNormalCurrentRoad.getText().toString())) {
-      this.mNormalCurrentRoad.setText(paramString);
+
+    public void setHighWayRemainDistance(String distance) {
+        if (!distance.equals(this.mHighWayLeftDistance)) {
+            if ("0米".equals(distance)) {
+                this.mHighWayLeftDistance.setText("现在");
+                this.mHighWayLeftDistanceLable.setText("");
+                return;
+            }
+            this.mHighWayLeftDistance.setText(distance);
+            this.mHighWayLeftDistanceLable.setText("后");
+        }
     }
-  }
-  
-  public void setNormalGoMeters(String paramString)
-  {
-    if ("0米".equals(paramString))
-    {
-      this.mNormalGoMeters.setText("现在");
-      this.mNormalGoMetersLable.setText("");
-      return;
+
+    public void setHighWayExitRoad(String roads) {
+        if (!roads.equals(this.mHighWayGoWhere.getText().toString())) {
+            this.mHighWayGoWhere.setText(roads);
+        }
     }
-    this.mNormalGoMeters.setText(paramString);
-    this.mNormalGoMetersLable.setText("后");
-  }
-  
-  public void setNormalTurnIcon(int paramInt)
-  {
-    if (RightHandResourcesProvider.getEnNaviType() == 0)
-    {
-      this.mNormalTurnIcon.setImageDrawable(JarUtils.getResources().getDrawable(paramInt));
-      return;
+
+    public boolean isMirror() {
+        return this.isMirror;
     }
-    this.mNormalTurnIcon.setImageDrawable(RightHandResourcesProvider.getDrawableIncludeRightHandIcon(paramInt));
-  }
-  
-  public void updateCurrentCarSpeed()
-  {
-    if (this.mCarSpeed != null)
-    {
-      int i = RGHUDDataModel.getProgress(RGAssistGuideModel.getInstance().getCurCarSpeedInt(), 240);
-      this.mCarSpeedProgress.setMainProgress(i);
-      this.mCarSpeedProgress.setSubProgress(240);
-      this.mCarSpeed.setText(RGAssistGuideModel.getInstance().getCurCarSpeed());
+
+    public void setMirror(boolean isMirror) {
+        this.isMirror = isMirror;
     }
-  }
-  
-  public void updateDirectRoadInfoVisibility(boolean paramBoolean)
-  {
-    if (paramBoolean == true) {}
-    for (int i = 0;; i = 8)
-    {
-      this.mDirectRoadLayout.setVisibility(i);
-      return;
+
+    public void updateHudYaw(boolean isYaw) {
+        if (isYaw) {
+            updateHudView(isYaw);
+            this.mYawLayout.setVisibility(0);
+            return;
+        }
+        updateHudView(isYaw);
+        this.mYawLayout.setVisibility(8);
     }
-  }
-  
-  public void updateHighWayAlongVisibility(boolean paramBoolean)
-  {
-    this.mHighWayTurnIcon.setVisibility(0);
-    this.mHighWayLeftDistance.setVisibility(0);
-    this.mHighWayGoWhere.setVisibility(0);
-    if (paramBoolean)
-    {
-      this.mHighWayGoTo.setVisibility(8);
-      this.mHighWayExitCode.setVisibility(0);
-      this.mHighWayEnter.setVisibility(0);
-      return;
+
+    public void updateHudView(boolean show) {
+        int visibility = !show ? 0 : 8;
+        if (getCurrentOrientation() == 2) {
+            this.mSpeedLayout.setVisibility(visibility);
+            this.mLeftDistanceLayout.setVisibility(visibility);
+        }
+        this.mHudLayout.setVisibility(visibility);
     }
-    this.mHighWayGoTo.setVisibility(0);
-    this.mHighWayExitCode.setVisibility(8);
-    this.mHighWayEnter.setVisibility(8);
-  }
-  
-  public void updateHighWayVisibility(boolean paramBoolean)
-  {
-    if (paramBoolean == true) {}
-    for (int i = 0;; i = 8)
-    {
-      this.mHighWayLayout.setVisibility(i);
-      return;
+
+    public void updateNormalRoadInfoVisibility(boolean show) {
+        this.mNormalLayout.setVisibility(show ? 0 : 8);
     }
-  }
-  
-  public void updateHudView(boolean paramBoolean)
-  {
-    if (!paramBoolean) {}
-    for (int i = 0;; i = 8)
-    {
-      if (getCurrentOrientation() == 2)
-      {
-        this.mSpeedLayout.setVisibility(i);
-        this.mLeftDistanceLayout.setVisibility(i);
-      }
-      this.mHudLayout.setVisibility(i);
-      return;
+
+    public void updateDirectRoadInfoVisibility(boolean show) {
+        this.mDirectRoadLayout.setVisibility(show ? 0 : 8);
     }
-  }
-  
-  public void updateHudYaw(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      updateHudView(paramBoolean);
-      this.mYawLayout.setVisibility(0);
-      return;
+
+    public void updateHighWayVisibility(boolean show) {
+        this.mHighWayLayout.setVisibility(show ? 0 : 8);
     }
-    updateHudView(paramBoolean);
-    this.mYawLayout.setVisibility(8);
-  }
-  
-  public void updateNormalRoadInfoVisibility(boolean paramBoolean)
-  {
-    if (paramBoolean == true) {}
-    for (int i = 0;; i = 8)
-    {
-      this.mNormalLayout.setVisibility(i);
-      return;
+
+    public void updateHighWayAlongVisibility(boolean show) {
+        this.mHighWayTurnIcon.setVisibility(0);
+        this.mHighWayLeftDistance.setVisibility(0);
+        this.mHighWayGoWhere.setVisibility(0);
+        if (show) {
+            this.mHighWayGoTo.setVisibility(8);
+            this.mHighWayExitCode.setVisibility(0);
+            this.mHighWayEnter.setVisibility(0);
+            return;
+        }
+        this.mHighWayGoTo.setVisibility(0);
+        this.mHighWayExitCode.setVisibility(8);
+        this.mHighWayEnter.setVisibility(8);
     }
-  }
-  
-  public void updateTotalRemainInfo()
-  {
-    if (this.mArrivingTime != null)
-    {
-      String str = RGSimpleGuideModel.getInstance().getArriveTimeString();
-      this.mArrivingTime.setText(String.format(BNStyleManager.getString(1711669875), new Object[] { str }));
+
+    public void updateCurrentCarSpeed() {
+        if (this.mCarSpeed != null) {
+            this.mCarSpeedProgress.setMainProgress(RGHUDDataModel.getProgress(RGAssistGuideModel.getInstance().getCurCarSpeedInt(), RGHUDDataModel.MAX_CAR_SPEED));
+            this.mCarSpeedProgress.setSubProgress(RGHUDDataModel.MAX_CAR_SPEED);
+            this.mCarSpeed.setText(RGAssistGuideModel.getInstance().getCurCarSpeed());
+        }
     }
-    int i;
-    int j;
-    if (this.mLeftTotalDistance != null)
-    {
-      i = RGSimpleGuideModel.getInstance().getTotalRemainDist();
-      if (i / 1000 < 1000) {
-        break label118;
-      }
-      this.mLeftTotalDistance.setTextSize(this.mTextSizeSecond);
-      j = RGHUDDataModel.getProgress(i, RGHUDDataModel.totalDistance);
-      if (i >= 50) {
-        break label133;
-      }
-      this.mLeftDistanceProgress.setMainProgress(0);
+
+    public void updateTotalRemainInfo() {
+        if (this.mArrivingTime != null) {
+            String arriveString = RGSimpleGuideModel.getInstance().getArriveTimeString();
+            this.mArrivingTime.setText(String.format(BNStyleManager.getString(C4048R.string.nsdk_string_hud_arrive_time), new Object[]{arriveString}));
+        }
+        if (this.mLeftTotalDistance != null) {
+            int remainDistanceInt = RGSimpleGuideModel.getInstance().getTotalRemainDist();
+            if (remainDistanceInt / 1000 >= 1000) {
+                this.mLeftTotalDistance.setTextSize((float) this.mTextSizeSecond);
+            } else {
+                this.mLeftTotalDistance.setTextSize((float) this.mTextSizeFirst);
+            }
+            int progress = RGHUDDataModel.getProgress(remainDistanceInt, RGHUDDataModel.totalDistance);
+            if (remainDistanceInt < 50) {
+                this.mLeftDistanceProgress.setMainProgress(0);
+            } else {
+                this.mLeftDistanceProgress.setMainProgress(progress);
+            }
+            this.mLeftDistanceProgress.setSubProgress(100);
+            this.mLeftTotalDistance.setText(RGHUDDataModel.getFormatDistance(remainDistanceInt));
+        }
     }
-    for (;;)
-    {
-      this.mLeftDistanceProgress.setSubProgress(100);
-      this.mLeftTotalDistance.setText(RGHUDDataModel.getFormatDistance(i));
-      return;
-      label118:
-      this.mLeftTotalDistance.setTextSize(this.mTextSizeFirst);
-      break;
-      label133:
-      this.mLeftDistanceProgress.setMainProgress(j);
+
+    public void onOrientationChanged() {
+        if (this.mViewGroup != null) {
+            this.mViewGroup.removeAllViews();
+        }
+        if (getCurrentOrientation() == 1) {
+            JarUtils.inflate((Activity) getContext(), C4048R.layout.nsdk_layout_rg_hud_view, this.mViewGroup);
+            findView();
+            return;
+        }
+        JarUtils.inflate((Activity) getContext(), C4048R.layout.nsdk_layout_rg_hud_view_land, this.mViewGroup);
+        findView();
     }
-  }
+
+    protected void dispatchDraw(Canvas canvas) {
+        if (this.isMirror) {
+            canvas.translate(0.0f, (float) getMeasuredHeight());
+            canvas.scale(1.0f, -1.0f);
+        }
+        super.dispatchDraw(canvas);
+    }
+
+    public void lostGPSSignal() {
+        this.gpsView.setVisibility(0);
+        this.uiView.setVisibility(8);
+    }
+
+    public void gpsSignalRecover() {
+        this.uiView.setVisibility(0);
+        this.gpsView.setVisibility(8);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/hud/RGHUDView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

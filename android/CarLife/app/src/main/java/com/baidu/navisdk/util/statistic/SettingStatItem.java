@@ -4,323 +4,144 @@ import com.baidu.navisdk.BNaviModuleManager;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.statistics.BNStatisticsManager;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
 import com.baidu.navisdk.ui.cruise.view.CruiseMenu;
 import com.baidu.navisdk.ui.routeguide.control.RGRouteSortController;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.PreferenceHelper;
 import java.util.ArrayList;
 import java.util.BitSet;
+import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-public class SettingStatItem
-{
-  private static final String TAG = "SettingStat";
-  private static SettingStatItem instance = null;
-  
-  public static int bitSetToInt(BitSet paramBitSet)
-  {
-    int j = 0;
-    int i = 0;
-    while (i < 32)
-    {
-      int k = j;
-      if (paramBitSet.get(i)) {
-        k = j | 1 << i;
-      }
-      i += 1;
-      j = k;
+public class SettingStatItem {
+    private static final String TAG = "SettingStat";
+    private static SettingStatItem instance = null;
+
+    private SettingStatItem() {
     }
-    return j;
-  }
-  
-  private static int getCruiseSpeekContentIntBits()
-  {
-    BitSet localBitSet = new BitSet(CruiseMenu.sSettingPrefKeys.length);
-    int i = 0;
-    if (i < CruiseMenu.sSettingPrefKeys.length)
-    {
-      if (BNSettingManager.getInt(CruiseMenu.sSettingPrefKeys[i], 0) == 0) {}
-      for (boolean bool = true;; bool = false)
-      {
-        localBitSet.set(i, bool);
-        i += 1;
-        break;
-      }
-    }
-    i = bitSetToInt(localBitSet);
-    LogUtil.e("SettingStat", "cruise speek content bits: " + Integer.toBinaryString(i));
-    return i;
-  }
-  
-  public static SettingStatItem getInstance()
-  {
-    if (instance == null) {
-      instance = new SettingStatItem();
-    }
-    return instance;
-  }
-  
-  private static int getSpeekContentIntBits()
-  {
-    BitSet localBitSet = new BitSet(5);
-    localBitSet.set(0, BNSettingManager.isElecCameraSpeakEnable());
-    localBitSet.set(1, BNSettingManager.isStraightDirectSpeakEnable());
-    localBitSet.set(2, BNSettingManager.isSaftyDriveSpeakEnable());
-    localBitSet.set(3, BNSettingManager.isRoadConditionSpeakEnable());
-    localBitSet.set(4, BNSettingManager.isSpeedCameraSpeakEnable());
-    int i = bitSetToInt(localBitSet);
-    LogUtil.e("SettingStat", "navi speek content bits: " + Integer.toBinaryString(i));
-    return i;
-  }
-  
-  public void onEvent()
-  {
-    ArrayList localArrayList = new ArrayList();
-    if (PreferenceHelper.getInstance(BNaviModuleManager.getContext()).getBoolean("NAVI_ROADCOND_ON_OFF", false))
-    {
-      i = 1;
-      localArrayList.add(new BasicNameValuePair("lk", Integer.toString(i)));
-      i = -1;
-      switch (BNSettingManager.getVoiceMode())
-      {
-      default: 
-        label76:
-        localArrayList.add(new BasicNameValuePair("bb", Integer.toString(i)));
-        switch (BNSettingManager.getIsShowMapSwitch())
-        {
-        case 1: 
-        default: 
-          label124:
-          i = -1;
-          switch (BNSettingManager.getMapMode())
-          {
-          default: 
-            label152:
-            localArrayList.add(new BasicNameValuePair("sj", Integer.toString(i)));
-            i = -1;
-            switch (BNSettingManager.getNaviDayAndNightMode())
-            {
-            default: 
-              label200:
-              localArrayList.add(new BasicNameValuePair("ry", Integer.toString(i)));
-              i = -1;
-              switch (BNSettingManager.getPowerSaveMode())
-              {
-              default: 
-                label248:
-                localArrayList.add(new BasicNameValuePair("sd", Integer.toString(i)));
-                if (BNSettingManager.isAutoUpdateNewData())
-                {
-                  i = 1;
-                  label274:
-                  localArrayList.add(new BasicNameValuePair("zd", Integer.toString(i)));
-                  if (!BNSettingManager.getPrefParkSearch()) {
-                    break label830;
-                  }
-                  i = 1;
-                  label300:
-                  localArrayList.add(new BasicNameValuePair("tc", Integer.toString(i)));
-                  if (!BNSettingManager.getPrefRealEnlargementNavi()) {
-                    break label835;
-                  }
-                  i = 1;
-                  label326:
-                  localArrayList.add(new BasicNameValuePair("sjt", Integer.toString(i)));
-                  if (!BNSettingManager.getColladaStatus()) {
-                    break label840;
-                  }
-                  i = 1;
-                  label352:
-                  localArrayList.add(new BasicNameValuePair("cl", Integer.toString(i)));
-                  if (!BNSettingManager.isAutoLevelMode()) {
-                    break label845;
-                  }
-                  i = 1;
-                  label378:
-                  localArrayList.add(new BasicNameValuePair("al", Integer.toString(i)));
-                  localArrayList.add(new BasicNameValuePair("sort", Integer.toString(RGRouteSortController.getInstance().getPreferValue())));
-                  localArrayList.add(new BasicNameValuePair("pre", Integer.toString(BNRoutePlaner.getInstance().getCalcPreference())));
-                  if (!BNaviModuleManager.isSettingCarPlate()) {
-                    break label850;
-                  }
-                  i = 1;
-                  label450:
-                  localArrayList.add(new BasicNameValuePair("cn", Integer.toString(i)));
-                  if (!BNaviModuleManager.isCarPlateNumComplete()) {
-                    break label855;
-                  }
-                  i = 1;
-                  label476:
-                  localArrayList.add(new BasicNameValuePair("wcn", Integer.toString(i)));
-                  if (BNSettingManager.getPrefRoutPlanMode() != 3) {
-                    break label860;
-                  }
-                  i = 1;
-                  label503:
-                  localArrayList.add(new BasicNameValuePair("ol", Integer.toString(i)));
-                  if (!BNSettingManager.getAutoEnterLightNavi()) {
-                    break label865;
-                  }
-                  i = 1;
-                  label529:
-                  localArrayList.add(new BasicNameValuePair("rd", Integer.toString(i)));
-                  if (BNSettingManager.getIsShowMapSwitch() != 0) {
-                    break label870;
-                  }
-                  i = 1;
-                  label555:
-                  localArrayList.add(new BasicNameValuePair("slk", Integer.toString(i)));
-                  if (!BNSettingManager.isBlueToothPhoneChannel()) {
-                    break label875;
-                  }
-                  i = 1;
-                  label581:
-                  localArrayList.add(new BasicNameValuePair("bl", Integer.toString(i)));
-                  if (!BNSettingManager.getPrefFloatSwitch()) {
-                    break label880;
-                  }
-                  i = 1;
-                  label607:
-                  localArrayList.add(new BasicNameValuePair("bn", Integer.toString(i)));
-                  if (BNSettingManager.getIsShowMapSwitch() != 0) {
-                    break label885;
-                  }
-                  i = 1;
-                  label633:
-                  if (i == 0) {
-                    break label890;
-                  }
-                  i = 0;
-                  label639:
-                  localArrayList.add(new BasicNameValuePair("light_win", Integer.toString(i)));
-                  if (!BNSettingManager.getShowCarLogoToEnd()) {
-                    break label895;
-                  }
-                  i = 1;
-                  label665:
-                  localArrayList.add(new BasicNameValuePair("red_line", Integer.toString(i)));
-                  if (BNSettingManager.getPlayTTsVoiceMode() != 0) {
-                    break label900;
-                  }
-                  i = 1;
-                  label691:
-                  if (i == 0) {
-                    break label905;
-                  }
-                  i = 1;
-                  label697:
-                  localArrayList.add(new BasicNameValuePair("music_mode", Integer.toString(i)));
-                  if (BNSettingManager.getVoiceMode() != 2) {
-                    break label910;
-                  }
-                  i = 1;
-                  label724:
-                  if (i == 0) {
-                    break label915;
-                  }
-                }
-                break;
-              }
-              break;
-            }
-            break;
-          }
-          break;
+
+    public static SettingStatItem getInstance() {
+        if (instance == null) {
+            instance = new SettingStatItem();
         }
-        break;
-      }
+        return instance;
     }
-    label830:
-    label835:
-    label840:
-    label845:
-    label850:
-    label855:
-    label860:
-    label865:
-    label870:
-    label875:
-    label880:
-    label885:
-    label890:
-    label895:
-    label900:
-    label905:
-    label910:
-    label915:
-    for (int i = 0;; i = 1)
-    {
-      localArrayList.add(new BasicNameValuePair("voice_mode", Integer.toString(i)));
-      BNStatisticsManager.getInstance().onEventWithParam(50006, null, localArrayList);
-      return;
-      i = 0;
-      break;
-      i = 2;
-      break label76;
-      i = 0;
-      break label76;
-      i = 1;
-      break label76;
-      break label124;
-      break label124;
-      i = 1;
-      break label152;
-      i = 0;
-      break label152;
-      i = 2;
-      break label200;
-      i = 1;
-      break label200;
-      i = 0;
-      break label200;
-      i = 1;
-      break label248;
-      i = 0;
-      break label248;
-      i = 2;
-      break label248;
-      i = 0;
-      break label274;
-      i = 0;
-      break label300;
-      i = 0;
-      break label326;
-      i = 0;
-      break label352;
-      i = 0;
-      break label378;
-      i = 0;
-      break label450;
-      i = 0;
-      break label476;
-      i = 0;
-      break label503;
-      i = 0;
-      break label529;
-      i = 0;
-      break label555;
-      i = 0;
-      break label581;
-      i = 0;
-      break label607;
-      i = 0;
-      break label633;
-      i = 1;
-      break label639;
-      i = 0;
-      break label665;
-      i = 0;
-      break label691;
-      i = 0;
-      break label697;
-      i = 0;
-      break label724;
+
+    public void onEvent() {
+        ArrayList<NameValuePair> params = new ArrayList();
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_ROADCONDITION, Integer.toString(PreferenceHelper.getInstance(BNaviModuleManager.getContext()).getBoolean("NAVI_ROADCOND_ON_OFF", false) ? 1 : 0)));
+        int voiceMode = -1;
+        switch (BNSettingManager.getVoiceMode()) {
+            case 0:
+                voiceMode = 2;
+                break;
+            case 1:
+                voiceMode = 1;
+                break;
+            case 2:
+                voiceMode = 0;
+                break;
+        }
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_SPEAKMODE, Integer.toString(voiceMode)));
+        switch (BNSettingManager.getIsShowMapSwitch()) {
+            case 0:
+                break;
+            case 2:
+                break;
+        }
+        int mMapMode = -1;
+        switch (BNSettingManager.getMapMode()) {
+            case 1:
+                mMapMode = 1;
+                break;
+            case 2:
+                mMapMode = 0;
+                break;
+        }
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_NAVIGATIONVIEW, Integer.toString(mMapMode)));
+        int dayNightMode = -1;
+        switch (BNSettingManager.getNaviDayAndNightMode()) {
+            case 1:
+                dayNightMode = 0;
+                break;
+            case 2:
+                dayNightMode = 2;
+                break;
+            case 3:
+                dayNightMode = 1;
+                break;
+        }
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_DAYNIGHT, Integer.toString(dayNightMode)));
+        int powSaveMode = -1;
+        switch (BNSettingManager.getPowerSaveMode()) {
+            case 0:
+                powSaveMode = 1;
+                break;
+            case 1:
+                powSaveMode = 2;
+                break;
+            case 2:
+                powSaveMode = 0;
+                break;
+        }
+        params.add(new BasicNameValuePair("sd", Integer.toString(powSaveMode)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_AUTOUPDATE, Integer.toString(BNSettingManager.isAutoUpdateNewData() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_PARKMODE, Integer.toString(BNSettingManager.getPrefParkSearch() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_VIEWENLARGEMENT, Integer.toString(BNSettingManager.getPrefRealEnlargementNavi() ? 1 : 0)));
+        params.add(new BasicNameValuePair("cl", Integer.toString(BNSettingManager.getColladaStatus() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_AUTO_LEVEL, Integer.toString(BNSettingManager.isAutoLevelMode() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_ROUTE_SORT, Integer.toString(RGRouteSortController.getInstance().getPreferValue())));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_ROUTE_PREFER, Integer.toString(BNRoutePlaner.getInstance().getCalcPreference())));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_CAR_PLATE, Integer.toString(BNaviModuleManager.isSettingCarPlate() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_COMPLETE_CAR_PLATE, Integer.toString(BNaviModuleManager.isCarPlateNumComplete() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_ONLINE_ROUTE_FIRST, Integer.toString(BNSettingManager.getPrefRoutPlanMode() == 3 ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_AUTO_ENTER_LIGHT, Integer.toString(BNSettingManager.getAutoEnterLightNavi() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_REMAIN_ROAD_CONDITION_OVERVIEW, Integer.toString(BNSettingManager.getIsShowMapSwitch() == 0 ? 1 : 0)));
+        params.add(new BasicNameValuePair("bl", Integer.toString(BNSettingManager.isBlueToothPhoneChannel() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_BACKGROUND_FLOAT, Integer.toString(BNSettingManager.getPrefFloatSwitch() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_LIGHT_WIN, Integer.toString(BNSettingManager.getIsShowMapSwitch() == 0 ? 0 : 1)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_RED_LINE, Integer.toString(BNSettingManager.getShowCarLogoToEnd() ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_MUSIC_MODE, Integer.toString(BNSettingManager.getPlayTTsVoiceMode() == 0 ? 1 : 0)));
+        params.add(new BasicNameValuePair(NaviStatConstants.K_NSC_KEY_SETTING_VOICE_MODE, Integer.toString(BNSettingManager.getVoiceMode() == 2 ? 0 : 1)));
+        BNStatisticsManager.getInstance().onEventWithParam(NaviStatConstants.K_NSC_ACTION_SETTING, null, params);
     }
-  }
+
+    private static int getSpeekContentIntBits() {
+        BitSet bitSet = new BitSet(5);
+        bitSet.set(0, BNSettingManager.isElecCameraSpeakEnable());
+        bitSet.set(1, BNSettingManager.isStraightDirectSpeakEnable());
+        bitSet.set(2, BNSettingManager.isSaftyDriveSpeakEnable());
+        bitSet.set(3, BNSettingManager.isRoadConditionSpeakEnable());
+        bitSet.set(4, BNSettingManager.isSpeedCameraSpeakEnable());
+        int bits = bitSetToInt(bitSet);
+        LogUtil.m15791e(TAG, "navi speek content bits: " + Integer.toBinaryString(bits));
+        return bits;
+    }
+
+    private static int getCruiseSpeekContentIntBits() {
+        BitSet bitSet = new BitSet(CruiseMenu.sSettingPrefKeys.length);
+        for (int i = 0; i < CruiseMenu.sSettingPrefKeys.length; i++) {
+            boolean z;
+            if (BNSettingManager.getInt(CruiseMenu.sSettingPrefKeys[i], 0) == 0) {
+                z = true;
+            } else {
+                z = false;
+            }
+            bitSet.set(i, z);
+        }
+        int bits = bitSetToInt(bitSet);
+        LogUtil.m15791e(TAG, "cruise speek content bits: " + Integer.toBinaryString(bits));
+        return bits;
+    }
+
+    public static int bitSetToInt(BitSet bitSet) {
+        int bitInteger = 0;
+        for (int i = 0; i < 32; i++) {
+            if (bitSet.get(i)) {
+                bitInteger |= 1 << i;
+            }
+        }
+        return bitInteger;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/statistic/SettingStatItem.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

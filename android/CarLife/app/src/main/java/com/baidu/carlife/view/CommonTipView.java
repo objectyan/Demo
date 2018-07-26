@@ -1,7 +1,6 @@
 package com.baidu.carlife.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -13,197 +12,198 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.baidu.carlife.BaiduNaviApplication;
+import com.baidu.carlife.C0965R;
+import com.baidu.navisdk.util.statistic.datacheck.regular.Regular;
 
-public class CommonTipView
-  extends RelativeLayout
-{
-  public static final int a = 0;
-  public static final int b = 1;
-  public static final int c = 2;
-  private final int d = 0;
-  private final int e = 1;
-  private final int f = 2;
-  private String g;
-  private int h;
-  private int i;
-  private TextView j;
-  private ImageView k;
-  private Button l;
-  private a m;
-  
-  public CommonTipView(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public CommonTipView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public CommonTipView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    a(paramContext);
-  }
-  
-  private void a(Context paramContext)
-  {
-    ((LayoutInflater)paramContext.getSystemService("layout_inflater")).inflate(2130968715, this, true);
-    this.j = ((TextView)findViewById(2131624655));
-    this.k = ((ImageView)findViewById(2131624654));
-    this.l = ((Button)findViewById(2131624656));
-    this.l.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (CommonTipView.a(CommonTipView.this) != null) {
-          CommonTipView.a(CommonTipView.this).a();
-        }
-      }
-    });
-  }
-  
-  private int c(int paramInt)
-  {
-    if (paramInt != 0) {
-      try
-      {
-        String str = BaiduNaviApplication.getInstance().getResources().getResourceTypeName(paramInt);
-        if ("string".equals(str)) {
-          return 1;
-        }
-        boolean bool = "drawable".equals(str);
-        if (bool) {
-          return 2;
-        }
-      }
-      catch (Resources.NotFoundException localNotFoundException) {}
+public class CommonTipView extends RelativeLayout {
+    /* renamed from: a */
+    public static final int f7088a = 0;
+    /* renamed from: b */
+    public static final int f7089b = 1;
+    /* renamed from: c */
+    public static final int f7090c = 2;
+    /* renamed from: d */
+    private final int f7091d;
+    /* renamed from: e */
+    private final int f7092e;
+    /* renamed from: f */
+    private final int f7093f;
+    /* renamed from: g */
+    private String f7094g;
+    /* renamed from: h */
+    private int f7095h;
+    /* renamed from: i */
+    private int f7096i;
+    /* renamed from: j */
+    private TextView f7097j;
+    /* renamed from: k */
+    private ImageView f7098k;
+    /* renamed from: l */
+    private Button f7099l;
+    /* renamed from: m */
+    private C1526a f7100m;
+
+    /* renamed from: com.baidu.carlife.view.CommonTipView$a */
+    public interface C1526a {
+        /* renamed from: a */
+        void mo1575a();
     }
-    return 0;
-  }
-  
-  private void setDefaultTextView()
-  {
-    if (TextUtils.isEmpty(this.g))
-    {
-      this.j.setText(BaiduNaviApplication.getInstance().getApplicationContext().getString(2131296383));
-      return;
+
+    /* renamed from: com.baidu.carlife.view.CommonTipView$1 */
+    class C22081 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ CommonTipView f7087a;
+
+        C22081(CommonTipView this$0) {
+            this.f7087a = this$0;
+        }
+
+        public void onClick(View v) {
+            if (this.f7087a.f7100m != null) {
+                this.f7087a.f7100m.mo1575a();
+            }
+        }
     }
-    this.j.setText(this.g);
-  }
-  
-  public void a()
-  {
-    a(0, false);
-  }
-  
-  public void a(int paramInt)
-  {
-    a(paramInt, false);
-  }
-  
-  public void a(int paramInt1, int paramInt2)
-  {
-    a(BaiduNaviApplication.getInstance().getString(paramInt1), paramInt2);
-  }
-  
-  public void a(int paramInt, boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      this.k.setVisibility(8);
-      this.l.setVisibility(0);
-      if (paramInt == 1) {
-        this.j.setText(2131296385);
-      }
-      while (this.i == 0)
-      {
-        this.l.setText(BaiduNaviApplication.getInstance().getApplicationContext().getString(2131296386));
-        return;
-        if (paramInt == 2) {
-          this.j.setText(2131296384);
+
+    public void setCommonTipCallBack(C1526a commonTipCallBack) {
+        this.f7100m = commonTipCallBack;
+    }
+
+    public CommonTipView(Context context) {
+        this(context, null);
+    }
+
+    public CommonTipView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public CommonTipView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.f7091d = 0;
+        this.f7092e = 1;
+        this.f7093f = 2;
+        m8394a(context);
+    }
+
+    /* renamed from: a */
+    private void m8394a(Context context) {
+        ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(C0965R.layout.common_tip_view, this, true);
+        this.f7097j = (TextView) findViewById(C0965R.id.tv_tip);
+        this.f7098k = (ImageView) findViewById(C0965R.id.iv_tip);
+        this.f7099l = (Button) findViewById(C0965R.id.btn_tip);
+        this.f7099l.setOnClickListener(new C22081(this));
+    }
+
+    /* renamed from: a */
+    public void m8396a() {
+        m8399a(0, false);
+    }
+
+    /* renamed from: a */
+    public void m8401a(boolean needCallBack) {
+        m8399a(0, needCallBack);
+    }
+
+    /* renamed from: a */
+    public void m8397a(int type) {
+        m8399a(type, false);
+    }
+
+    /* renamed from: a */
+    public void m8399a(int type, boolean needCallBack) {
+        if (needCallBack) {
+            this.f7098k.setVisibility(8);
+            this.f7099l.setVisibility(0);
+            if (type == 1) {
+                this.f7097j.setText(C0965R.string.common_error_nonetwork);
+            } else if (type == 2) {
+                this.f7097j.setText(C0965R.string.common_error_nogps);
+            } else {
+                setDefaultTextView();
+            }
+            if (this.f7096i == 0) {
+                this.f7099l.setText(BaiduNaviApplication.getInstance().getApplicationContext().getString(C0965R.string.common_tip_reload));
+                return;
+            } else {
+                this.f7099l.setText(this.f7096i);
+                return;
+            }
+        }
+        this.f7098k.setVisibility(0);
+        this.f7099l.setVisibility(8);
+        if (type == 1) {
+            this.f7097j.setText(C0965R.string.common_error_nonetwork);
+            this.f7098k.setImageResource(C0965R.drawable.com_ic_network_timeout);
+        } else if (type == 2) {
+            this.f7097j.setText(C0965R.string.common_error_nogps);
+            this.f7098k.setImageResource(C0965R.drawable.com_ic_location_unavailable);
         } else {
-          setDefaultTextView();
+            setDefaultTextView();
+            if (this.f7095h == 0) {
+                this.f7098k.setImageResource(C0965R.drawable.com_ic_contents_empty);
+            } else {
+                this.f7098k.setImageResource(this.f7095h);
+            }
         }
-      }
-      this.l.setText(this.i);
-      return;
     }
-    this.k.setVisibility(0);
-    this.l.setVisibility(8);
-    if (paramInt == 1)
-    {
-      this.j.setText(2131296385);
-      this.k.setImageResource(2130838304);
-      return;
+
+    private void setDefaultTextView() {
+        if (TextUtils.isEmpty(this.f7094g)) {
+            this.f7097j.setText(BaiduNaviApplication.getInstance().getApplicationContext().getString(C0965R.string.common_error_empty));
+        } else {
+            this.f7097j.setText(this.f7094g);
+        }
     }
-    if (paramInt == 2)
-    {
-      this.j.setText(2131296384);
-      this.k.setImageResource(2130838293);
-      return;
+
+    /* renamed from: b */
+    public void m8402b() {
+        this.f7099l.performClick();
     }
-    setDefaultTextView();
-    if (this.h == 0)
-    {
-      this.k.setImageResource(2130838267);
-      return;
+
+    /* renamed from: b */
+    public void m8403b(int tipTextId) {
+        m8398a(tipTextId, 0);
     }
-    this.k.setImageResource(this.h);
-  }
-  
-  public void a(String paramString, int paramInt)
-  {
-    this.g = paramString;
-    int n = c(paramInt);
-    if (n == 1)
-    {
-      this.i = paramInt;
-      return;
+
+    /* renamed from: a */
+    public void m8398a(int tipTextId, int resId) {
+        m8400a(BaiduNaviApplication.getInstance().getString(tipTextId), resId);
     }
-    if (n == 2)
-    {
-      this.h = paramInt;
-      return;
+
+    /* renamed from: a */
+    public void m8400a(String tipText, int resId) {
+        this.f7094g = tipText;
+        int type = m8395c(resId);
+        if (type == 1) {
+            this.f7096i = resId;
+        } else if (type == 2) {
+            this.f7095h = resId;
+        } else {
+            this.f7095h = 0;
+            this.f7096i = 0;
+        }
     }
-    this.h = 0;
-    this.i = 0;
-  }
-  
-  public void a(boolean paramBoolean)
-  {
-    a(0, paramBoolean);
-  }
-  
-  public void b()
-  {
-    this.l.performClick();
-  }
-  
-  public void b(int paramInt)
-  {
-    a(paramInt, 0);
-  }
-  
-  public View getFocusView()
-  {
-    return this.l;
-  }
-  
-  public void setCommonTipCallBack(a parama)
-  {
-    this.m = parama;
-  }
-  
-  public static abstract interface a
-  {
-    public abstract void a();
-  }
+
+    /* renamed from: c */
+    private int m8395c(int rId) {
+        if (rId == 0) {
+            return 0;
+        }
+        try {
+            String typeName = BaiduNaviApplication.getInstance().getResources().getResourceTypeName(rId);
+            if (Regular.TYPE_STRING.equals(typeName)) {
+                return 1;
+            }
+            if ("drawable".equals(typeName)) {
+                return 2;
+            }
+            return 0;
+        } catch (NotFoundException e) {
+            return 0;
+        }
+    }
+
+    public View getFocusView() {
+        return this.f7099l;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/CommonTipView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

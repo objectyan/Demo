@@ -1,151 +1,199 @@
 package com.baidu.navisdk.logic;
 
-import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
-import com.baidu.navisdk.BNaviModuleManager;
-import com.baidu.navisdk.util.common.HttpsClient;
-import com.baidu.navisdk.util.common.LogUtil;
-import com.baidu.navisdk.util.common.NetworkUtils;
-import com.baidu.navisdk.util.http.HttpRequestManager;
-import java.net.URI;
-import java.util.List;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class HttpPostDataBase
-  extends CommandBase
-{
-  private static final int K_TIMEOUT_CONNECTION = 3000;
-  private static final int K_TIMEOUT_SOCKET = 5000;
-  private static final String TAG = "HttpPostFileBase";
-  protected JSONObject mJson;
-  
-  protected CommandResult exec()
-  {
-    if (!NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext()))
-    {
-      this.mRet.set(NaviErrCode.getSDKError(1));
-      localObject1 = this.mRet;
-      return (CommandResult)localObject1;
+public abstract class HttpPostDataBase extends CommandBase {
+    private static final int K_TIMEOUT_CONNECTION = 3000;
+    private static final int K_TIMEOUT_SOCKET = 5000;
+    private static final String TAG = "HttpPostFileBase";
+    protected JSONObject mJson;
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    protected com.baidu.navisdk.logic.CommandResult exec() {
+        /* JADX: method processing error */
+/*
+Error: jadx.core.utils.exceptions.JadxRuntimeException: Can't find block by offset: 0x0016 in list [B:19:0x0094]
+	at jadx.core.utils.BlockUtils.getBlockByOffset(BlockUtils.java:43)
+	at jadx.core.dex.instructions.IfNode.initBlocks(IfNode.java:60)
+	at jadx.core.dex.visitors.blocksmaker.BlockFinish.initBlocksInIfNodes(BlockFinish.java:48)
+	at jadx.core.dex.visitors.blocksmaker.BlockFinish.visit(BlockFinish.java:33)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:31)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:17)
+	at jadx.core.ProcessClass.process(ProcessClass.java:34)
+	at jadx.api.JadxDecompiler.processClass(JadxDecompiler.java:282)
+	at jadx.api.JavaClass.decompile(JavaClass.java:62)
+	at jadx.api.JadxDecompiler.lambda$appendSourcesSave$0(JadxDecompiler.java:200)
+*/
+        /*
+        r13 = this;
+        r11 = com.baidu.navisdk.BNaviModuleManager.getContext();
+        r11 = com.baidu.navisdk.util.common.NetworkUtils.isNetworkAvailable(r11);
+        if (r11 != 0) goto L_0x0017;
+    L_0x000a:
+        r11 = r13.mRet;
+        r12 = 1;
+        r12 = com.baidu.navisdk.logic.NaviErrCode.getSDKError(r12);
+        r11.set(r12);
+        r11 = r13.mRet;
+    L_0x0016:
+        return r11;
+    L_0x0017:
+        r3 = com.baidu.navisdk.util.common.HttpsClient.getHttpClient();
+        r10 = r13.getUrl();
+        r7 = r13.getMultipartEntity();
+        r11 = com.baidu.navisdk.util.http.HttpRequestManager.getInstance();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r4 = r11.getHttpPost(r10);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r4.setEntity(r7);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r5 = 0;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r13.mReqData;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r0 = r11.mCookieStore;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r0 == 0) goto L_0x009e;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x0035:
+        r11 = r0.getCookies();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r11 == 0) goto L_0x009e;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x003b:
+        r6 = new org.apache.http.protocol.BasicHttpContext;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r6.<init>();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r0.getCookies();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = 0;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r11.get(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r11 == 0) goto L_0x0070;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x004b:
+        r11 = r0.getCookies();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = 0;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r11.get(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r11 instanceof org.apache.http.impl.cookie.BasicClientCookie;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r11 == 0) goto L_0x0070;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x0058:
+        r11 = r0.getCookies();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = 0;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r11.get(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = (org.apache.http.impl.cookie.BasicClientCookie) r11;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = (org.apache.http.impl.cookie.BasicClientCookie) r11;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = r4.getURI();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = r12.getHost();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11.setDomain(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x0070:
+        r11 = "http.cookie-store";	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r6.setAttribute(r11, r0);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r5 = r3.execute(r4, r6);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x007a:
+        r11 = r5.getStatusLine();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r11.getStatusCode();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = 200; // 0xc8 float:2.8E-43 double:9.9E-322;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r11 == r12) goto L_0x00a3;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x0086:
+        r11 = r13.mRet;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = 5;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = com.baidu.navisdk.logic.NaviErrCode.getAppError(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11.set(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r13.mRet;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r3 == 0) goto L_0x0016;
+    L_0x0094:
+        r12 = r3.getConnectionManager();
+        r12.shutdown();
+        r3 = 0;
+        goto L_0x0016;
+    L_0x009e:
+        r5 = r3.execute(r4);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        goto L_0x007a;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x00a3:
+        r2 = r5.getEntity();	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r2 == 0) goto L_0x00bd;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x00a9:
+        r9 = org.apache.http.util.EntityUtils.toString(r2);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = android.text.TextUtils.isEmpty(r9);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r11 == 0) goto L_0x00d9;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x00b3:
+        r11 = r13.mRet;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = 4;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = com.baidu.navisdk.logic.NaviErrCode.getAppError(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11.set(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+    L_0x00bd:
+        if (r3 == 0) goto L_0x00c7;
+    L_0x00bf:
+        r11 = r3.getConnectionManager();
+        r11.shutdown();
+        r3 = 0;
+    L_0x00c7:
+        r13.parseJson();
+        r11 = r13.mRet;
+        r11 = r11.isSuccess();
+        if (r11 == 0) goto L_0x012d;
+    L_0x00d2:
+        r13.handleSuccess();
+    L_0x00d5:
+        r11 = r13.mRet;
+        goto L_0x0016;
+    L_0x00d9:
+        r8 = new org.json.JSONObject;	 Catch:{ JSONException -> 0x00e6 }
+        r8.<init>(r9);	 Catch:{ JSONException -> 0x00e6 }
+        r13.mJson = r8;	 Catch:{ JSONException -> 0x00e6 }
+        r11 = r13.mRet;	 Catch:{ JSONException -> 0x00e6 }
+        r11.setSuccess();	 Catch:{ JSONException -> 0x00e6 }
+        goto L_0x00bd;
+    L_0x00e6:
+        r1 = move-exception;
+        r11 = r13.mRet;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = 3;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = com.baidu.navisdk.logic.NaviErrCode.getAppError(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11.set(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r13.mRet;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r3 == 0) goto L_0x0016;
+    L_0x00f5:
+        r12 = r3.getConnectionManager();
+        r12.shutdown();
+        r3 = 0;
+        goto L_0x0016;
+    L_0x00ff:
+        r1 = move-exception;
+        r11 = "HttpPostFileBase";	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = "HttpPostDataBase exec exception";	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        com.baidu.navisdk.util.common.LogUtil.m15791e(r11, r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r13.mRet;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = 0;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r12 = com.baidu.navisdk.logic.NaviErrCode.getAppError(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11.set(r12);	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        r11 = r13.mRet;	 Catch:{ Exception -> 0x00ff, all -> 0x0121 }
+        if (r3 == 0) goto L_0x0016;
+    L_0x0117:
+        r12 = r3.getConnectionManager();
+        r12.shutdown();
+        r3 = 0;
+        goto L_0x0016;
+    L_0x0121:
+        r11 = move-exception;
+        if (r3 == 0) goto L_0x012c;
+    L_0x0124:
+        r12 = r3.getConnectionManager();
+        r12.shutdown();
+        r3 = 0;
+    L_0x012c:
+        throw r11;
+    L_0x012d:
+        r13.handleError();
+        goto L_0x00d5;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.navisdk.logic.HttpPostDataBase.exec():com.baidu.navisdk.logic.CommandResult");
     }
-    HttpsClient localHttpsClient = HttpsClient.getHttpClient();
-    Object localObject1 = getUrl();
-    Object localObject5 = getMultipartEntity();
-    for (;;)
-    {
-      try
-      {
-        localObject1 = HttpRequestManager.getInstance().getHttpPost((String)localObject1);
-        ((HttpPost)localObject1).setEntity((HttpEntity)localObject5);
-        localObject5 = this.mReqData.mCookieStore;
-        if ((localObject5 != null) && (((CookieStore)localObject5).getCookies() != null))
-        {
-          BasicHttpContext localBasicHttpContext = new BasicHttpContext();
-          if ((((CookieStore)localObject5).getCookies().get(0) != null) && ((((CookieStore)localObject5).getCookies().get(0) instanceof BasicClientCookie))) {
-            ((BasicClientCookie)((CookieStore)localObject5).getCookies().get(0)).setDomain(((HttpPost)localObject1).getURI().getHost());
-          }
-          localBasicHttpContext.setAttribute("http.cookie-store", localObject5);
-          localObject1 = localHttpsClient.execute((HttpUriRequest)localObject1, localBasicHttpContext);
-          if (((HttpResponse)localObject1).getStatusLine().getStatusCode() != 200)
-          {
-            this.mRet.set(NaviErrCode.getAppError(5));
-            localObject5 = this.mRet;
-            localObject1 = localObject5;
-            return (CommandResult)localObject5;
-          }
-        }
-        else
-        {
-          localObject1 = localHttpsClient.execute((HttpUriRequest)localObject1);
-          continue;
-        }
-        localObject1 = ((HttpResponse)localObject1).getEntity();
-        if (localObject1 != null)
-        {
-          localObject1 = EntityUtils.toString((HttpEntity)localObject1);
-          if (TextUtils.isEmpty((CharSequence)localObject1)) {
-            this.mRet.set(NaviErrCode.getAppError(4));
-          }
-        }
-        else
-        {
-          if (localHttpsClient != null) {
-            localHttpsClient.getConnectionManager().shutdown();
-          }
-          parseJson();
-          if (!this.mRet.isSuccess()) {
-            break label405;
-          }
-          handleSuccess();
-          return this.mRet;
-        }
-        try
-        {
-          this.mJson = new JSONObject((String)localObject1);
-          this.mRet.setSuccess();
-        }
-        catch (JSONException localJSONException)
-        {
-          this.mRet.set(NaviErrCode.getAppError(3));
-          localObject5 = this.mRet;
-          Object localObject2 = localObject5;
-        }
-        return (CommandResult)localObject5;
-      }
-      catch (Exception localException)
-      {
-        LogUtil.e("HttpPostFileBase", "HttpPostDataBase exec exception");
-        this.mRet.set(NaviErrCode.getAppError(0));
-        localObject5 = this.mRet;
-        Object localObject3 = localObject5;
-        return (CommandResult)localObject5;
-      }
-      finally
-      {
-        if (localHttpsClient != null) {
-          localHttpsClient.getConnectionManager().shutdown();
-        }
-      }
-      label405:
-      handleError();
+
+    protected abstract MultipartEntity getMultipartEntity();
+
+    protected abstract String getUrl();
+
+    protected void parseJson() {
     }
-  }
-  
-  protected abstract MultipartEntity getMultipartEntity();
-  
-  protected abstract String getUrl();
-  
-  protected void handleSuccess()
-  {
-    if ((!this.mReqData.mHasMsgSent) && (this.mReqData.mRetryTimes == 1))
-    {
-      Message localMessage = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
-      localMessage.arg1 = 0;
-      localMessage.obj = new RspData(this.mReqData, this.mJson);
-      localMessage.sendToTarget();
-      this.mReqData.mHasMsgSent = true;
+
+    protected void handleSuccess() {
+        if (!this.mReqData.mHasMsgSent && this.mReqData.mRetryTimes == 1) {
+            Message msg = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
+            msg.arg1 = 0;
+            msg.obj = new RspData(this.mReqData, this.mJson);
+            msg.sendToTarget();
+            this.mReqData.mHasMsgSent = true;
+        }
     }
-  }
-  
-  protected void parseJson() {}
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/logic/HttpPostDataBase.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

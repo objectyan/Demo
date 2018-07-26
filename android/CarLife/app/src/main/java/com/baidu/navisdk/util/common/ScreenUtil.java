@@ -1,177 +1,138 @@
 package com.baidu.navisdk.util.common;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.util.DisplayMetrics;
-import android.view.View;
-import android.view.Window;
-import java.lang.reflect.Field;
 
-public class ScreenUtil
-{
-  public static final int DENSITY_DEFAULT = 160;
-  public static final int SCREEN_SIZE_Y_LARGE = 640;
-  private static ScreenUtil mInstance = null;
-  private DisplayMetrics mDM;
-  private int mDPI = 0;
-  private float mDensity = 0.0F;
-  private int mHeightPixels = 0;
-  private int mStatusBarHeight = 0;
-  private int mWidthPixels = 0;
-  private int mWindowHeightPixels = 0;
-  private int mWindowWidthPixels = 0;
-  
-  public static ScreenUtil getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new ScreenUtil();
+public class ScreenUtil {
+    public static final int DENSITY_DEFAULT = 160;
+    public static final int SCREEN_SIZE_Y_LARGE = 640;
+    private static ScreenUtil mInstance = null;
+    private DisplayMetrics mDM;
+    private int mDPI = 0;
+    private float mDensity = 0.0f;
+    private int mHeightPixels = 0;
+    private int mStatusBarHeight = 0;
+    private int mWidthPixels = 0;
+    private int mWindowHeightPixels = 0;
+    private int mWindowWidthPixels = 0;
+
+    private ScreenUtil() {
     }
-    return mInstance;
-  }
-  
-  private int getStatusBarHeightInner(Activity paramActivity)
-  {
-    if (paramActivity == null) {
-      return 0;
-    }
-    try
-    {
-      Class localClass = Class.forName("com.android.internal.R$dimen");
-      Object localObject = localClass.newInstance();
-      int i = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString());
-      i = paramActivity.getResources().getDimensionPixelSize(i);
-      return i;
-    }
-    catch (Exception localException)
-    {
-      Rect localRect = new Rect();
-      paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
-      return localRect.top;
-    }
-  }
-  
-  public int dip2px(float paramFloat)
-  {
-    return (int)(0.5F + this.mDensity * paramFloat);
-  }
-  
-  public int dip2px(int paramInt)
-  {
-    return (int)(0.5F + this.mDensity * paramInt);
-  }
-  
-  public int getDPI()
-  {
-    return this.mDPI;
-  }
-  
-  public float getDensity()
-  {
-    return this.mDensity;
-  }
-  
-  public DisplayMetrics getDisplayMetrics()
-  {
-    return this.mDM;
-  }
-  
-  public int getGuidePanelWidth()
-  {
-    return getHeightPixels() / 4;
-  }
-  
-  public int getHeightPixels()
-  {
-    return this.mHeightPixels;
-  }
-  
-  public int getStatusBarHeight()
-  {
-    return this.mStatusBarHeight;
-  }
-  
-  public int getWidthPixels()
-  {
-    return this.mWidthPixels;
-  }
-  
-  public int getWindowHeight(Activity paramActivity)
-  {
-    return paramActivity.getWindow().getDecorView().getMeasuredHeight();
-  }
-  
-  @Deprecated
-  public int getWindowHeightPixels()
-  {
-    return this.mWindowHeightPixels;
-  }
-  
-  public int getWindowWidth(Activity paramActivity)
-  {
-    return paramActivity.getWindow().getDecorView().getMeasuredWidth();
-  }
-  
-  @Deprecated
-  public int getWindowWidthPixels()
-  {
-    return this.mWindowWidthPixels;
-  }
-  
-  public void init(Activity paramActivity)
-  {
-    if (paramActivity == null) {}
-    for (;;)
-    {
-      return;
-      this.mDM = paramActivity.getResources().getDisplayMetrics();
-      this.mDensity = this.mDM.density;
-      this.mWidthPixels = Math.min(this.mDM.widthPixels, this.mDM.heightPixels);
-      this.mHeightPixels = Math.max(this.mDM.widthPixels, this.mDM.heightPixels);
-      this.mWindowWidthPixels = getWindowWidth(paramActivity);
-      this.mWindowHeightPixels = getWindowHeight(paramActivity);
-      this.mStatusBarHeight = getStatusBarHeightInner(paramActivity);
-      try
-      {
-        PackageUtil.sdkVersion = Integer.parseInt(Build.VERSION.SDK);
-        if (PackageUtil.sdkVersion > 3) {}
-        for (this.mDPI = this.mDM.densityDpi; this.mDPI == 0; this.mDPI = 160)
-        {
-          this.mDPI = 160;
-          return;
+
+    public static ScreenUtil getInstance() {
+        if (mInstance == null) {
+            mInstance = new ScreenUtil();
         }
-      }
-      catch (Exception paramActivity)
-      {
-        for (;;) {}
-      }
+        return mInstance;
     }
-  }
-  
-  public int percentHeight(float paramFloat)
-  {
-    return (int)(getHeightPixels() * paramFloat);
-  }
-  
-  public int percentWidth(float paramFloat)
-  {
-    return (int)(getWidthPixels() * paramFloat);
-  }
-  
-  public int px2dip(float paramFloat)
-  {
-    return (int)(0.5F + paramFloat / this.mDensity);
-  }
-  
-  public int px2dip(int paramInt)
-  {
-    return (int)(0.5F + paramInt / this.mDensity);
-  }
+
+    public void init(Activity activity) {
+        if (activity != null) {
+            this.mDM = activity.getResources().getDisplayMetrics();
+            this.mDensity = this.mDM.density;
+            this.mWidthPixels = Math.min(this.mDM.widthPixels, this.mDM.heightPixels);
+            this.mHeightPixels = Math.max(this.mDM.widthPixels, this.mDM.heightPixels);
+            this.mWindowWidthPixels = getWindowWidth(activity);
+            this.mWindowHeightPixels = getWindowHeight(activity);
+            this.mStatusBarHeight = getStatusBarHeightInner(activity);
+            try {
+                PackageUtil.sdkVersion = Integer.parseInt(VERSION.SDK);
+            } catch (Exception e) {
+            }
+            if (PackageUtil.sdkVersion > 3) {
+                this.mDPI = this.mDM.densityDpi;
+            } else {
+                this.mDPI = 160;
+            }
+            if (this.mDPI == 0) {
+                this.mDPI = 160;
+            }
+        }
+    }
+
+    public DisplayMetrics getDisplayMetrics() {
+        return this.mDM;
+    }
+
+    public float getDensity() {
+        return this.mDensity;
+    }
+
+    public int getDPI() {
+        return this.mDPI;
+    }
+
+    public int getWidthPixels() {
+        return this.mWidthPixels;
+    }
+
+    public int getHeightPixels() {
+        return this.mHeightPixels;
+    }
+
+    public int getStatusBarHeight() {
+        return this.mStatusBarHeight;
+    }
+
+    @Deprecated
+    public int getWindowWidthPixels() {
+        return this.mWindowWidthPixels;
+    }
+
+    @Deprecated
+    public int getWindowHeightPixels() {
+        return this.mWindowHeightPixels;
+    }
+
+    public int dip2px(int dip) {
+        return (int) (0.5f + (this.mDensity * ((float) dip)));
+    }
+
+    public int px2dip(int px) {
+        return (int) (0.5f + (((float) px) / this.mDensity));
+    }
+
+    public int dip2px(float dip) {
+        return (int) (0.5f + (this.mDensity * dip));
+    }
+
+    public int px2dip(float px) {
+        return (int) (0.5f + (px / this.mDensity));
+    }
+
+    public int percentHeight(float percent) {
+        return (int) (((float) getHeightPixels()) * percent);
+    }
+
+    public int percentWidth(float percent) {
+        return (int) (((float) getWidthPixels()) * percent);
+    }
+
+    public int getGuidePanelWidth() {
+        return getHeightPixels() / 4;
+    }
+
+    private int getStatusBarHeightInner(Activity activity) {
+        if (activity == null) {
+            return 0;
+        }
+        try {
+            Class<?> c = Class.forName("com.android.internal.R$dimen");
+            return activity.getResources().getDimensionPixelSize(Integer.parseInt(c.getField("status_bar_height").get(c.newInstance()).toString()));
+        } catch (Exception e) {
+            Rect rect = new Rect();
+            activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+            return rect.top;
+        }
+    }
+
+    public int getWindowWidth(Activity activity) {
+        return activity.getWindow().getDecorView().getMeasuredWidth();
+    }
+
+    public int getWindowHeight(Activity activity) {
+        return activity.getWindow().getDecorView().getMeasuredHeight();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/navisdk/util/common/ScreenUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

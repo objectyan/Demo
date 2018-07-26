@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="drawable" name="bnav_carmode_right_menu_bg">#e516191e</item>
+    <item type="drawable" name="bnav_carmode_right_menu_bg_pressed">#4b444a55</item>
+    <item type="drawable" name="bnav_common_bg_mask_night">#ff23262d</item>
+    <item type="drawable" name="bnav_common_bg_pressed_mask">#ffdfdfdf</item>
+    <item type="drawable" name="bnav_common_bg_pressed_mask_night">#ff161a2a</item>
+    <item type="drawable" name="bnav_dt_start_navi_normal">#ff3477eb</item>
+    <item type="drawable" name="bnav_dt_start_navi_press">#ff2e6bd3</item>
+    <item type="drawable" name="carmode_blue_bg">#ff36bfff</item>
+    <item type="drawable" name="carmode_blue_bg_pressed">#ff009be6</item>
+    <item type="drawable" name="home_notify_news_layout_background">#ff000000</item>
+    <item type="drawable" name="news_list_item_background_carmode">#ff23262d</item>
+    <item type="drawable" name="nsdk_route_preferencd_item_normal">#ffffffff</item>
+    <item type="drawable" name="nsdk_route_preferencd_item_press">#ffdfdfdf</item>
+    <item type="drawable" name="poi_dragon">#fff8f8f8</item>
+    <item type="drawable" name="poi_dragon_night">#ff2c334c</item>
+    <item type="drawable" name="screen_background_light">#ffffffff</item>
+    <item type="drawable" name="search_result_text_focused">#ff0070bf</item>
+    <item type="drawable" name="search_result_text_unfocused">#ff008df2</item>
+    <item type="drawable" name="transparent">#00000000</item>
+</resources>

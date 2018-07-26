@@ -8,151 +8,126 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1260i;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ConnectService
-  extends Service
-{
-  public static final int a = -1;
-  private static final String b = "ConnectService";
-  private static final int c = 100;
-  private HandlerThread d = new HandlerThread("MsgHandlerThread");
-  private a e;
-  private Messenger f;
-  private f g = null;
-  private Handler h = null;
-  private List<Message> i = new LinkedList();
-  private e j = null;
-  
-  private void a()
-  {
-    try
-    {
-      if ((this.g == null) || (this.h == null))
-      {
-        this.g = new f(this);
-        this.h = this.g.a();
-      }
-      if (this.i.size() > 0)
-      {
-        Message localMessage = (Message)this.i.remove(0);
-        this.e.sendMessage(localMessage);
-      }
-      this.j = e.a();
-      this.j.c();
-      this.j.h();
-      return;
-    }
-    catch (Throwable localThrowable)
-    {
-      this.g = null;
-      this.h = null;
-      localThrowable.printStackTrace();
-    }
-  }
-  
-  public IBinder onBind(Intent paramIntent)
-  {
-    i.b("ConnectService", "ConnectService onBind()");
-    return this.f.getBinder();
-  }
-  
-  public void onCreate()
-  {
-    i.b("ConnectService", "ConnectService onCreate()");
-    super.onCreate();
-    this.d.start();
-    this.e = new a(this.d.getLooper());
-    this.f = new Messenger(this.e);
-    a();
-  }
-  
-  public void onDestroy()
-  {
-    i.b("ConnectService", "ConnectService onDestroy()");
-    if (this.j != null)
-    {
-      this.j.d();
-      this.j = null;
-    }
-    super.onDestroy();
-  }
-  
-  public void onRebind(Intent paramIntent)
-  {
-    i.b("ConnectService", "ConnectService onRebind()");
-    super.onRebind(paramIntent);
-  }
-  
-  public void onStart(Intent paramIntent, int paramInt)
-  {
-    i.b("ConnectService", "ConnectService onStart(), startId = " + paramInt);
-  }
-  
-  public int onStartCommand(Intent paramIntent, int paramInt1, int paramInt2)
-  {
-    i.b("ConnectService", "ConnectService onStartCommand()");
-    return super.onStartCommand(paramIntent, paramInt1, paramInt2);
-  }
-  
-  public boolean onUnbind(Intent paramIntent)
-  {
-    i.b("ConnectService", "ConnectService onUnbind()");
-    return super.onUnbind(paramIntent);
-  }
-  
-  private class a
-    extends Handler
-  {
-    public a(Looper paramLooper)
-    {
-      super();
-    }
-    
-    public void handleMessage(Message paramMessage)
-    {
-      if (ConnectService.a(ConnectService.this) != null)
-      {
-        ConnectService.a(ConnectService.this).handleMessage(paramMessage);
-        if (ConnectService.b(ConnectService.this).size() > 0)
-        {
-          paramMessage = (Message)ConnectService.b(ConnectService.this).remove(0);
-          ConnectService.c(ConnectService.this).sendMessage(paramMessage);
+public class ConnectService extends Service {
+    /* renamed from: a */
+    public static final int f3180a = -1;
+    /* renamed from: b */
+    private static final String f3181b = "ConnectService";
+    /* renamed from: c */
+    private static final int f3182c = 100;
+    /* renamed from: d */
+    private HandlerThread f3183d = new HandlerThread("MsgHandlerThread");
+    /* renamed from: e */
+    private C1193a f3184e;
+    /* renamed from: f */
+    private Messenger f3185f;
+    /* renamed from: g */
+    private C1220f f3186g = null;
+    /* renamed from: h */
+    private Handler f3187h = null;
+    /* renamed from: i */
+    private List<Message> f3188i = new LinkedList();
+    /* renamed from: j */
+    private C1218e f3189j = null;
+
+    /* renamed from: com.baidu.carlife.core.connect.ConnectService$a */
+    private class C1193a extends Handler {
+        /* renamed from: a */
+        final /* synthetic */ ConnectService f3179a;
+
+        public C1193a(ConnectService connectService, Looper looper) {
+            this.f3179a = connectService;
+            super(looper);
         }
-        return;
-      }
-      Message localMessage1;
-      Message localMessage2;
-      if (ConnectService.b(ConnectService.this).size() >= 100)
-      {
-        localMessage1 = (Message)ConnectService.b(ConnectService.this).remove(0);
-        localMessage2 = Message.obtain(null, -1, localMessage1);
-      }
-      try
-      {
-        i.e("ConnectService", "Send MSG_SEND_DISCARD, oldMsg what = " + Integer.toString(localMessage1.what));
-        localMessage1.replyTo.send(localMessage2);
-        paramMessage = Message.obtain(paramMessage);
-        ConnectService.b(ConnectService.this).add(paramMessage);
-        ConnectService.d(ConnectService.this);
-        return;
-      }
-      catch (Throwable localThrowable)
-      {
-        for (;;)
-        {
-          i.e("ConnectService", "Send MSG_SEND_DISCARD Error");
-          localThrowable.printStackTrace();
+
+        public void handleMessage(Message msg) {
+            if (this.f3179a.f3187h != null) {
+                this.f3179a.f3187h.handleMessage(msg);
+                if (this.f3179a.f3188i.size() > 0) {
+                    this.f3179a.f3184e.sendMessage((Message) this.f3179a.f3188i.remove(0));
+                    return;
+                }
+                return;
+            }
+            if (this.f3179a.f3188i.size() >= 100) {
+                Message oldMsg = (Message) this.f3179a.f3188i.remove(0);
+                Message replayMsg = Message.obtain(null, -1, oldMsg);
+                try {
+                    C1260i.m4445e(ConnectService.f3181b, "Send MSG_SEND_DISCARD, oldMsg what = " + Integer.toString(oldMsg.what));
+                    oldMsg.replyTo.send(replayMsg);
+                } catch (Throwable t) {
+                    C1260i.m4445e(ConnectService.f3181b, "Send MSG_SEND_DISCARD Error");
+                    t.printStackTrace();
+                }
+            }
+            this.f3179a.f3188i.add(Message.obtain(msg));
+            this.f3179a.m4097a();
         }
-      }
     }
-  }
+
+    /* renamed from: a */
+    private void m4097a() {
+        try {
+            if (this.f3186g == null || this.f3187h == null) {
+                this.f3186g = new C1220f(this);
+                this.f3187h = this.f3186g.m4257a();
+            }
+            if (this.f3188i.size() > 0) {
+                this.f3184e.sendMessage((Message) this.f3188i.remove(0));
+            }
+            this.f3189j = C1218e.m4228a();
+            this.f3189j.m4244c();
+            this.f3189j.m4254h();
+        } catch (Throwable t) {
+            this.f3186g = null;
+            this.f3187h = null;
+            t.printStackTrace();
+        }
+    }
+
+    public IBinder onBind(Intent intent) {
+        C1260i.m4435b(f3181b, "ConnectService onBind()");
+        return this.f3185f.getBinder();
+    }
+
+    public boolean onUnbind(Intent intent) {
+        C1260i.m4435b(f3181b, "ConnectService onUnbind()");
+        return super.onUnbind(intent);
+    }
+
+    public void onRebind(Intent intent) {
+        C1260i.m4435b(f3181b, "ConnectService onRebind()");
+        super.onRebind(intent);
+    }
+
+    public void onCreate() {
+        C1260i.m4435b(f3181b, "ConnectService onCreate()");
+        super.onCreate();
+        this.f3183d.start();
+        this.f3184e = new C1193a(this, this.f3183d.getLooper());
+        this.f3185f = new Messenger(this.f3184e);
+        m4097a();
+    }
+
+    public void onStart(Intent intent, int startId) {
+        C1260i.m4435b(f3181b, "ConnectService onStart(), startId = " + startId);
+    }
+
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        C1260i.m4435b(f3181b, "ConnectService onStartCommand()");
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void onDestroy() {
+        C1260i.m4435b(f3181b, "ConnectService onDestroy()");
+        if (this.f3189j != null) {
+            this.f3189j.m4246d();
+            this.f3189j = null;
+        }
+        super.onDestroy();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/core/connect/ConnectService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

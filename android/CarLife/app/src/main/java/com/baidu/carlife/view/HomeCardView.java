@@ -14,464 +14,476 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.carlife.R.p;
+import com.baidu.carlife.C0965R;
 
-public class HomeCardView
-  extends RelativeLayout
-  implements View.OnTouchListener
-{
-  private static final String a = HomeCardView.class.getSimpleName();
-  private a b;
-  private View c;
-  private View d;
-  private View e;
-  private View f;
-  private View g;
-  private View h;
-  private View i;
-  private View j;
-  private TextView k;
-  private TextView l;
-  private ImageView m;
-  private ImageView n;
-  private ImageView o;
-  private HomeCardMusicMelodyView p;
-  private View.OnClickListener q;
-  private View.OnClickListener r;
-  private View.OnClickListener s;
-  
-  public HomeCardView(Context paramContext)
-  {
-    super(paramContext);
-    a(paramContext);
-  }
-  
-  public HomeCardView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    a(paramContext);
-    a(paramContext, paramAttributeSet);
-  }
-  
-  public HomeCardView a()
-  {
-    this.m.setVisibility(0);
-    return this;
-  }
-  
-  public HomeCardView a(int paramInt)
-  {
-    this.m.setVisibility(paramInt);
-    return this;
-  }
-  
-  public HomeCardView a(Drawable paramDrawable)
-  {
-    if (paramDrawable != null)
-    {
-      this.m.setImageDrawable(paramDrawable);
-      this.m.setVisibility(0);
-      return this;
+public class HomeCardView extends RelativeLayout implements OnTouchListener {
+    /* renamed from: a */
+    private static final String f7136a = HomeCardView.class.getSimpleName();
+    /* renamed from: b */
+    private C2218a f7137b;
+    /* renamed from: c */
+    private View f7138c;
+    /* renamed from: d */
+    private View f7139d;
+    /* renamed from: e */
+    private View f7140e;
+    /* renamed from: f */
+    private View f7141f;
+    /* renamed from: g */
+    private View f7142g;
+    /* renamed from: h */
+    private View f7143h;
+    /* renamed from: i */
+    private View f7144i;
+    /* renamed from: j */
+    private View f7145j;
+    /* renamed from: k */
+    private TextView f7146k;
+    /* renamed from: l */
+    private TextView f7147l;
+    /* renamed from: m */
+    private ImageView f7148m;
+    /* renamed from: n */
+    private ImageView f7149n;
+    /* renamed from: o */
+    private ImageView f7150o;
+    /* renamed from: p */
+    private HomeCardMusicMelodyView f7151p;
+    /* renamed from: q */
+    private OnClickListener f7152q;
+    /* renamed from: r */
+    private OnClickListener f7153r;
+    /* renamed from: s */
+    private OnClickListener f7154s;
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$1 */
+    class C22101 implements OnTouchListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeCardView f7121a;
+
+        C22101(HomeCardView this$0) {
+            this.f7121a = this$0;
+        }
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return true;
+        }
     }
-    this.m.setVisibility(8);
-    return this;
-  }
-  
-  public HomeCardView a(View.OnClickListener paramOnClickListener)
-  {
-    this.q = paramOnClickListener;
-    return this;
-  }
-  
-  public HomeCardView a(a parama)
-  {
-    this.b = parama;
-    return this;
-  }
-  
-  public HomeCardView a(String paramString)
-  {
-    this.k.setText(paramString);
-    return this;
-  }
-  
-  protected void a(Context paramContext)
-  {
-    this.c = ((LayoutInflater)paramContext.getSystemService("layout_inflater")).inflate(2130968623, this, true);
-    this.d = findViewById(2131624243);
-    this.e = findViewById(2131624245);
-    this.f = findViewById(2131624244);
-    this.i = findViewById(2131624248);
-    this.g = findViewById(2131624254);
-    this.h = findViewById(2131624255);
-    this.j = findViewById(2131624253);
-    this.k = ((TextView)findViewById(2131624246));
-    this.l = ((TextView)findViewById(2131624247));
-    this.m = ((ImageView)findViewById(2131624249));
-    this.n = ((ImageView)findViewById(2131624250));
-    this.o = ((ImageView)findViewById(2131624251));
-    this.p = ((HomeCardMusicMelodyView)findViewById(2131624252));
-    this.c.setOnTouchListener(new View.OnTouchListener()
-    {
-      public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-      {
-        return true;
-      }
-    });
-    this.f.setOnTouchListener(this);
-    this.e.setOnTouchListener(this);
-    this.e.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (HomeCardView.a(HomeCardView.this) != null) {
-          HomeCardView.a(HomeCardView.this).onClick(HomeCardView.this);
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$2 */
+    class C22112 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeCardView f7122a;
+
+        C22112(HomeCardView this$0) {
+            this.f7122a = this$0;
         }
-      }
-    });
-    this.f.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (HomeCardView.a(HomeCardView.this) != null) {
-          HomeCardView.a(HomeCardView.this).onClick(HomeCardView.this);
+
+        public void onClick(View v) {
+            if (this.f7122a.f7154s != null) {
+                this.f7122a.f7154s.onClick(this.f7122a);
+            }
         }
-      }
-    });
-    this.m.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (HomeCardView.b(HomeCardView.this) != null) {
-          HomeCardView.b(HomeCardView.this).onClick(paramAnonymousView);
+    }
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$3 */
+    class C22123 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeCardView f7123a;
+
+        C22123(HomeCardView this$0) {
+            this.f7123a = this$0;
         }
-      }
-    });
-    this.n.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (HomeCardView.c(HomeCardView.this) != null) {
-          HomeCardView.c(HomeCardView.this).onClick(paramAnonymousView);
+
+        public void onClick(View v) {
+            if (this.f7123a.f7154s != null) {
+                this.f7123a.f7154s.onClick(this.f7123a);
+            }
         }
-      }
-    });
-    this.m.setOnTouchListener(new View.OnTouchListener()
-    {
-      public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-      {
-        if (HomeCardView.d(HomeCardView.this) == HomeCardView.a.c)
-        {
-          if (paramAnonymousMotionEvent.getAction() != 0) {
-            break label33;
-          }
-          HomeCardView.e(HomeCardView.this).setVisibility(0);
+    }
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$4 */
+    class C22134 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeCardView f7124a;
+
+        C22134(HomeCardView this$0) {
+            this.f7124a = this$0;
         }
-        label33:
-        while (paramAnonymousMotionEvent.getAction() != 1) {
-          return false;
+
+        public void onClick(View v) {
+            if (this.f7124a.f7152q != null) {
+                this.f7124a.f7152q.onClick(v);
+            }
         }
-        HomeCardView.e(HomeCardView.this).setVisibility(8);
+    }
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$5 */
+    class C22145 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeCardView f7125a;
+
+        C22145(HomeCardView this$0) {
+            this.f7125a = this$0;
+        }
+
+        public void onClick(View v) {
+            if (this.f7125a.f7153r != null) {
+                this.f7125a.f7153r.onClick(v);
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$6 */
+    class C22156 implements OnTouchListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeCardView f7126a;
+
+        C22156(HomeCardView this$0) {
+            this.f7126a = this$0;
+        }
+
+        public boolean onTouch(View v, MotionEvent event) {
+            if (this.f7126a.f7137b == C2218a.Discover) {
+                if (event.getAction() == 0) {
+                    this.f7126a.f7142g.setVisibility(0);
+                } else if (event.getAction() == 1) {
+                    this.f7126a.f7142g.setVisibility(8);
+                }
+            }
+            return false;
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$7 */
+    class C22167 implements OnTouchListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeCardView f7127a;
+
+        C22167(HomeCardView this$0) {
+            this.f7127a = this$0;
+        }
+
+        public boolean onTouch(View v, MotionEvent event) {
+            if (this.f7127a.f7137b == C2218a.Carlife) {
+                if (event.getAction() == 0) {
+                    this.f7127a.f7142g.setVisibility(0);
+                } else if (event.getAction() == 1) {
+                    this.f7127a.f7142g.setVisibility(8);
+                }
+            }
+            return false;
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$8 */
+    class C22178 implements OnFocusChangeListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeCardView f7128a;
+
+        C22178(HomeCardView this$0) {
+            this.f7128a = this$0;
+        }
+
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                this.f7128a.f7142g.setVisibility(8);
+                this.f7128a.f7143h.setVisibility(0);
+                return;
+            }
+            this.f7128a.f7143h.setVisibility(8);
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.view.HomeCardView$a */
+    public enum C2218a {
+        Navi("Navi"),
+        Music("Music"),
+        Discover("Discover"),
+        Carlife("Carlife"),
+        ExitCarlife("ExitCarlife");
+        
+        /* renamed from: f */
+        private String f7135f;
+
+        private C2218a(String type) {
+            this.f7135f = type;
+        }
+
+        /* renamed from: a */
+        public synchronized String m8409a() {
+            return this.f7135f;
+        }
+
+        /* renamed from: a */
+        public synchronized void m8410a(String type) {
+            this.f7135f = type;
+        }
+    }
+
+    public HomeCardView(Context context) {
+        super(context);
+        m8423a(context);
+    }
+
+    public HomeCardView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        m8423a(context);
+        m8424a(context, attrs);
+    }
+
+    /* renamed from: a */
+    protected void m8423a(Context context) {
+        this.f7138c = ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(C0965R.layout.carlife_common_home_card, this, true);
+        this.f7139d = findViewById(C0965R.id.home_card_ll);
+        this.f7140e = findViewById(C0965R.id.home_card_up_ll);
+        this.f7141f = findViewById(C0965R.id.home_card_content_ll);
+        this.f7144i = findViewById(C0965R.id.home_card_middle_ll);
+        this.f7142g = findViewById(C0965R.id.card_press_view);
+        this.f7143h = findViewById(C0965R.id.card_focus_view);
+        this.f7145j = findViewById(C0965R.id.red_point);
+        this.f7146k = (TextView) findViewById(C0965R.id.tv_home_card_up_title);
+        this.f7147l = (TextView) findViewById(C0965R.id.tv_home_card_up_info);
+        this.f7148m = (ImageView) findViewById(C0965R.id.iv_home_card_middle_first);
+        this.f7149n = (ImageView) findViewById(C0965R.id.iv_home_card_middle_secend);
+        this.f7150o = (ImageView) findViewById(C0965R.id.iv_home_card_vehicle_logo);
+        this.f7151p = (HomeCardMusicMelodyView) findViewById(C0965R.id.music_melody);
+        this.f7138c.setOnTouchListener(new C22101(this));
+        this.f7141f.setOnTouchListener(this);
+        this.f7140e.setOnTouchListener(this);
+        this.f7140e.setOnClickListener(new C22112(this));
+        this.f7141f.setOnClickListener(new C22123(this));
+        this.f7148m.setOnClickListener(new C22134(this));
+        this.f7149n.setOnClickListener(new C22145(this));
+        this.f7148m.setOnTouchListener(new C22156(this));
+        this.f7150o.setOnTouchListener(new C22167(this));
+        setOnFocusChangeListener(new C22178(this));
+    }
+
+    public void setFocusViewGone() {
+        this.f7143h.setVisibility(8);
+    }
+
+    public void setOnClickListener(OnClickListener l) {
+        super.setOnClickListener(l);
+        this.f7154s = l;
+    }
+
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == 0) {
+            this.f7142g.setVisibility(0);
+        } else if (event.getAction() == 1) {
+            this.f7142g.setVisibility(8);
+        }
         return false;
-      }
-    });
-    this.o.setOnTouchListener(new View.OnTouchListener()
-    {
-      public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-      {
-        if (HomeCardView.d(HomeCardView.this) == HomeCardView.a.d)
-        {
-          if (paramAnonymousMotionEvent.getAction() != 0) {
-            break label33;
-          }
-          HomeCardView.e(HomeCardView.this).setVisibility(0);
+    }
+
+    /* renamed from: a */
+    protected void m8424a(Context context, AttributeSet attrs) {
+        if (attrs != null) {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, C0965R.C0963p.HomeCardView);
+            String cardType = typedArray.getString(7);
+            if (!TextUtils.isEmpty(cardType)) {
+                if (C2218a.Navi.m8409a().equals(cardType)) {
+                    this.f7137b = C2218a.Navi;
+                } else if (C2218a.Music.m8409a().equals(cardType)) {
+                    this.f7137b = C2218a.Music;
+                } else if (C2218a.Discover.m8409a().equals(cardType)) {
+                    this.f7137b = C2218a.Discover;
+                } else if (C2218a.Carlife.m8409a().equals(cardType)) {
+                    this.f7137b = C2218a.Carlife;
+                } else if (C2218a.ExitCarlife.m8409a().equals(cardType)) {
+                    this.f7137b = C2218a.ExitCarlife;
+                }
+            }
+            Drawable background = typedArray.getDrawable(0);
+            if (background != null) {
+                this.f7139d.setBackground(background);
+            }
+            if (this.f7137b == C2218a.Carlife) {
+                Drawable vehicleName = typedArray.getDrawable(1);
+                Drawable vehicleLogo = typedArray.getDrawable(2);
+                this.f7146k.setText(typedArray.getString(3));
+                if (vehicleName != null) {
+                    this.f7140e.setBackground(vehicleName);
+                }
+                if (vehicleLogo != null) {
+                    this.f7150o.setImageDrawable(vehicleLogo);
+                }
+                this.f7150o.setVisibility(0);
+                this.f7144i.setVisibility(8);
+            } else {
+                this.f7150o.setVisibility(8);
+                this.f7144i.setVisibility(0);
+                String title = typedArray.getString(3);
+                String info = typedArray.getString(4);
+                this.f7146k.setText(title);
+                this.f7147l.setText(info);
+                Drawable first = typedArray.getDrawable(5);
+                Drawable secend = typedArray.getDrawable(6);
+                if (first != null) {
+                    this.f7148m.setImageDrawable(first);
+                    this.f7148m.setVisibility(0);
+                } else {
+                    this.f7148m.setVisibility(8);
+                }
+                if (secend != null) {
+                    this.f7149n.setImageDrawable(secend);
+                    this.f7149n.setVisibility(0);
+                } else {
+                    this.f7149n.setVisibility(8);
+                }
+            }
+            typedArray.recycle();
         }
-        label33:
-        while (paramAnonymousMotionEvent.getAction() != 1) {
-          return false;
+    }
+
+    /* renamed from: a */
+    public HomeCardView m8421a(C2218a cardType) {
+        this.f7137b = cardType;
+        return this;
+    }
+
+    /* renamed from: a */
+    public HomeCardView m8422a(String title) {
+        this.f7146k.setText(title);
+        return this;
+    }
+
+    /* renamed from: b */
+    public HomeCardView m8429b(String info) {
+        this.f7147l.setText(info);
+        return this;
+    }
+
+    /* renamed from: a */
+    public HomeCardView m8418a(int visibility) {
+        this.f7148m.setVisibility(visibility);
+        return this;
+    }
+
+    /* renamed from: a */
+    public HomeCardView m8417a() {
+        this.f7148m.setVisibility(0);
+        return this;
+    }
+
+    /* renamed from: b */
+    public HomeCardView m8425b() {
+        this.f7149n.setVisibility(0);
+        return this;
+    }
+
+    /* renamed from: c */
+    public HomeCardView m8430c() {
+        this.f7148m.setVisibility(8);
+        return this;
+    }
+
+    /* renamed from: d */
+    public HomeCardView m8435d() {
+        this.f7149n.setVisibility(8);
+        return this;
+    }
+
+    /* renamed from: a */
+    public HomeCardView m8419a(Drawable drawable) {
+        if (drawable != null) {
+            this.f7148m.setImageDrawable(drawable);
+            this.f7148m.setVisibility(0);
+        } else {
+            this.f7148m.setVisibility(8);
         }
-        HomeCardView.e(HomeCardView.this).setVisibility(8);
-        return false;
-      }
-    });
-    setOnFocusChangeListener(new View.OnFocusChangeListener()
-    {
-      public void onFocusChange(View paramAnonymousView, boolean paramAnonymousBoolean)
-      {
-        if (paramAnonymousBoolean)
-        {
-          HomeCardView.e(HomeCardView.this).setVisibility(8);
-          HomeCardView.f(HomeCardView.this).setVisibility(0);
-          return;
+        return this;
+    }
+
+    /* renamed from: b */
+    public HomeCardView m8426b(int resId) {
+        this.f7148m.setImageResource(resId);
+        return this;
+    }
+
+    /* renamed from: b */
+    public HomeCardView m8427b(Drawable drawable) {
+        if (drawable != null) {
+            this.f7149n.setImageDrawable(drawable);
+            this.f7149n.setVisibility(0);
+        } else {
+            this.f7149n.setVisibility(8);
         }
-        HomeCardView.f(HomeCardView.this).setVisibility(8);
-      }
-    });
-  }
-  
-  protected void a(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    if (paramAttributeSet == null) {
-      return;
+        return this;
     }
-    paramContext = paramContext.obtainStyledAttributes(paramAttributeSet, R.p.HomeCardView);
-    paramAttributeSet = paramContext.getString(7);
-    Object localObject;
-    if (!TextUtils.isEmpty(paramAttributeSet))
-    {
-      if (a.a.a().equals(paramAttributeSet)) {
-        this.b = a.a;
-      }
+
+    /* renamed from: c */
+    public HomeCardView m8431c(int resId) {
+        this.f7149n.setImageResource(resId);
+        return this;
     }
-    else
-    {
-      paramAttributeSet = paramContext.getDrawable(0);
-      if (paramAttributeSet != null) {
-        this.d.setBackground(paramAttributeSet);
-      }
-      if (this.b != a.d) {
-        break label242;
-      }
-      paramAttributeSet = paramContext.getDrawable(1);
-      localObject = paramContext.getDrawable(2);
-      String str = paramContext.getString(3);
-      this.k.setText(str);
-      if (paramAttributeSet != null) {
-        this.e.setBackground(paramAttributeSet);
-      }
-      if (localObject != null) {
-        this.o.setImageDrawable((Drawable)localObject);
-      }
-      this.o.setVisibility(0);
-      this.i.setVisibility(8);
+
+    /* renamed from: d */
+    public HomeCardView m8436d(int visibility) {
+        this.f7145j.setVisibility(visibility);
+        return this;
     }
-    for (;;)
-    {
-      paramContext.recycle();
-      return;
-      if (a.b.a().equals(paramAttributeSet))
-      {
-        this.b = a.b;
-        break;
-      }
-      if (a.c.a().equals(paramAttributeSet))
-      {
-        this.b = a.c;
-        break;
-      }
-      if (a.d.a().equals(paramAttributeSet))
-      {
-        this.b = a.d;
-        break;
-      }
-      if (!a.e.a().equals(paramAttributeSet)) {
-        break;
-      }
-      this.b = a.e;
-      break;
-      label242:
-      this.o.setVisibility(8);
-      this.i.setVisibility(0);
-      paramAttributeSet = paramContext.getString(3);
-      localObject = paramContext.getString(4);
-      this.k.setText(paramAttributeSet);
-      this.l.setText((CharSequence)localObject);
-      paramAttributeSet = paramContext.getDrawable(5);
-      localObject = paramContext.getDrawable(6);
-      if (paramAttributeSet != null)
-      {
-        this.m.setImageDrawable(paramAttributeSet);
-        this.m.setVisibility(0);
-      }
-      for (;;)
-      {
-        if (localObject == null) {
-          break label355;
-        }
-        this.n.setImageDrawable((Drawable)localObject);
-        this.n.setVisibility(0);
-        break;
-        this.m.setVisibility(8);
-      }
-      label355:
-      this.n.setVisibility(8);
+
+    /* renamed from: c */
+    public HomeCardView m8432c(Drawable drawable) {
+        this.f7150o.setImageDrawable(drawable);
+        return this;
     }
-  }
-  
-  public HomeCardView b()
-  {
-    this.n.setVisibility(0);
-    return this;
-  }
-  
-  public HomeCardView b(int paramInt)
-  {
-    this.m.setImageResource(paramInt);
-    return this;
-  }
-  
-  public HomeCardView b(Drawable paramDrawable)
-  {
-    if (paramDrawable != null)
-    {
-      this.n.setImageDrawable(paramDrawable);
-      this.n.setVisibility(0);
-      return this;
+
+    /* renamed from: e */
+    public HomeCardView m8438e(int resId) {
+        this.f7150o.setImageResource(resId);
+        return this;
     }
-    this.n.setVisibility(8);
-    return this;
-  }
-  
-  public HomeCardView b(View.OnClickListener paramOnClickListener)
-  {
-    this.r = paramOnClickListener;
-    return this;
-  }
-  
-  public HomeCardView b(String paramString)
-  {
-    this.l.setText(paramString);
-    return this;
-  }
-  
-  public HomeCardView c()
-  {
-    this.m.setVisibility(8);
-    return this;
-  }
-  
-  public HomeCardView c(int paramInt)
-  {
-    this.n.setImageResource(paramInt);
-    return this;
-  }
-  
-  public HomeCardView c(Drawable paramDrawable)
-  {
-    this.o.setImageDrawable(paramDrawable);
-    return this;
-  }
-  
-  public HomeCardView c(View.OnClickListener paramOnClickListener)
-  {
-    this.o.setOnClickListener(paramOnClickListener);
-    return this;
-  }
-  
-  public HomeCardView c(String paramString)
-  {
-    this.k.setText(paramString);
-    this.e.setBackground(null);
-    return this;
-  }
-  
-  public HomeCardView d()
-  {
-    this.n.setVisibility(8);
-    return this;
-  }
-  
-  public HomeCardView d(int paramInt)
-  {
-    this.j.setVisibility(paramInt);
-    return this;
-  }
-  
-  public HomeCardView d(Drawable paramDrawable)
-  {
-    this.e.setBackground(paramDrawable);
-    this.k.setText("");
-    return this;
-  }
-  
-  public HomeCardView e(int paramInt)
-  {
-    this.o.setImageResource(paramInt);
-    return this;
-  }
-  
-  public HomeCardView f(int paramInt)
-  {
-    this.e.setBackgroundResource(paramInt);
-    this.k.setText("");
-    return this;
-  }
-  
-  public HomeCardView g(int paramInt)
-  {
-    this.p.setVisibility(paramInt);
-    return this;
-  }
-  
-  public HomeCardMusicMelodyView getMusicMelody()
-  {
-    return this.p;
-  }
-  
-  public boolean onTouch(View paramView, MotionEvent paramMotionEvent)
-  {
-    if (paramMotionEvent.getAction() == 0) {
-      this.g.setVisibility(0);
+
+    /* renamed from: d */
+    public HomeCardView m8437d(Drawable drawable) {
+        this.f7140e.setBackground(drawable);
+        this.f7146k.setText("");
+        return this;
     }
-    while (paramMotionEvent.getAction() != 1) {
-      return false;
+
+    /* renamed from: f */
+    public HomeCardView m8439f(int resId) {
+        this.f7140e.setBackgroundResource(resId);
+        this.f7146k.setText("");
+        return this;
     }
-    this.g.setVisibility(8);
-    return false;
-  }
-  
-  public void setFocusViewGone()
-  {
-    this.h.setVisibility(8);
-  }
-  
-  public void setOnClickListener(View.OnClickListener paramOnClickListener)
-  {
-    super.setOnClickListener(paramOnClickListener);
-    this.s = paramOnClickListener;
-  }
-  
-  public static enum a
-  {
-    private String f;
-    
-    private a(String paramString)
-    {
-      this.f = paramString;
+
+    /* renamed from: c */
+    public HomeCardView m8434c(String name) {
+        this.f7146k.setText(name);
+        this.f7140e.setBackground(null);
+        return this;
     }
-    
-    public String a()
-    {
-      try
-      {
-        String str = this.f;
-        return str;
-      }
-      finally
-      {
-        localObject = finally;
-        throw ((Throwable)localObject);
-      }
+
+    /* renamed from: g */
+    public HomeCardView m8440g(int visibility) {
+        this.f7151p.setVisibility(visibility);
+        return this;
     }
-    
-    public void a(String paramString)
-    {
-      try
-      {
-        this.f = paramString;
-        return;
-      }
-      finally
-      {
-        paramString = finally;
-        throw paramString;
-      }
+
+    public HomeCardMusicMelodyView getMusicMelody() {
+        return this.f7151p;
     }
-  }
+
+    /* renamed from: a */
+    public HomeCardView m8420a(OnClickListener listener) {
+        this.f7152q = listener;
+        return this;
+    }
+
+    /* renamed from: b */
+    public HomeCardView m8428b(OnClickListener listener) {
+        this.f7153r = listener;
+        return this;
+    }
+
+    /* renamed from: c */
+    public HomeCardView m8433c(OnClickListener listener) {
+        this.f7150o.setOnClickListener(listener);
+        return this;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/HomeCardView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -9,22 +9,29 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.baidu.baidumaps.p042f.p043a.p044a.C0705a;
 import com.baidu.baidunavis.control.NavMapManager;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.g;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.p078f.C1436a;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
 import com.baidu.mapframework.common.mapview.MapViewConfig.PositionStatus;
 import com.baidu.navi.controller.PoiController;
 import com.baidu.navi.fragment.MapContentFragment;
+import com.baidu.navi.fragment.NameSearchFragment;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navi.view.CarmodePoiDetailView;
 import com.baidu.navi.view.CarmodePoiListView;
-import com.baidu.navi.view.MapControlPanel;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.base.BNSubject;
 import com.baidu.navisdk.comapi.mapcontrol.BNMapController;
 import com.baidu.navisdk.comapi.mapcontrol.BNMapObserver;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams.BundleKey;
 import com.baidu.navisdk.comapi.userdata.BNFavoriteManager;
+import com.baidu.navisdk.comapi.userdata.FavoriteParams.Key;
 import com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandController;
 import com.baidu.navisdk.model.datastruct.FavoritePoiInfo;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
@@ -37,756 +44,641 @@ import com.baidu.navisdk.util.logic.BNLocationManagerProxy;
 import com.baidu.nplatform.comapi.MapItem;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import com.baidu.nplatform.comapi.map.MapController;
-import com.baidu.nplatform.comapi.map.MapController.MultiTouch;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarModePoiDetailFragment
-  extends MapContentFragment
-{
-  public static final int INCOMING_BROWSE_FAVORITE = 86;
-  public static final int INCOMING_BROWSE_MAP_ANTIGEO = 81;
-  public static final int INCOMING_BROWSE_MAP_POIPICK = 82;
-  public static final int INCOMING_FAVORITE = 85;
-  public static final int INCOMING_INTENT_API = 87;
-  public static final int INCOMING_SEARCH_RESULT = 83;
-  public static final int INCOMING_STREETSCAPE = 84;
-  public static final String INCOMING_TYPE = "incoming_type";
-  public static final String ISFAVPOI = "ISFAVPOI";
-  public static final String ISMYPOSITION = "ISMYPOSITION";
-  public static final String KEY_CHILD_COUNT_ARRAY = "child_count_array";
-  public static final String KEY_CHILD_START_ARRAY = "child_start_array";
-  public static final String KEY_CHILD_START_POI = "child_start_poi";
-  public static final String KEY_CURRENT_CHILD_COUNT = "current_child_count";
-  public static final String KEY_CURRENT_PARENT_POSITION = "current_parent_position";
-  public static final String KEY_CURRENT_POI = "current_poi";
-  public static final String KEY_FC_TYPE = "fc_type";
-  public static final String KEY_LATITUDE_E6 = "lat";
-  public static final String KEY_LONGITUDE_E6 = "lon";
-  public static final String KEY_PARENT_POSITION_ARRAY = "parent_position_array";
-  public static final String KEY_SHORT_URI = "short_uri";
-  public static final String SEACHR_POI_DETAIL_NEWER_GUIDE_KEY = "search_poi_detail_newer_key";
-  public static final String SEARCH_RESULT_MODE = "search_result_mode";
-  private static final String TAG = "PoiSearch";
-  private ArrayList<SearchPoi> ParChildPoi;
-  private int id = 0;
-  private BNMapObserver mBNMapObserver = new BNMapObserver()
-  {
-    public void update(BNSubject paramAnonymousBNSubject, int paramAnonymousInt1, int paramAnonymousInt2, Object paramAnonymousObject)
-    {
-      if (2 == paramAnonymousInt1) {
-        switch (paramAnonymousInt2)
-        {
+public class CarModePoiDetailFragment extends MapContentFragment {
+    public static final int INCOMING_BROWSE_FAVORITE = 86;
+    public static final int INCOMING_BROWSE_MAP_ANTIGEO = 81;
+    public static final int INCOMING_BROWSE_MAP_POIPICK = 82;
+    public static final int INCOMING_FAVORITE = 85;
+    public static final int INCOMING_INTENT_API = 87;
+    public static final int INCOMING_SEARCH_RESULT = 83;
+    public static final int INCOMING_STREETSCAPE = 84;
+    public static final String INCOMING_TYPE = "incoming_type";
+    public static final String ISFAVPOI = "ISFAVPOI";
+    public static final String ISMYPOSITION = "ISMYPOSITION";
+    public static final String KEY_CHILD_COUNT_ARRAY = "child_count_array";
+    public static final String KEY_CHILD_START_ARRAY = "child_start_array";
+    public static final String KEY_CHILD_START_POI = "child_start_poi";
+    public static final String KEY_CURRENT_CHILD_COUNT = "current_child_count";
+    public static final String KEY_CURRENT_PARENT_POSITION = "current_parent_position";
+    public static final String KEY_CURRENT_POI = "current_poi";
+    public static final String KEY_FC_TYPE = "fc_type";
+    public static final String KEY_LATITUDE_E6 = "lat";
+    public static final String KEY_LONGITUDE_E6 = "lon";
+    public static final String KEY_PARENT_POSITION_ARRAY = "parent_position_array";
+    public static final String KEY_SHORT_URI = "short_uri";
+    public static final String SEACHR_POI_DETAIL_NEWER_GUIDE_KEY = "search_poi_detail_newer_key";
+    public static final String SEARCH_RESULT_MODE = "search_result_mode";
+    private static final String TAG = "PoiSearch";
+    private ArrayList<SearchPoi> ParChildPoi;
+    private int id = 0;
+    private BNMapObserver mBNMapObserver = new C39103();
+    private View mBack;
+    private int[] mChildCnt = new int[200];
+    private int[] mChildIndex = new int[200];
+    private int mFCType = -1;
+    private ImageView mIvBack;
+    private View mLocation;
+    private C1443g mMiddleFocusArea;
+    private CarmodePoiDetailView mPoiDetailView;
+    private ArrayList<SearchPoi> mPoiList;
+    private CarmodePoiListView mPoiListView;
+    private C1443g mRightFocusArea;
+    private int mSearchRsultNetMode = 0;
+    private ViewGroup mViewGroup;
+    private ImageView mZoomInBtnView;
+    private ImageView mZoomOutBtnView;
+    private long xOffset = ((long) (ScreenUtil.getInstance().dip2px(-250) / 2));
+    private long yOffset = ((long) (ScreenUtil.getInstance().dip2px(0) / 2));
+
+    /* renamed from: com.baidu.navi.fragment.carmode.CarModePoiDetailFragment$1 */
+    class C39081 implements OnTouchListener {
+        C39081() {
         }
-      }
-      while (1 != paramAnonymousInt1)
-      {
-        return;
-        i.e("POI", "BNMapObserver.EventGesture.EVENT_LONGPRESS");
-        paramAnonymousBNSubject = (MotionEvent)paramAnonymousObject;
-        CarModePoiDetailFragment.this.handleLongPress(paramAnonymousBNSubject);
-        return;
-      }
-      switch (paramAnonymousInt2)
-      {
-      default: 
-        return;
-      case 257: 
-        i.e("POI", "BNMapObserver.EventGesture.EVENT_CLICKED_POI_FINISHED");
-        PoiController.getInstance().focusItem(true);
-        return;
-      case 264: 
-        i.e("POI", "BNMapObserver.EventGesture.EVENT_CLICKED_BASE_POI_LAYER");
-        CarModePoiDetailFragment.this.handleClickBasePoiLayer((MapItem)paramAnonymousObject);
-        return;
-      case 265: 
-        CarModePoiDetailFragment.this.handleClickPoiBkgLayer((MapItem)paramAnonymousObject);
-        return;
-      case 276: 
-        CarModePoiDetailFragment.this.handleClickFavPoiLayer((MapItem)paramAnonymousObject);
-        return;
-      }
-      i.e("POI", "BNMapObserver.EventGesture.EVENT_CLICKED_POI_LAYER");
-      CarModePoiDetailFragment.this.handleClickPoiLayer((MapItem)paramAnonymousObject);
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return true;
+        }
     }
-  };
-  private View mBack;
-  private int[] mChildCnt = new int['È'];
-  private int[] mChildIndex = new int['È'];
-  private int mFCType = -1;
-  private ImageView mIvBack;
-  private View mLocation;
-  private g mMiddleFocusArea;
-  private CarmodePoiDetailView mPoiDetailView;
-  private ArrayList<SearchPoi> mPoiList;
-  private CarmodePoiListView mPoiListView;
-  private g mRightFocusArea;
-  private int mSearchRsultNetMode = 0;
-  private ViewGroup mViewGroup;
-  private ImageView mZoomInBtnView;
-  private ImageView mZoomOutBtnView;
-  private long xOffset = ScreenUtil.getInstance().dip2px(65286) / 2;
-  private long yOffset = ScreenUtil.getInstance().dip2px(0) / 2;
-  
-  private View.OnClickListener getBackBtnOnclickListner()
-  {
-    new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        CarModePoiDetailFragment.this.onBackPressed();
-      }
-    };
-  }
-  
-  private void getBundle()
-  {
-    switch (this.mShowBundle.getInt("incoming_type"))
-    {
-    default: 
-      onBackPressed();
-      return;
-    case 81: 
-      handleComeFromBrowsermapAntigeo();
-      return;
-    case 82: 
-      handleComeFromBrowsermapPickpoint();
-      return;
-    case 84: 
-      i.e("PoiSearch", "from streetscape");
-      onBackPressed();
-      return;
-    case 83: 
-      handleComeFromSearchResult();
-      return;
-    case 85: 
-      i.e("PoiSearch", "from favorite");
-      handleComeFromFavorite();
-      return;
-    case 86: 
-      handleBrowseFavPoi();
-      return;
+
+    /* renamed from: com.baidu.navi.fragment.carmode.CarModePoiDetailFragment$2 */
+    class C39092 implements OnClickListener {
+        C39092() {
+        }
+
+        public void onClick(View v) {
+            CarModePoiDetailFragment.this.onBackPressed();
+        }
     }
-    handleComeFromIntentApi();
-  }
-  
-  private SearchPoi getCurrentPoi()
-  {
-    if (this.mPoiDetailView.getVisibility() == 0) {
-      return this.mPoiDetailView.getSearchPoi();
+
+    /* renamed from: com.baidu.navi.fragment.carmode.CarModePoiDetailFragment$3 */
+    class C39103 implements BNMapObserver {
+        C39103() {
+        }
+
+        public void update(BNSubject o, int type, int event, Object arg) {
+            if (2 == type) {
+                switch (event) {
+                    case 517:
+                        C1260i.e("POI", "BNMapObserver.EventGesture.EVENT_LONGPRESS");
+                        CarModePoiDetailFragment.this.handleLongPress((MotionEvent) arg);
+                        return;
+                    default:
+                        return;
+                }
+            } else if (1 == type) {
+                switch (event) {
+                    case 257:
+                        C1260i.e("POI", "BNMapObserver.EventGesture.EVENT_CLICKED_POI_FINISHED");
+                        PoiController.getInstance().focusItem(true);
+                        return;
+                    case 264:
+                        C1260i.e("POI", "BNMapObserver.EventGesture.EVENT_CLICKED_BASE_POI_LAYER");
+                        CarModePoiDetailFragment.this.handleClickBasePoiLayer((MapItem) arg);
+                        return;
+                    case 265:
+                        CarModePoiDetailFragment.this.handleClickPoiBkgLayer((MapItem) arg);
+                        return;
+                    case 276:
+                        CarModePoiDetailFragment.this.handleClickFavPoiLayer((MapItem) arg);
+                        return;
+                    case 277:
+                        C1260i.e("POI", "BNMapObserver.EventGesture.EVENT_CLICKED_POI_LAYER");
+                        CarModePoiDetailFragment.this.handleClickPoiLayer((MapItem) arg);
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
     }
-    return this.mPoiListView.getCurrentSearchPoi();
-  }
-  
-  private void handleBrowseFavPoi()
-  {
-    List localList = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getPoiList();
-    if ((localList != null) && (localList.size() == 1) && (localList.get(0) != null))
-    {
-      this.mPoiDetailView.setMyPositionMode(false);
-      PoiController.getInstance().focusPoi((SearchPoi)localList.get(0));
-      PoiController.getInstance().animationTo((SearchPoi)localList.get(0), this.xOffset, this.yOffset);
-      this.mPoiDetailView.setFavSearchPoi((SearchPoi)localList.get(0));
-      this.mPoiDetailView.setVisibility(0);
-      this.mPoiListView.setVisibility(8);
-      this.mPoiDetailView.setFromBrowseMapFragment(true, getNaviFragmentManager());
-      return;
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        boolean z = false;
+        if (NavMapManager.getInstance().getNaviMapMode() != 5) {
+            C0705a.a().d();
+            C0705a.a().a(false, null);
+            NavMapManager.getInstance().set3DGestureEnable(false);
+            BNMapController instance = BNMapController.getInstance();
+            if (!BNStyleManager.getRealDayStyle()) {
+                z = true;
+            }
+            instance.setNightMode(z);
+        }
+        loadMapCtrlPanel(true);
+        this.mViewGroup = (ViewGroup) inflater.inflate(C0965R.layout.car_mode_frag_poi_detail, null);
+        this.mViewGroup.findViewById(C0965R.id.poilayout).setOnTouchListener(new C39081());
+        this.mBack = this.mViewGroup.findViewById(C0965R.id.layout_back);
+        this.mIvBack = (ImageView) this.mViewGroup.findViewById(C0965R.id.left_imageview);
+        this.mPoiListView = (CarmodePoiListView) this.mViewGroup.findViewById(C0965R.id.poilistview);
+        this.mPoiDetailView = (CarmodePoiDetailView) this.mViewGroup.findViewById(C0965R.id.poidetailview);
+        this.mPoiDetailView.setOnDialogListener(this);
+        this.mPoiListView.setOnDialogListener(this);
+        return this.mViewGroup;
     }
-    back(null);
-  }
-  
-  private void handleClickBasePoiLayer(MapItem paramMapItem)
-  {
-    if ((paramMapItem == null) || (MapController.mMultiTouch.mTwoTouch)) {
-      return;
+
+    protected void onInitView() {
+        C1260i.e("PoiSearch", "@移动统计 @搜周边-POI详情页-进入次数");
+        C1260i.e("PoiSearch", "getBundle()");
+        this.mPoiListView.setController(PoiController.getInstance());
+        this.mPoiDetailView.setController(PoiController.getInstance());
+        getBundle();
+        this.mBack.setOnClickListener(getBackBtnOnclickListner());
     }
-    GeoPoint localGeoPoint = new GeoPoint(paramMapItem.mLongitude, paramMapItem.mLatitude);
-    SearchPoi localSearchPoi = new SearchPoi();
-    if (paramMapItem.mTitle != null) {
-      localSearchPoi.mName = paramMapItem.mTitle.replace("\\", "");
+
+    protected void onInitMap() {
+        setMapLayerMode(1);
     }
-    localSearchPoi.mViewPoint = localGeoPoint;
-    localSearchPoi.mGuidePoint = localGeoPoint;
-    localSearchPoi.mOriginUID = paramMapItem.mUid;
-    this.mPoiDetailView.pickPoi(localSearchPoi, this.xOffset, this.yOffset);
-    this.mPoiDetailView.setMyPositionMode(false);
-    showPoidetailView();
-  }
-  
-  private void handleClickFavPoiLayer(MapItem paramMapItem)
-  {
-    if (MapController.mMultiTouch.mTwoTouch) {}
-    FavoritePoiInfo localFavoritePoiInfo;
-    SearchPoi localSearchPoi;
-    do
-    {
-      return;
-      paramMapItem = new GeoPoint(paramMapItem.mLongitude, paramMapItem.mLatitude);
-      localFavoritePoiInfo = BNFavoriteManager.getInstance().getFavPoiInfoByGeoPoint(paramMapItem);
-      localSearchPoi = new SearchPoi();
-    } while (localFavoritePoiInfo == null);
-    localSearchPoi.mName = localFavoritePoiInfo.mFavName;
-    localSearchPoi.mAddress = localFavoritePoiInfo.mFavAddr;
-    localSearchPoi.mPhone = localFavoritePoiInfo.mPhone;
-    localSearchPoi.mViewPoint = paramMapItem;
-    localSearchPoi.mGuidePoint = paramMapItem;
-    this.mPoiDetailView.setMyPositionMode(false);
-    PoiController.getInstance().focusPoi(paramMapItem);
-    PoiController.getInstance().animationTo(paramMapItem, this.xOffset, this.yOffset);
-    this.mPoiDetailView.setFavSearchPoi(localSearchPoi);
-    showPoidetailView();
-  }
-  
-  private void handleClickPoiLayer(MapItem paramMapItem)
-  {
-    if ((paramMapItem == null) || (MapController.mMultiTouch.mTwoTouch)) {}
-    int i;
-    do
-    {
-      return;
-      if (this.id != 0)
-      {
-        i = paramMapItem.mItemID;
-        if (this.mPoiList.size() == 1)
-        {
-          this.mPoiDetailView.setSearchPoi((SearchPoi)this.mPoiList.get(0));
-          PoiController.getInstance().animationByFrogleap((SearchPoi)this.mPoiList.get(0));
-          PoiController.getInstance().focusPoi(this.ParChildPoi, paramMapItem.mItemID);
-          this.mPoiDetailView.setVisibility(0);
-          this.mPoiListView.setVisibility(8);
-          return;
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+        super.onUpdateStyle(dayStyle);
+        if (this.mIvBack != null) {
+            this.mIvBack.setBackground(StyleManager.getDrawable(C0965R.drawable.map_bg_btn_selector));
+        }
+    }
+
+    public void onResume() {
+        super.onResume();
+        initMapLayer();
+        setMapFocusViewVisible(false);
+        hideMapCtrlPanel();
+        if (this.mMapControlPanel != null) {
+            this.mMapControlPanel.hideLayerView();
+        }
+        BNMapController.getInstance().addObserver(this.mBNMapObserver);
+        ArrayList<SearchPoi> poiList = (ArrayList) ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getPoiList();
+        ArrayList<SearchPoi> searchPois = null;
+        if (poiList != null) {
+            searchPois = new ArrayList();
+            int i = 0;
+            while (i < poiList.size() && i < 10) {
+                searchPois.add(poiList.get(i));
+                i++;
+            }
+        }
+        PoiController.getInstance().updatePoiBkgLayer(searchPois);
+        PoiController.getInstance().focusPoi(getCurrentPoi());
+        if (this.mShowBundle.getInt("incoming_type") != 85) {
+            BNMapController.getInstance().showLayer(4, true);
+            BNMapController.getInstance().updateLayer(4);
+        }
+        BNMapController.getInstance().showLayer(3, true);
+        BNMapController.getInstance().showLayer(6, true);
+        BNMapController.getInstance().showLayer(7, true);
+        BNMapController.getInstance().updateLayer(3);
+        int xOffset = ScreenUtil.getInstance().dip2px(-250) / 2;
+        PoiController.getInstance().animationTo(getCurrentPoi(), (long) xOffset, (long) (ScreenUtil.getInstance().dip2px(0) / 2), 15);
+    }
+
+    private void initMapLayer() {
+        BNMapController.getInstance().setMapDrawScreenRect(new Rect(0, ScreenUtil.getInstance().getStatusBarHeight(), ScreenUtil.getInstance().getHeightPixels(), ScreenUtil.getInstance().getWidthPixels()));
+        NavMapManager.getInstance().showCarResultLayer(false);
+    }
+
+    private SearchPoi getCurrentPoi() {
+        if (this.mPoiDetailView.getVisibility() == 0) {
+            return this.mPoiDetailView.getSearchPoi();
+        }
+        return this.mPoiListView.getCurrentSearchPoi();
+    }
+
+    public void onPause() {
+        BNMapController.getInstance().deleteObserver(this.mBNMapObserver);
+        PoiController.getInstance().focusItem(false);
+        BNPoiSearcher.getInstance().clearBkgCache();
+        BNPoiSearcher.getInstance().clearPoiCache();
+        BNMapController.getInstance().showLayer(4, false);
+        BNMapController.getInstance().updateLayer(4);
+        BNMapController.getInstance().updateLayer(3);
+        PoiController.getInstance().clearPoiCache();
+        super.onPause();
+    }
+
+    public boolean onBackPressed() {
+        if (this.mPoiList == null || this.mPoiList.size() <= 1 || this.mPoiListView.getVisibility() == 0) {
+            Bundle bundle = null;
+            if (this.mPoiDetailView != null) {
+                bundle = new Bundle();
+                bundle.putInt(BundleKey.FROM_FRAGMENT, 33);
+                bundle.putInt(Key.FAVORITE_ACTION_KEY, 2);
+            }
+            back(bundle);
+        } else {
+            showPoiListlView();
+            this.mPoiListView.setCurrentIndex(this.mPoiListView.getCurretnIndex(), this.mPoiListView.getCurrentPoiList(), this.mPoiListView.getCurretnId());
+        }
+        return true;
+    }
+
+    private void getBundle() {
+        switch (this.mShowBundle.getInt("incoming_type")) {
+            case 81:
+                handleComeFromBrowsermapAntigeo();
+                return;
+            case 82:
+                handleComeFromBrowsermapPickpoint();
+                return;
+            case 83:
+                handleComeFromSearchResult();
+                return;
+            case 84:
+                C1260i.e("PoiSearch", "from streetscape");
+                onBackPressed();
+                return;
+            case 85:
+                C1260i.e("PoiSearch", "from favorite");
+                handleComeFromFavorite();
+                return;
+            case 86:
+                handleBrowseFavPoi();
+                return;
+            case 87:
+                handleComeFromIntentApi();
+                return;
+            default:
+                onBackPressed();
+                return;
+        }
+    }
+
+    private void handleComeFromIntentApi() {
+        if (this.mShowBundle.containsKey("lat") && this.mShowBundle.containsKey("lon")) {
+            int latitudeE6 = this.mShowBundle.getInt("lat");
+            int longitudeE6 = this.mShowBundle.getInt("lon");
+            GeoPoint geoPt = new GeoPoint();
+            geoPt.setLatitudeE6(latitudeE6);
+            geoPt.setLongitudeE6(longitudeE6);
+            this.mPoiDetailView.setMyPositionMode(false);
+            this.mPoiDetailView.antiPoi(geoPt, 0, (long) (this.mPoiDetailView.getHeight() / 2));
+            this.mPoiDetailView.setVisibility(0);
+            this.mPoiListView.setVisibility(8);
+        } else if (this.mShowBundle.containsKey("short_uri")) {
+            String shortUri = this.mShowBundle.getString("short_uri");
+            this.mPoiListView.setVisibility(8);
+            this.mPoiDetailView.handleShortUri(shortUri);
+        }
+    }
+
+    private void handleComeFromFavorite() {
+        boolean isMyPosition = this.mShowBundle.getBoolean(ISMYPOSITION);
+        SearchPoi poi = FavoriteModel.getInstance().getFavoriteSearchPoi();
+        if (poi == null) {
+            onBackPressed();
+            return;
+        }
+        PoiController.getInstance().setSearchNetMode(0);
+        this.mPoiDetailView.setSearchPoi(poi);
+        this.mPoiDetailView.setMyPositionMode(isMyPosition);
+        this.mPoiDetailView.setVisibility(0);
+        this.mPoiListView.setVisibility(8);
+        this.mBack.setVisibility(0);
+        PoiController.getInstance().focusPoi(poi);
+    }
+
+    private void handleBrowseFavPoi() {
+        List<SearchPoi> poiList = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getPoiList();
+        if (poiList == null || poiList.size() != 1 || poiList.get(0) == null) {
+            back(null);
+            return;
         }
         this.mPoiDetailView.setMyPositionMode(false);
-        this.mPoiListView.setCurrentIndex(i - 1, this.ParChildPoi, paramMapItem.mItemID);
-        this.mPoiDetailView.setVisibility(4);
-        this.mPoiListView.setVisibility(0);
-        return;
-      }
-      i = paramMapItem.mItemID;
-      this.mPoiDetailView.setMyPositionMode(false);
-      paramMapItem = this.mPoiListView.getCurrentPoiList();
-    } while ((paramMapItem == null) || (i >= paramMapItem.size()));
-    SearchPoi localSearchPoi = (SearchPoi)paramMapItem.get(i);
-    PoiController.getInstance().focusPoi(paramMapItem, i);
-    PoiController.getInstance().animationByFrogleap(localSearchPoi);
-    this.mPoiDetailView.setFavSearchPoi(localSearchPoi);
-    showPoidetailView();
-  }
-  
-  private void handleComeFromBrowsermapAntigeo()
-  {
-    boolean bool = this.mShowBundle.getBoolean("ISMYPOSITION");
-    i.e("PoiSearch", "from handleComeFromBrowsermap");
-    List localList = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getPoiList();
-    if ((localList != null) && (localList.size() == 1) && (localList.get(0) != null))
-    {
-      this.mPoiDetailView.setMyPositionMode(bool);
-      this.mPoiDetailView.antiPoi(((SearchPoi)localList.get(0)).mViewPoint, this.xOffset, this.yOffset);
-      this.mPoiDetailView.setVisibility(0);
-      this.mPoiListView.setVisibility(8);
-      PoiController.getInstance().focusPoi((SearchPoi)localList.get(0));
-      this.mPoiDetailView.setFromBrowseMapFragment(true, getNaviFragmentManager());
-      return;
+        PoiController.getInstance().focusPoi((SearchPoi) poiList.get(0));
+        PoiController.getInstance().animationTo((SearchPoi) poiList.get(0), this.xOffset, this.yOffset);
+        this.mPoiDetailView.setFavSearchPoi((SearchPoi) poiList.get(0));
+        this.mPoiDetailView.setVisibility(0);
+        this.mPoiListView.setVisibility(8);
+        this.mPoiDetailView.setFromBrowseMapFragment(true, getNaviFragmentManager());
     }
-    back(null);
-  }
-  
-  private void handleComeFromBrowsermapPickpoint()
-  {
-    boolean bool = this.mShowBundle.getBoolean("ISMYPOSITION");
-    i.e("PoiSearch", "from handleComeFromBrowsermap");
-    List localList = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getPoiList();
-    if ((localList != null) && (localList.size() == 1) && (localList.get(0) != null))
-    {
-      this.mPoiDetailView.setMyPositionMode(bool);
-      this.mPoiDetailView.pickPoi((SearchPoi)localList.get(0), this.xOffset, this.yOffset);
-      this.mPoiDetailView.setVisibility(0);
-      this.mPoiListView.setVisibility(8);
-      PoiController.getInstance().focusPoi((SearchPoi)localList.get(0));
-      this.mPoiDetailView.setFromBrowseMapFragment(true, getNaviFragmentManager());
-      return;
-    }
-    back(null);
-  }
-  
-  private void handleComeFromFavorite()
-  {
-    boolean bool = this.mShowBundle.getBoolean("ISMYPOSITION");
-    SearchPoi localSearchPoi = FavoriteModel.getInstance().getFavoriteSearchPoi();
-    if (localSearchPoi == null)
-    {
-      onBackPressed();
-      return;
-    }
-    PoiController.getInstance().setSearchNetMode(0);
-    this.mPoiDetailView.setSearchPoi(localSearchPoi);
-    this.mPoiDetailView.setMyPositionMode(bool);
-    this.mPoiDetailView.setVisibility(0);
-    this.mPoiListView.setVisibility(8);
-    this.mBack.setVisibility(0);
-    PoiController.getInstance().focusPoi(localSearchPoi);
-  }
-  
-  private void handleComeFromIntentApi()
-  {
-    if ((this.mShowBundle.containsKey("lat")) && (this.mShowBundle.containsKey("lon")))
-    {
-      i = this.mShowBundle.getInt("lat");
-      j = this.mShowBundle.getInt("lon");
-      localObject = new GeoPoint();
-      ((GeoPoint)localObject).setLatitudeE6(i);
-      ((GeoPoint)localObject).setLongitudeE6(j);
-      this.mPoiDetailView.setMyPositionMode(false);
-      this.mPoiDetailView.antiPoi((GeoPoint)localObject, 0L, this.mPoiDetailView.getHeight() / 2);
-      this.mPoiDetailView.setVisibility(0);
-      this.mPoiListView.setVisibility(8);
-    }
-    while (!this.mShowBundle.containsKey("short_uri"))
-    {
-      int i;
-      int j;
-      return;
-    }
-    Object localObject = this.mShowBundle.getString("short_uri");
-    this.mPoiListView.setVisibility(8);
-    this.mPoiDetailView.handleShortUri((String)localObject);
-  }
-  
-  private void handleComeFromSearchResult()
-  {
-    i.e("PoiSearch", "from search  result");
-    int k = this.mShowBundle.getInt("current_poi");
-    Object localObject = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getPoiList();
-    int j = 0;
-    this.mPoiListView.setComeFrom(this.mShowBundle.getInt("come_from", 0));
-    this.mPoiDetailView.setComeFrom(this.mShowBundle.getInt("come_from", 0));
-    this.mFCType = this.mShowBundle.getInt("fc_type", 0);
-    int n = this.mShowBundle.getInt("current_child_count", 0);
-    int m = this.mShowBundle.getInt("child_start_poi", 0);
-    int i = this.mShowBundle.getInt("current_parent_position", 0);
-    this.mChildCnt = this.mShowBundle.getIntArray("child_count_array");
-    this.mChildIndex = this.mShowBundle.getIntArray("child_start_array");
-    this.ParChildPoi = new ArrayList(n + 1);
-    if (this.mFCType == 1)
-    {
-      this.id = (k - m + 1);
-      this.ParChildPoi.add(((List)localObject).get(i));
-      this.mPoiList = new ArrayList(n);
-      i = 0;
-      while (i < n)
-      {
-        this.mPoiList.add(((List)localObject).get(i + m));
-        this.ParChildPoi.add(((List)localObject).get(i + m));
-        i += 1;
-      }
-      if ((k - m >= this.mPoiList.size()) || (k < 0)) {
-        back(null);
-      }
-    }
-    else
-    {
-      i = j;
-      if (this.mChildIndex != null)
-      {
-        i = j;
-        if (this.mChildIndex[0] > 0) {
-          if (((List)localObject).size() <= this.mChildIndex[0]) {
-            break label376;
-          }
+
+    private void handleComeFromBrowsermapAntigeo() {
+        boolean isMyPosition = this.mShowBundle.getBoolean(ISMYPOSITION);
+        C1260i.e("PoiSearch", "from handleComeFromBrowsermap");
+        List<SearchPoi> poiList = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getPoiList();
+        if (poiList == null || poiList.size() != 1 || poiList.get(0) == null) {
+            back(null);
+            return;
         }
-      }
-      label376:
-      for (i = this.mChildIndex[0];; i = ((List)localObject).size())
-      {
-        this.mPoiList = new ArrayList(i);
+        this.mPoiDetailView.setMyPositionMode(isMyPosition);
+        this.mPoiDetailView.antiPoi(((SearchPoi) poiList.get(0)).mViewPoint, this.xOffset, this.yOffset);
+        this.mPoiDetailView.setVisibility(0);
+        this.mPoiListView.setVisibility(8);
+        PoiController.getInstance().focusPoi((SearchPoi) poiList.get(0));
+        this.mPoiDetailView.setFromBrowseMapFragment(true, getNaviFragmentManager());
+    }
+
+    private void handleComeFromBrowsermapPickpoint() {
+        boolean isMyPosition = this.mShowBundle.getBoolean(ISMYPOSITION);
+        C1260i.e("PoiSearch", "from handleComeFromBrowsermap");
+        List<SearchPoi> poiList = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getPoiList();
+        if (poiList == null || poiList.size() != 1 || poiList.get(0) == null) {
+            back(null);
+            return;
+        }
+        this.mPoiDetailView.setMyPositionMode(isMyPosition);
+        this.mPoiDetailView.pickPoi((SearchPoi) poiList.get(0), this.xOffset, this.yOffset);
+        this.mPoiDetailView.setVisibility(0);
+        this.mPoiListView.setVisibility(8);
+        PoiController.getInstance().focusPoi((SearchPoi) poiList.get(0));
+        this.mPoiDetailView.setFromBrowseMapFragment(true, getNaviFragmentManager());
+    }
+
+    private void handleComeFromSearchResult() {
+        C1260i.e("PoiSearch", "from search  result");
+        int mCurrentBkgIndex = this.mShowBundle.getInt("current_poi");
+        List<SearchPoi> poiList = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getPoiList();
+        int Parentsize = 0;
+        this.mPoiListView.setComeFrom(this.mShowBundle.getInt(NameSearchFragment.COME_FROM, 0));
+        this.mPoiDetailView.setComeFrom(this.mShowBundle.getInt(NameSearchFragment.COME_FROM, 0));
+        this.mFCType = this.mShowBundle.getInt("fc_type", 0);
+        int mChildNum = this.mShowBundle.getInt("current_child_count", 0);
+        int mStartIndex = this.mShowBundle.getInt("child_start_poi", 0);
+        int mParentIndex = this.mShowBundle.getInt("current_parent_position", 0);
+        this.mChildCnt = this.mShowBundle.getIntArray("child_count_array");
+        this.mChildIndex = this.mShowBundle.getIntArray("child_start_array");
+        this.ParChildPoi = new ArrayList(mChildNum + 1);
+        int i;
+        if (this.mFCType == 1) {
+            int Childsize = mChildNum;
+            this.id = (mCurrentBkgIndex - mStartIndex) + 1;
+            this.ParChildPoi.add(poiList.get(mParentIndex));
+            this.mPoiList = new ArrayList(Childsize);
+            for (i = 0; i < Childsize; i++) {
+                this.mPoiList.add(poiList.get(i + mStartIndex));
+                this.ParChildPoi.add(poiList.get(i + mStartIndex));
+            }
+            if (mCurrentBkgIndex - mStartIndex >= this.mPoiList.size() || mCurrentBkgIndex < 0) {
+                back(null);
+                return;
+            }
+        }
+        if (this.mChildIndex != null && this.mChildIndex[0] > 0) {
+            Parentsize = poiList.size() > this.mChildIndex[0] ? this.mChildIndex[0] : poiList.size();
+        }
+        this.mPoiList = new ArrayList(Parentsize);
         this.id = 0;
-        j = 0;
-        while (j < i)
-        {
-          this.mPoiList.add(((List)localObject).get(j));
-          j += 1;
+        for (i = 0; i < Parentsize; i++) {
+            this.mPoiList.add(poiList.get(i));
         }
-      }
-      this.ParChildPoi.add(((List)localObject).get(k));
-      if ((this.mChildCnt != null) && (this.mChildIndex != null) && (this.mChildCnt[k] > 0))
-      {
-        i = 0;
-        while (i < this.mChildCnt[k])
-        {
-          this.ParChildPoi.add(((List)localObject).get(this.mChildIndex[k] + i));
-          i += 1;
+        this.ParChildPoi.add(poiList.get(mCurrentBkgIndex));
+        if (!(this.mChildCnt == null || this.mChildIndex == null || this.mChildCnt[mCurrentBkgIndex] <= 0)) {
+            for (int j = 0; j < this.mChildCnt[mCurrentBkgIndex]; j++) {
+                this.ParChildPoi.add(poiList.get(this.mChildIndex[mCurrentBkgIndex] + j));
+            }
         }
-      }
-      if ((k >= this.mPoiList.size()) || (k < 0))
-      {
-        back(null);
-        return;
-      }
+        if (mCurrentBkgIndex >= this.mPoiList.size() || mCurrentBkgIndex < 0) {
+            back(null);
+            return;
+        }
+        int mSearchRsultNetMode = this.mShowBundle.getInt("search_result_mode");
+        PoiController.getInstance().setSearchNetMode(mSearchRsultNetMode);
+        C1260i.e("PoiSearch", "searchRsultNetMode = " + mSearchRsultNetMode);
+        if (this.mShowBundle.containsKey("district_id")) {
+            PoiController.getInstance().setDistrictId(this.mShowBundle.getInt("district_id"));
+        }
+        if (this.mShowBundle.containsKey("search_key")) {
+            PoiController.getInstance().setSearchKey(this.mShowBundle.getString("search_key"));
+        }
+        if (this.mFCType == 0) {
+            if (this.mPoiList.size() == 1) {
+                this.mPoiDetailView.setSearchPoi((SearchPoi) this.mPoiList.get(0));
+                this.mPoiListView.setCurrentIndex(mCurrentBkgIndex, this.ParChildPoi, this.id);
+                this.mPoiDetailView.setVisibility(0);
+                this.mPoiListView.setVisibility(8);
+                PoiController.getInstance().focusPoi(this.ParChildPoi, 0);
+            } else {
+                this.mPoiListView.setSearchPoiList(this.mPoiList);
+                this.mPoiListView.setChildIndex(this.mChildIndex);
+                this.mPoiListView.setChildCnt(this.mChildCnt);
+                this.mPoiListView.setCurrentIndex(mCurrentBkgIndex, this.ParChildPoi, this.id);
+                this.mPoiDetailView.setVisibility(4);
+                this.mPoiListView.setVisibility(0);
+            }
+        } else if (this.mPoiList.size() == 1) {
+            this.mPoiDetailView.setSearchPoi((SearchPoi) this.mPoiList.get(0));
+            this.mPoiListView.setCurrentIndex(mCurrentBkgIndex - mStartIndex, this.ParChildPoi, this.id);
+            this.mPoiDetailView.setVisibility(0);
+            this.mPoiListView.setVisibility(8);
+            PoiController.getInstance().focusPoi(this.ParChildPoi, this.id);
+        } else {
+            this.mPoiListView.setSearchPoiList(this.mPoiList);
+            this.mPoiListView.setCurrentIndex(mCurrentBkgIndex - mStartIndex, this.ParChildPoi, this.id);
+            this.mPoiDetailView.setVisibility(4);
+            this.mPoiListView.setVisibility(0);
+        }
+        this.mBack.setVisibility(0);
     }
-    i = this.mShowBundle.getInt("search_result_mode");
-    PoiController.getInstance().setSearchNetMode(i);
-    i.e("PoiSearch", "searchRsultNetMode = " + i);
-    if (this.mShowBundle.containsKey("district_id"))
-    {
-      i = this.mShowBundle.getInt("district_id");
-      PoiController.getInstance().setDistrictId(i);
+
+    public void onDestroy() {
+        ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getPoiList().clear();
+        super.onDestroy();
     }
-    if (this.mShowBundle.containsKey("search_key"))
-    {
-      localObject = this.mShowBundle.getString("search_key");
-      PoiController.getInstance().setSearchKey((String)localObject);
+
+    private OnClickListener getBackBtnOnclickListner() {
+        return new C39092();
     }
-    if (this.mFCType == 0) {
-      if (this.mPoiList.size() == 1)
-      {
-        this.mPoiDetailView.setSearchPoi((SearchPoi)this.mPoiList.get(0));
-        this.mPoiListView.setCurrentIndex(k, this.ParChildPoi, this.id);
-        this.mPoiDetailView.setVisibility(0);
-        this.mPoiListView.setVisibility(8);
-        PoiController.getInstance().focusPoi(this.ParChildPoi, 0);
-      }
+
+    private void handleClickFavPoiLayer(MapItem item) {
+        if (!MapController.mMultiTouch.mTwoTouch) {
+            GeoPoint favGeoPoint = new GeoPoint(item.mLongitude, item.mLatitude);
+            FavoritePoiInfo favData = BNFavoriteManager.getInstance().getFavPoiInfoByGeoPoint(favGeoPoint);
+            SearchPoi poi = new SearchPoi();
+            if (favData != null) {
+                poi.mName = favData.mFavName;
+                poi.mAddress = favData.mFavAddr;
+                poi.mPhone = favData.mPhone;
+                poi.mViewPoint = favGeoPoint;
+                poi.mGuidePoint = favGeoPoint;
+                this.mPoiDetailView.setMyPositionMode(false);
+                PoiController.getInstance().focusPoi(favGeoPoint);
+                PoiController.getInstance().animationTo(favGeoPoint, this.xOffset, this.yOffset);
+                this.mPoiDetailView.setFavSearchPoi(poi);
+                showPoidetailView();
+            }
+        }
     }
-    for (;;)
-    {
-      this.mBack.setVisibility(0);
-      return;
-      this.mPoiListView.setSearchPoiList(this.mPoiList);
-      this.mPoiListView.setChildIndex(this.mChildIndex);
-      this.mPoiListView.setChildCnt(this.mChildCnt);
-      this.mPoiListView.setCurrentIndex(k, this.ParChildPoi, this.id);
-      this.mPoiDetailView.setVisibility(4);
-      this.mPoiListView.setVisibility(0);
-      continue;
-      if (this.mPoiList.size() == 1)
-      {
-        this.mPoiDetailView.setSearchPoi((SearchPoi)this.mPoiList.get(0));
-        this.mPoiListView.setCurrentIndex(k - m, this.ParChildPoi, this.id);
-        this.mPoiDetailView.setVisibility(0);
-        this.mPoiListView.setVisibility(8);
-        PoiController.getInstance().focusPoi(this.ParChildPoi, this.id);
-      }
-      else
-      {
-        this.mPoiListView.setSearchPoiList(this.mPoiList);
-        this.mPoiListView.setCurrentIndex(k - m, this.ParChildPoi, this.id);
-        this.mPoiDetailView.setVisibility(4);
-        this.mPoiListView.setVisibility(0);
-      }
+
+    private void handleClickBasePoiLayer(MapItem item) {
+        if (item != null && !MapController.mMultiTouch.mTwoTouch) {
+            GeoPoint point = new GeoPoint(item.mLongitude, item.mLatitude);
+            SearchPoi poi = new SearchPoi();
+            if (item.mTitle != null) {
+                poi.mName = item.mTitle.replace("\\", "");
+            }
+            poi.mViewPoint = point;
+            poi.mGuidePoint = point;
+            poi.mOriginUID = item.mUid;
+            this.mPoiDetailView.pickPoi(poi, this.xOffset, this.yOffset);
+            this.mPoiDetailView.setMyPositionMode(false);
+            showPoidetailView();
+        }
     }
-  }
-  
-  private void handleLongPress(MotionEvent paramMotionEvent)
-  {
-    paramMotionEvent = BNMapController.getInstance().getGeoPosByScreenPos((int)paramMotionEvent.getX(), (int)paramMotionEvent.getY());
-    ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).setAntiGeoPoint(paramMotionEvent);
-    showPoidetailView();
-    this.mPoiDetailView.setMyPositionMode(false);
-    this.mPoiDetailView.antiPoi(paramMotionEvent, this.xOffset, this.yOffset);
-  }
-  
-  private void initMapLayer()
-  {
-    Rect localRect = new Rect(0, ScreenUtil.getInstance().getStatusBarHeight(), ScreenUtil.getInstance().getHeightPixels(), ScreenUtil.getInstance().getWidthPixels());
-    BNMapController.getInstance().setMapDrawScreenRect(localRect);
-    NavMapManager.getInstance().showCarResultLayer(false);
-  }
-  
-  private void showPoiListlView()
-  {
-    this.mPoiListView.setVisibility(0);
-    this.mPoiDetailView.setVisibility(8);
-  }
-  
-  private void showPoidetailView()
-  {
-    this.mPoiListView.setVisibility(8);
-    this.mPoiDetailView.setVisibility(0);
-  }
-  
-  public void driving()
-  {
-    backTo(17, null);
-    com.baidu.carlife.custom.a.a().d();
-  }
-  
-  protected void handleClickPoiBkgLayer(MapItem paramMapItem)
-  {
-    if (paramMapItem == null) {}
-    int j;
-    int i;
-    do
-    {
-      return;
-      this.mPoiDetailView.setMyPositionMode(false);
-      j = BNPoiSearcher.getInstance().parseBkgLayerId(paramMapItem.mUid);
-      i = this.mPoiListView.getCurretnId();
-      paramMapItem = (ArrayList)((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getPoiList();
-    } while ((paramMapItem == null) || (this.mChildIndex == null) || (this.mChildCnt == null) || (paramMapItem.size() <= j));
-    if (i == 0)
-    {
-      int k = this.mChildCnt[j];
-      localArrayList = new ArrayList(k + 1);
-      localArrayList.add(paramMapItem.get(j));
-      if (paramMapItem.size() == 1)
-      {
-        this.mPoiDetailView.setSearchPoi((SearchPoi)paramMapItem.get(0));
+
+    private void handleClickPoiLayer(MapItem item) {
+        if (item != null && !MapController.mMultiTouch.mTwoTouch) {
+            int idSearcher;
+            if (this.id != 0) {
+                idSearcher = item.mItemID - 1;
+                if (this.mPoiList.size() == 1) {
+                    this.mPoiDetailView.setSearchPoi((SearchPoi) this.mPoiList.get(0));
+                    PoiController.getInstance().animationByFrogleap((SearchPoi) this.mPoiList.get(0));
+                    PoiController.getInstance().focusPoi(this.ParChildPoi, item.mItemID);
+                    this.mPoiDetailView.setVisibility(0);
+                    this.mPoiListView.setVisibility(8);
+                    return;
+                }
+                this.mPoiDetailView.setMyPositionMode(false);
+                this.mPoiListView.setCurrentIndex(idSearcher, this.ParChildPoi, item.mItemID);
+                this.mPoiDetailView.setVisibility(4);
+                this.mPoiListView.setVisibility(0);
+                return;
+            }
+            idSearcher = item.mItemID;
+            this.mPoiDetailView.setMyPositionMode(false);
+            ArrayList<SearchPoi> CurrentPoiList = this.mPoiListView.getCurrentPoiList();
+            if (CurrentPoiList != null && idSearcher < CurrentPoiList.size()) {
+                SearchPoi focusPoi = (SearchPoi) CurrentPoiList.get(idSearcher);
+                PoiController.getInstance().focusPoi(CurrentPoiList, idSearcher);
+                PoiController.getInstance().animationByFrogleap(focusPoi);
+                this.mPoiDetailView.setFavSearchPoi(focusPoi);
+                showPoidetailView();
+            }
+        }
+    }
+
+    protected void handleClickPoiBkgLayer(MapItem arg) {
+        if (arg != null) {
+            this.mPoiDetailView.setMyPositionMode(false);
+            int idSearcher = BNPoiSearcher.getInstance().parseBkgLayerId(arg.mUid);
+            int mCurrentId = this.mPoiListView.getCurretnId();
+            ArrayList<SearchPoi> poiList = (ArrayList) ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getPoiList();
+            if (poiList != null && this.mChildIndex != null && this.mChildCnt != null && poiList.size() > idSearcher) {
+                if (mCurrentId == 0) {
+                    int mSearcherChild = this.mChildCnt[idSearcher];
+                    ArrayList<SearchPoi> mSearchPoiList = new ArrayList(mSearcherChild + 1);
+                    mSearchPoiList.add(poiList.get(idSearcher));
+                    if (poiList.size() == 1) {
+                        this.mPoiDetailView.setSearchPoi((SearchPoi) poiList.get(0));
+                        showPoidetailView();
+                        PoiController.getInstance().focusPoi((SearchPoi) poiList.get(0));
+                        PoiController.getInstance().animationByFrogleap((SearchPoi) poiList.get(0));
+                        PoiController.getInstance().focusItem(true);
+                        return;
+                    }
+                    if (mSearcherChild > 0 && poiList.size() >= this.mChildIndex[idSearcher] + mSearcherChild) {
+                        for (int i = 0; i < mSearcherChild; i++) {
+                            mSearchPoiList.add(poiList.get(this.mChildIndex[idSearcher] + i));
+                        }
+                    }
+                    if (mSearchPoiList.size() > 1) {
+                        this.mPoiListView.setCurrentIndex(idSearcher, mSearchPoiList, 0);
+                    } else {
+                        this.mPoiListView.setCurrentIndex(idSearcher);
+                    }
+                    PoiController.getInstance().focusItem(true);
+                    showPoiListlView();
+                    return;
+                }
+                SearchPoi focusPoi = (SearchPoi) poiList.get(idSearcher);
+                ArrayList<SearchPoi> CurrentPoiList = this.mPoiListView.getCurrentPoiList();
+                CurrentPoiList.set(0, focusPoi);
+                PoiController.getInstance().focusPoi(CurrentPoiList, 0);
+                PoiController.getInstance().animationByFrogleap(focusPoi);
+                this.mPoiDetailView.setFavSearchPoi(focusPoi);
+                showPoidetailView();
+            }
+        }
+    }
+
+    private void handleLongPress(MotionEvent e) {
+        GeoPoint geoPt = BNMapController.getInstance().getGeoPosByScreenPos((int) e.getX(), (int) e.getY());
+        ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).setAntiGeoPoint(geoPt);
         showPoidetailView();
-        PoiController.getInstance().focusPoi((SearchPoi)paramMapItem.get(0));
-        PoiController.getInstance().animationByFrogleap((SearchPoi)paramMapItem.get(0));
-        PoiController.getInstance().focusItem(true);
-        return;
-      }
-      if ((k > 0) && (paramMapItem.size() >= this.mChildIndex[j] + k))
-      {
-        i = 0;
-        while (i < k)
-        {
-          localArrayList.add(paramMapItem.get(this.mChildIndex[j] + i));
-          i += 1;
+        this.mPoiDetailView.setMyPositionMode(false);
+        this.mPoiDetailView.antiPoi(geoPt, this.xOffset, this.yOffset);
+    }
+
+    private void showPoidetailView() {
+        this.mPoiListView.setVisibility(8);
+        this.mPoiDetailView.setVisibility(0);
+    }
+
+    private void showPoiListlView() {
+        this.mPoiListView.setVisibility(0);
+        this.mPoiDetailView.setVisibility(8);
+    }
+
+    public boolean onVoiceCommand(int type, int subType, int arg1, Object arg2, boolean needResponse) {
+        if (3 == type && 4 == subType) {
+            PoiController.getInstance().startCalcRoute(getCurrentPoi(), this);
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(type, 1);
         }
-      }
-      if (localArrayList.size() > 1) {
-        this.mPoiListView.setCurrentIndex(j, localArrayList, 0);
-      }
-      for (;;)
-      {
-        PoiController.getInstance().focusItem(true);
-        showPoiListlView();
-        return;
-        this.mPoiListView.setCurrentIndex(j);
-      }
+        return super.onVoiceCommand(type, subType, arg1, arg2, needResponse);
     }
-    paramMapItem = (SearchPoi)paramMapItem.get(j);
-    ArrayList localArrayList = this.mPoiListView.getCurrentPoiList();
-    localArrayList.set(0, paramMapItem);
-    PoiController.getInstance().focusPoi(localArrayList, 0);
-    PoiController.getInstance().animationByFrogleap(paramMapItem);
-    this.mPoiDetailView.setFavSearchPoi(paramMapItem);
-    showPoidetailView();
-  }
-  
-  public void initFocusChain(View paramView)
-  {
-    if ((this.mMiddleFocusArea == null) && (this.mMapControlPanel != null))
-    {
-      this.mZoomInBtnView = this.mMapControlPanel.getZoomInBtnView();
-      this.mZoomOutBtnView = this.mMapControlPanel.getZoomOutBtnView();
-      this.mLocation = this.mMapControlPanel.getLocationView();
-      this.mMiddleFocusArea = new g(this.mViewGroup.findViewById(2131624141), 4, true);
-      this.mMiddleFocusArea.d(this.mBack).d(this.mZoomInBtnView);
-      this.mMiddleFocusArea.d(this.mZoomOutBtnView).d(this.mLocation);
-    }
-    if ((this.mPoiList != null) && (this.mPoiList.size() > 0))
-    {
-      if (this.mPoiList.size() != 1) {
-        break label269;
-      }
-      this.mRightFocusArea = new g(this.mPoiDetailView, 5);
-      this.mRightFocusArea.d(this.mPoiDetailView.findViewById(2131624537));
-      this.mRightFocusArea.d(this.mPoiDetailView.findViewById(2131624541));
-      this.mRightFocusArea.d(this.mPoiDetailView.findViewById(2131624543));
-      this.mRightFocusArea.c(null);
-      this.mRightFocusArea.b(this.mPoiDetailView.findViewById(2131624543));
-    }
-    for (;;)
-    {
-      d.a().b(new com.baidu.carlife.f.a[] { this.mMiddleFocusArea, this.mRightFocusArea });
-      d.a().h(this.mMiddleFocusArea);
-      return;
-      label269:
-      this.mRightFocusArea = new g(this.mPoiListView, 5);
-      this.mRightFocusArea.d(this.mPoiListView.findViewById(2131624537));
-      this.mRightFocusArea.d(this.mPoiListView.findViewById(2131624541));
-      this.mRightFocusArea.d(this.mPoiListView.findViewById(2131624543));
-      this.mRightFocusArea.d(this.mPoiListView.findViewById(2131624546));
-      this.mRightFocusArea.d(this.mPoiListView.findViewById(2131624547));
-      this.mRightFocusArea.c(null);
-      this.mRightFocusArea.b(this.mPoiListView.findViewById(2131624543));
-    }
-  }
-  
-  public boolean onBackPressed()
-  {
-    if ((this.mPoiList != null) && (this.mPoiList.size() > 1) && (this.mPoiListView.getVisibility() != 0))
-    {
-      showPoiListlView();
-      this.mPoiListView.setCurrentIndex(this.mPoiListView.getCurretnIndex(), this.mPoiListView.getCurrentPoiList(), this.mPoiListView.getCurretnId());
-      return true;
-    }
-    Bundle localBundle = null;
-    if (this.mPoiDetailView != null)
-    {
-      localBundle = new Bundle();
-      localBundle.putInt("from_Fragment", 33);
-      localBundle.putInt("fav_action_key", 2);
-    }
-    back(localBundle);
-    return true;
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    boolean bool = false;
-    if (NavMapManager.getInstance().getNaviMapMode() != 5)
-    {
-      com.baidu.baidumaps.f.a.a.a.a().d();
-      com.baidu.baidumaps.f.a.a.a.a().a(false, null);
-      NavMapManager.getInstance().set3DGestureEnable(false);
-      BNMapController localBNMapController = BNMapController.getInstance();
-      if (!BNStyleManager.getRealDayStyle()) {
-        bool = true;
-      }
-      localBNMapController.setNightMode(bool);
-    }
-    loadMapCtrlPanel(true);
-    this.mViewGroup = ((ViewGroup)paramLayoutInflater.inflate(2130968614, null));
-    this.mViewGroup.findViewById(2131624138).setOnTouchListener(new View.OnTouchListener()
-    {
-      public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-      {
-        return true;
-      }
-    });
-    this.mBack = this.mViewGroup.findViewById(2131624136);
-    this.mIvBack = ((ImageView)this.mViewGroup.findViewById(2131624137));
-    this.mPoiListView = ((CarmodePoiListView)this.mViewGroup.findViewById(2131624139));
-    this.mPoiDetailView = ((CarmodePoiDetailView)this.mViewGroup.findViewById(2131624140));
-    this.mPoiDetailView.setOnDialogListener(this);
-    this.mPoiListView.setOnDialogListener(this);
-    return this.mViewGroup;
-  }
-  
-  public void onDestroy()
-  {
-    ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getPoiList().clear();
-    super.onDestroy();
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    super.onHiddenChanged(paramBoolean);
-    if (!paramBoolean) {
-      initFocusChain(null);
-    }
-  }
-  
-  protected void onInitMap()
-  {
-    setMapLayerMode(1);
-  }
-  
-  protected void onInitView()
-  {
-    i.e("PoiSearch", "@移动统计 @搜周边-POI详情页-进入次数");
-    i.e("PoiSearch", "getBundle()");
-    this.mPoiListView.setController(PoiController.getInstance());
-    this.mPoiDetailView.setController(PoiController.getInstance());
-    getBundle();
-    this.mBack.setOnClickListener(getBackBtnOnclickListner());
-  }
-  
-  protected void onLocationBtnClicked(MapViewConfig.PositionStatus paramPositionStatus)
-  {
-    super.onLocationBtnClicked(paramPositionStatus);
-    if (paramPositionStatus == MapViewConfig.PositionStatus.NORMAL)
-    {
-      paramPositionStatus = BNLocationManagerProxy.getInstance().getLastValidLocation();
-      i.e("PoiSearch", "onLocationBtnClicked: " + paramPositionStatus);
-      if ((paramPositionStatus == null) || (!paramPositionStatus.isValid())) {}
-    }
-  }
-  
-  public void onPause()
-  {
-    BNMapController.getInstance().deleteObserver(this.mBNMapObserver);
-    PoiController.getInstance().focusItem(false);
-    BNPoiSearcher.getInstance().clearBkgCache();
-    BNPoiSearcher.getInstance().clearPoiCache();
-    BNMapController.getInstance().showLayer(4, false);
-    BNMapController.getInstance().updateLayer(4);
-    BNMapController.getInstance().updateLayer(3);
-    PoiController.getInstance().clearPoiCache();
-    super.onPause();
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    initMapLayer();
-    setMapFocusViewVisible(false);
-    hideMapCtrlPanel();
-    if (this.mMapControlPanel != null) {
-      this.mMapControlPanel.hideLayerView();
-    }
-    BNMapController.getInstance().addObserver(this.mBNMapObserver);
-    ArrayList localArrayList2 = (ArrayList)((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getPoiList();
-    Object localObject = null;
-    if (localArrayList2 != null)
-    {
-      ArrayList localArrayList1 = new ArrayList();
-      i = 0;
-      for (;;)
-      {
-        localObject = localArrayList1;
-        if (i >= localArrayList2.size()) {
-          break;
+
+    protected void onLocationBtnClicked(PositionStatus curLocMode) {
+        super.onLocationBtnClicked(curLocMode);
+        if (curLocMode == PositionStatus.NORMAL) {
+            GeoPoint geoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
+            C1260i.e("PoiSearch", "onLocationBtnClicked: " + geoPoint);
+            if (geoPoint != null && !geoPoint.isValid()) {
+            }
         }
-        localObject = localArrayList1;
-        if (i >= 10) {
-          break;
+    }
+
+    protected void showTrafficMap(boolean show) {
+        BNMapController.getInstance().switchITSMode(true);
+        BNMapController.getInstance().showTrafficMap(true);
+    }
+
+    public void initFocusChain(View root) {
+        if (this.mMiddleFocusArea == null && this.mMapControlPanel != null) {
+            this.mZoomInBtnView = this.mMapControlPanel.getZoomInBtnView();
+            this.mZoomOutBtnView = this.mMapControlPanel.getZoomOutBtnView();
+            this.mLocation = this.mMapControlPanel.getLocationView();
+            this.mMiddleFocusArea = new C1443g(this.mViewGroup.findViewById(C0965R.id.layout_map_control_panel), 4, true);
+            this.mMiddleFocusArea.d(this.mBack).d(this.mZoomInBtnView);
+            this.mMiddleFocusArea.d(this.mZoomOutBtnView).d(this.mLocation);
         }
-        localArrayList1.add(localArrayList2.get(i));
-        i += 1;
-      }
+        if (this.mPoiList != null && this.mPoiList.size() > 0) {
+            if (this.mPoiList.size() == 1) {
+                this.mRightFocusArea = new C1443g(this.mPoiDetailView, 5);
+                this.mRightFocusArea.d(this.mPoiDetailView.findViewById(C0965R.id.carmode_map_poi_panel_right_place_layout));
+                this.mRightFocusArea.d(this.mPoiDetailView.findViewById(C0965R.id.carmode_map_poi_panel_right_phone_layout));
+                this.mRightFocusArea.d(this.mPoiDetailView.findViewById(C0965R.id.carmode_map_poi_panel_right_distance_layout));
+                this.mRightFocusArea.c(null);
+                this.mRightFocusArea.b(this.mPoiDetailView.findViewById(C0965R.id.carmode_map_poi_panel_right_distance_layout));
+            } else {
+                this.mRightFocusArea = new C1443g(this.mPoiListView, 5);
+                this.mRightFocusArea.d(this.mPoiListView.findViewById(C0965R.id.carmode_map_poi_panel_right_place_layout));
+                this.mRightFocusArea.d(this.mPoiListView.findViewById(C0965R.id.carmode_map_poi_panel_right_phone_layout));
+                this.mRightFocusArea.d(this.mPoiListView.findViewById(C0965R.id.carmode_map_poi_panel_right_distance_layout));
+                this.mRightFocusArea.d(this.mPoiListView.findViewById(C0965R.id.carmode_map_poi_panel_right_up));
+                this.mRightFocusArea.d(this.mPoiListView.findViewById(C0965R.id.carmode_map_poi_panel_right_down));
+                this.mRightFocusArea.c(null);
+                this.mRightFocusArea.b(this.mPoiListView.findViewById(C0965R.id.carmode_map_poi_panel_right_distance_layout));
+            }
+        }
+        C1440d.a().b(new C1436a[]{this.mMiddleFocusArea, this.mRightFocusArea});
+        C1440d.a().h(this.mMiddleFocusArea);
     }
-    PoiController.getInstance().updatePoiBkgLayer((ArrayList)localObject);
-    PoiController.getInstance().focusPoi(getCurrentPoi());
-    if (this.mShowBundle.getInt("incoming_type") != 85)
-    {
-      BNMapController.getInstance().showLayer(4, true);
-      BNMapController.getInstance().updateLayer(4);
+
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            initFocusChain(null);
+        }
     }
-    BNMapController.getInstance().showLayer(3, true);
-    BNMapController.getInstance().showLayer(6, true);
-    BNMapController.getInstance().showLayer(7, true);
-    BNMapController.getInstance().updateLayer(3);
-    int i = ScreenUtil.getInstance().dip2px(0) / 2;
-    int j = ScreenUtil.getInstance().dip2px(65286) / 2;
-    PoiController.getInstance().animationTo(getCurrentPoi(), j, i, 15);
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateStyle(boolean paramBoolean)
-  {
-    super.onUpdateStyle(paramBoolean);
-    if (this.mIvBack == null) {
-      return;
+
+    public void driving() {
+        backTo(17, null);
+        C1342a.a().d();
     }
-    this.mIvBack.setBackground(StyleManager.getDrawable(2130838852));
-  }
-  
-  public boolean onVoiceCommand(int paramInt1, int paramInt2, int paramInt3, Object paramObject, boolean paramBoolean)
-  {
-    if ((3 == paramInt1) && (4 == paramInt2))
-    {
-      PoiController.getInstance().startCalcRoute(getCurrentPoi(), this);
-      BNVoiceCommandController.getInstance().commonVoiceCommandResponse(paramInt1, 1);
+
+    public void stopDriving() {
     }
-    return super.onVoiceCommand(paramInt1, paramInt2, paramInt3, paramObject, paramBoolean);
-  }
-  
-  protected void showTrafficMap(boolean paramBoolean)
-  {
-    BNMapController.getInstance().switchITSMode(true);
-    BNMapController.getInstance().showTrafficMap(true);
-  }
-  
-  public void stopDriving() {}
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/fragment/carmode/CarModePoiDetailFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

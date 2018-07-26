@@ -6,150 +6,118 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import com.baidu.carlife.core.screen.e;
+import com.baidu.carlife.core.screen.C1277e;
 import com.baidu.navi.controller.PoiController;
 import com.baidu.navi.view.PoiDetailView;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
 import java.util.List;
 
-public class PoiListPagerAdapter
-  extends PagerAdapter
-{
-  private static final String TAG = "PoiSearch";
-  private boolean isViewDragonOut = false;
-  private Context mContext;
-  private View mCurrentView;
-  private View.OnClickListener mDragonOnClickListener;
-  private View.OnTouchListener mDragonOnTouchListener;
-  private e mOnDialogListener;
-  private PoiController mPoiController;
-  private PoiDetailView[] mPoiDetailViews;
-  private List<SearchPoi> mPoiList;
-  private int mSelectIndex = -1;
-  
-  public PoiListPagerAdapter(Context paramContext, List<SearchPoi> paramList, PoiController paramPoiController, e parame)
-  {
-    this.mPoiList = paramList;
-    this.mContext = paramContext;
-    this.mPoiController = paramPoiController;
-    this.mPoiDetailViews = new PoiDetailView[getCount()];
-    this.mOnDialogListener = parame;
-  }
-  
-  public void destroyItem(ViewGroup paramViewGroup, int paramInt, Object paramObject)
-  {
-    paramViewGroup.removeView((View)paramObject);
-  }
-  
-  public int getCount()
-  {
-    int i = 10;
-    if (this.mPoiList == null) {
-      i = 0;
+public class PoiListPagerAdapter extends PagerAdapter {
+    private static final String TAG = "PoiSearch";
+    private boolean isViewDragonOut = false;
+    private Context mContext;
+    private View mCurrentView;
+    private OnClickListener mDragonOnClickListener;
+    private OnTouchListener mDragonOnTouchListener;
+    private C1277e mOnDialogListener;
+    private PoiController mPoiController;
+    private PoiDetailView[] mPoiDetailViews;
+    private List<SearchPoi> mPoiList;
+    private int mSelectIndex = -1;
+
+    public PoiListPagerAdapter(Context mContext, List<SearchPoi> mPoiList, PoiController controller, C1277e listener) {
+        this.mPoiList = mPoiList;
+        this.mContext = mContext;
+        this.mPoiController = controller;
+        this.mPoiDetailViews = new PoiDetailView[getCount()];
+        this.mOnDialogListener = listener;
     }
-    while (this.mPoiList.size() > 10) {
-      return i;
+
+    public Object instantiateItem(ViewGroup container, int position) {
+        if (position >= getCount()) {
+            return null;
+        }
+        Object view = this.mPoiDetailViews[position];
+        if (view == null) {
+            view = new PoiDetailView(this.mContext);
+            view.setOnDialogListener(this.mOnDialogListener);
+            view.setController(this.mPoiController);
+            view.setSearchPoi((SearchPoi) this.mPoiList.get(position));
+            view.setSearchPoiIndex(position, ((SearchPoi) this.mPoiList.get(position)).mFCType);
+            view.setTag(Integer.valueOf(position));
+            view.setId(position);
+            this.mPoiDetailViews[position] = view;
+            if (this.mSelectIndex == position) {
+                view.checkStreetId();
+            }
+            view.setIsGragonOut(this.isViewDragonOut);
+            view.updateStyle();
+        }
+        view.setDragonOnClickListener(this.mDragonOnClickListener);
+        view.setDragonOnTouchListener(this.mDragonOnTouchListener);
+        container.addView(view);
+        return view;
     }
-    return this.mPoiList.size();
-  }
-  
-  public View getPrimaryItem()
-  {
-    return this.mCurrentView;
-  }
-  
-  public Object instantiateItem(ViewGroup paramViewGroup, int paramInt)
-  {
-    if (paramInt >= getCount()) {
-      return null;
+
+    public void setDragonOnClickListener(OnClickListener listener) {
+        this.mDragonOnClickListener = listener;
     }
-    PoiDetailView localPoiDetailView2 = this.mPoiDetailViews[paramInt];
-    PoiDetailView localPoiDetailView1 = localPoiDetailView2;
-    if (localPoiDetailView2 == null)
-    {
-      localPoiDetailView1 = new PoiDetailView(this.mContext);
-      localPoiDetailView1.setOnDialogListener(this.mOnDialogListener);
-      localPoiDetailView1.setController(this.mPoiController);
-      localPoiDetailView1.setSearchPoi((SearchPoi)this.mPoiList.get(paramInt));
-      localPoiDetailView1.setSearchPoiIndex(paramInt, ((SearchPoi)this.mPoiList.get(paramInt)).mFCType);
-      localPoiDetailView1.setTag(Integer.valueOf(paramInt));
-      localPoiDetailView1.setId(paramInt);
-      this.mPoiDetailViews[paramInt] = localPoiDetailView1;
-      if (this.mSelectIndex == paramInt) {
-        localPoiDetailView1.checkStreetId();
-      }
-      localPoiDetailView1.setIsGragonOut(this.isViewDragonOut);
-      localPoiDetailView1.updateStyle();
+
+    public void setDragonOnTouchListener(OnTouchListener listener) {
+        this.mDragonOnTouchListener = listener;
     }
-    localPoiDetailView1.setDragonOnClickListener(this.mDragonOnClickListener);
-    localPoiDetailView1.setDragonOnTouchListener(this.mDragonOnTouchListener);
-    paramViewGroup.addView(localPoiDetailView1);
-    return localPoiDetailView1;
-  }
-  
-  public boolean isViewFromObject(View paramView, Object paramObject)
-  {
-    return paramView == paramObject;
-  }
-  
-  public void selectIndex(int paramInt)
-  {
-    this.mSelectIndex = paramInt;
-    if ((this.mSelectIndex >= 0) && (this.mSelectIndex < this.mPoiDetailViews.length))
-    {
-      PoiDetailView localPoiDetailView = this.mPoiDetailViews[this.mSelectIndex];
-      if (localPoiDetailView != null)
-      {
-        this.mSelectIndex = -1;
-        localPoiDetailView.checkStreetId();
-      }
+
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView((View) object);
     }
-  }
-  
-  public void setDragonOnClickListener(View.OnClickListener paramOnClickListener)
-  {
-    this.mDragonOnClickListener = paramOnClickListener;
-  }
-  
-  public void setDragonOnTouchListener(View.OnTouchListener paramOnTouchListener)
-  {
-    this.mDragonOnTouchListener = paramOnTouchListener;
-  }
-  
-  public void setIsDragonOut(boolean paramBoolean)
-  {
-    this.isViewDragonOut = paramBoolean;
-    int i = 0;
-    while (i < this.mPoiDetailViews.length)
-    {
-      PoiDetailView localPoiDetailView = this.mPoiDetailViews[i];
-      if (localPoiDetailView != null) {
-        localPoiDetailView.setIsGragonOut(this.isViewDragonOut);
-      }
-      i += 1;
+
+    public int getCount() {
+        if (this.mPoiList == null) {
+            return 0;
+        }
+        if (this.mPoiList.size() <= 10) {
+            return this.mPoiList.size();
+        }
+        return 10;
     }
-  }
-  
-  public void setPrimaryItem(ViewGroup paramViewGroup, int paramInt, Object paramObject)
-  {
-    this.mCurrentView = ((View)paramObject);
-  }
-  
-  public void updateStyle()
-  {
-    int i = 0;
-    while (i < this.mPoiDetailViews.length)
-    {
-      if (this.mPoiDetailViews[i] != null) {
-        this.mPoiDetailViews[i].updateStyle();
-      }
-      i += 1;
+
+    public boolean isViewFromObject(View arg0, Object arg1) {
+        return arg0 == arg1;
     }
-  }
+
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        this.mCurrentView = (View) object;
+    }
+
+    public View getPrimaryItem() {
+        return this.mCurrentView;
+    }
+
+    public void selectIndex(int selectIndex) {
+        this.mSelectIndex = selectIndex;
+        if (this.mSelectIndex >= 0 && this.mSelectIndex < this.mPoiDetailViews.length) {
+            PoiDetailView detailView = this.mPoiDetailViews[this.mSelectIndex];
+            if (detailView != null) {
+                this.mSelectIndex = -1;
+                detailView.checkStreetId();
+            }
+        }
+    }
+
+    public void updateStyle() {
+        for (int i = 0; i < this.mPoiDetailViews.length; i++) {
+            if (this.mPoiDetailViews[i] != null) {
+                this.mPoiDetailViews[i].updateStyle();
+            }
+        }
+    }
+
+    public void setIsDragonOut(boolean isDragonOut) {
+        this.isViewDragonOut = isDragonOut;
+        for (PoiDetailView poiDetailView : this.mPoiDetailViews) {
+            if (poiDetailView != null) {
+                poiDetailView.setIsGragonOut(this.isViewDragonOut);
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/adapter/PoiListPagerAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

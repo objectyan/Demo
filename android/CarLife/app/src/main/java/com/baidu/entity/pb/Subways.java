@@ -1,5 +1,6 @@
 package com.baidu.entity.pb;
 
+import com.baidu.baidunavis.model.NavCarInfo;
 import com.google.protobuf.micro.CodedInputStreamMicro;
 import com.google.protobuf.micro.CodedOutputStreamMicro;
 import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
@@ -7,1972 +8,1779 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class Subways
-  extends MessageMicro
-{
-  public static final int L_FIELD_NUMBER = 2;
-  public static final int SW_XMLATTR_FIELD_NUMBER = 1;
-  private boolean a;
-  private SwXmlattr b = null;
-  private List<L> c = Collections.emptyList();
-  private int d = -1;
-  
-  public static Subways parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new Subways().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static Subways parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (Subways)new Subways().mergeFrom(paramArrayOfByte);
-  }
-  
-  public Subways addL(L paramL)
-  {
-    if (paramL == null) {
-      return this;
-    }
-    if (this.c.isEmpty()) {
-      this.c = new ArrayList();
-    }
-    this.c.add(paramL);
-    return this;
-  }
-  
-  public final Subways clear()
-  {
-    clearSwXmlattr();
-    clearL();
-    this.d = -1;
-    return this;
-  }
-  
-  public Subways clearL()
-  {
-    this.c = Collections.emptyList();
-    return this;
-  }
-  
-  public Subways clearSwXmlattr()
-  {
-    this.a = false;
-    this.b = null;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.d < 0) {
-      getSerializedSize();
-    }
-    return this.d;
-  }
-  
-  public L getL(int paramInt)
-  {
-    return (L)this.c.get(paramInt);
-  }
-  
-  public int getLCount()
-  {
-    return this.c.size();
-  }
-  
-  public List<L> getLList()
-  {
-    return this.c;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasSwXmlattr()) {
-      i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getSwXmlattr());
-    }
-    Iterator localIterator = getLList().iterator();
-    while (localIterator.hasNext()) {
-      i = CodedOutputStreamMicro.computeMessageSize(2, (L)localIterator.next()) + i;
-    }
-    this.d = i;
-    return i;
-  }
-  
-  public SwXmlattr getSwXmlattr()
-  {
-    return this.b;
-  }
-  
-  public boolean hasSwXmlattr()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Subways mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      Object localObject;
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
-        return this;
-      case 10: 
-        localObject = new SwXmlattr();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setSwXmlattr((SwXmlattr)localObject);
-        break;
-      case 18: 
-        localObject = new L();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        addL((L)localObject);
-      }
-    }
-  }
-  
-  public Subways setL(int paramInt, L paramL)
-  {
-    if (paramL == null) {
-      return this;
-    }
-    this.c.set(paramInt, paramL);
-    return this;
-  }
-  
-  public Subways setSwXmlattr(SwXmlattr paramSwXmlattr)
-  {
-    if (paramSwXmlattr == null) {
-      return clearSwXmlattr();
-    }
-    this.a = true;
-    this.b = paramSwXmlattr;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasSwXmlattr()) {
-      paramCodedOutputStreamMicro.writeMessage(1, getSwXmlattr());
-    }
-    Iterator localIterator = getLList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(2, (L)localIterator.next());
-    }
-  }
-  
-  public static final class L
-    extends MessageMicro
-  {
-    public static final int L_XMLATTR_FIELD_NUMBER = 1;
-    public static final int P_FIELD_NUMBER = 2;
-    private boolean a;
-    private LXmlattr b = null;
-    private List<P> c = Collections.emptyList();
-    private int d = -1;
-    
-    public static L parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new L().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static L parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (L)new L().mergeFrom(paramArrayOfByte);
-    }
-    
-    public L addP(P paramP)
-    {
-      if (paramP == null) {
-        return this;
-      }
-      if (this.c.isEmpty()) {
-        this.c = new ArrayList();
-      }
-      this.c.add(paramP);
-      return this;
-    }
-    
-    public final L clear()
-    {
-      clearLXmlattr();
-      clearP();
-      this.d = -1;
-      return this;
-    }
-    
-    public L clearLXmlattr()
-    {
-      this.a = false;
-      this.b = null;
-      return this;
-    }
-    
-    public L clearP()
-    {
-      this.c = Collections.emptyList();
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.d < 0) {
-        getSerializedSize();
-      }
-      return this.d;
-    }
-    
-    public LXmlattr getLXmlattr()
-    {
-      return this.b;
-    }
-    
-    public P getP(int paramInt)
-    {
-      return (P)this.c.get(paramInt);
-    }
-    
-    public int getPCount()
-    {
-      return this.c.size();
-    }
-    
-    public List<P> getPList()
-    {
-      return this.c;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasLXmlattr()) {
-        i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getLXmlattr());
-      }
-      Iterator localIterator = getPList().iterator();
-      while (localIterator.hasNext()) {
-        i = CodedOutputStreamMicro.computeMessageSize(2, (P)localIterator.next()) + i;
-      }
-      this.d = i;
-      return i;
-    }
-    
-    public boolean hasLXmlattr()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public L mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new LXmlattr();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setLXmlattr((LXmlattr)localObject);
-          break;
-        case 18: 
-          localObject = new P();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addP((P)localObject);
-        }
-      }
-    }
-    
-    public L setLXmlattr(LXmlattr paramLXmlattr)
-    {
-      if (paramLXmlattr == null) {
-        return clearLXmlattr();
-      }
-      this.a = true;
-      this.b = paramLXmlattr;
-      return this;
-    }
-    
-    public L setP(int paramInt, P paramP)
-    {
-      if (paramP == null) {
-        return this;
-      }
-      this.c.set(paramInt, paramP);
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasLXmlattr()) {
-        paramCodedOutputStreamMicro.writeMessage(1, getLXmlattr());
-      }
-      Iterator localIterator = getPList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(2, (P)localIterator.next());
-      }
-    }
-    
-    public static final class LXmlattr
-      extends MessageMicro
-    {
-      public static final int LBR_FIELD_NUMBER = 8;
-      public static final int LBX_FIELD_NUMBER = 6;
-      public static final int LBY_FIELD_NUMBER = 7;
-      public static final int LB_FIELD_NUMBER = 2;
-      public static final int LC_FIELD_NUMBER = 9;
-      public static final int LID_FIELD_NUMBER = 1;
-      public static final int LOOP_FIELD_NUMBER = 5;
-      public static final int N_FIELD_NUMBER = 4;
-      public static final int SLB_FIELD_NUMBER = 3;
-      public static final int UID2_FIELD_NUMBER = 11;
-      public static final int UID_FIELD_NUMBER = 10;
-      private boolean a;
-      private String b = "";
-      private boolean c;
-      private String d = "";
-      private boolean e;
-      private String f = "";
-      private boolean g;
-      private String h = "";
-      private boolean i;
-      private boolean j = false;
-      private boolean k;
-      private double l = 0.0D;
-      private boolean m;
-      private double n = 0.0D;
-      private boolean o;
-      private double p = 0.0D;
-      private boolean q;
-      private String r = "";
-      private boolean s;
-      private String t = "";
-      private boolean u;
-      private String v = "";
-      private int w = -1;
-      
-      public static LXmlattr parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new LXmlattr().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static LXmlattr parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (LXmlattr)new LXmlattr().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final LXmlattr clear()
-      {
-        clearLid();
-        clearLb();
-        clearSlb();
-        clearN();
-        clearLoop();
-        clearLbx();
-        clearLby();
-        clearLbr();
-        clearLc();
-        clearUid();
-        clearUid2();
-        this.w = -1;
-        return this;
-      }
-      
-      public LXmlattr clearLb()
-      {
-        this.c = false;
-        this.d = "";
-        return this;
-      }
-      
-      public LXmlattr clearLbr()
-      {
-        this.o = false;
-        this.p = 0.0D;
-        return this;
-      }
-      
-      public LXmlattr clearLbx()
-      {
-        this.k = false;
-        this.l = 0.0D;
-        return this;
-      }
-      
-      public LXmlattr clearLby()
-      {
-        this.m = false;
-        this.n = 0.0D;
-        return this;
-      }
-      
-      public LXmlattr clearLc()
-      {
-        this.q = false;
-        this.r = "";
-        return this;
-      }
-      
-      public LXmlattr clearLid()
-      {
-        this.a = false;
-        this.b = "";
-        return this;
-      }
-      
-      public LXmlattr clearLoop()
-      {
-        this.i = false;
-        this.j = false;
-        return this;
-      }
-      
-      public LXmlattr clearN()
-      {
-        this.g = false;
-        this.h = "";
-        return this;
-      }
-      
-      public LXmlattr clearSlb()
-      {
-        this.e = false;
-        this.f = "";
-        return this;
-      }
-      
-      public LXmlattr clearUid()
-      {
-        this.s = false;
-        this.t = "";
-        return this;
-      }
-      
-      public LXmlattr clearUid2()
-      {
-        this.u = false;
-        this.v = "";
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.w < 0) {
-          getSerializedSize();
-        }
-        return this.w;
-      }
-      
-      public String getLb()
-      {
-        return this.d;
-      }
-      
-      public double getLbr()
-      {
-        return this.p;
-      }
-      
-      public double getLbx()
-      {
-        return this.l;
-      }
-      
-      public double getLby()
-      {
-        return this.n;
-      }
-      
-      public String getLc()
-      {
-        return this.r;
-      }
-      
-      public String getLid()
-      {
-        return this.b;
-      }
-      
-      public boolean getLoop()
-      {
-        return this.j;
-      }
-      
-      public String getN()
-      {
-        return this.h;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i2 = 0;
-        if (hasLid()) {
-          i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getLid());
-        }
-        int i1 = i2;
-        if (hasLb()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getLb());
-        }
-        i2 = i1;
-        if (hasSlb()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getSlb());
-        }
-        i1 = i2;
-        if (hasN()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getN());
-        }
-        i2 = i1;
-        if (hasLoop()) {
-          i2 = i1 + CodedOutputStreamMicro.computeBoolSize(5, getLoop());
-        }
-        i1 = i2;
-        if (hasLbx()) {
-          i1 = i2 + CodedOutputStreamMicro.computeDoubleSize(6, getLbx());
-        }
-        i2 = i1;
-        if (hasLby()) {
-          i2 = i1 + CodedOutputStreamMicro.computeDoubleSize(7, getLby());
-        }
-        i1 = i2;
-        if (hasLbr()) {
-          i1 = i2 + CodedOutputStreamMicro.computeDoubleSize(8, getLbr());
-        }
-        i2 = i1;
-        if (hasLc()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getLc());
-        }
-        i1 = i2;
-        if (hasUid()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(10, getUid());
-        }
-        i2 = i1;
-        if (hasUid2()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(11, getUid2());
-        }
-        this.w = i2;
-        return i2;
-      }
-      
-      public String getSlb()
-      {
-        return this.f;
-      }
-      
-      public String getUid()
-      {
-        return this.t;
-      }
-      
-      public String getUid2()
-      {
-        return this.v;
-      }
-      
-      public boolean hasLb()
-      {
-        return this.c;
-      }
-      
-      public boolean hasLbr()
-      {
-        return this.o;
-      }
-      
-      public boolean hasLbx()
-      {
-        return this.k;
-      }
-      
-      public boolean hasLby()
-      {
-        return this.m;
-      }
-      
-      public boolean hasLc()
-      {
-        return this.q;
-      }
-      
-      public boolean hasLid()
-      {
-        return this.a;
-      }
-      
-      public boolean hasLoop()
-      {
-        return this.i;
-      }
-      
-      public boolean hasN()
-      {
-        return this.g;
-      }
-      
-      public boolean hasSlb()
-      {
-        return this.e;
-      }
-      
-      public boolean hasUid()
-      {
-        return this.s;
-      }
-      
-      public boolean hasUid2()
-      {
-        return this.u;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public LXmlattr mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i1 = paramCodedInputStreamMicro.readTag();
-          switch (i1)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-            break;
-          case 0: 
-            return this;
-          case 10: 
-            setLid(paramCodedInputStreamMicro.readString());
-            break;
-          case 18: 
-            setLb(paramCodedInputStreamMicro.readString());
-            break;
-          case 26: 
-            setSlb(paramCodedInputStreamMicro.readString());
-            break;
-          case 34: 
-            setN(paramCodedInputStreamMicro.readString());
-            break;
-          case 40: 
-            setLoop(paramCodedInputStreamMicro.readBool());
-            break;
-          case 49: 
-            setLbx(paramCodedInputStreamMicro.readDouble());
-            break;
-          case 57: 
-            setLby(paramCodedInputStreamMicro.readDouble());
-            break;
-          case 65: 
-            setLbr(paramCodedInputStreamMicro.readDouble());
-            break;
-          case 74: 
-            setLc(paramCodedInputStreamMicro.readString());
-            break;
-          case 82: 
-            setUid(paramCodedInputStreamMicro.readString());
-            break;
-          case 90: 
-            setUid2(paramCodedInputStreamMicro.readString());
-          }
-        }
-      }
-      
-      public LXmlattr setLb(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
-        return this;
-      }
-      
-      public LXmlattr setLbr(double paramDouble)
-      {
-        this.o = true;
-        this.p = paramDouble;
-        return this;
-      }
-      
-      public LXmlattr setLbx(double paramDouble)
-      {
-        this.k = true;
-        this.l = paramDouble;
-        return this;
-      }
-      
-      public LXmlattr setLby(double paramDouble)
-      {
-        this.m = true;
-        this.n = paramDouble;
-        return this;
-      }
-      
-      public LXmlattr setLc(String paramString)
-      {
-        this.q = true;
-        this.r = paramString;
-        return this;
-      }
-      
-      public LXmlattr setLid(String paramString)
-      {
-        this.a = true;
-        this.b = paramString;
-        return this;
-      }
-      
-      public LXmlattr setLoop(boolean paramBoolean)
-      {
-        this.i = true;
-        this.j = paramBoolean;
-        return this;
-      }
-      
-      public LXmlattr setN(String paramString)
-      {
-        this.g = true;
-        this.h = paramString;
-        return this;
-      }
-      
-      public LXmlattr setSlb(String paramString)
-      {
-        this.e = true;
-        this.f = paramString;
-        return this;
-      }
-      
-      public LXmlattr setUid(String paramString)
-      {
-        this.s = true;
-        this.t = paramString;
-        return this;
-      }
-      
-      public LXmlattr setUid2(String paramString)
-      {
-        this.u = true;
-        this.v = paramString;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasLid()) {
-          paramCodedOutputStreamMicro.writeString(1, getLid());
-        }
-        if (hasLb()) {
-          paramCodedOutputStreamMicro.writeString(2, getLb());
-        }
-        if (hasSlb()) {
-          paramCodedOutputStreamMicro.writeString(3, getSlb());
-        }
-        if (hasN()) {
-          paramCodedOutputStreamMicro.writeString(4, getN());
-        }
-        if (hasLoop()) {
-          paramCodedOutputStreamMicro.writeBool(5, getLoop());
-        }
-        if (hasLbx()) {
-          paramCodedOutputStreamMicro.writeDouble(6, getLbx());
-        }
-        if (hasLby()) {
-          paramCodedOutputStreamMicro.writeDouble(7, getLby());
-        }
-        if (hasLbr()) {
-          paramCodedOutputStreamMicro.writeDouble(8, getLbr());
-        }
-        if (hasLc()) {
-          paramCodedOutputStreamMicro.writeString(9, getLc());
-        }
-        if (hasUid()) {
-          paramCodedOutputStreamMicro.writeString(10, getUid());
-        }
-        if (hasUid2()) {
-          paramCodedOutputStreamMicro.writeString(11, getUid2());
-        }
-      }
-    }
-    
-    public static final class P
-      extends MessageMicro
-    {
-      public static final int P_XMLATTR_FIELD_NUMBER = 1;
-      private boolean a;
-      private PXmlattr b = null;
-      private int c = -1;
-      
-      public static P parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new P().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static P parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (P)new P().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final P clear()
-      {
-        clearPXmlattr();
-        this.c = -1;
-        return this;
-      }
-      
-      public P clearPXmlattr()
-      {
-        this.a = false;
-        this.b = null;
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.c < 0) {
-          getSerializedSize();
-        }
-        return this.c;
-      }
-      
-      public PXmlattr getPXmlattr()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i = 0;
-        if (hasPXmlattr()) {
-          i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getPXmlattr());
-        }
-        this.c = i;
-        return i;
-      }
-      
-      public boolean hasPXmlattr()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public P mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
-            return this;
-          case 10: 
-            PXmlattr localPXmlattr = new PXmlattr();
-            paramCodedInputStreamMicro.readMessage(localPXmlattr);
-            setPXmlattr(localPXmlattr);
-          }
-        }
-      }
-      
-      public P setPXmlattr(PXmlattr paramPXmlattr)
-      {
-        if (paramPXmlattr == null) {
-          return clearPXmlattr();
-        }
-        this.a = true;
-        this.b = paramPXmlattr;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasPXmlattr()) {
-          paramCodedOutputStreamMicro.writeMessage(1, getPXmlattr());
-        }
-      }
-      
-      public static final class PXmlattr
-        extends MessageMicro
-      {
-        public static final int BOLD_FIELD_NUMBER = 15;
-        public static final int EX_FIELD_NUMBER = 8;
-        public static final int IU_FIELD_NUMBER = 9;
-        public static final int LB_FIELD_NUMBER = 2;
-        public static final int PX_FIELD_NUMBER = 12;
-        public static final int PY_FIELD_NUMBER = 13;
-        public static final int RC_FIELD_NUMBER = 10;
-        public static final int RX_FIELD_NUMBER = 5;
-        public static final int RY_FIELD_NUMBER = 6;
-        public static final int SID_FIELD_NUMBER = 1;
-        public static final int SLB_FIELD_NUMBER = 11;
-        public static final int ST_FIELD_NUMBER = 7;
-        public static final int UID_FIELD_NUMBER = 14;
-        public static final int X_FIELD_NUMBER = 3;
-        public static final int Y_FIELD_NUMBER = 4;
-        private boolean A;
-        private String B = "";
-        private boolean C;
-        private boolean D = false;
-        private int E = -1;
-        private boolean a;
-        private String b = "";
-        private boolean c;
-        private String d = "";
-        private boolean e;
-        private double f = 0.0D;
-        private boolean g;
-        private double h = 0.0D;
-        private boolean i;
-        private double j = 0.0D;
-        private boolean k;
-        private double l = 0.0D;
-        private boolean m;
-        private boolean n = false;
-        private boolean o;
-        private boolean p = false;
-        private boolean q;
-        private boolean r = false;
-        private boolean s;
-        private boolean t = false;
-        private boolean u;
-        private boolean v = false;
-        private boolean w;
-        private double x = 0.0D;
-        private boolean y;
-        private double z = 0.0D;
-        
-        public static PXmlattr parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-          throws IOException
-        {
-          return new PXmlattr().mergeFrom(paramCodedInputStreamMicro);
-        }
-        
-        public static PXmlattr parseFrom(byte[] paramArrayOfByte)
-          throws InvalidProtocolBufferMicroException
-        {
-          return (PXmlattr)new PXmlattr().mergeFrom(paramArrayOfByte);
-        }
-        
-        public final PXmlattr clear()
-        {
-          clearSid();
-          clearLb();
-          clearX();
-          clearY();
-          clearRx();
-          clearRy();
-          clearSt();
-          clearEx();
-          clearIu();
-          clearRc();
-          clearSlb();
-          clearPx();
-          clearPy();
-          clearUid();
-          clearBold();
-          this.E = -1;
-          return this;
-        }
-        
-        public PXmlattr clearBold()
-        {
-          this.C = false;
-          this.D = false;
-          return this;
-        }
-        
-        public PXmlattr clearEx()
-        {
-          this.o = false;
-          this.p = false;
-          return this;
-        }
-        
-        public PXmlattr clearIu()
-        {
-          this.q = false;
-          this.r = false;
-          return this;
-        }
-        
-        public PXmlattr clearLb()
-        {
-          this.c = false;
-          this.d = "";
-          return this;
-        }
-        
-        public PXmlattr clearPx()
-        {
-          this.w = false;
-          this.x = 0.0D;
-          return this;
-        }
-        
-        public PXmlattr clearPy()
-        {
-          this.y = false;
-          this.z = 0.0D;
-          return this;
-        }
-        
-        public PXmlattr clearRc()
-        {
-          this.s = false;
-          this.t = false;
-          return this;
-        }
-        
-        public PXmlattr clearRx()
-        {
-          this.i = false;
-          this.j = 0.0D;
-          return this;
-        }
-        
-        public PXmlattr clearRy()
-        {
-          this.k = false;
-          this.l = 0.0D;
-          return this;
-        }
-        
-        public PXmlattr clearSid()
-        {
-          this.a = false;
-          this.b = "";
-          return this;
-        }
-        
-        public PXmlattr clearSlb()
-        {
-          this.u = false;
-          this.v = false;
-          return this;
-        }
-        
-        public PXmlattr clearSt()
-        {
-          this.m = false;
-          this.n = false;
-          return this;
-        }
-        
-        public PXmlattr clearUid()
-        {
-          this.A = false;
-          this.B = "";
-          return this;
-        }
-        
-        public PXmlattr clearX()
-        {
-          this.e = false;
-          this.f = 0.0D;
-          return this;
-        }
-        
-        public PXmlattr clearY()
-        {
-          this.g = false;
-          this.h = 0.0D;
-          return this;
-        }
-        
-        public boolean getBold()
-        {
-          return this.D;
-        }
-        
-        public int getCachedSize()
-        {
-          if (this.E < 0) {
-            getSerializedSize();
-          }
-          return this.E;
-        }
-        
-        public boolean getEx()
-        {
-          return this.p;
-        }
-        
-        public boolean getIu()
-        {
-          return this.r;
-        }
-        
-        public String getLb()
-        {
-          return this.d;
-        }
-        
-        public double getPx()
-        {
-          return this.x;
-        }
-        
-        public double getPy()
-        {
-          return this.z;
-        }
-        
-        public boolean getRc()
-        {
-          return this.t;
-        }
-        
-        public double getRx()
-        {
-          return this.j;
-        }
-        
-        public double getRy()
-        {
-          return this.l;
-        }
-        
-        public int getSerializedSize()
-        {
-          int i2 = 0;
-          if (hasSid()) {
-            i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getSid());
-          }
-          int i1 = i2;
-          if (hasLb()) {
-            i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getLb());
-          }
-          i2 = i1;
-          if (hasX()) {
-            i2 = i1 + CodedOutputStreamMicro.computeDoubleSize(3, getX());
-          }
-          i1 = i2;
-          if (hasY()) {
-            i1 = i2 + CodedOutputStreamMicro.computeDoubleSize(4, getY());
-          }
-          i2 = i1;
-          if (hasRx()) {
-            i2 = i1 + CodedOutputStreamMicro.computeDoubleSize(5, getRx());
-          }
-          i1 = i2;
-          if (hasRy()) {
-            i1 = i2 + CodedOutputStreamMicro.computeDoubleSize(6, getRy());
-          }
-          i2 = i1;
-          if (hasSt()) {
-            i2 = i1 + CodedOutputStreamMicro.computeBoolSize(7, getSt());
-          }
-          i1 = i2;
-          if (hasEx()) {
-            i1 = i2 + CodedOutputStreamMicro.computeBoolSize(8, getEx());
-          }
-          i2 = i1;
-          if (hasIu()) {
-            i2 = i1 + CodedOutputStreamMicro.computeBoolSize(9, getIu());
-          }
-          i1 = i2;
-          if (hasRc()) {
-            i1 = i2 + CodedOutputStreamMicro.computeBoolSize(10, getRc());
-          }
-          i2 = i1;
-          if (hasSlb()) {
-            i2 = i1 + CodedOutputStreamMicro.computeBoolSize(11, getSlb());
-          }
-          i1 = i2;
-          if (hasPx()) {
-            i1 = i2 + CodedOutputStreamMicro.computeDoubleSize(12, getPx());
-          }
-          i2 = i1;
-          if (hasPy()) {
-            i2 = i1 + CodedOutputStreamMicro.computeDoubleSize(13, getPy());
-          }
-          i1 = i2;
-          if (hasUid()) {
-            i1 = i2 + CodedOutputStreamMicro.computeStringSize(14, getUid());
-          }
-          i2 = i1;
-          if (hasBold()) {
-            i2 = i1 + CodedOutputStreamMicro.computeBoolSize(15, getBold());
-          }
-          this.E = i2;
-          return i2;
-        }
-        
-        public String getSid()
-        {
-          return this.b;
-        }
-        
-        public boolean getSlb()
-        {
-          return this.v;
-        }
-        
-        public boolean getSt()
-        {
-          return this.n;
-        }
-        
-        public String getUid()
-        {
-          return this.B;
-        }
-        
-        public double getX()
-        {
-          return this.f;
-        }
-        
-        public double getY()
-        {
-          return this.h;
-        }
-        
-        public boolean hasBold()
-        {
-          return this.C;
-        }
-        
-        public boolean hasEx()
-        {
-          return this.o;
-        }
-        
-        public boolean hasIu()
-        {
-          return this.q;
-        }
-        
-        public boolean hasLb()
-        {
-          return this.c;
-        }
-        
-        public boolean hasPx()
-        {
-          return this.w;
-        }
-        
-        public boolean hasPy()
-        {
-          return this.y;
-        }
-        
-        public boolean hasRc()
-        {
-          return this.s;
-        }
-        
-        public boolean hasRx()
-        {
-          return this.i;
-        }
-        
-        public boolean hasRy()
-        {
-          return this.k;
-        }
-        
-        public boolean hasSid()
-        {
-          return this.a;
-        }
-        
-        public boolean hasSlb()
-        {
-          return this.u;
-        }
-        
-        public boolean hasSt()
-        {
-          return this.m;
-        }
-        
-        public boolean hasUid()
-        {
-          return this.A;
-        }
-        
-        public boolean hasX()
-        {
-          return this.e;
-        }
-        
-        public boolean hasY()
-        {
-          return this.g;
-        }
-        
-        public final boolean isInitialized()
-        {
-          return true;
-        }
-        
-        public PXmlattr mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-          throws IOException
-        {
-          for (;;)
-          {
-            int i1 = paramCodedInputStreamMicro.readTag();
-            switch (i1)
-            {
-            default: 
-              if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-              break;
-            case 0: 
-              return this;
-            case 10: 
-              setSid(paramCodedInputStreamMicro.readString());
-              break;
-            case 18: 
-              setLb(paramCodedInputStreamMicro.readString());
-              break;
-            case 25: 
-              setX(paramCodedInputStreamMicro.readDouble());
-              break;
-            case 33: 
-              setY(paramCodedInputStreamMicro.readDouble());
-              break;
-            case 41: 
-              setRx(paramCodedInputStreamMicro.readDouble());
-              break;
-            case 49: 
-              setRy(paramCodedInputStreamMicro.readDouble());
-              break;
-            case 56: 
-              setSt(paramCodedInputStreamMicro.readBool());
-              break;
-            case 64: 
-              setEx(paramCodedInputStreamMicro.readBool());
-              break;
-            case 72: 
-              setIu(paramCodedInputStreamMicro.readBool());
-              break;
-            case 80: 
-              setRc(paramCodedInputStreamMicro.readBool());
-              break;
-            case 88: 
-              setSlb(paramCodedInputStreamMicro.readBool());
-              break;
-            case 97: 
-              setPx(paramCodedInputStreamMicro.readDouble());
-              break;
-            case 105: 
-              setPy(paramCodedInputStreamMicro.readDouble());
-              break;
-            case 114: 
-              setUid(paramCodedInputStreamMicro.readString());
-              break;
-            case 120: 
-              setBold(paramCodedInputStreamMicro.readBool());
+public final class Subways extends MessageMicro {
+    public static final int L_FIELD_NUMBER = 2;
+    public static final int SW_XMLATTR_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private boolean f14751a;
+    /* renamed from: b */
+    private SwXmlattr f14752b = null;
+    /* renamed from: c */
+    private List<C3151L> f14753c = Collections.emptyList();
+    /* renamed from: d */
+    private int f14754d = -1;
+
+    /* renamed from: com.baidu.entity.pb.Subways$L */
+    public static final class C3151L extends MessageMicro {
+        public static final int L_XMLATTR_FIELD_NUMBER = 1;
+        public static final int P_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f14728a;
+        /* renamed from: b */
+        private LXmlattr f14729b = null;
+        /* renamed from: c */
+        private List<C3150P> f14730c = Collections.emptyList();
+        /* renamed from: d */
+        private int f14731d = -1;
+
+        /* renamed from: com.baidu.entity.pb.Subways$L$LXmlattr */
+        public static final class LXmlattr extends MessageMicro {
+            public static final int LBR_FIELD_NUMBER = 8;
+            public static final int LBX_FIELD_NUMBER = 6;
+            public static final int LBY_FIELD_NUMBER = 7;
+            public static final int LB_FIELD_NUMBER = 2;
+            public static final int LC_FIELD_NUMBER = 9;
+            public static final int LID_FIELD_NUMBER = 1;
+            public static final int LOOP_FIELD_NUMBER = 5;
+            public static final int N_FIELD_NUMBER = 4;
+            public static final int SLB_FIELD_NUMBER = 3;
+            public static final int UID2_FIELD_NUMBER = 11;
+            public static final int UID_FIELD_NUMBER = 10;
+            /* renamed from: a */
+            private boolean f14671a;
+            /* renamed from: b */
+            private String f14672b = "";
+            /* renamed from: c */
+            private boolean f14673c;
+            /* renamed from: d */
+            private String f14674d = "";
+            /* renamed from: e */
+            private boolean f14675e;
+            /* renamed from: f */
+            private String f14676f = "";
+            /* renamed from: g */
+            private boolean f14677g;
+            /* renamed from: h */
+            private String f14678h = "";
+            /* renamed from: i */
+            private boolean f14679i;
+            /* renamed from: j */
+            private boolean f14680j = false;
+            /* renamed from: k */
+            private boolean f14681k;
+            /* renamed from: l */
+            private double f14682l = 0.0d;
+            /* renamed from: m */
+            private boolean f14683m;
+            /* renamed from: n */
+            private double f14684n = 0.0d;
+            /* renamed from: o */
+            private boolean f14685o;
+            /* renamed from: p */
+            private double f14686p = 0.0d;
+            /* renamed from: q */
+            private boolean f14687q;
+            /* renamed from: r */
+            private String f14688r = "";
+            /* renamed from: s */
+            private boolean f14689s;
+            /* renamed from: t */
+            private String f14690t = "";
+            /* renamed from: u */
+            private boolean f14691u;
+            /* renamed from: v */
+            private String f14692v = "";
+            /* renamed from: w */
+            private int f14693w = -1;
+
+            public static LXmlattr parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new LXmlattr().mergeFrom(codedInputStreamMicro);
             }
-          }
+
+            public static LXmlattr parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (LXmlattr) new LXmlattr().mergeFrom(bArr);
+            }
+
+            public final LXmlattr clear() {
+                clearLid();
+                clearLb();
+                clearSlb();
+                clearN();
+                clearLoop();
+                clearLbx();
+                clearLby();
+                clearLbr();
+                clearLc();
+                clearUid();
+                clearUid2();
+                this.f14693w = -1;
+                return this;
+            }
+
+            public LXmlattr clearLb() {
+                this.f14673c = false;
+                this.f14674d = "";
+                return this;
+            }
+
+            public LXmlattr clearLbr() {
+                this.f14685o = false;
+                this.f14686p = 0.0d;
+                return this;
+            }
+
+            public LXmlattr clearLbx() {
+                this.f14681k = false;
+                this.f14682l = 0.0d;
+                return this;
+            }
+
+            public LXmlattr clearLby() {
+                this.f14683m = false;
+                this.f14684n = 0.0d;
+                return this;
+            }
+
+            public LXmlattr clearLc() {
+                this.f14687q = false;
+                this.f14688r = "";
+                return this;
+            }
+
+            public LXmlattr clearLid() {
+                this.f14671a = false;
+                this.f14672b = "";
+                return this;
+            }
+
+            public LXmlattr clearLoop() {
+                this.f14679i = false;
+                this.f14680j = false;
+                return this;
+            }
+
+            public LXmlattr clearN() {
+                this.f14677g = false;
+                this.f14678h = "";
+                return this;
+            }
+
+            public LXmlattr clearSlb() {
+                this.f14675e = false;
+                this.f14676f = "";
+                return this;
+            }
+
+            public LXmlattr clearUid() {
+                this.f14689s = false;
+                this.f14690t = "";
+                return this;
+            }
+
+            public LXmlattr clearUid2() {
+                this.f14691u = false;
+                this.f14692v = "";
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f14693w < 0) {
+                    getSerializedSize();
+                }
+                return this.f14693w;
+            }
+
+            public String getLb() {
+                return this.f14674d;
+            }
+
+            public double getLbr() {
+                return this.f14686p;
+            }
+
+            public double getLbx() {
+                return this.f14682l;
+            }
+
+            public double getLby() {
+                return this.f14684n;
+            }
+
+            public String getLc() {
+                return this.f14688r;
+            }
+
+            public String getLid() {
+                return this.f14672b;
+            }
+
+            public boolean getLoop() {
+                return this.f14680j;
+            }
+
+            public String getN() {
+                return this.f14678h;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasLid()) {
+                    i = 0 + CodedOutputStreamMicro.computeStringSize(1, getLid());
+                }
+                if (hasLb()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getLb());
+                }
+                if (hasSlb()) {
+                    i += CodedOutputStreamMicro.computeStringSize(3, getSlb());
+                }
+                if (hasN()) {
+                    i += CodedOutputStreamMicro.computeStringSize(4, getN());
+                }
+                if (hasLoop()) {
+                    i += CodedOutputStreamMicro.computeBoolSize(5, getLoop());
+                }
+                if (hasLbx()) {
+                    i += CodedOutputStreamMicro.computeDoubleSize(6, getLbx());
+                }
+                if (hasLby()) {
+                    i += CodedOutputStreamMicro.computeDoubleSize(7, getLby());
+                }
+                if (hasLbr()) {
+                    i += CodedOutputStreamMicro.computeDoubleSize(8, getLbr());
+                }
+                if (hasLc()) {
+                    i += CodedOutputStreamMicro.computeStringSize(9, getLc());
+                }
+                if (hasUid()) {
+                    i += CodedOutputStreamMicro.computeStringSize(10, getUid());
+                }
+                if (hasUid2()) {
+                    i += CodedOutputStreamMicro.computeStringSize(11, getUid2());
+                }
+                this.f14693w = i;
+                return i;
+            }
+
+            public String getSlb() {
+                return this.f14676f;
+            }
+
+            public String getUid() {
+                return this.f14690t;
+            }
+
+            public String getUid2() {
+                return this.f14692v;
+            }
+
+            public boolean hasLb() {
+                return this.f14673c;
+            }
+
+            public boolean hasLbr() {
+                return this.f14685o;
+            }
+
+            public boolean hasLbx() {
+                return this.f14681k;
+            }
+
+            public boolean hasLby() {
+                return this.f14683m;
+            }
+
+            public boolean hasLc() {
+                return this.f14687q;
+            }
+
+            public boolean hasLid() {
+                return this.f14671a;
+            }
+
+            public boolean hasLoop() {
+                return this.f14679i;
+            }
+
+            public boolean hasN() {
+                return this.f14677g;
+            }
+
+            public boolean hasSlb() {
+                return this.f14675e;
+            }
+
+            public boolean hasUid() {
+                return this.f14689s;
+            }
+
+            public boolean hasUid2() {
+                return this.f14691u;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public LXmlattr mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 10:
+                            setLid(codedInputStreamMicro.readString());
+                            continue;
+                        case 18:
+                            setLb(codedInputStreamMicro.readString());
+                            continue;
+                        case 26:
+                            setSlb(codedInputStreamMicro.readString());
+                            continue;
+                        case 34:
+                            setN(codedInputStreamMicro.readString());
+                            continue;
+                        case 40:
+                            setLoop(codedInputStreamMicro.readBool());
+                            continue;
+                        case 49:
+                            setLbx(codedInputStreamMicro.readDouble());
+                            continue;
+                        case 57:
+                            setLby(codedInputStreamMicro.readDouble());
+                            continue;
+                        case 65:
+                            setLbr(codedInputStreamMicro.readDouble());
+                            continue;
+                        case 74:
+                            setLc(codedInputStreamMicro.readString());
+                            continue;
+                        case 82:
+                            setUid(codedInputStreamMicro.readString());
+                            continue;
+                        case 90:
+                            setUid2(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public LXmlattr setLb(String str) {
+                this.f14673c = true;
+                this.f14674d = str;
+                return this;
+            }
+
+            public LXmlattr setLbr(double d) {
+                this.f14685o = true;
+                this.f14686p = d;
+                return this;
+            }
+
+            public LXmlattr setLbx(double d) {
+                this.f14681k = true;
+                this.f14682l = d;
+                return this;
+            }
+
+            public LXmlattr setLby(double d) {
+                this.f14683m = true;
+                this.f14684n = d;
+                return this;
+            }
+
+            public LXmlattr setLc(String str) {
+                this.f14687q = true;
+                this.f14688r = str;
+                return this;
+            }
+
+            public LXmlattr setLid(String str) {
+                this.f14671a = true;
+                this.f14672b = str;
+                return this;
+            }
+
+            public LXmlattr setLoop(boolean z) {
+                this.f14679i = true;
+                this.f14680j = z;
+                return this;
+            }
+
+            public LXmlattr setN(String str) {
+                this.f14677g = true;
+                this.f14678h = str;
+                return this;
+            }
+
+            public LXmlattr setSlb(String str) {
+                this.f14675e = true;
+                this.f14676f = str;
+                return this;
+            }
+
+            public LXmlattr setUid(String str) {
+                this.f14689s = true;
+                this.f14690t = str;
+                return this;
+            }
+
+            public LXmlattr setUid2(String str) {
+                this.f14691u = true;
+                this.f14692v = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasLid()) {
+                    codedOutputStreamMicro.writeString(1, getLid());
+                }
+                if (hasLb()) {
+                    codedOutputStreamMicro.writeString(2, getLb());
+                }
+                if (hasSlb()) {
+                    codedOutputStreamMicro.writeString(3, getSlb());
+                }
+                if (hasN()) {
+                    codedOutputStreamMicro.writeString(4, getN());
+                }
+                if (hasLoop()) {
+                    codedOutputStreamMicro.writeBool(5, getLoop());
+                }
+                if (hasLbx()) {
+                    codedOutputStreamMicro.writeDouble(6, getLbx());
+                }
+                if (hasLby()) {
+                    codedOutputStreamMicro.writeDouble(7, getLby());
+                }
+                if (hasLbr()) {
+                    codedOutputStreamMicro.writeDouble(8, getLbr());
+                }
+                if (hasLc()) {
+                    codedOutputStreamMicro.writeString(9, getLc());
+                }
+                if (hasUid()) {
+                    codedOutputStreamMicro.writeString(10, getUid());
+                }
+                if (hasUid2()) {
+                    codedOutputStreamMicro.writeString(11, getUid2());
+                }
+            }
         }
-        
-        public PXmlattr setBold(boolean paramBoolean)
-        {
-          this.C = true;
-          this.D = paramBoolean;
-          return this;
+
+        /* renamed from: com.baidu.entity.pb.Subways$L$P */
+        public static final class C3150P extends MessageMicro {
+            public static final int P_XMLATTR_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private boolean f14725a;
+            /* renamed from: b */
+            private PXmlattr f14726b = null;
+            /* renamed from: c */
+            private int f14727c = -1;
+
+            /* renamed from: com.baidu.entity.pb.Subways$L$P$PXmlattr */
+            public static final class PXmlattr extends MessageMicro {
+                public static final int BOLD_FIELD_NUMBER = 15;
+                public static final int EX_FIELD_NUMBER = 8;
+                public static final int IU_FIELD_NUMBER = 9;
+                public static final int LB_FIELD_NUMBER = 2;
+                public static final int PX_FIELD_NUMBER = 12;
+                public static final int PY_FIELD_NUMBER = 13;
+                public static final int RC_FIELD_NUMBER = 10;
+                public static final int RX_FIELD_NUMBER = 5;
+                public static final int RY_FIELD_NUMBER = 6;
+                public static final int SID_FIELD_NUMBER = 1;
+                public static final int SLB_FIELD_NUMBER = 11;
+                public static final int ST_FIELD_NUMBER = 7;
+                public static final int UID_FIELD_NUMBER = 14;
+                public static final int X_FIELD_NUMBER = 3;
+                public static final int Y_FIELD_NUMBER = 4;
+                /* renamed from: A */
+                private boolean f14694A;
+                /* renamed from: B */
+                private String f14695B = "";
+                /* renamed from: C */
+                private boolean f14696C;
+                /* renamed from: D */
+                private boolean f14697D = false;
+                /* renamed from: E */
+                private int f14698E = -1;
+                /* renamed from: a */
+                private boolean f14699a;
+                /* renamed from: b */
+                private String f14700b = "";
+                /* renamed from: c */
+                private boolean f14701c;
+                /* renamed from: d */
+                private String f14702d = "";
+                /* renamed from: e */
+                private boolean f14703e;
+                /* renamed from: f */
+                private double f14704f = 0.0d;
+                /* renamed from: g */
+                private boolean f14705g;
+                /* renamed from: h */
+                private double f14706h = 0.0d;
+                /* renamed from: i */
+                private boolean f14707i;
+                /* renamed from: j */
+                private double f14708j = 0.0d;
+                /* renamed from: k */
+                private boolean f14709k;
+                /* renamed from: l */
+                private double f14710l = 0.0d;
+                /* renamed from: m */
+                private boolean f14711m;
+                /* renamed from: n */
+                private boolean f14712n = false;
+                /* renamed from: o */
+                private boolean f14713o;
+                /* renamed from: p */
+                private boolean f14714p = false;
+                /* renamed from: q */
+                private boolean f14715q;
+                /* renamed from: r */
+                private boolean f14716r = false;
+                /* renamed from: s */
+                private boolean f14717s;
+                /* renamed from: t */
+                private boolean f14718t = false;
+                /* renamed from: u */
+                private boolean f14719u;
+                /* renamed from: v */
+                private boolean f14720v = false;
+                /* renamed from: w */
+                private boolean f14721w;
+                /* renamed from: x */
+                private double f14722x = 0.0d;
+                /* renamed from: y */
+                private boolean f14723y;
+                /* renamed from: z */
+                private double f14724z = 0.0d;
+
+                public static PXmlattr parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                    return new PXmlattr().mergeFrom(codedInputStreamMicro);
+                }
+
+                public static PXmlattr parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                    return (PXmlattr) new PXmlattr().mergeFrom(bArr);
+                }
+
+                public final PXmlattr clear() {
+                    clearSid();
+                    clearLb();
+                    clearX();
+                    clearY();
+                    clearRx();
+                    clearRy();
+                    clearSt();
+                    clearEx();
+                    clearIu();
+                    clearRc();
+                    clearSlb();
+                    clearPx();
+                    clearPy();
+                    clearUid();
+                    clearBold();
+                    this.f14698E = -1;
+                    return this;
+                }
+
+                public PXmlattr clearBold() {
+                    this.f14696C = false;
+                    this.f14697D = false;
+                    return this;
+                }
+
+                public PXmlattr clearEx() {
+                    this.f14713o = false;
+                    this.f14714p = false;
+                    return this;
+                }
+
+                public PXmlattr clearIu() {
+                    this.f14715q = false;
+                    this.f14716r = false;
+                    return this;
+                }
+
+                public PXmlattr clearLb() {
+                    this.f14701c = false;
+                    this.f14702d = "";
+                    return this;
+                }
+
+                public PXmlattr clearPx() {
+                    this.f14721w = false;
+                    this.f14722x = 0.0d;
+                    return this;
+                }
+
+                public PXmlattr clearPy() {
+                    this.f14723y = false;
+                    this.f14724z = 0.0d;
+                    return this;
+                }
+
+                public PXmlattr clearRc() {
+                    this.f14717s = false;
+                    this.f14718t = false;
+                    return this;
+                }
+
+                public PXmlattr clearRx() {
+                    this.f14707i = false;
+                    this.f14708j = 0.0d;
+                    return this;
+                }
+
+                public PXmlattr clearRy() {
+                    this.f14709k = false;
+                    this.f14710l = 0.0d;
+                    return this;
+                }
+
+                public PXmlattr clearSid() {
+                    this.f14699a = false;
+                    this.f14700b = "";
+                    return this;
+                }
+
+                public PXmlattr clearSlb() {
+                    this.f14719u = false;
+                    this.f14720v = false;
+                    return this;
+                }
+
+                public PXmlattr clearSt() {
+                    this.f14711m = false;
+                    this.f14712n = false;
+                    return this;
+                }
+
+                public PXmlattr clearUid() {
+                    this.f14694A = false;
+                    this.f14695B = "";
+                    return this;
+                }
+
+                public PXmlattr clearX() {
+                    this.f14703e = false;
+                    this.f14704f = 0.0d;
+                    return this;
+                }
+
+                public PXmlattr clearY() {
+                    this.f14705g = false;
+                    this.f14706h = 0.0d;
+                    return this;
+                }
+
+                public boolean getBold() {
+                    return this.f14697D;
+                }
+
+                public int getCachedSize() {
+                    if (this.f14698E < 0) {
+                        getSerializedSize();
+                    }
+                    return this.f14698E;
+                }
+
+                public boolean getEx() {
+                    return this.f14714p;
+                }
+
+                public boolean getIu() {
+                    return this.f14716r;
+                }
+
+                public String getLb() {
+                    return this.f14702d;
+                }
+
+                public double getPx() {
+                    return this.f14722x;
+                }
+
+                public double getPy() {
+                    return this.f14724z;
+                }
+
+                public boolean getRc() {
+                    return this.f14718t;
+                }
+
+                public double getRx() {
+                    return this.f14708j;
+                }
+
+                public double getRy() {
+                    return this.f14710l;
+                }
+
+                public int getSerializedSize() {
+                    int i = 0;
+                    if (hasSid()) {
+                        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getSid());
+                    }
+                    if (hasLb()) {
+                        i += CodedOutputStreamMicro.computeStringSize(2, getLb());
+                    }
+                    if (hasX()) {
+                        i += CodedOutputStreamMicro.computeDoubleSize(3, getX());
+                    }
+                    if (hasY()) {
+                        i += CodedOutputStreamMicro.computeDoubleSize(4, getY());
+                    }
+                    if (hasRx()) {
+                        i += CodedOutputStreamMicro.computeDoubleSize(5, getRx());
+                    }
+                    if (hasRy()) {
+                        i += CodedOutputStreamMicro.computeDoubleSize(6, getRy());
+                    }
+                    if (hasSt()) {
+                        i += CodedOutputStreamMicro.computeBoolSize(7, getSt());
+                    }
+                    if (hasEx()) {
+                        i += CodedOutputStreamMicro.computeBoolSize(8, getEx());
+                    }
+                    if (hasIu()) {
+                        i += CodedOutputStreamMicro.computeBoolSize(9, getIu());
+                    }
+                    if (hasRc()) {
+                        i += CodedOutputStreamMicro.computeBoolSize(10, getRc());
+                    }
+                    if (hasSlb()) {
+                        i += CodedOutputStreamMicro.computeBoolSize(11, getSlb());
+                    }
+                    if (hasPx()) {
+                        i += CodedOutputStreamMicro.computeDoubleSize(12, getPx());
+                    }
+                    if (hasPy()) {
+                        i += CodedOutputStreamMicro.computeDoubleSize(13, getPy());
+                    }
+                    if (hasUid()) {
+                        i += CodedOutputStreamMicro.computeStringSize(14, getUid());
+                    }
+                    if (hasBold()) {
+                        i += CodedOutputStreamMicro.computeBoolSize(15, getBold());
+                    }
+                    this.f14698E = i;
+                    return i;
+                }
+
+                public String getSid() {
+                    return this.f14700b;
+                }
+
+                public boolean getSlb() {
+                    return this.f14720v;
+                }
+
+                public boolean getSt() {
+                    return this.f14712n;
+                }
+
+                public String getUid() {
+                    return this.f14695B;
+                }
+
+                public double getX() {
+                    return this.f14704f;
+                }
+
+                public double getY() {
+                    return this.f14706h;
+                }
+
+                public boolean hasBold() {
+                    return this.f14696C;
+                }
+
+                public boolean hasEx() {
+                    return this.f14713o;
+                }
+
+                public boolean hasIu() {
+                    return this.f14715q;
+                }
+
+                public boolean hasLb() {
+                    return this.f14701c;
+                }
+
+                public boolean hasPx() {
+                    return this.f14721w;
+                }
+
+                public boolean hasPy() {
+                    return this.f14723y;
+                }
+
+                public boolean hasRc() {
+                    return this.f14717s;
+                }
+
+                public boolean hasRx() {
+                    return this.f14707i;
+                }
+
+                public boolean hasRy() {
+                    return this.f14709k;
+                }
+
+                public boolean hasSid() {
+                    return this.f14699a;
+                }
+
+                public boolean hasSlb() {
+                    return this.f14719u;
+                }
+
+                public boolean hasSt() {
+                    return this.f14711m;
+                }
+
+                public boolean hasUid() {
+                    return this.f14694A;
+                }
+
+                public boolean hasX() {
+                    return this.f14703e;
+                }
+
+                public boolean hasY() {
+                    return this.f14705g;
+                }
+
+                public final boolean isInitialized() {
+                    return true;
+                }
+
+                public PXmlattr mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                    while (true) {
+                        int readTag = codedInputStreamMicro.readTag();
+                        switch (readTag) {
+                            case 0:
+                                break;
+                            case 10:
+                                setSid(codedInputStreamMicro.readString());
+                                continue;
+                            case 18:
+                                setLb(codedInputStreamMicro.readString());
+                                continue;
+                            case 25:
+                                setX(codedInputStreamMicro.readDouble());
+                                continue;
+                            case 33:
+                                setY(codedInputStreamMicro.readDouble());
+                                continue;
+                            case 41:
+                                setRx(codedInputStreamMicro.readDouble());
+                                continue;
+                            case 49:
+                                setRy(codedInputStreamMicro.readDouble());
+                                continue;
+                            case 56:
+                                setSt(codedInputStreamMicro.readBool());
+                                continue;
+                            case 64:
+                                setEx(codedInputStreamMicro.readBool());
+                                continue;
+                            case NavCarInfo.CarType_57L /*72*/:
+                                setIu(codedInputStreamMicro.readBool());
+                                continue;
+                            case 80:
+                                setRc(codedInputStreamMicro.readBool());
+                                continue;
+                            case 88:
+                                setSlb(codedInputStreamMicro.readBool());
+                                continue;
+                            case 97:
+                                setPx(codedInputStreamMicro.readDouble());
+                                continue;
+                            case 105:
+                                setPy(codedInputStreamMicro.readDouble());
+                                continue;
+                            case 114:
+                                setUid(codedInputStreamMicro.readString());
+                                continue;
+                            case 120:
+                                setBold(codedInputStreamMicro.readBool());
+                                continue;
+                            default:
+                                if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                    break;
+                                }
+                                continue;
+                        }
+                        return this;
+                    }
+                }
+
+                public PXmlattr setBold(boolean z) {
+                    this.f14696C = true;
+                    this.f14697D = z;
+                    return this;
+                }
+
+                public PXmlattr setEx(boolean z) {
+                    this.f14713o = true;
+                    this.f14714p = z;
+                    return this;
+                }
+
+                public PXmlattr setIu(boolean z) {
+                    this.f14715q = true;
+                    this.f14716r = z;
+                    return this;
+                }
+
+                public PXmlattr setLb(String str) {
+                    this.f14701c = true;
+                    this.f14702d = str;
+                    return this;
+                }
+
+                public PXmlattr setPx(double d) {
+                    this.f14721w = true;
+                    this.f14722x = d;
+                    return this;
+                }
+
+                public PXmlattr setPy(double d) {
+                    this.f14723y = true;
+                    this.f14724z = d;
+                    return this;
+                }
+
+                public PXmlattr setRc(boolean z) {
+                    this.f14717s = true;
+                    this.f14718t = z;
+                    return this;
+                }
+
+                public PXmlattr setRx(double d) {
+                    this.f14707i = true;
+                    this.f14708j = d;
+                    return this;
+                }
+
+                public PXmlattr setRy(double d) {
+                    this.f14709k = true;
+                    this.f14710l = d;
+                    return this;
+                }
+
+                public PXmlattr setSid(String str) {
+                    this.f14699a = true;
+                    this.f14700b = str;
+                    return this;
+                }
+
+                public PXmlattr setSlb(boolean z) {
+                    this.f14719u = true;
+                    this.f14720v = z;
+                    return this;
+                }
+
+                public PXmlattr setSt(boolean z) {
+                    this.f14711m = true;
+                    this.f14712n = z;
+                    return this;
+                }
+
+                public PXmlattr setUid(String str) {
+                    this.f14694A = true;
+                    this.f14695B = str;
+                    return this;
+                }
+
+                public PXmlattr setX(double d) {
+                    this.f14703e = true;
+                    this.f14704f = d;
+                    return this;
+                }
+
+                public PXmlattr setY(double d) {
+                    this.f14705g = true;
+                    this.f14706h = d;
+                    return this;
+                }
+
+                public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                    if (hasSid()) {
+                        codedOutputStreamMicro.writeString(1, getSid());
+                    }
+                    if (hasLb()) {
+                        codedOutputStreamMicro.writeString(2, getLb());
+                    }
+                    if (hasX()) {
+                        codedOutputStreamMicro.writeDouble(3, getX());
+                    }
+                    if (hasY()) {
+                        codedOutputStreamMicro.writeDouble(4, getY());
+                    }
+                    if (hasRx()) {
+                        codedOutputStreamMicro.writeDouble(5, getRx());
+                    }
+                    if (hasRy()) {
+                        codedOutputStreamMicro.writeDouble(6, getRy());
+                    }
+                    if (hasSt()) {
+                        codedOutputStreamMicro.writeBool(7, getSt());
+                    }
+                    if (hasEx()) {
+                        codedOutputStreamMicro.writeBool(8, getEx());
+                    }
+                    if (hasIu()) {
+                        codedOutputStreamMicro.writeBool(9, getIu());
+                    }
+                    if (hasRc()) {
+                        codedOutputStreamMicro.writeBool(10, getRc());
+                    }
+                    if (hasSlb()) {
+                        codedOutputStreamMicro.writeBool(11, getSlb());
+                    }
+                    if (hasPx()) {
+                        codedOutputStreamMicro.writeDouble(12, getPx());
+                    }
+                    if (hasPy()) {
+                        codedOutputStreamMicro.writeDouble(13, getPy());
+                    }
+                    if (hasUid()) {
+                        codedOutputStreamMicro.writeString(14, getUid());
+                    }
+                    if (hasBold()) {
+                        codedOutputStreamMicro.writeBool(15, getBold());
+                    }
+                }
+            }
+
+            public static C3150P parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new C3150P().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static C3150P parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (C3150P) new C3150P().mergeFrom(bArr);
+            }
+
+            public final C3150P clear() {
+                clearPXmlattr();
+                this.f14727c = -1;
+                return this;
+            }
+
+            public C3150P clearPXmlattr() {
+                this.f14725a = false;
+                this.f14726b = null;
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f14727c < 0) {
+                    getSerializedSize();
+                }
+                return this.f14727c;
+            }
+
+            public PXmlattr getPXmlattr() {
+                return this.f14726b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasPXmlattr()) {
+                    i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getPXmlattr());
+                }
+                this.f14727c = i;
+                return i;
+            }
+
+            public boolean hasPXmlattr() {
+                return this.f14725a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public C3150P mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 10:
+                            MessageMicro pXmlattr = new PXmlattr();
+                            codedInputStreamMicro.readMessage(pXmlattr);
+                            setPXmlattr(pXmlattr);
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public C3150P setPXmlattr(PXmlattr pXmlattr) {
+                if (pXmlattr == null) {
+                    return clearPXmlattr();
+                }
+                this.f14725a = true;
+                this.f14726b = pXmlattr;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasPXmlattr()) {
+                    codedOutputStreamMicro.writeMessage(1, getPXmlattr());
+                }
+            }
         }
-        
-        public PXmlattr setEx(boolean paramBoolean)
-        {
-          this.o = true;
-          this.p = paramBoolean;
-          return this;
+
+        public static C3151L parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new C3151L().mergeFrom(codedInputStreamMicro);
         }
-        
-        public PXmlattr setIu(boolean paramBoolean)
-        {
-          this.q = true;
-          this.r = paramBoolean;
-          return this;
+
+        public static C3151L parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (C3151L) new C3151L().mergeFrom(bArr);
         }
-        
-        public PXmlattr setLb(String paramString)
-        {
-          this.c = true;
-          this.d = paramString;
-          return this;
+
+        public C3151L addP(C3150P c3150p) {
+            if (c3150p != null) {
+                if (this.f14730c.isEmpty()) {
+                    this.f14730c = new ArrayList();
+                }
+                this.f14730c.add(c3150p);
+            }
+            return this;
         }
-        
-        public PXmlattr setPx(double paramDouble)
-        {
-          this.w = true;
-          this.x = paramDouble;
-          return this;
+
+        public final C3151L clear() {
+            clearLXmlattr();
+            clearP();
+            this.f14731d = -1;
+            return this;
         }
-        
-        public PXmlattr setPy(double paramDouble)
-        {
-          this.y = true;
-          this.z = paramDouble;
-          return this;
+
+        public C3151L clearLXmlattr() {
+            this.f14728a = false;
+            this.f14729b = null;
+            return this;
         }
-        
-        public PXmlattr setRc(boolean paramBoolean)
-        {
-          this.s = true;
-          this.t = paramBoolean;
-          return this;
+
+        public C3151L clearP() {
+            this.f14730c = Collections.emptyList();
+            return this;
         }
-        
-        public PXmlattr setRx(double paramDouble)
-        {
-          this.i = true;
-          this.j = paramDouble;
-          return this;
+
+        public int getCachedSize() {
+            if (this.f14731d < 0) {
+                getSerializedSize();
+            }
+            return this.f14731d;
         }
-        
-        public PXmlattr setRy(double paramDouble)
-        {
-          this.k = true;
-          this.l = paramDouble;
-          return this;
+
+        public LXmlattr getLXmlattr() {
+            return this.f14729b;
         }
-        
-        public PXmlattr setSid(String paramString)
-        {
-          this.a = true;
-          this.b = paramString;
-          return this;
+
+        public C3150P getP(int i) {
+            return (C3150P) this.f14730c.get(i);
         }
-        
-        public PXmlattr setSlb(boolean paramBoolean)
-        {
-          this.u = true;
-          this.v = paramBoolean;
-          return this;
+
+        public int getPCount() {
+            return this.f14730c.size();
         }
-        
-        public PXmlattr setSt(boolean paramBoolean)
-        {
-          this.m = true;
-          this.n = paramBoolean;
-          return this;
+
+        public List<C3150P> getPList() {
+            return this.f14730c;
         }
-        
-        public PXmlattr setUid(String paramString)
-        {
-          this.A = true;
-          this.B = paramString;
-          return this;
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasLXmlattr()) {
+                i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getLXmlattr());
+            }
+            int i2 = i;
+            for (C3150P computeMessageSize : getPList()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize) + i2;
+            }
+            this.f14731d = i2;
+            return i2;
         }
-        
-        public PXmlattr setX(double paramDouble)
-        {
-          this.e = true;
-          this.f = paramDouble;
-          return this;
+
+        public boolean hasLXmlattr() {
+            return this.f14728a;
         }
-        
-        public PXmlattr setY(double paramDouble)
-        {
-          this.g = true;
-          this.h = paramDouble;
-          return this;
+
+        public final boolean isInitialized() {
+            return true;
         }
-        
-        public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-          throws IOException
-        {
-          if (hasSid()) {
-            paramCodedOutputStreamMicro.writeString(1, getSid());
-          }
-          if (hasLb()) {
-            paramCodedOutputStreamMicro.writeString(2, getLb());
-          }
-          if (hasX()) {
-            paramCodedOutputStreamMicro.writeDouble(3, getX());
-          }
-          if (hasY()) {
-            paramCodedOutputStreamMicro.writeDouble(4, getY());
-          }
-          if (hasRx()) {
-            paramCodedOutputStreamMicro.writeDouble(5, getRx());
-          }
-          if (hasRy()) {
-            paramCodedOutputStreamMicro.writeDouble(6, getRy());
-          }
-          if (hasSt()) {
-            paramCodedOutputStreamMicro.writeBool(7, getSt());
-          }
-          if (hasEx()) {
-            paramCodedOutputStreamMicro.writeBool(8, getEx());
-          }
-          if (hasIu()) {
-            paramCodedOutputStreamMicro.writeBool(9, getIu());
-          }
-          if (hasRc()) {
-            paramCodedOutputStreamMicro.writeBool(10, getRc());
-          }
-          if (hasSlb()) {
-            paramCodedOutputStreamMicro.writeBool(11, getSlb());
-          }
-          if (hasPx()) {
-            paramCodedOutputStreamMicro.writeDouble(12, getPx());
-          }
-          if (hasPy()) {
-            paramCodedOutputStreamMicro.writeDouble(13, getPy());
-          }
-          if (hasUid()) {
-            paramCodedOutputStreamMicro.writeString(14, getUid());
-          }
-          if (hasBold()) {
-            paramCodedOutputStreamMicro.writeBool(15, getBold());
-          }
+
+        public C3151L mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro lXmlattr;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        lXmlattr = new LXmlattr();
+                        codedInputStreamMicro.readMessage(lXmlattr);
+                        setLXmlattr(lXmlattr);
+                        continue;
+                    case 18:
+                        lXmlattr = new C3150P();
+                        codedInputStreamMicro.readMessage(lXmlattr);
+                        addP(lXmlattr);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
         }
-      }
-    }
-  }
-  
-  public static final class SwXmlattr
-    extends MessageMicro
-  {
-    public static final int BG_FIELD_NUMBER = 5;
-    public static final int CID_FIELD_NUMBER = 1;
-    public static final int C_FIELD_NUMBER = 3;
-    public static final int HEIGHT_FIELD_NUMBER = 8;
-    public static final int ICON_FIELD_NUMBER = 6;
-    public static final int N_FIELD_NUMBER = 2;
-    public static final int SRC_FIELD_NUMBER = 4;
-    public static final int VERSION_FIELD_NUMBER = 9;
-    public static final int WIDTH_FIELD_NUMBER = 7;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private int d = 0;
-    private boolean e;
-    private String f = "";
-    private boolean g;
-    private String h = "";
-    private boolean i;
-    private String j = "";
-    private boolean k;
-    private String l = "";
-    private boolean m;
-    private String n = "";
-    private boolean o;
-    private String p = "";
-    private boolean q;
-    private String r = "";
-    private int s = -1;
-    
-    public static SwXmlattr parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new SwXmlattr().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static SwXmlattr parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (SwXmlattr)new SwXmlattr().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final SwXmlattr clear()
-    {
-      clearCid();
-      clearN();
-      clearC();
-      clearSrc();
-      clearBg();
-      clearIcon();
-      clearWidth();
-      clearHeight();
-      clearVersion();
-      this.s = -1;
-      return this;
-    }
-    
-    public SwXmlattr clearBg()
-    {
-      this.i = false;
-      this.j = "";
-      return this;
-    }
-    
-    public SwXmlattr clearC()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public SwXmlattr clearCid()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public SwXmlattr clearHeight()
-    {
-      this.o = false;
-      this.p = "";
-      return this;
-    }
-    
-    public SwXmlattr clearIcon()
-    {
-      this.k = false;
-      this.l = "";
-      return this;
-    }
-    
-    public SwXmlattr clearN()
-    {
-      this.c = false;
-      this.d = 0;
-      return this;
-    }
-    
-    public SwXmlattr clearSrc()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public SwXmlattr clearVersion()
-    {
-      this.q = false;
-      this.r = "";
-      return this;
-    }
-    
-    public SwXmlattr clearWidth()
-    {
-      this.m = false;
-      this.n = "";
-      return this;
-    }
-    
-    public String getBg()
-    {
-      return this.j;
-    }
-    
-    public String getC()
-    {
-      return this.f;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.s < 0) {
-        getSerializedSize();
-      }
-      return this.s;
-    }
-    
-    public String getCid()
-    {
-      return this.b;
-    }
-    
-    public String getHeight()
-    {
-      return this.p;
-    }
-    
-    public String getIcon()
-    {
-      return this.l;
-    }
-    
-    public int getN()
-    {
-      return this.d;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasCid()) {
-        i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getCid());
-      }
-      int i1 = i2;
-      if (hasN()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(2, getN());
-      }
-      i2 = i1;
-      if (hasC()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getC());
-      }
-      i1 = i2;
-      if (hasSrc()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getSrc());
-      }
-      i2 = i1;
-      if (hasBg()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getBg());
-      }
-      i1 = i2;
-      if (hasIcon()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getIcon());
-      }
-      i2 = i1;
-      if (hasWidth()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getWidth());
-      }
-      i1 = i2;
-      if (hasHeight()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getHeight());
-      }
-      i2 = i1;
-      if (hasVersion()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getVersion());
-      }
-      this.s = i2;
-      return i2;
-    }
-    
-    public String getSrc()
-    {
-      return this.h;
-    }
-    
-    public String getVersion()
-    {
-      return this.r;
-    }
-    
-    public String getWidth()
-    {
-      return this.n;
-    }
-    
-    public boolean hasBg()
-    {
-      return this.i;
-    }
-    
-    public boolean hasC()
-    {
-      return this.e;
-    }
-    
-    public boolean hasCid()
-    {
-      return this.a;
-    }
-    
-    public boolean hasHeight()
-    {
-      return this.o;
-    }
-    
-    public boolean hasIcon()
-    {
-      return this.k;
-    }
-    
-    public boolean hasN()
-    {
-      return this.c;
-    }
-    
-    public boolean hasSrc()
-    {
-      return this.g;
-    }
-    
-    public boolean hasVersion()
-    {
-      return this.q;
-    }
-    
-    public boolean hasWidth()
-    {
-      return this.m;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public SwXmlattr mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setCid(paramCodedInputStreamMicro.readString());
-          break;
-        case 16: 
-          setN(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 26: 
-          setC(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setSrc(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          setBg(paramCodedInputStreamMicro.readString());
-          break;
-        case 50: 
-          setIcon(paramCodedInputStreamMicro.readString());
-          break;
-        case 58: 
-          setWidth(paramCodedInputStreamMicro.readString());
-          break;
-        case 66: 
-          setHeight(paramCodedInputStreamMicro.readString());
-          break;
-        case 74: 
-          setVersion(paramCodedInputStreamMicro.readString());
+
+        public C3151L setLXmlattr(LXmlattr lXmlattr) {
+            if (lXmlattr == null) {
+                return clearLXmlattr();
+            }
+            this.f14728a = true;
+            this.f14729b = lXmlattr;
+            return this;
         }
-      }
+
+        public C3151L setP(int i, C3150P c3150p) {
+            if (c3150p != null) {
+                this.f14730c.set(i, c3150p);
+            }
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasLXmlattr()) {
+                codedOutputStreamMicro.writeMessage(1, getLXmlattr());
+            }
+            for (C3150P writeMessage : getPList()) {
+                codedOutputStreamMicro.writeMessage(2, writeMessage);
+            }
+        }
     }
-    
-    public SwXmlattr setBg(String paramString)
-    {
-      this.i = true;
-      this.j = paramString;
-      return this;
+
+    public static final class SwXmlattr extends MessageMicro {
+        public static final int BG_FIELD_NUMBER = 5;
+        public static final int CID_FIELD_NUMBER = 1;
+        public static final int C_FIELD_NUMBER = 3;
+        public static final int HEIGHT_FIELD_NUMBER = 8;
+        public static final int ICON_FIELD_NUMBER = 6;
+        public static final int N_FIELD_NUMBER = 2;
+        public static final int SRC_FIELD_NUMBER = 4;
+        public static final int VERSION_FIELD_NUMBER = 9;
+        public static final int WIDTH_FIELD_NUMBER = 7;
+        /* renamed from: a */
+        private boolean f14732a;
+        /* renamed from: b */
+        private String f14733b = "";
+        /* renamed from: c */
+        private boolean f14734c;
+        /* renamed from: d */
+        private int f14735d = 0;
+        /* renamed from: e */
+        private boolean f14736e;
+        /* renamed from: f */
+        private String f14737f = "";
+        /* renamed from: g */
+        private boolean f14738g;
+        /* renamed from: h */
+        private String f14739h = "";
+        /* renamed from: i */
+        private boolean f14740i;
+        /* renamed from: j */
+        private String f14741j = "";
+        /* renamed from: k */
+        private boolean f14742k;
+        /* renamed from: l */
+        private String f14743l = "";
+        /* renamed from: m */
+        private boolean f14744m;
+        /* renamed from: n */
+        private String f14745n = "";
+        /* renamed from: o */
+        private boolean f14746o;
+        /* renamed from: p */
+        private String f14747p = "";
+        /* renamed from: q */
+        private boolean f14748q;
+        /* renamed from: r */
+        private String f14749r = "";
+        /* renamed from: s */
+        private int f14750s = -1;
+
+        public static SwXmlattr parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new SwXmlattr().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static SwXmlattr parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (SwXmlattr) new SwXmlattr().mergeFrom(bArr);
+        }
+
+        public final SwXmlattr clear() {
+            clearCid();
+            clearN();
+            clearC();
+            clearSrc();
+            clearBg();
+            clearIcon();
+            clearWidth();
+            clearHeight();
+            clearVersion();
+            this.f14750s = -1;
+            return this;
+        }
+
+        public SwXmlattr clearBg() {
+            this.f14740i = false;
+            this.f14741j = "";
+            return this;
+        }
+
+        public SwXmlattr clearC() {
+            this.f14736e = false;
+            this.f14737f = "";
+            return this;
+        }
+
+        public SwXmlattr clearCid() {
+            this.f14732a = false;
+            this.f14733b = "";
+            return this;
+        }
+
+        public SwXmlattr clearHeight() {
+            this.f14746o = false;
+            this.f14747p = "";
+            return this;
+        }
+
+        public SwXmlattr clearIcon() {
+            this.f14742k = false;
+            this.f14743l = "";
+            return this;
+        }
+
+        public SwXmlattr clearN() {
+            this.f14734c = false;
+            this.f14735d = 0;
+            return this;
+        }
+
+        public SwXmlattr clearSrc() {
+            this.f14738g = false;
+            this.f14739h = "";
+            return this;
+        }
+
+        public SwXmlattr clearVersion() {
+            this.f14748q = false;
+            this.f14749r = "";
+            return this;
+        }
+
+        public SwXmlattr clearWidth() {
+            this.f14744m = false;
+            this.f14745n = "";
+            return this;
+        }
+
+        public String getBg() {
+            return this.f14741j;
+        }
+
+        public String getC() {
+            return this.f14737f;
+        }
+
+        public int getCachedSize() {
+            if (this.f14750s < 0) {
+                getSerializedSize();
+            }
+            return this.f14750s;
+        }
+
+        public String getCid() {
+            return this.f14733b;
+        }
+
+        public String getHeight() {
+            return this.f14747p;
+        }
+
+        public String getIcon() {
+            return this.f14743l;
+        }
+
+        public int getN() {
+            return this.f14735d;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasCid()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getCid());
+            }
+            if (hasN()) {
+                i += CodedOutputStreamMicro.computeInt32Size(2, getN());
+            }
+            if (hasC()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getC());
+            }
+            if (hasSrc()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getSrc());
+            }
+            if (hasBg()) {
+                i += CodedOutputStreamMicro.computeStringSize(5, getBg());
+            }
+            if (hasIcon()) {
+                i += CodedOutputStreamMicro.computeStringSize(6, getIcon());
+            }
+            if (hasWidth()) {
+                i += CodedOutputStreamMicro.computeStringSize(7, getWidth());
+            }
+            if (hasHeight()) {
+                i += CodedOutputStreamMicro.computeStringSize(8, getHeight());
+            }
+            if (hasVersion()) {
+                i += CodedOutputStreamMicro.computeStringSize(9, getVersion());
+            }
+            this.f14750s = i;
+            return i;
+        }
+
+        public String getSrc() {
+            return this.f14739h;
+        }
+
+        public String getVersion() {
+            return this.f14749r;
+        }
+
+        public String getWidth() {
+            return this.f14745n;
+        }
+
+        public boolean hasBg() {
+            return this.f14740i;
+        }
+
+        public boolean hasC() {
+            return this.f14736e;
+        }
+
+        public boolean hasCid() {
+            return this.f14732a;
+        }
+
+        public boolean hasHeight() {
+            return this.f14746o;
+        }
+
+        public boolean hasIcon() {
+            return this.f14742k;
+        }
+
+        public boolean hasN() {
+            return this.f14734c;
+        }
+
+        public boolean hasSrc() {
+            return this.f14738g;
+        }
+
+        public boolean hasVersion() {
+            return this.f14748q;
+        }
+
+        public boolean hasWidth() {
+            return this.f14744m;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public SwXmlattr mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setCid(codedInputStreamMicro.readString());
+                        continue;
+                    case 16:
+                        setN(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 26:
+                        setC(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setSrc(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        setBg(codedInputStreamMicro.readString());
+                        continue;
+                    case 50:
+                        setIcon(codedInputStreamMicro.readString());
+                        continue;
+                    case 58:
+                        setWidth(codedInputStreamMicro.readString());
+                        continue;
+                    case 66:
+                        setHeight(codedInputStreamMicro.readString());
+                        continue;
+                    case 74:
+                        setVersion(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public SwXmlattr setBg(String str) {
+            this.f14740i = true;
+            this.f14741j = str;
+            return this;
+        }
+
+        public SwXmlattr setC(String str) {
+            this.f14736e = true;
+            this.f14737f = str;
+            return this;
+        }
+
+        public SwXmlattr setCid(String str) {
+            this.f14732a = true;
+            this.f14733b = str;
+            return this;
+        }
+
+        public SwXmlattr setHeight(String str) {
+            this.f14746o = true;
+            this.f14747p = str;
+            return this;
+        }
+
+        public SwXmlattr setIcon(String str) {
+            this.f14742k = true;
+            this.f14743l = str;
+            return this;
+        }
+
+        public SwXmlattr setN(int i) {
+            this.f14734c = true;
+            this.f14735d = i;
+            return this;
+        }
+
+        public SwXmlattr setSrc(String str) {
+            this.f14738g = true;
+            this.f14739h = str;
+            return this;
+        }
+
+        public SwXmlattr setVersion(String str) {
+            this.f14748q = true;
+            this.f14749r = str;
+            return this;
+        }
+
+        public SwXmlattr setWidth(String str) {
+            this.f14744m = true;
+            this.f14745n = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasCid()) {
+                codedOutputStreamMicro.writeString(1, getCid());
+            }
+            if (hasN()) {
+                codedOutputStreamMicro.writeInt32(2, getN());
+            }
+            if (hasC()) {
+                codedOutputStreamMicro.writeString(3, getC());
+            }
+            if (hasSrc()) {
+                codedOutputStreamMicro.writeString(4, getSrc());
+            }
+            if (hasBg()) {
+                codedOutputStreamMicro.writeString(5, getBg());
+            }
+            if (hasIcon()) {
+                codedOutputStreamMicro.writeString(6, getIcon());
+            }
+            if (hasWidth()) {
+                codedOutputStreamMicro.writeString(7, getWidth());
+            }
+            if (hasHeight()) {
+                codedOutputStreamMicro.writeString(8, getHeight());
+            }
+            if (hasVersion()) {
+                codedOutputStreamMicro.writeString(9, getVersion());
+            }
+        }
     }
-    
-    public SwXmlattr setC(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
+
+    public static Subways parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new Subways().mergeFrom(codedInputStreamMicro);
     }
-    
-    public SwXmlattr setCid(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
+
+    public static Subways parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (Subways) new Subways().mergeFrom(bArr);
     }
-    
-    public SwXmlattr setHeight(String paramString)
-    {
-      this.o = true;
-      this.p = paramString;
-      return this;
+
+    public Subways addL(C3151L c3151l) {
+        if (c3151l != null) {
+            if (this.f14753c.isEmpty()) {
+                this.f14753c = new ArrayList();
+            }
+            this.f14753c.add(c3151l);
+        }
+        return this;
     }
-    
-    public SwXmlattr setIcon(String paramString)
-    {
-      this.k = true;
-      this.l = paramString;
-      return this;
+
+    public final Subways clear() {
+        clearSwXmlattr();
+        clearL();
+        this.f14754d = -1;
+        return this;
     }
-    
-    public SwXmlattr setN(int paramInt)
-    {
-      this.c = true;
-      this.d = paramInt;
-      return this;
+
+    public Subways clearL() {
+        this.f14753c = Collections.emptyList();
+        return this;
     }
-    
-    public SwXmlattr setSrc(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
+
+    public Subways clearSwXmlattr() {
+        this.f14751a = false;
+        this.f14752b = null;
+        return this;
     }
-    
-    public SwXmlattr setVersion(String paramString)
-    {
-      this.q = true;
-      this.r = paramString;
-      return this;
+
+    public int getCachedSize() {
+        if (this.f14754d < 0) {
+            getSerializedSize();
+        }
+        return this.f14754d;
     }
-    
-    public SwXmlattr setWidth(String paramString)
-    {
-      this.m = true;
-      this.n = paramString;
-      return this;
+
+    public C3151L getL(int i) {
+        return (C3151L) this.f14753c.get(i);
     }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasCid()) {
-        paramCodedOutputStreamMicro.writeString(1, getCid());
-      }
-      if (hasN()) {
-        paramCodedOutputStreamMicro.writeInt32(2, getN());
-      }
-      if (hasC()) {
-        paramCodedOutputStreamMicro.writeString(3, getC());
-      }
-      if (hasSrc()) {
-        paramCodedOutputStreamMicro.writeString(4, getSrc());
-      }
-      if (hasBg()) {
-        paramCodedOutputStreamMicro.writeString(5, getBg());
-      }
-      if (hasIcon()) {
-        paramCodedOutputStreamMicro.writeString(6, getIcon());
-      }
-      if (hasWidth()) {
-        paramCodedOutputStreamMicro.writeString(7, getWidth());
-      }
-      if (hasHeight()) {
-        paramCodedOutputStreamMicro.writeString(8, getHeight());
-      }
-      if (hasVersion()) {
-        paramCodedOutputStreamMicro.writeString(9, getVersion());
-      }
+
+    public int getLCount() {
+        return this.f14753c.size();
     }
-  }
+
+    public List<C3151L> getLList() {
+        return this.f14753c;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasSwXmlattr()) {
+            i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getSwXmlattr());
+        }
+        int i2 = i;
+        for (C3151L computeMessageSize : getLList()) {
+            i2 = CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize) + i2;
+        }
+        this.f14754d = i2;
+        return i2;
+    }
+
+    public SwXmlattr getSwXmlattr() {
+        return this.f14752b;
+    }
+
+    public boolean hasSwXmlattr() {
+        return this.f14751a;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public Subways mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            MessageMicro swXmlattr;
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    swXmlattr = new SwXmlattr();
+                    codedInputStreamMicro.readMessage(swXmlattr);
+                    setSwXmlattr(swXmlattr);
+                    continue;
+                case 18:
+                    swXmlattr = new C3151L();
+                    codedInputStreamMicro.readMessage(swXmlattr);
+                    addL(swXmlattr);
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public Subways setL(int i, C3151L c3151l) {
+        if (c3151l != null) {
+            this.f14753c.set(i, c3151l);
+        }
+        return this;
+    }
+
+    public Subways setSwXmlattr(SwXmlattr swXmlattr) {
+        if (swXmlattr == null) {
+            return clearSwXmlattr();
+        }
+        this.f14751a = true;
+        this.f14752b = swXmlattr;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasSwXmlattr()) {
+            codedOutputStreamMicro.writeMessage(1, getSwXmlattr());
+        }
+        for (C3151L writeMessage : getLList()) {
+            codedOutputStreamMicro.writeMessage(2, writeMessage);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/Subways.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

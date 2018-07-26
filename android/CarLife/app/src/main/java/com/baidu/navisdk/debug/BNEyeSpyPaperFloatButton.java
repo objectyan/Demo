@@ -1,6 +1,5 @@
 package com.baidu.navisdk.debug;
 
-import android.app.Activity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,164 +14,146 @@ import com.baidu.navisdk.ui.util.ForbidDaulClickUtils;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.ScreenUtil;
 
-public class BNEyeSpyPaperFloatButton
-{
-  private static final String TAG = BNEyeSpyPaperFloatButton.class.getSimpleName();
-  private boolean isMoved = false;
-  private boolean isShowing = false;
-  private float mDownX = 0.0F;
-  private float mDownY = 0.0F;
-  private LinearLayout mFloatLayout;
-  private int mTouchSlop;
-  private WindowManager mWindowManager;
-  private float mXInFloatView;
-  private float mXInScreen;
-  private float mYInFloatView;
-  private float mYInScreen;
-  private WindowManager.LayoutParams wmParams;
-  
-  public BNEyeSpyPaperFloatButton()
-  {
-    initWindowsManger();
-    initViews();
-    this.mTouchSlop = ViewConfiguration.get(BNaviModuleManager.getActivity()).getScaledTouchSlop();
-  }
-  
-  private boolean handleMotionEvent(MotionEvent paramMotionEvent)
-  {
-    switch (paramMotionEvent.getAction())
-    {
-    default: 
-    case 0: 
-    case 2: 
-      do
-      {
-        return false;
-        this.mXInFloatView = paramMotionEvent.getX();
-        this.mYInFloatView = paramMotionEvent.getY();
-        this.mDownX = paramMotionEvent.getRawX();
-        this.mDownY = paramMotionEvent.getRawY();
-        this.isMoved = false;
-        return false;
-        this.mXInScreen = paramMotionEvent.getRawX();
-        this.mYInScreen = (paramMotionEvent.getRawY() - ScreenUtil.getInstance().getStatusBarHeight());
-        if ((Math.abs(this.mDownX - paramMotionEvent.getRawX()) > this.mTouchSlop) || (Math.abs(this.mDownY - paramMotionEvent.getRawY()) > this.mTouchSlop)) {
-          this.isMoved = true;
+public class BNEyeSpyPaperFloatButton {
+    private static final String TAG = BNEyeSpyPaperFloatButton.class.getSimpleName();
+    private boolean isMoved = false;
+    private boolean isShowing = false;
+    private float mDownX = 0.0f;
+    private float mDownY = 0.0f;
+    private LinearLayout mFloatLayout;
+    private int mTouchSlop;
+    private WindowManager mWindowManager;
+    private float mXInFloatView;
+    private float mXInScreen;
+    private float mYInFloatView;
+    private float mYInScreen;
+    private LayoutParams wmParams;
+
+    /* renamed from: com.baidu.navisdk.debug.BNEyeSpyPaperFloatButton$1 */
+    class C40811 implements OnClickListener {
+        C40811() {
         }
-      } while (!this.isMoved);
-      updateViewPosition();
-      return false;
-    }
-    updateViewPosition();
-    return this.isMoved;
-  }
-  
-  private void initViews()
-  {
-    this.mFloatLayout = new LinearLayout(BNaviModuleManager.getActivity());
-    TextView localTextView = new TextView(BNaviModuleManager.getActivity());
-    localTextView.setTextSize(1, 20.0F);
-    localTextView.setText("报bug");
-    this.mFloatLayout.addView(localTextView);
-    this.mFloatLayout.setOrientation(0);
-    this.mFloatLayout.setGravity(17);
-    this.mFloatLayout.setBackgroundColor(-65536);
-    this.mFloatLayout.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (ForbidDaulClickUtils.isFastDoubleClick()) {
-          return;
+
+        public void onClick(View v) {
+            if (!ForbidDaulClickUtils.isFastDoubleClick()) {
+                BNEyeSpyPaperController.getInstance().showUserKeyLogDialog();
+            }
         }
-        BNEyeSpyPaperController.getInstance().showUserKeyLogDialog();
-      }
-    });
-  }
-  
-  private void initWindowsManger()
-  {
-    this.wmParams = new WindowManager.LayoutParams();
-    this.mWindowManager = ((WindowManager)BNaviModuleManager.getActivity().getSystemService("window"));
-    this.wmParams.type = 2;
-    this.wmParams.format = 1;
-    this.wmParams.flags = 8;
-    this.wmParams.gravity = 51;
-    this.wmParams.width = ScreenUtil.getInstance().dip2px(69);
-    this.wmParams.height = ScreenUtil.getInstance().dip2px(30);
-  }
-  
-  private void updateViewPosition()
-  {
-    this.wmParams.x = ((int)(this.mXInScreen - this.mXInFloatView));
-    this.wmParams.y = ((int)(this.mYInScreen - this.mYInFloatView));
-    try
-    {
-      this.mWindowManager.updateViewLayout(this.mFloatLayout, this.wmParams);
-      return;
     }
-    catch (Exception localException) {}
-  }
-  
-  public void dispose()
-  {
-    this.isShowing = false;
-    if (this.mFloatLayout != null) {
-      this.mWindowManager.removeView(this.mFloatLayout);
-    }
-  }
-  
-  public void hide()
-  {
-    LogUtil.e(TAG, "hide");
-    try
-    {
-      if ((this.mFloatLayout != null) && (this.mFloatLayout.getParent() != null)) {
-        this.mWindowManager.removeView(this.mFloatLayout);
-      }
-      this.isShowing = false;
-      return;
-    }
-    catch (Exception localException)
-    {
-      LogUtil.e(TAG, "hide float excetion e:" + localException.getMessage());
-    }
-  }
-  
-  public boolean isShow()
-  {
-    return this.isShowing;
-  }
-  
-  public boolean show()
-  {
-    LogUtil.e(TAG, "show :" + isShow());
-    if (isShow()) {
-      return true;
-    }
-    try
-    {
-      this.mFloatLayout.setOnTouchListener(new View.OnTouchListener()
-      {
-        public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-        {
-          return BNEyeSpyPaperFloatButton.this.handleMotionEvent(paramAnonymousMotionEvent);
+
+    /* renamed from: com.baidu.navisdk.debug.BNEyeSpyPaperFloatButton$2 */
+    class C40822 implements OnTouchListener {
+        C40822() {
         }
-      });
-      this.mWindowManager.addView(this.mFloatLayout, this.wmParams);
-      this.isShowing = true;
-      return true;
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return BNEyeSpyPaperFloatButton.this.handleMotionEvent(event);
+        }
     }
-    catch (Exception localException)
-    {
-      LogUtil.e(TAG, "float excetion e:" + localException.getMessage());
-      this.isShowing = false;
+
+    public BNEyeSpyPaperFloatButton() {
+        initWindowsManger();
+        initViews();
+        this.mTouchSlop = ViewConfiguration.get(BNaviModuleManager.getActivity()).getScaledTouchSlop();
     }
-    return false;
-  }
+
+    private void initWindowsManger() {
+        this.wmParams = new LayoutParams();
+        this.mWindowManager = (WindowManager) BNaviModuleManager.getActivity().getSystemService("window");
+        this.wmParams.type = 2;
+        this.wmParams.format = 1;
+        this.wmParams.flags = 8;
+        this.wmParams.gravity = 51;
+        this.wmParams.width = ScreenUtil.getInstance().dip2px(69);
+        this.wmParams.height = ScreenUtil.getInstance().dip2px(30);
+    }
+
+    private void initViews() {
+        this.mFloatLayout = new LinearLayout(BNaviModuleManager.getActivity());
+        TextView textView = new TextView(BNaviModuleManager.getActivity());
+        textView.setTextSize(1, 20.0f);
+        textView.setText("报bug");
+        this.mFloatLayout.addView(textView);
+        this.mFloatLayout.setOrientation(0);
+        this.mFloatLayout.setGravity(17);
+        this.mFloatLayout.setBackgroundColor(-65536);
+        this.mFloatLayout.setOnClickListener(new C40811());
+    }
+
+    public boolean show() {
+        LogUtil.m15791e(TAG, "show :" + isShow());
+        if (isShow()) {
+            return true;
+        }
+        try {
+            this.mFloatLayout.setOnTouchListener(new C40822());
+            this.mWindowManager.addView(this.mFloatLayout, this.wmParams);
+            this.isShowing = true;
+            return true;
+        } catch (Exception e) {
+            LogUtil.m15791e(TAG, "float excetion e:" + e.getMessage());
+            this.isShowing = false;
+            return false;
+        }
+    }
+
+    public void hide() {
+        LogUtil.m15791e(TAG, "hide");
+        try {
+            if (!(this.mFloatLayout == null || this.mFloatLayout.getParent() == null)) {
+                this.mWindowManager.removeView(this.mFloatLayout);
+            }
+            this.isShowing = false;
+        } catch (Exception e) {
+            LogUtil.m15791e(TAG, "hide float excetion e:" + e.getMessage());
+        }
+    }
+
+    public boolean isShow() {
+        return this.isShowing;
+    }
+
+    public void dispose() {
+        this.isShowing = false;
+        if (this.mFloatLayout != null) {
+            this.mWindowManager.removeView(this.mFloatLayout);
+        }
+    }
+
+    private boolean handleMotionEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case 0:
+                this.mXInFloatView = event.getX();
+                this.mYInFloatView = event.getY();
+                this.mDownX = event.getRawX();
+                this.mDownY = event.getRawY();
+                this.isMoved = false;
+                return false;
+            case 1:
+                updateViewPosition();
+                return this.isMoved;
+            case 2:
+                this.mXInScreen = event.getRawX();
+                this.mYInScreen = event.getRawY() - ((float) ScreenUtil.getInstance().getStatusBarHeight());
+                if (Math.abs(this.mDownX - event.getRawX()) > ((float) this.mTouchSlop) || Math.abs(this.mDownY - event.getRawY()) > ((float) this.mTouchSlop)) {
+                    this.isMoved = true;
+                }
+                if (!this.isMoved) {
+                    return false;
+                }
+                updateViewPosition();
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    private void updateViewPosition() {
+        this.wmParams.x = (int) (this.mXInScreen - this.mXInFloatView);
+        this.wmParams.y = (int) (this.mYInScreen - this.mYInFloatView);
+        try {
+            this.mWindowManager.updateViewLayout(this.mFloatLayout, this.wmParams);
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/debug/BNEyeSpyPaperFloatButton.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

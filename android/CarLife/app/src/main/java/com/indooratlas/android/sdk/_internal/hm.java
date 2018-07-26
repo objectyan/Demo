@@ -1,86 +1,73 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class hm
-{
-  int a;
-  int b;
-  int c;
-  final int[] d = new int[10];
-  
-  final int a()
-  {
-    if ((this.a & 0x2) != 0) {
-      return this.d[1];
+public final class hm {
+    /* renamed from: a */
+    int f24223a;
+    /* renamed from: b */
+    int f24224b;
+    /* renamed from: c */
+    int f24225c;
+    /* renamed from: d */
+    final int[] f24226d = new int[10];
+
+    /* renamed from: a */
+    final hm m20982a(int i, int i2, int i3) {
+        if (i < this.f24226d.length) {
+            int i4 = 1 << i;
+            this.f24223a |= i4;
+            if ((i2 & 1) != 0) {
+                this.f24224b |= i4;
+            } else {
+                this.f24224b &= i4 ^ -1;
+            }
+            if ((i2 & 2) != 0) {
+                this.f24225c = i4 | this.f24225c;
+            } else {
+                this.f24225c = (i4 ^ -1) & this.f24225c;
+            }
+            this.f24226d[i] = i3;
+        }
+        return this;
     }
-    return -1;
-  }
-  
-  final hm a(int paramInt1, int paramInt2, int paramInt3)
-  {
-    if (paramInt1 >= this.d.length) {
-      return this;
+
+    /* renamed from: a */
+    final boolean m20983a(int i) {
+        if (((1 << i) & this.f24223a) != 0) {
+            return true;
+        }
+        return false;
     }
-    int i = 1 << paramInt1;
-    this.a |= i;
-    if ((paramInt2 & 0x1) != 0)
-    {
-      this.b |= i;
-      if ((paramInt2 & 0x2) == 0) {
-        break label86;
-      }
+
+    /* renamed from: b */
+    final int m20985b(int i) {
+        int i2;
+        int i3 = 0;
+        if (((1 << i) & this.f24225c) != 0) {
+            i2 = 1;
+        } else {
+            i2 = 0;
+        }
+        if (i2 != 0) {
+            i2 = 2;
+        } else {
+            i2 = 0;
+        }
+        if (((1 << i) & this.f24224b) != 0) {
+            i3 = 1;
+        }
+        if (i3 != 0) {
+            return i2 | 1;
+        }
+        return i2;
     }
-    label86:
-    for (this.c = (i | this.c);; this.c = ((i ^ 0xFFFFFFFF) & this.c))
-    {
-      this.d[paramInt1] = paramInt3;
-      return this;
-      this.b &= (i ^ 0xFFFFFFFF);
-      break;
+
+    /* renamed from: a */
+    final int m20981a() {
+        return (this.f24223a & 2) != 0 ? this.f24226d[1] : -1;
     }
-  }
-  
-  final boolean a(int paramInt)
-  {
-    return (1 << paramInt & this.a) != 0;
-  }
-  
-  public final int b()
-  {
-    if ((this.a & 0x80) != 0) {
-      return this.d[7];
+
+    /* renamed from: b */
+    public final int m20984b() {
+        return (this.f24223a & 128) != 0 ? this.f24226d[7] : 65536;
     }
-    return 65536;
-  }
-  
-  final int b(int paramInt)
-  {
-    int j = 0;
-    if ((1 << paramInt & this.c) != 0)
-    {
-      i = 1;
-      if (i == 0) {
-        break label51;
-      }
-    }
-    label51:
-    for (int i = 2;; i = 0)
-    {
-      if ((1 << paramInt & this.b) != 0) {
-        j = 1;
-      }
-      paramInt = i;
-      if (j != 0) {
-        paramInt = i | 0x1;
-      }
-      return paramInt;
-      i = 0;
-      break;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hm.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

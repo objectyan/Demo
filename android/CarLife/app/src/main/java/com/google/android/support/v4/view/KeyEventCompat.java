@@ -4,212 +4,174 @@ import android.os.Build.VERSION;
 import android.view.KeyEvent;
 import android.view.KeyEvent.Callback;
 import android.view.View;
+import com.baidu.carlife.core.C1253f;
 
-public class KeyEventCompat
-{
-  static final KeyEventVersionImpl IMPL = new BaseKeyEventVersionImpl();
-  
-  static
-  {
-    if (Build.VERSION.SDK_INT >= 11)
-    {
-      IMPL = new HoneycombKeyEventVersionImpl();
-      return;
+public class KeyEventCompat {
+    static final KeyEventVersionImpl IMPL;
+
+    interface KeyEventVersionImpl {
+        boolean dispatch(KeyEvent keyEvent, Callback callback, Object obj, Object obj2);
+
+        Object getKeyDispatcherState(View view);
+
+        boolean isTracking(KeyEvent keyEvent);
+
+        boolean metaStateHasModifiers(int i, int i2);
+
+        boolean metaStateHasNoModifiers(int i);
+
+        int normalizeMetaState(int i);
+
+        void startTracking(KeyEvent keyEvent);
     }
-  }
-  
-  public static boolean dispatch(KeyEvent paramKeyEvent, KeyEvent.Callback paramCallback, Object paramObject1, Object paramObject2)
-  {
-    return IMPL.dispatch(paramKeyEvent, paramCallback, paramObject1, paramObject2);
-  }
-  
-  public static Object getKeyDispatcherState(View paramView)
-  {
-    return IMPL.getKeyDispatcherState(paramView);
-  }
-  
-  public static boolean hasModifiers(KeyEvent paramKeyEvent, int paramInt)
-  {
-    return IMPL.metaStateHasModifiers(paramKeyEvent.getMetaState(), paramInt);
-  }
-  
-  public static boolean hasNoModifiers(KeyEvent paramKeyEvent)
-  {
-    return IMPL.metaStateHasNoModifiers(paramKeyEvent.getMetaState());
-  }
-  
-  public static boolean isTracking(KeyEvent paramKeyEvent)
-  {
-    return IMPL.isTracking(paramKeyEvent);
-  }
-  
-  public static boolean metaStateHasModifiers(int paramInt1, int paramInt2)
-  {
-    return IMPL.metaStateHasModifiers(paramInt1, paramInt2);
-  }
-  
-  public static boolean metaStateHasNoModifiers(int paramInt)
-  {
-    return IMPL.metaStateHasNoModifiers(paramInt);
-  }
-  
-  public static int normalizeMetaState(int paramInt)
-  {
-    return IMPL.normalizeMetaState(paramInt);
-  }
-  
-  public static void startTracking(KeyEvent paramKeyEvent)
-  {
-    IMPL.startTracking(paramKeyEvent);
-  }
-  
-  static class BaseKeyEventVersionImpl
-    implements KeyEventCompat.KeyEventVersionImpl
-  {
-    private static final int META_ALL_MASK = 247;
-    private static final int META_MODIFIER_MASK = 247;
-    
-    private static int metaStateFilterDirectionalModifiers(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5)
-    {
-      int j = 1;
-      int i;
-      if ((paramInt2 & paramInt3) != 0)
-      {
-        i = 1;
-        paramInt4 |= paramInt5;
-        if ((paramInt2 & paramInt4) == 0) {
-          break label51;
+
+    static class BaseKeyEventVersionImpl implements KeyEventVersionImpl {
+        private static final int META_ALL_MASK = 247;
+        private static final int META_MODIFIER_MASK = 247;
+
+        BaseKeyEventVersionImpl() {
         }
-        paramInt2 = j;
-      }
-      for (;;)
-      {
-        if (i != 0)
-        {
-          if (paramInt2 != 0)
-          {
-            throw new IllegalArgumentException("bad arguments");
-            i = 0;
-            break;
-            label51:
-            paramInt2 = 0;
-            continue;
-          }
-          paramInt4 = paramInt1 & (paramInt4 ^ 0xFFFFFFFF);
+
+        private static int metaStateFilterDirectionalModifiers(int metaState, int modifiers, int basic, int left, int right) {
+            boolean wantBasic;
+            boolean wantLeftOrRight = true;
+            if ((modifiers & basic) != 0) {
+                wantBasic = true;
+            } else {
+                wantBasic = false;
+            }
+            int directional = left | right;
+            if ((modifiers & directional) == 0) {
+                wantLeftOrRight = false;
+            }
+            if (wantBasic) {
+                if (!wantLeftOrRight) {
+                    return metaState & (directional ^ -1);
+                }
+                throw new IllegalArgumentException("bad arguments");
+            } else if (wantLeftOrRight) {
+                return metaState & (basic ^ -1);
+            } else {
+                return metaState;
+            }
         }
-      }
-      do
-      {
-        return paramInt4;
-        paramInt4 = paramInt1;
-      } while (paramInt2 == 0);
-      return paramInt1 & (paramInt3 ^ 0xFFFFFFFF);
+
+        public int normalizeMetaState(int metaState) {
+            if ((metaState & 192) != 0) {
+                metaState |= 1;
+            }
+            if ((metaState & 48) != 0) {
+                metaState |= 2;
+            }
+            return metaState & C1253f.dP;
+        }
+
+        public boolean metaStateHasModifiers(int metaState, int modifiers) {
+            if (metaStateFilterDirectionalModifiers(metaStateFilterDirectionalModifiers(normalizeMetaState(metaState) & C1253f.dP, modifiers, 1, 64, 128), modifiers, 2, 16, 32) == modifiers) {
+                return true;
+            }
+            return false;
+        }
+
+        public boolean metaStateHasNoModifiers(int metaState) {
+            return (normalizeMetaState(metaState) & C1253f.dP) == 0;
+        }
+
+        public void startTracking(KeyEvent event) {
+        }
+
+        public boolean isTracking(KeyEvent event) {
+            return false;
+        }
+
+        public Object getKeyDispatcherState(View view) {
+            return null;
+        }
+
+        public boolean dispatch(KeyEvent event, Callback receiver, Object state, Object target) {
+            return event.dispatch(receiver);
+        }
     }
-    
-    public boolean dispatch(KeyEvent paramKeyEvent, KeyEvent.Callback paramCallback, Object paramObject1, Object paramObject2)
-    {
-      return paramKeyEvent.dispatch(paramCallback);
+
+    static class EclairKeyEventVersionImpl extends BaseKeyEventVersionImpl {
+        EclairKeyEventVersionImpl() {
+        }
+
+        public void startTracking(KeyEvent event) {
+            KeyEventCompatEclair.startTracking(event);
+        }
+
+        public boolean isTracking(KeyEvent event) {
+            return KeyEventCompatEclair.isTracking(event);
+        }
+
+        public Object getKeyDispatcherState(View view) {
+            return KeyEventCompatEclair.getKeyDispatcherState(view);
+        }
+
+        public boolean dispatch(KeyEvent event, Callback receiver, Object state, Object target) {
+            return KeyEventCompatEclair.dispatch(event, receiver, state, target);
+        }
     }
-    
-    public Object getKeyDispatcherState(View paramView)
-    {
-      return null;
+
+    static class HoneycombKeyEventVersionImpl extends EclairKeyEventVersionImpl {
+        HoneycombKeyEventVersionImpl() {
+        }
+
+        public int normalizeMetaState(int metaState) {
+            return KeyEventCompatHoneycomb.normalizeMetaState(metaState);
+        }
+
+        public boolean metaStateHasModifiers(int metaState, int modifiers) {
+            return KeyEventCompatHoneycomb.metaStateHasModifiers(metaState, modifiers);
+        }
+
+        public boolean metaStateHasNoModifiers(int metaState) {
+            return KeyEventCompatHoneycomb.metaStateHasNoModifiers(metaState);
+        }
     }
-    
-    public boolean isTracking(KeyEvent paramKeyEvent)
-    {
-      return false;
+
+    static {
+        if (VERSION.SDK_INT >= 11) {
+            IMPL = new HoneycombKeyEventVersionImpl();
+        } else {
+            IMPL = new BaseKeyEventVersionImpl();
+        }
     }
-    
-    public boolean metaStateHasModifiers(int paramInt1, int paramInt2)
-    {
-      return metaStateFilterDirectionalModifiers(metaStateFilterDirectionalModifiers(normalizeMetaState(paramInt1) & 0xF7, paramInt2, 1, 64, 128), paramInt2, 2, 16, 32) == paramInt2;
+
+    public static int normalizeMetaState(int metaState) {
+        return IMPL.normalizeMetaState(metaState);
     }
-    
-    public boolean metaStateHasNoModifiers(int paramInt)
-    {
-      return (normalizeMetaState(paramInt) & 0xF7) == 0;
+
+    public static boolean metaStateHasModifiers(int metaState, int modifiers) {
+        return IMPL.metaStateHasModifiers(metaState, modifiers);
     }
-    
-    public int normalizeMetaState(int paramInt)
-    {
-      int i = paramInt;
-      if ((paramInt & 0xC0) != 0) {
-        i = paramInt | 0x1;
-      }
-      paramInt = i;
-      if ((i & 0x30) != 0) {
-        paramInt = i | 0x2;
-      }
-      return paramInt & 0xF7;
+
+    public static boolean metaStateHasNoModifiers(int metaState) {
+        return IMPL.metaStateHasNoModifiers(metaState);
     }
-    
-    public void startTracking(KeyEvent paramKeyEvent) {}
-  }
-  
-  static class EclairKeyEventVersionImpl
-    extends KeyEventCompat.BaseKeyEventVersionImpl
-  {
-    public boolean dispatch(KeyEvent paramKeyEvent, KeyEvent.Callback paramCallback, Object paramObject1, Object paramObject2)
-    {
-      return KeyEventCompatEclair.dispatch(paramKeyEvent, paramCallback, paramObject1, paramObject2);
+
+    public static boolean hasModifiers(KeyEvent event, int modifiers) {
+        return IMPL.metaStateHasModifiers(event.getMetaState(), modifiers);
     }
-    
-    public Object getKeyDispatcherState(View paramView)
-    {
-      return KeyEventCompatEclair.getKeyDispatcherState(paramView);
+
+    public static boolean hasNoModifiers(KeyEvent event) {
+        return IMPL.metaStateHasNoModifiers(event.getMetaState());
     }
-    
-    public boolean isTracking(KeyEvent paramKeyEvent)
-    {
-      return KeyEventCompatEclair.isTracking(paramKeyEvent);
+
+    public static void startTracking(KeyEvent event) {
+        IMPL.startTracking(event);
     }
-    
-    public void startTracking(KeyEvent paramKeyEvent)
-    {
-      KeyEventCompatEclair.startTracking(paramKeyEvent);
+
+    public static boolean isTracking(KeyEvent event) {
+        return IMPL.isTracking(event);
     }
-  }
-  
-  static class HoneycombKeyEventVersionImpl
-    extends KeyEventCompat.EclairKeyEventVersionImpl
-  {
-    public boolean metaStateHasModifiers(int paramInt1, int paramInt2)
-    {
-      return KeyEventCompatHoneycomb.metaStateHasModifiers(paramInt1, paramInt2);
+
+    public static Object getKeyDispatcherState(View view) {
+        return IMPL.getKeyDispatcherState(view);
     }
-    
-    public boolean metaStateHasNoModifiers(int paramInt)
-    {
-      return KeyEventCompatHoneycomb.metaStateHasNoModifiers(paramInt);
+
+    public static boolean dispatch(KeyEvent event, Callback receiver, Object state, Object target) {
+        return IMPL.dispatch(event, receiver, state, target);
     }
-    
-    public int normalizeMetaState(int paramInt)
-    {
-      return KeyEventCompatHoneycomb.normalizeMetaState(paramInt);
-    }
-  }
-  
-  static abstract interface KeyEventVersionImpl
-  {
-    public abstract boolean dispatch(KeyEvent paramKeyEvent, KeyEvent.Callback paramCallback, Object paramObject1, Object paramObject2);
-    
-    public abstract Object getKeyDispatcherState(View paramView);
-    
-    public abstract boolean isTracking(KeyEvent paramKeyEvent);
-    
-    public abstract boolean metaStateHasModifiers(int paramInt1, int paramInt2);
-    
-    public abstract boolean metaStateHasNoModifiers(int paramInt);
-    
-    public abstract int normalizeMetaState(int paramInt);
-    
-    public abstract void startTracking(KeyEvent paramKeyEvent);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/KeyEventCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

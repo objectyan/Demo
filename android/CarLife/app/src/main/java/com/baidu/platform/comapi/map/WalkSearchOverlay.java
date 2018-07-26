@@ -4,73 +4,52 @@ import android.os.Bundle;
 import com.baidu.entity.pb.WalkSearch;
 import com.baidu.platform.comapi.map.provider.WalkSearchProvider;
 import com.baidu.platform.comapi.search.convert.ResultCache;
-import com.baidu.platform.comapi.search.convert.ResultCache.Item;
+import com.baidu.platform.comapi.search.convert.ResultCache$Item;
 import com.baidu.platform.comjni.map.basemap.AppBaseMap;
 import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 
-public class WalkSearchOverlay
-  extends InnerOverlay
-{
-  byte[] pbData = null;
-  
-  public WalkSearchOverlay()
-  {
-    super(39);
-  }
-  
-  public WalkSearchOverlay(AppBaseMap paramAppBaseMap)
-  {
-    super(39, paramAppBaseMap);
-  }
-  
-  private String handlePBResult(WalkSearch paramWalkSearch)
-  {
-    return new WalkSearchProvider(paramWalkSearch).getRenderData();
-  }
-  
-  public String getData()
-  {
-    if (this.pbData != null) {
-      localObject = null;
+public class WalkSearchOverlay extends InnerOverlay {
+    byte[] pbData = null;
+
+    public WalkSearchOverlay() {
+        super(39);
     }
-    try
-    {
-      WalkSearch localWalkSearch = WalkSearch.parseFrom(this.pbData);
-      localObject = localWalkSearch;
+
+    public WalkSearchOverlay(AppBaseMap baseMap) {
+        super(39, baseMap);
     }
-    catch (InvalidProtocolBufferMicroException localInvalidProtocolBufferMicroException)
-    {
-      for (;;) {}
+
+    public void setPbData(byte[] pb) {
+        this.pbData = pb;
     }
-    if (localObject != null)
-    {
-      setType(-1);
-      return handlePBResult((WalkSearch)localObject);
+
+    public Bundle getParam() {
+        return null;
     }
-    return null;
-    Object localObject = ResultCache.getInstance().get(this.strJsonData);
-    if ((localObject != null) && ((((ResultCache.Item)localObject).messageLite instanceof WalkSearch)))
-    {
-      setType(-1);
-      return handlePBResult((WalkSearch)((ResultCache.Item)localObject).messageLite);
+
+    public String getData() {
+        if (this.pbData != null) {
+            WalkSearch walkSearch = null;
+            try {
+                walkSearch = WalkSearch.parseFrom(this.pbData);
+            } catch (InvalidProtocolBufferMicroException e) {
+            }
+            if (walkSearch == null) {
+                return null;
+            }
+            setType(-1);
+            return handlePBResult(walkSearch);
+        }
+        ResultCache$Item item = ResultCache.getInstance().get(this.strJsonData);
+        if (item == null || !(item.messageLite instanceof WalkSearch)) {
+            setType(39);
+            return this.strJsonData;
+        }
+        setType(-1);
+        return handlePBResult((WalkSearch) item.messageLite);
     }
-    setType(39);
-    return this.strJsonData;
-  }
-  
-  public Bundle getParam()
-  {
-    return null;
-  }
-  
-  public void setPbData(byte[] paramArrayOfByte)
-  {
-    this.pbData = paramArrayOfByte;
-  }
+
+    private String handlePBResult(WalkSearch protoMessage) {
+        return new WalkSearchProvider(protoMessage).getRenderData();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/WalkSearchOverlay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

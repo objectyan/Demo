@@ -2,23 +2,20 @@ package com.baidu.ufosdk.ui;
 
 import android.content.Context;
 import com.baidu.ufosdk.UfoSDK;
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class ck
-  implements Runnable
-{
-  ck(cj paramcj) {}
-  
-  public final void run()
-  {
-    Context localContext = cj.a(this.a).getApplicationContext();
-    String str = UfoSDK.clientid;
-    a.b(localContext);
-  }
+/* compiled from: FeedbackListActivity */
+final class ck implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ cj f21623a;
+
+    ck(cj cjVar) {
+        this.f21623a = cjVar;
+    }
+
+    public final void run() {
+        Context applicationContext = this.f21623a.f21622a.getApplicationContext();
+        String str = UfoSDK.clientid;
+        C5180a.m17572b(applicationContext);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ck.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

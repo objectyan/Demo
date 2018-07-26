@@ -3,105 +3,82 @@ package com.google.zxing;
 import java.util.EnumMap;
 import java.util.Map;
 
-public final class Result
-{
-  private final BarcodeFormat format;
-  private final byte[] rawBytes;
-  private Map<ResultMetadataType, Object> resultMetadata;
-  private ResultPoint[] resultPoints;
-  private final String text;
-  private final long timestamp;
-  
-  public Result(String paramString, byte[] paramArrayOfByte, ResultPoint[] paramArrayOfResultPoint, BarcodeFormat paramBarcodeFormat)
-  {
-    this(paramString, paramArrayOfByte, paramArrayOfResultPoint, paramBarcodeFormat, System.currentTimeMillis());
-  }
-  
-  public Result(String paramString, byte[] paramArrayOfByte, ResultPoint[] paramArrayOfResultPoint, BarcodeFormat paramBarcodeFormat, long paramLong)
-  {
-    this.text = paramString;
-    this.rawBytes = paramArrayOfByte;
-    this.resultPoints = paramArrayOfResultPoint;
-    this.format = paramBarcodeFormat;
-    this.resultMetadata = null;
-    this.timestamp = paramLong;
-  }
-  
-  public void addResultPoints(ResultPoint[] paramArrayOfResultPoint)
-  {
-    ResultPoint[] arrayOfResultPoint1 = this.resultPoints;
-    if (arrayOfResultPoint1 == null) {
-      this.resultPoints = paramArrayOfResultPoint;
+public final class Result {
+    private final BarcodeFormat format;
+    private final byte[] rawBytes;
+    private Map<ResultMetadataType, Object> resultMetadata;
+    private ResultPoint[] resultPoints;
+    private final String text;
+    private final long timestamp;
+
+    public Result(String text, byte[] rawBytes, ResultPoint[] resultPoints, BarcodeFormat format) {
+        this(text, rawBytes, resultPoints, format, System.currentTimeMillis());
     }
-    while ((paramArrayOfResultPoint == null) || (paramArrayOfResultPoint.length <= 0)) {
-      return;
+
+    public Result(String text, byte[] rawBytes, ResultPoint[] resultPoints, BarcodeFormat format, long timestamp) {
+        this.text = text;
+        this.rawBytes = rawBytes;
+        this.resultPoints = resultPoints;
+        this.format = format;
+        this.resultMetadata = null;
+        this.timestamp = timestamp;
     }
-    ResultPoint[] arrayOfResultPoint2 = new ResultPoint[arrayOfResultPoint1.length + paramArrayOfResultPoint.length];
-    System.arraycopy(arrayOfResultPoint1, 0, arrayOfResultPoint2, 0, arrayOfResultPoint1.length);
-    System.arraycopy(paramArrayOfResultPoint, 0, arrayOfResultPoint2, arrayOfResultPoint1.length, paramArrayOfResultPoint.length);
-    this.resultPoints = arrayOfResultPoint2;
-  }
-  
-  public BarcodeFormat getBarcodeFormat()
-  {
-    return this.format;
-  }
-  
-  public byte[] getRawBytes()
-  {
-    return this.rawBytes;
-  }
-  
-  public Map<ResultMetadataType, Object> getResultMetadata()
-  {
-    return this.resultMetadata;
-  }
-  
-  public ResultPoint[] getResultPoints()
-  {
-    return this.resultPoints;
-  }
-  
-  public String getText()
-  {
-    return this.text;
-  }
-  
-  public long getTimestamp()
-  {
-    return this.timestamp;
-  }
-  
-  public void putAllMetadata(Map<ResultMetadataType, Object> paramMap)
-  {
-    if (paramMap != null)
-    {
-      if (this.resultMetadata == null) {
-        this.resultMetadata = paramMap;
-      }
+
+    public String getText() {
+        return this.text;
     }
-    else {
-      return;
+
+    public byte[] getRawBytes() {
+        return this.rawBytes;
     }
-    this.resultMetadata.putAll(paramMap);
-  }
-  
-  public void putMetadata(ResultMetadataType paramResultMetadataType, Object paramObject)
-  {
-    if (this.resultMetadata == null) {
-      this.resultMetadata = new EnumMap(ResultMetadataType.class);
+
+    public ResultPoint[] getResultPoints() {
+        return this.resultPoints;
     }
-    this.resultMetadata.put(paramResultMetadataType, paramObject);
-  }
-  
-  public String toString()
-  {
-    return this.text;
-  }
+
+    public BarcodeFormat getBarcodeFormat() {
+        return this.format;
+    }
+
+    public Map<ResultMetadataType, Object> getResultMetadata() {
+        return this.resultMetadata;
+    }
+
+    public void putMetadata(ResultMetadataType type, Object value) {
+        if (this.resultMetadata == null) {
+            this.resultMetadata = new EnumMap(ResultMetadataType.class);
+        }
+        this.resultMetadata.put(type, value);
+    }
+
+    public void putAllMetadata(Map<ResultMetadataType, Object> metadata) {
+        if (metadata == null) {
+            return;
+        }
+        if (this.resultMetadata == null) {
+            this.resultMetadata = metadata;
+        } else {
+            this.resultMetadata.putAll(metadata);
+        }
+    }
+
+    public void addResultPoints(ResultPoint[] newPoints) {
+        ResultPoint[] oldPoints = this.resultPoints;
+        if (oldPoints == null) {
+            this.resultPoints = newPoints;
+        } else if (newPoints != null && newPoints.length > 0) {
+            ResultPoint[] allPoints = new ResultPoint[(oldPoints.length + newPoints.length)];
+            System.arraycopy(oldPoints, 0, allPoints, 0, oldPoints.length);
+            System.arraycopy(newPoints, 0, allPoints, oldPoints.length, newPoints.length);
+            this.resultPoints = allPoints;
+        }
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
+    }
+
+    public String toString() {
+        return this.text;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/Result.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

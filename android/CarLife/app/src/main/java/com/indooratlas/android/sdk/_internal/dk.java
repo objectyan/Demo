@@ -7,64 +7,48 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 
 @TargetApi(18)
-final class dk
-  extends df
-  implements BluetoothAdapter.LeScanCallback
-{
-  dk(BluetoothManager paramBluetoothManager, dg paramdg)
-  {
-    super(paramBluetoothManager, paramdg);
-  }
-  
-  final boolean a()
-  {
-    if (this.a) {
-      return false;
+final class dk extends df implements LeScanCallback {
+    dk(BluetoothManager bluetoothManager, dg dgVar) {
+        super(bluetoothManager, dgVar);
     }
-    Object localObject = this.b.getAdapter();
-    if ((localObject != null) && ((((BluetoothAdapter)localObject).getState() == 12) || (((BluetoothAdapter)localObject).getState() == 11)))
-    {
-      ((BluetoothAdapter)localObject).startLeScan(this);
-      this.a = true;
+
+    /* renamed from: a */
+    final boolean mo4666a() {
+        if (this.a) {
+            return false;
+        }
+        BluetoothAdapter adapter = this.b.getAdapter();
+        if (adapter != null && (adapter.getState() == 12 || adapter.getState() == 11)) {
+            adapter.startLeScan(this);
+            this.a = true;
+        }
+        String str = cz.f23362a;
+        new StringBuilder("BLE scan started: ").append(this.a);
+        return this.a;
     }
-    localObject = cz.a;
-    new StringBuilder("BLE scan started: ").append(this.a);
-    return this.a;
-  }
-  
-  final boolean b()
-  {
-    if (!this.a) {
-      return false;
+
+    /* renamed from: b */
+    final boolean mo4667b() {
+        if (!this.a) {
+            return false;
+        }
+        BluetoothAdapter adapter = this.b.getAdapter();
+        if (adapter != null) {
+            adapter.stopLeScan(this);
+        }
+        this.a = false;
+        return true;
     }
-    BluetoothAdapter localBluetoothAdapter = this.b.getAdapter();
-    if (localBluetoothAdapter != null) {
-      localBluetoothAdapter.stopLeScan(this);
+
+    public final void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+        String str = null;
+        String name = device != null ? device.getName() : null;
+        if (device != null) {
+            str = device.getAddress();
+        }
+        dh a = dl.m20330a(name, str, rssi, scanRecord);
+        if (a != null) {
+            super.m20307a(a);
+        }
     }
-    this.a = false;
-    return true;
-  }
-  
-  public final void onLeScan(BluetoothDevice paramBluetoothDevice, int paramInt, byte[] paramArrayOfByte)
-  {
-    String str2 = null;
-    if (paramBluetoothDevice != null) {}
-    for (String str1 = paramBluetoothDevice.getName();; str1 = null)
-    {
-      if (paramBluetoothDevice != null) {
-        str2 = paramBluetoothDevice.getAddress();
-      }
-      paramBluetoothDevice = dl.a(str1, str2, paramInt, paramArrayOfByte);
-      if (paramBluetoothDevice != null) {
-        super.a(paramBluetoothDevice);
-      }
-      return;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dk.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

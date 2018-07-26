@@ -1,16 +1,9 @@
 package com.android.volley;
 
-public abstract interface ResponseDelivery
-{
-  public abstract void postError(Request<?> paramRequest, VolleyError paramVolleyError);
-  
-  public abstract void postResponse(Request<?> paramRequest, Response<?> paramResponse);
-  
-  public abstract void postResponse(Request<?> paramRequest, Response<?> paramResponse, Runnable paramRunnable);
+public interface ResponseDelivery {
+    void postError(Request<?> request, VolleyError volleyError);
+
+    void postResponse(Request<?> request, Response<?> response);
+
+    void postResponse(Request<?> request, Response<?> response, Runnable runnable);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/ResponseDelivery.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

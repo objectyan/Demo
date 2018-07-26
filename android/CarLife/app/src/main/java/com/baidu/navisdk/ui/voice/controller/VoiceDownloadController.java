@@ -1,11 +1,14 @@
 package com.baidu.navisdk.ui.voice.controller;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import com.baidu.navisdk.comapi.base.MsgHandler;
 import com.baidu.navisdk.jni.nativeif.JNIVoicePersonalityControl;
+import com.baidu.navisdk.model.params.MsgDefine;
 import com.baidu.navisdk.ui.voice.BNVoice;
+import com.baidu.navisdk.ui.voice.BNVoiceParams;
 import com.baidu.navisdk.ui.voice.model.VoiceDataStatus;
 import com.baidu.navisdk.ui.voice.model.VoiceInfo;
 import com.baidu.navisdk.util.common.LogUtil;
@@ -16,271 +19,223 @@ import com.baidu.navisdk.vi.VMsgDispatcher;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class VoiceDownloadController
-{
-  private static Object mCallbackListLock = new Object();
-  private ArrayList<Handler> mCallbackHandlerList = new ArrayList();
-  private MsgHandler mHandler = new MsgHandler(Looper.getMainLooper())
-  {
-    public void careAbout()
-    {
-      observe(4164);
-      observe(4165);
-      observe(4167);
-      observe(4166);
-      observe(4163);
-      observe(4176);
-      observe(4177);
-      observe(4178);
-      observe(4183);
-    }
-    
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      String str = VoiceDownloadStatus.getInstance().getCurrentDownTaskId();
-      int i;
-      switch (paramAnonymousMessage.what)
-      {
-      default: 
-        return;
-      case 4164: 
-        LogUtil.e("BNVoice", "down handleMessage failed ");
-        VoiceDownloadStatus.getInstance().pauseDownload();
-        VoiceDownloadController.this.sendDownloadStatusChange(3, -1, -1, str);
-        return;
-      case 4165: 
-        LogUtil.e("BNVoice", "down handleMessage finish ");
-        VoiceDownloadStatus.getInstance().finishDownload();
-        VoiceDownloadController.this.sendDownloadStatusChange(4, -1, -1, str);
-        return;
-      case 4167: 
-        LogUtil.e("BNVoice", "down handleMessage md5error ");
-        VoiceDownloadStatus.getInstance().failDownload(18);
-        VoiceDownloadController.this.sendDownloadStatusChange(3, -1, -1, str);
-        return;
-      case 4166: 
-        i = paramAnonymousMessage.arg2;
-        LogUtil.e("BNVoice", "down handleMessage start totalSize = " + i);
-        if (!VoiceDownloadController.this.checkSDCardStatus(i))
-        {
-          VoiceDownloadStatus.getInstance().pauseDownload();
-          return;
+public class VoiceDownloadController {
+    private static Object mCallbackListLock = new Object();
+    private ArrayList<Handler> mCallbackHandlerList;
+    private MsgHandler mHandler;
+    private ArrayList<VoiceInfo> mSharedVoiceInfo;
+
+    private static class LazyHolder {
+        private static final VoiceDownloadController INSTANCE = new VoiceDownloadController();
+
+        private LazyHolder() {
         }
-        VoiceDownloadStatus.getInstance().setSizeinfo(i);
-        return;
-      case 4163: 
-        i = paramAnonymousMessage.arg2;
-        LogUtil.e("BNVoice", "down handleMessage update downloadsize = " + i);
-        VoiceDownloadStatus.getInstance().updateDownload(i);
-        return;
-      case 5555: 
-        i = paramAnonymousMessage.arg1;
-        int j = paramAnonymousMessage.arg2;
-        LogUtil.e("BNVoice", " voice download in case NetworkListener.MSG_TYPE_NET_WORK_CHANGE wifiStatus " + i + " connectStatus = " + j);
-        if (j != 1) {
-          VoiceDownloadStatus.getInstance().pauseAllDownload(261);
+    }
+
+    public void addSharedVoiceInfo(VoiceInfo info) {
+        if (!this.mSharedVoiceInfo.contains(info)) {
+            this.mSharedVoiceInfo.add(info);
         }
-        for (;;)
-        {
-          BNVoice.getInstance().notifyObservers(7, paramAnonymousMessage.arg2, null);
-          return;
-          if (i != 1) {
-            VoiceDownloadStatus.getInstance().pauseFullDoseDownload(262);
-          }
+    }
+
+    public void removeSharedVoieInfo(String taskId) {
+        for (int id = 0; id < this.mSharedVoiceInfo.size(); id++) {
+            if (((VoiceInfo) this.mSharedVoiceInfo.get(id)).equals(taskId)) {
+                this.mSharedVoiceInfo.remove(id);
+                return;
+            }
         }
-      case 5565: 
-        LogUtil.e("Handler", " in case SDCardListener.MSG_TYPE_SDCARD_CHANGE");
-        return;
-      case 4176: 
-        LogUtil.e("BNVoice", "Voice MSG_NAVI_VoiceData_UploadMsg arg1 = " + paramAnonymousMessage.arg1);
-        BNVoice.getInstance().notifyObservers(4, paramAnonymousMessage.arg1, null);
-        return;
-      case 4177: 
-        LogUtil.e("BNVoice", "Voice BuildTTS arg1 = " + paramAnonymousMessage.arg1);
-        BNVoice.getInstance().notifyObservers(5, paramAnonymousMessage.arg1, null);
-        return;
-      case 4178: 
-        BNVoice.getInstance().notifyObservers(3, 0, null);
-        return;
-      }
-      LogUtil.e("BNVoice", "Voice NewTaskInfo arg1 = " + paramAnonymousMessage.arg1);
-      BNVoice.getInstance().notifyObservers(6, paramAnonymousMessage.arg1, null);
-      VoiceDownloadStatus.getInstance().addJinShaToSharedVoiceInfo();
     }
-  };
-  private ArrayList<VoiceInfo> mSharedVoiceInfo = new ArrayList();
-  
-  private VoiceDownloadController()
-  {
-    VMsgDispatcher.registerMsgHandler(this.mHandler);
-    NetworkListener.registerMessageHandler(this.mHandler);
-    SDCardListener.registerMessageHandler(this.mHandler);
-  }
-  
-  private boolean checkSDCardStatus(int paramInt)
-  {
-    boolean bool = true;
-    if (paramInt < 0) {
-      return false;
-    }
-    if (SDCardUtils.handleSdcardError(paramInt, true) == 0) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
-    }
-  }
-  
-  public static VoiceDownloadController getInstance()
-  {
-    return LazyHolder.INSTANCE;
-  }
-  
-  private void sendDownloadStatusChange(int paramInt1, int paramInt2, int paramInt3, String paramString)
-  {
-    synchronized (mCallbackListLock)
-    {
-      ArrayList localArrayList = new ArrayList(this.mCallbackHandlerList);
-      try
-      {
-        ??? = localArrayList.iterator();
-        while (((Iterator)???).hasNext()) {
-          ((Handler)((Iterator)???).next()).obtainMessage(paramInt1, paramInt2, paramInt3, paramString).sendToTarget();
+
+    public boolean hasInSharedVoice(String taskId) {
+        Iterator it = this.mSharedVoiceInfo.iterator();
+        while (it.hasNext()) {
+            if (((VoiceInfo) it.next()).equals(taskId)) {
+                return true;
+            }
         }
-        return;
-      }
-      catch (Exception paramString)
-      {
-        LogUtil.e("BNVoice", "sendMsgChange:" + paramString.getMessage());
-      }
+        return false;
     }
-  }
-  
-  public void addSharedVoiceInfo(VoiceInfo paramVoiceInfo)
-  {
-    if (!this.mSharedVoiceInfo.contains(paramVoiceInfo)) {
-      this.mSharedVoiceInfo.add(paramVoiceInfo);
+
+    public ArrayList<VoiceInfo> getSharedVoiceInfos() {
+        return this.mSharedVoiceInfo;
     }
-  }
-  
-  public void dipose()
-  {
-    VMsgDispatcher.unregisterMsgHandler(this.mHandler);
-    NetworkListener.unRegisterMessageHandler(this.mHandler);
-    SDCardListener.unRegisterMessageHandler(this.mHandler);
-  }
-  
-  public ArrayList<VoiceInfo> getDownloadVoiceTask()
-  {
-    ArrayList localArrayList = new ArrayList();
-    try
-    {
-      JNIVoicePersonalityControl.sInstance.getDownloadVoiceTask(localArrayList);
-      localArrayList = JNIVoicePersonalityControl.sInstance.parseVoiceInfoListBundle(localArrayList);
-      return localArrayList;
+
+    public static VoiceDownloadController getInstance() {
+        return LazyHolder.INSTANCE;
     }
-    catch (Throwable localThrowable) {}
-    return new ArrayList();
-  }
-  
-  public ArrayList<VoiceInfo> getRecommendVoiceTask()
-  {
-    ArrayList localArrayList = new ArrayList();
-    JNIVoicePersonalityControl.sInstance.getRecommendVoiceTask(localArrayList);
-    return JNIVoicePersonalityControl.sInstance.parseVoiceInfoListBundle(localArrayList);
-  }
-  
-  public ArrayList<VoiceInfo> getSharedVoiceInfos()
-  {
-    return this.mSharedVoiceInfo;
-  }
-  
-  public VoiceDataStatus getTaskDownStausFromEngine(String paramString)
-  {
-    VoiceDataStatus localVoiceDataStatus = new VoiceDataStatus();
-    JNIVoicePersonalityControl.sInstance.isTaskDowned(paramString, localVoiceDataStatus);
-    return localVoiceDataStatus;
-  }
-  
-  public boolean hasInSharedVoice(String paramString)
-  {
-    Iterator localIterator = this.mSharedVoiceInfo.iterator();
-    while (localIterator.hasNext()) {
-      if (((VoiceInfo)localIterator.next()).equals(paramString)) {
-        return true;
-      }
+
+    private VoiceDownloadController() {
+        this.mSharedVoiceInfo = new ArrayList();
+        this.mHandler = new MsgHandler(Looper.getMainLooper()) {
+            public void handleMessage(Message msg) {
+                String curId = VoiceDownloadStatus.getInstance().getCurrentDownTaskId();
+                switch (msg.what) {
+                    case 4163:
+                        int downloadSize = msg.arg2;
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "down handleMessage update downloadsize = " + downloadSize);
+                        VoiceDownloadStatus.getInstance().updateDownload(downloadSize);
+                        return;
+                    case 4164:
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "down handleMessage failed ");
+                        VoiceDownloadStatus.getInstance().pauseDownload();
+                        VoiceDownloadController.this.sendDownloadStatusChange(3, -1, -1, curId);
+                        return;
+                    case 4165:
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "down handleMessage finish ");
+                        VoiceDownloadStatus.getInstance().finishDownload();
+                        VoiceDownloadController.this.sendDownloadStatusChange(4, -1, -1, curId);
+                        return;
+                    case MsgDefine.MSG_NAVI_VoiceDataDownloadStart /*4166*/:
+                        int totalSize = msg.arg2;
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "down handleMessage start totalSize = " + totalSize);
+                        if (VoiceDownloadController.this.checkSDCardStatus(totalSize)) {
+                            VoiceDownloadStatus.getInstance().setSizeinfo(totalSize);
+                            return;
+                        } else {
+                            VoiceDownloadStatus.getInstance().pauseDownload();
+                            return;
+                        }
+                    case MsgDefine.MSG_NAVI_VoiceDataDownloadMD5Error /*4167*/:
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "down handleMessage md5error ");
+                        VoiceDownloadStatus.getInstance().failDownload(18);
+                        VoiceDownloadController.this.sendDownloadStatusChange(3, -1, -1, curId);
+                        return;
+                    case MsgDefine.MSG_NAVI_VoiceData_UploadMsg /*4176*/:
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "Voice MSG_NAVI_VoiceData_UploadMsg arg1 = " + msg.arg1);
+                        BNVoice.getInstance().notifyObservers(4, msg.arg1, null);
+                        return;
+                    case MsgDefine.MSG_NAVI_VoiceData_BuildTTS /*4177*/:
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "Voice BuildTTS arg1 = " + msg.arg1);
+                        BNVoice.getInstance().notifyObservers(5, msg.arg1, null);
+                        return;
+                    case MsgDefine.MSG_NAVI_VoiceData_NewRecommend /*4178*/:
+                        BNVoice.getInstance().notifyObservers(3, 0, null);
+                        return;
+                    case MsgDefine.MSG_NAVI_VoiceData_NewTaskInfo /*4183*/:
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "Voice NewTaskInfo arg1 = " + msg.arg1);
+                        BNVoice.getInstance().notifyObservers(6, msg.arg1, null);
+                        VoiceDownloadStatus.getInstance().addJinShaToSharedVoiceInfo();
+                        return;
+                    case NetworkListener.MSG_TYPE_NET_WORK_CHANGE /*5555*/:
+                        int wifiStatus = msg.arg1;
+                        int connectStatus = msg.arg2;
+                        LogUtil.m15791e(BNVoiceParams.MODULE_TAG, " voice download in case NetworkListener.MSG_TYPE_NET_WORK_CHANGE wifiStatus " + wifiStatus + " connectStatus = " + connectStatus);
+                        if (connectStatus != 1) {
+                            VoiceDownloadStatus.getInstance().pauseAllDownload(261);
+                        } else if (wifiStatus != 1) {
+                            VoiceDownloadStatus.getInstance().pauseFullDoseDownload(262);
+                        }
+                        BNVoice.getInstance().notifyObservers(7, msg.arg2, null);
+                        return;
+                    case SDCardListener.MSG_TYPE_SDCARD_CHANGE /*5565*/:
+                        LogUtil.m15791e("Handler", " in case SDCardListener.MSG_TYPE_SDCARD_CHANGE");
+                        return;
+                    default:
+                        return;
+                }
+            }
+
+            public void careAbout() {
+                observe(4164);
+                observe(4165);
+                observe((int) MsgDefine.MSG_NAVI_VoiceDataDownloadMD5Error);
+                observe((int) MsgDefine.MSG_NAVI_VoiceDataDownloadStart);
+                observe(4163);
+                observe((int) MsgDefine.MSG_NAVI_VoiceData_UploadMsg);
+                observe((int) MsgDefine.MSG_NAVI_VoiceData_BuildTTS);
+                observe((int) MsgDefine.MSG_NAVI_VoiceData_NewRecommend);
+                observe((int) MsgDefine.MSG_NAVI_VoiceData_NewTaskInfo);
+            }
+        };
+        this.mCallbackHandlerList = new ArrayList();
+        VMsgDispatcher.registerMsgHandler(this.mHandler);
+        NetworkListener.registerMessageHandler(this.mHandler);
+        SDCardListener.registerMessageHandler(this.mHandler);
     }
-    return false;
-  }
-  
-  public void pauseAllDownload()
-  {
-    VoiceDownloadStatus.getInstance().pauseAllDownload(0);
-  }
-  
-  public void pauseDownload(String paramString)
-  {
-    VoiceDownloadStatus.getInstance().pauseDownload(paramString);
-  }
-  
-  public void registCallbackHandler(Handler paramHandler)
-  {
-    synchronized (mCallbackListLock)
-    {
-      if (!this.mCallbackHandlerList.contains(paramHandler)) {
-        this.mCallbackHandlerList.add(paramHandler);
-      }
-      return;
+
+    public void dipose() {
+        VMsgDispatcher.unregisterMsgHandler(this.mHandler);
+        NetworkListener.unRegisterMessageHandler(this.mHandler);
+        SDCardListener.unRegisterMessageHandler(this.mHandler);
     }
-  }
-  
-  public void removeDownload(String paramString)
-  {
-    VoiceDownloadStatus.getInstance().removeDownload(paramString);
-  }
-  
-  public void removeSharedVoieInfo(String paramString)
-  {
-    int i = 0;
-    for (;;)
-    {
-      if (i < this.mSharedVoiceInfo.size())
-      {
-        if (((VoiceInfo)this.mSharedVoiceInfo.get(i)).equals(paramString)) {
-          this.mSharedVoiceInfo.remove(i);
+
+    public void registCallbackHandler(Handler handler) {
+        synchronized (mCallbackListLock) {
+            if (!this.mCallbackHandlerList.contains(handler)) {
+                this.mCallbackHandlerList.add(handler);
+            }
         }
-      }
-      else {
-        return;
-      }
-      i += 1;
     }
-  }
-  
-  public boolean startDownload(String paramString)
-  {
-    return VoiceDownloadStatus.getInstance().startDownload(paramString);
-  }
-  
-  public void unregistCallbackHandler(Handler paramHandler)
-  {
-    synchronized (mCallbackListLock)
-    {
-      if (this.mCallbackHandlerList.contains(paramHandler)) {
-        this.mCallbackHandlerList.remove(paramHandler);
-      }
-      return;
+
+    public void unregistCallbackHandler(Handler handler) {
+        synchronized (mCallbackListLock) {
+            if (this.mCallbackHandlerList.contains(handler)) {
+                this.mCallbackHandlerList.remove(handler);
+            }
+        }
     }
-  }
-  
-  private static class LazyHolder
-  {
-    private static final VoiceDownloadController INSTANCE = new VoiceDownloadController(null);
-  }
+
+    private void sendDownloadStatusChange(int what, int arg1, int arg2, String id) {
+        synchronized (mCallbackListLock) {
+            ArrayList<Handler> callbackList = new ArrayList(this.mCallbackHandlerList);
+        }
+        try {
+            Iterator it = callbackList.iterator();
+            while (it.hasNext()) {
+                ((Handler) it.next()).obtainMessage(what, arg1, arg2, id).sendToTarget();
+            }
+        } catch (Exception e) {
+            LogUtil.m15791e(BNVoiceParams.MODULE_TAG, "sendMsgChange:" + e.getMessage());
+        }
+    }
+
+    public boolean startDownload(String taskId) {
+        return VoiceDownloadStatus.getInstance().startDownload(taskId);
+    }
+
+    public void removeDownload(String taskId) {
+        VoiceDownloadStatus.getInstance().removeDownload(taskId);
+    }
+
+    public void pauseDownload(String taskId) {
+        VoiceDownloadStatus.getInstance().pauseDownload(taskId);
+    }
+
+    public void pauseAllDownload() {
+        VoiceDownloadStatus.getInstance().pauseAllDownload(0);
+    }
+
+    public VoiceDataStatus getTaskDownStausFromEngine(String taskId) {
+        VoiceDataStatus status = new VoiceDataStatus();
+        JNIVoicePersonalityControl.sInstance.isTaskDowned(taskId, status);
+        return status;
+    }
+
+    public ArrayList<VoiceInfo> getDownloadVoiceTask() {
+        ArrayList<Bundle> voiceInfoBundleList = new ArrayList();
+        try {
+            JNIVoicePersonalityControl.sInstance.getDownloadVoiceTask(voiceInfoBundleList);
+            return JNIVoicePersonalityControl.sInstance.parseVoiceInfoListBundle(voiceInfoBundleList);
+        } catch (Throwable th) {
+            return new ArrayList();
+        }
+    }
+
+    public ArrayList<VoiceInfo> getRecommendVoiceTask() {
+        ArrayList<Bundle> voiceInfoBundleList = new ArrayList();
+        JNIVoicePersonalityControl.sInstance.getRecommendVoiceTask(voiceInfoBundleList);
+        return JNIVoicePersonalityControl.sInstance.parseVoiceInfoListBundle(voiceInfoBundleList);
+    }
+
+    private boolean checkSDCardStatus(int size) {
+        boolean z = true;
+        if (size < 0) {
+            return false;
+        }
+        if (SDCardUtils.handleSdcardError((long) size, true) != 0) {
+            z = false;
+        }
+        return z;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/voice/controller/VoiceDownloadController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

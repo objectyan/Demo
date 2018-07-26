@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 import com.baidu.baidunavis.BaiduNaviManager;
 import com.baidu.baidunavis.NavLocationManager;
@@ -20,16 +19,17 @@ import com.baidu.baidunavis.navirecover.NaviRecoveryManager;
 import com.baidu.baidunavis.stat.NavUserBehaviour;
 import com.baidu.baidunavis.tts.BaseTTSPlayer;
 import com.baidu.baidunavis.tts.OnTTSVoiceDataSwitchListener;
-import com.baidu.baidunavis.ui.widget.NavTipTool;
 import com.baidu.baidunavis.wrapper.LogUtil;
 import com.baidu.baidunavis.wrapper.NaviEngineInitListener;
 import com.baidu.mapframework.tts.OnTTSStateChangedListener;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.navisdk.BNaviEngineManager;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.BNaviModuleManager.AppSourceDefine;
 import com.baidu.navisdk.comapi.commontool.BNRecoverNaviHelper;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.statistics.BNStatisticsManager;
 import com.baidu.navisdk.comapi.tts.IBNTTSPlayerListener;
@@ -42,22 +42,21 @@ import com.baidu.navisdk.jni.nativeif.JNITTSPlayer;
 import com.baidu.navisdk.jni.nativeif.JNITrajectoryControl;
 import com.baidu.navisdk.model.datastruct.EngineCommonConfig;
 import com.baidu.navisdk.module.cloudconfig.CloudConfigObtainManager;
+import com.baidu.navisdk.module.offscreen.BNOffScreenParams;
 import com.baidu.navisdk.module.tingphone.control.TingPhoneFileManager;
 import com.baidu.navisdk.ui.download.BNDownloadNotifyManager;
 import com.baidu.navisdk.ui.download.BNDownloadUIManager;
 import com.baidu.navisdk.ui.routeguide.BNavigator;
 import com.baidu.navisdk.ui.voice.BNVoice;
-import com.baidu.navisdk.ui.voice.BNVoice.VoiceAccountListener;
-import com.baidu.navisdk.ui.voice.BNVoice.VoiceDataSwitchListener;
-import com.baidu.navisdk.ui.voice.BNVoice.VoiceSwitchData;
+import com.baidu.navisdk.ui.voice.BNVoice$VoiceAccountListener;
+import com.baidu.navisdk.ui.voice.BNVoice$VoiceDataSwitchListener;
+import com.baidu.navisdk.ui.voice.BNVoice$VoiceSwitchData;
+import com.baidu.navisdk.ui.voice.BNVoiceParams;
 import com.baidu.navisdk.util.common.CommonHandlerThread;
 import com.baidu.navisdk.util.common.CommonHandlerThread.Callback;
 import com.baidu.navisdk.util.common.NetworkUtils;
-import com.baidu.navisdk.util.common.PackageUtil;
 import com.baidu.navisdk.util.common.PreferenceHelper;
 import com.baidu.navisdk.util.common.SysOSAPI;
-import com.baidu.navisdk.util.http.HttpURLManager;
-import com.baidu.navisdk.util.http.center.BNHttpCenter;
 import com.baidu.navisdk.util.logic.BNSysLocationManager;
 import com.baidu.navisdk.util.logic.BNSysSensorManager;
 import com.baidu.navisdk.util.statistic.IBNStatisticsListener;
@@ -65,951 +64,820 @@ import com.baidu.navisdk.util.statistic.PerformStatItem;
 import com.baidu.navisdk.util.statistic.PerformStatisticsController;
 import com.baidu.navisdk.util.statistic.RespTimeStatItem;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import com.baidu.navisdk.util.worker.loop.BNPerformceFramework;
-import com.baidu.platform.a.b;
+import com.baidu.navisdk.vi.VDeviceAPI;
 import com.baidu.platform.comapi.util.SysOSAPIv2;
+import com.baidu.platform.p206a.C4747b;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NavInitController
-{
-  private static final int MSG_CLEAN_TINGPHONE_FILE = 3;
-  public static final int MSG_INIT_BASE_ENGINE_INNER = 100;
-  private static final int MSG_INIT_CLOUD_CONFIG = 2;
-  private static final int MSG_UPDATE_SWITCH_TTS_RESULT = 0;
-  public static final String TAG = NavInitController.class.getSimpleName();
-  private static NavInitController sInstance = null;
-  private BNVoice.VoiceAccountListener mAccountListener = new BNVoice.VoiceAccountListener()
-  {
-    public void asynGetAccountHeadUrl() {}
-    
-    public String onGetAccountBduss()
-    {
-      String str = NavMapAdapter.getInstance().getBduss();
-      if (!TextUtils.isEmpty(str)) {
-        return str;
-      }
-      return null;
-    }
-  };
-  private CommonHandlerThread.Callback mChildThreadCallback = new CommonHandlerThread.Callback()
-  {
-    public void careAbouts()
-    {
-      careAbout(50);
-      careAbout(51);
-      careAbout(55);
-      careAbout(150);
-    }
-    
-    public void execute(Message paramAnonymousMessage)
-    {
-      switch (paramAnonymousMessage.what)
-      {
-      }
-      for (;;)
-      {
-        return;
-        if (NavCommonFuncModel.getInstance().getActivity() != null)
-        {
-          if ((paramAnonymousMessage.obj != null) && ((paramAnonymousMessage.obj instanceof NaviEngineInitListener)))
-          {
-            NavInitController.this.initBaseEngineStepOne(NavCommonFuncModel.getInstance().getActivity(), (NaviEngineInitListener)paramAnonymousMessage.obj);
-            return;
-          }
-          NavInitController.this.initBaseEngineStepOne(NavCommonFuncModel.getInstance().getActivity(), null);
-          return;
-          NavInitController.this.delayInitModule();
-          return;
-          BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-StartRecordTraj", null)new BNWorkerConfig
-          {
-            protected String execute()
-            {
-              int j = 1;
-              Object localObject1 = TAG;
-              Object localObject2 = new StringBuilder().append("initAfterEngineInited()  updateUserInfo, bduss=").append(NavMapAdapter.getInstance().getBduss()).append(", uid=").append(NavMapAdapter.getInstance().getUid()).append(", islogin=");
-              int i;
-              if (NavMapAdapter.getInstance().isLogin())
-              {
-                i = 1;
-                NavLogUtils.e((String)localObject1, i);
-              }
-              for (;;)
-              {
-                try
-                {
-                  localObject1 = JNITrajectoryControl.sInstance;
-                  localObject2 = NavMapAdapter.getInstance().getBduss();
-                  String str = NavMapAdapter.getInstance().getUid();
-                  if (!NavMapAdapter.getInstance().isLogin()) {
-                    continue;
-                  }
-                  i = j;
-                  ((JNITrajectoryControl)localObject1).updateUserInfo((String)localObject2, str, i);
+public class NavInitController {
+    private static final int MSG_CLEAN_TINGPHONE_FILE = 3;
+    public static final int MSG_INIT_BASE_ENGINE_INNER = 100;
+    private static final int MSG_INIT_CLOUD_CONFIG = 2;
+    private static final int MSG_UPDATE_SWITCH_TTS_RESULT = 0;
+    public static final String TAG = NavInitController.class.getSimpleName();
+    private static NavInitController sInstance = null;
+    private BNVoice$VoiceAccountListener mAccountListener = new BNVoice$VoiceAccountListener() {
+        public String onGetAccountBduss() {
+            String bduss = NavMapAdapter.getInstance().getBduss();
+            return !TextUtils.isEmpty(bduss) ? bduss : null;
+        }
+
+        public void asynGetAccountHeadUrl() {
+        }
+    };
+    private Callback mChildThreadCallback = new Callback() {
+        public void careAbouts() {
+            careAbout(50);
+            careAbout(51);
+            careAbout(55);
+            careAbout(CommonHandlerThread.MSG_START_RECORD_TRAJECTORY);
+        }
+
+        public void execute(Message message) {
+            switch (message.what) {
+                case 50:
+                    if (NavCommonFuncModel.getInstance().getActivity() == null) {
+                        return;
+                    }
+                    if (message.obj == null || !(message.obj instanceof NaviEngineInitListener)) {
+                        NavInitController.this.initBaseEngineStepOne(NavCommonFuncModel.getInstance().getActivity(), null);
+                        return;
+                    } else {
+                        NavInitController.this.initBaseEngineStepOne(NavCommonFuncModel.getInstance().getActivity(), (NaviEngineInitListener) message.obj);
+                        return;
+                    }
+                case 51:
+                    NavInitController.this.delayInitModule();
+                    return;
+                case 55:
+                    BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-StartRecordTraj", null) {
+                        protected String execute() {
+                            int i = 1;
+                            NavLogUtils.m3003e(TAG, "initAfterEngineInited()  updateUserInfo, bduss=" + NavMapAdapter.getInstance().getBduss() + ", uid=" + NavMapAdapter.getInstance().getUid() + ", islogin=" + (NavMapAdapter.getInstance().isLogin() ? 1 : 0));
+                            try {
+                                JNITrajectoryControl jNITrajectoryControl = JNITrajectoryControl.sInstance;
+                                String bduss = NavMapAdapter.getInstance().getBduss();
+                                String uid = NavMapAdapter.getInstance().getUid();
+                                if (!NavMapAdapter.getInstance().isLogin()) {
+                                    i = 0;
+                                }
+                                jNITrajectoryControl.updateUserInfo(bduss, uid, i);
+                            } catch (Throwable th) {
+                            }
+                            return null;
+                        }
+                    }, new BNWorkerConfig(100, 0));
+                    return;
+                case CommonHandlerThread.MSG_START_RECORD_TRAJECTORY /*150*/:
+                    try {
+                        if (message.obj != null && (message.obj instanceof Bundle)) {
+                            Bundle data = message.obj;
+                            String userId = "";
+                            if (data.containsKey("userId")) {
+                                userId = data.getString("userId");
+                            }
+                            String startPointName = "";
+                            if (data.containsKey("startPointName")) {
+                                startPointName = data.getString("startPointName");
+                            }
+                            NavTrajectoryController.getInstance().startRecordInner(userId, startPointName, data.getInt("fromType"), data.getBoolean("selfRegisterLocation"), data.getBoolean("notInputStartEndGeo"));
+                            NavLogUtils.m3003e(NavInitController.TAG, "initAfterEngineInited()  MSG_START_RECORD_TRAJECTORY");
+                            return;
+                        }
+                        return;
+                    } catch (Throwable th) {
+                        return;
+                    }
+                default:
+                    return;
+            }
+        }
+
+        public String getName() {
+            return "Navi-SDK-Init";
+        }
+    };
+    private Handler mHandler = new Handler(CommonHandlerThread.getInstance().getLooper()) {
+        public void handleMessage(Message msg) {
+            boolean z = true;
+            if (msg.what == 100) {
+                NavInitController.this.initBaseEngineStepTwoForEngine(NavInitController.this.mOutNaviEngineInitListener);
+            } else if (msg.what == 0) {
+                BNVoice instance = BNVoice.getInstance();
+                if (msg.arg1 != 1) {
+                    z = false;
                 }
-                catch (Throwable localThrowable)
-                {
-                  continue;
+                instance.handleVoiceDataSwitchResult(z);
+            } else if (msg.what == 2) {
+                new CloudConfigObtainManager().initCloudConfigOutline();
+            } else if (msg.what == 3) {
+                TingPhoneFileManager.cleanPathFileAndConfig();
+            }
+        }
+    };
+    private Object mInitObj = new Object();
+    private Object mNaviEngineInitListenerObj = new Object();
+    private List<NaviEngineInitListener> mNaviEngineInitListeners = new ArrayList();
+    private NaviEngineInitListener mOutNaviEngineInitListener = null;
+    private BNVoice$VoiceDataSwitchListener mSwitchTTSListener = new BNVoice$VoiceDataSwitchListener() {
+        public boolean onVoiceDataSwitch(BNVoice$VoiceSwitchData data) {
+            if (data == null) {
+                LogUtil.m3004e(BNVoiceParams.MODULE_TAG, "onVoiceDataSwitch data is null");
+                return false;
+            }
+            LogUtil.m3004e(BNVoiceParams.MODULE_TAG, "onVoiceDataSwitch id :" + data.taskId);
+            LogUtil.m3004e(BNVoiceParams.MODULE_TAG, "onVoiceDataSwitch mainPath :" + data.mainPath + " subPath:" + data.subPath);
+            if (data.type == 0) {
+                BaseTTSPlayer.getInstance().setCustomParams(false);
+                BaseTTSPlayer.getInstance().loadCustomResource("");
+                BaseTTSPlayer.getInstance().switchTTSVoiceData(null, NavInitController.this.mTtsSwitchListener);
+            } else if (2 == data.type) {
+                boolean setResult = BaseTTSPlayer.getInstance().setCustomParams(true);
+                boolean loadResult = BaseTTSPlayer.getInstance().loadCustomResource(data.mainPath);
+                boolean switchResult = BaseTTSPlayer.getInstance().switchTTSVoiceData(null, NavInitController.this.mTtsSwitchListener);
+                if (!(loadResult && setResult && switchResult)) {
+                    LogUtil.m3004e(BNVoiceParams.MODULE_TAG, "onVoiceDataSwitch result :" + loadResult + setResult + switchResult);
                 }
+            } else if (1 == data.type || 3 == data.type) {
+                BaseTTSPlayer.getInstance().setCustomParams(false);
+                BaseTTSPlayer.getInstance().loadCustomResource("");
+                BaseTTSPlayer.getInstance().switchTTSVoiceData(data.mainPath, NavInitController.this.mTtsSwitchListener);
+            } else if (4 == data.type) {
+                BaseTTSPlayer.getInstance().setCustomParams(true);
+                BaseTTSPlayer.getInstance().loadCustomResource(data.subPath);
+                BaseTTSPlayer.getInstance().switchTTSVoiceData(data.mainPath, NavInitController.this.mTtsSwitchListener);
+            }
+            return true;
+        }
+
+        public boolean onFreeCustom(BNVoice$VoiceSwitchData data) {
+            if (BaseTTSPlayer.getInstance().getTTSVoiceDataCustom()) {
+                boolean resultSetSwitch = BaseTTSPlayer.getInstance().setCustomParams(false);
+                LogUtil.m3004e(NavInitController.TAG, "onFreeCustom :" + resultSetSwitch + " resultSetPath" + BaseTTSPlayer.getInstance().loadCustomResource(""));
+                if (resultSetSwitch) {
+                    return BaseTTSPlayer.getInstance().freeCustomTTSVoiceData(data.subPath, NavInitController.this.mTtsSwitchListener);
+                }
+                return false;
+            }
+            LogUtil.m3004e(NavInitController.TAG, "onFreeCustom custom is false");
+            return true;
+        }
+
+        public boolean onLoadCustom(BNVoice$VoiceSwitchData data) {
+            if (data == null) {
+                LogUtil.m3004e(BNVoiceParams.MODULE_TAG, "onLoadCustom data is null");
+                return false;
+            }
+            LogUtil.m3004e(BNVoiceParams.MODULE_TAG, "onLoadCustom mainPath :" + data.mainPath + " subPath:" + data.subPath);
+            if (BaseTTSPlayer.getInstance().getTTSVoiceDataCustom() && data.subPath != null && data.subPath.equals(BaseTTSPlayer.getInstance().getCustomVoiceDataPath())) {
+                LogUtil.m3004e(NavInitController.TAG, "onLoadCustom has loaded");
+                return true;
+            }
+            boolean resultSetSwitch = BaseTTSPlayer.getInstance().setCustomParams(true);
+            boolean resultSetPath = BaseTTSPlayer.getInstance().loadCustomResource(data.subPath);
+            LogUtil.m3004e(NavInitController.TAG, "onLoadCustom :" + resultSetSwitch + " resultSetPath " + resultSetPath);
+            if (resultSetSwitch && resultSetPath) {
+                return BaseTTSPlayer.getInstance().loadCustomTTSVoiceData(data.subPath, NavInitController.this.mTtsSwitchListener);
+            }
+            return false;
+        }
+
+        public boolean isCanSwitchVoice() {
+            return BaseTTSPlayer.getInstance().canSwitchVoice();
+        }
+    };
+    private OnTTSVoiceDataSwitchListener mTtsSwitchListener = new OnTTSVoiceDataSwitchListener() {
+        public void onTTSVoiceDataSwitched(boolean switchSuccessed) {
+            int i = 0;
+            if (NavInitController.this.mHandler != null) {
+                Message msg = NavInitController.this.mHandler.obtainMessage();
+                msg.what = 0;
+                if (switchSuccessed) {
+                    i = 1;
+                }
+                msg.arg1 = i;
+                NavInitController.this.mHandler.sendMessage(msg);
+            }
+        }
+    };
+
+    /* renamed from: com.baidu.baidunavis.control.NavInitController$1 */
+    class C07911 implements IBNTTSPlayerListener {
+        C07911() {
+        }
+
+        public int playTTSText(String arg0, String arg2, int arg1) {
+            boolean z = true;
+            LogUtil.m3004e(NavInitController.TAG, "tts -- playTTSText arg0 = " + arg0 + ", arg1 = " + arg1 + ", arg2 = " + arg2);
+            if (!BNavigator.getInstance().isNaviBegin() && arg0 != null && "GPS信号弱,位置刷新可能不及时，请谨慎驾驶".equals(arg0)) {
+                return 1;
+            }
+            BaseTTSPlayer instance = BaseTTSPlayer.getInstance();
+            if (arg1 != 1) {
+                z = false;
+            }
+            return instance.playTTSText(arg0, arg2, z);
+        }
+
+        public int playTTSText(String arg0, int arg1) {
+            boolean z = true;
+            LogUtil.m3004e(NavInitController.TAG, "tts -- playTTSText arg0 = " + arg0 + ", arg1 = " + arg1);
+            if (!BNavigator.getInstance().isNaviBegin() && arg0 != null && "GPS信号弱,位置刷新可能不及时，请谨慎驾驶".equals(arg0)) {
+                return 1;
+            }
+            BaseTTSPlayer instance = BaseTTSPlayer.getInstance();
+            if (arg1 != 1) {
+                z = false;
+            }
+            return instance.playTTSText(arg0, z);
+        }
+
+        public int playXDTTSText(String arg0, String arg2, int arg1) {
+            LogUtil.m3004e(NavInitController.TAG, "tts -- playTTSText arg0 = " + arg0 + ", arg1 = " + arg1 + ", arg2 = " + arg2);
+            return 0;
+        }
+
+        public void phoneHangUp() {
+            BaseTTSPlayer.getInstance().setPhoneIn(false);
+        }
+
+        public void phoneCalling() {
+            BaseTTSPlayer.getInstance().setPhoneIn(true);
+            BaseTTSPlayer.getInstance().stopTTS();
+            BaseTTSPlayer.getInstance().stopSound();
+        }
+
+        public int getTTSState() {
+            return BaseTTSPlayer.getInstance().getTTSState();
+        }
+
+        public void initTTSPlayer() {
+        }
+
+        public void pauseTTS() {
+            BaseTTSPlayer.getInstance().pauseTTS();
+            LogUtil.m3004e(NavInitController.TAG, "tts -- pauseTTS");
+        }
+
+        public void releaseTTSPlayer() {
+        }
+
+        public void resumeTTS() {
+            BaseTTSPlayer.getInstance().resumeTTS();
+            JNIGuidanceControl.getInstance().setTTSPlayEnd();
+            LogUtil.m3004e(NavInitController.TAG, "tts -- resumeTTS");
+        }
+
+        public void stopTTS() {
+            BaseTTSPlayer.getInstance().stopTTS();
+            LogUtil.m3004e(NavInitController.TAG, "tts -- stopTTS");
+        }
+
+        public int playAudio(String audioPath, AudioPlayerListener lis) {
+            return BaseTTSPlayer.getInstance().playAudio(audioPath, lis);
+        }
+
+        public int cancelAudio() {
+            return BaseTTSPlayer.getInstance().cancelAudio();
+        }
+
+        public void setNaviMuteState(boolean isNaviMute) {
+            BaseTTSPlayer.getInstance().setNaviMuteState(isNaviMute);
+        }
+
+        public boolean isNaviMuteState() {
+            return BaseTTSPlayer.getInstance().isNaviMuteState();
+        }
+    }
+
+    /* renamed from: com.baidu.baidunavis.control.NavInitController$2 */
+    class C07922 implements OnTTSStateChangedListener {
+        C07922() {
+        }
+
+        public void onPlayEnd() {
+            JNITTSPlayer.sInstance.PlayOver();
+            JNIGuidanceControl.getInstance().setTTSPlayEnd();
+            LogUtil.m3004e(NavInitController.TAG, "tts -- onPlayEnd");
+        }
+
+        public void onPlayStart() {
+            LogUtil.m3004e(NavInitController.TAG, "tts -- onPlayStart");
+        }
+
+        public void onPlayError(int code, String message) {
+        }
+    }
+
+    private NavInitController() {
+    }
+
+    public static NavInitController getInstance() {
+        if (sInstance == null) {
+            sInstance = new NavInitController();
+        }
+        return sInstance;
+    }
+
+    private boolean init(Activity a) {
+        if (a == null) {
+            return false;
+        }
+        return NavCommonFuncModel.getInstance().initParams(a);
+    }
+
+    public void handleAppSource() {
+        BNaviModuleManager.sAppSourceStr = AppSourceDefine.DEFAULT_SOURCE;
+        BNaviModuleManager.updateAppSource();
+    }
+
+    private void initAfterEngineInited() {
+        handleAppSource();
+        NavCommonFuncController.getInstance().registerNaviEventListener();
+        initMTJStatisticsService();
+        BNRoutePlaner.getInstance().init(BNaviModuleManager.getContext());
+        BNRoutePlaner.getInstance().setCalcPrference(PreferenceHelper.getInstance(BNaviModuleManager.getContext()).getInt(RoutePlanParams.CALC_PREFERENCE, 1));
+        setRoutePlanStatistcsUrl();
+        try {
+            NavRoutePlanController.getInstance().init();
+        } catch (Throwable th) {
+        }
+        BNaviModuleManager.setupNaviCommonCallBackListener(NavCommonFuncController.getInstance().mNaviCommonCallBack);
+        RespTimeStatItem.getInstance().addSDKInitTime();
+    }
+
+    private void initNaviTTSListener() {
+        TTSPlayerControl.setTTSPlayerListener(new C07911());
+        TTSPlayerControl.init();
+        BaseTTSPlayer.getInstance().setOnTTSStateChangedListener(new C07922());
+    }
+
+    public void initBaseEngine(Activity activity, final NaviEngineInitListener naviEngineInitListener) {
+        BNPerformceFramework.init(new NavPerformanceFramework());
+        BNWorkerCenter.init(new NavWorkerCenter());
+        if (PerformStatItem.sUserTest) {
+            PerformStatisticsController.peByType(3, "ad_init_start", System.currentTimeMillis());
+        }
+        BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-Init", null) {
+            protected String execute() {
+                if (Looper.myLooper() == null) {
+                    Looper.prepare();
+                }
+                NavInitController.this.initBaseEngineStepOne(NavCommonFuncModel.getInstance().getActivity(), naviEngineInitListener);
                 return null;
-                i = 0;
-                break;
-                i = 0;
-              }
             }
-          }, new BNWorkerConfig(100, 0));
-          return;
-          try
-          {
-            if ((paramAnonymousMessage.obj != null) && ((paramAnonymousMessage.obj instanceof Bundle)))
-            {
-              Bundle localBundle = (Bundle)paramAnonymousMessage.obj;
-              paramAnonymousMessage = "";
-              if (localBundle.containsKey("userId")) {
-                paramAnonymousMessage = localBundle.getString("userId");
-              }
-              String str = "";
-              if (localBundle.containsKey("startPointName")) {
-                str = localBundle.getString("startPointName");
-              }
-              int i = localBundle.getInt("fromType");
-              boolean bool1 = localBundle.getBoolean("selfRegisterLocation");
-              boolean bool2 = localBundle.getBoolean("notInputStartEndGeo");
-              NavTrajectoryController.getInstance().startRecordInner(paramAnonymousMessage, str, i, bool1, bool2);
-              NavLogUtils.e(NavInitController.TAG, "initAfterEngineInited()  MSG_START_RECORD_TRAJECTORY");
-              return;
-            }
-          }
-          catch (Throwable paramAnonymousMessage) {}
+        }, new BNWorkerConfig(2, 1));
+        if (this.mChildThreadCallback != null) {
+            CommonHandlerThread.getInstance().registerCallback(this.mChildThreadCallback);
         }
-      }
     }
-    
-    public String getName()
-    {
-      return "Navi-SDK-Init";
+
+    public void loadNaviSO() {
+        int i = 0;
+        while (i < 2) {
+            try {
+                if (C4747b.a().a("gnustl_shared") && C4747b.a().a("app_BaiduVIlib") && C4747b.a().a("BDSpeechDecoder_V1") && C4747b.a().a("etts_domain_data_builder") && C4747b.a().a("app_BaiduNaviApplib") && C4747b.a().a("audiomessage-jni")) {
+                    BaiduNaviManager.sIsNaviSoLoadSuccess = true;
+                    break;
+                } else {
+                    BaiduNaviManager.sIsNaviSoLoadSuccess = false;
+                    i++;
+                }
+            } catch (Throwable th) {
+                BaiduNaviManager.sIsNaviSoLoadSuccess = false;
+            }
+        }
+        NavLogUtils.m3003e(TAG, "static load so. sIsNaviSoLoadSuccess=" + BaiduNaviManager.sIsNaviSoLoadSuccess);
     }
-  };
-  private Handler mHandler = new Handler(CommonHandlerThread.getInstance().getLooper())
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      boolean bool = true;
-      if (paramAnonymousMessage.what == 100) {
-        NavInitController.this.initBaseEngineStepTwoForEngine(NavInitController.this.mOutNaviEngineInitListener);
-      }
-      do
-      {
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void initBaseEngineStepOne(android.app.Activity r6, com.baidu.baidunavis.wrapper.NaviEngineInitListener r7) {
+        /*
+        r5 = this;
+        r4 = 1;
+        r3 = 0;
+        r1 = TAG;
+        r2 = "initBaseEngineStepOne() ";
+        com.baidu.baidunavis.control.NavLogUtils.m3003e(r1, r2);
+        r5.loadNaviSO();
+        r1 = com.baidu.baidunavis.BaiduNaviManager.isNaviSoLoadSuccess();
+        if (r1 == 0) goto L_0x0015;
+    L_0x0013:
+        if (r6 != 0) goto L_0x0029;
+    L_0x0015:
+        com.baidu.baidunavis.BaiduNaviManager.sIsBaseEngineInitial = r3;
+        com.baidu.baidunavis.BaiduNaviManager.sIsBaseEngineInitialized = r3;
+        com.baidu.baidunavis.BaiduNaviManager.sIsEngineInitialFailed = r4;
+        if (r7 == 0) goto L_0x0020;
+    L_0x001d:
+        r7.engineInitFail();
+    L_0x0020:
+        r1 = TAG;
+        r2 = "initBaseEngine() return 1 so not loaded or activity is null";
+        com.baidu.baidunavis.control.NavLogUtils.m3003e(r1, r2);
+    L_0x0028:
         return;
-        if (paramAnonymousMessage.what == 0)
-        {
-          BNVoice localBNVoice = BNVoice.getInstance();
-          if (paramAnonymousMessage.arg1 == 1) {}
-          for (;;)
-          {
-            localBNVoice.handleVoiceDataSwitchResult(bool);
+    L_0x0029:
+        r2 = r5.mInitObj;
+        monitor-enter(r2);
+        r1 = com.baidu.baidunavis.BaiduNaviManager.sIsBaseEngineInitialized;	 Catch:{ all -> 0x003f }
+        if (r1 == 0) goto L_0x0042;
+    L_0x0030:
+        if (r7 == 0) goto L_0x0035;
+    L_0x0032:
+        r7.engineInitSuccess();	 Catch:{ all -> 0x003f }
+    L_0x0035:
+        r1 = TAG;	 Catch:{ all -> 0x003f }
+        r3 = "initBaseEngine() return 2 inited";
+        com.baidu.baidunavis.control.NavLogUtils.m3003e(r1, r3);	 Catch:{ all -> 0x003f }
+        monitor-exit(r2);	 Catch:{ all -> 0x003f }
+        goto L_0x0028;
+    L_0x003f:
+        r1 = move-exception;
+        monitor-exit(r2);	 Catch:{ all -> 0x003f }
+        throw r1;
+    L_0x0042:
+        r1 = com.baidu.baidunavis.BaiduNaviManager.sIsBaseEngineInitial;	 Catch:{ all -> 0x003f }
+        if (r1 == 0) goto L_0x0066;
+    L_0x0046:
+        if (r7 == 0) goto L_0x0059;
+    L_0x0048:
+        r1 = TAG;	 Catch:{ all -> 0x003f }
+        r3 = "initBaseEngine() return 3 , listen is added to list.";
+        com.baidu.baidunavis.control.NavLogUtils.m3003e(r1, r3);	 Catch:{ all -> 0x003f }
+        r3 = r5.mNaviEngineInitListenerObj;	 Catch:{ all -> 0x003f }
+        monitor-enter(r3);	 Catch:{ all -> 0x003f }
+        r1 = r5.mNaviEngineInitListeners;	 Catch:{ all -> 0x0063 }
+        r1.add(r7);	 Catch:{ all -> 0x0063 }
+        monitor-exit(r3);	 Catch:{ all -> 0x0063 }
+    L_0x0059:
+        r1 = TAG;	 Catch:{ all -> 0x003f }
+        r3 = "initBaseEngine() return 3 is initing.";
+        com.baidu.baidunavis.control.NavLogUtils.m3003e(r1, r3);	 Catch:{ all -> 0x003f }
+        monitor-exit(r2);	 Catch:{ all -> 0x003f }
+        goto L_0x0028;
+    L_0x0063:
+        r1 = move-exception;
+        monitor-exit(r3);	 Catch:{ all -> 0x0063 }
+        throw r1;	 Catch:{ all -> 0x003f }
+    L_0x0066:
+        r1 = 1;
+        com.baidu.baidunavis.BaiduNaviManager.sIsBaseEngineInitial = r1;	 Catch:{ all -> 0x003f }
+        r1 = 0;
+        com.baidu.baidunavis.BaiduNaviManager.sIsBaseEngineInitialized = r1;	 Catch:{ all -> 0x003f }
+        r1 = 0;
+        com.baidu.baidunavis.BaiduNaviManager.sIsEngineInitialFailed = r1;	 Catch:{ all -> 0x003f }
+        r5.mOutNaviEngineInitListener = r7;	 Catch:{ all -> 0x003f }
+        monitor-exit(r2);	 Catch:{ all -> 0x003f }
+        if (r6 == 0) goto L_0x0090;
+    L_0x0074:
+        r1 = com.baidu.baidunavis.NavMapAdapter.getInstance();
+        r1 = r1.isExternalStorageEnabled();
+        if (r1 != 0) goto L_0x0090;
+    L_0x007e:
+        r1 = 2131296667; // 0x7f09019b float:1.8211257E38 double:1.0530004643E-314;
+        com.baidu.baidunavis.ui.widget.NavTipTool.onCreateToastDialog(r6, r1);
+        r5.handleEngineInitFailed();
+        r1 = TAG;
+        r2 = "initBaseEngine() return 4 sdcard error.";
+        com.baidu.baidunavis.control.NavLogUtils.m3003e(r1, r2);
+        goto L_0x0028;
+    L_0x0090:
+        r1 = com.baidu.navisdk.util.statistic.RespTimeStatItem.getInstance();
+        r1.setStartAppTime();
+        r1 = com.baidu.navisdk.util.statistic.RespTimeStatItem.getInstance();
+        r1.startCountSDKInitTime();
+        r1 = getInstance();
+        r1 = r1.init(r6);
+        if (r1 != 0) goto L_0x00b5;
+    L_0x00a8:
+        r5.handleEngineInitFailed();
+        r1 = TAG;
+        r2 = "initBaseEngine() return 5";
+        com.baidu.baidunavis.control.NavLogUtils.m3003e(r1, r2);
+        goto L_0x0028;
+    L_0x00b5:
+        r1 = com.baidu.platform.comapi.util.SysOSAPIv2.getInstance();
+        r0 = r1.getSdcardPath();
+        r1 = com.baidu.navisdk.util.common.SysOSAPI.getInstance();
+        r1.init();
+        r1 = com.baidu.navisdk.util.common.SysOSAPI.getInstance();
+        r2 = com.baidu.baidunavis.NavMapAdapter.getInstance();
+        r2 = r2.getDataFolderName();
+        r1.setAppFolderName(r2);
+        r1 = com.baidu.navisdk.util.common.SysOSAPI.getInstance();
+        r1.initSDcardPath(r0);
+        r1 = com.baidu.navisdk.comapi.setting.BNSettingManager.isShowJavaLog();
+        com.baidu.navisdk.util.common.LogUtil.LOGGABLE = r1;
+        r1 = com.baidu.platform.comapi.util.SysOSAPIv2.getInstance();
+        r1 = r1.getCuid();
+        com.baidu.navisdk.util.common.PackageUtil.setCuid(r1);
+        r1 = new com.baidu.baidunavis.control.NavHttpCenter;
+        r1.<init>();
+        com.baidu.navisdk.util.http.center.BNHttpCenter.init(r1);
+        com.baidu.navisdk.BNaviModuleManager.initListenersForMap(r6);
+        r1 = TAG;
+        r2 = "initpack-------------";
+        android.util.Log.e(r1, r2);
+        com.baidu.navisdk.BNaviModuleManager.initContext(r6);
+        r1 = com.baidu.navisdk.util.http.HttpURLManager.getInstance();
+        r1.initUrlData();
+        r1 = r5.mOutNaviEngineInitListener;
+        r5.initBaseEngineStepTwoForEngine(r1);
+        goto L_0x0028;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.baidunavis.control.NavInitController.initBaseEngineStepOne(android.app.Activity, com.baidu.baidunavis.wrapper.NaviEngineInitListener):void");
+    }
+
+    private void handleEngineInitStart() {
+        LogUtil.m3004e(TAG, "handleEngineInitStart()");
+        if (this.mOutNaviEngineInitListener != null) {
+            this.mOutNaviEngineInitListener.engineInitStart();
+        }
+        if (this.mNaviEngineInitListeners.size() > 0) {
+            synchronized (this.mNaviEngineInitListenerObj) {
+                for (int i = this.mNaviEngineInitListeners.size() - 1; i >= 0; i--) {
+                    ((NaviEngineInitListener) this.mNaviEngineInitListeners.get(i)).engineInitStart();
+                }
+            }
+        }
+    }
+
+    private void handleEngineInitSuccess() {
+        LogUtil.m3004e(TAG, "handleEngineInitSuccess()");
+        if (testNaviResourceLoad()) {
+            BaiduNaviManager.sIsBaseEngineInitial = false;
+            BaiduNaviManager.sIsBaseEngineInitialized = true;
+            BaiduNaviManager.sIsEngineInitialFailed = false;
+            if (NavCommonFuncModel.getInstance().getActivity() == null) {
+                handleEngineInitFailed();
+                return;
+            }
+            try {
+                BNaviModuleManager.setupBase(true);
+            } catch (Throwable th) {
+            }
+            getInstance().initAfterEngineInited();
+            if (PerformStatItem.sUserTest) {
+                PerformStatisticsController.peByType(3, "ad_init_ok", System.currentTimeMillis());
+            }
+            BNEyeSpyPaperController.getInstance().endInitMonitor(true);
+            if (this.mOutNaviEngineInitListener != null) {
+                this.mOutNaviEngineInitListener.engineInitSuccess();
+            }
+            if (this.mNaviEngineInitListeners.size() > 0) {
+                synchronized (this.mNaviEngineInitListenerObj) {
+                    for (int i = this.mNaviEngineInitListeners.size() - 1; i >= 0; i--) {
+                        NavLogUtils.m3003e(TAG, "handleEngineInitSuccess() dispatch to listen" + i);
+                        ((NaviEngineInitListener) this.mNaviEngineInitListeners.get(i)).engineInitSuccess();
+                        this.mNaviEngineInitListeners.remove(i);
+                    }
+                }
+            }
+            BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-Init-Delay", null) {
+                protected String execute() {
+                    NavInitController.this.delayInitModule();
+                    return null;
+                }
+            }, new BNWorkerConfig(2, 1));
             return;
-            bool = false;
-          }
         }
-        if (paramAnonymousMessage.what == 2)
-        {
-          new CloudConfigObtainManager().initCloudConfigOutline();
-          return;
-        }
-      } while (paramAnonymousMessage.what != 3);
-      TingPhoneFileManager.cleanPathFileAndConfig();
+        LogUtil.m3004e(TAG, "failed to load jar resource.");
+        handleEngineInitFailed();
     }
-  };
-  private Object mInitObj = new Object();
-  private Object mNaviEngineInitListenerObj = new Object();
-  private List<NaviEngineInitListener> mNaviEngineInitListeners = new ArrayList();
-  private NaviEngineInitListener mOutNaviEngineInitListener = null;
-  private BNVoice.VoiceDataSwitchListener mSwitchTTSListener = new BNVoice.VoiceDataSwitchListener()
-  {
-    public boolean isCanSwitchVoice()
-    {
-      return BaseTTSPlayer.getInstance().canSwitchVoice();
+
+    private void handleEngineInitFailed() {
+        LogUtil.m3004e(TAG, "handleEngineInitFailed()");
+        UserOPController.getInstance().add(UserOPParams.EXCEPTION_7_2, "1", null, null);
+        BaiduNaviManager.sIsBaseEngineInitial = false;
+        BaiduNaviManager.sIsBaseEngineInitialized = false;
+        BaiduNaviManager.sIsEngineInitialFailed = true;
+        if (PerformStatItem.sUserTest) {
+            PerformStatisticsController.peByType(3, "ad_init_failed", System.currentTimeMillis());
+        }
+        BNEyeSpyPaperController.getInstance().endInitMonitor(false);
+        if (this.mOutNaviEngineInitListener != null) {
+            this.mOutNaviEngineInitListener.engineInitFail();
+        }
+        synchronized (this.mNaviEngineInitListenerObj) {
+            for (int i = this.mNaviEngineInitListeners.size() - 1; i >= 0; i--) {
+                ((NaviEngineInitListener) this.mNaviEngineInitListeners.get(i)).engineInitFail();
+                this.mNaviEngineInitListeners.remove(i);
+            }
+        }
     }
-    
-    public boolean onFreeCustom(BNVoice.VoiceSwitchData paramAnonymousVoiceSwitchData)
-    {
-      boolean bool1 = false;
-      if (!BaseTTSPlayer.getInstance().getTTSVoiceDataCustom())
-      {
-        LogUtil.e(NavInitController.TAG, "onFreeCustom custom is false");
-        bool1 = true;
-      }
-      boolean bool2;
-      do
-      {
-        return bool1;
-        bool2 = BaseTTSPlayer.getInstance().setCustomParams(false);
-        boolean bool3 = BaseTTSPlayer.getInstance().loadCustomResource("");
-        LogUtil.e(NavInitController.TAG, "onFreeCustom :" + bool2 + " resultSetPath" + bool3);
-      } while (!bool2);
-      return BaseTTSPlayer.getInstance().freeCustomTTSVoiceData(paramAnonymousVoiceSwitchData.subPath, NavInitController.this.mTtsSwitchListener);
+
+    private void initBaseEngineStepTwoForEngine(NaviEngineInitListener naviEngineInitListener) {
+        BNEyeSpyPaperController.getInstance().startInitMonitor();
+        if (NavCommonFuncModel.getInstance().getActivity() == null) {
+            handleEngineInitFailed();
+            return;
+        }
+        handleEngineInitStart();
+        try {
+            if (BNaviEngineManager.getInstance().initEngine(getEngineCommonConfig(), this.mHandler)) {
+                handleEngineInitSuccess();
+            } else {
+                handleEngineInitFailed();
+            }
+        } catch (Throwable th) {
+            handleEngineInitFailed();
+        }
     }
-    
-    public boolean onLoadCustom(BNVoice.VoiceSwitchData paramAnonymousVoiceSwitchData)
-    {
-      if (paramAnonymousVoiceSwitchData == null) {
-        LogUtil.e("BNVoice", "onLoadCustom data is null");
-      }
-      boolean bool1;
-      boolean bool2;
-      do
-      {
-        return false;
-        LogUtil.e("BNVoice", "onLoadCustom mainPath :" + paramAnonymousVoiceSwitchData.mainPath + " subPath:" + paramAnonymousVoiceSwitchData.subPath);
-        if ((BaseTTSPlayer.getInstance().getTTSVoiceDataCustom()) && (paramAnonymousVoiceSwitchData.subPath != null) && (paramAnonymousVoiceSwitchData.subPath.equals(BaseTTSPlayer.getInstance().getCustomVoiceDataPath())))
-        {
-          LogUtil.e(NavInitController.TAG, "onLoadCustom has loaded");
-          return true;
+
+    private void delayInitModule() {
+        try {
+            initNaviTTSListener();
+            BNVoice.getInstance().setVoiceDataSwitchListener(this.mSwitchTTSListener);
+            BNVoice.getInstance().setVoiceAccountListener(this.mAccountListener);
+        } catch (Throwable th) {
         }
-        bool1 = BaseTTSPlayer.getInstance().setCustomParams(true);
-        bool2 = BaseTTSPlayer.getInstance().loadCustomResource(paramAnonymousVoiceSwitchData.subPath);
-        LogUtil.e(NavInitController.TAG, "onLoadCustom :" + bool1 + " resultSetPath " + bool2);
-      } while ((!bool1) || (!bool2));
-      return BaseTTSPlayer.getInstance().loadCustomTTSVoiceData(paramAnonymousVoiceSwitchData.subPath, NavInitController.this.mTtsSwitchListener);
-    }
-    
-    public boolean onVoiceDataSwitch(BNVoice.VoiceSwitchData paramAnonymousVoiceSwitchData)
-    {
-      if (paramAnonymousVoiceSwitchData == null)
-      {
-        LogUtil.e("BNVoice", "onVoiceDataSwitch data is null");
-        return false;
-      }
-      LogUtil.e("BNVoice", "onVoiceDataSwitch id :" + paramAnonymousVoiceSwitchData.taskId);
-      LogUtil.e("BNVoice", "onVoiceDataSwitch mainPath :" + paramAnonymousVoiceSwitchData.mainPath + " subPath:" + paramAnonymousVoiceSwitchData.subPath);
-      if (paramAnonymousVoiceSwitchData.type == 0)
-      {
-        BaseTTSPlayer.getInstance().setCustomParams(false);
-        BaseTTSPlayer.getInstance().loadCustomResource("");
-        BaseTTSPlayer.getInstance().switchTTSVoiceData(null, NavInitController.this.mTtsSwitchListener);
-      }
-      for (;;)
-      {
-        return true;
-        if (2 == paramAnonymousVoiceSwitchData.type)
-        {
-          boolean bool1 = BaseTTSPlayer.getInstance().setCustomParams(true);
-          boolean bool2 = BaseTTSPlayer.getInstance().loadCustomResource(paramAnonymousVoiceSwitchData.mainPath);
-          boolean bool3 = BaseTTSPlayer.getInstance().switchTTSVoiceData(null, NavInitController.this.mTtsSwitchListener);
-          if ((!bool2) || (!bool1) || (!bool3)) {
-            LogUtil.e("BNVoice", "onVoiceDataSwitch result :" + bool2 + bool1 + bool3);
-          }
+        try {
+            BNOfflineDataManager.getInstance().initDownloadInfo(true);
+            if (NavCommonFuncModel.getInstance().getActivity() != null) {
+                NavMapAdapter.getInstance().checkNewVerData(NavCommonFuncModel.getInstance().getActivity());
+            }
+            BaiduNaviManager.getInstance().downLoadCityMapData(NavCommonFuncController.getInstance().getLocationCityId());
+        } catch (Throwable th2) {
         }
-        else if ((1 == paramAnonymousVoiceSwitchData.type) || (3 == paramAnonymousVoiceSwitchData.type))
-        {
-          BaseTTSPlayer.getInstance().setCustomParams(false);
-          BaseTTSPlayer.getInstance().loadCustomResource("");
-          BaseTTSPlayer.getInstance().switchTTSVoiceData(paramAnonymousVoiceSwitchData.mainPath, NavInitController.this.mTtsSwitchListener);
+        try {
+            BNSysLocationManager.getInstance().init(BNaviModuleManager.getContext());
+            BNSysSensorManager.getInstance().initSensor(BNaviModuleManager.getContext());
+            NavSensorManager.getInstence().addSensorChangeListener();
+        } catch (Throwable th3) {
         }
-        else if (4 == paramAnonymousVoiceSwitchData.type)
-        {
-          BaseTTSPlayer.getInstance().setCustomParams(true);
-          BaseTTSPlayer.getInstance().loadCustomResource(paramAnonymousVoiceSwitchData.subPath);
-          BaseTTSPlayer.getInstance().switchTTSVoiceData(paramAnonymousVoiceSwitchData.mainPath, NavInitController.this.mTtsSwitchListener);
-        }
-      }
-    }
-  };
-  private OnTTSVoiceDataSwitchListener mTtsSwitchListener = new OnTTSVoiceDataSwitchListener()
-  {
-    public void onTTSVoiceDataSwitched(boolean paramAnonymousBoolean)
-    {
-      int i = 0;
-      if (NavInitController.this.mHandler != null)
-      {
-        Message localMessage = NavInitController.this.mHandler.obtainMessage();
-        localMessage.what = 0;
-        if (paramAnonymousBoolean) {
-          i = 1;
-        }
-        localMessage.arg1 = i;
-        NavInitController.this.mHandler.sendMessage(localMessage);
-      }
-    }
-  };
-  
-  private void checkXiJiang()
-  {
-    BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask("CarNavi-checkXiJiang", null)new BNWorkerConfig
-    {
-      protected String execute()
-      {
-        try
-        {
-          if ((NetworkUtils.isNetworkAvailable(NavCommonFuncModel.getInstance().getActivity())) && (JNIOfflineDataControl.getInstance().checkNewVer(new Bundle(), new int[35]))) {
-            return null;
-          }
-          NavInitController.this.checkXiJiang();
-          return null;
-        }
-        catch (Throwable localThrowable) {}
-        return null;
-      }
-    }, new BNWorkerConfig(100, 0), 43200000L);
-  }
-  
-  private void delayInitModule()
-  {
-    try
-    {
-      initNaviTTSListener();
-      BNVoice.getInstance().setVoiceDataSwitchListener(this.mSwitchTTSListener);
-      BNVoice.getInstance().setVoiceAccountListener(this.mAccountListener);
-      for (;;)
-      {
-        try
-        {
-          BNOfflineDataManager.getInstance().initDownloadInfo(true);
-          if (NavCommonFuncModel.getInstance().getActivity() != null) {
-            NavMapAdapter.getInstance().checkNewVerData(NavCommonFuncModel.getInstance().getActivity());
-          }
-          BaiduNaviManager.getInstance().downLoadCityMapData(NavCommonFuncController.getInstance().getLocationCityId());
-        }
-        catch (Throwable localThrowable4)
-        {
-          continue;
-        }
-        try
-        {
-          BNSysLocationManager.getInstance().init(BNaviModuleManager.getContext());
-          BNSysSensorManager.getInstance().initSensor(BNaviModuleManager.getContext());
-          NavSensorManager.getInstence().addSensorChangeListener();
-          NavLocationManager.getInstance().addLocationListener();
-          if (BaiduNaviManager.getInstance().mIsMapUseGPS) {
+        NavLocationManager.getInstance().addLocationListener();
+        if (BaiduNaviManager.getInstance().mIsMapUseGPS) {
             BaiduNaviManager.getInstance().notifyMapGPSEnable(true);
-          }
-          if ((NavCommonFuncModel.getInstance().getActivity() != null) && (NavRoutePlanModel.getInstance().getEntry() != 7))
-          {
+        }
+        if (!(NavCommonFuncModel.getInstance().getActivity() == null || NavRoutePlanModel.getInstance().getEntry() == 7)) {
             NavMapAdapter.importSettingToNaviSDK(NavCommonFuncModel.getInstance().getActivity());
             BNRecoverNaviHelper.getInstance().init();
-          }
-          NaviRecoveryManager.getInstance().resetCrashAndKillTime(NavCommonFuncModel.getInstance().getActivity());
-          NavMapManager.getInstance().init();
-          NavNetworkListener.getInstance().registNetworkTypeChangeEvent();
-          try
-          {
+        }
+        NaviRecoveryManager.getInstance().resetCrashAndKillTime(NavCommonFuncModel.getInstance().getActivity());
+        NavMapManager.getInstance().init();
+        NavNetworkListener.getInstance().registNetworkTypeChangeEvent();
+        try {
             NavDayNightController.getInstance().init();
             BNStatisticsManager.getInstance().init();
-            BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask("CarNavi-UpdateUserInfo", null)new BNWorkerConfig
-            {
-              protected String execute()
-              {
-                int j = 1;
-                Object localObject1 = TAG;
-                Object localObject2 = new StringBuilder().append("initAfterEngineInited()  updateUserInfo, bduss=").append(NavMapAdapter.getInstance().getBduss()).append(", uid=").append(NavMapAdapter.getInstance().getUid()).append(", islogin=");
-                int i;
-                if (NavMapAdapter.getInstance().isLogin())
-                {
-                  i = 1;
-                  NavLogUtils.e((String)localObject1, i);
-                }
-                for (;;)
-                {
-                  try
-                  {
-                    localObject1 = JNITrajectoryControl.sInstance;
-                    localObject2 = NavMapAdapter.getInstance().getBduss();
-                    String str = NavMapAdapter.getInstance().getUid();
+        } catch (Throwable th4) {
+        }
+        BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask<String, String>("CarNavi-UpdateUserInfo", null) {
+            protected String execute() {
+                int i = 1;
+                NavLogUtils.m3003e(TAG, "initAfterEngineInited()  updateUserInfo, bduss=" + NavMapAdapter.getInstance().getBduss() + ", uid=" + NavMapAdapter.getInstance().getUid() + ", islogin=" + (NavMapAdapter.getInstance().isLogin() ? 1 : 0));
+                try {
+                    JNITrajectoryControl jNITrajectoryControl = JNITrajectoryControl.sInstance;
+                    String bduss = NavMapAdapter.getInstance().getBduss();
+                    String uid = NavMapAdapter.getInstance().getUid();
                     if (!NavMapAdapter.getInstance().isLogin()) {
-                      continue;
+                        i = 0;
                     }
-                    i = j;
-                    ((JNITrajectoryControl)localObject1).updateUserInfo((String)localObject2, str, i);
-                  }
-                  catch (Throwable localThrowable)
-                  {
-                    continue;
-                  }
-                  return null;
-                  i = 0;
-                  break;
-                  i = 0;
+                    jNITrajectoryControl.updateUserInfo(bduss, uid, i);
+                } catch (Throwable th) {
                 }
-              }
-            }, new BNWorkerConfig(100, 0), 10000L);
-            checkXiJiang();
-            BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask("CarNavi-CloudConfig", null)new BNWorkerConfig
-            {
-              protected String execute()
-              {
+                return null;
+            }
+        }, new BNWorkerConfig(100, 0), BNOffScreenParams.MIN_ENTER_INTERVAL);
+        checkXiJiang();
+        BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask<String, String>("CarNavi-CloudConfig", null) {
+            protected String execute() {
                 new CloudConfigObtainManager().initCloudConfigOutline();
                 return null;
-              }
-            }, new BNWorkerConfig(100, 0), 1000L);
-            BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask("CarNavi-TingPhone", null)new BNWorkerConfig
-            {
-              protected String execute()
-              {
+            }
+        }, new BNWorkerConfig(100, 0), 1000);
+        BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask<String, String>("CarNavi-TingPhone", null) {
+            protected String execute() {
                 TingPhoneFileManager.cleanPathFileAndConfig();
                 return null;
-              }
-            }, new BNWorkerConfig(100, 0), 12000L);
-            NavMapAdapter.sMonkey = BNSettingManager.isMonkey();
-            if (NavMapAdapter.sMonkey) {}
-            try
-            {
-              NavRouteGuideController.getInstance().runMonkey();
-              UserOPController.getInstance().add("8.2.8", "3", null, null);
-              if (NavCommonFuncModel.getInstance().mIsOnRestoreInstanceData)
-              {
-                NavCommonFuncModel.getInstance().mIsOnRestoreInstanceData = false;
-                UserOPController.getInstance().add("1.q");
-              }
-              if ((PerformStatItem.sBatchTestNetworkAndServerTime) && (this.mHandler != null)) {
-                BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask("CarNavi-BatchNetworkTest", null)new BNWorkerConfig
-                {
-                  protected String execute()
-                  {
+            }
+        }, new BNWorkerConfig(100, 0), 12000);
+        NavMapAdapter.sMonkey = BNSettingManager.isMonkey();
+        if (NavMapAdapter.sMonkey) {
+            try {
+                NavRouteGuideController.getInstance().runMonkey();
+            } catch (Throwable th5) {
+            }
+        }
+        UserOPController.getInstance().add(UserOPParams.ASYN_WALK_8_2_8, "3", null, null);
+        if (NavCommonFuncModel.getInstance().mIsOnRestoreInstanceData) {
+            NavCommonFuncModel.getInstance().mIsOnRestoreInstanceData = false;
+            UserOPController.getInstance().add(UserOPParams.COMMON_1_q);
+        }
+        if (PerformStatItem.sBatchTestNetworkAndServerTime && this.mHandler != null) {
+            BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask<String, String>("CarNavi-BatchNetworkTest", null) {
+                protected String execute() {
                     PerformStatisticsController.getInstance().startBatchTestNetworkAndServer();
                     if (NavCommonFuncModel.getInstance().getActivity() != null) {
-                      Toast.makeText(NavCommonFuncModel.getInstance().getActivity(), "开始批量测试百度网络和服务端耗时", 0).show();
+                        Toast.makeText(NavCommonFuncModel.getInstance().getActivity(), "开始批量测试百度网络和服务端耗时", 0).show();
                     }
                     return null;
-                  }
-                }, new BNWorkerConfig(100, 0), 10000L);
-              }
-              return;
+                }
+            }, new BNWorkerConfig(100, 0), BNOffScreenParams.MIN_ENTER_INTERVAL);
+        }
+    }
+
+    private void checkXiJiang() {
+        BNWorkerCenter.getInstance().submitNormalTaskDelay(new BNWorkerNormalTask<String, String>("CarNavi-checkXiJiang", null) {
+            protected String execute() {
+                try {
+                    if (!(NetworkUtils.isNetworkAvailable(NavCommonFuncModel.getInstance().getActivity()) && JNIOfflineDataControl.getInstance().checkNewVer(new Bundle(), new int[35]))) {
+                        NavInitController.this.checkXiJiang();
+                    }
+                } catch (Throwable th) {
+                }
+                return null;
             }
-            catch (Throwable localThrowable1) {}
-          }
-          catch (Throwable localThrowable2) {}
+        }, new BNWorkerConfig(100, 0), 43200000);
+    }
+
+    private void setRoutePlanStatistcsUrl() {
+        String strUrl = "";
+        try {
+            strUrl = ((("&mb=" + URLEncoder.encode(VDeviceAPI.getPhoneType(), "UTF-8")) + "&sv=" + URLEncoder.encode(VDeviceAPI.getAppPackageVersion(), "UTF-8")) + "&pcn=" + URLEncoder.encode(VDeviceAPI.getAppPackageName(), "UTF-8")) + "&kv=" + URLEncoder.encode(VDeviceAPI.getSDKVersion(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
         }
-        catch (Throwable localThrowable3) {}
-      }
+        strUrl = ((strUrl + "&os=android") + "&net=" + com.baidu.vi.VDeviceAPI.getCurrentNetworkType()) + "&channel=" + SysOSAPIv2.getInstance().getChannel();
+        NavRoutePlanModel.getInstance().routePlanStatistcsUrl = strUrl;
+        BNRoutePlaner.getInstance().setRoutePlanStatistcsUrl(strUrl);
+        NavLogUtils.m3003e(TAG, "setRoutePlanStatistcsUrl() url=" + strUrl);
     }
-    catch (Throwable localThrowable5)
-    {
-      for (;;) {}
-    }
-  }
-  
-  public static void destroy()
-  {
-    BNDownloadUIManager.pauseAllDownload();
-    BNDownloadNotifyManager.getInstance().clearNotification();
-    if (NavUserBehaviour.isInitialized()) {
-      NavUserBehaviour.destory();
-    }
-    BaiduNaviManager.getInstance().uninitEngine();
-  }
-  
-  private EngineCommonConfig getEngineCommonConfig()
-  {
-    String str = SysOSAPIv2.getInstance().getSdcardPath();
-    SysOSAPI.getInstance().setAppFolderName(NavMapAdapter.getInstance().getDataFolderName());
-    SysOSAPI.getInstance().initSDcardPath(str);
-    SysOSAPI.getInstance().setOfflineDataPath(SysOSAPI.getInstance().GetSDCardPath());
-    EngineCommonConfig localEngineCommonConfig = new EngineCommonConfig();
-    localEngineCommonConfig.mSearchNetMode = BNSettingManager.getPrefSearchMode();
-    localEngineCommonConfig.mGuidanceNetMode = 0;
-    localEngineCommonConfig.mMapEngineNetMode = 0;
-    localEngineCommonConfig.mOtherEngineNetMode = 0;
-    localEngineCommonConfig.mStrProductName = "baiduNavi_SDK_FOR_Map";
-    localEngineCommonConfig.mRootPath = str;
-    localEngineCommonConfig.mStrMapPath = NavMapAdapter.getInstance().getDataPath();
-    localEngineCommonConfig.mStrAppFolderName = NavMapAdapter.getInstance().getDataFolderName();
-    try
-    {
-      localEngineCommonConfig.mMengMengDaTTSPath = NavMapAdapter.getInstance().getMengMengDaTTSPath();
-      return localEngineCommonConfig;
-    }
-    catch (Throwable localThrowable) {}
-    return localEngineCommonConfig;
-  }
-  
-  public static NavInitController getInstance()
-  {
-    if (sInstance == null) {
-      sInstance = new NavInitController();
-    }
-    return sInstance;
-  }
-  
-  private void handleEngineInitFailed()
-  {
-    LogUtil.e(TAG, "handleEngineInitFailed()");
-    UserOPController.getInstance().add("7.2", "1", null, null);
-    BaiduNaviManager.sIsBaseEngineInitial = false;
-    BaiduNaviManager.sIsBaseEngineInitialized = false;
-    BaiduNaviManager.sIsEngineInitialFailed = true;
-    if (PerformStatItem.sUserTest) {
-      PerformStatisticsController.peByType(3, "ad_init_failed", System.currentTimeMillis());
-    }
-    BNEyeSpyPaperController.getInstance().endInitMonitor(false);
-    if (this.mOutNaviEngineInitListener != null) {
-      this.mOutNaviEngineInitListener.engineInitFail();
-    }
-    synchronized (this.mNaviEngineInitListenerObj)
-    {
-      int i = this.mNaviEngineInitListeners.size() - 1;
-      while (i >= 0)
-      {
-        ((NaviEngineInitListener)this.mNaviEngineInitListeners.get(i)).engineInitFail();
-        this.mNaviEngineInitListeners.remove(i);
-        i -= 1;
-      }
-      return;
-    }
-  }
-  
-  private void handleEngineInitStart()
-  {
-    LogUtil.e(TAG, "handleEngineInitStart()");
-    if (this.mOutNaviEngineInitListener != null) {
-      this.mOutNaviEngineInitListener.engineInitStart();
-    }
-    if (this.mNaviEngineInitListeners.size() > 0) {
-      synchronized (this.mNaviEngineInitListenerObj)
-      {
-        int i = this.mNaviEngineInitListeners.size() - 1;
-        while (i >= 0)
-        {
-          ((NaviEngineInitListener)this.mNaviEngineInitListeners.get(i)).engineInitStart();
-          i -= 1;
+
+    private EngineCommonConfig getEngineCommonConfig() {
+        String sdcardDir = SysOSAPIv2.getInstance().getSdcardPath();
+        SysOSAPI.getInstance().setAppFolderName(NavMapAdapter.getInstance().getDataFolderName());
+        SysOSAPI.getInstance().initSDcardPath(sdcardDir);
+        SysOSAPI.getInstance().setOfflineDataPath(SysOSAPI.getInstance().GetSDCardPath());
+        String mSdcardPath = sdcardDir;
+        EngineCommonConfig engineCommonConfig = new EngineCommonConfig();
+        engineCommonConfig.mSearchNetMode = BNSettingManager.getPrefSearchMode();
+        engineCommonConfig.mGuidanceNetMode = 0;
+        engineCommonConfig.mMapEngineNetMode = 0;
+        engineCommonConfig.mOtherEngineNetMode = 0;
+        engineCommonConfig.mStrProductName = "baiduNavi_SDK_FOR_Map";
+        engineCommonConfig.mRootPath = mSdcardPath;
+        engineCommonConfig.mStrMapPath = NavMapAdapter.getInstance().getDataPath();
+        engineCommonConfig.mStrAppFolderName = NavMapAdapter.getInstance().getDataFolderName();
+        try {
+            engineCommonConfig.mMengMengDaTTSPath = NavMapAdapter.getInstance().getMengMengDaTTSPath();
+        } catch (Throwable th) {
         }
-        return;
-      }
+        return engineCommonConfig;
     }
-  }
-  
-  private void handleEngineInitSuccess()
-  {
-    LogUtil.e(TAG, "handleEngineInitSuccess()");
-    if (testNaviResourceLoad())
-    {
-      BaiduNaviManager.sIsBaseEngineInitial = false;
-      BaiduNaviManager.sIsBaseEngineInitialized = true;
-      BaiduNaviManager.sIsEngineInitialFailed = false;
-      if (NavCommonFuncModel.getInstance().getActivity() == null)
-      {
-        handleEngineInitFailed();
-        return;
-      }
+
+    public void uninitEngine() {
+        LogUtil.m3004e("uninitEngine", null);
+        NavNetworkListener.getInstance().unregistNetworkTypeChangeEvent();
+        BNRoutePlaner.destory();
+        BNaviModuleManager.destory();
+        BaiduNaviManager.sIsBaseEngineInitial = false;
+        BaiduNaviManager.sIsBaseEngineInitialized = false;
+        BaiduNaviManager.sIsEngineInitialFailed = false;
+        NavCommonFuncController.getInstance().unregisterNaviEventListener();
     }
-    try
-    {
-      BNaviModuleManager.setupBase(true);
-      getInstance().initAfterEngineInited();
-      if (PerformStatItem.sUserTest) {
-        PerformStatisticsController.peByType(3, "ad_init_ok", System.currentTimeMillis());
-      }
-      BNEyeSpyPaperController.getInstance().endInitMonitor(true);
-      if (this.mOutNaviEngineInitListener != null) {
-        this.mOutNaviEngineInitListener.engineInitSuccess();
-      }
-      if (this.mNaviEngineInitListeners.size() > 0) {}
-      synchronized (this.mNaviEngineInitListenerObj)
-      {
-        int i = this.mNaviEngineInitListeners.size() - 1;
-        while (i >= 0)
-        {
-          NavLogUtils.e(TAG, "handleEngineInitSuccess() dispatch to listen" + i);
-          ((NaviEngineInitListener)this.mNaviEngineInitListeners.get(i)).engineInitSuccess();
-          this.mNaviEngineInitListeners.remove(i);
-          i -= 1;
+
+    private void initMTJStatisticsService() {
+        BNStatisticsManager.getInstance().setStatisticsListener(new IBNStatisticsListener() {
+            public void onEventStart(Context arg0, String arg1, String arg2) {
+            }
+
+            public void onEventEnd(Context arg0, String arg1, String arg2) {
+            }
+
+            public void onEventDuration(Context arg0, String arg1, String arg2, int arg3) {
+            }
+
+            public void onEvent(String s, String s1) {
+                StatisticManager.onEvent(s, s1);
+            }
+
+            public void onEventDuration(String s, String s1, int i) {
+            }
+
+            public void onEvent(Context arg0, String arg1, String arg2) {
+            }
+        });
+    }
+
+    private boolean testNaviResourceLoad() {
+        return true;
+    }
+
+    public static void destroy() {
+        BNDownloadUIManager.pauseAllDownload();
+        BNDownloadNotifyManager.getInstance().clearNotification();
+        if (NavUserBehaviour.isInitialized()) {
+            NavUserBehaviour.destory();
         }
-        BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-Init-Delay", null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            NavInitController.this.delayInitModule();
-            return null;
-          }
-        }, new BNWorkerConfig(2, 1));
-        return;
-      }
-      LogUtil.e(TAG, "failed to load jar resource.");
-      handleEngineInitFailed();
-      return;
+        BaiduNaviManager.getInstance().uninitEngine();
     }
-    catch (Throwable localThrowable)
-    {
-      for (;;) {}
-    }
-  }
-  
-  private boolean init(Activity paramActivity)
-  {
-    if (paramActivity == null) {
-      return false;
-    }
-    return NavCommonFuncModel.getInstance().initParams(paramActivity);
-  }
-  
-  private void initAfterEngineInited()
-  {
-    handleAppSource();
-    NavCommonFuncController.getInstance().registerNaviEventListener();
-    initMTJStatisticsService();
-    BNRoutePlaner.getInstance().init(BNaviModuleManager.getContext());
-    BNRoutePlaner.getInstance().setCalcPrference(PreferenceHelper.getInstance(BNaviModuleManager.getContext()).getInt("calc_preference", 1));
-    setRoutePlanStatistcsUrl();
-    try
-    {
-      NavRoutePlanController.getInstance().init();
-      BNaviModuleManager.setupNaviCommonCallBackListener(NavCommonFuncController.getInstance().mNaviCommonCallBack);
-      RespTimeStatItem.getInstance().addSDKInitTime();
-      return;
-    }
-    catch (Throwable localThrowable)
-    {
-      for (;;) {}
-    }
-  }
-  
-  private void initBaseEngineStepOne(Activity arg1, NaviEngineInitListener paramNaviEngineInitListener)
-  {
-    NavLogUtils.e(TAG, "initBaseEngineStepOne() ");
-    loadNaviSO();
-    if ((!BaiduNaviManager.isNaviSoLoadSuccess()) || (??? == null))
-    {
-      BaiduNaviManager.sIsBaseEngineInitial = false;
-      BaiduNaviManager.sIsBaseEngineInitialized = false;
-      BaiduNaviManager.sIsEngineInitialFailed = true;
-      if (paramNaviEngineInitListener != null) {
-        paramNaviEngineInitListener.engineInitFail();
-      }
-      NavLogUtils.e(TAG, "initBaseEngine() return 1 so not loaded or activity is null");
-      return;
-    }
-    synchronized (this.mInitObj)
-    {
-      if (BaiduNaviManager.sIsBaseEngineInitialized)
-      {
-        if (paramNaviEngineInitListener != null) {
-          paramNaviEngineInitListener.engineInitSuccess();
-        }
-        NavLogUtils.e(TAG, "initBaseEngine() return 2 inited");
-        return;
-      }
-    }
-    if (BaiduNaviManager.sIsBaseEngineInitial)
-    {
-      if (paramNaviEngineInitListener != null) {
-        NavLogUtils.e(TAG, "initBaseEngine() return 3 , listen is added to list.");
-      }
-      synchronized (this.mNaviEngineInitListenerObj)
-      {
-        this.mNaviEngineInitListeners.add(paramNaviEngineInitListener);
-        NavLogUtils.e(TAG, "initBaseEngine() return 3 is initing.");
-        return;
-      }
-    }
-    BaiduNaviManager.sIsBaseEngineInitial = true;
-    BaiduNaviManager.sIsBaseEngineInitialized = false;
-    BaiduNaviManager.sIsEngineInitialFailed = false;
-    this.mOutNaviEngineInitListener = paramNaviEngineInitListener;
-    if ((??? != null) && (!NavMapAdapter.getInstance().isExternalStorageEnabled()))
-    {
-      NavTipTool.onCreateToastDialog(???, 2131296667);
-      handleEngineInitFailed();
-      NavLogUtils.e(TAG, "initBaseEngine() return 4 sdcard error.");
-      return;
-    }
-    RespTimeStatItem.getInstance().setStartAppTime();
-    RespTimeStatItem.getInstance().startCountSDKInitTime();
-    if (!getInstance().init(???))
-    {
-      handleEngineInitFailed();
-      NavLogUtils.e(TAG, "initBaseEngine() return 5");
-      return;
-    }
-    paramNaviEngineInitListener = SysOSAPIv2.getInstance().getSdcardPath();
-    SysOSAPI.getInstance().init();
-    SysOSAPI.getInstance().setAppFolderName(NavMapAdapter.getInstance().getDataFolderName());
-    SysOSAPI.getInstance().initSDcardPath(paramNaviEngineInitListener);
-    com.baidu.navisdk.util.common.LogUtil.LOGGABLE = BNSettingManager.isShowJavaLog();
-    PackageUtil.setCuid(SysOSAPIv2.getInstance().getCuid());
-    BNHttpCenter.init(new NavHttpCenter());
-    BNaviModuleManager.initListenersForMap(???);
-    Log.e(TAG, "initpack-------------");
-    BNaviModuleManager.initContext(???);
-    HttpURLManager.getInstance().initUrlData();
-    initBaseEngineStepTwoForEngine(this.mOutNaviEngineInitListener);
-  }
-  
-  private void initBaseEngineStepTwoForEngine(NaviEngineInitListener paramNaviEngineInitListener)
-  {
-    BNEyeSpyPaperController.getInstance().startInitMonitor();
-    if (NavCommonFuncModel.getInstance().getActivity() == null)
-    {
-      handleEngineInitFailed();
-      return;
-    }
-    handleEngineInitStart();
-    try
-    {
-      paramNaviEngineInitListener = getEngineCommonConfig();
-      if (BNaviEngineManager.getInstance().initEngine(paramNaviEngineInitListener, this.mHandler))
-      {
-        handleEngineInitSuccess();
-        return;
-      }
-    }
-    catch (Throwable paramNaviEngineInitListener)
-    {
-      handleEngineInitFailed();
-      return;
-    }
-    handleEngineInitFailed();
-  }
-  
-  private void initMTJStatisticsService()
-  {
-    BNStatisticsManager.getInstance().setStatisticsListener(new IBNStatisticsListener()
-    {
-      public void onEvent(Context paramAnonymousContext, String paramAnonymousString1, String paramAnonymousString2) {}
-      
-      public void onEvent(String paramAnonymousString1, String paramAnonymousString2)
-      {
-        StatisticManager.onEvent(paramAnonymousString1, paramAnonymousString2);
-      }
-      
-      public void onEventDuration(Context paramAnonymousContext, String paramAnonymousString1, String paramAnonymousString2, int paramAnonymousInt) {}
-      
-      public void onEventDuration(String paramAnonymousString1, String paramAnonymousString2, int paramAnonymousInt) {}
-      
-      public void onEventEnd(Context paramAnonymousContext, String paramAnonymousString1, String paramAnonymousString2) {}
-      
-      public void onEventStart(Context paramAnonymousContext, String paramAnonymousString1, String paramAnonymousString2) {}
-    });
-  }
-  
-  private void initNaviTTSListener()
-  {
-    TTSPlayerControl.setTTSPlayerListener(new IBNTTSPlayerListener()
-    {
-      public int cancelAudio()
-      {
-        return BaseTTSPlayer.getInstance().cancelAudio();
-      }
-      
-      public int getTTSState()
-      {
-        return BaseTTSPlayer.getInstance().getTTSState();
-      }
-      
-      public void initTTSPlayer() {}
-      
-      public boolean isNaviMuteState()
-      {
-        return BaseTTSPlayer.getInstance().isNaviMuteState();
-      }
-      
-      public void pauseTTS()
-      {
-        BaseTTSPlayer.getInstance().pauseTTS();
-        LogUtil.e(NavInitController.TAG, "tts -- pauseTTS");
-      }
-      
-      public void phoneCalling()
-      {
-        BaseTTSPlayer.getInstance().setPhoneIn(true);
-        BaseTTSPlayer.getInstance().stopTTS();
-        BaseTTSPlayer.getInstance().stopSound();
-      }
-      
-      public void phoneHangUp()
-      {
-        BaseTTSPlayer.getInstance().setPhoneIn(false);
-      }
-      
-      public int playAudio(String paramAnonymousString, IBNTTSPlayerListener.AudioPlayerListener paramAnonymousAudioPlayerListener)
-      {
-        return BaseTTSPlayer.getInstance().playAudio(paramAnonymousString, paramAnonymousAudioPlayerListener);
-      }
-      
-      public int playTTSText(String paramAnonymousString, int paramAnonymousInt)
-      {
-        boolean bool = true;
-        LogUtil.e(NavInitController.TAG, "tts -- playTTSText arg0 = " + paramAnonymousString + ", arg1 = " + paramAnonymousInt);
-        if ((!BNavigator.getInstance().isNaviBegin()) && (paramAnonymousString != null) && ("GPS信号弱,位置刷新可能不及时，请谨慎驾驶".equals(paramAnonymousString))) {
-          return 1;
-        }
-        BaseTTSPlayer localBaseTTSPlayer = BaseTTSPlayer.getInstance();
-        if (paramAnonymousInt == 1) {}
-        for (;;)
-        {
-          return localBaseTTSPlayer.playTTSText(paramAnonymousString, bool);
-          bool = false;
-        }
-      }
-      
-      public int playTTSText(String paramAnonymousString1, String paramAnonymousString2, int paramAnonymousInt)
-      {
-        boolean bool = true;
-        LogUtil.e(NavInitController.TAG, "tts -- playTTSText arg0 = " + paramAnonymousString1 + ", arg1 = " + paramAnonymousInt + ", arg2 = " + paramAnonymousString2);
-        if ((!BNavigator.getInstance().isNaviBegin()) && (paramAnonymousString1 != null) && ("GPS信号弱,位置刷新可能不及时，请谨慎驾驶".equals(paramAnonymousString1))) {
-          return 1;
-        }
-        BaseTTSPlayer localBaseTTSPlayer = BaseTTSPlayer.getInstance();
-        if (paramAnonymousInt == 1) {}
-        for (;;)
-        {
-          return localBaseTTSPlayer.playTTSText(paramAnonymousString1, paramAnonymousString2, bool);
-          bool = false;
-        }
-      }
-      
-      public int playXDTTSText(String paramAnonymousString1, String paramAnonymousString2, int paramAnonymousInt)
-      {
-        LogUtil.e(NavInitController.TAG, "tts -- playTTSText arg0 = " + paramAnonymousString1 + ", arg1 = " + paramAnonymousInt + ", arg2 = " + paramAnonymousString2);
-        return 0;
-      }
-      
-      public void releaseTTSPlayer() {}
-      
-      public void resumeTTS()
-      {
-        BaseTTSPlayer.getInstance().resumeTTS();
-        JNIGuidanceControl.getInstance().setTTSPlayEnd();
-        LogUtil.e(NavInitController.TAG, "tts -- resumeTTS");
-      }
-      
-      public void setNaviMuteState(boolean paramAnonymousBoolean)
-      {
-        BaseTTSPlayer.getInstance().setNaviMuteState(paramAnonymousBoolean);
-      }
-      
-      public void stopTTS()
-      {
-        BaseTTSPlayer.getInstance().stopTTS();
-        LogUtil.e(NavInitController.TAG, "tts -- stopTTS");
-      }
-    });
-    TTSPlayerControl.init();
-    BaseTTSPlayer.getInstance().setOnTTSStateChangedListener(new OnTTSStateChangedListener()
-    {
-      public void onPlayEnd()
-      {
-        JNITTSPlayer.sInstance.PlayOver();
-        JNIGuidanceControl.getInstance().setTTSPlayEnd();
-        LogUtil.e(NavInitController.TAG, "tts -- onPlayEnd");
-      }
-      
-      public void onPlayError(int paramAnonymousInt, String paramAnonymousString) {}
-      
-      public void onPlayStart()
-      {
-        LogUtil.e(NavInitController.TAG, "tts -- onPlayStart");
-      }
-    });
-  }
-  
-  private void setRoutePlanStatistcsUrl()
-  {
-    Object localObject = "";
-    try
-    {
-      String str = "&mb=" + URLEncoder.encode(com.baidu.navisdk.vi.VDeviceAPI.getPhoneType(), "UTF-8");
-      localObject = str;
-      str = str + "&sv=" + URLEncoder.encode(com.baidu.navisdk.vi.VDeviceAPI.getAppPackageVersion(), "UTF-8");
-      localObject = str;
-      str = str + "&pcn=" + URLEncoder.encode(com.baidu.navisdk.vi.VDeviceAPI.getAppPackageName(), "UTF-8");
-      localObject = str;
-      str = str + "&kv=" + URLEncoder.encode(com.baidu.navisdk.vi.VDeviceAPI.getSDKVersion(), "UTF-8");
-      localObject = str;
-    }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      for (;;) {}
-    }
-    localObject = (String)localObject + "&os=android";
-    localObject = (String)localObject + "&net=" + com.baidu.vi.VDeviceAPI.getCurrentNetworkType();
-    localObject = (String)localObject + "&channel=" + SysOSAPIv2.getInstance().getChannel();
-    NavRoutePlanModel.getInstance().routePlanStatistcsUrl = ((String)localObject);
-    BNRoutePlaner.getInstance().setRoutePlanStatistcsUrl((String)localObject);
-    NavLogUtils.e(TAG, "setRoutePlanStatistcsUrl() url=" + (String)localObject);
-  }
-  
-  private boolean testNaviResourceLoad()
-  {
-    return true;
-  }
-  
-  public void handleAppSource()
-  {
-    BNaviModuleManager.sAppSourceStr = "others";
-    BNaviModuleManager.updateAppSource();
-  }
-  
-  public void initBaseEngine(Activity paramActivity, final NaviEngineInitListener paramNaviEngineInitListener)
-  {
-    BNPerformceFramework.init(new NavPerformanceFramework());
-    BNWorkerCenter.init(new NavWorkerCenter());
-    if (PerformStatItem.sUserTest) {
-      PerformStatisticsController.peByType(3, "ad_init_start", System.currentTimeMillis());
-    }
-    BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-Init", null)new BNWorkerConfig
-    {
-      protected String execute()
-      {
-        if (Looper.myLooper() == null) {
-          Looper.prepare();
-        }
-        NavInitController.this.initBaseEngineStepOne(NavCommonFuncModel.getInstance().getActivity(), paramNaviEngineInitListener);
-        return null;
-      }
-    }, new BNWorkerConfig(2, 1));
-    if (this.mChildThreadCallback != null) {
-      CommonHandlerThread.getInstance().registerCallback(this.mChildThreadCallback);
-    }
-  }
-  
-  public void loadNaviSO()
-  {
-    int i = 0;
-    for (;;)
-    {
-      if (i < 2) {}
-      try
-      {
-        if ((b.a().a("gnustl_shared")) && (b.a().a("app_BaiduVIlib")) && (b.a().a("BDSpeechDecoder_V1")) && (b.a().a("etts_domain_data_builder")) && (b.a().a("app_BaiduNaviApplib")) && (b.a().a("audiomessage-jni")))
-        {
-          BaiduNaviManager.sIsNaviSoLoadSuccess = true;
-          NavLogUtils.e(TAG, "static load so. sIsNaviSoLoadSuccess=" + BaiduNaviManager.sIsNaviSoLoadSuccess);
-          return;
-        }
-        BaiduNaviManager.sIsNaviSoLoadSuccess = false;
-      }
-      catch (Throwable localThrowable)
-      {
-        for (;;)
-        {
-          BaiduNaviManager.sIsNaviSoLoadSuccess = false;
-        }
-      }
-      i += 1;
-    }
-  }
-  
-  public void uninitEngine()
-  {
-    LogUtil.e("uninitEngine", null);
-    NavNetworkListener.getInstance().unregistNetworkTypeChangeEvent();
-    BNRoutePlaner.destory();
-    BNaviModuleManager.destory();
-    BaiduNaviManager.sIsBaseEngineInitial = false;
-    BaiduNaviManager.sIsBaseEngineInitialized = false;
-    BaiduNaviManager.sIsEngineInitialFailed = false;
-    NavCommonFuncController.getInstance().unregisterNaviEventListener();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/control/NavInitController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

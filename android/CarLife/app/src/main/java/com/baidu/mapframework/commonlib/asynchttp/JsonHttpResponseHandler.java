@@ -6,270 +6,189 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class JsonHttpResponseHandler
-  extends TextHttpResponseHandler
-{
-  private static final String a = "JsonHttpRH";
-  protected boolean useRFC5179CompatibilityMode = true;
-  
-  public JsonHttpResponseHandler()
-  {
-    super("UTF-8");
-  }
-  
-  public JsonHttpResponseHandler(String paramString)
-  {
-    super(paramString);
-  }
-  
-  public JsonHttpResponseHandler(String paramString, boolean paramBoolean)
-  {
-    super(paramString);
-    this.useRFC5179CompatibilityMode = paramBoolean;
-  }
-  
-  public JsonHttpResponseHandler(boolean paramBoolean)
-  {
-    super("UTF-8");
-    this.useRFC5179CompatibilityMode = paramBoolean;
-  }
-  
-  public boolean isUseRFC5179CompatibilityMode()
-  {
-    return this.useRFC5179CompatibilityMode;
-  }
-  
-  public void onFailure(int paramInt, Header[] paramArrayOfHeader, String paramString, Throwable paramThrowable)
-  {
-    AsyncHttpClient.log.w("JsonHttpRH", "onFailure(int, Header[], String, Throwable) was not overriden, but callback was received", paramThrowable);
-  }
-  
-  public void onFailure(int paramInt, Header[] paramArrayOfHeader, Throwable paramThrowable, JSONArray paramJSONArray)
-  {
-    AsyncHttpClient.log.w("JsonHttpRH", "onFailure(int, Header[], Throwable, JSONArray) was not overriden, but callback was received", paramThrowable);
-  }
-  
-  public void onFailure(int paramInt, Header[] paramArrayOfHeader, Throwable paramThrowable, JSONObject paramJSONObject)
-  {
-    AsyncHttpClient.log.w("JsonHttpRH", "onFailure(int, Header[], Throwable, JSONObject) was not overriden, but callback was received", paramThrowable);
-  }
-  
-  public final void onFailure(final int paramInt, final Header[] paramArrayOfHeader, final byte[] paramArrayOfByte, final Throwable paramThrowable)
-  {
-    if (paramArrayOfByte != null)
-    {
-      paramArrayOfHeader = new Runnable()
-      {
-        public void run()
-        {
-          try
-          {
-            final Object localObject = JsonHttpResponseHandler.this.parseResponse(paramArrayOfByte);
-            JsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                if ((!JsonHttpResponseHandler.this.useRFC5179CompatibilityMode) && (localObject == null))
-                {
-                  JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.2.this.b, JsonHttpResponseHandler.2.this.c, (String)null, JsonHttpResponseHandler.2.this.d);
-                  return;
+public class JsonHttpResponseHandler extends TextHttpResponseHandler {
+    /* renamed from: a */
+    private static final String f18868a = "JsonHttpRH";
+    protected boolean useRFC5179CompatibilityMode = true;
+
+    public JsonHttpResponseHandler() {
+        super("UTF-8");
+    }
+
+    public JsonHttpResponseHandler(String encoding) {
+        super(encoding);
+    }
+
+    public JsonHttpResponseHandler(boolean useRFC5179CompatibilityMode) {
+        super("UTF-8");
+        this.useRFC5179CompatibilityMode = useRFC5179CompatibilityMode;
+    }
+
+    public JsonHttpResponseHandler(String encoding, boolean useRFC5179CompatibilityMode) {
+        super(encoding);
+        this.useRFC5179CompatibilityMode = useRFC5179CompatibilityMode;
+    }
+
+    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+        AsyncHttpClient.log.mo2636w(f18868a, "onSuccess(int, Header[], JSONObject) was not overriden, but callback was received");
+    }
+
+    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+        AsyncHttpClient.log.mo2636w(f18868a, "onSuccess(int, Header[], JSONArray) was not overriden, but callback was received");
+    }
+
+    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+        AsyncHttpClient.log.mo2637w(f18868a, "onFailure(int, Header[], Throwable, JSONObject) was not overriden, but callback was received", throwable);
+    }
+
+    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+        AsyncHttpClient.log.mo2637w(f18868a, "onFailure(int, Header[], Throwable, JSONArray) was not overriden, but callback was received", throwable);
+    }
+
+    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+        AsyncHttpClient.log.mo2637w(f18868a, "onFailure(int, Header[], String, Throwable) was not overriden, but callback was received", throwable);
+    }
+
+    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+        AsyncHttpClient.log.mo2636w(f18868a, "onSuccess(int, Header[], String) was not overriden, but callback was received");
+    }
+
+    public final void onSuccess(final int statusCode, final Header[] headers, final byte[] responseBytes) {
+        if (statusCode != 204) {
+            Runnable parser = new Runnable(this) {
+                /* renamed from: d */
+                final /* synthetic */ JsonHttpResponseHandler f18858d;
+
+                public void run() {
+                    try {
+                        final Object jsonResponse = this.f18858d.parseResponse(responseBytes);
+                        this.f18858d.postRunnable(new Runnable(this) {
+                            /* renamed from: b */
+                            final /* synthetic */ C35001 f18852b;
+
+                            public void run() {
+                                if (!this.f18852b.f18858d.useRFC5179CompatibilityMode && jsonResponse == null) {
+                                    this.f18852b.f18858d.onSuccess(statusCode, headers, (String) null);
+                                } else if (jsonResponse instanceof JSONObject) {
+                                    this.f18852b.f18858d.onSuccess(statusCode, headers, (JSONObject) jsonResponse);
+                                } else if (jsonResponse instanceof JSONArray) {
+                                    this.f18852b.f18858d.onSuccess(statusCode, headers, (JSONArray) jsonResponse);
+                                } else if (!(jsonResponse instanceof String)) {
+                                    this.f18852b.f18858d.onFailure(statusCode, headers, new JSONException("Unexpected response type " + jsonResponse.getClass().getName()), (JSONObject) null);
+                                } else if (this.f18852b.f18858d.useRFC5179CompatibilityMode) {
+                                    this.f18852b.f18858d.onFailure(statusCode, headers, (String) jsonResponse, new JSONException("Response cannot be parsed as JSON data"));
+                                } else {
+                                    this.f18852b.f18858d.onSuccess(statusCode, headers, (String) jsonResponse);
+                                }
+                            }
+                        });
+                    } catch (final JSONException ex) {
+                        this.f18858d.postRunnable(new Runnable(this) {
+                            /* renamed from: b */
+                            final /* synthetic */ C35001 f18854b;
+
+                            public void run() {
+                                this.f18854b.f18858d.onFailure(statusCode, headers, ex, (JSONObject) null);
+                            }
+                        });
+                    }
                 }
-                if ((localObject instanceof JSONObject))
-                {
-                  JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.2.this.b, JsonHttpResponseHandler.2.this.c, JsonHttpResponseHandler.2.this.d, (JSONObject)localObject);
-                  return;
-                }
-                if ((localObject instanceof JSONArray))
-                {
-                  JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.2.this.b, JsonHttpResponseHandler.2.this.c, JsonHttpResponseHandler.2.this.d, (JSONArray)localObject);
-                  return;
-                }
-                if ((localObject instanceof String))
-                {
-                  JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.2.this.b, JsonHttpResponseHandler.2.this.c, (String)localObject, JsonHttpResponseHandler.2.this.d);
-                  return;
-                }
-                JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.2.this.b, JsonHttpResponseHandler.2.this.c, new JSONException("Unexpected response type " + localObject.getClass().getName()), (JSONObject)null);
-              }
-            });
-            return;
-          }
-          catch (JSONException localJSONException)
-          {
-            JsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.2.this.b, JsonHttpResponseHandler.2.this.c, localJSONException, (JSONObject)null);
-              }
-            });
-          }
+            };
+            if (getUseSynchronousMode() || getUsePoolThread()) {
+                parser.run();
+                return;
+            } else {
+                new Thread(parser).start();
+                return;
+            }
         }
-      };
-      if ((!getUseSynchronousMode()) && (!getUsePoolThread()))
-      {
-        new Thread(paramArrayOfHeader).start();
-        return;
-      }
-      paramArrayOfHeader.run();
-      return;
+        onSuccess(statusCode, headers, new JSONObject());
     }
-    AsyncHttpClient.log.v("JsonHttpRH", "response body is null, calling onFailure(Throwable, JSONObject)");
-    onFailure(paramInt, paramArrayOfHeader, paramThrowable, (JSONObject)null);
-  }
-  
-  public void onSuccess(int paramInt, Header[] paramArrayOfHeader, String paramString)
-  {
-    AsyncHttpClient.log.w("JsonHttpRH", "onSuccess(int, Header[], String) was not overriden, but callback was received");
-  }
-  
-  public void onSuccess(int paramInt, Header[] paramArrayOfHeader, JSONArray paramJSONArray)
-  {
-    AsyncHttpClient.log.w("JsonHttpRH", "onSuccess(int, Header[], JSONArray) was not overriden, but callback was received");
-  }
-  
-  public void onSuccess(int paramInt, Header[] paramArrayOfHeader, JSONObject paramJSONObject)
-  {
-    AsyncHttpClient.log.w("JsonHttpRH", "onSuccess(int, Header[], JSONObject) was not overriden, but callback was received");
-  }
-  
-  public final void onSuccess(final int paramInt, final Header[] paramArrayOfHeader, final byte[] paramArrayOfByte)
-  {
-    if (paramInt != 204)
-    {
-      paramArrayOfHeader = new Runnable()
-      {
-        public void run()
-        {
-          try
-          {
-            final Object localObject = JsonHttpResponseHandler.this.parseResponse(paramArrayOfByte);
-            JsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                if ((!JsonHttpResponseHandler.this.useRFC5179CompatibilityMode) && (localObject == null))
-                {
-                  JsonHttpResponseHandler.this.onSuccess(JsonHttpResponseHandler.1.this.b, JsonHttpResponseHandler.1.this.c, (String)null);
-                  return;
+
+    public final void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
+        if (responseBytes != null) {
+            final byte[] bArr = responseBytes;
+            final int i = statusCode;
+            final Header[] headerArr = headers;
+            final Throwable th = throwable;
+            Runnable parser = new Runnable(this) {
+                /* renamed from: e */
+                final /* synthetic */ JsonHttpResponseHandler f18867e;
+
+                public void run() {
+                    try {
+                        final Object jsonResponse = this.f18867e.parseResponse(bArr);
+                        this.f18867e.postRunnable(new Runnable(this) {
+                            /* renamed from: b */
+                            final /* synthetic */ C35032 f18860b;
+
+                            public void run() {
+                                if (!this.f18860b.f18867e.useRFC5179CompatibilityMode && jsonResponse == null) {
+                                    this.f18860b.f18867e.onFailure(i, headerArr, (String) null, th);
+                                } else if (jsonResponse instanceof JSONObject) {
+                                    this.f18860b.f18867e.onFailure(i, headerArr, th, (JSONObject) jsonResponse);
+                                } else if (jsonResponse instanceof JSONArray) {
+                                    this.f18860b.f18867e.onFailure(i, headerArr, th, (JSONArray) jsonResponse);
+                                } else if (jsonResponse instanceof String) {
+                                    this.f18860b.f18867e.onFailure(i, headerArr, (String) jsonResponse, th);
+                                } else {
+                                    this.f18860b.f18867e.onFailure(i, headerArr, new JSONException("Unexpected response type " + jsonResponse.getClass().getName()), (JSONObject) null);
+                                }
+                            }
+                        });
+                    } catch (final JSONException ex) {
+                        this.f18867e.postRunnable(new Runnable(this) {
+                            /* renamed from: b */
+                            final /* synthetic */ C35032 f18862b;
+
+                            public void run() {
+                                this.f18862b.f18867e.onFailure(i, headerArr, ex, (JSONObject) null);
+                            }
+                        });
+                    }
                 }
-                if ((localObject instanceof JSONObject))
-                {
-                  JsonHttpResponseHandler.this.onSuccess(JsonHttpResponseHandler.1.this.b, JsonHttpResponseHandler.1.this.c, (JSONObject)localObject);
-                  return;
-                }
-                if ((localObject instanceof JSONArray))
-                {
-                  JsonHttpResponseHandler.this.onSuccess(JsonHttpResponseHandler.1.this.b, JsonHttpResponseHandler.1.this.c, (JSONArray)localObject);
-                  return;
-                }
-                if ((localObject instanceof String))
-                {
-                  if (JsonHttpResponseHandler.this.useRFC5179CompatibilityMode)
-                  {
-                    JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.1.this.b, JsonHttpResponseHandler.1.this.c, (String)localObject, new JSONException("Response cannot be parsed as JSON data"));
-                    return;
-                  }
-                  JsonHttpResponseHandler.this.onSuccess(JsonHttpResponseHandler.1.this.b, JsonHttpResponseHandler.1.this.c, (String)localObject);
-                  return;
-                }
-                JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.1.this.b, JsonHttpResponseHandler.1.this.c, new JSONException("Unexpected response type " + localObject.getClass().getName()), (JSONObject)null);
-              }
-            });
-            return;
-          }
-          catch (JSONException localJSONException)
-          {
-            JsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                JsonHttpResponseHandler.this.onFailure(JsonHttpResponseHandler.1.this.b, JsonHttpResponseHandler.1.this.c, localJSONException, (JSONObject)null);
-              }
-            });
-          }
+            };
+            if (getUseSynchronousMode() || getUsePoolThread()) {
+                parser.run();
+                return;
+            } else {
+                new Thread(parser).start();
+                return;
+            }
         }
-      };
-      if ((!getUseSynchronousMode()) && (!getUsePoolThread()))
-      {
-        new Thread(paramArrayOfHeader).start();
-        return;
-      }
-      paramArrayOfHeader.run();
-      return;
+        AsyncHttpClient.log.mo2634v(f18868a, "response body is null, calling onFailure(Throwable, JSONObject)");
+        onFailure(statusCode, headers, throwable, (JSONObject) null);
     }
-    onSuccess(paramInt, paramArrayOfHeader, new JSONObject());
-  }
-  
-  protected Object parseResponse(byte[] paramArrayOfByte)
-    throws JSONException
-  {
-    if (paramArrayOfByte == null)
-    {
-      localObject2 = null;
-      return localObject2;
-    }
-    Object localObject3 = null;
-    Object localObject2 = getResponseString(paramArrayOfByte, getCharset());
-    Object localObject1 = localObject2;
-    paramArrayOfByte = (byte[])localObject3;
-    if (localObject2 != null)
-    {
-      localObject2 = ((String)localObject2).trim();
-      if (!this.useRFC5179CompatibilityMode) {
-        break label86;
-      }
-      if (!((String)localObject2).startsWith("{"))
-      {
-        localObject1 = localObject2;
-        paramArrayOfByte = (byte[])localObject3;
-        if (!((String)localObject2).startsWith("[")) {}
-      }
-      else
-      {
-        paramArrayOfByte = new JSONTokener((String)localObject2).nextValue();
-        localObject1 = localObject2;
-      }
-    }
-    for (;;)
-    {
-      localObject2 = paramArrayOfByte;
-      if (paramArrayOfByte != null) {
-        break;
-      }
-      return localObject1;
-      label86:
-      if (((((String)localObject2).startsWith("{")) && (((String)localObject2).endsWith("}"))) || ((((String)localObject2).startsWith("[")) && (((String)localObject2).endsWith("]"))))
-      {
-        paramArrayOfByte = new JSONTokener((String)localObject2).nextValue();
-        localObject1 = localObject2;
-      }
-      else
-      {
-        localObject1 = localObject2;
-        paramArrayOfByte = (byte[])localObject3;
-        if (((String)localObject2).startsWith("\""))
-        {
-          localObject1 = localObject2;
-          paramArrayOfByte = (byte[])localObject3;
-          if (((String)localObject2).endsWith("\""))
-          {
-            paramArrayOfByte = ((String)localObject2).substring(1, ((String)localObject2).length() - 1);
-            localObject1 = localObject2;
-          }
+
+    protected Object parseResponse(byte[] responseBody) throws JSONException {
+        if (responseBody == null) {
+            return null;
         }
-      }
+        Object result = null;
+        String jsonString = TextHttpResponseHandler.getResponseString(responseBody, getCharset());
+        if (jsonString != null) {
+            jsonString = jsonString.trim();
+            if (this.useRFC5179CompatibilityMode) {
+                if (jsonString.startsWith("{") || jsonString.startsWith("[")) {
+                    result = new JSONTokener(jsonString).nextValue();
+                }
+            } else if ((jsonString.startsWith("{") && jsonString.endsWith("}")) || (jsonString.startsWith("[") && jsonString.endsWith("]"))) {
+                result = new JSONTokener(jsonString).nextValue();
+            } else if (jsonString.startsWith("\"") && jsonString.endsWith("\"")) {
+                result = jsonString.substring(1, jsonString.length() - 1);
+            }
+        }
+        if (result == null) {
+            return jsonString;
+        }
+        return result;
     }
-  }
-  
-  public void setUseRFC5179CompatibilityMode(boolean paramBoolean)
-  {
-    this.useRFC5179CompatibilityMode = paramBoolean;
-  }
+
+    public boolean isUseRFC5179CompatibilityMode() {
+        return this.useRFC5179CompatibilityMode;
+    }
+
+    public void setUseRFC5179CompatibilityMode(boolean useRFC5179CompatibilityMode) {
+        this.useRFC5179CompatibilityMode = useRFC5179CompatibilityMode;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/JsonHttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

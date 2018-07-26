@@ -2,69 +2,39 @@ package com.indooratlas.android.sdk._internal;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 
-public final class ck
-{
-  private static ck d;
-  public final String a;
-  public final String b;
-  public final int c;
-  
-  private ck(Context paramContext)
-  {
-    try
-    {
-      paramContext = paramContext.getPackageManager().getPackageInfo(paramContext.getPackageName(), 128);
-      if (paramContext != null)
-      {
-        str = paramContext.packageName;
-        this.a = str;
-        if (paramContext == null) {
-          break label74;
+public final class ck {
+    /* renamed from: d */
+    private static ck f23315d;
+    /* renamed from: a */
+    public final String f23316a;
+    /* renamed from: b */
+    public final String f23317b;
+    /* renamed from: c */
+    public final int f23318c;
+
+    private ck(Context context) {
+        PackageInfo packageInfo;
+        PackageInfo packageInfo2 = null;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 128);
+        } catch (Throwable th) {
+            packageInfo = packageInfo2;
         }
-        str = paramContext.versionName;
-        this.b = str;
-        if (paramContext == null) {
-          break label80;
+        this.f23316a = packageInfo != null ? packageInfo.packageName : "n/a";
+        this.f23317b = packageInfo != null ? packageInfo.versionName : "n/a";
+        this.f23318c = packageInfo != null ? packageInfo.versionCode : -1;
+    }
+
+    /* renamed from: a */
+    public static synchronized ck m20223a(Context context) {
+        ck ckVar;
+        synchronized (ck.class) {
+            if (f23315d == null) {
+                f23315d = new ck(context);
+            }
+            ckVar = f23315d;
         }
-        i = paramContext.versionCode;
-        this.c = i;
-      }
+        return ckVar;
     }
-    catch (Throwable paramContext)
-    {
-      for (;;)
-      {
-        paramContext = null;
-        continue;
-        String str = "n/a";
-        continue;
-        label74:
-        str = "n/a";
-        continue;
-        label80:
-        int i = -1;
-      }
-    }
-  }
-  
-  public static ck a(Context paramContext)
-  {
-    try
-    {
-      if (d == null) {
-        d = new ck(paramContext);
-      }
-      paramContext = d;
-      return paramContext;
-    }
-    finally {}
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ck.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

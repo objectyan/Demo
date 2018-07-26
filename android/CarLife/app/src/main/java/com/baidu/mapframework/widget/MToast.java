@@ -2,9 +2,7 @@ package com.baidu.mapframework.widget;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build.VERSION;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -12,76 +10,58 @@ import com.baidu.mapframework.nirvana.looper.LooperManager;
 import com.baidu.mapframework.nirvana.looper.LooperTask;
 import com.baidu.mapframework.nirvana.module.Module;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
-import com.baidu.platform.comapi.c;
-import com.baidu.platform.comapi.util.n;
+import com.baidu.navisdk.module.BusinessActivityManager;
+import com.baidu.platform.comapi.C2907c;
+import com.baidu.platform.comapi.util.C4835n;
 import java.util.List;
 
-public class MToast
-{
-  private static int a;
-  
-  public static void show(int paramInt)
-  {
-    show(c.f().getResources().getString(paramInt));
-  }
-  
-  public static void show(Context paramContext, final int paramInt)
-  {
-    if (paramContext == null) {
-      return;
+public class MToast {
+    /* renamed from: a */
+    private static int f19344a;
+
+    public static void show(int strId) {
+        show(C2907c.f().getResources().getString(strId));
     }
-    n.a(new Runnable()
-    {
-      public void run()
-      {
-        MToast.show(this.a, this.a.getString(paramInt));
-      }
-    });
-  }
-  
-  public static void show(Context paramContext, final String paramString)
-  {
-    if ((paramContext == null) || (TextUtils.isEmpty(paramString))) {}
-    List localList;
-    do
-    {
-      return;
-      a = 0;
-      if (paramString.length() > 15) {
-        a = 1;
-      }
-      if (Build.VERSION.SDK_INT >= 21) {
-        break;
-      }
-      localList = ((ActivityManager)paramContext.getSystemService("activity")).getRunningTasks(1);
-    } while ((localList == null) || (localList.size() <= 0) || (localList.get(0) == null) || (!paramContext.getPackageName().equals(((ActivityManager.RunningTaskInfo)localList.get(0)).baseActivity.getPackageName())));
-    LooperManager.executeTask(Module.COMMON_WIDGET_MODULE, new LooperTask()
-    {
-      public void run()
-      {
-        if (this.a != null) {
-          Toast.makeText(this.a, paramString, MToast.a()).show();
+
+    public static void show(String message) {
+        show(C2907c.f(), message);
+    }
+
+    public static void show(final Context context, final String message) {
+        if (context != null && !TextUtils.isEmpty(message)) {
+            f19344a = 0;
+            if (message.length() > 15) {
+                f19344a = 1;
+            }
+            if (VERSION.SDK_INT < 21) {
+                List<RunningTaskInfo> infos = ((ActivityManager) context.getSystemService(BusinessActivityManager.AUDIO_DIR)).getRunningTasks(1);
+                if (infos != null && infos.size() > 0 && infos.get(0) != null && context.getPackageName().equals(((RunningTaskInfo) infos.get(0)).baseActivity.getPackageName())) {
+                    LooperManager.executeTask(Module.COMMON_WIDGET_MODULE, new LooperTask() {
+                        public void run() {
+                            if (context != null) {
+                                Toast.makeText(context, message, MToast.f19344a).show();
+                            }
+                        }
+                    }, ScheduleConfig.forData());
+                    return;
+                }
+                return;
+            }
+            LooperManager.executeTask(Module.COMMON_WIDGET_MODULE, new LooperTask() {
+                public void run() {
+                    Toast.makeText(context, message, MToast.f19344a).show();
+                }
+            }, ScheduleConfig.forData());
         }
-      }
-    }, ScheduleConfig.forData());
-    return;
-    LooperManager.executeTask(Module.COMMON_WIDGET_MODULE, new LooperTask()
-    {
-      public void run()
-      {
-        Toast.makeText(this.a, paramString, MToast.a()).show();
-      }
-    }, ScheduleConfig.forData());
-  }
-  
-  public static void show(String paramString)
-  {
-    show(c.f(), paramString);
-  }
+    }
+
+    public static void show(final Context context, final int resId) {
+        if (context != null) {
+            C4835n.m16033a(new Runnable() {
+                public void run() {
+                    MToast.show(context, context.getString(resId));
+                }
+            });
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/widget/MToast.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

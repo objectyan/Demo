@@ -1,94 +1,80 @@
 package com.baidu.mapframework.common.mapview;
 
-import android.content.Context;
-import android.content.res.Resources;
+import com.baidu.carlife.C0965R;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import com.baidu.platform.comapi.map.ItemizedOverlay;
 import com.baidu.platform.comapi.map.MapGLSurfaceView;
-import java.util.List;
 
-public class BaiduMapItemizedOverlay
-  extends ItemizedOverlay
-{
-  private OnTapListener a;
-  private MapGLSurfaceView b = MapViewFactory.getInstance().getMapView();
-  
-  private BaiduMapItemizedOverlay()
-  {
-    super(MapViewFactory.getInstance().getMapView().getContext().getResources().getDrawable(2130838736), MapViewFactory.getInstance().getMapView());
-  }
-  
-  public static BaiduMapItemizedOverlay getInstance()
-  {
-    return Holder.a;
-  }
-  
-  public OnTapListener getOnTapListener()
-  {
-    return this.a;
-  }
-  
-  public void hide()
-  {
-    if (this.b.getOverlays().contains(this)) {
-      this.b.removeOverlay(this);
+public class BaiduMapItemizedOverlay extends ItemizedOverlay {
+    /* renamed from: a */
+    private OnTapListener f18770a;
+    /* renamed from: b */
+    private MapGLSurfaceView f18771b;
+
+    private static class Holder {
+        /* renamed from: a */
+        static final BaiduMapItemizedOverlay f18769a = new BaiduMapItemizedOverlay();
+
+        private Holder() {
+        }
     }
-  }
-  
-  public final boolean onTap(int paramInt)
-  {
-    if ((this.a != null) && (this.a.onTap(paramInt))) {
-      return true;
+
+    public interface OnTapListener {
+        boolean onTap(int i);
+
+        boolean onTap(int i, int i2, GeoPoint geoPoint);
+
+        boolean onTap(GeoPoint geoPoint, MapGLSurfaceView mapGLSurfaceView);
     }
-    return super.onTap(paramInt);
-  }
-  
-  public final boolean onTap(int paramInt1, int paramInt2, GeoPoint paramGeoPoint)
-  {
-    if ((this.a != null) && (this.a.onTap(paramInt1, paramInt2, paramGeoPoint))) {
-      return true;
+
+    public static BaiduMapItemizedOverlay getInstance() {
+        return Holder.f18769a;
     }
-    return super.onTap(paramInt1, paramInt2, paramGeoPoint);
-  }
-  
-  public final boolean onTap(GeoPoint paramGeoPoint, MapGLSurfaceView paramMapGLSurfaceView)
-  {
-    if ((this.a != null) && (this.a.onTap(paramGeoPoint, paramMapGLSurfaceView))) {
-      return true;
+
+    private BaiduMapItemizedOverlay() {
+        super(MapViewFactory.getInstance().getMapView().getContext().getResources().getDrawable(C0965R.drawable.icon_gcoding), MapViewFactory.getInstance().getMapView());
+        this.f18771b = MapViewFactory.getInstance().getMapView();
     }
-    return super.onTap(paramGeoPoint, paramMapGLSurfaceView);
-  }
-  
-  public void setOnTapListener(OnTapListener paramOnTapListener)
-  {
-    this.a = paramOnTapListener;
-  }
-  
-  public void show()
-  {
-    if (this.b.getOverlays().contains(this)) {
-      hide();
+
+    public OnTapListener getOnTapListener() {
+        return this.f18770a;
     }
-    this.b.addOverlay(this);
-  }
-  
-  private static class Holder
-  {
-    static final BaiduMapItemizedOverlay a = new BaiduMapItemizedOverlay(null);
-  }
-  
-  public static abstract interface OnTapListener
-  {
-    public abstract boolean onTap(int paramInt);
-    
-    public abstract boolean onTap(int paramInt1, int paramInt2, GeoPoint paramGeoPoint);
-    
-    public abstract boolean onTap(GeoPoint paramGeoPoint, MapGLSurfaceView paramMapGLSurfaceView);
-  }
+
+    public void setOnTapListener(OnTapListener mOnTapListener) {
+        this.f18770a = mOnTapListener;
+    }
+
+    public void show() {
+        if (this.f18771b.getOverlays().contains(this)) {
+            hide();
+        }
+        this.f18771b.addOverlay(this);
+    }
+
+    public void hide() {
+        if (this.f18771b.getOverlays().contains(this)) {
+            this.f18771b.removeOverlay(this);
+        }
+    }
+
+    public final boolean onTap(int index) {
+        if (this.f18770a == null || !this.f18770a.onTap(index)) {
+            return super.onTap(index);
+        }
+        return true;
+    }
+
+    public final boolean onTap(GeoPoint p, MapGLSurfaceView mapView) {
+        if (this.f18770a == null || !this.f18770a.onTap(p, mapView)) {
+            return super.onTap(p, mapView);
+        }
+        return true;
+    }
+
+    public final boolean onTap(int index, int clickIndex, GeoPoint p) {
+        if (this.f18770a == null || !this.f18770a.onTap(index, clickIndex, p)) {
+            return super.onTap(index, clickIndex, p);
+        }
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/common/mapview/BaiduMapItemizedOverlay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

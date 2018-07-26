@@ -4,37 +4,30 @@ import com.baidu.navisdk.model.datastruct.SearchPoi;
 import com.baidu.navisdk.model.datastruct.SearchPoiPager;
 import java.util.ArrayList;
 
-public abstract interface IBNSearchResultListener
-{
-  public abstract void asynSearchCityList(SearchPoiPager paramSearchPoiPager, SearchPoi paramSearchPoi);
-  
-  public abstract String getDistance(SearchPoi paramSearchPoi);
-  
-  public abstract void goChildPoiDetailFragment(boolean paramBoolean1, int paramInt1, boolean paramBoolean2, int paramInt2, int paramInt3, int paramInt4, int[] paramArrayOfInt1, int[] paramArrayOfInt2, int[] paramArrayOfInt3);
-  
-  public abstract void goPoiDetailFragment(boolean paramBoolean1, int paramInt, boolean paramBoolean2, int[] paramArrayOfInt1, int[] paramArrayOfInt2, int[] paramArrayOfInt3);
-  
-  public abstract void onCountrywideOnlineSearch();
-  
-  public abstract void onLoadMore();
-  
-  public abstract void onNormalOnlineSearch();
-  
-  public abstract void onRefresh();
-  
-  public abstract void pressleftTitleBack();
-  
-  public abstract void setFocusMadianIndex(SearchPoi paramSearchPoi, boolean paramBoolean, int paramInt);
-  
-  public abstract void startGoNavi(boolean paramBoolean, SearchPoi paramSearchPoi);
-  
-  public abstract void updateAppMapView(int paramInt1, int paramInt2);
-  
-  public abstract void updateResultPoiBkgLayer(ArrayList<SearchPoi> paramArrayList);
+public interface IBNSearchResultListener {
+    void asynSearchCityList(SearchPoiPager searchPoiPager, SearchPoi searchPoi);
+
+    String getDistance(SearchPoi searchPoi);
+
+    void goChildPoiDetailFragment(boolean z, int i, boolean z2, int i2, int i3, int i4, int[] iArr, int[] iArr2, int[] iArr3);
+
+    void goPoiDetailFragment(boolean z, int i, boolean z2, int[] iArr, int[] iArr2, int[] iArr3);
+
+    void onCountrywideOnlineSearch();
+
+    void onLoadMore();
+
+    void onNormalOnlineSearch();
+
+    void onRefresh();
+
+    void pressleftTitleBack();
+
+    void setFocusMadianIndex(SearchPoi searchPoi, boolean z, int i);
+
+    void startGoNavi(boolean z, SearchPoi searchPoi);
+
+    void updateAppMapView(int i, int i2);
+
+    void updateResultPoiBkgLayer(ArrayList<SearchPoi> arrayList);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/search/IBNSearchResultListener.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

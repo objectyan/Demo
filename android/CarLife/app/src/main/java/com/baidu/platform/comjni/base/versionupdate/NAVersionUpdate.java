@@ -1,55 +1,27 @@
 package com.baidu.platform.comjni.base.versionupdate;
 
-import com.baidu.platform.comjni.a;
+import com.baidu.platform.comjni.C2912a;
 
-public class NAVersionUpdate
-  extends a
-{
-  private int a = 0;
-  
-  private native int nativeCreate();
-  
-  private native int nativeRelease(int paramInt);
-  
-  private native void nativeSetVerUpdateParams(int paramInt, String paramString1, String paramString2);
-  
-  public int create()
-  {
-    this.a = nativeCreate();
-    return this.a;
-  }
-  
-  public int release()
-  {
-    try
-    {
-      int i = nativeRelease(this.a);
-      return i;
+public class NAVersionUpdate extends C2912a {
+    /* renamed from: a */
+    private int f19998a = 0;
+
+    private native int nativeCreate();
+
+    private native int nativeRelease(int i);
+
+    private native void nativeSetVerUpdateParams(int i, String str, String str2);
+
+    public int create() {
+        this.f19998a = nativeCreate();
+        return this.f19998a;
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public synchronized int release() {
+        return nativeRelease(this.f19998a);
     }
-  }
-  
-  public void setVerUpdateParams(String paramString1, String paramString2)
-  {
-    try
-    {
-      nativeSetVerUpdateParams(this.a, paramString1, paramString2);
-      return;
+
+    public synchronized void setVerUpdateParams(String strDownloadPath, String bundleParams) {
+        nativeSetVerUpdateParams(this.f19998a, strDownloadPath, bundleParams);
     }
-    finally
-    {
-      paramString1 = finally;
-      throw paramString1;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comjni/base/versionupdate/NAVersionUpdate.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

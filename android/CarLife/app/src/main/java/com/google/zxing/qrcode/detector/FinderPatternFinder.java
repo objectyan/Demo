@@ -1,5 +1,6 @@
 package com.google.zxing.qrcode.detector;
 
+import com.baidu.carlife.core.C1253f;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.ResultPoint;
@@ -9,571 +10,402 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class FinderPatternFinder
-{
-  private static final int CENTER_QUORUM = 2;
-  private static final int INTEGER_MATH_SHIFT = 8;
-  protected static final int MAX_MODULES = 57;
-  protected static final int MIN_SKIP = 3;
-  private final int[] crossCheckStateCount;
-  private boolean hasSkipped;
-  private final BitMatrix image;
-  private final List<FinderPattern> possibleCenters;
-  private final ResultPointCallback resultPointCallback;
-  
-  public FinderPatternFinder(BitMatrix paramBitMatrix)
-  {
-    this(paramBitMatrix, null);
-  }
-  
-  public FinderPatternFinder(BitMatrix paramBitMatrix, ResultPointCallback paramResultPointCallback)
-  {
-    this.image = paramBitMatrix;
-    this.possibleCenters = new ArrayList();
-    this.crossCheckStateCount = new int[5];
-    this.resultPointCallback = paramResultPointCallback;
-  }
-  
-  private static float centerFromEnd(int[] paramArrayOfInt, int paramInt)
-  {
-    return paramInt - paramArrayOfInt[4] - paramArrayOfInt[3] - paramArrayOfInt[2] / 2.0F;
-  }
-  
-  private float crossCheckHorizontal(int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    BitMatrix localBitMatrix = this.image;
-    int k = localBitMatrix.getWidth();
-    int[] arrayOfInt = getCrossCheckStateCount();
-    int i = paramInt1;
-    while ((i >= 0) && (localBitMatrix.get(i, paramInt2)))
-    {
-      arrayOfInt[2] += 1;
-      i -= 1;
-    }
-    int j = i;
-    if (i < 0) {
-      return NaN.0F;
-    }
-    while ((j >= 0) && (!localBitMatrix.get(j, paramInt2)) && (arrayOfInt[1] <= paramInt3))
-    {
-      arrayOfInt[1] += 1;
-      j -= 1;
-    }
-    if ((j < 0) || (arrayOfInt[1] > paramInt3)) {
-      return NaN.0F;
-    }
-    while ((j >= 0) && (localBitMatrix.get(j, paramInt2)) && (arrayOfInt[0] <= paramInt3))
-    {
-      arrayOfInt[0] += 1;
-      j -= 1;
-    }
-    if (arrayOfInt[0] > paramInt3) {
-      return NaN.0F;
-    }
-    paramInt1 += 1;
-    while ((paramInt1 < k) && (localBitMatrix.get(paramInt1, paramInt2)))
-    {
-      arrayOfInt[2] += 1;
-      paramInt1 += 1;
-    }
-    i = paramInt1;
-    if (paramInt1 == k) {
-      return NaN.0F;
-    }
-    while ((i < k) && (!localBitMatrix.get(i, paramInt2)) && (arrayOfInt[3] < paramInt3))
-    {
-      arrayOfInt[3] += 1;
-      i += 1;
-    }
-    if ((i == k) || (arrayOfInt[3] >= paramInt3)) {
-      return NaN.0F;
-    }
-    while ((i < k) && (localBitMatrix.get(i, paramInt2)) && (arrayOfInt[4] < paramInt3))
-    {
-      arrayOfInt[4] += 1;
-      i += 1;
-    }
-    if (arrayOfInt[4] >= paramInt3) {
-      return NaN.0F;
-    }
-    if (Math.abs(arrayOfInt[0] + arrayOfInt[1] + arrayOfInt[2] + arrayOfInt[3] + arrayOfInt[4] - paramInt4) * 5 >= paramInt4) {
-      return NaN.0F;
-    }
-    if (foundPatternCross(arrayOfInt)) {
-      return centerFromEnd(arrayOfInt, i);
-    }
-    return NaN.0F;
-  }
-  
-  private float crossCheckVertical(int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    BitMatrix localBitMatrix = this.image;
-    int k = localBitMatrix.getHeight();
-    int[] arrayOfInt = getCrossCheckStateCount();
-    int i = paramInt1;
-    while ((i >= 0) && (localBitMatrix.get(paramInt2, i)))
-    {
-      arrayOfInt[2] += 1;
-      i -= 1;
-    }
-    int j = i;
-    if (i < 0) {
-      return NaN.0F;
-    }
-    while ((j >= 0) && (!localBitMatrix.get(paramInt2, j)) && (arrayOfInt[1] <= paramInt3))
-    {
-      arrayOfInt[1] += 1;
-      j -= 1;
-    }
-    if ((j < 0) || (arrayOfInt[1] > paramInt3)) {
-      return NaN.0F;
-    }
-    while ((j >= 0) && (localBitMatrix.get(paramInt2, j)) && (arrayOfInt[0] <= paramInt3))
-    {
-      arrayOfInt[0] += 1;
-      j -= 1;
-    }
-    if (arrayOfInt[0] > paramInt3) {
-      return NaN.0F;
-    }
-    paramInt1 += 1;
-    while ((paramInt1 < k) && (localBitMatrix.get(paramInt2, paramInt1)))
-    {
-      arrayOfInt[2] += 1;
-      paramInt1 += 1;
-    }
-    i = paramInt1;
-    if (paramInt1 == k) {
-      return NaN.0F;
-    }
-    while ((i < k) && (!localBitMatrix.get(paramInt2, i)) && (arrayOfInt[3] < paramInt3))
-    {
-      arrayOfInt[3] += 1;
-      i += 1;
-    }
-    if ((i == k) || (arrayOfInt[3] >= paramInt3)) {
-      return NaN.0F;
-    }
-    while ((i < k) && (localBitMatrix.get(paramInt2, i)) && (arrayOfInt[4] < paramInt3))
-    {
-      arrayOfInt[4] += 1;
-      i += 1;
-    }
-    if (arrayOfInt[4] >= paramInt3) {
-      return NaN.0F;
-    }
-    if (Math.abs(arrayOfInt[0] + arrayOfInt[1] + arrayOfInt[2] + arrayOfInt[3] + arrayOfInt[4] - paramInt4) * 5 >= paramInt4 * 2) {
-      return NaN.0F;
-    }
-    if (foundPatternCross(arrayOfInt)) {
-      return centerFromEnd(arrayOfInt, i);
-    }
-    return NaN.0F;
-  }
-  
-  private int findRowSkip()
-  {
-    if (this.possibleCenters.size() <= 1) {}
-    Object localObject;
-    FinderPattern localFinderPattern;
-    for (;;)
-    {
-      return 0;
-      localObject = null;
-      Iterator localIterator = this.possibleCenters.iterator();
-      while (localIterator.hasNext())
-      {
-        localFinderPattern = (FinderPattern)localIterator.next();
-        if (localFinderPattern.getCount() >= 2)
-        {
-          if (localObject != null) {
-            break label63;
-          }
-          localObject = localFinderPattern;
+public class FinderPatternFinder {
+    private static final int CENTER_QUORUM = 2;
+    private static final int INTEGER_MATH_SHIFT = 8;
+    protected static final int MAX_MODULES = 57;
+    protected static final int MIN_SKIP = 3;
+    private final int[] crossCheckStateCount;
+    private boolean hasSkipped;
+    private final BitMatrix image;
+    private final List<FinderPattern> possibleCenters;
+    private final ResultPointCallback resultPointCallback;
+
+    private static class CenterComparator implements Serializable, Comparator<FinderPattern> {
+        private final float average;
+
+        private CenterComparator(float f) {
+            this.average = f;
         }
-      }
-    }
-    label63:
-    this.hasSkipped = true;
-    return (int)(Math.abs(((FinderPattern)localObject).getX() - localFinderPattern.getX()) - Math.abs(((FinderPattern)localObject).getY() - localFinderPattern.getY())) / 2;
-  }
-  
-  protected static boolean foundPatternCross(int[] paramArrayOfInt)
-  {
-    boolean bool = true;
-    int j = 0;
-    int i = 0;
-    if (i < 5)
-    {
-      k = paramArrayOfInt[i];
-      if (k != 0) {}
-    }
-    while (j < 7)
-    {
-      int k;
-      return false;
-      j += k;
-      i += 1;
-      break;
-    }
-    i = (j << 8) / 7;
-    j = i / 2;
-    if ((Math.abs(i - (paramArrayOfInt[0] << 8)) < j) && (Math.abs(i - (paramArrayOfInt[1] << 8)) < j) && (Math.abs(i * 3 - (paramArrayOfInt[2] << 8)) < j * 3) && (Math.abs(i - (paramArrayOfInt[3] << 8)) < j) && (Math.abs(i - (paramArrayOfInt[4] << 8)) < j)) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
-    }
-  }
-  
-  private int[] getCrossCheckStateCount()
-  {
-    this.crossCheckStateCount[0] = 0;
-    this.crossCheckStateCount[1] = 0;
-    this.crossCheckStateCount[2] = 0;
-    this.crossCheckStateCount[3] = 0;
-    this.crossCheckStateCount[4] = 0;
-    return this.crossCheckStateCount;
-  }
-  
-  private boolean haveMultiplyConfirmedCenters()
-  {
-    int i = 0;
-    float f1 = 0.0F;
-    int j = this.possibleCenters.size();
-    Iterator localIterator = this.possibleCenters.iterator();
-    while (localIterator.hasNext())
-    {
-      FinderPattern localFinderPattern = (FinderPattern)localIterator.next();
-      if (localFinderPattern.getCount() >= 2)
-      {
-        i += 1;
-        f1 += localFinderPattern.getEstimatedModuleSize();
-      }
-    }
-    if (i < 3) {}
-    float f2;
-    do
-    {
-      return false;
-      float f3 = f1 / j;
-      f2 = 0.0F;
-      localIterator = this.possibleCenters.iterator();
-      while (localIterator.hasNext()) {
-        f2 += Math.abs(((FinderPattern)localIterator.next()).getEstimatedModuleSize() - f3);
-      }
-    } while (f2 > 0.05F * f1);
-    return true;
-  }
-  
-  private FinderPattern[] selectBestPatterns()
-    throws NotFoundException
-  {
-    int i = this.possibleCenters.size();
-    if (i < 3) {
-      throw NotFoundException.getNotFoundInstance();
-    }
-    float f1;
-    Iterator localIterator;
-    if (i > 3)
-    {
-      float f2 = 0.0F;
-      f1 = 0.0F;
-      localIterator = this.possibleCenters.iterator();
-      while (localIterator.hasNext())
-      {
-        float f3 = ((FinderPattern)localIterator.next()).getEstimatedModuleSize();
-        f2 += f3;
-        f1 += f3 * f3;
-      }
-      f2 /= i;
-      f1 = (float)Math.sqrt(f1 / i - f2 * f2);
-      Collections.sort(this.possibleCenters, new FurthestFromAverageComparator(f2, null));
-      f1 = Math.max(0.2F * f2, f1);
-      int j;
-      for (i = 0; (i < this.possibleCenters.size()) && (this.possibleCenters.size() > 3); i = j + 1)
-      {
-        j = i;
-        if (Math.abs(((FinderPattern)this.possibleCenters.get(i)).getEstimatedModuleSize() - f2) > f1)
-        {
-          this.possibleCenters.remove(i);
-          j = i - 1;
+
+        public int compare(FinderPattern center1, FinderPattern center2) {
+            if (center2.getCount() != center1.getCount()) {
+                return center2.getCount() - center1.getCount();
+            }
+            float dA = Math.abs(center2.getEstimatedModuleSize() - this.average);
+            float dB = Math.abs(center1.getEstimatedModuleSize() - this.average);
+            if (dA < dB) {
+                return 1;
+            }
+            return dA == dB ? 0 : -1;
         }
-      }
     }
-    if (this.possibleCenters.size() > 3)
-    {
-      f1 = 0.0F;
-      localIterator = this.possibleCenters.iterator();
-      while (localIterator.hasNext()) {
-        f1 += ((FinderPattern)localIterator.next()).getEstimatedModuleSize();
-      }
-      f1 /= this.possibleCenters.size();
-      Collections.sort(this.possibleCenters, new CenterComparator(f1, null));
-      this.possibleCenters.subList(3, this.possibleCenters.size()).clear();
-    }
-    return new FinderPattern[] { (FinderPattern)this.possibleCenters.get(0), (FinderPattern)this.possibleCenters.get(1), (FinderPattern)this.possibleCenters.get(2) };
-  }
-  
-  FinderPatternInfo find(Map<DecodeHintType, ?> paramMap)
-    throws NotFoundException
-  {
-    int i;
-    int i1;
-    int i2;
-    int m;
-    boolean bool1;
-    int k;
-    if ((paramMap != null) && (paramMap.containsKey(DecodeHintType.TRY_HARDER)))
-    {
-      i = 1;
-      i1 = this.image.getHeight();
-      i2 = this.image.getWidth();
-      m = i1 * 3 / 228;
-      if ((m < 3) || (i != 0)) {
-        m = 3;
-      }
-      bool1 = false;
-      paramMap = new int[5];
-      k = m - 1;
-    }
-    for (;;)
-    {
-      if ((k >= i1) || (bool1)) {
-        break label459;
-      }
-      paramMap[0] = 0;
-      paramMap[1] = 0;
-      paramMap[2] = 0;
-      paramMap[3] = 0;
-      paramMap[4] = 0;
-      i = 0;
-      int j = 0;
-      label108:
-      if (j < i2)
-      {
-        int n;
-        if (this.image.get(j, k))
-        {
-          n = i;
-          if ((i & 0x1) == 1) {
-            n = i + 1;
-          }
-          paramMap[n] += 1;
-          i = n;
+
+    private static class FurthestFromAverageComparator implements Serializable, Comparator<FinderPattern> {
+        private final float average;
+
+        private FurthestFromAverageComparator(float f) {
+            this.average = f;
         }
-        for (;;)
-        {
-          j += 1;
-          break label108;
-          i = 0;
-          break;
-          if ((i & 0x1) == 0)
-          {
-            if (i == 4)
-            {
-              if (foundPatternCross(paramMap))
-              {
-                if (handlePossibleCenter(paramMap, k, j))
-                {
-                  n = 2;
-                  if (this.hasSkipped)
-                  {
-                    bool2 = haveMultiplyConfirmedCenters();
-                    m = k;
-                  }
-                  for (;;)
-                  {
-                    i = 0;
-                    paramMap[0] = 0;
-                    paramMap[1] = 0;
-                    paramMap[2] = 0;
-                    paramMap[3] = 0;
-                    paramMap[4] = 0;
-                    bool1 = bool2;
-                    k = m;
-                    m = n;
-                    break;
-                    i = findRowSkip();
-                    bool2 = bool1;
-                    m = k;
-                    if (i > paramMap[2])
-                    {
-                      m = k + (i - paramMap[2] - 2);
-                      j = i2 - 1;
-                      bool2 = bool1;
+
+        public int compare(FinderPattern center1, FinderPattern center2) {
+            float dA = Math.abs(center2.getEstimatedModuleSize() - this.average);
+            float dB = Math.abs(center1.getEstimatedModuleSize() - this.average);
+            if (dA < dB) {
+                return -1;
+            }
+            return dA == dB ? 0 : 1;
+        }
+    }
+
+    public FinderPatternFinder(BitMatrix image) {
+        this(image, null);
+    }
+
+    public FinderPatternFinder(BitMatrix image, ResultPointCallback resultPointCallback) {
+        this.image = image;
+        this.possibleCenters = new ArrayList();
+        this.crossCheckStateCount = new int[5];
+        this.resultPointCallback = resultPointCallback;
+    }
+
+    protected BitMatrix getImage() {
+        return this.image;
+    }
+
+    protected List<FinderPattern> getPossibleCenters() {
+        return this.possibleCenters;
+    }
+
+    FinderPatternInfo find(Map<DecodeHintType, ?> hints) throws NotFoundException {
+        boolean tryHarder = hints != null && hints.containsKey(DecodeHintType.TRY_HARDER);
+        int maxI = this.image.getHeight();
+        int maxJ = this.image.getWidth();
+        int iSkip = (maxI * 3) / C1253f.dI;
+        if (iSkip < 3 || tryHarder) {
+            iSkip = 3;
+        }
+        boolean done = false;
+        int[] stateCount = new int[5];
+        int i = iSkip - 1;
+        while (i < maxI && !done) {
+            stateCount[0] = 0;
+            stateCount[1] = 0;
+            stateCount[2] = 0;
+            stateCount[3] = 0;
+            stateCount[4] = 0;
+            int currentState = 0;
+            int j = 0;
+            while (j < maxJ) {
+                if (this.image.get(j, i)) {
+                    if ((currentState & 1) == 1) {
+                        currentState++;
                     }
-                  }
+                    stateCount[currentState] = stateCount[currentState] + 1;
+                } else if ((currentState & 1) != 0) {
+                    stateCount[currentState] = stateCount[currentState] + 1;
+                } else if (currentState != 4) {
+                    currentState++;
+                    stateCount[currentState] = stateCount[currentState] + 1;
+                } else if (!foundPatternCross(stateCount)) {
+                    stateCount[0] = stateCount[2];
+                    stateCount[1] = stateCount[3];
+                    stateCount[2] = stateCount[4];
+                    stateCount[3] = 1;
+                    stateCount[4] = 0;
+                    currentState = 3;
+                } else if (handlePossibleCenter(stateCount, i, j)) {
+                    iSkip = 2;
+                    if (this.hasSkipped) {
+                        done = haveMultiplyConfirmedCenters();
+                    } else {
+                        int rowSkip = findRowSkip();
+                        if (rowSkip > stateCount[2]) {
+                            i += (rowSkip - stateCount[2]) - 2;
+                            j = maxJ - 1;
+                        }
+                    }
+                    currentState = 0;
+                    stateCount[0] = 0;
+                    stateCount[1] = 0;
+                    stateCount[2] = 0;
+                    stateCount[3] = 0;
+                    stateCount[4] = 0;
+                } else {
+                    stateCount[0] = stateCount[2];
+                    stateCount[1] = stateCount[3];
+                    stateCount[2] = stateCount[4];
+                    stateCount[3] = 1;
+                    stateCount[4] = 0;
+                    currentState = 3;
                 }
-                paramMap[0] = paramMap[2];
-                paramMap[1] = paramMap[3];
-                paramMap[2] = paramMap[4];
-                paramMap[3] = 1;
-                paramMap[4] = 0;
-                i = 3;
-              }
-              else
-              {
-                paramMap[0] = paramMap[2];
-                paramMap[1] = paramMap[3];
-                paramMap[2] = paramMap[4];
-                paramMap[3] = 1;
-                paramMap[4] = 0;
-                i = 3;
-              }
+                j++;
             }
-            else
-            {
-              i += 1;
-              paramMap[i] += 1;
+            if (foundPatternCross(stateCount) && handlePossibleCenter(stateCount, i, maxJ)) {
+                iSkip = stateCount[0];
+                if (this.hasSkipped) {
+                    done = haveMultiplyConfirmedCenters();
+                }
             }
-          }
-          else {
-            paramMap[i] += 1;
-          }
+            i += iSkip;
         }
-      }
-      boolean bool2 = bool1;
-      i = m;
-      if (foundPatternCross(paramMap))
-      {
-        bool2 = bool1;
-        i = m;
-        if (handlePossibleCenter(paramMap, k, i2))
-        {
-          j = paramMap[0];
-          bool2 = bool1;
-          i = j;
-          if (this.hasSkipped)
-          {
-            bool2 = haveMultiplyConfirmedCenters();
-            i = j;
-          }
-        }
-      }
-      k += i;
-      bool1 = bool2;
-      m = i;
+        FinderPattern[] patternInfo = selectBestPatterns();
+        ResultPoint.orderBestPatterns(patternInfo);
+        return new FinderPatternInfo(patternInfo);
     }
-    label459:
-    paramMap = selectBestPatterns();
-    ResultPoint.orderBestPatterns(paramMap);
-    return new FinderPatternInfo(paramMap);
-  }
-  
-  protected BitMatrix getImage()
-  {
-    return this.image;
-  }
-  
-  protected List<FinderPattern> getPossibleCenters()
-  {
-    return this.possibleCenters;
-  }
-  
-  protected boolean handlePossibleCenter(int[] paramArrayOfInt, int paramInt1, int paramInt2)
-  {
-    int i = paramArrayOfInt[0] + paramArrayOfInt[1] + paramArrayOfInt[2] + paramArrayOfInt[3] + paramArrayOfInt[4];
-    float f2 = centerFromEnd(paramArrayOfInt, paramInt2);
-    float f1 = crossCheckVertical(paramInt1, (int)f2, paramArrayOfInt[2], i);
-    if (!Float.isNaN(f1))
-    {
-      f2 = crossCheckHorizontal((int)f2, (int)f1, paramArrayOfInt[2], i);
-      if (!Float.isNaN(f2))
-      {
-        float f3 = i / 7.0F;
-        i = 0;
-        paramInt1 = 0;
-        for (;;)
-        {
-          paramInt2 = i;
-          if (paramInt1 < this.possibleCenters.size())
-          {
-            paramArrayOfInt = (FinderPattern)this.possibleCenters.get(paramInt1);
-            if (paramArrayOfInt.aboutEquals(f3, f1, f2))
-            {
-              this.possibleCenters.set(paramInt1, paramArrayOfInt.combineEstimate(f1, f2, f3));
-              paramInt2 = 1;
+
+    private static float centerFromEnd(int[] stateCount, int end) {
+        return ((float) ((end - stateCount[4]) - stateCount[3])) - (((float) stateCount[2]) / 2.0f);
+    }
+
+    protected static boolean foundPatternCross(int[] stateCount) {
+        boolean z = true;
+        int totalModuleSize = 0;
+        for (int i = 0; i < 5; i++) {
+            int count = stateCount[i];
+            if (count == 0) {
+                return false;
             }
-          }
-          else
-          {
-            if (paramInt2 == 0)
-            {
-              paramArrayOfInt = new FinderPattern(f2, f1, f3);
-              this.possibleCenters.add(paramArrayOfInt);
-              if (this.resultPointCallback != null) {
-                this.resultPointCallback.foundPossibleResultPoint(paramArrayOfInt);
-              }
+            totalModuleSize += count;
+        }
+        if (totalModuleSize < 7) {
+            return false;
+        }
+        int moduleSize = (totalModuleSize << 8) / 7;
+        int maxVariance = moduleSize / 2;
+        if (Math.abs(moduleSize - (stateCount[0] << 8)) >= maxVariance || Math.abs(moduleSize - (stateCount[1] << 8)) >= maxVariance || Math.abs((moduleSize * 3) - (stateCount[2] << 8)) >= maxVariance * 3 || Math.abs(moduleSize - (stateCount[3] << 8)) >= maxVariance || Math.abs(moduleSize - (stateCount[4] << 8)) >= maxVariance) {
+            z = false;
+        }
+        return z;
+    }
+
+    private int[] getCrossCheckStateCount() {
+        this.crossCheckStateCount[0] = 0;
+        this.crossCheckStateCount[1] = 0;
+        this.crossCheckStateCount[2] = 0;
+        this.crossCheckStateCount[3] = 0;
+        this.crossCheckStateCount[4] = 0;
+        return this.crossCheckStateCount;
+    }
+
+    private float crossCheckVertical(int startI, int centerJ, int maxCount, int originalStateCountTotal) {
+        BitMatrix image = this.image;
+        int maxI = image.getHeight();
+        int[] stateCount = getCrossCheckStateCount();
+        int i = startI;
+        while (i >= 0 && image.get(centerJ, i)) {
+            stateCount[2] = stateCount[2] + 1;
+            i--;
+        }
+        if (i < 0) {
+            return Float.NaN;
+        }
+        while (i >= 0 && !image.get(centerJ, i) && stateCount[1] <= maxCount) {
+            stateCount[1] = stateCount[1] + 1;
+            i--;
+        }
+        if (i < 0 || stateCount[1] > maxCount) {
+            return Float.NaN;
+        }
+        while (i >= 0 && image.get(centerJ, i) && stateCount[0] <= maxCount) {
+            stateCount[0] = stateCount[0] + 1;
+            i--;
+        }
+        if (stateCount[0] > maxCount) {
+            return Float.NaN;
+        }
+        i = startI + 1;
+        while (i < maxI && image.get(centerJ, i)) {
+            stateCount[2] = stateCount[2] + 1;
+            i++;
+        }
+        if (i == maxI) {
+            return Float.NaN;
+        }
+        while (i < maxI && !image.get(centerJ, i) && stateCount[3] < maxCount) {
+            stateCount[3] = stateCount[3] + 1;
+            i++;
+        }
+        if (i == maxI || stateCount[3] >= maxCount) {
+            return Float.NaN;
+        }
+        while (i < maxI && image.get(centerJ, i) && stateCount[4] < maxCount) {
+            stateCount[4] = stateCount[4] + 1;
+            i++;
+        }
+        if (stateCount[4] >= maxCount) {
+            return Float.NaN;
+        }
+        if (Math.abs(((((stateCount[0] + stateCount[1]) + stateCount[2]) + stateCount[3]) + stateCount[4]) - originalStateCountTotal) * 5 >= originalStateCountTotal * 2) {
+            return Float.NaN;
+        }
+        return foundPatternCross(stateCount) ? centerFromEnd(stateCount, i) : Float.NaN;
+    }
+
+    private float crossCheckHorizontal(int startJ, int centerI, int maxCount, int originalStateCountTotal) {
+        BitMatrix image = this.image;
+        int maxJ = image.getWidth();
+        int[] stateCount = getCrossCheckStateCount();
+        int j = startJ;
+        while (j >= 0 && image.get(j, centerI)) {
+            stateCount[2] = stateCount[2] + 1;
+            j--;
+        }
+        if (j < 0) {
+            return Float.NaN;
+        }
+        while (j >= 0 && !image.get(j, centerI) && stateCount[1] <= maxCount) {
+            stateCount[1] = stateCount[1] + 1;
+            j--;
+        }
+        if (j < 0 || stateCount[1] > maxCount) {
+            return Float.NaN;
+        }
+        while (j >= 0 && image.get(j, centerI) && stateCount[0] <= maxCount) {
+            stateCount[0] = stateCount[0] + 1;
+            j--;
+        }
+        if (stateCount[0] > maxCount) {
+            return Float.NaN;
+        }
+        j = startJ + 1;
+        while (j < maxJ && image.get(j, centerI)) {
+            stateCount[2] = stateCount[2] + 1;
+            j++;
+        }
+        if (j == maxJ) {
+            return Float.NaN;
+        }
+        while (j < maxJ && !image.get(j, centerI) && stateCount[3] < maxCount) {
+            stateCount[3] = stateCount[3] + 1;
+            j++;
+        }
+        if (j == maxJ || stateCount[3] >= maxCount) {
+            return Float.NaN;
+        }
+        while (j < maxJ && image.get(j, centerI) && stateCount[4] < maxCount) {
+            stateCount[4] = stateCount[4] + 1;
+            j++;
+        }
+        if (stateCount[4] >= maxCount) {
+            return Float.NaN;
+        }
+        if (Math.abs(((((stateCount[0] + stateCount[1]) + stateCount[2]) + stateCount[3]) + stateCount[4]) - originalStateCountTotal) * 5 >= originalStateCountTotal) {
+            return Float.NaN;
+        }
+        return foundPatternCross(stateCount) ? centerFromEnd(stateCount, j) : Float.NaN;
+    }
+
+    protected boolean handlePossibleCenter(int[] stateCount, int i, int j) {
+        int stateCountTotal = (((stateCount[0] + stateCount[1]) + stateCount[2]) + stateCount[3]) + stateCount[4];
+        float centerJ = centerFromEnd(stateCount, j);
+        float centerI = crossCheckVertical(i, (int) centerJ, stateCount[2], stateCountTotal);
+        if (!Float.isNaN(centerI)) {
+            centerJ = crossCheckHorizontal((int) centerJ, (int) centerI, stateCount[2], stateCountTotal);
+            if (!Float.isNaN(centerJ)) {
+                float estimatedModuleSize = ((float) stateCountTotal) / 7.0f;
+                boolean found = false;
+                for (int index = 0; index < this.possibleCenters.size(); index++) {
+                    FinderPattern center = (FinderPattern) this.possibleCenters.get(index);
+                    if (center.aboutEquals(estimatedModuleSize, centerI, centerJ)) {
+                        this.possibleCenters.set(index, center.combineEstimate(centerI, centerJ, estimatedModuleSize));
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    FinderPattern point = new FinderPattern(centerJ, centerI, estimatedModuleSize);
+                    this.possibleCenters.add(point);
+                    if (this.resultPointCallback != null) {
+                        this.resultPointCallback.foundPossibleResultPoint(point);
+                    }
+                }
+                return true;
             }
-            return true;
-          }
-          paramInt1 += 1;
         }
-      }
+        return false;
     }
-    return false;
-  }
-  
-  private static class CenterComparator
-    implements Serializable, Comparator<FinderPattern>
-  {
-    private final float average;
-    
-    private CenterComparator(float paramFloat)
-    {
-      this.average = paramFloat;
-    }
-    
-    public int compare(FinderPattern paramFinderPattern1, FinderPattern paramFinderPattern2)
-    {
-      if (paramFinderPattern2.getCount() == paramFinderPattern1.getCount())
-      {
-        float f1 = Math.abs(paramFinderPattern2.getEstimatedModuleSize() - this.average);
-        float f2 = Math.abs(paramFinderPattern1.getEstimatedModuleSize() - this.average);
-        if (f1 < f2) {
-          return 1;
+
+    private int findRowSkip() {
+        if (this.possibleCenters.size() <= 1) {
+            return 0;
         }
-        if (f1 == f2) {
-          return 0;
+        FinderPattern firstConfirmedCenter = null;
+        for (FinderPattern center : this.possibleCenters) {
+            if (center.getCount() >= 2) {
+                if (firstConfirmedCenter == null) {
+                    firstConfirmedCenter = center;
+                } else {
+                    this.hasSkipped = true;
+                    return ((int) (Math.abs(firstConfirmedCenter.getX() - center.getX()) - Math.abs(firstConfirmedCenter.getY() - center.getY()))) / 2;
+                }
+            }
         }
-        return -1;
-      }
-      return paramFinderPattern2.getCount() - paramFinderPattern1.getCount();
-    }
-  }
-  
-  private static class FurthestFromAverageComparator
-    implements Serializable, Comparator<FinderPattern>
-  {
-    private final float average;
-    
-    private FurthestFromAverageComparator(float paramFloat)
-    {
-      this.average = paramFloat;
-    }
-    
-    public int compare(FinderPattern paramFinderPattern1, FinderPattern paramFinderPattern2)
-    {
-      float f1 = Math.abs(paramFinderPattern2.getEstimatedModuleSize() - this.average);
-      float f2 = Math.abs(paramFinderPattern1.getEstimatedModuleSize() - this.average);
-      if (f1 < f2) {
-        return -1;
-      }
-      if (f1 == f2) {
         return 0;
-      }
-      return 1;
     }
-  }
+
+    private boolean haveMultiplyConfirmedCenters() {
+        int confirmedCount = 0;
+        float totalModuleSize = 0.0f;
+        int max = this.possibleCenters.size();
+        for (FinderPattern pattern : this.possibleCenters) {
+            if (pattern.getCount() >= 2) {
+                confirmedCount++;
+                totalModuleSize += pattern.getEstimatedModuleSize();
+            }
+        }
+        if (confirmedCount < 3) {
+            return false;
+        }
+        float average = totalModuleSize / ((float) max);
+        float totalDeviation = 0.0f;
+        for (FinderPattern pattern2 : this.possibleCenters) {
+            totalDeviation += Math.abs(pattern2.getEstimatedModuleSize() - average);
+        }
+        if (totalDeviation <= 0.05f * totalModuleSize) {
+            return true;
+        }
+        return false;
+    }
+
+    private FinderPattern[] selectBestPatterns() throws NotFoundException {
+        int startSize = this.possibleCenters.size();
+        if (startSize < 3) {
+            throw NotFoundException.getNotFoundInstance();
+        }
+        float totalModuleSize;
+        if (startSize > 3) {
+            totalModuleSize = 0.0f;
+            float square = 0.0f;
+            for (FinderPattern center : this.possibleCenters) {
+                float size = center.getEstimatedModuleSize();
+                totalModuleSize += size;
+                square += size * size;
+            }
+            float average = totalModuleSize / ((float) startSize);
+            float stdDev = (float) Math.sqrt((double) ((square / ((float) startSize)) - (average * average)));
+            Collections.sort(this.possibleCenters, new FurthestFromAverageComparator(average));
+            float limit = Math.max(0.2f * average, stdDev);
+            int i = 0;
+            while (i < this.possibleCenters.size() && this.possibleCenters.size() > 3) {
+                if (Math.abs(((FinderPattern) this.possibleCenters.get(i)).getEstimatedModuleSize() - average) > limit) {
+                    this.possibleCenters.remove(i);
+                    i--;
+                }
+                i++;
+            }
+        }
+        if (this.possibleCenters.size() > 3) {
+            totalModuleSize = 0.0f;
+            for (FinderPattern possibleCenter : this.possibleCenters) {
+                totalModuleSize += possibleCenter.getEstimatedModuleSize();
+            }
+            Collections.sort(this.possibleCenters, new CenterComparator(totalModuleSize / ((float) this.possibleCenters.size())));
+            this.possibleCenters.subList(3, this.possibleCenters.size()).clear();
+        }
+        return new FinderPattern[]{(FinderPattern) this.possibleCenters.get(0), (FinderPattern) this.possibleCenters.get(1), (FinderPattern) this.possibleCenters.get(2)};
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/detector/FinderPatternFinder.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

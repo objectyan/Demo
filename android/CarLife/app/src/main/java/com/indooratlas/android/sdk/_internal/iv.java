@@ -5,163 +5,138 @@ import java.io.IOException;
 import java.util.zip.CRC32;
 import java.util.zip.Inflater;
 
-public final class iv
-  implements jd
-{
-  private int a = 0;
-  private final ip b;
-  private final Inflater c;
-  private final iw d;
-  private final CRC32 e = new CRC32();
-  
-  public iv(jd paramjd)
-  {
-    if (paramjd == null) {
-      throw new IllegalArgumentException("source == null");
-    }
-    this.c = new Inflater(true);
-    this.b = ix.a(paramjd);
-    this.d = new iw(this.b, this.c);
-  }
-  
-  private void a(in paramin, long paramLong1, long paramLong2)
-  {
-    Object localObject;
-    long l1;
-    long l2;
-    for (paramin = paramin.a;; paramin = paramin.f)
-    {
-      localObject = paramin;
-      l1 = paramLong1;
-      l2 = paramLong2;
-      if (paramLong1 < paramin.c - paramin.b) {
-        break;
-      }
-      paramLong1 -= paramin.c - paramin.b;
-    }
-    while (l2 > 0L)
-    {
-      int i = (int)(((ja)localObject).b + l1);
-      int j = (int)Math.min(((ja)localObject).c - i, l2);
-      this.e.update(((ja)localObject).a, i, j);
-      l2 -= j;
-      localObject = ((ja)localObject).f;
-      l1 = 0L;
-    }
-  }
-  
-  private static void a(String paramString, int paramInt1, int paramInt2)
-    throws IOException
-  {
-    if (paramInt2 != paramInt1) {
-      throw new IOException(String.format("%s: actual 0x%08x != expected 0x%08x", new Object[] { paramString, Integer.valueOf(paramInt2), Integer.valueOf(paramInt1) }));
-    }
-  }
-  
-  public final long a(in paramin, long paramLong)
-    throws IOException
-  {
-    if (paramLong < 0L) {
-      throw new IllegalArgumentException("byteCount < 0: " + paramLong);
-    }
-    if (paramLong == 0L) {
-      return 0L;
-    }
-    long l;
-    if (this.a == 0)
-    {
-      this.b.a(10L);
-      int j = this.b.b().b(3L);
-      if ((j >> 1 & 0x1) == 1) {}
-      for (int i = 1;; i = 0)
-      {
-        if (i != 0) {
-          a(this.b.b(), 0L, 10L);
+public final class iv implements jd {
+    /* renamed from: a */
+    private int f24408a = 0;
+    /* renamed from: b */
+    private final ip f24409b;
+    /* renamed from: c */
+    private final Inflater f24410c;
+    /* renamed from: d */
+    private final iw f24411d;
+    /* renamed from: e */
+    private final CRC32 f24412e = new CRC32();
+
+    public iv(jd jdVar) {
+        if (jdVar == null) {
+            throw new IllegalArgumentException("source == null");
         }
-        a("ID1ID2", 8075, this.b.f());
-        this.b.f(8L);
-        if ((j >> 2 & 0x1) == 1)
-        {
-          this.b.a(2L);
-          if (i != 0) {
-            a(this.b.b(), 0L, 2L);
-          }
-          int k = this.b.b().h();
-          this.b.a(k);
-          if (i != 0) {
-            a(this.b.b(), 0L, k);
-          }
-          this.b.f(k);
-        }
-        if ((j >> 3 & 0x1) != 1) {
-          break label323;
-        }
-        l = this.b.a((byte)0);
-        if (l != -1L) {
-          break;
-        }
-        throw new EOFException();
-      }
-      if (i != 0) {
-        a(this.b.b(), 0L, 1L + l);
-      }
-      this.b.f(1L + l);
-      label323:
-      if ((j >> 4 & 0x1) == 1)
-      {
-        l = this.b.a((byte)0);
-        if (l == -1L) {
-          throw new EOFException();
-        }
-        if (i != 0) {
-          a(this.b.b(), 0L, 1L + l);
-        }
-        this.b.f(1L + l);
-      }
-      if (i != 0)
-      {
-        a("FHCRC", this.b.h(), (short)(int)this.e.getValue());
-        this.e.reset();
-      }
-      this.a = 1;
+        this.f24410c = new Inflater(true);
+        this.f24409b = ix.m21259a(jdVar);
+        this.f24411d = new iw(this.f24409b, this.f24410c);
     }
-    if (this.a == 1)
-    {
-      l = paramin.b;
-      paramLong = this.d.a(paramin, paramLong);
-      if (paramLong != -1L)
-      {
-        a(paramin, l, paramLong);
-        return paramLong;
-      }
-      this.a = 2;
+
+    /* renamed from: a */
+    public final long mo4730a(in inVar, long j) throws IOException {
+        if (j < 0) {
+            throw new IllegalArgumentException("byteCount < 0: " + j);
+        } else if (j == 0) {
+            return 0;
+        } else {
+            if (this.f24408a == 0) {
+                Object obj;
+                long a;
+                this.f24409b.mo4740a(10);
+                byte b = this.f24409b.mo4741b().m21189b(3);
+                if (((b >> 1) & 1) == 1) {
+                    obj = 1;
+                } else {
+                    obj = null;
+                }
+                if (obj != null) {
+                    m21245a(this.f24409b.mo4741b(), 0, 10);
+                }
+                m21246a("ID1ID2", 8075, this.f24409b.mo4751f());
+                this.f24409b.mo4752f(8);
+                if (((b >> 2) & 1) == 1) {
+                    this.f24409b.mo4740a(2);
+                    if (obj != null) {
+                        m21245a(this.f24409b.mo4741b(), 0, 2);
+                    }
+                    short h = this.f24409b.mo4741b().mo4756h();
+                    this.f24409b.mo4740a((long) h);
+                    if (obj != null) {
+                        m21245a(this.f24409b.mo4741b(), 0, (long) h);
+                    }
+                    this.f24409b.mo4752f((long) h);
+                }
+                if (((b >> 3) & 1) == 1) {
+                    a = this.f24409b.mo4738a((byte) 0);
+                    if (a == -1) {
+                        throw new EOFException();
+                    }
+                    if (obj != null) {
+                        m21245a(this.f24409b.mo4741b(), 0, 1 + a);
+                    }
+                    this.f24409b.mo4752f(1 + a);
+                }
+                if (((b >> 4) & 1) == 1) {
+                    a = this.f24409b.mo4738a((byte) 0);
+                    if (a == -1) {
+                        throw new EOFException();
+                    }
+                    if (obj != null) {
+                        m21245a(this.f24409b.mo4741b(), 0, 1 + a);
+                    }
+                    this.f24409b.mo4752f(1 + a);
+                }
+                if (obj != null) {
+                    m21246a("FHCRC", this.f24409b.mo4756h(), (short) ((int) this.f24412e.getValue()));
+                    this.f24412e.reset();
+                }
+                this.f24408a = 1;
+            }
+            if (this.f24408a == 1) {
+                long j2 = inVar.f24392b;
+                long a2 = this.f24411d.mo4730a(inVar, j);
+                if (a2 != -1) {
+                    m21245a(inVar, j2, a2);
+                    return a2;
+                }
+                this.f24408a = 2;
+            }
+            if (this.f24408a == 2) {
+                m21246a("CRC", this.f24409b.mo4757i(), (int) this.f24412e.getValue());
+                m21246a("ISIZE", this.f24409b.mo4757i(), this.f24410c.getTotalOut());
+                this.f24408a = 3;
+                if (!this.f24409b.mo4748d()) {
+                    throw new IOException("gzip finished without exhausting source");
+                }
+            }
+            return -1;
+        }
     }
-    if (this.a == 2)
-    {
-      a("CRC", this.b.i(), (int)this.e.getValue());
-      a("ISIZE", this.b.i(), this.c.getTotalOut());
-      this.a = 3;
-      if (!this.b.d()) {
-        throw new IOException("gzip finished without exhausting source");
-      }
+
+    /* renamed from: a */
+    public final je mo4731a() {
+        return this.f24409b.mo4731a();
     }
-    return -1L;
-  }
-  
-  public final je a()
-  {
-    return this.b.a();
-  }
-  
-  public final void close()
-    throws IOException
-  {
-    this.d.close();
-  }
+
+    public final void close() throws IOException {
+        this.f24411d.close();
+    }
+
+    /* renamed from: a */
+    private void m21245a(in inVar, long j, long j2) {
+        ja jaVar = inVar.f24391a;
+        while (j >= ((long) (jaVar.f24431c - jaVar.f24430b))) {
+            j -= (long) (jaVar.f24431c - jaVar.f24430b);
+            jaVar = jaVar.f24434f;
+        }
+        while (j2 > 0) {
+            int i = (int) (((long) jaVar.f24430b) + j);
+            int min = (int) Math.min((long) (jaVar.f24431c - i), j2);
+            this.f24412e.update(jaVar.f24429a, i, min);
+            j2 -= (long) min;
+            jaVar = jaVar.f24434f;
+            j = 0;
+        }
+    }
+
+    /* renamed from: a */
+    private static void m21246a(String str, int i, int i2) throws IOException {
+        if (i2 != i) {
+            throw new IOException(String.format("%s: actual 0x%08x != expected 0x%08x", new Object[]{str, Integer.valueOf(i2), Integer.valueOf(i)}));
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/iv.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

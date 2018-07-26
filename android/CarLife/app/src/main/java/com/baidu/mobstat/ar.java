@@ -2,27 +2,19 @@ package com.baidu.mobstat;
 
 import android.content.Context;
 
- enum ar
-{
-  ar(int paramInt1)
-  {
-    super(paramString, paramInt, paramInt1, null);
-  }
-  
-  public void a(Context paramContext)
-  {
-    Context localContext = paramContext.getApplicationContext();
-    paramContext = au.a(paramContext);
-    be localbe = new be();
-    localbe.a = false;
-    localbe.b = "R";
-    localbe.c = false;
-    paramContext.a(localContext, localbe.a());
-  }
+enum ar extends ao {
+    ar(String str, int i, int i2) {
+        super(str, i, i2);
+    }
+
+    /* renamed from: a */
+    public void mo2725a(Context context) {
+        Context applicationContext = context.getApplicationContext();
+        C3587l a = au.m15354a(context);
+        be beVar = new be();
+        beVar.f19439a = false;
+        beVar.f19440b = "R";
+        beVar.f19441c = false;
+        a.mo2728a(applicationContext, beVar.m15436a());
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

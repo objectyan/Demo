@@ -6,86 +6,69 @@ import android.os.Build.VERSION;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.GridView;
+import com.baidu.carlife.C0965R;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.AnimationStyle;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Mode;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Orientation;
 import com.baidu.navi.view.pulltorefresh.internal.EmptyViewMethodAccessor;
 
-public class PullToRefreshGridView
-  extends PullToRefreshAdapterViewBase<GridView>
-{
-  public PullToRefreshGridView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public PullToRefreshGridView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public PullToRefreshGridView(Context paramContext, PullToRefreshBase.Mode paramMode)
-  {
-    super(paramContext, paramMode);
-  }
-  
-  public PullToRefreshGridView(Context paramContext, PullToRefreshBase.Mode paramMode, PullToRefreshBase.AnimationStyle paramAnimationStyle)
-  {
-    super(paramContext, paramMode, paramAnimationStyle);
-  }
-  
-  protected final GridView createRefreshableView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    if (Build.VERSION.SDK_INT >= 9) {}
-    for (paramContext = new InternalGridViewSDK9(paramContext, paramAttributeSet);; paramContext = new InternalGridView(paramContext, paramAttributeSet))
-    {
-      paramContext.setId(2131623937);
-      return paramContext;
+public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView> {
+
+    class InternalGridView extends GridView implements EmptyViewMethodAccessor {
+        public InternalGridView(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        public void setEmptyView(View emptyView) {
+            PullToRefreshGridView.this.setEmptyView(emptyView);
+        }
+
+        public void setEmptyViewInternal(View emptyView) {
+            super.setEmptyView(emptyView);
+        }
     }
-  }
-  
-  public final PullToRefreshBase.Orientation getPullToRefreshScrollDirection()
-  {
-    return PullToRefreshBase.Orientation.VERTICAL;
-  }
-  
-  class InternalGridView
-    extends GridView
-    implements EmptyViewMethodAccessor
-  {
-    public InternalGridView(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramAttributeSet);
+
+    @TargetApi(9)
+    final class InternalGridViewSDK9 extends InternalGridView {
+        public InternalGridViewSDK9(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+            boolean returnValue = super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+            OverscrollHelper.overScrollBy(PullToRefreshGridView.this, deltaX, scrollX, deltaY, scrollY, isTouchEvent);
+            return returnValue;
+        }
     }
-    
-    public void setEmptyView(View paramView)
-    {
-      PullToRefreshGridView.this.setEmptyView(paramView);
+
+    public PullToRefreshGridView(Context context) {
+        super(context);
     }
-    
-    public void setEmptyViewInternal(View paramView)
-    {
-      super.setEmptyView(paramView);
+
+    public PullToRefreshGridView(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-  }
-  
-  @TargetApi(9)
-  final class InternalGridViewSDK9
-    extends PullToRefreshGridView.InternalGridView
-  {
-    public InternalGridViewSDK9(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramContext, paramAttributeSet);
+
+    public PullToRefreshGridView(Context context, Mode mode) {
+        super(context, mode);
     }
-    
-    protected boolean overScrollBy(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, int paramInt6, int paramInt7, int paramInt8, boolean paramBoolean)
-    {
-      boolean bool = super.overScrollBy(paramInt1, paramInt2, paramInt3, paramInt4, paramInt5, paramInt6, paramInt7, paramInt8, paramBoolean);
-      OverscrollHelper.overScrollBy(PullToRefreshGridView.this, paramInt1, paramInt3, paramInt2, paramInt4, paramBoolean);
-      return bool;
+
+    public PullToRefreshGridView(Context context, Mode mode, AnimationStyle style) {
+        super(context, mode, style);
     }
-  }
+
+    public final Orientation getPullToRefreshScrollDirection() {
+        return Orientation.VERTICAL;
+    }
+
+    protected final GridView createRefreshableView(Context context, AttributeSet attrs) {
+        GridView gv;
+        if (VERSION.SDK_INT >= 9) {
+            gv = new InternalGridViewSDK9(context, attrs);
+        } else {
+            gv = new InternalGridView(context, attrs);
+        }
+        gv.setId(C0965R.id.nsdk_ptr_gridview);
+        return gv;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/pulltorefresh/PullToRefreshGridView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

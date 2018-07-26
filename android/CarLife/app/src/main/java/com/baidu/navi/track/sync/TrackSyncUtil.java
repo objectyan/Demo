@@ -4,237 +4,185 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
-import com.baidu.carlife.core.a;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1260i;
 import com.baidu.navi.track.database.DataCache;
 import com.baidu.navi.track.database.DataService;
 import com.baidu.navi.track.database.DataService.Action;
 import com.baidu.navi.track.datashop.DeleteFileThread;
 import com.baidu.navi.track.model.BaseTrackModel;
-import com.baidu.navi.track.model.CarNavi;
 import com.baidu.navi.track.model.CarNaviModel;
-import com.baidu.navi.track.model.NaviPoint;
 import com.baidu.navi.track.model.TrackSyncRequestModel;
 import com.baidu.navi.track.model.TrackSyncResponseModel;
+import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class TrackSyncUtil
-{
-  private static final String TAG = TrackSyncUtil.class.getSimpleName();
-  
-  public static void checkTrackStatusInDB(Handler paramHandler, TrackSyncResponseModel paramTrackSyncResponseModel, int paramInt)
-  {
-    i.b(TAG, "checkTrackStatusInDB model=" + paramTrackSyncResponseModel);
-    if ((paramTrackSyncResponseModel == null) || ((paramTrackSyncResponseModel.guidList.isEmpty()) && (paramTrackSyncResponseModel.dataList.isEmpty()))) {}
-    ArrayList localArrayList;
-    do
-    {
-      return;
-      localArrayList = new ArrayList();
-      Object localObject = paramTrackSyncResponseModel.guidList.iterator();
-      while (((Iterator)localObject).hasNext()) {
-        localArrayList.add((String)((Iterator)localObject).next());
-      }
-      paramTrackSyncResponseModel = paramTrackSyncResponseModel.dataList.iterator();
-      while (paramTrackSyncResponseModel.hasNext())
-      {
-        localObject = (CarNaviModel)paramTrackSyncResponseModel.next();
-        if (((CarNaviModel)localObject).getPBData().hasGuid()) {
-          localArrayList.add(((CarNaviModel)localObject).getPBData().getGuid());
+public class TrackSyncUtil {
+    private static final String TAG = TrackSyncUtil.class.getSimpleName();
+
+    public static ArrayList<TrackSyncRequestModel> getSyncDataRequestParams(ArrayList<Object> unSyncData, HashMap<String, Integer> updateStatusMap, ArrayList<String> arrayList) {
+        if (unSyncData == null || unSyncData.isEmpty()) {
+            return null;
         }
-      }
-    } while (localArrayList.size() <= 0);
-    operateDBTransaction(paramHandler, DataService.Action.ACTION_GET_TRACK_SYNC_STATE_BY_GUID_LIST.toString(), localArrayList, paramInt);
-  }
-  
-  public static ArrayList<TrackSyncRequestModel> getSyncDataRequestParams(ArrayList<Object> paramArrayList, HashMap<String, Integer> paramHashMap, ArrayList<String> paramArrayList1)
-  {
-    if ((paramArrayList == null) || (paramArrayList.isEmpty())) {
-      paramArrayList1 = null;
-    }
-    ArrayList localArrayList;
-    int i;
-    do
-    {
-      return paramArrayList1;
-      localArrayList = new ArrayList();
-      i = 0;
-      paramArrayList1 = localArrayList;
-    } while (i >= paramArrayList.size());
-    TrackSyncRequestModel localTrackSyncRequestModel = new TrackSyncRequestModel();
-    paramArrayList1 = paramArrayList.get(i);
-    CarNaviModel localCarNaviModel;
-    String str2;
-    int j;
-    label199:
-    String str1;
-    if ((paramArrayList1 instanceof CarNaviModel))
-    {
-      localCarNaviModel = (CarNaviModel)paramArrayList1;
-      localTrackSyncRequestModel.isResponse = "0";
-      localTrackSyncRequestModel.updateTime = String.valueOf(localCarNaviModel.getPBData().getModifyTime());
-      localTrackSyncRequestModel.guid = localCarNaviModel.getPBData().getGuid();
-      localTrackSyncRequestModel.uploadTime = String.valueOf(System.currentTimeMillis() / 1000L);
-      localTrackSyncRequestModel.uid = localCarNaviModel.getUseId();
-      paramArrayList1 = localCarNaviModel.getPBData().getSid();
-      localCarNaviModel.getSDcardPath();
-      str2 = localCarNaviModel.getPBData().getGuid();
-      if ((localCarNaviModel.getSyncState() != 0) && (3 != localCarNaviModel.getSyncState()) && (10 != localCarNaviModel.getSyncState())) {
-        break label587;
-      }
-      j = 10;
-      if (!TextUtils.isEmpty(paramArrayList1)) {
-        break label567;
-      }
-      paramArrayList1 = "1";
-      localTrackSyncRequestModel.actionType = "1";
-      localTrackSyncRequestModel.createTime = String.valueOf(localCarNaviModel.getPBData().getCtime());
-      localTrackSyncRequestModel.name = (localCarNaviModel.getPBData().getStartPoint().getAddr() + "_" + localCarNaviModel.getPBData().getEndPoint().getAddr());
-      localTrackSyncRequestModel.distance = String.valueOf(localCarNaviModel.getPBData().getDistance());
-      localTrackSyncRequestModel.duration = String.valueOf(localCarNaviModel.getPBData().getDuration());
-      localTrackSyncRequestModel.speed = String.valueOf(localCarNaviModel.getPBData().getAvgSpeed());
-      localTrackSyncRequestModel.maxSpeed = String.valueOf(localCarNaviModel.getPBData().getMaxSpeed());
-      localTrackSyncRequestModel.dataVersion = "1";
-      localTrackSyncRequestModel.startPosition = (localCarNaviModel.getPBData().getStartPoint().getLng() + "," + localCarNaviModel.getPBData().getStartPoint().getLat());
-      localTrackSyncRequestModel.endPosition = (localCarNaviModel.getPBData().getEndPoint().getLng() + "," + localCarNaviModel.getPBData().getEndPoint().getLat());
-      localTrackSyncRequestModel.fileSign = localCarNaviModel.getPBData().getSign();
-      localTrackSyncRequestModel.trackFilePath = localCarNaviModel.getSDcardPath();
-      localTrackSyncRequestModel.type = "2";
-      if (!localCarNaviModel.isConnect()) {
-        break label580;
-      }
-      str1 = "1";
-      label472:
-      localTrackSyncRequestModel.isConn = str1;
-      localTrackSyncRequestModel.cuid = localCarNaviModel.getCarCuid();
-      localTrackSyncRequestModel.channel = localCarNaviModel.getCarChannel();
-      localTrackSyncRequestModel.version = localCarNaviModel.getCarVersion();
-    }
-    for (;;)
-    {
-      localTrackSyncRequestModel.updatePhoneInfo();
-      i.b(TAG, "track actionType = " + paramArrayList1);
-      localArrayList.add(localTrackSyncRequestModel);
-      paramHashMap.put(str2, Integer.valueOf(j));
-      label567:
-      label580:
-      label587:
-      do
-      {
-        i += 1;
-        break;
-        paramArrayList1 = "2";
-        localTrackSyncRequestModel.actionType = "2";
-        break label199;
-        str1 = "0";
-        break label472;
-      } while ((2 != localCarNaviModel.getSyncState()) && (12 != localCarNaviModel.getSyncState()));
-      j = 2;
-      paramArrayList1 = "3";
-      localTrackSyncRequestModel.actionType = "3";
-    }
-  }
-  
-  public static void operateDBTransaction(Handler paramHandler, String paramString, Object paramObject, int paramInt)
-  {
-    a locala = a.a();
-    Intent localIntent = new Intent(locala, DataService.class);
-    if (paramHandler != null) {
-      localIntent.putExtra("handler", DataCache.getInstance().addCache(paramHandler));
-    }
-    localIntent.putExtra("cache_key", DataCache.getInstance().addCache(paramObject));
-    localIntent.putExtra("non_ui_evnet", true);
-    if (paramInt != -1) {
-      localIntent.putExtra("token_int_key", paramInt);
-    }
-    localIntent.setAction(paramString);
-    try
-    {
-      locala.startService(localIntent);
-      return;
-    }
-    catch (Exception paramHandler)
-    {
-      i.b(TAG, "Unable to find BaiduCarLife app process");
-    }
-  }
-  
-  public static void parseSyncDataBundle(Handler paramHandler, TrackSyncResponseModel paramTrackSyncResponseModel, HashMap<String, Integer> paramHashMap)
-  {
-    if (paramTrackSyncResponseModel == null) {
-      return;
-    }
-    ArrayList localArrayList1 = new ArrayList();
-    ArrayList localArrayList2 = new ArrayList();
-    ArrayList localArrayList3 = new ArrayList();
-    ArrayList localArrayList4 = new ArrayList();
-    HashMap localHashMap = new HashMap();
-    Iterator localIterator = paramTrackSyncResponseModel.guidList.iterator();
-    while (localIterator.hasNext())
-    {
-      String str = (String)localIterator.next();
-      if ((paramHashMap != null) && (paramHashMap.containsKey(str))) {
-        if (((Integer)paramHashMap.get(str)).intValue() == 2)
-        {
-          localHashMap.put(str, Integer.valueOf(1));
-          localArrayList1.add(str);
+        ArrayList<TrackSyncRequestModel> requestModels = new ArrayList();
+        for (int i = 0; i < unSyncData.size(); i++) {
+            TrackSyncRequestModel requestModel = new TrackSyncRequestModel();
+            String cid = "";
+            String sid = "";
+            String action = "";
+            String path = "";
+            CarNaviModel obj = unSyncData.get(i);
+            if (obj instanceof CarNaviModel) {
+                int updateAction;
+                CarNaviModel car = obj;
+                requestModel.isResponse = "0";
+                requestModel.updateTime = String.valueOf(car.getPBData().getModifyTime());
+                requestModel.guid = car.getPBData().getGuid();
+                requestModel.uploadTime = String.valueOf(System.currentTimeMillis() / 1000);
+                requestModel.uid = car.getUseId();
+                sid = car.getPBData().getSid();
+                path = car.getSDcardPath();
+                cid = car.getPBData().getGuid();
+                if (car.getSyncState() == 0 || 3 == car.getSyncState() || 10 == car.getSyncState()) {
+                    updateAction = 10;
+                    if (TextUtils.isEmpty(sid)) {
+                        action = "1";
+                        requestModel.actionType = "1";
+                    } else {
+                        action = "2";
+                        requestModel.actionType = "2";
+                    }
+                    requestModel.createTime = String.valueOf(car.getPBData().getCtime());
+                    requestModel.name = car.getPBData().getStartPoint().getAddr() + JNISearchConst.LAYER_ID_DIVIDER + car.getPBData().getEndPoint().getAddr();
+                    requestModel.distance = String.valueOf(car.getPBData().getDistance());
+                    requestModel.duration = String.valueOf(car.getPBData().getDuration());
+                    requestModel.speed = String.valueOf(car.getPBData().getAvgSpeed());
+                    requestModel.maxSpeed = String.valueOf(car.getPBData().getMaxSpeed());
+                    requestModel.dataVersion = "1";
+                    requestModel.startPosition = car.getPBData().getStartPoint().getLng() + "," + car.getPBData().getStartPoint().getLat();
+                    requestModel.endPosition = car.getPBData().getEndPoint().getLng() + "," + car.getPBData().getEndPoint().getLat();
+                    requestModel.fileSign = car.getPBData().getSign();
+                    requestModel.trackFilePath = car.getSDcardPath();
+                    requestModel.type = "2";
+                    requestModel.isConn = car.isConnect() ? "1" : "0";
+                    requestModel.cuid = car.getCarCuid();
+                    requestModel.channel = car.getCarChannel();
+                    requestModel.version = car.getCarVersion();
+                } else if (2 == car.getSyncState() || 12 == car.getSyncState()) {
+                    updateAction = 2;
+                    action = "3";
+                    requestModel.actionType = "3";
+                }
+                requestModel.updatePhoneInfo();
+                C1260i.b(TAG, "track actionType = " + action);
+                requestModels.add(requestModel);
+                updateStatusMap.put(cid, Integer.valueOf(updateAction));
+            }
         }
-        else if (((Integer)paramHashMap.get(str)).intValue() == 10)
-        {
-          localHashMap.put(str, Integer.valueOf(1));
-          BaseTrackModel localBaseTrackModel = new BaseTrackModel();
-          localBaseTrackModel.guid = str;
-          localBaseTrackModel.sid = "111";
-          localBaseTrackModel.syncState = 1;
-          localArrayList3.add(localBaseTrackModel);
+        return requestModels;
+    }
+
+    public static void parseSyncDataBundle(Handler handler, TrackSyncResponseModel model, HashMap<String, Integer> map) {
+        if (model != null) {
+            ArrayList<String> delGuids = new ArrayList();
+            ArrayList<Object> modifyObjs = new ArrayList();
+            ArrayList<Object> addLocalGuids = new ArrayList();
+            ArrayList<Object> addServerObjs = new ArrayList();
+            HashMap<String, Integer> updateStatusMap = new HashMap();
+            Iterator it = model.guidList.iterator();
+            while (it.hasNext()) {
+                String guid = (String) it.next();
+                if (map != null && map.containsKey(guid)) {
+                    if (((Integer) map.get(guid)).intValue() == 2) {
+                        updateStatusMap.put(guid, Integer.valueOf(1));
+                        delGuids.add(guid);
+                    } else if (((Integer) map.get(guid)).intValue() == 10) {
+                        updateStatusMap.put(guid, Integer.valueOf(1));
+                        BaseTrackModel baseTrackModel = new BaseTrackModel();
+                        baseTrackModel.guid = guid;
+                        baseTrackModel.sid = "111";
+                        baseTrackModel.syncState = 1;
+                        addLocalGuids.add(baseTrackModel);
+                    }
+                }
+            }
+            if (model.isResponse == 1) {
+                Iterator it2 = model.dataList.iterator();
+                while (it2.hasNext()) {
+                    CarNaviModel carNaviModel = (CarNaviModel) it2.next();
+                    if (carNaviModel.getSyncState() == 2) {
+                        updateStatusMap.put(carNaviModel.getPBData().getGuid(), Integer.valueOf(1));
+                        delGuids.add(carNaviModel.getPBData().getGuid());
+                    } else if (carNaviModel.getSyncState() == 3) {
+                        updateStatusMap.put(carNaviModel.getPBData().getGuid(), Integer.valueOf(1));
+                        addServerObjs.add(carNaviModel);
+                    }
+                }
+            }
+            if (delGuids.size() > 0) {
+                operateDBTransaction(handler, Action.ACTION_DELETE_TRACK_BY_GUID_LIST.toString(), delGuids, 10001);
+                new DeleteFileThread(delGuids).start();
+            }
+            if (modifyObjs.size() > 0) {
+                operateDBTransaction(handler, Action.ACTION_UPDATE_TRACK_INFO_BY_LIST.toString(), modifyObjs, 10001);
+            }
+            if (addLocalGuids.size() > 0) {
+                operateDBTransaction(handler, Action.ACTION_UPDATE_TRACK_SYNC_STATE_AND_SID_BY_GUID_LIST.toString(), addLocalGuids, 10001);
+            }
+            if (addServerObjs.size() > 0) {
+                operateDBTransaction(handler, Action.ACTION_WRITE_TRACK_TO_DB.toString(), addServerObjs, 10001);
+            }
+            operateDBTransaction(handler, Action.ACTION_UPDATE_TRACK_SYNC_STATE_BY_GUID_LIST.toString(), updateStatusMap, 10002);
+            C1260i.b(TAG, "delGuids.size=" + delGuids.size());
+            C1260i.b(TAG, "addLocalGuids.size=" + addLocalGuids.size());
+            C1260i.b(TAG, "modifyObjs.size=" + modifyObjs.size());
+            C1260i.b(TAG, "addServerObjs.size=" + addServerObjs.size());
+            C1260i.b(TAG, "updateStatusMap=" + updateStatusMap);
         }
-      }
     }
-    if (paramTrackSyncResponseModel.isResponse == 1)
-    {
-      paramTrackSyncResponseModel = paramTrackSyncResponseModel.dataList.iterator();
-      while (paramTrackSyncResponseModel.hasNext())
-      {
-        paramHashMap = (CarNaviModel)paramTrackSyncResponseModel.next();
-        if (paramHashMap.getSyncState() == 2)
-        {
-          localHashMap.put(paramHashMap.getPBData().getGuid(), Integer.valueOf(1));
-          localArrayList1.add(paramHashMap.getPBData().getGuid());
+
+    public static void checkTrackStatusInDB(Handler handler, TrackSyncResponseModel model, int token) {
+        C1260i.b(TAG, "checkTrackStatusInDB model=" + model);
+        if (model == null) {
+            return;
         }
-        else if (paramHashMap.getSyncState() == 3)
-        {
-          localHashMap.put(paramHashMap.getPBData().getGuid(), Integer.valueOf(1));
-          localArrayList4.add(paramHashMap);
+        if (!model.guidList.isEmpty() || !model.dataList.isEmpty()) {
+            ArrayList<String> guids = new ArrayList();
+            Iterator it = model.guidList.iterator();
+            while (it.hasNext()) {
+                guids.add((String) it.next());
+            }
+            it = model.dataList.iterator();
+            while (it.hasNext()) {
+                CarNaviModel item = (CarNaviModel) it.next();
+                if (item.getPBData().hasGuid()) {
+                    guids.add(item.getPBData().getGuid());
+                }
+            }
+            if (guids.size() > 0) {
+                operateDBTransaction(handler, Action.ACTION_GET_TRACK_SYNC_STATE_BY_GUID_LIST.toString(), guids, token);
+            }
         }
-      }
     }
-    if (localArrayList1.size() > 0)
-    {
-      operateDBTransaction(paramHandler, DataService.Action.ACTION_DELETE_TRACK_BY_GUID_LIST.toString(), localArrayList1, 10001);
-      new DeleteFileThread(localArrayList1).start();
+
+    public static void operateDBTransaction(Handler handler, String action, Object obj, int token) {
+        Context context = C1157a.a();
+        Intent intent = new Intent(context, DataService.class);
+        if (handler != null) {
+            intent.putExtra(DataService.EXTRA_HANDLER, DataCache.getInstance().addCache(handler));
+        }
+        intent.putExtra(DataService.EXTRA_CACHE_KEY, DataCache.getInstance().addCache(obj));
+        intent.putExtra(DataService.EXTRA_NON_UI_EVENT, true);
+        if (token != -1) {
+            intent.putExtra(DataService.EXTRA_TOKEN_INT_KEY, token);
+        }
+        intent.setAction(action);
+        try {
+            context.startService(intent);
+        } catch (Exception e) {
+            C1260i.b(TAG, "Unable to find BaiduCarLife app process");
+        }
     }
-    if (localArrayList2.size() > 0) {
-      operateDBTransaction(paramHandler, DataService.Action.ACTION_UPDATE_TRACK_INFO_BY_LIST.toString(), localArrayList2, 10001);
-    }
-    if (localArrayList3.size() > 0) {
-      operateDBTransaction(paramHandler, DataService.Action.ACTION_UPDATE_TRACK_SYNC_STATE_AND_SID_BY_GUID_LIST.toString(), localArrayList3, 10001);
-    }
-    if (localArrayList4.size() > 0) {
-      operateDBTransaction(paramHandler, DataService.Action.ACTION_WRITE_TRACK_TO_DB.toString(), localArrayList4, 10001);
-    }
-    operateDBTransaction(paramHandler, DataService.Action.ACTION_UPDATE_TRACK_SYNC_STATE_BY_GUID_LIST.toString(), localHashMap, 10002);
-    i.b(TAG, "delGuids.size=" + localArrayList1.size());
-    i.b(TAG, "addLocalGuids.size=" + localArrayList3.size());
-    i.b(TAG, "modifyObjs.size=" + localArrayList2.size());
-    i.b(TAG, "addServerObjs.size=" + localArrayList4.size());
-    i.b(TAG, "updateStatusMap=" + localHashMap);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/track/sync/TrackSyncUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

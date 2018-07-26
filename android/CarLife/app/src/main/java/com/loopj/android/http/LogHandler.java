@@ -4,143 +4,126 @@ import android.annotation.TargetApi;
 import android.os.Build.VERSION;
 import android.util.Log;
 
-public class LogHandler
-  implements LogInterface
-{
-  boolean mLoggingEnabled = true;
-  int mLoggingLevel = 2;
-  
-  @TargetApi(8)
-  private void checkedWtf(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    Log.wtf(paramString1, paramString2, paramThrowable);
-  }
-  
-  public void d(String paramString1, String paramString2)
-  {
-    log(2, paramString1, paramString2);
-  }
-  
-  public void d(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    logWithThrowable(3, paramString1, paramString2, paramThrowable);
-  }
-  
-  public void e(String paramString1, String paramString2)
-  {
-    log(6, paramString1, paramString2);
-  }
-  
-  public void e(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    logWithThrowable(6, paramString1, paramString2, paramThrowable);
-  }
-  
-  public int getLoggingLevel()
-  {
-    return this.mLoggingLevel;
-  }
-  
-  public void i(String paramString1, String paramString2)
-  {
-    log(4, paramString1, paramString2);
-  }
-  
-  public void i(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    logWithThrowable(4, paramString1, paramString2, paramThrowable);
-  }
-  
-  public boolean isLoggingEnabled()
-  {
-    return this.mLoggingEnabled;
-  }
-  
-  public void log(int paramInt, String paramString1, String paramString2)
-  {
-    logWithThrowable(paramInt, paramString1, paramString2, null);
-  }
-  
-  public void logWithThrowable(int paramInt, String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    if ((isLoggingEnabled()) && (shouldLog(paramInt))) {}
-    switch (paramInt)
-    {
-    case 7: 
-    default: 
-      return;
-    case 2: 
-      Log.v(paramString1, paramString2, paramThrowable);
-      return;
-    case 5: 
-      Log.w(paramString1, paramString2, paramThrowable);
-      return;
-    case 6: 
-      Log.e(paramString1, paramString2, paramThrowable);
-      return;
-    case 3: 
-      Log.d(paramString1, paramString2, paramThrowable);
-      return;
-    case 8: 
-      if (Integer.valueOf(Build.VERSION.SDK).intValue() > 8)
-      {
-        checkedWtf(paramString1, paramString2, paramThrowable);
-        return;
-      }
-      Log.e(paramString1, paramString2, paramThrowable);
-      return;
+public class LogHandler implements LogInterface {
+    boolean mLoggingEnabled = true;
+    int mLoggingLevel = 2;
+
+    public boolean isLoggingEnabled() {
+        return this.mLoggingEnabled;
     }
-    Log.i(paramString1, paramString2, paramThrowable);
-  }
-  
-  public void setLoggingEnabled(boolean paramBoolean)
-  {
-    this.mLoggingEnabled = paramBoolean;
-  }
-  
-  public void setLoggingLevel(int paramInt)
-  {
-    this.mLoggingLevel = paramInt;
-  }
-  
-  public boolean shouldLog(int paramInt)
-  {
-    return paramInt >= this.mLoggingLevel;
-  }
-  
-  public void v(String paramString1, String paramString2)
-  {
-    log(2, paramString1, paramString2);
-  }
-  
-  public void v(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    logWithThrowable(2, paramString1, paramString2, paramThrowable);
-  }
-  
-  public void w(String paramString1, String paramString2)
-  {
-    log(5, paramString1, paramString2);
-  }
-  
-  public void w(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    logWithThrowable(5, paramString1, paramString2, paramThrowable);
-  }
-  
-  public void wtf(String paramString1, String paramString2)
-  {
-    log(8, paramString1, paramString2);
-  }
-  
-  public void wtf(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    logWithThrowable(8, paramString1, paramString2, paramThrowable);
-  }
+
+    public void setLoggingEnabled(boolean loggingEnabled) {
+        this.mLoggingEnabled = loggingEnabled;
+    }
+
+    public int getLoggingLevel() {
+        return this.mLoggingLevel;
+    }
+
+    public void setLoggingLevel(int loggingLevel) {
+        this.mLoggingLevel = loggingLevel;
+    }
+
+    public boolean shouldLog(int logLevel) {
+        return logLevel >= this.mLoggingLevel;
+    }
+
+    public void log(int logLevel, String tag, String msg) {
+        logWithThrowable(logLevel, tag, msg, null);
+    }
+
+    public void logWithThrowable(int logLevel, String tag, String msg, Throwable t) {
+        if (isLoggingEnabled() && shouldLog(logLevel)) {
+            switch (logLevel) {
+                case 2:
+                    Log.v(tag, msg, t);
+                    return;
+                case 3:
+                    Log.d(tag, msg, t);
+                    return;
+                case 4:
+                    Log.i(tag, msg, t);
+                    return;
+                case 5:
+                    Log.w(tag, msg, t);
+                    return;
+                case 6:
+                    Log.e(tag, msg, t);
+                    return;
+                case 8:
+                    if (Integer.valueOf(VERSION.SDK).intValue() > 8) {
+                        checkedWtf(tag, msg, t);
+                        return;
+                    } else {
+                        Log.e(tag, msg, t);
+                        return;
+                    }
+                default:
+                    return;
+            }
+        }
+    }
+
+    @TargetApi(8)
+    private void checkedWtf(String tag, String msg, Throwable t) {
+        Log.wtf(tag, msg, t);
+    }
+
+    /* renamed from: v */
+    public void mo4889v(String tag, String msg) {
+        log(2, tag, msg);
+    }
+
+    /* renamed from: v */
+    public void mo4890v(String tag, String msg, Throwable t) {
+        logWithThrowable(2, tag, msg, t);
+    }
+
+    /* renamed from: d */
+    public void mo4878d(String tag, String msg) {
+        log(2, tag, msg);
+    }
+
+    /* renamed from: d */
+    public void mo4879d(String tag, String msg, Throwable t) {
+        logWithThrowable(3, tag, msg, t);
+    }
+
+    /* renamed from: i */
+    public void mo4883i(String tag, String msg) {
+        log(4, tag, msg);
+    }
+
+    /* renamed from: i */
+    public void mo4884i(String tag, String msg, Throwable t) {
+        logWithThrowable(4, tag, msg, t);
+    }
+
+    /* renamed from: w */
+    public void mo4891w(String tag, String msg) {
+        log(5, tag, msg);
+    }
+
+    /* renamed from: w */
+    public void mo4892w(String tag, String msg, Throwable t) {
+        logWithThrowable(5, tag, msg, t);
+    }
+
+    /* renamed from: e */
+    public void mo4880e(String tag, String msg) {
+        log(6, tag, msg);
+    }
+
+    /* renamed from: e */
+    public void mo4881e(String tag, String msg, Throwable t) {
+        logWithThrowable(6, tag, msg, t);
+    }
+
+    public void wtf(String tag, String msg) {
+        log(8, tag, msg);
+    }
+
+    public void wtf(String tag, String msg, Throwable t) {
+        logWithThrowable(8, tag, msg, t);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/loopj/android/http/LogHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

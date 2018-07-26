@@ -3,16 +3,15 @@ package com.baidu.ufosdk.ui;
 import android.view.View;
 import android.widget.AbsListView.RecyclerListener;
 
-final class bq
-  implements AbsListView.RecyclerListener
-{
-  bq(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void onMovedToScrapHeap(View paramView) {}
+/* compiled from: FeedbackInputActivity */
+final class bq implements RecyclerListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21585a;
+
+    bq(FeedbackInputActivity feedbackInputActivity) {
+        this.f21585a = feedbackInputActivity;
+    }
+
+    public final void onMovedToScrapHeap(View view) {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

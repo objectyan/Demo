@@ -1,15 +1,9 @@
 package com.indooratlas.android.sdk._internal;
 
-public abstract interface kh
-  extends kk
-{
-  public abstract void a(String paramString1, String paramString2);
-  
-  public abstract void a(byte[] paramArrayOfByte);
+public interface kh extends kk {
+    /* renamed from: a */
+    void mo4819a(String str, String str2);
+
+    /* renamed from: a */
+    void mo4820a(byte[] bArr);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/kh.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

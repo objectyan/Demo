@@ -10,235 +10,185 @@ import com.baidu.navisdk.util.worker.BNWorkerCallbackTask;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BNImageLoaderEngine
-{
-  public static final int BITMAP_FROM_DISK = 1;
-  public static final int BITMAP_FROM_FAILED = 4;
-  public static final int BITMAP_FROM_LOADING = 3;
-  public static final int BITMAP_FROM_LOADING_QUEUE = 2;
-  public static final int BITMAP_FROM_MEMORY = 0;
-  private Map<String, ImageInfoSet> loadingImageSets = new HashMap();
-  private final Object pauseLock = new Object();
-  
-  private void displayFail(LoadAndDisplayImageTask paramLoadAndDisplayImageTask)
-  {
-    if (!paramLoadAndDisplayImageTask.checkIsValid()) {}
-    do
-    {
-      return;
-      paramLoadAndDisplayImageTask.options.getDisplayer().display(paramLoadAndDisplayImageTask.uri, paramLoadAndDisplayImageTask.options.getImageOnFail(), paramLoadAndDisplayImageTask.imageView);
-    } while (paramLoadAndDisplayImageTask.listener == null);
-    paramLoadAndDisplayImageTask.listener.onLoadingComplete(paramLoadAndDisplayImageTask.uri, paramLoadAndDisplayImageTask.imageView, null, paramLoadAndDisplayImageTask.mBitmapFrom);
-  }
-  
-  private void displaySuccess(Bitmap paramBitmap, LoadAndDisplayImageTask paramLoadAndDisplayImageTask)
-  {
-    if ((!paramLoadAndDisplayImageTask.checkIsValid()) || (paramBitmap == null)) {}
-    for (;;)
-    {
-      return;
-      paramLoadAndDisplayImageTask.options.getDisplayer().display(paramLoadAndDisplayImageTask.uri, paramBitmap, paramLoadAndDisplayImageTask.imageView);
-      if (paramLoadAndDisplayImageTask.options.isPersistCache()) {
-        if (!BNImageLoader.mPersistCache.containsKey(paramLoadAndDisplayImageTask.key)) {
-          BNImageLoader.mPersistCache.put(paramLoadAndDisplayImageTask.key, paramBitmap);
+public class BNImageLoaderEngine {
+    public static final int BITMAP_FROM_DISK = 1;
+    public static final int BITMAP_FROM_FAILED = 4;
+    public static final int BITMAP_FROM_LOADING = 3;
+    public static final int BITMAP_FROM_LOADING_QUEUE = 2;
+    public static final int BITMAP_FROM_MEMORY = 0;
+    private Map<String, ImageInfoSet> loadingImageSets = new HashMap();
+    private final Object pauseLock = new Object();
+
+    static class ImageInfoSet {
+        private ArrayList<LoadAndDisplayImageTask> imageViewAList = new ArrayList();
+
+        ImageInfoSet(LoadAndDisplayImageTask task) {
+            this.imageViewAList.add(task);
         }
-      }
-      while (paramLoadAndDisplayImageTask.listener != null)
-      {
-        paramLoadAndDisplayImageTask.listener.onLoadingComplete(paramLoadAndDisplayImageTask.uri, paramLoadAndDisplayImageTask.imageView, paramBitmap, paramLoadAndDisplayImageTask.mBitmapFrom);
-        return;
-        if ((paramLoadAndDisplayImageTask.options.isCacheInMemory()) && (!paramLoadAndDisplayImageTask.sUrlCache.containsKey(paramLoadAndDisplayImageTask.key))) {
-          paramLoadAndDisplayImageTask.sUrlCache.put(paramLoadAndDisplayImageTask.key, paramBitmap);
+
+        public void add(LoadAndDisplayImageTask task) {
+            this.imageViewAList.add(task);
         }
-      }
     }
-  }
-  
-  boolean preparedBitmapLoad(String paramString, LoadAndDisplayImageTask paramLoadAndDisplayImageTask)
-  {
-    if (paramLoadAndDisplayImageTask == null) {
-      return false;
-    }
-    if (this.loadingImageSets == null) {
-      this.loadingImageSets = new HashMap();
-    }
-    if (this.loadingImageSets.containsKey(paramString))
-    {
-      ((ImageInfoSet)this.loadingImageSets.get(paramString)).add(paramLoadAndDisplayImageTask);
-      return false;
-    }
-    this.loadingImageSets.put(paramString, new ImageInfoSet(paramLoadAndDisplayImageTask));
-    return true;
-  }
-  
-  void removeBitmapLoad(String paramString)
-  {
-    if (this.loadingImageSets != null) {
-      this.loadingImageSets.remove(paramString);
-    }
-  }
-  
-  void submit(final LoadAndDisplayImageTask paramLoadAndDisplayImageTask)
-  {
-    if (paramLoadAndDisplayImageTask == null) {
-      return;
-    }
-    BNWorkerCenter.getInstance().submitCallbackTask(new BNWorkerCallbackTask("BNImageLoaderEngine-submit", null)new BNWorkerConfig
-    {
-      public void callback(Bitmap paramAnonymousBitmap)
-      {
-        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("BNImageLoaderEngine-submit-2", paramAnonymousBitmap)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            Object localObject2 = null;
-            Object localObject1 = localObject2;
-            if (BNImageLoaderEngine.this.loadingImageSets != null)
-            {
-              BNImageLoaderEngine.ImageInfoSet localImageInfoSet = (BNImageLoaderEngine.ImageInfoSet)BNImageLoaderEngine.this.loadingImageSets.get(BNImageLoaderEngine.1.this.val$task.uri);
-              localObject1 = localObject2;
-              if (localImageInfoSet != null) {
-                localObject1 = BNImageLoaderEngine.ImageInfoSet.access$100(localImageInfoSet);
-              }
+
+    static class LoadAndDisplayImageTask implements Runnable {
+        ImageView imageView;
+        String key;
+        String keyPath;
+        BNImageLoadingListener listener;
+        int mBitmapFrom;
+        Bitmap mBmp;
+        BNDisplayImageOptions options;
+        ImageCache sUrlCache;
+        String uri;
+
+        /* renamed from: com.baidu.navisdk.util.navimageloader.BNImageLoaderEngine$LoadAndDisplayImageTask$1 */
+        class C47191 extends BitmapRspHandler {
+            C47191() {
             }
-            int i;
-            if ((this.inData != null) && (!((Bitmap)this.inData).isRecycled()))
-            {
-              if (localObject1 != null)
-              {
-                i = 0;
-                while (i < ((ArrayList)localObject1).size())
-                {
-                  BNImageLoaderEngine.this.displaySuccess((Bitmap)this.inData, (BNImageLoaderEngine.LoadAndDisplayImageTask)((ArrayList)localObject1).get(i));
-                  i += 1;
+
+            public void onRevBitmap(Bitmap retBmp) {
+                LoadAndDisplayImageTask.this.mBmp = retBmp;
+                if (LoadAndDisplayImageTask.this.mBmp != null && LoadAndDisplayImageTask.this.options.isCacheOnDisk()) {
+                    LoadAndDisplayImageTask.this.sUrlCache.cache2Disk(LoadAndDisplayImageTask.this.keyPath, LoadAndDisplayImageTask.this.mBmp);
                 }
-              }
-              BNImageLoaderEngine.this.displaySuccess((Bitmap)this.inData, BNImageLoaderEngine.1.this.val$task);
             }
-            for (;;)
-            {
-              BNImageLoaderEngine.this.removeBitmapLoad(BNImageLoaderEngine.1.this.val$task.uri);
-              return null;
-              if (localObject1 != null)
-              {
-                i = 0;
-                while (i < ((ArrayList)localObject1).size())
-                {
-                  BNImageLoaderEngine.this.displayFail((BNImageLoaderEngine.LoadAndDisplayImageTask)((ArrayList)localObject1).get(i));
-                  i += 1;
+
+            public void onFailure(Throwable error) {
+                LoadAndDisplayImageTask.this.mBmp = null;
+            }
+        }
+
+        LoadAndDisplayImageTask(String key, String keyPath, String uri, ImageView imageView, BNDisplayImageOptions options, BNImageLoadingListener listener, ImageCache sUrlCache) {
+            this.keyPath = keyPath;
+            this.uri = uri;
+            this.imageView = imageView;
+            this.options = options;
+            this.listener = listener;
+            this.sUrlCache = sUrlCache;
+            this.key = key;
+        }
+
+        public void run() {
+            if (checkIsValid()) {
+                this.mBmp = ImageTools.getBitmapFromPath(this.keyPath);
+                if (this.mBmp != null) {
+                    this.mBitmapFrom = 1;
+                    return;
                 }
-              }
-              else
-              {
-                BNImageLoaderEngine.this.displayFail(BNImageLoaderEngine.1.this.val$task);
-              }
+                try {
+                    new BaseHttpClient().get(this.uri, new C47191());
+                } catch (Exception e) {
+                    this.mBmp = null;
+                }
             }
-          }
-        }, new BNWorkerConfig(100, 0));
-      }
-      
-      protected Bitmap execute()
-      {
-        paramLoadAndDisplayImageTask.run();
-        return paramLoadAndDisplayImageTask.getLoadedBitMap();
-      }
-    }, new BNWorkerConfig(100, 0));
-  }
-  
-  static class ImageInfoSet
-  {
-    private ArrayList<BNImageLoaderEngine.LoadAndDisplayImageTask> imageViewAList = new ArrayList();
-    
-    ImageInfoSet(BNImageLoaderEngine.LoadAndDisplayImageTask paramLoadAndDisplayImageTask)
-    {
-      this.imageViewAList.add(paramLoadAndDisplayImageTask);
-    }
-    
-    public void add(BNImageLoaderEngine.LoadAndDisplayImageTask paramLoadAndDisplayImageTask)
-    {
-      this.imageViewAList.add(paramLoadAndDisplayImageTask);
-    }
-  }
-  
-  static class LoadAndDisplayImageTask
-    implements Runnable
-  {
-    ImageView imageView;
-    String key;
-    String keyPath;
-    BNImageLoadingListener listener;
-    int mBitmapFrom;
-    Bitmap mBmp;
-    BNDisplayImageOptions options;
-    ImageCache sUrlCache;
-    String uri;
-    
-    LoadAndDisplayImageTask(String paramString1, String paramString2, String paramString3, ImageView paramImageView, BNDisplayImageOptions paramBNDisplayImageOptions, BNImageLoadingListener paramBNImageLoadingListener, ImageCache paramImageCache)
-    {
-      this.keyPath = paramString2;
-      this.uri = paramString3;
-      this.imageView = paramImageView;
-      this.options = paramBNDisplayImageOptions;
-      this.listener = paramBNImageLoadingListener;
-      this.sUrlCache = paramImageCache;
-      this.key = paramString1;
-    }
-    
-    private boolean checkIsValid()
-    {
-      return (this.uri != null) && (this.sUrlCache != null) && (this.options != null);
-    }
-    
-    public Bitmap getLoadedBitMap()
-    {
-      return this.mBmp;
-    }
-    
-    public void run()
-    {
-      if (!checkIsValid()) {
-        return;
-      }
-      this.mBmp = ImageTools.getBitmapFromPath(this.keyPath);
-      if (this.mBmp != null)
-      {
-        this.mBitmapFrom = 1;
-        return;
-      }
-      try
-      {
-        new BaseHttpClient().get(this.uri, new BitmapRspHandler()
-        {
-          public void onFailure(Throwable paramAnonymousThrowable)
-          {
-            BNImageLoaderEngine.LoadAndDisplayImageTask.this.mBmp = null;
-          }
-          
-          public void onRevBitmap(Bitmap paramAnonymousBitmap)
-          {
-            BNImageLoaderEngine.LoadAndDisplayImageTask.this.mBmp = paramAnonymousBitmap;
-            if ((BNImageLoaderEngine.LoadAndDisplayImageTask.this.mBmp != null) && (BNImageLoaderEngine.LoadAndDisplayImageTask.this.options.isCacheOnDisk())) {
-              BNImageLoaderEngine.LoadAndDisplayImageTask.this.sUrlCache.cache2Disk(BNImageLoaderEngine.LoadAndDisplayImageTask.this.keyPath, BNImageLoaderEngine.LoadAndDisplayImageTask.this.mBmp);
+        }
+
+        public Bitmap getLoadedBitMap() {
+            return this.mBmp;
+        }
+
+        private boolean checkIsValid() {
+            if (this.uri == null || this.sUrlCache == null || this.options == null) {
+                return false;
             }
-          }
-        });
-        return;
-      }
-      catch (Exception localException)
-      {
-        this.mBmp = null;
-      }
+            return true;
+        }
     }
-  }
+
+    BNImageLoaderEngine() {
+    }
+
+    boolean preparedBitmapLoad(String uri, LoadAndDisplayImageTask mTask) {
+        if (mTask == null) {
+            return false;
+        }
+        if (this.loadingImageSets == null) {
+            this.loadingImageSets = new HashMap();
+        }
+        if (this.loadingImageSets.containsKey(uri)) {
+            ((ImageInfoSet) this.loadingImageSets.get(uri)).add(mTask);
+            return false;
+        }
+        this.loadingImageSets.put(uri, new ImageInfoSet(mTask));
+        return true;
+    }
+
+    void removeBitmapLoad(String uri) {
+        if (this.loadingImageSets != null) {
+            this.loadingImageSets.remove(uri);
+        }
+    }
+
+    void submit(final LoadAndDisplayImageTask task) {
+        if (task != null) {
+            BNWorkerCenter.getInstance().submitCallbackTask(new BNWorkerCallbackTask<String, Bitmap>("BNImageLoaderEngine-submit", null) {
+                protected Bitmap execute() {
+                    task.run();
+                    return task.getLoadedBitMap();
+                }
+
+                public void callback(Bitmap data) {
+                    BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<Bitmap, String>("BNImageLoaderEngine-submit-2", data) {
+                        protected String execute() {
+                            ArrayList<LoadAndDisplayImageTask> mALImageInfo = null;
+                            if (BNImageLoaderEngine.this.loadingImageSets != null) {
+                                ImageInfoSet mImageInfoSet = (ImageInfoSet) BNImageLoaderEngine.this.loadingImageSets.get(task.uri);
+                                if (mImageInfoSet != null) {
+                                    mALImageInfo = mImageInfoSet.imageViewAList;
+                                }
+                            }
+                            int i;
+                            if (this.inData == null || ((Bitmap) this.inData).isRecycled()) {
+                                if (mALImageInfo != null) {
+                                    for (i = 0; i < mALImageInfo.size(); i++) {
+                                        BNImageLoaderEngine.this.displayFail((LoadAndDisplayImageTask) mALImageInfo.get(i));
+                                    }
+                                } else {
+                                    BNImageLoaderEngine.this.displayFail(task);
+                                }
+                            } else if (mALImageInfo != null) {
+                                for (i = 0; i < mALImageInfo.size(); i++) {
+                                    BNImageLoaderEngine.this.displaySuccess((Bitmap) this.inData, (LoadAndDisplayImageTask) mALImageInfo.get(i));
+                                }
+                            } else {
+                                BNImageLoaderEngine.this.displaySuccess((Bitmap) this.inData, task);
+                            }
+                            BNImageLoaderEngine.this.removeBitmapLoad(task.uri);
+                            return null;
+                        }
+                    }, new BNWorkerConfig(100, 0));
+                }
+            }, new BNWorkerConfig(100, 0));
+        }
+    }
+
+    private void displaySuccess(Bitmap mBitmap, LoadAndDisplayImageTask task) {
+        if (task.checkIsValid() && mBitmap != null) {
+            task.options.getDisplayer().display(task.uri, mBitmap, task.imageView);
+            if (task.options.isPersistCache()) {
+                if (!BNImageLoader.mPersistCache.containsKey(task.key)) {
+                    BNImageLoader.mPersistCache.put(task.key, mBitmap);
+                }
+            } else if (task.options.isCacheInMemory() && !task.sUrlCache.containsKey(task.key)) {
+                task.sUrlCache.put(task.key, mBitmap);
+            }
+            if (task.listener != null) {
+                task.listener.onLoadingComplete(task.uri, task.imageView, mBitmap, task.mBitmapFrom);
+            }
+        }
+    }
+
+    private void displayFail(LoadAndDisplayImageTask task) {
+        if (task.checkIsValid()) {
+            task.options.getDisplayer().display(task.uri, task.options.getImageOnFail(), task.imageView);
+            if (task.listener != null) {
+                task.listener.onLoadingComplete(task.uri, task.imageView, null, task.mBitmapFrom);
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/navimageloader/BNImageLoaderEngine.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

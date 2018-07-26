@@ -1,39 +1,29 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class hz
-  extends gn
-{
-  private final gd a;
-  private final ip b;
-  
-  public hz(gd paramgd, ip paramip)
-  {
-    this.a = paramgd;
-    this.b = paramip;
-  }
-  
-  public final gg a()
-  {
-    String str = this.a.a("Content-Type");
-    if (str != null) {
-      return gg.a(str);
+public final class hz extends gn {
+    /* renamed from: a */
+    private final gd f24325a;
+    /* renamed from: b */
+    private final ip f24326b;
+
+    public hz(gd gdVar, ip ipVar) {
+        this.f24325a = gdVar;
+        this.f24326b = ipVar;
     }
-    return null;
-  }
-  
-  public final long b()
-  {
-    return hy.a(this.a);
-  }
-  
-  public final ip c()
-  {
-    return this.b;
-  }
+
+    /* renamed from: a */
+    public final gg m21083a() {
+        String a = this.f24325a.a("Content-Type");
+        return a != null ? gg.a(a) : null;
+    }
+
+    /* renamed from: b */
+    public final long m21084b() {
+        return hy.m21078a(this.f24325a);
+    }
+
+    /* renamed from: c */
+    public final ip m21085c() {
+        return this.f24326b;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hz.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

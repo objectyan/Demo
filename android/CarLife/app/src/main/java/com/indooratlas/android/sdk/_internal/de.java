@@ -2,50 +2,48 @@ package com.indooratlas.android.sdk._internal;
 
 import android.hardware.Sensor;
 
-public final class de
-  implements cw
-{
-  int a = 0;
-  
-  public final int a()
-  {
-    return this.a;
-  }
-  
-  public final Sensor b()
-  {
-    return null;
-  }
-  
-  public final String toString()
-  {
-    return "SimpleSensor{mType=" + this.a + '}';
-  }
-  
-  public static final class a
-  {
-    private de a = new de((byte)0);
-    private boolean b;
-    
-    public final a a(int paramInt)
-    {
-      this.a.a = paramInt;
-      this.b = true;
-      return this;
+public final class de implements cw {
+    /* renamed from: a */
+    int f23381a;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.de$a */
+    public static class C5847a {
+        /* renamed from: a */
+        private de f23379a = new de();
+        /* renamed from: b */
+        private boolean f23380b;
+
+        /* renamed from: a */
+        public final C5847a m20303a(int i) {
+            this.f23379a.f23381a = i;
+            this.f23380b = true;
+            return this;
+        }
+
+        /* renamed from: a */
+        public final de m20304a() {
+            if (this.f23380b) {
+                return this.f23379a;
+            }
+            throw new IllegalStateException("sensor type must be set");
+        }
     }
-    
-    public final de a()
-    {
-      if (!this.b) {
-        throw new IllegalStateException("sensor type must be set");
-      }
-      return this.a;
+
+    private de() {
+        this.f23381a = 0;
     }
-  }
+
+    /* renamed from: a */
+    public final int mo4658a() {
+        return this.f23381a;
+    }
+
+    public final String toString() {
+        return "SimpleSensor{mType=" + this.f23381a + '}';
+    }
+
+    /* renamed from: b */
+    public final Sensor mo4659b() {
+        return null;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/de.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

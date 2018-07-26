@@ -1,7 +1,6 @@
 package com.baidu.carlife.view.pinnedheaderlistview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
@@ -10,170 +9,179 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import com.baidu.carlife.l.a;
-import com.baidu.carlife.util.r;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.navi.protocol.model.RoutePlanDataStruct;
 
-public class BladeView
-  extends View
-{
-  int a = -1;
-  Paint b = new Paint();
-  boolean c = false;
-  Runnable d = new Runnable()
-  {
-    public void run()
-    {
-      if ((BladeView.a(BladeView.this) != null) && (BladeView.a(BladeView.this).isShowing())) {
-        BladeView.a(BladeView.this).dismiss();
-      }
+public class BladeView extends View {
+    /* renamed from: a */
+    int f7746a;
+    /* renamed from: b */
+    Paint f7747b;
+    /* renamed from: c */
+    boolean f7748c;
+    /* renamed from: d */
+    Runnable f7749d;
+    /* renamed from: e */
+    private C2350a f7750e;
+    /* renamed from: f */
+    private String[] f7751f;
+    /* renamed from: g */
+    private String[] f7752g;
+    /* renamed from: h */
+    private PopupWindow f7753h;
+    /* renamed from: i */
+    private TextView f7754i;
+    /* renamed from: j */
+    private Handler f7755j;
+
+    /* renamed from: com.baidu.carlife.view.pinnedheaderlistview.BladeView$1 */
+    class C23491 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ BladeView f7745a;
+
+        C23491(BladeView this$0) {
+            this.f7745a = this$0;
+        }
+
+        public void run() {
+            if (this.f7745a.f7753h != null && this.f7745a.f7753h.isShowing()) {
+                this.f7745a.f7753h.dismiss();
+            }
+        }
     }
-  };
-  private a e;
-  private String[] f = { "A", ".", "D", ".", "G", ".", "K", ".", "O", ".", "R", ".", "W", ".", "Z", "#" };
-  private String[] g = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "#" };
-  private PopupWindow h;
-  private TextView i;
-  private Handler j = new Handler();
-  
-  public BladeView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public BladeView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public BladeView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  private void a(int paramInt)
-  {
-    if (this.e != null)
-    {
-      this.e.a(this.g[paramInt]);
-      a(this.g[paramInt]);
+
+    /* renamed from: com.baidu.carlife.view.pinnedheaderlistview.BladeView$a */
+    public interface C2350a {
+        /* renamed from: a */
+        void m8927a(String str);
     }
-  }
-  
-  private void a(String paramString)
-  {
-    if (this.h == null)
-    {
-      this.j.removeCallbacks(this.d);
-      this.i = new TextView(getContext());
-      this.i.setBackground(r.b(2130838268));
-      this.i.setTextColor(r.a(2131558703));
-      this.i.setTextSize(getResources().getDimensionPixelSize(2131361813));
-      this.i.setGravity(17);
-      int k = getResources().getDimensionPixelSize(2131361814);
-      int m = getResources().getDimensionPixelSize(2131361815);
-      this.h = new PopupWindow(this.i, m, k);
+
+    public BladeView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.f7751f = new String[]{"A", ".", "D", ".", "G", ".", "K", ".", "O", ".", "R", ".", "W", ".", "Z", "#"};
+        this.f7752g = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", RoutePlanDataStruct.KEY_X, RoutePlanDataStruct.KEY_Y, "Z", "#"};
+        this.f7746a = -1;
+        this.f7747b = new Paint();
+        this.f7748c = false;
+        this.f7755j = new Handler();
+        this.f7749d = new C23491(this);
     }
-    this.i.setText(paramString);
-    if (this.h.isShowing())
-    {
-      this.h.update();
-      return;
+
+    public BladeView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.f7751f = new String[]{"A", ".", "D", ".", "G", ".", "K", ".", "O", ".", "R", ".", "W", ".", "Z", "#"};
+        this.f7752g = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", RoutePlanDataStruct.KEY_X, RoutePlanDataStruct.KEY_Y, "Z", "#"};
+        this.f7746a = -1;
+        this.f7747b = new Paint();
+        this.f7748c = false;
+        this.f7755j = new Handler();
+        this.f7749d = new C23491(this);
     }
-    this.h.showAtLocation(getRootView(), 17, 0, 0);
-  }
-  
-  public void a()
-  {
-    this.c = false;
-    this.a = -1;
-    this.j.postDelayed(this.d, 800L);
-  }
-  
-  public boolean dispatchTouchEvent(MotionEvent paramMotionEvent)
-  {
-    int n = paramMotionEvent.getAction();
-    float f1 = paramMotionEvent.getY();
-    int i1 = this.a;
-    int m = 0;
-    int k = m;
-    if (getHeight() > 0)
-    {
-      k = m;
-      if (this.g.length > 0) {
-        k = (int)(f1 / getHeight() * this.g.length);
-      }
+
+    public BladeView(Context context) {
+        super(context);
+        this.f7751f = new String[]{"A", ".", "D", ".", "G", ".", "K", ".", "O", ".", "R", ".", "W", ".", "Z", "#"};
+        this.f7752g = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", RoutePlanDataStruct.KEY_X, RoutePlanDataStruct.KEY_Y, "Z", "#"};
+        this.f7746a = -1;
+        this.f7747b = new Paint();
+        this.f7748c = false;
+        this.f7755j = new Handler();
+        this.f7749d = new C23491(this);
     }
-    switch (n)
-    {
-    default: 
-    case 0: 
-    case 2: 
-      do
-      {
-        do
-        {
-          return true;
-          this.c = true;
-        } while ((i1 == k) || (k < 0) || (k >= this.g.length));
-        a(k);
-        this.a = k;
-        invalidate();
+
+    public void setLetterDisplayList(String[] list) {
+        this.f7751f = list;
+    }
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        int height = getHeight();
+        int width = getWidth();
+        int singleHeight = height / this.f7751f.length;
+        for (int i = 0; i < this.f7751f.length; i++) {
+            this.f7747b.setColor(C2188r.m8328a((int) C0965R.color.cl_other_d_index));
+            this.f7747b.setTextSize((float) getResources().getDimensionPixelSize(C0965R.dimen.bladeview_fontsize));
+            this.f7747b.setFakeBoldText(true);
+            this.f7747b.setAntiAlias(true);
+            canvas.drawText(this.f7751f[i], (float) (width / 3), (float) ((singleHeight * i) + singleHeight), this.f7747b);
+            this.f7747b.reset();
+        }
+    }
+
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+        float y = event.getY();
+        int oldChoose = this.f7746a;
+        int c = 0;
+        if (getHeight() > 0 && this.f7752g.length > 0) {
+            c = (int) ((y / ((float) getHeight())) * ((float) this.f7752g.length));
+        }
+        switch (action) {
+            case 0:
+                this.f7748c = true;
+                if (oldChoose != c && c >= 0 && c < this.f7752g.length) {
+                    m8929a(c);
+                    this.f7746a = c;
+                    invalidate();
+                    break;
+                }
+            case 1:
+                m8931a();
+                invalidate();
+                break;
+            case 2:
+                if (!C1663a.m5979a().m5993N() && oldChoose != c && c >= 0 && c < this.f7752g.length) {
+                    m8929a(c);
+                    this.f7746a = c;
+                    invalidate();
+                    break;
+                }
+        }
         return true;
-      } while ((a.a().N()) || (i1 == k) || (k < 0) || (k >= this.g.length));
-      a(k);
-      this.a = k;
-      invalidate();
-      return true;
     }
-    a();
-    invalidate();
-    return true;
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    int k = getHeight();
-    int m = getWidth();
-    int n = k / this.f.length;
-    k = 0;
-    while (k < this.f.length)
-    {
-      this.b.setColor(r.a(2131558651));
-      this.b.setTextSize(getResources().getDimensionPixelSize(2131361812));
-      this.b.setFakeBoldText(true);
-      this.b.setAntiAlias(true);
-      float f1 = m / 3;
-      float f2 = n * k + n;
-      paramCanvas.drawText(this.f[k], f1, f2, this.b);
-      this.b.reset();
-      k += 1;
+
+    /* renamed from: a */
+    private void m8930a(String text) {
+        if (this.f7753h == null) {
+            this.f7755j.removeCallbacks(this.f7749d);
+            this.f7754i = new TextView(getContext());
+            this.f7754i.setBackground(C2188r.m8331b(C0965R.drawable.com_ic_cursorindex));
+            this.f7754i.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a5_title));
+            this.f7754i.setTextSize((float) getResources().getDimensionPixelSize(C0965R.dimen.bladeview_popup_fontsize));
+            this.f7754i.setGravity(17);
+            int height = getResources().getDimensionPixelSize(C0965R.dimen.bladeview_popup_height);
+            this.f7753h = new PopupWindow(this.f7754i, getResources().getDimensionPixelSize(C0965R.dimen.bladeview_popup_width), height);
+        }
+        this.f7754i.setText(text);
+        if (this.f7753h.isShowing()) {
+            this.f7753h.update();
+        } else {
+            this.f7753h.showAtLocation(getRootView(), 17, 0, 0);
+        }
     }
-  }
-  
-  public boolean onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    return super.onTouchEvent(paramMotionEvent);
-  }
-  
-  public void setLetterDisplayList(String[] paramArrayOfString)
-  {
-    this.f = paramArrayOfString;
-  }
-  
-  public void setOnItemClickListener(a parama)
-  {
-    this.e = parama;
-  }
-  
-  public static abstract interface a
-  {
-    public abstract void a(String paramString);
-  }
+
+    /* renamed from: a */
+    public void m8931a() {
+        this.f7748c = false;
+        this.f7746a = -1;
+        this.f7755j.postDelayed(this.f7749d, 800);
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
+
+    public void setOnItemClickListener(C2350a listener) {
+        this.f7750e = listener;
+    }
+
+    /* renamed from: a */
+    private void m8929a(int item) {
+        if (this.f7750e != null) {
+            this.f7750e.m8927a(this.f7752g[item]);
+            m8930a(this.f7752g[item]);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/pinnedheaderlistview/BladeView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

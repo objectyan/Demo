@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import com.facebook.common.p141m.C2924g;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,14 +14,18 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -28,545 +33,281 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public final class EventContext
-  extends ContextWrapper
-{
-  private static final String TAG = "EventContext";
-  private static final Logger logger = Logger.getLogger("EventContext");
-  
-  public EventContext(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public static short[] byteToShortArray(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    if (paramInt2 == 0) {
-      return new short[0];
-    }
-    ByteBuffer localByteBuffer = ByteBuffer.allocate(paramInt2);
-    localByteBuffer.order(ByteOrder.nativeOrder());
-    localByteBuffer.put(paramArrayOfByte, paramInt1, paramInt2);
-    localByteBuffer.clear();
-    paramArrayOfByte = new short[paramInt2 / 2];
-    localByteBuffer.asShortBuffer().get(paramArrayOfByte);
-    return paramArrayOfByte;
-  }
-  
-  public static long computePower(short[] paramArrayOfShort, int paramInt)
-  {
-    if (paramArrayOfShort == null) {}
-    int i;
-    do
-    {
-      return 0L;
-      System.currentTimeMillis();
-      i = Math.min(paramInt / 2, 512);
-    } while (i <= 0);
-    long l = 0L;
-    paramInt = 0;
-    while (paramInt < i)
-    {
-      l += paramArrayOfShort[(paramInt * 2)] * paramArrayOfShort[(paramInt * 2)];
-      paramInt += 1;
-    }
-    return Math.sqrt(l / i);
-  }
-  
-  public long computePower(byte[] paramArrayOfByte, int paramInt)
-  {
-    short[] arrayOfShort = new short[paramInt / 2];
-    paramInt = 0;
-    while (paramInt < arrayOfShort.length)
-    {
-      arrayOfShort[paramInt] = ((short)(paramArrayOfByte[(paramInt * 2 + 1)] << 8 | paramArrayOfByte[(paramInt * 2 + 0)] & 0xFF));
-      paramInt += 1;
-    }
-    return computePower(arrayOfShort, arrayOfShort.length);
-  }
-  
-  public SharedPreferences getSdkSharedPreferences()
-  {
-    return super.getSharedPreferences("bds", 0);
-  }
-  
-  /* Error */
-  public String httpRequest(String paramString, java.util.Map<String, String> paramMap, byte[] paramArrayOfByte, boolean paramBoolean)
-    throws Exception
-  {
-    // Byte code:
-    //   0: aconst_null
-    //   1: astore 7
-    //   3: aconst_null
-    //   4: astore 6
-    //   6: aload 7
-    //   8: astore 5
-    //   10: ldc 13
-    //   12: iconst_3
-    //   13: invokestatic 105	android/util/Log:isLoggable	(Ljava/lang/String;I)Z
-    //   16: ifne +19 -> 35
-    //   19: aload 7
-    //   21: astore 5
-    //   23: getstatic 25	com/baidu/speech/asr/EventContext:logger	Ljava/util/logging/Logger;
-    //   26: getstatic 111	java/util/logging/Level:ALL	Ljava/util/logging/Level;
-    //   29: invokevirtual 114	java/util/logging/Logger:isLoggable	(Ljava/util/logging/Level;)Z
-    //   32: ifeq +47 -> 79
-    //   35: aload 7
-    //   37: astore 5
-    //   39: getstatic 25	com/baidu/speech/asr/EventContext:logger	Ljava/util/logging/Logger;
-    //   42: new 116	java/lang/StringBuilder
-    //   45: dup
-    //   46: invokespecial 118	java/lang/StringBuilder:<init>	()V
-    //   49: ldc 120
-    //   51: invokevirtual 124	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   54: invokestatic 74	java/lang/System:currentTimeMillis	()J
-    //   57: ldc2_w 125
-    //   60: lrem
-    //   61: invokevirtual 129	java/lang/StringBuilder:append	(J)Ljava/lang/StringBuilder;
-    //   64: ldc -125
-    //   66: invokevirtual 124	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   69: aload_1
-    //   70: invokevirtual 124	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   73: invokevirtual 135	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   76: invokevirtual 139	java/util/logging/Logger:info	(Ljava/lang/String;)V
-    //   79: aload 7
-    //   81: astore 5
-    //   83: new 141	java/net/URL
-    //   86: dup
-    //   87: aload_1
-    //   88: invokespecial 143	java/net/URL:<init>	(Ljava/lang/String;)V
-    //   91: invokevirtual 147	java/net/URL:openConnection	()Ljava/net/URLConnection;
-    //   94: checkcast 149	java/net/HttpURLConnection
-    //   97: astore_1
-    //   98: aload_1
-    //   99: sipush 8000
-    //   102: invokevirtual 153	java/net/HttpURLConnection:setConnectTimeout	(I)V
-    //   105: aload_1
-    //   106: sipush 8000
-    //   109: invokevirtual 156	java/net/HttpURLConnection:setReadTimeout	(I)V
-    //   112: aload_1
-    //   113: iconst_0
-    //   114: invokevirtual 160	java/net/HttpURLConnection:setInstanceFollowRedirects	(Z)V
-    //   117: aload_2
-    //   118: invokeinterface 166 1 0
-    //   123: invokeinterface 172 1 0
-    //   128: astore_2
-    //   129: aload_2
-    //   130: invokeinterface 178 1 0
-    //   135: ifeq +103 -> 238
-    //   138: aload_2
-    //   139: invokeinterface 182 1 0
-    //   144: checkcast 184	java/util/Map$Entry
-    //   147: astore 5
-    //   149: aload_1
-    //   150: aload 5
-    //   152: invokeinterface 187 1 0
-    //   157: checkcast 189	java/lang/String
-    //   160: aload 5
-    //   162: invokeinterface 192 1 0
-    //   167: checkcast 189	java/lang/String
-    //   170: invokevirtual 196	java/net/HttpURLConnection:setRequestProperty	(Ljava/lang/String;Ljava/lang/String;)V
-    //   173: goto -44 -> 129
-    //   176: astore_2
-    //   177: aload_1
-    //   178: astore 5
-    //   180: ldc 13
-    //   182: iconst_3
-    //   183: invokestatic 105	android/util/Log:isLoggable	(Ljava/lang/String;I)Z
-    //   186: ifne +18 -> 204
-    //   189: aload_1
-    //   190: astore 5
-    //   192: getstatic 25	com/baidu/speech/asr/EventContext:logger	Ljava/util/logging/Logger;
-    //   195: getstatic 111	java/util/logging/Level:ALL	Ljava/util/logging/Level;
-    //   198: invokevirtual 114	java/util/logging/Logger:isLoggable	(Ljava/util/logging/Level;)Z
-    //   201: ifeq +18 -> 219
-    //   204: aload_1
-    //   205: astore 5
-    //   207: getstatic 25	com/baidu/speech/asr/EventContext:logger	Ljava/util/logging/Logger;
-    //   210: getstatic 199	java/util/logging/Level:WARNING	Ljava/util/logging/Level;
-    //   213: ldc -55
-    //   215: aload_2
-    //   216: invokevirtual 205	java/util/logging/Logger:log	(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V
-    //   219: aload_1
-    //   220: astore 5
-    //   222: aload_2
-    //   223: athrow
-    //   224: astore_2
-    //   225: aload 5
-    //   227: astore_1
-    //   228: aload_1
-    //   229: ifnull +7 -> 236
-    //   232: aload_1
-    //   233: invokevirtual 208	java/net/HttpURLConnection:disconnect	()V
-    //   236: aload_2
-    //   237: athrow
-    //   238: aload_3
-    //   239: ifnonnull +8 -> 247
-    //   242: iload 4
-    //   244: ifeq +9 -> 253
-    //   247: aload_1
-    //   248: ldc -46
-    //   250: invokevirtual 213	java/net/HttpURLConnection:setRequestMethod	(Ljava/lang/String;)V
-    //   253: aload_1
-    //   254: invokevirtual 216	java/net/HttpURLConnection:connect	()V
-    //   257: aload_3
-    //   258: ifnull +11 -> 269
-    //   261: aload_1
-    //   262: invokevirtual 220	java/net/HttpURLConnection:getOutputStream	()Ljava/io/OutputStream;
-    //   265: aload_3
-    //   266: invokevirtual 226	java/io/OutputStream:write	([B)V
-    //   269: new 228	java/util/Scanner
-    //   272: dup
-    //   273: aload_1
-    //   274: invokevirtual 232	java/net/HttpURLConnection:getInputStream	()Ljava/io/InputStream;
-    //   277: invokespecial 235	java/util/Scanner:<init>	(Ljava/io/InputStream;)V
-    //   280: ldc -19
-    //   282: invokevirtual 241	java/util/Scanner:useDelimiter	(Ljava/lang/String;)Ljava/util/Scanner;
-    //   285: invokevirtual 243	java/util/Scanner:next	()Ljava/lang/String;
-    //   288: astore_2
-    //   289: ldc 13
-    //   291: iconst_3
-    //   292: invokestatic 105	android/util/Log:isLoggable	(Ljava/lang/String;I)Z
-    //   295: ifne +15 -> 310
-    //   298: getstatic 25	com/baidu/speech/asr/EventContext:logger	Ljava/util/logging/Logger;
-    //   301: getstatic 111	java/util/logging/Level:ALL	Ljava/util/logging/Level;
-    //   304: invokevirtual 114	java/util/logging/Logger:isLoggable	(Ljava/util/logging/Level;)Z
-    //   307: ifeq +28 -> 335
-    //   310: getstatic 25	com/baidu/speech/asr/EventContext:logger	Ljava/util/logging/Logger;
-    //   313: new 116	java/lang/StringBuilder
-    //   316: dup
-    //   317: invokespecial 118	java/lang/StringBuilder:<init>	()V
-    //   320: ldc -11
-    //   322: invokevirtual 124	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   325: aload_2
-    //   326: invokevirtual 124	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   329: invokevirtual 135	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   332: invokevirtual 139	java/util/logging/Logger:info	(Ljava/lang/String;)V
-    //   335: aload_1
-    //   336: ifnull +7 -> 343
-    //   339: aload_1
-    //   340: invokevirtual 208	java/net/HttpURLConnection:disconnect	()V
-    //   343: aload_2
-    //   344: areturn
-    //   345: astore_2
-    //   346: goto -118 -> 228
-    //   349: astore_2
-    //   350: aload 6
-    //   352: astore_1
-    //   353: goto -176 -> 177
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	356	0	this	EventContext
-    //   0	356	1	paramString	String
-    //   0	356	2	paramMap	java.util.Map<String, String>
-    //   0	356	3	paramArrayOfByte	byte[]
-    //   0	356	4	paramBoolean	boolean
-    //   8	218	5	localObject1	Object
-    //   4	347	6	localObject2	Object
-    //   1	79	7	localObject3	Object
-    // Exception table:
-    //   from	to	target	type
-    //   98	129	176	java/lang/Exception
-    //   129	173	176	java/lang/Exception
-    //   247	253	176	java/lang/Exception
-    //   253	257	176	java/lang/Exception
-    //   261	269	176	java/lang/Exception
-    //   269	310	176	java/lang/Exception
-    //   310	335	176	java/lang/Exception
-    //   10	19	224	finally
-    //   23	35	224	finally
-    //   39	79	224	finally
-    //   83	98	224	finally
-    //   180	189	224	finally
-    //   192	204	224	finally
-    //   207	219	224	finally
-    //   222	224	224	finally
-    //   98	129	345	finally
-    //   129	173	345	finally
-    //   247	253	345	finally
-    //   253	257	345	finally
-    //   261	269	345	finally
-    //   269	310	345	finally
-    //   310	335	345	finally
-    //   10	19	349	java/lang/Exception
-    //   23	35	349	java/lang/Exception
-    //   39	79	349	java/lang/Exception
-    //   83	98	349	java/lang/Exception
-  }
-  
-  public String join(List<String> paramList, String paramString)
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    paramList = paramList.iterator();
-    int i = 1;
-    if (paramList.hasNext())
-    {
-      String str = (String)paramList.next();
-      if (i != 0) {
-        i = 0;
-      }
-      for (;;)
-      {
-        localStringBuilder.append(str);
-        break;
-        localStringBuilder.append(paramString);
-      }
-    }
-    return localStringBuilder.toString();
-  }
-  
-  public byte[] loadBytesFromUri(String paramString)
-    throws IOException
-  {
-    byte[] arrayOfByte = null;
-    ByteArrayOutputStream localByteArrayOutputStream = null;
-    Object localObject1 = arrayOfByte;
-    Object localObject2;
-    String str;
-    for (;;)
-    {
-      try
-      {
-        if (paramString.contains("://"))
-        {
-          localObject1 = arrayOfByte;
-          localObject2 = Pattern.compile("(.*?)://(.*)").matcher(paramString);
-          paramString = localByteArrayOutputStream;
-          localObject1 = arrayOfByte;
-          if (((Matcher)localObject2).find())
-          {
-            localObject1 = arrayOfByte;
-            str = ((Matcher)localObject2).group(1);
-            localObject1 = arrayOfByte;
-            localObject2 = ((Matcher)localObject2).group(2);
-            localObject1 = arrayOfByte;
-            if (!str.equalsIgnoreCase("file")) {
-              break;
+public final class EventContext extends ContextWrapper {
+    private static final String TAG = "EventContext";
+    private static final Logger logger = Logger.getLogger(TAG);
+
+    private static class SmartLogger {
+        private static final String TAG = "baidu_speech";
+        private static final Logger logger = Logger.getLogger(TAG);
+
+        static {
+            logger.setLevel(Level.OFF);
+        }
+
+        private SmartLogger() {
+        }
+
+        public static <T> T wrap(Object obj, String[] strArr) {
+            return wrap(TAG, obj, strArr);
+        }
+
+        public static <T> T wrap(String str, final Object obj, final String... strArr) {
+            final boolean isLoggable = Log.isLoggable(TAG, 3);
+            if (Log.isLoggable(TAG, 3)) {
+                logger.setLevel(Level.ALL);
             }
-            localObject1 = arrayOfByte;
-            paramString = new FileInputStream((String)localObject2);
-          }
-          if (paramString != null) {
-            break label269;
-          }
-          localObject1 = paramString;
-          throw new IOException("bad data source");
+            ArrayList arrayList = new ArrayList();
+            Class cls = obj.getClass();
+            do {
+                arrayList.addAll(Arrays.asList(cls.getInterfaces()));
+                cls = cls.getSuperclass();
+            } while (cls != Object.class);
+            return Proxy.newProxyInstance(obj.getClass().getClassLoader(), (Class[]) arrayList.toArray(new Class[0]), new InvocationHandler() {
+                public Object invoke(Object obj, Method method, Object[] objArr) throws Throwable {
+                    Object invoke = method.invoke(obj, objArr);
+                    StringBuffer stringBuffer = new StringBuffer();
+                    String name = (strArr == null || strArr.length <= 0) ? obj.getClass().getName() : strArr[0];
+                    stringBuffer.append(name + "@" + Integer.toHexString(obj.hashCode()));
+                    stringBuffer.append("." + method.getName() + "(");
+                    if (objArr != null) {
+                        for (Object obj2 : objArr) {
+                            name = obj2 + "";
+                            if (!isLoggable) {
+                                name = name.replaceAll("[\r\n]]", "");
+                                name = name.substring(0, Math.min(50, name.length()));
+                            }
+                            stringBuffer.append(name + ", ");
+                        }
+                    }
+                    stringBuffer.append(") : " + invoke);
+                    SmartLogger.logger.info(stringBuffer.toString());
+                    return invoke;
+                }
+            });
         }
-      }
-      finally
-      {
-        if (localObject1 != null) {
-          ((InputStream)localObject1).close();
+    }
+
+    public EventContext(Context context) {
+        super(context);
+    }
+
+    public static short[] byteToShortArray(byte[] bArr, int i, int i2) {
+        if (i2 == 0) {
+            return new short[0];
         }
-      }
-      localObject1 = arrayOfByte;
-      paramString = "file://" + paramString;
+        ByteBuffer allocate = ByteBuffer.allocate(i2);
+        allocate.order(ByteOrder.nativeOrder());
+        allocate.put(bArr, i, i2);
+        allocate.clear();
+        short[] sArr = new short[(i2 / 2)];
+        allocate.asShortBuffer().get(sArr);
+        return sArr;
     }
-    localObject1 = arrayOfByte;
-    if (!str.equalsIgnoreCase("asset"))
-    {
-      localObject1 = arrayOfByte;
-      if (!str.equalsIgnoreCase("assets")) {}
-    }
-    else
-    {
-      localObject1 = arrayOfByte;
-      if (!((String)localObject2).startsWith("/")) {
-        break label341;
-      }
-    }
-    label269:
-    label341:
-    for (paramString = "";; paramString = "/")
-    {
-      localObject1 = arrayOfByte;
-      paramString = getClass().getResourceAsStream("/assets" + paramString + (String)localObject2);
-      break;
-      paramString = localByteArrayOutputStream;
-      localObject1 = arrayOfByte;
-      if (!str.equalsIgnoreCase("res")) {
-        break;
-      }
-      localObject1 = arrayOfByte;
-      paramString = getClass().getResourceAsStream((String)localObject2);
-      break;
-      localObject1 = paramString;
-      arrayOfByte = new byte['Ѐ'];
-      localObject1 = paramString;
-      localByteArrayOutputStream = new ByteArrayOutputStream();
-      for (;;)
-      {
-        localObject1 = paramString;
-        int i = paramString.read(arrayOfByte, 0, arrayOfByte.length);
-        if (-1 == i) {
-          break;
+
+    public static long computePower(short[] sArr, int i) {
+        if (sArr == null) {
+            return 0;
         }
-        localObject1 = paramString;
-        localByteArrayOutputStream.write(arrayOfByte, 0, i);
-      }
-      localObject1 = paramString;
-      arrayOfByte = localByteArrayOutputStream.toByteArray();
-      if (paramString != null) {
-        paramString.close();
-      }
-      return arrayOfByte;
-    }
-  }
-  
-  public JSONObject loadJsonFromUri(String paramString)
-  {
-    return loadJsonFromUri(paramString, false, false);
-  }
-  
-  public JSONObject loadJsonFromUri(String paramString, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    try
-    {
-      paramString = loadJsonFromUriOrThrow(paramString, paramBoolean1, paramBoolean2);
-      return paramString;
-    }
-    catch (Exception paramString) {}
-    return null;
-  }
-  
-  public JSONObject loadJsonFromUriOrThrow(String paramString)
-    throws IOException, JSONException
-  {
-    return loadJsonFromUriOrThrow(paramString, false, false);
-  }
-  
-  public JSONObject loadJsonFromUriOrThrow(String paramString, boolean paramBoolean1, boolean paramBoolean2)
-    throws IOException, JSONException
-  {
-    String str = loadStringFromUri(paramString, paramBoolean1);
-    paramString = str;
-    if (paramBoolean2) {
-      paramString = URLDecoder.decode(str, "UTF-8");
-    }
-    return new JSONObject(paramString);
-  }
-  
-  public String loadStringFromUri(String paramString)
-    throws IOException
-  {
-    return loadStringFromUri(paramString, false);
-  }
-  
-  public String loadStringFromUri(String paramString, boolean paramBoolean)
-    throws IOException
-  {
-    paramString = loadBytesFromUri(paramString);
-    if (paramBoolean) {
-      return new String(Base64.decode(paramString, 0), "UTF-8");
-    }
-    return new String(paramString, "UTF-8");
-  }
-  
-  public <T> T loggerIt(Object paramObject, String... paramVarArgs)
-  {
-    return (T)SmartLogger.wrap(paramObject, paramVarArgs);
-  }
-  
-  public Object searchItemFromJson(JSONObject paramJSONObject, String paramString)
-    throws JSONException
-  {
-    if (paramJSONObject == null) {
-      return null;
-    }
-    if (TextUtils.isEmpty(paramString)) {
-      return null;
-    }
-    Iterator localIterator = paramJSONObject.keys();
-    while (localIterator.hasNext())
-    {
-      Object localObject = (String)localIterator.next();
-      if (((String)localObject).equals(paramString)) {
-        return paramJSONObject.get(paramString);
-      }
-      localObject = paramJSONObject.get((String)localObject);
-      if ((localObject instanceof JSONObject))
-      {
-        localObject = searchItemFromJson((JSONObject)localObject, paramString);
-        if (localObject != null) {
-          return localObject;
+        System.currentTimeMillis();
+        int min = Math.min(i / 2, 512);
+        if (min <= 0) {
+            return 0;
         }
-      }
+        long j = 0;
+        for (int i2 = 0; i2 < min; i2++) {
+            j += (long) (sArr[i2 * 2] * sArr[i2 * 2]);
+        }
+        return (long) Math.sqrt((double) (j / ((long) min)));
     }
-    return null;
-  }
-  
-  private static class SmartLogger
-  {
-    private static final String TAG = "baidu_speech";
-    private static final Logger logger = Logger.getLogger("baidu_speech");
-    
-    static
-    {
-      logger.setLevel(Level.OFF);
+
+    public long computePower(byte[] bArr, int i) {
+        short[] sArr = new short[(i / 2)];
+        for (int i2 = 0; i2 < sArr.length; i2++) {
+            sArr[i2] = (short) ((bArr[(i2 * 2) + 1] << 8) | (bArr[(i2 * 2) + 0] & 255));
+        }
+        return computePower(sArr, sArr.length);
     }
-    
-    public static <T> T wrap(Object paramObject, String[] paramArrayOfString)
-    {
-      return (T)wrap("baidu_speech", paramObject, paramArrayOfString);
+
+    public SharedPreferences getSdkSharedPreferences() {
+        return super.getSharedPreferences("bds", 0);
     }
-    
-    public static <T> T wrap(String paramString, Object paramObject, final String... paramVarArgs)
-    {
-      final boolean bool = Log.isLoggable("baidu_speech", 3);
-      if (Log.isLoggable("baidu_speech", 3)) {
-        logger.setLevel(Level.ALL);
-      }
-      ArrayList localArrayList = new ArrayList();
-      paramString = paramObject.getClass();
-      Class localClass;
-      do
-      {
-        localArrayList.addAll(Arrays.asList(paramString.getInterfaces()));
-        localClass = paramString.getSuperclass();
-        paramString = localClass;
-      } while (localClass != Object.class);
-      (T)Proxy.newProxyInstance(paramObject.getClass().getClassLoader(), (Class[])localArrayList.toArray(new Class[0]), new InvocationHandler()
-      {
-        public Object invoke(Object paramAnonymousObject, Method paramAnonymousMethod, Object[] paramAnonymousArrayOfObject)
-          throws Throwable
-        {
-          Object localObject = paramAnonymousMethod.invoke(this.val$target, paramAnonymousArrayOfObject);
-          StringBuffer localStringBuffer = new StringBuffer();
-          if ((paramVarArgs != null) && (paramVarArgs.length > 0)) {}
-          for (paramAnonymousObject = paramVarArgs[0];; paramAnonymousObject = this.val$target.getClass().getName())
-          {
-            localStringBuffer.append((String)paramAnonymousObject + "@" + Integer.toHexString(this.val$target.hashCode()));
-            localStringBuffer.append("." + paramAnonymousMethod.getName() + "(");
-            if (paramAnonymousArrayOfObject == null) {
-              break;
+
+    public String httpRequest(String str, Map<String, String> map, byte[] bArr, boolean z) throws Exception {
+        Throwable th;
+        Throwable th2;
+        HttpURLConnection httpURLConnection = null;
+        try {
+            if (Log.isLoggable(TAG, 3) || logger.isLoggable(Level.ALL)) {
+                logger.info("cur time: " + (System.currentTimeMillis() % 1000000) + ", http req: " + str);
             }
-            int j = paramAnonymousArrayOfObject.length;
-            int i = 0;
-            while (i < j)
-            {
-              paramAnonymousObject = paramAnonymousArrayOfObject[i];
-              paramAnonymousMethod = paramAnonymousObject + "";
-              paramAnonymousObject = paramAnonymousMethod;
-              if (!bool)
-              {
-                paramAnonymousObject = paramAnonymousMethod.replaceAll("[\r\n]]", "");
-                paramAnonymousObject = ((String)paramAnonymousObject).substring(0, Math.min(50, ((String)paramAnonymousObject).length()));
-              }
-              localStringBuffer.append((String)paramAnonymousObject + ", ");
-              i += 1;
+            HttpURLConnection httpURLConnection2 = (HttpURLConnection) new URL(str).openConnection();
+            try {
+                httpURLConnection2.setConnectTimeout(8000);
+                httpURLConnection2.setReadTimeout(8000);
+                httpURLConnection2.setInstanceFollowRedirects(false);
+                for (Entry entry : map.entrySet()) {
+                    httpURLConnection2.setRequestProperty((String) entry.getKey(), (String) entry.getValue());
+                }
+                if (bArr != null || z) {
+                    httpURLConnection2.setRequestMethod("POST");
+                }
+                httpURLConnection2.connect();
+                if (bArr != null) {
+                    httpURLConnection2.getOutputStream().write(bArr);
+                }
+                String next = new Scanner(httpURLConnection2.getInputStream()).useDelimiter("\\A").next();
+                if (Log.isLoggable(TAG, 3) || logger.isLoggable(Level.ALL)) {
+                    logger.info("http res: " + next);
+                }
+                if (httpURLConnection2 != null) {
+                    httpURLConnection2.disconnect();
+                }
+                return next;
+            } catch (Throwable e) {
+                th = e;
+                httpURLConnection = httpURLConnection2;
+                th2 = th;
+                try {
+                    if (Log.isLoggable(TAG, 3) || logger.isLoggable(Level.ALL)) {
+                        logger.log(Level.WARNING, "", th2);
+                    }
+                    throw th2;
+                } catch (Throwable th3) {
+                    th2 = th3;
+                    if (httpURLConnection != null) {
+                        httpURLConnection.disconnect();
+                    }
+                    throw th2;
+                }
+            } catch (Throwable e2) {
+                th = e2;
+                httpURLConnection = httpURLConnection2;
+                th2 = th;
+                if (httpURLConnection != null) {
+                    httpURLConnection.disconnect();
+                }
+                throw th2;
             }
-          }
-          localStringBuffer.append(") : " + localObject);
-          EventContext.SmartLogger.logger.info(localStringBuffer.toString());
-          return localObject;
+        } catch (Exception e3) {
+            th2 = e3;
+            logger.log(Level.WARNING, "", th2);
+            throw th2;
         }
-      });
     }
-  }
+
+    public String join(List<String> list, String str) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Object obj = 1;
+        for (String str2 : list) {
+            if (obj != null) {
+                obj = null;
+            } else {
+                stringBuilder.append(str);
+            }
+            stringBuilder.append(str2);
+        }
+        return stringBuilder.toString();
+    }
+
+    public byte[] loadBytesFromUri(String str) throws IOException {
+        InputStream inputStream = null;
+        try {
+            CharSequence charSequence;
+            if (!str.contains("://")) {
+                charSequence = "file://" + str;
+            }
+            Matcher matcher = Pattern.compile("(.*?)://(.*)").matcher(charSequence);
+            if (matcher.find()) {
+                String group = matcher.group(1);
+                String group2 = matcher.group(2);
+                if (group.equalsIgnoreCase(C2924g.f12889c)) {
+                    inputStream = new FileInputStream(group2);
+                } else if (group.equalsIgnoreCase(C2924g.f12891e) || group.equalsIgnoreCase("assets")) {
+                    inputStream = getClass().getResourceAsStream("/assets" + (group2.startsWith("/") ? "" : "/") + group2);
+                } else if (group.equalsIgnoreCase(C2924g.f12892f)) {
+                    inputStream = getClass().getResourceAsStream(group2);
+                }
+            }
+            if (inputStream == null) {
+                throw new IOException("bad data source");
+            }
+            byte[] bArr = new byte[1024];
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            while (true) {
+                int read = inputStream.read(bArr, 0, bArr.length);
+                if (-1 == read) {
+                    break;
+                }
+                byteArrayOutputStream.write(bArr, 0, read);
+            }
+            bArr = byteArrayOutputStream.toByteArray();
+            return bArr;
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+    }
+
+    public JSONObject loadJsonFromUri(String str) {
+        return loadJsonFromUri(str, false, false);
+    }
+
+    public JSONObject loadJsonFromUri(String str, boolean z, boolean z2) {
+        try {
+            return loadJsonFromUriOrThrow(str, z, z2);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public JSONObject loadJsonFromUriOrThrow(String str) throws IOException, JSONException {
+        return loadJsonFromUriOrThrow(str, false, false);
+    }
+
+    public JSONObject loadJsonFromUriOrThrow(String str, boolean z, boolean z2) throws IOException, JSONException {
+        String loadStringFromUri = loadStringFromUri(str, z);
+        if (z2) {
+            loadStringFromUri = URLDecoder.decode(loadStringFromUri, "UTF-8");
+        }
+        return new JSONObject(loadStringFromUri);
+    }
+
+    public String loadStringFromUri(String str) throws IOException {
+        return loadStringFromUri(str, false);
+    }
+
+    public String loadStringFromUri(String str, boolean z) throws IOException {
+        byte[] loadBytesFromUri = loadBytesFromUri(str);
+        return z ? new String(Base64.decode(loadBytesFromUri, 0), "UTF-8") : new String(loadBytesFromUri, "UTF-8");
+    }
+
+    public <T> T loggerIt(Object obj, String... strArr) {
+        return SmartLogger.wrap(obj, strArr);
+    }
+
+    public Object searchItemFromJson(JSONObject jSONObject, String str) throws JSONException {
+        if (jSONObject == null) {
+            return null;
+        }
+        if (TextUtils.isEmpty(str)) {
+            return null;
+        }
+        Iterator keys = jSONObject.keys();
+        while (keys.hasNext()) {
+            String str2 = (String) keys.next();
+            if (str2.equals(str)) {
+                return jSONObject.get(str);
+            }
+            Object obj = jSONObject.get(str2);
+            if (obj instanceof JSONObject) {
+                obj = searchItemFromJson((JSONObject) obj, str);
+                if (obj != null) {
+                    return obj;
+                }
+            }
+        }
+        return null;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/speech/asr/EventContext.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

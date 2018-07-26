@@ -6,75 +6,69 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.UnknownHostException;
 
-public final class bd
-{
-  public static int a = 7;
-  
-  private static String a()
-  {
-    return "Bottom";
-  }
-  
-  private static void a(int paramInt, String paramString)
-  {
-    if (a(paramInt)) {
-      Log.println(paramInt, a(), paramString);
+public final class bd {
+    /* renamed from: a */
+    public static int f19438a = 7;
+
+    /* renamed from: a */
+    public static void m15428a(String str) {
+        m15427a(3, str);
     }
-  }
-  
-  public static void a(String paramString)
-  {
-    a(3, paramString);
-  }
-  
-  public static void a(Throwable paramThrowable)
-  {
-    a(3, d(paramThrowable));
-  }
-  
-  private static boolean a(int paramInt)
-  {
-    return paramInt >= a;
-  }
-  
-  public static void b(String paramString)
-  {
-    a(5, paramString);
-  }
-  
-  public static void b(Throwable paramThrowable)
-  {
-    a(5, d(paramThrowable));
-  }
-  
-  public static void c(String paramString)
-  {
-    a(6, paramString);
-  }
-  
-  public static void c(Throwable paramThrowable)
-  {
-    a(6, d(paramThrowable));
-  }
-  
-  private static String d(Throwable paramThrowable)
-  {
-    if (paramThrowable == null) {
-      return "";
+
+    /* renamed from: a */
+    public static void m15429a(Throwable th) {
+        m15427a(3, m15435d(th));
     }
-    for (Object localObject = paramThrowable; localObject != null; localObject = ((Throwable)localObject).getCause()) {
-      if ((localObject instanceof UnknownHostException)) {
-        return "";
-      }
+
+    /* renamed from: b */
+    public static void m15431b(String str) {
+        m15427a(5, str);
     }
-    localObject = new StringWriter();
-    paramThrowable.printStackTrace(new PrintWriter((Writer)localObject));
-    return ((StringWriter)localObject).toString();
-  }
+
+    /* renamed from: b */
+    public static void m15432b(Throwable th) {
+        m15427a(5, m15435d(th));
+    }
+
+    /* renamed from: c */
+    public static void m15433c(String str) {
+        m15427a(6, str);
+    }
+
+    /* renamed from: c */
+    public static void m15434c(Throwable th) {
+        m15427a(6, m15435d(th));
+    }
+
+    /* renamed from: d */
+    private static String m15435d(Throwable th) {
+        if (th == null) {
+            return "";
+        }
+        for (Throwable th2 = th; th2 != null; th2 = th2.getCause()) {
+            if (th2 instanceof UnknownHostException) {
+                return "";
+            }
+        }
+        Writer stringWriter = new StringWriter();
+        th.printStackTrace(new PrintWriter(stringWriter));
+        return stringWriter.toString();
+    }
+
+    /* renamed from: a */
+    private static void m15427a(int i, String str) {
+        if (m15430a(i)) {
+            Log.println(i, m15426a(), str);
+        }
+    }
+
+    /* renamed from: a */
+    private static boolean m15430a(int i) {
+        return i >= f19438a;
+    }
+
+    /* renamed from: a */
+    private static String m15426a() {
+        return "Bottom";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bd.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

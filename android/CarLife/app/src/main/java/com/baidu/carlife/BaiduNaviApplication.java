@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Process;
-import android.support.multidex.b;
+import android.support.multidex.C0047b;
 import com.baidu.baidunavis.NavMapAdapter;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.util.C2191s;
+import com.baidu.carlife.wechat.C2374a;
 import com.baidu.mapframework.common.config.GlobalConfig;
 import com.baidu.mapframework.common.mapview.MapViewFactory;
 import com.baidu.mapframework.commonlib.utils.ProcessUtil;
@@ -19,114 +22,90 @@ import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.util.common.AudioUtils;
 import com.baidu.navisdk.util.db.DBManager;
 import com.baidu.navisdk.vi.VDeviceAPI;
-import com.baidu.platform.comapi.c;
+import com.baidu.platform.comapi.C2907c;
 import com.baidu.platform.comjni.engine.NAEngine;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
-import java.util.List;
 
-public class BaiduNaviApplication
-  extends Application
-  implements Thread.UncaughtExceptionHandler
-{
-  private static final String TAG = "BaiduNaviApplication";
-  private static BaiduNaviApplication mInstance = null;
-  
-  public static BaiduNaviApplication getInstance()
-  {
-    return mInstance;
-  }
-  
-  protected void attachBaseContext(Context paramContext)
-  {
-    super.attachBaseContext(paramContext);
-    b.a(this);
-    c.b(this);
-    c.a(this);
-  }
-  
-  public void exitApp(boolean paramBoolean)
-  {
-    if (!paramBoolean) {
-      killProccess();
+public class BaiduNaviApplication extends Application implements UncaughtExceptionHandler {
+    private static final String TAG = "BaiduNaviApplication";
+    private static BaiduNaviApplication mInstance = null;
+
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        C0047b.m139a((Context) this);
+        C2907c.m10972b(this);
+        C2907c.m10970a(this);
     }
-    for (;;)
-    {
-      mInstance = null;
-      DBManager.destroy();
-      FavoritePois.destroyPoiFav();
-      return;
-      relaseBeforeExit();
-      killProccess();
+
+    public void onCreate() {
+        super.onCreate();
+        C1260i.m4435b(TAG, "onCreate");
+        mInstance = this;
+        C1157a.m3877a(this);
+        C2907c.m10974c();
+        StorageSettings.getInstance().initialize(this);
+        C2907c.m10975d();
+        NAEngine.startSocketProc();
+        BNSettingManager.init(this);
+        if (ProcessUtil.isMainProcess(this)) {
+            MapViewFactory.getInstance().preCreateMapViewInstance();
+        }
+        Thread.setDefaultUncaughtExceptionHandler(this);
+        C2191s.f7018l = System.currentTimeMillis();
+        C2374a.m9042a(this);
+        GlobalConfig.getInstance().setmOpen3D(Boolean.valueOf(false));
+        GlobalConfig.getInstance().setOpenOverlook(Boolean.valueOf(false));
     }
-  }
-  
-  public void killProccess()
-  {
-    i.b("jason", "killProcess");
-    VDeviceAPI.setScreenAlwaysOn(false);
-    Process.killProcess(Process.myPid());
-  }
-  
-  public void onCreate()
-  {
-    super.onCreate();
-    i.b("BaiduNaviApplication", "onCreate");
-    mInstance = this;
-    com.baidu.carlife.core.a.a(this);
-    c.c();
-    StorageSettings.getInstance().initialize(this);
-    c.d();
-    NAEngine.startSocketProc();
-    BNSettingManager.init(this);
-    if (ProcessUtil.isMainProcess(this)) {
-      MapViewFactory.getInstance().preCreateMapViewInstance();
+
+    public static BaiduNaviApplication getInstance() {
+        return mInstance;
     }
-    Thread.setDefaultUncaughtExceptionHandler(this);
-    com.baidu.carlife.util.s.l = System.currentTimeMillis();
-    com.baidu.carlife.wechat.a.a(this);
-    GlobalConfig.getInstance().setmOpen3D(Boolean.valueOf(false));
-    GlobalConfig.getInstance().setOpenOverlook(Boolean.valueOf(false));
-  }
-  
-  public void onLowMemory()
-  {
-    super.onLowMemory();
-  }
-  
-  public void onTerminate()
-  {
-    super.onTerminate();
-  }
-  
-  public void relaseBeforeExit()
-  {
-    i.b("jason", "releaseBeforeExit after engine init success");
-    if (AssetsDexInjectHelper.getInstance().isNaviInjectSuccess()) {
-      NavMapAdapter.destroy();
+
+    public void onLowMemory() {
+        super.onLowMemory();
     }
-    c.e();
-    AudioUtils.unInit();
-  }
-  
-  public void uncaughtException(Thread paramThread, Throwable paramThrowable)
-  {
-    i.b(paramThrowable);
-    paramThread = ActivityStack.getActivityStack().iterator();
-    while (paramThread.hasNext())
-    {
-      paramThrowable = (Activity)((WeakReference)paramThread.next()).get();
-      if (paramThrowable != null) {
-        paramThrowable.moveTaskToBack(true);
-      }
+
+    public void onTerminate() {
+        super.onTerminate();
     }
-    ForegroundService.stop(getApplicationContext());
-    exitApp(true);
-  }
+
+    public void uncaughtException(Thread arg0, Throwable arg1) {
+        C1260i.m4439b(arg1);
+        for (WeakReference<Activity> weakReference : ActivityStack.getActivityStack()) {
+            Activity activity = (Activity) weakReference.get();
+            if (activity != null) {
+                activity.moveTaskToBack(true);
+            }
+        }
+        ForegroundService.stop(getApplicationContext());
+        exitApp(true);
+    }
+
+    public void exitApp(boolean needRelease) {
+        if (needRelease) {
+            relaseBeforeExit();
+            killProccess();
+        } else {
+            killProccess();
+        }
+        mInstance = null;
+        DBManager.destroy();
+        FavoritePois.destroyPoiFav();
+    }
+
+    public void relaseBeforeExit() {
+        C1260i.m4435b("jason", "releaseBeforeExit after engine init success");
+        if (AssetsDexInjectHelper.getInstance().isNaviInjectSuccess()) {
+            NavMapAdapter.destroy();
+        }
+        C2907c.m10976e();
+        AudioUtils.unInit();
+    }
+
+    public void killProccess() {
+        C1260i.m4435b("jason", "killProcess");
+        VDeviceAPI.setScreenAlwaysOn(false);
+        Process.killProcess(Process.myPid());
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/BaiduNaviApplication.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

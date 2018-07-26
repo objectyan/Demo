@@ -2,31 +2,23 @@ package com.google.android.support.v4.view.accessibility;
 
 import android.view.accessibility.AccessibilityRecord;
 
-class AccessibilityRecordCompatIcsMr1
-{
-  public static int getMaxScrollX(Object paramObject)
-  {
-    return ((AccessibilityRecord)paramObject).getMaxScrollX();
-  }
-  
-  public static int getMaxScrollY(Object paramObject)
-  {
-    return ((AccessibilityRecord)paramObject).getMaxScrollY();
-  }
-  
-  public static void setMaxScrollX(Object paramObject, int paramInt)
-  {
-    ((AccessibilityRecord)paramObject).setMaxScrollX(paramInt);
-  }
-  
-  public static void setMaxScrollY(Object paramObject, int paramInt)
-  {
-    ((AccessibilityRecord)paramObject).setMaxScrollY(paramInt);
-  }
+class AccessibilityRecordCompatIcsMr1 {
+    AccessibilityRecordCompatIcsMr1() {
+    }
+
+    public static int getMaxScrollX(Object record) {
+        return ((AccessibilityRecord) record).getMaxScrollX();
+    }
+
+    public static int getMaxScrollY(Object record) {
+        return ((AccessibilityRecord) record).getMaxScrollY();
+    }
+
+    public static void setMaxScrollX(Object record, int maxScrollX) {
+        ((AccessibilityRecord) record).setMaxScrollX(maxScrollX);
+    }
+
+    public static void setMaxScrollY(Object record, int maxScrollY) {
+        ((AccessibilityRecord) record).setMaxScrollY(maxScrollY);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/accessibility/AccessibilityRecordCompatIcsMr1.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

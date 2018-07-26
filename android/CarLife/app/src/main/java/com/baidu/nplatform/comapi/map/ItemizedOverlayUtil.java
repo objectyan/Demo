@@ -3,123 +3,107 @@ package com.baidu.nplatform.comapi.map;
 import android.graphics.drawable.Drawable;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 
-public class ItemizedOverlayUtil
-{
-  private MapWrapper mMapWrapper;
-  
-  public static ItemizedOverlayUtil getInstance()
-  {
-    return Holder.OVERLAY;
-  }
-  
-  public void addMapItem(OverlayItem paramOverlayItem)
-  {
-    if (getMapWrapper() != null) {
-      getMapWrapper().addMapItem(paramOverlayItem);
+public class ItemizedOverlayUtil {
+    private MapWrapper mMapWrapper;
+
+    public interface OnTapListener {
+        boolean onTap(int i);
+
+        boolean onTap(int i, int i2, GeoPoint geoPoint);
+
+        boolean onTap(GeoPoint geoPoint);
     }
-  }
-  
-  public MapWrapper getMapWrapper()
-  {
-    return this.mMapWrapper;
-  }
-  
-  public OnTapListener getOnTapListener()
-  {
-    if (getMapWrapper() != null) {
-      return getMapWrapper().getOnTapListener();
+
+    private static class Holder {
+        static final ItemizedOverlayUtil OVERLAY = new ItemizedOverlayUtil();
+
+        private Holder() {
+        }
     }
-    return null;
-  }
-  
-  public OverlayItem getOverlayItem(GeoPoint paramGeoPoint, Drawable paramDrawable)
-  {
-    paramGeoPoint = new OverlayItem(paramGeoPoint, "mItem", "");
-    paramGeoPoint.setMarker(paramDrawable);
-    return paramGeoPoint;
-  }
-  
-  public void hide()
-  {
-    if (getMapWrapper() != null) {
-      getMapWrapper().showItemizedOverlay(false);
+
+    public interface MapWrapper {
+        void addMapItem(OverlayItem overlayItem);
+
+        OnTapListener getOnTapListener();
+
+        void refresh();
+
+        void removeAllItems();
+
+        void removeMapItem(OverlayItem overlayItem);
+
+        void setOnTapListener(OnTapListener onTapListener);
+
+        void showItemizedOverlay(boolean z);
     }
-  }
-  
-  public void refresh()
-  {
-    if (getMapWrapper() != null) {
-      getMapWrapper().refresh();
+
+    public static ItemizedOverlayUtil getInstance() {
+        return Holder.OVERLAY;
     }
-  }
-  
-  public void removeAllItems()
-  {
-    if (getMapWrapper() != null) {
-      getMapWrapper().removeAllItems();
+
+    private ItemizedOverlayUtil() {
     }
-  }
-  
-  public void removeMapItem(OverlayItem paramOverlayItem)
-  {
-    if (getMapWrapper() != null) {
-      getMapWrapper().removeMapItem(paramOverlayItem);
+
+    public void show() {
+        if (getMapWrapper() != null) {
+            getMapWrapper().showItemizedOverlay(true);
+        }
     }
-  }
-  
-  public void setMapWrapper(MapWrapper paramMapWrapper)
-  {
-    this.mMapWrapper = paramMapWrapper;
-  }
-  
-  public void setOnTapListener(OnTapListener paramOnTapListener)
-  {
-    if (getMapWrapper() != null) {
-      getMapWrapper().setOnTapListener(paramOnTapListener);
+
+    public void hide() {
+        if (getMapWrapper() != null) {
+            getMapWrapper().showItemizedOverlay(false);
+        }
     }
-  }
-  
-  public void show()
-  {
-    if (getMapWrapper() != null) {
-      getMapWrapper().showItemizedOverlay(true);
+
+    public OverlayItem getOverlayItem(GeoPoint geoPoint, Drawable drawable) {
+        OverlayItem navItem = new OverlayItem(geoPoint, "mItem", "");
+        navItem.setMarker(drawable);
+        return navItem;
     }
-  }
-  
-  private static class Holder
-  {
-    static final ItemizedOverlayUtil OVERLAY = new ItemizedOverlayUtil(null);
-  }
-  
-  public static abstract interface MapWrapper
-  {
-    public abstract void addMapItem(OverlayItem paramOverlayItem);
-    
-    public abstract ItemizedOverlayUtil.OnTapListener getOnTapListener();
-    
-    public abstract void refresh();
-    
-    public abstract void removeAllItems();
-    
-    public abstract void removeMapItem(OverlayItem paramOverlayItem);
-    
-    public abstract void setOnTapListener(ItemizedOverlayUtil.OnTapListener paramOnTapListener);
-    
-    public abstract void showItemizedOverlay(boolean paramBoolean);
-  }
-  
-  public static abstract interface OnTapListener
-  {
-    public abstract boolean onTap(int paramInt);
-    
-    public abstract boolean onTap(int paramInt1, int paramInt2, GeoPoint paramGeoPoint);
-    
-    public abstract boolean onTap(GeoPoint paramGeoPoint);
-  }
+
+    public void addMapItem(OverlayItem item) {
+        if (getMapWrapper() != null) {
+            getMapWrapper().addMapItem(item);
+        }
+    }
+
+    public void removeMapItem(OverlayItem item) {
+        if (getMapWrapper() != null) {
+            getMapWrapper().removeMapItem(item);
+        }
+    }
+
+    public void removeAllItems() {
+        if (getMapWrapper() != null) {
+            getMapWrapper().removeAllItems();
+        }
+    }
+
+    public void refresh() {
+        if (getMapWrapper() != null) {
+            getMapWrapper().refresh();
+        }
+    }
+
+    public OnTapListener getOnTapListener() {
+        if (getMapWrapper() != null) {
+            return getMapWrapper().getOnTapListener();
+        }
+        return null;
+    }
+
+    public void setOnTapListener(OnTapListener mOnTapListener) {
+        if (getMapWrapper() != null) {
+            getMapWrapper().setOnTapListener(mOnTapListener);
+        }
+    }
+
+    public MapWrapper getMapWrapper() {
+        return this.mMapWrapper;
+    }
+
+    public void setMapWrapper(MapWrapper mMapWrapper) {
+        this.mMapWrapper = mMapWrapper;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/nplatform/comapi/map/ItemizedOverlayUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

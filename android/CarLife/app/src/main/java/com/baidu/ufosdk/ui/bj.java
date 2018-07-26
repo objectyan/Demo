@@ -5,20 +5,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-final class bj
-  implements View.OnTouchListener
-{
-  bj(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  @SuppressLint({"ClickableViewAccessibility"})
-  public final boolean onTouch(View paramView, MotionEvent paramMotionEvent)
-  {
-    return false;
-  }
+/* compiled from: FeedbackInputActivity */
+final class bj implements OnTouchListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21578a;
+
+    bj(FeedbackInputActivity feedbackInputActivity) {
+        this.f21578a = feedbackInputActivity;
+    }
+
+    @SuppressLint({"ClickableViewAccessibility"})
+    public final boolean onTouch(View view, MotionEvent motionEvent) {
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bj.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -10,112 +10,78 @@ import com.google.zxing.common.reedsolomon.ReedSolomonDecoder;
 import com.google.zxing.common.reedsolomon.ReedSolomonException;
 import java.util.Map;
 
-public final class Decoder
-{
-  private final ReedSolomonDecoder rsDecoder = new ReedSolomonDecoder(GenericGF.QR_CODE_FIELD_256);
-  
-  private void correctErrors(byte[] paramArrayOfByte, int paramInt)
-    throws ChecksumException
-  {
-    int j = paramArrayOfByte.length;
-    int[] arrayOfInt = new int[j];
-    int i = 0;
-    while (i < j)
-    {
-      paramArrayOfByte[i] &= 0xFF;
-      i += 1;
+public final class Decoder {
+    private final ReedSolomonDecoder rsDecoder = new ReedSolomonDecoder(GenericGF.QR_CODE_FIELD_256);
+
+    public DecoderResult decode(boolean[][] image) throws ChecksumException, FormatException {
+        return decode(image, null);
     }
-    i = paramArrayOfByte.length;
-    try
-    {
-      this.rsDecoder.decode(arrayOfInt, i - paramInt);
-      i = 0;
-      while (i < paramInt)
-      {
-        paramArrayOfByte[i] = ((byte)arrayOfInt[i]);
-        i += 1;
-      }
-      return;
-    }
-    catch (ReedSolomonException paramArrayOfByte)
-    {
-      throw ChecksumException.getChecksumInstance();
-    }
-  }
-  
-  public DecoderResult decode(BitMatrix paramBitMatrix)
-    throws ChecksumException, FormatException
-  {
-    return decode(paramBitMatrix, null);
-  }
-  
-  public DecoderResult decode(BitMatrix paramBitMatrix, Map<DecodeHintType, ?> paramMap)
-    throws FormatException, ChecksumException
-  {
-    Object localObject1 = new BitMatrixParser(paramBitMatrix);
-    paramBitMatrix = ((BitMatrixParser)localObject1).readVersion();
-    ErrorCorrectionLevel localErrorCorrectionLevel = ((BitMatrixParser)localObject1).readFormatInformation().getErrorCorrectionLevel();
-    localObject1 = DataBlock.getDataBlocks(((BitMatrixParser)localObject1).readCodewords(), paramBitMatrix, localErrorCorrectionLevel);
-    int j = 0;
-    int k = localObject1.length;
-    int i = 0;
-    while (i < k)
-    {
-      j += localObject1[i].getNumDataCodewords();
-      i += 1;
-    }
-    byte[] arrayOfByte1 = new byte[j];
-    i = 0;
-    int m = localObject1.length;
-    j = 0;
-    while (j < m)
-    {
-      Object localObject2 = localObject1[j];
-      byte[] arrayOfByte2 = ((DataBlock)localObject2).getCodewords();
-      int n = ((DataBlock)localObject2).getNumDataCodewords();
-      correctErrors(arrayOfByte2, n);
-      k = 0;
-      while (k < n)
-      {
-        arrayOfByte1[i] = arrayOfByte2[k];
-        k += 1;
-        i += 1;
-      }
-      j += 1;
-    }
-    return DecodedBitStreamParser.decode(arrayOfByte1, paramBitMatrix, localErrorCorrectionLevel, paramMap);
-  }
-  
-  public DecoderResult decode(boolean[][] paramArrayOfBoolean)
-    throws ChecksumException, FormatException
-  {
-    return decode(paramArrayOfBoolean, null);
-  }
-  
-  public DecoderResult decode(boolean[][] paramArrayOfBoolean, Map<DecodeHintType, ?> paramMap)
-    throws ChecksumException, FormatException
-  {
-    int k = paramArrayOfBoolean.length;
-    BitMatrix localBitMatrix = new BitMatrix(k);
-    int i = 0;
-    while (i < k)
-    {
-      int j = 0;
-      while (j < k)
-      {
-        if (paramArrayOfBoolean[i][j] != 0) {
-          localBitMatrix.set(j, i);
+
+    public DecoderResult decode(boolean[][] image, Map<DecodeHintType, ?> hints) throws ChecksumException, FormatException {
+        int dimension = image.length;
+        BitMatrix bits = new BitMatrix(dimension);
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                if (image[i][j]) {
+                    bits.set(j, i);
+                }
+            }
         }
-        j += 1;
-      }
-      i += 1;
+        return decode(bits, (Map) hints);
     }
-    return decode(localBitMatrix, paramMap);
-  }
+
+    public DecoderResult decode(BitMatrix bits) throws ChecksumException, FormatException {
+        return decode(bits, null);
+    }
+
+    public DecoderResult decode(BitMatrix bits, Map<DecodeHintType, ?> hints) throws FormatException, ChecksumException {
+        BitMatrixParser parser = new BitMatrixParser(bits);
+        Version version = parser.readVersion();
+        ErrorCorrectionLevel ecLevel = parser.readFormatInformation().getErrorCorrectionLevel();
+        DataBlock[] dataBlocks = DataBlock.getDataBlocks(parser.readCodewords(), version, ecLevel);
+        int totalBytes = 0;
+        for (DataBlock dataBlock : dataBlocks) {
+            DataBlock dataBlock2;
+            totalBytes += dataBlock2.getNumDataCodewords();
+        }
+        byte[] resultBytes = new byte[totalBytes];
+        int resultOffset = 0;
+        DataBlock[] arr$ = dataBlocks;
+        int len$ = arr$.length;
+        int i$ = 0;
+        while (i$ < len$) {
+            dataBlock2 = arr$[i$];
+            byte[] codewordBytes = dataBlock2.getCodewords();
+            int numDataCodewords = dataBlock2.getNumDataCodewords();
+            correctErrors(codewordBytes, numDataCodewords);
+            int i = 0;
+            int resultOffset2 = resultOffset;
+            while (i < numDataCodewords) {
+                resultOffset = resultOffset2 + 1;
+                resultBytes[resultOffset2] = codewordBytes[i];
+                i++;
+                resultOffset2 = resultOffset;
+            }
+            i$++;
+            resultOffset = resultOffset2;
+        }
+        return DecodedBitStreamParser.decode(resultBytes, version, ecLevel, hints);
+    }
+
+    private void correctErrors(byte[] codewordBytes, int numDataCodewords) throws ChecksumException {
+        int i;
+        int numCodewords = codewordBytes.length;
+        int[] codewordsInts = new int[numCodewords];
+        for (i = 0; i < numCodewords; i++) {
+            codewordsInts[i] = codewordBytes[i] & 255;
+        }
+        try {
+            this.rsDecoder.decode(codewordsInts, codewordBytes.length - numDataCodewords);
+            for (i = 0; i < numDataCodewords; i++) {
+                codewordBytes[i] = (byte) codewordsInts[i];
+            }
+        } catch (ReedSolomonException e) {
+            throw ChecksumException.getChecksumInstance();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/decoder/Decoder.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

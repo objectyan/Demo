@@ -3,9 +3,12 @@ package com.baidu.navi.logic.model;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import com.baidu.carlife.core.a;
-import com.baidu.carlife.logic.codriver.adapter.b;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.logic.codriver.adapter.C1754b;
+import com.baidu.che.codriver.platform.NaviCmdConstants;
 import com.baidu.navi.fragment.NaviFragmentManager;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams.BundleKey;
 import com.baidu.navisdk.model.AddressSettingModel;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
@@ -16,181 +19,149 @@ import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UIModel
-  extends BaseModel
-{
-  private static UIModel mInstance;
-  private boolean mIsAutoUpdateData = false;
-  private boolean mIsNewData = false;
-  private int mSearchDistrictID = 131;
-  private String mSearchDistrictName = "北京市";
-  
-  public static UIModel getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new UIModel();
+public class UIModel extends BaseModel {
+    private static UIModel mInstance;
+    private boolean mIsAutoUpdateData = false;
+    private boolean mIsNewData = false;
+    private int mSearchDistrictID = NaviFragmentManager.TYPE_CAR_DRV_LIST;
+    private String mSearchDistrictName = "北京市";
+
+    private UIModel() {
     }
-    return mInstance;
-  }
-  
-  private static boolean isSettingCompAddr(Bundle paramBundle)
-  {
-    return paramBundle.getInt("select_point_action") == 5;
-  }
-  
-  private static boolean isSettingHomeAddr(Bundle paramBundle)
-  {
-    return paramBundle.getInt("select_point_action", -1) == 4;
-  }
-  
-  private static boolean setCompAddr(RoutePlanNode paramRoutePlanNode, Context paramContext)
-  {
-    if (AddressSettingModel.setCompAddress(paramContext, paramRoutePlanNode))
-    {
-      TipTool.onCreateToastDialog(paramContext, paramContext.getString(2131297139));
-      return true;
-    }
-    TipTool.onCreateToastDialog(paramContext, paramContext.getString(2131297138));
-    return false;
-  }
-  
-  private static boolean setHomeAddress(RoutePlanNode paramRoutePlanNode, Context paramContext)
-  {
-    if (AddressSettingModel.setHomeAddress(paramContext, paramRoutePlanNode))
-    {
-      TipTool.onCreateToastDialog(paramContext, paramContext.getString(2131297141));
-      return true;
-    }
-    TipTool.onCreateToastDialog(paramContext, paramContext.getString(2131297138));
-    return false;
-  }
-  
-  public static void settingAddress(SearchPoi paramSearchPoi, Context paramContext, Bundle paramBundle)
-  {
-    if (settingAddress(RoutePlanModel.changeToRoutePlanNode(paramSearchPoi), paramContext, paramBundle)) {
-      syncAddressToCoDriver(paramSearchPoi, paramBundle);
-    }
-  }
-  
-  public static boolean settingAddress(RoutePlanNode paramRoutePlanNode, Context paramContext, Bundle paramBundle)
-  {
-    if ((paramRoutePlanNode.getLatitudeE6() < 0) || (paramRoutePlanNode.getLongitudeE6() < 0)) {
-      TipTool.onCreateToastDialog(paramContext, paramContext.getString(2131297138));
-    }
-    do
-    {
-      return false;
-      if (isSettingHomeAddr(paramBundle)) {
-        return setHomeAddress(paramRoutePlanNode, paramContext);
-      }
-    } while (!isSettingCompAddr(paramBundle));
-    return setCompAddr(paramRoutePlanNode, paramContext);
-  }
-  
-  public static void syncAddressToCoDriver(SearchPoi paramSearchPoi, Bundle paramBundle)
-  {
-    if ((paramSearchPoi == null) || (paramSearchPoi.mGuidePoint == null)) {}
-    JSONObject localJSONObject;
-    do
-    {
-      return;
-      if (isSettingHomeAddr(paramBundle))
-      {
-        paramBundle = new JSONObject();
-        try
-        {
-          paramBundle.put("domain", "navigate_instruction");
-          paramBundle.put("intent", "set_home");
-          localJSONObject = new JSONObject();
-          localJSONObject.put("name", paramSearchPoi.mName);
-          localJSONObject.put("address", paramSearchPoi.mAddress);
-          paramSearchPoi = new GeoPoint(paramSearchPoi.mGuidePoint.getLongitudeE6(), paramSearchPoi.mGuidePoint.getLatitudeE6());
-          localJSONObject.put("lat", paramSearchPoi.getLatitudeE6());
-          localJSONObject.put("lng", paramSearchPoi.getLongitudeE6());
-          localJSONObject.put("type", "home");
-          paramBundle.put("data", localJSONObject);
-          b.a().a(paramBundle.toString());
-          return;
+
+    public static UIModel getInstance() {
+        if (mInstance == null) {
+            mInstance = new UIModel();
         }
-        catch (JSONException paramSearchPoi)
-        {
-          return;
+        return mInstance;
+    }
+
+    public void setIsAutoUpdateDataStatus(boolean update) {
+        this.mIsAutoUpdateData = update;
+    }
+
+    public void setNewData(boolean newData) {
+        this.mIsNewData = newData;
+    }
+
+    private static boolean isSettingCompAddr(Bundle budle) {
+        return budle.getInt(BundleKey.SELECT_POINT_ACTION) == 5;
+    }
+
+    private static boolean isSettingHomeAddr(Bundle budle) {
+        return budle.getInt(BundleKey.SELECT_POINT_ACTION, -1) == 4;
+    }
+
+    public static void syncAddressToCoDriverForAppStart() {
+        if (AddressSettingModel.hasSetCompAddr(C1157a.a())) {
+            RoutePlanNode node = AddressSettingModel.getCompAddrNode(C1157a.a());
+            SearchPoi poi = new SearchPoi();
+            poi.mName = node.mName;
+            poi.mAddress = node.mDescription;
+            poi.mGuidePoint = node.mGeoPoint;
+            Bundle bundle = new Bundle();
+            bundle.putInt(BundleKey.SELECT_POINT_ACTION, 5);
+            syncAddressToCoDriver(poi, bundle);
         }
-      }
-    } while (!isSettingCompAddr(paramBundle));
-    paramBundle = new JSONObject();
-    try
-    {
-      paramBundle.put("domain", "navigate_instruction");
-      paramBundle.put("intent", "set_work");
-      localJSONObject = new JSONObject();
-      localJSONObject.put("name", paramSearchPoi.mName);
-      localJSONObject.put("address", paramSearchPoi.mAddress);
-      paramSearchPoi = new GeoPoint(paramSearchPoi.mGuidePoint.getLongitudeE6(), paramSearchPoi.mGuidePoint.getLatitudeE6());
-      localJSONObject.put("lat", paramSearchPoi.getLatitudeE6());
-      localJSONObject.put("lng", paramSearchPoi.getLongitudeE6());
-      localJSONObject.put("type", "office");
-      paramBundle.put("data", localJSONObject);
-      b.a().a(paramBundle.toString());
-      return;
+        if (AddressSettingModel.hasSetHomeAddr(C1157a.a())) {
+            node = AddressSettingModel.getHomeAddrNode(C1157a.a());
+            poi = new SearchPoi();
+            poi.mName = node.mName;
+            poi.mAddress = node.mDescription;
+            poi.mGuidePoint = node.mGeoPoint;
+            bundle = new Bundle();
+            bundle.putInt(BundleKey.SELECT_POINT_ACTION, 4);
+            syncAddressToCoDriver(poi, bundle);
+        }
     }
-    catch (JSONException paramSearchPoi) {}
-  }
-  
-  public static void syncAddressToCoDriverForAppStart()
-  {
-    Object localObject;
-    SearchPoi localSearchPoi;
-    if (AddressSettingModel.hasSetCompAddr(a.a()))
-    {
-      localObject = AddressSettingModel.getCompAddrNode(a.a());
-      localSearchPoi = new SearchPoi();
-      localSearchPoi.mName = ((RoutePlanNode)localObject).mName;
-      localSearchPoi.mAddress = ((RoutePlanNode)localObject).mDescription;
-      localSearchPoi.mGuidePoint = ((RoutePlanNode)localObject).mGeoPoint;
-      localObject = new Bundle();
-      ((Bundle)localObject).putInt("select_point_action", 5);
-      syncAddressToCoDriver(localSearchPoi, (Bundle)localObject);
+
+    public static void syncAddressToCoDriver(SearchPoi poi, Bundle bundle) {
+        if (poi != null && poi.mGuidePoint != null) {
+            JSONObject jsonObject;
+            JSONObject data;
+            GeoPoint point;
+            if (isSettingHomeAddr(bundle)) {
+                jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("domain", "navigate_instruction");
+                    jsonObject.put("intent", "set_home");
+                    data = new JSONObject();
+                    data.put("name", poi.mName);
+                    data.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_ADDRESS, poi.mAddress);
+                    point = new GeoPoint(poi.mGuidePoint.getLongitudeE6(), poi.mGuidePoint.getLatitudeE6());
+                    data.put("lat", point.getLatitudeE6());
+                    data.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_LNG, point.getLongitudeE6());
+                    data.put("type", "home");
+                    jsonObject.put("data", data);
+                    C1754b.a().a(jsonObject.toString());
+                } catch (JSONException e) {
+                }
+            } else if (isSettingCompAddr(bundle)) {
+                jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("domain", "navigate_instruction");
+                    jsonObject.put("intent", "set_work");
+                    data = new JSONObject();
+                    data.put("name", poi.mName);
+                    data.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_ADDRESS, poi.mAddress);
+                    point = new GeoPoint(poi.mGuidePoint.getLongitudeE6(), poi.mGuidePoint.getLatitudeE6());
+                    data.put("lat", point.getLatitudeE6());
+                    data.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_LNG, point.getLongitudeE6());
+                    data.put("type", NaviCmdConstants.KEY_NAVI_CMD_SET_ADDRESS_COMPANY);
+                    jsonObject.put("data", data);
+                    C1754b.a().a(jsonObject.toString());
+                } catch (JSONException e2) {
+                }
+            }
+        }
     }
-    if (AddressSettingModel.hasSetHomeAddr(a.a()))
-    {
-      localObject = AddressSettingModel.getHomeAddrNode(a.a());
-      localSearchPoi = new SearchPoi();
-      localSearchPoi.mName = ((RoutePlanNode)localObject).mName;
-      localSearchPoi.mAddress = ((RoutePlanNode)localObject).mDescription;
-      localSearchPoi.mGuidePoint = ((RoutePlanNode)localObject).mGeoPoint;
-      localObject = new Bundle();
-      ((Bundle)localObject).putInt("select_point_action", 4);
-      syncAddressToCoDriver(localSearchPoi, (Bundle)localObject);
+
+    public static void settingAddress(SearchPoi node, Context context, Bundle bundle) {
+        if (settingAddress(RoutePlanModel.changeToRoutePlanNode(node), context, bundle)) {
+            syncAddressToCoDriver(node, bundle);
+        }
     }
-  }
-  
-  public void goSettingFragment(int paramInt, NaviFragmentManager paramNaviFragmentManager)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("from_Fragment", 304);
-    localBundle.putInt("select_point_action", paramInt);
-    paramNaviFragmentManager.showFragment(49, localBundle);
-  }
-  
-  public void setIsAutoUpdateDataStatus(boolean paramBoolean)
-  {
-    this.mIsAutoUpdateData = paramBoolean;
-  }
-  
-  public void setNewData(boolean paramBoolean)
-  {
-    this.mIsNewData = paramBoolean;
-  }
-  
-  public void showToast(Activity paramActivity, int paramInt)
-  {
-    TipTool.onCreateToastDialog(paramActivity, paramInt);
-  }
+
+    public static boolean settingAddress(RoutePlanNode node, Context context, Bundle bundle) {
+        if (node.getLatitudeE6() < 0 || node.getLongitudeE6() < 0) {
+            TipTool.onCreateToastDialog(context, context.getString(C0965R.string.set_addr_fail));
+            return false;
+        } else if (isSettingHomeAddr(bundle)) {
+            return setHomeAddress(node, context);
+        } else {
+            if (isSettingCompAddr(bundle)) {
+                return setCompAddr(node, context);
+            }
+            return false;
+        }
+    }
+
+    private static boolean setCompAddr(RoutePlanNode node, Context context) {
+        if (AddressSettingModel.setCompAddress(context, node)) {
+            TipTool.onCreateToastDialog(context, context.getString(C0965R.string.set_comp_addr_sucess));
+            return true;
+        }
+        TipTool.onCreateToastDialog(context, context.getString(C0965R.string.set_addr_fail));
+        return false;
+    }
+
+    private static boolean setHomeAddress(RoutePlanNode node, Context context) {
+        if (AddressSettingModel.setHomeAddress(context, node)) {
+            TipTool.onCreateToastDialog(context, context.getString(C0965R.string.set_home_addr_sucess));
+            return true;
+        }
+        TipTool.onCreateToastDialog(context, context.getString(C0965R.string.set_addr_fail));
+        return false;
+    }
+
+    public void goSettingFragment(int action, NaviFragmentManager mNaviFragmentManager) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BundleKey.FROM_FRAGMENT, 304);
+        bundle.putInt(BundleKey.SELECT_POINT_ACTION, action);
+        mNaviFragmentManager.showFragment(49, bundle);
+    }
+
+    public void showToast(Activity mActivity, int result) {
+        TipTool.onCreateToastDialog((Context) mActivity, result);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/logic/model/UIModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

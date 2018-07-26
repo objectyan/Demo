@@ -3,19 +3,18 @@ package com.baidu.mobstat;
 import java.io.File;
 import java.io.FilenameFilter;
 
-class cd
-  implements FilenameFilter
-{
-  cd(cc paramcc) {}
-  
-  public boolean accept(File paramFile, String paramString)
-  {
-    return paramString.startsWith("__send_data_");
-  }
+class cd implements FilenameFilter {
+    /* renamed from: a */
+    final /* synthetic */ cc f19553a;
+
+    cd(cc ccVar) {
+        this.f19553a = ccVar;
+    }
+
+    public boolean accept(File file, String str) {
+        if (str.startsWith(Config.PREFIX_SEND_DATA)) {
+            return true;
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cd.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,82 +1,69 @@
 package com.baidu.mapframework.nirvana.schedule;
 
-import com.baidu.mapframework.nirvana.e;
+import com.baidu.mapframework.nirvana.C3541e;
 
-public class ScheduleConfig
-{
-  private static final ScheduleConfig d = new ScheduleConfig(DataTaskType.forUpdateData(), ScheduleTag.NULL);
-  private static final ScheduleConfig e = new ScheduleConfig(DataTaskType.forUpdateData(), ScheduleTag.SETUP);
-  private static final ScheduleConfig f = new ScheduleConfig(DataTaskType.forStatictics(), ScheduleTag.NULL);
-  private final TaskType a;
-  private final ScheduleTag b;
-  private LifecycleManager.Lifecycle c;
-  
-  public ScheduleConfig(TaskType paramTaskType, ScheduleTag paramScheduleTag)
-  {
-    this.a = paramTaskType;
-    this.b = paramScheduleTag;
-  }
-  
-  public static ScheduleConfig forData()
-  {
-    return d;
-  }
-  
-  public static ScheduleConfig forSetupData()
-  {
-    return e;
-  }
-  
-  public static ScheduleConfig forStatistics()
-  {
-    return f;
-  }
-  
-  public static ScheduleConfig uiPage(String paramString)
-  {
-    return new ScheduleConfig(UITaskType.forPage(paramString), ScheduleTag.NULL);
-  }
-  
-  public static ScheduleConfig uiScene(String paramString)
-  {
-    return new ScheduleConfig(UITaskType.forScene(paramString), ScheduleTag.NULL);
-  }
-  
-  public void bindLifecycle()
-  {
-    if ((this.a instanceof UITaskType))
-    {
-      UITaskType localUITaskType = (UITaskType)this.a;
-      this.c = e.d().a(localUITaskType.getType(), localUITaskType.getName());
+public class ScheduleConfig {
+    /* renamed from: d */
+    private static final ScheduleConfig f19254d = new ScheduleConfig(DataTaskType.forUpdateData(), ScheduleTag.NULL);
+    /* renamed from: e */
+    private static final ScheduleConfig f19255e = new ScheduleConfig(DataTaskType.forUpdateData(), ScheduleTag.SETUP);
+    /* renamed from: f */
+    private static final ScheduleConfig f19256f = new ScheduleConfig(DataTaskType.forStatictics(), ScheduleTag.NULL);
+    /* renamed from: a */
+    private final TaskType f19257a;
+    /* renamed from: b */
+    private final ScheduleTag f19258b;
+    /* renamed from: c */
+    private Lifecycle f19259c;
+
+    public static ScheduleConfig forData() {
+        return f19254d;
     }
-  }
-  
-  public ScheduleTag getTag()
-  {
-    return this.b;
-  }
-  
-  public TaskType getType()
-  {
-    return this.a;
-  }
-  
-  public boolean isLifecycleActive()
-  {
-    if (this.c != null) {
-      return this.c.isActive();
+
+    public static ScheduleConfig forSetupData() {
+        return f19255e;
     }
-    return true;
-  }
-  
-  public String toString()
-  {
-    return "ScheduleConfig{type=" + this.a + ", tag=" + this.b + '}';
-  }
+
+    public static ScheduleConfig forStatistics() {
+        return f19256f;
+    }
+
+    public static ScheduleConfig uiPage(String pageName) {
+        return new ScheduleConfig(UITaskType.forPage(pageName), ScheduleTag.NULL);
+    }
+
+    public static ScheduleConfig uiScene(String sceneName) {
+        return new ScheduleConfig(UITaskType.forScene(sceneName), ScheduleTag.NULL);
+    }
+
+    public ScheduleConfig(TaskType type, ScheduleTag tag) {
+        this.f19257a = type;
+        this.f19258b = tag;
+    }
+
+    public TaskType getType() {
+        return this.f19257a;
+    }
+
+    public ScheduleTag getTag() {
+        return this.f19258b;
+    }
+
+    public void bindLifecycle() {
+        if (this.f19257a instanceof UITaskType) {
+            UITaskType t = this.f19257a;
+            this.f19259c = C3541e.m15176d().m15228a(t.getType(), t.getName());
+        }
+    }
+
+    public boolean isLifecycleActive() {
+        if (this.f19259c != null) {
+            return this.f19259c.isActive();
+        }
+        return true;
+    }
+
+    public String toString() {
+        return "ScheduleConfig{type=" + this.f19257a + ", tag=" + this.f19258b + '}';
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/schedule/ScheduleConfig.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

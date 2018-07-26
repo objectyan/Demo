@@ -4,88 +4,62 @@ import android.util.Pair;
 import com.baidu.platform.comapi.map.MapController;
 import com.baidu.platform.comapi.map.MapStatus;
 import com.baidu.platform.comapi.map.gesture.Base.Line;
-import com.baidu.platform.comapi.map.gesture.Base.Point;
 import com.baidu.platform.comapi.map.gesture.Base.Vector;
-import com.baidu.platform.comapi.map.gesture.GestureMonitor;
 import com.baidu.platform.comapi.map.gesture.detector.MoveDetector;
 
-public class OverLookOpt
-  extends Opt
-{
-  private static final double DOWN_SPEED = 2.0D;
-  public static final int MAX_OVER_LOOK = 0;
-  private static final int UP_SPEED = 4;
-  private boolean isFirst = true;
-  
-  public OverLookOpt(MapController paramMapController)
-  {
-    super(paramMapController);
-  }
-  
-  private void rotateOverlook(double paramDouble, MapStatus paramMapStatus)
-  {
-    if (paramDouble > 0.0D)
-    {
-      paramMapStatus.overlooking -= 4;
-      return;
+public class OverLookOpt extends Opt {
+    private static final double DOWN_SPEED = 2.0d;
+    public static final int MAX_OVER_LOOK = 0;
+    private static final int UP_SPEED = 4;
+    private boolean isFirst = true;
+
+    public OverLookOpt(MapController controller) {
+        super(controller);
     }
-    paramMapStatus.overlooking = ((int)(paramMapStatus.overlooking + 2.0D));
-  }
-  
-  public void finish(MoveDetector paramMoveDetector, Pair<Base.Vector, Base.Vector> paramPair)
-  {
-    paramMoveDetector = this.controller.getMapStatus();
-    if (paramMoveDetector.bOverlookSpringback) {
-      if (paramMoveDetector.overlooking <= 0) {
-        break label39;
-      }
-    }
-    label39:
-    for (paramMoveDetector.overlooking = 0;; paramMoveDetector.overlooking = paramMoveDetector.minOverlooking)
-    {
-      this.controller.setMapStatusWithAnimation(paramMoveDetector, 200);
-      return;
-    }
-  }
-  
-  public void perform(MoveDetector paramMoveDetector)
-  {
-    Base.Line localLine = paramMoveDetector.lastPosition;
-    paramMoveDetector = paramMoveDetector.currentPosition;
-    MapStatus localMapStatus = this.controller.getMapStatus();
-    double d1 = paramMoveDetector.a.y - localLine.a.y;
-    double d2 = paramMoveDetector.b.y - localLine.b.y;
-    if (d1 * d2 > 0.0D) {
-      rotateOverlook(d1, localMapStatus);
-    }
-    for (;;)
-    {
-      this.controller.setMapStatus(localMapStatus);
-      if (this.isFirst)
-      {
-        this.isFirst = false;
-        this.controller.getGestureMonitor().handleMoveOverlook();
-      }
-      return;
-      if (d1 * d2 == 0.0D)
-      {
-        if (d1 != 0.0D) {
-          rotateOverlook(d1, localMapStatus);
-        } else if (d2 != 0.0D) {
-          rotateOverlook(d2, localMapStatus);
+
+    public void perform(MoveDetector detector) {
+        Line last = detector.lastPosition;
+        Line current = detector.currentPosition;
+        MapStatus mapStatus = this.controller.getMapStatus();
+        double a = current.f19856a.f19859y - last.f19856a.f19859y;
+        double b = current.f19857b.f19859y - last.f19857b.f19859y;
+        if (a * b > 0.0d) {
+            rotateOverlook(a, mapStatus);
+        } else if (a * b == 0.0d) {
+            if (a != 0.0d) {
+                rotateOverlook(a, mapStatus);
+            } else if (b != 0.0d) {
+                rotateOverlook(b, mapStatus);
+            }
+        } else if (Math.abs(a) > Math.abs(b)) {
+            rotateOverlook(a, mapStatus);
+        } else {
+            rotateOverlook(b, mapStatus);
         }
-      }
-      else if (Math.abs(d1) > Math.abs(d2)) {
-        rotateOverlook(d1, localMapStatus);
-      } else {
-        rotateOverlook(d2, localMapStatus);
-      }
+        this.controller.setMapStatus(mapStatus);
+        if (this.isFirst) {
+            this.isFirst = false;
+            this.controller.getGestureMonitor().handleMoveOverlook();
+        }
     }
-  }
+
+    public void finish(MoveDetector detector, Pair<Vector, Vector> pair) {
+        MapStatus mapStatus = this.controller.getMapStatus();
+        if (mapStatus.bOverlookSpringback) {
+            if (mapStatus.overlooking > 0) {
+                mapStatus.overlooking = 0;
+            } else {
+                mapStatus.overlooking = mapStatus.minOverlooking;
+            }
+            this.controller.setMapStatusWithAnimation(mapStatus, 200);
+        }
+    }
+
+    private void rotateOverlook(double move, MapStatus mapStatus) {
+        if (move > 0.0d) {
+            mapStatus.overlooking -= 4;
+        } else {
+            mapStatus.overlooking = (int) (((double) mapStatus.overlooking) + DOWN_SPEED);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/gesture/opt/OverLookOpt.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

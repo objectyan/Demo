@@ -2,154 +2,112 @@ package com.google.protobuf.micro;
 
 import java.io.UnsupportedEncodingException;
 
-public final class ByteStringMicro
-{
-  public static final ByteStringMicro EMPTY = new ByteStringMicro(new byte[0]);
-  private final byte[] bytes;
-  private volatile int hash = 0;
-  
-  private ByteStringMicro(byte[] paramArrayOfByte)
-  {
-    this.bytes = paramArrayOfByte;
-  }
-  
-  public static ByteStringMicro copyFrom(String paramString1, String paramString2)
-    throws UnsupportedEncodingException
-  {
-    return new ByteStringMicro(paramString1.getBytes(paramString2));
-  }
-  
-  public static ByteStringMicro copyFrom(byte[] paramArrayOfByte)
-  {
-    return copyFrom(paramArrayOfByte, 0, paramArrayOfByte.length);
-  }
-  
-  public static ByteStringMicro copyFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    byte[] arrayOfByte = new byte[paramInt2];
-    System.arraycopy(paramArrayOfByte, paramInt1, arrayOfByte, 0, paramInt2);
-    return new ByteStringMicro(arrayOfByte);
-  }
-  
-  public static ByteStringMicro copyFromUtf8(String paramString)
-  {
-    try
-    {
-      paramString = new ByteStringMicro(paramString.getBytes("UTF-8"));
-      return paramString;
+public final class ByteStringMicro {
+    public static final ByteStringMicro EMPTY = new ByteStringMicro(new byte[0]);
+    private final byte[] bytes;
+    private volatile int hash = 0;
+
+    private ByteStringMicro(byte[] bytes) {
+        this.bytes = bytes;
     }
-    catch (UnsupportedEncodingException paramString)
-    {
-      throw new RuntimeException("UTF-8 not supported?");
+
+    public byte byteAt(int index) {
+        return this.bytes[index];
     }
-  }
-  
-  public byte byteAt(int paramInt)
-  {
-    return this.bytes[paramInt];
-  }
-  
-  public void copyTo(byte[] paramArrayOfByte, int paramInt)
-  {
-    System.arraycopy(this.bytes, 0, paramArrayOfByte, paramInt, this.bytes.length);
-  }
-  
-  public void copyTo(byte[] paramArrayOfByte, int paramInt1, int paramInt2, int paramInt3)
-  {
-    System.arraycopy(this.bytes, paramInt1, paramArrayOfByte, paramInt2, paramInt3);
-  }
-  
-  public boolean equals(Object paramObject)
-  {
-    if (paramObject == this) {}
-    for (;;)
-    {
-      return true;
-      if (!(paramObject instanceof ByteStringMicro)) {
-        return false;
-      }
-      Object localObject = (ByteStringMicro)paramObject;
-      int j = this.bytes.length;
-      if (j != ((ByteStringMicro)localObject).bytes.length) {
-        return false;
-      }
-      paramObject = this.bytes;
-      localObject = ((ByteStringMicro)localObject).bytes;
-      int i = 0;
-      while (i < j)
-      {
-        if (paramObject[i] != localObject[i]) {
-          return false;
+
+    public int size() {
+        return this.bytes.length;
+    }
+
+    public boolean isEmpty() {
+        return this.bytes.length == 0;
+    }
+
+    public static ByteStringMicro copyFrom(byte[] bytes, int offset, int size) {
+        byte[] copy = new byte[size];
+        System.arraycopy(bytes, offset, copy, 0, size);
+        return new ByteStringMicro(copy);
+    }
+
+    public static ByteStringMicro copyFrom(byte[] bytes) {
+        return copyFrom(bytes, 0, bytes.length);
+    }
+
+    public static ByteStringMicro copyFrom(String text, String charsetName) throws UnsupportedEncodingException {
+        return new ByteStringMicro(text.getBytes(charsetName));
+    }
+
+    public static ByteStringMicro copyFromUtf8(String text) {
+        try {
+            return new ByteStringMicro(text.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 not supported?");
         }
-        i += 1;
-      }
     }
-  }
-  
-  public int hashCode()
-  {
-    int i = this.hash;
-    int j = i;
-    if (i == 0)
-    {
-      byte[] arrayOfByte = this.bytes;
-      int k = this.bytes.length;
-      i = k;
-      j = 0;
-      while (j < k)
-      {
-        i = i * 31 + arrayOfByte[j];
-        j += 1;
-      }
-      j = i;
-      if (i == 0) {
-        j = 1;
-      }
-      this.hash = j;
+
+    public void copyTo(byte[] target, int offset) {
+        System.arraycopy(this.bytes, 0, target, offset, this.bytes.length);
     }
-    return j;
-  }
-  
-  public boolean isEmpty()
-  {
-    return this.bytes.length == 0;
-  }
-  
-  public int size()
-  {
-    return this.bytes.length;
-  }
-  
-  public byte[] toByteArray()
-  {
-    int i = this.bytes.length;
-    byte[] arrayOfByte = new byte[i];
-    System.arraycopy(this.bytes, 0, arrayOfByte, 0, i);
-    return arrayOfByte;
-  }
-  
-  public String toString(String paramString)
-    throws UnsupportedEncodingException
-  {
-    return new String(this.bytes, paramString);
-  }
-  
-  public String toStringUtf8()
-  {
-    try
-    {
-      String str = new String(this.bytes, "UTF-8");
-      return str;
+
+    public void copyTo(byte[] target, int sourceOffset, int targetOffset, int size) {
+        System.arraycopy(this.bytes, sourceOffset, target, targetOffset, size);
     }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      throw new RuntimeException("UTF-8 not supported?");
+
+    public byte[] toByteArray() {
+        int size = this.bytes.length;
+        byte[] copy = new byte[size];
+        System.arraycopy(this.bytes, 0, copy, 0, size);
+        return copy;
     }
-  }
+
+    public String toString(String charsetName) throws UnsupportedEncodingException {
+        return new String(this.bytes, charsetName);
+    }
+
+    public String toStringUtf8() {
+        try {
+            return new String(this.bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 not supported?");
+        }
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof ByteStringMicro)) {
+            return false;
+        }
+        ByteStringMicro other = (ByteStringMicro) o;
+        int size = this.bytes.length;
+        if (size != other.bytes.length) {
+            return false;
+        }
+        byte[] thisBytes = this.bytes;
+        byte[] otherBytes = other.bytes;
+        for (int i = 0; i < size; i++) {
+            if (thisBytes[i] != otherBytes[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int hashCode() {
+        int h = this.hash;
+        if (h == 0) {
+            byte[] thisBytes = this.bytes;
+            int size = this.bytes.length;
+            h = size;
+            for (int i = 0; i < size; i++) {
+                h = (h * 31) + thisBytes[i];
+            }
+            if (h == 0) {
+                h = 1;
+            }
+            this.hash = h;
+        }
+        return h;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/micro/ByteStringMicro.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

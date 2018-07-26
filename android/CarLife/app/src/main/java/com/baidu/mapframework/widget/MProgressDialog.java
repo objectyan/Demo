@@ -5,63 +5,58 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.support.v4.app.FragmentActivity;
 
-public class MProgressDialog
-{
-  static BMProgressDialog a;
-  static final int b = 1;
-  
-  private static void a(FragmentActivity paramFragmentActivity, int paramInt, String paramString1, String paramString2, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    
-    if ((a(paramFragmentActivity)) && (paramFragmentActivity.getSupportFragmentManager() != null)) {}
-    try
-    {
-      a = BMProgressDialog.a(paramInt, paramOnCancelListener);
-      a.show(paramFragmentActivity.getSupportFragmentManager(), "BMProgressDialog");
-      return;
+public class MProgressDialog {
+    /* renamed from: a */
+    static BMProgressDialog f19336a = null;
+    /* renamed from: b */
+    static final int f19337b = 1;
+
+    /* renamed from: com.baidu.mapframework.widget.MProgressDialog$1 */
+    static class C35801 implements OnCancelListener {
+        C35801() {
+        }
+
+        public void onCancel(DialogInterface dialog) {
+        }
     }
-    catch (Exception paramFragmentActivity) {}
-  }
-  
-  private static boolean a(Activity paramActivity)
-  {
-    return (paramActivity != null) && (!paramActivity.isFinishing());
-  }
-  
-  public static void dismiss()
-  {
-    if ((a != null) && (a.getFragmentManager() != null)) {
-      a.dismiss();
+
+    /* renamed from: a */
+    private static void m15261a(FragmentActivity fragActivity, int layoutResId, String title, String message, OnCancelListener cancelListener) {
+        dismiss();
+        if (m15262a(fragActivity) && fragActivity.getSupportFragmentManager() != null) {
+            try {
+                f19336a = BMProgressDialog.m15256a(layoutResId, cancelListener);
+                f19336a.show(fragActivity.getSupportFragmentManager(), "BMProgressDialog");
+            } catch (Exception e) {
+            }
+        }
     }
-    a = null;
-  }
-  
-  public static void show(FragmentActivity paramFragmentActivity, int paramInt, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    a(paramFragmentActivity, paramInt, null, null, paramOnCancelListener);
-  }
-  
-  public static void show(FragmentActivity paramFragmentActivity, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    a(paramFragmentActivity, 0, null, null, paramOnCancelListener);
-  }
-  
-  public static void show(FragmentActivity paramFragmentActivity, String paramString1, String paramString2)
-  {
-    a(paramFragmentActivity, 0, paramString1, paramString2, new DialogInterface.OnCancelListener()
-    {
-      public void onCancel(DialogInterface paramAnonymousDialogInterface) {}
-    });
-  }
-  
-  public static void show(FragmentActivity paramFragmentActivity, String paramString1, String paramString2, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    a(paramFragmentActivity, 0, paramString1, paramString2, paramOnCancelListener);
-  }
+
+    public static void show(FragmentActivity fragActivity, String title, String message, OnCancelListener cancelListener) {
+        m15261a(fragActivity, 0, title, message, cancelListener);
+    }
+
+    public static void show(FragmentActivity fragActivity, String title, String message) {
+        m15261a(fragActivity, 0, title, message, new C35801());
+    }
+
+    public static void show(FragmentActivity fragActivity, int layoutResId, OnCancelListener cancelListener) {
+        m15261a(fragActivity, layoutResId, null, null, cancelListener);
+    }
+
+    public static void show(FragmentActivity fragActivity, OnCancelListener cancelListener) {
+        m15261a(fragActivity, 0, null, null, cancelListener);
+    }
+
+    public static void dismiss() {
+        if (!(f19336a == null || f19336a.getFragmentManager() == null)) {
+            f19336a.dismiss();
+        }
+        f19336a = null;
+    }
+
+    /* renamed from: a */
+    private static boolean m15262a(Activity activity) {
+        return (activity == null || activity.isFinishing()) ? false : true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/widget/MProgressDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

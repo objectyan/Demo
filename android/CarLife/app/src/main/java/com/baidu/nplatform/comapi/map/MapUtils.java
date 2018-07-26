@@ -2,145 +2,92 @@ package com.baidu.nplatform.comapi.map;
 
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 
-public class MapUtils
-{
-  static double[][] LL2MC = { { -0.0015702102444D, 111320.7020616939D, 1.704480524535203E15D, -1.033898737604234E16D, 2.611266785660388E16D, -3.51496691766537E16D, 2.659570071840392E16D, -1.072501245418824E16D, 1.800819912950474E15D, 82.5D }, { 8.277824516172526E-4D, 111320.7020463578D, 6.477955746671607E8D, -4.082003173641316E9D, 1.077490566351142E10D, -1.517187553151559E10D, 1.205306533862167E10D, -5.124939663577472E9D, 9.133119359512032E8D, 67.5D }, { 0.00337398766765D, 111320.7020202162D, 4481351.045890365D, -2.339375119931662E7D, 7.968221547186455E7D, -1.159649932797253E8D, 9.723671115602145E7D, -4.366194633752821E7D, 8477230.501135234D, 52.5D }, { 0.00220636496208D, 111320.7020209128D, 51751.86112841131D, 3796837.749470245D, 992013.7397791013D, -1221952.21711287D, 1340652.697009075D, -620943.6990984312D, 144416.9293806241D, 37.5D }, { -3.441963504368392E-4D, 111320.7020576856D, 278.2353980772752D, 2485758.690035394D, 6070.750963243378D, 54821.18345352118D, 9540.606633304236D, -2710.55326746645D, 1405.483844121726D, 22.5D }, { -3.218135878613132E-4D, 111320.7020701615D, 0.00369383431289D, 823725.6402795718D, 0.46104986909093D, 2351.343141331292D, 1.58060784298199D, 8.77738589078284D, 0.37238884252424D, 7.45D } };
-  static double[] LLBAND;
-  static double[][] MC2LL;
-  static double[] MCBAND = { 1.289059486E7D, 8362377.87D, 5591021.0D, 3481989.83D, 1678043.12D, 0.0D };
-  
-  static
-  {
-    LLBAND = new double[] { 7.5E7D, 6.0E7D, 4.5E7D, 3.0E7D, 1.5E7D, 0.0D };
-    double[] arrayOfDouble1 = { -7.435856389565537E-9D, 8.983055097726239E-6D, -0.78625201886289D, 96.32687599759846D, -1.85204757529826D, -59.36935905485877D, 47.40033549296737D, -16.50741931063887D, 2.28786674699375D, 1.026014486E7D };
-    double[] arrayOfDouble2 = { 3.09191371068437E-9D, 8.983055096812155E-6D, 6.995724062E-5D, 23.10934304144901D, -2.3663490511E-4D, -0.6321817810242D, -0.00663494467273D, 0.03430082397953D, -0.00466043876332D, 2555164.4D };
-    MC2LL = new double[][] { { 1.410526172116255E-8D, 8.98305509648872E-6D, -1.9939833816331D, 200.9824383106796D, -187.2403703815547D, 91.6087516669843D, -23.38765649603339D, 2.57121317296198D, -0.03801003308653D, 1.73379812E7D }, arrayOfDouble1, { -3.030883460898826E-8D, 8.98305509983578E-6D, 0.30071316287616D, 59.74293618442277D, 7.357984074871D, -25.38371002664745D, 13.45380521110908D, -3.29883767235584D, 0.32710905363475D, 6856817.37D }, { -1.981981304930552E-8D, 8.983055099779535E-6D, 0.03278182852591D, 40.31678527705744D, 0.65659298677277D, -4.44255534477492D, 0.85341911805263D, 0.12923347998204D, -0.04625736007561D, 4482777.06D }, arrayOfDouble2, { 2.890871144776878E-9D, 8.983055095805407E-6D, -3.068298E-8D, 7.47137025468032D, -3.53937994E-6D, -0.02145144861037D, -1.234426596E-5D, 1.0322952773E-4D, -3.23890364E-6D, 826088.5D } };
-  }
-  
-  static VDPOINT _conv_(VDPOINT paramVDPOINT, double[] paramArrayOfDouble)
-  {
-    int j = -1;
-    VDPOINT localVDPOINT = new VDPOINT();
-    localVDPOINT.x = (paramArrayOfDouble[0] + paramArrayOfDouble[1] * Math.abs(paramVDPOINT.x));
-    double d = Math.abs(paramVDPOINT.y) / paramArrayOfDouble[9];
-    localVDPOINT.y = (paramArrayOfDouble[2] + paramArrayOfDouble[3] * d + paramArrayOfDouble[4] * d * d + paramArrayOfDouble[5] * d * d * d + paramArrayOfDouble[6] * d * d * d * d + paramArrayOfDouble[7] * d * d * d * d * d + paramArrayOfDouble[8] * d * d * d * d * d * d);
-    d = localVDPOINT.x;
-    if (paramVDPOINT.x < 0.0D)
-    {
-      i = -1;
-      localVDPOINT.x = (d * i);
-      d = localVDPOINT.y;
-      if (paramVDPOINT.y >= 0.0D) {
-        break label188;
-      }
-    }
-    label188:
-    for (int i = j;; i = 1)
-    {
-      localVDPOINT.y = (i * d);
-      return localVDPOINT;
-      i = 1;
-      break;
-    }
-  }
-  
-  public static GeoPoint ll2mc(GeoPoint paramGeoPoint)
-  {
-    VDPOINT localVDPOINT = new VDPOINT();
-    Object localObject2 = null;
-    localVDPOINT.y = Math.abs(paramGeoPoint.getLatitudeE6());
-    if (localVDPOINT.y < 0.1D) {
-      localVDPOINT.y = 0.1D;
-    }
-    int i = 0;
-    for (;;)
-    {
-      Object localObject1 = localObject2;
-      if (i < LLBAND.length)
-      {
-        if (localVDPOINT.y > LLBAND[i]) {
-          localObject1 = LL2MC[i];
+public class MapUtils {
+    static double[][] LL2MC = new double[][]{new double[]{-0.0015702102444d, 111320.7020616939d, 1.704480524535203E15d, -1.033898737604234E16d, 2.611266785660388E16d, -3.51496691766537E16d, 2.659570071840392E16d, -1.072501245418824E16d, 1.800819912950474E15d, 82.5d}, new double[]{8.277824516172526E-4d, 111320.7020463578d, 6.477955746671607E8d, -4.082003173641316E9d, 1.077490566351142E10d, -1.517187553151559E10d, 1.205306533862167E10d, -5.124939663577472E9d, 9.133119359512032E8d, 67.5d}, new double[]{0.00337398766765d, 111320.7020202162d, 4481351.045890365d, -2.339375119931662E7d, 7.968221547186455E7d, -1.159649932797253E8d, 9.723671115602145E7d, -4.366194633752821E7d, 8477230.501135234d, 52.5d}, new double[]{0.00220636496208d, 111320.7020209128d, 51751.86112841131d, 3796837.749470245d, 992013.7397791013d, -1221952.21711287d, 1340652.697009075d, -620943.6990984312d, 144416.9293806241d, 37.5d}, new double[]{-3.441963504368392E-4d, 111320.7020576856d, 278.2353980772752d, 2485758.690035394d, 6070.750963243378d, 54821.18345352118d, 9540.606633304236d, -2710.55326746645d, 1405.483844121726d, 22.5d}, new double[]{-3.218135878613132E-4d, 111320.7020701615d, 0.00369383431289d, 823725.6402795718d, 0.46104986909093d, 2351.343141331292d, 1.58060784298199d, 8.77738589078284d, 0.37238884252424d, 7.45d}};
+    static double[] LLBAND = new double[]{7.5E7d, 6.0E7d, 4.5E7d, 3.0E7d, 1.5E7d, 0.0d};
+    static double[][] MC2LL = new double[][]{new double[]{1.410526172116255E-8d, 8.98305509648872E-6d, -1.9939833816331d, 200.9824383106796d, -187.2403703815547d, 91.6087516669843d, -23.38765649603339d, 2.57121317296198d, -0.03801003308653d, 1.73379812E7d}, new double[]{-7.435856389565537E-9d, 8.983055097726239E-6d, -0.78625201886289d, 96.32687599759846d, -1.85204757529826d, -59.36935905485877d, 47.40033549296737d, -16.50741931063887d, 2.28786674699375d, 1.026014486E7d}, new double[]{-3.030883460898826E-8d, 8.98305509983578E-6d, 0.30071316287616d, 59.74293618442277d, 7.357984074871d, -25.38371002664745d, 13.45380521110908d, -3.29883767235584d, 0.32710905363475d, 6856817.37d}, new double[]{-1.981981304930552E-8d, 8.983055099779535E-6d, 0.03278182852591d, 40.31678527705744d, 0.65659298677277d, -4.44255534477492d, 0.85341911805263d, 0.12923347998204d, -0.04625736007561d, 4482777.06d}, new double[]{3.09191371068437E-9d, 8.983055096812155E-6d, 6.995724062E-5d, 23.10934304144901d, -2.3663490511E-4d, -0.6321817810242d, -0.00663494467273d, 0.03430082397953d, -0.00466043876332d, 2555164.4d}, new double[]{2.890871144776878E-9d, 8.983055095805407E-6d, -3.068298E-8d, 7.47137025468032d, -3.53937994E-6d, -0.02145144861037d, -1.234426596E-5d, 1.0322952773E-4d, -3.23890364E-6d, 826088.5d}};
+    static double[] MCBAND = new double[]{1.289059486E7d, 8362377.87d, 5591021.0d, 3481989.83d, 1678043.12d, 0.0d};
+
+    static class VDPOINT {
+        /* renamed from: x */
+        double f19729x;
+        /* renamed from: y */
+        double f19730y;
+
+        VDPOINT() {
         }
-      }
-      else
-      {
-        localVDPOINT.x = (paramGeoPoint.getLongitudeE6() / 1000000.0D);
-        localVDPOINT.y = (paramGeoPoint.getLatitudeE6() / 1000000.0D);
-        paramGeoPoint = _conv_(localVDPOINT, (double[])localObject1);
-        return new GeoPoint((int)paramGeoPoint.y, (int)paramGeoPoint.x);
-      }
-      i += 1;
     }
-  }
-  
-  public static GeoPoint mc2ll(GeoPoint paramGeoPoint)
-  {
-    VDPOINT localVDPOINT1 = new VDPOINT();
-    localVDPOINT1.x = paramGeoPoint.getLongitudeE6();
-    localVDPOINT1.y = paramGeoPoint.getLatitudeE6();
-    VDPOINT localVDPOINT2 = new VDPOINT();
-    localVDPOINT2.x = localVDPOINT1.x;
-    label95:
-    int i;
-    if (localVDPOINT2.x > 2.0037508342E7D)
-    {
-      localVDPOINT2.x = 2.0037508342E7D;
-      localVDPOINT2.y = localVDPOINT1.y;
-      if ((localVDPOINT2.y >= 1.0E-6D) || (localVDPOINT2.y < 0.0D)) {
-        break label182;
-      }
-      localVDPOINT2.y = 1.0E-6D;
-      localVDPOINT1 = null;
-      i = 0;
+
+    static VDPOINT _conv_(VDPOINT fromPoint, double[] factor) {
+        int i;
+        int i2 = -1;
+        VDPOINT toPoint = new VDPOINT();
+        toPoint.f19729x = factor[0] + (factor[1] * Math.abs(fromPoint.f19729x));
+        double temp = Math.abs(fromPoint.f19730y) / factor[9];
+        toPoint.f19730y = (((((factor[2] + (factor[3] * temp)) + ((factor[4] * temp) * temp)) + (((factor[5] * temp) * temp) * temp)) + ((((factor[6] * temp) * temp) * temp) * temp)) + (((((factor[7] * temp) * temp) * temp) * temp) * temp)) + ((((((factor[8] * temp) * temp) * temp) * temp) * temp) * temp);
+        double d = toPoint.f19729x;
+        if (fromPoint.f19729x < 0.0d) {
+            i = -1;
+        } else {
+            i = 1;
+        }
+        toPoint.f19729x = d * ((double) i);
+        d = toPoint.f19730y;
+        if (fromPoint.f19730y >= 0.0d) {
+            i2 = 1;
+        }
+        toPoint.f19730y = ((double) i2) * d;
+        return toPoint;
     }
-    for (;;)
-    {
-      paramGeoPoint = localVDPOINT1;
-      if (i < 6)
-      {
-        if (Math.abs(localVDPOINT2.y) > MCBAND[i]) {
-          paramGeoPoint = MC2LL[i];
+
+    public static GeoPoint mc2ll(GeoPoint pt) {
+        VDPOINT point = new VDPOINT();
+        point.f19729x = (double) pt.getLongitudeE6();
+        point.f19730y = (double) pt.getLatitudeE6();
+        VDPOINT temp = new VDPOINT();
+        temp.f19729x = point.f19729x;
+        if (temp.f19729x > 2.0037508342E7d) {
+            temp.f19729x = 2.0037508342E7d;
+        } else if (temp.f19729x < -2.0037508342E7d) {
+            temp.f19729x = -2.0037508342E7d;
         }
-      }
-      else
-      {
-        paramGeoPoint = _conv_(localVDPOINT2, paramGeoPoint);
-        return new GeoPoint((int)(paramGeoPoint.y * 1000000.0D), (int)(paramGeoPoint.x * 1000000.0D));
-        if (localVDPOINT2.x >= -2.0037508342E7D) {
-          break;
+        temp.f19730y = point.f19730y;
+        if (temp.f19730y < 1.0E-6d && temp.f19730y >= 0.0d) {
+            temp.f19730y = 1.0E-6d;
+        } else if (temp.f19730y < 0.0d && temp.f19730y > -1.0E-6d) {
+            temp.f19730y = -1.0E-6d;
+        } else if (temp.f19730y > 2.0037508342E7d) {
+            temp.f19730y = 2.0037508342E7d;
+        } else if (temp.f19730y < -2.0037508342E7d) {
+            temp.f19730y = -2.0037508342E7d;
         }
-        localVDPOINT2.x = -2.0037508342E7D;
-        break;
-        label182:
-        if ((localVDPOINT2.y < 0.0D) && (localVDPOINT2.y > -1.0E-6D))
-        {
-          localVDPOINT2.y = -1.0E-6D;
-          break label95;
+        double[] factor = null;
+        for (int i = 0; i < 6; i++) {
+            if (Math.abs(temp.f19730y) > MCBAND[i]) {
+                factor = MC2LL[i];
+                break;
+            }
         }
-        if (localVDPOINT2.y > 2.0037508342E7D)
-        {
-          localVDPOINT2.y = 2.0037508342E7D;
-          break label95;
-        }
-        if (localVDPOINT2.y >= -2.0037508342E7D) {
-          break label95;
-        }
-        localVDPOINT2.y = -2.0037508342E7D;
-        break label95;
-      }
-      i += 1;
+        VDPOINT p = _conv_(temp, factor);
+        return new GeoPoint((int) (p.f19730y * 1000000.0d), (int) (p.f19729x * 1000000.0d));
     }
-  }
-  
-  static class VDPOINT
-  {
-    double x;
-    double y;
-  }
+
+    public static GeoPoint ll2mc(GeoPoint point) {
+        VDPOINT temp = new VDPOINT();
+        double[] factor = null;
+        temp.f19730y = (double) Math.abs(point.getLatitudeE6());
+        if (temp.f19730y < 0.1d) {
+            temp.f19730y = 0.1d;
+        }
+        for (int i = 0; i < LLBAND.length; i++) {
+            if (temp.f19730y > LLBAND[i]) {
+                factor = LL2MC[i];
+                break;
+            }
+        }
+        temp.f19729x = ((double) point.getLongitudeE6()) / 1000000.0d;
+        temp.f19730y = ((double) point.getLatitudeE6()) / 1000000.0d;
+        VDPOINT p = _conv_(temp, factor);
+        return new GeoPoint((int) p.f19730y, (int) p.f19729x);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/nplatform/comapi/map/MapUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

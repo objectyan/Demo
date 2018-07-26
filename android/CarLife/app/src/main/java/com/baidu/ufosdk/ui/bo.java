@@ -2,31 +2,25 @@ package com.baidu.ufosdk.ui;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 
-final class bo
-  implements View.OnClickListener
-{
-  bo(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void onClick(View paramView)
-  {
-    if (FeedbackInputActivity.M(this.a)) {
-      return;
+/* compiled from: FeedbackInputActivity */
+final class bo implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21583a;
+
+    bo(FeedbackInputActivity feedbackInputActivity) {
+        this.f21583a = feedbackInputActivity;
     }
-    if (FeedbackInputActivity.e(this.a).getVisibility() == 0)
-    {
-      FeedbackInputActivity.e(this.a).setVisibility(8);
-      FeedbackInputActivity.f(this.a).setVisibility(8);
-      return;
+
+    public final void onClick(View view) {
+        if (!this.f21583a.ao) {
+            if (this.f21583a.f21480X.getVisibility() == 0) {
+                this.f21583a.f21480X.setVisibility(8);
+                this.f21583a.am.setVisibility(8);
+                return;
+            }
+            this.f21583a.f21480X.setVisibility(0);
+            this.f21583a.am.setVisibility(0);
+        }
     }
-    FeedbackInputActivity.e(this.a).setVisibility(0);
-    FeedbackInputActivity.f(this.a).setVisibility(0);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bo.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

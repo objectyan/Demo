@@ -1,39 +1,28 @@
 package com.baidu.tts.client;
 
-import com.baidu.tts.f.m;
+import com.baidu.tts.p233f.C5095m;
 
-public enum TtsMode
-{
-  private final m a;
-  
-  static
-  {
-    OFFLINE = new TtsMode("OFFLINE", 1, m.b);
-  }
-  
-  private TtsMode(m paramm)
-  {
-    this.a = paramm;
-  }
-  
-  public String getDescription()
-  {
-    return this.a.b();
-  }
-  
-  public int getMode()
-  {
-    return this.a.a();
-  }
-  
-  public m getTtsEnum()
-  {
-    return this.a;
-  }
+public enum TtsMode {
+    ONLINE(C5095m.ONLINE),
+    OFFLINE(C5095m.OFFLINE),
+    MIX(C5095m.MIX);
+    
+    /* renamed from: a */
+    private final C5095m f20839a;
+
+    private TtsMode(C5095m ttsEnum) {
+        this.f20839a = ttsEnum;
+    }
+
+    public C5095m getTtsEnum() {
+        return this.f20839a;
+    }
+
+    public int getMode() {
+        return this.f20839a.m17281a();
+    }
+
+    public String getDescription() {
+        return this.f20839a.m17282b();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/client/TtsMode.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

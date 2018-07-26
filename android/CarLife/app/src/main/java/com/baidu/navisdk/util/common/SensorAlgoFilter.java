@@ -1,44 +1,26 @@
 package com.baidu.navisdk.util.common;
 
-public class SensorAlgoFilter
-{
-  private float mBarrier = 2.0F;
-  private float mOldV;
-  
-  public SensorAlgoFilter() {}
-  
-  public SensorAlgoFilter(float paramFloat)
-  {
-    this.mBarrier = paramFloat;
-  }
-  
-  private float checkAndCalc(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    float f2 = paramFloat1 - paramFloat2;
-    float f1;
-    if ((f2 > 180.0F) || (f2 < -180.0F)) {
-      f1 = paramFloat2;
+public class SensorAlgoFilter {
+    private float mBarrier = 2.0f;
+    private float mOldV;
+
+    public SensorAlgoFilter(float barrier) {
+        this.mBarrier = barrier;
     }
-    do
-    {
-      return f1;
-      if (f2 < -paramFloat3) {
-        break;
-      }
-      f1 = paramFloat1;
-    } while (paramFloat3 >= f2);
-    return (paramFloat1 + paramFloat2) / 2.0F;
-  }
-  
-  public float execute(float paramFloat)
-  {
-    this.mOldV = checkAndCalc(this.mOldV, paramFloat, this.mBarrier);
-    return this.mOldV;
-  }
+
+    public float execute(float v) {
+        this.mOldV = checkAndCalc(this.mOldV, v, this.mBarrier);
+        return this.mOldV;
+    }
+
+    private float checkAndCalc(float oldV, float newV, float barrier) {
+        float delta = oldV - newV;
+        if (delta > 180.0f || delta < -180.0f) {
+            return newV;
+        }
+        if (delta < (-barrier) || barrier < delta) {
+            return (oldV + newV) / 2.0f;
+        }
+        return oldV;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/common/SensorAlgoFilter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

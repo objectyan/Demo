@@ -11,185 +11,160 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Parcel;
 import android.os.RemoteException;
+import com.baidu.sapi2.C4891b;
 import com.baidu.sapi2.SapiAccount;
 import com.baidu.sapi2.SapiAccountManager;
-import com.baidu.sapi2.SapiAccountManager.ReceiveShareListener;
-import com.baidu.sapi2.SapiConfiguration;
-import com.baidu.sapi2.utils.L;
+import com.baidu.sapi2.utils.C4913L;
 import com.baidu.sapi2.utils.SapiUtils;
 import com.baidu.sapi2.utils.enums.Domain;
 import com.baidu.sapi2.utils.enums.LoginShareStrategy;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import org.json.JSONObject;
 
-public final class ShareService
-  extends Service
-{
-  private static Context a;
-  private static LoginShareStrategy b;
-  private static com.baidu.sapi2.b c;
-  private static boolean d = false;
-  private Handler e;
-  
-  void a(Context paramContext)
-  {
-    try
-    {
-      a = paramContext;
-      c = com.baidu.sapi2.b.a(paramContext);
-      b = SapiAccountManager.getInstance().getSapiConfiguration().loginShareStrategy();
-      d = true;
-      return;
-    }
-    catch (IllegalStateException paramContext)
-    {
-      d = false;
-    }
-  }
-  
-  void a(Parcel paramParcel)
-  {
-    Bundle localBundle = new Bundle();
-    ShareModel localShareModel = new ShareModel(ShareEvent.SYNC_ACK);
-    Object localObject = c.d();
-    localShareModel.a((SapiAccount)localObject);
-    List localList = c.f();
-    if (localObject != null)
-    {
-      ((SapiAccount)localObject).app = SapiUtils.getAppName(a);
-      if ((localList.size() > 0) && (localList.contains(localObject)))
-      {
-        localList.set(localList.indexOf(localObject), localList.get(0));
-        localList.set(0, localObject);
-      }
-    }
-    for (;;)
-    {
-      localShareModel.a().addAll(localList);
-      localShareModel.a().addAll(c.e());
-      localObject = localShareModel.a().iterator();
-      while (((Iterator)localObject).hasNext()) {
-        ((SapiAccount)((Iterator)localObject).next()).app = SapiUtils.getAppName(a);
-      }
-      Collections.reverse(localList);
-    }
-    c.b(a, b, localShareModel);
-    localBundle.putParcelable("LOGIN_SHARE_MODEL", localShareModel);
-    if (c.o() != null) {
-      localBundle.putString("RELOGIN_CREDENTIALS", b.a(a, c.o().toString()));
-    }
-    localBundle.putSerializable("RUNTIME_ENVIRONMENT", SapiAccountManager.getInstance().getSapiConfiguration().environment);
-    paramParcel.writeBundle(localBundle);
-  }
-  
-  public IBinder onBind(Intent paramIntent)
-  {
-    return new a(null);
-  }
-  
-  public void onCreate()
-  {
-    super.onCreate();
-    this.e = new Handler(Looper.getMainLooper());
-  }
-  
-  @TargetApi(5)
-  public int onStartCommand(Intent paramIntent, int paramInt1, int paramInt2)
-  {
-    stopSelf();
-    return 2;
-  }
-  
-  public boolean onUnbind(Intent paramIntent)
-  {
-    stopSelf();
-    return super.onUnbind(paramIntent);
-  }
-  
-  private class a
-    extends Binder
-  {
-    private a() {}
-    
-    protected boolean onTransact(int paramInt1, Parcel paramParcel1, Parcel paramParcel2, int paramInt2)
-      throws RemoteException
-    {
-      boolean bool2 = true;
-      boolean bool1;
-      if (!c.b(ShareService.this)) {
-        bool1 = false;
-      }
-      ShareModel localShareModel;
-      for (;;)
-      {
-        return bool1;
-        if (SapiAccountManager.getReceiveShareListener() != null)
-        {
-          if (ShareService.a(ShareService.this) == null) {
-            ShareService.a(ShareService.this, new Handler(Looper.getMainLooper()));
-          }
-          ShareService.a(ShareService.this).post(new Runnable()
-          {
-            public void run()
-            {
-              if (SapiAccountManager.getReceiveShareListener() != null) {
-                SapiAccountManager.getReceiveShareListener().onReceiveShare();
-              }
+public final class ShareService extends Service {
+    /* renamed from: a */
+    private static Context f20467a;
+    /* renamed from: b */
+    private static LoginShareStrategy f20468b;
+    /* renamed from: c */
+    private static C4891b f20469c;
+    /* renamed from: d */
+    private static boolean f20470d = false;
+    /* renamed from: e */
+    private Handler f20471e;
+
+    /* renamed from: com.baidu.sapi2.share.ShareService$a */
+    private class C4898a extends Binder {
+        /* renamed from: a */
+        final /* synthetic */ ShareService f20466a;
+
+        /* renamed from: com.baidu.sapi2.share.ShareService$a$1 */
+        class C48971 implements Runnable {
+            /* renamed from: a */
+            final /* synthetic */ C4898a f20465a;
+
+            C48971(C4898a c4898a) {
+                this.f20465a = c4898a;
             }
-          });
-        }
-        if (!ShareService.a()) {
-          ShareService.this.a(ShareService.this);
-        }
-        bool1 = bool2;
-        if (ShareService.a())
-        {
-          bool1 = bool2;
-          if (ShareService.b() != LoginShareStrategy.DISABLED) {
-            try
-            {
-              paramParcel1 = paramParcel1.readBundle(ShareModel.class.getClassLoader());
-              localShareModel = (ShareModel)paramParcel1.getParcelable("LOGIN_SHARE_MODEL");
-              bool1 = bool2;
-              if (localShareModel != null) {
-                if ((paramParcel1.getSerializable("RUNTIME_ENVIRONMENT") != null) && ((paramParcel1.getSerializable("RUNTIME_ENVIRONMENT") instanceof Domain)))
-                {
-                  bool1 = bool2;
-                  if ((Domain)paramParcel1.getSerializable("RUNTIME_ENVIRONMENT") != SapiAccountManager.getInstance().getSapiConfiguration().environment) {}
+
+            public void run() {
+                if (SapiAccountManager.getReceiveShareListener() != null) {
+                    SapiAccountManager.getReceiveShareListener().onReceiveShare();
                 }
-                else
-                {
-                  c.c(ShareService.c(), paramParcel1.getString("RELOGIN_CREDENTIALS"));
-                  switch (ShareService.1.a[localShareModel.b().ordinal()])
-                  {
-                  case 1: 
-                    c.a(ShareService.c(), ShareService.b(), localShareModel);
+            }
+        }
+
+        private C4898a(ShareService shareService) {
+            this.f20466a = shareService;
+        }
+
+        protected boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (!C4912c.m16368b(this.f20466a)) {
+                return false;
+            }
+            if (SapiAccountManager.getReceiveShareListener() != null) {
+                if (this.f20466a.f20471e == null) {
+                    this.f20466a.f20471e = new Handler(Looper.getMainLooper());
+                }
+                this.f20466a.f20471e.post(new C48971(this));
+            }
+            if (!ShareService.f20470d) {
+                this.f20466a.m16339a(this.f20466a);
+            }
+            if (!ShareService.f20470d || ShareService.f20468b == LoginShareStrategy.DISABLED) {
+                return true;
+            }
+            try {
+                Bundle bundle = data.readBundle(ShareModel.class.getClassLoader());
+                ShareModel shareModel = (ShareModel) bundle.getParcelable("LOGIN_SHARE_MODEL");
+                if (shareModel == null) {
                     return true;
-                  }
                 }
-              }
+                if (bundle.getSerializable("RUNTIME_ENVIRONMENT") != null && (bundle.getSerializable("RUNTIME_ENVIRONMENT") instanceof Domain) && ((Domain) bundle.getSerializable("RUNTIME_ENVIRONMENT")) != SapiAccountManager.getInstance().getSapiConfiguration().environment) {
+                    return true;
+                }
+                C4912c.m16370c(ShareService.f20467a, bundle.getString("RELOGIN_CREDENTIALS"));
+                switch (shareModel.m16331b()) {
+                    case VALIDATE:
+                        C4912c.m16361a(ShareService.f20467a, ShareService.f20468b, shareModel);
+                        return true;
+                    case INVALIDATE:
+                        C4912c.m16360a(ShareService.f20467a, shareModel);
+                        return true;
+                    case SYNC_REQ:
+                        this.f20466a.m16340a(reply);
+                        return true;
+                    default:
+                        return true;
+                }
+                C4913L.m16374e(e);
+                return true;
+            } catch (Throwable e) {
+                C4913L.m16374e(e);
+                return true;
             }
-            catch (Throwable paramParcel1)
-            {
-              L.e(paramParcel1);
-              return true;
-            }
-          }
         }
-      }
-      c.a(ShareService.c(), localShareModel);
-      return true;
-      ShareService.this.a(paramParcel2);
-      return true;
-      return true;
     }
-  }
+
+    public void onCreate() {
+        super.onCreate();
+        this.f20471e = new Handler(Looper.getMainLooper());
+    }
+
+    public IBinder onBind(Intent intent) {
+        return new C4898a();
+    }
+
+    @TargetApi(5)
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        stopSelf();
+        return 2;
+    }
+
+    public boolean onUnbind(Intent intent) {
+        stopSelf();
+        return super.onUnbind(intent);
+    }
+
+    /* renamed from: a */
+    void m16339a(Context ctx) {
+        try {
+            f20467a = ctx;
+            f20469c = C4891b.m16250a(ctx);
+            f20468b = SapiAccountManager.getInstance().getSapiConfiguration().loginShareStrategy();
+            f20470d = true;
+        } catch (IllegalStateException e) {
+            f20470d = false;
+        }
+    }
+
+    /* renamed from: a */
+    void m16340a(Parcel replay) {
+        Bundle bundle = new Bundle();
+        ShareModel model = new ShareModel(ShareEvent.SYNC_ACK);
+        SapiAccount currentAccount = f20469c.m16278d();
+        model.m16326a(currentAccount);
+        List<SapiAccount> loginAccounts = f20469c.m16284f();
+        if (currentAccount != null) {
+            currentAccount.app = SapiUtils.getAppName(f20467a);
+            if (loginAccounts.size() > 0 && loginAccounts.contains(currentAccount)) {
+                loginAccounts.set(loginAccounts.indexOf(currentAccount), loginAccounts.get(0));
+                loginAccounts.set(0, currentAccount);
+            }
+        } else {
+            Collections.reverse(loginAccounts);
+        }
+        model.m16324a().addAll(loginAccounts);
+        model.m16324a().addAll(f20469c.m16281e());
+        for (SapiAccount account : model.m16324a()) {
+            account.app = SapiUtils.getAppName(f20467a);
+        }
+        C4912c.m16367b(f20467a, f20468b, model);
+        bundle.putParcelable("LOGIN_SHARE_MODEL", model);
+        if (f20469c.m16293o() != null) {
+            bundle.putString("RELOGIN_CREDENTIALS", C4909b.m16354a(f20467a, f20469c.m16293o().toString()));
+        }
+        bundle.putSerializable("RUNTIME_ENVIRONMENT", SapiAccountManager.getInstance().getSapiConfiguration().environment);
+        replay.writeBundle(bundle);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/sapi2/share/ShareService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

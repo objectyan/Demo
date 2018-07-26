@@ -4,30 +4,26 @@ import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import com.baidu.ufosdk.a;
-import com.baidu.ufosdk.util.h;
+import com.baidu.ufosdk.C5167a;
+import com.baidu.ufosdk.util.C5215h;
 
-final class bx
-  implements View.OnClickListener
-{
-  bx(br parambr) {}
-  
-  public final void onClick(View paramView)
-  {
-    paramView = ((TextView)paramView).getText().toString();
-    if ((!h.a()) && (br.a(this.a).d) && (paramView.contains("我的反馈")))
-    {
-      br.a(this.a).c = true;
-      paramView = new Intent(br.a(this.a), FeedbackListActivity.class);
-      paramView.putExtra("feedback_channel", a.h);
-      br.a(this.a).startActivity(paramView);
-      br.a(this.a).finish();
+/* compiled from: FeedbackInputActivity */
+final class bx implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ br f21593a;
+
+    bx(br brVar) {
+        this.f21593a = brVar;
     }
-  }
+
+    public final void onClick(View view) {
+        String charSequence = ((TextView) view).getText().toString();
+        if (!C5215h.m17755a() && this.f21593a.f21586a.f21484d && charSequence.contains("我的反馈")) {
+            this.f21593a.f21586a.f21483c = true;
+            Intent intent = new Intent(this.f21593a.f21586a, FeedbackListActivity.class);
+            intent.putExtra("feedback_channel", C5167a.f21362h);
+            this.f21593a.f21586a.startActivity(intent);
+            this.f21593a.f21586a.finish();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bx.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,154 +3,135 @@ package com.indooratlas.android.sdk._internal;
 import java.lang.ref.Reference;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
-public final class fw
-{
-  static final Executor a;
-  final int b = 5;
-  final Runnable c = new Runnable()
-  {
-    public final void run()
-    {
-      long l1;
-      do
-      {
-        l1 = fw.this.a(System.nanoTime());
-        if (l1 == -1L) {
-          return;
+public final class fw {
+    /* renamed from: a */
+    static final Executor f23798a = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60, TimeUnit.SECONDS, new SynchronousQueue(), gy.m20788a("OkHttp ConnectionPool", true));
+    /* renamed from: g */
+    static final /* synthetic */ boolean f23799g = (!fw.class.desiredAssertionStatus());
+    /* renamed from: b */
+    final int f23800b;
+    /* renamed from: c */
+    final Runnable f23801c;
+    /* renamed from: d */
+    final Deque<ii> f23802d;
+    /* renamed from: e */
+    final gx f23803e;
+    /* renamed from: f */
+    boolean f23804f;
+    /* renamed from: h */
+    private final long f23805h;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.fw$1 */
+    class C59121 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ fw f23797a;
+
+        C59121(fw fwVar) {
+            this.f23797a = fwVar;
         }
-      } while (l1 <= 0L);
-      long l2 = l1 / 1000000L;
-      try
-      {
-        synchronized (fw.this)
-        {
-          fw.this.wait(l2, (int)(l1 - l2 * 1000000L));
-        }
-      }
-      catch (InterruptedException localInterruptedException)
-      {
-        for (;;) {}
-      }
-    }
-  };
-  final Deque<ii> d = new ArrayDeque();
-  final gx e = new gx();
-  boolean f;
-  private final long h;
-  
-  static
-  {
-    if (!fw.class.desiredAssertionStatus()) {}
-    for (boolean bool = true;; bool = false)
-    {
-      g = bool;
-      a = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue(), gy.a("OkHttp ConnectionPool", true));
-      return;
-    }
-  }
-  
-  public fw()
-  {
-    this(TimeUnit.MINUTES);
-  }
-  
-  private fw(TimeUnit paramTimeUnit)
-  {
-    this.h = paramTimeUnit.toNanos(5L);
-    if (5L <= 0L) {
-      throw new IllegalArgumentException("keepAliveDuration <= 0: 5");
-    }
-  }
-  
-  final long a(long paramLong)
-  {
-    Object localObject1 = null;
-    long l1 = Long.MIN_VALUE;
-    for (;;)
-    {
-      int j;
-      int i;
-      int k;
-      try
-      {
-        Iterator localIterator = this.d.iterator();
-        j = 0;
-        i = 0;
-        if (localIterator.hasNext())
-        {
-          ii localii = (ii)localIterator.next();
-          List localList = localii.i;
-          k = 0;
-          if (k < localList.size())
-          {
-            if (((Reference)localList.get(k)).get() != null)
-            {
-              k += 1;
-              continue;
+
+        public final void run() {
+            while (true) {
+                long a = this.f23797a.m20576a(System.nanoTime());
+                if (a != -1) {
+                    if (a > 0) {
+                        long j = a / 1000000;
+                        a -= j * 1000000;
+                        synchronized (this.f23797a) {
+                            try {
+                                this.f23797a.wait(j, (int) a);
+                            } catch (InterruptedException e) {
+                            }
+                        }
+                    }
+                } else {
+                    return;
+                }
             }
-            gs.a.warning("A connection to " + localii.a.a.a + " was leaked. Did you forget to close a response body?");
-            localList.remove(k);
-            localii.j = true;
-            if (!localList.isEmpty()) {
-              continue;
-            }
-            localii.k = (paramLong - this.h);
-            k = 0;
-            break label311;
-          }
-          k = localList.size();
-          break label311;
-          long l2 = paramLong - localii.k;
-          if (l2 <= l1) {
-            break label308;
-          }
-          localObject1 = localii;
-          l1 = l2;
-          break label323;
         }
-        if ((l1 >= this.h) || (j > this.b))
-        {
-          this.d.remove(localObject1);
-          gy.a(((ii)localObject1).c);
-          return 0L;
-        }
-        if (j > 0)
-        {
-          paramLong = this.h;
-          return paramLong - l1;
-        }
-      }
-      finally {}
-      if (i > 0)
-      {
-        paramLong = this.h;
-        return paramLong;
-      }
-      this.f = false;
-      return -1L;
-      label308:
-      label311:
-      if (k > 0)
-      {
-        i += 1;
-        continue;
-        label323:
-        j += 1;
-      }
     }
-  }
+
+    public fw() {
+        this(TimeUnit.MINUTES);
+    }
+
+    private fw(TimeUnit timeUnit) {
+        this.f23801c = new C59121(this);
+        this.f23802d = new ArrayDeque();
+        this.f23803e = new gx();
+        this.f23800b = 5;
+        this.f23805h = timeUnit.toNanos(5);
+        if (5 <= 0) {
+            throw new IllegalArgumentException("keepAliveDuration <= 0: 5");
+        }
+    }
+
+    /* renamed from: a */
+    final long m20576a(long j) {
+        ii iiVar = null;
+        long j2 = Long.MIN_VALUE;
+        synchronized (this) {
+            int i = 0;
+            int i2 = 0;
+            for (ii iiVar2 : this.f23802d) {
+                int i3;
+                long j3;
+                List list = iiVar2.f24364i;
+                int i4 = 0;
+                while (i4 < list.size()) {
+                    if (((Reference) list.get(i4)).get() != null) {
+                        i4++;
+                    } else {
+                        gs.f23876a.warning("A connection to " + iiVar2.f24356a.f23983a.f23707a + " was leaked. Did you forget to close a response body?");
+                        list.remove(i4);
+                        iiVar2.f24365j = true;
+                        if (list.isEmpty()) {
+                            iiVar2.f24366k = j - this.f23805h;
+                            i3 = 0;
+                            break;
+                        }
+                    }
+                }
+                i3 = list.size();
+                if (i3 > 0) {
+                    i2++;
+                } else {
+                    ii iiVar3;
+                    int i5 = i + 1;
+                    long j4 = j - iiVar2.f24366k;
+                    if (j4 > j2) {
+                        long j5 = j4;
+                        iiVar3 = iiVar2;
+                        j3 = j5;
+                    } else {
+                        j3 = j2;
+                        iiVar3 = iiVar;
+                    }
+                    j2 = j3;
+                    iiVar = iiVar3;
+                    i = i5;
+                }
+            }
+            if (j2 >= this.f23805h || i > this.f23800b) {
+                this.f23802d.remove(iiVar);
+                gy.m20792a(iiVar.f24358c);
+                return 0;
+            } else if (i > 0) {
+                j3 = this.f23805h - j2;
+                return j3;
+            } else if (i2 > 0) {
+                j3 = this.f23805h;
+                return j3;
+            } else {
+                this.f23804f = false;
+                return -1;
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/fw.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

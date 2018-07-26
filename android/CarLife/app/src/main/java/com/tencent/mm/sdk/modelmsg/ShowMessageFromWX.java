@@ -3,78 +3,57 @@ package com.tencent.mm.sdk.modelmsg;
 import android.os.Bundle;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage.Builder;
 
-public class ShowMessageFromWX
-{
-  public static class Req
-    extends BaseReq
-  {
-    public String country;
-    public String lang;
-    public WXMediaMessage message;
-    
-    public Req() {}
-    
-    public Req(Bundle paramBundle)
-    {
-      fromBundle(paramBundle);
+public class ShowMessageFromWX {
+
+    public static class Req extends BaseReq {
+        public String country;
+        public String lang;
+        public WXMediaMessage message;
+
+        public Req(Bundle bundle) {
+            fromBundle(bundle);
+        }
+
+        public boolean checkArgs() {
+            return this.message == null ? false : this.message.checkArgs();
+        }
+
+        public void fromBundle(Bundle bundle) {
+            super.fromBundle(bundle);
+            this.lang = bundle.getString("_wxapi_showmessage_req_lang");
+            this.country = bundle.getString("_wxapi_showmessage_req_country");
+            this.message = Builder.fromBundle(bundle);
+        }
+
+        public int getType() {
+            return 4;
+        }
+
+        public void toBundle(Bundle bundle) {
+            Bundle toBundle = Builder.toBundle(this.message);
+            super.toBundle(toBundle);
+            bundle.putString("_wxapi_showmessage_req_lang", this.lang);
+            bundle.putString("_wxapi_showmessage_req_country", this.country);
+            bundle.putAll(toBundle);
+        }
     }
-    
-    public boolean checkArgs()
-    {
-      if (this.message == null) {
-        return false;
-      }
-      return this.message.checkArgs();
+
+    public static class Resp extends BaseResp {
+        public Resp(Bundle bundle) {
+            fromBundle(bundle);
+        }
+
+        public boolean checkArgs() {
+            return true;
+        }
+
+        public int getType() {
+            return 4;
+        }
     }
-    
-    public void fromBundle(Bundle paramBundle)
-    {
-      super.fromBundle(paramBundle);
-      this.lang = paramBundle.getString("_wxapi_showmessage_req_lang");
-      this.country = paramBundle.getString("_wxapi_showmessage_req_country");
-      this.message = WXMediaMessage.Builder.fromBundle(paramBundle);
+
+    private ShowMessageFromWX() {
     }
-    
-    public int getType()
-    {
-      return 4;
-    }
-    
-    public void toBundle(Bundle paramBundle)
-    {
-      Bundle localBundle = WXMediaMessage.Builder.toBundle(this.message);
-      super.toBundle(localBundle);
-      paramBundle.putString("_wxapi_showmessage_req_lang", this.lang);
-      paramBundle.putString("_wxapi_showmessage_req_country", this.country);
-      paramBundle.putAll(localBundle);
-    }
-  }
-  
-  public static class Resp
-    extends BaseResp
-  {
-    public Resp() {}
-    
-    public Resp(Bundle paramBundle)
-    {
-      fromBundle(paramBundle);
-    }
-    
-    public boolean checkArgs()
-    {
-      return true;
-    }
-    
-    public int getType()
-    {
-      return 4;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/mm/sdk/modelmsg/ShowMessageFromWX.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

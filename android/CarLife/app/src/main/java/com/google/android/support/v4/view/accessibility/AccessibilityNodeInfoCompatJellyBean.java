@@ -4,76 +4,59 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-class AccessibilityNodeInfoCompatJellyBean
-{
-  public static void addChild(Object paramObject, View paramView, int paramInt)
-  {
-    ((AccessibilityNodeInfo)paramObject).addChild(paramView, paramInt);
-  }
-  
-  public static Object findFocus(Object paramObject, int paramInt)
-  {
-    return ((AccessibilityNodeInfo)paramObject).findFocus(paramInt);
-  }
-  
-  public static Object focusSearch(Object paramObject, int paramInt)
-  {
-    return ((AccessibilityNodeInfo)paramObject).focusSearch(paramInt);
-  }
-  
-  public static int getMovementGranularities(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).getMovementGranularities();
-  }
-  
-  public static boolean isAccessibilityFocused(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isAccessibilityFocused();
-  }
-  
-  public static boolean isVisibleToUser(Object paramObject)
-  {
-    return ((AccessibilityNodeInfo)paramObject).isVisibleToUser();
-  }
-  
-  public static Object obtain(View paramView, int paramInt)
-  {
-    return AccessibilityNodeInfo.obtain(paramView, paramInt);
-  }
-  
-  public static boolean performAction(Object paramObject, int paramInt, Bundle paramBundle)
-  {
-    return ((AccessibilityNodeInfo)paramObject).performAction(paramInt, paramBundle);
-  }
-  
-  public static void setAccesibilityFocused(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setAccessibilityFocused(paramBoolean);
-  }
-  
-  public static void setMovementGranularities(Object paramObject, int paramInt)
-  {
-    ((AccessibilityNodeInfo)paramObject).setMovementGranularities(paramInt);
-  }
-  
-  public static void setParent(Object paramObject, View paramView, int paramInt)
-  {
-    ((AccessibilityNodeInfo)paramObject).setParent(paramView, paramInt);
-  }
-  
-  public static void setSource(Object paramObject, View paramView, int paramInt)
-  {
-    ((AccessibilityNodeInfo)paramObject).setSource(paramView, paramInt);
-  }
-  
-  public static void setVisibleToUser(Object paramObject, boolean paramBoolean)
-  {
-    ((AccessibilityNodeInfo)paramObject).setVisibleToUser(paramBoolean);
-  }
+class AccessibilityNodeInfoCompatJellyBean {
+    AccessibilityNodeInfoCompatJellyBean() {
+    }
+
+    public static void addChild(Object info, View child, int virtualDescendantId) {
+        ((AccessibilityNodeInfo) info).addChild(child, virtualDescendantId);
+    }
+
+    public static void setSource(Object info, View root, int virtualDescendantId) {
+        ((AccessibilityNodeInfo) info).setSource(root, virtualDescendantId);
+    }
+
+    public static boolean isVisibleToUser(Object info) {
+        return ((AccessibilityNodeInfo) info).isVisibleToUser();
+    }
+
+    public static void setVisibleToUser(Object info, boolean visibleToUser) {
+        ((AccessibilityNodeInfo) info).setVisibleToUser(visibleToUser);
+    }
+
+    public static boolean performAction(Object info, int action, Bundle arguments) {
+        return ((AccessibilityNodeInfo) info).performAction(action, arguments);
+    }
+
+    public static void setMovementGranularities(Object info, int granularities) {
+        ((AccessibilityNodeInfo) info).setMovementGranularities(granularities);
+    }
+
+    public static int getMovementGranularities(Object info) {
+        return ((AccessibilityNodeInfo) info).getMovementGranularities();
+    }
+
+    public static Object obtain(View root, int virtualDescendantId) {
+        return AccessibilityNodeInfo.obtain(root, virtualDescendantId);
+    }
+
+    public static Object findFocus(Object info, int focus) {
+        return ((AccessibilityNodeInfo) info).findFocus(focus);
+    }
+
+    public static Object focusSearch(Object info, int direction) {
+        return ((AccessibilityNodeInfo) info).focusSearch(direction);
+    }
+
+    public static void setParent(Object info, View root, int virtualDescendantId) {
+        ((AccessibilityNodeInfo) info).setParent(root, virtualDescendantId);
+    }
+
+    public static boolean isAccessibilityFocused(Object info) {
+        return ((AccessibilityNodeInfo) info).isAccessibilityFocused();
+    }
+
+    public static void setAccesibilityFocused(Object info, boolean focused) {
+        ((AccessibilityNodeInfo) info).setAccessibilityFocused(focused);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/accessibility/AccessibilityNodeInfoCompatJellyBean.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,46 +5,34 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
-import com.baidu.carlife.c.b.a;
-import com.baidu.carlife.c.f.a.a;
-import com.baidu.carlife.c.f.a.b;
+import com.baidu.carlife.p059c.p061f.C1139a.C1095b;
+import com.baidu.carlife.p059c.p061f.C1139a.C1132a;
 
-public class ViewContainer
-  extends FrameLayout
-  implements a.b
-{
-  private a.a a;
-  
-  public ViewContainer(@NonNull Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public ViewContainer(@NonNull Context paramContext, @Nullable AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public ViewContainer(@NonNull Context paramContext, @Nullable AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  public void a()
-  {
-    removeAllViews();
-    addView(this.a.b().a());
-    this.a.a();
-  }
-  
-  public void a(a.a parama)
-  {
-    this.a = parama;
-  }
+public class ViewContainer extends FrameLayout implements C1095b {
+    /* renamed from: a */
+    private C1132a f5727a;
+
+    public ViewContainer(@NonNull Context context) {
+        super(context);
+    }
+
+    public ViewContainer(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public ViewContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    /* renamed from: a */
+    public void m7041a(C1132a basePresenter) {
+        this.f5727a = basePresenter;
+    }
+
+    /* renamed from: a */
+    public void m7039a() {
+        removeAllViews();
+        addView(this.f5727a.mo1429b().m3702a());
+        this.f5727a.mo1424a();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/logic/music/views/ViewContainer.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

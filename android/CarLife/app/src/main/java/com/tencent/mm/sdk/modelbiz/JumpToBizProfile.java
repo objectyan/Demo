@@ -1,68 +1,51 @@
 package com.tencent.mm.sdk.modelbiz;
 
 import android.os.Bundle;
-import com.tencent.mm.sdk.b.b;
 import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.p287b.C6094b;
 
-public class JumpToBizProfile
-{
-  public static final int JUMP_TO_HARD_WARE_BIZ_PROFILE = 1;
-  public static final int JUMP_TO_NORMAL_BIZ_PROFILE = 0;
-  
-  public static class Req
-    extends BaseReq
-  {
-    private static final int EXT_MSG_LENGTH = 1024;
-    private static final String TAG = "MicroMsg.SDK.JumpToBizProfile.Req";
-    public String extMsg;
-    public int profileType = 0;
-    public String toUserName;
-    
-    public boolean checkArgs()
-    {
-      if ((this.toUserName == null) || (this.toUserName.length() == 0))
-      {
-        b.b("MicroMsg.SDK.JumpToBizProfile.Req", "checkArgs fail, toUserName is invalid");
-        return false;
-      }
-      if ((this.extMsg != null) && (this.extMsg.length() > 1024))
-      {
-        b.b("MicroMsg.SDK.JumpToBizProfile.Req", "ext msg is not null, while the length exceed 1024 bytes");
-        return false;
-      }
-      if ((this.profileType == 1) && ((this.extMsg == null) || (this.extMsg.length() == 0)))
-      {
-        b.b("MicroMsg.SDK.JumpToBizProfile.Req", "scene is jump to hardware profile, while extmsg is null");
-        return false;
-      }
-      return true;
+public class JumpToBizProfile {
+    public static final int JUMP_TO_HARD_WARE_BIZ_PROFILE = 1;
+    public static final int JUMP_TO_NORMAL_BIZ_PROFILE = 0;
+
+    public static class Req extends BaseReq {
+        private static final int EXT_MSG_LENGTH = 1024;
+        private static final String TAG = "MicroMsg.SDK.JumpToBizProfile.Req";
+        public String extMsg;
+        public int profileType = 0;
+        public String toUserName;
+
+        public boolean checkArgs() {
+            if (this.toUserName == null || this.toUserName.length() == 0) {
+                C6094b.m21682b(TAG, "checkArgs fail, toUserName is invalid");
+                return false;
+            } else if (this.extMsg != null && this.extMsg.length() > 1024) {
+                C6094b.m21682b(TAG, "ext msg is not null, while the length exceed 1024 bytes");
+                return false;
+            } else if (this.profileType != 1 || (this.extMsg != null && this.extMsg.length() != 0)) {
+                return true;
+            } else {
+                C6094b.m21682b(TAG, "scene is jump to hardware profile, while extmsg is null");
+                return false;
+            }
+        }
+
+        public void fromBundle(Bundle bundle) {
+            super.fromBundle(bundle);
+            this.toUserName = bundle.getString("_wxapi_jump_to_biz_profile_req_to_user_name");
+            this.extMsg = bundle.getString("_wxapi_jump_to_biz_profile_req_ext_msg");
+        }
+
+        public int getType() {
+            return 7;
+        }
+
+        public void toBundle(Bundle bundle) {
+            super.toBundle(bundle);
+            bundle.putString("_wxapi_jump_to_biz_profile_req_to_user_name", this.toUserName);
+            bundle.putString("_wxapi_jump_to_biz_profile_req_ext_msg", this.extMsg);
+            bundle.putInt("_wxapi_jump_to_biz_profile_req_scene", 0);
+            bundle.putInt("_wxapi_jump_to_biz_profile_req_profile_type", this.profileType);
+        }
     }
-    
-    public void fromBundle(Bundle paramBundle)
-    {
-      super.fromBundle(paramBundle);
-      this.toUserName = paramBundle.getString("_wxapi_jump_to_biz_profile_req_to_user_name");
-      this.extMsg = paramBundle.getString("_wxapi_jump_to_biz_profile_req_ext_msg");
-    }
-    
-    public int getType()
-    {
-      return 7;
-    }
-    
-    public void toBundle(Bundle paramBundle)
-    {
-      super.toBundle(paramBundle);
-      paramBundle.putString("_wxapi_jump_to_biz_profile_req_to_user_name", this.toUserName);
-      paramBundle.putString("_wxapi_jump_to_biz_profile_req_ext_msg", this.extMsg);
-      paramBundle.putInt("_wxapi_jump_to_biz_profile_req_scene", 0);
-      paramBundle.putInt("_wxapi_jump_to_biz_profile_req_profile_type", this.profileType);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/mm/sdk/modelbiz/JumpToBizProfile.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

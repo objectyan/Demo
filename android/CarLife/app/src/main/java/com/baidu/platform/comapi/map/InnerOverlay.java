@@ -2,194 +2,157 @@ package com.baidu.platform.comapi.map;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import com.baidu.mobstat.Config;
 import com.baidu.platform.comjni.map.basemap.AppBaseMap;
 
-public abstract class InnerOverlay
-  extends Overlay
-{
-  static final boolean DEBUG = false;
-  private static final String TAG = "InnerOverlay";
-  AppBaseMap mBaseMap = null;
-  String strJsonData = null;
-  
-  public InnerOverlay() {}
-  
-  public InnerOverlay(int paramInt)
-  {
-    setType(paramInt);
-  }
-  
-  public InnerOverlay(int paramInt, AppBaseMap paramAppBaseMap)
-  {
-    setType(paramInt);
-    this.mBaseMap = paramAppBaseMap;
-  }
-  
-  public boolean IsOverlayShow()
-  {
-    return (this.mLayerID != 0) && (this.mBaseMap != null) && (this.mBaseMap.GetId() != 0) && (this.mBaseMap.LayersIsShow(this.mLayerID));
-  }
-  
-  public void SetMapParam(int paramInt, AppBaseMap paramAppBaseMap)
-  {
-    this.mLayerID = paramInt;
-    this.mBaseMap = paramAppBaseMap;
-  }
-  
-  public void SetOverlayShow(boolean paramBoolean)
-  {
-    if ((this.mLayerID == 0) || (this.mBaseMap == null) || (this.mBaseMap.GetId() == 0)) {}
-    long l;
-    do
-    {
-      return;
-      l = 0L;
-      if (MapTrace.enableTrace) {
-        l = System.currentTimeMillis();
-      }
-      this.mBaseMap.ShowLayers(this.mLayerID, paramBoolean);
-    } while (!MapTrace.enableTrace);
-    MapTrace.trace("InnerOverlay", "ShowLayer:" + this.mLayerID + ":" + paramBoolean + " tag:" + getLayerTag() + " [" + (System.currentTimeMillis() - l) + "ms]");
-  }
-  
-  public void UpdateOverlay()
-  {
-    if ((this.mLayerID == 0) || (this.mBaseMap == null) || (this.mBaseMap.GetId() == 0)) {}
-    long l;
-    do
-    {
-      return;
-      l = 0L;
-      if (MapTrace.enableTrace) {
-        l = System.currentTimeMillis();
-      }
-      this.mBaseMap.UpdateLayers(this.mLayerID);
-    } while (!MapTrace.enableTrace);
-    MapTrace.trace("InnerOverlay", "UpdateLayer:" + this.mLayerID + " tag:" + getLayerTag() + " [" + (System.currentTimeMillis() - l) + "ms]");
-  }
-  
-  public boolean addedToMapView()
-  {
-    if ((this.mBaseMap == null) || (this.mBaseMap.GetId() == 0)) {
-      return false;
+public abstract class InnerOverlay extends Overlay {
+    static final boolean DEBUG = false;
+    private static final String TAG = "InnerOverlay";
+    AppBaseMap mBaseMap = null;
+    String strJsonData = null;
+
+    public InnerOverlay(int type) {
+        setType(type);
     }
-    long l = 0L;
-    if (MapTrace.enableTrace) {
-      l = System.currentTimeMillis();
+
+    public InnerOverlay(int type, AppBaseMap baseMap) {
+        setType(type);
+        this.mBaseMap = baseMap;
     }
-    this.mLayerID = this.mBaseMap.AddLayer(getUpdateType(), getUpdateTimeInterval(), getLayerTag());
-    if (MapTrace.enableTrace) {
-      MapTrace.trace("InnerOverlay", "AddLayer:" + this.mLayerID + " type:" + this.mType + " tag:" + getLayerTag() + " [" + (System.currentTimeMillis() - l) + "ms]");
+
+    public void SetMapParam(int layerID, AppBaseMap baseMap) {
+        this.mLayerID = layerID;
+        this.mBaseMap = baseMap;
     }
-    if (this.mLayerID != 0)
-    {
-      this.mBaseMap.SetLayersClickable(this.mLayerID, true);
-      SetOverlayShow(getDefaultShowStatus());
-      return true;
+
+    public void SetOverlayShow(boolean bShow) {
+        if (this.mLayerID != 0 && this.mBaseMap != null && this.mBaseMap.GetId() != 0) {
+            long time = 0;
+            if (MapTrace.enableTrace) {
+                time = System.currentTimeMillis();
+            }
+            this.mBaseMap.ShowLayers(this.mLayerID, bShow);
+            if (MapTrace.enableTrace) {
+                MapTrace.trace(TAG, "ShowLayer:" + this.mLayerID + Config.TRACE_TODAY_VISIT_SPLIT + bShow + " tag:" + getLayerTag() + " [" + (System.currentTimeMillis() - time) + "ms]");
+            }
+        }
     }
-    return false;
-  }
-  
-  public void clear()
-  {
-    long l = 0L;
-    if (MapTrace.enableTrace) {
-      l = System.currentTimeMillis();
+
+    public boolean IsOverlayShow() {
+        return (this.mLayerID == 0 || this.mBaseMap == null || this.mBaseMap.GetId() == 0 || !this.mBaseMap.LayersIsShow(this.mLayerID)) ? false : true;
     }
-    if (!TextUtils.isEmpty(this.strJsonData))
-    {
-      this.strJsonData = null;
-      if (this.mBaseMap != null) {
-        this.mBaseMap.ClearLayer(this.mLayerID);
-      }
+
+    public void UpdateOverlay() {
+        if (this.mLayerID != 0 && this.mBaseMap != null && this.mBaseMap.GetId() != 0) {
+            long time = 0;
+            if (MapTrace.enableTrace) {
+                time = System.currentTimeMillis();
+            }
+            this.mBaseMap.UpdateLayers(this.mLayerID);
+            if (MapTrace.enableTrace) {
+                MapTrace.trace(TAG, "UpdateLayer:" + this.mLayerID + " tag:" + getLayerTag() + " [" + (System.currentTimeMillis() - time) + "ms]");
+            }
+        }
     }
-    if (MapTrace.enableTrace) {
-      MapTrace.trace("InnerOverlay", "ClearLayer:" + this.mLayerID + " tag:" + getLayerTag() + " [" + (System.currentTimeMillis() - l) + "ms]");
+
+    public void setData(String strJson) {
+        if (strJson != null) {
+            this.strJsonData = strJson;
+        }
     }
-  }
-  
-  public String getData()
-  {
-    return this.strJsonData;
-  }
-  
-  public boolean getDefaultShowStatus()
-  {
-    return false;
-  }
-  
-  public String getLayerTag()
-  {
-    return "default";
-  }
-  
-  public Bundle getParam()
-  {
-    return null;
-  }
-  
-  public int getType()
-  {
-    return this.mType;
-  }
-  
-  public int getUpdateTimeInterval()
-  {
-    return 0;
-  }
-  
-  public int getUpdateType()
-  {
-    return 0;
-  }
-  
-  public boolean insertToMapView(int paramInt)
-  {
-    if ((this.mBaseMap == null) || (this.mBaseMap.GetId() == 0)) {
-      return false;
+
+    public String getData() {
+        return this.strJsonData;
     }
-    this.mLayerID = this.mBaseMap.InsertLayerAt(paramInt, getUpdateType(), getUpdateTimeInterval(), getLayerTag());
-    if (this.mLayerID != 0)
-    {
-      this.mBaseMap.SetLayersClickable(this.mLayerID, true);
-      SetOverlayShow(getDefaultShowStatus());
-      return true;
+
+    public Bundle getParam() {
+        return null;
     }
-    return false;
-  }
-  
-  public void setData(String paramString)
-  {
-    if (paramString != null) {
-      this.strJsonData = paramString;
+
+    public void clear() {
+        long time = 0;
+        if (MapTrace.enableTrace) {
+            time = System.currentTimeMillis();
+        }
+        if (!TextUtils.isEmpty(this.strJsonData)) {
+            this.strJsonData = null;
+            if (this.mBaseMap != null) {
+                this.mBaseMap.ClearLayer(this.mLayerID);
+            }
+        }
+        if (MapTrace.enableTrace) {
+            MapTrace.trace(TAG, "ClearLayer:" + this.mLayerID + " tag:" + getLayerTag() + " [" + (System.currentTimeMillis() - time) + "ms]");
+        }
     }
-  }
-  
-  public void setFocus(int paramInt, boolean paramBoolean)
-  {
-    setFocus(paramInt, paramBoolean, null);
-  }
-  
-  public void setFocus(int paramInt, boolean paramBoolean, String paramString)
-  {
-    if ((this.mBaseMap == null) || (this.mBaseMap.GetId() == 0)) {
-      return;
+
+    public void setType(int type) {
+        this.mType = type;
     }
-    Bundle localBundle = new Bundle();
-    if (!TextUtils.isEmpty(paramString)) {
-      localBundle.putString("uid", paramString);
+
+    public int getType() {
+        return this.mType;
     }
-    this.mBaseMap.SetFocus(this.mLayerID, paramInt, paramBoolean, localBundle);
-  }
-  
-  public void setType(int paramInt)
-  {
-    this.mType = paramInt;
-  }
+
+    public int getUpdateType() {
+        return 0;
+    }
+
+    public int getUpdateTimeInterval() {
+        return 0;
+    }
+
+    public String getLayerTag() {
+        return "default";
+    }
+
+    public boolean getDefaultShowStatus() {
+        return false;
+    }
+
+    public void setFocus(int index, boolean bFocus, String uid) {
+        if (this.mBaseMap != null && this.mBaseMap.GetId() != 0) {
+            Bundle bundle = new Bundle();
+            if (!TextUtils.isEmpty(uid)) {
+                bundle.putString("uid", uid);
+            }
+            this.mBaseMap.SetFocus(this.mLayerID, index, bFocus, bundle);
+        }
+    }
+
+    public void setFocus(int index, boolean bFocus) {
+        setFocus(index, bFocus, null);
+    }
+
+    public boolean addedToMapView() {
+        if (this.mBaseMap == null || this.mBaseMap.GetId() == 0) {
+            return false;
+        }
+        long time = 0;
+        if (MapTrace.enableTrace) {
+            time = System.currentTimeMillis();
+        }
+        this.mLayerID = this.mBaseMap.AddLayer(getUpdateType(), getUpdateTimeInterval(), getLayerTag());
+        if (MapTrace.enableTrace) {
+            MapTrace.trace(TAG, "AddLayer:" + this.mLayerID + " type:" + this.mType + " tag:" + getLayerTag() + " [" + (System.currentTimeMillis() - time) + "ms]");
+        }
+        if (this.mLayerID == 0) {
+            return false;
+        }
+        this.mBaseMap.SetLayersClickable(this.mLayerID, true);
+        SetOverlayShow(getDefaultShowStatus());
+        return true;
+    }
+
+    public boolean insertToMapView(int pos) {
+        if (this.mBaseMap == null || this.mBaseMap.GetId() == 0) {
+            return false;
+        }
+        this.mLayerID = this.mBaseMap.InsertLayerAt(pos, getUpdateType(), getUpdateTimeInterval(), getLayerTag());
+        if (this.mLayerID == 0) {
+            return false;
+        }
+        this.mBaseMap.SetLayersClickable(this.mLayerID, true);
+        SetOverlayShow(getDefaultShowStatus());
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/InnerOverlay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

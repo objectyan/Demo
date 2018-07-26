@@ -6,180 +6,108 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-class af
-  extends SQLiteOpenHelper
-{
-  private String a;
-  private SQLiteDatabase b;
-  
-  public af(Context paramContext, String paramString)
-  {
-    super(paramContext, ".confd", null, 1);
-    this.a = paramString;
-  }
-  
-  public int a(String paramString, String[] paramArrayOfString)
-  {
-    return this.b.delete(this.a, paramString, paramArrayOfString);
-  }
-  
-  public long a(String paramString, ContentValues paramContentValues)
-  {
-    return this.b.insert(this.a, paramString, paramContentValues);
-  }
-  
-  public Cursor a(String[] paramArrayOfString1, String paramString1, String[] paramArrayOfString2, String paramString2, String paramString3, String paramString4, String paramString5)
-  {
-    return this.b.query(this.a, paramArrayOfString1, paramString1, paramArrayOfString2, paramString2, paramString3, paramString4, paramString5);
-  }
-  
-  public void a(String paramString)
-  {
-    getWritableDatabase().execSQL(paramString);
-  }
-  
-  public boolean a()
-  {
-    boolean bool1 = true;
-    for (;;)
-    {
-      try
-      {
-        SQLiteDatabase localSQLiteDatabase = this.b;
-        int i;
-        if (localSQLiteDatabase == null)
-        {
-          i = 1;
-          if (i == 0) {}
+class af extends SQLiteOpenHelper {
+    /* renamed from: a */
+    private String f19382a;
+    /* renamed from: b */
+    private SQLiteDatabase f19383b;
+
+    public af(Context context, String str) {
+        super(context, ".confd", null, 1);
+        this.f19382a = str;
+    }
+
+    public void onCreate(SQLiteDatabase sQLiteDatabase) {
+        this.f19383b = sQLiteDatabase;
+    }
+
+    /* renamed from: a */
+    public synchronized boolean m15304a() {
+        boolean z = true;
+        synchronized (this) {
+            boolean z2;
+            if (this.f19383b == null) {
+                z2 = true;
+            } else if (this.f19383b.isOpen()) {
+                z2 = false;
+            } else {
+                z2 = true;
+            }
+            if (z2) {
+                try {
+                    this.f19383b = getWritableDatabase();
+                } catch (NullPointerException e) {
+                    throw new NullPointerException("db path is null");
+                }
+            }
+            if (this.f19383b == null || !this.f19383b.isOpen()) {
+                z = false;
+            }
         }
-        try
-        {
-          this.b = getWritableDatabase();
-          if (this.b != null)
-          {
-            boolean bool2 = this.b.isOpen();
-            if (bool2) {}
-          }
-          else
-          {
-            bool1 = false;
-          }
-          return bool1;
+        return z;
+    }
+
+    public synchronized void close() {
+        super.close();
+        if (this.f19383b != null) {
+            this.f19383b.close();
+            this.f19383b = null;
         }
-        catch (NullPointerException localNullPointerException)
-        {
-          throw new NullPointerException("db path is null");
+    }
+
+    public synchronized SQLiteDatabase getReadableDatabase() {
+        return super.getReadableDatabase();
+    }
+
+    public synchronized SQLiteDatabase getWritableDatabase() {
+        return super.getWritableDatabase();
+    }
+
+    public void onOpen(SQLiteDatabase sQLiteDatabase) {
+        super.onOpen(sQLiteDatabase);
+    }
+
+    public void onUpgrade(SQLiteDatabase sQLiteDatabase, int i, int i2) {
+    }
+
+    /* renamed from: a */
+    public void m15303a(String str) {
+        getWritableDatabase().execSQL(str);
+    }
+
+    /* renamed from: b */
+    public final int m15305b() {
+        Cursor cursor = null;
+        int i = 0;
+        try {
+            cursor = this.f19383b.rawQuery("SELECT COUNT(*) FROM " + this.f19382a, null);
+            if (cursor == null || !cursor.moveToNext()) {
+                if (cursor != null) {
+                    cursor.close();
+                }
+                return i;
+            }
+            i = cursor.getInt(0);
+            return i;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        if (!this.b.isOpen()) {
-          i = 1;
-        } else {
-          i = 0;
-        }
-      }
-      finally {}
     }
-  }
-  
-  public final int b()
-  {
-    Object localObject1 = null;
-    int j = 0;
-    try
-    {
-      Cursor localCursor = this.b.rawQuery("SELECT COUNT(*) FROM " + this.a, null);
-      if (localCursor != null)
-      {
-        localObject1 = localCursor;
-        if (localCursor.moveToNext())
-        {
-          localObject1 = localCursor;
-          i = localCursor.getInt(0);
-          j = i;
-          if (localCursor != null)
-          {
-            localCursor.close();
-            j = i;
-          }
-        }
-      }
-      while (localCursor == null)
-      {
-        int i;
-        return j;
-      }
-      localCursor.close();
-      return 0;
+
+    /* renamed from: a */
+    public Cursor m15302a(String[] strArr, String str, String[] strArr2, String str2, String str3, String str4, String str5) {
+        return this.f19383b.query(this.f19382a, strArr, str, strArr2, str2, str3, str4, str5);
     }
-    finally
-    {
-      if (localObject1 != null) {
-        ((Cursor)localObject1).close();
-      }
+
+    /* renamed from: a */
+    public long m15301a(String str, ContentValues contentValues) {
+        return this.f19383b.insert(this.f19382a, str, contentValues);
     }
-  }
-  
-  public void close()
-  {
-    try
-    {
-      super.close();
-      if (this.b != null)
-      {
-        this.b.close();
-        this.b = null;
-      }
-      return;
+
+    /* renamed from: a */
+    public int m15300a(String str, String[] strArr) {
+        return this.f19383b.delete(this.f19382a, str, strArr);
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
-    }
-  }
-  
-  public SQLiteDatabase getReadableDatabase()
-  {
-    try
-    {
-      SQLiteDatabase localSQLiteDatabase = super.getReadableDatabase();
-      return localSQLiteDatabase;
-    }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
-    }
-  }
-  
-  public SQLiteDatabase getWritableDatabase()
-  {
-    try
-    {
-      SQLiteDatabase localSQLiteDatabase = super.getWritableDatabase();
-      return localSQLiteDatabase;
-    }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
-    }
-  }
-  
-  public void onCreate(SQLiteDatabase paramSQLiteDatabase)
-  {
-    this.b = paramSQLiteDatabase;
-  }
-  
-  public void onOpen(SQLiteDatabase paramSQLiteDatabase)
-  {
-    super.onOpen(paramSQLiteDatabase);
-  }
-  
-  public void onUpgrade(SQLiteDatabase paramSQLiteDatabase, int paramInt1, int paramInt2) {}
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/af.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

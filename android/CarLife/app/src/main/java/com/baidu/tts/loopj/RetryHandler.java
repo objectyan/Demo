@@ -14,100 +14,62 @@ import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.protocol.HttpContext;
 
-class RetryHandler
-  implements HttpRequestRetryHandler
-{
-  private static final HashSet<Class<?>> exceptionBlacklist;
-  private static final HashSet<Class<?>> exceptionWhitelist = new HashSet();
-  private final int maxRetries;
-  private final int retrySleepTimeMS;
-  
-  static
-  {
-    exceptionBlacklist = new HashSet();
-    exceptionWhitelist.add(NoHttpResponseException.class);
-    exceptionWhitelist.add(UnknownHostException.class);
-    exceptionWhitelist.add(SocketException.class);
-    exceptionWhitelist.add(ConnectTimeoutException.class);
-    exceptionWhitelist.add(SocketTimeoutException.class);
-    exceptionBlacklist.add(InterruptedIOException.class);
-    exceptionBlacklist.add(SSLException.class);
-  }
-  
-  public RetryHandler(int paramInt1, int paramInt2)
-  {
-    this.maxRetries = paramInt1;
-    this.retrySleepTimeMS = paramInt2;
-  }
-  
-  static void addClassToBlacklist(Class<?> paramClass)
-  {
-    exceptionBlacklist.add(paramClass);
-  }
-  
-  static void addClassToWhitelist(Class<?> paramClass)
-  {
-    exceptionWhitelist.add(paramClass);
-  }
-  
-  protected boolean isInList(HashSet<Class<?>> paramHashSet, Throwable paramThrowable)
-  {
-    paramHashSet = paramHashSet.iterator();
-    while (paramHashSet.hasNext()) {
-      if (((Class)paramHashSet.next()).isInstance(paramThrowable)) {
-        return true;
-      }
+class RetryHandler implements HttpRequestRetryHandler {
+    private static final HashSet<Class<?>> exceptionBlacklist = new HashSet();
+    private static final HashSet<Class<?>> exceptionWhitelist = new HashSet();
+    private final int maxRetries;
+    private final int retrySleepTimeMS;
+
+    static {
+        exceptionWhitelist.add(NoHttpResponseException.class);
+        exceptionWhitelist.add(UnknownHostException.class);
+        exceptionWhitelist.add(SocketException.class);
+        exceptionWhitelist.add(ConnectTimeoutException.class);
+        exceptionWhitelist.add(SocketTimeoutException.class);
+        exceptionBlacklist.add(InterruptedIOException.class);
+        exceptionBlacklist.add(SSLException.class);
     }
-    return false;
-  }
-  
-  public boolean retryRequest(IOException paramIOException, int paramInt, HttpContext paramHttpContext)
-  {
-    boolean bool2 = true;
-    paramHttpContext = (Boolean)paramHttpContext.getAttribute("http.request_sent");
-    int i;
-    boolean bool1;
-    if ((paramHttpContext != null) && (paramHttpContext.booleanValue()))
-    {
-      i = 1;
-      if (paramInt <= this.maxRetries) {
-        break label62;
-      }
-      bool1 = false;
+
+    public RetryHandler(int maxRetries, int retrySleepTimeMS) {
+        this.maxRetries = maxRetries;
+        this.retrySleepTimeMS = retrySleepTimeMS;
     }
-    for (;;)
-    {
-      if (!bool1) {
-        break label110;
-      }
-      SystemClock.sleep(this.retrySleepTimeMS);
-      return bool1;
-      i = 0;
-      break;
-      label62:
-      bool1 = bool2;
-      if (!isInList(exceptionWhitelist, paramIOException)) {
-        if (isInList(exceptionBlacklist, paramIOException))
-        {
-          bool1 = false;
+
+    public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
+        boolean z = true;
+        Boolean bool = (Boolean) context.getAttribute("http.request_sent");
+        boolean z2 = bool != null && bool.booleanValue();
+        if (executionCount > this.maxRetries) {
+            z = false;
+        } else if (!isInList(exceptionWhitelist, exception)) {
+            if (isInList(exceptionBlacklist, exception)) {
+                z = false;
+            } else if (!z2) {
+            }
         }
-        else
-        {
-          bool1 = bool2;
-          if (i == 0) {
-            bool1 = bool2;
-          }
+        if (z) {
+            SystemClock.sleep((long) this.retrySleepTimeMS);
+        } else {
+            exception.printStackTrace();
         }
-      }
+        return z;
     }
-    label110:
-    paramIOException.printStackTrace();
-    return bool1;
-  }
+
+    static void addClassToWhitelist(Class<?> cls) {
+        exceptionWhitelist.add(cls);
+    }
+
+    static void addClassToBlacklist(Class<?> cls) {
+        exceptionBlacklist.add(cls);
+    }
+
+    protected boolean isInList(HashSet<Class<?>> list, Throwable error) {
+        Iterator it = list.iterator();
+        while (it.hasNext()) {
+            if (((Class) it.next()).isInstance(error)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/loopj/RetryHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

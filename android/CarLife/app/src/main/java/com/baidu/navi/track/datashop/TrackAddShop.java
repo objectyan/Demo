@@ -6,20 +6,19 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import com.baidu.carlife.core.a;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1260i;
 import com.baidu.navi.track.common.TrackConfig;
 import com.baidu.navi.track.database.DataCache;
 import com.baidu.navi.track.database.DataService;
 import com.baidu.navi.track.database.DataService.Action;
-import com.baidu.navi.track.model.CarNavi;
 import com.baidu.navi.track.model.CarNaviModel;
 import com.baidu.navi.track.model.NaviPoint;
 import com.baidu.navi.track.model.TrackDBEvent;
 import com.baidu.navi.track.sync.TrackDataSync;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
-import com.baidu.navisdk.logic.RspData;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
 import com.baidu.navisdk.util.common.CoordinateTransformUtil;
@@ -30,282 +29,224 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class TrackAddShop
-{
-  private static final String DefaultTrackName = "未知路";
-  private static final int SEARCH_POI_TIMEOUT = 120000;
-  private static final String TAG = "TrackAddShop";
-  private int geoSearchCount = 0;
-  private boolean isSync = false;
-  private Object lockObject = new Object();
-  protected HashMap<Handler, String> mEndGeoTrackId = new HashMap();
-  private Handler mHandler = new MyHandler(null);
-  protected HashMap<Handler, String> mStartGeoTrackId = new HashMap();
-  private Object originalObject;
-  
-  private void addRecord(Object paramObject)
-  {
-    if (paramObject != null) {}
-    try
-    {
-      ArrayList localArrayList = new ArrayList();
-      localArrayList.add(paramObject);
-      paramObject = a.a();
-      Intent localIntent = new Intent((Context)paramObject, DataService.class);
-      localIntent.putExtra("handler", DataCache.getInstance().addCache(this.mHandler));
-      localIntent.setAction(DataService.Action.ACTION_WRITE_TRACK_TO_DB.toString());
-      localIntent.putExtra("cache_key", DataCache.getInstance().addCache(localArrayList));
-      ((Context)paramObject).startService(localIntent);
-      return;
-    }
-    catch (Exception paramObject) {}
-  }
-  
-  private void checkRecordEndName()
-  {
-    if ((this.originalObject == null) || (!(this.originalObject instanceof CarNaviModel))) {}
-    Object localObject;
-    String str;
-    do
-    {
-      return;
-      localObject = ((CarNaviModel)this.originalObject).getPBData().getEndPoint();
-      localObject = CoordinateTransformUtil.transferBD09ToGCJ02(((NaviPoint)localObject).getLng(), ((NaviPoint)localObject).getLat());
-      str = ((CarNaviModel)this.originalObject).getPBData().getGuid();
-    } while ((localObject == null) || (TextUtils.isEmpty(str)));
-    SearchHandler localSearchHandler = new SearchHandler(Looper.getMainLooper());
-    this.mEndGeoTrackId.put(localSearchHandler, str);
-    startAntiGeo((GeoPoint)localObject, localSearchHandler);
-  }
-  
-  private void checkRecordStartName()
-  {
-    if ((this.originalObject == null) || (!(this.originalObject instanceof CarNaviModel))) {}
-    Object localObject1;
-    GeoPoint localGeoPoint;
-    do
-    {
-      return;
-      localObject1 = ((CarNaviModel)this.originalObject).getPBData().getStartPoint();
-      localGeoPoint = CoordinateTransformUtil.transferBD09ToGCJ02(((NaviPoint)localObject1).getLng(), ((NaviPoint)localObject1).getLat());
-      localObject2 = ((NaviPoint)localObject1).getAddr();
-      localObject1 = ((CarNaviModel)this.originalObject).getPBData().getGuid();
-    } while ((localGeoPoint == null) || (TextUtils.isEmpty((CharSequence)localObject1)) || ((localObject2 != null) && (((String)localObject2).length() != 0) && (!((String)localObject2).equals("我的位置")) && (!((String)localObject2).equals("地图上的点"))));
-    Object localObject2 = new SearchHandler(Looper.getMainLooper());
-    this.mStartGeoTrackId.put(localObject2, localObject1);
-    startAntiGeo(localGeoPoint, (SearchHandler)localObject2);
-  }
-  
-  private void releaseShop()
-  {
-    this.originalObject = null;
-    this.mStartGeoTrackId.clear();
-    this.mEndGeoTrackId.clear();
-    if (this.mHandler != null)
-    {
-      this.mHandler.removeCallbacksAndMessages(null);
-      this.mHandler = null;
-    }
-  }
-  
-  private void startAntiGeo(GeoPoint paramGeoPoint, SearchHandler paramSearchHandler)
-  {
-    if ((!NetworkUtils.isNetworkAvailable(a.a())) && (!hasCurLocationCityOfflineData(paramGeoPoint))) {
-      return;
-    }
-    this.geoSearchCount += 1;
-    BNPoiSearcher.getInstance().asynGetPoiByPoint(paramGeoPoint, 120000, paramSearchHandler);
-  }
-  
-  private void updateRecord(Object paramObject)
-  {
-    if (paramObject != null)
-    {
-      ArrayList localArrayList = new ArrayList();
-      localArrayList.add(paramObject);
-      paramObject = a.a();
-      Intent localIntent = new Intent((Context)paramObject, DataService.class);
-      localIntent.putExtra("handler", DataCache.getInstance().addCache(this.mHandler));
-      localIntent.setAction(DataService.Action.ACTION_UPDATE_TRACK_INFO_BY_LIST.toString());
-      localIntent.putExtra("cache_key", DataCache.getInstance().addCache(localArrayList));
-      ((Context)paramObject).startService(localIntent);
-    }
-  }
-  
-  public void addRecord(Object paramObject, boolean paramBoolean)
-  {
-    if (paramObject == null) {
-      return;
-    }
-    this.originalObject = paramObject;
-    this.isSync = paramBoolean;
-    addRecord(paramObject);
-    checkRecordStartName();
-    checkRecordEndName();
-  }
-  
-  public boolean hasCurLocationCityOfflineData(GeoPoint paramGeoPoint)
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (BNOfflineDataManager.getInstance().isProvinceDataDownload(0))
-    {
-      for (paramGeoPoint = BNPoiSearcher.getInstance().getDistrictByPoint(paramGeoPoint, 0); (paramGeoPoint != null) && (paramGeoPoint.mType > 2); paramGeoPoint = BNPoiSearcher.getInstance().getParentDistrict(paramGeoPoint.mId)) {}
-      bool1 = bool2;
-      if (paramGeoPoint != null) {
-        bool1 = BNOfflineDataManager.getInstance().isProvinceDataDownload(paramGeoPoint.mId);
-      }
-    }
-    return bool1;
-  }
-  
-  private class MyHandler
-    extends Handler
-  {
-    private MyHandler() {}
-    
-    public void handleMessage(Message arg1)
-    {
-      if (???.what != 2) {}
-      TrackDBEvent localTrackDBEvent;
-      do
-      {
-        do
-        {
-          return;
-          i.b("TrackAddShop", "handleMessage msg = " + ???);
-          localTrackDBEvent = null;
-          if ((???.obj instanceof TrackDBEvent)) {
-            localTrackDBEvent = (TrackDBEvent)???.obj;
-          }
-        } while (localTrackDBEvent == null);
-        i.b("TrackAddShop", "dbEvent.type = " + localTrackDBEvent.type);
-      } while (localTrackDBEvent.type != 1);
-      i.b("TrackAddShop", "dbEvent.status = " + localTrackDBEvent.status);
-      int i = TrackConfig.getInstance().getTotalDistanse();
-      int j = TrackConfig.getInstance().getWeekEndTime();
-      int k = TrackConfig.getInstance().getMaxTime();
-      int n;
-      int i2;
-      if ((TrackAddShop.this.originalObject != null) && ((TrackAddShop.this.originalObject instanceof CarNaviModel)) && (i > 0) && (j > 0) && (k > 0))
-      {
-        int m = TrackConfig.getInstance().getWeekDistanse();
-        n = ((CarNaviModel)TrackAddShop.this.originalObject).getPBData().getDistance();
-        int i1 = ((CarNaviModel)TrackAddShop.this.originalObject).getPBData().getDuration();
-        i2 = ((CarNaviModel)TrackAddShop.this.originalObject).getPBData().getCtime();
-        TrackConfig.getInstance().setTotalDistanse(n + i);
-        if (k < i1) {
-          TrackConfig.getInstance().setMaxTime(i1);
+public class TrackAddShop {
+    private static final String DefaultTrackName = "未知路";
+    private static final int SEARCH_POI_TIMEOUT = 120000;
+    private static final String TAG = "TrackAddShop";
+    private int geoSearchCount = 0;
+    private boolean isSync = false;
+    private Object lockObject = new Object();
+    protected HashMap<Handler, String> mEndGeoTrackId = new HashMap();
+    private Handler mHandler = new MyHandler();
+    protected HashMap<Handler, String> mStartGeoTrackId = new HashMap();
+    private Object originalObject;
+
+    private class MyHandler extends Handler {
+        private MyHandler() {
         }
-        if ((i2 < j - 604800) || (i2 >= j)) {
-          break label410;
+
+        public void handleMessage(Message msg) {
+            if (msg.what == 2) {
+                C1260i.b(TrackAddShop.TAG, "handleMessage msg = " + msg);
+                TrackDBEvent dbEvent = null;
+                if (msg.obj instanceof TrackDBEvent) {
+                    dbEvent = msg.obj;
+                }
+                if (dbEvent != null) {
+                    C1260i.b(TrackAddShop.TAG, "dbEvent.type = " + dbEvent.type);
+                    if (dbEvent.type == 1) {
+                        C1260i.b(TrackAddShop.TAG, "dbEvent.status = " + dbEvent.status);
+                        int totalDistanse = TrackConfig.getInstance().getTotalDistanse();
+                        int weekEndTime = TrackConfig.getInstance().getWeekEndTime();
+                        int maxTime = TrackConfig.getInstance().getMaxTime();
+                        if (TrackAddShop.this.originalObject != null && (TrackAddShop.this.originalObject instanceof CarNaviModel) && totalDistanse > 0 && weekEndTime > 0 && maxTime > 0) {
+                            int weekDistanse = TrackConfig.getInstance().getWeekDistanse();
+                            int weedStartTime = weekEndTime - 604800;
+                            int distanse = ((CarNaviModel) TrackAddShop.this.originalObject).getPBData().getDistance();
+                            int duration = ((CarNaviModel) TrackAddShop.this.originalObject).getPBData().getDuration();
+                            int ctime = ((CarNaviModel) TrackAddShop.this.originalObject).getPBData().getCtime();
+                            TrackConfig.getInstance().setTotalDistanse(distanse + totalDistanse);
+                            if (maxTime < duration) {
+                                TrackConfig.getInstance().setMaxTime(duration);
+                            }
+                            if (ctime >= weedStartTime && ctime < weekEndTime) {
+                                TrackConfig.getInstance().setWeekDistanse(distanse + weekDistanse);
+                            } else if (ctime > weekEndTime) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(7, 2);
+                                cal.set(11, 0);
+                                cal.set(12, 0);
+                                cal.set(13, 0);
+                                long time = (cal.getTimeInMillis() / 1000) + 604800;
+                                if (cal.getTimeInMillis() > System.currentTimeMillis()) {
+                                    time -= 604800;
+                                }
+                                TrackConfig.getInstance().setWeekDistanse(distanse);
+                                TrackConfig.getInstance().setWeekEndTime((int) time);
+                            }
+                        }
+                        synchronized (TrackAddShop.this.lockObject) {
+                            if (TrackAddShop.this.isSync && TrackAddShop.this.geoSearchCount == 0 && TrackAddShop.this.originalObject != null) {
+                                C1260i.b(TrackAddShop.TAG, "originalObject : " + TrackAddShop.this.originalObject.toString());
+                                TrackDataSync.getInstance().autoSync(TrackAddShop.this.originalObject);
+                            }
+                            if (TrackAddShop.this.geoSearchCount == 0) {
+                                TrackAddShop.this.releaseShop();
+                            }
+                        }
+                    }
+                }
+            }
         }
-        TrackConfig.getInstance().setWeekDistanse(n + m);
-      }
-      for (;;)
-      {
-        synchronized (TrackAddShop.this.lockObject)
-        {
-          if ((TrackAddShop.this.isSync) && (TrackAddShop.this.geoSearchCount == 0) && (TrackAddShop.this.originalObject != null))
-          {
-            i.b("TrackAddShop", "originalObject : " + TrackAddShop.this.originalObject.toString());
-            TrackDataSync.getInstance().autoSync(TrackAddShop.this.originalObject);
-          }
-          if (TrackAddShop.this.geoSearchCount == 0) {
-            TrackAddShop.this.releaseShop();
-          }
-          return;
-        }
-        label410:
-        if (i2 > j)
-        {
-          ??? = Calendar.getInstance();
-          ???.set(7, 2);
-          ???.set(11, 0);
-          ???.set(12, 0);
-          ???.set(13, 0);
-          long l2 = ???.getTimeInMillis() / 1000L + 604800L;
-          long l1 = l2;
-          if (???.getTimeInMillis() > System.currentTimeMillis()) {
-            l1 = l2 - 604800L;
-          }
-          TrackConfig.getInstance().setWeekDistanse(n);
-          TrackConfig.getInstance().setWeekEndTime((int)l1);
-        }
-      }
     }
-  }
-  
-  class SearchHandler
-    extends Handler
-  {
-    public SearchHandler(Looper paramLooper)
-    {
-      super();
+
+    class SearchHandler extends Handler {
+        public SearchHandler(Looper mainLooper) {
+            super(mainLooper);
+        }
+
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1003:
+                    if (msg.arg1 == 0) {
+                        SearchPoi searchPoi = msg.obj.mData;
+                        if (searchPoi != null) {
+                            String trackId;
+                            if (TrackAddShop.this.mStartGeoTrackId.containsKey(this)) {
+                                trackId = (String) TrackAddShop.this.mStartGeoTrackId.get(this);
+                                if (TextUtils.isEmpty(searchPoi.mName)) {
+                                    searchPoi.mName = TrackAddShop.DefaultTrackName;
+                                }
+                                if (TrackAddShop.this.originalObject != null && (TrackAddShop.this.originalObject instanceof CarNaviModel) && ((CarNaviModel) TrackAddShop.this.originalObject).getPBData().getGuid().equals(trackId)) {
+                                    ((CarNaviModel) TrackAddShop.this.originalObject).getPBData().getStartPoint().setAddr(searchPoi.mName);
+                                }
+                                C1260i.b(TrackAddShop.TAG, "trackStartName:" + searchPoi.mName);
+                            } else if (TrackAddShop.this.mEndGeoTrackId.containsKey(this)) {
+                                trackId = (String) TrackAddShop.this.mEndGeoTrackId.get(this);
+                                if (TextUtils.isEmpty(searchPoi.mName)) {
+                                    searchPoi.mName = TrackAddShop.DefaultTrackName;
+                                }
+                                if (TrackAddShop.this.originalObject != null && (TrackAddShop.this.originalObject instanceof CarNaviModel) && ((CarNaviModel) TrackAddShop.this.originalObject).getPBData().getGuid().equals(trackId)) {
+                                    ((CarNaviModel) TrackAddShop.this.originalObject).getPBData().getEndPoint().setAddr(searchPoi.mName);
+                                }
+                                C1260i.b(TrackAddShop.TAG, "trackEndName:" + searchPoi.mName);
+                            }
+                        }
+                        if (TrackAddShop.this.mStartGeoTrackId.remove(this) == null) {
+                            TrackAddShop.this.mEndGeoTrackId.remove(this);
+                        }
+                    }
+                    synchronized (TrackAddShop.this.lockObject) {
+                        TrackAddShop.this.geoSearchCount = TrackAddShop.this.geoSearchCount - 1;
+                        if (TrackAddShop.this.geoSearchCount == 0 && TrackAddShop.this.originalObject != null) {
+                            TrackAddShop.this.updateRecord(TrackAddShop.this.originalObject);
+                            TrackDataSync.getInstance().autoSync(TrackAddShop.this.originalObject);
+                            TrackAddShop.this.releaseShop();
+                        }
+                    }
+                    return;
+                default:
+                    return;
+            }
+        }
     }
-    
-    public void handleMessage(Message arg1)
-    {
-      switch (???.what)
-      {
-      default: 
-        return;
-      }
-      if (???.arg1 == 0)
-      {
-        ??? = (SearchPoi)((RspData)???.obj).mData;
-        if (??? != null)
-        {
-          if (!TrackAddShop.this.mStartGeoTrackId.containsKey(this)) {
-            break label301;
-          }
-          String str1 = (String)TrackAddShop.this.mStartGeoTrackId.get(this);
-          if (TextUtils.isEmpty(???.mName)) {
-            ???.mName = "未知路";
-          }
-          if ((TrackAddShop.this.originalObject != null) && ((TrackAddShop.this.originalObject instanceof CarNaviModel)) && (((CarNaviModel)TrackAddShop.this.originalObject).getPBData().getGuid().equals(str1))) {
-            ((CarNaviModel)TrackAddShop.this.originalObject).getPBData().getStartPoint().setAddr(???.mName);
-          }
-          ??? = ???.mName;
-          i.b("TrackAddShop", "trackStartName:" + ???);
+
+    public void addRecord(Object trackItem, boolean isSync) {
+        if (trackItem != null) {
+            this.originalObject = trackItem;
+            this.isSync = isSync;
+            addRecord(trackItem);
+            checkRecordStartName();
+            checkRecordEndName();
         }
-      }
-      for (;;)
-      {
-        if (TrackAddShop.this.mStartGeoTrackId.remove(this) == null) {
-          TrackAddShop.this.mEndGeoTrackId.remove(this);
-        }
-        synchronized (TrackAddShop.this.lockObject)
-        {
-          TrackAddShop.access$310(TrackAddShop.this);
-          if ((TrackAddShop.this.geoSearchCount == 0) && (TrackAddShop.this.originalObject != null))
-          {
-            TrackAddShop.this.updateRecord(TrackAddShop.this.originalObject);
-            TrackDataSync.getInstance().autoSync(TrackAddShop.this.originalObject);
-            TrackAddShop.this.releaseShop();
-          }
-          return;
-        }
-        label301:
-        if (TrackAddShop.this.mEndGeoTrackId.containsKey(this))
-        {
-          String str2 = (String)TrackAddShop.this.mEndGeoTrackId.get(this);
-          if (TextUtils.isEmpty(???.mName)) {
-            ???.mName = "未知路";
-          }
-          if ((TrackAddShop.this.originalObject != null) && ((TrackAddShop.this.originalObject instanceof CarNaviModel)) && (((CarNaviModel)TrackAddShop.this.originalObject).getPBData().getGuid().equals(str2))) {
-            ((CarNaviModel)TrackAddShop.this.originalObject).getPBData().getEndPoint().setAddr(???.mName);
-          }
-          ??? = ???.mName;
-          i.b("TrackAddShop", "trackEndName:" + ???);
-        }
-      }
     }
-  }
+
+    private void addRecord(Object trackItem) {
+        if (trackItem != null) {
+            try {
+                List<Object> list = new ArrayList();
+                list.add(trackItem);
+                Context context = C1157a.a();
+                Intent intent = new Intent(context, DataService.class);
+                intent.putExtra(DataService.EXTRA_HANDLER, DataCache.getInstance().addCache(this.mHandler));
+                intent.setAction(Action.ACTION_WRITE_TRACK_TO_DB.toString());
+                intent.putExtra(DataService.EXTRA_CACHE_KEY, DataCache.getInstance().addCache(list));
+                context.startService(intent);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private void updateRecord(Object trackItem) {
+        if (trackItem != null) {
+            List<Object> list = new ArrayList();
+            list.add(trackItem);
+            Context context = C1157a.a();
+            Intent intent = new Intent(context, DataService.class);
+            intent.putExtra(DataService.EXTRA_HANDLER, DataCache.getInstance().addCache(this.mHandler));
+            intent.setAction(Action.ACTION_UPDATE_TRACK_INFO_BY_LIST.toString());
+            intent.putExtra(DataService.EXTRA_CACHE_KEY, DataCache.getInstance().addCache(list));
+            context.startService(intent);
+        }
+    }
+
+    private void releaseShop() {
+        this.originalObject = null;
+        this.mStartGeoTrackId.clear();
+        this.mEndGeoTrackId.clear();
+        if (this.mHandler != null) {
+            this.mHandler.removeCallbacksAndMessages(null);
+            this.mHandler = null;
+        }
+    }
+
+    private void checkRecordStartName() {
+        if (this.originalObject != null && (this.originalObject instanceof CarNaviModel)) {
+            NaviPoint startNaviPoint = ((CarNaviModel) this.originalObject).getPBData().getStartPoint();
+            GeoPoint startPoint = CoordinateTransformUtil.transferBD09ToGCJ02(startNaviPoint.getLng(), startNaviPoint.getLat());
+            String curStartName = startNaviPoint.getAddr();
+            String trackId = ((CarNaviModel) this.originalObject).getPBData().getGuid();
+            if (startPoint != null && !TextUtils.isEmpty(trackId)) {
+                if (curStartName == null || curStartName.length() == 0 || curStartName.equals(RoutePlanParams.MY_LOCATION) || curStartName.equals("地图上的点")) {
+                    SearchHandler searchHandler = new SearchHandler(Looper.getMainLooper());
+                    this.mStartGeoTrackId.put(searchHandler, trackId);
+                    startAntiGeo(startPoint, searchHandler);
+                }
+            }
+        }
+    }
+
+    private void checkRecordEndName() {
+        if (this.originalObject != null && (this.originalObject instanceof CarNaviModel)) {
+            NaviPoint endNaviPoint = ((CarNaviModel) this.originalObject).getPBData().getEndPoint();
+            GeoPoint geoPoint = CoordinateTransformUtil.transferBD09ToGCJ02(endNaviPoint.getLng(), endNaviPoint.getLat());
+            String trackId = ((CarNaviModel) this.originalObject).getPBData().getGuid();
+            if (geoPoint != null && !TextUtils.isEmpty(trackId)) {
+                SearchHandler searchHandler = new SearchHandler(Looper.getMainLooper());
+                this.mEndGeoTrackId.put(searchHandler, trackId);
+                startAntiGeo(geoPoint, searchHandler);
+            }
+        }
+    }
+
+    private void startAntiGeo(GeoPoint geoPoint, SearchHandler handler) {
+        if (NetworkUtils.isNetworkAvailable(C1157a.a()) || hasCurLocationCityOfflineData(geoPoint)) {
+            this.geoSearchCount++;
+            BNPoiSearcher.getInstance().asynGetPoiByPoint(geoPoint, SEARCH_POI_TIMEOUT, handler);
+        }
+    }
+
+    public boolean hasCurLocationCityOfflineData(GeoPoint geoPoint) {
+        if (!BNOfflineDataManager.getInstance().isProvinceDataDownload(0)) {
+            return false;
+        }
+        DistrictInfo districtInfo = BNPoiSearcher.getInstance().getDistrictByPoint(geoPoint, 0);
+        while (districtInfo != null && districtInfo.mType > 2) {
+            districtInfo = BNPoiSearcher.getInstance().getParentDistrict(districtInfo.mId);
+        }
+        if (districtInfo != null) {
+            return BNOfflineDataManager.getInstance().isProvinceDataDownload(districtInfo.mId);
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/track/datashop/TrackAddShop.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

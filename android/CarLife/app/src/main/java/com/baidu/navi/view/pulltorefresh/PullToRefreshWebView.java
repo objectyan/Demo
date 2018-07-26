@@ -8,123 +8,112 @@ import android.util.AttributeSet;
 import android.util.FloatMath;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import com.baidu.carlife.C0965R;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.AnimationStyle;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Mode;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
+import com.baidu.navi.view.pulltorefresh.PullToRefreshBase.Orientation;
 
-public class PullToRefreshWebView
-  extends PullToRefreshBase<WebView>
-{
-  private static final PullToRefreshBase.OnRefreshListener<WebView> defaultOnRefreshListener = new PullToRefreshBase.OnRefreshListener()
-  {
-    public void onRefresh(PullToRefreshBase<WebView> paramAnonymousPullToRefreshBase)
-    {
-      ((WebView)paramAnonymousPullToRefreshBase.getRefreshableView()).reload();
+public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
+    private static final OnRefreshListener<WebView> defaultOnRefreshListener = new C40341();
+    private final WebChromeClient defaultWebChromeClient = new C40352();
+
+    /* renamed from: com.baidu.navi.view.pulltorefresh.PullToRefreshWebView$1 */
+    static class C40341 implements OnRefreshListener<WebView> {
+        C40341() {
+        }
+
+        public void onRefresh(PullToRefreshBase<WebView> refreshView) {
+            ((WebView) refreshView.getRefreshableView()).reload();
+        }
     }
-  };
-  private final WebChromeClient defaultWebChromeClient = new WebChromeClient()
-  {
-    public void onProgressChanged(WebView paramAnonymousWebView, int paramAnonymousInt)
-    {
-      if (paramAnonymousInt == 100) {
-        PullToRefreshWebView.this.onRefreshComplete();
-      }
+
+    /* renamed from: com.baidu.navi.view.pulltorefresh.PullToRefreshWebView$2 */
+    class C40352 extends WebChromeClient {
+        C40352() {
+        }
+
+        public void onProgressChanged(WebView view, int newProgress) {
+            if (newProgress == 100) {
+                PullToRefreshWebView.this.onRefreshComplete();
+            }
+        }
     }
-  };
-  
-  public PullToRefreshWebView(Context paramContext)
-  {
-    super(paramContext);
-    setOnRefreshListener(defaultOnRefreshListener);
-    ((WebView)this.mRefreshableView).setWebChromeClient(this.defaultWebChromeClient);
-  }
-  
-  public PullToRefreshWebView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    setOnRefreshListener(defaultOnRefreshListener);
-    ((WebView)this.mRefreshableView).setWebChromeClient(this.defaultWebChromeClient);
-  }
-  
-  public PullToRefreshWebView(Context paramContext, PullToRefreshBase.Mode paramMode)
-  {
-    super(paramContext, paramMode);
-    setOnRefreshListener(defaultOnRefreshListener);
-    ((WebView)this.mRefreshableView).setWebChromeClient(this.defaultWebChromeClient);
-  }
-  
-  public PullToRefreshWebView(Context paramContext, PullToRefreshBase.Mode paramMode, PullToRefreshBase.AnimationStyle paramAnimationStyle)
-  {
-    super(paramContext, paramMode, paramAnimationStyle);
-    setOnRefreshListener(defaultOnRefreshListener);
-    ((WebView)this.mRefreshableView).setWebChromeClient(this.defaultWebChromeClient);
-  }
-  
-  protected WebView createRefreshableView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    if (Build.VERSION.SDK_INT >= 9) {}
-    for (paramContext = new InternalWebViewSDK9(paramContext, paramAttributeSet);; paramContext = new WebView(paramContext, paramAttributeSet))
-    {
-      paramContext.setId(2131623939);
-      return paramContext;
+
+    @TargetApi(9)
+    final class InternalWebViewSDK9 extends WebView {
+        static final int OVERSCROLL_FUZZY_THRESHOLD = 2;
+        static final float OVERSCROLL_SCALE_FACTOR = 1.5f;
+
+        public InternalWebViewSDK9(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+            boolean returnValue = super.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+            OverscrollHelper.overScrollBy(PullToRefreshWebView.this, deltaX, scrollX, deltaY, scrollY, getScrollRange(), 2, OVERSCROLL_SCALE_FACTOR, isTouchEvent);
+            return returnValue;
+        }
+
+        private int getScrollRange() {
+            return (int) Math.max(0.0f, FloatMath.floor(((WebView) PullToRefreshWebView.this.mRefreshableView).getScale() * ((float) ((WebView) PullToRefreshWebView.this.mRefreshableView).getContentHeight())) - ((float) ((getHeight() - getPaddingBottom()) - getPaddingTop())));
+        }
     }
-  }
-  
-  public final PullToRefreshBase.Orientation getPullToRefreshScrollDirection()
-  {
-    return PullToRefreshBase.Orientation.VERTICAL;
-  }
-  
-  protected boolean isReadyForPullEnd()
-  {
-    float f = ((WebView)this.mRefreshableView).getContentHeight();
-    f = FloatMath.floor(((WebView)this.mRefreshableView).getScale() * f);
-    return ((WebView)this.mRefreshableView).getScrollY() >= f - ((WebView)this.mRefreshableView).getHeight();
-  }
-  
-  protected boolean isReadyForPullStart()
-  {
-    return ((WebView)this.mRefreshableView).getScrollY() == 0;
-  }
-  
-  protected void onPtrRestoreInstanceState(Bundle paramBundle)
-  {
-    super.onPtrRestoreInstanceState(paramBundle);
-    ((WebView)this.mRefreshableView).restoreState(paramBundle);
-  }
-  
-  protected void onPtrSaveInstanceState(Bundle paramBundle)
-  {
-    super.onPtrSaveInstanceState(paramBundle);
-    ((WebView)this.mRefreshableView).saveState(paramBundle);
-  }
-  
-  @TargetApi(9)
-  final class InternalWebViewSDK9
-    extends WebView
-  {
-    static final int OVERSCROLL_FUZZY_THRESHOLD = 2;
-    static final float OVERSCROLL_SCALE_FACTOR = 1.5F;
-    
-    public InternalWebViewSDK9(Context paramContext, AttributeSet paramAttributeSet)
-    {
-      super(paramAttributeSet);
+
+    public PullToRefreshWebView(Context context) {
+        super(context);
+        setOnRefreshListener(defaultOnRefreshListener);
+        ((WebView) this.mRefreshableView).setWebChromeClient(this.defaultWebChromeClient);
     }
-    
-    private int getScrollRange()
-    {
-      float f = ((WebView)PullToRefreshWebView.this.mRefreshableView).getContentHeight();
-      return (int)Math.max(0.0F, FloatMath.floor(((WebView)PullToRefreshWebView.this.mRefreshableView).getScale() * f) - (getHeight() - getPaddingBottom() - getPaddingTop()));
+
+    public PullToRefreshWebView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setOnRefreshListener(defaultOnRefreshListener);
+        ((WebView) this.mRefreshableView).setWebChromeClient(this.defaultWebChromeClient);
     }
-    
-    protected boolean overScrollBy(int paramInt1, int paramInt2, int paramInt3, int paramInt4, int paramInt5, int paramInt6, int paramInt7, int paramInt8, boolean paramBoolean)
-    {
-      boolean bool = super.overScrollBy(paramInt1, paramInt2, paramInt3, paramInt4, paramInt5, paramInt6, paramInt7, paramInt8, paramBoolean);
-      OverscrollHelper.overScrollBy(PullToRefreshWebView.this, paramInt1, paramInt3, paramInt2, paramInt4, getScrollRange(), 2, 1.5F, paramBoolean);
-      return bool;
+
+    public PullToRefreshWebView(Context context, Mode mode) {
+        super(context, mode);
+        setOnRefreshListener(defaultOnRefreshListener);
+        ((WebView) this.mRefreshableView).setWebChromeClient(this.defaultWebChromeClient);
     }
-  }
+
+    public PullToRefreshWebView(Context context, Mode mode, AnimationStyle style) {
+        super(context, mode, style);
+        setOnRefreshListener(defaultOnRefreshListener);
+        ((WebView) this.mRefreshableView).setWebChromeClient(this.defaultWebChromeClient);
+    }
+
+    public final Orientation getPullToRefreshScrollDirection() {
+        return Orientation.VERTICAL;
+    }
+
+    protected WebView createRefreshableView(Context context, AttributeSet attrs) {
+        WebView webView;
+        if (VERSION.SDK_INT >= 9) {
+            webView = new InternalWebViewSDK9(context, attrs);
+        } else {
+            webView = new WebView(context, attrs);
+        }
+        webView.setId(C0965R.id.nsdk_ptr_webview);
+        return webView;
+    }
+
+    protected boolean isReadyForPullStart() {
+        return ((WebView) this.mRefreshableView).getScrollY() == 0;
+    }
+
+    protected boolean isReadyForPullEnd() {
+        return ((float) ((WebView) this.mRefreshableView).getScrollY()) >= FloatMath.floor(((WebView) this.mRefreshableView).getScale() * ((float) ((WebView) this.mRefreshableView).getContentHeight())) - ((float) ((WebView) this.mRefreshableView).getHeight());
+    }
+
+    protected void onPtrRestoreInstanceState(Bundle savedInstanceState) {
+        super.onPtrRestoreInstanceState(savedInstanceState);
+        ((WebView) this.mRefreshableView).restoreState(savedInstanceState);
+    }
+
+    protected void onPtrSaveInstanceState(Bundle saveState) {
+        super.onPtrSaveInstanceState(saveState);
+        ((WebView) this.mRefreshableView).saveState(saveState);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/pulltorefresh/PullToRefreshWebView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

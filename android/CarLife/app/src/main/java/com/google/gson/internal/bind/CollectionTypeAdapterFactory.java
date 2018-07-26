@@ -3,7 +3,7 @@ package com.google.gson.internal.bind;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
-import com.google.gson.internal..Gson.Types;
+import com.google.gson.internal.C$Gson$Types;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.ObjectConstructor;
 import com.google.gson.reflect.TypeToken;
@@ -13,80 +13,57 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Iterator;
 
-public final class CollectionTypeAdapterFactory
-  implements TypeAdapterFactory
-{
-  private final ConstructorConstructor constructorConstructor;
-  
-  public CollectionTypeAdapterFactory(ConstructorConstructor paramConstructorConstructor)
-  {
-    this.constructorConstructor = paramConstructorConstructor;
-  }
-  
-  public <T> TypeAdapter<T> create(Gson paramGson, TypeToken<T> paramTypeToken)
-  {
-    Type localType = paramTypeToken.getType();
-    Class localClass = paramTypeToken.getRawType();
-    if (!Collection.class.isAssignableFrom(localClass)) {
-      return null;
+public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
+    private final ConstructorConstructor constructorConstructor;
+
+    private static final class Adapter<E> extends TypeAdapter<Collection<E>> {
+        private final ObjectConstructor<? extends Collection<E>> constructor;
+        private final TypeAdapter<E> elementTypeAdapter;
+
+        public Adapter(Gson context, Type elementType, TypeAdapter<E> elementTypeAdapter, ObjectConstructor<? extends Collection<E>> constructor) {
+            this.elementTypeAdapter = new TypeAdapterRuntimeTypeWrapper(context, elementTypeAdapter, elementType);
+            this.constructor = constructor;
+        }
+
+        public Collection<E> read(JsonReader in) throws IOException {
+            if (in.peek() == JsonToken.NULL) {
+                in.nextNull();
+                return null;
+            }
+            Collection<E> collection = (Collection) this.constructor.construct();
+            in.beginArray();
+            while (in.hasNext()) {
+                collection.add(this.elementTypeAdapter.read(in));
+            }
+            in.endArray();
+            return collection;
+        }
+
+        public void write(JsonWriter out, Collection<E> collection) throws IOException {
+            if (collection == null) {
+                out.nullValue();
+                return;
+            }
+            out.beginArray();
+            for (E element : collection) {
+                this.elementTypeAdapter.write(out, element);
+            }
+            out.endArray();
+        }
     }
-    localType = .Gson.Types.getCollectionElementType(localType, localClass);
-    return new Adapter(paramGson, localType, paramGson.getAdapter(TypeToken.get(localType)), this.constructorConstructor.get(paramTypeToken));
-  }
-  
-  private static final class Adapter<E>
-    extends TypeAdapter<Collection<E>>
-  {
-    private final ObjectConstructor<? extends Collection<E>> constructor;
-    private final TypeAdapter<E> elementTypeAdapter;
-    
-    public Adapter(Gson paramGson, Type paramType, TypeAdapter<E> paramTypeAdapter, ObjectConstructor<? extends Collection<E>> paramObjectConstructor)
-    {
-      this.elementTypeAdapter = new TypeAdapterRuntimeTypeWrapper(paramGson, paramTypeAdapter, paramType);
-      this.constructor = paramObjectConstructor;
+
+    public CollectionTypeAdapterFactory(ConstructorConstructor constructorConstructor) {
+        this.constructorConstructor = constructorConstructor;
     }
-    
-    public Collection<E> read(JsonReader paramJsonReader)
-      throws IOException
-    {
-      if (paramJsonReader.peek() == JsonToken.NULL)
-      {
-        paramJsonReader.nextNull();
-        return null;
-      }
-      Collection localCollection = (Collection)this.constructor.construct();
-      paramJsonReader.beginArray();
-      while (paramJsonReader.hasNext()) {
-        localCollection.add(this.elementTypeAdapter.read(paramJsonReader));
-      }
-      paramJsonReader.endArray();
-      return localCollection;
+
+    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+        Type type = typeToken.getType();
+        Class<? super T> rawType = typeToken.getRawType();
+        if (!Collection.class.isAssignableFrom(rawType)) {
+            return null;
+        }
+        Type elementType = C$Gson$Types.getCollectionElementType(type, rawType);
+        return new Adapter(gson, elementType, gson.getAdapter(TypeToken.get(elementType)), this.constructorConstructor.get(typeToken));
     }
-    
-    public void write(JsonWriter paramJsonWriter, Collection<E> paramCollection)
-      throws IOException
-    {
-      if (paramCollection == null)
-      {
-        paramJsonWriter.nullValue();
-        return;
-      }
-      paramJsonWriter.beginArray();
-      paramCollection = paramCollection.iterator();
-      while (paramCollection.hasNext())
-      {
-        Object localObject = paramCollection.next();
-        this.elementTypeAdapter.write(paramJsonWriter, localObject);
-      }
-      paramJsonWriter.endArray();
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/bind/CollectionTypeAdapterFactory.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

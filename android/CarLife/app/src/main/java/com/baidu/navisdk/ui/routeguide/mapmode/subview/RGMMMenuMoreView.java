@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build.VERSION;
@@ -24,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -33,6 +31,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.BNaviModuleManager.NaviCommonConstant;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.CommonParams.Const.ModuleName;
+import com.baidu.navisdk.comapi.routeguide.RouteGuideParams.NavState;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.ui.routeguide.asr.xdvoice.XDVoiceInstructManager;
@@ -53,1255 +55,1057 @@ import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.StringUtils;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 
-public class RGMMMenuMoreView
-  extends BNBaseOrientationView
-  implements View.OnClickListener, RadioGroup.OnCheckedChangeListener, TextView.OnEditorActionListener, IMoreSettingView
-{
-  public static final int BLUETOOTH_INDEX = 1;
-  public static final int DYNAMIC_3D_INDEX = 4;
-  public static final int FLOAT_INDEX = 7;
-  private static final long K_INTERNEL_CLICK = 1000L;
-  private static final long K_MAX_CLICK = 7L;
-  public static final int LICENSE_PLATES_LIMIT_INDEX = 0;
-  public static final int LIST_OPTION_CNT = 8;
-  public static final int PARK_INDEX = 6;
-  public static final int REAL_ENLARGE_INDEX = 3;
-  public static final int SCALE_INDEX = 2;
-  private static final int SHOT_NAME_CELLS_CNT = 9;
-  public static final int SHOW_CAR_LOGO_TO_END_INDEX = 5;
-  private static String TAG = "RouteGuide";
-  private static String mPlateNumTag = "";
-  private RelativeLayout carPlateParent;
-  private RadioGroup dayModeSelector;
-  private RadioGroup guideAngleSeletor;
-  private int[] hDividerLineView = { 1711866791, 1711866800, 1711866813, 1711866819, 1711866828, 1711866834, 1711866840, 1711866845, 1711866850, 1711866855, 1711866862, 1711866867, 1711866873, 1711866786 };
-  private boolean isInputMethodShowing = false;
-  private int[] mBackgroundView = { 1711866820, 1711866796, 1711866801, 1711866807, 1711866814, 1711866827, 1711866829, 1711866830, 1711866835, 1711866836, 1711866841, 1711866842, 1711866846, 1711866851, 1711866856, 1711866861, 1711866863, 1711866868, 1711866874, 1711866875, 1711866790, 1711866792, 1711866785, 1711866809 };
-  private ImageView mCarLogoArrowView = null;
-  private ImageView mCarLogoRedGuide;
-  private String mCarNum = "";
-  private TextView mCarPlate;
-  private ImageButton mCarPlateDelete;
-  private TextView mCarPlateHead;
-  private EditText mCarPlateInput;
-  private RelativeLayout mCarPlateSettingView;
-  private TextView mCarPlateTs;
-  private ImageView[] mCheckboxs = new ImageView[8];
-  private LinearLayout mCityShortName;
-  private final String[] mCityShotNames = { "京", "沪", "浙", "苏", "粤", "鲁", "晋", "冀", "豫", "川", "渝", "辽", "吉", "黑", "皖", "鄂", "湘", "赣", "闽", "陕", "甘", "宁", "蒙", "津", "贵", "云", "桂", "琼", "青", "新", "藏" };
-  private int mClickNum;
-  private int[] mDividerCategoryView = { 1711866826, 1711866860, 1711866789 };
-  private ImageView mIVBlueToothRedGuide;
-  private boolean[] mIsChecked = new boolean[8];
-  private long mLastClickTime;
-  private ScrollView mMenuMoreScroll;
-  private MoreSettingPresenter mPresenter = new MoreSettingPresenter(this);
-  private int[] mTextViewId = { 1711866802, 1711866821, 1711866827, 1711866835, 1711866852, 1711866847, 1711866861, 1711866864, 1711866815, 1711866869, 1711866790, 1711866793, 1711866827, 1711866829, 1711866835, 1711866841, 1711866857, 1711866861, 1711866874, 1711866790, 1711866793 };
-  private int[] mTipsTextViewId = { 1711866853, 1711866848, 1711866865, 1711866817, 1711866871, 1711866858, 1711866878, 1711866795, 1711866804, 1711866823 };
-  private BNCommonTitleBar mTitleBar = null;
-  private int[] mTogglebuttonGroup = { 1711866796, 1711866830, 1711866836, 1711866842, 1711866875 };
-  private ImageView mVoiceRedGuide = null;
-  private TextView mVoiceTV = null;
-  private TextView mVoiceValTips;
-  private RadioGroup misicVolumeSelector;
-  private RadioGroup oververSelector;
-  private View shadowView;
-  private View.OnClickListener shotNameOnclickListener = new View.OnClickListener()
-  {
-    public void onClick(View paramAnonymousView)
-    {
-      if (paramAnonymousView == null) {}
-      while ((RGMMMenuMoreView.this.mCarPlateInput == null) || (RGMMMenuMoreView.this.mCarPlate == null) || (RGMMMenuMoreView.this.mCityShortName == null) || (RGMMMenuMoreView.this.shadowView == null)) {
-        return;
-      }
-      paramAnonymousView = ((TextView)paramAnonymousView).getText().toString();
-      RGMMMenuMoreView.this.updatePlateView(paramAnonymousView);
-      if ((RGMMMenuMoreView.this.mCarPlateInput != null) && (RGMMMenuMoreView.this.mCarPlateInput.getText().toString().length() >= 6) && (RGMMMenuMoreView.this.mIsChecked[0] != 0) && ((RGMMMenuMoreView.this.mCarPlateInput.getVisibility() == 0) || (RGMMMenuMoreView.this.mCarPlate.getVisibility() == 0)) && (RGMMMenuMoreView.this.mCarPlateInput.getVisibility() == 0) && (RGMMMenuMoreView.this.checkPlate())) {
-        RGMMMenuMoreView.this.mPresenter.handleCheckPlateSuccess(RGMMMenuMoreView.this.mContext, RGMMMenuMoreView.this.mCarNum);
-      }
-      RGMMMenuMoreView.this.setCityShortPanelVisible(8);
-      RGMMMenuMoreView.this.shadowView.setVisibility(8);
-    }
-  };
-  private RadioGroup voiceModeSeletor;
-  
-  public RGMMMenuMoreView(Context paramContext, ViewGroup paramViewGroup, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext, paramViewGroup, paramOnRGSubViewListener);
-  }
-  
-  private boolean carPlateNumIsEmpty()
-  {
-    if ((this.mCarPlate == null) || (this.mCarPlateInput == null)) {}
-    while (TextUtils.isEmpty(this.mCarPlateInput.getText().toString().trim())) {
-      return true;
-    }
-    return false;
-  }
-  
-  private void changeContinewNavi()
-  {
-    if (("NAV_STATE_OPERATE".equals(RGControlPanelModel.getInstance().getNavState())) && (this.mSubViewListener != null)) {
-      this.mSubViewListener.onOtherAction(3, 0, 0, null);
-    }
-  }
-  
-  private boolean checkClick()
-  {
-    boolean bool = false;
-    long l = System.currentTimeMillis();
-    if (l - this.mLastClickTime < 1000L) {}
-    for (this.mClickNum += 1;; this.mClickNum = 0)
-    {
-      this.mLastClickTime = l;
-      if (this.mClickNum > 3L) {
-        TipTool.onCreateToastDialog(this.mContext, "连击:" + this.mClickNum);
-      }
-      if (this.mClickNum >= 7L)
-      {
-        this.mClickNum = 0;
-        bool = true;
-      }
-      return bool;
-    }
-  }
-  
-  private boolean checkPlate()
-  {
-    if ((this.mCarPlate == null) || (this.mCarPlateInput == null)) {
-      return false;
-    }
-    this.mCarNum = this.mCarPlate.getText().toString().trim();
-    if (TextUtils.isEmpty(this.mCarNum)) {
-      this.mCarNum = this.mCarPlateInput.getText().toString().trim();
-    }
-    return this.mPresenter.checkPlate(this.mCarNum);
-  }
-  
-  private boolean getIsTrueCurDay(boolean paramBoolean)
-  {
-    if ((this.mRootView != null) && (this.hDividerLineView.length > 0) && (this.mRootView.findViewById(this.hDividerLineView[0]) != null))
-    {
-      View localView = this.mRootView.findViewById(this.hDividerLineView[0]);
-      if (Build.VERSION.SDK_INT >= 11)
-      {
-        int i = ((ColorDrawable)localView.getBackground()).getColor();
-        if (JarUtils.getResources() != null) {
-          if (i != JarUtils.getResources().getColor(1711800690)) {
-            break label102;
-          }
+public class RGMMMenuMoreView extends BNBaseOrientationView implements OnClickListener, OnCheckedChangeListener, OnEditorActionListener, IMoreSettingView {
+    public static final int BLUETOOTH_INDEX = 1;
+    public static final int DYNAMIC_3D_INDEX = 4;
+    public static final int FLOAT_INDEX = 7;
+    private static final long K_INTERNEL_CLICK = 1000;
+    private static final long K_MAX_CLICK = 7;
+    public static final int LICENSE_PLATES_LIMIT_INDEX = 0;
+    public static final int LIST_OPTION_CNT = 8;
+    public static final int PARK_INDEX = 6;
+    public static final int REAL_ENLARGE_INDEX = 3;
+    public static final int SCALE_INDEX = 2;
+    private static final int SHOT_NAME_CELLS_CNT = 9;
+    public static final int SHOW_CAR_LOGO_TO_END_INDEX = 5;
+    private static String TAG = ModuleName.ROUTEGUIDE;
+    private static String mPlateNumTag = "";
+    private RelativeLayout carPlateParent;
+    private RadioGroup dayModeSelector;
+    private RadioGroup guideAngleSeletor;
+    private int[] hDividerLineView = new int[]{C4048R.id.bnav_rg_menu_h_split_0, C4048R.id.bnav_rg_menu_h_split_1, C4048R.id.bnav_rg_menu_h_split_2, C4048R.id.bnav_rg_menu_h_split_3, C4048R.id.bnav_rg_menu_h_split_4, C4048R.id.bnav_rg_menu_h_split_5, C4048R.id.bnav_rg_menu_h_split_6, C4048R.id.bnav_rg_menu_h_split_7, C4048R.id.bnav_rg_menu_h_split_8, C4048R.id.bnav_rg_menu_h_split_10, C4048R.id.bnav_rg_menu_h_split_11, C4048R.id.bnav_rg_menu_h_split_12, C4048R.id.bnav_rg_menu_h_split_13, C4048R.id.bnav_rg_menu_h_split_14};
+    private boolean isInputMethodShowing = false;
+    private int[] mBackgroundView = new int[]{C4048R.id.nav_view_car_logo_select_layout, C4048R.id.nav_view_voice_selector_rg, C4048R.id.nav_license_plates_limit_layout, C4048R.id.car_plate_setting_view, C4048R.id.nav_bluetooth_layout, C4048R.id.nav_during_tv, C4048R.id.nav_guide_angle_text_tv, C4048R.id.nav_view_guide_angle_selector_rg, C4048R.id.nav_day_night_mode_tv, C4048R.id.nav_view_night_mode_selector_rg, C4048R.id.nav_overview_text_tv, C4048R.id.nav_view_overview_selector_rg, C4048R.id.nav_scale_layout, C4048R.id.nav_real_enlarge_layout, C4048R.id.nav_show_car_logo_to_end_layout, C4048R.id.nav_additional_right_tv, C4048R.id.nav_park_layout, C4048R.id.nav_float_setting_layout, C4048R.id.nav_music_volume_tv, C4048R.id.nav_view_music_volume_selector_rg, C4048R.id.nav_common_use_tv, C4048R.id.nav_voice_switch_layout, C4048R.id.nav_view_menu_more_setting_panel, C4048R.id.car_plate_input_parent};
+    private ImageView mCarLogoArrowView = null;
+    private ImageView mCarLogoRedGuide;
+    private String mCarNum = "";
+    private TextView mCarPlate;
+    private ImageButton mCarPlateDelete;
+    private TextView mCarPlateHead;
+    private EditText mCarPlateInput;
+    private RelativeLayout mCarPlateSettingView;
+    private TextView mCarPlateTs;
+    private ImageView[] mCheckboxs = new ImageView[8];
+    private LinearLayout mCityShortName;
+    private final String[] mCityShotNames = new String[]{"京", "沪", "浙", "苏", "粤", "鲁", "晋", "冀", "豫", "川", "渝", "辽", "吉", "黑", "皖", "鄂", "湘", "赣", "闽", "陕", "甘", "宁", "蒙", "津", "贵", "云", "桂", "琼", "青", "新", "藏"};
+    private int mClickNum;
+    private int[] mDividerCategoryView = new int[]{C4048R.id.bnav_rg_menu_car_logo_category, C4048R.id.bnav_rg_menu_show_in_guidence_category, C4048R.id.bnav_rg_menu_margin_top_category};
+    private ImageView mIVBlueToothRedGuide;
+    private boolean[] mIsChecked = new boolean[8];
+    private long mLastClickTime;
+    private ScrollView mMenuMoreScroll;
+    private MoreSettingPresenter mPresenter = new MoreSettingPresenter(this);
+    private int[] mTextViewId = new int[]{C4048R.id.nav_license_plates_limit_title_tv, C4048R.id.nav_logo_tv, C4048R.id.nav_during_tv, C4048R.id.nav_day_night_mode_tv, C4048R.id.nav_real_enlarge_tv, C4048R.id.nav_scale_tv, C4048R.id.nav_additional_right_tv, C4048R.id.nav_park_tv, C4048R.id.nav_bluetooth_tv, C4048R.id.nav_float_setting_tv, C4048R.id.nav_common_use_tv, C4048R.id.nav_voice_text_tv, C4048R.id.nav_during_tv, C4048R.id.nav_guide_angle_text_tv, C4048R.id.nav_day_night_mode_tv, C4048R.id.nav_overview_text_tv, C4048R.id.nav_show_car_logo_to_end_tv, C4048R.id.nav_additional_right_tv, C4048R.id.nav_music_volume_tv, C4048R.id.nav_common_use_tv, C4048R.id.nav_voice_text_tv};
+    private int[] mTipsTextViewId = new int[]{C4048R.id.nav_real_enlarge_tips_tv, C4048R.id.nav_scale_tips_tv, C4048R.id.nav_park_tips_tv, C4048R.id.nav_bluetooth_tips_tv, C4048R.id.nav_float_setting_tips_tv, C4048R.id.nav_show_car_logo_to_end_tips_tv, C4048R.id.tv_music_volume_tips, C4048R.id.nav_voice_language_text_tv, C4048R.id.nav_license_plates_limit_tips_tv, C4048R.id.nav_logo_tips_tv};
+    private BNCommonTitleBar mTitleBar = null;
+    private int[] mTogglebuttonGroup = new int[]{C4048R.id.nav_view_voice_selector_rg, C4048R.id.nav_view_guide_angle_selector_rg, C4048R.id.nav_view_night_mode_selector_rg, C4048R.id.nav_view_overview_selector_rg, C4048R.id.nav_view_music_volume_selector_rg};
+    private ImageView mVoiceRedGuide = null;
+    private TextView mVoiceTV = null;
+    private TextView mVoiceValTips;
+    private RadioGroup misicVolumeSelector;
+    private RadioGroup oververSelector;
+    private View shadowView;
+    private OnClickListener shotNameOnclickListener = new C43853();
+    private RadioGroup voiceModeSeletor;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMMenuMoreView$1 */
+    class C43831 implements TextWatcher {
+        C43831() {
         }
-      }
-    }
-    label102:
-    for (boolean bool = true;; bool = false)
-    {
-      this.mIsCurDay = bool;
-      if (paramBoolean != this.mIsCurDay) {
-        break;
-      }
-      return true;
-    }
-    return false;
-  }
-  
-  private void hideInput()
-  {
-    if (this.carPlateParent == null) {
-      return;
-    }
-    this.carPlateParent.setVisibility(8);
-  }
-  
-  private boolean hideInputMethodView()
-  {
-    if (this.mCarPlateInput == null) {}
-    InputMethodManager localInputMethodManager;
-    do
-    {
-      return false;
-      localInputMethodManager = (InputMethodManager)this.mContext.getSystemService("input_method");
-    } while ((localInputMethodManager == null) || (!localInputMethodManager.isActive()));
-    localInputMethodManager.hideSoftInputFromWindow(this.mCarPlateInput.getWindowToken(), 0);
-    this.mCarPlateInput.clearFocus();
-    return true;
-  }
-  
-  private void hidePlate()
-  {
-    if ((this.mCarPlate == null) || (this.mCarPlateDelete == null)) {
-      return;
-    }
-    hideInputMethodView();
-    this.mCarPlate.setVisibility(8);
-    this.mCarPlateDelete.setVisibility(8);
-  }
-  
-  private void initActionOnOff()
-  {
-    this.mIsChecked = this.mPresenter.initUserConfig();
-    int i = 0;
-    while (i < 8)
-    {
-      updateCheckDrawable(i);
-      i += 1;
-    }
-    if (this.mCarPlateSettingView != null)
-    {
-      if (this.mIsChecked[0] != 0) {
-        break label61;
-      }
-      this.mCarPlateSettingView.setVisibility(8);
-    }
-    for (;;)
-    {
-      initRadioGroups();
-      return;
-      label61:
-      this.mCarPlateSettingView.setVisibility(0);
-    }
-  }
-  
-  private void initLicensePlatesLimitView()
-  {
-    this.mCarPlateSettingView = ((RelativeLayout)this.mRootView.findViewById(1711866807));
-    this.carPlateParent = ((RelativeLayout)this.mRootView.findViewById(1711866809));
-    this.mCarPlateTs = ((TextView)this.mRootView.findViewById(1711866803));
-    this.mCarPlateInput = ((EditText)this.mRootView.findViewById(1711866811));
-    this.mCarPlateDelete = ((ImageButton)this.mRootView.findViewById(1711866812));
-    this.mCarPlateHead = ((TextView)this.mRootView.findViewById(1711866810));
-    this.mRootView.findViewById(1711866805).setOnClickListener(this);
-    this.mCarPlate = ((TextView)this.mRootView.findViewById(1711866808));
-    this.mCityShortName = ((LinearLayout)this.mRootView.findViewById(1711866788));
-    this.shadowView = this.mRootView.findViewById(1711866879);
-    initPlateInput();
-    updateCheckDrawable(0);
-    this.mCarPlateDelete.setOnClickListener(this);
-    this.mCarPlate.setOnClickListener(this);
-    this.mPresenter.initPlateFromLocal(this.mContext);
-    this.mCarPlateInput.setOnEditorActionListener(this);
-  }
-  
-  private void initPlateInput()
-  {
-    if ((this.mCarPlateInput == null) || (this.mCarPlateHead == null) || (this.mCarPlate == null)) {
-      return;
-    }
-    this.mCarPlateInput.addTextChangedListener(new TextWatcher()
-    {
-      public void afterTextChanged(Editable paramAnonymousEditable)
-      {
-        try
-        {
-          RGMMMenuMoreView.this.mCarPlateTs.setText("");
-          RGMMMenuMoreView.this.mCarPlateTs.setTextColor(Color.parseColor("#7a7c80"));
-          if (paramAnonymousEditable.length() >= 6)
-          {
-            if ((RGMMMenuMoreView.this.mIsChecked[0] != 0) && ((RGMMMenuMoreView.this.mCarPlateInput.getVisibility() == 0) || (RGMMMenuMoreView.this.mCarPlate.getVisibility() == 0)) && (RGMMMenuMoreView.this.mCarPlateInput.getVisibility() == 0) && (RGMMMenuMoreView.this.checkPlate()))
-            {
-              if (paramAnonymousEditable.length() == 7)
-              {
-                RGMMMenuMoreView.this.mCarPlateTs.setText("(新能源车牌)");
-                RGMMMenuMoreView.this.mCarPlateTs.setTextColor(Color.parseColor("#45cc6a"));
-              }
-              RGMMMenuMoreView.this.mPresenter.handleCheckPlateSuccess(RGMMMenuMoreView.this.mContext, RGMMMenuMoreView.this.mCarNum);
-              RGMMMenuMoreView.this.mPresenter.updatePreferValue(32, RGMMMenuMoreView.this.mIsChecked[0]);
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (!TextUtils.isEmpty(s)) {
+                try {
+                    RGMMMenuMoreView.this.mCarPlate.setText(RGMMMenuMoreView.this.mCarPlateHead.getText() + s.toString().toUpperCase().trim().toString());
+                } catch (Exception e) {
+                }
             }
-          }
-          else if ((paramAnonymousEditable.length() == 0) && (RGMMMenuMoreView.this.mCarPlateInput != null))
-          {
-            boolean bool = RGMMMenuMoreView.this.mCarPlateInput.isShown();
-            if (bool) {}
-          }
         }
-        catch (Exception paramAnonymousEditable) {}
-      }
-      
-      public void beforeTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3) {}
-      
-      public void onTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3)
-      {
-        if (TextUtils.isEmpty(paramAnonymousCharSequence)) {
-          return;
+
+        public void afterTextChanged(Editable s) {
+            try {
+                RGMMMenuMoreView.this.mCarPlateTs.setText("");
+                RGMMMenuMoreView.this.mCarPlateTs.setTextColor(Color.parseColor("#7a7c80"));
+                if (s.length() >= 6) {
+                    if (!RGMMMenuMoreView.this.mIsChecked[0]) {
+                        return;
+                    }
+                    if ((RGMMMenuMoreView.this.mCarPlateInput.getVisibility() == 0 || RGMMMenuMoreView.this.mCarPlate.getVisibility() == 0) && RGMMMenuMoreView.this.mCarPlateInput.getVisibility() == 0 && RGMMMenuMoreView.this.checkPlate()) {
+                        if (s.length() == 7) {
+                            RGMMMenuMoreView.this.mCarPlateTs.setText("(新能源车牌)");
+                            RGMMMenuMoreView.this.mCarPlateTs.setTextColor(Color.parseColor("#45cc6a"));
+                        }
+                        RGMMMenuMoreView.this.mPresenter.handleCheckPlateSuccess(RGMMMenuMoreView.this.mContext, RGMMMenuMoreView.this.mCarNum);
+                        RGMMMenuMoreView.this.mPresenter.updatePreferValue(32, RGMMMenuMoreView.this.mIsChecked[0]);
+                    }
+                } else if (s.length() != 0 || RGMMMenuMoreView.this.mCarPlateInput == null || !RGMMMenuMoreView.this.mCarPlateInput.isShown()) {
+                }
+            } catch (Exception e) {
+            }
         }
-        try
-        {
-          paramAnonymousCharSequence = paramAnonymousCharSequence.toString().toUpperCase().trim();
-          RGMMMenuMoreView.this.mCarPlate.setText(RGMMMenuMoreView.this.mCarPlateHead.getText() + paramAnonymousCharSequence.toString());
-          return;
-        }
-        catch (Exception paramAnonymousCharSequence) {}
-      }
-    });
-    this.mCarPlateInput.setTransformationMethod(new AllCapTransMethod());
-    this.mCarPlateHead.setOnClickListener(this);
-    this.mCarPlateInput.setClickable(true);
-    this.mCarPlateInput.setOnClickListener(this);
-    this.mCarPlateInput.setOnFocusChangeListener(new View.OnFocusChangeListener()
-    {
-      public void onFocusChange(View paramAnonymousView, boolean paramAnonymousBoolean)
-      {
-        if (paramAnonymousBoolean) {
-          RGMMMenuMoreView.this.mPresenter.addUserOP("b.2");
-        }
-      }
-    });
-  }
-  
-  private void initRadioGroups()
-  {
-    this.voiceModeSeletor = ((RadioGroup)this.mRootView.findViewById(1711866796));
-    this.guideAngleSeletor = ((RadioGroup)this.mRootView.findViewById(1711866830));
-    this.dayModeSelector = ((RadioGroup)this.mRootView.findViewById(1711866836));
-    this.oververSelector = ((RadioGroup)this.mRootView.findViewById(1711866842));
-    this.misicVolumeSelector = ((RadioGroup)this.mRootView.findViewById(1711866875));
-    this.mPresenter.initActionSwitchSetting();
-    this.voiceModeSeletor.setOnCheckedChangeListener(this);
-    this.guideAngleSeletor.setOnCheckedChangeListener(this);
-    this.dayModeSelector.setOnCheckedChangeListener(this);
-    this.oververSelector.setOnCheckedChangeListener(this);
-    this.misicVolumeSelector.setOnCheckedChangeListener(this);
-  }
-  
-  private void openCarPlatDirectly(boolean paramBoolean)
-  {
-    if (!paramBoolean)
-    {
-      this.mMenuMoreScroll.scrollTo(0, 0);
-      if (this.mIsChecked[0] == 0)
-      {
-        reverseItemCheck(0);
-        this.mPresenter.onSettingsChange(this.mIsChecked, 0);
-      }
-      showInputMethodView();
-      return;
     }
-    showInputMethodView();
-  }
-  
-  private void reverseItemCheck(int paramInt)
-  {
-    try
-    {
-      boolean[] arrayOfBoolean = this.mIsChecked;
-      if (this.mIsChecked[paramInt] == 0) {}
-      for (int i = 1;; i = 0)
-      {
-        arrayOfBoolean[paramInt] = i;
-        return;
-      }
-      return;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMMenuMoreView$2 */
+    class C43842 implements OnFocusChangeListener {
+        C43842() {
+        }
+
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                RGMMMenuMoreView.this.mPresenter.addUserOP(UserOPParams.SETTING_b_2);
+            }
+        }
     }
-    catch (Exception localException) {}
-  }
-  
-  private void setCityShortPanelVisible(int paramInt)
-  {
-    if (this.mCityShortName != null) {
-      this.mCityShortName.setVisibility(paramInt);
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMMenuMoreView$3 */
+    class C43853 implements OnClickListener {
+        C43853() {
+        }
+
+        public void onClick(View v) {
+            if (v != null && RGMMMenuMoreView.this.mCarPlateInput != null && RGMMMenuMoreView.this.mCarPlate != null && RGMMMenuMoreView.this.mCityShortName != null && RGMMMenuMoreView.this.shadowView != null) {
+                RGMMMenuMoreView.this.updatePlateView(((TextView) v).getText().toString());
+                if (RGMMMenuMoreView.this.mCarPlateInput != null && RGMMMenuMoreView.this.mCarPlateInput.getText().toString().length() >= 6 && RGMMMenuMoreView.this.mIsChecked[0] && ((RGMMMenuMoreView.this.mCarPlateInput.getVisibility() == 0 || RGMMMenuMoreView.this.mCarPlate.getVisibility() == 0) && RGMMMenuMoreView.this.mCarPlateInput.getVisibility() == 0 && RGMMMenuMoreView.this.checkPlate())) {
+                    RGMMMenuMoreView.this.mPresenter.handleCheckPlateSuccess(RGMMMenuMoreView.this.mContext, RGMMMenuMoreView.this.mCarNum);
+                }
+                RGMMMenuMoreView.this.setCityShortPanelVisible(8);
+                RGMMMenuMoreView.this.shadowView.setVisibility(8);
+            }
+        }
     }
-  }
-  
-  private void showDialogCityShotName()
-  {
-    if ((this.mCityShortName == null) || (this.shadowView == null)) {}
-    for (;;)
-    {
-      return;
-      hideInputMethodView();
-      this.mCityShortName.requestFocus();
-      if (this.mCityShortName.getVisibility() == 0)
-      {
+
+    static class AllCapTransMethod extends ReplacementTransformationMethod {
+        AllCapTransMethod() {
+        }
+
+        protected char[] getOriginal() {
+            return new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+        }
+
+        protected char[] getReplacement() {
+            return new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+        }
+    }
+
+    public RGMMMenuMoreView(Context c, ViewGroup p, OnRGSubViewListener lis) {
+        super(c, p, lis);
+    }
+
+    public void initViewById() {
+        if (this.mRootView != null) {
+            this.mTitleBar = (BNCommonTitleBar) this.mRootView.findViewById(C4048R.id.title_bar);
+            if (this.mTitleBar != null) {
+                this.mTitleBar.setMiddleTextVisible(true);
+                this.mTitleBar.setMiddleText(BNStyleManager.getString(C4048R.string.nsdk_string_rg_menu_more_setting));
+                this.mTitleBar.setMiddleTextSize(16.0f);
+                this.mTitleBar.setRightTextVisible(false);
+            }
+            this.mMenuMoreScroll = (ScrollView) this.mRootView.findViewById(C4048R.id.bnav_rg_menu_more_scroll);
+            this.mCheckboxs[0] = (ImageView) this.mRootView.findViewById(C4048R.id.nav_license_plates_limit_condition_cb);
+            this.mCheckboxs[1] = (ImageView) this.mRootView.findViewById(C4048R.id.nav_bluetooth_cb);
+            this.mCheckboxs[2] = (ImageView) this.mRootView.findViewById(C4048R.id.nav_scale_cb);
+            this.mCheckboxs[3] = (ImageView) this.mRootView.findViewById(C4048R.id.nav_real_enlarge_cb);
+            this.mCheckboxs[5] = (ImageView) this.mRootView.findViewById(C4048R.id.nav_show_car_logo_to_end_cb);
+            this.mCheckboxs[6] = (ImageView) this.mRootView.findViewById(C4048R.id.nav_park_cb);
+            this.mCheckboxs[7] = (ImageView) this.mRootView.findViewById(C4048R.id.nav_float_setting_cb);
+            this.mPresenter.initRedGuide();
+            this.mIVBlueToothRedGuide = (ImageView) this.mRootView.findViewById(C4048R.id.bnav_rg_menu_blue_hfp_red_guide);
+            this.mCarLogoRedGuide = (ImageView) this.mRootView.findViewById(C4048R.id.bnav_rg_menu_car_logo_red_guide);
+            this.mVoiceRedGuide = (ImageView) this.mRootView.findViewById(C4048R.id.bnav_rg_menu_voice_red_guide);
+            this.mCarLogoArrowView = (ImageView) this.mRootView.findViewById(C4048R.id.nav_logo_right_iv);
+            this.mVoiceTV = (TextView) this.mRootView.findViewById(C4048R.id.nav_voice_language_text_tv);
+            this.mVoiceValTips = (TextView) this.mRootView.findViewById(C4048R.id.tv_music_volume_tips);
+            initActionOnOff();
+            initLicensePlatesLimitView();
+        }
+    }
+
+    public int getPortraitLayoutId() {
+        return C4048R.layout.nsdk_layout_rg_mapmode_menu_more_setting;
+    }
+
+    public int getLandscapeLayoutId() {
+        return C4048R.layout.nsdk_layout_rg_mapmode_menu_more_setting;
+    }
+
+    public int getContainerViewId() {
+        return C4048R.id.bnav_rg_menu_more_setting_container;
+    }
+
+    public LayoutParams generalLayoutParams() {
+        return new LayoutParams(-1, -1);
+    }
+
+    public void updateDataByLast() {
+    }
+
+    public void initListener() {
+        this.mTitleBar.findViewById(C4048R.id.left_imageview).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_view_car_logo_select_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_license_plates_limit_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_real_enlarge_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_show_car_logo_to_end_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_scale_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_park_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_float_setting_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_bluetooth_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_voice_switch_layout).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_guide_angle_hud_rb).setOnClickListener(this);
+        this.mRootView.findViewById(C4048R.id.nav_additional_right_tv).setOnClickListener(this);
+        this.mTitleBar.setOnClickListener(this);
+    }
+
+    private void initActionOnOff() {
+        this.mIsChecked = this.mPresenter.initUserConfig();
+        for (int i = 0; i < 8; i++) {
+            updateCheckDrawable(i);
+        }
+        if (this.mCarPlateSettingView != null) {
+            if (this.mIsChecked[0]) {
+                this.mCarPlateSettingView.setVisibility(0);
+            } else {
+                this.mCarPlateSettingView.setVisibility(8);
+            }
+        }
+        initRadioGroups();
+    }
+
+    private void initRadioGroups() {
+        this.voiceModeSeletor = (RadioGroup) this.mRootView.findViewById(C4048R.id.nav_view_voice_selector_rg);
+        this.guideAngleSeletor = (RadioGroup) this.mRootView.findViewById(C4048R.id.nav_view_guide_angle_selector_rg);
+        this.dayModeSelector = (RadioGroup) this.mRootView.findViewById(C4048R.id.nav_view_night_mode_selector_rg);
+        this.oververSelector = (RadioGroup) this.mRootView.findViewById(C4048R.id.nav_view_overview_selector_rg);
+        this.misicVolumeSelector = (RadioGroup) this.mRootView.findViewById(C4048R.id.nav_view_music_volume_selector_rg);
+        this.mPresenter.initActionSwitchSetting();
+        this.voiceModeSeletor.setOnCheckedChangeListener(this);
+        this.guideAngleSeletor.setOnCheckedChangeListener(this);
+        this.dayModeSelector.setOnCheckedChangeListener(this);
+        this.oververSelector.setOnCheckedChangeListener(this);
+        this.misicVolumeSelector.setOnCheckedChangeListener(this);
+    }
+
+    private void initLicensePlatesLimitView() {
+        this.mCarPlateSettingView = (RelativeLayout) this.mRootView.findViewById(C4048R.id.car_plate_setting_view);
+        this.carPlateParent = (RelativeLayout) this.mRootView.findViewById(C4048R.id.car_plate_input_parent);
+        this.mCarPlateTs = (TextView) this.mRootView.findViewById(C4048R.id.nav_limit_tips_tv);
+        this.mCarPlateInput = (EditText) this.mRootView.findViewById(C4048R.id.car_plate_input);
+        this.mCarPlateDelete = (ImageButton) this.mRootView.findViewById(C4048R.id.car_plate_delete);
+        this.mCarPlateHead = (TextView) this.mRootView.findViewById(C4048R.id.car_plate_head);
+        this.mRootView.findViewById(C4048R.id.nav_license_plates_limit_link_tv).setOnClickListener(this);
+        this.mCarPlate = (TextView) this.mRootView.findViewById(C4048R.id.car_plate);
+        this.mCityShortName = (LinearLayout) this.mRootView.findViewById(C4048R.id.city_shortname);
+        this.shadowView = this.mRootView.findViewById(C4048R.id.mark);
+        initPlateInput();
+        updateCheckDrawable(0);
+        this.mCarPlateDelete.setOnClickListener(this);
+        this.mCarPlate.setOnClickListener(this);
+        this.mPresenter.initPlateFromLocal(this.mContext);
+        this.mCarPlateInput.setOnEditorActionListener(this);
+    }
+
+    public void orientationChanged(ViewGroup p, int orien) {
+        super.orientationChanged(p, orien);
+        if (this.isInputMethodShowing) {
+            this.isInputMethodShowing = false;
+            openCarPlatDirectly(true);
+        }
+    }
+
+    public void setInputMethodShowFlag() {
+        if (isVisibility()) {
+            InputMethodManager imm = (InputMethodManager) this.mCarPlateInput.getContext().getSystemService("input_method");
+            if (this.mCarPlateInput != null && this.mCarPlateInput.isFocused() && imm.isActive(this.mCarPlateInput)) {
+                this.isInputMethodShowing = true;
+            }
+        }
+    }
+
+    public void show(Bundle bundle) {
+        super.show(bundle);
+        RGCarPreferSettingController.getInstance().setLastRPPreferSettingValue(BNRoutePlaner.getInstance().getCalcPreference());
+        RGNotificationController.getInstance().hideAllCommonView();
+        RGNotificationController.getInstance().hideAllOperableView();
+        this.mPresenter.getVoiceName();
+        initActionOnOff();
+        this.mPresenter.getPlateFromLocal(this.mContext);
+        if (bundle != null) {
+            boolean openCarPlate = bundle.getBoolean("open_car_plate", false);
+            LogUtil.m15791e(TAG, "openCarPlate: " + openCarPlate);
+            if (openCarPlate) {
+                openCarPlatDirectly(false);
+            }
+        }
+        XDVoiceInstructManager.getInstance().setWakeupEnable(false);
+    }
+
+    public void hide() {
+        if (isVisibility()) {
+            RGViewController.getInstance().updateToolBoxStatus();
+        }
+        super.hide();
+        hideInputMethodView();
         setCityShortPanelVisible(8);
-        this.shadowView.setVisibility(8);
-        return;
-      }
-      setCityShortPanelVisible(0);
-      this.shadowView.setVisibility(0);
-      this.shadowView.setOnClickListener(this);
-      this.mCityShortName.setClickable(true);
-      this.mCityShortName.removeAllViews();
-      int j = 0;
-      while (j < this.mCityShotNames.length) {
-        if ((j == 0) || (j % 9 == 0))
-        {
-          LinearLayout localLinearLayout1 = (LinearLayout)JarUtils.inflate((Activity)this.mContext, 1711472640, null);
-          int i = 0;
-          if (i < 9)
-          {
-            LinearLayout localLinearLayout2 = (LinearLayout)JarUtils.inflate((Activity)this.mContext, 1711472641, null);
-            localLinearLayout2.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1.0F));
-            TextView localTextView = (TextView)localLinearLayout2.findViewById(1711865859);
-            if (j < this.mCityShotNames.length)
-            {
-              localTextView.setText(this.mCityShotNames[j]);
-              localTextView.setOnClickListener(this.shotNameOnclickListener);
-            }
-            for (;;)
-            {
-              localLinearLayout1.addView(localLinearLayout2);
-              j += 1;
-              i += 1;
-              break;
-              localTextView.setVisibility(4);
-            }
-          }
-          this.mCityShortName.addView(localLinearLayout1);
+        XDVoiceInstructManager.getInstance().setWakeupEnable(true);
+    }
+
+    private void openCarPlatDirectly(boolean isOrientation) {
+        if (isOrientation) {
+            showInputMethodView();
+            return;
         }
-      }
-    }
-  }
-  
-  private void showInput()
-  {
-    if (this.carPlateParent == null) {
-      return;
-    }
-    this.carPlateParent.setVisibility(0);
-    this.mCarPlateInput.setFocusable(true);
-    this.mCarPlateInput.setFocusableInTouchMode(true);
-    this.mCarPlateInput.requestFocus();
-  }
-  
-  private void showInputMethodView()
-  {
-    if (this.mCarPlateInput == null) {}
-    InputMethodManager localInputMethodManager;
-    do
-    {
-      return;
-      this.mCarPlateInput.setFocusable(true);
-      this.mCarPlateInput.setFocusableInTouchMode(true);
-      this.mCarPlateInput.requestFocus();
-      localInputMethodManager = (InputMethodManager)this.mCarPlateInput.getContext().getSystemService("input_method");
-    } while (localInputMethodManager == null);
-    localInputMethodManager.showSoftInput(this.mCarPlateInput, 0);
-  }
-  
-  private void showPlate()
-  {
-    if ((this.mCarPlate == null) || (this.mCarPlateDelete == null)) {
-      return;
-    }
-    this.mCarPlate.setVisibility(0);
-    this.mCarPlateDelete.setVisibility(0);
-  }
-  
-  private void updateDayModeView()
-  {
-    this.mCarLogoArrowView.setImageDrawable(JarUtils.getResources().getDrawable(1711407528));
-    int i = 0;
-    while ((this.mRootView != null) && (i < this.mTextViewId.length))
-    {
-      localObject = (TextView)this.mRootView.findViewById(this.mTextViewId[i]);
-      if (localObject != null) {
-        ((TextView)localObject).setTextColor(Color.parseColor("#333333"));
-      }
-      i += 1;
-    }
-    i = 0;
-    while ((this.mRootView != null) && (i < this.mTipsTextViewId.length))
-    {
-      localObject = (TextView)this.mRootView.findViewById(this.mTipsTextViewId[i]);
-      if (localObject != null) {
-        ((TextView)localObject).setTextColor(BNStyleManager.getColor(1711800676));
-      }
-      i += 1;
-    }
-    if (this.mTitleBar != null)
-    {
-      this.mTitleBar.setTitleBarBackgroundColor(BNStyleManager.getColor(1711800536));
-      this.mTitleBar.setMiddleTextColor(BNStyleManager.getColor(1711800538));
-      this.mTitleBar.setLeftIconAlpha(1.0F);
-      this.mTitleBar.setTitleBarDivideLineBackgroudColor(BNStyleManager.getColor(1711800539));
-      this.mTitleBar.setLeftImageViewSrc(BNStyleManager.getDrawable(1711407181));
-    }
-    Object localObject = JarUtils.getResources().getColorStateList(1711800810);
-    i = 0;
-    while ((this.mTogglebuttonGroup != null) && (i < this.mTogglebuttonGroup.length))
-    {
-      RadioGroup localRadioGroup = (RadioGroup)this.mRootView.findViewById(this.mTogglebuttonGroup[i]);
-      int j = 0;
-      while ((localRadioGroup.getChildCount() > 0) && (j < localRadioGroup.getChildCount()))
-      {
-        RadioButton localRadioButton = (RadioButton)localRadioGroup.getChildAt(j);
-        if (localObject != null) {
-          localRadioButton.setTextColor((ColorStateList)localObject);
+        this.mMenuMoreScroll.scrollTo(0, 0);
+        if (!this.mIsChecked[0]) {
+            reverseItemCheck(0);
+            this.mPresenter.onSettingsChange(this.mIsChecked, 0);
         }
-        localRadioButton.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407154));
-        j += 1;
-      }
-      i += 1;
+        showInputMethodView();
     }
-    if ((this.carPlateParent != null) && (this.mCarPlate != null) && (this.mCarPlateInput != null))
-    {
-      this.carPlateParent.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407168));
-      this.mCarPlate.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407168));
-      this.mCarPlateInput.setTextColor(-16777216);
-      this.mCarPlate.setTextColor(-16777216);
+
+    public void onClick(View v) {
+        if (v != null) {
+            try {
+                switch (v.getId()) {
+                    case C4048R.id.left_imageview /*1711865878*/:
+                        if (this.mSubViewListener != null) {
+                            this.mSubViewListener.onMenuMoreAction();
+                            return;
+                        }
+                        return;
+                    case C4048R.id.title_bar /*1711865893*/:
+                        return;
+                    case C4048R.id.nav_voice_switch_layout /*1711866792*/:
+                        BNSettingManager.setFirstVoiceGuide(true);
+                        if (this.mVoiceRedGuide != null) {
+                            this.mVoiceRedGuide.setVisibility(8);
+                        }
+                        UserOPController.getInstance().add(UserOPParams.GUIDE_3_5_6);
+                        if (this.mSubViewListener != null) {
+                            this.mSubViewListener.onOtherAction(5, 3, 0, null);
+                            return;
+                        }
+                        return;
+                    case C4048R.id.nav_license_plates_limit_layout /*1711866801*/:
+                        reverseItemCheck(0);
+                        this.mPresenter.onSettingsChange(this.mIsChecked, 0);
+                        if (!this.mIsChecked[0]) {
+                            hideInputMethodView();
+                            return;
+                        } else if (this.mCarPlateInput != null && this.mCarPlateInput.isShown()) {
+                            showInputMethodView();
+                            return;
+                        } else {
+                            return;
+                        }
+                    case C4048R.id.nav_license_plates_limit_link_tv /*1711866805*/:
+                        hideInputMethodView();
+                        BNaviModuleManager.openCarPlateExplainPage(this.mContext);
+                        return;
+                    case C4048R.id.car_plate /*1711866808*/:
+                        hidePlate();
+                        showInput();
+                        String plateInfo = this.mCarPlate.getText().toString();
+                        String plateHead = "";
+                        if (!TextUtils.isEmpty(plateInfo)) {
+                            if (plateInfo.length() >= 7) {
+                                plateHead = plateInfo.substring(0, 1);
+                                plateInfo = plateInfo.substring(1, plateInfo.length());
+                                this.mCarPlateInput.setText(plateInfo);
+                                this.mCarPlateInput.setSelection(plateInfo.length());
+                            }
+                            this.mCarPlateHead.setText(plateHead);
+                            showInputMethodView();
+                            return;
+                        }
+                        return;
+                    case C4048R.id.car_plate_head /*1711866810*/:
+                        showDialogCityShotName();
+                        return;
+                    case C4048R.id.car_plate_input /*1711866811*/:
+                        this.mPresenter.addUserOP(UserOPParams.SETTING_b_2);
+                        return;
+                    case C4048R.id.car_plate_delete /*1711866812*/:
+                        if (this.mCarPlate != null && this.mCarPlateInput != null) {
+                            this.mCarPlate.setText("");
+                            this.mCarPlateInput.setText("");
+                            hidePlate();
+                            showInput();
+                            return;
+                        }
+                        return;
+                    case C4048R.id.nav_bluetooth_layout /*1711866814*/:
+                        this.mPresenter.setBlueToothChannelGuide(this.mContext, this.mIsChecked[1]);
+                        return;
+                    case C4048R.id.nav_view_car_logo_select_layout /*1711866820*/:
+                        this.mPresenter.setCarLogo();
+                        return;
+                    case C4048R.id.nav_guide_angle_hud_rb /*1711866833*/:
+                        this.mPresenter.onChangeAngleHUDModeSetting();
+                        return;
+                    case C4048R.id.nav_scale_layout /*1711866846*/:
+                        reverseItemCheck(2);
+                        this.mPresenter.onSettingsChange(this.mIsChecked, 2);
+                        return;
+                    case C4048R.id.nav_real_enlarge_layout /*1711866851*/:
+                        reverseItemCheck(3);
+                        this.mPresenter.onSettingsChange(this.mIsChecked, 3);
+                        return;
+                    case C4048R.id.nav_show_car_logo_to_end_layout /*1711866856*/:
+                        reverseItemCheck(5);
+                        this.mPresenter.onSettingsChange(this.mIsChecked, 5);
+                        return;
+                    case C4048R.id.nav_additional_right_tv /*1711866861*/:
+                        if (checkClick()) {
+                            new BNDebugModelDialog(this.mContext).show();
+                            return;
+                        }
+                        return;
+                    case C4048R.id.nav_park_layout /*1711866863*/:
+                        reverseItemCheck(6);
+                        this.mPresenter.onSettingsChange(this.mIsChecked, 6);
+                        return;
+                    case C4048R.id.nav_float_setting_layout /*1711866868*/:
+                        boolean isOpen = this.mIsChecked[7];
+                        if (isOpen) {
+                            this.mPresenter.addUserOP(UserOPParams.GUIDE_3_x_1, null, "", null);
+                        } else {
+                            this.mPresenter.addUserOP(UserOPParams.GUIDE_3_x_1, "", null, null);
+                        }
+                        if (isOpen || BNaviModuleManager.hasPermission(NaviCommonConstant.OVERLAY_PERMISSION)) {
+                            reverseItemCheck(7);
+                            this.mPresenter.onSettingsChange(this.mIsChecked, 7);
+                            return;
+                        }
+                        RGViewController.getInstance().showOpenOverlyPermissonDialog();
+                        return;
+                    case C4048R.id.mark /*1711866879*/:
+                        this.shadowView.setVisibility(8);
+                        setCityShortPanelVisible(8);
+                        return;
+                    default:
+                        return;
+                }
+            } catch (Exception e) {
+            }
+        }
     }
-  }
-  
-  private void updateNightModeView()
-  {
-    this.mCarLogoArrowView.setImageDrawable(JarUtils.getResources().getDrawable(1711407527));
-    int i = 0;
-    Object localObject;
-    while ((this.mRootView != null) && (i < this.mTextViewId.length))
-    {
-      localObject = (TextView)this.mRootView.findViewById(this.mTextViewId[i]);
-      if (localObject != null) {
-        ((TextView)localObject).setTextColor(Color.parseColor("#ffffff"));
-      }
-      i += 1;
+
+    public void updateStyle(boolean day) {
+        if (!getIsTrueCurDay(day)) {
+            View category;
+            super.updateStyle(day);
+            int i = 0;
+            while (this.mRootView != null && i < this.hDividerLineView.length) {
+                View v = this.mRootView.findViewById(this.hDividerLineView[i]);
+                if (v != null) {
+                    v.setBackgroundColor(BNStyleManager.getColor(C4048R.color.cl_bg_b));
+                }
+                i++;
+            }
+            i = 0;
+            while (this.mRootView != null && i < this.mDividerCategoryView.length) {
+                category = this.mRootView.findViewById(this.mDividerCategoryView[i]);
+                if (category != null) {
+                    category.setBackgroundColor(BNStyleManager.getColor(C4048R.color.cl_bg_c));
+                }
+                i++;
+            }
+            i = 0;
+            while (this.mRootView != null && i < this.mBackgroundView.length) {
+                category = this.mRootView.findViewById(this.mBackgroundView[i]);
+                if (category != null) {
+                    category.setBackgroundColor(BNStyleManager.getColor(C4048R.color.cl_bg_d));
+                }
+                i++;
+            }
+            if (day) {
+                updateDayModeView();
+            } else {
+                updateNightModeView();
+            }
+        }
     }
-    i = 0;
-    while ((this.mRootView != null) && (i < this.mTipsTextViewId.length))
-    {
-      localObject = (TextView)this.mRootView.findViewById(this.mTipsTextViewId[i]);
-      if (localObject != null) {
-        ((TextView)localObject).setTextColor(Color.parseColor("#606367"));
-      }
-      i += 1;
-    }
-    if (this.mTitleBar != null)
-    {
-      this.mTitleBar.setTitleBarBackgroundColor(JarUtils.getResources().getColor(1711800695));
-      this.mTitleBar.setMiddleTextColor(Color.parseColor("#ffffff"));
-      this.mTitleBar.setLeftIconAlpha(0.3F);
-      this.mTitleBar.setTitleBarDivideLineBackgroudColor(BNStyleManager.getColor(1711800540));
-      this.mTitleBar.setLeftImageViewSrc(BNStyleManager.getDrawable(1711407183));
-    }
-    i = 0;
-    while ((this.mTogglebuttonGroup != null) && (i < this.mTogglebuttonGroup.length))
-    {
-      localObject = (RadioGroup)this.mRootView.findViewById(this.mTogglebuttonGroup[i]);
-      int j = 0;
-      while ((((RadioGroup)localObject).getChildCount() > 0) && (j < ((RadioGroup)localObject).getChildCount()))
-      {
-        RadioButton localRadioButton = (RadioButton)((RadioGroup)localObject).getChildAt(j);
-        localRadioButton.setTextColor(-1);
-        localRadioButton.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407155));
-        j += 1;
-      }
-      i += 1;
-    }
-    if ((this.carPlateParent != null) && (this.mCarPlate != null) && (this.mCarPlateInput != null))
-    {
-      this.carPlateParent.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407169));
-      this.mCarPlate.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407169));
-      this.mCarPlateInput.setTextColor(-1);
-      this.mCarPlate.setTextColor(-1);
-    }
-  }
-  
-  private void updatePlateView(String paramString)
-  {
-    if ((this.mCarPlateHead == null) || (this.mCarPlate == null)) {
-      return;
-    }
-    if (!TextUtils.isEmpty(paramString))
-    {
-      this.mCarPlateHead.setText(paramString);
-      this.mCarPlate.setText(paramString + this.mCarPlateInput.getText().toString().toUpperCase().trim());
-      return;
-    }
-    this.mCarPlateHead.setText("");
-  }
-  
-  public boolean checkMenuMoreViewPlateChanged()
-  {
-    if (this.mIsChecked[0] == 0) {}
-    String str;
-    do
-    {
-      do
-      {
+
+    private boolean getIsTrueCurDay(boolean day) {
+        if (!(this.mRootView == null || this.hDividerLineView.length <= 0 || this.mRootView.findViewById(this.hDividerLineView[0]) == null)) {
+            View view = this.mRootView.findViewById(this.hDividerLineView[0]);
+            if (VERSION.SDK_INT >= 11) {
+                int color = ((ColorDrawable) view.getBackground()).getColor();
+                if (JarUtils.getResources() != null) {
+                    boolean z;
+                    if (color == JarUtils.getResources().getColor(C4048R.color.cl_bg_b)) {
+                        z = true;
+                    } else {
+                        z = false;
+                    }
+                    this.mIsCurDay = z;
+                }
+            }
+        }
+        if (day == this.mIsCurDay) {
+            return true;
+        }
         return false;
-      } while ((this.mCarPlateInput == null) || (this.mCarPlateHead == null));
-      str = this.mCarPlateHead.getText().toString().trim() + this.mCarPlateInput.getText().toString().trim();
-    } while ((StringUtils.isEmpty(mPlateNumTag)) || (StringUtils.isEmpty(str)) || (mPlateNumTag.equals(str)));
-    return true;
-  }
-  
-  public ViewGroup.LayoutParams generalLayoutParams()
-  {
-    return new ViewGroup.LayoutParams(-1, -1);
-  }
-  
-  public int getContainerViewId()
-  {
-    return 1711866547;
-  }
-  
-  public void getIsShowMapSwitch(int paramInt)
-  {
-    if (this.oververSelector != null)
-    {
-      if (paramInt == 0) {
-        this.oververSelector.check(1711866843);
-      }
     }
-    else {
-      return;
-    }
-    this.oververSelector.check(1711866844);
-  }
-  
-  public int getLandscapeLayoutId()
-  {
-    return 1711472729;
-  }
-  
-  public void getMapMode(int paramInt)
-  {
-    if (this.guideAngleSeletor != null)
-    {
-      if (paramInt != 0) {
-        break label22;
-      }
-      this.guideAngleSeletor.check(1711866831);
-    }
-    label22:
-    while (paramInt != 1) {
-      return;
-    }
-    this.guideAngleSeletor.check(1711866832);
-  }
-  
-  public void getNaviDayAndNightMode(int paramInt)
-  {
-    if (this.dayModeSelector != null)
-    {
-      if (paramInt == 0) {
-        this.dayModeSelector.check(1711866837);
-      }
-    }
-    else {
-      return;
-    }
-    if (paramInt == 1)
-    {
-      this.dayModeSelector.check(1711866838);
-      return;
-    }
-    this.dayModeSelector.check(1711866839);
-  }
-  
-  public void getPlayTTsVoiceMode(int paramInt)
-  {
-    if ((this.misicVolumeSelector != null) && (this.mVoiceValTips != null))
-    {
-      if (paramInt == 0)
-      {
-        this.misicVolumeSelector.check(1711866876);
-        this.mVoiceValTips.setText(JarUtils.getResources().getString(1711670363));
-      }
-    }
-    else {
-      return;
-    }
-    this.misicVolumeSelector.check(1711866877);
-    this.mVoiceValTips.setText(JarUtils.getResources().getString(1711670364));
-  }
-  
-  public int getPortraitLayoutId()
-  {
-    return 1711472729;
-  }
-  
-  public void getVoiceMode(int paramInt)
-  {
-    if (paramInt == 0)
-    {
-      this.voiceModeSeletor.check(1711866797);
-      return;
-    }
-    if (paramInt == 1)
-    {
-      this.voiceModeSeletor.check(1711866798);
-      return;
-    }
-    this.voiceModeSeletor.check(1711866799);
-  }
-  
-  public void hide()
-  {
-    if (isVisibility()) {
-      RGViewController.getInstance().updateToolBoxStatus();
-    }
-    super.hide();
-    hideInputMethodView();
-    setCityShortPanelVisible(8);
-    XDVoiceInstructManager.getInstance().setWakeupEnable(true);
-  }
-  
-  public void initListener()
-  {
-    this.mTitleBar.findViewById(1711865878).setOnClickListener(this);
-    this.mRootView.findViewById(1711866820).setOnClickListener(this);
-    this.mRootView.findViewById(1711866801).setOnClickListener(this);
-    this.mRootView.findViewById(1711866851).setOnClickListener(this);
-    this.mRootView.findViewById(1711866856).setOnClickListener(this);
-    this.mRootView.findViewById(1711866846).setOnClickListener(this);
-    this.mRootView.findViewById(1711866863).setOnClickListener(this);
-    this.mRootView.findViewById(1711866868).setOnClickListener(this);
-    this.mRootView.findViewById(1711866814).setOnClickListener(this);
-    this.mRootView.findViewById(1711866792).setOnClickListener(this);
-    this.mRootView.findViewById(1711866833).setOnClickListener(this);
-    this.mRootView.findViewById(1711866861).setOnClickListener(this);
-    this.mTitleBar.setOnClickListener(this);
-  }
-  
-  public void initViewById()
-  {
-    if (this.mRootView == null) {
-      return;
-    }
-    this.mTitleBar = ((BNCommonTitleBar)this.mRootView.findViewById(1711865893));
-    if (this.mTitleBar != null)
-    {
-      this.mTitleBar.setMiddleTextVisible(true);
-      this.mTitleBar.setMiddleText(BNStyleManager.getString(1711669404));
-      this.mTitleBar.setMiddleTextSize(16.0F);
-      this.mTitleBar.setRightTextVisible(false);
-    }
-    this.mMenuMoreScroll = ((ScrollView)this.mRootView.findViewById(1711866787));
-    this.mCheckboxs[0] = ((ImageView)this.mRootView.findViewById(1711866806));
-    this.mCheckboxs[1] = ((ImageView)this.mRootView.findViewById(1711866818));
-    this.mCheckboxs[2] = ((ImageView)this.mRootView.findViewById(1711866849));
-    this.mCheckboxs[3] = ((ImageView)this.mRootView.findViewById(1711866854));
-    this.mCheckboxs[5] = ((ImageView)this.mRootView.findViewById(1711866859));
-    this.mCheckboxs[6] = ((ImageView)this.mRootView.findViewById(1711866866));
-    this.mCheckboxs[7] = ((ImageView)this.mRootView.findViewById(1711866872));
-    this.mPresenter.initRedGuide();
-    this.mIVBlueToothRedGuide = ((ImageView)this.mRootView.findViewById(1711866816));
-    this.mCarLogoRedGuide = ((ImageView)this.mRootView.findViewById(1711866822));
-    this.mVoiceRedGuide = ((ImageView)this.mRootView.findViewById(1711866729));
-    this.mCarLogoArrowView = ((ImageView)this.mRootView.findViewById(1711866824));
-    this.mVoiceTV = ((TextView)this.mRootView.findViewById(1711866795));
-    this.mVoiceValTips = ((TextView)this.mRootView.findViewById(1711866878));
-    initActionOnOff();
-    initLicensePlatesLimitView();
-  }
-  
-  public void jumpCarLogoPage()
-  {
-    if (this.mSubViewListener != null) {
-      this.mSubViewListener.onCarLogoAction();
-    }
-  }
-  
-  public boolean menuMoreViewCloseAble()
-  {
-    boolean bool2 = true;
-    boolean bool1;
-    if ((this.mCityShortName != null) && (this.mCityShortName.isShown()))
-    {
-      setCityShortPanelVisible(8);
-      bool1 = false;
-    }
-    do
-    {
-      do
-      {
-        do
-        {
-          return bool1;
-          bool1 = bool2;
-        } while (this.mIsChecked[0] == 0);
-        if (!carPlateNumIsEmpty()) {
-          break;
-        }
-        reverseItemCheck(0);
-        this.mPresenter.onSettingsChange(this.mIsChecked, 0);
-        bool1 = bool2;
-      } while (this.mIsChecked[0] != 0);
-      hideInputMethodView();
-      return true;
-      bool2 = checkPlate();
-      bool1 = bool2;
-    } while (bool2);
-    this.mCarPlateTs.setTextColor(-65536);
-    this.mCarPlateTs.setText(JarUtils.getResources().getString(1711670362));
-    this.mCarPlateTs.setVisibility(0);
-    return bool2;
-  }
-  
-  public void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent)
-  {
-    if (paramInt1 == 3001) {
-      if (BNaviModuleManager.hasPermission("android.settings.action.MANAGE_OVERLAY_PERMISSION"))
-      {
-        reverseItemCheck(7);
-        this.mPresenter.onSettingsChange(this.mIsChecked, 7);
-      }
-    }
-    while ((paramInt1 != 3002) || (this.mPresenter == null)) {
-      return;
-    }
-    this.mPresenter.getVoiceName();
-  }
-  
-  public void onBlueToothRedGuide(boolean paramBoolean)
-  {
-    if ((this.mIVBlueToothRedGuide != null) && (paramBoolean)) {
-      this.mIVBlueToothRedGuide.setVisibility(0);
-    }
-  }
-  
-  public void onCarLogoRedGuide(boolean paramBoolean)
-  {
-    if (this.mCarLogoRedGuide == null) {
-      return;
-    }
-    if (paramBoolean)
-    {
-      this.mCarLogoRedGuide.setVisibility(0);
-      return;
-    }
-    this.mCarLogoRedGuide.setVisibility(8);
-  }
-  
-  public void onCarPlateInputLayoutVisible(int paramInt)
-  {
-    if ((this.mCarPlateSettingView != null) && (this.mCarPlateTs != null))
-    {
-      this.mCarPlateSettingView.setVisibility(paramInt);
-      this.mCarPlateTs.setVisibility(paramInt);
-      if ((paramInt == 8) && (JarUtils.getResources().getString(1711670362).equals(this.mCarPlateTs.getText().toString()))) {
-        this.mCarPlateTs.setText("");
-      }
-    }
-  }
-  
-  public void onCheckedChanged(RadioGroup paramRadioGroup, int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-    case 1711866797: 
-    case 1711866798: 
-    case 1711866799: 
-    case 1711866831: 
-    case 1711866832: 
-    case 1711866837: 
-    case 1711866838: 
-    case 1711866839: 
-    case 1711866876: 
-    case 1711866877: 
-      do
-      {
-        do
-        {
-          return;
-          this.mPresenter.onChangeDetailVoiceModeSetting();
-          changeContinewNavi();
-          return;
-          this.mPresenter.onChangeConciseVoiceModeSetting();
-          changeContinewNavi();
-          return;
-          this.mPresenter.onChangeQuiteVoiceModeSetting();
-          changeContinewNavi();
-          return;
-          this.mPresenter.onChangeAngleFollowModeSetting();
-          return;
-          this.mPresenter.onChangeAngleTrueNorthModeSetting();
-          return;
-          this.mPresenter.setNaviDayAndNightMode(1);
-          return;
-          this.mPresenter.setNaviDayAndNightMode(2);
-          return;
-          this.mPresenter.setNaviDayAndNightMode(3);
-          return;
-          this.mPresenter.setPlayTTSMusicMode(0);
-        } while (this.mVoiceValTips == null);
-        this.mVoiceValTips.setText(JarUtils.getResources().getString(1711670363));
-        return;
-        this.mPresenter.setPlayTTSMusicMode(1);
-      } while (this.mVoiceValTips == null);
-      this.mVoiceValTips.setText(JarUtils.getResources().getString(1711670364));
-      return;
-    case 1711866843: 
-      this.mPresenter.setRouteConditionOverView(0);
-      changeContinewNavi();
-      return;
-    }
-    this.mPresenter.setRouteConditionOverView(1);
-    changeContinewNavi();
-  }
-  
-  public void onClick(View paramView)
-  {
-    if (paramView == null) {}
-    for (;;)
-    {
-      return;
-      try
-      {
-        switch (paramView.getId())
-        {
-        case 1711865893: 
-        case 1711865878: 
-          if (this.mSubViewListener != null)
-          {
-            this.mSubViewListener.onMenuMoreAction();
-            return;
-          }
-          break;
-        case 1711866833: 
-          this.mPresenter.onChangeAngleHUDModeSetting();
-          return;
-        case 1711866820: 
-          this.mPresenter.setCarLogo();
-          return;
-        case 1711866846: 
-          reverseItemCheck(2);
-          this.mPresenter.onSettingsChange(this.mIsChecked, 2);
-          return;
-        case 1711866801: 
-          reverseItemCheck(0);
-          this.mPresenter.onSettingsChange(this.mIsChecked, 0);
-          if (this.mIsChecked[0] == 0)
-          {
-            hideInputMethodView();
-            return;
-          }
-          if ((this.mCarPlateInput != null) && (this.mCarPlateInput.isShown()))
-          {
-            showInputMethodView();
-            return;
-          }
-          break;
-        case 1711866851: 
-          reverseItemCheck(3);
-          this.mPresenter.onSettingsChange(this.mIsChecked, 3);
-          return;
-        case 1711866856: 
-          reverseItemCheck(5);
-          this.mPresenter.onSettingsChange(this.mIsChecked, 5);
-          return;
-        case 1711866863: 
-          reverseItemCheck(6);
-          this.mPresenter.onSettingsChange(this.mIsChecked, 6);
-          return;
-        case 1711866868: 
-          int i = this.mIsChecked[7];
-          if (i != 0) {
-            this.mPresenter.addUserOP("3.x.1", null, "", null);
-          }
-          while ((i == 0) && (!BNaviModuleManager.hasPermission("android.settings.action.MANAGE_OVERLAY_PERMISSION")))
-          {
-            RGViewController.getInstance().showOpenOverlyPermissonDialog();
-            return;
-            this.mPresenter.addUserOP("3.x.1", "", null, null);
-          }
-          reverseItemCheck(7);
-          this.mPresenter.onSettingsChange(this.mIsChecked, 7);
-          return;
-        case 1711866814: 
-          this.mPresenter.setBlueToothChannelGuide(this.mContext, this.mIsChecked[1]);
-          return;
-        case 1711866805: 
-          hideInputMethodView();
-          BNaviModuleManager.openCarPlateExplainPage(this.mContext);
-          return;
-        case 1711866792: 
-          BNSettingManager.setFirstVoiceGuide(true);
-          if (this.mVoiceRedGuide != null) {
-            this.mVoiceRedGuide.setVisibility(8);
-          }
-          UserOPController.getInstance().add("3.5.6");
-          if (this.mSubViewListener != null)
-          {
-            this.mSubViewListener.onOtherAction(5, 3, 0, null);
-            return;
-          }
-          break;
-        case 1711866812: 
-          if ((this.mCarPlate != null) && (this.mCarPlateInput != null))
-          {
-            this.mCarPlate.setText("");
-            this.mCarPlateInput.setText("");
-            hidePlate();
-            showInput();
-            return;
-          }
-          break;
-        case 1711866808: 
-          hidePlate();
-          showInput();
-          String str = this.mCarPlate.getText().toString();
-          paramView = "";
-          if (!TextUtils.isEmpty(str))
-          {
-            if (str.length() >= 7)
-            {
-              paramView = str.substring(0, 1);
-              str = str.substring(1, str.length());
-              this.mCarPlateInput.setText(str);
-              this.mCarPlateInput.setSelection(str.length());
+
+    private void updateDayModeView() {
+        this.mCarLogoArrowView.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_common_ic_setting_right_arrow));
+        int i = 0;
+        while (this.mRootView != null && i < this.mTextViewId.length) {
+            TextView text = (TextView) this.mRootView.findViewById(this.mTextViewId[i]);
+            if (text != null) {
+                text.setTextColor(Color.parseColor("#333333"));
             }
-            this.mCarPlateHead.setText(paramView);
-            showInputMethodView();
-            return;
-          }
-          break;
-        case 1711866810: 
-          showDialogCityShotName();
-          return;
-        case 1711866811: 
-          this.mPresenter.addUserOP("b.2");
-          return;
-        case 1711866879: 
-          this.shadowView.setVisibility(8);
-          setCityShortPanelVisible(8);
-          return;
-        case 1711866861: 
-          if (checkClick())
-          {
-            new BNDebugModelDialog(this.mContext).show();
-            return;
-          }
-          break;
+            i++;
         }
-      }
-      catch (Exception paramView) {}
+        i = 0;
+        while (this.mRootView != null && i < this.mTipsTextViewId.length) {
+            text = (TextView) this.mRootView.findViewById(this.mTipsTextViewId[i]);
+            if (text != null) {
+                text.setTextColor(BNStyleManager.getColor(C4048R.color.cl_text_b));
+            }
+            i++;
+        }
+        if (this.mTitleBar != null) {
+            this.mTitleBar.setTitleBarBackgroundColor(BNStyleManager.getColor(C4048R.color.bnav_titlebar_bg));
+            this.mTitleBar.setMiddleTextColor(BNStyleManager.getColor(C4048R.color.bnav_titlebar_middle_text));
+            this.mTitleBar.setLeftIconAlpha(1.0f);
+            this.mTitleBar.setTitleBarDivideLineBackgroudColor(BNStyleManager.getColor(C4048R.color.bnav_titlebar_divide_line_color_day));
+            this.mTitleBar.setLeftImageViewSrc(BNStyleManager.getDrawable(C4048R.drawable.bnav_titlebar_ic_back_new));
+        }
+        ColorStateList textStateColor = JarUtils.getResources().getColorStateList(C4048R.color.nsdk_color_more_setting_voice_selector);
+        i = 0;
+        while (this.mTogglebuttonGroup != null && i < this.mTogglebuttonGroup.length) {
+            RadioGroup radioGroup = (RadioGroup) this.mRootView.findViewById(this.mTogglebuttonGroup[i]);
+            int j = 0;
+            while (radioGroup.getChildCount() > 0 && j < radioGroup.getChildCount()) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(j);
+                if (textStateColor != null) {
+                    radioButton.setTextColor(textStateColor);
+                }
+                radioButton.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.bnav_more_setting_voice_day));
+                j++;
+            }
+            i++;
+        }
+        if (this.carPlateParent != null && this.mCarPlate != null && this.mCarPlateInput != null) {
+            this.carPlateParent.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.bnav_setting_car_plate_input_day_bg));
+            this.mCarPlate.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.bnav_setting_car_plate_input_day_bg));
+            this.mCarPlateInput.setTextColor(-16777216);
+            this.mCarPlate.setTextColor(-16777216);
+        }
     }
-  }
-  
-  public boolean onEditorAction(TextView paramTextView, int paramInt, KeyEvent paramKeyEvent)
-  {
-    if ((paramInt == 4) || ((paramKeyEvent != null) && (paramKeyEvent.getKeyCode() == 66)))
-    {
-      hideInputMethodView();
-      return true;
+
+    private void updateNightModeView() {
+        this.mCarLogoArrowView.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_common_ic_setting_night_right_arrow));
+        int i = 0;
+        while (this.mRootView != null && i < this.mTextViewId.length) {
+            TextView text = (TextView) this.mRootView.findViewById(this.mTextViewId[i]);
+            if (text != null) {
+                text.setTextColor(Color.parseColor("#ffffff"));
+            }
+            i++;
+        }
+        i = 0;
+        while (this.mRootView != null && i < this.mTipsTextViewId.length) {
+            text = (TextView) this.mRootView.findViewById(this.mTipsTextViewId[i]);
+            if (text != null) {
+                text.setTextColor(Color.parseColor("#606367"));
+            }
+            i++;
+        }
+        if (this.mTitleBar != null) {
+            this.mTitleBar.setTitleBarBackgroundColor(JarUtils.getResources().getColor(C4048R.color.cl_bg_d_night));
+            this.mTitleBar.setMiddleTextColor(Color.parseColor("#ffffff"));
+            this.mTitleBar.setLeftIconAlpha(0.3f);
+            this.mTitleBar.setTitleBarDivideLineBackgroudColor(BNStyleManager.getColor(C4048R.color.bnav_titlebar_divide_line_color_night));
+            this.mTitleBar.setLeftImageViewSrc(BNStyleManager.getDrawable(C4048R.drawable.bnav_titlebar_ic_back_normal_night));
+        }
+        i = 0;
+        while (this.mTogglebuttonGroup != null && i < this.mTogglebuttonGroup.length) {
+            RadioGroup radioGroup = (RadioGroup) this.mRootView.findViewById(this.mTogglebuttonGroup[i]);
+            int j = 0;
+            while (radioGroup.getChildCount() > 0 && j < radioGroup.getChildCount()) {
+                RadioButton radioButton = (RadioButton) radioGroup.getChildAt(j);
+                radioButton.setTextColor(-1);
+                radioButton.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.bnav_more_setting_voice_night));
+                j++;
+            }
+            i++;
+        }
+        if (this.carPlateParent != null && this.mCarPlate != null && this.mCarPlateInput != null) {
+            this.carPlateParent.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.bnav_setting_car_plate_input_night_bg));
+            this.mCarPlate.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.bnav_setting_car_plate_input_night_bg));
+            this.mCarPlateInput.setTextColor(-1);
+            this.mCarPlate.setTextColor(-1);
+        }
     }
-    return false;
-  }
-  
-  public void onResume()
-  {
-    if (this.mPresenter != null) {
-      this.mPresenter.getVoiceName();
+
+    public void updateBlueToothView(boolean open) {
+        try {
+            this.mIsChecked[1] = open;
+            updateCheckDrawable(1);
+        } catch (Exception e) {
+        }
     }
-  }
-  
-  public void onSwitchBackground(boolean paramBoolean)
-  {
-    if ((!paramBoolean) && (this.mCityShortName != null) && (this.mCityShortName.isShown())) {
-      hideInputMethodView();
+
+    public void updateCheckDrawable(int index) {
+        try {
+            if (this.mIsChecked[index]) {
+                this.mCheckboxs[index].setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_set_checkin_icon));
+            } else {
+                this.mCheckboxs[index].setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_set_checkout_icon));
+            }
+        } catch (Exception e) {
+        }
     }
-  }
-  
-  public void onVoiceRedGuide(boolean paramBoolean)
-  {
-    if ((this.mVoiceRedGuide != null) && (paramBoolean)) {
-      this.mVoiceRedGuide.setVisibility(0);
+
+    public void onCarPlateInputLayoutVisible(int visible) {
+        if (this.mCarPlateSettingView != null && this.mCarPlateTs != null) {
+            this.mCarPlateSettingView.setVisibility(visible);
+            this.mCarPlateTs.setVisibility(visible);
+            if (visible == 8 && JarUtils.getResources().getString(C4048R.string.setting_license_plates_limit_error).equals(this.mCarPlateTs.getText().toString())) {
+                this.mCarPlateTs.setText("");
+            }
+        }
     }
-  }
-  
-  public void orientationChanged(ViewGroup paramViewGroup, int paramInt)
-  {
-    super.orientationChanged(paramViewGroup, paramInt);
-    if (this.isInputMethodShowing)
-    {
-      this.isInputMethodShowing = false;
-      openCarPlatDirectly(true);
+
+    private void reverseItemCheck(int index) {
+        try {
+            this.mIsChecked[index] = !this.mIsChecked[index];
+        } catch (Exception e) {
+        }
     }
-  }
-  
-  public void setInputMethodShowFlag()
-  {
-    if (isVisibility())
-    {
-      InputMethodManager localInputMethodManager = (InputMethodManager)this.mCarPlateInput.getContext().getSystemService("input_method");
-      if ((this.mCarPlateInput != null) && (this.mCarPlateInput.isFocused()) && (localInputMethodManager.isActive(this.mCarPlateInput))) {
-        this.isInputMethodShowing = true;
-      }
+
+    private void initPlateInput() {
+        if (this.mCarPlateInput != null && this.mCarPlateHead != null && this.mCarPlate != null) {
+            this.mCarPlateInput.addTextChangedListener(new C43831());
+            this.mCarPlateInput.setTransformationMethod(new AllCapTransMethod());
+            this.mCarPlateHead.setOnClickListener(this);
+            this.mCarPlateInput.setClickable(true);
+            this.mCarPlateInput.setOnClickListener(this);
+            this.mCarPlateInput.setOnFocusChangeListener(new C43842());
+        }
     }
-  }
-  
-  public void setNaviDayAndNightMode(int paramInt)
-  {
-    if (this.dayModeSelector != null)
-    {
-      if (paramInt == 3) {
-        this.dayModeSelector.check(1711866839);
-      }
+
+    private boolean checkPlate() {
+        if (this.mCarPlate == null || this.mCarPlateInput == null) {
+            return false;
+        }
+        this.mCarNum = this.mCarPlate.getText().toString().trim();
+        if (TextUtils.isEmpty(this.mCarNum)) {
+            this.mCarNum = this.mCarPlateInput.getText().toString().trim();
+        }
+        return this.mPresenter.checkPlate(this.mCarNum);
     }
-    else {
-      return;
+
+    private boolean hideInputMethodView() {
+        if (this.mCarPlateInput == null) {
+            return false;
+        }
+        InputMethodManager imm = (InputMethodManager) this.mContext.getSystemService("input_method");
+        if (imm == null || !imm.isActive()) {
+            return false;
+        }
+        imm.hideSoftInputFromWindow(this.mCarPlateInput.getWindowToken(), 0);
+        this.mCarPlateInput.clearFocus();
+        return true;
     }
-    if (paramInt == 2)
-    {
-      this.dayModeSelector.check(1711866838);
-      return;
+
+    private void showInputMethodView() {
+        if (this.mCarPlateInput != null) {
+            this.mCarPlateInput.setFocusable(true);
+            this.mCarPlateInput.setFocusableInTouchMode(true);
+            this.mCarPlateInput.requestFocus();
+            InputMethodManager imm = (InputMethodManager) this.mCarPlateInput.getContext().getSystemService("input_method");
+            if (imm != null) {
+                imm.showSoftInput(this.mCarPlateInput, 0);
+            }
+        }
     }
-    this.dayModeSelector.check(1711866837);
-  }
-  
-  public void setVoiceSpeakSetting(int paramInt1, int paramInt2)
-  {
-    if (this.mSubViewListener != null) {
-      this.mSubViewListener.onOtherAction(6, paramInt1, paramInt2, null);
+
+    private void hideInput() {
+        if (this.carPlateParent != null) {
+            this.carPlateParent.setVisibility(8);
+        }
     }
-  }
-  
-  public void show(Bundle paramBundle)
-  {
-    super.show(paramBundle);
-    int i = BNRoutePlaner.getInstance().getCalcPreference();
-    RGCarPreferSettingController.getInstance().setLastRPPreferSettingValue(i);
-    RGNotificationController.getInstance().hideAllCommonView();
-    RGNotificationController.getInstance().hideAllOperableView();
-    this.mPresenter.getVoiceName();
-    initActionOnOff();
-    this.mPresenter.getPlateFromLocal(this.mContext);
-    if (paramBundle != null)
-    {
-      boolean bool = paramBundle.getBoolean("open_car_plate", false);
-      LogUtil.e(TAG, "openCarPlate: " + bool);
-      if (bool) {
-        openCarPlatDirectly(false);
-      }
+
+    private void hidePlate() {
+        if (this.mCarPlate != null && this.mCarPlateDelete != null) {
+            hideInputMethodView();
+            this.mCarPlate.setVisibility(8);
+            this.mCarPlateDelete.setVisibility(8);
+        }
     }
-    XDVoiceInstructManager.getInstance().setWakeupEnable(false);
-  }
-  
-  public void showBlueToothChannelGuide(boolean paramBoolean)
-  {
-    this.mIVBlueToothRedGuide.setVisibility(8);
-    if (paramBoolean)
-    {
-      RGMapModeViewController.getInstance().showBtOscDialog();
-      return;
+
+    private void showPlate() {
+        if (this.mCarPlate != null && this.mCarPlateDelete != null) {
+            this.mCarPlate.setVisibility(0);
+            this.mCarPlateDelete.setVisibility(0);
+        }
     }
-    TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(1711669692));
-  }
-  
-  public void showCarPlate(String paramString)
-  {
-    mPlateNumTag = paramString;
-    this.mCarNum = paramString;
-    if (!TextUtils.isEmpty(this.mCarNum))
-    {
-      showPlate();
-      hideInput();
-      if (this.mCarNum.length() >= 1)
-      {
-        this.mCarPlateHead.setText(this.mCarNum.substring(0, 1));
-        this.mCarPlateInput.setText(this.mCarNum.substring(1));
-      }
-      this.mPresenter.updatePreferValue(32, this.mIsChecked[0]);
+
+    private void updatePlateView(String plateHead) {
+        if (this.mCarPlateHead != null && this.mCarPlate != null) {
+            if (TextUtils.isEmpty(plateHead)) {
+                this.mCarPlateHead.setText("");
+                return;
+            }
+            this.mCarPlateHead.setText(plateHead);
+            this.mCarPlate.setText(plateHead + this.mCarPlateInput.getText().toString().toUpperCase().trim());
+        }
     }
-  }
-  
-  public void updateBlueToothView(boolean paramBoolean)
-  {
-    try
-    {
-      this.mIsChecked[1] = paramBoolean;
-      updateCheckDrawable(1);
-      return;
+
+    private void showInput() {
+        if (this.carPlateParent != null) {
+            this.carPlateParent.setVisibility(0);
+            this.mCarPlateInput.setFocusable(true);
+            this.mCarPlateInput.setFocusableInTouchMode(true);
+            this.mCarPlateInput.requestFocus();
+        }
     }
-    catch (Exception localException) {}
-  }
-  
-  public void updateCheckDrawable(int paramInt)
-  {
-    try
-    {
-      if (this.mIsChecked[paramInt] != 0)
-      {
-        this.mCheckboxs[paramInt].setImageDrawable(JarUtils.getResources().getDrawable(1711408040));
-        return;
-      }
-      this.mCheckboxs[paramInt].setImageDrawable(JarUtils.getResources().getDrawable(1711408041));
-      return;
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 3001) {
+            if (BNaviModuleManager.hasPermission(NaviCommonConstant.OVERLAY_PERMISSION)) {
+                reverseItemCheck(7);
+                this.mPresenter.onSettingsChange(this.mIsChecked, 7);
+            }
+        } else if (requestCode == 3002 && this.mPresenter != null) {
+            this.mPresenter.getVoiceName();
+        }
     }
-    catch (Exception localException) {}
-  }
-  
-  public void updateDataByLast() {}
-  
-  public void updateGuideAngleSeletor()
-  {
-    if (BNSettingManager.getMapMode() == 1)
-    {
-      getMapMode(0);
-      return;
+
+    private void showDialogCityShotName() {
+        if (this.mCityShortName != null && this.shadowView != null) {
+            hideInputMethodView();
+            this.mCityShortName.requestFocus();
+            if (this.mCityShortName.getVisibility() == 0) {
+                setCityShortPanelVisible(8);
+                this.shadowView.setVisibility(8);
+                return;
+            }
+            setCityShortPanelVisible(0);
+            this.shadowView.setVisibility(0);
+            this.shadowView.setOnClickListener(this);
+            this.mCityShortName.setClickable(true);
+            this.mCityShortName.removeAllViews();
+            int i = 0;
+            while (i < this.mCityShotNames.length) {
+                if (i == 0 || i % 9 == 0) {
+                    LinearLayout itemRow = (LinearLayout) JarUtils.inflate((Activity) this.mContext, C4048R.layout.city_short_name, null);
+                    for (int j = 0; j < 9; j++) {
+                        LinearLayout item = (LinearLayout) JarUtils.inflate((Activity) this.mContext, C4048R.layout.city_short_name_item, null);
+                        item.setLayoutParams(new LinearLayout.LayoutParams(-1, -2, 1.0f));
+                        TextView textView = (TextView) item.findViewById(C4048R.id.text_view);
+                        if (i < this.mCityShotNames.length) {
+                            textView.setText(this.mCityShotNames[i]);
+                            textView.setOnClickListener(this.shotNameOnclickListener);
+                        } else {
+                            textView.setVisibility(4);
+                        }
+                        itemRow.addView(item);
+                        i++;
+                    }
+                    this.mCityShortName.addView(itemRow);
+                }
+            }
+        }
     }
-    getMapMode(1);
-  }
-  
-  public void updateStyle(boolean paramBoolean)
-  {
-    if (getIsTrueCurDay(paramBoolean)) {
-      return;
+
+    private void setCityShortPanelVisible(int visible) {
+        if (this.mCityShortName != null) {
+            this.mCityShortName.setVisibility(visible);
+        }
     }
-    super.updateStyle(paramBoolean);
-    int i = 0;
-    View localView;
-    while ((this.mRootView != null) && (i < this.hDividerLineView.length))
-    {
-      localView = this.mRootView.findViewById(this.hDividerLineView[i]);
-      if (localView != null) {
-        localView.setBackgroundColor(BNStyleManager.getColor(1711800690));
-      }
-      i += 1;
+
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case C4048R.id.nav_voice_detail_rb /*1711866797*/:
+                this.mPresenter.onChangeDetailVoiceModeSetting();
+                changeContinewNavi();
+                return;
+            case C4048R.id.nav_voice_concise_rb /*1711866798*/:
+                this.mPresenter.onChangeConciseVoiceModeSetting();
+                changeContinewNavi();
+                return;
+            case C4048R.id.nav_voice_mute_rb /*1711866799*/:
+                this.mPresenter.onChangeQuiteVoiceModeSetting();
+                changeContinewNavi();
+                return;
+            case C4048R.id.nav_guide_angle_follow_rb /*1711866831*/:
+                this.mPresenter.onChangeAngleFollowModeSetting();
+                return;
+            case C4048R.id.nav_guide_angle_true_north_rb /*1711866832*/:
+                this.mPresenter.onChangeAngleTrueNorthModeSetting();
+                return;
+            case C4048R.id.nav_night_mode_auto_rb /*1711866837*/:
+                this.mPresenter.setNaviDayAndNightMode(1);
+                return;
+            case C4048R.id.nav_day_mode_rb /*1711866838*/:
+                this.mPresenter.setNaviDayAndNightMode(2);
+                return;
+            case C4048R.id.nav_night_mode_rb /*1711866839*/:
+                this.mPresenter.setNaviDayAndNightMode(3);
+                return;
+            case C4048R.id.nav_overview_thumbnail_rb /*1711866843*/:
+                this.mPresenter.setRouteConditionOverView(0);
+                changeContinewNavi();
+                return;
+            case C4048R.id.nav_overview_road_condition_rb /*1711866844*/:
+                this.mPresenter.setRouteConditionOverView(1);
+                changeContinewNavi();
+                return;
+            case C4048R.id.nav_music_volume_lower_rb /*1711866876*/:
+                this.mPresenter.setPlayTTSMusicMode(0);
+                if (this.mVoiceValTips != null) {
+                    this.mVoiceValTips.setText(JarUtils.getResources().getString(C4048R.string.setting_val_lower));
+                    return;
+                }
+                return;
+            case C4048R.id.nav_music_volume_stop_rb /*1711866877*/:
+                this.mPresenter.setPlayTTSMusicMode(1);
+                if (this.mVoiceValTips != null) {
+                    this.mVoiceValTips.setText(JarUtils.getResources().getString(C4048R.string.setting_val_stop));
+                    return;
+                }
+                return;
+            default:
+                return;
+        }
     }
-    i = 0;
-    while ((this.mRootView != null) && (i < this.mDividerCategoryView.length))
-    {
-      localView = this.mRootView.findViewById(this.mDividerCategoryView[i]);
-      if (localView != null) {
-        localView.setBackgroundColor(BNStyleManager.getColor(1711800692));
-      }
-      i += 1;
+
+    private void changeContinewNavi() {
+        if (NavState.NAV_STATE_OPERATE.equals(RGControlPanelModel.getInstance().getNavState()) && this.mSubViewListener != null) {
+            this.mSubViewListener.onOtherAction(3, 0, 0, null);
+        }
     }
-    i = 0;
-    while ((this.mRootView != null) && (i < this.mBackgroundView.length))
-    {
-      localView = this.mRootView.findViewById(this.mBackgroundView[i]);
-      if (localView != null) {
-        localView.setBackgroundColor(BNStyleManager.getColor(1711800694));
-      }
-      i += 1;
+
+    public void updateVoiceName(String voiceName) {
+        if (this.mVoiceTV != null) {
+            this.mVoiceTV.setText(voiceName);
+        }
     }
-    if (paramBoolean)
-    {
-      updateDayModeView();
-      return;
+
+    public void setVoiceSpeakSetting(int settingType, int value) {
+        if (this.mSubViewListener != null) {
+            this.mSubViewListener.onOtherAction(6, settingType, value, null);
+        }
     }
-    updateNightModeView();
-  }
-  
-  public void updateVoiceName(String paramString)
-  {
-    if (this.mVoiceTV != null) {
-      this.mVoiceTV.setText(paramString);
+
+    public void showCarPlate(String carPlate) {
+        mPlateNumTag = carPlate;
+        this.mCarNum = carPlate;
+        if (!TextUtils.isEmpty(this.mCarNum)) {
+            showPlate();
+            hideInput();
+            if (this.mCarNum.length() >= 1) {
+                this.mCarPlateHead.setText(this.mCarNum.substring(0, 1));
+                this.mCarPlateInput.setText(this.mCarNum.substring(1));
+            }
+            this.mPresenter.updatePreferValue(32, this.mIsChecked[0]);
+        }
     }
-  }
-  
-  static class AllCapTransMethod
-    extends ReplacementTransformationMethod
-  {
-    protected char[] getOriginal()
-    {
-      return new char[] { 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122 };
+
+    public void showBlueToothChannelGuide(boolean isConnect) {
+        this.mIVBlueToothRedGuide.setVisibility(8);
+        if (isConnect) {
+            RGMapModeViewController.getInstance().showBtOscDialog();
+        } else {
+            TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(C4048R.string.alert_bt_osc_no_Bt));
+        }
     }
-    
-    protected char[] getReplacement()
-    {
-      return new char[] { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 };
+
+    public void jumpCarLogoPage() {
+        if (this.mSubViewListener != null) {
+            this.mSubViewListener.onCarLogoAction();
+        }
     }
-  }
+
+    public void onBlueToothRedGuide(boolean isShow) {
+        if (this.mIVBlueToothRedGuide != null && isShow) {
+            this.mIVBlueToothRedGuide.setVisibility(0);
+        }
+    }
+
+    public void onCarLogoRedGuide(boolean isShow) {
+        if (this.mCarLogoRedGuide != null) {
+            if (isShow) {
+                this.mCarLogoRedGuide.setVisibility(0);
+            } else {
+                this.mCarLogoRedGuide.setVisibility(8);
+            }
+        }
+    }
+
+    public void onVoiceRedGuide(boolean isShow) {
+        if (this.mVoiceRedGuide != null && isShow) {
+            this.mVoiceRedGuide.setVisibility(0);
+        }
+    }
+
+    public void getVoiceMode(int index) {
+        if (index == 0) {
+            this.voiceModeSeletor.check(C4048R.id.nav_voice_detail_rb);
+        } else if (index == 1) {
+            this.voiceModeSeletor.check(C4048R.id.nav_voice_concise_rb);
+        } else {
+            this.voiceModeSeletor.check(C4048R.id.nav_voice_mute_rb);
+        }
+    }
+
+    public void getMapMode(int index) {
+        if (this.guideAngleSeletor == null) {
+            return;
+        }
+        if (index == 0) {
+            this.guideAngleSeletor.check(C4048R.id.nav_guide_angle_follow_rb);
+        } else if (index == 1) {
+            this.guideAngleSeletor.check(C4048R.id.nav_guide_angle_true_north_rb);
+        }
+    }
+
+    public void getNaviDayAndNightMode(int index) {
+        if (this.dayModeSelector == null) {
+            return;
+        }
+        if (index == 0) {
+            this.dayModeSelector.check(C4048R.id.nav_night_mode_auto_rb);
+        } else if (index == 1) {
+            this.dayModeSelector.check(C4048R.id.nav_day_mode_rb);
+        } else {
+            this.dayModeSelector.check(C4048R.id.nav_night_mode_rb);
+        }
+    }
+
+    public void setNaviDayAndNightMode(int index) {
+        if (this.dayModeSelector == null) {
+            return;
+        }
+        if (index == 3) {
+            this.dayModeSelector.check(C4048R.id.nav_night_mode_rb);
+        } else if (index == 2) {
+            this.dayModeSelector.check(C4048R.id.nav_day_mode_rb);
+        } else {
+            this.dayModeSelector.check(C4048R.id.nav_night_mode_auto_rb);
+        }
+    }
+
+    public void getIsShowMapSwitch(int index) {
+        if (this.oververSelector == null) {
+            return;
+        }
+        if (index == 0) {
+            this.oververSelector.check(C4048R.id.nav_overview_thumbnail_rb);
+        } else {
+            this.oververSelector.check(C4048R.id.nav_overview_road_condition_rb);
+        }
+    }
+
+    public void getPlayTTsVoiceMode(int index) {
+        if (this.misicVolumeSelector != null && this.mVoiceValTips != null) {
+            if (index == 0) {
+                this.misicVolumeSelector.check(C4048R.id.nav_music_volume_lower_rb);
+                this.mVoiceValTips.setText(JarUtils.getResources().getString(C4048R.string.setting_val_lower));
+                return;
+            }
+            this.misicVolumeSelector.check(C4048R.id.nav_music_volume_stop_rb);
+            this.mVoiceValTips.setText(JarUtils.getResources().getString(C4048R.string.setting_val_stop));
+        }
+    }
+
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId != 4 && (event == null || event.getKeyCode() != 66)) {
+            return false;
+        }
+        hideInputMethodView();
+        return true;
+    }
+
+    public boolean checkMenuMoreViewPlateChanged() {
+        if (!this.mIsChecked[0] || this.mCarPlateInput == null || this.mCarPlateHead == null) {
+            return false;
+        }
+        String num = this.mCarPlateHead.getText().toString().trim() + this.mCarPlateInput.getText().toString().trim();
+        if (StringUtils.isEmpty(mPlateNumTag) || StringUtils.isEmpty(num) || mPlateNumTag.equals(num)) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean menuMoreViewCloseAble() {
+        if (this.mCityShortName != null && this.mCityShortName.isShown()) {
+            setCityShortPanelVisible(8);
+            return false;
+        } else if (!this.mIsChecked[0]) {
+            return true;
+        } else {
+            if (carPlateNumIsEmpty()) {
+                reverseItemCheck(0);
+                this.mPresenter.onSettingsChange(this.mIsChecked, 0);
+                if (this.mIsChecked[0]) {
+                    return true;
+                }
+                hideInputMethodView();
+                return true;
+            }
+            boolean validity = checkPlate();
+            if (validity) {
+                return validity;
+            }
+            this.mCarPlateTs.setTextColor(-65536);
+            this.mCarPlateTs.setText(JarUtils.getResources().getString(C4048R.string.setting_license_plates_limit_error));
+            this.mCarPlateTs.setVisibility(0);
+            return validity;
+        }
+    }
+
+    private boolean carPlateNumIsEmpty() {
+        if (this.mCarPlate == null || this.mCarPlateInput == null || TextUtils.isEmpty(this.mCarPlateInput.getText().toString().trim())) {
+            return true;
+        }
+        return false;
+    }
+
+    public void onSwitchBackground(boolean isBackground) {
+        if (!isBackground && this.mCityShortName != null && this.mCityShortName.isShown()) {
+            hideInputMethodView();
+        }
+    }
+
+    public void updateGuideAngleSeletor() {
+        if (BNSettingManager.getMapMode() == 1) {
+            getMapMode(0);
+        } else {
+            getMapMode(1);
+        }
+    }
+
+    public void onResume() {
+        if (this.mPresenter != null) {
+            this.mPresenter.getVoiceName();
+        }
+    }
+
+    private boolean checkClick() {
+        long now = System.currentTimeMillis();
+        if (now - this.mLastClickTime < K_INTERNEL_CLICK) {
+            this.mClickNum++;
+        } else {
+            this.mClickNum = 0;
+        }
+        this.mLastClickTime = now;
+        if (((long) this.mClickNum) > 3) {
+            TipTool.onCreateToastDialog(this.mContext, "连击:" + this.mClickNum);
+        }
+        if (((long) this.mClickNum) < K_MAX_CLICK) {
+            return false;
+        }
+        this.mClickNum = 0;
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMMenuMoreView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

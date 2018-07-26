@@ -3,107 +3,83 @@ package com.baidu.navi.controller;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import com.baidu.carlife.C0965R;
 import com.baidu.navi.fragment.BaseFragment;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navi.util.NaviAccountUtils;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.verify.BNKeyVerify;
+import com.baidu.navisdk.logic.CommandConst;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.logic.BNLocationManagerProxy;
+import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 
-public class LaunchController
-{
-  private static final String ACCESS_KEY = "1Z7v3O9UhsHdUt6iA2GaQaoG";
-  private static final String TAG = LaunchController.class.getSimpleName();
-  private boolean mIsDelayedInitDone = false;
-  public Handler mUIHandler = new Handler(Looper.getMainLooper())
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      switch (paramAnonymousMessage.what)
-      {
-      }
-      do
-      {
-        return;
-      } while (paramAnonymousMessage.arg1 != 0);
-      LogUtil.e("NaviActivity", StyleManager.getString(2131296545));
+public class LaunchController {
+    private static final String ACCESS_KEY = "1Z7v3O9UhsHdUt6iA2GaQaoG";
+    private static final String TAG = LaunchController.class.getSimpleName();
+    private boolean mIsDelayedInitDone;
+    public Handler mUIHandler;
+
+    private static class LazyHolder {
+        private static final LaunchController instance = new LaunchController();
+
+        private LazyHolder() {
+        }
     }
-  };
-  
-  private void delayedInit()
-  {
-    BNSettingManager.initEngine();
-    BNLocationManagerProxy.getInstance().getLastValidLocation();
-    verifySDK();
-  }
-  
-  public static LaunchController getInstance()
-  {
-    return LazyHolder.instance;
-  }
-  
-  private void verifySDK()
-  {
-    BNKeyVerify.getInstance().asyncVerify("1Z7v3O9UhsHdUt6iA2GaQaoG", this.mUIHandler);
-  }
-  
-  /* Error */
-  public void asyncDelayedInit(final Handler paramHandler, long paramLong)
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: aload_1
-    //   3: ifnull +14 -> 17
-    //   6: aload_0
-    //   7: getfield 36	com/baidu/navi/controller/LaunchController:mIsDelayedInitDone	Z
-    //   10: istore 4
-    //   12: iload 4
-    //   14: ifeq +6 -> 20
-    //   17: aload_0
-    //   18: monitorexit
-    //   19: return
-    //   20: aload_1
-    //   21: new 8	com/baidu/navi/controller/LaunchController$2
-    //   24: dup
-    //   25: aload_0
-    //   26: aload_1
-    //   27: invokespecial 92	com/baidu/navi/controller/LaunchController$2:<init>	(Lcom/baidu/navi/controller/LaunchController;Landroid/os/Handler;)V
-    //   30: lload_2
-    //   31: invokevirtual 98	android/os/Handler:postDelayed	(Ljava/lang/Runnable;J)Z
-    //   34: pop
-    //   35: goto -18 -> 17
-    //   38: astore_1
-    //   39: aload_0
-    //   40: monitorexit
-    //   41: aload_1
-    //   42: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	43	0	this	LaunchController
-    //   0	43	1	paramHandler	Handler
-    //   0	43	2	paramLong	long
-    //   10	3	4	bool	boolean
-    // Exception table:
-    //   from	to	target	type
-    //   6	12	38	finally
-    //   20	35	38	finally
-  }
-  
-  public boolean getInitFinished()
-  {
-    return this.mIsDelayedInitDone;
-  }
-  
-  private static class LazyHolder
-  {
-    private static final LaunchController instance = new LaunchController(null);
-  }
+
+    public static LaunchController getInstance() {
+        return LazyHolder.instance;
+    }
+
+    private LaunchController() {
+        this.mIsDelayedInitDone = false;
+        this.mUIHandler = new Handler(Looper.getMainLooper()) {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case CommandConst.K_MSG_SDKOP_VERIFY /*1302*/:
+                        if (msg.arg1 == 0) {
+                            LogUtil.m15791e("NaviActivity", StyleManager.getString(C0965R.string.key_verify_succ));
+                            return;
+                        }
+                        return;
+                    default:
+                        return;
+                }
+            }
+        };
+    }
+
+    public synchronized void asyncDelayedInit(final Handler handler, long delayedMillis) {
+        if (handler != null) {
+            if (!this.mIsDelayedInitDone) {
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        NaviAccountUtils.getInstance().initAccount(BaseFragment.getNaviActivity());
+                        LaunchController.this.delayedInit();
+                        UserCenterController.getInstance().setDataUpdate(handler);
+                        if (NaviAccountUtils.getInstance().isLogin()) {
+                            UserCenterController.getInstance().startUpdateUserInfo(1, handler);
+                        } else {
+                            UserCenterController.getInstance().startUpdateUserInfo(0, handler);
+                        }
+                        LaunchController.this.mIsDelayedInitDone = true;
+                    }
+                }, delayedMillis);
+            }
+        }
+    }
+
+    public boolean getInitFinished() {
+        return this.mIsDelayedInitDone;
+    }
+
+    private void delayedInit() {
+        BNSettingManager.initEngine();
+        GeoPoint point = BNLocationManagerProxy.getInstance().getLastValidLocation();
+        verifySDK();
+    }
+
+    private void verifySDK() {
+        BNKeyVerify.getInstance().asyncVerify(ACCESS_KEY, this.mUIHandler);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/controller/LaunchController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

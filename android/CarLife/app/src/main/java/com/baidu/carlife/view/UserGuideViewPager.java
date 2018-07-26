@@ -5,45 +5,33 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-public class UserGuideViewPager
-  extends ViewPager
-{
-  private boolean a;
-  
-  public UserGuideViewPager(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public UserGuideViewPager(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public boolean onInterceptTouchEvent(MotionEvent paramMotionEvent)
-  {
-    if (this.a) {
-      return super.onInterceptTouchEvent(paramMotionEvent);
+public class UserGuideViewPager extends ViewPager {
+    /* renamed from: a */
+    private boolean f7303a;
+
+    public UserGuideViewPager(Context context) {
+        super(context);
     }
-    return false;
-  }
-  
-  public boolean onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    if (this.a) {
-      return super.onTouchEvent(paramMotionEvent);
+
+    public UserGuideViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-    return false;
-  }
-  
-  public void setScrollOperationFlag(boolean paramBoolean)
-  {
-    this.a = paramBoolean;
-  }
+
+    public void setScrollOperationFlag(boolean flag) {
+        this.f7303a = flag;
+    }
+
+    public boolean onTouchEvent(MotionEvent arg0) {
+        if (this.f7303a) {
+            return super.onTouchEvent(arg0);
+        }
+        return false;
+    }
+
+    public boolean onInterceptTouchEvent(MotionEvent arg0) {
+        if (this.f7303a) {
+            return super.onInterceptTouchEvent(arg0);
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/UserGuideViewPager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

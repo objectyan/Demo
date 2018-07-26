@@ -3,6 +3,7 @@ package com.baidu.navisdk.util.common;
 import android.content.Context;
 import android.os.Build;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -13,552 +14,395 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import org.json.JSONObject;
 
-public class SystemInfoUtils
-{
-  public static final String K_CPU_FEATURE_NEON = "neon";
-  public static final String K_CPU_FEATURE_UNKNOWN = "unknown";
-  public static final String K_CPU_FEATURE_VFP = "vfp";
-  public static final String K_CPU_FEATURE_VFPV3 = "vfpv3";
-  public static final String K_CPU_MODEL_UNKNOWN = "unknown";
-  public static final String K_CPU_MODEL_V5 = "armv5";
-  public static final String K_CPU_MODEL_V6 = "armv6";
-  public static final String K_CPU_MODEL_V7 = "armv7";
-  public static final String K_CPU_MODEL_X86 = "x86";
-  private static final String kCpuInfoMaxFreqFilePath = "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq";
-  
-  public static CPUInfo getCPUInfo()
-  {
-    for (;;)
-    {
-      try
-      {
-        localObject = new byte['Ѐ'];
-        new RandomAccessFile("/proc/cpuinfo", "r").read((byte[])localObject);
-        localObject = new String((byte[])localObject);
-        int i = ((String)localObject).indexOf(0);
-        if (i == -1) {
-          continue;
+public class SystemInfoUtils {
+    public static final String K_CPU_FEATURE_NEON = "neon";
+    public static final String K_CPU_FEATURE_UNKNOWN = "unknown";
+    public static final String K_CPU_FEATURE_VFP = "vfp";
+    public static final String K_CPU_FEATURE_VFPV3 = "vfpv3";
+    public static final String K_CPU_MODEL_UNKNOWN = "unknown";
+    public static final String K_CPU_MODEL_V5 = "armv5";
+    public static final String K_CPU_MODEL_V6 = "armv6";
+    public static final String K_CPU_MODEL_V7 = "armv7";
+    public static final String K_CPU_MODEL_X86 = "x86";
+    private static final String kCpuInfoMaxFreqFilePath = "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq";
+
+    public static class CPUInfo {
+        public static final int CPU_FEATURE_NEON = 256;
+        public static final int CPU_FEATURE_UNKNOWS = 0;
+        public static final int CPU_FEATURE_VFP = 1;
+        public static final int CPU_FEATURE_VFPV3 = 16;
+        public static final int CPU_TYPE_ARMV5TE = 1;
+        public static final int CPU_TYPE_ARMV6 = 16;
+        public static final int CPU_TYPE_ARMV7 = 256;
+        public static final int CPU_TYPE_UNKNOWN = 0;
+        public double mBogoMips;
+        public int mCPUCount;
+        public int mCPUFeature;
+        public long mCPUMaxFreq;
+        public int mCPUType;
+    }
+
+    public static String getMobileInfo() {
+        JSONObject mbInfo = new JSONObject();
+        try {
+            for (Field field : Build.class.getDeclaredFields()) {
+                field.setAccessible(true);
+                mbInfo.put(field.getName(), field.get(null).toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        localObject = ((String)localObject).substring(0, i);
-      }
-      catch (IOException localIOException)
-      {
-        Object localObject = "";
-        localIOException.printStackTrace();
-        continue;
-      }
-      localObject = parseCPUInfo((String)localObject);
-      ((CPUInfo)localObject).mCPUMaxFreq = getMaxCpuFreq();
-      return (CPUInfo)localObject;
+        return mbInfo.toString();
     }
-  }
-  
-  public static String getCpuFeature()
-  {
-    CPUInfo localCPUInfo = getCPUInfo();
-    if ((localCPUInfo.mCPUFeature & 0x100) == 256) {
-      return "neon";
-    }
-    if ((localCPUInfo.mCPUFeature & 0x1) == 1) {
-      return "vfp";
-    }
-    if ((localCPUInfo.mCPUFeature & 0x10) == 16) {
-      return "vfpv3";
-    }
-    return "unknown";
-  }
-  
-  public static String getCpuModel()
-  {
-    CPUInfo localCPUInfo = getCPUInfo();
-    if ((localCPUInfo.mCPUType & 0x1) == 1) {
-      return "armv5";
-    }
-    if ((localCPUInfo.mCPUType & 0x10) == 16) {
-      return "armv6";
-    }
-    if ((localCPUInfo.mCPUType & 0x100) == 256) {
-      return "armv7";
-    }
-    return "unknown";
-  }
-  
-  public static String getCpuString()
-  {
-    if (Build.CPU_ABI.equalsIgnoreCase("x86")) {
-      return "Intel";
-    }
-    try
-    {
-      Object localObject = new byte['Ѐ'];
-      new RandomAccessFile("/proc/cpuinfo", "r").read((byte[])localObject);
-      localObject = new String((byte[])localObject);
-      int i = ((String)localObject).indexOf(0);
-      if (i != -1)
-      {
-        localObject = ((String)localObject).substring(0, i);
-        return (String)localObject;
-      }
-      return (String)localObject;
-    }
-    catch (IOException localIOException)
-    {
-      localIOException.printStackTrace();
-    }
-    return "";
-  }
-  
-  public static String getCpuType()
-  {
-    String str2 = getCpuString();
-    String str1;
-    if (str2.contains("ARMv5"))
-    {
-      str1 = "armv5";
-      if (!str2.contains("neon")) {
-        break label95;
-      }
-      str1 = str1 + "_neon";
-    }
-    for (;;)
-    {
-      return str1;
-      if (str2.contains("ARMv6"))
-      {
-        str1 = "armv6";
-        break;
-      }
-      if (str2.contains("ARMv7"))
-      {
-        str1 = "armv7";
-        break;
-      }
-      if (str2.contains("Intel"))
-      {
-        str1 = "x86";
-        break;
-      }
-      return "unknown";
-      label95:
-      if (str2.contains("vfpv3")) {
-        str1 = str1 + "_vfpv3";
-      } else if (str2.contains(" vfp")) {
-        str1 = str1 + "_vfp";
-      } else {
-        str1 = str1 + "_none";
-      }
-    }
-  }
-  
-  public static String getIpAddress(Context paramContext)
-  {
-    localObject = null;
-    try
-    {
-      Enumeration localEnumeration1 = NetworkInterface.getNetworkInterfaces();
-      if (localEnumeration1.hasMoreElements())
-      {
-        Enumeration localEnumeration2 = ((NetworkInterface)localEnumeration1.nextElement()).getInetAddresses();
-        paramContext = (Context)localObject;
-        for (;;)
-        {
-          localObject = paramContext;
-          if (!localEnumeration2.hasMoreElements()) {
-            break;
-          }
-          localObject = (InetAddress)localEnumeration2.nextElement();
-          if (!((InetAddress)localObject).isLoopbackAddress()) {
-            paramContext = ((InetAddress)localObject).getHostAddress().toString();
-          }
+
+    public static String getCpuString() {
+        if (Build.CPU_ABI.equalsIgnoreCase(K_CPU_MODEL_X86)) {
+            return "Intel";
         }
-      }
-      return (String)localObject;
-    }
-    catch (SocketException paramContext)
-    {
-      return null;
-    }
-  }
-  
-  /* Error */
-  private static int getMaxCpuFreq()
-  {
-    // Byte code:
-    //   0: iconst_0
-    //   1: istore_1
-    //   2: iconst_0
-    //   3: istore_0
-    //   4: aconst_null
-    //   5: astore 9
-    //   7: aconst_null
-    //   8: astore 4
-    //   10: aconst_null
-    //   11: astore 8
-    //   13: aconst_null
-    //   14: astore 7
-    //   16: aconst_null
-    //   17: astore_3
-    //   18: aconst_null
-    //   19: astore 6
-    //   21: aconst_null
-    //   22: astore 5
-    //   24: new 181	java/io/FileReader
-    //   27: dup
-    //   28: ldc 36
-    //   30: invokespecial 184	java/io/FileReader:<init>	(Ljava/lang/String;)V
-    //   33: astore_2
-    //   34: new 186	java/io/BufferedReader
-    //   37: dup
-    //   38: aload_2
-    //   39: invokespecial 189	java/io/BufferedReader:<init>	(Ljava/io/Reader;)V
-    //   42: astore_3
-    //   43: aload_3
-    //   44: invokevirtual 192	java/io/BufferedReader:readLine	()Ljava/lang/String;
-    //   47: astore 4
-    //   49: aload 4
-    //   51: ifnull +12 -> 63
-    //   54: aload 4
-    //   56: invokevirtual 195	java/lang/String:trim	()Ljava/lang/String;
-    //   59: invokestatic 201	java/lang/Integer:parseInt	(Ljava/lang/String;)I
-    //   62: istore_0
-    //   63: aload_2
-    //   64: ifnull +7 -> 71
-    //   67: aload_2
-    //   68: invokevirtual 204	java/io/FileReader:close	()V
-    //   71: aload_3
-    //   72: ifnull +228 -> 300
-    //   75: aload_3
-    //   76: invokevirtual 205	java/io/BufferedReader:close	()V
-    //   79: iload_0
-    //   80: ireturn
-    //   81: astore_2
-    //   82: aload_2
-    //   83: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   86: goto -15 -> 71
-    //   89: astore_2
-    //   90: aload_2
-    //   91: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   94: iload_0
-    //   95: ireturn
-    //   96: astore 6
-    //   98: aload 8
-    //   100: astore_2
-    //   101: aload 5
-    //   103: astore_3
-    //   104: aload_2
-    //   105: astore 4
-    //   107: aload 6
-    //   109: invokevirtual 206	java/io/FileNotFoundException:printStackTrace	()V
-    //   112: aload_2
-    //   113: ifnull +7 -> 120
-    //   116: aload_2
-    //   117: invokevirtual 204	java/io/FileReader:close	()V
-    //   120: iload_1
-    //   121: istore_0
-    //   122: aload 5
-    //   124: ifnull -45 -> 79
-    //   127: aload 5
-    //   129: invokevirtual 205	java/io/BufferedReader:close	()V
-    //   132: iconst_0
-    //   133: ireturn
-    //   134: astore_2
-    //   135: aload_2
-    //   136: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   139: iconst_0
-    //   140: ireturn
-    //   141: astore_2
-    //   142: aload_2
-    //   143: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   146: goto -26 -> 120
-    //   149: astore 6
-    //   151: aload 9
-    //   153: astore_2
-    //   154: aload 7
-    //   156: astore 5
-    //   158: aload 5
-    //   160: astore_3
-    //   161: aload_2
-    //   162: astore 4
-    //   164: aload 6
-    //   166: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   169: aload_2
-    //   170: ifnull +7 -> 177
-    //   173: aload_2
-    //   174: invokevirtual 204	java/io/FileReader:close	()V
-    //   177: iload_1
-    //   178: istore_0
-    //   179: aload 5
-    //   181: ifnull -102 -> 79
-    //   184: aload 5
-    //   186: invokevirtual 205	java/io/BufferedReader:close	()V
-    //   189: iconst_0
-    //   190: ireturn
-    //   191: astore_2
-    //   192: aload_2
-    //   193: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   196: iconst_0
-    //   197: ireturn
-    //   198: astore_2
-    //   199: aload_2
-    //   200: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   203: goto -26 -> 177
-    //   206: astore_2
-    //   207: aload 4
-    //   209: ifnull +8 -> 217
-    //   212: aload 4
-    //   214: invokevirtual 204	java/io/FileReader:close	()V
-    //   217: aload_3
-    //   218: ifnull +7 -> 225
-    //   221: aload_3
-    //   222: invokevirtual 205	java/io/BufferedReader:close	()V
-    //   225: aload_2
-    //   226: athrow
-    //   227: astore 4
-    //   229: aload 4
-    //   231: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   234: goto -17 -> 217
-    //   237: astore_3
-    //   238: aload_3
-    //   239: invokevirtual 88	java/io/IOException:printStackTrace	()V
-    //   242: goto -17 -> 225
-    //   245: astore 5
-    //   247: aload 6
-    //   249: astore_3
-    //   250: aload_2
-    //   251: astore 4
-    //   253: aload 5
-    //   255: astore_2
-    //   256: goto -49 -> 207
-    //   259: astore 5
-    //   261: aload_2
-    //   262: astore 4
-    //   264: aload 5
-    //   266: astore_2
-    //   267: goto -60 -> 207
-    //   270: astore 6
-    //   272: aload 7
-    //   274: astore 5
-    //   276: goto -118 -> 158
-    //   279: astore 6
-    //   281: aload_3
-    //   282: astore 5
-    //   284: goto -126 -> 158
-    //   287: astore 6
-    //   289: goto -188 -> 101
-    //   292: astore 6
-    //   294: aload_3
-    //   295: astore 5
-    //   297: goto -196 -> 101
-    //   300: iload_0
-    //   301: ireturn
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   3	298	0	i	int
-    //   1	177	1	j	int
-    //   33	35	2	localFileReader	FileReader
-    //   81	2	2	localIOException1	IOException
-    //   89	2	2	localIOException2	IOException
-    //   100	17	2	localObject1	Object
-    //   134	2	2	localIOException3	IOException
-    //   141	2	2	localIOException4	IOException
-    //   153	21	2	localObject2	Object
-    //   191	2	2	localIOException5	IOException
-    //   198	2	2	localIOException6	IOException
-    //   206	45	2	localObject3	Object
-    //   255	12	2	localObject4	Object
-    //   17	205	3	localObject5	Object
-    //   237	2	3	localIOException7	IOException
-    //   249	46	3	localObject6	Object
-    //   8	205	4	localObject7	Object
-    //   227	3	4	localIOException8	IOException
-    //   251	12	4	localObject8	Object
-    //   22	163	5	localObject9	Object
-    //   245	9	5	localObject10	Object
-    //   259	6	5	localObject11	Object
-    //   274	22	5	localObject12	Object
-    //   19	1	6	localObject13	Object
-    //   96	12	6	localFileNotFoundException1	java.io.FileNotFoundException
-    //   149	99	6	localIOException9	IOException
-    //   270	1	6	localIOException10	IOException
-    //   279	1	6	localIOException11	IOException
-    //   287	1	6	localFileNotFoundException2	java.io.FileNotFoundException
-    //   292	1	6	localFileNotFoundException3	java.io.FileNotFoundException
-    //   14	259	7	localObject14	Object
-    //   11	88	8	localObject15	Object
-    //   5	147	9	localObject16	Object
-    // Exception table:
-    //   from	to	target	type
-    //   67	71	81	java/io/IOException
-    //   75	79	89	java/io/IOException
-    //   24	34	96	java/io/FileNotFoundException
-    //   127	132	134	java/io/IOException
-    //   116	120	141	java/io/IOException
-    //   24	34	149	java/io/IOException
-    //   184	189	191	java/io/IOException
-    //   173	177	198	java/io/IOException
-    //   24	34	206	finally
-    //   107	112	206	finally
-    //   164	169	206	finally
-    //   212	217	227	java/io/IOException
-    //   221	225	237	java/io/IOException
-    //   34	43	245	finally
-    //   43	49	259	finally
-    //   54	63	259	finally
-    //   34	43	270	java/io/IOException
-    //   43	49	279	java/io/IOException
-    //   54	63	279	java/io/IOException
-    //   34	43	287	java/io/FileNotFoundException
-    //   43	49	292	java/io/FileNotFoundException
-    //   54	63	292	java/io/FileNotFoundException
-  }
-  
-  public static String getMobileInfo()
-  {
-    localJSONObject = new JSONObject();
-    try
-    {
-      Field[] arrayOfField = Build.class.getDeclaredFields();
-      int j = arrayOfField.length;
-      int i = 0;
-      while (i < j)
-      {
-        Field localField = arrayOfField[i];
-        localField.setAccessible(true);
-        localJSONObject.put(localField.getName(), localField.get(null).toString());
-        i += 1;
-      }
-      return localJSONObject.toString();
-    }
-    catch (Exception localException)
-    {
-      localException.printStackTrace();
-    }
-  }
-  
-  public static long getTotalMemory()
-  {
-    long l = 0L;
-    try
-    {
-      FileReader localFileReader = new FileReader("/proc/meminfo");
-      BufferedReader localBufferedReader = new BufferedReader(localFileReader, 8192);
-      String str = localBufferedReader.readLine();
-      if (str != null) {
-        l = Integer.valueOf(str.split("\\s+")[1]).intValue() / 1024;
-      }
-      localBufferedReader.close();
-      localFileReader.close();
-      return l;
-    }
-    catch (IOException localIOException) {}
-    return -1L;
-  }
-  
-  private static CPUInfo parseCPUInfo(String paramString)
-  {
-    if ((paramString == null) || ("".equals(paramString))) {
-      paramString = null;
-    }
-    CPUInfo localCPUInfo;
-    String[] arrayOfString;
-    int k;
-    int i;
-    label146:
-    do
-    {
-      return paramString;
-      localCPUInfo = new CPUInfo();
-      localCPUInfo.mCPUType = 0;
-      localCPUInfo.mCPUFeature = 0;
-      localCPUInfo.mCPUCount = 1;
-      localCPUInfo.mBogoMips = 0.0D;
-      if (!paramString.contains("ARMv5")) {
-        break;
-      }
-      localCPUInfo.mCPUType = 1;
-      if (paramString.contains("neon")) {
-        localCPUInfo.mCPUFeature |= 0x100;
-      }
-      if (paramString.contains("vfpv3")) {
-        localCPUInfo.mCPUFeature |= 0x10;
-      }
-      if (paramString.contains(" vfp")) {
-        localCPUInfo.mCPUFeature |= 0x1;
-      }
-      arrayOfString = paramString.split("\n");
-      k = arrayOfString.length;
-      i = 0;
-      paramString = localCPUInfo;
-    } while (i >= k);
-    paramString = arrayOfString[i];
-    int j;
-    if (paramString.contains("CPU variant"))
-    {
-      j = paramString.indexOf(": ");
-      if (j >= 0) {
-        paramString = paramString.substring(j + 2);
-      }
-    }
-    for (;;)
-    {
-      try
-      {
-        localCPUInfo.mCPUCount = Integer.decode(paramString).intValue();
-        if (localCPUInfo.mCPUCount != 0) {
-          continue;
+        String strInfo = "";
+        try {
+            byte[] bs = new byte[1024];
+            new RandomAccessFile("/proc/cpuinfo", "r").read(bs);
+            String ret = new String(bs);
+            int index = ret.indexOf(0);
+            if (index != -1) {
+                return ret.substring(0, index);
+            }
+            return ret;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return strInfo;
         }
-        j = 1;
-        localCPUInfo.mCPUCount = j;
-      }
-      catch (NumberFormatException paramString)
-      {
-        localCPUInfo.mCPUCount = 1;
-        continue;
-      }
-      i += 1;
-      break label146;
-      if (paramString.contains("ARMv6"))
-      {
-        localCPUInfo.mCPUType = 16;
-        break;
-      }
-      if (!paramString.contains("ARMv7")) {
-        break;
-      }
-      localCPUInfo.mCPUType = 256;
-      break;
-      j = localCPUInfo.mCPUCount;
-      continue;
-      if (paramString.contains("BogoMIPS"))
-      {
-        j = paramString.indexOf(": ");
-        if (j >= 0) {
-          paramString.substring(j + 2);
-        }
-      }
     }
-  }
-  
-  public static class CPUInfo
-  {
-    public static final int CPU_FEATURE_NEON = 256;
-    public static final int CPU_FEATURE_UNKNOWS = 0;
-    public static final int CPU_FEATURE_VFP = 1;
-    public static final int CPU_FEATURE_VFPV3 = 16;
-    public static final int CPU_TYPE_ARMV5TE = 1;
-    public static final int CPU_TYPE_ARMV6 = 16;
-    public static final int CPU_TYPE_ARMV7 = 256;
-    public static final int CPU_TYPE_UNKNOWN = 0;
-    public double mBogoMips;
-    public int mCPUCount;
-    public int mCPUFeature;
-    public long mCPUMaxFreq;
-    public int mCPUType;
-  }
+
+    public static String getCpuType() {
+        String strType;
+        String strInfo = getCpuString();
+        if (strInfo.contains("ARMv5")) {
+            strType = K_CPU_MODEL_V5;
+        } else if (strInfo.contains("ARMv6")) {
+            strType = K_CPU_MODEL_V6;
+        } else if (strInfo.contains("ARMv7")) {
+            strType = K_CPU_MODEL_V7;
+        } else if (!strInfo.contains("Intel")) {
+            return "unknown";
+        } else {
+            strType = K_CPU_MODEL_X86;
+        }
+        if (strInfo.contains(K_CPU_FEATURE_NEON)) {
+            strType = strType + "_neon";
+        } else if (strInfo.contains(K_CPU_FEATURE_VFPV3)) {
+            strType = strType + "_vfpv3";
+        } else if (strInfo.contains(" vfp")) {
+            strType = strType + "_vfp";
+        } else {
+            strType = strType + "_none";
+        }
+        return strType;
+    }
+
+    public static CPUInfo getCPUInfo() {
+        String strInfo;
+        try {
+            byte[] bs = new byte[1024];
+            new RandomAccessFile("/proc/cpuinfo", "r").read(bs);
+            String ret = new String(bs);
+            int index = ret.indexOf(0);
+            if (index != -1) {
+                strInfo = ret.substring(0, index);
+            } else {
+                strInfo = ret;
+            }
+        } catch (IOException ex) {
+            strInfo = "";
+            ex.printStackTrace();
+        }
+        CPUInfo info = parseCPUInfo(strInfo);
+        info.mCPUMaxFreq = (long) getMaxCpuFreq();
+        return info;
+    }
+
+    private static int getMaxCpuFreq() {
+        FileNotFoundException e;
+        IOException e2;
+        Throwable th;
+        int result = 0;
+        FileReader fr = null;
+        BufferedReader br = null;
+        try {
+            BufferedReader br2;
+            FileReader fr2 = new FileReader(kCpuInfoMaxFreqFilePath);
+            try {
+                br2 = new BufferedReader(fr2);
+            } catch (FileNotFoundException e3) {
+                e = e3;
+                fr = fr2;
+                try {
+                    e.printStackTrace();
+                    if (fr != null) {
+                        try {
+                            fr.close();
+                        } catch (IOException e22) {
+                            e22.printStackTrace();
+                        }
+                    }
+                    if (br != null) {
+                        try {
+                            br.close();
+                        } catch (IOException e222) {
+                            e222.printStackTrace();
+                        }
+                    }
+                    return result;
+                } catch (Throwable th2) {
+                    th = th2;
+                    if (fr != null) {
+                        try {
+                            fr.close();
+                        } catch (IOException e2222) {
+                            e2222.printStackTrace();
+                        }
+                    }
+                    if (br != null) {
+                        try {
+                            br.close();
+                        } catch (IOException e22222) {
+                            e22222.printStackTrace();
+                        }
+                    }
+                    throw th;
+                }
+            } catch (IOException e4) {
+                e22222 = e4;
+                fr = fr2;
+                e22222.printStackTrace();
+                if (fr != null) {
+                    try {
+                        fr.close();
+                    } catch (IOException e222222) {
+                        e222222.printStackTrace();
+                    }
+                }
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e2222222) {
+                        e2222222.printStackTrace();
+                    }
+                }
+                return result;
+            } catch (Throwable th3) {
+                th = th3;
+                fr = fr2;
+                if (fr != null) {
+                    fr.close();
+                }
+                if (br != null) {
+                    br.close();
+                }
+                throw th;
+            }
+            try {
+                String text = br2.readLine();
+                if (text != null) {
+                    result = Integer.parseInt(text.trim());
+                }
+                if (fr2 != null) {
+                    try {
+                        fr2.close();
+                    } catch (IOException e22222222) {
+                        e22222222.printStackTrace();
+                    }
+                }
+                if (br2 != null) {
+                    try {
+                        br2.close();
+                        br = br2;
+                        fr = fr2;
+                    } catch (IOException e222222222) {
+                        e222222222.printStackTrace();
+                        br = br2;
+                        fr = fr2;
+                    }
+                } else {
+                    fr = fr2;
+                }
+            } catch (FileNotFoundException e5) {
+                e = e5;
+                br = br2;
+                fr = fr2;
+                e.printStackTrace();
+                if (fr != null) {
+                    fr.close();
+                }
+                if (br != null) {
+                    br.close();
+                }
+                return result;
+            } catch (IOException e6) {
+                e222222222 = e6;
+                br = br2;
+                fr = fr2;
+                e222222222.printStackTrace();
+                if (fr != null) {
+                    fr.close();
+                }
+                if (br != null) {
+                    br.close();
+                }
+                return result;
+            } catch (Throwable th4) {
+                th = th4;
+                br = br2;
+                fr = fr2;
+                if (fr != null) {
+                    fr.close();
+                }
+                if (br != null) {
+                    br.close();
+                }
+                throw th;
+            }
+        } catch (FileNotFoundException e7) {
+            e = e7;
+            e.printStackTrace();
+            if (fr != null) {
+                fr.close();
+            }
+            if (br != null) {
+                br.close();
+            }
+            return result;
+        } catch (IOException e8) {
+            e222222222 = e8;
+            e222222222.printStackTrace();
+            if (fr != null) {
+                fr.close();
+            }
+            if (br != null) {
+                br.close();
+            }
+            return result;
+        }
+        return result;
+    }
+
+    private static CPUInfo parseCPUInfo(String cpuInfo) {
+        if (cpuInfo == null || "".equals(cpuInfo)) {
+            return null;
+        }
+        CPUInfo ci = new CPUInfo();
+        ci.mCPUType = 0;
+        ci.mCPUFeature = 0;
+        ci.mCPUCount = 1;
+        ci.mBogoMips = 0.0d;
+        if (cpuInfo.contains("ARMv5")) {
+            ci.mCPUType = 1;
+        } else if (cpuInfo.contains("ARMv6")) {
+            ci.mCPUType = 16;
+        } else if (cpuInfo.contains("ARMv7")) {
+            ci.mCPUType = 256;
+        }
+        if (cpuInfo.contains(K_CPU_FEATURE_NEON)) {
+            ci.mCPUFeature |= 256;
+        }
+        if (cpuInfo.contains(K_CPU_FEATURE_VFPV3)) {
+            ci.mCPUFeature |= 16;
+        }
+        if (cpuInfo.contains(" vfp")) {
+            ci.mCPUFeature |= 1;
+        }
+        for (String item : cpuInfo.split("\n")) {
+            int index;
+            if (item.contains("CPU variant")) {
+                index = item.indexOf(": ");
+                if (index >= 0) {
+                    try {
+                        int i;
+                        ci.mCPUCount = Integer.decode(item.substring(index + 2)).intValue();
+                        if (ci.mCPUCount == 0) {
+                            i = 1;
+                        } else {
+                            i = ci.mCPUCount;
+                        }
+                        ci.mCPUCount = i;
+                    } catch (NumberFormatException e) {
+                        ci.mCPUCount = 1;
+                    }
+                }
+            } else if (item.contains("BogoMIPS")) {
+                index = item.indexOf(": ");
+                if (index >= 0) {
+                    item.substring(index + 2);
+                }
+            }
+        }
+        return ci;
+    }
+
+    public static long getTotalMemory() {
+        long initial_memory = 0;
+        try {
+            FileReader localFileReader = new FileReader("/proc/meminfo");
+            BufferedReader localBufferedReader = new BufferedReader(localFileReader, 8192);
+            String str2 = localBufferedReader.readLine();
+            if (str2 != null) {
+                initial_memory = (long) (Integer.valueOf(str2.split("\\s+")[1]).intValue() / 1024);
+            }
+            localBufferedReader.close();
+            localFileReader.close();
+            return initial_memory;
+        } catch (IOException e) {
+            return -1;
+        }
+    }
+
+    public static String getCpuModel() {
+        String cpu_model = "";
+        CPUInfo in = getCPUInfo();
+        if ((in.mCPUType & 1) == 1) {
+            return K_CPU_MODEL_V5;
+        }
+        if ((in.mCPUType & 16) == 16) {
+            return K_CPU_MODEL_V6;
+        }
+        if ((in.mCPUType & 256) == 256) {
+            return K_CPU_MODEL_V7;
+        }
+        return "unknown";
+    }
+
+    public static String getCpuFeature() {
+        String cpu_feature = "";
+        CPUInfo in = getCPUInfo();
+        if ((in.mCPUFeature & 256) == 256) {
+            return K_CPU_FEATURE_NEON;
+        }
+        if ((in.mCPUFeature & 1) == 1) {
+            return K_CPU_FEATURE_VFP;
+        }
+        if ((in.mCPUFeature & 16) == 16) {
+            return K_CPU_FEATURE_VFPV3;
+        }
+        return "unknown";
+    }
+
+    public static String getIpAddress(Context mContext) {
+        String ipAddress = null;
+        try {
+            Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+            while (en.hasMoreElements()) {
+                Enumeration<InetAddress> enumIpAddr = ((NetworkInterface) en.nextElement()).getInetAddresses();
+                while (enumIpAddr.hasMoreElements()) {
+                    InetAddress inetAddress = (InetAddress) enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        ipAddress = inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+            return ipAddress;
+        } catch (SocketException e) {
+            return null;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/common/SystemInfoUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,53 +2,33 @@ package com.baidu.navi.protocol.pack;
 
 import android.os.Bundle;
 import com.baidu.navi.protocol.model.DataStruct;
-import com.baidu.navi.protocol.model.DataStruct.CommandResult;
 import com.baidu.navi.protocol.model.GetMapScaleDataStruct;
 import com.baidu.navi.protocol.util.PackerUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GetMapScalePacker
-  extends BasePacker
-{
-  public String packResult(DataStruct paramDataStruct)
-  {
-    String str = "";
-    Object localObject = str;
-    Bundle localBundle;
-    if (paramDataStruct != null)
-    {
-      localBundle = ((GetMapScaleDataStruct)paramDataStruct).commandResult.params;
-      localObject = str;
-      if (localBundle != null)
-      {
-        localObject = new JSONObject();
-        prePackResult((JSONObject)localObject, paramDataStruct);
-      }
+public class GetMapScalePacker extends BasePacker {
+    public String packResult(DataStruct ds) {
+        String result = "";
+        if (ds == null) {
+            return result;
+        }
+        Bundle params = ((GetMapScaleDataStruct) ds).commandResult.params;
+        if (params == null) {
+            return result;
+        }
+        JSONObject extDataObj = new JSONObject();
+        prePackResult(extDataObj, ds);
+        try {
+            extDataObj.put(GetMapScaleDataStruct.KEY_MAP_SCALE_LEVEL, params.getInt(GetMapScaleDataStruct.KEY_MAP_SCALE_LEVEL, 0));
+            extDataObj.put(GetMapScaleDataStruct.KEY_MAP_SCALE_DIS, params.getInt(GetMapScaleDataStruct.KEY_MAP_SCALE_DIS, 0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONObject obj = PackerUtil.createResultJSON(extDataObj);
+        if (obj != null) {
+            return obj.toString();
+        }
+        return result;
     }
-    try
-    {
-      ((JSONObject)localObject).put("scaleLevel", localBundle.getInt("scaleLevel", 0));
-      ((JSONObject)localObject).put("scaleDis", localBundle.getInt("scaleDis", 0));
-      paramDataStruct = PackerUtil.createResultJSON((JSONObject)localObject);
-      localObject = str;
-      if (paramDataStruct != null) {
-        localObject = paramDataStruct.toString();
-      }
-      return (String)localObject;
-    }
-    catch (JSONException paramDataStruct)
-    {
-      for (;;)
-      {
-        paramDataStruct.printStackTrace();
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/protocol/pack/GetMapScalePacker.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

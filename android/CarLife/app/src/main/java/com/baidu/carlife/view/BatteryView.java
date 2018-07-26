@@ -12,217 +12,209 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.baidu.carlife.d.b.e;
-import com.baidu.carlife.d.b.f;
-import com.baidu.carlife.d.b.g;
+import com.baidu.carlife.p075d.C1431b.C1423e;
+import com.baidu.carlife.p075d.C1431b.C1424f;
+import com.baidu.carlife.p075d.C1431b.C1425g;
 
-public class BatteryView
-  extends RelativeLayout
-{
-  private Context a;
-  private BatteryReceiver b;
-  private View c;
-  private ImageView d;
-  private View e;
-  private int f = 0;
-  private int g = -1;
-  private boolean h = false;
-  private Bitmap i;
-  private Bitmap j;
-  private Bitmap k;
-  private Paint l;
-  private int m = 0;
-  private int n = 0;
-  private int o = 0;
-  private int p = 0;
-  
-  public BatteryView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public BatteryView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    this.a = paramContext;
-    a(paramContext);
-  }
-  
-  public static int a(Context paramContext, float paramFloat)
-  {
-    return (int)(paramFloat * paramContext.getResources().getDisplayMetrics().density + 0.5F);
-  }
-  
-  private void a(int paramInt)
-  {
-    this.g = paramInt;
-    this.h = false;
-    if (this.e != null) {
-      this.e.setVisibility(8);
+public class BatteryView extends RelativeLayout {
+    /* renamed from: a */
+    private Context f7057a;
+    /* renamed from: b */
+    private BatteryReceiver f7058b;
+    /* renamed from: c */
+    private View f7059c;
+    /* renamed from: d */
+    private ImageView f7060d;
+    /* renamed from: e */
+    private View f7061e;
+    /* renamed from: f */
+    private int f7062f;
+    /* renamed from: g */
+    private int f7063g;
+    /* renamed from: h */
+    private boolean f7064h;
+    /* renamed from: i */
+    private Bitmap f7065i;
+    /* renamed from: j */
+    private Bitmap f7066j;
+    /* renamed from: k */
+    private Bitmap f7067k;
+    /* renamed from: l */
+    private Paint f7068l;
+    /* renamed from: m */
+    private int f7069m;
+    /* renamed from: n */
+    private int f7070n;
+    /* renamed from: o */
+    private int f7071o;
+    /* renamed from: p */
+    private int f7072p;
+
+    private class BatteryReceiver extends BroadcastReceiver {
+        /* renamed from: a */
+        final /* synthetic */ BatteryView f7056a;
+
+        private BatteryReceiver(BatteryView batteryView) {
+            this.f7056a = batteryView;
+        }
+
+        public void onReceive(Context context, Intent intent) {
+            if ("android.intent.action.BATTERY_CHANGED".equals(intent.getAction())) {
+                int level = intent.getIntExtra("level", 0);
+                switch (intent.getIntExtra("status", 1)) {
+                    case 2:
+                        this.f7056a.m8389b(level);
+                        return;
+                    case 3:
+                        this.f7056a.m8385a(level);
+                        return;
+                    case 4:
+                        this.f7056a.m8385a(level);
+                        return;
+                    case 5:
+                        this.f7056a.m8389b(100);
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
     }
-    if (this.d != null) {}
-    setType(this.f);
-    invalidate();
-  }
-  
-  private void a(Context paramContext)
-  {
-    ((LayoutInflater)paramContext.getSystemService("layout_inflater")).inflate(b.g.widget_battery_view, this, true);
-    this.c = findViewById(b.f.rl_battery);
-    this.d = ((ImageView)findViewById(b.f.iv_battery_state));
-    if (this.d != null) {
-      this.d.setVisibility(8);
+
+    public BatteryView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
-    this.e = findViewById(b.f.iv_charge);
-    if (this.e != null)
-    {
-      this.e.setVisibility(8);
-      this.m = this.e.getPaddingLeft();
-      this.n = this.e.getPaddingRight();
-      this.o = this.e.getPaddingBottom();
-      this.p = this.e.getPaddingTop();
+
+    public BatteryView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.f7062f = 0;
+        this.f7063g = -1;
+        this.f7064h = false;
+        this.f7069m = 0;
+        this.f7070n = 0;
+        this.f7071o = 0;
+        this.f7072p = 0;
+        this.f7057a = context;
+        m8386a(context);
     }
-    paramContext = getResources();
-    this.j = BitmapFactory.decodeResource(paramContext, b.e.statusbaric_ic_battery_electricity);
-    this.i = BitmapFactory.decodeResource(paramContext, b.e.statusbaric_ic_battery_electricity_black);
-    this.l = new Paint();
-    this.k = Bitmap.createBitmap(this.j.getWidth(), this.j.getHeight(), Bitmap.Config.ARGB_8888);
-    this.k.eraseColor(-65536);
-  }
-  
-  public static int b(Context paramContext, float paramFloat)
-  {
-    return (int)(paramFloat / paramContext.getResources().getDisplayMetrics().density + 0.5F);
-  }
-  
-  private void b(int paramInt)
-  {
-    this.h = true;
-    this.g = paramInt;
-    setType(this.f);
-    invalidate();
-  }
-  
-  protected void onAttachedToWindow()
-  {
-    super.onAttachedToWindow();
-    IntentFilter localIntentFilter = new IntentFilter("android.intent.action.BATTERY_CHANGED");
-    this.b = new BatteryReceiver(null);
-    this.a.registerReceiver(this.b, localIntentFilter);
-  }
-  
-  protected void onDetachedFromWindow()
-  {
-    super.onDetachedFromWindow();
-    if ((this.a != null) && (this.b != null)) {
-      this.a.unregisterReceiver(this.b);
+
+    /* renamed from: a */
+    private void m8386a(Context context) {
+        ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(C1425g.widget_battery_view, this, true);
+        this.f7059c = findViewById(C1424f.rl_battery);
+        this.f7060d = (ImageView) findViewById(C1424f.iv_battery_state);
+        if (this.f7060d != null) {
+            this.f7060d.setVisibility(8);
+        }
+        this.f7061e = findViewById(C1424f.iv_charge);
+        if (this.f7061e != null) {
+            this.f7061e.setVisibility(8);
+            this.f7069m = this.f7061e.getPaddingLeft();
+            this.f7070n = this.f7061e.getPaddingRight();
+            this.f7071o = this.f7061e.getPaddingBottom();
+            this.f7072p = this.f7061e.getPaddingTop();
+        }
+        Resources res = getResources();
+        this.f7066j = BitmapFactory.decodeResource(res, C1423e.statusbaric_ic_battery_electricity);
+        this.f7065i = BitmapFactory.decodeResource(res, C1423e.statusbaric_ic_battery_electricity_black);
+        this.f7068l = new Paint();
+        this.f7067k = Bitmap.createBitmap(this.f7066j.getWidth(), this.f7066j.getHeight(), Config.ARGB_8888);
+        this.f7067k.eraseColor(-65536);
     }
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    Rect localRect1;
-    Rect localRect2;
-    if (!this.h)
-    {
-      int i1 = getHeight() - this.p - this.o;
-      int i2 = this.g * i1 / 100;
-      int i3 = this.o;
-      localRect1 = new Rect(this.m, i1 - i3 - i2, getWidth() - this.n, getHeight() - this.o);
-      i1 = this.i.getHeight() * this.g / 100;
-      localRect2 = new Rect(0, this.i.getHeight() - i1, this.i.getWidth(), this.i.getHeight());
-      if (this.g <= 20) {
-        paramCanvas.drawBitmap(this.k, localRect2, localRect1, this.l);
-      }
+
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        IntentFilter intentFilter = new IntentFilter("android.intent.action.BATTERY_CHANGED");
+        this.f7058b = new BatteryReceiver();
+        this.f7057a.registerReceiver(this.f7058b, intentFilter);
     }
-    else
-    {
-      return;
+
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (this.f7057a != null && this.f7058b != null) {
+            this.f7057a.unregisterReceiver(this.f7058b);
+        }
     }
-    if (this.f == 1)
-    {
-      paramCanvas.drawBitmap(this.i, localRect2, localRect1, this.l);
-      return;
+
+    public void setType(int type) {
+        this.f7062f = type;
+        if (!this.f7064h) {
+            if (this.f7062f == 1) {
+                setBackgroundResource(C1423e.statusbaric_ic_battery_bg_black);
+                if (this.f7060d != null) {
+                    this.f7060d.setBackgroundResource(C1423e.statusbaric_ic_battery_bg_black);
+                }
+                if (this.f7061e != null) {
+                    this.f7061e.setBackgroundResource(C1423e.statusbaric_ic_battery_charge_black);
+                }
+            } else {
+                setBackgroundResource(C1423e.statusbaric_ic_battery_bg);
+                if (this.f7060d != null) {
+                    this.f7060d.setBackgroundResource(C1423e.statusbaric_ic_battery_bg);
+                }
+                if (this.f7061e != null) {
+                    this.f7061e.setBackgroundResource(C1423e.statusbaric_ic_battery_charge);
+                }
+            }
+            invalidate();
+        } else if (this.f7062f == 1) {
+            setBackgroundResource(C1423e.statusbaric_ic_battery_charge_black);
+        } else {
+            setBackgroundResource(C1423e.statusbaric_ic_battery_charge);
+        }
     }
-    paramCanvas.drawBitmap(this.j, localRect2, localRect1, this.l);
-  }
-  
-  public void setType(int paramInt)
-  {
-    this.f = paramInt;
-    if (this.h)
-    {
-      if (this.f == 1)
-      {
-        setBackgroundResource(b.e.statusbaric_ic_battery_charge_black);
-        return;
-      }
-      setBackgroundResource(b.e.statusbaric_ic_battery_charge);
-      return;
+
+    /* renamed from: a */
+    private void m8385a(int level) {
+        this.f7063g = level;
+        this.f7064h = false;
+        if (this.f7061e != null) {
+            this.f7061e.setVisibility(8);
+        }
+        if (this.f7060d != null) {
+            setType(this.f7062f);
+            invalidate();
+        } else {
+            setType(this.f7062f);
+            invalidate();
+        }
     }
-    if (this.f == 1)
-    {
-      setBackgroundResource(b.e.statusbaric_ic_battery_bg_black);
-      if (this.d != null) {
-        this.d.setBackgroundResource(b.e.statusbaric_ic_battery_bg_black);
-      }
-      if (this.e != null) {
-        this.e.setBackgroundResource(b.e.statusbaric_ic_battery_charge_black);
-      }
+
+    /* renamed from: b */
+    private void m8389b(int level) {
+        this.f7064h = true;
+        this.f7063g = level;
+        setType(this.f7062f);
+        invalidate();
     }
-    for (;;)
-    {
-      invalidate();
-      return;
-      setBackgroundResource(b.e.statusbaric_ic_battery_bg);
-      if (this.d != null) {
-        this.d.setBackgroundResource(b.e.statusbaric_ic_battery_bg);
-      }
-      if (this.e != null) {
-        this.e.setBackgroundResource(b.e.statusbaric_ic_battery_charge);
-      }
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (!this.f7064h) {
+            int dstHeight = (getHeight() - this.f7072p) - this.f7071o;
+            Rect rectDest = new Rect(this.f7069m, (dstHeight - this.f7071o) - ((this.f7063g * dstHeight) / 100), getWidth() - this.f7070n, getHeight() - this.f7071o);
+            Rect rectBmp = new Rect(0, this.f7065i.getHeight() - ((this.f7065i.getHeight() * this.f7063g) / 100), this.f7065i.getWidth(), this.f7065i.getHeight());
+            if (this.f7063g <= 20) {
+                canvas.drawBitmap(this.f7067k, rectBmp, rectDest, this.f7068l);
+            } else if (this.f7062f == 1) {
+                canvas.drawBitmap(this.f7065i, rectBmp, rectDest, this.f7068l);
+            } else {
+                canvas.drawBitmap(this.f7066j, rectBmp, rectDest, this.f7068l);
+            }
+        }
     }
-  }
-  
-  private class BatteryReceiver
-    extends BroadcastReceiver
-  {
-    private BatteryReceiver() {}
-    
-    public void onReceive(Context paramContext, Intent paramIntent)
-    {
-      int i;
-      if ("android.intent.action.BATTERY_CHANGED".equals(paramIntent.getAction())) {
-        i = paramIntent.getIntExtra("level", 0);
-      }
-      switch (paramIntent.getIntExtra("status", 1))
-      {
-      case 1: 
-      default: 
-        return;
-      case 2: 
-        BatteryView.a(BatteryView.this, i);
-        return;
-      case 3: 
-        BatteryView.b(BatteryView.this, i);
-        return;
-      case 5: 
-        BatteryView.a(BatteryView.this, 100);
-        return;
-      }
-      BatteryView.b(BatteryView.this, i);
+
+    /* renamed from: a */
+    public static int m8384a(Context context, float dpValue) {
+        return (int) ((dpValue * context.getResources().getDisplayMetrics().density) + 0.5f);
     }
-  }
+
+    /* renamed from: b */
+    public static int m8388b(Context context, float pxValue) {
+        return (int) ((pxValue / context.getResources().getDisplayMetrics().density) + 0.5f);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/BatteryView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

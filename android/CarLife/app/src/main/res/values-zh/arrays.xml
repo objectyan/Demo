@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="carlife_setting_name">
+        <item>“小度小度”开启语音唤醒</item>
+        <item>车载画面颜色调整</item>
+        <item>导航设置</item>
+        <item>Carlife语音包</item>
+        <item>行程记录</item>
+        <item>USB调试模式</item>
+        <item>清除缓存</item>
+        <item>关于</item>
+    </string-array>
+    <string-array name="carlife_setting_name_elh">
+        <item>“小度小度”开启语音唤醒</item>
+        <item>车载画面颜色调整</item>
+        <item>导航设置</item>
+        <item>Carlife语音包</item>
+        <item>行程记录</item>
+        <item>更新后视镜固件</item>
+        <item>清除缓存</item>
+        <item>关于</item>
+    </string-array>
+    <string-array name="carlife_setting_name_usb">
+        <item>“小度小度”开启语音唤醒</item>
+        <item>车载画面颜色调整</item>
+        <item>导航设置</item>
+        <item>Carlife语音包</item>
+        <item>行程记录</item>
+        <item>清除缓存</item>
+        <item>关于</item>
+    </string-array>
+    <string-array name="custom_info_list">
+        <item>个人信息</item>
+        <item>支付管理</item>
+        <item>注销</item>
+    </string-array>
+    <string-array name="feedback_image">
+        <item>拍照</item>
+        <item>从相册选择</item>
+        <item>关闭</item>
+    </string-array>
+    <string-array name="home_discovery">
+        <item>找车位</item>
+        <item>去加油</item>
+        <item>找美食</item>
+        <item>呼叫救援</item>
+    </string-array>
+    <string-array name="home_food_menu">
+        <item>离我最近</item>
+        <item>好评优先</item>
+    </string-array>
+    <string-array name="home_help_items">
+        <item>@string/home_more_voice</item>
+        <item>@string/home_more_connect_help</item>
+        <item>@string/commonquestion_setting_title</item>
+        <item>@string/feedback</item>
+    </string-array>
+    <string-array name="home_my">
+        <item>行程信息</item>
+        <item>离线地图包</item>
+        <item>主题皮肤</item>
+        <item>设置</item>
+    </string-array>
+    <string-array name="home_my_skin">
+        <item>尊享黑</item>
+        <item>质感蓝</item>
+    </string-array>
+    <string-array name="map_ctrl_menu_item">
+        <item>@string/carlife_map_ctrl_address</item>
+        <item>@string/carlife_map_ctrl_its</item>
+        <item>@string/carlife_map_ctrl_cruise</item>
+    </string-array>
+    <string-array name="map_in_navi_route_search_list_item_keywords">
+        <item>@string/map_in_navi_route_search_keyword_oil</item>
+        <item>@string/map_in_navi_route_search_keyword_park</item>
+        <item>@string/map_in_navi_route_search_keyword_toilets</item>
+        <item>@string/map_in_navi_route_search_keyword_food</item>
+        <item>@string/map_in_navi_route_search_keyword_hotel</item>
+        <item>@string/map_in_navi_route_search_keyword_bank</item>
+    </string-array>
+    <string-array name="module_music_apps_list">
+        <item>本地音乐</item>
+        <item>QQ音乐</item>
+        <item>网易云音乐</item>
+    </string-array>
+    <string-array name="person_ctrl_menu_item">
+        <item>@string/carlife_person_ctrl_journey_setting</item>
+        <item>@string/carlife_person_ctrl_map_setting</item>
+        <item>@string/carlife_person_ctrl_voice_setting</item>
+        <item>@string/carlife_person_ctrl_help</item>
+        <item>清除缓存</item>
+        <item>@string/carlife_person_ctrl_about</item>
+    </string-array>
+    <string-array name="space_catalog_name_main">
+        <item>加油站</item>
+        <item>停车场</item>
+        <item>汽车维修</item>
+        <item>银行</item>
+        <item>餐饮</item>
+        <item>酒店</item>
+        <item>公共厕所</item>
+        <item>医院</item>
+    </string-array>
+    <string-array name="car_drv_play_more_array">
+        <item>保存到相册</item>
+        <item>删除</item>
+        <item>取消</item>
+    </string-array>
+    <string-array name="card_order_name">
+        <item>我要去</item>
+        <item>查地图</item>
+        <item>搜周边</item>
+        <item>电子狗</item>
+        <item>个人中心</item>
+        <item>路线规划</item>
+        <item>语音导航</item>
+        <item>发现</item>
+        <item>更多</item>
+    </string-array>
+    <string-array name="card_setting_name">
+        <item>语音导航</item>
+        <item>街景推荐</item>
+        <item>电子狗</item>
+    </string-array>
+    <string-array name="fav_long_press_array">
+        <item>重命名</item>
+        <item>删除</item>
+        <item>关闭</item>
+    </string-array>
+    <string-array name="home_discovery_closenavi">
+        <item>找车位</item>
+        <item>呼叫救援</item>
+    </string-array>
+    <string-array name="home_discovery_closenavi_etcp">
+        <item>ETCP</item>
+        <item>呼叫救援</item>
+    </string-array>
+    <string-array name="home_discovery_etcp">
+        <item>ETCP</item>
+        <item>去加油</item>
+        <item>找美食</item>
+        <item>呼叫救援</item>
+    </string-array>
+    <string-array name="home_my_closenavi">
+        <item>行程信息</item>
+        <item>主题皮肤</item>
+        <item>设置</item>
+    </string-array>
+    <string-array name="music_source_list">
+        <item>本地音乐</item>
+        <item>QQ音乐</item>
+        <item>网易云音乐</item>
+        <item>喜马拉雅FM</item>
+        <item>考拉FM</item>
+        <item>车悦宝</item>
+        <item>中国广播</item>
+    </string-array>
+    <string-array name="nsdk_cruise_camera_blindbend_names">
+        <item>无效值</item>
+        <item>左急转弯</item>
+        <item>右急转弯</item>
+        <item>连续转弯</item>
+    </string-array>
+    <string-array name="nsdk_cruise_camera_joint_names">
+        <item>无效值</item>
+        <item>左合流</item>
+        <item>右合流</item>
+        <item>本线合流</item>
+    </string-array>
+    <string-array name="nsdk_cruise_camera_names">
+        <item>合流</item>
+        <item>隧道</item>
+        <item>桥梁</item>
+        <item>铁路道口</item>
+        <item>急转弯</item>
+        <item>急下坡</item>
+        <item>落石区域</item>
+        <item>事故多发路段</item>
+        <item>限速拍照</item>
+        <item>闯红灯拍照</item>
+        <item>违章拍照</item>
+        <item>区间限速拍照</item>
+        <item>学校路段</item>
+        <item>路面不平</item>
+        <item>道路变窄</item>
+        <item>前面村庄</item>
+        <item>易滑路段</item>
+        <item>禁止超车</item>
+        <item>请鸣喇叭</item>
+    </string-array>
+    <string-array name="nsdk_cruise_camera_narrow_names">
+        <item>无效值</item>
+        <item>左侧变窄</item>
+        <item>右侧变窄</item>
+        <item>两侧变窄</item>
+    </string-array>
+    <string-array name="nsdk_cruise_camera_rockfall_names">
+        <item>无效值</item>
+        <item>落石区域</item>
+        <item>落石区域</item>
+    </string-array>
+    <string-array name="nsdk_cruise_camera_slop_names">
+        <item>无效值</item>
+        <item>急上坡</item>
+        <item>急下坡</item>
+        <item>连续陡坡</item>
+    </string-array>
+    <string-array name="nsdk_rg_space_catalog_id">
+        <item>7b40</item>
+        <item>2c80</item>
+        <item>7b00</item>
+        <item>7a80</item>
+    </string-array>
+    <string-array name="nsdk_rg_space_catalog_name">
+        <item>加油站</item>
+        <item>厕所</item>
+        <item>停车场</item>
+        <item>服务区</item>
+    </string-array>
+    <string-array name="persional_afternoon">
+        <item>下午好！我一直都在！</item>
+        <item>下午好！请问有什么吩咐呢？</item>
+        <item>下午好！需要为您做什么呢？</item>
+        <item>下午好！有什么可以帮您？</item>
+        <item>下午好！需要帮忙吗？</item>
+    </string-array>
+    <string-array name="persional_midnight">
+        <item>夜深了，请勿疲劳驾驶，我一直在您身边！</item>
+        <item>夜深了，请安全驾驶哦！</item>
+    </string-array>
+    <string-array name="persional_morning">
+        <item>上午好！愿您一天好心情！</item>
+        <item>上午好！请问有什么吩咐呢？</item>
+        <item>上午好！需要为您做什么呢？</item>
+        <item>上午好！有什么可以帮您？</item>
+        <item>上午好！需要帮忙吗？</item>
+    </string-array>
+    <string-array name="persional_night">
+        <item>晚上好！请您注意安全驾驶哦！</item>
+        <item>晚上好！请问有什么吩咐呢？</item>
+        <item>晚上好！需要为您做什么呢？</item>
+        <item>晚上好！有什么可以帮您？</item>
+        <item>晚上好！需要帮忙吗？</item>
+    </string-array>
+    <string-array name="persional_noon">
+        <item>中午好，吃饭了吗，您可以说“搜索附近的美食”</item>
+        <item>中午好！请问有什么吩咐呢？</item>
+        <item>中午好！需要为您做什么呢？</item>
+        <item>中午好！有什么可以帮您？</item>
+        <item>中午好！需要帮忙吗？</item>
+    </string-array>
+    <string-array name="soft_input_num">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>0</item>
+        <item>.</item>
+        <item>,</item>
+        <item>/</item>
+        <item>-</item>
+        <item>_</item>
+        <item>’</item>
+        <item>\@</item>
+        <item>;</item>
+    </string-array>
+    <string-array name="space_catalog_id">
+        <item>1</item>
+        <item>6</item>
+        <item>3</item>
+        <item>5</item>
+        <item>4</item>
+        <item>0</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>2</item>
+        <item>a</item>
+    </string-array>
+    <string-array name="space_catalog_id_bank">
+        <item>3</item>
+        <item>4041</item>
+        <item>4040</item>
+    </string-array>
+    <string-array name="space_catalog_id_car">
+        <item>0</item>
+        <item>2140</item>
+        <item>2180</item>
+        <item>2080</item>
+        <item>2100</item>
+        <item>2040</item>
+        <item>21c0</item>
+        <item>20c0</item>
+    </string-array>
+    <string-array name="space_catalog_id_catering">
+        <item>4</item>
+        <item>0840</item>
+        <item>0880</item>
+        <item>08c0</item>
+        <item>0900</item>
+        <item>0940</item>
+        <item>0980</item>
+        <item>0a00</item>
+        <item>09c0</item>
+    </string-array>
+    <string-array name="space_catalog_id_entertainment">
+        <item>8</item>
+        <item>4b01</item>
+        <item>4b02</item>
+        <item>4a80</item>
+        <item>6040</item>
+        <item>4b03</item>
+        <item>48c0</item>
+        <item>4980</item>
+        <item>49c0</item>
+    </string-array>
+    <string-array name="space_catalog_id_government">
+        <item>a</item>
+        <item>98c0</item>
+        <item>9840</item>
+        <item>9880</item>
+        <item>99c2</item>
+        <item>99c1</item>
+        <item>99c3</item>
+    </string-array>
+    <string-array name="space_catalog_id_hotel">
+        <item>5</item>
+        <item>1040</item>
+        <item>10c0</item>
+        <item>1080</item>
+        <item>1100</item>
+    </string-array>
+    <string-array name="space_catalog_id_life">
+        <item>9</item>
+        <item>3840</item>
+        <item>3880</item>
+        <item>2840</item>
+        <item>6840</item>
+        <item>2980</item>
+        <item>2940</item>
+        <item>2c80</item>
+        <item>2882</item>
+        <item>2883</item>
+        <item>2881</item>
+        <item>28c0</item>
+    </string-array>
+    <string-array name="space_catalog_id_main">
+        <item>7b40</item>
+        <item>7b00</item>
+        <item>2140</item>
+        <item>4040</item>
+        <item>0800</item>
+        <item>1000</item>
+        <item>2c80</item>
+        <item>5840</item>
+    </string-array>
+    <string-array name="space_catalog_id_medical">
+        <item>2</item>
+        <item>5840</item>
+        <item>5a80</item>
+        <item>5880</item>
+        <item>5900</item>
+    </string-array>
+    <string-array name="space_catalog_id_scenery">
+        <item>6</item>
+        <item>6040</item>
+        <item>6080</item>
+        <item>6100</item>
+        <item>6300</item>
+        <item>6280</item>
+        <item>6200</item>
+    </string-array>
+    <string-array name="space_catalog_id_shopping">
+        <item>7</item>
+        <item>1840</item>
+        <item>18c0</item>
+        <item>1880</item>
+        <item>1940</item>
+        <item>19c0</item>
+        <item>1a40</item>
+    </string-array>
+    <string-array name="space_catalog_id_traffic">
+        <item>1</item>
+        <item>7b40</item>
+        <item>7b00</item>
+        <item>7840</item>
+        <item>78c0</item>
+        <item>7900</item>
+        <item>7a80</item>
+        <item>79c0</item>
+        <item>7940</item>
+        <item>7a00</item>
+        <item>28c0</item>
+    </string-array>
+    <string-array name="space_catalog_name">
+        <item>交通</item>
+        <item>景点</item>
+        <item>银行</item>
+        <item>酒店</item>
+        <item>餐饮</item>
+        <item>汽车</item>
+        <item>购物</item>
+        <item>娱乐</item>
+        <item>生活</item>
+        <item>医疗</item>
+        <item>政府</item>
+    </string-array>
+    <string-array name="space_catalog_name_bank">
+        <item>银行</item>
+        <item>ATM机</item>
+        <item>银行</item>
+    </string-array>
+    <string-array name="space_catalog_name_car">
+        <item>汽车</item>
+        <item>汽车维修</item>
+        <item>汽车配件</item>
+        <item>汽车美容</item>
+        <item>汽车租赁</item>
+        <item>汽车销售</item>
+        <item>汽车检验</item>
+        <item>洗车</item>
+    </string-array>
+    <string-array name="space_catalog_name_catering">
+        <item>餐饮</item>
+        <item>中餐馆</item>
+        <item>西餐厅</item>
+        <item>日本菜</item>
+        <item>韩国菜</item>
+        <item>东南亚菜</item>
+        <item>自助餐</item>
+        <item>小吃</item>
+        <item>快餐</item>
+    </string-array>
+    <string-array name="space_catalog_name_entertainment">
+        <item>娱乐</item>
+        <item>酒吧</item>
+        <item>茶座</item>
+        <item>网吧</item>
+        <item>公园</item>
+        <item>咖啡厅</item>
+        <item>电影院</item>
+        <item>KTV</item>
+        <item>娱乐场所</item>
+    </string-array>
+    <string-array name="space_catalog_name_government">
+        <item>政府</item>
+        <item>政府</item>
+        <item>法院</item>
+        <item>检察院</item>
+        <item>派出所</item>
+        <item>公安局</item>
+        <item>交通局</item>
+    </string-array>
+    <string-array name="space_catalog_name_hotel">
+        <item>酒店</item>
+        <item>星级酒店</item>
+        <item>公寓酒店</item>
+        <item>快捷酒店</item>
+        <item>旅馆</item>
+    </string-array>
+    <string-array name="space_catalog_name_life">
+        <item>生活</item>
+        <item>美容</item>
+        <item>美发</item>
+        <item>邮局</item>
+        <item>学校</item>
+        <item>照相馆</item>
+        <item>图文快印</item>
+        <item>公共厕所</item>
+        <item>移动营业厅</item>
+        <item>联通营业厅</item>
+        <item>电信营业厅</item>
+        <item>车票售票点</item>
+    </string-array>
+    <string-array name="space_catalog_name_medical">
+        <item>医疗</item>
+        <item>医院</item>
+        <item>药店</item>
+        <item>诊所</item>
+        <item>急救中心</item>
+    </string-array>
+    <string-array name="space_catalog_name_scenery">
+        <item>景点</item>
+        <item>公园</item>
+        <item>游乐园</item>
+        <item>博物馆</item>
+        <item>度假村</item>
+        <item>风景区</item>
+        <item>名胜古迹</item>
+    </string-array>
+    <string-array name="space_catalog_name_shopping">
+        <item>购物</item>
+        <item>商场</item>
+        <item>家电</item>
+        <item>超市便利店</item>
+        <item>家居建材</item>
+        <item>书店</item>
+        <item>体育用品</item>
+    </string-array>
+    <string-array name="space_catalog_name_traffic">
+        <item>交通</item>
+        <item>加油站</item>
+        <item>停车场</item>
+        <item>飞机场</item>
+        <item>火车站</item>
+        <item>地铁站</item>
+        <item>服务区</item>
+        <item>公交车站</item>
+        <item>长途车站</item>
+        <item>港口码头</item>
+        <item>车票售票点</item>
+    </string-array>
+    <string-array name="tts_record_guide_list">
+        <item>导航去百度国际大厦</item>
+        <item>天气怎么样</item>
+        <item>登录百度账号</item>
+        <item>来首刘德华的歌</item>
+        <item>附近的电影院/美食</item>
+        <item>空气质量如何</item>
+        <item>刘德华是谁</item>
+        <item>打电话给小度</item>
+        <item>现在几点</item>
+    </string-array>
+    <string-array name="tts_record_home_hint_array">
+        <item>小度没听明白，试试说：导航去公司</item>
+        <item>小度没听明白，试试说：附近的加油站</item>
+        <item>小度没听明白，试试说：今天天气怎么样</item>
+        <item>小度没听明白，试试说：我要听王菲的歌</item>
+        <item>小度没听明白，试试说：打电话给小度</item>
+    </string-array>
+    <string-array name="tts_record_music_hint_array">
+        <item>小度没听明白，试试说：我要听李荣浩的歌</item>
+        <item>小度没听明白，试试说：播放音乐</item>
+        <item>小度没听明白，试试说：上一首</item>
+        <item>小度没听明白，试试说：我要听南山南</item>
+    </string-array>
+    <string-array name="tts_record_navi_hint_array">
+        <item>小度没听明白，试试说：导航去公司</item>
+        <item>小度没听明白，试试说：我要回家</item>
+        <item>小度没听明白，试试说：附近的加油站</item>
+        <item>小度没听明白，试试说：第一个</item>
+        <item>小度没听明白，试试说：导航去天安门</item>
+    </string-array>
+    <string-array name="tts_record_phone_hint_array">
+        <item>小度没听明白，试试说：打电话给妈妈</item>
+        <item>小度没听明白，试试说：打电话给10086</item>
+        <item>小度没听明白，试试说：呼叫欧阳小凌</item>
+    </string-array>
+    <string-array name="tts_record_radio_hint_array">
+        <item>小度没听明白，试试说：我要听《小王子》</item>
+        <item>小度没听明白，试试说：播放广州广播电台</item>
+        <item>小度没听明白，试试说：我要听百家讲坛</item>
+        <item>小度没听明白，试试说：我要听新闻</item>
+        <item>小度没听明白，试试说：我要听儿童节目</item>
+    </string-array>
+    <string-array name="tts_record_start_hint_array">
+        <item>我来啦！</item>
+        <item>我在呢！</item>
+        <item>请吩咐</item>
+    </string-array>
+    <string-array name="user_center_syn_array">
+        <item>同步收藏夹</item>
+        <item>同步轨迹</item>
+        <item>退出登录</item>
+        <item>取消</item>
+    </string-array>
+    <string-array name="user_center_syn_array_without_track">
+        <item>同步收藏夹</item>
+        <item>退出登录</item>
+        <item>取消</item>
+    </string-array>
+    <string-array name="voice_domain_list">
+        <item>通用功能，“前往音乐”</item>
+        <item>打电话，“打电话给小明”</item>
+        <item>用地图，“我要去百度大厦”</item>
+        <item>听音乐，“播放音乐”</item>
+    </string-array>
+    <string-array name="voice_domain_list_closenavi">
+        <item>通用功能，“前往音乐”</item>
+        <item>打电话，“打电话给小明”</item>
+        <item>听音乐，“播放音乐”</item>
+    </string-array>
+</resources>

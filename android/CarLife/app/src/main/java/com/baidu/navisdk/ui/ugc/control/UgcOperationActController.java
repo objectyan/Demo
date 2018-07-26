@@ -1,6 +1,5 @@
 package com.baidu.navisdk.ui.ugc.control;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -10,17 +9,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.widget.ImageView;
+import com.baidu.carlife.radio.p080b.C2125n;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.base.MsgHandler;
 import com.baidu.navisdk.jni.nativeif.JNIBaseMap;
 import com.baidu.navisdk.jni.nativeif.JNITrajectoryControl;
 import com.baidu.navisdk.logic.CommandCenter;
+import com.baidu.navisdk.logic.CommandConstants;
 import com.baidu.navisdk.logic.ReqData;
-import com.baidu.navisdk.logic.RspData;
 import com.baidu.navisdk.logic.commandparser.CmdGeneralHttpRequestFunc;
 import com.baidu.navisdk.logic.commandparser.CmdGeneralHttpRequestFunc.Callback;
 import com.baidu.navisdk.model.GeoLocateModel;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
+import com.baidu.navisdk.model.params.MsgDefine;
 import com.baidu.navisdk.module.cloudconfig.CloudConfigObtainManager;
 import com.baidu.navisdk.ui.ugc.model.UgcOperationalActModel;
 import com.baidu.navisdk.ui.ugc.model.UgcOperationalActModel.UgcReportSerInfoPackage;
@@ -38,7 +40,6 @@ import com.baidu.navisdk.util.http.center.BNHttpCenter;
 import com.baidu.navisdk.util.http.center.BNHttpCenterHelper;
 import com.baidu.navisdk.util.http.center.BNHttpParams;
 import com.baidu.navisdk.util.http.center.BNHttpTextResponseHandler;
-import com.baidu.navisdk.util.http.center.IBNHttpCenter;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.vi.VMsgDispatcher;
 import java.io.BufferedReader;
@@ -58,629 +59,513 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-public class UgcOperationActController
-{
-  public static final int MSG_UGCOPERATIONACT_DATA_REPORT_RET = 1501;
-  public static final int MSG_UGCOPERATIONACT_DATA_REQUEST_RET = 1500;
-  private static final int MSG_UGC_EVENT_COUNTS_RET = 1502;
-  private static final int SCREEN_SHOT_HEIGH = 150;
-  public static final String SCREEN_SHOT_TEMP_FILE_PATH = SysOSAPI.getInstance().GetSDCardCachePath() + "/ugc_navi_screen_shot_temp.jpg";
-  private static final int SCREEN_SHOT_WIDTH = 200;
-  private static final String TAG = UgcOperationActController.class.getName();
-  public static UgcOperationActController instance;
-  private LinkedList<IViewPackage> CacheIamgeList = new LinkedList();
-  public boolean isUgcUploading = false;
-  private Handler mImageHandler = new Handler(Looper.getMainLooper())
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if (paramAnonymousMessage == null) {}
-      while (paramAnonymousMessage.arg1 != 0) {
-        return;
-      }
-      try
-      {
-        Bitmap localBitmap = (Bitmap)((RspData)paramAnonymousMessage.obj).mReq.getObj();
-        UgcOperationActController.this.updateUgcImageView(paramAnonymousMessage.what, localBitmap);
-        UgcOperationalActModel.getInstance().setUgcBitMapWithType(paramAnonymousMessage.what, localBitmap);
-        return;
-      }
-      catch (Exception paramAnonymousMessage)
-      {
-        LogUtil.e(UgcOperationActController.TAG, paramAnonymousMessage.toString());
-      }
-    }
-  };
-  private JNIBaseMap mJniBaseMap = null;
-  private MsgHandler mMsgHandler = new MsgHandler(Looper.getMainLooper())
-  {
-    public void careAbout()
-    {
-      observe(4616);
-    }
-    
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if (paramAnonymousMessage.what == 4616) {}
-      try
-      {
-        if (UgcOperationActController.this.mJniBaseMap != null)
-        {
-          paramAnonymousMessage = new Bundle();
-          UgcOperationActController.this.mJniBaseMap.getScreenShotImage(paramAnonymousMessage);
-          int i = paramAnonymousMessage.getInt("unImageWidth");
-          int j = paramAnonymousMessage.getInt("unImageHeight");
-          paramAnonymousMessage = Bitmap.createBitmap(paramAnonymousMessage.getIntArray("pbtImageData"), i, j, Bitmap.Config.ARGB_8888);
-          if (paramAnonymousMessage != null)
-          {
-            paramAnonymousMessage = PhotoCaptureUtils.compress(paramAnonymousMessage, 600, 800);
-            if ((paramAnonymousMessage != null) && (PhotoCaptureUtils.getInstance().setBitmapToFile(UgcOperationActController.SCREEN_SHOT_TEMP_FILE_PATH, paramAnonymousMessage)))
-            {
-              UgcOperationalActModel.getInstance().mUgcReportSerInfoPackage.screenshotPicPath = UgcOperationActController.SCREEN_SHOT_TEMP_FILE_PATH;
-              LogUtil.e(UgcOperationActController.TAG + "msg", "has map bitmap");
+public class UgcOperationActController {
+    public static final int MSG_UGCOPERATIONACT_DATA_REPORT_RET = 1501;
+    public static final int MSG_UGCOPERATIONACT_DATA_REQUEST_RET = 1500;
+    private static final int MSG_UGC_EVENT_COUNTS_RET = 1502;
+    private static final int SCREEN_SHOT_HEIGH = 150;
+    public static final String SCREEN_SHOT_TEMP_FILE_PATH = (SysOSAPI.getInstance().GetSDCardCachePath() + "/ugc_navi_screen_shot_temp.jpg");
+    private static final int SCREEN_SHOT_WIDTH = 200;
+    private static final String TAG = UgcOperationActController.class.getName();
+    public static UgcOperationActController instance;
+    private LinkedList<IViewPackage> CacheIamgeList = new LinkedList();
+    public boolean isUgcUploading = false;
+    private Handler mImageHandler = new Handler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            if (msg != null && msg.arg1 == 0) {
+                try {
+                    Bitmap mBitmap = (Bitmap) msg.obj.mReq.getObj();
+                    UgcOperationActController.this.updateUgcImageView(msg.what, mBitmap);
+                    UgcOperationalActModel.getInstance().setUgcBitMapWithType(msg.what, mBitmap);
+                } catch (Exception e) {
+                    LogUtil.m15791e(UgcOperationActController.TAG, e.toString());
+                }
             }
-          }
         }
-      }
-      catch (Exception paramAnonymousMessage)
-      {
-        for (;;)
-        {
-          paramAnonymousMessage.printStackTrace();
-        }
-      }
-      UgcOperationActController.getInstance().ugcInfoReportUpLoad();
-      if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
-        UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcFinish();
-      }
-    }
-  };
-  private UgcInfoReportUpLoadResultCallBack mUgcInfoReportUpLoadResultCallBack = null;
-  
-  private UgcOperationActController()
-  {
-    VMsgDispatcher.registerMsgHandler(this.mMsgHandler);
-  }
-  
-  private CookieStore getCookieStore()
-  {
-    if (BNaviModuleManager.getBduss() == null) {
-      return null;
-    }
-    BasicClientCookie localBasicClientCookie = new BasicClientCookie("BDUSS", BNaviModuleManager.getBduss());
-    BasicCookieStore localBasicCookieStore = new BasicCookieStore();
-    localBasicClientCookie.setDomain(".baidu.com");
-    localBasicClientCookie.setPath("/");
-    localBasicClientCookie.setVersion(0);
-    localBasicCookieStore.addCookie(localBasicClientCookie);
-    return localBasicCookieStore;
-  }
-  
-  private int getCurrentCityId()
-  {
-    int i = -1;
-    DistrictInfo localDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
-    if (localDistrictInfo != null) {
-      i = localDistrictInfo.mId;
-    }
-    return i;
-  }
-  
-  public static UgcOperationActController getInstance()
-  {
-    if (instance == null) {
-      instance = new UgcOperationActController();
-    }
-    return instance;
-  }
-  
-  private String getUTF8Encode(String paramString)
-  {
-    String str = "";
-    if (paramString != null) {}
-    try
-    {
-      str = URLEncoder.encode(paramString, "utf-8");
-      return str;
-    }
-    catch (Exception paramString) {}
-    return "";
-  }
-  
-  private List<NameValuePair> getUgcReportCountsReqParam()
-  {
-    try
-    {
-      ArrayList localArrayList = new ArrayList();
-      StringBuffer localStringBuffer;
-      String str;
-      localException1.printStackTrace();
-    }
-    catch (Exception localException1)
-    {
-      try
-      {
-        localStringBuffer = new StringBuffer();
-        str = PackageUtil.getCuid() + "";
-        localArrayList.add(new BasicNameValuePair("cuid", str));
-        localStringBuffer.append("cuid=" + URLEncoder.encode(str, "utf-8"));
-        str = PackageUtil.getVersionName() + "";
-        localArrayList.add(new BasicNameValuePair("sv", str));
-        localStringBuffer.append("&sv=" + URLEncoder.encode(str, "utf-8"));
-        str = PackageUtil.strOSVersion + "";
-        localArrayList.add(new BasicNameValuePair("osv", str));
-        localStringBuffer.append("&osv=" + URLEncoder.encode(str, "utf-8"));
-        str = CloudConfigObtainManager.SortSequenceWithAscendingOder(localArrayList);
-        LogUtil.e(TAG + "unsign str:", str);
-        str = JNITrajectoryControl.sInstance.getUrlParamsSign(str) + "";
-        LogUtil.e(TAG + "hassign sign:", str);
-        localArrayList.add(new BasicNameValuePair("sign", str));
-        localStringBuffer.append("&sign=" + URLEncoder.encode(str, "utf-8"));
-        LogUtil.e(TAG + "params:", localStringBuffer.toString());
-        return localArrayList;
-      }
-      catch (Exception localException2)
-      {
-        for (;;) {}
-      }
-      localException1 = localException1;
-    }
-    return null;
-  }
-  
-  public String convertStreamToString(InputStream paramInputStream)
-  {
-    BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(paramInputStream));
-    StringBuilder localStringBuilder = new StringBuilder();
-    try
-    {
-      for (;;)
-      {
-        String str = localBufferedReader.readLine();
-        if (str == null) {
-          break;
-        }
-        localStringBuilder.append(str + "/n");
-      }
-      try
-      {
-        paramInputStream.close();
-        throw ((Throwable)localObject);
-      }
-      catch (IOException paramInputStream)
-      {
-        for (;;)
-        {
-          paramInputStream.printStackTrace();
-        }
-      }
-    }
-    catch (IOException localIOException)
-    {
-      localIOException = localIOException;
-      localIOException.printStackTrace();
-      try
-      {
-        paramInputStream.close();
-        for (;;)
-        {
-          return localStringBuilder.toString();
-          try
-          {
-            paramInputStream.close();
-          }
-          catch (IOException paramInputStream)
-          {
-            paramInputStream.printStackTrace();
-          }
-        }
-      }
-      catch (IOException paramInputStream)
-      {
-        for (;;)
-        {
-          paramInputStream.printStackTrace();
-        }
-      }
-    }
-    finally {}
-  }
-  
-  public void destroy()
-  {
-    instance = null;
-    this.mJniBaseMap = null;
-    VMsgDispatcher.unregisterMsgHandler(this.mMsgHandler);
-  }
-  
-  public String getShowRCEventListUrl()
-  {
-    String str1 = PackageUtil.getCuid();
-    String str2 = PackageUtil.strOSVersion;
-    Object localObject = PackageUtil.strSoftWareVer;
-    localObject = new ArrayList();
-    StringBuffer localStringBuffer = new StringBuffer();
-    try
-    {
-      ((List)localObject).add(new BasicNameValuePair("cuid", str1));
-      localStringBuffer.append("cuid=" + URLEncoder.encode(str1, "utf-8"));
-      ((List)localObject).add(new BasicNameValuePair("os", "0"));
-      localStringBuffer.append("&os=" + URLEncoder.encode("0", "utf-8"));
-      ((List)localObject).add(new BasicNameValuePair("osv", str2));
-      localStringBuffer.append("&osv=" + URLEncoder.encode(str2, "utf-8"));
-      ((List)localObject).add(new BasicNameValuePair("sv", str2));
-      localStringBuffer.append("&sv=" + URLEncoder.encode(str2, "utf-8"));
-      str1 = JNITrajectoryControl.sInstance.getUrlParamsSign(CloudConfigObtainManager.SortSequenceWithAscendingOder((List)localObject)) + "";
-      ((List)localObject).add(new BasicNameValuePair("sign", str1));
-      localStringBuffer.append("&sign=" + URLEncoder.encode(str1, "utf-8"));
-      str1 = HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_UGC_RCEVENT_LIST_SHOW) + "?" + localStringBuffer.toString();
-      LogUtil.e(TAG + "getShowRCEventListUrl:", str1);
-      return str1;
-    }
-    catch (Exception localException)
-    {
-      localException.printStackTrace();
-    }
-    return null;
-  }
-  
-  public void getUgcReportCounts(Handler paramHandler, int paramInt)
-  {
-    if (!NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext())) {
-      return;
-    }
-    paramHandler = new ReqData("cmd.general.httprequest.func", 7, paramHandler, paramInt, 10000);
-    paramHandler.mCookieStore = getCookieStore();
-    CmdGeneralHttpRequestFunc.addFunc(paramHandler, new CmdGeneralHttpRequestFunc.Callback()
-    {
-      public List<NameValuePair> getRequestParams()
-      {
-        return UgcOperationActController.this.getUgcReportCountsReqParam();
-      }
-      
-      public int getRequestType()
-      {
-        return 1;
-      }
-      
-      public String getUrl()
-      {
-        return HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_UGC_RCEVENT_COUNTS);
-      }
-      
-      public boolean parseResponseJSON(JSONObject paramAnonymousJSONObject)
-      {
-        return true;
-      }
-      
-      public void responseImage(byte[] paramAnonymousArrayOfByte) {}
-    });
-    CommandCenter.getInstance().sendRequest(paramHandler);
-  }
-  
-  public void registerUgcImageView(int paramInt, ImageView paramImageView)
-  {
-    if (paramImageView == null) {
-      return;
-    }
-    if (this.CacheIamgeList == null) {
-      this.CacheIamgeList = new LinkedList();
-    }
-    this.CacheIamgeList.add(new IViewPackage(paramInt, paramImageView));
-  }
-  
-  public void requestBitMapFromHttp(int paramInt)
-  {
-    final String str = UgcOperationalActModel.getInstance().getUrlByType(paramInt);
-    if (str == null) {
-      return;
-    }
-    final ReqData localReqData = new ReqData("cmd.general.httprequest.func", 7, this.mImageHandler, paramInt, 10000);
-    CmdGeneralHttpRequestFunc.addFunc(localReqData, new CmdGeneralHttpRequestFunc.Callback()
-    {
-      public List<NameValuePair> getRequestParams()
-      {
-        return null;
-      }
-      
-      public int getRequestType()
-      {
-        return 2;
-      }
-      
-      public String getUrl()
-      {
-        return str;
-      }
-      
-      public boolean parseResponseJSON(JSONObject paramAnonymousJSONObject)
-      {
-        return true;
-      }
-      
-      public void responseImage(byte[] paramAnonymousArrayOfByte)
-      {
-        if (paramAnonymousArrayOfByte != null)
-        {
-          paramAnonymousArrayOfByte = BitmapFactory.decodeByteArray(paramAnonymousArrayOfByte, 0, paramAnonymousArrayOfByte.length);
-          localReqData.setObj(paramAnonymousArrayOfByte);
-        }
-      }
-    });
-    CommandCenter.getInstance().sendRequest(localReqData);
-  }
-  
-  public boolean setScreenShotParam(int paramInt)
-  {
-    if (this.mJniBaseMap == null) {
-      this.mJniBaseMap = new JNIBaseMap();
-    }
-    ScreenUtil localScreenUtil = ScreenUtil.getInstance();
-    if (paramInt == 1) {
-      paramInt = localScreenUtil.getWidthPixels();
-    }
-    for (int i = localScreenUtil.getHeightPixels() - ScreenUtil.getInstance().dip2px(120);; i = localScreenUtil.getHeightPixels())
-    {
-      return new JNIBaseMap().setScreenShotParam(4, paramInt, i, 0L, 0L, 0);
-      paramInt = localScreenUtil.getWidthPixels() * 2 / 3;
-    }
-  }
-  
-  public void setUgcInfoReportUpLoadResultCallBack(UgcInfoReportUpLoadResultCallBack paramUgcInfoReportUpLoadResultCallBack)
-  {
-    this.mUgcInfoReportUpLoadResultCallBack = paramUgcInfoReportUpLoadResultCallBack;
-  }
-  
-  public boolean ugcInfoReportUpLoad()
-  {
-    boolean bool = true;
-    if (this.isUgcUploading) {
-      bool = false;
-    }
-    BNHttpParams localBNHttpParams;
-    Object localObject;
-    do
-    {
-      return bool;
-      this.isUgcUploading = true;
-      localBNHttpParams = new BNHttpParams();
-      localBNHttpParams.isAsync = true;
-      localBNHttpParams.postFileMap = new HashMap();
-      localObject = UgcOperationalActModel.getInstance().mUgcReportSerInfoPackage;
-    } while (localObject == null);
-    ArrayList localArrayList = new ArrayList();
-    try
-    {
-      localArrayList.add(new BasicNameValuePair("cuid", PackageUtil.getCuid()));
-      localArrayList.add(new BasicNameValuePair("upload_type", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).uploadType));
-      localArrayList.add(new BasicNameValuePair("sid", "1"));
-      localArrayList.add(new BasicNameValuePair("os", "0"));
-      localArrayList.add(new BasicNameValuePair("osv", PackageUtil.strOSVersion));
-      localArrayList.add(new BasicNameValuePair("sv", PackageUtil.strSoftWareVer));
-      localArrayList.add(new BasicNameValuePair("cityCode", getCurrentCityId() + ""));
-      localArrayList.add(new BasicNameValuePair("cityName", getUTF8Encode(GeoLocateModel.getInstance().getCurCityName())));
-      localArrayList.add(new BasicNameValuePair("from_point", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).fromPoint));
-      localArrayList.add(new BasicNameValuePair("from_uid", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).fromUid));
-      localArrayList.add(new BasicNameValuePair("from_name", getUTF8Encode(((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).fromName)));
-      localArrayList.add(new BasicNameValuePair("to_point", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).toPoint));
-      localArrayList.add(new BasicNameValuePair("to_uid", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).toUid));
-      localArrayList.add(new BasicNameValuePair("to_name", getUTF8Encode(((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).toName)));
-      localArrayList.add(new BasicNameValuePair("business_trigger", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).business_trigger));
-      localArrayList.add(new BasicNameValuePair("name", getUTF8Encode(((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).Name)));
-      localArrayList.add(new BasicNameValuePair("parent_type", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).parentType));
-      localArrayList.add(new BasicNameValuePair("sub_type", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).subType));
-      localArrayList.add(new BasicNameValuePair("content", getUTF8Encode(((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).content)));
-      if ((((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).screenshotPicPath != null) && (!((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).screenshotPicPath.trim().equals(""))) {
-        localBNHttpParams.postFileMap.put("screenshot_pic", new File(((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).screenshotPicPath));
-      }
-      if ((((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).photoPicPath != null) && (!((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).photoPicPath.trim().equals(""))) {
-        localBNHttpParams.postFileMap.put("pic", new File(((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).photoPicPath));
-      }
-      if ((((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).voicePath != null) && (!((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).voicePath.trim().equals(""))) {
-        localBNHttpParams.postFileMap.put("voice", new File(((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).voicePath));
-      }
-      localArrayList.add(new BasicNameValuePair("point", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).point));
-      localArrayList.add(new BasicNameValuePair("photo_point", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).photoPoint));
-      localArrayList.add(new BasicNameValuePair("user_point", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).userPoint));
-      localArrayList.add(new BasicNameValuePair("session_id", ((UgcOperationalActModel.UgcReportSerInfoPackage)localObject).sessionId));
-      localObject = CloudConfigObtainManager.SortSequenceWithAscendingOder(localArrayList);
-      LogUtil.e(TAG + "unsign str:", (String)localObject);
-      localObject = JNITrajectoryControl.sInstance.getUrlParamsSign((String)localObject) + "";
-      LogUtil.e(TAG + "hassign sign:", (String)localObject);
-      localArrayList.add(new BasicNameValuePair("sign", (String)localObject));
-      localObject = BNHttpCenterHelper.formatParams(localArrayList);
-      BNHttpCenter.getInstance().post(HttpURLManager.getInstance().getUsedUrl(HttpURLManager.ULRParam.URL_UGC_OPER_INFO_REPORT), (HashMap)localObject, new BNHttpTextResponseHandler()
-      {
-        public void onFailure(int paramAnonymousInt, String paramAnonymousString, Throwable paramAnonymousThrowable)
-        {
-          if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
-            UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcInfoReportUpLoadFail(JarUtils.getResources().getString(1711670288));
-          }
-          UgcOperationActController.this.isUgcUploading = false;
-        }
-        
-        public void onSuccess(int paramAnonymousInt, String paramAnonymousString)
-        {
-          LogUtil.e(UgcOperationActController.TAG + "mUgcRportHandler msg:", paramAnonymousString);
-          try
-          {
-            paramAnonymousString = new JSONObject(paramAnonymousString);
-            if (paramAnonymousString.getInt("errno") == 0)
-            {
-              paramAnonymousString = paramAnonymousString.getJSONObject("data");
-              if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
-                UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcInfoReportUpLoadSuccess(paramAnonymousString);
-              }
+    };
+    private JNIBaseMap mJniBaseMap = null;
+    private MsgHandler mMsgHandler = new MsgHandler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            if (msg.what == MsgDefine.MSG_NAVI_TYPE_UGC_SCREENSHOT) {
+                try {
+                    if (UgcOperationActController.this.mJniBaseMap != null) {
+                        Bundle bundle = new Bundle();
+                        UgcOperationActController.this.mJniBaseMap.getScreenShotImage(bundle);
+                        Bitmap mLockBitmap = Bitmap.createBitmap(bundle.getIntArray("pbtImageData"), bundle.getInt("unImageWidth"), bundle.getInt("unImageHeight"), Config.ARGB_8888);
+                        if (mLockBitmap != null) {
+                            Bitmap mCompressBitmap = PhotoCaptureUtils.compress(mLockBitmap, 600, 800);
+                            if (mCompressBitmap != null && PhotoCaptureUtils.getInstance().setBitmapToFile(UgcOperationActController.SCREEN_SHOT_TEMP_FILE_PATH, mCompressBitmap)) {
+                                UgcOperationalActModel.getInstance().mUgcReportSerInfoPackage.screenshotPicPath = UgcOperationActController.SCREEN_SHOT_TEMP_FILE_PATH;
+                                LogUtil.m15791e(UgcOperationActController.TAG + "msg", "has map bitmap");
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                UgcOperationActController.getInstance().ugcInfoReportUpLoad();
+                if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
+                    UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcFinish();
+                }
             }
-            for (;;)
-            {
-              UgcOperationActController.this.isUgcUploading = false;
-              return;
-              if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
-                UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcInfoReportUpLoadFail(JarUtils.getResources().getString(1711670287));
-              }
+        }
+
+        public void careAbout() {
+            observe((int) MsgDefine.MSG_NAVI_TYPE_UGC_SCREENSHOT);
+        }
+    };
+    private UgcInfoReportUpLoadResultCallBack mUgcInfoReportUpLoadResultCallBack = null;
+
+    /* renamed from: com.baidu.navisdk.ui.ugc.control.UgcOperationActController$3 */
+    class C45013 extends BNHttpTextResponseHandler {
+        C45013() {
+        }
+
+        public void onSuccess(int statusCode, String responseString) {
+            LogUtil.m15791e(UgcOperationActController.TAG + "mUgcRportHandler msg:", responseString);
+            try {
+                JSONObject retJsonObject = new JSONObject(responseString);
+                if (retJsonObject.getInt(C2125n.f6745M) == 0) {
+                    JSONObject dataJsonObject = retJsonObject.getJSONObject("data");
+                    if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
+                        UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcInfoReportUpLoadSuccess(dataJsonObject);
+                    }
+                } else if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
+                    UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcInfoReportUpLoadFail(JarUtils.getResources().getString(C4048R.string.nsdk_string_ugc_report_fail));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
+                    UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcInfoReportUpLoadFail(JarUtils.getResources().getString(C4048R.string.nsdk_string_ugc_report_fail));
+                }
             }
-          }
-          catch (Exception paramAnonymousString)
-          {
-            for (;;)
-            {
-              paramAnonymousString.printStackTrace();
-              if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
-                UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcInfoReportUpLoadFail(JarUtils.getResources().getString(1711670287));
-              }
+            UgcOperationActController.this.isUgcUploading = false;
+        }
+
+        public void onFailure(int statusCode, String responseString, Throwable throwable) {
+            if (UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack != null) {
+                UgcOperationActController.this.mUgcInfoReportUpLoadResultCallBack.onUgcInfoReportUpLoadFail(JarUtils.getResources().getString(C4048R.string.nsdk_string_ugc_report_fail_badwet));
             }
-          }
+            UgcOperationActController.this.isUgcUploading = false;
         }
-      }, localBNHttpParams);
-      LogUtil.e(TAG + "_getMultipartEntity():", localArrayList.toString());
-      return true;
     }
-    catch (Exception localException)
-    {
-      localException.printStackTrace();
-    }
-    return true;
-  }
-  
-  public void unRegisterAllUgcImageView()
-  {
-    if (this.CacheIamgeList != null) {
-      this.CacheIamgeList.clear();
-    }
-  }
-  
-  public void unRegisterUgcImageView(int paramInt, ImageView paramImageView)
-  {
-    if (this.CacheIamgeList == null) {}
-    for (;;)
-    {
-      return;
-      int j;
-      for (int i = 0; i < this.CacheIamgeList.size(); i = j + 1)
-      {
-        j = i;
-        if (((IViewPackage)this.CacheIamgeList.get(i)).equals(paramInt, paramImageView))
-        {
-          this.CacheIamgeList.remove(i);
-          j = i - 1;
+
+    /* renamed from: com.baidu.navisdk.ui.ugc.control.UgcOperationActController$5 */
+    class C45035 implements Callback {
+        C45035() {
         }
-      }
-    }
-  }
-  
-  public void updateImageViewBGroundSrc(int paramInt, ImageView paramImageView)
-  {
-    updateImageViewBGroundSrc(paramInt, paramImageView, null);
-  }
-  
-  public void updateImageViewBGroundSrc(int paramInt, ImageView paramImageView, Handler paramHandler)
-  {
-    if (paramImageView == null) {
-      return;
-    }
-    LogUtil.e("caizhirui:bitmap_type", paramInt + "");
-    if (UgcOperationalActModel.getInstance().getUgcBitMapByType(paramInt) != null)
-    {
-      paramImageView.setBackgroundDrawable(new BitmapDrawable(ImageTools.getBitmapFromResId(1711408123)));
-      return;
-    }
-    UrlDrawableContainIView.getDrawable(UgcOperationalActModel.getInstance().getUrlByType(paramInt), UgcOperationalActModel.getInstance().getUgcDrawableIdByType(paramInt), paramImageView, paramHandler);
-  }
-  
-  public void updateUgcImageView(int paramInt, Bitmap paramBitmap)
-  {
-    if ((paramBitmap == null) || (this.CacheIamgeList == null)) {}
-    for (;;)
-    {
-      return;
-      int j;
-      for (int i = 0; i < this.CacheIamgeList.size(); i = j + 1)
-      {
-        j = i;
-        if (((IViewPackage)this.CacheIamgeList.get(i)).update(paramInt, paramBitmap))
-        {
-          this.CacheIamgeList.remove(i);
-          j = i - 1;
+
+        public boolean parseResponseJSON(JSONObject jsonObj) {
+            return true;
         }
-      }
+
+        public String getUrl() {
+            return HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_UGC_RCEVENT_COUNTS);
+        }
+
+        public List<NameValuePair> getRequestParams() {
+            return UgcOperationActController.this.getUgcReportCountsReqParam();
+        }
+
+        public int getRequestType() {
+            return 1;
+        }
+
+        public void responseImage(byte[] img) {
+        }
     }
-  }
-  
-  public static class IViewPackage
-  {
-    ImageView mImageView;
-    int type;
-    
-    public IViewPackage(int paramInt, ImageView paramImageView)
-    {
-      this.type = paramInt;
-      this.mImageView = paramImageView;
+
+    public static class IViewPackage {
+        ImageView mImageView;
+        int type;
+
+        public IViewPackage(int type, ImageView mImageView) {
+            this.type = type;
+            this.mImageView = mImageView;
+        }
+
+        public boolean update(int type, Bitmap mBitmap) {
+            if (this.type != type) {
+                return false;
+            }
+            if (!(this.mImageView == null || mBitmap == null)) {
+                this.mImageView.setBackgroundDrawable(null);
+                this.mImageView.setImageBitmap(mBitmap);
+            }
+            return true;
+        }
+
+        public boolean equals(int type, ImageView mImageView) {
+            if (this.type == type && this.mImageView == mImageView) {
+                return true;
+            }
+            return false;
+        }
     }
-    
-    public boolean equals(int paramInt, ImageView paramImageView)
-    {
-      return (this.type == paramInt) && (this.mImageView == paramImageView);
+
+    public interface UgcInfoReportUpLoadResultCallBack {
+        void onUgcFinish();
+
+        void onUgcInfoReportUpLoadFail(String str);
+
+        void onUgcInfoReportUpLoadSuccess(JSONObject jSONObject);
     }
-    
-    public boolean update(int paramInt, Bitmap paramBitmap)
-    {
-      if (this.type != paramInt) {
-        return false;
-      }
-      if ((this.mImageView != null) && (paramBitmap != null))
-      {
-        this.mImageView.setBackgroundDrawable(null);
-        this.mImageView.setImageBitmap(paramBitmap);
-      }
-      return true;
+
+    private interface UgcPostHttpConstans {
+        public static final String UGC_POST_HTTP_PARAM_BDUSS = "bduss";
+        public static final String UGC_POST_HTTP_PARAM_BUSINESS_TRIGGER = "business_trigger";
+        public static final String UGC_POST_HTTP_PARAM_CITYCODE = "cityCode";
+        public static final String UGC_POST_HTTP_PARAM_CITYNAME = "cityName";
+        public static final String UGC_POST_HTTP_PARAM_CONTENT = "content";
+        public static final String UGC_POST_HTTP_PARAM_CUID = "cuid";
+        public static final String UGC_POST_HTTP_PARAM_FROM_NAME = "from_name";
+        public static final String UGC_POST_HTTP_PARAM_FROM_POINT = "from_point";
+        public static final String UGC_POST_HTTP_PARAM_FROM_UID = "from_uid";
+        public static final String UGC_POST_HTTP_PARAM_NAME = "name";
+        public static final String UGC_POST_HTTP_PARAM_OS = "os";
+        public static final String UGC_POST_HTTP_PARAM_OSV = "osv";
+        public static final String UGC_POST_HTTP_PARAM_PARENT_TYPE = "parent_type";
+        public static final String UGC_POST_HTTP_PARAM_PHOTO_POINT = "photo_point";
+        public static final String UGC_POST_HTTP_PARAM_PIC = "pic";
+        public static final String UGC_POST_HTTP_PARAM_POINT = "point";
+        public static final String UGC_POST_HTTP_PARAM_SCREENSHOT_PIC = "screenshot_pic";
+        public static final String UGC_POST_HTTP_PARAM_SESSION_ID = "session_id";
+        public static final String UGC_POST_HTTP_PARAM_SID = "sid";
+        public static final String UGC_POST_HTTP_PARAM_SIGN = "sign";
+        public static final String UGC_POST_HTTP_PARAM_SUB_TYPE = "sub_type";
+        public static final String UGC_POST_HTTP_PARAM_SV = "sv";
+        public static final String UGC_POST_HTTP_PARAM_TO_NAME = "to_name";
+        public static final String UGC_POST_HTTP_PARAM_TO_POINT = "to_point";
+        public static final String UGC_POST_HTTP_PARAM_TO_UID = "to_uid";
+        public static final String UGC_POST_HTTP_PARAM_UPLOAD_TYPE = "upload_type";
+        public static final String UGC_POST_HTTP_PARAM_USER_POINT = "user_point";
+        public static final String UGC_POST_HTTP_PARAM_VOICE = "voice";
     }
-  }
-  
-  public static abstract interface UgcInfoReportUpLoadResultCallBack
-  {
-    public abstract void onUgcFinish();
-    
-    public abstract void onUgcInfoReportUpLoadFail(String paramString);
-    
-    public abstract void onUgcInfoReportUpLoadSuccess(JSONObject paramJSONObject);
-  }
-  
-  private static abstract interface UgcPostHttpConstans
-  {
-    public static final String UGC_POST_HTTP_PARAM_BDUSS = "bduss";
-    public static final String UGC_POST_HTTP_PARAM_BUSINESS_TRIGGER = "business_trigger";
-    public static final String UGC_POST_HTTP_PARAM_CITYCODE = "cityCode";
-    public static final String UGC_POST_HTTP_PARAM_CITYNAME = "cityName";
-    public static final String UGC_POST_HTTP_PARAM_CONTENT = "content";
-    public static final String UGC_POST_HTTP_PARAM_CUID = "cuid";
-    public static final String UGC_POST_HTTP_PARAM_FROM_NAME = "from_name";
-    public static final String UGC_POST_HTTP_PARAM_FROM_POINT = "from_point";
-    public static final String UGC_POST_HTTP_PARAM_FROM_UID = "from_uid";
-    public static final String UGC_POST_HTTP_PARAM_NAME = "name";
-    public static final String UGC_POST_HTTP_PARAM_OS = "os";
-    public static final String UGC_POST_HTTP_PARAM_OSV = "osv";
-    public static final String UGC_POST_HTTP_PARAM_PARENT_TYPE = "parent_type";
-    public static final String UGC_POST_HTTP_PARAM_PHOTO_POINT = "photo_point";
-    public static final String UGC_POST_HTTP_PARAM_PIC = "pic";
-    public static final String UGC_POST_HTTP_PARAM_POINT = "point";
-    public static final String UGC_POST_HTTP_PARAM_SCREENSHOT_PIC = "screenshot_pic";
-    public static final String UGC_POST_HTTP_PARAM_SESSION_ID = "session_id";
-    public static final String UGC_POST_HTTP_PARAM_SID = "sid";
-    public static final String UGC_POST_HTTP_PARAM_SIGN = "sign";
-    public static final String UGC_POST_HTTP_PARAM_SUB_TYPE = "sub_type";
-    public static final String UGC_POST_HTTP_PARAM_SV = "sv";
-    public static final String UGC_POST_HTTP_PARAM_TO_NAME = "to_name";
-    public static final String UGC_POST_HTTP_PARAM_TO_POINT = "to_point";
-    public static final String UGC_POST_HTTP_PARAM_TO_UID = "to_uid";
-    public static final String UGC_POST_HTTP_PARAM_UPLOAD_TYPE = "upload_type";
-    public static final String UGC_POST_HTTP_PARAM_USER_POINT = "user_point";
-    public static final String UGC_POST_HTTP_PARAM_VOICE = "voice";
-  }
+
+    private UgcOperationActController() {
+        VMsgDispatcher.registerMsgHandler(this.mMsgHandler);
+    }
+
+    public static UgcOperationActController getInstance() {
+        if (instance == null) {
+            instance = new UgcOperationActController();
+        }
+        return instance;
+    }
+
+    public void requestBitMapFromHttp(int what) {
+        final String url = UgcOperationalActModel.getInstance().getUrlByType(what);
+        if (url != null) {
+            final ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_GENERAL_HTTPREQUEST_FUNC, 7, this.mImageHandler, what, 10000);
+            CmdGeneralHttpRequestFunc.addFunc(reqdata, new Callback() {
+                public boolean parseResponseJSON(JSONObject jsonObj) {
+                    return true;
+                }
+
+                public String getUrl() {
+                    return url;
+                }
+
+                public List<NameValuePair> getRequestParams() {
+                    return null;
+                }
+
+                public int getRequestType() {
+                    return 2;
+                }
+
+                public void responseImage(byte[] img) {
+                    if (img != null) {
+                        reqdata.setObj(BitmapFactory.decodeByteArray(img, 0, img.length));
+                    }
+                }
+            });
+            CommandCenter.getInstance().sendRequest(reqdata);
+        }
+    }
+
+    public void registerUgcImageView(int type, ImageView mImageView) {
+        if (mImageView != null) {
+            if (this.CacheIamgeList == null) {
+                this.CacheIamgeList = new LinkedList();
+            }
+            this.CacheIamgeList.add(new IViewPackage(type, mImageView));
+        }
+    }
+
+    public void unRegisterUgcImageView(int type, ImageView mImageView) {
+        if (this.CacheIamgeList != null) {
+            int i = 0;
+            while (i < this.CacheIamgeList.size()) {
+                if (((IViewPackage) this.CacheIamgeList.get(i)).equals(type, mImageView)) {
+                    this.CacheIamgeList.remove(i);
+                    i--;
+                }
+                i++;
+            }
+        }
+    }
+
+    public void updateUgcImageView(int type, Bitmap mBitmap) {
+        if (mBitmap != null && this.CacheIamgeList != null) {
+            int i = 0;
+            while (i < this.CacheIamgeList.size()) {
+                if (((IViewPackage) this.CacheIamgeList.get(i)).update(type, mBitmap)) {
+                    this.CacheIamgeList.remove(i);
+                    i--;
+                }
+                i++;
+            }
+        }
+    }
+
+    public void unRegisterAllUgcImageView() {
+        if (this.CacheIamgeList != null) {
+            this.CacheIamgeList.clear();
+        }
+    }
+
+    public void destroy() {
+        instance = null;
+        this.mJniBaseMap = null;
+        VMsgDispatcher.unregisterMsgHandler(this.mMsgHandler);
+    }
+
+    public void updateImageViewBGroundSrc(int type, ImageView mImageView, Handler mHandler) {
+        if (mImageView != null) {
+            LogUtil.m15791e("caizhirui:bitmap_type", type + "");
+            if (UgcOperationalActModel.getInstance().getUgcBitMapByType(type) != null) {
+                mImageView.setBackgroundDrawable(new BitmapDrawable(ImageTools.getBitmapFromResId(C4048R.drawable.ugc_default_pic)));
+            } else {
+                UrlDrawableContainIView.getDrawable(UgcOperationalActModel.getInstance().getUrlByType(type), UgcOperationalActModel.getInstance().getUgcDrawableIdByType(type), mImageView, mHandler);
+            }
+        }
+    }
+
+    public void updateImageViewBGroundSrc(int type, ImageView mImageView) {
+        updateImageViewBGroundSrc(type, mImageView, null);
+    }
+
+    public void setUgcInfoReportUpLoadResultCallBack(UgcInfoReportUpLoadResultCallBack mUgcInfoReportUpLoadResultCallBack) {
+        this.mUgcInfoReportUpLoadResultCallBack = mUgcInfoReportUpLoadResultCallBack;
+    }
+
+    public boolean ugcInfoReportUpLoad() {
+        if (this.isUgcUploading) {
+            return false;
+        }
+        this.isUgcUploading = true;
+        BNHttpParams httpParams = new BNHttpParams();
+        httpParams.isAsync = true;
+        httpParams.postFileMap = new HashMap();
+        UgcReportSerInfoPackage mUgcReportSerInfoPackage = UgcOperationalActModel.getInstance().mUgcReportSerInfoPackage;
+        if (mUgcReportSerInfoPackage == null) {
+            return true;
+        }
+        List<NameValuePair> params = new ArrayList();
+        try {
+            params.add(new BasicNameValuePair("cuid", PackageUtil.getCuid()));
+            params.add(new BasicNameValuePair(UgcPostHttpConstans.UGC_POST_HTTP_PARAM_UPLOAD_TYPE, mUgcReportSerInfoPackage.uploadType));
+            params.add(new BasicNameValuePair("sid", "1"));
+            params.add(new BasicNameValuePair("os", "0"));
+            params.add(new BasicNameValuePair("osv", PackageUtil.strOSVersion));
+            params.add(new BasicNameValuePair("sv", PackageUtil.strSoftWareVer));
+            params.add(new BasicNameValuePair(UgcPostHttpConstans.UGC_POST_HTTP_PARAM_CITYCODE, getCurrentCityId() + ""));
+            params.add(new BasicNameValuePair(UgcPostHttpConstans.UGC_POST_HTTP_PARAM_CITYNAME, getUTF8Encode(GeoLocateModel.getInstance().getCurCityName())));
+            params.add(new BasicNameValuePair("from_point", mUgcReportSerInfoPackage.fromPoint));
+            params.add(new BasicNameValuePair("from_uid", mUgcReportSerInfoPackage.fromUid));
+            params.add(new BasicNameValuePair("from_name", getUTF8Encode(mUgcReportSerInfoPackage.fromName)));
+            params.add(new BasicNameValuePair("to_point", mUgcReportSerInfoPackage.toPoint));
+            params.add(new BasicNameValuePair("to_uid", mUgcReportSerInfoPackage.toUid));
+            params.add(new BasicNameValuePair("to_name", getUTF8Encode(mUgcReportSerInfoPackage.toName)));
+            params.add(new BasicNameValuePair("business_trigger", mUgcReportSerInfoPackage.business_trigger));
+            params.add(new BasicNameValuePair("name", getUTF8Encode(mUgcReportSerInfoPackage.Name)));
+            params.add(new BasicNameValuePair("parent_type", mUgcReportSerInfoPackage.parentType));
+            params.add(new BasicNameValuePair("sub_type", mUgcReportSerInfoPackage.subType));
+            params.add(new BasicNameValuePair("content", getUTF8Encode(mUgcReportSerInfoPackage.content)));
+            if (!(mUgcReportSerInfoPackage.screenshotPicPath == null || mUgcReportSerInfoPackage.screenshotPicPath.trim().equals(""))) {
+                httpParams.postFileMap.put("screenshot_pic", new File(mUgcReportSerInfoPackage.screenshotPicPath));
+            }
+            if (!(mUgcReportSerInfoPackage.photoPicPath == null || mUgcReportSerInfoPackage.photoPicPath.trim().equals(""))) {
+                httpParams.postFileMap.put("pic", new File(mUgcReportSerInfoPackage.photoPicPath));
+            }
+            if (!(mUgcReportSerInfoPackage.voicePath == null || mUgcReportSerInfoPackage.voicePath.trim().equals(""))) {
+                httpParams.postFileMap.put("voice", new File(mUgcReportSerInfoPackage.voicePath));
+            }
+            params.add(new BasicNameValuePair("point", mUgcReportSerInfoPackage.point));
+            params.add(new BasicNameValuePair("photo_point", mUgcReportSerInfoPackage.photoPoint));
+            params.add(new BasicNameValuePair("user_point", mUgcReportSerInfoPackage.userPoint));
+            params.add(new BasicNameValuePair("session_id", mUgcReportSerInfoPackage.sessionId));
+            String str = CloudConfigObtainManager.SortSequenceWithAscendingOder(params);
+            LogUtil.m15791e(TAG + "unsign str:", str);
+            String sign = JNITrajectoryControl.sInstance.getUrlParamsSign(str) + "";
+            LogUtil.m15791e(TAG + "hassign sign:", sign);
+            params.add(new BasicNameValuePair("sign", sign));
+            BNHttpCenter.getInstance().post(HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_UGC_OPER_INFO_REPORT), BNHttpCenterHelper.formatParams(params), new C45013(), httpParams);
+            LogUtil.m15791e(TAG + "_getMultipartEntity():", params.toString());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+
+    private int getCurrentCityId() {
+        DistrictInfo district = GeoLocateModel.getInstance().getCurrentDistrict();
+        if (district != null) {
+            return district.mId;
+        }
+        return -1;
+    }
+
+    private CookieStore getCookieStore() {
+        if (BNaviModuleManager.getBduss() == null) {
+            return null;
+        }
+        BasicClientCookie cookie = new BasicClientCookie("BDUSS", BNaviModuleManager.getBduss());
+        CookieStore cookieStore = new BasicCookieStore();
+        cookie.setDomain(".baidu.com");
+        cookie.setPath("/");
+        cookie.setVersion(0);
+        cookieStore.addCookie(cookie);
+        return cookieStore;
+    }
+
+    private String getUTF8Encode(String str) {
+        String ret = "";
+        if (str != null) {
+            try {
+                ret = URLEncoder.encode(str, "utf-8");
+            } catch (Exception e) {
+            }
+        }
+        return ret;
+    }
+
+    public String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        while (true) {
+            try {
+                String line = reader.readLine();
+                if (line != null) {
+                    sb.append(line + "/n");
+                } else {
+                    try {
+                        break;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e2) {
+                e2.printStackTrace();
+                try {
+                    is.close();
+                } catch (IOException e22) {
+                    e22.printStackTrace();
+                }
+            } catch (Throwable th) {
+                try {
+                    is.close();
+                } catch (IOException e222) {
+                    e222.printStackTrace();
+                }
+                throw th;
+            }
+        }
+        is.close();
+        return sb.toString();
+    }
+
+    public boolean setScreenShotParam(int mOrientation) {
+        int width;
+        int height;
+        if (this.mJniBaseMap == null) {
+            this.mJniBaseMap = new JNIBaseMap();
+        }
+        ScreenUtil mScreen = ScreenUtil.getInstance();
+        if (mOrientation == 1) {
+            width = mScreen.getWidthPixels();
+            height = mScreen.getHeightPixels() - ScreenUtil.getInstance().dip2px(120);
+        } else {
+            width = (mScreen.getWidthPixels() * 2) / 3;
+            height = mScreen.getHeightPixels();
+        }
+        return new JNIBaseMap().setScreenShotParam(4, width, height, 0, 0, 0);
+    }
+
+    public String getShowRCEventListUrl() {
+        String cuid = PackageUtil.getCuid();
+        String os = "0";
+        String osv = PackageUtil.strOSVersion;
+        String sv = PackageUtil.strSoftWareVer;
+        List<NameValuePair> params = new ArrayList();
+        StringBuffer sb = new StringBuffer();
+        try {
+            params.add(new BasicNameValuePair("cuid", cuid));
+            sb.append("cuid=" + URLEncoder.encode(cuid, "utf-8"));
+            params.add(new BasicNameValuePair("os", os));
+            sb.append("&os=" + URLEncoder.encode(os, "utf-8"));
+            params.add(new BasicNameValuePair("osv", osv));
+            sb.append("&osv=" + URLEncoder.encode(osv, "utf-8"));
+            params.add(new BasicNameValuePair("sv", osv));
+            sb.append("&sv=" + URLEncoder.encode(osv, "utf-8"));
+            String sign = JNITrajectoryControl.sInstance.getUrlParamsSign(CloudConfigObtainManager.SortSequenceWithAscendingOder(params)) + "";
+            params.add(new BasicNameValuePair("sign", sign));
+            sb.append("&sign=" + URLEncoder.encode(sign, "utf-8"));
+            String retUrl = HttpURLManager.getInstance().getUsedUrl(ULRParam.URL_UGC_RCEVENT_LIST_SHOW) + "?" + sb.toString();
+            LogUtil.m15791e(TAG + "getShowRCEventListUrl:", retUrl);
+            return retUrl;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void getUgcReportCounts(Handler mHandler, int what) {
+        if (NetworkUtils.isNetworkAvailable(BNaviModuleManager.getContext())) {
+            ReqData reqdata = new ReqData(CommandConstants.K_COMMAND_KEY_GENERAL_HTTPREQUEST_FUNC, 7, mHandler, what, 10000);
+            reqdata.mCookieStore = getCookieStore();
+            CmdGeneralHttpRequestFunc.addFunc(reqdata, new C45035());
+            CommandCenter.getInstance().sendRequest(reqdata);
+        }
+    }
+
+    private List<NameValuePair> getUgcReportCountsReqParam() {
+        List<NameValuePair> list;
+        Exception e;
+        try {
+            List<NameValuePair> params = new ArrayList();
+            try {
+                StringBuffer sb = new StringBuffer();
+                String mParam = PackageUtil.getCuid() + "";
+                params.add(new BasicNameValuePair("cuid", mParam));
+                sb.append("cuid=" + URLEncoder.encode(mParam, "utf-8"));
+                mParam = PackageUtil.getVersionName() + "";
+                params.add(new BasicNameValuePair("sv", mParam));
+                sb.append("&sv=" + URLEncoder.encode(mParam, "utf-8"));
+                mParam = PackageUtil.strOSVersion + "";
+                params.add(new BasicNameValuePair("osv", mParam));
+                sb.append("&osv=" + URLEncoder.encode(mParam, "utf-8"));
+                String str = CloudConfigObtainManager.SortSequenceWithAscendingOder(params);
+                LogUtil.m15791e(TAG + "unsign str:", str);
+                mParam = JNITrajectoryControl.sInstance.getUrlParamsSign(str) + "";
+                LogUtil.m15791e(TAG + "hassign sign:", mParam);
+                params.add(new BasicNameValuePair("sign", mParam));
+                sb.append("&sign=" + URLEncoder.encode(mParam, "utf-8"));
+                LogUtil.m15791e(TAG + "params:", sb.toString());
+                list = params;
+                return params;
+            } catch (Exception e2) {
+                e = e2;
+                list = params;
+                e.printStackTrace();
+                return null;
+            }
+        } catch (Exception e3) {
+            e = e3;
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/ugc/control/UgcOperationActController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

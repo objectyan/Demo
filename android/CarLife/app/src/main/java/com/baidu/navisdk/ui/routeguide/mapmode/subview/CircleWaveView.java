@@ -6,57 +6,47 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.View;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.util.BNStyleManager;
 import com.baidu.navisdk.util.common.ScreenUtil;
 
-public class CircleWaveView
-  extends View
-{
-  private Paint paint = new Paint();
-  private int radius = 0;
-  
-  public CircleWaveView(Context paramContext)
-  {
-    super(paramContext);
-    this.paint.setAntiAlias(true);
-    this.paint.setColor(BNStyleManager.getColor(1711800716));
-    this.paint.setStyle(Paint.Style.FILL);
-  }
-  
-  public CircleWaveView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public CircleWaveView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    this.paint.setAntiAlias(true);
-    this.paint.setColor(BNStyleManager.getColor(1711800716));
-    this.paint.setStyle(Paint.Style.FILL);
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    int i = getMeasuredWidth() / 2;
-    int j = getMeasuredHeight() / 2;
-    paramCanvas.drawCircle(i, j, this.radius, this.paint);
-  }
-  
-  public void setCircleRadius(int paramInt)
-  {
-    if (paramInt + 10 > 80) {}
-    for (this.radius = ((int)(80.0F * ScreenUtil.getInstance().getDensity()));; this.radius = ((int)((paramInt + 10) * ScreenUtil.getInstance().getDensity())))
-    {
-      invalidate();
-      return;
+public class CircleWaveView extends View {
+    private Paint paint;
+    private int radius;
+
+    public CircleWaveView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
-  }
+
+    public CircleWaveView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.radius = 0;
+        this.paint = new Paint();
+        this.paint.setAntiAlias(true);
+        this.paint.setColor(BNStyleManager.getColor(C4048R.color.nsdk_cl_asr_voice_wave));
+        this.paint.setStyle(Style.FILL);
+    }
+
+    public CircleWaveView(Context context) {
+        super(context);
+        this.radius = 0;
+        this.paint = new Paint();
+        this.paint.setAntiAlias(true);
+        this.paint.setColor(BNStyleManager.getColor(C4048R.color.nsdk_cl_asr_voice_wave));
+        this.paint.setStyle(Style.FILL);
+    }
+
+    public void setCircleRadius(int percent) {
+        if (percent + 10 > 80) {
+            this.radius = (int) (80.0f * ScreenUtil.getInstance().getDensity());
+        } else {
+            this.radius = (int) (((float) (percent + 10)) * ScreenUtil.getInstance().getDensity());
+        }
+        invalidate();
+    }
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.drawCircle((float) (getMeasuredWidth() / 2), (float) (getMeasuredHeight() / 2), (float) this.radius, this.paint);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/CircleWaveView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

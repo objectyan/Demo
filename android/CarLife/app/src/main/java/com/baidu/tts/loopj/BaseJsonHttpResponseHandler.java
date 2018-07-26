@@ -2,119 +2,95 @@ package com.baidu.tts.loopj;
 
 import org.apache.http.Header;
 
-public abstract class BaseJsonHttpResponseHandler<JSON_TYPE>
-  extends TextHttpResponseHandler
-{
-  private static final String LOG_TAG = "BaseJsonHttpRH";
-  
-  public BaseJsonHttpResponseHandler()
-  {
-    this("UTF-8");
-  }
-  
-  public BaseJsonHttpResponseHandler(String paramString)
-  {
-    super(paramString);
-  }
-  
-  public final void onFailure(final int paramInt, final Header[] paramArrayOfHeader, final String paramString, final Throwable paramThrowable)
-  {
-    if (paramString != null)
-    {
-      paramArrayOfHeader = new Runnable()
-      {
-        public void run()
-        {
-          try
-          {
-            final Object localObject = BaseJsonHttpResponseHandler.this.parseResponse(paramString, true);
-            BaseJsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                BaseJsonHttpResponseHandler.this.onFailure(BaseJsonHttpResponseHandler.2.this.val$statusCode, BaseJsonHttpResponseHandler.2.this.val$headers, BaseJsonHttpResponseHandler.2.this.val$throwable, BaseJsonHttpResponseHandler.2.this.val$responseString, localObject);
-              }
-            });
-            return;
-          }
-          catch (Throwable localThrowable)
-          {
-            AsyncHttpClient.log.d("BaseJsonHttpRH", "parseResponse thrown an problem", localThrowable);
-            BaseJsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                BaseJsonHttpResponseHandler.this.onFailure(BaseJsonHttpResponseHandler.2.this.val$statusCode, BaseJsonHttpResponseHandler.2.this.val$headers, BaseJsonHttpResponseHandler.2.this.val$throwable, BaseJsonHttpResponseHandler.2.this.val$responseString, null);
-              }
-            });
-          }
-        }
-      };
-      if ((!getUseSynchronousMode()) && (!getUsePoolThread()))
-      {
-        new Thread(paramArrayOfHeader).start();
-        return;
-      }
-      paramArrayOfHeader.run();
-      return;
+public abstract class BaseJsonHttpResponseHandler<JSON_TYPE> extends TextHttpResponseHandler {
+    private static final String LOG_TAG = "BaseJsonHttpRH";
+
+    public abstract void onFailure(int i, Header[] headerArr, Throwable th, String str, JSON_TYPE json_type);
+
+    public abstract void onSuccess(int i, Header[] headerArr, String str, JSON_TYPE json_type);
+
+    protected abstract JSON_TYPE parseResponse(String str, boolean z) throws Throwable;
+
+    public BaseJsonHttpResponseHandler() {
+        this("UTF-8");
     }
-    onFailure(paramInt, paramArrayOfHeader, paramThrowable, null, null);
-  }
-  
-  public abstract void onFailure(int paramInt, Header[] paramArrayOfHeader, Throwable paramThrowable, String paramString, JSON_TYPE paramJSON_TYPE);
-  
-  public final void onSuccess(final int paramInt, final Header[] paramArrayOfHeader, final String paramString)
-  {
-    if (paramInt != 204)
-    {
-      paramArrayOfHeader = new Runnable()
-      {
-        public void run()
-        {
-          try
-          {
-            final Object localObject = BaseJsonHttpResponseHandler.this.parseResponse(paramString, false);
-            BaseJsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                BaseJsonHttpResponseHandler.this.onSuccess(BaseJsonHttpResponseHandler.1.this.val$statusCode, BaseJsonHttpResponseHandler.1.this.val$headers, BaseJsonHttpResponseHandler.1.this.val$responseString, localObject);
-              }
-            });
-            return;
-          }
-          catch (Throwable localThrowable)
-          {
-            AsyncHttpClient.log.d("BaseJsonHttpRH", "parseResponse thrown an problem", localThrowable);
-            BaseJsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                BaseJsonHttpResponseHandler.this.onFailure(BaseJsonHttpResponseHandler.1.this.val$statusCode, BaseJsonHttpResponseHandler.1.this.val$headers, localThrowable, BaseJsonHttpResponseHandler.1.this.val$responseString, null);
-              }
-            });
-          }
-        }
-      };
-      if ((!getUseSynchronousMode()) && (!getUsePoolThread()))
-      {
-        new Thread(paramArrayOfHeader).start();
-        return;
-      }
-      paramArrayOfHeader.run();
-      return;
+
+    public BaseJsonHttpResponseHandler(String encoding) {
+        super(encoding);
     }
-    onSuccess(paramInt, paramArrayOfHeader, null, null);
-  }
-  
-  public abstract void onSuccess(int paramInt, Header[] paramArrayOfHeader, String paramString, JSON_TYPE paramJSON_TYPE);
-  
-  protected abstract JSON_TYPE parseResponse(String paramString, boolean paramBoolean)
-    throws Throwable;
+
+    public final void onSuccess(final int statusCode, final Header[] headers, final String responseString) {
+        if (statusCode != 204) {
+            Runnable c51271 = new Runnable() {
+                public void run() {
+                    try {
+                        final Object parseResponse = BaseJsonHttpResponseHandler.this.parseResponse(responseString, false);
+                        BaseJsonHttpResponseHandler.this.postRunnable(new Runnable() {
+                            public void run() {
+                                BaseJsonHttpResponseHandler.this.onSuccess(statusCode, headers, responseString, parseResponse);
+                            }
+                        });
+                    } catch (final Throwable th) {
+                        AsyncHttpClient.log.mo3895d(BaseJsonHttpResponseHandler.LOG_TAG, "parseResponse thrown an problem", th);
+                        BaseJsonHttpResponseHandler.this.postRunnable(new Runnable() {
+                            public void run() {
+                                BaseJsonHttpResponseHandler.this.onFailure(statusCode, headers, th, responseString, null);
+                            }
+                        });
+                    }
+                }
+            };
+            if (getUseSynchronousMode() || getUsePoolThread()) {
+                c51271.run();
+                return;
+            } else {
+                new Thread(c51271).start();
+                return;
+            }
+        }
+        onSuccess(statusCode, headers, null, null);
+    }
+
+    public final void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+        if (responseString != null) {
+            final String str = responseString;
+            final int i = statusCode;
+            final Header[] headerArr = headers;
+            final Throwable th = throwable;
+            Runnable c51302 = new Runnable() {
+
+                /* renamed from: com.baidu.tts.loopj.BaseJsonHttpResponseHandler$2$2 */
+                class C51292 implements Runnable {
+                    C51292() {
+                    }
+
+                    public void run() {
+                        BaseJsonHttpResponseHandler.this.onFailure(i, headerArr, th, str, null);
+                    }
+                }
+
+                public void run() {
+                    try {
+                        final Object parseResponse = BaseJsonHttpResponseHandler.this.parseResponse(str, true);
+                        BaseJsonHttpResponseHandler.this.postRunnable(new Runnable() {
+                            public void run() {
+                                BaseJsonHttpResponseHandler.this.onFailure(i, headerArr, th, str, parseResponse);
+                            }
+                        });
+                    } catch (Throwable th) {
+                        AsyncHttpClient.log.mo3895d(BaseJsonHttpResponseHandler.LOG_TAG, "parseResponse thrown an problem", th);
+                        BaseJsonHttpResponseHandler.this.postRunnable(new C51292());
+                    }
+                }
+            };
+            if (getUseSynchronousMode() || getUsePoolThread()) {
+                c51302.run();
+                return;
+            } else {
+                new Thread(c51302).start();
+                return;
+            }
+        }
+        onFailure(statusCode, headers, throwable, null, null);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/loopj/BaseJsonHttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

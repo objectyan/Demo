@@ -3,7 +3,6 @@ package com.baidu.navisdk.util.drivertool.view;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,9 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.util.ForbidDaulClickUtils;
 import com.baidu.navisdk.util.common.FileUtils;
 import com.baidu.navisdk.util.common.LogUtil;
@@ -32,406 +31,370 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-public class BNDrivingToolIssueStoreDialog
-  extends Dialog
-{
-  private Button mAddAttachBtn;
-  private LinearLayout mAddAttachLl;
-  private Button mCancelBtn;
-  private Button mCreateIssueBtn;
-  private EditText mIssueDespEt;
-  private Spinner mIssueIDSp;
-  private Spinner mIssueStateSp;
-  private Spinner mIssueTypeSp;
-  private Spinner mResponsiblePmSp;
-  private TextView mSelectPicTx;
-  private Button mStoreBtn;
-  private int mType;
-  
-  public BNDrivingToolIssueStoreDialog(Context paramContext, int paramInt)
-  {
-    super(paramContext);
-    this.mType = paramInt;
-    Object localObject = JarUtils.getResources().newTheme();
-    ((Resources.Theme)localObject).applyStyle(1711996937, true);
-    JarUtils.setDialogThemeField(this, (Resources.Theme)localObject);
-    paramContext = JarUtils.oldInflate((Activity)paramContext, 1711472674, null);
-    setContentView(paramContext);
-    this.mIssueIDSp = ((Spinner)paramContext.findViewById(1711866096));
-    this.mIssueDespEt = ((EditText)paramContext.findViewById(1711866099));
-    this.mIssueTypeSp = ((Spinner)paramContext.findViewById(1711866102));
-    this.mResponsiblePmSp = ((Spinner)paramContext.findViewById(1711866105));
-    this.mIssueStateSp = ((Spinner)paramContext.findViewById(1711866108));
-    this.mCreateIssueBtn = ((Button)paramContext.findViewById(1711866093));
-    this.mStoreBtn = ((Button)paramContext.findViewById(1711866113));
-    this.mAddAttachBtn = ((Button)paramContext.findViewById(1711866110));
-    this.mSelectPicTx = ((TextView)paramContext.findViewById(1711866111));
-    this.mCancelBtn = ((Button)paramContext.findViewById(1711866112));
-    this.mAddAttachLl = ((LinearLayout)paramContext.findViewById(1711866109));
-    if (this.mType != 4) {
-      this.mAddAttachLl.setVisibility(8);
-    }
-    paramContext = getWindow();
-    localObject = paramContext.getAttributes();
-    ((WindowManager.LayoutParams)localObject).width = (ScreenUtil.getInstance().getWidthPixels() / 34 * 31);
-    if (paramInt == 4) {}
-    for (((WindowManager.LayoutParams)localObject).height = (ScreenUtil.getInstance().getHeightPixels() / 45 * 27);; ((WindowManager.LayoutParams)localObject).height = (ScreenUtil.getInstance().getHeightPixels() / 40 * 21))
-    {
-      ((WindowManager.LayoutParams)localObject).gravity = 17;
-      paramContext.setAttributes((WindowManager.LayoutParams)localObject);
-      paramContext.setGravity(17);
-      setStoreBtnState(false);
-      initListener();
-      initData();
-      return;
-    }
-  }
-  
-  private void initData()
-  {
-    if ("0".equals(BNDrivingToolManager.getInstance().mRouteFlag))
-    {
-      BNDrivingToolManager.getInstance().mIssueFlag = "0";
-      if (this.mType == 4) {
-        BNDrivingToolManager.getInstance().mIssueFlag = "1";
-      }
-      BNDrivingToolManager.getInstance().asynPullIssueList();
-      BNDrivingToolManager.getInstance().asynPullReliablePerson();
-      localObject = BNDrivingToolManager.getInstance().getIssueInfo().mIssueTime;
-      if ((localObject == null) || (((String)localObject).length() == 0)) {
-        System.currentTimeMillis();
-      }
-      localObject = BNaviModuleManager.getNaviActivity();
-      if (localObject != null) {
-        break label103;
-      }
-    }
-    label103:
-    do
-    {
-      return;
-      BNDrivingToolManager.getInstance().mIssueFlag = "0";
-      BNDrivingToolManager.getInstance().mRouteFlag = "0";
-      break;
-      if (this.mIssueTypeSp != null)
-      {
-        ArrayAdapter localArrayAdapter = new ArrayAdapter((Context)localObject, 17367048, BNDrivingToolParams.ISSUE_TYPES);
-        localArrayAdapter.setDropDownViewResource(17367049);
-        this.mIssueTypeSp.setAdapter(localArrayAdapter);
-      }
-    } while (this.mIssueStateSp == null);
-    Object localObject = new ArrayAdapter((Context)localObject, 17367048, BNDrivingToolParams.ISSUE_STATUS);
-    ((ArrayAdapter)localObject).setDropDownViewResource(17367049);
-    this.mIssueStateSp.setAdapter((SpinnerAdapter)localObject);
-  }
-  
-  private void initListener()
-  {
-    if (this.mCreateIssueBtn != null) {
-      this.mCreateIssueBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (ForbidDaulClickUtils.isFastDoubleClick(1500L)) {
-            return;
-          }
-          BNDrivingToolManager.getInstance().mIssueFlag = "1";
-          BNDrivingToolManager.getInstance().asynPullIssueList();
+public class BNDrivingToolIssueStoreDialog extends Dialog {
+    private Button mAddAttachBtn;
+    private LinearLayout mAddAttachLl;
+    private Button mCancelBtn;
+    private Button mCreateIssueBtn;
+    private EditText mIssueDespEt;
+    private Spinner mIssueIDSp;
+    private Spinner mIssueStateSp;
+    private Spinner mIssueTypeSp;
+    private Spinner mResponsiblePmSp;
+    private TextView mSelectPicTx;
+    private Button mStoreBtn;
+    private int mType;
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolIssueStoreDialog$1 */
+    class C46851 implements OnClickListener {
+        C46851() {
         }
-      });
-    }
-    if (this.mIssueIDSp != null) {
-      this.mIssueIDSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-      {
-        public void onItemSelected(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-        {
-          paramAnonymousAdapterView = BNDrivingToolManager.getInstance().getIssueInfo();
-          paramAnonymousView = BNDrivingToolManager.getInstance().mIssueList;
-          if (paramAnonymousView != null)
-          {
-            paramAnonymousAdapterView.mIssueID = ((String)paramAnonymousView.get(paramAnonymousInt)).trim();
-            if (BNDrivingToolManager.getInstance().isIssueNewCreate(paramAnonymousAdapterView.mIssueID)) {
-              break label93;
+
+        public void onClick(View v) {
+            if (!ForbidDaulClickUtils.isFastDoubleClick(1500)) {
+                BNDrivingToolManager.getInstance().mIssueFlag = "1";
+                BNDrivingToolManager.getInstance().asynPullIssueList();
             }
-            BNDrivingToolIssueStoreDialog.this.setStoreViewEnable(false);
-            if (!"-  -  -  -  -  -  -  -  -  -  -  -  -  -  -".equals(paramAnonymousAdapterView.mIssueID)) {
-              break label104;
-            }
-            BNDrivingToolManager.getInstance().isIssueRet = false;
-          }
-          for (;;)
-          {
-            if (!BNDrivingToolManager.getInstance().isIssueRet) {
-              break label157;
-            }
-            BNDrivingToolIssueStoreDialog.this.setStoreBtnState(true);
-            return;
-            label93:
-            BNDrivingToolIssueStoreDialog.this.setStoreViewEnable(true);
-            break;
-            label104:
-            if (BNDrivingToolManager.getInstance().isNoDrivingTest)
-            {
-              if (BNAttachmentManager.getInstance().mFilePathList.size() <= 0) {
-                BNDrivingToolManager.getInstance().isIssueRet = false;
-              } else {
-                BNDrivingToolManager.getInstance().isIssueRet = true;
-              }
-            }
-            else {
-              BNDrivingToolManager.getInstance().isIssueRet = true;
-            }
-          }
-          label157:
-          BNDrivingToolIssueStoreDialog.this.setStoreBtnState(false);
         }
-        
-        public void onNothingSelected(AdapterView<?> paramAnonymousAdapterView) {}
-      });
     }
-    if (this.mIssueDespEt != null) {
-      BNDrivingToolManager.getInstance().getIssueInfo().mIssueDescrption = this.mIssueDespEt.getText().toString().trim();
-    }
-    if (this.mIssueTypeSp != null) {
-      this.mIssueTypeSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-      {
-        public void onItemSelected(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-        {
-          paramAnonymousAdapterView = BNDrivingToolManager.getInstance().getIssueInfo();
-          if (BNDrivingToolParams.ISSUE_TYPES[paramAnonymousInt].equals("-  -  -  -  -  -  -  -  -  -  -  -  -  -  -"))
-          {
-            paramAnonymousAdapterView.mIssueType = null;
-            return;
-          }
-          paramAnonymousAdapterView.mIssueType = String.valueOf(paramAnonymousInt - 1);
-          BNDrivingToolManager.getInstance().updateReliableList(paramAnonymousInt - 1);
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolIssueStoreDialog$2 */
+    class C46862 implements OnItemSelectedListener {
+        C46862() {
         }
-        
-        public void onNothingSelected(AdapterView<?> paramAnonymousAdapterView) {}
-      });
-    }
-    if (this.mResponsiblePmSp != null) {
-      this.mResponsiblePmSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-      {
-        public void onItemSelected(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-        {
-          paramAnonymousAdapterView = BNDrivingToolManager.getInstance().getIssueInfo();
-          paramAnonymousView = BNDrivingToolManager.getInstance().mReliablePersonList;
-          if ((paramAnonymousView != null) && (paramAnonymousView.size() > 0))
-          {
-            paramAnonymousView = (String)paramAnonymousView.get(paramAnonymousInt);
-            if ((paramAnonymousView != null) && (paramAnonymousView.equals("-  -  -  -  -  -  -  -  -  -  -  -  -  -  -"))) {
-              paramAnonymousAdapterView.mPersonReliableID = null;
-            }
-          }
-          else
-          {
-            return;
-          }
-          paramAnonymousAdapterView.mPersonReliableID = ((String)BNDrivingToolManager.getInstance().mReliablePersonMap.get(paramAnonymousView));
-        }
-        
-        public void onNothingSelected(AdapterView<?> paramAnonymousAdapterView) {}
-      });
-    }
-    if (this.mIssueStateSp != null) {
-      this.mIssueStateSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-      {
-        public void onItemSelected(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-        {
-          paramAnonymousAdapterView = BNDrivingToolManager.getInstance().getIssueInfo();
-          if (BNDrivingToolParams.ISSUE_STATUS[paramAnonymousInt].equals("-  -  -  -  -  -  -  -  -  -  -  -  -  -  -"))
-          {
-            paramAnonymousAdapterView.mIssueStatus = null;
-            return;
-          }
-          paramAnonymousAdapterView.mIssueStatus = String.valueOf(paramAnonymousInt - 1);
-        }
-        
-        public void onNothingSelected(AdapterView<?> paramAnonymousAdapterView) {}
-      });
-    }
-    if (this.mAddAttachBtn != null) {
-      this.mAddAttachBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNAttachmentManager.getInstance().startSelectPicture();
-        }
-      });
-    }
-    if (this.mStoreBtn != null) {
-      this.mStoreBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask(getClass().getSimpleName(), null)new BNWorkerConfig
-          {
-            protected String execute()
-            {
-              int i = 1;
-              if (BNDrivingToolIssueStoreDialog.this.mType == 3)
-              {
-                BNScreentShotManager.sIsInThread = true;
-                BNScreentShotManager.getInstance().handleSave();
-              }
-              BNDrivingToolManager.getInstance().getIssueInfo().mIssueDescrption = BNDrivingToolIssueStoreDialog.this.mIssueDespEt.getText().toString().trim();
-              if (!BNDrivingToolIssueStoreDialog.this.mResponsiblePmSp.isEnabled()) {}
-              for (;;)
-              {
-                if (i != 0)
-                {
-                  DrivingToolIssueInfo localDrivingToolIssueInfo = BNDrivingToolManager.getInstance().getIssueInfo();
-                  localDrivingToolIssueInfo.mIssueType = null;
-                  localDrivingToolIssueInfo.mPersonReliableID = null;
-                  localDrivingToolIssueInfo.mIssueStatus = null;
+
+        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+            DrivingToolIssueInfo issueInfo = BNDrivingToolManager.getInstance().getIssueInfo();
+            List<String> issueList = BNDrivingToolManager.getInstance().mIssueList;
+            if (issueList != null) {
+                issueInfo.mIssueID = ((String) issueList.get(position)).trim();
+                if (BNDrivingToolManager.getInstance().isIssueNewCreate(issueInfo.mIssueID)) {
+                    BNDrivingToolIssueStoreDialog.this.setStoreViewEnable(true);
+                } else {
+                    BNDrivingToolIssueStoreDialog.this.setStoreViewEnable(false);
                 }
-                if (BNDrivingToolIssueStoreDialog.this.mType == 4)
-                {
-                  BNAttachmentManager.getInstance().storeAttachmentIndex(BNDrivingToolIssueStoreDialog.this.mType);
-                  label126:
-                  BNDrivingToolManager.getInstance().clearIssueInfo();
-                  BNAttachmentManager.getInstance().mFilePathList.clear();
-                  if (BNScreentShotManager.getInstance().mCachePath == null) {}
+                if (BNDrivingToolParams.DEFAULT_SPINNER_DATA.equals(issueInfo.mIssueID)) {
+                    BNDrivingToolManager.getInstance().isIssueRet = false;
+                } else if (!BNDrivingToolManager.getInstance().isNoDrivingTest) {
+                    BNDrivingToolManager.getInstance().isIssueRet = true;
+                } else if (BNAttachmentManager.getInstance().mFilePathList.size() <= 0) {
+                    BNDrivingToolManager.getInstance().isIssueRet = false;
+                } else {
+                    BNDrivingToolManager.getInstance().isIssueRet = true;
                 }
-                try
-                {
-                  FileUtils.del(BNScreentShotManager.getInstance().mCachePath);
-                  if (BNDrivingToolIssueStoreDialog.this.mType == 3)
-                  {
-                    BNScreentShotManager.sIsInThread = false;
-                    return null;
-                    i = 0;
-                    continue;
-                    BNDrivingToolManager.getInstance().storeIndexFile(BNDrivingToolIssueStoreDialog.this.mType);
-                    break label126;
-                  }
-                  BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("InitListener-" + getClass().getSimpleName(), null)new BNWorkerConfig
-                  {
-                    protected String execute()
-                    {
-                      BNDrivingToolIssueStoreDialog.this.dismiss();
-                      BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
-                      BNDrivingToolIssueStoreDialog.this.setStoreBtnState(false);
-                      return null;
+                if (BNDrivingToolManager.getInstance().isIssueRet) {
+                    BNDrivingToolIssueStoreDialog.this.setStoreBtnState(true);
+                } else {
+                    BNDrivingToolIssueStoreDialog.this.setStoreBtnState(false);
+                }
+            }
+        }
+
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolIssueStoreDialog$3 */
+    class C46873 implements OnItemSelectedListener {
+        C46873() {
+        }
+
+        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+            DrivingToolIssueInfo issueInfo = BNDrivingToolManager.getInstance().getIssueInfo();
+            if (BNDrivingToolParams.ISSUE_TYPES[position].equals(BNDrivingToolParams.DEFAULT_SPINNER_DATA)) {
+                issueInfo.mIssueType = null;
+                return;
+            }
+            issueInfo.mIssueType = String.valueOf(position - 1);
+            BNDrivingToolManager.getInstance().updateReliableList(position - 1);
+        }
+
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolIssueStoreDialog$4 */
+    class C46884 implements OnItemSelectedListener {
+        C46884() {
+        }
+
+        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+            DrivingToolIssueInfo issueInfo = BNDrivingToolManager.getInstance().getIssueInfo();
+            List<String> reliableList = BNDrivingToolManager.getInstance().mReliablePersonList;
+            if (reliableList != null && reliableList.size() > 0) {
+                String reliablePerson = (String) reliableList.get(position);
+                if (reliablePerson == null || !reliablePerson.equals(BNDrivingToolParams.DEFAULT_SPINNER_DATA)) {
+                    issueInfo.mPersonReliableID = (String) BNDrivingToolManager.getInstance().mReliablePersonMap.get(reliablePerson);
+                } else {
+                    issueInfo.mPersonReliableID = null;
+                }
+            }
+        }
+
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolIssueStoreDialog$5 */
+    class C46895 implements OnItemSelectedListener {
+        C46895() {
+        }
+
+        public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+            DrivingToolIssueInfo issueInfo = BNDrivingToolManager.getInstance().getIssueInfo();
+            if (BNDrivingToolParams.ISSUE_STATUS[position].equals(BNDrivingToolParams.DEFAULT_SPINNER_DATA)) {
+                issueInfo.mIssueStatus = null;
+            } else {
+                issueInfo.mIssueStatus = String.valueOf(position - 1);
+            }
+        }
+
+        public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolIssueStoreDialog$6 */
+    class C46906 implements OnClickListener {
+        C46906() {
+        }
+
+        public void onClick(View v) {
+            BNAttachmentManager.getInstance().startSelectPicture();
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolIssueStoreDialog$7 */
+    class C46937 implements OnClickListener {
+        C46937() {
+        }
+
+        public void onClick(View v) {
+            BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>(getClass().getSimpleName(), null) {
+                protected String execute() {
+                    boolean isOld = true;
+                    if (BNDrivingToolIssueStoreDialog.this.mType == 3) {
+                        BNScreentShotManager.sIsInThread = true;
+                        BNScreentShotManager.getInstance().handleSave();
                     }
-                  }, new BNWorkerConfig(100, 0));
-                  return null;
+                    BNDrivingToolManager.getInstance().getIssueInfo().mIssueDescrption = BNDrivingToolIssueStoreDialog.this.mIssueDespEt.getText().toString().trim();
+                    if (BNDrivingToolIssueStoreDialog.this.mResponsiblePmSp.isEnabled()) {
+                        isOld = false;
+                    }
+                    if (isOld) {
+                        DrivingToolIssueInfo info = BNDrivingToolManager.getInstance().getIssueInfo();
+                        info.mIssueType = null;
+                        info.mPersonReliableID = null;
+                        info.mIssueStatus = null;
+                    }
+                    if (BNDrivingToolIssueStoreDialog.this.mType == 4) {
+                        BNAttachmentManager.getInstance().storeAttachmentIndex(BNDrivingToolIssueStoreDialog.this.mType);
+                    } else {
+                        BNDrivingToolManager.getInstance().storeIndexFile(BNDrivingToolIssueStoreDialog.this.mType);
+                    }
+                    BNDrivingToolManager.getInstance().clearIssueInfo();
+                    BNAttachmentManager.getInstance().mFilePathList.clear();
+                    if (BNScreentShotManager.getInstance().mCachePath != null) {
+                        try {
+                            FileUtils.del(BNScreentShotManager.getInstance().mCachePath);
+                        } catch (IOException e) {
+                        }
+                    }
+                    if (BNDrivingToolIssueStoreDialog.this.mType == 3) {
+                        BNScreentShotManager.sIsInThread = false;
+                    } else {
+                        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("InitListener-" + getClass().getSimpleName(), null) {
+                            protected String execute() {
+                                BNDrivingToolIssueStoreDialog.this.dismiss();
+                                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
+                                BNDrivingToolIssueStoreDialog.this.setStoreBtnState(false);
+                                return null;
+                            }
+                        }, new BNWorkerConfig(100, 0));
+                    }
+                    return null;
                 }
-                catch (IOException localIOException)
-                {
-                  for (;;) {}
-                }
-              }
+            }, new BNWorkerConfig(100, 0));
+            if (BNDrivingToolIssueStoreDialog.this.mType == 3) {
+                BNDrivingToolIssueStoreDialog.this.dismiss();
+                BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
+                BNDrivingToolIssueStoreDialog.this.setStoreBtnState(false);
             }
-          }, new BNWorkerConfig(100, 0));
-          if (BNDrivingToolIssueStoreDialog.this.mType == 3)
-          {
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.util.drivertool.view.BNDrivingToolIssueStoreDialog$8 */
+    class C46948 implements OnClickListener {
+        C46948() {
+        }
+
+        public void onClick(View v) {
             BNDrivingToolIssueStoreDialog.this.dismiss();
-            BNDrivingToolManager.getInstance().setDrivingToolIconVisibility(true);
-            BNDrivingToolIssueStoreDialog.this.setStoreBtnState(false);
-          }
         }
-      });
     }
-    if (this.mCancelBtn != null) {
-      this.mCancelBtn.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          BNDrivingToolIssueStoreDialog.this.dismiss();
+
+    public BNDrivingToolIssueStoreDialog(Context ctx, int type) {
+        super(ctx);
+        this.mType = type;
+        Theme theme = JarUtils.getResources().newTheme();
+        theme.applyStyle(C4048R.style.BNDialog, true);
+        JarUtils.setDialogThemeField(this, theme);
+        View view = JarUtils.oldInflate((Activity) ctx, C4048R.layout.nsdk_layout_driving_tool_issue_store, null);
+        setContentView(view);
+        this.mIssueIDSp = (Spinner) view.findViewById(C4048R.id.issue_id_sp);
+        this.mIssueDespEt = (EditText) view.findViewById(C4048R.id.issue_desp_et);
+        this.mIssueTypeSp = (Spinner) view.findViewById(C4048R.id.issue_type_sp);
+        this.mResponsiblePmSp = (Spinner) view.findViewById(C4048R.id.responsible_pm_sp);
+        this.mIssueStateSp = (Spinner) view.findViewById(C4048R.id.current_state_sp);
+        this.mCreateIssueBtn = (Button) view.findViewById(C4048R.id.create_issue_btn);
+        this.mStoreBtn = (Button) view.findViewById(C4048R.id.store_btn);
+        this.mAddAttachBtn = (Button) view.findViewById(C4048R.id.add_attch_btn);
+        this.mSelectPicTx = (TextView) view.findViewById(C4048R.id.select_picture_tx);
+        this.mCancelBtn = (Button) view.findViewById(C4048R.id.cancel_btn);
+        this.mAddAttachLl = (LinearLayout) view.findViewById(C4048R.id.add_attach_ll);
+        if (this.mType != 4) {
+            this.mAddAttachLl.setVisibility(8);
         }
-      });
-    }
-  }
-  
-  public void setStoreBtnState(boolean paramBoolean)
-  {
-    if (this.mStoreBtn == null) {
-      return;
-    }
-    if (paramBoolean) {
-      this.mStoreBtn.setBackgroundColor(-16711936);
-    }
-    for (;;)
-    {
-      this.mStoreBtn.setClickable(paramBoolean);
-      return;
-      this.mStoreBtn.setBackgroundColor(-7829368);
-    }
-  }
-  
-  public void setStoreViewEnable(boolean paramBoolean)
-  {
-    if (this.mIssueTypeSp != null) {
-      this.mIssueTypeSp.setEnabled(paramBoolean);
-    }
-    if (this.mIssueStateSp != null) {
-      this.mIssueStateSp.setEnabled(paramBoolean);
-    }
-    if (this.mResponsiblePmSp != null) {
-      this.mResponsiblePmSp.setEnabled(paramBoolean);
-    }
-  }
-  
-  public void updateAttachNumber(int paramInt)
-  {
-    this.mSelectPicTx.setText("图片数：" + String.valueOf(paramInt));
-  }
-  
-  public void updateIssueListView()
-  {
-    if (this.mIssueIDSp != null)
-    {
-      Object localObject = BNDrivingToolManager.getInstance().mIssueList;
-      if (localObject != null)
-      {
-        localObject = new ArrayAdapter(BNaviModuleManager.getNaviActivity(), 17367048, (List)localObject);
-        ((ArrayAdapter)localObject).setDropDownViewResource(17367049);
-        this.mIssueIDSp.setAdapter((SpinnerAdapter)localObject);
-        if ((BNDrivingToolManager.getInstance().mIssueList != null) && (BNDrivingToolManager.getInstance().mIssueList.size() > 0) && (BNDrivingToolManager.getInstance().mIssueFlag.equals("1")))
-        {
-          int i = BNDrivingToolManager.getInstance().mIssueList.size() - 1;
-          this.mIssueIDSp.setSelection(i, true);
-          LogUtil.e("drivingTool", "set new create issue selcetion " + (String)BNDrivingToolManager.getInstance().mIssueList.get(i));
+        Window window = getWindow();
+        LayoutParams lp = window.getAttributes();
+        lp.width = (ScreenUtil.getInstance().getWidthPixels() / 34) * 31;
+        if (type == 4) {
+            lp.height = (ScreenUtil.getInstance().getHeightPixels() / 45) * 27;
+        } else {
+            lp.height = (ScreenUtil.getInstance().getHeightPixels() / 40) * 21;
         }
-      }
+        lp.gravity = 17;
+        window.setAttributes(lp);
+        window.setGravity(17);
+        setStoreBtnState(false);
+        initListener();
+        initData();
     }
-  }
-  
-  public void updateNewIssueDefaultAction()
-  {
-    if (this.mIssueStateSp != null) {
-      this.mIssueStateSp.setSelection(1);
+
+    public void updateAttachNumber(int type) {
+        this.mSelectPicTx.setText("图片数：" + String.valueOf(type));
     }
-  }
-  
-  public void updateReliablePersonView()
-  {
-    if (this.mResponsiblePmSp != null)
-    {
-      Object localObject = BNDrivingToolManager.getInstance().mReliablePersonList;
-      if (localObject != null)
-      {
-        Activity localActivity = BNaviModuleManager.getNaviActivity();
-        if (localActivity != null)
-        {
-          localObject = new ArrayAdapter(localActivity, 17367048, (List)localObject);
-          ((ArrayAdapter)localObject).setDropDownViewResource(17367049);
-          this.mResponsiblePmSp.setAdapter((SpinnerAdapter)localObject);
+
+    public void updateIssueListView() {
+        if (this.mIssueIDSp != null) {
+            List<String> issueList = BNDrivingToolManager.getInstance().mIssueList;
+            if (issueList != null) {
+                ArrayAdapter<String> adapter = new ArrayAdapter(BNaviModuleManager.getNaviActivity(), 17367048, issueList);
+                adapter.setDropDownViewResource(17367049);
+                this.mIssueIDSp.setAdapter(adapter);
+                if (BNDrivingToolManager.getInstance().mIssueList != null && BNDrivingToolManager.getInstance().mIssueList.size() > 0 && BNDrivingToolManager.getInstance().mIssueFlag.equals("1")) {
+                    int position = BNDrivingToolManager.getInstance().mIssueList.size() - 1;
+                    this.mIssueIDSp.setSelection(position, true);
+                    LogUtil.m15791e(BNDrivingToolManager.MODULENAME, "set new create issue selcetion " + ((String) BNDrivingToolManager.getInstance().mIssueList.get(position)));
+                }
+            }
         }
-      }
     }
-  }
+
+    public void setStoreViewEnable(boolean enable) {
+        if (this.mIssueTypeSp != null) {
+            this.mIssueTypeSp.setEnabled(enable);
+        }
+        if (this.mIssueStateSp != null) {
+            this.mIssueStateSp.setEnabled(enable);
+        }
+        if (this.mResponsiblePmSp != null) {
+            this.mResponsiblePmSp.setEnabled(enable);
+        }
+    }
+
+    public void updateReliablePersonView() {
+        if (this.mResponsiblePmSp != null) {
+            List<String> reliablePersonList = BNDrivingToolManager.getInstance().mReliablePersonList;
+            if (reliablePersonList != null) {
+                Context ctx = BNaviModuleManager.getNaviActivity();
+                if (ctx != null) {
+                    ArrayAdapter<String> adapter = new ArrayAdapter(ctx, 17367048, reliablePersonList);
+                    adapter.setDropDownViewResource(17367049);
+                    this.mResponsiblePmSp.setAdapter(adapter);
+                }
+            }
+        }
+    }
+
+    private void initData() {
+        if ("0".equals(BNDrivingToolManager.getInstance().mRouteFlag)) {
+            BNDrivingToolManager.getInstance().mIssueFlag = "0";
+        } else {
+            BNDrivingToolManager.getInstance().mIssueFlag = "0";
+            BNDrivingToolManager.getInstance().mRouteFlag = "0";
+        }
+        if (this.mType == 4) {
+            BNDrivingToolManager.getInstance().mIssueFlag = "1";
+        }
+        BNDrivingToolManager.getInstance().asynPullIssueList();
+        BNDrivingToolManager.getInstance().asynPullReliablePerson();
+        String timeStr = BNDrivingToolManager.getInstance().getIssueInfo().mIssueTime;
+        if (timeStr == null || timeStr.length() == 0) {
+            timeStr = String.valueOf(System.currentTimeMillis());
+        }
+        Context ctx = BNaviModuleManager.getNaviActivity();
+        if (ctx != null) {
+            ArrayAdapter<String> adapter;
+            if (this.mIssueTypeSp != null) {
+                adapter = new ArrayAdapter(ctx, 17367048, BNDrivingToolParams.ISSUE_TYPES);
+                adapter.setDropDownViewResource(17367049);
+                this.mIssueTypeSp.setAdapter(adapter);
+            }
+            if (this.mIssueStateSp != null) {
+                adapter = new ArrayAdapter(ctx, 17367048, BNDrivingToolParams.ISSUE_STATUS);
+                adapter.setDropDownViewResource(17367049);
+                this.mIssueStateSp.setAdapter(adapter);
+            }
+        }
+    }
+
+    private void initListener() {
+        if (this.mCreateIssueBtn != null) {
+            this.mCreateIssueBtn.setOnClickListener(new C46851());
+        }
+        if (this.mIssueIDSp != null) {
+            this.mIssueIDSp.setOnItemSelectedListener(new C46862());
+        }
+        if (this.mIssueDespEt != null) {
+            BNDrivingToolManager.getInstance().getIssueInfo().mIssueDescrption = this.mIssueDespEt.getText().toString().trim();
+        }
+        if (this.mIssueTypeSp != null) {
+            this.mIssueTypeSp.setOnItemSelectedListener(new C46873());
+        }
+        if (this.mResponsiblePmSp != null) {
+            this.mResponsiblePmSp.setOnItemSelectedListener(new C46884());
+        }
+        if (this.mIssueStateSp != null) {
+            this.mIssueStateSp.setOnItemSelectedListener(new C46895());
+        }
+        if (this.mAddAttachBtn != null) {
+            this.mAddAttachBtn.setOnClickListener(new C46906());
+        }
+        if (this.mStoreBtn != null) {
+            this.mStoreBtn.setOnClickListener(new C46937());
+        }
+        if (this.mCancelBtn != null) {
+            this.mCancelBtn.setOnClickListener(new C46948());
+        }
+    }
+
+    public void setStoreBtnState(boolean state) {
+        if (this.mStoreBtn != null) {
+            if (state) {
+                this.mStoreBtn.setBackgroundColor(-16711936);
+            } else {
+                this.mStoreBtn.setBackgroundColor(-7829368);
+            }
+            this.mStoreBtn.setClickable(state);
+        }
+    }
+
+    public void updateNewIssueDefaultAction() {
+        if (this.mIssueStateSp != null) {
+            this.mIssueStateSp.setSelection(1);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/drivertool/view/BNDrivingToolIssueStoreDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

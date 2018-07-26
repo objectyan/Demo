@@ -1,123 +1,94 @@
 package com.google.zxing.qrcode.decoder;
 
-final class DataBlock
-{
-  private final byte[] codewords;
-  private final int numDataCodewords;
-  
-  private DataBlock(int paramInt, byte[] paramArrayOfByte)
-  {
-    this.numDataCodewords = paramInt;
-    this.codewords = paramArrayOfByte;
-  }
-  
-  static DataBlock[] getDataBlocks(byte[] paramArrayOfByte, Version paramVersion, ErrorCorrectionLevel paramErrorCorrectionLevel)
-  {
-    if (paramArrayOfByte.length != paramVersion.getTotalCodewords()) {
-      throw new IllegalArgumentException();
+import com.google.zxing.qrcode.decoder.Version.ECB;
+import com.google.zxing.qrcode.decoder.Version.ECBlocks;
+
+final class DataBlock {
+    private final byte[] codewords;
+    private final int numDataCodewords;
+
+    private DataBlock(int numDataCodewords, byte[] codewords) {
+        this.numDataCodewords = numDataCodewords;
+        this.codewords = codewords;
     }
-    paramVersion = paramVersion.getECBlocksForLevel(paramErrorCorrectionLevel);
-    int j = 0;
-    paramErrorCorrectionLevel = paramVersion.getECBlocks();
-    int k = paramErrorCorrectionLevel.length;
-    int i = 0;
-    while (i < k)
-    {
-      j += paramErrorCorrectionLevel[i].getCount();
-      i += 1;
-    }
-    DataBlock[] arrayOfDataBlock = new DataBlock[j];
-    k = 0;
-    int m = paramErrorCorrectionLevel.length;
-    i = 0;
-    int n;
-    while (i < m)
-    {
-      Object localObject = paramErrorCorrectionLevel[i];
-      j = 0;
-      while (j < ((Version.ECB)localObject).getCount())
-      {
-        n = ((Version.ECB)localObject).getDataCodewords();
-        arrayOfDataBlock[k] = new DataBlock(n, new byte[paramVersion.getECCodewordsPerBlock() + n]);
-        j += 1;
-        k += 1;
-      }
-      i += 1;
-    }
-    j = arrayOfDataBlock[0].codewords.length;
-    i = arrayOfDataBlock.length - 1;
-    int i1;
-    if ((i < 0) || (arrayOfDataBlock[i].codewords.length == j))
-    {
-      i1 = i + 1;
-      n = j - paramVersion.getECCodewordsPerBlock();
-      i = 0;
-      j = 0;
-    }
-    for (;;)
-    {
-      if (j >= n) {
-        break label265;
-      }
-      m = 0;
-      for (;;)
-      {
-        if (m < k)
-        {
-          arrayOfDataBlock[m].codewords[j] = paramArrayOfByte[i];
-          m += 1;
-          i += 1;
-          continue;
-          i -= 1;
-          break;
+
+    static DataBlock[] getDataBlocks(byte[] rawCodewords, Version version, ErrorCorrectionLevel ecLevel) {
+        if (rawCodewords.length != version.getTotalCodewords()) {
+            throw new IllegalArgumentException();
         }
-      }
-      j += 1;
-    }
-    label265:
-    j = i1;
-    while (j < k)
-    {
-      arrayOfDataBlock[j].codewords[n] = paramArrayOfByte[i];
-      j += 1;
-      i += 1;
-    }
-    int i2 = arrayOfDataBlock[0].codewords.length;
-    m = n;
-    j = i;
-    i = m;
-    while (i < i2)
-    {
-      m = 0;
-      if (m < k)
-      {
-        if (m < i1) {}
-        for (n = i;; n = i + 1)
-        {
-          arrayOfDataBlock[m].codewords[n] = paramArrayOfByte[j];
-          m += 1;
-          j += 1;
-          break;
+        int i;
+        int j;
+        int rawCodewordsOffset;
+        ECBlocks ecBlocks = version.getECBlocksForLevel(ecLevel);
+        int totalBlocks = 0;
+        ECB[] ecBlockArray = ecBlocks.getECBlocks();
+        for (ECB ecBlock : ecBlockArray) {
+            totalBlocks += ecBlock.getCount();
         }
-      }
-      i += 1;
+        DataBlock[] result = new DataBlock[totalBlocks];
+        int numResultBlocks = 0;
+        for (ECB ecBlock2 : ecBlockArray) {
+            i = 0;
+            while (i < ecBlock2.getCount()) {
+                int numDataCodewords = ecBlock2.getDataCodewords();
+                int numResultBlocks2 = numResultBlocks + 1;
+                result[numResultBlocks] = new DataBlock(numDataCodewords, new byte[(ecBlocks.getECCodewordsPerBlock() + numDataCodewords)]);
+                i++;
+                numResultBlocks = numResultBlocks2;
+            }
+        }
+        int shorterBlocksTotalCodewords = result[0].codewords.length;
+        int longerBlocksStartAt = result.length - 1;
+        while (longerBlocksStartAt >= 0 && result[longerBlocksStartAt].codewords.length != shorterBlocksTotalCodewords) {
+            longerBlocksStartAt--;
+        }
+        longerBlocksStartAt++;
+        int shorterBlocksNumDataCodewords = shorterBlocksTotalCodewords - ecBlocks.getECCodewordsPerBlock();
+        int rawCodewordsOffset2 = 0;
+        i = 0;
+        while (i < shorterBlocksNumDataCodewords) {
+            j = 0;
+            rawCodewordsOffset = rawCodewordsOffset2;
+            while (j < numResultBlocks) {
+                rawCodewordsOffset2 = rawCodewordsOffset + 1;
+                result[j].codewords[i] = rawCodewords[rawCodewordsOffset];
+                j++;
+                rawCodewordsOffset = rawCodewordsOffset2;
+            }
+            i++;
+            rawCodewordsOffset2 = rawCodewordsOffset;
+        }
+        j = longerBlocksStartAt;
+        rawCodewordsOffset = rawCodewordsOffset2;
+        while (j < numResultBlocks) {
+            rawCodewordsOffset2 = rawCodewordsOffset + 1;
+            result[j].codewords[shorterBlocksNumDataCodewords] = rawCodewords[rawCodewordsOffset];
+            j++;
+            rawCodewordsOffset = rawCodewordsOffset2;
+        }
+        int max = result[0].codewords.length;
+        i = shorterBlocksNumDataCodewords;
+        rawCodewordsOffset2 = rawCodewordsOffset;
+        while (i < max) {
+            j = 0;
+            rawCodewordsOffset = rawCodewordsOffset2;
+            while (j < numResultBlocks) {
+                rawCodewordsOffset2 = rawCodewordsOffset + 1;
+                result[j].codewords[j < longerBlocksStartAt ? i : i + 1] = rawCodewords[rawCodewordsOffset];
+                j++;
+                rawCodewordsOffset = rawCodewordsOffset2;
+            }
+            i++;
+            rawCodewordsOffset2 = rawCodewordsOffset;
+        }
+        return result;
     }
-    return arrayOfDataBlock;
-  }
-  
-  byte[] getCodewords()
-  {
-    return this.codewords;
-  }
-  
-  int getNumDataCodewords()
-  {
-    return this.numDataCodewords;
-  }
+
+    int getNumDataCodewords() {
+        return this.numDataCodewords;
+    }
+
+    byte[] getCodewords() {
+        return this.codewords;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/decoder/DataBlock.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

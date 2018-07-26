@@ -1,51 +1,34 @@
 package com.baidu.navisdk.logic.task;
 
 import com.baidu.navisdk.logic.CommandBase;
-import com.baidu.navisdk.logic.CommandCenter.CommandCenterListener;
 import com.baidu.navisdk.logic.CommandDispatcher;
 import com.baidu.navisdk.logic.CommandResult;
+import com.baidu.navisdk.logic.NaviErrCode;
 import com.baidu.navisdk.logic.ReqData;
 import java.util.concurrent.Callable;
 
-public class StatisticsTask
-{
-  public static CommandResult doTask(ReqData paramReqData, String paramString)
-    throws Exception
-  {
-    CommandResult localCommandResult = new CommandResult();
-    paramString = CommandDispatcher.getCommandParser(paramString);
-    if (paramString != null)
-    {
-      paramReqData = paramString.execute(paramReqData);
-      if (paramReqData.isSuccess()) {
-        return paramReqData;
-      }
+public class StatisticsTask {
+    public static CommandResult doTask(ReqData reqdata, String cmd) throws Exception {
+        CommandResult ret = new CommandResult();
+        CommandBase commandParser = CommandDispatcher.getCommandParser(cmd);
+        if (commandParser != null) {
+            ret = commandParser.execute(reqdata);
+            if (ret.isSuccess()) {
+                return ret;
+            }
+            return ret;
+        }
+        ret.set((int) NaviErrCode.RET_BUG);
+        return ret;
     }
-    else
-    {
-      localCommandResult.set(55537);
-      return localCommandResult;
+
+    public static Callable<CommandResult> newTask(final ReqData reqdata) {
+        return new Callable<CommandResult>() {
+            public CommandResult call() throws Exception {
+                CommandResult result = StatisticsTask.doTask(reqdata, reqdata.mCmd);
+                reqdata.mRequestListener.onRequestFinish(reqdata, result);
+                return result;
+            }
+        };
     }
-    return paramReqData;
-  }
-  
-  public static Callable<CommandResult> newTask(ReqData paramReqData)
-  {
-    new Callable()
-    {
-      public CommandResult call()
-        throws Exception
-      {
-        CommandResult localCommandResult = StatisticsTask.doTask(this.val$reqdata, this.val$reqdata.mCmd);
-        this.val$reqdata.mRequestListener.onRequestFinish(this.val$reqdata, localCommandResult);
-        return localCommandResult;
-      }
-    };
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/logic/task/StatisticsTask.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

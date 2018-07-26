@@ -3,67 +3,54 @@ package com.google.android.support.v4.view;
 import android.os.Build.VERSION;
 import android.view.VelocityTracker;
 
-public class VelocityTrackerCompat
-{
-  static final VelocityTrackerVersionImpl IMPL = new BaseVelocityTrackerVersionImpl();
-  
-  static
-  {
-    if (Build.VERSION.SDK_INT >= 11)
-    {
-      IMPL = new HoneycombVelocityTrackerVersionImpl();
-      return;
+public class VelocityTrackerCompat {
+    static final VelocityTrackerVersionImpl IMPL;
+
+    interface VelocityTrackerVersionImpl {
+        float getXVelocity(VelocityTracker velocityTracker, int i);
+
+        float getYVelocity(VelocityTracker velocityTracker, int i);
     }
-  }
-  
-  public static float getXVelocity(VelocityTracker paramVelocityTracker, int paramInt)
-  {
-    return IMPL.getXVelocity(paramVelocityTracker, paramInt);
-  }
-  
-  public static float getYVelocity(VelocityTracker paramVelocityTracker, int paramInt)
-  {
-    return IMPL.getYVelocity(paramVelocityTracker, paramInt);
-  }
-  
-  static class BaseVelocityTrackerVersionImpl
-    implements VelocityTrackerCompat.VelocityTrackerVersionImpl
-  {
-    public float getXVelocity(VelocityTracker paramVelocityTracker, int paramInt)
-    {
-      return paramVelocityTracker.getXVelocity();
+
+    static class BaseVelocityTrackerVersionImpl implements VelocityTrackerVersionImpl {
+        BaseVelocityTrackerVersionImpl() {
+        }
+
+        public float getXVelocity(VelocityTracker tracker, int pointerId) {
+            return tracker.getXVelocity();
+        }
+
+        public float getYVelocity(VelocityTracker tracker, int pointerId) {
+            return tracker.getYVelocity();
+        }
     }
-    
-    public float getYVelocity(VelocityTracker paramVelocityTracker, int paramInt)
-    {
-      return paramVelocityTracker.getYVelocity();
+
+    static class HoneycombVelocityTrackerVersionImpl implements VelocityTrackerVersionImpl {
+        HoneycombVelocityTrackerVersionImpl() {
+        }
+
+        public float getXVelocity(VelocityTracker tracker, int pointerId) {
+            return VelocityTrackerCompatHoneycomb.getXVelocity(tracker, pointerId);
+        }
+
+        public float getYVelocity(VelocityTracker tracker, int pointerId) {
+            return VelocityTrackerCompatHoneycomb.getYVelocity(tracker, pointerId);
+        }
     }
-  }
-  
-  static class HoneycombVelocityTrackerVersionImpl
-    implements VelocityTrackerCompat.VelocityTrackerVersionImpl
-  {
-    public float getXVelocity(VelocityTracker paramVelocityTracker, int paramInt)
-    {
-      return VelocityTrackerCompatHoneycomb.getXVelocity(paramVelocityTracker, paramInt);
+
+    static {
+        if (VERSION.SDK_INT >= 11) {
+            IMPL = new HoneycombVelocityTrackerVersionImpl();
+        } else {
+            IMPL = new BaseVelocityTrackerVersionImpl();
+        }
     }
-    
-    public float getYVelocity(VelocityTracker paramVelocityTracker, int paramInt)
-    {
-      return VelocityTrackerCompatHoneycomb.getYVelocity(paramVelocityTracker, paramInt);
+
+    public static float getXVelocity(VelocityTracker tracker, int pointerId) {
+        return IMPL.getXVelocity(tracker, pointerId);
     }
-  }
-  
-  static abstract interface VelocityTrackerVersionImpl
-  {
-    public abstract float getXVelocity(VelocityTracker paramVelocityTracker, int paramInt);
-    
-    public abstract float getYVelocity(VelocityTracker paramVelocityTracker, int paramInt);
-  }
+
+    public static float getYVelocity(VelocityTracker tracker, int pointerId) {
+        return IMPL.getYVelocity(tracker, pointerId);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/VelocityTrackerCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

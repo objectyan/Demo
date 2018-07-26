@@ -1,267 +1,300 @@
 package com.baidu.navi.controller;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
 import com.baidu.navisdk.util.db.DBManager;
-import com.baidu.navisdk.util.db.DBManager.DBOperateResultCallback;
+import com.baidu.navisdk.util.db.DBManager$DBOperateResultCallback;
 import com.baidu.navisdk.util.db.model.NaviFavoriteDestModel;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteDestinationController
-{
-  private static final String TAG = FavoriteDestinationController.class.getSimpleName();
-  private DBManager.DBOperateResultCallback mCallback = new DBManager.DBOperateResultCallback()
-  {
-    public void onAddOrDeleteSuccess()
-    {
-      FavoriteDestinationController.this.notifyHistoryDataSetChanged();
+public class FavoriteDestinationController {
+    private static final String TAG = FavoriteDestinationController.class.getSimpleName();
+    private DBManager$DBOperateResultCallback mCallback;
+    private List<RoutePlanNode> mDataList;
+
+    public interface FavoriteDestResultCallBack {
+        void onAddResult(boolean z);
+
+        void onCheckResult(boolean z);
+
+        void onCleanResult(boolean z);
+
+        void onRemoveResult(boolean z);
     }
-    
-    public void onQuerySuccess()
-    {
-      FavoriteDestinationController.this.notifyHistoryDataSetChanged();
-    }
-  };
-  private List<RoutePlanNode> mDataList = new ArrayList();
-  
-  private double getDistance(GeoPoint paramGeoPoint1, GeoPoint paramGeoPoint2)
-  {
-    double d1 = paramGeoPoint1.getLongitudeE6() - paramGeoPoint2.getLongitudeE6();
-    double d2 = paramGeoPoint1.getLatitudeE6() - paramGeoPoint2.getLatitudeE6();
-    return Math.sqrt(d1 * d1 + d2 * d2);
-  }
-  
-  public static FavoriteDestinationController getInstance()
-  {
-    return InnerHolder.mInstance;
-  }
-  
-  private void notifyHistoryDataSetChanged()
-  {
-    this.mDataList = NaviFavoriteDestModel.getInstance().getRoutePlanNode();
-  }
-  
-  public void addFavoriteDestFromDB(RoutePlanNode paramRoutePlanNode, FavoriteDestResultCallBack paramFavoriteDestResultCallBack)
-  {
-    if (paramRoutePlanNode == null) {
-      if (paramFavoriteDestResultCallBack != null) {
-        paramFavoriteDestResultCallBack.onAddResult(false);
-      }
-    }
-    do
-    {
-      return;
-      DBManager.addFavoriteDestPointToDB(paramRoutePlanNode);
-      DBManager.getAllFavoriteDestPoints(this.mCallback);
-    } while (paramFavoriteDestResultCallBack == null);
-    paramFavoriteDestResultCallBack.onAddResult(true);
-  }
-  
-  public void checkFavoriteDest(final SearchPoi paramSearchPoi, final FavoriteDestResultCallBack paramFavoriteDestResultCallBack)
-  {
-    if ((this.mDataList == null) || (paramSearchPoi == null) || (paramFavoriteDestResultCallBack == null))
-    {
-      if (paramFavoriteDestResultCallBack != null) {
-        paramFavoriteDestResultCallBack.onCheckResult(false);
-      }
-      return;
-    }
-    if ((paramSearchPoi == null) || (paramSearchPoi.mGuidePoint == null))
-    {
-      paramFavoriteDestResultCallBack.onCheckResult(false);
-      return;
-    }
-    if ((paramSearchPoi == null) || (paramSearchPoi.mGuidePoint.getLatitudeE6() == Integer.MIN_VALUE) || (paramSearchPoi.mGuidePoint.getLongitudeE6() == Integer.MIN_VALUE))
-    {
-      paramFavoriteDestResultCallBack.onCheckResult(false);
-      return;
-    }
-    new Thread(new Runnable()
-    {
-      public void run()
-      {
-        int i = 0;
-        if ((FavoriteDestinationController.this.mDataList == null) || (paramSearchPoi == null) || (paramFavoriteDestResultCallBack == null)) {
-          i = 1;
+
+    /* renamed from: com.baidu.navi.controller.FavoriteDestinationController$1 */
+    class C36831 implements DBManager$DBOperateResultCallback {
+        C36831() {
         }
-        if ((i != 0) || (paramSearchPoi == null) || (paramSearchPoi.mGuidePoint == null)) {
-          i = 1;
+
+        public void onAddOrDeleteSuccess() {
+            FavoriteDestinationController.this.notifyHistoryDataSetChanged();
         }
-        if ((i != 0) || (paramSearchPoi == null) || (paramSearchPoi.mGuidePoint.getLatitudeE6() == Integer.MIN_VALUE) || (paramSearchPoi.mGuidePoint.getLongitudeE6() == Integer.MIN_VALUE)) {
-          i = 1;
+
+        public void onQuerySuccess() {
+            FavoriteDestinationController.this.notifyHistoryDataSetChanged();
         }
-        boolean bool2 = false;
-        int j = 0;
-        RoutePlanNode localRoutePlanNode;
-        if (i == 0)
-        {
-          bool1 = bool2;
-          if (j >= FavoriteDestinationController.this.mDataList.size()) {}
+    }
+
+    static class InnerHolder {
+        static FavoriteDestinationController mInstance = new FavoriteDestinationController();
+
+        InnerHolder() {
         }
-        else
-        {
-          localRoutePlanNode = (RoutePlanNode)FavoriteDestinationController.this.mDataList.get(j);
-          if (localRoutePlanNode.mGeoPoint == null) {}
-          while ((localRoutePlanNode.mGeoPoint.getLatitudeE6() == Integer.MIN_VALUE) || (localRoutePlanNode.mGeoPoint.getLongitudeE6() == Integer.MIN_VALUE))
-          {
-            j += 1;
-            break;
-          }
-          if ((localRoutePlanNode.mGeoPoint.getLatitudeE6() != paramSearchPoi.mGuidePoint.getLatitudeE6()) || (localRoutePlanNode.mGeoPoint.getLongitudeE6() != paramSearchPoi.mGuidePoint.getLongitudeE6())) {
-            break label249;
-          }
+    }
+
+    private FavoriteDestinationController() {
+        this.mDataList = new ArrayList();
+        this.mCallback = new C36831();
+    }
+
+    public static FavoriteDestinationController getInstance() {
+        return InnerHolder.mInstance;
+    }
+
+    private void notifyHistoryDataSetChanged() {
+        this.mDataList = NaviFavoriteDestModel.getInstance().getRoutePlanNode();
+    }
+
+    public List<RoutePlanNode> getFavoriteDestList() {
+        return this.mDataList;
+    }
+
+    public boolean checkFavoriteDest(SearchPoi point) {
+        if (this.mDataList == null || point == null) {
+            return false;
         }
-        for (final boolean bool1 = true;; bool1 = true)
-        {
-          new Handler(Looper.getMainLooper()).post(new Runnable()
-          {
-            public void run()
-            {
-              if (FavoriteDestinationController.2.this.val$callback != null) {
-                FavoriteDestinationController.2.this.val$callback.onCheckResult(bool1);
-              }
+        if (point == null || point.mGuidePoint == null) {
+            return false;
+        }
+        if (point == null || point.mGuidePoint.getLatitudeE6() == Integer.MIN_VALUE || point.mGuidePoint.getLongitudeE6() == Integer.MIN_VALUE) {
+            return false;
+        }
+        for (int i = 0; i < this.mDataList.size(); i++) {
+            RoutePlanNode mRoutePlanNode = (RoutePlanNode) this.mDataList.get(i);
+            if (!(mRoutePlanNode.mGeoPoint == null || mRoutePlanNode.mGeoPoint.getLatitudeE6() == Integer.MIN_VALUE || mRoutePlanNode.mGeoPoint.getLongitudeE6() == Integer.MIN_VALUE)) {
+                if (mRoutePlanNode.mGeoPoint.getLatitudeE6() == point.mGuidePoint.getLatitudeE6() && mRoutePlanNode.mGeoPoint.getLongitudeE6() == point.mGuidePoint.getLongitudeE6()) {
+                    return true;
+                }
+                if (!TextUtils.isEmpty(mRoutePlanNode.mName) && !TextUtils.isEmpty(point.mName) && mRoutePlanNode.mName.equals(point.mName) && getDistance(point.mGuidePoint, mRoutePlanNode.mGeoPoint) <= 5.0d) {
+                    return true;
+                }
             }
-          });
-          return;
-          label249:
-          if ((TextUtils.isEmpty(localRoutePlanNode.mName)) || (TextUtils.isEmpty(paramSearchPoi.mName)) || (!localRoutePlanNode.mName.equals(paramSearchPoi.mName)) || (FavoriteDestinationController.this.getDistance(paramSearchPoi.mGuidePoint, localRoutePlanNode.mGeoPoint) > 5.0D)) {
-            break;
-          }
         }
-      }
-    }).start();
-  }
-  
-  public boolean checkFavoriteDest(SearchPoi paramSearchPoi)
-  {
-    boolean bool2 = true;
-    boolean bool1;
-    if ((this.mDataList == null) || (paramSearchPoi == null))
-    {
-      bool1 = false;
-      return bool1;
+        return false;
     }
-    if ((paramSearchPoi == null) || (paramSearchPoi.mGuidePoint == null)) {
-      return false;
-    }
-    if ((paramSearchPoi == null) || (paramSearchPoi.mGuidePoint.getLatitudeE6() == Integer.MIN_VALUE) || (paramSearchPoi.mGuidePoint.getLongitudeE6() == Integer.MIN_VALUE)) {
-      return false;
-    }
-    int i = 0;
-    if (i < this.mDataList.size())
-    {
-      RoutePlanNode localRoutePlanNode = (RoutePlanNode)this.mDataList.get(i);
-      if (localRoutePlanNode.mGeoPoint == null) {}
-      do
-      {
-        do
-        {
-          i += 1;
-          break;
-        } while ((localRoutePlanNode.mGeoPoint.getLatitudeE6() == Integer.MIN_VALUE) || (localRoutePlanNode.mGeoPoint.getLongitudeE6() == Integer.MIN_VALUE));
-        if (localRoutePlanNode.mGeoPoint.getLatitudeE6() == paramSearchPoi.mGuidePoint.getLatitudeE6())
-        {
-          bool1 = bool2;
-          if (localRoutePlanNode.mGeoPoint.getLongitudeE6() == paramSearchPoi.mGuidePoint.getLongitudeE6()) {
-            break;
-          }
+
+    public void checkFavoriteDest(final SearchPoi point, final FavoriteDestResultCallBack callback) {
+        if (this.mDataList == null || point == null || callback == null) {
+            if (callback != null) {
+                callback.onCheckResult(false);
+            }
+        } else if (point == null || point.mGuidePoint == null) {
+            callback.onCheckResult(false);
+        } else if (point == null || point.mGuidePoint.getLatitudeE6() == Integer.MIN_VALUE || point.mGuidePoint.getLongitudeE6() == Integer.MIN_VALUE) {
+            callback.onCheckResult(false);
+        } else {
+            new Thread(new Runnable() {
+                /* JADX WARNING: inconsistent code. */
+                /* Code decompiled incorrectly, please refer to instructions dump. */
+                public void run() {
+                    /*
+                    r11 = this;
+                    r10 = -2147483648; // 0xffffffff80000000 float:-0.0 double:NaN;
+                    r2 = 0;
+                    r6 = com.baidu.navi.controller.FavoriteDestinationController.this;
+                    r6 = r6.mDataList;
+                    if (r6 == 0) goto L_0x0013;
+                L_0x000b:
+                    r6 = r4;
+                    if (r6 == 0) goto L_0x0013;
+                L_0x000f:
+                    r6 = r5;
+                    if (r6 != 0) goto L_0x0014;
+                L_0x0013:
+                    r2 = 1;
+                L_0x0014:
+                    if (r2 != 0) goto L_0x0020;
+                L_0x0016:
+                    r6 = r4;
+                    if (r6 == 0) goto L_0x0020;
+                L_0x001a:
+                    r6 = r4;
+                    r6 = r6.mGuidePoint;
+                    if (r6 != 0) goto L_0x0021;
+                L_0x0020:
+                    r2 = 1;
+                L_0x0021:
+                    if (r2 != 0) goto L_0x003b;
+                L_0x0023:
+                    r6 = r4;
+                    if (r6 == 0) goto L_0x003b;
+                L_0x0027:
+                    r6 = r4;
+                    r6 = r6.mGuidePoint;
+                    r6 = r6.getLatitudeE6();
+                    if (r6 == r10) goto L_0x003b;
+                L_0x0031:
+                    r6 = r4;
+                    r6 = r6.mGuidePoint;
+                    r6 = r6.getLongitudeE6();
+                    if (r6 != r10) goto L_0x003c;
+                L_0x003b:
+                    r2 = 1;
+                L_0x003c:
+                    r4 = 0;
+                    r1 = 0;
+                L_0x003e:
+                    if (r2 != 0) goto L_0x004c;
+                L_0x0040:
+                    r6 = com.baidu.navi.controller.FavoriteDestinationController.this;
+                    r6 = r6.mDataList;
+                    r6 = r6.size();
+                    if (r1 >= r6) goto L_0x0090;
+                L_0x004c:
+                    r6 = com.baidu.navi.controller.FavoriteDestinationController.this;
+                    r6 = r6.mDataList;
+                    r5 = r6.get(r1);
+                    r5 = (com.baidu.navisdk.model.datastruct.RoutePlanNode) r5;
+                    r6 = r5.mGeoPoint;
+                    if (r6 != 0) goto L_0x005f;
+                L_0x005c:
+                    r1 = r1 + 1;
+                    goto L_0x003e;
+                L_0x005f:
+                    r6 = r5.mGeoPoint;
+                    r6 = r6.getLatitudeE6();
+                    if (r6 == r10) goto L_0x005c;
+                L_0x0067:
+                    r6 = r5.mGeoPoint;
+                    r6 = r6.getLongitudeE6();
+                    if (r6 == r10) goto L_0x005c;
+                L_0x006f:
+                    r6 = r5.mGeoPoint;
+                    r6 = r6.getLatitudeE6();
+                    r7 = r4;
+                    r7 = r7.mGuidePoint;
+                    r7 = r7.getLatitudeE6();
+                    if (r6 != r7) goto L_0x00a3;
+                L_0x007f:
+                    r6 = r5.mGeoPoint;
+                    r6 = r6.getLongitudeE6();
+                    r7 = r4;
+                    r7 = r7.mGuidePoint;
+                    r7 = r7.getLongitudeE6();
+                    if (r6 != r7) goto L_0x00a3;
+                L_0x008f:
+                    r4 = 1;
+                L_0x0090:
+                    r3 = r4;
+                    r0 = new android.os.Handler;
+                    r6 = android.os.Looper.getMainLooper();
+                    r0.<init>(r6);
+                    r6 = new com.baidu.navi.controller.FavoriteDestinationController$2$1;
+                    r6.<init>(r3);
+                    r0.post(r6);
+                    return;
+                L_0x00a3:
+                    r6 = r5.mName;
+                    r6 = android.text.TextUtils.isEmpty(r6);
+                    if (r6 != 0) goto L_0x005c;
+                L_0x00ab:
+                    r6 = r4;
+                    r6 = r6.mName;
+                    r6 = android.text.TextUtils.isEmpty(r6);
+                    if (r6 != 0) goto L_0x005c;
+                L_0x00b5:
+                    r6 = r5.mName;
+                    r7 = r4;
+                    r7 = r7.mName;
+                    r6 = r6.equals(r7);
+                    if (r6 == 0) goto L_0x005c;
+                L_0x00c1:
+                    r6 = com.baidu.navi.controller.FavoriteDestinationController.this;
+                    r7 = r4;
+                    r7 = r7.mGuidePoint;
+                    r8 = r5.mGeoPoint;
+                    r6 = r6.getDistance(r7, r8);
+                    r8 = 4617315517961601024; // 0x4014000000000000 float:0.0 double:5.0;
+                    r6 = (r6 > r8 ? 1 : (r6 == r8 ? 0 : -1));
+                    if (r6 > 0) goto L_0x005c;
+                L_0x00d3:
+                    r4 = 1;
+                    goto L_0x0090;
+                    */
+                    throw new UnsupportedOperationException("Method not decompiled: com.baidu.navi.controller.FavoriteDestinationController.2.run():void");
+                }
+            }).start();
         }
-      } while ((TextUtils.isEmpty(localRoutePlanNode.mName)) || (TextUtils.isEmpty(paramSearchPoi.mName)) || (!localRoutePlanNode.mName.equals(paramSearchPoi.mName)) || (getDistance(paramSearchPoi.mGuidePoint, localRoutePlanNode.mGeoPoint) > 5.0D));
-      return true;
     }
-    return false;
-  }
-  
-  public void cleanAllFavoriteDest(final FavoriteDestResultCallBack paramFavoriteDestResultCallBack)
-  {
-    DBManager.clearFavoriteDestFromDB(new DBManager.DBOperateResultCallback()
-    {
-      public void onAddOrDeleteSuccess()
-      {
-        FavoriteDestinationController.this.notifyHistoryDataSetChanged();
-        if (paramFavoriteDestResultCallBack != null) {
-          paramFavoriteDestResultCallBack.onCleanResult(true);
+
+    private double getDistance(GeoPoint point, GeoPoint center) {
+        double dx = (double) (point.getLongitudeE6() - center.getLongitudeE6());
+        double dy = (double) (point.getLatitudeE6() - center.getLatitudeE6());
+        return Math.sqrt((dx * dx) + (dy * dy));
+    }
+
+    public void queryAllFavoriteDestFromDB(DBManager$DBOperateResultCallback callback) {
+        if (!NaviFavoriteDestModel.getInstance().checkIsQueryDB()) {
+            if (callback == null) {
+                DBManager.getAllFavoriteDestPoints(this.mCallback);
+            } else {
+                DBManager.getAllFavoriteDestPoints(callback);
+            }
         }
-      }
-      
-      public void onQuerySuccess() {}
-    });
-  }
-  
-  public RoutePlanNode createRoutePlanNode(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return null;
     }
-    return new RoutePlanNode(paramSearchPoi.mGuidePoint, paramSearchPoi.mViewPoint, 8, paramSearchPoi.mName, paramSearchPoi.mAddress, paramSearchPoi.mOriginUID);
-  }
-  
-  public void deleteFavoriteDestFromDB(RoutePlanNode paramRoutePlanNode, final FavoriteDestResultCallBack paramFavoriteDestResultCallBack)
-  {
-    if (paramRoutePlanNode == null)
-    {
-      if (paramFavoriteDestResultCallBack != null) {
-        paramFavoriteDestResultCallBack.onRemoveResult(false);
-      }
-      return;
+
+    public void cleanAllFavoriteDest(final FavoriteDestResultCallBack callback) {
+        DBManager.clearFavoriteDestFromDB(new DBManager$DBOperateResultCallback() {
+            public void onQuerySuccess() {
+            }
+
+            public void onAddOrDeleteSuccess() {
+                FavoriteDestinationController.this.notifyHistoryDataSetChanged();
+                if (callback != null) {
+                    callback.onCleanResult(true);
+                }
+            }
+        });
     }
-    DBManager.deleteFavoriteDestFromDB(paramRoutePlanNode, new DBManager.DBOperateResultCallback()
-    {
-      public void onAddOrDeleteSuccess()
-      {
-        FavoriteDestinationController.this.notifyHistoryDataSetChanged();
-        if (paramFavoriteDestResultCallBack != null) {
-          paramFavoriteDestResultCallBack.onRemoveResult(true);
+
+    public void deleteFavoriteDestFromDB(RoutePlanNode node, final FavoriteDestResultCallBack callback) {
+        if (node != null) {
+            DBManager.deleteFavoriteDestFromDB(node, new DBManager$DBOperateResultCallback() {
+                public void onQuerySuccess() {
+                }
+
+                public void onAddOrDeleteSuccess() {
+                    FavoriteDestinationController.this.notifyHistoryDataSetChanged();
+                    if (callback != null) {
+                        callback.onRemoveResult(true);
+                    }
+                }
+            });
+        } else if (callback != null) {
+            callback.onRemoveResult(false);
         }
-      }
-      
-      public void onQuerySuccess() {}
-    });
-  }
-  
-  public List<RoutePlanNode> getFavoriteDestList()
-  {
-    return this.mDataList;
-  }
-  
-  public void queryAllFavoriteDestFromDB(DBManager.DBOperateResultCallback paramDBOperateResultCallback)
-  {
-    if (!NaviFavoriteDestModel.getInstance().checkIsQueryDB())
-    {
-      if (paramDBOperateResultCallback == null) {
-        DBManager.getAllFavoriteDestPoints(this.mCallback);
-      }
     }
-    else {
-      return;
+
+    public void addFavoriteDestFromDB(RoutePlanNode node, FavoriteDestResultCallBack callback) {
+        if (node != null) {
+            DBManager.addFavoriteDestPointToDB(node);
+            DBManager.getAllFavoriteDestPoints(this.mCallback);
+            if (callback != null) {
+                callback.onAddResult(true);
+            }
+        } else if (callback != null) {
+            callback.onAddResult(false);
+        }
     }
-    DBManager.getAllFavoriteDestPoints(paramDBOperateResultCallback);
-  }
-  
-  public static abstract interface FavoriteDestResultCallBack
-  {
-    public abstract void onAddResult(boolean paramBoolean);
-    
-    public abstract void onCheckResult(boolean paramBoolean);
-    
-    public abstract void onCleanResult(boolean paramBoolean);
-    
-    public abstract void onRemoveResult(boolean paramBoolean);
-  }
-  
-  static class InnerHolder
-  {
-    static FavoriteDestinationController mInstance = new FavoriteDestinationController(null);
-  }
+
+    public RoutePlanNode createRoutePlanNode(SearchPoi node) {
+        if (node == null) {
+            return null;
+        }
+        return new RoutePlanNode(node.mGuidePoint, node.mViewPoint, 8, node.mName, node.mAddress, node.mOriginUID);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/controller/FavoriteDestinationController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

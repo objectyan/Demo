@@ -13,7 +13,6 @@ import com.baidu.mapframework.nirvana.module.Module;
 import com.baidu.mapframework.nirvana.schedule.DataTaskType;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
 import com.baidu.mapframework.nirvana.schedule.ScheduleTag;
-import com.baidu.mapframework.nirvana.schedule.TaskType;
 import com.baidu.mapframework.nirvana.schedule.UITaskType;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
@@ -25,189 +24,145 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
-public class NavWorkerCenter
-  extends BNWorkerCenterAbs
-{
-  private Map<Integer, WeakReference<LooperTask>> mMainTaskMap = new ConcurrentHashMap();
-  private Module module = Module.NAV_MODULE;
-  private QueueToken normalToken = ConcurrentManager.obtainTaskQueue(this.module);
-  
-  private ScheduleConfig getConfig(BNWorkerConfig paramBNWorkerConfig)
-  {
-    if (paramBNWorkerConfig == null) {
-      return new ScheduleConfig(DataTaskType.forUpdateData(), ScheduleTag.NULL);
-    }
-    Object localObject3 = null;
-    Object localObject4 = null;
-    Object localObject1 = localObject4;
-    Object localObject2 = localObject3;
-    switch (paramBNWorkerConfig.type)
-    {
-    default: 
-      localObject1 = DataTaskType.forUpdateData();
-      localObject2 = localObject3;
-    case 4: 
-    case 5: 
-    case 6: 
-    case 9: 
-      switch (paramBNWorkerConfig.tag)
-      {
-      }
-      break;
-    }
-    for (paramBNWorkerConfig = ScheduleTag.NULL;; paramBNWorkerConfig = ScheduleTag.SETUP)
-    {
-      if ((localObject2 == null) || (paramBNWorkerConfig == null)) {
-        break label256;
-      }
-      return new ScheduleConfig((TaskType)localObject2, paramBNWorkerConfig);
-      localObject2 = UITaskType.forPage(BNRouteGuideFragment.class.getName());
-      localObject1 = localObject4;
-      break;
-      localObject2 = UITaskType.forPage(BNDownloadPage.class.getName());
-      localObject1 = localObject4;
-      break;
-      localObject2 = UITaskType.forPage(BNCruiserFragment.class.getName());
-      localObject1 = localObject4;
-      break;
-      localObject1 = DataTaskType.forUpdateData();
-      localObject2 = localObject3;
-      break;
-      localObject1 = DataTaskType.forDownload();
-      localObject2 = localObject3;
-      break;
-      localObject1 = DataTaskType.forStatictics();
-      localObject2 = localObject3;
-      break;
-    }
-    label256:
-    if ((localObject1 != null) && (paramBNWorkerConfig != null)) {
-      return new ScheduleConfig((TaskType)localObject1, paramBNWorkerConfig);
-    }
-    return new ScheduleConfig(DataTaskType.forUpdateData(), ScheduleTag.NULL);
-  }
-  
-  public <K, T> boolean cancelTask(BNWorkerTask<K, T> paramBNWorkerTask, boolean paramBoolean)
-  {
-    paramBoolean = super.cancelTask(paramBNWorkerTask, paramBoolean);
-    if (paramBNWorkerTask != null)
-    {
-      LogUtil.e(BNWorkerCenter.TAG, "cancelTask() taskid=" + paramBNWorkerTask.hashCode());
-      if (!this.mMainTaskMap.containsKey(Integer.valueOf(paramBNWorkerTask.hashCode()))) {
-        break label151;
-      }
-      WeakReference localWeakReference = (WeakReference)this.mMainTaskMap.get(Integer.valueOf(paramBNWorkerTask.hashCode()));
-      if ((localWeakReference != null) && (localWeakReference.get() != null))
-      {
-        ((LooperTask)localWeakReference.get()).cancel();
-        this.mMainTaskMap.remove(Integer.valueOf(paramBNWorkerTask.hashCode()));
-        LogUtil.e(BNWorkerCenter.TAG, "cancelTask() cancel ok in base.");
-      }
-    }
-    for (;;)
-    {
-      LogUtil.e(BNWorkerCenter.TAG, "cancelTask() superRet=" + paramBoolean);
-      return paramBoolean;
-      label151:
-      LogUtil.e(BNWorkerCenter.TAG, "cancelTask() not found in base queue.");
-    }
-  }
-  
-  public <K, T> void submitMainThreadTask(final BNWorkerNormalTask<K, T> paramBNWorkerNormalTask, BNWorkerConfig paramBNWorkerConfig)
-  {
-    if (paramBNWorkerNormalTask == null) {
-      return;
-    }
-    LooperTask local2 = new LooperTask()
-    {
-      public void run()
-      {
-        if (paramBNWorkerNormalTask != null) {}
-        try
-        {
-          paramBNWorkerNormalTask.call();
-          return;
+public class NavWorkerCenter extends BNWorkerCenterAbs {
+    private Map<Integer, WeakReference<LooperTask>> mMainTaskMap = new ConcurrentHashMap();
+    private Module module = Module.NAV_MODULE;
+    private QueueToken normalToken = ConcurrentManager.obtainTaskQueue(this.module);
+
+    private static class NavConcurrentCallable<K, T> extends ConcurrentCallable<T> {
+        private BNWorkerTask<K, T> workerTask = null;
+
+        public NavConcurrentCallable(BNWorkerTask<K, T> task) {
+            this.workerTask = task;
         }
-        catch (Exception localException)
-        {
-          LogUtil.e(BNWorkerCenter.TAG, "mianthreadtask:" + paramBNWorkerNormalTask.getTaskName() + " - execute ex. ex=" + localException.getMessage());
+
+        public T call() {
+            if (this.workerTask != null) {
+                try {
+                    return this.workerTask.call();
+                } catch (Exception e) {
+                    LogUtil.e(BNWorkerCenter.TAG, "concurrenttask:" + this.workerTask.getTaskName() + " - execute ex. ex=" + e.getMessage());
+                }
+            }
+            return null;
         }
-      }
-    };
-    this.mMainTaskMap.put(Integer.valueOf(paramBNWorkerNormalTask.hashCode()), new WeakReference(local2));
-    LooperManager.executeTask(this.module, local2, getConfig(paramBNWorkerConfig));
-  }
-  
-  public <K, T> void submitQueneTask(final BNWorkerNormalTask<K, T> paramBNWorkerNormalTask, BNWorkerConfig paramBNWorkerConfig)
-  {
-    paramBNWorkerNormalTask = new ConcurrentTask()
-    {
-      public void run()
-      {
-        if (paramBNWorkerNormalTask != null) {}
-        try
-        {
-          paramBNWorkerNormalTask.call();
-          return;
-        }
-        catch (Exception localException)
-        {
-          LogUtil.e(BNWorkerCenter.TAG, "quenetask:" + paramBNWorkerNormalTask.getTaskName() + " - execute ex. ex=" + localException.getMessage());
-        }
-      }
-    };
-    paramBNWorkerNormalTask.setQueueToken(this.normalToken);
-    ConcurrentManager.executeTask(this.module, paramBNWorkerNormalTask, getConfig(paramBNWorkerConfig));
-  }
-  
-  public <K, T> Future<?> submitTask(BNWorkerTask<K, T> paramBNWorkerTask, BNWorkerConfig paramBNWorkerConfig)
-  {
-    if (!checkTask(paramBNWorkerTask)) {
-      paramBNWorkerConfig = null;
     }
-    FutureTask localFutureTask;
-    do
-    {
-      return paramBNWorkerConfig;
-      localFutureTask = ConcurrentManager.submitTask(this.module, new NavConcurrentCallable(paramBNWorkerTask), getConfig(paramBNWorkerConfig));
-      paramBNWorkerConfig = localFutureTask;
-    } while (localFutureTask == null);
-    this.taskFutures.put(paramBNWorkerTask, localFutureTask);
-    return localFutureTask;
-  }
-  
-  private static class NavConcurrentCallable<K, T>
-    extends ConcurrentCallable<T>
-  {
-    private BNWorkerTask<K, T> workerTask = null;
-    
-    public NavConcurrentCallable(BNWorkerTask<K, T> paramBNWorkerTask)
-    {
-      this.workerTask = paramBNWorkerTask;
-    }
-    
-    public T call()
-    {
-      if (this.workerTask != null) {
-        try
-        {
-          Object localObject = this.workerTask.call();
-          return (T)localObject;
+
+    public <K, T> Future<?> submitTask(BNWorkerTask<K, T> task, BNWorkerConfig config) {
+        if (!checkTask(task)) {
+            return null;
         }
-        catch (Exception localException)
-        {
-          LogUtil.e(BNWorkerCenter.TAG, "concurrenttask:" + this.workerTask.getTaskName() + " - execute ex. ex=" + localException.getMessage());
+        Future<?> future = ConcurrentManager.submitTask(this.module, new NavConcurrentCallable(task), getConfig(config));
+        if (future == null) {
+            return future;
         }
-      }
-      return null;
+        this.taskFutures.put(task, future);
+        return future;
     }
-  }
+
+    public <K, T> void submitQueneTask(final BNWorkerNormalTask<K, T> task, BNWorkerConfig config) {
+        ConcurrentTask concurrentTask = new ConcurrentTask() {
+            public void run() {
+                if (task != null) {
+                    try {
+                        task.call();
+                    } catch (Exception e) {
+                        LogUtil.e(BNWorkerCenter.TAG, "quenetask:" + task.getTaskName() + " - execute ex. ex=" + e.getMessage());
+                    }
+                }
+            }
+        };
+        concurrentTask.setQueueToken(this.normalToken);
+        ConcurrentManager.executeTask(this.module, concurrentTask, getConfig(config));
+    }
+
+    public <K, T> void submitMainThreadTask(final BNWorkerNormalTask<K, T> task, BNWorkerConfig config) {
+        if (task != null) {
+            LooperTask lt = new LooperTask() {
+                public void run() {
+                    if (task != null) {
+                        try {
+                            task.call();
+                        } catch (Exception e) {
+                            LogUtil.e(BNWorkerCenter.TAG, "mianthreadtask:" + task.getTaskName() + " - execute ex. ex=" + e.getMessage());
+                        }
+                    }
+                }
+            };
+            this.mMainTaskMap.put(Integer.valueOf(task.hashCode()), new WeakReference(lt));
+            LooperManager.executeTask(this.module, lt, getConfig(config));
+        }
+    }
+
+    public <K, T> boolean cancelTask(BNWorkerTask<K, T> task, boolean force) {
+        boolean superRet = super.cancelTask(task, force);
+        if (task != null) {
+            LogUtil.e(BNWorkerCenter.TAG, "cancelTask() taskid=" + task.hashCode());
+            if (this.mMainTaskMap.containsKey(Integer.valueOf(task.hashCode()))) {
+                WeakReference<LooperTask> lt = (WeakReference) this.mMainTaskMap.get(Integer.valueOf(task.hashCode()));
+                if (!(lt == null || lt.get() == null)) {
+                    ((LooperTask) lt.get()).cancel();
+                    this.mMainTaskMap.remove(Integer.valueOf(task.hashCode()));
+                    LogUtil.e(BNWorkerCenter.TAG, "cancelTask() cancel ok in base.");
+                }
+            } else {
+                LogUtil.e(BNWorkerCenter.TAG, "cancelTask() not found in base queue.");
+            }
+        }
+        LogUtil.e(BNWorkerCenter.TAG, "cancelTask() superRet=" + superRet);
+        return superRet;
+    }
+
+    private ScheduleConfig getConfig(BNWorkerConfig config) {
+        if (config == null) {
+            return new ScheduleConfig(DataTaskType.forUpdateData(), ScheduleTag.NULL);
+        }
+        ScheduleTag tag;
+        UITaskType uiType = null;
+        DataTaskType dataType = null;
+        switch (config.type) {
+            case 2:
+                uiType = UITaskType.forPage(BNRouteGuideFragment.class.getName());
+                break;
+            case 4:
+            case 5:
+            case 6:
+            case 9:
+                break;
+            case 7:
+                uiType = UITaskType.forPage(BNDownloadPage.class.getName());
+                break;
+            case 8:
+                uiType = UITaskType.forPage(BNCruiserFragment.class.getName());
+                break;
+            case 100:
+                dataType = DataTaskType.forUpdateData();
+                break;
+            case 101:
+                dataType = DataTaskType.forDownload();
+                break;
+            case 102:
+                dataType = DataTaskType.forStatictics();
+                break;
+            default:
+                dataType = DataTaskType.forUpdateData();
+                break;
+        }
+        switch (config.tag) {
+            case 1:
+                tag = ScheduleTag.SETUP;
+                break;
+            default:
+                tag = ScheduleTag.NULL;
+                break;
+        }
+        if (uiType != null && tag != null) {
+            return new ScheduleConfig(uiType, tag);
+        }
+        if (dataType == null || tag == null) {
+            return new ScheduleConfig(DataTaskType.forUpdateData(), ScheduleTag.NULL);
+        }
+        return new ScheduleConfig(dataType, tag);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/control/NavWorkerCenter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

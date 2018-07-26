@@ -3,19 +3,22 @@ package com.baidu.ufosdk.ui;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public final class cv
-{
-  public TextView a;
-  public TextView b;
-  public TextView c;
-  public TextView d;
-  public ImageView e;
-  
-  public cv(FeedbackListActivity paramFeedbackListActivity) {}
+/* compiled from: FeedbackListActivity */
+public final class cv {
+    /* renamed from: a */
+    public TextView f21634a;
+    /* renamed from: b */
+    public TextView f21635b;
+    /* renamed from: c */
+    public TextView f21636c;
+    /* renamed from: d */
+    public TextView f21637d;
+    /* renamed from: e */
+    public ImageView f21638e;
+    /* renamed from: f */
+    final /* synthetic */ FeedbackListActivity f21639f;
+
+    public cv(FeedbackListActivity feedbackListActivity) {
+        this.f21639f = feedbackListActivity;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/cv.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

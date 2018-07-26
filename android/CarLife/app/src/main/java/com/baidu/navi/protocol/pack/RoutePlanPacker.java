@@ -3,134 +3,100 @@ package com.baidu.navi.protocol.pack;
 import android.os.Bundle;
 import android.text.TextUtils;
 import com.baidu.navi.protocol.model.DataStruct;
-import com.baidu.navi.protocol.model.DataStruct.CommandResult;
 import com.baidu.navi.protocol.model.GeoPointInfo;
 import com.baidu.navi.protocol.model.RoutePlanDataStruct;
+import com.baidu.navi.protocol.model.RoutePlanDataStruct.ResultKey;
 import com.baidu.navi.protocol.util.PackerUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RoutePlanPacker
-  extends BasePacker
-{
-  private static final String TAG = RoutePlanPacker.class.getSimpleName();
-  
-  public String pack(DataStruct paramDataStruct)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (paramDataStruct != null)
-    {
-      localObject1 = localObject2;
-      if ((paramDataStruct instanceof RoutePlanDataStruct)) {
-        paramDataStruct = (RoutePlanDataStruct)paramDataStruct;
-      }
-    }
-    try
-    {
-      localObject1 = new JSONObject();
-      JSONObject localJSONObject1 = GeoPointInfo.toJSONObject(paramDataStruct.startPoint, false, false);
-      JSONObject localJSONObject2 = GeoPointInfo.toJSONObject(paramDataStruct.endPoint, false, false);
-      JSONArray localJSONArray = GeoPointInfo.toJSONArray(paramDataStruct.mViaPoints);
-      ((JSONObject)localObject1).put("start", localJSONObject1);
-      ((JSONObject)localObject1).put("end", localJSONObject2);
-      ((JSONObject)localObject1).put("via", localJSONArray);
-      ((JSONObject)localObject1).put("calMode", paramDataStruct.calMode);
-      ((JSONObject)localObject1).put("addHistory", paramDataStruct.addHistory);
-      paramDataStruct = PackerUtil.createProtocolJSON("route", (JSONObject)localObject1);
-      localObject1 = localObject2;
-      if (paramDataStruct != null) {
-        localObject1 = paramDataStruct.toString();
-      }
-      return (String)localObject1;
-    }
-    catch (JSONException paramDataStruct)
-    {
-      paramDataStruct.printStackTrace();
-    }
-    return null;
-  }
-  
-  public String packResult(DataStruct paramDataStruct)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (paramDataStruct != null) {}
-    try
-    {
-      localObject1 = new JSONObject();
-      prePackResult((JSONObject)localObject1, paramDataStruct);
-      paramDataStruct = paramDataStruct.commandResult.params;
-      if (paramDataStruct != null)
-      {
-        if (paramDataStruct.containsKey("totalTime"))
-        {
-          String str = paramDataStruct.getString("totalTime");
-          if (!TextUtils.isEmpty(str)) {
-            ((JSONObject)localObject1).put("totalTime", str);
-          }
+public class RoutePlanPacker extends BasePacker {
+    private static final String TAG = RoutePlanPacker.class.getSimpleName();
+
+    public String pack(DataStruct ds) {
+        String result = null;
+        if (ds != null && (ds instanceof RoutePlanDataStruct)) {
+            RoutePlanDataStruct guideDs = (RoutePlanDataStruct) ds;
+            try {
+                JSONObject extDataObj = new JSONObject();
+                JSONObject startObj = GeoPointInfo.toJSONObject(guideDs.startPoint, false, false);
+                JSONObject endObj = GeoPointInfo.toJSONObject(guideDs.endPoint, false, false);
+                JSONArray viaObj = GeoPointInfo.toJSONArray(guideDs.mViaPoints);
+                extDataObj.put("start", startObj);
+                extDataObj.put("end", endObj);
+                extDataObj.put(RoutePlanDataStruct.KEY_VIA, viaObj);
+                extDataObj.put(RoutePlanDataStruct.KEY_CALMODE, guideDs.calMode);
+                extDataObj.put(RoutePlanDataStruct.KEY_ADD_HISTORY, guideDs.addHistory);
+                JSONObject obj = PackerUtil.createProtocolJSON("route", extDataObj);
+                if (obj != null) {
+                    result = obj.toString();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        if (paramDataStruct.containsKey("distance"))
-        {
-          paramDataStruct = paramDataStruct.getString("distance");
-          if (!TextUtils.isEmpty(paramDataStruct)) {
-            ((JSONObject)localObject1).put("distance", paramDataStruct);
-          }
-        }
-      }
-      paramDataStruct = PackerUtil.createResultJSON((JSONObject)localObject1);
-      localObject1 = localObject2;
-      if (paramDataStruct != null) {
-        localObject1 = paramDataStruct.toString();
-      }
-      return (String)localObject1;
+        return result;
     }
-    catch (JSONException paramDataStruct)
-    {
-      paramDataStruct.printStackTrace();
+
+    public DataStruct unpack(JSONObject obj) {
+        RoutePlanDataStruct ds = null;
+        if (obj != null) {
+            JSONObject extDataObj = PackerUtil.getExtDataObj(obj);
+            if (extDataObj != null) {
+                JSONObject startObj = extDataObj.optJSONObject("start");
+                JSONObject endObj = extDataObj.optJSONObject("end");
+                JSONArray viaObj = extDataObj.optJSONArray(RoutePlanDataStruct.KEY_VIA);
+                int calMode = extDataObj.optInt(RoutePlanDataStruct.KEY_CALMODE, 1);
+                boolean addHistory = extDataObj.optBoolean(RoutePlanDataStruct.KEY_ADD_HISTORY, false);
+                ds = new RoutePlanDataStruct();
+                ds.calMode = calMode;
+                ds.addHistory = addHistory;
+                if (startObj != null) {
+                    ds.startPoint = GeoPointInfo.jsonToGeo(startObj);
+                }
+                if (endObj != null) {
+                    ds.endPoint = GeoPointInfo.jsonToGeo(endObj);
+                }
+                if (viaObj != null) {
+                    ds.mViaPoints = GeoPointInfo.jsonToList(viaObj);
+                }
+            }
+        }
+        return ds;
     }
-    return null;
-  }
-  
-  public DataStruct unpack(JSONObject paramJSONObject)
-  {
-    JSONArray localJSONArray = null;
-    Object localObject = localJSONArray;
-    if (paramJSONObject != null)
-    {
-      paramJSONObject = PackerUtil.getExtDataObj(paramJSONObject);
-      localObject = localJSONArray;
-      if (paramJSONObject != null)
-      {
-        localObject = paramJSONObject.optJSONObject("start");
-        JSONObject localJSONObject = paramJSONObject.optJSONObject("end");
-        localJSONArray = paramJSONObject.optJSONArray("via");
-        int i = paramJSONObject.optInt("calMode", 1);
-        boolean bool = paramJSONObject.optBoolean("addHistory", false);
-        paramJSONObject = new RoutePlanDataStruct();
-        paramJSONObject.calMode = i;
-        paramJSONObject.addHistory = bool;
-        if (localObject != null) {
-          paramJSONObject.startPoint = GeoPointInfo.jsonToGeo((JSONObject)localObject);
+
+    public String packResult(DataStruct ds) {
+        String result = null;
+        if (ds != null) {
+            try {
+                JSONObject extDataObj = new JSONObject();
+                prePackResult(extDataObj, ds);
+                Bundle params = ds.commandResult.params;
+                if (params != null) {
+                    String key = ResultKey.TOTAL_TIME;
+                    if (params.containsKey(key)) {
+                        String totalTime = params.getString(key);
+                        if (!TextUtils.isEmpty(totalTime)) {
+                            extDataObj.put(key, totalTime);
+                        }
+                    }
+                    key = "distance";
+                    if (params.containsKey(key)) {
+                        String distance = params.getString(key);
+                        if (!TextUtils.isEmpty(distance)) {
+                            extDataObj.put(key, distance);
+                        }
+                    }
+                }
+                JSONObject obj = PackerUtil.createResultJSON(extDataObj);
+                if (obj != null) {
+                    result = obj.toString();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        if (localJSONObject != null) {
-          paramJSONObject.endPoint = GeoPointInfo.jsonToGeo(localJSONObject);
-        }
-        localObject = paramJSONObject;
-        if (localJSONArray != null)
-        {
-          paramJSONObject.mViaPoints = GeoPointInfo.jsonToList(localJSONArray);
-          localObject = paramJSONObject;
-        }
-      }
+        return result;
     }
-    return (DataStruct)localObject;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/protocol/pack/RoutePlanPacker.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

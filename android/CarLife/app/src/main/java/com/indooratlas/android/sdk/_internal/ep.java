@@ -1,21 +1,16 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class ep
-{
-  public final double a;
-  public final double b;
-  public final Integer c;
-  
-  public ep(double paramDouble1, double paramDouble2, Integer paramInteger)
-  {
-    this.a = paramDouble1;
-    this.b = paramDouble2;
-    this.c = paramInteger;
-  }
+public final class ep {
+    /* renamed from: a */
+    public final double f23525a;
+    /* renamed from: b */
+    public final double f23526b;
+    /* renamed from: c */
+    public final Integer f23527c;
+
+    public ep(double d, double d2, Integer num) {
+        this.f23525a = d;
+        this.f23526b = d2;
+        this.f23527c = num;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ep.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

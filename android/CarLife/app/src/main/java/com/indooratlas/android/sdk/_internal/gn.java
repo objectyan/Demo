@@ -4,61 +4,51 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-public abstract class gn
-  implements Closeable
-{
-  private byte[] e()
-    throws IOException
-  {
-    long l = b();
-    if (l > 2147483647L) {
-      throw new IOException("Cannot buffer entire body for content length: " + l);
+public abstract class gn implements Closeable {
+    /* renamed from: a */
+    public abstract gg m20738a();
+
+    /* renamed from: b */
+    public abstract long m20739b();
+
+    /* renamed from: c */
+    public abstract ip m20740c();
+
+    /* renamed from: e */
+    private byte[] m20737e() throws IOException {
+        long b = m20739b();
+        if (b > 2147483647L) {
+            throw new IOException("Cannot buffer entire body for content length: " + b);
+        }
+        Closeable c = m20740c();
+        try {
+            byte[] n = c.n();
+            if (b == -1 || b == ((long) n.length)) {
+                return n;
+            }
+            throw new IOException("Content-Length and stream length disagree");
+        } finally {
+            gy.m20790a(c);
+        }
     }
-    ip localip = c();
-    try
-    {
-      byte[] arrayOfByte1 = localip.n();
-      gy.a(localip);
-      if ((l != -1L) && (l != arrayOfByte1.length)) {
-        throw new IOException("Content-Length and stream length disagree");
-      }
+
+    /* renamed from: d */
+    public final String m20741d() throws IOException {
+        Charset charset;
+        byte[] e = m20737e();
+        gg a = m20738a();
+        if (a != null) {
+            charset = gy.f24042c;
+            if (a.f23872a != null) {
+                charset = Charset.forName(a.f23872a);
+            }
+        } else {
+            charset = gy.f24042c;
+        }
+        return new String(e, charset.name());
     }
-    finally
-    {
-      gy.a(localip);
+
+    public void close() {
+        gy.m20790a(m20740c());
     }
-    return arrayOfByte2;
-  }
-  
-  public abstract gg a();
-  
-  public abstract long b();
-  
-  public abstract ip c();
-  
-  public void close()
-  {
-    gy.a(c());
-  }
-  
-  public final String d()
-    throws IOException
-  {
-    byte[] arrayOfByte = e();
-    gg localgg = a();
-    if (localgg != null)
-    {
-      localCharset = gy.c;
-      if (localgg.a == null) {}
-    }
-    for (Charset localCharset = Charset.forName(localgg.a);; localCharset = gy.c) {
-      return new String(arrayOfByte, localCharset.name());
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gn.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

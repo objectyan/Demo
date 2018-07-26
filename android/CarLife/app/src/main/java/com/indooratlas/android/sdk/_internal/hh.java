@@ -1,874 +1,707 @@
 package com.indooratlas.android.sdk._internal;
 
+import android.support.v4.media.TransportMediator;
+import com.indooratlas.android.sdk._internal.ha.C5936a;
+import com.indooratlas.android.sdk._internal.hg.C5954a;
+import com.indooratlas.android.sdk._internal.hg.C5955b;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class hh
-  implements ho
-{
-  private static final Logger a = Logger.getLogger(b.class.getName());
-  private static final iq b = iq.a("PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n");
-  
-  private static IOException c(String paramString, Object... paramVarArgs)
-    throws IOException
-  {
-    throw new IOException(String.format(paramString, paramVarArgs));
-  }
-  
-  public final ha a(ip paramip, boolean paramBoolean)
-  {
-    return new c(paramip, paramBoolean);
-  }
-  
-  public final hb a(io paramio, boolean paramBoolean)
-  {
-    return new d(paramio, paramBoolean);
-  }
-  
-  static final class a
-    implements jd
-  {
-    int a;
-    byte b;
-    int c;
-    int d;
-    short e;
-    private final ip f;
-    
-    public a(ip paramip)
-    {
-      this.f = paramip;
-    }
-    
-    public final long a(in paramin, long paramLong)
-      throws IOException
-    {
-      if (this.d == 0)
-      {
-        this.f.f(this.e);
-        this.e = 0;
-        if ((this.b & 0x4) == 0) {}
-      }
-      do
-      {
-        return -1L;
-        int i = this.c;
-        int j = hh.a(this.f);
-        this.d = j;
-        this.a = j;
-        byte b1 = (byte)(this.f.e() & 0xFF);
-        this.b = ((byte)(this.f.e() & 0xFF));
-        if (hh.b().isLoggable(Level.FINE)) {
-          hh.b().fine(hh.b.a(true, this.c, this.a, b1, this.b));
+public final class hh implements ho {
+    /* renamed from: a */
+    private static final Logger f24205a = Logger.getLogger(C5957b.class.getName());
+    /* renamed from: b */
+    private static final iq f24206b = iq.a("PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n");
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hh$a */
+    static final class C5956a implements jd {
+        /* renamed from: a */
+        int f24186a;
+        /* renamed from: b */
+        byte f24187b;
+        /* renamed from: c */
+        int f24188c;
+        /* renamed from: d */
+        int f24189d;
+        /* renamed from: e */
+        short f24190e;
+        /* renamed from: f */
+        private final ip f24191f;
+
+        public C5956a(ip ipVar) {
+            this.f24191f = ipVar;
         }
-        this.c = (this.f.g() & 0x7FFFFFFF);
-        if (b1 != 9) {
-          throw hh.a("%s != TYPE_CONTINUATION", new Object[] { Byte.valueOf(b1) });
-        }
-        if (this.c == i) {
-          break;
-        }
-        throw hh.a("TYPE_CONTINUATION streamId changed", new Object[0]);
-        paramLong = this.f.a(paramin, Math.min(paramLong, this.d));
-      } while (paramLong == -1L);
-      this.d = ((int)(this.d - paramLong));
-      return paramLong;
-    }
-    
-    public final je a()
-    {
-      return this.f.a();
-    }
-    
-    public final void close()
-      throws IOException
-    {}
-  }
-  
-  static final class b
-  {
-    private static final String[] a;
-    private static final String[] b;
-    private static final String[] c;
-    
-    static
-    {
-      int k = 0;
-      a = new String[] { "DATA", "HEADERS", "PRIORITY", "RST_STREAM", "SETTINGS", "PUSH_PROMISE", "PING", "GOAWAY", "WINDOW_UPDATE", "CONTINUATION" };
-      b = new String[64];
-      c = new String['Ā'];
-      int i = 0;
-      while (i < c.length)
-      {
-        c[i] = String.format("%8s", new Object[] { Integer.toBinaryString(i) }).replace(' ', '0');
-        i += 1;
-      }
-      b[0] = "";
-      b[1] = "END_STREAM";
-      int[] arrayOfInt = new int[1];
-      arrayOfInt[0] = 1;
-      b[8] = "PADDED";
-      i = 0;
-      int j;
-      while (i <= 0)
-      {
-        j = arrayOfInt[i];
-        b[(j | 0x8)] = (b[j] + "|PADDED");
-        i += 1;
-      }
-      b[4] = "END_HEADERS";
-      b[32] = "PRIORITY";
-      b[36] = "END_HEADERS|PRIORITY";
-      i = 0;
-      for (;;)
-      {
-        j = k;
-        if (i >= 3) {
-          break;
-        }
-        int m = new int[] { 4, 32, 36 }[i];
-        j = 0;
-        while (j <= 0)
-        {
-          int n = arrayOfInt[j];
-          b[(n | m)] = (b[n] + '|' + b[m]);
-          b[(n | m | 0x8)] = (b[n] + '|' + b[m] + "|PADDED");
-          j += 1;
-        }
-        i += 1;
-      }
-      while (j < b.length)
-      {
-        if (b[j] == null) {
-          b[j] = c[j];
-        }
-        j += 1;
-      }
-    }
-    
-    static String a(boolean paramBoolean, int paramInt1, int paramInt2, byte paramByte1, byte paramByte2)
-    {
-      String str2;
-      Object localObject;
-      if (paramByte1 < a.length)
-      {
-        str2 = a[paramByte1];
-        if (paramByte2 != 0) {
-          break label92;
-        }
-        localObject = "";
-        label24:
-        if (!paramBoolean) {
-          break label259;
-        }
-      }
-      label92:
-      label225:
-      label259:
-      for (String str1 = "<<";; str1 = ">>")
-      {
-        return String.format("%s 0x%08x %5d %-13s %s", new Object[] { str1, Integer.valueOf(paramInt1), Integer.valueOf(paramInt2), str2, localObject });
-        str2 = String.format("0x%02x", new Object[] { Byte.valueOf(paramByte1) });
-        break;
-        switch (paramByte1)
-        {
-        case 5: 
-        default: 
-          if (paramByte2 >= b.length) {
-            break;
-          }
-        }
-        for (str1 = b[paramByte2];; str1 = c[paramByte2])
-        {
-          if ((paramByte1 != 5) || ((paramByte2 & 0x4) == 0)) {
-            break label225;
-          }
-          localObject = str1.replace("HEADERS", "PUSH_PROMISE");
-          break;
-          if (paramByte2 == 1)
-          {
-            localObject = "ACK";
-            break;
-          }
-          localObject = c[paramByte2];
-          break;
-          localObject = c[paramByte2];
-          break;
-        }
-        localObject = str1;
-        if (paramByte1 != 0) {
-          break label24;
-        }
-        localObject = str1;
-        if ((paramByte2 & 0x20) == 0) {
-          break label24;
-        }
-        localObject = str1.replace("PRIORITY", "COMPRESSED");
-        break label24;
-      }
-    }
-  }
-  
-  static final class c
-    implements ha
-  {
-    final hg.a a;
-    private final ip b;
-    private final hh.a c;
-    private final boolean d;
-    
-    c(ip paramip, boolean paramBoolean)
-    {
-      this.b = paramip;
-      this.d = paramBoolean;
-      this.c = new hh.a(this.b);
-      this.a = new hg.a(this.c);
-    }
-    
-    private List<he> a(int paramInt1, short paramShort, byte paramByte, int paramInt2)
-      throws IOException
-    {
-      Object localObject1 = this.c;
-      this.c.d = paramInt1;
-      ((hh.a)localObject1).a = paramInt1;
-      this.c.e = paramShort;
-      this.c.b = paramByte;
-      this.c.c = paramInt2;
-      localObject1 = this.a;
-      while (!((hg.a)localObject1).b.d())
-      {
-        paramInt1 = ((hg.a)localObject1).b.e() & 0xFF;
-        if (paramInt1 == 128) {
-          throw new IOException("index == 0");
-        }
-        if ((paramInt1 & 0x80) == 128)
-        {
-          paramInt1 = ((hg.a)localObject1).a(paramInt1, 127) - 1;
-          if (hg.a.c(paramInt1))
-          {
-            localObject2 = hg.a()[paramInt1];
-            ((hg.a)localObject1).a.add(localObject2);
-          }
-          else
-          {
-            paramInt2 = ((hg.a)localObject1).a(paramInt1 - hg.a().length);
-            if ((paramInt2 < 0) || (paramInt2 > ((hg.a)localObject1).e.length - 1)) {
-              throw new IOException("Header index too large " + (paramInt1 + 1));
+
+        /* renamed from: a */
+        public final long m20936a(in inVar, long j) throws IOException {
+            while (this.f24189d == 0) {
+                this.f24191f.f((long) this.f24190e);
+                this.f24190e = (short) 0;
+                if ((this.f24187b & 4) != 0) {
+                    return -1;
+                }
+                int i = this.f24188c;
+                int a = ((((this.f24191f.e() & 255) << 16) | ((this.f24191f.e() & 255) << 8)) | (this.f24191f.e() & 255));
+                this.f24189d = a;
+                this.f24186a = a;
+                byte e = (byte) (this.f24191f.e() & 255);
+                this.f24187b = (byte) (this.f24191f.e() & 255);
+                if (hh.f24205a.isLoggable(Level.FINE)) {
+                    hh.f24205a.fine(C5957b.m20938a(true, this.f24188c, this.f24186a, e, this.f24187b));
+                }
+                this.f24188c = this.f24191f.g() & Integer.MAX_VALUE;
+                if (e != (byte) 9) {
+                    throw hh.m20965c("%s != TYPE_CONTINUATION", Byte.valueOf(e));
+                } else if (this.f24188c != i) {
+                    throw hh.m20965c("TYPE_CONTINUATION streamId changed", new Object[0]);
+                }
             }
-            ((hg.a)localObject1).a.add(localObject1.e[paramInt2]);
-          }
-        }
-        else if (paramInt1 == 64)
-        {
-          ((hg.a)localObject1).a(new he(hg.a(((hg.a)localObject1).b()), ((hg.a)localObject1).b()));
-        }
-        else if ((paramInt1 & 0x40) == 64)
-        {
-          ((hg.a)localObject1).a(new he(((hg.a)localObject1).b(((hg.a)localObject1).a(paramInt1, 63) - 1), ((hg.a)localObject1).b()));
-        }
-        else if ((paramInt1 & 0x20) == 32)
-        {
-          ((hg.a)localObject1).d = ((hg.a)localObject1).a(paramInt1, 31);
-          if ((((hg.a)localObject1).d < 0) || (((hg.a)localObject1).d > ((hg.a)localObject1).c)) {
-            throw new IOException("Invalid dynamic table size update " + ((hg.a)localObject1).d);
-          }
-          ((hg.a)localObject1).a();
-        }
-        else
-        {
-          iq localiq;
-          if ((paramInt1 == 16) || (paramInt1 == 0))
-          {
-            localObject2 = hg.a(((hg.a)localObject1).b());
-            localiq = ((hg.a)localObject1).b();
-            ((hg.a)localObject1).a.add(new he((iq)localObject2, localiq));
-          }
-          else
-          {
-            localObject2 = ((hg.a)localObject1).b(((hg.a)localObject1).a(paramInt1, 15) - 1);
-            localiq = ((hg.a)localObject1).b();
-            ((hg.a)localObject1).a.add(new he((iq)localObject2, localiq));
-          }
-        }
-      }
-      localObject1 = this.a;
-      Object localObject2 = new ArrayList(((hg.a)localObject1).a);
-      ((hg.a)localObject1).a.clear();
-      return (List<he>)localObject2;
-    }
-    
-    private void b()
-      throws IOException
-    {
-      this.b.g();
-      this.b.e();
-    }
-    
-    public final void a()
-      throws IOException
-    {
-      if (this.d) {}
-      iq localiq;
-      do
-      {
-        return;
-        localiq = this.b.c(hh.a().c.length);
-        if (hh.b().isLoggable(Level.FINE)) {
-          hh.b().fine(String.format("<< CONNECTION %s", new Object[] { localiq.b() }));
-        }
-      } while (hh.a().equals(localiq));
-      throw hh.a("Expected a connection header but was %s", new Object[] { localiq.a() });
-    }
-    
-    public final boolean a(ha.a parama)
-      throws IOException
-    {
-      boolean bool1 = true;
-      int j = 0;
-      boolean bool2 = false;
-      int i = 0;
-      int n;
-      byte b2;
-      label250:
-      label256:
-      label426:
-      label608:
-      label833:
-      do
-      {
-        do
-        {
-          try
-          {
-            this.b.a(9L);
-            n = hh.a(this.b);
-            if ((n < 0) || (n > 16384)) {
-              throw hh.a("FRAME_SIZE_ERROR: %s", new Object[] { Integer.valueOf(n) });
+            long a2 = this.f24191f.a(inVar, Math.min(j, (long) this.f24189d));
+            if (a2 == -1) {
+                return -1;
             }
-          }
-          catch (IOException parama)
-          {
-            bool1 = false;
-            return bool1;
-          }
-          byte b1 = (byte)(this.b.e() & 0xFF);
-          b2 = (byte)(this.b.e() & 0xFF);
-          m = this.b.g() & 0x7FFFFFFF;
-          if (hh.b().isLoggable(Level.FINE)) {
-            hh.b().fine(hh.b.a(true, m, n, b1, b2));
-          }
-          switch (b1)
-          {
-          default: 
-            this.b.f(n);
-            return true;
-          case 0: 
-            if ((b2 & 0x1) != 0)
-            {
-              bool1 = true;
-              if ((b2 & 0x20) == 0) {
-                break label250;
-              }
+            this.f24189d = (int) (((long) this.f24189d) - a2);
+            return a2;
+        }
+
+        /* renamed from: a */
+        public final je m20937a() {
+            return this.f24191f.a();
+        }
+
+        public final void close() throws IOException {
+        }
+    }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hh$b */
+    static final class C5957b {
+        /* renamed from: a */
+        private static final String[] f24192a = new String[]{"DATA", "HEADERS", "PRIORITY", "RST_STREAM", "SETTINGS", "PUSH_PROMISE", "PING", "GOAWAY", "WINDOW_UPDATE", "CONTINUATION"};
+        /* renamed from: b */
+        private static final String[] f24193b = new String[64];
+        /* renamed from: c */
+        private static final String[] f24194c = new String[256];
+
+        C5957b() {
+        }
+
+        /* renamed from: a */
+        static String m20938a(boolean z, int i, int i2, byte b, byte b2) {
+            Object obj;
+            String str;
+            if (b < f24192a.length) {
+                obj = f24192a[b];
+            } else {
+                String format = String.format("0x%02x", new Object[]{Byte.valueOf(b)});
             }
-            for (k = 1;; k = 0)
-            {
-              if (k == 0) {
-                break label256;
-              }
-              throw hh.a("PROTOCOL_ERROR: FLAG_COMPRESSED without SETTINGS_COMPRESS_DATA", new Object[0]);
-              bool1 = false;
-              break;
+            if (b2 != (byte) 0) {
+                switch (b) {
+                    case (byte) 2:
+                    case (byte) 3:
+                    case (byte) 7:
+                    case (byte) 8:
+                        str = f24194c[b2];
+                        break;
+                    case (byte) 4:
+                    case (byte) 6:
+                        if (b2 != (byte) 1) {
+                            str = f24194c[b2];
+                            break;
+                        }
+                        str = "ACK";
+                        break;
+                    default:
+                        str = b2 < f24193b.length ? f24193b[b2] : f24194c[b2];
+                        if (b != (byte) 5 || (b2 & 4) == 0) {
+                            if (b == (byte) 0 && (b2 & 32) != 0) {
+                                str = str.replace("PRIORITY", "COMPRESSED");
+                                break;
+                            }
+                        }
+                        str = str.replace("HEADERS", "PUSH_PROMISE");
+                        break;
+                        break;
+                }
             }
-            if ((b2 & 0x8) != 0) {
-              i = (short)(this.b.e() & 0xFF);
+            str = "";
+            String str2 = "%s 0x%08x %5d %-13s %s";
+            Object[] objArr = new Object[5];
+            objArr[0] = z ? "<<" : ">>";
+            objArr[1] = Integer.valueOf(i);
+            objArr[2] = Integer.valueOf(i2);
+            objArr[3] = obj;
+            objArr[4] = str;
+            return String.format(str2, objArr);
+        }
+
+        static {
+            int i;
+            int i2 = 0;
+            for (i = 0; i < f24194c.length; i++) {
+                f24194c[i] = String.format("%8s", new Object[]{Integer.toBinaryString(i)}).replace(' ', '0');
             }
-            k = hh.a(n, b2, i);
-            parama.a(bool1, m, this.b, k);
-            this.b.f(i);
-            return true;
-          case 1: 
-            if (m == 0) {
-              throw hh.a("PROTOCOL_ERROR: TYPE_HEADERS streamId == 0", new Object[0]);
+            f24193b[0] = "";
+            f24193b[1] = "END_STREAM";
+            int[] iArr = new int[]{1};
+            f24193b[8] = "PADDED";
+            for (i = 0; i <= 0; i++) {
+                int i3 = iArr[i];
+                f24193b[i3 | 8] = f24193b[i3] + "|PADDED";
             }
-            if ((b2 & 0x1) != 0)
-            {
-              bool1 = true;
-              if ((b2 & 0x8) == 0) {
-                break label426;
-              }
+            f24193b[4] = "END_HEADERS";
+            f24193b[32] = "PRIORITY";
+            f24193b[36] = "END_HEADERS|PRIORITY";
+            int[] iArr2 = new int[]{4, 32, 36};
+            for (i3 = 0; i3 < 3; i3++) {
+                int i4 = iArr2[i3];
+                for (i = 0; i <= 0; i++) {
+                    int i5 = iArr[i];
+                    f24193b[i5 | i4] = f24193b[i5] + '|' + f24193b[i4];
+                    f24193b[(i5 | i4) | 8] = f24193b[i5] + '|' + f24193b[i4] + "|PADDED";
+                }
             }
-            for (i = (short)(this.b.e() & 0xFF);; i = 0)
-            {
-              k = n;
-              if ((b2 & 0x20) != 0)
-              {
-                b();
-                k = n - 5;
-              }
-              parama.a(false, bool1, m, a(hh.a(k, b2, i), i, b2, m), hf.d);
-              return true;
-              bool1 = false;
-              break;
+            while (i2 < f24193b.length) {
+                if (f24193b[i2] == null) {
+                    f24193b[i2] = f24194c[i2];
+                }
+                i2++;
             }
-          case 2: 
-            if (n != 5) {
-              throw hh.a("TYPE_PRIORITY length: %d != 5", new Object[] { Integer.valueOf(n) });
+        }
+    }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hh$c */
+    static final class C5958c implements ha {
+        /* renamed from: a */
+        final C5954a f24195a = new C5954a(this.f24197c);
+        /* renamed from: b */
+        private final ip f24196b;
+        /* renamed from: c */
+        private final C5956a f24197c = new C5956a(this.f24196b);
+        /* renamed from: d */
+        private final boolean f24198d;
+
+        C5958c(ip ipVar, boolean z) {
+            this.f24196b = ipVar;
+            this.f24198d = z;
+        }
+
+        /* renamed from: a */
+        public final void mo4711a() throws IOException {
+            if (!this.f24198d) {
+                iq c = this.f24196b.c((long) hh.f24206b.f24395c.length);
+                if (hh.f24205a.isLoggable(Level.FINE)) {
+                    hh.f24205a.fine(String.format("<< CONNECTION %s", new Object[]{c.b()}));
+                }
+                if (!hh.f24206b.equals(c)) {
+                    throw hh.m20965c("Expected a connection header but was %s", c.a());
+                }
             }
-            if (m == 0) {
-              throw hh.a("TYPE_PRIORITY streamId == 0", new Object[0]);
+        }
+
+        /* renamed from: a */
+        public final boolean mo4712a(C5936a c5936a) throws IOException {
+            boolean z = false;
+            try {
+                this.f24196b.a(9);
+                int a = ((((this.f24196b.e() & 255) << 16) | ((this.f24196b.e() & 255) << 8)) | (this.f24196b.e() & 255));
+                if (a < 0 || a > 16384) {
+                    throw hh.m20965c("FRAME_SIZE_ERROR: %s", Integer.valueOf(a));
+                }
+                byte e = (byte) (this.f24196b.e() & 255);
+                byte e2 = (byte) (this.f24196b.e() & 255);
+                int g = this.f24196b.g() & Integer.MAX_VALUE;
+                if (hh.f24205a.isLoggable(Level.FINE)) {
+                    hh.f24205a.fine(C5957b.m20938a(true, g, a, e, e2));
+                }
+                boolean z2;
+                short e3;
+                int f;
+                switch (e) {
+                    case (byte) 0:
+                        boolean z3;
+                        if ((e2 & 1) != 0) {
+                            z3 = true;
+                        } else {
+                            z3 = false;
+                        }
+                        if ((e2 & 32) != 0) {
+                            z2 = true;
+                        } else {
+                            z2 = false;
+                        }
+                        if (z2) {
+                            throw hh.m20965c("PROTOCOL_ERROR: FLAG_COMPRESSED without SETTINGS_COMPRESS_DATA", new Object[0]);
+                        }
+                        if ((e2 & 8) != 0) {
+                            e3 = (short) (this.f24196b.e() & 255);
+                        }
+                        c5936a.mo4708a(z3, g, this.f24196b, hh.m20958a(a, e2, e3));
+                        this.f24196b.f((long) e3);
+                        return true;
+                    case (byte) 1:
+                        if (g == 0) {
+                            throw hh.m20965c("PROTOCOL_ERROR: TYPE_HEADERS streamId == 0", new Object[0]);
+                        }
+                        short e4;
+                        z2 = (e2 & 1) != 0;
+                        if ((e2 & 8) != 0) {
+                            e4 = (short) (this.f24196b.e() & 255);
+                        } else {
+                            e4 = (short) 0;
+                        }
+                        if ((e2 & 32) != 0) {
+                            m20940b();
+                            a -= 5;
+                        }
+                        c5936a.mo4710a(false, z2, g, m20939a(hh.m20958a(a, e2, e4), e4, e2, g), hf.HTTP_20_HEADERS);
+                        return true;
+                    case (byte) 2:
+                        if (a != 5) {
+                            throw hh.m20965c("TYPE_PRIORITY length: %d != 5", Integer.valueOf(a));
+                        } else if (g == 0) {
+                            throw hh.m20965c("TYPE_PRIORITY streamId == 0", new Object[0]);
+                        } else {
+                            m20940b();
+                            return true;
+                        }
+                    case (byte) 3:
+                        if (a != 4) {
+                            throw hh.m20965c("TYPE_RST_STREAM length: %d != 4", Integer.valueOf(a));
+                        } else if (g == 0) {
+                            throw hh.m20965c("TYPE_RST_STREAM streamId == 0", new Object[0]);
+                        } else {
+                            gz b = gz.m20804b(this.f24196b.g());
+                            if (b == null) {
+                                throw hh.m20965c("TYPE_RST_STREAM unexpected error code: %d", Integer.valueOf(a));
+                            }
+                            c5936a.mo4704a(g, b);
+                            return true;
+                        }
+                    case (byte) 4:
+                        if (g != 0) {
+                            throw hh.m20965c("TYPE_SETTINGS streamId != 0", new Object[0]);
+                        } else if ((e2 & 1) != 0) {
+                            if (a == 0) {
+                                return true;
+                            }
+                            throw hh.m20965c("FRAME_SIZE_ERROR ack frame should be empty!", new Object[0]);
+                        } else if (a % 6 != 0) {
+                            throw hh.m20965c("TYPE_SETTINGS length %% 6 != 0: %s", Integer.valueOf(a));
+                        } else {
+                            hm hmVar = new hm();
+                            for (g = 0; g < a; g += 6) {
+                                f = this.f24196b.f();
+                                int g2 = this.f24196b.g();
+                                switch (f) {
+                                    case 1:
+                                    case 6:
+                                        break;
+                                    case 2:
+                                        if (!(g2 == 0 || g2 == 1)) {
+                                            throw hh.m20965c("PROTOCOL_ERROR SETTINGS_ENABLE_PUSH != 0 or 1", new Object[0]);
+                                        }
+                                    case 3:
+                                        f = 4;
+                                        break;
+                                    case 4:
+                                        f = 7;
+                                        if (g2 >= 0) {
+                                            break;
+                                        }
+                                        throw hh.m20965c("PROTOCOL_ERROR SETTINGS_INITIAL_WINDOW_SIZE > 2^31 - 1", new Object[0]);
+                                    case 5:
+                                        if (g2 >= 16384 && g2 <= 16777215) {
+                                            break;
+                                        }
+                                        throw hh.m20965c("PROTOCOL_ERROR SETTINGS_MAX_FRAME_SIZE: %s", Integer.valueOf(g2));
+                                    default:
+                                        throw hh.m20965c("PROTOCOL_ERROR invalid settings id: %s", Short.valueOf(f));
+                                }
+                                hmVar.m20982a(f, 0, g2);
+                            }
+                            c5936a.mo4709a(false, hmVar);
+                            if (hmVar.m20981a() < 0) {
+                                return true;
+                            }
+                            C5954a c5954a = this.f24195a;
+                            int a2 = hmVar.m20981a();
+                            c5954a.f24177c = a2;
+                            c5954a.f24178d = a2;
+                            c5954a.m20926a();
+                            return true;
+                        }
+                    case (byte) 5:
+                        if (g == 0) {
+                            throw hh.m20965c("PROTOCOL_ERROR: TYPE_PUSH_PROMISE streamId == 0", new Object[0]);
+                        }
+                        if ((e2 & 8) != 0) {
+                            e3 = (short) (this.f24196b.e() & 255);
+                        }
+                        c5936a.mo4706a(this.f24196b.g() & Integer.MAX_VALUE, m20939a(hh.m20958a(a - 4, e2, e3), e3, e2, g));
+                        return true;
+                    case (byte) 6:
+                        if (a != 8) {
+                            throw hh.m20965c("TYPE_PING length != 8: %s", Integer.valueOf(a));
+                        } else if (g != 0) {
+                            throw hh.m20965c("TYPE_PING streamId != 0", new Object[0]);
+                        } else {
+                            a = this.f24196b.g();
+                            f = this.f24196b.g();
+                            if ((e2 & 1) != 0) {
+                                z = true;
+                            }
+                            c5936a.mo4707a(z, a, f);
+                            return true;
+                        }
+                    case (byte) 7:
+                        if (a < 8) {
+                            throw hh.m20965c("TYPE_GOAWAY length < 8: %s", Integer.valueOf(a));
+                        } else if (g != 0) {
+                            throw hh.m20965c("TYPE_GOAWAY streamId != 0", new Object[0]);
+                        } else {
+                            f = this.f24196b.g();
+                            int i = a - 8;
+                            if (gz.m20804b(this.f24196b.g()) == null) {
+                                throw hh.m20965c("TYPE_GOAWAY unexpected error code: %d", Integer.valueOf(this.f24196b.g()));
+                            }
+                            iq iqVar = iq.f24394b;
+                            if (i > 0) {
+                                iqVar = this.f24196b.c((long) i);
+                            }
+                            c5936a.mo4705a(f, iqVar);
+                            return true;
+                        }
+                    case (byte) 8:
+                        if (a != 4) {
+                            throw hh.m20965c("TYPE_WINDOW_UPDATE length !=4: %s", Integer.valueOf(a));
+                        }
+                        long g3 = ((long) this.f24196b.g()) & 2147483647L;
+                        if (g3 == 0) {
+                            throw hh.m20965c("windowSizeIncrement was 0", Long.valueOf(g3));
+                        }
+                        c5936a.mo4703a(g, g3);
+                        return true;
+                    default:
+                        this.f24196b.f((long) a);
+                        return true;
+                }
+            } catch (IOException e5) {
+                return false;
             }
-            b();
-            return true;
-          case 3: 
-            if (n != 4) {
-              throw hh.a("TYPE_RST_STREAM length: %d != 4", new Object[] { Integer.valueOf(n) });
+        }
+
+        /* renamed from: a */
+        private List<he> m20939a(int i, short s, byte b, int i2) throws IOException {
+            C5956a c5956a = this.f24197c;
+            this.f24197c.f24189d = i;
+            c5956a.f24186a = i;
+            this.f24197c.f24190e = s;
+            this.f24197c.f24187b = b;
+            this.f24197c.f24188c = i2;
+            C5954a c5954a = this.f24195a;
+            while (!c5954a.f24176b.d()) {
+                int e = c5954a.f24176b.e() & 255;
+                if (e == 128) {
+                    throw new IOException("index == 0");
+                } else if ((e & 128) == 128) {
+                    e = c5954a.m20925a(e, TransportMediator.KEYCODE_MEDIA_PAUSE) - 1;
+                    if (C5954a.m20921c(e)) {
+                        c5954a.f24175a.add(hg.f24184a[e]);
+                    } else {
+                        int a = c5954a.m20924a(e - hg.f24184a.length);
+                        if (a < 0 || a > c5954a.f24179e.length - 1) {
+                            throw new IOException("Header index too large " + (e + 1));
+                        }
+                        c5954a.f24175a.add(c5954a.f24179e[a]);
+                    }
+                } else if (e == 64) {
+                    c5954a.m20927a(new he(hg.m20933a(c5954a.m20928b()), c5954a.m20928b()));
+                } else if ((e & 64) == 64) {
+                    c5954a.m20927a(new he(c5954a.m20929b(c5954a.m20925a(e, 63) - 1), c5954a.m20928b()));
+                } else if ((e & 32) == 32) {
+                    c5954a.f24178d = c5954a.m20925a(e, 31);
+                    if (c5954a.f24178d < 0 || c5954a.f24178d > c5954a.f24177c) {
+                        throw new IOException("Invalid dynamic table size update " + c5954a.f24178d);
+                    }
+                    c5954a.m20926a();
+                } else if (e == 16 || e == 0) {
+                    c5954a.f24175a.add(new he(hg.m20933a(c5954a.m20928b()), c5954a.m20928b()));
+                } else {
+                    c5954a.f24175a.add(new he(c5954a.m20929b(c5954a.m20925a(e, 15) - 1), c5954a.m20928b()));
+                }
             }
-            if (m == 0) {
-              throw hh.a("TYPE_RST_STREAM streamId == 0", new Object[0]);
+            c5954a = this.f24195a;
+            List arrayList = new ArrayList(c5954a.f24175a);
+            c5954a.f24175a.clear();
+            return arrayList;
+        }
+
+        /* renamed from: b */
+        private void m20940b() throws IOException {
+            this.f24196b.g();
+            this.f24196b.e();
+        }
+
+        public final void close() throws IOException {
+            this.f24196b.close();
+        }
+    }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hh$d */
+    static final class C5959d implements hb {
+        /* renamed from: a */
+        private final io f24199a;
+        /* renamed from: b */
+        private final boolean f24200b;
+        /* renamed from: c */
+        private final in f24201c = new in();
+        /* renamed from: d */
+        private final C5955b f24202d = new C5955b(this.f24201c);
+        /* renamed from: e */
+        private int f24203e = 16384;
+        /* renamed from: f */
+        private boolean f24204f;
+
+        C5959d(io ioVar, boolean z) {
+            this.f24199a = ioVar;
+            this.f24200b = z;
+        }
+
+        /* renamed from: b */
+        public final synchronized void mo4721b() throws IOException {
+            if (this.f24204f) {
+                throw new IOException("closed");
             }
-            k = this.b.g();
-            localObject = gz.b(k);
-            if (localObject == null) {
-              throw hh.a("TYPE_RST_STREAM unexpected error code: %d", new Object[] { Integer.valueOf(k) });
+            this.f24199a.flush();
+        }
+
+        /* renamed from: a */
+        public final synchronized void mo4717a(hm hmVar) throws IOException {
+            if (this.f24204f) {
+                throw new IOException("closed");
             }
-            parama.a(m, (gz)localObject);
-            return true;
-          case 4: 
-            if (m != 0) {
-              throw hh.a("TYPE_SETTINGS streamId != 0", new Object[0]);
+            int i = this.f24203e;
+            if ((hmVar.f24223a & 32) != 0) {
+                i = hmVar.f24226d[5];
             }
-            if ((b2 & 0x1) == 0) {
-              break label608;
+            this.f24203e = i;
+            m20943a(0, 0, (byte) 4, (byte) 1);
+            this.f24199a.flush();
+        }
+
+        /* renamed from: a */
+        public final synchronized void mo4713a() throws IOException {
+            if (this.f24204f) {
+                throw new IOException("closed");
+            } else if (this.f24200b) {
+                if (hh.f24205a.isLoggable(Level.FINE)) {
+                    hh.f24205a.fine(String.format(">> CONNECTION %s", new Object[]{hh.f24206b.b()}));
+                }
+                this.f24199a.b(hh.f24206b.d());
+                this.f24199a.flush();
             }
-          }
-        } while (n == 0);
-        throw hh.a("FRAME_SIZE_ERROR ack frame should be empty!", new Object[0]);
-        if (n % 6 != 0) {
-          throw hh.a("TYPE_SETTINGS length %% 6 != 0: %s", new Object[] { Integer.valueOf(n) });
         }
-        localObject = new hm();
-        k = 0;
-        if (k < n)
-        {
-          i = this.b.f();
-          int i1 = this.b.g();
-          m = i;
-          switch (i)
-          {
-          default: 
-            throw hh.a("PROTOCOL_ERROR invalid settings id: %s", new Object[] { Short.valueOf(i) });
-          case 2: 
-            m = i;
-            if (i1 != 0)
-            {
-              m = i;
-              if (i1 != 1) {
-                throw hh.a("PROTOCOL_ERROR SETTINGS_ENABLE_PUSH != 0 or 1", new Object[0]);
-              }
+
+        /* renamed from: a */
+        public final synchronized void mo4720a(boolean z, int i, List<he> list) throws IOException {
+            if (this.f24204f) {
+                throw new IOException("closed");
+            } else if (this.f24204f) {
+                throw new IOException("closed");
+            } else {
+                this.f24202d.m20932a((List) list);
+                long j = this.f24201c.f24392b;
+                int min = (int) Math.min((long) this.f24203e, j);
+                byte b = j == ((long) min) ? (byte) 4 : (byte) 0;
+                if (z) {
+                    b = (byte) (b | 1);
+                }
+                m20943a(i, min, (byte) 1, b);
+                this.f24199a.a_(this.f24201c, (long) min);
+                if (j > ((long) min)) {
+                    m20944b(i, j - ((long) min));
+                }
             }
-            break;
-          case 3: 
-            m = 4;
-          }
-          do
-          {
-            do
-            {
-              ((hm)localObject).a(m, 0, i1);
-              k += 6;
-              break;
-              m = 7;
-            } while (i1 >= 0);
-            throw hh.a("PROTOCOL_ERROR SETTINGS_INITIAL_WINDOW_SIZE > 2^31 - 1", new Object[0]);
-            if (i1 < 16384) {
-              break label833;
+        }
+
+        /* renamed from: b */
+        private void m20944b(int i, long j) throws IOException {
+            while (j > 0) {
+                int min = (int) Math.min((long) this.f24203e, j);
+                j -= (long) min;
+                m20943a(i, min, (byte) 9, j == 0 ? (byte) 4 : (byte) 0);
+                this.f24199a.a_(this.f24201c, (long) min);
             }
-            m = i;
-          } while (i1 <= 16777215);
-          throw hh.a("PROTOCOL_ERROR SETTINGS_MAX_FRAME_SIZE: %s", new Object[] { Integer.valueOf(i1) });
         }
-        parama.a(false, (hm)localObject);
-      } while (((hm)localObject).a() < 0);
-      parama = this.a;
-      int k = ((hm)localObject).a();
-      parama.c = k;
-      parama.d = k;
-      parama.a();
-      return true;
-      if (m == 0) {
-        throw hh.a("PROTOCOL_ERROR: TYPE_PUSH_PROMISE streamId == 0", new Object[0]);
-      }
-      i = j;
-      if ((b2 & 0x8) != 0) {
-        i = (short)(this.b.e() & 0xFF);
-      }
-      parama.a(this.b.g() & 0x7FFFFFFF, a(hh.a(n - 4, b2, i), i, b2, m));
-      return true;
-      if (n != 8) {
-        throw hh.a("TYPE_PING length != 8: %s", new Object[] { Integer.valueOf(n) });
-      }
-      if (m != 0) {
-        throw hh.a("TYPE_PING streamId != 0", new Object[0]);
-      }
-      k = this.b.g();
-      int m = this.b.g();
-      bool1 = bool2;
-      if ((b2 & 0x1) != 0) {
-        bool1 = true;
-      }
-      parama.a(bool1, k, m);
-      return true;
-      if (n < 8) {
-        throw hh.a("TYPE_GOAWAY length < 8: %s", new Object[] { Integer.valueOf(n) });
-      }
-      if (m != 0) {
-        throw hh.a("TYPE_GOAWAY streamId != 0", new Object[0]);
-      }
-      k = this.b.g();
-      m = this.b.g();
-      n -= 8;
-      if (gz.b(m) == null) {
-        throw hh.a("TYPE_GOAWAY unexpected error code: %d", new Object[] { Integer.valueOf(m) });
-      }
-      Object localObject = iq.b;
-      if (n > 0) {
-        localObject = this.b.c(n);
-      }
-      parama.a(k, (iq)localObject);
-      return true;
-      if (n != 4) {
-        throw hh.a("TYPE_WINDOW_UPDATE length !=4: %s", new Object[] { Integer.valueOf(n) });
-      }
-      long l = this.b.g() & 0x7FFFFFFF;
-      if (l == 0L) {
-        throw hh.a("windowSizeIncrement was 0", new Object[] { Long.valueOf(l) });
-      }
-      parama.a(m, l);
-      return true;
-    }
-    
-    public final void close()
-      throws IOException
-    {
-      this.b.close();
-    }
-  }
-  
-  static final class d
-    implements hb
-  {
-    private final io a;
-    private final boolean b;
-    private final in c;
-    private final hg.b d;
-    private int e;
-    private boolean f;
-    
-    d(io paramio, boolean paramBoolean)
-    {
-      this.a = paramio;
-      this.b = paramBoolean;
-      this.c = new in();
-      this.d = new hg.b(this.c);
-      this.e = 16384;
-    }
-    
-    private void a(int paramInt1, int paramInt2, byte paramByte1, byte paramByte2)
-      throws IOException
-    {
-      if (hh.b().isLoggable(Level.FINE)) {
-        hh.b().fine(hh.b.a(false, paramInt1, paramInt2, paramByte1, paramByte2));
-      }
-      if (paramInt2 > this.e) {
-        throw hh.b("FRAME_SIZE_ERROR length > %d: %d", new Object[] { Integer.valueOf(this.e), Integer.valueOf(paramInt2) });
-      }
-      if ((0x80000000 & paramInt1) != 0) {
-        throw hh.b("reserved bit set: %s", new Object[] { Integer.valueOf(paramInt1) });
-      }
-      hh.a(this.a, paramInt2);
-      this.a.j(paramByte1 & 0xFF);
-      this.a.j(paramByte2 & 0xFF);
-      this.a.h(0x7FFFFFFF & paramInt1);
-    }
-    
-    private void b(int paramInt, long paramLong)
-      throws IOException
-    {
-      if (paramLong > 0L)
-      {
-        int i = (int)Math.min(this.e, paramLong);
-        paramLong -= i;
-        if (paramLong == 0L) {}
-        for (byte b1 = 4;; b1 = 0)
-        {
-          a(paramInt, i, (byte)9, b1);
-          this.a.a_(this.c, i);
-          break;
+
+        /* renamed from: a */
+        public final synchronized void mo4715a(int i, gz gzVar) throws IOException {
+            if (this.f24204f) {
+                throw new IOException("closed");
+            } else if (gzVar.f24064s == -1) {
+                throw new IllegalArgumentException();
+            } else {
+                m20943a(i, 4, (byte) 3, (byte) 0);
+                this.f24199a.h(gzVar.f24064s);
+                this.f24199a.flush();
+            }
         }
-      }
+
+        /* renamed from: c */
+        public final int mo4723c() {
+            return this.f24203e;
+        }
+
+        /* renamed from: a */
+        public final synchronized void mo4719a(boolean z, int i, in inVar, int i2) throws IOException {
+            byte b = (byte) 0;
+            synchronized (this) {
+                if (this.f24204f) {
+                    throw new IOException("closed");
+                }
+                if (z) {
+                    b = (byte) 1;
+                }
+                m20943a(i, i2, (byte) 0, b);
+                if (i2 > 0) {
+                    this.f24199a.a_(inVar, (long) i2);
+                }
+            }
+        }
+
+        /* renamed from: b */
+        public final synchronized void mo4722b(hm hmVar) throws IOException {
+            synchronized (this) {
+                if (this.f24204f) {
+                    throw new IOException("closed");
+                }
+                m20943a(0, Integer.bitCount(hmVar.f24223a) * 6, (byte) 4, (byte) 0);
+                for (int i = 0; i < 10; i++) {
+                    if (hmVar.m20983a(i)) {
+                        int i2;
+                        if (i == 4) {
+                            i2 = 3;
+                        } else if (i == 7) {
+                            i2 = 4;
+                        } else {
+                            i2 = i;
+                        }
+                        this.f24199a.i(i2);
+                        this.f24199a.h(hmVar.f24226d[i]);
+                    }
+                }
+                this.f24199a.flush();
+            }
+        }
+
+        /* renamed from: a */
+        public final synchronized void mo4718a(boolean z, int i, int i2) throws IOException {
+            byte b = (byte) 0;
+            synchronized (this) {
+                if (this.f24204f) {
+                    throw new IOException("closed");
+                }
+                if (z) {
+                    b = (byte) 1;
+                }
+                m20943a(0, 8, (byte) 6, b);
+                this.f24199a.h(i);
+                this.f24199a.h(i2);
+                this.f24199a.flush();
+            }
+        }
+
+        /* renamed from: a */
+        public final synchronized void mo4716a(int i, gz gzVar, byte[] bArr) throws IOException {
+            if (this.f24204f) {
+                throw new IOException("closed");
+            } else if (gzVar.f24064s == -1) {
+                throw hh.m20963b("errorCode.httpCode == -1", new Object[0]);
+            } else {
+                m20943a(0, bArr.length + 8, (byte) 7, (byte) 0);
+                this.f24199a.h(i);
+                this.f24199a.h(gzVar.f24064s);
+                if (bArr.length > 0) {
+                    this.f24199a.b(bArr);
+                }
+                this.f24199a.flush();
+            }
+        }
+
+        /* renamed from: a */
+        public final synchronized void mo4714a(int i, long j) throws IOException {
+            if (this.f24204f) {
+                throw new IOException("closed");
+            } else if (j == 0 || j > 2147483647L) {
+                throw hh.m20963b("windowSizeIncrement == 0 || windowSizeIncrement > 0x7fffffffL: %s", new Object[]{Long.valueOf(j)});
+            } else {
+                m20943a(i, 4, (byte) 8, (byte) 0);
+                this.f24199a.h((int) j);
+                this.f24199a.flush();
+            }
+        }
+
+        public final synchronized void close() throws IOException {
+            this.f24204f = true;
+            this.f24199a.close();
+        }
+
+        /* renamed from: a */
+        private void m20943a(int i, int i2, byte b, byte b2) throws IOException {
+            if (hh.f24205a.isLoggable(Level.FINE)) {
+                hh.f24205a.fine(C5957b.m20938a(false, i, i2, b, b2));
+            }
+            if (i2 > this.f24203e) {
+                throw hh.m20963b("FRAME_SIZE_ERROR length > %d: %d", new Object[]{Integer.valueOf(this.f24203e), Integer.valueOf(i2)});
+            } else if ((Integer.MIN_VALUE & i) != 0) {
+                throw hh.m20963b("reserved bit set: %s", new Object[]{Integer.valueOf(i)});
+            } else {
+                hh.m20962a(this.f24199a, i2);
+                this.f24199a.j(b & 255);
+                this.f24199a.j(b2 & 255);
+                this.f24199a.h(Integer.MAX_VALUE & i);
+            }
+        }
     }
-    
-    public final void a()
-      throws IOException
-    {
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      boolean bool = this.b;
-      if (!bool) {}
-      for (;;)
-      {
-        return;
-        if (hh.b().isLoggable(Level.FINE)) {
-          hh.b().fine(String.format(">> CONNECTION %s", new Object[] { hh.a().b() }));
-        }
-        this.a.b(hh.a().d());
-        this.a.flush();
-      }
+
+    /* renamed from: a */
+    public final ha mo4724a(ip ipVar, boolean z) {
+        return new C5958c(ipVar, z);
     }
-    
-    public final void a(int paramInt, long paramLong)
-      throws IOException
-    {
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      if ((paramLong == 0L) || (paramLong > 2147483647L)) {
-        throw hh.b("windowSizeIncrement == 0 || windowSizeIncrement > 0x7fffffffL: %s", new Object[] { Long.valueOf(paramLong) });
-      }
-      a(paramInt, 4, (byte)8, (byte)0);
-      this.a.h((int)paramLong);
-      this.a.flush();
+
+    /* renamed from: a */
+    public final hb mo4725a(io ioVar, boolean z) {
+        return new C5959d(ioVar, z);
     }
-    
-    public final void a(int paramInt, gz paramgz)
-      throws IOException
-    {
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      if (paramgz.s == -1) {
-        throw new IllegalArgumentException();
-      }
-      a(paramInt, 4, (byte)3, (byte)0);
-      this.a.h(paramgz.s);
-      this.a.flush();
+
+    /* renamed from: c */
+    private static IOException m20965c(String str, Object... objArr) throws IOException {
+        throw new IOException(String.format(str, objArr));
     }
-    
-    public final void a(int paramInt, gz paramgz, byte[] paramArrayOfByte)
-      throws IOException
-    {
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
+
+    /* renamed from: a */
+    static /* synthetic */ int m20958a(int i, byte b, short s) throws IOException {
+        if ((b & 8) != 0) {
+            short s2 = i - 1;
         }
-      }
-      finally {}
-      if (paramgz.s == -1) {
-        throw hh.b("errorCode.httpCode == -1", new Object[0]);
-      }
-      a(0, paramArrayOfByte.length + 8, (byte)7, (byte)0);
-      this.a.h(paramInt);
-      this.a.h(paramgz.s);
-      if (paramArrayOfByte.length > 0) {
-        this.a.b(paramArrayOfByte);
-      }
-      this.a.flush();
+        if (s <= s2) {
+            return (short) (s2 - s);
+        }
+        throw m20965c("PROTOCOL_ERROR padding %s > remaining length %s", Short.valueOf(s), Integer.valueOf(s2));
     }
-    
-    public final void a(hm paramhm)
-      throws IOException
-    {
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      int i = this.e;
-      if ((paramhm.a & 0x20) != 0) {
-        i = paramhm.d[5];
-      }
-      this.e = i;
-      a(0, 0, (byte)4, (byte)1);
-      this.a.flush();
+
+    /* renamed from: b */
+    static /* synthetic */ IllegalArgumentException m20963b(String str, Object[] objArr) {
+        throw new IllegalArgumentException(String.format(str, objArr));
     }
-    
-    public final void a(boolean paramBoolean, int paramInt1, int paramInt2)
-      throws IOException
-    {
-      byte b1 = 0;
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      if (paramBoolean) {
-        b1 = 1;
-      }
-      a(0, 8, (byte)6, b1);
-      this.a.h(paramInt1);
-      this.a.h(paramInt2);
-      this.a.flush();
+
+    /* renamed from: a */
+    static /* synthetic */ void m20962a(io ioVar, int i) throws IOException {
+        ioVar.j((i >>> 16) & 255);
+        ioVar.j((i >>> 8) & 255);
+        ioVar.j(i & 255);
     }
-    
-    public final void a(boolean paramBoolean, int paramInt1, in paramin, int paramInt2)
-      throws IOException
-    {
-      byte b1 = 0;
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      if (paramBoolean) {
-        b1 = 1;
-      }
-      a(paramInt1, paramInt2, (byte)0, b1);
-      if (paramInt2 > 0) {
-        this.a.a_(paramin, paramInt2);
-      }
-    }
-    
-    public final void a(boolean paramBoolean, int paramInt, List<he> paramList)
-      throws IOException
-    {
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      if (this.f) {
-        throw new IOException("closed");
-      }
-      this.d.a(paramList);
-      long l = this.c.b;
-      int i = (int)Math.min(this.e, l);
-      byte b1;
-      if (l == i) {
-        b1 = 4;
-      }
-      for (;;)
-      {
-        a(paramInt, i, (byte)1, b2);
-        this.a.a_(this.c, i);
-        if (l > i) {
-          b(paramInt, l - i);
-        }
-        return;
-        b1 = 0;
-        byte b2 = b1;
-        if (paramBoolean) {
-          b2 = (byte)(b1 | 0x1);
-        }
-      }
-    }
-    
-    public final void b()
-      throws IOException
-    {
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      this.a.flush();
-    }
-    
-    public final void b(hm paramhm)
-      throws IOException
-    {
-      int i = 0;
-      try
-      {
-        if (this.f) {
-          throw new IOException("closed");
-        }
-      }
-      finally {}
-      a(0, Integer.bitCount(paramhm.a) * 6, (byte)4, (byte)0);
-      int j;
-      if (i < 10)
-      {
-        if (!paramhm.a(i)) {
-          break label111;
-        }
-        if (i != 4) {
-          break label118;
-        }
-        j = 3;
-      }
-      for (;;)
-      {
-        label64:
-        this.a.i(j);
-        this.a.h(paramhm.d[i]);
-        break label111;
-        this.a.flush();
-        return;
-        label111:
-        label118:
-        do
-        {
-          j = i;
-          break label64;
-          i += 1;
-          break;
-        } while (i != 7);
-        j = 4;
-      }
-    }
-    
-    public final int c()
-    {
-      return this.e;
-    }
-    
-    public final void close()
-      throws IOException
-    {
-      try
-      {
-        this.f = true;
-        this.a.close();
-        return;
-      }
-      finally
-      {
-        localObject = finally;
-        throw ((Throwable)localObject);
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hh.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

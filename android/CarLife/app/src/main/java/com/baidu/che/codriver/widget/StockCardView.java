@@ -6,71 +6,60 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
+import com.baidu.carlife.C0965R;
 import com.baidu.che.codriver.protocol.data.nlp.StockData;
-import com.baidu.che.codriver.ui.d.b;
-import com.baidu.che.codriver.ui.d.k;
-import com.baidu.che.codriver.util.a;
-import com.baidu.che.codriver.util.h;
+import com.baidu.che.codriver.ui.p124d.C2549b;
+import com.baidu.che.codriver.ui.p124d.C2709k;
+import com.baidu.che.codriver.util.C2714a;
+import com.baidu.che.codriver.util.C2725h;
 
-public class StockCardView
-  extends LinearLayout
-{
-  public static final String a = StockCardView.class.getSimpleName();
-  private TextView b;
-  private NetworkImageView c;
-  private Context d;
-  
-  public StockCardView(Context paramContext)
-  {
-    super(paramContext, null);
-    this.d = paramContext;
-  }
-  
-  public StockCardView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-    this.d = paramContext;
-  }
-  
-  public StockCardView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    this.d = paramContext;
-  }
-  
-  private void a()
-  {
-    this.b = ((TextView)findViewById(2131626088));
-    this.c = ((NetworkImageView)findViewById(2131626089));
-  }
-  
-  public void a(b paramb)
-  {
-    h.b(a, "updateQrCodeInfo");
-    StockData localStockData = ((k)paramb).a;
-    try
-    {
-      this.b.setText(paramb.g);
-      if (!TextUtils.isEmpty(localStockData.kurl)) {
-        this.c.setImageUrl(localStockData.kurl, a.a());
-      }
-      return;
+public class StockCardView extends LinearLayout {
+    /* renamed from: a */
+    public static final String f9486a = StockCardView.class.getSimpleName();
+    /* renamed from: b */
+    private TextView f9487b;
+    /* renamed from: c */
+    private NetworkImageView f9488c;
+    /* renamed from: d */
+    private Context f9489d;
+
+    public StockCardView(Context context) {
+        super(context, null);
+        this.f9489d = context;
     }
-    catch (NullPointerException paramb)
-    {
-      h.e("ConversationAdapter", paramb.getMessage().toString());
+
+    public StockCardView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+        this.f9489d = context;
     }
-  }
-  
-  protected void onFinishInflate()
-  {
-    super.onFinishInflate();
-    a();
-  }
+
+    public StockCardView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.f9489d = context;
+    }
+
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        m10906a();
+    }
+
+    /* renamed from: a */
+    private void m10906a() {
+        this.f9487b = (TextView) findViewById(C0965R.id.stock_title);
+        this.f9488c = (NetworkImageView) findViewById(C0965R.id.stock_pic);
+    }
+
+    /* renamed from: a */
+    public void m10907a(C2549b model) {
+        C2725h.m10207b(f9486a, "updateQrCodeInfo");
+        StockData stockData = ((C2709k) model).f8881a;
+        try {
+            this.f9487b.setText(model.f8465g);
+            if (!TextUtils.isEmpty(stockData.kurl)) {
+                this.f9488c.setImageUrl(stockData.kurl, C2714a.m10135a());
+            }
+        } catch (NullPointerException mNull) {
+            C2725h.m10214e("ConversationAdapter", mNull.getMessage().toString());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/widget/StockCardView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

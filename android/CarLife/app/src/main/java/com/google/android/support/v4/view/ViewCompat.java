@@ -10,677 +10,574 @@ import android.view.accessibility.AccessibilityEvent;
 import com.google.android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import com.google.android.support.v4.view.accessibility.AccessibilityNodeProviderCompat;
 
-public class ViewCompat
-{
-  public static final int ACCESSIBILITY_LIVE_REGION_ASSERTIVE = 2;
-  public static final int ACCESSIBILITY_LIVE_REGION_NONE = 0;
-  public static final int ACCESSIBILITY_LIVE_REGION_POLITE = 1;
-  private static final long FAKE_FRAME_TIME = 10L;
-  static final ViewCompatImpl IMPL = new BaseViewCompatImpl();
-  public static final int IMPORTANT_FOR_ACCESSIBILITY_AUTO = 0;
-  public static final int IMPORTANT_FOR_ACCESSIBILITY_NO = 2;
-  public static final int IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS = 4;
-  public static final int IMPORTANT_FOR_ACCESSIBILITY_YES = 1;
-  public static final int LAYER_TYPE_HARDWARE = 2;
-  public static final int LAYER_TYPE_NONE = 0;
-  public static final int LAYER_TYPE_SOFTWARE = 1;
-  public static final int LAYOUT_DIRECTION_INHERIT = 2;
-  public static final int LAYOUT_DIRECTION_LOCALE = 3;
-  public static final int LAYOUT_DIRECTION_LTR = 0;
-  public static final int LAYOUT_DIRECTION_RTL = 1;
-  public static final int MEASURED_HEIGHT_STATE_SHIFT = 16;
-  public static final int MEASURED_SIZE_MASK = 16777215;
-  public static final int MEASURED_STATE_MASK = -16777216;
-  public static final int MEASURED_STATE_TOO_SMALL = 16777216;
-  public static final int OVER_SCROLL_ALWAYS = 0;
-  public static final int OVER_SCROLL_IF_CONTENT_SCROLLS = 1;
-  public static final int OVER_SCROLL_NEVER = 2;
-  
-  static
-  {
-    int i = Build.VERSION.SDK_INT;
-    if (i >= 19)
-    {
-      IMPL = new KitKatViewCompatImpl();
-      return;
+public class ViewCompat {
+    public static final int ACCESSIBILITY_LIVE_REGION_ASSERTIVE = 2;
+    public static final int ACCESSIBILITY_LIVE_REGION_NONE = 0;
+    public static final int ACCESSIBILITY_LIVE_REGION_POLITE = 1;
+    private static final long FAKE_FRAME_TIME = 10;
+    static final ViewCompatImpl IMPL;
+    public static final int IMPORTANT_FOR_ACCESSIBILITY_AUTO = 0;
+    public static final int IMPORTANT_FOR_ACCESSIBILITY_NO = 2;
+    public static final int IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS = 4;
+    public static final int IMPORTANT_FOR_ACCESSIBILITY_YES = 1;
+    public static final int LAYER_TYPE_HARDWARE = 2;
+    public static final int LAYER_TYPE_NONE = 0;
+    public static final int LAYER_TYPE_SOFTWARE = 1;
+    public static final int LAYOUT_DIRECTION_INHERIT = 2;
+    public static final int LAYOUT_DIRECTION_LOCALE = 3;
+    public static final int LAYOUT_DIRECTION_LTR = 0;
+    public static final int LAYOUT_DIRECTION_RTL = 1;
+    public static final int MEASURED_HEIGHT_STATE_SHIFT = 16;
+    public static final int MEASURED_SIZE_MASK = 16777215;
+    public static final int MEASURED_STATE_MASK = -16777216;
+    public static final int MEASURED_STATE_TOO_SMALL = 16777216;
+    public static final int OVER_SCROLL_ALWAYS = 0;
+    public static final int OVER_SCROLL_IF_CONTENT_SCROLLS = 1;
+    public static final int OVER_SCROLL_NEVER = 2;
+
+    interface ViewCompatImpl {
+        boolean canScrollHorizontally(View view, int i);
+
+        boolean canScrollVertically(View view, int i);
+
+        int getAccessibilityLiveRegion(View view);
+
+        AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View view);
+
+        float getAlpha(View view);
+
+        int getImportantForAccessibility(View view);
+
+        int getLabelFor(View view);
+
+        int getLayerType(View view);
+
+        int getLayoutDirection(View view);
+
+        int getMeasuredHeightAndState(View view);
+
+        int getMeasuredState(View view);
+
+        int getMeasuredWidthAndState(View view);
+
+        int getOverScrollMode(View view);
+
+        ViewParent getParentForAccessibility(View view);
+
+        boolean hasTransientState(View view);
+
+        boolean isOpaque(View view);
+
+        void onInitializeAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent);
+
+        void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat);
+
+        void onPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent);
+
+        boolean performAccessibilityAction(View view, int i, Bundle bundle);
+
+        void postInvalidateOnAnimation(View view);
+
+        void postInvalidateOnAnimation(View view, int i, int i2, int i3, int i4);
+
+        void postOnAnimation(View view, Runnable runnable);
+
+        void postOnAnimationDelayed(View view, Runnable runnable, long j);
+
+        int resolveSizeAndState(int i, int i2, int i3);
+
+        void setAccessibilityDelegate(View view, AccessibilityDelegateCompat accessibilityDelegateCompat);
+
+        void setAccessibilityLiveRegion(View view, int i);
+
+        void setHasTransientState(View view, boolean z);
+
+        void setImportantForAccessibility(View view, int i);
+
+        void setLabelFor(View view, int i);
+
+        void setLayerPaint(View view, Paint paint);
+
+        void setLayerType(View view, int i, Paint paint);
+
+        void setLayoutDirection(View view, int i);
+
+        void setOverScrollMode(View view, int i);
     }
-    if (i >= 17)
-    {
-      IMPL = new JbMr1ViewCompatImpl();
-      return;
-    }
-    if (i >= 16)
-    {
-      IMPL = new JBViewCompatImpl();
-      return;
-    }
-    if (i >= 14)
-    {
-      IMPL = new ICSViewCompatImpl();
-      return;
-    }
-    if (i >= 11)
-    {
-      IMPL = new HCViewCompatImpl();
-      return;
-    }
-    if (i >= 9)
-    {
-      IMPL = new GBViewCompatImpl();
-      return;
-    }
-  }
-  
-  public static boolean canScrollHorizontally(View paramView, int paramInt)
-  {
-    return IMPL.canScrollHorizontally(paramView, paramInt);
-  }
-  
-  public static boolean canScrollVertically(View paramView, int paramInt)
-  {
-    return IMPL.canScrollVertically(paramView, paramInt);
-  }
-  
-  public static AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View paramView)
-  {
-    return IMPL.getAccessibilityNodeProvider(paramView);
-  }
-  
-  public static float getAlpha(View paramView)
-  {
-    return IMPL.getAlpha(paramView);
-  }
-  
-  public static int getImportantForAccessibility(View paramView)
-  {
-    return IMPL.getImportantForAccessibility(paramView);
-  }
-  
-  public static int getLabelFor(View paramView)
-  {
-    return IMPL.getLabelFor(paramView);
-  }
-  
-  public static int getLayerType(View paramView)
-  {
-    return IMPL.getLayerType(paramView);
-  }
-  
-  public static int getLayoutDirection(View paramView)
-  {
-    return IMPL.getLayoutDirection(paramView);
-  }
-  
-  public static int getMeasuredHeightAndState(View paramView)
-  {
-    return IMPL.getMeasuredHeightAndState(paramView);
-  }
-  
-  public static int getMeasuredState(View paramView)
-  {
-    return IMPL.getMeasuredState(paramView);
-  }
-  
-  public static int getMeasuredWidthAndState(View paramView)
-  {
-    return IMPL.getMeasuredWidthAndState(paramView);
-  }
-  
-  public static int getOverScrollMode(View paramView)
-  {
-    return IMPL.getOverScrollMode(paramView);
-  }
-  
-  public static ViewParent getParentForAccessibility(View paramView)
-  {
-    return IMPL.getParentForAccessibility(paramView);
-  }
-  
-  public static boolean hasTransientState(View paramView)
-  {
-    return IMPL.hasTransientState(paramView);
-  }
-  
-  public static boolean isOpaque(View paramView)
-  {
-    return IMPL.isOpaque(paramView);
-  }
-  
-  public static void onInitializeAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    IMPL.onInitializeAccessibilityEvent(paramView, paramAccessibilityEvent);
-  }
-  
-  public static void onInitializeAccessibilityNodeInfo(View paramView, AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat)
-  {
-    IMPL.onInitializeAccessibilityNodeInfo(paramView, paramAccessibilityNodeInfoCompat);
-  }
-  
-  public static void onPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    IMPL.onPopulateAccessibilityEvent(paramView, paramAccessibilityEvent);
-  }
-  
-  public static boolean performAccessibilityAction(View paramView, int paramInt, Bundle paramBundle)
-  {
-    return IMPL.performAccessibilityAction(paramView, paramInt, paramBundle);
-  }
-  
-  public static void postInvalidateOnAnimation(View paramView)
-  {
-    IMPL.postInvalidateOnAnimation(paramView);
-  }
-  
-  public static void postInvalidateOnAnimation(View paramView, int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    IMPL.postInvalidateOnAnimation(paramView, paramInt1, paramInt2, paramInt3, paramInt4);
-  }
-  
-  public static void postOnAnimation(View paramView, Runnable paramRunnable)
-  {
-    IMPL.postOnAnimation(paramView, paramRunnable);
-  }
-  
-  public static void postOnAnimationDelayed(View paramView, Runnable paramRunnable, long paramLong)
-  {
-    IMPL.postOnAnimationDelayed(paramView, paramRunnable, paramLong);
-  }
-  
-  public static int resolveSizeAndState(int paramInt1, int paramInt2, int paramInt3)
-  {
-    return IMPL.resolveSizeAndState(paramInt1, paramInt2, paramInt3);
-  }
-  
-  public static void setAccessibilityDelegate(View paramView, AccessibilityDelegateCompat paramAccessibilityDelegateCompat)
-  {
-    IMPL.setAccessibilityDelegate(paramView, paramAccessibilityDelegateCompat);
-  }
-  
-  public static void setHasTransientState(View paramView, boolean paramBoolean)
-  {
-    IMPL.setHasTransientState(paramView, paramBoolean);
-  }
-  
-  public static void setImportantForAccessibility(View paramView, int paramInt)
-  {
-    IMPL.setImportantForAccessibility(paramView, paramInt);
-  }
-  
-  public static void setLabelFor(View paramView, int paramInt)
-  {
-    IMPL.setLabelFor(paramView, paramInt);
-  }
-  
-  public static void setLayerPaint(View paramView, Paint paramPaint)
-  {
-    IMPL.setLayerPaint(paramView, paramPaint);
-  }
-  
-  public static void setLayerType(View paramView, int paramInt, Paint paramPaint)
-  {
-    IMPL.setLayerType(paramView, paramInt, paramPaint);
-  }
-  
-  public static void setLayoutDirection(View paramView, int paramInt)
-  {
-    IMPL.setLayoutDirection(paramView, paramInt);
-  }
-  
-  public static void setOverScrollMode(View paramView, int paramInt)
-  {
-    IMPL.setOverScrollMode(paramView, paramInt);
-  }
-  
-  public int getAccessibilityLiveRegion(View paramView)
-  {
-    return IMPL.getAccessibilityLiveRegion(paramView);
-  }
-  
-  public void setAccessibilityLiveRegion(View paramView, int paramInt)
-  {
-    IMPL.setAccessibilityLiveRegion(paramView, paramInt);
-  }
-  
-  static class BaseViewCompatImpl
-    implements ViewCompat.ViewCompatImpl
-  {
-    public boolean canScrollHorizontally(View paramView, int paramInt)
-    {
-      return false;
-    }
-    
-    public boolean canScrollVertically(View paramView, int paramInt)
-    {
-      return false;
-    }
-    
-    public int getAccessibilityLiveRegion(View paramView)
-    {
-      return 0;
-    }
-    
-    public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View paramView)
-    {
-      return null;
-    }
-    
-    public float getAlpha(View paramView)
-    {
-      return 1.0F;
-    }
-    
-    long getFrameTime()
-    {
-      return 10L;
-    }
-    
-    public int getImportantForAccessibility(View paramView)
-    {
-      return 0;
-    }
-    
-    public int getLabelFor(View paramView)
-    {
-      return 0;
-    }
-    
-    public int getLayerType(View paramView)
-    {
-      return 0;
-    }
-    
-    public int getLayoutDirection(View paramView)
-    {
-      return 0;
-    }
-    
-    public int getMeasuredHeightAndState(View paramView)
-    {
-      return paramView.getMeasuredHeight();
-    }
-    
-    public int getMeasuredState(View paramView)
-    {
-      return 0;
-    }
-    
-    public int getMeasuredWidthAndState(View paramView)
-    {
-      return paramView.getMeasuredWidth();
-    }
-    
-    public int getOverScrollMode(View paramView)
-    {
-      return 2;
-    }
-    
-    public ViewParent getParentForAccessibility(View paramView)
-    {
-      return paramView.getParent();
-    }
-    
-    public boolean hasTransientState(View paramView)
-    {
-      return false;
-    }
-    
-    public boolean isOpaque(View paramView)
-    {
-      boolean bool2 = false;
-      paramView = paramView.getBackground();
-      boolean bool1 = bool2;
-      if (paramView != null)
-      {
-        bool1 = bool2;
-        if (paramView.getOpacity() == -1) {
-          bool1 = true;
+
+    static class BaseViewCompatImpl implements ViewCompatImpl {
+        BaseViewCompatImpl() {
         }
-      }
-      return bool1;
+
+        public boolean canScrollHorizontally(View v, int direction) {
+            return false;
+        }
+
+        public boolean canScrollVertically(View v, int direction) {
+            return false;
+        }
+
+        public int getOverScrollMode(View v) {
+            return 2;
+        }
+
+        public void setOverScrollMode(View v, int mode) {
+        }
+
+        public void setAccessibilityDelegate(View v, AccessibilityDelegateCompat delegate) {
+        }
+
+        public void onPopulateAccessibilityEvent(View v, AccessibilityEvent event) {
+        }
+
+        public void onInitializeAccessibilityEvent(View v, AccessibilityEvent event) {
+        }
+
+        public void onInitializeAccessibilityNodeInfo(View v, AccessibilityNodeInfoCompat info) {
+        }
+
+        public boolean hasTransientState(View view) {
+            return false;
+        }
+
+        public void setHasTransientState(View view, boolean hasTransientState) {
+        }
+
+        public void postInvalidateOnAnimation(View view) {
+            view.postInvalidateDelayed(getFrameTime());
+        }
+
+        public void postInvalidateOnAnimation(View view, int left, int top, int right, int bottom) {
+            view.postInvalidateDelayed(getFrameTime(), left, top, right, bottom);
+        }
+
+        public void postOnAnimation(View view, Runnable action) {
+            view.postDelayed(action, getFrameTime());
+        }
+
+        public void postOnAnimationDelayed(View view, Runnable action, long delayMillis) {
+            view.postDelayed(action, getFrameTime() + delayMillis);
+        }
+
+        long getFrameTime() {
+            return 10;
+        }
+
+        public int getImportantForAccessibility(View view) {
+            return 0;
+        }
+
+        public void setImportantForAccessibility(View view, int mode) {
+        }
+
+        public boolean performAccessibilityAction(View view, int action, Bundle arguments) {
+            return false;
+        }
+
+        public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View view) {
+            return null;
+        }
+
+        public float getAlpha(View view) {
+            return 1.0f;
+        }
+
+        public void setLayerType(View view, int layerType, Paint paint) {
+        }
+
+        public int getLayerType(View view) {
+            return 0;
+        }
+
+        public int getLabelFor(View view) {
+            return 0;
+        }
+
+        public void setLabelFor(View view, int id) {
+        }
+
+        public void setLayerPaint(View view, Paint p) {
+        }
+
+        public int getLayoutDirection(View view) {
+            return 0;
+        }
+
+        public void setLayoutDirection(View view, int layoutDirection) {
+        }
+
+        public ViewParent getParentForAccessibility(View view) {
+            return view.getParent();
+        }
+
+        public boolean isOpaque(View view) {
+            Drawable bg = view.getBackground();
+            if (bg == null || bg.getOpacity() != -1) {
+                return false;
+            }
+            return true;
+        }
+
+        public int resolveSizeAndState(int size, int measureSpec, int childMeasuredState) {
+            return View.resolveSize(size, measureSpec);
+        }
+
+        public int getMeasuredWidthAndState(View view) {
+            return view.getMeasuredWidth();
+        }
+
+        public int getMeasuredHeightAndState(View view) {
+            return view.getMeasuredHeight();
+        }
+
+        public int getMeasuredState(View view) {
+            return 0;
+        }
+
+        public int getAccessibilityLiveRegion(View view) {
+            return 0;
+        }
+
+        public void setAccessibilityLiveRegion(View view, int mode) {
+        }
     }
-    
-    public void onInitializeAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent) {}
-    
-    public void onInitializeAccessibilityNodeInfo(View paramView, AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat) {}
-    
-    public void onPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent) {}
-    
-    public boolean performAccessibilityAction(View paramView, int paramInt, Bundle paramBundle)
-    {
-      return false;
+
+    static class EclairMr1ViewCompatImpl extends BaseViewCompatImpl {
+        EclairMr1ViewCompatImpl() {
+        }
+
+        public boolean isOpaque(View view) {
+            return ViewCompatEclairMr1.isOpaque(view);
+        }
     }
-    
-    public void postInvalidateOnAnimation(View paramView)
-    {
-      paramView.postInvalidateDelayed(getFrameTime());
+
+    static class GBViewCompatImpl extends EclairMr1ViewCompatImpl {
+        GBViewCompatImpl() {
+        }
+
+        public int getOverScrollMode(View v) {
+            return ViewCompatGingerbread.getOverScrollMode(v);
+        }
+
+        public void setOverScrollMode(View v, int mode) {
+            ViewCompatGingerbread.setOverScrollMode(v, mode);
+        }
     }
-    
-    public void postInvalidateOnAnimation(View paramView, int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-    {
-      paramView.postInvalidateDelayed(getFrameTime(), paramInt1, paramInt2, paramInt3, paramInt4);
+
+    static class HCViewCompatImpl extends GBViewCompatImpl {
+        HCViewCompatImpl() {
+        }
+
+        long getFrameTime() {
+            return ViewCompatHC.getFrameTime();
+        }
+
+        public float getAlpha(View view) {
+            return ViewCompatHC.getAlpha(view);
+        }
+
+        public void setLayerType(View view, int layerType, Paint paint) {
+            ViewCompatHC.setLayerType(view, layerType, paint);
+        }
+
+        public int getLayerType(View view) {
+            return ViewCompatHC.getLayerType(view);
+        }
+
+        public void setLayerPaint(View view, Paint paint) {
+            setLayerType(view, getLayerType(view), paint);
+            view.invalidate();
+        }
+
+        public int resolveSizeAndState(int size, int measureSpec, int childMeasuredState) {
+            return ViewCompatHC.resolveSizeAndState(size, measureSpec, childMeasuredState);
+        }
+
+        public int getMeasuredWidthAndState(View view) {
+            return ViewCompatHC.getMeasuredWidthAndState(view);
+        }
+
+        public int getMeasuredHeightAndState(View view) {
+            return ViewCompatHC.getMeasuredHeightAndState(view);
+        }
+
+        public int getMeasuredState(View view) {
+            return ViewCompatHC.getMeasuredState(view);
+        }
     }
-    
-    public void postOnAnimation(View paramView, Runnable paramRunnable)
-    {
-      paramView.postDelayed(paramRunnable, getFrameTime());
+
+    static class ICSViewCompatImpl extends HCViewCompatImpl {
+        ICSViewCompatImpl() {
+        }
+
+        public boolean canScrollHorizontally(View v, int direction) {
+            return ViewCompatICS.canScrollHorizontally(v, direction);
+        }
+
+        public boolean canScrollVertically(View v, int direction) {
+            return ViewCompatICS.canScrollVertically(v, direction);
+        }
+
+        public void onPopulateAccessibilityEvent(View v, AccessibilityEvent event) {
+            ViewCompatICS.onPopulateAccessibilityEvent(v, event);
+        }
+
+        public void onInitializeAccessibilityEvent(View v, AccessibilityEvent event) {
+            ViewCompatICS.onInitializeAccessibilityEvent(v, event);
+        }
+
+        public void onInitializeAccessibilityNodeInfo(View v, AccessibilityNodeInfoCompat info) {
+            ViewCompatICS.onInitializeAccessibilityNodeInfo(v, info.getInfo());
+        }
+
+        public void setAccessibilityDelegate(View v, AccessibilityDelegateCompat delegate) {
+            ViewCompatICS.setAccessibilityDelegate(v, delegate.getBridge());
+        }
     }
-    
-    public void postOnAnimationDelayed(View paramView, Runnable paramRunnable, long paramLong)
-    {
-      paramView.postDelayed(paramRunnable, getFrameTime() + paramLong);
+
+    static class JBViewCompatImpl extends ICSViewCompatImpl {
+        JBViewCompatImpl() {
+        }
+
+        public boolean hasTransientState(View view) {
+            return ViewCompatJB.hasTransientState(view);
+        }
+
+        public void setHasTransientState(View view, boolean hasTransientState) {
+            ViewCompatJB.setHasTransientState(view, hasTransientState);
+        }
+
+        public void postInvalidateOnAnimation(View view) {
+            ViewCompatJB.postInvalidateOnAnimation(view);
+        }
+
+        public void postInvalidateOnAnimation(View view, int left, int top, int right, int bottom) {
+            ViewCompatJB.postInvalidateOnAnimation(view, left, top, right, bottom);
+        }
+
+        public void postOnAnimation(View view, Runnable action) {
+            ViewCompatJB.postOnAnimation(view, action);
+        }
+
+        public void postOnAnimationDelayed(View view, Runnable action, long delayMillis) {
+            ViewCompatJB.postOnAnimationDelayed(view, action, delayMillis);
+        }
+
+        public int getImportantForAccessibility(View view) {
+            return ViewCompatJB.getImportantForAccessibility(view);
+        }
+
+        public void setImportantForAccessibility(View view, int mode) {
+            ViewCompatJB.setImportantForAccessibility(view, mode);
+        }
+
+        public boolean performAccessibilityAction(View view, int action, Bundle arguments) {
+            return ViewCompatJB.performAccessibilityAction(view, action, arguments);
+        }
+
+        public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View view) {
+            Object compat = ViewCompatJB.getAccessibilityNodeProvider(view);
+            if (compat != null) {
+                return new AccessibilityNodeProviderCompat(compat);
+            }
+            return null;
+        }
+
+        public ViewParent getParentForAccessibility(View view) {
+            return ViewCompatJB.getParentForAccessibility(view);
+        }
     }
-    
-    public int resolveSizeAndState(int paramInt1, int paramInt2, int paramInt3)
-    {
-      return View.resolveSize(paramInt1, paramInt2);
+
+    static class JbMr1ViewCompatImpl extends JBViewCompatImpl {
+        JbMr1ViewCompatImpl() {
+        }
+
+        public int getLabelFor(View view) {
+            return ViewCompatJellybeanMr1.getLabelFor(view);
+        }
+
+        public void setLabelFor(View view, int id) {
+            ViewCompatJellybeanMr1.setLabelFor(view, id);
+        }
+
+        public void setLayerPaint(View view, Paint paint) {
+            ViewCompatJellybeanMr1.setLayerPaint(view, paint);
+        }
+
+        public int getLayoutDirection(View view) {
+            return ViewCompatJellybeanMr1.getLayoutDirection(view);
+        }
+
+        public void setLayoutDirection(View view, int layoutDirection) {
+            ViewCompatJellybeanMr1.setLayoutDirection(view, layoutDirection);
+        }
     }
-    
-    public void setAccessibilityDelegate(View paramView, AccessibilityDelegateCompat paramAccessibilityDelegateCompat) {}
-    
-    public void setAccessibilityLiveRegion(View paramView, int paramInt) {}
-    
-    public void setHasTransientState(View paramView, boolean paramBoolean) {}
-    
-    public void setImportantForAccessibility(View paramView, int paramInt) {}
-    
-    public void setLabelFor(View paramView, int paramInt) {}
-    
-    public void setLayerPaint(View paramView, Paint paramPaint) {}
-    
-    public void setLayerType(View paramView, int paramInt, Paint paramPaint) {}
-    
-    public void setLayoutDirection(View paramView, int paramInt) {}
-    
-    public void setOverScrollMode(View paramView, int paramInt) {}
-  }
-  
-  static class EclairMr1ViewCompatImpl
-    extends ViewCompat.BaseViewCompatImpl
-  {
-    public boolean isOpaque(View paramView)
-    {
-      return ViewCompatEclairMr1.isOpaque(paramView);
+
+    static class KitKatViewCompatImpl extends JbMr1ViewCompatImpl {
+        KitKatViewCompatImpl() {
+        }
+
+        public int getAccessibilityLiveRegion(View view) {
+            return ViewCompatKitKat.getAccessibilityLiveRegion(view);
+        }
+
+        public void setAccessibilityLiveRegion(View view, int mode) {
+            ViewCompatKitKat.setAccessibilityLiveRegion(view, mode);
+        }
     }
-  }
-  
-  static class GBViewCompatImpl
-    extends ViewCompat.EclairMr1ViewCompatImpl
-  {
-    public int getOverScrollMode(View paramView)
-    {
-      return ViewCompatGingerbread.getOverScrollMode(paramView);
+
+    static {
+        int version = VERSION.SDK_INT;
+        if (version >= 19) {
+            IMPL = new KitKatViewCompatImpl();
+        } else if (version >= 17) {
+            IMPL = new JbMr1ViewCompatImpl();
+        } else if (version >= 16) {
+            IMPL = new JBViewCompatImpl();
+        } else if (version >= 14) {
+            IMPL = new ICSViewCompatImpl();
+        } else if (version >= 11) {
+            IMPL = new HCViewCompatImpl();
+        } else if (version >= 9) {
+            IMPL = new GBViewCompatImpl();
+        } else {
+            IMPL = new BaseViewCompatImpl();
+        }
     }
-    
-    public void setOverScrollMode(View paramView, int paramInt)
-    {
-      ViewCompatGingerbread.setOverScrollMode(paramView, paramInt);
+
+    public static boolean canScrollHorizontally(View v, int direction) {
+        return IMPL.canScrollHorizontally(v, direction);
     }
-  }
-  
-  static class HCViewCompatImpl
-    extends ViewCompat.GBViewCompatImpl
-  {
-    public float getAlpha(View paramView)
-    {
-      return ViewCompatHC.getAlpha(paramView);
+
+    public static boolean canScrollVertically(View v, int direction) {
+        return IMPL.canScrollVertically(v, direction);
     }
-    
-    long getFrameTime()
-    {
-      return ViewCompatHC.getFrameTime();
+
+    public static int getOverScrollMode(View v) {
+        return IMPL.getOverScrollMode(v);
     }
-    
-    public int getLayerType(View paramView)
-    {
-      return ViewCompatHC.getLayerType(paramView);
+
+    public static void setOverScrollMode(View v, int overScrollMode) {
+        IMPL.setOverScrollMode(v, overScrollMode);
     }
-    
-    public int getMeasuredHeightAndState(View paramView)
-    {
-      return ViewCompatHC.getMeasuredHeightAndState(paramView);
+
+    public static void onPopulateAccessibilityEvent(View v, AccessibilityEvent event) {
+        IMPL.onPopulateAccessibilityEvent(v, event);
     }
-    
-    public int getMeasuredState(View paramView)
-    {
-      return ViewCompatHC.getMeasuredState(paramView);
+
+    public static void onInitializeAccessibilityEvent(View v, AccessibilityEvent event) {
+        IMPL.onInitializeAccessibilityEvent(v, event);
     }
-    
-    public int getMeasuredWidthAndState(View paramView)
-    {
-      return ViewCompatHC.getMeasuredWidthAndState(paramView);
+
+    public static void onInitializeAccessibilityNodeInfo(View v, AccessibilityNodeInfoCompat info) {
+        IMPL.onInitializeAccessibilityNodeInfo(v, info);
     }
-    
-    public int resolveSizeAndState(int paramInt1, int paramInt2, int paramInt3)
-    {
-      return ViewCompatHC.resolveSizeAndState(paramInt1, paramInt2, paramInt3);
+
+    public static void setAccessibilityDelegate(View v, AccessibilityDelegateCompat delegate) {
+        IMPL.setAccessibilityDelegate(v, delegate);
     }
-    
-    public void setLayerPaint(View paramView, Paint paramPaint)
-    {
-      setLayerType(paramView, getLayerType(paramView), paramPaint);
-      paramView.invalidate();
+
+    public static boolean hasTransientState(View view) {
+        return IMPL.hasTransientState(view);
     }
-    
-    public void setLayerType(View paramView, int paramInt, Paint paramPaint)
-    {
-      ViewCompatHC.setLayerType(paramView, paramInt, paramPaint);
+
+    public static void setHasTransientState(View view, boolean hasTransientState) {
+        IMPL.setHasTransientState(view, hasTransientState);
     }
-  }
-  
-  static class ICSViewCompatImpl
-    extends ViewCompat.HCViewCompatImpl
-  {
-    public boolean canScrollHorizontally(View paramView, int paramInt)
-    {
-      return ViewCompatICS.canScrollHorizontally(paramView, paramInt);
+
+    public static void postInvalidateOnAnimation(View view) {
+        IMPL.postInvalidateOnAnimation(view);
     }
-    
-    public boolean canScrollVertically(View paramView, int paramInt)
-    {
-      return ViewCompatICS.canScrollVertically(paramView, paramInt);
+
+    public static void postInvalidateOnAnimation(View view, int left, int top, int right, int bottom) {
+        IMPL.postInvalidateOnAnimation(view, left, top, right, bottom);
     }
-    
-    public void onInitializeAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      ViewCompatICS.onInitializeAccessibilityEvent(paramView, paramAccessibilityEvent);
+
+    public static void postOnAnimation(View view, Runnable action) {
+        IMPL.postOnAnimation(view, action);
     }
-    
-    public void onInitializeAccessibilityNodeInfo(View paramView, AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat)
-    {
-      ViewCompatICS.onInitializeAccessibilityNodeInfo(paramView, paramAccessibilityNodeInfoCompat.getInfo());
+
+    public static void postOnAnimationDelayed(View view, Runnable action, long delayMillis) {
+        IMPL.postOnAnimationDelayed(view, action, delayMillis);
     }
-    
-    public void onPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      ViewCompatICS.onPopulateAccessibilityEvent(paramView, paramAccessibilityEvent);
+
+    public static int getImportantForAccessibility(View view) {
+        return IMPL.getImportantForAccessibility(view);
     }
-    
-    public void setAccessibilityDelegate(View paramView, AccessibilityDelegateCompat paramAccessibilityDelegateCompat)
-    {
-      ViewCompatICS.setAccessibilityDelegate(paramView, paramAccessibilityDelegateCompat.getBridge());
+
+    public static void setImportantForAccessibility(View view, int mode) {
+        IMPL.setImportantForAccessibility(view, mode);
     }
-  }
-  
-  static class JBViewCompatImpl
-    extends ViewCompat.ICSViewCompatImpl
-  {
-    public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View paramView)
-    {
-      paramView = ViewCompatJB.getAccessibilityNodeProvider(paramView);
-      if (paramView != null) {
-        return new AccessibilityNodeProviderCompat(paramView);
-      }
-      return null;
+
+    public static boolean performAccessibilityAction(View view, int action, Bundle arguments) {
+        return IMPL.performAccessibilityAction(view, action, arguments);
     }
-    
-    public int getImportantForAccessibility(View paramView)
-    {
-      return ViewCompatJB.getImportantForAccessibility(paramView);
+
+    public static AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View view) {
+        return IMPL.getAccessibilityNodeProvider(view);
     }
-    
-    public ViewParent getParentForAccessibility(View paramView)
-    {
-      return ViewCompatJB.getParentForAccessibility(paramView);
+
+    public static float getAlpha(View view) {
+        return IMPL.getAlpha(view);
     }
-    
-    public boolean hasTransientState(View paramView)
-    {
-      return ViewCompatJB.hasTransientState(paramView);
+
+    public static void setLayerType(View view, int layerType, Paint paint) {
+        IMPL.setLayerType(view, layerType, paint);
     }
-    
-    public boolean performAccessibilityAction(View paramView, int paramInt, Bundle paramBundle)
-    {
-      return ViewCompatJB.performAccessibilityAction(paramView, paramInt, paramBundle);
+
+    public static int getLayerType(View view) {
+        return IMPL.getLayerType(view);
     }
-    
-    public void postInvalidateOnAnimation(View paramView)
-    {
-      ViewCompatJB.postInvalidateOnAnimation(paramView);
+
+    public static int getLabelFor(View view) {
+        return IMPL.getLabelFor(view);
     }
-    
-    public void postInvalidateOnAnimation(View paramView, int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-    {
-      ViewCompatJB.postInvalidateOnAnimation(paramView, paramInt1, paramInt2, paramInt3, paramInt4);
+
+    public static void setLabelFor(View view, int labeledId) {
+        IMPL.setLabelFor(view, labeledId);
     }
-    
-    public void postOnAnimation(View paramView, Runnable paramRunnable)
-    {
-      ViewCompatJB.postOnAnimation(paramView, paramRunnable);
+
+    public static void setLayerPaint(View view, Paint paint) {
+        IMPL.setLayerPaint(view, paint);
     }
-    
-    public void postOnAnimationDelayed(View paramView, Runnable paramRunnable, long paramLong)
-    {
-      ViewCompatJB.postOnAnimationDelayed(paramView, paramRunnable, paramLong);
+
+    public static int getLayoutDirection(View view) {
+        return IMPL.getLayoutDirection(view);
     }
-    
-    public void setHasTransientState(View paramView, boolean paramBoolean)
-    {
-      ViewCompatJB.setHasTransientState(paramView, paramBoolean);
+
+    public static void setLayoutDirection(View view, int layoutDirection) {
+        IMPL.setLayoutDirection(view, layoutDirection);
     }
-    
-    public void setImportantForAccessibility(View paramView, int paramInt)
-    {
-      ViewCompatJB.setImportantForAccessibility(paramView, paramInt);
+
+    public static ViewParent getParentForAccessibility(View view) {
+        return IMPL.getParentForAccessibility(view);
     }
-  }
-  
-  static class JbMr1ViewCompatImpl
-    extends ViewCompat.JBViewCompatImpl
-  {
-    public int getLabelFor(View paramView)
-    {
-      return ViewCompatJellybeanMr1.getLabelFor(paramView);
+
+    public static boolean isOpaque(View view) {
+        return IMPL.isOpaque(view);
     }
-    
-    public int getLayoutDirection(View paramView)
-    {
-      return ViewCompatJellybeanMr1.getLayoutDirection(paramView);
+
+    public static int resolveSizeAndState(int size, int measureSpec, int childMeasuredState) {
+        return IMPL.resolveSizeAndState(size, measureSpec, childMeasuredState);
     }
-    
-    public void setLabelFor(View paramView, int paramInt)
-    {
-      ViewCompatJellybeanMr1.setLabelFor(paramView, paramInt);
+
+    public static int getMeasuredWidthAndState(View view) {
+        return IMPL.getMeasuredWidthAndState(view);
     }
-    
-    public void setLayerPaint(View paramView, Paint paramPaint)
-    {
-      ViewCompatJellybeanMr1.setLayerPaint(paramView, paramPaint);
+
+    public static int getMeasuredHeightAndState(View view) {
+        return IMPL.getMeasuredHeightAndState(view);
     }
-    
-    public void setLayoutDirection(View paramView, int paramInt)
-    {
-      ViewCompatJellybeanMr1.setLayoutDirection(paramView, paramInt);
+
+    public static int getMeasuredState(View view) {
+        return IMPL.getMeasuredState(view);
     }
-  }
-  
-  static class KitKatViewCompatImpl
-    extends ViewCompat.JbMr1ViewCompatImpl
-  {
-    public int getAccessibilityLiveRegion(View paramView)
-    {
-      return ViewCompatKitKat.getAccessibilityLiveRegion(paramView);
+
+    public int getAccessibilityLiveRegion(View view) {
+        return IMPL.getAccessibilityLiveRegion(view);
     }
-    
-    public void setAccessibilityLiveRegion(View paramView, int paramInt)
-    {
-      ViewCompatKitKat.setAccessibilityLiveRegion(paramView, paramInt);
+
+    public void setAccessibilityLiveRegion(View view, int mode) {
+        IMPL.setAccessibilityLiveRegion(view, mode);
     }
-  }
-  
-  static abstract interface ViewCompatImpl
-  {
-    public abstract boolean canScrollHorizontally(View paramView, int paramInt);
-    
-    public abstract boolean canScrollVertically(View paramView, int paramInt);
-    
-    public abstract int getAccessibilityLiveRegion(View paramView);
-    
-    public abstract AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View paramView);
-    
-    public abstract float getAlpha(View paramView);
-    
-    public abstract int getImportantForAccessibility(View paramView);
-    
-    public abstract int getLabelFor(View paramView);
-    
-    public abstract int getLayerType(View paramView);
-    
-    public abstract int getLayoutDirection(View paramView);
-    
-    public abstract int getMeasuredHeightAndState(View paramView);
-    
-    public abstract int getMeasuredState(View paramView);
-    
-    public abstract int getMeasuredWidthAndState(View paramView);
-    
-    public abstract int getOverScrollMode(View paramView);
-    
-    public abstract ViewParent getParentForAccessibility(View paramView);
-    
-    public abstract boolean hasTransientState(View paramView);
-    
-    public abstract boolean isOpaque(View paramView);
-    
-    public abstract void onInitializeAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract void onInitializeAccessibilityNodeInfo(View paramView, AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat);
-    
-    public abstract void onPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract boolean performAccessibilityAction(View paramView, int paramInt, Bundle paramBundle);
-    
-    public abstract void postInvalidateOnAnimation(View paramView);
-    
-    public abstract void postInvalidateOnAnimation(View paramView, int paramInt1, int paramInt2, int paramInt3, int paramInt4);
-    
-    public abstract void postOnAnimation(View paramView, Runnable paramRunnable);
-    
-    public abstract void postOnAnimationDelayed(View paramView, Runnable paramRunnable, long paramLong);
-    
-    public abstract int resolveSizeAndState(int paramInt1, int paramInt2, int paramInt3);
-    
-    public abstract void setAccessibilityDelegate(View paramView, AccessibilityDelegateCompat paramAccessibilityDelegateCompat);
-    
-    public abstract void setAccessibilityLiveRegion(View paramView, int paramInt);
-    
-    public abstract void setHasTransientState(View paramView, boolean paramBoolean);
-    
-    public abstract void setImportantForAccessibility(View paramView, int paramInt);
-    
-    public abstract void setLabelFor(View paramView, int paramInt);
-    
-    public abstract void setLayerPaint(View paramView, Paint paramPaint);
-    
-    public abstract void setLayerType(View paramView, int paramInt, Paint paramPaint);
-    
-    public abstract void setLayoutDirection(View paramView, int paramInt);
-    
-    public abstract void setOverScrollMode(View paramView, int paramInt);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/ViewCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

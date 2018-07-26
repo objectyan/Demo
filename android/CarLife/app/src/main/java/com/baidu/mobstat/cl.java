@@ -2,22 +2,21 @@ package com.baidu.mobstat;
 
 import android.content.Context;
 
-class cl
-  implements Runnable
-{
-  cl(ch paramch, Context paramContext) {}
-  
-  public void run()
-  {
-    long l = System.currentTimeMillis();
-    if ((ch.b(this.b) > 0L) && (l - ch.b(this.b) > this.b.c())) {
-      ch.a(this.b, this.a, false);
+class cl implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ Context f19590a;
+    /* renamed from: b */
+    final /* synthetic */ ch f19591b;
+
+    cl(ch chVar, Context context) {
+        this.f19591b = chVar;
+        this.f19590a = context;
     }
-  }
+
+    public void run() {
+        long currentTimeMillis = System.currentTimeMillis();
+        if (this.f19591b.f19575f > 0 && currentTimeMillis - this.f19591b.f19575f > ((long) this.f19591b.m15601c())) {
+            this.f19591b.m15572a(this.f19590a, false);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

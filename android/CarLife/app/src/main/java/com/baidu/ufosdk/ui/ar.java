@@ -1,25 +1,21 @@
 package com.baidu.ufosdk.ui;
 
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
+import com.tencent.qplayauto.device.QPlayAutoJNI;
 
-final class ar
-  implements Runnable
-{
-  ar(aq paramaq) {}
-  
-  public final void run()
-  {
-    try
-    {
-      a.a(FeedbackInputActivity.g(aq.a(this.a)), "-1");
-      return;
+/* compiled from: FeedbackInputActivity */
+final class ar implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ aq f21555a;
+
+    ar(aq aqVar) {
+        this.f21555a = aqVar;
     }
-    catch (Exception localException) {}
-  }
+
+    public final void run() {
+        try {
+            C5180a.m17571a(this.f21555a.f21554a.f21469M, QPlayAutoJNI.SONG_LIST_ROOT_ID);
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

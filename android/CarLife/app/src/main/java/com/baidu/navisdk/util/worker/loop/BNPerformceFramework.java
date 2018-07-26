@@ -3,104 +3,75 @@ package com.baidu.navisdk.util.worker.loop;
 import android.os.Message;
 import com.baidu.navisdk.util.common.LogUtil;
 
-public class BNPerformceFramework
-  implements IBNPerformceFramework
-{
-  public static final String TAG = BNPerformceFramework.class.getSimpleName();
-  private static BNPerformceFramework sInstance = null;
-  private static final Object sInstanceLock = new Object();
-  private IBNPerformceFramework mFramework = null;
-  
-  public static BNPerformceFramework getInstance()
-  {
-    if (sInstance == null) {}
-    synchronized (sInstanceLock)
-    {
-      if (sInstance == null) {
-        sInstance = new BNPerformceFramework();
-      }
-      return sInstance;
+public class BNPerformceFramework implements IBNPerformceFramework {
+    public static final String TAG = BNPerformceFramework.class.getSimpleName();
+    private static BNPerformceFramework sInstance = null;
+    private static final Object sInstanceLock = new Object();
+    private IBNPerformceFramework mFramework = null;
+
+    private BNPerformceFramework() {
     }
-  }
-  
-  public static void init(IBNPerformceFramework paramIBNPerformceFramework)
-  {
-    getInstance().setFramework(paramIBNPerformceFramework);
-  }
-  
-  private void setFramework(IBNPerformceFramework paramIBNPerformceFramework)
-  {
-    if (this.mFramework != null)
-    {
-      LogUtil.e(TAG, "setFramework() framework is not null.");
-      return;
+
+    public static BNPerformceFramework getInstance() {
+        if (sInstance == null) {
+            synchronized (sInstanceLock) {
+                if (sInstance == null) {
+                    sInstance = new BNPerformceFramework();
+                }
+            }
+        }
+        return sInstance;
     }
-    if (paramIBNPerformceFramework == null)
-    {
-      LogUtil.e(TAG, "setFramework() framework is null.");
-      return;
+
+    public static void init(IBNPerformceFramework framework) {
+        getInstance().setFramework(framework);
     }
-    this.mFramework = paramIBNPerformceFramework;
-  }
-  
-  public void markFinish(Message paramMessage)
-  {
-    if (paramMessage == null)
-    {
-      LogUtil.e(TAG, "markFinish() message is null.");
-      return;
+
+    private void setFramework(IBNPerformceFramework framework) {
+        if (this.mFramework != null) {
+            LogUtil.m15791e(TAG, "setFramework() framework is not null.");
+        } else if (framework == null) {
+            LogUtil.m15791e(TAG, "setFramework() framework is null.");
+        } else {
+            this.mFramework = framework;
+        }
     }
-    if (this.mFramework != null)
-    {
-      this.mFramework.markFinish(paramMessage);
-      return;
+
+    public void runInLooperBuffer(Runnable runnable) {
+        if (runnable == null) {
+            LogUtil.m15791e(TAG, "runInLooperBuffer() runnable is null.");
+        } else if (this.mFramework != null) {
+            this.mFramework.runInLooperBuffer(runnable);
+        } else {
+            LogUtil.m15791e(TAG, "runInLooperBuffer() framework is null.");
+        }
     }
-    LogUtil.e(TAG, "markFinish() framework is null.");
-  }
-  
-  public void markRunning(Message paramMessage)
-  {
-    if (paramMessage == null)
-    {
-      LogUtil.e(TAG, "markRunning() message is null.");
-      return;
+
+    public void markSubmit(Message message) {
+        if (this.mFramework != null) {
+            this.mFramework.markSubmit(message);
+        } else {
+            LogUtil.m15791e(TAG, "markSubmit() framework is null.");
+        }
     }
-    if (this.mFramework != null)
-    {
-      this.mFramework.markRunning(paramMessage);
-      return;
+
+    public void markRunning(Message message) {
+        if (message == null) {
+            LogUtil.m15791e(TAG, "markRunning() message is null.");
+        } else if (this.mFramework != null) {
+            this.mFramework.markRunning(message);
+        } else {
+            LogUtil.m15791e(TAG, "markRunning() framework is null.");
+        }
     }
-    LogUtil.e(TAG, "markRunning() framework is null.");
-  }
-  
-  public void markSubmit(Message paramMessage)
-  {
-    if (this.mFramework != null)
-    {
-      this.mFramework.markSubmit(paramMessage);
-      return;
+
+    public void markFinish(Message message) {
+        if (message == null) {
+            LogUtil.m15791e(TAG, "markFinish() message is null.");
+        } else if (this.mFramework != null) {
+            this.mFramework.markFinish(message);
+        } else {
+            LogUtil.m15791e(TAG, "markFinish() framework is null.");
+        }
     }
-    LogUtil.e(TAG, "markSubmit() framework is null.");
-  }
-  
-  public void runInLooperBuffer(Runnable paramRunnable)
-  {
-    if (paramRunnable == null)
-    {
-      LogUtil.e(TAG, "runInLooperBuffer() runnable is null.");
-      return;
-    }
-    if (this.mFramework != null)
-    {
-      this.mFramework.runInLooperBuffer(paramRunnable);
-      return;
-    }
-    LogUtil.e(TAG, "runInLooperBuffer() framework is null.");
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/worker/loop/BNPerformceFramework.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

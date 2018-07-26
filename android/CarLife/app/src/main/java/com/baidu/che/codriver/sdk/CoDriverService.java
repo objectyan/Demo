@@ -3,32 +3,24 @@ package com.baidu.che.codriver.sdk;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import com.baidu.che.codriver.sdk.a.l;
-import com.baidu.che.codriver.util.h;
+import com.baidu.che.codriver.sdk.p081a.C2606l;
+import com.baidu.che.codriver.util.C2725h;
 
-public class CoDriverService
-  extends Service
-{
-  private static final String a = "[sdk_server] CoDriverService";
-  private b b;
-  
-  public IBinder onBind(Intent paramIntent)
-  {
-    h.b("[sdk_server] CoDriverService", "onBind");
-    return this.b;
-  }
-  
-  public void onCreate()
-  {
-    super.onCreate();
-    h.b("[sdk_server] CoDriverService", "onCreate");
-    this.b = new b();
-    l.a().a(this.b);
-  }
+public class CoDriverService extends Service {
+    /* renamed from: a */
+    private static final String f8535a = "[sdk_server] CoDriverService";
+    /* renamed from: b */
+    private C2618b f8536b;
+
+    public void onCreate() {
+        super.onCreate();
+        C2725h.m10207b(f8535a, "onCreate");
+        this.f8536b = new C2618b();
+        C2606l.m9828a().m9830a(this.f8536b);
+    }
+
+    public IBinder onBind(Intent intent) {
+        C2725h.m10207b(f8535a, "onBind");
+        return this.f8536b;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/sdk/CoDriverService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

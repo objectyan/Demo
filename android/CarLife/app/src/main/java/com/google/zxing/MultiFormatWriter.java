@@ -12,50 +12,44 @@ import com.google.zxing.pdf417.encoder.PDF417Writer;
 import com.google.zxing.qrcode.QRCodeWriter;
 import java.util.Map;
 
-public final class MultiFormatWriter
-  implements Writer
-{
-  public BitMatrix encode(String paramString, BarcodeFormat paramBarcodeFormat, int paramInt1, int paramInt2)
-    throws WriterException
-  {
-    return encode(paramString, paramBarcodeFormat, paramInt1, paramInt2, null);
-  }
-  
-  public BitMatrix encode(String paramString, BarcodeFormat paramBarcodeFormat, int paramInt1, int paramInt2, Map<EncodeHintType, ?> paramMap)
-    throws WriterException
-  {
-    Object localObject;
-    switch (paramBarcodeFormat)
-    {
-    default: 
-      throw new IllegalArgumentException("No encoder available for format " + paramBarcodeFormat);
-    case ???: 
-      localObject = new EAN8Writer();
+public final class MultiFormatWriter implements Writer {
+    public BitMatrix encode(String contents, BarcodeFormat format, int width, int height) throws WriterException {
+        return encode(contents, format, width, height, null);
     }
-    for (;;)
-    {
-      return ((Writer)localObject).encode(paramString, paramBarcodeFormat, paramInt1, paramInt2, paramMap);
-      localObject = new EAN13Writer();
-      continue;
-      localObject = new UPCAWriter();
-      continue;
-      localObject = new QRCodeWriter();
-      continue;
-      localObject = new Code39Writer();
-      continue;
-      localObject = new Code128Writer();
-      continue;
-      localObject = new ITFWriter();
-      continue;
-      localObject = new PDF417Writer();
-      continue;
-      localObject = new CodaBarWriter();
+
+    public BitMatrix encode(String contents, BarcodeFormat format, int width, int height, Map<EncodeHintType, ?> hints) throws WriterException {
+        Writer writer;
+        switch (format) {
+            case EAN_8:
+                writer = new EAN8Writer();
+                break;
+            case EAN_13:
+                writer = new EAN13Writer();
+                break;
+            case UPC_A:
+                writer = new UPCAWriter();
+                break;
+            case QR_CODE:
+                writer = new QRCodeWriter();
+                break;
+            case CODE_39:
+                writer = new Code39Writer();
+                break;
+            case CODE_128:
+                writer = new Code128Writer();
+                break;
+            case ITF:
+                writer = new ITFWriter();
+                break;
+            case PDF_417:
+                writer = new PDF417Writer();
+                break;
+            case CODABAR:
+                writer = new CodaBarWriter();
+                break;
+            default:
+                throw new IllegalArgumentException("No encoder available for format " + format);
+        }
+        return writer.encode(contents, format, width, height, hints);
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/MultiFormatWriter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

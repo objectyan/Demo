@@ -9,453 +9,385 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeVideoEncoderInfoProto
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_com_baidu_carlife_protobuf_CarlifeVideoEncoderInfo_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_com_baidu_carlife_protobuf_CarlifeVideoEncoderInfo_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeVideoEncoderInfoProto.access$1102(paramAnonymousFileDescriptor);
-        CarlifeVideoEncoderInfoProto.access$002((Descriptors.Descriptor)CarlifeVideoEncoderInfoProto.getDescriptor().getMessageTypes().get(0));
-        CarlifeVideoEncoderInfoProto.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeVideoEncoderInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeVideoEncoderInfo_descriptor, new String[] { "Width", "Height", "FrameRate" }, CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.class, CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n\"CarlifeVideoEncoderInfoProto.proto\022\032com.baidu.carlife.protobuf\"K\n\027CarlifeVideoEncoderInfo\022\r\n\005width\030\001 \002(\005\022\016\n\006height\030\002 \002(\005\022\021\n\tframeRate\030\003 \002(\005" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeVideoEncoderInfo
-    extends GeneratedMessage
-  {
-    public static final int FRAMERATE_FIELD_NUMBER = 3;
-    public static final int HEIGHT_FIELD_NUMBER = 2;
-    public static final int WIDTH_FIELD_NUMBER = 1;
-    private static final CarlifeVideoEncoderInfo defaultInstance = new CarlifeVideoEncoderInfo();
-    private int frameRate_ = 0;
-    private boolean hasFrameRate;
-    private boolean hasHeight;
-    private boolean hasWidth;
-    private int height_ = 0;
-    private int memoizedSerializedSize = -1;
-    private int width_ = 0;
-    
-    static
-    {
-      CarlifeVideoEncoderInfoProto.getDescriptor();
-      CarlifeVideoEncoderInfoProto.internalForceInit();
-    }
-    
-    public static CarlifeVideoEncoderInfo getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeVideoEncoderInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeVideoEncoderInfo_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeVideoEncoderInfo paramCarlifeVideoEncoderInfo)
-    {
-      return newBuilder().mergeFrom(paramCarlifeVideoEncoderInfo);
-    }
-    
-    public static CarlifeVideoEncoderInfo parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeVideoEncoderInfo parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public CarlifeVideoEncoderInfo getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public int getFrameRate()
-    {
-      return this.frameRate_;
-    }
-    
-    public int getHeight()
-    {
-      return this.height_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      int j = 0;
-      if (hasWidth()) {
-        j = 0 + CodedOutputStream.computeInt32Size(1, getWidth());
-      }
-      i = j;
-      if (hasHeight()) {
-        i = j + CodedOutputStream.computeInt32Size(2, getHeight());
-      }
-      j = i;
-      if (hasFrameRate()) {
-        j = i + CodedOutputStream.computeInt32Size(3, getFrameRate());
-      }
-      i = j + getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public int getWidth()
-    {
-      return this.width_;
-    }
-    
-    public boolean hasFrameRate()
-    {
-      return this.hasFrameRate;
-    }
-    
-    public boolean hasHeight()
-    {
-      return this.hasHeight;
-    }
-    
-    public boolean hasWidth()
-    {
-      return this.hasWidth;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeVideoEncoderInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeVideoEncoderInfo_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      if (!this.hasWidth) {}
-      while ((!this.hasHeight) || (!this.hasFrameRate)) {
-        return false;
-      }
-      return true;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasWidth()) {
-        paramCodedOutputStream.writeInt32(1, getWidth());
-      }
-      if (hasHeight()) {
-        paramCodedOutputStream.writeInt32(2, getHeight());
-      }
-      if (hasFrameRate()) {
-        paramCodedOutputStream.writeInt32(3, getFrameRate());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo result;
-      
-      private CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeVideoEncoderInfoProto {
+    private static FileDescriptor descriptor;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeVideoEncoderInfo_descriptor */
+    private static Descriptor f6670xcc3e1383;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeVideoEncoderInfo_fieldAccessorTable */
+    private static FieldAccessorTable f6671xc4ef0701;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeVideoEncoderInfoProto$1 */
+    static class C21001 implements InternalDescriptorAssigner {
+        C21001() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo(null);
-        return localBuilder;
-      }
-      
-      public CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeVideoEncoderInfoProto.descriptor = root;
+            CarlifeVideoEncoderInfoProto.f6670xcc3e1383 = (Descriptor) CarlifeVideoEncoderInfoProto.getDescriptor().getMessageTypes().get(0);
+            CarlifeVideoEncoderInfoProto.f6671xc4ef0701 = new FieldAccessorTable(CarlifeVideoEncoderInfoProto.f6670xcc3e1383, new String[]{"Width", "Height", "FrameRate"}, CarlifeVideoEncoderInfo.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo localCarlifeVideoEncoderInfo = this.result;
-        this.result = null;
-        return localCarlifeVideoEncoderInfo;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo(null);
-        return this;
-      }
-      
-      public Builder clearFrameRate()
-      {
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$902(this.result, false);
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$1002(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearHeight()
-      {
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$702(this.result, false);
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$802(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearWidth()
-      {
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$502(this.result, false);
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$602(this.result, 0);
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo getDefaultInstanceForType()
-      {
-        return CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.getDescriptor();
-      }
-      
-      public int getFrameRate()
-      {
-        return this.result.getFrameRate();
-      }
-      
-      public int getHeight()
-      {
-        return this.result.getHeight();
-      }
-      
-      public int getWidth()
-      {
-        return this.result.getWidth();
-      }
-      
-      public boolean hasFrameRate()
-      {
-        return this.result.hasFrameRate();
-      }
-      
-      public boolean hasHeight()
-      {
-        return this.result.hasHeight();
-      }
-      
-      public boolean hasWidth()
-      {
-        return this.result.hasWidth();
-      }
-      
-      protected CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo paramCarlifeVideoEncoderInfo)
-      {
-        if (paramCarlifeVideoEncoderInfo == CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeVideoEncoderInfo.hasWidth()) {
-          setWidth(paramCarlifeVideoEncoderInfo.getWidth());
-        }
-        if (paramCarlifeVideoEncoderInfo.hasHeight()) {
-          setHeight(paramCarlifeVideoEncoderInfo.getHeight());
-        }
-        if (paramCarlifeVideoEncoderInfo.hasFrameRate()) {
-          setFrameRate(paramCarlifeVideoEncoderInfo.getFrameRate());
-        }
-        mergeUnknownFields(paramCarlifeVideoEncoderInfo.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeVideoEncoderInfo extends GeneratedMessage {
+        public static final int FRAMERATE_FIELD_NUMBER = 3;
+        public static final int HEIGHT_FIELD_NUMBER = 2;
+        public static final int WIDTH_FIELD_NUMBER = 1;
+        private static final CarlifeVideoEncoderInfo defaultInstance = new CarlifeVideoEncoderInfo();
+        private int frameRate_;
+        private boolean hasFrameRate;
+        private boolean hasHeight;
+        private boolean hasWidth;
+        private int height_;
+        private int memoizedSerializedSize;
+        private int width_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeVideoEncoderInfo result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setWidth(paramCodedInputStream.readInt32());
-            break;
-          case 16: 
-            setHeight(paramCodedInputStream.readInt32());
-            break;
-          case 24: 
-            setFrameRate(paramCodedInputStream.readInt32());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeVideoEncoderInfo();
+                return builder;
+            }
+
+            protected CarlifeVideoEncoderInfo internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeVideoEncoderInfo();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeVideoEncoderInfo.getDescriptor();
+            }
+
+            public CarlifeVideoEncoderInfo getDefaultInstanceForType() {
+                return CarlifeVideoEncoderInfo.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeVideoEncoderInfo build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeVideoEncoderInfo buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeVideoEncoderInfo buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeVideoEncoderInfo returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeVideoEncoderInfo) {
+                    return mergeFrom((CarlifeVideoEncoderInfo) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeVideoEncoderInfo other) {
+                if (other != CarlifeVideoEncoderInfo.getDefaultInstance()) {
+                    if (other.hasWidth()) {
+                        setWidth(other.getWidth());
+                    }
+                    if (other.hasHeight()) {
+                        setHeight(other.getHeight());
+                    }
+                    if (other.hasFrameRate()) {
+                        setFrameRate(other.getFrameRate());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setWidth(input.readInt32());
+                            continue;
+                        case 16:
+                            setHeight(input.readInt32());
+                            continue;
+                        case 24:
+                            setFrameRate(input.readInt32());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasWidth() {
+                return this.result.hasWidth();
+            }
+
+            public int getWidth() {
+                return this.result.getWidth();
+            }
+
+            public Builder setWidth(int value) {
+                this.result.hasWidth = true;
+                this.result.width_ = value;
+                return this;
+            }
+
+            public Builder clearWidth() {
+                this.result.hasWidth = false;
+                this.result.width_ = 0;
+                return this;
+            }
+
+            public boolean hasHeight() {
+                return this.result.hasHeight();
+            }
+
+            public int getHeight() {
+                return this.result.getHeight();
+            }
+
+            public Builder setHeight(int value) {
+                this.result.hasHeight = true;
+                this.result.height_ = value;
+                return this;
+            }
+
+            public Builder clearHeight() {
+                this.result.hasHeight = false;
+                this.result.height_ = 0;
+                return this;
+            }
+
+            public boolean hasFrameRate() {
+                return this.result.hasFrameRate();
+            }
+
+            public int getFrameRate() {
+                return this.result.getFrameRate();
+            }
+
+            public Builder setFrameRate(int value) {
+                this.result.hasFrameRate = true;
+                this.result.frameRate_ = value;
+                return this;
+            }
+
+            public Builder clearFrameRate() {
+                this.result.hasFrameRate = false;
+                this.result.frameRate_ = 0;
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo)) {
-          return mergeFrom((CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo)paramMessage);
+
+        private CarlifeVideoEncoderInfo() {
+            this.width_ = 0;
+            this.height_ = 0;
+            this.frameRate_ = 0;
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setFrameRate(int paramInt)
-      {
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$902(this.result, true);
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$1002(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setHeight(int paramInt)
-      {
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$702(this.result, true);
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$802(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setWidth(int paramInt)
-      {
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$502(this.result, true);
-        CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.access$602(this.result, paramInt);
-        return this;
-      }
+
+        static {
+            CarlifeVideoEncoderInfoProto.getDescriptor();
+            CarlifeVideoEncoderInfoProto.internalForceInit();
+        }
+
+        public static CarlifeVideoEncoderInfo getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public CarlifeVideoEncoderInfo getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeVideoEncoderInfoProto.f6670xcc3e1383;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeVideoEncoderInfoProto.f6671xc4ef0701;
+        }
+
+        public boolean hasWidth() {
+            return this.hasWidth;
+        }
+
+        public int getWidth() {
+            return this.width_;
+        }
+
+        public boolean hasHeight() {
+            return this.hasHeight;
+        }
+
+        public int getHeight() {
+            return this.height_;
+        }
+
+        public boolean hasFrameRate() {
+            return this.hasFrameRate;
+        }
+
+        public int getFrameRate() {
+            return this.frameRate_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasWidth && this.hasHeight && this.hasFrameRate) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasWidth()) {
+                output.writeInt32(1, getWidth());
+            }
+            if (hasHeight()) {
+                output.writeInt32(2, getHeight());
+            }
+            if (hasFrameRate()) {
+                output.writeInt32(3, getFrameRate());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasWidth()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getWidth());
+            }
+            if (hasHeight()) {
+                size += CodedOutputStream.computeInt32Size(2, getHeight());
+            }
+            if (hasFrameRate()) {
+                size += CodedOutputStream.computeInt32Size(3, getFrameRate());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeVideoEncoderInfo parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeVideoEncoderInfo parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeVideoEncoderInfo prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeVideoEncoderInfoProto() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n\"CarlifeVideoEncoderInfoProto.proto\u0012\u001acom.baidu.carlife.protobuf\"K\n\u0017CarlifeVideoEncoderInfo\u0012\r\n\u0005width\u0018\u0001 \u0002(\u0005\u0012\u000e\n\u0006height\u0018\u0002 \u0002(\u0005\u0012\u0011\n\tframeRate\u0018\u0003 \u0002(\u0005"}, new FileDescriptor[0], new C21001());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeVideoEncoderInfoProto.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

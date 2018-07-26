@@ -1,5 +1,7 @@
 package com.baidu.navisdk.ui.routeguide.model;
 
+import com.baidu.carlife.util.C2175f;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.routeguide.control.RGLaneLineController;
 import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
 import com.baidu.navisdk.util.common.LogUtil;
@@ -7,286 +9,218 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class RGLaneInfoModel
-{
-  public static final int AFTER_SOURCE = 1;
-  private static final int BUS_IMAGE_ID = 1711407239;
-  public static final int CURRENT_MAX_LINE = 9;
-  public static final int ENLARGE_TYPE = 100;
-  public static final int LANE_SOURCE = 2;
-  public static final int MAX_LINE_NUMBER = 16;
-  public static final int NORMAL_LANE = 101;
-  public static final int PORTRAIT_ENLARGE = 200;
-  public static final String TAG = RGLaneInfoModel.class.getName();
-  public static RGLaneInfoModel mInstance = new RGLaneInfoModel();
-  public boolean isLaneShow = false;
-  public boolean isShow = false;
-  public int mID = 0;
-  private HashMap<String, Integer> mImageMap = new HashMap();
-  public ArrayList<Integer> mImalgeIdList = new ArrayList();
-  public RGLineItem[] mLaneLineList = new RGLineItem[16];
-  public int mLineNumber = 0;
-  public int mRemainDist = 0;
-  public int mStartDist = 0;
-  public double mX = 0.0D;
-  public double mY = 0.0D;
-  
-  private int getImageID(String paramString, boolean paramBoolean)
-  {
-    int j = 0;
-    int i = j;
-    if (this.mImageMap != null)
-    {
-      i = j;
-      if (this.mImageMap.containsKey(paramString)) {
-        i = ((Integer)this.mImageMap.get(paramString)).intValue();
-      }
+public class RGLaneInfoModel {
+    public static final int AFTER_SOURCE = 1;
+    private static final int BUS_IMAGE_ID = 1711407239;
+    public static final int CURRENT_MAX_LINE = 9;
+    public static final int ENLARGE_TYPE = 100;
+    public static final int LANE_SOURCE = 2;
+    public static final int MAX_LINE_NUMBER = 16;
+    public static final int NORMAL_LANE = 101;
+    public static final int PORTRAIT_ENLARGE = 200;
+    public static final String TAG = RGLaneInfoModel.class.getName();
+    public static RGLaneInfoModel mInstance = new RGLaneInfoModel();
+    public boolean isLaneShow = false;
+    public boolean isShow = false;
+    public int mID = 0;
+    private HashMap<String, Integer> mImageMap = new HashMap();
+    public ArrayList<Integer> mImalgeIdList = new ArrayList();
+    public RGLineItem[] mLaneLineList = new RGLineItem[16];
+    public int mLineNumber = 0;
+    public int mRemainDist = 0;
+    public int mStartDist = 0;
+    public double mX = 0.0d;
+    public double mY = 0.0d;
+
+    public boolean isShowLaneLineView() {
+        return this.isShow && this.isLaneShow;
     }
-    LogUtil.e(TAG, "getImageID id is " + i);
-    return i;
-  }
-  
-  public static RGLaneInfoModel getModel(boolean paramBoolean)
-  {
-    if ((paramBoolean) || (mInstance == null)) {
-      mInstance = new RGLaneInfoModel();
-    }
-    return mInstance;
-  }
-  
-  private void initMap()
-  {
-    if (this.mImageMap.size() > 0) {
-      return;
-    }
-    if (this.mImageMap == null) {
-      this.mImageMap = new HashMap();
-    }
-    this.mImageMap.put("11000000", Integer.valueOf(1711407260));
-    this.mImageMap.put("10000000", Integer.valueOf(1711407261));
-    this.mImageMap.put("00110000", Integer.valueOf(1711407262));
-    this.mImageMap.put("00100000", Integer.valueOf(1711407263));
-    this.mImageMap.put("00001100", Integer.valueOf(1711407252));
-    this.mImageMap.put("00001000", Integer.valueOf(1711407255));
-    this.mImageMap.put("00000011", Integer.valueOf(1711407258));
-    this.mImageMap.put("00000010", Integer.valueOf(1711407259));
-    this.mImageMap.put("10001000", Integer.valueOf(1711407216));
-    this.mImageMap.put("11001000", Integer.valueOf(1711407219));
-    this.mImageMap.put("10001100", Integer.valueOf(1711407215));
-    this.mImageMap.put("00101000", Integer.valueOf(1711407218));
-    this.mImageMap.put("00111000", Integer.valueOf(1711407220));
-    this.mImageMap.put("00101100", Integer.valueOf(1711407217));
-    this.mImageMap.put("10101000", Integer.valueOf(1711407221));
-    this.mImageMap.put("11101000", Integer.valueOf(1711407223));
-    this.mImageMap.put("10111000", Integer.valueOf(1711407224));
-    this.mImageMap.put("10101100", Integer.valueOf(1711407222));
-    this.mImageMap.put("10000010", Integer.valueOf(1711407226));
-    this.mImageMap.put("11000010", Integer.valueOf(1711407241));
-    this.mImageMap.put("10000011", Integer.valueOf(1711407225));
-    this.mImageMap.put("10100000", Integer.valueOf(1711407243));
-    this.mImageMap.put("11100000", Integer.valueOf(1711407242));
-    this.mImageMap.put("10110000", Integer.valueOf(1711407248));
-    this.mImageMap.put("00100010", Integer.valueOf(1711407228));
-    this.mImageMap.put("00110010", Integer.valueOf(1711407247));
-    this.mImageMap.put("00100011", Integer.valueOf(1711407227));
-    this.mImageMap.put("00001010", Integer.valueOf(1711407230));
-    this.mImageMap.put("00001110", Integer.valueOf(1711407253));
-    this.mImageMap.put("00001011", Integer.valueOf(1711407229));
-    this.mImageMap.put("10100010", Integer.valueOf(1711407232));
-    this.mImageMap.put("11100010", Integer.valueOf(1711407244));
-    this.mImageMap.put("10110010", Integer.valueOf(1711407249));
-    this.mImageMap.put("10100011", Integer.valueOf(1711407231));
-    this.mImageMap.put("10001010", Integer.valueOf(1711407236));
-    this.mImageMap.put("11001010", Integer.valueOf(1711407246));
-    this.mImageMap.put("10001110", Integer.valueOf(1711407256));
-    this.mImageMap.put("10001011", Integer.valueOf(1711407235));
-    this.mImageMap.put("00101010", Integer.valueOf(1711407238));
-    this.mImageMap.put("00111010", Integer.valueOf(1711407251));
-    this.mImageMap.put("00101110", Integer.valueOf(1711407257));
-    this.mImageMap.put("00101011", Integer.valueOf(1711407237));
-    this.mImageMap.put("10101010", Integer.valueOf(1711407234));
-    this.mImageMap.put("11101010", Integer.valueOf(1711407245));
-    this.mImageMap.put("10111010", Integer.valueOf(1711407250));
-    this.mImageMap.put("10101110", Integer.valueOf(1711407254));
-    this.mImageMap.put("10101011", Integer.valueOf(1711407233));
-  }
-  
-  private boolean isNewLaneShow()
-  {
-    if (RGEnlargeRoadMapModel.getInstance().isAnyEnlargeRoadMapShowing()) {
-      return true;
-    }
-    ArrayList localArrayList = RGLaneLineController.getInstance().mLastImalgeIdList;
-    if ((this.mImalgeIdList != null) && (localArrayList != null) && (this.mImalgeIdList.size() == localArrayList.size()))
-    {
-      int i = 0;
-      while (i < this.mImalgeIdList.size())
-      {
-        if (((Integer)this.mImalgeIdList.get(i)).intValue() != ((Integer)localArrayList.get(i)).intValue()) {
-          return true;
+
+    private void initMap() {
+        if (this.mImageMap.size() <= 0) {
+            if (this.mImageMap == null) {
+                this.mImageMap = new HashMap();
+            }
+            this.mImageMap.put("11000000", Integer.valueOf(C4048R.drawable.ic_lane_turn_left_90));
+            this.mImageMap.put("10000000", Integer.valueOf(C4048R.drawable.ic_lane_turn_left_90_gray));
+            this.mImageMap.put("00110000", Integer.valueOf(C4048R.drawable.ic_lane_turn_right_90));
+            this.mImageMap.put("00100000", Integer.valueOf(C4048R.drawable.ic_lane_turn_right_90_gray));
+            this.mImageMap.put("00001100", Integer.valueOf(C4048R.drawable.ic_lane_straight));
+            this.mImageMap.put("00001000", Integer.valueOf(C4048R.drawable.ic_lane_straight_gray));
+            this.mImageMap.put("00000011", Integer.valueOf(C4048R.drawable.ic_lane_turn_around_left));
+            this.mImageMap.put("00000010", Integer.valueOf(C4048R.drawable.ic_lane_turn_around_left_gray));
+            this.mImageMap.put("10001000", Integer.valueOf(C4048R.drawable.ic_lane_2cross_left_straight_gray));
+            this.mImageMap.put("11001000", Integer.valueOf(C4048R.drawable.ic_lane_2cross_turn_left));
+            this.mImageMap.put("10001100", Integer.valueOf(C4048R.drawable.ic_lane_2cross_left_straight));
+            this.mImageMap.put("00101000", Integer.valueOf(C4048R.drawable.ic_lane_2cross_right_straight_gray));
+            this.mImageMap.put("00111000", Integer.valueOf(C4048R.drawable.ic_lane_2cross_turn_right));
+            this.mImageMap.put("00101100", Integer.valueOf(C4048R.drawable.ic_lane_2cross_right_straight));
+            this.mImageMap.put("10101000", Integer.valueOf(C4048R.drawable.ic_lane_3cross_gray));
+            this.mImageMap.put("11101000", Integer.valueOf(C4048R.drawable.ic_lane_3cross_turn_left));
+            this.mImageMap.put("10111000", Integer.valueOf(C4048R.drawable.ic_lane_3cross_turn_right));
+            this.mImageMap.put("10101100", Integer.valueOf(C4048R.drawable.ic_lane_3cross_straight));
+            this.mImageMap.put("10000010", Integer.valueOf(C4048R.drawable.ic_lane_around_and_left_gray));
+            this.mImageMap.put("11000010", Integer.valueOf(C4048R.drawable.ic_lane_left_and_around));
+            this.mImageMap.put("10000011", Integer.valueOf(C4048R.drawable.ic_lane_around_and_left));
+            this.mImageMap.put(C2175f.f6941a, Integer.valueOf(C4048R.drawable.ic_lane_left_and_right_gray));
+            this.mImageMap.put("11100000", Integer.valueOf(C4048R.drawable.ic_lane_left_and_right));
+            this.mImageMap.put("10110000", Integer.valueOf(C4048R.drawable.ic_lane_right_and_left));
+            this.mImageMap.put("00100010", Integer.valueOf(C4048R.drawable.ic_lane_around_and_right_gray));
+            this.mImageMap.put("00110010", Integer.valueOf(C4048R.drawable.ic_lane_right_and_around));
+            this.mImageMap.put("00100011", Integer.valueOf(C4048R.drawable.ic_lane_around_and_right));
+            this.mImageMap.put("00001010", Integer.valueOf(C4048R.drawable.ic_lane_around_and_straight_gray));
+            this.mImageMap.put("00001110", Integer.valueOf(C4048R.drawable.ic_lane_straight_and_around));
+            this.mImageMap.put("00001011", Integer.valueOf(C4048R.drawable.ic_lane_around_and_straight));
+            this.mImageMap.put("10100010", Integer.valueOf(C4048R.drawable.ic_lane_around_left_right_gray));
+            this.mImageMap.put("11100010", Integer.valueOf(C4048R.drawable.ic_lane_left_around_right));
+            this.mImageMap.put("10110010", Integer.valueOf(C4048R.drawable.ic_lane_right_around_left));
+            this.mImageMap.put("10100011", Integer.valueOf(C4048R.drawable.ic_lane_around_left_right));
+            this.mImageMap.put("10001010", Integer.valueOf(C4048R.drawable.ic_lane_around_left_straight_gray));
+            this.mImageMap.put("11001010", Integer.valueOf(C4048R.drawable.ic_lane_left_around_straight));
+            this.mImageMap.put("10001110", Integer.valueOf(C4048R.drawable.ic_lane_straight_left_around));
+            this.mImageMap.put("10001011", Integer.valueOf(C4048R.drawable.ic_lane_around_left_straight));
+            this.mImageMap.put("00101010", Integer.valueOf(C4048R.drawable.ic_lane_around_right_straight_gray));
+            this.mImageMap.put("00111010", Integer.valueOf(C4048R.drawable.ic_lane_right_around_straight));
+            this.mImageMap.put("00101110", Integer.valueOf(C4048R.drawable.ic_lane_straight_right_around));
+            this.mImageMap.put("00101011", Integer.valueOf(C4048R.drawable.ic_lane_around_right_straight));
+            this.mImageMap.put("10101010", Integer.valueOf(C4048R.drawable.ic_lane_around_left_right_straight_gray));
+            this.mImageMap.put("11101010", Integer.valueOf(C4048R.drawable.ic_lane_left_around_right_straight));
+            this.mImageMap.put("10111010", Integer.valueOf(C4048R.drawable.ic_lane_right_around_left_straight));
+            this.mImageMap.put("10101110", Integer.valueOf(C4048R.drawable.ic_lane_straight_around_left_right));
+            this.mImageMap.put("10101011", Integer.valueOf(C4048R.drawable.ic_lane_around_left_right_straight));
         }
-        i += 1;
-      }
-      return false;
     }
-    return true;
-  }
-  
-  public void cloneData(RGLineItem[] paramArrayOfRGLineItem)
-  {
-    if ((paramArrayOfRGLineItem == null) || (paramArrayOfRGLineItem.length <= 0)) {}
-    for (;;)
-    {
-      return;
-      int i = 0;
-      while (i < paramArrayOfRGLineItem.length)
-      {
-        this.mLaneLineList[i] = paramArrayOfRGLineItem[i];
-        LogUtil.e(TAG, "cloneData is " + this.mLaneLineList[i].toString());
-        i += 1;
-      }
+
+    public String parseItem(RGLineItem item) {
+        int i = 1;
+        if (item == null) {
+            return "0";
+        }
+        int i2;
+        StringBuffer buf = new StringBuffer();
+        buf.append(item.isLeft ? 1 : 0);
+        if (item.isLeftBright) {
+            i2 = 1;
+        } else {
+            i2 = 0;
+        }
+        buf.append(i2);
+        if (item.isRight) {
+            i2 = 1;
+        } else {
+            i2 = 0;
+        }
+        buf.append(i2);
+        if (item.isRightBright) {
+            i2 = 1;
+        } else {
+            i2 = 0;
+        }
+        buf.append(i2);
+        if (item.isFront) {
+            i2 = 1;
+        } else {
+            i2 = 0;
+        }
+        buf.append(i2);
+        if (item.isFrontBright) {
+            i2 = 1;
+        } else {
+            i2 = 0;
+        }
+        buf.append(i2);
+        if (item.isBack) {
+            i2 = 1;
+        } else {
+            i2 = 0;
+        }
+        buf.append(i2);
+        if (!item.isBackBright) {
+            i = 0;
+        }
+        buf.append(i);
+        LogUtil.m15791e(TAG, "parseItemToLong long is " + buf.toString());
+        return buf.toString();
     }
-  }
-  
-  public int getImageIDFromItem(RGLineItem paramRGLineItem)
-  {
-    if (paramRGLineItem.isBusLine) {
-      return 1711407239;
+
+    public int getImageIDFromItem(RGLineItem item) {
+        if (item.isBusLine) {
+            return 1711407239;
+        }
+        return getImageID(parseItem(item), item.isBusLine);
     }
-    return getImageID(parseItem(paramRGLineItem), paramRGLineItem.isBusLine);
-  }
-  
-  public void handleShowMessage()
-  {
-    LogUtil.e(TAG, "handleShowMessage");
-    initMap();
-    this.isShow = true;
-    if (!this.isLaneShow)
-    {
-      LogUtil.e(TAG, "handleShowMessage isLaneShow " + this.isLaneShow);
-      return;
+
+    private int getImageID(String itemID, boolean isBusLine) {
+        int imageID = 0;
+        if (this.mImageMap != null && this.mImageMap.containsKey(itemID)) {
+            imageID = ((Integer) this.mImageMap.get(itemID)).intValue();
+        }
+        LogUtil.m15791e(TAG, "getImageID id is " + imageID);
+        return imageID;
     }
-    if (this.mLineNumber > 9) {
-      this.mLineNumber = 9;
+
+    public void cloneData(RGLineItem[] data) {
+        if (data != null && data.length > 0) {
+            for (int i = 0; i < data.length; i++) {
+                this.mLaneLineList[i] = data[i];
+                LogUtil.m15791e(TAG, "cloneData is " + this.mLaneLineList[i].toString());
+            }
+        }
     }
-    this.mImalgeIdList.clear();
-    int i = 0;
-    while (i < this.mLineNumber)
-    {
-      int j = getImageIDFromItem(this.mLaneLineList[i]);
-      this.mImalgeIdList.add(Integer.valueOf(j));
-      i += 1;
+
+    public void handleShowMessage() {
+        LogUtil.m15791e(TAG, "handleShowMessage");
+        initMap();
+        this.isShow = true;
+        if (this.isLaneShow) {
+            if (this.mLineNumber > 9) {
+                this.mLineNumber = 9;
+            }
+            this.mImalgeIdList.clear();
+            for (int i = 0; i < this.mLineNumber; i++) {
+                this.mImalgeIdList.add(Integer.valueOf(getImageIDFromItem(this.mLaneLineList[i])));
+            }
+            if (isNewLaneShow()) {
+                RGLaneLineController.getInstance().mLastImalgeIdList.clear();
+                Iterator it = this.mImalgeIdList.iterator();
+                while (it.hasNext()) {
+                    RGLaneLineController.getInstance().mLastImalgeIdList.add((Integer) it.next());
+                }
+                RGMapModeViewController.getInstance().updateLaneLineImage(this.mImalgeIdList);
+                RGMapModeViewController.getInstance().updateEnlargeLaneLineImage(this.mImalgeIdList);
+                RGMapModeViewController.getInstance().requestShowExpendView(7, true, 2);
+                return;
+            }
+            LogUtil.m15791e(TAG, "update, not show");
+            return;
+        }
+        LogUtil.m15791e(TAG, "handleShowMessage isLaneShow " + this.isLaneShow);
     }
-    if (!isNewLaneShow())
-    {
-      LogUtil.e(TAG, "update, not show");
-      return;
+
+    private boolean isNewLaneShow() {
+        if (RGEnlargeRoadMapModel.getInstance().isAnyEnlargeRoadMapShowing()) {
+            return true;
+        }
+        ArrayList<Integer> mLastImalgeIdList = RGLaneLineController.getInstance().mLastImalgeIdList;
+        if (this.mImalgeIdList == null || mLastImalgeIdList == null || this.mImalgeIdList.size() != mLastImalgeIdList.size()) {
+            return true;
+        }
+        for (int i = 0; i < this.mImalgeIdList.size(); i++) {
+            if (((Integer) this.mImalgeIdList.get(i)).intValue() != ((Integer) mLastImalgeIdList.get(i)).intValue()) {
+                return true;
+            }
+        }
+        return false;
     }
-    RGLaneLineController.getInstance().mLastImalgeIdList.clear();
-    Iterator localIterator = this.mImalgeIdList.iterator();
-    while (localIterator.hasNext())
-    {
-      Integer localInteger = (Integer)localIterator.next();
-      RGLaneLineController.getInstance().mLastImalgeIdList.add(localInteger);
+
+    public static RGLaneInfoModel getModel(boolean isShowMessage) {
+        if (isShowMessage || mInstance == null) {
+            mInstance = new RGLaneInfoModel();
+        }
+        return mInstance;
     }
-    RGMapModeViewController.getInstance().updateLaneLineImage(this.mImalgeIdList);
-    RGMapModeViewController.getInstance().updateEnlargeLaneLineImage(this.mImalgeIdList);
-    RGMapModeViewController.getInstance().requestShowExpendView(7, true, 2);
-  }
-  
-  public boolean isShowLaneLineView()
-  {
-    return (this.isShow) && (this.isLaneShow);
-  }
-  
-  public String parseItem(RGLineItem paramRGLineItem)
-  {
-    int j = 1;
-    if (paramRGLineItem == null) {
-      return "0";
+
+    public String toString() {
+        return String.format("[%d,%d,%d,%b]", new Object[]{Integer.valueOf(this.mLineNumber), Integer.valueOf(this.mStartDist), Integer.valueOf(this.mID), Boolean.valueOf(this.isLaneShow)});
     }
-    StringBuffer localStringBuffer = new StringBuffer();
-    if (paramRGLineItem.isLeft)
-    {
-      i = 1;
-      localStringBuffer.append(i);
-      if (!paramRGLineItem.isLeftBright) {
-        break label188;
-      }
-      i = 1;
-      label44:
-      localStringBuffer.append(i);
-      if (!paramRGLineItem.isRight) {
-        break label193;
-      }
-      i = 1;
-      label60:
-      localStringBuffer.append(i);
-      if (!paramRGLineItem.isRightBright) {
-        break label198;
-      }
-      i = 1;
-      label76:
-      localStringBuffer.append(i);
-      if (!paramRGLineItem.isFront) {
-        break label203;
-      }
-      i = 1;
-      label92:
-      localStringBuffer.append(i);
-      if (!paramRGLineItem.isFrontBright) {
-        break label208;
-      }
-      i = 1;
-      label108:
-      localStringBuffer.append(i);
-      if (!paramRGLineItem.isBack) {
-        break label213;
-      }
-      i = 1;
-      label124:
-      localStringBuffer.append(i);
-      if (!paramRGLineItem.isBackBright) {
-        break label218;
-      }
-    }
-    label188:
-    label193:
-    label198:
-    label203:
-    label208:
-    label213:
-    label218:
-    for (int i = j;; i = 0)
-    {
-      localStringBuffer.append(i);
-      LogUtil.e(TAG, "parseItemToLong long is " + localStringBuffer.toString());
-      return localStringBuffer.toString();
-      i = 0;
-      break;
-      i = 0;
-      break label44;
-      i = 0;
-      break label60;
-      i = 0;
-      break label76;
-      i = 0;
-      break label92;
-      i = 0;
-      break label108;
-      i = 0;
-      break label124;
-    }
-  }
-  
-  public String toString()
-  {
-    return String.format("[%d,%d,%d,%b]", new Object[] { Integer.valueOf(this.mLineNumber), Integer.valueOf(this.mStartDist), Integer.valueOf(this.mID), Boolean.valueOf(this.isLaneShow) });
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/model/RGLaneInfoModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -8,138 +8,116 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class RGUgcRoadModel
-{
-  private static final String BUNDLE_UGCINFO_DISTRICT = "BUNDLE_UGCINFO_DISTRICT";
-  private static final String BUNDLE_UGCINFO_GEOPOINT = "BUNDLE_UGCINFO_GEOPOINT";
-  private static final String BUNDLE_UGCINFO_ID = "BUNDLE_UGCINFO_ID";
-  private static final String BUNDLE_UGCINFO_POINT_X = "BUNDLE_UGCINFO_POINT_X";
-  private static final String BUNDLE_UGCINFO_POINT_Y = "BUNDLE_UGCINFO_POINT_Y";
-  private static final String BUNDLE_UGCINFO_ROAD_NAME = "BUNDLE_UGCINFO_ROAD_NAME";
-  private static final String BUNDLE_UGCINFO_SYNC_STATUS = "BUNDLE_UGCINFO_SYNC_STATUS";
-  private static final String BUNDLE_UGCINFO_TIME = "BUNDLE_UGCINFO_TIME";
-  private static final String BUNDLE_UGCINFO_TYPE = "BUNDLE_UGCINFO_TYPE";
-  private static RGUgcRoadModel sInstance = null;
-  private List<UgcPointInfo> mUgcYawItems = new ArrayList();
-  private int ugcItemType = -1;
-  
-  public static RGUgcRoadModel getInstance()
-  {
-    if (sInstance == null) {
-      sInstance = new RGUgcRoadModel();
-    }
-    return sInstance;
-  }
-  
-  public int getUgcItemType()
-  {
-    return this.ugcItemType;
-  }
-  
-  public ArrayList<UgcPointInfo> getUgcManagerInfoList()
-  {
-    Object localObject = new ArrayList();
-    JNIUgcRoadControl.sInstance.getAllItems((ArrayList)localObject, 0);
-    LogUtil.e("RGUgcRoadModel", "getUgcManagerInfoList unYawPointCnt = " + 0);
-    ArrayList localArrayList = new ArrayList();
-    if ((localObject != null) && (!((ArrayList)localObject).isEmpty()))
-    {
-      localObject = ((ArrayList)localObject).iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        Bundle localBundle = (Bundle)((Iterator)localObject).next();
-        UgcPointInfo localUgcPointInfo = new UgcPointInfo();
-        localUgcPointInfo.mUgcId = localBundle.getString("BUNDLE_UGCINFO_ID");
-        localUgcPointInfo.mUgcSyncStatus = localBundle.getInt("BUNDLE_UGCINFO_SYNC_STATUS");
-        localUgcPointInfo.mUgcType = localBundle.getInt("BUNDLE_UGCINFO_TYPE");
-        localUgcPointInfo.mUgcPointRoadName = localBundle.getString("BUNDLE_UGCINFO_ROAD_NAME");
-        localUgcPointInfo.mUgcTime = localBundle.getString("BUNDLE_UGCINFO_TIME");
-        localUgcPointInfo.mUgcDistrictName = localBundle.getString("BUNDLE_UGCINFO_DISTRICT");
-        localBundle = localBundle.getBundle("BUNDLE_UGCINFO_GEOPOINT");
-        if (localBundle != null)
-        {
-          LogUtil.e("RGUgcRoadModel", "getUgcManagerInfoList  viewPointBundle!=null:");
-          localUgcPointInfo.longitude = localBundle.getInt("lon");
-          localUgcPointInfo.latitude = localBundle.getInt("lat");
-          localUgcPointInfo.setUgcViewPoint(localBundle.getInt("lon"), localBundle.getInt("lat"));
+public class RGUgcRoadModel {
+    private static final String BUNDLE_UGCINFO_DISTRICT = "BUNDLE_UGCINFO_DISTRICT";
+    private static final String BUNDLE_UGCINFO_GEOPOINT = "BUNDLE_UGCINFO_GEOPOINT";
+    private static final String BUNDLE_UGCINFO_ID = "BUNDLE_UGCINFO_ID";
+    private static final String BUNDLE_UGCINFO_POINT_X = "BUNDLE_UGCINFO_POINT_X";
+    private static final String BUNDLE_UGCINFO_POINT_Y = "BUNDLE_UGCINFO_POINT_Y";
+    private static final String BUNDLE_UGCINFO_ROAD_NAME = "BUNDLE_UGCINFO_ROAD_NAME";
+    private static final String BUNDLE_UGCINFO_SYNC_STATUS = "BUNDLE_UGCINFO_SYNC_STATUS";
+    private static final String BUNDLE_UGCINFO_TIME = "BUNDLE_UGCINFO_TIME";
+    private static final String BUNDLE_UGCINFO_TYPE = "BUNDLE_UGCINFO_TYPE";
+    private static RGUgcRoadModel sInstance = null;
+    private List<UgcPointInfo> mUgcYawItems = new ArrayList();
+    private int ugcItemType = -1;
+
+    public static RGUgcRoadModel getInstance() {
+        if (sInstance == null) {
+            sInstance = new RGUgcRoadModel();
         }
-        LogUtil.e("RGUgcRoadModel", "getUgcManagerInfoList  ugcPointInfo.mUgcId:" + localUgcPointInfo.mUgcId + "  ugcPointInfo.mUgcSyncStatus:" + localUgcPointInfo.mUgcSyncStatus + "  ugcPointInfo.mUgcType:" + localUgcPointInfo.mUgcType + "  ugcPointInfo.mUgcPointRoadName:" + localUgcPointInfo.mUgcPointRoadName + "  ugcPointInfo.mUgcTime:" + localUgcPointInfo.mUgcTime + "  ugcPointInfo.lon:" + localUgcPointInfo.longitude + "  ugcPointInfo.lat:" + localUgcPointInfo.latitude);
-        localArrayList.add(localUgcPointInfo);
-      }
+        return sInstance;
     }
-    return localArrayList;
-  }
-  
-  public List<UgcPointInfo> getUgcYawItems()
-  {
-    return this.mUgcYawItems;
-  }
-  
-  public int getUgcYawItemsNum()
-  {
-    int i = 0;
-    if (this.mUgcYawItems != null) {
-      i = this.mUgcYawItems.size();
+
+    private RGUgcRoadModel() {
     }
-    return i;
-  }
-  
-  public ArrayList<UgcPointInfo> getUgcYawPointList()
-  {
-    Object localObject = new ArrayList();
-    JNIUgcRoadControl.sInstance.getCurYawPoint((ArrayList)localObject, 10);
-    LogUtil.e("RGUgcRoadModel", "getUgcYawPointList unYawPointCnt = " + 10);
-    ArrayList localArrayList = new ArrayList();
-    if ((localObject != null) && (!((ArrayList)localObject).isEmpty()))
-    {
-      localObject = ((ArrayList)localObject).iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        Bundle localBundle = (Bundle)((Iterator)localObject).next();
-        UgcPointInfo localUgcPointInfo = new UgcPointInfo();
-        localUgcPointInfo.mUgcPointRoadName = localBundle.getString("BUNDLE_UGCINFO_ROAD_NAME");
-        localUgcPointInfo.mUgPermitType = localBundle.getInt("BUNDLE_UGCINFO_TYPE");
-        localBundle = localBundle.getBundle("BUNDLE_UGCINFO_GEOPOINT");
-        if (localBundle != null)
-        {
-          LogUtil.e("RGUgcRoadModel", "getUgcYawPointList  viewPointBundle!=null:");
-          localUgcPointInfo.longitude = localBundle.getInt("lon");
-          localUgcPointInfo.latitude = localBundle.getInt("lat");
-          localUgcPointInfo.setUgcViewPoint(localBundle.getInt("lon"), localBundle.getInt("lat"));
+
+    public int getUgcItemType() {
+        return this.ugcItemType;
+    }
+
+    public void setUgcItemType(int ugcItemType) {
+        this.ugcItemType = ugcItemType;
+    }
+
+    public void updateUgcYawItems(List<UgcPointInfo> list) {
+        reset();
+        if (list != null && list.size() != 0 && this.mUgcYawItems != null) {
+            this.mUgcYawItems.clear();
+            this.mUgcYawItems.addAll(list);
         }
-        LogUtil.e("RGUgcRoadModel", "getUgcYawPointList  ugcPointInfo.mUgPermitType:" + localUgcPointInfo.mUgPermitType + "  ugcPointInfo.mUgcPointRoadName:" + localUgcPointInfo.mUgcPointRoadName + "  ugcPointInfo.lon:" + localUgcPointInfo.longitude + "  ugcPointInfo.lat:" + localUgcPointInfo.latitude);
-        localArrayList.add(localUgcPointInfo);
-      }
     }
-    return localArrayList;
-  }
-  
-  public void reset()
-  {
-    if (this.mUgcYawItems != null) {
-      this.mUgcYawItems.clear();
+
+    public int getUgcYawItemsNum() {
+        if (this.mUgcYawItems != null) {
+            return this.mUgcYawItems.size();
+        }
+        return 0;
     }
-  }
-  
-  public void setUgcItemType(int paramInt)
-  {
-    this.ugcItemType = paramInt;
-  }
-  
-  public void updateUgcYawItems(List<UgcPointInfo> paramList)
-  {
-    reset();
-    if ((paramList == null) || (paramList.size() == 0)) {}
-    while (this.mUgcYawItems == null) {
-      return;
+
+    public List<UgcPointInfo> getUgcYawItems() {
+        return this.mUgcYawItems;
     }
-    this.mUgcYawItems.clear();
-    this.mUgcYawItems.addAll(paramList);
-  }
+
+    public void reset() {
+        if (this.mUgcYawItems != null) {
+            this.mUgcYawItems.clear();
+        }
+    }
+
+    public ArrayList<UgcPointInfo> getUgcYawPointList() {
+        ArrayList<Bundle> bundleList = new ArrayList();
+        JNIUgcRoadControl.sInstance.getCurYawPoint(bundleList, 10);
+        LogUtil.m15791e("RGUgcRoadModel", "getUgcYawPointList unYawPointCnt = " + 10);
+        ArrayList<UgcPointInfo> ugcPointInfoList = new ArrayList();
+        if (!(bundleList == null || bundleList.isEmpty())) {
+            Iterator it = bundleList.iterator();
+            while (it.hasNext()) {
+                Bundle bundle = (Bundle) it.next();
+                UgcPointInfo ugcPointInfo = new UgcPointInfo();
+                ugcPointInfo.mUgcPointRoadName = bundle.getString(BUNDLE_UGCINFO_ROAD_NAME);
+                ugcPointInfo.mUgPermitType = bundle.getInt(BUNDLE_UGCINFO_TYPE);
+                Bundle viewPointBundle = bundle.getBundle(BUNDLE_UGCINFO_GEOPOINT);
+                if (viewPointBundle != null) {
+                    LogUtil.m15791e("RGUgcRoadModel", "getUgcYawPointList  viewPointBundle!=null:");
+                    ugcPointInfo.longitude = viewPointBundle.getInt("lon");
+                    ugcPointInfo.latitude = viewPointBundle.getInt("lat");
+                    ugcPointInfo.setUgcViewPoint(viewPointBundle.getInt("lon"), viewPointBundle.getInt("lat"));
+                }
+                LogUtil.m15791e("RGUgcRoadModel", "getUgcYawPointList  ugcPointInfo.mUgPermitType:" + ugcPointInfo.mUgPermitType + "  ugcPointInfo.mUgcPointRoadName:" + ugcPointInfo.mUgcPointRoadName + "  ugcPointInfo.lon:" + ugcPointInfo.longitude + "  ugcPointInfo.lat:" + ugcPointInfo.latitude);
+                ugcPointInfoList.add(ugcPointInfo);
+            }
+        }
+        return ugcPointInfoList;
+    }
+
+    public ArrayList<UgcPointInfo> getUgcManagerInfoList() {
+        ArrayList<Bundle> bundleList = new ArrayList();
+        JNIUgcRoadControl.sInstance.getAllItems(bundleList, 0);
+        LogUtil.m15791e("RGUgcRoadModel", "getUgcManagerInfoList unYawPointCnt = " + 0);
+        ArrayList<UgcPointInfo> ugcPointInfoList = new ArrayList();
+        if (!(bundleList == null || bundleList.isEmpty())) {
+            Iterator it = bundleList.iterator();
+            while (it.hasNext()) {
+                Bundle bundle = (Bundle) it.next();
+                UgcPointInfo ugcPointInfo = new UgcPointInfo();
+                ugcPointInfo.mUgcId = bundle.getString(BUNDLE_UGCINFO_ID);
+                ugcPointInfo.mUgcSyncStatus = bundle.getInt(BUNDLE_UGCINFO_SYNC_STATUS);
+                ugcPointInfo.mUgcType = bundle.getInt(BUNDLE_UGCINFO_TYPE);
+                ugcPointInfo.mUgcPointRoadName = bundle.getString(BUNDLE_UGCINFO_ROAD_NAME);
+                ugcPointInfo.mUgcTime = bundle.getString(BUNDLE_UGCINFO_TIME);
+                ugcPointInfo.mUgcDistrictName = bundle.getString(BUNDLE_UGCINFO_DISTRICT);
+                Bundle viewPointBundle = bundle.getBundle(BUNDLE_UGCINFO_GEOPOINT);
+                if (viewPointBundle != null) {
+                    LogUtil.m15791e("RGUgcRoadModel", "getUgcManagerInfoList  viewPointBundle!=null:");
+                    ugcPointInfo.longitude = viewPointBundle.getInt("lon");
+                    ugcPointInfo.latitude = viewPointBundle.getInt("lat");
+                    ugcPointInfo.setUgcViewPoint(viewPointBundle.getInt("lon"), viewPointBundle.getInt("lat"));
+                }
+                LogUtil.m15791e("RGUgcRoadModel", "getUgcManagerInfoList  ugcPointInfo.mUgcId:" + ugcPointInfo.mUgcId + "  ugcPointInfo.mUgcSyncStatus:" + ugcPointInfo.mUgcSyncStatus + "  ugcPointInfo.mUgcType:" + ugcPointInfo.mUgcType + "  ugcPointInfo.mUgcPointRoadName:" + ugcPointInfo.mUgcPointRoadName + "  ugcPointInfo.mUgcTime:" + ugcPointInfo.mUgcTime + "  ugcPointInfo.lon:" + ugcPointInfo.longitude + "  ugcPointInfo.lat:" + ugcPointInfo.latitude);
+                ugcPointInfoList.add(ugcPointInfo);
+            }
+        }
+        return ugcPointInfoList;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/model/RGUgcRoadModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

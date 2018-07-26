@@ -6,70 +6,66 @@ import android.os.HandlerThread;
 import java.util.HashMap;
 import java.util.Map;
 
-class bm
-{
-  private static HandlerThread b = new HandlerThread("EventHandleThread");
-  private static Handler c;
-  private static bm d = new bm();
-  HashMap<String, bs> a = new HashMap();
-  
-  private bm()
-  {
-    b.start();
-    b.setPriority(10);
-    c = new Handler(b.getLooper());
-  }
-  
-  public static bm a()
-  {
-    return d;
-  }
-  
-  public String a(String paramString1, String paramString2)
-  {
-    return "__sdk_" + paramString1 + "$|$" + paramString2;
-  }
-  
-  public void a(Context paramContext, String paramString1, String paramString2, int paramInt, long paramLong1, long paramLong2, ExtraInfo paramExtraInfo, Map<String, String> paramMap)
-  {
-    DataCore.instance().putEvent(paramContext, paramString1, paramString2, paramInt, paramLong1, paramLong2, "", "", 0, false, paramExtraInfo, paramMap);
-    DataCore.instance().flush(paramContext);
-  }
-  
-  public void a(Context paramContext, String paramString1, String paramString2, int paramInt1, long paramLong1, long paramLong2, String paramString3, String paramString4, int paramInt2, boolean paramBoolean)
-  {
-    DataCore.instance().putEvent(paramContext, paramString1, paramString2, paramInt1, paramLong1, paramLong2, paramString3, paramString4, paramInt2, paramBoolean, null, null);
-    DataCore.instance().flush(paramContext);
-  }
-  
-  public void a(Context paramContext, String paramString1, String paramString2, int paramInt, long paramLong, ExtraInfo paramExtraInfo, Map<String, String> paramMap)
-  {
-    c.post(new bo(this, paramContext, paramString1, paramString2, paramInt, paramLong, paramExtraInfo, paramMap));
-  }
-  
-  public void a(Context paramContext, String paramString1, String paramString2, int paramInt1, long paramLong, String paramString3, String paramString4, int paramInt2, boolean paramBoolean)
-  {
-    c.post(new bn(this, paramContext, paramString1, paramString2, paramInt1, paramLong, paramString3, paramString4, paramInt2, paramBoolean));
-  }
-  
-  public void a(Context paramContext, String paramString1, String paramString2, long paramLong)
-  {
-    c.post(new bp(this, paramLong, paramString1, paramString2));
-  }
-  
-  public void a(Context paramContext, String paramString1, String paramString2, long paramLong, ExtraInfo paramExtraInfo, Map<String, String> paramMap)
-  {
-    c.post(new bq(this, paramString1, paramString2, paramLong, paramContext, paramExtraInfo, paramMap));
-  }
-  
-  public void b(Context paramContext, String paramString1, String paramString2, long paramLong, ExtraInfo paramExtraInfo, Map<String, String> paramMap)
-  {
-    c.post(new br(this, paramLong, paramContext, paramString1, paramString2, paramExtraInfo, paramMap));
-  }
+class bm {
+    /* renamed from: b */
+    private static HandlerThread f19457b = new HandlerThread("EventHandleThread");
+    /* renamed from: c */
+    private static Handler f19458c;
+    /* renamed from: d */
+    private static bm f19459d = new bm();
+    /* renamed from: a */
+    HashMap<String, bs> f19460a = new HashMap();
+
+    private bm() {
+        f19457b.start();
+        f19457b.setPriority(10);
+        f19458c = new Handler(f19457b.getLooper());
+    }
+
+    /* renamed from: a */
+    public static bm m15495a() {
+        return f19459d;
+    }
+
+    /* renamed from: a */
+    public void m15497a(Context context, String str, String str2, int i, long j, long j2, ExtraInfo extraInfo, Map<String, String> map) {
+        DataCore.instance().putEvent(context, str, str2, i, j, j2, "", "", 0, false, extraInfo, map);
+        DataCore.instance().flush(context);
+    }
+
+    /* renamed from: a */
+    public void m15498a(Context context, String str, String str2, int i, long j, long j2, String str3, String str4, int i2, boolean z) {
+        DataCore.instance().putEvent(context, str, str2, i, j, j2, str3, str4, i2, z, null, null);
+        DataCore.instance().flush(context);
+    }
+
+    /* renamed from: a */
+    public void m15500a(Context context, String str, String str2, int i, long j, String str3, String str4, int i2, boolean z) {
+        f19458c.post(new bn(this, context, str, str2, i, j, str3, str4, i2, z));
+    }
+
+    /* renamed from: a */
+    public void m15499a(Context context, String str, String str2, int i, long j, ExtraInfo extraInfo, Map<String, String> map) {
+        f19458c.post(new bo(this, context, str, str2, i, j, extraInfo, map));
+    }
+
+    /* renamed from: a */
+    public void m15501a(Context context, String str, String str2, long j) {
+        f19458c.post(new bp(this, j, str, str2));
+    }
+
+    /* renamed from: a */
+    public void m15502a(Context context, String str, String str2, long j, ExtraInfo extraInfo, Map<String, String> map) {
+        f19458c.post(new bq(this, str, str2, j, context, extraInfo, map));
+    }
+
+    /* renamed from: b */
+    public void m15503b(Context context, String str, String str2, long j, ExtraInfo extraInfo, Map<String, String> map) {
+        f19458c.post(new br(this, j, context, str, str2, extraInfo, map));
+    }
+
+    /* renamed from: a */
+    public String m15496a(String str, String str2) {
+        return "__sdk_" + str + "$|$" + str2;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bm.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

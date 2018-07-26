@@ -1,83 +1,71 @@
 package com.baidu.navi.favorite.http;
 
-import com.baidu.carlife.core.f;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.k.a.d;
-import com.baidu.carlife.k.a.e;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.p054k.p055a.C1622d;
+import com.baidu.carlife.p054k.p055a.C1626e;
+import com.baidu.che.codriver.platform.PlatformConstants;
+import com.baidu.che.codriver.vr.C2848p;
 import com.baidu.navi.favorite.FavoritePois;
 import com.baidu.navi.favorite.model.FavoriteSyncRequestModel;
+import com.baidu.navi.track.database.DataService;
 import org.json.JSONException;
 
-public class FavoriteSyncRequest
-  extends e
-{
-  private FavoriteSyncRequestModel requestModel;
-  
-  public FavoriteSyncRequest()
-  {
-    this.tag = FavoriteSyncRequest.class.getSimpleName();
-  }
-  
-  protected d getPostRequestParams()
-  {
-    d locald = new d();
-    locald.put("bduss", this.requestModel.bduss);
-    locald.put("datas", this.requestModel.datas);
-    return locald;
-  }
-  
-  protected String getUrl()
-  {
-    return "http://client.map.baidu.com/sync/";
-  }
-  
-  protected d getUrlParams()
-  {
-    d locald = new d();
-    locald.put("type", "sync");
-    locald.put("from", "carlife");
-    locald.put("key", "2");
-    locald.put("qt", "sync");
-    locald.put("limit", this.requestModel.limit);
-    locald.put("lastver", this.requestModel.lastver);
-    locald.put("bduss", this.requestModel.bduss);
-    locald.put("datas", this.requestModel.datas);
-    locald.sortParams();
-    String str = RequestParamsSignUtil.calcUrlSign(locald.getUrlParams());
-    if (f.jp < 6) {
-      i.b(this.tag, locald.getUrlParams().toString());
+public class FavoriteSyncRequest extends C1626e {
+    private FavoriteSyncRequestModel requestModel;
+
+    public FavoriteSyncRequest() {
+        this.tag = FavoriteSyncRequest.class.getSimpleName();
     }
-    locald = new d();
-    locald.put("type", "sync");
-    locald.put("from", "carlife");
-    locald.put("key", "2");
-    locald.put("qt", "sync");
-    locald.put("limit", this.requestModel.limit);
-    locald.put("lastver", this.requestModel.lastver);
-    locald.put("sign", str);
-    if (f.jp < 6) {
-      i.b(this.tag, locald.getUrlParams().toString());
+
+    public void setParamsModel(FavoriteSyncRequestModel model) {
+        this.requestModel = model;
     }
-    return locald;
-  }
-  
-  protected int responseSuccessCallBack(String paramString)
-    throws JSONException
-  {
-    if (f.jp < 6) {
-      i.b(this.tag, paramString);
+
+    protected String getUrl() {
+        return "http://client.map.baidu.com/sync/";
     }
-    return FavoritePois.getPoiInstance().handleSyncResult(paramString, this.requestModel.bduid);
-  }
-  
-  public void setParamsModel(FavoriteSyncRequestModel paramFavoriteSyncRequestModel)
-  {
-    this.requestModel = paramFavoriteSyncRequestModel;
-  }
+
+    protected C1622d getUrlParams() {
+        C1622d params = new C1622d();
+        params.put("type", "sync");
+        params.put(PlatformConstants.CONNECT_EXTRA_KEY, C2848p.f9316q);
+        params.put("key", "2");
+        params.put("qt", "sync");
+        params.put(DataService.EXTRA_LIMIT, this.requestModel.limit);
+        params.put("lastver", this.requestModel.lastver);
+        params.put("bduss", this.requestModel.bduss);
+        params.put("datas", this.requestModel.datas);
+        params.sortParams();
+        String sign = RequestParamsSignUtil.calcUrlSign(params.getUrlParams());
+        if (C1253f.jp < 6) {
+            C1260i.b(this.tag, params.getUrlParams().toString());
+        }
+        C1622d urlParams = new C1622d();
+        urlParams.put("type", "sync");
+        urlParams.put(PlatformConstants.CONNECT_EXTRA_KEY, C2848p.f9316q);
+        urlParams.put("key", "2");
+        urlParams.put("qt", "sync");
+        urlParams.put(DataService.EXTRA_LIMIT, this.requestModel.limit);
+        urlParams.put("lastver", this.requestModel.lastver);
+        urlParams.put("sign", sign);
+        if (C1253f.jp < 6) {
+            C1260i.b(this.tag, urlParams.getUrlParams().toString());
+        }
+        return urlParams;
+    }
+
+    protected C1622d getPostRequestParams() {
+        C1622d params = new C1622d();
+        params.put("bduss", this.requestModel.bduss);
+        params.put("datas", this.requestModel.datas);
+        return params;
+    }
+
+    protected int responseSuccessCallBack(String data) throws JSONException {
+        if (C1253f.jp < 6) {
+            C1260i.b(this.tag, data);
+        }
+        return FavoritePois.getPoiInstance().handleSyncResult(data, this.requestModel.bduid);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/favorite/http/FavoriteSyncRequest.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

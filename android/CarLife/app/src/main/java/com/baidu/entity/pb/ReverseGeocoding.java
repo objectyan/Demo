@@ -7,1417 +7,1282 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class ReverseGeocoding
-  extends MessageMicro
-{
-  public static final int ADDRESS_DETAIL_FIELD_NUMBER = 6;
-  public static final int ADDRESS_FIELD_NUMBER = 1;
-  public static final int AREA_FIELD_NUMBER = 13;
-  public static final int BUILDID_FIELD_NUMBER = 3;
-  public static final int BUSINESS_FIELD_NUMBER = 7;
-  public static final int FLOOR_FIELD_NUMBER = 2;
-  public static final int NEARBY_FIELD_NUMBER = 11;
-  public static final int PANO_FIELD_NUMBER = 4;
-  public static final int POINT_FIELD_NUMBER = 9;
-  public static final int POI_DESC_FIELD_NUMBER = 8;
-  public static final int STREETSCAPEID_FIELD_NUMBER = 5;
-  public static final int SURROUND_POI_FIELD_NUMBER = 10;
-  public static final int TAIL_BAR_TEXT_FIELD_NUMBER = 12;
-  private boolean a;
-  private String b = "";
-  private boolean c;
-  private String d = "";
-  private boolean e;
-  private String f = "";
-  private boolean g;
-  private int h = 0;
-  private boolean i;
-  private String j = "";
-  private boolean k;
-  private AddressDetail l = null;
-  private boolean m;
-  private String n = "";
-  private boolean o;
-  private String p = "";
-  private boolean q;
-  private Point r = null;
-  private List<SurroundPoi> s = Collections.emptyList();
-  private boolean t;
-  private String u = "";
-  private boolean v;
-  private String w = "";
-  private boolean x;
-  private String y = "";
-  private int z = -1;
-  
-  public static ReverseGeocoding parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new ReverseGeocoding().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static ReverseGeocoding parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (ReverseGeocoding)new ReverseGeocoding().mergeFrom(paramArrayOfByte);
-  }
-  
-  public ReverseGeocoding addSurroundPoi(SurroundPoi paramSurroundPoi)
-  {
-    if (paramSurroundPoi == null) {
-      return this;
+public final class ReverseGeocoding extends MessageMicro {
+    public static final int ADDRESS_DETAIL_FIELD_NUMBER = 6;
+    public static final int ADDRESS_FIELD_NUMBER = 1;
+    public static final int AREA_FIELD_NUMBER = 13;
+    public static final int BUILDID_FIELD_NUMBER = 3;
+    public static final int BUSINESS_FIELD_NUMBER = 7;
+    public static final int FLOOR_FIELD_NUMBER = 2;
+    public static final int NEARBY_FIELD_NUMBER = 11;
+    public static final int PANO_FIELD_NUMBER = 4;
+    public static final int POINT_FIELD_NUMBER = 9;
+    public static final int POI_DESC_FIELD_NUMBER = 8;
+    public static final int STREETSCAPEID_FIELD_NUMBER = 5;
+    public static final int SURROUND_POI_FIELD_NUMBER = 10;
+    public static final int TAIL_BAR_TEXT_FIELD_NUMBER = 12;
+    /* renamed from: a */
+    private boolean f14247a;
+    /* renamed from: b */
+    private String f14248b = "";
+    /* renamed from: c */
+    private boolean f14249c;
+    /* renamed from: d */
+    private String f14250d = "";
+    /* renamed from: e */
+    private boolean f14251e;
+    /* renamed from: f */
+    private String f14252f = "";
+    /* renamed from: g */
+    private boolean f14253g;
+    /* renamed from: h */
+    private int f14254h = 0;
+    /* renamed from: i */
+    private boolean f14255i;
+    /* renamed from: j */
+    private String f14256j = "";
+    /* renamed from: k */
+    private boolean f14257k;
+    /* renamed from: l */
+    private AddressDetail f14258l = null;
+    /* renamed from: m */
+    private boolean f14259m;
+    /* renamed from: n */
+    private String f14260n = "";
+    /* renamed from: o */
+    private boolean f14261o;
+    /* renamed from: p */
+    private String f14262p = "";
+    /* renamed from: q */
+    private boolean f14263q;
+    /* renamed from: r */
+    private Point f14264r = null;
+    /* renamed from: s */
+    private List<SurroundPoi> f14265s = Collections.emptyList();
+    /* renamed from: t */
+    private boolean f14266t;
+    /* renamed from: u */
+    private String f14267u = "";
+    /* renamed from: v */
+    private boolean f14268v;
+    /* renamed from: w */
+    private String f14269w = "";
+    /* renamed from: x */
+    private boolean f14270x;
+    /* renamed from: y */
+    private String f14271y = "";
+    /* renamed from: z */
+    private int f14272z = -1;
+
+    public static final class AddressDetail extends MessageMicro {
+        public static final int CITY_CODE_FIELD_NUMBER = 2;
+        public static final int CITY_FIELD_NUMBER = 1;
+        public static final int COUNTRY_CODE_FIELD_NUMBER = 4;
+        public static final int COUNTRY_FIELD_NUMBER = 3;
+        public static final int DISTRICT_FIELD_NUMBER = 5;
+        public static final int PROVINCE_FIELD_NUMBER = 6;
+        public static final int STREET_FIELD_NUMBER = 7;
+        public static final int STREET_NUMBER_FIELD_NUMBER = 8;
+        /* renamed from: a */
+        private boolean f14209a;
+        /* renamed from: b */
+        private String f14210b = "";
+        /* renamed from: c */
+        private boolean f14211c;
+        /* renamed from: d */
+        private int f14212d = 0;
+        /* renamed from: e */
+        private boolean f14213e;
+        /* renamed from: f */
+        private String f14214f = "";
+        /* renamed from: g */
+        private boolean f14215g;
+        /* renamed from: h */
+        private int f14216h = 0;
+        /* renamed from: i */
+        private boolean f14217i;
+        /* renamed from: j */
+        private String f14218j = "";
+        /* renamed from: k */
+        private boolean f14219k;
+        /* renamed from: l */
+        private String f14220l = "";
+        /* renamed from: m */
+        private boolean f14221m;
+        /* renamed from: n */
+        private String f14222n = "";
+        /* renamed from: o */
+        private boolean f14223o;
+        /* renamed from: p */
+        private String f14224p = "";
+        /* renamed from: q */
+        private int f14225q = -1;
+
+        public static AddressDetail parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new AddressDetail().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static AddressDetail parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (AddressDetail) new AddressDetail().mergeFrom(bArr);
+        }
+
+        public final AddressDetail clear() {
+            clearCity();
+            clearCityCode();
+            clearCountry();
+            clearCountryCode();
+            clearDistrict();
+            clearProvince();
+            clearStreet();
+            clearStreetNumber();
+            this.f14225q = -1;
+            return this;
+        }
+
+        public AddressDetail clearCity() {
+            this.f14209a = false;
+            this.f14210b = "";
+            return this;
+        }
+
+        public AddressDetail clearCityCode() {
+            this.f14211c = false;
+            this.f14212d = 0;
+            return this;
+        }
+
+        public AddressDetail clearCountry() {
+            this.f14213e = false;
+            this.f14214f = "";
+            return this;
+        }
+
+        public AddressDetail clearCountryCode() {
+            this.f14215g = false;
+            this.f14216h = 0;
+            return this;
+        }
+
+        public AddressDetail clearDistrict() {
+            this.f14217i = false;
+            this.f14218j = "";
+            return this;
+        }
+
+        public AddressDetail clearProvince() {
+            this.f14219k = false;
+            this.f14220l = "";
+            return this;
+        }
+
+        public AddressDetail clearStreet() {
+            this.f14221m = false;
+            this.f14222n = "";
+            return this;
+        }
+
+        public AddressDetail clearStreetNumber() {
+            this.f14223o = false;
+            this.f14224p = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f14225q < 0) {
+                getSerializedSize();
+            }
+            return this.f14225q;
+        }
+
+        public String getCity() {
+            return this.f14210b;
+        }
+
+        public int getCityCode() {
+            return this.f14212d;
+        }
+
+        public String getCountry() {
+            return this.f14214f;
+        }
+
+        public int getCountryCode() {
+            return this.f14216h;
+        }
+
+        public String getDistrict() {
+            return this.f14218j;
+        }
+
+        public String getProvince() {
+            return this.f14220l;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasCity()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getCity());
+            }
+            if (hasCityCode()) {
+                i += CodedOutputStreamMicro.computeInt32Size(2, getCityCode());
+            }
+            if (hasCountry()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getCountry());
+            }
+            if (hasCountryCode()) {
+                i += CodedOutputStreamMicro.computeInt32Size(4, getCountryCode());
+            }
+            if (hasDistrict()) {
+                i += CodedOutputStreamMicro.computeStringSize(5, getDistrict());
+            }
+            if (hasProvince()) {
+                i += CodedOutputStreamMicro.computeStringSize(6, getProvince());
+            }
+            if (hasStreet()) {
+                i += CodedOutputStreamMicro.computeStringSize(7, getStreet());
+            }
+            if (hasStreetNumber()) {
+                i += CodedOutputStreamMicro.computeStringSize(8, getStreetNumber());
+            }
+            this.f14225q = i;
+            return i;
+        }
+
+        public String getStreet() {
+            return this.f14222n;
+        }
+
+        public String getStreetNumber() {
+            return this.f14224p;
+        }
+
+        public boolean hasCity() {
+            return this.f14209a;
+        }
+
+        public boolean hasCityCode() {
+            return this.f14211c;
+        }
+
+        public boolean hasCountry() {
+            return this.f14213e;
+        }
+
+        public boolean hasCountryCode() {
+            return this.f14215g;
+        }
+
+        public boolean hasDistrict() {
+            return this.f14217i;
+        }
+
+        public boolean hasProvince() {
+            return this.f14219k;
+        }
+
+        public boolean hasStreet() {
+            return this.f14221m;
+        }
+
+        public boolean hasStreetNumber() {
+            return this.f14223o;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public AddressDetail mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setCity(codedInputStreamMicro.readString());
+                        continue;
+                    case 16:
+                        setCityCode(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 26:
+                        setCountry(codedInputStreamMicro.readString());
+                        continue;
+                    case 32:
+                        setCountryCode(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 42:
+                        setDistrict(codedInputStreamMicro.readString());
+                        continue;
+                    case 50:
+                        setProvince(codedInputStreamMicro.readString());
+                        continue;
+                    case 58:
+                        setStreet(codedInputStreamMicro.readString());
+                        continue;
+                    case 66:
+                        setStreetNumber(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public AddressDetail setCity(String str) {
+            this.f14209a = true;
+            this.f14210b = str;
+            return this;
+        }
+
+        public AddressDetail setCityCode(int i) {
+            this.f14211c = true;
+            this.f14212d = i;
+            return this;
+        }
+
+        public AddressDetail setCountry(String str) {
+            this.f14213e = true;
+            this.f14214f = str;
+            return this;
+        }
+
+        public AddressDetail setCountryCode(int i) {
+            this.f14215g = true;
+            this.f14216h = i;
+            return this;
+        }
+
+        public AddressDetail setDistrict(String str) {
+            this.f14217i = true;
+            this.f14218j = str;
+            return this;
+        }
+
+        public AddressDetail setProvince(String str) {
+            this.f14219k = true;
+            this.f14220l = str;
+            return this;
+        }
+
+        public AddressDetail setStreet(String str) {
+            this.f14221m = true;
+            this.f14222n = str;
+            return this;
+        }
+
+        public AddressDetail setStreetNumber(String str) {
+            this.f14223o = true;
+            this.f14224p = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasCity()) {
+                codedOutputStreamMicro.writeString(1, getCity());
+            }
+            if (hasCityCode()) {
+                codedOutputStreamMicro.writeInt32(2, getCityCode());
+            }
+            if (hasCountry()) {
+                codedOutputStreamMicro.writeString(3, getCountry());
+            }
+            if (hasCountryCode()) {
+                codedOutputStreamMicro.writeInt32(4, getCountryCode());
+            }
+            if (hasDistrict()) {
+                codedOutputStreamMicro.writeString(5, getDistrict());
+            }
+            if (hasProvince()) {
+                codedOutputStreamMicro.writeString(6, getProvince());
+            }
+            if (hasStreet()) {
+                codedOutputStreamMicro.writeString(7, getStreet());
+            }
+            if (hasStreetNumber()) {
+                codedOutputStreamMicro.writeString(8, getStreetNumber());
+            }
+        }
     }
-    if (this.s.isEmpty()) {
-      this.s = new ArrayList();
+
+    public static final class SurroundPoi extends MessageMicro {
+        public static final int ADDR_FIELD_NUMBER = 1;
+        public static final int BUILDINGID_FIELD_NUMBER = 7;
+        public static final int DISTANCE_FIELD_NUMBER = 10;
+        public static final int FLOORID_FIELD_NUMBER = 6;
+        public static final int INDOORPANO_FIELD_NUMBER = 9;
+        public static final int NAME_FIELD_NUMBER = 4;
+        public static final int PANO_FIELD_NUMBER = 8;
+        public static final int POINT_FIELD_NUMBER = 2;
+        public static final int TAG_FIELD_NUMBER = 5;
+        public static final int UID_FIELD_NUMBER = 3;
+        /* renamed from: a */
+        private boolean f14226a;
+        /* renamed from: b */
+        private String f14227b = "";
+        /* renamed from: c */
+        private boolean f14228c;
+        /* renamed from: d */
+        private Point f14229d = null;
+        /* renamed from: e */
+        private boolean f14230e;
+        /* renamed from: f */
+        private String f14231f = "";
+        /* renamed from: g */
+        private boolean f14232g;
+        /* renamed from: h */
+        private String f14233h = "";
+        /* renamed from: i */
+        private boolean f14234i;
+        /* renamed from: j */
+        private String f14235j = "";
+        /* renamed from: k */
+        private boolean f14236k;
+        /* renamed from: l */
+        private String f14237l = "";
+        /* renamed from: m */
+        private boolean f14238m;
+        /* renamed from: n */
+        private String f14239n = "";
+        /* renamed from: o */
+        private boolean f14240o;
+        /* renamed from: p */
+        private int f14241p = 0;
+        /* renamed from: q */
+        private boolean f14242q;
+        /* renamed from: r */
+        private String f14243r = "";
+        /* renamed from: s */
+        private boolean f14244s;
+        /* renamed from: t */
+        private double f14245t = 0.0d;
+        /* renamed from: u */
+        private int f14246u = -1;
+
+        public static SurroundPoi parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new SurroundPoi().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static SurroundPoi parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (SurroundPoi) new SurroundPoi().mergeFrom(bArr);
+        }
+
+        public final SurroundPoi clear() {
+            clearAddr();
+            clearPoint();
+            clearUid();
+            clearName();
+            clearTag();
+            clearFloorId();
+            clearBuildingId();
+            clearPano();
+            clearIndoorPano();
+            clearDistance();
+            this.f14246u = -1;
+            return this;
+        }
+
+        public SurroundPoi clearAddr() {
+            this.f14226a = false;
+            this.f14227b = "";
+            return this;
+        }
+
+        public SurroundPoi clearBuildingId() {
+            this.f14238m = false;
+            this.f14239n = "";
+            return this;
+        }
+
+        public SurroundPoi clearDistance() {
+            this.f14244s = false;
+            this.f14245t = 0.0d;
+            return this;
+        }
+
+        public SurroundPoi clearFloorId() {
+            this.f14236k = false;
+            this.f14237l = "";
+            return this;
+        }
+
+        public SurroundPoi clearIndoorPano() {
+            this.f14242q = false;
+            this.f14243r = "";
+            return this;
+        }
+
+        public SurroundPoi clearName() {
+            this.f14232g = false;
+            this.f14233h = "";
+            return this;
+        }
+
+        public SurroundPoi clearPano() {
+            this.f14240o = false;
+            this.f14241p = 0;
+            return this;
+        }
+
+        public SurroundPoi clearPoint() {
+            this.f14228c = false;
+            this.f14229d = null;
+            return this;
+        }
+
+        public SurroundPoi clearTag() {
+            this.f14234i = false;
+            this.f14235j = "";
+            return this;
+        }
+
+        public SurroundPoi clearUid() {
+            this.f14230e = false;
+            this.f14231f = "";
+            return this;
+        }
+
+        public String getAddr() {
+            return this.f14227b;
+        }
+
+        public String getBuildingId() {
+            return this.f14239n;
+        }
+
+        public int getCachedSize() {
+            if (this.f14246u < 0) {
+                getSerializedSize();
+            }
+            return this.f14246u;
+        }
+
+        public double getDistance() {
+            return this.f14245t;
+        }
+
+        public String getFloorId() {
+            return this.f14237l;
+        }
+
+        public String getIndoorPano() {
+            return this.f14243r;
+        }
+
+        public String getName() {
+            return this.f14233h;
+        }
+
+        public int getPano() {
+            return this.f14241p;
+        }
+
+        public Point getPoint() {
+            return this.f14229d;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasAddr()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getAddr());
+            }
+            if (hasPoint()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, getPoint());
+            }
+            if (hasUid()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getUid());
+            }
+            if (hasName()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getName());
+            }
+            if (hasTag()) {
+                i += CodedOutputStreamMicro.computeStringSize(5, getTag());
+            }
+            if (hasFloorId()) {
+                i += CodedOutputStreamMicro.computeStringSize(6, getFloorId());
+            }
+            if (hasBuildingId()) {
+                i += CodedOutputStreamMicro.computeStringSize(7, getBuildingId());
+            }
+            if (hasPano()) {
+                i += CodedOutputStreamMicro.computeInt32Size(8, getPano());
+            }
+            if (hasIndoorPano()) {
+                i += CodedOutputStreamMicro.computeStringSize(9, getIndoorPano());
+            }
+            if (hasDistance()) {
+                i += CodedOutputStreamMicro.computeDoubleSize(10, getDistance());
+            }
+            this.f14246u = i;
+            return i;
+        }
+
+        public String getTag() {
+            return this.f14235j;
+        }
+
+        public String getUid() {
+            return this.f14231f;
+        }
+
+        public boolean hasAddr() {
+            return this.f14226a;
+        }
+
+        public boolean hasBuildingId() {
+            return this.f14238m;
+        }
+
+        public boolean hasDistance() {
+            return this.f14244s;
+        }
+
+        public boolean hasFloorId() {
+            return this.f14236k;
+        }
+
+        public boolean hasIndoorPano() {
+            return this.f14242q;
+        }
+
+        public boolean hasName() {
+            return this.f14232g;
+        }
+
+        public boolean hasPano() {
+            return this.f14240o;
+        }
+
+        public boolean hasPoint() {
+            return this.f14228c;
+        }
+
+        public boolean hasTag() {
+            return this.f14234i;
+        }
+
+        public boolean hasUid() {
+            return this.f14230e;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public SurroundPoi mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setAddr(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        MessageMicro point = new Point();
+                        codedInputStreamMicro.readMessage(point);
+                        setPoint(point);
+                        continue;
+                    case 26:
+                        setUid(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setName(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        setTag(codedInputStreamMicro.readString());
+                        continue;
+                    case 50:
+                        setFloorId(codedInputStreamMicro.readString());
+                        continue;
+                    case 58:
+                        setBuildingId(codedInputStreamMicro.readString());
+                        continue;
+                    case 64:
+                        setPano(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 74:
+                        setIndoorPano(codedInputStreamMicro.readString());
+                        continue;
+                    case 81:
+                        setDistance(codedInputStreamMicro.readDouble());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public SurroundPoi setAddr(String str) {
+            this.f14226a = true;
+            this.f14227b = str;
+            return this;
+        }
+
+        public SurroundPoi setBuildingId(String str) {
+            this.f14238m = true;
+            this.f14239n = str;
+            return this;
+        }
+
+        public SurroundPoi setDistance(double d) {
+            this.f14244s = true;
+            this.f14245t = d;
+            return this;
+        }
+
+        public SurroundPoi setFloorId(String str) {
+            this.f14236k = true;
+            this.f14237l = str;
+            return this;
+        }
+
+        public SurroundPoi setIndoorPano(String str) {
+            this.f14242q = true;
+            this.f14243r = str;
+            return this;
+        }
+
+        public SurroundPoi setName(String str) {
+            this.f14232g = true;
+            this.f14233h = str;
+            return this;
+        }
+
+        public SurroundPoi setPano(int i) {
+            this.f14240o = true;
+            this.f14241p = i;
+            return this;
+        }
+
+        public SurroundPoi setPoint(Point point) {
+            if (point == null) {
+                return clearPoint();
+            }
+            this.f14228c = true;
+            this.f14229d = point;
+            return this;
+        }
+
+        public SurroundPoi setTag(String str) {
+            this.f14234i = true;
+            this.f14235j = str;
+            return this;
+        }
+
+        public SurroundPoi setUid(String str) {
+            this.f14230e = true;
+            this.f14231f = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasAddr()) {
+                codedOutputStreamMicro.writeString(1, getAddr());
+            }
+            if (hasPoint()) {
+                codedOutputStreamMicro.writeMessage(2, getPoint());
+            }
+            if (hasUid()) {
+                codedOutputStreamMicro.writeString(3, getUid());
+            }
+            if (hasName()) {
+                codedOutputStreamMicro.writeString(4, getName());
+            }
+            if (hasTag()) {
+                codedOutputStreamMicro.writeString(5, getTag());
+            }
+            if (hasFloorId()) {
+                codedOutputStreamMicro.writeString(6, getFloorId());
+            }
+            if (hasBuildingId()) {
+                codedOutputStreamMicro.writeString(7, getBuildingId());
+            }
+            if (hasPano()) {
+                codedOutputStreamMicro.writeInt32(8, getPano());
+            }
+            if (hasIndoorPano()) {
+                codedOutputStreamMicro.writeString(9, getIndoorPano());
+            }
+            if (hasDistance()) {
+                codedOutputStreamMicro.writeDouble(10, getDistance());
+            }
+        }
     }
-    this.s.add(paramSurroundPoi);
-    return this;
-  }
-  
-  public final ReverseGeocoding clear()
-  {
-    clearAddress();
-    clearFloor();
-    clearBuildId();
-    clearPano();
-    clearStreetScapeID();
-    clearAddressDetail();
-    clearBusiness();
-    clearPoiDesc();
-    clearPoint();
-    clearSurroundPoi();
-    clearNearby();
-    clearTailBarText();
-    clearArea();
-    this.z = -1;
-    return this;
-  }
-  
-  public ReverseGeocoding clearAddress()
-  {
-    this.a = false;
-    this.b = "";
-    return this;
-  }
-  
-  public ReverseGeocoding clearAddressDetail()
-  {
-    this.k = false;
-    this.l = null;
-    return this;
-  }
-  
-  public ReverseGeocoding clearArea()
-  {
-    this.x = false;
-    this.y = "";
-    return this;
-  }
-  
-  public ReverseGeocoding clearBuildId()
-  {
-    this.e = false;
-    this.f = "";
-    return this;
-  }
-  
-  public ReverseGeocoding clearBusiness()
-  {
-    this.m = false;
-    this.n = "";
-    return this;
-  }
-  
-  public ReverseGeocoding clearFloor()
-  {
-    this.c = false;
-    this.d = "";
-    return this;
-  }
-  
-  public ReverseGeocoding clearNearby()
-  {
-    this.t = false;
-    this.u = "";
-    return this;
-  }
-  
-  public ReverseGeocoding clearPano()
-  {
-    this.g = false;
-    this.h = 0;
-    return this;
-  }
-  
-  public ReverseGeocoding clearPoiDesc()
-  {
-    this.o = false;
-    this.p = "";
-    return this;
-  }
-  
-  public ReverseGeocoding clearPoint()
-  {
-    this.q = false;
-    this.r = null;
-    return this;
-  }
-  
-  public ReverseGeocoding clearStreetScapeID()
-  {
-    this.i = false;
-    this.j = "";
-    return this;
-  }
-  
-  public ReverseGeocoding clearSurroundPoi()
-  {
-    this.s = Collections.emptyList();
-    return this;
-  }
-  
-  public ReverseGeocoding clearTailBarText()
-  {
-    this.v = false;
-    this.w = "";
-    return this;
-  }
-  
-  public String getAddress()
-  {
-    return this.b;
-  }
-  
-  public AddressDetail getAddressDetail()
-  {
-    return this.l;
-  }
-  
-  public String getArea()
-  {
-    return this.y;
-  }
-  
-  public String getBuildId()
-  {
-    return this.f;
-  }
-  
-  public String getBusiness()
-  {
-    return this.n;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.z < 0) {
-      getSerializedSize();
+
+    public static ReverseGeocoding parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new ReverseGeocoding().mergeFrom(codedInputStreamMicro);
     }
-    return this.z;
-  }
-  
-  public String getFloor()
-  {
-    return this.d;
-  }
-  
-  public String getNearby()
-  {
-    return this.u;
-  }
-  
-  public int getPano()
-  {
-    return this.h;
-  }
-  
-  public String getPoiDesc()
-  {
-    return this.p;
-  }
-  
-  public Point getPoint()
-  {
-    return this.r;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i2 = 0;
-    if (hasAddress()) {
-      i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getAddress());
+
+    public static ReverseGeocoding parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (ReverseGeocoding) new ReverseGeocoding().mergeFrom(bArr);
     }
-    int i1 = i2;
-    if (hasFloor()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getFloor());
-    }
-    i2 = i1;
-    if (hasBuildId()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getBuildId());
-    }
-    i1 = i2;
-    if (hasPano()) {
-      i1 = i2 + CodedOutputStreamMicro.computeInt32Size(4, getPano());
-    }
-    i2 = i1;
-    if (hasStreetScapeID()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getStreetScapeID());
-    }
-    i1 = i2;
-    if (hasAddressDetail()) {
-      i1 = i2 + CodedOutputStreamMicro.computeMessageSize(6, getAddressDetail());
-    }
-    i2 = i1;
-    if (hasBusiness()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getBusiness());
-    }
-    i1 = i2;
-    if (hasPoiDesc()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getPoiDesc());
-    }
-    i2 = i1;
-    if (hasPoint()) {
-      i2 = i1 + CodedOutputStreamMicro.computeMessageSize(9, getPoint());
-    }
-    Iterator localIterator = getSurroundPoiList().iterator();
-    while (localIterator.hasNext()) {
-      i2 = CodedOutputStreamMicro.computeMessageSize(10, (SurroundPoi)localIterator.next()) + i2;
-    }
-    i1 = i2;
-    if (hasNearby()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(11, getNearby());
-    }
-    i2 = i1;
-    if (hasTailBarText()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(12, getTailBarText());
-    }
-    i1 = i2;
-    if (hasArea()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(13, getArea());
-    }
-    this.z = i1;
-    return i1;
-  }
-  
-  public String getStreetScapeID()
-  {
-    return this.j;
-  }
-  
-  public SurroundPoi getSurroundPoi(int paramInt)
-  {
-    return (SurroundPoi)this.s.get(paramInt);
-  }
-  
-  public int getSurroundPoiCount()
-  {
-    return this.s.size();
-  }
-  
-  public List<SurroundPoi> getSurroundPoiList()
-  {
-    return this.s;
-  }
-  
-  public String getTailBarText()
-  {
-    return this.w;
-  }
-  
-  public boolean hasAddress()
-  {
-    return this.a;
-  }
-  
-  public boolean hasAddressDetail()
-  {
-    return this.k;
-  }
-  
-  public boolean hasArea()
-  {
-    return this.x;
-  }
-  
-  public boolean hasBuildId()
-  {
-    return this.e;
-  }
-  
-  public boolean hasBusiness()
-  {
-    return this.m;
-  }
-  
-  public boolean hasFloor()
-  {
-    return this.c;
-  }
-  
-  public boolean hasNearby()
-  {
-    return this.t;
-  }
-  
-  public boolean hasPano()
-  {
-    return this.g;
-  }
-  
-  public boolean hasPoiDesc()
-  {
-    return this.o;
-  }
-  
-  public boolean hasPoint()
-  {
-    return this.q;
-  }
-  
-  public boolean hasStreetScapeID()
-  {
-    return this.i;
-  }
-  
-  public boolean hasTailBarText()
-  {
-    return this.v;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public ReverseGeocoding mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      Object localObject;
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
+
+    public ReverseGeocoding addSurroundPoi(SurroundPoi surroundPoi) {
+        if (surroundPoi != null) {
+            if (this.f14265s.isEmpty()) {
+                this.f14265s = new ArrayList();
+            }
+            this.f14265s.add(surroundPoi);
+        }
         return this;
-      case 10: 
-        setAddress(paramCodedInputStreamMicro.readString());
-        break;
-      case 18: 
-        setFloor(paramCodedInputStreamMicro.readString());
-        break;
-      case 26: 
-        setBuildId(paramCodedInputStreamMicro.readString());
-        break;
-      case 32: 
-        setPano(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 42: 
-        setStreetScapeID(paramCodedInputStreamMicro.readString());
-        break;
-      case 50: 
-        localObject = new AddressDetail();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setAddressDetail((AddressDetail)localObject);
-        break;
-      case 58: 
-        setBusiness(paramCodedInputStreamMicro.readString());
-        break;
-      case 66: 
-        setPoiDesc(paramCodedInputStreamMicro.readString());
-        break;
-      case 74: 
-        localObject = new Point();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setPoint((Point)localObject);
-        break;
-      case 82: 
-        localObject = new SurroundPoi();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        addSurroundPoi((SurroundPoi)localObject);
-        break;
-      case 90: 
-        setNearby(paramCodedInputStreamMicro.readString());
-        break;
-      case 98: 
-        setTailBarText(paramCodedInputStreamMicro.readString());
-        break;
-      case 106: 
-        setArea(paramCodedInputStreamMicro.readString());
-      }
     }
-  }
-  
-  public ReverseGeocoding setAddress(String paramString)
-  {
-    this.a = true;
-    this.b = paramString;
-    return this;
-  }
-  
-  public ReverseGeocoding setAddressDetail(AddressDetail paramAddressDetail)
-  {
-    if (paramAddressDetail == null) {
-      return clearAddressDetail();
+
+    public final ReverseGeocoding clear() {
+        clearAddress();
+        clearFloor();
+        clearBuildId();
+        clearPano();
+        clearStreetScapeID();
+        clearAddressDetail();
+        clearBusiness();
+        clearPoiDesc();
+        clearPoint();
+        clearSurroundPoi();
+        clearNearby();
+        clearTailBarText();
+        clearArea();
+        this.f14272z = -1;
+        return this;
     }
-    this.k = true;
-    this.l = paramAddressDetail;
-    return this;
-  }
-  
-  public ReverseGeocoding setArea(String paramString)
-  {
-    this.x = true;
-    this.y = paramString;
-    return this;
-  }
-  
-  public ReverseGeocoding setBuildId(String paramString)
-  {
-    this.e = true;
-    this.f = paramString;
-    return this;
-  }
-  
-  public ReverseGeocoding setBusiness(String paramString)
-  {
-    this.m = true;
-    this.n = paramString;
-    return this;
-  }
-  
-  public ReverseGeocoding setFloor(String paramString)
-  {
-    this.c = true;
-    this.d = paramString;
-    return this;
-  }
-  
-  public ReverseGeocoding setNearby(String paramString)
-  {
-    this.t = true;
-    this.u = paramString;
-    return this;
-  }
-  
-  public ReverseGeocoding setPano(int paramInt)
-  {
-    this.g = true;
-    this.h = paramInt;
-    return this;
-  }
-  
-  public ReverseGeocoding setPoiDesc(String paramString)
-  {
-    this.o = true;
-    this.p = paramString;
-    return this;
-  }
-  
-  public ReverseGeocoding setPoint(Point paramPoint)
-  {
-    if (paramPoint == null) {
-      return clearPoint();
+
+    public ReverseGeocoding clearAddress() {
+        this.f14247a = false;
+        this.f14248b = "";
+        return this;
     }
-    this.q = true;
-    this.r = paramPoint;
-    return this;
-  }
-  
-  public ReverseGeocoding setStreetScapeID(String paramString)
-  {
-    this.i = true;
-    this.j = paramString;
-    return this;
-  }
-  
-  public ReverseGeocoding setSurroundPoi(int paramInt, SurroundPoi paramSurroundPoi)
-  {
-    if (paramSurroundPoi == null) {
-      return this;
+
+    public ReverseGeocoding clearAddressDetail() {
+        this.f14257k = false;
+        this.f14258l = null;
+        return this;
     }
-    this.s.set(paramInt, paramSurroundPoi);
-    return this;
-  }
-  
-  public ReverseGeocoding setTailBarText(String paramString)
-  {
-    this.v = true;
-    this.w = paramString;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasAddress()) {
-      paramCodedOutputStreamMicro.writeString(1, getAddress());
+
+    public ReverseGeocoding clearArea() {
+        this.f14270x = false;
+        this.f14271y = "";
+        return this;
     }
-    if (hasFloor()) {
-      paramCodedOutputStreamMicro.writeString(2, getFloor());
+
+    public ReverseGeocoding clearBuildId() {
+        this.f14251e = false;
+        this.f14252f = "";
+        return this;
     }
-    if (hasBuildId()) {
-      paramCodedOutputStreamMicro.writeString(3, getBuildId());
+
+    public ReverseGeocoding clearBusiness() {
+        this.f14259m = false;
+        this.f14260n = "";
+        return this;
     }
-    if (hasPano()) {
-      paramCodedOutputStreamMicro.writeInt32(4, getPano());
+
+    public ReverseGeocoding clearFloor() {
+        this.f14249c = false;
+        this.f14250d = "";
+        return this;
     }
-    if (hasStreetScapeID()) {
-      paramCodedOutputStreamMicro.writeString(5, getStreetScapeID());
+
+    public ReverseGeocoding clearNearby() {
+        this.f14266t = false;
+        this.f14267u = "";
+        return this;
     }
-    if (hasAddressDetail()) {
-      paramCodedOutputStreamMicro.writeMessage(6, getAddressDetail());
+
+    public ReverseGeocoding clearPano() {
+        this.f14253g = false;
+        this.f14254h = 0;
+        return this;
     }
-    if (hasBusiness()) {
-      paramCodedOutputStreamMicro.writeString(7, getBusiness());
+
+    public ReverseGeocoding clearPoiDesc() {
+        this.f14261o = false;
+        this.f14262p = "";
+        return this;
     }
-    if (hasPoiDesc()) {
-      paramCodedOutputStreamMicro.writeString(8, getPoiDesc());
+
+    public ReverseGeocoding clearPoint() {
+        this.f14263q = false;
+        this.f14264r = null;
+        return this;
     }
-    if (hasPoint()) {
-      paramCodedOutputStreamMicro.writeMessage(9, getPoint());
+
+    public ReverseGeocoding clearStreetScapeID() {
+        this.f14255i = false;
+        this.f14256j = "";
+        return this;
     }
-    Iterator localIterator = getSurroundPoiList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(10, (SurroundPoi)localIterator.next());
+
+    public ReverseGeocoding clearSurroundPoi() {
+        this.f14265s = Collections.emptyList();
+        return this;
     }
-    if (hasNearby()) {
-      paramCodedOutputStreamMicro.writeString(11, getNearby());
+
+    public ReverseGeocoding clearTailBarText() {
+        this.f14268v = false;
+        this.f14269w = "";
+        return this;
     }
-    if (hasTailBarText()) {
-      paramCodedOutputStreamMicro.writeString(12, getTailBarText());
+
+    public String getAddress() {
+        return this.f14248b;
     }
-    if (hasArea()) {
-      paramCodedOutputStreamMicro.writeString(13, getArea());
+
+    public AddressDetail getAddressDetail() {
+        return this.f14258l;
     }
-  }
-  
-  public static final class AddressDetail
-    extends MessageMicro
-  {
-    public static final int CITY_CODE_FIELD_NUMBER = 2;
-    public static final int CITY_FIELD_NUMBER = 1;
-    public static final int COUNTRY_CODE_FIELD_NUMBER = 4;
-    public static final int COUNTRY_FIELD_NUMBER = 3;
-    public static final int DISTRICT_FIELD_NUMBER = 5;
-    public static final int PROVINCE_FIELD_NUMBER = 6;
-    public static final int STREET_FIELD_NUMBER = 7;
-    public static final int STREET_NUMBER_FIELD_NUMBER = 8;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private int d = 0;
-    private boolean e;
-    private String f = "";
-    private boolean g;
-    private int h = 0;
-    private boolean i;
-    private String j = "";
-    private boolean k;
-    private String l = "";
-    private boolean m;
-    private String n = "";
-    private boolean o;
-    private String p = "";
-    private int q = -1;
-    
-    public static AddressDetail parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new AddressDetail().mergeFrom(paramCodedInputStreamMicro);
+
+    public String getArea() {
+        return this.f14271y;
     }
-    
-    public static AddressDetail parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (AddressDetail)new AddressDetail().mergeFrom(paramArrayOfByte);
+
+    public String getBuildId() {
+        return this.f14252f;
     }
-    
-    public final AddressDetail clear()
-    {
-      clearCity();
-      clearCityCode();
-      clearCountry();
-      clearCountryCode();
-      clearDistrict();
-      clearProvince();
-      clearStreet();
-      clearStreetNumber();
-      this.q = -1;
-      return this;
+
+    public String getBusiness() {
+        return this.f14260n;
     }
-    
-    public AddressDetail clearCity()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public AddressDetail clearCityCode()
-    {
-      this.c = false;
-      this.d = 0;
-      return this;
-    }
-    
-    public AddressDetail clearCountry()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public AddressDetail clearCountryCode()
-    {
-      this.g = false;
-      this.h = 0;
-      return this;
-    }
-    
-    public AddressDetail clearDistrict()
-    {
-      this.i = false;
-      this.j = "";
-      return this;
-    }
-    
-    public AddressDetail clearProvince()
-    {
-      this.k = false;
-      this.l = "";
-      return this;
-    }
-    
-    public AddressDetail clearStreet()
-    {
-      this.m = false;
-      this.n = "";
-      return this;
-    }
-    
-    public AddressDetail clearStreetNumber()
-    {
-      this.o = false;
-      this.p = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.q < 0) {
-        getSerializedSize();
-      }
-      return this.q;
-    }
-    
-    public String getCity()
-    {
-      return this.b;
-    }
-    
-    public int getCityCode()
-    {
-      return this.d;
-    }
-    
-    public String getCountry()
-    {
-      return this.f;
-    }
-    
-    public int getCountryCode()
-    {
-      return this.h;
-    }
-    
-    public String getDistrict()
-    {
-      return this.j;
-    }
-    
-    public String getProvince()
-    {
-      return this.l;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasCity()) {
-        i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getCity());
-      }
-      int i1 = i2;
-      if (hasCityCode()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(2, getCityCode());
-      }
-      i2 = i1;
-      if (hasCountry()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getCountry());
-      }
-      i1 = i2;
-      if (hasCountryCode()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(4, getCountryCode());
-      }
-      i2 = i1;
-      if (hasDistrict()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getDistrict());
-      }
-      i1 = i2;
-      if (hasProvince()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getProvince());
-      }
-      i2 = i1;
-      if (hasStreet()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getStreet());
-      }
-      i1 = i2;
-      if (hasStreetNumber()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getStreetNumber());
-      }
-      this.q = i1;
-      return i1;
-    }
-    
-    public String getStreet()
-    {
-      return this.n;
-    }
-    
-    public String getStreetNumber()
-    {
-      return this.p;
-    }
-    
-    public boolean hasCity()
-    {
-      return this.a;
-    }
-    
-    public boolean hasCityCode()
-    {
-      return this.c;
-    }
-    
-    public boolean hasCountry()
-    {
-      return this.e;
-    }
-    
-    public boolean hasCountryCode()
-    {
-      return this.g;
-    }
-    
-    public boolean hasDistrict()
-    {
-      return this.i;
-    }
-    
-    public boolean hasProvince()
-    {
-      return this.k;
-    }
-    
-    public boolean hasStreet()
-    {
-      return this.m;
-    }
-    
-    public boolean hasStreetNumber()
-    {
-      return this.o;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public AddressDetail mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setCity(paramCodedInputStreamMicro.readString());
-          break;
-        case 16: 
-          setCityCode(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 26: 
-          setCountry(paramCodedInputStreamMicro.readString());
-          break;
-        case 32: 
-          setCountryCode(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 42: 
-          setDistrict(paramCodedInputStreamMicro.readString());
-          break;
-        case 50: 
-          setProvince(paramCodedInputStreamMicro.readString());
-          break;
-        case 58: 
-          setStreet(paramCodedInputStreamMicro.readString());
-          break;
-        case 66: 
-          setStreetNumber(paramCodedInputStreamMicro.readString());
+
+    public int getCachedSize() {
+        if (this.f14272z < 0) {
+            getSerializedSize();
         }
-      }
+        return this.f14272z;
     }
-    
-    public AddressDetail setCity(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
+
+    public String getFloor() {
+        return this.f14250d;
     }
-    
-    public AddressDetail setCityCode(int paramInt)
-    {
-      this.c = true;
-      this.d = paramInt;
-      return this;
+
+    public String getNearby() {
+        return this.f14267u;
     }
-    
-    public AddressDetail setCountry(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
+
+    public int getPano() {
+        return this.f14254h;
     }
-    
-    public AddressDetail setCountryCode(int paramInt)
-    {
-      this.g = true;
-      this.h = paramInt;
-      return this;
+
+    public String getPoiDesc() {
+        return this.f14262p;
     }
-    
-    public AddressDetail setDistrict(String paramString)
-    {
-      this.i = true;
-      this.j = paramString;
-      return this;
+
+    public Point getPoint() {
+        return this.f14264r;
     }
-    
-    public AddressDetail setProvince(String paramString)
-    {
-      this.k = true;
-      this.l = paramString;
-      return this;
-    }
-    
-    public AddressDetail setStreet(String paramString)
-    {
-      this.m = true;
-      this.n = paramString;
-      return this;
-    }
-    
-    public AddressDetail setStreetNumber(String paramString)
-    {
-      this.o = true;
-      this.p = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasCity()) {
-        paramCodedOutputStreamMicro.writeString(1, getCity());
-      }
-      if (hasCityCode()) {
-        paramCodedOutputStreamMicro.writeInt32(2, getCityCode());
-      }
-      if (hasCountry()) {
-        paramCodedOutputStreamMicro.writeString(3, getCountry());
-      }
-      if (hasCountryCode()) {
-        paramCodedOutputStreamMicro.writeInt32(4, getCountryCode());
-      }
-      if (hasDistrict()) {
-        paramCodedOutputStreamMicro.writeString(5, getDistrict());
-      }
-      if (hasProvince()) {
-        paramCodedOutputStreamMicro.writeString(6, getProvince());
-      }
-      if (hasStreet()) {
-        paramCodedOutputStreamMicro.writeString(7, getStreet());
-      }
-      if (hasStreetNumber()) {
-        paramCodedOutputStreamMicro.writeString(8, getStreetNumber());
-      }
-    }
-  }
-  
-  public static final class SurroundPoi
-    extends MessageMicro
-  {
-    public static final int ADDR_FIELD_NUMBER = 1;
-    public static final int BUILDINGID_FIELD_NUMBER = 7;
-    public static final int DISTANCE_FIELD_NUMBER = 10;
-    public static final int FLOORID_FIELD_NUMBER = 6;
-    public static final int INDOORPANO_FIELD_NUMBER = 9;
-    public static final int NAME_FIELD_NUMBER = 4;
-    public static final int PANO_FIELD_NUMBER = 8;
-    public static final int POINT_FIELD_NUMBER = 2;
-    public static final int TAG_FIELD_NUMBER = 5;
-    public static final int UID_FIELD_NUMBER = 3;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private Point d = null;
-    private boolean e;
-    private String f = "";
-    private boolean g;
-    private String h = "";
-    private boolean i;
-    private String j = "";
-    private boolean k;
-    private String l = "";
-    private boolean m;
-    private String n = "";
-    private boolean o;
-    private int p = 0;
-    private boolean q;
-    private String r = "";
-    private boolean s;
-    private double t = 0.0D;
-    private int u = -1;
-    
-    public static SurroundPoi parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new SurroundPoi().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static SurroundPoi parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (SurroundPoi)new SurroundPoi().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final SurroundPoi clear()
-    {
-      clearAddr();
-      clearPoint();
-      clearUid();
-      clearName();
-      clearTag();
-      clearFloorId();
-      clearBuildingId();
-      clearPano();
-      clearIndoorPano();
-      clearDistance();
-      this.u = -1;
-      return this;
-    }
-    
-    public SurroundPoi clearAddr()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public SurroundPoi clearBuildingId()
-    {
-      this.m = false;
-      this.n = "";
-      return this;
-    }
-    
-    public SurroundPoi clearDistance()
-    {
-      this.s = false;
-      this.t = 0.0D;
-      return this;
-    }
-    
-    public SurroundPoi clearFloorId()
-    {
-      this.k = false;
-      this.l = "";
-      return this;
-    }
-    
-    public SurroundPoi clearIndoorPano()
-    {
-      this.q = false;
-      this.r = "";
-      return this;
-    }
-    
-    public SurroundPoi clearName()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public SurroundPoi clearPano()
-    {
-      this.o = false;
-      this.p = 0;
-      return this;
-    }
-    
-    public SurroundPoi clearPoint()
-    {
-      this.c = false;
-      this.d = null;
-      return this;
-    }
-    
-    public SurroundPoi clearTag()
-    {
-      this.i = false;
-      this.j = "";
-      return this;
-    }
-    
-    public SurroundPoi clearUid()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public String getAddr()
-    {
-      return this.b;
-    }
-    
-    public String getBuildingId()
-    {
-      return this.n;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.u < 0) {
-        getSerializedSize();
-      }
-      return this.u;
-    }
-    
-    public double getDistance()
-    {
-      return this.t;
-    }
-    
-    public String getFloorId()
-    {
-      return this.l;
-    }
-    
-    public String getIndoorPano()
-    {
-      return this.r;
-    }
-    
-    public String getName()
-    {
-      return this.h;
-    }
-    
-    public int getPano()
-    {
-      return this.p;
-    }
-    
-    public Point getPoint()
-    {
-      return this.d;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasAddr()) {
-        i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getAddr());
-      }
-      int i1 = i2;
-      if (hasPoint()) {
-        i1 = i2 + CodedOutputStreamMicro.computeMessageSize(2, getPoint());
-      }
-      i2 = i1;
-      if (hasUid()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getUid());
-      }
-      i1 = i2;
-      if (hasName()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getName());
-      }
-      i2 = i1;
-      if (hasTag()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getTag());
-      }
-      i1 = i2;
-      if (hasFloorId()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getFloorId());
-      }
-      i2 = i1;
-      if (hasBuildingId()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getBuildingId());
-      }
-      i1 = i2;
-      if (hasPano()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(8, getPano());
-      }
-      i2 = i1;
-      if (hasIndoorPano()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getIndoorPano());
-      }
-      i1 = i2;
-      if (hasDistance()) {
-        i1 = i2 + CodedOutputStreamMicro.computeDoubleSize(10, getDistance());
-      }
-      this.u = i1;
-      return i1;
-    }
-    
-    public String getTag()
-    {
-      return this.j;
-    }
-    
-    public String getUid()
-    {
-      return this.f;
-    }
-    
-    public boolean hasAddr()
-    {
-      return this.a;
-    }
-    
-    public boolean hasBuildingId()
-    {
-      return this.m;
-    }
-    
-    public boolean hasDistance()
-    {
-      return this.s;
-    }
-    
-    public boolean hasFloorId()
-    {
-      return this.k;
-    }
-    
-    public boolean hasIndoorPano()
-    {
-      return this.q;
-    }
-    
-    public boolean hasName()
-    {
-      return this.g;
-    }
-    
-    public boolean hasPano()
-    {
-      return this.o;
-    }
-    
-    public boolean hasPoint()
-    {
-      return this.c;
-    }
-    
-    public boolean hasTag()
-    {
-      return this.i;
-    }
-    
-    public boolean hasUid()
-    {
-      return this.e;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public SurroundPoi mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setAddr(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          Point localPoint = new Point();
-          paramCodedInputStreamMicro.readMessage(localPoint);
-          setPoint(localPoint);
-          break;
-        case 26: 
-          setUid(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setName(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          setTag(paramCodedInputStreamMicro.readString());
-          break;
-        case 50: 
-          setFloorId(paramCodedInputStreamMicro.readString());
-          break;
-        case 58: 
-          setBuildingId(paramCodedInputStreamMicro.readString());
-          break;
-        case 64: 
-          setPano(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 74: 
-          setIndoorPano(paramCodedInputStreamMicro.readString());
-          break;
-        case 81: 
-          setDistance(paramCodedInputStreamMicro.readDouble());
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasAddress()) {
+            i = 0 + CodedOutputStreamMicro.computeStringSize(1, getAddress());
         }
-      }
+        if (hasFloor()) {
+            i += CodedOutputStreamMicro.computeStringSize(2, getFloor());
+        }
+        if (hasBuildId()) {
+            i += CodedOutputStreamMicro.computeStringSize(3, getBuildId());
+        }
+        if (hasPano()) {
+            i += CodedOutputStreamMicro.computeInt32Size(4, getPano());
+        }
+        if (hasStreetScapeID()) {
+            i += CodedOutputStreamMicro.computeStringSize(5, getStreetScapeID());
+        }
+        if (hasAddressDetail()) {
+            i += CodedOutputStreamMicro.computeMessageSize(6, getAddressDetail());
+        }
+        if (hasBusiness()) {
+            i += CodedOutputStreamMicro.computeStringSize(7, getBusiness());
+        }
+        if (hasPoiDesc()) {
+            i += CodedOutputStreamMicro.computeStringSize(8, getPoiDesc());
+        }
+        if (hasPoint()) {
+            i += CodedOutputStreamMicro.computeMessageSize(9, getPoint());
+        }
+        int i2 = i;
+        for (SurroundPoi computeMessageSize : getSurroundPoiList()) {
+            i2 = CodedOutputStreamMicro.computeMessageSize(10, computeMessageSize) + i2;
+        }
+        if (hasNearby()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(11, getNearby());
+        }
+        if (hasTailBarText()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(12, getTailBarText());
+        }
+        if (hasArea()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(13, getArea());
+        }
+        this.f14272z = i2;
+        return i2;
     }
-    
-    public SurroundPoi setAddr(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
+
+    public String getStreetScapeID() {
+        return this.f14256j;
     }
-    
-    public SurroundPoi setBuildingId(String paramString)
-    {
-      this.m = true;
-      this.n = paramString;
-      return this;
+
+    public SurroundPoi getSurroundPoi(int i) {
+        return (SurroundPoi) this.f14265s.get(i);
     }
-    
-    public SurroundPoi setDistance(double paramDouble)
-    {
-      this.s = true;
-      this.t = paramDouble;
-      return this;
+
+    public int getSurroundPoiCount() {
+        return this.f14265s.size();
     }
-    
-    public SurroundPoi setFloorId(String paramString)
-    {
-      this.k = true;
-      this.l = paramString;
-      return this;
+
+    public List<SurroundPoi> getSurroundPoiList() {
+        return this.f14265s;
     }
-    
-    public SurroundPoi setIndoorPano(String paramString)
-    {
-      this.q = true;
-      this.r = paramString;
-      return this;
+
+    public String getTailBarText() {
+        return this.f14269w;
     }
-    
-    public SurroundPoi setName(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
+
+    public boolean hasAddress() {
+        return this.f14247a;
     }
-    
-    public SurroundPoi setPano(int paramInt)
-    {
-      this.o = true;
-      this.p = paramInt;
-      return this;
+
+    public boolean hasAddressDetail() {
+        return this.f14257k;
     }
-    
-    public SurroundPoi setPoint(Point paramPoint)
-    {
-      if (paramPoint == null) {
-        return clearPoint();
-      }
-      this.c = true;
-      this.d = paramPoint;
-      return this;
+
+    public boolean hasArea() {
+        return this.f14270x;
     }
-    
-    public SurroundPoi setTag(String paramString)
-    {
-      this.i = true;
-      this.j = paramString;
-      return this;
+
+    public boolean hasBuildId() {
+        return this.f14251e;
     }
-    
-    public SurroundPoi setUid(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
+
+    public boolean hasBusiness() {
+        return this.f14259m;
     }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasAddr()) {
-        paramCodedOutputStreamMicro.writeString(1, getAddr());
-      }
-      if (hasPoint()) {
-        paramCodedOutputStreamMicro.writeMessage(2, getPoint());
-      }
-      if (hasUid()) {
-        paramCodedOutputStreamMicro.writeString(3, getUid());
-      }
-      if (hasName()) {
-        paramCodedOutputStreamMicro.writeString(4, getName());
-      }
-      if (hasTag()) {
-        paramCodedOutputStreamMicro.writeString(5, getTag());
-      }
-      if (hasFloorId()) {
-        paramCodedOutputStreamMicro.writeString(6, getFloorId());
-      }
-      if (hasBuildingId()) {
-        paramCodedOutputStreamMicro.writeString(7, getBuildingId());
-      }
-      if (hasPano()) {
-        paramCodedOutputStreamMicro.writeInt32(8, getPano());
-      }
-      if (hasIndoorPano()) {
-        paramCodedOutputStreamMicro.writeString(9, getIndoorPano());
-      }
-      if (hasDistance()) {
-        paramCodedOutputStreamMicro.writeDouble(10, getDistance());
-      }
+
+    public boolean hasFloor() {
+        return this.f14249c;
     }
-  }
+
+    public boolean hasNearby() {
+        return this.f14266t;
+    }
+
+    public boolean hasPano() {
+        return this.f14253g;
+    }
+
+    public boolean hasPoiDesc() {
+        return this.f14261o;
+    }
+
+    public boolean hasPoint() {
+        return this.f14263q;
+    }
+
+    public boolean hasStreetScapeID() {
+        return this.f14255i;
+    }
+
+    public boolean hasTailBarText() {
+        return this.f14268v;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public ReverseGeocoding mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            MessageMicro addressDetail;
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    setAddress(codedInputStreamMicro.readString());
+                    continue;
+                case 18:
+                    setFloor(codedInputStreamMicro.readString());
+                    continue;
+                case 26:
+                    setBuildId(codedInputStreamMicro.readString());
+                    continue;
+                case 32:
+                    setPano(codedInputStreamMicro.readInt32());
+                    continue;
+                case 42:
+                    setStreetScapeID(codedInputStreamMicro.readString());
+                    continue;
+                case 50:
+                    addressDetail = new AddressDetail();
+                    codedInputStreamMicro.readMessage(addressDetail);
+                    setAddressDetail(addressDetail);
+                    continue;
+                case 58:
+                    setBusiness(codedInputStreamMicro.readString());
+                    continue;
+                case 66:
+                    setPoiDesc(codedInputStreamMicro.readString());
+                    continue;
+                case 74:
+                    addressDetail = new Point();
+                    codedInputStreamMicro.readMessage(addressDetail);
+                    setPoint(addressDetail);
+                    continue;
+                case 82:
+                    addressDetail = new SurroundPoi();
+                    codedInputStreamMicro.readMessage(addressDetail);
+                    addSurroundPoi(addressDetail);
+                    continue;
+                case 90:
+                    setNearby(codedInputStreamMicro.readString());
+                    continue;
+                case 98:
+                    setTailBarText(codedInputStreamMicro.readString());
+                    continue;
+                case 106:
+                    setArea(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public ReverseGeocoding setAddress(String str) {
+        this.f14247a = true;
+        this.f14248b = str;
+        return this;
+    }
+
+    public ReverseGeocoding setAddressDetail(AddressDetail addressDetail) {
+        if (addressDetail == null) {
+            return clearAddressDetail();
+        }
+        this.f14257k = true;
+        this.f14258l = addressDetail;
+        return this;
+    }
+
+    public ReverseGeocoding setArea(String str) {
+        this.f14270x = true;
+        this.f14271y = str;
+        return this;
+    }
+
+    public ReverseGeocoding setBuildId(String str) {
+        this.f14251e = true;
+        this.f14252f = str;
+        return this;
+    }
+
+    public ReverseGeocoding setBusiness(String str) {
+        this.f14259m = true;
+        this.f14260n = str;
+        return this;
+    }
+
+    public ReverseGeocoding setFloor(String str) {
+        this.f14249c = true;
+        this.f14250d = str;
+        return this;
+    }
+
+    public ReverseGeocoding setNearby(String str) {
+        this.f14266t = true;
+        this.f14267u = str;
+        return this;
+    }
+
+    public ReverseGeocoding setPano(int i) {
+        this.f14253g = true;
+        this.f14254h = i;
+        return this;
+    }
+
+    public ReverseGeocoding setPoiDesc(String str) {
+        this.f14261o = true;
+        this.f14262p = str;
+        return this;
+    }
+
+    public ReverseGeocoding setPoint(Point point) {
+        if (point == null) {
+            return clearPoint();
+        }
+        this.f14263q = true;
+        this.f14264r = point;
+        return this;
+    }
+
+    public ReverseGeocoding setStreetScapeID(String str) {
+        this.f14255i = true;
+        this.f14256j = str;
+        return this;
+    }
+
+    public ReverseGeocoding setSurroundPoi(int i, SurroundPoi surroundPoi) {
+        if (surroundPoi != null) {
+            this.f14265s.set(i, surroundPoi);
+        }
+        return this;
+    }
+
+    public ReverseGeocoding setTailBarText(String str) {
+        this.f14268v = true;
+        this.f14269w = str;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasAddress()) {
+            codedOutputStreamMicro.writeString(1, getAddress());
+        }
+        if (hasFloor()) {
+            codedOutputStreamMicro.writeString(2, getFloor());
+        }
+        if (hasBuildId()) {
+            codedOutputStreamMicro.writeString(3, getBuildId());
+        }
+        if (hasPano()) {
+            codedOutputStreamMicro.writeInt32(4, getPano());
+        }
+        if (hasStreetScapeID()) {
+            codedOutputStreamMicro.writeString(5, getStreetScapeID());
+        }
+        if (hasAddressDetail()) {
+            codedOutputStreamMicro.writeMessage(6, getAddressDetail());
+        }
+        if (hasBusiness()) {
+            codedOutputStreamMicro.writeString(7, getBusiness());
+        }
+        if (hasPoiDesc()) {
+            codedOutputStreamMicro.writeString(8, getPoiDesc());
+        }
+        if (hasPoint()) {
+            codedOutputStreamMicro.writeMessage(9, getPoint());
+        }
+        for (SurroundPoi writeMessage : getSurroundPoiList()) {
+            codedOutputStreamMicro.writeMessage(10, writeMessage);
+        }
+        if (hasNearby()) {
+            codedOutputStreamMicro.writeString(11, getNearby());
+        }
+        if (hasTailBarText()) {
+            codedOutputStreamMicro.writeString(12, getTailBarText());
+        }
+        if (hasArea()) {
+            codedOutputStreamMicro.writeString(13, getArea());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/ReverseGeocoding.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

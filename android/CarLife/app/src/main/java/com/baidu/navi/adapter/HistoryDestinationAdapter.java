@@ -3,7 +3,6 @@ package com.baidu.navi.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -16,413 +15,366 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.baidu.carlife.BaiduNaviApplication;
-import com.baidu.carlife.core.screen.b;
-import com.baidu.carlife.core.screen.e;
-import com.baidu.carlife.view.dialog.c;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.C1277e;
+import com.baidu.carlife.view.dialog.C1953c;
 import com.baidu.navi.controller.QuickRoutePlanController;
 import com.baidu.navi.style.StyleManager;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.navi.view.TravelRefListener;
+import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.ui.util.ForbidDaulClickUtils;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.NetworkUtils;
 import com.baidu.navisdk.util.common.StringUtils;
 import com.baidu.navisdk.util.db.DBManager;
-import com.baidu.navisdk.util.db.DBManager.DBOperateResultCallback;
+import com.baidu.navisdk.util.db.DBManager$DBOperateResultCallback;
 import com.baidu.navisdk.util.db.model.NaviDestHistroyModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryDestinationAdapter
-  extends BaseAdapter
-{
-  private int MAX_HISTORY_NUM = 10;
-  private DBManager.DBOperateResultCallback callback = new DBManager.DBOperateResultCallback()
-  {
-    public void onAddOrDeleteSuccess()
-    {
-      new Handler(Looper.getMainLooper()).post(new Runnable()
-      {
-        public void run()
-        {
-          HistoryDestinationAdapter.this.notifyHistoryDataSetChanged();
-          if ((HistoryDestinationAdapter.this.mTravelRefListener != null) && (HistoryDestinationAdapter.this.getCount() == 0)) {
-            HistoryDestinationAdapter.this.mTravelRefListener.onAddOrDeleteSuccess();
-          }
+public class HistoryDestinationAdapter extends BaseAdapter {
+    private int MAX_HISTORY_NUM = 10;
+    private DBManager$DBOperateResultCallback callback = new C36354();
+    private boolean hideRefLayout = false;
+    ViewHolder holder;
+    private View mCleanHistoryLayout;
+    private Context mContext;
+    private QuickRoutePlanController mFragControl;
+    private List<RoutePlanNode> mHistoryList = new ArrayList();
+    private LayoutInflater mInflater;
+    private boolean mIsCarMode = false;
+    private boolean mIsQuickNaviFragment = false;
+    private boolean mIsRoutePlanNodeFragment = false;
+    private ListView mListView;
+    private NaviDestHistroyModel mNaviDestHistory;
+    private C1277e mOnDialogListener;
+    private int mOrientation;
+    private String mPackageName;
+    private Resources mResources;
+    private RoutePlanNode mRoutePlanNode;
+    private TravelRefListener mTravelRefListener;
+
+    /* renamed from: com.baidu.navi.adapter.HistoryDestinationAdapter$3 */
+    class C36323 implements C0672b {
+        C36323() {
         }
-      });
-    }
-    
-    public void onQuerySuccess()
-    {
-      new Handler(Looper.getMainLooper()).post(new Runnable()
-      {
-        public void run()
-        {
-          HistoryDestinationAdapter.this.notifyHistoryDataSetChanged();
+
+        public void onClick() {
+            HistoryDestinationAdapter.this.cleanAllHistoryDesPoi();
         }
-      });
     }
-  };
-  private boolean hideRefLayout = false;
-  ViewHolder holder;
-  private View mCleanHistoryLayout;
-  private Context mContext;
-  private QuickRoutePlanController mFragControl;
-  private List<RoutePlanNode> mHistoryList = new ArrayList();
-  private LayoutInflater mInflater;
-  private boolean mIsCarMode = false;
-  private boolean mIsQuickNaviFragment = false;
-  private boolean mIsRoutePlanNodeFragment = false;
-  private ListView mListView;
-  private NaviDestHistroyModel mNaviDestHistory;
-  private e mOnDialogListener;
-  private int mOrientation;
-  private String mPackageName;
-  private Resources mResources;
-  private RoutePlanNode mRoutePlanNode;
-  private TravelRefListener mTravelRefListener;
-  
-  public HistoryDestinationAdapter(Context paramContext, boolean paramBoolean)
-  {
-    this.mInflater = ((LayoutInflater)paramContext.getSystemService("layout_inflater"));
-    this.mContext = paramContext;
-    this.mIsQuickNaviFragment = paramBoolean;
-    this.mNaviDestHistory = NaviDestHistroyModel.getInstance();
-  }
-  
-  public HistoryDestinationAdapter(Context paramContext, boolean paramBoolean, TravelRefListener paramTravelRefListener)
-  {
-    this.mInflater = ((LayoutInflater)paramContext.getSystemService("layout_inflater"));
-    this.mContext = paramContext;
-    this.mIsQuickNaviFragment = paramBoolean;
-    this.mNaviDestHistory = NaviDestHistroyModel.getInstance();
-    if (!this.mNaviDestHistory.checkIsQueryDB()) {
-      DBManager.getAllHistoryDestPoints(this.callback);
-    }
-    this.mTravelRefListener = paramTravelRefListener;
-  }
-  
-  public HistoryDestinationAdapter(Context paramContext, boolean paramBoolean, TravelRefListener paramTravelRefListener, QuickRoutePlanController paramQuickRoutePlanController)
-  {
-    this.mInflater = ((LayoutInflater)paramContext.getSystemService("layout_inflater"));
-    this.mContext = paramContext;
-    this.mIsQuickNaviFragment = paramBoolean;
-    this.mNaviDestHistory = NaviDestHistroyModel.getInstance();
-    if (!this.mNaviDestHistory.checkIsQueryDB()) {
-      DBManager.getAllHistoryDestPoints(this.callback);
-    }
-    this.mTravelRefListener = paramTravelRefListener;
-    this.mFragControl = paramQuickRoutePlanController;
-  }
-  
-  private View getItemView(View paramView, final int paramInt)
-  {
-    if (paramView == null)
-    {
-      this.holder = new ViewHolder();
-      paramView = this.mInflater.inflate(2130968950, null);
-      this.holder.infoLayout = ((LinearLayout)paramView.findViewById(2131625821));
-      this.holder.poiInfoLayout = ((LinearLayout)paramView.findViewById(2131625823));
-      this.holder.pointName = ((TextView)paramView.findViewById(2131625825));
-      this.holder.pointDescription = ((TextView)paramView.findViewById(2131625826));
-      this.holder.pointIcon = ((ImageView)paramView.findViewById(2131625822));
-      this.holder.travelRef = ((ImageView)paramView.findViewById(2131625827));
-      this.holder.travelRefLayout = ((LinearLayout)paramView.findViewById(2131625824));
-      paramView.setTag(this.holder);
-    }
-    for (;;)
-    {
-      updateStyle(paramInt);
-      this.holder.travelRefLayout.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (ForbidDaulClickUtils.isFastDoubleClick()) {
-            return;
-          }
-          if (HistoryDestinationAdapter.this.mTravelRefListener != null) {
-            HistoryDestinationAdapter.this.mTravelRefListener.onEnterTravelRefFragment(paramInt, false);
-          }
-          StatisticManager.onEvent("410041", "410041");
+
+    /* renamed from: com.baidu.navi.adapter.HistoryDestinationAdapter$4 */
+    class C36354 implements DBManager$DBOperateResultCallback {
+
+        /* renamed from: com.baidu.navi.adapter.HistoryDestinationAdapter$4$1 */
+        class C36331 implements Runnable {
+            C36331() {
+            }
+
+            public void run() {
+                HistoryDestinationAdapter.this.notifyHistoryDataSetChanged();
+                if (HistoryDestinationAdapter.this.mTravelRefListener != null && HistoryDestinationAdapter.this.getCount() == 0) {
+                    HistoryDestinationAdapter.this.mTravelRefListener.onAddOrDeleteSuccess();
+                }
+            }
         }
-      });
-      return paramView;
-      this.holder = ((ViewHolder)paramView.getTag());
-    }
-  }
-  
-  private String getResourceNameById(int paramInt)
-  {
-    String str = "";
-    if (this.mResources != null) {}
-    try
-    {
-      str = this.mResources.getResourceEntryName(paramInt);
-      return str;
-    }
-    catch (Resources.NotFoundException localNotFoundException) {}
-    return "";
-  }
-  
-  private void setItemContent(int paramInt)
-  {
-    if ((this.mHistoryList == null) || (paramInt >= this.mHistoryList.size())) {
-      return;
-    }
-    this.mRoutePlanNode = ((RoutePlanNode)this.mHistoryList.get(paramInt));
-    if (this.mRoutePlanNode != null)
-    {
-      String str2 = this.mRoutePlanNode.getName();
-      String str3 = this.mRoutePlanNode.getDescription();
-      String str1 = str2;
-      if (StringUtils.isEmpty(str2)) {
-        str1 = this.mContext.getString(2131296411);
-      }
-      if (this.holder.pointName != null) {
-        this.holder.pointName.setText(str1);
-      }
-      if (this.holder.pointDescription != null)
-      {
-        if ((str3 == null) || (str3.length() <= 0)) {
-          break label202;
+
+        /* renamed from: com.baidu.navi.adapter.HistoryDestinationAdapter$4$2 */
+        class C36342 implements Runnable {
+            C36342() {
+            }
+
+            public void run() {
+                HistoryDestinationAdapter.this.notifyHistoryDataSetChanged();
+            }
         }
-        this.holder.pointDescription.setText(str3);
-        this.holder.pointDescription.setVisibility(0);
-      }
-    }
-    while (((this.mIsQuickNaviFragment) || (this.mIsCarMode)) && (!this.hideRefLayout) && (NetworkUtils.isNetworkAvailable(this.mContext)))
-    {
-      this.holder.travelRefLayout.setVisibility(0);
-      this.holder.travelRef.setVisibility(0);
-      return;
-      label202:
-      this.holder.pointDescription.setText(null);
-      this.holder.pointDescription.setVisibility(8);
-    }
-    this.holder.travelRefLayout.setVisibility(8);
-    this.holder.travelRef.setVisibility(8);
-  }
-  
-  private void updateStyle(int paramInt)
-  {
-    Drawable localDrawable;
-    if (this.mIsCarMode)
-    {
-      if (this.holder.pointName != null) {
-        this.holder.pointName.setTextColor(StyleManager.getColor(2131558554));
-      }
-      if (this.holder.pointDescription != null) {
-        this.holder.pointDescription.setTextColor(StyleManager.getColor(2131558556));
-      }
-      if ((this.mPackageName != null) && (this.mResources != null))
-      {
-        paramInt = getHistoryIcon(paramInt);
-        if (paramInt > 0)
-        {
-          localDrawable = this.mResources.getDrawable(paramInt);
-          this.holder.pointIcon.setBackgroundDrawable(localDrawable);
-          if (this.holder.travelRef != null) {
-            this.holder.travelRef.setBackgroundDrawable(StyleManager.getDrawable(2130837659));
-          }
+
+        C36354() {
         }
-      }
+
+        public void onAddOrDeleteSuccess() {
+            new Handler(Looper.getMainLooper()).post(new C36331());
+        }
+
+        public void onQuerySuccess() {
+            new Handler(Looper.getMainLooper()).post(new C36342());
+        }
     }
-    for (;;)
-    {
-      if (this.holder.infoLayout != null) {}
-      return;
-      this.holder.pointIcon.setBackgroundDrawable(StyleManager.getDrawable(2130837977));
-      break;
-      this.holder.pointIcon.setBackgroundDrawable(StyleManager.getDrawable(2130837977));
-      break;
-      if (this.holder.pointIcon != null) {
-        this.holder.pointIcon.setBackgroundDrawable(StyleManager.getDrawable(2130837977));
-      }
-      if (this.holder.pointName != null) {
-        this.holder.pointName.setTextColor(StyleManager.getColor(2131558501));
-      }
-      if (this.holder.pointDescription != null) {
-        this.holder.pointDescription.setTextColor(StyleManager.getColor(2131558499));
-      }
-      if (this.holder.travelRef != null)
-      {
-        localDrawable = StyleManager.getDrawable(2130837968);
-        this.holder.travelRef.setBackgroundDrawable(localDrawable);
-      }
+
+    public static class ViewHolder {
+        public LinearLayout infoLayout;
+        public LinearLayout poiInfoLayout;
+        public TextView pointDescription;
+        public ImageView pointIcon;
+        public TextView pointName;
+        public ImageView travelRef;
+        public LinearLayout travelRefLayout;
     }
-  }
-  
-  public void cleanAllHistoryDesPoi()
-  {
-    DBManager.clearHistoryDestFromDB(this.callback);
-  }
-  
-  public void delRoutePlanHistoryItem(int paramInt)
-  {
-    if (this.mHistoryList == null) {
-      return;
+
+    public HistoryDestinationAdapter(Context context, boolean bIsQuickNaviFragment) {
+        this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        this.mContext = context;
+        this.mIsQuickNaviFragment = bIsQuickNaviFragment;
+        this.mNaviDestHistory = NaviDestHistroyModel.getInstance();
     }
-    DBManager.deleteHistoryDestFromDB((RoutePlanNode)this.mHistoryList.get(paramInt), this.callback);
-  }
-  
-  public int getCount()
-  {
-    if (this.mHistoryList == null) {
-      return 0;
+
+    public HistoryDestinationAdapter(Context context, boolean bIsQuickNaviFragment, TravelRefListener listener) {
+        this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        this.mContext = context;
+        this.mIsQuickNaviFragment = bIsQuickNaviFragment;
+        this.mNaviDestHistory = NaviDestHistroyModel.getInstance();
+        if (!this.mNaviDestHistory.checkIsQueryDB()) {
+            DBManager.getAllHistoryDestPoints(this.callback);
+        }
+        this.mTravelRefListener = listener;
     }
-    int i = this.mHistoryList.size();
-    if (i > this.MAX_HISTORY_NUM) {
-      i = this.MAX_HISTORY_NUM;
+
+    public HistoryDestinationAdapter(Context context, boolean bIsQuickNaviFragment, TravelRefListener listener, QuickRoutePlanController mFragControl) {
+        this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        this.mContext = context;
+        this.mIsQuickNaviFragment = bIsQuickNaviFragment;
+        this.mNaviDestHistory = NaviDestHistroyModel.getInstance();
+        if (!this.mNaviDestHistory.checkIsQueryDB()) {
+            DBManager.getAllHistoryDestPoints(this.callback);
+        }
+        this.mTravelRefListener = listener;
+        this.mFragControl = mFragControl;
     }
-    for (;;)
-    {
-      return i;
+
+    public void setCarMode(boolean isCar) {
+        this.mIsCarMode = isCar;
+        this.mPackageName = BaiduNaviApplication.getInstance().getPackageName();
+        this.mResources = BaiduNaviApplication.getInstance().getResources();
     }
-  }
-  
-  public RoutePlanNode getDate(int paramInt)
-  {
-    LogUtil.e("navi_history", paramInt + " position:  " + paramInt);
-    if ((paramInt < 0) || (paramInt >= this.mHistoryList.size())) {
-      return null;
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        convertView = getItemView(convertView, position);
+        setItemContent(position);
+        return convertView;
     }
-    return (RoutePlanNode)this.mHistoryList.get(paramInt);
-  }
-  
-  public int getHistoryIcon(int paramInt)
-  {
-    if (paramInt < 0) {
-      return -1;
+
+    private View getItemView(View convertView, final int position) {
+        if (convertView == null) {
+            this.holder = new ViewHolder();
+            convertView = this.mInflater.inflate(C0965R.layout.navi_des_history_item, null);
+            this.holder.infoLayout = (LinearLayout) convertView.findViewById(C0965R.id.nav_history_item_layout);
+            this.holder.poiInfoLayout = (LinearLayout) convertView.findViewById(C0965R.id.poi_info_layout);
+            this.holder.pointName = (TextView) convertView.findViewById(C0965R.id.poi_name);
+            this.holder.pointDescription = (TextView) convertView.findViewById(C0965R.id.poi_description);
+            this.holder.pointIcon = (ImageView) convertView.findViewById(C0965R.id.icon_view);
+            this.holder.travelRef = (ImageView) convertView.findViewById(C0965R.id.btn_travel_ref);
+            this.holder.travelRefLayout = (LinearLayout) convertView.findViewById(C0965R.id.travel_ref_layout);
+            convertView.setTag(this.holder);
+        } else {
+            this.holder = (ViewHolder) convertView.getTag();
+        }
+        updateStyle(position);
+        this.holder.travelRefLayout.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+                if (!ForbidDaulClickUtils.isFastDoubleClick()) {
+                    if (HistoryDestinationAdapter.this.mTravelRefListener != null) {
+                        HistoryDestinationAdapter.this.mTravelRefListener.onEnterTravelRefFragment(position, false);
+                    }
+                    StatisticManager.onEvent(StatisticConstants.WILLINGGO_HISTORYREFERENCE, StatisticConstants.WILLINGGO_HISTORYREFERENCE);
+                }
+            }
+        });
+        return convertView;
     }
-    String str = getResourceNameById(2130838123);
-    str = str + "_" + (paramInt + 1);
-    return this.mResources.getIdentifier(str, "drawable", this.mPackageName);
-  }
-  
-  public Object getItem(int paramInt)
-  {
-    if ((paramInt > 0) && (paramInt < this.mHistoryList.size())) {
-      return this.mHistoryList.get(paramInt);
+
+    private void setItemContent(int position) {
+        if (this.mHistoryList != null && position < this.mHistoryList.size()) {
+            this.mRoutePlanNode = (RoutePlanNode) this.mHistoryList.get(position);
+            if (this.mRoutePlanNode != null) {
+                String name = this.mRoutePlanNode.getName();
+                String description = this.mRoutePlanNode.getDescription();
+                if (StringUtils.isEmpty(name)) {
+                    name = this.mContext.getString(C0965R.string.default_poi_name);
+                }
+                if (this.holder.pointName != null) {
+                    this.holder.pointName.setText(name);
+                }
+                if (this.holder.pointDescription != null) {
+                    if (description == null || description.length() <= 0) {
+                        this.holder.pointDescription.setText(null);
+                        this.holder.pointDescription.setVisibility(8);
+                    } else {
+                        this.holder.pointDescription.setText(description);
+                        this.holder.pointDescription.setVisibility(0);
+                    }
+                }
+            }
+            if ((this.mIsQuickNaviFragment || this.mIsCarMode) && !this.hideRefLayout && NetworkUtils.isNetworkAvailable(this.mContext)) {
+                this.holder.travelRefLayout.setVisibility(0);
+                this.holder.travelRef.setVisibility(0);
+                return;
+            }
+            this.holder.travelRefLayout.setVisibility(8);
+            this.holder.travelRef.setVisibility(8);
+        }
     }
-    return null;
-  }
-  
-  public long getItemId(int paramInt)
-  {
-    return paramInt;
-  }
-  
-  public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    paramView = getItemView(paramView, paramInt);
-    setItemContent(paramInt);
-    return paramView;
-  }
-  
-  public void hidleRefLayout()
-  {
-    this.hideRefLayout = true;
-  }
-  
-  public void notifyHistoryDataSetChanged()
-  {
-    this.mHistoryList = this.mNaviDestHistory.getRoutePlanNode();
-    refreshListViewData();
-  }
-  
-  public void refreshListViewData()
-  {
-    if (this.mCleanHistoryLayout != null)
-    {
-      if (getCount() != 0) {
-        break label50;
-      }
-      this.mCleanHistoryLayout.setVisibility(8);
-      if (this.mListView != null) {
-        this.mListView.setVisibility(4);
-      }
+
+    public void hidleRefLayout() {
+        this.hideRefLayout = true;
     }
-    for (;;)
-    {
-      notifyDataSetChanged();
-      if (this.mListView != null) {}
-      return;
-      label50:
-      if (this.mListView != null) {
-        this.mListView.setVisibility(0);
-      }
+
+    public int getHistoryIcon(int position) {
+        if (position < 0) {
+            return -1;
+        }
+        int num = position + 1;
+        return this.mResources.getIdentifier(getResourceNameById(C0965R.drawable.carmode_ic_common_serial_bg) + JNISearchConst.LAYER_ID_DIVIDER + num, "drawable", this.mPackageName);
     }
-  }
-  
-  public void setCarMode(boolean paramBoolean)
-  {
-    this.mIsCarMode = paramBoolean;
-    this.mPackageName = BaiduNaviApplication.getInstance().getPackageName();
-    this.mResources = BaiduNaviApplication.getInstance().getResources();
-  }
-  
-  public void setCleanHistoryLayout(View paramView)
-  {
-    this.mCleanHistoryLayout = paramView;
-  }
-  
-  public void setListView(ListView paramListView)
-  {
-    this.mListView = paramListView;
-  }
-  
-  public void setOnDialogListener(e parame)
-  {
-    this.mOnDialogListener = parame;
-  }
-  
-  public void setOrientation(int paramInt)
-  {
-    this.mOrientation = paramInt;
-  }
-  
-  public void showCleanAllHistoryDialog()
-  {
-    c localc = new c(this.mContext).a(2131296261).g(17).c(2131296260).q().d(2131296259);
-    localc.a(new b()
-    {
-      public void onClick()
-      {
-        HistoryDestinationAdapter.this.cleanAllHistoryDesPoi();
-      }
-    });
-    this.mOnDialogListener.showDialog(localc);
-  }
-  
-  public void showDelHistoryItemDialog(final int paramInt)
-  {
-    c localc = new c(this.mContext).a(2131296267).g(17).c(2131296264).q().d(2131296259);
-    localc.a(new b()
-    {
-      public void onClick()
-      {
-        HistoryDestinationAdapter.this.delRoutePlanHistoryItem(paramInt);
-      }
-    });
-    this.mOnDialogListener.showDialog(localc);
-  }
-  
-  public static class ViewHolder
-  {
-    public LinearLayout infoLayout;
-    public LinearLayout poiInfoLayout;
-    public TextView pointDescription;
-    public ImageView pointIcon;
-    public TextView pointName;
-    public ImageView travelRef;
-    public LinearLayout travelRefLayout;
-  }
+
+    private String getResourceNameById(int resId) {
+        String name = "";
+        if (this.mResources == null) {
+            return name;
+        }
+        try {
+            return this.mResources.getResourceEntryName(resId);
+        } catch (NotFoundException e) {
+            return "";
+        }
+    }
+
+    private void updateStyle(int position) {
+        if (this.mIsCarMode) {
+            if (this.holder.pointName != null) {
+                this.holder.pointName.setTextColor(StyleManager.getColor(C0965R.color.carmode_common_main_text));
+            }
+            if (this.holder.pointDescription != null) {
+                this.holder.pointDescription.setTextColor(StyleManager.getColor(C0965R.color.carmode_common_second_text));
+            }
+            if (this.mPackageName == null || this.mResources == null) {
+                this.holder.pointIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_search_ic_history));
+            } else {
+                int resId = getHistoryIcon(position);
+                if (resId > 0) {
+                    this.holder.pointIcon.setBackgroundDrawable(this.mResources.getDrawable(resId));
+                } else {
+                    this.holder.pointIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_search_ic_history));
+                }
+            }
+            if (this.holder.travelRef != null) {
+                this.holder.travelRef.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_car_mode_poi_detail_ic_goout));
+            }
+        } else {
+            if (this.holder.pointIcon != null) {
+                this.holder.pointIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_search_ic_history));
+            }
+            if (this.holder.pointName != null) {
+                this.holder.pointName.setTextColor(StyleManager.getColor(C0965R.color.bnav_rp_point_text_color));
+            }
+            if (this.holder.pointDescription != null) {
+                this.holder.pointDescription.setTextColor(StyleManager.getColor(C0965R.color.bnav_rp_point_secondText_color));
+            }
+            if (this.holder.travelRef != null) {
+                this.holder.travelRef.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_rp_travel_ref_selected));
+            }
+        }
+        if (this.holder.infoLayout == null) {
+        }
+    }
+
+    public int getCount() {
+        if (this.mHistoryList == null) {
+            return 0;
+        }
+        int count;
+        int size = this.mHistoryList.size();
+        if (size > this.MAX_HISTORY_NUM) {
+            count = this.MAX_HISTORY_NUM;
+        } else {
+            count = size;
+        }
+        return count;
+    }
+
+    public Object getItem(int position) {
+        if (position <= 0 || position >= this.mHistoryList.size()) {
+            return null;
+        }
+        return this.mHistoryList.get(position);
+    }
+
+    public long getItemId(int position) {
+        return (long) position;
+    }
+
+    public void showDelHistoryItemDialog(final int position) {
+        C1953c commonDialog = new C1953c(this.mContext).a(C0965R.string.alert_delete).g(17).c(C0965R.string.alert_confirm).q().d(C0965R.string.alert_cancel);
+        commonDialog.a(new C0672b() {
+            public void onClick() {
+                HistoryDestinationAdapter.this.delRoutePlanHistoryItem(position);
+            }
+        });
+        this.mOnDialogListener.showDialog(commonDialog);
+    }
+
+    public void showCleanAllHistoryDialog() {
+        C1953c commonDialog = new C1953c(this.mContext).a(C0965R.string.alert_clear_history_des).g(17).c(C0965R.string.alert_clean).q().d(C0965R.string.alert_cancel);
+        commonDialog.a(new C36323());
+        this.mOnDialogListener.showDialog(commonDialog);
+    }
+
+    public void cleanAllHistoryDesPoi() {
+        DBManager.clearHistoryDestFromDB(this.callback);
+    }
+
+    public void delRoutePlanHistoryItem(int position) {
+        if (this.mHistoryList != null) {
+            DBManager.deleteHistoryDestFromDB((RoutePlanNode) this.mHistoryList.get(position), this.callback);
+        }
+    }
+
+    public void notifyHistoryDataSetChanged() {
+        this.mHistoryList = this.mNaviDestHistory.getRoutePlanNode();
+        refreshListViewData();
+    }
+
+    public void refreshListViewData() {
+        if (this.mCleanHistoryLayout != null) {
+            if (getCount() == 0) {
+                this.mCleanHistoryLayout.setVisibility(8);
+                if (this.mListView != null) {
+                    this.mListView.setVisibility(4);
+                }
+            } else if (this.mListView != null) {
+                this.mListView.setVisibility(0);
+            }
+        }
+        notifyDataSetChanged();
+        if (this.mListView == null) {
+        }
+    }
+
+    public RoutePlanNode getDate(int position) {
+        LogUtil.m15791e("navi_history", position + " position:  " + position);
+        if (position < 0 || position >= this.mHistoryList.size()) {
+            return null;
+        }
+        return (RoutePlanNode) this.mHistoryList.get(position);
+    }
+
+    public void setOrientation(int orientation) {
+        this.mOrientation = orientation;
+    }
+
+    public void setListView(ListView list) {
+        this.mListView = list;
+    }
+
+    public void setCleanHistoryLayout(View layout) {
+        this.mCleanHistoryLayout = layout;
+    }
+
+    public void setOnDialogListener(C1277e listener) {
+        this.mOnDialogListener = listener;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/adapter/HistoryDestinationAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

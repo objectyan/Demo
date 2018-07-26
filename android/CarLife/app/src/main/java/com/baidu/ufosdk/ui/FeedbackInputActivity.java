@@ -4,13 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,16 +25,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.os.StatFs;
-import android.text.Editable;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.Html.ImageGetter;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,30 +41,41 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.baidu.ufosdk.ResumeCallBack;
-import com.baidu.ufosdk.SubmitMessageCallBack;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.radio.p080b.C2125n;
+import com.baidu.navi.util.SearchParamKey;
+import com.baidu.navisdk.module.BusinessActivityManager;
+import com.baidu.navisdk.util.statistic.PerformStatItem;
+import com.baidu.platform.comapi.map.MapGLSurfaceView;
+import com.baidu.speech.asr.SpeechConstant;
+import com.baidu.ufosdk.C5167a;
 import com.baidu.ufosdk.UfoSDK;
-import com.baidu.ufosdk.b.e;
-import com.baidu.ufosdk.e.b;
-import com.baidu.ufosdk.util.i;
-import com.baidu.ufosdk.util.l;
-import com.baidu.ufosdk.util.m;
-import com.baidu.ufosdk.util.p;
-import com.baidu.ufosdk.util.r;
-import com.baidu.ufosdk.util.s;
-import com.baidu.ufosdk.util.t;
-import com.baidu.ufosdk.util.u;
+import com.baidu.ufosdk.p247a.C5165a;
+import com.baidu.ufosdk.p248b.C5168a;
+import com.baidu.ufosdk.p248b.C5170c;
+import com.baidu.ufosdk.p248b.C5171d;
+import com.baidu.ufosdk.p248b.C5172e;
+import com.baidu.ufosdk.p249c.C5174a;
+import com.baidu.ufosdk.p251e.C5181b;
+import com.baidu.ufosdk.util.C5208a;
+import com.baidu.ufosdk.util.C5210c;
+import com.baidu.ufosdk.util.C5211d;
+import com.baidu.ufosdk.util.C5215h;
+import com.baidu.ufosdk.util.C5216i;
+import com.baidu.ufosdk.util.C5219l;
+import com.baidu.ufosdk.util.C5220m;
+import com.baidu.ufosdk.util.C5223p;
+import com.baidu.ufosdk.util.C5225r;
+import com.baidu.ufosdk.util.C5226s;
+import com.baidu.ufosdk.util.C5227t;
+import com.baidu.ufosdk.util.C5228u;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,1303 +84,1222 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 @SuppressLint({"NewApi", "HandlerLeak"})
-public class FeedbackInputActivity
-  extends Activity
-{
-  public static ArrayList a;
-  public static Bitmap b;
-  private final int A = 2131755008;
-  private final int B = 2131755009;
-  private final int C = 2131755010;
-  private Intent D;
-  private LinearLayout E;
-  private LinearLayout F;
-  private LinearLayout G;
-  private RelativeLayout H;
-  private ImageView I;
-  private Button J;
-  private LinearLayout K;
-  private String L = "";
-  private String M = "";
-  private com.baidu.ufosdk.a.a N;
-  private List O = new ArrayList();
-  private ListView P;
-  private br Q;
-  private View R;
-  private ExecutorService S;
-  private View T;
-  private TextView U;
-  private boolean V = false;
-  private boolean W = false;
-  private LinearLayout X;
-  private List Y;
-  private int Z = -1;
-  private SharedPreferences.Editor aa;
-  private SharedPreferences ab;
-  private View ac;
-  private int ad = 0;
-  private int ae = 0;
-  private boolean af = true;
-  private boolean ag = false;
-  private boolean ah = false;
-  private boolean ai = false;
-  private ArrayList aj;
-  private Handler ak = new aj(this);
-  private BroadcastReceiver al = new be(this);
-  private View am;
-  private boolean an = false;
-  private boolean ao = false;
-  private EditText ap;
-  private String aq = "";
-  private boolean ar = true;
-  private LinearLayout as;
-  private String at;
-  private boolean au = true;
-  private TextView av;
-  private String aw;
-  private Button ax;
-  protected boolean c = false;
-  protected boolean d = false;
-  protected boolean e = false;
-  protected int f;
-  Html.ImageGetter g = new bk(this);
-  private final int h = 2131296257;
-  private final int i = 2131296258;
-  private final int j = 2131296259;
-  private final int k = 2131296299;
-  private final int l = 2131296273;
-  private final int m = 2131296265;
-  private final int n = 2131296266;
-  private final int o = 2131296267;
-  private final int p = 2131296268;
-  private final int q = 2131296272;
-  private final int r = 2131296269;
-  private final int s = 2131296270;
-  private final int t = 2131296260;
-  private final int u = 2131296261;
-  private final int v = 2131296262;
-  private final int w = 2131296263;
-  private final int x = 2131296283;
-  private final int y = 2131296315;
-  private final int z = 2131296264;
-  
-  /* Error */
-  private int a(Uri paramUri)
-  {
-    // Byte code:
-    //   0: aload_1
-    //   1: ifnonnull +5 -> 6
-    //   4: iconst_0
-    //   5: ireturn
-    //   6: aload_0
-    //   7: invokevirtual 542	com/baidu/ufosdk/ui/FeedbackInputActivity:getContentResolver	()Landroid/content/ContentResolver;
-    //   10: aload_1
-    //   11: aconst_null
-    //   12: aconst_null
-    //   13: aconst_null
-    //   14: aconst_null
-    //   15: invokevirtual 548	android/content/ContentResolver:query	(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;
-    //   18: astore_1
-    //   19: aload_1
-    //   20: ifnull +89 -> 109
-    //   23: aload_1
-    //   24: invokeinterface 553 1 0
-    //   29: pop
-    //   30: aload_1
-    //   31: aload_1
-    //   32: ldc_w 555
-    //   35: invokeinterface 558 2 0
-    //   40: invokeinterface 562 2 0
-    //   45: astore_3
-    //   46: aload_3
-    //   47: ifnonnull +13 -> 60
-    //   50: iconst_0
-    //   51: istore_2
-    //   52: aload_1
-    //   53: invokeinterface 565 1 0
-    //   58: iload_2
-    //   59: ireturn
-    //   60: aload_3
-    //   61: invokestatic 570	java/lang/Integer:parseInt	(Ljava/lang/String;)I
-    //   64: istore_2
-    //   65: goto -13 -> 52
-    //   68: astore_1
-    //   69: aconst_null
-    //   70: astore_1
-    //   71: aload_1
-    //   72: invokeinterface 565 1 0
-    //   77: iconst_0
-    //   78: ireturn
-    //   79: astore_1
-    //   80: iconst_0
-    //   81: ireturn
-    //   82: astore_3
-    //   83: aconst_null
-    //   84: astore_1
-    //   85: aload_1
-    //   86: invokeinterface 565 1 0
-    //   91: aload_3
-    //   92: athrow
-    //   93: astore_1
-    //   94: goto -36 -> 58
-    //   97: astore_1
-    //   98: goto -7 -> 91
-    //   101: astore_3
-    //   102: goto -17 -> 85
-    //   105: astore_3
-    //   106: goto -35 -> 71
-    //   109: iconst_0
-    //   110: istore_2
-    //   111: goto -59 -> 52
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	114	0	this	FeedbackInputActivity
-    //   0	114	1	paramUri	Uri
-    //   51	60	2	i1	int
-    //   45	16	3	str	String
-    //   82	10	3	localObject1	Object
-    //   101	1	3	localObject2	Object
-    //   105	1	3	localException	Exception
-    // Exception table:
-    //   from	to	target	type
-    //   6	19	68	java/lang/Exception
-    //   71	77	79	java/lang/Exception
-    //   6	19	82	finally
-    //   52	58	93	java/lang/Exception
-    //   85	91	97	java/lang/Exception
-    //   23	46	101	finally
-    //   60	65	101	finally
-    //   23	46	105	java/lang/Exception
-    //   60	65	105	java/lang/Exception
-  }
-  
-  private static Bitmap a(Bitmap paramBitmap, int paramInt)
-  {
-    Bitmap localBitmap;
-    if ((paramBitmap == null) || (paramInt <= 0)) {
-      localBitmap = null;
-    }
-    int i3;
-    int i4;
-    do
-    {
-      do
-      {
-        return localBitmap;
-        i3 = paramBitmap.getWidth();
-        i4 = paramBitmap.getHeight();
-        localBitmap = paramBitmap;
-      } while (i3 <= paramInt);
-      localBitmap = paramBitmap;
-    } while (i4 <= paramInt);
-    int i1 = Math.max(i3, i4) * paramInt / Math.min(i3, i4);
-    int i2;
-    if (i3 > i4) {
-      i2 = i1;
-    }
-    for (;;)
-    {
-      if (i3 > i4) {
-        i1 = paramInt;
-      }
-      try
-      {
-        paramBitmap = Bitmap.createScaledBitmap(paramBitmap, i2, i1, true);
-        i2 = (i2 - paramInt) / 2;
-        i1 = (i1 - paramInt) / 2;
-        try
-        {
-          localBitmap = Bitmap.createBitmap(paramBitmap, i2, i1, paramInt, paramInt);
-          paramBitmap.recycle();
-          return localBitmap;
+public class FeedbackInputActivity extends Activity {
+    /* renamed from: a */
+    public static ArrayList f21455a;
+    /* renamed from: b */
+    public static Bitmap f21456b;
+    /* renamed from: A */
+    private final int f21457A = C0965R.menu.base;
+    /* renamed from: B */
+    private final int f21458B = C0965R.menu.main;
+    /* renamed from: C */
+    private final int f21459C = 2131755010;
+    /* renamed from: D */
+    private Intent f21460D;
+    /* renamed from: E */
+    private LinearLayout f21461E;
+    /* renamed from: F */
+    private LinearLayout f21462F;
+    /* renamed from: G */
+    private LinearLayout f21463G;
+    /* renamed from: H */
+    private RelativeLayout f21464H;
+    /* renamed from: I */
+    private ImageView f21465I;
+    /* renamed from: J */
+    private Button f21466J;
+    /* renamed from: K */
+    private LinearLayout f21467K;
+    /* renamed from: L */
+    private String f21468L = "";
+    /* renamed from: M */
+    private String f21469M = "";
+    /* renamed from: N */
+    private C5165a f21470N;
+    /* renamed from: O */
+    private List f21471O = new ArrayList();
+    /* renamed from: P */
+    private ListView f21472P;
+    /* renamed from: Q */
+    private br f21473Q;
+    /* renamed from: R */
+    private View f21474R;
+    /* renamed from: S */
+    private ExecutorService f21475S;
+    /* renamed from: T */
+    private View f21476T;
+    /* renamed from: U */
+    private TextView f21477U;
+    /* renamed from: V */
+    private boolean f21478V = false;
+    /* renamed from: W */
+    private boolean f21479W = false;
+    /* renamed from: X */
+    private LinearLayout f21480X;
+    /* renamed from: Y */
+    private List f21481Y;
+    /* renamed from: Z */
+    private int f21482Z = -1;
+    private Editor aa;
+    private SharedPreferences ab;
+    private View ac;
+    private int ad = 0;
+    private int ae = 0;
+    private boolean af = true;
+    private boolean ag = false;
+    private boolean ah = false;
+    private boolean ai = false;
+    private ArrayList aj;
+    private Handler ak = new aj(this);
+    private BroadcastReceiver al = new be(this);
+    private View am;
+    private boolean an = false;
+    private boolean ao = false;
+    private EditText ap;
+    private String aq = "";
+    private boolean ar = true;
+    private LinearLayout as;
+    private String at;
+    private boolean au = true;
+    private TextView av;
+    private String aw;
+    private Button ax;
+    /* renamed from: c */
+    protected boolean f21483c = false;
+    /* renamed from: d */
+    protected boolean f21484d = false;
+    /* renamed from: e */
+    protected boolean f21485e = false;
+    /* renamed from: f */
+    protected int f21486f;
+    /* renamed from: g */
+    ImageGetter f21487g = new bk(this);
+    /* renamed from: h */
+    private final int f21488h = C0965R.string.add_rescue_info;
+    /* renamed from: i */
+    private final int f21489i = C0965R.string.agreement;
+    /* renamed from: j */
+    private final int f21490j = C0965R.string.alert_cancel;
+    /* renamed from: k */
+    private final int f21491k = C0965R.string.auth_title;
+    /* renamed from: l */
+    private final int f21492l = C0965R.string.alert_download_apk_title;
+    /* renamed from: m */
+    private final int f21493m = C0965R.string.alert_confirm_a;
+    /* renamed from: n */
+    private final int f21494n = C0965R.string.alert_continue_last_navi_tips;
+    /* renamed from: o */
+    private final int f21495o = C0965R.string.alert_delete;
+    /* renamed from: p */
+    private final int f21496p = C0965R.string.alert_delete_comp_addr;
+    /* renamed from: q */
+    private final int f21497q = C0965R.string.alert_disclaimer;
+    /* renamed from: r */
+    private final int f21498r = C0965R.string.alert_delete_home_addr;
+    /* renamed from: s */
+    private final int f21499s = C0965R.string.alert_delete_navi_cache;
+    /* renamed from: t */
+    private final int f21500t = C0965R.string.alert_clean;
+    /* renamed from: u */
+    private final int f21501u = C0965R.string.alert_clear_history_des;
+    /* renamed from: v */
+    private final int f21502v = C0965R.string.alert_close;
+    /* renamed from: w */
+    private final int f21503w = C0965R.string.alert_common_data_not_download;
+    /* renamed from: x */
+    private final int f21504x = C0965R.string.alert_no_valid_data_info;
+    /* renamed from: y */
+    private final int f21505y = C0965R.string.carlife_feedback_content_num_count;
+    /* renamed from: z */
+    private final int f21506z = C0965R.string.alert_confirm;
+
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        requestWindowFeature(1);
+        setRequestedOrientation(1);
+        this.ab = getSharedPreferences("UfoSharePreference", 0);
+        this.aa = this.ab.edit();
+        this.aq = getIntent().getStringExtra("faq_id");
+        this.f21468L = getIntent().getStringExtra("msgid");
+        this.at = getIntent().getStringExtra("no_result");
+        if (TextUtils.isEmpty(this.f21468L)) {
+            this.f21468L = "newMessage";
         }
-        catch (Exception paramBitmap)
-        {
-          return null;
+        if (TextUtils.isEmpty(this.aq)) {
+            this.aq = "";
         }
-        i2 = paramInt;
-      }
-      catch (Exception paramBitmap) {}
-    }
-    return null;
-  }
-  
-  private void a()
-  {
-    if (this.ac.getVisibility() == 0)
-    {
-      this.ac.setVisibility(8);
-      this.ao = false;
-      this.av.setTextColor(i.a(com.baidu.ufosdk.a.w, com.baidu.ufosdk.a.x, com.baidu.ufosdk.a.w, com.baidu.ufosdk.a.w));
-      this.ap.setEnabled(true);
-      return;
-    }
-    if (a != null) {
-      a.clear();
-    }
-    getApplicationContext();
-    new cb(this).execute(new Void[0]);
-  }
-  
-  private void a(String paramString)
-  {
-    paramString = new cx(this, paramString);
-    paramString.a(new az(this, paramString));
-    paramString.show();
-  }
-  
-  private boolean a(Context paramContext, String paramString1, String paramString2, String paramString3, String paramString4, String paramString5, Handler paramHandler)
-  {
-    Object localObject;
-    String str;
-    boolean bool;
-    label159:
-    int i1;
-    label167:
-    label207:
-    long l1;
-    if (com.baidu.ufosdk.a.ai != null)
-    {
-      localObject = com.baidu.ufosdk.a.ai;
-      if (paramString2.contains("newMessage"))
-      {
-        str = null;
-        ((SubmitMessageCallBack)localObject).onSubmitMessageBeforeCallback(paramString3, str);
-      }
-    }
-    else
-    {
-      str = com.baidu.ufosdk.a.as;
-      localObject = new HashMap();
-      ((Map)localObject).put("clientid", paramString1);
-      ((Map)localObject).put("appid", UfoSDK.appid);
-      ((Map)localObject).put("devid", UfoSDK.devid);
-      if ((UfoSDK.robotAnswer) && (this.af)) {
-        ((Map)localObject).put("answerPerson", "robot");
-      }
-      if (!paramString2.contains("newMessage")) {
-        ((Map)localObject).put("id", paramString2);
-      }
-      ((Map)localObject).put("content", paramString3);
-      if (paramString4 != null) {
-        break label824;
-      }
-      bool = false;
-      if (!bool) {
-        break label843;
-      }
-      i1 = 1;
-      com.baidu.ufosdk.util.c.c("contactWay is " + paramString4);
-      if (i1 != 0) {
-        break label925;
-      }
-      ((Map)localObject).put("contact_way", paramString4);
-      ((Map)localObject).put("brand", Build.MANUFACTURER);
-      ((Map)localObject).put("model", Build.MODEL);
-      ((Map)localObject).put("sdkvn", "1.7.13");
-      ((Map)localObject).put("os", "android");
-      ((Map)localObject).put("appvn", com.baidu.ufosdk.b.d.c());
-      if (!s.a("android.permission.MOUNT_UNMOUNT_FILESYSTEMS")) {
-        break label1006;
-      }
-      paramString1 = new StatFs(Environment.getDataDirectory().getPath());
-      l1 = paramString1.getBlockSize();
-      l1 = paramString1.getAvailableBlocks() * l1;
-      label317:
-      ((Map)localObject).put("freespace", String.valueOf(l1));
-      ((Map)localObject).put("uid", com.baidu.ufosdk.a.b);
-      ((Map)localObject).put("osvn", Build.VERSION.RELEASE);
-      ((Map)localObject).put("extra", com.baidu.ufosdk.a.d);
-      ((Map)localObject).put("extend_feedback_channel", Integer.valueOf(com.baidu.ufosdk.a.h));
-      ((Map)localObject).put("osvc", String.valueOf(l.a()));
-      ((Map)localObject).put("referer", com.baidu.ufosdk.a.n);
-      ((Map)localObject).put("baiducuid", com.baidu.ufosdk.a.c);
-      if (!TextUtils.isEmpty(this.aq)) {
-        ((Map)localObject).put("faq_id", this.aq);
-      }
-      ((Map)localObject).put("phonetime", String.valueOf(System.currentTimeMillis()));
-      if (!s.a("android.permission.ACCESS_NETWORK_STATE")) {
-        break label1014;
-      }
-      ((Map)localObject).put("nettype", com.baidu.ufosdk.b.c.a(paramContext));
-      label503:
-      ((Map)localObject).put("screenSize", e.b(paramContext));
-      if (com.baidu.ufosdk.a.a) {
-        ((Map)localObject).put("logcat", com.baidu.ufosdk.b.a.a());
-      }
-      if (!TextUtils.isEmpty(com.baidu.ufosdk.a.f)) {
-        ((Map)localObject).put("ip_location", com.baidu.ufosdk.a.f);
-      }
-      paramString1 = m.a(com.baidu.ufosdk.c.a.a((Map)localObject));
-    }
-    for (;;)
-    {
-      try
-      {
-        if (TextUtils.isEmpty(paramString5))
-        {
-          paramString1 = "sdk_encrypt=" + URLEncoder.encode(paramString1, "UTF-8");
-          paramString1 = b.a(str, paramString1);
-          if (TextUtils.isEmpty(paramString1)) {
-            break label1122;
-          }
-          paramString1 = new JSONObject(m.b(paramString1));
-          com.baidu.ufosdk.util.c.a("response is -----------------> " + paramString1.toString());
-          if ((UfoSDK.robotAnswer) && (this.af))
-          {
-            if (!paramString1.has("round")) {
-              continue;
-            }
-            this.ad = ((Integer)paramString1.get("round")).intValue();
-          }
-          if (((Integer)paramString1.get("errno")).intValue() != 0) {
-            break label1122;
-          }
-          UfoSDK.neverFeedback = false;
-          UfoSDK.lastSendTime = System.currentTimeMillis();
-          paramString4 = paramContext.getSharedPreferences("UfoSharePreference", 0).edit();
-          paramString4.putBoolean("UfoNeverFeedback", false);
-          paramString4.putLong("Ufolastsendtime", UfoSDK.lastSendTime);
-          paramString4.commit();
-          paramString1 = String.valueOf(paramString1.get("id"));
-          if (com.baidu.ufosdk.a.ai != null) {
-            com.baidu.ufosdk.a.ai.onSubmitMessageAfterCallback(paramString3, paramString1);
-          }
-          if (!paramString2.contains("newMessage")) {
-            break label1124;
-          }
-          paramHandler.obtainMessage(14, paramString1).sendToTarget();
-          return true;
-          str = paramString2;
-          break;
-          label824:
-          bool = Pattern.compile("[a-zA-Z_]{1,}[0-9]{0,}@(([a-zA-z0-9]-*){1,}\\.){1,3}[a-zA-z\\-]{1,}").matcher(paramString4).matches();
-          break label159;
-          label843:
-          if (paramString4 == null)
-          {
-            bool = false;
-            if (!bool) {
-              continue;
-            }
-            i1 = 2;
-            break label167;
-          }
-          bool = Pattern.compile("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0-9]))\\d{8}$").matcher(paramString4).matches();
-          continue;
-          if (paramString4 == null)
-          {
-            bool = false;
-            if (!bool) {
-              continue;
-            }
-            i1 = 3;
-            break label167;
-          }
-          bool = Pattern.compile("^[1-9][0-9]{4,}$").matcher(paramString4).matches();
-          continue;
-          i1 = 0;
-          break label167;
-          label925:
-          if (i1 == 1)
-          {
-            com.baidu.ufosdk.util.c.c("contactWay is email");
-            ((Map)localObject).put("email", paramString4);
-            break label207;
-          }
-          if (i1 == 2)
-          {
-            com.baidu.ufosdk.util.c.c("contactWay is tel");
-            ((Map)localObject).put("tel", paramString4);
-            break label207;
-          }
-          com.baidu.ufosdk.util.c.c("contactWay is qq");
-          ((Map)localObject).put("qq", paramString4);
-          break label207;
-          label1006:
-          l1 = -1L;
-          break label317;
-          label1014:
-          ((Map)localObject).put("nettype", "N/A");
-          break label503;
+        String string = this.ab.getString("contact", "N/A");
+        C5210c.m17732a("************************加密后的联系方式：tempContactStr: " + string);
+        this.aw = C5220m.m17773b(string);
+        C5210c.m17732a("************************解密后的联系方式：contactStr: " + this.aw);
+        this.aa.putBoolean("ADD_PIC_FLAG", true);
+        this.aa.commit();
+        if (this.aw == null) {
+            this.aw = "";
         }
-        paramString1 = "sdk_encrypt=" + URLEncoder.encode(paramString1, "UTF-8") + "&screenshot=" + URLEncoder.encode(paramString5, "UTF-8");
-        continue;
-        this.af = false;
-        continue;
-        return false;
-      }
-      catch (Exception paramString1)
-      {
-        com.baidu.ufosdk.util.c.a("sendRecord fail.", paramString1);
-        Looper.prepare();
-        Toast.makeText(paramContext, u.a("18"), 1).show();
-        paramHandler.obtainMessage(13).sendToTarget();
-        Looper.loop();
-      }
-      label1122:
-      label1124:
-      paramHandler.obtainMessage(12, paramString1).sendToTarget();
-    }
-  }
-  
-  private void b()
-  {
-    if (this.X == null) {}
-    int i1;
-    do
-    {
-      return;
-      this.X.removeAllViews();
-      i1 = 0;
-    } while (i1 >= this.Y.size());
-    RelativeLayout localRelativeLayout = new RelativeLayout(this);
-    Object localObject3;
-    if (i1 != this.Y.size() - 1)
-    {
-      localObject3 = new db(this);
-      ((db)localObject3).setTag(Integer.valueOf(i1));
-      ((db)localObject3).setBackgroundDrawable(null);
-      ((db)localObject3).setPadding(0, 0, 0, 0);
-      ((db)localObject3).setScaleType(ImageView.ScaleType.CENTER_CROP);
-      ((db)localObject3).setMaxHeight(i.a(getApplicationContext(), 48.0F));
-      ((db)localObject3).setMinimumHeight(i.a(getApplicationContext(), 48.0F));
-      ((db)localObject3).setMaxWidth(i.a(getApplicationContext(), 48.0F));
-      ((db)localObject3).setMinimumWidth(i.a(getApplicationContext(), 48.0F));
-      localRelativeLayout.addView((View)localObject3, new RelativeLayout.LayoutParams(i.a(getApplicationContext(), 48.0F), i.a(getApplicationContext(), 48.0F)));
-    }
-    for (;;)
-    {
-      try
-      {
-        if (this.Y.get(i1) == null) {
-          break label747;
+        C5167a.f21362h = getIntent().getIntExtra("feedback_channel", 0);
+        f21455a = new ArrayList();
+        this.f21464H = new RelativeLayout(this);
+        this.f21464H.setId(C0965R.string.alert_clean);
+        this.f21464H.setBackgroundColor(C5167a.f21379y);
+        View relativeLayout = new RelativeLayout(this);
+        relativeLayout.setId(C0965R.string.alert_clear_history_des);
+        new RelativeLayout(this).setId(C0965R.string.alert_common_data_not_download);
+        this.f21466J = new Button(this);
+        this.f21466J.setText(C5228u.m17794a("23"));
+        LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, -2);
+        layoutParams.addRule(13);
+        this.f21464H.addView(this.f21466J, layoutParams);
+        this.f21466J.setVisibility(8);
+        View linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(0);
+        linearLayout.setGravity(16);
+        linearLayout.setBackgroundDrawable(C5223p.m17781a(getApplicationContext(), null, "ufo_back_layout_press.png"));
+        layoutParams = new LinearLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 18.0f), C5216i.m17757a(getApplicationContext(), 50.0f));
+        layoutParams.setMargins(C5216i.m17757a(getApplicationContext(), 10.0f), 0, 0, 0);
+        this.f21465I = new ImageView(this);
+        this.f21465I.setId(C0965R.string.add_rescue_info);
+        this.f21465I.setScaleType(ScaleType.CENTER_CROP);
+        this.f21465I.setBackgroundDrawable(new BitmapDrawable(C5223p.m17779a(getApplicationContext(), "ufo_back_icon.png")));
+        linearLayout.addView(this.f21465I, layoutParams);
+        View textView = new TextView(this);
+        textView.setText(C5167a.f21361g);
+        textView.setTextSize(C5167a.f21339K);
+        textView.setTextColor(C5167a.f21332D);
+        textView.setGravity(16);
+        LayoutParams layoutParams2 = new LinearLayout.LayoutParams(-2, -2);
+        layoutParams2.setMargins(0, 0, C5216i.m17757a(getApplicationContext(), 8.0f), 0);
+        linearLayout.addView(textView, layoutParams2);
+        layoutParams = new RelativeLayout.LayoutParams(-2, -2);
+        layoutParams.addRule(9);
+        layoutParams.addRule(15);
+        relativeLayout.addView(linearLayout, layoutParams);
+        View textView2 = new TextView(this);
+        textView2.setId(C0965R.string.agreement);
+        textView2.setTextColor(C5167a.f21373s);
+        textView2.setTextSize(C5167a.f21340L);
+        textView2.setGravity(17);
+        layoutParams = new RelativeLayout.LayoutParams(-2, -1);
+        layoutParams.addRule(13);
+        relativeLayout.addView(textView2, layoutParams);
+        this.ax = new Button(this);
+        this.ax.setVisibility(8);
+        this.ax.setText(C5228u.m17794a(PerformStatItem.RP_SUCCESS_NORMAL_STEP_INDEX));
+        this.ax.setId(2131755010);
+        this.ax.setTextColor(C5167a.f21374t);
+        this.ax.setTextSize(C5167a.f21347S);
+        this.ax.setGravity(17);
+        this.ax.setTextColor(C5216i.m17759a(C5167a.f21374t, C5167a.f21375u, C5167a.f21374t, C5167a.f21374t));
+        this.ax.setBackgroundColor(16777215);
+        this.ax.setPadding(C5216i.m17757a(getApplicationContext(), 8.0f), 0, C5216i.m17757a(getApplicationContext(), 8.0f), 0);
+        layoutParams = new RelativeLayout.LayoutParams(-2, -2);
+        layoutParams.addRule(11);
+        layoutParams.addRule(15);
+        layoutParams.setMargins(0, 0, C5216i.m17757a(getApplicationContext(), 10.0f), 0);
+        relativeLayout.addView(this.ax, layoutParams);
+        try {
+            relativeLayout.setBackgroundDrawable(new BitmapDrawable(C5223p.m17779a(getApplicationContext(), "ufo_nav_bg.png")));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (BitmapFactory.decodeByteArray((byte[])this.Y.get(i1), 0, ((byte[])this.Y.get(i1)).length) == null) {
-          break;
+        layoutParams = new RelativeLayout.LayoutParams(-1, C5216i.m17757a(getApplicationContext(), 50.0f));
+        layoutParams.addRule(10);
+        this.f21464H.addView(relativeLayout, layoutParams);
+        this.ac = C5216i.m17765b(this, C5228u.m17794a("25"));
+        layoutParams = new RelativeLayout.LayoutParams(-2, -2);
+        layoutParams.addRule(13);
+        this.f21464H.addView(this.ac, layoutParams);
+        this.ac.setVisibility(8);
+        this.f21463G = new LinearLayout(this);
+        this.f21463G.setId(C0965R.string.alert_download_apk_title);
+        this.f21463G.setOrientation(0);
+        this.f21462F = new LinearLayout(this);
+        this.f21462F.setId(C0965R.string.alert_cancel);
+        this.f21462F.setOrientation(1);
+        this.f21462F.setBackgroundColor(C5167a.f21333E);
+        textView = new RelativeLayout(this);
+        textView.setId(C0965R.string.alert_confirm_a);
+        textView.setFocusable(true);
+        textView.setFocusableInTouchMode(true);
+        this.av = new TextView(this);
+        this.av.setText("发送");
+        this.av.setTextColor(C5167a.f21377w);
+        this.av.setTextSize(13.0f);
+        this.av.setGravity(17);
+        this.av.setId(C0965R.string.auth_title);
+        this.av.setBackgroundColor(C5167a.f21333E);
+        this.av.setClickable(true);
+        LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(-2, -1);
+        layoutParams3.addRule(11);
+        layoutParams3.addRule(15);
+        layoutParams3.setMargins(C5216i.m17757a(getApplicationContext(), 7.0f), 0, 0, 0);
+        textView.addView(this.av, layoutParams3);
+        View linearLayout2 = new LinearLayout(this);
+        linearLayout2.setOrientation(0);
+        linearLayout2.setBackgroundDrawable(C5223p.m17781a(getApplicationContext(), null, "ufo_back_layout_press.png"));
+        linearLayout2.setClickable(true);
+        linearLayout2.setId(C0965R.string.auto_mode);
+        View imageView = new ImageView(this);
+        imageView.setId(C0965R.string.alert_delete);
+        imageView.setScaleType(ScaleType.CENTER_CROP);
+        imageView.setBackgroundDrawable(new BitmapDrawable(C5223p.m17779a(getApplicationContext(), "ufo_pluspic_icon.png")));
+        LayoutParams layoutParams4 = new LinearLayout.LayoutParams(-1, -1);
+        layoutParams4.setMargins(C5216i.m17757a(getApplicationContext(), 5.0f), C5216i.m17757a(getApplicationContext(), 5.0f), C5216i.m17757a(getApplicationContext(), 5.0f), C5216i.m17757a(getApplicationContext(), 5.0f));
+        linearLayout2.addView(imageView, layoutParams4);
+        LayoutParams layoutParams5 = new RelativeLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 33.0f), C5216i.m17757a(getApplicationContext(), 33.0f));
+        layoutParams5.addRule(15);
+        layoutParams5.addRule(9);
+        textView.addView(linearLayout2, layoutParams5);
+        this.ap = new EditText(this);
+        this.ap.setImeOptions(4);
+        this.ap.setInputType(262144);
+        this.ap.setSingleLine(false);
+        this.ap.setId(C0965R.string.alert_continue_last_navi_tips);
+        this.ap.setVisibility(0);
+        this.ap.setTextSize(14.0f);
+        this.ap.setGravity(16);
+        this.ap.setPadding(C5216i.m17757a(getApplicationContext(), 5.0f), 0, C5216i.m17757a(getApplicationContext(), 5.0f), 0);
+        Drawable gradientDrawable = new GradientDrawable();
+        gradientDrawable.setStroke(1, -2697514);
+        float a = (float) C5216i.m17757a(getApplicationContext(), 4.0f);
+        gradientDrawable.setColor(-1);
+        gradientDrawable.setCornerRadius(a);
+        this.ap.setBackgroundDrawable(gradientDrawable);
+        layoutParams5 = new RelativeLayout.LayoutParams(-1, -1);
+        layoutParams5.addRule(1, linearLayout2.getId());
+        layoutParams5.addRule(0, this.av.getId());
+        layoutParams5.addRule(15);
+        textView.addView(this.ap, layoutParams5);
+        this.ap.setOnEditorActionListener(new bl(this));
+        this.ap.addTextChangedListener(new bm(this));
+        this.av.setOnClickListener(new bn(this));
+        linearLayout2.setOnClickListener(new bo(this));
+        this.ax.setOnClickListener(new bp(this));
+        this.f21463G.addView(textView, new LinearLayout.LayoutParams(-1, -1));
+        this.f21463G.setGravity(16);
+        layoutParams = new LinearLayout.LayoutParams(-1, C5216i.m17757a(getApplicationContext(), 40.0f));
+        this.f21463G.setPadding(0, C5216i.m17757a(getApplicationContext(), 3.0f), C5216i.m17757a(getApplicationContext(), 4.0f), C5216i.m17757a(getApplicationContext(), 3.0f));
+        this.f21462F.setGravity(3);
+        this.f21462F.addView(this.f21463G, layoutParams);
+        this.am = new View(this);
+        this.am.setId(C0965R.string.alert_disclaimer);
+        this.am.setBackgroundColor(C5167a.f21331C);
+        layoutParams = new LinearLayout.LayoutParams(-1, 1);
+        layoutParams.setMargins(0, C5216i.m17757a(getApplicationContext(), 3.0f), 0, C5216i.m17757a(getApplicationContext(), 3.0f));
+        this.f21462F.addView(this.am, layoutParams);
+        this.am.setVisibility(8);
+        this.f21480X = new LinearLayout(this);
+        this.f21480X.setOrientation(0);
+        this.f21480X.setPadding(0, C5216i.m17757a(getApplicationContext(), 8.0f), 0, C5216i.m17757a(getApplicationContext(), 8.0f));
+        this.f21480X.setId(C0965R.string.alert_delete_navi_cache);
+        this.f21480X.setVisibility(8);
+        this.f21481Y = new ArrayList();
+        Object byteArrayExtra = getIntent().getByteArrayExtra("shot");
+        if (byteArrayExtra == null || byteArrayExtra.length <= 0) {
+            this.f21481Y.add(C5223p.m17782a(this));
+            this.f21480X.setVisibility(8);
+        } else {
+            this.f21481Y.add(byteArrayExtra);
+            this.f21481Y.add(C5223p.m17783b(this));
+            this.f21480X.setVisibility(0);
         }
-        Object localObject1 = BitmapFactory.decodeByteArray((byte[])this.Y.get(i1), 0, ((byte[])this.Y.get(i1)).length);
-        if ((localObject1 == null) || (a((Bitmap)localObject1, i.a(getApplicationContext(), 45.0F)) == null)) {
-          break;
-        }
-        ((db)localObject3).setImageBitmap((Bitmap)localObject1);
-        localObject1 = new ImageButton(this);
-        ((ImageButton)localObject1).setTag(Integer.valueOf(i1));
-        ((ImageButton)localObject1).setBackgroundDrawable(null);
-        ((ImageButton)localObject1).setPadding(i.a(getApplicationContext(), 9.0F), 0, 0, i.a(getApplicationContext(), 9.0F));
-        ((ImageButton)localObject1).setScaleType(ImageView.ScaleType.FIT_XY);
-        localObject3 = p.a(getApplicationContext(), "ufo_delete_little_icon.png");
-        if (localObject3 == null) {
-          break;
-        }
-        ((ImageButton)localObject1).setImageBitmap((Bitmap)localObject3);
-        localObject3 = new RelativeLayout.LayoutParams(i.a(getApplicationContext(), 24.0F), i.a(getApplicationContext(), 24.0F));
-        ((RelativeLayout.LayoutParams)localObject3).addRule(11);
-        ((RelativeLayout.LayoutParams)localObject3).addRule(10);
-        ((RelativeLayout.LayoutParams)localObject3).setMargins(0, 0, 0, 0);
-        localRelativeLayout.addView((View)localObject1, (ViewGroup.LayoutParams)localObject3);
-        ((ImageButton)localObject1).setOnClickListener(new bd(this));
-        localObject1 = new LinearLayout.LayoutParams(i.a(getApplicationContext(), 48.0F), i.a(getApplicationContext(), 48.0F));
-        if (i1 != 0) {
-          break label727;
-        }
-        ((LinearLayout.LayoutParams)localObject1).setMargins(i.a(getApplicationContext(), 6.0F), 0, 0, 0);
-        ((LinearLayout.LayoutParams)localObject1).gravity = 80;
-        this.X.addView(localRelativeLayout, (ViewGroup.LayoutParams)localObject1);
-        i1 += 1;
-      }
-      catch (OutOfMemoryError localOutOfMemoryError1)
-      {
-        System.gc();
-        return;
-      }
-      ImageView localImageView = new ImageView(this);
-      localImageView.setTag(Integer.valueOf(i1));
-      localImageView.setBackgroundDrawable(null);
-      localImageView.setPadding(0, 0, 0, 0);
-      localImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-      localImageView.setMaxHeight(i.a(getApplicationContext(), 48.0F));
-      localImageView.setMinimumHeight(i.a(getApplicationContext(), 48.0F));
-      localImageView.setMaxWidth(i.a(getApplicationContext(), 48.0F));
-      localImageView.setMinimumWidth(i.a(getApplicationContext(), 48.0F));
-      localRelativeLayout.addView(localImageView, new RelativeLayout.LayoutParams(i.a(getApplicationContext(), 48.0F), i.a(getApplicationContext(), 48.0F)));
-      try
-      {
-        localObject3 = BitmapFactory.decodeByteArray((byte[])this.Y.get(i1), 0, ((byte[])this.Y.get(i1)).length);
-        if ((localObject3 == null) || (a((Bitmap)localObject3, i.a(getApplicationContext(), 45.0F)) == null)) {
-          break;
-        }
-        localImageView.setImageBitmap((Bitmap)localObject3);
-        localImageView.setOnClickListener(new bf(this));
-      }
-      catch (OutOfMemoryError localOutOfMemoryError2)
-      {
-        System.gc();
-        return;
-      }
-      label727:
-      localOutOfMemoryError2.setMargins(i.a(getApplicationContext(), 10.0F), 0, 0, 0);
-      continue;
-      label747:
-      Object localObject2 = null;
-    }
-  }
-  
-  protected final void a(View paramView)
-  {
-    Object localObject = new Button(this);
-    ((Button)localObject).setBackgroundDrawable(null);
-    ((Button)localObject).setText("复制");
-    ((Button)localObject).setTextSize(12.0F);
-    ((Button)localObject).setTextColor(-1);
-    ((Button)localObject).setGravity(17);
-    localObject = new PopupWindow((View)localObject, i.a(getApplicationContext(), 60.0F), i.a(getApplicationContext(), 35.0F), true);
-    ((PopupWindow)localObject).setTouchable(true);
-    ((PopupWindow)localObject).getContentView().setOnClickListener(new bi(this, paramView, (PopupWindow)localObject));
-    ((PopupWindow)localObject).setTouchInterceptor(new bj(this));
-    try
-    {
-      ((PopupWindow)localObject).setBackgroundDrawable(r.a(this, "ufo_loading_bg.9.png"));
-      ((PopupWindow)localObject).showAsDropDown(paramView);
-      return;
-    }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        localException.printStackTrace();
-      }
-    }
-  }
-  
-  public boolean dispatchKeyEvent(KeyEvent paramKeyEvent)
-  {
-    if ((paramKeyEvent.getKeyCode() == 4) && (paramKeyEvent.getAction() == 1))
-    {
-      this.c = true;
-      a();
-      return false;
-    }
-    return super.dispatchKeyEvent(paramKeyEvent);
-  }
-  
-  public boolean dispatchTouchEvent(MotionEvent paramMotionEvent)
-  {
-    int i2 = 1;
-    if (paramMotionEvent.getAction() == 0)
-    {
-      LinearLayout localLinearLayout = this.F;
-      Object localObject;
-      int i1;
-      int i3;
-      if ((localLinearLayout != null) && ((localLinearLayout instanceof LinearLayout)))
-      {
-        localObject = new int[2];
-        localLinearLayout.getLocationInWindow((int[])localObject);
-        i1 = localObject[0];
-        i3 = localObject[1];
-        int i4 = localLinearLayout.getHeight();
-        int i5 = localLinearLayout.getWidth();
-        if ((paramMotionEvent.getX() <= i1) || (paramMotionEvent.getX() >= i5 + i1) || (paramMotionEvent.getY() <= i3) || (paramMotionEvent.getY() >= i4 + i3))
-        {
-          i1 = i2;
-          if (this.aj != null) {
-            localObject = this.aj.iterator();
-          }
-        }
-      }
-      label285:
-      for (;;)
-      {
-        if (!((Iterator)localObject).hasNext())
-        {
-          i1 = i2;
-          if (i1 != 0)
-          {
-            localObject = (InputMethodManager)getSystemService("input_method");
-            if (localObject != null) {
-              ((InputMethodManager)localObject).hideSoftInputFromWindow(localLinearLayout.getWindowToken(), 0);
-            }
-          }
-          return super.dispatchTouchEvent(paramMotionEvent);
-        }
-        View localView = (View)((Iterator)localObject).next();
-        int[] arrayOfInt = new int[2];
-        localView.getLocationOnScreen(arrayOfInt);
-        i1 = arrayOfInt[0];
-        i3 = arrayOfInt[1];
-        if ((paramMotionEvent.getX() < i1) || (paramMotionEvent.getX() > i1 + localView.getWidth()) || (paramMotionEvent.getY() < i3) || (paramMotionEvent.getY() > localView.getHeight() + i3)) {}
-        for (i1 = 0;; i1 = 1)
-        {
-          if (i1 == 0) {
-            break label285;
-          }
-          i1 = 0;
-          break;
-        }
-      }
-    }
-    if (getWindow().superDispatchTouchEvent(paramMotionEvent)) {
-      return true;
-    }
-    return onTouchEvent(paramMotionEvent);
-  }
-  
-  protected void onActivityResult(int paramInt1, int paramInt2, Intent paramIntent)
-  {
-    super.onActivityResult(paramInt1, paramInt2, paramIntent);
-    Object localObject1;
-    if (!this.an)
-    {
-      localObject1 = new com.baidu.ufosdk.util.d(this);
-      ((com.baidu.ufosdk.util.d)localObject1).c(((com.baidu.ufosdk.util.d)localObject1).c() + 1);
-      this.an = true;
-    }
-    if (paramInt2 != -1) {}
-    do
-    {
-      return;
-      this.W = false;
-    } while (paramIntent == null);
-    for (;;)
-    {
-      try
-      {
-        localObject1 = paramIntent.getData();
-        if (localObject1 == null) {
-          break;
-        }
-        try
-        {
-          paramIntent = getContentResolver().openInputStream((Uri)localObject1);
-          if (paramIntent.available() >= 3145728) {
-            continue;
-          }
-          localObject3 = new byte['Ѐ'];
-          localObject4 = new ByteArrayOutputStream();
-          paramInt2 = paramIntent.read((byte[])localObject3);
-          if (paramInt2 != -1) {
-            continue;
-          }
-          localObject3 = ((ByteArrayOutputStream)localObject4).toByteArray();
-          ((ByteArrayOutputStream)localObject4).close();
-          paramIntent.close();
-          if (localObject3 != null) {
-            break label263;
-          }
-          paramIntent = (Intent)localObject3;
-          try
-          {
-            Toast.makeText(this, u.a("21"), 1).show();
-            return;
-          }
-          catch (Exception localException1) {}
-        }
-        catch (Exception localException2)
-        {
-          Object localObject3;
-          Object localObject4;
-          Object localObject2;
-          long l1;
-          paramIntent = null;
-          continue;
-        }
-        System.out.println(localException1.getMessage());
-        if (paramInt1 != this.Y.size() - 1) {
-          break label429;
-        }
-        this.Y.set(paramInt1, paramIntent);
-        this.Y.add(p.b(this));
-        b();
-        this.ap.setFocusable(true);
-        this.ap.setFocusableInTouchMode(true);
-        return;
-      }
-      catch (Exception paramIntent)
-      {
-        localObject2 = null;
-        continue;
-        ((ByteArrayOutputStream)localObject4).write((byte[])localObject3, 0, paramInt2);
-        continue;
-        Toast.makeText(this, u.a("21"), 1).show();
-        return;
-      }
-      label263:
-      paramIntent = (Intent)localObject3;
-      localObject2 = t.a((byte[])localObject3, a((Uri)localObject2));
-      if (localObject2 == null)
-      {
-        paramIntent = (Intent)localObject2;
-        Toast.makeText(this, u.a("21"), 1).show();
-        return;
-      }
-      paramIntent = (Intent)localObject2;
-      paramInt2 = localObject2.length;
-      if (paramInt2 > 1048576)
-      {
-        Toast.makeText(this, u.a("21"), 1).show();
-        return;
-      }
-      paramIntent = (Intent)localObject2;
-      paramInt2 = localObject2.length;
-      if (paramInt2 == 0)
-      {
-        Toast.makeText(this, "图片选择错误，请重新选择一张。", 1).show();
-        return;
-      }
-      paramIntent = (Intent)localObject2;
-      localObject3 = (ActivityManager)getSystemService("activity");
-      paramIntent = (Intent)localObject2;
-      localObject4 = new ActivityManager.MemoryInfo();
-      paramIntent = (Intent)localObject2;
-      ((ActivityManager)localObject3).getMemoryInfo((ActivityManager.MemoryInfo)localObject4);
-      paramIntent = (Intent)localObject2;
-      l1 = ((ActivityManager.MemoryInfo)localObject4).availMem / 1024L;
-      if (l1 < 35000L)
-      {
-        Toast.makeText(this, "内存不足，图片读取失败，请尝试清理内存稍后再试.", 1).show();
-        System.gc();
-        return;
-        label429:
-        Toast.makeText(this, "内存不足，图片读取失败，请尝试清理内存稍后再试.", 1).show();
-        com.baidu.ufosdk.util.c.b("picBytesList--->clear");
-        this.Y.clear();
-        this.Y.add(p.b(this));
-      }
-      else
-      {
-        paramIntent = (Intent)localObject2;
-      }
-    }
-  }
-  
-  protected void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    requestWindowFeature(1);
-    setRequestedOrientation(1);
-    this.ab = getSharedPreferences("UfoSharePreference", 0);
-    this.aa = this.ab.edit();
-    this.aq = getIntent().getStringExtra("faq_id");
-    this.L = getIntent().getStringExtra("msgid");
-    this.at = getIntent().getStringExtra("no_result");
-    if (TextUtils.isEmpty(this.L)) {
-      this.L = "newMessage";
-    }
-    if (TextUtils.isEmpty(this.aq)) {
-      this.aq = "";
-    }
-    paramBundle = this.ab.getString("contact", "N/A");
-    com.baidu.ufosdk.util.c.a("************************加密后的联系方式：tempContactStr: " + paramBundle);
-    this.aw = m.b(paramBundle);
-    com.baidu.ufosdk.util.c.a("************************解密后的联系方式：contactStr: " + this.aw);
-    this.aa.putBoolean("ADD_PIC_FLAG", true);
-    this.aa.commit();
-    if (this.aw == null) {
-      this.aw = "";
-    }
-    com.baidu.ufosdk.a.h = getIntent().getIntExtra("feedback_channel", 0);
-    a = new ArrayList();
-    this.H = new RelativeLayout(this);
-    this.H.setId(2131296260);
-    this.H.setBackgroundColor(com.baidu.ufosdk.a.y);
-    Object localObject2 = new RelativeLayout(this);
-    ((RelativeLayout)localObject2).setId(2131296261);
-    new RelativeLayout(this).setId(2131296263);
-    this.J = new Button(this);
-    this.J.setText(u.a("23"));
-    paramBundle = new RelativeLayout.LayoutParams(-2, -2);
-    paramBundle.addRule(13);
-    this.H.addView(this.J, paramBundle);
-    this.J.setVisibility(8);
-    paramBundle = new LinearLayout(this);
-    paramBundle.setOrientation(0);
-    paramBundle.setGravity(16);
-    paramBundle.setBackgroundDrawable(p.a(getApplicationContext(), null, "ufo_back_layout_press.png"));
-    Object localObject1 = new LinearLayout.LayoutParams(i.a(getApplicationContext(), 18.0F), i.a(getApplicationContext(), 50.0F));
-    ((LinearLayout.LayoutParams)localObject1).setMargins(i.a(getApplicationContext(), 10.0F), 0, 0, 0);
-    this.I = new ImageView(this);
-    this.I.setId(2131296257);
-    this.I.setScaleType(ImageView.ScaleType.CENTER_CROP);
-    this.I.setBackgroundDrawable(new BitmapDrawable(p.a(getApplicationContext(), "ufo_back_icon.png")));
-    paramBundle.addView(this.I, (ViewGroup.LayoutParams)localObject1);
-    localObject1 = new TextView(this);
-    ((TextView)localObject1).setText(com.baidu.ufosdk.a.g);
-    ((TextView)localObject1).setTextSize(com.baidu.ufosdk.a.K);
-    ((TextView)localObject1).setTextColor(com.baidu.ufosdk.a.D);
-    ((TextView)localObject1).setGravity(16);
-    Object localObject3 = new LinearLayout.LayoutParams(-2, -2);
-    ((LinearLayout.LayoutParams)localObject3).setMargins(0, 0, i.a(getApplicationContext(), 8.0F), 0);
-    paramBundle.addView((View)localObject1, (ViewGroup.LayoutParams)localObject3);
-    localObject1 = new RelativeLayout.LayoutParams(-2, -2);
-    ((RelativeLayout.LayoutParams)localObject1).addRule(9);
-    ((RelativeLayout.LayoutParams)localObject1).addRule(15);
-    ((RelativeLayout)localObject2).addView(paramBundle, (ViewGroup.LayoutParams)localObject1);
-    localObject1 = new TextView(this);
-    ((TextView)localObject1).setId(2131296258);
-    ((TextView)localObject1).setTextColor(com.baidu.ufosdk.a.s);
-    ((TextView)localObject1).setTextSize(com.baidu.ufosdk.a.L);
-    ((TextView)localObject1).setGravity(17);
-    localObject3 = new RelativeLayout.LayoutParams(-2, -1);
-    ((RelativeLayout.LayoutParams)localObject3).addRule(13);
-    ((RelativeLayout)localObject2).addView((View)localObject1, (ViewGroup.LayoutParams)localObject3);
-    this.ax = new Button(this);
-    this.ax.setVisibility(8);
-    this.ax.setText(u.a("17"));
-    this.ax.setId(2131755010);
-    this.ax.setTextColor(com.baidu.ufosdk.a.t);
-    this.ax.setTextSize(com.baidu.ufosdk.a.S);
-    this.ax.setGravity(17);
-    this.ax.setTextColor(i.a(com.baidu.ufosdk.a.t, com.baidu.ufosdk.a.u, com.baidu.ufosdk.a.t, com.baidu.ufosdk.a.t));
-    this.ax.setBackgroundColor(16777215);
-    this.ax.setPadding(i.a(getApplicationContext(), 8.0F), 0, i.a(getApplicationContext(), 8.0F), 0);
-    localObject3 = new RelativeLayout.LayoutParams(-2, -2);
-    ((RelativeLayout.LayoutParams)localObject3).addRule(11);
-    ((RelativeLayout.LayoutParams)localObject3).addRule(15);
-    ((RelativeLayout.LayoutParams)localObject3).setMargins(0, 0, i.a(getApplicationContext(), 10.0F), 0);
-    ((RelativeLayout)localObject2).addView(this.ax, (ViewGroup.LayoutParams)localObject3);
-    try
-    {
-      ((RelativeLayout)localObject2).setBackgroundDrawable(new BitmapDrawable(p.a(getApplicationContext(), "ufo_nav_bg.png")));
-      localObject3 = new RelativeLayout.LayoutParams(-1, i.a(getApplicationContext(), 50.0F));
-      ((RelativeLayout.LayoutParams)localObject3).addRule(10);
-      this.H.addView((View)localObject2, (ViewGroup.LayoutParams)localObject3);
-      this.ac = i.b(this, u.a("25"));
-      localObject3 = new RelativeLayout.LayoutParams(-2, -2);
-      ((RelativeLayout.LayoutParams)localObject3).addRule(13);
-      this.H.addView(this.ac, (ViewGroup.LayoutParams)localObject3);
-      this.ac.setVisibility(8);
-      this.G = new LinearLayout(this);
-      this.G.setId(2131296273);
-      this.G.setOrientation(0);
-      this.F = new LinearLayout(this);
-      this.F.setId(2131296259);
-      this.F.setOrientation(1);
-      this.F.setBackgroundColor(com.baidu.ufosdk.a.E);
-      localObject3 = new RelativeLayout(this);
-      ((RelativeLayout)localObject3).setId(2131296265);
-      ((RelativeLayout)localObject3).setFocusable(true);
-      ((RelativeLayout)localObject3).setFocusableInTouchMode(true);
-      this.av = new TextView(this);
-      this.av.setText("发送");
-      this.av.setTextColor(com.baidu.ufosdk.a.w);
-      this.av.setTextSize(13.0F);
-      this.av.setGravity(17);
-      this.av.setId(2131296299);
-      this.av.setBackgroundColor(com.baidu.ufosdk.a.E);
-      this.av.setClickable(true);
-      Object localObject4 = new RelativeLayout.LayoutParams(-2, -1);
-      ((RelativeLayout.LayoutParams)localObject4).addRule(11);
-      ((RelativeLayout.LayoutParams)localObject4).addRule(15);
-      ((RelativeLayout.LayoutParams)localObject4).setMargins(i.a(getApplicationContext(), 7.0F), 0, 0, 0);
-      ((RelativeLayout)localObject3).addView(this.av, (ViewGroup.LayoutParams)localObject4);
-      localObject4 = new LinearLayout(this);
-      ((LinearLayout)localObject4).setOrientation(0);
-      ((LinearLayout)localObject4).setBackgroundDrawable(p.a(getApplicationContext(), null, "ufo_back_layout_press.png"));
-      ((LinearLayout)localObject4).setClickable(true);
-      ((LinearLayout)localObject4).setId(2131296300);
-      Object localObject5 = new ImageView(this);
-      ((ImageView)localObject5).setId(2131296267);
-      ((ImageView)localObject5).setScaleType(ImageView.ScaleType.CENTER_CROP);
-      ((ImageView)localObject5).setBackgroundDrawable(new BitmapDrawable(p.a(getApplicationContext(), "ufo_pluspic_icon.png")));
-      LinearLayout.LayoutParams localLayoutParams = new LinearLayout.LayoutParams(-1, -1);
-      localLayoutParams.setMargins(i.a(getApplicationContext(), 5.0F), i.a(getApplicationContext(), 5.0F), i.a(getApplicationContext(), 5.0F), i.a(getApplicationContext(), 5.0F));
-      ((LinearLayout)localObject4).addView((View)localObject5, localLayoutParams);
-      localObject5 = new RelativeLayout.LayoutParams(i.a(getApplicationContext(), 33.0F), i.a(getApplicationContext(), 33.0F));
-      ((RelativeLayout.LayoutParams)localObject5).addRule(15);
-      ((RelativeLayout.LayoutParams)localObject5).addRule(9);
-      ((RelativeLayout)localObject3).addView((View)localObject4, (ViewGroup.LayoutParams)localObject5);
-      this.ap = new EditText(this);
-      this.ap.setImeOptions(4);
-      this.ap.setInputType(262144);
-      this.ap.setSingleLine(false);
-      this.ap.setId(2131296266);
-      this.ap.setVisibility(0);
-      this.ap.setTextSize(14.0F);
-      this.ap.setGravity(16);
-      this.ap.setPadding(i.a(getApplicationContext(), 5.0F), 0, i.a(getApplicationContext(), 5.0F), 0);
-      localObject5 = new GradientDrawable();
-      ((GradientDrawable)localObject5).setStroke(1, -2697514);
-      float f1 = i.a(getApplicationContext(), 4.0F);
-      ((GradientDrawable)localObject5).setColor(-1);
-      ((GradientDrawable)localObject5).setCornerRadius(f1);
-      this.ap.setBackgroundDrawable((Drawable)localObject5);
-      localObject5 = new RelativeLayout.LayoutParams(-1, -1);
-      ((RelativeLayout.LayoutParams)localObject5).addRule(1, ((LinearLayout)localObject4).getId());
-      ((RelativeLayout.LayoutParams)localObject5).addRule(0, this.av.getId());
-      ((RelativeLayout.LayoutParams)localObject5).addRule(15);
-      ((RelativeLayout)localObject3).addView(this.ap, (ViewGroup.LayoutParams)localObject5);
-      this.ap.setOnEditorActionListener(new bl(this));
-      this.ap.addTextChangedListener(new bm(this));
-      this.av.setOnClickListener(new bn(this));
-      ((LinearLayout)localObject4).setOnClickListener(new bo(this));
-      this.ax.setOnClickListener(new bp(this));
-      localObject4 = new LinearLayout.LayoutParams(-1, -1);
-      this.G.addView((View)localObject3, (ViewGroup.LayoutParams)localObject4);
-      this.G.setGravity(16);
-      localObject3 = new LinearLayout.LayoutParams(-1, i.a(getApplicationContext(), 40.0F));
-      this.G.setPadding(0, i.a(getApplicationContext(), 3.0F), i.a(getApplicationContext(), 4.0F), i.a(getApplicationContext(), 3.0F));
-      this.F.setGravity(3);
-      this.F.addView(this.G, (ViewGroup.LayoutParams)localObject3);
-      this.am = new View(this);
-      this.am.setId(2131296272);
-      this.am.setBackgroundColor(com.baidu.ufosdk.a.C);
-      localObject3 = new LinearLayout.LayoutParams(-1, 1);
-      ((LinearLayout.LayoutParams)localObject3).setMargins(0, i.a(getApplicationContext(), 3.0F), 0, i.a(getApplicationContext(), 3.0F));
-      this.F.addView(this.am, (ViewGroup.LayoutParams)localObject3);
-      this.am.setVisibility(8);
-      this.X = new LinearLayout(this);
-      this.X.setOrientation(0);
-      this.X.setPadding(0, i.a(getApplicationContext(), 8.0F), 0, i.a(getApplicationContext(), 8.0F));
-      this.X.setId(2131296270);
-      this.X.setVisibility(8);
-      this.Y = new ArrayList();
-      localObject3 = getIntent().getByteArrayExtra("shot");
-      if ((localObject3 != null) && (localObject3.length > 0))
-      {
-        this.Y.add(localObject3);
-        this.Y.add(p.b(this));
-        this.X.setVisibility(0);
-        b();
-        localObject3 = new LinearLayout.LayoutParams(i.a(getApplicationContext(), 229.0F), i.a(getApplicationContext(), 64.0F));
-        this.F.addView(this.X, (ViewGroup.LayoutParams)localObject3);
-        localObject3 = new RelativeLayout.LayoutParams(-1, -2);
-        ((RelativeLayout.LayoutParams)localObject3).addRule(12);
-        this.F.setPadding(i.a(getApplicationContext(), 7.0F), i.a(getApplicationContext(), 5.0F), i.a(getApplicationContext(), 7.0F), i.a(getApplicationContext(), 5.0F));
-        this.F.bringToFront();
-        this.H.addView(this.F, (ViewGroup.LayoutParams)localObject3);
-        this.P = new ListView(this);
-        this.P.setBackgroundColor(com.baidu.ufosdk.a.F);
-        this.P.setDivider(new ColorDrawable(com.baidu.ufosdk.a.F));
-        this.P.setDividerHeight(0);
-        this.Q = new br(this, this);
-        this.P.setAdapter(this.Q);
-        this.P.setFocusable(false);
-        this.P.setCacheColorHint(com.baidu.ufosdk.a.F);
-        this.P.setClickable(false);
-        this.P.setTranscriptMode(2);
-        this.P.setRecyclerListener(new bq(this));
-        localObject3 = new LinearLayout(this);
-        ((LinearLayout)localObject3).setId(2131296315);
-        ((LinearLayout)localObject3).setBackgroundColor(0);
-        ((LinearLayout)localObject3).setOrientation(1);
-        ((LinearLayout)localObject3).setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
-        this.K = new LinearLayout(this);
-        this.K.setId(2131296283);
-        this.K.setBackgroundColor(com.baidu.ufosdk.a.F);
-        this.K.clearAnimation();
-        localObject4 = new LinearLayout.LayoutParams(-1, -1);
-        localObject5 = new RelativeLayout.LayoutParams(-1, -1);
-        ((RelativeLayout.LayoutParams)localObject5).addRule(3, ((RelativeLayout)localObject2).getId());
-        ((RelativeLayout.LayoutParams)localObject5).addRule(2, ((LinearLayout)localObject3).getId());
-        ((RelativeLayout.LayoutParams)localObject5).setMargins(0, 0, 0, 0);
-        this.K.addView(this.P, (ViewGroup.LayoutParams)localObject4);
-        this.H.addView(this.K, (ViewGroup.LayoutParams)localObject5);
+        m17653b();
+        this.f21462F.addView(this.f21480X, new LinearLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 229.0f), C5216i.m17757a(getApplicationContext(), 64.0f)));
+        layoutParams = new RelativeLayout.LayoutParams(-1, -2);
+        layoutParams.addRule(12);
+        this.f21462F.setPadding(C5216i.m17757a(getApplicationContext(), 7.0f), C5216i.m17757a(getApplicationContext(), 5.0f), C5216i.m17757a(getApplicationContext(), 7.0f), C5216i.m17757a(getApplicationContext(), 5.0f));
+        this.f21462F.bringToFront();
+        this.f21464H.addView(this.f21462F, layoutParams);
+        this.f21472P = new ListView(this);
+        this.f21472P.setBackgroundColor(C5167a.f21334F);
+        this.f21472P.setDivider(new ColorDrawable(C5167a.f21334F));
+        this.f21472P.setDividerHeight(0);
+        this.f21473Q = new br(this, this);
+        this.f21472P.setAdapter(this.f21473Q);
+        this.f21472P.setFocusable(false);
+        this.f21472P.setCacheColorHint(C5167a.f21334F);
+        this.f21472P.setClickable(false);
+        this.f21472P.setTranscriptMode(2);
+        this.f21472P.setRecyclerListener(new bq(this));
+        textView = new LinearLayout(this);
+        textView.setId(C0965R.string.carlife_feedback_content_num_count);
+        textView.setBackgroundColor(0);
+        textView.setOrientation(1);
+        textView.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
+        this.f21467K = new LinearLayout(this);
+        this.f21467K.setId(C0965R.string.alert_no_valid_data_info);
+        this.f21467K.setBackgroundColor(C5167a.f21334F);
+        this.f21467K.clearAnimation();
+        layoutParams3 = new LinearLayout.LayoutParams(-1, -1);
+        layoutParams5 = new RelativeLayout.LayoutParams(-1, -1);
+        layoutParams5.addRule(3, relativeLayout.getId());
+        layoutParams5.addRule(2, textView.getId());
+        layoutParams5.setMargins(0, 0, 0, 0);
+        this.f21467K.addView(this.f21472P, layoutParams3);
+        this.f21464H.addView(this.f21467K, layoutParams5);
         this.as = new LinearLayout(this);
-        this.as.setId(2131296269);
+        this.as.setId(C0965R.string.alert_delete_home_addr);
         this.as.setOrientation(0);
-        this.as.setBackgroundColor(com.baidu.ufosdk.a.G);
+        this.as.setBackgroundColor(C5167a.f21335G);
         this.as.setGravity(16);
         this.as.setVisibility(8);
-        localObject2 = new TextView(this);
-        ((TextView)localObject2).setText("以上内容是否解决了您的问题？");
-        ((TextView)localObject2).setTextColor(com.baidu.ufosdk.a.I);
-        ((TextView)localObject2).setSingleLine(false);
-        ((TextView)localObject2).setTextSize(12.0F);
-        ((TextView)localObject2).setGravity(17);
-        localObject4 = new LinearLayout.LayoutParams(-1, -1);
-        ((LinearLayout.LayoutParams)localObject4).setMargins(i.a(getApplicationContext(), 10.0F), 0, i.a(getApplicationContext(), 15.0F), 0);
-        ((LinearLayout.LayoutParams)localObject4).weight = 1.0F;
-        this.as.addView((View)localObject2, (ViewGroup.LayoutParams)localObject4);
-        localObject2 = new Button(this);
-        ((Button)localObject2).setText("解决了");
-        ((Button)localObject2).setTextColor(com.baidu.ufosdk.a.H);
-        ((Button)localObject2).setTextSize(13.0F);
-        ((Button)localObject2).setGravity(17);
-        ((Button)localObject2).setBackgroundDrawable(p.a(getApplicationContext(), "ufo_feedback_btn_defult.9.png", "ufo_feedback_btn_press.9.png"));
-        localObject4 = new LinearLayout.LayoutParams(-1, i.a(getApplicationContext(), 43.0F));
-        ((LinearLayout.LayoutParams)localObject4).weight = 1.0F;
-        this.as.addView((View)localObject2, (ViewGroup.LayoutParams)localObject4);
-        localObject4 = new View(this);
-        ((View)localObject4).setBackgroundColor(0);
-        localObject5 = new LinearLayout.LayoutParams(i.a(getApplicationContext(), 10.0F), -1);
-        this.as.addView((View)localObject4, (ViewGroup.LayoutParams)localObject5);
-        localObject4 = new Button(this);
-        ((Button)localObject4).setText("没有解决\n提交人工处理");
-        ((Button)localObject4).setTextColor(com.baidu.ufosdk.a.H);
-        ((Button)localObject4).setTextSize(10.0F);
-        ((Button)localObject4).setGravity(17);
-        ((Button)localObject4).setBackgroundDrawable(p.a(getApplicationContext(), "ufo_loading_bg_n.9.png", "ufo_loading_bg.9.png"));
-        localObject5 = new LinearLayout.LayoutParams(-1, i.a(getApplicationContext(), 45.0F));
-        ((LinearLayout.LayoutParams)localObject5).weight = 1.0F;
-        this.as.addView((View)localObject4, (ViewGroup.LayoutParams)localObject5);
-        ((Button)localObject2).setOnClickListener(new ao(this));
-        ((Button)localObject4).setOnClickListener(new aq(this));
-        localObject2 = new LinearLayout.LayoutParams(-1, i.a(getApplicationContext(), 60.0F));
+        relativeLayout = new TextView(this);
+        relativeLayout.setText("以上内容是否解决了您的问题？");
+        relativeLayout.setTextColor(C5167a.f21337I);
+        relativeLayout.setSingleLine(false);
+        relativeLayout.setTextSize(12.0f);
+        relativeLayout.setGravity(17);
+        layoutParams3 = new LinearLayout.LayoutParams(-1, -1);
+        layoutParams3.setMargins(C5216i.m17757a(getApplicationContext(), 10.0f), 0, C5216i.m17757a(getApplicationContext(), 15.0f), 0);
+        layoutParams3.weight = 1.0f;
+        this.as.addView(relativeLayout, layoutParams3);
+        relativeLayout = new Button(this);
+        relativeLayout.setText("解决了");
+        relativeLayout.setTextColor(C5167a.f21336H);
+        relativeLayout.setTextSize(13.0f);
+        relativeLayout.setGravity(17);
+        relativeLayout.setBackgroundDrawable(C5223p.m17781a(getApplicationContext(), "ufo_feedback_btn_defult.9.png", "ufo_feedback_btn_press.9.png"));
+        layoutParams3 = new LinearLayout.LayoutParams(-1, C5216i.m17757a(getApplicationContext(), 43.0f));
+        layoutParams3.weight = 1.0f;
+        this.as.addView(relativeLayout, layoutParams3);
+        linearLayout2 = new View(this);
+        linearLayout2.setBackgroundColor(0);
+        this.as.addView(linearLayout2, new LinearLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 10.0f), -1));
+        linearLayout2 = new Button(this);
+        linearLayout2.setText("没有解决\n提交人工处理");
+        linearLayout2.setTextColor(C5167a.f21336H);
+        linearLayout2.setTextSize(10.0f);
+        linearLayout2.setGravity(17);
+        linearLayout2.setBackgroundDrawable(C5223p.m17781a(getApplicationContext(), "ufo_loading_bg_n.9.png", "ufo_loading_bg.9.png"));
+        layoutParams5 = new LinearLayout.LayoutParams(-1, C5216i.m17757a(getApplicationContext(), 45.0f));
+        layoutParams5.weight = 1.0f;
+        this.as.addView(linearLayout2, layoutParams5);
+        relativeLayout.setOnClickListener(new ao(this));
+        linearLayout2.setOnClickListener(new aq(this));
+        LayoutParams layoutParams6 = new LinearLayout.LayoutParams(-1, C5216i.m17757a(getApplicationContext(), 60.0f));
         this.as.bringToFront();
-        this.as.setPadding(i.a(getApplicationContext(), 0.0F), i.a(getApplicationContext(), 0.0F), i.a(getApplicationContext(), 15.0F), i.a(getApplicationContext(), 0.0F));
-        ((LinearLayout)localObject3).addView(this.as, (ViewGroup.LayoutParams)localObject2);
-        this.T = new View(this);
-        this.T.setId(2131296268);
-        this.T.setBackgroundColor(-2236963);
-        localObject2 = new LinearLayout.LayoutParams(-1, 1);
-        ((LinearLayout)localObject3).addView(this.T, (ViewGroup.LayoutParams)localObject2);
-        localObject2 = new RelativeLayout.LayoutParams(-1, -2);
-        ((RelativeLayout.LayoutParams)localObject2).addRule(2, this.F.getId());
-        this.H.addView((View)localObject3, (ViewGroup.LayoutParams)localObject2);
-        this.E = new LinearLayout(this);
-        this.E.setOrientation(1);
-        new LinearLayout.LayoutParams(-2, -2);
-        localObject2 = new ImageView(this);
-        localObject3 = new LinearLayout.LayoutParams(i.a(getApplicationContext(), 115.0F), i.a(getApplicationContext(), 101.0F));
-      }
-    }
-    catch (Exception localException3)
-    {
-      try
-      {
-        ((ImageView)localObject2).setBackgroundDrawable(r.a(getApplicationContext(), "ufo_no_netwrok.png"));
-        this.E.addView((View)localObject2, (ViewGroup.LayoutParams)localObject3);
-        this.U = new TextView(this);
-        this.U.setPadding(i.a(getApplicationContext(), 10.0F), i.a(getApplicationContext(), 18.0F), i.a(getApplicationContext(), 10.0F), i.a(getApplicationContext(), 11.0F));
-        this.U.setTextSize(com.baidu.ufosdk.a.M);
-        this.U.setTextColor(-10066330);
-        localObject2 = new LinearLayout.LayoutParams(-2, -2);
-        i.a(getApplicationContext(), this.U);
-        this.E.addView(this.U, (ViewGroup.LayoutParams)localObject2);
-        this.J = new Button(this);
-        this.J.setText(u.a("22"));
-        this.J.setTextSize(com.baidu.ufosdk.a.N);
-        this.J.setTextColor(-13421773);
-      }
-      catch (Exception localException3)
-      {
-        try
-        {
-          for (;;)
-          {
-            this.J.setBackgroundDrawable(p.a(getApplicationContext(), "ufo_reload_btn_defult.9.png", "ufo_reload_btn_press.9.png"));
-            localObject2 = new LinearLayout.LayoutParams(i.a(getApplicationContext(), 122.0F), i.a(getApplicationContext(), 40.0F));
-            this.E.addView(this.J, (ViewGroup.LayoutParams)localObject2);
-            localObject2 = new RelativeLayout.LayoutParams(-2, -2);
-            ((RelativeLayout.LayoutParams)localObject2).addRule(13);
-            this.H.addView(this.E, (ViewGroup.LayoutParams)localObject2);
-            this.E.setGravity(17);
-            this.E.setVisibility(8);
-            localObject2 = new ViewGroup.LayoutParams(-1, -1);
-            setContentView(this.H, (ViewGroup.LayoutParams)localObject2);
-            this.R = i.b(this, u.a("13"));
-            localObject2 = new RelativeLayout.LayoutParams(i.a(getApplicationContext(), 114.0F), i.a(getApplicationContext(), 39.0F));
-            ((RelativeLayout.LayoutParams)localObject2).addRule(13);
-            this.H.addView(this.R, (ViewGroup.LayoutParams)localObject2);
-            if (UfoSDK.clientid.length() != 0) {
-              break;
-            }
-            Toast.makeText(getApplicationContext(), u.a("18"), 1).show();
-            paramBundle = new Intent(this, FeedbackListActivity.class);
-            paramBundle.putExtra("feedback_channel", com.baidu.ufosdk.a.h);
-            startActivity(paramBundle);
+        this.as.setPadding(C5216i.m17757a(getApplicationContext(), 0.0f), C5216i.m17757a(getApplicationContext(), 0.0f), C5216i.m17757a(getApplicationContext(), 15.0f), C5216i.m17757a(getApplicationContext(), 0.0f));
+        textView.addView(this.as, layoutParams6);
+        this.f21476T = new View(this);
+        this.f21476T.setId(C0965R.string.alert_delete_comp_addr);
+        this.f21476T.setBackgroundColor(-2236963);
+        textView.addView(this.f21476T, new LinearLayout.LayoutParams(-1, 1));
+        layoutParams6 = new RelativeLayout.LayoutParams(-1, -2);
+        layoutParams6.addRule(2, this.f21462F.getId());
+        this.f21464H.addView(textView, layoutParams6);
+        this.f21461E = new LinearLayout(this);
+        this.f21461E.setOrientation(1);
+        LinearLayout.LayoutParams layoutParams7 = new LinearLayout.LayoutParams(-2, -2);
+        relativeLayout = new ImageView(this);
+        layoutParams3 = new LinearLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 115.0f), C5216i.m17757a(getApplicationContext(), 101.0f));
+        try {
+            relativeLayout.setBackgroundDrawable(C5225r.m17786a(getApplicationContext(), "ufo_no_netwrok.png"));
+        } catch (Exception e2) {
+            e2.printStackTrace();
+        }
+        this.f21461E.addView(relativeLayout, layoutParams3);
+        this.f21477U = new TextView(this);
+        this.f21477U.setPadding(C5216i.m17757a(getApplicationContext(), 10.0f), C5216i.m17757a(getApplicationContext(), 18.0f), C5216i.m17757a(getApplicationContext(), 10.0f), C5216i.m17757a(getApplicationContext(), 11.0f));
+        this.f21477U.setTextSize(C5167a.f21341M);
+        this.f21477U.setTextColor(-10066330);
+        layoutParams = new LinearLayout.LayoutParams(-2, -2);
+        C5216i.m17762a(getApplicationContext(), this.f21477U);
+        this.f21461E.addView(this.f21477U, layoutParams);
+        this.f21466J = new Button(this);
+        this.f21466J.setText(C5228u.m17794a("22"));
+        this.f21466J.setTextSize(C5167a.f21342N);
+        this.f21466J.setTextColor(-13421773);
+        try {
+            this.f21466J.setBackgroundDrawable(C5223p.m17781a(getApplicationContext(), "ufo_reload_btn_defult.9.png", "ufo_reload_btn_press.9.png"));
+        } catch (Exception e22) {
+            e22.printStackTrace();
+        }
+        this.f21461E.addView(this.f21466J, new LinearLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 122.0f), C5216i.m17757a(getApplicationContext(), 40.0f)));
+        layoutParams = new RelativeLayout.LayoutParams(-2, -2);
+        layoutParams.addRule(13);
+        this.f21464H.addView(this.f21461E, layoutParams);
+        this.f21461E.setGravity(17);
+        this.f21461E.setVisibility(8);
+        setContentView(this.f21464H, new LayoutParams(-1, -1));
+        this.f21474R = C5216i.m17765b(this, C5228u.m17794a("13"));
+        layoutParams = new RelativeLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 114.0f), C5216i.m17757a(getApplicationContext(), 39.0f));
+        layoutParams.addRule(13);
+        this.f21464H.addView(this.f21474R, layoutParams);
+        if (UfoSDK.clientid.length() == 0) {
+            Toast.makeText(getApplicationContext(), C5228u.m17794a("18"), 1).show();
+            Intent intent = new Intent(this, FeedbackListActivity.class);
+            intent.putExtra("feedback_channel", C5167a.f21362h);
+            startActivity(intent);
             finish();
             return;
-            localException2 = localException2;
-            localException2.printStackTrace();
-            continue;
-            this.Y.add(p.a(this));
-            this.X.setVisibility(8);
-          }
-          localException3 = localException3;
-          localException3.printStackTrace();
         }
-        catch (Exception localException1)
-        {
-          for (;;)
-          {
-            localException1.printStackTrace();
-          }
-          this.D = getIntent();
-          this.L = this.D.getStringExtra("msgid");
-          if (this.L == null) {
-            break label3768;
-          }
+        this.f21460D = getIntent();
+        this.f21468L = this.f21460D.getStringExtra("msgid");
+        if (this.f21468L == null || this.f21468L.length() <= 0 || this.f21468L.equals("newMessage")) {
+            textView2.setText("意见反馈");
+            if (UfoSDK.isShowFeedbackBtn) {
+                this.ax.setVisibility(0);
+            } else {
+                this.ax.setVisibility(8);
+            }
+            this.af = true;
+            this.au = false;
+            this.f21485e = false;
+            this.f21474R.setVisibility(8);
+            this.ac.setVisibility(8);
+            this.ak.obtainMessage(5, "newMessage").sendToTarget();
+        } else {
+            textView2.setText("反馈详情");
+            this.ax.setVisibility(8);
+            this.af = false;
+            this.au = true;
+            this.f21485e = true;
+            this.f21475S = Executors.newSingleThreadExecutor();
+            this.f21475S.execute(new as(this));
         }
-      }
+        linearLayout.setOnClickListener(new at(this));
+        this.f21462F.setOnClickListener(new au(this));
+        this.f21466J.setOnClickListener(new av(this));
     }
-    if ((this.L.length() > 0) && (!this.L.equals("newMessage")))
-    {
-      ((TextView)localObject1).setText("反馈详情");
-      this.ax.setVisibility(8);
-      this.af = false;
-      this.au = true;
-      this.e = true;
-      this.S = Executors.newSingleThreadExecutor();
-      this.S.execute(new as(this));
-      paramBundle.setOnClickListener(new at(this));
-      this.F.setOnClickListener(new au(this));
-      this.J.setOnClickListener(new av(this));
-      return;
+
+    public boolean dispatchKeyEvent(KeyEvent keyEvent) {
+        if (keyEvent.getKeyCode() != 4 || keyEvent.getAction() != 1) {
+            return super.dispatchKeyEvent(keyEvent);
+        }
+        this.f21483c = true;
+        m17642a();
+        return false;
     }
-    label3768:
-    ((TextView)localObject1).setText("意见反馈");
-    if (UfoSDK.isShowFeedbackBtn) {
-      this.ax.setVisibility(0);
+
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        int i = 1;
+        if (motionEvent.getAction() == 0) {
+            InputMethodManager inputMethodManager;
+            View view = this.f21462F;
+            if (view != null && (view instanceof LinearLayout)) {
+                int[] iArr = new int[2];
+                view.getLocationInWindow(iArr);
+                int i2 = iArr[0];
+                int i3 = iArr[1];
+                int height = view.getHeight() + i3;
+                int width = view.getWidth() + i2;
+                if (motionEvent.getX() <= ((float) i2) || motionEvent.getX() >= ((float) width) || motionEvent.getY() <= ((float) i3) || motionEvent.getY() >= ((float) height)) {
+                    if (this.aj != null) {
+                        Iterator it = this.aj.iterator();
+                        while (it.hasNext()) {
+                            View view2 = (View) it.next();
+                            int[] iArr2 = new int[2];
+                            view2.getLocationOnScreen(iArr2);
+                            width = iArr2[0];
+                            height = iArr2[1];
+                            if (motionEvent.getX() < ((float) width) || motionEvent.getX() > ((float) (width + view2.getWidth())) || motionEvent.getY() < ((float) height) || motionEvent.getY() > ((float) (view2.getHeight() + height))) {
+                                i3 = 0;
+                                continue;
+                            } else {
+                                i3 = 1;
+                                continue;
+                            }
+                            if (i3 != 0) {
+                            }
+                        }
+                    }
+                    if (i != 0) {
+                        inputMethodManager = (InputMethodManager) getSystemService("input_method");
+                        if (inputMethodManager != null) {
+                            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
+                    }
+                    return super.dispatchTouchEvent(motionEvent);
+                }
+            }
+            i = 0;
+            if (i != 0) {
+                inputMethodManager = (InputMethodManager) getSystemService("input_method");
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+            return super.dispatchTouchEvent(motionEvent);
+        } else if (getWindow().superDispatchTouchEvent(motionEvent)) {
+            return true;
+        } else {
+            return onTouchEvent(motionEvent);
+        }
     }
-    for (;;)
-    {
-      this.af = true;
-      this.au = false;
-      this.e = false;
-      this.R.setVisibility(8);
-      this.ac.setVisibility(8);
-      this.ak.obtainMessage(5, "newMessage").sendToTarget();
-      break;
-      this.ax.setVisibility(8);
+
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        return super.onTouchEvent(motionEvent);
     }
-  }
-  
-  protected void onDestroy()
-  {
-    super.onDestroy();
-    com.baidu.ufosdk.util.a.a = null;
-  }
-  
-  public void onPause()
-  {
-    super.onPause();
-    super.onPause();
-    this.aa.putString("contactWay", null);
-    if (this.ar)
-    {
-      if (TextUtils.isEmpty(this.aq)) {
-        break label95;
-      }
-      this.aa.putString(this.aq, this.ap.getText().toString());
+
+    /* renamed from: a */
+    private void m17642a() {
+        if (this.ac.getVisibility() == 0) {
+            this.ac.setVisibility(8);
+            this.ao = false;
+            this.av.setTextColor(C5216i.m17759a(C5167a.f21377w, C5167a.f21378x, C5167a.f21377w, C5167a.f21377w));
+            this.ap.setEnabled(true);
+            return;
+        }
+        if (f21455a != null) {
+            f21455a.clear();
+        }
+        getApplicationContext();
+        new cb(this).execute(new Void[0]);
     }
-    for (;;)
-    {
-      this.aa.commit();
-      if (this.N != null)
-      {
-        this.N.a();
-        this.N = null;
-      }
-      return;
-      label95:
-      this.aa.putString(this.L, this.ap.getText().toString());
+
+    /* renamed from: J */
+    static /* synthetic */ void m17630J(FeedbackInputActivity feedbackInputActivity) {
+        feedbackInputActivity.as.setVisibility(8);
+        if (!feedbackInputActivity.ao) {
+            if (feedbackInputActivity.ap.getText().toString().trim().length() <= 0) {
+                Toast.makeText(feedbackInputActivity, C5228u.m17794a(PerformStatItem.DATA_HANDLE_AFTER_LIGHT_STEP_INDEX), 0).show();
+            } else if (feedbackInputActivity.ap.getText().toString().trim().length() > C5167a.af) {
+                Toast.makeText(feedbackInputActivity, C5228u.m17794a("16"), 0).show();
+            } else if (C5170c.m17557b(feedbackInputActivity.getApplicationContext()).contains("UNKNOWN") || C5170c.m17557b(feedbackInputActivity.getApplicationContext()).contains("NONE")) {
+                Toast.makeText(feedbackInputActivity, C5228u.m17794a("18"), 1).show();
+            } else if (UfoSDK.clientid.length() == 0) {
+                Toast.makeText(feedbackInputActivity, C5228u.m17794a("18"), 1).show();
+                new Thread(new ax(feedbackInputActivity)).start();
+            } else {
+                if (!(feedbackInputActivity.getCurrentFocus() == null || feedbackInputActivity.getCurrentFocus().getWindowToken() == null)) {
+                    ((InputMethodManager) feedbackInputActivity.getSystemService("input_method")).hideSoftInputFromWindow(feedbackInputActivity.getCurrentFocus().getWindowToken(), 2);
+                }
+                feedbackInputActivity.ao = true;
+                feedbackInputActivity.av.setTextColor(C5167a.f21378x);
+                feedbackInputActivity.ap.setEnabled(false);
+                C5210c.m17734b("000000000000000000000000000 联系方式：" + feedbackInputActivity.aw + "  msgId : " + feedbackInputActivity.f21468L);
+                if (!feedbackInputActivity.f21468L.equals("newMessage") || !UfoSDK.contactDialogSwitch) {
+                    feedbackInputActivity.ac.setVisibility(0);
+                    feedbackInputActivity.ac.bringToFront();
+                    new Thread(new ay(feedbackInputActivity)).start();
+                } else if (feedbackInputActivity.aw == null || feedbackInputActivity.aw.equals("null")) {
+                    feedbackInputActivity.m17650a("");
+                } else {
+                    feedbackInputActivity.m17650a(feedbackInputActivity.aw);
+                }
+            }
+        }
     }
-  }
-  
-  protected void onRestart()
-  {
-    super.onRestart();
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    if (com.baidu.ufosdk.a.ah != null) {
-      com.baidu.ufosdk.a.ah.onResumeCallback();
+
+    /* renamed from: P */
+    static /* synthetic */ void m17636P(FeedbackInputActivity feedbackInputActivity) {
+        int i = 0;
+        if (feedbackInputActivity.f21481Y.size() < 2) {
+            if (feedbackInputActivity.m17651a(feedbackInputActivity.getApplicationContext(), UfoSDK.clientid, feedbackInputActivity.f21468L, C5167a.f21364j + feedbackInputActivity.ap.getText().toString() + C5167a.f21365k, feedbackInputActivity.aw, null, feedbackInputActivity.ak)) {
+                C5210c.m17734b("反馈发送成功！--" + feedbackInputActivity.ap.getText().toString());
+                feedbackInputActivity.ak.obtainMessage(1, feedbackInputActivity.ap.getText().toString()).sendToTarget();
+                if ((!UfoSDK.robotAnswer || !feedbackInputActivity.af) && !feedbackInputActivity.f21468L.contains("newMessage") && !feedbackInputActivity.f21484d) {
+                    feedbackInputActivity.ak.obtainMessage(8).sendToTarget();
+                    return;
+                }
+                return;
+            }
+            C5210c.m17736d("反馈发送失败！");
+            return;
+        }
+        JSONArray jSONArray = new JSONArray();
+        for (int i2 = 0; i2 < feedbackInputActivity.f21481Y.size() - 1; i2++) {
+            jSONArray.put(Base64.encodeToString((byte[]) feedbackInputActivity.f21481Y.get(i2), 0));
+        }
+        if (jSONArray.toString().length() < 2097152) {
+            if (feedbackInputActivity.m17651a(feedbackInputActivity.getApplicationContext(), UfoSDK.clientid, feedbackInputActivity.f21468L, C5167a.f21364j + feedbackInputActivity.ap.getText().toString() + C5167a.f21365k, feedbackInputActivity.aw, jSONArray.toString(), feedbackInputActivity.ak)) {
+                feedbackInputActivity.ak.obtainMessage(1, feedbackInputActivity.ap.getText().toString()).sendToTarget();
+                while (i < feedbackInputActivity.f21481Y.size() - 1) {
+                    feedbackInputActivity.ak.obtainMessage(3, feedbackInputActivity.f21481Y.get(i)).sendToTarget();
+                    i++;
+                }
+                if ((!UfoSDK.robotAnswer || !feedbackInputActivity.af) && !feedbackInputActivity.f21468L.contains("newMessage") && !feedbackInputActivity.f21484d) {
+                    feedbackInputActivity.ak.obtainMessage(8).sendToTarget();
+                    return;
+                }
+                return;
+            }
+            C5210c.m17736d("发送失败");
+            return;
+        }
+        Toast.makeText(feedbackInputActivity, C5228u.m17794a("21"), 1).show();
     }
-    this.J.setText(u.a("22"));
-    i.a((RelativeLayout)this.R, u.a("13"));
-    if ((this.L != null) && (this.L.length() > 0))
-    {
-      if (this.N == null) {
-        this.N = new com.baidu.ufosdk.a.a(getApplicationContext(), this.L);
-      }
-      this.N.b();
-      if (!this.N.isAlive()) {
-        this.N.start();
-      }
+
+    /* renamed from: a */
+    private boolean m17651a(Context context, String str, String str2, String str3, String str4, String str5, Handler handler) {
+        boolean z;
+        int i;
+        long availableBlocks;
+        if (C5167a.ai != null) {
+            C5167a.ai.onSubmitMessageBeforeCallback(str3, str2.contains("newMessage") ? null : str2);
+        }
+        String str6 = C5167a.as;
+        Map hashMap = new HashMap();
+        hashMap.put("clientid", str);
+        hashMap.put(SpeechConstant.APP_ID, UfoSDK.appid);
+        hashMap.put("devid", UfoSDK.devid);
+        if (UfoSDK.robotAnswer && this.af) {
+            hashMap.put("answerPerson", "robot");
+        }
+        if (!str2.contains("newMessage")) {
+            hashMap.put("id", str2);
+        }
+        hashMap.put("content", str3);
+        if (str4 == null) {
+            z = false;
+        } else {
+            z = Pattern.compile("[a-zA-Z_]{1,}[0-9]{0,}@(([a-zA-z0-9]-*){1,}\\.){1,3}[a-zA-z\\-]{1,}").matcher(str4).matches();
+        }
+        if (z) {
+            i = 1;
+        } else {
+            if (str4 == null) {
+                z = false;
+            } else {
+                z = Pattern.compile("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0-9]))\\d{8}$").matcher(str4).matches();
+            }
+            if (z) {
+                i = 2;
+            } else {
+                if (str4 == null) {
+                    z = false;
+                } else {
+                    z = Pattern.compile("^[1-9][0-9]{4,}$").matcher(str4).matches();
+                }
+                if (z) {
+                    i = 3;
+                } else {
+                    i = 0;
+                }
+            }
+        }
+        C5210c.m17735c("contactWay is " + str4);
+        if (i == 0) {
+            hashMap.put("contact_way", str4);
+        } else if (i == 1) {
+            C5210c.m17735c("contactWay is email");
+            hashMap.put("email", str4);
+        } else if (i == 2) {
+            C5210c.m17735c("contactWay is tel");
+            hashMap.put(SearchParamKey.TEL, str4);
+        } else {
+            C5210c.m17735c("contactWay is qq");
+            hashMap.put("qq", str4);
+        }
+        hashMap.put("brand", Build.MANUFACTURER);
+        hashMap.put("model", Build.MODEL);
+        hashMap.put("sdkvn", "1.7.13");
+        hashMap.put("os", "android");
+        hashMap.put("appvn", C5171d.m17561c());
+        String str7 = "freespace";
+        if (C5226s.m17792a("android.permission.MOUNT_UNMOUNT_FILESYSTEMS")) {
+            StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
+            availableBlocks = ((long) statFs.getAvailableBlocks()) * ((long) statFs.getBlockSize());
+        } else {
+            availableBlocks = -1;
+        }
+        hashMap.put(str7, String.valueOf(availableBlocks));
+        hashMap.put("uid", C5167a.f21356b);
+        hashMap.put("osvn", VERSION.RELEASE);
+        hashMap.put("extra", C5167a.f21358d);
+        hashMap.put("extend_feedback_channel", Integer.valueOf(C5167a.f21362h));
+        hashMap.put("osvc", String.valueOf(C5219l.m17768a()));
+        hashMap.put("referer", C5167a.f21368n);
+        hashMap.put("baiducuid", C5167a.f21357c);
+        if (!TextUtils.isEmpty(this.aq)) {
+            hashMap.put("faq_id", this.aq);
+        }
+        hashMap.put("phonetime", String.valueOf(System.currentTimeMillis()));
+        if (C5226s.m17792a("android.permission.ACCESS_NETWORK_STATE")) {
+            hashMap.put("nettype", C5170c.m17556a(context));
+        } else {
+            hashMap.put("nettype", "N/A");
+        }
+        hashMap.put("screenSize", C5172e.m17563b(context));
+        if (C5167a.f21355a) {
+            hashMap.put("logcat", C5168a.m17555a());
+        }
+        if (!TextUtils.isEmpty(C5167a.f21360f)) {
+            hashMap.put("ip_location", C5167a.f21360f);
+        }
+        String a = C5220m.m17770a(C5174a.m17564a(hashMap));
+        try {
+            if (TextUtils.isEmpty(str5)) {
+                a = "sdk_encrypt=" + URLEncoder.encode(a, "UTF-8");
+            } else {
+                a = "sdk_encrypt=" + URLEncoder.encode(a, "UTF-8") + "&screenshot=" + URLEncoder.encode(str5, "UTF-8");
+            }
+            Object a2 = C5181b.m17578a(str6, a);
+            if (!TextUtils.isEmpty(a2)) {
+                JSONObject jSONObject = new JSONObject(C5220m.m17773b(a2));
+                C5210c.m17732a("response is -----------------> " + jSONObject.toString());
+                if (UfoSDK.robotAnswer && this.af) {
+                    if (jSONObject.has("round")) {
+                        this.ad = ((Integer) jSONObject.get("round")).intValue();
+                    } else {
+                        this.af = false;
+                    }
+                }
+                if (((Integer) jSONObject.get(C2125n.f6745M)).intValue() == 0) {
+                    UfoSDK.neverFeedback = false;
+                    UfoSDK.lastSendTime = System.currentTimeMillis();
+                    Editor edit = context.getSharedPreferences("UfoSharePreference", 0).edit();
+                    edit.putBoolean("UfoNeverFeedback", false);
+                    edit.putLong("Ufolastsendtime", UfoSDK.lastSendTime);
+                    edit.commit();
+                    a = String.valueOf(jSONObject.get("id"));
+                    if (C5167a.ai != null) {
+                        C5167a.ai.onSubmitMessageAfterCallback(str3, a);
+                    }
+                    if (str2.contains("newMessage")) {
+                        handler.obtainMessage(14, a).sendToTarget();
+                    } else {
+                        handler.obtainMessage(12, a).sendToTarget();
+                    }
+                    return true;
+                }
+            }
+        } catch (Throwable e) {
+            C5210c.m17733a("sendRecord fail.", e);
+            Looper.prepare();
+            Toast.makeText(context, C5228u.m17794a("18"), 1).show();
+            handler.obtainMessage(13).sendToTarget();
+            Looper.loop();
+        }
+        return false;
     }
-    Object localObject = new com.baidu.ufosdk.util.d(this);
-    ((com.baidu.ufosdk.util.d)localObject).a(((com.baidu.ufosdk.util.d)localObject).a() + 1);
-    if (com.baidu.ufosdk.a.ah != null) {
-      com.baidu.ufosdk.a.ah.onResumeCallback();
+
+    /* renamed from: a */
+    private void m17650a(String str) {
+        cx cxVar = new cx(this, str);
+        cxVar.m17722a(new az(this, cxVar));
+        cxVar.show();
     }
-    i.a((RelativeLayout)this.ac, u.a("25"));
-    this.ar = true;
-    if (this.L == null)
-    {
-      this.L = "newMessage";
-      localObject = "";
-      if (this.at == null) {
-        break label293;
-      }
-      this.ap.setText(this.at);
-      label203:
-      this.ap.setSelection(((String)localObject).length());
-      if (this.ap.getText().toString().trim().length() > 0) {
-        break label357;
-      }
-      this.av.setTextColor(com.baidu.ufosdk.a.x);
+
+    /* renamed from: a */
+    private static Bitmap m17641a(Bitmap bitmap, int i) {
+        if (bitmap == null || i <= 0) {
+            return null;
+        }
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        if (width <= i || height <= i) {
+            return bitmap;
+        }
+        int max = (Math.max(width, height) * i) / Math.min(width, height);
+        int i2 = width > height ? max : i;
+        if (width > height) {
+            max = i;
+        }
+        try {
+            Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, i2, max, true);
+            try {
+                bitmap = Bitmap.createBitmap(createScaledBitmap, (i2 - i) / 2, (max - i) / 2, i, i);
+                createScaledBitmap.recycle();
+                return bitmap;
+            } catch (Exception e) {
+                return null;
+            }
+        } catch (Exception e2) {
+            return null;
+        }
     }
-    for (;;)
-    {
-      if (UfoSDK.clientid.length() != 0) {
-        break label382;
-      }
-      new Thread(new bg(this)).start();
-      return;
-      if (this.L.length() != 0) {
-        break;
-      }
-      this.L = "newMessage";
-      break;
-      label293:
-      if (!TextUtils.isEmpty(this.aq))
-      {
-        localObject = this.ab.getString(this.aq, "");
-        this.ap.setText((CharSequence)localObject);
-        break label203;
-      }
-      localObject = this.ab.getString(this.L, "");
-      this.ap.setText((CharSequence)localObject);
-      break label203;
-      label357:
-      this.av.setTextColor(i.a(com.baidu.ufosdk.a.w, com.baidu.ufosdk.a.x, com.baidu.ufosdk.a.w, com.baidu.ufosdk.a.w));
+
+    /* renamed from: b */
+    private void m17653b() {
+        if (this.f21480X != null) {
+            this.f21480X.removeAllViews();
+            for (int i = 0; i < this.f21481Y.size(); i++) {
+                View relativeLayout = new RelativeLayout(this);
+                View dbVar;
+                Bitmap bitmap;
+                if (i != this.f21481Y.size() - 1) {
+                    dbVar = new db(this);
+                    dbVar.setTag(Integer.valueOf(i));
+                    dbVar.setBackgroundDrawable(null);
+                    dbVar.setPadding(0, 0, 0, 0);
+                    dbVar.setScaleType(ScaleType.CENTER_CROP);
+                    dbVar.setMaxHeight(C5216i.m17757a(getApplicationContext(), 48.0f));
+                    dbVar.setMinimumHeight(C5216i.m17757a(getApplicationContext(), 48.0f));
+                    dbVar.setMaxWidth(C5216i.m17757a(getApplicationContext(), 48.0f));
+                    dbVar.setMinimumWidth(C5216i.m17757a(getApplicationContext(), 48.0f));
+                    relativeLayout.addView(dbVar, new RelativeLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 48.0f), C5216i.m17757a(getApplicationContext(), 48.0f)));
+                    try {
+                        if (this.f21481Y.get(i) == null) {
+                            bitmap = null;
+                        } else if (BitmapFactory.decodeByteArray((byte[]) this.f21481Y.get(i), 0, ((byte[]) this.f21481Y.get(i)).length) != null) {
+                            bitmap = BitmapFactory.decodeByteArray((byte[]) this.f21481Y.get(i), 0, ((byte[]) this.f21481Y.get(i)).length);
+                        } else {
+                            return;
+                        }
+                        if (bitmap != null && m17641a(bitmap, C5216i.m17757a(getApplicationContext(), 45.0f)) != null) {
+                            dbVar.setImageBitmap(bitmap);
+                            View imageButton = new ImageButton(this);
+                            imageButton.setTag(Integer.valueOf(i));
+                            imageButton.setBackgroundDrawable(null);
+                            imageButton.setPadding(C5216i.m17757a(getApplicationContext(), 9.0f), 0, 0, C5216i.m17757a(getApplicationContext(), 9.0f));
+                            imageButton.setScaleType(ScaleType.FIT_XY);
+                            Bitmap a = C5223p.m17779a(getApplicationContext(), "ufo_delete_little_icon.png");
+                            if (a != null) {
+                                imageButton.setImageBitmap(a);
+                                LayoutParams layoutParams = new RelativeLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 24.0f), C5216i.m17757a(getApplicationContext(), 24.0f));
+                                layoutParams.addRule(11);
+                                layoutParams.addRule(10);
+                                layoutParams.setMargins(0, 0, 0, 0);
+                                relativeLayout.addView(imageButton, layoutParams);
+                                imageButton.setOnClickListener(new bd(this));
+                            } else {
+                                return;
+                            }
+                        }
+                        return;
+                    } catch (OutOfMemoryError e) {
+                        System.gc();
+                        return;
+                    }
+                }
+                dbVar = new ImageView(this);
+                dbVar.setTag(Integer.valueOf(i));
+                dbVar.setBackgroundDrawable(null);
+                dbVar.setPadding(0, 0, 0, 0);
+                dbVar.setScaleType(ScaleType.CENTER_CROP);
+                dbVar.setMaxHeight(C5216i.m17757a(getApplicationContext(), 48.0f));
+                dbVar.setMinimumHeight(C5216i.m17757a(getApplicationContext(), 48.0f));
+                dbVar.setMaxWidth(C5216i.m17757a(getApplicationContext(), 48.0f));
+                dbVar.setMinimumWidth(C5216i.m17757a(getApplicationContext(), 48.0f));
+                relativeLayout.addView(dbVar, new RelativeLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 48.0f), C5216i.m17757a(getApplicationContext(), 48.0f)));
+                try {
+                    bitmap = BitmapFactory.decodeByteArray((byte[]) this.f21481Y.get(i), 0, ((byte[]) this.f21481Y.get(i)).length);
+                    if (bitmap != null && m17641a(bitmap, C5216i.m17757a(getApplicationContext(), 45.0f)) != null) {
+                        dbVar.setImageBitmap(bitmap);
+                        dbVar.setOnClickListener(new bf(this));
+                    } else {
+                        return;
+                    }
+                } catch (OutOfMemoryError e2) {
+                    System.gc();
+                    return;
+                }
+                LayoutParams layoutParams2 = new LinearLayout.LayoutParams(C5216i.m17757a(getApplicationContext(), 48.0f), C5216i.m17757a(getApplicationContext(), 48.0f));
+                if (i == 0) {
+                    layoutParams2.setMargins(C5216i.m17757a(getApplicationContext(), 6.0f), 0, 0, 0);
+                } else {
+                    layoutParams2.setMargins(C5216i.m17757a(getApplicationContext(), 10.0f), 0, 0, 0);
+                }
+                layoutParams2.gravity = 80;
+                this.f21480X.addView(relativeLayout, layoutParams2);
+            }
+        }
     }
-    label382:
-    new Thread(new bh(this)).start();
-  }
-  
-  public void onStart()
-  {
-    super.onStart();
-    IntentFilter localIntentFilter = new IntentFilter();
-    localIntentFilter.addAction("com.baidu.ufosdk.getchat");
-    localIntentFilter.addAction("com.baidu.ufosdk.getmsgid");
-    localIntentFilter.addAction("com.baidu.ufosdk.deletemsg_dialogdismiss");
-    localIntentFilter.addAction("com.baidu.ufosdk.reload");
-    registerReceiver(this.al, localIntentFilter);
-  }
-  
-  public void onStop()
-  {
-    super.onStop();
-    InputMethodManager localInputMethodManager = (InputMethodManager)getSystemService("input_method");
-    if (localInputMethodManager != null)
-    {
-      View localView = getCurrentFocus();
-      if (localView != null) {
-        localInputMethodManager.hideSoftInputFromWindow(localView.getApplicationWindowToken(), 2);
-      }
+
+    protected void onRestart() {
+        super.onRestart();
     }
-    unregisterReceiver(this.al);
-  }
-  
-  public boolean onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    return super.onTouchEvent(paramMotionEvent);
-  }
+
+    public void onResume() {
+        super.onResume();
+        if (C5167a.ah != null) {
+            C5167a.ah.onResumeCallback();
+        }
+        this.f21466J.setText(C5228u.m17794a("22"));
+        C5216i.m17763a((RelativeLayout) this.f21474R, C5228u.m17794a("13"));
+        if (this.f21468L != null && this.f21468L.length() > 0) {
+            if (this.f21470N == null) {
+                this.f21470N = new C5165a(getApplicationContext(), this.f21468L);
+            }
+            this.f21470N.m17552b();
+            if (!this.f21470N.isAlive()) {
+                this.f21470N.start();
+            }
+        }
+        C5211d c5211d = new C5211d(this);
+        c5211d.m17740a(c5211d.m17739a() + 1);
+        if (C5167a.ah != null) {
+            C5167a.ah.onResumeCallback();
+        }
+        C5216i.m17763a((RelativeLayout) this.ac, C5228u.m17794a("25"));
+        this.ar = true;
+        if (this.f21468L == null) {
+            this.f21468L = "newMessage";
+        } else if (this.f21468L.length() == 0) {
+            this.f21468L = "newMessage";
+        }
+        String str = "";
+        if (this.at != null) {
+            this.ap.setText(this.at);
+        } else if (TextUtils.isEmpty(this.aq)) {
+            str = this.ab.getString(this.f21468L, "");
+            this.ap.setText(str);
+        } else {
+            str = this.ab.getString(this.aq, "");
+            this.ap.setText(str);
+        }
+        this.ap.setSelection(str.length());
+        if (this.ap.getText().toString().trim().length() <= 0) {
+            this.av.setTextColor(C5167a.f21378x);
+        } else {
+            this.av.setTextColor(C5216i.m17759a(C5167a.f21377w, C5167a.f21378x, C5167a.f21377w, C5167a.f21377w));
+        }
+        if (UfoSDK.clientid.length() == 0) {
+            new Thread(new bg(this)).start();
+        } else {
+            new Thread(new bh(this)).start();
+        }
+    }
+
+    public void onPause() {
+        super.onPause();
+        super.onPause();
+        this.aa.putString("contactWay", null);
+        if (this.ar) {
+            if (TextUtils.isEmpty(this.aq)) {
+                this.aa.putString(this.f21468L, this.ap.getText().toString());
+            } else {
+                this.aa.putString(this.aq, this.ap.getText().toString());
+            }
+        }
+        this.aa.commit();
+        if (this.f21470N != null) {
+            this.f21470N.m17550a();
+            this.f21470N = null;
+        }
+    }
+
+    public void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.baidu.ufosdk.getchat");
+        intentFilter.addAction("com.baidu.ufosdk.getmsgid");
+        intentFilter.addAction("com.baidu.ufosdk.deletemsg_dialogdismiss");
+        intentFilter.addAction("com.baidu.ufosdk.reload");
+        registerReceiver(this.al, intentFilter);
+    }
+
+    public void onStop() {
+        super.onStop();
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService("input_method");
+        if (inputMethodManager != null) {
+            View currentFocus = getCurrentFocus();
+            if (currentFocus != null) {
+                inputMethodManager.hideSoftInputFromWindow(currentFocus.getApplicationWindowToken(), 2);
+            }
+        }
+        unregisterReceiver(this.al);
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        C5208a.f21687a = null;
+    }
+
+    /* renamed from: a */
+    private int m17640a(Uri uri) {
+        Cursor query;
+        Cursor cursor;
+        Throwable th;
+        if (uri == null) {
+            return 0;
+        }
+        try {
+            int i;
+            query = getContentResolver().query(uri, null, null, null, null);
+            if (query != null) {
+                try {
+                    query.moveToFirst();
+                    String string = query.getString(query.getColumnIndex("orientation"));
+                    if (string == null) {
+                        i = 0;
+                    } else {
+                        i = Integer.parseInt(string);
+                    }
+                } catch (Exception e) {
+                    cursor = query;
+                    try {
+                        cursor.close();
+                        return 0;
+                    } catch (Exception e2) {
+                        return 0;
+                    }
+                } catch (Throwable th2) {
+                    th = th2;
+                    try {
+                        query.close();
+                    } catch (Exception e3) {
+                    }
+                    throw th;
+                }
+            }
+            i = 0;
+            try {
+                query.close();
+            } catch (Exception e4) {
+            }
+            return i;
+        } catch (Exception e5) {
+            cursor = null;
+            cursor.close();
+            return 0;
+        } catch (Throwable th3) {
+            th = th3;
+            query = null;
+            query.close();
+            throw th;
+        }
+    }
+
+    protected void onActivityResult(int i, int i2, Intent intent) {
+        Object obj;
+        Exception exception;
+        super.onActivityResult(i, i2, intent);
+        if (!this.an) {
+            C5211d c5211d = new C5211d(this);
+            c5211d.m17744c(c5211d.m17743c() + 1);
+            this.an = true;
+        }
+        if (i2 == -1) {
+            this.f21479W = false;
+            if (intent != null) {
+                Uri data;
+                try {
+                    data = intent.getData();
+                } catch (Exception e) {
+                    data = null;
+                }
+                if (data != null) {
+                    try {
+                        InputStream openInputStream = getContentResolver().openInputStream(data);
+                        if (openInputStream.available() < MapGLSurfaceView.FLAG_OVERLAY_BMBAR_DYNAMCI_MAP) {
+                            byte[] bArr = new byte[1024];
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            while (true) {
+                                int read = openInputStream.read(bArr);
+                                if (read == -1) {
+                                    break;
+                                }
+                                byteArrayOutputStream.write(bArr, 0, read);
+                            }
+                            Object toByteArray = byteArrayOutputStream.toByteArray();
+                            byteArrayOutputStream.close();
+                            openInputStream.close();
+                            if (toByteArray == null) {
+                                try {
+                                    Toast.makeText(this, C5228u.m17794a("21"), 1).show();
+                                    return;
+                                } catch (Exception e2) {
+                                    Exception exception2 = e2;
+                                    obj = toByteArray;
+                                    exception = exception2;
+                                    System.out.println(exception.getMessage());
+                                    if (i != this.f21481Y.size() - 1) {
+                                        Toast.makeText(this, "内存不足，图片读取失败，请尝试清理内存稍后再试.", 1).show();
+                                        C5210c.m17734b("picBytesList--->clear");
+                                        this.f21481Y.clear();
+                                        this.f21481Y.add(C5223p.m17783b(this));
+                                    } else {
+                                        this.f21481Y.set(i, obj);
+                                        this.f21481Y.add(C5223p.m17783b(this));
+                                    }
+                                    m17653b();
+                                    this.ap.setFocusable(true);
+                                    this.ap.setFocusableInTouchMode(true);
+                                    return;
+                                }
+                            }
+                            toByteArray = C5227t.m17793a(toByteArray, m17640a(data));
+                            if (toByteArray == null) {
+                                Toast.makeText(this, C5228u.m17794a("21"), 1).show();
+                                return;
+                            } else if (toByteArray.length > 1048576) {
+                                Toast.makeText(this, C5228u.m17794a("21"), 1).show();
+                                return;
+                            } else if (toByteArray.length == 0) {
+                                Toast.makeText(this, "图片选择错误，请重新选择一张。", 1).show();
+                                return;
+                            } else {
+                                ActivityManager activityManager = (ActivityManager) getSystemService(BusinessActivityManager.AUDIO_DIR);
+                                MemoryInfo memoryInfo = new MemoryInfo();
+                                activityManager.getMemoryInfo(memoryInfo);
+                                if (memoryInfo.availMem / PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID < 35000) {
+                                    Toast.makeText(this, "内存不足，图片读取失败，请尝试清理内存稍后再试.", 1).show();
+                                    System.gc();
+                                    return;
+                                }
+                                obj = toByteArray;
+                                if (i != this.f21481Y.size() - 1) {
+                                    this.f21481Y.set(i, obj);
+                                    this.f21481Y.add(C5223p.m17783b(this));
+                                } else {
+                                    Toast.makeText(this, "内存不足，图片读取失败，请尝试清理内存稍后再试.", 1).show();
+                                    C5210c.m17734b("picBytesList--->clear");
+                                    this.f21481Y.clear();
+                                    this.f21481Y.add(C5223p.m17783b(this));
+                                }
+                                m17653b();
+                                this.ap.setFocusable(true);
+                                this.ap.setFocusableInTouchMode(true);
+                                return;
+                            }
+                        }
+                        Toast.makeText(this, C5228u.m17794a("21"), 1).show();
+                    } catch (Exception e22) {
+                        exception = e22;
+                        obj = null;
+                    }
+                }
+            }
+        }
+    }
+
+    /* renamed from: a */
+    protected final void m17682a(View view) {
+        View button = new Button(this);
+        button.setBackgroundDrawable(null);
+        button.setText("复制");
+        button.setTextSize(12.0f);
+        button.setTextColor(-1);
+        button.setGravity(17);
+        PopupWindow popupWindow = new PopupWindow(button, C5216i.m17757a(getApplicationContext(), 60.0f), C5216i.m17757a(getApplicationContext(), 35.0f), true);
+        popupWindow.setTouchable(true);
+        popupWindow.getContentView().setOnClickListener(new bi(this, view, popupWindow));
+        popupWindow.setTouchInterceptor(new bj(this));
+        try {
+            popupWindow.setBackgroundDrawable(C5225r.m17786a((Context) this, "ufo_loading_bg.9.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        popupWindow.showAsDropDown(view);
+    }
+
+    /* renamed from: a */
+    static /* synthetic */ void m17643a(FeedbackInputActivity feedbackInputActivity) {
+        feedbackInputActivity.f21480X.removeAllViews();
+        feedbackInputActivity.f21481Y.removeAll(feedbackInputActivity.f21481Y);
+        feedbackInputActivity.f21481Y.add(C5223p.m17782a(feedbackInputActivity));
+        feedbackInputActivity.m17653b();
+    }
+
+    /* renamed from: S */
+    static /* synthetic */ void m17639S(FeedbackInputActivity feedbackInputActivity) {
+        if (!C5215h.m17755a()) {
+            Intent intent = new Intent("android.intent.action.GET_CONTENT");
+            intent.addCategory("android.intent.category.OPENABLE");
+            intent.setType("image/*");
+            if (feedbackInputActivity.f21482Z == feedbackInputActivity.f21481Y.size() - 1) {
+                if (!(feedbackInputActivity.getCurrentFocus() == null || feedbackInputActivity.getCurrentFocus().getWindowToken() == null)) {
+                    ((InputMethodManager) feedbackInputActivity.getSystemService("input_method")).hideSoftInputFromWindow(feedbackInputActivity.getCurrentFocus().getWindowToken(), 2);
+                }
+                try {
+                    feedbackInputActivity.f21479W = true;
+                    feedbackInputActivity.startActivityForResult(intent, feedbackInputActivity.f21482Z);
+                    try {
+                        feedbackInputActivity.overridePendingTransition(C5216i.m17758a(feedbackInputActivity.getApplicationContext(), "ufo_slide_in_from_bottom"), 0);
+                    } catch (Exception e) {
+                    }
+                } catch (ActivityNotFoundException e2) {
+                    Toast.makeText(feedbackInputActivity, C5228u.m17794a("0"), 1).show();
+                }
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/FeedbackInputActivity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

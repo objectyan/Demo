@@ -1,125 +1,82 @@
 package com.baidu.navi.favorite.http;
 
 import android.text.TextUtils;
-import com.baidu.carlife.k.a.d;
-import com.baidu.carlife.k.a.e;
+import com.baidu.carlife.p054k.p055a.C1622d;
+import com.baidu.carlife.p054k.p055a.C1626e;
 import com.baidu.navi.favorite.sync.FamilyAndCompanySyncManager;
 import com.baidu.navisdk.BNaviModuleManager;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.PreferenceHelper;
-import com.baidu.platform.comapi.util.a;
+import com.baidu.platform.comapi.util.C4794a;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AuthTokenSyncRequest
-  extends e
-{
-  public static final String KEY = "YiVz0MC3b9UqsETN";
-  public static final String SYNC_AUTH_ID = "sync_auth_id";
-  public static final String SYNC_AUTH_TOKEN = "sync_auth_token";
-  
-  public AuthTokenSyncRequest()
-  {
-    this.tag = AuthTokenSyncRequest.class.getSimpleName();
-  }
-  
-  public static byte[] hex2byte(String paramString)
-  {
-    paramString = paramString.getBytes();
-    if (paramString.length % 2 != 0) {
-      throw new IllegalArgumentException("长度不是偶数");
-    }
-    byte[] arrayOfByte = new byte[paramString.length / 2];
-    int i = 0;
-    while (i < paramString.length)
-    {
-      String str = new String(paramString, i, 2);
-      arrayOfByte[(i / 2)] = ((byte)Integer.parseInt(str, 16));
-      i += 2;
-    }
-    return arrayOfByte;
-  }
-  
-  protected d getPostRequestParams()
-  {
-    return null;
-  }
-  
-  protected String getUrl()
-  {
-    long l = System.currentTimeMillis();
-    return "http://automap.baidu.com/naviauto/?__c=user&rt=login&ofmt=json&ctime=" + l + "&fromapp=carlife";
-  }
-  
-  protected d getUrlParams()
-  {
-    return null;
-  }
-  
-  public void reponseNoJsonCallBack(String paramString)
-  {
-    int k = -4;
-    i = k;
-    try
-    {
-      paramString = new String(a.b("YiVz0MC3b9UqsETN", hex2byte(paramString.trim())));
-      j = k;
-      i = k;
-      if (!TextUtils.isEmpty(paramString))
-      {
-        i = k;
-        Object localObject = new JSONObject(paramString).optJSONObject("result");
-        i = k;
-        paramString = ((JSONObject)localObject).optString("auth_id");
-        i = k;
-        localObject = ((JSONObject)localObject).optString("auth_token");
-        i = k;
-        LogUtil.e("family", "authId:" + paramString + "authToken:" + (String)localObject);
-        j = k;
-        i = k;
-        if (!TextUtils.isEmpty(paramString))
-        {
-          j = k;
-          i = k;
-          if (!TextUtils.isEmpty((CharSequence)localObject))
-          {
-            i = k;
-            PreferenceHelper.getInstance(BNaviModuleManager.getContext()).putString("sync_auth_id", paramString);
-            i = k;
-            PreferenceHelper.getInstance(BNaviModuleManager.getContext()).putString("sync_auth_token", (String)localObject);
-            i = 0;
-            j = 0;
-            new Thread(new Runnable()
-            {
-              public void run()
-              {
-                FamilyAndCompanySyncManager.getInstance().startSync();
-              }
-            }).start();
-          }
+public class AuthTokenSyncRequest extends C1626e {
+    public static final String KEY = "YiVz0MC3b9UqsETN";
+    public static final String SYNC_AUTH_ID = "sync_auth_id";
+    public static final String SYNC_AUTH_TOKEN = "sync_auth_token";
+
+    /* renamed from: com.baidu.navi.favorite.http.AuthTokenSyncRequest$1 */
+    class C37781 implements Runnable {
+        C37781() {
         }
-      }
+
+        public void run() {
+            FamilyAndCompanySyncManager.getInstance().startSync();
+        }
     }
-    catch (Exception paramString)
-    {
-      for (;;)
-      {
-        paramString.printStackTrace();
-        int j = i;
-      }
+
+    public AuthTokenSyncRequest() {
+        this.tag = AuthTokenSyncRequest.class.getSimpleName();
     }
-    notifyResponseListener(j);
-  }
-  
-  protected int responseSuccessCallBack(String paramString)
-    throws JSONException
-  {
-    return -4;
-  }
+
+    protected String getUrl() {
+        return "http://automap.baidu.com/naviauto/?__c=user&rt=login&ofmt=json&ctime=" + System.currentTimeMillis() + "&fromapp=carlife";
+    }
+
+    protected int responseSuccessCallBack(String data) throws JSONException {
+        return -4;
+    }
+
+    protected C1622d getUrlParams() {
+        return null;
+    }
+
+    protected C1622d getPostRequestParams() {
+        return null;
+    }
+
+    public void reponseNoJsonCallBack(String response) {
+        int code = -4;
+        try {
+            String result = new String(C4794a.m15888b(KEY, hex2byte(response.trim())));
+            if (!TextUtils.isEmpty(result)) {
+                JSONObject jsonResult = new JSONObject(result).optJSONObject("result");
+                String authId = jsonResult.optString("auth_id");
+                String authToken = jsonResult.optString("auth_token");
+                LogUtil.m15791e("family", "authId:" + authId + "authToken:" + authToken);
+                if (!(TextUtils.isEmpty(authId) || TextUtils.isEmpty(authToken))) {
+                    PreferenceHelper.getInstance(BNaviModuleManager.getContext()).putString(SYNC_AUTH_ID, authId);
+                    PreferenceHelper.getInstance(BNaviModuleManager.getContext()).putString(SYNC_AUTH_TOKEN, authToken);
+                    code = 0;
+                    new Thread(new C37781()).start();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        notifyResponseListener(code);
+    }
+
+    public static byte[] hex2byte(String s) {
+        byte[] b = s.getBytes();
+        if (b.length % 2 != 0) {
+            throw new IllegalArgumentException("长度不是偶数");
+        }
+        byte[] b2 = new byte[(b.length / 2)];
+        for (int n = 0; n < b.length; n += 2) {
+            b2[n / 2] = (byte) Integer.parseInt(new String(b, n, 2), 16);
+        }
+        return b2;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/favorite/http/AuthTokenSyncRequest.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

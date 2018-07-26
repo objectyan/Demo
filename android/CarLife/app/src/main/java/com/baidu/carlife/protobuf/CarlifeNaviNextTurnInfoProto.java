@@ -9,609 +9,523 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeNaviNextTurnInfoProto
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_com_baidu_carlife_protobuf_CarlifeNaviNextTurnInfo_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_com_baidu_carlife_protobuf_CarlifeNaviNextTurnInfo_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeNaviNextTurnInfoProto.access$1702(paramAnonymousFileDescriptor);
-        CarlifeNaviNextTurnInfoProto.access$002((Descriptors.Descriptor)CarlifeNaviNextTurnInfoProto.getDescriptor().getMessageTypes().get(0));
-        CarlifeNaviNextTurnInfoProto.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeNaviNextTurnInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeNaviNextTurnInfo_descriptor, new String[] { "Action", "NextTurn", "RoadName", "TotalDistance", "RemainDistance", "TurnIconData" }, CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.class, CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n\"CarlifeNaviNextTurnInfoProto.proto\022\032com.baidu.carlife.protobuf\"\001\n\027CarlifeNaviNextTurnInfo\022\016\n\006action\030\001 \002(\005\022\020\n\bnextTurn\030\002 \002(\005\022\020\n\broadName\030\003 \002(\t\022\025\n\rtotalDistance\030\004 \002(\005\022\026\n\016remainDistance\030\005 \002(\005\022\024\n\fturnIconData\030\006 \002(\f" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeNaviNextTurnInfo
-    extends GeneratedMessage
-  {
-    public static final int ACTION_FIELD_NUMBER = 1;
-    public static final int NEXTTURN_FIELD_NUMBER = 2;
-    public static final int REMAINDISTANCE_FIELD_NUMBER = 5;
-    public static final int ROADNAME_FIELD_NUMBER = 3;
-    public static final int TOTALDISTANCE_FIELD_NUMBER = 4;
-    public static final int TURNICONDATA_FIELD_NUMBER = 6;
-    private static final CarlifeNaviNextTurnInfo defaultInstance = new CarlifeNaviNextTurnInfo();
-    private int action_ = 0;
-    private boolean hasAction;
-    private boolean hasNextTurn;
-    private boolean hasRemainDistance;
-    private boolean hasRoadName;
-    private boolean hasTotalDistance;
-    private boolean hasTurnIconData;
-    private int memoizedSerializedSize = -1;
-    private int nextTurn_ = 0;
-    private int remainDistance_ = 0;
-    private String roadName_ = "";
-    private int totalDistance_ = 0;
-    private ByteString turnIconData_ = ByteString.EMPTY;
-    
-    static
-    {
-      CarlifeNaviNextTurnInfoProto.getDescriptor();
-      CarlifeNaviNextTurnInfoProto.internalForceInit();
-    }
-    
-    public static CarlifeNaviNextTurnInfo getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeNaviNextTurnInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeNaviNextTurnInfo_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeNaviNextTurnInfo paramCarlifeNaviNextTurnInfo)
-    {
-      return newBuilder().mergeFrom(paramCarlifeNaviNextTurnInfo);
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeNaviNextTurnInfo parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public int getAction()
-    {
-      return this.action_;
-    }
-    
-    public CarlifeNaviNextTurnInfo getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public int getNextTurn()
-    {
-      return this.nextTurn_;
-    }
-    
-    public int getRemainDistance()
-    {
-      return this.remainDistance_;
-    }
-    
-    public String getRoadName()
-    {
-      return this.roadName_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      int j = 0;
-      if (hasAction()) {
-        j = 0 + CodedOutputStream.computeInt32Size(1, getAction());
-      }
-      i = j;
-      if (hasNextTurn()) {
-        i = j + CodedOutputStream.computeInt32Size(2, getNextTurn());
-      }
-      j = i;
-      if (hasRoadName()) {
-        j = i + CodedOutputStream.computeStringSize(3, getRoadName());
-      }
-      i = j;
-      if (hasTotalDistance()) {
-        i = j + CodedOutputStream.computeInt32Size(4, getTotalDistance());
-      }
-      j = i;
-      if (hasRemainDistance()) {
-        j = i + CodedOutputStream.computeInt32Size(5, getRemainDistance());
-      }
-      i = j;
-      if (hasTurnIconData()) {
-        i = j + CodedOutputStream.computeBytesSize(6, getTurnIconData());
-      }
-      i += getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public int getTotalDistance()
-    {
-      return this.totalDistance_;
-    }
-    
-    public ByteString getTurnIconData()
-    {
-      return this.turnIconData_;
-    }
-    
-    public boolean hasAction()
-    {
-      return this.hasAction;
-    }
-    
-    public boolean hasNextTurn()
-    {
-      return this.hasNextTurn;
-    }
-    
-    public boolean hasRemainDistance()
-    {
-      return this.hasRemainDistance;
-    }
-    
-    public boolean hasRoadName()
-    {
-      return this.hasRoadName;
-    }
-    
-    public boolean hasTotalDistance()
-    {
-      return this.hasTotalDistance;
-    }
-    
-    public boolean hasTurnIconData()
-    {
-      return this.hasTurnIconData;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeNaviNextTurnInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeNaviNextTurnInfo_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      if (!this.hasAction) {}
-      while ((!this.hasNextTurn) || (!this.hasRoadName) || (!this.hasTotalDistance) || (!this.hasRemainDistance) || (!this.hasTurnIconData)) {
-        return false;
-      }
-      return true;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasAction()) {
-        paramCodedOutputStream.writeInt32(1, getAction());
-      }
-      if (hasNextTurn()) {
-        paramCodedOutputStream.writeInt32(2, getNextTurn());
-      }
-      if (hasRoadName()) {
-        paramCodedOutputStream.writeString(3, getRoadName());
-      }
-      if (hasTotalDistance()) {
-        paramCodedOutputStream.writeInt32(4, getTotalDistance());
-      }
-      if (hasRemainDistance()) {
-        paramCodedOutputStream.writeInt32(5, getRemainDistance());
-      }
-      if (hasTurnIconData()) {
-        paramCodedOutputStream.writeBytes(6, getTurnIconData());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo result;
-      
-      private CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeNaviNextTurnInfoProto {
+    private static FileDescriptor descriptor;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeNaviNextTurnInfo_descriptor */
+    private static Descriptor f6641x3d72832e;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeNaviNextTurnInfo_fieldAccessorTable */
+    private static FieldAccessorTable f6642x77fa9bac;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeNaviNextTurnInfoProto$1 */
+    static class C20751 implements InternalDescriptorAssigner {
+        C20751() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo(null);
-        return localBuilder;
-      }
-      
-      public CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeNaviNextTurnInfoProto.descriptor = root;
+            CarlifeNaviNextTurnInfoProto.f6641x3d72832e = (Descriptor) CarlifeNaviNextTurnInfoProto.getDescriptor().getMessageTypes().get(0);
+            CarlifeNaviNextTurnInfoProto.f6642x77fa9bac = new FieldAccessorTable(CarlifeNaviNextTurnInfoProto.f6641x3d72832e, new String[]{"Action", "NextTurn", "RoadName", "TotalDistance", "RemainDistance", "TurnIconData"}, CarlifeNaviNextTurnInfo.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo localCarlifeNaviNextTurnInfo = this.result;
-        this.result = null;
-        return localCarlifeNaviNextTurnInfo;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo(null);
-        return this;
-      }
-      
-      public Builder clearAction()
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$502(this.result, false);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$602(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearNextTurn()
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$702(this.result, false);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$802(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearRemainDistance()
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1302(this.result, false);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1402(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearRoadName()
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$902(this.result, false);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1002(this.result, CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.getDefaultInstance().getRoadName());
-        return this;
-      }
-      
-      public Builder clearTotalDistance()
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1102(this.result, false);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1202(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearTurnIconData()
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1502(this.result, false);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1602(this.result, CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.getDefaultInstance().getTurnIconData());
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public int getAction()
-      {
-        return this.result.getAction();
-      }
-      
-      public CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo getDefaultInstanceForType()
-      {
-        return CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.getDescriptor();
-      }
-      
-      public int getNextTurn()
-      {
-        return this.result.getNextTurn();
-      }
-      
-      public int getRemainDistance()
-      {
-        return this.result.getRemainDistance();
-      }
-      
-      public String getRoadName()
-      {
-        return this.result.getRoadName();
-      }
-      
-      public int getTotalDistance()
-      {
-        return this.result.getTotalDistance();
-      }
-      
-      public ByteString getTurnIconData()
-      {
-        return this.result.getTurnIconData();
-      }
-      
-      public boolean hasAction()
-      {
-        return this.result.hasAction();
-      }
-      
-      public boolean hasNextTurn()
-      {
-        return this.result.hasNextTurn();
-      }
-      
-      public boolean hasRemainDistance()
-      {
-        return this.result.hasRemainDistance();
-      }
-      
-      public boolean hasRoadName()
-      {
-        return this.result.hasRoadName();
-      }
-      
-      public boolean hasTotalDistance()
-      {
-        return this.result.hasTotalDistance();
-      }
-      
-      public boolean hasTurnIconData()
-      {
-        return this.result.hasTurnIconData();
-      }
-      
-      protected CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo paramCarlifeNaviNextTurnInfo)
-      {
-        if (paramCarlifeNaviNextTurnInfo == CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeNaviNextTurnInfo.hasAction()) {
-          setAction(paramCarlifeNaviNextTurnInfo.getAction());
-        }
-        if (paramCarlifeNaviNextTurnInfo.hasNextTurn()) {
-          setNextTurn(paramCarlifeNaviNextTurnInfo.getNextTurn());
-        }
-        if (paramCarlifeNaviNextTurnInfo.hasRoadName()) {
-          setRoadName(paramCarlifeNaviNextTurnInfo.getRoadName());
-        }
-        if (paramCarlifeNaviNextTurnInfo.hasTotalDistance()) {
-          setTotalDistance(paramCarlifeNaviNextTurnInfo.getTotalDistance());
-        }
-        if (paramCarlifeNaviNextTurnInfo.hasRemainDistance()) {
-          setRemainDistance(paramCarlifeNaviNextTurnInfo.getRemainDistance());
-        }
-        if (paramCarlifeNaviNextTurnInfo.hasTurnIconData()) {
-          setTurnIconData(paramCarlifeNaviNextTurnInfo.getTurnIconData());
-        }
-        mergeUnknownFields(paramCarlifeNaviNextTurnInfo.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeNaviNextTurnInfo extends GeneratedMessage {
+        public static final int ACTION_FIELD_NUMBER = 1;
+        public static final int NEXTTURN_FIELD_NUMBER = 2;
+        public static final int REMAINDISTANCE_FIELD_NUMBER = 5;
+        public static final int ROADNAME_FIELD_NUMBER = 3;
+        public static final int TOTALDISTANCE_FIELD_NUMBER = 4;
+        public static final int TURNICONDATA_FIELD_NUMBER = 6;
+        private static final CarlifeNaviNextTurnInfo defaultInstance = new CarlifeNaviNextTurnInfo();
+        private int action_;
+        private boolean hasAction;
+        private boolean hasNextTurn;
+        private boolean hasRemainDistance;
+        private boolean hasRoadName;
+        private boolean hasTotalDistance;
+        private boolean hasTurnIconData;
+        private int memoizedSerializedSize;
+        private int nextTurn_;
+        private int remainDistance_;
+        private String roadName_;
+        private int totalDistance_;
+        private ByteString turnIconData_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeNaviNextTurnInfo result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setAction(paramCodedInputStream.readInt32());
-            break;
-          case 16: 
-            setNextTurn(paramCodedInputStream.readInt32());
-            break;
-          case 26: 
-            setRoadName(paramCodedInputStream.readString());
-            break;
-          case 32: 
-            setTotalDistance(paramCodedInputStream.readInt32());
-            break;
-          case 40: 
-            setRemainDistance(paramCodedInputStream.readInt32());
-            break;
-          case 50: 
-            setTurnIconData(paramCodedInputStream.readBytes());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeNaviNextTurnInfo();
+                return builder;
+            }
+
+            protected CarlifeNaviNextTurnInfo internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeNaviNextTurnInfo();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeNaviNextTurnInfo.getDescriptor();
+            }
+
+            public CarlifeNaviNextTurnInfo getDefaultInstanceForType() {
+                return CarlifeNaviNextTurnInfo.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeNaviNextTurnInfo build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeNaviNextTurnInfo buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeNaviNextTurnInfo buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeNaviNextTurnInfo returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeNaviNextTurnInfo) {
+                    return mergeFrom((CarlifeNaviNextTurnInfo) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeNaviNextTurnInfo other) {
+                if (other != CarlifeNaviNextTurnInfo.getDefaultInstance()) {
+                    if (other.hasAction()) {
+                        setAction(other.getAction());
+                    }
+                    if (other.hasNextTurn()) {
+                        setNextTurn(other.getNextTurn());
+                    }
+                    if (other.hasRoadName()) {
+                        setRoadName(other.getRoadName());
+                    }
+                    if (other.hasTotalDistance()) {
+                        setTotalDistance(other.getTotalDistance());
+                    }
+                    if (other.hasRemainDistance()) {
+                        setRemainDistance(other.getRemainDistance());
+                    }
+                    if (other.hasTurnIconData()) {
+                        setTurnIconData(other.getTurnIconData());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setAction(input.readInt32());
+                            continue;
+                        case 16:
+                            setNextTurn(input.readInt32());
+                            continue;
+                        case 26:
+                            setRoadName(input.readString());
+                            continue;
+                        case 32:
+                            setTotalDistance(input.readInt32());
+                            continue;
+                        case 40:
+                            setRemainDistance(input.readInt32());
+                            continue;
+                        case 50:
+                            setTurnIconData(input.readBytes());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasAction() {
+                return this.result.hasAction();
+            }
+
+            public int getAction() {
+                return this.result.getAction();
+            }
+
+            public Builder setAction(int value) {
+                this.result.hasAction = true;
+                this.result.action_ = value;
+                return this;
+            }
+
+            public Builder clearAction() {
+                this.result.hasAction = false;
+                this.result.action_ = 0;
+                return this;
+            }
+
+            public boolean hasNextTurn() {
+                return this.result.hasNextTurn();
+            }
+
+            public int getNextTurn() {
+                return this.result.getNextTurn();
+            }
+
+            public Builder setNextTurn(int value) {
+                this.result.hasNextTurn = true;
+                this.result.nextTurn_ = value;
+                return this;
+            }
+
+            public Builder clearNextTurn() {
+                this.result.hasNextTurn = false;
+                this.result.nextTurn_ = 0;
+                return this;
+            }
+
+            public boolean hasRoadName() {
+                return this.result.hasRoadName();
+            }
+
+            public String getRoadName() {
+                return this.result.getRoadName();
+            }
+
+            public Builder setRoadName(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasRoadName = true;
+                this.result.roadName_ = value;
+                return this;
+            }
+
+            public Builder clearRoadName() {
+                this.result.hasRoadName = false;
+                this.result.roadName_ = CarlifeNaviNextTurnInfo.getDefaultInstance().getRoadName();
+                return this;
+            }
+
+            public boolean hasTotalDistance() {
+                return this.result.hasTotalDistance();
+            }
+
+            public int getTotalDistance() {
+                return this.result.getTotalDistance();
+            }
+
+            public Builder setTotalDistance(int value) {
+                this.result.hasTotalDistance = true;
+                this.result.totalDistance_ = value;
+                return this;
+            }
+
+            public Builder clearTotalDistance() {
+                this.result.hasTotalDistance = false;
+                this.result.totalDistance_ = 0;
+                return this;
+            }
+
+            public boolean hasRemainDistance() {
+                return this.result.hasRemainDistance();
+            }
+
+            public int getRemainDistance() {
+                return this.result.getRemainDistance();
+            }
+
+            public Builder setRemainDistance(int value) {
+                this.result.hasRemainDistance = true;
+                this.result.remainDistance_ = value;
+                return this;
+            }
+
+            public Builder clearRemainDistance() {
+                this.result.hasRemainDistance = false;
+                this.result.remainDistance_ = 0;
+                return this;
+            }
+
+            public boolean hasTurnIconData() {
+                return this.result.hasTurnIconData();
+            }
+
+            public ByteString getTurnIconData() {
+                return this.result.getTurnIconData();
+            }
+
+            public Builder setTurnIconData(ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasTurnIconData = true;
+                this.result.turnIconData_ = value;
+                return this;
+            }
+
+            public Builder clearTurnIconData() {
+                this.result.hasTurnIconData = false;
+                this.result.turnIconData_ = CarlifeNaviNextTurnInfo.getDefaultInstance().getTurnIconData();
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo)) {
-          return mergeFrom((CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo)paramMessage);
+
+        private CarlifeNaviNextTurnInfo() {
+            this.action_ = 0;
+            this.nextTurn_ = 0;
+            this.roadName_ = "";
+            this.totalDistance_ = 0;
+            this.remainDistance_ = 0;
+            this.turnIconData_ = ByteString.EMPTY;
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setAction(int paramInt)
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$502(this.result, true);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$602(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setNextTurn(int paramInt)
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$702(this.result, true);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$802(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setRemainDistance(int paramInt)
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1302(this.result, true);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1402(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setRoadName(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        static {
+            CarlifeNaviNextTurnInfoProto.getDescriptor();
+            CarlifeNaviNextTurnInfoProto.internalForceInit();
         }
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$902(this.result, true);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1002(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setTotalDistance(int paramInt)
-      {
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1102(this.result, true);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1202(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setTurnIconData(ByteString paramByteString)
-      {
-        if (paramByteString == null) {
-          throw new NullPointerException();
+
+        public static CarlifeNaviNextTurnInfo getDefaultInstance() {
+            return defaultInstance;
         }
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1502(this.result, true);
-        CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.access$1602(this.result, paramByteString);
-        return this;
-      }
+
+        public CarlifeNaviNextTurnInfo getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeNaviNextTurnInfoProto.f6641x3d72832e;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeNaviNextTurnInfoProto.f6642x77fa9bac;
+        }
+
+        public boolean hasAction() {
+            return this.hasAction;
+        }
+
+        public int getAction() {
+            return this.action_;
+        }
+
+        public boolean hasNextTurn() {
+            return this.hasNextTurn;
+        }
+
+        public int getNextTurn() {
+            return this.nextTurn_;
+        }
+
+        public boolean hasRoadName() {
+            return this.hasRoadName;
+        }
+
+        public String getRoadName() {
+            return this.roadName_;
+        }
+
+        public boolean hasTotalDistance() {
+            return this.hasTotalDistance;
+        }
+
+        public int getTotalDistance() {
+            return this.totalDistance_;
+        }
+
+        public boolean hasRemainDistance() {
+            return this.hasRemainDistance;
+        }
+
+        public int getRemainDistance() {
+            return this.remainDistance_;
+        }
+
+        public boolean hasTurnIconData() {
+            return this.hasTurnIconData;
+        }
+
+        public ByteString getTurnIconData() {
+            return this.turnIconData_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasAction && this.hasNextTurn && this.hasRoadName && this.hasTotalDistance && this.hasRemainDistance && this.hasTurnIconData) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasAction()) {
+                output.writeInt32(1, getAction());
+            }
+            if (hasNextTurn()) {
+                output.writeInt32(2, getNextTurn());
+            }
+            if (hasRoadName()) {
+                output.writeString(3, getRoadName());
+            }
+            if (hasTotalDistance()) {
+                output.writeInt32(4, getTotalDistance());
+            }
+            if (hasRemainDistance()) {
+                output.writeInt32(5, getRemainDistance());
+            }
+            if (hasTurnIconData()) {
+                output.writeBytes(6, getTurnIconData());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasAction()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getAction());
+            }
+            if (hasNextTurn()) {
+                size += CodedOutputStream.computeInt32Size(2, getNextTurn());
+            }
+            if (hasRoadName()) {
+                size += CodedOutputStream.computeStringSize(3, getRoadName());
+            }
+            if (hasTotalDistance()) {
+                size += CodedOutputStream.computeInt32Size(4, getTotalDistance());
+            }
+            if (hasRemainDistance()) {
+                size += CodedOutputStream.computeInt32Size(5, getRemainDistance());
+            }
+            if (hasTurnIconData()) {
+                size += CodedOutputStream.computeBytesSize(6, getTurnIconData());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeNaviNextTurnInfo parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeNaviNextTurnInfo parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeNaviNextTurnInfo prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeNaviNextTurnInfoProto() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n\"CarlifeNaviNextTurnInfoProto.proto\u0012\u001acom.baidu.carlife.protobuf\"\u0001\n\u0017CarlifeNaviNextTurnInfo\u0012\u000e\n\u0006action\u0018\u0001 \u0002(\u0005\u0012\u0010\n\bnextTurn\u0018\u0002 \u0002(\u0005\u0012\u0010\n\broadName\u0018\u0003 \u0002(\t\u0012\u0015\n\rtotalDistance\u0018\u0004 \u0002(\u0005\u0012\u0016\n\u000eremainDistance\u0018\u0005 \u0002(\u0005\u0012\u0014\n\fturnIconData\u0018\u0006 \u0002(\f"}, new FileDescriptor[0], new C20751());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeNaviNextTurnInfoProto.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

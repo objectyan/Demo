@@ -1,7 +1,6 @@
 package com.baidu.carlife.fragment;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
@@ -12,467 +11,448 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.adpter.q;
-import com.baidu.carlife.core.e;
-import com.baidu.carlife.core.f;
-import com.baidu.carlife.core.f.a;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.j;
-import com.baidu.carlife.core.k;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.logic.voice.n;
-import com.baidu.carlife.util.h;
-import com.baidu.carlife.util.r;
-import com.baidu.carlife.util.w;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.adpter.C1020q;
+import com.baidu.carlife.core.C0936j;
+import com.baidu.carlife.core.C1251e;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1253f.C1252a;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.custom.elhyf.C1371b;
+import com.baidu.carlife.logic.C1765g;
+import com.baidu.carlife.logic.voice.C1912n;
+import com.baidu.carlife.p078f.C1438c;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.util.C2177h;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.carlife.util.C2201w;
 import com.baidu.carlife.view.SwitchButton;
+import com.baidu.carlife.view.dialog.C1953c;
 import com.baidu.navi.fragment.ContentFragment;
+import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.track.common.TrackConfigUtil;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.platform.comapi.util.SysOSAPIv2;
 import java.io.File;
 
-public class SettingFragment
-  extends ContentFragment
-  implements AdapterView.OnItemClickListener
-{
-  public static String a = SettingFragment.class.getSimpleName();
-  protected q b;
-  private ListView c;
-  private a d;
-  private com.baidu.carlife.view.dialog.c e;
-  private com.baidu.carlife.f.g f;
-  private com.baidu.carlife.f.c g;
-  
-  private boolean b()
-  {
-    if ((!c()) && (n.a().n()))
-    {
-      w.a(2131297222, 0);
-      return false;
+public class SettingFragment extends ContentFragment implements OnItemClickListener {
+    /* renamed from: a */
+    public static String f4782a = SettingFragment.class.getSimpleName();
+    /* renamed from: b */
+    protected C1020q f4783b;
+    /* renamed from: c */
+    private ListView f4784c;
+    /* renamed from: d */
+    private C1575a f4785d;
+    /* renamed from: e */
+    private C1953c f4786e;
+    /* renamed from: f */
+    private C1443g f4787f;
+    /* renamed from: g */
+    private C1438c f4788g;
+
+    /* renamed from: com.baidu.carlife.fragment.SettingFragment$1 */
+    class C15711 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ SettingFragment f4777a;
+
+        C15711(SettingFragment this$0) {
+            this.f4777a = this$0;
+        }
+
+        public void onClick() {
+            this.f4777a.m5792d();
+        }
     }
-    return true;
-  }
-  
-  private boolean c()
-  {
-    return e.a().o();
-  }
-  
-  private void d()
-  {
-    new Thread(new Runnable()
-    {
-      public void run()
-      {
-        if (TextUtils.isEmpty(SysOSAPIv2.getInstance().getSdcardPath())) {}
-        Object localObject;
-        do
-        {
-          do
-          {
-            return;
-            localObject = SysOSAPIv2.getInstance().getSdcardPath() + File.separator + f.hM + File.separator + "tmp";
-          } while (TextUtils.isEmpty((CharSequence)localObject));
-          localObject = new File((String)localObject);
-        } while (!((File)localObject).exists());
-        h.a((File)localObject);
-      }
-    }).start();
-  }
-  
-  private void e()
-  {
-    if (this.e != null) {
-      this.e.d();
+
+    /* renamed from: com.baidu.carlife.fragment.SettingFragment$2 */
+    class C15722 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ SettingFragment f4778a;
+
+        C15722(SettingFragment this$0) {
+            this.f4778a = this$0;
+        }
+
+        public void onClick() {
+            this.f4778a.m5792d();
+        }
     }
-  }
-  
-  public boolean a()
-  {
-    boolean bool = false;
-    if ((f.jx == f.a.ab) || (f.jx == f.a.aa)) {
-      bool = true;
+
+    /* renamed from: com.baidu.carlife.fragment.SettingFragment$3 */
+    class C15733 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ SettingFragment f4779a;
+
+        C15733(SettingFragment this$0) {
+            this.f4779a = this$0;
+        }
+
+        public void onClick() {
+            this.f4779a.m5792d();
+        }
     }
-    return bool;
-  }
-  
-  public void driving()
-  {
-    i.b("yftech", "SettingFragment driving");
-    e();
-    back();
-    com.baidu.carlife.custom.a.a().d();
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = paramLayoutInflater.inflate(2130968809, null);
-    setCommonTitleBar(this.mContentView, getString(2131296639));
-    int i;
-    if (f.jv) {
-      i = 2131230720;
-    }
-    for (;;)
-    {
-      this.b = new q(getContext(), i);
-      this.c = ((ListView)this.mContentView.findViewById(2131625180));
-      this.c.setOverScrollMode(2);
-      this.c.setAdapter(this.b);
-      this.c.setOnItemClickListener(this);
-      this.d = new a(Looper.getMainLooper());
-      k.a(this.d);
-      return this.mContentView;
-      if (a()) {
-        i = 2131230721;
-      } else {
-        i = 2131230722;
-      }
-    }
-  }
-  
-  public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle)
-  {
-    return super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-  }
-  
-  public void onDestroy()
-  {
-    this.d.removeCallbacksAndMessages(null);
-    k.b(this.d);
-    this.b = null;
-    this.e = null;
-    this.c = null;
-    super.onDestroy();
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.fragmentType != getCurrentFragmentType()) {
-      return;
-    }
-    if (this.f == null)
-    {
-      this.f = new com.baidu.carlife.f.g(this.mContentView.findViewById(2131624146), 2);
-      this.f.d(this.mContentView.findViewById(2131624258));
-    }
-    if (this.g == null) {
-      this.g = new com.baidu.carlife.f.c(this.c, 6);
-    }
-    d.a().b(new com.baidu.carlife.f.a[] { this.f, this.g });
-    d.a().h(this.g);
-    this.g.e();
-  }
-  
-  protected void onInitView() {}
-  
-  public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong)
-  {
-    paramInt = (int)paramAdapterView.getItemIdAtPosition(paramInt);
-    i.b(a, "onItemClick:itemId = " + paramInt);
-    if (f.jv) {
-      switch (paramInt)
-      {
-      }
-    }
-    label585:
-    label776:
-    label941:
-    do
-    {
-      do
-      {
-        do
-        {
-          do
-          {
-            do
-            {
-              do
-              {
-                do
-                {
-                  return;
-                } while (!b());
-                paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-                paramAdapterView.setVisibility(0);
-                if (!e.a().o()) {}
-                for (bool = true;; bool = false)
-                {
-                  paramAdapterView.setChecked(bool);
-                  return;
+
+    /* renamed from: com.baidu.carlife.fragment.SettingFragment$4 */
+    class C15744 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ SettingFragment f4780a;
+
+        C15744(SettingFragment this$0) {
+            this.f4780a = this$0;
+        }
+
+        public void run() {
+            if (!TextUtils.isEmpty(SysOSAPIv2.getInstance().getSdcardPath())) {
+                String naviCacheDir = SysOSAPIv2.getInstance().getSdcardPath() + File.separator + C1253f.hM + File.separator + "tmp";
+                if (!TextUtils.isEmpty(naviCacheDir)) {
+                    File file = new File(naviCacheDir);
+                    if (file.exists()) {
+                        C2177h.m8270a(file);
+                    }
                 }
-                paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-                paramAdapterView.setVisibility(0);
-                if (!com.baidu.carlife.l.a.a().j()) {}
-                for (bool = true;; bool = false)
-                {
-                  paramAdapterView.setChecked(bool);
-                  return;
-                }
-                if (!com.baidu.carlife.logic.g.a().c()) {
-                  break;
-                }
-              } while (showConnectForbidDialog());
-              showFragment(532, null);
-              return;
-              showFragment(532, null);
-              return;
-              if (!com.baidu.carlife.logic.g.a().c()) {
-                break;
-              }
-            } while (showConnectForbidDialog());
-            showFragment(568, null);
-            return;
-            showFragment(568, null);
-            return;
-            paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-            if (!TrackConfigUtil.getInstance().getRouteRecordFlag()) {}
-            for (bool = true;; bool = false)
-            {
-              paramAdapterView.setChecked(bool);
-              return;
             }
-            try
-            {
-              mActivity.startActivity(new Intent("android.settings.APPLICATION_DEVELOPMENT_SETTINGS"));
-              return;
-            }
-            catch (Exception paramAdapterView)
-            {
-              paramAdapterView.printStackTrace();
-              return;
-            }
-            if (this.e == null)
-            {
-              this.e = new com.baidu.carlife.view.dialog.c(mActivity).b(2131296270).a(2131296271).g(17).c(2131296264).q().d(2131296259);
-              this.e.a(new com.baidu.carlife.core.screen.b()
-              {
-                public void onClick()
-                {
-                  SettingFragment.a(SettingFragment.this);
-                }
-              });
-            }
-            showDialog(this.e);
-            StatisticManager.onEvent("1028", "1028");
-            return;
-            showFragment(539, null);
-            StatisticManager.onEvent("1029", "1029");
-            return;
-            if (!a()) {
-              break label776;
-            }
-            switch (paramInt)
-            {
-            default: 
-              return;
-            case 0: 
-              paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-              if (!b())
-              {
-                paramAdapterView.setChecked(false);
-                return;
-              }
-              paramAdapterView.setVisibility(0);
-              if (!e.a().o()) {}
-              for (bool = true;; bool = false)
-              {
-                paramAdapterView.setChecked(bool);
-                return;
-              }
-            case 1: 
-              paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-              paramAdapterView.setVisibility(0);
-              if (!com.baidu.carlife.l.a.a().j()) {}
-              for (bool = true;; bool = false)
-              {
-                paramAdapterView.setChecked(bool);
-                return;
-              }
-            case 2: 
-              if (!com.baidu.carlife.logic.g.a().c()) {
-                break label585;
-              }
-            }
-          } while (showConnectForbidDialog());
-          showFragment(532, null);
-          return;
-          showFragment(532, null);
-          return;
-          if (!com.baidu.carlife.logic.g.a().c()) {
-            break;
-          }
-        } while (showConnectForbidDialog());
-        showFragment(568, null);
-        return;
-        showFragment(568, null);
-        return;
-        paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-        if (!TrackConfigUtil.getInstance().getRouteRecordFlag()) {}
-        for (bool = true;; bool = false)
-        {
-          paramAdapterView.setChecked(bool);
-          return;
         }
-        com.baidu.carlife.custom.elhyf.b.a().d();
-        return;
-        if (this.e == null)
-        {
-          this.e = new com.baidu.carlife.view.dialog.c(mActivity).b(2131296270).a(2131296271).g(17).c(2131296264).q().d(2131296259);
-          this.e.a(new com.baidu.carlife.core.screen.b()
-          {
-            public void onClick()
-            {
-              SettingFragment.a(SettingFragment.this);
-            }
-          });
-        }
-        showDialog(this.e);
-        StatisticManager.onEvent("1028", "1028");
-        return;
-        showFragment(539, null);
-        StatisticManager.onEvent("1029", "1029");
-        return;
-        switch (paramInt)
-        {
-        default: 
-          return;
-        case 0: 
-          paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-          if (!b())
-          {
-            paramAdapterView.setChecked(false);
-            return;
-          }
-          paramAdapterView.setVisibility(0);
-          if (!e.a().o()) {}
-          for (bool = true;; bool = false)
-          {
-            paramAdapterView.setChecked(bool);
-            return;
-          }
-        case 1: 
-          paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-          paramAdapterView.setVisibility(0);
-          if (!com.baidu.carlife.l.a.a().j()) {}
-          for (bool = true;; bool = false)
-          {
-            paramAdapterView.setChecked(bool);
-            return;
-          }
-        case 2: 
-          if (!com.baidu.carlife.logic.g.a().c()) {
-            break label941;
-          }
-        }
-      } while (showConnectForbidDialog());
-      showFragment(532, null);
-      return;
-      showFragment(532, null);
-      return;
-      if (!com.baidu.carlife.logic.g.a().c()) {
-        break;
-      }
-    } while (showConnectForbidDialog());
-    showFragment(568, null);
-    return;
-    showFragment(568, null);
-    return;
-    paramAdapterView = (SwitchButton)paramView.findViewById(2131625241);
-    if (!TrackConfigUtil.getInstance().getRouteRecordFlag()) {}
-    for (boolean bool = true;; bool = false)
-    {
-      paramAdapterView.setChecked(bool);
-      return;
     }
-    if (this.e == null)
-    {
-      this.e = new com.baidu.carlife.view.dialog.c(mActivity).b(2131296270).a(2131296271).g(17).c(2131296264).q().d(2131296259);
-      this.e.a(new com.baidu.carlife.core.screen.b()
-      {
-        public void onClick()
-        {
-          SettingFragment.a(SettingFragment.this);
+
+    /* renamed from: com.baidu.carlife.fragment.SettingFragment$a */
+    private class C1575a extends C0936j {
+        /* renamed from: a */
+        final /* synthetic */ SettingFragment f4781a;
+
+        public C1575a(SettingFragment settingFragment, Looper looper) {
+            this.f4781a = settingFragment;
+            super(looper);
         }
-      });
-    }
-    showDialog(this.e);
-    StatisticManager.onEvent("1028", "1028");
-    return;
-    showFragment(539, null);
-    StatisticManager.onEvent("1029", "1029");
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    i.b(a);
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    super.onUpdateSkin();
-    updateCommonSkin();
-    this.c.setSelector(r.b(2130838223));
-    this.c.setDivider(r.b(2131558624));
-    this.c.setDividerHeight(getResources().getDimensionPixelSize(2131361846));
-    this.b.notifyDataSetChanged();
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public void stopDriving()
-  {
-    i.b("yftech", "SettingFragment stopDriving");
-  }
-  
-  private class a
-    extends j
-  {
-    public a(Looper paramLooper)
-    {
-      super();
-    }
-    
-    public void careAbout()
-    {
-      addMsg(16875523);
-    }
-    
-    public void handleMessage(Message paramMessage)
-    {
-      super.handleMessage(paramMessage);
-      switch (paramMessage.what)
-      {
-      }
-      for (;;)
-      {
-        return;
-        int i;
-        if ((String)paramMessage.obj == null) {
-          i = 2131230720;
+
+        public void careAbout() {
+            addMsg(C1253f.bU);
         }
-        while (SettingFragment.this.b != null)
-        {
-          SettingFragment.this.b.a(i);
-          SettingFragment.this.b.notifyDataSetChanged();
-          return;
-          if (SettingFragment.this.a()) {
-            i = 2131230721;
-          } else {
-            i = 2131230722;
-          }
+
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case C1253f.bU /*16875523*/:
+                    int listId;
+                    if (msg.obj == null) {
+                        listId = C0965R.array.carlife_setting_name;
+                    } else if (this.f4781a.m5794a()) {
+                        listId = C0965R.array.carlife_setting_name_elh;
+                    } else {
+                        listId = C0965R.array.carlife_setting_name_usb;
+                    }
+                    if (this.f4781a.f4783b != null) {
+                        this.f4781a.f4783b.m3260a(listId);
+                        this.f4781a.f4783b.notifyDataSetChanged();
+                        return;
+                    }
+                    return;
+                default:
+                    return;
+            }
         }
-      }
     }
-  }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        int arrayId;
+        this.mContentView = inflater.inflate(C0965R.layout.frag_setting, null);
+        setCommonTitleBar(this.mContentView, getString(C0965R.string.module_setting));
+        if (C1253f.jv) {
+            arrayId = C0965R.array.carlife_setting_name;
+        } else if (m5794a()) {
+            arrayId = C0965R.array.carlife_setting_name_elh;
+        } else {
+            arrayId = C0965R.array.carlife_setting_name_usb;
+        }
+        this.f4783b = new C1020q(getContext(), arrayId);
+        this.f4784c = (ListView) this.mContentView.findViewById(C0965R.id.setting_list);
+        this.f4784c.setOverScrollMode(2);
+        this.f4784c.setAdapter(this.f4783b);
+        this.f4784c.setOnItemClickListener(this);
+        this.f4785d = new C1575a(this, Looper.getMainLooper());
+        C1261k.m4460a(this.f4785d);
+        return this.mContentView;
+    }
+
+    protected void onUpdateSkin() {
+        super.onUpdateSkin();
+        updateCommonSkin();
+        this.f4784c.setSelector(C2188r.m8331b(C0965R.drawable.com_bg_item_selector));
+        this.f4784c.setDivider(C2188r.m8331b(C0965R.color.cl_line_a1_item));
+        this.f4784c.setDividerHeight(getResources().getDimensionPixelSize(C0965R.dimen.common_item_line));
+        this.f4783b.notifyDataSetChanged();
+    }
+
+    public void onResume() {
+        super.onResume();
+        C1260i.m4434b(f4782a);
+    }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
+        int itemId = (int) adapter.getItemIdAtPosition(pos);
+        C1260i.m4435b(f4782a, "onItemClick:itemId = " + itemId);
+        SwitchButton switchVoice;
+        SwitchButton switchColorMode;
+        if (C1253f.jv) {
+            switch (itemId) {
+                case 0:
+                    if (m5790b()) {
+                        switchVoice = (SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup);
+                        switchVoice.setVisibility(0);
+                        switchVoice.setChecked(!C1251e.m4358a().m4398o());
+                        return;
+                    }
+                    return;
+                case 1:
+                    switchColorMode = (SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup);
+                    switchColorMode.setVisibility(0);
+                    switchColorMode.setChecked(!C1663a.m5979a().m6043j());
+                    return;
+                case 2:
+                    if (!C1765g.m6424a().m6442c()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_NAVI, null);
+                        return;
+                    } else if (!showConnectForbidDialog()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_NAVI, null);
+                        return;
+                    } else {
+                        return;
+                    }
+                case 3:
+                    if (!C1765g.m6424a().m6442c()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_TTS, null);
+                        return;
+                    } else if (!showConnectForbidDialog()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_TTS, null);
+                        return;
+                    } else {
+                        return;
+                    }
+                case 4:
+                    ((SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup)).setChecked(!TrackConfigUtil.getInstance().getRouteRecordFlag());
+                    return;
+                case 5:
+                    try {
+                        mActivity.startActivity(new Intent("android.settings.APPLICATION_DEVELOPMENT_SETTINGS"));
+                        return;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                case 6:
+                    if (this.f4786e == null) {
+                        this.f4786e = new C1953c(mActivity).m7442b((int) C0965R.string.alert_delete_navi_cache).m7435a((int) C0965R.string.alert_delete_navi_cache_content).m7457g(17).m7447c((int) C0965R.string.alert_confirm).m7458q().m7450d((int) C0965R.string.alert_cancel);
+                        this.f4786e.m7438a(new C15711(this));
+                    }
+                    showDialog(this.f4786e);
+                    StatisticManager.onEvent(StatisticConstants.SETTINGS_CLEAN_BUFFER, StatisticConstants.SETTINGS_CLEAN_BUFFER);
+                    return;
+                case 7:
+                    showFragment(539, null);
+                    StatisticManager.onEvent(StatisticConstants.SETTINGS_ABOUT, StatisticConstants.SETTINGS_ABOUT);
+                    return;
+                default:
+                    return;
+            }
+        } else if (m5794a()) {
+            switch (itemId) {
+                case 0:
+                    switchVoice = (SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup);
+                    if (m5790b()) {
+                        switchVoice.setVisibility(0);
+                        switchVoice.setChecked(!C1251e.m4358a().m4398o());
+                        return;
+                    }
+                    switchVoice.setChecked(false);
+                    return;
+                case 1:
+                    switchColorMode = (SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup);
+                    switchColorMode.setVisibility(0);
+                    switchColorMode.setChecked(!C1663a.m5979a().m6043j());
+                    return;
+                case 2:
+                    if (!C1765g.m6424a().m6442c()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_NAVI, null);
+                        return;
+                    } else if (!showConnectForbidDialog()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_NAVI, null);
+                        return;
+                    } else {
+                        return;
+                    }
+                case 3:
+                    if (!C1765g.m6424a().m6442c()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_TTS, null);
+                        return;
+                    } else if (!showConnectForbidDialog()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_TTS, null);
+                        return;
+                    } else {
+                        return;
+                    }
+                case 4:
+                    ((SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup)).setChecked(!TrackConfigUtil.getInstance().getRouteRecordFlag());
+                    return;
+                case 5:
+                    C1371b.m4996a().m5014d();
+                    return;
+                case 6:
+                    if (this.f4786e == null) {
+                        this.f4786e = new C1953c(mActivity).m7442b((int) C0965R.string.alert_delete_navi_cache).m7435a((int) C0965R.string.alert_delete_navi_cache_content).m7457g(17).m7447c((int) C0965R.string.alert_confirm).m7458q().m7450d((int) C0965R.string.alert_cancel);
+                        this.f4786e.m7438a(new C15722(this));
+                    }
+                    showDialog(this.f4786e);
+                    StatisticManager.onEvent(StatisticConstants.SETTINGS_CLEAN_BUFFER, StatisticConstants.SETTINGS_CLEAN_BUFFER);
+                    return;
+                case 7:
+                    showFragment(539, null);
+                    StatisticManager.onEvent(StatisticConstants.SETTINGS_ABOUT, StatisticConstants.SETTINGS_ABOUT);
+                    return;
+                default:
+                    return;
+            }
+        } else {
+            switch (itemId) {
+                case 0:
+                    switchVoice = (SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup);
+                    if (m5790b()) {
+                        switchVoice.setVisibility(0);
+                        switchVoice.setChecked(!C1251e.m4358a().m4398o());
+                        return;
+                    }
+                    switchVoice.setChecked(false);
+                    return;
+                case 1:
+                    switchColorMode = (SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup);
+                    switchColorMode.setVisibility(0);
+                    switchColorMode.setChecked(!C1663a.m5979a().m6043j());
+                    return;
+                case 2:
+                    if (!C1765g.m6424a().m6442c()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_NAVI, null);
+                        return;
+                    } else if (!showConnectForbidDialog()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_NAVI, null);
+                        return;
+                    } else {
+                        return;
+                    }
+                case 3:
+                    if (!C1765g.m6424a().m6442c()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_TTS, null);
+                        return;
+                    } else if (!showConnectForbidDialog()) {
+                        showFragment(NaviFragmentManager.TYPE_SETTING_TTS, null);
+                        return;
+                    } else {
+                        return;
+                    }
+                case 4:
+                    ((SwitchButton) view.findViewById(C0965R.id.sw_voice_wakeup)).setChecked(!TrackConfigUtil.getInstance().getRouteRecordFlag());
+                    return;
+                case 5:
+                    if (this.f4786e == null) {
+                        this.f4786e = new C1953c(mActivity).m7442b((int) C0965R.string.alert_delete_navi_cache).m7435a((int) C0965R.string.alert_delete_navi_cache_content).m7457g(17).m7447c((int) C0965R.string.alert_confirm).m7458q().m7450d((int) C0965R.string.alert_cancel);
+                        this.f4786e.m7438a(new C15733(this));
+                    }
+                    showDialog(this.f4786e);
+                    StatisticManager.onEvent(StatisticConstants.SETTINGS_CLEAN_BUFFER, StatisticConstants.SETTINGS_CLEAN_BUFFER);
+                    return;
+                case 6:
+                    showFragment(539, null);
+                    StatisticManager.onEvent(StatisticConstants.SETTINGS_ABOUT, StatisticConstants.SETTINGS_ABOUT);
+                    return;
+                default:
+                    return;
+            }
+        }
+    }
+
+    public void onInitFocusAreas() {
+        if (this.fragmentType == getCurrentFragmentType()) {
+            if (this.f4787f == null) {
+                this.f4787f = new C1443g(this.mContentView.findViewById(C0965R.id.title_bar), 2);
+                this.f4787f.m5300d(this.mContentView.findViewById(C0965R.id.ib_left));
+            }
+            if (this.f4788g == null) {
+                this.f4788g = new C1438c(this.f4784c, 6);
+            }
+            C1440d.m5251a().m5256b(this.f4787f, this.f4788g);
+            C1440d.m5251a().m5268h(this.f4788g);
+            this.f4788g.m5250e();
+        }
+    }
+
+    /* renamed from: b */
+    private boolean m5790b() {
+        if (m5791c() || !C1912n.m7270a().m7315n()) {
+            return true;
+        }
+        C2201w.m8371a((int) C0965R.string.voice_feature_no_wakeup, 0);
+        return false;
+    }
+
+    /* renamed from: c */
+    private boolean m5791c() {
+        return C1251e.m4358a().m4398o();
+    }
+
+    /* renamed from: d */
+    private void m5792d() {
+        new Thread(new C15744(this)).start();
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "SettingFragment driving");
+        m5793e();
+        back();
+        C1342a.m4926a().m4931d();
+    }
+
+    public void onDestroy() {
+        this.f4785d.removeCallbacksAndMessages(null);
+        C1261k.m4464b(this.f4785d);
+        this.f4783b = null;
+        this.f4786e = null;
+        this.f4784c = null;
+        super.onDestroy();
+    }
+
+    public void stopDriving() {
+        C1260i.m4435b("yftech", "SettingFragment stopDriving");
+    }
+
+    /* renamed from: e */
+    private void m5793e() {
+        if (this.f4786e != null) {
+            this.f4786e.mo1526d();
+        }
+    }
+
+    /* renamed from: a */
+    public boolean m5794a() {
+        if (C1253f.jx == C1252a.VEHICLE_CHANNEL_YUANFENG_ELH_ONLINE || C1253f.jx == C1252a.VEHICLE_CHANNEL_YUANFENG_ELH_PCBA) {
+            return true;
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/SettingFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

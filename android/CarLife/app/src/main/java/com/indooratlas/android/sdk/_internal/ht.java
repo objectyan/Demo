@@ -1,5 +1,8 @@
 package com.indooratlas.android.sdk._internal;
 
+import android.net.http.Headers;
+import com.indooratlas.android.sdk._internal.gd.C5917a;
+import com.indooratlas.android.sdk._internal.gm.C5927a;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
@@ -9,260 +12,228 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public final class ht
-  implements hx
-{
-  private static final iq a = iq.a("connection");
-  private static final iq b = iq.a("host");
-  private static final iq c = iq.a("keep-alive");
-  private static final iq d = iq.a("proxy-connection");
-  private static final iq e = iq.a("transfer-encoding");
-  private static final iq f = iq.a("te");
-  private static final iq g = iq.a("encoding");
-  private static final iq h = iq.a("upgrade");
-  private static final List<iq> i = gy.a(new iq[] { a, b, c, d, e, he.b, he.c, he.d, he.e, he.f, he.g });
-  private static final List<iq> j = gy.a(new iq[] { a, b, c, d, e });
-  private static final List<iq> k = gy.a(new iq[] { a, b, c, d, f, e, g, h, he.b, he.c, he.d, he.e, he.f, he.g });
-  private static final List<iq> l = gy.a(new iq[] { a, b, c, d, f, e, g, h });
-  private final ig m;
-  private final hc n;
-  private hv o;
-  private hd p;
-  
-  public ht(ig paramig, hc paramhc)
-  {
-    this.m = paramig;
-    this.n = paramhc;
-  }
-  
-  private static gm.a a(List<he> paramList)
-    throws IOException
-  {
-    Object localObject1 = null;
-    Object localObject2 = "HTTP/1.1";
-    gd.a locala = new gd.a();
-    int i5 = paramList.size();
-    int i1 = 0;
-    while (i1 < i5)
-    {
-      iq localiq = ((he)paramList.get(i1)).h;
-      String str2 = ((he)paramList.get(i1)).i.a();
-      int i2 = 0;
-      if (i2 < str2.length())
-      {
-        int i4 = str2.indexOf(0, i2);
-        int i3 = i4;
-        if (i4 == -1) {
-          i3 = str2.length();
+public final class ht implements hx {
+    /* renamed from: a */
+    private static final iq f24274a = iq.a(Headers.CONN_DIRECTIVE);
+    /* renamed from: b */
+    private static final iq f24275b = iq.a("host");
+    /* renamed from: c */
+    private static final iq f24276c = iq.a("keep-alive");
+    /* renamed from: d */
+    private static final iq f24277d = iq.a(Headers.PROXY_CONNECTION);
+    /* renamed from: e */
+    private static final iq f24278e = iq.a(Headers.TRANSFER_ENCODING);
+    /* renamed from: f */
+    private static final iq f24279f = iq.a("te");
+    /* renamed from: g */
+    private static final iq f24280g = iq.a("encoding");
+    /* renamed from: h */
+    private static final iq f24281h = iq.a("upgrade");
+    /* renamed from: i */
+    private static final List<iq> f24282i = gy.m20786a(f24274a, f24275b, f24276c, f24277d, f24278e, he.f24161b, he.f24162c, he.f24163d, he.f24164e, he.f24165f, he.f24166g);
+    /* renamed from: j */
+    private static final List<iq> f24283j = gy.m20786a(f24274a, f24275b, f24276c, f24277d, f24278e);
+    /* renamed from: k */
+    private static final List<iq> f24284k = gy.m20786a(f24274a, f24275b, f24276c, f24277d, f24279f, f24278e, f24280g, f24281h, he.f24161b, he.f24162c, he.f24163d, he.f24164e, he.f24165f, he.f24166g);
+    /* renamed from: l */
+    private static final List<iq> f24285l = gy.m20786a(f24274a, f24275b, f24276c, f24277d, f24279f, f24278e, f24280g, f24281h);
+    /* renamed from: m */
+    private final ig f24286m;
+    /* renamed from: n */
+    private final hc f24287n;
+    /* renamed from: o */
+    private hv f24288o;
+    /* renamed from: p */
+    private hd f24289p;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ht$a */
+    class C5973a extends is {
+        /* renamed from: a */
+        final /* synthetic */ ht f24273a;
+
+        public C5973a(ht htVar, jd jdVar) {
+            this.f24273a = htVar;
+            super(jdVar);
         }
-        String str1 = str2.substring(i2, i3);
-        if (localiq.equals(he.a)) {
-          localObject1 = str1;
+
+        public final void close() throws IOException {
+            this.f24273a.f24286m.a(false, this.f24273a);
+            super.close();
         }
-        for (;;)
-        {
-          i2 = i3 + 1;
-          break;
-          if (localiq.equals(he.g)) {
-            localObject2 = str1;
-          } else if (!j.contains(localiq)) {
-            locala.a(localiq.a(), str1);
-          }
+    }
+
+    public ht(ig igVar, hc hcVar) {
+        this.f24286m = igVar;
+        this.f24287n = hcVar;
+    }
+
+    /* renamed from: a */
+    public final void m21036a(hv hvVar) {
+        this.f24288o = hvVar;
+    }
+
+    /* renamed from: a */
+    public final jc m21033a(gk gkVar, long j) throws IOException {
+        return this.f24289p.m20918d();
+    }
+
+    /* renamed from: a */
+    public final void m21035a(gk gkVar) throws IOException {
+        if (this.f24289p == null) {
+            List arrayList;
+            this.f24288o.a();
+            boolean a = hv.a(gkVar);
+            if (this.f24287n.f24112a == gi.HTTP_2) {
+                gd gdVar = gkVar.f23954c;
+                arrayList = new ArrayList((gdVar.f23845a.length / 2) + 4);
+                arrayList.add(new he(he.f24161b, gkVar.f23953b));
+                arrayList.add(new he(he.f24162c, ib.a(gkVar.f23952a)));
+                arrayList.add(new he(he.f24164e, gy.m20783a(gkVar.f23952a)));
+                arrayList.add(new he(he.f24163d, gkVar.f23952a.f23861a));
+                int length = gdVar.f23845a.length / 2;
+                for (int i = 0; i < length; i++) {
+                    iq a2 = iq.a(gdVar.m20617a(i).toLowerCase(Locale.US));
+                    if (!f24284k.contains(a2)) {
+                        arrayList.add(new he(a2, gdVar.m20619b(i)));
+                    }
+                }
+            } else {
+                arrayList = m21031b(gkVar);
+            }
+            this.f24289p = this.f24287n.m20879a(arrayList, a);
+            this.f24289p.f24156h.a((long) this.f24288o.f24303b.f23926w, TimeUnit.MILLISECONDS);
+            this.f24289p.f24157i.a((long) this.f24288o.f24303b.f23927x, TimeUnit.MILLISECONDS);
         }
-      }
-      i1 += 1;
     }
-    if (localObject1 == null) {
-      throw new ProtocolException("Expected ':status' header not present");
+
+    /* renamed from: a */
+    public final void m21037a(ic icVar) throws IOException {
+        icVar.a(this.f24289p.m20918d());
     }
-    paramList = if.a((String)localObject2 + " " + (String)localObject1);
-    localObject1 = new gm.a();
-    ((gm.a)localObject1).b = gi.c;
-    ((gm.a)localObject1).c = paramList.b;
-    ((gm.a)localObject1).d = paramList.c;
-    return ((gm.a)localObject1).a(locala.a());
-  }
-  
-  private static List<he> b(gk paramgk)
-  {
-    gd localgd = paramgk.c;
-    ArrayList localArrayList = new ArrayList(localgd.a.length / 2 + 5);
-    localArrayList.add(new he(he.b, paramgk.b));
-    localArrayList.add(new he(he.c, ib.a(paramgk.a)));
-    localArrayList.add(new he(he.g, "HTTP/1.1"));
-    localArrayList.add(new he(he.f, gy.a(paramgk.a)));
-    localArrayList.add(new he(he.d, paramgk.a.a));
-    paramgk = new LinkedHashSet();
-    int i3 = localgd.a.length / 2;
-    int i1 = 0;
-    if (i1 < i3)
-    {
-      iq localiq = iq.a(localgd.a(i1).toLowerCase(Locale.US));
-      String str;
-      if (!i.contains(localiq))
-      {
-        str = localgd.b(i1);
-        if (!paramgk.add(localiq)) {
-          break label241;
+
+    /* renamed from: c */
+    public final void m21039c() throws IOException {
+        this.f24289p.m20918d().close();
+    }
+
+    /* renamed from: b */
+    public final C5927a m21038b() throws IOException {
+        if (this.f24287n.f24112a != gi.HTTP_2) {
+            return m21029a(this.f24289p.m20916c());
         }
-        localArrayList.add(new he(localiq, str));
-      }
-      label241:
-      label338:
-      for (;;)
-      {
-        i1 += 1;
-        break;
-        int i2 = 0;
-        for (;;)
-        {
-          if (i2 >= localArrayList.size()) {
-            break label338;
-          }
-          if (((he)localArrayList.get(i2)).h.equals(localiq))
-          {
-            localArrayList.set(i2, new he(localiq, ((he)localArrayList.get(i2)).i.a() + '\000' + str));
-            break;
-          }
-          i2 += 1;
+        List c = this.f24289p.m20916c();
+        String str = null;
+        C5917a c5917a = new C5917a();
+        int size = c.size();
+        int i = 0;
+        while (i < size) {
+            iq iqVar = ((he) c.get(i)).f24167h;
+            String a = ((he) c.get(i)).f24168i.a();
+            if (!iqVar.equals(he.f24160a)) {
+                if (!f24285l.contains(iqVar)) {
+                    c5917a.m20612a(iqVar.a(), a);
+                }
+                a = str;
+            }
+            i++;
+            str = a;
         }
-      }
-    }
-    return localArrayList;
-  }
-  
-  public final gn a(gm paramgm)
-    throws IOException
-  {
-    a locala = new a(this.p.f);
-    return new hz(paramgm.f, ix.a(locala));
-  }
-  
-  public final jc a(gk paramgk, long paramLong)
-    throws IOException
-  {
-    return this.p.d();
-  }
-  
-  public final void a()
-  {
-    if (this.p != null) {
-      this.p.b(gz.l);
-    }
-  }
-  
-  public final void a(gk paramgk)
-    throws IOException
-  {
-    if (this.p != null) {
-      return;
-    }
-    this.o.a();
-    boolean bool = hv.a(paramgk);
-    if (this.n.a == gi.d)
-    {
-      gd localgd = paramgk.c;
-      ArrayList localArrayList = new ArrayList(localgd.a.length / 2 + 4);
-      localArrayList.add(new he(he.b, paramgk.b));
-      localArrayList.add(new he(he.c, ib.a(paramgk.a)));
-      localArrayList.add(new he(he.e, gy.a(paramgk.a)));
-      localArrayList.add(new he(he.d, paramgk.a.a));
-      int i1 = 0;
-      int i2 = localgd.a.length / 2;
-      for (;;)
-      {
-        paramgk = localArrayList;
-        if (i1 >= i2) {
-          break;
+        if (str == null) {
+            throw new ProtocolException("Expected ':status' header not present");
         }
-        paramgk = iq.a(localgd.a(i1).toLowerCase(Locale.US));
-        if (!k.contains(paramgk)) {
-          localArrayList.add(new he(paramgk, localgd.b(i1)));
+        C5979if a2 = C5979if.a("HTTP/1.1 " + str);
+        C5927a c5927a = new C5927a();
+        c5927a.f23963b = gi.HTTP_2;
+        c5927a.f23964c = a2.f24345b;
+        c5927a.f23965d = a2.f24346c;
+        return c5927a.m20721a(c5917a.m20613a());
+    }
+
+    /* renamed from: b */
+    private static List<he> m21031b(gk gkVar) {
+        gd gdVar = gkVar.f23954c;
+        List<he> arrayList = new ArrayList((gdVar.f23845a.length / 2) + 5);
+        arrayList.add(new he(he.f24161b, gkVar.f23953b));
+        arrayList.add(new he(he.f24162c, ib.a(gkVar.f23952a)));
+        arrayList.add(new he(he.f24166g, "HTTP/1.1"));
+        arrayList.add(new he(he.f24165f, gy.m20783a(gkVar.f23952a)));
+        arrayList.add(new he(he.f24163d, gkVar.f23952a.f23861a));
+        Set linkedHashSet = new LinkedHashSet();
+        int length = gdVar.f23845a.length / 2;
+        for (int i = 0; i < length; i++) {
+            iq a = iq.a(gdVar.m20617a(i).toLowerCase(Locale.US));
+            if (!f24282i.contains(a)) {
+                String b = gdVar.m20619b(i);
+                if (linkedHashSet.add(a)) {
+                    arrayList.add(new he(a, b));
+                } else {
+                    for (int i2 = 0; i2 < arrayList.size(); i2++) {
+                        if (((he) arrayList.get(i2)).f24167h.equals(a)) {
+                            arrayList.set(i2, new he(a, new StringBuilder(((he) arrayList.get(i2)).f24168i.a()).append('\u0000').append(b).toString()));
+                            break;
+                        }
+                    }
+                }
+            }
         }
-        i1 += 1;
-      }
+        return arrayList;
     }
-    paramgk = b(paramgk);
-    this.p = this.n.a(paramgk, bool);
-    this.p.h.a(this.o.b.w, TimeUnit.MILLISECONDS);
-    this.p.i.a(this.o.b.x, TimeUnit.MILLISECONDS);
-  }
-  
-  public final void a(hv paramhv)
-  {
-    this.o = paramhv;
-  }
-  
-  public final void a(ic paramic)
-    throws IOException
-  {
-    paramic.a(this.p.d());
-  }
-  
-  public final gm.a b()
-    throws IOException
-  {
-    if (this.n.a == gi.d)
-    {
-      List localList = this.p.c();
-      Object localObject1 = null;
-      gd.a locala = new gd.a();
-      int i2 = localList.size();
-      int i1 = 0;
-      if (i1 < i2)
-      {
-        iq localiq = ((he)localList.get(i1)).h;
-        localObject2 = ((he)localList.get(i1)).i.a();
-        if (localiq.equals(he.a)) {
-          localObject1 = localObject2;
+
+    /* renamed from: a */
+    private static C5927a m21029a(List<he> list) throws IOException {
+        String str = null;
+        String str2 = "HTTP/1.1";
+        C5917a c5917a = new C5917a();
+        int size = list.size();
+        int i = 0;
+        while (i < size) {
+            iq iqVar = ((he) list.get(i)).f24167h;
+            String a = ((he) list.get(i)).f24168i.a();
+            String str3 = str2;
+            int i2 = 0;
+            while (i2 < a.length()) {
+                int indexOf = a.indexOf(0, i2);
+                if (indexOf == -1) {
+                    indexOf = a.length();
+                }
+                str2 = a.substring(i2, indexOf);
+                if (!iqVar.equals(he.f24160a)) {
+                    if (iqVar.equals(he.f24166g)) {
+                        str3 = str2;
+                        str2 = str;
+                    } else {
+                        if (!f24283j.contains(iqVar)) {
+                            c5917a.m20612a(iqVar.a(), str2);
+                        }
+                        str2 = str;
+                    }
+                }
+                str = str2;
+                i2 = indexOf + 1;
+            }
+            i++;
+            str2 = str3;
         }
-        for (;;)
-        {
-          i1 += 1;
-          break;
-          if (!l.contains(localiq)) {
-            locala.a(localiq.a(), (String)localObject2);
-          }
+        if (str == null) {
+            throw new ProtocolException("Expected ':status' header not present");
         }
-      }
-      if (localObject1 == null) {
-        throw new ProtocolException("Expected ':status' header not present");
-      }
-      localObject1 = if.a("HTTP/1.1 " + (String)localObject1);
-      Object localObject2 = new gm.a();
-      ((gm.a)localObject2).b = gi.d;
-      ((gm.a)localObject2).c = ((if)localObject1).b;
-      ((gm.a)localObject2).d = ((if)localObject1).c;
-      return ((gm.a)localObject2).a(locala.a());
+        C5979if a2 = C5979if.a(str2 + " " + str);
+        C5927a c5927a = new C5927a();
+        c5927a.f23963b = gi.SPDY_3;
+        c5927a.f23964c = a2.f24345b;
+        c5927a.f23965d = a2.f24346c;
+        return c5927a.m20721a(c5917a.m20613a());
     }
-    return a(this.p.c());
-  }
-  
-  public final void c()
-    throws IOException
-  {
-    this.p.d().close();
-  }
-  
-  final class a
-    extends is
-  {
-    public a(jd paramjd)
-    {
-      super();
+
+    /* renamed from: a */
+    public final gn m21032a(gm gmVar) throws IOException {
+        return new hz(gmVar.f23977f, ix.a(new C5973a(this, this.f24289p.f24154f)));
     }
-    
-    public final void close()
-      throws IOException
-    {
-      ht.a(ht.this).a(false, ht.this);
-      super.close();
+
+    /* renamed from: a */
+    public final void m21034a() {
+        if (this.f24289p != null) {
+            this.f24289p.m20914b(gz.CANCEL);
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ht.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,40 +1,31 @@
 package com.baidu.mobstat;
 
 import android.content.Context;
-import android.os.Handler;
-import java.util.Timer;
 
-class bz
-  implements Runnable
-{
-  bz(by paramby, Context paramContext) {}
-  
-  public void run()
-  {
-    if (by.a(this.b) != null)
-    {
-      by.a(this.b).cancel();
-      by.a(this.b, null);
+class bz implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ Context f19546a;
+    /* renamed from: b */
+    final /* synthetic */ by f19547b;
+
+    bz(by byVar, Context context) {
+        this.f19547b = byVar;
+        this.f19546a = context;
     }
-    by.a(this.b, SendStrategyEnum.values()[bj.a().b(this.a)]);
-    by.a(this.b, bj.a().c(this.a));
-    by.a(this.b, bj.a().d(this.a));
-    if (by.b(this.b).equals(SendStrategyEnum.SET_TIME_INTERVAL)) {
-      this.b.b(this.a);
+
+    public void run() {
+        if (this.f19547b.f19544f != null) {
+            this.f19547b.f19544f.cancel();
+            this.f19547b.f19544f = null;
+        }
+        this.f19547b.f19543e = SendStrategyEnum.values()[bj.m15464a().m15469b(this.f19546a)];
+        this.f19547b.f19542d = bj.m15464a().m15473c(this.f19546a);
+        this.f19547b.f19540b = bj.m15464a().m15478d(this.f19546a);
+        if (this.f19547b.f19543e.equals(SendStrategyEnum.SET_TIME_INTERVAL)) {
+            this.f19547b.m15544b(this.f19546a);
+        } else if (this.f19547b.f19543e.equals(SendStrategyEnum.ONCE_A_DAY)) {
+            this.f19547b.m15544b(this.f19546a);
+        }
+        this.f19547b.f19545g.postDelayed(new ca(this), (long) (this.f19547b.f19541c * 1000));
     }
-    for (;;)
-    {
-      by.d(this.b).postDelayed(new ca(this), by.c(this.b) * 1000);
-      return;
-      if (by.b(this.b).equals(SendStrategyEnum.ONCE_A_DAY)) {
-        this.b.b(this.a);
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bz.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

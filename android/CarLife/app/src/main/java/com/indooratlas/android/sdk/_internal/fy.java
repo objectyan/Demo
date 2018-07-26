@@ -1,5 +1,6 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.facebook.common.p262l.C5361b;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -9,520 +10,337 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import p003b.p004a.p009d.C0206d;
 
-public final class fy
-{
-  private static final Pattern c = Pattern.compile("(\\d{2,4})[^\\d]*");
-  private static final Pattern d = Pattern.compile("(?i)(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*");
-  private static final Pattern e = Pattern.compile("(\\d{1,2})[^\\d]*");
-  private static final Pattern f = Pattern.compile("(\\d{1,2}):(\\d{1,2}):(\\d{1,2})[^\\d]*");
-  public final String a;
-  public final String b;
-  private final long g;
-  private final String h;
-  private final String i;
-  private final boolean j;
-  private final boolean k;
-  private final boolean l;
-  private final boolean m;
-  
-  private fy(String paramString1, String paramString2, long paramLong, String paramString3, String paramString4, boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3, boolean paramBoolean4)
-  {
-    this.a = paramString1;
-    this.b = paramString2;
-    this.g = paramLong;
-    this.h = paramString3;
-    this.i = paramString4;
-    this.j = paramBoolean1;
-    this.k = paramBoolean2;
-    this.m = paramBoolean3;
-    this.l = paramBoolean4;
-  }
-  
-  private static int a(String paramString, int paramInt1, int paramInt2, boolean paramBoolean)
-  {
-    for (;;)
-    {
-      int n = paramInt2;
-      if (paramInt1 < paramInt2)
-      {
-        n = paramString.charAt(paramInt1);
-        if (((n >= 32) || (n == 9)) && (n < 127) && ((n < 48) || (n > 57)) && ((n < 97) || (n > 122)) && ((n < 65) || (n > 90)) && (n != 58)) {
-          break label108;
-        }
-        n = 1;
-        if (paramBoolean) {
-          break label114;
-        }
-      }
-      label108:
-      label114:
-      for (int i1 = 1;; i1 = 0)
-      {
-        if (n != i1) {
-          break label120;
-        }
-        n = paramInt1;
-        return n;
-        n = 0;
-        break;
-      }
-      label120:
-      paramInt1 += 1;
+public final class fy {
+    /* renamed from: c */
+    private static final Pattern f23818c = Pattern.compile("(\\d{2,4})[^\\d]*");
+    /* renamed from: d */
+    private static final Pattern f23819d = Pattern.compile("(?i)(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*");
+    /* renamed from: e */
+    private static final Pattern f23820e = Pattern.compile("(\\d{1,2})[^\\d]*");
+    /* renamed from: f */
+    private static final Pattern f23821f = Pattern.compile("(\\d{1,2}):(\\d{1,2}):(\\d{1,2})[^\\d]*");
+    /* renamed from: a */
+    public final String f23822a;
+    /* renamed from: b */
+    public final String f23823b;
+    /* renamed from: g */
+    private final long f23824g;
+    /* renamed from: h */
+    private final String f23825h;
+    /* renamed from: i */
+    private final String f23826i;
+    /* renamed from: j */
+    private final boolean f23827j;
+    /* renamed from: k */
+    private final boolean f23828k;
+    /* renamed from: l */
+    private final boolean f23829l;
+    /* renamed from: m */
+    private final boolean f23830m;
+
+    private fy(String str, String str2, long j, String str3, String str4, boolean z, boolean z2, boolean z3, boolean z4) {
+        this.f23822a = str;
+        this.f23823b = str2;
+        this.f23824g = j;
+        this.f23825h = str3;
+        this.f23826i = str4;
+        this.f23827j = z;
+        this.f23828k = z2;
+        this.f23830m = z3;
+        this.f23829l = z4;
     }
-  }
-  
-  private static long a(String paramString)
-  {
-    try
-    {
-      l1 = Long.parseLong(paramString);
-      if (l1 > 0L) {
-        break label15;
-      }
-    }
-    catch (NumberFormatException localNumberFormatException)
-    {
-      long l1;
-      label15:
-      while (paramString.matches("-?\\d+")) {
-        if (!paramString.startsWith("-")) {
-          return Long.MAX_VALUE;
-        }
-      }
-      throw localNumberFormatException;
-    }
-    return Long.MIN_VALUE;
-    return l1;
-  }
-  
-  private static fy a(long paramLong, ge paramge, String paramString)
-  {
-    int i13 = paramString.length();
-    int n = gy.a(paramString, 0, i13, ';');
-    int i1 = gy.a(paramString, 0, n, '=');
-    if (i1 == n) {
-      return null;
-    }
-    String str1 = gy.c(paramString, 0, i1);
-    if (str1.isEmpty()) {
-      return null;
-    }
-    String str2 = gy.c(paramString, i1 + 1, n);
-    long l1 = 253402300799999L;
-    long l2 = -1L;
-    localObject1 = null;
-    localObject2 = null;
-    boolean bool4 = false;
-    boolean bool3 = false;
-    boolean bool2 = true;
-    boolean bool1 = false;
-    n += 1;
-    int i14;
-    Object localObject7;
-    Object localObject3;
-    if (n < i13)
-    {
-      i14 = gy.a(paramString, n, i13, ';');
-      i1 = gy.a(paramString, n, i14, '=');
-      localObject7 = gy.c(paramString, n, i1);
-      if (i1 < i14)
-      {
-        localObject3 = gy.c(paramString, i1 + 1, i14);
-        label162:
-        if (!((String)localObject7).equalsIgnoreCase("expires")) {
-          break label764;
-        }
-      }
-    }
-    for (;;)
-    {
-      int i3;
-      int i5;
-      int i2;
-      try
-      {
-        int i15 = ((String)localObject3).length();
-        i6 = a((String)localObject3, 0, i15, false);
-        i1 = -1;
-        i3 = -1;
-        i5 = -1;
-        i2 = -1;
-        int i4 = -1;
-        n = -1;
-        localObject7 = f.matcher((CharSequence)localObject3);
-        if (i6 < i15)
-        {
-          int i12 = a((String)localObject3, i6 + 1, i15, true);
-          ((Matcher)localObject7).region(i6, i12);
-          if ((i1 == -1) && (((Matcher)localObject7).usePattern(f).matches()))
-          {
-            i7 = Integer.parseInt(((Matcher)localObject7).group(1));
-            i9 = Integer.parseInt(((Matcher)localObject7).group(2));
-            i11 = Integer.parseInt(((Matcher)localObject7).group(3));
-            i10 = i2;
-            i8 = i4;
-            i6 = n;
-            i12 = a((String)localObject3, i12 + 1, i15, false);
-            n = i6;
-            i4 = i8;
-            i2 = i10;
-            i5 = i11;
-            i3 = i9;
-            i1 = i7;
-            i6 = i12;
-            continue;
-            localObject3 = "";
-            break label162;
-          }
-          if ((i2 == -1) && (((Matcher)localObject7).usePattern(e).matches()))
-          {
-            i10 = Integer.parseInt(((Matcher)localObject7).group(1));
-            i6 = n;
-            i8 = i4;
-            i11 = i5;
-            i9 = i3;
-            i7 = i1;
-            continue;
-          }
-          if ((i4 == -1) && (((Matcher)localObject7).usePattern(d).matches()))
-          {
-            String str3 = ((Matcher)localObject7).group(1).toLowerCase(Locale.US);
-            i8 = d.pattern().indexOf(str3) / 4;
-            i6 = n;
-            i10 = i2;
-            i11 = i5;
-            i9 = i3;
-            i7 = i1;
-            continue;
-          }
-          i6 = n;
-          int i8 = i4;
-          int i10 = i2;
-          int i11 = i5;
-          int i9 = i3;
-          int i7 = i1;
-          if (n != -1) {
-            continue;
-          }
-          i6 = n;
-          i8 = i4;
-          i10 = i2;
-          i11 = i5;
-          i9 = i3;
-          i7 = i1;
-          if (!((Matcher)localObject7).usePattern(c).matches()) {
-            continue;
-          }
-          i6 = Integer.parseInt(((Matcher)localObject7).group(1));
-          i8 = i4;
-          i10 = i2;
-          i11 = i5;
-          i9 = i3;
-          i7 = i1;
-          continue;
-          if (i6 < 1601) {
-            throw new IllegalArgumentException();
-          }
-          if (i4 != -1) {
-            break label1337;
-          }
-          throw new IllegalArgumentException();
-          throw new IllegalArgumentException();
-          throw new IllegalArgumentException();
-          throw new IllegalArgumentException();
-          throw new IllegalArgumentException();
-          localObject3 = new GregorianCalendar(gy.d);
-          ((Calendar)localObject3).setLenient(false);
-          ((Calendar)localObject3).set(1, i6);
-          ((Calendar)localObject3).set(2, i4 - 1);
-          ((Calendar)localObject3).set(5, i2);
-          ((Calendar)localObject3).set(11, i1);
-          ((Calendar)localObject3).set(12, i3);
-          ((Calendar)localObject3).set(13, i5);
-          ((Calendar)localObject3).set(14, 0);
-          long l3 = ((Calendar)localObject3).getTimeInMillis();
-          l1 = l3;
-          bool1 = true;
-          localObject3 = localObject1;
-          localObject1 = localObject2;
-          localObject2 = localObject3;
-          break label1316;
-          label764:
-          if (((String)localObject7).equalsIgnoreCase("max-age")) {
-            try
-            {
-              l3 = a((String)localObject3);
-              l2 = l3;
-              bool1 = true;
-              localObject3 = localObject1;
-              localObject1 = localObject2;
-              localObject2 = localObject3;
-            }
-            catch (NumberFormatException localNumberFormatException)
-            {
-              localObject4 = localObject1;
-              localObject1 = localObject2;
-              localObject2 = localObject4;
-            }
-          }
-          if (!((String)localObject7).equalsIgnoreCase("domain")) {}
-        }
-      }
-      catch (IllegalArgumentException localIllegalArgumentException1)
-      {
-        int i6;
-        Object localObject4;
-        localObject5 = localObject2;
-        localObject2 = localObject1;
-        localObject1 = localObject5;
-      }
-      try
-      {
-        if (((String)localObject4).endsWith(".")) {
-          throw new IllegalArgumentException();
-        }
-        localObject7 = localObject4;
-        if (((String)localObject4).startsWith(".")) {
-          localObject7 = ((String)localObject4).substring(1);
-        }
-        localObject4 = gy.a((String)localObject7);
-        if (localObject4 == null) {
-          throw new IllegalArgumentException();
-        }
-        bool2 = false;
-        localObject1 = localObject2;
-        localObject2 = localObject4;
-      }
-      catch (IllegalArgumentException localIllegalArgumentException2)
-      {
-        for (;;)
-        {
-          Object localObject6 = localObject1;
-          localObject1 = localObject2;
-          localObject2 = localObject6;
-        }
-      }
-      if (((String)localObject7).equalsIgnoreCase("path"))
-      {
-        localObject2 = localObject1;
-        localObject1 = localObject4;
-      }
-      else if (((String)localObject7).equalsIgnoreCase("secure"))
-      {
-        bool4 = true;
-        localObject4 = localObject1;
-        localObject1 = localObject2;
-        localObject2 = localObject4;
-      }
-      else if (((String)localObject7).equalsIgnoreCase("httponly"))
-      {
-        bool3 = true;
-        localObject4 = localObject1;
-        localObject1 = localObject2;
-        localObject2 = localObject4;
-        break label1316;
-        if (l2 == Long.MIN_VALUE)
-        {
-          l1 = Long.MIN_VALUE;
-          if (localObject1 == null)
-          {
-            paramString = paramge.b;
-            if (localObject2 != null)
-            {
-              localObject1 = localObject2;
-              if (((String)localObject2).startsWith("/")) {}
-            }
-            else
-            {
-              paramge = paramge.d();
-              n = paramge.lastIndexOf('/');
-              if (n == 0) {
-                continue;
-              }
-              paramge = paramge.substring(0, n);
-              localObject1 = paramge;
-            }
-            return new fy(str1, str2, l1, paramString, (String)localObject1, bool4, bool3, bool2, bool1);
-          }
-        }
-        else
-        {
-          if (l2 == -1L) {
-            continue;
-          }
-          if (l2 <= 9223372036854775L)
-          {
-            l1 = l2 * 1000L;
-            l2 = paramLong + l1;
-            if (l2 >= paramLong)
-            {
-              l1 = l2;
-              if (l2 <= 253402300799999L) {
-                continue;
-              }
-            }
-            l1 = 253402300799999L;
-            continue;
-          }
-          l1 = Long.MAX_VALUE;
-          continue;
-        }
-        paramString = paramge.b;
-        if (paramString.equals(localObject1))
-        {
-          n = 1;
-          if (n == 0) {
+
+    /* renamed from: a */
+    private static fy m20590a(long j, ge geVar, String str) {
+        int length = str.length();
+        int a = gy.m20780a(str, 0, length, ';');
+        int a2 = gy.m20780a(str, 0, a, '=');
+        if (a2 == a) {
             return null;
-          }
         }
-        else
-        {
-          if ((paramString.endsWith((String)localObject1)) && (paramString.charAt(paramString.length() - ((String)localObject1).length() - 1) == '.') && (!gy.b(paramString)))
-          {
-            n = 1;
-            continue;
-          }
-          n = 0;
-          continue;
-          paramge = "/";
-          continue;
+        String c = gy.m20802c(str, 0, a2);
+        if (c.isEmpty()) {
+            return null;
         }
-        paramString = (String)localObject1;
-        continue;
-      }
-      else
-      {
-        localObject4 = localObject1;
-        localObject1 = localObject2;
-        localObject2 = localObject4;
-        break label1316;
-        continue;
-        if ((n < 70) || (n > 99)) {
-          continue;
-        }
-        n += 1900;
-        i6 = n;
-        if (n < 0) {
-          continue;
-        }
-        i6 = n;
-        if (n > 69) {
-          continue;
-        }
-        i6 = n + 2000;
-        continue;
-      }
-      label1316:
-      n = i14 + 1;
-      Object localObject5 = localObject2;
-      localObject2 = localObject1;
-      localObject1 = localObject5;
-      break;
-      label1337:
-      if ((i2 > 0) && (i2 <= 31)) {
-        if ((i1 >= 0) && (i1 <= 23)) {
-          if ((i3 >= 0) && (i3 <= 59)) {
-            if (i5 >= 0) {
-              if (i5 <= 59) {}
+        String c2;
+        String str2;
+        String c3 = gy.m20802c(str, a2 + 1, a);
+        long j2 = C0206d.f307a;
+        long j3 = -1;
+        String str3 = null;
+        String str4 = null;
+        boolean z = false;
+        boolean z2 = false;
+        boolean z3 = true;
+        boolean z4 = false;
+        a++;
+        while (a < length) {
+            String str5;
+            int a3 = gy.m20780a(str, a, length, ';');
+            int a4 = gy.m20780a(str, a, a3, '=');
+            String c4 = gy.m20802c(str, a, a4);
+            c2 = a4 < a3 ? gy.m20802c(str, a4 + 1, a3) : "";
+            if (c4.equalsIgnoreCase("expires")) {
+                try {
+                    int length2 = c2.length();
+                    int a5 = m20588a(c2, 0, length2, false);
+                    int i = -1;
+                    int i2 = -1;
+                    int i3 = -1;
+                    int i4 = -1;
+                    int i5 = -1;
+                    a4 = -1;
+                    Matcher matcher = f23821f.matcher(c2);
+                    while (a5 < length2) {
+                        int a6 = m20588a(c2, a5 + 1, length2, true);
+                        matcher.region(a5, a6);
+                        if (i == -1 && matcher.usePattern(f23821f).matches()) {
+                            i = Integer.parseInt(matcher.group(1));
+                            i2 = Integer.parseInt(matcher.group(2));
+                            i3 = Integer.parseInt(matcher.group(3));
+                        } else {
+                            if (i4 == -1) {
+                                if (matcher.usePattern(f23820e).matches()) {
+                                    i4 = Integer.parseInt(matcher.group(1));
+                                }
+                            }
+                            if (i5 == -1 && matcher.usePattern(f23819d).matches()) {
+                                i5 = f23819d.pattern().indexOf(matcher.group(1).toLowerCase(Locale.US)) / 4;
+                            } else if (a4 == -1 && matcher.usePattern(f23818c).matches()) {
+                                a4 = Integer.parseInt(matcher.group(1));
+                            }
+                        }
+                        a5 = m20588a(c2, a6 + 1, length2, false);
+                    }
+                    if (a4 < 70 || a4 > 99) {
+                        a = a4;
+                    } else {
+                        a = a4 + 1900;
+                    }
+                    if (a >= 0 && a <= 69) {
+                        a += 2000;
+                    }
+                    if (a < 1601) {
+                        throw new IllegalArgumentException();
+                    } else if (i5 == -1) {
+                        throw new IllegalArgumentException();
+                    } else if (i4 <= 0 || i4 > 31) {
+                        throw new IllegalArgumentException();
+                    } else if (i < 0 || i > 23) {
+                        throw new IllegalArgumentException();
+                    } else if (i2 < 0 || i2 > 59) {
+                        throw new IllegalArgumentException();
+                    } else if (i3 < 0 || i3 > 59) {
+                        throw new IllegalArgumentException();
+                    } else {
+                        Calendar gregorianCalendar = new GregorianCalendar(gy.f24043d);
+                        gregorianCalendar.setLenient(false);
+                        gregorianCalendar.set(1, a);
+                        gregorianCalendar.set(2, i5 - 1);
+                        gregorianCalendar.set(5, i4);
+                        gregorianCalendar.set(11, i);
+                        gregorianCalendar.set(12, i2);
+                        gregorianCalendar.set(13, i3);
+                        gregorianCalendar.set(14, 0);
+                        j2 = gregorianCalendar.getTimeInMillis();
+                        z4 = true;
+                        c2 = str4;
+                        str4 = str3;
+                    }
+                } catch (IllegalArgumentException e) {
+                    c2 = str4;
+                    str4 = str3;
+                }
+            } else if (c4.equalsIgnoreCase("max-age")) {
+                try {
+                    j3 = m20589a(c2);
+                    z4 = true;
+                    c2 = str4;
+                    str4 = str3;
+                } catch (NumberFormatException e2) {
+                    c2 = str4;
+                    str4 = str3;
+                }
+            } else if (c4.equalsIgnoreCase("domain")) {
+                try {
+                    if (c2.endsWith(".")) {
+                        throw new IllegalArgumentException();
+                    }
+                    if (c2.startsWith(".")) {
+                        c2 = c2.substring(1);
+                    }
+                    c2 = gy.m20784a(c2);
+                    if (c2 == null) {
+                        throw new IllegalArgumentException();
+                    }
+                    z3 = false;
+                    str5 = str4;
+                    str4 = c2;
+                    c2 = str5;
+                } catch (IllegalArgumentException e3) {
+                    c2 = str4;
+                    str4 = str3;
+                }
+            } else if (c4.equalsIgnoreCase("path")) {
+                str4 = str3;
+            } else {
+                if (c4.equalsIgnoreCase("secure")) {
+                    z = true;
+                    c2 = str4;
+                    str4 = str3;
+                } else {
+                    if (c4.equalsIgnoreCase("httponly")) {
+                        z2 = true;
+                        c2 = str4;
+                        str4 = str3;
+                    } else {
+                        c2 = str4;
+                        str4 = str3;
+                    }
+                }
             }
-          }
+            str5 = c2;
+            a = a3 + 1;
+            str3 = str4;
+            str4 = str5;
         }
-      }
-    }
-  }
-  
-  public static List<fy> a(ge paramge, gd paramgd)
-  {
-    int i1 = paramgd.a.length / 2;
-    int n = 0;
-    Object localObject2;
-    for (Object localObject1 = null; n < i1; localObject1 = localObject2)
-    {
-      localObject2 = localObject1;
-      if ("Set-Cookie".equalsIgnoreCase(paramgd.a(n)))
-      {
-        localObject2 = localObject1;
-        if (localObject1 == null) {
-          localObject2 = new ArrayList(2);
+        if (j3 == Long.MIN_VALUE) {
+            j2 = Long.MIN_VALUE;
+        } else if (j3 != -1) {
+            j2 = j + (j3 <= 9223372036854775L ? j3 * 1000 : C5361b.f21945a);
+            if (j2 < j || j2 > C0206d.f307a) {
+                j2 = C0206d.f307a;
+            }
         }
-        ((List)localObject2).add(paramgd.b(n));
-      }
-      n += 1;
+        if (str3 == null) {
+            c2 = geVar.f23862b;
+        } else {
+            Object obj;
+            str2 = geVar.f23862b;
+            if (str2.equals(str3)) {
+                obj = 1;
+            } else if (str2.endsWith(str3) && str2.charAt((str2.length() - str3.length()) - 1) == '.' && !gy.m20800b(str2)) {
+                obj = 1;
+            } else {
+                obj = null;
+            }
+            if (obj == null) {
+                return null;
+            }
+            c2 = str3;
+        }
+        if (str4 == null || !str4.startsWith("/")) {
+            str2 = geVar.m20650d();
+            int lastIndexOf = str2.lastIndexOf(47);
+            str4 = lastIndexOf != 0 ? str2.substring(0, lastIndexOf) : "/";
+        }
+        return new fy(c, c3, j2, c2, str4, z, z2, z3, z4);
     }
-    if (localObject1 != null)
-    {
-      localObject1 = Collections.unmodifiableList((List)localObject1);
-      i1 = ((List)localObject1).size();
-      paramgd = null;
-      n = 0;
-      label102:
-      if (n >= i1) {
-        break label172;
-      }
-      localObject2 = (String)((List)localObject1).get(n);
-      localObject2 = a(System.currentTimeMillis(), paramge, (String)localObject2);
-      if (localObject2 == null) {
-        break label188;
-      }
-      if (paramgd != null) {
-        break label185;
-      }
-      paramgd = new ArrayList();
-      label148:
-      paramgd.add(localObject2);
+
+    /* renamed from: a */
+    private static int m20588a(String str, int i, int i2, boolean z) {
+        for (int i3 = i; i3 < i2; i3++) {
+            Object obj;
+            char charAt = str.charAt(i3);
+            Object obj2 = ((charAt >= ' ' || charAt == '\t') && charAt < '' && ((charAt < '0' || charAt > '9') && ((charAt < 'a' || charAt > 'z') && ((charAt < 'A' || charAt > 'Z') && charAt != ':')))) ? null : 1;
+            if (z) {
+                obj = null;
+            } else {
+                obj = 1;
+            }
+            if (obj2 == obj) {
+                return i3;
+            }
+        }
+        return i2;
     }
-    label172:
-    label185:
-    label188:
-    for (;;)
-    {
-      n += 1;
-      break label102;
-      localObject1 = Collections.emptyList();
-      break;
-      if (paramgd != null) {
-        return Collections.unmodifiableList(paramgd);
-      }
-      return Collections.emptyList();
-      break label148;
+
+    /* renamed from: a */
+    private static long m20589a(String str) {
+        try {
+            long parseLong = Long.parseLong(str);
+            if (parseLong <= 0) {
+                return Long.MIN_VALUE;
+            }
+            return parseLong;
+        } catch (NumberFormatException e) {
+            if (!str.matches("-?\\d+")) {
+                throw e;
+            } else if (str.startsWith("-")) {
+                return Long.MIN_VALUE;
+            } else {
+                return C5361b.f21945a;
+            }
+        }
     }
-  }
-  
-  public final String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    localStringBuilder.append(this.a);
-    localStringBuilder.append('=');
-    localStringBuilder.append(this.b);
-    if (this.l)
-    {
-      if (this.g != Long.MIN_VALUE) {
-        break label131;
-      }
-      localStringBuilder.append("; max-age=0");
+
+    /* renamed from: a */
+    public static List<fy> m20591a(ge geVar, gd gdVar) {
+        List unmodifiableList;
+        String str = "Set-Cookie";
+        int length = gdVar.f23845a.length / 2;
+        List list = null;
+        for (int i = 0; i < length; i++) {
+            if (str.equalsIgnoreCase(gdVar.m20617a(i))) {
+                if (list == null) {
+                    list = new ArrayList(2);
+                }
+                list.add(gdVar.m20619b(i));
+            }
+        }
+        if (list != null) {
+            unmodifiableList = Collections.unmodifiableList(list);
+        } else {
+            unmodifiableList = Collections.emptyList();
+        }
+        int size = unmodifiableList.size();
+        List list2 = null;
+        int i2 = 0;
+        while (i2 < size) {
+            fy a = m20590a(System.currentTimeMillis(), geVar, (String) unmodifiableList.get(i2));
+            if (a != null) {
+                if (list2 == null) {
+                    list = new ArrayList();
+                } else {
+                    list = list2;
+                }
+                list.add(a);
+            } else {
+                list = list2;
+            }
+            i2++;
+            list2 = list;
+        }
+        if (list2 != null) {
+            return Collections.unmodifiableList(list2);
+        }
+        return Collections.emptyList();
     }
-    for (;;)
-    {
-      if (!this.m) {
-        localStringBuilder.append("; domain=").append(this.h);
-      }
-      localStringBuilder.append("; path=").append(this.i);
-      if (this.j) {
-        localStringBuilder.append("; secure");
-      }
-      if (this.k) {
-        localStringBuilder.append("; httponly");
-      }
-      return localStringBuilder.toString();
-      label131:
-      localStringBuilder.append("; expires=").append(hu.a(new Date(this.g)));
+
+    public final String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(this.f23822a);
+        stringBuilder.append('=');
+        stringBuilder.append(this.f23823b);
+        if (this.f23829l) {
+            if (this.f23824g == Long.MIN_VALUE) {
+                stringBuilder.append("; max-age=0");
+            } else {
+                stringBuilder.append("; expires=").append(hu.m21040a(new Date(this.f23824g)));
+            }
+        }
+        if (!this.f23830m) {
+            stringBuilder.append("; domain=").append(this.f23825h);
+        }
+        stringBuilder.append("; path=").append(this.f23826i);
+        if (this.f23827j) {
+            stringBuilder.append("; secure");
+        }
+        if (this.f23828k) {
+            stringBuilder.append("; httponly");
+        }
+        return stringBuilder.toString();
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/fy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

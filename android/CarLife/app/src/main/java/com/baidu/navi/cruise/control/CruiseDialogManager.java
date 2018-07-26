@@ -5,407 +5,326 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import com.baidu.carlife.C0965R;
 import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.ui.widget.BNDialog;
 import com.baidu.navisdk.ui.widget.BNDialog.OnNaviClickListener;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.ScreenUtil;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CruiseDialogManager
-{
-  private static final String TAG = "Cruise";
-  private Activity mActivity;
-  private CruiseDialogManagerInterface mCruiseDialogManagerInterface;
-  private List<Dialog> mDialogList = new LinkedList();
-  private BNDialog mExitDialog;
-  private BNDialog mGPSSettingDialog;
-  private AlertDialog mNewerGuideDialog;
-  private BNDialog mNotLocatedDialog;
-  private BNDialog mUnavailableDialog;
-  
-  public CruiseDialogManager(Activity paramActivity)
-  {
-    this.mActivity = paramActivity;
-  }
-  
-  private void buildNewerGuideDialogLand()
-  {
-    if (this.mNewerGuideDialog == null)
-    {
-      AlertDialog.Builder localBuilder = new AlertDialog.Builder(this.mActivity);
-      View localView = this.mActivity.getLayoutInflater().inflate(2130968971, null);
-      localView.findViewById(2131625945).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (CruiseDialogManager.this.mNewerGuideDialog != null)
-          {
-            CruiseDialogManager.this.mNewerGuideDialog.dismiss();
-            CruiseDialogManager.access$302(CruiseDialogManager.this, null);
-          }
-          CruiseDialogManager.this.popDialogAndShow();
+public class CruiseDialogManager {
+    private static final String TAG = "Cruise";
+    private Activity mActivity;
+    private CruiseDialogManagerInterface mCruiseDialogManagerInterface;
+    private List<Dialog> mDialogList = new LinkedList();
+    private BNDialog mExitDialog;
+    private BNDialog mGPSSettingDialog;
+    private AlertDialog mNewerGuideDialog;
+    private BNDialog mNotLocatedDialog;
+    private BNDialog mUnavailableDialog;
+
+    public interface CruiseDialogManagerInterface {
+        void dismissGPSSettingDialog();
+
+        void dismissQuitDialog();
+
+        void hideCruiseUnavailableDialog();
+
+        void popDialogAndShow();
+
+        void putDialogInQueue(Dialog dialog);
+
+        void showCruiseNotLocDialog(OnNaviClickListener onNaviClickListener);
+
+        void showCruiseUnavailableDialog(OnNaviClickListener onNaviClickListener);
+
+        void showGPSSettingDialog();
+
+        void showQuitDialog(OnNaviClickListener onNaviClickListener);
+    }
+
+    /* renamed from: com.baidu.navi.cruise.control.CruiseDialogManager$1 */
+    class C37421 implements OnNaviClickListener {
+        C37421() {
         }
-      });
-      this.mNewerGuideDialog = localBuilder.create();
-      if (this.mNewerGuideDialog != null)
-      {
-        this.mNewerGuideDialog.setView(localView, 0, 0, 0, 0);
-        this.mNewerGuideDialog.setCancelable(false);
-      }
-    }
-  }
-  
-  private void buildNewerGuideDialogPortrait()
-  {
-    if (this.mNewerGuideDialog == null)
-    {
-      AlertDialog.Builder localBuilder = new AlertDialog.Builder(this.mActivity);
-      int i = 2130968970;
-      if (ScreenUtil.getInstance().getHeightPixels() < 640) {
-        i = 2130968971;
-      }
-      View localView = this.mActivity.getLayoutInflater().inflate(i, null);
-      localView.findViewById(2131625945).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          if (CruiseDialogManager.this.mNewerGuideDialog != null)
-          {
-            CruiseDialogManager.this.mNewerGuideDialog.dismiss();
-            CruiseDialogManager.access$302(CruiseDialogManager.this, null);
-          }
-          CruiseDialogManager.this.popDialogAndShow();
-        }
-      });
-      this.mNewerGuideDialog = localBuilder.create();
-      if (this.mNewerGuideDialog != null)
-      {
-        this.mNewerGuideDialog.setView(localView, 0, 0, 0, 0);
-        this.mNewerGuideDialog.setCancelable(false);
-      }
-    }
-  }
-  
-  private void openSysNetworkSetting(boolean paramBoolean)
-  {
-    if (paramBoolean) {}
-    for (Intent localIntent = new Intent("android.settings.WIFI_SETTINGS");; localIntent = new Intent("android.settings.WIRELESS_SETTINGS")) {
-      try
-      {
-        if (this.mActivity != null) {
-          this.mActivity.startActivity(localIntent);
-        }
-        return;
-      }
-      catch (Exception localException)
-      {
-        LogUtil.e("Cruise", localException.toString());
-      }
-    }
-  }
-  
-  public void dismissGPSSettingDialog()
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.dismissGPSSettingDialog();
-    }
-    for (;;)
-    {
-      return;
-      try
-      {
-        if ((this.mGPSSettingDialog != null) && (this.mActivity != null) && (!this.mActivity.isFinishing()))
-        {
-          if (this.mGPSSettingDialog.isShowing()) {
-            this.mGPSSettingDialog.dismiss();
-          }
-          this.mGPSSettingDialog = null;
-          return;
-        }
-      }
-      catch (Exception localException) {}
-    }
-  }
-  
-  public void dismissQuitDialog()
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.dismissQuitDialog();
-    }
-    while ((this.mExitDialog == null) || (this.mActivity == null) || (this.mActivity.isFinishing())) {
-      return;
-    }
-    if (this.mExitDialog.isShowing()) {
-      this.mExitDialog.dismiss();
-    }
-    this.mExitDialog = null;
-  }
-  
-  public void hideCruiseUnavailableDialog()
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.hideCruiseUnavailableDialog();
-    }
-    for (;;)
-    {
-      return;
-      try
-      {
-        if ((this.mUnavailableDialog != null) && (this.mUnavailableDialog.isShowing()))
-        {
-          this.mUnavailableDialog.dismiss();
-          return;
-        }
-      }
-      catch (Exception localException)
-      {
-        this.mUnavailableDialog = null;
-      }
-    }
-  }
-  
-  public boolean isNewerGuideDialogShowing()
-  {
-    return (this.mNewerGuideDialog != null) && (this.mNewerGuideDialog.isShowing());
-  }
-  
-  public void popDialogAndShow()
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.popDialogAndShow();
-    }
-    Dialog localDialog;
-    do
-    {
-      do
-      {
-        return;
-      } while ((this.mDialogList == null) || (this.mDialogList.isEmpty()));
-      localDialog = (Dialog)this.mDialogList.remove(0);
-    } while ((localDialog == null) || (localDialog.isShowing()) || (this.mActivity.isFinishing()));
-    try
-    {
-      localDialog.show();
-      return;
-    }
-    catch (Exception localException) {}
-  }
-  
-  public void putDialogInQueue(Dialog paramDialog)
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.putDialogInQueue(paramDialog);
-    }
-    while ((this.mDialogList == null) || (paramDialog == null)) {
-      return;
-    }
-    Iterator localIterator = this.mDialogList.iterator();
-    while (localIterator.hasNext()) {
-      if (paramDialog == (Dialog)localIterator.next()) {
-        return;
-      }
-    }
-    this.mDialogList.add(paramDialog);
-  }
-  
-  public void setCruiseDialogManagerInterface(CruiseDialogManagerInterface paramCruiseDialogManagerInterface)
-  {
-    this.mCruiseDialogManagerInterface = paramCruiseDialogManagerInterface;
-  }
-  
-  public void showCruiseNotLocDialog(BNDialog.OnNaviClickListener paramOnNaviClickListener)
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.showCruiseNotLocDialog(paramOnNaviClickListener);
-    }
-    for (;;)
-    {
-      return;
-      try
-      {
-        if (this.mNotLocatedDialog == null)
-        {
-          this.mNotLocatedDialog = new BNDialog(this.mActivity).setTitleText(2131296783).setContentMessage(2131297811).setFirstBtnText(2131296781).setOnFirstBtnClickListener(paramOnNaviClickListener);
-          this.mNotLocatedDialog.setCancelable(false);
-        }
-        if (this.mNotLocatedDialog != null)
-        {
-          this.mNotLocatedDialog.show();
-          return;
-        }
-      }
-      catch (Exception paramOnNaviClickListener) {}
-    }
-  }
-  
-  public void showCruiseUnavailableDialog(BNDialog.OnNaviClickListener paramOnNaviClickListener)
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.showCruiseUnavailableDialog(paramOnNaviClickListener);
-    }
-    for (;;)
-    {
-      return;
-      hideCruiseUnavailableDialog();
-      try
-      {
-        if ((this.mUnavailableDialog == null) && (this.mActivity != null)) {
-          this.mUnavailableDialog = new BNDialog(this.mActivity).setTitleText(2131296783).setContentMessage(2131297817).setFirstBtnText(2131297814).setOnFirstBtnClickListener(new BNDialog.OnNaviClickListener()
-          {
-            public void onClick()
-            {
-              CruiseDialogManager.this.openSysNetworkSetting(true);
-              CruiseDialogManager.this.mUnavailableDialog.dismiss();
+
+        public void onClick() {
+            if (CruiseDialogManager.this.mActivity != null && CruiseDialogManager.this.mActivity != null && !CruiseDialogManager.this.mActivity.isFinishing()) {
+                TipTool.onCreateToastDialog(CruiseDialogManager.this.mActivity, CruiseDialogManager.this.mActivity.getResources().getString(C0965R.string.nsdk_string_rg_open_gps));
             }
-          }).setSecondBtnText(2131296734).setOnSecondBtnClickListener(paramOnNaviClickListener);
         }
-        if ((this.mUnavailableDialog != null) && (!this.mActivity.isFinishing()))
-        {
-          this.mUnavailableDialog.show();
-          return;
+    }
+
+    /* renamed from: com.baidu.navi.cruise.control.CruiseDialogManager$2 */
+    class C37432 implements OnNaviClickListener {
+        C37432() {
         }
-      }
-      catch (Exception paramOnNaviClickListener)
-      {
-        this.mUnavailableDialog = null;
-      }
-    }
-  }
-  
-  public void showGPSSettingDialog()
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.showGPSSettingDialog();
-    }
-    for (;;)
-    {
-      return;
-      try
-      {
-        if ((this.mGPSSettingDialog == null) && (this.mActivity != null) && (!this.mActivity.isFinishing()))
-        {
-          Resources localResources = this.mActivity.getResources();
-          this.mGPSSettingDialog = new BNDialog(this.mActivity).setTitleText(localResources.getString(2131296783)).setContentMessage(localResources.getString(2131297792)).setFirstBtnText(localResources.getString(2131297793)).setFirstBtnTextColorHighLight().setOnFirstBtnClickListener(new BNDialog.OnNaviClickListener()
-          {
-            public void onClick()
-            {
-              try
-              {
-                Intent localIntent = new Intent("android.settings.LOCATION_SOURCE_SETTINGS");
-                CruiseDialogManager.this.mActivity.startActivity(localIntent);
-                return;
-              }
-              catch (Exception localException)
-              {
-                LogUtil.e("", localException.toString());
-                TipTool.onCreateToastDialog(CruiseDialogManager.this.mActivity, CruiseDialogManager.this.mActivity.getResources().getString(2131296789));
-              }
+
+        public void onClick() {
+            try {
+                CruiseDialogManager.this.mActivity.startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
+            } catch (Exception e) {
+                LogUtil.m15791e("", e.toString());
+                TipTool.onCreateToastDialog(CruiseDialogManager.this.mActivity, CruiseDialogManager.this.mActivity.getResources().getString(C0965R.string.nsdk_string_rg_no_gps));
             }
-          }).setSecondBtnText(localResources.getString(2131296781)).setOnSecondBtnClickListener(new BNDialog.OnNaviClickListener()
-          {
-            public void onClick()
-            {
-              if ((CruiseDialogManager.this.mActivity != null) && (CruiseDialogManager.this.mActivity != null) && (!CruiseDialogManager.this.mActivity.isFinishing())) {
-                TipTool.onCreateToastDialog(CruiseDialogManager.this.mActivity, CruiseDialogManager.this.mActivity.getResources().getString(2131296790));
-              }
+        }
+    }
+
+    /* renamed from: com.baidu.navi.cruise.control.CruiseDialogManager$3 */
+    class C37443 implements OnNaviClickListener {
+        C37443() {
+        }
+
+        public void onClick() {
+            CruiseDialogManager.this.openSysNetworkSetting(true);
+            CruiseDialogManager.this.mUnavailableDialog.dismiss();
+        }
+    }
+
+    /* renamed from: com.baidu.navi.cruise.control.CruiseDialogManager$4 */
+    class C37454 implements OnClickListener {
+        C37454() {
+        }
+
+        public void onClick(View v) {
+            if (CruiseDialogManager.this.mNewerGuideDialog != null) {
+                CruiseDialogManager.this.mNewerGuideDialog.dismiss();
+                CruiseDialogManager.this.mNewerGuideDialog = null;
             }
-          });
+            CruiseDialogManager.this.popDialogAndShow();
         }
-        if ((this.mActivity != null) && (!this.mActivity.isFinishing()) && (this.mGPSSettingDialog != null) && (!this.mGPSSettingDialog.isShowing()))
-        {
-          this.mGPSSettingDialog.show();
-          return;
+    }
+
+    /* renamed from: com.baidu.navi.cruise.control.CruiseDialogManager$5 */
+    class C37465 implements OnClickListener {
+        C37465() {
         }
-      }
-      catch (Exception localException)
-      {
-        LogUtil.e("Cruise", "dialog show failed because activity is NOT running!");
-      }
+
+        public void onClick(View v) {
+            if (CruiseDialogManager.this.mNewerGuideDialog != null) {
+                CruiseDialogManager.this.mNewerGuideDialog.dismiss();
+                CruiseDialogManager.this.mNewerGuideDialog = null;
+            }
+            CruiseDialogManager.this.popDialogAndShow();
+        }
     }
-  }
-  
-  public void showNewerGuideDialog(boolean paramBoolean)
-  {
-    if ((this.mNewerGuideDialog != null) && (this.mNewerGuideDialog.isShowing()))
-    {
-      this.mNewerGuideDialog.dismiss();
-      this.mNewerGuideDialog = null;
+
+    public CruiseDialogManager(Activity activity) {
+        this.mActivity = activity;
     }
-    if (this.mActivity.getResources().getConfiguration().orientation == 1)
-    {
-      buildNewerGuideDialogPortrait();
-      if (!paramBoolean) {
-        break label70;
-      }
-      putDialogInQueue(this.mNewerGuideDialog);
+
+    public void setCruiseDialogManagerInterface(CruiseDialogManagerInterface cruiseDialogManagerInterface) {
+        this.mCruiseDialogManagerInterface = cruiseDialogManagerInterface;
     }
-    label70:
-    while ((this.mNewerGuideDialog == null) || (this.mActivity.isFinishing()))
-    {
-      return;
-      buildNewerGuideDialogLand();
-      break;
-    }
-    this.mNewerGuideDialog.show();
-  }
-  
-  public void showQuitDialog(BNDialog.OnNaviClickListener paramOnNaviClickListener)
-  {
-    if (this.mCruiseDialogManagerInterface != null) {
-      this.mCruiseDialogManagerInterface.showQuitDialog(paramOnNaviClickListener);
-    }
-    for (;;)
-    {
-      return;
-      if (this.mActivity != null)
-      {
-        dismissQuitDialog();
-        try
-        {
-          this.mExitDialog = new BNDialog(this.mActivity).enableBackKey(true).setTitleText(this.mActivity.getResources().getString(2131296783)).setContentMessage(this.mActivity.getResources().getString(2131296739)).setFirstBtnText(this.mActivity.getResources().getString(2131296737)).setFirstBtnTextColorHighLight().setOnFirstBtnClickListener(paramOnNaviClickListener).setSecondBtnText(this.mActivity.getResources().getString(2131296755));
-          if ((!this.mExitDialog.isShowing()) && (this.mActivity != null) && (!this.mActivity.isFinishing()))
-          {
-            this.mExitDialog.show();
+
+    public void showGPSSettingDialog() {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.showGPSSettingDialog();
             return;
-          }
         }
-        catch (Exception paramOnNaviClickListener) {}
-      }
+        try {
+            if (!(this.mGPSSettingDialog != null || this.mActivity == null || this.mActivity.isFinishing())) {
+                Resources res = this.mActivity.getResources();
+                this.mGPSSettingDialog = new BNDialog(this.mActivity).setTitleText(res.getString(C0965R.string.nsdk_string_rg_nav_title_tip)).setContentMessage(res.getString(C0965R.string.nsdk_string_cruise_gps_not_open_and_set)).setFirstBtnText(res.getString(C0965R.string.nsdk_string_cruise_gps_setting)).setFirstBtnTextColorHighLight().setOnFirstBtnClickListener(new C37432()).setSecondBtnText(res.getString(C0965R.string.nsdk_string_rg_nav_dialog_cancel)).setOnSecondBtnClickListener(new C37421());
+            }
+            if (this.mActivity != null && !this.mActivity.isFinishing() && this.mGPSSettingDialog != null && !this.mGPSSettingDialog.isShowing()) {
+                this.mGPSSettingDialog.show();
+            }
+        } catch (Exception e) {
+            LogUtil.m15791e("Cruise", "dialog show failed because activity is NOT running!");
+        }
     }
-  }
-  
-  public static abstract interface CruiseDialogManagerInterface
-  {
-    public abstract void dismissGPSSettingDialog();
-    
-    public abstract void dismissQuitDialog();
-    
-    public abstract void hideCruiseUnavailableDialog();
-    
-    public abstract void popDialogAndShow();
-    
-    public abstract void putDialogInQueue(Dialog paramDialog);
-    
-    public abstract void showCruiseNotLocDialog(BNDialog.OnNaviClickListener paramOnNaviClickListener);
-    
-    public abstract void showCruiseUnavailableDialog(BNDialog.OnNaviClickListener paramOnNaviClickListener);
-    
-    public abstract void showGPSSettingDialog();
-    
-    public abstract void showQuitDialog(BNDialog.OnNaviClickListener paramOnNaviClickListener);
-  }
+
+    public void dismissGPSSettingDialog() {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.dismissGPSSettingDialog();
+            return;
+        }
+        try {
+            if (this.mGPSSettingDialog != null && this.mActivity != null && !this.mActivity.isFinishing()) {
+                if (this.mGPSSettingDialog.isShowing()) {
+                    this.mGPSSettingDialog.dismiss();
+                }
+                this.mGPSSettingDialog = null;
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void showQuitDialog(OnNaviClickListener onQuitListener) {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.showQuitDialog(onQuitListener);
+        } else if (this.mActivity != null) {
+            dismissQuitDialog();
+            try {
+                this.mExitDialog = new BNDialog(this.mActivity).enableBackKey(true).setTitleText(this.mActivity.getResources().getString(C0965R.string.nsdk_string_rg_nav_title_tip)).setContentMessage(this.mActivity.getResources().getString(C0965R.string.nsdk_string_cruise_exit_msg)).setFirstBtnText(this.mActivity.getResources().getString(C0965R.string.nsdk_string_confirm)).setFirstBtnTextColorHighLight().setOnFirstBtnClickListener(onQuitListener).setSecondBtnText(this.mActivity.getResources().getString(C0965R.string.nsdk_string_negative));
+                if (!this.mExitDialog.isShowing() && this.mActivity != null && !this.mActivity.isFinishing()) {
+                    this.mExitDialog.show();
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public void dismissQuitDialog() {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.dismissQuitDialog();
+        } else if (this.mExitDialog != null && this.mActivity != null && !this.mActivity.isFinishing()) {
+            if (this.mExitDialog.isShowing()) {
+                this.mExitDialog.dismiss();
+            }
+            this.mExitDialog = null;
+        }
+    }
+
+    public void showCruiseNotLocDialog(OnNaviClickListener onCancelListener) {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.showCruiseNotLocDialog(onCancelListener);
+            return;
+        }
+        try {
+            if (this.mNotLocatedDialog == null) {
+                this.mNotLocatedDialog = new BNDialog(this.mActivity).setTitleText((int) C0965R.string.nsdk_string_rg_nav_title_tip).setContentMessage((int) C0965R.string.nsdk_string_cruise_not_loc).setFirstBtnText((int) C0965R.string.nsdk_string_rg_nav_dialog_cancel).setOnFirstBtnClickListener(onCancelListener);
+                this.mNotLocatedDialog.setCancelable(false);
+            }
+            if (this.mNotLocatedDialog != null) {
+                this.mNotLocatedDialog.show();
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void showCruiseUnavailableDialog(OnNaviClickListener onDownloadListener) {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.showCruiseUnavailableDialog(onDownloadListener);
+            return;
+        }
+        hideCruiseUnavailableDialog();
+        try {
+            if (this.mUnavailableDialog == null && this.mActivity != null) {
+                this.mUnavailableDialog = new BNDialog(this.mActivity).setTitleText((int) C0965R.string.nsdk_string_rg_nav_title_tip).setContentMessage((int) C0965R.string.nsdk_string_cruise_unavailable).setFirstBtnText((int) C0965R.string.nsdk_string_cruise_open_net).setOnFirstBtnClickListener(new C37443()).setSecondBtnText((int) C0965R.string.nsdk_string_common_alert_download).setOnSecondBtnClickListener(onDownloadListener);
+            }
+            if (this.mUnavailableDialog != null && !this.mActivity.isFinishing()) {
+                this.mUnavailableDialog.show();
+            }
+        } catch (Exception e) {
+            this.mUnavailableDialog = null;
+        }
+    }
+
+    public void hideCruiseUnavailableDialog() {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.hideCruiseUnavailableDialog();
+            return;
+        }
+        try {
+            if (this.mUnavailableDialog != null && this.mUnavailableDialog.isShowing()) {
+                this.mUnavailableDialog.dismiss();
+            }
+        } catch (Exception e) {
+            this.mUnavailableDialog = null;
+        }
+    }
+
+    private void openSysNetworkSetting(boolean isWifi) {
+        Intent intent;
+        if (isWifi) {
+            intent = new Intent("android.settings.WIFI_SETTINGS");
+        } else {
+            intent = new Intent("android.settings.WIRELESS_SETTINGS");
+        }
+        try {
+            if (this.mActivity != null) {
+                this.mActivity.startActivity(intent);
+            }
+        } catch (Exception e) {
+            LogUtil.m15791e("Cruise", e.toString());
+        }
+    }
+
+    private void buildNewerGuideDialogPortrait() {
+        if (this.mNewerGuideDialog == null) {
+            Builder builder = new Builder(this.mActivity);
+            int layoutId = C0965R.layout.nsdk_layout_cruise_newerguide;
+            if (ScreenUtil.getInstance().getHeightPixels() < 640) {
+                layoutId = C0965R.layout.nsdk_layout_cruise_newerguide_land;
+            }
+            View view = this.mActivity.getLayoutInflater().inflate(layoutId, null);
+            view.findViewById(C0965R.id.cruise_newerguid_btn).setOnClickListener(new C37454());
+            this.mNewerGuideDialog = builder.create();
+            if (this.mNewerGuideDialog != null) {
+                this.mNewerGuideDialog.setView(view, 0, 0, 0, 0);
+                this.mNewerGuideDialog.setCancelable(false);
+            }
+        }
+    }
+
+    private void buildNewerGuideDialogLand() {
+        if (this.mNewerGuideDialog == null) {
+            Builder builder = new Builder(this.mActivity);
+            View view = this.mActivity.getLayoutInflater().inflate(C0965R.layout.nsdk_layout_cruise_newerguide_land, null);
+            view.findViewById(C0965R.id.cruise_newerguid_btn).setOnClickListener(new C37465());
+            this.mNewerGuideDialog = builder.create();
+            if (this.mNewerGuideDialog != null) {
+                this.mNewerGuideDialog.setView(view, 0, 0, 0, 0);
+                this.mNewerGuideDialog.setCancelable(false);
+            }
+        }
+    }
+
+    public void showNewerGuideDialog(boolean inQueue) {
+        if (this.mNewerGuideDialog != null && this.mNewerGuideDialog.isShowing()) {
+            this.mNewerGuideDialog.dismiss();
+            this.mNewerGuideDialog = null;
+        }
+        if (this.mActivity.getResources().getConfiguration().orientation == 1) {
+            buildNewerGuideDialogPortrait();
+        } else {
+            buildNewerGuideDialogLand();
+        }
+        if (inQueue) {
+            putDialogInQueue(this.mNewerGuideDialog);
+        } else if (this.mNewerGuideDialog != null && !this.mActivity.isFinishing()) {
+            this.mNewerGuideDialog.show();
+        }
+    }
+
+    public boolean isNewerGuideDialogShowing() {
+        if (this.mNewerGuideDialog == null || !this.mNewerGuideDialog.isShowing()) {
+            return false;
+        }
+        return true;
+    }
+
+    public void putDialogInQueue(Dialog dialog) {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.putDialogInQueue(dialog);
+        } else if (this.mDialogList != null && dialog != null) {
+            for (Dialog dlg : this.mDialogList) {
+                if (dialog == dlg) {
+                    return;
+                }
+            }
+            this.mDialogList.add(dialog);
+        }
+    }
+
+    public void popDialogAndShow() {
+        if (this.mCruiseDialogManagerInterface != null) {
+            this.mCruiseDialogManagerInterface.popDialogAndShow();
+        } else if (this.mDialogList != null && !this.mDialogList.isEmpty()) {
+            Dialog dialog = (Dialog) this.mDialogList.remove(0);
+            if (dialog != null && !dialog.isShowing() && !this.mActivity.isFinishing()) {
+                try {
+                    dialog.show();
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/cruise/control/CruiseDialogManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

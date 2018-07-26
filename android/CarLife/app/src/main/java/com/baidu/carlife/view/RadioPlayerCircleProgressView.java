@@ -8,55 +8,48 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
-import com.baidu.carlife.core.d;
-import com.baidu.carlife.util.r;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1249d;
+import com.baidu.carlife.util.C2188r;
 
-public class RadioPlayerCircleProgressView
-  extends View
-{
-  private int a;
-  private Paint b = new Paint();
-  private final int c = d.a().c(2);
-  private RectF d;
-  private int e = 100;
-  
-  public RadioPlayerCircleProgressView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    this.b.setAntiAlias(true);
-    this.b.setFlags(1);
-    this.b.setStyle(Paint.Style.STROKE);
-    this.b.setColor(r.a(2131558680));
-    this.b.setStrokeWidth(this.c);
-    this.b.setStrokeCap(Paint.Cap.SQUARE);
-    this.d = new RectF();
-  }
-  
-  protected void onDraw(Canvas paramCanvas)
-  {
-    super.onDraw(paramCanvas);
-    int i = getWidth() / 2;
-    if (i == 0) {
-      return;
+public class RadioPlayerCircleProgressView extends View {
+    /* renamed from: a */
+    private int f7210a;
+    /* renamed from: b */
+    private Paint f7211b = new Paint();
+    /* renamed from: c */
+    private final int f7212c = C1249d.m4331a().m4343c(2);
+    /* renamed from: d */
+    private RectF f7213d;
+    /* renamed from: e */
+    private int f7214e = 100;
+
+    public void setProgress(int progress) {
+        this.f7210a = progress;
+        invalidate();
     }
-    this.d.set(this.c / 2, this.c / 2, i * 2 - this.c / 2, i * 2 - this.c / 2);
-    paramCanvas.drawArc(this.d, -90.0F, 360.0F * (this.a / this.e), false, this.b);
-  }
-  
-  public void setMax(int paramInt)
-  {
-    this.e = paramInt;
-  }
-  
-  public void setProgress(int paramInt)
-  {
-    this.a = paramInt;
-    invalidate();
-  }
+
+    public void setMax(int value) {
+        this.f7214e = value;
+    }
+
+    public RadioPlayerCircleProgressView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.f7211b.setAntiAlias(true);
+        this.f7211b.setFlags(1);
+        this.f7211b.setStyle(Style.STROKE);
+        this.f7211b.setColor(C2188r.m8328a((int) C0965R.color.cl_progress_radio_player));
+        this.f7211b.setStrokeWidth((float) this.f7212c);
+        this.f7211b.setStrokeCap(Cap.SQUARE);
+        this.f7213d = new RectF();
+    }
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        int center = getWidth() / 2;
+        if (center != 0) {
+            this.f7213d.set((float) (this.f7212c / 2), (float) (this.f7212c / 2), (float) ((center * 2) - (this.f7212c / 2)), (float) ((center * 2) - (this.f7212c / 2)));
+            canvas.drawArc(this.f7213d, -90.0f, 360.0f * (((float) this.f7210a) / ((float) this.f7214e)), false, this.f7211b);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/RadioPlayerCircleProgressView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,27 +2,22 @@ package com.baidu.ufosdk.ui;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import com.baidu.ufosdk.util.i;
+import com.baidu.ufosdk.util.C5216i;
 
-final class ac
-  implements View.OnClickListener
-{
-  ac(FeedbackHotActivity paramFeedbackHotActivity) {}
-  
-  public final void onClick(View paramView)
-  {
-    this.a.finish();
-    try
-    {
-      this.a.overridePendingTransition(i.a(this.a.getApplicationContext(), "ufo_slide_in_from_left"), i.a(this.a.getApplicationContext(), "ufo_slide_out_to_right"));
-      return;
+/* compiled from: FeedbackHotActivity */
+final class ac implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackHotActivity f21539a;
+
+    ac(FeedbackHotActivity feedbackHotActivity) {
+        this.f21539a = feedbackHotActivity;
     }
-    catch (Exception paramView) {}
-  }
+
+    public final void onClick(View view) {
+        this.f21539a.finish();
+        try {
+            this.f21539a.overridePendingTransition(C5216i.m17758a(this.f21539a.getApplicationContext(), "ufo_slide_in_from_left"), C5216i.m17758a(this.f21539a.getApplicationContext(), "ufo_slide_out_to_right"));
+        } catch (Exception e) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ac.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

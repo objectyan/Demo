@@ -4,49 +4,34 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-public abstract class BNMainLooperHandler
-  extends Handler
-{
-  public BNMainLooperHandler()
-  {
-    super(Looper.getMainLooper());
-  }
-  
-  public final void dispatchMessage(Message paramMessage)
-  {
-    super.dispatchMessage(paramMessage);
-  }
-  
-  public final void handleMessage(Message paramMessage)
-  {
-    if (paramMessage == null) {
-      return;
+public abstract class BNMainLooperHandler extends Handler {
+    public abstract void onMessage(Message message);
+
+    public BNMainLooperHandler() {
+        super(Looper.getMainLooper());
     }
-    final Message localMessage = Message.obtain();
-    localMessage.copyFrom(paramMessage);
-    BNPerformceFramework.getInstance().runInLooperBuffer(new Runnable()
-    {
-      public void run()
-      {
-        BNPerformceFramework.getInstance().markRunning(localMessage);
-        BNMainLooperHandler.this.onMessage(localMessage);
-        BNPerformceFramework.getInstance().markFinish(localMessage);
-        localMessage.recycle();
-      }
-    });
-  }
-  
-  public abstract void onMessage(Message paramMessage);
-  
-  public final boolean sendMessageAtTime(Message paramMessage, long paramLong)
-  {
-    BNPerformceFramework.getInstance().markSubmit(paramMessage);
-    return super.sendMessageAtTime(paramMessage, paramLong);
-  }
+
+    public final boolean sendMessageAtTime(Message msg, long uptimeMillis) {
+        BNPerformceFramework.getInstance().markSubmit(msg);
+        return super.sendMessageAtTime(msg, uptimeMillis);
+    }
+
+    public final void handleMessage(Message msg) {
+        if (msg != null) {
+            final Message copyMsg = Message.obtain();
+            copyMsg.copyFrom(msg);
+            BNPerformceFramework.getInstance().runInLooperBuffer(new Runnable() {
+                public void run() {
+                    BNPerformceFramework.getInstance().markRunning(copyMsg);
+                    BNMainLooperHandler.this.onMessage(copyMsg);
+                    BNPerformceFramework.getInstance().markFinish(copyMsg);
+                    copyMsg.recycle();
+                }
+            });
+        }
+    }
+
+    public final void dispatchMessage(Message msg) {
+        super.dispatchMessage(msg);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/worker/loop/BNMainLooperHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

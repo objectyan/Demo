@@ -6,14 +6,6 @@ import java.io.IOException;
 import java.util.Map;
 import org.apache.http.HttpResponse;
 
-public abstract interface HttpStack
-{
-  public abstract HttpResponse performRequest(Request<?> paramRequest, Map<String, String> paramMap)
-    throws IOException, AuthFailureError;
+public interface HttpStack {
+    HttpResponse performRequest(Request<?> request, Map<String, String> map) throws IOException, AuthFailureError;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/toolbox/HttpStack.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

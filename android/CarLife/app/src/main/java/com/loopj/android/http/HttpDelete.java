@@ -1,33 +1,20 @@
 package com.loopj.android.http;
 
-import cz.msebera.android.httpclient.b.d.f;
+import cz.msebera.android.httpclient.p158b.p159d.C6037f;
 import java.net.URI;
 
-public final class HttpDelete
-  extends f
-{
-  public static final String METHOD_NAME = "DELETE";
-  
-  public HttpDelete() {}
-  
-  public HttpDelete(String paramString)
-  {
-    setURI(URI.create(paramString));
-  }
-  
-  public HttpDelete(URI paramURI)
-  {
-    setURI(paramURI);
-  }
-  
-  public String getMethod()
-  {
-    return "DELETE";
-  }
+public final class HttpDelete extends C6037f {
+    public static final String METHOD_NAME = "DELETE";
+
+    public HttpDelete(URI uri) {
+        setURI(uri);
+    }
+
+    public HttpDelete(String uri) {
+        setURI(URI.create(uri));
+    }
+
+    public String getMethod() {
+        return "DELETE";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/loopj/android/http/HttpDelete.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

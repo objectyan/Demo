@@ -3,116 +3,91 @@ package com.indooratlas.android.sdk._internal;
 import android.annotation.TargetApi;
 import com.indooratlas.algorithm.ClientProcessingManager;
 
-public final class cf
-  extends ds
-{
-  private ClientProcessingManager a;
-  private long b;
-  private long d;
-  private long e;
-  private cr f;
-  private long g = -1L;
-  
-  public cf(ClientProcessingManager paramClientProcessingManager, cr paramcr)
-  {
-    this.a = paramClientProcessingManager;
-    this.f = paramcr;
-  }
-  
-  @TargetApi(22)
-  public final void a(cx paramcx, dd paramdd)
-  {
-    int i = paramcx.a.a();
-    Object localObject;
-    float[] arrayOfFloat;
-    long l1;
-    switch (i)
-    {
-    default: 
-      localObject = cz.a;
-      i = -1;
-      if (i != -1)
-      {
-        localObject = (do)paramcx.c;
-        arrayOfFloat = ((do)localObject).d;
-        l1 = System.nanoTime();
-        if (paramcx.a.a() == 1)
-        {
-          long l2 = this.f.a();
-          if ((this.g < 0L) || (l2 - this.g > 1000L) || (l2 < this.g))
-          {
-            this.a.setTime(this.f.a(), ((do)localObject).c);
-            this.g = l2;
-          }
-        }
-        switch (i)
-        {
-        default: 
-          this.a.addSampleIMU(i, paramcx.b, arrayOfFloat[0], arrayOfFloat[1], arrayOfFloat[2]);
-        }
-      }
-      break;
+public final class cf extends ds {
+    /* renamed from: a */
+    private ClientProcessingManager f23304a;
+    /* renamed from: b */
+    private long f23305b;
+    /* renamed from: d */
+    private long f23306d;
+    /* renamed from: e */
+    private long f23307e;
+    /* renamed from: f */
+    private cr f23308f;
+    /* renamed from: g */
+    private long f23309g = -1;
+
+    public cf(ClientProcessingManager clientProcessingManager, cr crVar) {
+        this.f23304a = clientProcessingManager;
+        this.f23308f = crVar;
     }
-    for (;;)
-    {
-      double d1;
-      if (paramcx.a.a() == 14)
-      {
-        this.b += 1L;
-        if ((this.b % 5L == 0L) && (arrayOfFloat.length == 6))
-        {
-          d1 = arrayOfFloat[3];
-          double d2 = arrayOfFloat[4];
-          double d3 = arrayOfFloat[5];
-          i = ((do)localObject).a;
-          int j = ((do)localObject).a;
-          i = j;
-          if (j != 0)
-          {
-            i = j;
-            if (j != 1)
-            {
-              i = j;
-              if (j != 2)
-              {
-                i = j;
-                if (j != 3) {
-                  i = 0;
+
+    @TargetApi(22)
+    /* renamed from: a */
+    public final void mo4616a(cx cxVar, dd ddVar) {
+        int i;
+        int a = cxVar.f23358a.mo4658a();
+        switch (a) {
+            case 1:
+                i = 2;
+                break;
+            case 2:
+                i = 3;
+                break;
+            case 4:
+                i = 1;
+                break;
+            case 6:
+                i = 5;
+                break;
+            case 14:
+                i = 0;
+                break;
+            default:
+                String str = cz.f23362a;
+                new Object[1][0] = Integer.valueOf(a);
+                i = -1;
+                break;
+        }
+        if (i != -1) {
+            C5852do c5852do = (C5852do) cxVar.f23360c;
+            float[] fArr = c5852do.f23426d;
+            long nanoTime = System.nanoTime();
+            if (cxVar.f23358a.mo4658a() == 1) {
+                long a2 = this.f23308f.mo4654a();
+                if (this.f23309g < 0 || a2 - this.f23309g > 1000 || a2 < this.f23309g) {
+                    this.f23304a.setTime(this.f23308f.mo4654a(), c5852do.f23425c);
+                    this.f23309g = a2;
                 }
-              }
             }
-          }
-          this.a.setDeviceBias(d1, d2, d3, i);
+            switch (i) {
+                case 5:
+                    this.f23304a.addSampleIMU(i, cxVar.f23359b, (double) fArr[0], 0.0d, 0.0d);
+                    break;
+                default:
+                    this.f23304a.addSampleIMU(i, cxVar.f23359b, (double) fArr[0], (double) fArr[1], (double) fArr[2]);
+                    break;
+            }
+            if (cxVar.f23358a.mo4658a() == 14) {
+                this.f23305b++;
+                if (this.f23305b % 5 == 0 && fArr.length == 6) {
+                    Object[] objArr = new Object[]{Double.valueOf((double) fArr[3]), Double.valueOf((double) fArr[4]), Double.valueOf((double) fArr[5]), Integer.valueOf(c5852do.f23423a)};
+                    int i2 = c5852do.f23423a;
+                    if (!(i2 == 0 || i2 == 1 || i2 == 2 || i2 == 3)) {
+                        i2 = 0;
+                    }
+                    this.f23304a.setDeviceBias(r2, r4, r6, i2);
+                }
+            }
+            long nanoTime2 = System.nanoTime() - nanoTime;
+            if (nanoTime2 > this.f23306d) {
+                this.f23306d = nanoTime2;
+                if (cs.f23352a) {
+                    new Object[1][0] = Double.valueOf(((double) nanoTime2) / 1000000.0d);
+                }
+            }
+            this.f23307e = cxVar.f23359b;
         }
-      }
-      l1 = System.nanoTime() - l1;
-      if (l1 > this.d)
-      {
-        this.d = l1;
-        if (cs.a) {
-          d1 = l1 / 1000000.0D;
-        }
-      }
-      this.e = paramcx.b;
-      super.a(paramcx, paramdd);
-      return;
-      i = 3;
-      break;
-      i = 2;
-      break;
-      i = 0;
-      break;
-      i = 1;
-      break;
-      i = 5;
-      break;
-      this.a.addSampleIMU(i, paramcx.b, arrayOfFloat[0], 0.0D, 0.0D);
+        super.mo4616a(cxVar, ddVar);
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/cf.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,52 +5,36 @@ import com.baidu.tts.tools.ResourceTools;
 import com.baidu.tts.tools.StringTool;
 import java.io.File;
 
-public class SynthesizerTool
-{
-  public static String getEngineInfo()
-  {
-    return EmbeddedSynthesizerEngine.bdTTSGetEngineParam();
-  }
-  
-  public static int getEngineVersion()
-  {
-    return EmbeddedSynthesizerEngine.getEngineMinVersion();
-  }
-  
-  public static String getModelInfo(String paramString)
-  {
-    if (!StringTool.isEmpty(paramString))
-    {
-      File localFile = new File(paramString);
-      if ((localFile.exists()) && (localFile.canRead())) {
-        return EmbeddedSynthesizerEngine.bdTTSGetDatParam(paramString);
-      }
-    }
-    return null;
-  }
-  
-  public static boolean verifyModelFile(String paramString)
-  {
-    if (StringTool.isEmpty(paramString)) {}
-    for (;;)
-    {
-      return false;
-      paramString = ResourceTools.stringToByteArrayAddNull(paramString);
-      try
-      {
-        int i = EmbeddedSynthesizerEngine.bdTTSVerifyDataFile(paramString);
-        if (i >= 0) {
-          return true;
+public class SynthesizerTool {
+    public static boolean verifyModelFile(String filePath) {
+        if (StringTool.isEmpty(filePath)) {
+            return false;
         }
-      }
-      catch (Exception paramString) {}
+        try {
+            if (EmbeddedSynthesizerEngine.bdTTSVerifyDataFile(ResourceTools.stringToByteArrayAddNull(filePath)) >= 0) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
-    return false;
-  }
+
+    public static String getEngineInfo() {
+        return EmbeddedSynthesizerEngine.bdTTSGetEngineParam();
+    }
+
+    public static int getEngineVersion() {
+        return EmbeddedSynthesizerEngine.getEngineMinVersion();
+    }
+
+    public static String getModelInfo(String filePath) {
+        if (!StringTool.isEmpty(filePath)) {
+            File file = new File(filePath);
+            if (file.exists() && file.canRead()) {
+                return EmbeddedSynthesizerEngine.bdTTSGetDatParam(filePath);
+            }
+        }
+        return null;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/client/SynthesizerTool.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

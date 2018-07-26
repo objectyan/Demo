@@ -1,28 +1,38 @@
 package com.baidu.carlife.fragment;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.screen.BaseDialog.a;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.g;
-import com.baidu.carlife.k.a.e.a;
-import com.baidu.carlife.k.j;
-import com.baidu.carlife.util.w;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.adpter.C0977c;
+import com.baidu.carlife.adpter.C1023r;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.BaseDialog.C1265a;
+import com.baidu.carlife.core.screen.presentation.p071a.C1307e;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.logic.C1766h;
+import com.baidu.carlife.model.C1925e;
+import com.baidu.carlife.model.C1926f;
+import com.baidu.carlife.p054k.C1647h;
+import com.baidu.carlife.p054k.C1649j;
+import com.baidu.carlife.p054k.p055a.C1626e.C0924a;
+import com.baidu.carlife.p078f.C1438c;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.carlife.util.C2201w;
 import com.baidu.carlife.view.CommonTipView;
 import com.baidu.carlife.view.LoadMoreFooter;
-import com.baidu.carlife.view.a.b;
-import com.baidu.carlife.view.dialog.f;
+import com.baidu.carlife.view.dialog.C2282f;
+import com.baidu.carlife.view.p104a.C2251b;
 import com.baidu.navi.fragment.ContentFragment;
+import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.util.NaviAccountUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,333 +40,373 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class HomeDiscoverFoodFragment
-  extends ContentFragment
-{
-  public static final int a = 0;
-  public static final int b = 1;
-  public static final String c = HomeDiscoverFoodFragment.class.getSimpleName();
-  private static final int d = 0;
-  private static final int e = 1;
-  private ListView f;
-  private LoadMoreFooter g;
-  private f h;
-  private CommonTipView i;
-  private ImageButton j;
-  private boolean k;
-  private j l;
-  private com.baidu.carlife.k.h m;
-  private List<com.baidu.carlife.model.e> n;
-  private List<com.baidu.carlife.model.e> o;
-  private com.baidu.carlife.adpter.c p;
-  private int q = 0;
-  private g r;
-  private com.baidu.carlife.f.c s;
-  private int t = 0;
-  private e.a u = new e.a()
-  {
-    public void onNetWorkResponse(int paramAnonymousInt)
-    {
-      if (!HomeDiscoverFoodFragment.this.isAdded()) {}
-      do
-      {
-        return;
-        if (paramAnonymousInt == 0)
-        {
-          List localList = HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this).a();
-          if ((localList != null) && (localList.size() > 0))
-          {
-            HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this).a(HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this).a());
-            HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this).notifyDataSetChanged();
-            HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this, 0);
-            HomeDiscoverFoodFragment.this.onInitFocusAreas();
-          }
+public class HomeDiscoverFoodFragment extends ContentFragment {
+    /* renamed from: a */
+    public static final int f4373a = 0;
+    /* renamed from: b */
+    public static final int f4374b = 1;
+    /* renamed from: c */
+    public static final String f4375c = HomeDiscoverFoodFragment.class.getSimpleName();
+    /* renamed from: d */
+    private static final int f4376d = 0;
+    /* renamed from: e */
+    private static final int f4377e = 1;
+    /* renamed from: f */
+    private ListView f4378f;
+    /* renamed from: g */
+    private LoadMoreFooter f4379g;
+    /* renamed from: h */
+    private C2282f f4380h;
+    /* renamed from: i */
+    private CommonTipView f4381i;
+    /* renamed from: j */
+    private ImageButton f4382j;
+    /* renamed from: k */
+    private boolean f4383k;
+    /* renamed from: l */
+    private C1649j f4384l;
+    /* renamed from: m */
+    private C1647h f4385m;
+    /* renamed from: n */
+    private List<C1925e> f4386n;
+    /* renamed from: o */
+    private List<C1925e> f4387o;
+    /* renamed from: p */
+    private C0977c f4388p;
+    /* renamed from: q */
+    private int f4389q = 0;
+    /* renamed from: r */
+    private C1443g f4390r;
+    /* renamed from: s */
+    private C1438c f4391s;
+    /* renamed from: t */
+    private int f4392t = 0;
+    /* renamed from: u */
+    private C0924a f4393u = new C14781(this);
+    /* renamed from: v */
+    private C0924a f4394v = new C14792(this);
+    /* renamed from: w */
+    private Comparator<C1925e> f4395w = new C14803(this);
+    /* renamed from: x */
+    private OnItemClickListener f4396x = new C14814(this);
+
+    /* renamed from: com.baidu.carlife.fragment.HomeDiscoverFoodFragment$1 */
+    class C14781 implements C0924a {
+        /* renamed from: a */
+        final /* synthetic */ HomeDiscoverFoodFragment f4367a;
+
+        C14781(HomeDiscoverFoodFragment this$0) {
+            this.f4367a = this$0;
         }
-      } while (!HomeDiscoverFoodFragment.c(HomeDiscoverFoodFragment.this));
-      HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this, false);
-      HomeDiscoverFoodFragment.d(HomeDiscoverFoodFragment.this).toPostRequest();
-    }
-  };
-  private e.a v = new e.a()
-  {
-    public void onNetWorkResponse(int paramAnonymousInt)
-    {
-      com.baidu.carlife.core.screen.presentation.a.e.a().c();
-      if (HomeDiscoverFoodFragment.d(HomeDiscoverFoodFragment.this).b() == 0)
-      {
-        HomeDiscoverFoodFragment.e(HomeDiscoverFoodFragment.this).setFooterDividersEnabled(false);
-        HomeDiscoverFoodFragment.f(HomeDiscoverFoodFragment.this).setStatus(0);
-        switch (paramAnonymousInt)
-        {
+
+        public void onNetWorkResponse(int responseCode) {
+            if (this.f4367a.isAdded()) {
+                if (responseCode == 0) {
+                    List<C1926f> temp = this.f4367a.f4384l.m5959a();
+                    if (temp != null && temp.size() > 0) {
+                        this.f4367a.f4388p.m3177a(this.f4367a.f4384l.m5959a());
+                        this.f4367a.f4388p.notifyDataSetChanged();
+                        this.f4367a.f4392t = 0;
+                        this.f4367a.onInitFocusAreas();
+                    }
+                }
+                if (this.f4367a.f4383k) {
+                    this.f4367a.f4383k = false;
+                    this.f4367a.f4385m.toPostRequest();
+                }
+            }
         }
-      }
-      do
-      {
-        return;
-        HomeDiscoverFoodFragment.e(HomeDiscoverFoodFragment.this).setFooterDividersEnabled(true);
-        HomeDiscoverFoodFragment.f(HomeDiscoverFoodFragment.this).setStatus(1);
-        break;
-        if (HomeDiscoverFoodFragment.g(HomeDiscoverFoodFragment.this) == null) {
-          HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this, new ArrayList());
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.HomeDiscoverFoodFragment$2 */
+    class C14792 implements C0924a {
+        /* renamed from: a */
+        final /* synthetic */ HomeDiscoverFoodFragment f4368a;
+
+        C14792(HomeDiscoverFoodFragment this$0) {
+            this.f4368a = this$0;
         }
-        HomeDiscoverFoodFragment.h(HomeDiscoverFoodFragment.this).setVisibility(0);
-        HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this, HomeDiscoverFoodFragment.g(HomeDiscoverFoodFragment.this).size());
-        HomeDiscoverFoodFragment.g(HomeDiscoverFoodFragment.this).addAll(HomeDiscoverFoodFragment.d(HomeDiscoverFoodFragment.this).a());
-        if (HomeDiscoverFoodFragment.i(HomeDiscoverFoodFragment.this) == 0)
-        {
-          HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this).b(HomeDiscoverFoodFragment.g(HomeDiscoverFoodFragment.this));
-          HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this).notifyDataSetChanged();
-          HomeDiscoverFoodFragment.this.onInitFocusAreas();
-          return;
+
+        public void onNetWorkResponse(int responseCode) {
+            C1307e.m4686a().mo1468c();
+            if (this.f4368a.f4385m.m5957b() == 0) {
+                this.f4368a.f4378f.setFooterDividersEnabled(false);
+                this.f4368a.f4379g.setStatus(0);
+            } else {
+                this.f4368a.f4378f.setFooterDividersEnabled(true);
+                this.f4368a.f4379g.setStatus(1);
+            }
+            switch (responseCode) {
+                case -3:
+                case -1:
+                    if (this.f4368a.f4388p.isEmpty()) {
+                        this.f4368a.f4381i.m8397a(0);
+                        this.f4368a.f4378f.setEmptyView(this.f4368a.f4381i);
+                        this.f4368a.f4392t = 0;
+                        this.f4368a.onInitFocusAreas();
+                        return;
+                    }
+                    return;
+                case -2:
+                    if (this.f4368a.f4388p.isEmpty()) {
+                        this.f4368a.f4381i.m8397a(1);
+                        this.f4368a.f4378f.setEmptyView(this.f4368a.f4381i);
+                        this.f4368a.f4392t = 0;
+                        this.f4368a.onInitFocusAreas();
+                        return;
+                    }
+                    C2201w.m8371a((int) C0965R.string.common_error_nonetwork, 0);
+                    return;
+                case 0:
+                    if (this.f4368a.f4386n == null) {
+                        this.f4368a.f4386n = new ArrayList();
+                    }
+                    this.f4368a.f4382j.setVisibility(0);
+                    this.f4368a.f4392t = this.f4368a.f4386n.size();
+                    this.f4368a.f4386n.addAll(this.f4368a.f4385m.m5956a());
+                    if (this.f4368a.f4389q == 0) {
+                        this.f4368a.f4388p.m3178b(this.f4368a.f4386n);
+                        this.f4368a.f4388p.notifyDataSetChanged();
+                        this.f4368a.onInitFocusAreas();
+                        return;
+                    }
+                    this.f4368a.m5406a();
+                    return;
+                default:
+                    return;
+            }
         }
-        HomeDiscoverFoodFragment.j(HomeDiscoverFoodFragment.this);
-        return;
-        if (HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this).isEmpty())
-        {
-          HomeDiscoverFoodFragment.k(HomeDiscoverFoodFragment.this).a(1);
-          HomeDiscoverFoodFragment.e(HomeDiscoverFoodFragment.this).setEmptyView(HomeDiscoverFoodFragment.k(HomeDiscoverFoodFragment.this));
-          HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this, 0);
-          HomeDiscoverFoodFragment.this.onInitFocusAreas();
-          return;
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.HomeDiscoverFoodFragment$3 */
+    class C14803 implements Comparator<C1925e> {
+        /* renamed from: a */
+        final /* synthetic */ HomeDiscoverFoodFragment f4369a;
+
+        C14803(HomeDiscoverFoodFragment this$0) {
+            this.f4369a = this$0;
         }
-        w.a(2131296385, 0);
-        return;
-      } while (!HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this).isEmpty());
-      HomeDiscoverFoodFragment.k(HomeDiscoverFoodFragment.this).a(0);
-      HomeDiscoverFoodFragment.e(HomeDiscoverFoodFragment.this).setEmptyView(HomeDiscoverFoodFragment.k(HomeDiscoverFoodFragment.this));
-      HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this, 0);
-      HomeDiscoverFoodFragment.this.onInitFocusAreas();
-    }
-  };
-  private Comparator<com.baidu.carlife.model.e> w = new Comparator()
-  {
-    public int a(com.baidu.carlife.model.e paramAnonymouse1, com.baidu.carlife.model.e paramAnonymouse2)
-    {
-      if (paramAnonymouse2.B.compareTo(paramAnonymouse1.B) != 0) {
-        return paramAnonymouse2.B.compareTo(paramAnonymouse1.B);
-      }
-      return paramAnonymouse1.n.compareTo(paramAnonymouse2.n);
-    }
-  };
-  private AdapterView.OnItemClickListener x = new AdapterView.OnItemClickListener()
-  {
-    public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-    {
-      if (paramAnonymousLong < 0L) {
-        if ((HomeDiscoverFoodFragment.f(HomeDiscoverFoodFragment.this).a()) && (HomeDiscoverFoodFragment.d(HomeDiscoverFoodFragment.this) != null)) {
-          HomeDiscoverFoodFragment.d(HomeDiscoverFoodFragment.this).toPostRequest();
+
+        public /* synthetic */ int compare(Object obj, Object obj2) {
+            return m5402a((C1925e) obj, (C1925e) obj2);
         }
-      }
-      do
-      {
-        return;
-        paramAnonymousAdapterView = paramAnonymousAdapterView.getItemAtPosition((int)paramAnonymousLong);
-      } while (paramAnonymousAdapterView == null);
-      paramAnonymousView = new Bundle();
-      paramAnonymousView.putSerializable("model", (Serializable)paramAnonymousAdapterView);
-      HomeDiscoverFoodFragment.this.showFragment(560, paramAnonymousView);
-    }
-  };
-  
-  private void a()
-  {
-    if (this.o == null) {
-      this.o = new ArrayList();
-    }
-    if (this.n != null)
-    {
-      this.o.clear();
-      this.o.addAll(this.n);
-      Collections.sort(this.o, this.w);
-      this.p.b(this.o);
-      this.p.notifyDataSetChanged();
-      this.t = 0;
-      onInitFocusAreas();
-    }
-  }
-  
-  private void b()
-  {
-    if ((this.h != null) && (this.h.isShown())) {
-      this.h.d();
-    }
-  }
-  
-  public void driving()
-  {
-    i.b("yftech", "HomeDiscoverFoodFragment driving");
-    com.baidu.carlife.core.screen.presentation.a.e.a().c();
-    b();
-    back();
-    com.baidu.carlife.custom.a.a().d();
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    paramLayoutInflater = paramLayoutInflater.inflate(2130968765, null);
-    setCommonTitleBar(paramLayoutInflater, getResources().getStringArray(2131230725)[2]);
-    ((TextView)paramLayoutInflater.findViewById(2131624262)).setText(2131296513);
-    Object localObject = getResources().getStringArray(2131230726);
-    localObject = new com.baidu.carlife.adpter.r(getContext(), (String[])localObject);
-    this.h = new f(getContext(), 2131296378, (BaseAdapter)localObject, new a(null));
-    this.h.setSelected(0);
-    this.j = ((ImageButton)paramLayoutInflater.findViewById(2131624264));
-    this.j.setVisibility(8);
-    this.j.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        HomeDiscoverFoodFragment.this.showDialog(HomeDiscoverFoodFragment.l(HomeDiscoverFoodFragment.this), BaseDialog.a.b);
-      }
-    });
-    this.i = ((CommonTipView)paramLayoutInflater.findViewById(2131623981));
-    this.i.b(2131296457);
-    this.f = ((ListView)paramLayoutInflater.findViewById(2131624353));
-    this.f.setOverScrollMode(2);
-    this.f.setFooterDividersEnabled(false);
-    this.g = new LoadMoreFooter(getContext());
-    this.f.addFooterView(this.g);
-    this.p = new com.baidu.carlife.adpter.c(getContext(), this);
-    this.f.setAdapter(this.p);
-    this.f.setOnItemClickListener(this.x);
-    com.baidu.carlife.core.screen.presentation.a.e.a().b(getString(2131296859));
-    this.k = true;
-    this.l = new j();
-    this.l.registerResponseListener(this.u);
-    this.m = new com.baidu.carlife.k.h();
-    this.m.registerResponseListener(this.v);
-    return paramLayoutInflater;
-  }
-  
-  public void onDestroy()
-  {
-    super.onDestroy();
-    com.baidu.carlife.logic.h.b = false;
-  }
-  
-  public void onDetach()
-  {
-    super.onDetach();
-    if (this.l != null) {
-      this.l.cancel();
-    }
-    if (this.m != null) {
-      this.m.cancel();
-    }
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    if (!paramBoolean) {
-      setBottomBarStatus(false);
-    }
-    super.onHiddenChanged(paramBoolean);
-    if ((NaviAccountUtils.getInstance().isLogin()) && (!paramBoolean))
-    {
-      i.b(c, "onHiddenChanged NetWork UserQueueRequest");
-      this.l.toPostRequest();
-    }
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.fragmentType != getCurrentFragmentType()) {
-      return;
-    }
-    if (this.r == null)
-    {
-      this.r = new g(this.mContentView.findViewById(2131623980), 2);
-      this.r.d(this.mContentView.findViewById(2131624258)).d(this.j);
-    }
-    if (this.s == null) {
-      this.s = new com.baidu.carlife.f.c(this.f, 6);
-    }
-    if (this.p.isEmpty())
-    {
-      d.a().b(new com.baidu.carlife.f.a[] { this.r });
-      d.a().h(this.r);
-      return;
-    }
-    this.f.setSelection(this.t);
-    d.a().b(new com.baidu.carlife.f.a[] { this.r, this.s });
-    d.a().h(this.s);
-  }
-  
-  protected void onInitView() {}
-  
-  public void onResume()
-  {
-    super.onResume();
-    if (NaviAccountUtils.getInstance().isLogin())
-    {
-      i.b(c, "onResume NetWork UserQueueRequest");
-      this.l.toPostRequest();
-    }
-    for (;;)
-    {
-      if (com.baidu.carlife.logic.h.c) {
-        this.f.setSelection(0);
-      }
-      com.baidu.carlife.logic.h.c = false;
-      return;
-      if (this.k)
-      {
-        this.k = false;
-        this.m.toPostRequest();
-      }
-    }
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    updateCommonSkin();
-    this.j.setBackground(b.a(mActivity));
-    this.j.setImageDrawable(com.baidu.carlife.util.r.b(2130838320));
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public void stopDriving()
-  {
-    i.b("yftech", "HomeDiscoverFoodFragment stopDriving");
-  }
-  
-  private class a
-    implements AdapterView.OnItemClickListener
-  {
-    private a() {}
-    
-    public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong)
-    {
-      HomeDiscoverFoodFragment.this.dismissDialog(HomeDiscoverFoodFragment.l(HomeDiscoverFoodFragment.this));
-      HomeDiscoverFoodFragment.l(HomeDiscoverFoodFragment.this).setSelected(paramInt);
-      switch (paramInt)
-      {
-      default: 
-        return;
-      case 0: 
-        if (HomeDiscoverFoodFragment.i(HomeDiscoverFoodFragment.this) != 0)
-        {
-          HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this).b(HomeDiscoverFoodFragment.g(HomeDiscoverFoodFragment.this));
-          HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this).notifyDataSetChanged();
-          HomeDiscoverFoodFragment.a(HomeDiscoverFoodFragment.this, 0);
-          HomeDiscoverFoodFragment.this.onInitFocusAreas();
+
+        /* renamed from: a */
+        public int m5402a(C1925e lhs, C1925e rhs) {
+            if (rhs.f5969B.compareTo(lhs.f5969B) != 0) {
+                return rhs.f5969B.compareTo(lhs.f5969B);
+            }
+            return lhs.f5980n.compareTo(rhs.f5980n);
         }
-        HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this, 0);
-        return;
-      }
-      if (HomeDiscoverFoodFragment.i(HomeDiscoverFoodFragment.this) != 1) {
-        HomeDiscoverFoodFragment.j(HomeDiscoverFoodFragment.this);
-      }
-      HomeDiscoverFoodFragment.b(HomeDiscoverFoodFragment.this, 1);
     }
-  }
+
+    /* renamed from: com.baidu.carlife.fragment.HomeDiscoverFoodFragment$4 */
+    class C14814 implements OnItemClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeDiscoverFoodFragment f4370a;
+
+        C14814(HomeDiscoverFoodFragment this$0) {
+            this.f4370a = this$0;
+        }
+
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (id >= 0) {
+                Object model = parent.getItemAtPosition((int) id);
+                if (model != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("model", (Serializable) model);
+                    this.f4370a.showFragment(NaviFragmentManager.TYPE_HOME_DISCOVER_FOOD_DETAIL, bundle);
+                }
+            } else if (this.f4370a.f4379g.m8458a() && this.f4370a.f4385m != null) {
+                this.f4370a.f4385m.toPostRequest();
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.HomeDiscoverFoodFragment$5 */
+    class C14825 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeDiscoverFoodFragment f4371a;
+
+        C14825(HomeDiscoverFoodFragment this$0) {
+            this.f4371a = this$0;
+        }
+
+        public void onClick(View v) {
+            this.f4371a.showDialog(this.f4371a.f4380h, C1265a.Right);
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.HomeDiscoverFoodFragment$a */
+    private class C1483a implements OnItemClickListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeDiscoverFoodFragment f4372a;
+
+        private C1483a(HomeDiscoverFoodFragment homeDiscoverFoodFragment) {
+            this.f4372a = homeDiscoverFoodFragment;
+        }
+
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            this.f4372a.dismissDialog(this.f4372a.f4380h);
+            this.f4372a.f4380h.setSelected(position);
+            switch (position) {
+                case 0:
+                    if (this.f4372a.f4389q != 0) {
+                        this.f4372a.f4388p.m3178b(this.f4372a.f4386n);
+                        this.f4372a.f4388p.notifyDataSetChanged();
+                        this.f4372a.f4392t = 0;
+                        this.f4372a.onInitFocusAreas();
+                    }
+                    this.f4372a.f4389q = 0;
+                    return;
+                case 1:
+                    if (this.f4372a.f4389q != 1) {
+                        this.f4372a.m5406a();
+                    }
+                    this.f4372a.f4389q = 1;
+                    return;
+                default:
+                    return;
+            }
+        }
+    }
+
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            setBottomBarStatus(false);
+        }
+        super.onHiddenChanged(hidden);
+        if (NaviAccountUtils.getInstance().isLogin() && !hidden) {
+            C1260i.m4435b(f4375c, "onHiddenChanged NetWork UserQueueRequest");
+            this.f4384l.toPostRequest();
+        }
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        View contentView = inflater.inflate(C0965R.layout.frag_home_discover_food, null);
+        setCommonTitleBar(contentView, getResources().getStringArray(C0965R.array.home_discovery)[2]);
+        ((TextView) contentView.findViewById(C0965R.id.tv_title_desc)).setText(C0965R.string.home_food_nowait);
+        this.f4380h = new C2282f(getContext(), C0965R.string.carmode_order, new C1023r(getContext(), getResources().getStringArray(C0965R.array.home_food_menu)), new C1483a());
+        this.f4380h.setSelected(0);
+        this.f4382j = (ImageButton) contentView.findViewById(C0965R.id.ib_right);
+        this.f4382j.setVisibility(8);
+        this.f4382j.setOnClickListener(new C14825(this));
+        this.f4381i = (CommonTipView) contentView.findViewById(C0965R.id.common_tip_view);
+        this.f4381i.m8403b(C0965R.string.error_nofood);
+        this.f4378f = (ListView) contentView.findViewById(C0965R.id.listview);
+        this.f4378f.setOverScrollMode(2);
+        this.f4378f.setFooterDividersEnabled(false);
+        this.f4379g = new LoadMoreFooter(getContext());
+        this.f4378f.addFooterView(this.f4379g);
+        this.f4388p = new C0977c(getContext(), this);
+        this.f4378f.setAdapter(this.f4388p);
+        this.f4378f.setOnItemClickListener(this.f4396x);
+        C1307e.m4686a().mo1467b(getString(C0965R.string.progress_loading));
+        this.f4383k = true;
+        this.f4384l = new C1649j();
+        this.f4384l.registerResponseListener(this.f4393u);
+        this.f4385m = new C1647h();
+        this.f4385m.registerResponseListener(this.f4394v);
+        return contentView;
+    }
+
+    public void onResume() {
+        super.onResume();
+        if (NaviAccountUtils.getInstance().isLogin()) {
+            C1260i.m4435b(f4375c, "onResume NetWork UserQueueRequest");
+            this.f4384l.toPostRequest();
+        } else if (this.f4383k) {
+            this.f4383k = false;
+            this.f4385m.toPostRequest();
+        }
+        if (C1766h.f5369c) {
+            this.f4378f.setSelection(0);
+        }
+        C1766h.f5369c = false;
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        C1766h.f5368b = false;
+    }
+
+    /* renamed from: a */
+    private void m5406a() {
+        if (this.f4387o == null) {
+            this.f4387o = new ArrayList();
+        }
+        if (this.f4386n != null) {
+            this.f4387o.clear();
+            this.f4387o.addAll(this.f4386n);
+            Collections.sort(this.f4387o, this.f4395w);
+            this.f4388p.m3178b(this.f4387o);
+            this.f4388p.notifyDataSetChanged();
+            this.f4392t = 0;
+            onInitFocusAreas();
+        }
+    }
+
+    protected void onUpdateSkin() {
+        updateCommonSkin();
+        this.f4382j.setBackground(C2251b.m8527a(mActivity));
+        this.f4382j.setImageDrawable(C2188r.m8331b(C0965R.drawable.com_ic_sequence));
+    }
+
+    public void onDetach() {
+        super.onDetach();
+        if (this.f4384l != null) {
+            this.f4384l.cancel();
+        }
+        if (this.f4385m != null) {
+            this.f4385m.cancel();
+        }
+    }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "HomeDiscoverFoodFragment driving");
+        C1307e.m4686a().mo1468c();
+        m5410b();
+        back();
+        C1342a.m4926a().m4931d();
+    }
+
+    public void stopDriving() {
+        C1260i.m4435b("yftech", "HomeDiscoverFoodFragment stopDriving");
+    }
+
+    /* renamed from: b */
+    private void m5410b() {
+        if (this.f4380h != null && this.f4380h.isShown()) {
+            this.f4380h.mo1526d();
+        }
+    }
+
+    public void onInitFocusAreas() {
+        if (this.fragmentType == getCurrentFragmentType()) {
+            if (this.f4390r == null) {
+                this.f4390r = new C1443g(this.mContentView.findViewById(C0965R.id.temp), 2);
+                this.f4390r.m5300d(this.mContentView.findViewById(C0965R.id.ib_left)).m5300d(this.f4382j);
+            }
+            if (this.f4391s == null) {
+                this.f4391s = new C1438c(this.f4378f, 6);
+            }
+            if (this.f4388p.isEmpty()) {
+                C1440d.m5251a().m5256b(this.f4390r);
+                C1440d.m5251a().m5268h(this.f4390r);
+                return;
+            }
+            this.f4378f.setSelection(this.f4392t);
+            C1440d.m5251a().m5256b(this.f4390r, this.f4391s);
+            C1440d.m5251a().m5268h(this.f4391s);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/HomeDiscoverFoodFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

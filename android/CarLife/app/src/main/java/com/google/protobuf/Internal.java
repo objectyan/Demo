@@ -2,47 +2,29 @@ package com.google.protobuf;
 
 import java.io.UnsupportedEncodingException;
 
-public class Internal
-{
-  public static ByteString bytesDefaultValue(String paramString)
-  {
-    try
-    {
-      paramString = ByteString.copyFrom(paramString.getBytes("ISO-8859-1"));
-      return paramString;
+public class Internal {
+
+    public interface EnumLiteMap<T extends EnumLite> {
+        T findValueByNumber(int i);
     }
-    catch (UnsupportedEncodingException paramString)
-    {
-      throw new IllegalStateException("Java VM does not support a standard character set.", paramString);
+
+    public interface EnumLite {
+        int getNumber();
     }
-  }
-  
-  public static String stringDefaultValue(String paramString)
-  {
-    try
-    {
-      paramString = new String(paramString.getBytes("ISO-8859-1"), "UTF-8");
-      return paramString;
+
+    public static String stringDefaultValue(String bytes) {
+        try {
+            return new String(bytes.getBytes("ISO-8859-1"), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Java VM does not support a standard character set.", e);
+        }
     }
-    catch (UnsupportedEncodingException paramString)
-    {
-      throw new IllegalStateException("Java VM does not support a standard character set.", paramString);
+
+    public static ByteString bytesDefaultValue(String bytes) {
+        try {
+            return ByteString.copyFrom(bytes.getBytes("ISO-8859-1"));
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Java VM does not support a standard character set.", e);
+        }
     }
-  }
-  
-  public static abstract interface EnumLite
-  {
-    public abstract int getNumber();
-  }
-  
-  public static abstract interface EnumLiteMap<T extends Internal.EnumLite>
-  {
-    public abstract T findValueByNumber(int paramInt);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/Internal.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

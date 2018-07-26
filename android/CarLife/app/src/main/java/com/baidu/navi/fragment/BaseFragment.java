@@ -10,436 +10,358 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout.LayoutParams;
 import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.core.C1260i;
 import com.baidu.carlife.core.screen.BaseDialog;
-import com.baidu.carlife.core.screen.BaseDialog.a;
-import com.baidu.carlife.core.screen.a;
-import com.baidu.carlife.core.screen.e;
-import com.baidu.carlife.core.screen.l;
-import com.baidu.carlife.core.screen.m;
-import com.baidu.carlife.core.screen.presentation.a.g;
-import com.baidu.carlife.core.screen.presentation.h;
+import com.baidu.carlife.core.screen.BaseDialog.C1265a;
+import com.baidu.carlife.core.screen.C1269a;
+import com.baidu.carlife.core.screen.C1277e;
+import com.baidu.carlife.core.screen.C1278f;
+import com.baidu.carlife.core.screen.C1283l;
+import com.baidu.carlife.core.screen.C1284m;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.core.screen.presentation.p071a.C1308f;
+import com.baidu.carlife.core.screen.presentation.p071a.C1309g;
+import com.baidu.carlife.fragment.WebViewFragment;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.logic.CommandCenter;
 
-public abstract class BaseFragment
-  extends Fragment
-  implements e, com.baidu.carlife.core.screen.f, l, m
-{
-  private static final String TAG = "Framework";
-  public static CarlifeActivity mActivity;
-  protected static boolean mResumeMapView = true;
-  protected static boolean mUpdateIts = true;
-  protected int fragmentType;
-  private com.baidu.carlife.core.screen.presentation.a.f mCarlifeView;
-  protected View mContentView;
-  protected boolean mDayStyle;
-  protected boolean mEnableLandInMapMode = false;
-  private h mFragmentManagerCallbackProxy;
-  protected int mOrientation;
-  protected boolean mViewCreated = false;
-  
-  public static CarlifeActivity getNaviActivity()
-  {
-    return mActivity;
-  }
-  
-  public static void initBeforeAll(CarlifeActivity paramCarlifeActivity)
-  {
-    mActivity = paramCarlifeActivity;
-  }
-  
-  public void back()
-  {
-    back(null);
-  }
-  
-  public void back(Bundle paramBundle)
-  {
-    if (this.mFragmentManagerCallbackProxy != null) {
-      this.mFragmentManagerCallbackProxy.back(paramBundle);
+public abstract class BaseFragment extends Fragment implements C1277e, C1278f, C1283l, C1284m {
+    private static final String TAG = "Framework";
+    public static CarlifeActivity mActivity;
+    protected static boolean mResumeMapView = true;
+    protected static boolean mUpdateIts = true;
+    protected int fragmentType;
+    private C1308f mCarlifeView;
+    protected View mContentView;
+    protected boolean mDayStyle;
+    protected boolean mEnableLandInMapMode = false;
+    private C1328h mFragmentManagerCallbackProxy;
+    protected int mOrientation;
+    protected boolean mViewCreated = false;
+
+    protected abstract void onUpdateOrientation(int i);
+
+    protected abstract void onUpdateStyle(boolean z);
+
+    public static void initBeforeAll(CarlifeActivity activity) {
+        mActivity = activity;
     }
-  }
-  
-  public void backTo(int paramInt, Bundle paramBundle)
-  {
-    this.mFragmentManagerCallbackProxy.backTo(paramInt, paramBundle);
-  }
-  
-  public boolean canProcessUI()
-  {
-    return isAdded();
-  }
-  
-  public void cancelDialog()
-  {
-    this.mCarlifeView.cancelDialog();
-  }
-  
-  public void cancelDialog(BaseDialog paramBaseDialog)
-  {
-    this.mCarlifeView.cancelDialog(paramBaseDialog);
-  }
-  
-  public void cancelRequest()
-  {
-    CommandCenter.getInstance().cancelRequest(getClass().getSimpleName());
-  }
-  
-  public ContentFragment createFragment(int paramInt)
-  {
-    return this.mFragmentManagerCallbackProxy.createFragment(paramInt);
-  }
-  
-  public void dismissDialog()
-  {
-    this.mCarlifeView.dismissDialog();
-  }
-  
-  public void dismissDialog(BaseDialog paramBaseDialog)
-  {
-    this.mCarlifeView.dismissDialog(paramBaseDialog);
-  }
-  
-  protected void dismissGuideHint()
-  {
-    this.mCarlifeView.a();
-  }
-  
-  protected void enableLandscapse()
-  {
-    if (BNSettingManager.getCurrentUsingMode() == 1) {
-      this.mEnableLandInMapMode = true;
+
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        C1260i.b("Framework", "onAttach: " + getClass().getName());
     }
-  }
-  
-  protected void forbiddenLanscapse()
-  {
-    if (BNSettingManager.getCurrentUsingMode() == 1)
-    {
-      if (this.mEnableLandInMapMode) {
-        mActivity.setRequestedOrientation(-1);
-      }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        C1260i.b("Framework", "onCreate: " + getClass().getName());
+        this.mFragmentManagerCallbackProxy = C1328h.a();
+        setHasOptionsMenu(true);
     }
-    else {
-      return;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        C1260i.b("Framework", "onCreateView: " + getClass().getName());
+        this.mFragmentManagerCallbackProxy = C1328h.a();
+        this.mCarlifeView = C1309g.a().b();
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
-    mActivity.setRequestedOrientation(1);
-  }
-  
-  public ContentFragment getCurrentFragment()
-  {
-    return this.mFragmentManagerCallbackProxy.getCurrentFragment();
-  }
-  
-  public int getCurrentFragmentType()
-  {
-    return this.mFragmentManagerCallbackProxy.getCurrentFragmentType();
-  }
-  
-  public NaviFragmentManager getNaviFragmentManager()
-  {
-    return this.mFragmentManagerCallbackProxy.getNaviFragmentManager();
-  }
-  
-  public int getNextFragmentType()
-  {
-    return this.mFragmentManagerCallbackProxy.getNextFragmentType();
-  }
-  
-  public String getStringUtil(int paramInt)
-  {
-    return mActivity.getString(paramInt);
-  }
-  
-  public int getType()
-  {
-    return this.fragmentType;
-  }
-  
-  public void hideMapFragment()
-  {
-    this.mCarlifeView.hideMapFragment();
-  }
-  
-  public void hideWindowView()
-  {
-    this.mCarlifeView.hideWindowView();
-  }
-  
-  public void innerNameSearch(String paramString)
-  {
-    this.mCarlifeView.innerNameSearch(paramString);
-  }
-  
-  public boolean isCarlifeFragment(int paramInt)
-  {
-    return this.mFragmentManagerCallbackProxy.isCarlifeFragment(paramInt);
-  }
-  
-  public boolean isDialogShown()
-  {
-    return this.mCarlifeView.isDialogShown();
-  }
-  
-  public boolean isNaviMapFragment()
-  {
-    return this.mFragmentManagerCallbackProxy.isNaviMapFragment();
-  }
-  
-  public boolean isProgressDialogShowing()
-  {
-    return this.mCarlifeView.d();
-  }
-  
-  public boolean isWindowViewShown()
-  {
-    return this.mCarlifeView.isWindowViewShown();
-  }
-  
-  public void onActivityCreated(Bundle paramBundle)
-  {
-    super.onActivityCreated(paramBundle);
-    i.b("Framework", "onActivityCreated");
-  }
-  
-  public void onAttach(Context paramContext)
-  {
-    super.onAttach(paramContext);
-    i.b("Framework", "onAttach: " + getClass().getName());
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    i.b("Framework", "onCreate: " + getClass().getName());
-    this.mFragmentManagerCallbackProxy = h.a();
-    setHasOptionsMenu(true);
-  }
-  
-  public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle)
-  {
-    i.b("Framework", "onCreateView: " + getClass().getName());
-    this.mFragmentManagerCallbackProxy = h.a();
-    this.mCarlifeView = g.a().b();
-    return super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-  }
-  
-  public void onDestroy()
-  {
-    super.onDestroy();
-    i.b("Framework", "onDestroy");
-  }
-  
-  public void onDestroyView()
-  {
-    super.onDestroyView();
-    i.b("Framework", "onDestroyView");
-  }
-  
-  public void onDetach()
-  {
-    super.onDetach();
-    i.b("Framework", "onDetach");
-  }
-  
-  public boolean onKeyDown(int paramInt, KeyEvent paramKeyEvent)
-  {
-    return false;
-  }
-  
-  public void onPause()
-  {
-    super.onPause();
-    i.b("Framework", "onPause");
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    i.b("Framework", "onResume");
-  }
-  
-  public void onStart()
-  {
-    super.onStart();
-    i.b("Framework", "onStart");
-  }
-  
-  public void onStop()
-  {
-    super.onStop();
-    i.b("Framework", "onStop");
-  }
-  
-  protected abstract void onUpdateOrientation(int paramInt);
-  
-  protected abstract void onUpdateStyle(boolean paramBoolean);
-  
-  public void openNavi()
-  {
-    this.mCarlifeView.openNavi();
-  }
-  
-  public void openNavi(Bundle paramBundle)
-  {
-    this.mCarlifeView.openNavi(paramBundle);
-  }
-  
-  public void openNaviFromOutSide(int paramInt, Bundle paramBundle)
-  {
-    this.mCarlifeView.openNaviFromOutSide(paramInt, paramBundle);
-  }
-  
-  public void openWebView(int paramInt1, int paramInt2, String paramString1, String paramString2)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("bundle_type", paramInt1);
-    localBundle.putString("bundle_title_key", paramString1);
-    localBundle.putString("bundle_url_key", paramString2);
-    showFragment(paramInt2, localBundle);
-  }
-  
-  public void performOpenHome()
-  {
-    this.mCarlifeView.performOpenHome();
-  }
-  
-  public void push(ContentFragment paramContentFragment)
-  {
-    this.mFragmentManagerCallbackProxy.push(paramContentFragment);
-  }
-  
-  public void removeAllFragmentByType(int paramInt)
-  {
-    this.mFragmentManagerCallbackProxy.removeAllFragmentByType(paramInt);
-  }
-  
-  public void removeFragmentTo(int paramInt)
-  {
-    this.mFragmentManagerCallbackProxy.removeFragmentTo(paramInt);
-  }
-  
-  public void removeWeChatFragmentFromStack()
-  {
-    this.mFragmentManagerCallbackProxy.removeWeChatFragmentFromStack();
-  }
-  
-  public void setBottomBarBackgroud(Drawable paramDrawable)
-  {
-    if (this.mCarlifeView != null) {
-      this.mCarlifeView.setBottomBarBackgroud(paramDrawable);
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        C1260i.b("Framework", "onActivityCreated");
     }
-  }
-  
-  public void setBottomBarStatus(boolean paramBoolean)
-  {
-    if (this.mCarlifeView != null) {
-      this.mCarlifeView.setBottomBarStatus(paramBoolean);
+
+    public void onStart() {
+        super.onStart();
+        C1260i.b("Framework", "onStart");
     }
-  }
-  
-  public void setType(int paramInt)
-  {
-    this.fragmentType = paramInt;
-  }
-  
-  public boolean showConnectForbidDialog()
-  {
-    return this.mCarlifeView.showConnectForbidDialog();
-  }
-  
-  public void showDialog(BaseDialog paramBaseDialog)
-  {
-    this.mCarlifeView.showDialog(paramBaseDialog);
-  }
-  
-  public void showDialog(BaseDialog paramBaseDialog, BaseDialog.a parama)
-  {
-    this.mCarlifeView.showDialog(paramBaseDialog, parama);
-  }
-  
-  public void showFragment(int paramInt, Bundle paramBundle)
-  {
-    this.mFragmentManagerCallbackProxy.showFragment(paramInt, paramBundle);
-  }
-  
-  protected void showGuideHint(String paramString)
-  {
-    this.mCarlifeView.a(paramString);
-  }
-  
-  public void showLatestHomeFragment()
-  {
-    this.mFragmentManagerCallbackProxy.showLatestHomeFragment();
-  }
-  
-  public void showLatestMusicFragment()
-  {
-    this.mFragmentManagerCallbackProxy.showLatestMusicFragment();
-  }
-  
-  public void showLatestNaviFragment()
-  {
-    this.mFragmentManagerCallbackProxy.showLatestNaviFragment();
-  }
-  
-  public void showLatestPhoneFragment()
-  {
-    this.mFragmentManagerCallbackProxy.showLatestPhoneFragment();
-  }
-  
-  public void showMapFragment()
-  {
-    this.mCarlifeView.showMapFragment();
-  }
-  
-  public void showPluginFrament(Fragment paramFragment)
-  {
-    this.mFragmentManagerCallbackProxy.showPluginFrament(paramFragment);
-  }
-  
-  public void showWindowView(View paramView, RelativeLayout.LayoutParams paramLayoutParams)
-  {
-    this.mCarlifeView.showWindowView(paramView, paramLayoutParams);
-  }
-  
-  public void startCalcRoute(a parama)
-  {
-    this.mCarlifeView.startCalcRoute(parama);
-  }
-  
-  public void updateGaussianBlurBackground()
-  {
-    this.mCarlifeView.updateGaussianBlurBackground();
-  }
-  
-  public void updateMainDisplayStatus(int paramInt)
-  {
-    this.mCarlifeView.updateMainDisplayStatus(paramInt);
-  }
-  
-  public void updateOrientation(int paramInt)
-  {
-    i.b("Framework", "updateOrientation orientation " + paramInt);
-    if (this.mViewCreated) {
-      onUpdateOrientation(paramInt);
+
+    public void onResume() {
+        super.onResume();
+        C1260i.b("Framework", "onResume");
     }
-    this.mOrientation = paramInt;
-  }
-  
-  public void updateStyle(boolean paramBoolean)
-  {
-    i.b("Framework", "updateStyle");
-    if (this.mViewCreated) {
-      onUpdateStyle(paramBoolean);
+
+    public void onPause() {
+        super.onPause();
+        C1260i.b("Framework", "onPause");
     }
-    this.mDayStyle = paramBoolean;
-  }
+
+    public void onStop() {
+        super.onStop();
+        C1260i.b("Framework", "onStop");
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        C1260i.b("Framework", "onDestroyView");
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        C1260i.b("Framework", "onDestroy");
+    }
+
+    public void onDetach() {
+        super.onDetach();
+        C1260i.b("Framework", "onDetach");
+    }
+
+    public void cancelRequest() {
+        CommandCenter.getInstance().cancelRequest(getClass().getSimpleName());
+    }
+
+    public void updateOrientation(int orientation) {
+        C1260i.b("Framework", "updateOrientation orientation " + orientation);
+        if (this.mViewCreated) {
+            onUpdateOrientation(orientation);
+        }
+        this.mOrientation = orientation;
+    }
+
+    public void updateStyle(boolean dayStyle) {
+        C1260i.b("Framework", "updateStyle");
+        if (this.mViewCreated) {
+            onUpdateStyle(dayStyle);
+        }
+        this.mDayStyle = dayStyle;
+    }
+
+    protected void forbiddenLanscapse() {
+        if (BNSettingManager.getCurrentUsingMode() != 1) {
+            return;
+        }
+        if (this.mEnableLandInMapMode) {
+            mActivity.setRequestedOrientation(-1);
+        } else {
+            mActivity.setRequestedOrientation(1);
+        }
+    }
+
+    protected void enableLandscapse() {
+        if (BNSettingManager.getCurrentUsingMode() == 1) {
+            this.mEnableLandInMapMode = true;
+        }
+    }
+
+    public boolean canProcessUI() {
+        return isAdded();
+    }
+
+    public static CarlifeActivity getNaviActivity() {
+        return mActivity;
+    }
+
+    public int getType() {
+        return this.fragmentType;
+    }
+
+    public void setType(int fragmentType) {
+        this.fragmentType = fragmentType;
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return false;
+    }
+
+    public String getStringUtil(int resId) {
+        return mActivity.getString(resId);
+    }
+
+    public void openWebView(int webviewType, int type, String title, String url) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(WebViewFragment.f4863c, webviewType);
+        bundle.putString(WebViewFragment.f4861a, title);
+        bundle.putString(WebViewFragment.f4862b, url);
+        showFragment(type, bundle);
+    }
+
+    public void showDialog(BaseDialog childView) {
+        this.mCarlifeView.showDialog(childView);
+    }
+
+    public void showDialog(BaseDialog childView, C1265a gravity) {
+        this.mCarlifeView.showDialog(childView, gravity);
+    }
+
+    public void dismissDialog() {
+        this.mCarlifeView.dismissDialog();
+    }
+
+    public void dismissDialog(BaseDialog childView) {
+        this.mCarlifeView.dismissDialog(childView);
+    }
+
+    public void cancelDialog() {
+        this.mCarlifeView.cancelDialog();
+    }
+
+    public void cancelDialog(BaseDialog childView) {
+        this.mCarlifeView.cancelDialog(childView);
+    }
+
+    public boolean isDialogShown() {
+        return this.mCarlifeView.isDialogShown();
+    }
+
+    public void back() {
+        back(null);
+    }
+
+    public void back(Bundle bundle) {
+        if (this.mFragmentManagerCallbackProxy != null) {
+            this.mFragmentManagerCallbackProxy.back(bundle);
+        }
+    }
+
+    public void removeWeChatFragmentFromStack() {
+        this.mFragmentManagerCallbackProxy.removeWeChatFragmentFromStack();
+    }
+
+    public void backTo(int type, Bundle bundle) {
+        this.mFragmentManagerCallbackProxy.backTo(type, bundle);
+    }
+
+    public void showFragment(int type, Bundle bundle) {
+        this.mFragmentManagerCallbackProxy.showFragment(type, bundle);
+    }
+
+    public void showPluginFrament(Fragment fragment) {
+        this.mFragmentManagerCallbackProxy.showPluginFrament(fragment);
+    }
+
+    public void push(ContentFragment fragment) {
+        this.mFragmentManagerCallbackProxy.push(fragment);
+    }
+
+    public void removeFragmentTo(int type) {
+        this.mFragmentManagerCallbackProxy.removeFragmentTo(type);
+    }
+
+    public void removeAllFragmentByType(int fragmentType) {
+        this.mFragmentManagerCallbackProxy.removeAllFragmentByType(fragmentType);
+    }
+
+    public ContentFragment getCurrentFragment() {
+        return this.mFragmentManagerCallbackProxy.getCurrentFragment();
+    }
+
+    public int getCurrentFragmentType() {
+        return this.mFragmentManagerCallbackProxy.getCurrentFragmentType();
+    }
+
+    public NaviFragmentManager getNaviFragmentManager() {
+        return this.mFragmentManagerCallbackProxy.getNaviFragmentManager();
+    }
+
+    public void showLatestHomeFragment() {
+        this.mFragmentManagerCallbackProxy.showLatestHomeFragment();
+    }
+
+    public void showLatestMusicFragment() {
+        this.mFragmentManagerCallbackProxy.showLatestMusicFragment();
+    }
+
+    public void showLatestPhoneFragment() {
+        this.mFragmentManagerCallbackProxy.showLatestPhoneFragment();
+    }
+
+    public void showLatestNaviFragment() {
+        this.mFragmentManagerCallbackProxy.showLatestNaviFragment();
+    }
+
+    public boolean isCarlifeFragment(int type) {
+        return this.mFragmentManagerCallbackProxy.isCarlifeFragment(type);
+    }
+
+    public ContentFragment createFragment(int type) {
+        return this.mFragmentManagerCallbackProxy.createFragment(type);
+    }
+
+    public boolean isProgressDialogShowing() {
+        return this.mCarlifeView.d();
+    }
+
+    public boolean showConnectForbidDialog() {
+        return this.mCarlifeView.showConnectForbidDialog();
+    }
+
+    public void updateMainDisplayStatus(int modeType) {
+        this.mCarlifeView.updateMainDisplayStatus(modeType);
+    }
+
+    public void updateGaussianBlurBackground() {
+        this.mCarlifeView.updateGaussianBlurBackground();
+    }
+
+    public void setBottomBarStatus(boolean show) {
+        if (this.mCarlifeView != null) {
+            this.mCarlifeView.setBottomBarStatus(show);
+        }
+    }
+
+    public void setBottomBarBackgroud(Drawable drawable) {
+        if (this.mCarlifeView != null) {
+            this.mCarlifeView.setBottomBarBackgroud(drawable);
+        }
+    }
+
+    public void innerNameSearch(String key) {
+        this.mCarlifeView.innerNameSearch(key);
+    }
+
+    public void openNaviFromOutSide(int type, Bundle bundle) {
+        this.mCarlifeView.openNaviFromOutSide(type, bundle);
+    }
+
+    public void openNavi() {
+        this.mCarlifeView.openNavi();
+    }
+
+    public void openNavi(Bundle bundle) {
+        this.mCarlifeView.openNavi(bundle);
+    }
+
+    public void startCalcRoute(C1269a poi) {
+        this.mCarlifeView.startCalcRoute(poi);
+    }
+
+    public void showWindowView(View view, LayoutParams layoutParams) {
+        this.mCarlifeView.showWindowView(view, layoutParams);
+    }
+
+    public void hideWindowView() {
+        this.mCarlifeView.hideWindowView();
+    }
+
+    public boolean isWindowViewShown() {
+        return this.mCarlifeView.isWindowViewShown();
+    }
+
+    public void performOpenHome() {
+        this.mCarlifeView.performOpenHome();
+    }
+
+    protected void showGuideHint(String hintStr) {
+        this.mCarlifeView.a(hintStr);
+    }
+
+    protected void dismissGuideHint() {
+        this.mCarlifeView.a();
+    }
+
+    public void hideMapFragment() {
+        this.mCarlifeView.hideMapFragment();
+    }
+
+    public void showMapFragment() {
+        this.mCarlifeView.showMapFragment();
+    }
+
+    public boolean isNaviMapFragment() {
+        return this.mFragmentManagerCallbackProxy.isNaviMapFragment();
+    }
+
+    public int getNextFragmentType() {
+        return this.mFragmentManagerCallbackProxy.getNextFragmentType();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/fragment/BaseFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

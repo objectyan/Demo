@@ -8,170 +8,137 @@ import com.baidu.nplatform.comapi.basestruct.Point;
 import com.baidu.nplatform.comapi.map.MapController;
 import com.baidu.nplatform.comapi.map.MapController.AnimationType;
 
-public class NMapControlProxy
-{
-  private static volatile NMapControlProxy mInstance;
-  
-  public static void destory()
-  {
-    if (mInstance != null) {}
-    try
-    {
-      if (mInstance != null) {
-        mInstance.dispose();
-      }
-      mInstance = null;
-      return;
+public class NMapControlProxy {
+    private static volatile NMapControlProxy mInstance;
+
+    private NMapControlProxy() {
     }
-    finally {}
-  }
-  
-  private void dispose() {}
-  
-  public static NMapControlProxy getInstance()
-  {
-    if (mInstance == null) {}
-    try
-    {
-      if (mInstance == null) {
-        mInstance = new NMapControlProxy();
-      }
-      return mInstance;
+
+    public void addMapObserver(BNObserver observer) {
+        BNMapController.getInstance().addObserver(observer);
     }
-    finally {}
-  }
-  
-  public static int getScaleDis(int paramInt)
-  {
-    return MapController.getScaleDis(paramInt);
-  }
-  
-  public boolean UpdataBaseLayers()
-  {
-    return BNMapController.getInstance().UpdataBaseLayers();
-  }
-  
-  public void addMapObserver(BNObserver paramBNObserver)
-  {
-    BNMapController.getInstance().addObserver(paramBNObserver);
-  }
-  
-  public void deleteAllObserver()
-  {
-    BNMapController.getInstance().deleteAllObserver();
-  }
-  
-  public void deleteMapObserver(BNObserver paramBNObserver)
-  {
-    BNMapController.getInstance().deleteObserver(paramBNObserver);
-  }
-  
-  public void enableTouchEventLookover(boolean paramBoolean)
-  {
-    BNMapController.getInstance().enableTouchEventLookover(paramBoolean);
-  }
-  
-  public GeoPoint getGeoPosByScreenPos(int paramInt1, int paramInt2)
-  {
-    return BNMapController.getInstance().getGeoPosByScreenPos(paramInt1, paramInt2);
-  }
-  
-  public int getLayerMode()
-  {
-    return BNMapController.getInstance().getLayerMode();
-  }
-  
-  public MapStatus getMapStatus()
-  {
-    return BNMapController.getInstance().getMapStatus();
-  }
-  
-  public Point getScreenPosByGeoPos(GeoPoint paramGeoPoint)
-  {
-    return BNMapController.getInstance().getScreenPosByGeoPos(paramGeoPoint);
-  }
-  
-  public int getScreenWidth()
-  {
-    return BNMapController.getInstance().getScreenWidth();
-  }
-  
-  public int getZoomLevel()
-  {
-    return BNMapController.getInstance().getZoomLevel();
-  }
-  
-  public double getZoomUnitsInMeter()
-  {
-    return BNMapController.getInstance().getZoomUnitsInMeter();
-  }
-  
-  public void setDrawHouse(boolean paramBoolean1, boolean paramBoolean2)
-  {
-    BNMapController.getInstance().setDrawHouse(paramBoolean1, paramBoolean2);
-  }
-  
-  public void setLayerMode(int paramInt)
-  {
-    BNMapController.getInstance().setLayerMode(paramInt);
-  }
-  
-  public void setLevel(float paramFloat)
-  {
-    BNMapController.getInstance().setLevel(paramFloat);
-  }
-  
-  public void setMapStatus(MapStatus paramMapStatus, MapController.AnimationType paramAnimationType)
-  {
-    BNMapController.getInstance().setMapStatus(paramMapStatus, paramAnimationType);
-  }
-  
-  public void setMapStatus(MapStatus paramMapStatus, MapController.AnimationType paramAnimationType, int paramInt)
-  {
-    BNMapController.getInstance().setMapStatus(paramMapStatus, paramAnimationType, paramInt);
-  }
-  
-  public void setNaviCarPos()
-  {
-    MapController localMapController = BNMapController.getInstance().getMapController();
-    if (localMapController != null) {
-      localMapController.setNaviCarPos();
+
+    public void deleteMapObserver(BNObserver observer) {
+        BNMapController.getInstance().deleteObserver(observer);
     }
-  }
-  
-  public boolean showLayer(int paramInt, boolean paramBoolean)
-  {
-    return BNMapController.getInstance().showLayer(paramInt, paramBoolean);
-  }
-  
-  public void showTrafficMap(boolean paramBoolean)
-  {
-    BNMapController.getInstance().showTrafficMap(paramBoolean);
-  }
-  
-  public void switchITSMode(boolean paramBoolean)
-  {
-    BNMapController.getInstance().switchITSMode(paramBoolean);
-  }
-  
-  public boolean updateLayer(int paramInt)
-  {
-    return BNMapController.getInstance().updateLayer(paramInt);
-  }
-  
-  public boolean zoomIn()
-  {
-    return BNMapController.getInstance().zoomIn();
-  }
-  
-  public boolean zoomOut()
-  {
-    return BNMapController.getInstance().zoomOut();
-  }
+
+    public void deleteAllObserver() {
+        BNMapController.getInstance().deleteAllObserver();
+    }
+
+    public static NMapControlProxy getInstance() {
+        if (mInstance == null) {
+            synchronized (NMapControlProxy.class) {
+                if (mInstance == null) {
+                    mInstance = new NMapControlProxy();
+                }
+            }
+        }
+        return mInstance;
+    }
+
+    public static void destory() {
+        if (mInstance != null) {
+            synchronized (NMapControlProxy.class) {
+                if (mInstance != null) {
+                    mInstance.dispose();
+                }
+            }
+        }
+        mInstance = null;
+    }
+
+    private void dispose() {
+    }
+
+    public int getLayerMode() {
+        return BNMapController.getInstance().getLayerMode();
+    }
+
+    public void setLayerMode(int mode) {
+        BNMapController.getInstance().setLayerMode(mode);
+    }
+
+    public void setDrawHouse(boolean bDrawHouse, boolean bUseLock) {
+        BNMapController.getInstance().setDrawHouse(bDrawHouse, bUseLock);
+    }
+
+    public void setLevel(float level) {
+        BNMapController.getInstance().setLevel(level);
+    }
+
+    public int getZoomLevel() {
+        return BNMapController.getInstance().getZoomLevel();
+    }
+
+    public boolean zoomIn() {
+        return BNMapController.getInstance().zoomIn();
+    }
+
+    public boolean zoomOut() {
+        return BNMapController.getInstance().zoomOut();
+    }
+
+    public int getScreenWidth() {
+        return BNMapController.getInstance().getScreenWidth();
+    }
+
+    public static int getScaleDis(int nLevel) {
+        return MapController.getScaleDis(nLevel);
+    }
+
+    public double getZoomUnitsInMeter() {
+        return BNMapController.getInstance().getZoomUnitsInMeter();
+    }
+
+    public boolean updateLayer(int layerType) {
+        return BNMapController.getInstance().updateLayer(layerType);
+    }
+
+    public boolean UpdataBaseLayers() {
+        return BNMapController.getInstance().UpdataBaseLayers();
+    }
+
+    public MapStatus getMapStatus() {
+        return BNMapController.getInstance().getMapStatus();
+    }
+
+    public void enableTouchEventLookover(boolean b) {
+        BNMapController.getInstance().enableTouchEventLookover(b);
+    }
+
+    public void setMapStatus(MapStatus st, AnimationType animationType) {
+        BNMapController.getInstance().setMapStatus(st, animationType);
+    }
+
+    public void setMapStatus(MapStatus st, AnimationType animationType, int duration) {
+        BNMapController.getInstance().setMapStatus(st, animationType, duration);
+    }
+
+    public boolean showLayer(int layerType, boolean show) {
+        return BNMapController.getInstance().showLayer(layerType, show);
+    }
+
+    public GeoPoint getGeoPosByScreenPos(int inX, int inY) {
+        return BNMapController.getInstance().getGeoPosByScreenPos(inX, inY);
+    }
+
+    public Point getScreenPosByGeoPos(GeoPoint geoPoint) {
+        return BNMapController.getInstance().getScreenPosByGeoPos(geoPoint);
+    }
+
+    public void showTrafficMap(boolean bShow) {
+        BNMapController.getInstance().showTrafficMap(bShow);
+    }
+
+    public void switchITSMode(boolean itsMode) {
+        BNMapController.getInstance().switchITSMode(itsMode);
+    }
+
+    public void setNaviCarPos() {
+        MapController mapController = BNMapController.getInstance().getMapController();
+        if (mapController != null) {
+            mapController.setNaviCarPos();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/control/NMapControlProxy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

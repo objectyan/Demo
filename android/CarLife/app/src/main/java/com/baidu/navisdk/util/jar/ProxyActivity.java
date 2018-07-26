@@ -40,496 +40,386 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ProxyActivity
-  extends Activity
-{
-  private static final String TAG = "ProxyActivity";
-  private static AssetManager naviSdkAm;
-  private static Resources naviSdkRes;
-  private static Resources.Theme naviSdkTheme;
-  private String comPackageName;
-  private LayoutInflater mInflater;
-  private Activity originActivity = null;
-  
-  public ProxyActivity(Activity paramActivity)
-  {
-    if ((paramActivity == null) || (naviSdkRes == null) || (naviSdkTheme == null)) {
-      LogUtil.e("ProxyActivity", "exception:originActivity = " + paramActivity + ";naviSdkRes=" + naviSdkRes + ";naviSdkTheme=" + naviSdkTheme);
+public class ProxyActivity extends Activity {
+    private static final String TAG = "ProxyActivity";
+    private static AssetManager naviSdkAm;
+    private static Resources naviSdkRes;
+    private static Theme naviSdkTheme;
+    private String comPackageName;
+    private LayoutInflater mInflater;
+    private Activity originActivity = null;
+
+    public ProxyActivity(Activity originActivity) {
+        if (originActivity == null || naviSdkRes == null || naviSdkTheme == null) {
+            LogUtil.e(TAG, "exception:originActivity = " + originActivity + ";naviSdkRes=" + naviSdkRes + ";naviSdkTheme=" + naviSdkTheme);
+        }
+        this.originActivity = originActivity;
+        if (getBaseContext() == null) {
+            attachBaseContext(getOriginalActivity().getBaseContext());
+        }
     }
-    this.originActivity = paramActivity;
-    if (getBaseContext() == null) {
-      attachBaseContext(getOriginalActivity().getBaseContext());
+
+    public void destory() {
+        this.originActivity = null;
     }
-  }
-  
-  public static void setAssetManager(AssetManager paramAssetManager)
-  {
-    naviSdkAm = paramAssetManager;
-  }
-  
-  public static void setResource(Resources paramResources)
-  {
-    naviSdkRes = paramResources;
-  }
-  
-  public static void setResourcesTheme(Resources.Theme paramTheme)
-  {
-    naviSdkTheme = paramTheme;
-  }
-  
-  public boolean bindService(Intent paramIntent, ServiceConnection paramServiceConnection, int paramInt)
-  {
-    return getOriginalActivity().bindService(paramIntent, paramServiceConnection, paramInt);
-  }
-  
-  public int checkCallingOrSelfPermission(String paramString)
-  {
-    return getOriginalActivity().checkCallingOrSelfPermission(paramString);
-  }
-  
-  public int checkCallingOrSelfUriPermission(Uri paramUri, int paramInt)
-  {
-    return getOriginalActivity().checkCallingOrSelfUriPermission(paramUri, paramInt);
-  }
-  
-  public int checkCallingPermission(String paramString)
-  {
-    return getOriginalActivity().checkCallingPermission(paramString);
-  }
-  
-  public int checkCallingUriPermission(Uri paramUri, int paramInt)
-  {
-    return getOriginalActivity().checkCallingUriPermission(paramUri, paramInt);
-  }
-  
-  public int checkPermission(String paramString, int paramInt1, int paramInt2)
-  {
-    return getOriginalActivity().checkPermission(paramString, paramInt1, paramInt2);
-  }
-  
-  public int checkUriPermission(Uri paramUri, int paramInt1, int paramInt2, int paramInt3)
-  {
-    return getOriginalActivity().checkUriPermission(paramUri, paramInt1, paramInt2, paramInt3);
-  }
-  
-  public int checkUriPermission(Uri paramUri, String paramString1, String paramString2, int paramInt1, int paramInt2, int paramInt3)
-  {
-    return getOriginalActivity().checkUriPermission(paramUri, paramString1, paramString2, paramInt1, paramInt2, paramInt3);
-  }
-  
-  @Deprecated
-  public void clearWallpaper()
-    throws IOException
-  {
-    getOriginalActivity().clearWallpaper();
-  }
-  
-  public Context createPackageContext(String paramString, int paramInt)
-    throws PackageManager.NameNotFoundException
-  {
-    return getOriginalActivity().createPackageContext(paramString, paramInt);
-  }
-  
-  public String[] databaseList()
-  {
-    return getOriginalActivity().databaseList();
-  }
-  
-  public boolean deleteDatabase(String paramString)
-  {
-    return getOriginalActivity().deleteDatabase(paramString);
-  }
-  
-  public boolean deleteFile(String paramString)
-  {
-    return getOriginalActivity().deleteFile(paramString);
-  }
-  
-  public void destory()
-  {
-    this.originActivity = null;
-  }
-  
-  public void enforceCallingOrSelfPermission(String paramString1, String paramString2)
-  {
-    getOriginalActivity().enforceCallingOrSelfPermission(paramString1, paramString2);
-  }
-  
-  public void enforceCallingOrSelfUriPermission(Uri paramUri, int paramInt, String paramString)
-  {
-    getOriginalActivity().enforceCallingOrSelfUriPermission(paramUri, paramInt, paramString);
-  }
-  
-  public void enforceCallingPermission(String paramString1, String paramString2)
-  {
-    getOriginalActivity().enforceCallingPermission(paramString1, paramString2);
-  }
-  
-  public void enforceCallingUriPermission(Uri paramUri, int paramInt, String paramString)
-  {
-    getOriginalActivity().enforceCallingUriPermission(paramUri, paramInt, paramString);
-  }
-  
-  public void enforcePermission(String paramString1, int paramInt1, int paramInt2, String paramString2)
-  {
-    getOriginalActivity().enforcePermission(paramString1, paramInt1, paramInt2, paramString2);
-  }
-  
-  public void enforceUriPermission(Uri paramUri, int paramInt1, int paramInt2, int paramInt3, String paramString)
-  {
-    getOriginalActivity().enforceUriPermission(paramUri, paramInt1, paramInt2, paramInt3, paramString);
-  }
-  
-  public void enforceUriPermission(Uri paramUri, String paramString1, String paramString2, int paramInt1, int paramInt2, int paramInt3, String paramString3)
-  {
-    getOriginalActivity().enforceUriPermission(paramUri, paramString1, paramString2, paramInt1, paramInt2, paramInt3, paramString3);
-  }
-  
-  public String[] fileList()
-  {
-    return getOriginalActivity().fileList();
-  }
-  
-  public Context getApplicationContext()
-  {
-    return getOriginalActivity().getApplicationContext();
-  }
-  
-  public ApplicationInfo getApplicationInfo()
-  {
-    return getOriginalActivity().getApplicationInfo();
-  }
-  
-  public AssetManager getAssets()
-  {
-    return naviSdkAm;
-  }
-  
-  public File getCacheDir()
-  {
-    return getOriginalActivity().getCacheDir();
-  }
-  
-  public ClassLoader getClassLoader()
-  {
-    return getOriginalActivity().getClassLoader();
-  }
-  
-  public ContentResolver getContentResolver()
-  {
-    return getOriginalActivity().getContentResolver();
-  }
-  
-  public File getDatabasePath(String paramString)
-  {
-    return getOriginalActivity().getDatabasePath(paramString);
-  }
-  
-  public File getDir(String paramString, int paramInt)
-  {
-    return getOriginalActivity().getDir(paramString, paramInt);
-  }
-  
-  public File getExternalCacheDir()
-  {
-    return getOriginalActivity().getExternalCacheDir();
-  }
-  
-  public File getExternalFilesDir(String paramString)
-  {
-    return getOriginalActivity().getExternalFilesDir(paramString);
-  }
-  
-  public File getFileStreamPath(String paramString)
-  {
-    return getOriginalActivity().getFileStreamPath(paramString);
-  }
-  
-  public File getFilesDir()
-  {
-    return getOriginalActivity().getFilesDir();
-  }
-  
-  public LayoutInflater getLayoutInflater()
-  {
-    return getOriginalActivity().getLayoutInflater();
-  }
-  
-  public Looper getMainLooper()
-  {
-    return getOriginalActivity().getMainLooper();
-  }
-  
-  public File getObbDir()
-  {
-    return getOriginalActivity().getObbDir();
-  }
-  
-  public Activity getOriginActivity()
-  {
-    return this.originActivity;
-  }
-  
-  public Activity getOriginalActivity()
-  {
-    if (this.originActivity == null) {
-      return BNaviModuleManager.getActivity();
+
+    public static void setAssetManager(AssetManager am) {
+        naviSdkAm = am;
     }
-    return this.originActivity;
-  }
-  
-  public String getPackageCodePath()
-  {
-    return getOriginalActivity().getPackageCodePath();
-  }
-  
-  public PackageManager getPackageManager()
-  {
-    return getOriginalActivity().getPackageManager();
-  }
-  
-  public String getPackageName()
-  {
-    return getOriginalActivity().getPackageName();
-  }
-  
-  public String getPackageResourcePath()
-  {
-    return getOriginalActivity().getPackageResourcePath();
-  }
-  
-  public Resources getResources()
-  {
-    return naviSdkRes;
-  }
-  
-  public SharedPreferences getSharedPreferences(String paramString, int paramInt)
-  {
-    return getOriginalActivity().getSharedPreferences(paramString, paramInt);
-  }
-  
-  public Object getSystemService(String paramString)
-  {
-    if ((TextUtils.equals(paramString, "layout_inflater")) && (Build.VERSION.SDK_INT <= 15))
-    {
-      if (this.mInflater == null) {
-        this.mInflater = ((LayoutInflater)super.getSystemService(paramString)).cloneInContext(this);
-      }
-      return this.mInflater;
+
+    public static void setResource(Resources res) {
+        naviSdkRes = res;
     }
-    return getOriginalActivity().getSystemService(paramString);
-  }
-  
-  public Resources.Theme getTheme()
-  {
-    return naviSdkTheme;
-  }
-  
-  @Deprecated
-  public Drawable getWallpaper()
-  {
-    return getOriginalActivity().getWallpaper();
-  }
-  
-  @Deprecated
-  public int getWallpaperDesiredMinimumHeight()
-  {
-    return getOriginalActivity().getWallpaperDesiredMinimumHeight();
-  }
-  
-  @Deprecated
-  public int getWallpaperDesiredMinimumWidth()
-  {
-    return getOriginalActivity().getWallpaperDesiredMinimumWidth();
-  }
-  
-  public Window getWindow()
-  {
-    return getOriginalActivity().getWindow();
-  }
-  
-  public WindowManager getWindowManager()
-  {
-    return getOriginalActivity().getWindowManager();
-  }
-  
-  public void grantUriPermission(String paramString, Uri paramUri, int paramInt)
-  {
-    getOriginalActivity().grantUriPermission(paramString, paramUri, paramInt);
-  }
-  
-  public boolean isFinishing()
-  {
-    return getOriginalActivity().isFinishing();
-  }
-  
-  protected void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-  }
-  
-  public FileInputStream openFileInput(String paramString)
-    throws FileNotFoundException
-  {
-    return getOriginalActivity().openFileInput(paramString);
-  }
-  
-  public FileOutputStream openFileOutput(String paramString, int paramInt)
-    throws FileNotFoundException
-  {
-    return getOriginalActivity().openFileOutput(paramString, paramInt);
-  }
-  
-  public SQLiteDatabase openOrCreateDatabase(String paramString, int paramInt, SQLiteDatabase.CursorFactory paramCursorFactory)
-  {
-    return getOriginalActivity().openOrCreateDatabase(paramString, paramInt, paramCursorFactory);
-  }
-  
-  public SQLiteDatabase openOrCreateDatabase(String paramString, int paramInt, SQLiteDatabase.CursorFactory paramCursorFactory, DatabaseErrorHandler paramDatabaseErrorHandler)
-  {
-    return getOriginalActivity().openOrCreateDatabase(paramString, paramInt, paramCursorFactory, paramDatabaseErrorHandler);
-  }
-  
-  @Deprecated
-  public Drawable peekWallpaper()
-  {
-    return getOriginalActivity().peekWallpaper();
-  }
-  
-  public Intent registerReceiver(BroadcastReceiver paramBroadcastReceiver, IntentFilter paramIntentFilter)
-  {
-    return getOriginalActivity().registerReceiver(paramBroadcastReceiver, paramIntentFilter);
-  }
-  
-  public Intent registerReceiver(BroadcastReceiver paramBroadcastReceiver, IntentFilter paramIntentFilter, String paramString, Handler paramHandler)
-  {
-    return getOriginalActivity().registerReceiver(paramBroadcastReceiver, paramIntentFilter, paramString, paramHandler);
-  }
-  
-  public void removeStickyBroadcast(Intent paramIntent)
-  {
-    getOriginalActivity().removeStickyBroadcast(paramIntent);
-  }
-  
-  public void revokeUriPermission(Uri paramUri, int paramInt)
-  {
-    getOriginalActivity().revokeUriPermission(paramUri, paramInt);
-  }
-  
-  public void sendBroadcast(Intent paramIntent)
-  {
-    getOriginalActivity().sendBroadcast(paramIntent);
-  }
-  
-  public void sendBroadcast(Intent paramIntent, String paramString)
-  {
-    getOriginalActivity().sendBroadcast(paramIntent, paramString);
-  }
-  
-  public void sendOrderedBroadcast(Intent paramIntent, String paramString)
-  {
-    getOriginalActivity().sendBroadcast(paramIntent, paramString);
-  }
-  
-  public void sendOrderedBroadcast(Intent paramIntent, String paramString1, BroadcastReceiver paramBroadcastReceiver, Handler paramHandler, int paramInt, String paramString2, Bundle paramBundle)
-  {
-    getOriginalActivity().sendOrderedBroadcast(paramIntent, paramString1, paramBroadcastReceiver, paramHandler, paramInt, paramString2, paramBundle);
-  }
-  
-  public void sendStickyBroadcast(Intent paramIntent)
-  {
-    getOriginalActivity().sendStickyBroadcast(paramIntent);
-  }
-  
-  public void sendStickyOrderedBroadcast(Intent paramIntent, BroadcastReceiver paramBroadcastReceiver, Handler paramHandler, int paramInt, String paramString, Bundle paramBundle)
-  {
-    getOriginalActivity().sendStickyOrderedBroadcast(paramIntent, paramBroadcastReceiver, paramHandler, paramInt, paramString, paramBundle);
-  }
-  
-  public void setRequestedOrientation(int paramInt)
-  {
-    getOriginalActivity().setRequestedOrientation(paramInt);
-  }
-  
-  public void setTheme(int paramInt)
-  {
-    getOriginalActivity().setTheme(paramInt);
-  }
-  
-  @Deprecated
-  public void setWallpaper(Bitmap paramBitmap)
-    throws IOException
-  {
-    getOriginalActivity().setWallpaper(paramBitmap);
-  }
-  
-  @Deprecated
-  public void setWallpaper(InputStream paramInputStream)
-    throws IOException
-  {
-    getOriginalActivity().setWallpaper(paramInputStream);
-  }
-  
-  public void startActivities(Intent[] paramArrayOfIntent)
-  {
-    getOriginalActivity().startActivities(paramArrayOfIntent);
-  }
-  
-  public void startActivity(Intent paramIntent)
-  {
-    getOriginalActivity().startActivity(paramIntent);
-  }
-  
-  public boolean startInstrumentation(ComponentName paramComponentName, String paramString, Bundle paramBundle)
-  {
-    return getOriginalActivity().startInstrumentation(paramComponentName, paramString, paramBundle);
-  }
-  
-  public void startIntentSender(IntentSender paramIntentSender, Intent paramIntent, int paramInt1, int paramInt2, int paramInt3)
-    throws IntentSender.SendIntentException
-  {
-    getOriginalActivity().startIntentSender(paramIntentSender, paramIntent, paramInt1, paramInt2, paramInt3);
-  }
-  
-  public ComponentName startService(Intent paramIntent)
-  {
-    return getOriginalActivity().startService(paramIntent);
-  }
-  
-  public boolean stopService(Intent paramIntent)
-  {
-    return getOriginalActivity().stopService(paramIntent);
-  }
-  
-  public void unbindService(ServiceConnection paramServiceConnection)
-  {
-    try
-    {
-      getOriginalActivity().unbindService(paramServiceConnection);
-      return;
+
+    public static void setResourcesTheme(Theme theme) {
+        naviSdkTheme = theme;
     }
-    catch (Exception paramServiceConnection)
-    {
-      paramServiceConnection.printStackTrace();
+
+    public Activity getOriginalActivity() {
+        if (this.originActivity == null) {
+            return BNaviModuleManager.getActivity();
+        }
+        return this.originActivity;
     }
-  }
-  
-  public void unregisterReceiver(BroadcastReceiver paramBroadcastReceiver)
-  {
-    try
-    {
-      getOriginalActivity().unregisterReceiver(paramBroadcastReceiver);
-      return;
+
+    public Window getWindow() {
+        return getOriginalActivity().getWindow();
     }
-    catch (Exception paramBroadcastReceiver)
-    {
-      paramBroadcastReceiver.printStackTrace();
+
+    public WindowManager getWindowManager() {
+        return getOriginalActivity().getWindowManager();
     }
-  }
+
+    public void setRequestedOrientation(int requestedOrientation) {
+        getOriginalActivity().setRequestedOrientation(requestedOrientation);
+    }
+
+    public boolean isFinishing() {
+        return getOriginalActivity().isFinishing();
+    }
+
+    public AssetManager getAssets() {
+        return naviSdkAm;
+    }
+
+    public Resources getResources() {
+        return naviSdkRes;
+    }
+
+    public LayoutInflater getLayoutInflater() {
+        return getOriginalActivity().getLayoutInflater();
+    }
+
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+    }
+
+    public PackageManager getPackageManager() {
+        return getOriginalActivity().getPackageManager();
+    }
+
+    public ContentResolver getContentResolver() {
+        return getOriginalActivity().getContentResolver();
+    }
+
+    public Looper getMainLooper() {
+        return getOriginalActivity().getMainLooper();
+    }
+
+    public Context getApplicationContext() {
+        return getOriginalActivity().getApplicationContext();
+    }
+
+    public Activity getOriginActivity() {
+        return this.originActivity;
+    }
+
+    public Theme getTheme() {
+        return naviSdkTheme;
+    }
+
+    public ClassLoader getClassLoader() {
+        return getOriginalActivity().getClassLoader();
+    }
+
+    public String getPackageName() {
+        return getOriginalActivity().getPackageName();
+    }
+
+    public ApplicationInfo getApplicationInfo() {
+        return getOriginalActivity().getApplicationInfo();
+    }
+
+    public String getPackageResourcePath() {
+        return getOriginalActivity().getPackageResourcePath();
+    }
+
+    public String getPackageCodePath() {
+        return getOriginalActivity().getPackageCodePath();
+    }
+
+    public SharedPreferences getSharedPreferences(String name, int mode) {
+        return getOriginalActivity().getSharedPreferences(name, mode);
+    }
+
+    public FileInputStream openFileInput(String name) throws FileNotFoundException {
+        return getOriginalActivity().openFileInput(name);
+    }
+
+    public FileOutputStream openFileOutput(String name, int mode) throws FileNotFoundException {
+        return getOriginalActivity().openFileOutput(name, mode);
+    }
+
+    public File getFileStreamPath(String name) {
+        return getOriginalActivity().getFileStreamPath(name);
+    }
+
+    public File getFilesDir() {
+        return getOriginalActivity().getFilesDir();
+    }
+
+    public File getExternalFilesDir(String type) {
+        return getOriginalActivity().getExternalFilesDir(type);
+    }
+
+    public File getObbDir() {
+        return getOriginalActivity().getObbDir();
+    }
+
+    public File getCacheDir() {
+        return getOriginalActivity().getCacheDir();
+    }
+
+    public File getExternalCacheDir() {
+        return getOriginalActivity().getExternalCacheDir();
+    }
+
+    public String[] fileList() {
+        return getOriginalActivity().fileList();
+    }
+
+    public File getDir(String name, int mode) {
+        return getOriginalActivity().getDir(name, mode);
+    }
+
+    public SQLiteDatabase openOrCreateDatabase(String name, int mode, CursorFactory factory) {
+        return getOriginalActivity().openOrCreateDatabase(name, mode, factory);
+    }
+
+    public SQLiteDatabase openOrCreateDatabase(String name, int mode, CursorFactory factory, DatabaseErrorHandler errorHandler) {
+        return getOriginalActivity().openOrCreateDatabase(name, mode, factory, errorHandler);
+    }
+
+    public File getDatabasePath(String name) {
+        return getOriginalActivity().getDatabasePath(name);
+    }
+
+    @Deprecated
+    public Drawable getWallpaper() {
+        return getOriginalActivity().getWallpaper();
+    }
+
+    @Deprecated
+    public Drawable peekWallpaper() {
+        return getOriginalActivity().peekWallpaper();
+    }
+
+    @Deprecated
+    public int getWallpaperDesiredMinimumWidth() {
+        return getOriginalActivity().getWallpaperDesiredMinimumWidth();
+    }
+
+    @Deprecated
+    public int getWallpaperDesiredMinimumHeight() {
+        return getOriginalActivity().getWallpaperDesiredMinimumHeight();
+    }
+
+    @Deprecated
+    public void clearWallpaper() throws IOException {
+        getOriginalActivity().clearWallpaper();
+    }
+
+    public void removeStickyBroadcast(Intent intent) {
+        getOriginalActivity().removeStickyBroadcast(intent);
+    }
+
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        return getOriginalActivity().registerReceiver(receiver, filter);
+    }
+
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter, String broadcastPermission, Handler scheduler) {
+        return getOriginalActivity().registerReceiver(receiver, filter, broadcastPermission, scheduler);
+    }
+
+    public boolean bindService(Intent service, ServiceConnection conn, int flags) {
+        return getOriginalActivity().bindService(service, conn, flags);
+    }
+
+    public Object getSystemService(String name) {
+        if (!TextUtils.equals(name, "layout_inflater") || VERSION.SDK_INT > 15) {
+            return getOriginalActivity().getSystemService(name);
+        }
+        if (this.mInflater == null) {
+            this.mInflater = ((LayoutInflater) super.getSystemService(name)).cloneInContext(this);
+        }
+        return this.mInflater;
+    }
+
+    public int checkPermission(String permission, int pid, int uid) {
+        return getOriginalActivity().checkPermission(permission, pid, uid);
+    }
+
+    public int checkCallingPermission(String permission) {
+        return getOriginalActivity().checkCallingPermission(permission);
+    }
+
+    public int checkCallingOrSelfPermission(String permission) {
+        return getOriginalActivity().checkCallingOrSelfPermission(permission);
+    }
+
+    public void grantUriPermission(String toPackage, Uri uri, int modeFlags) {
+        getOriginalActivity().grantUriPermission(toPackage, uri, modeFlags);
+    }
+
+    public int checkUriPermission(Uri uri, int pid, int uid, int modeFlags) {
+        return getOriginalActivity().checkUriPermission(uri, pid, uid, modeFlags);
+    }
+
+    public int checkCallingUriPermission(Uri uri, int modeFlags) {
+        return getOriginalActivity().checkCallingUriPermission(uri, modeFlags);
+    }
+
+    public int checkCallingOrSelfUriPermission(Uri uri, int modeFlags) {
+        return getOriginalActivity().checkCallingOrSelfUriPermission(uri, modeFlags);
+    }
+
+    public int checkUriPermission(Uri uri, String readPermission, String writePermission, int pid, int uid, int modeFlags) {
+        return getOriginalActivity().checkUriPermission(uri, readPermission, writePermission, pid, uid, modeFlags);
+    }
+
+    public boolean deleteFile(String name) {
+        return getOriginalActivity().deleteFile(name);
+    }
+
+    public boolean deleteDatabase(String name) {
+        return getOriginalActivity().deleteDatabase(name);
+    }
+
+    public String[] databaseList() {
+        return getOriginalActivity().databaseList();
+    }
+
+    public void enforcePermission(String permission, int pid, int uid, String message) {
+        getOriginalActivity().enforcePermission(permission, pid, uid, message);
+    }
+
+    public void enforceCallingPermission(String permission, String message) {
+        getOriginalActivity().enforceCallingPermission(permission, message);
+    }
+
+    public void enforceCallingOrSelfPermission(String permission, String message) {
+        getOriginalActivity().enforceCallingOrSelfPermission(permission, message);
+    }
+
+    public void enforceUriPermission(Uri uri, int pid, int uid, int modeFlags, String message) {
+        getOriginalActivity().enforceUriPermission(uri, pid, uid, modeFlags, message);
+    }
+
+    public void enforceCallingUriPermission(Uri uri, int modeFlags, String message) {
+        getOriginalActivity().enforceCallingUriPermission(uri, modeFlags, message);
+    }
+
+    public void enforceCallingOrSelfUriPermission(Uri uri, int modeFlags, String message) {
+        getOriginalActivity().enforceCallingOrSelfUriPermission(uri, modeFlags, message);
+    }
+
+    public void enforceUriPermission(Uri uri, String readPermission, String writePermission, int pid, int uid, int modeFlags, String message) {
+        getOriginalActivity().enforceUriPermission(uri, readPermission, writePermission, pid, uid, modeFlags, message);
+    }
+
+    public Context createPackageContext(String packageName, int flags) throws NameNotFoundException {
+        return getOriginalActivity().createPackageContext(packageName, flags);
+    }
+
+    public void sendBroadcast(Intent intent) {
+        getOriginalActivity().sendBroadcast(intent);
+    }
+
+    public void sendBroadcast(Intent intent, String receiverPermission) {
+        getOriginalActivity().sendBroadcast(intent, receiverPermission);
+    }
+
+    public void revokeUriPermission(Uri uri, int modeFlags) {
+        getOriginalActivity().revokeUriPermission(uri, modeFlags);
+    }
+
+    public void sendOrderedBroadcast(Intent intent, String receiverPermission) {
+        getOriginalActivity().sendBroadcast(intent, receiverPermission);
+    }
+
+    public void sendOrderedBroadcast(Intent intent, String receiverPermission, BroadcastReceiver resultReceiver, Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
+        getOriginalActivity().sendOrderedBroadcast(intent, receiverPermission, resultReceiver, scheduler, initialCode, initialData, initialExtras);
+    }
+
+    public void sendStickyBroadcast(Intent intent) {
+        getOriginalActivity().sendStickyBroadcast(intent);
+    }
+
+    public void sendStickyOrderedBroadcast(Intent intent, BroadcastReceiver resultReceiver, Handler scheduler, int initialCode, String initialData, Bundle initialExtras) {
+        getOriginalActivity().sendStickyOrderedBroadcast(intent, resultReceiver, scheduler, initialCode, initialData, initialExtras);
+    }
+
+    public void setTheme(int resid) {
+        getOriginalActivity().setTheme(resid);
+    }
+
+    @Deprecated
+    public void setWallpaper(Bitmap bitmap) throws IOException {
+        getOriginalActivity().setWallpaper(bitmap);
+    }
+
+    @Deprecated
+    public void setWallpaper(InputStream data) throws IOException {
+        getOriginalActivity().setWallpaper(data);
+    }
+
+    public void startActivities(Intent[] intents) {
+        getOriginalActivity().startActivities(intents);
+    }
+
+    public void startActivity(Intent intent) {
+        getOriginalActivity().startActivity(intent);
+    }
+
+    public void startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags) throws SendIntentException {
+        getOriginalActivity().startIntentSender(intent, fillInIntent, flagsMask, flagsValues, extraFlags);
+    }
+
+    public boolean startInstrumentation(ComponentName className, String profileFile, Bundle arguments) {
+        return getOriginalActivity().startInstrumentation(className, profileFile, arguments);
+    }
+
+    public void unregisterReceiver(BroadcastReceiver receiver) {
+        try {
+            getOriginalActivity().unregisterReceiver(receiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ComponentName startService(Intent service) {
+        return getOriginalActivity().startService(service);
+    }
+
+    public boolean stopService(Intent service) {
+        return getOriginalActivity().stopService(service);
+    }
+
+    public void unbindService(ServiceConnection conn) {
+        try {
+            getOriginalActivity().unbindService(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/navisdk/util/jar/ProxyActivity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

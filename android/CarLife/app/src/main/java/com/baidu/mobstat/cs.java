@@ -1,72 +1,57 @@
 package com.baidu.mobstat;
 
 import android.annotation.SuppressLint;
+import com.baidu.sapi2.utils.C4923f;
+import java.security.Key;
 import java.security.SecureRandom;
+import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class cs
-{
-  public static String a(byte[] paramArrayOfByte)
-  {
-    try
-    {
-      paramArrayOfByte = b(a(), b(), paramArrayOfByte);
-      return paramArrayOfByte;
+public class cs {
+    @SuppressLint({"TrulyRandom"})
+    /* renamed from: a */
+    public static byte[] m15619a(byte[] bArr, byte[] bArr2, byte[] bArr3) {
+        Key secretKeySpec = new SecretKeySpec(bArr, C4923f.f20618w);
+        AlgorithmParameterSpec ivParameterSpec = new IvParameterSpec(bArr2);
+        Cipher instance = Cipher.getInstance(C4923f.f20617v);
+        instance.init(1, secretKeySpec, ivParameterSpec);
+        return instance.doFinal(bArr3);
     }
-    catch (Exception paramArrayOfByte)
-    {
-      db.b(paramArrayOfByte);
+
+    /* renamed from: a */
+    public static byte[] m15618a() {
+        KeyGenerator instance = KeyGenerator.getInstance(C4923f.f20618w);
+        instance.init(128, new SecureRandom());
+        return instance.generateKey().getEncoded();
     }
-    return "";
-  }
-  
-  public static byte[] a()
-  {
-    KeyGenerator localKeyGenerator = KeyGenerator.getInstance("AES");
-    localKeyGenerator.init(128, new SecureRandom());
-    return localKeyGenerator.generateKey().getEncoded();
-  }
-  
-  @SuppressLint({"TrulyRandom"})
-  public static byte[] a(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2, byte[] paramArrayOfByte3)
-  {
-    paramArrayOfByte1 = new SecretKeySpec(paramArrayOfByte1, "AES");
-    paramArrayOfByte2 = new IvParameterSpec(paramArrayOfByte2);
-    Cipher localCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-    localCipher.init(1, paramArrayOfByte1, paramArrayOfByte2);
-    return localCipher.doFinal(paramArrayOfByte3);
-  }
-  
-  public static String b(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2, byte[] paramArrayOfByte3)
-  {
-    try
-    {
-      paramArrayOfByte3 = a(paramArrayOfByte1, paramArrayOfByte2, cx.a(paramArrayOfByte3));
-      paramArrayOfByte1 = cv.b(paramArrayOfByte3) + "|" + dc.a(paramArrayOfByte1) + "|" + dc.a(paramArrayOfByte2);
-      return paramArrayOfByte1;
+
+    /* renamed from: b */
+    public static byte[] m15621b() {
+        byte[] bArr = new byte[16];
+        new SecureRandom().nextBytes(bArr);
+        return bArr;
     }
-    catch (Exception paramArrayOfByte1)
-    {
-      db.b(paramArrayOfByte1);
+
+    /* renamed from: a */
+    public static String m15617a(byte[] bArr) {
+        try {
+            return m15620b(m15618a(), m15621b(), bArr);
+        } catch (Throwable e) {
+            db.m15662b(e);
+            return "";
+        }
     }
-    return "";
-  }
-  
-  public static byte[] b()
-  {
-    SecureRandom localSecureRandom = new SecureRandom();
-    byte[] arrayOfByte = new byte[16];
-    localSecureRandom.nextBytes(arrayOfByte);
-    return arrayOfByte;
-  }
+
+    /* renamed from: b */
+    public static String m15620b(byte[] bArr, byte[] bArr2, byte[] bArr3) {
+        try {
+            return cv.m15642b(m15619a(bArr, bArr2, cx.m15644a(bArr3))) + "|" + dc.m15666a(bArr) + "|" + dc.m15666a(bArr2);
+        } catch (Throwable e) {
+            db.m15662b(e);
+            return "";
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

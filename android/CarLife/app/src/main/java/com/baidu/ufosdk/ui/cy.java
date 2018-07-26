@@ -2,31 +2,28 @@ package com.baidu.ufosdk.ui;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
 
-final class cy
-  implements TextWatcher
-{
-  cy(cx paramcx) {}
-  
-  public final void afterTextChanged(Editable paramEditable)
-  {
-    paramEditable = cx.b(this.a).getText().toString();
-    if (paramEditable.length() > 200)
-    {
-      paramEditable = paramEditable.substring(0, 200);
-      cx.b(this.a).setText(paramEditable.substring(0, 200));
-      cx.b(this.a).setSelection(paramEditable.length());
+/* compiled from: InputContactDialog */
+final class cy implements TextWatcher {
+    /* renamed from: a */
+    final /* synthetic */ cx f21653a;
+
+    cy(cx cxVar) {
+        this.f21653a = cxVar;
     }
-  }
-  
-  public final void beforeTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {}
-  
-  public final void onTextChanged(CharSequence paramCharSequence, int paramInt1, int paramInt2, int paramInt3) {}
+
+    public final void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+    }
+
+    public final void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+    }
+
+    public final void afterTextChanged(Editable editable) {
+        String editable2 = this.f21653a.f21651j.getText().toString();
+        if (editable2.length() > 200) {
+            editable2 = editable2.substring(0, 200);
+            this.f21653a.f21651j.setText(editable2.substring(0, 200));
+            this.f21653a.f21651j.setSelection(editable2.length());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/cy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

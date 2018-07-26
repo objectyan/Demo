@@ -2,58 +2,49 @@ package com.baidu.mobstat;
 
 import android.app.Activity;
 import android.app.Application.ActivityLifecycleCallbacks;
-import android.content.Context;
 import android.os.Bundle;
-import java.util.HashMap;
 
-class bg
-  implements Application.ActivityLifecycleCallbacks
-{
-  bg(bf parambf) {}
-  
-  public void onActivityCreated(Activity paramActivity, Bundle paramBundle) {}
-  
-  public void onActivityDestroyed(Activity arg1)
-  {
-    String str = ???.getClass().getName();
-    synchronized (bf.b(this.a))
-    {
-      bf.b(this.a).remove(str);
-      return;
+class bg implements ActivityLifecycleCallbacks {
+    /* renamed from: a */
+    final /* synthetic */ bf f19446a;
+
+    bg(bf bfVar) {
+        this.f19446a = bfVar;
     }
-  }
-  
-  public void onActivityPaused(Activity paramActivity)
-  {
-    Context localContext = paramActivity.getApplicationContext();
-    ch.a().b(localContext, System.currentTimeMillis());
-    if (bf.a(this.a)) {
-      bf.a(this.a, paramActivity, false);
+
+    public void onActivityResumed(Activity activity) {
+        ch.m15571a().m15588a(activity.getApplicationContext(), System.currentTimeMillis());
+        if (this.f19446a.f19444c) {
+            this.f19446a.m15444a(activity, true);
+            this.f19446a.m15440a(activity);
+        }
+        ch.m15571a().m15604f();
     }
-    ch.a().a(paramActivity.getApplicationContext());
-  }
-  
-  public void onActivityResumed(Activity paramActivity)
-  {
-    Context localContext = paramActivity.getApplicationContext();
-    ch.a().a(localContext, System.currentTimeMillis());
-    if (bf.a(this.a))
-    {
-      bf.a(this.a, paramActivity, true);
-      bf.a(this.a, paramActivity);
+
+    public void onActivityPaused(Activity activity) {
+        ch.m15571a().m15599b(activity.getApplicationContext(), System.currentTimeMillis());
+        if (this.f19446a.f19444c) {
+            this.f19446a.m15444a(activity, false);
+        }
+        ch.m15571a().m15587a(activity.getApplicationContext());
     }
-    ch.a().f();
-  }
-  
-  public void onActivitySaveInstanceState(Activity paramActivity, Bundle paramBundle) {}
-  
-  public void onActivityStarted(Activity paramActivity) {}
-  
-  public void onActivityStopped(Activity paramActivity) {}
+
+    public void onActivityCreated(Activity activity, Bundle bundle) {
+    }
+
+    public void onActivityStarted(Activity activity) {
+    }
+
+    public void onActivityStopped(Activity activity) {
+    }
+
+    public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+    }
+
+    public void onActivityDestroyed(Activity activity) {
+        String name = activity.getClass().getName();
+        synchronized (this.f19446a.f19443a) {
+            this.f19446a.f19443a.remove(name);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bg.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

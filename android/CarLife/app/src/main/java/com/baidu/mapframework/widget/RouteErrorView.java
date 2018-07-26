@@ -7,50 +7,38 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 
-public class RouteErrorView
-  extends RelativeLayout
-{
-  private View a;
-  private TextView b;
-  private View c;
-  
-  public RouteErrorView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    LayoutInflater.from(paramContext).inflate(2130968998, this);
-    this.a = findViewById(2131626019);
-    this.b = ((TextView)findViewById(2131626020));
-    this.c = findViewById(2131626021);
-  }
-  
-  public void setRepeatButtonListener(View.OnClickListener paramOnClickListener)
-  {
-    this.a.setOnClickListener(paramOnClickListener);
-  }
-  
-  public void setText(String paramString)
-  {
-    this.b.setText(paramString);
-  }
-  
-  public void setmRepeatButtonGone()
-  {
-    if (this.c != null) {
-      this.c.setVisibility(8);
+public class RouteErrorView extends RelativeLayout {
+    /* renamed from: a */
+    private View f19345a = findViewById(C0965R.id.route_error_repeat_button);
+    /* renamed from: b */
+    private TextView f19346b = ((TextView) findViewById(C0965R.id.route_error_text_button));
+    /* renamed from: c */
+    private View f19347c = findViewById(C0965R.id.route_error_repeat_text);
+
+    public RouteErrorView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        LayoutInflater.from(context).inflate(C0965R.layout.route_error_view, this);
     }
-  }
-  
-  public void setmRepeatButtonVisible()
-  {
-    if (this.c != null) {
-      this.c.setVisibility(0);
+
+    public void setText(String text) {
+        this.f19346b.setText(text);
     }
-  }
+
+    public void setRepeatButtonListener(OnClickListener listener) {
+        this.f19345a.setOnClickListener(listener);
+    }
+
+    public void setmRepeatButtonGone() {
+        if (this.f19347c != null) {
+            this.f19347c.setVisibility(8);
+        }
+    }
+
+    public void setmRepeatButtonVisible() {
+        if (this.f19347c != null) {
+            this.f19347c.setVisibility(0);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/widget/RouteErrorView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

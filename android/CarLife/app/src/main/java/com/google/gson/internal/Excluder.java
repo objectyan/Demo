@@ -1,5 +1,6 @@
 package com.google.gson.internal;
 
+import com.baidu.platform.comapi.map.provider.RouteLineResConst;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -15,243 +16,226 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class Excluder
-  implements TypeAdapterFactory, Cloneable
-{
-  public static final Excluder DEFAULT = new Excluder();
-  private static final double IGNORE_VERSIONS = -1.0D;
-  private List<ExclusionStrategy> deserializationStrategies = Collections.emptyList();
-  private int modifiers = 136;
-  private boolean requireExpose;
-  private List<ExclusionStrategy> serializationStrategies = Collections.emptyList();
-  private boolean serializeInnerClasses = true;
-  private double version = -1.0D;
-  
-  private boolean isAnonymousOrLocal(Class<?> paramClass)
-  {
-    return (!Enum.class.isAssignableFrom(paramClass)) && ((paramClass.isAnonymousClass()) || (paramClass.isLocalClass()));
-  }
-  
-  private boolean isInnerClass(Class<?> paramClass)
-  {
-    return (paramClass.isMemberClass()) && (!isStatic(paramClass));
-  }
-  
-  private boolean isStatic(Class<?> paramClass)
-  {
-    return (paramClass.getModifiers() & 0x8) != 0;
-  }
-  
-  private boolean isValidSince(Since paramSince)
-  {
-    return (paramSince == null) || (paramSince.value() <= this.version);
-  }
-  
-  private boolean isValidUntil(Until paramUntil)
-  {
-    return (paramUntil == null) || (paramUntil.value() > this.version);
-  }
-  
-  private boolean isValidVersion(Since paramSince, Until paramUntil)
-  {
-    return (isValidSince(paramSince)) && (isValidUntil(paramUntil));
-  }
-  
-  protected Excluder clone()
-  {
-    try
-    {
-      Excluder localExcluder = (Excluder)super.clone();
-      return localExcluder;
-    }
-    catch (CloneNotSupportedException localCloneNotSupportedException)
-    {
-      throw new AssertionError();
-    }
-  }
-  
-  public <T> TypeAdapter<T> create(final Gson paramGson, final TypeToken<T> paramTypeToken)
-  {
-    Class localClass = paramTypeToken.getRawType();
-    final boolean bool1 = excludeClass(localClass, true);
-    final boolean bool2 = excludeClass(localClass, false);
-    if ((!bool1) && (!bool2)) {
-      return null;
-    }
-    new TypeAdapter()
-    {
-      private TypeAdapter<T> delegate;
-      
-      private TypeAdapter<T> delegate()
-      {
-        TypeAdapter localTypeAdapter = this.delegate;
-        if (localTypeAdapter != null) {
-          return localTypeAdapter;
+public final class Excluder implements TypeAdapterFactory, Cloneable {
+    public static final Excluder DEFAULT = new Excluder();
+    private static final double IGNORE_VERSIONS = -1.0d;
+    private List<ExclusionStrategy> deserializationStrategies = Collections.emptyList();
+    private int modifiers = RouteLineResConst.LINE_DARK_RED_NORMAL;
+    private boolean requireExpose;
+    private List<ExclusionStrategy> serializationStrategies = Collections.emptyList();
+    private boolean serializeInnerClasses = true;
+    private double version = -1.0d;
+
+    protected Excluder clone() {
+        try {
+            return (Excluder) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
         }
-        localTypeAdapter = paramGson.getDelegateAdapter(Excluder.this, paramTypeToken);
-        this.delegate = localTypeAdapter;
-        return localTypeAdapter;
-      }
-      
-      public T read(JsonReader paramAnonymousJsonReader)
-        throws IOException
-      {
-        if (bool2)
-        {
-          paramAnonymousJsonReader.skipValue();
-          return null;
+    }
+
+    public Excluder withVersion(double ignoreVersionsAfter) {
+        Excluder result = clone();
+        result.version = ignoreVersionsAfter;
+        return result;
+    }
+
+    public com.google.gson.internal.Excluder withModifiers(int... r7) {
+        /* JADX: method processing error */
+/*
+Error: java.lang.IndexOutOfBoundsException: bitIndex < 0: -1
+	at java.util.BitSet.get(BitSet.java:623)
+	at jadx.core.dex.visitors.CodeShrinker$ArgsInfo.usedArgAssign(CodeShrinker.java:138)
+	at jadx.core.dex.visitors.CodeShrinker$ArgsInfo.access$300(CodeShrinker.java:43)
+	at jadx.core.dex.visitors.CodeShrinker.canMoveBetweenBlocks(CodeShrinker.java:282)
+	at jadx.core.dex.visitors.CodeShrinker.shrinkBlock(CodeShrinker.java:232)
+	at jadx.core.dex.visitors.CodeShrinker.shrinkMethod(CodeShrinker.java:38)
+	at jadx.core.dex.visitors.regions.LoopRegionVisitor.checkArrayForEach(LoopRegionVisitor.java:196)
+	at jadx.core.dex.visitors.regions.LoopRegionVisitor.checkForIndexedLoop(LoopRegionVisitor.java:119)
+	at jadx.core.dex.visitors.regions.LoopRegionVisitor.processLoopRegion(LoopRegionVisitor.java:65)
+	at jadx.core.dex.visitors.regions.LoopRegionVisitor.enterRegion(LoopRegionVisitor.java:52)
+	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseInternal(DepthRegionTraversal.java:56)
+	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverseInternal(DepthRegionTraversal.java:58)
+	at jadx.core.dex.visitors.regions.DepthRegionTraversal.traverse(DepthRegionTraversal.java:18)
+	at jadx.core.dex.visitors.regions.LoopRegionVisitor.visit(LoopRegionVisitor.java:46)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:31)
+	at jadx.core.dex.visitors.DepthTraversal.visit(DepthTraversal.java:17)
+	at jadx.core.ProcessClass.process(ProcessClass.java:34)
+	at jadx.core.ProcessClass.processDependencies(ProcessClass.java:56)
+	at jadx.core.ProcessClass.process(ProcessClass.java:39)
+	at jadx.api.JadxDecompiler.processClass(JadxDecompiler.java:282)
+	at jadx.api.JavaClass.decompile(JavaClass.java:62)
+	at jadx.api.JadxDecompiler.lambda$appendSourcesSave$0(JadxDecompiler.java:200)
+*/
+        /*
+        r6 = this;
+        r4 = r6.clone();
+        r5 = 0;
+        r4.modifiers = r5;
+        r0 = r7;
+        r2 = r0.length;
+        r1 = 0;
+    L_0x000a:
+        if (r1 >= r2) goto L_0x0016;
+    L_0x000c:
+        r3 = r0[r1];
+        r5 = r4.modifiers;
+        r5 = r5 | r3;
+        r4.modifiers = r5;
+        r1 = r1 + 1;
+        goto L_0x000a;
+    L_0x0016:
+        return r4;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.Excluder.withModifiers(int[]):com.google.gson.internal.Excluder");
+    }
+
+    public Excluder disableInnerClassSerialization() {
+        Excluder result = clone();
+        result.serializeInnerClasses = false;
+        return result;
+    }
+
+    public Excluder excludeFieldsWithoutExposeAnnotation() {
+        Excluder result = clone();
+        result.requireExpose = true;
+        return result;
+    }
+
+    public Excluder withExclusionStrategy(ExclusionStrategy exclusionStrategy, boolean serialization, boolean deserialization) {
+        Excluder result = clone();
+        if (serialization) {
+            result.serializationStrategies = new ArrayList(this.serializationStrategies);
+            result.serializationStrategies.add(exclusionStrategy);
         }
-        return (T)delegate().read(paramAnonymousJsonReader);
-      }
-      
-      public void write(JsonWriter paramAnonymousJsonWriter, T paramAnonymousT)
-        throws IOException
-      {
-        if (bool1)
-        {
-          paramAnonymousJsonWriter.nullValue();
-          return;
+        if (deserialization) {
+            result.deserializationStrategies = new ArrayList(this.deserializationStrategies);
+            result.deserializationStrategies.add(exclusionStrategy);
         }
-        delegate().write(paramAnonymousJsonWriter, paramAnonymousT);
-      }
-    };
-  }
-  
-  public Excluder disableInnerClassSerialization()
-  {
-    Excluder localExcluder = clone();
-    localExcluder.serializeInnerClasses = false;
-    return localExcluder;
-  }
-  
-  public boolean excludeClass(Class<?> paramClass, boolean paramBoolean)
-  {
-    if ((this.version != -1.0D) && (!isValidVersion((Since)paramClass.getAnnotation(Since.class), (Until)paramClass.getAnnotation(Until.class)))) {
-      return true;
+        return result;
     }
-    if ((!this.serializeInnerClasses) && (isInnerClass(paramClass))) {
-      return true;
-    }
-    if (isAnonymousOrLocal(paramClass)) {
-      return true;
-    }
-    if (paramBoolean) {}
-    for (Object localObject = this.serializationStrategies;; localObject = this.deserializationStrategies)
-    {
-      localObject = ((List)localObject).iterator();
-      do
-      {
-        if (!((Iterator)localObject).hasNext()) {
-          break;
+
+    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+        Class<?> rawType = type.getRawType();
+        final boolean skipSerialize = excludeClass(rawType, true);
+        final boolean skipDeserialize = excludeClass(rawType, false);
+        if (!skipSerialize && !skipDeserialize) {
+            return null;
         }
-      } while (!((ExclusionStrategy)((Iterator)localObject).next()).shouldSkipClass(paramClass));
-      return true;
+        final Gson gson2 = gson;
+        final TypeToken<T> typeToken = type;
+        return new TypeAdapter<T>() {
+            private TypeAdapter<T> delegate;
+
+            public T read(JsonReader in) throws IOException {
+                if (!skipDeserialize) {
+                    return delegate().read(in);
+                }
+                in.skipValue();
+                return null;
+            }
+
+            public void write(JsonWriter out, T value) throws IOException {
+                if (skipSerialize) {
+                    out.nullValue();
+                } else {
+                    delegate().write(out, value);
+                }
+            }
+
+            private TypeAdapter<T> delegate() {
+                TypeAdapter<T> d = this.delegate;
+                if (d != null) {
+                    return d;
+                }
+                d = gson2.getDelegateAdapter(Excluder.this, typeToken);
+                this.delegate = d;
+                return d;
+            }
+        };
     }
-    return false;
-  }
-  
-  public boolean excludeField(Field paramField, boolean paramBoolean)
-  {
-    if ((this.modifiers & paramField.getModifiers()) != 0) {
-      return true;
-    }
-    if ((this.version != -1.0D) && (!isValidVersion((Since)paramField.getAnnotation(Since.class), (Until)paramField.getAnnotation(Until.class)))) {
-      return true;
-    }
-    if (paramField.isSynthetic()) {
-      return true;
-    }
-    if (this.requireExpose)
-    {
-      localObject = (Expose)paramField.getAnnotation(Expose.class);
-      if (localObject != null)
-      {
-        if (!paramBoolean) {
-          break label97;
+
+    public boolean excludeField(Field field, boolean serialize) {
+        if ((this.modifiers & field.getModifiers()) != 0) {
+            return true;
         }
-        if (((Expose)localObject).serialize()) {
-          break label106;
+        if (this.version != -1.0d && !isValidVersion((Since) field.getAnnotation(Since.class), (Until) field.getAnnotation(Until.class))) {
+            return true;
         }
-      }
-      label97:
-      while (!((Expose)localObject).deserialize()) {
-        return true;
-      }
-    }
-    label106:
-    if ((!this.serializeInnerClasses) && (isInnerClass(paramField.getType()))) {
-      return true;
-    }
-    if (isAnonymousOrLocal(paramField.getType())) {
-      return true;
-    }
-    if (paramBoolean) {}
-    for (Object localObject = this.serializationStrategies; !((List)localObject).isEmpty(); localObject = this.deserializationStrategies)
-    {
-      paramField = new FieldAttributes(paramField);
-      localObject = ((List)localObject).iterator();
-      do
-      {
-        if (!((Iterator)localObject).hasNext()) {
-          break;
+        if (field.isSynthetic()) {
+            return true;
         }
-      } while (!((ExclusionStrategy)((Iterator)localObject).next()).shouldSkipField(paramField));
-      return true;
+        if (this.requireExpose) {
+            Expose annotation = (Expose) field.getAnnotation(Expose.class);
+            if (annotation == null || (serialize ? !annotation.serialize() : !annotation.deserialize())) {
+                return true;
+            }
+        }
+        if (!this.serializeInnerClasses && isInnerClass(field.getType())) {
+            return true;
+        }
+        if (isAnonymousOrLocal(field.getType())) {
+            return true;
+        }
+        List<ExclusionStrategy> list = serialize ? this.serializationStrategies : this.deserializationStrategies;
+        if (!list.isEmpty()) {
+            FieldAttributes fieldAttributes = new FieldAttributes(field);
+            for (ExclusionStrategy exclusionStrategy : list) {
+                if (exclusionStrategy.shouldSkipField(fieldAttributes)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    return false;
-  }
-  
-  public Excluder excludeFieldsWithoutExposeAnnotation()
-  {
-    Excluder localExcluder = clone();
-    localExcluder.requireExpose = true;
-    return localExcluder;
-  }
-  
-  public Excluder withExclusionStrategy(ExclusionStrategy paramExclusionStrategy, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    Excluder localExcluder = clone();
-    if (paramBoolean1)
-    {
-      localExcluder.serializationStrategies = new ArrayList(this.serializationStrategies);
-      localExcluder.serializationStrategies.add(paramExclusionStrategy);
+
+    public boolean excludeClass(Class<?> clazz, boolean serialize) {
+        if (this.version != -1.0d && !isValidVersion((Since) clazz.getAnnotation(Since.class), (Until) clazz.getAnnotation(Until.class))) {
+            return true;
+        }
+        if (!this.serializeInnerClasses && isInnerClass(clazz)) {
+            return true;
+        }
+        if (isAnonymousOrLocal(clazz)) {
+            return true;
+        }
+        for (ExclusionStrategy exclusionStrategy : serialize ? this.serializationStrategies : this.deserializationStrategies) {
+            if (exclusionStrategy.shouldSkipClass(clazz)) {
+                return true;
+            }
+        }
+        return false;
     }
-    if (paramBoolean2)
-    {
-      localExcluder.deserializationStrategies = new ArrayList(this.deserializationStrategies);
-      localExcluder.deserializationStrategies.add(paramExclusionStrategy);
+
+    private boolean isAnonymousOrLocal(Class<?> clazz) {
+        return !Enum.class.isAssignableFrom(clazz) && (clazz.isAnonymousClass() || clazz.isLocalClass());
     }
-    return localExcluder;
-  }
-  
-  public Excluder withModifiers(int... paramVarArgs)
-  {
-    Excluder localExcluder = clone();
-    localExcluder.modifiers = 0;
-    int j = paramVarArgs.length;
-    int i = 0;
-    while (i < j)
-    {
-      int k = paramVarArgs[i];
-      localExcluder.modifiers |= k;
-      i += 1;
+
+    private boolean isInnerClass(Class<?> clazz) {
+        return clazz.isMemberClass() && !isStatic(clazz);
     }
-    return localExcluder;
-  }
-  
-  public Excluder withVersion(double paramDouble)
-  {
-    Excluder localExcluder = clone();
-    localExcluder.version = paramDouble;
-    return localExcluder;
-  }
+
+    private boolean isStatic(Class<?> clazz) {
+        return (clazz.getModifiers() & 8) != 0;
+    }
+
+    private boolean isValidVersion(Since since, Until until) {
+        return isValidSince(since) && isValidUntil(until);
+    }
+
+    private boolean isValidSince(Since annotation) {
+        if (annotation == null || annotation.value() <= this.version) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isValidUntil(Until annotation) {
+        if (annotation == null || annotation.value() > this.version) {
+            return true;
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/Excluder.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

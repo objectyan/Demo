@@ -5,981 +5,677 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.OnFragmentListener;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.screen.l;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.C1283l;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-public abstract class ContentFragmentManager
-{
-  public static final String KEY_BACK_BUNDLE = "back_bundle";
-  public static final String KEY_FRAGMENT_TYPE = "key_fragment_type";
-  public static final String KEY_SHOW_BUNDLE = "show_bundle";
-  public static final String MODULE_FROM = "module_from";
-  public static final int MODULE_HOME = 1;
-  public static final int MODULE_MUSIC = 4;
-  public static final int MODULE_NAVI = 3;
-  public static final int MODULE_PHONE = 2;
-  private static final String TAG = "Framework";
-  protected IContentFragmentFactory mContentFragmentFactory;
-  protected FragmentInfo mCurrentFragmentInfo;
-  protected ArrayList<FragmentInfo> mFragmentInfoStack;
-  protected FragmentManager mFragmentManager;
-  public int mLastFragmentType;
-  protected Stack<Fragment> mPluginFragments;
-  protected l mUiListener;
-  
-  public ContentFragmentManager(OnFragmentListener paramOnFragmentListener)
-  {
-    this.mFragmentManager = paramOnFragmentListener.getSupportFragmentManager();
-    this.mFragmentInfoStack = new ArrayList();
-    this.mCurrentFragmentInfo = null;
-    this.mPluginFragments = new Stack();
-  }
-  
-  private ContentFragment getFragment(int paramInt)
-  {
-    Object localObject2 = null;
-    int i = 0;
-    Iterator localIterator = this.mFragmentInfoStack.iterator();
-    for (;;)
-    {
-      Object localObject1 = localObject2;
-      if (localIterator.hasNext())
-      {
-        if (((FragmentInfo)localIterator.next()).mType == paramInt)
-        {
-          localObject1 = ((FragmentInfo)this.mFragmentInfoStack.remove(i)).mFragment;
-          removeAllCarLifeFragmentByType(paramInt);
-          i.b("ouyang", "-------------getFragment-OK-isExist----");
+public abstract class ContentFragmentManager {
+    public static final String KEY_BACK_BUNDLE = "back_bundle";
+    public static final String KEY_FRAGMENT_TYPE = "key_fragment_type";
+    public static final String KEY_SHOW_BUNDLE = "show_bundle";
+    public static final String MODULE_FROM = "module_from";
+    public static final int MODULE_HOME = 1;
+    public static final int MODULE_MUSIC = 4;
+    public static final int MODULE_NAVI = 3;
+    public static final int MODULE_PHONE = 2;
+    private static final String TAG = "Framework";
+    protected IContentFragmentFactory mContentFragmentFactory;
+    protected FragmentInfo mCurrentFragmentInfo = null;
+    protected ArrayList<FragmentInfo> mFragmentInfoStack = new ArrayList();
+    protected FragmentManager mFragmentManager;
+    public int mLastFragmentType;
+    protected Stack<Fragment> mPluginFragments = new Stack();
+    protected C1283l mUiListener;
+
+    protected class FragmentInfo {
+        public ContentFragment mFragment;
+        public int mType;
+
+        public FragmentInfo(ContentFragment fragment, int type) {
+            this.mFragment = fragment;
+            this.mType = type;
         }
-      }
-      else
-      {
-        localObject2 = localObject1;
-        if (localObject1 == null)
-        {
-          localObject2 = localObject1;
-          if (this.mContentFragmentFactory != null)
-          {
-            localObject2 = this.mContentFragmentFactory.createFragment(paramInt);
-            i.b("ouyang", "-------------getFragment-OK--create--- : " + paramInt);
-          }
+    }
+
+    public abstract boolean isCarLifeMusicSDKFragment(ContentFragment contentFragment, ContentFragment contentFragment2);
+
+    public abstract boolean isCarlifeFragment(int i);
+
+    public abstract boolean isCarlifeHomeFragment(int i);
+
+    public abstract boolean isCarlifeLaunchFragment(int i);
+
+    public abstract boolean isCarlifeMusicFragment(int i);
+
+    public abstract boolean isCarlifeMusicLocalFragment(int i);
+
+    public abstract boolean isCarlifeMusicNeteaseFragment(int i);
+
+    public abstract boolean isCarlifeMusicThirdFragment(int i);
+
+    public abstract boolean isCarlifeRadioMusicFragment(int i);
+
+    public abstract boolean isCarlifeTelephoneFragment(int i);
+
+    public abstract boolean isMapViewFragment(int i);
+
+    public abstract boolean isRadioFragment(int i);
+
+    public abstract boolean isWeChatFragment(int i);
+
+    public ContentFragmentManager(OnFragmentListener activity) {
+        this.mFragmentManager = activity.getSupportFragmentManager();
+    }
+
+    public void setFragmentManager(OnFragmentListener listener) {
+        this.mFragmentManager = listener.getSupportFragmentManager();
+    }
+
+    public void setFragmentFactory(IContentFragmentFactory contentFragmentFactory) {
+        this.mContentFragmentFactory = contentFragmentFactory;
+    }
+
+    public void showFragment(int type, Bundle bundle) {
+        ContentFragment fragment = null;
+        if (this.mContentFragmentFactory != null) {
+            fragment = this.mContentFragmentFactory.createFragment(type);
         }
-        return (ContentFragment)localObject2;
-      }
-      i += 1;
-    }
-  }
-  
-  private void replaceCarLifeFragment(ContentFragment paramContentFragment)
-  {
-    FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-    if (paramContentFragment.isAdded()) {
-      return;
-    }
-    localFragmentTransaction.replace(2131623987, paramContentFragment);
-    localFragmentTransaction.commitAllowingStateLoss();
-  }
-  
-  private void replaceCarLifeHomeFragment(ContentFragment paramContentFragment, int paramInt, boolean paramBoolean)
-  {
-    FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-    ContentFragment localContentFragment = null;
-    if (this.mCurrentFragmentInfo != null) {
-      localContentFragment = this.mCurrentFragmentInfo.mFragment;
-    }
-    this.mLastFragmentType = paramContentFragment.fragmentType;
-    if (paramBoolean) {
-      if (localContentFragment != null)
-      {
-        if (!isCarlifeHomeFragment(localContentFragment.getType())) {
-          break label86;
+        if (this.mCurrentFragmentInfo != null) {
+            if (this.mCurrentFragmentInfo.mType != type) {
+                push(this.mCurrentFragmentInfo);
+            } else {
+                fragment = this.mCurrentFragmentInfo.mFragment;
+            }
         }
-        localFragmentTransaction.remove(localContentFragment);
-        if (!paramContentFragment.isAdded()) {
-          break label97;
+        if (fragment != null) {
+            Bundle parentBundle = fragment.getArguments();
+            if (parentBundle == null) {
+                parentBundle = new Bundle();
+                parentBundle.putInt(KEY_FRAGMENT_TYPE, type);
+                fragment.setArguments(parentBundle);
+            }
+            if (bundle != null) {
+                parentBundle.putBundle(KEY_SHOW_BUNDLE, bundle);
+            }
         }
-        localFragmentTransaction.show(paramContentFragment);
-      }
-    }
-    for (;;)
-    {
-      localFragmentTransaction.commitAllowingStateLoss();
-      return;
-      label86:
-      localFragmentTransaction.hide(localContentFragment);
-      break;
-      label97:
-      if (paramContentFragment.isDetached())
-      {
-        localFragmentTransaction.attach(paramContentFragment);
-        continue;
-        if ((paramInt != localContentFragment.getType()) && (localContentFragment != null))
-        {
-          if (!isCarlifeLaunchFragment(localContentFragment.getType())) {
-            break label165;
-          }
-          localFragmentTransaction.remove(localContentFragment);
+        replaceFragment(fragment, type, false);
+        this.mCurrentFragmentInfo = new FragmentInfo(fragment, type);
+        if (this.mCurrentFragmentInfo.mFragment != null) {
+            this.mCurrentFragmentInfo.mFragment.requestInitView();
         }
-        for (;;)
-        {
-          if (!paramContentFragment.isAdded()) {
-            break label199;
-          }
-          localFragmentTransaction.show(paramContentFragment);
-          break;
-          label165:
-          if (isCarlifeHomeFragment(localContentFragment.getType())) {
-            localFragmentTransaction.detach(localContentFragment);
-          } else {
-            localFragmentTransaction.hide(localContentFragment);
-          }
+        if (this.mUiListener != null) {
+            this.mUiListener.updateGaussianBlurBackground();
+            this.mUiListener.updateMainDisplayStatus(4003);
         }
-        label199:
-        if (paramContentFragment.isDetached())
-        {
-          localFragmentTransaction.attach(paramContentFragment);
+    }
+
+    public void backToNavi(Bundle bundle) {
+        FragmentInfo fragmentInfo = null;
+        for (int i = this.mFragmentInfoStack.size() - 1; i >= 0; i--) {
+            if (!isCarlifeFragment(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType)) {
+                fragmentInfo = (FragmentInfo) this.mFragmentInfoStack.remove(i);
+                break;
+            }
         }
-        else if ((!paramContentFragment.isAdded()) && (!paramContentFragment.isAddFt()))
-        {
-          localFragmentTransaction.add(2131623987, paramContentFragment);
-          paramContentFragment.setAddFt(true);
+        if (fragmentInfo == null) {
+            C1260i.b("Framework", "----------fragment is null!----");
+            return;
         }
-      }
-    }
-  }
-  
-  private void replaceCarLifeMusicFragment(ContentFragment paramContentFragment, int paramInt, boolean paramBoolean)
-  {
-    FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-    ContentFragment localContentFragment = null;
-    if (this.mCurrentFragmentInfo != null) {
-      localContentFragment = this.mCurrentFragmentInfo.mFragment;
-    }
-    this.mLastFragmentType = paramContentFragment.fragmentType;
-    if (paramBoolean) {
-      if (localContentFragment != null)
-      {
-        if (!isCarlifeMusicFragment(localContentFragment.getType())) {
-          break label86;
+        if (this.mCurrentFragmentInfo != null) {
+            push(this.mCurrentFragmentInfo);
         }
-        localFragmentTransaction.remove(localContentFragment);
-        if (!paramContentFragment.isAdded()) {
-          break label97;
+        if (fragmentInfo.mFragment != null) {
+            Bundle parentBundle = fragmentInfo.mFragment.getArguments();
+            if (parentBundle != null) {
+                if (bundle != null) {
+                    parentBundle.putBundle(KEY_BACK_BUNDLE, bundle);
+                } else {
+                    parentBundle.remove(KEY_BACK_BUNDLE);
+                }
+            }
         }
-        localFragmentTransaction.show(paramContentFragment);
-      }
-    }
-    for (;;)
-    {
-      localFragmentTransaction.commitAllowingStateLoss();
-      return;
-      label86:
-      localFragmentTransaction.hide(localContentFragment);
-      break;
-      label97:
-      if (paramContentFragment.isDetached())
-      {
-        localFragmentTransaction.attach(paramContentFragment);
-        continue;
-        if ((paramInt != localContentFragment.getType()) && (localContentFragment != null))
-        {
-          if (!isCarlifeMusicFragment(localContentFragment.getType())) {
-            break label165;
-          }
-          localFragmentTransaction.detach(localContentFragment);
+        replaceFragment(fragmentInfo.mFragment, fragmentInfo.mType, false);
+        this.mCurrentFragmentInfo = fragmentInfo;
+        if (this.mUiListener != null) {
+            this.mUiListener.updateGaussianBlurBackground();
+            this.mUiListener.updateMainDisplayStatus(4003);
+            this.mUiListener.setBottomBarStatus(true);
         }
-        for (;;)
-        {
-          if (!paramContentFragment.isAdded()) {
-            break label176;
-          }
-          localFragmentTransaction.show(paramContentFragment);
-          break;
-          label165:
-          localFragmentTransaction.hide(localContentFragment);
+        if (this.mCurrentFragmentInfo.mType == 113 || this.mCurrentFragmentInfo.mType == 114) {
+            this.mCurrentFragmentInfo.mFragment.requestInitView();
         }
-        label176:
-        if (paramContentFragment.isDetached())
-        {
-          localFragmentTransaction.attach(paramContentFragment);
+    }
+
+    public void back(Bundle bundle) {
+        FragmentInfo fragmentInfo;
+        int curType = getCurrentFragmentType();
+        if (!isCarlifeFragment(curType)) {
+            fragmentInfo = popNavi();
+        } else if (isCarlifeHomeFragment(curType)) {
+            fragmentInfo = popHome();
+        } else if (isCarlifeMusicLocalFragment(curType)) {
+            fragmentInfo = popLocalMusic();
+        } else if (isCarlifeMusicNeteaseFragment(curType)) {
+            fragmentInfo = popNetease();
+        } else if (isCarlifeMusicThirdFragment(curType)) {
+            fragmentInfo = popThirdParty();
+        } else {
+            fragmentInfo = popCarlife();
         }
-        else if ((!paramContentFragment.isAdded()) && (!paramContentFragment.isAddFt()))
-        {
-          localFragmentTransaction.add(2131623987, paramContentFragment);
-          paramContentFragment.setAddFt(true);
+        if (fragmentInfo != null) {
+            if (fragmentInfo.mFragment != null) {
+                Bundle parentBundle = fragmentInfo.mFragment.getArguments();
+                if (parentBundle != null) {
+                    if (bundle != null) {
+                        parentBundle.putBundle(KEY_BACK_BUNDLE, bundle);
+                    } else {
+                        parentBundle.remove(KEY_BACK_BUNDLE);
+                    }
+                }
+            }
+            if (isCarlifeMusicFragment(fragmentInfo.mType)) {
+                replaceCarLifeMusicFragment(fragmentInfo.mFragment, fragmentInfo.mType, true);
+            } else if (isCarlifeHomeFragment(fragmentInfo.mType)) {
+                replaceCarLifeHomeFragment(fragmentInfo.mFragment, fragmentInfo.mType, true);
+            } else if (isCarlifeTelephoneFragment(fragmentInfo.mType)) {
+                replaceCarLifeTelephoneFragment(fragmentInfo.mFragment, fragmentInfo.mType, true);
+            } else if (isCarlifeLaunchFragment(fragmentInfo.mType)) {
+                replaceCarLifeFragment(fragmentInfo.mFragment);
+            } else if (!isCarlifeFragment(fragmentInfo.mType)) {
+                replaceFragment(fragmentInfo.mFragment, fragmentInfo.mType, true);
+            }
+            this.mCurrentFragmentInfo = fragmentInfo;
+            if (this.mCurrentFragmentInfo.mFragment != null) {
+                this.mCurrentFragmentInfo.mFragment.requestRestoreView();
+            }
         }
-      }
     }
-  }
-  
-  private void replaceCarLifeTelephoneFragment(ContentFragment paramContentFragment, int paramInt, boolean paramBoolean)
-  {
-    FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-    ContentFragment localContentFragment = null;
-    if (this.mCurrentFragmentInfo != null) {
-      localContentFragment = this.mCurrentFragmentInfo.mFragment;
+
+    public void back() {
+        back(null);
     }
-    this.mLastFragmentType = paramContentFragment.fragmentType;
-    if (paramBoolean) {
-      if (localContentFragment != null)
-      {
-        if (!isCarlifeTelephoneFragment(localContentFragment.getType())) {
-          break label86;
+
+    public ContentFragment getCurrentFragment() {
+        if (this.mCurrentFragmentInfo == null) {
+            return null;
         }
-        localFragmentTransaction.remove(localContentFragment);
-        if (!paramContentFragment.isAdded()) {
-          break label97;
+        return this.mCurrentFragmentInfo.mFragment;
+    }
+
+    public int getCurrentFragmentType() {
+        if (this.mCurrentFragmentInfo == null) {
+            return 0;
         }
-        localFragmentTransaction.show(paramContentFragment);
-      }
+        return this.mCurrentFragmentInfo.mType;
     }
-    for (;;)
-    {
-      localFragmentTransaction.commitAllowingStateLoss();
-      return;
-      label86:
-      localFragmentTransaction.hide(localContentFragment);
-      break;
-      label97:
-      if (paramContentFragment.isDetached())
-      {
-        localFragmentTransaction.attach(paramContentFragment);
-        continue;
-        if ((paramInt != localContentFragment.getType()) && (localContentFragment != null))
-        {
-          if (!isCarlifeTelephoneFragment(localContentFragment.getType())) {
-            break label165;
-          }
-          localFragmentTransaction.detach(localContentFragment);
+
+    public int getFragmentStackSize() {
+        return this.mFragmentInfoStack.size();
+    }
+
+    public ContentFragment getFragmentInStack(int index) {
+        if (index >= this.mFragmentInfoStack.size()) {
+            return null;
         }
-        for (;;)
-        {
-          if (!paramContentFragment.isAdded()) {
-            break label176;
-          }
-          localFragmentTransaction.show(paramContentFragment);
-          break;
-          label165:
-          localFragmentTransaction.hide(localContentFragment);
+        return ((FragmentInfo) this.mFragmentInfoStack.get(index)).mFragment;
+    }
+
+    public int getFragmentTypeInStack(int index) {
+        if (index >= this.mFragmentInfoStack.size()) {
+            return -1;
         }
-        label176:
-        if (paramContentFragment.isDetached())
-        {
-          localFragmentTransaction.attach(paramContentFragment);
+        return ((FragmentInfo) this.mFragmentInfoStack.get(index)).mType;
+    }
+
+    public int findFragmentIndexInStack(int type) {
+        for (int i = 0; i < this.mFragmentInfoStack.size(); i++) {
+            if (((FragmentInfo) this.mFragmentInfoStack.get(i)).mType == type) {
+                return i;
+            }
         }
-        else if ((!paramContentFragment.isAdded()) && (!paramContentFragment.isAddFt()))
-        {
-          localFragmentTransaction.add(2131623987, paramContentFragment);
-          paramContentFragment.setAddFt(true);
+        return -1;
+    }
+
+    protected int removeFragmentFromStack(int index) {
+        if (index >= this.mFragmentInfoStack.size()) {
+            return -1;
         }
-      }
-    }
-  }
-  
-  public void addPluginFragment(Fragment paramFragment)
-  {
-    if (this.mPluginFragments.size() > 0) {}
-    for (Object localObject = (Fragment)this.mPluginFragments.peek();; localObject = this.mCurrentFragmentInfo.mFragment)
-    {
-      FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-      if (!paramFragment.isAdded()) {
-        localFragmentTransaction.add(2131623987, paramFragment);
-      }
-      localFragmentTransaction.hide((Fragment)localObject);
-      localFragmentTransaction.commitAllowingStateLoss();
-      this.mPluginFragments.push(paramFragment);
-      return;
-    }
-  }
-  
-  public void back()
-  {
-    back(null);
-  }
-  
-  public void back(Bundle paramBundle)
-  {
-    int i = getCurrentFragmentType();
-    FragmentInfo localFragmentInfo;
-    if (isCarlifeFragment(i)) {
-      if (isCarlifeHomeFragment(i)) {
-        localFragmentInfo = popHome();
-      }
-    }
-    while (localFragmentInfo == null)
-    {
-      return;
-      if (isCarlifeMusicLocalFragment(i))
-      {
-        localFragmentInfo = popLocalMusic();
-      }
-      else if (isCarlifeMusicNeteaseFragment(i))
-      {
-        localFragmentInfo = popNetease();
-      }
-      else if (isCarlifeMusicThirdFragment(i))
-      {
-        localFragmentInfo = popThirdParty();
-      }
-      else
-      {
-        localFragmentInfo = popCarlife();
-        continue;
-        localFragmentInfo = popNavi();
-      }
-    }
-    Bundle localBundle;
-    if (localFragmentInfo.mFragment != null)
-    {
-      localBundle = localFragmentInfo.mFragment.getArguments();
-      if (localBundle != null)
-      {
-        if (paramBundle == null) {
-          break label178;
+        if (isCarlifeFragment(((FragmentInfo) this.mFragmentInfoStack.get(index)).mType) && ((FragmentInfo) this.mFragmentInfoStack.get(index)).mType != 516 && ((FragmentInfo) this.mFragmentInfoStack.get(index)).mType != 514 && ((FragmentInfo) this.mFragmentInfoStack.get(index)).mType != 517) {
+            return -1;
         }
-        localBundle.putBundle("back_bundle", paramBundle);
-      }
+        FragmentInfo fragmentInfo = (FragmentInfo) this.mFragmentInfoStack.remove(index);
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        ft.remove(fragmentInfo.mFragment);
+        ft.commitAllowingStateLoss();
+        return fragmentInfo.mType;
     }
-    label128:
-    if (isCarlifeMusicFragment(localFragmentInfo.mType)) {
-      replaceCarLifeMusicFragment(localFragmentInfo.mFragment, localFragmentInfo.mType, true);
-    }
-    for (;;)
-    {
-      this.mCurrentFragmentInfo = localFragmentInfo;
-      if (this.mCurrentFragmentInfo.mFragment == null) {
-        break;
-      }
-      this.mCurrentFragmentInfo.mFragment.requestRestoreView();
-      return;
-      label178:
-      localBundle.remove("back_bundle");
-      break label128;
-      if (isCarlifeHomeFragment(localFragmentInfo.mType)) {
-        replaceCarLifeHomeFragment(localFragmentInfo.mFragment, localFragmentInfo.mType, true);
-      } else if (isCarlifeTelephoneFragment(localFragmentInfo.mType)) {
-        replaceCarLifeTelephoneFragment(localFragmentInfo.mFragment, localFragmentInfo.mType, true);
-      } else if (isCarlifeLaunchFragment(localFragmentInfo.mType)) {
-        replaceCarLifeFragment(localFragmentInfo.mFragment);
-      } else if (!isCarlifeFragment(localFragmentInfo.mType)) {
-        replaceFragment(localFragmentInfo.mFragment, localFragmentInfo.mType, true);
-      }
-    }
-  }
-  
-  public void backToNavi(Bundle paramBundle)
-  {
-    Bundle localBundle = null;
-    int i = this.mFragmentInfoStack.size() - 1;
-    Object localObject;
-    for (;;)
-    {
-      localObject = localBundle;
-      if (i >= 0)
-      {
-        if (!isCarlifeFragment(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType)) {
-          localObject = (FragmentInfo)this.mFragmentInfoStack.remove(i);
+
+    public void removeAllFragmentByType(int fragmentType) {
+        int index = findFragmentIndexInStack(fragmentType);
+        while (index >= 0) {
+            removeFragmentFromStack(index);
+            index = findFragmentIndexInStack(fragmentType);
         }
-      }
-      else
-      {
-        if (localObject != null) {
-          break;
+    }
+
+    public void removeAllCarLifeFragmentByType(int fragmentType) {
+        int index = findFragmentIndexInStack(fragmentType);
+        while (index >= 0 && index < this.mFragmentInfoStack.size()) {
+            this.mFragmentInfoStack.remove(index);
+            index = findFragmentIndexInStack(fragmentType);
         }
-        i.b("Framework", "----------fragment is null!----");
-        return;
-      }
-      i -= 1;
     }
-    if (this.mCurrentFragmentInfo != null) {
-      push(this.mCurrentFragmentInfo);
-    }
-    if (((FragmentInfo)localObject).mFragment != null)
-    {
-      localBundle = ((FragmentInfo)localObject).mFragment.getArguments();
-      if (localBundle != null)
-      {
-        if (paramBundle == null) {
-          break label212;
+
+    public void removeWeChatFragmentFromStack() {
+        for (int i = this.mFragmentInfoStack.size() - 1; i >= 0; i--) {
+            if (isWeChatFragment(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType)) {
+                FragmentInfo fragmentInfo = (FragmentInfo) this.mFragmentInfoStack.remove(i);
+                FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+                ft.remove(fragmentInfo.mFragment);
+                ft.commitAllowingStateLoss();
+            }
         }
-        localBundle.putBundle("back_bundle", paramBundle);
-      }
     }
-    for (;;)
-    {
-      replaceFragment(((FragmentInfo)localObject).mFragment, ((FragmentInfo)localObject).mType, false);
-      this.mCurrentFragmentInfo = ((FragmentInfo)localObject);
-      if (this.mUiListener != null)
-      {
-        this.mUiListener.updateGaussianBlurBackground();
-        this.mUiListener.updateMainDisplayStatus(4003);
-        this.mUiListener.setBottomBarStatus(true);
-      }
-      if ((this.mCurrentFragmentInfo.mType != 113) && (this.mCurrentFragmentInfo.mType != 114)) {
-        break;
-      }
-      this.mCurrentFragmentInfo.mFragment.requestInitView();
-      return;
-      label212:
-      localBundle.remove("back_bundle");
-    }
-  }
-  
-  public int findFragmentIndexInStack(int paramInt)
-  {
-    int i = 0;
-    while (i < this.mFragmentInfoStack.size())
-    {
-      if (((FragmentInfo)this.mFragmentInfoStack.get(i)).mType == paramInt) {
-        return i;
-      }
-      i += 1;
-    }
-    return -1;
-  }
-  
-  public ContentFragment getCurrentFragment()
-  {
-    if (this.mCurrentFragmentInfo == null) {
-      return null;
-    }
-    return this.mCurrentFragmentInfo.mFragment;
-  }
-  
-  public int getCurrentFragmentType()
-  {
-    if (this.mCurrentFragmentInfo == null) {
-      return 0;
-    }
-    return this.mCurrentFragmentInfo.mType;
-  }
-  
-  public ContentFragment getFragmentInStack(int paramInt)
-  {
-    if (paramInt >= this.mFragmentInfoStack.size()) {
-      return null;
-    }
-    return ((FragmentInfo)this.mFragmentInfoStack.get(paramInt)).mFragment;
-  }
-  
-  public FragmentManager getFragmentManager()
-  {
-    return this.mFragmentManager;
-  }
-  
-  public int getFragmentStackSize()
-  {
-    return this.mFragmentInfoStack.size();
-  }
-  
-  public int getFragmentTypeInStack(int paramInt)
-  {
-    if (paramInt >= this.mFragmentInfoStack.size()) {
-      return -1;
-    }
-    return ((FragmentInfo)this.mFragmentInfoStack.get(paramInt)).mType;
-  }
-  
-  public void hideAllFragments()
-  {
-    List localList = this.mFragmentManager.getFragments();
-    if (localList != null)
-    {
-      FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-      int j = localList.size();
-      int i = 0;
-      if (i < j)
-      {
-        Fragment localFragment = (Fragment)localList.get(i);
-        if ((localFragment == null) || ((localFragment instanceof MapFragment))) {}
-        for (;;)
-        {
-          i += 1;
-          break;
-          localFragmentTransaction.hide(localFragment);
+
+    protected void push(FragmentInfo fragmentInfo) {
+        if (fragmentInfo != null) {
+            this.mFragmentInfoStack.add(fragmentInfo);
         }
-      }
-      localFragmentTransaction.commitAllowingStateLoss();
     }
-  }
-  
-  public abstract boolean isCarLifeMusicSDKFragment(ContentFragment paramContentFragment1, ContentFragment paramContentFragment2);
-  
-  public abstract boolean isCarlifeFragment(int paramInt);
-  
-  public abstract boolean isCarlifeHomeFragment(int paramInt);
-  
-  public abstract boolean isCarlifeLaunchFragment(int paramInt);
-  
-  public abstract boolean isCarlifeMusicFragment(int paramInt);
-  
-  public abstract boolean isCarlifeMusicLocalFragment(int paramInt);
-  
-  public abstract boolean isCarlifeMusicNeteaseFragment(int paramInt);
-  
-  public abstract boolean isCarlifeMusicThirdFragment(int paramInt);
-  
-  public abstract boolean isCarlifeRadioMusicFragment(int paramInt);
-  
-  public abstract boolean isCarlifeTelephoneFragment(int paramInt);
-  
-  public abstract boolean isMapViewFragment(int paramInt);
-  
-  public abstract boolean isRadioFragment(int paramInt);
-  
-  public abstract boolean isWeChatFragment(int paramInt);
-  
-  protected void logFragmentStack()
-  {
-    Object localObject1 = "fragment in stack: [";
-    Object localObject2 = localObject1;
-    if (this.mContentFragmentFactory != null)
-    {
-      int j = this.mFragmentInfoStack.size();
-      int i = 0;
-      for (;;)
-      {
-        localObject2 = localObject1;
-        if (i >= j) {
-          break;
+
+    protected FragmentInfo pop() {
+        int size = this.mFragmentInfoStack.size();
+        if (size <= 0) {
+            return null;
         }
-        localObject2 = (String)localObject1 + this.mContentFragmentFactory.toString(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType);
-        localObject1 = localObject2;
-        if (i < this.mFragmentInfoStack.size() - 1) {
-          localObject1 = (String)localObject2 + ", ";
+        return (FragmentInfo) this.mFragmentInfoStack.remove(size - 1);
+    }
+
+    protected FragmentInfo popHome() {
+        if (this.mFragmentInfoStack.size() <= 0) {
+            return null;
         }
-        i += 1;
-      }
-    }
-    i.b("Framework", (String)localObject2 + "]");
-  }
-  
-  protected FragmentInfo pop()
-  {
-    int i = this.mFragmentInfoStack.size();
-    if (i <= 0) {
-      return null;
-    }
-    return (FragmentInfo)this.mFragmentInfoStack.remove(i - 1);
-  }
-  
-  protected FragmentInfo popCarlife()
-  {
-    if (this.mFragmentInfoStack.size() <= 0) {}
-    for (;;)
-    {
-      return null;
-      int i = this.mFragmentInfoStack.size() - 1;
-      while (i >= 0)
-      {
-        if (isCarlifeFragment(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType))
-        {
-          FragmentInfo localFragmentInfo = (FragmentInfo)this.mFragmentInfoStack.get(i);
-          this.mFragmentInfoStack.remove(i);
-          return localFragmentInfo;
+        for (int i = this.mFragmentInfoStack.size() - 1; i >= 0; i--) {
+            if (isCarlifeHomeFragment(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType)) {
+                FragmentInfo fragmentInfo = (FragmentInfo) this.mFragmentInfoStack.get(i);
+                this.mFragmentInfoStack.remove(i);
+                return fragmentInfo;
+            }
         }
-        i -= 1;
-      }
+        return null;
     }
-  }
-  
-  protected FragmentInfo popHome()
-  {
-    if (this.mFragmentInfoStack.size() <= 0) {}
-    for (;;)
-    {
-      return null;
-      int i = this.mFragmentInfoStack.size() - 1;
-      while (i >= 0)
-      {
-        if (isCarlifeHomeFragment(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType))
-        {
-          FragmentInfo localFragmentInfo = (FragmentInfo)this.mFragmentInfoStack.get(i);
-          this.mFragmentInfoStack.remove(i);
-          return localFragmentInfo;
+
+    protected FragmentInfo popLocalMusic() {
+        if (this.mFragmentInfoStack.size() <= 0) {
+            return null;
         }
-        i -= 1;
-      }
-    }
-  }
-  
-  protected FragmentInfo popLocalMusic()
-  {
-    if (this.mFragmentInfoStack.size() <= 0) {}
-    for (;;)
-    {
-      return null;
-      int i = this.mFragmentInfoStack.size() - 1;
-      while (i >= 0)
-      {
-        if (isCarlifeMusicLocalFragment(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType))
-        {
-          FragmentInfo localFragmentInfo = (FragmentInfo)this.mFragmentInfoStack.get(i);
-          this.mFragmentInfoStack.remove(i);
-          return localFragmentInfo;
+        for (int i = this.mFragmentInfoStack.size() - 1; i >= 0; i--) {
+            if (isCarlifeMusicLocalFragment(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType)) {
+                FragmentInfo fragmentInfo = (FragmentInfo) this.mFragmentInfoStack.get(i);
+                this.mFragmentInfoStack.remove(i);
+                return fragmentInfo;
+            }
         }
-        i -= 1;
-      }
+        return null;
     }
-  }
-  
-  protected FragmentInfo popNavi()
-  {
-    if (this.mFragmentInfoStack.size() <= 0) {}
-    for (;;)
-    {
-      return null;
-      int i = this.mFragmentInfoStack.size() - 1;
-      while (i >= 0)
-      {
-        if (!isCarlifeFragment(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType)) {
-          return (FragmentInfo)this.mFragmentInfoStack.remove(i);
+
+    protected FragmentInfo popNetease() {
+        if (this.mFragmentInfoStack.size() <= 0) {
+            return null;
         }
-        i -= 1;
-      }
-    }
-  }
-  
-  protected FragmentInfo popNetease()
-  {
-    if (this.mFragmentInfoStack.size() <= 0) {}
-    for (;;)
-    {
-      return null;
-      int i = this.mFragmentInfoStack.size() - 1;
-      while (i >= 0)
-      {
-        if (isCarlifeMusicNeteaseFragment(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType)) {
-          return (FragmentInfo)this.mFragmentInfoStack.remove(i);
+        for (int i = this.mFragmentInfoStack.size() - 1; i >= 0; i--) {
+            if (isCarlifeMusicNeteaseFragment(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType)) {
+                return (FragmentInfo) this.mFragmentInfoStack.remove(i);
+            }
         }
-        i -= 1;
-      }
+        return null;
     }
-  }
-  
-  protected FragmentInfo popThirdParty()
-  {
-    if (this.mFragmentInfoStack.size() <= 0) {}
-    for (;;)
-    {
-      return null;
-      int i = this.mFragmentInfoStack.size() - 1;
-      while (i >= 0)
-      {
-        if (isCarlifeMusicThirdFragment(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType)) {
-          return (FragmentInfo)this.mFragmentInfoStack.remove(i);
+
+    protected FragmentInfo popThirdParty() {
+        if (this.mFragmentInfoStack.size() <= 0) {
+            return null;
         }
-        i -= 1;
-      }
-    }
-  }
-  
-  protected void push(FragmentInfo paramFragmentInfo)
-  {
-    if (paramFragmentInfo == null) {
-      return;
-    }
-    this.mFragmentInfoStack.add(paramFragmentInfo);
-  }
-  
-  public void removeAllCarLifeFragmentByType(int paramInt)
-  {
-    for (int i = findFragmentIndexInStack(paramInt);; i = findFragmentIndexInStack(paramInt))
-    {
-      if ((i < 0) || (i >= this.mFragmentInfoStack.size())) {
-        return;
-      }
-      this.mFragmentInfoStack.remove(i);
-    }
-  }
-  
-  public void removeAllFragmentByType(int paramInt)
-  {
-    for (int i = findFragmentIndexInStack(paramInt); i >= 0; i = findFragmentIndexInStack(paramInt)) {
-      removeFragmentFromStack(i);
-    }
-  }
-  
-  protected int removeFragmentFromStack(int paramInt)
-  {
-    if (paramInt >= this.mFragmentInfoStack.size()) {
-      return -1;
-    }
-    if ((!isCarlifeFragment(((FragmentInfo)this.mFragmentInfoStack.get(paramInt)).mType)) || (((FragmentInfo)this.mFragmentInfoStack.get(paramInt)).mType == 516) || (((FragmentInfo)this.mFragmentInfoStack.get(paramInt)).mType == 514) || (((FragmentInfo)this.mFragmentInfoStack.get(paramInt)).mType == 517))
-    {
-      FragmentInfo localFragmentInfo = (FragmentInfo)this.mFragmentInfoStack.remove(paramInt);
-      FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-      localFragmentTransaction.remove(localFragmentInfo.mFragment);
-      localFragmentTransaction.commitAllowingStateLoss();
-      return localFragmentInfo.mType;
-    }
-    return -1;
-  }
-  
-  public void removePluginFragment(Fragment paramFragment)
-  {
-    if (this.mPluginFragments.size() > 1) {}
-    for (Object localObject = (Fragment)this.mPluginFragments.get(this.mPluginFragments.size() - 2);; localObject = this.mCurrentFragmentInfo.mFragment)
-    {
-      FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-      localFragmentTransaction.remove(paramFragment);
-      localFragmentTransaction.show((Fragment)localObject);
-      localFragmentTransaction.commitAllowingStateLoss();
-      this.mPluginFragments.remove(paramFragment);
-      return;
-    }
-  }
-  
-  public void removeTopPluginFragment()
-  {
-    if (this.mPluginFragments.size() > 1) {}
-    for (Object localObject = (Fragment)this.mPluginFragments.get(this.mPluginFragments.size() - 2);; localObject = this.mCurrentFragmentInfo.mFragment)
-    {
-      Fragment localFragment = (Fragment)this.mPluginFragments.pop();
-      FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-      localFragmentTransaction.remove(localFragment);
-      localFragmentTransaction.show((Fragment)localObject);
-      localFragmentTransaction.commitAllowingStateLoss();
-      return;
-    }
-  }
-  
-  public void removeWeChatFragmentFromStack()
-  {
-    int i = this.mFragmentInfoStack.size() - 1;
-    while (i >= 0)
-    {
-      if (isWeChatFragment(((FragmentInfo)this.mFragmentInfoStack.get(i)).mType))
-      {
-        FragmentInfo localFragmentInfo = (FragmentInfo)this.mFragmentInfoStack.remove(i);
-        FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-        localFragmentTransaction.remove(localFragmentInfo.mFragment);
-        localFragmentTransaction.commitAllowingStateLoss();
-      }
-      i -= 1;
-    }
-  }
-  
-  protected void replaceFragment(ContentFragment paramContentFragment, int paramInt, boolean paramBoolean)
-  {
-    FragmentTransaction localFragmentTransaction = this.mFragmentManager.beginTransaction();
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (this.mCurrentFragmentInfo != null)
-    {
-      localObject1 = localObject2;
-      if (this.mCurrentFragmentInfo.mFragment != null) {
-        localObject1 = this.mCurrentFragmentInfo.mFragment;
-      }
-    }
-    this.mLastFragmentType = paramContentFragment.fragmentType;
-    if (paramBoolean) {
-      if (localObject1 != null)
-      {
-        if (!isCarlifeFragment(((ContentFragment)localObject1).getType())) {
-          break label104;
+        for (int i = this.mFragmentInfoStack.size() - 1; i >= 0; i--) {
+            if (isCarlifeMusicThirdFragment(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType)) {
+                return (FragmentInfo) this.mFragmentInfoStack.remove(i);
+            }
         }
-        localFragmentTransaction.hide((Fragment)localObject1);
-        if (!paramContentFragment.isAdded()) {
-          break label115;
-        }
-        localFragmentTransaction.show(paramContentFragment);
-      }
+        return null;
     }
-    for (;;)
-    {
-      localFragmentTransaction.commitAllowingStateLoss();
-      return;
-      label104:
-      localFragmentTransaction.remove((Fragment)localObject1);
-      break;
-      label115:
-      if (paramContentFragment.isDetached())
-      {
-        localFragmentTransaction.attach(paramContentFragment);
-        continue;
-        if ((paramInt != ((ContentFragment)localObject1).getType()) && (localObject1 != null))
-        {
-          if (!isCarlifeFragment(((ContentFragment)localObject1).getType())) {
-            break label183;
-          }
-          localFragmentTransaction.hide((Fragment)localObject1);
+
+    protected FragmentInfo popCarlife() {
+        if (this.mFragmentInfoStack.size() <= 0) {
+            return null;
         }
-        for (;;)
-        {
-          if (!paramContentFragment.isAdded()) {
-            break label194;
-          }
-          localFragmentTransaction.show(paramContentFragment);
-          break;
-          label183:
-          localFragmentTransaction.detach((Fragment)localObject1);
+        for (int i = this.mFragmentInfoStack.size() - 1; i >= 0; i--) {
+            if (isCarlifeFragment(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType)) {
+                FragmentInfo fragmentInfo = (FragmentInfo) this.mFragmentInfoStack.get(i);
+                this.mFragmentInfoStack.remove(i);
+                return fragmentInfo;
+            }
         }
-        label194:
-        if (paramContentFragment.isDetached())
-        {
-          localFragmentTransaction.attach(paramContentFragment);
-        }
-        else if ((!paramContentFragment.isAdded()) && (!paramContentFragment.isAddFt()))
-        {
-          localFragmentTransaction.add(2131623987, paramContentFragment);
-          paramContentFragment.setAddFt(true);
-        }
-      }
+        return null;
     }
-  }
-  
-  public void setFragmentFactory(IContentFragmentFactory paramIContentFragmentFactory)
-  {
-    this.mContentFragmentFactory = paramIContentFragmentFactory;
-  }
-  
-  public void setFragmentManager(OnFragmentListener paramOnFragmentListener)
-  {
-    this.mFragmentManager = paramOnFragmentListener.getSupportFragmentManager();
-  }
-  
-  public void setUIListener(l paraml)
-  {
-    this.mUiListener = paraml;
-  }
-  
-  public void showCarlifeFragment(int paramInt, Bundle paramBundle)
-  {
-    Object localObject2 = getFragment(paramInt);
-    Object localObject1 = localObject2;
-    int j;
-    int i;
-    if (this.mCurrentFragmentInfo != null)
-    {
-      if (paramInt != this.mCurrentFragmentInfo.mType)
-      {
-        push(this.mCurrentFragmentInfo);
-        localObject1 = localObject2;
-      }
-    }
-    else
-    {
-      if (localObject1 != null)
-      {
-        Bundle localBundle = ((ContentFragment)localObject1).getArguments();
-        localObject2 = localBundle;
-        if (localBundle == null)
-        {
-          localObject2 = new Bundle();
-          ((Bundle)localObject2).putInt("key_fragment_type", paramInt);
-          ((ContentFragment)localObject1).setArguments((Bundle)localObject2);
+
+    protected FragmentInfo popNavi() {
+        if (this.mFragmentInfoStack.size() <= 0) {
+            return null;
         }
-        if (paramBundle != null) {
-          ((Bundle)localObject2).putBundle("show_bundle", paramBundle);
+        for (int i = this.mFragmentInfoStack.size() - 1; i >= 0; i--) {
+            if (!isCarlifeFragment(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType)) {
+                return (FragmentInfo) this.mFragmentInfoStack.remove(i);
+            }
         }
-      }
-      j = 4001;
-      if (!isCarlifeMusicFragment(paramInt)) {
-        break label188;
-      }
-      i = 4004;
-      replaceCarLifeMusicFragment((ContentFragment)localObject1, paramInt, false);
+        return null;
     }
-    for (;;)
-    {
-      if (this.mUiListener != null) {
-        this.mUiListener.updateMainDisplayStatus(i);
-      }
-      this.mCurrentFragmentInfo = new FragmentInfo((ContentFragment)localObject1, paramInt);
-      if (this.mCurrentFragmentInfo.mFragment != null) {
-        this.mCurrentFragmentInfo.mFragment.requestInitView();
-      }
-      return;
-      localObject1 = this.mCurrentFragmentInfo.mFragment;
-      break;
-      label188:
-      if (isCarlifeHomeFragment(paramInt))
-      {
-        i = 4001;
-        replaceCarLifeHomeFragment((ContentFragment)localObject1, paramInt, false);
-      }
-      else if (isCarlifeTelephoneFragment(paramInt))
-      {
-        i = 4002;
-        replaceCarLifeTelephoneFragment((ContentFragment)localObject1, paramInt, false);
-      }
-      else
-      {
-        i = j;
-        if (isCarlifeLaunchFragment(paramInt))
-        {
-          replaceCarLifeFragment((ContentFragment)localObject1);
-          i = j;
+
+    protected void logFragmentStack() {
+        String fragmentStackStr = "fragment in stack: [";
+        if (this.mContentFragmentFactory != null) {
+            int size = this.mFragmentInfoStack.size();
+            for (int i = 0; i < size; i++) {
+                fragmentStackStr = fragmentStackStr + this.mContentFragmentFactory.toString(((FragmentInfo) this.mFragmentInfoStack.get(i)).mType);
+                if (i < this.mFragmentInfoStack.size() - 1) {
+                    fragmentStackStr = fragmentStackStr + ", ";
+                }
+            }
         }
-      }
+        C1260i.b("Framework", fragmentStackStr + "]");
     }
-  }
-  
-  public void showFragment(int paramInt, Bundle paramBundle)
-  {
-    Object localObject1 = null;
-    if (this.mContentFragmentFactory != null) {
-      localObject1 = this.mContentFragmentFactory.createFragment(paramInt);
-    }
-    Object localObject2 = localObject1;
-    if (this.mCurrentFragmentInfo != null)
-    {
-      if (this.mCurrentFragmentInfo.mType == paramInt) {
-        break label176;
-      }
-      push(this.mCurrentFragmentInfo);
-    }
-    label176:
-    for (localObject2 = localObject1;; localObject2 = this.mCurrentFragmentInfo.mFragment)
-    {
-      if (localObject2 != null)
-      {
-        Bundle localBundle = ((ContentFragment)localObject2).getArguments();
-        localObject1 = localBundle;
-        if (localBundle == null)
-        {
-          localObject1 = new Bundle();
-          ((Bundle)localObject1).putInt("key_fragment_type", paramInt);
-          ((ContentFragment)localObject2).setArguments((Bundle)localObject1);
+
+    public void showCarlifeFragment(int type, Bundle bundle) {
+        ContentFragment fragment = getFragment(type);
+        if (this.mCurrentFragmentInfo != null) {
+            if (type != this.mCurrentFragmentInfo.mType) {
+                push(this.mCurrentFragmentInfo);
+            } else {
+                fragment = this.mCurrentFragmentInfo.mFragment;
+            }
         }
-        if (paramBundle != null) {
-          ((Bundle)localObject1).putBundle("show_bundle", paramBundle);
+        if (fragment != null) {
+            Bundle parentBundle = fragment.getArguments();
+            if (parentBundle == null) {
+                parentBundle = new Bundle();
+                parentBundle.putInt(KEY_FRAGMENT_TYPE, type);
+                fragment.setArguments(parentBundle);
+            }
+            if (bundle != null) {
+                parentBundle.putBundle(KEY_SHOW_BUNDLE, bundle);
+            }
         }
-      }
-      replaceFragment((ContentFragment)localObject2, paramInt, false);
-      this.mCurrentFragmentInfo = new FragmentInfo((ContentFragment)localObject2, paramInt);
-      if (this.mCurrentFragmentInfo.mFragment != null) {
-        this.mCurrentFragmentInfo.mFragment.requestInitView();
-      }
-      if (this.mUiListener != null)
-      {
-        this.mUiListener.updateGaussianBlurBackground();
-        this.mUiListener.updateMainDisplayStatus(4003);
-      }
-      return;
+        int bottomStatusType = 4001;
+        if (isCarlifeMusicFragment(type)) {
+            bottomStatusType = 4004;
+            replaceCarLifeMusicFragment(fragment, type, false);
+        } else if (isCarlifeHomeFragment(type)) {
+            bottomStatusType = 4001;
+            replaceCarLifeHomeFragment(fragment, type, false);
+        } else if (isCarlifeTelephoneFragment(type)) {
+            bottomStatusType = 4002;
+            replaceCarLifeTelephoneFragment(fragment, type, false);
+        } else if (isCarlifeLaunchFragment(type)) {
+            replaceCarLifeFragment(fragment);
+        }
+        if (this.mUiListener != null) {
+            this.mUiListener.updateMainDisplayStatus(bottomStatusType);
+        }
+        this.mCurrentFragmentInfo = new FragmentInfo(fragment, type);
+        if (this.mCurrentFragmentInfo.mFragment != null) {
+            this.mCurrentFragmentInfo.mFragment.requestInitView();
+        }
     }
-  }
-  
-  protected class FragmentInfo
-  {
-    public ContentFragment mFragment;
-    public int mType;
-    
-    public FragmentInfo(ContentFragment paramContentFragment, int paramInt)
-    {
-      this.mFragment = paramContentFragment;
-      this.mType = paramInt;
+
+    private ContentFragment getFragment(int type) {
+        ContentFragment fragment = null;
+        int index = 0;
+        Iterator it = this.mFragmentInfoStack.iterator();
+        while (it.hasNext()) {
+            if (((FragmentInfo) it.next()).mType == type) {
+                fragment = ((FragmentInfo) this.mFragmentInfoStack.remove(index)).mFragment;
+                removeAllCarLifeFragmentByType(type);
+                C1260i.b("ouyang", "-------------getFragment-OK-isExist----");
+                break;
+            }
+            index++;
+        }
+        if (fragment != null || this.mContentFragmentFactory == null) {
+            return fragment;
+        }
+        fragment = this.mContentFragmentFactory.createFragment(type);
+        C1260i.b("ouyang", "-------------getFragment-OK--create--- : " + type);
+        return fragment;
     }
-  }
+
+    protected void replaceFragment(ContentFragment fragment, int type, boolean back) {
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        ContentFragment currFragment = null;
+        if (!(this.mCurrentFragmentInfo == null || this.mCurrentFragmentInfo.mFragment == null)) {
+            currFragment = this.mCurrentFragmentInfo.mFragment;
+        }
+        this.mLastFragmentType = fragment.fragmentType;
+        if (!back) {
+            if (!(type == currFragment.getType() || currFragment == null)) {
+                if (isCarlifeFragment(currFragment.getType())) {
+                    ft.hide(currFragment);
+                } else {
+                    ft.detach(currFragment);
+                }
+            }
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else if (fragment.isDetached()) {
+                ft.attach(fragment);
+            } else if (!(fragment.isAdded() || fragment.isAddFt())) {
+                ft.add(C0965R.id.content_frame, fragment);
+                fragment.setAddFt(true);
+            }
+        } else if (currFragment != null) {
+            if (isCarlifeFragment(currFragment.getType())) {
+                ft.hide(currFragment);
+            } else {
+                ft.remove(currFragment);
+            }
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else if (fragment.isDetached()) {
+                ft.attach(fragment);
+            }
+        }
+        ft.commitAllowingStateLoss();
+    }
+
+    private void replaceCarLifeMusicFragment(ContentFragment fragment, int type, boolean back) {
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        ContentFragment currFragment = null;
+        if (this.mCurrentFragmentInfo != null) {
+            currFragment = this.mCurrentFragmentInfo.mFragment;
+        }
+        this.mLastFragmentType = fragment.fragmentType;
+        if (!back) {
+            if (!(type == currFragment.getType() || currFragment == null)) {
+                if (isCarlifeMusicFragment(currFragment.getType())) {
+                    ft.detach(currFragment);
+                } else {
+                    ft.hide(currFragment);
+                }
+            }
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else if (fragment.isDetached()) {
+                ft.attach(fragment);
+            } else if (!(fragment.isAdded() || fragment.isAddFt())) {
+                ft.add(C0965R.id.content_frame, fragment);
+                fragment.setAddFt(true);
+            }
+        } else if (currFragment != null) {
+            if (isCarlifeMusicFragment(currFragment.getType())) {
+                ft.remove(currFragment);
+            } else {
+                ft.hide(currFragment);
+            }
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else if (fragment.isDetached()) {
+                ft.attach(fragment);
+            }
+        }
+        ft.commitAllowingStateLoss();
+    }
+
+    private void replaceCarLifeHomeFragment(ContentFragment fragment, int type, boolean back) {
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        ContentFragment currFragment = null;
+        if (this.mCurrentFragmentInfo != null) {
+            currFragment = this.mCurrentFragmentInfo.mFragment;
+        }
+        this.mLastFragmentType = fragment.fragmentType;
+        if (!back) {
+            if (!(type == currFragment.getType() || currFragment == null)) {
+                if (isCarlifeLaunchFragment(currFragment.getType())) {
+                    ft.remove(currFragment);
+                } else if (isCarlifeHomeFragment(currFragment.getType())) {
+                    ft.detach(currFragment);
+                } else {
+                    ft.hide(currFragment);
+                }
+            }
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else if (fragment.isDetached()) {
+                ft.attach(fragment);
+            } else if (!(fragment.isAdded() || fragment.isAddFt())) {
+                ft.add(C0965R.id.content_frame, fragment);
+                fragment.setAddFt(true);
+            }
+        } else if (currFragment != null) {
+            if (isCarlifeHomeFragment(currFragment.getType())) {
+                ft.remove(currFragment);
+            } else {
+                ft.hide(currFragment);
+            }
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else if (fragment.isDetached()) {
+                ft.attach(fragment);
+            }
+        }
+        ft.commitAllowingStateLoss();
+    }
+
+    private void replaceCarLifeTelephoneFragment(ContentFragment fragment, int type, boolean back) {
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        ContentFragment currFragment = null;
+        if (this.mCurrentFragmentInfo != null) {
+            currFragment = this.mCurrentFragmentInfo.mFragment;
+        }
+        this.mLastFragmentType = fragment.fragmentType;
+        if (!back) {
+            if (!(type == currFragment.getType() || currFragment == null)) {
+                if (isCarlifeTelephoneFragment(currFragment.getType())) {
+                    ft.detach(currFragment);
+                } else {
+                    ft.hide(currFragment);
+                }
+            }
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else if (fragment.isDetached()) {
+                ft.attach(fragment);
+            } else if (!(fragment.isAdded() || fragment.isAddFt())) {
+                ft.add(C0965R.id.content_frame, fragment);
+                fragment.setAddFt(true);
+            }
+        } else if (currFragment != null) {
+            if (isCarlifeTelephoneFragment(currFragment.getType())) {
+                ft.remove(currFragment);
+            } else {
+                ft.hide(currFragment);
+            }
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else if (fragment.isDetached()) {
+                ft.attach(fragment);
+            }
+        }
+        ft.commitAllowingStateLoss();
+    }
+
+    private void replaceCarLifeFragment(ContentFragment fragment) {
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        if (!fragment.isAdded()) {
+            ft.replace(C0965R.id.content_frame, fragment);
+            ft.commitAllowingStateLoss();
+        }
+    }
+
+    public void addPluginFragment(Fragment fragment) {
+        Fragment lastFragment;
+        if (this.mPluginFragments.size() > 0) {
+            lastFragment = (Fragment) this.mPluginFragments.peek();
+        } else {
+            lastFragment = this.mCurrentFragmentInfo.mFragment;
+        }
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        if (!fragment.isAdded()) {
+            ft.add(C0965R.id.content_frame, fragment);
+        }
+        ft.hide(lastFragment);
+        ft.commitAllowingStateLoss();
+        this.mPluginFragments.push(fragment);
+    }
+
+    public void removePluginFragment(Fragment fragment) {
+        Fragment lastFragment;
+        if (this.mPluginFragments.size() > 1) {
+            lastFragment = (Fragment) this.mPluginFragments.get(this.mPluginFragments.size() - 2);
+        } else {
+            lastFragment = this.mCurrentFragmentInfo.mFragment;
+        }
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        ft.remove(fragment);
+        ft.show(lastFragment);
+        ft.commitAllowingStateLoss();
+        this.mPluginFragments.remove(fragment);
+    }
+
+    public void removeTopPluginFragment() {
+        Fragment lastFragment;
+        if (this.mPluginFragments.size() > 1) {
+            lastFragment = (Fragment) this.mPluginFragments.get(this.mPluginFragments.size() - 2);
+        } else {
+            lastFragment = this.mCurrentFragmentInfo.mFragment;
+        }
+        Fragment fragment = (Fragment) this.mPluginFragments.pop();
+        FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+        ft.remove(fragment);
+        ft.show(lastFragment);
+        ft.commitAllowingStateLoss();
+    }
+
+    public void setUIListener(C1283l listener) {
+        this.mUiListener = listener;
+    }
+
+    public FragmentManager getFragmentManager() {
+        return this.mFragmentManager;
+    }
+
+    public void hideAllFragments() {
+        List<Fragment> allFragments = this.mFragmentManager.getFragments();
+        if (allFragments != null) {
+            FragmentTransaction ft = this.mFragmentManager.beginTransaction();
+            int len = allFragments.size();
+            for (int i = 0; i < len; i++) {
+                Fragment fragment = (Fragment) allFragments.get(i);
+                if (!(fragment == null || (fragment instanceof MapFragment))) {
+                    ft.hide(fragment);
+                }
+            }
+            ft.commitAllowingStateLoss();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/fragment/ContentFragmentManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,44 +2,32 @@ package com.indooratlas.android.sdk._internal;
 
 import java.io.IOException;
 
-public abstract class is
-  implements jd
-{
-  private final jd a;
-  
-  public is(jd paramjd)
-  {
-    if (paramjd == null) {
-      throw new IllegalArgumentException("delegate == null");
+public abstract class is implements jd {
+    /* renamed from: a */
+    private final jd f24401a;
+
+    public is(jd jdVar) {
+        if (jdVar == null) {
+            throw new IllegalArgumentException("delegate == null");
+        }
+        this.f24401a = jdVar;
     }
-    this.a = paramjd;
-  }
-  
-  public long a(in paramin, long paramLong)
-    throws IOException
-  {
-    return this.a.a(paramin, paramLong);
-  }
-  
-  public final je a()
-  {
-    return this.a.a();
-  }
-  
-  public void close()
-    throws IOException
-  {
-    this.a.close();
-  }
-  
-  public String toString()
-  {
-    return getClass().getSimpleName() + "(" + this.a.toString() + ")";
-  }
+
+    /* renamed from: a */
+    public long mo4730a(in inVar, long j) throws IOException {
+        return this.f24401a.mo4730a(inVar, j);
+    }
+
+    /* renamed from: a */
+    public final je mo4731a() {
+        return this.f24401a.mo4731a();
+    }
+
+    public void close() throws IOException {
+        this.f24401a.close();
+    }
+
+    public String toString() {
+        return getClass().getSimpleName() + "(" + this.f24401a.toString() + ")";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/is.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

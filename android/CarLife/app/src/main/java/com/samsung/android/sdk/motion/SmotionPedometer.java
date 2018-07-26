@@ -1,6 +1,5 @@
 package com.samsung.android.sdk.motion;
 
-import android.content.Context;
 import android.hardware.scontext.SContextListener;
 import android.hardware.scontext.SContextManager;
 import android.os.Build.VERSION;
@@ -12,328 +11,306 @@ import android.view.WindowManager;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SmotionPedometer
-{
-  private static boolean f;
-  private static Smotion l = null;
-  private static final Object n = new Object();
-  private Info a;
-  private a b;
-  private ChangeListener c = null;
-  private SContextListener d = null;
-  private PowerManager e;
-  private boolean g = false;
-  private Timer h = null;
-  private boolean i = false;
-  private boolean j = false;
-  private long k = 3000L;
-  private boolean m = false;
-  private Display o;
-  
-  public SmotionPedometer(Looper arg1, Smotion paramSmotion)
-  {
-    if (??? == null) {
-      throw new NullPointerException("SmotionPedometer : Looper is null. ");
+public class SmotionPedometer {
+    /* renamed from: f */
+    private static boolean f24714f;
+    /* renamed from: l */
+    private static Smotion f24715l = null;
+    /* renamed from: n */
+    private static final Object f24716n = new Object();
+    /* renamed from: a */
+    private Info f24717a;
+    /* renamed from: b */
+    private C6072a f24718b;
+    /* renamed from: c */
+    private ChangeListener f24719c = null;
+    /* renamed from: d */
+    private SContextListener f24720d = null;
+    /* renamed from: e */
+    private PowerManager f24721e;
+    /* renamed from: g */
+    private boolean f24722g = false;
+    /* renamed from: h */
+    private Timer f24723h = null;
+    /* renamed from: i */
+    private boolean f24724i = false;
+    /* renamed from: j */
+    private boolean f24725j = false;
+    /* renamed from: k */
+    private long f24726k = 3000;
+    /* renamed from: m */
+    private boolean f24727m = false;
+    /* renamed from: o */
+    private Display f24728o;
+
+    public interface ChangeListener {
+        void onChanged(Info info);
     }
-    if (paramSmotion == null) {
-      throw new NullPointerException("SmotionPedometer : Smotion is null. ");
+
+    public static class Info {
+        public static final int COUNT_RUN_DOWN = 5;
+        public static final int COUNT_RUN_FLAT = 6;
+        public static final int COUNT_RUN_UP = 4;
+        public static final int COUNT_TOTAL = 0;
+        public static final int COUNT_WALK_DOWN = 2;
+        public static final int COUNT_WALK_FLAT = 3;
+        public static final int COUNT_WALK_UP = 1;
+        public static final int STATUS_RUN_DOWN = 5;
+        public static final int STATUS_RUN_FLAT = 6;
+        public static final int STATUS_RUN_UP = 4;
+        public static final int STATUS_STOP = 0;
+        public static final int STATUS_UNKNOWN = -1;
+        public static final int STATUS_WALK_DOWN = 2;
+        public static final int STATUS_WALK_FLAT = 3;
+        public static final int STATUS_WALK_UP = 1;
+        /* renamed from: a */
+        private long f24701a;
+        /* renamed from: b */
+        private long f24702b;
+        /* renamed from: c */
+        private long f24703c;
+        /* renamed from: d */
+        private long f24704d;
+        /* renamed from: e */
+        private long f24705e;
+        /* renamed from: f */
+        private long f24706f;
+        /* renamed from: g */
+        private long f24707g;
+        /* renamed from: h */
+        private double f24708h;
+        /* renamed from: i */
+        private double f24709i;
+        /* renamed from: j */
+        private double f24710j;
+        /* renamed from: k */
+        private int f24711k;
+        /* renamed from: l */
+        private long f24712l;
+
+        public Info() {
+            if (SmotionPedometer.f24715l == null) {
+                throw new IllegalStateException("SmotionPedometer.Info : SmotionPedometer is not created. ");
+            } else if (!SmotionPedometer.f24714f) {
+                throw new IllegalStateException("SmotionPedometer.Info : This device is not supported. ");
+            }
+        }
+
+        /* renamed from: a */
+        static /* synthetic */ void m21627a(Info info, int i, long j) {
+            switch (i) {
+                case 0:
+                    info.f24701a = j;
+                    return;
+                case 1:
+                    info.f24702b = j;
+                    return;
+                case 2:
+                    info.f24703c = j;
+                    return;
+                case 3:
+                    info.f24704d = j;
+                    return;
+                case 4:
+                    info.f24705e = j;
+                    return;
+                case 5:
+                    info.f24706f = j;
+                    return;
+                case 6:
+                    info.f24707g = j;
+                    return;
+                default:
+                    return;
+            }
+        }
+
+        public double getCalorie() {
+            return this.f24710j;
+        }
+
+        public long getCount(int i) {
+            if (i < 0 || i > 6) {
+                throw new IllegalArgumentException("SmotionPedometer : type value is wrong. ");
+            }
+            switch (i) {
+                case 0:
+                    return this.f24701a;
+                case 1:
+                    return this.f24702b;
+                case 2:
+                    return this.f24703c;
+                case 3:
+                    return this.f24704d;
+                case 4:
+                    return this.f24705e;
+                case 5:
+                    return this.f24706f;
+                case 6:
+                    return this.f24707g;
+                default:
+                    return 0;
+            }
+        }
+
+        public double getDistance() {
+            return this.f24709i;
+        }
+
+        public double getSpeed() {
+            return this.f24708h;
+        }
+
+        public int getStatus() {
+            return this.f24711k;
+        }
+
+        public long getTimeStamp() {
+            return this.f24712l;
+        }
     }
-    if (paramSmotion.d == null) {
-      throw new IllegalArgumentException("SmotionPedometer : Smotion.initialize() is not called. ");
+
+    /* renamed from: com.samsung.android.sdk.motion.SmotionPedometer$a */
+    private static class C6072a extends SContextManager {
+        public C6072a(Looper looper) {
+            super(looper);
+        }
+
+        public final boolean registerListener(SContextListener sContextListener, int i) {
+            return super.registerListener(sContextListener, i);
+        }
+
+        public final void unregisterListener(SContextListener sContextListener) {
+            super.unregisterListener(sContextListener);
+        }
+
+        public final void unregisterListener(SContextListener sContextListener, int i) {
+            super.unregisterListener(sContextListener, i);
+        }
     }
-    if (!paramSmotion.a) {
-      throw new IllegalStateException("SmotionPedometer : Smotion.initialize() is not successful. ");
+
+    /* renamed from: com.samsung.android.sdk.motion.SmotionPedometer$b */
+    private class C6073b extends TimerTask {
+        /* renamed from: a */
+        private /* synthetic */ SmotionPedometer f24713a;
+
+        private C6073b(SmotionPedometer smotionPedometer) {
+            this.f24713a = smotionPedometer;
+        }
+
+        public final void run() {
+            this.f24713a.f24722g = true;
+        }
     }
-    this.b = new a(???);
-    boolean bool;
-    synchronized (n)
-    {
-      l = paramSmotion;
-      bool = l.isFeatureEnabled(1);
+
+    public SmotionPedometer(Looper looper, Smotion smotion) {
+        if (looper == null) {
+            throw new NullPointerException("SmotionPedometer : Looper is null. ");
+        } else if (smotion == null) {
+            throw new NullPointerException("SmotionPedometer : Smotion is null. ");
+        } else if (smotion.f24655d == null) {
+            throw new IllegalArgumentException("SmotionPedometer : Smotion.initialize() is not called. ");
+        } else if (smotion.f24654a) {
+            this.f24718b = new C6072a(looper);
+            synchronized (f24716n) {
+                f24715l = smotion;
+            }
+            boolean isFeatureEnabled = f24715l.isFeatureEnabled(1);
+            synchronized (f24716n) {
+                f24714f = isFeatureEnabled;
+            }
+            this.f24721e = (PowerManager) smotion.f24655d.getSystemService("power");
+            this.f24728o = ((WindowManager) smotion.f24655d.getSystemService("window")).getDefaultDisplay();
+            if (!f24714f) {
+                throw new IllegalStateException("SmotionPedometer : This device is not supported. ");
+            }
+        } else {
+            throw new IllegalStateException("SmotionPedometer : Smotion.initialize() is not successful. ");
+        }
     }
-    synchronized (n)
-    {
-      f = bool;
-      this.e = ((PowerManager)paramSmotion.d.getSystemService("power"));
-      this.o = ((WindowManager)paramSmotion.d.getSystemService("window")).getDefaultDisplay();
-      if (!f)
-      {
-        throw new IllegalStateException("SmotionPedometer : This device is not supported. ");
-        paramSmotion = finally;
-        throw paramSmotion;
-      }
+
+    /* renamed from: c */
+    private boolean m21637c() {
+        return VERSION.SDK_INT > 19 ? this.f24728o.getState() == 2 ? true : this.f24728o.getState() == 1 ? false : false : this.f24721e.isScreenOn();
     }
-  }
-  
-  private boolean c()
-  {
-    if (Build.VERSION.SDK_INT > 19)
-    {
-      if (this.o.getState() == 2) {
-        return true;
-      }
-      if (this.o.getState() == 1) {
-        return false;
-      }
+
+    /* renamed from: d */
+    private void m21638d() {
+        this.f24722g = false;
+        if (this.f24723h != null) {
+            this.f24723h.cancel();
+            this.f24723h = null;
+        }
     }
-    else
-    {
-      return this.e.isScreenOn();
+
+    public Info getInfo() {
+        if (this.f24719c == null) {
+            throw new IllegalStateException("SmotionPedometer : start() is not called. ");
+        }
+        if (!m21637c()) {
+            this.f24724i = false;
+            updateInfo();
+            if (this.f24723h == null) {
+                this.f24723h = new Timer();
+                this.f24723h.schedule(new C6073b(), this.f24726k);
+            }
+            while (!this.f24724i) {
+                if (this.f24722g) {
+                    Log.d("SmotionPedometer", "SmotionPedometer : getInfo() Time out !!");
+                    break;
+                }
+            }
+            this.f24724i = false;
+            m21638d();
+        }
+        return !this.f24725j ? null : this.f24717a;
     }
-    return false;
-  }
-  
-  private void d()
-  {
-    this.g = false;
-    if (this.h != null)
-    {
-      this.h.cancel();
-      this.h = null;
+
+    public void start(ChangeListener changeListener) {
+        if (changeListener == null) {
+            throw new IllegalArgumentException("SmotionPedometer : Listener is null. ");
+        } else if (!f24714f) {
+            throw new IllegalStateException("SmotionPedometer : This device is not supported. ");
+        } else if (this.f24719c == null) {
+            this.f24719c = changeListener;
+            this.f24717a = new Info();
+            this.f24720d = changeListener == null ? null : new C6077d(this, changeListener);
+            this.f24718b.registerListener(this.f24720d, 2);
+            this.f24727m = true;
+            updateInfo();
+            try {
+                f24715l.m21598a(f24715l.f24655d, "SmotionPedometer.start()");
+            } catch (SecurityException e) {
+                throw new SecurityException("com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY permission is required.");
+            }
+        } else {
+            throw new IllegalStateException("SmotionPedometer : ChangeListener is already registered. ");
+        }
     }
-  }
-  
-  public Info getInfo()
-  {
-    if (this.c == null) {
-      throw new IllegalStateException("SmotionPedometer : start() is not called. ");
+
+    public void stop() {
+        if (this.f24719c == null) {
+            throw new IllegalStateException("SmotionPedometer : start() is not called. ");
+        }
+        if (this.f24718b != null) {
+            this.f24718b.unregisterListener(this.f24720d, 2);
+        }
+        m21638d();
+        this.f24719c = null;
+        this.f24717a = null;
+        this.f24720d = null;
     }
-    if (!c())
-    {
-      this.i = false;
-      updateInfo();
-      if (this.h == null)
-      {
-        this.h = new Timer();
-        this.h.schedule(new b((byte)0), this.k);
-      }
-      if (!this.i) {
-        break label96;
-      }
+
+    public void updateInfo() {
+        if (this.f24720d == null) {
+            throw new IllegalStateException("SmotionPedometer : start() is not called. ");
+        } else if (!m21637c()) {
+            this.f24718b.requestToUpdate(this.f24720d, 2);
+        } else if (this.f24727m) {
+            this.f24718b.requestToUpdate(this.f24720d, 2);
+            this.f24727m = false;
+        } else if (this.f24717a != null) {
+            this.f24719c.onChanged(this.f24717a);
+        }
     }
-    for (;;)
-    {
-      this.i = false;
-      d();
-      if (this.j) {
-        break label114;
-      }
-      return null;
-      label96:
-      if (!this.g) {
-        break;
-      }
-      Log.d("SmotionPedometer", "SmotionPedometer : getInfo() Time out !!");
-    }
-    label114:
-    return this.a;
-  }
-  
-  public void start(ChangeListener paramChangeListener)
-  {
-    if (paramChangeListener == null) {
-      throw new IllegalArgumentException("SmotionPedometer : Listener is null. ");
-    }
-    if (!f) {
-      throw new IllegalStateException("SmotionPedometer : This device is not supported. ");
-    }
-    if (this.c == null)
-    {
-      this.c = paramChangeListener;
-      this.a = new Info();
-      if (paramChangeListener != null) {
-        break label111;
-      }
-    }
-    label111:
-    for (paramChangeListener = null;; paramChangeListener = new d(this, paramChangeListener))
-    {
-      this.d = paramChangeListener;
-      this.b.registerListener(this.d, 2);
-      this.m = true;
-      updateInfo();
-      try
-      {
-        l.a(l.d, "SmotionPedometer.start()");
-        return;
-      }
-      catch (SecurityException paramChangeListener)
-      {
-        throw new SecurityException("com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY permission is required.");
-      }
-      throw new IllegalStateException("SmotionPedometer : ChangeListener is already registered. ");
-    }
-  }
-  
-  public void stop()
-  {
-    if (this.c == null) {
-      throw new IllegalStateException("SmotionPedometer : start() is not called. ");
-    }
-    if (this.b != null) {
-      this.b.unregisterListener(this.d, 2);
-    }
-    d();
-    this.c = null;
-    this.a = null;
-    this.d = null;
-  }
-  
-  public void updateInfo()
-  {
-    if (this.d == null) {
-      throw new IllegalStateException("SmotionPedometer : start() is not called. ");
-    }
-    if (c())
-    {
-      if (this.m)
-      {
-        this.b.requestToUpdate(this.d, 2);
-        this.m = false;
-      }
-      while (this.a == null) {
-        return;
-      }
-      this.c.onChanged(this.a);
-      return;
-    }
-    this.b.requestToUpdate(this.d, 2);
-  }
-  
-  public static abstract interface ChangeListener
-  {
-    public abstract void onChanged(SmotionPedometer.Info paramInfo);
-  }
-  
-  public static class Info
-  {
-    public static final int COUNT_RUN_DOWN = 5;
-    public static final int COUNT_RUN_FLAT = 6;
-    public static final int COUNT_RUN_UP = 4;
-    public static final int COUNT_TOTAL = 0;
-    public static final int COUNT_WALK_DOWN = 2;
-    public static final int COUNT_WALK_FLAT = 3;
-    public static final int COUNT_WALK_UP = 1;
-    public static final int STATUS_RUN_DOWN = 5;
-    public static final int STATUS_RUN_FLAT = 6;
-    public static final int STATUS_RUN_UP = 4;
-    public static final int STATUS_STOP = 0;
-    public static final int STATUS_UNKNOWN = -1;
-    public static final int STATUS_WALK_DOWN = 2;
-    public static final int STATUS_WALK_FLAT = 3;
-    public static final int STATUS_WALK_UP = 1;
-    private long a;
-    private long b;
-    private long c;
-    private long d;
-    private long e;
-    private long f;
-    private long g;
-    private double h;
-    private double i;
-    private double j;
-    private int k;
-    private long l;
-    
-    public Info()
-    {
-      if (SmotionPedometer.a() == null) {
-        throw new IllegalStateException("SmotionPedometer.Info : SmotionPedometer is not created. ");
-      }
-      if (!SmotionPedometer.b()) {
-        throw new IllegalStateException("SmotionPedometer.Info : This device is not supported. ");
-      }
-    }
-    
-    public double getCalorie()
-    {
-      return this.j;
-    }
-    
-    public long getCount(int paramInt)
-    {
-      if ((paramInt < 0) || (paramInt > 6)) {
-        throw new IllegalArgumentException("SmotionPedometer : type value is wrong. ");
-      }
-      switch (paramInt)
-      {
-      default: 
-        return 0L;
-      case 0: 
-        return this.a;
-      case 1: 
-        return this.b;
-      case 2: 
-        return this.c;
-      case 3: 
-        return this.d;
-      case 4: 
-        return this.e;
-      case 5: 
-        return this.f;
-      }
-      return this.g;
-    }
-    
-    public double getDistance()
-    {
-      return this.i;
-    }
-    
-    public double getSpeed()
-    {
-      return this.h;
-    }
-    
-    public int getStatus()
-    {
-      return this.k;
-    }
-    
-    public long getTimeStamp()
-    {
-      return this.l;
-    }
-  }
-  
-  private static final class a
-    extends SContextManager
-  {
-    public a(Looper paramLooper)
-    {
-      super();
-    }
-    
-    public final boolean registerListener(SContextListener paramSContextListener, int paramInt)
-    {
-      return super.registerListener(paramSContextListener, paramInt);
-    }
-    
-    public final void unregisterListener(SContextListener paramSContextListener)
-    {
-      super.unregisterListener(paramSContextListener);
-    }
-    
-    public final void unregisterListener(SContextListener paramSContextListener, int paramInt)
-    {
-      super.unregisterListener(paramSContextListener, paramInt);
-    }
-  }
-  
-  private final class b
-    extends TimerTask
-  {
-    private b() {}
-    
-    public final void run()
-    {
-      SmotionPedometer.a(SmotionPedometer.this, true);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/samsung/android/sdk/motion/SmotionPedometer.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

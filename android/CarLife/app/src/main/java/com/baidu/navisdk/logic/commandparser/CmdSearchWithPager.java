@@ -1,13 +1,14 @@
 package com.baidu.navisdk.logic.commandparser;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
 import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import com.baidu.navisdk.jni.nativeif.JNISearchControl;
 import com.baidu.navisdk.logic.CommandBase;
+import com.baidu.navisdk.logic.CommandConst;
 import com.baidu.navisdk.logic.CommandResult;
 import com.baidu.navisdk.logic.ReqData;
 import com.baidu.navisdk.logic.RspData;
@@ -19,469 +20,398 @@ import com.baidu.navisdk.model.modelfactory.NaviDataEngine;
 import com.baidu.navisdk.model.modelfactory.PoiSearchModel;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.statistic.SearchStatItem;
-import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class CmdSearchWithPager
-  extends CommandBase
-  implements JNISearchConst
-{
-  SearchPoiPager mSearchPoiPager;
-  
-  private Bundle getNameSearchByKeyBundle(SearchPoiPager paramSearchPoiPager)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putString("Name", paramSearchPoiPager.getSearchKey().toUpperCase(Locale.getDefault()));
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramSearchPoiPager.getDistrct()));
-    int i = paramSearchPoiPager.getCountPerPager();
-    if (paramSearchPoiPager.getNetMode() == 1) {}
-    for (i = Math.min(i, 20);; i = Math.min(i, 100))
-    {
-      localBundle.putInt("PoiCount", i);
-      localBundle.putInt("PoiPagerNum", paramSearchPoiPager.getPagerNum());
-      return localBundle;
+public class CmdSearchWithPager extends CommandBase implements JNISearchConst {
+    SearchPoiPager mSearchPoiPager;
+
+    public static void packetParams(ReqData reqdata, SearchPoiPager searchPoiPager) {
+        reqdata.mParams.put(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_PAGER, searchPoiPager);
     }
-  }
-  
-  private Bundle getNameSearchByKeyWithRouteBundle(SearchPoiPager paramSearchPoiPager)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putString("Name", paramSearchPoiPager.getSearchKey().toUpperCase(Locale.getDefault()));
-    localBundle.putInt("Mode", paramSearchPoiPager.getSearchMode());
-    localBundle.putInt("Range", paramSearchPoiPager.getSearchRange());
-    int j = paramSearchPoiPager.getSortType();
-    if (j >= 1)
-    {
-      i = j;
-      if (j <= 3) {}
+
+    protected void unpacketParams(ReqData reqdata) {
+        this.mSearchPoiPager = (SearchPoiPager) reqdata.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_PAGER);
     }
-    else
-    {
-      i = 1;
+
+    protected CommandResult exec() {
+        boolean z;
+        boolean z2 = true;
+        SearchStatItem statItem = SearchStatItem.getInstance();
+        statItem.init();
+        long startTime = SystemClock.elapsedRealtime();
+        int ret = searchWithPager(this.mSearchPoiPager);
+        if (ret >= 0) {
+            this.mRet.setSuccess();
+        } else {
+            this.mRet.set(ret);
+        }
+        if (ret >= 0) {
+            z = true;
+        } else {
+            z = false;
+        }
+        statItem.mSearchSucc = z;
+        int netMode = BNPoiSearcher.getInstance().getSearchNetworkMode();
+        statItem.setSearchType(netMode);
+        statItem.setResponseTime(SystemClock.elapsedRealtime() - startTime);
+        statItem.onEvent();
+        BNPoiSearcher instance = BNPoiSearcher.getInstance();
+        if (ret < 0) {
+            z2 = false;
+        }
+        instance.mtjStatSearch(netMode, z2);
+        return this.mRet;
     }
-    localBundle.putInt("Sort", i);
-    int i = paramSearchPoiPager.getCountPerPager();
-    if (paramSearchPoiPager.getNetMode() == 1) {}
-    for (i = Math.min(i, 30);; i = Math.min(i, 100))
-    {
-      localBundle.putInt("PoiCount", i);
-      localBundle.putInt("PoiPagerNum", paramSearchPoiPager.getPagerNum());
-      return localBundle;
+
+    protected void handleSuccess() {
+        PoiSearchModel poiSearchModel = (PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH);
+        List<SearchPoi> poiList = this.mSearchPoiPager.getPoiList();
+        if (poiSearchModel != null && poiList != null && poiList.size() > 0) {
+            poiSearchModel.addSearchPoiPager(this.mSearchPoiPager);
+        }
+        if (!this.mReqData.mHasMsgSent) {
+            Message msg = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
+            msg.arg1 = 0;
+            msg.obj = new RspData(this.mReqData, this.mSearchPoiPager);
+            msg.sendToTarget();
+            this.mReqData.mHasMsgSent = true;
+        }
     }
-  }
-  
-  private Bundle getSpaceSearchByCatalogBundle(SearchPoiPager paramSearchPoiPager)
-  {
-    SearchCircle localSearchCircle = paramSearchPoiPager.getSearchCircle();
-    int i = paramSearchPoiPager.getNetMode();
-    DistrictInfo localDistrictInfo = JNISearchControl.sInstance.getDistrictByPoint(localSearchCircle.mCenter, i);
-    if ((localDistrictInfo == null) || ((localDistrictInfo.mType != 2) && (localDistrictInfo.mType != 3))) {
-      return null;
+
+    public int searchWithPager(SearchPoiPager searchPoiPager) {
+        if (searchPoiPager == null || !searchPoiPager.isVail()) {
+            return -1;
+        }
+        Bundle input = null;
+        switch (searchPoiPager.getSearchType()) {
+            case 1:
+                input = getNameSearchByKeyBundle(searchPoiPager);
+                break;
+            case 2:
+                input = getSpaceSearchByKeyBundle(searchPoiPager);
+                break;
+            case 3:
+                input = getSpaceSearchByKeyWithDistrictIdBundle(searchPoiPager);
+                break;
+            case 4:
+                input = getSpaceSearchByCatalogBundle(searchPoiPager);
+                break;
+            case 5:
+                input = getSpaceSearchByCatalogWithDistrictIdBundle(searchPoiPager);
+                break;
+            case 6:
+                input = getNameSearchByKeyWithRouteBundle(searchPoiPager);
+                break;
+        }
+        if (input == null) {
+            return -3;
+        }
+        ArrayList<Bundle> outputList = new ArrayList();
+        int ret = 0;
+        switch (searchPoiPager.getSearchType()) {
+            case 1:
+                ret = JNISearchControl.sInstance.searchByNameWithPager(input, outputList);
+                break;
+            case 2:
+                ret = JNISearchControl.sInstance.searchByNameWithPager(input, outputList);
+                break;
+            case 3:
+                ret = JNISearchControl.sInstance.searchByNameWithPager(input, outputList);
+                break;
+            case 4:
+                ret = JNISearchControl.sInstance.searchByCircleWithPager(input, outputList);
+                break;
+            case 5:
+                ret = JNISearchControl.sInstance.searchByCircleWithPager(input, outputList);
+                break;
+            case 6:
+                ret = JNISearchControl.sInstance.searchByKeyInRouteWithPager(input, outputList);
+                break;
+        }
+        LogUtil.m15791e("", "searchByName() ret: " + ret);
+        LogUtil.m15791e("", "outputList count: " + outputList.size());
+        if (ret < 0) {
+            return -4;
+        }
+        int outputSize = outputList.size();
+        for (int i = 0; i < outputSize; i++) {
+            SearchPoi poi = JNISearchControl.sInstance.parsePoiBundle((Bundle) outputList.get(i));
+            if (poi != null) {
+                searchPoiPager.addSearchPoi(poi);
+            }
+        }
+        boolean isLastPager = false;
+        if (outputSize > 0) {
+            if (((Bundle) outputList.get(0)).getInt("IsLastPager", 0) > 0) {
+                isLastPager = true;
+            } else {
+                isLastPager = false;
+            }
+        }
+        searchPoiPager.setLastPager(isLastPager);
+        return outputSize;
     }
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("CatalogId", paramSearchPoiPager.getCatalogId());
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(localDistrictInfo));
-    localBundle.putInt("HasCircle", 1);
-    localBundle.putInt("CenterX", localSearchCircle.mCenter.getLongitudeE6());
-    localBundle.putInt("CenterY", localSearchCircle.mCenter.getLatitudeE6());
-    localBundle.putInt("Radius", localSearchCircle.mRadius);
-    int j = paramSearchPoiPager.getCountPerPager();
-    if (i == 1) {}
-    for (i = Math.min(j, 20);; i = Math.min(j, 100))
-    {
-      localBundle.putInt("PoiCount", i);
-      localBundle.putInt("PoiPagerNum", paramSearchPoiPager.getPagerNum());
-      return localBundle;
+
+    private Bundle getNameSearchByKeyBundle(SearchPoiPager searchPoiPager) {
+        Bundle input = new Bundle();
+        input.putString("Name", searchPoiPager.getSearchKey().toUpperCase(Locale.getDefault()));
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(searchPoiPager.getDistrct()));
+        int count = searchPoiPager.getCountPerPager();
+        if (searchPoiPager.getNetMode() == 1) {
+            count = Math.min(count, 20);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, searchPoiPager.getPagerNum());
+        return input;
     }
-  }
-  
-  private Bundle getSpaceSearchByCatalogWithDistrictIdBundle(SearchPoiPager paramSearchPoiPager)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("CatalogId", paramSearchPoiPager.getCatalogId());
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramSearchPoiPager.getDistrct()));
-    localBundle.putInt("HasCircle", 1);
-    SearchCircle localSearchCircle = paramSearchPoiPager.getSearchCircle();
-    localBundle.putInt("CenterX", localSearchCircle.mCenter.getLongitudeE6());
-    localBundle.putInt("CenterY", localSearchCircle.mCenter.getLatitudeE6());
-    localBundle.putInt("Radius", localSearchCircle.mRadius);
-    int i = paramSearchPoiPager.getCountPerPager();
-    if (paramSearchPoiPager.getNetMode() == 1) {}
-    for (i = Math.min(i, 20);; i = Math.min(i, 100))
-    {
-      localBundle.putInt("PoiCount", i);
-      localBundle.putInt("PoiPagerNum", paramSearchPoiPager.getPagerNum());
-      return localBundle;
+
+    private Bundle getSpaceSearchByKeyWithDistrictIdBundle(SearchPoiPager searchPoiPager) {
+        Bundle input = new Bundle();
+        input.putString("Name", searchPoiPager.getSearchKey().toUpperCase(Locale.getDefault()));
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(searchPoiPager.getDistrct()));
+        input.putInt("HasCircle", 1);
+        SearchCircle circle = searchPoiPager.getSearchCircle();
+        input.putInt("CenterX", circle.mCenter.getLongitudeE6());
+        input.putInt("CenterY", circle.mCenter.getLatitudeE6());
+        input.putInt("Radius", circle.mRadius);
+        int count = searchPoiPager.getCountPerPager();
+        if (searchPoiPager.getNetMode() == 1) {
+            count = Math.min(count, 20);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, searchPoiPager.getPagerNum());
+        return input;
     }
-  }
-  
-  private Bundle getSpaceSearchByKeyBundle(SearchPoiPager paramSearchPoiPager)
-  {
-    Bundle localBundle = new Bundle();
-    SearchCircle localSearchCircle = paramSearchPoiPager.getSearchCircle();
-    int i = paramSearchPoiPager.getNetMode();
-    DistrictInfo localDistrictInfo = JNISearchControl.sInstance.getDistrictByPoint(localSearchCircle.mCenter, i);
-    if ((localDistrictInfo == null) || ((localDistrictInfo.mType != 2) && (localDistrictInfo.mType != 3))) {
-      return null;
+
+    private Bundle getSpaceSearchByKeyBundle(SearchPoiPager searchPoiPager) {
+        Bundle input = new Bundle();
+        SearchCircle circle = searchPoiPager.getSearchCircle();
+        int netMode = searchPoiPager.getNetMode();
+        DistrictInfo district = JNISearchControl.sInstance.getDistrictByPoint(circle.mCenter, netMode);
+        if (district == null || (district.mType != 2 && district.mType != 3)) {
+            return null;
+        }
+        input.putString("Name", searchPoiPager.getSearchKey().toUpperCase(Locale.getDefault()));
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(district));
+        input.putInt("HasCircle", 1);
+        input.putInt("CenterX", circle.mCenter.getLongitudeE6());
+        input.putInt("CenterY", circle.mCenter.getLatitudeE6());
+        input.putInt("Radius", circle.mRadius);
+        int count = searchPoiPager.getCountPerPager();
+        if (netMode == 1) {
+            count = Math.min(count, 20);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, searchPoiPager.getPagerNum());
+        return input;
     }
-    localBundle.putString("Name", paramSearchPoiPager.getSearchKey().toUpperCase(Locale.getDefault()));
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(localDistrictInfo));
-    localBundle.putInt("HasCircle", 1);
-    localBundle.putInt("CenterX", localSearchCircle.mCenter.getLongitudeE6());
-    localBundle.putInt("CenterY", localSearchCircle.mCenter.getLatitudeE6());
-    localBundle.putInt("Radius", localSearchCircle.mRadius);
-    int j = paramSearchPoiPager.getCountPerPager();
-    if (i == 1) {}
-    for (i = Math.min(j, 20);; i = Math.min(j, 100))
-    {
-      localBundle.putInt("PoiCount", i);
-      localBundle.putInt("PoiPagerNum", paramSearchPoiPager.getPagerNum());
-      return localBundle;
+
+    private Bundle getNameSearchByKeyWithRouteBundle(SearchPoiPager searchPoiPager) {
+        Bundle input = new Bundle();
+        input.putString("Name", searchPoiPager.getSearchKey().toUpperCase(Locale.getDefault()));
+        input.putInt(JNISearchConst.JNI_MODE, searchPoiPager.getSearchMode());
+        input.putInt("Range", searchPoiPager.getSearchRange());
+        int sortType = searchPoiPager.getSortType();
+        if (sortType < 1 || sortType > 3) {
+            sortType = 1;
+        }
+        input.putInt(JNISearchConst.JNI_SORT, sortType);
+        int count = searchPoiPager.getCountPerPager();
+        if (searchPoiPager.getNetMode() == 1) {
+            count = Math.min(count, 30);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, searchPoiPager.getPagerNum());
+        return input;
     }
-  }
-  
-  private Bundle getSpaceSearchByKeyWithDistrictIdBundle(SearchPoiPager paramSearchPoiPager)
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putString("Name", paramSearchPoiPager.getSearchKey().toUpperCase(Locale.getDefault()));
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramSearchPoiPager.getDistrct()));
-    localBundle.putInt("HasCircle", 1);
-    SearchCircle localSearchCircle = paramSearchPoiPager.getSearchCircle();
-    localBundle.putInt("CenterX", localSearchCircle.mCenter.getLongitudeE6());
-    localBundle.putInt("CenterY", localSearchCircle.mCenter.getLatitudeE6());
-    localBundle.putInt("Radius", localSearchCircle.mRadius);
-    int i = paramSearchPoiPager.getCountPerPager();
-    if (paramSearchPoiPager.getNetMode() == 1) {}
-    for (i = Math.min(i, 20);; i = Math.min(i, 100))
-    {
-      localBundle.putInt("PoiCount", i);
-      localBundle.putInt("PoiPagerNum", paramSearchPoiPager.getPagerNum());
-      return localBundle;
+
+    private Bundle getSpaceSearchByCatalogWithDistrictIdBundle(SearchPoiPager searchPoiPager) {
+        Bundle input = new Bundle();
+        input.putInt("CatalogId", searchPoiPager.getCatalogId());
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(searchPoiPager.getDistrct()));
+        input.putInt("HasCircle", 1);
+        SearchCircle circle = searchPoiPager.getSearchCircle();
+        input.putInt("CenterX", circle.mCenter.getLongitudeE6());
+        input.putInt("CenterY", circle.mCenter.getLatitudeE6());
+        input.putInt("Radius", circle.mRadius);
+        int count = searchPoiPager.getCountPerPager();
+        if (searchPoiPager.getNetMode() == 1) {
+            count = Math.min(count, 20);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, searchPoiPager.getPagerNum());
+        return input;
     }
-  }
-  
-  public static void packetParams(ReqData paramReqData, SearchPoiPager paramSearchPoiPager)
-  {
-    paramReqData.mParams.put("param.search.pager", paramSearchPoiPager);
-  }
-  
-  protected CommandResult exec()
-  {
-    boolean bool2 = true;
-    Object localObject = SearchStatItem.getInstance();
-    ((SearchStatItem)localObject).init();
-    long l = SystemClock.elapsedRealtime();
-    int i = searchWithPager(this.mSearchPoiPager);
-    label44:
-    int j;
-    if (i >= 0)
-    {
-      this.mRet.setSuccess();
-      if (i < 0) {
-        break label114;
-      }
-      bool1 = true;
-      ((SearchStatItem)localObject).mSearchSucc = bool1;
-      j = BNPoiSearcher.getInstance().getSearchNetworkMode();
-      ((SearchStatItem)localObject).setSearchType(j);
-      ((SearchStatItem)localObject).setResponseTime(SystemClock.elapsedRealtime() - l);
-      ((SearchStatItem)localObject).onEvent();
-      localObject = BNPoiSearcher.getInstance();
-      if (i < 0) {
-        break label119;
-      }
+
+    private Bundle getSpaceSearchByCatalogBundle(SearchPoiPager searchPoiPager) {
+        SearchCircle circle = searchPoiPager.getSearchCircle();
+        int netMode = searchPoiPager.getNetMode();
+        DistrictInfo district = JNISearchControl.sInstance.getDistrictByPoint(circle.mCenter, netMode);
+        if (district == null || (district.mType != 2 && district.mType != 3)) {
+            return null;
+        }
+        Bundle input = new Bundle();
+        input.putInt("CatalogId", searchPoiPager.getCatalogId());
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(district));
+        input.putInt("HasCircle", 1);
+        input.putInt("CenterX", circle.mCenter.getLongitudeE6());
+        input.putInt("CenterY", circle.mCenter.getLatitudeE6());
+        input.putInt("Radius", circle.mRadius);
+        int count = searchPoiPager.getCountPerPager();
+        if (netMode == 1) {
+            count = Math.min(count, 20);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, searchPoiPager.getPagerNum());
+        return input;
     }
-    label114:
-    label119:
-    for (boolean bool1 = bool2;; bool1 = false)
-    {
-      ((BNPoiSearcher)localObject).mtjStatSearch(j, bool1);
-      return this.mRet;
-      this.mRet.set(i);
-      break;
-      bool1 = false;
-      break label44;
+
+    public int spaceSearchByKeyWithPager(String key, int districtId, SearchCircle circle, int poiCount, int netMode, SearchPoiPager searchPoiPager, int pagerNum) {
+        if (key == null || circle == null || searchPoiPager == null) {
+            return -1;
+        }
+        if (key.length() <= 0) {
+            return -2;
+        }
+        if (circle.mCenter == null) {
+            return -3;
+        }
+        Bundle input = new Bundle();
+        input.putString("Name", key.toUpperCase(Locale.getDefault()));
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(districtId));
+        input.putInt("HasCircle", 1);
+        input.putInt("CenterX", circle.mCenter.getLongitudeE6());
+        input.putInt("CenterY", circle.mCenter.getLatitudeE6());
+        input.putInt("Radius", circle.mRadius);
+        int count = poiCount;
+        if (netMode == 1) {
+            count = Math.min(count, 20);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, pagerNum);
+        ArrayList<Bundle> outputList = new ArrayList();
+        int ret = JNISearchControl.sInstance.searchByNameWithPager(input, outputList);
+        LogUtil.m15791e("", "searchByName() ret: " + ret);
+        LogUtil.m15791e("", "outputList count: " + outputList.size());
+        if (ret < 0) {
+            return -5;
+        }
+        int outputSize = outputList.size();
+        for (int i = 0; i < outputSize; i++) {
+            SearchPoi poi = JNISearchControl.sInstance.parsePoiBundle((Bundle) outputList.get(i));
+            if (poi != null) {
+                searchPoiPager.addSearchPoi(poi);
+            }
+        }
+        boolean isLastPager = false;
+        if (outputSize > 0) {
+            isLastPager = ((Bundle) outputList.get(0)).getInt("IsLastPager", 0) > 0;
+        }
+        searchPoiPager.setLastPager(isLastPager);
+        return outputSize;
     }
-  }
-  
-  protected void handleSuccess()
-  {
-    Object localObject = (PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel");
-    ArrayList localArrayList = this.mSearchPoiPager.getPoiList();
-    if ((localObject != null) && (localArrayList != null) && (localArrayList.size() > 0)) {
-      ((PoiSearchModel)localObject).addSearchPoiPager(this.mSearchPoiPager);
+
+    public int spaceSearchByKeyWithPager(String key, SearchCircle circle, int poiCount, int netMode, SearchPoiPager searchPoiPager, int pagerNum) {
+        if (key == null || circle == null || searchPoiPager == null) {
+            return -1;
+        }
+        if (key.length() <= 0) {
+            return -2;
+        }
+        if (circle.mCenter == null) {
+            return -3;
+        }
+        DistrictInfo district = JNISearchControl.sInstance.getDistrictByPoint(circle.mCenter, netMode);
+        if (district == null || (district.mType != 2 && district.mType != 3)) {
+            return -5;
+        }
+        Bundle input = new Bundle();
+        input.putString("Name", key.toUpperCase(Locale.getDefault()));
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(district.mId));
+        input.putInt("HasCircle", 1);
+        input.putInt("CenterX", circle.mCenter.getLongitudeE6());
+        input.putInt("CenterY", circle.mCenter.getLatitudeE6());
+        input.putInt("Radius", circle.mRadius);
+        int count = poiCount;
+        if (netMode == 1) {
+            count = Math.min(count, 20);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, pagerNum);
+        ArrayList<Bundle> outputList = new ArrayList();
+        int ret = JNISearchControl.sInstance.searchByNameWithPager(input, outputList);
+        LogUtil.m15791e("", "searchByName() ret: " + ret);
+        LogUtil.m15791e("", "outputList count: " + outputList.size());
+        if (ret < 0) {
+            return -6;
+        }
+        int outputSize = outputList.size();
+        for (int i = 0; i < outputSize; i++) {
+            SearchPoi poi = JNISearchControl.sInstance.parsePoiBundle((Bundle) outputList.get(i));
+            if (poi != null) {
+                searchPoiPager.addSearchPoi(poi);
+            }
+        }
+        boolean isLastPager = false;
+        if (outputSize > 0) {
+            isLastPager = ((Bundle) outputList.get(0)).getInt("IsLastPager", 0) > 0;
+        }
+        searchPoiPager.setLastPager(isLastPager);
+        return outputSize;
     }
-    for (;;)
-    {
-      if (!this.mReqData.mHasMsgSent)
-      {
-        localObject = this.mReqData.mHandler.obtainMessage(this.mReqData.mHandlerMsgWhat);
-        ((Message)localObject).arg1 = 0;
-        ((Message)localObject).obj = new RspData(this.mReqData, this.mSearchPoiPager);
-        ((Message)localObject).sendToTarget();
-        this.mReqData.mHasMsgSent = true;
-      }
-      return;
+
+    public int spaceSearchByCatalogWith(int catalogId, int districtId, SearchCircle circle, int poiCount, int netMode, ArrayList<SearchPoi> poiList, int pagerNum) {
+        if (circle == null || poiList == null) {
+            return -1;
+        }
+        if (circle.mCenter == null) {
+            return -2;
+        }
+        Bundle input = new Bundle();
+        input.putInt("CatalogId", catalogId);
+        input.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(districtId));
+        input.putInt("HasCircle", 1);
+        input.putInt("CenterX", circle.mCenter.getLongitudeE6());
+        input.putInt("CenterY", circle.mCenter.getLatitudeE6());
+        input.putInt("Radius", circle.mRadius);
+        int count = poiCount;
+        if (netMode == 1) {
+            count = Math.min(count, 20);
+        } else {
+            count = Math.min(count, 100);
+        }
+        input.putInt("PoiCount", count);
+        input.putInt(JNISearchConst.JNI_POI_PAGERNUM, pagerNum);
+        ArrayList<Bundle> outputList = new ArrayList();
+        int ret = JNISearchControl.sInstance.searchByCircle(input, outputList);
+        LogUtil.m15791e("", "searchByCircle() ret: " + ret);
+        LogUtil.m15791e("", "outputList count: " + outputList.size());
+        if (ret < 0) {
+            return -4;
+        }
+        int outputSize = outputList.size();
+        for (int i = 0; i < outputSize; i++) {
+            ArrayList<SearchPoi> arrayList = poiList;
+            arrayList.add(JNISearchControl.sInstance.parsePoiBundle((Bundle) outputList.get(i)));
+        }
+        return outputSize;
     }
-  }
-  
-  public int searchWithPager(SearchPoiPager paramSearchPoiPager)
-  {
-    if ((paramSearchPoiPager == null) || (!paramSearchPoiPager.isVail())) {
-      return -1;
-    }
-    Object localObject = null;
-    switch (paramSearchPoiPager.getSearchType())
-    {
-    }
-    while (localObject == null)
-    {
-      return -3;
-      localObject = getNameSearchByKeyBundle(paramSearchPoiPager);
-      continue;
-      localObject = getSpaceSearchByKeyBundle(paramSearchPoiPager);
-      continue;
-      localObject = getSpaceSearchByKeyWithDistrictIdBundle(paramSearchPoiPager);
-      continue;
-      localObject = getSpaceSearchByCatalogBundle(paramSearchPoiPager);
-      continue;
-      localObject = getSpaceSearchByCatalogWithDistrictIdBundle(paramSearchPoiPager);
-      continue;
-      localObject = getNameSearchByKeyWithRouteBundle(paramSearchPoiPager);
-    }
-    ArrayList localArrayList = new ArrayList();
-    int i = 0;
-    switch (paramSearchPoiPager.getSearchType())
-    {
-    }
-    for (;;)
-    {
-      LogUtil.e("", "searchByName() ret: " + i);
-      LogUtil.e("", "outputList count: " + localArrayList.size());
-      if (i >= 0) {
-        break;
-      }
-      return -4;
-      i = JNISearchControl.sInstance.searchByNameWithPager((Bundle)localObject, localArrayList);
-      continue;
-      i = JNISearchControl.sInstance.searchByNameWithPager((Bundle)localObject, localArrayList);
-      continue;
-      i = JNISearchControl.sInstance.searchByNameWithPager((Bundle)localObject, localArrayList);
-      continue;
-      i = JNISearchControl.sInstance.searchByCircleWithPager((Bundle)localObject, localArrayList);
-      continue;
-      i = JNISearchControl.sInstance.searchByCircleWithPager((Bundle)localObject, localArrayList);
-      continue;
-      i = JNISearchControl.sInstance.searchByKeyInRouteWithPager((Bundle)localObject, localArrayList);
-    }
-    int j = localArrayList.size();
-    i = 0;
-    if (i < j)
-    {
-      localObject = (Bundle)localArrayList.get(i);
-      localObject = JNISearchControl.sInstance.parsePoiBundle((Bundle)localObject);
-      if (localObject == null) {}
-      for (;;)
-      {
-        i += 1;
-        break;
-        paramSearchPoiPager.addSearchPoi(localObject);
-      }
-    }
-    boolean bool = false;
-    if (j > 0) {
-      if (((Bundle)localArrayList.get(0)).getInt("IsLastPager", 0) <= 0) {
-        break label419;
-      }
-    }
-    label419:
-    for (bool = true;; bool = false)
-    {
-      paramSearchPoiPager.setLastPager(bool);
-      return j;
-    }
-  }
-  
-  public int spaceSearchByCatalogWith(int paramInt1, int paramInt2, SearchCircle paramSearchCircle, int paramInt3, int paramInt4, ArrayList<SearchPoi> paramArrayList, int paramInt5)
-  {
-    if ((paramSearchCircle == null) || (paramArrayList == null))
-    {
-      paramInt1 = -1;
-      return paramInt1;
-    }
-    if (paramSearchCircle.mCenter == null) {
-      return -2;
-    }
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("CatalogId", paramInt1);
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramInt2));
-    localBundle.putInt("HasCircle", 1);
-    localBundle.putInt("CenterX", paramSearchCircle.mCenter.getLongitudeE6());
-    localBundle.putInt("CenterY", paramSearchCircle.mCenter.getLatitudeE6());
-    localBundle.putInt("Radius", paramSearchCircle.mRadius);
-    if (paramInt4 == 1) {}
-    for (paramInt1 = Math.min(paramInt3, 20);; paramInt1 = Math.min(paramInt3, 100))
-    {
-      localBundle.putInt("PoiCount", paramInt1);
-      localBundle.putInt("PoiPagerNum", paramInt5);
-      paramSearchCircle = new ArrayList();
-      paramInt1 = JNISearchControl.sInstance.searchByCircle(localBundle, paramSearchCircle);
-      LogUtil.e("", "searchByCircle() ret: " + paramInt1);
-      LogUtil.e("", "outputList count: " + paramSearchCircle.size());
-      if (paramInt1 >= 0) {
-        break;
-      }
-      return -4;
-    }
-    paramInt3 = paramSearchCircle.size();
-    paramInt2 = 0;
-    for (;;)
-    {
-      paramInt1 = paramInt3;
-      if (paramInt2 >= paramInt3) {
-        break;
-      }
-      localBundle = (Bundle)paramSearchCircle.get(paramInt2);
-      paramArrayList.add(JNISearchControl.sInstance.parsePoiBundle(localBundle));
-      paramInt2 += 1;
-    }
-  }
-  
-  public int spaceSearchByKeyWithPager(String paramString, int paramInt1, SearchCircle paramSearchCircle, int paramInt2, int paramInt3, SearchPoiPager paramSearchPoiPager, int paramInt4)
-  {
-    if ((paramString == null) || (paramSearchCircle == null) || (paramSearchPoiPager == null)) {
-      return -1;
-    }
-    if (paramString.length() <= 0) {
-      return -2;
-    }
-    if (paramSearchCircle.mCenter == null) {
-      return -3;
-    }
-    Bundle localBundle = new Bundle();
-    localBundle.putString("Name", paramString.toUpperCase(Locale.getDefault()));
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(paramInt1));
-    localBundle.putInt("HasCircle", 1);
-    localBundle.putInt("CenterX", paramSearchCircle.mCenter.getLongitudeE6());
-    localBundle.putInt("CenterY", paramSearchCircle.mCenter.getLatitudeE6());
-    localBundle.putInt("Radius", paramSearchCircle.mRadius);
-    if (paramInt3 == 1) {}
-    for (paramInt1 = Math.min(paramInt2, 20);; paramInt1 = Math.min(paramInt2, 100))
-    {
-      localBundle.putInt("PoiCount", paramInt1);
-      localBundle.putInt("PoiPagerNum", paramInt4);
-      paramString = new ArrayList();
-      paramInt1 = JNISearchControl.sInstance.searchByNameWithPager(localBundle, paramString);
-      LogUtil.e("", "searchByName() ret: " + paramInt1);
-      LogUtil.e("", "outputList count: " + paramString.size());
-      if (paramInt1 >= 0) {
-        break;
-      }
-      return -5;
-    }
-    paramInt2 = paramString.size();
-    paramInt1 = 0;
-    if (paramInt1 < paramInt2)
-    {
-      paramSearchCircle = (Bundle)paramString.get(paramInt1);
-      paramSearchCircle = JNISearchControl.sInstance.parsePoiBundle(paramSearchCircle);
-      if (paramSearchCircle == null) {}
-      for (;;)
-      {
-        paramInt1 += 1;
-        break;
-        paramSearchPoiPager.addSearchPoi(paramSearchCircle);
-      }
-    }
-    boolean bool = false;
-    if (paramInt2 > 0) {
-      if (((Bundle)paramString.get(0)).getInt("IsLastPager", 0) <= 0) {
-        break label331;
-      }
-    }
-    label331:
-    for (bool = true;; bool = false)
-    {
-      paramSearchPoiPager.setLastPager(bool);
-      return paramInt2;
-    }
-  }
-  
-  public int spaceSearchByKeyWithPager(String paramString, SearchCircle paramSearchCircle, int paramInt1, int paramInt2, SearchPoiPager paramSearchPoiPager, int paramInt3)
-  {
-    if ((paramString == null) || (paramSearchCircle == null) || (paramSearchPoiPager == null)) {
-      return -1;
-    }
-    if (paramString.length() <= 0) {
-      return -2;
-    }
-    if (paramSearchCircle.mCenter == null) {
-      return -3;
-    }
-    DistrictInfo localDistrictInfo = JNISearchControl.sInstance.getDistrictByPoint(paramSearchCircle.mCenter, paramInt2);
-    if ((localDistrictInfo == null) || ((localDistrictInfo.mType != 2) && (localDistrictInfo.mType != 3))) {
-      return -5;
-    }
-    Bundle localBundle = new Bundle();
-    localBundle.putString("Name", paramString.toUpperCase(Locale.getDefault()));
-    localBundle.putInt("DistrictId", JNISearchControl.sInstance.getCompDistrictId(localDistrictInfo.mId));
-    localBundle.putInt("HasCircle", 1);
-    localBundle.putInt("CenterX", paramSearchCircle.mCenter.getLongitudeE6());
-    localBundle.putInt("CenterY", paramSearchCircle.mCenter.getLatitudeE6());
-    localBundle.putInt("Radius", paramSearchCircle.mRadius);
-    if (paramInt2 == 1) {}
-    for (paramInt1 = Math.min(paramInt1, 20);; paramInt1 = Math.min(paramInt1, 100))
-    {
-      localBundle.putInt("PoiCount", paramInt1);
-      localBundle.putInt("PoiPagerNum", paramInt3);
-      paramString = new ArrayList();
-      paramInt1 = JNISearchControl.sInstance.searchByNameWithPager(localBundle, paramString);
-      LogUtil.e("", "searchByName() ret: " + paramInt1);
-      LogUtil.e("", "outputList count: " + paramString.size());
-      if (paramInt1 >= 0) {
-        break;
-      }
-      return -6;
-    }
-    paramInt2 = paramString.size();
-    paramInt1 = 0;
-    if (paramInt1 < paramInt2)
-    {
-      paramSearchCircle = (Bundle)paramString.get(paramInt1);
-      paramSearchCircle = JNISearchControl.sInstance.parsePoiBundle(paramSearchCircle);
-      if (paramSearchCircle == null) {}
-      for (;;)
-      {
-        paramInt1 += 1;
-        break;
-        paramSearchPoiPager.addSearchPoi(paramSearchCircle);
-      }
-    }
-    boolean bool = false;
-    if (paramInt2 > 0) {
-      if (((Bundle)paramString.get(0)).getInt("IsLastPager", 0) <= 0) {
-        break label373;
-      }
-    }
-    label373:
-    for (bool = true;; bool = false)
-    {
-      paramSearchPoiPager.setLastPager(bool);
-      return paramInt2;
-    }
-  }
-  
-  protected void unpacketParams(ReqData paramReqData)
-  {
-    this.mSearchPoiPager = ((SearchPoiPager)paramReqData.mParams.get("param.search.pager"));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/logic/commandparser/CmdSearchWithPager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

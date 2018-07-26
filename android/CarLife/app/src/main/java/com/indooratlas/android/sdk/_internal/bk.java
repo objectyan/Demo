@@ -1,89 +1,83 @@
 package com.indooratlas.android.sdk._internal;
 
-import android.content.Context;
 import android.net.ConnectivityManager;
 import com.indooratlas.algorithm.ClientProcessingManager;
+import com.indooratlas.android.sdk._internal.bt.C5791a;
+import com.indooratlas.android.sdk._internal.cr.C5843a;
 import com.indooratlas.android.sdk.internal.DeviceWatchdog;
 import java.io.IOException;
 import java.net.URI;
 import org.json.JSONObject;
 
-public final class bk
-{
-  private static cr a = new cr.a();
-  
-  public static ClientProcessingManager a(t paramt)
-  {
-    return new ClientProcessingManager(paramt);
-  }
-  
-  public static ac a(String paramString1, String paramString2, String paramString3, String paramString4)
-  {
-    paramString1 = new ao(paramString1, paramString4);
-    paramString1.a(paramString2, paramString3);
-    paramString1.a("IAWire");
-    return paramString1;
-  }
-  
-  public static bb a(JSONObject paramJSONObject)
-  {
-    return new bb(paramJSONObject);
-  }
-  
-  public static bm a()
-  {
-    return new bm();
-  }
-  
-  public static bt a(bf parambf, bt.a parama)
-  {
-    return new bt(parambf.v, parama);
-  }
-  
-  public static bx a(bf parambf, URI paramURI, String paramString, int paramInt)
-    throws IOException
-  {
-    return new bu(parambf, paramURI, paramString, paramInt);
-  }
-  
-  public static cz a(bf parambf)
-  {
-    return cz.a(parambf.o);
-  }
-  
-  public static ConnectivityManager b(bf parambf)
-  {
-    return (ConnectivityManager)parambf.o.getSystemService("connectivity");
-  }
-  
-  public static cr b()
-  {
-    return a;
-  }
-  
-  public static bn c(bf parambf)
-  {
-    return new bn(parambf, parambf.e, parambf.b);
-  }
-  
-  public static ca d(bf parambf)
-  {
-    return new ca(new by(parambf.t));
-  }
-  
-  public static cj e(bf parambf)
-  {
-    return cj.a(parambf.o);
-  }
-  
-  public static DeviceWatchdog f(bf parambf)
-  {
-    return new DeviceWatchdog(parambf);
-  }
+public final class bk {
+    /* renamed from: a */
+    private static cr f23200a = new C5843a();
+
+    /* renamed from: a */
+    public static ClientProcessingManager m20096a(C6008t c6008t) {
+        return new ClientProcessingManager(c6008t);
+    }
+
+    /* renamed from: c */
+    public static bn m20105c(bf bfVar) {
+        return new bn(bfVar, bfVar.f23160e, bfVar.f23157b);
+    }
+
+    /* renamed from: a */
+    public static ac m20097a(String str, String str2, String str3, String str4) {
+        ac aoVar = new ao(str, str4);
+        aoVar.m19787a(str2, str3);
+        aoVar.m19836a("IAWire");
+        return aoVar;
+    }
+
+    /* renamed from: a */
+    public static bx m20101a(bf bfVar, URI uri, String str, int i) throws IOException {
+        return new bu(bfVar, uri, str, i);
+    }
+
+    /* renamed from: a */
+    public static bt m20100a(bf bfVar, C5791a c5791a) {
+        return new bt(bfVar.f23177v, c5791a);
+    }
+
+    /* renamed from: d */
+    public static ca m20106d(bf bfVar) {
+        return new ca(new by(bfVar.f23175t));
+    }
+
+    /* renamed from: a */
+    public static bm m20099a() {
+        return new bm();
+    }
+
+    /* renamed from: b */
+    public static cr m20104b() {
+        return f23200a;
+    }
+
+    /* renamed from: a */
+    public static bb m20098a(JSONObject jSONObject) {
+        return new bb(jSONObject);
+    }
+
+    /* renamed from: f */
+    public static DeviceWatchdog m20108f(bf bfVar) {
+        return new DeviceWatchdog(bfVar);
+    }
+
+    /* renamed from: a */
+    public static cz m20102a(bf bfVar) {
+        return cz.m20279a(bfVar.f23170o);
+    }
+
+    /* renamed from: b */
+    public static ConnectivityManager m20103b(bf bfVar) {
+        return (ConnectivityManager) bfVar.f23170o.getSystemService("connectivity");
+    }
+
+    /* renamed from: e */
+    public static cj m20107e(bf bfVar) {
+        return cj.m20218a(bfVar.f23170o);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/bk.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

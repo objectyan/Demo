@@ -1,22 +1,18 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.kd.C5997a;
 import java.nio.ByteBuffer;
 
-public abstract interface kc
-  extends kd
-{
-  public abstract void a(kd.a parama);
-  
-  public abstract void a(ByteBuffer paramByteBuffer)
-    throws ju;
-  
-  public abstract void a(boolean paramBoolean);
-  
-  public abstract void b(boolean paramBoolean);
+public interface kc extends kd {
+    /* renamed from: a */
+    void mo4808a(C5997a c5997a);
+
+    /* renamed from: a */
+    void mo4809a(ByteBuffer byteBuffer) throws ju;
+
+    /* renamed from: a */
+    void mo4810a(boolean z);
+
+    /* renamed from: b */
+    void mo4811b(boolean z);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/kc.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

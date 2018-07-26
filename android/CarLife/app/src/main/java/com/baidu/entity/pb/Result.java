@@ -6,148 +6,126 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class Result
-  extends MessageMicro
-{
-  public static final int ERROR_FIELD_NUMBER = 2;
-  public static final int TYPE_FIELD_NUMBER = 1;
-  private boolean a;
-  private int b = 0;
-  private boolean c;
-  private int d = 0;
-  private int e = -1;
-  
-  public static Result parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new Result().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static Result parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (Result)new Result().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final Result clear()
-  {
-    clearType();
-    clearError();
-    this.e = -1;
-    return this;
-  }
-  
-  public Result clearError()
-  {
-    this.c = false;
-    this.d = 0;
-    return this;
-  }
-  
-  public Result clearType()
-  {
-    this.a = false;
-    this.b = 0;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.e < 0) {
-      getSerializedSize();
+public final class Result extends MessageMicro {
+    public static final int ERROR_FIELD_NUMBER = 2;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private boolean f14204a;
+    /* renamed from: b */
+    private int f14205b = 0;
+    /* renamed from: c */
+    private boolean f14206c;
+    /* renamed from: d */
+    private int f14207d = 0;
+    /* renamed from: e */
+    private int f14208e = -1;
+
+    public static Result parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new Result().mergeFrom(codedInputStreamMicro);
     }
-    return this.e;
-  }
-  
-  public int getError()
-  {
-    return this.d;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasType()) {
-      i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getType());
+
+    public static Result parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (Result) new Result().mergeFrom(bArr);
     }
-    int j = i;
-    if (hasError()) {
-      j = i + CodedOutputStreamMicro.computeSInt32Size(2, getError());
-    }
-    this.e = j;
-    return j;
-  }
-  
-  public int getType()
-  {
-    return this.b;
-  }
-  
-  public boolean hasError()
-  {
-    return this.c;
-  }
-  
-  public boolean hasType()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Result mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public final Result clear() {
+        clearType();
+        clearError();
+        this.f14208e = -1;
         return this;
-      case 8: 
-        setType(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 16: 
-        setError(paramCodedInputStreamMicro.readSInt32());
-      }
     }
-  }
-  
-  public Result setError(int paramInt)
-  {
-    this.c = true;
-    this.d = paramInt;
-    return this;
-  }
-  
-  public Result setType(int paramInt)
-  {
-    this.a = true;
-    this.b = paramInt;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasType()) {
-      paramCodedOutputStreamMicro.writeInt32(1, getType());
+
+    public Result clearError() {
+        this.f14206c = false;
+        this.f14207d = 0;
+        return this;
     }
-    if (hasError()) {
-      paramCodedOutputStreamMicro.writeSInt32(2, getError());
+
+    public Result clearType() {
+        this.f14204a = false;
+        this.f14205b = 0;
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f14208e < 0) {
+            getSerializedSize();
+        }
+        return this.f14208e;
+    }
+
+    public int getError() {
+        return this.f14207d;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasType()) {
+            i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getType());
+        }
+        if (hasError()) {
+            i += CodedOutputStreamMicro.computeSInt32Size(2, getError());
+        }
+        this.f14208e = i;
+        return i;
+    }
+
+    public int getType() {
+        return this.f14205b;
+    }
+
+    public boolean hasError() {
+        return this.f14206c;
+    }
+
+    public boolean hasType() {
+        return this.f14204a;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public Result mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 8:
+                    setType(codedInputStreamMicro.readInt32());
+                    continue;
+                case 16:
+                    setError(codedInputStreamMicro.readSInt32());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public Result setError(int i) {
+        this.f14206c = true;
+        this.f14207d = i;
+        return this;
+    }
+
+    public Result setType(int i) {
+        this.f14204a = true;
+        this.f14205b = i;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasType()) {
+            codedOutputStreamMicro.writeInt32(1, getType());
+        }
+        if (hasError()) {
+            codedOutputStreamMicro.writeSInt32(2, getError());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/Result.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

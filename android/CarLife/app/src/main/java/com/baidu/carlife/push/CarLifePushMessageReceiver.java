@@ -4,145 +4,113 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import com.baidu.android.pushservice.PushMessageReceiver;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.k;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.sapi2.result.FillUserProfileResult;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CarLifePushMessageReceiver
-  extends PushMessageReceiver
-{
-  public static final String a = CarLifePushMessageReceiver.class.getSimpleName();
-  
-  public void onBind(Context paramContext, int paramInt, String paramString1, String paramString2, String paramString3, String paramString4)
-  {
-    paramContext = "onBind errorCode=" + paramInt + " appid=" + paramString1 + " userId=" + paramString2 + " channelId=" + paramString3 + " requestId=" + paramString4;
-    Log.d(a, paramContext);
-    if (paramInt == 0) {
-      Log.d(a, "绑定成功");
-    }
-  }
-  
-  public void onDelTags(Context paramContext, int paramInt, List<String> paramList1, List<String> paramList2, String paramString)
-  {
-    paramContext = "onDelTags errorCode=" + paramInt + " successTags=" + paramList1 + " failTags=" + paramList2 + " requestId=" + paramString;
-    Log.d(a, paramContext);
-  }
-  
-  public void onListTags(Context paramContext, int paramInt, List<String> paramList, String paramString)
-  {
-    paramContext = "onListTags errorCode=" + paramInt + " tags=" + paramList;
-    Log.d(a, paramContext);
-  }
-  
-  public void onMessage(Context paramContext, String paramString1, String paramString2)
-  {
-    paramContext = "透传消息 onMessage=\"" + paramString1 + "\" customContentString=" + paramString2;
-    Log.d(a, paramContext);
-    if (!TextUtils.isEmpty(paramString2)) {}
-    try
-    {
-      paramContext = new JSONObject(paramString2);
-      paramContext.printStackTrace();
-    }
-    catch (JSONException paramContext)
-    {
-      try
-      {
-        if (!paramContext.isNull("mykey")) {
-          paramContext.getString("mykey");
+public class CarLifePushMessageReceiver extends PushMessageReceiver {
+    /* renamed from: a */
+    public static final String f6676a = CarLifePushMessageReceiver.class.getSimpleName();
+
+    public void onBind(Context context, int errorCode, String appid, String userId, String channelId, String requestId) {
+        Log.d(f6676a, "onBind errorCode=" + errorCode + " appid=" + appid + " userId=" + userId + " channelId=" + channelId + " requestId=" + requestId);
+        if (errorCode == 0) {
+            Log.d(f6676a, FillUserProfileResult.RESULT_MSG_SUCCESS);
         }
-        return;
-      }
-      catch (JSONException paramContext)
-      {
-        for (;;) {}
-      }
-      paramContext = paramContext;
     }
-  }
-  
-  public void onNotificationArrived(Context paramContext, String paramString1, String paramString2, String paramString3)
-  {
-    paramContext = "通知到达 onNotificationArrived  title=\"" + paramString1 + "\" description=\"" + paramString2 + "\" customContent=" + paramString3;
-    Log.d(a, paramContext);
-    if (!TextUtils.isEmpty(paramString3)) {}
-    try
-    {
-      paramContext = new JSONObject(paramString3);
-      paramContext.printStackTrace();
-    }
-    catch (JSONException paramContext)
-    {
-      try
-      {
-        if (!paramContext.isNull("mykey")) {
-          paramContext.getString("mykey");
+
+    public void onMessage(Context context, String message, String customContentString) {
+        JSONException e;
+        Log.d(f6676a, "透传消息 onMessage=\"" + message + "\" customContentString=" + customContentString);
+        if (!TextUtils.isEmpty(customContentString)) {
+            try {
+                JSONObject customJson = new JSONObject(customContentString);
+                try {
+                    if (!customJson.isNull("mykey")) {
+                        customJson.getString("mykey");
+                    }
+                } catch (JSONException e2) {
+                    e = e2;
+                    JSONObject jSONObject = customJson;
+                    e.printStackTrace();
+                }
+            } catch (JSONException e3) {
+                e = e3;
+                e.printStackTrace();
+            }
         }
-        return;
-      }
-      catch (JSONException paramContext)
-      {
-        for (;;) {}
-      }
-      paramContext = paramContext;
     }
-  }
-  
-  public void onNotificationClicked(Context paramContext, String paramString1, String paramString2, String paramString3)
-  {
-    paramContext = "通知点击 onNotificationClicked title=\"" + paramString1 + "\" description=\"" + paramString2 + "\" customContent=" + paramString3;
-    Log.d(a, paramContext);
-    if (!TextUtils.isEmpty(paramString3)) {}
-    try
-    {
-      paramContext = new JSONObject(paramString3);
-      paramContext.printStackTrace();
-    }
-    catch (JSONException paramContext)
-    {
-      try
-      {
-        if (!paramContext.isNull("urlkey"))
-        {
-          paramContext = paramContext.getString("urlkey");
-          paramContext.replace("\\", "");
-          if (!paramContext.isEmpty())
-          {
-            a.a(paramContext);
-            k.a(1072, 0, 0, paramContext);
-            i.b(a, "GetValue: " + paramContext);
-          }
+
+    public void onNotificationArrived(Context context, String title, String description, String customContentString) {
+        JSONException e;
+        Log.d(f6676a, "通知到达 onNotificationArrived  title=\"" + title + "\" description=\"" + description + "\" customContent=" + customContentString);
+        if (!TextUtils.isEmpty(customContentString)) {
+            try {
+                JSONObject customJson = new JSONObject(customContentString);
+                try {
+                    if (!customJson.isNull("mykey")) {
+                        customJson.getString("mykey");
+                    }
+                } catch (JSONException e2) {
+                    e = e2;
+                    JSONObject jSONObject = customJson;
+                    e.printStackTrace();
+                }
+            } catch (JSONException e3) {
+                e = e3;
+                e.printStackTrace();
+            }
         }
-        return;
-      }
-      catch (JSONException paramContext)
-      {
-        for (;;) {}
-      }
-      paramContext = paramContext;
     }
-  }
-  
-  public void onSetTags(Context paramContext, int paramInt, List<String> paramList1, List<String> paramList2, String paramString)
-  {
-    paramContext = "onSetTags errorCode=" + paramInt + " successTags=" + paramList1 + " failTags=" + paramList2 + " requestId=" + paramString;
-    Log.d(a, paramContext);
-  }
-  
-  public void onUnbind(Context paramContext, int paramInt, String paramString)
-  {
-    paramContext = "onUnbind errorCode=" + paramInt + " requestId = " + paramString;
-    Log.d(a, paramContext);
-    if (paramInt == 0) {
-      Log.d(a, "解绑成功");
+
+    public void onNotificationClicked(Context context, String title, String description, String customContentString) {
+        JSONException e;
+        Log.d(f6676a, "通知点击 onNotificationClicked title=\"" + title + "\" description=\"" + description + "\" customContent=" + customContentString);
+        if (!TextUtils.isEmpty(customContentString)) {
+            try {
+                JSONObject customJson = new JSONObject(customContentString);
+                try {
+                    if (!customJson.isNull("urlkey")) {
+                        Object myvalue = customJson.getString("urlkey");
+                        myvalue.replace("\\", "");
+                        if (!myvalue.isEmpty()) {
+                            C2103a.m7881a((String) myvalue);
+                            C1261k.m4456a((int) C1253f.fr, 0, 0, myvalue);
+                            C1260i.m4435b(f6676a, "GetValue: " + myvalue);
+                        }
+                    }
+                } catch (JSONException e2) {
+                    e = e2;
+                    JSONObject jSONObject = customJson;
+                    e.printStackTrace();
+                }
+            } catch (JSONException e3) {
+                e = e3;
+                e.printStackTrace();
+            }
+        }
     }
-  }
+
+    public void onSetTags(Context context, int errorCode, List<String> successTags, List<String> failTags, String requestId) {
+        Log.d(f6676a, "onSetTags errorCode=" + errorCode + " successTags=" + successTags + " failTags=" + failTags + " requestId=" + requestId);
+    }
+
+    public void onDelTags(Context context, int errorCode, List<String> successTags, List<String> failTags, String requestId) {
+        Log.d(f6676a, "onDelTags errorCode=" + errorCode + " successTags=" + successTags + " failTags=" + failTags + " requestId=" + requestId);
+    }
+
+    public void onListTags(Context context, int errorCode, List<String> tags, String requestId) {
+        Log.d(f6676a, "onListTags errorCode=" + errorCode + " tags=" + tags);
+    }
+
+    public void onUnbind(Context context, int errorCode, String requestId) {
+        Log.d(f6676a, "onUnbind errorCode=" + errorCode + " requestId = " + requestId);
+        if (errorCode == 0) {
+            Log.d(f6676a, "解绑成功");
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/push/CarLifePushMessageReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

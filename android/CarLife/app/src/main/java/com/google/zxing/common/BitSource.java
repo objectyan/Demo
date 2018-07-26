@@ -1,80 +1,58 @@
 package com.google.zxing.common;
 
-public final class BitSource
-{
-  private int bitOffset;
-  private int byteOffset;
-  private final byte[] bytes;
-  
-  public BitSource(byte[] paramArrayOfByte)
-  {
-    this.bytes = paramArrayOfByte;
-  }
-  
-  public int available()
-  {
-    return (this.bytes.length - this.byteOffset) * 8 - this.bitOffset;
-  }
-  
-  public int getByteOffset()
-  {
-    return this.byteOffset;
-  }
-  
-  public int readBits(int paramInt)
-  {
-    if ((paramInt < 1) || (paramInt > 32)) {
-      throw new IllegalArgumentException();
+public final class BitSource {
+    private int bitOffset;
+    private int byteOffset;
+    private final byte[] bytes;
+
+    public BitSource(byte[] bytes) {
+        this.bytes = bytes;
     }
-    int i = 0;
-    int j = paramInt;
-    if (this.bitOffset > 0)
-    {
-      j = 8 - this.bitOffset;
-      if (paramInt >= j) {
-        break label170;
-      }
+
+    public int getByteOffset() {
+        return this.byteOffset;
     }
-    label170:
-    for (i = paramInt;; i = j)
-    {
-      j -= i;
-      int k = (this.bytes[this.byteOffset] & 255 >> 8 - i << j) >> j;
-      paramInt -= i;
-      this.bitOffset += i;
-      i = k;
-      j = paramInt;
-      if (this.bitOffset == 8)
-      {
-        this.bitOffset = 0;
-        this.byteOffset += 1;
-        j = paramInt;
-        i = k;
-      }
-      paramInt = i;
-      if (j <= 0) {
-        return paramInt;
-      }
-      while (j >= 8)
-      {
-        i = i << 8 | this.bytes[this.byteOffset] & 0xFF;
-        this.byteOffset += 1;
-        j -= 8;
-      }
+
+    public int readBits(int numBits) {
+        if (numBits < 1 || numBits > 32) {
+            throw new IllegalArgumentException();
+        }
+        int result = 0;
+        if (this.bitOffset > 0) {
+            int toRead;
+            int bitsLeft = 8 - this.bitOffset;
+            if (numBits < bitsLeft) {
+                toRead = numBits;
+            } else {
+                toRead = bitsLeft;
+            }
+            int bitsToNotRead = bitsLeft - toRead;
+            result = (this.bytes[this.byteOffset] & ((255 >> (8 - toRead)) << bitsToNotRead)) >> bitsToNotRead;
+            numBits -= toRead;
+            this.bitOffset += toRead;
+            if (this.bitOffset == 8) {
+                this.bitOffset = 0;
+                this.byteOffset++;
+            }
+        }
+        if (numBits <= 0) {
+            return result;
+        }
+        while (numBits >= 8) {
+            result = (result << 8) | (this.bytes[this.byteOffset] & 255);
+            this.byteOffset++;
+            numBits -= 8;
+        }
+        if (numBits <= 0) {
+            return result;
+        }
+        bitsToNotRead = 8 - numBits;
+        result = (result << numBits) | ((this.bytes[this.byteOffset] & ((255 >> bitsToNotRead) << bitsToNotRead)) >> bitsToNotRead);
+        this.bitOffset += numBits;
+        return result;
     }
-    paramInt = i;
-    if (j > 0)
-    {
-      paramInt = 8 - j;
-      paramInt = i << j | (this.bytes[this.byteOffset] & 255 >> paramInt << paramInt) >> paramInt;
-      this.bitOffset += j;
+
+    public int available() {
+        return ((this.bytes.length - this.byteOffset) * 8) - this.bitOffset;
     }
-    return paramInt;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/common/BitSource.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

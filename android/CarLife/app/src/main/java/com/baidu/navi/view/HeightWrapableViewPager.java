@@ -6,61 +6,44 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.MeasureSpec;
 
-public class HeightWrapableViewPager
-  extends ViewPager
-{
-  private View mCurrentView;
-  
-  public HeightWrapableViewPager(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public HeightWrapableViewPager(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  private int measureHeight(int paramInt, View paramView)
-  {
-    int i = 0;
-    int k = View.MeasureSpec.getMode(paramInt);
-    int j = View.MeasureSpec.getSize(paramInt);
-    if (k == 1073741824) {
-      i = j;
+public class HeightWrapableViewPager extends ViewPager {
+    private View mCurrentView;
+
+    public HeightWrapableViewPager(Context context) {
+        super(context);
     }
-    do
-    {
-      return i;
-      paramInt = i;
-      if (paramView != null) {
-        paramInt = paramView.getMeasuredHeight();
-      }
-      i = paramInt;
-    } while (k != Integer.MIN_VALUE);
-    return Math.min(paramInt, j);
-  }
-  
-  public View getCurrentView(int paramInt)
-  {
-    return this.mCurrentView;
-  }
-  
-  protected void onMeasure(int paramInt1, int paramInt2)
-  {
-    super.onMeasure(paramInt1, paramInt2);
-    View localView = findViewWithTag(Integer.valueOf(getCurrentItem()));
-    this.mCurrentView = localView;
-    if (localView != null)
-    {
-      localView.measure(paramInt1, paramInt2);
-      setMeasuredDimension(getMeasuredWidth(), measureHeight(paramInt2, localView));
+
+    public HeightWrapableViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-  }
+
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        View view = findViewWithTag(Integer.valueOf(getCurrentItem()));
+        this.mCurrentView = view;
+        if (view != null) {
+            view.measure(widthMeasureSpec, heightMeasureSpec);
+            setMeasuredDimension(getMeasuredWidth(), measureHeight(heightMeasureSpec, view));
+        }
+    }
+
+    private int measureHeight(int measureSpec, View view) {
+        int result = 0;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+        if (specMode == 1073741824) {
+            return specSize;
+        }
+        if (view != null) {
+            result = view.getMeasuredHeight();
+        }
+        if (specMode == Integer.MIN_VALUE) {
+            return Math.min(result, specSize);
+        }
+        return result;
+    }
+
+    public View getCurrentView(int position) {
+        return this.mCurrentView;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/HeightWrapableViewPager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

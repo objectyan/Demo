@@ -1,740 +1,559 @@
 package com.google.protobuf.micro;
 
+import android.support.v4.media.TransportMediator;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-public final class CodedOutputStreamMicro
-{
-  public static final int DEFAULT_BUFFER_SIZE = 4096;
-  public static final int LITTLE_ENDIAN_32_SIZE = 4;
-  public static final int LITTLE_ENDIAN_64_SIZE = 8;
-  private final byte[] buffer;
-  private final int limit;
-  private final OutputStream output;
-  private int position;
-  
-  private CodedOutputStreamMicro(OutputStream paramOutputStream, byte[] paramArrayOfByte)
-  {
-    this.output = paramOutputStream;
-    this.buffer = paramArrayOfByte;
-    this.position = 0;
-    this.limit = paramArrayOfByte.length;
-  }
-  
-  private CodedOutputStreamMicro(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    this.output = null;
-    this.buffer = paramArrayOfByte;
-    this.position = paramInt1;
-    this.limit = (paramInt1 + paramInt2);
-  }
-  
-  public static int computeBoolSize(int paramInt, boolean paramBoolean)
-  {
-    return computeTagSize(paramInt) + computeBoolSizeNoTag(paramBoolean);
-  }
-  
-  public static int computeBoolSizeNoTag(boolean paramBoolean)
-  {
-    return 1;
-  }
-  
-  public static int computeByteArraySize(int paramInt, byte[] paramArrayOfByte)
-  {
-    return computeTagSize(paramInt) + computeByteArraySizeNoTag(paramArrayOfByte);
-  }
-  
-  public static int computeByteArraySizeNoTag(byte[] paramArrayOfByte)
-  {
-    return computeRawVarint32Size(paramArrayOfByte.length) + paramArrayOfByte.length;
-  }
-  
-  public static int computeBytesSize(int paramInt, ByteStringMicro paramByteStringMicro)
-  {
-    return computeTagSize(paramInt) + computeBytesSizeNoTag(paramByteStringMicro);
-  }
-  
-  public static int computeBytesSizeNoTag(ByteStringMicro paramByteStringMicro)
-  {
-    return computeRawVarint32Size(paramByteStringMicro.size()) + paramByteStringMicro.size();
-  }
-  
-  public static int computeDoubleSize(int paramInt, double paramDouble)
-  {
-    return computeTagSize(paramInt) + computeDoubleSizeNoTag(paramDouble);
-  }
-  
-  public static int computeDoubleSizeNoTag(double paramDouble)
-  {
-    return 8;
-  }
-  
-  public static int computeEnumSize(int paramInt1, int paramInt2)
-  {
-    return computeTagSize(paramInt1) + computeEnumSizeNoTag(paramInt2);
-  }
-  
-  public static int computeEnumSizeNoTag(int paramInt)
-  {
-    return computeRawVarint32Size(paramInt);
-  }
-  
-  public static int computeFixed32Size(int paramInt1, int paramInt2)
-  {
-    return computeTagSize(paramInt1) + computeFixed32SizeNoTag(paramInt2);
-  }
-  
-  public static int computeFixed32SizeNoTag(int paramInt)
-  {
-    return 4;
-  }
-  
-  public static int computeFixed64Size(int paramInt, long paramLong)
-  {
-    return computeTagSize(paramInt) + computeFixed64SizeNoTag(paramLong);
-  }
-  
-  public static int computeFixed64SizeNoTag(long paramLong)
-  {
-    return 8;
-  }
-  
-  public static int computeFloatSize(int paramInt, float paramFloat)
-  {
-    return computeTagSize(paramInt) + computeFloatSizeNoTag(paramFloat);
-  }
-  
-  public static int computeFloatSizeNoTag(float paramFloat)
-  {
-    return 4;
-  }
-  
-  public static int computeGroupSize(int paramInt, MessageMicro paramMessageMicro)
-  {
-    return computeTagSize(paramInt) * 2 + computeGroupSizeNoTag(paramMessageMicro);
-  }
-  
-  public static int computeGroupSizeNoTag(MessageMicro paramMessageMicro)
-  {
-    return paramMessageMicro.getSerializedSize();
-  }
-  
-  public static int computeInt32Size(int paramInt1, int paramInt2)
-  {
-    return computeTagSize(paramInt1) + computeInt32SizeNoTag(paramInt2);
-  }
-  
-  public static int computeInt32SizeNoTag(int paramInt)
-  {
-    if (paramInt >= 0) {
-      return computeRawVarint32Size(paramInt);
+public final class CodedOutputStreamMicro {
+    public static final int DEFAULT_BUFFER_SIZE = 4096;
+    public static final int LITTLE_ENDIAN_32_SIZE = 4;
+    public static final int LITTLE_ENDIAN_64_SIZE = 8;
+    private final byte[] buffer;
+    private final int limit;
+    private final OutputStream output;
+    private int position;
+
+    public static class OutOfSpaceException extends IOException {
+        private static final long serialVersionUID = -6947486886997889499L;
+
+        OutOfSpaceException() {
+            super("CodedOutputStream was writing to a flat byte array and ran out of space.");
+        }
     }
-    return 10;
-  }
-  
-  public static int computeInt64Size(int paramInt, long paramLong)
-  {
-    return computeTagSize(paramInt) + computeInt64SizeNoTag(paramLong);
-  }
-  
-  public static int computeInt64SizeNoTag(long paramLong)
-  {
-    return computeRawVarint64Size(paramLong);
-  }
-  
-  public static int computeMessageSize(int paramInt, MessageMicro paramMessageMicro)
-  {
-    return computeTagSize(paramInt) + computeMessageSizeNoTag(paramMessageMicro);
-  }
-  
-  public static int computeMessageSizeNoTag(MessageMicro paramMessageMicro)
-  {
-    int i = paramMessageMicro.getSerializedSize();
-    return computeRawVarint32Size(i) + i;
-  }
-  
-  public static int computeRawVarint32Size(int paramInt)
-  {
-    if ((paramInt & 0xFFFFFF80) == 0) {
-      return 1;
+
+    private CodedOutputStreamMicro(byte[] buffer, int offset, int length) {
+        this.output = null;
+        this.buffer = buffer;
+        this.position = offset;
+        this.limit = offset + length;
     }
-    if ((paramInt & 0xC000) == 0) {
-      return 2;
+
+    private CodedOutputStreamMicro(OutputStream output, byte[] buffer) {
+        this.output = output;
+        this.buffer = buffer;
+        this.position = 0;
+        this.limit = buffer.length;
     }
-    if ((0xFFE00000 & paramInt) == 0) {
-      return 3;
+
+    public static CodedOutputStreamMicro newInstance(OutputStream output) {
+        return newInstance(output, 4096);
     }
-    if ((0xF0000000 & paramInt) == 0) {
-      return 4;
+
+    public static CodedOutputStreamMicro newInstance(OutputStream output, int bufferSize) {
+        return new CodedOutputStreamMicro(output, new byte[bufferSize]);
     }
-    return 5;
-  }
-  
-  public static int computeRawVarint64Size(long paramLong)
-  {
-    if ((0xFFFFFFFFFFFFFF80 & paramLong) == 0L) {
-      return 1;
+
+    public static CodedOutputStreamMicro newInstance(byte[] flatArray) {
+        return newInstance(flatArray, 0, flatArray.length);
     }
-    if ((0xFFFFFFFFFFFFC000 & paramLong) == 0L) {
-      return 2;
+
+    public static CodedOutputStreamMicro newInstance(byte[] flatArray, int offset, int length) {
+        return new CodedOutputStreamMicro(flatArray, offset, length);
     }
-    if ((0xFFFFFFFFFFE00000 & paramLong) == 0L) {
-      return 3;
+
+    public void writeDouble(int fieldNumber, double value) throws IOException {
+        writeTag(fieldNumber, 1);
+        writeDoubleNoTag(value);
     }
-    if ((0xFFFFFFFFF0000000 & paramLong) == 0L) {
-      return 4;
+
+    public void writeFloat(int fieldNumber, float value) throws IOException {
+        writeTag(fieldNumber, 5);
+        writeFloatNoTag(value);
     }
-    if ((0xFFFFFFF800000000 & paramLong) == 0L) {
-      return 5;
+
+    public void writeUInt64(int fieldNumber, long value) throws IOException {
+        writeTag(fieldNumber, 0);
+        writeUInt64NoTag(value);
     }
-    if ((0xFFFFFC0000000000 & paramLong) == 0L) {
-      return 6;
+
+    public void writeInt64(int fieldNumber, long value) throws IOException {
+        writeTag(fieldNumber, 0);
+        writeInt64NoTag(value);
     }
-    if ((0xFFFE000000000000 & paramLong) == 0L) {
-      return 7;
+
+    public void writeInt32(int fieldNumber, int value) throws IOException {
+        writeTag(fieldNumber, 0);
+        writeInt32NoTag(value);
     }
-    if ((0xFF00000000000000 & paramLong) == 0L) {
-      return 8;
+
+    public void writeFixed64(int fieldNumber, long value) throws IOException {
+        writeTag(fieldNumber, 1);
+        writeFixed64NoTag(value);
     }
-    if ((0x8000000000000000 & paramLong) == 0L) {
-      return 9;
+
+    public void writeFixed32(int fieldNumber, int value) throws IOException {
+        writeTag(fieldNumber, 5);
+        writeFixed32NoTag(value);
     }
-    return 10;
-  }
-  
-  public static int computeSFixed32Size(int paramInt1, int paramInt2)
-  {
-    return computeTagSize(paramInt1) + computeSFixed32SizeNoTag(paramInt2);
-  }
-  
-  public static int computeSFixed32SizeNoTag(int paramInt)
-  {
-    return 4;
-  }
-  
-  public static int computeSFixed64Size(int paramInt, long paramLong)
-  {
-    return computeTagSize(paramInt) + computeSFixed64SizeNoTag(paramLong);
-  }
-  
-  public static int computeSFixed64SizeNoTag(long paramLong)
-  {
-    return 8;
-  }
-  
-  public static int computeSInt32Size(int paramInt1, int paramInt2)
-  {
-    return computeTagSize(paramInt1) + computeSInt32SizeNoTag(paramInt2);
-  }
-  
-  public static int computeSInt32SizeNoTag(int paramInt)
-  {
-    return computeRawVarint32Size(encodeZigZag32(paramInt));
-  }
-  
-  public static int computeSInt64Size(int paramInt, long paramLong)
-  {
-    return computeTagSize(paramInt) + computeSInt64SizeNoTag(paramLong);
-  }
-  
-  public static int computeSInt64SizeNoTag(long paramLong)
-  {
-    return computeRawVarint64Size(encodeZigZag64(paramLong));
-  }
-  
-  public static int computeStringSize(int paramInt, String paramString)
-  {
-    return computeTagSize(paramInt) + computeStringSizeNoTag(paramString);
-  }
-  
-  public static int computeStringSizeNoTag(String paramString)
-  {
-    try
-    {
-      paramString = paramString.getBytes("UTF-8");
-      int i = computeRawVarint32Size(paramString.length);
-      int j = paramString.length;
-      return i + j;
+
+    public void writeBool(int fieldNumber, boolean value) throws IOException {
+        writeTag(fieldNumber, 0);
+        writeBoolNoTag(value);
     }
-    catch (UnsupportedEncodingException paramString)
-    {
-      throw new RuntimeException("UTF-8 not supported.");
+
+    public void writeString(int fieldNumber, String value) throws IOException {
+        writeTag(fieldNumber, 2);
+        writeStringNoTag(value);
     }
-  }
-  
-  public static int computeTagSize(int paramInt)
-  {
-    return computeRawVarint32Size(WireFormatMicro.makeTag(paramInt, 0));
-  }
-  
-  public static int computeUInt32Size(int paramInt1, int paramInt2)
-  {
-    return computeTagSize(paramInt1) + computeUInt32SizeNoTag(paramInt2);
-  }
-  
-  public static int computeUInt32SizeNoTag(int paramInt)
-  {
-    return computeRawVarint32Size(paramInt);
-  }
-  
-  public static int computeUInt64Size(int paramInt, long paramLong)
-  {
-    return computeTagSize(paramInt) + computeUInt64SizeNoTag(paramLong);
-  }
-  
-  public static int computeUInt64SizeNoTag(long paramLong)
-  {
-    return computeRawVarint64Size(paramLong);
-  }
-  
-  public static int encodeZigZag32(int paramInt)
-  {
-    return paramInt << 1 ^ paramInt >> 31;
-  }
-  
-  public static long encodeZigZag64(long paramLong)
-  {
-    return paramLong << 1 ^ paramLong >> 63;
-  }
-  
-  public static CodedOutputStreamMicro newInstance(OutputStream paramOutputStream)
-  {
-    return newInstance(paramOutputStream, 4096);
-  }
-  
-  public static CodedOutputStreamMicro newInstance(OutputStream paramOutputStream, int paramInt)
-  {
-    return new CodedOutputStreamMicro(paramOutputStream, new byte[paramInt]);
-  }
-  
-  public static CodedOutputStreamMicro newInstance(byte[] paramArrayOfByte)
-  {
-    return newInstance(paramArrayOfByte, 0, paramArrayOfByte.length);
-  }
-  
-  public static CodedOutputStreamMicro newInstance(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    return new CodedOutputStreamMicro(paramArrayOfByte, paramInt1, paramInt2);
-  }
-  
-  private void refreshBuffer()
-    throws IOException
-  {
-    if (this.output == null) {
-      throw new OutOfSpaceException();
+
+    public void writeGroup(int fieldNumber, MessageMicro value) throws IOException {
+        writeTag(fieldNumber, 3);
+        writeGroupNoTag(value);
+        writeTag(fieldNumber, 4);
     }
-    this.output.write(this.buffer, 0, this.position);
-    this.position = 0;
-  }
-  
-  public void checkNoSpaceLeft()
-  {
-    if (spaceLeft() != 0) {
-      throw new IllegalStateException("Did not write as much data as expected.");
+
+    public void writeMessage(int fieldNumber, MessageMicro value) throws IOException {
+        writeTag(fieldNumber, 2);
+        writeMessageNoTag(value);
     }
-  }
-  
-  public void flush()
-    throws IOException
-  {
-    if (this.output != null) {
-      refreshBuffer();
+
+    public void writeBytes(int fieldNumber, ByteStringMicro value) throws IOException {
+        writeTag(fieldNumber, 2);
+        writeBytesNoTag(value);
     }
-  }
-  
-  public int spaceLeft()
-  {
-    if (this.output == null) {
-      return this.limit - this.position;
+
+    public void writeByteArray(int fieldNumber, byte[] value) throws IOException {
+        writeTag(fieldNumber, 2);
+        writeByteArrayNoTag(value);
     }
-    throw new UnsupportedOperationException("spaceLeft() can only be called on CodedOutputStreams that are writing to a flat array.");
-  }
-  
-  public void writeBool(int paramInt, boolean paramBoolean)
-    throws IOException
-  {
-    writeTag(paramInt, 0);
-    writeBoolNoTag(paramBoolean);
-  }
-  
-  public void writeBoolNoTag(boolean paramBoolean)
-    throws IOException
-  {
-    if (paramBoolean) {}
-    for (int i = 1;; i = 0)
-    {
-      writeRawByte(i);
-      return;
+
+    public void writeUInt32(int fieldNumber, int value) throws IOException {
+        writeTag(fieldNumber, 0);
+        writeUInt32NoTag(value);
     }
-  }
-  
-  public void writeByteArray(int paramInt, byte[] paramArrayOfByte)
-    throws IOException
-  {
-    writeTag(paramInt, 2);
-    writeByteArrayNoTag(paramArrayOfByte);
-  }
-  
-  public void writeByteArrayNoTag(byte[] paramArrayOfByte)
-    throws IOException
-  {
-    writeRawVarint32(paramArrayOfByte.length);
-    writeRawBytes(paramArrayOfByte);
-  }
-  
-  public void writeBytes(int paramInt, ByteStringMicro paramByteStringMicro)
-    throws IOException
-  {
-    writeTag(paramInt, 2);
-    writeBytesNoTag(paramByteStringMicro);
-  }
-  
-  public void writeBytesNoTag(ByteStringMicro paramByteStringMicro)
-    throws IOException
-  {
-    paramByteStringMicro = paramByteStringMicro.toByteArray();
-    writeRawVarint32(paramByteStringMicro.length);
-    writeRawBytes(paramByteStringMicro);
-  }
-  
-  public void writeDouble(int paramInt, double paramDouble)
-    throws IOException
-  {
-    writeTag(paramInt, 1);
-    writeDoubleNoTag(paramDouble);
-  }
-  
-  public void writeDoubleNoTag(double paramDouble)
-    throws IOException
-  {
-    writeRawLittleEndian64(Double.doubleToLongBits(paramDouble));
-  }
-  
-  public void writeEnum(int paramInt1, int paramInt2)
-    throws IOException
-  {
-    writeTag(paramInt1, 0);
-    writeEnumNoTag(paramInt2);
-  }
-  
-  public void writeEnumNoTag(int paramInt)
-    throws IOException
-  {
-    writeRawVarint32(paramInt);
-  }
-  
-  public void writeFixed32(int paramInt1, int paramInt2)
-    throws IOException
-  {
-    writeTag(paramInt1, 5);
-    writeFixed32NoTag(paramInt2);
-  }
-  
-  public void writeFixed32NoTag(int paramInt)
-    throws IOException
-  {
-    writeRawLittleEndian32(paramInt);
-  }
-  
-  public void writeFixed64(int paramInt, long paramLong)
-    throws IOException
-  {
-    writeTag(paramInt, 1);
-    writeFixed64NoTag(paramLong);
-  }
-  
-  public void writeFixed64NoTag(long paramLong)
-    throws IOException
-  {
-    writeRawLittleEndian64(paramLong);
-  }
-  
-  public void writeFloat(int paramInt, float paramFloat)
-    throws IOException
-  {
-    writeTag(paramInt, 5);
-    writeFloatNoTag(paramFloat);
-  }
-  
-  public void writeFloatNoTag(float paramFloat)
-    throws IOException
-  {
-    writeRawLittleEndian32(Float.floatToIntBits(paramFloat));
-  }
-  
-  public void writeGroup(int paramInt, MessageMicro paramMessageMicro)
-    throws IOException
-  {
-    writeTag(paramInt, 3);
-    writeGroupNoTag(paramMessageMicro);
-    writeTag(paramInt, 4);
-  }
-  
-  public void writeGroupNoTag(MessageMicro paramMessageMicro)
-    throws IOException
-  {
-    paramMessageMicro.writeTo(this);
-  }
-  
-  public void writeInt32(int paramInt1, int paramInt2)
-    throws IOException
-  {
-    writeTag(paramInt1, 0);
-    writeInt32NoTag(paramInt2);
-  }
-  
-  public void writeInt32NoTag(int paramInt)
-    throws IOException
-  {
-    if (paramInt >= 0)
-    {
-      writeRawVarint32(paramInt);
-      return;
+
+    public void writeEnum(int fieldNumber, int value) throws IOException {
+        writeTag(fieldNumber, 0);
+        writeEnumNoTag(value);
     }
-    writeRawVarint64(paramInt);
-  }
-  
-  public void writeInt64(int paramInt, long paramLong)
-    throws IOException
-  {
-    writeTag(paramInt, 0);
-    writeInt64NoTag(paramLong);
-  }
-  
-  public void writeInt64NoTag(long paramLong)
-    throws IOException
-  {
-    writeRawVarint64(paramLong);
-  }
-  
-  public void writeMessage(int paramInt, MessageMicro paramMessageMicro)
-    throws IOException
-  {
-    writeTag(paramInt, 2);
-    writeMessageNoTag(paramMessageMicro);
-  }
-  
-  public void writeMessageNoTag(MessageMicro paramMessageMicro)
-    throws IOException
-  {
-    writeRawVarint32(paramMessageMicro.getCachedSize());
-    paramMessageMicro.writeTo(this);
-  }
-  
-  public void writeRawByte(byte paramByte)
-    throws IOException
-  {
-    if (this.position == this.limit) {
-      refreshBuffer();
+
+    public void writeSFixed32(int fieldNumber, int value) throws IOException {
+        writeTag(fieldNumber, 5);
+        writeSFixed32NoTag(value);
     }
-    byte[] arrayOfByte = this.buffer;
-    int i = this.position;
-    this.position = (i + 1);
-    arrayOfByte[i] = paramByte;
-  }
-  
-  public void writeRawByte(int paramInt)
-    throws IOException
-  {
-    writeRawByte((byte)paramInt);
-  }
-  
-  public void writeRawBytes(byte[] paramArrayOfByte)
-    throws IOException
-  {
-    writeRawBytes(paramArrayOfByte, 0, paramArrayOfByte.length);
-  }
-  
-  public void writeRawBytes(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-    throws IOException
-  {
-    if (this.limit - this.position >= paramInt2)
-    {
-      System.arraycopy(paramArrayOfByte, paramInt1, this.buffer, this.position, paramInt2);
-      this.position += paramInt2;
-      return;
+
+    public void writeSFixed64(int fieldNumber, long value) throws IOException {
+        writeTag(fieldNumber, 1);
+        writeSFixed64NoTag(value);
     }
-    int i = this.limit - this.position;
-    System.arraycopy(paramArrayOfByte, paramInt1, this.buffer, this.position, i);
-    paramInt1 += i;
-    paramInt2 -= i;
-    this.position = this.limit;
-    refreshBuffer();
-    if (paramInt2 <= this.limit)
-    {
-      System.arraycopy(paramArrayOfByte, paramInt1, this.buffer, 0, paramInt2);
-      this.position = paramInt2;
-      return;
+
+    public void writeSInt32(int fieldNumber, int value) throws IOException {
+        writeTag(fieldNumber, 0);
+        writeSInt32NoTag(value);
     }
-    this.output.write(paramArrayOfByte, paramInt1, paramInt2);
-  }
-  
-  public void writeRawLittleEndian32(int paramInt)
-    throws IOException
-  {
-    writeRawByte(paramInt & 0xFF);
-    writeRawByte(paramInt >> 8 & 0xFF);
-    writeRawByte(paramInt >> 16 & 0xFF);
-    writeRawByte(paramInt >> 24 & 0xFF);
-  }
-  
-  public void writeRawLittleEndian64(long paramLong)
-    throws IOException
-  {
-    writeRawByte((int)paramLong & 0xFF);
-    writeRawByte((int)(paramLong >> 8) & 0xFF);
-    writeRawByte((int)(paramLong >> 16) & 0xFF);
-    writeRawByte((int)(paramLong >> 24) & 0xFF);
-    writeRawByte((int)(paramLong >> 32) & 0xFF);
-    writeRawByte((int)(paramLong >> 40) & 0xFF);
-    writeRawByte((int)(paramLong >> 48) & 0xFF);
-    writeRawByte((int)(paramLong >> 56) & 0xFF);
-  }
-  
-  public void writeRawVarint32(int paramInt)
-    throws IOException
-  {
-    for (;;)
-    {
-      if ((paramInt & 0xFFFFFF80) == 0)
-      {
-        writeRawByte(paramInt);
-        return;
-      }
-      writeRawByte(paramInt & 0x7F | 0x80);
-      paramInt >>>= 7;
+
+    public void writeSInt64(int fieldNumber, long value) throws IOException {
+        writeTag(fieldNumber, 0);
+        writeSInt64NoTag(value);
     }
-  }
-  
-  public void writeRawVarint64(long paramLong)
-    throws IOException
-  {
-    for (;;)
-    {
-      if ((0xFFFFFFFFFFFFFF80 & paramLong) == 0L)
-      {
-        writeRawByte((int)paramLong);
-        return;
-      }
-      writeRawByte((int)paramLong & 0x7F | 0x80);
-      paramLong >>>= 7;
+
+    public void writeDoubleNoTag(double value) throws IOException {
+        writeRawLittleEndian64(Double.doubleToLongBits(value));
     }
-  }
-  
-  public void writeSFixed32(int paramInt1, int paramInt2)
-    throws IOException
-  {
-    writeTag(paramInt1, 5);
-    writeSFixed32NoTag(paramInt2);
-  }
-  
-  public void writeSFixed32NoTag(int paramInt)
-    throws IOException
-  {
-    writeRawLittleEndian32(paramInt);
-  }
-  
-  public void writeSFixed64(int paramInt, long paramLong)
-    throws IOException
-  {
-    writeTag(paramInt, 1);
-    writeSFixed64NoTag(paramLong);
-  }
-  
-  public void writeSFixed64NoTag(long paramLong)
-    throws IOException
-  {
-    writeRawLittleEndian64(paramLong);
-  }
-  
-  public void writeSInt32(int paramInt1, int paramInt2)
-    throws IOException
-  {
-    writeTag(paramInt1, 0);
-    writeSInt32NoTag(paramInt2);
-  }
-  
-  public void writeSInt32NoTag(int paramInt)
-    throws IOException
-  {
-    writeRawVarint32(encodeZigZag32(paramInt));
-  }
-  
-  public void writeSInt64(int paramInt, long paramLong)
-    throws IOException
-  {
-    writeTag(paramInt, 0);
-    writeSInt64NoTag(paramLong);
-  }
-  
-  public void writeSInt64NoTag(long paramLong)
-    throws IOException
-  {
-    writeRawVarint64(encodeZigZag64(paramLong));
-  }
-  
-  public void writeString(int paramInt, String paramString)
-    throws IOException
-  {
-    writeTag(paramInt, 2);
-    writeStringNoTag(paramString);
-  }
-  
-  public void writeStringNoTag(String paramString)
-    throws IOException
-  {
-    paramString = paramString.getBytes("UTF-8");
-    writeRawVarint32(paramString.length);
-    writeRawBytes(paramString);
-  }
-  
-  public void writeTag(int paramInt1, int paramInt2)
-    throws IOException
-  {
-    writeRawVarint32(WireFormatMicro.makeTag(paramInt1, paramInt2));
-  }
-  
-  public void writeUInt32(int paramInt1, int paramInt2)
-    throws IOException
-  {
-    writeTag(paramInt1, 0);
-    writeUInt32NoTag(paramInt2);
-  }
-  
-  public void writeUInt32NoTag(int paramInt)
-    throws IOException
-  {
-    writeRawVarint32(paramInt);
-  }
-  
-  public void writeUInt64(int paramInt, long paramLong)
-    throws IOException
-  {
-    writeTag(paramInt, 0);
-    writeUInt64NoTag(paramLong);
-  }
-  
-  public void writeUInt64NoTag(long paramLong)
-    throws IOException
-  {
-    writeRawVarint64(paramLong);
-  }
-  
-  public static class OutOfSpaceException
-    extends IOException
-  {
-    private static final long serialVersionUID = -6947486886997889499L;
-    
-    OutOfSpaceException()
-    {
-      super();
+
+    public void writeFloatNoTag(float value) throws IOException {
+        writeRawLittleEndian32(Float.floatToIntBits(value));
     }
-  }
+
+    public void writeUInt64NoTag(long value) throws IOException {
+        writeRawVarint64(value);
+    }
+
+    public void writeInt64NoTag(long value) throws IOException {
+        writeRawVarint64(value);
+    }
+
+    public void writeInt32NoTag(int value) throws IOException {
+        if (value >= 0) {
+            writeRawVarint32(value);
+        } else {
+            writeRawVarint64((long) value);
+        }
+    }
+
+    public void writeFixed64NoTag(long value) throws IOException {
+        writeRawLittleEndian64(value);
+    }
+
+    public void writeFixed32NoTag(int value) throws IOException {
+        writeRawLittleEndian32(value);
+    }
+
+    public void writeBoolNoTag(boolean value) throws IOException {
+        writeRawByte(value ? 1 : 0);
+    }
+
+    public void writeStringNoTag(String value) throws IOException {
+        byte[] bytes = value.getBytes("UTF-8");
+        writeRawVarint32(bytes.length);
+        writeRawBytes(bytes);
+    }
+
+    public void writeGroupNoTag(MessageMicro value) throws IOException {
+        value.writeTo(this);
+    }
+
+    public void writeMessageNoTag(MessageMicro value) throws IOException {
+        writeRawVarint32(value.getCachedSize());
+        value.writeTo(this);
+    }
+
+    public void writeBytesNoTag(ByteStringMicro value) throws IOException {
+        byte[] bytes = value.toByteArray();
+        writeRawVarint32(bytes.length);
+        writeRawBytes(bytes);
+    }
+
+    public void writeByteArrayNoTag(byte[] value) throws IOException {
+        writeRawVarint32(value.length);
+        writeRawBytes(value);
+    }
+
+    public void writeUInt32NoTag(int value) throws IOException {
+        writeRawVarint32(value);
+    }
+
+    public void writeEnumNoTag(int value) throws IOException {
+        writeRawVarint32(value);
+    }
+
+    public void writeSFixed32NoTag(int value) throws IOException {
+        writeRawLittleEndian32(value);
+    }
+
+    public void writeSFixed64NoTag(long value) throws IOException {
+        writeRawLittleEndian64(value);
+    }
+
+    public void writeSInt32NoTag(int value) throws IOException {
+        writeRawVarint32(encodeZigZag32(value));
+    }
+
+    public void writeSInt64NoTag(long value) throws IOException {
+        writeRawVarint64(encodeZigZag64(value));
+    }
+
+    public static int computeDoubleSize(int fieldNumber, double value) {
+        return computeTagSize(fieldNumber) + computeDoubleSizeNoTag(value);
+    }
+
+    public static int computeFloatSize(int fieldNumber, float value) {
+        return computeTagSize(fieldNumber) + computeFloatSizeNoTag(value);
+    }
+
+    public static int computeUInt64Size(int fieldNumber, long value) {
+        return computeTagSize(fieldNumber) + computeUInt64SizeNoTag(value);
+    }
+
+    public static int computeInt64Size(int fieldNumber, long value) {
+        return computeTagSize(fieldNumber) + computeInt64SizeNoTag(value);
+    }
+
+    public static int computeInt32Size(int fieldNumber, int value) {
+        return computeTagSize(fieldNumber) + computeInt32SizeNoTag(value);
+    }
+
+    public static int computeFixed64Size(int fieldNumber, long value) {
+        return computeTagSize(fieldNumber) + computeFixed64SizeNoTag(value);
+    }
+
+    public static int computeFixed32Size(int fieldNumber, int value) {
+        return computeTagSize(fieldNumber) + computeFixed32SizeNoTag(value);
+    }
+
+    public static int computeBoolSize(int fieldNumber, boolean value) {
+        return computeTagSize(fieldNumber) + computeBoolSizeNoTag(value);
+    }
+
+    public static int computeStringSize(int fieldNumber, String value) {
+        return computeTagSize(fieldNumber) + computeStringSizeNoTag(value);
+    }
+
+    public static int computeGroupSize(int fieldNumber, MessageMicro value) {
+        return (computeTagSize(fieldNumber) * 2) + computeGroupSizeNoTag(value);
+    }
+
+    public static int computeMessageSize(int fieldNumber, MessageMicro value) {
+        return computeTagSize(fieldNumber) + computeMessageSizeNoTag(value);
+    }
+
+    public static int computeBytesSize(int fieldNumber, ByteStringMicro value) {
+        return computeTagSize(fieldNumber) + computeBytesSizeNoTag(value);
+    }
+
+    public static int computeByteArraySize(int fieldNumber, byte[] value) {
+        return computeTagSize(fieldNumber) + computeByteArraySizeNoTag(value);
+    }
+
+    public static int computeUInt32Size(int fieldNumber, int value) {
+        return computeTagSize(fieldNumber) + computeUInt32SizeNoTag(value);
+    }
+
+    public static int computeEnumSize(int fieldNumber, int value) {
+        return computeTagSize(fieldNumber) + computeEnumSizeNoTag(value);
+    }
+
+    public static int computeSFixed32Size(int fieldNumber, int value) {
+        return computeTagSize(fieldNumber) + computeSFixed32SizeNoTag(value);
+    }
+
+    public static int computeSFixed64Size(int fieldNumber, long value) {
+        return computeTagSize(fieldNumber) + computeSFixed64SizeNoTag(value);
+    }
+
+    public static int computeSInt32Size(int fieldNumber, int value) {
+        return computeTagSize(fieldNumber) + computeSInt32SizeNoTag(value);
+    }
+
+    public static int computeSInt64Size(int fieldNumber, long value) {
+        return computeTagSize(fieldNumber) + computeSInt64SizeNoTag(value);
+    }
+
+    public static int computeDoubleSizeNoTag(double value) {
+        return 8;
+    }
+
+    public static int computeFloatSizeNoTag(float value) {
+        return 4;
+    }
+
+    public static int computeUInt64SizeNoTag(long value) {
+        return computeRawVarint64Size(value);
+    }
+
+    public static int computeInt64SizeNoTag(long value) {
+        return computeRawVarint64Size(value);
+    }
+
+    public static int computeInt32SizeNoTag(int value) {
+        if (value >= 0) {
+            return computeRawVarint32Size(value);
+        }
+        return 10;
+    }
+
+    public static int computeFixed64SizeNoTag(long value) {
+        return 8;
+    }
+
+    public static int computeFixed32SizeNoTag(int value) {
+        return 4;
+    }
+
+    public static int computeBoolSizeNoTag(boolean value) {
+        return 1;
+    }
+
+    public static int computeStringSizeNoTag(String value) {
+        try {
+            byte[] bytes = value.getBytes("UTF-8");
+            return computeRawVarint32Size(bytes.length) + bytes.length;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 not supported.");
+        }
+    }
+
+    public static int computeGroupSizeNoTag(MessageMicro value) {
+        return value.getSerializedSize();
+    }
+
+    public static int computeMessageSizeNoTag(MessageMicro value) {
+        int size = value.getSerializedSize();
+        return computeRawVarint32Size(size) + size;
+    }
+
+    public static int computeBytesSizeNoTag(ByteStringMicro value) {
+        return computeRawVarint32Size(value.size()) + value.size();
+    }
+
+    public static int computeByteArraySizeNoTag(byte[] value) {
+        return computeRawVarint32Size(value.length) + value.length;
+    }
+
+    public static int computeUInt32SizeNoTag(int value) {
+        return computeRawVarint32Size(value);
+    }
+
+    public static int computeEnumSizeNoTag(int value) {
+        return computeRawVarint32Size(value);
+    }
+
+    public static int computeSFixed32SizeNoTag(int value) {
+        return 4;
+    }
+
+    public static int computeSFixed64SizeNoTag(long value) {
+        return 8;
+    }
+
+    public static int computeSInt32SizeNoTag(int value) {
+        return computeRawVarint32Size(encodeZigZag32(value));
+    }
+
+    public static int computeSInt64SizeNoTag(long value) {
+        return computeRawVarint64Size(encodeZigZag64(value));
+    }
+
+    private void refreshBuffer() throws IOException {
+        if (this.output == null) {
+            throw new OutOfSpaceException();
+        }
+        this.output.write(this.buffer, 0, this.position);
+        this.position = 0;
+    }
+
+    public void flush() throws IOException {
+        if (this.output != null) {
+            refreshBuffer();
+        }
+    }
+
+    public int spaceLeft() {
+        if (this.output == null) {
+            return this.limit - this.position;
+        }
+        throw new UnsupportedOperationException("spaceLeft() can only be called on CodedOutputStreams that are writing to a flat array.");
+    }
+
+    public void checkNoSpaceLeft() {
+        if (spaceLeft() != 0) {
+            throw new IllegalStateException("Did not write as much data as expected.");
+        }
+    }
+
+    public void writeRawByte(byte value) throws IOException {
+        if (this.position == this.limit) {
+            refreshBuffer();
+        }
+        byte[] bArr = this.buffer;
+        int i = this.position;
+        this.position = i + 1;
+        bArr[i] = value;
+    }
+
+    public void writeRawByte(int value) throws IOException {
+        writeRawByte((byte) value);
+    }
+
+    public void writeRawBytes(byte[] value) throws IOException {
+        writeRawBytes(value, 0, value.length);
+    }
+
+    public void writeRawBytes(byte[] value, int offset, int length) throws IOException {
+        if (this.limit - this.position >= length) {
+            System.arraycopy(value, offset, this.buffer, this.position, length);
+            this.position += length;
+            return;
+        }
+        int bytesWritten = this.limit - this.position;
+        System.arraycopy(value, offset, this.buffer, this.position, bytesWritten);
+        offset += bytesWritten;
+        length -= bytesWritten;
+        this.position = this.limit;
+        refreshBuffer();
+        if (length <= this.limit) {
+            System.arraycopy(value, offset, this.buffer, 0, length);
+            this.position = length;
+            return;
+        }
+        this.output.write(value, offset, length);
+    }
+
+    public void writeTag(int fieldNumber, int wireType) throws IOException {
+        writeRawVarint32(WireFormatMicro.makeTag(fieldNumber, wireType));
+    }
+
+    public static int computeTagSize(int fieldNumber) {
+        return computeRawVarint32Size(WireFormatMicro.makeTag(fieldNumber, 0));
+    }
+
+    public void writeRawVarint32(int value) throws IOException {
+        while ((value & -128) != 0) {
+            writeRawByte((value & TransportMediator.KEYCODE_MEDIA_PAUSE) | 128);
+            value >>>= 7;
+        }
+        writeRawByte(value);
+    }
+
+    public static int computeRawVarint32Size(int value) {
+        if ((value & -128) == 0) {
+            return 1;
+        }
+        if ((value & -16384) == 0) {
+            return 2;
+        }
+        if ((-2097152 & value) == 0) {
+            return 3;
+        }
+        if ((-268435456 & value) == 0) {
+            return 4;
+        }
+        return 5;
+    }
+
+    public void writeRawVarint64(long value) throws IOException {
+        while ((-128 & value) != 0) {
+            writeRawByte((((int) value) & TransportMediator.KEYCODE_MEDIA_PAUSE) | 128);
+            value >>>= 7;
+        }
+        writeRawByte((int) value);
+    }
+
+    public static int computeRawVarint64Size(long value) {
+        if ((-128 & value) == 0) {
+            return 1;
+        }
+        if ((-16384 & value) == 0) {
+            return 2;
+        }
+        if ((-2097152 & value) == 0) {
+            return 3;
+        }
+        if ((-268435456 & value) == 0) {
+            return 4;
+        }
+        if ((-34359738368L & value) == 0) {
+            return 5;
+        }
+        if ((-4398046511104L & value) == 0) {
+            return 6;
+        }
+        if ((-562949953421312L & value) == 0) {
+            return 7;
+        }
+        if ((-72057594037927936L & value) == 0) {
+            return 8;
+        }
+        if ((Long.MIN_VALUE & value) == 0) {
+            return 9;
+        }
+        return 10;
+    }
+
+    public void writeRawLittleEndian32(int value) throws IOException {
+        writeRawByte(value & 255);
+        writeRawByte((value >> 8) & 255);
+        writeRawByte((value >> 16) & 255);
+        writeRawByte((value >> 24) & 255);
+    }
+
+    public void writeRawLittleEndian64(long value) throws IOException {
+        writeRawByte(((int) value) & 255);
+        writeRawByte(((int) (value >> 8)) & 255);
+        writeRawByte(((int) (value >> 16)) & 255);
+        writeRawByte(((int) (value >> 24)) & 255);
+        writeRawByte(((int) (value >> 32)) & 255);
+        writeRawByte(((int) (value >> 40)) & 255);
+        writeRawByte(((int) (value >> 48)) & 255);
+        writeRawByte(((int) (value >> 56)) & 255);
+    }
+
+    public static int encodeZigZag32(int n) {
+        return (n << 1) ^ (n >> 31);
+    }
+
+    public static long encodeZigZag64(long n) {
+        return (n << 1) ^ (n >> 63);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/micro/CodedOutputStreamMicro.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

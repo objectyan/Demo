@@ -1,132 +1,92 @@
 package com.nineoldandroids.animation;
 
-import android.view.animation.Interpolator;
 import java.util.ArrayList;
 
-class IntKeyframeSet
-  extends KeyframeSet
-{
-  private int deltaValue;
-  private boolean firstTime = true;
-  private int firstValue;
-  private int lastValue;
-  
-  public IntKeyframeSet(Keyframe.IntKeyframe... paramVarArgs)
-  {
-    super(paramVarArgs);
-  }
-  
-  public IntKeyframeSet clone()
-  {
-    ArrayList localArrayList = this.mKeyframes;
-    int j = this.mKeyframes.size();
-    Keyframe.IntKeyframe[] arrayOfIntKeyframe = new Keyframe.IntKeyframe[j];
-    int i = 0;
-    while (i < j)
-    {
-      arrayOfIntKeyframe[i] = ((Keyframe.IntKeyframe)((Keyframe)localArrayList.get(i)).clone());
-      i += 1;
+class IntKeyframeSet extends KeyframeSet {
+    private int deltaValue;
+    private boolean firstTime = true;
+    private int firstValue;
+    private int lastValue;
+
+    public IntKeyframeSet(IntKeyframe... keyframes) {
+        super(keyframes);
     }
-    return new IntKeyframeSet(arrayOfIntKeyframe);
-  }
-  
-  public int getIntValue(float paramFloat)
-  {
-    float f1;
-    if (this.mNumKeyframes == 2)
-    {
-      if (this.firstTime)
-      {
-        this.firstTime = false;
-        this.firstValue = ((Keyframe.IntKeyframe)this.mKeyframes.get(0)).getIntValue();
-        this.lastValue = ((Keyframe.IntKeyframe)this.mKeyframes.get(1)).getIntValue();
-        this.deltaValue = (this.lastValue - this.firstValue);
-      }
-      f1 = paramFloat;
-      if (this.mInterpolator != null) {
-        f1 = this.mInterpolator.getInterpolation(paramFloat);
-      }
-      if (this.mEvaluator == null) {
-        return this.firstValue + (int)(this.deltaValue * f1);
-      }
-      return ((Number)this.mEvaluator.evaluate(f1, Integer.valueOf(this.firstValue), Integer.valueOf(this.lastValue))).intValue();
+
+    public Object getValue(float fraction) {
+        return Integer.valueOf(getIntValue(fraction));
     }
-    Keyframe.IntKeyframe localIntKeyframe;
-    int j;
-    float f2;
-    float f3;
-    if (paramFloat <= 0.0F)
-    {
-      localObject = (Keyframe.IntKeyframe)this.mKeyframes.get(0);
-      localIntKeyframe = (Keyframe.IntKeyframe)this.mKeyframes.get(1);
-      i = ((Keyframe.IntKeyframe)localObject).getIntValue();
-      j = localIntKeyframe.getIntValue();
-      f2 = ((Keyframe.IntKeyframe)localObject).getFraction();
-      f3 = localIntKeyframe.getFraction();
-      localObject = localIntKeyframe.getInterpolator();
-      f1 = paramFloat;
-      if (localObject != null) {
-        f1 = ((Interpolator)localObject).getInterpolation(paramFloat);
-      }
-      paramFloat = (f1 - f2) / (f3 - f2);
-      if (this.mEvaluator == null) {
-        return (int)((j - i) * paramFloat) + i;
-      }
-      return ((Number)this.mEvaluator.evaluate(paramFloat, Integer.valueOf(i), Integer.valueOf(j))).intValue();
-    }
-    if (paramFloat >= 1.0F)
-    {
-      localObject = (Keyframe.IntKeyframe)this.mKeyframes.get(this.mNumKeyframes - 2);
-      localIntKeyframe = (Keyframe.IntKeyframe)this.mKeyframes.get(this.mNumKeyframes - 1);
-      i = ((Keyframe.IntKeyframe)localObject).getIntValue();
-      j = localIntKeyframe.getIntValue();
-      f2 = ((Keyframe.IntKeyframe)localObject).getFraction();
-      f3 = localIntKeyframe.getFraction();
-      localObject = localIntKeyframe.getInterpolator();
-      f1 = paramFloat;
-      if (localObject != null) {
-        f1 = ((Interpolator)localObject).getInterpolation(paramFloat);
-      }
-      paramFloat = (f1 - f2) / (f3 - f2);
-      if (this.mEvaluator == null) {
-        return (int)((j - i) * paramFloat) + i;
-      }
-      return ((Number)this.mEvaluator.evaluate(paramFloat, Integer.valueOf(i), Integer.valueOf(j))).intValue();
-    }
-    Object localObject = (Keyframe.IntKeyframe)this.mKeyframes.get(0);
-    int i = 1;
-    while (i < this.mNumKeyframes)
-    {
-      localIntKeyframe = (Keyframe.IntKeyframe)this.mKeyframes.get(i);
-      if (paramFloat < localIntKeyframe.getFraction())
-      {
-        Interpolator localInterpolator = localIntKeyframe.getInterpolator();
-        f1 = paramFloat;
-        if (localInterpolator != null) {
-          f1 = localInterpolator.getInterpolation(paramFloat);
+
+    public IntKeyframeSet clone() {
+        ArrayList<Keyframe> keyframes = this.mKeyframes;
+        int numKeyframes = this.mKeyframes.size();
+        IntKeyframe[] newKeyframes = new IntKeyframe[numKeyframes];
+        for (int i = 0; i < numKeyframes; i++) {
+            newKeyframes[i] = (IntKeyframe) ((Keyframe) keyframes.get(i)).clone();
         }
-        paramFloat = (f1 - ((Keyframe.IntKeyframe)localObject).getFraction()) / (localIntKeyframe.getFraction() - ((Keyframe.IntKeyframe)localObject).getFraction());
-        i = ((Keyframe.IntKeyframe)localObject).getIntValue();
-        j = localIntKeyframe.getIntValue();
-        if (this.mEvaluator == null) {
-          return (int)((j - i) * paramFloat) + i;
-        }
-        return ((Number)this.mEvaluator.evaluate(paramFloat, Integer.valueOf(i), Integer.valueOf(j))).intValue();
-      }
-      localObject = localIntKeyframe;
-      i += 1;
+        return new IntKeyframeSet(newKeyframes);
     }
-    return ((Number)((Keyframe)this.mKeyframes.get(this.mNumKeyframes - 1)).getValue()).intValue();
-  }
-  
-  public Object getValue(float paramFloat)
-  {
-    return Integer.valueOf(getIntValue(paramFloat));
-  }
+
+    public int getIntValue(float fraction) {
+        if (this.mNumKeyframes == 2) {
+            if (this.firstTime) {
+                this.firstTime = false;
+                this.firstValue = ((IntKeyframe) this.mKeyframes.get(0)).getIntValue();
+                this.lastValue = ((IntKeyframe) this.mKeyframes.get(1)).getIntValue();
+                this.deltaValue = this.lastValue - this.firstValue;
+            }
+            if (this.mInterpolator != null) {
+                fraction = this.mInterpolator.getInterpolation(fraction);
+            }
+            if (this.mEvaluator == null) {
+                return this.firstValue + ((int) (((float) this.deltaValue) * fraction));
+            }
+            return ((Number) this.mEvaluator.evaluate(fraction, Integer.valueOf(this.firstValue), Integer.valueOf(this.lastValue))).intValue();
+        } else if (fraction <= 0.0f) {
+            prevKeyframe = (IntKeyframe) this.mKeyframes.get(0);
+            nextKeyframe = (IntKeyframe) this.mKeyframes.get(1);
+            prevValue = prevKeyframe.getIntValue();
+            nextValue = nextKeyframe.getIntValue();
+            prevFraction = prevKeyframe.getFraction();
+            nextFraction = nextKeyframe.getFraction();
+            interpolator = nextKeyframe.getInterpolator();
+            if (interpolator != null) {
+                fraction = interpolator.getInterpolation(fraction);
+            }
+            intervalFraction = (fraction - prevFraction) / (nextFraction - prevFraction);
+            return this.mEvaluator == null ? ((int) (((float) (nextValue - prevValue)) * intervalFraction)) + prevValue : ((Number) this.mEvaluator.evaluate(intervalFraction, Integer.valueOf(prevValue), Integer.valueOf(nextValue))).intValue();
+        } else if (fraction >= 1.0f) {
+            prevKeyframe = (IntKeyframe) this.mKeyframes.get(this.mNumKeyframes - 2);
+            nextKeyframe = (IntKeyframe) this.mKeyframes.get(this.mNumKeyframes - 1);
+            prevValue = prevKeyframe.getIntValue();
+            nextValue = nextKeyframe.getIntValue();
+            prevFraction = prevKeyframe.getFraction();
+            nextFraction = nextKeyframe.getFraction();
+            interpolator = nextKeyframe.getInterpolator();
+            if (interpolator != null) {
+                fraction = interpolator.getInterpolation(fraction);
+            }
+            intervalFraction = (fraction - prevFraction) / (nextFraction - prevFraction);
+            return this.mEvaluator == null ? ((int) (((float) (nextValue - prevValue)) * intervalFraction)) + prevValue : ((Number) this.mEvaluator.evaluate(intervalFraction, Integer.valueOf(prevValue), Integer.valueOf(nextValue))).intValue();
+        } else {
+            prevKeyframe = (IntKeyframe) this.mKeyframes.get(0);
+            int i = 1;
+            while (i < this.mNumKeyframes) {
+                nextKeyframe = (IntKeyframe) this.mKeyframes.get(i);
+                if (fraction < nextKeyframe.getFraction()) {
+                    interpolator = nextKeyframe.getInterpolator();
+                    if (interpolator != null) {
+                        fraction = interpolator.getInterpolation(fraction);
+                    }
+                    intervalFraction = (fraction - prevKeyframe.getFraction()) / (nextKeyframe.getFraction() - prevKeyframe.getFraction());
+                    prevValue = prevKeyframe.getIntValue();
+                    nextValue = nextKeyframe.getIntValue();
+                    return this.mEvaluator == null ? ((int) (((float) (nextValue - prevValue)) * intervalFraction)) + prevValue : ((Number) this.mEvaluator.evaluate(intervalFraction, Integer.valueOf(prevValue), Integer.valueOf(nextValue))).intValue();
+                } else {
+                    prevKeyframe = nextKeyframe;
+                    i++;
+                }
+            }
+            return ((Number) ((Keyframe) this.mKeyframes.get(this.mNumKeyframes - 1)).getValue()).intValue();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/animation/IntKeyframeSet.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,70 +3,46 @@ package com.google.gson.internal;
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 
-public final class LazilyParsedNumber
-  extends Number
-{
-  private final String value;
-  
-  public LazilyParsedNumber(String paramString)
-  {
-    this.value = paramString;
-  }
-  
-  private Object writeReplace()
-    throws ObjectStreamException
-  {
-    return new BigDecimal(this.value);
-  }
-  
-  public double doubleValue()
-  {
-    return Double.parseDouble(this.value);
-  }
-  
-  public float floatValue()
-  {
-    return Float.parseFloat(this.value);
-  }
-  
-  public int intValue()
-  {
-    try
-    {
-      int i = Integer.parseInt(this.value);
-      return i;
+public final class LazilyParsedNumber extends Number {
+    private final String value;
+
+    public LazilyParsedNumber(String value) {
+        this.value = value;
     }
-    catch (NumberFormatException localNumberFormatException1)
-    {
-      try
-      {
-        long l = Long.parseLong(this.value);
-        return (int)l;
-      }
-      catch (NumberFormatException localNumberFormatException2) {}
+
+    public int intValue() {
+        try {
+            return Integer.parseInt(this.value);
+        } catch (NumberFormatException e) {
+            try {
+                return (int) Long.parseLong(this.value);
+            } catch (NumberFormatException e2) {
+                return new BigDecimal(this.value).intValue();
+            }
+        }
     }
-    return new BigDecimal(this.value).intValue();
-  }
-  
-  public long longValue()
-  {
-    try
-    {
-      long l = Long.parseLong(this.value);
-      return l;
+
+    public long longValue() {
+        try {
+            return Long.parseLong(this.value);
+        } catch (NumberFormatException e) {
+            return new BigDecimal(this.value).longValue();
+        }
     }
-    catch (NumberFormatException localNumberFormatException) {}
-    return new BigDecimal(this.value).longValue();
-  }
-  
-  public String toString()
-  {
-    return this.value;
-  }
+
+    public float floatValue() {
+        return Float.parseFloat(this.value);
+    }
+
+    public double doubleValue() {
+        return Double.parseDouble(this.value);
+    }
+
+    public String toString() {
+        return this.value;
+    }
+
+    private Object writeReplace() throws ObjectStreamException {
+        return new BigDecimal(this.value);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/LazilyParsedNumber.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

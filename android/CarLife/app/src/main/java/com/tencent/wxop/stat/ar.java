@@ -1,66 +1,55 @@
 package com.tencent.wxop.stat;
 
 import android.content.Context;
-import com.tencent.wxop.stat.b.b;
-import com.tencent.wxop.stat.b.m;
+import com.tencent.wxop.stat.p291b.C6144m;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ar
-{
-  private static volatile ar b = null;
-  private Timer a = null;
-  private Context c = null;
-  
-  private ar(Context paramContext)
-  {
-    this.c = paramContext.getApplicationContext();
-    this.a = new Timer(false);
-  }
-  
-  public static ar a(Context paramContext)
-  {
-    if (b == null) {}
-    try
-    {
-      if (b == null) {
-        b = new ar(paramContext);
-      }
-      return b;
+public class ar {
+    /* renamed from: b */
+    private static volatile ar f24853b = null;
+    /* renamed from: a */
+    private Timer f24854a = null;
+    /* renamed from: c */
+    private Context f24855c = null;
+
+    private ar(Context context) {
+        this.f24855c = context.getApplicationContext();
+        this.f24854a = new Timer(false);
     }
-    finally {}
-  }
-  
-  public void a()
-  {
-    if (f.a() == h.f)
-    {
-      long l = f.m() * 60 * 1000;
-      if (f.b()) {
-        m.b().b("setupPeriodTimer delay:" + l);
-      }
-      a(new as(this), l);
+
+    /* renamed from: a */
+    public static ar m21801a(Context context) {
+        if (f24853b == null) {
+            synchronized (ar.class) {
+                if (f24853b == null) {
+                    f24853b = new ar(context);
+                }
+            }
+        }
+        return f24853b;
     }
-  }
-  
-  public void a(TimerTask paramTimerTask, long paramLong)
-  {
-    if (this.a != null)
-    {
-      if (f.b()) {
-        m.b().b("setupPeriodTimer schedule delay:" + paramLong);
-      }
-      this.a.schedule(paramTimerTask, paramLong);
+
+    /* renamed from: a */
+    public void m21802a() {
+        if (C6156f.m21971a() == C6158h.PERIOD) {
+            long m = (long) ((C6156f.m22034m() * 60) * 1000);
+            if (C6156f.m21997b()) {
+                C6144m.m21872b().m21825b("setupPeriodTimer delay:" + m);
+            }
+            m21803a(new as(this), m);
+        }
     }
-    while (!f.b()) {
-      return;
+
+    /* renamed from: a */
+    public void m21803a(TimerTask timerTask, long j) {
+        if (this.f24854a != null) {
+            if (C6156f.m21997b()) {
+                C6144m.m21872b().m21825b("setupPeriodTimer schedule delay:" + j);
+            }
+            this.f24854a.schedule(timerTask, j);
+        } else if (C6156f.m21997b()) {
+            C6144m.m21872b().m21830f("setupPeriodTimer schedule timer == null");
+        }
     }
-    m.b().f("setupPeriodTimer schedule timer == null");
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/ar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,204 +3,204 @@ package com.baidu.mapframework.commonlib.date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-final class DateTimeParser
-{
-  private static final Pattern a = Pattern.compile("(\\d{1,4})-(\\d\\d)-(\\d\\d)|(\\d{1,4})-(\\d\\d)|(\\d{1,4})");
-  private static final String b = "\\:";
-  private static final String c = "(\\d\\d)";
-  private static final String d = "9";
-  private static final Integer e = Integer.valueOf("9");
-  private static final Pattern f = Pattern.compile("(\\d\\d)\\:(\\d\\d)\\:(\\d\\d)\\.(\\d{1,9})|(\\d\\d)\\:(\\d\\d)\\:(\\d\\d)|(\\d\\d)\\:(\\d\\d)|(\\d\\d)");
-  private static final String g = ":";
-  private static final int h = 2;
-  private Integer i;
-  private Integer j;
-  private Integer k;
-  private Integer l;
-  private Integer m;
-  private Integer n;
-  private Integer o;
-  
-  private String a(Matcher paramMatcher, int... paramVarArgs)
-  {
-    String str = null;
-    int i2 = paramVarArgs.length;
-    int i1 = 0;
-    for (;;)
-    {
-      if (i1 < i2)
-      {
-        str = paramMatcher.group(paramVarArgs[i1]);
-        if (str == null) {}
-      }
-      else
-      {
-        return str;
-      }
-      i1 += 1;
+final class DateTimeParser {
+    /* renamed from: a */
+    private static final Pattern f19012a = Pattern.compile("(\\d{1,4})-(\\d\\d)-(\\d\\d)|(\\d{1,4})-(\\d\\d)|(\\d{1,4})");
+    /* renamed from: b */
+    private static final String f19013b = "\\:";
+    /* renamed from: c */
+    private static final String f19014c = "(\\d\\d)";
+    /* renamed from: d */
+    private static final String f19015d = "9";
+    /* renamed from: e */
+    private static final Integer f19016e = Integer.valueOf("9");
+    /* renamed from: f */
+    private static final Pattern f19017f = Pattern.compile("(\\d\\d)\\:(\\d\\d)\\:(\\d\\d)\\.(\\d{1,9})|(\\d\\d)\\:(\\d\\d)\\:(\\d\\d)|(\\d\\d)\\:(\\d\\d)|(\\d\\d)");
+    /* renamed from: g */
+    private static final String f19018g = ":";
+    /* renamed from: h */
+    private static final int f19019h = 2;
+    /* renamed from: i */
+    private Integer f19020i;
+    /* renamed from: j */
+    private Integer f19021j;
+    /* renamed from: k */
+    private Integer f19022k;
+    /* renamed from: l */
+    private Integer f19023l;
+    /* renamed from: m */
+    private Integer f19024m;
+    /* renamed from: n */
+    private Integer f19025n;
+    /* renamed from: o */
+    private Integer f19026o;
+
+    private class Parts {
+        /* renamed from: a */
+        String f19008a;
+        /* renamed from: b */
+        String f19009b;
+        /* renamed from: c */
+        final /* synthetic */ DateTimeParser f19010c;
+
+        private Parts(DateTimeParser dateTimeParser) {
+            this.f19010c = dateTimeParser;
+        }
+
+        /* renamed from: a */
+        boolean m15049a() {
+            return (this.f19008a == null || this.f19009b == null) ? false : true;
+        }
+
+        /* renamed from: b */
+        boolean m15050b() {
+            return this.f19009b == null;
+        }
+
+        /* renamed from: c */
+        boolean m15051c() {
+            return this.f19008a == null;
+        }
     }
-  }
-  
-  private Parts c(String paramString)
-  {
-    Parts localParts = new Parts(null);
-    int i2 = b(paramString);
-    if ((i2 > 0) && (i2 < paramString.length())) {}
-    for (int i1 = 1; i1 != 0; i1 = 0)
-    {
-      localParts.a = paramString.substring(0, i2);
-      localParts.b = paramString.substring(i2 + 1);
-      return localParts;
+
+    static final class UnknownDateTimeFormat extends RuntimeException {
+        /* renamed from: a */
+        private static final long f19011a = -7179421566055773208L;
+
+        UnknownDateTimeFormat(String aMessage) {
+            super(aMessage);
+        }
+
+        UnknownDateTimeFormat(String aMessage, Throwable aEx) {
+            super(aMessage, aEx);
+        }
     }
-    if (d(paramString))
-    {
-      localParts.b = paramString;
-      return localParts;
+
+    DateTimeParser() {
     }
-    localParts.a = paramString;
-    return localParts;
-  }
-  
-  private boolean d(String paramString)
-  {
-    boolean bool = false;
-    if (paramString.length() >= 2) {
-      bool = ":".equals(paramString.substring(2, 3));
+
+    /* renamed from: a */
+    DateTime m15058a(String aDateTime) {
+        if (aDateTime == null) {
+            throw new NullPointerException("DateTime string is null");
+        }
+        Parts parts = m15053c(aDateTime.trim());
+        if (parts.m15049a()) {
+            m15055e(parts.f19008a);
+            m15056f(parts.f19009b);
+        } else if (parts.m15050b()) {
+            m15055e(parts.f19008a);
+        } else if (parts.m15051c()) {
+            m15056f(parts.f19009b);
+        }
+        return new DateTime(this.f19020i, this.f19021j, this.f19022k, this.f19023l, this.f19024m, this.f19025n, this.f19026o);
     }
-    return bool;
-  }
-  
-  private void e(String paramString)
-  {
-    Matcher localMatcher = a.matcher(paramString);
-    if (localMatcher.matches())
-    {
-      paramString = a(localMatcher, new int[] { 1, 4, 6 });
-      if (paramString != null) {
-        this.i = Integer.valueOf(paramString);
-      }
-      paramString = a(localMatcher, new int[] { 2, 5 });
-      if (paramString != null) {
-        this.j = Integer.valueOf(paramString);
-      }
-      paramString = a(localMatcher, new int[] { 3 });
-      if (paramString != null) {
-        this.k = Integer.valueOf(paramString);
-      }
-      return;
+
+    /* renamed from: c */
+    private Parts m15053c(String aDateTime) {
+        boolean hasDateTimeSeparator;
+        Parts result = new Parts();
+        int dateTimeSeparator = m15059b(aDateTime);
+        if (dateTimeSeparator <= 0 || dateTimeSeparator >= aDateTime.length()) {
+            hasDateTimeSeparator = false;
+        } else {
+            hasDateTimeSeparator = true;
+        }
+        if (hasDateTimeSeparator) {
+            result.f19008a = aDateTime.substring(0, dateTimeSeparator);
+            result.f19009b = aDateTime.substring(dateTimeSeparator + 1);
+        } else if (m15054d(aDateTime)) {
+            result.f19009b = aDateTime;
+        } else {
+            result.f19008a = aDateTime;
+        }
+        return result;
     }
-    throw new UnknownDateTimeFormat("Unexpected format for date:" + paramString);
-  }
-  
-  private void f(String paramString)
-  {
-    Matcher localMatcher = f.matcher(paramString);
-    if (localMatcher.matches())
-    {
-      paramString = a(localMatcher, new int[] { 1, 5, 8, 10 });
-      if (paramString != null) {
-        this.l = Integer.valueOf(paramString);
-      }
-      paramString = a(localMatcher, new int[] { 2, 6, 9 });
-      if (paramString != null) {
-        this.m = Integer.valueOf(paramString);
-      }
-      paramString = a(localMatcher, new int[] { 3, 7 });
-      if (paramString != null) {
-        this.n = Integer.valueOf(paramString);
-      }
-      paramString = a(localMatcher, new int[] { 4 });
-      if (paramString != null) {
-        this.o = Integer.valueOf(g(paramString));
-      }
-      return;
+
+    /* renamed from: b */
+    int m15059b(String aDateTime) {
+        int i = -1;
+        i = aDateTime.indexOf(" ");
+        if (i == -1) {
+            return aDateTime.indexOf("T");
+        }
+        return i;
     }
-    throw new UnknownDateTimeFormat("Unexpected format for time:" + paramString);
-  }
-  
-  private String g(String paramString)
-  {
-    paramString = new StringBuilder(paramString);
-    while (paramString.length() < e.intValue()) {
-      paramString.append("0");
+
+    /* renamed from: d */
+    private boolean m15054d(String aDateTime) {
+        if (aDateTime.length() >= 2) {
+            return ":".equals(aDateTime.substring(2, 3));
+        }
+        return false;
     }
-    return paramString.toString();
-  }
-  
-  DateTime a(String paramString)
-  {
-    if (paramString == null) {
-      throw new NullPointerException("DateTime string is null");
+
+    /* renamed from: e */
+    private void m15055e(String aDate) {
+        Matcher matcher = f19012a.matcher(aDate);
+        if (matcher.matches()) {
+            String year = m15052a(matcher, 1, 4, 6);
+            if (year != null) {
+                this.f19020i = Integer.valueOf(year);
+            }
+            String month = m15052a(matcher, 2, 5);
+            if (month != null) {
+                this.f19021j = Integer.valueOf(month);
+            }
+            String day = m15052a(matcher, 3);
+            if (day != null) {
+                this.f19022k = Integer.valueOf(day);
+                return;
+            }
+            return;
+        }
+        throw new UnknownDateTimeFormat("Unexpected format for date:" + aDate);
     }
-    paramString = c(paramString.trim());
-    if (paramString.a())
-    {
-      e(paramString.a);
-      f(paramString.b);
+
+    /* renamed from: a */
+    private String m15052a(Matcher aMatcher, int... aGroupIds) {
+        String result = null;
+        for (int id : aGroupIds) {
+            result = aMatcher.group(id);
+            if (result != null) {
+                break;
+            }
+        }
+        return result;
     }
-    for (;;)
-    {
-      return new DateTime(this.i, this.j, this.k, this.l, this.m, this.n, this.o);
-      if (paramString.b()) {
-        e(paramString.a);
-      } else if (paramString.c()) {
-        f(paramString.b);
-      }
+
+    /* renamed from: f */
+    private void m15056f(String aTime) {
+        Matcher matcher = f19017f.matcher(aTime);
+        if (matcher.matches()) {
+            String hour = m15052a(matcher, 1, 5, 8, 10);
+            if (hour != null) {
+                this.f19023l = Integer.valueOf(hour);
+            }
+            String minute = m15052a(matcher, 2, 6, 9);
+            if (minute != null) {
+                this.f19024m = Integer.valueOf(minute);
+            }
+            String second = m15052a(matcher, 3, 7);
+            if (second != null) {
+                this.f19025n = Integer.valueOf(second);
+            }
+            String decimalSeconds = m15052a(matcher, 4);
+            if (decimalSeconds != null) {
+                this.f19026o = Integer.valueOf(m15057g(decimalSeconds));
+                return;
+            }
+            return;
+        }
+        throw new UnknownDateTimeFormat("Unexpected format for time:" + aTime);
     }
-  }
-  
-  int b(String paramString)
-  {
-    int i2 = paramString.indexOf(" ");
-    int i1 = i2;
-    if (i2 == -1) {
-      i1 = paramString.indexOf("T");
+
+    /* renamed from: g */
+    private String m15057g(String aDecimalSeconds) {
+        StringBuilder result = new StringBuilder(aDecimalSeconds);
+        while (result.length() < f19016e.intValue()) {
+            result.append("0");
+        }
+        return result.toString();
     }
-    return i1;
-  }
-  
-  private class Parts
-  {
-    String a;
-    String b;
-    
-    private Parts() {}
-    
-    boolean a()
-    {
-      return (this.a != null) && (this.b != null);
-    }
-    
-    boolean b()
-    {
-      return this.b == null;
-    }
-    
-    boolean c()
-    {
-      return this.a == null;
-    }
-  }
-  
-  static final class UnknownDateTimeFormat
-    extends RuntimeException
-  {
-    private static final long a = -7179421566055773208L;
-    
-    UnknownDateTimeFormat(String paramString)
-    {
-      super();
-    }
-    
-    UnknownDateTimeFormat(String paramString, Throwable paramThrowable)
-    {
-      super(paramThrowable);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/date/DateTimeParser.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

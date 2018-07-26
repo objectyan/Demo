@@ -1,44 +1,31 @@
 package com.google.android.support.v4.view;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.text.method.SingleLineTransformationMethod;
 import android.view.View;
 import android.widget.TextView;
 import java.util.Locale;
 
-class PagerTitleStripIcs
-{
-  public static void setSingleLineAllCaps(TextView paramTextView)
-  {
-    paramTextView.setTransformationMethod(new SingleLineAllCapsTransform(paramTextView.getContext()));
-  }
-  
-  private static class SingleLineAllCapsTransform
-    extends SingleLineTransformationMethod
-  {
-    private static final String TAG = "SingleLineAllCapsTransform";
-    private Locale mLocale;
-    
-    public SingleLineAllCapsTransform(Context paramContext)
-    {
-      this.mLocale = paramContext.getResources().getConfiguration().locale;
+class PagerTitleStripIcs {
+
+    private static class SingleLineAllCapsTransform extends SingleLineTransformationMethod {
+        private static final String TAG = "SingleLineAllCapsTransform";
+        private Locale mLocale;
+
+        public SingleLineAllCapsTransform(Context context) {
+            this.mLocale = context.getResources().getConfiguration().locale;
+        }
+
+        public CharSequence getTransformation(CharSequence source, View view) {
+            source = super.getTransformation(source, view);
+            return source != null ? source.toString().toUpperCase(this.mLocale) : null;
+        }
     }
-    
-    public CharSequence getTransformation(CharSequence paramCharSequence, View paramView)
-    {
-      paramCharSequence = super.getTransformation(paramCharSequence, paramView);
-      if (paramCharSequence != null) {
-        return paramCharSequence.toString().toUpperCase(this.mLocale);
-      }
-      return null;
+
+    PagerTitleStripIcs() {
     }
-  }
+
+    public static void setSingleLineAllCaps(TextView text) {
+        text.setTransformationMethod(new SingleLineAllCapsTransform(text.getContext()));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/PagerTitleStripIcs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,21 +3,20 @@ package com.baidu.mobstat;
 import android.content.Context;
 import java.util.TimerTask;
 
-class cb
-  extends TimerTask
-{
-  cb(by paramby, Context paramContext) {}
-  
-  public void run()
-  {
-    if (!DataCore.instance().isPartEmpty()) {
-      by.a(this.b, this.a);
+class cb extends TimerTask {
+    /* renamed from: a */
+    final /* synthetic */ Context f19549a;
+    /* renamed from: b */
+    final /* synthetic */ by f19550b;
+
+    cb(by byVar, Context context) {
+        this.f19550b = byVar;
+        this.f19549a = context;
     }
-  }
+
+    public void run() {
+        if (!DataCore.instance().isPartEmpty()) {
+            this.f19550b.m15536c(this.f19549a);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cb.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

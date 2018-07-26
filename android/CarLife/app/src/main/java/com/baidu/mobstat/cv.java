@@ -1,213 +1,151 @@
 package com.baidu.mobstat;
 
-public final class cv
-{
-  private static final byte[] a = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 43, 47 };
-  
-  public static String a(byte[] paramArrayOfByte, String paramString)
-  {
-    int i = paramArrayOfByte.length * 4 / 3;
-    byte[] arrayOfByte = new byte[i + (i / 76 + 3)];
-    int i1 = paramArrayOfByte.length - paramArrayOfByte.length % 3;
-    int k = 0;
-    int j = 0;
-    i = 0;
-    while (j < i1)
-    {
-      int m = i + 1;
-      arrayOfByte[i] = a[((paramArrayOfByte[j] & 0xFF) >> 2)];
-      i = m + 1;
-      arrayOfByte[m] = a[((paramArrayOfByte[j] & 0x3) << 4 | (paramArrayOfByte[(j + 1)] & 0xFF) >> 4)];
-      int n = i + 1;
-      arrayOfByte[i] = a[((paramArrayOfByte[(j + 1)] & 0xF) << 2 | (paramArrayOfByte[(j + 2)] & 0xFF) >> 6)];
-      m = n + 1;
-      arrayOfByte[n] = a[(paramArrayOfByte[(j + 2)] & 0x3F)];
-      i = k;
-      if ((m - k) % 76 == 0)
-      {
-        i = k;
-        if (m != 0) {
-          i = k + 1;
-        }
-      }
-      n = j + 3;
-      j = m;
-      k = i;
-      i = j;
-      j = n;
+public final class cv {
+    /* renamed from: a */
+    private static final byte[] f19626a = new byte[]{(byte) 65, (byte) 66, (byte) 67, (byte) 68, (byte) 69, (byte) 70, (byte) 71, (byte) 72, (byte) 73, (byte) 74, (byte) 75, (byte) 76, (byte) 77, (byte) 78, (byte) 79, (byte) 80, (byte) 81, (byte) 82, (byte) 83, (byte) 84, (byte) 85, (byte) 86, (byte) 87, (byte) 88, (byte) 89, (byte) 90, (byte) 97, (byte) 98, (byte) 99, (byte) 100, (byte) 101, (byte) 102, (byte) 103, (byte) 104, (byte) 105, (byte) 106, (byte) 107, (byte) 108, (byte) 109, (byte) 110, (byte) 111, (byte) 112, (byte) 113, (byte) 114, (byte) 115, (byte) 116, (byte) 117, (byte) 118, (byte) 119, (byte) 120, (byte) 121, (byte) 122, (byte) 48, (byte) 49, (byte) 50, (byte) 51, (byte) 52, (byte) 53, (byte) 54, (byte) 55, (byte) 56, (byte) 57, (byte) 43, (byte) 47};
+
+    /* renamed from: a */
+    public static byte[] m15640a(byte[] bArr) {
+        return m15641a(bArr, bArr.length);
     }
-    switch (paramArrayOfByte.length % 3)
-    {
+
+    /* renamed from: a */
+    public static byte[] m15641a(byte[] bArr, int i) {
+        int i2 = (i / 4) * 3;
+        if (i2 == 0) {
+            return new byte[0];
+        }
+        int i3;
+        Object obj = new byte[i2];
+        i2 = 0;
+        while (true) {
+            byte b = bArr[i - 1];
+            if (!(b == (byte) 10 || b == (byte) 13 || b == (byte) 32 || b == (byte) 9)) {
+                if (b != (byte) 61) {
+                    break;
+                }
+                i2++;
+            }
+            i--;
+        }
+        int i4 = 0;
+        int i5 = 0;
+        int i6 = 0;
+        int i7 = 0;
+        while (i4 < i) {
+            b = bArr[i4];
+            if (b == (byte) 10 || b == (byte) 13 || b == (byte) 32) {
+                i3 = i5;
+                i5 = i7;
+                i7 = i6;
+            } else if (b == (byte) 9) {
+                i3 = i5;
+                i5 = i7;
+                i7 = i6;
+            } else {
+                if (b >= (byte) 65 && b <= (byte) 90) {
+                    i3 = b - 65;
+                } else if (b >= (byte) 97 && b <= (byte) 122) {
+                    i3 = b - 71;
+                } else if (b >= (byte) 48 && b <= (byte) 57) {
+                    i3 = b + 4;
+                } else if (b == (byte) 43) {
+                    i3 = 62;
+                } else if (b != (byte) 47) {
+                    return null;
+                } else {
+                    i3 = 63;
+                }
+                i5 = (i5 << 6) | ((byte) i3);
+                if (i6 % 4 == 3) {
+                    i3 = i7 + 1;
+                    obj[i7] = (byte) ((16711680 & i5) >> 16);
+                    i7 = i3 + 1;
+                    obj[i3] = (byte) ((65280 & i5) >> 8);
+                    i3 = i7 + 1;
+                    obj[i7] = (byte) (i5 & 255);
+                } else {
+                    i3 = i7;
+                }
+                i7 = i6 + 1;
+                int i8 = i5;
+                i5 = i3;
+                i3 = i8;
+            }
+            i4++;
+            i6 = i7;
+            i7 = i5;
+            i5 = i3;
+        }
+        if (i2 > 0) {
+            i5 <<= i2 * 6;
+            i3 = i7 + 1;
+            obj[i7] = (byte) ((16711680 & i5) >> 16);
+            if (i2 == 1) {
+                i7 = i3 + 1;
+                obj[i3] = (byte) ((65280 & i5) >> 8);
+            } else {
+                i7 = i3;
+            }
+        }
+        byte[] bArr2 = new byte[i7];
+        System.arraycopy(obj, 0, bArr2, 0, i7);
+        return bArr2;
     }
-    for (;;)
-    {
-      return new String(arrayOfByte, 0, i, paramString);
-      j = i + 1;
-      arrayOfByte[i] = a[((paramArrayOfByte[i1] & 0xFF) >> 2)];
-      i = j + 1;
-      arrayOfByte[j] = a[((paramArrayOfByte[i1] & 0x3) << 4)];
-      j = i + 1;
-      arrayOfByte[i] = 61;
-      i = j + 1;
-      arrayOfByte[j] = 61;
-      continue;
-      j = i + 1;
-      arrayOfByte[i] = a[((paramArrayOfByte[i1] & 0xFF) >> 2)];
-      i = j + 1;
-      arrayOfByte[j] = a[((paramArrayOfByte[i1] & 0x3) << 4 | (paramArrayOfByte[(i1 + 1)] & 0xFF) >> 4)];
-      j = i + 1;
-      arrayOfByte[i] = a[((paramArrayOfByte[(i1 + 1)] & 0xF) << 2)];
-      i = j + 1;
-      arrayOfByte[j] = 61;
+
+    /* renamed from: b */
+    public static String m15642b(byte[] bArr) {
+        return m15639a(bArr, "utf-8");
     }
-  }
-  
-  public static byte[] a(byte[] paramArrayOfByte)
-  {
-    return a(paramArrayOfByte, paramArrayOfByte.length);
-  }
-  
-  public static byte[] a(byte[] paramArrayOfByte, int paramInt)
-  {
-    int i = paramInt / 4 * 3;
-    if (i == 0) {
-      return new byte[0];
+
+    /* renamed from: a */
+    public static String m15639a(byte[] bArr, String str) {
+        int length = (bArr.length * 4) / 3;
+        byte[] bArr2 = new byte[(length + ((length / 76) + 3))];
+        int length2 = bArr.length - (bArr.length % 3);
+        length = 0;
+        int i = 0;
+        int i2 = 0;
+        while (i < length2) {
+            int i3 = i2 + 1;
+            bArr2[i2] = f19626a[(bArr[i] & 255) >> 2];
+            i2 = i3 + 1;
+            bArr2[i3] = f19626a[((bArr[i] & 3) << 4) | ((bArr[i + 1] & 255) >> 4)];
+            int i4 = i2 + 1;
+            bArr2[i2] = f19626a[((bArr[i + 1] & 15) << 2) | ((bArr[i + 2] & 255) >> 6)];
+            i3 = i4 + 1;
+            bArr2[i4] = f19626a[bArr[i + 2] & 63];
+            if ((i3 - length) % 76 == 0 && i3 != 0) {
+                length++;
+            }
+            i += 3;
+            i2 = i3;
+        }
+        switch (bArr.length % 3) {
+            case 1:
+                length = i2 + 1;
+                bArr2[i2] = f19626a[(bArr[length2] & 255) >> 2];
+                i2 = length + 1;
+                bArr2[length] = f19626a[(bArr[length2] & 3) << 4];
+                i = i2 + 1;
+                bArr2[i2] = (byte) 61;
+                length = i + 1;
+                bArr2[i] = (byte) 61;
+                break;
+            case 2:
+                length = i2 + 1;
+                bArr2[i2] = f19626a[(bArr[length2] & 255) >> 2];
+                i2 = length + 1;
+                bArr2[length] = f19626a[((bArr[length2] & 3) << 4) | ((bArr[length2 + 1] & 255) >> 4)];
+                i = i2 + 1;
+                bArr2[i2] = f19626a[(bArr[length2 + 1] & 15) << 2];
+                length = i + 1;
+                bArr2[i] = (byte) 61;
+                break;
+            default:
+                length = i2;
+                break;
+        }
+        return new String(bArr2, 0, length, str);
     }
-    byte[] arrayOfByte = new byte[i];
-    int m = 0;
-    int n = paramInt;
-    i = paramArrayOfByte[(n - 1)];
-    paramInt = m;
-    if (i != 10)
-    {
-      paramInt = m;
-      if (i != 13)
-      {
-        paramInt = m;
-        if (i != 32) {
-          if (i != 9) {
-            break label80;
-          }
-        }
-      }
-    }
-    for (paramInt = m;; paramInt = m + 1)
-    {
-      n -= 1;
-      m = paramInt;
-      break;
-      label80:
-      if (i != 61) {
-        break label94;
-      }
-    }
-    label94:
-    int i1 = 0;
-    int k = 0;
-    int j = 0;
-    paramInt = 0;
-    if (i1 < n)
-    {
-      i = paramArrayOfByte[i1];
-      if ((i == 10) || (i == 13) || (i == 32)) {
-        break label405;
-      }
-      if (i == 9)
-      {
-        i = j;
-        j = paramInt;
-        paramInt = k;
-      }
-    }
-    for (;;)
-    {
-      i1 += 1;
-      k = paramInt;
-      paramInt = j;
-      j = i;
-      break;
-      if ((i >= 65) && (i <= 90))
-      {
-        i -= 65;
-        label180:
-        i = k << 6 | (byte)i;
-        if (j % 4 != 3) {
-          break label402;
-        }
-        k = paramInt + 1;
-        arrayOfByte[paramInt] = ((byte)((0xFF0000 & i) >> 16));
-        int i2 = k + 1;
-        arrayOfByte[k] = ((byte)((0xFF00 & i) >> 8));
-        paramInt = i2 + 1;
-        arrayOfByte[i2] = ((byte)(i & 0xFF));
-      }
-      label399:
-      label402:
-      for (;;)
-      {
-        k = j + 1;
-        j = paramInt;
-        paramInt = i;
-        i = k;
-        break;
-        if ((i >= 97) && (i <= 122))
-        {
-          i -= 71;
-          break label180;
-        }
-        if ((i >= 48) && (i <= 57))
-        {
-          i += 4;
-          break label180;
-        }
-        if (i == 43)
-        {
-          i = 62;
-          break label180;
-        }
-        if (i == 47)
-        {
-          i = 63;
-          break label180;
-        }
-        return null;
-        i = paramInt;
-        if (m > 0)
-        {
-          j = k << m * 6;
-          i = paramInt + 1;
-          arrayOfByte[paramInt] = ((byte)((0xFF0000 & j) >> 16));
-          if (m != 1) {
-            break label399;
-          }
-          paramInt = i + 1;
-          arrayOfByte[i] = ((byte)((0xFF00 & j) >> 8));
-          i = paramInt;
-        }
-        for (;;)
-        {
-          paramArrayOfByte = new byte[i];
-          System.arraycopy(arrayOfByte, 0, paramArrayOfByte, 0, i);
-          return paramArrayOfByte;
-        }
-      }
-      label405:
-      i = k;
-      k = paramInt;
-      paramInt = i;
-      i = j;
-      j = k;
-    }
-  }
-  
-  public static String b(byte[] paramArrayOfByte)
-  {
-    return a(paramArrayOfByte, "utf-8");
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cv.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

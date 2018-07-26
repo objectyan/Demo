@@ -1,28 +1,19 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class ki
-  extends kl
-  implements kg
-{
-  private String a = "*";
-  
-  public final String a()
-  {
-    return this.a;
-  }
-  
-  public final void a(String paramString)
-    throws IllegalArgumentException
-  {
-    if (paramString == null) {
-      throw new IllegalArgumentException("http resource descriptor must not be null");
+public final class ki extends kl implements kg {
+    /* renamed from: a */
+    private String f24556a = "*";
+
+    /* renamed from: a */
+    public final void mo4826a(String str) throws IllegalArgumentException {
+        if (str == null) {
+            throw new IllegalArgumentException("http resource descriptor must not be null");
+        }
+        this.f24556a = str;
     }
-    this.a = paramString;
-  }
+
+    /* renamed from: a */
+    public final String mo4825a() {
+        return this.f24556a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ki.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

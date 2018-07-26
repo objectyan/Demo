@@ -4,126 +4,94 @@ import java.io.IOException;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
 
-public final class iu
-  implements jc
-{
-  private final io a;
-  private final Deflater b;
-  private final ir c;
-  private boolean d;
-  private final CRC32 e = new CRC32();
-  
-  public iu(jc paramjc)
-  {
-    if (paramjc == null) {
-      throw new IllegalArgumentException("sink == null");
-    }
-    this.b = new Deflater(-1, true);
-    this.a = ix.a(paramjc);
-    this.c = new ir(this.a, this.b);
-    paramjc = this.a.b();
-    paramjc.c(8075);
-    paramjc.b(8);
-    paramjc.b(0);
-    paramjc.d(0);
-    paramjc.b(0);
-    paramjc.b(0);
-  }
-  
-  private void b(in paramin, long paramLong)
-  {
-    for (paramin = paramin.a; paramLong > 0L; paramin = paramin.f)
-    {
-      int i = (int)Math.min(paramLong, paramin.c - paramin.b);
-      this.e.update(paramin.a, paramin.b, i);
-      paramLong -= i;
-    }
-  }
-  
-  public final je a()
-  {
-    return this.a.a();
-  }
-  
-  public final void a_(in paramin, long paramLong)
-    throws IOException
-  {
-    if (paramLong < 0L) {
-      throw new IllegalArgumentException("byteCount < 0: " + paramLong);
-    }
-    if (paramLong == 0L) {
-      return;
-    }
-    b(paramin, paramLong);
-    this.c.a_(paramin, paramLong);
-  }
-  
-  public final void close()
-    throws IOException
-  {
-    if (this.d) {}
-    for (;;)
-    {
-      return;
-      Object localObject2 = null;
-      try
-      {
-        this.c.b();
-        this.a.g((int)this.e.getValue());
-        this.a.g(this.b.getTotalIn());
-        try
-        {
-          this.b.end();
-          localObject1 = localObject2;
+public final class iu implements jc {
+    /* renamed from: a */
+    private final io f24403a;
+    /* renamed from: b */
+    private final Deflater f24404b;
+    /* renamed from: c */
+    private final ir f24405c;
+    /* renamed from: d */
+    private boolean f24406d;
+    /* renamed from: e */
+    private final CRC32 f24407e = new CRC32();
+
+    public iu(jc jcVar) {
+        if (jcVar == null) {
+            throw new IllegalArgumentException("sink == null");
         }
-        catch (Throwable localThrowable1)
-        {
-          for (;;)
-          {
-            Object localObject1;
-            label72:
-            if (localThrowable3 != null) {
-              localThrowable2 = localThrowable3;
+        this.f24404b = new Deflater(-1, true);
+        this.f24403a = ix.m21258a(jcVar);
+        this.f24405c = new ir(this.f24403a, this.f24404b);
+        in b = this.f24403a.mo4741b();
+        b.m21196c(8075);
+        b.m21191b(8);
+        b.m21191b(0);
+        b.m21199d(0);
+        b.m21191b(0);
+        b.m21191b(0);
+    }
+
+    public final void a_(in inVar, long j) throws IOException {
+        if (j < 0) {
+            throw new IllegalArgumentException("byteCount < 0: " + j);
+        } else if (j != 0) {
+            m21243b(inVar, j);
+            this.f24405c.a_(inVar, j);
+        }
+    }
+
+    public final void flush() throws IOException {
+        this.f24405c.flush();
+    }
+
+    /* renamed from: a */
+    public final je mo4733a() {
+        return this.f24403a.mo4733a();
+    }
+
+    public final void close() throws IOException {
+        Throwable th;
+        if (!this.f24406d) {
+            Throwable th2 = null;
+            try {
+                this.f24405c.m21235b();
+                this.f24403a.mo4754g((int) this.f24407e.getValue());
+                this.f24403a.mo4754g(this.f24404b.getTotalIn());
+            } catch (Throwable th3) {
+                th2 = th3;
             }
-          }
+            try {
+                this.f24404b.end();
+                th3 = th2;
+            } catch (Throwable th4) {
+                th3 = th4;
+                if (th2 != null) {
+                    th3 = th2;
+                }
+            }
+            try {
+                this.f24403a.close();
+            } catch (Throwable th22) {
+                if (th3 == null) {
+                    th3 = th22;
+                }
+            }
+            this.f24406d = true;
+            if (th3 != null) {
+                jf.m21315a(th3);
+            }
         }
-        try
-        {
-          this.a.close();
-          localObject2 = localObject1;
-        }
-        catch (Throwable localThrowable4)
-        {
-          Object localObject3 = localThrowable2;
-          if (localThrowable2 != null) {
-            break label72;
-          }
-          localObject3 = localThrowable4;
-          break label72;
-        }
-        this.d = true;
-        if (localObject2 == null) {
-          continue;
-        }
-        jf.a((Throwable)localObject2);
-        return;
-      }
-      catch (Throwable localThrowable3)
-      {
-        for (;;) {}
-      }
     }
-  }
-  
-  public final void flush()
-    throws IOException
-  {
-    this.c.flush();
-  }
+
+    /* renamed from: b */
+    private void m21243b(in inVar, long j) {
+        ja jaVar = inVar.f24391a;
+        while (j > 0) {
+            int min = (int) Math.min(j, (long) (jaVar.f24431c - jaVar.f24430b));
+            this.f24407e.update(jaVar.f24429a, jaVar.f24430b, min);
+            j -= (long) min;
+            jaVar = jaVar.f24434f;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/iu.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

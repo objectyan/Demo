@@ -2,56 +2,58 @@ package com.indooratlas.android.sdk._internal;
 
 import android.net.wifi.ScanResult;
 import android.os.Build.VERSION;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class dx
-{
-  public String a;
-  public String b;
-  public String c;
-  public int d;
-  public int e;
-  public int f;
-  public int g;
-  public int h;
-  public CharSequence i;
-  public long j;
-  public CharSequence k;
-  
-  public static List<dx> a(List<ScanResult> paramList)
-  {
-    CopyOnWriteArrayList localCopyOnWriteArrayList = new CopyOnWriteArrayList();
-    paramList = paramList.iterator();
-    while (paramList.hasNext())
-    {
-      ScanResult localScanResult = (ScanResult)paramList.next();
-      dx localdx = new dx();
-      localdx.a = localScanResult.BSSID;
-      localdx.b = localScanResult.SSID;
-      localdx.c = localScanResult.capabilities;
-      localdx.g = localScanResult.frequency;
-      localdx.h = localScanResult.level;
-      if (Build.VERSION.SDK_INT >= 17) {
-        localdx.j = localScanResult.timestamp;
-      }
-      if (Build.VERSION.SDK_INT >= 23)
-      {
-        localdx.d = localScanResult.centerFreq0;
-        localdx.e = localScanResult.centerFreq1;
-        localdx.f = localScanResult.channelWidth;
-        localdx.i = localScanResult.operatorFriendlyName;
-        localdx.k = localScanResult.venueName;
-      }
-      localCopyOnWriteArrayList.add(localdx);
+public final class dx {
+    /* renamed from: a */
+    public String f23478a;
+    /* renamed from: b */
+    public String f23479b;
+    /* renamed from: c */
+    public String f23480c;
+    /* renamed from: d */
+    public int f23481d;
+    /* renamed from: e */
+    public int f23482e;
+    /* renamed from: f */
+    public int f23483f;
+    /* renamed from: g */
+    public int f23484g;
+    /* renamed from: h */
+    public int f23485h;
+    /* renamed from: i */
+    public CharSequence f23486i;
+    /* renamed from: j */
+    public long f23487j;
+    /* renamed from: k */
+    public CharSequence f23488k;
+
+    private dx() {
     }
-    return localCopyOnWriteArrayList;
-  }
+
+    /* renamed from: a */
+    public static List<dx> m20374a(List<ScanResult> list) {
+        List copyOnWriteArrayList = new CopyOnWriteArrayList();
+        for (ScanResult scanResult : list) {
+            dx dxVar = new dx();
+            dxVar.f23478a = scanResult.BSSID;
+            dxVar.f23479b = scanResult.SSID;
+            dxVar.f23480c = scanResult.capabilities;
+            dxVar.f23484g = scanResult.frequency;
+            dxVar.f23485h = scanResult.level;
+            if (VERSION.SDK_INT >= 17) {
+                dxVar.f23487j = scanResult.timestamp;
+            }
+            if (VERSION.SDK_INT >= 23) {
+                dxVar.f23481d = scanResult.centerFreq0;
+                dxVar.f23482e = scanResult.centerFreq1;
+                dxVar.f23483f = scanResult.channelWidth;
+                dxVar.f23486i = scanResult.operatorFriendlyName;
+                dxVar.f23488k = scanResult.venueName;
+            }
+            copyOnWriteArrayList.add(dxVar);
+        }
+        return copyOnWriteArrayList;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dx.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

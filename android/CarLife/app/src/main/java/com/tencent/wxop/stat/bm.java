@@ -1,50 +1,41 @@
 package com.tencent.wxop.stat;
 
 import android.content.Context;
-import com.tencent.wxop.stat.a.c;
-import com.tencent.wxop.stat.b.b;
-import java.util.Map;
+import com.tencent.wxop.stat.p290a.C6122c;
 
-final class bm
-  implements Runnable
-{
-  bm(String paramString, c paramc, Context paramContext) {}
-  
-  public final void run()
-  {
-    try
-    {
-      if (j.a(this.a))
-      {
-        j.g().g("The event_id of StatService.trackCustomBeginEvent() can not be null or empty.");
-        return;
-      }
-      if (f.b()) {
-        j.g().b("add begin key:" + this.b);
-      }
-      if (j.l().containsKey(this.b))
-      {
-        j.g().e("Duplicate CustomEvent key: " + this.b.toString() + ", trackCustomBeginKVEvent() repeated?");
-        return;
-      }
+final class bm implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ String f24996a;
+    /* renamed from: b */
+    final /* synthetic */ C6122c f24997b;
+    /* renamed from: c */
+    final /* synthetic */ Context f24998c;
+
+    bm(String str, C6122c c6122c, Context context) {
+        this.f24996a = str;
+        this.f24997b = c6122c;
+        this.f24998c = context;
     }
-    catch (Throwable localThrowable)
-    {
-      j.g().b(localThrowable);
-      j.a(this.c, localThrowable);
-      return;
+
+    public final void run() {
+        try {
+            if (C6160j.m22111a(this.f24996a)) {
+                C6160j.f25104q.m21831g("The event_id of StatService.trackCustomBeginEvent() can not be null or empty.");
+                return;
+            }
+            if (C6156f.m21997b()) {
+                C6160j.f25104q.m21825b("add begin key:" + this.f24997b);
+            }
+            if (C6160j.f25092e.containsKey(this.f24997b)) {
+                C6160j.f25104q.m21829e("Duplicate CustomEvent key: " + this.f24997b.toString() + ", trackCustomBeginKVEvent() repeated?");
+            } else if (C6160j.f25092e.size() <= C6156f.m22036n()) {
+                C6160j.f25092e.put(this.f24997b, Long.valueOf(System.currentTimeMillis()));
+            } else {
+                C6160j.f25104q.m21831g("The number of timedEvent exceeds the maximum value " + Integer.toString(C6156f.m22036n()));
+            }
+        } catch (Throwable th) {
+            C6160j.f25104q.m21826b(th);
+            C6160j.m22104a(this.f24998c, th);
+        }
     }
-    if (j.l().size() <= f.n())
-    {
-      j.l().put(this.b, Long.valueOf(System.currentTimeMillis()));
-      return;
-    }
-    j.g().g("The number of timedEvent exceeds the maximum value " + Integer.toString(f.n()));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/bm.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

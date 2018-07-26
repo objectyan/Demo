@@ -1,24 +1,15 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class jt
-  extends RuntimeException
-{
-  private static final long serialVersionUID = 7906596804233893092L;
-  public int a;
-  
-  public jt()
-  {
-    this.a = 0;
-  }
-  
-  public jt(int paramInt)
-  {
-    this.a = paramInt;
-  }
+public final class jt extends RuntimeException {
+    private static final long serialVersionUID = 7906596804233893092L;
+    /* renamed from: a */
+    public int f24536a;
+
+    public jt(int i) {
+        this.f24536a = i;
+    }
+
+    public jt() {
+        this.f24536a = 0;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/jt.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

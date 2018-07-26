@@ -9,268 +9,184 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
-public class FileTools
-{
-  public static void createDir(String paramString)
-  {
-    new File(paramString).mkdirs();
-  }
-  
-  public static File createFile(String paramString)
-  {
-    return getFile(paramString);
-  }
-  
-  public static File createFile(String paramString1, String paramString2)
-  {
-    return getFile(jointPathAndName(paramString1, paramString2));
-  }
-  
-  public static boolean deleteFile(File paramFile)
-  {
-    return (!paramFile.exists()) || (paramFile.delete());
-  }
-  
-  public static boolean deleteFile(String paramString)
-  {
-    return deleteFile(createFile(paramString));
-  }
-  
-  public static String extractFileName(String paramString)
-  {
-    return paramString.substring(paramString.lastIndexOf(File.separator) + 1);
-  }
-  
-  public static boolean fileCopy(File paramFile1, File paramFile2)
-    throws FileNotFoundException
-  {
-    return fileCopy(new FileInputStream(paramFile1), new FileOutputStream(paramFile2));
-  }
-  
-  public static boolean fileCopy(FileDescriptor paramFileDescriptor1, FileDescriptor paramFileDescriptor2)
-  {
-    return fileCopy(new FileInputStream(paramFileDescriptor1), new FileOutputStream(paramFileDescriptor2));
-  }
-  
-  public static boolean fileCopy(FileInputStream paramFileInputStream, FileOutputStream paramFileOutputStream)
-  {
-    try
-    {
-      boolean bool = fileCopy(paramFileInputStream.getChannel(), paramFileOutputStream.getChannel());
-      try
-      {
-        paramFileInputStream.close();
-        paramFileOutputStream.close();
-        return bool;
-      }
-      catch (IOException paramFileInputStream)
-      {
-        paramFileInputStream.printStackTrace();
-        return bool;
-      }
-      try
-      {
-        paramFileInputStream.close();
-        paramFileOutputStream.close();
-        throw ((Throwable)localObject);
-      }
-      catch (IOException paramFileInputStream)
-      {
-        for (;;)
-        {
-          paramFileInputStream.printStackTrace();
+public class FileTools {
+    public static boolean isFileExist(String path) {
+        if (new File(path).exists()) {
+            return true;
         }
-      }
-    }
-    catch (Exception localException)
-    {
-      localException = localException;
-      try
-      {
-        paramFileInputStream.close();
-        paramFileOutputStream.close();
         return false;
-      }
-      catch (IOException paramFileInputStream)
-      {
-        paramFileInputStream.printStackTrace();
-        return false;
-      }
     }
-    finally
-    {
-      localObject = finally;
-    }
-  }
-  
-  public static boolean fileCopy(String paramString1, String paramString2)
-    throws FileNotFoundException
-  {
-    return fileCopy(createFile(paramString1), createFile(paramString2));
-  }
-  
-  public static boolean fileCopy(String paramString1, String paramString2, String paramString3, String paramString4)
-    throws FileNotFoundException
-  {
-    return fileCopy(createFile(paramString1, paramString2), createFile(paramString3, paramString4));
-  }
-  
-  public static boolean fileCopy(FileChannel paramFileChannel1, FileChannel paramFileChannel2)
-  {
-    try
-    {
-      paramFileChannel1.transferTo(0L, paramFileChannel1.size(), paramFileChannel2);
-      try
-      {
-        paramFileChannel1.close();
-        paramFileChannel2.close();
-        return true;
-      }
-      catch (IOException paramFileChannel1)
-      {
-        paramFileChannel1.printStackTrace();
-        return false;
-      }
-      return false;
-    }
-    catch (IOException localIOException)
-    {
-      localIOException.printStackTrace();
-      try
-      {
-        paramFileChannel1.close();
-        paramFileChannel2.close();
-        return true;
-      }
-      catch (IOException paramFileChannel1)
-      {
-        paramFileChannel1.printStackTrace();
-        return false;
-      }
-    }
-    finally
-    {
-      try
-      {
-        paramFileChannel1.close();
-        paramFileChannel2.close();
-        return true;
-      }
-      catch (IOException paramFileChannel1)
-      {
-        paramFileChannel1.printStackTrace();
-      }
-    }
-  }
-  
-  public static File getFile(String paramString)
-  {
-    File localFile = new File(paramString);
-    if (localFile.exists()) {}
-    for (;;)
-    {
-      if (!localFile.exists()) {}
-      try
-      {
-        localFile.createNewFile();
-        return localFile;
-      }
-      catch (IOException paramString)
-      {
-        paramString.printStackTrace();
-      }
-      if (paramString.endsWith(File.separator))
-      {
-        localFile.mkdirs();
-      }
-      else
-      {
-        paramString = new File(paramString.substring(0, paramString.lastIndexOf(File.separator)));
-        if (!paramString.exists()) {
-          paramString.mkdirs();
+
+    public static boolean isFileExist(Object... args) {
+        File file;
+        if (args.length == 1) {
+            Object obj = args[0];
+            if (obj instanceof File) {
+                file = (File) obj;
+            } else if (obj instanceof String) {
+                file = createFile((String) obj);
+            } else {
+                file = null;
+            }
+        } else if (args.length == 2) {
+            file = createFile((String) args[0], (String) args[1]);
+        } else {
+            throw new UnknownError();
         }
-      }
-    }
-    return localFile;
-  }
-  
-  public static File getFile(String paramString1, String paramString2)
-  {
-    return getFile(jointPathAndName(paramString1, paramString2));
-  }
-  
-  public static boolean isFileExist(String paramString)
-  {
-    return new File(paramString).exists();
-  }
-  
-  public static boolean isFileExist(Object... paramVarArgs)
-  {
-    if (paramVarArgs.length == 1)
-    {
-      paramVarArgs = paramVarArgs[0];
-      if ((paramVarArgs instanceof File)) {
-        paramVarArgs = (File)paramVarArgs;
-      }
-    }
-    for (;;)
-    {
-      if (paramVarArgs != null)
-      {
-        return paramVarArgs.exists();
-        if ((paramVarArgs instanceof String))
-        {
-          paramVarArgs = createFile((String)paramVarArgs);
-          continue;
-          if (paramVarArgs.length == 2)
-          {
-            paramVarArgs = createFile((String)paramVarArgs[0], (String)paramVarArgs[1]);
-            continue;
-          }
-          throw new UnknownError();
+        if (file != null) {
+            return file.exists();
         }
-      }
-      else
-      {
         return false;
-      }
-      paramVarArgs = null;
     }
-  }
-  
-  public static String jointPathAndName(String paramString1, String paramString2)
-  {
-    if (paramString1.endsWith(File.separator)) {
-      return paramString1 + paramString2;
+
+    public static String jointPathAndName(String path, String name) {
+        if (path.endsWith(File.separator)) {
+            return path + name;
+        }
+        return path + File.separator + name;
     }
-    return paramString1 + File.separator + paramString2;
-  }
-  
-  public static boolean writeFile(String paramString, File paramFile)
-  {
-    try
-    {
-      if (paramFile.exists()) {}
-      for (;;)
-      {
-        paramFile = new FileWriter(paramFile, false);
-        paramFile.write(paramString);
-        paramFile.flush();
-        paramFile.close();
-        return true;
-        paramFile.createNewFile();
-      }
-      return false;
+
+    public static boolean deleteFile(String path) {
+        return deleteFile(createFile(path));
     }
-    catch (IOException paramString)
-    {
-      paramString.printStackTrace();
+
+    public static boolean deleteFile(File file) {
+        return !file.exists() || file.delete();
     }
-  }
+
+    public static boolean fileCopy(String source, String target) throws FileNotFoundException {
+        return fileCopy(createFile(source), createFile(target));
+    }
+
+    public static boolean fileCopy(String sPath, String sName, String tPath, String tName) throws FileNotFoundException {
+        return fileCopy(createFile(sPath, sName), createFile(tPath, tName));
+    }
+
+    public static boolean fileCopy(FileDescriptor source, FileDescriptor target) {
+        return fileCopy(new FileInputStream(source), new FileOutputStream(target));
+    }
+
+    public static boolean fileCopy(File source, File target) throws FileNotFoundException {
+        return fileCopy(new FileInputStream(source), new FileOutputStream(target));
+    }
+
+    public static boolean fileCopy(FileInputStream source, FileOutputStream target) {
+        boolean z = false;
+        try {
+            z = fileCopy(source.getChannel(), target.getChannel());
+            try {
+                source.close();
+                target.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e2) {
+            try {
+                source.close();
+                target.close();
+            } catch (IOException e3) {
+                e3.printStackTrace();
+            }
+        } catch (Throwable th) {
+            try {
+                source.close();
+                target.close();
+            } catch (IOException e32) {
+                e32.printStackTrace();
+            }
+            throw th;
+        }
+        return z;
+    }
+
+    public static boolean fileCopy(FileChannel source, FileChannel target) {
+        try {
+            source.transferTo(0, source.size(), target);
+            try {
+                source.close();
+                target.close();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } catch (IOException e2) {
+            e2.printStackTrace();
+            try {
+                source.close();
+                target.close();
+                return true;
+            } catch (IOException e3) {
+                e3.printStackTrace();
+                return false;
+            }
+        } catch (Throwable th) {
+            try {
+                source.close();
+                target.close();
+                return true;
+            } catch (IOException e32) {
+                e32.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    public static boolean writeFile(String data, File file) {
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileWriter fileWriter = new FileWriter(file, false);
+            fileWriter.write(data);
+            fileWriter.flush();
+            fileWriter.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void createDir(String path) {
+        new File(path).mkdirs();
+    }
+
+    public static String extractFileName(String fullName) {
+        return fullName.substring(fullName.lastIndexOf(File.separator) + 1);
+    }
+
+    public static File getFile(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            if (path.endsWith(File.separator)) {
+                file.mkdirs();
+            } else {
+                File file2 = new File(path.substring(0, path.lastIndexOf(File.separator)));
+                if (!file2.exists()) {
+                    file2.mkdirs();
+                }
+            }
+        }
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return file;
+    }
+
+    public static File getFile(String path, String fileName) {
+        return getFile(jointPathAndName(path, fileName));
+    }
+
+    public static File createFile(String absPath) {
+        return getFile(absPath);
+    }
+
+    public static File createFile(String path, String name) {
+        return getFile(jointPathAndName(path, name));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/tools/FileTools.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

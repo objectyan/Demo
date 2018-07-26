@@ -5,116 +5,83 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.TypeAdapter;
 import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.google.gson.stream.MalformedJsonException;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.Writer;
 
-public final class Streams
-{
-  public static JsonElement parse(JsonReader paramJsonReader)
-    throws JsonParseException
-  {
-    int i = 1;
-    try
-    {
-      paramJsonReader.peek();
-      i = 0;
-      paramJsonReader = (JsonElement)TypeAdapters.JSON_ELEMENT.read(paramJsonReader);
-      return paramJsonReader;
+public final class Streams {
+
+    private static final class AppendableWriter extends Writer {
+        private final Appendable appendable;
+        private final CurrentWrite currentWrite;
+
+        static class CurrentWrite implements CharSequence {
+            char[] chars;
+
+            CurrentWrite() {
+            }
+
+            public int length() {
+                return this.chars.length;
+            }
+
+            public char charAt(int i) {
+                return this.chars[i];
+            }
+
+            public CharSequence subSequence(int start, int end) {
+                return new String(this.chars, start, end - start);
+            }
+        }
+
+        private AppendableWriter(Appendable appendable) {
+            this.currentWrite = new CurrentWrite();
+            this.appendable = appendable;
+        }
+
+        public void write(char[] chars, int offset, int length) throws IOException {
+            this.currentWrite.chars = chars;
+            this.appendable.append(this.currentWrite, offset, offset + length);
+        }
+
+        public void write(int i) throws IOException {
+            this.appendable.append((char) i);
+        }
+
+        public void flush() {
+        }
+
+        public void close() {
+        }
     }
-    catch (EOFException paramJsonReader)
-    {
-      if (i != 0) {
-        return JsonNull.INSTANCE;
-      }
-      throw new JsonSyntaxException(paramJsonReader);
+
+    public static JsonElement parse(JsonReader reader) throws JsonParseException {
+        boolean isEmpty = true;
+        try {
+            reader.peek();
+            isEmpty = false;
+            return (JsonElement) TypeAdapters.JSON_ELEMENT.read(reader);
+        } catch (Throwable e) {
+            if (isEmpty) {
+                return JsonNull.INSTANCE;
+            }
+            throw new JsonSyntaxException(e);
+        } catch (Throwable e2) {
+            throw new JsonSyntaxException(e2);
+        } catch (Throwable e22) {
+            throw new JsonIOException(e22);
+        } catch (Throwable e222) {
+            throw new JsonSyntaxException(e222);
+        }
     }
-    catch (MalformedJsonException paramJsonReader)
-    {
-      throw new JsonSyntaxException(paramJsonReader);
+
+    public static void write(JsonElement element, JsonWriter writer) throws IOException {
+        TypeAdapters.JSON_ELEMENT.write(writer, element);
     }
-    catch (IOException paramJsonReader)
-    {
-      throw new JsonIOException(paramJsonReader);
+
+    public static Writer writerForAppendable(Appendable appendable) {
+        return appendable instanceof Writer ? (Writer) appendable : new AppendableWriter(appendable);
     }
-    catch (NumberFormatException paramJsonReader)
-    {
-      throw new JsonSyntaxException(paramJsonReader);
-    }
-  }
-  
-  public static void write(JsonElement paramJsonElement, JsonWriter paramJsonWriter)
-    throws IOException
-  {
-    TypeAdapters.JSON_ELEMENT.write(paramJsonWriter, paramJsonElement);
-  }
-  
-  public static Writer writerForAppendable(Appendable paramAppendable)
-  {
-    if ((paramAppendable instanceof Writer)) {
-      return (Writer)paramAppendable;
-    }
-    return new AppendableWriter(paramAppendable, null);
-  }
-  
-  private static final class AppendableWriter
-    extends Writer
-  {
-    private final Appendable appendable;
-    private final CurrentWrite currentWrite = new CurrentWrite();
-    
-    private AppendableWriter(Appendable paramAppendable)
-    {
-      this.appendable = paramAppendable;
-    }
-    
-    public void close() {}
-    
-    public void flush() {}
-    
-    public void write(int paramInt)
-      throws IOException
-    {
-      this.appendable.append((char)paramInt);
-    }
-    
-    public void write(char[] paramArrayOfChar, int paramInt1, int paramInt2)
-      throws IOException
-    {
-      this.currentWrite.chars = paramArrayOfChar;
-      this.appendable.append(this.currentWrite, paramInt1, paramInt1 + paramInt2);
-    }
-    
-    static class CurrentWrite
-      implements CharSequence
-    {
-      char[] chars;
-      
-      public char charAt(int paramInt)
-      {
-        return this.chars[paramInt];
-      }
-      
-      public int length()
-      {
-        return this.chars.length;
-      }
-      
-      public CharSequence subSequence(int paramInt1, int paramInt2)
-      {
-        return new String(this.chars, paramInt1, paramInt2 - paramInt1);
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/Streams.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,127 +5,138 @@ import android.os.Build.VERSION;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class ar
-{
-  private static ar a = null;
-  private LinkedList<as> b = new LinkedList();
-  
-  private ar()
-  {
-    this.b.add(new a((byte)0));
-  }
-  
-  public static ar a()
-  {
-    try
-    {
-      if (a == null) {
-        a = new ar();
-      }
-      return a;
-    }
-    finally {}
-  }
-  
-  public final int a(b paramb)
-  {
-    synchronized (this.b)
-    {
-      Iterator localIterator = this.b.iterator();
-      if (localIterator.hasNext())
-      {
-        int i = ((as)localIterator.next()).a(paramb);
-        return i;
-      }
-      return -1;
-    }
-  }
-  
-  public final String a(c paramc)
-  {
-    synchronized (this.b)
-    {
-      Iterator localIterator = this.b.iterator();
-      if (localIterator.hasNext())
-      {
-        paramc = ((as)localIterator.next()).a(paramc);
-        return paramc;
-      }
-      return "unknown";
-    }
-  }
-  
-  static final class a
-    implements as
-  {
-    public final int a(ar.b paramb)
-    {
-      switch (ar.1.b[paramb.ordinal()])
-      {
-      default: 
-        throw new RuntimeException("IAEnvironmentManager broken " + paramb);
-      }
-      return Build.VERSION.SDK_INT;
-    }
-    
-    public final String a(ar.c paramc)
-    {
-      switch (ar.1.a[paramc.ordinal()])
-      {
-      default: 
-        throw new RuntimeException("IAEnvironmentManager broken: " + paramc);
-      case 1: 
-        return Build.ID;
-      case 2: 
-        return Build.DISPLAY;
-      case 3: 
-        return Build.PRODUCT;
-      case 4: 
-        return Build.DEVICE;
-      case 5: 
-        return Build.BOARD;
-      case 6: 
-        return Build.MANUFACTURER;
-      case 7: 
-        return Build.BRAND;
-      case 8: 
-        return Build.MODEL;
-      case 9: 
-        return Build.BOOTLOADER;
-      case 10: 
-        return Build.HARDWARE;
-      case 11: 
-        return Build.SERIAL;
-      case 12: 
-        return Build.VERSION.INCREMENTAL;
-      case 13: 
-        return Build.VERSION.RELEASE;
-      case 14: 
-        if (Build.VERSION.SDK_INT < 23) {
-          return "unknown";
+public class ar {
+    /* renamed from: a */
+    private static ar f22991a = null;
+    /* renamed from: b */
+    private LinkedList<as> f22992b = new LinkedList();
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ar$a */
+    static class C5766a implements as {
+        private C5766a() {
         }
-        return Build.VERSION.BASE_OS;
-      }
-      if (Build.VERSION.SDK_INT < 23) {
-        return "unknown";
-      }
-      return Build.VERSION.SECURITY_PATCH;
+
+        /* renamed from: a */
+        public final String mo4600a(C5768c c5768c) {
+            switch (c5768c) {
+                case ID:
+                    return Build.ID;
+                case DISPLAY:
+                    return Build.DISPLAY;
+                case PRODUCT:
+                    return Build.PRODUCT;
+                case DEVICE:
+                    return Build.DEVICE;
+                case BOARD:
+                    return Build.BOARD;
+                case MANUFACTURER:
+                    return Build.MANUFACTURER;
+                case BRAND:
+                    return Build.BRAND;
+                case MODEL:
+                    return Build.MODEL;
+                case BOOTLOADER:
+                    return Build.BOOTLOADER;
+                case HARDWARE:
+                    return Build.HARDWARE;
+                case SERIAL:
+                    return Build.SERIAL;
+                case VERSION_INCREMENTAL:
+                    return VERSION.INCREMENTAL;
+                case VERSION_RELEASE:
+                    return VERSION.RELEASE;
+                case VERSION_BASE_OS:
+                    if (VERSION.SDK_INT < 23) {
+                        return "unknown";
+                    }
+                    return VERSION.BASE_OS;
+                case VERSION_SECURITY_PATCH:
+                    if (VERSION.SDK_INT < 23) {
+                        return "unknown";
+                    }
+                    return VERSION.SECURITY_PATCH;
+                default:
+                    throw new RuntimeException("IAEnvironmentManager broken: " + c5768c);
+            }
+        }
+
+        /* renamed from: a */
+        public final int mo4599a(C5767b c5767b) {
+            switch (c5767b) {
+                case f22973a:
+                    return VERSION.SDK_INT;
+                default:
+                    throw new RuntimeException("IAEnvironmentManager broken " + c5767b);
+            }
+        }
     }
-  }
-  
-  public static enum b
-  {
-    private b() {}
-  }
-  
-  public static enum c
-  {
-    private c() {}
-  }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ar$b */
+    public enum C5767b {
+        ;
+
+        private C5767b(String str) {
+        }
+    }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ar$c */
+    public enum C5768c {
+        ID,
+        DISPLAY,
+        PRODUCT,
+        DEVICE,
+        BOARD,
+        MANUFACTURER,
+        BRAND,
+        MODEL,
+        BOOTLOADER,
+        HARDWARE,
+        SERIAL,
+        VERSION_INCREMENTAL,
+        VERSION_RELEASE,
+        VERSION_BASE_OS,
+        VERSION_SECURITY_PATCH
+    }
+
+    private ar() {
+        this.f22992b.add(new C5766a());
+    }
+
+    /* renamed from: a */
+    public static ar m19847a() {
+        synchronized (ar.class) {
+            if (f22991a == null) {
+                f22991a = new ar();
+            }
+        }
+        return f22991a;
+    }
+
+    /* renamed from: a */
+    public final String m19849a(C5768c c5768c) {
+        String a;
+        synchronized (this.f22992b) {
+            Iterator it = this.f22992b.iterator();
+            if (it.hasNext()) {
+                a = ((as) it.next()).mo4600a(c5768c);
+            } else {
+                a = "unknown";
+            }
+        }
+        return a;
+    }
+
+    /* renamed from: a */
+    public final int m19848a(C5767b c5767b) {
+        int a;
+        synchronized (this.f22992b) {
+            Iterator it = this.f22992b.iterator();
+            if (it.hasNext()) {
+                a = ((as) it.next()).mo4599a(c5767b);
+            } else {
+                a = -1;
+            }
+        }
+        return a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

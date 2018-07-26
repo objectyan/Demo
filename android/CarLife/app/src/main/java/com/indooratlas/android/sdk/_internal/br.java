@@ -2,37 +2,33 @@ package com.indooratlas.android.sdk._internal;
 
 import java.util.Arrays;
 
-public abstract interface br
-{
-  public static final class a
-  {
-    private int a = 0;
-    private br[] b = new br[0];
-    
-    final void a()
-    {
-      this.a = 0;
-      if (this.a < this.b.length) {
-        this.a += 1;
-      }
+public interface br {
+
+    /* renamed from: com.indooratlas.android.sdk._internal.br$a */
+    public static class C5827a {
+        /* renamed from: a */
+        private int f23242a = 0;
+        /* renamed from: b */
+        private br[] f23243b = new br[0];
+
+        /* renamed from: a */
+        public final void m20134a(br brVar) {
+            br[] brVarArr = this.f23243b;
+            if (brVarArr == null) {
+                throw new IllegalArgumentException("array cannot be null");
+            }
+            int length = brVarArr.length;
+            Object[] copyOf = Arrays.copyOf(brVarArr, length + 1);
+            copyOf[length] = brVar;
+            this.f23243b = (br[]) copyOf;
+        }
+
+        /* renamed from: a */
+        final void m20133a() {
+            this.f23242a = 0;
+            if (this.f23242a < this.f23243b.length) {
+                this.f23242a++;
+            }
+        }
     }
-    
-    public final void a(br parambr)
-    {
-      Object localObject = this.b;
-      if (localObject == null) {
-        throw new IllegalArgumentException("array cannot be null");
-      }
-      int i = localObject.length;
-      localObject = Arrays.copyOf((Object[])localObject, i + 1);
-      localObject[i] = parambr;
-      this.b = ((br[])localObject);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/br.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

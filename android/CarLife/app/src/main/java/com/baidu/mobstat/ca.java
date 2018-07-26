@@ -1,18 +1,14 @@
 package com.baidu.mobstat;
 
-class ca
-  implements Runnable
-{
-  ca(bz parambz) {}
-  
-  public void run()
-  {
-    by.a(this.a.b, this.a.a);
-  }
+class ca implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ bz f19548a;
+
+    ca(bz bzVar) {
+        this.f19548a = bzVar;
+    }
+
+    public void run() {
+        this.f19548a.f19547b.m15536c(this.f19548a.f19546a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ca.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

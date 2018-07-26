@@ -1,7 +1,5 @@
 package com.baidu.carlife.fragment;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Message;
 import android.text.TextUtils;
@@ -15,1174 +13,1247 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 import com.baidu.baidunavis.control.NavPoiController;
 import com.baidu.carlife.BaiduNaviApplication;
-import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.f;
-import com.baidu.carlife.core.f.a;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.j;
-import com.baidu.carlife.core.k;
-import com.baidu.carlife.core.screen.BaseDialog.a;
-import com.baidu.carlife.k.a.e.a;
-import com.baidu.carlife.k.a.h.a;
-import com.baidu.carlife.k.a.h.b;
-import com.baidu.carlife.k.a.h.c;
-import com.baidu.carlife.k.u;
-import com.baidu.carlife.logic.o;
-import com.baidu.carlife.logic.q;
-import com.baidu.carlife.logic.voice.m;
-import com.baidu.carlife.radio.b.aa;
-import com.baidu.carlife.radio.b.aa.a;
-import com.baidu.carlife.radio.c.a.a;
-import com.baidu.carlife.util.w;
-import com.baidu.carlife.view.HomeCardMusicMelodyView;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.adpter.C0984g;
+import com.baidu.carlife.core.C0936j;
+import com.baidu.carlife.core.C1157a;
+import com.baidu.carlife.core.C1249d;
+import com.baidu.carlife.core.C1251e;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1253f.C1252a;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.carlife.core.connect.C1212c;
+import com.baidu.carlife.core.screen.BaseDialog.C1265a;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.logic.C1856o;
+import com.baidu.carlife.logic.C1868q;
+import com.baidu.carlife.logic.codriver.adapter.C1754b;
+import com.baidu.carlife.logic.music.C1818h;
+import com.baidu.carlife.logic.music.C1834p;
+import com.baidu.carlife.logic.p082b.C1502b;
+import com.baidu.carlife.logic.p082b.C1715a;
+import com.baidu.carlife.logic.voice.C1903m;
+import com.baidu.carlife.model.C1937p;
+import com.baidu.carlife.model.C1942q;
+import com.baidu.carlife.model.C1943r;
+import com.baidu.carlife.p054k.C1660s;
+import com.baidu.carlife.p054k.C1662u;
+import com.baidu.carlife.p054k.p055a.C1626e.C0924a;
+import com.baidu.carlife.p054k.p055a.C1635h;
+import com.baidu.carlife.p054k.p055a.C1635h.C1489c;
+import com.baidu.carlife.p054k.p055a.C1635h.C1633a;
+import com.baidu.carlife.p054k.p055a.C1635h.C1634b;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.p083g.C1605a;
+import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p100n.C1977e;
+import com.baidu.carlife.radio.p079c.C2139a;
+import com.baidu.carlife.radio.p079c.C2139a.C1491a;
+import com.baidu.carlife.radio.p079c.C2142b;
+import com.baidu.carlife.radio.p080b.aa;
+import com.baidu.carlife.radio.p080b.aa.C1496a;
+import com.baidu.carlife.radio.p102a.C2105a;
+import com.baidu.carlife.util.C2170a;
+import com.baidu.carlife.util.C2177h;
+import com.baidu.carlife.util.C2186p;
+import com.baidu.carlife.util.C2191s;
+import com.baidu.carlife.util.C2201w;
+import com.baidu.carlife.view.C2342g;
 import com.baidu.carlife.view.HomeCardView;
 import com.baidu.carlife.view.MainTopBarView;
-import com.baidu.che.codriver.protocol.d.a;
+import com.baidu.carlife.view.dialog.C1953c;
+import com.baidu.carlife.view.dialog.C2276d;
+import com.baidu.che.codriver.protocol.C2566d.C2565a;
 import com.baidu.che.codriver.protocol.data.nlp.NLPResponseData;
 import com.baidu.che.codriver.protocol.data.nlp.NLPResponseData.Result;
 import com.baidu.che.codriver.protocol.data.nlp.RestrictionData;
-import com.baidu.che.codriver.sdk.a.g.a;
-import com.baidu.che.codriver.vr.m.c;
+import com.baidu.che.codriver.sdk.p081a.C2593g.C1499a;
+import com.baidu.che.codriver.ui.p124d.C2704g;
+import com.baidu.che.codriver.util.C2716c;
+import com.baidu.che.codriver.util.C2736p;
+import com.baidu.che.codriver.vr.C2673m.C2837c;
 import com.baidu.navi.BaiduNaviSDKManager;
 import com.baidu.navi.controller.AccountController;
 import com.baidu.navi.controller.AccountController.IAccountListener;
 import com.baidu.navi.controller.UserCenterController;
 import com.baidu.navi.fragment.BaseFragment;
 import com.baidu.navi.fragment.ContentFragment;
+import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.util.NaviAccountUtils;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.navisdk.model.AddressSettingModel;
 import com.baidu.navisdk.model.GeoLocateModel;
-import com.baidu.navisdk.model.datastruct.DistrictInfo;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.util.logic.BNLocationManagerProxy;
 import com.baidu.platform.comapi.util.SysOSAPIv2;
 import com.baidu.sapi2.shell.callback.SapiCallBack;
 import com.baidu.sapi2.shell.response.GetPortraitResponse;
+import com.baidu.sapi2.shell.response.SapiResponse;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
-import java.lang.reflect.Type;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Random;
 
-public class HomeFragment
-  extends ContentFragment
-  implements View.OnClickListener, AdapterView.OnItemClickListener
-{
-  public static String a = HomeFragment.class.getSimpleName();
-  private static final int b = 99;
-  private static final int c = 101;
-  private boolean A = false;
-  private com.baidu.carlife.view.dialog.d B;
-  private com.baidu.carlife.adpter.g C;
-  private HomeCardView d;
-  private HomeCardView e;
-  private HomeCardView f;
-  private HomeCardView g;
-  private HomeCardView h;
-  private j i;
-  private com.baidu.carlife.f.g j;
-  private com.baidu.carlife.f.g k;
-  private com.baidu.carlife.f.g l;
-  private SimpleDraweeView m;
-  private View n;
-  private View o;
-  private View p;
-  private com.baidu.carlife.view.dialog.c q;
-  private boolean r = false;
-  private u s;
-  private com.baidu.carlife.k.s t;
-  private Drawable u;
-  private String v;
-  private String w;
-  private e.a x = new e.a()
-  {
-    public void onNetWorkResponse(int paramAnonymousInt)
-    {
-      if ((paramAnonymousInt == 0) && (HomeFragment.this.isAdded()))
-      {
-        if (HomeFragment.a(HomeFragment.this) == null) {
-          HomeFragment.b(HomeFragment.this);
-        }
-        com.baidu.carlife.model.r localr = HomeFragment.a(HomeFragment.this).a();
-        HomeFragment.a(HomeFragment.this, localr.f, localr.a, localr.g);
-      }
-    }
-  };
-  private e.a y = new e.a()
-  {
-    public void onNetWorkResponse(int paramAnonymousInt)
-    {
-      final Object localObject2 = HomeFragment.c(HomeFragment.this).b();
-      final Object localObject1 = HomeFragment.c(HomeFragment.this).a();
-      String str2 = (String)localObject1 + "_1.png";
-      Object localObject3 = BaseFragment.mActivity.getFilesDir().getAbsolutePath() + File.separator + str2;
-      HomeFragment.a(HomeFragment.this, null);
-      HomeFragment.a(HomeFragment.this, null);
-      if (localObject2 == null) {
-        if (f.jx.a().equals(localObject1))
+public class HomeFragment extends ContentFragment implements OnClickListener, OnItemClickListener {
+    /* renamed from: a */
+    public static String f4452a = HomeFragment.class.getSimpleName();
+    /* renamed from: b */
+    private static final int f4453b = 99;
+    /* renamed from: c */
+    private static final int f4454c = 101;
+    /* renamed from: A */
+    private boolean f4455A = false;
+    /* renamed from: B */
+    private C2276d f4456B;
+    /* renamed from: C */
+    private C0984g f4457C;
+    /* renamed from: d */
+    private HomeCardView f4458d;
+    /* renamed from: e */
+    private HomeCardView f4459e;
+    /* renamed from: f */
+    private HomeCardView f4460f;
+    /* renamed from: g */
+    private HomeCardView f4461g;
+    /* renamed from: h */
+    private HomeCardView f4462h;
+    /* renamed from: i */
+    private C0936j f4463i;
+    /* renamed from: j */
+    private C1443g f4464j;
+    /* renamed from: k */
+    private C1443g f4465k;
+    /* renamed from: l */
+    private C1443g f4466l;
+    /* renamed from: m */
+    private SimpleDraweeView f4467m;
+    /* renamed from: n */
+    private View f4468n;
+    /* renamed from: o */
+    private View f4469o;
+    /* renamed from: p */
+    private View f4470p;
+    /* renamed from: q */
+    private C1953c f4471q;
+    /* renamed from: r */
+    private boolean f4472r = false;
+    /* renamed from: s */
+    private C1662u f4473s;
+    /* renamed from: t */
+    private C1660s f4474t;
+    /* renamed from: u */
+    private Drawable f4475u;
+    /* renamed from: v */
+    private String f4476v;
+    /* renamed from: w */
+    private String f4477w;
+    /* renamed from: x */
+    private C0924a f4478x = new C14941(this);
+    /* renamed from: y */
+    private C0924a f4479y = new C0924a(this) {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4431a;
+
         {
-          HomeFragment.a(HomeFragment.this, com.baidu.carlife.util.p.a().a((String)localObject1 + "VehicleName", null));
-          localObject1 = new File((String)localObject3);
-          HomeFragment.a(HomeFragment.this, Drawable.createFromPath(((File)localObject1).getAbsolutePath()));
-          HomeFragment.a(HomeFragment.this, HomeFragment.d(HomeFragment.this), HomeFragment.e(HomeFragment.this));
+            this.f4431a = this$0;
         }
-      }
-      while (!f.jx.a().equals(localObject1)) {
-        return;
-      }
-      final String str1 = ((com.baidu.carlife.model.p)localObject2).c;
-      HomeFragment.a(HomeFragment.this, ((com.baidu.carlife.model.p)localObject2).b);
-      com.baidu.carlife.util.p.a().b((String)localObject1 + "VehicleName", HomeFragment.e(HomeFragment.this));
-      localObject3 = new File((String)localObject3);
-      if ((com.baidu.carlife.util.p.a().a((String)localObject1 + "TimeStamp", "").equals(str1)) && (((File)localObject3).exists()))
-      {
-        HomeFragment.a(HomeFragment.this, Drawable.createFromPath(((File)localObject3).getAbsolutePath()));
-        HomeFragment.a(HomeFragment.this, HomeFragment.d(HomeFragment.this), HomeFragment.e(HomeFragment.this));
-        return;
-      }
-      HomeFragment.a(HomeFragment.this, null, HomeFragment.e(HomeFragment.this));
-      localObject2 = new com.baidu.carlife.k.a.h(HomeFragment.this.getContext(), ((com.baidu.carlife.model.p)localObject2).a, str2, BaseFragment.mActivity.getFilesDir().getAbsolutePath(), null, true, 0);
-      ((com.baidu.carlife.k.a.h)localObject2).a(new h.c()
-      {
-        public void a(long paramAnonymous2Long, int paramAnonymous2Int) {}
-        
-        public void a(h.b paramAnonymous2b, h.a paramAnonymous2a)
-        {
-          if (h.b.e == paramAnonymous2b)
-          {
-            com.baidu.carlife.util.p.a().b(localObject1 + "TimeStamp", str1);
-            if ((localObject2.b() != null) && (com.baidu.carlife.l.a.a().N()))
-            {
-              HomeFragment.a(HomeFragment.this, Drawable.createFromPath(localObject2.b().getAbsolutePath()));
-              HomeFragment.a(HomeFragment.this, HomeFragment.d(HomeFragment.this), HomeFragment.e(HomeFragment.this));
+
+        public void onNetWorkResponse(int responseCode) {
+            C1937p vehicleLogoModel = this.f4431a.f4474t.m5974b();
+            final String channel = this.f4431a.f4474t.m5972a();
+            String fileName = channel + "_1.png";
+            String filePath = BaseFragment.mActivity.getFilesDir().getAbsolutePath() + File.separator + fileName;
+            this.f4431a.f4476v = null;
+            this.f4431a.f4475u = null;
+            if (vehicleLogoModel == null) {
+                if (C1253f.jx.m4403a().equals(channel)) {
+                    this.f4431a.f4476v = C2186p.m8304a().m8309a(channel + "VehicleName", null);
+                    this.f4431a.f4475u = Drawable.createFromPath(new File(filePath).getAbsolutePath());
+                    this.f4431a.m5458a(this.f4431a.f4475u, this.f4431a.f4476v);
+                }
+            } else if (C1253f.jx.m4403a().equals(channel)) {
+                final String timeStamp = vehicleLogoModel.f6113c;
+                this.f4431a.f4476v = vehicleLogoModel.f6112b;
+                C2186p.m8304a().m8319b(channel + "VehicleName", this.f4431a.f4476v);
+                File logoFile = new File(filePath);
+                if (C2186p.m8304a().m8309a(channel + "TimeStamp", "").equals(timeStamp) && logoFile.exists()) {
+                    this.f4431a.f4475u = Drawable.createFromPath(logoFile.getAbsolutePath());
+                    this.f4431a.m5458a(this.f4431a.f4475u, this.f4431a.f4476v);
+                    return;
+                }
+                this.f4431a.m5458a(null, this.f4431a.f4476v);
+                final C1635h vehicleLogoDownload = new C1635h(this.f4431a.getContext(), vehicleLogoModel.f6111a, fileName, BaseFragment.mActivity.getFilesDir().getAbsolutePath(), null, true, 0);
+                vehicleLogoDownload.m5921a(new C1489c(this) {
+                    /* renamed from: d */
+                    final /* synthetic */ AnonymousClass12 f4430d;
+
+                    /* renamed from: a */
+                    public void mo1561a(C1634b state, C1633a errorCode) {
+                        if (C1634b.SUCESS == state) {
+                            C2186p.m8304a().m8319b(channel + "TimeStamp", timeStamp);
+                            if (vehicleLogoDownload.m5922b() != null && C1663a.m5979a().m5993N()) {
+                                this.f4430d.f4431a.f4475u = Drawable.createFromPath(vehicleLogoDownload.m5922b().getAbsolutePath());
+                                this.f4430d.f4431a.m5458a(this.f4430d.f4431a.f4475u, this.f4430d.f4431a.f4476v);
+                            }
+                        }
+                    }
+
+                    /* renamed from: a */
+                    public void mo1560a(long total, int progress) {
+                    }
+                });
+                vehicleLogoDownload.m5924e();
             }
-          }
         }
-      });
-      ((com.baidu.carlife.k.a.h)localObject2).e();
-    }
-  };
-  private Random z = new Random();
-  
-  private Drawable a(String paramString)
-  {
-    if (TextUtils.isEmpty(paramString)) {}
-    do
-    {
-      return null;
-      if (paramString.contains("多云")) {
-        return getResources().getDrawable(2130839455);
-      }
-      if (paramString.contains("晴")) {
-        return getResources().getDrawable(2130839456);
-      }
-      if (paramString.contains("雨")) {
-        return getResources().getDrawable(2130839458);
-      }
-      if (paramString.contains("雪")) {
-        return getResources().getDrawable(2130839461);
-      }
-    } while (!paramString.contains("阴"));
-    return getResources().getDrawable(2130839459);
-  }
-  
-  private void a(int paramInt)
-  {
-    if ((com.baidu.carlife.logic.music.h.b().v()) && (paramInt == 101))
-    {
-      this.A = false;
-      d();
-      Object localObject = com.baidu.carlife.radio.c.b.a().c(com.baidu.carlife.logic.music.h.b().s().n());
-      String str;
-      if (localObject != null)
-      {
-        this.r = true;
-        str = ((com.baidu.carlife.radio.a.a)localObject).b();
-        localObject = str;
-        if (!com.baidu.carlife.util.a.a())
-        {
-          if (!"每日随心".equals(str)) {
-            break label112;
-          }
-          localObject = "Daily Audio";
+    };
+    /* renamed from: z */
+    private Random f4480z = new Random();
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$1 */
+    class C14941 implements C0924a {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4441a;
+
+        C14941(HomeFragment this$0) {
+            this.f4441a = this$0;
         }
-      }
-      for (;;)
-      {
-        this.e.b((String)localObject);
-        this.e.b(2130838243);
-        this.e.c(2130838242);
-        this.e.b();
-        return;
-        label112:
-        if ("音乐".equals(str))
-        {
-          localObject = "Music";
-        }
-        else if ("儿童".equals(str))
-        {
-          localObject = "Children";
-        }
-        else if ("听书".equals(str))
-        {
-          localObject = "Audio Book";
-        }
-        else if ("电台".equals(str))
-        {
-          localObject = "Radio";
-        }
-        else if ("语音点播".equals(str))
-        {
-          localObject = "VOD";
-        }
-        else if ("情感".equals(str))
-        {
-          localObject = "Emotion";
-        }
-        else if ("学习".equals(str))
-        {
-          localObject = "Study";
-        }
-        else if ("新闻".equals(str))
-        {
-          localObject = "News";
-        }
-        else
-        {
-          localObject = str;
-          if ("娱乐".equals(str)) {
-            localObject = "Recreation";
-          }
-        }
-      }
-    }
-    this.A = true;
-    d();
-    this.e.b(2130838245);
-  }
-  
-  private void a(int paramInt1, int paramInt2)
-  {
-    this.u = getResources().getDrawable(paramInt1);
-    this.v = getString(paramInt2);
-    a(this.u, this.v);
-    this.w = f.jx.a();
-  }
-  
-  private void a(Drawable paramDrawable, String paramString)
-  {
-    if ((!isAdded()) || (this.g == null)) {
-      return;
-    }
-    if (paramDrawable == null) {
-      this.g.e(2130838574);
-    }
-    while (TextUtils.isEmpty(paramString)) {
-      if (com.baidu.carlife.util.a.a())
-      {
-        this.g.f(2130838575);
-        return;
-        this.g.c(paramDrawable);
-      }
-      else
-      {
-        this.g.c("Baidu CarLife");
-        return;
-      }
-    }
-    this.g.c(paramString);
-  }
-  
-  private void a(final RoutePlanNode paramRoutePlanNode)
-  {
-    if (BaiduNaviSDKManager.getInstance().isNaviBegin())
-    {
-      showDialog(new com.baidu.carlife.view.dialog.c(mActivity).a(2131296442).c(2131296264).d(2131296259).a(new com.baidu.carlife.core.screen.b()
-      {
-        public void onClick()
-        {
-          HomeFragment.a(HomeFragment.this, paramRoutePlanNode);
-        }
-      }), BaseDialog.a.a);
-      return;
-    }
-    b(paramRoutePlanNode);
-  }
-  
-  private void a(String paramString1, String paramString2, int paramInt)
-  {
-    i.b(a, "temperature = " + paramString1 + ", state = " + paramString2);
-    if ((this.mContentView == null) || (TextUtils.isEmpty(paramString1)) || (TextUtils.isEmpty(paramString2)) || (paramString1.length() <= 1)) {}
-    TextView localTextView;
-    do
-    {
-      return;
-      localTextView = (TextView)this.mContentView.findViewById(2131625595);
-      localTextView.setCompoundDrawablesWithIntrinsicBounds(a(paramString2), null, null, null);
-      paramString1 = paramString1.trim();
-    } while (com.baidu.carlife.core.e.e(paramString1));
-    localTextView.setText(paramString1);
-  }
-  
-  private void b()
-  {
-    this.d = ((HomeCardView)this.mContentView.findViewById(2131624707));
-    this.e = ((HomeCardView)this.mContentView.findViewById(2131624710));
-    this.f = ((HomeCardView)this.mContentView.findViewById(2131624893));
-    this.g = ((HomeCardView)this.mContentView.findViewById(2131624895));
-    this.h = ((HomeCardView)this.mContentView.findViewById(2131624898));
-    this.m = ((SimpleDraweeView)this.mContentView.findViewById(2131624888));
-    this.n = this.mContentView.findViewById(2131624887);
-    this.o = this.mContentView.findViewById(2131624253);
-    this.p = this.mContentView.findViewById(2131624897);
-    a();
-  }
-  
-  private void b(int paramInt)
-  {
-    if ((this.e == null) || (this.r)) {
-      return;
-    }
-    if (paramInt > 0)
-    {
-      if (paramInt < 10000)
-      {
-        this.e.b(String.valueOf(paramInt) + getResources().getString(2131296552));
-        return;
-      }
-      if (paramInt < 10000000)
-      {
-        paramInt /= 1000;
-        if (paramInt % 10 == 0)
-        {
-          this.e.b(String.valueOf(a(paramInt / 10 * 10000)) + getResources().getString(2131296552));
-          return;
-        }
-        this.e.b(String.valueOf(a(paramInt / 10.0D * 10000.0D)) + getResources().getString(2131296552));
-        return;
-      }
-      this.e.b(getResources().getString(2131296554));
-      return;
-    }
-    this.e.b("");
-  }
-  
-  private void b(RoutePlanNode paramRoutePlanNode)
-  {
-    openNavi();
-    if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
-      BaiduNaviSDKManager.getInstance().quitNavi();
-    }
-    if (BaiduNaviSDKManager.getInstance().isCruiseBegin()) {
-      BaiduNaviSDKManager.getInstance().quitCruise();
-    }
-    com.baidu.carlife.core.screen.presentation.h.a().backTo(17, null);
-    NavPoiController.getInstance().startCalcRoute(paramRoutePlanNode);
-  }
-  
-  private void c()
-  {
-    this.n.setOnClickListener(this);
-    this.d.setOnClickListener(this);
-    this.e.setOnClickListener(this);
-    this.f.setOnClickListener(this);
-    this.g.setOnClickListener(this);
-    if (this.h != null) {
-      this.h.setOnClickListener(this);
-    }
-    this.d.a(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        StatisticManager.onEvent("HOME_ICON_0006");
-        HomeFragment.i(HomeFragment.this);
-      }
-    }).b(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        StatisticManager.onEvent("HOME_ICON_0007");
-        HomeFragment.h(HomeFragment.this);
-      }
-    });
-    this.f.a(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        StatisticManager.onEvent("HOME_ICON_0001");
-        o.a().c();
-        HomeFragment.this.showFragment(542, null);
-      }
-    });
-    this.g.c(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        StatisticManager.onEvent("HOME_ICON_0004");
-        HomeFragment.this.showFragment(545, null);
-      }
-    });
-    this.e.a(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        m.a().b();
-        StatisticManager.onEvent("HOME_ICON_0009");
-        if (com.baidu.carlife.logic.music.h.b().v())
-        {
-          com.baidu.carlife.logic.music.p.a().c();
-          com.baidu.carlife.logic.music.h.b().f(true);
-          return;
-        }
-        if (!com.baidu.carlife.core.e.a().r())
-        {
-          w.a(2131296718);
-          return;
-        }
-        new com.baidu.carlife.radio.c.a(HomeFragment.this.getContext()).a(HomeFragment.this, new a.a()
-        {
-          public void a()
-          {
-            if (com.baidu.carlife.logic.music.h.b().q()) {
-              com.baidu.carlife.logic.music.p.a().d();
+
+        public void onNetWorkResponse(int responseCode) {
+            if (responseCode == 0 && this.f4441a.isAdded()) {
+                if (this.f4441a.f4473s == null) {
+                    this.f4441a.m5480h();
+                }
+                C1943r weatherModel = this.f4441a.f4473s.m5978a();
+                this.f4441a.m5464a(weatherModel.f6171f, weatherModel.f6166a, weatherModel.f6172g);
             }
-            com.baidu.carlife.logic.music.h.b().x();
-          }
-        });
-      }
-    }).b(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        m.a().b();
-        StatisticManager.onEvent("HOME_ICON_0010");
-        if (!com.baidu.carlife.core.e.a().r())
-        {
-          w.a(2131296718);
-          return;
         }
-        new com.baidu.carlife.radio.c.a(HomeFragment.this.getContext()).a(HomeFragment.this, new a.a()
-        {
-          public void a()
-          {
-            com.baidu.carlife.logic.music.h.b().g(true);
-            com.baidu.carlife.logic.music.h.b().a(true);
-          }
-        });
-      }
-    });
-    this.n.setOnTouchListener(new View.OnTouchListener()
-    {
-      public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-      {
-        if (paramAnonymousMotionEvent.getAction() == 0) {
-          HomeFragment.j(HomeFragment.this).setAlpha(0.4F);
+    }
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$2 */
+    class C14952 implements OnTouchListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4442a;
+
+        C14952(HomeFragment this$0) {
+            this.f4442a = this$0;
         }
-        for (;;)
-        {
-          return false;
-          if (paramAnonymousMotionEvent.getAction() == 1) {
-            HomeFragment.j(HomeFragment.this).setAlpha(1.0F);
-          }
-        }
-      }
-    });
-  }
-  
-  private void d()
-  {
-    if ((this.A) || (getCurrentFragment() != this) || (!com.baidu.carlife.logic.music.h.b().v()))
-    {
-      this.i.removeMsg(99);
-      this.e.g(8);
-      return;
-    }
-    this.e.g(0);
-    this.e.getMusicMelody().setStartIndex(this.z.nextInt(40));
-    this.e.getMusicMelody().invalidate();
-    this.i.sendEmptyMessageDelayed(99, 200L);
-  }
-  
-  private void e()
-  {
-    if (com.baidu.carlife.core.e.a().r()) {
-      new aa().a(new aa.a()
-      {
-        public void a(int paramAnonymousInt)
-        {
-          HomeFragment.a(HomeFragment.this, paramAnonymousInt);
-        }
-        
-        public void a(String paramAnonymousString)
-        {
-          i.b(HomeFragment.a, "UserOnlineNumberRequest error " + paramAnonymousString);
-        }
-      });
-    }
-  }
-  
-  private void f()
-  {
-    com.baidu.che.codriver.util.c.d("cltcwidg");
-    String str = GeoLocateModel.getInstance().getCurrentDistrict().mName;
-    com.baidu.carlife.logic.codriver.adapter.b.a().a(str + "限行信息", new g.a()
-    {
-      public void a(d.a paramAnonymousa)
-      {
-        com.baidu.che.codriver.util.c.d("");
-        if (HomeFragment.k(HomeFragment.this) != null) {
-          HomeFragment.k(HomeFragment.this).b("");
-        }
-      }
-      
-      public void a(NLPResponseData paramAnonymousNLPResponseData)
-      {
-        com.baidu.che.codriver.util.c.d("");
-        if (HomeFragment.k(HomeFragment.this) == null) {}
-        do
-        {
-          return;
-          if ((paramAnonymousNLPResponseData == null) || (paramAnonymousNLPResponseData.resultList == null) || (paramAnonymousNLPResponseData.resultList.size() <= 0) || (!"traffic_limit".equals(((NLPResponseData.Result)paramAnonymousNLPResponseData.resultList.get(0)).cardType)) || (!"universal_search".equals(((NLPResponseData.Result)paramAnonymousNLPResponseData.resultList.get(0)).intent)) || (((NLPResponseData.Result)paramAnonymousNLPResponseData.resultList.get(0)).ttsStatus == null) || (((NLPResponseData.Result)paramAnonymousNLPResponseData.resultList.get(0)).data == null)) {
-            break;
-          }
-          Gson localGson = new Gson();
-          Type localType = new TypeToken() {}.getType();
-          paramAnonymousNLPResponseData = (RestrictionData)localGson.fromJson(((NLPResponseData.Result)paramAnonymousNLPResponseData.resultList.get(0)).data, localType);
-        } while (paramAnonymousNLPResponseData == null);
-        HomeFragment.k(HomeFragment.this).b(paramAnonymousNLPResponseData.getTodayRestriction());
-        return;
-        HomeFragment.k(HomeFragment.this).b("");
-      }
-    });
-  }
-  
-  private void g()
-  {
-    if (this.g == null) {
-      return;
-    }
-    if (com.baidu.carlife.n.e.a().b())
-    {
-      this.g.d(0);
-      return;
-    }
-    if ((!com.baidu.carlife.l.a.a().N()) && (o.a().b()))
-    {
-      this.g.d(0);
-      return;
-    }
-    this.g.d(8);
-  }
-  
-  private void h()
-  {
-    this.s = new u();
-    this.s.registerResponseListener(this.x);
-  }
-  
-  private void i()
-  {
-    if (this.o == null) {
-      return;
-    }
-    if (com.baidu.carlife.logic.b.a.a())
-    {
-      this.o.setVisibility(0);
-      return;
-    }
-    this.o.setVisibility(8);
-  }
-  
-  private void j()
-  {
-    if (NaviAccountUtils.getInstance().isLogin()) {
-      if (NaviAccountUtils.getInstance().getPortraitUrl() != null)
-      {
-        locala = com.baidu.carlife.g.a.a(this.m, NaviAccountUtils.getInstance().getPortraitUrl(), 52, 52);
-        this.m.setController(locala);
-      }
-    }
-    while (this.m == null)
-    {
-      com.facebook.drawee.c.a locala;
-      return;
-      NaviAccountUtils.getInstance().asyncGetProtraitUrl(new SapiCallBack()
-      {
-        public void a(GetPortraitResponse paramAnonymousGetPortraitResponse)
-        {
-          com.facebook.drawee.c.a locala = com.baidu.carlife.g.a.a(HomeFragment.j(HomeFragment.this), paramAnonymousGetPortraitResponse.portrait, 52, 52);
-          HomeFragment.j(HomeFragment.this).setController(locala);
-          com.baidu.carlife.util.p.a().b("account_portrait_url", paramAnonymousGetPortraitResponse.portrait);
-        }
-        
-        public void onNetworkFailed()
-        {
-          Object localObject = com.baidu.carlife.util.p.a().a("account_portrait_url", "");
-          if (!TextUtils.isEmpty((CharSequence)localObject))
-          {
-            localObject = com.baidu.carlife.g.a.a(HomeFragment.j(HomeFragment.this), (String)localObject, 52, 52);
-            HomeFragment.j(HomeFragment.this).setController((com.facebook.drawee.g.a)localObject);
-          }
-        }
-        
-        public void onSystemError(int paramAnonymousInt) {}
-      });
-      return;
-    }
-    this.m.setImageURI("");
-  }
-  
-  private void k()
-  {
-    if (this.s == null) {
-      h();
-    }
-    if (this.s.a() == null) {
-      this.s.toPostRequest();
-    }
-  }
-  
-  private void l()
-  {
-    f.a locala = f.jx;
-    switch (11.a[locala.ordinal()])
-    {
-    default: 
-      if ((locala.a().equals(this.w)) && (this.u != null))
-      {
-        a(this.u, this.v);
-        return;
-      }
-      break;
-    case 1: 
-      this.u = null;
-      this.v = null;
-      a(this.u, this.v);
-      this.w = locala.a();
-      return;
-    }
-    this.w = locala.a();
-    this.t = new com.baidu.carlife.k.s();
-    this.t.registerResponseListener(this.y);
-    this.t.a(this.w);
-    this.t.toGetRequest();
-  }
-  
-  private void m()
-  {
-    MainTopBarView localMainTopBarView = (MainTopBarView)this.mContentView.findViewById(2131624889);
-    if (com.baidu.carlife.l.a.a().N())
-    {
-      localMainTopBarView.b(true);
-      return;
-    }
-    localMainTopBarView.b(false);
-    a(null, null);
-  }
-  
-  private void n()
-  {
-    if (this.C == null)
-    {
-      this.C = new com.baidu.carlife.adpter.g(getActivity());
-      this.C.a(new com.baidu.carlife.logic.b.b()
-      {
-        public boolean a(int paramAnonymousInt)
-        {
-          switch (paramAnonymousInt)
-          {
-          default: 
+
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == 0) {
+                this.f4442a.f4467m.setAlpha(0.4f);
+            } else if (event.getAction() == 1) {
+                this.f4442a.f4467m.setAlpha(1.0f);
+            }
             return false;
-          }
-          return com.baidu.carlife.logic.b.a.a();
         }
-      });
     }
-    if (this.B == null)
-    {
-      this.B = new com.baidu.carlife.view.dialog.d(getActivity(), this.C, this);
-      this.B.j();
-      this.B.setSelected(0);
-    }
-    for (;;)
-    {
-      p();
-      showDialog(this.B, BaseDialog.a.d);
-      return;
-      this.B.i();
-    }
-  }
-  
-  private void o()
-  {
-    AccountController.getInstance().loginIn(new AccountController.IAccountListener()
-    {
-      public void onLogResult(boolean paramAnonymousBoolean)
-      {
-        if (paramAnonymousBoolean)
-        {
-          StatisticManager.onEvent("HOME_MINE_0007");
-          UserCenterController.getInstance().startUpdateUserInfo(1, null);
-          HomeFragment.x(HomeFragment.this);
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$3 */
+    class C14973 implements C1496a {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4443a;
+
+        C14973(HomeFragment this$0) {
+            this.f4443a = this$0;
         }
-      }
-    });
-  }
-  
-  private void p()
-  {
-    if (this.C == null) {
-      return;
+
+        /* renamed from: a */
+        public void mo1563a(int count) {
+            this.f4443a.m5466b(count);
+        }
+
+        /* renamed from: a */
+        public void mo1564a(String error) {
+            C1260i.m4435b(HomeFragment.f4452a, "UserOnlineNumberRequest error " + error);
+        }
     }
-    String str = getContext().getString(2131297203);
-    try
-    {
-      bool = NaviAccountUtils.getInstance().isLogin();
-      if (bool) {
-        str = NaviAccountUtils.getInstance().getUserName();
-      }
-      this.C.a(str);
-      return;
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$4 */
+    class C15004 implements C1499a {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4445a;
+
+        /* renamed from: com.baidu.carlife.fragment.HomeFragment$4$1 */
+        class C14981 extends TypeToken<RestrictionData> {
+            /* renamed from: a */
+            final /* synthetic */ C15004 f4444a;
+
+            C14981(C15004 this$1) {
+                this.f4444a = this$1;
+            }
+        }
+
+        C15004(HomeFragment this$0) {
+            this.f4445a = this$0;
+        }
+
+        /* renamed from: a */
+        public void mo1565a(C2565a error) {
+            C2716c.m10156d("");
+            if (this.f4445a.f4458d != null) {
+                this.f4445a.f4458d.m8429b("");
+            }
+        }
+
+        /* renamed from: a */
+        public void mo1566a(NLPResponseData response) {
+            C2716c.m10156d("");
+            if (this.f4445a.f4458d != null) {
+                if (response == null || response.resultList == null || response.resultList.size() <= 0 || !C2704g.f8845d.equals(((Result) response.resultList.get(0)).cardType) || !"universal_search".equals(((Result) response.resultList.get(0)).intent) || ((Result) response.resultList.get(0)).ttsStatus == null || ((Result) response.resultList.get(0)).data == null) {
+                    this.f4445a.f4458d.m8429b("");
+                    return;
+                }
+                RestrictionData restrictionData = (RestrictionData) new Gson().fromJson(((Result) response.resultList.get(0)).data, new C14981(this).getType());
+                if (restrictionData != null) {
+                    this.f4445a.f4458d.m8429b(restrictionData.getTodayRestriction());
+                }
+            }
+        }
     }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        boolean bool = false;
-      }
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$5 */
+    class C15015 implements SapiCallBack<GetPortraitResponse> {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4446a;
+
+        C15015(HomeFragment this$0) {
+            this.f4446a = this$0;
+        }
+
+        public /* synthetic */ void onSuccess(SapiResponse sapiResponse) {
+            m5449a((GetPortraitResponse) sapiResponse);
+        }
+
+        /* renamed from: a */
+        public void m5449a(GetPortraitResponse getPortraitResponse) {
+            this.f4446a.f4467m.setController(C1605a.m5867a(this.f4446a.f4467m, getPortraitResponse.portrait, 52, 52));
+            C2186p.m8304a().m8319b("account_portrait_url", getPortraitResponse.portrait);
+        }
+
+        public void onNetworkFailed() {
+            String portrait = C2186p.m8304a().m8309a("account_portrait_url", "");
+            if (!TextUtils.isEmpty(portrait)) {
+                this.f4446a.f4467m.setController(C1605a.m5867a(this.f4446a.f4467m, portrait, 52, 52));
+            }
+        }
+
+        public void onSystemError(int i) {
+        }
     }
-  }
-  
-  private void q()
-  {
-    new Thread(new Runnable()
-    {
-      public void run()
-      {
-        if (TextUtils.isEmpty(SysOSAPIv2.getInstance().getSdcardPath())) {}
-        Object localObject;
-        do
-        {
-          do
-          {
-            return;
-            localObject = SysOSAPIv2.getInstance().getSdcardPath() + File.separator + f.hM + File.separator + "tmp";
-          } while (TextUtils.isEmpty((CharSequence)localObject));
-          localObject = new File((String)localObject);
-        } while (!((File)localObject).exists());
-        com.baidu.carlife.util.h.a((File)localObject);
-      }
-    }).start();
-  }
-  
-  private void r()
-  {
-    Object localObject = new com.baidu.carlife.core.connect.c(true);
-    ((com.baidu.carlife.core.connect.c)localObject).c(65569);
-    localObject = Message.obtain(null, ((com.baidu.carlife.core.connect.c)localObject).d(), 1001, 0, localObject);
-    com.baidu.carlife.l.a.a().a((Message)localObject);
-  }
-  
-  private void s()
-  {
-    if (AddressSettingModel.hasSetCompAddr(com.baidu.carlife.core.a.a()))
-    {
-      a(AddressSettingModel.getCompAddrNode(com.baidu.carlife.core.a.a()));
-      return;
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$6 */
+    class C15036 extends C1502b {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4447a;
+
+        C15036(HomeFragment this$0) {
+            this.f4447a = this$0;
+        }
+
+        /* renamed from: a */
+        public boolean mo1567a(int position) {
+            switch (position) {
+                case 2:
+                    return C1715a.m6265a();
+                default:
+                    return false;
+            }
+        }
     }
-    com.baidu.carlife.logic.codriver.adapter.b.a().a(m.c.d);
-  }
-  
-  private void t()
-  {
-    if (AddressSettingModel.hasSetHomeAddr(com.baidu.carlife.core.a.a()))
-    {
-      a(AddressSettingModel.getHomeAddrNode(com.baidu.carlife.core.a.a()));
-      return;
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$7 */
+    class C15047 implements IAccountListener {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4448a;
+
+        C15047(HomeFragment this$0) {
+            this.f4448a = this$0;
+        }
+
+        public void onLogResult(boolean success) {
+            if (success) {
+                StatisticManager.onEvent(StatisticConstants.HOME_MINE_0007);
+                UserCenterController.getInstance().startUpdateUserInfo(1, null);
+                this.f4448a.m5497p();
+            }
+        }
     }
-    com.baidu.carlife.logic.codriver.adapter.b.a().a(m.c.c);
-  }
-  
-  private void u()
-  {
-    i.b(a, "goVoiceNavi" + m.c.e);
-    com.baidu.carlife.logic.codriver.adapter.b.a().a(m.c.e);
-  }
-  
-  public String a(double paramDouble)
-  {
-    return new DecimalFormat("#,##0").format(paramDouble);
-  }
-  
-  public void a()
-  {
-    if ((this.p != null) && (com.baidu.carlife.core.d.m()))
-    {
-      this.p.setVisibility(0);
-      View localView = this.mContentView.findViewById(2131624891);
-      if (localView != null) {
-        localView.setVisibility(0);
-      }
-      localView = this.mContentView.findViewById(2131624892);
-      if (localView != null) {
-        localView.setVisibility(0);
-      }
-      localView = this.mContentView.findViewById(2131624894);
-      if (localView != null) {
-        localView.setVisibility(0);
-      }
-      localView = this.mContentView.findViewById(2131624896);
-      if (localView != null) {
-        localView.setVisibility(0);
-      }
-      this.mContentView.requestLayout();
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$8 */
+    class C15058 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4449a;
+
+        C15058(HomeFragment this$0) {
+            this.f4449a = this$0;
+        }
+
+        public void onClick() {
+            this.f4449a.m5499q();
+        }
     }
-  }
-  
-  public boolean onBackPressed()
-  {
-    if (mActivity != null) {
-      mActivity.d();
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$9 */
+    class C15069 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4450a;
+
+        C15069(HomeFragment this$0) {
+            this.f4450a = this$0;
+        }
+
+        public void run() {
+            if (!TextUtils.isEmpty(SysOSAPIv2.getInstance().getSdcardPath())) {
+                String naviCacheDir = SysOSAPIv2.getInstance().getSdcardPath() + File.separator + C1253f.hM + File.separator + "tmp";
+                if (!TextUtils.isEmpty(naviCacheDir)) {
+                    File file = new File(naviCacheDir);
+                    if (file.exists()) {
+                        C2177h.m8270a(file);
+                    }
+                }
+            }
+        }
     }
-    return true;
-  }
-  
-  public void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    default: 
-      return;
-    case 2131624893: 
-      com.baidu.carlife.view.g.e().f();
-      StatisticManager.onEvent("HOME_ICON_0001");
-      o.a().c();
-      showFragment(542, null);
-      return;
-    case 2131624710: 
-      m.a().b();
-      StatisticManager.onEvent("HOME_ICON_0008");
-      showFragment(594, null);
-      return;
-    case 2131624707: 
-      com.baidu.carlife.view.g.e().f();
-      StatisticManager.onEvent("HOME_ICON_0005");
-      u();
-      return;
-    case 2131624895: 
-      com.baidu.carlife.view.g.e().f();
-      StatisticManager.onEvent("HOME_ICON_0004");
-      showFragment(545, null);
-      return;
-    case 2131624887: 
-      com.baidu.carlife.view.g.e().f();
-      n();
-      return;
+
+    /* renamed from: com.baidu.carlife.fragment.HomeFragment$a */
+    private class C1507a extends C0936j {
+        /* renamed from: a */
+        final /* synthetic */ HomeFragment f4451a;
+
+        private C1507a(HomeFragment homeFragment) {
+            this.f4451a = homeFragment;
+        }
+
+        public void careAbout() {
+            addMsg(3007);
+            addMsg(3008);
+            addMsg(C1253f.gi);
+            addMsg(225);
+            addMsg(1002);
+            addMsg(C1253f.fm);
+        }
+
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 99:
+                    this.f4451a.m5473d();
+                    return;
+                case 101:
+                    this.f4451a.dismissDialog(this.f4451a.f4456B);
+                    return;
+                case 225:
+                    this.f4451a.m5456a(msg.arg1);
+                    return;
+                case 1002:
+                case 3007:
+                    if (C1663a.m5979a().m5993N()) {
+                        this.f4451a.m5488l();
+                    } else {
+                        this.f4451a.m5458a(null, null);
+                    }
+                    this.f4451a.m5478g();
+                    if (msg.what == 1002) {
+                        C1260i.m4435b(HomeFragment.f4452a, "####### MSG_CONNECT_STATUS_DISCONNECTED : " + this.f4451a.f4470p);
+                        if (this.f4451a.f4470p != null) {
+                            this.f4451a.f4470p.setVisibility(8);
+                            View bank1 = this.f4451a.mContentView.findViewById(C0965R.id.card_bank_1);
+                            if (bank1 != null) {
+                                bank1.setVisibility(8);
+                            }
+                            View bank2 = this.f4451a.mContentView.findViewById(C0965R.id.card_bank_2);
+                            if (bank2 != null) {
+                                bank2.setVisibility(8);
+                            }
+                            View bank3 = this.f4451a.mContentView.findViewById(C0965R.id.card_bank_3);
+                            if (bank3 != null) {
+                                bank3.setVisibility(8);
+                            }
+                            View bank4 = this.f4451a.mContentView.findViewById(C0965R.id.card_bank_4);
+                            if (bank4 != null) {
+                                bank4.setVisibility(8);
+                            }
+                            this.f4451a.mContentView.requestLayout();
+                            return;
+                        }
+                        return;
+                    }
+                    return;
+                case C1253f.fm /*1040*/:
+                    this.f4451a.m5513a();
+                    return;
+                case 3008:
+                    this.f4451a.m5490m();
+                    return;
+                case C1253f.gi /*3012*/:
+                    if (this.f4451a.getCurrentFragmentType() == this.f4451a.fragmentType) {
+                        this.f4451a.m5478g();
+                        return;
+                    }
+                    return;
+                default:
+                    return;
+            }
+        }
     }
-    r();
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = paramLayoutInflater.inflate(2130968763, null);
-    this.i = new a(null);
-    k.a(this.i);
-    setBottomBarStatus(true);
-    b();
-    c();
-    h();
-    k.b(3007);
-    try
-    {
-      NaviAccountUtils.getInstance().initAccount(BaiduNaviApplication.getInstance());
-      NaviAccountUtils.getInstance().asyncGetUserInfo();
-      com.baidu.carlife.util.s.a(false, true, false, true);
-      com.baidu.carlife.view.g.e().b();
-      q.f().i();
-      if (BNLocationManagerProxy.getInstance().isLocationValid())
-      {
-        f();
-        e();
+
+    /* renamed from: a */
+    private void m5458a(Drawable drawable, String name) {
+        if (isAdded() && this.f4461g != null) {
+            if (drawable == null) {
+                this.f4461g.m8438e((int) C0965R.drawable.home_ic_carlife_card);
+            } else {
+                this.f4461g.m8432c(drawable);
+            }
+            if (!TextUtils.isEmpty(name)) {
+                this.f4461g.m8434c(name);
+            } else if (C2170a.m8217a()) {
+                this.f4461g.m8439f((int) C0965R.drawable.home_ic_carlife_name);
+            } else {
+                this.f4461g.m8434c("Baidu CarLife");
+            }
+        }
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mContentView = inflater.inflate(C0965R.layout.frag_home_big_screen, null);
+        this.f4463i = new C1507a();
+        C1261k.m4460a(this.f4463i);
+        setBottomBarStatus(true);
+        m5465b();
+        m5471c();
+        m5480h();
+        C1261k.m4461b(3007);
+        try {
+            NaviAccountUtils.getInstance().initAccount(BaiduNaviApplication.getInstance());
+            NaviAccountUtils.getInstance().asyncGetUserInfo();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        C2191s.m8343a(false, true, false, true);
+        C2342g.m8864e().m8892b();
+        C1868q.m7089f().m7123i();
+        if (BNLocationManagerProxy.getInstance().isLocationValid()) {
+            m5476f();
+            m5475e();
+        } else {
+            this.f4463i.postDelayed(new Runnable(this) {
+                /* renamed from: a */
+                final /* synthetic */ HomeFragment f4432a;
+
+                {
+                    this.f4432a = this$0;
+                }
+
+                public void run() {
+                    if (BNLocationManagerProxy.getInstance().isLocationValid()) {
+                        this.f4432a.m5476f();
+                    }
+                    this.f4432a.m5475e();
+                }
+            }, 2000);
+        }
         return this.mContentView;
-      }
     }
-    catch (Exception paramLayoutInflater)
-    {
-      for (;;)
-      {
-        paramLayoutInflater.printStackTrace();
-        continue;
-        this.i.postDelayed(new Runnable()
-        {
-          public void run()
-          {
-            if (BNLocationManagerProxy.getInstance().isLocationValid()) {
-              HomeFragment.f(HomeFragment.this);
-            }
-            HomeFragment.g(HomeFragment.this);
-          }
-        }, 2000L);
-      }
+
+    /* renamed from: b */
+    private void m5465b() {
+        this.f4458d = (HomeCardView) this.mContentView.findViewById(C0965R.id.home_card_navi);
+        this.f4459e = (HomeCardView) this.mContentView.findViewById(C0965R.id.home_card_music);
+        this.f4460f = (HomeCardView) this.mContentView.findViewById(C0965R.id.home_card_discover);
+        this.f4461g = (HomeCardView) this.mContentView.findViewById(C0965R.id.home_card_carlife);
+        this.f4462h = (HomeCardView) this.mContentView.findViewById(C0965R.id.home_card_exit);
+        this.f4467m = (SimpleDraweeView) this.mContentView.findViewById(C0965R.id.btn_person);
+        this.f4468n = this.mContentView.findViewById(C0965R.id.rl_person);
+        this.f4469o = this.mContentView.findViewById(C0965R.id.red_point);
+        this.f4470p = this.mContentView.findViewById(C0965R.id.viewadapt);
+        m5513a();
     }
-  }
-  
-  public void onDestroyView()
-  {
-    this.q = null;
-    super.onDestroyView();
-  }
-  
-  public void onDetach()
-  {
-    k.b(this.i);
-    super.onDetach();
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    super.onHiddenChanged(paramBoolean);
-    i.b(a);
-    k();
-    g();
-    i();
-    if (paramBoolean)
-    {
-      this.A = true;
-      com.baidu.carlife.view.g.e().f();
-      return;
-    }
-    this.A = false;
-    d();
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if ((this.mContentView == null) || (this.d == null) || (this.e == null) || (this.f == null) || (this.g == null) || (this.n == null)) {
-      return;
-    }
-    com.baidu.carlife.f.d locald = com.baidu.carlife.f.d.a();
-    if (this.k == null)
-    {
-      this.k = new com.baidu.carlife.f.g(this.mContentView, 2);
-      this.k.d(this.n);
-    }
-    if (this.j == null)
-    {
-      this.j = new com.baidu.carlife.f.g(this.mContentView.findViewById(2131624890), 4);
-      this.j.d(this.d).d(this.e).d(this.f).d(this.g);
-      if ((this.h != null) && (this.h.isShown())) {
-        this.j.d(this.h);
-      }
-    }
-    View localView = mActivity.u().g();
-    if (this.l == null)
-    {
-      this.l = new com.baidu.carlife.f.g(localView, 6);
-      this.l.d(localView.findViewById(2131623991)).d(localView.findViewById(2131623992)).d(localView.findViewById(2131623993)).d(localView.findViewById(2131623994)).d(localView.findViewById(2131623995));
-    }
-    this.l.b(true);
-    this.l.b(localView.findViewById(2131623993));
-    locald.b(new com.baidu.carlife.f.a[] { this.k, this.j, this.l });
-    locald.h(this.l);
-  }
-  
-  protected void onInitView() {}
-  
-  public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong)
-  {
-    this.i.removeMsg(101);
-    int i1 = 0;
-    switch (paramInt)
-    {
-    default: 
-      paramInt = i1;
-    }
-    for (;;)
-    {
-      this.i.sendEmptyMessageDelayed(101, paramInt);
-      label71:
-      return;
-      if (NaviAccountUtils.getInstance().isLogin()) {
-        showFragment(544, null);
-      }
-      for (;;)
-      {
-        paramInt = 200;
-        break;
-        if (!this.C.a()) {
-          break label71;
+
+    /* renamed from: c */
+    private void m5471c() {
+        this.f4468n.setOnClickListener(this);
+        this.f4458d.setOnClickListener(this);
+        this.f4459e.setOnClickListener(this);
+        this.f4460f.setOnClickListener(this);
+        this.f4461g.setOnClickListener(this);
+        if (this.f4462h != null) {
+            this.f4462h.setOnClickListener(this);
         }
-        StatisticManager.onEvent("HOME_MINE_0001", "点击我的-登录小人按键的用户数");
-        o();
-      }
-      showFragment(578, null);
-      paramInt = 200;
-      continue;
-      showFragment(580, null);
-      paramInt = 200;
-      continue;
-      showFragment(581, null);
-      paramInt = 200;
-      continue;
-      showFragment(565, null);
-      paramInt = 100;
-      continue;
-      if (this.q == null)
-      {
-        this.q = new com.baidu.carlife.view.dialog.c(mActivity).b(2131296270).a(2131296271).g(17).c(2131296264).q().d(2131296259);
-        this.q.a(new com.baidu.carlife.core.screen.b()
-        {
-          public void onClick()
-          {
-            HomeFragment.y(HomeFragment.this);
-          }
+        this.f4458d.m8420a(new OnClickListener(this) {
+            /* renamed from: a */
+            final /* synthetic */ HomeFragment f4434a;
+
+            {
+                this.f4434a = this$0;
+            }
+
+            public void onClick(View v) {
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0006);
+                this.f4434a.m5505t();
+            }
+        }).m8428b(new OnClickListener(this) {
+            /* renamed from: a */
+            final /* synthetic */ HomeFragment f4433a;
+
+            {
+                this.f4433a = this$0;
+            }
+
+            public void onClick(View v) {
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0007);
+                this.f4433a.m5503s();
+            }
         });
-      }
-      showDialog(this.q);
-      StatisticManager.onEvent("1028", "1028");
-      paramInt = i1;
-      continue;
-      showFragment(539, null);
-      StatisticManager.onEvent("1029", "1029");
-      paramInt = 100;
-    }
-  }
-  
-  public void onPause()
-  {
-    super.onPause();
-    this.A = true;
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    k.b(3007);
-    g();
-    i();
-    m();
-    k();
-    i.b(a);
-    this.A = false;
-    this.i.removeMsg(99);
-    if (com.baidu.carlife.logic.music.h.b().v()) {
-      d();
-    }
-    j();
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin() {}
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public boolean onVoiceCommand(String paramString1, String paramString2)
-  {
-    i.b(a, "HomeFragment VOICE Command: " + paramString1 + " # " + paramString2);
-    if (paramString2.equals("发现"))
-    {
-      onClick(this.f);
-      return true;
-    }
-    if ((this.B != null) && (this.B.isShown())) {
-      return this.B.a(paramString1, paramString2);
-    }
-    if (paramString2.equals("ind_center"))
-    {
-      onClick(this.n);
-      return true;
-    }
-    return false;
-  }
-  
-  private class a
-    extends j
-  {
-    private a() {}
-    
-    public void careAbout()
-    {
-      addMsg(3007);
-      addMsg(3008);
-      addMsg(3012);
-      addMsg(225);
-      addMsg(1002);
-      addMsg(1040);
-    }
-    
-    public void handleMessage(Message paramMessage)
-    {
-      switch (paramMessage.what)
-      {
-      default: 
-      case 3008: 
-      case 1002: 
-      case 3007: 
-      case 3012: 
-        do
-        {
-          return;
-          HomeFragment.l(HomeFragment.this);
-          return;
-          if (com.baidu.carlife.l.a.a().N()) {
-            HomeFragment.m(HomeFragment.this);
-          }
-          for (;;)
-          {
-            HomeFragment.n(HomeFragment.this);
-            if (paramMessage.what != 1002) {
-              break;
+        this.f4460f.m8420a(new OnClickListener(this) {
+            /* renamed from: a */
+            final /* synthetic */ HomeFragment f4435a;
+
+            {
+                this.f4435a = this$0;
             }
-            i.b(HomeFragment.a, "####### MSG_CONNECT_STATUS_DISCONNECTED : " + HomeFragment.o(HomeFragment.this));
-            if (HomeFragment.o(HomeFragment.this) == null) {
-              break;
+
+            public void onClick(View v) {
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0001);
+                C1856o.m7042a().m7046c();
+                this.f4435a.showFragment(NaviFragmentManager.TYPE_HOME_DISCOVER, null);
             }
-            HomeFragment.o(HomeFragment.this).setVisibility(8);
-            paramMessage = HomeFragment.p(HomeFragment.this).findViewById(2131624891);
-            if (paramMessage != null) {
-              paramMessage.setVisibility(8);
+        });
+        this.f4461g.m8433c(new OnClickListener(this) {
+            /* renamed from: a */
+            final /* synthetic */ HomeFragment f4436a;
+
+            {
+                this.f4436a = this$0;
             }
-            paramMessage = HomeFragment.q(HomeFragment.this).findViewById(2131624892);
-            if (paramMessage != null) {
-              paramMessage.setVisibility(8);
+
+            public void onClick(View v) {
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0004);
+                this.f4436a.showFragment(NaviFragmentManager.TYPE_HOME_MORE, null);
             }
-            paramMessage = HomeFragment.r(HomeFragment.this).findViewById(2131624894);
-            if (paramMessage != null) {
-              paramMessage.setVisibility(8);
+        });
+        this.f4459e.m8420a(new OnClickListener(this) {
+            /* renamed from: a */
+            final /* synthetic */ HomeFragment f4440a;
+
+            /* renamed from: com.baidu.carlife.fragment.HomeFragment$19$1 */
+            class C14931 implements C1491a {
+                /* renamed from: a */
+                final /* synthetic */ AnonymousClass19 f4439a;
+
+                C14931(AnonymousClass19 this$1) {
+                    this.f4439a = this$1;
+                }
+
+                /* renamed from: a */
+                public void mo1562a() {
+                    if (C1818h.m6730b().m6829q()) {
+                        C1834p.m6925a().m6928d();
+                    }
+                    C1818h.m6730b().m6836x();
+                }
             }
-            paramMessage = HomeFragment.s(HomeFragment.this).findViewById(2131624896);
-            if (paramMessage != null) {
-              paramMessage.setVisibility(8);
+
+            {
+                this.f4440a = this$0;
             }
-            HomeFragment.t(HomeFragment.this).requestLayout();
+
+            public void onClick(View v) {
+                C1903m.m7252a().m7255b();
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0009);
+                if (C1818h.m6730b().m6834v()) {
+                    C1834p.m6925a().m6927c();
+                    C1818h.m6730b().m6811f(true);
+                } else if (C1251e.m4358a().m4401r()) {
+                    new C2139a(this.f4440a.getContext()).m8066a(this.f4440a, new C14931(this));
+                } else {
+                    C2201w.m8370a((int) C0965R.string.network_unconnected);
+                }
+            }
+        }).m8428b(new OnClickListener(this) {
+            /* renamed from: a */
+            final /* synthetic */ HomeFragment f4438a;
+
+            /* renamed from: com.baidu.carlife.fragment.HomeFragment$18$1 */
+            class C14921 implements C1491a {
+                /* renamed from: a */
+                final /* synthetic */ AnonymousClass18 f4437a;
+
+                C14921(AnonymousClass18 this$1) {
+                    this.f4437a = this$1;
+                }
+
+                /* renamed from: a */
+                public void mo1562a() {
+                    C1818h.m6730b().m6813g(true);
+                    C1818h.m6730b().m6789a(true);
+                }
+            }
+
+            {
+                this.f4438a = this$0;
+            }
+
+            public void onClick(View v) {
+                C1903m.m7252a().m7255b();
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0010);
+                if (C1251e.m4358a().m4401r()) {
+                    new C2139a(this.f4438a.getContext()).m8066a(this.f4438a, new C14921(this));
+                } else {
+                    C2201w.m8370a((int) C0965R.string.network_unconnected);
+                }
+            }
+        });
+        this.f4468n.setOnTouchListener(new C14952(this));
+    }
+
+    /* renamed from: d */
+    private void m5473d() {
+        if (!this.f4455A && getCurrentFragment() == this && C1818h.m6730b().m6834v()) {
+            this.f4459e.m8440g(0);
+            this.f4459e.getMusicMelody().setStartIndex(this.f4480z.nextInt(40));
+            this.f4459e.getMusicMelody().invalidate();
+            this.f4463i.sendEmptyMessageDelayed(99, 200);
             return;
-            HomeFragment.a(HomeFragment.this, null, null);
-          }
-        } while (HomeFragment.this.getCurrentFragmentType() != HomeFragment.u(HomeFragment.this));
-        HomeFragment.n(HomeFragment.this);
-        return;
-      case 99: 
-        HomeFragment.v(HomeFragment.this);
-        return;
-      case 225: 
-        HomeFragment.b(HomeFragment.this, paramMessage.arg1);
-        return;
-      case 101: 
-        HomeFragment.this.dismissDialog(HomeFragment.w(HomeFragment.this));
-        return;
-      }
-      HomeFragment.this.a();
+        }
+        this.f4463i.removeMsg(99);
+        this.f4459e.m8440g(8);
     }
-  }
+
+    /* renamed from: a */
+    private void m5456a(int dataType) {
+        if (C1818h.m6730b().m6834v() && dataType == 101) {
+            this.f4455A = false;
+            m5473d();
+            C2105a channelModel = C2142b.m8067a().m8077c(C1818h.m6730b().m6831s().m6644n());
+            if (channelModel != null) {
+                this.f4472r = true;
+                String channelName = channelModel.m7895b();
+                if (!C2170a.m8217a()) {
+                    if ("每日随心".equals(channelName)) {
+                        channelName = "Daily Audio";
+                    } else if (C1942q.f6153u.equals(channelName)) {
+                        channelName = "Music";
+                    } else if ("儿童".equals(channelName)) {
+                        channelName = "Children";
+                    } else if ("听书".equals(channelName)) {
+                        channelName = "Audio Book";
+                    } else if ("电台".equals(channelName)) {
+                        channelName = "Radio";
+                    } else if ("语音点播".equals(channelName)) {
+                        channelName = "VOD";
+                    } else if ("情感".equals(channelName)) {
+                        channelName = "Emotion";
+                    } else if ("学习".equals(channelName)) {
+                        channelName = "Study";
+                    } else if ("新闻".equals(channelName)) {
+                        channelName = "News";
+                    } else if ("娱乐".equals(channelName)) {
+                        channelName = "Recreation";
+                    }
+                }
+                this.f4459e.m8429b(channelName);
+            }
+            this.f4459e.m8426b((int) C0965R.drawable.com_home_ic_music_pause_selector);
+            this.f4459e.m8431c((int) C0965R.drawable.com_home_ic_music_next_selector);
+            this.f4459e.m8425b();
+            return;
+        }
+        this.f4455A = true;
+        m5473d();
+        this.f4459e.m8426b((int) C0965R.drawable.com_home_ic_music_play_selector01);
+    }
+
+    /* renamed from: e */
+    private void m5475e() {
+        if (C1251e.m4358a().m4401r()) {
+            new aa().m7944a(new C14973(this));
+        }
+    }
+
+    /* renamed from: b */
+    private void m5466b(int count) {
+        if (this.f4459e != null && !this.f4472r) {
+            if (count <= 0) {
+                this.f4459e.m8429b("");
+            } else if (count < 10000) {
+                this.f4459e.m8429b(String.valueOf(count) + getResources().getString(C0965R.string.listen_user));
+            } else if (count < C1253f.iE) {
+                int tmp = count / 1000;
+                if (tmp % 10 == 0) {
+                    this.f4459e.m8429b(String.valueOf(m5512a((double) ((tmp / 10) * 10000))) + getResources().getString(C0965R.string.listen_user));
+                } else {
+                    this.f4459e.m8429b(String.valueOf(m5512a((((double) tmp) / 10.0d) * 10000.0d)) + getResources().getString(C0965R.string.listen_user));
+                }
+            } else {
+                this.f4459e.m8429b(getResources().getString(C0965R.string.listen_user_ten_m));
+            }
+        }
+    }
+
+    /* renamed from: a */
+    public String m5512a(double num) {
+        return new DecimalFormat("#,##0").format(num);
+    }
+
+    /* renamed from: f */
+    private void m5476f() {
+        C2716c.m10156d("cltcwidg");
+        C1754b.m6365a().m6380a(GeoLocateModel.getInstance().getCurrentDistrict().mName + "限行信息", new C15004(this));
+    }
+
+    /* renamed from: g */
+    private void m5478g() {
+        if (this.f4461g != null) {
+            if (C1977e.m7498a().m7557b()) {
+                this.f4461g.m8436d(0);
+            } else if (C1663a.m5979a().m5993N() || !C1856o.m7042a().m7045b()) {
+                this.f4461g.m8436d(8);
+            } else {
+                this.f4461g.m8436d(0);
+            }
+        }
+    }
+
+    /* renamed from: h */
+    private void m5480h() {
+        this.f4473s = new C1662u();
+        this.f4473s.registerResponseListener(this.f4478x);
+    }
+
+    protected void onInitView() {
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case C0965R.id.home_card_navi:
+                C2342g.m8864e().m8895f();
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0005);
+                m5507u();
+                return;
+            case C0965R.id.home_card_music:
+                C1903m.m7252a().m7255b();
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0008);
+                showFragment(NaviFragmentManager.TYPE_RADIO_CHANNEL, null);
+                return;
+            case C0965R.id.rl_person:
+                C2342g.m8864e().m8895f();
+                m5492n();
+                return;
+            case C0965R.id.home_card_discover:
+                C2342g.m8864e().m8895f();
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0001);
+                C1856o.m7042a().m7046c();
+                showFragment(NaviFragmentManager.TYPE_HOME_DISCOVER, null);
+                return;
+            case C0965R.id.home_card_carlife:
+                C2342g.m8864e().m8895f();
+                StatisticManager.onEvent(StatisticConstants.HOME_ICON_0004);
+                showFragment(NaviFragmentManager.TYPE_HOME_MORE, null);
+                return;
+            case C0965R.id.home_card_exit:
+                m5501r();
+                return;
+            default:
+                return;
+        }
+    }
+
+    public void onPause() {
+        super.onPause();
+        this.f4455A = true;
+    }
+
+    public void onResume() {
+        super.onResume();
+        C1261k.m4461b(3007);
+        m5478g();
+        m5482i();
+        m5490m();
+        m5487k();
+        C1260i.m4434b(f4452a);
+        this.f4455A = false;
+        this.f4463i.removeMsg(99);
+        if (C1818h.m6730b().m6834v()) {
+            m5473d();
+        }
+        m5485j();
+    }
+
+    /* renamed from: i */
+    private void m5482i() {
+        if (this.f4469o != null) {
+            if (C1715a.m6265a()) {
+                this.f4469o.setVisibility(0);
+            } else {
+                this.f4469o.setVisibility(8);
+            }
+        }
+    }
+
+    /* renamed from: j */
+    private void m5485j() {
+        if (NaviAccountUtils.getInstance().isLogin()) {
+            if (NaviAccountUtils.getInstance().getPortraitUrl() != null) {
+                this.f4467m.setController(C1605a.m5867a(this.f4467m, NaviAccountUtils.getInstance().getPortraitUrl(), 52, 52));
+                return;
+            }
+            NaviAccountUtils.getInstance().asyncGetProtraitUrl(new C15015(this));
+        } else if (this.f4467m != null) {
+            this.f4467m.setImageURI("");
+        }
+    }
+
+    /* renamed from: k */
+    private void m5487k() {
+        if (this.f4473s == null) {
+            m5480h();
+        }
+        if (this.f4473s.m5978a() == null) {
+            this.f4473s.toPostRequest();
+        }
+    }
+
+    public boolean onBackPressed() {
+        if (mActivity != null) {
+            mActivity.m3108d();
+        }
+        return true;
+    }
+
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        C1260i.m4434b(f4452a);
+        m5487k();
+        m5478g();
+        m5482i();
+        if (hidden) {
+            this.f4455A = true;
+            C2342g.m8864e().m8895f();
+            return;
+        }
+        this.f4455A = false;
+        m5473d();
+    }
+
+    public boolean onVoiceCommand(String strCommand, String strIntent) {
+        C1260i.m4435b(f4452a, "HomeFragment VOICE Command: " + strCommand + " # " + strIntent);
+        if (strIntent.equals("发现")) {
+            onClick(this.f4460f);
+            return true;
+        } else if (this.f4456B != null && this.f4456B.isShown()) {
+            return this.f4456B.m8612a(strCommand, strIntent);
+        } else {
+            if (!strIntent.equals(C2736p.f8994x)) {
+                return false;
+            }
+            onClick(this.f4468n);
+            return true;
+        }
+    }
+
+    /* renamed from: a */
+    private void m5457a(int drawableId, int stringId) {
+        this.f4475u = getResources().getDrawable(drawableId);
+        this.f4476v = getString(stringId);
+        m5458a(this.f4475u, this.f4476v);
+        this.f4477w = C1253f.jx.m4403a();
+    }
+
+    /* renamed from: l */
+    private void m5488l() {
+        C1252a v = C1253f.jx;
+        switch (v) {
+            case VEHICLE_CHANNEL_NORMAL:
+                this.f4475u = null;
+                this.f4476v = null;
+                m5458a(this.f4475u, this.f4476v);
+                this.f4477w = v.m4403a();
+                return;
+            default:
+                if (!v.m4403a().equals(this.f4477w) || this.f4475u == null) {
+                    this.f4477w = v.m4403a();
+                    this.f4474t = new C1660s();
+                    this.f4474t.registerResponseListener(this.f4479y);
+                    this.f4474t.m5973a(this.f4477w);
+                    this.f4474t.toGetRequest();
+                    return;
+                }
+                m5458a(this.f4475u, this.f4476v);
+                return;
+        }
+    }
+
+    /* renamed from: m */
+    private void m5490m() {
+        MainTopBarView topbarview = (MainTopBarView) this.mContentView.findViewById(C0965R.id.main_comm_top_bar);
+        if (C1663a.m5979a().m5993N()) {
+            topbarview.m8463b(true);
+            return;
+        }
+        topbarview.m8463b(false);
+        m5458a(null, null);
+    }
+
+    public void onDestroyView() {
+        this.f4471q = null;
+        super.onDestroyView();
+    }
+
+    public void onDetach() {
+        C1261k.m4464b(this.f4463i);
+        super.onDetach();
+    }
+
+    protected void onUpdateSkin() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    /* renamed from: a */
+    private void m5464a(String temperature, String state, int pm25) {
+        C1260i.m4435b(f4452a, "temperature = " + temperature + ", state = " + state);
+        if (this.mContentView != null && !TextUtils.isEmpty(temperature) && !TextUtils.isEmpty(state) && temperature.length() > 1) {
+            TextView leftTV = (TextView) this.mContentView.findViewById(C0965R.id.tv_left_bar);
+            leftTV.setCompoundDrawablesWithIntrinsicBounds(m5453a(state), null, null, null);
+            temperature = temperature.trim();
+            if (!C1251e.m4370e(temperature)) {
+                leftTV.setText(temperature);
+            }
+        }
+    }
+
+    /* renamed from: a */
+    private Drawable m5453a(String state) {
+        if (TextUtils.isEmpty(state)) {
+            return null;
+        }
+        if (state.contains(C1253f.gA)) {
+            return getResources().getDrawable(C0965R.drawable.statusbaric_ic_weather_cloudy);
+        }
+        if (state.contains(C1253f.gB)) {
+            return getResources().getDrawable(C0965R.drawable.statusbaric_ic_weather_fine);
+        }
+        if (state.contains(C1253f.gz)) {
+            return getResources().getDrawable(C0965R.drawable.statusbaric_ic_weather_rain);
+        }
+        if (state.contains(C1253f.gC)) {
+            return getResources().getDrawable(C0965R.drawable.statusbaric_ic_weather_snow);
+        }
+        if (state.contains(C1253f.gD)) {
+            return getResources().getDrawable(C0965R.drawable.statusbaric_ic_weather_shade);
+        }
+        return null;
+    }
+
+    public void onInitFocusAreas() {
+        if (this.mContentView != null && this.f4458d != null && this.f4459e != null && this.f4460f != null && this.f4461g != null && this.f4468n != null) {
+            C1440d focusManager = C1440d.m5251a();
+            if (this.f4465k == null) {
+                this.f4465k = new C1443g(this.mContentView, 2);
+                this.f4465k.m5300d(this.f4468n);
+            }
+            if (this.f4464j == null) {
+                this.f4464j = new C1443g(this.mContentView.findViewById(C0965R.id.layout_icons), 4);
+                this.f4464j.m5300d(this.f4458d).m5300d(this.f4459e).m5300d(this.f4460f).m5300d(this.f4461g);
+                if (this.f4462h != null && this.f4462h.isShown()) {
+                    this.f4464j.m5300d(this.f4462h);
+                }
+            }
+            View rootView = mActivity.m3125u().m4695g();
+            if (this.f4466l == null) {
+                this.f4466l = new C1443g(rootView, 6);
+                this.f4466l.m5300d(rootView.findViewById(C0965R.id.iv_home)).m5300d(rootView.findViewById(C0965R.id.iv_phone_book)).m5300d(rootView.findViewById(C0965R.id.iv_voice_focus_bg)).m5300d(rootView.findViewById(C0965R.id.iv_navi)).m5300d(rootView.findViewById(C0965R.id.iv_music));
+            }
+            this.f4466l.m5298b(true);
+            this.f4466l.m5297b(rootView.findViewById(C0965R.id.iv_voice_focus_bg));
+            focusManager.m5256b(this.f4465k, this.f4464j, this.f4466l);
+            focusManager.m5268h(this.f4466l);
+        }
+    }
+
+    /* renamed from: n */
+    private void m5492n() {
+        if (this.f4457C == null) {
+            this.f4457C = new C0984g(getActivity());
+            this.f4457C.m3191a(new C15036(this));
+        }
+        if (this.f4456B == null) {
+            this.f4456B = new C2276d(getActivity(), this.f4457C, this);
+            this.f4456B.m8618j();
+            this.f4456B.setSelected(0);
+        } else {
+            this.f4456B.mo1630i();
+        }
+        m5497p();
+        showDialog(this.f4456B, C1265a.left);
+    }
+
+    /* renamed from: o */
+    private void m5495o() {
+        AccountController.getInstance().loginIn(new C15047(this));
+    }
+
+    /* renamed from: p */
+    private void m5497p() {
+        if (this.f4457C != null) {
+            boolean isLogin;
+            String userName = getContext().getString(C0965R.string.user_not_login);
+            try {
+                isLogin = NaviAccountUtils.getInstance().isLogin();
+            } catch (Exception e) {
+                isLogin = false;
+            }
+            if (isLogin) {
+                userName = NaviAccountUtils.getInstance().getUserName();
+            }
+            this.f4457C.m3192a(userName);
+        }
+    }
+
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        this.f4463i.removeMsg(101);
+        int nDelayHideDlg = 0;
+        switch (position) {
+            case 0:
+                if (NaviAccountUtils.getInstance().isLogin()) {
+                    showFragment(NaviFragmentManager.TYPE_HOME_MY_DETAIL, null);
+                } else if (this.f4457C.m3193a()) {
+                    StatisticManager.onEvent(StatisticConstants.HOME_MINE_0001, StatisticConstants.HOME_ACCOUNT_LOGIN_001);
+                    m5495o();
+                } else {
+                    return;
+                }
+                nDelayHideDlg = 200;
+                break;
+            case 1:
+                showFragment(NaviFragmentManager.TYPE_ROUTE_RECORD, null);
+                nDelayHideDlg = 200;
+                break;
+            case 2:
+                showFragment(NaviFragmentManager.TYPE_MAP_SETTING, null);
+                nDelayHideDlg = 200;
+                break;
+            case 3:
+                showFragment(NaviFragmentManager.TYPE_VOICE_SETTING, null);
+                nDelayHideDlg = 200;
+                break;
+            case 4:
+                showFragment(NaviFragmentManager.TYPE_HOME_HELP_PANEL, null);
+                nDelayHideDlg = 100;
+                break;
+            case 5:
+                if (this.f4471q == null) {
+                    this.f4471q = new C1953c(mActivity).m7442b((int) C0965R.string.alert_delete_navi_cache).m7435a((int) C0965R.string.alert_delete_navi_cache_content).m7457g(17).m7447c((int) C0965R.string.alert_confirm).m7458q().m7450d((int) C0965R.string.alert_cancel);
+                    this.f4471q.m7438a(new C15058(this));
+                }
+                showDialog(this.f4471q);
+                StatisticManager.onEvent(StatisticConstants.SETTINGS_CLEAN_BUFFER, StatisticConstants.SETTINGS_CLEAN_BUFFER);
+                break;
+            case 6:
+                showFragment(539, null);
+                StatisticManager.onEvent(StatisticConstants.SETTINGS_ABOUT, StatisticConstants.SETTINGS_ABOUT);
+                nDelayHideDlg = 100;
+                break;
+        }
+        this.f4463i.sendEmptyMessageDelayed(101, (long) nDelayHideDlg);
+    }
+
+    /* renamed from: q */
+    private void m5499q() {
+        new Thread(new C15069(this)).start();
+    }
+
+    /* renamed from: r */
+    private void m5501r() {
+        C1212c command = new C1212c(true);
+        command.m4201c(C1253f.au);
+        C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+    }
+
+    /* renamed from: s */
+    private void m5503s() {
+        if (AddressSettingModel.hasSetCompAddr(C1157a.m3876a())) {
+            m5463a(AddressSettingModel.getCompAddrNode(C1157a.m3876a()));
+        } else {
+            C1754b.m6365a().m6378a(C2837c.STATE_SET_COMPANY);
+        }
+    }
+
+    /* renamed from: t */
+    private void m5505t() {
+        if (AddressSettingModel.hasSetHomeAddr(C1157a.m3876a())) {
+            m5463a(AddressSettingModel.getHomeAddrNode(C1157a.m3876a()));
+        } else {
+            C1754b.m6365a().m6378a(C2837c.STATE_SET_HOME);
+        }
+    }
+
+    /* renamed from: u */
+    private void m5507u() {
+        C1260i.m4435b(f4452a, "goVoiceNavi" + C2837c.STATE_WHERE_GOING);
+        C1754b.m6365a().m6378a(C2837c.STATE_WHERE_GOING);
+    }
+
+    /* renamed from: a */
+    private void m5463a(final RoutePlanNode node) {
+        if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
+            showDialog(new C1953c(mActivity).m7435a((int) C0965R.string.dialog_quit_naviing_to_navi).m7447c((int) C0965R.string.alert_confirm).m7450d((int) C0965R.string.alert_cancel).m7438a(new C0672b(this) {
+                /* renamed from: b */
+                final /* synthetic */ HomeFragment f4425b;
+
+                public void onClick() {
+                    this.f4425b.m5469b(node);
+                }
+            }), C1265a.Center);
+        } else {
+            m5469b(node);
+        }
+    }
+
+    /* renamed from: b */
+    private void m5469b(RoutePlanNode node) {
+        openNavi();
+        if (BaiduNaviSDKManager.getInstance().isNaviBegin()) {
+            BaiduNaviSDKManager.getInstance().quitNavi();
+        }
+        if (BaiduNaviSDKManager.getInstance().isCruiseBegin()) {
+            BaiduNaviSDKManager.getInstance().quitCruise();
+        }
+        C1328h.m4757a().backTo(17, null);
+        NavPoiController.getInstance().startCalcRoute(node);
+    }
+
+    /* renamed from: a */
+    public void m5513a() {
+        if (this.f4470p != null && C1249d.m4334m()) {
+            this.f4470p.setVisibility(0);
+            View bank1 = this.mContentView.findViewById(C0965R.id.card_bank_1);
+            if (bank1 != null) {
+                bank1.setVisibility(0);
+            }
+            View bank2 = this.mContentView.findViewById(C0965R.id.card_bank_2);
+            if (bank2 != null) {
+                bank2.setVisibility(0);
+            }
+            View bank3 = this.mContentView.findViewById(C0965R.id.card_bank_3);
+            if (bank3 != null) {
+                bank3.setVisibility(0);
+            }
+            View bank4 = this.mContentView.findViewById(C0965R.id.card_bank_4);
+            if (bank4 != null) {
+                bank4.setVisibility(0);
+            }
+            this.mContentView.requestLayout();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/HomeFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,97 +1,79 @@
 package com.baidu.navi.util;
 
+import com.baidu.mobstat.Config;
 import java.sql.Date;
 import java.util.Calendar;
 
-public class RouteCustomUtil
-{
-  public static final int MILLS_EVERY_DAY = 86400000;
-  public static final int ROUTE_CUSTOM_ACTION_CREATE = 1;
-  public static final int ROUTE_CUSTOM_ACTION_EDIT = 2;
-  public static final int ROUTE_CUSTOM_REPEAT_FRI = 6;
-  public static final int ROUTE_CUSTOM_REPEAT_MON = 2;
-  public static final int ROUTE_CUSTOM_REPEAT_SAT = 7;
-  public static final int ROUTE_CUSTOM_REPEAT_SUN = 1;
-  public static final int ROUTE_CUSTOM_REPEAT_THU = 5;
-  public static final int ROUTE_CUSTOM_REPEAT_TUE = 3;
-  public static final int ROUTE_CUSTOM_REPEAT_WED = 4;
-  private static RouteCustomUtil mInstance;
-  
-  private String format(int paramInt)
-  {
-    String str2 = "" + paramInt;
-    String str1 = str2;
-    if (str2.length() == 1) {
-      str1 = "0" + str2;
+public class RouteCustomUtil {
+    public static final int MILLS_EVERY_DAY = 86400000;
+    public static final int ROUTE_CUSTOM_ACTION_CREATE = 1;
+    public static final int ROUTE_CUSTOM_ACTION_EDIT = 2;
+    public static final int ROUTE_CUSTOM_REPEAT_FRI = 6;
+    public static final int ROUTE_CUSTOM_REPEAT_MON = 2;
+    public static final int ROUTE_CUSTOM_REPEAT_SAT = 7;
+    public static final int ROUTE_CUSTOM_REPEAT_SUN = 1;
+    public static final int ROUTE_CUSTOM_REPEAT_THU = 5;
+    public static final int ROUTE_CUSTOM_REPEAT_TUE = 3;
+    public static final int ROUTE_CUSTOM_REPEAT_WED = 4;
+    private static RouteCustomUtil mInstance;
+
+    public static RouteCustomUtil getInstance() {
+        if (mInstance == null) {
+            mInstance = new RouteCustomUtil();
+        }
+        return mInstance;
     }
-    return str1;
-  }
-  
-  public static RouteCustomUtil getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new RouteCustomUtil();
+
+    public long getPushTimeMillsByWeek(int week, int hour, int minute) {
+        int days = 0;
+        if (getWeekByTimeMillis(System.currentTimeMillis()) >= week) {
+            days = 7;
+        }
+        Calendar calende = Calendar.getInstance();
+        calende.setTimeInMillis(System.currentTimeMillis());
+        calende.set(7, week);
+        calende.set(11, hour);
+        calende.set(12, minute);
+        calende.set(13, 0);
+        calende.set(14, 0);
+        return calende.getTimeInMillis() + ((long) (86400000 * days));
     }
-    return mInstance;
-  }
-  
-  public long calcPushTime(int paramInt1, int paramInt2, int paramInt3)
-  {
-    long l3 = System.currentTimeMillis();
-    Calendar localCalendar = Calendar.getInstance();
-    localCalendar.setTimeInMillis(System.currentTimeMillis());
-    localCalendar.set(11, paramInt1);
-    localCalendar.set(12, paramInt2);
-    localCalendar.set(13, 0);
-    localCalendar.set(14, 0);
-    long l2 = localCalendar.getTimeInMillis();
-    long l1 = l2;
-    if (paramInt3 == 0)
-    {
-      l1 = l2;
-      if (l2 < l3) {
-        l1 = l2 + 86400000L;
-      }
+
+    public int getWeekByTimeMillis(long mills) {
+        Calendar calende = Calendar.getInstance();
+        calende.setTime(new Date(mills));
+        int week = calende.get(7);
+        if (week < 0) {
+            return 0;
+        }
+        return week;
     }
-    return l1;
-  }
-  
-  public long getPushTimeMillsByWeek(int paramInt1, int paramInt2, int paramInt3)
-  {
-    int i = 0;
-    if (getWeekByTimeMillis(System.currentTimeMillis()) >= paramInt1) {
-      i = 7;
+
+    public long calcPushTime(int hour, int minute, int isRepeat) {
+        long curTimeMills = System.currentTimeMillis();
+        Calendar calende = Calendar.getInstance();
+        calende.setTimeInMillis(System.currentTimeMillis());
+        calende.set(11, hour);
+        calende.set(12, minute);
+        calende.set(13, 0);
+        calende.set(14, 0);
+        long time = calende.getTimeInMillis();
+        if (isRepeat != 0 || time >= curTimeMills) {
+            return time;
+        }
+        return time + 86400000;
     }
-    Calendar localCalendar = Calendar.getInstance();
-    localCalendar.setTimeInMillis(System.currentTimeMillis());
-    localCalendar.set(7, paramInt1);
-    localCalendar.set(11, paramInt2);
-    localCalendar.set(12, paramInt3);
-    localCalendar.set(13, 0);
-    localCalendar.set(14, 0);
-    return localCalendar.getTimeInMillis() + 86400000 * i;
-  }
-  
-  public String getTimeStr(int paramInt1, int paramInt2)
-  {
-    return format(paramInt1) + ":" + format(paramInt2);
-  }
-  
-  public int getWeekByTimeMillis(long paramLong)
-  {
-    Calendar localCalendar = Calendar.getInstance();
-    localCalendar.setTime(new Date(paramLong));
-    int j = localCalendar.get(7);
-    int i = j;
-    if (j < 0) {
-      i = 0;
+
+    public String getTimeStr(int hour, int minute) {
+        String timeStr = "";
+        return format(hour) + Config.TRACE_TODAY_VISIT_SPLIT + format(minute);
     }
-    return i;
-  }
+
+    private String format(int x) {
+        String s = "" + x;
+        if (s.length() == 1) {
+            return "0" + s;
+        }
+        return s;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/util/RouteCustomUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

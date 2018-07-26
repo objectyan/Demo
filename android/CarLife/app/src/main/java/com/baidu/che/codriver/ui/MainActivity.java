@@ -2,58 +2,45 @@ package com.baidu.che.codriver.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.baidu.che.codriver.ui.b.b;
+import com.baidu.che.codriver.ui.p128b.C2674b;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
 
-public class MainActivity
-  extends BaseActivity
-{
-  private static final String a = "MainActivity";
-  
-  protected void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    Bundle localBundle = getIntent().getExtras();
-    paramBundle = null;
-    if (localBundle != null) {
-      paramBundle = localBundle.getString("mode", null);
+public class MainActivity extends BaseActivity {
+    /* renamed from: a */
+    private static final String f8689a = "MainActivity";
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getIntent().getExtras();
+        String mode = null;
+        if (bundle != null) {
+            mode = bundle.getString(NaviStatConstants.K_NSC_KEY_MODE_TYPE, null);
+        }
+        C2674b.m9985b().m10007a((BaseActivity) this);
+        C2674b.m9985b().m10028e(mode);
     }
-    b.b().a(this);
-    b.b().e(paramBundle);
-  }
-  
-  protected void onDestroy()
-  {
-    super.onDestroy();
-  }
-  
-  protected void onNewIntent(Intent paramIntent)
-  {
-    super.onNewIntent(paramIntent);
-  }
-  
-  protected void onPause()
-  {
-    super.onPause();
-  }
-  
-  protected void onResume()
-  {
-    super.onResume();
-  }
-  
-  protected void onStart()
-  {
-    super.onStart();
-  }
-  
-  protected void onStop()
-  {
-    super.onStop();
-  }
+
+    protected void onStart() {
+        super.onStart();
+    }
+
+    protected void onResume() {
+        super.onResume();
+    }
+
+    protected void onPause() {
+        super.onPause();
+    }
+
+    protected void onStop() {
+        super.onStop();
+    }
+
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/ui/MainActivity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -6,148 +6,126 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class BzInfo
-  extends MessageMicro
-{
-  public static final int CIRCLE_FIELD_NUMBER = 2;
-  public static final int ERRNO_FIELD_NUMBER = 1;
-  private boolean a;
-  private String b = "";
-  private boolean c;
-  private String d = "";
-  private int e = -1;
-  
-  public static BzInfo parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new BzInfo().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static BzInfo parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (BzInfo)new BzInfo().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final BzInfo clear()
-  {
-    clearErrno();
-    clearCircle();
-    this.e = -1;
-    return this;
-  }
-  
-  public BzInfo clearCircle()
-  {
-    this.c = false;
-    this.d = "";
-    return this;
-  }
-  
-  public BzInfo clearErrno()
-  {
-    this.a = false;
-    this.b = "";
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.e < 0) {
-      getSerializedSize();
+public final class BzInfo extends MessageMicro {
+    public static final int CIRCLE_FIELD_NUMBER = 2;
+    public static final int ERRNO_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private boolean f10431a;
+    /* renamed from: b */
+    private String f10432b = "";
+    /* renamed from: c */
+    private boolean f10433c;
+    /* renamed from: d */
+    private String f10434d = "";
+    /* renamed from: e */
+    private int f10435e = -1;
+
+    public static BzInfo parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new BzInfo().mergeFrom(codedInputStreamMicro);
     }
-    return this.e;
-  }
-  
-  public String getCircle()
-  {
-    return this.d;
-  }
-  
-  public String getErrno()
-  {
-    return this.b;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasErrno()) {
-      i = 0 + CodedOutputStreamMicro.computeStringSize(1, getErrno());
+
+    public static BzInfo parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (BzInfo) new BzInfo().mergeFrom(bArr);
     }
-    int j = i;
-    if (hasCircle()) {
-      j = i + CodedOutputStreamMicro.computeStringSize(2, getCircle());
-    }
-    this.e = j;
-    return j;
-  }
-  
-  public boolean hasCircle()
-  {
-    return this.c;
-  }
-  
-  public boolean hasErrno()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public BzInfo mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public final BzInfo clear() {
+        clearErrno();
+        clearCircle();
+        this.f10435e = -1;
         return this;
-      case 10: 
-        setErrno(paramCodedInputStreamMicro.readString());
-        break;
-      case 18: 
-        setCircle(paramCodedInputStreamMicro.readString());
-      }
     }
-  }
-  
-  public BzInfo setCircle(String paramString)
-  {
-    this.c = true;
-    this.d = paramString;
-    return this;
-  }
-  
-  public BzInfo setErrno(String paramString)
-  {
-    this.a = true;
-    this.b = paramString;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasErrno()) {
-      paramCodedOutputStreamMicro.writeString(1, getErrno());
+
+    public BzInfo clearCircle() {
+        this.f10433c = false;
+        this.f10434d = "";
+        return this;
     }
-    if (hasCircle()) {
-      paramCodedOutputStreamMicro.writeString(2, getCircle());
+
+    public BzInfo clearErrno() {
+        this.f10431a = false;
+        this.f10432b = "";
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f10435e < 0) {
+            getSerializedSize();
+        }
+        return this.f10435e;
+    }
+
+    public String getCircle() {
+        return this.f10434d;
+    }
+
+    public String getErrno() {
+        return this.f10432b;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasErrno()) {
+            i = 0 + CodedOutputStreamMicro.computeStringSize(1, getErrno());
+        }
+        if (hasCircle()) {
+            i += CodedOutputStreamMicro.computeStringSize(2, getCircle());
+        }
+        this.f10435e = i;
+        return i;
+    }
+
+    public boolean hasCircle() {
+        return this.f10433c;
+    }
+
+    public boolean hasErrno() {
+        return this.f10431a;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public BzInfo mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    setErrno(codedInputStreamMicro.readString());
+                    continue;
+                case 18:
+                    setCircle(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public BzInfo setCircle(String str) {
+        this.f10433c = true;
+        this.f10434d = str;
+        return this;
+    }
+
+    public BzInfo setErrno(String str) {
+        this.f10431a = true;
+        this.f10432b = str;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasErrno()) {
+            codedOutputStreamMicro.writeString(1, getErrno());
+        }
+        if (hasCircle()) {
+            codedOutputStreamMicro.writeString(2, getCircle());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/BzInfo.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,146 +1,103 @@
 package com.baidu.navisdk.ui.routeguide.asr.xdvoice.executor;
 
+import com.baidu.navi.track.datashop.TrackDataShop;
 import com.baidu.navisdk.comapi.routeguide.BNRouteGuider;
+import com.baidu.navisdk.ui.routeguide.asr.xdvoice.XDVoiceInstructionParams.VoiceInstructionType;
 import com.baidu.navisdk.ui.routeguide.asr.xdvoice.XDVoiceInstructionResponse;
 import com.baidu.navisdk.ui.routeguide.asr.xdvoice.XDVoiceInstructionResponse.RetState;
 import com.baidu.navisdk.ui.routeguide.asr.xdvoice.XDVoiceTTSListener;
 import com.baidu.navisdk.ui.routeguide.model.RGSimpleGuideModel;
 import com.baidu.navisdk.util.common.StringUtils;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 
-public class XDQueryInstruction
-  extends InstructionExecutorAbs
-{
-  private String formatDistanceToChineseString()
-  {
-    String str2 = StringUtils.formatDistanceToChineseString(RGSimpleGuideModel.getInstance().getTotalRemainDist());
-    if ((!StringUtils.isEmpty(str2)) && (str2.contains("点2"))) {
-      str2.replaceAll("点2", "点二");
-    }
-    String str1 = str2;
-    if (StringUtils.isEmpty(str2)) {
-      str1 = "";
-    }
-    return str1;
-  }
-  
-  private StringBuilder getRemainTimeStr(StringBuilder paramStringBuilder)
-  {
-    String str2 = RGSimpleGuideModel.getInstance().getTotalRemainTimeString();
-    if (!StringUtils.isEmpty(str2))
-    {
-      str1 = str2;
-      if (str2.contains("分"))
-      {
-        str1 = str2;
-        if (!str2.endsWith("分")) {
-          str1 = str2.substring(0, str2.indexOf("分") + 1);
+public class XDQueryInstruction extends InstructionExecutorAbs {
+    public void execute(String subType, XDVoiceTTSListener xdVoiceTTSListener) {
+        XDVoiceInstructionResponse speakContent = null;
+        if (VoiceInstructionType.REMAINING_TIME.equals(subType)) {
+            speakContent = getRemainTime();
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_c_2);
+        } else if (VoiceInstructionType.REMAINING_DISTANCE.equals(subType)) {
+            speakContent = getRemainDistance();
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_c_3);
+        } else if (VoiceInstructionType.REMAINING_DISTANCE_AND_TIME.equals(subType)) {
+            speakContent = getRemainTimeAndDistance();
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_c_f);
+        } else if (VoiceInstructionType.TRAFFIC_INFO.equals(subType)) {
+            speakContent = queryRouteInfo();
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_c_9);
         }
-      }
+        xdVoiceTTSListener.onResponse(speakContent);
     }
-    for (String str1 = str1 + "钟";; str1 = "")
-    {
-      paramStringBuilder.append(str1);
-      str1 = RGSimpleGuideModel.getInstance().getArriveTimeChineseString();
-      if (!StringUtils.isEmpty(str1))
-      {
-        paramStringBuilder.append(",预计");
-        paramStringBuilder.append(str1);
-      }
-      return paramStringBuilder;
+
+    public XDVoiceInstructionResponse getRemainTime() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("离目的地还有");
+        return new XDVoiceInstructionResponse(RetState.SUCCESS, getRemainTimeStr(sb).toString());
     }
-  }
-  
-  public void execute(String paramString, XDVoiceTTSListener paramXDVoiceTTSListener)
-  {
-    XDVoiceInstructionResponse localXDVoiceInstructionResponse = null;
-    if ("remaining_time".equals(paramString))
-    {
-      localXDVoiceInstructionResponse = getRemainTime();
-      UserOPController.getInstance().add("3.c.2");
+
+    public XDVoiceInstructionResponse getRemainDistance() {
+        StringBuilder sb = new StringBuilder();
+        String distS = formatDistanceToChineseString();
+        if (distS != null) {
+            sb.append("离目的地");
+            sb.append(distS);
+        }
+        return new XDVoiceInstructionResponse(RetState.SUCCESS, sb.toString());
     }
-    for (;;)
-    {
-      paramXDVoiceTTSListener.onResponse(localXDVoiceInstructionResponse);
-      return;
-      if ("remaining_distance".equals(paramString))
-      {
-        localXDVoiceInstructionResponse = getRemainDistance();
-        UserOPController.getInstance().add("3.c.3");
-      }
-      else if ("remaining_distance_and_time".equals(paramString))
-      {
-        localXDVoiceInstructionResponse = getRemainTimeAndDistance();
-        UserOPController.getInstance().add("3.c.f");
-      }
-      else if ("traffic_info".equals(paramString))
-      {
-        localXDVoiceInstructionResponse = queryRouteInfo();
-        UserOPController.getInstance().add("3.c.9");
-      }
+
+    public XDVoiceInstructionResponse getRemainTimeAndDistance() {
+        StringBuilder sb = new StringBuilder();
+        String distS = formatDistanceToChineseString();
+        if (distS != null) {
+            sb.append("离目的地");
+            sb.append(distS);
+        }
+        sb.append("大约需要");
+        return new XDVoiceInstructionResponse(RetState.SUCCESS, getRemainTimeStr(sb).toString());
     }
-  }
-  
-  public XDVoiceInstructionResponse getRemainDistance()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    String str = formatDistanceToChineseString();
-    if (str != null)
-    {
-      localStringBuilder.append("离目的地");
-      localStringBuilder.append(str);
+
+    public XDVoiceInstructionResponse queryRouteInfo() {
+        String speakContent = BNRouteGuider.getInstance().getCurRoadConditionText();
+        if (!StringUtils.isEmpty(speakContent)) {
+            if (speakContent.contains(",")) {
+                speakContent = speakContent.replaceAll(",", "");
+            }
+            if (speakContent.contains("，")) {
+                speakContent = speakContent.replaceAll("，", "");
+            }
+            if (speakContent.contains(TrackDataShop.SPECIAL_ADDR_IN_TRACK)) {
+                speakContent = speakContent.replaceAll(TrackDataShop.SPECIAL_ADDR_IN_TRACK, "前方道路");
+            }
+            speakContent = speakContent + ",请小心驾驶";
+        }
+        return new XDVoiceInstructionResponse(RetState.SUCCESS, speakContent);
     }
-    return new XDVoiceInstructionResponse(XDVoiceInstructionResponse.RetState.SUCCESS, localStringBuilder.toString());
-  }
-  
-  public XDVoiceInstructionResponse getRemainTime()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    localStringBuilder.append("离目的地还有");
-    localStringBuilder = getRemainTimeStr(localStringBuilder);
-    return new XDVoiceInstructionResponse(XDVoiceInstructionResponse.RetState.SUCCESS, localStringBuilder.toString());
-  }
-  
-  public XDVoiceInstructionResponse getRemainTimeAndDistance()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    String str = formatDistanceToChineseString();
-    if (str != null)
-    {
-      localStringBuilder.append("离目的地");
-      localStringBuilder.append(str);
+
+    private StringBuilder getRemainTimeStr(StringBuilder stringBuilder) {
+        String arriveTime = RGSimpleGuideModel.getInstance().getTotalRemainTimeString();
+        if (StringUtils.isEmpty(arriveTime)) {
+            arriveTime = "";
+        } else {
+            if (arriveTime.contains("分") && !arriveTime.endsWith("分")) {
+                arriveTime = arriveTime.substring(0, arriveTime.indexOf("分") + 1);
+            }
+            arriveTime = arriveTime + "钟";
+        }
+        stringBuilder.append(arriveTime);
+        String estimationTime = RGSimpleGuideModel.getInstance().getArriveTimeChineseString();
+        if (!StringUtils.isEmpty(estimationTime)) {
+            stringBuilder.append(",预计");
+            stringBuilder.append(estimationTime);
+        }
+        return stringBuilder;
     }
-    localStringBuilder.append("大约需要");
-    localStringBuilder = getRemainTimeStr(localStringBuilder);
-    return new XDVoiceInstructionResponse(XDVoiceInstructionResponse.RetState.SUCCESS, localStringBuilder.toString());
-  }
-  
-  public XDVoiceInstructionResponse queryRouteInfo()
-  {
-    Object localObject2 = BNRouteGuider.getInstance().getCurRoadConditionText();
-    Object localObject1 = localObject2;
-    if (!StringUtils.isEmpty((String)localObject2))
-    {
-      localObject1 = localObject2;
-      if (((String)localObject2).contains(",")) {
-        localObject1 = ((String)localObject2).replaceAll(",", "");
-      }
-      localObject2 = localObject1;
-      if (((String)localObject1).contains("，")) {
-        localObject2 = ((String)localObject1).replaceAll("，", "");
-      }
-      localObject1 = localObject2;
-      if (((String)localObject2).contains("无名路")) {
-        localObject1 = ((String)localObject2).replaceAll("无名路", "前方道路");
-      }
-      localObject1 = (String)localObject1 + ",请小心驾驶";
+
+    private String formatDistanceToChineseString() {
+        String distS = StringUtils.formatDistanceToChineseString(RGSimpleGuideModel.getInstance().getTotalRemainDist());
+        if (!StringUtils.isEmpty(distS) && distS.contains("点2")) {
+            distS.replaceAll("点2", "点二");
+        }
+        return StringUtils.isEmpty(distS) ? "" : distS;
     }
-    return new XDVoiceInstructionResponse(XDVoiceInstructionResponse.RetState.SUCCESS, (String)localObject1);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/asr/xdvoice/executor/XDQueryInstruction.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

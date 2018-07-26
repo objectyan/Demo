@@ -11,209 +11,164 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class JsonTreeWriter
-  extends JsonWriter
-{
-  private static final JsonPrimitive SENTINEL_CLOSED = new JsonPrimitive("closed");
-  private static final Writer UNWRITABLE_WRITER = new Writer()
-  {
-    public void close()
-      throws IOException
-    {
-      throw new AssertionError();
+public final class JsonTreeWriter extends JsonWriter {
+    private static final JsonPrimitive SENTINEL_CLOSED = new JsonPrimitive("closed");
+    private static final Writer UNWRITABLE_WRITER = new C57101();
+    private String pendingName;
+    private JsonElement product = JsonNull.INSTANCE;
+    private final List<JsonElement> stack = new ArrayList();
+
+    /* renamed from: com.google.gson.internal.bind.JsonTreeWriter$1 */
+    static class C57101 extends Writer {
+        C57101() {
+        }
+
+        public void write(char[] buffer, int offset, int counter) {
+            throw new AssertionError();
+        }
+
+        public void flush() throws IOException {
+            throw new AssertionError();
+        }
+
+        public void close() throws IOException {
+            throw new AssertionError();
+        }
     }
-    
-    public void flush()
-      throws IOException
-    {
-      throw new AssertionError();
+
+    public JsonTreeWriter() {
+        super(UNWRITABLE_WRITER);
     }
-    
-    public void write(char[] paramAnonymousArrayOfChar, int paramAnonymousInt1, int paramAnonymousInt2)
-    {
-      throw new AssertionError();
+
+    public JsonElement get() {
+        if (this.stack.isEmpty()) {
+            return this.product;
+        }
+        throw new IllegalStateException("Expected one JSON element but was " + this.stack);
     }
-  };
-  private String pendingName;
-  private JsonElement product = JsonNull.INSTANCE;
-  private final List<JsonElement> stack = new ArrayList();
-  
-  public JsonTreeWriter()
-  {
-    super(UNWRITABLE_WRITER);
-  }
-  
-  private JsonElement peek()
-  {
-    return (JsonElement)this.stack.get(this.stack.size() - 1);
-  }
-  
-  private void put(JsonElement paramJsonElement)
-  {
-    if (this.pendingName != null)
-    {
-      if ((!paramJsonElement.isJsonNull()) || (getSerializeNulls())) {
-        ((JsonObject)peek()).add(this.pendingName, paramJsonElement);
-      }
-      this.pendingName = null;
-      return;
+
+    private JsonElement peek() {
+        return (JsonElement) this.stack.get(this.stack.size() - 1);
     }
-    if (this.stack.isEmpty())
-    {
-      this.product = paramJsonElement;
-      return;
+
+    private void put(JsonElement value) {
+        if (this.pendingName != null) {
+            if (!value.isJsonNull() || getSerializeNulls()) {
+                ((JsonObject) peek()).add(this.pendingName, value);
+            }
+            this.pendingName = null;
+        } else if (this.stack.isEmpty()) {
+            this.product = value;
+        } else {
+            JsonElement element = peek();
+            if (element instanceof JsonArray) {
+                ((JsonArray) element).add(value);
+                return;
+            }
+            throw new IllegalStateException();
+        }
     }
-    JsonElement localJsonElement = peek();
-    if ((localJsonElement instanceof JsonArray))
-    {
-      ((JsonArray)localJsonElement).add(paramJsonElement);
-      return;
+
+    public JsonWriter beginArray() throws IOException {
+        JsonArray array = new JsonArray();
+        put(array);
+        this.stack.add(array);
+        return this;
     }
-    throw new IllegalStateException();
-  }
-  
-  public JsonWriter beginArray()
-    throws IOException
-  {
-    JsonArray localJsonArray = new JsonArray();
-    put(localJsonArray);
-    this.stack.add(localJsonArray);
-    return this;
-  }
-  
-  public JsonWriter beginObject()
-    throws IOException
-  {
-    JsonObject localJsonObject = new JsonObject();
-    put(localJsonObject);
-    this.stack.add(localJsonObject);
-    return this;
-  }
-  
-  public void close()
-    throws IOException
-  {
-    if (!this.stack.isEmpty()) {
-      throw new IOException("Incomplete document");
+
+    public JsonWriter endArray() throws IOException {
+        if (this.stack.isEmpty() || this.pendingName != null) {
+            throw new IllegalStateException();
+        } else if (peek() instanceof JsonArray) {
+            this.stack.remove(this.stack.size() - 1);
+            return this;
+        } else {
+            throw new IllegalStateException();
+        }
     }
-    this.stack.add(SENTINEL_CLOSED);
-  }
-  
-  public JsonWriter endArray()
-    throws IOException
-  {
-    if ((this.stack.isEmpty()) || (this.pendingName != null)) {
-      throw new IllegalStateException();
+
+    public JsonWriter beginObject() throws IOException {
+        JsonObject object = new JsonObject();
+        put(object);
+        this.stack.add(object);
+        return this;
     }
-    if ((peek() instanceof JsonArray))
-    {
-      this.stack.remove(this.stack.size() - 1);
-      return this;
+
+    public JsonWriter endObject() throws IOException {
+        if (this.stack.isEmpty() || this.pendingName != null) {
+            throw new IllegalStateException();
+        } else if (peek() instanceof JsonObject) {
+            this.stack.remove(this.stack.size() - 1);
+            return this;
+        } else {
+            throw new IllegalStateException();
+        }
     }
-    throw new IllegalStateException();
-  }
-  
-  public JsonWriter endObject()
-    throws IOException
-  {
-    if ((this.stack.isEmpty()) || (this.pendingName != null)) {
-      throw new IllegalStateException();
+
+    public JsonWriter name(String name) throws IOException {
+        if (this.stack.isEmpty() || this.pendingName != null) {
+            throw new IllegalStateException();
+        } else if (peek() instanceof JsonObject) {
+            this.pendingName = name;
+            return this;
+        } else {
+            throw new IllegalStateException();
+        }
     }
-    if ((peek() instanceof JsonObject))
-    {
-      this.stack.remove(this.stack.size() - 1);
-      return this;
+
+    public JsonWriter value(String value) throws IOException {
+        if (value == null) {
+            return nullValue();
+        }
+        put(new JsonPrimitive(value));
+        return this;
     }
-    throw new IllegalStateException();
-  }
-  
-  public void flush()
-    throws IOException
-  {}
-  
-  public JsonElement get()
-  {
-    if (!this.stack.isEmpty()) {
-      throw new IllegalStateException("Expected one JSON element but was " + this.stack);
+
+    public JsonWriter nullValue() throws IOException {
+        put(JsonNull.INSTANCE);
+        return this;
     }
-    return this.product;
-  }
-  
-  public JsonWriter name(String paramString)
-    throws IOException
-  {
-    if ((this.stack.isEmpty()) || (this.pendingName != null)) {
-      throw new IllegalStateException();
+
+    public JsonWriter value(boolean value) throws IOException {
+        put(new JsonPrimitive(Boolean.valueOf(value)));
+        return this;
     }
-    if ((peek() instanceof JsonObject))
-    {
-      this.pendingName = paramString;
-      return this;
+
+    public JsonWriter value(double value) throws IOException {
+        if (isLenient() || !(Double.isNaN(value) || Double.isInfinite(value))) {
+            put(new JsonPrimitive(Double.valueOf(value)));
+            return this;
+        }
+        throw new IllegalArgumentException("JSON forbids NaN and infinities: " + value);
     }
-    throw new IllegalStateException();
-  }
-  
-  public JsonWriter nullValue()
-    throws IOException
-  {
-    put(JsonNull.INSTANCE);
-    return this;
-  }
-  
-  public JsonWriter value(double paramDouble)
-    throws IOException
-  {
-    if ((!isLenient()) && ((Double.isNaN(paramDouble)) || (Double.isInfinite(paramDouble)))) {
-      throw new IllegalArgumentException("JSON forbids NaN and infinities: " + paramDouble);
+
+    public JsonWriter value(long value) throws IOException {
+        put(new JsonPrimitive(Long.valueOf(value)));
+        return this;
     }
-    put(new JsonPrimitive(Double.valueOf(paramDouble)));
-    return this;
-  }
-  
-  public JsonWriter value(long paramLong)
-    throws IOException
-  {
-    put(new JsonPrimitive(Long.valueOf(paramLong)));
-    return this;
-  }
-  
-  public JsonWriter value(Number paramNumber)
-    throws IOException
-  {
-    if (paramNumber == null) {
-      return nullValue();
+
+    public JsonWriter value(Number value) throws IOException {
+        if (value == null) {
+            return nullValue();
+        }
+        if (!isLenient()) {
+            double d = value.doubleValue();
+            if (Double.isNaN(d) || Double.isInfinite(d)) {
+                throw new IllegalArgumentException("JSON forbids NaN and infinities: " + value);
+            }
+        }
+        put(new JsonPrimitive(value));
+        return this;
     }
-    if (!isLenient())
-    {
-      double d = paramNumber.doubleValue();
-      if ((Double.isNaN(d)) || (Double.isInfinite(d))) {
-        throw new IllegalArgumentException("JSON forbids NaN and infinities: " + paramNumber);
-      }
+
+    public void flush() throws IOException {
     }
-    put(new JsonPrimitive(paramNumber));
-    return this;
-  }
-  
-  public JsonWriter value(String paramString)
-    throws IOException
-  {
-    if (paramString == null) {
-      return nullValue();
+
+    public void close() throws IOException {
+        if (this.stack.isEmpty()) {
+            this.stack.add(SENTINEL_CLOSED);
+            return;
+        }
+        throw new IOException("Incomplete document");
     }
-    put(new JsonPrimitive(paramString));
-    return this;
-  }
-  
-  public JsonWriter value(boolean paramBoolean)
-    throws IOException
-  {
-    put(new JsonPrimitive(Boolean.valueOf(paramBoolean)));
-    return this;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/bind/JsonTreeWriter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

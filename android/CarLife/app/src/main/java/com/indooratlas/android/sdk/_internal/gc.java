@@ -1,88 +1,75 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.baidu.navi.fragment.NaviFragmentManager;
 import java.security.cert.Certificate;
 import java.util.Collections;
 import java.util.List;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 
-public final class gc
-{
-  public final fu a;
-  public final List<Certificate> b;
-  private final gp c;
-  private final List<Certificate> d;
-  
-  private gc(gp paramgp, fu paramfu, List<Certificate> paramList1, List<Certificate> paramList2)
-  {
-    this.c = paramgp;
-    this.a = paramfu;
-    this.b = paramList1;
-    this.d = paramList2;
-  }
-  
-  public static gc a(SSLSession paramSSLSession)
-  {
-    Object localObject = paramSSLSession.getCipherSuite();
-    if (localObject == null) {
-      throw new IllegalStateException("cipherSuite == null");
+public final class gc {
+    /* renamed from: a */
+    public final fu f23840a;
+    /* renamed from: b */
+    public final List<Certificate> f23841b;
+    /* renamed from: c */
+    private final gp f23842c;
+    /* renamed from: d */
+    private final List<Certificate> f23843d;
+
+    private gc(gp gpVar, fu fuVar, List<Certificate> list, List<Certificate> list2) {
+        this.f23842c = gpVar;
+        this.f23840a = fuVar;
+        this.f23841b = list;
+        this.f23843d = list2;
     }
-    fu localfu = fu.a((String)localObject);
-    localObject = paramSSLSession.getProtocol();
-    if (localObject == null) {
-      throw new IllegalStateException("tlsVersion == null");
-    }
-    gp localgp = gp.a((String)localObject);
-    try
-    {
-      localObject = paramSSLSession.getPeerCertificates();
-      if (localObject != null)
-      {
-        localObject = gy.a((Object[])localObject);
-        paramSSLSession = paramSSLSession.getLocalCertificates();
-        if (paramSSLSession == null) {
-          break label109;
+
+    /* renamed from: a */
+    public static gc m20609a(SSLSession sSLSession) {
+        String cipherSuite = sSLSession.getCipherSuite();
+        if (cipherSuite == null) {
+            throw new IllegalStateException("cipherSuite == null");
         }
-        paramSSLSession = gy.a(paramSSLSession);
-        return new gc(localgp, localfu, (List)localObject, paramSSLSession);
-      }
+        fu a = fu.m20574a(cipherSuite);
+        cipherSuite = sSLSession.getProtocol();
+        if (cipherSuite == null) {
+            throw new IllegalStateException("tlsVersion == null");
+        }
+        Object[] peerCertificates;
+        List a2;
+        List a3;
+        gp a4 = gp.m20742a(cipherSuite);
+        try {
+            peerCertificates = sSLSession.getPeerCertificates();
+        } catch (SSLPeerUnverifiedException e) {
+            peerCertificates = null;
+        }
+        if (peerCertificates != null) {
+            a2 = gy.m20786a(peerCertificates);
+        } else {
+            a2 = Collections.emptyList();
+        }
+        Object[] localCertificates = sSLSession.getLocalCertificates();
+        if (localCertificates != null) {
+            a3 = gy.m20786a(localCertificates);
+        } else {
+            a3 = Collections.emptyList();
+        }
+        return new gc(a4, a, a2, a3);
     }
-    catch (SSLPeerUnverifiedException localSSLPeerUnverifiedException)
-    {
-      for (;;)
-      {
-        List localList = null;
-        continue;
-        localList = Collections.emptyList();
-        continue;
-        label109:
-        paramSSLSession = Collections.emptyList();
-      }
+
+    public final boolean equals(Object other) {
+        if (!(other instanceof gc)) {
+            return false;
+        }
+        gc gcVar = (gc) other;
+        if (gy.m20796a(this.f23840a, gcVar.f23840a) && this.f23840a.equals(gcVar.f23840a) && this.f23841b.equals(gcVar.f23841b) && this.f23843d.equals(gcVar.f23843d)) {
+            return true;
+        }
+        return false;
     }
-  }
-  
-  public final boolean equals(Object paramObject)
-  {
-    if (!(paramObject instanceof gc)) {}
-    do
-    {
-      return false;
-      paramObject = (gc)paramObject;
-    } while ((!gy.a(this.a, ((gc)paramObject).a)) || (!this.a.equals(((gc)paramObject).a)) || (!this.b.equals(((gc)paramObject).b)) || (!this.d.equals(((gc)paramObject).d)));
-    return true;
-  }
-  
-  public final int hashCode()
-  {
-    if (this.c != null) {}
-    for (int i = this.c.hashCode();; i = 0) {
-      return (((i + 527) * 31 + this.a.hashCode()) * 31 + this.b.hashCode()) * 31 + this.d.hashCode();
+
+    public final int hashCode() {
+        return (((((((this.f23842c != null ? this.f23842c.hashCode() : 0) + NaviFragmentManager.TYPE_PHONE_END) * 31) + this.f23840a.hashCode()) * 31) + this.f23841b.hashCode()) * 31) + this.f23843d.hashCode();
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gc.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

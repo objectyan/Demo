@@ -5,161 +5,114 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 
-class bv
-{
-  private static final bv a = new bv();
-  private Context b;
-  private volatile boolean c = false;
-  private volatile boolean d = false;
-  private volatile boolean e = false;
-  private HandlerThread f;
-  private Handler g;
-  
-  public static bv a()
-  {
-    return a;
-  }
-  
-  private void a(boolean paramBoolean)
-  {
-    try
-    {
-      bx localbx = new bx(this, paramBoolean);
-      localbx.setPriority(10);
-      localbx.start();
-      return;
+class bv {
+    /* renamed from: a */
+    private static final bv f19528a = new bv();
+    /* renamed from: b */
+    private Context f19529b;
+    /* renamed from: c */
+    private volatile boolean f19530c = false;
+    /* renamed from: d */
+    private volatile boolean f19531d = false;
+    /* renamed from: e */
+    private volatile boolean f19532e = false;
+    /* renamed from: f */
+    private HandlerThread f19533f;
+    /* renamed from: g */
+    private Handler f19534g;
+
+    /* renamed from: a */
+    public static bv m15511a() {
+        return f19528a;
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    private bv() {
     }
-  }
-  
-  private void b(Context paramContext, boolean paramBoolean)
-  {
-    if (paramContext == null) {}
-    while (this.c) {
-      return;
-    }
-    this.b = paramContext.getApplicationContext();
-    a(paramBoolean);
-    this.c = true;
-  }
-  
-  public void a(Context paramContext)
-  {
-    a(paramContext, false);
-  }
-  
-  public void a(Context paramContext, boolean paramBoolean)
-  {
-    try
-    {
-      a().b(paramContext.getApplicationContext());
-      b(paramContext.getApplicationContext(), paramBoolean);
-      return;
-    }
-    catch (Throwable localThrowable)
-    {
-      for (;;) {}
-    }
-  }
-  
-  public void a(Context paramContext, boolean paramBoolean1, boolean paramBoolean2)
-  {
-    if (this.d) {
-      return;
-    }
-    PrefOperate.loadMetaDataConfig(paramContext);
-    DataCore.instance().loadStatData(paramContext);
-    DataCore.instance().loadLastSession(paramContext);
-    DataCore.instance().installHeader(paramContext);
-    if (paramBoolean1) {
-      DataCore.instance().saveLogDataToSend(paramContext, true, paramBoolean2);
-    }
-    this.d = true;
-  }
-  
-  public void b(Context paramContext)
-  {
-    if (this.e) {}
-    do
-    {
-      do
-      {
-        return;
-      } while (paramContext == null);
-      if ((this.f == null) || (!this.f.isAlive()))
-      {
-        this.f = new HandlerThread("dataAnalyzeThread");
-        this.f.start();
-        Looper localLooper = this.f.getLooper();
-        if (localLooper != null) {
-          this.g = new Handler(localLooper);
+
+    /* renamed from: a */
+    public void m15516a(Context context, boolean z) {
+        try {
+            m15511a().m15518b(context.getApplicationContext());
+        } catch (Throwable th) {
         }
-      }
-    } while (this.g == null);
-    this.g.postDelayed(new bw(this, paramContext), 5000L);
-    this.e = true;
-  }
-  
-  public boolean b()
-  {
-    try
-    {
-      boolean bool = this.c;
-      return bool;
+        m15514b(context.getApplicationContext(), z);
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    /* renamed from: a */
+    public void m15515a(Context context) {
+        m15516a(context, false);
     }
-  }
-  
-  public boolean c()
-  {
-    try
-    {
-      boolean bool = this.d;
-      return bool;
-    }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
-    }
-  }
-  
-  public void d()
-  {
-    if (!this.d) {
-      try
-      {
-        for (;;)
-        {
-          boolean bool = this.d;
-          if (bool) {
-            break;
-          }
-          try
-          {
-            wait(50L);
-          }
-          catch (InterruptedException localInterruptedException)
-          {
-            db.b(localInterruptedException.getMessage());
-          }
+
+    /* renamed from: b */
+    public void m15518b(Context context) {
+        if (!this.f19532e && context != null) {
+            if (this.f19533f == null || !this.f19533f.isAlive()) {
+                this.f19533f = new HandlerThread("dataAnalyzeThread");
+                this.f19533f.start();
+                Looper looper = this.f19533f.getLooper();
+                if (looper != null) {
+                    this.f19534g = new Handler(looper);
+                }
+            }
+            if (this.f19534g != null) {
+                this.f19534g.postDelayed(new bw(this, context), Config.BPLUS_DELAY_TIME);
+                this.f19532e = true;
+            }
         }
-      }
-      finally {}
     }
-  }
+
+    /* renamed from: b */
+    private void m15514b(Context context, boolean z) {
+        if (context != null && !this.f19530c) {
+            this.f19529b = context.getApplicationContext();
+            m15512a(z);
+            this.f19530c = true;
+        }
+    }
+
+    /* renamed from: b */
+    public synchronized boolean m15519b() {
+        return this.f19530c;
+    }
+
+    /* renamed from: c */
+    public synchronized boolean m15520c() {
+        return this.f19531d;
+    }
+
+    /* renamed from: a */
+    private synchronized void m15512a(boolean z) {
+        bx bxVar = new bx(this, z);
+        bxVar.setPriority(10);
+        bxVar.start();
+    }
+
+    /* renamed from: d */
+    public void m15521d() {
+        if (!this.f19531d) {
+            synchronized (this) {
+                while (!this.f19531d) {
+                    try {
+                        wait(50);
+                    } catch (InterruptedException e) {
+                        db.m15661b(e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    /* renamed from: a */
+    public void m15517a(Context context, boolean z, boolean z2) {
+        if (!this.f19531d) {
+            PrefOperate.loadMetaDataConfig(context);
+            DataCore.instance().loadStatData(context);
+            DataCore.instance().loadLastSession(context);
+            DataCore.instance().installHeader(context);
+            if (z) {
+                DataCore.instance().saveLogDataToSend(context, true, z2);
+            }
+            this.f19531d = true;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bv.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

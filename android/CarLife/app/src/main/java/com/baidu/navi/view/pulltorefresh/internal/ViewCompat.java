@@ -5,61 +5,51 @@ import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.view.View;
 
-public class ViewCompat
-{
-  public static void postOnAnimation(View paramView, Runnable paramRunnable)
-  {
-    if (Build.VERSION.SDK_INT >= 16)
-    {
-      SDK16.postOnAnimation(paramView, paramRunnable);
-      return;
+public class ViewCompat {
+
+    @TargetApi(11)
+    static class SDK11 {
+        SDK11() {
+        }
+
+        public static void setLayerType(View view, int layerType) {
+            view.setLayerType(layerType, null);
+        }
     }
-    paramView.postDelayed(paramRunnable, 16L);
-  }
-  
-  public static void setBackground(View paramView, Drawable paramDrawable)
-  {
-    if (Build.VERSION.SDK_INT >= 16)
-    {
-      SDK16.setBackground(paramView, paramDrawable);
-      return;
+
+    @TargetApi(16)
+    static class SDK16 {
+        SDK16() {
+        }
+
+        public static void postOnAnimation(View view, Runnable runnable) {
+            view.postOnAnimation(runnable);
+        }
+
+        public static void setBackground(View view, Drawable background) {
+            view.setBackground(background);
+        }
     }
-    paramView.setBackgroundDrawable(paramDrawable);
-  }
-  
-  public static void setLayerType(View paramView, int paramInt)
-  {
-    if (Build.VERSION.SDK_INT >= 11) {
-      SDK11.setLayerType(paramView, paramInt);
+
+    public static void postOnAnimation(View view, Runnable runnable) {
+        if (VERSION.SDK_INT >= 16) {
+            SDK16.postOnAnimation(view, runnable);
+        } else {
+            view.postDelayed(runnable, 16);
+        }
     }
-  }
-  
-  @TargetApi(11)
-  static class SDK11
-  {
-    public static void setLayerType(View paramView, int paramInt)
-    {
-      paramView.setLayerType(paramInt, null);
+
+    public static void setBackground(View view, Drawable background) {
+        if (VERSION.SDK_INT >= 16) {
+            SDK16.setBackground(view, background);
+        } else {
+            view.setBackgroundDrawable(background);
+        }
     }
-  }
-  
-  @TargetApi(16)
-  static class SDK16
-  {
-    public static void postOnAnimation(View paramView, Runnable paramRunnable)
-    {
-      paramView.postOnAnimation(paramRunnable);
+
+    public static void setLayerType(View view, int layerType) {
+        if (VERSION.SDK_INT >= 11) {
+            SDK11.setLayerType(view, layerType);
+        }
     }
-    
-    public static void setBackground(View paramView, Drawable paramDrawable)
-    {
-      paramView.setBackground(paramDrawable);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/pulltorefresh/internal/ViewCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,38 +5,24 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import com.baidu.android.pushservice.f;
-import com.baidu.android.pushservice.j.p;
+import com.baidu.android.pushservice.C0522f;
+import com.baidu.android.pushservice.p031j.C0578p;
 
-public class HwNotifyActivity
-  extends Activity
-{
-  protected void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    try
-    {
-      paramBundle = getIntent();
-      if (paramBundle != null)
-      {
-        Uri localUri = paramBundle.getData();
-        String str1 = f.d(getApplicationContext(), paramBundle);
-        String str2 = f.c(getApplicationContext(), paramBundle);
-        if ((!TextUtils.isEmpty(str2)) && (localUri != null) && (f.a(getApplicationContext(), str2, str1))) {
-          p.a(getApplicationContext(), paramBundle);
+public class HwNotifyActivity extends Activity {
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        try {
+            Intent intent = getIntent();
+            if (intent != null) {
+                Uri data = intent.getData();
+                String d = C0522f.m2195d(getApplicationContext(), intent);
+                String c = C0522f.m2192c(getApplicationContext(), intent);
+                if (!(TextUtils.isEmpty(c) || data == null || !C0522f.m2185a(getApplicationContext(), c, d))) {
+                    C0578p.m2523a(getApplicationContext(), intent);
+                }
+            }
+        } catch (Exception e) {
         }
-      }
+        finish();
     }
-    catch (Exception paramBundle)
-    {
-      for (;;) {}
-    }
-    finish();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/hwproxy/HwNotifyActivity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

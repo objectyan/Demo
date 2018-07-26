@@ -1,30 +1,24 @@
 package com.baidu.ufosdk.ui;
 
-import android.os.Handler;
 import android.os.Message;
-import java.util.Timer;
 import java.util.TimerTask;
 
-final class aa
-  extends TimerTask
-{
-  aa(z paramz) {}
-  
-  public final void run()
-  {
-    Message localMessage = new Message();
-    localMessage.what = 3;
-    FeedbackFacePageActivity.o(z.a(this.a)).sendMessage(localMessage);
-    if (FeedbackFacePageActivity.p(z.a(this.a)) != null)
-    {
-      FeedbackFacePageActivity.p(z.a(this.a)).cancel();
-      FeedbackFacePageActivity.p(z.a(this.a)).purge();
+/* compiled from: FeedbackFacePageActivity */
+final class aa extends TimerTask {
+    /* renamed from: a */
+    final /* synthetic */ C5207z f21537a;
+
+    aa(C5207z c5207z) {
+        this.f21537a = c5207z;
     }
-  }
+
+    public final void run() {
+        Message message = new Message();
+        message.what = 3;
+        this.f21537a.f21686a.f21435z.sendMessage(message);
+        if (this.f21537a.f21686a.f21426q != null) {
+            this.f21537a.f21686a.f21426q.cancel();
+            this.f21537a.f21686a.f21426q.purge();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/aa.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

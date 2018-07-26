@@ -5,312 +5,258 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import com.google.android.support.v4.view.AccessibilityDelegateCompatIcs.AccessibilityDelegateBridge;
+import com.google.android.support.v4.view.AccessibilityDelegateCompatJellyBean.AccessibilityDelegateBridgeJellyBean;
 import com.google.android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import com.google.android.support.v4.view.accessibility.AccessibilityNodeProviderCompat;
 
-public class AccessibilityDelegateCompat
-{
-  private static final Object DEFAULT_DELEGATE;
-  private static final AccessibilityDelegateImpl IMPL;
-  final Object mBridge = IMPL.newAccessiblityDelegateBridge(this);
-  
-  static
-  {
-    if (Build.VERSION.SDK_INT >= 16) {
-      IMPL = new AccessibilityDelegateJellyBeanImpl();
+public class AccessibilityDelegateCompat {
+    private static final Object DEFAULT_DELEGATE = IMPL.newAccessiblityDelegateDefaultImpl();
+    private static final AccessibilityDelegateImpl IMPL;
+    final Object mBridge = IMPL.newAccessiblityDelegateBridge(this);
+
+    interface AccessibilityDelegateImpl {
+        boolean dispatchPopulateAccessibilityEvent(Object obj, View view, AccessibilityEvent accessibilityEvent);
+
+        AccessibilityNodeProviderCompat getAccessibilityNodeProvider(Object obj, View view);
+
+        Object newAccessiblityDelegateBridge(AccessibilityDelegateCompat accessibilityDelegateCompat);
+
+        Object newAccessiblityDelegateDefaultImpl();
+
+        void onInitializeAccessibilityEvent(Object obj, View view, AccessibilityEvent accessibilityEvent);
+
+        void onInitializeAccessibilityNodeInfo(Object obj, View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat);
+
+        void onPopulateAccessibilityEvent(Object obj, View view, AccessibilityEvent accessibilityEvent);
+
+        boolean onRequestSendAccessibilityEvent(Object obj, ViewGroup viewGroup, View view, AccessibilityEvent accessibilityEvent);
+
+        boolean performAccessibilityAction(Object obj, View view, int i, Bundle bundle);
+
+        void sendAccessibilityEvent(Object obj, View view, int i);
+
+        void sendAccessibilityEventUnchecked(Object obj, View view, AccessibilityEvent accessibilityEvent);
     }
-    for (;;)
-    {
-      DEFAULT_DELEGATE = IMPL.newAccessiblityDelegateDefaultImpl();
-      return;
-      if (Build.VERSION.SDK_INT >= 14) {
-        IMPL = new AccessibilityDelegateIcsImpl();
-      } else {
-        IMPL = new AccessibilityDelegateStubImpl();
-      }
-    }
-  }
-  
-  public boolean dispatchPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    return IMPL.dispatchPopulateAccessibilityEvent(DEFAULT_DELEGATE, paramView, paramAccessibilityEvent);
-  }
-  
-  public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View paramView)
-  {
-    return IMPL.getAccessibilityNodeProvider(DEFAULT_DELEGATE, paramView);
-  }
-  
-  Object getBridge()
-  {
-    return this.mBridge;
-  }
-  
-  public void onInitializeAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    IMPL.onInitializeAccessibilityEvent(DEFAULT_DELEGATE, paramView, paramAccessibilityEvent);
-  }
-  
-  public void onInitializeAccessibilityNodeInfo(View paramView, AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat)
-  {
-    IMPL.onInitializeAccessibilityNodeInfo(DEFAULT_DELEGATE, paramView, paramAccessibilityNodeInfoCompat);
-  }
-  
-  public void onPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    IMPL.onPopulateAccessibilityEvent(DEFAULT_DELEGATE, paramView, paramAccessibilityEvent);
-  }
-  
-  public boolean onRequestSendAccessibilityEvent(ViewGroup paramViewGroup, View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    return IMPL.onRequestSendAccessibilityEvent(DEFAULT_DELEGATE, paramViewGroup, paramView, paramAccessibilityEvent);
-  }
-  
-  public boolean performAccessibilityAction(View paramView, int paramInt, Bundle paramBundle)
-  {
-    return IMPL.performAccessibilityAction(DEFAULT_DELEGATE, paramView, paramInt, paramBundle);
-  }
-  
-  public void sendAccessibilityEvent(View paramView, int paramInt)
-  {
-    IMPL.sendAccessibilityEvent(DEFAULT_DELEGATE, paramView, paramInt);
-  }
-  
-  public void sendAccessibilityEventUnchecked(View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    IMPL.sendAccessibilityEventUnchecked(DEFAULT_DELEGATE, paramView, paramAccessibilityEvent);
-  }
-  
-  static class AccessibilityDelegateIcsImpl
-    extends AccessibilityDelegateCompat.AccessibilityDelegateStubImpl
-  {
-    public boolean dispatchPopulateAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      return AccessibilityDelegateCompatIcs.dispatchPopulateAccessibilityEvent(paramObject, paramView, paramAccessibilityEvent);
-    }
-    
-    public Object newAccessiblityDelegateBridge(final AccessibilityDelegateCompat paramAccessibilityDelegateCompat)
-    {
-      AccessibilityDelegateCompatIcs.newAccessibilityDelegateBridge(new AccessibilityDelegateCompatIcs.AccessibilityDelegateBridge()
-      {
-        public boolean dispatchPopulateAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          return paramAccessibilityDelegateCompat.dispatchPopulateAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+    static class AccessibilityDelegateStubImpl implements AccessibilityDelegateImpl {
+        AccessibilityDelegateStubImpl() {
         }
-        
-        public void onInitializeAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          paramAccessibilityDelegateCompat.onInitializeAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+        public Object newAccessiblityDelegateDefaultImpl() {
+            return null;
         }
-        
-        public void onInitializeAccessibilityNodeInfo(View paramAnonymousView, Object paramAnonymousObject)
-        {
-          paramAccessibilityDelegateCompat.onInitializeAccessibilityNodeInfo(paramAnonymousView, new AccessibilityNodeInfoCompat(paramAnonymousObject));
+
+        public Object newAccessiblityDelegateBridge(AccessibilityDelegateCompat listener) {
+            return null;
         }
-        
-        public void onPopulateAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          paramAccessibilityDelegateCompat.onPopulateAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+        public boolean dispatchPopulateAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
+            return false;
         }
-        
-        public boolean onRequestSendAccessibilityEvent(ViewGroup paramAnonymousViewGroup, View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          return paramAccessibilityDelegateCompat.onRequestSendAccessibilityEvent(paramAnonymousViewGroup, paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+        public void onInitializeAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
         }
-        
-        public void sendAccessibilityEvent(View paramAnonymousView, int paramAnonymousInt)
-        {
-          paramAccessibilityDelegateCompat.sendAccessibilityEvent(paramAnonymousView, paramAnonymousInt);
+
+        public void onInitializeAccessibilityNodeInfo(Object delegate, View host, AccessibilityNodeInfoCompat info) {
         }
-        
-        public void sendAccessibilityEventUnchecked(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          paramAccessibilityDelegateCompat.sendAccessibilityEventUnchecked(paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+        public void onPopulateAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
         }
-      });
-    }
-    
-    public Object newAccessiblityDelegateDefaultImpl()
-    {
-      return AccessibilityDelegateCompatIcs.newAccessibilityDelegateDefaultImpl();
-    }
-    
-    public void onInitializeAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      AccessibilityDelegateCompatIcs.onInitializeAccessibilityEvent(paramObject, paramView, paramAccessibilityEvent);
-    }
-    
-    public void onInitializeAccessibilityNodeInfo(Object paramObject, View paramView, AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat)
-    {
-      AccessibilityDelegateCompatIcs.onInitializeAccessibilityNodeInfo(paramObject, paramView, paramAccessibilityNodeInfoCompat.getInfo());
-    }
-    
-    public void onPopulateAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      AccessibilityDelegateCompatIcs.onPopulateAccessibilityEvent(paramObject, paramView, paramAccessibilityEvent);
-    }
-    
-    public boolean onRequestSendAccessibilityEvent(Object paramObject, ViewGroup paramViewGroup, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      return AccessibilityDelegateCompatIcs.onRequestSendAccessibilityEvent(paramObject, paramViewGroup, paramView, paramAccessibilityEvent);
-    }
-    
-    public void sendAccessibilityEvent(Object paramObject, View paramView, int paramInt)
-    {
-      AccessibilityDelegateCompatIcs.sendAccessibilityEvent(paramObject, paramView, paramInt);
-    }
-    
-    public void sendAccessibilityEventUnchecked(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      AccessibilityDelegateCompatIcs.sendAccessibilityEventUnchecked(paramObject, paramView, paramAccessibilityEvent);
-    }
-  }
-  
-  static abstract interface AccessibilityDelegateImpl
-  {
-    public abstract boolean dispatchPopulateAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract AccessibilityNodeProviderCompat getAccessibilityNodeProvider(Object paramObject, View paramView);
-    
-    public abstract Object newAccessiblityDelegateBridge(AccessibilityDelegateCompat paramAccessibilityDelegateCompat);
-    
-    public abstract Object newAccessiblityDelegateDefaultImpl();
-    
-    public abstract void onInitializeAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract void onInitializeAccessibilityNodeInfo(Object paramObject, View paramView, AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat);
-    
-    public abstract void onPopulateAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract boolean onRequestSendAccessibilityEvent(Object paramObject, ViewGroup paramViewGroup, View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract boolean performAccessibilityAction(Object paramObject, View paramView, int paramInt, Bundle paramBundle);
-    
-    public abstract void sendAccessibilityEvent(Object paramObject, View paramView, int paramInt);
-    
-    public abstract void sendAccessibilityEventUnchecked(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent);
-  }
-  
-  static class AccessibilityDelegateJellyBeanImpl
-    extends AccessibilityDelegateCompat.AccessibilityDelegateIcsImpl
-  {
-    public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(Object paramObject, View paramView)
-    {
-      paramObject = AccessibilityDelegateCompatJellyBean.getAccessibilityNodeProvider(paramObject, paramView);
-      if (paramObject != null) {
-        return new AccessibilityNodeProviderCompat(paramObject);
-      }
-      return null;
-    }
-    
-    public Object newAccessiblityDelegateBridge(final AccessibilityDelegateCompat paramAccessibilityDelegateCompat)
-    {
-      AccessibilityDelegateCompatJellyBean.newAccessibilityDelegateBridge(new AccessibilityDelegateCompatJellyBean.AccessibilityDelegateBridgeJellyBean()
-      {
-        public boolean dispatchPopulateAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          return paramAccessibilityDelegateCompat.dispatchPopulateAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+        public boolean onRequestSendAccessibilityEvent(Object delegate, ViewGroup host, View child, AccessibilityEvent event) {
+            return true;
         }
-        
-        public Object getAccessibilityNodeProvider(View paramAnonymousView)
-        {
-          paramAnonymousView = paramAccessibilityDelegateCompat.getAccessibilityNodeProvider(paramAnonymousView);
-          if (paramAnonymousView != null) {
-            return paramAnonymousView.getProvider();
-          }
-          return null;
+
+        public void sendAccessibilityEvent(Object delegate, View host, int eventType) {
         }
-        
-        public void onInitializeAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          paramAccessibilityDelegateCompat.onInitializeAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+        public void sendAccessibilityEventUnchecked(Object delegate, View host, AccessibilityEvent event) {
         }
-        
-        public void onInitializeAccessibilityNodeInfo(View paramAnonymousView, Object paramAnonymousObject)
-        {
-          paramAccessibilityDelegateCompat.onInitializeAccessibilityNodeInfo(paramAnonymousView, new AccessibilityNodeInfoCompat(paramAnonymousObject));
+
+        public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(Object delegate, View host) {
+            return null;
         }
-        
-        public void onPopulateAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          paramAccessibilityDelegateCompat.onPopulateAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+        public boolean performAccessibilityAction(Object delegate, View host, int action, Bundle args) {
+            return false;
         }
-        
-        public boolean onRequestSendAccessibilityEvent(ViewGroup paramAnonymousViewGroup, View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          return paramAccessibilityDelegateCompat.onRequestSendAccessibilityEvent(paramAnonymousViewGroup, paramAnonymousView, paramAnonymousAccessibilityEvent);
+    }
+
+    static class AccessibilityDelegateIcsImpl extends AccessibilityDelegateStubImpl {
+        AccessibilityDelegateIcsImpl() {
         }
-        
-        public boolean performAccessibilityAction(View paramAnonymousView, int paramAnonymousInt, Bundle paramAnonymousBundle)
-        {
-          return paramAccessibilityDelegateCompat.performAccessibilityAction(paramAnonymousView, paramAnonymousInt, paramAnonymousBundle);
+
+        public Object newAccessiblityDelegateDefaultImpl() {
+            return AccessibilityDelegateCompatIcs.newAccessibilityDelegateDefaultImpl();
         }
-        
-        public void sendAccessibilityEvent(View paramAnonymousView, int paramAnonymousInt)
-        {
-          paramAccessibilityDelegateCompat.sendAccessibilityEvent(paramAnonymousView, paramAnonymousInt);
+
+        public Object newAccessiblityDelegateBridge(final AccessibilityDelegateCompat compat) {
+            return AccessibilityDelegateCompatIcs.newAccessibilityDelegateBridge(new AccessibilityDelegateBridge() {
+                public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+                    return compat.dispatchPopulateAccessibilityEvent(host, event);
+                }
+
+                public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event) {
+                    compat.onInitializeAccessibilityEvent(host, event);
+                }
+
+                public void onInitializeAccessibilityNodeInfo(View host, Object info) {
+                    compat.onInitializeAccessibilityNodeInfo(host, new AccessibilityNodeInfoCompat(info));
+                }
+
+                public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+                    compat.onPopulateAccessibilityEvent(host, event);
+                }
+
+                public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child, AccessibilityEvent event) {
+                    return compat.onRequestSendAccessibilityEvent(host, child, event);
+                }
+
+                public void sendAccessibilityEvent(View host, int eventType) {
+                    compat.sendAccessibilityEvent(host, eventType);
+                }
+
+                public void sendAccessibilityEventUnchecked(View host, AccessibilityEvent event) {
+                    compat.sendAccessibilityEventUnchecked(host, event);
+                }
+            });
         }
-        
-        public void sendAccessibilityEventUnchecked(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-        {
-          paramAccessibilityDelegateCompat.sendAccessibilityEventUnchecked(paramAnonymousView, paramAnonymousAccessibilityEvent);
+
+        public boolean dispatchPopulateAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
+            return AccessibilityDelegateCompatIcs.dispatchPopulateAccessibilityEvent(delegate, host, event);
         }
-      });
+
+        public void onInitializeAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
+            AccessibilityDelegateCompatIcs.onInitializeAccessibilityEvent(delegate, host, event);
+        }
+
+        public void onInitializeAccessibilityNodeInfo(Object delegate, View host, AccessibilityNodeInfoCompat info) {
+            AccessibilityDelegateCompatIcs.onInitializeAccessibilityNodeInfo(delegate, host, info.getInfo());
+        }
+
+        public void onPopulateAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
+            AccessibilityDelegateCompatIcs.onPopulateAccessibilityEvent(delegate, host, event);
+        }
+
+        public boolean onRequestSendAccessibilityEvent(Object delegate, ViewGroup host, View child, AccessibilityEvent event) {
+            return AccessibilityDelegateCompatIcs.onRequestSendAccessibilityEvent(delegate, host, child, event);
+        }
+
+        public void sendAccessibilityEvent(Object delegate, View host, int eventType) {
+            AccessibilityDelegateCompatIcs.sendAccessibilityEvent(delegate, host, eventType);
+        }
+
+        public void sendAccessibilityEventUnchecked(Object delegate, View host, AccessibilityEvent event) {
+            AccessibilityDelegateCompatIcs.sendAccessibilityEventUnchecked(delegate, host, event);
+        }
     }
-    
-    public boolean performAccessibilityAction(Object paramObject, View paramView, int paramInt, Bundle paramBundle)
-    {
-      return AccessibilityDelegateCompatJellyBean.performAccessibilityAction(paramObject, paramView, paramInt, paramBundle);
+
+    static class AccessibilityDelegateJellyBeanImpl extends AccessibilityDelegateIcsImpl {
+        AccessibilityDelegateJellyBeanImpl() {
+        }
+
+        public Object newAccessiblityDelegateBridge(final AccessibilityDelegateCompat compat) {
+            return AccessibilityDelegateCompatJellyBean.newAccessibilityDelegateBridge(new AccessibilityDelegateBridgeJellyBean() {
+                public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+                    return compat.dispatchPopulateAccessibilityEvent(host, event);
+                }
+
+                public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event) {
+                    compat.onInitializeAccessibilityEvent(host, event);
+                }
+
+                public void onInitializeAccessibilityNodeInfo(View host, Object info) {
+                    compat.onInitializeAccessibilityNodeInfo(host, new AccessibilityNodeInfoCompat(info));
+                }
+
+                public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+                    compat.onPopulateAccessibilityEvent(host, event);
+                }
+
+                public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child, AccessibilityEvent event) {
+                    return compat.onRequestSendAccessibilityEvent(host, child, event);
+                }
+
+                public void sendAccessibilityEvent(View host, int eventType) {
+                    compat.sendAccessibilityEvent(host, eventType);
+                }
+
+                public void sendAccessibilityEventUnchecked(View host, AccessibilityEvent event) {
+                    compat.sendAccessibilityEventUnchecked(host, event);
+                }
+
+                public Object getAccessibilityNodeProvider(View host) {
+                    AccessibilityNodeProviderCompat provider = compat.getAccessibilityNodeProvider(host);
+                    return provider != null ? provider.getProvider() : null;
+                }
+
+                public boolean performAccessibilityAction(View host, int action, Bundle args) {
+                    return compat.performAccessibilityAction(host, action, args);
+                }
+            });
+        }
+
+        public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(Object delegate, View host) {
+            Object provider = AccessibilityDelegateCompatJellyBean.getAccessibilityNodeProvider(delegate, host);
+            if (provider != null) {
+                return new AccessibilityNodeProviderCompat(provider);
+            }
+            return null;
+        }
+
+        public boolean performAccessibilityAction(Object delegate, View host, int action, Bundle args) {
+            return AccessibilityDelegateCompatJellyBean.performAccessibilityAction(delegate, host, action, args);
+        }
     }
-  }
-  
-  static class AccessibilityDelegateStubImpl
-    implements AccessibilityDelegateCompat.AccessibilityDelegateImpl
-  {
-    public boolean dispatchPopulateAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      return false;
+
+    static {
+        if (VERSION.SDK_INT >= 16) {
+            IMPL = new AccessibilityDelegateJellyBeanImpl();
+        } else if (VERSION.SDK_INT >= 14) {
+            IMPL = new AccessibilityDelegateIcsImpl();
+        } else {
+            IMPL = new AccessibilityDelegateStubImpl();
+        }
     }
-    
-    public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(Object paramObject, View paramView)
-    {
-      return null;
+
+    Object getBridge() {
+        return this.mBridge;
     }
-    
-    public Object newAccessiblityDelegateBridge(AccessibilityDelegateCompat paramAccessibilityDelegateCompat)
-    {
-      return null;
+
+    public void sendAccessibilityEvent(View host, int eventType) {
+        IMPL.sendAccessibilityEvent(DEFAULT_DELEGATE, host, eventType);
     }
-    
-    public Object newAccessiblityDelegateDefaultImpl()
-    {
-      return null;
+
+    public void sendAccessibilityEventUnchecked(View host, AccessibilityEvent event) {
+        IMPL.sendAccessibilityEventUnchecked(DEFAULT_DELEGATE, host, event);
     }
-    
-    public void onInitializeAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent) {}
-    
-    public void onInitializeAccessibilityNodeInfo(Object paramObject, View paramView, AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat) {}
-    
-    public void onPopulateAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent) {}
-    
-    public boolean onRequestSendAccessibilityEvent(Object paramObject, ViewGroup paramViewGroup, View paramView, AccessibilityEvent paramAccessibilityEvent)
-    {
-      return true;
+
+    public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+        return IMPL.dispatchPopulateAccessibilityEvent(DEFAULT_DELEGATE, host, event);
     }
-    
-    public boolean performAccessibilityAction(Object paramObject, View paramView, int paramInt, Bundle paramBundle)
-    {
-      return false;
+
+    public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+        IMPL.onPopulateAccessibilityEvent(DEFAULT_DELEGATE, host, event);
     }
-    
-    public void sendAccessibilityEvent(Object paramObject, View paramView, int paramInt) {}
-    
-    public void sendAccessibilityEventUnchecked(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent) {}
-  }
+
+    public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event) {
+        IMPL.onInitializeAccessibilityEvent(DEFAULT_DELEGATE, host, event);
+    }
+
+    public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
+        IMPL.onInitializeAccessibilityNodeInfo(DEFAULT_DELEGATE, host, info);
+    }
+
+    public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child, AccessibilityEvent event) {
+        return IMPL.onRequestSendAccessibilityEvent(DEFAULT_DELEGATE, host, child, event);
+    }
+
+    public AccessibilityNodeProviderCompat getAccessibilityNodeProvider(View host) {
+        return IMPL.getAccessibilityNodeProvider(DEFAULT_DELEGATE, host);
+    }
+
+    public boolean performAccessibilityAction(View host, int action, Bundle args) {
+        return IMPL.performAccessibilityAction(DEFAULT_DELEGATE, host, action, args);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/AccessibilityDelegateCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

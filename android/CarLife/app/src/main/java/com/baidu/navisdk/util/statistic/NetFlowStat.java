@@ -8,195 +8,162 @@ import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.PreferenceHelper;
 import java.text.DecimalFormat;
 
-public class NetFlowStat
-{
-  private static final String KEY_COUNT_SUM = "count.sum";
-  private static final String KEY_DATA_SIZE = "data.size";
-  private static final String KEY_PSTDOMAIN_NAME = "pstdomain.name";
-  private static final String KEY_TICK_COUNT = "tick.count";
-  private static final String NAVI_END_FLAG_KEY = "navi.end.flag.key";
-  private static final String TAG = NetFlowStat.class.getName();
-  private static NetFlowStat instance = null;
-  private StringBuffer httpNetFlowBuffer = null;
-  
-  public static NetFlowStat getInstance()
-  {
-    if (instance == null) {
-      instance = new NetFlowStat();
-    }
-    return instance;
-  }
-  
-  private static String getUrlForShort(String paramString)
-  {
-    String str;
-    if (paramString == null) {
-      str = null;
-    }
-    do
-    {
-      do
-      {
-        return str;
-        if ((paramString.startsWith("http://")) && (paramString.length() > "http://".length())) {
-          return paramString.substring("http://".length());
+public class NetFlowStat {
+    private static final String KEY_COUNT_SUM = "count.sum";
+    private static final String KEY_DATA_SIZE = "data.size";
+    private static final String KEY_PSTDOMAIN_NAME = "pstdomain.name";
+    private static final String KEY_TICK_COUNT = "tick.count";
+    private static final String NAVI_END_FLAG_KEY = "navi.end.flag.key";
+    private static final String TAG = NetFlowStat.class.getName();
+    private static NetFlowStat instance = null;
+    private StringBuffer httpNetFlowBuffer;
+
+    public static class HttpNetFlowInfo {
+        private static DecimalFormat decimalFormat = null;
+        private float receiveDataSize = 0.0f;
+        private float sendDataSize = 0.0f;
+        private long startTime = 0;
+        private String url = null;
+
+        public HttpNetFlowInfo() {
+            if (decimalFormat == null) {
+                decimalFormat = new DecimalFormat(".0");
+            }
         }
-        str = paramString;
-      } while (!paramString.startsWith("https://"));
-      str = paramString;
-    } while (paramString.length() <= "https://".length());
-    return paramString.substring("https://".length());
-  }
-  
-  private String parseBundle(Bundle paramBundle)
-  {
-    if (paramBundle == null) {
-      return null;
-    }
-    StringBuffer localStringBuffer = new StringBuffer();
-    int j = paramBundle.getInt("count.sum");
-    int i = 0;
-    while (i < j)
-    {
-      Bundle localBundle = paramBundle.getBundle(i + "");
-      if (localBundle != null)
-      {
-        localStringBuffer.append("e;");
-        localStringBuffer.append(localBundle.getLong("tick.count"));
-        localStringBuffer.append(";");
-        localStringBuffer.append(localBundle.getDouble("data.size"));
-        localStringBuffer.append(";");
-        localStringBuffer.append(getUrlForShort(localBundle.getString("pstdomain.name")));
-        if (i + 1 < j) {
-          localStringBuffer.append("||");
+
+        public void setSendDataInfo(long startTime, long sendDataSizeByte, String url) {
+            this.url = NetFlowStat.getUrlForShort(url);
+            this.startTime = startTime;
+            this.sendDataSize = ((float) (sendDataSizeByte >> 9)) / 2.0f;
         }
-      }
-      i += 1;
+
+        public void setReceiveDataInfo(long receiveDataSizeByte) {
+            this.receiveDataSize = ((float) (receiveDataSizeByte >> 9)) / 2.0f;
+        }
+
+        public String toString() {
+            if (decimalFormat == null) {
+                decimalFormat = new DecimalFormat(".0");
+            }
+            StringBuffer sb = new StringBuffer();
+            sb.append("c;");
+            sb.append(this.startTime + ";");
+            sb.append(decimalFormat.format((double) (this.sendDataSize + this.receiveDataSize)) + ";");
+            if (this.url == null) {
+                this.url = "";
+            }
+            sb.append(this.url);
+            return sb.toString();
+        }
+
+        public void submit() {
+            NetFlowStat.getInstance().addHttpNetFlow(toString());
+        }
     }
-    return localStringBuffer.toString();
-  }
-  
-  public String GetAllNetWorkDataSize()
-  {
-    Bundle localBundle = new Bundle();
-    JNIStatisticsControl.sInstance.getAllNetWorkDataSize(localBundle);
-    return parseBundle(localBundle);
-  }
-  
-  public void addHttpNetFlow(String paramString)
-  {
-    if (paramString == null) {
-      return;
+
+    private NetFlowStat() {
+        this.httpNetFlowBuffer = null;
+        this.httpNetFlowBuffer = new StringBuffer();
     }
-    if (this.httpNetFlowBuffer == null) {
-      this.httpNetFlowBuffer = new StringBuffer();
+
+    public static NetFlowStat getInstance() {
+        if (instance == null) {
+            instance = new NetFlowStat();
+        }
+        return instance;
     }
-    if (!this.httpNetFlowBuffer.toString().equals("")) {
-      this.httpNetFlowBuffer.append("||");
+
+    public String GetAllNetWorkDataSize() {
+        Bundle mDataBundle = new Bundle();
+        JNIStatisticsControl.sInstance.getAllNetWorkDataSize(mDataBundle);
+        return parseBundle(mDataBundle);
     }
-    this.httpNetFlowBuffer.append(paramString);
-  }
-  
-  public void clearOldNetWorkDataRecord()
-  {
-    JNIStatisticsControl.sInstance.clearOldNetWorkDataRecord();
-  }
-  
-  public void destroy()
-  {
-    instance = null;
-    this.httpNetFlowBuffer = null;
-  }
-  
-  public void endStat(Context paramContext)
-  {
-    if (paramContext == null) {
-      return;
+
+    private String parseBundle(Bundle mDataBundle) {
+        if (mDataBundle == null) {
+            return null;
+        }
+        StringBuffer sb = new StringBuffer();
+        int countSum = mDataBundle.getInt(KEY_COUNT_SUM);
+        for (int i = 0; i < countSum; i++) {
+            Bundle mBundle = mDataBundle.getBundle(i + "");
+            if (mBundle != null) {
+                sb.append("e;");
+                sb.append(mBundle.getLong(KEY_TICK_COUNT));
+                sb.append(";");
+                sb.append(mBundle.getDouble(KEY_DATA_SIZE));
+                sb.append(";");
+                sb.append(getUrlForShort(mBundle.getString(KEY_PSTDOMAIN_NAME)));
+                if (i + 1 < countSum) {
+                    sb.append("||");
+                }
+            }
+        }
+        return sb.toString();
     }
-    PreferenceHelper.getInstance(paramContext).putBoolean("navi.end.flag.key", false);
-    String str = GetAllNetWorkDataSize();
-    paramContext = "";
-    if (this.httpNetFlowBuffer != null) {
-      paramContext = this.httpNetFlowBuffer.toString();
+
+    public void initStat(Context mContext) {
+        if (mContext == null) {
+            mContext = BNaviModuleManager.getContext();
+            if (mContext == null) {
+                return;
+            }
+        }
+        if (PreferenceHelper.getInstance(mContext).getBoolean(NAVI_END_FLAG_KEY, false)) {
+            NaviMergeStatItem.getInstance().mDft = 1;
+        } else {
+            NaviMergeStatItem.getInstance().mDft = 0;
+        }
+        PreferenceHelper.getInstance(mContext).putBoolean(NAVI_END_FLAG_KEY, true);
     }
-    LogUtil.e(TAG + "_endStat engine:", str);
-    LogUtil.e(TAG + "_endStat http:", paramContext);
-    NaviMergeStatItem.getInstance().setNetFlow(str + "||" + paramContext);
-    clearOldNetWorkDataRecord();
-    destroy();
-  }
-  
-  public void initStat(Context paramContext)
-  {
-    Context localContext = paramContext;
-    if (paramContext == null)
-    {
-      paramContext = BNaviModuleManager.getContext();
-      localContext = paramContext;
-      if (paramContext == null) {
-        return;
-      }
+
+    public void endStat(Context mContext) {
+        if (mContext != null) {
+            PreferenceHelper.getInstance(mContext).putBoolean(NAVI_END_FLAG_KEY, false);
+            String engineNetFlowStat = GetAllNetWorkDataSize();
+            String httpNetFlowStat = "";
+            if (this.httpNetFlowBuffer != null) {
+                httpNetFlowStat = this.httpNetFlowBuffer.toString();
+            }
+            LogUtil.m15791e(TAG + "_endStat engine:", engineNetFlowStat);
+            LogUtil.m15791e(TAG + "_endStat http:", httpNetFlowStat);
+            NaviMergeStatItem.getInstance().setNetFlow(engineNetFlowStat + "||" + httpNetFlowStat);
+            clearOldNetWorkDataRecord();
+            destroy();
+        }
     }
-    if (PreferenceHelper.getInstance(localContext).getBoolean("navi.end.flag.key", false)) {}
-    for (NaviMergeStatItem.getInstance().mDft = 1;; NaviMergeStatItem.getInstance().mDft = 0)
-    {
-      PreferenceHelper.getInstance(localContext).putBoolean("navi.end.flag.key", true);
-      return;
+
+    public void clearOldNetWorkDataRecord() {
+        JNIStatisticsControl.sInstance.clearOldNetWorkDataRecord();
     }
-  }
-  
-  public static class HttpNetFlowInfo
-  {
-    private static DecimalFormat decimalFormat = null;
-    private float receiveDataSize = 0.0F;
-    private float sendDataSize = 0.0F;
-    private long startTime = 0L;
-    private String url = null;
-    
-    public HttpNetFlowInfo()
-    {
-      if (decimalFormat == null) {
-        decimalFormat = new DecimalFormat(".0");
-      }
+
+    public void addHttpNetFlow(String statContent) {
+        if (statContent != null) {
+            if (this.httpNetFlowBuffer == null) {
+                this.httpNetFlowBuffer = new StringBuffer();
+            }
+            if (!this.httpNetFlowBuffer.toString().equals("")) {
+                this.httpNetFlowBuffer.append("||");
+            }
+            this.httpNetFlowBuffer.append(statContent);
+        }
     }
-    
-    public void setReceiveDataInfo(long paramLong)
-    {
-      this.receiveDataSize = ((float)(paramLong >> 9) / 2.0F);
+
+    public void destroy() {
+        instance = null;
+        this.httpNetFlowBuffer = null;
     }
-    
-    public void setSendDataInfo(long paramLong1, long paramLong2, String paramString)
-    {
-      this.url = NetFlowStat.getUrlForShort(paramString);
-      this.startTime = paramLong1;
-      this.sendDataSize = ((float)(paramLong2 >> 9) / 2.0F);
+
+    private static String getUrlForShort(String url) {
+        if (url == null) {
+            return null;
+        }
+        if (url.startsWith("http://") && url.length() > "http://".length()) {
+            return url.substring("http://".length());
+        }
+        if (!url.startsWith("https://") || url.length() <= "https://".length()) {
+            return url;
+        }
+        return url.substring("https://".length());
     }
-    
-    public void submit()
-    {
-      NetFlowStat.getInstance().addHttpNetFlow(toString());
-    }
-    
-    public String toString()
-    {
-      if (decimalFormat == null) {
-        decimalFormat = new DecimalFormat(".0");
-      }
-      StringBuffer localStringBuffer = new StringBuffer();
-      localStringBuffer.append("c;");
-      localStringBuffer.append(this.startTime + ";");
-      localStringBuffer.append(decimalFormat.format(this.sendDataSize + this.receiveDataSize) + ";");
-      if (this.url == null) {
-        this.url = "";
-      }
-      localStringBuffer.append(this.url);
-      return localStringBuffer.toString();
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/statistic/NetFlowStat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

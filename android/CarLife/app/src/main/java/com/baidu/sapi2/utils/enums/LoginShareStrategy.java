@@ -2,55 +2,35 @@ package com.baidu.sapi2.utils.enums;
 
 import android.text.TextUtils;
 
-public enum LoginShareStrategy
-{
-  private String a;
-  
-  private LoginShareStrategy(String paramString)
-  {
-    this.a = paramString;
-  }
-  
-  public static LoginShareStrategy getDefault()
-  {
-    return SILENT;
-  }
-  
-  public static LoginShareStrategy mapStrToValue(String paramString)
-  {
-    Object localObject;
-    if (TextUtils.isEmpty(paramString))
-    {
-      localObject = getDefault();
-      return (LoginShareStrategy)localObject;
+public enum LoginShareStrategy {
+    DISABLED("disabled"),
+    SILENT("silent"),
+    CHOICE("choice");
+    
+    /* renamed from: a */
+    private String f20567a;
+
+    public static LoginShareStrategy mapStrToValue(String v) {
+        if (TextUtils.isEmpty(v)) {
+            return getDefault();
+        }
+        for (LoginShareStrategy value : values()) {
+            if (v.equals(value.getStrValue())) {
+                return value;
+            }
+        }
+        return getDefault();
     }
-    LoginShareStrategy[] arrayOfLoginShareStrategy = values();
-    int j = arrayOfLoginShareStrategy.length;
-    int i = 0;
-    for (;;)
-    {
-      if (i >= j) {
-        break label57;
-      }
-      LoginShareStrategy localLoginShareStrategy = arrayOfLoginShareStrategy[i];
-      localObject = localLoginShareStrategy;
-      if (paramString.equals(localLoginShareStrategy.getStrValue())) {
-        break;
-      }
-      i += 1;
+
+    public static LoginShareStrategy getDefault() {
+        return SILENT;
     }
-    label57:
-    return getDefault();
-  }
-  
-  public String getStrValue()
-  {
-    return this.a;
-  }
+
+    private LoginShareStrategy(String strValue) {
+        this.f20567a = strValue;
+    }
+
+    public String getStrValue() {
+        return this.f20567a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/sapi2/utils/enums/LoginShareStrategy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

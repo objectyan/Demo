@@ -1,26 +1,13 @@
 package com.baidu.navisdk.ui.cruise.view;
 
-public class BCruiserR
-{
-  public static final int[] BlindBendTypeIResID;
-  public static final int[] CAMERA_ICON_ID = { 1711407600, 1711407619, 1711407594, 1711407611, 1711407588, 1711407591, 1711407613, 1711407586, 1711407601, 1711407610, 1711407610, 1711407601, 1711407595, 1711407621, 1711407605, 1711407622, 1711407615, 1711407609, 1711407598, 1711407597, 1711407608, 1711407596, 1711407620, 1711407602, 1711407623 };
-  public static final int[] JointTypeIResID = { 1711407600, 1711407599, 1711407600, 1711407600 };
-  public static final int[] NarrowTypeIResID;
-  public static final int[] RailwayTypeIResID = { 1711407611, 1711407611, 1711407612 };
-  public static final int[] RockFallTypeIResID;
-  public static final int[] SlopTypeIResID;
-  
-  static
-  {
-    BlindBendTypeIResID = new int[] { 1711407588, 1711407588, 1711407590, 1711407589, 1711407587 };
-    NarrowTypeIResID = new int[] { 1711407605, 1711407606, 1711407607, 1711407605 };
-    SlopTypeIResID = new int[] { 1711407591, 1711407593, 1711407592, 1711407591 };
-    RockFallTypeIResID = new int[] { 1711407613, 1711407613, 1711407614 };
-  }
+import com.baidu.navisdk.C4048R;
+
+public class BCruiserR {
+    public static final int[] BlindBendTypeIResID = new int[]{C4048R.drawable.nsdk_drawable_rg_cruise_blindbend_left, C4048R.drawable.nsdk_drawable_rg_cruise_blindbend_left, C4048R.drawable.nsdk_drawable_rg_cruise_blindbend_right, C4048R.drawable.nsdk_drawable_rg_cruise_blindbend_reverse, C4048R.drawable.nsdk_drawable_rg_cruise_blindbend_continuous};
+    public static final int[] CAMERA_ICON_ID = new int[]{C4048R.drawable.nsdk_drawable_rg_cruise_joint_right, C4048R.drawable.nsdk_drawable_rg_cruise_tunnel, C4048R.drawable.nsdk_drawable_rg_cruise_bridge, C4048R.drawable.nsdk_drawable_rg_cruise_railway_managed, C4048R.drawable.nsdk_drawable_rg_cruise_blindbend_left, C4048R.drawable.nsdk_drawable_rg_cruise_blindslope, C4048R.drawable.nsdk_drawable_rg_cruise_rockfall_left, C4048R.drawable.nsdk_drawable_rg_cruise_accident, C4048R.drawable.nsdk_drawable_rg_cruise_limitcamera, C4048R.drawable.nsdk_drawable_rg_cruise_peccanrycamera, C4048R.drawable.nsdk_drawable_rg_cruise_peccanrycamera, C4048R.drawable.nsdk_drawable_rg_cruise_limitcamera, C4048R.drawable.nsdk_drawable_rg_cruise_children, C4048R.drawable.nsdk_drawable_rg_cruise_uneven, C4048R.drawable.nsdk_drawable_rg_cruise_narrow_both, C4048R.drawable.nsdk_drawable_rg_cruise_viliage, C4048R.drawable.nsdk_drawable_rg_cruise_slip, C4048R.drawable.nsdk_drawable_rg_cruise_overtakeforbidden, C4048R.drawable.nsdk_drawable_rg_cruise_honk, C4048R.drawable.nsdk_drawable_rg_cruise_hillsidedangerous, C4048R.drawable.nsdk_drawable_rg_cruise_narrowbridge, C4048R.drawable.nsdk_drawable_rg_cruise_crosswind, C4048R.drawable.nsdk_drawable_rg_cruise_underwater, C4048R.drawable.nsdk_drawable_rg_cruise_lowspeed, C4048R.drawable.nsdk_drawable_rg_cruise_zippass};
+    public static final int[] JointTypeIResID = new int[]{C4048R.drawable.nsdk_drawable_rg_cruise_joint_right, C4048R.drawable.nsdk_drawable_rg_cruise_joint_left, C4048R.drawable.nsdk_drawable_rg_cruise_joint_right, C4048R.drawable.nsdk_drawable_rg_cruise_joint_right};
+    public static final int[] NarrowTypeIResID = new int[]{C4048R.drawable.nsdk_drawable_rg_cruise_narrow_both, C4048R.drawable.nsdk_drawable_rg_cruise_narrow_left, C4048R.drawable.nsdk_drawable_rg_cruise_narrow_right, C4048R.drawable.nsdk_drawable_rg_cruise_narrow_both};
+    public static final int[] RailwayTypeIResID = new int[]{C4048R.drawable.nsdk_drawable_rg_cruise_railway_managed, C4048R.drawable.nsdk_drawable_rg_cruise_railway_managed, C4048R.drawable.nsdk_drawable_rg_cruise_railway_unmanaged};
+    public static final int[] RockFallTypeIResID = new int[]{C4048R.drawable.nsdk_drawable_rg_cruise_rockfall_left, C4048R.drawable.nsdk_drawable_rg_cruise_rockfall_left, C4048R.drawable.nsdk_drawable_rg_cruise_rockfall_right};
+    public static final int[] SlopTypeIResID = new int[]{C4048R.drawable.nsdk_drawable_rg_cruise_blindslope, C4048R.drawable.nsdk_drawable_rg_cruise_blindslope_up, C4048R.drawable.nsdk_drawable_rg_cruise_blindslope_down, C4048R.drawable.nsdk_drawable_rg_cruise_blindslope};
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/cruise/view/BCruiserR.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

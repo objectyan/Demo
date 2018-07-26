@@ -1,19 +1,17 @@
 package com.nineoldandroids.animation;
 
-public abstract class AnimatorListenerAdapter
-  implements Animator.AnimatorListener
-{
-  public void onAnimationCancel(Animator paramAnimator) {}
-  
-  public void onAnimationEnd(Animator paramAnimator) {}
-  
-  public void onAnimationRepeat(Animator paramAnimator) {}
-  
-  public void onAnimationStart(Animator paramAnimator) {}
+import com.nineoldandroids.animation.Animator.AnimatorListener;
+
+public abstract class AnimatorListenerAdapter implements AnimatorListener {
+    public void onAnimationCancel(Animator animation) {
+    }
+
+    public void onAnimationEnd(Animator animation) {
+    }
+
+    public void onAnimationRepeat(Animator animation) {
+    }
+
+    public void onAnimationStart(Animator animation) {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/animation/AnimatorListenerAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

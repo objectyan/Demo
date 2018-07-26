@@ -1,63 +1,49 @@
 package com.baidu.mobstat;
 
 import android.text.TextUtils;
+import com.baidu.sapi2.utils.C4923f;
+import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-public class ct
-{
-  public static byte[] a(int paramInt, byte[] paramArrayOfByte)
-  {
-    paramInt -= 1;
-    if ((paramInt >= 0) && (cw.a.length > paramInt))
-    {
-      SecretKeySpec localSecretKeySpec = new SecretKeySpec(cw.a[paramInt].getBytes(), "AES");
-      Cipher localCipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-      localCipher.init(1, localSecretKeySpec);
-      return localCipher.doFinal(paramArrayOfByte);
+public class ct {
+    /* renamed from: a */
+    public static byte[] m15622a(int i, byte[] bArr) {
+        int i2 = i - 1;
+        if (i2 < 0 || cw.f19627a.length <= i2) {
+            return new byte[0];
+        }
+        Key secretKeySpec = new SecretKeySpec(cw.f19627a[i2].getBytes(), C4923f.f20618w);
+        Cipher instance = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        instance.init(1, secretKeySpec);
+        return instance.doFinal(bArr);
     }
-    return new byte[0];
-  }
-  
-  public static byte[] b(int paramInt, byte[] paramArrayOfByte)
-  {
-    paramInt -= 1;
-    if ((paramInt >= 0) && (cw.a.length > paramInt))
-    {
-      SecretKeySpec localSecretKeySpec = new SecretKeySpec(cw.a[paramInt].getBytes(), "AES");
-      Cipher localCipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-      localCipher.init(2, localSecretKeySpec);
-      return localCipher.doFinal(paramArrayOfByte);
+
+    /* renamed from: b */
+    public static byte[] m15623b(int i, byte[] bArr) {
+        int i2 = i - 1;
+        if (i2 < 0 || cw.f19627a.length <= i2) {
+            return new byte[0];
+        }
+        Key secretKeySpec = new SecretKeySpec(cw.f19627a[i2].getBytes(), C4923f.f20618w);
+        Cipher instance = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        instance.init(2, secretKeySpec);
+        return instance.doFinal(bArr);
     }
-    return new byte[0];
-  }
-  
-  public static String c(int paramInt, byte[] paramArrayOfByte)
-  {
-    try
-    {
-      paramArrayOfByte = cv.b(a(paramInt, paramArrayOfByte));
-      return paramArrayOfByte;
+
+    /* renamed from: c */
+    public static String m15624c(int i, byte[] bArr) {
+        try {
+            return cv.m15642b(m15622a(i, bArr));
+        } catch (Throwable e) {
+            db.m15659a(e);
+            return "";
+        }
     }
-    catch (Exception paramArrayOfByte)
-    {
-      db.a(paramArrayOfByte);
+
+    /* renamed from: d */
+    public static String m15625d(int i, byte[] bArr) {
+        Object c = m15624c(i, bArr);
+        return TextUtils.isEmpty(c) ? "" : c + "|" + i;
     }
-    return "";
-  }
-  
-  public static String d(int paramInt, byte[] paramArrayOfByte)
-  {
-    paramArrayOfByte = c(paramInt, paramArrayOfByte);
-    if (TextUtils.isEmpty(paramArrayOfByte)) {
-      return "";
-    }
-    return paramArrayOfByte + "|" + paramInt;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ct.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

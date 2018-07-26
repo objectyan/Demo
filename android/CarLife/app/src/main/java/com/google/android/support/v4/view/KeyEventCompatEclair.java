@@ -5,31 +5,23 @@ import android.view.KeyEvent.Callback;
 import android.view.KeyEvent.DispatcherState;
 import android.view.View;
 
-class KeyEventCompatEclair
-{
-  public static boolean dispatch(KeyEvent paramKeyEvent, KeyEvent.Callback paramCallback, Object paramObject1, Object paramObject2)
-  {
-    return paramKeyEvent.dispatch(paramCallback, (KeyEvent.DispatcherState)paramObject1, paramObject2);
-  }
-  
-  public static Object getKeyDispatcherState(View paramView)
-  {
-    return paramView.getKeyDispatcherState();
-  }
-  
-  public static boolean isTracking(KeyEvent paramKeyEvent)
-  {
-    return paramKeyEvent.isTracking();
-  }
-  
-  public static void startTracking(KeyEvent paramKeyEvent)
-  {
-    paramKeyEvent.startTracking();
-  }
+class KeyEventCompatEclair {
+    KeyEventCompatEclair() {
+    }
+
+    public static Object getKeyDispatcherState(View view) {
+        return view.getKeyDispatcherState();
+    }
+
+    public static boolean dispatch(KeyEvent event, Callback receiver, Object state, Object target) {
+        return event.dispatch(receiver, (DispatcherState) state, target);
+    }
+
+    public static void startTracking(KeyEvent event) {
+        event.startTracking();
+    }
+
+    public static boolean isTracking(KeyEvent event) {
+        return event.isTracking();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/KeyEventCompatEclair.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,49 +2,33 @@ package com.android.volley;
 
 import android.content.Intent;
 
-public class AuthFailureError
-  extends VolleyError
-{
-  private Intent mResolutionIntent;
-  
-  public AuthFailureError() {}
-  
-  public AuthFailureError(Intent paramIntent)
-  {
-    this.mResolutionIntent = paramIntent;
-  }
-  
-  public AuthFailureError(NetworkResponse paramNetworkResponse)
-  {
-    super(paramNetworkResponse);
-  }
-  
-  public AuthFailureError(String paramString)
-  {
-    super(paramString);
-  }
-  
-  public AuthFailureError(String paramString, Exception paramException)
-  {
-    super(paramString, paramException);
-  }
-  
-  public String getMessage()
-  {
-    if (this.mResolutionIntent != null) {
-      return "User needs to (re)enter credentials.";
+public class AuthFailureError extends VolleyError {
+    private Intent mResolutionIntent;
+
+    public AuthFailureError(Intent intent) {
+        this.mResolutionIntent = intent;
     }
-    return super.getMessage();
-  }
-  
-  public Intent getResolutionIntent()
-  {
-    return this.mResolutionIntent;
-  }
+
+    public AuthFailureError(NetworkResponse response) {
+        super(response);
+    }
+
+    public AuthFailureError(String message) {
+        super(message);
+    }
+
+    public AuthFailureError(String message, Exception reason) {
+        super(message, reason);
+    }
+
+    public Intent getResolutionIntent() {
+        return this.mResolutionIntent;
+    }
+
+    public String getMessage() {
+        if (this.mResolutionIntent != null) {
+            return "User needs to (re)enter credentials.";
+        }
+        return super.getMessage();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/AuthFailureError.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

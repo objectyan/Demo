@@ -1,13 +1,14 @@
 package com.baidu.navisdk.ui.routeguide.subview.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.modelfactory.NaviDataEngine;
 import com.baidu.navisdk.model.modelfactory.RoutePlanModel;
@@ -16,178 +17,131 @@ import com.baidu.navisdk.util.common.CoordinateTransformUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 
-public class RightHandResourcesProvider
-{
-  private static final int[] NEED_ROTATION_TURN_ID = { 1711407698, 1711407739, 1711407744, 1711407740, 1711407741, 1711407742, 1711407743, 1711407745, 1711407746, 1711407747, 1711407748, 1711407633 };
-  private static final Rect THAILAND_BOUND = new Rect(622634, 10837256, 2313605, 11760548);
-  private static GeoPoint lastEndPoint;
-  private static boolean lastIsRightHand = false;
-  private static GeoPoint lastStartPoint = null;
-  
-  static
-  {
-    lastEndPoint = null;
-  }
-  
-  public static final Drawable getDrawableIncludeRightHandIcon(int paramInt)
-  {
-    paramInt = getIconIdIncludeRightHandIcon(paramInt);
-    Drawable localDrawable = JarUtils.getResources().getDrawable(paramInt);
-    Object localObject = localDrawable;
-    if (localDrawable != null)
-    {
-      localObject = localDrawable;
-      if (isNeedRotate(paramInt)) {
-        localObject = localDrawable;
-      }
+public class RightHandResourcesProvider {
+    private static final int[] NEED_ROTATION_TURN_ID = new int[]{C4048R.drawable.nsdk_drawable_rg_ic_turn_back, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_out, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_front, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_left, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_leftback, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_leftfront, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_right, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_rightback, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_rightfront, C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_turnback, C4048R.drawable.nsdk_drawable_rg_hud_turn_back};
+    private static final Rect THAILAND_BOUND = new Rect(622634, 10837256, 2313605, 11760548);
+    private static GeoPoint lastEndPoint = null;
+    private static boolean lastIsRightHand = false;
+    private static GeoPoint lastStartPoint = null;
+
+    private RightHandResourcesProvider() {
     }
-    try
-    {
-      if ((localDrawable instanceof BitmapDrawable))
-      {
-        localObject = ((BitmapDrawable)localDrawable).getBitmap();
-        Matrix localMatrix = new Matrix();
-        localMatrix.postScale(-1.0F, 1.0F);
-        localObject = Bitmap.createBitmap((Bitmap)localObject, 0, 0, localDrawable.getIntrinsicWidth(), localDrawable.getIntrinsicHeight(), localMatrix, false);
-        localObject = new BitmapDrawable(JarUtils.getResources(), (Bitmap)localObject);
-      }
-      return (Drawable)localObject;
-    }
-    catch (Exception localException)
-    {
-      localException.printStackTrace();
-    }
-    return localDrawable;
-  }
-  
-  public static final int getEnNaviType()
-  {
-    return ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).getEnNaviType();
-  }
-  
-  private static final int getIconIdIncludeRightHandIcon(int paramInt)
-  {
-    int i = paramInt;
-    if (isRightHand()) {
-      i = getRightHandIconId(paramInt);
-    }
-    return i;
-  }
-  
-  private static final int getRightHandIconId(int paramInt)
-  {
-    switch (paramInt)
-    {
-    case 1711407744: 
-    default: 
-      return paramInt;
-    case 1711407745: 
-      return 1711407741;
-    case 1711407746: 
-      return 1711407742;
-    case 1711407747: 
-      return 1711407743;
-    case 1711407741: 
-      return 1711407745;
-    case 1711407742: 
-      return 1711407746;
-    }
-    return 1711407747;
-  }
-  
-  private static boolean isInThailandBound(GeoPoint paramGeoPoint)
-  {
-    return (paramGeoPoint != null) && (THAILAND_BOUND.contains(paramGeoPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6()));
-  }
-  
-  private static boolean isInternational()
-  {
-    RoutePlanModel localRoutePlanModel = (RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel");
-    return (localRoutePlanModel != null) && (localRoutePlanModel.getEnNaviType() != 0);
-  }
-  
-  public static boolean isInternationalWithToast(Context paramContext)
-  {
-    if (isInternational())
-    {
-      TipTool.onCreateToastDialog(paramContext, JarUtils.getResources().getString(1711670359));
-      return true;
-    }
-    return false;
-  }
-  
-  private static boolean isNeedRotate(int paramInt)
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    int[] arrayOfInt;
-    int j;
-    int i;
-    if (lastIsRightHand)
-    {
-      arrayOfInt = NEED_ROTATION_TURN_ID;
-      j = arrayOfInt.length;
-      i = 0;
-    }
-    for (;;)
-    {
-      bool1 = bool2;
-      if (i < j)
-      {
-        if (paramInt == arrayOfInt[i]) {
-          bool1 = true;
+
+    private static final boolean isRightHand() {
+        RoutePlanModel routePlanModel = (RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN);
+        if (routePlanModel.getEnNaviType() == 1) {
+            RoutePlanNode startNode = routePlanModel.getStartNode();
+            RoutePlanNode endNode = routePlanModel.getEndNode();
+            if (!(startNode == null || endNode == null)) {
+                if (lastStartPoint != null && lastStartPoint.equals(startNode.getGeoPoint()) && lastEndPoint != null && lastEndPoint.equals(endNode.getGeoPoint())) {
+                    return lastIsRightHand;
+                }
+                lastStartPoint = startNode.getGeoPoint();
+                lastEndPoint = endNode.getGeoPoint();
+                if (isInThailandBound(transNodeToGeoPoint(startNode)) && isInThailandBound(transNodeToGeoPoint(endNode))) {
+                    lastIsRightHand = true;
+                    return true;
+                }
+            }
         }
-      }
-      else {
-        return bool1;
-      }
-      i += 1;
+        lastIsRightHand = false;
+        return false;
     }
-  }
-  
-  private static final boolean isRightHand()
-  {
-    Object localObject = (RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel");
-    if (((RoutePlanModel)localObject).getEnNaviType() == 1)
-    {
-      RoutePlanNode localRoutePlanNode = ((RoutePlanModel)localObject).getStartNode();
-      localObject = ((RoutePlanModel)localObject).getEndNode();
-      if ((localRoutePlanNode != null) && (localObject != null))
-      {
-        if ((lastStartPoint != null) && (lastStartPoint.equals(localRoutePlanNode.getGeoPoint())) && (lastEndPoint != null) && (lastEndPoint.equals(((RoutePlanNode)localObject).getGeoPoint()))) {
-          return lastIsRightHand;
+
+    private static GeoPoint transNodeToGeoPoint(RoutePlanNode node) {
+        GeoPoint geoPoint = new GeoPoint();
+        if (node == null) {
+            return geoPoint;
         }
-        lastStartPoint = localRoutePlanNode.getGeoPoint();
-        lastEndPoint = ((RoutePlanNode)localObject).getGeoPoint();
-        if ((isInThailandBound(transNodeToGeoPoint(localRoutePlanNode))) && (isInThailandBound(transNodeToGeoPoint((RoutePlanNode)localObject))))
-        {
-          lastIsRightHand = true;
-          return true;
+        Bundle bundle = CoordinateTransformUtil.LLE62MC(node.getLongitudeE6(), node.getLatitudeE6());
+        if (bundle != null) {
+            return new GeoPoint(bundle.getInt("MCy"), bundle.getInt("MCx"));
         }
-      }
+        return geoPoint;
     }
-    lastIsRightHand = false;
-    return false;
-  }
-  
-  private static GeoPoint transNodeToGeoPoint(RoutePlanNode paramRoutePlanNode)
-  {
-    GeoPoint localGeoPoint2 = new GeoPoint();
-    GeoPoint localGeoPoint1 = localGeoPoint2;
-    if (paramRoutePlanNode != null)
-    {
-      paramRoutePlanNode = CoordinateTransformUtil.LLE62MC(paramRoutePlanNode.getLongitudeE6(), paramRoutePlanNode.getLatitudeE6());
-      localGeoPoint1 = localGeoPoint2;
-      if (paramRoutePlanNode != null) {
-        localGeoPoint1 = new GeoPoint(paramRoutePlanNode.getInt("MCy"), paramRoutePlanNode.getInt("MCx"));
-      }
+
+    public static final int getEnNaviType() {
+        return ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).getEnNaviType();
     }
-    return localGeoPoint1;
-  }
+
+    private static boolean isInThailandBound(GeoPoint point) {
+        if (point == null || !THAILAND_BOUND.contains(point.getLongitudeE6(), point.getLatitudeE6())) {
+            return false;
+        }
+        return true;
+    }
+
+    private static final int getIconIdIncludeRightHandIcon(int leftHandIconId) {
+        if (isRightHand()) {
+            return getRightHandIconId(leftHandIconId);
+        }
+        return leftHandIconId;
+    }
+
+    private static boolean isNeedRotate(int resId) {
+        if (!lastIsRightHand) {
+            return false;
+        }
+        for (int id : NEED_ROTATION_TURN_ID) {
+            if (resId == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static final Drawable getDrawableIncludeRightHandIcon(int leftHandId) {
+        int iconId = getIconIdIncludeRightHandIcon(leftHandId);
+        Drawable drawable = JarUtils.getResources().getDrawable(iconId);
+        if (drawable == null || !isNeedRotate(iconId)) {
+            return drawable;
+        }
+        try {
+            if (!(drawable instanceof BitmapDrawable)) {
+                return drawable;
+            }
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            Matrix matrix = new Matrix();
+            matrix.postScale(-1.0f, 1.0f);
+            return new BitmapDrawable(JarUtils.getResources(), Bitmap.createBitmap(bitmap, 0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), matrix, false));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return drawable;
+        }
+    }
+
+    private static final int getRightHandIconId(int leftHandId) {
+        switch (leftHandId) {
+            case C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_left /*1711407741*/:
+                return C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_right;
+            case C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_leftback /*1711407742*/:
+                return C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_rightback;
+            case C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_leftfront /*1711407743*/:
+                return C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_rightfront;
+            case C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_right /*1711407745*/:
+                return C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_left;
+            case C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_rightback /*1711407746*/:
+                return C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_leftback;
+            case C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_rightfront /*1711407747*/:
+                return C4048R.drawable.nsdk_drawable_rg_ic_turn_ring_leftfront;
+            default:
+                return leftHandId;
+        }
+    }
+
+    private static boolean isInternational() {
+        RoutePlanModel routePlanModel = (RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN);
+        if (routePlanModel == null || routePlanModel.getEnNaviType() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isInternationalWithToast(Context context) {
+        if (!isInternational()) {
+            return false;
+        }
+        TipTool.onCreateToastDialog(context, JarUtils.getResources().getString(C4048R.string.nsdk_string_global_not_support));
+        return true;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/util/RightHandResourcesProvider.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

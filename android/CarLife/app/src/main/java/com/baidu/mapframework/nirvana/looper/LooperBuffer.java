@@ -6,197 +6,139 @@ import com.baidu.mapframework.nirvana.module.Module;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
 import java.util.LinkedList;
 
-public class LooperBuffer
-{
-  private static final String a = LooperBuffer.class.getSimpleName();
-  private static final long b = 16L;
-  private static final long c = 800L;
-  private static final long d = 100L;
-  private final boolean e;
-  private volatile boolean f;
-  private final LinkedList<Runnable> g;
-  private volatile int h = 0;
-  private Handler i = new Handler(Looper.getMainLooper());
-  private long j = 0L;
-  
-  public LooperBuffer(boolean paramBoolean)
-  {
-    this.e = paramBoolean;
-    this.f = false;
-    this.g = new LinkedList();
-  }
-  
-  private void a()
-  {
-    synchronized (this.g)
-    {
-      long l = System.currentTimeMillis();
-      if ((!this.g.isEmpty()) && (System.currentTimeMillis() - l < 16L)) {
-        ((Runnable)this.g.removeFirst()).run();
-      }
-    }
-    if (!this.g.isEmpty()) {
-      b();
-    }
-  }
-  
-  private void a(Runnable paramRunnable)
-  {
-    synchronized (this.g)
-    {
-      this.g.addLast(paramRunnable);
-      return;
-    }
-  }
-  
-  private void b()
-  {
-    if (this.h >= 3) {
-      return;
-    }
-    this.h += 1;
-    LooperManager.executeTask(Module.BASE_FRAMEWORK_MODULE, new LooperTask()
-    {
-      public void run()
-      {
-        LooperBuffer.a(LooperBuffer.this);
-      }
-    }, ScheduleConfig.forData());
-  }
-  
-  private void c()
-  {
-    try
-    {
-      if (this.j == 0L) {
-        this.j = System.currentTimeMillis();
-      }
-      this.i.postDelayed(new Runnable()
-      {
-        public void run()
-        {
-          if (!LooperBuffer.b(LooperBuffer.this)) {
-            LooperBuffer.c(LooperBuffer.this);
-          }
+public class LooperBuffer {
+    /* renamed from: a */
+    private static final String f19196a = LooperBuffer.class.getSimpleName();
+    /* renamed from: b */
+    private static final long f19197b = 16;
+    /* renamed from: c */
+    private static final long f19198c = 800;
+    /* renamed from: d */
+    private static final long f19199d = 100;
+    /* renamed from: e */
+    private final boolean f19200e;
+    /* renamed from: f */
+    private volatile boolean f19201f;
+    /* renamed from: g */
+    private final LinkedList<Runnable> f19202g;
+    /* renamed from: h */
+    private volatile int f19203h = 0;
+    /* renamed from: i */
+    private Handler f19204i = new Handler(Looper.getMainLooper());
+    /* renamed from: j */
+    private long f19205j = 0;
+
+    /* renamed from: com.baidu.mapframework.nirvana.looper.LooperBuffer$1 */
+    class C35521 extends LooperTask {
+        /* renamed from: a */
+        final /* synthetic */ LooperBuffer f19194a;
+
+        C35521(LooperBuffer this$0) {
+            this.f19194a = this$0;
         }
-      }, 100L);
-      return;
+
+        public void run() {
+            this.f19194a.f19203h = this.f19194a.f19203h - 1;
+        }
     }
-    finally {}
-  }
-  
-  /* Error */
-  private boolean d()
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: aload_0
-    //   3: getfield 67	com/baidu/mapframework/nirvana/looper/LooperBuffer:f	Z
-    //   6: ifeq +14 -> 20
-    //   9: aload_0
-    //   10: getfield 63	com/baidu/mapframework/nirvana/looper/LooperBuffer:j	J
-    //   13: lstore_1
-    //   14: lload_1
-    //   15: lconst_0
-    //   16: lcmp
-    //   17: ifne +9 -> 26
-    //   20: iconst_1
-    //   21: istore_3
-    //   22: aload_0
-    //   23: monitorexit
-    //   24: iload_3
-    //   25: ireturn
-    //   26: invokestatic 79	java/lang/System:currentTimeMillis	()J
-    //   29: aload_0
-    //   30: getfield 63	com/baidu/mapframework/nirvana/looper/LooperBuffer:j	J
-    //   33: lsub
-    //   34: ldc2_w 16
-    //   37: lcmp
-    //   38: ifle +7 -> 45
-    //   41: aload_0
-    //   42: invokevirtual 133	com/baidu/mapframework/nirvana/looper/LooperBuffer:stopAnim	()V
-    //   45: iconst_0
-    //   46: istore_3
-    //   47: goto -25 -> 22
-    //   50: astore 4
-    //   52: aload_0
-    //   53: monitorexit
-    //   54: aload 4
-    //   56: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	57	0	this	LooperBuffer
-    //   13	2	1	l	long
-    //   21	26	3	bool	boolean
-    //   50	5	4	localObject	Object
-    // Exception table:
-    //   from	to	target	type
-    //   2	14	50	finally
-    //   26	45	50	finally
-  }
-  
-  private void e()
-  {
-    try
-    {
-      this.j = 0L;
-      return;
+
+    /* renamed from: com.baidu.mapframework.nirvana.looper.LooperBuffer$2 */
+    class C35532 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ LooperBuffer f19195a;
+
+        C35532(LooperBuffer this$0) {
+            this.f19195a = this$0;
+        }
+
+        public void run() {
+            if (!this.f19195a.m15203d()) {
+                this.f19195a.m15201c();
+            }
+        }
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public LooperBuffer(boolean enable) {
+        this.f19200e = enable;
+        this.f19201f = false;
+        this.f19202g = new LinkedList();
     }
-  }
-  
-  public void run(Runnable paramRunnable)
-  {
-    if (!this.e) {
-      paramRunnable.run();
+
+    public void run(Runnable runnable) {
+        if (this.f19200e) {
+            m15198a(runnable);
+            if (!this.f19201f) {
+                m15197a();
+                return;
+            }
+            return;
+        }
+        runnable.run();
     }
-    do
-    {
-      return;
-      a(paramRunnable);
-    } while (this.f);
-    a();
-  }
-  
-  public void startAnim()
-  {
-    try
-    {
-      this.f = true;
-      c();
-      return;
+
+    /* renamed from: a */
+    private void m15198a(Runnable runnable) {
+        synchronized (this.f19202g) {
+            this.f19202g.addLast(runnable);
+        }
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    /* renamed from: a */
+    private void m15197a() {
+        synchronized (this.f19202g) {
+            long start = System.currentTimeMillis();
+            while (!this.f19202g.isEmpty() && System.currentTimeMillis() - start < 16) {
+                ((Runnable) this.f19202g.removeFirst()).run();
+            }
+        }
+        if (!this.f19202g.isEmpty()) {
+            m15199b();
+        }
     }
-  }
-  
-  public void stopAnim()
-  {
-    try
-    {
-      this.f = false;
-      e();
-      b();
-      return;
+
+    public synchronized void startAnim() {
+        this.f19201f = true;
+        m15201c();
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public synchronized void stopAnim() {
+        this.f19201f = false;
+        m15204e();
+        m15199b();
     }
-  }
+
+    /* renamed from: b */
+    private void m15199b() {
+        if (this.f19203h < 3) {
+            this.f19203h++;
+            LooperManager.executeTask(Module.BASE_FRAMEWORK_MODULE, new C35521(this), ScheduleConfig.forData());
+        }
+    }
+
+    /* renamed from: c */
+    private synchronized void m15201c() {
+        if (this.f19205j == 0) {
+            this.f19205j = System.currentTimeMillis();
+        }
+        this.f19204i.postDelayed(new C35532(this), 100);
+    }
+
+    /* renamed from: d */
+    private synchronized boolean m15203d() {
+        boolean z;
+        if (!this.f19201f || this.f19205j == 0) {
+            z = true;
+        } else {
+            if (System.currentTimeMillis() - this.f19205j > f19198c) {
+                stopAnim();
+            }
+            z = false;
+        }
+        return z;
+    }
+
+    /* renamed from: e */
+    private synchronized void m15204e() {
+        this.f19205j = 0;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/looper/LooperBuffer.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

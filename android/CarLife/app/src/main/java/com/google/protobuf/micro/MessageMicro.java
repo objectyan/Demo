@@ -2,75 +2,49 @@ package com.google.protobuf.micro;
 
 import java.io.IOException;
 
-public abstract class MessageMicro
-{
-  public abstract int getCachedSize();
-  
-  public abstract int getSerializedSize();
-  
-  public abstract MessageMicro mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException;
-  
-  public MessageMicro mergeFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return mergeFrom(paramArrayOfByte, 0, paramArrayOfByte.length);
-  }
-  
-  public MessageMicro mergeFrom(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-    throws InvalidProtocolBufferMicroException
-  {
-    try
-    {
-      paramArrayOfByte = CodedInputStreamMicro.newInstance(paramArrayOfByte, paramInt1, paramInt2);
-      mergeFrom(paramArrayOfByte);
-      paramArrayOfByte.checkLastTagWas(0);
-      return this;
+public abstract class MessageMicro {
+    public abstract int getCachedSize();
+
+    public abstract int getSerializedSize();
+
+    public abstract MessageMicro mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException;
+
+    public abstract void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException;
+
+    public byte[] toByteArray() {
+        byte[] result = new byte[getSerializedSize()];
+        toByteArray(result, 0, result.length);
+        return result;
     }
-    catch (InvalidProtocolBufferMicroException paramArrayOfByte)
-    {
-      throw paramArrayOfByte;
+
+    public void toByteArray(byte[] data, int offset, int length) {
+        try {
+            CodedOutputStreamMicro output = CodedOutputStreamMicro.newInstance(data, offset, length);
+            writeTo(output);
+            output.checkNoSpaceLeft();
+        } catch (IOException e) {
+            throw new RuntimeException("Serializing to a byte array threw an IOException (should never happen).");
+        }
     }
-    catch (IOException paramArrayOfByte)
-    {
-      throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).");
+
+    public MessageMicro mergeFrom(byte[] data) throws InvalidProtocolBufferMicroException {
+        return mergeFrom(data, 0, data.length);
     }
-  }
-  
-  protected boolean parseUnknownField(CodedInputStreamMicro paramCodedInputStreamMicro, int paramInt)
-    throws IOException
-  {
-    return paramCodedInputStreamMicro.skipField(paramInt);
-  }
-  
-  public void toByteArray(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    try
-    {
-      paramArrayOfByte = CodedOutputStreamMicro.newInstance(paramArrayOfByte, paramInt1, paramInt2);
-      writeTo(paramArrayOfByte);
-      paramArrayOfByte.checkNoSpaceLeft();
-      return;
+
+    public MessageMicro mergeFrom(byte[] data, int off, int len) throws InvalidProtocolBufferMicroException {
+        try {
+            CodedInputStreamMicro input = CodedInputStreamMicro.newInstance(data, off, len);
+            mergeFrom(input);
+            input.checkLastTagWas(0);
+            return this;
+        } catch (InvalidProtocolBufferMicroException e) {
+            throw e;
+        } catch (IOException e2) {
+            throw new RuntimeException("Reading from a byte array threw an IOException (should never happen).");
+        }
     }
-    catch (IOException paramArrayOfByte)
-    {
-      throw new RuntimeException("Serializing to a byte array threw an IOException (should never happen).");
+
+    protected boolean parseUnknownField(CodedInputStreamMicro input, int tag) throws IOException {
+        return input.skipField(tag);
     }
-  }
-  
-  public byte[] toByteArray()
-  {
-    byte[] arrayOfByte = new byte[getSerializedSize()];
-    toByteArray(arrayOfByte, 0, arrayOfByte.length);
-    return arrayOfByte;
-  }
-  
-  public abstract void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/micro/MessageMicro.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

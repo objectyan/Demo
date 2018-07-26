@@ -2,32 +2,28 @@ package com.baidu.mobstat;
 
 import android.content.Context;
 
-class am
-  implements Runnable
-{
-  am(al paramal, String paramString, Context paramContext) {}
-  
-  public void run()
-  {
-    try
-    {
-      al.a(this.c, this.a);
-      if (this.b == null) {
-        return;
-      }
-      Context localContext = this.b.getApplicationContext();
-      al.a(this.c, localContext);
-      return;
+class am implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ String f19388a;
+    /* renamed from: b */
+    final /* synthetic */ Context f19389b;
+    /* renamed from: c */
+    final /* synthetic */ al f19390c;
+
+    am(al alVar, String str, Context context) {
+        this.f19390c = alVar;
+        this.f19388a = str;
+        this.f19389b = context;
     }
-    catch (Throwable localThrowable)
-    {
-      bd.b(localThrowable);
+
+    public void run() {
+        try {
+            this.f19390c.m15341a(this.f19388a);
+            if (this.f19389b != null) {
+                this.f19390c.m15338a(this.f19389b.getApplicationContext());
+            }
+        } catch (Throwable th) {
+            bd.m15432b(th);
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/am.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,44 +3,40 @@ package com.baidu.mobstat;
 import android.content.Context;
 import org.json.JSONObject;
 
-class av
-  implements l
-{
-  private ba a = ba.a;
-  
-  public void a(Context paramContext, long paramLong)
-  {
-    this.a.a(paramContext, paramLong);
-  }
-  
-  public void a(Context paramContext, String paramString)
-  {
-    this.a.a(paramContext, paramString);
-  }
-  
-  public void a(Context paramContext, JSONObject paramJSONObject)
-  {
-    this.a.a(paramContext, paramJSONObject);
-  }
-  
-  public boolean a(Context paramContext)
-  {
-    return this.a.a(paramContext);
-  }
-  
-  public void b(Context paramContext, String paramString)
-  {
-    this.a.b(paramContext, paramString);
-  }
-  
-  public boolean b(Context paramContext)
-  {
-    return this.a.b(paramContext);
-  }
+class av implements C3587l {
+    /* renamed from: a */
+    private ba f19403a = ba.f19429a;
+
+    av() {
+    }
+
+    /* renamed from: a */
+    public void mo2728a(Context context, JSONObject jSONObject) {
+        this.f19403a.m15422a(context, jSONObject);
+    }
+
+    /* renamed from: a */
+    public void mo2727a(Context context, String str) {
+        this.f19403a.m15421a(context, str);
+    }
+
+    /* renamed from: b */
+    public void mo2730b(Context context, String str) {
+        this.f19403a.m15424b(context, str);
+    }
+
+    /* renamed from: a */
+    public void mo2726a(Context context, long j) {
+        this.f19403a.m15420a(context, j);
+    }
+
+    /* renamed from: a */
+    public boolean mo2729a(Context context) {
+        return this.f19403a.m15423a(context);
+    }
+
+    /* renamed from: b */
+    public boolean mo2731b(Context context) {
+        return this.f19403a.m15425b(context);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/av.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -2,7 +2,6 @@ package com.baidu.baidunavis.control;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,19 +10,24 @@ import com.baidu.baidunavis.BaiduNaviManager;
 import com.baidu.baidunavis.NavMapAdapter;
 import com.baidu.baidunavis.model.NavModelHelper;
 import com.baidu.baidunavis.model.NavRoutePlanModel;
-import com.baidu.baidunavis.model.RouteNode;
+import com.baidu.baidunavis.stat.NavUserBehaviourDef.NavUserBehaviourNaviAction;
+import com.baidu.baidunavis.stat.NavUserBehaviourDef.NavUserBehaviourNaviEnter;
 import com.baidu.baidunavis.ui.widget.RoutePlanObserver;
 import com.baidu.baidunavis.ui.widget.RoutePlanObserver.IJumpToDownloadListener;
-import com.baidu.carlife.core.screen.b;
-import com.baidu.carlife.core.screen.d;
-import com.baidu.carlife.core.screen.presentation.h;
-import com.baidu.carlife.view.dialog.e;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.C0690d;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.view.dialog.C2278e;
+import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.location.LocationManager;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.mapcontrol.BNMapController;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
@@ -39,474 +43,406 @@ import com.baidu.navisdk.util.worker.loop.BNMainLooperHandler;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import com.baidu.nplatform.comapi.basestruct.MapStatus;
 import com.baidu.nplatform.comapi.map.MapController.AnimationType;
-import com.baidu.platform.comapi.c;
+import com.baidu.platform.comapi.C2907c;
 import java.util.ArrayList;
 
-public class NavPoiController
-{
-  private static final String TAG = "NavPoiController";
-  private static e mWaitProgress = null;
-  private Activity mActivity;
-  private Context mContext = BNaviModuleManager.getContext();
-  private int mDistrictId;
-  private int mId;
-  private Handler mRPHandler = new BNMainLooperHandler()
-  {
-    public void onMessage(Message paramAnonymousMessage)
-    {
-      switch (paramAnonymousMessage.what)
-      {
-      default: 
-        return;
-      case 4: 
-        BNRoutePlaner.getInstance().removeRouteResultHandler(NavPoiController.this.mRPHandler);
-        BaiduNaviManager.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "route_plan", "nav_nav");
-        NavRoutePlanController.getInstance().statisticsRoutePlanSuc();
-        int i;
-        if (NavMapAdapter.getInstance().isGpsEnabled()) {
-          if (NavMapAdapter.getInstance().isGPSLocationValid()) {
-            i = 1;
-          }
+public class NavPoiController {
+    private static final String TAG = "NavPoiController";
+    private static C2278e mWaitProgress = null;
+    private Activity mActivity;
+    private Context mContext;
+    private int mDistrictId;
+    private int mId;
+    private Handler mRPHandler;
+    private RoutePlanObserver mRoutePlanObserver;
+    private SearchPoi mRoutePlanPoi;
+    private String mSearchKey;
+    private int mSearchRsultNetMode;
+    private GeoPoint myPositionPoint;
+
+    /* renamed from: com.baidu.baidunavis.control.NavPoiController$1 */
+    class C08061 implements IJumpToDownloadListener {
+        C08061() {
         }
-        for (;;)
-        {
-          BNRoutePlaner.getInstance().triggerGPSStatus(i);
-          NavRoutePlanModel.getInstance().setmNavEnter("nav_nav");
-          BaiduNaviManager.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "navi", "nav_nav");
-          if ((BNStyleManager.getRealDayStyle()) || (NavMapManager.getInstance().isChangedMapMode())) {
-            break;
-          }
-          sendEmptyMessageDelayed(222, 1000L);
-          return;
-          i = 2;
-          continue;
-          i = 0;
+
+        public void onJumpToDownloadOfflineData() {
+            C1328h.m4757a().showFragment(NaviFragmentManager.TYPE_OFFLINE_DATA, null);
         }
-        NavPoiController.this.dismissWaitProgressDialog();
-        NavMapAdapter.getInstance().showFragment(52, null);
-        return;
-      case 7: 
-        NavPoiController.this.dismissWaitProgressDialog();
-        BNRoutePlaner.getInstance().removeRouteResultHandler(NavPoiController.this.mRPHandler);
-        return;
-      case 32: 
-        NavPoiController.this.dismissWaitProgressDialog();
-        BNRoutePlaner.getInstance().removeRouteResultHandler(NavPoiController.this.mRPHandler);
-        return;
-      case 8: 
-        NavPoiController.this.showWaitProgressDialog();
-        return;
-      }
-      NavPoiController.this.dismissWaitProgressDialog();
-      NavMapAdapter.getInstance().showFragment(52, null);
     }
-  };
-  private RoutePlanObserver mRoutePlanObserver = new RoutePlanObserver(new RoutePlanObserver.IJumpToDownloadListener()
-  {
-    public void onJumpToDownloadOfflineData()
-    {
-      h.a().showFragment(554, null);
-    }
-  });
-  private SearchPoi mRoutePlanPoi;
-  private String mSearchKey;
-  private int mSearchRsultNetMode = 1;
-  private GeoPoint myPositionPoint;
-  
-  private RoutePlanNode createRoutePlanNode(SearchPoi paramSearchPoi)
-  {
-    return new RoutePlanNode(paramSearchPoi.mGuidePoint, paramSearchPoi.mViewPoint, 8, paramSearchPoi.mName, paramSearchPoi.mAddress, paramSearchPoi.mOriginUID);
-  }
-  
-  public static NavPoiController getInstance()
-  {
-    return InnerHolder.mInstance;
-  }
-  
-  public void animationByFrogleap(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    animationByFrogleap(paramSearchPoi.mViewPoint);
-  }
-  
-  public void animationByFrogleap(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {}
-    MapStatus localMapStatus;
-    do
-    {
-      return;
-      localMapStatus = BNMapController.getInstance().getMapStatus();
-      paramGeoPoint = CoordinateTransformUtil.LLE62MC(paramGeoPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6());
-    } while ((localMapStatus == null) || (paramGeoPoint == null));
-    localMapStatus._CenterPtX = paramGeoPoint.getInt("MCx");
-    localMapStatus._CenterPtY = paramGeoPoint.getInt("MCy");
-    BNMapController.getInstance().setMapStatus(localMapStatus, MapController.AnimationType.eAnimationFrogleap);
-  }
-  
-  public void animationTo(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return;
-    }
-    MapStatus localMapStatus = BNMapController.getInstance().getMapStatus();
-    paramGeoPoint = CoordinateTransformUtil.LLE62MC(paramGeoPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6());
-    if ((paramGeoPoint != null) && (!paramGeoPoint.isEmpty()))
-    {
-      localMapStatus._CenterPtX = paramGeoPoint.getInt("MCx");
-      localMapStatus._CenterPtY = paramGeoPoint.getInt("MCy");
-    }
-    BNMapController.getInstance().setMapStatus(localMapStatus, MapController.AnimationType.eAnimationPos);
-  }
-  
-  public void animationTo(GeoPoint paramGeoPoint, long paramLong1, long paramLong2)
-  {
-    animationTo(paramGeoPoint, paramLong1, paramLong2, -1);
-  }
-  
-  public void animationTo(GeoPoint paramGeoPoint, long paramLong1, long paramLong2, int paramInt)
-  {
-    animationTo(paramGeoPoint, paramLong1, paramLong2, paramInt, true);
-  }
-  
-  public void animationTo(GeoPoint paramGeoPoint, long paramLong1, long paramLong2, int paramInt, boolean paramBoolean)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {}
-    MapStatus localMapStatus;
-    do
-    {
-      return;
-      localMapStatus = BNMapController.getInstance().getMapStatus();
-    } while (localMapStatus == null);
-    paramGeoPoint = CoordinateTransformUtil.LLE62MC(paramGeoPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6());
-    if ((paramGeoPoint != null) && (!paramGeoPoint.isEmpty()))
-    {
-      localMapStatus._CenterPtX = paramGeoPoint.getInt("MCx");
-      localMapStatus._CenterPtY = paramGeoPoint.getInt("MCy");
-    }
-    localMapStatus._Xoffset = paramLong1;
-    localMapStatus._Yoffset = paramLong2;
-    if (paramInt > 0) {
-      localMapStatus._Level = paramInt;
-    }
-    BNMapController localBNMapController = BNMapController.getInstance();
-    if (paramBoolean) {}
-    for (paramGeoPoint = MapController.AnimationType.eAnimationPos;; paramGeoPoint = MapController.AnimationType.eAnimationNone)
-    {
-      localBNMapController.setMapStatus(localMapStatus, paramGeoPoint);
-      return;
-    }
-  }
-  
-  public boolean antiGeo(SearchPoi paramSearchPoi, int paramInt, Handler paramHandler)
-  {
-    if (paramSearchPoi == null) {
-      return false;
-    }
-    return BNPoiSearcher.getInstance().asynGetPoiByPoint(paramSearchPoi.mViewPoint, paramInt, 10000, paramHandler);
-  }
-  
-  public void clearPoiCache()
-  {
-    BNPoiSearcher.getInstance().clearPoiCache();
-    BNMapController.getInstance().showLayer(3, false);
-    BNMapController.getInstance().updateLayer(3);
-  }
-  
-  public boolean dismissWaitProgressDialog()
-  {
-    NavMapAdapter.getInstance().dismissWaitProgressDialog();
-    return true;
-  }
-  
-  public void focusItem(boolean paramBoolean)
-  {
-    BNMapController.getInstance().focusItem(3, this.mId, paramBoolean);
-  }
-  
-  public void focusMadianPoi(SearchPoi paramSearchPoi, boolean paramBoolean, int paramInt)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    this.mId = 0;
-    BNPoiSearcher.getInstance().clearPoiCache();
-    BNPoiSearcher.getInstance().updateBkgPoiCache(paramSearchPoi.mViewPoint, paramBoolean, paramInt);
-    BNMapController.getInstance().showLayer(3, true);
-    BNMapController.getInstance().updateLayer(3);
-  }
-  
-  public void focusPoi(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return;
-    }
-    focusPoi(paramSearchPoi.mViewPoint);
-  }
-  
-  public void focusPoi(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return;
-    }
-    this.mId = 0;
-    BNPoiSearcher.getInstance().clearPoiCache();
-    BNPoiSearcher.getInstance().updatePoiCache(paramGeoPoint);
-    BNMapController.getInstance().showLayer(3, true);
-    BNMapController.getInstance().updateLayer(3);
-  }
-  
-  public void focusPoi(ArrayList<SearchPoi> paramArrayList, int paramInt)
-  {
-    if (paramArrayList == null) {
-      return;
-    }
-    this.mId = paramInt;
-    BNPoiSearcher.getInstance().clearPoiCache();
-    BNPoiSearcher.getInstance().updatePoiCacheWithList(paramArrayList);
-    BNMapController.getInstance().showLayer(3, true);
-    BNMapController.getInstance().updateLayer(3);
-  }
-  
-  public int getAntiPoiNetMode(GeoPoint paramGeoPoint)
-  {
-    int i = -1;
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return -1;
-    }
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (BNOfflineDataManager.getInstance().isProvinceDataDownload(0))
-    {
-      paramGeoPoint = BNPoiSearcher.getInstance().getDistrictByPoint(paramGeoPoint, 0);
-      bool1 = bool2;
-      if (paramGeoPoint != null)
-      {
-        paramGeoPoint = BNPoiSearcher.getInstance().getParentDistrict(paramGeoPoint.mId);
-        bool1 = bool2;
-        if (paramGeoPoint != null) {
-          bool1 = BNOfflineDataManager.getInstance().isProvinceDataDownload(paramGeoPoint.mId);
+
+    /* renamed from: com.baidu.baidunavis.control.NavPoiController$2 */
+    class C08072 extends BNMainLooperHandler {
+        C08072() {
         }
-      }
-    }
-    if (bool1) {
-      i = 0;
-    }
-    for (;;)
-    {
-      return i;
-      if (NetworkUtils.getConnectStatus()) {
-        i = 1;
-      }
-    }
-  }
-  
-  public String getDistance2CurrentPoint(SearchPoi paramSearchPoi)
-  {
-    if (paramSearchPoi == null) {
-      return "无数据";
-    }
-    return getDistance2CurrentPoint(paramSearchPoi.mViewPoint);
-  }
-  
-  public String getDistance2CurrentPoint(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {
-      return "";
-    }
-    if ((this.myPositionPoint == null) || (!this.myPositionPoint.isValid())) {
-      return "";
-    }
-    return StringUtils.getDistance(paramGeoPoint.getLongitudeE6() - this.myPositionPoint.getLongitudeE6(), paramGeoPoint.getLatitudeE6() - this.myPositionPoint.getLatitudeE6());
-  }
-  
-  public int getDistrictId()
-  {
-    return this.mDistrictId;
-  }
-  
-  public String getRoutePlanTipsMsg()
-  {
-    String str;
-    switch (BNRoutePlaner.getInstance().getGuideSceneType())
-    {
-    case 3: 
-    default: 
-      str = this.mContext.getResources().getString(2131296911);
-    }
-    for (;;)
-    {
-      BNRoutePlaner.getInstance().setGuideSceneType(1);
-      return str;
-      str = this.mContext.getResources().getString(2131296911);
-      continue;
-      str = this.mContext.getResources().getString(2131296890);
-      continue;
-      str = this.mContext.getResources().getString(2131296893);
-    }
-  }
-  
-  public int getSearchNetMode()
-  {
-    return this.mSearchRsultNetMode;
-  }
-  
-  public void setActivity(Activity paramActivity)
-  {
-    this.mActivity = paramActivity;
-  }
-  
-  public void setDestCalcRoute(RoutePlanNode paramRoutePlanNode, Handler paramHandler)
-  {
-    if (!LocationManager.getInstance().isLocationValid())
-    {
-      Toast.makeText(c.f(), "定位失败,请检查网络后重试!", 0).show();
-      return;
-    }
-    BNRoutePlaner.getInstance().cancleCalcRouteRequest();
-    BNRoutePlaner.getInstance().clearRouteInfoHandler();
-    RouteNode localRouteNode = NavMapAdapter.getInstance().getRouteNode(NavMapAdapter.getInstance().getGeoPoint(null, true), "我的位置", null);
-    NavRoutePlanModel.getInstance().setStartRouteNode(localRouteNode);
-    NavRoutePlanModel.getInstance().setEndRouteNode(NavMapAdapter.getInstance().getRouteNode(NavModelHelper.convertGeoPoint(paramRoutePlanNode.getGeoPoint()), paramRoutePlanNode.getName(), paramRoutePlanNode.getUID()));
-    NavMapAdapter.getInstance().setPreferValue(NavMapAdapter.getInstance().onGetLastPreferValue());
-    BNRoutePlaner.getInstance().setObserver(this.mRoutePlanObserver);
-    BNRoutePlaner.getInstance().addRouteResultHandler(paramHandler);
-    paramHandler = new ArrayList(2);
-    paramHandler.add(NavModelHelper.convertRouteNode(NavRoutePlanModel.getInstance().getStartRouteNode()));
-    paramHandler.add(paramRoutePlanNode);
-    NavSearchController.getInstance().setRpEntry(6);
-    BNRoutePlaner.getInstance().setPointsToCalcRoute(paramHandler, 0);
-  }
-  
-  public void setDistrictId(int paramInt)
-  {
-    this.mDistrictId = paramInt;
-  }
-  
-  public void setMapffset(long paramLong1, long paramLong2)
-  {
-    MapStatus localMapStatus = NMapControlProxy.getInstance().getMapStatus();
-    if (localMapStatus != null)
-    {
-      localMapStatus._Xoffset = paramLong1;
-      localMapStatus._Yoffset = paramLong2;
-      NMapControlProxy.getInstance().setMapStatus(localMapStatus, MapController.AnimationType.eAnimationNone);
-    }
-  }
-  
-  public void setMyPositionGeo(GeoPoint paramGeoPoint)
-  {
-    if (paramGeoPoint != null)
-    {
-      this.myPositionPoint = paramGeoPoint;
-      PoiSearchModel localPoiSearchModel = (PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel");
-      if (localPoiSearchModel != null) {
-        localPoiSearchModel.setMyPositionGeo(paramGeoPoint);
-      }
-    }
-  }
-  
-  public void setSearchKey(String paramString)
-  {
-    this.mSearchKey = paramString;
-  }
-  
-  public void setSearchNetMode(int paramInt)
-  {
-    this.mSearchRsultNetMode = paramInt;
-  }
-  
-  public void showWaitProgressDialog()
-  {
-    dismissWaitProgressDialog();
-    try
-    {
-      NavMapAdapter.getInstance().showProgressDialog(getRoutePlanTipsMsg(), new b()new d
-      {
-        public void onClick()
-        {
-          LogUtil.e("RoutePlan", "WaitProgress onCancel!");
-          BNRoutePlaner.getInstance().cancleCalcRouteRequest();
-          BNRoutePlaner.getInstance().clearRouteInfoHandler();
+
+        public void onMessage(Message msg) {
+            switch (msg.what) {
+                case 4:
+                    BNRoutePlaner.getInstance().removeRouteResultHandler(NavPoiController.this.mRPHandler);
+                    BaiduNaviManager.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), NavUserBehaviourNaviAction.BEHAVIOUR_NAVI_ACTION_RPLAN, NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_NAV_NAV);
+                    NavRoutePlanController.getInstance().statisticsRoutePlanSuc();
+                    int gpsState = NavMapAdapter.getInstance().isGpsEnabled() ? NavMapAdapter.getInstance().isGPSLocationValid() ? 1 : 2 : 0;
+                    BNRoutePlaner.getInstance().triggerGPSStatus(gpsState);
+                    NavRoutePlanModel.getInstance().setmNavEnter(NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_NAV_NAV);
+                    BaiduNaviManager.getInstance().sendNaviStatistics(NavRoutePlanModel.getInstance().getStartRouteNode(), NavRoutePlanModel.getInstance().getEndRouteNode(), "navi", NavUserBehaviourNaviEnter.BEHAVIOUR_NAVI_ENTER_NAV_NAV);
+                    if (BNStyleManager.getRealDayStyle() || NavMapManager.getInstance().isChangedMapMode()) {
+                        NavPoiController.this.dismissWaitProgressDialog();
+                        NavMapAdapter.getInstance().showFragment(52, null);
+                        return;
+                    }
+                    sendEmptyMessageDelayed(222, 1000);
+                    return;
+                case 7:
+                    NavPoiController.this.dismissWaitProgressDialog();
+                    BNRoutePlaner.getInstance().removeRouteResultHandler(NavPoiController.this.mRPHandler);
+                    return;
+                case 8:
+                    NavPoiController.this.showWaitProgressDialog();
+                    return;
+                case 32:
+                    NavPoiController.this.dismissWaitProgressDialog();
+                    BNRoutePlaner.getInstance().removeRouteResultHandler(NavPoiController.this.mRPHandler);
+                    return;
+                case 222:
+                    NavPoiController.this.dismissWaitProgressDialog();
+                    NavMapAdapter.getInstance().showFragment(52, null);
+                    return;
+                default:
+                    return;
+            }
         }
-      }, new d()
-      {
-        public void onCancel()
-        {
-          LogUtil.e("RoutePlan", "WaitProgress onCancel!");
-          BNRoutePlaner.getInstance().cancleCalcRouteRequest();
-          BNRoutePlaner.getInstance().clearRouteInfoHandler();
+    }
+
+    /* renamed from: com.baidu.baidunavis.control.NavPoiController$3 */
+    class C08083 implements C0672b {
+        C08083() {
         }
-      });
-      return;
+
+        public void onClick() {
+            LogUtil.e("RoutePlan", "WaitProgress onCancel!");
+            BNRoutePlaner.getInstance().cancleCalcRouteRequest();
+            BNRoutePlaner.getInstance().clearRouteInfoHandler();
+        }
     }
-    catch (Exception localException) {}
-  }
-  
-  public void startCalcRoute(RoutePlanNode paramRoutePlanNode)
-  {
-    NavRouteGuideController.getInstance().setBNavigatorListener(null);
-    NavRouteGuideController.getInstance().setIsThirdServer(false);
-    if (paramRoutePlanNode == null) {
-      return;
+
+    /* renamed from: com.baidu.baidunavis.control.NavPoiController$4 */
+    class C08094 implements C0690d {
+        C08094() {
+        }
+
+        public void onCancel() {
+            LogUtil.e("RoutePlan", "WaitProgress onCancel!");
+            BNRoutePlaner.getInstance().cancleCalcRouteRequest();
+            BNRoutePlaner.getInstance().clearRouteInfoHandler();
+        }
     }
-    LogUtil.e("NavPoiController", "calc route for navNode");
-    setDestCalcRoute(paramRoutePlanNode, this.mRPHandler);
-  }
-  
-  public void startCalcRoute(SearchPoi paramSearchPoi)
-  {
-    if (!NavRouteGuideController.getInstance().isThirdServer()) {
-      NavRouteGuideController.getInstance().setBNavigatorListener(null);
+
+    static class InnerHolder {
+        static NavPoiController mInstance = new NavPoiController();
+
+        InnerHolder() {
+        }
     }
-    NavRouteGuideController.getInstance().setIsThirdServer(false);
-    if (paramSearchPoi == null) {
-      return;
+
+    private NavPoiController() {
+        this.mSearchRsultNetMode = 1;
+        this.mRPHandler = new C08072();
+        this.mContext = BNaviModuleManager.getContext();
+        this.mRoutePlanObserver = new RoutePlanObserver(new C08061());
     }
-    this.mRoutePlanPoi = paramSearchPoi;
-    LogUtil.e("NavPoiController", "calc route");
-    RoutePlanNode localRoutePlanNode = createRoutePlanNode(paramSearchPoi);
-    localRoutePlanNode.mBusinessPoi = paramSearchPoi.mWanda;
-    if ((this.mSearchRsultNetMode == 0) && (paramSearchPoi != null)) {
-      BNPoiSearcher.getInstance().inputIndex(this.mSearchKey, this.mDistrictId, paramSearchPoi.mId);
+
+    public void setActivity(Activity activity) {
+        this.mActivity = activity;
     }
-    setDestCalcRoute(localRoutePlanNode, this.mRPHandler);
-  }
-  
-  public void updatePoiBkgLayer(ArrayList<SearchPoi> paramArrayList)
-  {
-    if (paramArrayList == null) {
-      return;
+
+    public static NavPoiController getInstance() {
+        return InnerHolder.mInstance;
     }
-    BNPoiSearcher.getInstance().clearBkgCache();
-    ArrayList localArrayList = new ArrayList(paramArrayList.size());
-    int i = 0;
-    if (i < paramArrayList.size())
-    {
-      SearchPoi localSearchPoi = (SearchPoi)paramArrayList.get(i);
-      if (localSearchPoi == null) {}
-      for (;;)
-      {
-        i += 1;
-        break;
-        localArrayList.add(localSearchPoi.mViewPoint);
-      }
+
+    public void setSearchKey(String key) {
+        this.mSearchKey = key;
     }
-    BNPoiSearcher.getInstance().updateBkgCache(localArrayList, -1);
-    BNMapController.getInstance().updateLayer(4);
-    BNMapController.getInstance().updateLayer(3);
-  }
-  
-  static class InnerHolder
-  {
-    static NavPoiController mInstance = new NavPoiController(null);
-  }
+
+    public void setMyPositionGeo(GeoPoint point) {
+        if (point != null) {
+            this.myPositionPoint = point;
+            PoiSearchModel poiSearchModel = (PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH);
+            if (poiSearchModel != null) {
+                poiSearchModel.setMyPositionGeo(point);
+            }
+        }
+    }
+
+    public String getDistance2CurrentPoint(SearchPoi searchPoi) {
+        if (searchPoi == null) {
+            return "无数据";
+        }
+        return getDistance2CurrentPoint(searchPoi.mViewPoint);
+    }
+
+    public String getDistance2CurrentPoint(GeoPoint point) {
+        if (point == null || !point.isValid()) {
+            return "";
+        }
+        if (this.myPositionPoint == null || !this.myPositionPoint.isValid()) {
+            return "";
+        }
+        return StringUtils.getDistance((double) (point.getLongitudeE6() - this.myPositionPoint.getLongitudeE6()), (double) (point.getLatitudeE6() - this.myPositionPoint.getLatitudeE6()));
+    }
+
+    public void setSearchNetMode(int searchNetMode) {
+        this.mSearchRsultNetMode = searchNetMode;
+    }
+
+    public int getSearchNetMode() {
+        return this.mSearchRsultNetMode;
+    }
+
+    public void updatePoiBkgLayer(ArrayList<SearchPoi> searchPois) {
+        if (searchPois != null) {
+            BNPoiSearcher.getInstance().clearBkgCache();
+            ArrayList<GeoPoint> geoList = new ArrayList(searchPois.size());
+            for (int i = 0; i < searchPois.size(); i++) {
+                SearchPoi poi = (SearchPoi) searchPois.get(i);
+                if (poi != null) {
+                    geoList.add(poi.mViewPoint);
+                }
+            }
+            BNPoiSearcher.getInstance().updateBkgCache(geoList, -1);
+            BNMapController.getInstance().updateLayer(4);
+            BNMapController.getInstance().updateLayer(3);
+        }
+    }
+
+    public void focusPoi(SearchPoi poi) {
+        if (poi != null) {
+            focusPoi(poi.mViewPoint);
+        }
+    }
+
+    public void focusPoi(ArrayList<SearchPoi> mPoiList, int id) {
+        if (mPoiList != null) {
+            this.mId = id;
+            BNPoiSearcher.getInstance().clearPoiCache();
+            BNPoiSearcher.getInstance().updatePoiCacheWithList(mPoiList);
+            BNMapController.getInstance().showLayer(3, true);
+            BNMapController.getInstance().updateLayer(3);
+        }
+    }
+
+    public void focusPoi(GeoPoint geoPoint) {
+        if (geoPoint != null && geoPoint.isValid()) {
+            this.mId = 0;
+            BNPoiSearcher.getInstance().clearPoiCache();
+            BNPoiSearcher.getInstance().updatePoiCache(geoPoint);
+            BNMapController.getInstance().showLayer(3, true);
+            BNMapController.getInstance().updateLayer(3);
+        }
+    }
+
+    public void focusMadianPoi(SearchPoi mCurrentPoi, boolean isMaDian, int index) {
+        if (mCurrentPoi != null) {
+            this.mId = 0;
+            BNPoiSearcher.getInstance().clearPoiCache();
+            BNPoiSearcher.getInstance().updateBkgPoiCache(mCurrentPoi.mViewPoint, isMaDian, index);
+            BNMapController.getInstance().showLayer(3, true);
+            BNMapController.getInstance().updateLayer(3);
+        }
+    }
+
+    public void focusItem(boolean focusFlag) {
+        BNMapController.getInstance().focusItem(3, this.mId, focusFlag);
+    }
+
+    public void clearPoiCache() {
+        BNPoiSearcher.getInstance().clearPoiCache();
+        BNMapController.getInstance().showLayer(3, false);
+        BNMapController.getInstance().updateLayer(3);
+    }
+
+    public void setMapffset(long xOffset, long yOffset) {
+        MapStatus st = NMapControlProxy.getInstance().getMapStatus();
+        if (st != null) {
+            st._Xoffset = xOffset;
+            st._Yoffset = yOffset;
+            NMapControlProxy.getInstance().setMapStatus(st, AnimationType.eAnimationNone);
+        }
+    }
+
+    public void animationByFrogleap(GeoPoint geopoint) {
+        if (geopoint != null && geopoint.isValid()) {
+            MapStatus curMapStatus = BNMapController.getInstance().getMapStatus();
+            Bundle b = CoordinateTransformUtil.LLE62MC(geopoint.getLongitudeE6(), geopoint.getLatitudeE6());
+            if (curMapStatus != null && b != null) {
+                curMapStatus._CenterPtX = b.getInt("MCx");
+                curMapStatus._CenterPtY = b.getInt("MCy");
+                BNMapController.getInstance().setMapStatus(curMapStatus, AnimationType.eAnimationFrogleap);
+            }
+        }
+    }
+
+    public void animationByFrogleap(SearchPoi searchPoi) {
+        if (searchPoi != null) {
+            animationByFrogleap(searchPoi.mViewPoint);
+        }
+    }
+
+    public void setDistrictId(int districtid) {
+        this.mDistrictId = districtid;
+    }
+
+    public int getDistrictId() {
+        return this.mDistrictId;
+    }
+
+    public void animationTo(GeoPoint geopoint) {
+        if (geopoint != null && geopoint.isValid()) {
+            MapStatus curMapStatus = BNMapController.getInstance().getMapStatus();
+            Bundle b = CoordinateTransformUtil.LLE62MC(geopoint.getLongitudeE6(), geopoint.getLatitudeE6());
+            if (!(b == null || b.isEmpty())) {
+                curMapStatus._CenterPtX = b.getInt("MCx");
+                curMapStatus._CenterPtY = b.getInt("MCy");
+            }
+            BNMapController.getInstance().setMapStatus(curMapStatus, AnimationType.eAnimationPos);
+        }
+    }
+
+    public void animationTo(GeoPoint geopoint, long xOffset, long yOffset, int level) {
+        animationTo(geopoint, xOffset, yOffset, level, true);
+    }
+
+    public void animationTo(GeoPoint geopoint, long xOffset, long yOffset, int level, boolean anim) {
+        if (geopoint != null && geopoint.isValid()) {
+            MapStatus curMapStatus = BNMapController.getInstance().getMapStatus();
+            if (curMapStatus != null) {
+                Bundle b = CoordinateTransformUtil.LLE62MC(geopoint.getLongitudeE6(), geopoint.getLatitudeE6());
+                if (!(b == null || b.isEmpty())) {
+                    curMapStatus._CenterPtX = b.getInt("MCx");
+                    curMapStatus._CenterPtY = b.getInt("MCy");
+                }
+                curMapStatus._Xoffset = xOffset;
+                curMapStatus._Yoffset = yOffset;
+                if (level > 0) {
+                    curMapStatus._Level = (float) level;
+                }
+                BNMapController.getInstance().setMapStatus(curMapStatus, anim ? AnimationType.eAnimationPos : AnimationType.eAnimationNone);
+            }
+        }
+    }
+
+    public void animationTo(GeoPoint geopoint, long xOffset, long yOffset) {
+        animationTo(geopoint, xOffset, yOffset, -1);
+    }
+
+    public int getAntiPoiNetMode(GeoPoint geopoint) {
+        int finalNetMode = -1;
+        if (geopoint == null || !geopoint.isValid()) {
+            return -1;
+        }
+        boolean hasDownloadData = false;
+        if (BNOfflineDataManager.getInstance().isProvinceDataDownload(0)) {
+            DistrictInfo childDistrictInfo = BNPoiSearcher.getInstance().getDistrictByPoint(geopoint, 0);
+            if (childDistrictInfo != null) {
+                DistrictInfo parentDistrict = BNPoiSearcher.getInstance().getParentDistrict(childDistrictInfo.mId);
+                if (parentDistrict != null) {
+                    hasDownloadData = BNOfflineDataManager.getInstance().isProvinceDataDownload(parentDistrict.mId);
+                }
+            }
+        }
+        if (hasDownloadData) {
+            finalNetMode = 0;
+        } else if (NetworkUtils.getConnectStatus()) {
+            finalNetMode = 1;
+        }
+        return finalNetMode;
+    }
+
+    public boolean antiGeo(SearchPoi poi, int netMode, Handler handler) {
+        if (poi == null) {
+            return false;
+        }
+        return BNPoiSearcher.getInstance().asynGetPoiByPoint(poi.mViewPoint, netMode, 10000, handler);
+    }
+
+    private RoutePlanNode createRoutePlanNode(SearchPoi node) {
+        return new RoutePlanNode(node.mGuidePoint, node.mViewPoint, 8, node.mName, node.mAddress, node.mOriginUID);
+    }
+
+    public void startCalcRoute(SearchPoi poi) {
+        if (!NavRouteGuideController.getInstance().isThirdServer()) {
+            NavRouteGuideController.getInstance().setBNavigatorListener(null);
+        }
+        NavRouteGuideController.getInstance().setIsThirdServer(false);
+        if (poi != null) {
+            this.mRoutePlanPoi = poi;
+            LogUtil.e(TAG, "calc route");
+            RoutePlanNode navNode = createRoutePlanNode(poi);
+            navNode.mBusinessPoi = poi.mWanda;
+            if (this.mSearchRsultNetMode == 0 && poi != null) {
+                BNPoiSearcher.getInstance().inputIndex(this.mSearchKey, this.mDistrictId, poi.mId);
+            }
+            setDestCalcRoute(navNode, this.mRPHandler);
+        }
+    }
+
+    public void startCalcRoute(RoutePlanNode navNode) {
+        NavRouteGuideController.getInstance().setBNavigatorListener(null);
+        NavRouteGuideController.getInstance().setIsThirdServer(false);
+        if (navNode != null) {
+            LogUtil.e(TAG, "calc route for navNode");
+            setDestCalcRoute(navNode, this.mRPHandler);
+        }
+    }
+
+    public boolean dismissWaitProgressDialog() {
+        NavMapAdapter.getInstance().dismissWaitProgressDialog();
+        return true;
+    }
+
+    public void showWaitProgressDialog() {
+        dismissWaitProgressDialog();
+        try {
+            NavMapAdapter.getInstance().showProgressDialog(getRoutePlanTipsMsg(), new C08083(), new C08094());
+        } catch (Exception e) {
+        }
+    }
+
+    public String getRoutePlanTipsMsg() {
+        String msg = "";
+        switch (BNRoutePlaner.getInstance().getGuideSceneType()) {
+            case 1:
+                msg = this.mContext.getResources().getString(C0965R.string.route_plane);
+                break;
+            case 2:
+                msg = this.mContext.getResources().getString(C0965R.string.route_dir_plane);
+                break;
+            case 4:
+                msg = this.mContext.getResources().getString(C0965R.string.route_place_plane);
+                break;
+            default:
+                msg = this.mContext.getResources().getString(C0965R.string.route_plane);
+                break;
+        }
+        BNRoutePlaner.getInstance().setGuideSceneType(1);
+        return msg;
+    }
+
+    public void setDestCalcRoute(RoutePlanNode node, Handler handler) {
+        if (LocationManager.getInstance().isLocationValid()) {
+            BNRoutePlaner.getInstance().cancleCalcRouteRequest();
+            BNRoutePlaner.getInstance().clearRouteInfoHandler();
+            NavRoutePlanModel.getInstance().setStartRouteNode(NavMapAdapter.getInstance().getRouteNode(NavMapAdapter.getInstance().getGeoPoint(null, true), RoutePlanParams.MY_LOCATION, null));
+            NavRoutePlanModel.getInstance().setEndRouteNode(NavMapAdapter.getInstance().getRouteNode(NavModelHelper.convertGeoPoint(node.getGeoPoint()), node.getName(), node.getUID()));
+            NavMapAdapter.getInstance().setPreferValue(NavMapAdapter.getInstance().onGetLastPreferValue());
+            BNRoutePlaner.getInstance().setObserver(this.mRoutePlanObserver);
+            BNRoutePlaner.getInstance().addRouteResultHandler(handler);
+            ArrayList<RoutePlanNode> nodes = new ArrayList(2);
+            nodes.add(NavModelHelper.convertRouteNode(NavRoutePlanModel.getInstance().getStartRouteNode()));
+            nodes.add(node);
+            NavSearchController.getInstance().setRpEntry(6);
+            BNRoutePlaner.getInstance().setPointsToCalcRoute(nodes, 0);
+            return;
+        }
+        Toast.makeText(C2907c.m10977f(), "定位失败,请检查网络后重试!", 0).show();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/control/NavPoiController.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

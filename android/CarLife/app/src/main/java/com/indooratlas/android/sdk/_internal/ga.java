@@ -1,5 +1,6 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.gj.C5924b;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
@@ -8,180 +9,102 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public final class ga
-{
-  private int a = 64;
-  private int b = 5;
-  private ExecutorService c;
-  private final Deque<gj.b> d = new ArrayDeque();
-  private final Deque<gj.b> e = new ArrayDeque();
-  private final Deque<gj> f = new ArrayDeque();
-  
-  private ExecutorService b()
-  {
-    try
-    {
-      if (this.c == null) {
-        this.c = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue(), gy.a("OkHttp Dispatcher", false));
-      }
-      ExecutorService localExecutorService = this.c;
-      return localExecutorService;
+public final class ga {
+    /* renamed from: a */
+    private int f23833a = 64;
+    /* renamed from: b */
+    private int f23834b = 5;
+    /* renamed from: c */
+    private ExecutorService f23835c;
+    /* renamed from: d */
+    private final Deque<C5924b> f23836d = new ArrayDeque();
+    /* renamed from: e */
+    private final Deque<C5924b> f23837e = new ArrayDeque();
+    /* renamed from: f */
+    private final Deque<gj> f23838f = new ArrayDeque();
+
+    /* renamed from: b */
+    private synchronized ExecutorService m20599b() {
+        if (this.f23835c == null) {
+            this.f23835c = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60, TimeUnit.SECONDS, new SynchronousQueue(), gy.m20788a("OkHttp Dispatcher", false));
+        }
+        return this.f23835c;
     }
-    finally {}
-  }
-  
-  private int c(gj.b paramb)
-  {
-    Iterator localIterator = this.e.iterator();
-    int i = 0;
-    if (localIterator.hasNext())
-    {
-      if (!((gj.b)localIterator.next()).a().equals(paramb.a())) {
-        break label52;
-      }
-      i += 1;
+
+    /* renamed from: a */
+    final synchronized void m20604a(C5924b c5924b) {
+        if (this.f23837e.size() >= this.f23833a || m20600c(c5924b) >= this.f23834b) {
+            this.f23836d.add(c5924b);
+        } else {
+            this.f23837e.add(c5924b);
+            m20599b().execute(c5924b);
+        }
     }
-    label52:
-    for (;;)
-    {
-      break;
-      return i;
+
+    /* renamed from: a */
+    public final synchronized void m20602a() {
+        for (C5924b c5924b : this.f23836d) {
+            c5924b.f23939a.mo4696c();
+        }
+        for (C5924b c5924b2 : this.f23837e) {
+            c5924b2.f23939a.mo4696c();
+        }
+        for (gj c : this.f23838f) {
+            c.mo4696c();
+        }
     }
-  }
-  
-  private void c()
-  {
-    if (this.e.size() >= this.a) {}
-    do
-    {
-      Iterator localIterator;
-      do
-      {
-        return;
-        while (this.d.isEmpty()) {}
-        localIterator = this.d.iterator();
-      } while (!localIterator.hasNext());
-      gj.b localb = (gj.b)localIterator.next();
-      if (c(localb) < this.b)
-      {
-        localIterator.remove();
-        this.e.add(localb);
-        b().execute(localb);
-      }
-    } while (this.e.size() < this.a);
-  }
-  
-  public final void a()
-  {
-    try
-    {
-      Iterator localIterator1 = this.d.iterator();
-      while (localIterator1.hasNext()) {
-        ((gj.b)localIterator1.next()).a.c();
-      }
-      localIterator2 = this.e.iterator();
+
+    /* renamed from: b */
+    final synchronized void m20606b(C5924b c5924b) {
+        if (this.f23837e.remove(c5924b)) {
+            m20601c();
+        } else {
+            throw new AssertionError("AsyncCall wasn't running!");
+        }
     }
-    finally {}
-    while (localIterator2.hasNext()) {
-      ((gj.b)localIterator2.next()).a.c();
+
+    /* renamed from: c */
+    private void m20601c() {
+        if (this.f23837e.size() < this.f23833a && !this.f23836d.isEmpty()) {
+            Iterator it = this.f23836d.iterator();
+            while (it.hasNext()) {
+                C5924b c5924b = (C5924b) it.next();
+                if (m20600c(c5924b) < this.f23834b) {
+                    it.remove();
+                    this.f23837e.add(c5924b);
+                    m20599b().execute(c5924b);
+                }
+                if (this.f23837e.size() >= this.f23833a) {
+                    return;
+                }
+            }
+        }
     }
-    Iterator localIterator2 = this.f.iterator();
-    while (localIterator2.hasNext()) {
-      ((gj)localIterator2.next()).c();
+
+    /* renamed from: c */
+    private int m20600c(C5924b c5924b) {
+        int i = 0;
+        for (C5924b a : this.f23837e) {
+            int i2;
+            if (a.m20689a().equals(c5924b.m20689a())) {
+                i2 = i + 1;
+            } else {
+                i2 = i;
+            }
+            i = i2;
+        }
+        return i;
     }
-  }
-  
-  final void a(fr paramfr)
-  {
-    try
-    {
-      if (!this.f.remove(paramfr)) {
-        throw new AssertionError("Call wasn't in-flight!");
-      }
+
+    /* renamed from: a */
+    final synchronized void m20605a(gj gjVar) {
+        this.f23838f.add(gjVar);
     }
-    finally {}
-  }
-  
-  /* Error */
-  final void a(gj.b paramb)
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: aload_0
-    //   3: getfield 30	com/indooratlas/android/sdk/_internal/ga:e	Ljava/util/Deque;
-    //   6: invokeinterface 92 1 0
-    //   11: aload_0
-    //   12: getfield 21	com/indooratlas/android/sdk/_internal/ga:a	I
-    //   15: if_icmpge +39 -> 54
-    //   18: aload_0
-    //   19: aload_1
-    //   20: invokespecial 97	com/indooratlas/android/sdk/_internal/ga:c	(Lcom/indooratlas/android/sdk/_internal/gj$b;)I
-    //   23: aload_0
-    //   24: getfield 23	com/indooratlas/android/sdk/_internal/ga:b	I
-    //   27: if_icmpge +27 -> 54
-    //   30: aload_0
-    //   31: getfield 30	com/indooratlas/android/sdk/_internal/ga:e	Ljava/util/Deque;
-    //   34: aload_1
-    //   35: invokeinterface 103 2 0
-    //   40: pop
-    //   41: aload_0
-    //   42: invokespecial 105	com/indooratlas/android/sdk/_internal/ga:b	()Ljava/util/concurrent/ExecutorService;
-    //   45: aload_1
-    //   46: invokeinterface 111 2 0
-    //   51: aload_0
-    //   52: monitorexit
-    //   53: return
-    //   54: aload_0
-    //   55: getfield 28	com/indooratlas/android/sdk/_internal/ga:d	Ljava/util/Deque;
-    //   58: aload_1
-    //   59: invokeinterface 103 2 0
-    //   64: pop
-    //   65: goto -14 -> 51
-    //   68: astore_1
-    //   69: aload_0
-    //   70: monitorexit
-    //   71: aload_1
-    //   72: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	73	0	this	ga
-    //   0	73	1	paramb	gj.b
-    // Exception table:
-    //   from	to	target	type
-    //   2	51	68	finally
-    //   54	65	68	finally
-  }
-  
-  final void a(gj paramgj)
-  {
-    try
-    {
-      this.f.add(paramgj);
-      return;
+
+    /* renamed from: a */
+    final synchronized void m20603a(fr frVar) {
+        if (!this.f23838f.remove(frVar)) {
+            throw new AssertionError("Call wasn't in-flight!");
+        }
     }
-    finally
-    {
-      paramgj = finally;
-      throw paramgj;
-    }
-  }
-  
-  final void b(gj.b paramb)
-  {
-    try
-    {
-      if (!this.e.remove(paramb)) {
-        throw new AssertionError("AsyncCall wasn't running!");
-      }
-    }
-    finally {}
-    c();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ga.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

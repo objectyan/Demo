@@ -1,14 +1,12 @@
 package com.indooratlas.android.sdk._internal;
 
-public abstract interface as
-{
-  public abstract int a(ar.b paramb);
-  
-  public abstract String a(ar.c paramc);
+import com.indooratlas.android.sdk._internal.ar.C5767b;
+import com.indooratlas.android.sdk._internal.ar.C5768c;
+
+public interface as {
+    /* renamed from: a */
+    int mo4599a(C5767b c5767b);
+
+    /* renamed from: a */
+    String mo4600a(C5768c c5768c);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/as.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

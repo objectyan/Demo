@@ -1,11 +1,9 @@
 package com.baidu.carlife.fragment;
 
-import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.view.LayoutInflater;
@@ -17,843 +15,883 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.screen.BaseDialog.a;
-import com.baidu.carlife.logic.music.b.b;
-import com.baidu.carlife.logic.music.j.a;
-import com.baidu.carlife.logic.music.q;
-import com.baidu.carlife.logic.music.t;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.adpter.C0989i;
+import com.baidu.carlife.core.C0936j;
+import com.baidu.carlife.core.C1249d;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.carlife.core.screen.BaseDialog.C1265a;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.custom.C1343b;
+import com.baidu.carlife.logic.C1772k;
+import com.baidu.carlife.logic.music.C1790b;
+import com.baidu.carlife.logic.music.C1790b.C1529a;
+import com.baidu.carlife.logic.music.C1790b.C1535b;
+import com.baidu.carlife.logic.music.C1818h;
+import com.baidu.carlife.logic.music.C1820j;
+import com.baidu.carlife.logic.music.C1820j.C1531a;
+import com.baidu.carlife.logic.music.C1838q;
+import com.baidu.carlife.logic.music.C1852t;
+import com.baidu.carlife.logic.music.p097b.C1789a;
 import com.baidu.carlife.logic.music.views.ViewContainer;
-import com.baidu.carlife.util.p;
-import com.baidu.carlife.util.r;
-import com.baidu.carlife.util.w;
+import com.baidu.carlife.model.C1931j;
+import com.baidu.carlife.p059c.C1102b.C1096a;
+import com.baidu.carlife.p078f.C1437b;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.util.C2186p;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.carlife.util.C2201w;
+import com.baidu.carlife.view.C2342g;
 import com.baidu.carlife.view.CommonTipView;
-import com.baidu.carlife.view.CommonTipView.a;
+import com.baidu.carlife.view.CommonTipView.C1526a;
 import com.baidu.carlife.view.MultiImageView;
+import com.baidu.carlife.view.dialog.C2282f;
+import com.baidu.carlife.view.p104a.C2251b;
 import com.baidu.navi.fragment.BaseFragment;
 import com.baidu.navi.fragment.ContentFragment;
+import com.baidu.navi.fragment.ContentFragmentManager;
 import com.baidu.navi.fragment.NaviFragmentManager;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
-import java.util.HashMap;
 
-public class MusicAlbumListFragment
-  extends ContentFragment
-  implements View.OnClickListener, AdapterView.OnItemClickListener
-{
-  private static final String f = "CarLifeMusic";
-  private View A;
-  private com.baidu.carlife.logic.music.b.a B;
-  private com.baidu.carlife.logic.music.b.a C = new com.baidu.carlife.logic.music.b.a()
-  {
-    public void a()
-    {
-      MusicAlbumListFragment.b(MusicAlbumListFragment.this);
-    }
-    
-    public void a(int paramAnonymousInt)
-    {
-      MusicAlbumListFragment.a(MusicAlbumListFragment.this, paramAnonymousInt);
-    }
-    
-    public void a(String paramAnonymousString)
-    {
-      String str = MusicAlbumListFragment.d(MusicAlbumListFragment.this).a(paramAnonymousString);
-      if (!TextUtils.isEmpty(str)) {
-        w.a(str + "断开连接了", 0);
-      }
-      b();
-      paramAnonymousString = MusicAlbumListFragment.d(MusicAlbumListFragment.this).b(paramAnonymousString);
-      if ((paramAnonymousString != null) && (MusicAlbumListFragment.d(MusicAlbumListFragment.this).g(paramAnonymousString.s())))
-      {
-        MusicAlbumListFragment.d(MusicAlbumListFragment.this).f(true);
-        com.baidu.carlife.core.k.a(310);
-        MusicAlbumListFragment.d(MusicAlbumListFragment.this).f(-1);
-        if (paramAnonymousString.s() == 1) {
-          c();
+public class MusicAlbumListFragment extends ContentFragment implements OnClickListener, OnItemClickListener {
+    /* renamed from: f */
+    private static final String f4556f = "CarLifeMusic";
+    /* renamed from: A */
+    private View f4557A;
+    /* renamed from: B */
+    private C1789a f4558B;
+    /* renamed from: C */
+    private C1529a f4559C = new C15302(this);
+    /* renamed from: D */
+    private C1531a f4560D = new C15323(this);
+    /* renamed from: E */
+    private C0936j f4561E = new C15376(this);
+    /* renamed from: a */
+    protected C1437b f4562a;
+    /* renamed from: b */
+    protected C1443g f4563b = null;
+    /* renamed from: c */
+    protected C1443g f4564c = null;
+    /* renamed from: d */
+    protected C1443g f4565d;
+    /* renamed from: e */
+    Runnable f4566e = new C15334(this);
+    /* renamed from: g */
+    private C1818h f4567g;
+    /* renamed from: h */
+    private C1790b f4568h;
+    /* renamed from: i */
+    private C0989i f4569i;
+    /* renamed from: j */
+    private boolean f4570j;
+    /* renamed from: k */
+    private View f4571k;
+    /* renamed from: l */
+    private View f4572l;
+    /* renamed from: m */
+    private View f4573m;
+    /* renamed from: n */
+    private View f4574n;
+    /* renamed from: o */
+    private View f4575o;
+    /* renamed from: p */
+    private GridView f4576p;
+    /* renamed from: q */
+    private TextView f4577q;
+    /* renamed from: r */
+    private TextView f4578r;
+    /* renamed from: s */
+    private TextView f4579s;
+    /* renamed from: t */
+    private RelativeLayout f4580t;
+    /* renamed from: u */
+    private MultiImageView f4581u;
+    /* renamed from: v */
+    private ImageView f4582v;
+    /* renamed from: w */
+    private C2282f f4583w;
+    /* renamed from: x */
+    private AnimationDrawable f4584x;
+    /* renamed from: y */
+    private CommonTipView f4585y;
+    /* renamed from: z */
+    private ViewContainer f4586z;
+
+    /* renamed from: com.baidu.carlife.fragment.MusicAlbumListFragment$1 */
+    class C15271 implements C1526a {
+        /* renamed from: a */
+        final /* synthetic */ MusicAlbumListFragment f4546a;
+
+        C15271(MusicAlbumListFragment this$0) {
+            this.f4546a = this$0;
         }
-      }
-    }
-    
-    public void b()
-    {
-      MusicAlbumListFragment.c(MusicAlbumListFragment.this);
-    }
-    
-    public void b(int paramAnonymousInt)
-    {
-      MusicAlbumListFragment.b(MusicAlbumListFragment.this, paramAnonymousInt);
-    }
-    
-    public void c()
-    {
-      if (MusicAlbumListFragment.e(MusicAlbumListFragment.this) != null) {
-        MusicAlbumListFragment.e(MusicAlbumListFragment.this).post(new Runnable()
-        {
-          public void run()
-          {
-            MusicAlbumListFragment.f(MusicAlbumListFragment.this);
-          }
-        });
-      }
-    }
-  };
-  private j.a D = new j.a()
-  {
-    public void a()
-    {
-      MusicAlbumListFragment.this.dismissDialog(MusicAlbumListFragment.g(MusicAlbumListFragment.this));
-    }
-  };
-  private com.baidu.carlife.core.j E = new com.baidu.carlife.core.j()
-  {
-    public void careAbout()
-    {
-      addMsg(206);
-      addMsg(248);
-      addMsg(1040);
-      addMsg(1002);
-      addMsg(3013);
-    }
-    
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      com.baidu.carlife.logic.music.b localb;
-      switch (paramAnonymousMessage.what)
-      {
-      default: 
-      case 206: 
-        do
-        {
-          return;
-          localb = MusicAlbumListFragment.d(MusicAlbumListFragment.this).h(paramAnonymousMessage.arg2);
-          if ((localb != null) && (localb.i()))
-          {
-            localb.a(false);
-            com.baidu.carlife.core.i.e("CarLifeMusic", "MSG_MUSIC_UPDATE_ALBUMLIST-1-");
-            return;
-          }
-          localb.j(2);
-          MusicAlbumListFragment.c(MusicAlbumListFragment.this);
-        } while (MusicAlbumListFragment.d(MusicAlbumListFragment.this).g() != paramAnonymousMessage.arg2);
-        MusicAlbumListFragment.a(MusicAlbumListFragment.this, paramAnonymousMessage.arg1);
-        return;
-      case 248: 
-        localb = MusicAlbumListFragment.d(MusicAlbumListFragment.this).h(paramAnonymousMessage.arg1);
-        if (localb != null)
-        {
-          localb.a(true);
-          localb.j(3);
-          if (paramAnonymousMessage.arg2 == -2) {
-            switch (paramAnonymousMessage.arg1)
-            {
+
+        /* renamed from: a */
+        public void mo1575a() {
+            if (C1772k.m6480a().m6489c() != 0) {
+                C2201w.m8371a((int) C0965R.string.phone_status_busy_music, 1);
+            } else {
+                this.f4546a.f4568h.mo1655b(true);
             }
-          }
         }
-        for (;;)
-        {
-          paramAnonymousMessage.arg2 = -1;
-          if (MusicAlbumListFragment.d(MusicAlbumListFragment.this).g() != paramAnonymousMessage.arg1) {
-            break;
-          }
-          MusicAlbumListFragment.c(MusicAlbumListFragment.this);
-          return;
-          StatisticManager.onEvent("MUSIC_QQ_0014", "同步超时");
-          continue;
-          StatisticManager.onEvent("MUSIC_XMLY_0010", "同步超时");
-          continue;
-          StatisticManager.onEvent("MUSIC_KAOLA_0010", "同步超时");
-          continue;
-          StatisticManager.onEvent("MUSIC_CYB_0010", "同步超时");
-        }
-      case 1040: 
-        MusicAlbumListFragment.a(MusicAlbumListFragment.this, true);
-        return;
-      case 1002: 
-        MusicAlbumListFragment.a(MusicAlbumListFragment.this, false);
-        return;
-      }
-      MusicAlbumListFragment.h(MusicAlbumListFragment.this);
     }
-  };
-  protected com.baidu.carlife.f.b a;
-  protected com.baidu.carlife.f.g b = null;
-  protected com.baidu.carlife.f.g c = null;
-  protected com.baidu.carlife.f.g d;
-  Runnable e = new Runnable()
-  {
-    public void run()
-    {
-      MusicAlbumListFragment.h(MusicAlbumListFragment.this);
-    }
-  };
-  private com.baidu.carlife.logic.music.h g;
-  private com.baidu.carlife.logic.music.b h;
-  private com.baidu.carlife.adpter.i i;
-  private boolean j;
-  private View k;
-  private View l;
-  private View m;
-  private View n;
-  private View o;
-  private GridView p;
-  private TextView q;
-  private TextView r;
-  private TextView s;
-  private RelativeLayout t;
-  private MultiImageView u;
-  private ImageView v;
-  private com.baidu.carlife.view.dialog.f w;
-  private AnimationDrawable x;
-  private CommonTipView y;
-  private ViewContainer z;
-  
-  private void a()
-  {
-    this.z = ((ViewContainer)this.mContentView.findViewById(2131624990));
-    this.k = this.mContentView.findViewById(2131624997);
-    this.l = this.mContentView.findViewById(2131624993);
-    this.m = this.mContentView.findViewById(2131624999);
-    this.n = this.mContentView.findViewById(2131624995);
-    this.o = this.mContentView.findViewById(2131624992);
-    this.k.setOnClickListener(this);
-    this.l.setOnClickListener(this);
-    this.t = ((RelativeLayout)this.mContentView.findViewById(2131625675));
-    this.u = ((MultiImageView)this.mContentView.findViewById(2131625676));
-    this.v = ((ImageView)this.mContentView.findViewById(2131625674));
-    this.v.setImageResource(2131034112);
-    this.x = ((AnimationDrawable)this.v.getDrawable());
-    this.t.setOnClickListener(this);
-    this.v.setOnClickListener(this);
-    this.q = ((TextView)this.mContentView.findViewById(2131624991));
-    this.r = ((TextView)this.mContentView.findViewById(2131624998));
-    this.s = ((TextView)this.mContentView.findViewById(2131624994));
-    this.p = ((GridView)this.mContentView.findViewById(2131625000));
-    this.p.setAdapter(this.i);
-    this.p.setOnItemClickListener(this);
-    this.w = new com.baidu.carlife.view.dialog.f(mActivity, 2131296613, this.g.E(), this.g.F());
-    this.w.j();
-    this.y = ((CommonTipView)this.mContentView.findViewById(2131623981));
-    this.y.setCommonTipCallBack(new CommonTipView.a()
-    {
-      public void a()
-      {
-        if (com.baidu.carlife.logic.k.a().c() != 0)
-        {
-          w.a(2131296842, 1);
-          return;
-        }
-        MusicAlbumListFragment.a(MusicAlbumListFragment.this).b(true);
-      }
-    });
-    if (com.baidu.carlife.custom.b.a().b()) {
-      if (com.baidu.carlife.core.screen.presentation.h.a().getNaviFragmentManager().isDriving()) {
-        break label374;
-      }
-    }
-    label374:
-    for (boolean bool = true;; bool = false)
-    {
-      a(bool);
-      b(com.baidu.carlife.l.a.a().N());
-      return;
-    }
-  }
-  
-  private void a(int paramInt)
-  {
-    dismissDialog(this.w);
-    com.baidu.carlife.model.j localj = this.g.m(paramInt);
-    if (localj == null) {
-      return;
-    }
-    if (localj.c >= 3)
-    {
-      this.u.setDefaultDrawable(r.b(2130838958));
-      this.u.setImageUrl(localj.j);
-    }
-    for (;;)
-    {
-      a(localj.m);
-      return;
-      this.u.setDefaultDrawableResId(localj.b);
-      this.u.setImageUrl(null);
-    }
-  }
-  
-  private void a(String paramString)
-  {
-    long l1 = p.a().a("DAU" + paramString, 0L);
-    if (l1 == 0L)
-    {
-      StatisticManager.onEvent("1067", paramString);
-      p.a().b("DAU" + paramString, System.currentTimeMillis());
-    }
-    Time localTime1;
-    Time localTime2;
-    do
-    {
-      return;
-      localTime1 = new Time();
-      localTime1.set(l1);
-      localTime2 = new Time();
-      localTime2.setToNow();
-    } while ((localTime2.year < localTime1.year) || ((localTime2.year <= localTime1.year) && (localTime2.yearDay <= localTime1.yearDay)));
-    StatisticManager.onEvent("1067", paramString);
-    p.a().b("DAU" + paramString, System.currentTimeMillis());
-  }
-  
-  private void a(boolean paramBoolean)
-  {
-    View localView = this.y.getFocusView();
-    if (paramBoolean) {}
-    for (float f1 = 1.0F;; f1 = 0.2F)
-    {
-      localView.setAlpha(f1);
-      this.y.getFocusView().setEnabled(paramBoolean);
-      return;
-    }
-  }
-  
-  private void b()
-  {
-    int i1 = this.g.g();
-    this.w.a(i1);
-    a(i1);
-    d();
-    c();
-  }
-  
-  private void b(int paramInt)
-  {
-    this.i.a(this.h.g(paramInt));
-    c(paramInt);
-    this.p.smoothScrollToPosition(0);
-    this.h.j(2);
-  }
-  
-  private void b(boolean paramBoolean)
-  {
-    if ((paramBoolean) && (com.baidu.carlife.core.d.m()))
-    {
-      this.p.setNumColumns(6);
-      this.p.requestLayout();
-      this.mContentView.requestLayout();
-      com.baidu.carlife.core.i.b("CarLifeMusic", "Update Gv Columns:6");
-      return;
-    }
-    this.p.setNumColumns(4);
-    this.p.requestLayout();
-    this.mContentView.requestLayout();
-    com.baidu.carlife.core.i.b("CarLifeMusic", "Update Gv Columns:4");
-  }
-  
-  private void c()
-  {
-    if (this.g.n() == -1) {
-      this.v.setVisibility(4);
-    }
-    do
-    {
-      return;
-      if (this.g.p())
-      {
-        this.v.setVisibility(0);
-        this.v.setImageResource(2131034112);
-        this.x = ((AnimationDrawable)this.v.getDrawable());
-        this.x.start();
-        return;
-      }
-      this.v.setVisibility(0);
-      this.v.setImageDrawable(r.b(2130838988));
-    } while (this.x == null);
-    this.x.stop();
-  }
-  
-  private void c(int paramInt)
-  {
-    if (paramInt == 2)
-    {
-      this.m.setVisibility(0);
-      this.n.setVisibility(4);
-      this.s.setTextColor(r.a(2131558693));
-      this.r.setTextColor(r.a(2131559221));
-      this.k.setBackgroundResource(2130838365);
-      this.l.setBackground(com.baidu.carlife.view.a.b.d(mActivity));
-    }
-    while (paramInt != 1) {
-      return;
-    }
-    this.m.setVisibility(4);
-    this.n.setVisibility(0);
-    this.s.setTextColor(r.a(2131559221));
-    this.r.setTextColor(r.a(2131558693));
-    this.k.setBackground(com.baidu.carlife.view.a.b.d(mActivity));
-    this.l.setBackgroundResource(2130838365);
-  }
-  
-  private void d()
-  {
-    ((com.baidu.carlife.logic.music.j)this.g.F()).a(this.D);
-  }
-  
-  private void d(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      if (this.h.s() == 1)
-      {
-        this.q.setText(2131296626);
-        this.q.setVisibility(0);
-      }
-      break;
-    }
-    for (;;)
-    {
-      c(this.h.w());
-      return;
-      this.q.setVisibility(8);
-      this.l.setVisibility(4);
-      this.k.setVisibility(4);
-      this.mContentView.findViewById(2131624996).setVisibility(4);
-      continue;
-      if (this.h.s() == 2)
-      {
-        this.l.setVisibility(0);
-        this.k.setVisibility(0);
-        this.mContentView.findViewById(2131624996).setVisibility(0);
-      }
-      else
-      {
-        this.q.setText(2131296623);
-        this.q.setVisibility(0);
-      }
-    }
-  }
-  
-  private void e()
-  {
-    this.j = true;
-    com.baidu.carlife.view.g.e().a(2131296859);
-    if (this.E != null) {
-      this.E.sendMessageDelayed(Message.obtain(this.E, 248, this.h.s(), -2), 15000L);
-    }
-  }
-  
-  private void e(int paramInt)
-  {
-    d(paramInt);
-    this.z.setVisibility(8);
-    switch (paramInt)
-    {
-    }
-    for (;;)
-    {
-      onInitFocusAreas();
-      return;
-      if (this.h.s() == 1)
-      {
-        h();
-      }
-      else
-      {
-        this.p.setVisibility(0);
-        this.z.setVisibility(8);
-        this.y.setVisibility(8);
-        continue;
-        this.p.setVisibility(4);
-        if (this.h.s() == 1) {
-          str = getString(2131296636);
-        }
-        for (;;)
-        {
-          this.y.setVisibility(0);
-          this.y.a(str, 2131296620);
-          this.y.a(true);
-          break;
-          str = this.g.a(this.h.q());
-          if (!TextUtils.isEmpty(str)) {
-            str = String.format(getString(2131296618), new Object[] { str });
-          } else {
-            str = String.format(getString(2131296618), new Object[] { "第三方" });
-          }
-        }
-        this.p.setVisibility(4);
-        if (this.h.s() == 1) {
-          str = getString(2131296632);
-        }
-        for (;;)
-        {
-          this.y.setVisibility(0);
-          this.y.a(str, 2131296620);
-          this.y.a(true);
-          break;
-          str = this.g.a(this.h.q());
-          if (!TextUtils.isEmpty(str)) {
-            str = String.format(getString(2131296618), new Object[] { str });
-          } else {
-            str = String.format(getString(2131296618), new Object[] { "第三方" });
-          }
-        }
-        this.p.setVisibility(4);
-        String str = this.g.a(this.h.q());
-        if (!TextUtils.isEmpty(str)) {}
-        for (str = String.format(getContext().getString(2131296617), new Object[] { str });; str = String.format(getContext().getString(2131296617), new Object[] { "第三方" }))
-        {
-          this.y.setVisibility(0);
-          this.y.a(str, 2131296615);
-          if (!"1012961a".equals(com.baidu.carlife.core.f.jt)) {
-            break label482;
-          }
-          this.y.a();
-          break;
-        }
-        label482:
-        this.y.a(true);
-        continue;
-        this.p.setVisibility(4);
-        this.y.setVisibility(0);
-        this.y.a(2131296599, 2131296600);
-        this.y.a(true);
-      }
-    }
-  }
-  
-  private void f()
-  {
-    this.j = false;
-    if (this.E != null) {
-      this.E.removeMessages(248);
-    }
-    com.baidu.carlife.view.g.e().f();
-  }
-  
-  private void g()
-  {
-    this.h = this.g.r();
-    this.h.a(this.C);
-    b();
-    this.h.b(getArguments());
-    if (this.h.s() == 2)
-    {
-      this.o.setVisibility(0);
-      this.q.setVisibility(8);
-      return;
-    }
-    this.o.setVisibility(8);
-    this.q.setVisibility(0);
-  }
-  
-  private void h()
-  {
-    l();
-    i();
-  }
-  
-  private void i()
-  {
-    this.B = new com.baidu.carlife.logic.music.b.a(this.h);
-    this.B.a(k());
-    this.z.a(this.B);
-    this.z.a();
-    this.B.a(this.e, 1500L);
-  }
-  
-  private void j()
-  {
-    if ((this.h.s() == 1) && (this.B != null)) {
-      ((q)this.h).a(new b.b()
-      {
-        public void a(final String paramAnonymousString, final int paramAnonymousInt)
-        {
-          if (MusicAlbumListFragment.i(MusicAlbumListFragment.this) != null)
-          {
-            ((q)MusicAlbumListFragment.a(MusicAlbumListFragment.this)).Z.put(paramAnonymousString, Integer.valueOf(paramAnonymousInt));
-            BaseFragment.getNaviActivity().runOnUiThread(new Runnable()
-            {
-              public void run()
-              {
-                MusicAlbumListFragment.i(MusicAlbumListFragment.this).a(paramAnonymousString, paramAnonymousInt);
-              }
-            });
-          }
-        }
-      });
-    }
-  }
-  
-  @NonNull
-  private com.baidu.carlife.c.b.a k()
-  {
-    this.A = getActivity().getLayoutInflater().inflate(2130968864, this.z, false);
-    return new com.baidu.carlife.c.b.a(this.A, 0);
-  }
-  
-  private void l()
-  {
-    this.y.setVisibility(8);
-    this.p.setVisibility(8);
-    this.z.setVisibility(0);
-  }
-  
-  private void m()
-  {
-    if ((this.h.x() != 3) && (this.h.x() != 0) && (this.h.x() != 1)) {
-      return;
-    }
-    this.y.b();
-  }
-  
-  private com.baidu.carlife.f.g n()
-  {
-    if (this.b == null) {
-      this.b = new com.baidu.carlife.f.g(this.mContentView, 4);
-    }
-    this.b.i();
-    this.b.d(this.l).d(this.k).d(this.v).d(this.t).d(this.y.getFocusView());
-    this.b.b(this.y.getFocusView());
-    return this.b;
-  }
-  
-  private com.baidu.carlife.f.b o()
-  {
-    if (this.a == null) {
-      this.a = new com.baidu.carlife.f.b(this.p, 6);
-    }
-    return this.a;
-  }
-  
-  private com.baidu.carlife.f.g p()
-  {
-    if (this.c == null) {
-      this.c = new com.baidu.carlife.f.g(this.mContentView, 4);
-    }
-    this.c.i();
-    this.c.d(this.v).d(this.t).d(this.y.getFocusView());
-    this.c.b(this.y.getFocusView());
-    return this.c;
-  }
-  
-  private com.baidu.carlife.f.g q()
-  {
-    if (this.A == null) {
-      return null;
-    }
-    if (this.d == null) {
-      this.d = new com.baidu.carlife.f.g(this.A, 6);
-    }
-    this.d.i();
-    this.d.d(this.A.findViewById(2131625359)).d(this.A.findViewById(2131625360)).d(this.A.findViewById(2131625361)).d(this.A.findViewById(2131625362));
-    return this.d;
-  }
-  
-  public void driving()
-  {
-    com.baidu.carlife.core.i.b("yftech", "MusicAlbumListFragment driving");
-    if (com.baidu.carlife.custom.b.a().b()) {
-      a(false);
-    }
-  }
-  
-  public boolean onBackPressed()
-  {
-    if (mActivity != null) {
-      mActivity.d();
-    }
-    return true;
-  }
-  
-  public void onClick(View paramView)
-  {
-    if (this.h == null) {
-      g();
-    }
-    do
-    {
-      ContentFragment localContentFragment;
-      do
-      {
-        do
-        {
-          do
-          {
-            return;
-            switch (paramView.getId())
-            {
-            default: 
-              return;
+
+    /* renamed from: com.baidu.carlife.fragment.MusicAlbumListFragment$2 */
+    class C15302 implements C1529a {
+        /* renamed from: a */
+        final /* synthetic */ MusicAlbumListFragment f4548a;
+
+        /* renamed from: com.baidu.carlife.fragment.MusicAlbumListFragment$2$1 */
+        class C15281 implements Runnable {
+            /* renamed from: a */
+            final /* synthetic */ C15302 f4547a;
+
+            C15281(C15302 this$1) {
+                this.f4547a = this$1;
             }
-          } while (this.h.w() == 1);
-          this.p.setVisibility(4);
-          c(1);
-          this.h.k(1);
-          return;
-          this.g.l(this.g.f());
-        } while (this.g.n() < 0);
-        paramView = new Bundle();
-        paramView.putBoolean("music_playing_icon", true);
-        localContentFragment = getCurrentFragment();
-      } while (localContentFragment == null);
-      if (localContentFragment.getType() == 737)
-      {
-        localContentFragment.getArguments().putBundle("show_bundle", paramView);
-        localContentFragment.onStart();
-        return;
-      }
-      showFragment(737, paramView);
-      return;
-      showDialog(this.w, BaseDialog.a.b);
-      return;
-    } while (this.h.w() == 2);
-    this.p.setVisibility(4);
-    c(2);
-    this.h.k(2);
-  }
-  
-  public void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    this.g = com.baidu.carlife.logic.music.h.b();
-    com.baidu.carlife.core.k.a(this.E);
-    this.i = new com.baidu.carlife.adpter.i();
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = paramLayoutInflater.inflate(2130968783, null);
-    a();
-    d();
-    return this.mContentView;
-  }
-  
-  public void onDestroyView()
-  {
-    dismissDialog(this.w);
-    super.onDestroyView();
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    super.onHiddenChanged(paramBoolean);
-    com.baidu.carlife.core.i.b("CarLifeMusic");
-    if (paramBoolean) {
-      com.baidu.carlife.view.g.e().f();
-    }
-    while (!this.j) {
-      return;
-    }
-    com.baidu.carlife.view.g.e().a(2131296859);
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if ((this.g == null) || (this.h == null) || (getCurrentFragmentType() != 745)) {}
-    com.baidu.carlife.f.d locald;
-    do
-    {
-      do
-      {
-        return;
-      } while (isDialogShown());
-      locald = com.baidu.carlife.f.d.a();
-      locald.g();
-      switch (this.h.x())
-      {
-      default: 
-        return;
-      case 0: 
-      case 1: 
-        locald.b(new com.baidu.carlife.f.a[] { p() });
-        locald.h(p());
-        com.baidu.carlife.core.i.e("musicalbum", "DISPLAY_STATUS_UNDOWNLOADED");
-        return;
-      case 2: 
-        if (this.h.s() != 1) {
-          break label161;
+
+            public void run() {
+                this.f4547a.f4548a.m5589c();
+            }
         }
-      }
-    } while (this.A == null);
-    locald.b(new com.baidu.carlife.f.a[] { n(), q() });
-    locald.h(this.d);
-    return;
-    label161:
-    locald.b(new com.baidu.carlife.f.a[] { n(), o() });
-    locald.h(o());
-    com.baidu.carlife.core.i.e("musicalbum", "DISPLAY_STATUS_NORMAL");
-    return;
-    locald.b(new com.baidu.carlife.f.a[] { n() });
-    locald.h(n());
-    com.baidu.carlife.core.i.e("musicalbum", "DISPLAY_STATUS_LOAD_FAIL");
-  }
-  
-  protected void onInitView() {}
-  
-  public void onItemClick(AdapterView<?> paramAdapterView, View paramView, int paramInt, long paramLong)
-  {
-    this.h.h(paramInt);
-  }
-  
-  public void onPause()
-  {
-    super.onPause();
-    com.baidu.carlife.view.g.e().f();
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    com.baidu.carlife.core.i.b("CarLifeMusic");
-    if (this.j) {
-      com.baidu.carlife.view.g.e().a(2131296859);
+
+        C15302(MusicAlbumListFragment this$0) {
+            this.f4548a = this$0;
+        }
+
+        /* renamed from: a */
+        public void mo1576a() {
+            this.f4548a.m5596e();
+        }
+
+        /* renamed from: b */
+        public void mo1579b() {
+            this.f4548a.m5598f();
+        }
+
+        /* renamed from: a */
+        public void mo1577a(int type) {
+            this.f4548a.m5585b(type);
+        }
+
+        /* renamed from: b */
+        public void mo1580b(int status) {
+            this.f4548a.m5597e(status);
+        }
+
+        /* renamed from: a */
+        public void mo1578a(String packageName) {
+            String appName = this.f4548a.f4567g.m6779a(packageName);
+            if (!TextUtils.isEmpty(appName)) {
+                C2201w.m8373a(appName + "断开连接了", 0);
+            }
+            mo1579b();
+            C1790b dataManager = this.f4548a.f4567g.m6792b(packageName);
+            if (dataManager != null && this.f4548a.f4567g.m6814g(dataManager.m6649s())) {
+                this.f4548a.f4567g.m6811f(true);
+                C1261k.m4452a((int) C1253f.dZ);
+                this.f4548a.f4567g.m6809f(-1);
+                if (dataManager.m6649s() == 1) {
+                    mo1581c();
+                }
+            }
+        }
+
+        /* renamed from: c */
+        public void mo1581c() {
+            if (this.f4548a.f4561E != null) {
+                this.f4548a.f4561E.post(new C15281(this));
+            }
+        }
     }
-  }
-  
-  public void onStart()
-  {
-    super.onStart();
-    com.baidu.carlife.core.i.b("CarLifeMusic", "-----MusicAlbumListFragment--onStart()---");
-    g();
-  }
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    updateCommonSkin();
-    this.t.setBackground(com.baidu.carlife.view.a.b.a(mActivity));
-    this.v.setBackground(com.baidu.carlife.view.a.b.a(mActivity));
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public boolean onVoiceCommand(String paramString1, String paramString2)
-  {
-    com.baidu.carlife.core.i.b("CarLifeMusic", "Voice Command: [" + paramString1 + "][" + paramString2 + "]");
-    if ((paramString2.equals("download")) || (paramString2.equals("sync")))
-    {
-      m();
-      return true;
+
+    /* renamed from: com.baidu.carlife.fragment.MusicAlbumListFragment$3 */
+    class C15323 implements C1531a {
+        /* renamed from: a */
+        final /* synthetic */ MusicAlbumListFragment f4549a;
+
+        C15323(MusicAlbumListFragment this$0) {
+            this.f4549a = this$0;
+        }
+
+        /* renamed from: a */
+        public void mo1582a() {
+            this.f4549a.dismissDialog(this.f4549a.f4583w);
+        }
     }
-    int i1 = t.a().a(paramString2);
-    if (i1 != -1)
-    {
-      this.g.F().onItemClick(null, null, i1, 0L);
-      return true;
+
+    /* renamed from: com.baidu.carlife.fragment.MusicAlbumListFragment$4 */
+    class C15334 implements Runnable {
+        /* renamed from: a */
+        final /* synthetic */ MusicAlbumListFragment f4550a;
+
+        C15334(MusicAlbumListFragment this$0) {
+            this.f4550a = this$0;
+        }
+
+        public void run() {
+            this.f4550a.m5606j();
+        }
     }
-    return false;
-  }
-  
-  public void stopDriving()
-  {
-    com.baidu.carlife.core.i.b("yftech", "MusicAlbumListFragment stopDriving");
-    if (com.baidu.carlife.custom.b.a().b()) {
-      a(true);
+
+    /* renamed from: com.baidu.carlife.fragment.MusicAlbumListFragment$5 */
+    class C15365 implements C1535b {
+        /* renamed from: a */
+        final /* synthetic */ MusicAlbumListFragment f4554a;
+
+        C15365(MusicAlbumListFragment this$0) {
+            this.f4554a = this$0;
+        }
+
+        /* renamed from: a */
+        public void mo1583a(final String albumId, final int size) {
+            if (this.f4554a.f4558B != null) {
+                ((C1838q) this.f4554a.f4568h).f5706Z.put(albumId, Integer.valueOf(size));
+                BaseFragment.getNaviActivity().runOnUiThread(new Runnable(this) {
+                    /* renamed from: c */
+                    final /* synthetic */ C15365 f4553c;
+
+                    public void run() {
+                        this.f4553c.f4554a.f4558B.m6589a(albumId, size);
+                    }
+                });
+            }
+        }
     }
-  }
+
+    /* renamed from: com.baidu.carlife.fragment.MusicAlbumListFragment$6 */
+    class C15376 extends C0936j {
+        /* renamed from: a */
+        final /* synthetic */ MusicAlbumListFragment f4555a;
+
+        C15376(MusicAlbumListFragment this$0) {
+            this.f4555a = this$0;
+        }
+
+        public void careAbout() {
+            addMsg(206);
+            addMsg(C1253f.dQ);
+            addMsg(C1253f.fm);
+            addMsg(1002);
+            addMsg(C1253f.gj);
+        }
+
+        public void handleMessage(Message msg) {
+            C1790b dataManager;
+            switch (msg.what) {
+                case 206:
+                    dataManager = this.f4555a.f4567g.m6815h(msg.arg2);
+                    if (dataManager == null || !dataManager.m6635i()) {
+                        dataManager.m6638j(2);
+                        this.f4555a.m5598f();
+                        if (this.f4555a.f4567g.m6812g() == msg.arg2) {
+                            this.f4555a.m5585b(msg.arg1);
+                            return;
+                        }
+                        return;
+                    }
+                    dataManager.m6609a(false);
+                    C1260i.m4445e("CarLifeMusic", "MSG_MUSIC_UPDATE_ALBUMLIST-1-");
+                    return;
+                case C1253f.dQ /*248*/:
+                    dataManager = this.f4555a.f4567g.m6815h(msg.arg1);
+                    if (dataManager != null) {
+                        dataManager.m6609a(true);
+                        dataManager.m6638j(3);
+                        if (msg.arg2 == -2) {
+                            switch (msg.arg1) {
+                                case 1:
+                                    StatisticManager.onEvent(StatisticConstants.MUSIC_QQ_0014, "同步超时");
+                                    break;
+                                case 3:
+                                    StatisticManager.onEvent(StatisticConstants.MUSIC_XMLY_0010, "同步超时");
+                                    break;
+                                case 4:
+                                    StatisticManager.onEvent(StatisticConstants.MUSIC_KAOLA_0010, "同步超时");
+                                    break;
+                                case 5:
+                                    StatisticManager.onEvent(StatisticConstants.MUSIC_CYB_0010, "同步超时");
+                                    break;
+                            }
+                            msg.arg2 = -1;
+                        }
+                    }
+                    if (this.f4555a.f4567g.m6812g() == msg.arg1) {
+                        this.f4555a.m5598f();
+                        return;
+                    }
+                    return;
+                case 1002:
+                    this.f4555a.m5588b(false);
+                    return;
+                case C1253f.fm /*1040*/:
+                    this.f4555a.m5588b(true);
+                    return;
+                case C1253f.gj /*3013*/:
+                    this.f4555a.m5606j();
+                    return;
+                default:
+                    return;
+            }
+        }
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.f4567g = C1818h.m6730b();
+        C1261k.m4460a(this.f4561E);
+        this.f4569i = new C0989i();
+    }
+
+    public void onStart() {
+        super.onStart();
+        C1260i.m4435b("CarLifeMusic", "-----MusicAlbumListFragment--onStart()---");
+        m5601g();
+    }
+
+    public void onClick(View v) {
+        if (this.f4568h == null) {
+            m5601g();
+            return;
+        }
+        switch (v.getId()) {
+            case C0965R.id.ll_title_toplist:
+                if (this.f4568h.m6653w() != 1) {
+                    this.f4576p.setVisibility(4);
+                    m5590c(1);
+                    this.f4568h.m6641k(1);
+                    return;
+                }
+                return;
+            case C0965R.id.ll_title_playlist:
+                if (this.f4568h.m6653w() != 2) {
+                    this.f4576p.setVisibility(4);
+                    m5590c(2);
+                    this.f4568h.m6641k(2);
+                    return;
+                }
+                return;
+            case C0965R.id.iv_list:
+                this.f4567g.m6822l(this.f4567g.m6808f());
+                if (this.f4567g.m6826n() >= 0) {
+                    Bundle arg = new Bundle();
+                    arg.putBoolean(C1790b.f5467j, true);
+                    ContentFragment curFrag = getCurrentFragment();
+                    if (curFrag == null) {
+                        return;
+                    }
+                    if (curFrag.getType() == NaviFragmentManager.TYPE_MUSIC_PLAYER) {
+                        curFrag.getArguments().putBundle(ContentFragmentManager.KEY_SHOW_BUNDLE, arg);
+                        curFrag.onStart();
+                        return;
+                    }
+                    showFragment(NaviFragmentManager.TYPE_MUSIC_PLAYER, arg);
+                    return;
+                }
+                return;
+            case C0965R.id.rl_music_type:
+                showDialog(this.f4583w, C1265a.Right);
+                return;
+            default:
+                return;
+        }
+    }
+
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        this.f4568h.m6633h(position);
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mContentView = inflater.inflate(C0965R.layout.frag_music_albumlist, null);
+        m5578a();
+        m5593d();
+        return this.mContentView;
+    }
+
+    public void onResume() {
+        super.onResume();
+        C1260i.m4434b("CarLifeMusic");
+        if (this.f4570j) {
+            C2342g.m8864e().m8886a((int) C0965R.string.progress_loading);
+        }
+    }
+
+    public boolean onBackPressed() {
+        if (mActivity != null) {
+            mActivity.m3108d();
+        }
+        return true;
+    }
+
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        C1260i.m4434b("CarLifeMusic");
+        if (hidden) {
+            C2342g.m8864e().m8895f();
+        } else if (this.f4570j) {
+            C2342g.m8864e().m8886a((int) C0965R.string.progress_loading);
+        }
+    }
+
+    public void onPause() {
+        super.onPause();
+        C2342g.m8864e().m8895f();
+    }
+
+    public void onDestroyView() {
+        dismissDialog(this.f4583w);
+        super.onDestroyView();
+    }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    protected void onUpdateSkin() {
+        updateCommonSkin();
+        this.f4580t.setBackground(C2251b.m8527a(mActivity));
+        this.f4582v.setBackground(C2251b.m8527a(mActivity));
+    }
+
+    /* renamed from: a */
+    private void m5578a() {
+        this.f4586z = (ViewContainer) this.mContentView.findViewById(C0965R.id.container);
+        this.f4571k = this.mContentView.findViewById(C0965R.id.ll_title_playlist);
+        this.f4572l = this.mContentView.findViewById(C0965R.id.ll_title_toplist);
+        this.f4573m = this.mContentView.findViewById(C0965R.id.hint_selected_playlist);
+        this.f4574n = this.mContentView.findViewById(C0965R.id.hint_selected_toplist);
+        this.f4575o = this.mContentView.findViewById(C0965R.id.ll_title_alllist);
+        this.f4571k.setOnClickListener(this);
+        this.f4572l.setOnClickListener(this);
+        this.f4580t = (RelativeLayout) this.mContentView.findViewById(C0965R.id.rl_music_type);
+        this.f4581u = (MultiImageView) this.mContentView.findViewById(C0965R.id.iv_music_type);
+        this.f4582v = (ImageView) this.mContentView.findViewById(C0965R.id.iv_list);
+        this.f4582v.setImageResource(C0965R.anim.anim_music_playing);
+        this.f4584x = (AnimationDrawable) this.f4582v.getDrawable();
+        this.f4580t.setOnClickListener(this);
+        this.f4582v.setOnClickListener(this);
+        this.f4577q = (TextView) this.mContentView.findViewById(C0965R.id.tv_title_mysongs);
+        this.f4578r = (TextView) this.mContentView.findViewById(C0965R.id.tv_title_playlist);
+        this.f4579s = (TextView) this.mContentView.findViewById(C0965R.id.tv_title_toplist);
+        this.f4576p = (GridView) this.mContentView.findViewById(C0965R.id.gv_playlist);
+        this.f4576p.setAdapter(this.f4569i);
+        this.f4576p.setOnItemClickListener(this);
+        this.f4583w = new C2282f(mActivity, C0965R.string.module_music_select_source, this.f4567g.m6771E(), this.f4567g.m6772F());
+        this.f4583w.m8636j();
+        this.f4585y = (CommonTipView) this.mContentView.findViewById(C0965R.id.common_tip_view);
+        this.f4585y.setCommonTipCallBack(new C15271(this));
+        if (C1343b.m4932a().m4935b()) {
+            m5583a(!C1328h.m4757a().getNaviFragmentManager().isDriving());
+        }
+        m5588b(C1663a.m5979a().m5993N());
+    }
+
+    /* renamed from: b */
+    private void m5584b() {
+        int selectedPos = this.f4567g.m6812g();
+        this.f4583w.m8630a(selectedPos);
+        m5579a(selectedPos);
+        m5593d();
+        m5589c();
+    }
+
+    /* renamed from: a */
+    private void m5579a(int pos) {
+        dismissDialog(this.f4583w);
+        C1931j app = this.f4567g.m6824m(pos);
+        if (app != null) {
+            if (app.f6068c >= 3) {
+                this.f4581u.setDefaultDrawable(C2188r.m8331b(C0965R.drawable.music_ic_default));
+                this.f4581u.setImageUrl(app.j);
+            } else {
+                this.f4581u.setDefaultDrawableResId(app.f6067b);
+                this.f4581u.setImageUrl(null);
+            }
+            m5582a(app.m);
+        }
+    }
+
+    /* renamed from: c */
+    private void m5589c() {
+        if (this.f4567g.m6826n() == -1) {
+            this.f4582v.setVisibility(4);
+        } else if (this.f4567g.m6828p()) {
+            this.f4582v.setVisibility(0);
+            this.f4582v.setImageResource(C0965R.anim.anim_music_playing);
+            this.f4584x = (AnimationDrawable) this.f4582v.getDrawable();
+            this.f4584x.start();
+        } else {
+            this.f4582v.setVisibility(0);
+            this.f4582v.setImageDrawable(C2188r.m8331b(C0965R.drawable.music_ic_player_normal));
+            if (this.f4584x != null) {
+                this.f4584x.stop();
+            }
+        }
+    }
+
+    /* renamed from: d */
+    private void m5593d() {
+        ((C1820j) this.f4567g.m6772F()).m6847a(this.f4560D);
+    }
+
+    /* renamed from: e */
+    private void m5596e() {
+        this.f4570j = true;
+        C2342g.m8864e().m8886a((int) C0965R.string.progress_loading);
+        if (this.f4561E != null) {
+            this.f4561E.sendMessageDelayed(Message.obtain(this.f4561E, C1253f.dQ, this.f4568h.m6649s(), -2), 15000);
+        }
+    }
+
+    /* renamed from: f */
+    private void m5598f() {
+        this.f4570j = false;
+        if (this.f4561E != null) {
+            this.f4561E.removeMessages(C1253f.dQ);
+        }
+        C2342g.m8864e().m8895f();
+    }
+
+    /* renamed from: g */
+    private void m5601g() {
+        this.f4568h = this.f4567g.m6830r();
+        this.f4568h.m6603a(this.f4559C);
+        m5584b();
+        this.f4568h.m6612b(getArguments());
+        if (this.f4568h.m6649s() == 2) {
+            this.f4575o.setVisibility(0);
+            this.f4577q.setVisibility(8);
+            return;
+        }
+        this.f4575o.setVisibility(8);
+        this.f4577q.setVisibility(0);
+    }
+
+    /* renamed from: b */
+    private void m5585b(int albumType) {
+        this.f4569i.m3208a(this.f4568h.m6629g(albumType));
+        m5590c(albumType);
+        this.f4576p.smoothScrollToPosition(0);
+        this.f4568h.m6638j(2);
+    }
+
+    /* renamed from: c */
+    private void m5590c(int status) {
+        if (status == 2) {
+            this.f4573m.setVisibility(0);
+            this.f4574n.setVisibility(4);
+            this.f4579s.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a2_title));
+            this.f4578r.setTextColor(C2188r.m8328a((int) C0965R.color.white));
+            this.f4571k.setBackgroundResource(C0965R.drawable.com_music_title_bg_selector);
+            this.f4572l.setBackground(C2251b.m8530d(mActivity));
+        } else if (status == 1) {
+            this.f4573m.setVisibility(4);
+            this.f4574n.setVisibility(0);
+            this.f4579s.setTextColor(C2188r.m8328a((int) C0965R.color.white));
+            this.f4578r.setTextColor(C2188r.m8328a((int) C0965R.color.cl_text_a2_title));
+            this.f4571k.setBackground(C2251b.m8530d(mActivity));
+            this.f4572l.setBackgroundResource(C0965R.drawable.com_music_title_bg_selector);
+        }
+    }
+
+    /* renamed from: d */
+    private void m5594d(int status) {
+        switch (status) {
+            case 0:
+            case 1:
+                this.f4577q.setVisibility(8);
+                this.f4572l.setVisibility(4);
+                this.f4571k.setVisibility(4);
+                this.mContentView.findViewById(C0965R.id.line_divider).setVisibility(4);
+                break;
+            default:
+                if (this.f4568h.m6649s() != 1) {
+                    if (this.f4568h.m6649s() != 2) {
+                        this.f4577q.setText(C0965R.string.module_music_title_bangdan_thirdparty);
+                        this.f4577q.setVisibility(0);
+                        break;
+                    }
+                    this.f4572l.setVisibility(0);
+                    this.f4571k.setVisibility(0);
+                    this.mContentView.findViewById(C0965R.id.line_divider).setVisibility(0);
+                    break;
+                }
+                this.f4577q.setText(C0965R.string.module_music_title_wodeyinyue);
+                this.f4577q.setVisibility(0);
+                break;
+        }
+        m5590c(this.f4568h.m6653w());
+    }
+
+    /* renamed from: e */
+    private void m5597e(int status) {
+        m5594d(status);
+        this.f4586z.setVisibility(8);
+        String temp;
+        switch (status) {
+            case 0:
+                this.f4576p.setVisibility(4);
+                if (TextUtils.isEmpty(this.f4567g.m6779a(this.f4568h.m6647q()))) {
+                    temp = String.format(getContext().getString(C0965R.string.module_music_thirdparty_not_exist), new Object[]{"第三方"});
+                } else {
+                    temp = String.format(getContext().getString(C0965R.string.module_music_thirdparty_not_exist), new Object[]{appName});
+                }
+                this.f4585y.setVisibility(0);
+                this.f4585y.m8400a(temp, (int) C0965R.string.module_music_thirdparty_download);
+                if (!C1253f.jc.equals(C1253f.jt)) {
+                    this.f4585y.m8401a(true);
+                    break;
+                } else {
+                    this.f4585y.m8396a();
+                    break;
+                }
+            case 1:
+                this.f4576p.setVisibility(4);
+                if (this.f4568h.m6649s() == 1) {
+                    temp = getString(C0965R.string.module_musicqq_not_link);
+                } else {
+                    if (TextUtils.isEmpty(this.f4567g.m6779a(this.f4568h.m6647q()))) {
+                        temp = String.format(getString(C0965R.string.module_music_thirdparty_not_link), new Object[]{"第三方"});
+                    } else {
+                        temp = String.format(getString(C0965R.string.module_music_thirdparty_not_link), new Object[]{appName});
+                    }
+                }
+                this.f4585y.setVisibility(0);
+                this.f4585y.m8400a(temp, (int) C0965R.string.module_music_thirdparty_sync);
+                this.f4585y.m8401a(true);
+                break;
+            case 2:
+                if (this.f4568h.m6649s() != 1) {
+                    this.f4576p.setVisibility(0);
+                    this.f4586z.setVisibility(8);
+                    this.f4585y.setVisibility(8);
+                    break;
+                }
+                m5602h();
+                break;
+            case 3:
+                this.f4576p.setVisibility(4);
+                this.f4585y.setVisibility(0);
+                this.f4585y.m8398a((int) C0965R.string.module_music_content_null_hint, (int) C0965R.string.module_music_content_reconnect);
+                this.f4585y.m8401a(true);
+                break;
+            case 7:
+                this.f4576p.setVisibility(4);
+                if (this.f4568h.m6649s() == 1) {
+                    temp = getString(C0965R.string.module_musicqq_intercepte);
+                } else {
+                    if (TextUtils.isEmpty(this.f4567g.m6779a(this.f4568h.m6647q()))) {
+                        temp = String.format(getString(C0965R.string.module_music_thirdparty_not_link), new Object[]{"第三方"});
+                    } else {
+                        temp = String.format(getString(C0965R.string.module_music_thirdparty_not_link), new Object[]{appName});
+                    }
+                }
+                this.f4585y.setVisibility(0);
+                this.f4585y.m8400a(temp, (int) C0965R.string.module_music_thirdparty_sync);
+                this.f4585y.m8401a(true);
+                break;
+        }
+        onInitFocusAreas();
+    }
+
+    /* renamed from: h */
+    private void m5602h() {
+        m5608l();
+        m5605i();
+    }
+
+    /* renamed from: i */
+    private void m5605i() {
+        this.f4558B = new C1789a(this.f4568h);
+        this.f4558B.mo1426a(m5607k());
+        this.f4586z.m7041a(this.f4558B);
+        this.f4586z.m7039a();
+        this.f4558B.m6588a(this.f4566e, 1500);
+    }
+
+    /* renamed from: j */
+    private void m5606j() {
+        if (this.f4568h.m6649s() == 1 && this.f4558B != null) {
+            ((C1838q) this.f4568h).m6964a(new C15365(this));
+        }
+    }
+
+    @NonNull
+    /* renamed from: k */
+    private C1096a m5607k() {
+        this.f4557A = getActivity().getLayoutInflater().inflate(C0965R.layout.item_four_card, this.f4586z, false);
+        return new C1096a(this.f4557A, 0);
+    }
+
+    /* renamed from: l */
+    private void m5608l() {
+        this.f4585y.setVisibility(8);
+        this.f4576p.setVisibility(8);
+        this.f4586z.setVisibility(0);
+    }
+
+    public boolean onVoiceCommand(String strCommand, String strIntent) {
+        C1260i.m4435b("CarLifeMusic", "Voice Command: [" + strCommand + "][" + strIntent + "]");
+        if (strIntent.equals("download") || strIntent.equals("sync")) {
+            m5609m();
+            return true;
+        }
+        int nIndex = C1852t.m7034a().m7037a(strIntent);
+        if (nIndex == -1) {
+            return false;
+        }
+        this.f4567g.m6772F().onItemClick(null, null, nIndex, 0);
+        return true;
+    }
+
+    /* renamed from: m */
+    private void m5609m() {
+        if (this.f4568h.m6654x() == 3 || this.f4568h.m6654x() == 0 || this.f4568h.m6654x() == 1) {
+            this.f4585y.m8402b();
+        }
+    }
+
+    /* renamed from: n */
+    private C1443g m5610n() {
+        if (this.f4563b == null) {
+            this.f4563b = new C1443g(this.mContentView, 4);
+        }
+        this.f4563b.m5306i();
+        this.f4563b.m5300d(this.f4572l).m5300d(this.f4571k).m5300d(this.f4582v).m5300d(this.f4580t).m5300d(this.f4585y.getFocusView());
+        this.f4563b.m5297b(this.f4585y.getFocusView());
+        return this.f4563b;
+    }
+
+    /* renamed from: o */
+    private C1437b m5611o() {
+        if (this.f4562a == null) {
+            this.f4562a = new C1437b(this.f4576p, 6);
+        }
+        return this.f4562a;
+    }
+
+    /* renamed from: p */
+    private C1443g m5612p() {
+        if (this.f4564c == null) {
+            this.f4564c = new C1443g(this.mContentView, 4);
+        }
+        this.f4564c.m5306i();
+        this.f4564c.m5300d(this.f4582v).m5300d(this.f4580t).m5300d(this.f4585y.getFocusView());
+        this.f4564c.m5297b(this.f4585y.getFocusView());
+        return this.f4564c;
+    }
+
+    public void onInitFocusAreas() {
+        if (this.f4567g != null && this.f4568h != null && getCurrentFragmentType() == NaviFragmentManager.TYPE_MUSIC_ALBUMLIST && !isDialogShown()) {
+            C1440d focusManager = C1440d.m5251a();
+            focusManager.m5267g();
+            switch (this.f4568h.m6654x()) {
+                case 0:
+                case 1:
+                    focusManager.m5256b(m5612p());
+                    focusManager.m5268h(m5612p());
+                    C1260i.m4445e("musicalbum", "DISPLAY_STATUS_UNDOWNLOADED");
+                    return;
+                case 2:
+                    if (this.f4568h.m6649s() != 1) {
+                        focusManager.m5256b(m5610n(), m5611o());
+                        focusManager.m5268h(m5611o());
+                        C1260i.m4445e("musicalbum", "DISPLAY_STATUS_NORMAL");
+                        return;
+                    } else if (this.f4557A != null) {
+                        focusManager.m5256b(m5610n(), m5613q());
+                        focusManager.m5268h(this.f4565d);
+                        return;
+                    } else {
+                        return;
+                    }
+                case 3:
+                    focusManager.m5256b(m5610n());
+                    focusManager.m5268h(m5610n());
+                    C1260i.m4445e("musicalbum", "DISPLAY_STATUS_LOAD_FAIL");
+                    return;
+                default:
+                    return;
+            }
+        }
+    }
+
+    /* renamed from: q */
+    private C1443g m5613q() {
+        if (this.f4557A == null) {
+            return null;
+        }
+        if (this.f4565d == null) {
+            this.f4565d = new C1443g(this.f4557A, 6);
+        }
+        this.f4565d.m5306i();
+        this.f4565d.m5300d(this.f4557A.findViewById(C0965R.id.card_1)).m5300d(this.f4557A.findViewById(C0965R.id.card_2)).m5300d(this.f4557A.findViewById(C0965R.id.card_3)).m5300d(this.f4557A.findViewById(C0965R.id.card_4));
+        return this.f4565d;
+    }
+
+    /* renamed from: a */
+    private void m5582a(String appPackageName) {
+        long lastTimeLong = C2186p.m8304a().m8308a("DAU" + appPackageName, 0);
+        if (lastTimeLong == 0) {
+            StatisticManager.onEvent(StatisticConstants.HOME_MUSIC_DAU, appPackageName);
+            C2186p.m8304a().m8318b("DAU" + appPackageName, System.currentTimeMillis());
+            return;
+        }
+        Time lastTime = new Time();
+        lastTime.set(lastTimeLong);
+        Time nowTime = new Time();
+        nowTime.setToNow();
+        if (nowTime.year < lastTime.year) {
+            return;
+        }
+        if (nowTime.year > lastTime.year || nowTime.yearDay > lastTime.yearDay) {
+            StatisticManager.onEvent(StatisticConstants.HOME_MUSIC_DAU, appPackageName);
+            C2186p.m8304a().m8318b("DAU" + appPackageName, System.currentTimeMillis());
+        }
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "MusicAlbumListFragment driving");
+        if (C1343b.m4932a().m4935b()) {
+            m5583a(false);
+        }
+    }
+
+    public void stopDriving() {
+        C1260i.m4435b("yftech", "MusicAlbumListFragment stopDriving");
+        if (C1343b.m4932a().m4935b()) {
+            m5583a(true);
+        }
+    }
+
+    /* renamed from: a */
+    private void m5583a(boolean enable) {
+        this.f4585y.getFocusView().setAlpha(enable ? 1.0f : 0.2f);
+        this.f4585y.getFocusView().setEnabled(enable);
+    }
+
+    /* renamed from: b */
+    private void m5588b(boolean bConnected) {
+        if (bConnected && C1249d.m4334m()) {
+            this.f4576p.setNumColumns(6);
+            this.f4576p.requestLayout();
+            this.mContentView.requestLayout();
+            C1260i.m4435b("CarLifeMusic", "Update Gv Columns:6");
+            return;
+        }
+        this.f4576p.setNumColumns(4);
+        this.f4576p.requestLayout();
+        this.mContentView.requestLayout();
+        C1260i.m4435b("CarLifeMusic", "Update Gv Columns:4");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/MusicAlbumListFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

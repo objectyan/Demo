@@ -1,12 +1,12 @@
 package com.baidu.mapframework.nirvana.concurrent;
 
-import com.baidu.mapframework.nirvana.b;
-import com.baidu.mapframework.nirvana.b.a;
-import com.baidu.mapframework.nirvana.b.c;
-import com.baidu.mapframework.nirvana.d;
-import com.baidu.mapframework.nirvana.e;
+import com.baidu.mapframework.nirvana.C3480g;
+import com.baidu.mapframework.nirvana.C3534b;
+import com.baidu.mapframework.nirvana.C3540d;
+import com.baidu.mapframework.nirvana.C3541e;
+import com.baidu.mapframework.nirvana.C3560n;
 import com.baidu.mapframework.nirvana.module.Module;
-import com.baidu.mapframework.nirvana.n;
+import com.baidu.mapframework.nirvana.p205b.C3533c;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
 import com.baidu.mapframework.nirvana.schedule.UITaskType;
 import java.util.concurrent.Callable;
@@ -16,121 +16,97 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
-public class ConcurrentManager
-{
-  private static final ExecutorService a = ;
-  private static final ExecutorService b = d.b("ConcurrentManager.UI.worker");
-  private static final int c = 1;
-  private static final ScheduledThreadPoolExecutor d = d.b("ConcurrentManager.SCHEDULE.worker", 1);
-  
-  private static Runnable a(@NotNull Runnable paramRunnable, final b paramb, final ScheduleConfig paramScheduleConfig)
-  {
-    new Runnable()
-    {
-      public void run()
-      {
-        e.b().a(this.a);
-        try
-        {
-          if (paramScheduleConfig.isLifecycleActive()) {
-            this.a.run();
-          }
-          e.b().b(this.a);
-          return;
+public class ConcurrentManager {
+    /* renamed from: a */
+    private static final ExecutorService f19144a = C3540d.m15165a();
+    /* renamed from: b */
+    private static final ExecutorService f19145b = C3540d.m15168b("ConcurrentManager.UI.worker");
+    /* renamed from: c */
+    private static final int f19146c = 1;
+    /* renamed from: d */
+    private static final ScheduledThreadPoolExecutor f19147d = C3540d.m15169b("ConcurrentManager.SCHEDULE.worker", 1);
+
+    /* renamed from: com.baidu.mapframework.nirvana.concurrent.ConcurrentManager$1 */
+    static class C35361 implements Callable<T> {
+        C35361() {
         }
-        catch (Exception localException)
-        {
-          for (;;)
-          {
-            if (paramb != null) {
-              paramb.a(localException);
+
+        public T call() throws Exception {
+            return null;
+        }
+    }
+
+    public static QueueToken obtainTaskQueue(Module module) {
+        return new QueueToken(new ConcurrentQueueRunner(f19144a));
+    }
+
+    public static void executeTask(@NotNull Module module, @NotNull ConcurrentTask task, @NotNull ScheduleConfig config) {
+        if (C3560n.m15213a(module, (C3480g) task, config)) {
+            C3541e.m15174b().m15142a(C3533c.CONCURRENT, task, module, config);
+            Runnable runnable = m15160a(task, task.getExceptionCallback(), config);
+            if (task.getQueueToken() != null) {
+                task.getQueueToken().m15163a().m15162a(runnable);
+            } else if (m15161a(config)) {
+                f19145b.execute(runnable);
             } else {
-              e.a("ConcurrentManager", localException);
+                f19144a.execute(runnable);
             }
-          }
         }
-      }
-    };
-  }
-  
-  private static boolean a(ScheduleConfig paramScheduleConfig)
-  {
-    try
-    {
-      boolean bool = paramScheduleConfig.getType() instanceof UITaskType;
-      return bool;
     }
-    catch (Exception paramScheduleConfig) {}
-    return false;
-  }
-  
-  public static void executeTask(@NotNull Module paramModule, @NotNull ConcurrentTask paramConcurrentTask, @NotNull ScheduleConfig paramScheduleConfig)
-  {
-    if (!n.a(paramModule, paramConcurrentTask, paramScheduleConfig)) {
-      return;
-    }
-    e.b().a(c.b, paramConcurrentTask, paramModule, paramScheduleConfig);
-    paramModule = a(paramConcurrentTask, paramConcurrentTask.getExceptionCallback(), paramScheduleConfig);
-    if (paramConcurrentTask.getQueueToken() == null)
-    {
-      if (a(paramScheduleConfig))
-      {
-        b.execute(paramModule);
-        return;
-      }
-      a.execute(paramModule);
-      return;
-    }
-    paramConcurrentTask.getQueueToken().a().a(paramModule);
-  }
-  
-  public static QueueToken obtainTaskQueue(Module paramModule)
-  {
-    return new QueueToken(new ConcurrentQueueRunner(a));
-  }
-  
-  public static void scheduleTask(@NotNull Module paramModule, @NotNull ScheduleTask paramScheduleTask, @NotNull ScheduleConfig paramScheduleConfig)
-  {
-    if (!n.a(paramModule, paramScheduleTask, paramScheduleConfig)) {
-      return;
-    }
-    e.b().a(c.b, paramScheduleTask, paramModule, paramScheduleConfig);
-    paramModule = a(paramScheduleTask, paramScheduleTask.getExceptionCallback(), paramScheduleConfig);
-    d.schedule(paramModule, paramScheduleTask.getDelay(), TimeUnit.MILLISECONDS);
-  }
-  
-  public static <T> FutureTask submitTask(@NotNull Module paramModule, @NotNull ConcurrentCallable<T> paramConcurrentCallable, @NotNull ScheduleConfig paramScheduleConfig)
-  {
-    if (!n.a(paramModule, paramConcurrentCallable, paramScheduleConfig)) {
-      new FutureTask(new Callable()
-      {
-        public T call()
-          throws Exception
-        {
-          return null;
+
+    public static <T> FutureTask submitTask(@NotNull Module module, @NotNull ConcurrentCallable<T> callable, @NotNull ScheduleConfig config) {
+        if (!C3560n.m15213a(module, (C3480g) callable, config)) {
+            return new FutureTask(new C35361());
         }
-      });
+        FutureTask futureTask = new FutureTask(callable);
+        C3541e.m15174b().m15142a(C3533c.CONCURRENT, futureTask, module, config);
+        Runnable runnable = m15160a(futureTask, callable.getExceptionCallback(), config);
+        if (callable.getQueueToken() != null) {
+            callable.getQueueToken().m15163a().m15162a(runnable);
+            return futureTask;
+        } else if (m15161a(config)) {
+            f19145b.execute(runnable);
+            return futureTask;
+        } else {
+            f19144a.execute(runnable);
+            return futureTask;
+        }
     }
-    FutureTask localFutureTask = new FutureTask(paramConcurrentCallable);
-    e.b().a(c.b, localFutureTask, paramModule, paramScheduleConfig);
-    paramModule = a(localFutureTask, paramConcurrentCallable.getExceptionCallback(), paramScheduleConfig);
-    if (paramConcurrentCallable.getQueueToken() == null)
-    {
-      if (a(paramScheduleConfig))
-      {
-        b.execute(paramModule);
-        return localFutureTask;
-      }
-      a.execute(paramModule);
-      return localFutureTask;
+
+    public static void scheduleTask(@NotNull Module module, @NotNull ScheduleTask task, @NotNull ScheduleConfig config) {
+        if (C3560n.m15213a(module, (C3480g) task, config)) {
+            C3541e.m15174b().m15142a(C3533c.CONCURRENT, task, module, config);
+            f19147d.schedule(m15160a(task, task.getExceptionCallback(), config), task.getDelay(), TimeUnit.MILLISECONDS);
+        }
     }
-    paramConcurrentCallable.getQueueToken().a().a(paramModule);
-    return localFutureTask;
-  }
+
+    /* renamed from: a */
+    private static Runnable m15160a(@NotNull final Runnable runnable, final C3534b callback, final ScheduleConfig config) {
+        return new Runnable() {
+            public void run() {
+                C3541e.m15174b().m15143a(runnable);
+                try {
+                    if (config.isLifecycleActive()) {
+                        runnable.run();
+                    }
+                } catch (Exception e) {
+                    if (callback != null) {
+                        callback.m15158a(e);
+                    } else {
+                        C3541e.m15171a("ConcurrentManager", e);
+                    }
+                }
+                C3541e.m15174b().m15146b(runnable);
+            }
+        };
+    }
+
+    /* renamed from: a */
+    private static boolean m15161a(ScheduleConfig config) {
+        try {
+            return config.getType() instanceof UITaskType;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/concurrent/ConcurrentManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

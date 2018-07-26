@@ -13,91 +13,50 @@ import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.protocol.HttpContext;
 
-class RetryHandler
-  implements HttpRequestRetryHandler
-{
-  private static final int RETRY_SLEEP_TIME_MILLIS = 500;
-  private int maxRetries;
-  
-  public RetryHandler(int paramInt)
-  {
-    this.maxRetries = paramInt;
-  }
-  
-  public boolean retryRequest(IOException paramIOException, int paramInt, HttpContext paramHttpContext)
-  {
-    boolean bool1 = true;
-    Boolean localBoolean = (Boolean)paramHttpContext.getAttribute("http.request_sent");
-    int i;
-    if ((localBoolean != null) && (localBoolean.booleanValue()))
-    {
-      i = 1;
-      if (paramInt <= this.maxRetries) {
-        break label92;
-      }
-      bool1 = false;
-      label43:
-      bool2 = bool1;
-      if (bool1) {
-        if (((HttpRequest)paramHttpContext.getAttribute("http.request") instanceof HttpEntityEnclosingRequest)) {
-          break label168;
+class RetryHandler implements HttpRequestRetryHandler {
+    private static final int RETRY_SLEEP_TIME_MILLIS = 500;
+    private int maxRetries;
+
+    public RetryHandler(int maxRetries) {
+        this.maxRetries = maxRetries;
+    }
+
+    public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
+        boolean sent;
+        boolean retry = true;
+        Boolean b = (Boolean) context.getAttribute("http.request_sent");
+        if (b == null || !b.booleanValue()) {
+            sent = false;
+        } else {
+            sent = true;
         }
-      }
+        if (executionCount > this.maxRetries) {
+            retry = false;
+        } else if (exception instanceof InterruptedIOException) {
+            retry = false;
+        } else if (exception instanceof SSLException) {
+            retry = false;
+        } else if (exception instanceof NoHttpResponseException) {
+            retry = true;
+        } else if (exception instanceof SocketException) {
+            retry = true;
+        } else if (exception instanceof UnknownHostException) {
+            retry = true;
+        } else if (!sent) {
+            retry = true;
+        }
+        if (retry) {
+            if (((HttpRequest) context.getAttribute("http.request")) instanceof HttpEntityEnclosingRequest) {
+                retry = false;
+            } else {
+                retry = true;
+            }
+        }
+        if (retry) {
+            SystemClock.sleep(500);
+        } else {
+            LogUtil.m15791e("plugin", exception == null ? "null poit of retry exception" : exception.getMessage());
+        }
+        return retry;
     }
-    label92:
-    label168:
-    for (boolean bool2 = true;; bool2 = false)
-    {
-      if (!bool2) {
-        break label174;
-      }
-      SystemClock.sleep(500L);
-      return bool2;
-      i = 0;
-      break;
-      if ((paramIOException instanceof InterruptedIOException))
-      {
-        bool1 = false;
-        break label43;
-      }
-      if ((paramIOException instanceof SSLException))
-      {
-        bool1 = false;
-        break label43;
-      }
-      if ((paramIOException instanceof NoHttpResponseException))
-      {
-        bool1 = true;
-        break label43;
-      }
-      if ((paramIOException instanceof SocketException))
-      {
-        bool1 = true;
-        break label43;
-      }
-      if ((paramIOException instanceof UnknownHostException))
-      {
-        bool1 = true;
-        break label43;
-      }
-      if (i != 0) {
-        break label43;
-      }
-      bool1 = true;
-      break label43;
-    }
-    label174:
-    if (paramIOException == null) {}
-    for (paramIOException = "null poit of retry exception";; paramIOException = paramIOException.getMessage())
-    {
-      LogUtil.e("plugin", paramIOException);
-      return bool2;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/utils/http/RetryHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

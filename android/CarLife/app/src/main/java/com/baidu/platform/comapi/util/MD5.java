@@ -1,5 +1,6 @@
 package com.baidu.platform.comapi.util;
 
+import com.baidu.navisdk.ui.routeguide.model.RGHUDDataModel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,194 +10,135 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class MD5
-{
-  protected static final char[] HEX_DIGITS = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102 };
-  private static final int MD5_16_LENGTH = 16;
-  private static final int MD5_16_START = 8;
-  private static final int MD5_LENGTH = 32;
-  
-  private static void appendHexPair(byte paramByte, StringBuffer paramStringBuffer)
-  {
-    char c1 = HEX_DIGITS[((paramByte & 0xF0) >> 4)];
-    char c2 = HEX_DIGITS[(paramByte & 0xF)];
-    paramStringBuffer.append(c1);
-    paramStringBuffer.append(c2);
-  }
-  
-  private static String bufferToHex(byte[] paramArrayOfByte)
-  {
-    return bufferToHex(paramArrayOfByte, 0, paramArrayOfByte.length);
-  }
-  
-  private static String bufferToHex(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    StringBuffer localStringBuffer = new StringBuffer(paramInt2 * 2);
-    int i = paramInt1;
-    while (i < paramInt1 + paramInt2)
-    {
-      appendHexPair(paramArrayOfByte[i], localStringBuffer);
-      i += 1;
+public class MD5 {
+    protected static final char[] HEX_DIGITS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private static final int MD5_16_LENGTH = 16;
+    private static final int MD5_16_START = 8;
+    private static final int MD5_LENGTH = 32;
+
+    public static String getMD5String(String s) {
+        return getMD5String(s.getBytes());
     }
-    return localStringBuffer.toString();
-  }
-  
-  public static boolean checkPassword(String paramString1, String paramString2)
-  {
-    return getMD5String(paramString1).equals(paramString2);
-  }
-  
-  public static String getFileMD5String(File paramFile)
-    throws IOException
-  {
-    return getFileMD5String(paramFile, 131072);
-  }
-  
-  public static String getFileMD5String(File paramFile, int paramInt)
-    throws IOException
-  {
-    Object localObject1 = null;
-    try
-    {
-      localObject2 = MessageDigest.getInstance("MD5");
-      localObject1 = localObject2;
+
+    public static String getMD5String(byte[] bytes) {
+        MessageDigest messagedigest = null;
+        try {
+            messagedigest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+        }
+        if (messagedigest == null) {
+            return "";
+        }
+        messagedigest.update(bytes);
+        try {
+            return bufferToHex(messagedigest.digest());
+        } catch (Exception e2) {
+            return "";
+        }
     }
-    catch (NoSuchAlgorithmException localNoSuchAlgorithmException)
-    {
-      Object localObject2;
-      for (;;) {}
+
+    public static String getMD5String16(String s) {
+        String md5 = getMD5String(s.getBytes());
+        if (md5.length() == 32) {
+            return md5.substring(8, 24);
+        }
+        return null;
     }
-    if (localObject1 == null) {
-      return "";
+
+    public static boolean checkPassword(String password, String md5PwdStr) {
+        return getMD5String(password).equals(md5PwdStr);
     }
-    paramFile = new FileInputStream(paramFile);
-    localObject2 = new byte[paramInt];
-    for (;;)
-    {
-      paramInt = paramFile.read((byte[])localObject2);
-      if (paramInt <= 0) {
-        break;
-      }
-      ((MessageDigest)localObject1).update((byte[])localObject2, 0, paramInt);
+
+    public static String getFileMD5String(File file) throws IOException {
+        return getFileMD5String(file, 131072);
     }
-    paramFile.close();
-    try
-    {
-      paramFile = bufferToHex(((MessageDigest)localObject1).digest());
-      return paramFile;
+
+    public static String getFileMD5String(File file, int bufSize) throws IOException {
+        MessageDigest messagedigest = null;
+        try {
+            messagedigest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+        }
+        if (messagedigest == null) {
+            return "";
+        }
+        InputStream fis = new FileInputStream(file);
+        byte[] buffer = new byte[bufSize];
+        while (true) {
+            int numRead = fis.read(buffer);
+            if (numRead > 0) {
+                messagedigest.update(buffer, 0, numRead);
+            } else {
+                fis.close();
+                try {
+                    return bufferToHex(messagedigest.digest());
+                } catch (Exception e2) {
+                    throw new IOException(e2.toString());
+                }
+            }
+        }
     }
-    catch (Exception paramFile)
-    {
-      throw new IOException(paramFile.toString());
+
+    public static String getFileMD5StringNIO(File file) throws IOException {
+        return getFileMD5StringNIO(file, 131072);
     }
-  }
-  
-  public static String getFileMD5StringNIO(File paramFile)
-    throws IOException
-  {
-    return getFileMD5StringNIO(paramFile, 131072);
-  }
-  
-  public static String getFileMD5StringNIO(File paramFile, int paramInt)
-    throws IOException
-  {
-    Object localObject1 = null;
-    try
-    {
-      localObject2 = MessageDigest.getInstance("MD5");
-      localObject1 = localObject2;
+
+    public static String getFileMD5StringNIO(File file, int bufSize) throws IOException {
+        MessageDigest messagedigest = null;
+        try {
+            messagedigest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+        }
+        if (messagedigest == null) {
+            return "";
+        }
+        FileInputStream fis = new FileInputStream(file);
+        FileChannel fChannel = fis.getChannel();
+        ByteBuffer buffer = ByteBuffer.allocate(bufSize);
+        for (int count = fChannel.read(buffer); count != -1; count = fChannel.read(buffer)) {
+            buffer.flip();
+            messagedigest.update(buffer);
+            if (!buffer.hasRemaining()) {
+                buffer.clear();
+            }
+        }
+        fis.close();
+        try {
+            return bufferToHex(messagedigest.digest());
+        } catch (Exception e2) {
+            throw new IOException(e2.toString());
+        }
     }
-    catch (NoSuchAlgorithmException localNoSuchAlgorithmException)
-    {
-      Object localObject2;
-      ByteBuffer localByteBuffer;
-      for (;;) {}
+
+    public static String getSignMD5String(String params) {
+        return URLEncodeUtils.generateSign(1, params);
     }
-    if (localObject1 == null) {
-      return "";
+
+    public static String getWebSignMD5String(String params) {
+        return URLEncodeUtils.generateSign(2, params);
     }
-    paramFile = new FileInputStream(paramFile);
-    localObject2 = paramFile.getChannel();
-    localByteBuffer = ByteBuffer.allocate(paramInt);
-    for (paramInt = ((FileChannel)localObject2).read(localByteBuffer); paramInt != -1; paramInt = ((FileChannel)localObject2).read(localByteBuffer))
-    {
-      localByteBuffer.flip();
-      ((MessageDigest)localObject1).update(localByteBuffer);
-      if (!localByteBuffer.hasRemaining()) {
-        localByteBuffer.clear();
-      }
+
+    private static String bufferToHex(byte[] bytes) {
+        return bufferToHex(bytes, 0, bytes.length);
     }
-    paramFile.close();
-    try
-    {
-      paramFile = bufferToHex(((MessageDigest)localObject1).digest());
-      return paramFile;
+
+    private static String bufferToHex(byte[] bytes, int m, int n) {
+        StringBuffer stringbuffer = new StringBuffer(n * 2);
+        int k = m + n;
+        for (int l = m; l < k; l++) {
+            appendHexPair(bytes[l], stringbuffer);
+        }
+        return stringbuffer.toString();
     }
-    catch (Exception paramFile)
-    {
-      throw new IOException(paramFile.toString());
+
+    private static void appendHexPair(byte bt, StringBuffer stringbuffer) {
+        char c0 = HEX_DIGITS[(bt & RGHUDDataModel.MAX_CAR_SPEED) >> 4];
+        char c1 = HEX_DIGITS[bt & 15];
+        stringbuffer.append(c0);
+        stringbuffer.append(c1);
     }
-  }
-  
-  public static String getMD5String(String paramString)
-  {
-    return getMD5String(paramString.getBytes());
-  }
-  
-  public static String getMD5String(byte[] paramArrayOfByte)
-  {
-    Object localObject = null;
-    try
-    {
-      MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
-      localObject = localMessageDigest;
+
+    public static String signOpra(String params) {
+        return URLEncodeUtils.generateSign(3, params);
     }
-    catch (NoSuchAlgorithmException localNoSuchAlgorithmException)
-    {
-      for (;;) {}
-    }
-    if (localObject == null) {
-      return "";
-    }
-    ((MessageDigest)localObject).update(paramArrayOfByte);
-    try
-    {
-      paramArrayOfByte = bufferToHex(((MessageDigest)localObject).digest());
-      return paramArrayOfByte;
-    }
-    catch (Exception paramArrayOfByte)
-    {
-      return "";
-    }
-  }
-  
-  public static String getMD5String16(String paramString)
-  {
-    paramString = getMD5String(paramString.getBytes());
-    if (paramString.length() == 32) {
-      return paramString.substring(8, 24);
-    }
-    return null;
-  }
-  
-  public static String getSignMD5String(String paramString)
-  {
-    return URLEncodeUtils.generateSign(1, paramString);
-  }
-  
-  public static String getWebSignMD5String(String paramString)
-  {
-    return URLEncodeUtils.generateSign(2, paramString);
-  }
-  
-  public static String signOpra(String paramString)
-  {
-    return URLEncodeUtils.generateSign(3, paramString);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/util/MD5.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

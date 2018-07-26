@@ -8,6 +8,7 @@ import com.baidu.mapframework.nirvana.module.Module;
 import com.baidu.mapframework.nirvana.network.NetworkManager;
 import com.baidu.mapframework.nirvana.network.NetworkTask;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
+import com.facebook.common.p141m.C2924g;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,14 +17,12 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.zip.GZIPInputStream;
@@ -46,6 +45,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.RedirectHandler;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -70,1060 +70,851 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 
-public class AsyncHttpClient
-{
-  public static final int DEFAULT_MAX_CONNECTIONS = 10;
-  public static final int DEFAULT_MAX_RETRIES = 5;
-  public static final int DEFAULT_RETRY_SLEEP_TIME_MILLIS = 1500;
-  public static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
-  public static final int DEFAULT_SOCKET_TIMEOUT = 10000;
-  public static final String ENCODING_GZIP = "gzip";
-  public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
-  public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
-  public static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
-  public static final String HEADER_CONTENT_RANGE = "Content-Range";
-  public static final String HEADER_CONTENT_TYPE = "Content-Type";
-  public static final String HEADER_HOST = "Host";
-  public static final String HEADER_ORG_HOST = "_org_host_";
-  public static final String LOG_TAG = "AsyncHttpClient";
-  public static LogInterface log = new LogHandler();
-  protected static DNSProxy sDNS_PROXY;
-  final Map<String, String> a;
-  boolean b = false;
-  private int c = 10;
-  private int d = 10000;
-  private int e = 10000;
-  private ExecutorService f;
-  protected final DefaultHttpClient httpClient;
-  protected final HttpContext httpContext;
-  protected final Map<Context, List<RequestHandle>> requestMap;
-  
-  public AsyncHttpClient()
-  {
-    this(false, 80, 443);
-  }
-  
-  public AsyncHttpClient(int paramInt)
-  {
-    this(false, paramInt, 443);
-  }
-  
-  public AsyncHttpClient(int paramInt1, int paramInt2)
-  {
-    this(false, paramInt1, paramInt2);
-  }
-  
-  public AsyncHttpClient(SchemeRegistry paramSchemeRegistry)
-  {
-    BasicHttpParams localBasicHttpParams = new BasicHttpParams();
-    ConnManagerParams.setTimeout(localBasicHttpParams, this.d);
-    ConnManagerParams.setMaxConnectionsPerRoute(localBasicHttpParams, new ConnPerRouteBean(this.c));
-    ConnManagerParams.setMaxTotalConnections(localBasicHttpParams, 10);
-    HttpConnectionParams.setSoTimeout(localBasicHttpParams, this.e);
-    HttpConnectionParams.setConnectionTimeout(localBasicHttpParams, this.d);
-    HttpConnectionParams.setTcpNoDelay(localBasicHttpParams, true);
-    HttpConnectionParams.setSocketBufferSize(localBasicHttpParams, 8192);
-    HttpProtocolParams.setVersion(localBasicHttpParams, HttpVersion.HTTP_1_1);
-    paramSchemeRegistry = createConnectionManager(paramSchemeRegistry, localBasicHttpParams);
-    if (paramSchemeRegistry != null) {}
-    for (;;)
-    {
-      Utils.asserts(bool, "Custom implementation of #createConnectionManager(SchemeRegistry, BasicHttpParams) returned null");
-      this.f = getDefaultThreadPool();
-      this.requestMap = Collections.synchronizedMap(new WeakHashMap());
-      this.a = new HashMap();
-      this.httpContext = new SyncBasicHttpContext(new BasicHttpContext());
-      this.httpClient = new DefaultHttpClient(paramSchemeRegistry, localBasicHttpParams);
-      this.httpClient.addRequestInterceptor(new HttpRequestInterceptor()
-      {
-        public void process(HttpRequest paramAnonymousHttpRequest, HttpContext paramAnonymousHttpContext)
-        {
-          if (!paramAnonymousHttpRequest.containsHeader("Accept-Encoding")) {
-            paramAnonymousHttpRequest.addHeader("Accept-Encoding", "gzip");
-          }
-          Object localObject;
-          if ((paramAnonymousHttpRequest.containsHeader("_org_host_")) && (paramAnonymousHttpRequest.containsHeader("Host")))
-          {
-            paramAnonymousHttpContext = paramAnonymousHttpRequest.getFirstHeader("_org_host_");
-            localObject = paramAnonymousHttpRequest.getFirstHeader("Host");
-            if (paramAnonymousHttpRequest.containsHeader("Host")) {
-              paramAnonymousHttpRequest.removeHeader((Header)localObject);
-            }
-            paramAnonymousHttpRequest.addHeader("Host", paramAnonymousHttpRequest.getFirstHeader("_org_host_").getValue());
-            paramAnonymousHttpRequest.removeHeader(paramAnonymousHttpContext);
-          }
-          paramAnonymousHttpContext = AsyncHttpClient.this.a.keySet().iterator();
-          while (paramAnonymousHttpContext.hasNext())
-          {
-            localObject = (String)paramAnonymousHttpContext.next();
-            if (paramAnonymousHttpRequest.containsHeader((String)localObject))
-            {
-              Header localHeader = paramAnonymousHttpRequest.getFirstHeader((String)localObject);
-              AsyncHttpClient.log.d("AsyncHttpClient", String.format("Headers were overwritten! (%s | %s) overwrites (%s | %s)", new Object[] { localObject, AsyncHttpClient.this.a.get(localObject), localHeader.getName(), localHeader.getValue() }));
-              paramAnonymousHttpRequest.removeHeader(localHeader);
-            }
-            paramAnonymousHttpRequest.addHeader((String)localObject, (String)AsyncHttpClient.this.a.get(localObject));
-          }
+public class AsyncHttpClient {
+    public static final int DEFAULT_MAX_CONNECTIONS = 10;
+    public static final int DEFAULT_MAX_RETRIES = 5;
+    public static final int DEFAULT_RETRY_SLEEP_TIME_MILLIS = 1500;
+    public static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
+    public static final int DEFAULT_SOCKET_TIMEOUT = 10000;
+    public static final String ENCODING_GZIP = "gzip";
+    public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+    public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+    public static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
+    public static final String HEADER_CONTENT_RANGE = "Content-Range";
+    public static final String HEADER_CONTENT_TYPE = "Content-Type";
+    public static final String HEADER_HOST = "Host";
+    public static final String HEADER_ORG_HOST = "_org_host_";
+    public static final String LOG_TAG = "AsyncHttpClient";
+    public static LogInterface log = new LogHandler();
+    protected static DNSProxy sDNS_PROXY;
+    /* renamed from: a */
+    final Map<String, String> f18799a;
+    /* renamed from: b */
+    boolean f18800b;
+    /* renamed from: c */
+    private int f18801c;
+    /* renamed from: d */
+    private int f18802d;
+    /* renamed from: e */
+    private int f18803e;
+    /* renamed from: f */
+    private ExecutorService f18804f;
+    protected final DefaultHttpClient httpClient;
+    protected final HttpContext httpContext;
+    protected final Map<Context, List<RequestHandle>> requestMap;
+
+    /* renamed from: com.baidu.mapframework.commonlib.asynchttp.AsyncHttpClient$1 */
+    class C34881 implements HttpRequestInterceptor {
+        /* renamed from: a */
+        final /* synthetic */ AsyncHttpClient f18790a;
+
+        C34881(AsyncHttpClient this$0) {
+            this.f18790a = this$0;
         }
-      });
-      this.httpClient.addResponseInterceptor(new HttpResponseInterceptor()
-      {
-        public void process(HttpResponse paramAnonymousHttpResponse, HttpContext paramAnonymousHttpContext)
-        {
-          paramAnonymousHttpContext = paramAnonymousHttpResponse.getEntity();
-          if (paramAnonymousHttpContext == null) {}
-          for (;;)
-          {
-            return;
-            Object localObject = paramAnonymousHttpContext.getContentEncoding();
-            if (localObject != null)
-            {
-              localObject = ((Header)localObject).getElements();
-              int j = localObject.length;
-              int i = 0;
-              while (i < j)
-              {
-                if (localObject[i].getName().equalsIgnoreCase("gzip"))
-                {
-                  paramAnonymousHttpResponse.setEntity(new AsyncHttpClient.InflatingEntity(paramAnonymousHttpContext));
-                  return;
+
+        public void process(HttpRequest request, HttpContext context) {
+            if (!request.containsHeader("Accept-Encoding")) {
+                request.addHeader("Accept-Encoding", "gzip");
+            }
+            if (request.containsHeader(AsyncHttpClient.HEADER_ORG_HOST) && request.containsHeader("Host")) {
+                Header orgHost = request.getFirstHeader(AsyncHttpClient.HEADER_ORG_HOST);
+                Header host = request.getFirstHeader("Host");
+                if (request.containsHeader("Host")) {
+                    request.removeHeader(host);
                 }
-                i += 1;
-              }
+                request.addHeader("Host", request.getFirstHeader(AsyncHttpClient.HEADER_ORG_HOST).getValue());
+                request.removeHeader(orgHost);
             }
-          }
-        }
-      });
-      this.httpClient.addRequestInterceptor(new HttpRequestInterceptor()
-      {
-        public void process(HttpRequest paramAnonymousHttpRequest, HttpContext paramAnonymousHttpContext)
-          throws HttpException, IOException
-        {
-          paramAnonymousHttpRequest = (AuthState)paramAnonymousHttpContext.getAttribute("http.auth.target-scope");
-          CredentialsProvider localCredentialsProvider = (CredentialsProvider)paramAnonymousHttpContext.getAttribute("http.auth.credentials-provider");
-          paramAnonymousHttpContext = (HttpHost)paramAnonymousHttpContext.getAttribute("http.target_host");
-          if (paramAnonymousHttpRequest.getAuthScheme() == null)
-          {
-            paramAnonymousHttpContext = localCredentialsProvider.getCredentials(new AuthScope(paramAnonymousHttpContext.getHostName(), paramAnonymousHttpContext.getPort()));
-            if (paramAnonymousHttpContext != null)
-            {
-              paramAnonymousHttpRequest.setAuthScheme(new BasicScheme());
-              paramAnonymousHttpRequest.setCredentials(paramAnonymousHttpContext);
+            for (String header : this.f18790a.f18799a.keySet()) {
+                if (request.containsHeader(header)) {
+                    AsyncHttpClient.log.mo2623d("AsyncHttpClient", String.format("Headers were overwritten! (%s | %s) overwrites (%s | %s)", new Object[]{header, this.f18790a.f18799a.get(header), overwritten.getName(), request.getFirstHeader(header).getValue()}));
+                    request.removeHeader(overwritten);
+                }
+                request.addHeader(header, (String) this.f18790a.f18799a.get(header));
             }
-          }
         }
-      }, 0);
-      this.httpClient.setHttpRequestRetryHandler(new RetryHandler(5, 1500));
-      setEnableRedirects(false);
-      return;
-      bool = false;
     }
-  }
-  
-  public AsyncHttpClient(boolean paramBoolean, int paramInt1, int paramInt2)
-  {
-    this(a(paramBoolean, paramInt1, paramInt2));
-  }
-  
-  private AsyncHttpRequest a(DefaultHttpClient paramDefaultHttpClient, HttpContext paramHttpContext, HttpUriRequest paramHttpUriRequest, String paramString, ResponseHandlerInterface paramResponseHandlerInterface, Context paramContext)
-  {
-    if (paramHttpUriRequest == null) {
-      throw new IllegalArgumentException("HttpUriRequest must not be null");
-    }
-    if (paramResponseHandlerInterface == null) {
-      throw new IllegalArgumentException("ResponseHandler must not be null");
-    }
-    if ((paramResponseHandlerInterface.getUseSynchronousMode()) && (!paramResponseHandlerInterface.getUsePoolThread())) {
-      throw new IllegalArgumentException("Synchronous ResponseHandler used in AsyncHttpClient. You should create your response handler in a looper thread or use SyncHttpClient instead.");
-    }
-    if (paramString != null)
-    {
-      if ((!(paramHttpUriRequest instanceof HttpEntityEnclosingRequestBase)) || (((HttpEntityEnclosingRequestBase)paramHttpUriRequest).getEntity() == null) || (!paramHttpUriRequest.containsHeader("Content-Type"))) {
-        break label253;
-      }
-      log.w("AsyncHttpClient", "Passed contentType will be ignored because HttpEntity sets content type");
-    }
-    for (;;)
-    {
-      paramResponseHandlerInterface.setRequestHeaders(paramHttpUriRequest.getAllHeaders());
-      paramResponseHandlerInterface.setRequestURI(paramHttpUriRequest.getURI());
-      Object localObject = paramHttpUriRequest.getURI();
-      String str1 = ((URI)localObject).toString();
-      localObject = ((URI)localObject).getHost();
-      if (sDNS_PROXY != null)
-      {
-        String str2 = sDNS_PROXY.getIP((String)localObject);
-        if ((str2 != null) && (!str2.equals("")))
-        {
-          sDNS_PROXY.putIP2DomainsRecord(str2, (String)localObject);
-          str1 = str1.replace((CharSequence)localObject, str2);
-          if ((paramHttpUriRequest instanceof HttpRequestBase)) {
-            ((HttpRequestBase)paramHttpUriRequest).setURI(URI.create(str1));
-          }
-          paramHttpUriRequest.setHeader("_org_host_", (String)localObject);
+
+    /* renamed from: com.baidu.mapframework.commonlib.asynchttp.AsyncHttpClient$2 */
+    class C34892 implements HttpResponseInterceptor {
+        /* renamed from: a */
+        final /* synthetic */ AsyncHttpClient f18791a;
+
+        C34892(AsyncHttpClient this$0) {
+            this.f18791a = this$0;
         }
-      }
-      return newAsyncHttpRequest(paramDefaultHttpClient, paramHttpContext, paramHttpUriRequest, paramString, paramResponseHandlerInterface, paramContext);
-      label253:
-      paramHttpUriRequest.setHeader("Content-Type", paramString);
-    }
-  }
-  
-  private RequestHandle a(AsyncHttpRequest paramAsyncHttpRequest, Context paramContext)
-  {
-    RequestHandle localRequestHandle = new RequestHandle(paramAsyncHttpRequest);
-    if (paramContext != null) {
-      synchronized (this.requestMap)
-      {
-        List localList = (List)this.requestMap.get(paramContext);
-        paramAsyncHttpRequest = localList;
-        if (localList == null)
-        {
-          paramAsyncHttpRequest = Collections.synchronizedList(new LinkedList());
-          this.requestMap.put(paramContext, paramAsyncHttpRequest);
-        }
-        paramAsyncHttpRequest.add(localRequestHandle);
-        paramAsyncHttpRequest = paramAsyncHttpRequest.iterator();
-        while (paramAsyncHttpRequest.hasNext()) {
-          if (((RequestHandle)paramAsyncHttpRequest.next()).shouldBeGarbageCollected()) {
-            paramAsyncHttpRequest.remove();
-          }
-        }
-      }
-    }
-    return localRequestHandle;
-  }
-  
-  private static SchemeRegistry a(boolean paramBoolean, int paramInt1, int paramInt2)
-  {
-    if (paramBoolean) {
-      log.d("AsyncHttpClient", "Beware! Using the fix is insecure, as it doesn't verify SSL certificates.");
-    }
-    int i = paramInt1;
-    if (paramInt1 < 1)
-    {
-      i = 80;
-      log.d("AsyncHttpClient", "Invalid HTTP port number specified, defaulting to 80");
-    }
-    paramInt1 = paramInt2;
-    if (paramInt2 < 1)
-    {
-      paramInt1 = 443;
-      log.d("AsyncHttpClient", "Invalid HTTPS port number specified, defaulting to 443");
-    }
-    if (paramBoolean) {}
-    for (SSLSocketFactory localSSLSocketFactory = MySSLSocketFactory.getFixedSocketFactory();; localSSLSocketFactory = SSLSocketFactory.getSocketFactory())
-    {
-      SchemeRegistry localSchemeRegistry = new SchemeRegistry();
-      localSchemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), i));
-      localSchemeRegistry.register(new Scheme("https", localSSLSocketFactory, paramInt1));
-      return localSchemeRegistry;
-    }
-  }
-  
-  private void a(List<RequestHandle> paramList, boolean paramBoolean)
-  {
-    if (paramList != null)
-    {
-      paramList = paramList.iterator();
-      while (paramList.hasNext()) {
-        ((RequestHandle)paramList.next()).cancel(paramBoolean);
-      }
-    }
-  }
-  
-  public static void allowRetryExceptionClass(Class<?> paramClass)
-  {
-    if (paramClass != null) {
-      RetryHandler.a(paramClass);
-    }
-  }
-  
-  public static void blockRetryExceptionClass(Class<?> paramClass)
-  {
-    if (paramClass != null) {
-      RetryHandler.b(paramClass);
-    }
-  }
-  
-  public static void endEntityViaReflection(HttpEntity paramHttpEntity)
-  {
-    Object localObject2;
-    if ((paramHttpEntity instanceof HttpEntityWrapper)) {
-      localObject2 = null;
-    }
-    try
-    {
-      Field[] arrayOfField = HttpEntityWrapper.class.getDeclaredFields();
-      int j = arrayOfField.length;
-      int i = 0;
-      for (;;)
-      {
-        Object localObject1 = localObject2;
-        if (i < j)
-        {
-          localObject1 = arrayOfField[i];
-          if (!((Field)localObject1).getName().equals("wrappedEntity")) {}
-        }
-        else
-        {
-          if (localObject1 != null)
-          {
-            ((Field)localObject1).setAccessible(true);
-            paramHttpEntity = (HttpEntity)((Field)localObject1).get(paramHttpEntity);
-            if (paramHttpEntity != null) {
-              paramHttpEntity.consumeContent();
+
+        public void process(HttpResponse response, HttpContext context) {
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                Header encoding = entity.getContentEncoding();
+                if (encoding != null) {
+                    for (HeaderElement element : encoding.getElements()) {
+                        if (element.getName().equalsIgnoreCase("gzip")) {
+                            response.setEntity(new InflatingEntity(entity));
+                            return;
+                        }
+                    }
+                }
             }
-          }
-          return;
         }
-        i += 1;
-      }
-      return;
     }
-    catch (Throwable paramHttpEntity)
-    {
-      log.e("AsyncHttpClient", "wrappedEntity consume", paramHttpEntity);
-    }
-  }
-  
-  public static String getUrlWithQueryString(boolean paramBoolean, String paramString, RequestParams paramRequestParams)
-  {
-    if (paramString == null) {
-      return null;
-    }
-    Object localObject = paramString;
-    if (paramBoolean) {}
-    try
-    {
-      localObject = new URL(URLDecoder.decode(paramString, "UTF-8"));
-      localObject = new URI(((URL)localObject).getProtocol(), ((URL)localObject).getUserInfo(), ((URL)localObject).getHost(), ((URL)localObject).getPort(), ((URL)localObject).getPath(), ((URL)localObject).getQuery(), ((URL)localObject).getRef()).toASCIIString();
-      paramString = (String)localObject;
-      if (paramRequestParams != null)
-      {
-        paramRequestParams = paramRequestParams.getParamString().trim();
-        paramString = (String)localObject;
-        if (!paramRequestParams.equals(""))
-        {
-          paramString = (String)localObject;
-          if (!paramRequestParams.equals("?"))
-          {
-            StringBuilder localStringBuilder = new StringBuilder().append((String)localObject);
-            if (!((String)localObject).contains("?")) {
-              break label182;
+
+    /* renamed from: com.baidu.mapframework.commonlib.asynchttp.AsyncHttpClient$3 */
+    class C34903 implements HttpRequestInterceptor {
+        /* renamed from: a */
+        final /* synthetic */ AsyncHttpClient f18792a;
+
+        C34903(AsyncHttpClient this$0) {
+            this.f18792a = this$0;
+        }
+
+        public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+            AuthState authState = (AuthState) context.getAttribute("http.auth.target-scope");
+            CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute("http.auth.credentials-provider");
+            HttpHost targetHost = (HttpHost) context.getAttribute("http.target_host");
+            if (authState.getAuthScheme() == null) {
+                Credentials creds = credsProvider.getCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()));
+                if (creds != null) {
+                    authState.setAuthScheme(new BasicScheme());
+                    authState.setCredentials(creds);
+                }
             }
-            paramString = "&";
-            paramString = paramString;
-            paramString = paramString + paramRequestParams;
-          }
         }
-      }
-      return paramString;
     }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        log.e("AsyncHttpClient", "getUrlWithQueryString encoding URL", localException);
-        String str = paramString;
-        continue;
-        label182:
-        paramString = "?";
-      }
-    }
-  }
-  
-  public static boolean isInputStreamGZIPCompressed(PushbackInputStream paramPushbackInputStream)
-    throws IOException
-  {
-    boolean bool = true;
-    if (paramPushbackInputStream == null) {
-      return false;
-    }
-    byte[] arrayOfByte = new byte[2];
-    int i = paramPushbackInputStream.read(arrayOfByte);
-    paramPushbackInputStream.unread(arrayOfByte);
-    int j = arrayOfByte[0];
-    int k = arrayOfByte[1];
-    if ((i == 2) && (35615 == (j & 0xFF | k << 8 & 0xFF00))) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
-    }
-  }
-  
-  public static void setDNSProxy(DNSProxy paramDNSProxy)
-  {
-    sDNS_PROXY = paramDNSProxy;
-    paramDNSProxy = SSLSocketFactory.getSocketFactory();
-    DNSProxyCompatX509HostnameVerifier localDNSProxyCompatX509HostnameVerifier = new DNSProxyCompatX509HostnameVerifier(paramDNSProxy.getHostnameVerifier());
-    localDNSProxyCompatX509HostnameVerifier.setDNSProxy(sDNS_PROXY);
-    paramDNSProxy.setHostnameVerifier(localDNSProxyCompatX509HostnameVerifier);
-  }
-  
-  public static void silentCloseInputStream(InputStream paramInputStream)
-  {
-    if (paramInputStream != null) {}
-    try
-    {
-      paramInputStream.close();
-      return;
-    }
-    catch (IOException paramInputStream)
-    {
-      log.w("AsyncHttpClient", "Cannot close input stream", paramInputStream);
-    }
-  }
-  
-  public static void silentCloseOutputStream(OutputStream paramOutputStream)
-  {
-    if (paramOutputStream != null) {}
-    try
-    {
-      paramOutputStream.close();
-      return;
-    }
-    catch (IOException paramOutputStream)
-    {
-      log.w("AsyncHttpClient", "Cannot close output stream", paramOutputStream);
-    }
-  }
-  
-  HttpEntity a(RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    HttpEntity localHttpEntity = null;
-    if (paramRequestParams != null) {}
-    try
-    {
-      localHttpEntity = paramRequestParams.getEntity(paramResponseHandlerInterface);
-      return localHttpEntity;
-    }
-    catch (IOException paramRequestParams)
-    {
-      if (paramResponseHandlerInterface != null)
-      {
-        paramResponseHandlerInterface.sendFailureMessage(0, null, null, paramRequestParams);
-        return null;
-      }
-      paramRequestParams.printStackTrace();
-    }
-    return null;
-  }
-  
-  HttpEntityEnclosingRequestBase a(HttpEntityEnclosingRequestBase paramHttpEntityEnclosingRequestBase, HttpEntity paramHttpEntity)
-  {
-    if (paramHttpEntity != null) {
-      paramHttpEntityEnclosingRequestBase.setEntity(paramHttpEntity);
-    }
-    return paramHttpEntityEnclosingRequestBase;
-  }
-  
-  public void addHeader(String paramString1, String paramString2)
-  {
-    this.a.put(paramString1, paramString2);
-  }
-  
-  public void cancelAllRequests(boolean paramBoolean)
-  {
-    Iterator localIterator = this.requestMap.values().iterator();
-    while (localIterator.hasNext())
-    {
-      Object localObject = (List)localIterator.next();
-      if (localObject != null)
-      {
-        localObject = ((List)localObject).iterator();
-        while (((Iterator)localObject).hasNext()) {
-          ((RequestHandle)((Iterator)localObject).next()).cancel(paramBoolean);
+
+    private static class InflatingEntity extends HttpEntityWrapper {
+        /* renamed from: a */
+        InputStream f18796a;
+        /* renamed from: b */
+        PushbackInputStream f18797b;
+        /* renamed from: c */
+        GZIPInputStream f18798c;
+
+        public InflatingEntity(HttpEntity wrapped) {
+            super(wrapped);
         }
-      }
-    }
-    this.requestMap.clear();
-  }
-  
-  public void cancelRequests(Context paramContext, final boolean paramBoolean)
-  {
-    if (paramContext == null)
-    {
-      log.e("AsyncHttpClient", "Passed null Context to cancelRequests");
-      return;
-    }
-    final List localList = (List)this.requestMap.get(paramContext);
-    this.requestMap.remove(paramContext);
-    if (Looper.myLooper() == Looper.getMainLooper())
-    {
-      paramContext = new Runnable()
-      {
-        public void run()
-        {
-          AsyncHttpClient.a(AsyncHttpClient.this, localList, paramBoolean);
+
+        public InputStream getContent() throws IOException {
+            this.f18796a = this.wrappedEntity.getContent();
+            this.f18797b = new PushbackInputStream(this.f18796a, 2);
+            if (!AsyncHttpClient.isInputStreamGZIPCompressed(this.f18797b)) {
+                return this.f18797b;
+            }
+            this.f18798c = new GZIPInputStream(this.f18797b);
+            return this.f18798c;
         }
-      };
-      this.f.submit(paramContext);
-      return;
-    }
-    a(localList, paramBoolean);
-  }
-  
-  public void cancelRequestsByTAG(Object paramObject, boolean paramBoolean)
-  {
-    label17:
-    Iterator localIterator;
-    if (paramObject == null)
-    {
-      log.d("AsyncHttpClient", "cancelRequestsByTAG, passed TAG is null, cannot proceed");
-      return;
-    }
-    else
-    {
-      localIterator = this.requestMap.values().iterator();
-    }
-    for (;;)
-    {
-      if (!localIterator.hasNext()) {
-        break label17;
-      }
-      Object localObject = (List)localIterator.next();
-      if (localObject == null) {
-        break;
-      }
-      localObject = ((List)localObject).iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        RequestHandle localRequestHandle = (RequestHandle)((Iterator)localObject).next();
-        if (paramObject.equals(localRequestHandle.getTag())) {
-          localRequestHandle.cancel(paramBoolean);
+
+        public long getContentLength() {
+            return this.wrappedEntity == null ? 0 : this.wrappedEntity.getContentLength();
         }
-      }
+
+        public void consumeContent() throws IOException {
+            AsyncHttpClient.silentCloseInputStream(this.f18796a);
+            AsyncHttpClient.silentCloseInputStream(this.f18797b);
+            AsyncHttpClient.silentCloseInputStream(this.f18798c);
+            super.consumeContent();
+        }
     }
-  }
-  
-  public void clearCredentialsProvider()
-  {
-    this.httpClient.getCredentialsProvider().clear();
-  }
-  
-  protected ClientConnectionManager createConnectionManager(SchemeRegistry paramSchemeRegistry, BasicHttpParams paramBasicHttpParams)
-  {
-    return new ThreadSafeClientConnManager(paramBasicHttpParams, paramSchemeRegistry);
-  }
-  
-  public RequestHandle delete(Context paramContext, String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString = new HttpDelete(getURI(paramString));
-    return sendRequest(this.httpClient, this.httpContext, paramString, null, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle delete(Context paramContext, String paramString1, HttpEntity paramHttpEntity, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return sendRequest(this.httpClient, this.httpContext, a(new HttpDelete(URI.create(paramString1).normalize()), paramHttpEntity), paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle delete(Context paramContext, String paramString, Header[] paramArrayOfHeader, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString = new HttpDelete(getUrlWithQueryString(this.b, paramString, paramRequestParams));
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
+
+    public AsyncHttpClient() {
+        this(false, 80, 443);
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString, null, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle delete(Context paramContext, String paramString, Header[] paramArrayOfHeader, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString = new HttpDelete(getURI(paramString));
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
+
+    public AsyncHttpClient(int httpPort) {
+        this(false, httpPort, 443);
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString, null, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle delete(String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return delete(null, paramString, paramResponseHandlerInterface);
-  }
-  
-  public void delete(String paramString, RequestParams paramRequestParams, AsyncHttpResponseHandler paramAsyncHttpResponseHandler)
-  {
-    paramString = new HttpDelete(getUrlWithQueryString(this.b, paramString, paramRequestParams));
-    sendRequest(this.httpClient, this.httpContext, paramString, null, paramAsyncHttpResponseHandler, null);
-  }
-  
-  public RequestHandle get(Context paramContext, String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return sendRequest(this.httpClient, this.httpContext, new org.apache.http.client.methods.HttpGet(getUrlWithQueryString(this.b, paramString, paramRequestParams)), null, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle get(Context paramContext, String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return get(paramContext, paramString, null, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle get(Context paramContext, String paramString1, HttpEntity paramHttpEntity, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return sendRequest(this.httpClient, this.httpContext, a(new HttpGet(URI.create(paramString1).normalize()), paramHttpEntity), paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle get(Context paramContext, String paramString, Header[] paramArrayOfHeader, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString = new org.apache.http.client.methods.HttpGet(getUrlWithQueryString(this.b, paramString, paramRequestParams));
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
+
+    public AsyncHttpClient(int httpPort, int httpsPort) {
+        this(false, httpPort, httpsPort);
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString, null, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle get(String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return get(null, paramString, paramRequestParams, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle get(String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return get(null, paramString, null, paramResponseHandlerInterface);
-  }
-  
-  public int getConnectTimeout()
-  {
-    return this.d;
-  }
-  
-  protected ExecutorService getDefaultThreadPool()
-  {
-    return NetworkManager.getAppNetworkThreadPool();
-  }
-  
-  public HttpClient getHttpClient()
-  {
-    return this.httpClient;
-  }
-  
-  public HttpContext getHttpContext()
-  {
-    return this.httpContext;
-  }
-  
-  public LogInterface getLogInterface()
-  {
-    return log;
-  }
-  
-  public int getLoggingLevel()
-  {
-    return log.getLoggingLevel();
-  }
-  
-  public int getMaxConnections()
-  {
-    return this.c;
-  }
-  
-  public int getResponseTimeout()
-  {
-    return this.e;
-  }
-  
-  public ExecutorService getThreadPool()
-  {
-    return this.f;
-  }
-  
-  protected URI getURI(String paramString)
-  {
-    return URI.create(paramString).normalize();
-  }
-  
-  public RequestHandle head(Context paramContext, String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return sendRequest(this.httpClient, this.httpContext, new HttpHead(getUrlWithQueryString(this.b, paramString, paramRequestParams)), null, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle head(Context paramContext, String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return head(paramContext, paramString, null, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle head(Context paramContext, String paramString, Header[] paramArrayOfHeader, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString = new HttpHead(getUrlWithQueryString(this.b, paramString, paramRequestParams));
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
+
+    public AsyncHttpClient(boolean fixNoHttpResponseException, int httpPort, int httpsPort) {
+        this(m14926a(fixNoHttpResponseException, httpPort, httpsPort));
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString, null, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle head(String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return head(null, paramString, paramRequestParams, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle head(String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return head(null, paramString, null, paramResponseHandlerInterface);
-  }
-  
-  public boolean isLoggingEnabled()
-  {
-    return log.isLoggingEnabled();
-  }
-  
-  public boolean isUrlEncodingEnabled()
-  {
-    return this.b;
-  }
-  
-  protected AsyncHttpRequest newAsyncHttpRequest(DefaultHttpClient paramDefaultHttpClient, HttpContext paramHttpContext, HttpUriRequest paramHttpUriRequest, String paramString, ResponseHandlerInterface paramResponseHandlerInterface, Context paramContext)
-  {
-    return new AsyncHttpRequest(paramDefaultHttpClient, paramHttpContext, paramHttpUriRequest, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle patch(Context paramContext, String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return patch(paramContext, paramString, a(paramRequestParams, paramResponseHandlerInterface), null, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle patch(Context paramContext, String paramString1, HttpEntity paramHttpEntity, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return sendRequest(this.httpClient, this.httpContext, a(new HttpPatch(getURI(paramString1)), paramHttpEntity), paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle patch(Context paramContext, String paramString1, Header[] paramArrayOfHeader, HttpEntity paramHttpEntity, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString1 = a(new HttpPatch(getURI(paramString1)), paramHttpEntity);
-    if (paramArrayOfHeader != null) {
-      paramString1.setHeaders(paramArrayOfHeader);
+
+    /* renamed from: a */
+    private static SchemeRegistry m14926a(boolean fixNoHttpResponseException, int httpPort, int httpsPort) {
+        SSLSocketFactory sslSocketFactory;
+        if (fixNoHttpResponseException) {
+            log.mo2623d("AsyncHttpClient", "Beware! Using the fix is insecure, as it doesn't verify SSL certificates.");
+        }
+        if (httpPort < 1) {
+            httpPort = 80;
+            log.mo2623d("AsyncHttpClient", "Invalid HTTP port number specified, defaulting to 80");
+        }
+        if (httpsPort < 1) {
+            httpsPort = 443;
+            log.mo2623d("AsyncHttpClient", "Invalid HTTPS port number specified, defaulting to 443");
+        }
+        if (fixNoHttpResponseException) {
+            sslSocketFactory = MySSLSocketFactory.getFixedSocketFactory();
+        } else {
+            sslSocketFactory = SSLSocketFactory.getSocketFactory();
+        }
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), httpPort));
+        schemeRegistry.register(new Scheme(C2924g.f12888b, sslSocketFactory, httpsPort));
+        return schemeRegistry;
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString1, paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle patch(String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return patch(null, paramString, paramRequestParams, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle patch(String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return patch(null, paramString, null, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle post(Context paramContext, String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return post(paramContext, paramString, a(paramRequestParams, paramResponseHandlerInterface), null, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle post(Context paramContext, String paramString1, HttpEntity paramHttpEntity, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return sendRequest(this.httpClient, this.httpContext, a(new HttpPost(getURI(paramString1)), paramHttpEntity), paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle post(Context paramContext, String paramString1, Header[] paramArrayOfHeader, RequestParams paramRequestParams, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString1 = new HttpPost(getURI(paramString1));
-    if (paramRequestParams != null) {
-      paramString1.setEntity(a(paramRequestParams, paramResponseHandlerInterface));
+
+    public AsyncHttpClient(SchemeRegistry schemeRegistry) {
+        boolean z = true;
+        this.f18801c = 10;
+        this.f18802d = 10000;
+        this.f18803e = 10000;
+        this.f18800b = false;
+        BasicHttpParams httpParams = new BasicHttpParams();
+        ConnManagerParams.setTimeout(httpParams, (long) this.f18802d);
+        ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(this.f18801c));
+        ConnManagerParams.setMaxTotalConnections(httpParams, 10);
+        HttpConnectionParams.setSoTimeout(httpParams, this.f18803e);
+        HttpConnectionParams.setConnectionTimeout(httpParams, this.f18802d);
+        HttpConnectionParams.setTcpNoDelay(httpParams, true);
+        HttpConnectionParams.setSocketBufferSize(httpParams, 8192);
+        HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
+        ClientConnectionManager cm = createConnectionManager(schemeRegistry, httpParams);
+        if (cm == null) {
+            z = false;
+        }
+        Utils.asserts(z, "Custom implementation of #createConnectionManager(SchemeRegistry, BasicHttpParams) returned null");
+        this.f18804f = getDefaultThreadPool();
+        this.requestMap = Collections.synchronizedMap(new WeakHashMap());
+        this.f18799a = new HashMap();
+        this.httpContext = new SyncBasicHttpContext(new BasicHttpContext());
+        this.httpClient = new DefaultHttpClient(cm, httpParams);
+        this.httpClient.addRequestInterceptor(new C34881(this));
+        this.httpClient.addResponseInterceptor(new C34892(this));
+        this.httpClient.addRequestInterceptor(new C34903(this), 0);
+        this.httpClient.setHttpRequestRetryHandler(new RetryHandler(5, 1500));
+        setEnableRedirects(false);
     }
-    if (paramArrayOfHeader != null) {
-      paramString1.setHeaders(paramArrayOfHeader);
+
+    public static void allowRetryExceptionClass(Class<?> cls) {
+        if (cls != null) {
+            RetryHandler.m14968a(cls);
+        }
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString1, paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle post(Context paramContext, String paramString1, Header[] paramArrayOfHeader, HttpEntity paramHttpEntity, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString1 = a(new HttpPost(getURI(paramString1)), paramHttpEntity);
-    if (paramArrayOfHeader != null) {
-      paramString1.setHeaders(paramArrayOfHeader);
+
+    public static void blockRetryExceptionClass(Class<?> cls) {
+        if (cls != null) {
+            RetryHandler.m14969b(cls);
+        }
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString1, paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle post(String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return post(null, paramString, paramRequestParams, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle post(String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return post(null, paramString, null, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle put(Context paramContext, String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return put(paramContext, paramString, a(paramRequestParams, paramResponseHandlerInterface), null, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle put(Context paramContext, String paramString1, HttpEntity paramHttpEntity, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return sendRequest(this.httpClient, this.httpContext, a(new HttpPut(getURI(paramString1)), paramHttpEntity), paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle put(Context paramContext, String paramString1, Header[] paramArrayOfHeader, HttpEntity paramHttpEntity, String paramString2, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    paramString1 = a(new HttpPut(getURI(paramString1)), paramHttpEntity);
-    if (paramArrayOfHeader != null) {
-      paramString1.setHeaders(paramArrayOfHeader);
+
+    public static void setDNSProxy(DNSProxy dnsProxy) {
+        sDNS_PROXY = dnsProxy;
+        SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
+        DNSProxyCompatX509HostnameVerifier x509HostnameVerifierWrapper = new DNSProxyCompatX509HostnameVerifier(sslSocketFactory.getHostnameVerifier());
+        x509HostnameVerifierWrapper.setDNSProxy(sDNS_PROXY);
+        sslSocketFactory.setHostnameVerifier(x509HostnameVerifierWrapper);
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString1, paramString2, paramResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle put(String paramString, RequestParams paramRequestParams, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return put(null, paramString, paramRequestParams, paramResponseHandlerInterface);
-  }
-  
-  public RequestHandle put(String paramString, ResponseHandlerInterface paramResponseHandlerInterface)
-  {
-    return put(null, paramString, null, paramResponseHandlerInterface);
-  }
-  
-  public void removeAllHeaders()
-  {
-    this.a.clear();
-  }
-  
-  public void removeHeader(String paramString)
-  {
-    this.a.remove(paramString);
-  }
-  
-  protected RequestHandle sendNirvanaRequest(DefaultHttpClient paramDefaultHttpClient, HttpContext paramHttpContext, HttpUriRequest paramHttpUriRequest, String paramString, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface, Context paramContext)
-  {
-    paramDefaultHttpClient = a(paramDefaultHttpClient, paramHttpContext, paramHttpUriRequest, paramString, paramNirvanaResponseHandlerInterface, paramContext);
-    paramHttpContext = new NetworkTask(paramHttpUriRequest.getURI().toString(), paramHttpUriRequest, null, paramDefaultHttpClient);
-    NetworkManager.executeTask(paramNirvanaResponseHandlerInterface.getNirvanaModule(), paramHttpContext, paramNirvanaResponseHandlerInterface.getNirvanaScheduleConfig());
-    return a(paramDefaultHttpClient, paramContext);
-  }
-  
-  protected RequestHandle sendRequest(DefaultHttpClient paramDefaultHttpClient, HttpContext paramHttpContext, HttpUriRequest paramHttpUriRequest, String paramString, ResponseHandlerInterface paramResponseHandlerInterface, Context paramContext)
-  {
-    paramDefaultHttpClient = a(paramDefaultHttpClient, paramHttpContext, paramHttpUriRequest, paramString, paramResponseHandlerInterface, paramContext);
-    paramHttpContext = new NetworkTask(paramHttpUriRequest.getURI().toString(), paramHttpUriRequest, null, paramDefaultHttpClient);
-    if ((paramResponseHandlerInterface instanceof NirvanaResponseHandlerInterface)) {
-      NetworkManager.executeTask(((NirvanaResponseHandlerInterface)paramResponseHandlerInterface).getNirvanaModule(), paramHttpContext, ((NirvanaResponseHandlerInterface)paramResponseHandlerInterface).getNirvanaScheduleConfig());
+
+    public HttpClient getHttpClient() {
+        return this.httpClient;
     }
-    for (;;)
-    {
-      return a(paramDefaultHttpClient, paramContext);
-      NetworkManager.executeTask(Module.SEARCH_FRAMEWORK_MODULE, paramHttpContext, ScheduleConfig.forData());
+
+    public HttpContext getHttpContext() {
+        return this.httpContext;
     }
-  }
-  
-  public void setAuthenticationPreemptive(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      this.httpClient.addRequestInterceptor(new PreemptiveAuthorizationHttpRequestInterceptor(), 0);
-      return;
+
+    public void setLoggingEnabled(boolean loggingEnabled) {
+        log.setLoggingEnabled(loggingEnabled);
     }
-    this.httpClient.removeRequestInterceptorByClass(PreemptiveAuthorizationHttpRequestInterceptor.class);
-  }
-  
-  public void setBasicAuth(String paramString1, String paramString2)
-  {
-    setBasicAuth(paramString1, paramString2, false);
-  }
-  
-  public void setBasicAuth(String paramString1, String paramString2, AuthScope paramAuthScope)
-  {
-    setBasicAuth(paramString1, paramString2, paramAuthScope, false);
-  }
-  
-  public void setBasicAuth(String paramString1, String paramString2, AuthScope paramAuthScope, boolean paramBoolean)
-  {
-    setCredentials(paramAuthScope, new UsernamePasswordCredentials(paramString1, paramString2));
-    setAuthenticationPreemptive(paramBoolean);
-  }
-  
-  public void setBasicAuth(String paramString1, String paramString2, boolean paramBoolean)
-  {
-    setBasicAuth(paramString1, paramString2, null, paramBoolean);
-  }
-  
-  public void setConnectTimeout(int paramInt)
-  {
-    int i = paramInt;
-    if (paramInt < 1000) {
-      i = 10000;
+
+    public boolean isLoggingEnabled() {
+        return log.isLoggingEnabled();
     }
-    this.d = i;
-    HttpParams localHttpParams = this.httpClient.getParams();
-    ConnManagerParams.setTimeout(localHttpParams, this.d);
-    HttpConnectionParams.setConnectionTimeout(localHttpParams, this.d);
-  }
-  
-  public void setCookieStore(CookieStore paramCookieStore)
-  {
-    this.httpContext.setAttribute("http.cookie-store", paramCookieStore);
-  }
-  
-  public void setCredentials(AuthScope paramAuthScope, Credentials paramCredentials)
-  {
-    if (paramCredentials == null)
-    {
-      log.d("AsyncHttpClient", "Provided credentials are null, not setting");
-      return;
+
+    public void setLoggingLevel(int logLevel) {
+        log.setLoggingLevel(logLevel);
     }
-    CredentialsProvider localCredentialsProvider = this.httpClient.getCredentialsProvider();
-    AuthScope localAuthScope = paramAuthScope;
-    if (paramAuthScope == null) {
-      localAuthScope = AuthScope.ANY;
+
+    public int getLoggingLevel() {
+        return log.getLoggingLevel();
     }
-    localCredentialsProvider.setCredentials(localAuthScope, paramCredentials);
-  }
-  
-  public void setEnableRedirects(boolean paramBoolean)
-  {
-    setEnableRedirects(paramBoolean, paramBoolean, paramBoolean);
-  }
-  
-  public void setEnableRedirects(boolean paramBoolean1, boolean paramBoolean2)
-  {
-    setEnableRedirects(paramBoolean1, paramBoolean2, true);
-  }
-  
-  public void setEnableRedirects(boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3)
-  {
-    HttpParams localHttpParams = this.httpClient.getParams();
-    if (!paramBoolean2) {}
-    for (paramBoolean2 = true;; paramBoolean2 = false)
-    {
-      localHttpParams.setBooleanParameter("http.protocol.reject-relative-redirect", paramBoolean2);
-      this.httpClient.getParams().setBooleanParameter("http.protocol.allow-circular-redirects", paramBoolean3);
-      this.httpClient.setRedirectHandler(new MyRedirectHandler(paramBoolean1));
-      return;
+
+    public LogInterface getLogInterface() {
+        return log;
     }
-  }
-  
-  public void setLogInterface(LogInterface paramLogInterface)
-  {
-    if (paramLogInterface != null) {
-      log = paramLogInterface;
+
+    public void setLogInterface(LogInterface logInterfaceInstance) {
+        if (logInterfaceInstance != null) {
+            log = logInterfaceInstance;
+        }
     }
-  }
-  
-  public void setLoggingEnabled(boolean paramBoolean)
-  {
-    log.setLoggingEnabled(paramBoolean);
-  }
-  
-  public void setLoggingLevel(int paramInt)
-  {
-    log.setLoggingLevel(paramInt);
-  }
-  
-  public void setMaxConnections(int paramInt)
-  {
-    int i = paramInt;
-    if (paramInt < 1) {
-      i = 10;
+
+    public void setCookieStore(CookieStore cookieStore) {
+        this.httpContext.setAttribute("http.cookie-store", cookieStore);
     }
-    this.c = i;
-    ConnManagerParams.setMaxConnectionsPerRoute(this.httpClient.getParams(), new ConnPerRouteBean(this.c));
-  }
-  
-  public void setMaxRetriesAndTimeout(int paramInt1, int paramInt2)
-  {
-    this.httpClient.setHttpRequestRetryHandler(new RetryHandler(paramInt1, paramInt2));
-  }
-  
-  public void setProxy(String paramString, int paramInt)
-  {
-    paramString = new HttpHost(paramString, paramInt);
-    this.httpClient.getParams().setParameter("http.route.default-proxy", paramString);
-  }
-  
-  public void setProxy(String paramString1, int paramInt, String paramString2, String paramString3)
-  {
-    this.httpClient.getCredentialsProvider().setCredentials(new AuthScope(paramString1, paramInt), new UsernamePasswordCredentials(paramString2, paramString3));
-    paramString1 = new HttpHost(paramString1, paramInt);
-    this.httpClient.getParams().setParameter("http.route.default-proxy", paramString1);
-  }
-  
-  public void setRedirectHandler(RedirectHandler paramRedirectHandler)
-  {
-    this.httpClient.setRedirectHandler(paramRedirectHandler);
-  }
-  
-  public void setResponseTimeout(int paramInt)
-  {
-    int i = paramInt;
-    if (paramInt < 1000) {
-      i = 10000;
+
+    public ExecutorService getThreadPool() {
+        return this.f18804f;
     }
-    this.e = i;
-    HttpConnectionParams.setSoTimeout(this.httpClient.getParams(), this.e);
-  }
-  
-  public void setSSLSocketFactory(SSLSocketFactory paramSSLSocketFactory)
-  {
-    this.httpClient.getConnectionManager().getSchemeRegistry().register(new Scheme("https", paramSSLSocketFactory, 443));
-  }
-  
-  public void setTimeout(int paramInt)
-  {
-    int i = paramInt;
-    if (paramInt < 1000) {
-      i = 10000;
+
+    protected ExecutorService getDefaultThreadPool() {
+        return NetworkManager.getAppNetworkThreadPool();
     }
-    setConnectTimeout(i);
-    setResponseTimeout(i);
-  }
-  
-  public void setURLEncodingEnabled(boolean paramBoolean)
-  {
-    this.b = paramBoolean;
-  }
-  
-  public void setUserAgent(String paramString)
-  {
-    HttpProtocolParams.setUserAgent(this.httpClient.getParams(), paramString);
-  }
-  
-  private static class InflatingEntity
-    extends HttpEntityWrapper
-  {
-    InputStream a;
-    PushbackInputStream b;
-    GZIPInputStream c;
-    
-    public InflatingEntity(HttpEntity paramHttpEntity)
-    {
-      super();
+
+    protected ClientConnectionManager createConnectionManager(SchemeRegistry schemeRegistry, BasicHttpParams httpParams) {
+        return new ThreadSafeClientConnManager(httpParams, schemeRegistry);
     }
-    
-    public void consumeContent()
-      throws IOException
-    {
-      AsyncHttpClient.silentCloseInputStream(this.a);
-      AsyncHttpClient.silentCloseInputStream(this.b);
-      AsyncHttpClient.silentCloseInputStream(this.c);
-      super.consumeContent();
+
+    public void setEnableRedirects(boolean enableRedirects, boolean enableRelativeRedirects, boolean enableCircularRedirects) {
+        this.httpClient.getParams().setBooleanParameter("http.protocol.reject-relative-redirect", !enableRelativeRedirects);
+        this.httpClient.getParams().setBooleanParameter("http.protocol.allow-circular-redirects", enableCircularRedirects);
+        this.httpClient.setRedirectHandler(new MyRedirectHandler(enableRedirects));
     }
-    
-    public InputStream getContent()
-      throws IOException
-    {
-      this.a = this.wrappedEntity.getContent();
-      this.b = new PushbackInputStream(this.a, 2);
-      if (AsyncHttpClient.isInputStreamGZIPCompressed(this.b))
-      {
-        this.c = new GZIPInputStream(this.b);
-        return this.c;
-      }
-      return this.b;
+
+    public void setEnableRedirects(boolean enableRedirects, boolean enableRelativeRedirects) {
+        setEnableRedirects(enableRedirects, enableRelativeRedirects, true);
     }
-    
-    public long getContentLength()
-    {
-      if (this.wrappedEntity == null) {
-        return 0L;
-      }
-      return this.wrappedEntity.getContentLength();
+
+    public void setEnableRedirects(boolean enableRedirects) {
+        setEnableRedirects(enableRedirects, enableRedirects, enableRedirects);
     }
-  }
+
+    public void setRedirectHandler(RedirectHandler customRedirectHandler) {
+        this.httpClient.setRedirectHandler(customRedirectHandler);
+    }
+
+    public void setUserAgent(String userAgent) {
+        HttpProtocolParams.setUserAgent(this.httpClient.getParams(), userAgent);
+    }
+
+    public int getMaxConnections() {
+        return this.f18801c;
+    }
+
+    public void setMaxConnections(int maxConnections) {
+        if (maxConnections < 1) {
+            maxConnections = 10;
+        }
+        this.f18801c = maxConnections;
+        ConnManagerParams.setMaxConnectionsPerRoute(this.httpClient.getParams(), new ConnPerRouteBean(this.f18801c));
+    }
+
+    public void setTimeout(int value) {
+        if (value < 1000) {
+            value = 10000;
+        }
+        setConnectTimeout(value);
+        setResponseTimeout(value);
+    }
+
+    public int getConnectTimeout() {
+        return this.f18802d;
+    }
+
+    public void setConnectTimeout(int value) {
+        if (value < 1000) {
+            value = 10000;
+        }
+        this.f18802d = value;
+        HttpParams httpParams = this.httpClient.getParams();
+        ConnManagerParams.setTimeout(httpParams, (long) this.f18802d);
+        HttpConnectionParams.setConnectionTimeout(httpParams, this.f18802d);
+    }
+
+    public int getResponseTimeout() {
+        return this.f18803e;
+    }
+
+    public void setResponseTimeout(int value) {
+        if (value < 1000) {
+            value = 10000;
+        }
+        this.f18803e = value;
+        HttpConnectionParams.setSoTimeout(this.httpClient.getParams(), this.f18803e);
+    }
+
+    public void setProxy(String hostname, int port) {
+        this.httpClient.getParams().setParameter("http.route.default-proxy", new HttpHost(hostname, port));
+    }
+
+    public void setProxy(String hostname, int port, String username, String password) {
+        this.httpClient.getCredentialsProvider().setCredentials(new AuthScope(hostname, port), new UsernamePasswordCredentials(username, password));
+        this.httpClient.getParams().setParameter("http.route.default-proxy", new HttpHost(hostname, port));
+    }
+
+    public void setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
+        this.httpClient.getConnectionManager().getSchemeRegistry().register(new Scheme(C2924g.f12888b, sslSocketFactory, 443));
+    }
+
+    public void setMaxRetriesAndTimeout(int retries, int timeout) {
+        this.httpClient.setHttpRequestRetryHandler(new RetryHandler(retries, timeout));
+    }
+
+    public void removeAllHeaders() {
+        this.f18799a.clear();
+    }
+
+    public void addHeader(String header, String value) {
+        this.f18799a.put(header, value);
+    }
+
+    public void removeHeader(String header) {
+        this.f18799a.remove(header);
+    }
+
+    public void setBasicAuth(String username, String password) {
+        setBasicAuth(username, password, false);
+    }
+
+    public void setBasicAuth(String username, String password, boolean preemptive) {
+        setBasicAuth(username, password, null, preemptive);
+    }
+
+    public void setBasicAuth(String username, String password, AuthScope scope) {
+        setBasicAuth(username, password, scope, false);
+    }
+
+    public void setBasicAuth(String username, String password, AuthScope scope, boolean preemptive) {
+        setCredentials(scope, new UsernamePasswordCredentials(username, password));
+        setAuthenticationPreemptive(preemptive);
+    }
+
+    public void setCredentials(AuthScope authScope, Credentials credentials) {
+        if (credentials == null) {
+            log.mo2623d("AsyncHttpClient", "Provided credentials are null, not setting");
+            return;
+        }
+        CredentialsProvider credentialsProvider = this.httpClient.getCredentialsProvider();
+        if (authScope == null) {
+            authScope = AuthScope.ANY;
+        }
+        credentialsProvider.setCredentials(authScope, credentials);
+    }
+
+    public void setAuthenticationPreemptive(boolean isPreemptive) {
+        if (isPreemptive) {
+            this.httpClient.addRequestInterceptor(new PreemptiveAuthorizationHttpRequestInterceptor(), 0);
+        } else {
+            this.httpClient.removeRequestInterceptorByClass(PreemptiveAuthorizationHttpRequestInterceptor.class);
+        }
+    }
+
+    public void clearCredentialsProvider() {
+        this.httpClient.getCredentialsProvider().clear();
+    }
+
+    public void cancelRequests(Context context, final boolean mayInterruptIfRunning) {
+        if (context == null) {
+            log.mo2625e("AsyncHttpClient", "Passed null Context to cancelRequests");
+            return;
+        }
+        final List requestList = (List) this.requestMap.get(context);
+        this.requestMap.remove(context);
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            this.f18804f.submit(new Runnable(this) {
+                /* renamed from: c */
+                final /* synthetic */ AsyncHttpClient f18795c;
+
+                public void run() {
+                    this.f18795c.m14928a(requestList, mayInterruptIfRunning);
+                }
+            });
+            return;
+        }
+        m14928a(requestList, mayInterruptIfRunning);
+    }
+
+    /* renamed from: a */
+    private void m14928a(List<RequestHandle> requestList, boolean mayInterruptIfRunning) {
+        if (requestList != null) {
+            for (RequestHandle requestHandle : requestList) {
+                requestHandle.cancel(mayInterruptIfRunning);
+            }
+        }
+    }
+
+    public void cancelAllRequests(boolean mayInterruptIfRunning) {
+        for (List<RequestHandle> requestList : this.requestMap.values()) {
+            if (requestList != null) {
+                for (RequestHandle requestHandle : requestList) {
+                    requestHandle.cancel(mayInterruptIfRunning);
+                }
+            }
+        }
+        this.requestMap.clear();
+    }
+
+    public void cancelRequestsByTAG(Object TAG, boolean mayInterruptIfRunning) {
+        if (TAG == null) {
+            log.mo2623d("AsyncHttpClient", "cancelRequestsByTAG, passed TAG is null, cannot proceed");
+            return;
+        }
+        for (List<RequestHandle> requestList : this.requestMap.values()) {
+            if (requestList != null) {
+                for (RequestHandle requestHandle : requestList) {
+                    if (TAG.equals(requestHandle.getTag())) {
+                        requestHandle.cancel(mayInterruptIfRunning);
+                    }
+                }
+            }
+        }
+    }
+
+    public RequestHandle head(String url, ResponseHandlerInterface responseHandler) {
+        return head(null, url, null, responseHandler);
+    }
+
+    public RequestHandle head(String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return head(null, url, params, responseHandler);
+    }
+
+    public RequestHandle head(Context context, String url, ResponseHandlerInterface responseHandler) {
+        return head(context, url, null, responseHandler);
+    }
+
+    public RequestHandle head(Context context, String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, new HttpHead(getUrlWithQueryString(this.f18800b, url, params)), null, responseHandler, context);
+    }
+
+    public RequestHandle head(Context context, String url, Header[] headers, RequestParams params, ResponseHandlerInterface responseHandler) {
+        HttpUriRequest request = new HttpHead(getUrlWithQueryString(this.f18800b, url, params));
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, request, null, responseHandler, context);
+    }
+
+    public RequestHandle get(String url, ResponseHandlerInterface responseHandler) {
+        return get(null, url, null, responseHandler);
+    }
+
+    public RequestHandle get(String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return get(null, url, params, responseHandler);
+    }
+
+    public RequestHandle get(Context context, String url, ResponseHandlerInterface responseHandler) {
+        return get(context, url, null, responseHandler);
+    }
+
+    public RequestHandle get(Context context, String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, new HttpGet(getUrlWithQueryString(this.f18800b, url, params)), null, responseHandler, context);
+    }
+
+    public RequestHandle get(Context context, String url, Header[] headers, RequestParams params, ResponseHandlerInterface responseHandler) {
+        HttpUriRequest request = new HttpGet(getUrlWithQueryString(this.f18800b, url, params));
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, request, null, responseHandler, context);
+    }
+
+    public RequestHandle get(Context context, String url, HttpEntity entity, String contentType, ResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, m14930a(new HttpGet(URI.create(url).normalize()), entity), contentType, responseHandler, context);
+    }
+
+    public RequestHandle post(String url, ResponseHandlerInterface responseHandler) {
+        return post(null, url, null, responseHandler);
+    }
+
+    public RequestHandle post(String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return post(null, url, params, responseHandler);
+    }
+
+    public RequestHandle post(Context context, String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return post(context, url, m14929a(params, responseHandler), null, responseHandler);
+    }
+
+    public RequestHandle post(Context context, String url, HttpEntity entity, String contentType, ResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, m14930a(new HttpPost(getURI(url)), entity), contentType, responseHandler, context);
+    }
+
+    public RequestHandle post(Context context, String url, Header[] headers, RequestParams params, String contentType, ResponseHandlerInterface responseHandler) {
+        HttpEntityEnclosingRequestBase request = new HttpPost(getURI(url));
+        if (params != null) {
+            request.setEntity(m14929a(params, responseHandler));
+        }
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, request, contentType, responseHandler, context);
+    }
+
+    public RequestHandle post(Context context, String url, Header[] headers, HttpEntity entity, String contentType, ResponseHandlerInterface responseHandler) {
+        HttpEntityEnclosingRequestBase request = m14930a(new HttpPost(getURI(url)), entity);
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, request, contentType, responseHandler, context);
+    }
+
+    public RequestHandle put(String url, ResponseHandlerInterface responseHandler) {
+        return put(null, url, null, responseHandler);
+    }
+
+    public RequestHandle put(String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return put(null, url, params, responseHandler);
+    }
+
+    public RequestHandle put(Context context, String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return put(context, url, m14929a(params, responseHandler), null, responseHandler);
+    }
+
+    public RequestHandle put(Context context, String url, HttpEntity entity, String contentType, ResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, m14930a(new HttpPut(getURI(url)), entity), contentType, responseHandler, context);
+    }
+
+    public RequestHandle put(Context context, String url, Header[] headers, HttpEntity entity, String contentType, ResponseHandlerInterface responseHandler) {
+        HttpEntityEnclosingRequestBase request = m14930a(new HttpPut(getURI(url)), entity);
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, request, contentType, responseHandler, context);
+    }
+
+    public RequestHandle patch(String url, ResponseHandlerInterface responseHandler) {
+        return patch(null, url, null, responseHandler);
+    }
+
+    public RequestHandle patch(String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return patch(null, url, params, responseHandler);
+    }
+
+    public RequestHandle patch(Context context, String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        return patch(context, url, m14929a(params, responseHandler), null, responseHandler);
+    }
+
+    public RequestHandle patch(Context context, String url, HttpEntity entity, String contentType, ResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, m14930a(new HttpPatch(getURI(url)), entity), contentType, responseHandler, context);
+    }
+
+    public RequestHandle patch(Context context, String url, Header[] headers, HttpEntity entity, String contentType, ResponseHandlerInterface responseHandler) {
+        HttpEntityEnclosingRequestBase request = m14930a(new HttpPatch(getURI(url)), entity);
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, request, contentType, responseHandler, context);
+    }
+
+    public RequestHandle delete(String url, ResponseHandlerInterface responseHandler) {
+        return delete(null, url, responseHandler);
+    }
+
+    public RequestHandle delete(Context context, String url, ResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, new HttpDelete(getURI(url)), null, responseHandler, context);
+    }
+
+    public RequestHandle delete(Context context, String url, Header[] headers, ResponseHandlerInterface responseHandler) {
+        HttpDelete delete = new HttpDelete(getURI(url));
+        if (headers != null) {
+            delete.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, delete, null, responseHandler, context);
+    }
+
+    public void delete(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        sendRequest(this.httpClient, this.httpContext, new HttpDelete(getUrlWithQueryString(this.f18800b, url, params)), null, responseHandler, null);
+    }
+
+    public RequestHandle delete(Context context, String url, Header[] headers, RequestParams params, ResponseHandlerInterface responseHandler) {
+        HttpDelete httpDelete = new HttpDelete(getUrlWithQueryString(this.f18800b, url, params));
+        if (headers != null) {
+            httpDelete.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, httpDelete, null, responseHandler, context);
+    }
+
+    public RequestHandle delete(Context context, String url, HttpEntity entity, String contentType, ResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, m14930a(new HttpDelete(URI.create(url).normalize()), entity), contentType, responseHandler, context);
+    }
+
+    public static String getUrlWithQueryString(boolean shouldEncodeUrl, String url, RequestParams params) {
+        if (url == null) {
+            return null;
+        }
+        if (shouldEncodeUrl) {
+            try {
+                URL _url = new URL(URLDecoder.decode(url, "UTF-8"));
+                url = new URI(_url.getProtocol(), _url.getUserInfo(), _url.getHost(), _url.getPort(), _url.getPath(), _url.getQuery(), _url.getRef()).toASCIIString();
+            } catch (Exception ex) {
+                log.mo2626e("AsyncHttpClient", "getUrlWithQueryString encoding URL", ex);
+            }
+        }
+        if (params != null) {
+            String paramString = params.getParamString().trim();
+            if (!(paramString.equals("") || paramString.equals("?"))) {
+                url = (url + (url.contains("?") ? "&" : "?")) + paramString;
+            }
+        }
+        return url;
+    }
+
+    protected AsyncHttpRequest newAsyncHttpRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, ResponseHandlerInterface responseHandler, Context context) {
+        return new AsyncHttpRequest(client, httpContext, uriRequest, responseHandler);
+    }
+
+    public static boolean isInputStreamGZIPCompressed(PushbackInputStream inputStream) throws IOException {
+        boolean z = true;
+        if (inputStream == null) {
+            return false;
+        }
+        byte[] signature = new byte[2];
+        int readStatus = inputStream.read(signature);
+        inputStream.unread(signature);
+        int streamHeader = (signature[0] & 255) | ((signature[1] << 8) & 65280);
+        if (!(readStatus == 2 && 35615 == streamHeader)) {
+            z = false;
+        }
+        return z;
+    }
+
+    protected RequestHandle sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, ResponseHandlerInterface responseHandler, Context context) {
+        AsyncHttpRequest request = m14924a(client, httpContext, uriRequest, contentType, responseHandler, context);
+        NetworkTask task = new NetworkTask(uriRequest.getURI().toString(), uriRequest, null, request);
+        if (responseHandler instanceof NirvanaResponseHandlerInterface) {
+            NetworkManager.executeTask(((NirvanaResponseHandlerInterface) responseHandler).getNirvanaModule(), task, ((NirvanaResponseHandlerInterface) responseHandler).getNirvanaScheduleConfig());
+        } else {
+            NetworkManager.executeTask(Module.SEARCH_FRAMEWORK_MODULE, task, ScheduleConfig.forData());
+        }
+        return m14925a(request, context);
+    }
+
+    /* renamed from: a */
+    private AsyncHttpRequest m14924a(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, ResponseHandlerInterface responseHandler, Context context) {
+        if (uriRequest == null) {
+            throw new IllegalArgumentException("HttpUriRequest must not be null");
+        } else if (responseHandler == null) {
+            throw new IllegalArgumentException("ResponseHandler must not be null");
+        } else if (!responseHandler.getUseSynchronousMode() || responseHandler.getUsePoolThread()) {
+            if (contentType != null) {
+                if ((uriRequest instanceof HttpEntityEnclosingRequestBase) && ((HttpEntityEnclosingRequestBase) uriRequest).getEntity() != null && uriRequest.containsHeader("Content-Type")) {
+                    log.mo2636w("AsyncHttpClient", "Passed contentType will be ignored because HttpEntity sets content type");
+                } else {
+                    uriRequest.setHeader("Content-Type", contentType);
+                }
+            }
+            responseHandler.setRequestHeaders(uriRequest.getAllHeaders());
+            responseHandler.setRequestURI(uriRequest.getURI());
+            URI uri = uriRequest.getURI();
+            String url = uri.toString();
+            String host = uri.getHost();
+            if (sDNS_PROXY != null) {
+                String ip = sDNS_PROXY.getIP(host);
+                if (!(ip == null || ip.equals(""))) {
+                    sDNS_PROXY.putIP2DomainsRecord(ip, host);
+                    url = url.replace(host, ip);
+                    if (uriRequest instanceof HttpRequestBase) {
+                        ((HttpRequestBase) uriRequest).setURI(URI.create(url));
+                    }
+                    uriRequest.setHeader(HEADER_ORG_HOST, host);
+                }
+            }
+            return newAsyncHttpRequest(client, httpContext, uriRequest, contentType, responseHandler, context);
+        } else {
+            throw new IllegalArgumentException("Synchronous ResponseHandler used in AsyncHttpClient. You should create your response handler in a looper thread or use SyncHttpClient instead.");
+        }
+    }
+
+    /* renamed from: a */
+    private RequestHandle m14925a(AsyncHttpRequest request, Context context) {
+        RequestHandle requestHandle = new RequestHandle(request);
+        if (context != null) {
+            List<RequestHandle> requestList;
+            synchronized (this.requestMap) {
+                requestList = (List) this.requestMap.get(context);
+                if (requestList == null) {
+                    requestList = Collections.synchronizedList(new LinkedList());
+                    this.requestMap.put(context, requestList);
+                }
+            }
+            requestList.add(requestHandle);
+            Iterator<RequestHandle> iterator = requestList.iterator();
+            while (iterator.hasNext()) {
+                if (((RequestHandle) iterator.next()).shouldBeGarbageCollected()) {
+                    iterator.remove();
+                }
+            }
+        }
+        return requestHandle;
+    }
+
+    protected RequestHandle sendNirvanaRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, NirvanaResponseHandlerInterface responseHandler, Context context) {
+        AsyncHttpRequest request = m14924a(client, httpContext, uriRequest, contentType, responseHandler, context);
+        NetworkManager.executeTask(responseHandler.getNirvanaModule(), new NetworkTask(uriRequest.getURI().toString(), uriRequest, null, request), responseHandler.getNirvanaScheduleConfig());
+        return m14925a(request, context);
+    }
+
+    public static void silentCloseInputStream(InputStream is) {
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException e) {
+                log.mo2637w("AsyncHttpClient", "Cannot close input stream", e);
+            }
+        }
+    }
+
+    protected URI getURI(String url) {
+        return URI.create(url).normalize();
+    }
+
+    public static void silentCloseOutputStream(OutputStream os) {
+        if (os != null) {
+            try {
+                os.close();
+            } catch (IOException e) {
+                log.mo2637w("AsyncHttpClient", "Cannot close output stream", e);
+            }
+        }
+    }
+
+    public void setURLEncodingEnabled(boolean enabled) {
+        this.f18800b = enabled;
+    }
+
+    /* renamed from: a */
+    HttpEntity m14929a(RequestParams params, ResponseHandlerInterface responseHandler) {
+        HttpEntity entity = null;
+        if (params != null) {
+            try {
+                entity = params.getEntity(responseHandler);
+            } catch (IOException e) {
+                if (responseHandler != null) {
+                    responseHandler.sendFailureMessage(0, null, null, e);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return entity;
+    }
+
+    public boolean isUrlEncodingEnabled() {
+        return this.f18800b;
+    }
+
+    /* renamed from: a */
+    HttpEntityEnclosingRequestBase m14930a(HttpEntityEnclosingRequestBase requestBase, HttpEntity entity) {
+        if (entity != null) {
+            requestBase.setEntity(entity);
+        }
+        return requestBase;
+    }
+
+    public static void endEntityViaReflection(HttpEntity entity) {
+        if (entity instanceof HttpEntityWrapper) {
+            Field f = null;
+            try {
+                for (Field ff : HttpEntityWrapper.class.getDeclaredFields()) {
+                    if (ff.getName().equals("wrappedEntity")) {
+                        f = ff;
+                        break;
+                    }
+                }
+                if (f != null) {
+                    f.setAccessible(true);
+                    HttpEntity wrapped = (HttpEntity) f.get(entity);
+                    if (wrapped != null) {
+                        wrapped.consumeContent();
+                    }
+                }
+            } catch (Throwable t) {
+                log.mo2626e("AsyncHttpClient", "wrappedEntity consume", t);
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/AsyncHttpClient.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

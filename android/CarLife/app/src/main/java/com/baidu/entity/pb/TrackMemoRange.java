@@ -7,130 +7,108 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class TrackMemoRange
-  extends MessageMicro
-{
-  public static final int DATE_FIELD_NUMBER = 1;
-  private List<String> a = Collections.emptyList();
-  private int b = -1;
-  
-  public static TrackMemoRange parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new TrackMemoRange().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static TrackMemoRange parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (TrackMemoRange)new TrackMemoRange().mergeFrom(paramArrayOfByte);
-  }
-  
-  public TrackMemoRange addDate(String paramString)
-  {
-    if (paramString == null) {
-      throw new NullPointerException();
+public final class TrackMemoRange extends MessageMicro {
+    public static final int DATE_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private List<String> f16307a = Collections.emptyList();
+    /* renamed from: b */
+    private int f16308b = -1;
+
+    public static TrackMemoRange parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new TrackMemoRange().mergeFrom(codedInputStreamMicro);
     }
-    if (this.a.isEmpty()) {
-      this.a = new ArrayList();
+
+    public static TrackMemoRange parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (TrackMemoRange) new TrackMemoRange().mergeFrom(bArr);
     }
-    this.a.add(paramString);
-    return this;
-  }
-  
-  public final TrackMemoRange clear()
-  {
-    clearDate();
-    this.b = -1;
-    return this;
-  }
-  
-  public TrackMemoRange clearDate()
-  {
-    this.a = Collections.emptyList();
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.b < 0) {
-      getSerializedSize();
-    }
-    return this.b;
-  }
-  
-  public String getDate(int paramInt)
-  {
-    return (String)this.a.get(paramInt);
-  }
-  
-  public int getDateCount()
-  {
-    return this.a.size();
-  }
-  
-  public List<String> getDateList()
-  {
-    return this.a;
-  }
-  
-  public int getSerializedSize()
-  {
-    Iterator localIterator = getDateList().iterator();
-    for (int i = 0; localIterator.hasNext(); i = CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next()) + i) {}
-    i = 0 + i + getDateList().size() * 1;
-    this.b = i;
-    return i;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public TrackMemoRange mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public TrackMemoRange addDate(String str) {
+        if (str == null) {
+            throw new NullPointerException();
+        }
+        if (this.f16307a.isEmpty()) {
+            this.f16307a = new ArrayList();
+        }
+        this.f16307a.add(str);
         return this;
-      case 10: 
-        addDate(paramCodedInputStreamMicro.readString());
-      }
     }
-  }
-  
-  public TrackMemoRange setDate(int paramInt, String paramString)
-  {
-    if (paramString == null) {
-      throw new NullPointerException();
+
+    public final TrackMemoRange clear() {
+        clearDate();
+        this.f16308b = -1;
+        return this;
     }
-    this.a.set(paramInt, paramString);
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    Iterator localIterator = getDateList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeString(1, (String)localIterator.next());
+
+    public TrackMemoRange clearDate() {
+        this.f16307a = Collections.emptyList();
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f16308b < 0) {
+            getSerializedSize();
+        }
+        return this.f16308b;
+    }
+
+    public String getDate(int i) {
+        return (String) this.f16307a.get(i);
+    }
+
+    public int getDateCount() {
+        return this.f16307a.size();
+    }
+
+    public List<String> getDateList() {
+        return this.f16307a;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        for (String computeStringSizeNoTag : getDateList()) {
+            i = CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag) + i;
+        }
+        int size = (0 + i) + (getDateList().size() * 1);
+        this.f16308b = size;
+        return size;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public TrackMemoRange mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    addDate(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public TrackMemoRange setDate(int i, String str) {
+        if (str == null) {
+            throw new NullPointerException();
+        }
+        this.f16307a.set(i, str);
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        for (String writeString : getDateList()) {
+            codedOutputStreamMicro.writeString(1, writeString);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/TrackMemoRange.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

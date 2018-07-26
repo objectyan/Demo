@@ -1,42 +1,38 @@
 package com.baidu.carlife.fragment;
 
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 import com.baidu.navi.fragment.ContentFragment;
 import com.baidu.navi.view.CommonTitleBar;
 
-public class YMServiceDetailFragment
-  extends ContentFragment
-{
-  private TextView a;
-  private TextView b;
-  private CommonTitleBar c;
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    paramLayoutInflater = (ViewGroup)paramLayoutInflater.inflate(2130968820, null);
-    setCommonTitleBar(paramLayoutInflater, getResources().getString(2131297240));
-    this.b = ((TextView)paramLayoutInflater.findViewById(2131625179));
-    return paramLayoutInflater;
-  }
-  
-  protected void onInitView() {}
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    updateCommonSkin();
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
+public class YMServiceDetailFragment extends ContentFragment {
+    /* renamed from: a */
+    private TextView f4896a;
+    /* renamed from: b */
+    private TextView f4897b;
+    /* renamed from: c */
+    private CommonTitleBar f4898c;
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        ViewGroup viewGroup = (ViewGroup) inflater.inflate(C0965R.layout.frag_ym_service_terms, null);
+        setCommonTitleBar(viewGroup, getResources().getString(C0965R.string.ym_service_terms_title));
+        this.f4897b = (TextView) viewGroup.findViewById(C0965R.id.service_items_txt);
+        return viewGroup;
+    }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    protected void onUpdateSkin() {
+        updateCommonSkin();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/YMServiceDetailFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

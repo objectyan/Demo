@@ -1,18 +1,15 @@
 package com.baidu.ufosdk.ui;
 
-final class bb
-  implements Runnable
-{
-  bb(az paramaz) {}
-  
-  public final void run()
-  {
-    FeedbackInputActivity.P(this.a.a);
-  }
+/* compiled from: FeedbackInputActivity */
+final class bb implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ az f21568a;
+
+    bb(az azVar) {
+        this.f21568a = azVar;
+    }
+
+    public final void run() {
+        FeedbackInputActivity.m17636P(this.f21568a.f21563a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bb.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

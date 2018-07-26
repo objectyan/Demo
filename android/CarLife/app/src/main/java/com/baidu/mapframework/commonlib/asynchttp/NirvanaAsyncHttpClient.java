@@ -6,100 +6,79 @@ import java.util.concurrent.ExecutorService;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 
-public class NirvanaAsyncHttpClient
-  extends AsyncHttpClient
-{
-  public RequestHandle get(Context paramContext, String paramString, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return get(paramContext, paramString, null, paramNirvanaResponseHandlerInterface);
-  }
-  
-  public RequestHandle get(Context paramContext, String paramString, RequestParams paramRequestParams, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return sendNirvanaRequest(this.httpClient, this.httpContext, new org.apache.http.client.methods.HttpGet(getUrlWithQueryString(this.b, paramString, paramRequestParams)), null, paramNirvanaResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle get(Context paramContext, String paramString1, HttpEntity paramHttpEntity, String paramString2, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return sendNirvanaRequest(this.httpClient, this.httpContext, a(new HttpGet(URI.create(paramString1).normalize()), paramHttpEntity), paramString2, paramNirvanaResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle get(Context paramContext, String paramString, Header[] paramArrayOfHeader, RequestParams paramRequestParams, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    paramString = new org.apache.http.client.methods.HttpGet(getUrlWithQueryString(this.b, paramString, paramRequestParams));
-    if (paramArrayOfHeader != null) {
-      paramString.setHeaders(paramArrayOfHeader);
+public class NirvanaAsyncHttpClient extends AsyncHttpClient {
+    public ExecutorService getThreadPool() {
+        return super.getThreadPool();
     }
-    return sendNirvanaRequest(this.httpClient, this.httpContext, paramString, null, paramNirvanaResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle get(String paramString, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return get(null, paramString, null, paramNirvanaResponseHandlerInterface);
-  }
-  
-  public RequestHandle get(String paramString, RequestParams paramRequestParams, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return get(null, paramString, paramRequestParams, paramNirvanaResponseHandlerInterface);
-  }
-  
-  protected ExecutorService getDefaultThreadPool()
-  {
-    return super.getDefaultThreadPool();
-  }
-  
-  public ExecutorService getThreadPool()
-  {
-    return super.getThreadPool();
-  }
-  
-  public RequestHandle post(Context paramContext, String paramString, RequestParams paramRequestParams, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return post(paramContext, paramString, a(paramRequestParams, paramNirvanaResponseHandlerInterface), null, paramNirvanaResponseHandlerInterface);
-  }
-  
-  public RequestHandle post(Context paramContext, String paramString1, HttpEntity paramHttpEntity, String paramString2, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return sendRequest(this.httpClient, this.httpContext, a(new HttpPost(getURI(paramString1)), paramHttpEntity), paramString2, paramNirvanaResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle post(Context paramContext, String paramString1, Header[] paramArrayOfHeader, RequestParams paramRequestParams, String paramString2, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    paramString1 = new HttpPost(getURI(paramString1));
-    if (paramRequestParams != null) {
-      paramString1.setEntity(a(paramRequestParams, paramNirvanaResponseHandlerInterface));
+
+    protected ExecutorService getDefaultThreadPool() {
+        return super.getDefaultThreadPool();
     }
-    if (paramArrayOfHeader != null) {
-      paramString1.setHeaders(paramArrayOfHeader);
+
+    public RequestHandle get(String url, NirvanaResponseHandlerInterface responseHandler) {
+        return get(null, url, null, responseHandler);
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString1, paramString2, paramNirvanaResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle post(Context paramContext, String paramString1, Header[] paramArrayOfHeader, HttpEntity paramHttpEntity, String paramString2, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    paramString1 = a(new HttpPost(getURI(paramString1)), paramHttpEntity);
-    if (paramArrayOfHeader != null) {
-      paramString1.setHeaders(paramArrayOfHeader);
+
+    public RequestHandle get(String url, RequestParams params, NirvanaResponseHandlerInterface responseHandler) {
+        return get(null, url, params, responseHandler);
     }
-    return sendRequest(this.httpClient, this.httpContext, paramString1, paramString2, paramNirvanaResponseHandlerInterface, paramContext);
-  }
-  
-  public RequestHandle post(String paramString, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return post(null, paramString, null, paramNirvanaResponseHandlerInterface);
-  }
-  
-  public RequestHandle post(String paramString, RequestParams paramRequestParams, NirvanaResponseHandlerInterface paramNirvanaResponseHandlerInterface)
-  {
-    return post(null, paramString, paramRequestParams, paramNirvanaResponseHandlerInterface);
-  }
+
+    public RequestHandle get(Context context, String url, NirvanaResponseHandlerInterface responseHandler) {
+        return get(context, url, null, responseHandler);
+    }
+
+    public RequestHandle get(Context context, String url, RequestParams params, NirvanaResponseHandlerInterface responseHandler) {
+        return sendNirvanaRequest(this.httpClient, this.httpContext, new HttpGet(AsyncHttpClient.getUrlWithQueryString(this.b, url, params)), null, responseHandler, context);
+    }
+
+    public RequestHandle get(Context context, String url, Header[] headers, RequestParams params, NirvanaResponseHandlerInterface responseHandler) {
+        HttpUriRequest request = new HttpGet(AsyncHttpClient.getUrlWithQueryString(this.b, url, params));
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendNirvanaRequest(this.httpClient, this.httpContext, request, null, responseHandler, context);
+    }
+
+    public RequestHandle get(Context context, String url, HttpEntity entity, String contentType, NirvanaResponseHandlerInterface responseHandler) {
+        return sendNirvanaRequest(this.httpClient, this.httpContext, m14930a(new HttpGet(URI.create(url).normalize()), entity), contentType, responseHandler, context);
+    }
+
+    public RequestHandle post(String url, NirvanaResponseHandlerInterface responseHandler) {
+        return post(null, url, null, responseHandler);
+    }
+
+    public RequestHandle post(String url, RequestParams params, NirvanaResponseHandlerInterface responseHandler) {
+        return post(null, url, params, responseHandler);
+    }
+
+    public RequestHandle post(Context context, String url, RequestParams params, NirvanaResponseHandlerInterface responseHandler) {
+        return post(context, url, m14929a(params, (ResponseHandlerInterface) responseHandler), null, responseHandler);
+    }
+
+    public RequestHandle post(Context context, String url, HttpEntity entity, String contentType, NirvanaResponseHandlerInterface responseHandler) {
+        return sendRequest(this.httpClient, this.httpContext, m14930a(new HttpPost(getURI(url)), entity), contentType, responseHandler, context);
+    }
+
+    public RequestHandle post(Context context, String url, Header[] headers, RequestParams params, String contentType, NirvanaResponseHandlerInterface responseHandler) {
+        HttpEntityEnclosingRequestBase request = new HttpPost(getURI(url));
+        if (params != null) {
+            request.setEntity(m14929a(params, (ResponseHandlerInterface) responseHandler));
+        }
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, request, contentType, responseHandler, context);
+    }
+
+    public RequestHandle post(Context context, String url, Header[] headers, HttpEntity entity, String contentType, NirvanaResponseHandlerInterface responseHandler) {
+        HttpEntityEnclosingRequestBase request = m14930a(new HttpPost(getURI(url)), entity);
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
+        return sendRequest(this.httpClient, this.httpContext, request, contentType, responseHandler, context);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/NirvanaAsyncHttpClient.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

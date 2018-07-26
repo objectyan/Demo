@@ -4,45 +4,31 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
-import com.baidu.carlife.core.screen.presentation.h;
-import com.baidu.carlife.custom.a;
-import com.baidu.carlife.custom.b;
-import com.baidu.navi.fragment.NaviFragmentManager;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.custom.C1343b;
 
-public class InterceptTouchRelativeLayout
-  extends RelativeLayout
-{
-  public InterceptTouchRelativeLayout(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public InterceptTouchRelativeLayout(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public InterceptTouchRelativeLayout(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  public InterceptTouchRelativeLayout(Context paramContext, AttributeSet paramAttributeSet, int paramInt1, int paramInt2)
-  {
-    super(paramContext, paramAttributeSet, paramInt1, paramInt2);
-  }
-  
-  public boolean onInterceptTouchEvent(MotionEvent paramMotionEvent)
-  {
-    if (((a.a().b()) || (b.a().b())) && (paramMotionEvent.getAction() == 2) && (h.a().getNaviFragmentManager().isDriving())) {
-      return true;
+public class InterceptTouchRelativeLayout extends RelativeLayout {
+    public InterceptTouchRelativeLayout(Context context) {
+        super(context);
     }
-    return super.onInterceptTouchEvent(paramMotionEvent);
-  }
+
+    public InterceptTouchRelativeLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public InterceptTouchRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public InterceptTouchRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        if ((C1342a.m4926a().m4929b() || C1343b.m4932a().m4935b()) && motionEvent.getAction() == 2 && C1328h.m4757a().getNaviFragmentManager().isDriving()) {
+            return true;
+        }
+        return super.onInterceptTouchEvent(motionEvent);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/InterceptTouchRelativeLayout.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

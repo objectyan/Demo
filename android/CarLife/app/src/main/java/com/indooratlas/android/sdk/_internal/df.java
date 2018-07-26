@@ -2,48 +2,42 @@ package com.indooratlas.android.sdk._internal;
 
 import android.bluetooth.BluetoothManager;
 import java.util.Iterator;
-import java.util.List;
 
-abstract class df
-{
-  protected boolean a;
-  final BluetoothManager b;
-  private final dg c;
-  
-  protected df(BluetoothManager paramBluetoothManager, dg paramdg)
-  {
-    this.b = paramBluetoothManager;
-    this.c = paramdg;
-  }
-  
-  final void a(dh paramdh)
-  {
-    dg localdg = this.c;
-    synchronized (localdg.d)
-    {
-      Iterator localIterator = localdg.d.iterator();
-      while (localIterator.hasNext())
-      {
-        dh localdh = (dh)localIterator.next();
-        if ((localdh.a != null) && (localdh.a.equals(paramdh.a))) {
-          localIterator.remove();
-        }
-      }
-      localdg.d.add(paramdh);
-      if ((localdg.a == null) || (localdg.c <= 100L)) {
-        localdg.c();
-      }
-      return;
+abstract class df {
+    /* renamed from: a */
+    protected boolean f23382a;
+    /* renamed from: b */
+    final BluetoothManager f23383b;
+    /* renamed from: c */
+    private final dg f23384c;
+
+    /* renamed from: a */
+    abstract boolean mo4666a();
+
+    /* renamed from: b */
+    abstract boolean mo4667b();
+
+    protected df(BluetoothManager bluetoothManager, dg dgVar) {
+        this.f23383b = bluetoothManager;
+        this.f23384c = dgVar;
     }
-  }
-  
-  abstract boolean a();
-  
-  abstract boolean b();
+
+    /* renamed from: a */
+    final void m20307a(dh dhVar) {
+        dg dgVar = this.f23384c;
+        synchronized (dgVar.f23389d) {
+            Iterator it = dgVar.f23389d.iterator();
+            while (it.hasNext()) {
+                dh dhVar2 = (dh) it.next();
+                if (dhVar2.f23394a != null && dhVar2.f23394a.equals(dhVar.f23394a)) {
+                    it.remove();
+                    break;
+                }
+            }
+            dgVar.f23389d.add(dhVar);
+        }
+        if (dgVar.f23386a == null || dgVar.f23388c <= 100) {
+            dgVar.m20320c();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/df.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

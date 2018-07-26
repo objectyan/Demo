@@ -2,57 +2,50 @@ package com.baidu.nplatform.comapi.map;
 
 import com.baidu.nplatform.comapi.MapItem;
 
-public abstract interface MapViewListener
-{
-  public abstract void onClickedBackground(int paramInt1, int paramInt2);
-  
-  public abstract void onClickedBaseLayer();
-  
-  public abstract void onClickedBasePOILayer(MapItem paramMapItem);
-  
-  public abstract void onClickedCompassLayer();
-  
-  public abstract void onClickedCustomLayer(MapItem paramMapItem, int paramInt1, int paramInt2);
-  
-  public abstract void onClickedEndLayer(MapItem paramMapItem, int paramInt1, int paramInt2);
-  
-  public abstract void onClickedFavPoiLayer(MapItem paramMapItem);
-  
-  public abstract void onClickedPOIBkgLayer(MapItem paramMapItem);
-  
-  public abstract void onClickedPOILayer(MapItem paramMapItem);
-  
-  public abstract void onClickedPopupLayer();
-  
-  public abstract void onClickedRoute(MapItem paramMapItem);
-  
-  public abstract void onClickedRouteSpecLayer(MapItem paramMapItem);
-  
-  public abstract void onClickedRouteUgcItem(MapItem paramMapItem);
-  
-  public abstract void onClickedStartLayer(MapItem paramMapItem, int paramInt1, int paramInt2);
-  
-  public abstract void onClickedStreetIndoorPoi(MapObj paramMapObj);
-  
-  public abstract void onClickedStreetPopup(String paramString);
-  
-  public abstract void onClickedThroughNodeLayer(MapItem paramMapItem, int paramInt1, int paramInt2);
-  
-  public abstract void onClickedUgcItem(MapItem paramMapItem);
-  
-  public abstract void onDoubleFingerRotate();
-  
-  public abstract void onDoubleFingerZoom();
-  
-  public abstract void onMapAnimationFinish();
-  
-  public abstract void onMapNetworkingChanged(boolean paramBoolean);
-  
-  public abstract void onMapObviousMove();
+public interface MapViewListener {
+    void onClickedBackground(int i, int i2);
+
+    void onClickedBaseLayer();
+
+    void onClickedBasePOILayer(MapItem mapItem);
+
+    void onClickedCompassLayer();
+
+    void onClickedCustomLayer(MapItem mapItem, int i, int i2);
+
+    void onClickedEndLayer(MapItem mapItem, int i, int i2);
+
+    void onClickedFavPoiLayer(MapItem mapItem);
+
+    void onClickedPOIBkgLayer(MapItem mapItem);
+
+    void onClickedPOILayer(MapItem mapItem);
+
+    void onClickedPopupLayer();
+
+    void onClickedRoute(MapItem mapItem);
+
+    void onClickedRouteSpecLayer(MapItem mapItem);
+
+    void onClickedRouteUgcItem(MapItem mapItem);
+
+    void onClickedStartLayer(MapItem mapItem, int i, int i2);
+
+    void onClickedStreetIndoorPoi(MapObj mapObj);
+
+    void onClickedStreetPopup(String str);
+
+    void onClickedThroughNodeLayer(MapItem mapItem, int i, int i2);
+
+    void onClickedUgcItem(MapItem mapItem);
+
+    void onDoubleFingerRotate();
+
+    void onDoubleFingerZoom();
+
+    void onMapAnimationFinish();
+
+    void onMapNetworkingChanged(boolean z);
+
+    void onMapObviousMove();
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/nplatform/comapi/map/MapViewListener.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

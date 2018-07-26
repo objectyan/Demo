@@ -6,71 +6,74 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import com.baidu.carlife.f.a;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.f;
-import com.baidu.carlife.f.g;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1442f;
+import com.baidu.carlife.p078f.C1443g;
 import com.baidu.navi.fragment.ContentFragment;
 
-public class CommonQuestionFragment
-  extends ContentFragment
-{
-  private ScrollView a;
-  private ImageButton b;
-  private TextView c;
-  private g d;
-  private f e;
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = paramLayoutInflater.inflate(2130968744, null);
-    this.a = ((ScrollView)this.mContentView.findViewById(2131624757));
-    this.b = ((ImageButton)this.mContentView.findViewById(2131624258));
-    this.c = ((TextView)this.mContentView.findViewById(2131624059));
-    this.b.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        CommonQuestionFragment.this.back(null);
-      }
-    });
-    this.c.setText(2131296387);
-    return this.mContentView;
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.fragmentType != getCurrentFragmentType()) {
-      return;
+public class CommonQuestionFragment extends ContentFragment {
+    /* renamed from: a */
+    private ScrollView f4239a;
+    /* renamed from: b */
+    private ImageButton f4240b;
+    /* renamed from: c */
+    private TextView f4241c;
+    /* renamed from: d */
+    private C1443g f4242d;
+    /* renamed from: e */
+    private C1442f f4243e;
+
+    /* renamed from: com.baidu.carlife.fragment.CommonQuestionFragment$1 */
+    class C14471 implements OnClickListener {
+        /* renamed from: a */
+        final /* synthetic */ CommonQuestionFragment f4238a;
+
+        C14471(CommonQuestionFragment this$0) {
+            this.f4238a = this$0;
+        }
+
+        public void onClick(View v) {
+            this.f4238a.back(null);
+        }
     }
-    if (this.d == null)
-    {
-      this.d = new g(this.mContentView.findViewById(2131624135), 2);
-      this.d.d(this.mContentView.findViewById(2131624258));
+
+    protected void onUpdateOrientation(int orientation) {
     }
-    if (this.e == null) {
-      this.e = new f(this.a, 4);
+
+    protected void onUpdateStyle(boolean dayStyle) {
     }
-    d locald = d.a();
-    locald.b(new a[] { this.d, this.e });
-    locald.h(this.d);
-  }
-  
-  protected void onInitView() {}
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    super.onUpdateSkin();
-    updateCommonSkin();
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mContentView = inflater.inflate(C0965R.layout.frag_common_questions, null);
+        this.f4239a = (ScrollView) this.mContentView.findViewById(C0965R.id.scroll_view);
+        this.f4240b = (ImageButton) this.mContentView.findViewById(C0965R.id.ib_left);
+        this.f4241c = (TextView) this.mContentView.findViewById(C0965R.id.tv_title);
+        this.f4240b.setOnClickListener(new C14471(this));
+        this.f4241c.setText(C0965R.string.commonquestion_setting_title);
+        return this.mContentView;
+    }
+
+    protected void onUpdateSkin() {
+        super.onUpdateSkin();
+        updateCommonSkin();
+    }
+
+    protected void onInitView() {
+    }
+
+    public void onInitFocusAreas() {
+        if (this.fragmentType == getCurrentFragmentType()) {
+            if (this.f4242d == null) {
+                this.f4242d = new C1443g(this.mContentView.findViewById(C0965R.id.common_title_bar), 2);
+                this.f4242d.m5300d(this.mContentView.findViewById(C0965R.id.ib_left));
+            }
+            if (this.f4243e == null) {
+                this.f4243e = new C1442f(this.f4239a, 4);
+            }
+            C1440d focusManager = C1440d.m5251a();
+            focusManager.m5256b(this.f4242d, this.f4243e);
+            focusManager.m5268h(this.f4242d);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/CommonQuestionFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

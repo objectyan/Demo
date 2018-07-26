@@ -3,149 +3,125 @@ package com.google.android.support.v4.view;
 import android.os.Build.VERSION;
 import android.view.MotionEvent;
 
-public class MotionEventCompat
-{
-  public static final int ACTION_HOVER_ENTER = 9;
-  public static final int ACTION_HOVER_EXIT = 10;
-  public static final int ACTION_HOVER_MOVE = 7;
-  public static final int ACTION_MASK = 255;
-  public static final int ACTION_POINTER_DOWN = 5;
-  public static final int ACTION_POINTER_INDEX_MASK = 65280;
-  public static final int ACTION_POINTER_INDEX_SHIFT = 8;
-  public static final int ACTION_POINTER_UP = 6;
-  public static final int ACTION_SCROLL = 8;
-  static final MotionEventVersionImpl IMPL = new BaseMotionEventVersionImpl();
-  
-  static
-  {
-    if (Build.VERSION.SDK_INT >= 5)
-    {
-      IMPL = new EclairMotionEventVersionImpl();
-      return;
+public class MotionEventCompat {
+    public static final int ACTION_HOVER_ENTER = 9;
+    public static final int ACTION_HOVER_EXIT = 10;
+    public static final int ACTION_HOVER_MOVE = 7;
+    public static final int ACTION_MASK = 255;
+    public static final int ACTION_POINTER_DOWN = 5;
+    public static final int ACTION_POINTER_INDEX_MASK = 65280;
+    public static final int ACTION_POINTER_INDEX_SHIFT = 8;
+    public static final int ACTION_POINTER_UP = 6;
+    public static final int ACTION_SCROLL = 8;
+    static final MotionEventVersionImpl IMPL;
+
+    interface MotionEventVersionImpl {
+        int findPointerIndex(MotionEvent motionEvent, int i);
+
+        int getPointerCount(MotionEvent motionEvent);
+
+        int getPointerId(MotionEvent motionEvent, int i);
+
+        float getX(MotionEvent motionEvent, int i);
+
+        float getY(MotionEvent motionEvent, int i);
     }
-  }
-  
-  public static int findPointerIndex(MotionEvent paramMotionEvent, int paramInt)
-  {
-    return IMPL.findPointerIndex(paramMotionEvent, paramInt);
-  }
-  
-  public static int getActionIndex(MotionEvent paramMotionEvent)
-  {
-    return (paramMotionEvent.getAction() & 0xFF00) >> 8;
-  }
-  
-  public static int getActionMasked(MotionEvent paramMotionEvent)
-  {
-    return paramMotionEvent.getAction() & 0xFF;
-  }
-  
-  public static int getPointerCount(MotionEvent paramMotionEvent)
-  {
-    return IMPL.getPointerCount(paramMotionEvent);
-  }
-  
-  public static int getPointerId(MotionEvent paramMotionEvent, int paramInt)
-  {
-    return IMPL.getPointerId(paramMotionEvent, paramInt);
-  }
-  
-  public static float getX(MotionEvent paramMotionEvent, int paramInt)
-  {
-    return IMPL.getX(paramMotionEvent, paramInt);
-  }
-  
-  public static float getY(MotionEvent paramMotionEvent, int paramInt)
-  {
-    return IMPL.getY(paramMotionEvent, paramInt);
-  }
-  
-  static class BaseMotionEventVersionImpl
-    implements MotionEventCompat.MotionEventVersionImpl
-  {
-    public int findPointerIndex(MotionEvent paramMotionEvent, int paramInt)
-    {
-      if (paramInt == 0) {
-        return 0;
-      }
-      return -1;
+
+    static class BaseMotionEventVersionImpl implements MotionEventVersionImpl {
+        BaseMotionEventVersionImpl() {
+        }
+
+        public int findPointerIndex(MotionEvent event, int pointerId) {
+            if (pointerId == 0) {
+                return 0;
+            }
+            return -1;
+        }
+
+        public int getPointerId(MotionEvent event, int pointerIndex) {
+            if (pointerIndex == 0) {
+                return 0;
+            }
+            throw new IndexOutOfBoundsException("Pre-Eclair does not support multiple pointers");
+        }
+
+        public float getX(MotionEvent event, int pointerIndex) {
+            if (pointerIndex == 0) {
+                return event.getX();
+            }
+            throw new IndexOutOfBoundsException("Pre-Eclair does not support multiple pointers");
+        }
+
+        public float getY(MotionEvent event, int pointerIndex) {
+            if (pointerIndex == 0) {
+                return event.getY();
+            }
+            throw new IndexOutOfBoundsException("Pre-Eclair does not support multiple pointers");
+        }
+
+        public int getPointerCount(MotionEvent event) {
+            return 1;
+        }
     }
-    
-    public int getPointerCount(MotionEvent paramMotionEvent)
-    {
-      return 1;
+
+    static class EclairMotionEventVersionImpl implements MotionEventVersionImpl {
+        EclairMotionEventVersionImpl() {
+        }
+
+        public int findPointerIndex(MotionEvent event, int pointerId) {
+            return MotionEventCompatEclair.findPointerIndex(event, pointerId);
+        }
+
+        public int getPointerId(MotionEvent event, int pointerIndex) {
+            return MotionEventCompatEclair.getPointerId(event, pointerIndex);
+        }
+
+        public float getX(MotionEvent event, int pointerIndex) {
+            return MotionEventCompatEclair.getX(event, pointerIndex);
+        }
+
+        public float getY(MotionEvent event, int pointerIndex) {
+            return MotionEventCompatEclair.getY(event, pointerIndex);
+        }
+
+        public int getPointerCount(MotionEvent event) {
+            return MotionEventCompatEclair.getPointerCount(event);
+        }
     }
-    
-    public int getPointerId(MotionEvent paramMotionEvent, int paramInt)
-    {
-      if (paramInt == 0) {
-        return 0;
-      }
-      throw new IndexOutOfBoundsException("Pre-Eclair does not support multiple pointers");
+
+    static {
+        if (VERSION.SDK_INT >= 5) {
+            IMPL = new EclairMotionEventVersionImpl();
+        } else {
+            IMPL = new BaseMotionEventVersionImpl();
+        }
     }
-    
-    public float getX(MotionEvent paramMotionEvent, int paramInt)
-    {
-      if (paramInt == 0) {
-        return paramMotionEvent.getX();
-      }
-      throw new IndexOutOfBoundsException("Pre-Eclair does not support multiple pointers");
+
+    public static int getActionMasked(MotionEvent event) {
+        return event.getAction() & 255;
     }
-    
-    public float getY(MotionEvent paramMotionEvent, int paramInt)
-    {
-      if (paramInt == 0) {
-        return paramMotionEvent.getY();
-      }
-      throw new IndexOutOfBoundsException("Pre-Eclair does not support multiple pointers");
+
+    public static int getActionIndex(MotionEvent event) {
+        return (event.getAction() & 65280) >> 8;
     }
-  }
-  
-  static class EclairMotionEventVersionImpl
-    implements MotionEventCompat.MotionEventVersionImpl
-  {
-    public int findPointerIndex(MotionEvent paramMotionEvent, int paramInt)
-    {
-      return MotionEventCompatEclair.findPointerIndex(paramMotionEvent, paramInt);
+
+    public static int findPointerIndex(MotionEvent event, int pointerId) {
+        return IMPL.findPointerIndex(event, pointerId);
     }
-    
-    public int getPointerCount(MotionEvent paramMotionEvent)
-    {
-      return MotionEventCompatEclair.getPointerCount(paramMotionEvent);
+
+    public static int getPointerId(MotionEvent event, int pointerIndex) {
+        return IMPL.getPointerId(event, pointerIndex);
     }
-    
-    public int getPointerId(MotionEvent paramMotionEvent, int paramInt)
-    {
-      return MotionEventCompatEclair.getPointerId(paramMotionEvent, paramInt);
+
+    public static float getX(MotionEvent event, int pointerIndex) {
+        return IMPL.getX(event, pointerIndex);
     }
-    
-    public float getX(MotionEvent paramMotionEvent, int paramInt)
-    {
-      return MotionEventCompatEclair.getX(paramMotionEvent, paramInt);
+
+    public static float getY(MotionEvent event, int pointerIndex) {
+        return IMPL.getY(event, pointerIndex);
     }
-    
-    public float getY(MotionEvent paramMotionEvent, int paramInt)
-    {
-      return MotionEventCompatEclair.getY(paramMotionEvent, paramInt);
+
+    public static int getPointerCount(MotionEvent event) {
+        return IMPL.getPointerCount(event);
     }
-  }
-  
-  static abstract interface MotionEventVersionImpl
-  {
-    public abstract int findPointerIndex(MotionEvent paramMotionEvent, int paramInt);
-    
-    public abstract int getPointerCount(MotionEvent paramMotionEvent);
-    
-    public abstract int getPointerId(MotionEvent paramMotionEvent, int paramInt);
-    
-    public abstract float getX(MotionEvent paramMotionEvent, int paramInt);
-    
-    public abstract float getY(MotionEvent paramMotionEvent, int paramInt);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/MotionEventCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

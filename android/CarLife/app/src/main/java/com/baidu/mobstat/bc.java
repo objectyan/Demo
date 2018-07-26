@@ -1,16 +1,14 @@
 package com.baidu.mobstat;
 
-public class bc
-{
-  public static boolean a = true;
-  public static boolean b = false;
-  public static String c = "M";
-  public static boolean d = false;
-  public static boolean e = true;
+public class bc {
+    /* renamed from: a */
+    public static boolean f19433a = true;
+    /* renamed from: b */
+    public static boolean f19434b = false;
+    /* renamed from: c */
+    public static String f19435c = "M";
+    /* renamed from: d */
+    public static boolean f19436d = false;
+    /* renamed from: e */
+    public static boolean f19437e = true;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bc.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

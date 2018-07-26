@@ -1,120 +1,96 @@
 package com.loopj.android.http;
 
-import cz.msebera.android.httpclient.f;
+import cz.msebera.android.httpclient.C6327f;
 
-public abstract class BaseJsonHttpResponseHandler<JSON_TYPE>
-  extends TextHttpResponseHandler
-{
-  private static final String LOG_TAG = "BaseJsonHttpRH";
-  
-  public BaseJsonHttpResponseHandler()
-  {
-    this("UTF-8");
-  }
-  
-  public BaseJsonHttpResponseHandler(String paramString)
-  {
-    super(paramString);
-  }
-  
-  public final void onFailure(final int paramInt, final f[] paramArrayOff, final String paramString, final Throwable paramThrowable)
-  {
-    if (paramString != null)
-    {
-      paramArrayOff = new Runnable()
-      {
-        public void run()
-        {
-          try
-          {
-            final Object localObject = BaseJsonHttpResponseHandler.this.parseResponse(paramString, true);
-            BaseJsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                BaseJsonHttpResponseHandler.this.onFailure(BaseJsonHttpResponseHandler.2.this.val$statusCode, BaseJsonHttpResponseHandler.2.this.val$headers, BaseJsonHttpResponseHandler.2.this.val$throwable, BaseJsonHttpResponseHandler.2.this.val$responseString, localObject);
-              }
-            });
-            return;
-          }
-          catch (Throwable localThrowable)
-          {
-            AsyncHttpClient.log.d("BaseJsonHttpRH", "parseResponse thrown an problem", localThrowable);
-            BaseJsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                BaseJsonHttpResponseHandler.this.onFailure(BaseJsonHttpResponseHandler.2.this.val$statusCode, BaseJsonHttpResponseHandler.2.this.val$headers, BaseJsonHttpResponseHandler.2.this.val$throwable, BaseJsonHttpResponseHandler.2.this.val$responseString, null);
-              }
-            });
-          }
-        }
-      };
-      if ((!getUseSynchronousMode()) && (!getUsePoolThread()))
-      {
-        new Thread(paramArrayOff).start();
-        return;
-      }
-      paramArrayOff.run();
-      return;
+public abstract class BaseJsonHttpResponseHandler<JSON_TYPE> extends TextHttpResponseHandler {
+    private static final String LOG_TAG = "BaseJsonHttpRH";
+
+    public abstract void onFailure(int i, C6327f[] c6327fArr, Throwable th, String str, JSON_TYPE json_type);
+
+    public abstract void onSuccess(int i, C6327f[] c6327fArr, String str, JSON_TYPE json_type);
+
+    protected abstract JSON_TYPE parseResponse(String str, boolean z) throws Throwable;
+
+    public BaseJsonHttpResponseHandler() {
+        this("UTF-8");
     }
-    onFailure(paramInt, paramArrayOff, paramThrowable, null, null);
-  }
-  
-  public abstract void onFailure(int paramInt, f[] paramArrayOff, Throwable paramThrowable, String paramString, JSON_TYPE paramJSON_TYPE);
-  
-  public final void onSuccess(final int paramInt, final f[] paramArrayOff, final String paramString)
-  {
-    if (paramInt != 204)
-    {
-      paramArrayOff = new Runnable()
-      {
-        public void run()
-        {
-          try
-          {
-            final Object localObject = BaseJsonHttpResponseHandler.this.parseResponse(paramString, false);
-            BaseJsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                BaseJsonHttpResponseHandler.this.onSuccess(BaseJsonHttpResponseHandler.1.this.val$statusCode, BaseJsonHttpResponseHandler.1.this.val$headers, BaseJsonHttpResponseHandler.1.this.val$responseString, localObject);
-              }
-            });
-            return;
-          }
-          catch (Throwable localThrowable)
-          {
-            AsyncHttpClient.log.d("BaseJsonHttpRH", "parseResponse thrown an problem", localThrowable);
-            BaseJsonHttpResponseHandler.this.postRunnable(new Runnable()
-            {
-              public void run()
-              {
-                BaseJsonHttpResponseHandler.this.onFailure(BaseJsonHttpResponseHandler.1.this.val$statusCode, BaseJsonHttpResponseHandler.1.this.val$headers, localThrowable, BaseJsonHttpResponseHandler.1.this.val$responseString, null);
-              }
-            });
-          }
-        }
-      };
-      if ((!getUseSynchronousMode()) && (!getUsePoolThread()))
-      {
-        new Thread(paramArrayOff).start();
-        return;
-      }
-      paramArrayOff.run();
-      return;
+
+    public BaseJsonHttpResponseHandler(String encoding) {
+        super(encoding);
     }
-    onSuccess(paramInt, paramArrayOff, null, null);
-  }
-  
-  public abstract void onSuccess(int paramInt, f[] paramArrayOff, String paramString, JSON_TYPE paramJSON_TYPE);
-  
-  protected abstract JSON_TYPE parseResponse(String paramString, boolean paramBoolean)
-    throws Throwable;
+
+    public final void onSuccess(final int statusCode, final C6327f[] headers, final String responseString) {
+        if (statusCode != 204) {
+            Runnable parser = new Runnable() {
+                public void run() {
+                    try {
+                        final JSON_TYPE jsonResponse = BaseJsonHttpResponseHandler.this.parseResponse(responseString, false);
+                        BaseJsonHttpResponseHandler.this.postRunnable(new Runnable() {
+                            public void run() {
+                                BaseJsonHttpResponseHandler.this.onSuccess(statusCode, headers, responseString, jsonResponse);
+                            }
+                        });
+                    } catch (final Throwable t) {
+                        AsyncHttpClient.log.mo4879d(BaseJsonHttpResponseHandler.LOG_TAG, "parseResponse thrown an problem", t);
+                        BaseJsonHttpResponseHandler.this.postRunnable(new Runnable() {
+                            public void run() {
+                                BaseJsonHttpResponseHandler.this.onFailure(statusCode, headers, t, responseString, null);
+                            }
+                        });
+                    }
+                }
+            };
+            if (getUseSynchronousMode() || getUsePoolThread()) {
+                parser.run();
+                return;
+            } else {
+                new Thread(parser).start();
+                return;
+            }
+        }
+        onSuccess(statusCode, headers, null, null);
+    }
+
+    public final void onFailure(int statusCode, C6327f[] headers, String responseString, Throwable throwable) {
+        if (responseString != null) {
+            final String str = responseString;
+            final int i = statusCode;
+            final C6327f[] c6327fArr = headers;
+            final Throwable th = throwable;
+            Runnable parser = new Runnable() {
+
+                /* renamed from: com.loopj.android.http.BaseJsonHttpResponseHandler$2$2 */
+                class C60302 implements Runnable {
+                    C60302() {
+                    }
+
+                    public void run() {
+                        BaseJsonHttpResponseHandler.this.onFailure(i, c6327fArr, th, str, null);
+                    }
+                }
+
+                public void run() {
+                    try {
+                        final JSON_TYPE jsonResponse = BaseJsonHttpResponseHandler.this.parseResponse(str, true);
+                        BaseJsonHttpResponseHandler.this.postRunnable(new Runnable() {
+                            public void run() {
+                                BaseJsonHttpResponseHandler.this.onFailure(i, c6327fArr, th, str, jsonResponse);
+                            }
+                        });
+                    } catch (Throwable t) {
+                        AsyncHttpClient.log.mo4879d(BaseJsonHttpResponseHandler.LOG_TAG, "parseResponse thrown an problem", t);
+                        BaseJsonHttpResponseHandler.this.postRunnable(new C60302());
+                    }
+                }
+            };
+            if (getUseSynchronousMode() || getUsePoolThread()) {
+                parser.run();
+                return;
+            } else {
+                new Thread(parser).start();
+                return;
+            }
+        }
+        onFailure(statusCode, headers, throwable, null, null);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/loopj/android/http/BaseJsonHttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

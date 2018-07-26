@@ -1,9 +1,10 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.baidu.mobstat.Config;
+import com.indooratlas.android.sdk._internal.gf.C5920a;
+import com.indooratlas.android.sdk._internal.gk.C5925a;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -12,122 +13,95 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-final class ap
-  implements gf
-{
-  private final an a;
-  
-  ap(an paraman)
-  {
-    this.a = paraman;
-  }
-  
-  public final gm a(gf.a parama)
-    throws IOException
-  {
-    gk localgk = parama.a();
-    Object localObject1 = localgk.a("X-IA-Skip-Signature");
-    if ((this.a.a()) && ((localObject1 == null) || (!"true".equals(localObject1))) && (localgk.a("Host").endsWith(".indooratlas.com"))) {}
-    for (int i = 1; i == 0; i = 0) {
-      return parama.a(localgk);
+final class ap implements gf {
+    /* renamed from: a */
+    private final an f22970a;
+
+    ap(an anVar) {
+        this.f22970a = anVar;
     }
-    String str1 = localgk.a("Content-Type");
-    String str2 = localgk.a("Date");
-    localObject1 = localgk.a();
-    String str3 = ((ge)localObject1).d();
-    localObject1 = ((ge)localObject1).g();
-    String str4 = localgk.b();
-    Object localObject3;
-    Object localObject2;
-    Object localObject4;
-    if (localObject1 != null)
-    {
-      localObject1 = URLDecoder.decode((String)localObject1, "UTF-8");
-      localObject3 = Collections.emptyMap();
-      localObject2 = null;
-      localObject4 = localgk.d();
-      if (localObject4 != null)
-      {
-        localObject2 = new in();
-        ((gl)localObject4).a((io)localObject2);
-        ((io)localObject2).close();
-        localObject2 = ((io)localObject2).b().n();
-      }
-    }
-    label692:
-    for (;;)
-    {
-      try
-      {
-        Object localObject7 = af.a(str2);
-        localObject4 = new fi();
-        if (!af.a(str1)) {
-          break label692;
+
+    /* renamed from: a */
+    public final gm mo4589a(C5920a c5920a) throws IOException {
+        Object obj;
+        gk a = c5920a.mo4689a();
+        String a2 = a.m20710a("X-IA-Skip-Signature");
+        if (!this.f22970a.a() || ((a2 != null && "true".equals(a2)) || !a.m20710a("Host").endsWith(".indooratlas.com"))) {
+            obj = null;
+        } else {
+            obj = 1;
         }
-        str1 = "";
-        Object localObject5 = this.a;
-        ((an)localObject5).b();
-        localObject5 = ((an)localObject5).b;
-        Object localObject6 = this.a;
-        ((an)localObject6).b();
-        localObject6 = ((an)localObject6).c;
-        Object localObject8 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.ENGLISH);
-        ((SimpleDateFormat)localObject8).setTimeZone(TimeZone.getTimeZone("UTC"));
-        localObject7 = ((SimpleDateFormat)localObject8).format((Date)localObject7);
-        if (localObject2 != null)
-        {
-          ((fi)localObject4).a((byte[])localObject2);
-          localObject2 = ((fi)localObject4).a((byte[])localObject2);
-          if ((localObject2 != null) && (!"".equals(localObject2)))
-          {
-            str1 = str1.split(";")[0];
-            localObject3 = new TreeMap((Map)localObject3);
-            localObject8 = new StringBuilder();
-            ((StringBuilder)localObject8).append(str4.toUpperCase().trim() + "\n");
-            ((StringBuilder)localObject8).append((String)localObject2 + "\n");
-            ((StringBuilder)localObject8).append(str1 + "\n");
-            ((StringBuilder)localObject8).append((String)localObject7 + "\n");
-            ((StringBuilder)localObject8).append(fi.a((Map)localObject3));
-            ((StringBuilder)localObject8).append(fi.a(str3, (String)localObject1));
-            localObject1 = ((StringBuilder)localObject8).toString();
-            str1 = ((fi)localObject4).a.a((String)localObject6, (String)localObject1);
-            localObject1 = new fk();
-            ((fk)localObject1).c = ("HMAC-256 " + (String)localObject5 + ":" + str1);
-            ((fk)localObject1).b = ((String)localObject7);
-            ((fk)localObject1).d = ((String)localObject2);
-            ((fk)localObject1).a = str1;
-            localObject2 = localgk.e().a("Authorization", ((fk)localObject1).c).a("Date", ((fk)localObject1).b);
-            if (!af.a(((fk)localObject1).d)) {
-              ((gk.a)localObject2).a("Content-SHA256", ((fk)localObject1).d);
+        if (obj == null) {
+            return c5920a.mo4690a(a);
+        }
+        CharSequence a3 = a.m20710a("Content-Type");
+        String a4 = a.m20710a("Date");
+        ge a5 = a.m20709a();
+        String d = a5.m20650d();
+        a2 = a5.m20653g();
+        String b = a.m20711b();
+        a2 = a2 != null ? URLDecoder.decode(a2, "UTF-8") : null;
+        Map emptyMap = Collections.emptyMap();
+        byte[] bArr = null;
+        gl d2 = a.m20713d();
+        if (d2 != null) {
+            io inVar = new in();
+            d2.mo4587a(inVar);
+            inVar.close();
+            bArr = inVar.b().n();
+        }
+        try {
+            String str;
+            String a6;
+            Date a7 = af.m19797a(a4);
+            fi fiVar = new fi();
+            if (af.m19798a(a3)) {
+                str = "";
+            } else {
+                CharSequence charSequence = a3;
             }
-            return parama.a(((gk.a)localObject2).a());
-          }
-          str1 = "";
-          continue;
+            an anVar = this.f22970a;
+            anVar.b();
+            String str2 = anVar.b;
+            anVar = this.f22970a;
+            anVar.b();
+            String str3 = anVar.c;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.ENGLISH);
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String format = simpleDateFormat.format(a7);
+            String str4 = "";
+            if (bArr != null) {
+                fiVar.m20556a(bArr);
+                a6 = fiVar.m20556a(bArr);
+            } else {
+                a6 = str4;
+            }
+            str4 = (a6 == null || "".equals(a6)) ? "" : str.split(";")[0];
+            Map treeMap = new TreeMap(emptyMap);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(b.toUpperCase().trim() + "\n");
+            stringBuilder.append(a6 + "\n");
+            stringBuilder.append(str4 + "\n");
+            stringBuilder.append(format + "\n");
+            stringBuilder.append(fi.m20555a(treeMap));
+            stringBuilder.append(fi.m20554a(d, a2));
+            a2 = fiVar.f23698a.mo4676a(str3, stringBuilder.toString());
+            fk fkVar = new fk();
+            fkVar.f23702c = "HMAC-256 " + str2 + Config.TRACE_TODAY_VISIT_SPLIT + a2;
+            fkVar.f23701b = format;
+            fkVar.f23703d = a6;
+            fkVar.f23700a = a2;
+            C5925a a8 = a.m20714e().m20704a("Authorization", fkVar.f23702c).m20704a("Date", fkVar.f23701b);
+            if (!af.m19798a(fkVar.f23703d)) {
+                a8.m20704a("Content-SHA256", fkVar.f23703d);
+            }
+            return c5920a.mo4690a(a8.m20706a());
+        } catch (Throwable e) {
+            throw new IOException("Failed to parse Date header value: '" + a4 + "'", e);
+        } catch (Throwable e2) {
+            throw new IOException("Signing request failed", e2);
+        } catch (Throwable e22) {
+            throw new IOException("Signing request failed", e22);
         }
-        localObject2 = "";
-      }
-      catch (ParseException parama)
-      {
-        throw new IOException("Failed to parse Date header value: '" + str2 + "'", parama);
-      }
-      catch (NoSuchAlgorithmException parama)
-      {
-        throw new IOException("Signing request failed", parama);
-      }
-      catch (fl parama)
-      {
-        throw new IOException("Signing request failed", parama);
-      }
-      continue;
-      localObject1 = null;
-      break;
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ap.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

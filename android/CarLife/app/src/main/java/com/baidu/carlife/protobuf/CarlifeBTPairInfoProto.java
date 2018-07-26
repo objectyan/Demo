@@ -1,5 +1,6 @@
 package com.baidu.carlife.protobuf;
 
+import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -9,671 +10,579 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeBTPairInfoProto
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_com_baidu_carlife_protobuf_CarlifeBTPairInfo_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_com_baidu_carlife_protobuf_CarlifeBTPairInfo_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeBTPairInfoProto.access$1902(paramAnonymousFileDescriptor);
-        CarlifeBTPairInfoProto.access$002((Descriptors.Descriptor)CarlifeBTPairInfoProto.getDescriptor().getMessageTypes().get(0));
-        CarlifeBTPairInfoProto.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeBTPairInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeBTPairInfo_descriptor, new String[] { "Address", "PassKey", "Hash", "Randomizer", "Uuid", "Name", "Status" }, CarlifeBTPairInfoProto.CarlifeBTPairInfo.class, CarlifeBTPairInfoProto.CarlifeBTPairInfo.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n\034CarlifeBTPairInfoProto.proto\022\032com.baidu.carlife.protobuf\"\001\n\021CarlifeBTPairInfo\022\017\n\007address\030\001 \002(\t\022\017\n\007passKey\030\002 \001(\t\022\f\n\004hash\030\003 \001(\t\022\022\n\nrandomizer\030\004 \001(\t\022\f\n\004uuid\030\005 \002(\t\022\f\n\004name\030\006 \002(\t\022\016\n\006status\030\007 \002(\005" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeBTPairInfo
-    extends GeneratedMessage
-  {
-    public static final int ADDRESS_FIELD_NUMBER = 1;
-    public static final int HASH_FIELD_NUMBER = 3;
-    public static final int NAME_FIELD_NUMBER = 6;
-    public static final int PASSKEY_FIELD_NUMBER = 2;
-    public static final int RANDOMIZER_FIELD_NUMBER = 4;
-    public static final int STATUS_FIELD_NUMBER = 7;
-    public static final int UUID_FIELD_NUMBER = 5;
-    private static final CarlifeBTPairInfo defaultInstance = new CarlifeBTPairInfo();
-    private String address_ = "";
-    private boolean hasAddress;
-    private boolean hasHash;
-    private boolean hasName;
-    private boolean hasPassKey;
-    private boolean hasRandomizer;
-    private boolean hasStatus;
-    private boolean hasUuid;
-    private String hash_ = "";
-    private int memoizedSerializedSize = -1;
-    private String name_ = "";
-    private String passKey_ = "";
-    private String randomizer_ = "";
-    private int status_ = 0;
-    private String uuid_ = "";
-    
-    static
-    {
-      CarlifeBTPairInfoProto.getDescriptor();
-      CarlifeBTPairInfoProto.internalForceInit();
-    }
-    
-    public static CarlifeBTPairInfo getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeBTPairInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeBTPairInfo_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeBTPairInfo paramCarlifeBTPairInfo)
-    {
-      return newBuilder().mergeFrom(paramCarlifeBTPairInfo);
-    }
-    
-    public static CarlifeBTPairInfo parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeBTPairInfo parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public String getAddress()
-    {
-      return this.address_;
-    }
-    
-    public CarlifeBTPairInfo getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public String getHash()
-    {
-      return this.hash_;
-    }
-    
-    public String getName()
-    {
-      return this.name_;
-    }
-    
-    public String getPassKey()
-    {
-      return this.passKey_;
-    }
-    
-    public String getRandomizer()
-    {
-      return this.randomizer_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      int j = 0;
-      if (hasAddress()) {
-        j = 0 + CodedOutputStream.computeStringSize(1, getAddress());
-      }
-      i = j;
-      if (hasPassKey()) {
-        i = j + CodedOutputStream.computeStringSize(2, getPassKey());
-      }
-      j = i;
-      if (hasHash()) {
-        j = i + CodedOutputStream.computeStringSize(3, getHash());
-      }
-      i = j;
-      if (hasRandomizer()) {
-        i = j + CodedOutputStream.computeStringSize(4, getRandomizer());
-      }
-      j = i;
-      if (hasUuid()) {
-        j = i + CodedOutputStream.computeStringSize(5, getUuid());
-      }
-      i = j;
-      if (hasName()) {
-        i = j + CodedOutputStream.computeStringSize(6, getName());
-      }
-      j = i;
-      if (hasStatus()) {
-        j = i + CodedOutputStream.computeInt32Size(7, getStatus());
-      }
-      i = j + getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public int getStatus()
-    {
-      return this.status_;
-    }
-    
-    public String getUuid()
-    {
-      return this.uuid_;
-    }
-    
-    public boolean hasAddress()
-    {
-      return this.hasAddress;
-    }
-    
-    public boolean hasHash()
-    {
-      return this.hasHash;
-    }
-    
-    public boolean hasName()
-    {
-      return this.hasName;
-    }
-    
-    public boolean hasPassKey()
-    {
-      return this.hasPassKey;
-    }
-    
-    public boolean hasRandomizer()
-    {
-      return this.hasRandomizer;
-    }
-    
-    public boolean hasStatus()
-    {
-      return this.hasStatus;
-    }
-    
-    public boolean hasUuid()
-    {
-      return this.hasUuid;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeBTPairInfoProto.internal_static_com_baidu_carlife_protobuf_CarlifeBTPairInfo_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      if (!this.hasAddress) {}
-      while ((!this.hasUuid) || (!this.hasName) || (!this.hasStatus)) {
-        return false;
-      }
-      return true;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasAddress()) {
-        paramCodedOutputStream.writeString(1, getAddress());
-      }
-      if (hasPassKey()) {
-        paramCodedOutputStream.writeString(2, getPassKey());
-      }
-      if (hasHash()) {
-        paramCodedOutputStream.writeString(3, getHash());
-      }
-      if (hasRandomizer()) {
-        paramCodedOutputStream.writeString(4, getRandomizer());
-      }
-      if (hasUuid()) {
-        paramCodedOutputStream.writeString(5, getUuid());
-      }
-      if (hasName()) {
-        paramCodedOutputStream.writeString(6, getName());
-      }
-      if (hasStatus()) {
-        paramCodedOutputStream.writeInt32(7, getStatus());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeBTPairInfoProto.CarlifeBTPairInfo result;
-      
-      private CarlifeBTPairInfoProto.CarlifeBTPairInfo buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeBTPairInfoProto {
+    private static FileDescriptor descriptor;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeBTPairInfo_descriptor */
+    private static Descriptor f6597xfddefd18;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeBTPairInfo_fieldAccessorTable */
+    private static FieldAccessorTable f6598xeb6b8b96;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeBTPairInfoProto$1 */
+    static class C20511 implements InternalDescriptorAssigner {
+        C20511() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeBTPairInfoProto.CarlifeBTPairInfo(null);
-        return localBuilder;
-      }
-      
-      public CarlifeBTPairInfoProto.CarlifeBTPairInfo build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeBTPairInfoProto.descriptor = root;
+            CarlifeBTPairInfoProto.f6597xfddefd18 = (Descriptor) CarlifeBTPairInfoProto.getDescriptor().getMessageTypes().get(0);
+            CarlifeBTPairInfoProto.f6598xeb6b8b96 = new FieldAccessorTable(CarlifeBTPairInfoProto.f6597xfddefd18, new String[]{JNISearchConst.JNI_ADDRESS, "PassKey", "Hash", "Randomizer", "Uuid", "Name", "Status"}, CarlifeBTPairInfo.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeBTPairInfoProto.CarlifeBTPairInfo buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo localCarlifeBTPairInfo = this.result;
-        this.result = null;
-        return localCarlifeBTPairInfo;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeBTPairInfoProto.CarlifeBTPairInfo(null);
-        return this;
-      }
-      
-      public Builder clearAddress()
-      {
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$502(this.result, false);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$602(this.result, CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDefaultInstance().getAddress());
-        return this;
-      }
-      
-      public Builder clearHash()
-      {
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$902(this.result, false);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1002(this.result, CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDefaultInstance().getHash());
-        return this;
-      }
-      
-      public Builder clearName()
-      {
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1502(this.result, false);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1602(this.result, CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDefaultInstance().getName());
-        return this;
-      }
-      
-      public Builder clearPassKey()
-      {
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$702(this.result, false);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$802(this.result, CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDefaultInstance().getPassKey());
-        return this;
-      }
-      
-      public Builder clearRandomizer()
-      {
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1102(this.result, false);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1202(this.result, CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDefaultInstance().getRandomizer());
-        return this;
-      }
-      
-      public Builder clearStatus()
-      {
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1702(this.result, false);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1802(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearUuid()
-      {
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1302(this.result, false);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1402(this.result, CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDefaultInstance().getUuid());
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public String getAddress()
-      {
-        return this.result.getAddress();
-      }
-      
-      public CarlifeBTPairInfoProto.CarlifeBTPairInfo getDefaultInstanceForType()
-      {
-        return CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDescriptor();
-      }
-      
-      public String getHash()
-      {
-        return this.result.getHash();
-      }
-      
-      public String getName()
-      {
-        return this.result.getName();
-      }
-      
-      public String getPassKey()
-      {
-        return this.result.getPassKey();
-      }
-      
-      public String getRandomizer()
-      {
-        return this.result.getRandomizer();
-      }
-      
-      public int getStatus()
-      {
-        return this.result.getStatus();
-      }
-      
-      public String getUuid()
-      {
-        return this.result.getUuid();
-      }
-      
-      public boolean hasAddress()
-      {
-        return this.result.hasAddress();
-      }
-      
-      public boolean hasHash()
-      {
-        return this.result.hasHash();
-      }
-      
-      public boolean hasName()
-      {
-        return this.result.hasName();
-      }
-      
-      public boolean hasPassKey()
-      {
-        return this.result.hasPassKey();
-      }
-      
-      public boolean hasRandomizer()
-      {
-        return this.result.hasRandomizer();
-      }
-      
-      public boolean hasStatus()
-      {
-        return this.result.hasStatus();
-      }
-      
-      public boolean hasUuid()
-      {
-        return this.result.hasUuid();
-      }
-      
-      protected CarlifeBTPairInfoProto.CarlifeBTPairInfo internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeBTPairInfoProto.CarlifeBTPairInfo paramCarlifeBTPairInfo)
-      {
-        if (paramCarlifeBTPairInfo == CarlifeBTPairInfoProto.CarlifeBTPairInfo.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeBTPairInfo.hasAddress()) {
-          setAddress(paramCarlifeBTPairInfo.getAddress());
-        }
-        if (paramCarlifeBTPairInfo.hasPassKey()) {
-          setPassKey(paramCarlifeBTPairInfo.getPassKey());
-        }
-        if (paramCarlifeBTPairInfo.hasHash()) {
-          setHash(paramCarlifeBTPairInfo.getHash());
-        }
-        if (paramCarlifeBTPairInfo.hasRandomizer()) {
-          setRandomizer(paramCarlifeBTPairInfo.getRandomizer());
-        }
-        if (paramCarlifeBTPairInfo.hasUuid()) {
-          setUuid(paramCarlifeBTPairInfo.getUuid());
-        }
-        if (paramCarlifeBTPairInfo.hasName()) {
-          setName(paramCarlifeBTPairInfo.getName());
-        }
-        if (paramCarlifeBTPairInfo.hasStatus()) {
-          setStatus(paramCarlifeBTPairInfo.getStatus());
-        }
-        mergeUnknownFields(paramCarlifeBTPairInfo.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeBTPairInfo extends GeneratedMessage {
+        public static final int ADDRESS_FIELD_NUMBER = 1;
+        public static final int HASH_FIELD_NUMBER = 3;
+        public static final int NAME_FIELD_NUMBER = 6;
+        public static final int PASSKEY_FIELD_NUMBER = 2;
+        public static final int RANDOMIZER_FIELD_NUMBER = 4;
+        public static final int STATUS_FIELD_NUMBER = 7;
+        public static final int UUID_FIELD_NUMBER = 5;
+        private static final CarlifeBTPairInfo defaultInstance = new CarlifeBTPairInfo();
+        private String address_;
+        private boolean hasAddress;
+        private boolean hasHash;
+        private boolean hasName;
+        private boolean hasPassKey;
+        private boolean hasRandomizer;
+        private boolean hasStatus;
+        private boolean hasUuid;
+        private String hash_;
+        private int memoizedSerializedSize;
+        private String name_;
+        private String passKey_;
+        private String randomizer_;
+        private int status_;
+        private String uuid_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeBTPairInfo result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 10: 
-            setAddress(paramCodedInputStream.readString());
-            break;
-          case 18: 
-            setPassKey(paramCodedInputStream.readString());
-            break;
-          case 26: 
-            setHash(paramCodedInputStream.readString());
-            break;
-          case 34: 
-            setRandomizer(paramCodedInputStream.readString());
-            break;
-          case 42: 
-            setUuid(paramCodedInputStream.readString());
-            break;
-          case 50: 
-            setName(paramCodedInputStream.readString());
-            break;
-          case 56: 
-            setStatus(paramCodedInputStream.readInt32());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeBTPairInfo();
+                return builder;
+            }
+
+            protected CarlifeBTPairInfo internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeBTPairInfo();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeBTPairInfo.getDescriptor();
+            }
+
+            public CarlifeBTPairInfo getDefaultInstanceForType() {
+                return CarlifeBTPairInfo.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeBTPairInfo build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeBTPairInfo buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeBTPairInfo buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeBTPairInfo returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeBTPairInfo) {
+                    return mergeFrom((CarlifeBTPairInfo) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeBTPairInfo other) {
+                if (other != CarlifeBTPairInfo.getDefaultInstance()) {
+                    if (other.hasAddress()) {
+                        setAddress(other.getAddress());
+                    }
+                    if (other.hasPassKey()) {
+                        setPassKey(other.getPassKey());
+                    }
+                    if (other.hasHash()) {
+                        setHash(other.getHash());
+                    }
+                    if (other.hasRandomizer()) {
+                        setRandomizer(other.getRandomizer());
+                    }
+                    if (other.hasUuid()) {
+                        setUuid(other.getUuid());
+                    }
+                    if (other.hasName()) {
+                        setName(other.getName());
+                    }
+                    if (other.hasStatus()) {
+                        setStatus(other.getStatus());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 10:
+                            setAddress(input.readString());
+                            continue;
+                        case 18:
+                            setPassKey(input.readString());
+                            continue;
+                        case 26:
+                            setHash(input.readString());
+                            continue;
+                        case 34:
+                            setRandomizer(input.readString());
+                            continue;
+                        case 42:
+                            setUuid(input.readString());
+                            continue;
+                        case 50:
+                            setName(input.readString());
+                            continue;
+                        case 56:
+                            setStatus(input.readInt32());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasAddress() {
+                return this.result.hasAddress();
+            }
+
+            public String getAddress() {
+                return this.result.getAddress();
+            }
+
+            public Builder setAddress(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasAddress = true;
+                this.result.address_ = value;
+                return this;
+            }
+
+            public Builder clearAddress() {
+                this.result.hasAddress = false;
+                this.result.address_ = CarlifeBTPairInfo.getDefaultInstance().getAddress();
+                return this;
+            }
+
+            public boolean hasPassKey() {
+                return this.result.hasPassKey();
+            }
+
+            public String getPassKey() {
+                return this.result.getPassKey();
+            }
+
+            public Builder setPassKey(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasPassKey = true;
+                this.result.passKey_ = value;
+                return this;
+            }
+
+            public Builder clearPassKey() {
+                this.result.hasPassKey = false;
+                this.result.passKey_ = CarlifeBTPairInfo.getDefaultInstance().getPassKey();
+                return this;
+            }
+
+            public boolean hasHash() {
+                return this.result.hasHash();
+            }
+
+            public String getHash() {
+                return this.result.getHash();
+            }
+
+            public Builder setHash(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasHash = true;
+                this.result.hash_ = value;
+                return this;
+            }
+
+            public Builder clearHash() {
+                this.result.hasHash = false;
+                this.result.hash_ = CarlifeBTPairInfo.getDefaultInstance().getHash();
+                return this;
+            }
+
+            public boolean hasRandomizer() {
+                return this.result.hasRandomizer();
+            }
+
+            public String getRandomizer() {
+                return this.result.getRandomizer();
+            }
+
+            public Builder setRandomizer(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasRandomizer = true;
+                this.result.randomizer_ = value;
+                return this;
+            }
+
+            public Builder clearRandomizer() {
+                this.result.hasRandomizer = false;
+                this.result.randomizer_ = CarlifeBTPairInfo.getDefaultInstance().getRandomizer();
+                return this;
+            }
+
+            public boolean hasUuid() {
+                return this.result.hasUuid();
+            }
+
+            public String getUuid() {
+                return this.result.getUuid();
+            }
+
+            public Builder setUuid(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasUuid = true;
+                this.result.uuid_ = value;
+                return this;
+            }
+
+            public Builder clearUuid() {
+                this.result.hasUuid = false;
+                this.result.uuid_ = CarlifeBTPairInfo.getDefaultInstance().getUuid();
+                return this;
+            }
+
+            public boolean hasName() {
+                return this.result.hasName();
+            }
+
+            public String getName() {
+                return this.result.getName();
+            }
+
+            public Builder setName(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasName = true;
+                this.result.name_ = value;
+                return this;
+            }
+
+            public Builder clearName() {
+                this.result.hasName = false;
+                this.result.name_ = CarlifeBTPairInfo.getDefaultInstance().getName();
+                return this;
+            }
+
+            public boolean hasStatus() {
+                return this.result.hasStatus();
+            }
+
+            public int getStatus() {
+                return this.result.getStatus();
+            }
+
+            public Builder setStatus(int value) {
+                this.result.hasStatus = true;
+                this.result.status_ = value;
+                return this;
+            }
+
+            public Builder clearStatus() {
+                this.result.hasStatus = false;
+                this.result.status_ = 0;
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeBTPairInfoProto.CarlifeBTPairInfo)) {
-          return mergeFrom((CarlifeBTPairInfoProto.CarlifeBTPairInfo)paramMessage);
+
+        private CarlifeBTPairInfo() {
+            this.address_ = "";
+            this.passKey_ = "";
+            this.hash_ = "";
+            this.randomizer_ = "";
+            this.uuid_ = "";
+            this.name_ = "";
+            this.status_ = 0;
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setAddress(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        static {
+            CarlifeBTPairInfoProto.getDescriptor();
+            CarlifeBTPairInfoProto.internalForceInit();
         }
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$502(this.result, true);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$602(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setHash(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        public static CarlifeBTPairInfo getDefaultInstance() {
+            return defaultInstance;
         }
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$902(this.result, true);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1002(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setName(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        public CarlifeBTPairInfo getDefaultInstanceForType() {
+            return defaultInstance;
         }
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1502(this.result, true);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1602(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setPassKey(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeBTPairInfoProto.f6597xfddefd18;
         }
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$702(this.result, true);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$802(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setRandomizer(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeBTPairInfoProto.f6598xeb6b8b96;
         }
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1102(this.result, true);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1202(this.result, paramString);
-        return this;
-      }
-      
-      public Builder setStatus(int paramInt)
-      {
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1702(this.result, true);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1802(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setUuid(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        public boolean hasAddress() {
+            return this.hasAddress;
         }
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1302(this.result, true);
-        CarlifeBTPairInfoProto.CarlifeBTPairInfo.access$1402(this.result, paramString);
-        return this;
-      }
+
+        public String getAddress() {
+            return this.address_;
+        }
+
+        public boolean hasPassKey() {
+            return this.hasPassKey;
+        }
+
+        public String getPassKey() {
+            return this.passKey_;
+        }
+
+        public boolean hasHash() {
+            return this.hasHash;
+        }
+
+        public String getHash() {
+            return this.hash_;
+        }
+
+        public boolean hasRandomizer() {
+            return this.hasRandomizer;
+        }
+
+        public String getRandomizer() {
+            return this.randomizer_;
+        }
+
+        public boolean hasUuid() {
+            return this.hasUuid;
+        }
+
+        public String getUuid() {
+            return this.uuid_;
+        }
+
+        public boolean hasName() {
+            return this.hasName;
+        }
+
+        public String getName() {
+            return this.name_;
+        }
+
+        public boolean hasStatus() {
+            return this.hasStatus;
+        }
+
+        public int getStatus() {
+            return this.status_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasAddress && this.hasUuid && this.hasName && this.hasStatus) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasAddress()) {
+                output.writeString(1, getAddress());
+            }
+            if (hasPassKey()) {
+                output.writeString(2, getPassKey());
+            }
+            if (hasHash()) {
+                output.writeString(3, getHash());
+            }
+            if (hasRandomizer()) {
+                output.writeString(4, getRandomizer());
+            }
+            if (hasUuid()) {
+                output.writeString(5, getUuid());
+            }
+            if (hasName()) {
+                output.writeString(6, getName());
+            }
+            if (hasStatus()) {
+                output.writeInt32(7, getStatus());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasAddress()) {
+                size = 0 + CodedOutputStream.computeStringSize(1, getAddress());
+            }
+            if (hasPassKey()) {
+                size += CodedOutputStream.computeStringSize(2, getPassKey());
+            }
+            if (hasHash()) {
+                size += CodedOutputStream.computeStringSize(3, getHash());
+            }
+            if (hasRandomizer()) {
+                size += CodedOutputStream.computeStringSize(4, getRandomizer());
+            }
+            if (hasUuid()) {
+                size += CodedOutputStream.computeStringSize(5, getUuid());
+            }
+            if (hasName()) {
+                size += CodedOutputStream.computeStringSize(6, getName());
+            }
+            if (hasStatus()) {
+                size += CodedOutputStream.computeInt32Size(7, getStatus());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeBTPairInfo parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeBTPairInfo parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeBTPairInfo prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeBTPairInfoProto() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n\u001cCarlifeBTPairInfoProto.proto\u0012\u001acom.baidu.carlife.protobuf\"\u0001\n\u0011CarlifeBTPairInfo\u0012\u000f\n\u0007address\u0018\u0001 \u0002(\t\u0012\u000f\n\u0007passKey\u0018\u0002 \u0001(\t\u0012\f\n\u0004hash\u0018\u0003 \u0001(\t\u0012\u0012\n\nrandomizer\u0018\u0004 \u0001(\t\u0012\f\n\u0004uuid\u0018\u0005 \u0002(\t\u0012\f\n\u0004name\u0018\u0006 \u0002(\t\u0012\u000e\n\u0006status\u0018\u0007 \u0002(\u0005"}, new FileDescriptor[0], new C20511());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeBTPairInfoProto.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

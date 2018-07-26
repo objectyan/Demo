@@ -1,30 +1,33 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.gd.C5917a;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLSocket;
 
-public abstract class gs
-{
-  public static final Logger a = Logger.getLogger(gh.class.getName());
-  public static gs b;
-  
-  public abstract gt a(gh paramgh);
-  
-  public abstract gx a(fw paramfw);
-  
-  public abstract ii a(fw paramfw, fn paramfn, ig paramig);
-  
-  public abstract void a(fx paramfx, SSLSocket paramSSLSocket, boolean paramBoolean);
-  
-  public abstract void a(gd.a parama, String paramString);
-  
-  public abstract boolean a(fw paramfw, ii paramii);
-  
-  public abstract void b(fw paramfw, ii paramii);
+public abstract class gs {
+    /* renamed from: a */
+    public static final Logger f23876a = Logger.getLogger(gh.class.getName());
+    /* renamed from: b */
+    public static gs f23877b;
+
+    /* renamed from: a */
+    public abstract gt mo4682a(gh ghVar);
+
+    /* renamed from: a */
+    public abstract gx mo4683a(fw fwVar);
+
+    /* renamed from: a */
+    public abstract ii mo4684a(fw fwVar, fn fnVar, ig igVar);
+
+    /* renamed from: a */
+    public abstract void mo4685a(fx fxVar, SSLSocket sSLSocket, boolean z);
+
+    /* renamed from: a */
+    public abstract void mo4686a(C5917a c5917a, String str);
+
+    /* renamed from: a */
+    public abstract boolean mo4687a(fw fwVar, ii iiVar);
+
+    /* renamed from: b */
+    public abstract void mo4688b(fw fwVar, ii iiVar);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

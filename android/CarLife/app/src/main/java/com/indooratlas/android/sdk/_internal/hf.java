@@ -1,12 +1,8 @@
 package com.indooratlas.android.sdk._internal;
 
-public enum hf
-{
-  private hf() {}
+public enum hf {
+    SPDY_SYN_STREAM,
+    SPDY_REPLY,
+    SPDY_HEADERS,
+    HTTP_20_HEADERS
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hf.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

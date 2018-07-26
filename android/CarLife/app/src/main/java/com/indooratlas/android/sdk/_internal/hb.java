@@ -4,44 +4,37 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
-public abstract interface hb
-  extends Closeable
-{
-  public abstract void a()
-    throws IOException;
-  
-  public abstract void a(int paramInt, long paramLong)
-    throws IOException;
-  
-  public abstract void a(int paramInt, gz paramgz)
-    throws IOException;
-  
-  public abstract void a(int paramInt, gz paramgz, byte[] paramArrayOfByte)
-    throws IOException;
-  
-  public abstract void a(hm paramhm)
-    throws IOException;
-  
-  public abstract void a(boolean paramBoolean, int paramInt1, int paramInt2)
-    throws IOException;
-  
-  public abstract void a(boolean paramBoolean, int paramInt1, in paramin, int paramInt2)
-    throws IOException;
-  
-  public abstract void a(boolean paramBoolean, int paramInt, List<he> paramList)
-    throws IOException;
-  
-  public abstract void b()
-    throws IOException;
-  
-  public abstract void b(hm paramhm)
-    throws IOException;
-  
-  public abstract int c();
+public interface hb extends Closeable {
+    /* renamed from: a */
+    void mo4713a() throws IOException;
+
+    /* renamed from: a */
+    void mo4714a(int i, long j) throws IOException;
+
+    /* renamed from: a */
+    void mo4715a(int i, gz gzVar) throws IOException;
+
+    /* renamed from: a */
+    void mo4716a(int i, gz gzVar, byte[] bArr) throws IOException;
+
+    /* renamed from: a */
+    void mo4717a(hm hmVar) throws IOException;
+
+    /* renamed from: a */
+    void mo4718a(boolean z, int i, int i2) throws IOException;
+
+    /* renamed from: a */
+    void mo4719a(boolean z, int i, in inVar, int i2) throws IOException;
+
+    /* renamed from: a */
+    void mo4720a(boolean z, int i, List<he> list) throws IOException;
+
+    /* renamed from: b */
+    void mo4721b() throws IOException;
+
+    /* renamed from: b */
+    void mo4722b(hm hmVar) throws IOException;
+
+    /* renamed from: c */
+    int mo4723c();
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hb.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -6,310 +6,279 @@ import android.os.Handler.Callback;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.os.SystemClock;
+import com.baidu.che.codriver.util.C2725h;
 import com.baidu.che.codriver.util.INoProguard;
-import com.baidu.che.codriver.util.h;
-import com.baidu.che.codriver.vr.n;
-import com.baidu.che.codriver.vr.record.c.a;
-import com.baidu.che.codriver.vr.record.d;
+import com.baidu.che.codriver.vr.C2840n;
+import com.baidu.che.codriver.vr.record.C1749d;
+import com.baidu.che.codriver.vr.record.C2862b;
+import com.baidu.che.codriver.vr.record.C2863c;
+import com.baidu.che.codriver.vr.record.C2863c.C2857a;
+import com.baidu.che.codriver.vr.record.outside.OutsideRecordHelper;
 import java.io.InputStream;
 
-public class RecordHelper
-  implements INoProguard, c.a
-{
-  private static final String INPUT_STREAM = "#com.baidu.che.codriver.vr.record.aec.RecordHelper.getInputStream()";
-  private static final int MSG_SOFTWARE_AEC_GET_ECHO = 1;
-  private static boolean SAVE_FLAG = false;
-  private static final String TAG = "RecordHelper";
-  private static RecordHelper mInstance;
-  private static com.baidu.che.codriver.vr.record.c mRecordInputStream;
-  private byte[] inputData = new byte['਀'];
-  private long lastDataPackageTime = 0L;
-  private com.baidu.che.codriver.vr.record.b mAecResultData;
-  private com.baidu.che.codriver.vr.record.b mBeforeAecMicData;
-  private com.baidu.che.codriver.vr.record.b mBeforeAecSpkData;
-  private Context mContext;
-  private Handler mHandler;
-  private byte[] mMicBuffer = new byte['਀'];
-  private d mRecordTool;
-  private a mRecordType = a.a;
-  private byte[] mSpeakerBuffer = new byte['਀'];
-  private b mState;
-  private c mVolumeChangeListener;
-  
-  public static InputStream getInputStream()
-  {
-    if ((mRecordInputStream == null) || (mRecordInputStream.a()))
-    {
-      h.b("RecordHelper", "-----getInputStream()--build RecordInputStream--");
-      mRecordInputStream = new com.baidu.che.codriver.vr.record.c();
-      if (mInstance != null) {
-        mInstance.startRecord();
-      }
+public class RecordHelper implements INoProguard, C2857a {
+    private static final String INPUT_STREAM = "#com.baidu.che.codriver.vr.record.aec.RecordHelper.getInputStream()";
+    private static final int MSG_SOFTWARE_AEC_GET_ECHO = 1;
+    private static boolean SAVE_FLAG = false;
+    private static final String TAG = "RecordHelper";
+    private static RecordHelper mInstance;
+    private static C2863c mRecordInputStream;
+    private byte[] inputData = new byte[C2858a.f9357a];
+    private long lastDataPackageTime = 0;
+    private C2862b mAecResultData;
+    private C2862b mBeforeAecMicData;
+    private C2862b mBeforeAecSpkData;
+    private Context mContext;
+    private Handler mHandler;
+    private byte[] mMicBuffer = new byte[C2858a.f9357a];
+    private C1749d mRecordTool;
+    private C2855a mRecordType = C2855a.INSIDE_RAW;
+    private byte[] mSpeakerBuffer = new byte[C2858a.f9357a];
+    private C2856b mState;
+    private C2740c mVolumeChangeListener;
+
+    /* renamed from: com.baidu.che.codriver.vr.record.aec.RecordHelper$c */
+    public interface C2740c {
+        /* renamed from: a */
+        void mo1951a(int i);
     }
-    return mRecordInputStream;
-  }
-  
-  private boolean isMicLeft()
-  {
-    return (this.mRecordType == a.c) || (this.mRecordType == a.f);
-  }
-  
-  public void endRecord()
-  {
-    h.b("RecordHelper", "-----endRecord()----");
-    this.mRecordTool.b();
-    if (this.mAecResultData != null) {
-      this.mAecResultData.d();
-    }
-    if (this.mBeforeAecMicData != null) {
-      this.mBeforeAecMicData.d();
-    }
-    if (this.mBeforeAecSpkData != null) {
-      this.mBeforeAecSpkData.d();
-    }
-  }
-  
-  public void feedAudioBuffer(byte[] paramArrayOfByte)
-  {
-    int i = 0;
-    if (i < paramArrayOfByte.length / 4)
-    {
-      if (isMicLeft())
-      {
-        this.mMicBuffer[(i * 2)] = paramArrayOfByte[(i * 4)];
-        this.mMicBuffer[(i * 2 + 1)] = paramArrayOfByte[(i * 4 + 1)];
-        this.mSpeakerBuffer[(i * 2)] = paramArrayOfByte[(i * 4 + 2)];
-        this.mSpeakerBuffer[(i * 2 + 1)] = paramArrayOfByte[(i * 4 + 3)];
-      }
-      for (;;)
-      {
-        i += 1;
-        break;
-        this.mSpeakerBuffer[(i * 2)] = paramArrayOfByte[(i * 4)];
-        this.mSpeakerBuffer[(i * 2 + 1)] = paramArrayOfByte[(i * 4 + 1)];
-        this.mMicBuffer[(i * 2)] = paramArrayOfByte[(i * 4 + 2)];
-        this.mMicBuffer[(i * 2 + 1)] = paramArrayOfByte[(i * 4 + 3)];
-      }
-    }
-    feedAudioBuffer(this.mMicBuffer, this.mSpeakerBuffer);
-  }
-  
-  public void feedAudioBuffer(byte[] paramArrayOfByte1, byte[] paramArrayOfByte2)
-  {
-    if ((paramArrayOfByte1 == null) || (paramArrayOfByte1.length == 0) || (paramArrayOfByte2 == null) || (paramArrayOfByte2.length == 0))
-    {
-      h.e("RecordHelper", "-----feedAudioBuffer-----NULL Data!!!");
-      a.b();
-    }
-    do
-    {
-      return;
-      if (this.mBeforeAecMicData != null) {
-        this.mBeforeAecMicData.b(paramArrayOfByte1);
-      }
-      if (this.mBeforeAecSpkData != null) {
-        this.mBeforeAecSpkData.b(paramArrayOfByte2);
-      }
-      a.a(paramArrayOfByte1, paramArrayOfByte2, this.inputData);
-      paramArrayOfByte1 = this.inputData;
-      if (n.a()) {
-        this.lastDataPackageTime = SystemClock.elapsedRealtime();
-      }
-      if (this.mAecResultData != null)
-      {
-        this.mAecResultData.b(paramArrayOfByte1);
-        return;
-      }
-    } while ((mRecordInputStream == null) || (mRecordInputStream.a()) || (mRecordInputStream.a(paramArrayOfByte1, 0, 2560) != -1));
-    h.e("RecordHelper", "--------feedAudioBuffer--ret == -1");
-  }
-  
-  public String getInfile()
-  {
-    if ((this.mRecordType == a.a) || (this.mRecordType == a.b)) {
-      return null;
-    }
-    if ((this.mRecordType == a.e) || (this.mRecordType == a.f) || (this.mRecordType == a.g)) {
-      return "#com.baidu.che.codriver.vr.record.outside.OutsideRecordHelper.getAsrInputStream()";
-    }
-    return "#com.baidu.che.codriver.vr.record.aec.RecordHelper.getInputStream()";
-  }
-  
-  public void init(Context paramContext, c paramc)
-  {
-    Object localObject = null;
-    mInstance = this;
-    this.mContext = paramContext;
-    a.a();
-    this.mRecordTool = new b();
-    if (SAVE_FLAG)
-    {
-      paramContext = new com.baidu.che.codriver.vr.record.b(this.mContext);
-      this.mAecResultData = paramContext;
-      if (!SAVE_FLAG) {
-        break label144;
-      }
-    }
-    label144:
-    for (paramContext = new com.baidu.che.codriver.vr.record.b(this.mContext);; paramContext = null)
-    {
-      this.mBeforeAecMicData = paramContext;
-      paramContext = (Context)localObject;
-      if (SAVE_FLAG) {
-        paramContext = new com.baidu.che.codriver.vr.record.b(this.mContext);
-      }
-      this.mBeforeAecSpkData = paramContext;
-      this.mVolumeChangeListener = paramc;
-      paramContext = new HandlerThread("AecVolumeChangeListener");
-      paramContext.start();
-      this.mHandler = new Handler(paramContext.getLooper(), new Handler.Callback()
-      {
-        public boolean handleMessage(Message paramAnonymousMessage)
-        {
-          switch (paramAnonymousMessage.what)
-          {
-          }
-          for (;;)
-          {
-            return true;
-            paramAnonymousMessage = Message.obtain(paramAnonymousMessage);
-            int i = a.c();
-            h.b("RecordHelper", "--MSG_SOFTWARE_AEC_GET_ECHO----volume:" + i);
-            if (i != paramAnonymousMessage.arg1)
-            {
-              paramAnonymousMessage.arg1 = i;
-              if (RecordHelper.this.mVolumeChangeListener != null) {
-                RecordHelper.this.mVolumeChangeListener.a(i);
-              }
+
+    /* renamed from: com.baidu.che.codriver.vr.record.aec.RecordHelper$1 */
+    class C28531 implements Callback {
+        /* renamed from: a */
+        final /* synthetic */ RecordHelper f9342a;
+
+        C28531(RecordHelper this$0) {
+            this.f9342a = this$0;
+        }
+
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    Message newMsg = Message.obtain(msg);
+                    int volume = C2858a.m10818c();
+                    C2725h.m10207b(RecordHelper.TAG, "--MSG_SOFTWARE_AEC_GET_ECHO----volume:" + volume);
+                    if (volume != newMsg.arg1) {
+                        newMsg.arg1 = volume;
+                        if (this.f9342a.mVolumeChangeListener != null) {
+                            this.f9342a.mVolumeChangeListener.mo1951a(volume);
+                        }
+                    }
+                    this.f9342a.mHandler.sendMessageDelayed(newMsg, 1000);
+                    break;
             }
-            RecordHelper.this.mHandler.sendMessageDelayed(paramAnonymousMessage, 1000L);
-          }
+            return true;
         }
-      });
-      return;
-      paramContext = null;
-      break;
     }
-  }
-  
-  public void onClose()
-  {
-    endRecord();
-  }
-  
-  public void release()
-  {
-    mRecordInputStream = null;
-    a.b();
-    this.mRecordTool.b();
-  }
-  
-  public void reset()
-  {
-    h.b("RecordHelper", "-----reset()----");
-    if ((mRecordInputStream == null) || (mRecordInputStream.a()))
-    {
-      h.b("RecordHelper", "-----reset()--build RecordInputStream--");
-      mRecordInputStream = new com.baidu.che.codriver.vr.record.c();
+
+    /* renamed from: com.baidu.che.codriver.vr.record.aec.RecordHelper$a */
+    public enum C2855a {
+        INSIDE_RAW,
+        INSIDE_DSP_RAW,
+        INSIDE_AEC_MIC_LEFT,
+        INSIDE_AEC_MIC_RIGHT,
+        OUTSIDE_RAW,
+        OUTSIDE_AEC_MIC_LEFT,
+        OUTSIDE_AEC_MIC_RIGHT,
+        OUTSIDE_AEC_DUAL_CHANNEL
     }
-    if (this.mAecResultData != null) {
-      this.mAecResultData.a("_resultAfterAec");
+
+    /* renamed from: com.baidu.che.codriver.vr.record.aec.RecordHelper$b */
+    public enum C2856b {
+        STATE_BUSY_WAKEUP,
+        STATE_BUSY_SCENE_CMD,
+        STATE_BUSY_NORMAL
     }
-    if (this.mBeforeAecMicData != null) {
-      this.mBeforeAecMicData.a("_MicDataBeforeAec");
-    }
-    if (this.mBeforeAecSpkData != null) {
-      this.mBeforeAecSpkData.a("_SpkDataBeforeAec");
-    }
-    this.mRecordTool.c();
-    mRecordInputStream.a(this);
-  }
-  
-  public void setDspEchoEnergy(int paramInt)
-  {
-    int j = 1;
-    int i = paramInt;
-    if (paramInt == 0) {
-      i = 1;
-    }
-    double d = 20.0D * Math.log10(i / 11584.0D);
-    if (d < -9.0D) {
-      paramInt = 1;
-    }
-    for (;;)
-    {
-      h.b("RecordHelper", "--MSG_HARDWARE_AEC_GET_ECHO---- echoEnergy:" + i + "(" + d + "dB) level:" + paramInt);
-      if (this.mVolumeChangeListener != null) {
-        this.mVolumeChangeListener.a(paramInt);
-      }
-      return;
-      if (d < -4.5D)
-      {
-        paramInt = 2;
-      }
-      else
-      {
-        paramInt = j;
-        if (d < 0.0D) {
-          paramInt = 3;
+
+    public String getInfile() {
+        if (this.mRecordType == C2855a.INSIDE_RAW || this.mRecordType == C2855a.INSIDE_DSP_RAW) {
+            return null;
         }
-      }
+        if (this.mRecordType == C2855a.OUTSIDE_RAW || this.mRecordType == C2855a.OUTSIDE_AEC_MIC_LEFT || this.mRecordType == C2855a.OUTSIDE_AEC_MIC_RIGHT) {
+            return OutsideRecordHelper.ASR_INPUT_STREAM;
+        }
+        return INPUT_STREAM;
     }
-  }
-  
-  public void setRecordType(a parama, d paramd)
-  {
-    h.b("RecordHelper", "setRecordType() " + parama.name());
-    if ((parama == this.mRecordType) && (this.mRecordType != a.a))
-    {
-      h.b("RecordHelper", "lastRecordType is " + this.mRecordType + " , setRecordType do nothing.");
-      return;
+
+    public static InputStream getInputStream() {
+        if (mRecordInputStream == null || mRecordInputStream.m10840a()) {
+            C2725h.m10207b(TAG, "-----getInputStream()--build RecordInputStream--");
+            mRecordInputStream = new C2863c();
+            if (mInstance != null) {
+                mInstance.startRecord();
+            }
+        }
+        return mRecordInputStream;
     }
-    this.mRecordType = parama;
-    switch (2.a[this.mRecordType.ordinal()])
-    {
-    case 1: 
-    default: 
-      this.mRecordTool = new b();
-      return;
-    case 2: 
-    case 3: 
-      this.mRecordTool = new c();
-      this.mHandler.sendEmptyMessageDelayed(1, 1000L);
-      return;
+
+    public void onClose() {
+        endRecord();
     }
-    this.mRecordTool = paramd;
-  }
-  
-  public void setState(b paramb)
-  {
-    this.mState = paramb;
-  }
-  
-  public void startRecord()
-  {
-    h.b("RecordHelper", "-----startRecord()----");
-    this.mRecordTool.a();
-  }
-  
-  public static enum a
-  {
-    private a() {}
-  }
-  
-  public static enum b
-  {
-    private b() {}
-  }
-  
-  public static abstract interface c
-  {
-    public abstract void a(int paramInt);
-  }
+
+    public void setState(C2856b state) {
+        this.mState = state;
+    }
+
+    public void init(Context context, C2740c listener) {
+        C2862b c2862b;
+        C2862b c2862b2 = null;
+        mInstance = this;
+        this.mContext = context;
+        C2858a.m10812a();
+        this.mRecordTool = new C2859b();
+        if (SAVE_FLAG) {
+            c2862b = new C2862b(this.mContext);
+        } else {
+            c2862b = null;
+        }
+        this.mAecResultData = c2862b;
+        if (SAVE_FLAG) {
+            c2862b = new C2862b(this.mContext);
+        } else {
+            c2862b = null;
+        }
+        this.mBeforeAecMicData = c2862b;
+        if (SAVE_FLAG) {
+            c2862b2 = new C2862b(this.mContext);
+        }
+        this.mBeforeAecSpkData = c2862b2;
+        this.mVolumeChangeListener = listener;
+        HandlerThread handlerThread = new HandlerThread("AecVolumeChangeListener");
+        handlerThread.start();
+        this.mHandler = new Handler(handlerThread.getLooper(), new C28531(this));
+    }
+
+    public void setRecordType(C2855a type, C1749d tool) {
+        C2725h.m10207b(TAG, "setRecordType() " + type.name());
+        if (type != this.mRecordType || this.mRecordType == C2855a.INSIDE_RAW) {
+            this.mRecordType = type;
+            switch (this.mRecordType) {
+                case INSIDE_DSP_RAW:
+                    return;
+                case INSIDE_AEC_MIC_LEFT:
+                case INSIDE_AEC_MIC_RIGHT:
+                    this.mRecordTool = new C2860c();
+                    this.mHandler.sendEmptyMessageDelayed(1, 1000);
+                    return;
+                case OUTSIDE_AEC_MIC_LEFT:
+                case OUTSIDE_AEC_MIC_RIGHT:
+                case OUTSIDE_AEC_DUAL_CHANNEL:
+                case OUTSIDE_RAW:
+                    this.mRecordTool = tool;
+                    return;
+                default:
+                    this.mRecordTool = new C2859b();
+                    return;
+            }
+        }
+        C2725h.m10207b(TAG, "lastRecordType is " + this.mRecordType + " , setRecordType do nothing.");
+    }
+
+    public void reset() {
+        C2725h.m10207b(TAG, "-----reset()----");
+        if (mRecordInputStream == null || mRecordInputStream.m10840a()) {
+            C2725h.m10207b(TAG, "-----reset()--build RecordInputStream--");
+            mRecordInputStream = new C2863c();
+        }
+        if (this.mAecResultData != null) {
+            this.mAecResultData.m10830a("_resultAfterAec");
+        }
+        if (this.mBeforeAecMicData != null) {
+            this.mBeforeAecMicData.m10830a("_MicDataBeforeAec");
+        }
+        if (this.mBeforeAecSpkData != null) {
+            this.mBeforeAecSpkData.m10830a("_SpkDataBeforeAec");
+        }
+        this.mRecordTool.mo1635c();
+        mRecordInputStream.m10839a(this);
+    }
+
+    public void startRecord() {
+        C2725h.m10207b(TAG, "-----startRecord()----");
+        this.mRecordTool.mo1632a();
+    }
+
+    public void endRecord() {
+        C2725h.m10207b(TAG, "-----endRecord()----");
+        this.mRecordTool.mo1634b();
+        if (this.mAecResultData != null) {
+            this.mAecResultData.m10837d();
+        }
+        if (this.mBeforeAecMicData != null) {
+            this.mBeforeAecMicData.m10837d();
+        }
+        if (this.mBeforeAecSpkData != null) {
+            this.mBeforeAecSpkData.m10837d();
+        }
+    }
+
+    public void release() {
+        mRecordInputStream = null;
+        C2858a.m10817b();
+        this.mRecordTool.mo1634b();
+    }
+
+    public void feedAudioBuffer(byte[] micData, byte[] spkData) {
+        if (micData == null || micData.length == 0 || spkData == null || spkData.length == 0) {
+            C2725h.m10214e(TAG, "-----feedAudioBuffer-----NULL Data!!!");
+            C2858a.m10817b();
+            return;
+        }
+        if (this.mBeforeAecMicData != null) {
+            this.mBeforeAecMicData.m10834b(micData);
+        }
+        if (this.mBeforeAecSpkData != null) {
+            this.mBeforeAecSpkData.m10834b(spkData);
+        }
+        C2858a.m10813a(micData, spkData, this.inputData);
+        byte[] finalData = this.inputData;
+        if (C2840n.m10672a()) {
+            this.lastDataPackageTime = SystemClock.elapsedRealtime();
+        }
+        if (this.mAecResultData != null) {
+            this.mAecResultData.m10834b(finalData);
+        } else if (mRecordInputStream != null && !mRecordInputStream.m10840a() && mRecordInputStream.m10838a(finalData, 0, C2858a.f9357a) == -1) {
+            C2725h.m10214e(TAG, "--------feedAudioBuffer--ret == -1");
+        }
+    }
+
+    public void feedAudioBuffer(byte[] rawData) {
+        for (int i = 0; i < rawData.length / 4; i++) {
+            if (isMicLeft()) {
+                this.mMicBuffer[i * 2] = rawData[i * 4];
+                this.mMicBuffer[(i * 2) + 1] = rawData[(i * 4) + 1];
+                this.mSpeakerBuffer[i * 2] = rawData[(i * 4) + 2];
+                this.mSpeakerBuffer[(i * 2) + 1] = rawData[(i * 4) + 3];
+            } else {
+                this.mSpeakerBuffer[i * 2] = rawData[i * 4];
+                this.mSpeakerBuffer[(i * 2) + 1] = rawData[(i * 4) + 1];
+                this.mMicBuffer[i * 2] = rawData[(i * 4) + 2];
+                this.mMicBuffer[(i * 2) + 1] = rawData[(i * 4) + 3];
+            }
+        }
+        feedAudioBuffer(this.mMicBuffer, this.mSpeakerBuffer);
+    }
+
+    private boolean isMicLeft() {
+        return this.mRecordType == C2855a.INSIDE_AEC_MIC_LEFT || this.mRecordType == C2855a.OUTSIDE_AEC_MIC_LEFT;
+    }
+
+    public void setDspEchoEnergy(int echoEnergy) {
+        int lvl = 1;
+        if (echoEnergy == 0) {
+            echoEnergy = 1;
+        }
+        double echoEnergydB = 20.0d * Math.log10(((double) echoEnergy) / 11584.0d);
+        if (echoEnergydB < -9.0d) {
+            lvl = 1;
+        } else if (echoEnergydB < -4.5d) {
+            lvl = 2;
+        } else if (echoEnergydB < 0.0d) {
+            lvl = 3;
+        }
+        C2725h.m10207b(TAG, "--MSG_HARDWARE_AEC_GET_ECHO---- echoEnergy:" + echoEnergy + "(" + echoEnergydB + "dB) level:" + lvl);
+        if (this.mVolumeChangeListener != null) {
+            this.mVolumeChangeListener.mo1951a(lvl);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/vr/record/aec/RecordHelper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

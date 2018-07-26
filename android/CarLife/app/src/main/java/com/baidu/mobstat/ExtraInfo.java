@@ -1,206 +1,174 @@
 package com.baidu.mobstat;
 
 import android.text.TextUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ExtraInfo
-{
-  String a = "";
-  String b = "";
-  String c = "";
-  String d = "";
-  String e = "";
-  String f = "";
-  String g = "";
-  String h = "";
-  String i = "";
-  String j = "";
-  
-  private static String a(String paramString)
-  {
-    String str = paramString;
-    if (TextUtils.isEmpty(paramString)) {
-      str = "";
-    }
-    paramString = str;
-    if (a(str, 1024)) {
-      paramString = "";
-    }
-    return paramString;
-  }
-  
-  private static boolean a(String paramString, int paramInt)
-  {
-    if (paramString == null) {}
-    for (;;)
-    {
-      return false;
-      try
-      {
-        k = paramString.getBytes().length;
-        if (k <= paramInt) {
-          continue;
+public class ExtraInfo {
+    /* renamed from: a */
+    String f19361a = "";
+    /* renamed from: b */
+    String f19362b = "";
+    /* renamed from: c */
+    String f19363c = "";
+    /* renamed from: d */
+    String f19364d = "";
+    /* renamed from: e */
+    String f19365e = "";
+    /* renamed from: f */
+    String f19366f = "";
+    /* renamed from: g */
+    String f19367g = "";
+    /* renamed from: h */
+    String f19368h = "";
+    /* renamed from: i */
+    String f19369i = "";
+    /* renamed from: j */
+    String f19370j = "";
+
+    /* renamed from: a */
+    private static boolean m15284a(String str, int i) {
+        if (str == null) {
+            return false;
         }
-        return true;
-      }
-      catch (Exception paramString)
-      {
-        for (;;)
-        {
-          int k = 0;
+        int length;
+        try {
+            length = str.getBytes().length;
+        } catch (Exception e) {
+            length = 0;
         }
-      }
+        if (length > i) {
+            return true;
+        }
+        return false;
     }
-  }
-  
-  public JSONObject dumpToJson()
-  {
-    JSONObject localJSONObject = new JSONObject();
-    try
-    {
-      if (!TextUtils.isEmpty(this.a)) {
-        localJSONObject.put("v1", this.a);
-      }
-      if (!TextUtils.isEmpty(this.b)) {
-        localJSONObject.put("v2", this.b);
-      }
-      if (!TextUtils.isEmpty(this.c)) {
-        localJSONObject.put("v3", this.c);
-      }
-      if (!TextUtils.isEmpty(this.d)) {
-        localJSONObject.put("v4", this.d);
-      }
-      if (!TextUtils.isEmpty(this.e)) {
-        localJSONObject.put("v5", this.e);
-      }
-      if (!TextUtils.isEmpty(this.f)) {
-        localJSONObject.put("v6", this.f);
-      }
-      if (!TextUtils.isEmpty(this.g)) {
-        localJSONObject.put("v7", this.g);
-      }
-      if (!TextUtils.isEmpty(this.h)) {
-        localJSONObject.put("v8", this.h);
-      }
-      if (!TextUtils.isEmpty(this.i)) {
-        localJSONObject.put("v9", this.i);
-      }
-      if (!TextUtils.isEmpty(this.j)) {
-        localJSONObject.put("v10", this.j);
-      }
-      return localJSONObject;
+
+    /* renamed from: a */
+    private static String m15283a(String str) {
+        if (TextUtils.isEmpty(str)) {
+            str = "";
+        }
+        if (m15284a(str, 1024)) {
+            return "";
+        }
+        return str;
     }
-    catch (JSONException localJSONException)
-    {
-      db.c(localJSONException);
+
+    public String getV1() {
+        return this.f19361a;
     }
-    return localJSONObject;
-  }
-  
-  public String getV1()
-  {
-    return this.a;
-  }
-  
-  public String getV10()
-  {
-    return this.j;
-  }
-  
-  public String getV2()
-  {
-    return this.b;
-  }
-  
-  public String getV3()
-  {
-    return this.c;
-  }
-  
-  public String getV4()
-  {
-    return this.d;
-  }
-  
-  public String getV5()
-  {
-    return this.e;
-  }
-  
-  public String getV6()
-  {
-    return this.f;
-  }
-  
-  public String getV7()
-  {
-    return this.g;
-  }
-  
-  public String getV8()
-  {
-    return this.h;
-  }
-  
-  public String getV9()
-  {
-    return this.i;
-  }
-  
-  public void setV1(String paramString)
-  {
-    this.a = a(paramString);
-  }
-  
-  public void setV10(String paramString)
-  {
-    this.j = a(paramString);
-  }
-  
-  public void setV2(String paramString)
-  {
-    this.b = a(paramString);
-  }
-  
-  public void setV3(String paramString)
-  {
-    this.c = a(paramString);
-  }
-  
-  public void setV4(String paramString)
-  {
-    this.d = a(paramString);
-  }
-  
-  public void setV5(String paramString)
-  {
-    this.e = a(paramString);
-  }
-  
-  public void setV6(String paramString)
-  {
-    this.f = a(paramString);
-  }
-  
-  public void setV7(String paramString)
-  {
-    this.g = a(paramString);
-  }
-  
-  public void setV8(String paramString)
-  {
-    this.h = a(paramString);
-  }
-  
-  public void setV9(String paramString)
-  {
-    this.i = a(paramString);
-  }
+
+    public void setV1(String str) {
+        this.f19361a = m15283a(str);
+    }
+
+    public String getV2() {
+        return this.f19362b;
+    }
+
+    public void setV2(String str) {
+        this.f19362b = m15283a(str);
+    }
+
+    public String getV3() {
+        return this.f19363c;
+    }
+
+    public void setV3(String str) {
+        this.f19363c = m15283a(str);
+    }
+
+    public String getV4() {
+        return this.f19364d;
+    }
+
+    public void setV4(String str) {
+        this.f19364d = m15283a(str);
+    }
+
+    public String getV5() {
+        return this.f19365e;
+    }
+
+    public void setV5(String str) {
+        this.f19365e = m15283a(str);
+    }
+
+    public String getV6() {
+        return this.f19366f;
+    }
+
+    public void setV6(String str) {
+        this.f19366f = m15283a(str);
+    }
+
+    public String getV7() {
+        return this.f19367g;
+    }
+
+    public void setV7(String str) {
+        this.f19367g = m15283a(str);
+    }
+
+    public String getV8() {
+        return this.f19368h;
+    }
+
+    public void setV8(String str) {
+        this.f19368h = m15283a(str);
+    }
+
+    public String getV9() {
+        return this.f19369i;
+    }
+
+    public void setV9(String str) {
+        this.f19369i = m15283a(str);
+    }
+
+    public String getV10() {
+        return this.f19370j;
+    }
+
+    public void setV10(String str) {
+        this.f19370j = m15283a(str);
+    }
+
+    public JSONObject dumpToJson() {
+        JSONObject jSONObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(this.f19361a)) {
+                jSONObject.put("v1", this.f19361a);
+            }
+            if (!TextUtils.isEmpty(this.f19362b)) {
+                jSONObject.put("v2", this.f19362b);
+            }
+            if (!TextUtils.isEmpty(this.f19363c)) {
+                jSONObject.put("v3", this.f19363c);
+            }
+            if (!TextUtils.isEmpty(this.f19364d)) {
+                jSONObject.put("v4", this.f19364d);
+            }
+            if (!TextUtils.isEmpty(this.f19365e)) {
+                jSONObject.put("v5", this.f19365e);
+            }
+            if (!TextUtils.isEmpty(this.f19366f)) {
+                jSONObject.put("v6", this.f19366f);
+            }
+            if (!TextUtils.isEmpty(this.f19367g)) {
+                jSONObject.put("v7", this.f19367g);
+            }
+            if (!TextUtils.isEmpty(this.f19368h)) {
+                jSONObject.put("v8", this.f19368h);
+            }
+            if (!TextUtils.isEmpty(this.f19369i)) {
+                jSONObject.put("v9", this.f19369i);
+            }
+            if (!TextUtils.isEmpty(this.f19370j)) {
+                jSONObject.put("v10", this.f19370j);
+            }
+        } catch (Throwable e) {
+            db.m15664c(e);
+        }
+        return jSONObject;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ExtraInfo.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

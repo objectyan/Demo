@@ -1,24 +1,17 @@
 package com.baidu.platform.comapi.map;
 
-public abstract interface MapListenerInterface
-{
-  public abstract void setCaptureMapListener(CaptureMapListener paramCaptureMapListener);
-  
-  public abstract void setEngineMsgListener(EngineMsgListener paramEngineMsgListener);
-  
-  public abstract void setHideIndoorPopupListener(HideIndoorPopupListener paramHideIndoorPopupListener);
-  
-  public abstract void setMapRenderModeChangeListener(MapRenderModeChangeListener paramMapRenderModeChangeListener);
-  
-  public abstract void setMapViewInterface(MapViewInterface paramMapViewInterface);
-  
-  public abstract void setMapViewListener(MapViewListener paramMapViewListener);
-  
-  public abstract void setStreetArrowClickListener(StreetArrowClickListener paramStreetArrowClickListener);
+public interface MapListenerInterface {
+    void setCaptureMapListener(CaptureMapListener captureMapListener);
+
+    void setEngineMsgListener(EngineMsgListener engineMsgListener);
+
+    void setHideIndoorPopupListener(HideIndoorPopupListener hideIndoorPopupListener);
+
+    void setMapRenderModeChangeListener(MapRenderModeChangeListener mapRenderModeChangeListener);
+
+    void setMapViewInterface(MapViewInterface mapViewInterface);
+
+    void setMapViewListener(MapViewListener mapViewListener);
+
+    void setStreetArrowClickListener(StreetArrowClickListener streetArrowClickListener);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/MapListenerInterface.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,65 +5,49 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class Primitives
-{
-  private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_TYPE;
-  private static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE_TYPE;
-  
-  static
-  {
-    HashMap localHashMap1 = new HashMap(16);
-    HashMap localHashMap2 = new HashMap(16);
-    add(localHashMap1, localHashMap2, Boolean.TYPE, Boolean.class);
-    add(localHashMap1, localHashMap2, Byte.TYPE, Byte.class);
-    add(localHashMap1, localHashMap2, Character.TYPE, Character.class);
-    add(localHashMap1, localHashMap2, Double.TYPE, Double.class);
-    add(localHashMap1, localHashMap2, Float.TYPE, Float.class);
-    add(localHashMap1, localHashMap2, Integer.TYPE, Integer.class);
-    add(localHashMap1, localHashMap2, Long.TYPE, Long.class);
-    add(localHashMap1, localHashMap2, Short.TYPE, Short.class);
-    add(localHashMap1, localHashMap2, Void.TYPE, Void.class);
-    PRIMITIVE_TO_WRAPPER_TYPE = Collections.unmodifiableMap(localHashMap1);
-    WRAPPER_TO_PRIMITIVE_TYPE = Collections.unmodifiableMap(localHashMap2);
-  }
-  
-  private static void add(Map<Class<?>, Class<?>> paramMap1, Map<Class<?>, Class<?>> paramMap2, Class<?> paramClass1, Class<?> paramClass2)
-  {
-    paramMap1.put(paramClass1, paramClass2);
-    paramMap2.put(paramClass2, paramClass1);
-  }
-  
-  public static boolean isPrimitive(Type paramType)
-  {
-    return PRIMITIVE_TO_WRAPPER_TYPE.containsKey(paramType);
-  }
-  
-  public static boolean isWrapperType(Type paramType)
-  {
-    return WRAPPER_TO_PRIMITIVE_TYPE.containsKey(.Gson.Preconditions.checkNotNull(paramType));
-  }
-  
-  public static <T> Class<T> unwrap(Class<T> paramClass)
-  {
-    Class localClass = (Class)WRAPPER_TO_PRIMITIVE_TYPE.get(.Gson.Preconditions.checkNotNull(paramClass));
-    if (localClass == null) {
-      return paramClass;
+public final class Primitives {
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_TYPE;
+    private static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE_TYPE;
+
+    private Primitives() {
     }
-    return localClass;
-  }
-  
-  public static <T> Class<T> wrap(Class<T> paramClass)
-  {
-    Class localClass = (Class)PRIMITIVE_TO_WRAPPER_TYPE.get(.Gson.Preconditions.checkNotNull(paramClass));
-    if (localClass == null) {
-      return paramClass;
+
+    static {
+        Map<Class<?>, Class<?>> primToWrap = new HashMap(16);
+        Map<Class<?>, Class<?>> wrapToPrim = new HashMap(16);
+        add(primToWrap, wrapToPrim, Boolean.TYPE, Boolean.class);
+        add(primToWrap, wrapToPrim, Byte.TYPE, Byte.class);
+        add(primToWrap, wrapToPrim, Character.TYPE, Character.class);
+        add(primToWrap, wrapToPrim, Double.TYPE, Double.class);
+        add(primToWrap, wrapToPrim, Float.TYPE, Float.class);
+        add(primToWrap, wrapToPrim, Integer.TYPE, Integer.class);
+        add(primToWrap, wrapToPrim, Long.TYPE, Long.class);
+        add(primToWrap, wrapToPrim, Short.TYPE, Short.class);
+        add(primToWrap, wrapToPrim, Void.TYPE, Void.class);
+        PRIMITIVE_TO_WRAPPER_TYPE = Collections.unmodifiableMap(primToWrap);
+        WRAPPER_TO_PRIMITIVE_TYPE = Collections.unmodifiableMap(wrapToPrim);
     }
-    return localClass;
-  }
+
+    private static void add(Map<Class<?>, Class<?>> forward, Map<Class<?>, Class<?>> backward, Class<?> key, Class<?> value) {
+        forward.put(key, value);
+        backward.put(value, key);
+    }
+
+    public static boolean isPrimitive(Type type) {
+        return PRIMITIVE_TO_WRAPPER_TYPE.containsKey(type);
+    }
+
+    public static boolean isWrapperType(Type type) {
+        return WRAPPER_TO_PRIMITIVE_TYPE.containsKey(C$Gson$Preconditions.checkNotNull(type));
+    }
+
+    public static <T> Class<T> wrap(Class<T> type) {
+        Class<T> wrapped = (Class) PRIMITIVE_TO_WRAPPER_TYPE.get(C$Gson$Preconditions.checkNotNull(type));
+        return wrapped == null ? type : wrapped;
+    }
+
+    public static <T> Class<T> unwrap(Class<T> type) {
+        Class<T> unwrapped = (Class) WRAPPER_TO_PRIMITIVE_TYPE.get(C$Gson$Preconditions.checkNotNull(type));
+        return unwrapped == null ? type : unwrapped;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/Primitives.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

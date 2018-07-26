@@ -1,11 +1,9 @@
 package com.baidu.carlife.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import com.android.volley.VolleyError;
@@ -13,195 +11,153 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.baidu.carlife.BaiduNaviApplication;
-import com.baidu.carlife.k.a.e;
+import com.baidu.carlife.p054k.p055a.C1626e;
 
-public class MultiImageView
-  extends ImageView
-{
-  private String a;
-  private Drawable b;
-  private ImageLoader c;
-  private ImageLoader.ImageContainer d;
-  
-  public MultiImageView(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public MultiImageView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public MultiImageView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  private void a(final boolean paramBoolean)
-  {
-    if (TextUtils.isEmpty(this.a))
-    {
-      if (this.d != null)
-      {
-        this.d.cancelRequest();
-        this.d = null;
-      }
-      setDefaultImageOrNull();
+public class MultiImageView extends ImageView {
+    /* renamed from: a */
+    private String f7196a;
+    /* renamed from: b */
+    private Drawable f7197b;
+    /* renamed from: c */
+    private ImageLoader f7198c;
+    /* renamed from: d */
+    private ImageContainer f7199d;
+
+    public MultiImageView(Context context) {
+        this(context, null);
     }
-    int n;
-    int m;
-    ImageView.ScaleType localScaleType;
-    int j;
-    label77:
-    label91:
-    int k;
-    label102:
-    do
-    {
-      return;
-      n = getWidth();
-      m = getHeight();
-      localScaleType = getScaleType();
-      j = 0;
-      i = 0;
-      if (getLayoutParams() != null)
-      {
-        if (getLayoutParams().width != -2) {
-          break label203;
-        }
-        j = 1;
-        if (getLayoutParams().height != -2) {
-          break label208;
-        }
-        i = 1;
-      }
-      if ((j == 0) || (i == 0)) {
-        break label213;
-      }
-      k = 1;
-      if ((n == 0) && (m == 0) && (k == 0)) {
-        break label217;
-      }
-      if ((this.d == null) || (this.d.getRequestUrl() == null)) {
-        break;
-      }
-    } while (this.d.getRequestUrl().equals(this.a));
-    this.d.cancelRequest();
-    setDefaultImageOrNull();
-    if (j != 0)
-    {
-      j = 0;
-      label168:
-      if (i == 0) {
-        break label225;
-      }
+
+    public MultiImageView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
-    label203:
-    label208:
-    label213:
-    label217:
-    label225:
-    for (int i = 0;; i = m)
-    {
-      this.d = this.c.get(this.a, new ImageLoader.ImageListener()
-      {
-        public void onErrorResponse(VolleyError paramAnonymousVolleyError) {}
-        
-        public void onResponse(final ImageLoader.ImageContainer paramAnonymousImageContainer, boolean paramAnonymousBoolean)
-        {
-          if ((paramAnonymousBoolean) && (paramBoolean)) {
-            MultiImageView.this.post(new Runnable()
-            {
-              public void run()
-              {
-                MultiImageView.1.this.onResponse(paramAnonymousImageContainer, false);
-              }
-            });
-          }
-          do
-          {
-            return;
-            if (paramAnonymousImageContainer.getBitmap() != null)
-            {
-              MultiImageView.this.setImageBitmap(paramAnonymousImageContainer.getBitmap());
-              return;
+
+    public MultiImageView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    public void setImageUrl(String url) {
+        setImageUrl(url, C1626e.getImageLoader());
+    }
+
+    private void setImageUrl(String url, ImageLoader imageLoader) {
+        this.f7196a = url;
+        this.f7198c = imageLoader;
+        m8465a(false);
+    }
+
+    public void setDefaultDrawable(Drawable defaultDrawable) {
+        this.f7197b = defaultDrawable;
+    }
+
+    public void setDefaultDrawableResId(int defaultResId) {
+        this.f7197b = BaiduNaviApplication.getInstance().getApplicationContext().getResources().getDrawable(defaultResId);
+    }
+
+    /* renamed from: a */
+    private void m8465a(final boolean isInLayoutPass) {
+        if (TextUtils.isEmpty(this.f7196a)) {
+            if (this.f7199d != null) {
+                this.f7199d.cancelRequest();
+                this.f7199d = null;
             }
-          } while (MultiImageView.a(MultiImageView.this) == null);
-          MultiImageView.this.setImageDrawable(MultiImageView.a(MultiImageView.this));
+            setDefaultImageOrNull();
+            return;
         }
-      }, j, i, localScaleType);
-      return;
-      j = 0;
-      break label77;
-      i = 0;
-      break label91;
-      k = 0;
-      break label102;
-      break;
-      j = n;
-      break label168;
+        int width = getWidth();
+        int height = getHeight();
+        ScaleType scaleType = getScaleType();
+        boolean wrapWidth = false;
+        boolean wrapHeight = false;
+        if (getLayoutParams() != null) {
+            if (getLayoutParams().width == -2) {
+                wrapWidth = true;
+            } else {
+                wrapWidth = false;
+            }
+            if (getLayoutParams().height == -2) {
+                wrapHeight = true;
+            } else {
+                wrapHeight = false;
+            }
+        }
+        boolean isFullyWrapContent;
+        if (wrapWidth && wrapHeight) {
+            isFullyWrapContent = true;
+        } else {
+            isFullyWrapContent = false;
+        }
+        if (width != 0 || height != 0 || isFullyWrapContent) {
+            int maxWidth;
+            int maxHeight;
+            if (!(this.f7199d == null || this.f7199d.getRequestUrl() == null)) {
+                if (!this.f7199d.getRequestUrl().equals(this.f7196a)) {
+                    this.f7199d.cancelRequest();
+                    setDefaultImageOrNull();
+                } else {
+                    return;
+                }
+            }
+            if (wrapWidth) {
+                maxWidth = 0;
+            } else {
+                maxWidth = width;
+            }
+            if (wrapHeight) {
+                maxHeight = 0;
+            } else {
+                maxHeight = height;
+            }
+            this.f7199d = this.f7198c.get(this.f7196a, new ImageListener(this) {
+                /* renamed from: b */
+                final /* synthetic */ MultiImageView f7195b;
+
+                public void onErrorResponse(VolleyError error) {
+                }
+
+                public void onResponse(final ImageContainer response, boolean isImmediate) {
+                    if (isImmediate && isInLayoutPass) {
+                        this.f7195b.post(new Runnable(this) {
+                            /* renamed from: b */
+                            final /* synthetic */ C22291 f7193b;
+
+                            public void run() {
+                                this.f7193b.onResponse(response, false);
+                            }
+                        });
+                    } else if (response.getBitmap() != null) {
+                        this.f7195b.setImageBitmap(response.getBitmap());
+                    } else if (this.f7195b.f7197b != null) {
+                        this.f7195b.setImageDrawable(this.f7195b.f7197b);
+                    }
+                }
+            }, maxWidth, maxHeight, scaleType);
+        }
     }
-  }
-  
-  private void setDefaultImageOrNull()
-  {
-    if (this.b != null)
-    {
-      setImageDrawable(this.b);
-      return;
+
+    private void setDefaultImageOrNull() {
+        if (this.f7197b != null) {
+            setImageDrawable(this.f7197b);
+        } else {
+            setImageBitmap(null);
+        }
     }
-    setImageBitmap(null);
-  }
-  
-  private void setImageUrl(String paramString, ImageLoader paramImageLoader)
-  {
-    this.a = paramString;
-    this.c = paramImageLoader;
-    a(false);
-  }
-  
-  protected void drawableStateChanged()
-  {
-    super.drawableStateChanged();
-    invalidate();
-  }
-  
-  protected void onDetachedFromWindow()
-  {
-    if (this.d != null)
-    {
-      this.d.cancelRequest();
-      setImageBitmap(null);
-      this.d = null;
+
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        m8465a(true);
     }
-    super.onDetachedFromWindow();
-  }
-  
-  protected void onLayout(boolean paramBoolean, int paramInt1, int paramInt2, int paramInt3, int paramInt4)
-  {
-    super.onLayout(paramBoolean, paramInt1, paramInt2, paramInt3, paramInt4);
-    a(true);
-  }
-  
-  public void setDefaultDrawable(Drawable paramDrawable)
-  {
-    this.b = paramDrawable;
-  }
-  
-  public void setDefaultDrawableResId(int paramInt)
-  {
-    this.b = BaiduNaviApplication.getInstance().getApplicationContext().getResources().getDrawable(paramInt);
-  }
-  
-  public void setImageUrl(String paramString)
-  {
-    setImageUrl(paramString, e.getImageLoader());
-  }
+
+    protected void onDetachedFromWindow() {
+        if (this.f7199d != null) {
+            this.f7199d.cancelRequest();
+            setImageBitmap(null);
+            this.f7199d = null;
+        }
+        super.onDetachedFromWindow();
+    }
+
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
+        invalidate();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/MultiImageView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

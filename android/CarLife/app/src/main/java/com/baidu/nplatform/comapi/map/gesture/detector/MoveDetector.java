@@ -6,104 +6,92 @@ import com.baidu.nplatform.comapi.map.gesture.Base.Line;
 import com.baidu.nplatform.comapi.map.gesture.Base.Vector;
 import com.baidu.nplatform.comapi.map.gesture.Tracker;
 
-public class MoveDetector
-{
-  public Base.Line currentPosition;
-  public MotionEvent event;
-  public Base.Line initialPosition;
-  public Base.Line lastPosition;
-  private Listener listener;
-  private boolean running = false;
-  public Tracker tracker = new Tracker();
-  
-  public MoveDetector(Listener paramListener)
-  {
-    this.listener = paramListener;
-  }
-  
-  private void handleMoving(MotionEvent paramMotionEvent)
-  {
-    this.tracker.addMovement(paramMotionEvent);
-    Pair localPair = this.tracker.velocity();
-    if ((paramMotionEvent.getPointerCount() == 2) && ((Math.abs(((Base.Vector)localPair.first).x) > 0.0D) || (Math.abs(((Base.Vector)localPair.first).y) > 0.0D) || (Math.abs(((Base.Vector)localPair.second).x) > 0.0D) || (Math.abs(((Base.Vector)localPair.second).y) > 0.0D)))
-    {
-      updatePosition(paramMotionEvent);
-      this.listener.onMove(this);
+public class MoveDetector {
+    public Line currentPosition;
+    public MotionEvent event;
+    public Line initialPosition;
+    public Line lastPosition;
+    private Listener listener;
+    private boolean running = false;
+    public Tracker tracker = new Tracker();
+
+    public interface Listener {
+        boolean onMove(MoveDetector moveDetector);
+
+        boolean onMoveBegin(MoveDetector moveDetector);
+
+        boolean onMoveEnd(MoveDetector moveDetector);
     }
-  }
-  
-  private void start()
-  {
-    this.tracker.init();
-    this.initialPosition = null;
-    this.lastPosition = null;
-    this.currentPosition = null;
-    this.running = true;
-    this.listener.onMoveBegin(this);
-  }
-  
-  private void stop()
-  {
-    this.tracker.finish();
-    this.running = false;
-    this.listener.onMoveEnd(this);
-  }
-  
-  private void updatePosition(MotionEvent paramMotionEvent)
-  {
-    Base.Line localLine = Base.Line.make(paramMotionEvent);
-    if (this.currentPosition != null) {}
-    for (paramMotionEvent = this.currentPosition;; paramMotionEvent = localLine)
-    {
-      this.lastPosition = paramMotionEvent;
-      this.currentPosition = localLine;
-      if (this.initialPosition == null) {
-        this.initialPosition = localLine;
-      }
-      return;
+
+    public MoveDetector(Listener listener) {
+        this.listener = listener;
     }
-  }
-  
-  public void onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    this.event = paramMotionEvent;
-    switch (paramMotionEvent.getAction())
-    {
+
+    public void onTouchEvent(MotionEvent event) {
+        this.event = event;
+        switch (event.getAction()) {
+            case 2:
+                if (this.running) {
+                    handleMoving(event);
+                    return;
+                } else if (event.getPointerCount() == 2) {
+                    start();
+                    return;
+                } else {
+                    return;
+                }
+            case 5:
+            case 261:
+                if (!this.running) {
+                    start();
+                    return;
+                }
+                return;
+            case 6:
+            case 262:
+                if (this.running) {
+                    stop();
+                    return;
+                }
+                return;
+            default:
+                return;
+        }
     }
-    do
-    {
-      do
-      {
-        do
-        {
-          return;
-        } while (this.running);
-        start();
-        return;
-      } while (!this.running);
-      stop();
-      return;
-      if (this.running)
-      {
-        handleMoving(paramMotionEvent);
-        return;
-      }
-    } while (paramMotionEvent.getPointerCount() != 2);
-    start();
-  }
-  
-  public static abstract interface Listener
-  {
-    public abstract boolean onMove(MoveDetector paramMoveDetector);
-    
-    public abstract boolean onMoveBegin(MoveDetector paramMoveDetector);
-    
-    public abstract boolean onMoveEnd(MoveDetector paramMoveDetector);
-  }
+
+    private void start() {
+        this.tracker.init();
+        this.initialPosition = null;
+        this.lastPosition = null;
+        this.currentPosition = null;
+        this.running = true;
+        this.listener.onMoveBegin(this);
+    }
+
+    private void stop() {
+        this.tracker.finish();
+        this.running = false;
+        this.listener.onMoveEnd(this);
+    }
+
+    private void handleMoving(MotionEvent event) {
+        this.tracker.addMovement(event);
+        Pair<Vector, Vector> velocity = this.tracker.velocity();
+        if (event.getPointerCount() != 2) {
+            return;
+        }
+        if (Math.abs(((Vector) velocity.first).f19735x) > 0.0d || Math.abs(((Vector) velocity.first).f19736y) > 0.0d || Math.abs(((Vector) velocity.second).f19735x) > 0.0d || Math.abs(((Vector) velocity.second).f19736y) > 0.0d) {
+            updatePosition(event);
+            this.listener.onMove(this);
+        }
+    }
+
+    private void updatePosition(MotionEvent event) {
+        Line line = Line.make(event);
+        this.lastPosition = this.currentPosition != null ? this.currentPosition : line;
+        this.currentPosition = line;
+        if (this.initialPosition == null) {
+            this.initialPosition = line;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/nplatform/comapi/map/gesture/detector/MoveDetector.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

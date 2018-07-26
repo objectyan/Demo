@@ -2,27 +2,23 @@ package com.indooratlas.android.sdk._internal;
 
 import android.os.Message;
 
-public class au
-  implements at
-{
-  public void a() {}
-  
-  public boolean a(Message paramMessage)
-  {
-    return false;
-  }
-  
-  public void b() {}
-  
-  public final String c()
-  {
-    String str = getClass().getName();
-    return str.substring(str.lastIndexOf('$') + 1);
-  }
+public class au implements at {
+    /* renamed from: a */
+    public void mo4621a() {
+    }
+
+    /* renamed from: b */
+    public void mo4622b() {
+    }
+
+    /* renamed from: a */
+    public boolean mo4601a(Message message) {
+        return false;
+    }
+
+    /* renamed from: c */
+    public final String m19853c() {
+        String name = getClass().getName();
+        return name.substring(name.lastIndexOf(36) + 1);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/au.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

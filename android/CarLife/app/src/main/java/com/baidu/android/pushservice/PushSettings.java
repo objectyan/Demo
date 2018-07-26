@@ -2,429 +2,320 @@ package com.baidu.android.pushservice;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.text.TextUtils;
-import com.baidu.android.pushservice.d.c;
-import com.baidu.android.pushservice.j.b;
-import com.baidu.android.pushservice.j.m;
-import com.baidu.android.pushservice.j.o;
-import com.baidu.android.pushservice.j.p;
-import java.util.Iterator;
-import java.util.List;
+import com.baidu.android.pushservice.p024c.C0448d;
+import com.baidu.android.pushservice.p025d.C0472c;
+import com.baidu.android.pushservice.p025d.C0473d;
+import com.baidu.android.pushservice.p031j.C0562b;
+import com.baidu.android.pushservice.p031j.C0574m;
+import com.baidu.android.pushservice.p031j.C0577o;
+import com.baidu.android.pushservice.p031j.C0578p;
 
-public class PushSettings
-{
-  private static int a = -1;
-  private static int b = -1;
-  private static int c = -1;
-  private static int d = -1;
-  private static int e = -1;
-  
-  public static String a(Context paramContext)
-  {
-    String str = b.a(paramContext, "com.baidu.pushservice.channel_id");
-    Object localObject = str;
-    if (TextUtils.isEmpty(str))
-    {
-      str = m.a(paramContext, "com.baidu.pushservice.channel_id");
-      localObject = str;
-      if (TextUtils.isEmpty(str))
-      {
-        str = c.d(paramContext);
-        if (!TextUtils.isEmpty(str)) {
-          return str;
+public class PushSettings {
+    /* renamed from: a */
+    private static int f1343a = -1;
+    /* renamed from: b */
+    private static int f1344b = -1;
+    /* renamed from: c */
+    private static int f1345c = -1;
+    /* renamed from: d */
+    private static int f1346d = -1;
+    /* renamed from: e */
+    private static int f1347e = -1;
+
+    /* renamed from: a */
+    public static String m1816a(Context context) {
+        Object a = C0562b.m2419a(context, "com.baidu.pushservice.channel_id");
+        if (!TextUtils.isEmpty(a)) {
+            return a;
         }
-        if (!p.F(paramContext)) {
-          break label115;
+        a = C0574m.m2465a(context, "com.baidu.pushservice.channel_id");
+        if (!TextUtils.isEmpty(a)) {
+            return a;
         }
-      }
-    }
-    label115:
-    for (localObject = p.o(paramContext.getApplicationContext());; localObject = p.n(paramContext.getApplicationContext()))
-    {
-      Iterator localIterator = ((List)localObject).iterator();
-      localObject = str;
-      while (localIterator.hasNext())
-      {
-        str = com.baidu.android.pushservice.d.d.a(paramContext, ((ResolveInfo)localIterator.next()).activityInfo.packageName);
-        localObject = str;
-        if (!TextUtils.isEmpty(str))
-        {
-          a(paramContext, str);
-          localObject = str;
+        CharSequence d = C0472c.m2035d(context);
+        if (!TextUtils.isEmpty(d)) {
+            return d;
         }
-      }
-      return (String)localObject;
-    }
-    return str;
-  }
-  
-  public static void a(Context paramContext, int paramInt)
-  {
-    if (paramContext == null) {
-      return;
-    }
-    m.a(paramContext, "com.baidu.pushservice.sd", paramInt);
-  }
-  
-  public static void a(Context paramContext, long paramLong)
-  {
-    if (paramContext == null) {
-      return;
-    }
-    m.a(paramContext, "com.baidu.pushservice.cst", paramLong);
-  }
-  
-  protected static void a(Context paramContext, String paramString)
-  {
-    b.a(paramContext, "com.baidu.pushservice.channel_id", paramString);
-    m.a(paramContext, "com.baidu.pushservice.channel_id", paramString);
-    c.a(paramContext, paramString);
-  }
-  
-  public static void a(Context paramContext, boolean paramBoolean)
-  {
-    int i = 0;
-    if (paramContext == null) {}
-    do
-    {
-      do
-      {
-        return;
-      } while (TextUtils.isEmpty(paramContext.getPackageName()));
-      Object localObject = m.a(paramContext, "com.baidu.pushservice.le");
-      if (!TextUtils.isEmpty((CharSequence)localObject))
-      {
-        StringBuilder localStringBuilder = new StringBuilder();
-        localObject = ((String)localObject).trim().split(",");
-        int m = localObject.length;
-        int j = 0;
-        if (j < m)
-        {
-          String str = localObject[j];
-          if (str.equals(paramContext.getPackageName()))
-          {
-            i = 1;
-            int k = 1;
-            if (!paramBoolean) {
-              i = k;
+        String str = d;
+        for (ResolveInfo resolveInfo : C0578p.m2502F(context) ? C0578p.m2588o(context.getApplicationContext()) : C0578p.m2587n(context.getApplicationContext())) {
+            str = C0473d.m2043a(context, resolveInfo.activityInfo.packageName);
+            if (!TextUtils.isEmpty(str)) {
+                m1819a(context, str);
+                return str;
             }
-          }
-          for (;;)
-          {
-            j += 1;
-            break;
-            localStringBuilder.append(str + ",");
-          }
         }
-        if (i == 0) {
-          localStringBuilder.append(paramContext.getPackageName() + ",");
+        return str;
+    }
+
+    /* renamed from: a */
+    public static void m1817a(Context context, int i) {
+        if (context != null) {
+            C0574m.m2466a(context, "com.baidu.pushservice.sd", i);
         }
-        m.a(paramContext, "com.baidu.pushservice.le", localStringBuilder.toString());
-        return;
-      }
-    } while (!paramBoolean);
-    m.a(paramContext, "com.baidu.pushservice.le", paramContext.getPackageName() + ",");
-  }
-  
-  public static String b(Context paramContext)
-  {
-    return m.a(paramContext, "com.baidu.pushservice.app_id");
-  }
-  
-  public static void b(Context paramContext, int paramInt)
-  {
-    if (paramContext == null) {
-      return;
     }
-    m.a(paramContext, "com.baidu.pushservice.lsi", paramInt * 1000);
-  }
-  
-  public static void b(Context paramContext, long paramLong)
-  {
-    if (paramContext == null) {
-      return;
-    }
-    m.a(paramContext, "com.baidu.pushservice.st", paramLong);
-  }
-  
-  protected static void b(Context paramContext, String paramString)
-  {
-    if (!TextUtils.isEmpty(paramString)) {
-      m.a(paramContext, "com.baidu.pushservice.app_id", paramString);
-    }
-  }
-  
-  private static void b(Context paramContext, boolean paramBoolean)
-  {
-    for (;;)
-    {
-      String str1;
-      try
-      {
-        String str2 = paramContext.getPackageName();
-        String str3 = p.v(paramContext);
-        str1 = "com.baidu.android.pushservice.action.OPENDEBUGMODE";
-        if (TextUtils.isEmpty(str3)) {
-          break label46;
+
+    /* renamed from: a */
+    public static void m1818a(Context context, long j) {
+        if (context != null) {
+            C0574m.m2467a(context, "com.baidu.pushservice.cst", j);
         }
-        if (!str2.equals(str3)) {
-          break label47;
+    }
+
+    /* renamed from: a */
+    protected static void m1819a(Context context, String str) {
+        C0562b.m2422a(context, "com.baidu.pushservice.channel_id", str);
+        C0574m.m2470a(context, "com.baidu.pushservice.channel_id", str);
+        C0472c.m2024a(context, str);
+    }
+
+    /* renamed from: a */
+    public static void m1820a(Context context, boolean z) {
+        Object obj = null;
+        if (context != null && !TextUtils.isEmpty(context.getPackageName())) {
+            Object a = C0574m.m2465a(context, "com.baidu.pushservice.le");
+            if (!TextUtils.isEmpty(a)) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (String str : a.trim().split(",")) {
+                    if (str.equals(context.getPackageName())) {
+                        obj = 1;
+                        if (!z) {
+                        }
+                    }
+                    stringBuilder.append(str + ",");
+                }
+                if (obj == null) {
+                    stringBuilder.append(context.getPackageName() + ",");
+                }
+                C0574m.m2470a(context, "com.baidu.pushservice.le", stringBuilder.toString());
+            } else if (z) {
+                C0574m.m2470a(context, "com.baidu.pushservice.le", context.getPackageName() + ",");
+            }
         }
-        return;
-      }
-      catch (Exception paramContext) {}
-      o.a(paramContext, new Intent(str1));
-      return;
-      label46:
-      return;
-      label47:
-      if (!paramBoolean) {
-        str1 = "com.baidu.android.pushservice.action.CLOSEDEBUGMODE";
-      }
     }
-  }
-  
-  public static void c(Context paramContext, String paramString)
-  {
-    if (paramContext == null) {}
-    do
-    {
-      do
-      {
-        return;
-      } while (TextUtils.isEmpty(paramString));
-      localObject = m.a(paramContext, "com.baidu.pushservice.le");
-    } while (TextUtils.isEmpty((CharSequence)localObject));
-    StringBuilder localStringBuilder = new StringBuilder();
-    Object localObject = ((String)localObject).trim().split(",");
-    int j = localObject.length;
-    int i = 0;
-    if (i < j)
-    {
-      String str = localObject[i];
-      if (str.equals(paramString)) {}
-      for (;;)
-      {
-        i += 1;
-        break;
-        localStringBuilder.append(str + ",");
-      }
+
+    /* renamed from: b */
+    public static String m1821b(Context context) {
+        return C0574m.m2465a(context, "com.baidu.pushservice.app_id");
     }
-    m.a(paramContext, "com.baidu.pushservice.le", localStringBuilder.toString());
-  }
-  
-  public static boolean c(Context paramContext)
-  {
-    boolean bool = true;
-    if (paramContext == null) {}
-    int i;
-    do
-    {
-      return false;
-      i = m.d(paramContext, "com.baidu.android.pushservice.PushSettings.debug_mode", -1);
-      if (a != 1) {
-        break;
-      }
-    } while ((i != -1) && (i != 1));
-    return true;
-    if (i == 1) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
+
+    /* renamed from: b */
+    public static void m1822b(Context context, int i) {
+        if (context != null) {
+            C0574m.m2466a(context, "com.baidu.pushservice.lsi", i * 1000);
+        }
     }
-  }
-  
-  public static long d(Context paramContext)
-  {
-    if (paramContext == null) {
-      return 0L;
+
+    /* renamed from: b */
+    public static void m1823b(Context context, long j) {
+        if (context != null) {
+            C0574m.m2467a(context, "com.baidu.pushservice.st", j);
+        }
     }
-    return m.c(paramContext, "com.baidu.pushservice.cst");
-  }
-  
-  public static long e(Context paramContext)
-  {
-    long l2 = m.c(paramContext, "com.baidu.pushservice.st");
-    long l1 = l2;
-    if (l2 <= 0L) {
-      l1 = 86400000L;
+
+    /* renamed from: b */
+    protected static void m1824b(Context context, String str) {
+        if (!TextUtils.isEmpty(str)) {
+            C0574m.m2470a(context, "com.baidu.pushservice.app_id", str);
+        }
     }
-    return l1;
-  }
-  
-  public static void enableDebugMode(Context paramContext, boolean paramBoolean)
-  {
-    if (paramBoolean) {
-      m.c(paramContext, "com.baidu.android.pushservice.PushSettings.debug_mode", 1);
+
+    /* renamed from: b */
+    private static void m1825b(Context context, boolean z) {
+        try {
+            String packageName = context.getPackageName();
+            CharSequence v = C0578p.m2603v(context);
+            String str = "com.baidu.android.pushservice.action.OPENDEBUGMODE";
+            if (!TextUtils.isEmpty(v) && !packageName.equals(v)) {
+                if (!z) {
+                    str = "com.baidu.android.pushservice.action.CLOSEDEBUGMODE";
+                }
+                C0577o.m2484a(context, new Intent(str));
+            }
+        } catch (Exception e) {
+        }
     }
-    for (;;)
-    {
-      if (!com.baidu.android.pushservice.c.d.g(paramContext)) {
-        b(paramContext, paramBoolean);
-      }
-      return;
-      m.c(paramContext, "com.baidu.android.pushservice.PushSettings.debug_mode", 0);
+
+    /* renamed from: c */
+    public static void m1826c(Context context, String str) {
+        if (context != null && !TextUtils.isEmpty(str)) {
+            Object a = C0574m.m2465a(context, "com.baidu.pushservice.le");
+            if (!TextUtils.isEmpty(a)) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (String str2 : a.trim().split(",")) {
+                    if (!str2.equals(str)) {
+                        stringBuilder.append(str2 + ",");
+                    }
+                }
+                C0574m.m2470a(context, "com.baidu.pushservice.le", stringBuilder.toString());
+            }
+        }
     }
-  }
-  
-  public static boolean f(Context paramContext)
-  {
-    return m.b(paramContext, "com.baidu.pushservice.sd", 0) == 1;
-  }
-  
-  public static int g(Context paramContext)
-  {
-    int i;
-    if (paramContext == null) {
-      i = 0;
+
+    /* renamed from: c */
+    public static boolean m1827c(Context context) {
+        boolean z = true;
+        if (context == null) {
+            return false;
+        }
+        int d = C0574m.m2476d(context, "com.baidu.android.pushservice.PushSettings.debug_mode", -1);
+        if (f1343a == 1) {
+            return d == -1 || d == 1;
+        } else {
+            if (d != 1) {
+                z = false;
+            }
+            return z;
+        }
     }
-    int j;
-    do
-    {
-      return i;
-      j = m.b(paramContext, "com.baidu.pushservice.lsi", -1);
-      i = j;
-    } while (j >= 0);
-    return 1800000;
-  }
-  
-  public static boolean h(Context paramContext)
-  {
-    return !TextUtils.isEmpty(m.a(paramContext, "com.baidu.pushservice.le"));
-  }
-  
-  public static boolean i(Context paramContext)
-  {
-    return TextUtils.equals(m.a(paramContext, "com.baidu.pushservice.lms"), "off");
-  }
-  
-  public static void j(Context paramContext)
-  {
-    if (paramContext == null) {}
-    m.a(paramContext, "com.baidu.pushservice.lms", "off");
-  }
-  
-  public static void k(Context paramContext)
-  {
-    if (paramContext == null) {}
-    m.a(paramContext, "com.baidu.pushservice.lms", "");
-  }
-  
-  public static void l(Context paramContext)
-  {
-    if (paramContext == null) {}
-    Object localObject;
-    do
-    {
-      return;
-      localObject = m.a(paramContext, "com.baidu.pushservice.le");
-    } while (TextUtils.isEmpty((CharSequence)localObject));
-    StringBuilder localStringBuilder = new StringBuilder();
-    String[] arrayOfString = ((String)localObject).trim().split(",");
-    PackageManager localPackageManager = paramContext.getPackageManager();
-    int j = arrayOfString.length;
-    int i = 0;
-    String str;
-    if (i < j)
-    {
-      str = arrayOfString[i];
-      localObject = null;
+
+    /* renamed from: d */
+    public static long m1828d(Context context) {
+        return context == null ? 0 : C0574m.m2474c(context, "com.baidu.pushservice.cst");
     }
-    try
-    {
-      PackageInfo localPackageInfo = localPackageManager.getPackageInfo(str, 0);
-      localObject = localPackageInfo;
+
+    /* renamed from: e */
+    public static long m1829e(Context context) {
+        long c = C0574m.m2474c(context, "com.baidu.pushservice.st");
+        return c <= 0 ? 86400000 : c;
     }
-    catch (Exception localException)
-    {
-      for (;;) {}
+
+    public static void enableDebugMode(Context context, boolean z) {
+        if (z) {
+            C0574m.m2475c(context, "com.baidu.android.pushservice.PushSettings.debug_mode", 1);
+        } else {
+            C0574m.m2475c(context, "com.baidu.android.pushservice.PushSettings.debug_mode", 0);
+        }
+        if (!C0448d.m1945g(context)) {
+            m1825b(context, z);
+        }
     }
-    if (localObject == null) {}
-    for (;;)
-    {
-      i += 1;
-      break;
-      localStringBuilder.append(str + ",");
+
+    /* renamed from: f */
+    public static boolean m1830f(Context context) {
+        return C0574m.m2471b(context, "com.baidu.pushservice.sd", 0) == 1;
     }
-    m.a(paramContext, "com.baidu.pushservice.le", localStringBuilder.toString());
-  }
-  
-  public static boolean m(Context paramContext)
-  {
-    boolean bool = true;
-    if (paramContext == null) {
-      return false;
+
+    /* renamed from: g */
+    public static int m1831g(Context context) {
+        if (context == null) {
+            return 0;
+        }
+        int b = C0574m.m2471b(context, "com.baidu.pushservice.lsi", -1);
+        return b < 0 ? 1800000 : b;
     }
-    if (b == -1) {
-      b = m.b(paramContext, "com.baidu.android.pushservice.PushSettings.xm_proxy_mode", -1);
+
+    /* renamed from: h */
+    public static boolean m1832h(Context context) {
+        return !TextUtils.isEmpty(C0574m.m2465a(context, "com.baidu.pushservice.le"));
     }
-    if (b == 1) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
+
+    /* renamed from: i */
+    public static boolean m1833i(Context context) {
+        return TextUtils.equals(C0574m.m2465a(context, "com.baidu.pushservice.lms"), "off");
     }
-  }
-  
-  public static boolean n(Context paramContext)
-  {
-    boolean bool = true;
-    if (paramContext == null) {
-      return false;
+
+    /* renamed from: j */
+    public static void m1834j(Context context) {
+        if (context == null) {
+            C0574m.m2470a(context, "com.baidu.pushservice.lms", "off");
+        } else {
+            C0574m.m2470a(context, "com.baidu.pushservice.lms", "off");
+        }
     }
-    if (d == -1) {
-      d = m.b(paramContext, "com.baidu.android.pushservice.PushSettings.mz_proxy_mode", -1);
+
+    /* renamed from: k */
+    public static void m1835k(Context context) {
+        if (context == null) {
+            C0574m.m2470a(context, "com.baidu.pushservice.lms", "");
+        } else {
+            C0574m.m2470a(context, "com.baidu.pushservice.lms", "");
+        }
     }
-    if (d == 1) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
+
+    /* renamed from: l */
+    public static void m1836l(Context context) {
+        if (context != null) {
+            Object a = C0574m.m2465a(context, "com.baidu.pushservice.le");
+            if (!TextUtils.isEmpty(a)) {
+                StringBuilder stringBuilder = new StringBuilder();
+                String[] split = a.trim().split(",");
+                PackageManager packageManager = context.getPackageManager();
+                for (String str : split) {
+                    PackageInfo packageInfo = null;
+                    try {
+                        packageInfo = packageManager.getPackageInfo(str, 0);
+                    } catch (Exception e) {
+                    }
+                    if (packageInfo != null) {
+                        stringBuilder.append(str + ",");
+                    }
+                }
+                C0574m.m2470a(context, "com.baidu.pushservice.le", stringBuilder.toString());
+            }
+        }
     }
-  }
-  
-  public static boolean o(Context paramContext)
-  {
-    boolean bool = true;
-    if (paramContext == null) {
-      return false;
+
+    /* renamed from: m */
+    public static boolean m1837m(Context context) {
+        boolean z = true;
+        if (context == null) {
+            return false;
+        }
+        if (f1344b == -1) {
+            f1344b = C0574m.m2471b(context, "com.baidu.android.pushservice.PushSettings.xm_proxy_mode", -1);
+        }
+        if (f1344b != 1) {
+            z = false;
+        }
+        return z;
     }
-    if (e == -1) {
-      e = m.b(paramContext, "com.baidu.android.pushservice.PushSettings.op_proxy_mode", -1);
+
+    /* renamed from: n */
+    public static boolean m1838n(Context context) {
+        boolean z = true;
+        if (context == null) {
+            return false;
+        }
+        if (f1346d == -1) {
+            f1346d = C0574m.m2471b(context, "com.baidu.android.pushservice.PushSettings.mz_proxy_mode", -1);
+        }
+        if (f1346d != 1) {
+            z = false;
+        }
+        return z;
     }
-    if (e == 1) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
+
+    /* renamed from: o */
+    public static boolean m1839o(Context context) {
+        boolean z = true;
+        if (context == null) {
+            return false;
+        }
+        if (f1347e == -1) {
+            f1347e = C0574m.m2471b(context, "com.baidu.android.pushservice.PushSettings.op_proxy_mode", -1);
+        }
+        if (f1347e != 1) {
+            z = false;
+        }
+        return z;
     }
-  }
-  
-  public static boolean p(Context paramContext)
-  {
-    boolean bool = true;
-    if (paramContext == null) {
-      return false;
+
+    /* renamed from: p */
+    public static boolean m1840p(Context context) {
+        boolean z = true;
+        if (context == null) {
+            return false;
+        }
+        if (f1345c == -1) {
+            f1345c = C0574m.m2471b(context, "com.baidu.android.pushservice.PushSettings.hw_proxy_mode", -1);
+        }
+        if (f1345c != 1) {
+            z = false;
+        }
+        return z;
     }
-    if (c == -1) {
-      c = m.b(paramContext, "com.baidu.android.pushservice.PushSettings.hw_proxy_mode", -1);
-    }
-    if (c == 1) {}
-    for (;;)
-    {
-      return bool;
-      bool = false;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/PushSettings.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

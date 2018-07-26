@@ -9,406 +9,343 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeSystemInfoProtos
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_carlife_protobuf_CarlifeSystemInfo_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_carlife_protobuf_CarlifeSystemInfo_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeSystemInfoProtos.access$902(paramAnonymousFileDescriptor);
-        CarlifeSystemInfoProtos.access$002((Descriptors.Descriptor)CarlifeSystemInfoProtos.getDescriptor().getMessageTypes().get(0));
-        CarlifeSystemInfoProtos.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeSystemInfoProtos.internal_static_carlife_protobuf_CarlifeSystemInfo_descriptor, new String[] { "FirmwareVersionCode", "UpdateUrl" }, CarlifeSystemInfoProtos.CarlifeSystemInfo.class, CarlifeSystemInfoProtos.CarlifeSystemInfo.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n\tota.proto\022\020carlife.protobuf\"C\n\021CarlifeSystemInfo\022\033\n\023firmwareVersionCode\030\001 \002(\005\022\021\n\tupdateUrl\030\002 \002(\tB5\n\032com.baidu.carlife.protobufB\027CarlifeSystemInfoProtos" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeSystemInfo
-    extends GeneratedMessage
-  {
-    public static final int FIRMWAREVERSIONCODE_FIELD_NUMBER = 1;
-    public static final int UPDATEURL_FIELD_NUMBER = 2;
-    private static final CarlifeSystemInfo defaultInstance = new CarlifeSystemInfo();
-    private int firmwareVersionCode_ = 0;
-    private boolean hasFirmwareVersionCode;
-    private boolean hasUpdateUrl;
-    private int memoizedSerializedSize = -1;
-    private String updateUrl_ = "";
-    
-    static
-    {
-      CarlifeSystemInfoProtos.getDescriptor();
-      CarlifeSystemInfoProtos.internalForceInit();
-    }
-    
-    public static CarlifeSystemInfo getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeSystemInfoProtos.internal_static_carlife_protobuf_CarlifeSystemInfo_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeSystemInfo paramCarlifeSystemInfo)
-    {
-      return newBuilder().mergeFrom(paramCarlifeSystemInfo);
-    }
-    
-    public static CarlifeSystemInfo parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeSystemInfo parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public CarlifeSystemInfo getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public int getFirmwareVersionCode()
-    {
-      return this.firmwareVersionCode_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      i = 0;
-      if (hasFirmwareVersionCode()) {
-        i = 0 + CodedOutputStream.computeInt32Size(1, getFirmwareVersionCode());
-      }
-      int j = i;
-      if (hasUpdateUrl()) {
-        j = i + CodedOutputStream.computeStringSize(2, getUpdateUrl());
-      }
-      i = j + getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public String getUpdateUrl()
-    {
-      return this.updateUrl_;
-    }
-    
-    public boolean hasFirmwareVersionCode()
-    {
-      return this.hasFirmwareVersionCode;
-    }
-    
-    public boolean hasUpdateUrl()
-    {
-      return this.hasUpdateUrl;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeSystemInfoProtos.internal_static_carlife_protobuf_CarlifeSystemInfo_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      if (!this.hasFirmwareVersionCode) {}
-      while (!this.hasUpdateUrl) {
-        return false;
-      }
-      return true;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasFirmwareVersionCode()) {
-        paramCodedOutputStream.writeInt32(1, getFirmwareVersionCode());
-      }
-      if (hasUpdateUrl()) {
-        paramCodedOutputStream.writeString(2, getUpdateUrl());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeSystemInfoProtos.CarlifeSystemInfo result;
-      
-      private CarlifeSystemInfoProtos.CarlifeSystemInfo buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeSystemInfoProtos {
+    private static FileDescriptor descriptor;
+    private static Descriptor internal_static_carlife_protobuf_CarlifeSystemInfo_descriptor;
+    /* renamed from: internal_static_carlife_protobuf_CarlifeSystemInfo_fieldAccessorTable */
+    private static FieldAccessorTable f6653x22b44655;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeSystemInfoProtos$1 */
+    static class C20831 implements InternalDescriptorAssigner {
+        C20831() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeSystemInfoProtos.CarlifeSystemInfo(null);
-        return localBuilder;
-      }
-      
-      public CarlifeSystemInfoProtos.CarlifeSystemInfo build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeSystemInfoProtos.descriptor = root;
+            CarlifeSystemInfoProtos.internal_static_carlife_protobuf_CarlifeSystemInfo_descriptor = (Descriptor) CarlifeSystemInfoProtos.getDescriptor().getMessageTypes().get(0);
+            CarlifeSystemInfoProtos.f6653x22b44655 = new FieldAccessorTable(CarlifeSystemInfoProtos.internal_static_carlife_protobuf_CarlifeSystemInfo_descriptor, new String[]{"FirmwareVersionCode", "UpdateUrl"}, CarlifeSystemInfo.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeSystemInfoProtos.CarlifeSystemInfo buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeSystemInfoProtos.CarlifeSystemInfo localCarlifeSystemInfo = this.result;
-        this.result = null;
-        return localCarlifeSystemInfo;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeSystemInfoProtos.CarlifeSystemInfo(null);
-        return this;
-      }
-      
-      public Builder clearFirmwareVersionCode()
-      {
-        CarlifeSystemInfoProtos.CarlifeSystemInfo.access$502(this.result, false);
-        CarlifeSystemInfoProtos.CarlifeSystemInfo.access$602(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearUpdateUrl()
-      {
-        CarlifeSystemInfoProtos.CarlifeSystemInfo.access$702(this.result, false);
-        CarlifeSystemInfoProtos.CarlifeSystemInfo.access$802(this.result, CarlifeSystemInfoProtos.CarlifeSystemInfo.getDefaultInstance().getUpdateUrl());
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public CarlifeSystemInfoProtos.CarlifeSystemInfo getDefaultInstanceForType()
-      {
-        return CarlifeSystemInfoProtos.CarlifeSystemInfo.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeSystemInfoProtos.CarlifeSystemInfo.getDescriptor();
-      }
-      
-      public int getFirmwareVersionCode()
-      {
-        return this.result.getFirmwareVersionCode();
-      }
-      
-      public String getUpdateUrl()
-      {
-        return this.result.getUpdateUrl();
-      }
-      
-      public boolean hasFirmwareVersionCode()
-      {
-        return this.result.hasFirmwareVersionCode();
-      }
-      
-      public boolean hasUpdateUrl()
-      {
-        return this.result.hasUpdateUrl();
-      }
-      
-      protected CarlifeSystemInfoProtos.CarlifeSystemInfo internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeSystemInfoProtos.CarlifeSystemInfo paramCarlifeSystemInfo)
-      {
-        if (paramCarlifeSystemInfo == CarlifeSystemInfoProtos.CarlifeSystemInfo.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeSystemInfo.hasFirmwareVersionCode()) {
-          setFirmwareVersionCode(paramCarlifeSystemInfo.getFirmwareVersionCode());
-        }
-        if (paramCarlifeSystemInfo.hasUpdateUrl()) {
-          setUpdateUrl(paramCarlifeSystemInfo.getUpdateUrl());
-        }
-        mergeUnknownFields(paramCarlifeSystemInfo.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeSystemInfo extends GeneratedMessage {
+        public static final int FIRMWAREVERSIONCODE_FIELD_NUMBER = 1;
+        public static final int UPDATEURL_FIELD_NUMBER = 2;
+        private static final CarlifeSystemInfo defaultInstance = new CarlifeSystemInfo();
+        private int firmwareVersionCode_;
+        private boolean hasFirmwareVersionCode;
+        private boolean hasUpdateUrl;
+        private int memoizedSerializedSize;
+        private String updateUrl_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeSystemInfo result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setFirmwareVersionCode(paramCodedInputStream.readInt32());
-            break;
-          case 18: 
-            setUpdateUrl(paramCodedInputStream.readString());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeSystemInfo();
+                return builder;
+            }
+
+            protected CarlifeSystemInfo internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeSystemInfo();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeSystemInfo.getDescriptor();
+            }
+
+            public CarlifeSystemInfo getDefaultInstanceForType() {
+                return CarlifeSystemInfo.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeSystemInfo build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeSystemInfo buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeSystemInfo buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeSystemInfo returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeSystemInfo) {
+                    return mergeFrom((CarlifeSystemInfo) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeSystemInfo other) {
+                if (other != CarlifeSystemInfo.getDefaultInstance()) {
+                    if (other.hasFirmwareVersionCode()) {
+                        setFirmwareVersionCode(other.getFirmwareVersionCode());
+                    }
+                    if (other.hasUpdateUrl()) {
+                        setUpdateUrl(other.getUpdateUrl());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setFirmwareVersionCode(input.readInt32());
+                            continue;
+                        case 18:
+                            setUpdateUrl(input.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasFirmwareVersionCode() {
+                return this.result.hasFirmwareVersionCode();
+            }
+
+            public int getFirmwareVersionCode() {
+                return this.result.getFirmwareVersionCode();
+            }
+
+            public Builder setFirmwareVersionCode(int value) {
+                this.result.hasFirmwareVersionCode = true;
+                this.result.firmwareVersionCode_ = value;
+                return this;
+            }
+
+            public Builder clearFirmwareVersionCode() {
+                this.result.hasFirmwareVersionCode = false;
+                this.result.firmwareVersionCode_ = 0;
+                return this;
+            }
+
+            public boolean hasUpdateUrl() {
+                return this.result.hasUpdateUrl();
+            }
+
+            public String getUpdateUrl() {
+                return this.result.getUpdateUrl();
+            }
+
+            public Builder setUpdateUrl(String value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasUpdateUrl = true;
+                this.result.updateUrl_ = value;
+                return this;
+            }
+
+            public Builder clearUpdateUrl() {
+                this.result.hasUpdateUrl = false;
+                this.result.updateUrl_ = CarlifeSystemInfo.getDefaultInstance().getUpdateUrl();
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeSystemInfoProtos.CarlifeSystemInfo)) {
-          return mergeFrom((CarlifeSystemInfoProtos.CarlifeSystemInfo)paramMessage);
+
+        private CarlifeSystemInfo() {
+            this.firmwareVersionCode_ = 0;
+            this.updateUrl_ = "";
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setFirmwareVersionCode(int paramInt)
-      {
-        CarlifeSystemInfoProtos.CarlifeSystemInfo.access$502(this.result, true);
-        CarlifeSystemInfoProtos.CarlifeSystemInfo.access$602(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setUpdateUrl(String paramString)
-      {
-        if (paramString == null) {
-          throw new NullPointerException();
+
+        static {
+            CarlifeSystemInfoProtos.getDescriptor();
+            CarlifeSystemInfoProtos.internalForceInit();
         }
-        CarlifeSystemInfoProtos.CarlifeSystemInfo.access$702(this.result, true);
-        CarlifeSystemInfoProtos.CarlifeSystemInfo.access$802(this.result, paramString);
-        return this;
-      }
+
+        public static CarlifeSystemInfo getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public CarlifeSystemInfo getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeSystemInfoProtos.internal_static_carlife_protobuf_CarlifeSystemInfo_descriptor;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeSystemInfoProtos.f6653x22b44655;
+        }
+
+        public boolean hasFirmwareVersionCode() {
+            return this.hasFirmwareVersionCode;
+        }
+
+        public int getFirmwareVersionCode() {
+            return this.firmwareVersionCode_;
+        }
+
+        public boolean hasUpdateUrl() {
+            return this.hasUpdateUrl;
+        }
+
+        public String getUpdateUrl() {
+            return this.updateUrl_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasFirmwareVersionCode && this.hasUpdateUrl) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasFirmwareVersionCode()) {
+                output.writeInt32(1, getFirmwareVersionCode());
+            }
+            if (hasUpdateUrl()) {
+                output.writeString(2, getUpdateUrl());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasFirmwareVersionCode()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getFirmwareVersionCode());
+            }
+            if (hasUpdateUrl()) {
+                size += CodedOutputStream.computeStringSize(2, getUpdateUrl());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeSystemInfo parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeSystemInfo parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeSystemInfo prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeSystemInfoProtos() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n\tota.proto\u0012\u0010carlife.protobuf\"C\n\u0011CarlifeSystemInfo\u0012\u001b\n\u0013firmwareVersionCode\u0018\u0001 \u0002(\u0005\u0012\u0011\n\tupdateUrl\u0018\u0002 \u0002(\tB5\n\u001acom.baidu.carlife.protobufB\u0017CarlifeSystemInfoProtos"}, new FileDescriptor[0], new C20831());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeSystemInfoProtos.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -9,406 +9,343 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeTransferSendProtos
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_carlife_protobuf_CarlifeTransferSend_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_carlife_protobuf_CarlifeTransferSend_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeTransferSendProtos.access$902(paramAnonymousFileDescriptor);
-        CarlifeTransferSendProtos.access$002((Descriptors.Descriptor)CarlifeTransferSendProtos.getDescriptor().getMessageTypes().get(0));
-        CarlifeTransferSendProtos.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeTransferSendProtos.internal_static_carlife_protobuf_CarlifeTransferSend_descriptor, new String[] { "PacketSize", "BodyData" }, CarlifeTransferSendProtos.CarlifeTransferSend.class, CarlifeTransferSendProtos.CarlifeTransferSend.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n\nsend.proto\022\020carlife.protobuf\";\n\023CarlifeTransferSend\022\022\n\npacketSize\030\001 \002(\005\022\020\n\bbodyData\030\002 \002(\fB7\n\032com.baidu.carlife.protobufB\031CarlifeTransferSendProtos" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeTransferSend
-    extends GeneratedMessage
-  {
-    public static final int BODYDATA_FIELD_NUMBER = 2;
-    public static final int PACKETSIZE_FIELD_NUMBER = 1;
-    private static final CarlifeTransferSend defaultInstance = new CarlifeTransferSend();
-    private ByteString bodyData_ = ByteString.EMPTY;
-    private boolean hasBodyData;
-    private boolean hasPacketSize;
-    private int memoizedSerializedSize = -1;
-    private int packetSize_ = 0;
-    
-    static
-    {
-      CarlifeTransferSendProtos.getDescriptor();
-      CarlifeTransferSendProtos.internalForceInit();
-    }
-    
-    public static CarlifeTransferSend getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeTransferSendProtos.internal_static_carlife_protobuf_CarlifeTransferSend_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeTransferSend paramCarlifeTransferSend)
-    {
-      return newBuilder().mergeFrom(paramCarlifeTransferSend);
-    }
-    
-    public static CarlifeTransferSend parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeTransferSend parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public ByteString getBodyData()
-    {
-      return this.bodyData_;
-    }
-    
-    public CarlifeTransferSend getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public int getPacketSize()
-    {
-      return this.packetSize_;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      i = 0;
-      if (hasPacketSize()) {
-        i = 0 + CodedOutputStream.computeInt32Size(1, getPacketSize());
-      }
-      int j = i;
-      if (hasBodyData()) {
-        j = i + CodedOutputStream.computeBytesSize(2, getBodyData());
-      }
-      i = j + getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public boolean hasBodyData()
-    {
-      return this.hasBodyData;
-    }
-    
-    public boolean hasPacketSize()
-    {
-      return this.hasPacketSize;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeTransferSendProtos.internal_static_carlife_protobuf_CarlifeTransferSend_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      if (!this.hasPacketSize) {}
-      while (!this.hasBodyData) {
-        return false;
-      }
-      return true;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasPacketSize()) {
-        paramCodedOutputStream.writeInt32(1, getPacketSize());
-      }
-      if (hasBodyData()) {
-        paramCodedOutputStream.writeBytes(2, getBodyData());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeTransferSendProtos.CarlifeTransferSend result;
-      
-      private CarlifeTransferSendProtos.CarlifeTransferSend buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeTransferSendProtos {
+    private static FileDescriptor descriptor;
+    private static Descriptor internal_static_carlife_protobuf_CarlifeTransferSend_descriptor;
+    /* renamed from: internal_static_carlife_protobuf_CarlifeTransferSend_fieldAccessorTable */
+    private static FieldAccessorTable f6663x178fee7f;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeTransferSendProtos$1 */
+    static class C20951 implements InternalDescriptorAssigner {
+        C20951() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeTransferSendProtos.CarlifeTransferSend(null);
-        return localBuilder;
-      }
-      
-      public CarlifeTransferSendProtos.CarlifeTransferSend build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeTransferSendProtos.descriptor = root;
+            CarlifeTransferSendProtos.internal_static_carlife_protobuf_CarlifeTransferSend_descriptor = (Descriptor) CarlifeTransferSendProtos.getDescriptor().getMessageTypes().get(0);
+            CarlifeTransferSendProtos.f6663x178fee7f = new FieldAccessorTable(CarlifeTransferSendProtos.internal_static_carlife_protobuf_CarlifeTransferSend_descriptor, new String[]{"PacketSize", "BodyData"}, CarlifeTransferSend.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeTransferSendProtos.CarlifeTransferSend buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeTransferSendProtos.CarlifeTransferSend localCarlifeTransferSend = this.result;
-        this.result = null;
-        return localCarlifeTransferSend;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeTransferSendProtos.CarlifeTransferSend(null);
-        return this;
-      }
-      
-      public Builder clearBodyData()
-      {
-        CarlifeTransferSendProtos.CarlifeTransferSend.access$702(this.result, false);
-        CarlifeTransferSendProtos.CarlifeTransferSend.access$802(this.result, CarlifeTransferSendProtos.CarlifeTransferSend.getDefaultInstance().getBodyData());
-        return this;
-      }
-      
-      public Builder clearPacketSize()
-      {
-        CarlifeTransferSendProtos.CarlifeTransferSend.access$502(this.result, false);
-        CarlifeTransferSendProtos.CarlifeTransferSend.access$602(this.result, 0);
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public ByteString getBodyData()
-      {
-        return this.result.getBodyData();
-      }
-      
-      public CarlifeTransferSendProtos.CarlifeTransferSend getDefaultInstanceForType()
-      {
-        return CarlifeTransferSendProtos.CarlifeTransferSend.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeTransferSendProtos.CarlifeTransferSend.getDescriptor();
-      }
-      
-      public int getPacketSize()
-      {
-        return this.result.getPacketSize();
-      }
-      
-      public boolean hasBodyData()
-      {
-        return this.result.hasBodyData();
-      }
-      
-      public boolean hasPacketSize()
-      {
-        return this.result.hasPacketSize();
-      }
-      
-      protected CarlifeTransferSendProtos.CarlifeTransferSend internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeTransferSendProtos.CarlifeTransferSend paramCarlifeTransferSend)
-      {
-        if (paramCarlifeTransferSend == CarlifeTransferSendProtos.CarlifeTransferSend.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeTransferSend.hasPacketSize()) {
-          setPacketSize(paramCarlifeTransferSend.getPacketSize());
-        }
-        if (paramCarlifeTransferSend.hasBodyData()) {
-          setBodyData(paramCarlifeTransferSend.getBodyData());
-        }
-        mergeUnknownFields(paramCarlifeTransferSend.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeTransferSend extends GeneratedMessage {
+        public static final int BODYDATA_FIELD_NUMBER = 2;
+        public static final int PACKETSIZE_FIELD_NUMBER = 1;
+        private static final CarlifeTransferSend defaultInstance = new CarlifeTransferSend();
+        private ByteString bodyData_;
+        private boolean hasBodyData;
+        private boolean hasPacketSize;
+        private int memoizedSerializedSize;
+        private int packetSize_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeTransferSend result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setPacketSize(paramCodedInputStream.readInt32());
-            break;
-          case 18: 
-            setBodyData(paramCodedInputStream.readBytes());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeTransferSend();
+                return builder;
+            }
+
+            protected CarlifeTransferSend internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeTransferSend();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeTransferSend.getDescriptor();
+            }
+
+            public CarlifeTransferSend getDefaultInstanceForType() {
+                return CarlifeTransferSend.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeTransferSend build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeTransferSend buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeTransferSend buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeTransferSend returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeTransferSend) {
+                    return mergeFrom((CarlifeTransferSend) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeTransferSend other) {
+                if (other != CarlifeTransferSend.getDefaultInstance()) {
+                    if (other.hasPacketSize()) {
+                        setPacketSize(other.getPacketSize());
+                    }
+                    if (other.hasBodyData()) {
+                        setBodyData(other.getBodyData());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setPacketSize(input.readInt32());
+                            continue;
+                        case 18:
+                            setBodyData(input.readBytes());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasPacketSize() {
+                return this.result.hasPacketSize();
+            }
+
+            public int getPacketSize() {
+                return this.result.getPacketSize();
+            }
+
+            public Builder setPacketSize(int value) {
+                this.result.hasPacketSize = true;
+                this.result.packetSize_ = value;
+                return this;
+            }
+
+            public Builder clearPacketSize() {
+                this.result.hasPacketSize = false;
+                this.result.packetSize_ = 0;
+                return this;
+            }
+
+            public boolean hasBodyData() {
+                return this.result.hasBodyData();
+            }
+
+            public ByteString getBodyData() {
+                return this.result.getBodyData();
+            }
+
+            public Builder setBodyData(ByteString value) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                this.result.hasBodyData = true;
+                this.result.bodyData_ = value;
+                return this;
+            }
+
+            public Builder clearBodyData() {
+                this.result.hasBodyData = false;
+                this.result.bodyData_ = CarlifeTransferSend.getDefaultInstance().getBodyData();
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeTransferSendProtos.CarlifeTransferSend)) {
-          return mergeFrom((CarlifeTransferSendProtos.CarlifeTransferSend)paramMessage);
+
+        private CarlifeTransferSend() {
+            this.packetSize_ = 0;
+            this.bodyData_ = ByteString.EMPTY;
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setBodyData(ByteString paramByteString)
-      {
-        if (paramByteString == null) {
-          throw new NullPointerException();
+
+        static {
+            CarlifeTransferSendProtos.getDescriptor();
+            CarlifeTransferSendProtos.internalForceInit();
         }
-        CarlifeTransferSendProtos.CarlifeTransferSend.access$702(this.result, true);
-        CarlifeTransferSendProtos.CarlifeTransferSend.access$802(this.result, paramByteString);
-        return this;
-      }
-      
-      public Builder setPacketSize(int paramInt)
-      {
-        CarlifeTransferSendProtos.CarlifeTransferSend.access$502(this.result, true);
-        CarlifeTransferSendProtos.CarlifeTransferSend.access$602(this.result, paramInt);
-        return this;
-      }
+
+        public static CarlifeTransferSend getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public CarlifeTransferSend getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeTransferSendProtos.internal_static_carlife_protobuf_CarlifeTransferSend_descriptor;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeTransferSendProtos.f6663x178fee7f;
+        }
+
+        public boolean hasPacketSize() {
+            return this.hasPacketSize;
+        }
+
+        public int getPacketSize() {
+            return this.packetSize_;
+        }
+
+        public boolean hasBodyData() {
+            return this.hasBodyData;
+        }
+
+        public ByteString getBodyData() {
+            return this.bodyData_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasPacketSize && this.hasBodyData) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasPacketSize()) {
+                output.writeInt32(1, getPacketSize());
+            }
+            if (hasBodyData()) {
+                output.writeBytes(2, getBodyData());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasPacketSize()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getPacketSize());
+            }
+            if (hasBodyData()) {
+                size += CodedOutputStream.computeBytesSize(2, getBodyData());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeTransferSend parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeTransferSend parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeTransferSend prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeTransferSendProtos() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n\nsend.proto\u0012\u0010carlife.protobuf\";\n\u0013CarlifeTransferSend\u0012\u0012\n\npacketSize\u0018\u0001 \u0002(\u0005\u0012\u0010\n\bbodyData\u0018\u0002 \u0002(\fB7\n\u001acom.baidu.carlife.protobufB\u0019CarlifeTransferSendProtos"}, new FileDescriptor[0], new C20951());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeTransferSendProtos.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,29 +1,24 @@
 package com.baidu.ufosdk.ui;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import com.baidu.ufosdk.UfoSDK;
-import com.baidu.ufosdk.e.a;
+import com.baidu.ufosdk.p251e.C5180a;
 
-final class bh
-  implements Runnable
-{
-  bh(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void run()
-  {
-    Object localObject = this.a.getApplicationContext();
-    String str = UfoSDK.clientid;
-    localObject = a.c((Context)localObject);
-    if (localObject != null) {
-      FeedbackInputActivity.H(this.a).obtainMessage(0, localObject).sendToTarget();
+/* compiled from: FeedbackInputActivity */
+final class bh implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21574a;
+
+    bh(FeedbackInputActivity feedbackInputActivity) {
+        this.f21574a = feedbackInputActivity;
     }
-  }
+
+    public final void run() {
+        Context applicationContext = this.f21574a.getApplicationContext();
+        String str = UfoSDK.clientid;
+        String c = C5180a.m17574c(applicationContext);
+        if (c != null) {
+            this.f21574a.ak.obtainMessage(0, c).sendToTarget();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bh.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -8,55 +8,41 @@ import java.util.Date;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
-public class SerializableCookie
-  implements Serializable
-{
-  private static final long serialVersionUID = 6374381828722046732L;
-  private transient BasicClientCookie clientCookie;
-  private final transient Cookie cookie;
-  
-  public SerializableCookie(Cookie paramCookie)
-  {
-    this.cookie = paramCookie;
-  }
-  
-  private void readObject(ObjectInputStream paramObjectInputStream)
-    throws IOException, ClassNotFoundException
-  {
-    this.clientCookie = new BasicClientCookie((String)paramObjectInputStream.readObject(), (String)paramObjectInputStream.readObject());
-    this.clientCookie.setComment((String)paramObjectInputStream.readObject());
-    this.clientCookie.setDomain((String)paramObjectInputStream.readObject());
-    this.clientCookie.setExpiryDate((Date)paramObjectInputStream.readObject());
-    this.clientCookie.setPath((String)paramObjectInputStream.readObject());
-    this.clientCookie.setVersion(paramObjectInputStream.readInt());
-    this.clientCookie.setSecure(paramObjectInputStream.readBoolean());
-  }
-  
-  private void writeObject(ObjectOutputStream paramObjectOutputStream)
-    throws IOException
-  {
-    paramObjectOutputStream.writeObject(this.cookie.getName());
-    paramObjectOutputStream.writeObject(this.cookie.getValue());
-    paramObjectOutputStream.writeObject(this.cookie.getComment());
-    paramObjectOutputStream.writeObject(this.cookie.getDomain());
-    paramObjectOutputStream.writeObject(this.cookie.getExpiryDate());
-    paramObjectOutputStream.writeObject(this.cookie.getPath());
-    paramObjectOutputStream.writeInt(this.cookie.getVersion());
-    paramObjectOutputStream.writeBoolean(this.cookie.isSecure());
-  }
-  
-  public Cookie getCookie()
-  {
-    Object localObject = this.cookie;
-    if (this.clientCookie != null) {
-      localObject = this.clientCookie;
+public class SerializableCookie implements Serializable {
+    private static final long serialVersionUID = 6374381828722046732L;
+    private transient BasicClientCookie clientCookie;
+    private final transient Cookie cookie;
+
+    public SerializableCookie(Cookie cookie) {
+        this.cookie = cookie;
     }
-    return (Cookie)localObject;
-  }
+
+    public Cookie getCookie() {
+        Cookie cookie = this.cookie;
+        if (this.clientCookie != null) {
+            return this.clientCookie;
+        }
+        return cookie;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(this.cookie.getName());
+        out.writeObject(this.cookie.getValue());
+        out.writeObject(this.cookie.getComment());
+        out.writeObject(this.cookie.getDomain());
+        out.writeObject(this.cookie.getExpiryDate());
+        out.writeObject(this.cookie.getPath());
+        out.writeInt(this.cookie.getVersion());
+        out.writeBoolean(this.cookie.isSecure());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        this.clientCookie = new BasicClientCookie((String) in.readObject(), (String) in.readObject());
+        this.clientCookie.setComment((String) in.readObject());
+        this.clientCookie.setDomain((String) in.readObject());
+        this.clientCookie.setExpiryDate((Date) in.readObject());
+        this.clientCookie.setPath((String) in.readObject());
+        this.clientCookie.setVersion(in.readInt());
+        this.clientCookie.setSecure(in.readBoolean());
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/loopj/SerializableCookie.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

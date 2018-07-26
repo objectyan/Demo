@@ -3,88 +3,66 @@ package com.baidu.mapframework.nirvana.looper;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import com.baidu.mapframework.nirvana.b;
-import com.baidu.mapframework.nirvana.b.a;
-import com.baidu.mapframework.nirvana.b.c;
-import com.baidu.mapframework.nirvana.e;
+import com.baidu.mapframework.nirvana.C3534b;
+import com.baidu.mapframework.nirvana.C3541e;
+import com.baidu.mapframework.nirvana.C3560n;
 import com.baidu.mapframework.nirvana.module.Module;
-import com.baidu.mapframework.nirvana.n;
+import com.baidu.mapframework.nirvana.p205b.C3533c;
 import com.baidu.mapframework.nirvana.schedule.ScheduleConfig;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class MainLooperHandler
-  extends Handler
-{
-  private final ScheduleConfig config;
-  private b exceptionCallback;
-  private final Module module;
-  
-  public MainLooperHandler(@NotNull Module paramModule, @NotNull ScheduleConfig paramScheduleConfig)
-  {
-    super(Looper.getMainLooper());
-    this.module = paramModule;
-    this.config = paramScheduleConfig;
-  }
-  
-  public final void dispatchMessage(Message paramMessage)
-  {
-    super.dispatchMessage(paramMessage);
-  }
-  
-  public b getExceptionCallback()
-  {
-    return this.exceptionCallback;
-  }
-  
-  public final void handleMessage(Message paramMessage)
-  {
-    if (paramMessage == null) {
-      return;
+public abstract class MainLooperHandler extends Handler {
+    private final ScheduleConfig config;
+    private C3534b exceptionCallback;
+    private final Module module;
+
+    public abstract void onMessage(Message message);
+
+    public MainLooperHandler(@NotNull Module module, @NotNull ScheduleConfig config) {
+        super(Looper.getMainLooper());
+        this.module = module;
+        this.config = config;
     }
-    final Message localMessage = Message.obtain();
-    localMessage.copyFrom(paramMessage);
-    e.c().run(new Runnable()
-    {
-      public void run()
-      {
-        e.b().a(localMessage);
-        try
-        {
-          MainLooperHandler.this.onMessage(localMessage);
-          e.b().b(localMessage);
-          localMessage.recycle();
-          return;
+
+    public C3534b getExceptionCallback() {
+        return this.exceptionCallback;
+    }
+
+    public void setExceptionCallback(C3534b exceptionCallback) {
+        this.exceptionCallback = exceptionCallback;
+    }
+
+    public final boolean sendMessageAtTime(Message msg, long uptimeMillis) {
+        C3541e.m15174b().m15142a(C3533c.LOOPER, msg, this.module, this.config);
+        return super.sendMessageAtTime(msg, uptimeMillis);
+    }
+
+    public final void handleMessage(Message msg) {
+        if (msg != null) {
+            final Message copyMsg = Message.obtain();
+            copyMsg.copyFrom(msg);
+            C3541e.m15175c().run(new Runnable(this) {
+                /* renamed from: b */
+                final /* synthetic */ MainLooperHandler f19213b;
+
+                public void run() {
+                    C3541e.m15174b().m15143a(copyMsg);
+                    try {
+                        this.f19213b.onMessage(copyMsg);
+                    } catch (Throwable e) {
+                        C3560n.m15211a("MainLooperHandler handleMessage exception", e);
+                        if (this.f19213b.exceptionCallback != null) {
+                            this.f19213b.exceptionCallback.m15158a(e);
+                        }
+                    }
+                    C3541e.m15174b().m15146b(copyMsg);
+                    copyMsg.recycle();
+                }
+            });
         }
-        catch (Exception localException)
-        {
-          for (;;)
-          {
-            n.a("MainLooperHandler handleMessage exception", localException);
-            if (MainLooperHandler.this.exceptionCallback != null) {
-              MainLooperHandler.this.exceptionCallback.a(localException);
-            }
-          }
-        }
-      }
-    });
-  }
-  
-  public abstract void onMessage(Message paramMessage);
-  
-  public final boolean sendMessageAtTime(Message paramMessage, long paramLong)
-  {
-    e.b().a(c.c, paramMessage, this.module, this.config);
-    return super.sendMessageAtTime(paramMessage, paramLong);
-  }
-  
-  public void setExceptionCallback(b paramb)
-  {
-    this.exceptionCallback = paramb;
-  }
+    }
+
+    public final void dispatchMessage(Message msg) {
+        super.dispatchMessage(msg);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/looper/MainLooperHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -15,268 +15,208 @@ import android.view.animation.Interpolator;
 import android.view.animation.LayoutAnimationController;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.util.jar.JarUtils;
+import com.baidu.platform.comapi.map.provider.EngineConst.OVERLAY_KEY;
 
-public class BNStyleManager
-{
-  public static final String SUFFIX_DAY_MODEL = "";
-  public static final String SUFFIX_NIGHT_MODEL = "_night";
-  private static boolean mDayStyle = false;
-  private static String mPackageName = "com.baidu.navisdk";
-  private static boolean mRealDayStyle = true;
-  private static SparseIntArray mResIdMap;
-  private static Resources mResources;
-  
-  static
-  {
-    mPackageName = "com.baidu.navisdk";
-    mResIdMap = new SparseIntArray();
-    mResources = JarUtils.getResources();
-  }
-  
-  public static void clearCacheResId()
-  {
-    mResIdMap.clear();
-  }
-  
-  public static Bitmap getBitmap(int paramInt)
-  {
-    if (mResources == null) {
-      return null;
+public class BNStyleManager {
+    public static final String SUFFIX_DAY_MODEL = "";
+    public static final String SUFFIX_NIGHT_MODEL = "_night";
+    private static boolean mDayStyle = false;
+    private static String mPackageName;
+    private static boolean mRealDayStyle = true;
+    private static SparseIntArray mResIdMap = new SparseIntArray();
+    private static Resources mResources = JarUtils.getResources();
+
+    static {
+        mPackageName = "com.baidu.navisdk";
+        mPackageName = "com.baidu.navisdk";
     }
-    try
-    {
-      Bitmap localBitmap = BitmapFactory.decodeResource(mResources, paramInt);
-      return localBitmap;
+
+    public static void setDayStyle(boolean dayStyle) {
+        mResIdMap.clear();
+        mDayStyle = dayStyle;
+        mRealDayStyle = dayStyle;
     }
-    catch (Resources.NotFoundException localNotFoundException) {}
-    return null;
-  }
-  
-  public static boolean getBoolean(int paramInt)
-  {
-    if (mResources == null) {
-      return false;
+
+    public static void switchToCarMode() {
+        mDayStyle = false;
     }
-    try
-    {
-      boolean bool = mResources.getBoolean(paramInt);
-      return bool;
+
+    public static void clearCacheResId() {
+        mResIdMap.clear();
     }
-    catch (Resources.NotFoundException localNotFoundException) {}
-    return false;
-  }
-  
-  public static int getColor(int paramInt)
-  {
-    return getColor(paramInt, mRealDayStyle);
-  }
-  
-  public static int getColor(int paramInt, boolean paramBoolean)
-  {
-    if (mResources == null) {
-      return 0;
+
+    public static boolean getDayStyle() {
+        return mDayStyle;
     }
-    int i = paramInt;
-    if (!paramBoolean)
-    {
-      i = mResIdMap.get(paramInt, -1);
-      if (i == -1) {
-        break label38;
-      }
+
+    public static boolean getRealDayStyle() {
+        return mRealDayStyle;
     }
-    label38:
-    try
-    {
-      paramInt = mResources.getColor(i);
-      return paramInt;
+
+    private static String getSuffix(boolean isDay) {
+        String suffix = "";
+        if (isDay) {
+            return suffix;
+        }
+        return "_night";
     }
-    catch (Resources.NotFoundException localNotFoundException) {}
-    String str = getResourceNameById(paramInt);
-    str = str + getSuffix(paramBoolean);
-    i = mResources.getIdentifier(str, "color", mPackageName);
-    if (i != 0) {
-      mResIdMap.put(paramInt, i);
+
+    public static void setResource(Resources resources) {
+        mResources = resources;
     }
-    if (i == 0) {}
-    for (;;)
-    {
-      i = paramInt;
-      break;
-      paramInt = i;
+
+    private static String getResourceNameById(int resId) {
+        String name = "";
+        if (mResources == null) {
+            return name;
+        }
+        try {
+            return mResources.getResourceEntryName(resId);
+        } catch (NotFoundException e) {
+            return "";
+        }
     }
-    return 0;
-  }
-  
-  public static boolean getDayStyle()
-  {
-    return mDayStyle;
-  }
-  
-  public static int getDimension(int paramInt)
-  {
-    if (mResources == null) {
-      return 0;
+
+    public static Drawable getDrawable(int resId) {
+        return getDrawable(resId, mDayStyle);
     }
-    try
-    {
-      float f = mResources.getDimension(paramInt);
-      return (int)f;
+
+    public static Drawable getDrawable(int resId, boolean dayStyle) {
+        if (mResources == null) {
+            return null;
+        }
+        if (!dayStyle) {
+            int cacheResId = mResIdMap.get(resId, -1);
+            if (cacheResId != -1) {
+                resId = cacheResId;
+            } else {
+                int resIdInNight = mResources.getIdentifier(getResourceNameById(resId) + getSuffix(dayStyle), "drawable", mPackageName);
+                if (resIdInNight != 0) {
+                    mResIdMap.put(resId, resIdInNight);
+                }
+                if (resIdInNight != 0) {
+                    resId = resIdInNight;
+                }
+            }
+        }
+        try {
+            return mResources.getDrawable(resId);
+        } catch (NotFoundException e) {
+            return null;
+        } catch (OutOfMemoryError e2) {
+            return null;
+        }
     }
-    catch (Resources.NotFoundException localNotFoundException) {}
-    return 0;
-  }
-  
-  public static Drawable getDrawable(int paramInt)
-  {
-    return getDrawable(paramInt, mDayStyle);
-  }
-  
-  public static Drawable getDrawable(int paramInt, boolean paramBoolean)
-  {
-    if (mResources == null) {
-      return null;
+
+    public static Drawable getRealDrawable(int resId) {
+        return getDrawable(resId, mRealDayStyle);
     }
-    int i = paramInt;
-    if (!paramBoolean)
-    {
-      i = mResIdMap.get(paramInt, -1);
-      if (i == -1) {
-        break label38;
-      }
+
+    public static boolean isUsingMapMode() {
+        if (BNSettingManager.getCurrentUsingMode() == 1) {
+            return true;
+        }
+        return false;
     }
-    try
-    {
-      localObject = mResources.getDrawable(i);
-      return (Drawable)localObject;
+
+    public static int getColor(int resId) {
+        return getColor(resId, mRealDayStyle);
     }
-    catch (Resources.NotFoundException localNotFoundException)
-    {
-      Object localObject;
-      label38:
-      return null;
+
+    public static int getColor(int resId, boolean dayStyle) {
+        if (mResources == null) {
+            return 0;
+        }
+        if (!dayStyle) {
+            int cacheResId = mResIdMap.get(resId, -1);
+            if (cacheResId != -1) {
+                resId = cacheResId;
+            } else {
+                int resIdInNight = mResources.getIdentifier(getResourceNameById(resId) + getSuffix(dayStyle), OVERLAY_KEY.SGEO_LEVEL_COLOR_LINE, mPackageName);
+                if (resIdInNight != 0) {
+                    mResIdMap.put(resId, resIdInNight);
+                }
+                if (resIdInNight != 0) {
+                    resId = resIdInNight;
+                }
+            }
+        }
+        try {
+            return mResources.getColor(resId);
+        } catch (NotFoundException e) {
+            return 0;
+        }
     }
-    catch (OutOfMemoryError localOutOfMemoryError) {}
-    localObject = getResourceNameById(paramInt);
-    localObject = (String)localObject + getSuffix(paramBoolean);
-    i = mResources.getIdentifier((String)localObject, "drawable", mPackageName);
-    if (i != 0) {
-      mResIdMap.put(paramInt, i);
+
+    public static String getString(int resId) {
+        if (mResources == null) {
+            return "";
+        }
+        String retStr = "";
+        try {
+            return mResources.getString(resId);
+        } catch (Exception e) {
+            return "";
+        }
     }
-    if (i == 0) {}
-    for (;;)
-    {
-      i = paramInt;
-      break;
-      paramInt = i;
+
+    public static int getDimension(int resId) {
+        if (mResources == null) {
+            return 0;
+        }
+        try {
+            return (int) mResources.getDimension(resId);
+        } catch (NotFoundException e) {
+            return 0;
+        }
     }
-    return null;
-  }
-  
-  public static boolean getRealDayStyle()
-  {
-    return mRealDayStyle;
-  }
-  
-  public static Drawable getRealDrawable(int paramInt)
-  {
-    return getDrawable(paramInt, mRealDayStyle);
-  }
-  
-  private static String getResourceNameById(int paramInt)
-  {
-    String str = "";
-    if (mResources != null) {}
-    try
-    {
-      str = mResources.getResourceEntryName(paramInt);
-      return str;
+
+    public static String[] getStringArray(int resId) {
+        if (mResources == null) {
+            return null;
+        }
+        try {
+            return mResources.getStringArray(resId);
+        } catch (NotFoundException e) {
+            return null;
+        }
     }
-    catch (Resources.NotFoundException localNotFoundException) {}
-    return "";
-  }
-  
-  public static String getString(int paramInt)
-  {
-    if (mResources == null) {
-      return "";
+
+    public static boolean getBoolean(int resId) {
+        if (mResources == null) {
+            return false;
+        }
+        try {
+            return mResources.getBoolean(resId);
+        } catch (NotFoundException e) {
+            return false;
+        }
     }
-    try
-    {
-      String str = mResources.getString(paramInt);
-      return str;
+
+    public static Bitmap getBitmap(int resId) {
+        if (mResources == null) {
+            return null;
+        }
+        try {
+            return BitmapFactory.decodeResource(mResources, resId);
+        } catch (NotFoundException e) {
+            return null;
+        }
     }
-    catch (Exception localException) {}
-    return "";
-  }
-  
-  public static String[] getStringArray(int paramInt)
-  {
-    if (mResources == null) {
-      return null;
+
+    public static View inflate(Activity activity, int resId, ViewGroup viewGroup) {
+        return JarUtils.inflate(activity, resId, viewGroup);
     }
-    try
-    {
-      String[] arrayOfString = mResources.getStringArray(paramInt);
-      return arrayOfString;
+
+    public static Animation loadAnimation(Context context, int id) {
+        return JarUtils.loadAnimation(context, id);
     }
-    catch (Resources.NotFoundException localNotFoundException) {}
-    return null;
-  }
-  
-  private static String getSuffix(boolean paramBoolean)
-  {
-    String str = "";
-    if (!paramBoolean) {
-      str = "_night";
+
+    public static LayoutAnimationController loadLayoutAnimation(Context context, int id) {
+        return JarUtils.loadLayoutAnimation(context, id);
     }
-    return str;
-  }
-  
-  public static View inflate(Activity paramActivity, int paramInt, ViewGroup paramViewGroup)
-  {
-    return JarUtils.inflate(paramActivity, paramInt, paramViewGroup);
-  }
-  
-  public static boolean isUsingMapMode()
-  {
-    return BNSettingManager.getCurrentUsingMode() == 1;
-  }
-  
-  public static Animation loadAnimation(Context paramContext, int paramInt)
-  {
-    return JarUtils.loadAnimation(paramContext, paramInt);
-  }
-  
-  public static Interpolator loadInterpolator(Context paramContext, int paramInt)
-  {
-    return JarUtils.loadInterpolator(paramContext, paramInt);
-  }
-  
-  public static LayoutAnimationController loadLayoutAnimation(Context paramContext, int paramInt)
-  {
-    return JarUtils.loadLayoutAnimation(paramContext, paramInt);
-  }
-  
-  public static void setDayStyle(boolean paramBoolean)
-  {
-    mResIdMap.clear();
-    mDayStyle = paramBoolean;
-    mRealDayStyle = paramBoolean;
-  }
-  
-  public static void setResource(Resources paramResources)
-  {
-    mResources = paramResources;
-  }
-  
-  public static void switchToCarMode()
-  {
-    mDayStyle = false;
-  }
+
+    public static Interpolator loadInterpolator(Context context, int id) {
+        return JarUtils.loadInterpolator(context, id);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/util/BNStyleManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

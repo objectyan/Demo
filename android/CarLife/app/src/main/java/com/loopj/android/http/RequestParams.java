@@ -1,7 +1,9 @@
 package com.loopj.android.http;
 
-import cz.msebera.android.httpclient.b.c.h;
-import cz.msebera.android.httpclient.b.g.j;
+import cz.msebera.android.httpclient.C3008n;
+import cz.msebera.android.httpclient.p158b.p167g.C6263j;
+import cz.msebera.android.httpclient.p158b.p296c.C6225h;
+import cz.msebera.android.httpclient.p160k.C6549n;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -21,542 +22,409 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RequestParams
-  implements Serializable
-{
-  public static final String APPLICATION_JSON = "application/json";
-  public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
-  protected static final String LOG_TAG = "RequestParams";
-  protected boolean autoCloseInputStreams;
-  protected String contentEncoding = "UTF-8";
-  protected String elapsedFieldInJsonStreamer = "_elapsed";
-  protected final ConcurrentHashMap<String, List<FileWrapper>> fileArrayParams = new ConcurrentHashMap();
-  protected final ConcurrentHashMap<String, FileWrapper> fileParams = new ConcurrentHashMap();
-  protected boolean forceMultipartEntity = false;
-  protected boolean isRepeatable;
-  protected final ConcurrentHashMap<String, StreamWrapper> streamParams = new ConcurrentHashMap();
-  protected final ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap();
-  protected final ConcurrentHashMap<String, Object> urlParamsWithObjects = new ConcurrentHashMap();
-  protected boolean useJsonStreamer;
-  
-  public RequestParams()
-  {
-    this((Map)null);
-  }
-  
-  public RequestParams(String paramString1, final String paramString2)
-  {
-    this(new HashMap() {});
-  }
-  
-  public RequestParams(Map<String, String> paramMap)
-  {
-    if (paramMap != null)
-    {
-      paramMap = paramMap.entrySet().iterator();
-      while (paramMap.hasNext())
-      {
-        Map.Entry localEntry = (Map.Entry)paramMap.next();
-        put((String)localEntry.getKey(), (String)localEntry.getValue());
-      }
-    }
-  }
-  
-  public RequestParams(Object... paramVarArgs)
-  {
-    int j = paramVarArgs.length;
-    if (j % 2 != 0) {
-      throw new IllegalArgumentException("Supplied arguments must be even");
-    }
-    int i = 0;
-    while (i < j)
-    {
-      put(String.valueOf(paramVarArgs[i]), String.valueOf(paramVarArgs[(i + 1)]));
-      i += 2;
-    }
-  }
-  
-  private cz.msebera.android.httpclient.n createFormEntity()
-  {
-    try
-    {
-      h localh = new h(getParamsList(), this.contentEncoding);
-      return localh;
-    }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      AsyncHttpClient.log.e("RequestParams", "createFormEntity failed", localUnsupportedEncodingException);
-    }
-    return null;
-  }
-  
-  private cz.msebera.android.httpclient.n createJsonStreamerEntity(ResponseHandlerInterface paramResponseHandlerInterface)
-    throws IOException
-  {
-    if ((!this.fileParams.isEmpty()) || (!this.streamParams.isEmpty())) {}
-    Map.Entry localEntry;
-    for (boolean bool = true;; bool = false)
-    {
-      paramResponseHandlerInterface = new JsonStreamerEntity(paramResponseHandlerInterface, bool, this.elapsedFieldInJsonStreamer);
-      localIterator = this.urlParams.entrySet().iterator();
-      while (localIterator.hasNext())
-      {
-        localEntry = (Map.Entry)localIterator.next();
-        paramResponseHandlerInterface.addPart((String)localEntry.getKey(), localEntry.getValue());
-      }
-    }
-    Iterator localIterator = this.urlParamsWithObjects.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localEntry = (Map.Entry)localIterator.next();
-      paramResponseHandlerInterface.addPart((String)localEntry.getKey(), localEntry.getValue());
-    }
-    localIterator = this.fileParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localEntry = (Map.Entry)localIterator.next();
-      paramResponseHandlerInterface.addPart((String)localEntry.getKey(), localEntry.getValue());
-    }
-    localIterator = this.streamParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localEntry = (Map.Entry)localIterator.next();
-      StreamWrapper localStreamWrapper = (StreamWrapper)localEntry.getValue();
-      if (localStreamWrapper.inputStream != null) {
-        paramResponseHandlerInterface.addPart((String)localEntry.getKey(), StreamWrapper.newInstance(localStreamWrapper.inputStream, localStreamWrapper.name, localStreamWrapper.contentType, localStreamWrapper.autoClose));
-      }
-    }
-    return paramResponseHandlerInterface;
-  }
-  
-  private cz.msebera.android.httpclient.n createMultipartEntity(ResponseHandlerInterface paramResponseHandlerInterface)
-    throws IOException
-  {
-    paramResponseHandlerInterface = new SimpleMultipartEntity(paramResponseHandlerInterface);
-    paramResponseHandlerInterface.setIsRepeatable(this.isRepeatable);
-    Iterator localIterator = this.urlParams.entrySet().iterator();
-    Object localObject1;
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      paramResponseHandlerInterface.addPartWithCharset((String)((Map.Entry)localObject1).getKey(), (String)((Map.Entry)localObject1).getValue(), this.contentEncoding);
-    }
-    localIterator = getParamsList(null, this.urlParamsWithObjects).iterator();
-    while (localIterator.hasNext())
-    {
-      localObject1 = (cz.msebera.android.httpclient.k.n)localIterator.next();
-      paramResponseHandlerInterface.addPartWithCharset(((cz.msebera.android.httpclient.k.n)localObject1).a(), ((cz.msebera.android.httpclient.k.n)localObject1).b(), this.contentEncoding);
-    }
-    localIterator = this.streamParams.entrySet().iterator();
-    Object localObject2;
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      localObject2 = (StreamWrapper)((Map.Entry)localObject1).getValue();
-      if (((StreamWrapper)localObject2).inputStream != null) {
-        paramResponseHandlerInterface.addPart((String)((Map.Entry)localObject1).getKey(), ((StreamWrapper)localObject2).name, ((StreamWrapper)localObject2).inputStream, ((StreamWrapper)localObject2).contentType);
-      }
-    }
-    localIterator = this.fileParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      localObject2 = (FileWrapper)((Map.Entry)localObject1).getValue();
-      paramResponseHandlerInterface.addPart((String)((Map.Entry)localObject1).getKey(), ((FileWrapper)localObject2).file, ((FileWrapper)localObject2).contentType, ((FileWrapper)localObject2).customFileName);
-    }
-    localIterator = this.fileArrayParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      localObject2 = ((List)((Map.Entry)localObject1).getValue()).iterator();
-      while (((Iterator)localObject2).hasNext())
-      {
-        FileWrapper localFileWrapper = (FileWrapper)((Iterator)localObject2).next();
-        paramResponseHandlerInterface.addPart((String)((Map.Entry)localObject1).getKey(), localFileWrapper.file, localFileWrapper.contentType, localFileWrapper.customFileName);
-      }
-    }
-    return paramResponseHandlerInterface;
-  }
-  
-  private List<cz.msebera.android.httpclient.k.n> getParamsList(String paramString, Object paramObject)
-  {
-    LinkedList localLinkedList = new LinkedList();
-    if ((paramObject instanceof Map))
-    {
-      Map localMap = (Map)paramObject;
-      paramObject = new ArrayList(localMap.keySet());
-      if ((((List)paramObject).size() > 0) && ((((List)paramObject).get(0) instanceof Comparable))) {
-        Collections.sort((List)paramObject);
-      }
-      Iterator localIterator = ((List)paramObject).iterator();
-      Object localObject;
-      do
-      {
-        do
-        {
-          if (!localIterator.hasNext()) {
-            break;
-          }
-          paramObject = localIterator.next();
-        } while (!(paramObject instanceof String));
-        localObject = localMap.get(paramObject);
-      } while (localObject == null);
-      if (paramString == null) {}
-      for (paramObject = (String)paramObject;; paramObject = String.format(Locale.US, "%s[%s]", new Object[] { paramString, paramObject }))
-      {
-        localLinkedList.addAll(getParamsList((String)paramObject, localObject));
-        break;
-      }
-    }
-    int j;
-    int i;
-    if ((paramObject instanceof List))
-    {
-      paramObject = (List)paramObject;
-      j = ((List)paramObject).size();
-      i = 0;
-      while (i < j)
-      {
-        localLinkedList.addAll(getParamsList(String.format(Locale.US, "%s[%d]", new Object[] { paramString, Integer.valueOf(i) }), ((List)paramObject).get(i)));
-        i += 1;
-      }
-    }
-    if ((paramObject instanceof Object[]))
-    {
-      paramObject = (Object[])paramObject;
-      j = paramObject.length;
-      i = 0;
-      while (i < j)
-      {
-        localLinkedList.addAll(getParamsList(String.format(Locale.US, "%s[%d]", new Object[] { paramString, Integer.valueOf(i) }), paramObject[i]));
-        i += 1;
-      }
-    }
-    if ((paramObject instanceof Set))
-    {
-      paramObject = ((Set)paramObject).iterator();
-      while (((Iterator)paramObject).hasNext()) {
-        localLinkedList.addAll(getParamsList(paramString, ((Iterator)paramObject).next()));
-      }
-    }
-    localLinkedList.add(new cz.msebera.android.httpclient.k.n(paramString, paramObject.toString()));
-    return localLinkedList;
-  }
-  
-  public void add(String paramString1, String paramString2)
-  {
-    Object localObject1;
-    if ((paramString1 != null) && (paramString2 != null))
-    {
-      Object localObject2 = this.urlParamsWithObjects.get(paramString1);
-      localObject1 = localObject2;
-      if (localObject2 == null)
-      {
-        localObject1 = new HashSet();
-        put(paramString1, localObject1);
-      }
-      if (!(localObject1 instanceof List)) {
-        break label59;
-      }
-      ((List)localObject1).add(paramString2);
-    }
-    label59:
-    while (!(localObject1 instanceof Set)) {
-      return;
-    }
-    ((Set)localObject1).add(paramString2);
-  }
-  
-  public cz.msebera.android.httpclient.n getEntity(ResponseHandlerInterface paramResponseHandlerInterface)
-    throws IOException
-  {
-    if (this.useJsonStreamer) {
-      return createJsonStreamerEntity(paramResponseHandlerInterface);
-    }
-    if ((!this.forceMultipartEntity) && (this.streamParams.isEmpty()) && (this.fileParams.isEmpty()) && (this.fileArrayParams.isEmpty())) {
-      return createFormEntity();
-    }
-    return createMultipartEntity(paramResponseHandlerInterface);
-  }
-  
-  protected String getParamString()
-  {
-    return j.a(getParamsList(), this.contentEncoding);
-  }
-  
-  protected List<cz.msebera.android.httpclient.k.n> getParamsList()
-  {
-    LinkedList localLinkedList = new LinkedList();
-    Iterator localIterator = this.urlParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      localLinkedList.add(new cz.msebera.android.httpclient.k.n((String)localEntry.getKey(), (String)localEntry.getValue()));
-    }
-    localLinkedList.addAll(getParamsList(null, this.urlParamsWithObjects));
-    return localLinkedList;
-  }
-  
-  public boolean has(String paramString)
-  {
-    return (this.urlParams.get(paramString) != null) || (this.streamParams.get(paramString) != null) || (this.fileParams.get(paramString) != null) || (this.urlParamsWithObjects.get(paramString) != null) || (this.fileArrayParams.get(paramString) != null);
-  }
-  
-  public void put(String paramString, int paramInt)
-  {
-    if (paramString != null) {
-      this.urlParams.put(paramString, String.valueOf(paramInt));
-    }
-  }
-  
-  public void put(String paramString, long paramLong)
-  {
-    if (paramString != null) {
-      this.urlParams.put(paramString, String.valueOf(paramLong));
-    }
-  }
-  
-  public void put(String paramString, File paramFile)
-    throws FileNotFoundException
-  {
-    put(paramString, paramFile, null, null);
-  }
-  
-  public void put(String paramString1, File paramFile, String paramString2)
-    throws FileNotFoundException
-  {
-    put(paramString1, paramFile, paramString2, null);
-  }
-  
-  public void put(String paramString1, File paramFile, String paramString2, String paramString3)
-    throws FileNotFoundException
-  {
-    if ((paramFile == null) || (!paramFile.exists())) {
-      throw new FileNotFoundException();
-    }
-    if (paramString1 != null) {
-      this.fileParams.put(paramString1, new FileWrapper(paramFile, paramString2, paramString3));
-    }
-  }
-  
-  public void put(String paramString, InputStream paramInputStream)
-  {
-    put(paramString, paramInputStream, null);
-  }
-  
-  public void put(String paramString1, InputStream paramInputStream, String paramString2)
-  {
-    put(paramString1, paramInputStream, paramString2, null);
-  }
-  
-  public void put(String paramString1, InputStream paramInputStream, String paramString2, String paramString3)
-  {
-    put(paramString1, paramInputStream, paramString2, paramString3, this.autoCloseInputStreams);
-  }
-  
-  public void put(String paramString1, InputStream paramInputStream, String paramString2, String paramString3, boolean paramBoolean)
-  {
-    if ((paramString1 != null) && (paramInputStream != null)) {
-      this.streamParams.put(paramString1, StreamWrapper.newInstance(paramInputStream, paramString2, paramString3, paramBoolean));
-    }
-  }
-  
-  public void put(String paramString, Object paramObject)
-  {
-    if ((paramString != null) && (paramObject != null)) {
-      this.urlParamsWithObjects.put(paramString, paramObject);
-    }
-  }
-  
-  public void put(String paramString1, String paramString2)
-  {
-    if ((paramString1 != null) && (paramString2 != null)) {
-      this.urlParams.put(paramString1, paramString2);
-    }
-  }
-  
-  public void put(String paramString1, String paramString2, File paramFile)
-    throws FileNotFoundException
-  {
-    put(paramString1, paramFile, null, paramString2);
-  }
-  
-  public void put(String paramString, File[] paramArrayOfFile)
-    throws FileNotFoundException
-  {
-    put(paramString, paramArrayOfFile, null, null);
-  }
-  
-  public void put(String paramString1, File[] paramArrayOfFile, String paramString2, String paramString3)
-    throws FileNotFoundException
-  {
-    if (paramString1 != null)
-    {
-      ArrayList localArrayList = new ArrayList();
-      int j = paramArrayOfFile.length;
-      int i = 0;
-      while (i < j)
-      {
-        File localFile = paramArrayOfFile[i];
-        if ((localFile == null) || (!localFile.exists())) {
-          throw new FileNotFoundException();
+public class RequestParams implements Serializable {
+    public static final String APPLICATION_JSON = "application/json";
+    public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+    protected static final String LOG_TAG = "RequestParams";
+    protected boolean autoCloseInputStreams;
+    protected String contentEncoding;
+    protected String elapsedFieldInJsonStreamer;
+    protected final ConcurrentHashMap<String, List<FileWrapper>> fileArrayParams;
+    protected final ConcurrentHashMap<String, FileWrapper> fileParams;
+    protected boolean forceMultipartEntity;
+    protected boolean isRepeatable;
+    protected final ConcurrentHashMap<String, StreamWrapper> streamParams;
+    protected final ConcurrentHashMap<String, String> urlParams;
+    protected final ConcurrentHashMap<String, Object> urlParamsWithObjects;
+    protected boolean useJsonStreamer;
+
+    /* renamed from: com.loopj.android.http.RequestParams$1 */
+    class C60471 extends HashMap<String, String> {
+        final /* synthetic */ String val$key;
+        final /* synthetic */ String val$value;
+
+        C60471(String str, String str2) {
+            this.val$key = str;
+            this.val$value = str2;
+            put(this.val$key, this.val$value);
         }
-        localArrayList.add(new FileWrapper(localFile, paramString2, paramString3));
-        i += 1;
-      }
-      this.fileArrayParams.put(paramString1, localArrayList);
     }
-  }
-  
-  public void remove(String paramString)
-  {
-    this.urlParams.remove(paramString);
-    this.streamParams.remove(paramString);
-    this.fileParams.remove(paramString);
-    this.urlParamsWithObjects.remove(paramString);
-    this.fileArrayParams.remove(paramString);
-  }
-  
-  public void setAutoCloseInputStreams(boolean paramBoolean)
-  {
-    this.autoCloseInputStreams = paramBoolean;
-  }
-  
-  public void setContentEncoding(String paramString)
-  {
-    if (paramString != null)
-    {
-      this.contentEncoding = paramString;
-      return;
+
+    public static class FileWrapper implements Serializable {
+        public final String contentType;
+        public final String customFileName;
+        public final File file;
+
+        public FileWrapper(File file, String contentType, String customFileName) {
+            this.file = file;
+            this.contentType = contentType;
+            this.customFileName = customFileName;
+        }
     }
-    AsyncHttpClient.log.d("RequestParams", "setContentEncoding called with null attribute");
-  }
-  
-  public void setElapsedFieldInJsonStreamer(String paramString)
-  {
-    this.elapsedFieldInJsonStreamer = paramString;
-  }
-  
-  public void setForceMultipartEntityContentType(boolean paramBoolean)
-  {
-    this.forceMultipartEntity = paramBoolean;
-  }
-  
-  public void setHttpEntityIsRepeatable(boolean paramBoolean)
-  {
-    this.isRepeatable = paramBoolean;
-  }
-  
-  public void setUseJsonStreamer(boolean paramBoolean)
-  {
-    this.useJsonStreamer = paramBoolean;
-  }
-  
-  public String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    Iterator localIterator = this.urlParams.entrySet().iterator();
-    Object localObject;
-    while (localIterator.hasNext())
-    {
-      localObject = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject).getKey());
-      localStringBuilder.append("=");
-      localStringBuilder.append((String)((Map.Entry)localObject).getValue());
+
+    public static class StreamWrapper {
+        public final boolean autoClose;
+        public final String contentType;
+        public final InputStream inputStream;
+        public final String name;
+
+        public StreamWrapper(InputStream inputStream, String name, String contentType, boolean autoClose) {
+            this.inputStream = inputStream;
+            this.name = name;
+            this.contentType = contentType;
+            this.autoClose = autoClose;
+        }
+
+        static StreamWrapper newInstance(InputStream inputStream, String name, String contentType, boolean autoClose) {
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+            return new StreamWrapper(inputStream, name, contentType, autoClose);
+        }
     }
-    localIterator = this.streamParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject).getKey());
-      localStringBuilder.append("=");
-      localStringBuilder.append("STREAM");
+
+    public RequestParams() {
+        this((Map) null);
     }
-    localIterator = this.fileParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject).getKey());
-      localStringBuilder.append("=");
-      localStringBuilder.append("FILE");
+
+    public RequestParams(Map<String, String> source) {
+        this.urlParams = new ConcurrentHashMap();
+        this.streamParams = new ConcurrentHashMap();
+        this.fileParams = new ConcurrentHashMap();
+        this.fileArrayParams = new ConcurrentHashMap();
+        this.urlParamsWithObjects = new ConcurrentHashMap();
+        this.forceMultipartEntity = false;
+        this.elapsedFieldInJsonStreamer = "_elapsed";
+        this.contentEncoding = "UTF-8";
+        if (source != null) {
+            for (Entry<String, String> entry : source.entrySet()) {
+                put((String) entry.getKey(), (String) entry.getValue());
+            }
+        }
     }
-    localIterator = this.fileArrayParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject).getKey());
-      localStringBuilder.append("=");
-      localStringBuilder.append("FILES(SIZE=").append(((List)((Map.Entry)localObject).getValue()).size()).append(")");
+
+    public RequestParams(String key, String value) {
+        this(new C60471(key, value));
     }
-    localIterator = getParamsList(null, this.urlParamsWithObjects).iterator();
-    while (localIterator.hasNext())
-    {
-      localObject = (cz.msebera.android.httpclient.k.n)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append(((cz.msebera.android.httpclient.k.n)localObject).a());
-      localStringBuilder.append("=");
-      localStringBuilder.append(((cz.msebera.android.httpclient.k.n)localObject).b());
+
+    public RequestParams(Object... keysAndValues) {
+        this.urlParams = new ConcurrentHashMap();
+        this.streamParams = new ConcurrentHashMap();
+        this.fileParams = new ConcurrentHashMap();
+        this.fileArrayParams = new ConcurrentHashMap();
+        this.urlParamsWithObjects = new ConcurrentHashMap();
+        this.forceMultipartEntity = false;
+        this.elapsedFieldInJsonStreamer = "_elapsed";
+        this.contentEncoding = "UTF-8";
+        int len = keysAndValues.length;
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("Supplied arguments must be even");
+        }
+        for (int i = 0; i < len; i += 2) {
+            put(String.valueOf(keysAndValues[i]), String.valueOf(keysAndValues[i + 1]));
+        }
     }
-    return localStringBuilder.toString();
-  }
-  
-  public static class FileWrapper
-    implements Serializable
-  {
-    public final String contentType;
-    public final String customFileName;
-    public final File file;
-    
-    public FileWrapper(File paramFile, String paramString1, String paramString2)
-    {
-      this.file = paramFile;
-      this.contentType = paramString1;
-      this.customFileName = paramString2;
+
+    public void setContentEncoding(String encoding) {
+        if (encoding != null) {
+            this.contentEncoding = encoding;
+        } else {
+            AsyncHttpClient.log.mo4878d(LOG_TAG, "setContentEncoding called with null attribute");
+        }
     }
-  }
-  
-  public static class StreamWrapper
-  {
-    public final boolean autoClose;
-    public final String contentType;
-    public final InputStream inputStream;
-    public final String name;
-    
-    public StreamWrapper(InputStream paramInputStream, String paramString1, String paramString2, boolean paramBoolean)
-    {
-      this.inputStream = paramInputStream;
-      this.name = paramString1;
-      this.contentType = paramString2;
-      this.autoClose = paramBoolean;
+
+    public void setForceMultipartEntityContentType(boolean force) {
+        this.forceMultipartEntity = force;
     }
-    
-    static StreamWrapper newInstance(InputStream paramInputStream, String paramString1, String paramString2, boolean paramBoolean)
-    {
-      String str = paramString2;
-      if (paramString2 == null) {
-        str = "application/octet-stream";
-      }
-      return new StreamWrapper(paramInputStream, paramString1, str, paramBoolean);
+
+    public void put(String key, String value) {
+        if (key != null && value != null) {
+            this.urlParams.put(key, value);
+        }
     }
-  }
+
+    public void put(String key, File[] files) throws FileNotFoundException {
+        put(key, files, null, null);
+    }
+
+    public void put(String key, File[] files, String contentType, String customFileName) throws FileNotFoundException {
+        if (key != null) {
+            List<FileWrapper> fileWrappers = new ArrayList();
+            for (File file : files) {
+                if (file == null || !file.exists()) {
+                    throw new FileNotFoundException();
+                }
+                fileWrappers.add(new FileWrapper(file, contentType, customFileName));
+            }
+            this.fileArrayParams.put(key, fileWrappers);
+        }
+    }
+
+    public void put(String key, File file) throws FileNotFoundException {
+        put(key, file, null, null);
+    }
+
+    public void put(String key, String customFileName, File file) throws FileNotFoundException {
+        put(key, file, null, customFileName);
+    }
+
+    public void put(String key, File file, String contentType) throws FileNotFoundException {
+        put(key, file, contentType, null);
+    }
+
+    public void put(String key, File file, String contentType, String customFileName) throws FileNotFoundException {
+        if (file == null || !file.exists()) {
+            throw new FileNotFoundException();
+        } else if (key != null) {
+            this.fileParams.put(key, new FileWrapper(file, contentType, customFileName));
+        }
+    }
+
+    public void put(String key, InputStream stream) {
+        put(key, stream, null);
+    }
+
+    public void put(String key, InputStream stream, String name) {
+        put(key, stream, name, null);
+    }
+
+    public void put(String key, InputStream stream, String name, String contentType) {
+        put(key, stream, name, contentType, this.autoCloseInputStreams);
+    }
+
+    public void put(String key, InputStream stream, String name, String contentType, boolean autoClose) {
+        if (key != null && stream != null) {
+            this.streamParams.put(key, StreamWrapper.newInstance(stream, name, contentType, autoClose));
+        }
+    }
+
+    public void put(String key, Object value) {
+        if (key != null && value != null) {
+            this.urlParamsWithObjects.put(key, value);
+        }
+    }
+
+    public void put(String key, int value) {
+        if (key != null) {
+            this.urlParams.put(key, String.valueOf(value));
+        }
+    }
+
+    public void put(String key, long value) {
+        if (key != null) {
+            this.urlParams.put(key, String.valueOf(value));
+        }
+    }
+
+    public void add(String key, String value) {
+        if (key != null && value != null) {
+            Object obj = this.urlParamsWithObjects.get(key);
+            if (obj == null) {
+                obj = new HashSet();
+                put(key, obj);
+            }
+            if (obj instanceof List) {
+                ((List) obj).add(value);
+            } else if (obj instanceof Set) {
+                ((Set) obj).add(value);
+            }
+        }
+    }
+
+    public void remove(String key) {
+        this.urlParams.remove(key);
+        this.streamParams.remove(key);
+        this.fileParams.remove(key);
+        this.urlParamsWithObjects.remove(key);
+        this.fileArrayParams.remove(key);
+    }
+
+    public boolean has(String key) {
+        return (this.urlParams.get(key) == null && this.streamParams.get(key) == null && this.fileParams.get(key) == null && this.urlParamsWithObjects.get(key) == null && this.fileArrayParams.get(key) == null) ? false : true;
+    }
+
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Entry<String, String> entry : this.urlParams.entrySet()) {
+            if (result.length() > 0) {
+                result.append("&");
+            }
+            result.append((String) entry.getKey());
+            result.append("=");
+            result.append((String) entry.getValue());
+        }
+        for (Entry<String, StreamWrapper> entry2 : this.streamParams.entrySet()) {
+            if (result.length() > 0) {
+                result.append("&");
+            }
+            result.append((String) entry2.getKey());
+            result.append("=");
+            result.append("STREAM");
+        }
+        for (Entry<String, FileWrapper> entry3 : this.fileParams.entrySet()) {
+            if (result.length() > 0) {
+                result.append("&");
+            }
+            result.append((String) entry3.getKey());
+            result.append("=");
+            result.append("FILE");
+        }
+        for (Entry<String, List<FileWrapper>> entry4 : this.fileArrayParams.entrySet()) {
+            if (result.length() > 0) {
+                result.append("&");
+            }
+            result.append((String) entry4.getKey());
+            result.append("=");
+            result.append("FILES(SIZE=").append(((List) entry4.getValue()).size()).append(")");
+        }
+        for (C6549n kv : getParamsList(null, this.urlParamsWithObjects)) {
+            if (result.length() > 0) {
+                result.append("&");
+            }
+            result.append(kv.mo5260a());
+            result.append("=");
+            result.append(kv.mo5261b());
+        }
+        return result.toString();
+    }
+
+    public void setHttpEntityIsRepeatable(boolean flag) {
+        this.isRepeatable = flag;
+    }
+
+    public void setUseJsonStreamer(boolean flag) {
+        this.useJsonStreamer = flag;
+    }
+
+    public void setElapsedFieldInJsonStreamer(String value) {
+        this.elapsedFieldInJsonStreamer = value;
+    }
+
+    public void setAutoCloseInputStreams(boolean flag) {
+        this.autoCloseInputStreams = flag;
+    }
+
+    public C3008n getEntity(ResponseHandlerInterface progressHandler) throws IOException {
+        if (this.useJsonStreamer) {
+            return createJsonStreamerEntity(progressHandler);
+        }
+        if (!this.forceMultipartEntity && this.streamParams.isEmpty() && this.fileParams.isEmpty() && this.fileArrayParams.isEmpty()) {
+            return createFormEntity();
+        }
+        return createMultipartEntity(progressHandler);
+    }
+
+    private C3008n createJsonStreamerEntity(ResponseHandlerInterface progressHandler) throws IOException {
+        boolean z = (this.fileParams.isEmpty() && this.streamParams.isEmpty()) ? false : true;
+        JsonStreamerEntity entity = new JsonStreamerEntity(progressHandler, z, this.elapsedFieldInJsonStreamer);
+        for (Entry<String, String> entry : this.urlParams.entrySet()) {
+            entity.addPart((String) entry.getKey(), entry.getValue());
+        }
+        for (Entry<String, Object> entry2 : this.urlParamsWithObjects.entrySet()) {
+            entity.addPart((String) entry2.getKey(), entry2.getValue());
+        }
+        for (Entry<String, FileWrapper> entry3 : this.fileParams.entrySet()) {
+            entity.addPart((String) entry3.getKey(), entry3.getValue());
+        }
+        for (Entry<String, StreamWrapper> entry4 : this.streamParams.entrySet()) {
+            StreamWrapper stream = (StreamWrapper) entry4.getValue();
+            if (stream.inputStream != null) {
+                entity.addPart((String) entry4.getKey(), StreamWrapper.newInstance(stream.inputStream, stream.name, stream.contentType, stream.autoClose));
+            }
+        }
+        return entity;
+    }
+
+    private C3008n createFormEntity() {
+        try {
+            return new C6225h(getParamsList(), this.contentEncoding);
+        } catch (UnsupportedEncodingException e) {
+            AsyncHttpClient.log.mo4881e(LOG_TAG, "createFormEntity failed", e);
+            return null;
+        }
+    }
+
+    private C3008n createMultipartEntity(ResponseHandlerInterface progressHandler) throws IOException {
+        SimpleMultipartEntity entity = new SimpleMultipartEntity(progressHandler);
+        entity.setIsRepeatable(this.isRepeatable);
+        for (Entry<String, String> entry : this.urlParams.entrySet()) {
+            entity.addPartWithCharset((String) entry.getKey(), (String) entry.getValue(), this.contentEncoding);
+        }
+        for (C6549n kv : getParamsList(null, this.urlParamsWithObjects)) {
+            entity.addPartWithCharset(kv.mo5260a(), kv.mo5261b(), this.contentEncoding);
+        }
+        for (Entry<String, StreamWrapper> entry2 : this.streamParams.entrySet()) {
+            StreamWrapper stream = (StreamWrapper) entry2.getValue();
+            if (stream.inputStream != null) {
+                entity.addPart((String) entry2.getKey(), stream.name, stream.inputStream, stream.contentType);
+            }
+        }
+        for (Entry<String, FileWrapper> entry3 : this.fileParams.entrySet()) {
+            FileWrapper fileWrapper = (FileWrapper) entry3.getValue();
+            entity.addPart((String) entry3.getKey(), fileWrapper.file, fileWrapper.contentType, fileWrapper.customFileName);
+        }
+        for (Entry<String, List<FileWrapper>> entry4 : this.fileArrayParams.entrySet()) {
+            for (FileWrapper fw : (List) entry4.getValue()) {
+                entity.addPart((String) entry4.getKey(), fw.file, fw.contentType, fw.customFileName);
+            }
+        }
+        return entity;
+    }
+
+    protected List<C6549n> getParamsList() {
+        List<C6549n> lparams = new LinkedList();
+        for (Entry<String, String> entry : this.urlParams.entrySet()) {
+            lparams.add(new C6549n((String) entry.getKey(), (String) entry.getValue()));
+        }
+        lparams.addAll(getParamsList(null, this.urlParamsWithObjects));
+        return lparams;
+    }
+
+    private List<C6549n> getParamsList(String key, Object value) {
+        List<C6549n> params = new LinkedList();
+        List list;
+        Object nestedValue;
+        if (value instanceof Map) {
+            Map map = (Map) value;
+            list = new ArrayList(map.keySet());
+            if (list.size() > 0 && (list.get(0) instanceof Comparable)) {
+                Collections.sort(list);
+            }
+            for (Object nestedKey : list) {
+                if (nestedKey instanceof String) {
+                    nestedValue = map.get(nestedKey);
+                    if (nestedValue != null) {
+                        String nestedKey2;
+                        if (key == null) {
+                            nestedKey2 = (String) nestedKey;
+                        } else {
+                            nestedKey2 = String.format(Locale.US, "%s[%s]", new Object[]{key, nestedKey});
+                        }
+                        params.addAll(getParamsList(nestedKey2, nestedValue));
+                    }
+                }
+            }
+        } else if (value instanceof List) {
+            list = (List) value;
+            int listSize = list.size();
+            for (nestedValueIndex = 0; nestedValueIndex < listSize; nestedValueIndex++) {
+                params.addAll(getParamsList(String.format(Locale.US, "%s[%d]", new Object[]{key, Integer.valueOf(nestedValueIndex)}), list.get(nestedValueIndex)));
+            }
+        } else if (value instanceof Object[]) {
+            for (Object paramsList : (Object[]) value) {
+                params.addAll(getParamsList(String.format(Locale.US, "%s[%d]", new Object[]{key, Integer.valueOf(nestedValueIndex)}), paramsList));
+            }
+        } else if (value instanceof Set) {
+            for (Object nestedValue2 : (Set) value) {
+                params.addAll(getParamsList(key, nestedValue2));
+            }
+        } else {
+            params.add(new C6549n(key, value.toString()));
+        }
+        return params;
+    }
+
+    protected String getParamString() {
+        return C6263j.m22455a(getParamsList(), this.contentEncoding);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/loopj/android/http/RequestParams.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

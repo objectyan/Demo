@@ -1,62 +1,23 @@
 package com.baidu.mapframework.nirvana.looper;
 
-import com.baidu.mapframework.nirvana.g;
+import com.baidu.mapframework.nirvana.C3480g;
 
-public abstract class BaseLooperTask
-  extends g
-  implements Runnable
-{
-  private boolean isCancel = false;
-  private Runnable onCancelRunnable = null;
-  
-  public void cancel()
-  {
-    try
-    {
-      this.isCancel = true;
-      if (this.onCancelRunnable != null) {
-        this.onCancelRunnable.run();
-      }
-      return;
+public abstract class BaseLooperTask extends C3480g implements Runnable {
+    private boolean isCancel = false;
+    private Runnable onCancelRunnable = null;
+
+    public synchronized void cancel() {
+        this.isCancel = true;
+        if (this.onCancelRunnable != null) {
+            this.onCancelRunnable.run();
+        }
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public synchronized boolean isCancel() {
+        return this.isCancel;
     }
-  }
-  
-  public boolean isCancel()
-  {
-    try
-    {
-      boolean bool = this.isCancel;
-      return bool;
+
+    synchronized void setOnCancel(Runnable runnable) {
+        this.onCancelRunnable = runnable;
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
-    }
-  }
-  
-  void setOnCancel(Runnable paramRunnable)
-  {
-    try
-    {
-      this.onCancelRunnable = paramRunnable;
-      return;
-    }
-    finally
-    {
-      paramRunnable = finally;
-      throw paramRunnable;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/nirvana/looper/BaseLooperTask.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

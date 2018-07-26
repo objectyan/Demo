@@ -7,131 +7,107 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class RoutePoiRec
-  extends MessageMicro
-{
-  public static final int RECOMMDATA_FIELD_NUMBER = 1;
-  private List<RouteItem> a = Collections.emptyList();
-  private int b = -1;
-  
-  public static RoutePoiRec parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new RoutePoiRec().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static RoutePoiRec parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (RoutePoiRec)new RoutePoiRec().mergeFrom(paramArrayOfByte);
-  }
-  
-  public RoutePoiRec addRecommdata(RouteItem paramRouteItem)
-  {
-    if (paramRouteItem == null) {
-      return this;
+public final class RoutePoiRec extends MessageMicro {
+    public static final int RECOMMDATA_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private List<RouteItem> f14278a = Collections.emptyList();
+    /* renamed from: b */
+    private int f14279b = -1;
+
+    public static RoutePoiRec parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new RoutePoiRec().mergeFrom(codedInputStreamMicro);
     }
-    if (this.a.isEmpty()) {
-      this.a = new ArrayList();
+
+    public static RoutePoiRec parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (RoutePoiRec) new RoutePoiRec().mergeFrom(bArr);
     }
-    this.a.add(paramRouteItem);
-    return this;
-  }
-  
-  public final RoutePoiRec clear()
-  {
-    clearRecommdata();
-    this.b = -1;
-    return this;
-  }
-  
-  public RoutePoiRec clearRecommdata()
-  {
-    this.a = Collections.emptyList();
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.b < 0) {
-      getSerializedSize();
-    }
-    return this.b;
-  }
-  
-  public RouteItem getRecommdata(int paramInt)
-  {
-    return (RouteItem)this.a.get(paramInt);
-  }
-  
-  public int getRecommdataCount()
-  {
-    return this.a.size();
-  }
-  
-  public List<RouteItem> getRecommdataList()
-  {
-    return this.a;
-  }
-  
-  public int getSerializedSize()
-  {
-    Iterator localIterator = getRecommdataList().iterator();
-    for (int i = 0; localIterator.hasNext(); i = CodedOutputStreamMicro.computeMessageSize(1, (RouteItem)localIterator.next()) + i) {}
-    this.b = i;
-    return i;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public RoutePoiRec mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public RoutePoiRec addRecommdata(RouteItem routeItem) {
+        if (routeItem != null) {
+            if (this.f14278a.isEmpty()) {
+                this.f14278a = new ArrayList();
+            }
+            this.f14278a.add(routeItem);
+        }
         return this;
-      case 10: 
-        RouteItem localRouteItem = new RouteItem();
-        paramCodedInputStreamMicro.readMessage(localRouteItem);
-        addRecommdata(localRouteItem);
-      }
     }
-  }
-  
-  public RoutePoiRec setRecommdata(int paramInt, RouteItem paramRouteItem)
-  {
-    if (paramRouteItem == null) {
-      return this;
+
+    public final RoutePoiRec clear() {
+        clearRecommdata();
+        this.f14279b = -1;
+        return this;
     }
-    this.a.set(paramInt, paramRouteItem);
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    Iterator localIterator = getRecommdataList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(1, (RouteItem)localIterator.next());
+
+    public RoutePoiRec clearRecommdata() {
+        this.f14278a = Collections.emptyList();
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f14279b < 0) {
+            getSerializedSize();
+        }
+        return this.f14279b;
+    }
+
+    public RouteItem getRecommdata(int i) {
+        return (RouteItem) this.f14278a.get(i);
+    }
+
+    public int getRecommdataCount() {
+        return this.f14278a.size();
+    }
+
+    public List<RouteItem> getRecommdataList() {
+        return this.f14278a;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        for (RouteItem computeMessageSize : getRecommdataList()) {
+            i = CodedOutputStreamMicro.computeMessageSize(1, computeMessageSize) + i;
+        }
+        this.f14279b = i;
+        return i;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public RoutePoiRec mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    MessageMicro routeItem = new RouteItem();
+                    codedInputStreamMicro.readMessage(routeItem);
+                    addRecommdata(routeItem);
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public RoutePoiRec setRecommdata(int i, RouteItem routeItem) {
+        if (routeItem != null) {
+            this.f14278a.set(i, routeItem);
+        }
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        for (RouteItem writeMessage : getRecommdataList()) {
+            codedOutputStreamMicro.writeMessage(1, writeMessage);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/RoutePoiRec.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -8,103 +8,90 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class ProcFile
-  extends File
-  implements Parcelable
-{
-  public static final Parcelable.Creator<ProcFile> CREATOR = new Parcelable.Creator()
-  {
-    public ProcFile a(Parcel paramAnonymousParcel)
-    {
-      return new ProcFile(paramAnonymousParcel);
-    }
-    
-    public ProcFile[] a(int paramAnonymousInt)
-    {
-      return new ProcFile[paramAnonymousInt];
-    }
-  };
-  public final String b;
-  
-  protected ProcFile(Parcel paramParcel)
-  {
-    super(paramParcel.readString());
-    this.b = paramParcel.readString();
-  }
-  
-  protected ProcFile(String paramString)
-    throws IOException
-  {
-    super(paramString);
-    this.b = b(paramString);
-  }
-  
-  protected static String b(String paramString)
-    throws IOException
-  {
-    Object localObject3 = null;
-    try
-    {
-      StringBuilder localStringBuilder = new StringBuilder();
-      localBufferedReader = new BufferedReader(new FileReader(paramString));
-      String str;
-      if (paramString == null) {
-        break label88;
-      }
-    }
-    finally
-    {
-      try
-      {
-        paramString = localBufferedReader.readLine();
-        str = "";
-        while (paramString != null)
-        {
-          localStringBuilder.append(str).append(paramString);
-          str = "\n";
-          paramString = localBufferedReader.readLine();
+public class ProcFile extends File implements Parcelable {
+    public static final Creator<ProcFile> CREATOR = new C20341();
+    /* renamed from: b */
+    public final String f6567b;
+
+    /* renamed from: com.baidu.carlife.processes.models.ProcFile$1 */
+    static class C20341 implements Creator<ProcFile> {
+        C20341() {
         }
-        paramString = localStringBuilder.toString();
-        if (localBufferedReader != null) {
-          localBufferedReader.close();
+
+        public /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return m7812a(parcel);
         }
-        return paramString;
-      }
-      finally
-      {
-        for (;;)
-        {
-          BufferedReader localBufferedReader;
-          paramString = localBufferedReader;
+
+        public /* synthetic */ Object[] newArray(int i) {
+            return m7813a(i);
         }
-      }
-      localObject1 = finally;
-      paramString = (String)localObject3;
+
+        /* renamed from: a */
+        public ProcFile m7812a(Parcel in) {
+            return new ProcFile(in);
+        }
+
+        /* renamed from: a */
+        public ProcFile[] m7813a(int size) {
+            return new ProcFile[size];
+        }
     }
-    paramString.close();
-    label88:
-    throw ((Throwable)localObject1);
-  }
-  
-  public int describeContents()
-  {
-    return 0;
-  }
-  
-  public long length()
-  {
-    return this.b.length();
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeString(getAbsolutePath());
-    paramParcel.writeString(this.b);
-  }
+
+    protected ProcFile(String path) throws IOException {
+        super(path);
+        this.f6567b = m7807b(path);
+    }
+
+    protected ProcFile(Parcel in) {
+        super(in.readString());
+        this.f6567b = in.readString();
+    }
+
+    /* renamed from: b */
+    protected static String m7807b(String path) throws IOException {
+        Throwable th;
+        BufferedReader reader = null;
+        try {
+            StringBuilder output = new StringBuilder();
+            BufferedReader reader2 = new BufferedReader(new FileReader(path));
+            try {
+                String newLine = "";
+                for (String line = reader2.readLine(); line != null; line = reader2.readLine()) {
+                    output.append(newLine).append(line);
+                    newLine = "\n";
+                }
+                String stringBuilder = output.toString();
+                if (reader2 != null) {
+                    reader2.close();
+                }
+                return stringBuilder;
+            } catch (Throwable th2) {
+                th = th2;
+                reader = reader2;
+                if (reader != null) {
+                    reader.close();
+                }
+                throw th;
+            }
+        } catch (Throwable th3) {
+            th = th3;
+            if (reader != null) {
+                reader.close();
+            }
+            throw th;
+        }
+    }
+
+    public long length() {
+        return (long) this.f6567b.length();
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(getAbsolutePath());
+        dest.writeString(this.f6567b);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/processes/models/ProcFile.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

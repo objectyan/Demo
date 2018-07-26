@@ -14,245 +14,188 @@ import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BNAutoDayNightHelper
-  extends BNSubject
-{
-  private static Timer mDayNightTimer = null;
-  private static BNAutoDayNightHelper mInstance;
-  private Handler mHandler = new Handler(Looper.getMainLooper());
-  private boolean mIsTimerStart;
-  private Object mRunLock = new Object();
-  
-  private boolean getDayNightMode()
-  {
-    Object localObject2 = BNSunRiseDownTimeHelper.getIntanse().calulatetm(39.92D, 116.46D);
-    GeoPoint localGeoPoint = GeoLocateModel.getInstance().getLastGeoPoint();
-    Object localObject1;
-    if (RightHandResourcesProvider.getEnNaviType() == 1)
-    {
-      localObject1 = localObject2;
-      if (localGeoPoint != null)
-      {
-        localObject1 = BNSunRiseDownTimeHelper.getIntanse().calulatetm(localGeoPoint.getLatitudeE6() / 100000, localGeoPoint.getLongitudeE6() / 100000);
-        BNSunRiseDownTimeHelper.getIntanse().updateInternationalTimeZone((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1);
-      }
-    }
-    for (;;)
-    {
-      long l1 = System.currentTimeMillis();
-      localObject2 = Calendar.getInstance();
-      ((Calendar)localObject2).set(11, ((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1).getDownHour());
-      ((Calendar)localObject2).set(12, ((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1).getDownMin());
-      long l2 = ((Calendar)localObject2).getTimeInMillis();
-      ((Calendar)localObject2).set(11, ((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1).getRiseHour());
-      ((Calendar)localObject2).set(12, ((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1).getRiseMin());
-      if ((l1 <= ((Calendar)localObject2).getTimeInMillis()) || (l1 >= l2)) {
-        break;
-      }
-      return true;
-      localObject1 = localObject2;
-      if (localGeoPoint != null)
-      {
-        localObject1 = localObject2;
-        if (localGeoPoint.getLatitudeE6() > 0)
-        {
-          localObject1 = localObject2;
-          if (localGeoPoint.getLongitudeE6() > 0) {
-            localObject1 = BNSunRiseDownTimeHelper.getIntanse().calulatetm(localGeoPoint.getLatitudeE6() / 100000, localGeoPoint.getLongitudeE6() / 100000);
-          }
+public class BNAutoDayNightHelper extends BNSubject {
+    private static Timer mDayNightTimer = null;
+    private static BNAutoDayNightHelper mInstance;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private boolean mIsTimerStart;
+    private Object mRunLock = new Object();
+
+    /* renamed from: com.baidu.navisdk.comapi.commontool.BNAutoDayNightHelper$1 */
+    class C40491 extends TimerTask {
+        C40491() {
         }
-      }
-    }
-    return false;
-  }
-  
-  private boolean getDayNightModeFinal()
-  {
-    int i = BNSettingManager.getNaviDayAndNightMode();
-    if ((i == 2) || (i == 4)) {
-      if (isTimerStart()) {
-        stopDayNightTimer();
-      }
-    }
-    do
-    {
-      return true;
-      if ((i == 3) || (i == 5))
-      {
-        if (isTimerStart()) {
-          stopDayNightTimer();
+
+        public void run() {
+            LogUtil.m15791e("TIMER", "Timer task get time to set navi mode");
+            BNAutoDayNightHelper.this.switchDayNightMode();
         }
-        return false;
-      }
-    } while (i != 1);
-    if (!isTimerStart()) {
-      startDayNightTimer();
     }
-    return getDayNightMode();
-  }
-  
-  public static BNAutoDayNightHelper getInstance()
-  {
-    if (mInstance == null) {
-      mInstance = new BNAutoDayNightHelper();
+
+    private BNAutoDayNightHelper() {
     }
-    return mInstance;
-  }
-  
-  private void notifyDayNightObservers(final int paramInt1, final int paramInt2, final Object paramObject)
-  {
-    synchronized (this.mRunLock)
-    {
-      this.mRunLock.notifyAll();
-      BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("notifyDayNightObservers-" + getClass().getSimpleName(), null)new BNWorkerConfig
-      {
-        protected String execute()
-        {
-          BNAutoDayNightHelper.this.notifyObservers(paramInt1, paramInt2, paramObject);
-          return null;
+
+    public static BNAutoDayNightHelper getInstance() {
+        if (mInstance == null) {
+            mInstance = new BNAutoDayNightHelper();
         }
-      }, new BNWorkerConfig(100, 0));
-      return;
+        return mInstance;
     }
-  }
-  
-  public boolean isTimerStart()
-  {
-    return this.mIsTimerStart;
-  }
-  
-  public void startDayNightTimer()
-  {
-    if (mDayNightTimer == null) {}
-    try
-    {
-      mDayNightTimer = new Timer(getClass().getSimpleName() + "_daynight", true);
-      mDayNightTimer.schedule(new TimerTask()
-      {
-        public void run()
-        {
-          LogUtil.e("TIMER", "Timer task get time to set navi mode");
-          BNAutoDayNightHelper.this.switchDayNightMode();
+
+    public void startDayNightTimer() {
+        if (mDayNightTimer == null) {
+            try {
+                mDayNightTimer = new Timer(getClass().getSimpleName() + "_daynight", true);
+                mDayNightTimer.schedule(new C40491(), 0, 600000);
+                this.mIsTimerStart = true;
+            } catch (Throwable th) {
+                mDayNightTimer = null;
+            }
         }
-      }, 0L, 600000L);
-      this.mIsTimerStart = true;
-      return;
     }
-    catch (Throwable localThrowable)
-    {
-      mDayNightTimer = null;
-    }
-  }
-  
-  public void stopDayNightTimer()
-  {
-    if (mDayNightTimer == null) {
-      return;
-    }
-    mDayNightTimer.cancel();
-    mDayNightTimer = null;
-    this.mIsTimerStart = false;
-  }
-  
-  public void switchDayNightMode()
-  {
-    Object localObject2 = BNSunRiseDownTimeHelper.getIntanse().calulatetm(39.92D, 116.46D);
-    GeoPoint localGeoPoint = GeoLocateModel.getInstance().getLastGeoPoint();
-    Object localObject1;
-    if (RightHandResourcesProvider.getEnNaviType() == 1)
-    {
-      localObject1 = localObject2;
-      if (localGeoPoint != null)
-      {
-        localObject1 = BNSunRiseDownTimeHelper.getIntanse().calulatetm(localGeoPoint.getLatitudeE6() / 100000, localGeoPoint.getLongitudeE6() / 100000);
-        BNSunRiseDownTimeHelper.getIntanse().updateInternationalTimeZone((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1);
-      }
-    }
-    for (;;)
-    {
-      long l1 = System.currentTimeMillis();
-      localObject2 = Calendar.getInstance();
-      ((Calendar)localObject2).set(11, ((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1).getDownHour());
-      ((Calendar)localObject2).set(12, ((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1).getDownMin());
-      long l2 = ((Calendar)localObject2).getTimeInMillis();
-      ((Calendar)localObject2).set(11, ((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1).getRiseHour());
-      ((Calendar)localObject2).set(12, ((BNSunRiseDownTimeHelper.SunRiseDownHM)localObject1).getRiseMin());
-      if ((l1 <= ((Calendar)localObject2).getTimeInMillis()) || (l1 >= l2)) {
-        break;
-      }
-      i = 2;
-      if (BNavigator.getInstance().isNaviBegin()) {
-        i = 4;
-      }
-      try
-      {
-        boolean bool = BNNaviResultController.getInstance().isNaviResultShowing();
-        if (bool) {
-          i = 2;
+
+    public void stopDayNightTimer() {
+        if (mDayNightTimer != null) {
+            mDayNightTimer.cancel();
+            mDayNightTimer = null;
+            this.mIsTimerStart = false;
         }
-      }
-      catch (Throwable localThrowable)
-      {
-        for (;;) {}
-      }
-      notifyDayNightObservers(1, i, null);
-      return;
-      localObject1 = localObject2;
-      if (localGeoPoint != null)
-      {
-        localObject1 = localObject2;
-        if (localGeoPoint.getLatitudeE6() > 0)
-        {
-          localObject1 = localObject2;
-          if (localGeoPoint.getLongitudeE6() > 0) {
-            localObject1 = BNSunRiseDownTimeHelper.getIntanse().calulatetm(localGeoPoint.getLatitudeE6() / 100000, localGeoPoint.getLongitudeE6() / 100000);
-          }
+    }
+
+    public boolean isTimerStart() {
+        return this.mIsTimerStart;
+    }
+
+    public void switchDayNightMode() {
+        SunRiseDownHM riseDown = BNSunRiseDownTimeHelper.getIntanse().calulatetm(39.92d, 116.46d);
+        GeoPoint geoPt = GeoLocateModel.getInstance().getLastGeoPoint();
+        if (RightHandResourcesProvider.getEnNaviType() == 1) {
+            if (geoPt != null) {
+                riseDown = BNSunRiseDownTimeHelper.getIntanse().calulatetm((double) (geoPt.getLatitudeE6() / 100000), (double) (geoPt.getLongitudeE6() / 100000));
+                BNSunRiseDownTimeHelper.getIntanse().updateInternationalTimeZone(riseDown);
+            }
+        } else if (geoPt != null && geoPt.getLatitudeE6() > 0 && geoPt.getLongitudeE6() > 0) {
+            riseDown = BNSunRiseDownTimeHelper.getIntanse().calulatetm((double) (geoPt.getLatitudeE6() / 100000), (double) (geoPt.getLongitudeE6() / 100000));
         }
-      }
-    }
-    int i = 3;
-    if (BNavigator.getInstance().isNaviBegin()) {
-      i = 5;
-    }
-    if (BNNaviResultController.getInstance().isNaviResultShowing()) {
-      i = 2;
-    }
-    notifyDayNightObservers(1, i, null);
-  }
-  
-  public void updateDayNightMode()
-  {
-    if (getDayNightModeFinal())
-    {
-      i = 2;
-      if (BNavigator.getInstance().isNaviBegin()) {
-        i = 4;
-      }
-      if (BNNaviResultController.getInstance().isNaviResultShowing()) {
+        long curtime = System.currentTimeMillis();
+        Calendar c = Calendar.getInstance();
+        c.set(11, riseDown.getDownHour());
+        c.set(12, riseDown.getDownMin());
+        long downtime = c.getTimeInMillis();
+        c.set(11, riseDown.getRiseHour());
+        c.set(12, riseDown.getRiseMin());
+        int i;
+        if (curtime <= c.getTimeInMillis() || curtime >= downtime) {
+            i = 3;
+            if (BNavigator.getInstance().isNaviBegin()) {
+                i = 5;
+            }
+            if (BNNaviResultController.getInstance().isNaviResultShowing()) {
+                i = 2;
+            }
+            notifyDayNightObservers(1, i, null);
+            return;
+        }
         i = 2;
-      }
-      notifyDayNightObservers(1, i, null);
-      return;
+        if (BNavigator.getInstance().isNaviBegin()) {
+            i = 4;
+        }
+        try {
+            if (BNNaviResultController.getInstance().isNaviResultShowing()) {
+                i = 2;
+            }
+        } catch (Throwable th) {
+        }
+        notifyDayNightObservers(1, i, null);
     }
-    int i = 3;
-    if (BNavigator.getInstance().isNaviBegin()) {
-      i = 5;
+
+    private boolean getDayNightMode() {
+        SunRiseDownHM riseDown = BNSunRiseDownTimeHelper.getIntanse().calulatetm(39.92d, 116.46d);
+        GeoPoint geoPt = GeoLocateModel.getInstance().getLastGeoPoint();
+        if (RightHandResourcesProvider.getEnNaviType() == 1) {
+            if (geoPt != null) {
+                riseDown = BNSunRiseDownTimeHelper.getIntanse().calulatetm((double) (geoPt.getLatitudeE6() / 100000), (double) (geoPt.getLongitudeE6() / 100000));
+                BNSunRiseDownTimeHelper.getIntanse().updateInternationalTimeZone(riseDown);
+            }
+        } else if (geoPt != null && geoPt.getLatitudeE6() > 0 && geoPt.getLongitudeE6() > 0) {
+            riseDown = BNSunRiseDownTimeHelper.getIntanse().calulatetm((double) (geoPt.getLatitudeE6() / 100000), (double) (geoPt.getLongitudeE6() / 100000));
+        }
+        long curtime = System.currentTimeMillis();
+        Calendar c = Calendar.getInstance();
+        c.set(11, riseDown.getDownHour());
+        c.set(12, riseDown.getDownMin());
+        long downtime = c.getTimeInMillis();
+        c.set(11, riseDown.getRiseHour());
+        c.set(12, riseDown.getRiseMin());
+        if (curtime <= c.getTimeInMillis() || curtime >= downtime) {
+            return false;
+        }
+        return true;
     }
-    if (BNNaviResultController.getInstance().isNaviResultShowing()) {
-      i = 2;
+
+    private boolean getDayNightModeFinal() {
+        int dayNightMode = BNSettingManager.getNaviDayAndNightMode();
+        if (dayNightMode == 2 || dayNightMode == 4) {
+            if (!isTimerStart()) {
+                return true;
+            }
+            stopDayNightTimer();
+            return true;
+        } else if (dayNightMode == 3 || dayNightMode == 5) {
+            if (isTimerStart()) {
+                stopDayNightTimer();
+            }
+            return false;
+        } else if (dayNightMode != 1) {
+            return true;
+        } else {
+            if (!isTimerStart()) {
+                startDayNightTimer();
+            }
+            return getDayNightMode();
+        }
     }
-    notifyDayNightObservers(1, i, null);
-  }
+
+    public void updateDayNightMode() {
+        int style;
+        if (getDayNightModeFinal()) {
+            style = 2;
+            if (BNavigator.getInstance().isNaviBegin()) {
+                style = 4;
+            }
+            if (BNNaviResultController.getInstance().isNaviResultShowing()) {
+                style = 2;
+            }
+            notifyDayNightObservers(1, style, null);
+            return;
+        }
+        style = 3;
+        if (BNavigator.getInstance().isNaviBegin()) {
+            style = 5;
+        }
+        if (BNNaviResultController.getInstance().isNaviResultShowing()) {
+            style = 2;
+        }
+        notifyDayNightObservers(1, style, null);
+    }
+
+    private void notifyDayNightObservers(int type, int event, Object arg) {
+        synchronized (this.mRunLock) {
+            this.mRunLock.notifyAll();
+            final int i = type;
+            final int i2 = event;
+            final Object obj = arg;
+            BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("notifyDayNightObservers-" + getClass().getSimpleName(), null) {
+                protected String execute() {
+                    BNAutoDayNightHelper.this.notifyObservers(i, i2, obj);
+                    return null;
+                }
+            }, new BNWorkerConfig(100, 0));
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/comapi/commontool/BNAutoDayNightHelper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -6,414 +6,371 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class Start
-  extends MessageMicro
-{
-  public static final int ADDR_FIELD_NUMBER = 5;
-  public static final int CODE_FIELD_NUMBER = 1;
-  public static final int DESCRIBE_FIELD_NUMBER = 9;
-  public static final int GEO_FIELD_NUMBER = 6;
-  public static final int INDOOR_FLOOR_FIELD_NUMBER = 7;
-  public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 8;
-  public static final int NAME_FIELD_NUMBER = 2;
-  public static final int NUM_FIELD_NUMBER = 3;
-  public static final int UID_FIELD_NUMBER = 4;
-  private boolean a;
-  private int b = 0;
-  private boolean c;
-  private String d = "";
-  private boolean e;
-  private int f = 0;
-  private boolean g;
-  private String h = "";
-  private boolean i;
-  private String j = "";
-  private boolean k;
-  private String l = "";
-  private boolean m;
-  private String n = "";
-  private boolean o;
-  private String p = "";
-  private boolean q;
-  private String r = "";
-  private int s = -1;
-  
-  public static Start parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new Start().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static Start parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (Start)new Start().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final Start clear()
-  {
-    clearCode();
-    clearName();
-    clearNum();
-    clearUid();
-    clearAddr();
-    clearGeo();
-    clearIndoorFloor();
-    clearIndoorParentUid();
-    clearDescribe();
-    this.s = -1;
-    return this;
-  }
-  
-  public Start clearAddr()
-  {
-    this.i = false;
-    this.j = "";
-    return this;
-  }
-  
-  public Start clearCode()
-  {
-    this.a = false;
-    this.b = 0;
-    return this;
-  }
-  
-  public Start clearDescribe()
-  {
-    this.q = false;
-    this.r = "";
-    return this;
-  }
-  
-  public Start clearGeo()
-  {
-    this.k = false;
-    this.l = "";
-    return this;
-  }
-  
-  public Start clearIndoorFloor()
-  {
-    this.m = false;
-    this.n = "";
-    return this;
-  }
-  
-  public Start clearIndoorParentUid()
-  {
-    this.o = false;
-    this.p = "";
-    return this;
-  }
-  
-  public Start clearName()
-  {
-    this.c = false;
-    this.d = "";
-    return this;
-  }
-  
-  public Start clearNum()
-  {
-    this.e = false;
-    this.f = 0;
-    return this;
-  }
-  
-  public Start clearUid()
-  {
-    this.g = false;
-    this.h = "";
-    return this;
-  }
-  
-  public String getAddr()
-  {
-    return this.j;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.s < 0) {
-      getSerializedSize();
+public final class Start extends MessageMicro {
+    public static final int ADDR_FIELD_NUMBER = 5;
+    public static final int CODE_FIELD_NUMBER = 1;
+    public static final int DESCRIBE_FIELD_NUMBER = 9;
+    public static final int GEO_FIELD_NUMBER = 6;
+    public static final int INDOOR_FLOOR_FIELD_NUMBER = 7;
+    public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 8;
+    public static final int NAME_FIELD_NUMBER = 2;
+    public static final int NUM_FIELD_NUMBER = 3;
+    public static final int UID_FIELD_NUMBER = 4;
+    /* renamed from: a */
+    private boolean f14652a;
+    /* renamed from: b */
+    private int f14653b = 0;
+    /* renamed from: c */
+    private boolean f14654c;
+    /* renamed from: d */
+    private String f14655d = "";
+    /* renamed from: e */
+    private boolean f14656e;
+    /* renamed from: f */
+    private int f14657f = 0;
+    /* renamed from: g */
+    private boolean f14658g;
+    /* renamed from: h */
+    private String f14659h = "";
+    /* renamed from: i */
+    private boolean f14660i;
+    /* renamed from: j */
+    private String f14661j = "";
+    /* renamed from: k */
+    private boolean f14662k;
+    /* renamed from: l */
+    private String f14663l = "";
+    /* renamed from: m */
+    private boolean f14664m;
+    /* renamed from: n */
+    private String f14665n = "";
+    /* renamed from: o */
+    private boolean f14666o;
+    /* renamed from: p */
+    private String f14667p = "";
+    /* renamed from: q */
+    private boolean f14668q;
+    /* renamed from: r */
+    private String f14669r = "";
+    /* renamed from: s */
+    private int f14670s = -1;
+
+    public static Start parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new Start().mergeFrom(codedInputStreamMicro);
     }
-    return this.s;
-  }
-  
-  public int getCode()
-  {
-    return this.b;
-  }
-  
-  public String getDescribe()
-  {
-    return this.r;
-  }
-  
-  public String getGeo()
-  {
-    return this.l;
-  }
-  
-  public String getIndoorFloor()
-  {
-    return this.n;
-  }
-  
-  public String getIndoorParentUid()
-  {
-    return this.p;
-  }
-  
-  public String getName()
-  {
-    return this.d;
-  }
-  
-  public int getNum()
-  {
-    return this.f;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i2 = 0;
-    if (hasCode()) {
-      i2 = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+
+    public static Start parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (Start) new Start().mergeFrom(bArr);
     }
-    int i1 = i2;
-    if (hasName()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getName());
-    }
-    i2 = i1;
-    if (hasNum()) {
-      i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getNum());
-    }
-    i1 = i2;
-    if (hasUid()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getUid());
-    }
-    i2 = i1;
-    if (hasAddr()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getAddr());
-    }
-    i1 = i2;
-    if (hasGeo()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getGeo());
-    }
-    i2 = i1;
-    if (hasIndoorFloor()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getIndoorFloor());
-    }
-    i1 = i2;
-    if (hasIndoorParentUid()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getIndoorParentUid());
-    }
-    i2 = i1;
-    if (hasDescribe()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getDescribe());
-    }
-    this.s = i2;
-    return i2;
-  }
-  
-  public String getUid()
-  {
-    return this.h;
-  }
-  
-  public boolean hasAddr()
-  {
-    return this.i;
-  }
-  
-  public boolean hasCode()
-  {
-    return this.a;
-  }
-  
-  public boolean hasDescribe()
-  {
-    return this.q;
-  }
-  
-  public boolean hasGeo()
-  {
-    return this.k;
-  }
-  
-  public boolean hasIndoorFloor()
-  {
-    return this.m;
-  }
-  
-  public boolean hasIndoorParentUid()
-  {
-    return this.o;
-  }
-  
-  public boolean hasName()
-  {
-    return this.c;
-  }
-  
-  public boolean hasNum()
-  {
-    return this.e;
-  }
-  
-  public boolean hasUid()
-  {
-    return this.g;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Start mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
+
+    public final Start clear() {
+        clearCode();
+        clearName();
+        clearNum();
+        clearUid();
+        clearAddr();
+        clearGeo();
+        clearIndoorFloor();
+        clearIndoorParentUid();
+        clearDescribe();
+        this.f14670s = -1;
         return this;
-      case 8: 
-        setCode(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 18: 
-        setName(paramCodedInputStreamMicro.readString());
-        break;
-      case 24: 
-        setNum(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 34: 
-        setUid(paramCodedInputStreamMicro.readString());
-        break;
-      case 42: 
-        setAddr(paramCodedInputStreamMicro.readString());
-        break;
-      case 50: 
-        setGeo(paramCodedInputStreamMicro.readString());
-        break;
-      case 58: 
-        setIndoorFloor(paramCodedInputStreamMicro.readString());
-        break;
-      case 66: 
-        setIndoorParentUid(paramCodedInputStreamMicro.readString());
-        break;
-      case 74: 
-        setDescribe(paramCodedInputStreamMicro.readString());
-      }
     }
-  }
-  
-  public Start setAddr(String paramString)
-  {
-    this.i = true;
-    this.j = paramString;
-    return this;
-  }
-  
-  public Start setCode(int paramInt)
-  {
-    this.a = true;
-    this.b = paramInt;
-    return this;
-  }
-  
-  public Start setDescribe(String paramString)
-  {
-    this.q = true;
-    this.r = paramString;
-    return this;
-  }
-  
-  public Start setGeo(String paramString)
-  {
-    this.k = true;
-    this.l = paramString;
-    return this;
-  }
-  
-  public Start setIndoorFloor(String paramString)
-  {
-    this.m = true;
-    this.n = paramString;
-    return this;
-  }
-  
-  public Start setIndoorParentUid(String paramString)
-  {
-    this.o = true;
-    this.p = paramString;
-    return this;
-  }
-  
-  public Start setName(String paramString)
-  {
-    this.c = true;
-    this.d = paramString;
-    return this;
-  }
-  
-  public Start setNum(int paramInt)
-  {
-    this.e = true;
-    this.f = paramInt;
-    return this;
-  }
-  
-  public Start setUid(String paramString)
-  {
-    this.g = true;
-    this.h = paramString;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasCode()) {
-      paramCodedOutputStreamMicro.writeInt32(1, getCode());
+
+    public Start clearAddr() {
+        this.f14660i = false;
+        this.f14661j = "";
+        return this;
     }
-    if (hasName()) {
-      paramCodedOutputStreamMicro.writeString(2, getName());
+
+    public Start clearCode() {
+        this.f14652a = false;
+        this.f14653b = 0;
+        return this;
     }
-    if (hasNum()) {
-      paramCodedOutputStreamMicro.writeInt32(3, getNum());
+
+    public Start clearDescribe() {
+        this.f14668q = false;
+        this.f14669r = "";
+        return this;
     }
-    if (hasUid()) {
-      paramCodedOutputStreamMicro.writeString(4, getUid());
+
+    public Start clearGeo() {
+        this.f14662k = false;
+        this.f14663l = "";
+        return this;
     }
-    if (hasAddr()) {
-      paramCodedOutputStreamMicro.writeString(5, getAddr());
+
+    public Start clearIndoorFloor() {
+        this.f14664m = false;
+        this.f14665n = "";
+        return this;
     }
-    if (hasGeo()) {
-      paramCodedOutputStreamMicro.writeString(6, getGeo());
+
+    public Start clearIndoorParentUid() {
+        this.f14666o = false;
+        this.f14667p = "";
+        return this;
     }
-    if (hasIndoorFloor()) {
-      paramCodedOutputStreamMicro.writeString(7, getIndoorFloor());
+
+    public Start clearName() {
+        this.f14654c = false;
+        this.f14655d = "";
+        return this;
     }
-    if (hasIndoorParentUid()) {
-      paramCodedOutputStreamMicro.writeString(8, getIndoorParentUid());
+
+    public Start clearNum() {
+        this.f14656e = false;
+        this.f14657f = 0;
+        return this;
     }
-    if (hasDescribe()) {
-      paramCodedOutputStreamMicro.writeString(9, getDescribe());
+
+    public Start clearUid() {
+        this.f14658g = false;
+        this.f14659h = "";
+        return this;
     }
-  }
+
+    public String getAddr() {
+        return this.f14661j;
+    }
+
+    public int getCachedSize() {
+        if (this.f14670s < 0) {
+            getSerializedSize();
+        }
+        return this.f14670s;
+    }
+
+    public int getCode() {
+        return this.f14653b;
+    }
+
+    public String getDescribe() {
+        return this.f14669r;
+    }
+
+    public String getGeo() {
+        return this.f14663l;
+    }
+
+    public String getIndoorFloor() {
+        return this.f14665n;
+    }
+
+    public String getIndoorParentUid() {
+        return this.f14667p;
+    }
+
+    public String getName() {
+        return this.f14655d;
+    }
+
+    public int getNum() {
+        return this.f14657f;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasCode()) {
+            i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+        }
+        if (hasName()) {
+            i += CodedOutputStreamMicro.computeStringSize(2, getName());
+        }
+        if (hasNum()) {
+            i += CodedOutputStreamMicro.computeInt32Size(3, getNum());
+        }
+        if (hasUid()) {
+            i += CodedOutputStreamMicro.computeStringSize(4, getUid());
+        }
+        if (hasAddr()) {
+            i += CodedOutputStreamMicro.computeStringSize(5, getAddr());
+        }
+        if (hasGeo()) {
+            i += CodedOutputStreamMicro.computeStringSize(6, getGeo());
+        }
+        if (hasIndoorFloor()) {
+            i += CodedOutputStreamMicro.computeStringSize(7, getIndoorFloor());
+        }
+        if (hasIndoorParentUid()) {
+            i += CodedOutputStreamMicro.computeStringSize(8, getIndoorParentUid());
+        }
+        if (hasDescribe()) {
+            i += CodedOutputStreamMicro.computeStringSize(9, getDescribe());
+        }
+        this.f14670s = i;
+        return i;
+    }
+
+    public String getUid() {
+        return this.f14659h;
+    }
+
+    public boolean hasAddr() {
+        return this.f14660i;
+    }
+
+    public boolean hasCode() {
+        return this.f14652a;
+    }
+
+    public boolean hasDescribe() {
+        return this.f14668q;
+    }
+
+    public boolean hasGeo() {
+        return this.f14662k;
+    }
+
+    public boolean hasIndoorFloor() {
+        return this.f14664m;
+    }
+
+    public boolean hasIndoorParentUid() {
+        return this.f14666o;
+    }
+
+    public boolean hasName() {
+        return this.f14654c;
+    }
+
+    public boolean hasNum() {
+        return this.f14656e;
+    }
+
+    public boolean hasUid() {
+        return this.f14658g;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public Start mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 8:
+                    setCode(codedInputStreamMicro.readInt32());
+                    continue;
+                case 18:
+                    setName(codedInputStreamMicro.readString());
+                    continue;
+                case 24:
+                    setNum(codedInputStreamMicro.readInt32());
+                    continue;
+                case 34:
+                    setUid(codedInputStreamMicro.readString());
+                    continue;
+                case 42:
+                    setAddr(codedInputStreamMicro.readString());
+                    continue;
+                case 50:
+                    setGeo(codedInputStreamMicro.readString());
+                    continue;
+                case 58:
+                    setIndoorFloor(codedInputStreamMicro.readString());
+                    continue;
+                case 66:
+                    setIndoorParentUid(codedInputStreamMicro.readString());
+                    continue;
+                case 74:
+                    setDescribe(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public Start setAddr(String str) {
+        this.f14660i = true;
+        this.f14661j = str;
+        return this;
+    }
+
+    public Start setCode(int i) {
+        this.f14652a = true;
+        this.f14653b = i;
+        return this;
+    }
+
+    public Start setDescribe(String str) {
+        this.f14668q = true;
+        this.f14669r = str;
+        return this;
+    }
+
+    public Start setGeo(String str) {
+        this.f14662k = true;
+        this.f14663l = str;
+        return this;
+    }
+
+    public Start setIndoorFloor(String str) {
+        this.f14664m = true;
+        this.f14665n = str;
+        return this;
+    }
+
+    public Start setIndoorParentUid(String str) {
+        this.f14666o = true;
+        this.f14667p = str;
+        return this;
+    }
+
+    public Start setName(String str) {
+        this.f14654c = true;
+        this.f14655d = str;
+        return this;
+    }
+
+    public Start setNum(int i) {
+        this.f14656e = true;
+        this.f14657f = i;
+        return this;
+    }
+
+    public Start setUid(String str) {
+        this.f14658g = true;
+        this.f14659h = str;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasCode()) {
+            codedOutputStreamMicro.writeInt32(1, getCode());
+        }
+        if (hasName()) {
+            codedOutputStreamMicro.writeString(2, getName());
+        }
+        if (hasNum()) {
+            codedOutputStreamMicro.writeInt32(3, getNum());
+        }
+        if (hasUid()) {
+            codedOutputStreamMicro.writeString(4, getUid());
+        }
+        if (hasAddr()) {
+            codedOutputStreamMicro.writeString(5, getAddr());
+        }
+        if (hasGeo()) {
+            codedOutputStreamMicro.writeString(6, getGeo());
+        }
+        if (hasIndoorFloor()) {
+            codedOutputStreamMicro.writeString(7, getIndoorFloor());
+        }
+        if (hasIndoorParentUid()) {
+            codedOutputStreamMicro.writeString(8, getIndoorParentUid());
+        }
+        if (hasDescribe()) {
+            codedOutputStreamMicro.writeString(9, getDescribe());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/Start.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

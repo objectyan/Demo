@@ -14,273 +14,213 @@ import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
 import com.baidu.navisdk.util.common.AudioUtils;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class BlueToothListener
-  extends BroadcastReceiver
-{
-  public static final int MSG_TYPE_BT_CHANGE = 10601;
-  public static final int MSG_TYPE_BT_SWITCH_CHANGE = 10602;
-  private static final String TAG = "BlueToothListener";
-  private static BluetoothAdapter ba;
-  public static String deviceName = "";
-  public static boolean isBTConnect;
-  private static final List<Handler> outboxHandlers;
-  private static BlueToothListener sInstance = new BlueToothListener();
-  public static boolean sIsOpenBTChannel;
-  
-  static
-  {
-    outboxHandlers = new ArrayList();
-    isBTConnect = false;
-    sIsOpenBTChannel = false;
-  }
-  
-  public BlueToothListener()
-  {
-    ba = BluetoothAdapter.getDefaultAdapter();
-  }
-  
-  private static void dispatchMessage(int paramInt1, int paramInt2, int paramInt3)
-  {
-    if (!outboxHandlers.isEmpty())
-    {
-      Iterator localIterator = outboxHandlers.iterator();
-      while (localIterator.hasNext()) {
-        Message.obtain((Handler)localIterator.next(), paramInt1, paramInt2, paramInt3, null).sendToTarget();
-      }
-    }
-  }
-  
-  public static boolean isBlueConnect(Context paramContext)
-  {
-    try
-    {
-      if (ba == null) {
-        isBTConnect = false;
-      }
-      for (;;)
-      {
-        return isBTConnect;
-        if (ba.isEnabled())
-        {
-          i = ba.getProfileConnectionState(2);
-          m = ba.getProfileConnectionState(1);
-          k = ba.getProfileConnectionState(3);
-          j = -1;
-          n = 2;
-          if (i != 2) {
-            break;
-          }
-          j = i;
-          i = 2;
-          if (j != -1)
-          {
-            isBTConnect = true;
-            ba.getProfileProxy(paramContext, new BluetoothProfile.ServiceListener()
-            {
-              public void onServiceConnected(int paramAnonymousInt, BluetoothProfile paramAnonymousBluetoothProfile)
-              {
-                LogUtil.e("BlueToothListener", "onServiceConnected");
-                paramAnonymousBluetoothProfile = paramAnonymousBluetoothProfile.getConnectedDevices();
-                if ((paramAnonymousBluetoothProfile != null) && (paramAnonymousBluetoothProfile.size() > 0))
-                {
-                  LogUtil.e("BlueToothListener", "connected devices not null");
-                  paramAnonymousBluetoothProfile = paramAnonymousBluetoothProfile.iterator();
-                  while (paramAnonymousBluetoothProfile.hasNext())
-                  {
-                    BluetoothDevice localBluetoothDevice = (BluetoothDevice)paramAnonymousBluetoothProfile.next();
-                    if (localBluetoothDevice != null) {
-                      BlueToothListener.deviceName = localBluetoothDevice.getName();
+public class BlueToothListener extends BroadcastReceiver {
+    public static final int MSG_TYPE_BT_CHANGE = 10601;
+    public static final int MSG_TYPE_BT_SWITCH_CHANGE = 10602;
+    private static final String TAG = "BlueToothListener";
+    private static BluetoothAdapter ba;
+    public static String deviceName = "";
+    public static boolean isBTConnect = false;
+    private static final List<Handler> outboxHandlers = new ArrayList();
+    private static BlueToothListener sInstance = new BlueToothListener();
+    public static boolean sIsOpenBTChannel = false;
+
+    /* renamed from: com.baidu.navisdk.util.listener.BlueToothListener$1 */
+    static class C47061 implements ServiceListener {
+        C47061() {
+        }
+
+        public void onServiceDisconnected(int profile) {
+            LogUtil.m15791e(BlueToothListener.TAG, "onServiceDisconnected");
+        }
+
+        public void onServiceConnected(int profile, BluetoothProfile proxy) {
+            LogUtil.m15791e(BlueToothListener.TAG, "onServiceConnected");
+            List<BluetoothDevice> mDevices = proxy.getConnectedDevices();
+            if (mDevices != null && mDevices.size() > 0) {
+                LogUtil.m15791e(BlueToothListener.TAG, "connected devices not null");
+                for (BluetoothDevice device : mDevices) {
+                    if (device != null) {
+                        BlueToothListener.deviceName = device.getName();
                     }
-                  }
-                  BlueToothListener.dispatchMessage(10601, 1, 2);
-                  UserOPController.getInstance().add("3.r.1", BlueToothListener.deviceName, null, null);
                 }
-              }
-              
-              public void onServiceDisconnected(int paramAnonymousInt)
-              {
-                LogUtil.e("BlueToothListener", "onServiceDisconnected");
-              }
-            }, i);
-          }
+                BlueToothListener.dispatchMessage(BlueToothListener.MSG_TYPE_BT_CHANGE, 1, 2);
+                UserOPController.getInstance().add(UserOPParams.GUIDE_3_r_1, BlueToothListener.deviceName, null, null);
+            }
         }
-      }
     }
-    catch (Throwable paramContext)
-    {
-      for (;;)
-      {
-        int i;
-        int m;
-        int k;
-        int j;
-        int n;
-        continue;
-        if (m == 2)
-        {
-          j = m;
-          i = 1;
+
+    public BlueToothListener() {
+        ba = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    public static boolean isBlueConnect(Context context) {
+        try {
+            if (ba == null) {
+                isBTConnect = false;
+            } else if (ba.isEnabled()) {
+                int a2dp = ba.getProfileConnectionState(2);
+                int headset = ba.getProfileConnectionState(1);
+                int health = ba.getProfileConnectionState(3);
+                int flag = -1;
+                int BluetoothProfileType = 2;
+                if (a2dp == 2) {
+                    flag = a2dp;
+                    BluetoothProfileType = 2;
+                } else if (headset == 2) {
+                    flag = headset;
+                    BluetoothProfileType = 1;
+                } else if (health == 2) {
+                    flag = health;
+                    BluetoothProfileType = 3;
+                }
+                if (flag != -1) {
+                    isBTConnect = true;
+                    ba.getProfileProxy(context, new C47061(), BluetoothProfileType);
+                }
+            }
+        } catch (Throwable th) {
         }
-        else
-        {
-          i = n;
-          if (k == 2)
-          {
-            j = k;
-            i = 3;
-          }
-        }
-      }
+        return isBTConnect;
     }
-  }
-  
-  public static void registerMessageHandler(Handler paramHandler)
-  {
-    if ((paramHandler != null) && (!outboxHandlers.contains(paramHandler))) {
-      outboxHandlers.add(paramHandler);
-    }
-  }
-  
-  public static void registerReceiver(Context paramContext)
-  {
-    try
-    {
-      isBTConnect = false;
-      IntentFilter localIntentFilter = new IntentFilter();
-      localIntentFilter.addAction("android.bluetooth.adapter.action.STATE_CHANGED");
-      localIntentFilter.addAction("android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED");
-      localIntentFilter.addAction("android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED");
-      localIntentFilter.addAction("android.bluetooth.headset.profile.action.AUDIO_STATE_CHANGED");
-      paramContext.registerReceiver(sInstance, localIntentFilter);
-      return;
-    }
-    catch (Exception paramContext) {}
-  }
-  
-  public static void unRegisterMessageHandler(Handler paramHandler)
-  {
-    if ((paramHandler != null) && (outboxHandlers.contains(paramHandler))) {
-      outboxHandlers.remove(paramHandler);
-    }
-  }
-  
-  public static void unregisterReceiver(Context paramContext)
-  {
-    try
-    {
-      isBTConnect = false;
-      paramContext.unregisterReceiver(sInstance);
-      return;
-    }
-    catch (Exception paramContext) {}
-  }
-  
-  public void onReceive(Context paramContext, Intent paramIntent)
-  {
-    paramContext = paramIntent.getAction();
-    LogUtil.e("BlueToothListener", "onReceive action = " + paramContext);
-    BluetoothDevice localBluetoothDevice;
-    int i;
-    if ("android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED".equals(paramContext))
-    {
-      localBluetoothDevice = (BluetoothDevice)paramIntent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
-      i = paramIntent.getIntExtra("android.bluetooth.profile.extra.STATE", 0);
-      paramContext = "";
-      if (localBluetoothDevice != null) {
-        paramContext = localBluetoothDevice.getAddress();
-      }
-      LogUtil.e("BlueToothListener", "BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED: remote addr = " + paramContext + "state = " + i);
-      switch (i)
-      {
-      }
-    }
-    do
-    {
-      do
-      {
-        return;
-        LogUtil.e("BlueToothListener", "BluetoothProfile is STATE_CONNECTED");
-        if (localBluetoothDevice != null) {
-          deviceName = localBluetoothDevice.getName();
-        }
-        UserOPController.getInstance().add("3.r.1", deviceName, null, null);
-        isBTConnect = true;
-        dispatchMessage(10601, 1, 0);
-        return;
-        LogUtil.e("BlueToothListener", "BluetoothProfile is STATE_CONNECTING");
-        return;
-        LogUtil.e("BlueToothListener", "BluetoothProfile is STATE_DISCONNECTED");
-        isBTConnect = false;
-        dispatchMessage(10601, 0, 0);
-        RGMapModeViewController.getInstance().resetAudio();
-        return;
-        if ("android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED".equals(paramContext))
-        {
-          i = paramIntent.getIntExtra("android.bluetooth.adapter.extra.CONNECTION_STATE", 0);
-          LogUtil.e("BlueToothListener", "BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED: remote state = " + i);
-          switch (i)
-          {
-          default: 
-            return;
-          case 0: 
-            LogUtil.e("BlueToothListener", "BluetoothAdapter is STATE_DISCONNECTED");
+
+    public static void registerReceiver(Context context) {
+        try {
             isBTConnect = false;
-            return;
-          case 2: 
-            LogUtil.e("BlueToothListener", "BluetoothAdapter is STATE_CONNECTED");
-            isBTConnect = true;
-            return;
-          }
-          LogUtil.e("BlueToothListener", "BluetoothAdapter is STATE_CONNECTING");
-          return;
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("android.bluetooth.adapter.action.STATE_CHANGED");
+            filter.addAction("android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED");
+            filter.addAction("android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED");
+            filter.addAction("android.bluetooth.headset.profile.action.AUDIO_STATE_CHANGED");
+            context.registerReceiver(sInstance, filter);
+        } catch (Exception e) {
         }
-        if ("android.bluetooth.adapter.action.STATE_CHANGED".equals(paramContext))
-        {
-          switch (paramIntent.getIntExtra("android.bluetooth.adapter.extra.STATE", 10))
-          {
-          default: 
-            return;
-          case 10: 
-            LogUtil.e("BlueToothListener", "BluetoothAdapter is STATE_OFF");
+    }
+
+    public static void unregisterReceiver(Context context) {
+        try {
             isBTConnect = false;
-            dispatchMessage(10601, 0, 0);
-            RGMapModeViewController.getInstance().resetAudio();
-            return;
-          case 12: 
-            LogUtil.e("BlueToothListener", "BluetoothAdapter is STATE_ON");
-            return;
-          case 11: 
-            LogUtil.e("BlueToothListener", "BluetoothAdapter is STATE_TURNING_ON");
-            return;
-          }
-          LogUtil.e("BlueToothListener", "BluetoothAdapter is STATE_TURNING_OFF");
-          return;
+            context.unregisterReceiver(sInstance);
+        } catch (Exception e) {
         }
-      } while (!"android.bluetooth.headset.profile.action.AUDIO_STATE_CHANGED".equals(paramContext));
-      i = paramIntent.getIntExtra("android.bluetooth.profile.extra.STATE", 0);
-      LogUtil.e("BlueToothListener", "BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED BluetoothProfile.EXTRA_STATE state = " + i);
-      switch (i)
-      {
-      default: 
-        return;
-      case 10: 
-        LogUtil.e("BlueToothListener", "BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED is BluetoothHeadset.STATE_AUDIO_DISCONNECTED");
-      }
-    } while (AudioUtils.sIsPhoneUsing);
-    dispatchMessage(10601, 2, 1);
-    return;
-    LogUtil.e("BlueToothListener", "BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED is BluetoothHeadset.STATE_AUDIO_CONNECTED");
-    return;
-    LogUtil.e("BlueToothListener", "BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED is BluetoothHeadset.STATE_AUDIO_CONNECTING");
-  }
+    }
+
+    public static void registerMessageHandler(Handler handler) {
+        if (handler != null && !outboxHandlers.contains(handler)) {
+            outboxHandlers.add(handler);
+        }
+    }
+
+    public static void unRegisterMessageHandler(Handler handler) {
+        if (handler != null && outboxHandlers.contains(handler)) {
+            outboxHandlers.remove(handler);
+        }
+    }
+
+    private static void dispatchMessage(int what, int arg1, int arg2) {
+        if (!outboxHandlers.isEmpty()) {
+            for (Handler handler : outboxHandlers) {
+                Message.obtain(handler, what, arg1, arg2, null).sendToTarget();
+            }
+        }
+    }
+
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        LogUtil.m15791e(TAG, "onReceive action = " + action);
+        int state;
+        if ("android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED".equals(action)) {
+            BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
+            state = intent.getIntExtra("android.bluetooth.profile.extra.STATE", 0);
+            String addr = "";
+            if (device != null) {
+                addr = device.getAddress();
+            }
+            LogUtil.m15791e(TAG, "BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED: remote addr = " + addr + "state = " + state);
+            switch (state) {
+                case 0:
+                    LogUtil.m15791e(TAG, "BluetoothProfile is STATE_DISCONNECTED");
+                    isBTConnect = false;
+                    dispatchMessage(MSG_TYPE_BT_CHANGE, 0, 0);
+                    RGMapModeViewController.getInstance().resetAudio();
+                    return;
+                case 1:
+                    LogUtil.m15791e(TAG, "BluetoothProfile is STATE_CONNECTING");
+                    return;
+                case 2:
+                    LogUtil.m15791e(TAG, "BluetoothProfile is STATE_CONNECTED");
+                    if (device != null) {
+                        deviceName = device.getName();
+                    }
+                    UserOPController.getInstance().add(UserOPParams.GUIDE_3_r_1, deviceName, null, null);
+                    isBTConnect = true;
+                    dispatchMessage(MSG_TYPE_BT_CHANGE, 1, 0);
+                    return;
+                default:
+                    return;
+            }
+        } else if ("android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED".equals(action)) {
+            state = intent.getIntExtra("android.bluetooth.adapter.extra.CONNECTION_STATE", 0);
+            LogUtil.m15791e(TAG, "BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED: remote state = " + state);
+            switch (state) {
+                case 0:
+                    LogUtil.m15791e(TAG, "BluetoothAdapter is STATE_DISCONNECTED");
+                    isBTConnect = false;
+                    return;
+                case 1:
+                    LogUtil.m15791e(TAG, "BluetoothAdapter is STATE_CONNECTING");
+                    return;
+                case 2:
+                    LogUtil.m15791e(TAG, "BluetoothAdapter is STATE_CONNECTED");
+                    isBTConnect = true;
+                    return;
+                default:
+                    return;
+            }
+        } else if ("android.bluetooth.adapter.action.STATE_CHANGED".equals(action)) {
+            switch (intent.getIntExtra("android.bluetooth.adapter.extra.STATE", 10)) {
+                case 10:
+                    LogUtil.m15791e(TAG, "BluetoothAdapter is STATE_OFF");
+                    isBTConnect = false;
+                    dispatchMessage(MSG_TYPE_BT_CHANGE, 0, 0);
+                    RGMapModeViewController.getInstance().resetAudio();
+                    return;
+                case 11:
+                    LogUtil.m15791e(TAG, "BluetoothAdapter is STATE_TURNING_ON");
+                    return;
+                case 12:
+                    LogUtil.m15791e(TAG, "BluetoothAdapter is STATE_ON");
+                    return;
+                case 13:
+                    LogUtil.m15791e(TAG, "BluetoothAdapter is STATE_TURNING_OFF");
+                    return;
+                default:
+                    return;
+            }
+        } else if ("android.bluetooth.headset.profile.action.AUDIO_STATE_CHANGED".equals(action)) {
+            state = intent.getIntExtra("android.bluetooth.profile.extra.STATE", 0);
+            LogUtil.m15791e(TAG, "BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED BluetoothProfile.EXTRA_STATE state = " + state);
+            switch (state) {
+                case 10:
+                    LogUtil.m15791e(TAG, "BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED is BluetoothHeadset.STATE_AUDIO_DISCONNECTED");
+                    if (!AudioUtils.sIsPhoneUsing) {
+                        dispatchMessage(MSG_TYPE_BT_CHANGE, 2, 1);
+                        return;
+                    }
+                    return;
+                case 11:
+                    LogUtil.m15791e(TAG, "BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED is BluetoothHeadset.STATE_AUDIO_CONNECTING");
+                    return;
+                case 12:
+                    LogUtil.m15791e(TAG, "BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED is BluetoothHeadset.STATE_AUDIO_CONNECTED");
+                    return;
+                default:
+                    return;
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/listener/BlueToothListener.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

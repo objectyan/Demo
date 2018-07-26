@@ -2,15 +2,8 @@ package com.baidu.nplatform.comjni.map.basemap;
 
 import android.os.Bundle;
 
-public abstract interface MapLayerDataInterface
-{
-  public abstract boolean hasLayer(int paramInt);
-  
-  public abstract int mapLayerDataReq(Bundle paramBundle, int paramInt1, int paramInt2);
+public interface MapLayerDataInterface {
+    boolean hasLayer(int i);
+
+    int mapLayerDataReq(Bundle bundle, int i, int i2);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/nplatform/comjni/map/basemap/MapLayerDataInterface.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

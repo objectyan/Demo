@@ -9,299 +9,242 @@ import android.text.TextUtils;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MediaPlayerUtil
-{
-  public static final String TAG = MediaPlayerUtil.class.getSimpleName();
-  private static MediaPlayerUtil sInstance;
-  private boolean isNeedReInit = true;
-  private boolean isPlaying = false;
-  private boolean isPreparing = false;
-  private MediaPlayer mMediaPlayer = null;
-  private Timer mTimer = null;
-  private TimerTask mTimerTask = null;
-  
-  public static MediaPlayerUtil getInstance()
-  {
-    if (sInstance == null) {}
-    try
-    {
-      if (sInstance == null) {
-        sInstance = new MediaPlayerUtil();
-      }
-      return sInstance;
+public class MediaPlayerUtil {
+    public static final String TAG = MediaPlayerUtil.class.getSimpleName();
+    private static MediaPlayerUtil sInstance;
+    private boolean isNeedReInit = true;
+    private boolean isPlaying = false;
+    private boolean isPreparing = false;
+    private MediaPlayer mMediaPlayer = null;
+    private Timer mTimer = null;
+    private TimerTask mTimerTask = null;
+
+    public interface PlayCallback {
+        void responsePlayComplete();
+
+        void responsePlayError();
+
+        void responsePlayPos(int i);
+
+        void startPlay();
+
+        void startPlayFirstTime();
+
+        void startPrepare();
+
+        void stopPrepare();
     }
-    finally {}
-  }
-  
-  public void cancelPlayAudio(PlayCallback paramPlayCallback)
-  {
-    if (this.mMediaPlayer != null) {}
-    try
-    {
-      if (this.mTimerTask != null)
-      {
-        this.mTimerTask.cancel();
-        this.mTimerTask = null;
-      }
-      if (this.mTimer != null)
-      {
-        this.mTimer.cancel();
-        this.mTimer = null;
-      }
-      if (paramPlayCallback != null) {
-        paramPlayCallback.responsePlayPos(this.mMediaPlayer.getCurrentPosition());
-      }
-      if (this.mMediaPlayer.isPlaying()) {
-        this.mMediaPlayer.stop();
-      }
-      this.mMediaPlayer.release();
-      this.mMediaPlayer = null;
-    }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        LogUtil.e(TAG, "cancelPlayAudio catch start");
-        if (LogUtil.LOGGABLE) {
-          localException.printStackTrace();
-        }
-        LogUtil.e(TAG, "cancelPlayAudio catch end");
-      }
-    }
-    this.isNeedReInit = true;
-    this.isPlaying = false;
-    this.isPreparing = false;
-    if (paramPlayCallback != null) {
-      paramPlayCallback.stopPrepare();
-    }
-  }
-  
-  public MediaPlayer getMediaPlayer()
-  {
-    return this.mMediaPlayer;
-  }
-  
-  public boolean isPlaying()
-  {
-    return this.isPlaying;
-  }
-  
-  public boolean isPreparing()
-  {
-    return this.isPreparing;
-  }
-  
-  public void pauseAudio()
-  {
-    if (this.mMediaPlayer != null) {}
-    try
-    {
-      if (this.mTimerTask != null)
-      {
-        this.mTimerTask.cancel();
-        this.mTimerTask = null;
-      }
-      if (this.mTimer != null)
-      {
-        this.mTimer.cancel();
-        this.mTimer = null;
-      }
-      if (this.mMediaPlayer.isPlaying()) {
-        this.mMediaPlayer.pause();
-      }
-    }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        LogUtil.e(TAG, "pauseAudio catch start");
-        if (LogUtil.LOGGABLE) {
-          localException.printStackTrace();
-        }
-        LogUtil.e(TAG, "pauseAudio catch end");
-      }
-    }
-    this.isPlaying = false;
-  }
-  
-  public void playAudio(String paramString, final int paramInt, final boolean paramBoolean, final PlayCallback paramPlayCallback)
-  {
-    LogUtil.e(TAG, "playAudio");
-    if ((paramString == null) || (TextUtils.isEmpty(paramString))) {}
-    label223:
-    do
-    {
-      do
-      {
-        do
-        {
-          for (;;)
-          {
-            return;
-            try
-            {
-              if (this.mMediaPlayer == null) {
-                this.mMediaPlayer = new MediaPlayer();
-              }
-              LogUtil.e(TAG, "isNeedReInit = " + this.isNeedReInit);
-              if (!this.isNeedReInit) {
-                break label223;
-              }
-              this.mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
-              {
-                public void onPrepared(MediaPlayer paramAnonymousMediaPlayer)
-                {
-                  LogUtil.e(MediaPlayerUtil.TAG, "onPrepared");
-                  MediaPlayerUtil.access$002(MediaPlayerUtil.this, false);
-                  if (paramPlayCallback != null) {
-                    paramPlayCallback.stopPrepare();
-                  }
-                  MediaPlayerUtil.this.mMediaPlayer.seekTo(paramInt);
+
+    public static MediaPlayerUtil getInstance() {
+        if (sInstance == null) {
+            synchronized (MediaPlayerUtil.class) {
+                if (sInstance == null) {
+                    sInstance = new MediaPlayerUtil();
                 }
-              });
-              this.mMediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener()
-              {
-                public void onSeekComplete(MediaPlayer paramAnonymousMediaPlayer)
-                {
-                  try
-                  {
-                    if (paramBoolean)
-                    {
-                      if (MediaPlayerUtil.this.mTimer == null) {
-                        MediaPlayerUtil.access$202(MediaPlayerUtil.this, new Timer());
-                      }
-                      if (MediaPlayerUtil.this.mTimerTask == null) {
-                        MediaPlayerUtil.access$302(MediaPlayerUtil.this, new TimerTask()
-                        {
-                          public void run()
-                          {
-                            if ((MediaPlayerUtil.this.mMediaPlayer != null) && (MediaPlayerUtil.2.this.val$callback != null) && (MediaPlayerUtil.this.isPlaying)) {
-                              MediaPlayerUtil.2.this.val$callback.responsePlayPos(MediaPlayerUtil.this.mMediaPlayer.getCurrentPosition());
+            }
+        }
+        return sInstance;
+    }
+
+    public void playAudio(String audioPath, final int startPos, final boolean isRecordPos, final PlayCallback callback) {
+        LogUtil.m15791e(TAG, "playAudio");
+        if (audioPath != null && !TextUtils.isEmpty(audioPath)) {
+            try {
+                if (this.mMediaPlayer == null) {
+                    this.mMediaPlayer = new MediaPlayer();
+                }
+                LogUtil.m15791e(TAG, "isNeedReInit = " + this.isNeedReInit);
+                if (this.isNeedReInit) {
+                    this.mMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
+                        public void onPrepared(MediaPlayer mp) {
+                            LogUtil.m15791e(MediaPlayerUtil.TAG, "onPrepared");
+                            MediaPlayerUtil.this.isPreparing = false;
+                            if (callback != null) {
+                                callback.stopPrepare();
                             }
-                          }
-                        });
-                      }
-                      MediaPlayerUtil.this.mTimer.schedule(MediaPlayerUtil.this.mTimerTask, 0L, 1000L);
+                            MediaPlayerUtil.this.mMediaPlayer.seekTo(startPos);
+                        }
+                    });
+                    this.mMediaPlayer.setOnSeekCompleteListener(new OnSeekCompleteListener() {
+
+                        /* renamed from: com.baidu.navisdk.util.common.MediaPlayerUtil$2$1 */
+                        class C46191 extends TimerTask {
+                            C46191() {
+                            }
+
+                            public void run() {
+                                if (MediaPlayerUtil.this.mMediaPlayer != null && callback != null && MediaPlayerUtil.this.isPlaying) {
+                                    callback.responsePlayPos(MediaPlayerUtil.this.mMediaPlayer.getCurrentPosition());
+                                }
+                            }
+                        }
+
+                        public void onSeekComplete(MediaPlayer mp) {
+                            try {
+                                if (isRecordPos) {
+                                    if (MediaPlayerUtil.this.mTimer == null) {
+                                        MediaPlayerUtil.this.mTimer = new Timer();
+                                    }
+                                    if (MediaPlayerUtil.this.mTimerTask == null) {
+                                        MediaPlayerUtil.this.mTimerTask = new C46191();
+                                    }
+                                    MediaPlayerUtil.this.mTimer.schedule(MediaPlayerUtil.this.mTimerTask, 0, 1000);
+                                }
+                                MediaPlayerUtil.this.mMediaPlayer.start();
+                                if (MediaPlayerUtil.this.mMediaPlayer.isPlaying()) {
+                                    MediaPlayerUtil.this.isPlaying = true;
+                                    MediaPlayerUtil.this.isNeedReInit = false;
+                                    if (callback != null) {
+                                        callback.startPlay();
+                                        callback.startPlayFirstTime();
+                                    }
+                                }
+                                LogUtil.m15791e(MediaPlayerUtil.TAG, "mMediaPlayer.start()");
+                            } catch (Exception e) {
+                                LogUtil.m15791e(MediaPlayerUtil.TAG, "playAudio catch onSeekComplete start");
+                                if (LogUtil.LOGGABLE) {
+                                    e.printStackTrace();
+                                }
+                                LogUtil.m15791e(MediaPlayerUtil.TAG, "playAudio catch onSeekComplete end");
+                            }
+                        }
+                    });
+                    this.mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+                        public void onCompletion(MediaPlayer mp) {
+                            LogUtil.m15791e(MediaPlayerUtil.TAG, "onCompletion");
+                            if (callback != null) {
+                                callback.responsePlayComplete();
+                            }
+                        }
+                    });
+                    this.mMediaPlayer.setOnErrorListener(new OnErrorListener() {
+                        public boolean onError(MediaPlayer mp, int what, int extra) {
+                            LogUtil.m15791e(MediaPlayerUtil.TAG, "onError what = " + what + ", extra = " + extra);
+                            if (callback != null) {
+                                callback.responsePlayError();
+                                callback.stopPrepare();
+                            }
+                            return true;
+                        }
+                    });
+                    this.mMediaPlayer.reset();
+                    this.mMediaPlayer.setDataSource(audioPath);
+                    this.mMediaPlayer.prepareAsync();
+                    this.isPreparing = true;
+                    if (callback != null) {
+                        callback.startPrepare();
+                        return;
                     }
-                    MediaPlayerUtil.this.mMediaPlayer.start();
-                    if (MediaPlayerUtil.this.mMediaPlayer.isPlaying())
-                    {
-                      MediaPlayerUtil.access$402(MediaPlayerUtil.this, true);
-                      MediaPlayerUtil.access$502(MediaPlayerUtil.this, false);
-                      if (paramPlayCallback != null)
-                      {
-                        paramPlayCallback.startPlay();
-                        paramPlayCallback.startPlayFirstTime();
-                      }
-                    }
-                    LogUtil.e(MediaPlayerUtil.TAG, "mMediaPlayer.start()");
                     return;
-                  }
-                  catch (Exception paramAnonymousMediaPlayer)
-                  {
-                    LogUtil.e(MediaPlayerUtil.TAG, "playAudio catch onSeekComplete start");
-                    if (LogUtil.LOGGABLE) {
-                      paramAnonymousMediaPlayer.printStackTrace();
+                }
+                if (isRecordPos) {
+                    if (this.mTimer == null) {
+                        this.mTimer = new Timer();
                     }
-                    LogUtil.e(MediaPlayerUtil.TAG, "playAudio catch onSeekComplete end");
-                  }
+                    if (this.mTimerTask == null) {
+                        this.mTimerTask = new TimerTask() {
+                            public void run() {
+                                if (MediaPlayerUtil.this.mMediaPlayer != null && callback != null && MediaPlayerUtil.this.isPlaying) {
+                                    callback.responsePlayPos(MediaPlayerUtil.this.mMediaPlayer.getCurrentPosition());
+                                }
+                            }
+                        };
+                    }
+                    this.mTimer.schedule(this.mTimerTask, 0, 1000);
                 }
-              });
-              this.mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-              {
-                public void onCompletion(MediaPlayer paramAnonymousMediaPlayer)
-                {
-                  LogUtil.e(MediaPlayerUtil.TAG, "onCompletion");
-                  if (paramPlayCallback != null) {
-                    paramPlayCallback.responsePlayComplete();
-                  }
+                this.mMediaPlayer.start();
+                if (this.mMediaPlayer.isPlaying()) {
+                    this.isPlaying = true;
+                    if (callback != null) {
+                        callback.startPlay();
+                    }
                 }
-              });
-              this.mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener()
-              {
-                public boolean onError(MediaPlayer paramAnonymousMediaPlayer, int paramAnonymousInt1, int paramAnonymousInt2)
-                {
-                  LogUtil.e(MediaPlayerUtil.TAG, "onError what = " + paramAnonymousInt1 + ", extra = " + paramAnonymousInt2);
-                  if (paramPlayCallback != null)
-                  {
-                    paramPlayCallback.responsePlayError();
-                    paramPlayCallback.stopPrepare();
-                  }
-                  return true;
+            } catch (Exception e) {
+                LogUtil.m15791e(TAG, "playAudio catch start");
+                if (LogUtil.LOGGABLE) {
+                    e.printStackTrace();
                 }
-              });
-              this.mMediaPlayer.reset();
-              this.mMediaPlayer.setDataSource(paramString);
-              this.mMediaPlayer.prepareAsync();
-              this.isPreparing = true;
-              if (paramPlayCallback != null)
-              {
-                paramPlayCallback.startPrepare();
-                return;
-              }
+                LogUtil.m15791e(TAG, "playAudio catch end");
+                if (callback != null) {
+                    callback.stopPrepare();
+                }
             }
-            catch (Exception paramString)
-            {
-              LogUtil.e(TAG, "playAudio catch start");
-              if (LogUtil.LOGGABLE) {
-                paramString.printStackTrace();
-              }
-              LogUtil.e(TAG, "playAudio catch end");
-            }
-          }
-        } while (paramPlayCallback == null);
-        paramPlayCallback.stopPrepare();
-        return;
-        if (paramBoolean)
-        {
-          if (this.mTimer == null) {
-            this.mTimer = new Timer();
-          }
-          if (this.mTimerTask == null) {
-            this.mTimerTask = new TimerTask()
-            {
-              public void run()
-              {
-                if ((MediaPlayerUtil.this.mMediaPlayer != null) && (paramPlayCallback != null) && (MediaPlayerUtil.this.isPlaying)) {
-                  paramPlayCallback.responsePlayPos(MediaPlayerUtil.this.mMediaPlayer.getCurrentPosition());
-                }
-              }
-            };
-          }
-          this.mTimer.schedule(this.mTimerTask, 0L, 1000L);
         }
-        this.mMediaPlayer.start();
-      } while (!this.mMediaPlayer.isPlaying());
-      this.isPlaying = true;
-    } while (paramPlayCallback == null);
-    paramPlayCallback.startPlay();
-  }
-  
-  public void setPreparing(boolean paramBoolean)
-  {
-    this.isPreparing = paramBoolean;
-  }
-  
-  public static abstract interface PlayCallback
-  {
-    public abstract void responsePlayComplete();
-    
-    public abstract void responsePlayError();
-    
-    public abstract void responsePlayPos(int paramInt);
-    
-    public abstract void startPlay();
-    
-    public abstract void startPlayFirstTime();
-    
-    public abstract void startPrepare();
-    
-    public abstract void stopPrepare();
-  }
+    }
+
+    public void cancelPlayAudio(PlayCallback callback) {
+        if (this.mMediaPlayer != null) {
+            try {
+                if (this.mTimerTask != null) {
+                    this.mTimerTask.cancel();
+                    this.mTimerTask = null;
+                }
+                if (this.mTimer != null) {
+                    this.mTimer.cancel();
+                    this.mTimer = null;
+                }
+                if (callback != null) {
+                    callback.responsePlayPos(this.mMediaPlayer.getCurrentPosition());
+                }
+                if (this.mMediaPlayer.isPlaying()) {
+                    this.mMediaPlayer.stop();
+                }
+                this.mMediaPlayer.release();
+                this.mMediaPlayer = null;
+            } catch (Exception e) {
+                LogUtil.m15791e(TAG, "cancelPlayAudio catch start");
+                if (LogUtil.LOGGABLE) {
+                    e.printStackTrace();
+                }
+                LogUtil.m15791e(TAG, "cancelPlayAudio catch end");
+            }
+        }
+        this.isNeedReInit = true;
+        this.isPlaying = false;
+        this.isPreparing = false;
+        if (callback != null) {
+            callback.stopPrepare();
+        }
+    }
+
+    public void pauseAudio() {
+        if (this.mMediaPlayer != null) {
+            try {
+                if (this.mTimerTask != null) {
+                    this.mTimerTask.cancel();
+                    this.mTimerTask = null;
+                }
+                if (this.mTimer != null) {
+                    this.mTimer.cancel();
+                    this.mTimer = null;
+                }
+                if (this.mMediaPlayer.isPlaying()) {
+                    this.mMediaPlayer.pause();
+                }
+            } catch (Exception e) {
+                LogUtil.m15791e(TAG, "pauseAudio catch start");
+                if (LogUtil.LOGGABLE) {
+                    e.printStackTrace();
+                }
+                LogUtil.m15791e(TAG, "pauseAudio catch end");
+            }
+        }
+        this.isPlaying = false;
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return this.mMediaPlayer;
+    }
+
+    public boolean isPlaying() {
+        return this.isPlaying;
+    }
+
+    public boolean isPreparing() {
+        return this.isPreparing;
+    }
+
+    public void setPreparing(boolean isPreparing) {
+        this.isPreparing = isPreparing;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/common/MediaPlayerUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

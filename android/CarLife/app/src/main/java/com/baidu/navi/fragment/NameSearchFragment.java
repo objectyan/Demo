@@ -1,7 +1,5 @@
 package com.baidu.navi.fragment;
 
-import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
@@ -19,22 +17,32 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import com.baidu.baidumaps.p042f.p043a.p044a.C0705a;
 import com.baidu.baidunavis.control.NavMapManager;
-import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.k;
-import com.baidu.carlife.core.screen.presentation.a.e;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.g;
-import com.baidu.carlife.logic.voice.n;
-import com.baidu.carlife.view.dialog.c;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.core.screen.presentation.p071a.C1307e;
+import com.baidu.carlife.custom.C1342a;
+import com.baidu.carlife.custom.C1343b;
+import com.baidu.carlife.logic.voice.C1912n;
+import com.baidu.carlife.p078f.C1436a;
+import com.baidu.carlife.p078f.C1437b;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
+import com.baidu.carlife.view.dialog.C1953c;
+import com.baidu.carlife.view.p104a.C2251b;
 import com.baidu.navi.common.util.FileUtils;
 import com.baidu.navi.controller.NameSearchHelper;
 import com.baidu.navi.controller.SearchStrategyHelper;
+import com.baidu.navi.protocol.model.HUDGuideDataStruct;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.poisearch.BNPoiSearcher;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandController;
-import com.baidu.navisdk.logic.ReqData;
+import com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandParams;
+import com.baidu.navisdk.logic.CommandConst;
 import com.baidu.navisdk.logic.RspData;
 import com.baidu.navisdk.model.GeoLocateModel;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
@@ -43,997 +51,851 @@ import com.baidu.navisdk.model.datastruct.SearchPoi;
 import com.baidu.navisdk.model.datastruct.SearchPoiPager;
 import com.baidu.navisdk.model.modelfactory.NaviDataEngine;
 import com.baidu.navisdk.model.modelfactory.PoiSearchModel;
+import com.baidu.navisdk.ui.routeguide.subview.OnRGSubViewListener.ActionTypeSearchParams;
 import com.baidu.navisdk.ui.util.TipTool;
 import com.baidu.navisdk.util.common.NetworkUtils;
 import com.baidu.navisdk.util.db.model.SearchNameHistroyModel;
 import com.baidu.navisdk.util.logic.BNLocationManagerProxy;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class NameSearchFragment
-  extends ContentFragment
-  implements View.OnClickListener
-{
-  public static final String COME_FROM = "come_from";
-  public static final int COME_FROM_DISCOVER_OIL = 8;
-  public static final int INCOMING_CARLIFE_MAP_PAGE = 6;
-  public static final int INCOMING_INTENT_API_COMMAND = 4;
-  public static final int INCOMING_MORE_CATALOG_SEARCH = 1;
-  public static final int INCOMING_NAME_SEARCH = 2;
-  public static final int INCOMING_REMAIN_OIL_COMMAND = 5;
-  public static final int INCOMING_ROUTE_PLAN_NODE_PAGE = 7;
-  public static final String INCOMING_TYPE = "incoming_type";
-  public static final int INCOMING_VOICE_COMMAND = 3;
-  public static final String INTENT_API_POI_POINT = "intent_api_point";
-  public static final String INTENT_API_POI_RADIUS = "intent_api_radius";
-  public static final String POI_CENTER_MODE = "poi_center_mode";
-  private static final String TAG = "PoiSearch";
-  public static final String VOICE_SEARCH_KEY = "voice_key";
-  private int cityId = 0;
-  private boolean hasData = false;
-  private GeoPoint intentApiPoint;
-  private int intentApiRadius = 0;
-  private boolean isFromIntentApi = false;
-  private boolean isFromVoice = false;
-  private boolean isPoiSearchMod = false;
-  private boolean isSpaceSearchMode = false;
-  private GridViewAdapter mAdapter;
-  private c mAlertDlg = null;
-  private ImageButton mBackBtn;
-  private GeoPoint mCurrentGeoPoint;
-  private SearchPoi mCurrentPoi;
-  private DistrictInfo mDistrictInfo;
-  private g mFocusAreaUp;
-  private com.baidu.carlife.f.b mFocusGridView;
-  private GridView mGridView;
-  private ViewGroup mGroupView;
-  private Handler mHandler = new Handler()
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if (!NameSearchFragment.this.canProcessUI()) {}
-      for (;;)
-      {
-        return;
-        RspData localRspData = (RspData)paramAnonymousMessage.obj;
-        if (paramAnonymousMessage.what == 1005)
-        {
-          e.a().c();
-          SearchPoiPager localSearchPoiPager = (SearchPoiPager)localRspData.mData;
-          if (localSearchPoiPager == null)
-          {
-            if ((NameSearchFragment.this.netMode == 1) && (NameSearchFragment.this.hasData))
-            {
-              paramAnonymousMessage = (SearchPoiPager)localRspData.mReq.mParams.get("param.search.pager");
-              NameSearchFragment.this.handleTimeout(paramAnonymousMessage);
-              NameSearchFragment.access$202(NameSearchFragment.this, false);
-              return;
-            }
-            i.e("PoiSearch", "search with pager fail");
-            if (NameSearchFragment.this.isFromVoice == true) {
-              BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-            }
-            TipTool.onCreateToastDialog(NameSearchFragment.this.getContext(), 2131298915);
-            if (n.a().l()) {
-              k.b(4162);
-            }
-          }
-          else
-          {
-            localSearchPoiPager.setNetMode(BNPoiSearcher.getInstance().getNetModeOfLastResult());
-            switch (localSearchPoiPager.getSearchType())
-            {
-            }
-            while ((NameSearchFragment.this.isFromVoice == true) && (paramAnonymousMessage.arg1 != 0))
-            {
-              BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-              return;
-              if (paramAnonymousMessage.arg1 == 0)
-              {
-                i.e("PoiSearch", "onSearchCatalogSucc()");
-                NameSearchFragment.this.handleSpaceCatalogSearchSuc(localSearchPoiPager);
-                k.b(4160);
-              }
-              else
-              {
-                i.e("PoiSearch", "Space Search fail");
-                TipTool.onCreateToastDialog(NameSearchFragment.this.getContext(), 2131298918);
-                continue;
-                if (paramAnonymousMessage.arg1 == 0)
-                {
-                  NameSearchFragment.this.handleNameSearchSuc(localSearchPoiPager);
-                  k.b(4160);
-                }
-                else
-                {
-                  i.e("PoiSearch", "Name Search fail");
-                  TipTool.onCreateToastDialog(NameSearchFragment.this.getContext(), 2131298915);
-                  if (n.a().l())
-                  {
-                    k.b(4162);
-                    continue;
-                    if (paramAnonymousMessage.arg1 == 0)
-                    {
-                      i.e("PoiSearch", "onSearchCatalogSucc()");
-                      NameSearchFragment.this.handleSpaceKeySearchSuc(localSearchPoiPager);
-                      k.b(4160);
-                      return;
-                    }
-                    i.e("PoiSearch", "Space Search fail");
-                    TipTool.onCreateToastDialog(NameSearchFragment.this.getContext(), 2131298915);
-                    if (n.a().l()) {
-                      k.b(4162);
-                    }
-                  }
-                }
-              }
-            }
-          }
+public class NameSearchFragment extends ContentFragment implements OnClickListener {
+    public static final String COME_FROM = "come_from";
+    public static final int COME_FROM_DISCOVER_OIL = 8;
+    public static final int INCOMING_CARLIFE_MAP_PAGE = 6;
+    public static final int INCOMING_INTENT_API_COMMAND = 4;
+    public static final int INCOMING_MORE_CATALOG_SEARCH = 1;
+    public static final int INCOMING_NAME_SEARCH = 2;
+    public static final int INCOMING_REMAIN_OIL_COMMAND = 5;
+    public static final int INCOMING_ROUTE_PLAN_NODE_PAGE = 7;
+    public static final String INCOMING_TYPE = "incoming_type";
+    public static final int INCOMING_VOICE_COMMAND = 3;
+    public static final String INTENT_API_POI_POINT = "intent_api_point";
+    public static final String INTENT_API_POI_RADIUS = "intent_api_radius";
+    public static final String POI_CENTER_MODE = "poi_center_mode";
+    private static final String TAG = "PoiSearch";
+    public static final String VOICE_SEARCH_KEY = "voice_key";
+    private int cityId = 0;
+    private boolean hasData = false;
+    private GeoPoint intentApiPoint;
+    private int intentApiRadius = 0;
+    private boolean isFromIntentApi = false;
+    private boolean isFromVoice = false;
+    private boolean isPoiSearchMod = false;
+    private boolean isSpaceSearchMode = false;
+    private GridViewAdapter mAdapter;
+    private C1953c mAlertDlg = null;
+    private ImageButton mBackBtn;
+    private GeoPoint mCurrentGeoPoint;
+    private SearchPoi mCurrentPoi;
+    private DistrictInfo mDistrictInfo;
+    private C1443g mFocusAreaUp;
+    private C1437b mFocusGridView;
+    private GridView mGridView;
+    private ViewGroup mGroupView;
+    private Handler mHandler = new C38072();
+    private int mLastOrientation = 0;
+    private C0672b mSearchDialogCancelListener = new C38105();
+    private int mSearchId;
+    private String mSearchKey;
+    private ImageButton mVoiceBtn;
+    private int netMode = 3;
+
+    /* renamed from: com.baidu.navi.fragment.NameSearchFragment$1 */
+    class C38061 implements OnItemClickListener {
+        C38061() {
         }
-      }
-    }
-  };
-  private int mLastOrientation = 0;
-  private com.baidu.carlife.core.screen.b mSearchDialogCancelListener = new com.baidu.carlife.core.screen.b()
-  {
-    public void onClick()
-    {
-      BNPoiSearcher.getInstance().cancelQuery();
-      k.b(4165);
-    }
-  };
-  private int mSearchId;
-  private String mSearchKey;
-  private ImageButton mVoiceBtn;
-  private int netMode = 3;
-  
-  private void clearLastResult()
-  {
-    ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSearchPoiPagerList().clear();
-  }
-  
-  private void dismissAllDialog()
-  {
-    if ((mActivity != null) && (!mActivity.isFinishing())) {
-      e.a().c();
-    }
-    dismissTwoBtnDialog();
-  }
-  
-  private void findViews()
-  {
-    this.mBackBtn = ((ImageButton)this.mGroupView.findViewById(2131624412));
-    this.mBackBtn.setOnClickListener(this);
-    this.mVoiceBtn = ((ImageButton)this.mGroupView.findViewById(2131624413));
-    this.mGridView = ((GridView)this.mGroupView.findViewById(2131624414));
-    this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-    {
-      public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-      {
-        paramAnonymousAdapterView = NameSearchFragment.this.mAdapter.getItem(paramAnonymousInt);
-        if (paramAnonymousAdapterView.type == 2) {
-          return;
+
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            Item item = NameSearchFragment.this.mAdapter.getItem(position);
+            if (item.type != 2) {
+                NameSearchHelper.getInstance().search(BaseFragment.mActivity, NameSearchFragment.this, item.name, Long.decode("0x" + item.id).intValue(), 3, false, false);
+            }
         }
-        paramAnonymousView = paramAnonymousAdapterView.name;
-        paramAnonymousInt = Long.decode("0x" + paramAnonymousAdapterView.id).intValue();
-        NameSearchHelper.getInstance().search(BaseFragment.mActivity, NameSearchFragment.this, paramAnonymousView, paramAnonymousInt, 3, false, false);
-      }
-    });
-  }
-  
-  private void getBundle()
-  {
-    int i = 0;
-    if (this.mShowBundle != null) {
-      i = this.mShowBundle.getInt("incoming_type");
     }
-    switch (i)
-    {
-    default: 
-    case 2: 
-    case 1: 
-    case 6: 
-    case 3: 
-    case 4: 
-      String str;
-      do
-      {
-        do
-        {
-          do
-          {
-            do
-            {
-              do
-              {
-                do
-                {
-                  return;
-                  this.isSpaceSearchMode = true;
-                  if (this.mShowBundle.containsKey("poi_center_mode"))
-                  {
+
+    /* renamed from: com.baidu.navi.fragment.NameSearchFragment$2 */
+    class C38072 extends Handler {
+        C38072() {
+        }
+
+        public void handleMessage(Message msg) {
+            if (NameSearchFragment.this.canProcessUI()) {
+                RspData rsp = msg.obj;
+                if (msg.what == 1005) {
+                    C1307e.a().c();
+                    SearchPoiPager searchPoiPager = rsp.mData;
+                    if (searchPoiPager != null) {
+                        searchPoiPager.setNetMode(BNPoiSearcher.getInstance().getNetModeOfLastResult());
+                        switch (searchPoiPager.getSearchType()) {
+                            case 1:
+                                if (msg.arg1 != 0) {
+                                    C1260i.e("PoiSearch", "Name Search fail");
+                                    TipTool.onCreateToastDialog(NameSearchFragment.this.getContext(), (int) C0965R.string.search_result_toast_failed);
+                                    if (C1912n.a().l()) {
+                                        C1261k.b(4162);
+                                        break;
+                                    }
+                                }
+                                NameSearchFragment.this.handleNameSearchSuc(searchPoiPager);
+                                C1261k.b(4160);
+                                break;
+                                break;
+                            case 3:
+                                if (msg.arg1 != 0) {
+                                    C1260i.e("PoiSearch", "Space Search fail");
+                                    TipTool.onCreateToastDialog(NameSearchFragment.this.getContext(), (int) C0965R.string.search_result_toast_failed);
+                                    if (C1912n.a().l()) {
+                                        C1261k.b(4162);
+                                        break;
+                                    }
+                                }
+                                C1260i.e("PoiSearch", "onSearchCatalogSucc()");
+                                NameSearchFragment.this.handleSpaceKeySearchSuc(searchPoiPager);
+                                C1261k.b(4160);
+                                return;
+                                break;
+                            case 5:
+                                if (msg.arg1 != 0) {
+                                    C1260i.e("PoiSearch", "Space Search fail");
+                                    TipTool.onCreateToastDialog(NameSearchFragment.this.getContext(), (int) C0965R.string.search_space_result_failed);
+                                    break;
+                                }
+                                C1260i.e("PoiSearch", "onSearchCatalogSucc()");
+                                NameSearchFragment.this.handleSpaceCatalogSearchSuc(searchPoiPager);
+                                C1261k.b(4160);
+                                break;
+                        }
+                        if (NameSearchFragment.this.isFromVoice && msg.arg1 != 0) {
+                            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+                        }
+                    } else if (NameSearchFragment.this.netMode == 1 && NameSearchFragment.this.hasData) {
+                        NameSearchFragment.this.handleTimeout((SearchPoiPager) rsp.mReq.mParams.get(CommandConst.K_COMMAND_PARAM_KEY_SEARCH_PAGER));
+                        NameSearchFragment.this.hasData = false;
+                    } else {
+                        C1260i.e("PoiSearch", "search with pager fail");
+                        if (NameSearchFragment.this.isFromVoice) {
+                            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+                        }
+                        TipTool.onCreateToastDialog(NameSearchFragment.this.getContext(), (int) C0965R.string.search_result_toast_failed);
+                        if (C1912n.a().l()) {
+                            C1261k.b(4162);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.navi.fragment.NameSearchFragment$4 */
+    class C38094 implements C0672b {
+        C38094() {
+        }
+
+        public void onClick() {
+            NameSearchFragment.this.dismissTwoBtnDialog();
+        }
+    }
+
+    /* renamed from: com.baidu.navi.fragment.NameSearchFragment$5 */
+    class C38105 implements C0672b {
+        C38105() {
+        }
+
+        public void onClick() {
+            BNPoiSearcher.getInstance().cancelQuery();
+            C1261k.b(4165);
+        }
+    }
+
+    private class GridViewAdapter extends BaseAdapter {
+        private List<Item> datas = new ArrayList();
+
+        class Item {
+            String icon;
+            String id;
+            String name;
+            int type;
+
+            Item(GridViewAdapter this$1, int type, String name, String id) {
+                this(type, name, id, "");
+            }
+
+            Item(int type, String name, String id, String icon) {
+                this.type = 0;
+                this.name = "";
+                this.id = "";
+                this.icon = "";
+                this.type = type;
+                this.name = name;
+                this.id = id;
+                this.icon = icon;
+            }
+        }
+
+        private class ViewHolder {
+            TextView textView;
+
+            private ViewHolder() {
+            }
+        }
+
+        public GridViewAdapter() {
+            initData();
+        }
+
+        private void initData() {
+            try {
+                JSONArray array = new JSONArray(FileUtils.getStringFromAssertFile(NameSearchFragment.this.getContext(), "name_search_item.json"));
+                int len = array.length();
+                for (int i = 0; i < len; i++) {
+                    JSONObject json = array.getJSONObject(i);
+                    int type = json.getInt("type");
+                    if (type == 1) {
+                        this.datas.add(new Item(type, json.getString("name"), json.getString("id"), json.getString(HUDGuideDataStruct.KEY_ICON_NAME)));
+                    } else {
+                        this.datas.add(new Item(this, type, json.getString("name"), json.getString("id")));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public int getCount() {
+            return this.datas.size();
+        }
+
+        public long getItemId(int position) {
+            return (long) position;
+        }
+
+        public Item getItem(int position) {
+            return (Item) this.datas.get(position);
+        }
+
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        public int getItemViewType(int position) {
+            return getItem(position).type == 1 ? 0 : 1;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                int resource = C0965R.layout.name_search_gridview_item2;
+                if (getItemViewType(position) == 0) {
+                    resource = C0965R.layout.name_search_gridview_item1;
+                }
+                convertView = LayoutInflater.from(NameSearchFragment.this.getContext()).inflate(resource, parent, false);
+                viewHolder.textView = (TextView) convertView.findViewById(C0965R.id.name_search_gridview_item_txt);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            Item item = getItem(position);
+            viewHolder.textView.setText(item.name);
+            if (getItemViewType(position) == 0) {
+                Resources res = NameSearchFragment.this.getContext().getResources();
+                int indentify = res.getIdentifier(NameSearchFragment.this.getContext().getPackageName() + ":drawable/" + item.icon, null, null);
+                if (indentify > 0) {
+                    Drawable top;
+                    if (VERSION.SDK_INT >= 21) {
+                        top = res.getDrawable(indentify, null);
+                    } else {
+                        top = res.getDrawable(indentify);
+                    }
+                    viewHolder.textView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+                }
+            } else {
+                viewHolder.textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+            switch (item.type) {
+                case 1:
+                    viewHolder.textView.setTextColor(NameSearchFragment.this.getResources().getColor(C0965R.color.cl_text_a5_content));
+                    break;
+                case 2:
+                    viewHolder.textView.setTextColor(NameSearchFragment.this.getResources().getColor(C0965R.color.cl_text_a1_content));
+                    break;
+                case 3:
+                    viewHolder.textView.setTextColor(NameSearchFragment.this.getResources().getColor(C0965R.color.cl_text_a2_content));
+                    break;
+            }
+            return convertView;
+        }
+    }
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mLastOrientation = getResources().getConfiguration().orientation;
+        this.mGroupView = (ViewGroup) inflater.inflate(C0965R.layout.carmode_frag_name_search, null);
+        findViews();
+        updateDistrict();
+        return this.mGroupView;
+    }
+
+    public void onInitFocusAreas() {
+        super.onInitFocusAreas();
+        initFocusChain(this.mGroupView);
+    }
+
+    private void findViews() {
+        this.mBackBtn = (ImageButton) this.mGroupView.findViewById(C0965R.id.name_search_back);
+        this.mBackBtn.setOnClickListener(this);
+        this.mVoiceBtn = (ImageButton) this.mGroupView.findViewById(C0965R.id.name_search_voice);
+        this.mGridView = (GridView) this.mGroupView.findViewById(C0965R.id.name_search_gridView);
+        this.mGridView.setOnItemClickListener(new C38061());
+    }
+
+    protected void onInitView() {
+        C1260i.e("PoiSearch", "onInitView()");
+        getBundle();
+    }
+
+    public void onResume() {
+        super.onResume();
+        updateDistrict();
+        clearLastResult();
+        if (this.mAdapter == null) {
+            this.mAdapter = new GridViewAdapter();
+            this.mGridView.setAdapter(this.mAdapter);
+        } else {
+            this.mAdapter.notifyDataSetChanged();
+        }
+        boolean isDataDownloaded;
+        if (this.isSpaceSearchMode) {
+            this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
+            isDataDownloaded = SearchStrategyHelper.getInstance(getContext()).hasDataDownloadedByPoint(this.mCurrentGeoPoint);
+        } else {
+            isDataDownloaded = SearchStrategyHelper.getInstance(getContext()).hasDataDownloadedBySet();
+        }
+        if (this.mDistrictInfo == null) {
+            C1260i.b("PoiSearch", "mDistrictInfo null");
+            return;
+        }
+        C1260i.b("PoiSearch", "mDistrictInfo " + this.mDistrictInfo);
+        if (NavMapManager.getInstance().getNaviMapMode() == 5) {
+            C0705a.a().e();
+            C0705a.a().g();
+            NavMapManager.getInstance().handleMapOverlays(0);
+            NavMapManager.getInstance().setNaviMapMode(0);
+        }
+    }
+
+    public void onPause() {
+        BNPoiSearcher.getInstance().cancelQuery();
+        C1307e.a().c();
+        super.onPause();
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+        if (orientation != this.mLastOrientation) {
+            this.mLastOrientation = orientation;
+        }
+    }
+
+    public boolean onBackPressed() {
+        C1307e.a().c();
+        pageBack(this.mModuleFrom);
+        return true;
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    private void updateDistrict() {
+        SearchStrategyHelper.getInstance(getContext()).hasDataDownloadedBySet();
+        this.mDistrictInfo = GeoLocateModel.getInstance().getDistrictByManMade();
+        if (this.mDistrictInfo == null) {
+            this.mDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
+        }
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case C0965R.id.name_search_back:
+                onBackPressed();
+                return;
+            case C0965R.id.name_search_voice:
+                C1912n.a().f();
+                return;
+            default:
+                return;
+        }
+    }
+
+    private void getBundle() {
+        int from = 0;
+        if (this.mShowBundle != null) {
+            from = this.mShowBundle.getInt("incoming_type");
+        }
+        switch (from) {
+            case 1:
+                C1260i.e("PoiSearch", "catalog in space search");
+                this.isSpaceSearchMode = true;
+                if (this.mShowBundle.containsKey("poi_center_mode")) {
                     this.isPoiSearchMod = this.mShowBundle.getBoolean("poi_center_mode");
                     if (this.isPoiSearchMod) {
-                      this.mCurrentPoi = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSpaceSearchPoi();
+                        this.mCurrentPoi = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSpaceSearchPoi();
+                        return;
                     }
-                  }
-                  initFocusChain(this.mGroupView);
-                  return;
-                  i.e("PoiSearch", "catalog in space search");
-                  this.isSpaceSearchMode = true;
-                } while (!this.mShowBundle.containsKey("poi_center_mode"));
-                this.isPoiSearchMod = this.mShowBundle.getBoolean("poi_center_mode");
-              } while (!this.isPoiSearchMod);
-              this.mCurrentPoi = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSpaceSearchPoi();
-              return;
-              this.isSpaceSearchMode = true;
-            } while (!this.mShowBundle.containsKey("poi_center_mode"));
-            this.isPoiSearchMod = this.mShowBundle.getBoolean("poi_center_mode");
-          } while (!this.isPoiSearchMod);
-          this.mCurrentPoi = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSpaceSearchPoi();
-          return;
-          str = null;
-          this.isFromVoice = true;
-          if (this.mShowBundle.containsKey("voice_key")) {
-            str = this.mShowBundle.getString("voice_key");
-          }
-        } while (!this.mShowBundle.containsKey("poi_center_mode"));
-        this.isSpaceSearchMode = this.mShowBundle.getBoolean("poi_center_mode");
-        if (this.isSpaceSearchMode)
-        {
-          trySearchSpace(str);
-          return;
+                    return;
+                }
+                return;
+            case 2:
+                this.isSpaceSearchMode = true;
+                if (this.mShowBundle.containsKey("poi_center_mode")) {
+                    this.isPoiSearchMod = this.mShowBundle.getBoolean("poi_center_mode");
+                    if (this.isPoiSearchMod) {
+                        this.mCurrentPoi = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSpaceSearchPoi();
+                    }
+                }
+                initFocusChain(this.mGroupView);
+                return;
+            case 3:
+                String key = null;
+                this.isFromVoice = true;
+                if (this.mShowBundle.containsKey(VOICE_SEARCH_KEY)) {
+                    key = this.mShowBundle.getString(VOICE_SEARCH_KEY);
+                }
+                if (this.mShowBundle.containsKey("poi_center_mode")) {
+                    this.isSpaceSearchMode = this.mShowBundle.getBoolean("poi_center_mode");
+                    if (this.isSpaceSearchMode) {
+                        trySearchSpace(key);
+                        return;
+                    } else {
+                        trySearch(key);
+                        return;
+                    }
+                }
+                return;
+            case 4:
+                String key1 = null;
+                if (this.mShowBundle.containsKey(VOICE_SEARCH_KEY)) {
+                    key1 = this.mShowBundle.getString(VOICE_SEARCH_KEY);
+                }
+                if (this.mShowBundle.containsKey("poi_center_mode")) {
+                    this.isSpaceSearchMode = this.mShowBundle.getBoolean("poi_center_mode");
+                    if (this.isSpaceSearchMode) {
+                        this.isFromIntentApi = true;
+                        if (this.mShowBundle.containsKey(INTENT_API_POI_POINT)) {
+                            this.intentApiPoint = parseGeoPointFromString(this.mShowBundle.getString(INTENT_API_POI_POINT));
+                        }
+                        if (this.mShowBundle.containsKey(INTENT_API_POI_RADIUS)) {
+                            this.intentApiRadius = this.mShowBundle.getInt(INTENT_API_POI_RADIUS);
+                        }
+                        SearchStrategyHelper.getInstance(getContext()).hasDataDownloadedBySet();
+                        trySearchSpace(Long.decode("0x" + key1).intValue());
+                        return;
+                    }
+                    trySearch(key1);
+                    return;
+                }
+                return;
+            case 5:
+                this.mSearchKey = ActionTypeSearchParams.Gas_Station;
+                this.mSearchId = Long.decode("0x7b40").intValue();
+                trySearchSpace(this.mSearchId);
+                return;
+            case 6:
+                this.isSpaceSearchMode = true;
+                if (this.mShowBundle.containsKey("poi_center_mode")) {
+                    this.isPoiSearchMod = this.mShowBundle.getBoolean("poi_center_mode");
+                    if (this.isPoiSearchMod) {
+                        this.mCurrentPoi = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSpaceSearchPoi();
+                        return;
+                    }
+                    return;
+                }
+                return;
+            default:
+                return;
         }
-        trySearch(str);
-        return;
-        str = null;
-        if (this.mShowBundle.containsKey("voice_key")) {
-          str = this.mShowBundle.getString("voice_key");
+    }
+
+    private GeoPoint parseGeoPointFromString(String geoString) {
+        if (TextUtils.isEmpty(geoString)) {
+            return null;
         }
-      } while (!this.mShowBundle.containsKey("poi_center_mode"));
-      this.isSpaceSearchMode = this.mShowBundle.getBoolean("poi_center_mode");
-      if (this.isSpaceSearchMode)
-      {
-        this.isFromIntentApi = true;
-        if (this.mShowBundle.containsKey("intent_api_point")) {
-          this.intentApiPoint = parseGeoPointFromString(this.mShowBundle.getString("intent_api_point"));
+        String[] geoArr = geoString.split(",");
+        if (geoArr == null || geoArr.length != 2 || TextUtils.isEmpty(geoArr[0]) || TextUtils.isEmpty(geoArr[0])) {
+            return null;
         }
-        if (this.mShowBundle.containsKey("intent_api_radius")) {
-          this.intentApiRadius = this.mShowBundle.getInt("intent_api_radius");
+        try {
+            return new GeoPoint((int) (Double.valueOf(geoArr[1]).doubleValue() * 100000.0d), (int) (100000.0d * Double.valueOf(geoArr[0]).doubleValue()));
+        } catch (NumberFormatException e) {
+            return null;
         }
-        SearchStrategyHelper.getInstance(getContext()).hasDataDownloadedBySet();
-        trySearchSpace(Long.decode("0x" + str).intValue());
-        return;
-      }
-      trySearch(str);
-      return;
     }
-    this.mSearchKey = "加油站";
-    this.mSearchId = Long.decode("0x7b40").intValue();
-    trySearchSpace(this.mSearchId);
-  }
-  
-  private int getFinalNetMode(int paramInt)
-  {
-    int i = BNSettingManager.getPrefSearchMode();
-    if (paramInt == 0) {
-      this.hasData = true;
-    }
-    while (i == 2) {
-      if (this.hasData)
-      {
-        return 0;
-        this.hasData = false;
-      }
-      else
-      {
-        return 1;
-      }
-    }
-    if ((!NetworkUtils.isNetworkAvailable(getContext())) && (this.hasData)) {
-      return 0;
-    }
-    return 1;
-  }
-  
-  private void handleNameSearchSuc(SearchPoiPager paramSearchPoiPager)
-  {
-    Object localObject = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSearchPoiPagerList();
-    if (((List)localObject).size() != 1)
-    {
-      resultEmpty(paramSearchPoiPager);
-      return;
-    }
-    localObject = ((SearchPoiPager)((List)localObject).get(0)).getPoiList();
-    if ((localObject == null) || (((List)localObject).size() == 0))
-    {
-      resultEmpty(paramSearchPoiPager);
-      return;
-    }
-    SearchNameHistroyModel.getInstance().addSearchName(paramSearchPoiPager.getSearchKey());
-    Bundle localBundle = this.mShowBundle;
-    localObject = localBundle;
-    if (localBundle == null) {
-      localObject = new Bundle();
-    }
-    ((Bundle)localObject).putString("search_key", paramSearchPoiPager.getSearchKey());
-    ((Bundle)localObject).putInt("search_mode", this.netMode);
-    ((Bundle)localObject).putInt("search_type", 17);
-    ((Bundle)localObject).putInt("district_id", this.mDistrictInfo.mId);
-    ((Bundle)localObject).putInt("module_from", this.mModuleFrom);
-    if (this.isFromVoice)
-    {
-      ((Bundle)localObject).putInt("incoming_type", 35);
-      ((Bundle)localObject).putInt("Key_Bundle_VC_Top_Type", this.mShowBundle.getInt("Key_Bundle_VC_Top_Type", -1));
-      ((Bundle)localObject).putInt("Key_Bundle_VC_Sub_Type", this.mShowBundle.getInt("Key_Bundle_VC_Sub_Type", -1));
-      ((Bundle)localObject).putInt("module_from", this.mShowBundle.getInt("module_from", 3));
-    }
-    showFragment(35, (Bundle)localObject);
-  }
-  
-  private void handleSpaceCatalogSearchSuc(SearchPoiPager paramSearchPoiPager)
-  {
-    Object localObject = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSearchPoiPagerList();
-    if (((List)localObject).size() != 1)
-    {
-      resultEmpty(paramSearchPoiPager);
-      return;
-    }
-    localObject = ((SearchPoiPager)((List)localObject).get(0)).getPoiList();
-    if ((localObject == null) || (((List)localObject).size() == 0))
-    {
-      resultEmpty(paramSearchPoiPager);
-      return;
-    }
-    SearchNameHistroyModel.getInstance().addSearchName(paramSearchPoiPager.getSearchKey());
-    localObject = this.mShowBundle;
-    if (((Bundle)localObject).containsKey("incoming_type"))
-    {
-      loge("contains incoming key");
-      if (((Bundle)localObject).getInt("incoming_type") == 5) {
-        loge("来自一键加油");
-      }
-    }
-    else
-    {
-      paramSearchPoiPager = (SearchPoiPager)localObject;
-      if (localObject == null)
-      {
-        loge("bundle is null");
-        paramSearchPoiPager = new Bundle();
-      }
-      if (this.isPoiSearchMod) {
-        paramSearchPoiPager.putBoolean("poi_center_mode", true);
-      }
-      paramSearchPoiPager.putString("search_key", this.mSearchKey);
-      paramSearchPoiPager.putInt("search_mode", this.netMode);
-      if (paramSearchPoiPager.getInt("incoming_type") != 5) {
-        break label240;
-      }
-      loge("来自一键加油，不用重新设置来源");
-    }
-    for (;;)
-    {
-      paramSearchPoiPager.putInt("incoming_type", 33);
-      paramSearchPoiPager.putInt("search_type", 19);
-      paramSearchPoiPager.putInt("district_id", new DistrictInfo().mId);
-      showFragment(35, paramSearchPoiPager);
-      return;
-      loge("不是来自一键加油");
-      break;
-      label240:
-      paramSearchPoiPager.putInt("incoming_type", 33);
-    }
-  }
-  
-  private void handleSpaceKeySearchSuc(SearchPoiPager paramSearchPoiPager)
-  {
-    Object localObject = ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).getSearchPoiPagerList();
-    if (((List)localObject).size() != 1)
-    {
-      resultEmpty(paramSearchPoiPager);
-      return;
-    }
-    localObject = ((SearchPoiPager)((List)localObject).get(0)).getPoiList();
-    if ((localObject == null) || (((List)localObject).size() == 0))
-    {
-      resultEmpty(paramSearchPoiPager);
-      return;
-    }
-    SearchNameHistroyModel.getInstance().addSearchName(paramSearchPoiPager.getSearchKey());
-    Bundle localBundle = this.mShowBundle;
-    localObject = localBundle;
-    if (localBundle == null) {
-      localObject = new Bundle();
-    }
-    ((Bundle)localObject).putString("search_key", paramSearchPoiPager.getSearchKey());
-    ((Bundle)localObject).putInt("district_id", this.cityId);
-    ((Bundle)localObject).putInt("search_mode", this.netMode);
-    ((Bundle)localObject).putInt("search_type", 18);
-    if (this.isPoiSearchMod) {
-      ((Bundle)localObject).putBoolean("poi_center_mode", true);
-    }
-    if (this.isFromVoice)
-    {
-      ((Bundle)localObject).putInt("incoming_type", 35);
-      ((Bundle)localObject).putInt("Key_Bundle_VC_Top_Type", this.mShowBundle.getInt("Key_Bundle_VC_Top_Type", -1));
-      ((Bundle)localObject).putInt("Key_Bundle_VC_Sub_Type", this.mShowBundle.getInt("Key_Bundle_VC_Sub_Type", -1));
-      ((Bundle)localObject).putInt("module_from", this.mShowBundle.getInt("module_from", 3));
-    }
-    showFragment(35, (Bundle)localObject);
-  }
-  
-  private void handleTimeout(SearchPoiPager paramSearchPoiPager)
-  {
-    if ((this.hasData) && (this.netMode == 1))
-    {
-      this.netMode = 0;
-      if (paramSearchPoiPager != null)
-      {
-        paramSearchPoiPager.setNetMode(this.netMode);
-        BNPoiSearcher.getInstance().asynSearchWithPager(paramSearchPoiPager, this.mHandler);
-        e.a().a(getResources().getString(2131296861), this.mSearchDialogCancelListener);
-      }
-    }
-    do
-    {
-      return;
-      if (this.isFromVoice == true) {
-        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-      }
-      TipTool.onCreateToastDialog(getContext(), 2131298915);
-    } while (!n.a().l());
-    k.b(4162);
-  }
-  
-  private GeoPoint parseGeoPointFromString(String paramString)
-  {
-    if (TextUtils.isEmpty(paramString)) {}
-    do
-    {
-      return null;
-      paramString = paramString.split(",");
-    } while ((paramString == null) || (paramString.length != 2) || (TextUtils.isEmpty(paramString[0])) || (TextUtils.isEmpty(paramString[0])));
-    try
-    {
-      double d = Double.valueOf(paramString[0]).doubleValue();
-      paramString = new GeoPoint((int)(Double.valueOf(paramString[1]).doubleValue() * 100000.0D), (int)(100000.0D * d));
-      return paramString;
-    }
-    catch (NumberFormatException paramString) {}
-    return null;
-  }
-  
-  private boolean resultEmpty(final SearchPoiPager paramSearchPoiPager)
-  {
-    if ((this.netMode == 0) && (this.hasData)) {
-      showTwoBtnDialog(2131298914, new com.baidu.carlife.core.screen.b()new com.baidu.carlife.core.screen.b
-      {
-        public void onClick()
-        {
-          NameSearchFragment.this.dismissTwoBtnDialog();
-          NameSearchFragment.access$102(NameSearchFragment.this, 1);
-          if (SearchStrategyHelper.getInstance(NameSearchFragment.this.getContext()).checkCanSearchByNetMode(NameSearchFragment.this.netMode))
-          {
-            paramSearchPoiPager.setNetMode(NameSearchFragment.this.netMode);
-            BNPoiSearcher.getInstance().asynSearchWithPager(paramSearchPoiPager, NameSearchFragment.this.mHandler);
-            e.a().a(NameSearchFragment.this.getResources().getString(2131296861), NameSearchFragment.this.mSearchDialogCancelListener);
-          }
+
+    private void handleNameSearchSuc(SearchPoiPager searchPoiPager) {
+        List<SearchPoiPager> searchPoiPagers = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSearchPoiPagerList();
+        if (searchPoiPagers.size() != 1) {
+            resultEmpty(searchPoiPager);
+            return;
         }
-      }, new com.baidu.carlife.core.screen.b()
-      {
-        public void onClick()
-        {
-          NameSearchFragment.this.dismissTwoBtnDialog();
+        List<SearchPoi> poiList = ((SearchPoiPager) searchPoiPagers.get(0)).getPoiList();
+        if (poiList == null || poiList.size() == 0) {
+            resultEmpty(searchPoiPager);
+            return;
         }
-      });
-    }
-    do
-    {
-      return true;
-      if (this.netMode == 1)
-      {
-        if (this.hasData)
-        {
-          this.hasData = false;
-          this.netMode = 0;
-          paramSearchPoiPager.setNetMode(this.netMode);
-          BNPoiSearcher.getInstance().asynSearchWithPager(paramSearchPoiPager, this.mHandler);
+        SearchNameHistroyModel.getInstance().addSearchName(searchPoiPager.getSearchKey());
+        Bundle bundle = this.mShowBundle;
+        if (bundle == null) {
+            bundle = new Bundle();
         }
-        for (;;)
-        {
-          return false;
-          if (this.isFromVoice == true) {
-            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-          }
-          if (NetworkUtils.isNetworkAvailable(getContext()))
-          {
-            TipTool.onCreateToastDialog(getContext(), 2131298915);
-            if (n.a().l()) {
-              k.b(4162);
-            }
-          }
-          else
-          {
-            TipTool.onCreateToastDialog(getContext(), 2131298924);
-            if (n.a().l()) {
-              k.b(4162);
-            }
-          }
+        bundle.putString("search_key", searchPoiPager.getSearchKey());
+        bundle.putInt("search_mode", this.netMode);
+        bundle.putInt("search_type", 17);
+        bundle.putInt("district_id", this.mDistrictInfo.mId);
+        bundle.putInt(ContentFragmentManager.MODULE_FROM, this.mModuleFrom);
+        if (this.isFromVoice) {
+            bundle.putInt("incoming_type", 35);
+            bundle.putInt(BNVoiceCommandParams.Key_Bundle_VC_Top_Type, this.mShowBundle.getInt(BNVoiceCommandParams.Key_Bundle_VC_Top_Type, -1));
+            bundle.putInt(BNVoiceCommandParams.Key_Bundle_VC_Sub_Type, this.mShowBundle.getInt(BNVoiceCommandParams.Key_Bundle_VC_Sub_Type, -1));
+            bundle.putInt(ContentFragmentManager.MODULE_FROM, this.mShowBundle.getInt(ContentFragmentManager.MODULE_FROM, 3));
         }
-      }
-      if (this.isFromVoice == true) {
-        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-      }
-      TipTool.onCreateToastDialog(getContext(), 2131298915);
-    } while (!n.a().l());
-    k.b(4162);
-    return true;
-  }
-  
-  private void search(String paramString)
-  {
-    SearchStrategyHelper.getInstance(getContext()).reloadSearchEngine();
-    if (SearchStrategyHelper.getInstance(getContext()).checkCanSearchByNetMode(this.netMode))
-    {
-      paramString = new SearchPoiPager(paramString, this.mDistrictInfo, 10, this.netMode);
-      if (BNPoiSearcher.getInstance().asynSearchWithPager(paramString, this.mHandler)) {
-        e.a().a(getResources().getString(2131296861), this.mSearchDialogCancelListener);
-      }
+        showFragment(35, bundle);
     }
-    while (this.isFromVoice != true) {
-      return;
+
+    private void handleSpaceKeySearchSuc(SearchPoiPager searchPoiPager) {
+        List<SearchPoiPager> searchPoiPagers = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSearchPoiPagerList();
+        if (searchPoiPagers.size() != 1) {
+            resultEmpty(searchPoiPager);
+            return;
+        }
+        List<SearchPoi> poiList = ((SearchPoiPager) searchPoiPagers.get(0)).getPoiList();
+        if (poiList == null || poiList.size() == 0) {
+            resultEmpty(searchPoiPager);
+            return;
+        }
+        SearchNameHistroyModel.getInstance().addSearchName(searchPoiPager.getSearchKey());
+        Bundle bundle = this.mShowBundle;
+        if (bundle == null) {
+            bundle = new Bundle();
+        }
+        bundle.putString("search_key", searchPoiPager.getSearchKey());
+        bundle.putInt("district_id", this.cityId);
+        bundle.putInt("search_mode", this.netMode);
+        bundle.putInt("search_type", 18);
+        if (this.isPoiSearchMod) {
+            bundle.putBoolean("poi_center_mode", true);
+        }
+        if (this.isFromVoice) {
+            bundle.putInt("incoming_type", 35);
+            bundle.putInt(BNVoiceCommandParams.Key_Bundle_VC_Top_Type, this.mShowBundle.getInt(BNVoiceCommandParams.Key_Bundle_VC_Top_Type, -1));
+            bundle.putInt(BNVoiceCommandParams.Key_Bundle_VC_Sub_Type, this.mShowBundle.getInt(BNVoiceCommandParams.Key_Bundle_VC_Sub_Type, -1));
+            bundle.putInt(ContentFragmentManager.MODULE_FROM, this.mShowBundle.getInt(ContentFragmentManager.MODULE_FROM, 3));
+        }
+        showFragment(35, bundle);
     }
-    BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-  }
-  
-  private void searchSpace(int paramInt)
-  {
-    int i = 5000;
-    SearchStrategyHelper.getInstance(getContext()).reloadSearchEngine();
-    Object localObject = new SearchCircle(this.mCurrentGeoPoint, 5000);
-    if (this.isFromIntentApi)
-    {
-      this.isFromIntentApi = false;
-      localObject = this.mCurrentGeoPoint;
-      if (this.intentApiRadius == 0) {
-        localObject = new SearchCircle((GeoPoint)localObject, i);
-      }
-    }
-    else
-    {
-      DistrictInfo localDistrictInfo = null;
-      if (0 == 0) {
-        localDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
-      }
-      if (!SearchStrategyHelper.getInstance(getContext()).checkCanSearchByNetMode(this.netMode)) {
-        break label154;
-      }
-      localObject = new SearchPoiPager(paramInt, localDistrictInfo, (SearchCircle)localObject, 10, this.netMode);
-      BNPoiSearcher.getInstance().asynSearchWithPager((SearchPoiPager)localObject, this.mHandler);
-      e.a().a(getResources().getString(2131296861), this.mSearchDialogCancelListener);
-    }
-    label154:
-    while (this.isFromVoice != true)
-    {
-      return;
-      i = this.intentApiRadius;
-      break;
-    }
-    BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-  }
-  
-  private void searchSpace(String paramString)
-  {
-    SearchStrategyHelper.getInstance(getContext()).reloadSearchEngine();
-    SearchCircle localSearchCircle = new SearchCircle(this.mCurrentGeoPoint, 5000);
-    DistrictInfo localDistrictInfo = null;
-    if (0 == 0) {
-      localDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
-    }
-    if (SearchStrategyHelper.getInstance(getContext()).checkCanSearchByNetMode(this.netMode))
-    {
-      paramString = new SearchPoiPager(paramString, localDistrictInfo, localSearchCircle, 10, this.netMode);
-      BNPoiSearcher.getInstance().asynSearchWithPager(paramString, this.mHandler);
-      e.a().a(getResources().getString(2131296861), this.mSearchDialogCancelListener);
-    }
-    while (this.isFromVoice != true) {
-      return;
-    }
-    BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-  }
-  
-  private void trySearch(String paramString)
-  {
-    this.netMode = SearchStrategyHelper.getInstance(getContext()).getNetModeBySet(this.mDistrictInfo);
-    BNSettingManager.getPrefSearchMode();
-    this.netMode = getFinalNetMode(this.netMode);
-    search(paramString);
-  }
-  
-  private void trySearchSpace(int paramInt)
-  {
-    if ((this.isFromIntentApi) && (this.intentApiPoint != null) && (this.intentApiPoint.isValid())) {}
-    for (this.mCurrentGeoPoint = this.intentApiPoint; (!BNLocationManagerProxy.getInstance().isLocationValid()) && (!this.isPoiSearchMod); this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation())
-    {
-      if (this.isFromVoice == true) {
-        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-      }
-      TipTool.onCreateToastDialog(getContext(), 2131298923);
-      return;
-    }
-    if ((this.isPoiSearchMod) && (this.mCurrentPoi != null)) {
-      this.mCurrentGeoPoint = this.mCurrentPoi.mViewPoint;
-    }
-    this.netMode = SearchStrategyHelper.getInstance(getContext()).getNetModeByPoint(this.mCurrentGeoPoint);
-    BNSettingManager.getPrefSearchMode();
-    this.netMode = getFinalNetMode(this.netMode);
-    searchSpace(paramInt);
-  }
-  
-  private void trySearchSpace(String paramString)
-  {
-    this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
-    if ((!BNLocationManagerProxy.getInstance().isLocationValid()) && (!this.isPoiSearchMod))
-    {
-      if (this.isFromVoice == true) {
-        BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
-      }
-      TipTool.onCreateToastDialog(getContext(), 2131298923);
-      return;
-    }
-    if ((this.isPoiSearchMod) && (this.mCurrentPoi != null)) {
-      this.mCurrentGeoPoint = this.mCurrentPoi.mViewPoint;
-    }
-    this.netMode = SearchStrategyHelper.getInstance(getContext()).getNetModeByPoint(this.mCurrentGeoPoint);
-    BNSettingManager.getPrefSearchMode();
-    this.netMode = getFinalNetMode(this.netMode);
-    searchSpace(paramString);
-  }
-  
-  private void updateDistrict()
-  {
-    SearchStrategyHelper.getInstance(getContext()).hasDataDownloadedBySet();
-    this.mDistrictInfo = GeoLocateModel.getInstance().getDistrictByManMade();
-    if (this.mDistrictInfo == null) {
-      this.mDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
-    }
-  }
-  
-  public boolean dismissTwoBtnDialog()
-  {
-    dismissDialog(this.mAlertDlg);
-    this.mAlertDlg = null;
-    return true;
-  }
-  
-  public void driving()
-  {
-    i.b("yftech", "NameSearchFragment driving");
-    dismissAllDialog();
-    if (com.baidu.carlife.custom.b.a().b())
-    {
-      int i = 0;
-      if (this.mShowBundle != null) {
-        i = this.mShowBundle.getInt("incoming_type");
-      }
-      i.b("yftech", "NameSearchFragment driving from:" + i);
-      if ((i == 8) || (i == 3)) {
-        pageBack(this.mModuleFrom);
-      }
-    }
-    for (;;)
-    {
-      com.baidu.carlife.custom.a.a().d();
-      return;
-      backTo(17, null);
-      continue;
-      backTo(17, null);
-    }
-  }
-  
-  public void initFocusChain(View paramView)
-  {
-    if (getCurrentFragmentType() != 34) {
-      return;
-    }
-    if (this.mFocusAreaUp == null)
-    {
-      this.mFocusAreaUp = new g(paramView.findViewById(2131624411), 2);
-      this.mFocusAreaUp.d(this.mBackBtn);
-    }
-    if (this.mFocusGridView == null) {
-      this.mFocusGridView = new com.baidu.carlife.f.b(this.mGridView, 6);
-    }
-    d.a().b(new com.baidu.carlife.f.a[] { this.mFocusAreaUp, this.mFocusGridView });
-    d.a().h(this.mFocusGridView);
-  }
-  
-  public boolean onBackPressed()
-  {
-    e.a().c();
-    pageBack(this.mModuleFrom);
-    return true;
-  }
-  
-  public void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    default: 
-      return;
-    case 2131624412: 
-      onBackPressed();
-      return;
-    }
-    n.a().f();
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mLastOrientation = getResources().getConfiguration().orientation;
-    this.mGroupView = ((ViewGroup)paramLayoutInflater.inflate(2130968659, null));
-    findViews();
-    updateDistrict();
-    return this.mGroupView;
-  }
-  
-  public void onDestroy()
-  {
-    super.onDestroy();
-  }
-  
-  public void onInitFocusAreas()
-  {
-    super.onInitFocusAreas();
-    initFocusChain(this.mGroupView);
-  }
-  
-  protected void onInitView()
-  {
-    i.e("PoiSearch", "onInitView()");
-    getBundle();
-  }
-  
-  public void onPause()
-  {
-    BNPoiSearcher.getInstance().cancelQuery();
-    e.a().c();
-    super.onPause();
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    updateDistrict();
-    clearLastResult();
-    if (this.mAdapter == null)
-    {
-      this.mAdapter = new GridViewAdapter();
-      this.mGridView.setAdapter(this.mAdapter);
-      if (!this.isSpaceSearchMode) {
-        break label100;
-      }
-      this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
-      SearchStrategyHelper.getInstance(getContext()).hasDataDownloadedByPoint(this.mCurrentGeoPoint);
-      label74:
-      if (this.mDistrictInfo != null) {
-        break label114;
-      }
-      i.b("PoiSearch", "mDistrictInfo null");
-    }
-    label100:
-    label114:
-    do
-    {
-      return;
-      this.mAdapter.notifyDataSetChanged();
-      break;
-      SearchStrategyHelper.getInstance(getContext()).hasDataDownloadedBySet();
-      break label74;
-      i.b("PoiSearch", "mDistrictInfo " + this.mDistrictInfo);
-    } while (NavMapManager.getInstance().getNaviMapMode() != 5);
-    com.baidu.baidumaps.f.a.a.a.a().e();
-    com.baidu.baidumaps.f.a.a.a.a().g();
-    NavMapManager.getInstance().handleMapOverlays(0);
-    NavMapManager.getInstance().setNaviMapMode(0);
-  }
-  
-  protected void onUpdateOrientation(int paramInt)
-  {
-    if (paramInt != this.mLastOrientation) {
-      this.mLastOrientation = paramInt;
-    }
-  }
-  
-  protected void onUpdateSkin()
-  {
-    if (this.mBackBtn != null) {
-      this.mBackBtn.setBackground(com.baidu.carlife.view.a.b.a(getContext()));
-    }
-    if (this.mVoiceBtn != null) {
-      this.mVoiceBtn.setBackground(com.baidu.carlife.view.a.b.a(getContext()));
-    }
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
-  
-  public void showTwoBtnDialog(int paramInt, com.baidu.carlife.core.screen.b paramb1, com.baidu.carlife.core.screen.b paramb2)
-  {
-    dismissTwoBtnDialog();
-    if (this.mAlertDlg == null)
-    {
-      this.mAlertDlg = new c(mActivity).a(paramInt).g(17).c(2131296264).q().d(2131296259);
-      this.mAlertDlg.b(paramb1);
-      this.mAlertDlg.a(paramb2);
-    }
-    showDialog(this.mAlertDlg);
-  }
-  
-  public void stopDriving() {}
-  
-  private class GridViewAdapter
-    extends BaseAdapter
-  {
-    private List<Item> datas = new ArrayList();
-    
-    public GridViewAdapter()
-    {
-      initData();
-    }
-    
-    private void initData()
-    {
-      Object localObject = FileUtils.getStringFromAssertFile(NameSearchFragment.this.getContext(), "name_search_item.json");
-      for (;;)
-      {
-        int i;
-        try
-        {
-          localObject = new JSONArray((String)localObject);
-          i = 0;
-          int j = ((JSONArray)localObject).length();
-          if (i < j)
-          {
-            JSONObject localJSONObject = ((JSONArray)localObject).getJSONObject(i);
-            int k = localJSONObject.getInt("type");
-            if (k == 1) {
-              this.datas.add(new Item(k, localJSONObject.getString("name"), localJSONObject.getString("id"), localJSONObject.getString("icon")));
+
+    private void handleSpaceCatalogSearchSuc(SearchPoiPager searchPoiPager) {
+        List<SearchPoiPager> searchPoiPagers = ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSearchPoiPagerList();
+        if (searchPoiPagers.size() != 1) {
+            resultEmpty(searchPoiPager);
+            return;
+        }
+        List<SearchPoi> poiList = ((SearchPoiPager) searchPoiPagers.get(0)).getPoiList();
+        if (poiList == null || poiList.size() == 0) {
+            resultEmpty(searchPoiPager);
+            return;
+        }
+        SearchNameHistroyModel.getInstance().addSearchName(searchPoiPager.getSearchKey());
+        Bundle bundle = this.mShowBundle;
+        if (bundle.containsKey("incoming_type")) {
+            loge("contains incoming key");
+            if (bundle.getInt("incoming_type") == 5) {
+                loge("来自一键加油");
             } else {
-              this.datas.add(new Item(k, localJSONObject.getString("name"), localJSONObject.getString("id")));
+                loge("不是来自一键加油");
             }
-          }
         }
-        catch (Exception localException)
-        {
-          localException.printStackTrace();
+        if (bundle == null) {
+            loge("bundle is null");
+            bundle = new Bundle();
         }
-        return;
-        i += 1;
-      }
-    }
-    
-    public int getCount()
-    {
-      return this.datas.size();
-    }
-    
-    public Item getItem(int paramInt)
-    {
-      return (Item)this.datas.get(paramInt);
-    }
-    
-    public long getItemId(int paramInt)
-    {
-      return paramInt;
-    }
-    
-    public int getItemViewType(int paramInt)
-    {
-      int i = 1;
-      if (getItem(paramInt).type == 1) {
-        i = 0;
-      }
-      return i;
-    }
-    
-    public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-    {
-      Object localObject;
-      label72:
-      Item localItem;
-      if (paramView == null)
-      {
-        localObject = new ViewHolder(null);
-        int i = 2130968941;
-        if (getItemViewType(paramInt) == 0) {
-          i = 2130968940;
+        if (this.isPoiSearchMod) {
+            bundle.putBoolean("poi_center_mode", true);
         }
-        paramView = LayoutInflater.from(NameSearchFragment.this.getContext()).inflate(i, paramViewGroup, false);
-        ((ViewHolder)localObject).textView = ((TextView)paramView.findViewById(2131625682));
-        paramView.setTag(localObject);
-        paramViewGroup = (ViewGroup)localObject;
-        localItem = getItem(paramInt);
-        paramViewGroup.textView.setText(localItem.name);
-        if (getItemViewType(paramInt) != 0) {
-          break label244;
+        bundle.putString("search_key", this.mSearchKey);
+        bundle.putInt("search_mode", this.netMode);
+        if (bundle.getInt("incoming_type") == 5) {
+            loge("来自一键加油，不用重新设置来源");
+        } else {
+            bundle.putInt("incoming_type", 33);
         }
-        localObject = NameSearchFragment.this.getContext().getResources();
-        paramInt = ((Resources)localObject).getIdentifier(NameSearchFragment.this.getContext().getPackageName() + ":drawable/" + localItem.icon, null, null);
-        if (paramInt > 0)
-        {
-          if (Build.VERSION.SDK_INT < 21) {
-            break label233;
-          }
-          localObject = ((Resources)localObject).getDrawable(paramInt, null);
-          label176:
-          paramViewGroup.textView.setCompoundDrawablesWithIntrinsicBounds(null, (Drawable)localObject, null, null);
+        bundle.putInt("incoming_type", 33);
+        bundle.putInt("search_type", 19);
+        bundle.putInt("district_id", new DistrictInfo().mId);
+        showFragment(35, bundle);
+    }
+
+    private void handleTimeout(SearchPoiPager searchPoiPager) {
+        if (this.hasData && this.netMode == 1) {
+            this.netMode = 0;
+            if (searchPoiPager != null) {
+                searchPoiPager.setNetMode(this.netMode);
+                BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, this.mHandler);
+                C1307e.a().a(getResources().getString(C0965R.string.progress_searching), this.mSearchDialogCancelListener);
+                return;
+            }
+            return;
         }
-      }
-      for (;;)
-      {
-        switch (localItem.type)
-        {
-        default: 
-          return paramView;
-          paramViewGroup = (ViewHolder)paramView.getTag();
-          break label72;
-          label233:
-          localObject = ((Resources)localObject).getDrawable(paramInt);
-          break label176;
-          label244:
-          paramViewGroup.textView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        if (this.isFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
         }
-      }
-      paramViewGroup.textView.setTextColor(NameSearchFragment.this.getResources().getColor(2131558702));
-      return paramView;
-      paramViewGroup.textView.setTextColor(NameSearchFragment.this.getResources().getColor(2131558687));
-      return paramView;
-      paramViewGroup.textView.setTextColor(NameSearchFragment.this.getResources().getColor(2131558692));
-      return paramView;
+        TipTool.onCreateToastDialog(getContext(), (int) C0965R.string.search_result_toast_failed);
+        if (C1912n.a().l()) {
+            C1261k.b(4162);
+        }
     }
-    
-    public int getViewTypeCount()
-    {
-      return 2;
+
+    private void clearLastResult() {
+        ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).getSearchPoiPagerList().clear();
     }
-    
-    class Item
-    {
-      String icon = "";
-      String id = "";
-      String name = "";
-      int type = 0;
-      
-      Item(int paramInt, String paramString1, String paramString2)
-      {
-        this(paramInt, paramString1, paramString2, "");
-      }
-      
-      Item(int paramInt, String paramString1, String paramString2, String paramString3)
-      {
-        this.type = paramInt;
-        this.name = paramString1;
-        this.id = paramString2;
-        this.icon = paramString3;
-      }
+
+    private void trySearch(String key) {
+        this.netMode = SearchStrategyHelper.getInstance(getContext()).getNetModeBySet(this.mDistrictInfo);
+        int settingMode = BNSettingManager.getPrefSearchMode();
+        this.netMode = getFinalNetMode(this.netMode);
+        search(key);
     }
-    
-    private class ViewHolder
-    {
-      TextView textView;
-      
-      private ViewHolder() {}
+
+    private void search(String key) {
+        SearchStrategyHelper.getInstance(getContext()).reloadSearchEngine();
+        if (SearchStrategyHelper.getInstance(getContext()).checkCanSearchByNetMode(this.netMode)) {
+            if (BNPoiSearcher.getInstance().asynSearchWithPager(new SearchPoiPager(key, this.mDistrictInfo, 10, this.netMode), this.mHandler)) {
+                C1307e.a().a(getResources().getString(C0965R.string.progress_searching), this.mSearchDialogCancelListener);
+            }
+        } else if (this.isFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
     }
-  }
+
+    private void trySearchSpace(String key) {
+        this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
+        if (BNLocationManagerProxy.getInstance().isLocationValid() || this.isPoiSearchMod) {
+            if (this.isPoiSearchMod && this.mCurrentPoi != null) {
+                this.mCurrentGeoPoint = this.mCurrentPoi.mViewPoint;
+            }
+            this.netMode = SearchStrategyHelper.getInstance(getContext()).getNetModeByPoint(this.mCurrentGeoPoint);
+            int settingMode = BNSettingManager.getPrefSearchMode();
+            this.netMode = getFinalNetMode(this.netMode);
+            searchSpace(key);
+            return;
+        }
+        if (this.isFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+        TipTool.onCreateToastDialog(getContext(), (int) C0965R.string.space_search_center_error);
+    }
+
+    private void searchSpace(String key) {
+        SearchStrategyHelper.getInstance(getContext()).reloadSearchEngine();
+        SearchCircle circle = new SearchCircle(this.mCurrentGeoPoint, 5000);
+        DistrictInfo districtInfo = null;
+        if (null == null) {
+            districtInfo = GeoLocateModel.getInstance().getCurrentDistrict();
+        }
+        if (SearchStrategyHelper.getInstance(getContext()).checkCanSearchByNetMode(this.netMode)) {
+            BNPoiSearcher.getInstance().asynSearchWithPager(new SearchPoiPager(key, districtInfo, circle, 10, this.netMode), this.mHandler);
+            C1307e.a().a(getResources().getString(C0965R.string.progress_searching), this.mSearchDialogCancelListener);
+        } else if (this.isFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+    }
+
+    private void trySearchSpace(int id) {
+        if (this.isFromIntentApi && this.intentApiPoint != null && this.intentApiPoint.isValid()) {
+            this.mCurrentGeoPoint = this.intentApiPoint;
+        } else {
+            this.mCurrentGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
+        }
+        if (BNLocationManagerProxy.getInstance().isLocationValid() || this.isPoiSearchMod) {
+            if (this.isPoiSearchMod && this.mCurrentPoi != null) {
+                this.mCurrentGeoPoint = this.mCurrentPoi.mViewPoint;
+            }
+            this.netMode = SearchStrategyHelper.getInstance(getContext()).getNetModeByPoint(this.mCurrentGeoPoint);
+            int settingMode = BNSettingManager.getPrefSearchMode();
+            this.netMode = getFinalNetMode(this.netMode);
+            searchSpace(id);
+            return;
+        }
+        if (this.isFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+        TipTool.onCreateToastDialog(getContext(), (int) C0965R.string.space_search_center_error);
+    }
+
+    private void searchSpace(int id) {
+        int i = 5000;
+        SearchStrategyHelper.getInstance(getContext()).reloadSearchEngine();
+        SearchCircle cricle = new SearchCircle(this.mCurrentGeoPoint, 5000);
+        if (this.isFromIntentApi) {
+            this.isFromIntentApi = false;
+            GeoPoint geoPoint = this.mCurrentGeoPoint;
+            if (this.intentApiRadius != 0) {
+                i = this.intentApiRadius;
+            }
+            cricle = new SearchCircle(geoPoint, i);
+        }
+        DistrictInfo districtInfo = null;
+        if (null == null) {
+            districtInfo = GeoLocateModel.getInstance().getCurrentDistrict();
+        }
+        if (SearchStrategyHelper.getInstance(getContext()).checkCanSearchByNetMode(this.netMode)) {
+            BNPoiSearcher.getInstance().asynSearchWithPager(new SearchPoiPager(id, districtInfo, cricle, 10, this.netMode), this.mHandler);
+            C1307e.a().a(getResources().getString(C0965R.string.progress_searching), this.mSearchDialogCancelListener);
+        } else if (this.isFromVoice) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+        }
+    }
+
+    private int getFinalNetMode(int mode) {
+        int settingMode = BNSettingManager.getPrefSearchMode();
+        if (mode == 0) {
+            this.hasData = true;
+        } else {
+            this.hasData = false;
+        }
+        if (settingMode == 2) {
+            if (this.hasData) {
+                return 0;
+            }
+            return 1;
+        } else if (NetworkUtils.isNetworkAvailable(getContext()) || !this.hasData) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private boolean resultEmpty(final SearchPoiPager searchPoiPager) {
+        if (this.netMode == 0 && this.hasData) {
+            showTwoBtnDialog(C0965R.string.search_result_empty_offline, new C0672b() {
+                public void onClick() {
+                    NameSearchFragment.this.dismissTwoBtnDialog();
+                    NameSearchFragment.this.netMode = 1;
+                    if (SearchStrategyHelper.getInstance(NameSearchFragment.this.getContext()).checkCanSearchByNetMode(NameSearchFragment.this.netMode)) {
+                        searchPoiPager.setNetMode(NameSearchFragment.this.netMode);
+                        BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, NameSearchFragment.this.mHandler);
+                        C1307e.a().a(NameSearchFragment.this.getResources().getString(C0965R.string.progress_searching), NameSearchFragment.this.mSearchDialogCancelListener);
+                    }
+                }
+            }, new C38094());
+            return true;
+        } else if (this.netMode == 1) {
+            if (this.hasData) {
+                this.hasData = false;
+                this.netMode = 0;
+                searchPoiPager.setNetMode(this.netMode);
+                BNPoiSearcher.getInstance().asynSearchWithPager(searchPoiPager, this.mHandler);
+            } else {
+                if (this.isFromVoice) {
+                    BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+                }
+                if (NetworkUtils.isNetworkAvailable(getContext())) {
+                    TipTool.onCreateToastDialog(getContext(), (int) C0965R.string.search_result_toast_failed);
+                    if (C1912n.a().l()) {
+                        C1261k.b(4162);
+                    }
+                } else {
+                    TipTool.onCreateToastDialog(getContext(), (int) C0965R.string.space_search_network_unavailable);
+                    if (C1912n.a().l()) {
+                        C1261k.b(4162);
+                    }
+                }
+            }
+            return false;
+        } else {
+            if (this.isFromVoice) {
+                BNVoiceCommandController.getInstance().commonVoiceCommandResponse(BNVoiceCommandController.getInstance().getLastestVCTopType(), 2);
+            }
+            TipTool.onCreateToastDialog(getContext(), (int) C0965R.string.search_result_toast_failed);
+            if (!C1912n.a().l()) {
+                return true;
+            }
+            C1261k.b(4162);
+            return true;
+        }
+    }
+
+    public void showTwoBtnDialog(int contentStr, C0672b confirmListener, C0672b cancleListener) {
+        dismissTwoBtnDialog();
+        if (this.mAlertDlg == null) {
+            this.mAlertDlg = new C1953c(mActivity).a(contentStr).g(17).c(C0965R.string.alert_confirm).q().d(C0965R.string.alert_cancel);
+            this.mAlertDlg.b(confirmListener);
+            this.mAlertDlg.a(cancleListener);
+        }
+        showDialog(this.mAlertDlg);
+    }
+
+    public boolean dismissTwoBtnDialog() {
+        dismissDialog(this.mAlertDlg);
+        this.mAlertDlg = null;
+        return true;
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    public void initFocusChain(View root) {
+        if (getCurrentFragmentType() == 34) {
+            if (this.mFocusAreaUp == null) {
+                this.mFocusAreaUp = new C1443g(root.findViewById(C0965R.id.name_search_focus_area_up), 2);
+                this.mFocusAreaUp.d(this.mBackBtn);
+            }
+            if (this.mFocusGridView == null) {
+                this.mFocusGridView = new C1437b(this.mGridView, 6);
+            }
+            C1440d.a().b(new C1436a[]{this.mFocusAreaUp, this.mFocusGridView});
+            C1440d.a().h(this.mFocusGridView);
+        }
+    }
+
+    protected void onUpdateSkin() {
+        if (this.mBackBtn != null) {
+            this.mBackBtn.setBackground(C2251b.a(getContext()));
+        }
+        if (this.mVoiceBtn != null) {
+            this.mVoiceBtn.setBackground(C2251b.a(getContext()));
+        }
+    }
+
+    public void driving() {
+        C1260i.b("yftech", "NameSearchFragment driving");
+        dismissAllDialog();
+        if (C1343b.a().b()) {
+            int from = 0;
+            if (this.mShowBundle != null) {
+                from = this.mShowBundle.getInt("incoming_type");
+            }
+            C1260i.b("yftech", "NameSearchFragment driving from:" + from);
+            if (from == 8 || from == 3) {
+                pageBack(this.mModuleFrom);
+            } else {
+                backTo(17, null);
+            }
+        } else {
+            backTo(17, null);
+        }
+        C1342a.a().d();
+    }
+
+    public void stopDriving() {
+    }
+
+    private void dismissAllDialog() {
+        if (!(mActivity == null || mActivity.isFinishing())) {
+            C1307e.a().c();
+        }
+        dismissTwoBtnDialog();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/fragment/NameSearchFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

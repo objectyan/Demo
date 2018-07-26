@@ -2,12 +2,5 @@ package com.baidu.che.codriver.util;
 
 import java.io.Serializable;
 
-public abstract interface INoProguard
-  extends Serializable
-{}
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/util/INoProguard.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */
+public interface INoProguard extends Serializable {
+}

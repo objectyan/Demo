@@ -5,54 +5,27 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-public class ListViewUtils
-{
-  public static void setListViewHeightBasedOnChildren(ListView paramListView)
-  {
-    ListAdapter localListAdapter = paramListView.getAdapter();
-    if (localListAdapter == null) {
-      return;
-    }
-    int j = 0;
-    int i = 0;
-    int m = localListAdapter.getCount();
-    for (;;)
-    {
-      if (i >= m) {
-        break label91;
-      }
-      localObject = null;
-      try
-      {
-        View localView = localListAdapter.getView(i, null, paramListView);
-        localObject = localView;
-      }
-      catch (Exception localException)
-      {
-        for (;;)
-        {
-          int k;
-          localException.printStackTrace();
+public class ListViewUtils {
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter != null) {
+            int totalHeight = 0;
+            int len = listAdapter.getCount();
+            for (int i = 0; i < len; i++) {
+                View listItem = null;
+                try {
+                    listItem = listAdapter.getView(i, null, listView);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (listItem != null) {
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+            }
+            LayoutParams params = listView.getLayoutParams();
+            params.height = (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + totalHeight;
+            listView.setLayoutParams(params);
         }
-      }
-      k = j;
-      if (localObject != null)
-      {
-        ((View)localObject).measure(0, 0);
-        k = j + ((View)localObject).getMeasuredHeight();
-      }
-      i += 1;
-      j = k;
     }
-    label91:
-    Object localObject = paramListView.getLayoutParams();
-    ((ViewGroup.LayoutParams)localObject).height = (paramListView.getDividerHeight() * (localListAdapter.getCount() - 1) + j);
-    paramListView.setLayoutParams((ViewGroup.LayoutParams)localObject);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/util/ListViewUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

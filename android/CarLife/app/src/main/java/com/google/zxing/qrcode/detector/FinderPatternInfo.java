@@ -1,31 +1,25 @@
 package com.google.zxing.qrcode.detector;
 
-public final class FinderPatternInfo
-{
-  private final FinderPattern bottomLeft = paramArrayOfFinderPattern[0];
-  private final FinderPattern topLeft = paramArrayOfFinderPattern[1];
-  private final FinderPattern topRight = paramArrayOfFinderPattern[2];
-  
-  public FinderPatternInfo(FinderPattern[] paramArrayOfFinderPattern) {}
-  
-  public FinderPattern getBottomLeft()
-  {
-    return this.bottomLeft;
-  }
-  
-  public FinderPattern getTopLeft()
-  {
-    return this.topLeft;
-  }
-  
-  public FinderPattern getTopRight()
-  {
-    return this.topRight;
-  }
+public final class FinderPatternInfo {
+    private final FinderPattern bottomLeft;
+    private final FinderPattern topLeft;
+    private final FinderPattern topRight;
+
+    public FinderPatternInfo(FinderPattern[] patternCenters) {
+        this.bottomLeft = patternCenters[0];
+        this.topLeft = patternCenters[1];
+        this.topRight = patternCenters[2];
+    }
+
+    public FinderPattern getBottomLeft() {
+        return this.bottomLeft;
+    }
+
+    public FinderPattern getTopLeft() {
+        return this.topLeft;
+    }
+
+    public FinderPattern getTopRight() {
+        return this.topRight;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/detector/FinderPatternInfo.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

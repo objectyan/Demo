@@ -2,307 +2,252 @@ package com.baidu.mapframework.common.mapview;
 
 import android.text.TextUtils;
 import com.baidu.mapframework.common.config.GlobalConfig;
-import com.baidu.platform.comapi.c;
+import com.baidu.navi.util.SearchParamKey;
+import com.baidu.platform.comapi.C2907c;
 import com.baidu.platform.comapi.map.MapController;
-import com.baidu.platform.comapi.map.MapGLSurfaceView;
 import com.baidu.platform.comapi.map.MapStatus;
 import com.baidu.platform.comapi.map.config.Preferences;
-import com.baidu.platform.comapi.util.f;
-import com.baidu.platform.comjni.map.basemap.AppBaseMap;
+import com.baidu.platform.comapi.util.C2911f;
 import org.json.JSONObject;
 
-public final class MapViewConfig
-{
-  private static boolean b = false;
-  private Preferences a = Preferences.build(c.f(), "mapview_conf");
-  private PositionStatus c;
-  private String d = "";
-  
-  public static MapViewConfig getInstance()
-  {
-    return Holder.a;
-  }
-  
-  public int getCenterPtX()
-  {
-    return this.a.getInt("map_centerptx", 12958162);
-  }
-  
-  public int getCenterPtY()
-  {
-    return this.a.getInt("map_centerpty", 4825907);
-  }
-  
-  public int getCenterPtZ()
-  {
-    return this.a.getInt("map_centerptz", 0);
-  }
-  
-  public int getGestureIntervalTime()
-  {
-    return this.a.getInt("gesture_interval_time", 0);
-  }
-  
-  public long getGestureStartTime()
-  {
-    return this.a.getLong("gesture_start_time", 0L).longValue();
-  }
-  
-  public boolean getIndoorSharePre(String paramString)
-  {
-    return this.a.getBoolean(paramString, false);
-  }
-  
-  public float getLevel()
-  {
-    return this.a.getFloat("map_level", 12.0F);
-  }
-  
-  public MapMode getMapMode()
-  {
-    return MapMode.valueOf(this.a.getString("map_mode", MapMode._2D.name()));
-  }
-  
-  public float getOverlook()
-  {
-    return this.a.getFloat("map_overlook", 0.0F);
-  }
-  
-  public PositionStatus getPositionStatus()
-  {
-    if ((!b) || (this.c == null))
-    {
-      setPositionStatus(PositionStatus.NORMAL);
-      return PositionStatus.NORMAL;
-    }
-    return this.c;
-  }
-  
-  public boolean getPredictTrafficGuideOpen()
-  {
-    return this.a.getBoolean("predict_traffic_guide_open", false);
-  }
-  
-  public boolean getPredictTrafficTipOpen()
-  {
-    return this.a.getBoolean("predict_traffic_tip_open", false);
-  }
-  
-  public boolean getPredictTrafficUserOpen()
-  {
-    return this.a.getBoolean("predict_traffic_user_open", false);
-  }
-  
-  public int getPredictType()
-  {
-    return this.a.getInt("predict_type", 0);
-  }
-  
-  public float getRotation()
-  {
-    return this.a.getFloat("map_rotation", 0.0F);
-  }
-  
-  public boolean getTrafficOpenWhenForeground()
-  {
-    return this.a.getBoolean("is_traffic_fgd", false);
-  }
-  
-  public void initTraffic(int paramInt)
-  {
-    String str;
-    if ((!this.a.contains("is_traffic")) || (shouldTurnOnTraffic()))
-    {
-      setShouldTurnOnTraffic(false);
-      str = MapViewFactory.getInstance().getMapView().getController().getBaseMap().GetCityInfoByID(paramInt);
-    }
-    try
-    {
-      if (new JSONObject(str).getInt("its") == 1) {
-        setTraffic(true);
-      }
-      return;
-    }
-    catch (Exception localException)
-    {
-      f.a(getClass().getName(), localException.getMessage(), localException);
-    }
-  }
-  
-  public boolean isPredictCity(String paramString)
-  {
-    Object localObject = this.d;
-    if (TextUtils.isEmpty((CharSequence)localObject)) {}
-    for (;;)
-    {
-      return false;
-      localObject = ((String)localObject).split(",");
-      int i = 0;
-      while (i < localObject.length)
-      {
-        if (localObject[i].equals(paramString)) {
-          return true;
+public final class MapViewConfig {
+    /* renamed from: b */
+    private static boolean f18776b = false;
+    /* renamed from: a */
+    private Preferences f18777a;
+    /* renamed from: c */
+    private PositionStatus f18778c;
+    /* renamed from: d */
+    private String f18779d;
+
+    private static class Holder {
+        /* renamed from: a */
+        static final MapViewConfig f18773a = new MapViewConfig();
+
+        private Holder() {
         }
-        i += 1;
-      }
     }
-  }
-  
-  public boolean isSupportPredict()
-  {
-    return isPredictCity(String.valueOf(GlobalConfig.getInstance().getLastLocationCityCode()));
-  }
-  
-  public boolean isTraffic()
-  {
-    return this.a.getBoolean("is_traffic", false);
-  }
-  
-  public void saveGestureIntervalTime(int paramInt)
-  {
-    this.a.putInt("gesture_interval_time", paramInt);
-  }
-  
-  public void saveGestureStartTime(long paramLong)
-  {
-    this.a.putLong("gesture_start_time", paramLong);
-  }
-  
-  public void saveMapStatus(MapStatus paramMapStatus)
-  {
-    if (paramMapStatus != null)
-    {
-      this.a.putFloat("map_level", paramMapStatus.level);
-      this.a.putFloat("map_rotation", paramMapStatus.rotation);
-      this.a.putFloat("map_overlook", paramMapStatus.overlooking);
-      this.a.putInt("map_centerptx", (int)paramMapStatus.centerPtX);
-      this.a.putInt("map_centerpty", (int)paramMapStatus.centerPtY);
-      this.a.putInt("map_centerptz", (int)paramMapStatus.centerPtZ);
+
+    public enum MapMode {
+        SATELLITE,
+        _2D,
+        _3D
     }
-  }
-  
-  public void setCenterPtX(int paramInt)
-  {
-    this.a.putInt("map_centerptx", paramInt);
-  }
-  
-  public void setCenterPtY(int paramInt)
-  {
-    this.a.putInt("map_centerpty", paramInt);
-  }
-  
-  public void setCenterPtZ(int paramInt)
-  {
-    this.a.putInt("map_centerptz", paramInt);
-  }
-  
-  public void setIndoorSharePre(String paramString, boolean paramBoolean)
-  {
-    this.a.putBoolean(paramString, paramBoolean);
-  }
-  
-  public void setLevel(float paramFloat)
-  {
-    this.a.putFloat("map_level", paramFloat);
-  }
-  
-  public void setMapMode(MapMode paramMapMode)
-  {
-    this.a.putString("map_mode", paramMapMode.name());
-  }
-  
-  public void setOverlook(float paramFloat)
-  {
-    this.a.putFloat("map_overlook", paramFloat);
-  }
-  
-  public void setPositionStatus(PositionStatus paramPositionStatus)
-  {
-    boolean bool = true;
-    b = true;
-    if (paramPositionStatus == PositionStatus.COMPASS) {}
-    for (;;)
-    {
-      MapController.isCompass = bool;
-      this.c = paramPositionStatus;
-      return;
-      bool = false;
+
+    public enum PositionStatus {
+        NORMAL,
+        FOLLOWING,
+        COMPASS,
+        LOCATING,
+        TRACKING
     }
-  }
-  
-  public void setPredictCitys(String paramString)
-  {
-    this.d = paramString;
-  }
-  
-  public void setPredictTrafficGuideOpen(boolean paramBoolean)
-  {
-    this.a.putBoolean("predict_traffic_guide_open", paramBoolean);
-  }
-  
-  public void setPredictTrafficTipOpen(boolean paramBoolean)
-  {
-    this.a.putBoolean("predict_traffic_tip_open", paramBoolean);
-  }
-  
-  public void setPredictTrafficUserOpen(boolean paramBoolean)
-  {
-    this.a.putBoolean("predict_traffic_user_open", paramBoolean);
-  }
-  
-  public void setPredictType(int paramInt)
-  {
-    this.a.putInt("predict_type", paramInt);
-  }
-  
-  public void setRotation(float paramFloat)
-  {
-    this.a.putFloat("map_rotation", paramFloat);
-  }
-  
-  public void setShouldTurnOnTraffic(boolean paramBoolean)
-  {
-    this.a.putBoolean("should_open_traffic", paramBoolean);
-  }
-  
-  public void setTraffic(boolean paramBoolean)
-  {
-    this.a.putBoolean("is_traffic", paramBoolean);
-  }
-  
-  public void setTrafficOpenWhenForeground(boolean paramBoolean)
-  {
-    this.a.putBoolean("is_traffic_fgd", paramBoolean);
-  }
-  
-  public boolean shouldTurnOnTraffic()
-  {
-    return this.a.getBoolean("should_open_traffic", false);
-  }
-  
-  private static class Holder
-  {
-    static final MapViewConfig a = new MapViewConfig(null);
-  }
-  
-  public static enum MapMode
-  {
-    private MapMode() {}
-  }
-  
-  public static enum PositionStatus
-  {
-    static
-    {
-      FOLLOWING = new PositionStatus("FOLLOWING", 1);
+
+    private MapViewConfig() {
+        this.f18779d = "";
+        this.f18777a = Preferences.build(C2907c.f(), "mapview_conf");
     }
-    
-    private PositionStatus() {}
-  }
+
+    public static MapViewConfig getInstance() {
+        return Holder.f18773a;
+    }
+
+    public PositionStatus getPositionStatus() {
+        if (f18776b && this.f18778c != null) {
+            return this.f18778c;
+        }
+        setPositionStatus(PositionStatus.NORMAL);
+        return PositionStatus.NORMAL;
+    }
+
+    public void setPositionStatus(PositionStatus positionStatus) {
+        boolean z = true;
+        f18776b = true;
+        if (positionStatus != PositionStatus.COMPASS) {
+            z = false;
+        }
+        MapController.isCompass = z;
+        this.f18778c = positionStatus;
+    }
+
+    public boolean isTraffic() {
+        return this.f18777a.getBoolean("is_traffic", false);
+    }
+
+    public void initTraffic(int cityId) {
+        if (!this.f18777a.contains("is_traffic") || shouldTurnOnTraffic()) {
+            setShouldTurnOnTraffic(false);
+            try {
+                if (new JSONObject(MapViewFactory.getInstance().getMapView().getController().getBaseMap().GetCityInfoByID(cityId)).getInt("its") == 1) {
+                    setTraffic(true);
+                }
+            } catch (Exception e) {
+                C2911f.a(getClass().getName(), e.getMessage(), e);
+            }
+        }
+    }
+
+    public void setTraffic(boolean mIsTraffic) {
+        this.f18777a.putBoolean("is_traffic", mIsTraffic);
+    }
+
+    public void setPredictType(int type) {
+        this.f18777a.putInt("predict_type", type);
+    }
+
+    public int getPredictType() {
+        return this.f18777a.getInt("predict_type", 0);
+    }
+
+    public void setTrafficOpenWhenForeground(boolean open) {
+        this.f18777a.putBoolean("is_traffic_fgd", open);
+    }
+
+    public boolean getTrafficOpenWhenForeground() {
+        return this.f18777a.getBoolean("is_traffic_fgd", false);
+    }
+
+    public void setPredictTrafficGuideOpen(boolean open) {
+        this.f18777a.putBoolean("predict_traffic_guide_open", open);
+    }
+
+    public boolean getPredictTrafficGuideOpen() {
+        return this.f18777a.getBoolean("predict_traffic_guide_open", false);
+    }
+
+    public void setPredictTrafficTipOpen(boolean open) {
+        this.f18777a.putBoolean("predict_traffic_tip_open", open);
+    }
+
+    public boolean getPredictTrafficTipOpen() {
+        return this.f18777a.getBoolean("predict_traffic_tip_open", false);
+    }
+
+    public void setPredictTrafficUserOpen(boolean open) {
+        this.f18777a.putBoolean("predict_traffic_user_open", open);
+    }
+
+    public boolean getPredictTrafficUserOpen() {
+        return this.f18777a.getBoolean("predict_traffic_user_open", false);
+    }
+
+    public void setPredictCitys(String citys) {
+        this.f18779d = citys;
+    }
+
+    public boolean isSupportPredict() {
+        return isPredictCity(String.valueOf(GlobalConfig.getInstance().getLastLocationCityCode()));
+    }
+
+    public boolean isPredictCity(String city) {
+        String citys = this.f18779d;
+        if (TextUtils.isEmpty(citys)) {
+            return false;
+        }
+        String[] cityArr = citys.split(",");
+        for (String equals : cityArr) {
+            if (equals.equals(city)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public MapMode getMapMode() {
+        return MapMode.valueOf(this.f18777a.getString("map_mode", MapMode._2D.name()));
+    }
+
+    public void setMapMode(MapMode newMode) {
+        this.f18777a.putString("map_mode", newMode.name());
+    }
+
+    public float getLevel() {
+        return this.f18777a.getFloat(SearchParamKey.MAP_LEVEL, 12.0f);
+    }
+
+    public void setLevel(float level) {
+        this.f18777a.putFloat(SearchParamKey.MAP_LEVEL, level);
+    }
+
+    public float getRotation() {
+        return this.f18777a.getFloat("map_rotation", 0.0f);
+    }
+
+    public void setRotation(float rotation) {
+        this.f18777a.putFloat("map_rotation", rotation);
+    }
+
+    public float getOverlook() {
+        return this.f18777a.getFloat("map_overlook", 0.0f);
+    }
+
+    public void setOverlook(float overlook) {
+        this.f18777a.putFloat("map_overlook", overlook);
+    }
+
+    public int getCenterPtX() {
+        return this.f18777a.getInt("map_centerptx", 12958162);
+    }
+
+    public void setCenterPtX(int x) {
+        this.f18777a.putInt("map_centerptx", x);
+    }
+
+    public int getCenterPtY() {
+        return this.f18777a.getInt("map_centerpty", 4825907);
+    }
+
+    public void setCenterPtY(int y) {
+        this.f18777a.putInt("map_centerpty", y);
+    }
+
+    public int getCenterPtZ() {
+        return this.f18777a.getInt("map_centerptz", 0);
+    }
+
+    public void setCenterPtZ(int z) {
+        this.f18777a.putInt("map_centerptz", z);
+    }
+
+    public void saveMapStatus(MapStatus mapStatus) {
+        if (mapStatus != null) {
+            this.f18777a.putFloat(SearchParamKey.MAP_LEVEL, mapStatus.level);
+            this.f18777a.putFloat("map_rotation", (float) mapStatus.rotation);
+            this.f18777a.putFloat("map_overlook", (float) mapStatus.overlooking);
+            this.f18777a.putInt("map_centerptx", (int) mapStatus.centerPtX);
+            this.f18777a.putInt("map_centerpty", (int) mapStatus.centerPtY);
+            this.f18777a.putInt("map_centerptz", (int) mapStatus.centerPtZ);
+        }
+    }
+
+    public void saveGestureStartTime(long time) {
+        this.f18777a.putLong("gesture_start_time", time);
+    }
+
+    public long getGestureStartTime() {
+        return this.f18777a.getLong("gesture_start_time", 0).longValue();
+    }
+
+    public void saveGestureIntervalTime(int time) {
+        this.f18777a.putInt("gesture_interval_time", time);
+    }
+
+    public int getGestureIntervalTime() {
+        return this.f18777a.getInt("gesture_interval_time", 0);
+    }
+
+    public boolean shouldTurnOnTraffic() {
+        return this.f18777a.getBoolean("should_open_traffic", false);
+    }
+
+    public void setShouldTurnOnTraffic(boolean should) {
+        this.f18777a.putBoolean("should_open_traffic", should);
+    }
+
+    public void setIndoorSharePre(String key, boolean should) {
+        this.f18777a.putBoolean(key, should);
+    }
+
+    public boolean getIndoorSharePre(String key) {
+        return this.f18777a.getBoolean(key, false);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/common/mapview/MapViewConfig.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

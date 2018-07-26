@@ -2,7 +2,6 @@ package com.baidu.navisdk.ui.download.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.offlinedata.BNOfflineDataManager;
 import com.baidu.navisdk.model.datastruct.OfflineDataInfo;
 import com.baidu.navisdk.ui.download.view.BNOfflineDataMergeLoadingView;
@@ -24,1034 +24,728 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import java.util.ArrayList;
 
-public class BNOfflineDataVerticalListAdapter
-  extends BNOfflineDataListAdapter
-{
-  private static final String DOWN_LOAD_LINKAGE_FLAG = "down.load.linkage.flag";
-  public boolean hasClickDataDownLoad = false;
-  public boolean hasClickDataUpdate = false;
-  private BNDialog linkageDialog = null;
-  private Activity mActivity;
-  private Context mContext;
-  private BNOfflineDataAdapterListener mDelegate;
-  private long mDiskSpace = 0L;
-  private ArrayList<OfflineDataInfo> mDownloadedItems;
-  private Boolean mIsUndownload = Boolean.valueOf(true);
-  private long mTotalDownloadSize = 0L;
-  private ArrayList<OfflineDataInfo> mUnDownloadItems;
-  
-  public BNOfflineDataVerticalListAdapter(Activity paramActivity, BNOfflineDataAdapterListener paramBNOfflineDataAdapterListener)
-  {
-    this.mContext = paramActivity.getBaseContext();
-    this.mDelegate = paramBNOfflineDataAdapterListener;
-    this.mActivity = paramActivity;
-    updateData();
-  }
-  
-  private void hasShowLinkageDialog(Context paramContext)
-  {
-    PreferenceHelper.getInstance(paramContext).putBoolean("down.load.linkage.flag", true);
-  }
-  
-  private void setVerticalListBackground(int paramInt, View paramView, ViewHolder paramViewHolder, boolean paramBoolean)
-  {
-    if (paramView == null) {
-      return;
-    }
-    paramView.setBackgroundColor(JarUtils.getResources().getColor(1711800400));
-    if (this.mIsUndownload.booleanValue())
-    {
-      if (paramInt < this.mUnDownloadItems.size())
-      {
-        paramView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407206));
-        paramViewHolder.mListMargin.setVisibility(8);
-      }
-      for (;;)
-      {
-        paramView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407206));
-        paramViewHolder.mTaskStatusIV.setVisibility(0);
-        paramViewHolder.mListMargin.setVisibility(8);
-        return;
-        if (paramInt >= this.mUnDownloadItems.size())
-        {
-          paramView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407206));
-          if (paramBoolean) {
-            paramViewHolder.mListMargin.setVisibility(0);
-          }
-          paramViewHolder.mListDivider.setVisibility(8);
+public class BNOfflineDataVerticalListAdapter extends BNOfflineDataListAdapter {
+    private static final String DOWN_LOAD_LINKAGE_FLAG = "down.load.linkage.flag";
+    public boolean hasClickDataDownLoad = false;
+    public boolean hasClickDataUpdate = false;
+    private BNDialog linkageDialog = null;
+    private Activity mActivity;
+    private Context mContext;
+    private BNOfflineDataAdapterListener mDelegate;
+    private long mDiskSpace = 0;
+    private ArrayList<OfflineDataInfo> mDownloadedItems;
+    private Boolean mIsUndownload = Boolean.valueOf(true);
+    private long mTotalDownloadSize = 0;
+    private ArrayList<OfflineDataInfo> mUnDownloadItems;
+
+    /* renamed from: com.baidu.navisdk.ui.download.adapter.BNOfflineDataVerticalListAdapter$5 */
+    class C43065 implements OnNaviClickListener {
+        C43065() {
         }
-      }
-    }
-    if (paramInt < this.mDownloadedItems.size())
-    {
-      paramView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407206));
-      paramViewHolder.mListMargin.setVisibility(8);
-    }
-    for (;;)
-    {
-      paramViewHolder.mTaskStatusIV.setVisibility(8);
-      return;
-      if (paramInt >= this.mDownloadedItems.size())
-      {
-        paramView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407206));
-        if (paramBoolean) {
-          paramViewHolder.mListMargin.setVisibility(0);
+
+        public void onClick() {
         }
-        paramViewHolder.mListDivider.setVisibility(8);
-      }
     }
-  }
-  
-  private boolean shouldShowLinkageDialog(Context paramContext, int paramInt)
-  {
-    return !BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt);
-  }
-  
-  private void showLinkageDialog(Activity paramActivity, boolean paramBoolean1, int paramInt, boolean paramBoolean2)
-  {
-    showLinkageDialog(paramActivity, paramBoolean1, paramInt, paramBoolean2, false);
-  }
-  
-  private void showLinkageDialog(Activity paramActivity, final boolean paramBoolean1, final int paramInt, final boolean paramBoolean2, final boolean paramBoolean3)
-  {
-    if (paramActivity == null) {
-      return;
+
+    /* renamed from: com.baidu.navisdk.ui.download.adapter.BNOfflineDataVerticalListAdapter$9 */
+    class C43109 implements OnClickListener {
+        C43109() {
+        }
+
+        public void onClick(View v) {
+            OfflineDataInfo model = (OfflineDataInfo) v.getTag();
+            if (model != null) {
+                BNOfflineDataVerticalListAdapter.this.mDelegate.itemDeleteButtomClicked(model);
+            }
+        }
     }
-    if (this.linkageDialog != null) {
-      dimissLinkageDialog();
+
+    public static class ViewHolder {
+        RelativeLayout mInfoLayout;
+        TextView mInfoTV;
+        View mListDivider;
+        View mListMargin;
+        BNOfflineDataMergeLoadingView mMergeloadView;
+        TextView mNameTV;
+        ProgressBar mProgressBarDownloading;
+        ProgressBar mProgressBarDownloadingNight;
+        ProgressBar mProgressBarSuspend;
+        ProgressBar mProgressBarSuspendNight;
+        ImageView mTaskStatusIV;
     }
-    try
-    {
-      this.linkageDialog = new BNDialog(paramActivity).setTitleText(JarUtils.getResources().getString(1711669753)).setContentMessage(JarUtils.getResources().getString(1711669845)).setSecondBtnText(JarUtils.getResources().getString(1711669846)).setOnSecondBtnClickListener(new BNDialog.OnNaviClickListener()
-      {
-        public void onClick()
-        {
-          if (paramBoolean3)
-          {
-            if (paramBoolean1)
-            {
-              BNOfflineDataManager.getInstance().downloadProvinceData(0);
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-              }
-            }
-            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt)) {
-              BNOfflineDataManager.getInstance().startDownBaseMapData(paramInt);
-            }
-            BNOfflineDataManager.getInstance().downloadProvinceData(paramInt);
-          }
-          for (;;)
-          {
-            BNOfflineDataVerticalListAdapter.this.dimissLinkageDialog();
-            return;
-            if (paramBoolean2) {
-              break;
-            }
-            BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
-            if (paramBoolean1)
-            {
-              BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus2", null)new BNWorkerConfig
-              {
-                protected String execute()
-                {
-                  BNOfflineDataManager.getInstance().startDownloadRequest(0);
-                  try
-                  {
-                    Thread.sleep(300L);
-                    BNOfflineDataManager.getInstance().startDownloadRequest(BNOfflineDataVerticalListAdapter.11.this.val$provinceId);
-                    return null;
-                  }
-                  catch (Exception localException)
-                  {
-                    for (;;) {}
-                  }
+
+    public Boolean getmIsUndownload() {
+        return this.mIsUndownload;
+    }
+
+    public long getmTotalDownloadSize() {
+        return this.mTotalDownloadSize;
+    }
+
+    public long getmDiskSpace() {
+        return this.mDiskSpace;
+    }
+
+    public BNOfflineDataVerticalListAdapter(Activity activity, BNOfflineDataAdapterListener delegate) {
+        this.mContext = activity.getBaseContext();
+        this.mDelegate = delegate;
+        this.mActivity = activity;
+        updateData();
+    }
+
+    public void updateData(boolean checkMapData) {
+        this.mUnDownloadItems = BNOfflineDataManager.getInstance().getUndowloadList();
+        this.mDownloadedItems = BNOfflineDataManager.getInstance().getDownloadedList();
+        if (checkMapData) {
+            long start = System.currentTimeMillis();
+            if (this.mDownloadedItems != null && this.mDownloadedItems.size() > 0) {
+                int i = 0;
+                while (i < this.mDownloadedItems.size()) {
+                    if (((OfflineDataInfo) this.mDownloadedItems.get(i)).mTaskStatus != 10) {
+                        LogUtil.m15791e("DataOffLine:", "start check " + ((OfflineDataInfo) this.mDownloadedItems.get(i)).mProvinceId);
+                        if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(((OfflineDataInfo) this.mDownloadedItems.get(i)).mProvinceId)) {
+                            ((OfflineDataInfo) this.mDownloadedItems.get(i)).mTaskStatus = 10;
+                            ((OfflineDataInfo) this.mDownloadedItems.get(i)).isFakeUpdate = true;
+                            ((OfflineDataInfo) this.mDownloadedItems.get(i)).mStrSize = "500";
+                            ((OfflineDataInfo) this.mDownloadedItems.get(i)).mIsNewVer = true;
+                        }
+                        i++;
+                    } else if (((OfflineDataInfo) this.mDownloadedItems.get(i)).mProvinceId == 0 && ((OfflineDataInfo) this.mDownloadedItems.get(i)).isFakeUpdate && BNOfflineDataManager.getInstance().checkBaseMapDataExit(((OfflineDataInfo) this.mDownloadedItems.get(i)).mProvinceId)) {
+                        ((OfflineDataInfo) this.mDownloadedItems.get(i)).mTaskStatus = 12;
+                        BNOfflineDataManager.getInstance().updateUpdateFinish(0, 100);
+                    }
                 }
-              }, new BNWorkerConfig(101, 0));
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-              }
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt)) {
-                BNOfflineDataManager.getInstance().startDownBaseMapData(paramInt);
-              }
             }
-            else
-            {
-              BNOfflineDataManager.getInstance().startDownloadRequest(paramInt);
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-              }
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt)) {
-                BNOfflineDataManager.getInstance().startDownBaseMapData(paramInt);
-              }
+            LogUtil.m15791e("testDelay:", "updateData coast:" + (System.currentTimeMillis() - start));
+            LogUtil.m15791e("OfflineData", "updateData  mUnDownloadItems: " + this.mUnDownloadItems.size() + "  mDownloadedItems: " + this.mDownloadedItems.size());
+        }
+    }
+
+    public void updateData() {
+        updateData(false);
+    }
+
+    public void updateDiskSpace() {
+        this.mTotalDownloadSize = 0;
+        this.mDiskSpace = 0;
+        int downloadSize = this.mDownloadedItems.size();
+        int unDownloadSize = this.mUnDownloadItems.size();
+        int i = 0;
+        while (i < downloadSize) {
+            try {
+                OfflineDataInfo mode = (OfflineDataInfo) this.mDownloadedItems.get(i);
+                int tempDownloadUpSize = (int) (((double) mode.mUpSize) * (((double) mode.mUpProgressBy10) / 1000.0d));
+                this.mTotalDownloadSize += (long) mode.mSize;
+                this.mTotalDownloadSize += (long) tempDownloadUpSize;
+                i++;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-          }
-          int k = 0;
-          ArrayList localArrayList = BNOfflineDataManager.getInstance().getDownloadedList();
-          int j = k;
-          int i;
-          if (localArrayList != null)
-          {
-            j = k;
-            if (localArrayList.size() > 0) {
-              i = 0;
-            }
-          }
-          for (;;)
-          {
-            j = k;
-            if (i < localArrayList.size())
-            {
-              if ((((OfflineDataInfo)localArrayList.get(i)).mTaskStatus == 10) && (((OfflineDataInfo)localArrayList.get(i)).mProvinceId == paramInt) && (((OfflineDataInfo)localArrayList.get(i)).isFakeUpdate))
-              {
-                ((OfflineDataInfo)localArrayList.get(i)).mTaskStatus = 12;
-                BNOfflineDataManager.getInstance().sendUpdateSucessMsg(paramInt);
-                j = 1;
-              }
-            }
-            else
-            {
-              if (j == 0)
-              {
-                BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
-                BNOfflineDataManager.getInstance().updateProvinceData(paramInt);
-              }
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-              }
-              if (BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt)) {
-                break;
-              }
-              BNOfflineDataManager.getInstance().startDownBaseMapData(paramInt);
-              break;
-            }
-            i += 1;
-          }
         }
-      }).setFirstBtnText(JarUtils.getResources().getString(1711669755)).setOnFirstBtnClickListener(new BNDialog.OnNaviClickListener()
-      {
-        public void onClick()
-        {
-          BNOfflineDataVerticalListAdapter.this.dimissLinkageDialog();
-          BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 1);
-          BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 0);
+        for (int j = 0; j < unDownloadSize; j++) {
+            mode = (OfflineDataInfo) this.mUnDownloadItems.get(j);
+            this.mTotalDownloadSize += (long) ((int) (((double) mode.mSize) * (((double) mode.mProgressBy10) / 1000.0d)));
         }
-      });
-      hasShowLinkageDialog(paramActivity);
-      this.linkageDialog.show();
-      return;
+        this.mDiskSpace = SDCardUtils.getSdcardSpace();
+        LogUtil.m15791e("OfflineData", "mDiskSpace: " + this.mDiskSpace + "  mTotalDownloadSize: " + this.mTotalDownloadSize);
     }
-    catch (Exception paramActivity)
-    {
-      paramActivity.printStackTrace();
-      BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 1);
-      BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 0);
+
+    public void updateUserClickStatus(Boolean isUndownload) {
+        this.mIsUndownload = isUndownload;
     }
-  }
-  
-  public void checkToStartDownloadRequest(OfflineDataInfo paramOfflineDataInfo, boolean paramBoolean)
-  {
-    int i = -1;
-    if (paramOfflineDataInfo != null)
-    {
-      double d = paramOfflineDataInfo.mProgress / 100.0D;
-      i = (int)(paramOfflineDataInfo.mSize * d);
-      i = SDCardUtils.handleOfflinePathError(paramOfflineDataInfo.mSize - i, true);
-    }
-    if (i == 1) {}
-    try
-    {
-      new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(1711669753)).setContentMessage(JarUtils.getResources().getString(1711669777)).setFirstBtnText(JarUtils.getResources().getString(1711669754)).show();
-      return;
-    }
-    catch (Exception paramOfflineDataInfo) {}
-    startCheckNetStatus(paramOfflineDataInfo.mProvinceId, paramBoolean);
-    return;
-  }
-  
-  public void chooseDownloadStrategy(final OfflineDataInfo paramOfflineDataInfo, final boolean paramBoolean)
-  {
-    int i = -1;
-    if (paramOfflineDataInfo != null)
-    {
-      double d = paramOfflineDataInfo.mProgress / 100.0D;
-      i = (int)(paramOfflineDataInfo.mSize * d);
-      i = SDCardUtils.handleOfflinePathError(paramOfflineDataInfo.mSize - i, true);
-    }
-    if (i == 1) {}
-    try
-    {
-      new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(1711669753)).setContentMessage(JarUtils.getResources().getString(1711669777)).setFirstBtnText(JarUtils.getResources().getString(1711669754)).show();
-      return;
-    }
-    catch (Exception paramOfflineDataInfo) {}
-    if (i != 0)
-    {
-      TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(1711669776));
-      return;
-    }
-    if (!NetworkUtils.isNetworkAvailable(this.mContext))
-    {
-      TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(1711669774));
-      return;
-    }
-    if (NetworkUtils.isTypeNetworkAvailable(this.mContext, 1))
-    {
-      if ((paramOfflineDataInfo.mTaskStatus != 4) && (shouldShowLinkageDialog(this.mContext, paramOfflineDataInfo.mProvinceId)))
-      {
-        showLinkageDialog(this.mActivity, paramBoolean, paramOfflineDataInfo.mProvinceId, false, true);
-        return;
-      }
-      if (paramBoolean)
-      {
-        BNOfflineDataManager.getInstance().downloadProvinceData(0);
-        if ((paramOfflineDataInfo.mTaskStatus != 4) && (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0))) {
-          BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+
+    public void checkToStartDownloadRequest(OfflineDataInfo taskModel, boolean downloadCommonFirst) {
+        int state = -1;
+        if (taskModel != null) {
+            state = SDCardUtils.handleOfflinePathError((long) (taskModel.mSize - ((int) (((double) taskModel.mSize) * (((double) taskModel.mProgress) / 100.0d)))), true);
         }
-      }
-      BNOfflineDataManager.getInstance().downloadProvinceData(paramOfflineDataInfo.mProvinceId);
-      return;
-    }
-    try
-    {
-      new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(1711669753)).setContentMessage(JarUtils.getResources().getString(1711669775)).setSecondBtnText(JarUtils.getResources().getString(1711669754)).setOnSecondBtnClickListener(new BNDialog.OnNaviClickListener()
-      {
-        public void onClick()
-        {
-          if ((paramOfflineDataInfo.mTaskStatus != 4) && (BNOfflineDataVerticalListAdapter.this.shouldShowLinkageDialog(BNOfflineDataVerticalListAdapter.this.mContext, paramOfflineDataInfo.mProvinceId)))
-          {
-            BNOfflineDataVerticalListAdapter.this.showLinkageDialog(BNOfflineDataVerticalListAdapter.this.mActivity, paramBoolean, paramOfflineDataInfo.mProvinceId, false, true);
-            return;
-          }
-          if (paramBoolean)
-          {
-            BNOfflineDataManager.getInstance().downloadProvinceData(0);
-            if ((paramOfflineDataInfo.mTaskStatus != 4) && (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0))) {
-              BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-            }
-          }
-          BNOfflineDataManager.getInstance().downloadProvinceData(paramOfflineDataInfo.mProvinceId);
-        }
-      }).setFirstBtnText(JarUtils.getResources().getString(1711669755)).setOnFirstBtnClickListener(new BNDialog.OnNaviClickListener()
-      {
-        public void onClick() {}
-      }).show();
-      return;
-    }
-    catch (Exception paramOfflineDataInfo) {}
-  }
-  
-  public void chooseUpdateStrategy(final OfflineDataInfo paramOfflineDataInfo)
-  {
-    int i = -1;
-    if (paramOfflineDataInfo != null)
-    {
-      double d = paramOfflineDataInfo.mUpProgress / 100.0D;
-      i = (int)(paramOfflineDataInfo.mUpSize * d);
-      i = SDCardUtils.handleOfflinePathError(paramOfflineDataInfo.mUpSize - i, true);
-    }
-    if (i == 1) {}
-    try
-    {
-      new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(1711669753)).setContentMessage(JarUtils.getResources().getString(1711669777)).setFirstBtnText(JarUtils.getResources().getString(1711669754)).show();
-      BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 1);
-      BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 0);
-      do
-      {
-        return;
-        if (i != 0)
-        {
-          TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(1711669776));
-          BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 1);
-          BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 0);
-          return;
-        }
-        if (!NetworkUtils.isNetworkAvailable(this.mContext))
-        {
-          TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(1711669774));
-          BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 1);
-          BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 0);
-          return;
-        }
-        if (!NetworkUtils.isTypeNetworkAvailable(this.mContext, 1)) {
-          break;
-        }
-        if (shouldShowLinkageDialog(this.mContext, paramOfflineDataInfo.mProvinceId))
-        {
-          showLinkageDialog(this.mActivity, false, paramOfflineDataInfo.mProvinceId, true);
-          return;
-        }
-        BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
-        BNOfflineDataManager.getInstance().updateProvinceData(paramOfflineDataInfo.mProvinceId);
-        if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-          BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-        }
-      } while (BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramOfflineDataInfo.mProvinceId));
-      BNOfflineDataManager.getInstance().startDownBaseMapData(paramOfflineDataInfo.mProvinceId);
-      return;
-      try
-      {
-        new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(1711669753)).setContentMessage(JarUtils.getResources().getString(1711669775)).setSecondBtnText(JarUtils.getResources().getString(1711669754)).setOnSecondBtnClickListener(new BNDialog.OnNaviClickListener()
-        {
-          public void onClick()
-          {
-            if (paramOfflineDataInfo.mProvinceId == 0)
-            {
-              BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
-              BNOfflineDataManager.getInstance().updateProvinceData(paramOfflineDataInfo.mProvinceId);
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-              }
-            }
-            do
-            {
-              return;
-              if (BNOfflineDataVerticalListAdapter.this.shouldShowLinkageDialog(BNOfflineDataVerticalListAdapter.this.mContext, paramOfflineDataInfo.mProvinceId))
-              {
-                BNOfflineDataVerticalListAdapter.this.showLinkageDialog(BNOfflineDataVerticalListAdapter.this.mActivity, false, paramOfflineDataInfo.mProvinceId, true);
+        if (state == 1) {
+            try {
+                new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_notification)).setContentMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_od_sdcard_storage_deficiency)).setFirstBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_confirm)).show();
                 return;
-              }
-              BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
-              BNOfflineDataManager.getInstance().updateProvinceData(paramOfflineDataInfo.mProvinceId);
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-              }
-            } while (BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramOfflineDataInfo.mProvinceId));
-            BNOfflineDataManager.getInstance().startDownBaseMapData(paramOfflineDataInfo.mProvinceId);
-          }
-        }).setFirstBtnText(JarUtils.getResources().getString(1711669755)).setOnFirstBtnClickListener(new BNDialog.OnNaviClickListener()
-        {
-          public void onClick()
-          {
-            BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 1);
-            BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 0);
-          }
-        }).show();
-        return;
-      }
-      catch (Exception localException1)
-      {
-        BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 1);
-        BNOfflineDataManager.getInstance().memoryUserOper(paramOfflineDataInfo.mProvinceId, false, 0);
-        return;
-      }
-    }
-    catch (Exception localException2)
-    {
-      for (;;) {}
-    }
-  }
-  
-  public void dimissLinkageDialog()
-  {
-    if (this.linkageDialog != null)
-    {
-      this.linkageDialog.dismiss();
-      this.linkageDialog = null;
-    }
-  }
-  
-  public int getCount()
-  {
-    if (this.mIsUndownload.booleanValue()) {
-      return this.mUnDownloadItems.size();
-    }
-    return this.mDownloadedItems.size();
-  }
-  
-  public OfflineDataInfo getDownloadedListModelByPosition(int paramInt)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (this.mUnDownloadItems != null)
-    {
-      localObject1 = localObject2;
-      if (this.mDownloadedItems != null)
-      {
-        if (!this.mIsUndownload.booleanValue()) {
-          break label63;
-        }
-        localObject1 = localObject2;
-        if (paramInt >= 0)
-        {
-          localObject1 = localObject2;
-          if (paramInt < this.mUnDownloadItems.size()) {
-            localObject1 = (OfflineDataInfo)this.mUnDownloadItems.get(paramInt);
-          }
-        }
-      }
-    }
-    label63:
-    do
-    {
-      do
-      {
-        return (OfflineDataInfo)localObject1;
-        localObject1 = localObject2;
-      } while (paramInt < 0);
-      localObject1 = localObject2;
-    } while (paramInt >= this.mDownloadedItems.size());
-    return (OfflineDataInfo)this.mDownloadedItems.get(paramInt);
-  }
-  
-  public Object getItem(int paramInt)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (this.mUnDownloadItems != null)
-    {
-      localObject1 = localObject2;
-      if (this.mDownloadedItems != null)
-      {
-        if (!this.mIsUndownload.booleanValue()) {
-          break label63;
-        }
-        localObject1 = localObject2;
-        if (paramInt >= 0)
-        {
-          localObject1 = localObject2;
-          if (paramInt < this.mUnDownloadItems.size()) {
-            localObject1 = (OfflineDataInfo)this.mUnDownloadItems.get(paramInt);
-          }
-        }
-      }
-    }
-    label63:
-    do
-    {
-      do
-      {
-        return localObject1;
-        localObject1 = localObject2;
-      } while (paramInt < 0);
-      localObject1 = localObject2;
-    } while (paramInt >= this.mDownloadedItems.size());
-    return (OfflineDataInfo)this.mDownloadedItems.get(paramInt);
-  }
-  
-  public long getItemId(int paramInt)
-  {
-    return paramInt;
-  }
-  
-  public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    OfflineDataInfo localOfflineDataInfo = (OfflineDataInfo)getItem(paramInt);
-    if ((paramView == null) || (localOfflineDataInfo == null))
-    {
-      paramView = JarUtils.inflate(this.mActivity, 1711472694, null);
-      if (paramView == null) {
-        try
-        {
-          if (this.mActivity != null)
-          {
-            paramView = new View(this.mActivity);
-            return paramView;
-          }
-          return null;
-        }
-        catch (Exception paramView)
-        {
-          return null;
-        }
-      }
-      paramViewGroup = new ViewHolder();
-      paramViewGroup.mInfoLayout = ((RelativeLayout)paramView.findViewById(1711866353));
-      paramViewGroup.mNameTV = ((TextView)paramView.findViewById(1711866355));
-      paramViewGroup.mInfoTV = ((TextView)paramView.findViewById(1711866356));
-      paramViewGroup.mProgressBarDownloading = ((ProgressBar)paramView.findViewById(1711866357));
-      paramViewGroup.mProgressBarSuspend = ((ProgressBar)paramView.findViewById(1711866359));
-      paramViewGroup.mProgressBarDownloadingNight = ((ProgressBar)paramView.findViewById(1711866358));
-      paramViewGroup.mProgressBarSuspendNight = ((ProgressBar)paramView.findViewById(1711866360));
-      paramViewGroup.mTaskStatusIV = ((ImageView)paramView.findViewById(1711866354));
-      paramViewGroup.mListDivider = paramView.findViewById(1711866362);
-      paramViewGroup.mListMargin = paramView.findViewById(1711866363);
-      paramViewGroup.mMergeloadView = ((BNOfflineDataMergeLoadingView)paramView.findViewById(1711866361));
-      paramView.setTag(paramViewGroup);
-    }
-    for (;;)
-    {
-      boolean bool1 = true;
-      boolean bool2 = true;
-      if ((localOfflineDataInfo != null) && (paramViewGroup != null))
-      {
-        localOfflineDataInfo.formatStatusTips();
-        LogUtil.e("OfflineData", "model.mName: " + localOfflineDataInfo.mName + "  model.mStatusTips: " + localOfflineDataInfo.mStatusTips + "  model.mTaskStatus111: " + localOfflineDataInfo.mTaskStatus + "  model.mDownloadRatio: " + localOfflineDataInfo.mDownloadRatio);
-        paramViewGroup.mInfoLayout.setVisibility(0);
-        paramViewGroup.mInfoTV.setVisibility(0);
-        paramViewGroup.mNameTV.setText(localOfflineDataInfo.mName);
-        paramViewGroup.mNameTV.setTextColor(-13421773);
-        paramViewGroup.mInfoTV.setText(localOfflineDataInfo.mStatusTips);
-        paramViewGroup.mInfoTV.setTextColor(localOfflineDataInfo.mStatusColor);
-        paramViewGroup.mProgressBarDownloading.setVisibility(8);
-        paramViewGroup.mProgressBarDownloadingNight.setVisibility(8);
-        paramViewGroup.mProgressBarSuspend.setVisibility(8);
-        paramViewGroup.mProgressBarSuspendNight.setVisibility(8);
-        paramViewGroup.mMergeloadView.hideLoading();
-        paramViewGroup.mTaskStatusIV.setTag(localOfflineDataInfo);
-        paramViewGroup.mTaskStatusIV.setOnClickListener(new View.OnClickListener()
-        {
-          public void onClick(View paramAnonymousView)
-          {
-            paramAnonymousView = (OfflineDataInfo)paramAnonymousView.getTag();
-            if (paramAnonymousView == null) {
-              return;
+            } catch (Exception e) {
+                return;
             }
-            BNOfflineDataVerticalListAdapter.this.mDelegate.itemDeleteButtomClicked(paramAnonymousView);
-          }
-        });
-        if ((localOfflineDataInfo.mTaskStatus != 5) && (localOfflineDataInfo.mTaskStatus != 1))
-        {
-          bool1 = bool2;
-          if (localOfflineDataInfo.mTaskStatus != 10) {}
         }
-        else
-        {
-          bool1 = false;
-        }
-        bool2 = bool1;
-        switch (localOfflineDataInfo.mTaskStatus)
-        {
-        default: 
-          bool2 = bool1;
-        case 7: 
-        case 14: 
-        case 15: 
-        case 18: 
-          label580:
-          if ((paramView != null) && (paramViewGroup != null)) {
-            setVerticalListBackground(paramInt, paramView, paramViewGroup, bool2);
-          }
-          if ((paramViewGroup == null) || (paramViewGroup.mListDivider == null)) {
-            break;
-          }
-        }
-      }
-      try
-      {
-        paramViewGroup.mListDivider.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407213));
-        return paramView;
-        paramViewGroup = (ViewHolder)paramView.getTag();
-        continue;
-        paramViewGroup.mListDivider.setVisibility(0);
-        paramViewGroup.mTaskStatusIV.setImageDrawable(JarUtils.getResources().getDrawable(1711408076));
-        bool2 = bool1;
-        break label580;
-        paramViewGroup.mTaskStatusIV.setImageDrawable(JarUtils.getResources().getDrawable(1711408078));
-        if (1 != 0)
-        {
-          paramViewGroup.mProgressBarDownloading.setProgress(localOfflineDataInfo.mProgress);
-          paramViewGroup.mProgressBarDownloading.setVisibility(0);
-        }
-        for (;;)
-        {
-          paramViewGroup.mListDivider.setVisibility(8);
-          bool2 = bool1;
-          break;
-          paramViewGroup.mProgressBarDownloadingNight.setProgress(localOfflineDataInfo.mProgress);
-          paramViewGroup.mProgressBarDownloadingNight.setVisibility(0);
-        }
-        paramViewGroup.mTaskStatusIV.setImageDrawable(JarUtils.getResources().getDrawable(1711408078));
-        if (1 != 0)
-        {
-          paramViewGroup.mProgressBarDownloading.setProgress(localOfflineDataInfo.mProgress);
-          paramViewGroup.mProgressBarDownloading.setVisibility(0);
-        }
-        for (;;)
-        {
-          paramViewGroup.mListDivider.setVisibility(8);
-          bool2 = bool1;
-          break;
-          paramViewGroup.mProgressBarDownloadingNight.setProgress(localOfflineDataInfo.mProgress);
-          paramViewGroup.mProgressBarDownloadingNight.setVisibility(0);
-        }
-        if (localOfflineDataInfo.mIsNewVer) {
-          if (1 != 0)
-          {
-            paramViewGroup.mProgressBarSuspend.setProgress(localOfflineDataInfo.mUpProgress);
-            paramViewGroup.mProgressBarSuspend.setVisibility(0);
-          }
-        }
-        for (;;)
-        {
-          paramViewGroup.mListDivider.setVisibility(8);
-          paramViewGroup.mTaskStatusIV.setImageDrawable(JarUtils.getResources().getDrawable(1711408074));
-          bool2 = bool1;
-          break;
-          paramViewGroup.mProgressBarSuspendNight.setProgress(localOfflineDataInfo.mUpProgress);
-          paramViewGroup.mProgressBarSuspendNight.setVisibility(0);
-          continue;
-          if (1 != 0)
-          {
-            paramViewGroup.mProgressBarSuspend.setProgress(localOfflineDataInfo.mProgress);
-            paramViewGroup.mProgressBarSuspend.setVisibility(0);
-          }
-          else
-          {
-            paramViewGroup.mProgressBarSuspendNight.setProgress(localOfflineDataInfo.mProgress);
-            paramViewGroup.mProgressBarSuspendNight.setVisibility(0);
-          }
-        }
-        paramViewGroup.mListDivider.setVisibility(0);
-        bool2 = bool1;
-        break label580;
-        if (1 != 0)
-        {
-          paramViewGroup.mProgressBarSuspend.setProgress(localOfflineDataInfo.mUpProgress);
-          paramViewGroup.mProgressBarSuspend.setVisibility(0);
-        }
-        for (;;)
-        {
-          paramViewGroup.mListDivider.setVisibility(8);
-          bool2 = bool1;
-          break;
-          paramViewGroup.mProgressBarSuspendNight.setProgress(localOfflineDataInfo.mUpProgress);
-          paramViewGroup.mProgressBarSuspendNight.setVisibility(0);
-        }
-        if (1 != 0)
-        {
-          paramViewGroup.mProgressBarDownloading.setProgress(localOfflineDataInfo.mUpProgress);
-          paramViewGroup.mProgressBarDownloading.setVisibility(0);
-        }
-        for (;;)
-        {
-          paramViewGroup.mListDivider.setVisibility(8);
-          bool2 = bool1;
-          break;
-          paramViewGroup.mProgressBarDownloadingNight.setProgress(localOfflineDataInfo.mUpProgress);
-          paramViewGroup.mProgressBarDownloadingNight.setVisibility(0);
-        }
-        paramViewGroup.mListDivider.setVisibility(0);
-        bool2 = bool1;
-        break label580;
-        paramViewGroup.mMergeloadView.showLoading();
-        bool2 = bool1;
-        break label580;
-        paramViewGroup.mListDivider.setVisibility(0);
-        bool2 = bool1;
-        break label580;
-        paramViewGroup.mListDivider.setVisibility(0);
-        bool2 = bool1;
-        break label580;
-        bool2 = bool1;
-        if (paramViewGroup == null) {
-          break label580;
-        }
-        paramViewGroup.mListDivider.setVisibility(8);
-        paramViewGroup.mInfoLayout.setVisibility(8);
-        paramViewGroup.mListMargin.setVisibility(8);
-        bool2 = bool1;
-      }
-      catch (Exception paramViewGroup)
-      {
-        for (;;) {}
-      }
+        startCheckNetStatus(taskModel.mProvinceId, downloadCommonFirst);
     }
-  }
-  
-  public long getmDiskSpace()
-  {
-    return this.mDiskSpace;
-  }
-  
-  public Boolean getmIsUndownload()
-  {
-    return this.mIsUndownload;
-  }
-  
-  public long getmTotalDownloadSize()
-  {
-    return this.mTotalDownloadSize;
-  }
-  
-  public boolean isEnabled(int paramInt)
-  {
-    return true;
-  }
-  
-  public void startCheckNetStatus(final int paramInt, final boolean paramBoolean)
-  {
-    if (!NetworkUtils.isNetworkAvailable(this.mContext))
-    {
-      TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(1711669774));
-      BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 1);
-      BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 0);
-    }
-    do
-    {
-      do
-      {
-        do
-        {
-          return;
-          if (!NetworkUtils.isTypeNetworkAvailable(this.mContext, 1)) {
-            break label312;
-          }
-          if (paramInt != 0) {
-            break;
-          }
-          BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus1", null)new BNWorkerConfig
-          {
-            protected String execute()
-            {
-              BNOfflineDataManager.getInstance().startDownloadRequest(0);
-              try
-              {
-                Thread.sleep(300L);
-                return null;
-              }
-              catch (Exception localException)
-              {
-                for (;;) {}
-              }
+
+    public void startCheckNetStatus(final int provinceId, final boolean downloadCommonFirst) {
+        if (!NetworkUtils.isNetworkAvailable(this.mContext)) {
+            TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(C4048R.string.nsdk_string_od_network_unconnected));
+            BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 1);
+            BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 0);
+        } else if (!NetworkUtils.isTypeNetworkAvailable(this.mContext, 1)) {
+            try {
+                new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_notification)).setContentMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_od_is_wifi_notification)).setSecondBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_confirm)).setOnSecondBtnClickListener(new OnNaviClickListener() {
+                    public void onClick() {
+                        BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
+                        if (provinceId == 0) {
+                            BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus1", null) {
+                                protected String execute() {
+                                    BNOfflineDataManager.getInstance().startDownloadRequest(0);
+                                    try {
+                                        Thread.sleep(300);
+                                    } catch (Exception e) {
+                                    }
+                                    return null;
+                                }
+                            }, new BNWorkerConfig(101, 0));
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                            }
+                        } else if (BNOfflineDataVerticalListAdapter.this.shouldShowLinkageDialog(BNOfflineDataVerticalListAdapter.this.mContext, provinceId)) {
+                            BNOfflineDataVerticalListAdapter.this.showLinkageDialog(BNOfflineDataVerticalListAdapter.this.mActivity, downloadCommonFirst, provinceId, false);
+                        } else {
+                            BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
+                            if (downloadCommonFirst) {
+                                BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus2", null) {
+                                    protected String execute() {
+                                        BNOfflineDataManager.getInstance().startDownloadRequest(0);
+                                        try {
+                                            Thread.sleep(300);
+                                        } catch (Exception e) {
+                                        }
+                                        BNOfflineDataManager.getInstance().startDownloadRequest(provinceId);
+                                        return null;
+                                    }
+                                }, new BNWorkerConfig(101, 0));
+                                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                    BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                                }
+                                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(provinceId)) {
+                                    BNOfflineDataManager.getInstance().startDownBaseMapData(provinceId);
+                                    return;
+                                }
+                                return;
+                            }
+                            BNOfflineDataManager.getInstance().startDownloadRequest(provinceId);
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                            }
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(provinceId)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(provinceId);
+                            }
+                        }
+                    }
+                }).setFirstBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_cancel)).setOnFirstBtnClickListener(new OnNaviClickListener() {
+                    public void onClick() {
+                        BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 1);
+                        BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 0);
+                    }
+                }).show();
+            } catch (Exception e) {
+                BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 1);
+                BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 0);
             }
-          }, new BNWorkerConfig(101, 0));
-        } while (BNOfflineDataManager.getInstance().checkBaseMapDataExit(0));
-        BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-        return;
-        if (shouldShowLinkageDialog(this.mContext, paramInt))
-        {
-          showLinkageDialog(this.mActivity, paramBoolean, paramInt, false);
-          return;
-        }
-        BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
-        if (!paramBoolean) {
-          break;
-        }
-        BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus2", null)new BNWorkerConfig
-        {
-          protected String execute()
-          {
-            BNOfflineDataManager.getInstance().startDownloadRequest(0);
-            try
-            {
-              Thread.sleep(300L);
-              BNOfflineDataManager.getInstance().startDownloadRequest(paramInt);
-              return null;
-            }
-            catch (Exception localException)
-            {
-              for (;;) {}
-            }
-          }
-        }, new BNWorkerConfig(101, 0));
-        if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-          BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-        }
-      } while (BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt));
-      BNOfflineDataManager.getInstance().startDownBaseMapData(paramInt);
-      return;
-      BNOfflineDataManager.getInstance().startDownloadRequest(paramInt);
-      if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-        BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-      }
-    } while (BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt));
-    BNOfflineDataManager.getInstance().startDownBaseMapData(paramInt);
-    return;
-    try
-    {
-      label312:
-      new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(1711669753)).setContentMessage(JarUtils.getResources().getString(1711669775)).setSecondBtnText(JarUtils.getResources().getString(1711669754)).setOnSecondBtnClickListener(new BNDialog.OnNaviClickListener()
-      {
-        public void onClick()
-        {
-          BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
-          if (paramInt == 0)
-          {
-            BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus1", null)new BNWorkerConfig
-            {
-              protected String execute()
-              {
-                BNOfflineDataManager.getInstance().startDownloadRequest(0);
-                try
-                {
-                  Thread.sleep(300L);
-                  return null;
+        } else if (provinceId == 0) {
+            BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus1", null) {
+                protected String execute() {
+                    BNOfflineDataManager.getInstance().startDownloadRequest(0);
+                    try {
+                        Thread.sleep(300);
+                    } catch (Exception e) {
+                    }
+                    return null;
                 }
-                catch (Exception localException)
-                {
-                  for (;;) {}
-                }
-              }
             }, new BNWorkerConfig(101, 0));
             if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-              BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-            }
-          }
-          do
-          {
-            do
-            {
-              return;
-              if (BNOfflineDataVerticalListAdapter.this.shouldShowLinkageDialog(BNOfflineDataVerticalListAdapter.this.mContext, paramInt))
-              {
-                BNOfflineDataVerticalListAdapter.this.showLinkageDialog(BNOfflineDataVerticalListAdapter.this.mActivity, paramBoolean, paramInt, false);
-                return;
-              }
-              BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
-              if (!paramBoolean) {
-                break;
-              }
-              BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus2", null)new BNWorkerConfig
-              {
-                protected String execute()
-                {
-                  BNOfflineDataManager.getInstance().startDownloadRequest(0);
-                  try
-                  {
-                    Thread.sleep(300L);
-                    BNOfflineDataManager.getInstance().startDownloadRequest(BNOfflineDataVerticalListAdapter.4.this.val$provinceId);
-                    return null;
-                  }
-                  catch (Exception localException)
-                  {
-                    for (;;) {}
-                  }
-                }
-              }, new BNWorkerConfig(101, 0));
-              if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
                 BNOfflineDataManager.getInstance().startDownBaseMapData(0);
-              }
-            } while (BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt));
-            BNOfflineDataManager.getInstance().startDownBaseMapData(paramInt);
-            return;
-            BNOfflineDataManager.getInstance().startDownloadRequest(paramInt);
-            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
-              BNOfflineDataManager.getInstance().startDownBaseMapData(0);
             }
-          } while (BNOfflineDataManager.getInstance().checkBaseMapDataExit(paramInt));
-          BNOfflineDataManager.getInstance().startDownBaseMapData(paramInt);
+        } else if (shouldShowLinkageDialog(this.mContext, provinceId)) {
+            showLinkageDialog(this.mActivity, downloadCommonFirst, provinceId, false);
+        } else {
+            BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
+            if (downloadCommonFirst) {
+                BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus2", null) {
+                    protected String execute() {
+                        BNOfflineDataManager.getInstance().startDownloadRequest(0);
+                        try {
+                            Thread.sleep(300);
+                        } catch (Exception e) {
+                        }
+                        BNOfflineDataManager.getInstance().startDownloadRequest(provinceId);
+                        return null;
+                    }
+                }, new BNWorkerConfig(101, 0));
+                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                    BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                }
+                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(provinceId)) {
+                    BNOfflineDataManager.getInstance().startDownBaseMapData(provinceId);
+                    return;
+                }
+                return;
+            }
+            BNOfflineDataManager.getInstance().startDownloadRequest(provinceId);
+            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+            }
+            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(provinceId)) {
+                BNOfflineDataManager.getInstance().startDownBaseMapData(provinceId);
+            }
         }
-      }).setFirstBtnText(JarUtils.getResources().getString(1711669755)).setOnFirstBtnClickListener(new BNDialog.OnNaviClickListener()
-      {
-        public void onClick()
-        {
-          BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 1);
-          BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 0);
+    }
+
+    public void chooseDownloadStrategy(final OfflineDataInfo model, final boolean downloadCommonFirst) {
+        int state = -1;
+        if (model != null) {
+            state = SDCardUtils.handleOfflinePathError((long) (model.mSize - ((int) (((double) model.mSize) * (((double) model.mProgress) / 100.0d)))), true);
         }
-      }).show();
-      return;
-    }
-    catch (Exception localException)
-    {
-      BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 1);
-      BNOfflineDataManager.getInstance().memoryUserOper(paramInt, false, 0);
-    }
-  }
-  
-  public void updateData()
-  {
-    updateData(false);
-  }
-  
-  public void updateData(boolean paramBoolean)
-  {
-    this.mUnDownloadItems = BNOfflineDataManager.getInstance().getUndowloadList();
-    this.mDownloadedItems = BNOfflineDataManager.getInstance().getDownloadedList();
-    long l1;
-    int i;
-    if (paramBoolean)
-    {
-      l1 = System.currentTimeMillis();
-      if ((this.mDownloadedItems != null) && (this.mDownloadedItems.size() > 0)) {
-        i = 0;
-      }
-    }
-    for (;;)
-    {
-      if (i < this.mDownloadedItems.size())
-      {
-        if (((OfflineDataInfo)this.mDownloadedItems.get(i)).mTaskStatus != 10) {
-          break label243;
+        if (state == 1) {
+            try {
+                new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_notification)).setContentMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_od_sdcard_storage_deficiency)).setFirstBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_confirm)).show();
+            } catch (Exception e) {
+            }
+        } else if (state != 0) {
+            TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(C4048R.string.nsdk_string_od_sdcard_error));
+        } else if (!NetworkUtils.isNetworkAvailable(this.mContext)) {
+            TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(C4048R.string.nsdk_string_od_network_unconnected));
+        } else if (!NetworkUtils.isTypeNetworkAvailable(this.mContext, 1)) {
+            try {
+                new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_notification)).setContentMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_od_is_wifi_notification)).setSecondBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_confirm)).setOnSecondBtnClickListener(new OnNaviClickListener() {
+                    public void onClick() {
+                        if (model.mTaskStatus == 4 || !BNOfflineDataVerticalListAdapter.this.shouldShowLinkageDialog(BNOfflineDataVerticalListAdapter.this.mContext, model.mProvinceId)) {
+                            if (downloadCommonFirst) {
+                                BNOfflineDataManager.getInstance().downloadProvinceData(0);
+                                if (!(model.mTaskStatus == 4 || BNOfflineDataManager.getInstance().checkBaseMapDataExit(0))) {
+                                    BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                                }
+                            }
+                            BNOfflineDataManager.getInstance().downloadProvinceData(model.mProvinceId);
+                            return;
+                        }
+                        BNOfflineDataVerticalListAdapter.this.showLinkageDialog(BNOfflineDataVerticalListAdapter.this.mActivity, downloadCommonFirst, model.mProvinceId, false, true);
+                    }
+                }).setFirstBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_cancel)).setOnFirstBtnClickListener(new C43065()).show();
+            } catch (Exception e2) {
+            }
+        } else if (model.mTaskStatus == 4 || !shouldShowLinkageDialog(this.mContext, model.mProvinceId)) {
+            if (downloadCommonFirst) {
+                BNOfflineDataManager.getInstance().downloadProvinceData(0);
+                if (!(model.mTaskStatus == 4 || BNOfflineDataManager.getInstance().checkBaseMapDataExit(0))) {
+                    BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                }
+            }
+            BNOfflineDataManager.getInstance().downloadProvinceData(model.mProvinceId);
+        } else {
+            showLinkageDialog(this.mActivity, downloadCommonFirst, model.mProvinceId, false, true);
         }
-        if ((((OfflineDataInfo)this.mDownloadedItems.get(i)).mProvinceId == 0) && (((OfflineDataInfo)this.mDownloadedItems.get(i)).isFakeUpdate) && (BNOfflineDataManager.getInstance().checkBaseMapDataExit(((OfflineDataInfo)this.mDownloadedItems.get(i)).mProvinceId)))
-        {
-          ((OfflineDataInfo)this.mDownloadedItems.get(i)).mTaskStatus = 12;
-          BNOfflineDataManager.getInstance().updateUpdateFinish(0, 100);
+    }
+
+    public void chooseUpdateStrategy(final OfflineDataInfo model) {
+        int state = -1;
+        if (model != null) {
+            state = SDCardUtils.handleOfflinePathError((long) (model.mUpSize - ((int) (((double) model.mUpSize) * (((double) model.mUpProgress) / 100.0d)))), true);
         }
-      }
-      long l2 = System.currentTimeMillis();
-      LogUtil.e("testDelay:", "updateData coast:" + (l2 - l1));
-      LogUtil.e("OfflineData", "updateData  mUnDownloadItems: " + this.mUnDownloadItems.size() + "  mDownloadedItems: " + this.mDownloadedItems.size());
-      return;
-      label243:
-      LogUtil.e("DataOffLine:", "start check " + ((OfflineDataInfo)this.mDownloadedItems.get(i)).mProvinceId);
-      if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(((OfflineDataInfo)this.mDownloadedItems.get(i)).mProvinceId))
-      {
-        ((OfflineDataInfo)this.mDownloadedItems.get(i)).mTaskStatus = 10;
-        ((OfflineDataInfo)this.mDownloadedItems.get(i)).isFakeUpdate = true;
-        ((OfflineDataInfo)this.mDownloadedItems.get(i)).mStrSize = "500";
-        ((OfflineDataInfo)this.mDownloadedItems.get(i)).mIsNewVer = true;
-      }
-      i += 1;
+        if (state == 1) {
+            try {
+                new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_notification)).setContentMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_od_sdcard_storage_deficiency)).setFirstBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_confirm)).show();
+            } catch (Exception e) {
+            }
+            BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 1);
+            BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 0);
+        } else if (state != 0) {
+            TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(C4048R.string.nsdk_string_od_sdcard_error));
+            BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 1);
+            BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 0);
+        } else if (!NetworkUtils.isNetworkAvailable(this.mContext)) {
+            TipTool.onCreateToastDialog(this.mContext, JarUtils.getResources().getString(C4048R.string.nsdk_string_od_network_unconnected));
+            BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 1);
+            BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 0);
+        } else if (!NetworkUtils.isTypeNetworkAvailable(this.mContext, 1)) {
+            try {
+                new BNDialog(this.mActivity).setTitleText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_notification)).setContentMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_od_is_wifi_notification)).setSecondBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_confirm)).setOnSecondBtnClickListener(new OnNaviClickListener() {
+                    public void onClick() {
+                        if (model.mProvinceId == 0) {
+                            BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
+                            BNOfflineDataManager.getInstance().updateProvinceData(model.mProvinceId);
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                            }
+                        } else if (BNOfflineDataVerticalListAdapter.this.shouldShowLinkageDialog(BNOfflineDataVerticalListAdapter.this.mContext, model.mProvinceId)) {
+                            BNOfflineDataVerticalListAdapter.this.showLinkageDialog(BNOfflineDataVerticalListAdapter.this.mActivity, false, model.mProvinceId, true);
+                        } else {
+                            BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
+                            BNOfflineDataManager.getInstance().updateProvinceData(model.mProvinceId);
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                            }
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(model.mProvinceId)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(model.mProvinceId);
+                            }
+                        }
+                    }
+                }).setFirstBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_cancel)).setOnFirstBtnClickListener(new OnNaviClickListener() {
+                    public void onClick() {
+                        BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 1);
+                        BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 0);
+                    }
+                }).show();
+            } catch (Exception e2) {
+                BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 1);
+                BNOfflineDataManager.getInstance().memoryUserOper(model.mProvinceId, false, 0);
+            }
+        } else if (shouldShowLinkageDialog(this.mContext, model.mProvinceId)) {
+            showLinkageDialog(this.mActivity, false, model.mProvinceId, true);
+        } else {
+            BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
+            BNOfflineDataManager.getInstance().updateProvinceData(model.mProvinceId);
+            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+            }
+            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(model.mProvinceId)) {
+                BNOfflineDataManager.getInstance().startDownBaseMapData(model.mProvinceId);
+            }
+        }
     }
-  }
-  
-  public void updateDiskSpace()
-  {
-    this.mTotalDownloadSize = 0L;
-    this.mDiskSpace = 0L;
-    int k = this.mDownloadedItems.size();
-    int j = this.mUnDownloadItems.size();
-    int i = 0;
-    if (i < k) {}
-    for (;;)
-    {
-      try
-      {
-        localOfflineDataInfo = (OfflineDataInfo)this.mDownloadedItems.get(i);
-        int m = (int)(localOfflineDataInfo.mUpSize * (localOfflineDataInfo.mUpProgressBy10 / 1000.0D));
-        this.mTotalDownloadSize += localOfflineDataInfo.mSize;
-        this.mTotalDownloadSize += m;
-        i += 1;
-      }
-      catch (Exception localException)
-      {
-        OfflineDataInfo localOfflineDataInfo;
-        localException.printStackTrace();
-        this.mDiskSpace = SDCardUtils.getSdcardSpace();
-        LogUtil.e("OfflineData", "mDiskSpace: " + this.mDiskSpace + "  mTotalDownloadSize: " + this.mTotalDownloadSize);
-        return;
-      }
-      if (i < j)
-      {
-        localOfflineDataInfo = (OfflineDataInfo)this.mUnDownloadItems.get(i);
-        k = (int)(localOfflineDataInfo.mSize * (localOfflineDataInfo.mProgressBy10 / 1000.0D));
-        this.mTotalDownloadSize += k;
-        i += 1;
-      }
-      else
-      {
-        i = 0;
-      }
+
+    public OfflineDataInfo getDownloadedListModelByPosition(int position) {
+        if (this.mUnDownloadItems == null || this.mDownloadedItems == null) {
+            return null;
+        }
+        if (this.mIsUndownload.booleanValue()) {
+            if (position < 0 || position >= this.mUnDownloadItems.size()) {
+                return null;
+            }
+            return (OfflineDataInfo) this.mUnDownloadItems.get(position);
+        } else if (position < 0 || position >= this.mDownloadedItems.size()) {
+            return null;
+        } else {
+            return (OfflineDataInfo) this.mDownloadedItems.get(position);
+        }
     }
-  }
-  
-  public void updateUserClickStatus(Boolean paramBoolean)
-  {
-    this.mIsUndownload = paramBoolean;
-  }
-  
-  public static class ViewHolder
-  {
-    RelativeLayout mInfoLayout;
-    TextView mInfoTV;
-    View mListDivider;
-    View mListMargin;
-    BNOfflineDataMergeLoadingView mMergeloadView;
-    TextView mNameTV;
-    ProgressBar mProgressBarDownloading;
-    ProgressBar mProgressBarDownloadingNight;
-    ProgressBar mProgressBarSuspend;
-    ProgressBar mProgressBarSuspendNight;
-    ImageView mTaskStatusIV;
-  }
+
+    public int getCount() {
+        return this.mIsUndownload.booleanValue() ? this.mUnDownloadItems.size() : this.mDownloadedItems.size();
+    }
+
+    public Object getItem(int position) {
+        if (this.mUnDownloadItems == null || this.mDownloadedItems == null) {
+            return null;
+        }
+        if (this.mIsUndownload.booleanValue()) {
+            if (position < 0 || position >= this.mUnDownloadItems.size()) {
+                return null;
+            }
+            return (OfflineDataInfo) this.mUnDownloadItems.get(position);
+        } else if (position < 0 || position >= this.mDownloadedItems.size()) {
+            return null;
+        } else {
+            return (OfflineDataInfo) this.mDownloadedItems.get(position);
+        }
+    }
+
+    public long getItemId(int position) {
+        return (long) position;
+    }
+
+    public boolean isEnabled(int position) {
+        return true;
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        OfflineDataInfo model = (OfflineDataInfo) getItem(position);
+        if (convertView == null || model == null) {
+            convertView = JarUtils.inflate(this.mActivity, C4048R.layout.nsdk_layout_offline_data_vertical_list_item, null);
+            if (convertView == null) {
+                try {
+                    if (this.mActivity != null) {
+                        return new View(this.mActivity);
+                    }
+                    return null;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+            holder = new ViewHolder();
+            holder.mInfoLayout = (RelativeLayout) convertView.findViewById(C4048R.id.info_relativelayout);
+            holder.mNameTV = (TextView) convertView.findViewById(C4048R.id.textview_name);
+            holder.mInfoTV = (TextView) convertView.findViewById(C4048R.id.textview_info);
+            holder.mProgressBarDownloading = (ProgressBar) convertView.findViewById(C4048R.id.progress_bar_downloading);
+            holder.mProgressBarSuspend = (ProgressBar) convertView.findViewById(C4048R.id.progress_bar_suspend);
+            holder.mProgressBarDownloadingNight = (ProgressBar) convertView.findViewById(C4048R.id.progress_bar_downloading_night);
+            holder.mProgressBarSuspendNight = (ProgressBar) convertView.findViewById(C4048R.id.progress_bar_suspend_night);
+            holder.mTaskStatusIV = (ImageView) convertView.findViewById(C4048R.id.imageview_btn_status);
+            holder.mListDivider = convertView.findViewById(C4048R.id.list_item_divider);
+            holder.mListMargin = convertView.findViewById(C4048R.id.list_item_margin);
+            holder.mMergeloadView = (BNOfflineDataMergeLoadingView) convertView.findViewById(C4048R.id.merge_view);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+        boolean isShowMargin = true;
+        if (model != null && holder != null) {
+            model.formatStatusTips();
+            LogUtil.m15791e("OfflineData", "model.mName: " + model.mName + "  model.mStatusTips: " + model.mStatusTips + "  model.mTaskStatus111: " + model.mTaskStatus + "  model.mDownloadRatio: " + model.mDownloadRatio);
+            holder.mInfoLayout.setVisibility(0);
+            holder.mInfoTV.setVisibility(0);
+            holder.mNameTV.setText(model.mName);
+            holder.mNameTV.setTextColor(-13421773);
+            holder.mInfoTV.setText(model.mStatusTips);
+            holder.mInfoTV.setTextColor(model.mStatusColor);
+            holder.mProgressBarDownloading.setVisibility(8);
+            holder.mProgressBarDownloadingNight.setVisibility(8);
+            holder.mProgressBarSuspend.setVisibility(8);
+            holder.mProgressBarSuspendNight.setVisibility(8);
+            holder.mMergeloadView.hideLoading();
+            holder.mTaskStatusIV.setTag(model);
+            holder.mTaskStatusIV.setOnClickListener(new C43109());
+            if (model.mTaskStatus == 5 || model.mTaskStatus == 1 || model.mTaskStatus == 10) {
+                isShowMargin = false;
+            }
+            switch (model.mTaskStatus) {
+                case 1:
+                    holder.mListDivider.setVisibility(0);
+                    holder.mTaskStatusIV.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.offline_data_status_download));
+                    break;
+                case 2:
+                    holder.mTaskStatusIV.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.offline_data_status_suspend_download));
+                    if (1 != null) {
+                        holder.mProgressBarDownloading.setProgress(model.mProgress);
+                        holder.mProgressBarDownloading.setVisibility(0);
+                    } else {
+                        holder.mProgressBarDownloadingNight.setProgress(model.mProgress);
+                        holder.mProgressBarDownloadingNight.setVisibility(0);
+                    }
+                    holder.mListDivider.setVisibility(8);
+                    break;
+                case 3:
+                    holder.mTaskStatusIV.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.offline_data_status_suspend_download));
+                    if (1 != null) {
+                        holder.mProgressBarDownloading.setProgress(model.mProgress);
+                        holder.mProgressBarDownloading.setVisibility(0);
+                    } else {
+                        holder.mProgressBarDownloadingNight.setProgress(model.mProgress);
+                        holder.mProgressBarDownloadingNight.setVisibility(0);
+                    }
+                    holder.mListDivider.setVisibility(8);
+                    break;
+                case 4:
+                case 6:
+                case 8:
+                case 9:
+                    if (model.mIsNewVer) {
+                        if (1 != null) {
+                            holder.mProgressBarSuspend.setProgress(model.mUpProgress);
+                            holder.mProgressBarSuspend.setVisibility(0);
+                        } else {
+                            holder.mProgressBarSuspendNight.setProgress(model.mUpProgress);
+                            holder.mProgressBarSuspendNight.setVisibility(0);
+                        }
+                    } else if (1 != null) {
+                        holder.mProgressBarSuspend.setProgress(model.mProgress);
+                        holder.mProgressBarSuspend.setVisibility(0);
+                    } else {
+                        holder.mProgressBarSuspendNight.setProgress(model.mProgress);
+                        holder.mProgressBarSuspendNight.setVisibility(0);
+                    }
+                    holder.mListDivider.setVisibility(8);
+                    holder.mTaskStatusIV.setImageDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.offline_data_status_continue_download));
+                    break;
+                case 5:
+                    holder.mListDivider.setVisibility(0);
+                    break;
+                case 10:
+                    holder.mListDivider.setVisibility(0);
+                    break;
+                case 11:
+                case 12:
+                    if (1 != null) {
+                        holder.mProgressBarDownloading.setProgress(model.mUpProgress);
+                        holder.mProgressBarDownloading.setVisibility(0);
+                    } else {
+                        holder.mProgressBarDownloadingNight.setProgress(model.mUpProgress);
+                        holder.mProgressBarDownloadingNight.setVisibility(0);
+                    }
+                    holder.mListDivider.setVisibility(8);
+                    break;
+                case 13:
+                    if (1 != null) {
+                        holder.mProgressBarSuspend.setProgress(model.mUpProgress);
+                        holder.mProgressBarSuspend.setVisibility(0);
+                    } else {
+                        holder.mProgressBarSuspendNight.setProgress(model.mUpProgress);
+                        holder.mProgressBarSuspendNight.setVisibility(0);
+                    }
+                    holder.mListDivider.setVisibility(8);
+                    break;
+                case 16:
+                    holder.mMergeloadView.showLoading();
+                    break;
+                case 17:
+                    holder.mListDivider.setVisibility(0);
+                    break;
+                case 19:
+                    holder.mListDivider.setVisibility(0);
+                    break;
+            }
+        } else if (holder != null) {
+            holder.mListDivider.setVisibility(8);
+            holder.mInfoLayout.setVisibility(8);
+            holder.mListMargin.setVisibility(8);
+        }
+        if (!(convertView == null || holder == null)) {
+            setVerticalListBackground(position, convertView, holder, isShowMargin);
+        }
+        if (!(holder == null || holder.mListDivider == null)) {
+            try {
+                holder.mListDivider.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.divide_list));
+            } catch (Exception e2) {
+            }
+        }
+        return convertView;
+    }
+
+    private void setVerticalListBackground(int position, View convertView, ViewHolder holder, boolean isShowMargin) {
+        if (convertView != null) {
+            convertView.setBackgroundColor(JarUtils.getResources().getColor(C4048R.color.nsdk_color_od_bg_list_transparent));
+            if (this.mIsUndownload.booleanValue()) {
+                if (position < this.mUnDownloadItems.size()) {
+                    convertView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.common_list_bg_selector));
+                    holder.mListMargin.setVisibility(8);
+                } else if (position >= this.mUnDownloadItems.size()) {
+                    convertView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.common_list_bg_selector));
+                    if (isShowMargin) {
+                        holder.mListMargin.setVisibility(0);
+                    }
+                    holder.mListDivider.setVisibility(8);
+                }
+                convertView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.common_list_bg_selector));
+                holder.mTaskStatusIV.setVisibility(0);
+                holder.mListMargin.setVisibility(8);
+                return;
+            }
+            if (position < this.mDownloadedItems.size()) {
+                convertView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.common_list_bg_selector));
+                holder.mListMargin.setVisibility(8);
+            } else if (position >= this.mDownloadedItems.size()) {
+                convertView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.common_list_bg_selector));
+                if (isShowMargin) {
+                    holder.mListMargin.setVisibility(0);
+                }
+                holder.mListDivider.setVisibility(8);
+            }
+            holder.mTaskStatusIV.setVisibility(8);
+        }
+    }
+
+    private void showLinkageDialog(Activity mActivity, boolean downloadCommonFirst, int provinceId, boolean isUpdate) {
+        showLinkageDialog(mActivity, downloadCommonFirst, provinceId, isUpdate, false);
+    }
+
+    private void showLinkageDialog(Activity mActivity, boolean downloadCommonFirst, final int provinceId, boolean isUpdate, boolean isContinue) {
+        if (mActivity != null) {
+            if (this.linkageDialog != null) {
+                dimissLinkageDialog();
+            }
+            try {
+                final boolean z = isContinue;
+                final boolean z2 = downloadCommonFirst;
+                final int i = provinceId;
+                final boolean z3 = isUpdate;
+                this.linkageDialog = new BNDialog(mActivity).setTitleText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_notification)).setContentMessage(JarUtils.getResources().getString(C4048R.string.nsdk_string_offline_data_linkage_notification)).setSecondBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_offline_data_start_down_confirm)).setOnSecondBtnClickListener(new OnNaviClickListener() {
+                    public void onClick() {
+                        if (z) {
+                            if (z2) {
+                                BNOfflineDataManager.getInstance().downloadProvinceData(0);
+                                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                    BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                                }
+                            }
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(i)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(i);
+                            }
+                            BNOfflineDataManager.getInstance().downloadProvinceData(i);
+                        } else if (z3) {
+                            boolean flag = false;
+                            ArrayList<OfflineDataInfo> mDownloadedItems = BNOfflineDataManager.getInstance().getDownloadedList();
+                            if (mDownloadedItems != null && mDownloadedItems.size() > 0) {
+                                int i = 0;
+                                while (i < mDownloadedItems.size()) {
+                                    if (((OfflineDataInfo) mDownloadedItems.get(i)).mTaskStatus == 10 && ((OfflineDataInfo) mDownloadedItems.get(i)).mProvinceId == i && ((OfflineDataInfo) mDownloadedItems.get(i)).isFakeUpdate) {
+                                        ((OfflineDataInfo) mDownloadedItems.get(i)).mTaskStatus = 12;
+                                        BNOfflineDataManager.getInstance().sendUpdateSucessMsg(i);
+                                        flag = true;
+                                        break;
+                                    }
+                                    i++;
+                                }
+                            }
+                            if (!flag) {
+                                BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
+                                BNOfflineDataManager.getInstance().updateProvinceData(i);
+                            }
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                            }
+                            if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(i)) {
+                                BNOfflineDataManager.getInstance().startDownBaseMapData(i);
+                            }
+                        } else {
+                            BNOfflineDataManager.getInstance().setIsClickDownloadOnMobile(Boolean.valueOf(true));
+                            if (z2) {
+                                BNWorkerCenter.getInstance().submitNormalTask(new BNWorkerNormalTask<String, String>("CarNavi-" + getClass().getSimpleName() + "_startCheckNetStatus2", null) {
+                                    protected String execute() {
+                                        BNOfflineDataManager.getInstance().startDownloadRequest(0);
+                                        try {
+                                            Thread.sleep(300);
+                                        } catch (Exception e) {
+                                        }
+                                        BNOfflineDataManager.getInstance().startDownloadRequest(i);
+                                        return null;
+                                    }
+                                }, new BNWorkerConfig(101, 0));
+                                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                    BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                                }
+                                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(i)) {
+                                    BNOfflineDataManager.getInstance().startDownBaseMapData(i);
+                                }
+                            } else {
+                                BNOfflineDataManager.getInstance().startDownloadRequest(i);
+                                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(0)) {
+                                    BNOfflineDataManager.getInstance().startDownBaseMapData(0);
+                                }
+                                if (!BNOfflineDataManager.getInstance().checkBaseMapDataExit(i)) {
+                                    BNOfflineDataManager.getInstance().startDownBaseMapData(i);
+                                }
+                            }
+                        }
+                        BNOfflineDataVerticalListAdapter.this.dimissLinkageDialog();
+                    }
+                }).setFirstBtnText(JarUtils.getResources().getString(C4048R.string.nsdk_string_common_alert_cancel)).setOnFirstBtnClickListener(new OnNaviClickListener() {
+                    public void onClick() {
+                        BNOfflineDataVerticalListAdapter.this.dimissLinkageDialog();
+                        BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 1);
+                        BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 0);
+                    }
+                });
+                hasShowLinkageDialog(mActivity);
+                this.linkageDialog.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 1);
+                BNOfflineDataManager.getInstance().memoryUserOper(provinceId, false, 0);
+            }
+        }
+    }
+
+    public void dimissLinkageDialog() {
+        if (this.linkageDialog != null) {
+            this.linkageDialog.dismiss();
+            this.linkageDialog = null;
+        }
+    }
+
+    private boolean shouldShowLinkageDialog(Context mContext, int provinceId) {
+        return !BNOfflineDataManager.getInstance().checkBaseMapDataExit(provinceId);
+    }
+
+    private void hasShowLinkageDialog(Context mContext) {
+        PreferenceHelper.getInstance(mContext).putBoolean(DOWN_LOAD_LINKAGE_FLAG, true);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/download/adapter/BNOfflineDataVerticalListAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

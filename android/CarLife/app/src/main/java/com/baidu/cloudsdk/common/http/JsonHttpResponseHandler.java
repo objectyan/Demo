@@ -7,133 +7,100 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-public class JsonHttpResponseHandler
-  extends HttpResponseHandler
-{
-  protected static final int SUCCESS_JSON_MESSAGE = 100;
-  
-  public JsonHttpResponseHandler() {}
-  
-  public JsonHttpResponseHandler(Looper paramLooper)
-  {
-    super(paramLooper);
-  }
-  
-  protected void handleFailureMessage(Throwable paramThrowable, String paramString)
-  {
-    if (paramString != null)
-    {
-      try
-      {
-        Object localObject = parseResponse(paramString);
-        if ((localObject instanceof JSONObject))
-        {
-          onFailure(paramThrowable, (JSONObject)localObject);
-          return;
+public class JsonHttpResponseHandler extends HttpResponseHandler {
+    protected static final int SUCCESS_JSON_MESSAGE = 100;
+
+    public JsonHttpResponseHandler(Looper looper) {
+        super(looper);
+    }
+
+    protected void onFailure(Throwable error, JSONArray errorResponse) {
+    }
+
+    protected void onFailure(Throwable error, JSONObject errorResponse) {
+    }
+
+    protected void onSuccess(JSONArray response) {
+    }
+
+    protected void onSuccess(JSONObject response) {
+    }
+
+    protected void onSuccess(int statusCode, JSONArray response) {
+        onSuccess(response);
+    }
+
+    protected void onSuccess(int statusCode, JSONObject response) {
+        onSuccess(response);
+    }
+
+    protected void sendSuccessMessage(int statusCode, String responseBody) {
+        if (statusCode != 204) {
+            try {
+                Object json = parseResponse(responseBody);
+                sendMessage(obtainMessage(100, new Object[]{Integer.valueOf(statusCode), json}));
+                return;
+            } catch (JSONException e) {
+                sendFailureMessage((Throwable) e, responseBody);
+                return;
+            }
         }
-        if ((localObject instanceof JSONArray))
-        {
-          onFailure(paramThrowable, (JSONArray)localObject);
-          return;
+        sendMessage(obtainMessage(100, new Object[]{Integer.valueOf(statusCode), new JSONObject()}));
+    }
+
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+            case 100:
+                Object[] objs = (Object[]) msg.obj;
+                handleSuccessJsonMessage(((Integer) objs[0]).intValue(), objs[1]);
+                return;
+            default:
+                super.handleMessage(msg);
+                return;
         }
-      }
-      catch (JSONException localJSONException)
-      {
-        onFailure(paramThrowable, paramString);
-        return;
-      }
-      onFailure(paramThrowable, paramString);
-      return;
     }
-    onFailure(paramThrowable, "");
-  }
-  
-  public void handleMessage(Message paramMessage)
-  {
-    switch (paramMessage.what)
-    {
-    default: 
-      super.handleMessage(paramMessage);
-      return;
+
+    protected void handleSuccessJsonMessage(int statusCode, Object json) {
+        if (json instanceof JSONObject) {
+            onSuccess(statusCode, (JSONObject) json);
+        } else if (json instanceof JSONArray) {
+            onSuccess(statusCode, (JSONArray) json);
+        } else {
+            onFailure(new JSONException("Unexpected type " + json.getClass().getName()), "");
+        }
     }
-    paramMessage = (Object[])paramMessage.obj;
-    handleSuccessJsonMessage(((Integer)paramMessage[0]).intValue(), paramMessage[1]);
-  }
-  
-  protected void handleSuccessJsonMessage(int paramInt, Object paramObject)
-  {
-    if ((paramObject instanceof JSONObject))
-    {
-      onSuccess(paramInt, (JSONObject)paramObject);
-      return;
+
+    protected void handleFailureMessage(Throwable e, String responseBody) {
+        if (responseBody != null) {
+            try {
+                Object json = parseResponse(responseBody);
+                if (json instanceof JSONObject) {
+                    onFailure(e, (JSONObject) json);
+                    return;
+                } else if (json instanceof JSONArray) {
+                    onFailure(e, (JSONArray) json);
+                    return;
+                } else {
+                    onFailure(e, responseBody);
+                    return;
+                }
+            } catch (JSONException e2) {
+                onFailure(e, responseBody);
+                return;
+            }
+        }
+        onFailure(e, "");
     }
-    if ((paramObject instanceof JSONArray))
-    {
-      onSuccess(paramInt, (JSONArray)paramObject);
-      return;
+
+    protected Object parseResponse(String responseBody) throws JSONException {
+        Object result = null;
+        responseBody = responseBody.trim();
+        if (responseBody.startsWith("{") || responseBody.startsWith("[")) {
+            result = new JSONTokener(responseBody).nextValue();
+        }
+        if (result == null) {
+            return responseBody;
+        }
+        return result;
     }
-    onFailure(new JSONException("Unexpected type " + paramObject.getClass().getName()), "");
-  }
-  
-  protected void onFailure(Throwable paramThrowable, JSONArray paramJSONArray) {}
-  
-  protected void onFailure(Throwable paramThrowable, JSONObject paramJSONObject) {}
-  
-  protected void onSuccess(int paramInt, JSONArray paramJSONArray)
-  {
-    onSuccess(paramJSONArray);
-  }
-  
-  protected void onSuccess(int paramInt, JSONObject paramJSONObject)
-  {
-    onSuccess(paramJSONObject);
-  }
-  
-  protected void onSuccess(JSONArray paramJSONArray) {}
-  
-  protected void onSuccess(JSONObject paramJSONObject) {}
-  
-  protected Object parseResponse(String paramString)
-    throws JSONException
-  {
-    Object localObject = null;
-    String str = paramString.trim();
-    if (!str.startsWith("{"))
-    {
-      paramString = (String)localObject;
-      if (!str.startsWith("[")) {}
-    }
-    else
-    {
-      paramString = new JSONTokener(str).nextValue();
-    }
-    localObject = paramString;
-    if (paramString == null) {
-      localObject = str;
-    }
-    return localObject;
-  }
-  
-  protected void sendSuccessMessage(int paramInt, String paramString)
-  {
-    if (paramInt != 204) {
-      try
-      {
-        sendMessage(obtainMessage(100, new Object[] { Integer.valueOf(paramInt), parseResponse(paramString) }));
-        return;
-      }
-      catch (JSONException localJSONException)
-      {
-        sendFailureMessage(localJSONException, paramString);
-        return;
-      }
-    }
-    sendMessage(obtainMessage(100, new Object[] { Integer.valueOf(paramInt), new JSONObject() }));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/cloudsdk/common/http/JsonHttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

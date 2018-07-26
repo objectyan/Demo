@@ -9,132 +9,111 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.util.EntityUtils;
 
-public class HttpResponseHandler
-  extends Handler
-{
-  protected static final String DEFAULT_CHARSET = "UTF-8";
-  protected static final int FAILURE_MESSAGE = 1;
-  protected static final int FINISH_MESSAGE = 3;
-  protected static final int START_MESSAGE = 2;
-  protected static final int SUCCESS_MESSAGE = 0;
-  protected String mDefaultCharset;
-  
-  public HttpResponseHandler()
-  {
-    this("UTF-8");
-  }
-  
-  public HttpResponseHandler(Looper paramLooper)
-  {
-    super(paramLooper);
-    this.mDefaultCharset = "UTF-8";
-  }
-  
-  public HttpResponseHandler(String paramString)
-  {
-    this.mDefaultCharset = paramString;
-  }
-  
-  protected void handleFailureMessage(Throwable paramThrowable, String paramString)
-  {
-    onFailure(paramThrowable, paramString);
-  }
-  
-  public void handleMessage(Message paramMessage)
-  {
-    switch (paramMessage.what)
-    {
-    default: 
-      return;
-    case 2: 
-      onStart();
-      return;
-    case 3: 
-      onFinish();
-      return;
-    case 1: 
-      paramMessage = (Object[])paramMessage.obj;
-      handleFailureMessage((Throwable)paramMessage[0], (String)paramMessage[1]);
-      return;
+public class HttpResponseHandler extends Handler {
+    protected static final String DEFAULT_CHARSET = "UTF-8";
+    protected static final int FAILURE_MESSAGE = 1;
+    protected static final int FINISH_MESSAGE = 3;
+    protected static final int START_MESSAGE = 2;
+    protected static final int SUCCESS_MESSAGE = 0;
+    protected String mDefaultCharset;
+
+    public HttpResponseHandler() {
+        this("UTF-8");
     }
-    paramMessage = (Object[])paramMessage.obj;
-    handleSuccessMessage(((Integer)paramMessage[0]).intValue(), (String)paramMessage[1]);
-  }
-  
-  protected void handleSuccessMessage(int paramInt, String paramString)
-  {
-    onSuccess(paramInt, paramString);
-  }
-  
-  protected void onFailure(Throwable paramThrowable, String paramString) {}
-  
-  protected void onFinish() {}
-  
-  protected void onStart() {}
-  
-  protected void onSuccess(int paramInt, String paramString)
-  {
-    onSuccess(paramString);
-  }
-  
-  protected void onSuccess(String paramString) {}
-  
-  protected void sendFailureMessage(Throwable paramThrowable, String paramString)
-  {
-    sendMessage(obtainMessage(1, new Object[] { paramThrowable, paramString }));
-  }
-  
-  protected void sendFailureMessage(Throwable paramThrowable, byte[] paramArrayOfByte)
-  {
-    sendMessage(obtainMessage(1, new Object[] { paramThrowable, paramArrayOfByte }));
-  }
-  
-  protected void sendFinishMessage()
-  {
-    sendMessage(obtainMessage(3));
-  }
-  
-  protected void sendResponseMessage(HttpResponse paramHttpResponse)
-  {
-    String str = null;
-    HttpEntity localHttpEntity = paramHttpResponse.getEntity();
-    if (localHttpEntity != null) {}
-    try
-    {
-      str = EntityUtils.toString(localHttpEntity, this.mDefaultCharset);
-      AsyncHttpClient.endEntityViaReflection(localHttpEntity);
-      paramHttpResponse = paramHttpResponse.getStatusLine();
-      if (paramHttpResponse.getStatusCode() >= 300)
-      {
-        sendFailureMessage(new HttpResponseException(paramHttpResponse.getStatusCode(), paramHttpResponse.getReasonPhrase()), str);
-        return;
-      }
+
+    public HttpResponseHandler(String defaultCharset) {
+        this.mDefaultCharset = defaultCharset;
     }
-    catch (Exception paramHttpResponse)
-    {
-      sendFailureMessage(paramHttpResponse, (String)null);
-      return;
+
+    public HttpResponseHandler(Looper looper) {
+        super(looper);
+        this.mDefaultCharset = "UTF-8";
     }
-    finally
-    {
-      AsyncHttpClient.endEntityViaReflection(localHttpEntity);
+
+    protected void onStart() {
     }
-    sendSuccessMessage(paramHttpResponse.getStatusCode(), str);
-  }
-  
-  protected void sendStartMessage()
-  {
-    sendMessage(obtainMessage(2));
-  }
-  
-  protected void sendSuccessMessage(int paramInt, String paramString)
-  {
-    sendMessage(obtainMessage(0, new Object[] { Integer.valueOf(paramInt), paramString }));
-  }
+
+    protected void onFinish() {
+    }
+
+    protected void onFailure(Throwable error, String responseBody) {
+    }
+
+    protected void onSuccess(String responseBody) {
+    }
+
+    protected void onSuccess(int statusCode, String responseBody) {
+        onSuccess(responseBody);
+    }
+
+    protected void sendStartMessage() {
+        sendMessage(obtainMessage(2));
+    }
+
+    protected void sendFinishMessage() {
+        sendMessage(obtainMessage(3));
+    }
+
+    protected void sendFailureMessage(Throwable error, String responseBody) {
+        sendMessage(obtainMessage(1, new Object[]{error, responseBody}));
+    }
+
+    protected void sendFailureMessage(Throwable error, byte[] responseBody) {
+        sendMessage(obtainMessage(1, new Object[]{error, responseBody}));
+    }
+
+    protected void sendSuccessMessage(int statusCode, String responseBody) {
+        sendMessage(obtainMessage(0, new Object[]{Integer.valueOf(statusCode), responseBody}));
+    }
+
+    protected void sendResponseMessage(HttpResponse response) {
+        String responseBody = null;
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            try {
+                responseBody = EntityUtils.toString(entity, this.mDefaultCharset);
+            } catch (Throwable e) {
+                sendFailureMessage(e, (String) null);
+                return;
+            } finally {
+                AsyncHttpClient.endEntityViaReflection(entity);
+            }
+        }
+        StatusLine status = response.getStatusLine();
+        if (status.getStatusCode() >= 300) {
+            sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
+        } else {
+            sendSuccessMessage(status.getStatusCode(), responseBody);
+        }
+    }
+
+    protected void handleSuccessMessage(int statusCode, String responseBody) {
+        onSuccess(statusCode, responseBody);
+    }
+
+    protected void handleFailureMessage(Throwable error, String responseBody) {
+        onFailure(error, responseBody);
+    }
+
+    public void handleMessage(Message msg) {
+        Object[] objs;
+        switch (msg.what) {
+            case 0:
+                objs = (Object[]) msg.obj;
+                handleSuccessMessage(((Integer) objs[0]).intValue(), (String) objs[1]);
+                return;
+            case 1:
+                objs = (Object[]) msg.obj;
+                handleFailureMessage((Throwable) objs[0], (String) objs[1]);
+                return;
+            case 2:
+                onStart();
+                return;
+            case 3:
+                onFinish();
+                return;
+            default:
+                return;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/cloudsdk/common/http/HttpResponseHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

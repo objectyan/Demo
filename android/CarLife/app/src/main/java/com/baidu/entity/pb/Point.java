@@ -6,148 +6,126 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class Point
-  extends MessageMicro
-{
-  public static final int X_FIELD_NUMBER = 1;
-  public static final int Y_FIELD_NUMBER = 2;
-  private boolean a;
-  private int b = 0;
-  private boolean c;
-  private int d = 0;
-  private int e = -1;
-  
-  public static Point parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new Point().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static Point parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (Point)new Point().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final Point clear()
-  {
-    clearX();
-    clearY();
-    this.e = -1;
-    return this;
-  }
-  
-  public Point clearX()
-  {
-    this.a = false;
-    this.b = 0;
-    return this;
-  }
-  
-  public Point clearY()
-  {
-    this.c = false;
-    this.d = 0;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.e < 0) {
-      getSerializedSize();
+public final class Point extends MessageMicro {
+    public static final int X_FIELD_NUMBER = 1;
+    public static final int Y_FIELD_NUMBER = 2;
+    /* renamed from: a */
+    private boolean f14171a;
+    /* renamed from: b */
+    private int f14172b = 0;
+    /* renamed from: c */
+    private boolean f14173c;
+    /* renamed from: d */
+    private int f14174d = 0;
+    /* renamed from: e */
+    private int f14175e = -1;
+
+    public static Point parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new Point().mergeFrom(codedInputStreamMicro);
     }
-    return this.e;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasX()) {
-      i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getX());
+
+    public static Point parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (Point) new Point().mergeFrom(bArr);
     }
-    int j = i;
-    if (hasY()) {
-      j = i + CodedOutputStreamMicro.computeInt32Size(2, getY());
-    }
-    this.e = j;
-    return j;
-  }
-  
-  public int getX()
-  {
-    return this.b;
-  }
-  
-  public int getY()
-  {
-    return this.d;
-  }
-  
-  public boolean hasX()
-  {
-    return this.a;
-  }
-  
-  public boolean hasY()
-  {
-    return this.c;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Point mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
+
+    public final Point clear() {
+        clearX();
+        clearY();
+        this.f14175e = -1;
         return this;
-      case 8: 
-        setX(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 16: 
-        setY(paramCodedInputStreamMicro.readInt32());
-      }
     }
-  }
-  
-  public Point setX(int paramInt)
-  {
-    this.a = true;
-    this.b = paramInt;
-    return this;
-  }
-  
-  public Point setY(int paramInt)
-  {
-    this.c = true;
-    this.d = paramInt;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasX()) {
-      paramCodedOutputStreamMicro.writeInt32(1, getX());
+
+    public Point clearX() {
+        this.f14171a = false;
+        this.f14172b = 0;
+        return this;
     }
-    if (hasY()) {
-      paramCodedOutputStreamMicro.writeInt32(2, getY());
+
+    public Point clearY() {
+        this.f14173c = false;
+        this.f14174d = 0;
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f14175e < 0) {
+            getSerializedSize();
+        }
+        return this.f14175e;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasX()) {
+            i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getX());
+        }
+        if (hasY()) {
+            i += CodedOutputStreamMicro.computeInt32Size(2, getY());
+        }
+        this.f14175e = i;
+        return i;
+    }
+
+    public int getX() {
+        return this.f14172b;
+    }
+
+    public int getY() {
+        return this.f14174d;
+    }
+
+    public boolean hasX() {
+        return this.f14171a;
+    }
+
+    public boolean hasY() {
+        return this.f14173c;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public Point mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 8:
+                    setX(codedInputStreamMicro.readInt32());
+                    continue;
+                case 16:
+                    setY(codedInputStreamMicro.readInt32());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public Point setX(int i) {
+        this.f14171a = true;
+        this.f14172b = i;
+        return this;
+    }
+
+    public Point setY(int i) {
+        this.f14173c = true;
+        this.f14174d = i;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasX()) {
+            codedOutputStreamMicro.writeInt32(1, getX());
+        }
+        if (hasY()) {
+            codedOutputStreamMicro.writeInt32(2, getY());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/Point.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,161 +3,126 @@ package com.baidu.navisdk.util.db.object;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import java.util.ArrayList;
 
-public class RouteCustomDBObject
-  implements BaseDBObject
-{
-  private long mCustomTime;
-  private int mDestType;
-  private int mHisRouteId;
-  private int mId;
-  private int mIsOpen;
-  private int mIsRepeat;
-  private long mModifiedTime;
-  private String mName;
-  private int mPUshTimeMinute;
-  private int mPushTimeHour;
-  private long mPushTimeMills;
-  private String mRepeatDate;
-  private ArrayList<RoutePlanNodeDBObject> mRoutePlanNodes;
-  
-  public long getCustomTime()
-  {
-    return this.mCustomTime;
-  }
-  
-  public int getDestType()
-  {
-    return this.mDestType;
-  }
-  
-  public int getHisRouteId()
-  {
-    return this.mHisRouteId;
-  }
-  
-  public int getId()
-  {
-    return this.mId;
-  }
-  
-  public int getIsRepeat()
-  {
-    return this.mIsRepeat;
-  }
-  
-  public long getModifiedTime()
-  {
-    return this.mModifiedTime;
-  }
-  
-  public String getName()
-  {
-    return this.mName;
-  }
-  
-  public int getOpen()
-  {
-    return this.mIsOpen;
-  }
-  
-  public int getPushTimeHour()
-  {
-    return this.mPushTimeHour;
-  }
-  
-  public long getPushTimeMills()
-  {
-    return this.mPushTimeMills;
-  }
-  
-  public int getPushTimeMinute()
-  {
-    return this.mPUshTimeMinute;
-  }
-  
-  public String getRepeatDate()
-  {
-    return this.mRepeatDate;
-  }
-  
-  public ArrayList<RoutePlanNodeDBObject> getRoutePlanDBNodes()
-  {
-    return this.mRoutePlanNodes;
-  }
-  
-  public ArrayList<RoutePlanNode> getRoutePlanNodes()
-  {
-    return RoutePlanNodeDBObject.convertToRoutePlanNodeList(this.mRoutePlanNodes);
-  }
-  
-  public void setCustomTime(long paramLong)
-  {
-    this.mCustomTime = paramLong;
-  }
-  
-  public void setDestType(int paramInt)
-  {
-    this.mDestType = paramInt;
-  }
-  
-  public void setHisRouteId(int paramInt)
-  {
-    this.mHisRouteId = paramInt;
-  }
-  
-  public void setId(int paramInt)
-  {
-    this.mId = paramInt;
-  }
-  
-  public void setIsRepeat(int paramInt)
-  {
-    this.mIsRepeat = paramInt;
-  }
-  
-  public void setModifiedTime(long paramLong)
-  {
-    this.mModifiedTime = paramLong;
-  }
-  
-  public void setName(String paramString)
-  {
-    this.mName = paramString;
-  }
-  
-  public void setOpen(int paramInt)
-  {
-    this.mIsOpen = paramInt;
-  }
-  
-  public void setPushTimeHour(int paramInt)
-  {
-    this.mPushTimeHour = paramInt;
-  }
-  
-  public void setPushTimeMills(long paramLong)
-  {
-    this.mPushTimeMills = paramLong;
-  }
-  
-  public void setPushTimeMinute(int paramInt)
-  {
-    this.mPUshTimeMinute = paramInt;
-  }
-  
-  public void setRepeatDate(String paramString)
-  {
-    this.mRepeatDate = paramString;
-  }
-  
-  public void setRoutePlanNodes(ArrayList<RoutePlanNodeDBObject> paramArrayList)
-  {
-    this.mRoutePlanNodes = paramArrayList;
-  }
+public class RouteCustomDBObject implements BaseDBObject {
+    private long mCustomTime;
+    private int mDestType;
+    private int mHisRouteId;
+    private int mId;
+    private int mIsOpen;
+    private int mIsRepeat;
+    private long mModifiedTime;
+    private String mName;
+    private int mPUshTimeMinute;
+    private int mPushTimeHour;
+    private long mPushTimeMills;
+    private String mRepeatDate;
+    private ArrayList<RoutePlanNodeDBObject> mRoutePlanNodes;
+
+    public int getId() {
+        return this.mId;
+    }
+
+    public void setId(int id) {
+        this.mId = id;
+    }
+
+    public int getHisRouteId() {
+        return this.mHisRouteId;
+    }
+
+    public void setHisRouteId(int hisRouteDBId) {
+        this.mHisRouteId = hisRouteDBId;
+    }
+
+    public String getName() {
+        return this.mName;
+    }
+
+    public void setName(String name) {
+        this.mName = name;
+    }
+
+    public int getOpen() {
+        return this.mIsOpen;
+    }
+
+    public void setOpen(int isOpen) {
+        this.mIsOpen = isOpen;
+    }
+
+    public int getPushTimeHour() {
+        return this.mPushTimeHour;
+    }
+
+    public void setPushTimeHour(int hour) {
+        this.mPushTimeHour = hour;
+    }
+
+    public int getPushTimeMinute() {
+        return this.mPUshTimeMinute;
+    }
+
+    public void setPushTimeMinute(int minute) {
+        this.mPUshTimeMinute = minute;
+    }
+
+    public long getPushTimeMills() {
+        return this.mPushTimeMills;
+    }
+
+    public void setPushTimeMills(long mills) {
+        this.mPushTimeMills = mills;
+    }
+
+    public long getCustomTime() {
+        return this.mCustomTime;
+    }
+
+    public void setCustomTime(long time) {
+        this.mCustomTime = time;
+    }
+
+    public long getModifiedTime() {
+        return this.mModifiedTime;
+    }
+
+    public void setModifiedTime(long time) {
+        this.mModifiedTime = time;
+    }
+
+    public int getDestType() {
+        return this.mDestType;
+    }
+
+    public void setDestType(int type) {
+        this.mDestType = type;
+    }
+
+    public int getIsRepeat() {
+        return this.mIsRepeat;
+    }
+
+    public void setIsRepeat(int isRepeat) {
+        this.mIsRepeat = isRepeat;
+    }
+
+    public String getRepeatDate() {
+        return this.mRepeatDate;
+    }
+
+    public void setRepeatDate(String dates) {
+        this.mRepeatDate = dates;
+    }
+
+    public ArrayList<RoutePlanNodeDBObject> getRoutePlanDBNodes() {
+        return this.mRoutePlanNodes;
+    }
+
+    public ArrayList<RoutePlanNode> getRoutePlanNodes() {
+        return RoutePlanNodeDBObject.convertToRoutePlanNodeList(this.mRoutePlanNodes);
+    }
+
+    public void setRoutePlanNodes(ArrayList<RoutePlanNodeDBObject> nodes) {
+        this.mRoutePlanNodes = nodes;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/db/object/RouteCustomDBObject.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

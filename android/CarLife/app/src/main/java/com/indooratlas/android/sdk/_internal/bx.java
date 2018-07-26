@@ -2,34 +2,38 @@ package com.indooratlas.android.sdk._internal;
 
 import java.nio.ByteBuffer;
 
-public abstract interface bx
-{
-  public abstract void a();
-  
-  public abstract void a(a parama);
-  
-  public abstract void a(byte[] paramArrayOfByte);
-  
-  public abstract void b();
-  
-  public abstract boolean c();
-  
-  public static abstract interface a
-  {
-    public abstract void a(int paramInt);
-    
-    public abstract void a(int paramInt, String paramString, boolean paramBoolean);
-    
-    public abstract void a(ByteBuffer paramByteBuffer);
-    
-    public abstract void c();
-    
-    public abstract void d();
-  }
+public interface bx {
+
+    /* renamed from: com.indooratlas.android.sdk._internal.bx$a */
+    public interface C5829a {
+        /* renamed from: a */
+        void mo4631a(int i);
+
+        /* renamed from: a */
+        void mo4632a(int i, String str, boolean z);
+
+        /* renamed from: a */
+        void mo4634a(ByteBuffer byteBuffer);
+
+        /* renamed from: c */
+        void mo4635c();
+
+        /* renamed from: d */
+        void mo4636d();
+    }
+
+    /* renamed from: a */
+    void mo4641a();
+
+    /* renamed from: a */
+    void mo4642a(C5829a c5829a);
+
+    /* renamed from: a */
+    void mo4643a(byte[] bArr);
+
+    /* renamed from: b */
+    void mo4644b();
+
+    /* renamed from: c */
+    boolean mo4645c();
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/bx.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

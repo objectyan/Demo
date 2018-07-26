@@ -2,211 +2,169 @@ package com.baidu.mapframework.commonlib.date;
 
 import java.lang.reflect.Array;
 
-final class ModelUtil
-{
-  static final int a = 23;
-  private static final int b = 37;
-  
-  private static int a(int paramInt)
-  {
-    return paramInt * 37;
-  }
-  
-  static int a(int paramInt, char paramChar)
-  {
-    return a(paramInt) + paramChar;
-  }
-  
-  static int a(int paramInt, double paramDouble)
-  {
-    return a(paramInt, Double.doubleToLongBits(paramDouble));
-  }
-  
-  static int a(int paramInt, float paramFloat)
-  {
-    return a(paramInt, Float.floatToIntBits(paramFloat));
-  }
-  
-  static int a(int paramInt1, int paramInt2)
-  {
-    return a(paramInt1) + paramInt2;
-  }
-  
-  static int a(int paramInt, long paramLong)
-  {
-    return a(paramInt) + (int)(paramLong >>> 32 ^ paramLong);
-  }
-  
-  static int a(int paramInt, Object paramObject)
-  {
-    int j;
-    if (paramObject == null)
-    {
-      j = a(paramInt, 0);
-      return j;
+final class ModelUtil {
+    /* renamed from: a */
+    static final int f19028a = 23;
+    /* renamed from: b */
+    private static final int f19029b = 37;
+
+    enum NullsGo {
+        FIRST,
+        LAST
     }
-    if (!b(paramObject)) {
-      return a(paramInt, paramObject.hashCode());
+
+    private ModelUtil() {
     }
-    int k = Array.getLength(paramObject);
-    int i = 0;
-    for (;;)
-    {
-      j = paramInt;
-      if (i >= k) {
-        break;
-      }
-      paramInt = a(paramInt, Array.get(paramObject, i));
-      i += 1;
+
+    /* renamed from: a */
+    static String m15071a(Object aObject) {
+        return ToStringUtil.m15082a(aObject);
     }
-  }
-  
-  static int a(int paramInt, boolean paramBoolean)
-  {
-    int i = a(paramInt);
-    if (paramBoolean) {}
-    for (paramInt = 1;; paramInt = 0) {
-      return paramInt + i;
+
+    /* renamed from: a */
+    static String m15072a(Object aObject, Class aSpecialClass, String aMethodName) {
+        return ToStringUtil.m15083a(aObject, aSpecialClass, aMethodName);
     }
-  }
-  
-  static <T extends Comparable<T>> int a(T paramT1, T paramT2, NullsGo paramNullsGo)
-  {
-    int j = 0;
-    if ((paramT1 != null) && (paramT2 != null))
-    {
-      j = paramT1.compareTo(paramT2);
-      return j;
-    }
-    int i;
-    if ((paramT1 == null) && (paramT2 != null)) {
-      i = -1;
-    }
-    for (;;)
-    {
-      j = i;
-      if (NullsGo.LAST != paramNullsGo) {
-        break;
-      }
-      return i * -1;
-      i = j;
-      if (paramT1 != null)
-      {
-        i = j;
-        if (paramT2 == null) {
-          i = 1;
+
+    /* renamed from: a */
+    static final int m15069a(Object... aFields) {
+        int result = 23;
+        for (Object field : aFields) {
+            result = m15066a(result, field);
         }
-      }
+        return result;
     }
-  }
-  
-  static final int a(Object... paramVarArgs)
-  {
-    int j = 23;
-    int k = paramVarArgs.length;
-    int i = 0;
-    while (i < k)
-    {
-      j = a(j, paramVarArgs[i]);
-      i += 1;
+
+    /* renamed from: a */
+    static int m15067a(int aSeed, boolean aBoolean) {
+        return (aBoolean ? 1 : 0) + m15060a(aSeed);
     }
-    return j;
-  }
-  
-  static Boolean a(Object paramObject1, Object paramObject2)
-  {
-    Boolean localBoolean = null;
-    if (paramObject1 == paramObject2) {
-      localBoolean = Boolean.TRUE;
+
+    /* renamed from: a */
+    static int m15061a(int aSeed, char aChar) {
+        return m15060a(aSeed) + aChar;
     }
-    while (paramObject1.getClass().isInstance(paramObject2)) {
-      return localBoolean;
+
+    /* renamed from: a */
+    static int m15064a(int aSeed, int aInt) {
+        return m15060a(aSeed) + aInt;
     }
-    return Boolean.FALSE;
-  }
-  
-  static String a(Object paramObject)
-  {
-    return ToStringUtil.a(paramObject);
-  }
-  
-  static String a(Object paramObject, Class paramClass, String paramString)
-  {
-    return ToStringUtil.a(paramObject, paramClass, paramString);
-  }
-  
-  static boolean a(char paramChar1, char paramChar2)
-  {
-    return paramChar1 == paramChar2;
-  }
-  
-  static boolean a(double paramDouble1, double paramDouble2)
-  {
-    return Double.doubleToLongBits(paramDouble1) == Double.doubleToLongBits(paramDouble2);
-  }
-  
-  static boolean a(float paramFloat1, float paramFloat2)
-  {
-    return Float.floatToIntBits(paramFloat1) == Float.floatToIntBits(paramFloat2);
-  }
-  
-  static boolean a(long paramLong1, long paramLong2)
-  {
-    return paramLong1 == paramLong2;
-  }
-  
-  static boolean a(boolean paramBoolean1, boolean paramBoolean2)
-  {
-    return paramBoolean1 == paramBoolean2;
-  }
-  
-  static boolean a(Object[] paramArrayOfObject1, Object[] paramArrayOfObject2)
-  {
-    if (paramArrayOfObject1.length != paramArrayOfObject2.length) {
-      throw new IllegalArgumentException("Array lengths do not match. 'This' length is " + paramArrayOfObject1.length + ", while 'That' length is " + paramArrayOfObject2.length + ".");
+
+    /* renamed from: a */
+    static int m15065a(int aSeed, long aLong) {
+        return m15060a(aSeed) + ((int) ((aLong >>> 32) ^ aLong));
     }
-    boolean bool2 = true;
-    int i = 0;
-    for (;;)
-    {
-      boolean bool1 = bool2;
-      if (i < paramArrayOfObject1.length)
-      {
-        if (!b(paramArrayOfObject1[i], paramArrayOfObject2[i])) {
-          bool1 = false;
+
+    /* renamed from: a */
+    static int m15063a(int aSeed, float aFloat) {
+        return m15064a(aSeed, Float.floatToIntBits(aFloat));
+    }
+
+    /* renamed from: a */
+    static int m15062a(int aSeed, double aDouble) {
+        return m15065a(aSeed, Double.doubleToLongBits(aDouble));
+    }
+
+    /* renamed from: a */
+    static int m15066a(int aSeed, Object aObject) {
+        int result = aSeed;
+        if (aObject == null) {
+            return m15064a(result, 0);
         }
-      }
-      else {
-        return bool1;
-      }
-      i += 1;
+        if (!m15079b(aObject)) {
+            return m15064a(result, aObject.hashCode());
+        }
+        int length = Array.getLength(aObject);
+        for (int idx = 0; idx < length; idx++) {
+            result = m15066a(result, Array.get(aObject, idx));
+        }
+        return result;
     }
-  }
-  
-  private static boolean b(Object paramObject)
-  {
-    return (paramObject != null) && (paramObject.getClass().isArray());
-  }
-  
-  static boolean b(Object paramObject1, Object paramObject2)
-  {
-    if ((b(paramObject1)) || (b(paramObject2))) {
-      throw new IllegalArgumentException("This method does not currently support arrays.");
+
+    /* renamed from: a */
+    static Boolean m15070a(Object aThis, Object aThat) {
+        if (aThis == aThat) {
+            return Boolean.TRUE;
+        }
+        if (aThis.getClass().isInstance(aThat)) {
+            return null;
+        }
+        return Boolean.FALSE;
     }
-    if (paramObject1 == null) {
-      return paramObject2 == null;
+
+    /* renamed from: a */
+    static boolean m15078a(Object[] aThisSignificantFields, Object[] aThatSignificantFields) {
+        if (aThisSignificantFields.length != aThatSignificantFields.length) {
+            throw new IllegalArgumentException("Array lengths do not match. 'This' length is " + aThisSignificantFields.length + ", while 'That' length is " + aThatSignificantFields.length + ".");
+        }
+        for (int idx = 0; idx < aThisSignificantFields.length; idx++) {
+            if (!m15080b(aThisSignificantFields[idx], aThatSignificantFields[idx])) {
+                return false;
+            }
+        }
+        return true;
     }
-    return paramObject1.equals(paramObject2);
-  }
-  
-  static enum NullsGo
-  {
-    private NullsGo() {}
-  }
+
+    /* renamed from: a */
+    static boolean m15077a(boolean aThis, boolean aThat) {
+        return aThis == aThat;
+    }
+
+    /* renamed from: a */
+    static boolean m15073a(char aThis, char aThat) {
+        return aThis == aThat;
+    }
+
+    /* renamed from: a */
+    static boolean m15076a(long aThis, long aThat) {
+        return aThis == aThat;
+    }
+
+    /* renamed from: a */
+    static boolean m15075a(float aThis, float aThat) {
+        return Float.floatToIntBits(aThis) == Float.floatToIntBits(aThat);
+    }
+
+    /* renamed from: a */
+    static boolean m15074a(double aThis, double aThat) {
+        return Double.doubleToLongBits(aThis) == Double.doubleToLongBits(aThat);
+    }
+
+    /* renamed from: b */
+    static boolean m15080b(Object aThis, Object aThat) {
+        if (m15079b(aThis) || m15079b(aThat)) {
+            throw new IllegalArgumentException("This method does not currently support arrays.");
+        } else if (aThis == null) {
+            return aThat == null;
+        } else {
+            return aThis.equals(aThat);
+        }
+    }
+
+    /* renamed from: a */
+    static <T extends Comparable<T>> int m15068a(T aThis, T aThat, NullsGo aNullsGo) {
+        int result = 0;
+        if (aThis != null && aThat != null) {
+            return aThis.compareTo(aThat);
+        }
+        if (aThis == null && aThat != null) {
+            result = -1;
+        } else if (aThis != null && aThat == null) {
+            result = 1;
+        }
+        if (NullsGo.LAST == aNullsGo) {
+            return result * -1;
+        }
+        return result;
+    }
+
+    /* renamed from: a */
+    private static int m15060a(int aSeed) {
+        return aSeed * 37;
+    }
+
+    /* renamed from: b */
+    private static boolean m15079b(Object aObject) {
+        return aObject != null && aObject.getClass().isArray();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/date/ModelUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

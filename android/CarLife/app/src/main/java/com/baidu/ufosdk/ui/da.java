@@ -1,14 +1,10 @@
 package com.baidu.ufosdk.ui;
 
-public abstract interface da
-{
-  public abstract void a();
-  
-  public abstract void a(String paramString);
+/* compiled from: InputContactDialog */
+public interface da {
+    /* renamed from: a */
+    void mo3928a();
+
+    /* renamed from: a */
+    void mo3929a(String str);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/da.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

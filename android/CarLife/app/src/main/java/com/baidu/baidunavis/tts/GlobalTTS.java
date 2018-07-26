@@ -4,200 +4,143 @@ import android.content.Context;
 import android.text.TextUtils;
 import com.baidu.baidunavis.BaiduNaviManager;
 import com.baidu.baidunavis.NavMapAdapter;
-import com.baidu.mapframework.a.a.a;
+import com.baidu.mapframework.p200a.p201a.C3463a;
 import com.baidu.navisdk.jni.nativeif.JNIGuidanceControl;
+import com.baidu.navisdk.ui.voice.BNVoiceParams;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SynthesizerTool;
 import java.io.File;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 
-public class GlobalTTS
-{
-  private static final String DEFAULT_VOICE_PATH_SUFFIX = "bd_etts_ch_speech.dat";
-  private static final String GLOBAL_VOICE_PATH_SUFFIX = "2-201526.dat";
-  private static final String K_TTS_DATA_EN_FILE = "bd_etts_en_speech.dat";
-  private static final String K_TTS_TEXT_DATA_EN_FILE = "bd_etts_en_text_default.dat";
-  private static String SP_NAME = "international";
-  private static String SP_TASK_ID_KEY = "globalVoiceTaskId";
-  private Context mContext;
-  private boolean mIsLoadedEnglish = false;
-  
-  @NotNull
-  private String getTtsGlobalVoiceDirPath()
-  {
-    return NavMapAdapter.getInstance().getDataPath() + File.separator + "baiduvoicedata" + File.separator + getGlobalVoiceTaskId();
-  }
-  
-  @NotNull
-  private String getTtsGlobalVoiceTextPath()
-  {
-    return getTtsGlobalVoiceDirPath() + File.separator + "bd_etts_en_text_default.dat";
-  }
-  
-  public String getGlobalVoiceTaskId()
-  {
-    return "2-201526";
-  }
-  
-  @NotNull
-  public String getTtsGlobalVoiceSpeechPath()
-  {
-    return getTtsGlobalVoiceDirPath() + File.separator + "bd_etts_en_speech.dat";
-  }
-  
-  @NotNull
-  public String getTtsGlobalVoiceZipPath()
-  {
-    return getTtsGlobalVoiceDirPath() + File.separator + getGlobalVoiceTaskId() + ".dat";
-  }
-  
-  boolean isGlobalVoice(String paramString)
-  {
-    return getTtsGlobalVoiceZipPath().equals(paramString);
-  }
-  
-  public boolean isGlobalVoiceExist()
-  {
-    boolean bool2 = false;
-    String str1 = getTtsGlobalVoiceSpeechPath();
-    File localFile1 = new File(str1);
-    String str2 = getTtsGlobalVoiceTextPath();
-    File localFile2 = new File(str2);
-    boolean bool1 = bool2;
-    try
-    {
-      if (localFile1.exists())
-      {
-        bool1 = bool2;
-        if (localFile2.exists())
-        {
-          bool1 = bool2;
-          if (SynthesizerTool.verifyModelFile(str1))
-          {
-            boolean bool3 = SynthesizerTool.verifyModelFile(str2);
-            bool1 = bool2;
-            if (bool3) {
-              bool1 = true;
+public class GlobalTTS {
+    private static final String DEFAULT_VOICE_PATH_SUFFIX = "bd_etts_ch_speech.dat";
+    private static final String GLOBAL_VOICE_PATH_SUFFIX = "2-201526.dat";
+    private static final String K_TTS_DATA_EN_FILE = "bd_etts_en_speech.dat";
+    private static final String K_TTS_TEXT_DATA_EN_FILE = "bd_etts_en_text_default.dat";
+    private static String SP_NAME = "international";
+    private static String SP_TASK_ID_KEY = "globalVoiceTaskId";
+    private Context mContext;
+    private boolean mIsLoadedEnglish = false;
+
+    @NotNull
+    private String getTtsGlobalVoiceDirPath() {
+        return NavMapAdapter.getInstance().getDataPath() + File.separator + "baiduvoicedata" + File.separator + getGlobalVoiceTaskId();
+    }
+
+    public String getGlobalVoiceTaskId() {
+        return BNVoiceParams.GLOBAL;
+    }
+
+    @NotNull
+    public String getTtsGlobalVoiceSpeechPath() {
+        return getTtsGlobalVoiceDirPath() + File.separator + K_TTS_DATA_EN_FILE;
+    }
+
+    @NotNull
+    private String getTtsGlobalVoiceTextPath() {
+        return getTtsGlobalVoiceDirPath() + File.separator + K_TTS_TEXT_DATA_EN_FILE;
+    }
+
+    @NotNull
+    public String getTtsGlobalVoiceZipPath() {
+        return getTtsGlobalVoiceDirPath() + File.separator + getGlobalVoiceTaskId() + ".dat";
+    }
+
+    public void unzip() {
+        if (!new File(getTtsGlobalVoiceSpeechPath()).exists()) {
+            File file = new File(getTtsGlobalVoiceZipPath());
+            if (file.exists()) {
+                try {
+                    C3463a.a(file, getTtsGlobalVoiceDirPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-          }
         }
-      }
-      return bool1;
     }
-    catch (Throwable localThrowable) {}
-    return false;
-  }
-  
-  public boolean isSupportEnglish(String paramString)
-  {
-    return (TextUtils.isEmpty(paramString)) || (paramString.endsWith("bd_etts_ch_speech.dat")) || (paramString.endsWith("2-201526.dat"));
-  }
-  
-  int loadEnglishModel(SpeechSynthesizer paramSpeechSynthesizer, String paramString)
-  {
-    if (paramSpeechSynthesizer != null) {
-      try
-      {
-        if (!getTtsGlobalVoiceZipPath().equals(paramString)) {
-          return -1;
+
+    boolean verifyGlobalVoice(String ttsPath) {
+        try {
+            boolean verifyResult;
+            if (getTtsGlobalVoiceZipPath().equals(ttsPath)) {
+                unzip();
+                verifyResult = SynthesizerTool.verifyModelFile(getTtsGlobalVoiceSpeechPath()) && SynthesizerTool.verifyModelFile(getTtsGlobalVoiceTextPath());
+            } else {
+                verifyResult = false;
+            }
+            updateGlobalTTSActive(verifyResult);
+            return verifyResult;
+        } catch (Error e) {
+            return false;
         }
-        this.mIsLoadedEnglish = true;
-        int i = paramSpeechSynthesizer.loadEnglishModel(getTtsGlobalVoiceTextPath(), getTtsGlobalVoiceSpeechPath());
+    }
+
+    int loadEnglishModel(SpeechSynthesizer ttsPlayer, String ttsPath) {
+        int i = -1;
+        if (ttsPlayer != null) {
+            try {
+                if (getTtsGlobalVoiceZipPath().equals(ttsPath)) {
+                    this.mIsLoadedEnglish = true;
+                    i = ttsPlayer.loadEnglishModel(getTtsGlobalVoiceTextPath(), getTtsGlobalVoiceSpeechPath());
+                }
+            } catch (Error e) {
+                e.printStackTrace();
+            }
+        }
         return i;
-      }
-      catch (Error paramSpeechSynthesizer)
-      {
-        paramSpeechSynthesizer.printStackTrace();
-      }
     }
-    return -1;
-  }
-  
-  boolean releaseEnglishModel(SpeechSynthesizer paramSpeechSynthesizer)
-  {
-    if (paramSpeechSynthesizer != null) {
-      try
-      {
-        if (!this.mIsLoadedEnglish) {
-          return false;
+
+    boolean isGlobalVoice(String ttsPath) {
+        return getTtsGlobalVoiceZipPath().equals(ttsPath);
+    }
+
+    boolean releaseEnglishModel(SpeechSynthesizer ttsPlayer) {
+        if (ttsPlayer == null) {
+            return false;
         }
-        paramSpeechSynthesizer.release();
-        this.mIsLoadedEnglish = false;
-        return true;
-      }
-      catch (Error paramSpeechSynthesizer) {}
-    }
-    return false;
-  }
-  
-  public void setContext(Context paramContext)
-  {
-    this.mContext = paramContext;
-  }
-  
-  public void unzip()
-  {
-    if (new File(getTtsGlobalVoiceSpeechPath()).exists()) {}
-    File localFile;
-    do
-    {
-      return;
-      localFile = new File(getTtsGlobalVoiceZipPath());
-    } while (!localFile.exists());
-    try
-    {
-      a.a(localFile, getTtsGlobalVoiceDirPath());
-      return;
-    }
-    catch (IOException localIOException)
-    {
-      localIOException.printStackTrace();
-    }
-  }
-  
-  public void updateGlobalTTSActive(boolean paramBoolean)
-  {
-    if (BaiduNaviManager.sIsBaseEngineInitialized) {}
-    try
-    {
-      JNIGuidanceControl.getInstance().setEngTTSActive(paramBoolean);
-      return;
-    }
-    catch (Throwable localThrowable)
-    {
-      localThrowable.printStackTrace();
-    }
-  }
-  
-  boolean verifyGlobalVoice(String paramString)
-  {
-    try
-    {
-      boolean bool;
-      if (getTtsGlobalVoiceZipPath().equals(paramString))
-      {
-        unzip();
-        if ((SynthesizerTool.verifyModelFile(getTtsGlobalVoiceSpeechPath())) && (SynthesizerTool.verifyModelFile(getTtsGlobalVoiceTextPath()))) {
-          bool = true;
+        try {
+            if (!this.mIsLoadedEnglish) {
+                return false;
+            }
+            ttsPlayer.release();
+            this.mIsLoadedEnglish = false;
+            return true;
+        } catch (Error e) {
+            return false;
         }
-      }
-      for (;;)
-      {
-        updateGlobalTTSActive(bool);
-        return bool;
-        bool = false;
-        continue;
-        bool = false;
-      }
-      return false;
     }
-    catch (Error paramString) {}
-  }
+
+    public void setContext(Context context) {
+        this.mContext = context;
+    }
+
+    public void updateGlobalTTSActive(boolean isActive) {
+        if (BaiduNaviManager.sIsBaseEngineInitialized) {
+            try {
+                JNIGuidanceControl.getInstance().setEngTTSActive(isActive);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean isGlobalVoiceExist() {
+        String speechPath = getTtsGlobalVoiceSpeechPath();
+        File speechFile = new File(speechPath);
+        String textPath = getTtsGlobalVoiceTextPath();
+        File textFile = new File(textPath);
+        try {
+            if (speechFile.exists() && textFile.exists() && SynthesizerTool.verifyModelFile(speechPath) && SynthesizerTool.verifyModelFile(textPath)) {
+                return true;
+            }
+            return false;
+        } catch (Throwable th) {
+            return false;
+        }
+    }
+
+    public boolean isSupportEnglish(String ttsPath) {
+        return TextUtils.isEmpty(ttsPath) || ttsPath.endsWith(DEFAULT_VOICE_PATH_SUFFIX) || ttsPath.endsWith(GLOBAL_VOICE_PATH_SUFFIX);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/baidunavis/tts/GlobalTTS.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

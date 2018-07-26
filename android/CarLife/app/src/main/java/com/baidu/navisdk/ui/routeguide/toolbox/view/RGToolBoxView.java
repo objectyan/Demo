@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.util.SparseArray;
@@ -17,8 +16,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.module.offscreen.BNOffScreenParams;
 import com.baidu.navisdk.ui.routeguide.control.RGViewController;
-import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
 import com.baidu.navisdk.ui.routeguide.subview.OnRGSubViewListener;
 import com.baidu.navisdk.ui.routeguide.toolbox.RGToolboxConstant;
 import com.baidu.navisdk.ui.routeguide.toolbox.present.BaseNavPresent;
@@ -32,915 +32,730 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 
-public class RGToolBoxView
-  implements IRGToolBoxView, CustomLinearScrollView.OnStatusChangeListener
-{
-  public static final int SETTING_ST_CLOSE = 2;
-  public static final int SETTING_ST_OPEN = 1;
-  private static final String TAG = "BNToolBoxView";
-  public static final int TOPBAR_STATE_BROWSEMAP = 1;
-  public static final int TOPBAR_STATE_NORMAL = 0;
-  private final int closeColor = BNStyleManager.getColor(1711800741);
-  private Activity mActivity;
-  private TextView mArrivetime;
-  private BNWorkerNormalTask<String, String> mAutoHideRunnable = new BNWorkerNormalTask("RGToolBoxView-autoHideTask", null)
-  {
-    protected String execute()
-    {
-      RGToolBoxView.this.closeToolBox();
-      return null;
+public class RGToolBoxView implements IRGToolBoxView, OnStatusChangeListener {
+    public static final int SETTING_ST_CLOSE = 2;
+    public static final int SETTING_ST_OPEN = 1;
+    private static final String TAG = "BNToolBoxView";
+    public static final int TOPBAR_STATE_BROWSEMAP = 1;
+    public static final int TOPBAR_STATE_NORMAL = 0;
+    private final int closeColor = BNStyleManager.getColor(C4048R.color.nsdk_rg_transparent);
+    private Activity mActivity;
+    private TextView mArrivetime;
+    private BNWorkerNormalTask<String, String> mAutoHideRunnable = new BNWorkerNormalTask<String, String>("RGToolBoxView-autoHideTask", null) {
+        protected String execute() {
+            RGToolBoxView.this.closeToolBox();
+            return null;
+        }
+    };
+    public String mCarNum;
+    private View mClearPoiView = null;
+    private int mContainnerViewId;
+    private TextView mCurStateTipsTv;
+    private boolean mIsCurDay = true;
+    private TextView mNoProgressLoadingView;
+    private ImageView mOpenCloseIV;
+    private View mOpenCloseLy;
+    private TextView mOpenCloseText;
+    private View mQuitDividerView;
+    private ImageView mQuitImageView;
+    private TextView mReRoutePlanTextView = null;
+    private View mReRoutePlanWattingView = null;
+    private TextView mRemainTimeTv;
+    private View mResumeSwitchLy = null;
+    private View mRootView;
+    private ViewGroup mRootViewContainer;
+    private CustomLinearScrollView mScrollView;
+    private View mTimeAndDistLy;
+    private BaseNavPresent mToolBoxPresent = null;
+    private View mViewBottomPanel;
+    private View mViewChange;
+    private View mViewClear;
+    private View mViewContinue;
+    private View mViewContinue2;
+    private View mViewExit;
+    private SparseArray<View> mViewMap = new SparseArray();
+    private View mViewSetting;
+    private SparseArray<Integer> mViewStatus = new SparseArray();
+    private final int openColor = BNStyleManager.getColor(C4048R.color.cl_rg_bg_a);
+
+    public interface LoadingCallback {
+        void onQuitClick();
     }
-  };
-  public String mCarNum;
-  private View mClearPoiView = null;
-  private int mContainnerViewId;
-  private TextView mCurStateTipsTv;
-  private boolean mIsCurDay = true;
-  private TextView mNoProgressLoadingView;
-  private ImageView mOpenCloseIV;
-  private View mOpenCloseLy;
-  private TextView mOpenCloseText;
-  private View mQuitDividerView;
-  private ImageView mQuitImageView;
-  private TextView mReRoutePlanTextView = null;
-  private View mReRoutePlanWattingView = null;
-  private TextView mRemainTimeTv;
-  private View mResumeSwitchLy = null;
-  private View mRootView;
-  private ViewGroup mRootViewContainer;
-  private CustomLinearScrollView mScrollView;
-  private View mTimeAndDistLy;
-  private BaseNavPresent mToolBoxPresent = null;
-  private View mViewBottomPanel;
-  private View mViewChange;
-  private View mViewClear;
-  private View mViewContinue;
-  private View mViewContinue2;
-  private View mViewExit;
-  private SparseArray<View> mViewMap = new SparseArray();
-  private View mViewSetting;
-  private SparseArray<Integer> mViewStatus = new SparseArray();
-  private final int openColor = BNStyleManager.getColor(1711800784);
-  
-  public RGToolBoxView(Activity paramActivity, ViewGroup paramViewGroup, int paramInt)
-  {
-    this.mActivity = paramActivity;
-    this.mContainnerViewId = paramInt;
-    this.mRootViewContainer = ((ViewGroup)paramViewGroup.findViewById(paramInt));
-    inflate();
-    updateStyle(BNStyleManager.getDayStyle());
-    initPresent();
-    this.mToolBoxPresent.startInit();
-  }
-  
-  private void addToContainner()
-  {
-    LogUtil.e("BNToolBoxView", "addToContainner");
-    if (this.mRootView == null) {
-      inflate();
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.toolbox.view.RGToolBoxView$1 */
+    class C44691 implements OnTouchListener {
+        C44691() {
+        }
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return true;
+        }
     }
-    this.mRootViewContainer.addView(this.mRootView);
-    if (RGViewController.getInstance().getPreloadOrientation() == 1) {
-      this.mRootViewContainer.setPadding(0, 0, 0, 0);
-    }
-    for (;;)
-    {
-      this.mRootViewContainer.setOnTouchListener(new View.OnTouchListener()
-      {
-        public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-        {
-          if ((paramAnonymousMotionEvent.getAction() == 0) && (RGToolBoxView.this.mScrollView != null) && (RGToolBoxView.this.mScrollView.getCurStatus() == 0))
-          {
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.toolbox.view.RGToolBoxView$3 */
+    class C44713 implements OnTouchListener {
+        C44713() {
+        }
+
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() != 0 || RGToolBoxView.this.mScrollView == null || RGToolBoxView.this.mScrollView.getCurStatus() != 0) {
+                return false;
+            }
             RGToolBoxView.this.closeToolBox();
             return true;
-          }
-          return false;
         }
-      });
-      if (this.mRootView.getVisibility() != 0) {
-        break;
-      }
-      this.mRootViewContainer.setVisibility(0);
-      return;
-      this.mRootViewContainer.setPadding(RGViewController.getInstance().getmRootViewHeight() / 4, 0, 0, 0);
     }
-    this.mRootViewContainer.setVisibility(8);
-  }
-  
-  private int getColor(int paramInt)
-  {
-    return BNStyleManager.getColor(paramInt, this.mIsCurDay);
-  }
-  
-  private Drawable getDrawable(int paramInt)
-  {
-    return BNStyleManager.getDrawable(paramInt, this.mIsCurDay);
-  }
-  
-  private boolean getIsTrueCurDay(boolean paramBoolean)
-  {
-    if ((this.mViewMap != null) && (this.mViewMap.size() > 0) && (this.mViewMap.get(0) != null))
-    {
-      localObject = (View)this.mViewMap.get(0);
-      if ((localObject instanceof TextView))
-      {
-        int i = ((TextView)localObject).getCurrentTextColor();
-        if (JarUtils.getResources() != null)
-        {
-          if (i != JarUtils.getResources().getColor(1711800793)) {
-            break label131;
-          }
-          bool = true;
-          this.mIsCurDay = bool;
+
+    public RGToolBoxView(Activity activity, ViewGroup viewGroup, int containnerId) {
+        this.mActivity = activity;
+        this.mContainnerViewId = containnerId;
+        this.mRootViewContainer = (ViewGroup) viewGroup.findViewById(containnerId);
+        inflate();
+        updateStyle(BNStyleManager.getDayStyle());
+        initPresent();
+        this.mToolBoxPresent.startInit();
+    }
+
+    public Context getContext() {
+        if (this.mActivity != null) {
+            return this.mActivity.getApplicationContext();
         }
-      }
+        LogUtil.m15791e(TAG, "getContext activity is null");
+        return null;
     }
-    Object localObject = new StringBuilder().append("getIsTrueCurDay mIsCurDay");
-    if (paramBoolean == this.mIsCurDay) {}
-    for (boolean bool = true;; bool = false)
-    {
-      LogUtil.e("BNToolBoxView", bool);
-      if (paramBoolean != this.mIsCurDay) {
-        break label141;
-      }
-      return true;
-      label131:
-      bool = false;
-      break;
+
+    private void initPresent() {
+        this.mToolBoxPresent = new RGToolBoxPresent(this);
     }
-    label141:
-    return false;
-  }
-  
-  private void initPresent()
-  {
-    this.mToolBoxPresent = new RGToolBoxPresent(this);
-  }
-  
-  private void rootViewFadeInAnim()
-  {
-    if ((Build.VERSION.SDK_INT >= 11) && (this.mRootViewContainer != null))
-    {
-      ObjectAnimator localObjectAnimator = ObjectAnimator.ofInt(this.mRootViewContainer, "backgroundColor", new int[] { this.closeColor, this.openColor });
-      localObjectAnimator.setDuration(200L);
-      localObjectAnimator.setEvaluator(new ArgbEvaluator());
-      localObjectAnimator.start();
+
+    public void updateSubListener(OnRGSubViewListener listener) {
+        this.mToolBoxPresent.setOnSubViewClickListener(listener);
     }
-  }
-  
-  private void rootViewFadeOutAnim()
-  {
-    if ((Build.VERSION.SDK_INT >= 11) && (this.mRootViewContainer != null))
-    {
-      ObjectAnimator localObjectAnimator = ObjectAnimator.ofInt(this.mRootViewContainer, "backgroundColor", new int[] { this.openColor, this.closeColor });
-      localObjectAnimator.setDuration(200L);
-      localObjectAnimator.setEvaluator(new ArgbEvaluator());
-      localObjectAnimator.start();
+
+    public View inflate() {
+        if (this.mRootView != null) {
+            return this.mRootView;
+        }
+        this.mRootView = JarUtils.inflate(this.mActivity, C4048R.layout.nsdk_layout_rg_mapmode_main_sub_toolbox, null);
+        if (this.mRootView == null) {
+            LogUtil.m15791e(TAG, "inflate fail mRootView null");
+            return null;
+        }
+        this.mScrollView = (CustomLinearScrollView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_scroollview);
+        this.mScrollView.setInitScrollStatus(1);
+        this.mScrollView.setOnStatusChangeListener(this);
+        this.mNoProgressLoadingView = (TextView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_loading_no_progress);
+        this.mTimeAndDistLy = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_time_and_dist_ly);
+        this.mRemainTimeTv = (TextView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_remain_time_and_dist);
+        this.mArrivetime = (TextView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_arrive_time);
+        this.mCurStateTipsTv = (TextView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_continue_nav);
+        for (int index = 0; index < RGToolboxConstant.VIEW_CLICK_IDS.length; index++) {
+            this.mViewMap.put(index, this.mRootView.findViewById(RGToolboxConstant.VIEW_CLICK_IDS[index]));
+        }
+        this.mOpenCloseLy = (View) this.mViewMap.get(9);
+        this.mOpenCloseText = (TextView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_open_close_tv);
+        this.mOpenCloseIV = (ImageView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_open_close_iv);
+        this.mQuitImageView = (ImageView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_quit_iv);
+        this.mQuitDividerView = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_quit_divider);
+        this.mReRoutePlanWattingView = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_rp_watting);
+        this.mReRoutePlanTextView = (TextView) this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_rp_watting_tv);
+        this.mReRoutePlanWattingView.setOnTouchListener(new C44691());
+        for (int id : RGToolboxConstant.CLICK_ViewIndex) {
+            final int viewID = id;
+            ((View) this.mViewMap.get(id)).setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    RGToolBoxView.this.mToolBoxPresent.onClick(v, viewID);
+                }
+            });
+        }
+        this.mViewExit = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_quit_ly);
+        this.mViewContinue = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_continue_nav);
+        this.mViewSetting = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_open_close_ly);
+        this.mViewContinue2 = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_resume_tv);
+        this.mViewChange = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_switch_route_tv);
+        this.mViewClear = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_clear_poi_tv);
+        this.mViewBottomPanel = this.mRootView.findViewById(C4048R.id.nsdk_rg_bottom_panel);
+        return this.mRootView;
     }
-  }
-  
-  public void closeToolBox()
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (this.mScrollView != null)
-    {
-      bool1 = bool2;
-      if (isOpenStatus())
-      {
-        bool1 = this.mScrollView.gotoBottom();
-        rootViewFadeOutAnim();
-      }
+
+    public void updateStyle(boolean day) {
+        if (!getIsTrueCurDay(day)) {
+            View styleView;
+            TextView v;
+            View v2;
+            this.mIsCurDay = day;
+            if (this.mOpenCloseIV != null) {
+                if (this.mScrollView.getCurStatus() == 0) {
+                    this.mOpenCloseIV.setImageDrawable(getDrawable(C4048R.drawable.nsdk_drawable_toolbox_icon_close_toolbox));
+                } else {
+                    this.mOpenCloseIV.setImageDrawable(getDrawable(C4048R.drawable.nsdk_drawable_toolbox_icon_open_toolbox));
+                }
+            }
+            if (this.mQuitImageView != null) {
+                this.mQuitImageView.setImageDrawable(getDrawable(C4048R.drawable.nsdk_drawable_toolbox_icon_quit_nav));
+            }
+            if (this.mReRoutePlanWattingView != null) {
+                this.mReRoutePlanWattingView.setBackgroundColor(getColor(C4048R.color.cl_bg_d));
+            }
+            int allViewLen = RGToolboxConstant.VIEW_SETTINGS_ITEM.length;
+            for (int index = 0; index < allViewLen; index++) {
+                styleView = (View) this.mViewMap.get(RGToolboxConstant.VIEW_SETTINGS_ITEM[index]);
+                styleView.setBackgroundDrawable(getDrawable(C4048R.drawable.nsdk_drawable_common_bg_pressed_mask_selector));
+                styleView.setPadding(0, ScreenUtil.getInstance().dip2px(16), 0, 0);
+                int color;
+                Drawable drawable;
+                switch (index) {
+                    case 0:
+                        color = getColor(C4048R.color.cl_text_b_mm);
+                        drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_route_sort);
+                        ((TextView) styleView).setTextColor(color);
+                        ((TextView) styleView).setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+                        break;
+                    case 1:
+                        color = getColor(C4048R.color.cl_text_b_mm);
+                        drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_way_search);
+                        ((TextView) styleView).setTextColor(color);
+                        ((TextView) styleView).setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+                        break;
+                    case 2:
+                        color = getColor(C4048R.color.cl_text_b_mm);
+                        drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_ugc_report);
+                        ((TextView) styleView).setTextColor(color);
+                        ((TextView) styleView).setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+                        break;
+                    case 3:
+                        color = getColor(C4048R.color.cl_text_b_mm);
+                        drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_route_share);
+                        ((TextView) styleView).setTextColor(color);
+                        ((TextView) styleView).setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+                        break;
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                        Integer value = (Integer) this.mViewStatus.get(RGToolboxConstant.VIEW_SETTINGS_ITEM[index]);
+                        if (value == null) {
+                            break;
+                        }
+                        updateSettingStatus(RGToolboxConstant.VIEW_SETTINGS_ITEM[index], value.intValue());
+                        break;
+                    default:
+                        break;
+                }
+            }
+            styleView = (View) this.mViewMap.get(14);
+            if (styleView != null && (styleView instanceof ImageView)) {
+                ((ImageView) styleView).setImageDrawable(getDrawable(C4048R.drawable.nsdk_notification_quit_icon));
+            }
+            ProgressBar progressBar = (ProgressBar) this.mRootView.findViewById(1711866945);
+            if (progressBar != null) {
+                Drawable barDrawable = getDrawable(C4048R.drawable.nsdk_drawable_black_loading_progress);
+                barDrawable.setBounds(0, 0, barDrawable.getIntrinsicWidth(), barDrawable.getIntrinsicHeight());
+                progressBar.setIndeterminateDrawable(barDrawable);
+            }
+            for (int id : RGToolboxConstant.VIEW_TEXT_A) {
+                v = (TextView) this.mRootView.findViewById(id);
+                if (v != null) {
+                    v.setTextColor(getColor(C4048R.color.cl_text_a_mm));
+                }
+            }
+            for (int id2 : RGToolboxConstant.VIEW_TEXT_B) {
+                v = (TextView) this.mRootView.findViewById(id2);
+                if (v != null) {
+                    v.setTextColor(getColor(C4048R.color.cl_text_b_mm));
+                }
+            }
+            for (int id22 : RGToolboxConstant.VIEW_TEXT_B_TITLE) {
+                v = (TextView) this.mRootView.findViewById(id22);
+                if (v != null) {
+                    v.setTextColor(getColor(C4048R.color.cl_text_b_mm_title));
+                }
+            }
+            for (int id222 : RGToolboxConstant.VIEW_TEXT_B_SINGLE) {
+                v = (TextView) this.mRootView.findViewById(id222);
+                if (v != null) {
+                    v.setTextColor(getColor(C4048R.color.cl_text_b_mm_single));
+                }
+            }
+            for (int id2222 : RGToolboxConstant.VIEW_BG_ID) {
+                v2 = this.mRootView.findViewById(id2222);
+                if (v2 != null) {
+                    v2.setBackgroundColor(getColor(C4048R.color.cl_bg_d));
+                }
+            }
+            for (int id22222 : RGToolboxConstant.DIVIDER_H) {
+                v2 = this.mRootView.findViewById(id22222);
+                if (v2 != null) {
+                    v2.setBackgroundColor(getColor(C4048R.color.cl_rg_bg_b));
+                }
+            }
+            for (int id222222 : RGToolboxConstant.DIVIDER_V) {
+                v2 = this.mRootView.findViewById(id222222);
+                if (v2 != null) {
+                    v2.setBackgroundColor(getColor(C4048R.color.cl_rg_bg_c));
+                }
+            }
+            this.mViewExit.setBackgroundDrawable(getDrawable(C4048R.drawable.bnav_common_cp_toolbox_selector));
+            this.mViewContinue.setBackgroundDrawable(getDrawable(C4048R.drawable.bnav_common_cp_toolbox_selector));
+            this.mViewContinue2.setBackgroundDrawable(getDrawable(C4048R.drawable.bnav_common_cp_toolbox_selector));
+            this.mViewSetting.setBackgroundDrawable(getDrawable(C4048R.drawable.bnav_common_cp_toolbox_selector));
+            this.mViewChange.setBackgroundDrawable(getDrawable(C4048R.drawable.bnav_common_cp_toolbox_selector));
+            this.mViewClear.setBackgroundDrawable(getDrawable(C4048R.drawable.bnav_common_cp_toolbox_selector));
+        }
     }
-    LogUtil.e("BNToolBoxView", "closeToolBox result :" + bool1);
-  }
-  
-  public void closeToolBox(boolean paramBoolean)
-  {
-    LogUtil.e("BNToolBoxView", "closeToolBox isNeedAnim:" + paramBoolean);
-    if ((this.mScrollView != null) && (isOpenStatus()))
-    {
-      this.mScrollView.gotoBottom();
-      if (paramBoolean) {
-        rootViewFadeOutAnim();
-      }
+
+    private boolean getIsTrueCurDay(boolean day) {
+        boolean z;
+        if (!(this.mViewMap == null || this.mViewMap.size() <= 0 || this.mViewMap.get(0) == null)) {
+            View view = (View) this.mViewMap.get(0);
+            if (view instanceof TextView) {
+                int color = ((TextView) view).getCurrentTextColor();
+                if (JarUtils.getResources() != null) {
+                    if (color == JarUtils.getResources().getColor(C4048R.color.cl_text_b_mm)) {
+                        z = true;
+                    } else {
+                        z = false;
+                    }
+                    this.mIsCurDay = z;
+                }
+            }
+        }
+        String str = TAG;
+        StringBuilder append = new StringBuilder().append("getIsTrueCurDay mIsCurDay");
+        if (day == this.mIsCurDay) {
+            z = true;
+        } else {
+            z = false;
+        }
+        LogUtil.m15791e(str, append.append(z).toString());
+        if (day == this.mIsCurDay) {
+            return true;
+        }
+        return false;
     }
-  }
-  
-  public Context getContext()
-  {
-    if (this.mActivity != null) {
-      return this.mActivity.getApplicationContext();
+
+    public void updateSettingStatus(int key, int value) {
+        LogUtil.m15791e(TAG, "updateSettingStatus key=" + key + " value = " + value);
+        this.mViewStatus.put(key, Integer.valueOf(value));
+        int color = -1;
+        Drawable drawable = null;
+        String title = "";
+        switch (key) {
+            case 4:
+                color = BNStyleManager.getColor(C4048R.color.cl_text_g, this.mIsCurDay);
+                if (value != 1) {
+                    drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_north2d_mode);
+                    title = BNStyleManager.getString(C4048R.string.nsdk_string_rg_menu_view_north2d);
+                    break;
+                }
+                drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_car3d_mode);
+                title = BNStyleManager.getString(C4048R.string.nsdk_string_rg_menu_view_car3d);
+                break;
+            case 5:
+                title = "导航声音";
+                if (value != 1) {
+                    color = getColor(C4048R.color.cl_text_g);
+                    drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_voice_open);
+                    break;
+                }
+                color = getColor(C4048R.color.cl_text_b_mm);
+                drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_voice_closed);
+                break;
+            case 6:
+                color = getColor(C4048R.color.cl_text_g);
+                if (value != 1) {
+                    drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_beam_chart);
+                    title = "路况条";
+                    break;
+                }
+                drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_fullview_state);
+                title = "全览小窗";
+                break;
+            case 7:
+                if (value != 1) {
+                    color = getColor(C4048R.color.cl_text_b_mm);
+                    drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_car_plate_closed);
+                    title = "车牌限行";
+                    break;
+                }
+                color = getColor(C4048R.color.cl_text_g);
+                drawable = getDrawable(C4048R.drawable.nsdk_drawable_toolbox_car_plate_open);
+                title = this.mCarNum;
+                break;
+        }
+        TextView textView = (TextView) this.mViewMap.get(key);
+        if (textView != null) {
+            textView.setText(title);
+            textView.setTextColor(color);
+            textView.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+        }
     }
-    LogUtil.e("BNToolBoxView", "getContext activity is null");
-    return null;
-  }
-  
-  public RGToolBoxPresent getPresent()
-  {
-    return (RGToolBoxPresent)this.mToolBoxPresent;
-  }
-  
-  public void hideLoadingViewHasProgress()
-  {
-    LogUtil.e("BNToolBoxView", "hideLoadingViewHasProgress");
-    this.mReRoutePlanWattingView.setVisibility(8);
-    this.mViewBottomPanel.setVisibility(0);
-    this.mScrollView.setScrollSupport(true);
-  }
-  
-  public void hideLoadingViewNoProgress()
-  {
-    LogUtil.e("BNToolBoxView", "hideLoadingViewNoProgress");
-    this.mNoProgressLoadingView.setVisibility(8);
-    this.mRemainTimeTv.setVisibility(0);
-    this.mArrivetime.setVisibility(0);
-    this.mScrollView.setScrollSupport(true);
-    this.mOpenCloseLy.setEnabled(true);
-    this.mTimeAndDistLy.setEnabled(true);
-    this.mOpenCloseLy.setAlpha(1.0F);
-  }
-  
-  public void hideToolBox()
-  {
-    LogUtil.e("BNToolBoxView", "hideToolBox :");
-    if (this.mRootView != null) {
-      this.mRootView.setVisibility(8);
+
+    public void showToolBox() {
+        LogUtil.m15791e(TAG, "showToolBox :");
+        if (this.mRootViewContainer.getChildCount() == 0) {
+            addToContainner();
+        }
+        updateStyle(BNStyleManager.getDayStyle());
+        if (this.mRootView != null) {
+            this.mRootView.setVisibility(0);
+        }
+        if (this.mRootViewContainer != null) {
+            this.mRootViewContainer.setVisibility(0);
+        }
     }
-    for (;;)
-    {
-      if (this.mRootViewContainer != null) {
-        this.mRootViewContainer.setVisibility(8);
-      }
-      BNWorkerCenter.getInstance().cancelTask(this.mAutoHideRunnable, false);
-      return;
-      LogUtil.e("BNToolBoxView", "showToolBox error");
+
+    public void hideToolBox() {
+        LogUtil.m15791e(TAG, "hideToolBox :");
+        if (this.mRootView != null) {
+            this.mRootView.setVisibility(8);
+        } else {
+            LogUtil.m15791e(TAG, "showToolBox error");
+        }
+        if (this.mRootViewContainer != null) {
+            this.mRootViewContainer.setVisibility(8);
+        }
+        BNWorkerCenter.getInstance().cancelTask(this.mAutoHideRunnable, false);
     }
-  }
-  
-  public View inflate()
-  {
-    if (this.mRootView != null) {
-      return this.mRootView;
+
+    public void openToolBox() {
+        boolean result = false;
+        if (this.mScrollView != null) {
+            result = this.mScrollView.gotoTop();
+            rootViewFadeInAnim();
+        }
+        LogUtil.m15791e(TAG, "openToolBox result :" + result);
     }
-    this.mRootView = JarUtils.inflate(this.mActivity, 1711472725, null);
-    if (this.mRootView == null)
-    {
-      LogUtil.e("BNToolBoxView", "inflate fail mRootView null");
-      return null;
+
+    public void closeToolBox() {
+        boolean result = false;
+        if (this.mScrollView != null && isOpenStatus()) {
+            result = this.mScrollView.gotoBottom();
+            rootViewFadeOutAnim();
+        }
+        LogUtil.m15791e(TAG, "closeToolBox result :" + result);
     }
-    this.mScrollView = ((CustomLinearScrollView)this.mRootView.findViewById(1711866657));
-    this.mScrollView.setInitScrollStatus(1);
-    this.mScrollView.setOnStatusChangeListener(this);
-    this.mNoProgressLoadingView = ((TextView)this.mRootView.findViewById(1711866666));
-    this.mTimeAndDistLy = this.mRootView.findViewById(1711866665);
-    this.mRemainTimeTv = ((TextView)this.mRootView.findViewById(1711866667));
-    this.mArrivetime = ((TextView)this.mRootView.findViewById(1711866668));
-    this.mCurStateTipsTv = ((TextView)this.mRootView.findViewById(1711866669));
-    int i = 0;
-    while (i < RGToolboxConstant.VIEW_CLICK_IDS.length)
-    {
-      this.mViewMap.put(i, this.mRootView.findViewById(RGToolboxConstant.VIEW_CLICK_IDS[i]));
-      i += 1;
+
+    public void closeToolBox(boolean isNeedAnim) {
+        LogUtil.m15791e(TAG, "closeToolBox isNeedAnim:" + isNeedAnim);
+        if (this.mScrollView != null && isOpenStatus()) {
+            this.mScrollView.gotoBottom();
+            if (isNeedAnim) {
+                rootViewFadeOutAnim();
+            }
+        }
     }
-    this.mOpenCloseLy = ((View)this.mViewMap.get(9));
-    this.mOpenCloseText = ((TextView)this.mRootView.findViewById(1711866673));
-    this.mOpenCloseIV = ((ImageView)this.mRootView.findViewById(1711866672));
-    this.mQuitImageView = ((ImageView)this.mRootView.findViewById(1711866662));
-    this.mQuitDividerView = this.mRootView.findViewById(1711866664);
-    this.mReRoutePlanWattingView = this.mRootView.findViewById(1711866680);
-    this.mReRoutePlanTextView = ((TextView)this.mRootView.findViewById(1711866946));
-    this.mReRoutePlanWattingView.setOnTouchListener(new View.OnTouchListener()
-    {
-      public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-      {
+
+    public boolean isOpenStatus() {
+        if (this.mScrollView == null || this.mScrollView.getCurStatus() != 0) {
+            return false;
+        }
         return true;
-      }
-    });
-    int[] arrayOfInt = RGToolboxConstant.CLICK_ViewIndex;
-    int j = arrayOfInt.length;
-    i = 0;
-    while (i < j)
-    {
-      final int k = arrayOfInt[i];
-      ((View)this.mViewMap.get(k)).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          RGToolBoxView.this.mToolBoxPresent.onClick(paramAnonymousView, k);
+    }
+
+    public boolean isToolboxScrolling() {
+        if (this.mScrollView != null) {
+            return this.mScrollView.isScrolling();
         }
-      });
-      i += 1;
+        return false;
     }
-    this.mViewExit = this.mRootView.findViewById(1711866661);
-    this.mViewContinue = this.mRootView.findViewById(1711866669);
-    this.mViewSetting = this.mRootView.findViewById(1711866671);
-    this.mViewContinue2 = this.mRootView.findViewById(1711866676);
-    this.mViewChange = this.mRootView.findViewById(1711866678);
-    this.mViewClear = this.mRootView.findViewById(1711866679);
-    this.mViewBottomPanel = this.mRootView.findViewById(1711866660);
-    return this.mRootView;
-  }
-  
-  public boolean isLastScrollEvent()
-  {
-    if (this.mScrollView != null) {
-      return this.mScrollView.mLastEventIsScroll;
+
+    public RGToolBoxPresent getPresent() {
+        return (RGToolBoxPresent) this.mToolBoxPresent;
     }
-    return false;
-  }
-  
-  public boolean isOpenStatus()
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (this.mScrollView != null)
-    {
-      bool1 = bool2;
-      if (this.mScrollView.getCurStatus() == 0) {
-        bool1 = true;
-      }
+
+    public void switchToolBarMode(int mode) {
     }
-    return bool1;
-  }
-  
-  public boolean isToolboxScrolling()
-  {
-    if (this.mScrollView != null) {
-      return this.mScrollView.isScrolling();
+
+    public void setCurStateTips(String tips) {
+        LogUtil.m15791e(TAG, "setCurStateTips tips:" + tips);
+        this.mCurStateTipsTv.setText(tips);
     }
-    return false;
-  }
-  
-  public void onDestroy()
-  {
-    LogUtil.e("BNToolBoxView", "onDestroy :");
-    this.mViewMap.clear();
-    this.mActivity = null;
-    this.mRemainTimeTv = null;
-    this.mArrivetime = null;
-    this.mCurStateTipsTv = null;
-    this.mScrollView = null;
-  }
-  
-  public void onOrientationChange(ViewGroup paramViewGroup, int paramInt)
-  {
-    LogUtil.e("BNToolBoxView", "onOrientationChange");
-    this.mRootViewContainer.removeAllViews();
-    this.mRootViewContainer = ((ViewGroup)paramViewGroup.findViewById(1711866531));
-    addToContainner();
-    if (isOpenStatus()) {
-      this.mRootViewContainer.setBackgroundColor(this.openColor);
-    }
-  }
-  
-  public void onProgressChange(int paramInt)
-  {
-    LogUtil.e("BNToolBoxView", "onProgressChange : " + paramInt);
-    View localView = (View)this.mViewMap.get(8);
-    float f = paramInt / 100.0F;
-    if (localView != null)
-    {
-      localView.setAlpha(f);
-      if (paramInt >= 10) {
-        break label130;
-      }
-      localView.setVisibility(4);
-    }
-    label130:
-    do
-    {
-      for (;;)
-      {
-        if (this.mRootViewContainer != null)
-        {
-          int i = (int)(0.5F * (1.0F - f) * 255.0F);
-          int j = (int)Math.pow(16.0D, 6.0D);
-          this.mRootViewContainer.setBackgroundColor(i * j);
-          if (paramInt <= 98) {
-            break;
-          }
-          this.mRootViewContainer.setBackgroundColor(this.closeColor);
+
+    public void updateRemainTimeAndDist(String remainTime) {
+        LogUtil.m15791e(TAG, "updateRemainTimeAndDist remainTime:" + remainTime);
+        if (this.mRemainTimeTv != null) {
+            this.mRemainTimeTv.setText(remainTime);
         }
-        return;
-        if (paramInt > 10) {
-          localView.setVisibility(0);
+    }
+
+    public void updateArriveTime(String timeAndDist) {
+        LogUtil.m15791e(TAG, "updateArriveTime:" + timeAndDist);
+        if (this.mArrivetime != null) {
+            this.mArrivetime.setText(timeAndDist);
         }
-      }
-    } while (paramInt >= 2);
-    this.mRootViewContainer.setBackgroundColor(this.openColor);
-  }
-  
-  public void onSizeChanged()
-  {
-    LogUtil.e("BNToolBoxView", "onSizeChanged");
-    if (RGViewController.getInstance().getPreloadOrientation() != 1)
-    {
-      this.mRootViewContainer.setPadding(RGViewController.getInstance().getmRootViewHeight() / 4, 0, 0, 0);
-      return;
     }
-    this.mRootViewContainer.setPadding(0, 0, 0, 0);
-  }
-  
-  public void onStatusChange(int paramInt)
-  {
-    LogUtil.e("BNToolBoxView", "onStatusChange :" + paramInt);
-    if (this.mViewMap.size() < 1) {
-      return;
-    }
-    switch (paramInt)
-    {
-    default: 
-      return;
-    case 0: 
-      if (this.mQuitDividerView != null) {
-        this.mQuitDividerView.setVisibility(4);
-      }
-      if (this.mOpenCloseText != null) {
-        this.mOpenCloseText.setText("收起");
-      }
-      if (this.mOpenCloseIV != null) {
-        this.mOpenCloseIV.setImageDrawable(getDrawable(1711407879));
-      }
-      this.mToolBoxPresent.onTopStatus();
-      BNWorkerCenter.getInstance().cancelTask(this.mAutoHideRunnable, false);
-      BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mAutoHideRunnable, new BNWorkerConfig(2, 0), 10000L);
-      return;
-    }
-    if (this.mQuitDividerView != null) {
-      this.mQuitDividerView.setVisibility(0);
-    }
-    if (this.mOpenCloseText != null) {
-      this.mOpenCloseText.setText("更多");
-    }
-    if (this.mOpenCloseIV != null) {
-      this.mOpenCloseIV.setImageDrawable(getDrawable(1711407881));
-    }
-    BNWorkerCenter.getInstance().cancelTask(this.mAutoHideRunnable, false);
-  }
-  
-  public void openToolBox()
-  {
-    boolean bool = false;
-    if (this.mScrollView != null)
-    {
-      bool = this.mScrollView.gotoTop();
-      rootViewFadeInAnim();
-    }
-    LogUtil.e("BNToolBoxView", "openToolBox result :" + bool);
-  }
-  
-  public void setCurStateTips(String paramString)
-  {
-    LogUtil.e("BNToolBoxView", "setCurStateTips tips:" + paramString);
-    this.mCurStateTipsTv.setText(paramString);
-  }
-  
-  public void setTopBarState(int paramInt)
-  {
-    LogUtil.e("BNToolBoxView", "setTopBarState : " + paramInt);
-    if (paramInt == 1)
-    {
-      if (this.mTimeAndDistLy != null) {
-        this.mTimeAndDistLy.setVisibility(8);
-      }
-      if (this.mCurStateTipsTv != null) {
-        this.mCurStateTipsTv.setVisibility(0);
-      }
-    }
-    do
-    {
-      do
-      {
-        return;
-      } while (paramInt != 0);
-      showResumeSwitchView(false);
-      if (this.mTimeAndDistLy != null) {
-        this.mTimeAndDistLy.setVisibility(0);
-      }
-    } while (this.mCurStateTipsTv == null);
-    this.mCurStateTipsTv.setVisibility(8);
-  }
-  
-  public void showClearPoiView(boolean paramBoolean)
-  {
-    int j = 8;
-    boolean bool = false;
-    LogUtil.e("BNToolBoxView", "showClearPoiView : " + paramBoolean);
-    if (this.mClearPoiView == null)
-    {
-      if (!paramBoolean) {
-        return;
-      }
-      this.mClearPoiView = this.mRootView.findViewById(1711866679);
-    }
-    Object localObject;
-    int i;
-    if (this.mViewBottomPanel != null)
-    {
-      localObject = this.mViewBottomPanel;
-      if (paramBoolean)
-      {
-        i = 8;
-        ((View)localObject).setVisibility(i);
-      }
-    }
-    else
-    {
-      localObject = this.mClearPoiView;
-      i = j;
-      if (paramBoolean) {
-        i = 0;
-      }
-      ((View)localObject).setVisibility(i);
-      localObject = this.mScrollView;
-      if (!paramBoolean) {
-        break label132;
-      }
-    }
-    label132:
-    for (paramBoolean = bool;; paramBoolean = true)
-    {
-      ((CustomLinearScrollView)localObject).setScrollSupport(paramBoolean);
-      closeToolBox();
-      return;
-      i = 0;
-      break;
-    }
-  }
-  
-  public void showLoadingViewHasProgress(String paramString)
-  {
-    LogUtil.e("BNToolBoxView", "showLoadingViewHasProgress");
-    this.mReRoutePlanWattingView.setVisibility(0);
-    this.mViewBottomPanel.setVisibility(8);
-    this.mReRoutePlanTextView.setText(paramString);
-    this.mScrollView.setScrollSupport(false);
-    closeToolBox(false);
-  }
-  
-  public void showLoadingViewNoProgress(String paramString)
-  {
-    LogUtil.e("BNToolBoxView", "showLoadingViewNoProgress");
-    this.mNoProgressLoadingView.setText(paramString);
-    this.mRemainTimeTv.setVisibility(8);
-    this.mArrivetime.setVisibility(8);
-    this.mNoProgressLoadingView.setVisibility(0);
-    this.mScrollView.setScrollSupport(false);
-    this.mOpenCloseLy.setEnabled(false);
-    this.mTimeAndDistLy.setEnabled(false);
-    this.mOpenCloseLy.setAlpha(0.5F);
-    closeToolBox();
-  }
-  
-  public void showResumeSwitchView(boolean paramBoolean)
-  {
-    int j = 8;
-    boolean bool = false;
-    LogUtil.e("BNToolBoxView", "showResumeSwitchView : " + paramBoolean);
-    if (this.mResumeSwitchLy == null)
-    {
-      if (!paramBoolean) {
-        return;
-      }
-      this.mResumeSwitchLy = this.mRootView.findViewById(1711866675);
-    }
-    Object localObject;
-    int i;
-    if (this.mViewBottomPanel != null)
-    {
-      localObject = this.mViewBottomPanel;
-      if (paramBoolean)
-      {
-        i = 8;
-        ((View)localObject).setVisibility(i);
-      }
-    }
-    else
-    {
-      localObject = this.mResumeSwitchLy;
-      i = j;
-      if (paramBoolean) {
-        i = 0;
-      }
-      ((View)localObject).setVisibility(i);
-      localObject = this.mScrollView;
-      if (!paramBoolean) {
-        break label128;
-      }
-    }
-    label128:
-    for (paramBoolean = bool;; paramBoolean = true)
-    {
-      ((CustomLinearScrollView)localObject).setScrollSupport(paramBoolean);
-      return;
-      i = 0;
-      break;
-    }
-  }
-  
-  public void showToolBox()
-  {
-    LogUtil.e("BNToolBoxView", "showToolBox :");
-    if (this.mRootViewContainer.getChildCount() == 0) {
-      addToContainner();
-    }
-    updateStyle(BNStyleManager.getDayStyle());
-    if (this.mRootView != null) {
-      this.mRootView.setVisibility(0);
-    }
-    if (this.mRootViewContainer != null) {
-      this.mRootViewContainer.setVisibility(0);
-    }
-  }
-  
-  public void switchToolBarMode(int paramInt) {}
-  
-  public void updateArriveTime(String paramString)
-  {
-    LogUtil.e("BNToolBoxView", "updateArriveTime:" + paramString);
-    if (this.mArrivetime != null) {
-      this.mArrivetime.setText(paramString);
-    }
-  }
-  
-  public void updateRemainTimeAndDist(String paramString)
-  {
-    LogUtil.e("BNToolBoxView", "updateRemainTimeAndDist remainTime:" + paramString);
-    if (this.mRemainTimeTv != null) {
-      this.mRemainTimeTv.setText(paramString);
-    }
-  }
-  
-  public void updateSettingStatus(int paramInt1, int paramInt2)
-  {
-    LogUtil.e("BNToolBoxView", "updateSettingStatus key=" + paramInt1 + " value = " + paramInt2);
-    this.mViewStatus.put(paramInt1, Integer.valueOf(paramInt2));
-    int i = -1;
-    Drawable localDrawable = null;
-    String str = "";
-    switch (paramInt1)
-    {
-    default: 
-      paramInt2 = i;
-    }
-    for (;;)
-    {
-      TextView localTextView = (TextView)this.mViewMap.get(paramInt1);
-      if (localTextView != null)
-      {
-        localTextView.setText(str);
-        localTextView.setTextColor(paramInt2);
-        localTextView.setCompoundDrawablesWithIntrinsicBounds(null, localDrawable, null, null);
-      }
-      return;
-      i = BNStyleManager.getColor(1711800685, this.mIsCurDay);
-      if (paramInt2 == 1)
-      {
-        localDrawable = getDrawable(1711407874);
-        str = BNStyleManager.getString(1711670072);
-        paramInt2 = i;
-      }
-      else
-      {
-        localDrawable = getDrawable(1711407889);
-        str = BNStyleManager.getString(1711670071);
-        paramInt2 = i;
-        continue;
-        str = "导航声音";
-        if (paramInt2 == 1)
-        {
-          paramInt2 = getColor(1711800793);
-          localDrawable = getDrawable(1711407897);
+
+    public void onOrientationChange(ViewGroup viewGroup, int orientation) {
+        LogUtil.m15791e(TAG, "onOrientationChange");
+        this.mRootViewContainer.removeAllViews();
+        this.mRootViewContainer = (ViewGroup) viewGroup.findViewById(C4048R.id.bnav_rg_toolbox_panel_container);
+        addToContainner();
+        if (isOpenStatus()) {
+            this.mRootViewContainer.setBackgroundColor(this.openColor);
         }
-        else
-        {
-          paramInt2 = getColor(1711800685);
-          localDrawable = getDrawable(1711407899);
-          continue;
-          i = getColor(1711800685);
-          if (paramInt2 == 1)
-          {
-            localDrawable = getDrawable(1711407878);
-            str = "全览小窗";
-            paramInt2 = i;
-          }
-          else
-          {
-            localDrawable = getDrawable(1711407873);
-            str = "路况条";
-            paramInt2 = i;
-            continue;
-            if (paramInt2 == 1)
-            {
-              paramInt2 = getColor(1711800685);
-              localDrawable = getDrawable(1711407877);
-              str = this.mCarNum;
+    }
+
+    public void onSizeChanged() {
+        LogUtil.m15791e(TAG, "onSizeChanged");
+        if (RGViewController.getInstance().getPreloadOrientation() != 1) {
+            this.mRootViewContainer.setPadding(RGViewController.getInstance().getmRootViewHeight() / 4, 0, 0, 0);
+        } else {
+            this.mRootViewContainer.setPadding(0, 0, 0, 0);
+        }
+    }
+
+    private void addToContainner() {
+        LogUtil.m15791e(TAG, "addToContainner");
+        if (this.mRootView == null) {
+            inflate();
+        }
+        this.mRootViewContainer.addView(this.mRootView);
+        if (RGViewController.getInstance().getPreloadOrientation() == 1) {
+            this.mRootViewContainer.setPadding(0, 0, 0, 0);
+        } else {
+            this.mRootViewContainer.setPadding(RGViewController.getInstance().getmRootViewHeight() / 4, 0, 0, 0);
+        }
+        this.mRootViewContainer.setOnTouchListener(new C44713());
+        if (this.mRootView.getVisibility() == 0) {
+            this.mRootViewContainer.setVisibility(0);
+        } else {
+            this.mRootViewContainer.setVisibility(8);
+        }
+    }
+
+    public void onDestroy() {
+        LogUtil.m15791e(TAG, "onDestroy :");
+        this.mViewMap.clear();
+        this.mActivity = null;
+        this.mRemainTimeTv = null;
+        this.mArrivetime = null;
+        this.mCurStateTipsTv = null;
+        this.mScrollView = null;
+    }
+
+    public void onStatusChange(int currentPage) {
+        LogUtil.m15791e(TAG, "onStatusChange :" + currentPage);
+        if (this.mViewMap.size() >= 1) {
+            switch (currentPage) {
+                case 0:
+                    if (this.mQuitDividerView != null) {
+                        this.mQuitDividerView.setVisibility(4);
+                    }
+                    if (this.mOpenCloseText != null) {
+                        this.mOpenCloseText.setText("收起");
+                    }
+                    if (this.mOpenCloseIV != null) {
+                        this.mOpenCloseIV.setImageDrawable(getDrawable(C4048R.drawable.nsdk_drawable_toolbox_icon_close_toolbox));
+                    }
+                    this.mToolBoxPresent.onTopStatus();
+                    BNWorkerCenter.getInstance().cancelTask(this.mAutoHideRunnable, false);
+                    BNWorkerCenter.getInstance().submitMainThreadTaskDelay(this.mAutoHideRunnable, new BNWorkerConfig(2, 0), BNOffScreenParams.MIN_ENTER_INTERVAL);
+                    return;
+                case 1:
+                    if (this.mQuitDividerView != null) {
+                        this.mQuitDividerView.setVisibility(0);
+                    }
+                    if (this.mOpenCloseText != null) {
+                        this.mOpenCloseText.setText("更多");
+                    }
+                    if (this.mOpenCloseIV != null) {
+                        this.mOpenCloseIV.setImageDrawable(getDrawable(C4048R.drawable.nsdk_drawable_toolbox_icon_open_toolbox));
+                    }
+                    BNWorkerCenter.getInstance().cancelTask(this.mAutoHideRunnable, false);
+                    return;
+                default:
+                    return;
             }
-            else
-            {
-              paramInt2 = getColor(1711800793);
-              localDrawable = getDrawable(1711407875);
-              str = "车牌限行";
-            }
-          }
         }
-      }
     }
-  }
-  
-  public void updateStyle(boolean paramBoolean)
-  {
-    if (getIsTrueCurDay(paramBoolean)) {
-      return;
+
+    public void onProgressChange(int progress) {
+        LogUtil.m15791e(TAG, "onProgressChange : " + progress);
+        View viewQuit = (View) this.mViewMap.get(8);
+        float progressF = ((float) progress) / 100.0f;
+        if (viewQuit != null) {
+            viewQuit.setAlpha(progressF);
+            if (progress < 10) {
+                viewQuit.setVisibility(4);
+            } else if (progress > 10) {
+                viewQuit.setVisibility(0);
+            }
+        }
+        if (this.mRootViewContainer != null) {
+            this.mRootViewContainer.setBackgroundColor(((int) ((0.5f * (1.0f - progressF)) * 255.0f)) * ((int) Math.pow(16.0d, 6.0d)));
+            if (progress > 98) {
+                this.mRootViewContainer.setBackgroundColor(this.closeColor);
+            } else if (progress < 2) {
+                this.mRootViewContainer.setBackgroundColor(this.openColor);
+            }
+        }
     }
-    this.mIsCurDay = paramBoolean;
-    if (this.mOpenCloseIV != null)
-    {
-      if (this.mScrollView.getCurStatus() == 0) {
-        this.mOpenCloseIV.setImageDrawable(getDrawable(1711407879));
-      }
+
+    public void setTopBarState(int state) {
+        LogUtil.m15791e(TAG, "setTopBarState : " + state);
+        if (state == 1) {
+            if (this.mTimeAndDistLy != null) {
+                this.mTimeAndDistLy.setVisibility(8);
+            }
+            if (this.mCurStateTipsTv != null) {
+                this.mCurStateTipsTv.setVisibility(0);
+            }
+        } else if (state == 0) {
+            showResumeSwitchView(false);
+            if (this.mTimeAndDistLy != null) {
+                this.mTimeAndDistLy.setVisibility(0);
+            }
+            if (this.mCurStateTipsTv != null) {
+                this.mCurStateTipsTv.setVisibility(8);
+            }
+        }
     }
-    else
-    {
-      if (this.mQuitImageView != null) {
-        this.mQuitImageView.setImageDrawable(getDrawable(1711407883));
-      }
-      if (this.mReRoutePlanWattingView != null) {
-        this.mReRoutePlanWattingView.setBackgroundColor(getColor(1711800694));
-      }
-      j = RGToolboxConstant.VIEW_SETTINGS_ITEM.length;
-      i = 0;
-      label94:
-      if (i >= j) {
-        break label427;
-      }
-      localObject1 = (View)this.mViewMap.get(RGToolboxConstant.VIEW_SETTINGS_ITEM[i]);
-      ((View)localObject1).setBackgroundDrawable(getDrawable(1711407444));
-      ((View)localObject1).setPadding(0, ScreenUtil.getInstance().dip2px(16), 0, 0);
-      switch (i)
-      {
-      }
+
+    public void showResumeSwitchView(boolean show) {
+        int i = 8;
+        boolean z = false;
+        LogUtil.m15791e(TAG, "showResumeSwitchView : " + show);
+        if (this.mResumeSwitchLy == null) {
+            if (show) {
+                this.mResumeSwitchLy = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_resume_switch_layout);
+            } else {
+                return;
+            }
+        }
+        if (this.mViewBottomPanel != null) {
+            int i2;
+            View view = this.mViewBottomPanel;
+            if (show) {
+                i2 = 8;
+            } else {
+                i2 = 0;
+            }
+            view.setVisibility(i2);
+        }
+        View view2 = this.mResumeSwitchLy;
+        if (show) {
+            i = 0;
+        }
+        view2.setVisibility(i);
+        CustomLinearScrollView customLinearScrollView = this.mScrollView;
+        if (!show) {
+            z = true;
+        }
+        customLinearScrollView.setScrollSupport(z);
     }
-    int k;
-    Object localObject2;
-    for (;;)
-    {
-      i += 1;
-      break label94;
-      this.mOpenCloseIV.setImageDrawable(getDrawable(1711407881));
-      break;
-      k = getColor(1711800793);
-      localObject2 = getDrawable(1711407892);
-      ((TextView)localObject1).setTextColor(k);
-      ((TextView)localObject1).setCompoundDrawablesWithIntrinsicBounds(null, (Drawable)localObject2, null, null);
-      continue;
-      k = getColor(1711800793);
-      localObject2 = getDrawable(1711407900);
-      ((TextView)localObject1).setTextColor(k);
-      ((TextView)localObject1).setCompoundDrawablesWithIntrinsicBounds(null, (Drawable)localObject2, null, null);
-      continue;
-      k = getColor(1711800793);
-      localObject2 = getDrawable(1711407895);
-      ((TextView)localObject1).setTextColor(k);
-      ((TextView)localObject1).setCompoundDrawablesWithIntrinsicBounds(null, (Drawable)localObject2, null, null);
-      continue;
-      k = getColor(1711800793);
-      localObject2 = getDrawable(1711407890);
-      ((TextView)localObject1).setTextColor(k);
-      ((TextView)localObject1).setCompoundDrawablesWithIntrinsicBounds(null, (Drawable)localObject2, null, null);
-      continue;
-      localObject1 = (Integer)this.mViewStatus.get(RGToolboxConstant.VIEW_SETTINGS_ITEM[i]);
-      if (localObject1 != null) {
-        updateSettingStatus(RGToolboxConstant.VIEW_SETTINGS_ITEM[i], ((Integer)localObject1).intValue());
-      }
+
+    public void showClearPoiView(boolean show) {
+        int i = 8;
+        boolean z = false;
+        LogUtil.m15791e(TAG, "showClearPoiView : " + show);
+        if (this.mClearPoiView == null) {
+            if (show) {
+                this.mClearPoiView = this.mRootView.findViewById(C4048R.id.bnav_rg_toolbox_clear_poi_tv);
+            } else {
+                return;
+            }
+        }
+        if (this.mViewBottomPanel != null) {
+            int i2;
+            View view = this.mViewBottomPanel;
+            if (show) {
+                i2 = 8;
+            } else {
+                i2 = 0;
+            }
+            view.setVisibility(i2);
+        }
+        View view2 = this.mClearPoiView;
+        if (show) {
+            i = 0;
+        }
+        view2.setVisibility(i);
+        CustomLinearScrollView customLinearScrollView = this.mScrollView;
+        if (!show) {
+            z = true;
+        }
+        customLinearScrollView.setScrollSupport(z);
+        closeToolBox();
     }
-    label427:
-    Object localObject1 = (View)this.mViewMap.get(14);
-    if ((localObject1 != null) && ((localObject1 instanceof ImageView))) {
-      ((ImageView)localObject1).setImageDrawable(getDrawable(1711407994));
+
+    public void showLoadingViewNoProgress(String text) {
+        LogUtil.m15791e(TAG, "showLoadingViewNoProgress");
+        this.mNoProgressLoadingView.setText(text);
+        this.mRemainTimeTv.setVisibility(8);
+        this.mArrivetime.setVisibility(8);
+        this.mNoProgressLoadingView.setVisibility(0);
+        this.mScrollView.setScrollSupport(false);
+        this.mOpenCloseLy.setEnabled(false);
+        this.mTimeAndDistLy.setEnabled(false);
+        this.mOpenCloseLy.setAlpha(0.5f);
+        closeToolBox();
     }
-    localObject1 = (ProgressBar)this.mRootView.findViewById(1711866945);
-    if (localObject1 != null)
-    {
-      localObject2 = getDrawable(1711407432);
-      ((Drawable)localObject2).setBounds(0, 0, ((Drawable)localObject2).getIntrinsicWidth(), ((Drawable)localObject2).getIntrinsicHeight());
-      ((ProgressBar)localObject1).setIndeterminateDrawable((Drawable)localObject2);
+
+    public void hideLoadingViewNoProgress() {
+        LogUtil.m15791e(TAG, "hideLoadingViewNoProgress");
+        this.mNoProgressLoadingView.setVisibility(8);
+        this.mRemainTimeTv.setVisibility(0);
+        this.mArrivetime.setVisibility(0);
+        this.mScrollView.setScrollSupport(true);
+        this.mOpenCloseLy.setEnabled(true);
+        this.mTimeAndDistLy.setEnabled(true);
+        this.mOpenCloseLy.setAlpha(1.0f);
     }
-    localObject1 = RGToolboxConstant.VIEW_TEXT_A;
-    int j = localObject1.length;
-    int i = 0;
-    while (i < j)
-    {
-      k = localObject1[i];
-      localObject2 = (TextView)this.mRootView.findViewById(k);
-      if (localObject2 != null) {
-        ((TextView)localObject2).setTextColor(getColor(1711800791));
-      }
-      i += 1;
+
+    public void showLoadingViewHasProgress(String text) {
+        LogUtil.m15791e(TAG, "showLoadingViewHasProgress");
+        this.mReRoutePlanWattingView.setVisibility(0);
+        this.mViewBottomPanel.setVisibility(8);
+        this.mReRoutePlanTextView.setText(text);
+        this.mScrollView.setScrollSupport(false);
+        closeToolBox(false);
     }
-    localObject1 = RGToolboxConstant.VIEW_TEXT_B;
-    j = localObject1.length;
-    i = 0;
-    while (i < j)
-    {
-      k = localObject1[i];
-      localObject2 = (TextView)this.mRootView.findViewById(k);
-      if (localObject2 != null) {
-        ((TextView)localObject2).setTextColor(getColor(1711800793));
-      }
-      i += 1;
+
+    public void hideLoadingViewHasProgress() {
+        LogUtil.m15791e(TAG, "hideLoadingViewHasProgress");
+        this.mReRoutePlanWattingView.setVisibility(8);
+        this.mViewBottomPanel.setVisibility(0);
+        this.mScrollView.setScrollSupport(true);
     }
-    localObject1 = RGToolboxConstant.VIEW_TEXT_B_TITLE;
-    j = localObject1.length;
-    i = 0;
-    while (i < j)
-    {
-      k = localObject1[i];
-      localObject2 = (TextView)this.mRootView.findViewById(k);
-      if (localObject2 != null) {
-        ((TextView)localObject2).setTextColor(getColor(1711800795));
-      }
-      i += 1;
+
+    private void rootViewFadeInAnim() {
+        if (VERSION.SDK_INT >= 11 && this.mRootViewContainer != null) {
+            ValueAnimator valueAnimator = ObjectAnimator.ofInt(this.mRootViewContainer, "backgroundColor", new int[]{this.closeColor, this.openColor});
+            valueAnimator.setDuration(200);
+            valueAnimator.setEvaluator(new ArgbEvaluator());
+            valueAnimator.start();
+        }
     }
-    localObject1 = RGToolboxConstant.VIEW_TEXT_B_SINGLE;
-    j = localObject1.length;
-    i = 0;
-    while (i < j)
-    {
-      k = localObject1[i];
-      localObject2 = (TextView)this.mRootView.findViewById(k);
-      if (localObject2 != null) {
-        ((TextView)localObject2).setTextColor(getColor(1711800797));
-      }
-      i += 1;
+
+    private void rootViewFadeOutAnim() {
+        if (VERSION.SDK_INT >= 11 && this.mRootViewContainer != null) {
+            ValueAnimator valueAnimator = ObjectAnimator.ofInt(this.mRootViewContainer, "backgroundColor", new int[]{this.openColor, this.closeColor});
+            valueAnimator.setDuration(200);
+            valueAnimator.setEvaluator(new ArgbEvaluator());
+            valueAnimator.start();
+        }
     }
-    localObject1 = RGToolboxConstant.VIEW_BG_ID;
-    j = localObject1.length;
-    i = 0;
-    while (i < j)
-    {
-      k = localObject1[i];
-      localObject2 = this.mRootView.findViewById(k);
-      if (localObject2 != null) {
-        ((View)localObject2).setBackgroundColor(getColor(1711800694));
-      }
-      i += 1;
+
+    public void updateUIForStartNav() {
+        if (this.mToolBoxPresent != null) {
+            ((RGToolBoxPresent) this.mToolBoxPresent).updateToolBoxItemState(7);
+        }
     }
-    localObject1 = RGToolboxConstant.DIVIDER_H;
-    j = localObject1.length;
-    i = 0;
-    while (i < j)
-    {
-      k = localObject1[i];
-      localObject2 = this.mRootView.findViewById(k);
-      if (localObject2 != null) {
-        ((View)localObject2).setBackgroundColor(getColor(1711800785));
-      }
-      i += 1;
+
+    public boolean isLastScrollEvent() {
+        if (this.mScrollView != null) {
+            return this.mScrollView.mLastEventIsScroll;
+        }
+        return false;
     }
-    localObject1 = RGToolboxConstant.DIVIDER_V;
-    j = localObject1.length;
-    i = 0;
-    while (i < j)
-    {
-      k = localObject1[i];
-      localObject2 = this.mRootView.findViewById(k);
-      if (localObject2 != null) {
-        ((View)localObject2).setBackgroundColor(getColor(1711800787));
-      }
-      i += 1;
+
+    private Drawable getDrawable(int resId) {
+        return BNStyleManager.getDrawable(resId, this.mIsCurDay);
     }
-    this.mViewExit.setBackgroundDrawable(getDrawable(1711407127));
-    this.mViewContinue.setBackgroundDrawable(getDrawable(1711407127));
-    this.mViewContinue2.setBackgroundDrawable(getDrawable(1711407127));
-    this.mViewSetting.setBackgroundDrawable(getDrawable(1711407127));
-    this.mViewChange.setBackgroundDrawable(getDrawable(1711407127));
-    this.mViewClear.setBackgroundDrawable(getDrawable(1711407127));
-  }
-  
-  public void updateSubListener(OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    this.mToolBoxPresent.setOnSubViewClickListener(paramOnRGSubViewListener);
-  }
-  
-  public void updateUIForStartNav()
-  {
-    if (this.mToolBoxPresent != null) {
-      ((RGToolBoxPresent)this.mToolBoxPresent).updateToolBoxItemState(7);
+
+    private int getColor(int resId) {
+        return BNStyleManager.getColor(resId, this.mIsCurDay);
     }
-  }
-  
-  public static abstract interface LoadingCallback
-  {
-    public abstract void onQuitClick();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/toolbox/view/RGToolBoxView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

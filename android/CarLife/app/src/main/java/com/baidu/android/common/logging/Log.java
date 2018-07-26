@@ -9,232 +9,201 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class Log
-{
-  public static final int FILE_LIMETE = 10485760;
-  public static final int FILE_NUMBER = 2;
-  private static Logger sFilelogger;
-  private static boolean sLog2File = false;
-  private static boolean sLogEnabled = true;
-  
-  public static void d(String paramString1, String paramString2)
-  {
-    if (sLogEnabled)
-    {
-      if ((sLog2File) && (sFilelogger != null)) {
-        sFilelogger.log(Level.INFO, paramString1 + ": " + paramString2);
-      }
+public final class Log {
+    public static final int FILE_LIMETE = 10485760;
+    public static final int FILE_NUMBER = 2;
+    private static Logger sFilelogger;
+    private static boolean sLog2File = false;
+    private static boolean sLogEnabled = true;
+
+    private Log() {
     }
-    else {
-      return;
-    }
-    android.util.Log.d(paramString1, paramString2);
-  }
-  
-  public static void d(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    d(paramString1, paramString2 + '\n' + getStackTraceString(paramThrowable));
-  }
-  
-  public static void e(String paramString1, String paramString2)
-  {
-    if (sLogEnabled)
-    {
-      if ((sLog2File) && (sFilelogger != null)) {
-        sFilelogger.log(Level.SEVERE, paramString1 + ": " + paramString2);
-      }
-    }
-    else {
-      return;
-    }
-    android.util.Log.e(paramString1, paramString2);
-  }
-  
-  public static void e(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    e(paramString1, paramString2 + '\n' + getStackTraceString(paramThrowable));
-  }
-  
-  public static void e(String paramString, Throwable paramThrowable)
-  {
-    e(paramString, getStackTraceString(paramThrowable));
-  }
-  
-  private static String getLogFileName()
-  {
-    String str2 = getProcessNameForPid(Process.myPid());
-    String str1 = str2;
-    if (TextUtils.isEmpty(str2)) {
-      str1 = "BaiduFileLog";
-    }
-    return str1.replace(':', '_');
-  }
-  
-  private static String getProcessNameForPid(int paramInt)
-  {
-    Object localObject2 = "/proc/" + paramInt + "/cmdline";
-    Object localObject1 = "/proc/" + paramInt + "/status";
-    String str;
-    for (;;)
-    {
-      try
-      {
-        localObject2 = new BufferedReader(new FileReader(new File((String)localObject2)));
-        str = ((BufferedReader)localObject2).readLine();
-        if (!TextUtils.isEmpty(str)) {
-          localObject1 = str.substring(0, str.indexOf(0));
+
+    /* renamed from: d */
+    public static void m1728d(String str, String str2) {
+        if (!sLogEnabled) {
+            return;
         }
-      }
-      catch (Exception localException1)
-      {
-        localObject1 = "";
-        localException1.printStackTrace();
-        return (String)localObject1;
-      }
-      try
-      {
-        ((BufferedReader)localObject2).close();
-        return (String)localObject1;
-      }
-      catch (Exception localException2)
-      {
-        continue;
-        str = "";
-        Object localObject3 = localObject1;
-        localObject1 = str;
-      }
-      localObject1 = new BufferedReader(new FileReader(new File((String)localObject1)));
-      localObject2 = ((BufferedReader)localObject1).readLine();
-      if (localObject2 != null) {
-        if (((String)localObject2).startsWith("Name:"))
-        {
-          paramInt = ((String)localObject2).indexOf("\t");
-          if (paramInt >= 0)
-          {
-            str = ((String)localObject2).substring(paramInt + 1);
-            localObject2 = localObject1;
-            localObject1 = str;
-          }
+        if (!sLog2File || sFilelogger == null) {
+            android.util.Log.d(str, str2);
+        } else {
+            sFilelogger.log(Level.INFO, str + ": " + str2);
         }
-        else
-        {
-          localObject2 = ((BufferedReader)localObject1).readLine();
-          continue;
+    }
+
+    /* renamed from: d */
+    public static void m1729d(String str, String str2, Throwable th) {
+        m1728d(str, str2 + '\n' + getStackTraceString(th));
+    }
+
+    /* renamed from: e */
+    public static void m1730e(String str, String str2) {
+        if (!sLogEnabled) {
+            return;
         }
-      }
+        if (!sLog2File || sFilelogger == null) {
+            android.util.Log.e(str, str2);
+        } else {
+            sFilelogger.log(Level.SEVERE, str + ": " + str2);
+        }
     }
-  }
-  
-  public static String getStackTraceString(Throwable paramThrowable)
-  {
-    if (paramThrowable == null) {
-      return "";
+
+    /* renamed from: e */
+    public static void m1731e(String str, String str2, Throwable th) {
+        m1730e(str, str2 + '\n' + getStackTraceString(th));
     }
-    StringWriter localStringWriter = new StringWriter();
-    paramThrowable.printStackTrace(new PrintWriter(localStringWriter));
-    return localStringWriter.toString();
-  }
-  
-  public static void i(String paramString1, String paramString2)
-  {
-    if (sLogEnabled)
-    {
-      if ((sLog2File) && (sFilelogger != null)) {
-        sFilelogger.log(Level.INFO, paramString1 + ": " + paramString2);
-      }
+
+    /* renamed from: e */
+    public static void m1732e(String str, Throwable th) {
+        m1730e(str, getStackTraceString(th));
     }
-    else {
-      return;
+
+    private static String getLogFileName() {
+        String processNameForPid = getProcessNameForPid(Process.myPid());
+        if (TextUtils.isEmpty(processNameForPid)) {
+            processNameForPid = "BaiduFileLog";
+        }
+        return processNameForPid.replace(':', '_');
     }
-    android.util.Log.i(paramString1, paramString2);
-  }
-  
-  public static void i(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    i(paramString1, paramString2 + '\n' + getStackTraceString(paramThrowable));
-  }
-  
-  public static void setLog2File(boolean paramBoolean)
-  {
-    sLog2File = paramBoolean;
-    String str;
-    Object localObject;
-    if ((sLog2File) && (sFilelogger == null))
-    {
-      str = getLogFileName();
-      localObject = new File(Environment.getExternalStorageDirectory(), str).getAbsolutePath();
+
+    private static String getProcessNameForPid(int i) {
+        Exception e;
+        String str = "/proc/" + i + "/cmdline";
+        String str2 = "/proc/" + i + "/status";
+        String str3 = "";
+        try {
+            BufferedReader bufferedReader;
+            BufferedReader bufferedReader2 = new BufferedReader(new FileReader(new File(str)));
+            String readLine = bufferedReader2.readLine();
+            BufferedReader bufferedReader3;
+            if (TextUtils.isEmpty(readLine)) {
+                bufferedReader2 = new BufferedReader(new FileReader(new File(str2)));
+                str2 = bufferedReader2.readLine();
+                while (str2 != null) {
+                    if (str2.startsWith("Name:")) {
+                        int indexOf = str2.indexOf("\t");
+                        if (indexOf >= 0) {
+                            bufferedReader3 = bufferedReader2;
+                            str = str2.substring(indexOf + 1);
+                            bufferedReader = bufferedReader3;
+                        }
+                        bufferedReader3 = bufferedReader2;
+                        str = str3;
+                        bufferedReader = bufferedReader3;
+                    } else {
+                        str2 = bufferedReader2.readLine();
+                    }
+                }
+                bufferedReader3 = bufferedReader2;
+                str = str3;
+                bufferedReader = bufferedReader3;
+            } else {
+                bufferedReader3 = bufferedReader2;
+                str = readLine.substring(0, readLine.indexOf(0));
+                bufferedReader = bufferedReader3;
+            }
+            try {
+                bufferedReader.close();
+            } catch (Exception e2) {
+                e = e2;
+                e.printStackTrace();
+                return str;
+            }
+        } catch (Exception e3) {
+            Exception exception = e3;
+            str = str3;
+            e = exception;
+            e.printStackTrace();
+            return str;
+        }
+        return str;
     }
-    try
-    {
-      localObject = new FileHandler((String)localObject + "_%g.log", 10485760, 2, true);
-      ((FileHandler)localObject).setFormatter(new SimpleFormatter());
-      sFilelogger = Logger.getLogger(str);
-      sFilelogger.setLevel(Level.ALL);
-      sFilelogger.addHandler((Handler)localObject);
-      return;
+
+    public static String getStackTraceString(Throwable th) {
+        if (th == null) {
+            return "";
+        }
+        Writer stringWriter = new StringWriter();
+        th.printStackTrace(new PrintWriter(stringWriter));
+        return stringWriter.toString();
     }
-    catch (SecurityException localSecurityException)
-    {
-      localSecurityException.printStackTrace();
-      return;
+
+    /* renamed from: i */
+    public static void m1733i(String str, String str2) {
+        if (!sLogEnabled) {
+            return;
+        }
+        if (!sLog2File || sFilelogger == null) {
+            android.util.Log.i(str, str2);
+        } else {
+            sFilelogger.log(Level.INFO, str + ": " + str2);
+        }
     }
-    catch (IOException localIOException)
-    {
-      localIOException.printStackTrace();
+
+    /* renamed from: i */
+    public static void m1734i(String str, String str2, Throwable th) {
+        m1733i(str, str2 + '\n' + getStackTraceString(th));
     }
-  }
-  
-  public static void setLogEnabled(boolean paramBoolean)
-  {
-    sLogEnabled = paramBoolean;
-  }
-  
-  public static void v(String paramString1, String paramString2)
-  {
-    if (sLogEnabled)
-    {
-      if ((sLog2File) && (sFilelogger != null)) {
-        sFilelogger.log(Level.INFO, paramString1 + ": " + paramString2);
-      }
+
+    public static void setLog2File(boolean z) {
+        sLog2File = z;
+        if (sLog2File && sFilelogger == null) {
+            String logFileName = getLogFileName();
+            try {
+                Handler fileHandler = new FileHandler(new File(Environment.getExternalStorageDirectory(), logFileName).getAbsolutePath() + "_%g.log", FILE_LIMETE, 2, true);
+                fileHandler.setFormatter(new SimpleFormatter());
+                sFilelogger = Logger.getLogger(logFileName);
+                sFilelogger.setLevel(Level.ALL);
+                sFilelogger.addHandler(fileHandler);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
     }
-    else {
-      return;
+
+    public static void setLogEnabled(boolean z) {
+        sLogEnabled = z;
     }
-    android.util.Log.v(paramString1, paramString2);
-  }
-  
-  public static void v(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    v(paramString1, paramString2 + '\n' + getStackTraceString(paramThrowable));
-  }
-  
-  public static void w(String paramString1, String paramString2)
-  {
-    if (sLogEnabled)
-    {
-      if ((sLog2File) && (sFilelogger != null)) {
-        sFilelogger.log(Level.WARNING, paramString1 + ": " + paramString2);
-      }
+
+    /* renamed from: v */
+    public static void m1735v(String str, String str2) {
+        if (!sLogEnabled) {
+            return;
+        }
+        if (!sLog2File || sFilelogger == null) {
+            android.util.Log.v(str, str2);
+        } else {
+            sFilelogger.log(Level.INFO, str + ": " + str2);
+        }
     }
-    else {
-      return;
+
+    /* renamed from: v */
+    public static void m1736v(String str, String str2, Throwable th) {
+        m1735v(str, str2 + '\n' + getStackTraceString(th));
     }
-    android.util.Log.w(paramString1, paramString2);
-  }
-  
-  public static void w(String paramString1, String paramString2, Throwable paramThrowable)
-  {
-    w(paramString1, paramString2 + '\n' + getStackTraceString(paramThrowable));
-  }
+
+    /* renamed from: w */
+    public static void m1737w(String str, String str2) {
+        if (!sLogEnabled) {
+            return;
+        }
+        if (!sLog2File || sFilelogger == null) {
+            android.util.Log.w(str, str2);
+        } else {
+            sFilelogger.log(Level.WARNING, str + ": " + str2);
+        }
+    }
+
+    /* renamed from: w */
+    public static void m1738w(String str, String str2, Throwable th) {
+        m1737w(str, str2 + '\n' + getStackTraceString(th));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/common/logging/Log.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

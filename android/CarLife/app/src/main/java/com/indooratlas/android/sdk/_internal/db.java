@@ -2,23 +2,22 @@ package com.indooratlas.android.sdk._internal;
 
 import java.util.List;
 
-public abstract interface db
-{
-  public abstract cw a(int paramInt);
-  
-  public abstract List<cw> a();
-  
-  public abstract List<cx> a(cw paramcw);
-  
-  public abstract void a(cy paramcy);
-  
-  public abstract void a(cy paramcy, cw paramcw);
-  
-  public abstract void a(cy paramcy, cw paramcw, da paramda);
+public interface db {
+    /* renamed from: a */
+    cw mo4660a(int i);
+
+    /* renamed from: a */
+    List<cw> mo4661a();
+
+    /* renamed from: a */
+    List<cx> mo4662a(cw cwVar);
+
+    /* renamed from: a */
+    void mo4663a(cy cyVar);
+
+    /* renamed from: a */
+    void mo4664a(cy cyVar, cw cwVar);
+
+    /* renamed from: a */
+    void mo4665a(cy cyVar, cw cwVar, da daVar);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/db.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

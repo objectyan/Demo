@@ -14,81 +14,58 @@ import com.baidu.navisdk.util.common.ScreenUtil;
 import com.baidu.nplatform.comapi.basestruct.MapStatus;
 import com.baidu.nplatform.comapi.map.MapController.AnimationType;
 
-public class RGStatePickPoint
-  extends RGState
-{
-  public void excute()
-  {
-    super.excute();
-  }
-  
-  public void exit()
-  {
-    BNMapController.getInstance().showLayer(4, false);
-    BNRouteGuider.getInstance().setBrowseStatus(false);
-    RGViewController.getInstance().hidePickPointView();
-    RGPickPointModel.getInstance().setPickPointShow(false);
-    super.exit();
-  }
-  
-  protected void onActionLayers()
-  {
-    MapStatus localMapStatus;
-    if (RGRouteSearchModel.getInstance().isRouteSearchMode())
-    {
-      BNMapController.getInstance().showLayer(4, false);
-      localMapStatus = NMapControlProxy.getInstance().getMapStatus();
-      if (localMapStatus != null)
-      {
-        if (1 != RGCacheStatus.sOrientation) {
-          break label89;
+public class RGStatePickPoint extends RGState {
+    protected void onActionUI() {
+        RGViewController.getInstance().hideAllViews();
+        RGViewController.getInstance().showRGSimpleGuideLeftPanelView();
+        RGViewController.getInstance().showRGSimpleGuideView();
+        RGViewController.getInstance().showDeviceStateView();
+        RGViewController.getInstance().showControlPanel();
+        RGMapModeViewController.getInstance().showControlManualOperatePanel(true);
+        RGViewController.getInstance().showPickPointView();
+        RGPickPointModel.getInstance().setPickPointShow(true);
+        RGControlPanelModel.getInstance().updateLocateStatus(3);
+        RGViewController.getInstance().showCommonView(false);
+    }
+
+    protected void onActionNaviEngine() {
+        BNRouteGuider.getInstance().setBrowseStatus(true);
+        RGEngineControl.getInstance().disableManuSound();
+    }
+
+    protected void onActionLayers() {
+        if (RGRouteSearchModel.getInstance().isRouteSearchMode()) {
+            BNMapController.getInstance().showLayer(4, false);
+        } else {
+            BNMapController.getInstance().showLayer(4, true);
         }
-        localMapStatus._Xoffset = 0L;
-        localMapStatus._Yoffset = (0 - ScreenUtil.getInstance().dip2px(64));
-      }
+        MapStatus st = NMapControlProxy.getInstance().getMapStatus();
+        if (st != null) {
+            if (1 == RGCacheStatus.sOrientation) {
+                st._Xoffset = 0;
+                st._Yoffset = (long) (0 - ScreenUtil.getInstance().dip2px(64));
+            } else if (2 == RGCacheStatus.sOrientation) {
+                st._Xoffset = (long) (ScreenUtil.getInstance().getHeightPixels() / 6);
+                st._Yoffset = (long) (0.0d - (((double) ScreenUtil.getInstance().getWidthPixels()) * 0.1d));
+            }
+            st._Rotation = 1;
+            st._Overlooking = 0;
+            NMapControlProxy.getInstance().setMapStatus(st, AnimationType.eAnimationAll);
+        }
     }
-    for (;;)
-    {
-      localMapStatus._Rotation = 1;
-      localMapStatus._Overlooking = 0;
-      NMapControlProxy.getInstance().setMapStatus(localMapStatus, MapController.AnimationType.eAnimationAll);
-      return;
-      BNMapController.getInstance().showLayer(4, true);
-      break;
-      label89:
-      if (2 == RGCacheStatus.sOrientation)
-      {
-        localMapStatus._Xoffset = (ScreenUtil.getInstance().getHeightPixels() / 6);
-        localMapStatus._Yoffset = ((0.0D - ScreenUtil.getInstance().getWidthPixels() * 0.1D));
-      }
+
+    protected void onActionMapStatus() {
     }
-  }
-  
-  protected void onActionMapStatus() {}
-  
-  protected void onActionNaviEngine()
-  {
-    BNRouteGuider.getInstance().setBrowseStatus(true);
-    RGEngineControl.getInstance().disableManuSound();
-  }
-  
-  protected void onActionUI()
-  {
-    RGViewController.getInstance().hideAllViews();
-    RGViewController.getInstance().showRGSimpleGuideLeftPanelView();
-    RGViewController.getInstance().showRGSimpleGuideView();
-    RGViewController.getInstance().showDeviceStateView();
-    RGViewController.getInstance().showControlPanel();
-    RGMapModeViewController.getInstance().showControlManualOperatePanel(true);
-    RGViewController.getInstance().showPickPointView();
-    RGPickPointModel.getInstance().setPickPointShow(true);
-    RGControlPanelModel.getInstance().updateLocateStatus(3);
-    RGViewController.getInstance().showCommonView(false);
-  }
+
+    public void excute() {
+        super.excute();
+    }
+
+    public void exit() {
+        BNMapController.getInstance().showLayer(4, false);
+        BNRouteGuider.getInstance().setBrowseStatus(false);
+        RGViewController.getInstance().hidePickPointView();
+        RGPickPointModel.getInstance().setPickPointShow(false);
+        super.exit();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/fsm/RGStatePickPoint.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

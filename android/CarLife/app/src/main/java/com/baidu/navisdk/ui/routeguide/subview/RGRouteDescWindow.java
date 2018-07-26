@@ -17,6 +17,7 @@ import android.view.View.OnTouchListener;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.widget.AlwaysMarqueeTextView;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.ScreenUtil;
@@ -26,156 +27,154 @@ import com.baidu.navisdk.util.jar.JarUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RGRouteDescWindow
-  extends PopupWindow
-{
-  private static final int MSG_DISMISS = 1;
-  private static final String TAG = "RouteGuide";
-  private final Context mContext;
-  private AlwaysMarqueeTextView mEndNameTextView;
-  private Handler mHandler = new Handler()
-  {
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      switch (paramAnonymousMessage.what)
-      {
-      }
-      do
-      {
-        return;
-      } while ((RGRouteDescWindow.this.mContext == null) || (((Activity)RGRouteDescWindow.this.mContext).isFinishing()) || (!RGRouteDescWindow.this.isShowing()));
-      RGRouteDescWindow.this.dismiss();
-    }
-  };
-  private View mParent;
-  private TextView mRouteDist;
-  private TextView mRouteDistUnit;
-  private TextView mRouteTime;
-  protected OnRGSubViewListener mSubViewListener;
-  
-  public RGRouteDescWindow(Context paramContext, View paramView, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext);
-    this.mContext = paramContext;
-    this.mSubViewListener = paramOnRGSubViewListener;
-    this.mParent = paramView;
-    paramContext = JarUtils.inflate((Activity)this.mContext, 1711472740, null);
-    this.mRouteDist = ((TextView)paramContext.findViewById(1711866957));
-    this.mRouteDistUnit = ((TextView)paramContext.findViewById(1711866958));
-    this.mRouteTime = ((TextView)paramContext.findViewById(1711866959));
-    this.mEndNameTextView = ((AlwaysMarqueeTextView)paramContext.findViewById(1711866961));
-    setWindowLayoutMode(-2, -2);
-    setContentView(paramContext);
-    setBackgroundDrawable(new ColorDrawable(0));
-    setAnimationStyle(1711996928);
-    onMeasureAndLayout();
-    setOutsideTouchable(true);
-    getContentView().setFocusableInTouchMode(true);
-    setTouchable(true);
-    getContentView().setOnKeyListener(new View.OnKeyListener()
-    {
-      public boolean onKey(View paramAnonymousView, int paramAnonymousInt, KeyEvent paramAnonymousKeyEvent)
-      {
-        LogUtil.e("RouteGuide", "返回了");
-        switch (paramAnonymousInt)
-        {
-        default: 
-          return false;
+public class RGRouteDescWindow extends PopupWindow {
+    private static final int MSG_DISMISS = 1;
+    private static final String TAG = "RouteGuide";
+    private final Context mContext;
+    private AlwaysMarqueeTextView mEndNameTextView;
+    private Handler mHandler = new C44541();
+    private View mParent;
+    private TextView mRouteDist;
+    private TextView mRouteDistUnit;
+    private TextView mRouteTime;
+    protected OnRGSubViewListener mSubViewListener;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.subview.RGRouteDescWindow$1 */
+    class C44541 extends Handler {
+        C44541() {
         }
-        return true;
-      }
-    });
-    setOnDismissListener(new PopupWindow.OnDismissListener()
-    {
-      public void onDismiss()
-      {
-        if (RGRouteDescWindow.this.mSubViewListener != null) {
-          RGRouteDescWindow.this.mSubViewListener.onRouteDescWindowHide();
+
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    if (RGRouteDescWindow.this.mContext != null && !((Activity) RGRouteDescWindow.this.mContext).isFinishing() && RGRouteDescWindow.this.isShowing()) {
+                        RGRouteDescWindow.this.dismiss();
+                        return;
+                    }
+                    return;
+                default:
+                    return;
+            }
         }
-      }
-    });
-    setTouchInterceptor(new View.OnTouchListener()
-    {
-      public boolean onTouch(View paramAnonymousView, MotionEvent paramAnonymousMotionEvent)
-      {
-        return true;
-      }
-    });
-  }
-  
-  private void onMeasureAndLayout()
-  {
-    getContentView().measure(View.MeasureSpec.makeMeasureSpec(ScreenUtil.getInstance().getWidthPixels(), Integer.MIN_VALUE), -2);
-    setWidth(getContentView().getMeasuredWidth());
-    setHeight(getContentView().getMeasuredHeight());
-  }
-  
-  private void setRouteTime(String paramString)
-  {
-    SpannableString localSpannableString = new SpannableString(paramString);
-    paramString = Pattern.compile("[0-9.<]+").matcher(paramString);
-    while (paramString.find()) {
-      localSpannableString.setSpan(new ForegroundColorSpan(-5180122), paramString.start(), paramString.end(), 33);
     }
-    this.mRouteTime.setText(localSpannableString);
-  }
-  
-  public void dismiss()
-  {
-    this.mHandler.removeMessages(1);
-    if ((this.mContext == null) || (((Activity)this.mContext).isFinishing()) || (!isShowing()) || (this != null)) {}
-    try
-    {
-      super.dismiss();
-      setFocusable(false);
-      getContentView().setFocusable(false);
-      return;
-    }
-    catch (Exception localException)
-    {
-      for (;;) {}
-    }
-  }
-  
-  public void setDistanceAndTime(int paramInt1, int paramInt2)
-  {
-    String[] arrayOfString = StringUtils.formatDistance(paramInt1, StringUtils.UnitLangEnum.ZH);
-    String str = StringUtils.formatTime2(paramInt2, 2);
-    this.mRouteDist.setText(arrayOfString[0]);
-    this.mRouteDistUnit.setText(arrayOfString[1]);
-    setRouteTime(str);
-  }
-  
-  public void setEndName(String paramString)
-  {
-    this.mEndNameTextView.setText(paramString);
-  }
-  
-  public void show()
-  {
-    LogUtil.e("RouteGuide", "show");
-    try
-    {
-      if ((this.mContext != null) && (!((Activity)this.mContext).isFinishing()))
-      {
-        if (this.mSubViewListener != null) {
-          this.mSubViewListener.onRouteDescWindowShow();
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.subview.RGRouteDescWindow$2 */
+    class C44552 implements OnKeyListener {
+        C44552() {
         }
+
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            LogUtil.m15791e("RouteGuide", "返回了");
+            switch (keyCode) {
+                case 4:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.subview.RGRouteDescWindow$3 */
+    class C44563 implements OnDismissListener {
+        C44563() {
+        }
+
+        public void onDismiss() {
+            if (RGRouteDescWindow.this.mSubViewListener != null) {
+                RGRouteDescWindow.this.mSubViewListener.onRouteDescWindowHide();
+            }
+        }
+    }
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.subview.RGRouteDescWindow$4 */
+    class C44574 implements OnTouchListener {
+        C44574() {
+        }
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return true;
+        }
+    }
+
+    public RGRouteDescWindow(Context context, View parent, OnRGSubViewListener listener) {
+        super(context);
+        this.mContext = context;
+        this.mSubViewListener = listener;
+        this.mParent = parent;
+        View contentView = JarUtils.inflate((Activity) this.mContext, C4048R.layout.nsdk_layout_rg_route_desc_window, null);
+        this.mRouteDist = (TextView) contentView.findViewById(C4048R.id.route_desc_distance);
+        this.mRouteDistUnit = (TextView) contentView.findViewById(C4048R.id.route_desc_distance_unit);
+        this.mRouteTime = (TextView) contentView.findViewById(C4048R.id.route_desc_time);
+        this.mEndNameTextView = (AlwaysMarqueeTextView) contentView.findViewById(C4048R.id.route_desc_end_name);
+        setWindowLayoutMode(-2, -2);
+        setContentView(contentView);
+        setBackgroundDrawable(new ColorDrawable(0));
+        setAnimationStyle(C4048R.style.RGRouteDescWinAnimation);
         onMeasureAndLayout();
-        showAtLocation(this.mParent, 17, 0, 0);
-        getContentView().setFocusable(true);
-        setFocusable(true);
-        this.mHandler.removeMessages(1);
-        this.mHandler.sendEmptyMessageDelayed(1, 2000L);
-      }
-      return;
+        setOutsideTouchable(true);
+        getContentView().setFocusableInTouchMode(true);
+        setTouchable(true);
+        getContentView().setOnKeyListener(new C44552());
+        setOnDismissListener(new C44563());
+        setTouchInterceptor(new C44574());
     }
-    catch (Exception localException) {}
-  }
+
+    public void show() {
+        LogUtil.m15791e("RouteGuide", "show");
+        try {
+            if (this.mContext != null && !((Activity) this.mContext).isFinishing()) {
+                if (this.mSubViewListener != null) {
+                    this.mSubViewListener.onRouteDescWindowShow();
+                }
+                onMeasureAndLayout();
+                showAtLocation(this.mParent, 17, 0, 0);
+                getContentView().setFocusable(true);
+                setFocusable(true);
+                this.mHandler.removeMessages(1);
+                this.mHandler.sendEmptyMessageDelayed(1, 2000);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    private void onMeasureAndLayout() {
+        getContentView().measure(MeasureSpec.makeMeasureSpec(ScreenUtil.getInstance().getWidthPixels(), Integer.MIN_VALUE), -2);
+        setWidth(getContentView().getMeasuredWidth());
+        setHeight(getContentView().getMeasuredHeight());
+    }
+
+    public void dismiss() {
+        this.mHandler.removeMessages(1);
+        if (this.mContext != null && !((Activity) this.mContext).isFinishing() && isShowing()) {
+            if (this != null) {
+                try {
+                    super.dismiss();
+                } catch (Exception e) {
+                }
+            }
+            setFocusable(false);
+            getContentView().setFocusable(false);
+        }
+    }
+
+    public void setDistanceAndTime(int distance, int time) {
+        String[] dist = StringUtils.formatDistance(distance, UnitLangEnum.ZH);
+        String strTime = StringUtils.formatTime2(time, 2);
+        this.mRouteDist.setText(dist[0]);
+        this.mRouteDistUnit.setText(dist[1]);
+        setRouteTime(strTime);
+    }
+
+    private void setRouteTime(String strTime) {
+        Spannable WordtoSpan = new SpannableString(strTime);
+        Matcher m = Pattern.compile("[0-9.<]+").matcher(strTime);
+        while (m.find()) {
+            WordtoSpan.setSpan(new ForegroundColorSpan(-5180122), m.start(), m.end(), 33);
+        }
+        this.mRouteTime.setText(WordtoSpan);
+    }
+
+    public void setEndName(String endName) {
+        this.mEndNameTextView.setText(endName);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/RGRouteDescWindow.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

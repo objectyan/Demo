@@ -1,51 +1,54 @@
 package com.baidu.mapframework.commonlib.asynchttp;
 
-public abstract interface LogInterface
-{
-  public static final int DEBUG = 3;
-  public static final int ERROR = 6;
-  public static final int INFO = 4;
-  public static final int VERBOSE = 2;
-  public static final int WARN = 5;
-  public static final int WTF = 8;
-  
-  public abstract void d(String paramString1, String paramString2);
-  
-  public abstract void d(String paramString1, String paramString2, Throwable paramThrowable);
-  
-  public abstract void e(String paramString1, String paramString2);
-  
-  public abstract void e(String paramString1, String paramString2, Throwable paramThrowable);
-  
-  public abstract int getLoggingLevel();
-  
-  public abstract void i(String paramString1, String paramString2);
-  
-  public abstract void i(String paramString1, String paramString2, Throwable paramThrowable);
-  
-  public abstract boolean isLoggingEnabled();
-  
-  public abstract void setLoggingEnabled(boolean paramBoolean);
-  
-  public abstract void setLoggingLevel(int paramInt);
-  
-  public abstract boolean shouldLog(int paramInt);
-  
-  public abstract void v(String paramString1, String paramString2);
-  
-  public abstract void v(String paramString1, String paramString2, Throwable paramThrowable);
-  
-  public abstract void w(String paramString1, String paramString2);
-  
-  public abstract void w(String paramString1, String paramString2, Throwable paramThrowable);
-  
-  public abstract void wtf(String paramString1, String paramString2);
-  
-  public abstract void wtf(String paramString1, String paramString2, Throwable paramThrowable);
+public interface LogInterface {
+    public static final int DEBUG = 3;
+    public static final int ERROR = 6;
+    public static final int INFO = 4;
+    public static final int VERBOSE = 2;
+    public static final int WARN = 5;
+    public static final int WTF = 8;
+
+    /* renamed from: d */
+    void mo2623d(String str, String str2);
+
+    /* renamed from: d */
+    void mo2624d(String str, String str2, Throwable th);
+
+    /* renamed from: e */
+    void mo2625e(String str, String str2);
+
+    /* renamed from: e */
+    void mo2626e(String str, String str2, Throwable th);
+
+    int getLoggingLevel();
+
+    /* renamed from: i */
+    void mo2628i(String str, String str2);
+
+    /* renamed from: i */
+    void mo2629i(String str, String str2, Throwable th);
+
+    boolean isLoggingEnabled();
+
+    void setLoggingEnabled(boolean z);
+
+    void setLoggingLevel(int i);
+
+    boolean shouldLog(int i);
+
+    /* renamed from: v */
+    void mo2634v(String str, String str2);
+
+    /* renamed from: v */
+    void mo2635v(String str, String str2, Throwable th);
+
+    /* renamed from: w */
+    void mo2636w(String str, String str2);
+
+    /* renamed from: w */
+    void mo2637w(String str, String str2, Throwable th);
+
+    void wtf(String str, String str2);
+
+    void wtf(String str, String str2, Throwable th);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/LogInterface.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

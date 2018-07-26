@@ -2,150 +2,130 @@ package com.baidu.android.pushservice.jni;
 
 import android.content.Context;
 import android.util.Log;
-import com.baidu.android.pushservice.j.p;
-import com.baidu.android.pushservice.message.h;
+import com.baidu.android.pushservice.message.C0622h;
+import com.baidu.android.pushservice.p031j.C0578p;
 
-public class PushSocket
-{
-  public static boolean a;
-  private static byte[] b = null;
-  private static int c = 0;
-  private static String d = "PushSocket";
-  private static int e = 36;
-  private static int f = 32;
-  
-  static
-  {
-    a = false;
-    try
-    {
-      System.loadLibrary("bdpush_V2_9");
-      a = true;
-      return;
-    }
-    catch (UnsatisfiedLinkError localUnsatisfiedLinkError) {}
-  }
-  
-  public static short a(byte[] paramArrayOfByte, int paramInt)
-  {
-    return (short)(paramArrayOfByte[(paramInt + 1)] << 8 | paramArrayOfByte[(paramInt + 0)] & 0xFF);
-  }
-  
-  public static void a(int paramInt)
-  {
-    b = null;
-    c = 0;
-    closeSocket(paramInt);
-  }
-  
-  public static boolean a(Context paramContext)
-  {
-    if (!a) {}
-    try
-    {
-      System.loadLibrary("bdpush_V2_9");
-      a = true;
-      return a;
-    }
-    catch (UnsatisfiedLinkError paramContext)
-    {
-      for (;;)
-      {
-        Log.e("BDPushSDK-" + d, "Native library not found! Please copy libbdpush_V2_9.so into your project!");
-      }
-    }
-  }
-  
-  public static byte[] a(Context paramContext, int paramInt)
-  {
-    Object localObject2 = null;
-    do
-    {
-      while (b != null)
-      {
-        int i = b.length;
-        if (i == c)
-        {
-          b = null;
-          c = 0;
+public class PushSocket {
+    /* renamed from: a */
+    public static boolean f1876a;
+    /* renamed from: b */
+    private static byte[] f1877b = null;
+    /* renamed from: c */
+    private static int f1878c = 0;
+    /* renamed from: d */
+    private static String f1879d = "PushSocket";
+    /* renamed from: e */
+    private static int f1880e = 36;
+    /* renamed from: f */
+    private static int f1881f = 32;
+
+    static {
+        f1876a = false;
+        try {
+            System.loadLibrary("bdpush_V2_9");
+            f1876a = true;
+        } catch (UnsatisfiedLinkError e) {
         }
-        else if (i - c > 1)
-        {
-          int j = a(b, c);
-          Object localObject1;
-          if ((j == h.f.a()) || (j == h.g.a()))
-          {
-            localObject1 = new byte[2];
-            System.arraycopy(b, c, localObject1, 0, localObject1.length);
-            if (j == h.g.a()) {
-              p.b("MSG_ID_TINY_HEARTBEAT_SERVER", paramContext);
+    }
+
+    /* renamed from: a */
+    public static short m2621a(byte[] bArr, int i) {
+        return (short) ((bArr[i + 1] << 8) | (bArr[i + 0] & 255));
+    }
+
+    /* renamed from: a */
+    public static void m2622a(int i) {
+        f1877b = null;
+        f1878c = 0;
+        closeSocket(i);
+    }
+
+    /* renamed from: a */
+    public static boolean m2623a(Context context) {
+        if (!f1876a) {
+            try {
+                System.loadLibrary("bdpush_V2_9");
+                f1876a = true;
+            } catch (UnsatisfiedLinkError e) {
+                Log.e("BDPushSDK-" + f1879d, "Native library not found! Please copy libbdpush_V2_9.so into your project!");
             }
-            c += 2;
-          }
-          do
-          {
-            return (byte[])localObject1;
-            if (i - c >= e) {
-              break;
+        }
+        return f1876a;
+    }
+
+    /* renamed from: a */
+    public static byte[] m2624a(Context context, int i) {
+        short a;
+        Object obj;
+        while (true) {
+            if (f1877b != null) {
+                int length = f1877b.length;
+                if (length == f1878c) {
+                    f1877b = null;
+                    f1878c = 0;
+                } else if (length - f1878c > 1) {
+                    a = m2621a(f1877b, f1878c);
+                    if (a == C0622h.MSG_ID_TINY_HEARTBEAT_CLIENT.m2744a() || a == C0622h.MSG_ID_TINY_HEARTBEAT_SERVER.m2744a()) {
+                        obj = new byte[2];
+                        System.arraycopy(f1877b, f1878c, obj, 0, obj.length);
+                    } else if (length - f1878c < f1880e && !m2626b(i)) {
+                        return null;
+                    } else {
+                        int b = m2625b(f1877b, f1878c + f1881f);
+                        if ((f1878c + b) + f1880e <= length - f1878c) {
+                            obj = new byte[(f1880e + b)];
+                            System.arraycopy(f1877b, f1878c, obj, 0, obj.length);
+                            f1878c += b + f1880e;
+                            return obj;
+                        } else if (!m2626b(i)) {
+                            return null;
+                        }
+                    }
+                } else if (!m2626b(i)) {
+                    return null;
+                }
+            } else if (!m2626b(i)) {
+                return null;
             }
-            localObject1 = localObject2;
-          } while (!b(paramInt));
-          j = b(b, c + f);
-          if (c + j + e <= i - c)
-          {
-            paramContext = new byte[e + j];
-            System.arraycopy(b, c, paramContext, 0, paramContext.length);
-            c += j + e;
-            return paramContext;
-          }
-          if (!b(paramInt)) {
-            return null;
-          }
         }
-        else if (!b(paramInt))
-        {
-          return null;
+        obj = new byte[2];
+        System.arraycopy(f1877b, f1878c, obj, 0, obj.length);
+        if (a == C0622h.MSG_ID_TINY_HEARTBEAT_SERVER.m2744a()) {
+            C0578p.m2546b("MSG_ID_TINY_HEARTBEAT_SERVER", context);
         }
-      }
-    } while (b(paramInt));
-    return null;
-  }
-  
-  public static int b(byte[] paramArrayOfByte, int paramInt)
-  {
-    return (paramArrayOfByte[(paramInt + 3)] & 0xFF) << 24 | (paramArrayOfByte[(paramInt + 2)] & 0xFF) << 16 | (paramArrayOfByte[(paramInt + 1)] & 0xFF) << 8 | (paramArrayOfByte[(paramInt + 0)] & 0xFF) << 0;
-  }
-  
-  private static boolean b(int paramInt)
-  {
-    byte[] arrayOfByte1 = rcvMsg(paramInt);
-    if ((arrayOfByte1 == null) || (arrayOfByte1.length == 0)) {
-      return false;
+        f1878c += 2;
+        return obj;
     }
-    if (b == null) {}
-    byte[] arrayOfByte2;
-    for (b = arrayOfByte1;; b = arrayOfByte2)
-    {
-      return true;
-      arrayOfByte2 = new byte[b.length + arrayOfByte1.length];
-      System.arraycopy(b, c, arrayOfByte2, 0, b.length - c);
-      System.arraycopy(arrayOfByte1, 0, arrayOfByte2, b.length, arrayOfByte1.length);
+
+    /* renamed from: b */
+    public static int m2625b(byte[] bArr, int i) {
+        return ((((bArr[i + 3] & 255) << 24) | ((bArr[i + 2] & 255) << 16)) | ((bArr[i + 1] & 255) << 8)) | ((bArr[i + 0] & 255) << 0);
     }
-  }
-  
-  public static native int closeSocket(int paramInt);
-  
-  public static native int createSocket(String paramString, int paramInt);
-  
-  public static native int getLastSocketError();
-  
-  private static native byte[] rcvMsg(int paramInt);
-  
-  public static native int sendMsg(int paramInt1, byte[] paramArrayOfByte, int paramInt2);
+
+    /* renamed from: b */
+    private static boolean m2626b(int i) {
+        Object rcvMsg = rcvMsg(i);
+        if (rcvMsg == null || rcvMsg.length == 0) {
+            return false;
+        }
+        if (f1877b == null) {
+            f1877b = rcvMsg;
+        } else {
+            Object obj = new byte[(f1877b.length + rcvMsg.length)];
+            System.arraycopy(f1877b, f1878c, obj, 0, f1877b.length - f1878c);
+            System.arraycopy(rcvMsg, 0, obj, f1877b.length, rcvMsg.length);
+            f1877b = obj;
+        }
+        return true;
+    }
+
+    public static native int closeSocket(int i);
+
+    public static native int createSocket(String str, int i);
+
+    public static native int getLastSocketError();
+
+    private static native byte[] rcvMsg(int i);
+
+    public static native int sendMsg(int i, byte[] bArr, int i2);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/jni/PushSocket.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

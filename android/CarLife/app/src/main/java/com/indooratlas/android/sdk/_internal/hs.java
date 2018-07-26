@@ -1,609 +1,489 @@
 package com.indooratlas.android.sdk._internal;
 
-import java.io.EOFException;
+import com.indooratlas.android.sdk._internal.gd.C5917a;
+import com.indooratlas.android.sdk._internal.gm.C5927a;
 import java.io.IOException;
 import java.net.ProtocolException;
-import java.net.Proxy;
 import java.net.Proxy.Type;
 import java.util.concurrent.TimeUnit;
 
-public final class hs
-  implements hx
-{
-  final ig a;
-  final ip b;
-  final io c;
-  int d = 0;
-  private hv e;
-  
-  public hs(ig paramig, ip paramip, io paramio)
-  {
-    this.a = paramig;
-    this.b = paramip;
-    this.c = paramio;
-  }
-  
-  public final gn a(gm paramgm)
-    throws IOException
-  {
-    Object localObject;
-    if (!hv.c(paramgm)) {
-      localObject = a(0L);
-    }
-    for (;;)
-    {
-      return new hz(paramgm.f, ix.a((jd)localObject));
-      if ("chunked".equalsIgnoreCase(paramgm.a("Transfer-Encoding")))
-      {
-        localObject = this.e;
-        if (this.d != 4) {
-          throw new IllegalStateException("state: " + this.d);
+public final class hs implements hx {
+    /* renamed from: a */
+    final ig f24268a;
+    /* renamed from: b */
+    final ip f24269b;
+    /* renamed from: c */
+    final io f24270c;
+    /* renamed from: d */
+    int f24271d = 0;
+    /* renamed from: e */
+    private hv f24272e;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hs$a */
+    abstract class C5967a implements jd {
+        /* renamed from: a */
+        protected final it f24250a;
+        /* renamed from: b */
+        protected boolean f24251b;
+        /* renamed from: c */
+        final /* synthetic */ hs f24252c;
+
+        private C5967a(hs hsVar) {
+            this.f24252c = hsVar;
+            this.f24250a = new it(this.f24252c.f24269b.a());
         }
-        this.d = 5;
-        localObject = new c((hv)localObject);
-      }
-      else
-      {
-        long l = hy.a(paramgm);
-        if (l != -1L)
-        {
-          localObject = a(l);
+
+        /* renamed from: a */
+        public final je m21009a() {
+            return this.f24250a;
         }
-        else
-        {
-          if (this.d != 4) {
-            throw new IllegalStateException("state: " + this.d);
-          }
-          if (this.a == null) {
-            throw new IllegalStateException("streamAllocation == null");
-          }
-          this.d = 5;
-          this.a.a(true, false, false);
-          localObject = new f((byte)0);
+
+        /* renamed from: a */
+        protected final void m21010a(boolean z) throws IOException {
+            if (this.f24252c.f24271d != 6) {
+                if (this.f24252c.f24271d != 5) {
+                    throw new IllegalStateException("state: " + this.f24252c.f24271d);
+                }
+                hs.m21016a(this.f24250a);
+                this.f24252c.f24271d = 6;
+                if (this.f24252c.f24268a != null) {
+                    this.f24252c.f24268a.a(!z, this.f24252c);
+                }
+            }
         }
-      }
     }
-  }
-  
-  public final jc a(gk paramgk, long paramLong)
-    throws IOException
-  {
-    if ("chunked".equalsIgnoreCase(paramgk.a("Transfer-Encoding")))
-    {
-      if (this.d != 1) {
-        throw new IllegalStateException("state: " + this.d);
-      }
-      this.d = 2;
-      return new b((byte)0);
-    }
-    if (paramLong != -1L)
-    {
-      if (this.d != 1) {
-        throw new IllegalStateException("state: " + this.d);
-      }
-      this.d = 2;
-      return new d(paramLong, (byte)0);
-    }
-    throw new IllegalStateException("Cannot stream a request body without chunked encoding or a known content length!");
-  }
-  
-  public final jd a(long paramLong)
-    throws IOException
-  {
-    if (this.d != 4) {
-      throw new IllegalStateException("state: " + this.d);
-    }
-    this.d = 5;
-    return new e(paramLong);
-  }
-  
-  public final void a()
-  {
-    ii localii = this.a.a();
-    if (localii != null) {
-      gy.a(localii.b);
-    }
-  }
-  
-  public final void a(gd paramgd, String paramString)
-    throws IOException
-  {
-    if (this.d != 0) {
-      throw new IllegalStateException("state: " + this.d);
-    }
-    this.c.b(paramString).b("\r\n");
-    int i = 0;
-    int j = paramgd.a.length / 2;
-    while (i < j)
-    {
-      this.c.b(paramgd.a(i)).b(": ").b(paramgd.b(i)).b("\r\n");
-      i += 1;
-    }
-    this.c.b("\r\n");
-    this.d = 1;
-  }
-  
-  public final void a(gk paramgk)
-    throws IOException
-  {
-    this.e.a();
-    Object localObject = this.e.c.a().a().b.type();
-    StringBuilder localStringBuilder = new StringBuilder();
-    localStringBuilder.append(paramgk.b);
-    localStringBuilder.append(' ');
-    int i;
-    if ((!paramgk.g()) && (localObject == Proxy.Type.HTTP))
-    {
-      i = 1;
-      if (i == 0) {
-        break label115;
-      }
-      localStringBuilder.append(paramgk.a);
-    }
-    for (;;)
-    {
-      localStringBuilder.append(" HTTP/1.1");
-      localObject = localStringBuilder.toString();
-      a(paramgk.c, (String)localObject);
-      return;
-      i = 0;
-      break;
-      label115:
-      localStringBuilder.append(ib.a(paramgk.a));
-    }
-  }
-  
-  public final void a(hv paramhv)
-  {
-    this.e = paramhv;
-  }
-  
-  public final void a(ic paramic)
-    throws IOException
-  {
-    if (this.d != 1) {
-      throw new IllegalStateException("state: " + this.d);
-    }
-    this.d = 3;
-    paramic.a(this.c);
-  }
-  
-  public final gm.a b()
-    throws IOException
-  {
-    return d();
-  }
-  
-  public final void c()
-    throws IOException
-  {
-    this.c.flush();
-  }
-  
-  public final gm.a d()
-    throws IOException
-  {
-    if ((this.d != 1) && (this.d != 3)) {
-      throw new IllegalStateException("state: " + this.d);
-    }
-    try
-    {
-      if localif;
-      do
-      {
-        localif = if.a(this.b.m());
-        localObject = new gm.a();
-        ((gm.a)localObject).b = localif.a;
-        ((gm.a)localObject).c = localif.b;
-        ((gm.a)localObject).d = localif.c;
-        localObject = ((gm.a)localObject).a(e());
-      } while (localif.b == 100);
-      this.d = 4;
-      return (gm.a)localObject;
-    }
-    catch (EOFException localEOFException)
-    {
-      Object localObject = new IOException("unexpected end of stream on " + this.a);
-      ((IOException)localObject).initCause(localEOFException);
-      throw ((Throwable)localObject);
-    }
-  }
-  
-  public final gd e()
-    throws IOException
-  {
-    gd.a locala = new gd.a();
-    for (;;)
-    {
-      String str = this.b.m();
-      if (str.length() == 0) {
-        break;
-      }
-      gs.b.a(locala, str);
-    }
-    return locala.a();
-  }
-  
-  abstract class a
-    implements jd
-  {
-    protected final it a = new it(hs.this.b.a());
-    protected boolean b;
-    
-    private a() {}
-    
-    public final je a()
-    {
-      return this.a;
-    }
-    
-    protected final void a(boolean paramBoolean)
-      throws IOException
-    {
-      if (hs.this.d == 6) {}
-      do
-      {
-        return;
-        if (hs.this.d != 5) {
-          throw new IllegalStateException("state: " + hs.this.d);
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hs$b */
+    final class C5968b implements jc {
+        /* renamed from: a */
+        final /* synthetic */ hs f24253a;
+        /* renamed from: b */
+        private final it f24254b;
+        /* renamed from: c */
+        private boolean f24255c;
+
+        private C5968b(hs hsVar) {
+            this.f24253a = hsVar;
+            this.f24254b = new it(this.f24253a.f24270c.a());
         }
-        hs.a(this.a);
-        hs.this.d = 6;
-      } while (hs.this.a == null);
-      ig localig = hs.this.a;
-      if (!paramBoolean) {}
-      for (paramBoolean = true;; paramBoolean = false)
-      {
-        localig.a(paramBoolean, hs.this);
-        return;
-      }
-    }
-  }
-  
-  final class b
-    implements jc
-  {
-    private final it b = new it(hs.this.c.a());
-    private boolean c;
-    
-    private b() {}
-    
-    public final je a()
-    {
-      return this.b;
-    }
-    
-    public final void a_(in paramin, long paramLong)
-      throws IOException
-    {
-      if (this.c) {
-        throw new IllegalStateException("closed");
-      }
-      if (paramLong == 0L) {
-        return;
-      }
-      hs.this.c.i(paramLong);
-      hs.this.c.b("\r\n");
-      hs.this.c.a_(paramin, paramLong);
-      hs.this.c.b("\r\n");
-    }
-    
-    /* Error */
-    public final void close()
-      throws IOException
-    {
-      // Byte code:
-      //   0: aload_0
-      //   1: monitorenter
-      //   2: aload_0
-      //   3: getfield 46	com/indooratlas/android/sdk/_internal/hs$b:c	Z
-      //   6: istore_1
-      //   7: iload_1
-      //   8: ifeq +6 -> 14
-      //   11: aload_0
-      //   12: monitorexit
-      //   13: return
-      //   14: aload_0
-      //   15: iconst_1
-      //   16: putfield 46	com/indooratlas/android/sdk/_internal/hs$b:c	Z
-      //   19: aload_0
-      //   20: getfield 18	com/indooratlas/android/sdk/_internal/hs$b:a	Lcom/indooratlas/android/sdk/_internal/hs;
-      //   23: getfield 26	com/indooratlas/android/sdk/_internal/hs:c	Lcom/indooratlas/android/sdk/_internal/io;
-      //   26: ldc 68
-      //   28: invokeinterface 62 2 0
-      //   33: pop
-      //   34: aload_0
-      //   35: getfield 36	com/indooratlas/android/sdk/_internal/hs$b:b	Lcom/indooratlas/android/sdk/_internal/it;
-      //   38: invokestatic 71	com/indooratlas/android/sdk/_internal/hs:a	(Lcom/indooratlas/android/sdk/_internal/it;)V
-      //   41: aload_0
-      //   42: getfield 18	com/indooratlas/android/sdk/_internal/hs$b:a	Lcom/indooratlas/android/sdk/_internal/hs;
-      //   45: iconst_3
-      //   46: putfield 75	com/indooratlas/android/sdk/_internal/hs:d	I
-      //   49: goto -38 -> 11
-      //   52: astore_2
-      //   53: aload_0
-      //   54: monitorexit
-      //   55: aload_2
-      //   56: athrow
-      // Local variable table:
-      //   start	length	slot	name	signature
-      //   0	57	0	this	b
-      //   6	2	1	bool	boolean
-      //   52	4	2	localObject	Object
-      // Exception table:
-      //   from	to	target	type
-      //   2	7	52	finally
-      //   14	49	52	finally
-    }
-    
-    /* Error */
-    public final void flush()
-      throws IOException
-    {
-      // Byte code:
-      //   0: aload_0
-      //   1: monitorenter
-      //   2: aload_0
-      //   3: getfield 46	com/indooratlas/android/sdk/_internal/hs$b:c	Z
-      //   6: istore_1
-      //   7: iload_1
-      //   8: ifeq +6 -> 14
-      //   11: aload_0
-      //   12: monitorexit
-      //   13: return
-      //   14: aload_0
-      //   15: getfield 18	com/indooratlas/android/sdk/_internal/hs$b:a	Lcom/indooratlas/android/sdk/_internal/hs;
-      //   18: getfield 26	com/indooratlas/android/sdk/_internal/hs:c	Lcom/indooratlas/android/sdk/_internal/io;
-      //   21: invokeinterface 78 1 0
-      //   26: goto -15 -> 11
-      //   29: astore_2
-      //   30: aload_0
-      //   31: monitorexit
-      //   32: aload_2
-      //   33: athrow
-      // Local variable table:
-      //   start	length	slot	name	signature
-      //   0	34	0	this	b
-      //   6	2	1	bool	boolean
-      //   29	4	2	localObject	Object
-      // Exception table:
-      //   from	to	target	type
-      //   2	7	29	finally
-      //   14	26	29	finally
-    }
-  }
-  
-  final class c
-    extends hs.a
-  {
-    private long e = -1L;
-    private boolean f = true;
-    private final hv g;
-    
-    c(hv paramhv)
-      throws IOException
-    {
-      super((byte)0);
-      this.g = paramhv;
-    }
-    
-    public final long a(in paramin, long paramLong)
-      throws IOException
-    {
-      if (paramLong < 0L) {
-        throw new IllegalArgumentException("byteCount < 0: " + paramLong);
-      }
-      if (this.b) {
-        throw new IllegalStateException("closed");
-      }
-      if (!this.f) {}
-      do
-      {
-        return -1L;
-        if ((this.e != 0L) && (this.e != -1L)) {
-          break;
+
+        /* renamed from: a */
+        public final je m21011a() {
+            return this.f24254b;
         }
-        if (this.e != -1L) {
-          hs.this.b.m();
+
+        public final void a_(in inVar, long j) throws IOException {
+            if (this.f24255c) {
+                throw new IllegalStateException("closed");
+            } else if (j != 0) {
+                this.f24253a.f24270c.i(j);
+                this.f24253a.f24270c.b("\r\n");
+                this.f24253a.f24270c.a_(inVar, j);
+                this.f24253a.f24270c.b("\r\n");
+            }
         }
-        try
-        {
-          this.e = hs.this.b.j();
-          String str = hs.this.b.m().trim();
-          if ((this.e < 0L) || ((!str.isEmpty()) && (!str.startsWith(";")))) {
-            throw new ProtocolException("expected chunk size and optional extensions but was \"" + this.e + str + "\"");
-          }
+
+        public final synchronized void flush() throws IOException {
+            if (!this.f24255c) {
+                this.f24253a.f24270c.flush();
+            }
         }
-        catch (NumberFormatException paramin)
-        {
-          throw new ProtocolException(paramin.getMessage());
+
+        public final synchronized void close() throws IOException {
+            if (!this.f24255c) {
+                this.f24255c = true;
+                this.f24253a.f24270c.b("0\r\n\r\n");
+                hs.m21016a(this.f24254b);
+                this.f24253a.f24271d = 3;
+            }
         }
-        if (this.e == 0L)
-        {
-          this.f = false;
-          this.g.a(hs.this.e());
-          a(true);
+    }
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hs$c */
+    class C5969c extends C5967a {
+        /* renamed from: d */
+        final /* synthetic */ hs f24256d;
+        /* renamed from: e */
+        private long f24257e = -1;
+        /* renamed from: f */
+        private boolean f24258f = true;
+        /* renamed from: g */
+        private final hv f24259g;
+
+        C5969c(hs hsVar, hv hvVar) throws IOException {
+            this.f24256d = hsVar;
+            super();
+            this.f24259g = hvVar;
         }
-      } while (!this.f);
-      paramLong = hs.this.b.a(paramin, Math.min(paramLong, this.e));
-      if (paramLong == -1L)
-      {
-        a(false);
-        throw new ProtocolException("unexpected end of stream");
-      }
-      this.e -= paramLong;
-      return paramLong;
+
+        /* renamed from: a */
+        public final long m21012a(in inVar, long j) throws IOException {
+            if (j < 0) {
+                throw new IllegalArgumentException("byteCount < 0: " + j);
+            } else if (this.b) {
+                throw new IllegalStateException("closed");
+            } else if (!this.f24258f) {
+                return -1;
+            } else {
+                if (this.f24257e == 0 || this.f24257e == -1) {
+                    if (this.f24257e != -1) {
+                        this.f24256d.f24269b.m();
+                    }
+                    try {
+                        this.f24257e = this.f24256d.f24269b.j();
+                        String trim = this.f24256d.f24269b.m().trim();
+                        if (this.f24257e < 0 || !(trim.isEmpty() || trim.startsWith(";"))) {
+                            throw new ProtocolException("expected chunk size and optional extensions but was \"" + this.f24257e + trim + "\"");
+                        }
+                        if (this.f24257e == 0) {
+                            this.f24258f = false;
+                            this.f24259g.a(this.f24256d.m21028e());
+                            m21010a(true);
+                        }
+                        if (!this.f24258f) {
+                            return -1;
+                        }
+                    } catch (NumberFormatException e) {
+                        throw new ProtocolException(e.getMessage());
+                    }
+                }
+                long a = this.f24256d.f24269b.a(inVar, Math.min(j, this.f24257e));
+                if (a == -1) {
+                    m21010a(false);
+                    throw new ProtocolException("unexpected end of stream");
+                }
+                this.f24257e -= a;
+                return a;
+            }
+        }
+
+        public final void close() throws IOException {
+            if (!this.b) {
+                if (this.f24258f && !gy.m20794a((jd) this, TimeUnit.MILLISECONDS)) {
+                    m21010a(false);
+                }
+                this.b = true;
+            }
+        }
     }
-    
-    public final void close()
-      throws IOException
-    {
-      if (this.b) {
-        return;
-      }
-      if ((this.f) && (!gy.a(this, TimeUnit.MILLISECONDS))) {
-        a(false);
-      }
-      this.b = true;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hs$d */
+    final class C5970d implements jc {
+        /* renamed from: a */
+        final /* synthetic */ hs f24260a;
+        /* renamed from: b */
+        private final it f24261b;
+        /* renamed from: c */
+        private boolean f24262c;
+        /* renamed from: d */
+        private long f24263d;
+
+        private C5970d(hs hsVar, long j) {
+            this.f24260a = hsVar;
+            this.f24261b = new it(this.f24260a.f24270c.a());
+            this.f24263d = j;
+        }
+
+        /* renamed from: a */
+        public final je m21013a() {
+            return this.f24261b;
+        }
+
+        public final void a_(in inVar, long j) throws IOException {
+            if (this.f24262c) {
+                throw new IllegalStateException("closed");
+            }
+            gy.m20789a(inVar.f24392b, j);
+            if (j > this.f24263d) {
+                throw new ProtocolException("expected " + this.f24263d + " bytes but received " + j);
+            }
+            this.f24260a.f24270c.a_(inVar, j);
+            this.f24263d -= j;
+        }
+
+        public final void flush() throws IOException {
+            if (!this.f24262c) {
+                this.f24260a.f24270c.flush();
+            }
+        }
+
+        public final void close() throws IOException {
+            if (!this.f24262c) {
+                this.f24262c = true;
+                if (this.f24263d > 0) {
+                    throw new ProtocolException("unexpected end of stream");
+                }
+                hs.m21016a(this.f24261b);
+                this.f24260a.f24271d = 3;
+            }
+        }
     }
-  }
-  
-  final class d
-    implements jc
-  {
-    private final it b = new it(hs.this.c.a());
-    private boolean c;
-    private long d;
-    
-    private d(long paramLong)
-    {
-      this.d = paramLong;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hs$e */
+    class C5971e extends C5967a {
+        /* renamed from: d */
+        final /* synthetic */ hs f24264d;
+        /* renamed from: e */
+        private long f24265e;
+
+        public C5971e(hs hsVar, long j) throws IOException {
+            this.f24264d = hsVar;
+            super();
+            this.f24265e = j;
+            if (this.f24265e == 0) {
+                m21010a(true);
+            }
+        }
+
+        /* renamed from: a */
+        public final long m21014a(in inVar, long j) throws IOException {
+            if (j < 0) {
+                throw new IllegalArgumentException("byteCount < 0: " + j);
+            } else if (this.b) {
+                throw new IllegalStateException("closed");
+            } else if (this.f24265e == 0) {
+                return -1;
+            } else {
+                long a = this.f24264d.f24269b.a(inVar, Math.min(this.f24265e, j));
+                if (a == -1) {
+                    m21010a(false);
+                    throw new ProtocolException("unexpected end of stream");
+                }
+                this.f24265e -= a;
+                if (this.f24265e == 0) {
+                    m21010a(true);
+                }
+                return a;
+            }
+        }
+
+        public final void close() throws IOException {
+            if (!this.b) {
+                if (!(this.f24265e == 0 || gy.m20794a((jd) this, TimeUnit.MILLISECONDS))) {
+                    m21010a(false);
+                }
+                this.b = true;
+            }
+        }
     }
-    
-    public final je a()
-    {
-      return this.b;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.hs$f */
+    class C5972f extends C5967a {
+        /* renamed from: d */
+        final /* synthetic */ hs f24266d;
+        /* renamed from: e */
+        private boolean f24267e;
+
+        private C5972f(hs hsVar) {
+            this.f24266d = hsVar;
+            super();
+        }
+
+        /* renamed from: a */
+        public final long m21015a(in inVar, long j) throws IOException {
+            if (j < 0) {
+                throw new IllegalArgumentException("byteCount < 0: " + j);
+            } else if (this.b) {
+                throw new IllegalStateException("closed");
+            } else if (this.f24267e) {
+                return -1;
+            } else {
+                long a = this.f24266d.f24269b.a(inVar, j);
+                if (a != -1) {
+                    return a;
+                }
+                this.f24267e = true;
+                m21010a(true);
+                return -1;
+            }
+        }
+
+        public final void close() throws IOException {
+            if (!this.b) {
+                if (!this.f24267e) {
+                    m21010a(false);
+                }
+                this.b = true;
+            }
+        }
     }
-    
-    public final void a_(in paramin, long paramLong)
-      throws IOException
-    {
-      if (this.c) {
-        throw new IllegalStateException("closed");
-      }
-      gy.a(paramin.b, paramLong);
-      if (paramLong > this.d) {
-        throw new ProtocolException("expected " + this.d + " bytes but received " + paramLong);
-      }
-      hs.this.c.a_(paramin, paramLong);
-      this.d -= paramLong;
+
+    public hs(ig igVar, ip ipVar, io ioVar) {
+        this.f24268a = igVar;
+        this.f24269b = ipVar;
+        this.f24270c = ioVar;
     }
-    
-    public final void close()
-      throws IOException
-    {
-      if (this.c) {
-        return;
-      }
-      this.c = true;
-      if (this.d > 0L) {
-        throw new ProtocolException("unexpected end of stream");
-      }
-      hs.a(this.b);
-      hs.this.d = 3;
+
+    /* renamed from: a */
+    public final void m21023a(hv hvVar) {
+        this.f24272e = hvVar;
     }
-    
-    public final void flush()
-      throws IOException
-    {
-      if (this.c) {
-        return;
-      }
-      hs.this.c.flush();
+
+    /* renamed from: a */
+    public final jc m21018a(gk gkVar, long j) throws IOException {
+        if ("chunked".equalsIgnoreCase(gkVar.m20710a("Transfer-Encoding"))) {
+            if (this.f24271d != 1) {
+                throw new IllegalStateException("state: " + this.f24271d);
+            }
+            this.f24271d = 2;
+            return new C5968b();
+        } else if (j == -1) {
+            throw new IllegalStateException("Cannot stream a request body without chunked encoding or a known content length!");
+        } else if (this.f24271d != 1) {
+            throw new IllegalStateException("state: " + this.f24271d);
+        } else {
+            this.f24271d = 2;
+            return new C5970d(j);
+        }
     }
-  }
-  
-  final class e
-    extends hs.a
-  {
-    private long e;
-    
-    public e(long paramLong)
-      throws IOException
-    {
-      super((byte)0);
-      this.e = paramLong;
-      if (this.e == 0L) {
-        a(true);
-      }
+
+    /* renamed from: a */
+    public final void m21020a() {
+        ii a = this.f24268a.a();
+        if (a != null) {
+            gy.m20792a(a.f24357b);
+        }
     }
-    
-    public final long a(in paramin, long paramLong)
-      throws IOException
-    {
-      if (paramLong < 0L) {
-        throw new IllegalArgumentException("byteCount < 0: " + paramLong);
-      }
-      if (this.b) {
-        throw new IllegalStateException("closed");
-      }
-      if (this.e == 0L) {
-        return -1L;
-      }
-      paramLong = hs.this.b.a(paramin, Math.min(this.e, paramLong));
-      if (paramLong == -1L)
-      {
-        a(false);
-        throw new ProtocolException("unexpected end of stream");
-      }
-      this.e -= paramLong;
-      if (this.e == 0L) {
-        a(true);
-      }
-      return paramLong;
+
+    /* renamed from: a */
+    public final void m21022a(gk gkVar) throws IOException {
+        Object obj;
+        this.f24272e.a();
+        Type type = this.f24272e.f24304c.a().m20575a().f23984b.type();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(gkVar.f23953b);
+        stringBuilder.append(' ');
+        if (gkVar.m20716g() || type != Type.HTTP) {
+            obj = null;
+        } else {
+            obj = 1;
+        }
+        if (obj != null) {
+            stringBuilder.append(gkVar.f23952a);
+        } else {
+            stringBuilder.append(ib.a(gkVar.f23952a));
+        }
+        stringBuilder.append(" HTTP/1.1");
+        m21021a(gkVar.f23954c, stringBuilder.toString());
     }
-    
-    public final void close()
-      throws IOException
-    {
-      if (this.b) {
-        return;
-      }
-      if ((this.e != 0L) && (!gy.a(this, TimeUnit.MILLISECONDS))) {
-        a(false);
-      }
-      this.b = true;
+
+    /* renamed from: b */
+    public final C5927a m21025b() throws IOException {
+        return m21027d();
     }
-  }
-  
-  final class f
-    extends hs.a
-  {
-    private boolean e;
-    
-    private f()
-    {
-      super((byte)0);
+
+    /* renamed from: a */
+    public final gn m21017a(gm gmVar) throws IOException {
+        jd a;
+        if (!hv.c(gmVar)) {
+            a = m21019a(0);
+        } else if ("chunked".equalsIgnoreCase(gmVar.m20729a("Transfer-Encoding"))) {
+            hv hvVar = this.f24272e;
+            if (this.f24271d != 4) {
+                throw new IllegalStateException("state: " + this.f24271d);
+            }
+            this.f24271d = 5;
+            a = new C5969c(this, hvVar);
+        } else {
+            long a2 = hy.a(gmVar);
+            if (a2 != -1) {
+                a = m21019a(a2);
+            } else if (this.f24271d != 4) {
+                throw new IllegalStateException("state: " + this.f24271d);
+            } else if (this.f24268a == null) {
+                throw new IllegalStateException("streamAllocation == null");
+            } else {
+                this.f24271d = 5;
+                this.f24268a.a(true, false, false);
+                a = new C5972f();
+            }
+        }
+        return new hz(gmVar.f23977f, ix.a(a));
     }
-    
-    public final long a(in paramin, long paramLong)
-      throws IOException
-    {
-      if (paramLong < 0L) {
-        throw new IllegalArgumentException("byteCount < 0: " + paramLong);
-      }
-      if (this.b) {
-        throw new IllegalStateException("closed");
-      }
-      if (this.e) {
-        return -1L;
-      }
-      paramLong = hs.this.b.a(paramin, paramLong);
-      if (paramLong == -1L)
-      {
-        this.e = true;
-        a(true);
-        return -1L;
-      }
-      return paramLong;
+
+    /* renamed from: c */
+    public final void m21026c() throws IOException {
+        this.f24270c.flush();
     }
-    
-    public final void close()
-      throws IOException
-    {
-      if (this.b) {
-        return;
-      }
-      if (!this.e) {
-        a(false);
-      }
-      this.b = true;
+
+    /* renamed from: a */
+    public final void m21021a(gd gdVar, String str) throws IOException {
+        if (this.f24271d != 0) {
+            throw new IllegalStateException("state: " + this.f24271d);
+        }
+        this.f24270c.b(str).b("\r\n");
+        int length = gdVar.f23845a.length / 2;
+        for (int i = 0; i < length; i++) {
+            this.f24270c.b(gdVar.m20617a(i)).b(": ").b(gdVar.m20619b(i)).b("\r\n");
+        }
+        this.f24270c.b("\r\n");
+        this.f24271d = 1;
     }
-  }
+
+    /* renamed from: d */
+    public final C5927a m21027d() throws IOException {
+        if (this.f24271d == 1 || this.f24271d == 3) {
+            C5927a c5927a;
+            C5979if a;
+            do {
+                try {
+                    a = C5979if.a(this.f24269b.m());
+                    c5927a = new C5927a();
+                    c5927a.f23963b = a.f24344a;
+                    c5927a.f23964c = a.f24345b;
+                    c5927a.f23965d = a.f24346c;
+                    c5927a = c5927a.m20721a(m21028e());
+                } catch (Throwable e) {
+                    IOException iOException = new IOException("unexpected end of stream on " + this.f24268a);
+                    iOException.initCause(e);
+                    throw iOException;
+                }
+            } while (a.f24345b == 100);
+            this.f24271d = 4;
+            return c5927a;
+        }
+        throw new IllegalStateException("state: " + this.f24271d);
+    }
+
+    /* renamed from: e */
+    public final gd m21028e() throws IOException {
+        C5917a c5917a = new C5917a();
+        while (true) {
+            String m = this.f24269b.m();
+            if (m.length() == 0) {
+                return c5917a.m20613a();
+            }
+            gs.f23877b.mo4686a(c5917a, m);
+        }
+    }
+
+    /* renamed from: a */
+    public final void m21024a(ic icVar) throws IOException {
+        if (this.f24271d != 1) {
+            throw new IllegalStateException("state: " + this.f24271d);
+        }
+        this.f24271d = 3;
+        icVar.a(this.f24270c);
+    }
+
+    /* renamed from: a */
+    public final jd m21019a(long j) throws IOException {
+        if (this.f24271d != 4) {
+            throw new IllegalStateException("state: " + this.f24271d);
+        }
+        this.f24271d = 5;
+        return new C5971e(this, j);
+    }
+
+    /* renamed from: a */
+    static /* synthetic */ void m21016a(it itVar) {
+        je jeVar = itVar.f24402a;
+        je jeVar2 = je.f24380b;
+        if (jeVar2 == null) {
+            throw new IllegalArgumentException("delegate == null");
+        }
+        itVar.f24402a = jeVar2;
+        jeVar.e_();
+        jeVar.d();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

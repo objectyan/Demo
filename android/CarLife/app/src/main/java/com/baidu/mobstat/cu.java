@@ -5,447 +5,285 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Proxy.Type;
 import java.net.URL;
 
-public final class cu
-{
-  private static final Proxy a = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.0.0.172", 80));
-  private static final Proxy b = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.0.0.200", 80));
-  
-  public static File a(String paramString)
-  {
-    if (!"mounted".equals(a())) {}
-    for (;;)
-    {
-      return null;
-      try
-      {
-        File localFile = Environment.getExternalStorageDirectory();
-        if (localFile == null) {
-          continue;
+public final class cu {
+    /* renamed from: a */
+    private static final Proxy f19624a = new Proxy(Type.HTTP, new InetSocketAddress("10.0.0.172", 80));
+    /* renamed from: b */
+    private static final Proxy f19625b = new Proxy(Type.HTTP, new InetSocketAddress("10.0.0.200", 80));
+
+    /* renamed from: a */
+    public static String m15627a() {
+        String str = null;
+        try {
+            str = Environment.getExternalStorageState();
+        } catch (Exception e) {
         }
-        return new File(localFile, paramString);
-      }
-      catch (Exception localException)
-      {
-        for (;;)
-        {
-          Object localObject = null;
+        return str;
+    }
+
+    /* renamed from: a */
+    public static File m15626a(String str) {
+        if (!"mounted".equals(m15627a())) {
+            return null;
         }
-      }
-    }
-  }
-  
-  public static String a()
-  {
-    try
-    {
-      String str = Environment.getExternalStorageState();
-      return str;
-    }
-    catch (Exception localException) {}
-    return null;
-  }
-  
-  /* Error */
-  public static String a(Context paramContext, String paramString)
-  {
-    // Byte code:
-    //   0: aconst_null
-    //   1: astore_2
-    //   2: aload_0
-    //   3: aload_1
-    //   4: invokevirtual 70	android/content/Context:openFileInput	(Ljava/lang/String;)Ljava/io/FileInputStream;
-    //   7: astore_0
-    //   8: aload_0
-    //   9: invokestatic 73	com/baidu/mobstat/cu:a	(Ljava/io/InputStream;)[B
-    //   12: astore_1
-    //   13: aload_1
-    //   14: ifnull +20 -> 34
-    //   17: new 45	java/lang/String
-    //   20: dup
-    //   21: aload_1
-    //   22: ldc 75
-    //   24: invokespecial 78	java/lang/String:<init>	([BLjava/lang/String;)V
-    //   27: astore_1
-    //   28: aload_0
-    //   29: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   32: aload_1
-    //   33: areturn
-    //   34: aload_0
-    //   35: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   38: ldc 85
-    //   40: areturn
-    //   41: astore_0
-    //   42: aload_2
-    //   43: astore_0
-    //   44: aload_0
-    //   45: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   48: goto -10 -> 38
-    //   51: astore_0
-    //   52: aconst_null
-    //   53: astore_2
-    //   54: aload_0
-    //   55: astore_1
-    //   56: aload_2
-    //   57: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   60: aload_1
-    //   61: athrow
-    //   62: astore_1
-    //   63: aload_0
-    //   64: astore_2
-    //   65: goto -9 -> 56
-    //   68: astore_1
-    //   69: goto -25 -> 44
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	72	0	paramContext	Context
-    //   0	72	1	paramString	String
-    //   1	64	2	localObject	Object
-    // Exception table:
-    //   from	to	target	type
-    //   2	8	41	java/lang/Exception
-    //   2	8	51	finally
-    //   8	13	62	finally
-    //   17	28	62	finally
-    //   8	13	68	java/lang/Exception
-    //   17	28	68	java/lang/Exception
-  }
-  
-  @SuppressLint({"DefaultLocale"})
-  public static HttpURLConnection a(Context paramContext, String paramString, int paramInt1, int paramInt2)
-  {
-    URL localURL = new URL(paramString);
-    paramString = (ConnectivityManager)paramContext.getSystemService("connectivity");
-    paramContext = paramString.getNetworkInfo(0);
-    paramString = paramString.getNetworkInfo(1);
-    if ((paramString != null) && (paramString.isAvailable()))
-    {
-      db.a("WIFI is available");
-      paramContext = (HttpURLConnection)localURL.openConnection();
-    }
-    for (;;)
-    {
-      paramString = paramContext;
-      if (paramContext == null) {
-        paramString = (HttpURLConnection)localURL.openConnection();
-      }
-      paramString.setConnectTimeout(paramInt1);
-      paramString.setReadTimeout(paramInt2);
-      return paramString;
-      if ((paramContext != null) && (paramContext.isAvailable()))
-      {
-        paramContext = paramContext.getExtraInfo();
-        if (paramContext != null) {}
-        for (paramContext = paramContext.toLowerCase();; paramContext = "")
-        {
-          db.a(paramContext);
-          if ((!paramContext.startsWith("cmwap")) && (!paramContext.startsWith("uniwap")) && (!paramContext.startsWith("3gwap"))) {
-            break label161;
-          }
-          paramContext = (HttpURLConnection)localURL.openConnection(a);
-          break;
+        File externalStorageDirectory;
+        try {
+            externalStorageDirectory = Environment.getExternalStorageDirectory();
+        } catch (Exception e) {
+            externalStorageDirectory = null;
         }
-        label161:
-        if (paramContext.startsWith("ctwap"))
-        {
-          paramContext = (HttpURLConnection)localURL.openConnection(b);
-          continue;
+        if (externalStorageDirectory != null) {
+            return new File(externalStorageDirectory, str);
         }
-      }
-      paramContext = null;
+        return null;
     }
-  }
-  
-  /* Error */
-  public static void a(Context paramContext, String paramString1, String paramString2, boolean paramBoolean)
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: ifnonnull +4 -> 5
-    //   4: return
-    //   5: aconst_null
-    //   6: astore 5
-    //   8: iload_3
-    //   9: ifeq +41 -> 50
-    //   12: ldc -101
-    //   14: istore 4
-    //   16: aload_0
-    //   17: aload_1
-    //   18: iload 4
-    //   20: invokevirtual 159	android/content/Context:openFileOutput	(Ljava/lang/String;I)Ljava/io/FileOutputStream;
-    //   23: astore_0
-    //   24: aload_0
-    //   25: astore 5
-    //   27: new 161	java/io/ByteArrayInputStream
-    //   30: dup
-    //   31: aload_2
-    //   32: ldc 75
-    //   34: invokevirtual 165	java/lang/String:getBytes	(Ljava/lang/String;)[B
-    //   37: invokespecial 168	java/io/ByteArrayInputStream:<init>	([B)V
-    //   40: aload_0
-    //   41: invokestatic 171	com/baidu/mobstat/da:a	(Ljava/io/InputStream;Ljava/io/OutputStream;)Z
-    //   44: pop
-    //   45: aload_0
-    //   46: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   49: return
-    //   50: iconst_0
-    //   51: istore 4
-    //   53: goto -37 -> 16
-    //   56: astore_0
-    //   57: aload 5
-    //   59: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   62: return
-    //   63: astore_0
-    //   64: aconst_null
-    //   65: astore_2
-    //   66: aload_0
-    //   67: astore_1
-    //   68: aload_2
-    //   69: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   72: aload_1
-    //   73: athrow
-    //   74: astore_1
-    //   75: aload_0
-    //   76: astore_2
-    //   77: goto -9 -> 68
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	80	0	paramContext	Context
-    //   0	80	1	paramString1	String
-    //   0	80	2	paramString2	String
-    //   0	80	3	paramBoolean	boolean
-    //   14	38	4	i	int
-    //   6	52	5	localContext	Context
-    // Exception table:
-    //   from	to	target	type
-    //   16	24	56	java/lang/Exception
-    //   27	45	56	java/lang/Exception
-    //   16	24	63	finally
-    //   27	45	74	finally
-  }
-  
-  /* Error */
-  public static void a(String paramString1, String paramString2, boolean paramBoolean)
-  {
-    // Byte code:
-    //   0: aconst_null
-    //   1: astore 4
-    //   3: aconst_null
-    //   4: astore_3
-    //   5: aload_0
-    //   6: invokestatic 174	com/baidu/mobstat/cu:a	(Ljava/lang/String;)Ljava/io/File;
-    //   9: astore_0
-    //   10: aload_0
-    //   11: ifnull +86 -> 97
-    //   14: aload_0
-    //   15: invokevirtual 177	java/io/File:exists	()Z
-    //   18: ifne +20 -> 38
-    //   21: aload_0
-    //   22: invokevirtual 180	java/io/File:getParentFile	()Ljava/io/File;
-    //   25: astore 5
-    //   27: aload 5
-    //   29: ifnull +9 -> 38
-    //   32: aload 5
-    //   34: invokevirtual 183	java/io/File:mkdirs	()Z
-    //   37: pop
-    //   38: new 185	java/io/FileOutputStream
-    //   41: dup
-    //   42: aload_0
-    //   43: iload_2
-    //   44: invokespecial 188	java/io/FileOutputStream:<init>	(Ljava/io/File;Z)V
-    //   47: astore_0
-    //   48: new 161	java/io/ByteArrayInputStream
-    //   51: dup
-    //   52: aload_1
-    //   53: ldc 75
-    //   55: invokevirtual 165	java/lang/String:getBytes	(Ljava/lang/String;)[B
-    //   58: invokespecial 168	java/io/ByteArrayInputStream:<init>	([B)V
-    //   61: aload_0
-    //   62: invokestatic 171	com/baidu/mobstat/da:a	(Ljava/io/InputStream;Ljava/io/OutputStream;)Z
-    //   65: pop
-    //   66: aload_0
-    //   67: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   70: return
-    //   71: astore_0
-    //   72: aload_3
-    //   73: astore_0
-    //   74: aload_0
-    //   75: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   78: return
-    //   79: astore_1
-    //   80: aload 4
-    //   82: astore_0
-    //   83: aload_0
-    //   84: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   87: aload_1
-    //   88: athrow
-    //   89: astore_1
-    //   90: goto -7 -> 83
-    //   93: astore_1
-    //   94: goto -20 -> 74
-    //   97: aconst_null
-    //   98: astore_0
-    //   99: goto -33 -> 66
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	102	0	paramString1	String
-    //   0	102	1	paramString2	String
-    //   0	102	2	paramBoolean	boolean
-    //   4	69	3	localObject1	Object
-    //   1	80	4	localObject2	Object
-    //   25	8	5	localFile	File
-    // Exception table:
-    //   from	to	target	type
-    //   5	10	71	java/lang/Exception
-    //   14	27	71	java/lang/Exception
-    //   32	38	71	java/lang/Exception
-    //   38	48	71	java/lang/Exception
-    //   5	10	79	finally
-    //   14	27	79	finally
-    //   32	38	79	finally
-    //   38	48	79	finally
-    //   48	66	89	finally
-    //   48	66	93	java/lang/Exception
-  }
-  
-  private static byte[] a(InputStream paramInputStream)
-  {
-    ByteArrayOutputStream localByteArrayOutputStream = new ByteArrayOutputStream();
-    if (da.a(paramInputStream, localByteArrayOutputStream)) {
-      return localByteArrayOutputStream.toByteArray();
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* renamed from: a */
+    public static void m15630a(android.content.Context r4, java.lang.String r5, java.lang.String r6, boolean r7) {
+        /*
+        if (r4 != 0) goto L_0x0003;
+    L_0x0002:
+        return;
+    L_0x0003:
+        r0 = 0;
+        if (r7 == 0) goto L_0x0020;
+    L_0x0006:
+        r1 = 32768; // 0x8000 float:4.5918E-41 double:1.61895E-319;
+    L_0x0009:
+        r0 = r4.openFileOutput(r5, r1);	 Catch:{ Exception -> 0x0022, all -> 0x0027 }
+        r1 = new java.io.ByteArrayInputStream;	 Catch:{ Exception -> 0x0022, all -> 0x002f }
+        r2 = "utf-8";
+        r2 = r6.getBytes(r2);	 Catch:{ Exception -> 0x0022, all -> 0x002f }
+        r1.<init>(r2);	 Catch:{ Exception -> 0x0022, all -> 0x002f }
+        com.baidu.mobstat.da.m15654a(r1, r0);	 Catch:{ Exception -> 0x0022, all -> 0x002f }
+        com.baidu.mobstat.da.m15653a(r0);
+        goto L_0x0002;
+    L_0x0020:
+        r1 = 0;
+        goto L_0x0009;
+    L_0x0022:
+        r1 = move-exception;
+        com.baidu.mobstat.da.m15653a(r0);
+        goto L_0x0002;
+    L_0x0027:
+        r1 = move-exception;
+        r3 = r1;
+        r1 = r0;
+        r0 = r3;
+    L_0x002b:
+        com.baidu.mobstat.da.m15653a(r1);
+        throw r0;
+    L_0x002f:
+        r1 = move-exception;
+        r3 = r1;
+        r1 = r0;
+        r0 = r3;
+        goto L_0x002b;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.baidu.mobstat.cu.a(android.content.Context, java.lang.String, java.lang.String, boolean):void");
     }
-    return null;
-  }
-  
-  /* Error */
-  public static String b(String paramString)
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: invokestatic 174	com/baidu/mobstat/cu:a	(Ljava/lang/String;)Ljava/io/File;
-    //   4: astore_0
-    //   5: aload_0
-    //   6: ifnull +51 -> 57
-    //   9: aload_0
-    //   10: invokevirtual 177	java/io/File:exists	()Z
-    //   13: ifeq +44 -> 57
-    //   16: aconst_null
-    //   17: astore_1
-    //   18: new 199	java/io/FileInputStream
-    //   21: dup
-    //   22: aload_0
-    //   23: invokespecial 202	java/io/FileInputStream:<init>	(Ljava/io/File;)V
-    //   26: astore_0
-    //   27: aload_0
-    //   28: invokestatic 73	com/baidu/mobstat/cu:a	(Ljava/io/InputStream;)[B
-    //   31: astore_1
-    //   32: aload_1
-    //   33: ifnull +20 -> 53
-    //   36: new 45	java/lang/String
-    //   39: dup
-    //   40: aload_1
-    //   41: ldc 75
-    //   43: invokespecial 78	java/lang/String:<init>	([BLjava/lang/String;)V
-    //   46: astore_1
-    //   47: aload_0
-    //   48: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   51: aload_1
-    //   52: areturn
-    //   53: aload_0
-    //   54: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   57: ldc 85
-    //   59: areturn
-    //   60: astore_0
-    //   61: aload_1
-    //   62: astore_0
-    //   63: aload_0
-    //   64: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   67: goto -10 -> 57
-    //   70: astore_0
-    //   71: aconst_null
-    //   72: astore_2
-    //   73: aload_0
-    //   74: astore_1
-    //   75: aload_2
-    //   76: invokestatic 83	com/baidu/mobstat/da:a	(Ljava/io/Closeable;)V
-    //   79: aload_1
-    //   80: athrow
-    //   81: astore_1
-    //   82: aload_0
-    //   83: astore_2
-    //   84: goto -9 -> 75
-    //   87: astore_1
-    //   88: goto -25 -> 63
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	91	0	paramString	String
-    //   17	63	1	localObject1	Object
-    //   81	1	1	localObject2	Object
-    //   87	1	1	localException	Exception
-    //   72	12	2	localObject3	Object
-    // Exception table:
-    //   from	to	target	type
-    //   18	27	60	java/lang/Exception
-    //   18	27	70	finally
-    //   27	32	81	finally
-    //   36	47	81	finally
-    //   27	32	87	java/lang/Exception
-    //   36	47	87	java/lang/Exception
-  }
-  
-  public static boolean b(Context paramContext, String paramString)
-  {
-    return paramContext.deleteFile(paramString);
-  }
-  
-  public static boolean c(Context paramContext, String paramString)
-  {
-    return paramContext.getFileStreamPath(paramString).exists();
-  }
-  
-  public static boolean c(String paramString)
-  {
-    paramString = a(paramString);
-    if ((paramString != null) && (paramString.isFile())) {
-      return paramString.delete();
+
+    /* renamed from: a */
+    public static void m15631a(String str, String str2, boolean z) {
+        Throwable th;
+        Closeable closeable = null;
+        try {
+            Closeable fileOutputStream;
+            File a = m15626a(str);
+            if (a != null) {
+                if (!a.exists()) {
+                    File parentFile = a.getParentFile();
+                    if (parentFile != null) {
+                        parentFile.mkdirs();
+                    }
+                }
+                fileOutputStream = new FileOutputStream(a, z);
+                try {
+                    da.m15654a(new ByteArrayInputStream(str2.getBytes("utf-8")), fileOutputStream);
+                } catch (Exception e) {
+                    closeable = fileOutputStream;
+                    da.m15653a(closeable);
+                } catch (Throwable th2) {
+                    Throwable th3 = th2;
+                    closeable = fileOutputStream;
+                    th = th3;
+                    da.m15653a(closeable);
+                    throw th;
+                }
+            }
+            fileOutputStream = null;
+            da.m15653a(fileOutputStream);
+        } catch (Exception e2) {
+            da.m15653a(closeable);
+        } catch (Throwable th4) {
+            th = th4;
+            da.m15653a(closeable);
+            throw th;
+        }
     }
-    return false;
-  }
-  
-  public static HttpURLConnection d(Context paramContext, String paramString)
-  {
-    return a(paramContext, paramString, 50000, 50000);
-  }
-  
-  public static boolean e(Context paramContext, String paramString)
-  {
-    boolean bool = false;
-    try
-    {
-      int i = paramContext.checkCallingOrSelfPermission(paramString);
-      if (i != -1) {
-        bool = true;
-      }
-      return bool;
+
+    /* renamed from: a */
+    public static String m15628a(Context context, String str) {
+        Throwable th;
+        Closeable closeable = null;
+        Closeable openFileInput;
+        try {
+            openFileInput = context.openFileInput(str);
+            try {
+                byte[] a = m15632a((InputStream) openFileInput);
+                if (a != null) {
+                    String str2 = new String(a, "utf-8");
+                    da.m15653a(openFileInput);
+                    return str2;
+                }
+                da.m15653a(openFileInput);
+                return "";
+            } catch (Exception e) {
+                closeable = openFileInput;
+                da.m15653a(closeable);
+                return "";
+            } catch (Throwable th2) {
+                th = th2;
+                da.m15653a(openFileInput);
+                throw th;
+            }
+        } catch (Exception e2) {
+            da.m15653a(closeable);
+            return "";
+        } catch (Throwable th3) {
+            Throwable th4 = th3;
+            openFileInput = null;
+            th = th4;
+            da.m15653a(openFileInput);
+            throw th;
+        }
     }
-    catch (Exception paramContext)
-    {
-      db.b("Check permission failed.");
+
+    /* renamed from: b */
+    public static String m15633b(String str) {
+        Throwable th;
+        File a = m15626a(str);
+        if (a != null && a.exists()) {
+            Closeable closeable = null;
+            Closeable fileInputStream;
+            try {
+                fileInputStream = new FileInputStream(a);
+                try {
+                    byte[] a2 = m15632a((InputStream) fileInputStream);
+                    if (a2 != null) {
+                        String str2 = new String(a2, "utf-8");
+                        da.m15653a(fileInputStream);
+                        return str2;
+                    }
+                    da.m15653a(fileInputStream);
+                } catch (Exception e) {
+                    closeable = fileInputStream;
+                    da.m15653a(closeable);
+                    return "";
+                } catch (Throwable th2) {
+                    th = th2;
+                    da.m15653a(fileInputStream);
+                    throw th;
+                }
+            } catch (Exception e2) {
+                da.m15653a(closeable);
+                return "";
+            } catch (Throwable th3) {
+                Throwable th4 = th3;
+                fileInputStream = null;
+                th = th4;
+                da.m15653a(fileInputStream);
+                throw th;
+            }
+        }
+        return "";
     }
-    return false;
-  }
+
+    /* renamed from: a */
+    private static byte[] m15632a(InputStream inputStream) {
+        OutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        return da.m15654a(inputStream, byteArrayOutputStream) ? byteArrayOutputStream.toByteArray() : null;
+    }
+
+    /* renamed from: b */
+    public static boolean m15634b(Context context, String str) {
+        return context.deleteFile(str);
+    }
+
+    /* renamed from: c */
+    public static boolean m15636c(String str) {
+        File a = m15626a(str);
+        if (a == null || !a.isFile()) {
+            return false;
+        }
+        return a.delete();
+    }
+
+    /* renamed from: c */
+    public static boolean m15635c(Context context, String str) {
+        return context.getFileStreamPath(str).exists();
+    }
+
+    /* renamed from: d */
+    public static HttpURLConnection m15637d(Context context, String str) {
+        return m15629a(context, str, 50000, 50000);
+    }
+
+    @SuppressLint({"DefaultLocale"})
+    /* renamed from: a */
+    public static HttpURLConnection m15629a(Context context, String str, int i, int i2) {
+        HttpURLConnection httpURLConnection;
+        URL url = new URL(str);
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService("connectivity");
+        NetworkInfo networkInfo = connectivityManager.getNetworkInfo(0);
+        NetworkInfo networkInfo2 = connectivityManager.getNetworkInfo(1);
+        if (networkInfo2 == null || !networkInfo2.isAvailable()) {
+            if (networkInfo != null && networkInfo.isAvailable()) {
+                String extraInfo = networkInfo.getExtraInfo();
+                extraInfo = extraInfo != null ? extraInfo.toLowerCase() : "";
+                db.m15657a(extraInfo);
+                if (extraInfo.startsWith("cmwap") || extraInfo.startsWith("uniwap") || extraInfo.startsWith("3gwap")) {
+                    httpURLConnection = (HttpURLConnection) url.openConnection(f19624a);
+                } else if (extraInfo.startsWith("ctwap")) {
+                    httpURLConnection = (HttpURLConnection) url.openConnection(f19625b);
+                }
+            }
+            httpURLConnection = null;
+        } else {
+            db.m15657a("WIFI is available");
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+        }
+        if (httpURLConnection == null) {
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+        }
+        httpURLConnection.setConnectTimeout(i);
+        httpURLConnection.setReadTimeout(i2);
+        return httpURLConnection;
+    }
+
+    /* renamed from: e */
+    public static boolean m15638e(Context context, String str) {
+        try {
+            return context.checkCallingOrSelfPermission(str) != -1;
+        } catch (Exception e) {
+            db.m15661b("Check permission failed.");
+            return false;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cu.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

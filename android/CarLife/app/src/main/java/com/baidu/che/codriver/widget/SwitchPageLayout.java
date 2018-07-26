@@ -10,246 +10,216 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
+import com.baidu.che.codriver.ui.p127a.C2651h;
+import com.baidu.che.codriver.util.C2725h;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class SwitchPageLayout
-  extends RelativeLayout
-  implements View.OnClickListener, e
-{
-  public static final String a = "SwitchPageLayout";
-  public static final int b = 500;
-  private com.baidu.che.codriver.ui.a.h c;
-  private int d;
-  private int e;
-  private TextView f;
-  private TextView g;
-  private CompoundImageView h;
-  private CompoundImageView i;
-  private View j;
-  private SparseArray<View> k = new SparseArray();
-  private LinearLayout l;
-  
-  public SwitchPageLayout(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public SwitchPageLayout(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public SwitchPageLayout(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  private View a(int paramInt)
-  {
-    if (this.k.get(paramInt) != null) {
-      return (View)this.k.get(paramInt);
+public class SwitchPageLayout extends RelativeLayout implements OnClickListener, C2880e {
+    /* renamed from: a */
+    public static final String f9492a = "SwitchPageLayout";
+    /* renamed from: b */
+    public static final int f9493b = 500;
+    /* renamed from: c */
+    private C2651h f9494c;
+    /* renamed from: d */
+    private int f9495d;
+    /* renamed from: e */
+    private int f9496e;
+    /* renamed from: f */
+    private TextView f9497f;
+    /* renamed from: g */
+    private TextView f9498g;
+    /* renamed from: h */
+    private CompoundImageView f9499h;
+    /* renamed from: i */
+    private CompoundImageView f9500i;
+    /* renamed from: j */
+    private View f9501j;
+    /* renamed from: k */
+    private SparseArray<View> f9502k;
+    /* renamed from: l */
+    private LinearLayout f9503l;
+
+    public SwitchPageLayout(Context context) {
+        this(context, null);
     }
-    View localView = this.c.a(this.d);
-    this.k.put(paramInt, localView);
-    return localView;
-  }
-  
-  private void a()
-  {
-    this.l = ((LinearLayout)findViewById(2131624990));
-    this.f = ((TextView)findViewById(2131625346));
-    this.j = findViewById(2131626091);
-    this.g = ((TextView)findViewById(2131626090));
-    this.h = ((CompoundImageView)findViewById(2131626092));
-    this.i = ((CompoundImageView)findViewById(2131626093));
-    this.h.setOnClickListener(this);
-    this.i.setOnClickListener(this);
-  }
-  
-  private void a(ViewGroup paramViewGroup, ArrayList<String> paramArrayList)
-  {
-    int n = paramViewGroup.getChildCount();
-    int m = 0;
-    if (m < n)
-    {
-      View localView = paramViewGroup.getChildAt(m);
-      if ((localView instanceof TextView)) {
-        if (localView.getVisibility() == 0) {
-          paramArrayList.add(((TextView)localView).getText().toString());
+
+    public SwitchPageLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public SwitchPageLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.f9502k = new SparseArray();
+    }
+
+    /* renamed from: a */
+    private void m10911a() {
+        this.f9503l = (LinearLayout) findViewById(C0965R.id.container);
+        this.f9497f = (TextView) findViewById(C0965R.id.title);
+        this.f9501j = findViewById(C0965R.id.control_bar);
+        this.f9498g = (TextView) findViewById(C0965R.id.page_index);
+        this.f9499h = (CompoundImageView) findViewById(C0965R.id.page_prev);
+        this.f9500i = (CompoundImageView) findViewById(C0965R.id.page_next);
+        this.f9499h.setOnClickListener(this);
+        this.f9500i.setOnClickListener(this);
+    }
+
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        m10911a();
+    }
+
+    public void setAdapter(C2651h adapter) {
+        this.f9494c = adapter;
+        this.f9496e = this.f9494c.mo1919a();
+        this.f9495d = this.f9494c.mo1921b();
+        this.f9502k.clear();
+        m10917d();
+    }
+
+    public void setTitle(String title) {
+        if (TextUtils.isEmpty(title)) {
+            this.f9497f.setVisibility(8);
+        } else {
+            this.f9497f.setText(title);
         }
-      }
-      for (;;)
-      {
-        m += 1;
-        break;
-        if ((localView instanceof ViewGroup)) {
-          a((ViewGroup)localView, paramArrayList);
+    }
+
+    public void setPageIndex(int current, int max) {
+        this.f9498g.setText(current + "/" + max);
+    }
+
+    public LinkedHashMap<View, ArrayList<String>> getKeywords() {
+        ViewGroup currentContent = (ViewGroup) m10910a(this.f9495d);
+        LinkedHashMap<View, ArrayList<String>> resultMap = new LinkedHashMap();
+        int childCount = currentContent.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            ArrayList resultList = new ArrayList();
+            View childView = currentContent.getChildAt(i);
+            if (childView instanceof ViewGroup) {
+                m10912a((ViewGroup) childView, resultList);
+            }
+            resultMap.put(childView, resultList);
         }
-      }
+        return resultMap;
     }
-  }
-  
-  private boolean a(boolean paramBoolean1, final boolean paramBoolean2)
-  {
-    if (paramBoolean2)
-    {
-      if (this.d == this.e - 1) {
-        return false;
-      }
-      this.d += 1;
-      label29:
-      if (!paramBoolean1) {
-        break label95;
-      }
-      if (!paramBoolean2) {
-        break label84;
-      }
-      this.i.setChecked(true);
-      label45:
-      postDelayed(new Runnable()
-      {
-        public void run()
-        {
-          SwitchPageLayout.a(SwitchPageLayout.this);
-          if (paramBoolean2)
-          {
-            SwitchPageLayout.b(SwitchPageLayout.this).setChecked(false);
-            return;
-          }
-          SwitchPageLayout.c(SwitchPageLayout.this).setChecked(false);
+
+    /* renamed from: a */
+    private void m10912a(ViewGroup rootView, ArrayList<String> resultList) {
+        int childCount = rootView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childView = rootView.getChildAt(i);
+            if (childView instanceof TextView) {
+                if (childView.getVisibility() == 0) {
+                    resultList.add(((TextView) childView).getText().toString());
+                }
+            } else if (childView instanceof ViewGroup) {
+                m10912a((ViewGroup) childView, (ArrayList) resultList);
+            }
         }
-      }, 500L);
     }
-    for (;;)
-    {
-      return true;
-      if (this.d == 0) {
-        break;
-      }
-      this.d -= 1;
-      break label29;
-      label84:
-      this.h.setChecked(true);
-      break label45;
-      label95:
-      d();
+
+    /* renamed from: b */
+    public boolean mo1983b() {
+        C2725h.m10207b(f9492a, "switchToPrevPage() mCurrentPage=" + this.f9495d + " mMaxPage=" + this.f9496e);
+        return m10914a(true, false);
     }
-  }
-  
-  private void d()
-  {
-    this.c.b(this.d);
-    this.l.removeAllViewsInLayout();
-    setPageIndex(this.d + 1, this.e);
-    this.l.addView(a(this.d));
-    if (this.e <= 1)
-    {
-      this.j.setVisibility(8);
-      return;
+
+    /* renamed from: c */
+    public boolean mo1984c() {
+        C2725h.m10207b(f9492a, "switchToNextPage() mCurrentPage=" + this.f9495d + " mMaxPage=" + this.f9496e);
+        return m10914a(true, true);
     }
-    if (this.d == 0)
-    {
-      this.j.setVisibility(0);
-      this.h.setEnabled(false);
-      this.h.setAlpha(0.4F);
-      this.i.setEnabled(true);
-      this.i.setAlpha(1.0F);
-      return;
+
+    /* renamed from: a */
+    private boolean m10914a(boolean needDelay, final boolean isNext) {
+        if (isNext) {
+            if (this.f9495d == this.f9496e - 1) {
+                return false;
+            }
+            this.f9495d++;
+        } else if (this.f9495d == 0) {
+            return false;
+        } else {
+            this.f9495d--;
+        }
+        if (needDelay) {
+            if (isNext) {
+                this.f9500i.setChecked(true);
+            } else {
+                this.f9499h.setChecked(true);
+            }
+            postDelayed(new Runnable(this) {
+                /* renamed from: b */
+                final /* synthetic */ SwitchPageLayout f9491b;
+
+                public void run() {
+                    this.f9491b.m10917d();
+                    if (isNext) {
+                        this.f9491b.f9500i.setChecked(false);
+                    } else {
+                        this.f9491b.f9499h.setChecked(false);
+                    }
+                }
+            }, 500);
+        } else {
+            m10917d();
+        }
+        return true;
     }
-    if (this.d == this.e - 1)
-    {
-      this.j.setVisibility(0);
-      this.h.setEnabled(true);
-      this.h.setAlpha(1.0F);
-      this.i.setEnabled(false);
-      this.i.setAlpha(0.4F);
-      return;
+
+    /* renamed from: d */
+    private void m10917d() {
+        this.f9494c.mo1922b(this.f9495d);
+        this.f9503l.removeAllViewsInLayout();
+        setPageIndex(this.f9495d + 1, this.f9496e);
+        this.f9503l.addView(m10910a(this.f9495d));
+        if (this.f9496e <= 1) {
+            this.f9501j.setVisibility(8);
+        } else if (this.f9495d == 0) {
+            this.f9501j.setVisibility(0);
+            this.f9499h.setEnabled(false);
+            this.f9499h.setAlpha(0.4f);
+            this.f9500i.setEnabled(true);
+            this.f9500i.setAlpha(1.0f);
+        } else if (this.f9495d == this.f9496e - 1) {
+            this.f9501j.setVisibility(0);
+            this.f9499h.setEnabled(true);
+            this.f9499h.setAlpha(1.0f);
+            this.f9500i.setEnabled(false);
+            this.f9500i.setAlpha(0.4f);
+        } else {
+            this.f9501j.setVisibility(0);
+            this.f9499h.setEnabled(true);
+            this.f9499h.setAlpha(1.0f);
+            this.f9500i.setEnabled(true);
+            this.f9500i.setAlpha(1.0f);
+        }
     }
-    this.j.setVisibility(0);
-    this.h.setEnabled(true);
-    this.h.setAlpha(1.0F);
-    this.i.setEnabled(true);
-    this.i.setAlpha(1.0F);
-  }
-  
-  public boolean b()
-  {
-    com.baidu.che.codriver.util.h.b("SwitchPageLayout", "switchToPrevPage() mCurrentPage=" + this.d + " mMaxPage=" + this.e);
-    return a(true, false);
-  }
-  
-  public boolean c()
-  {
-    com.baidu.che.codriver.util.h.b("SwitchPageLayout", "switchToNextPage() mCurrentPage=" + this.d + " mMaxPage=" + this.e);
-    return a(true, true);
-  }
-  
-  public LinkedHashMap<View, ArrayList<String>> getKeywords()
-  {
-    ViewGroup localViewGroup = (ViewGroup)a(this.d);
-    LinkedHashMap localLinkedHashMap = new LinkedHashMap();
-    int n = localViewGroup.getChildCount();
-    int m = 0;
-    while (m < n)
-    {
-      ArrayList localArrayList = new ArrayList();
-      View localView = localViewGroup.getChildAt(m);
-      if ((localView instanceof ViewGroup)) {
-        a((ViewGroup)localView, localArrayList);
-      }
-      localLinkedHashMap.put(localView, localArrayList);
-      m += 1;
+
+    /* renamed from: a */
+    private View m10910a(int position) {
+        if (this.f9502k.get(position) != null) {
+            return (View) this.f9502k.get(position);
+        }
+        View view = this.f9494c.mo1920a(this.f9495d);
+        this.f9502k.put(position, view);
+        return view;
     }
-    return localLinkedHashMap;
-  }
-  
-  public void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    default: 
-      return;
-    case 2131626092: 
-      a(false, false);
-      return;
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case C0965R.id.page_prev:
+                m10914a(false, false);
+                return;
+            case C0965R.id.page_next:
+                m10914a(false, true);
+                return;
+            default:
+                return;
+        }
     }
-    a(false, true);
-  }
-  
-  protected void onFinishInflate()
-  {
-    super.onFinishInflate();
-    a();
-  }
-  
-  public void setAdapter(com.baidu.che.codriver.ui.a.h paramh)
-  {
-    this.c = paramh;
-    this.e = this.c.a();
-    this.d = this.c.b();
-    this.k.clear();
-    d();
-  }
-  
-  public void setPageIndex(int paramInt1, int paramInt2)
-  {
-    this.g.setText(paramInt1 + "/" + paramInt2);
-  }
-  
-  public void setTitle(String paramString)
-  {
-    if (!TextUtils.isEmpty(paramString))
-    {
-      this.f.setText(paramString);
-      return;
-    }
-    this.f.setVisibility(8);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/widget/SwitchPageLayout.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

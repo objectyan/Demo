@@ -7,46 +7,29 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import java.io.UnsupportedEncodingException;
 
-public class StringRequest
-  extends Request<String>
-{
-  private final Response.Listener<String> mListener;
-  
-  public StringRequest(int paramInt, String paramString, Response.Listener<String> paramListener, Response.ErrorListener paramErrorListener)
-  {
-    super(paramInt, paramString, paramErrorListener);
-    this.mListener = paramListener;
-  }
-  
-  public StringRequest(String paramString, Response.Listener<String> paramListener, Response.ErrorListener paramErrorListener)
-  {
-    this(0, paramString, paramListener, paramErrorListener);
-  }
-  
-  protected void deliverResponse(String paramString)
-  {
-    this.mListener.onResponse(paramString);
-  }
-  
-  protected Response<String> parseNetworkResponse(NetworkResponse paramNetworkResponse)
-  {
-    try
-    {
-      String str1 = new String(paramNetworkResponse.data, HttpHeaderParser.parseCharset(paramNetworkResponse.headers));
-      return Response.success(str1, HttpHeaderParser.parseCacheHeaders(paramNetworkResponse));
+public class StringRequest extends Request<String> {
+    private final Listener<String> mListener;
+
+    public StringRequest(int method, String url, Listener<String> listener, ErrorListener errorListener) {
+        super(method, url, errorListener);
+        this.mListener = listener;
     }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      for (;;)
-      {
-        String str2 = new String(paramNetworkResponse.data);
-      }
+
+    public StringRequest(String url, Listener<String> listener, ErrorListener errorListener) {
+        this(0, url, listener, errorListener);
     }
-  }
+
+    protected void deliverResponse(String response) {
+        this.mListener.onResponse(response);
+    }
+
+    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+        String parsed;
+        try {
+            parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+        } catch (UnsupportedEncodingException e) {
+            parsed = new String(response.data);
+        }
+        return Response.success(parsed, HttpHeaderParser.parseCacheHeaders(response));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/android/volley/toolbox/StringRequest.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

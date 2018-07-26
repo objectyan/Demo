@@ -3,17 +3,16 @@ package com.baidu.mobstat;
 import android.net.wifi.ScanResult;
 import java.util.Comparator;
 
-final class df
-  implements Comparator<ScanResult>
-{
-  public int a(ScanResult paramScanResult1, ScanResult paramScanResult2)
-  {
-    return paramScanResult2.level - paramScanResult1.level;
-  }
+final class df implements Comparator<ScanResult> {
+    df() {
+    }
+
+    public /* synthetic */ int compare(Object obj, Object obj2) {
+        return m15712a((ScanResult) obj, (ScanResult) obj2);
+    }
+
+    /* renamed from: a */
+    public int m15712a(ScanResult scanResult, ScanResult scanResult2) {
+        return scanResult2.level - scanResult.level;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/df.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

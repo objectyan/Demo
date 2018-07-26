@@ -4,30 +4,21 @@ import java.util.Arrays;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 
-public final class ei
-{
-  public static String a(String paramString, Object... paramVarArgs)
-  {
-    try
-    {
-      String str = String.format(Locale.US, paramString, paramVarArgs);
-      return str;
+public final class ei {
+    /* renamed from: a */
+    public static String m20417a(String str, Object... objArr) {
+        try {
+            return String.format(Locale.US, str, objArr);
+        } catch (IllegalFormatException e) {
+            return str + " " + Arrays.toString(objArr);
+        }
     }
-    catch (IllegalFormatException localIllegalFormatException) {}
-    return paramString + " " + Arrays.toString(paramVarArgs);
-  }
-  
-  public static boolean a(CharSequence paramCharSequence)
-  {
-    if (paramCharSequence == null) {
-      return true;
+
+    /* renamed from: a */
+    public static boolean m20418a(CharSequence charSequence) {
+        if (charSequence == null) {
+            return true;
+        }
+        return charSequence.toString().trim().equals("");
     }
-    return paramCharSequence.toString().trim().equals("");
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ei.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -9,215 +9,173 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.ui.util.BNStyleManager;
+import com.baidu.navisdk.ui.widget.BNDialog.OnNaviClickListener;
 import com.baidu.navisdk.util.jar.JarUtils;
 import java.util.ArrayList;
 
-public class BNListDialog
-  extends BNDialog
-{
-  private Activity mActivity;
-  private ListView mListView;
-  
-  public BNListDialog(Activity paramActivity)
-  {
-    super(paramActivity);
-    this.mActivity = paramActivity;
-    paramActivity = JarUtils.inflate(paramActivity, 1711472649, null);
-    this.mListView = ((ListView)paramActivity.findViewById(1711865875));
-    setContentList(paramActivity);
-  }
-  
-  public BNListDialog enableBackKey(boolean paramBoolean)
-  {
-    super.enableBackKey(paramBoolean);
-    return this;
-  }
-  
-  public ListView getListView()
-  {
-    return this.mListView;
-  }
-  
-  public BNListDialog setAdapter(ListAdapter paramListAdapter)
-  {
-    this.mListView.setAdapter(paramListAdapter);
-    return this;
-  }
-  
-  public BNListDialog setContentList(View paramView)
-  {
-    super.setContentList(paramView);
-    return this;
-  }
-  
-  public BNListDialog setFirstBtnEnabled(boolean paramBoolean)
-  {
-    super.setFirstBtnEnabled(paramBoolean);
-    return this;
-  }
-  
-  public BNListDialog setFirstBtnText(int paramInt)
-  {
-    super.setFirstBtnText(paramInt);
-    return this;
-  }
-  
-  public BNListDialog setFirstBtnText(String paramString)
-  {
-    super.setFirstBtnText(paramString);
-    return this;
-  }
-  
-  public void setListAdapter(ArrayList<String> paramArrayList)
-  {
-    paramArrayList = new InnerListAdapter(paramArrayList);
-    this.mListView.setAdapter(paramArrayList);
-  }
-  
-  public BNListDialog setListHeight(int paramInt)
-  {
-    ViewGroup.LayoutParams localLayoutParams = this.mListView.getLayoutParams();
-    localLayoutParams.height = paramInt;
-    this.mListView.setLayoutParams(localLayoutParams);
-    return this;
-  }
-  
-  public BNListDialog setListSelection(int paramInt)
-  {
-    this.mListView.setSelection(paramInt);
-    return this;
-  }
-  
-  public BNListDialog setListTitleText(String paramString)
-  {
-    super.setListTitleText(paramString);
-    return this;
-  }
-  
-  public BNListDialog setListWidth(int paramInt)
-  {
-    ViewGroup.LayoutParams localLayoutParams = this.mListView.getLayoutParams();
-    localLayoutParams.width = paramInt;
-    this.mListView.setLayoutParams(localLayoutParams);
-    return this;
-  }
-  
-  public BNListDialog setOnFirstBtnClickListener(BNDialog.OnNaviClickListener paramOnNaviClickListener)
-  {
-    super.setOnFirstBtnClickListener(paramOnNaviClickListener);
-    return this;
-  }
-  
-  public BNListDialog setOnItemClickListener(AdapterView.OnItemClickListener paramOnItemClickListener)
-  {
-    this.mListView.setOnItemClickListener(paramOnItemClickListener);
-    return this;
-  }
-  
-  public BNListDialog setOnSecondBtnClickListener(BNDialog.OnNaviClickListener paramOnNaviClickListener)
-  {
-    super.setOnSecondBtnClickListener(paramOnNaviClickListener);
-    return this;
-  }
-  
-  public BNListDialog setSecondBtnEnabled(boolean paramBoolean)
-  {
-    super.setSecondBtnEnabled(paramBoolean);
-    return this;
-  }
-  
-  public BNListDialog setSecondBtnText(int paramInt)
-  {
-    super.setSecondBtnText(paramInt);
-    return this;
-  }
-  
-  public BNListDialog setSecondBtnText(String paramString)
-  {
-    super.setSecondBtnText(paramString);
-    return this;
-  }
-  
-  public BNListDialog setTitleText(int paramInt)
-  {
-    super.setTitleText(paramInt);
-    return this;
-  }
-  
-  public BNListDialog setTitleText(String paramString)
-  {
-    super.setTitleText(paramString);
-    return this;
-  }
-  
-  public class InnerListAdapter
-    extends BaseAdapter
-  {
-    private ArrayList<String> mDataList = new ArrayList();
-    
-    public InnerListAdapter()
-    {
-      int i = 0;
-      Object localObject;
-      while (i < ((ArrayList)localObject).size())
-      {
-        this.mDataList.add(((ArrayList)localObject).get(i));
-        i += 1;
-      }
-    }
-    
-    public int getCount()
-    {
-      if ((this.mDataList != null) && (this.mDataList.size() > 0)) {
-        return this.mDataList.size();
-      }
-      return 0;
-    }
-    
-    public Object getItem(int paramInt)
-    {
-      if ((this.mDataList != null) && (paramInt >= 0) && (paramInt < this.mDataList.size())) {
-        return this.mDataList.get(paramInt);
-      }
-      return null;
-    }
-    
-    public long getItemId(int paramInt)
-    {
-      return paramInt;
-    }
-    
-    public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-    {
-      if (paramView == null)
-      {
-        paramView = JarUtils.inflate(BNListDialog.this.mActivity, 1711472791, null);
-        paramViewGroup = (TextView)paramView.findViewById(1711865859);
-        paramView.setTag(paramViewGroup);
-      }
-      for (;;)
-      {
-        if ((this.mDataList != null) && (paramInt >= 0) && (paramInt < this.mDataList.size())) {
-          paramViewGroup.setText((CharSequence)this.mDataList.get(paramInt));
+public class BNListDialog extends BNDialog {
+    private Activity mActivity;
+    private ListView mListView;
+
+    public class InnerListAdapter extends BaseAdapter {
+        private ArrayList<String> mDataList = new ArrayList();
+
+        public InnerListAdapter(ArrayList<String> mDataList) {
+            for (int i = 0; i < mDataList.size(); i++) {
+                this.mDataList.add(mDataList.get(i));
+            }
         }
-        if (paramInt != getCount() - 1) {
-          break;
+
+        public int getCount() {
+            if (this.mDataList == null || this.mDataList.size() <= 0) {
+                return 0;
+            }
+            return this.mDataList.size();
         }
-        paramViewGroup.setTextColor(BNStyleManager.getColor(1711800396));
-        paramView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407371));
-        return paramView;
-        paramViewGroup = (TextView)paramView.getTag();
-      }
-      paramViewGroup.setTextColor(BNStyleManager.getColor(1711800396));
-      paramView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407374));
-      return paramView;
+
+        public Object getItem(int position) {
+            if (this.mDataList == null || position < 0 || position >= this.mDataList.size()) {
+                return null;
+            }
+            return this.mDataList.get(position);
+        }
+
+        public long getItemId(int position) {
+            return (long) position;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView textView;
+            if (convertView == null) {
+                convertView = JarUtils.inflate(BNListDialog.this.mActivity, C4048R.layout.tv_iv_list_item, null);
+                textView = (TextView) convertView.findViewById(C4048R.id.text_view);
+                convertView.setTag(textView);
+            } else {
+                textView = (TextView) convertView.getTag();
+            }
+            if (this.mDataList != null && position >= 0 && position < this.mDataList.size()) {
+                textView.setText((CharSequence) this.mDataList.get(position));
+            }
+            if (position == getCount() - 1) {
+                textView.setTextColor(BNStyleManager.getColor(C4048R.color.poi_city_list_title));
+                convertView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_dialog_chang));
+            } else {
+                textView.setTextColor(BNStyleManager.getColor(C4048R.color.poi_city_list_title));
+                convertView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_common_dialog_middle));
+            }
+            return convertView;
+        }
     }
-  }
+
+    public BNListDialog(Activity activity) {
+        super(activity);
+        this.mActivity = activity;
+        View view = JarUtils.inflate(activity, C4048R.layout.navi_dialog_listview, null);
+        this.mListView = (ListView) view.findViewById(C4048R.id.list_view);
+        setContentList(view);
+    }
+
+    public BNListDialog setAdapter(ListAdapter adapter) {
+        this.mListView.setAdapter(adapter);
+        return this;
+    }
+
+    public ListView getListView() {
+        return this.mListView;
+    }
+
+    public BNListDialog setOnItemClickListener(OnItemClickListener listener) {
+        this.mListView.setOnItemClickListener(listener);
+        return this;
+    }
+
+    public BNListDialog setListWidth(int width) {
+        LayoutParams params = this.mListView.getLayoutParams();
+        params.width = width;
+        this.mListView.setLayoutParams(params);
+        return this;
+    }
+
+    public BNListDialog setListHeight(int height) {
+        LayoutParams params = this.mListView.getLayoutParams();
+        params.height = height;
+        this.mListView.setLayoutParams(params);
+        return this;
+    }
+
+    public BNListDialog setListSelection(int position) {
+        this.mListView.setSelection(position);
+        return this;
+    }
+
+    public BNListDialog setTitleText(String text) {
+        super.setTitleText(text);
+        return this;
+    }
+
+    public BNListDialog setTitleText(int resId) {
+        super.setTitleText(resId);
+        return this;
+    }
+
+    public BNListDialog setFirstBtnText(String text) {
+        super.setFirstBtnText(text);
+        return this;
+    }
+
+    public BNListDialog setFirstBtnText(int resId) {
+        super.setFirstBtnText(resId);
+        return this;
+    }
+
+    public BNListDialog setSecondBtnText(String text) {
+        super.setSecondBtnText(text);
+        return this;
+    }
+
+    public BNListDialog setSecondBtnText(int resId) {
+        super.setSecondBtnText(resId);
+        return this;
+    }
+
+    public BNListDialog setContentList(View content) {
+        super.setContentList(content);
+        return this;
+    }
+
+    public BNListDialog setOnFirstBtnClickListener(OnNaviClickListener listener) {
+        super.setOnFirstBtnClickListener(listener);
+        return this;
+    }
+
+    public BNListDialog setOnSecondBtnClickListener(OnNaviClickListener listener) {
+        super.setOnSecondBtnClickListener(listener);
+        return this;
+    }
+
+    public BNListDialog setFirstBtnEnabled(boolean enabled) {
+        super.setFirstBtnEnabled(enabled);
+        return this;
+    }
+
+    public BNListDialog setSecondBtnEnabled(boolean enabled) {
+        super.setSecondBtnEnabled(enabled);
+        return this;
+    }
+
+    public BNListDialog enableBackKey(boolean cancelable) {
+        super.enableBackKey(cancelable);
+        return this;
+    }
+
+    public BNListDialog setListTitleText(String text) {
+        super.setListTitleText(text);
+        return this;
+    }
+
+    public void setListAdapter(ArrayList<String> mDataList) {
+        this.mListView.setAdapter(new InnerListAdapter(mDataList));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/widget/BNListDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

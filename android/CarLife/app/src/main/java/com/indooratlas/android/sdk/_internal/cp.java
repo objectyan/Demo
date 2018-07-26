@@ -3,227 +3,261 @@ package com.indooratlas.android.sdk._internal;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
+import com.baidu.che.codriver.sdk.p081a.C2602k.C1981b;
 import com.indooratlas.android.sdk.IALocation;
 import com.indooratlas.android.sdk.IARegion;
+import com.indooratlas.android.sdk._internal.ew.C5876a;
+import com.indooratlas.android.sdk._internal.ey.C5878a;
+import com.indooratlas.android.sdk._internal.ey.C5879b;
+import com.indooratlas.android.sdk._internal.fc.C5889a;
+import com.indooratlas.android.sdk._internal.fc.C5891c;
 
-public final class cp
-{
-  static
-  {
-    if (!cp.class.desiredAssertionStatus()) {}
-    for (boolean bool = true;; bool = false)
-    {
-      a = bool;
-      return;
+public final class cp {
+    /* renamed from: a */
+    static final /* synthetic */ boolean f23345a = (!cp.class.desiredAssertionStatus());
+
+    private cp() {
     }
-  }
-  
-  public static IARegion a(fc.a parama, long paramLong)
-  {
-    if (parama == null) {
-      return null;
+
+    /* renamed from: a */
+    public static final String m20238a(int i) {
+        switch (i) {
+            case 0:
+                return "UNKNOWN";
+            case 1:
+                return "POSITIONING";
+            case 2:
+                return "REST_OVER_WS";
+            case 3:
+                return "SYSTEM";
+            case 4:
+                return "EVENTS";
+            default:
+                return String.valueOf(i);
+        }
     }
-    if (parama.b != null)
-    {
-      parama = parama.b;
-      if (TextUtils.isEmpty(parama.d)) {
-        return IARegion.unknown();
-      }
+
+    /* JADX WARNING: inconsistent code. */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* renamed from: a */
+    public static final java.lang.String m20239a(int r1, int r2) {
+        /*
+        switch(r1) {
+            case 0: goto L_0x0008;
+            case 1: goto L_0x0015;
+            case 2: goto L_0x000f;
+            case 3: goto L_0x000c;
+            case 4: goto L_0x0012;
+            default: goto L_0x0003;
+        };
+    L_0x0003:
+        r0 = java.lang.String.valueOf(r2);
+    L_0x0007:
+        return r0;
+    L_0x0008:
+        r0 = "UNKNOWN";
+        goto L_0x0007;
+    L_0x000c:
+        switch(r2) {
+            case 0: goto L_0x0021;
+            case 1: goto L_0x001d;
+            default: goto L_0x000f;
+        };
+    L_0x000f:
+        switch(r2) {
+            case 0: goto L_0x0031;
+            case 1: goto L_0x0029;
+            case 2: goto L_0x002d;
+            case 3: goto L_0x0025;
+            default: goto L_0x0012;
+        };
+    L_0x0012:
+        switch(r2) {
+            case 0: goto L_0x0035;
+            default: goto L_0x0015;
+        };
+    L_0x0015:
+        switch(r2) {
+            case 0: goto L_0x0019;
+            case 1: goto L_0x0055;
+            case 2: goto L_0x0041;
+            case 3: goto L_0x0059;
+            case 4: goto L_0x0039;
+            case 5: goto L_0x0051;
+            case 6: goto L_0x003d;
+            case 7: goto L_0x004d;
+            case 8: goto L_0x0049;
+            case 9: goto L_0x0045;
+            default: goto L_0x0018;
+        };
+    L_0x0018:
+        goto L_0x0003;
+    L_0x0019:
+        r0 = "UNKNOWN";
+        goto L_0x0007;
+    L_0x001d:
+        r0 = "COMPONENT_ERROR";
+        goto L_0x0007;
+    L_0x0021:
+        r0 = "UNKNOWN";
+        goto L_0x0007;
+    L_0x0025:
+        r0 = "REST_ERROR";
+        goto L_0x0007;
+    L_0x0029:
+        r0 = "REST_REQUEST";
+        goto L_0x0007;
+    L_0x002d:
+        r0 = "REST_RESPONSE";
+        goto L_0x0007;
+    L_0x0031:
+        r0 = "UNKNOWN";
+        goto L_0x0007;
+    L_0x0035:
+        r0 = "METRICS";
+        goto L_0x0007;
+    L_0x0039:
+        r0 = "ALTER";
+        goto L_0x0007;
+    L_0x003d:
+        r0 = "ERROR";
+        goto L_0x0007;
+    L_0x0041:
+        r0 = "INPUT";
+        goto L_0x0007;
+    L_0x0045:
+        r0 = "INPUT_SERVER_MODE";
+        goto L_0x0007;
+    L_0x0049:
+        r0 = "STATE";
+        goto L_0x0007;
+    L_0x004d:
+        r0 = "STATE_REQUEST";
+        goto L_0x0007;
+    L_0x0051:
+        r0 = "OUTPUT";
+        goto L_0x0007;
+    L_0x0055:
+        r0 = "SETUP";
+        goto L_0x0007;
+    L_0x0059:
+        r0 = "STOP";
+        goto L_0x0007;
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.indooratlas.android.sdk._internal.cp.a(int, int):java.lang.String");
     }
-    switch (parama.b)
-    {
-    default: 
-      int i = parama.b;
-      parama = parama.d;
-      return IARegion.unknown();
-    case 1: 
-      return new IARegion(1, paramLong, parama.d, parama.e);
+
+    /* renamed from: a */
+    public static boolean m20240a(C5891c c5891c) {
+        return (c5891c == null || c5891c.f23625b == null || c5891c.f23625b.f23623b == null) ? false : true;
     }
-    return new IARegion(2, paramLong, parama.d, parama.e);
-  }
-  
-  public static ew.a a(IARegion paramIARegion)
-  {
-    if (paramIARegion == null) {
-      return null;
-    }
-    ew.a locala = new ew.a();
-    locala.d = paramIARegion.getId();
-    switch (paramIARegion.getType())
-    {
-    default: 
-      return null;
-    }
-    for (locala.b = 1;; locala.b = 2) {
-      return locala;
-    }
-  }
-  
-  public static final String a(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      return String.valueOf(paramInt);
-    case 0: 
-      return "UNKNOWN";
-    case 3: 
-      return "SYSTEM";
-    case 2: 
-      return "REST_OVER_WS";
-    case 4: 
-      return "EVENTS";
-    }
-    return "POSITIONING";
-  }
-  
-  public static final String a(int paramInt1, int paramInt2)
-  {
-    switch (paramInt1)
-    {
-    }
-    for (;;)
-    {
-      return String.valueOf(paramInt2);
-      return "UNKNOWN";
-      switch (paramInt2)
-      {
-      default: 
-        switch (paramInt2)
-        {
-        default: 
-          switch (paramInt2)
-          {
-          default: 
-            switch (paramInt2)
-            {
+
+    /* renamed from: a */
+    public static IARegion m20236a(C5889a c5889a, long j) {
+        if (c5889a == null) {
+            return null;
+        }
+        if (c5889a.f23622b != null) {
+            C5876a c5876a = c5889a.f23622b;
+            if (!TextUtils.isEmpty(c5876a.f23569d)) {
+                switch (c5876a.f23568b) {
+                    case 1:
+                        return new IARegion(1, j, c5876a.f23569d, c5876a.f23570e);
+                    case 2:
+                        return new IARegion(2, j, c5876a.f23569d, c5876a.f23570e);
+                    default:
+                        Object[] objArr = new Object[]{Integer.valueOf(c5876a.f23568b), c5876a.f23569d};
+                        break;
+                }
             }
-            break;
-          }
-          break;
+            return IARegion.unknown();
         }
-        break;
-      }
+        return IARegion.unknown();
     }
-    return "UNKNOWN";
-    return "COMPONENT_ERROR";
-    return "UNKNOWN";
-    return "REST_ERROR";
-    return "REST_REQUEST";
-    return "REST_RESPONSE";
-    return "UNKNOWN";
-    return "METRICS";
-    return "ALTER";
-    return "ERROR";
-    return "INPUT";
-    return "INPUT_SERVER_MODE";
-    return "STATE";
-    return "STATE_REQUEST";
-    return "OUTPUT";
-    return "SETUP";
-    return "STOP";
-  }
-  
-  public static boolean a(fc.c paramc)
-  {
-    return (paramc != null) && (paramc.b != null) && (paramc.b.b != null);
-  }
-  
-  public static ey.b[] a(IALocation... paramVarArgs)
-  {
-    if (paramVarArgs == null) {
-      return null;
+
+    /* renamed from: a */
+    public static C5879b[] m20241a(IALocation... iALocationArr) {
+        if (iALocationArr == null) {
+            return null;
+        }
+        C5879b[] c5879bArr = new C5879b[iALocationArr.length];
+        for (int i = 0; i < iALocationArr.length; i++) {
+            IALocation iALocation = iALocationArr[i];
+            C5879b c5879b = new C5879b();
+            if (iALocation.hasFloorLevel()) {
+                c5879b.f23592k = new C5935h();
+                c5879b.f23592k.f24067b = iALocation.getFloorLevel();
+            }
+            Location toLocation = iALocation.toLocation();
+            if (toLocation.hasAccuracy()) {
+                c5879b.f23587f = toLocation.getAccuracy();
+            }
+            if (toLocation.hasAltitude()) {
+                c5879b.f23588g = new C5915g();
+                c5879b.f23588g.f23832b = (float) toLocation.getAltitude();
+            }
+            if (toLocation.hasBearing()) {
+                c5879b.f23590i = toLocation.getBearing();
+            }
+            if (toLocation.hasSpeed()) {
+                c5879b.f23589h = new C5915g();
+                c5879b.f23589h.f23832b = toLocation.getSpeed();
+            }
+            if (!(toLocation.getLatitude() == 0.0d && toLocation.getLongitude() == 0.0d)) {
+                c5879b.f23584b = new C5878a();
+                c5879b.f23584b.f23581b = toLocation.getLatitude();
+                c5879b.f23584b.f23582d = toLocation.getLongitude();
+            }
+            c5879b.f23586e = toLocation.getTime();
+            Bundle extras = toLocation.getExtras();
+            if (extras != null && extras.containsKey("com.indooratlas.android.sdk.intent.extras.clientTime")) {
+                c5879b.f23585d = extras.getLong("com.indooratlas.android.sdk.intent.extras.clientTime");
+            }
+            if (extras != null && extras.containsKey("com.indooratlas.android.sdk.intent.extras.satelliteCount")) {
+                c5879b.f23593l = new C5935h();
+                c5879b.f23593l.f24067b = extras.getInt("com.indooratlas.android.sdk.intent.extras.satelliteCount");
+            }
+            String provider = toLocation.getProvider();
+            if ("IndoorAtlas".equals(provider)) {
+                c5879b.f23591j = 0;
+            } else if ("gps".equals(provider)) {
+                c5879b.f23591j = 4;
+            } else if (C1981b.f6367g.equals(provider)) {
+                c5879b.f23591j = 5;
+            } else if ("passive".equals(provider)) {
+                c5879b.f23591j = 1;
+            } else if ("fused".equalsIgnoreCase(provider)) {
+                c5879b.f23591j = 1;
+            } else if ("com.indooratlas.android.sdk.intent.extras.groundTruth".equals(provider)) {
+                c5879b.f23591j = 3;
+            } else if ("com.indooratlas.android.sdk.intent.extras.userInput".equals(provider)) {
+                c5879b.f23591j = 2;
+            } else {
+                ee.m20409a("IACore", "Unknown provider in IALocation: " + provider, new Object[0]);
+                c5879b.f23591j = 2;
+            }
+            c5879bArr[i] = c5879b;
+        }
+        return c5879bArr;
     }
-    ey.b[] arrayOfb = new ey.b[paramVarArgs.length];
-    int i = 0;
-    if (i < paramVarArgs.length)
-    {
-      Object localObject = paramVarArgs[i];
-      ey.b localb = new ey.b();
-      if (((IALocation)localObject).hasFloorLevel())
-      {
-        localb.k = new h();
-        localb.k.b = ((IALocation)localObject).getFloorLevel();
-      }
-      localObject = ((IALocation)localObject).toLocation();
-      if (((Location)localObject).hasAccuracy()) {
-        localb.f = ((Location)localObject).getAccuracy();
-      }
-      if (((Location)localObject).hasAltitude())
-      {
-        localb.g = new g();
-        localb.g.b = ((float)((Location)localObject).getAltitude());
-      }
-      if (((Location)localObject).hasBearing()) {
-        localb.i = ((Location)localObject).getBearing();
-      }
-      if (((Location)localObject).hasSpeed())
-      {
-        localb.h = new g();
-        localb.h.b = ((Location)localObject).getSpeed();
-      }
-      if ((((Location)localObject).getLatitude() != 0.0D) || (((Location)localObject).getLongitude() != 0.0D))
-      {
-        localb.b = new ey.a();
-        localb.b.b = ((Location)localObject).getLatitude();
-        localb.b.d = ((Location)localObject).getLongitude();
-      }
-      localb.e = ((Location)localObject).getTime();
-      Bundle localBundle = ((Location)localObject).getExtras();
-      if ((localBundle != null) && (localBundle.containsKey("com.indooratlas.android.sdk.intent.extras.clientTime"))) {
-        localb.d = localBundle.getLong("com.indooratlas.android.sdk.intent.extras.clientTime");
-      }
-      if ((localBundle != null) && (localBundle.containsKey("com.indooratlas.android.sdk.intent.extras.satelliteCount")))
-      {
-        localb.l = new h();
-        localb.l.b = localBundle.getInt("com.indooratlas.android.sdk.intent.extras.satelliteCount");
-      }
-      localObject = ((Location)localObject).getProvider();
-      if ("IndoorAtlas".equals(localObject)) {
-        localb.j = 0;
-      }
-      for (;;)
-      {
-        arrayOfb[i] = localb;
-        i += 1;
-        break;
-        if ("gps".equals(localObject))
-        {
-          localb.j = 4;
+
+    /* renamed from: a */
+    public static C5876a m20237a(IARegion iARegion) {
+        if (iARegion == null) {
+            return null;
         }
-        else if ("network".equals(localObject))
-        {
-          localb.j = 5;
+        C5876a c5876a = new C5876a();
+        c5876a.f23569d = iARegion.getId();
+        switch (iARegion.getType()) {
+            case 1:
+                c5876a.f23568b = 1;
+                break;
+            case 2:
+                c5876a.f23568b = 2;
+                break;
+            default:
+                return null;
         }
-        else if ("passive".equals(localObject))
-        {
-          localb.j = 1;
-        }
-        else if ("fused".equalsIgnoreCase((String)localObject))
-        {
-          localb.j = 1;
-        }
-        else if ("com.indooratlas.android.sdk.intent.extras.groundTruth".equals(localObject))
-        {
-          localb.j = 3;
-        }
-        else if ("com.indooratlas.android.sdk.intent.extras.userInput".equals(localObject))
-        {
-          localb.j = 2;
-        }
-        else
-        {
-          ee.a("IACore", "Unknown provider in IALocation: " + (String)localObject, new Object[0]);
-          localb.j = 2;
-        }
-      }
+        return c5876a;
     }
-    return arrayOfb;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/cp.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

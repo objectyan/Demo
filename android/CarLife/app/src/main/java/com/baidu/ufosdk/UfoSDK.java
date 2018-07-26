@@ -7,725 +7,591 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import com.baidu.carlife.radio.p079c.C2142b;
+import com.baidu.carlife.radio.p080b.C2125n;
+import com.baidu.che.codriver.platform.NaviCmdConstants;
+import com.baidu.che.codriver.sdk.p081a.C2578b;
+import com.baidu.mobstat.Config;
+import com.baidu.navi.track.sync.SyncChannelConstant.Key;
+import com.baidu.navisdk.util.statistic.PerformStatItem;
+import com.baidu.speech.asr.SpeechConstant;
+import com.baidu.ufosdk.p248b.C5171d;
+import com.baidu.ufosdk.p249c.C5174a;
+import com.baidu.ufosdk.p251e.C5181b;
 import com.baidu.ufosdk.ui.FeedbackFacePageActivity;
 import com.baidu.ufosdk.ui.FeedbackInputActivity;
 import com.baidu.ufosdk.ui.FeedbackListActivity;
+import com.baidu.ufosdk.util.C5210c;
+import com.baidu.ufosdk.util.C5211d;
+import com.baidu.ufosdk.util.C5213f;
+import com.baidu.ufosdk.util.C5220m;
+import com.baidu.ufosdk.util.C5221n;
+import com.baidu.ufosdk.util.C5226s;
 import com.baidu.ufosdk.util.NativeClass;
-import com.baidu.ufosdk.util.f;
-import com.baidu.ufosdk.util.m;
-import com.baidu.ufosdk.util.n;
-import com.baidu.ufosdk.util.s;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONObject;
 
-public class UfoSDK
-{
-  public static String appid;
-  public static String clientid = "";
-  public static boolean contactDialogSwitch;
-  public static String devid;
-  public static String firstServerText = "您好，请简要描述您的问题或建议";
-  public static boolean hasRegistered;
-  public static boolean isShowFeedbackBtn;
-  public static boolean isUninstallFeedback;
-  public static long lastSendTime;
-  public static boolean localFirstCall;
-  private static Context mApplication;
-  public static boolean neverFeedback;
-  public static String notSolvedReplyText;
-  public static String productid;
-  public static boolean robotAnswer;
-  public static String solvedReplyText;
-  
-  static
-  {
-    appid = "";
-    devid = "";
-    productid = "";
-    lastSendTime = -1L;
-    robotAnswer = false;
-    contactDialogSwitch = false;
-    isUninstallFeedback = false;
-    hasRegistered = false;
-    isShowFeedbackBtn = false;
-    notSolvedReplyText = "您的反馈已收到,我们会尽快跟进。";
-    solvedReplyText = "您的肯定是我们继续努力的动力！感谢您对我们的支持！。";
-  }
-  
-  public static void captureScreenAndFeedback(Activity paramActivity)
-  {
-    if (paramActivity == null) {
-      return;
+public class UfoSDK {
+    public static String appid = "";
+    public static String clientid = "";
+    public static boolean contactDialogSwitch = false;
+    public static String devid = "";
+    public static String firstServerText = "您好，请简要描述您的问题或建议";
+    public static boolean hasRegistered = false;
+    public static boolean isShowFeedbackBtn = false;
+    public static boolean isUninstallFeedback = false;
+    public static long lastSendTime = -1;
+    public static boolean localFirstCall;
+    private static Context mApplication;
+    public static boolean neverFeedback;
+    public static String notSolvedReplyText = "您的反馈已收到,我们会尽快跟进。";
+    public static String productid = "";
+    public static boolean robotAnswer = false;
+    public static String solvedReplyText = "您的肯定是我们继续努力的动力！感谢您对我们的支持！。";
+
+    public static HashMap getChineseMap() {
+        HashMap hashMap = new HashMap();
+        hashMap.put("0", "找不到相册应用");
+        hashMap.put("1", "        继续描述您遇到的问题");
+        hashMap.put("2", "天以前");
+        hashMap.put("3", "删除");
+        hashMap.put("4", "删除中...");
+        hashMap.put("5", "反馈详情");
+        hashMap.put(C2578b.f8568g, "您好，请描述您遇到的问题...");
+        hashMap.put("7", "帮助和反馈");
+        hashMap.put(NaviCmdConstants.ACTION_TYPE_PREFER_MODE_MIN_TOLL, "热门问题");
+        hashMap.put("9", "小时以前");
+        hashMap.put(C2142b.f6818b, "我要反馈");
+        hashMap.put("11", "刚刚");
+        hashMap.put(PerformStatItem.DATA_HANDLE_AFTER_LIGHT_STEP_INDEX, "请输入反馈内容");
+        hashMap.put("13", "加载中");
+        hashMap.put("14", "分钟以前");
+        hashMap.put("15", "个月以前");
+        hashMap.put("16", "输入超过200字");
+        hashMap.put(PerformStatItem.RP_SUCCESS_NORMAL_STEP_INDEX, "我的反馈");
+        hashMap.put("18", "网络中断，请检查网络配置");
+        hashMap.put("19", "网络不给力，请稍后再试");
+        hashMap.put("20", "您还没有反馈");
+        hashMap.put("21", "图片过大，请调整上传图片大小");
+        hashMap.put("22", "重新加载");
+        hashMap.put("23", "请重新加载网络");
+        hashMap.put("24", "发送");
+        hashMap.put("25", "发送中...");
+        hashMap.put("26", "谢谢支持");
+        hashMap.put("27", "字");
+        hashMap.put("28", "确认");
+        hashMap.put("29", "发送超时");
+        hashMap.put("30", "昨天");
+        hashMap.put("31", "选填：请留下您的邮箱/手机/QQ号");
+        hashMap.put("32", "不能超过10个字");
+        return hashMap;
     }
-    n.a(paramActivity).a(paramActivity, 0);
-  }
-  
-  public static void captureScreenAndFeedback(Activity paramActivity, int paramInt)
-  {
-    if (paramActivity == null) {
-      return;
-    }
-    n.a(paramActivity).a(paramActivity, paramInt);
-  }
-  
-  public static void closeInputContactSwitch()
-  {
-    contactDialogSwitch = false;
-  }
-  
-  public static void closeRobotAnswer()
-  {
-    robotAnswer = false;
-  }
-  
-  public static HashMap getChineseMap()
-  {
-    HashMap localHashMap = new HashMap();
-    localHashMap.put("0", "找不到相册应用");
-    localHashMap.put("1", "        继续描述您遇到的问题");
-    localHashMap.put("2", "天以前");
-    localHashMap.put("3", "删除");
-    localHashMap.put("4", "删除中...");
-    localHashMap.put("5", "反馈详情");
-    localHashMap.put("6", "您好，请描述您遇到的问题...");
-    localHashMap.put("7", "帮助和反馈");
-    localHashMap.put("8", "热门问题");
-    localHashMap.put("9", "小时以前");
-    localHashMap.put("10", "我要反馈");
-    localHashMap.put("11", "刚刚");
-    localHashMap.put("12", "请输入反馈内容");
-    localHashMap.put("13", "加载中");
-    localHashMap.put("14", "分钟以前");
-    localHashMap.put("15", "个月以前");
-    localHashMap.put("16", "输入超过200字");
-    localHashMap.put("17", "我的反馈");
-    localHashMap.put("18", "网络中断，请检查网络配置");
-    localHashMap.put("19", "网络不给力，请稍后再试");
-    localHashMap.put("20", "您还没有反馈");
-    localHashMap.put("21", "图片过大，请调整上传图片大小");
-    localHashMap.put("22", "重新加载");
-    localHashMap.put("23", "请重新加载网络");
-    localHashMap.put("24", "发送");
-    localHashMap.put("25", "发送中...");
-    localHashMap.put("26", "谢谢支持");
-    localHashMap.put("27", "字");
-    localHashMap.put("28", "确认");
-    localHashMap.put("29", "发送超时");
-    localHashMap.put("30", "昨天");
-    localHashMap.put("31", "选填：请留下您的邮箱/手机/QQ号");
-    localHashMap.put("32", "不能超过10个字");
-    return localHashMap;
-  }
-  
-  public static Intent getFeedbackInputIntent(Context paramContext)
-  {
-    paramContext = new Intent(paramContext, FeedbackInputActivity.class);
-    paramContext.putExtra("currentview", 1);
-    return paramContext;
-  }
-  
-  public static Intent getFeedbackInputIntent(Context paramContext, int paramInt)
-  {
-    paramContext = getFeedbackInputIntent(paramContext);
-    paramContext.putExtra("feedback_channel", paramInt);
-    return paramContext;
-  }
-  
-  public static Intent getFeedbackInputIntent(Context paramContext, HashMap paramHashMap, int paramInt)
-  {
-    setExtraData(paramHashMap);
-    return getFeedbackInputIntent(paramContext, paramInt);
-  }
-  
-  public static Intent getFeedbackListIntent(Context paramContext)
-  {
-    return new Intent(paramContext, FeedbackListActivity.class);
-  }
-  
-  public static Intent getFeedbackListIntent(Context paramContext, int paramInt)
-  {
-    paramContext = getFeedbackListIntent(paramContext);
-    paramContext.putExtra("feedback_channel", paramInt);
-    return paramContext;
-  }
-  
-  public static Intent getFeedbackListIntent(Context paramContext, HashMap paramHashMap, int paramInt)
-  {
-    setExtraData(paramHashMap);
-    return getFeedbackListIntent(paramContext, paramInt);
-  }
-  
-  public static String getFeedbackNoticeFlag()
-  {
-    if (clientid.length() == 0) {
-      return null;
-    }
-    if (localFirstCall)
-    {
-      localObject1 = getMyFeekackNum();
-      if ((localObject1 != null) && (((String)localObject1).length() != 0) && (Integer.parseInt((String)localObject1) != 0))
-      {
-        neverFeedback = false;
-        localObject1 = mApplication.getSharedPreferences("UfoSharePreference", 0).edit();
-        ((SharedPreferences.Editor)localObject1).putBoolean("UfoNeverFeedback", false);
-        ((SharedPreferences.Editor)localObject1).commit();
-      }
-      localFirstCall = false;
-      localObject1 = mApplication.getSharedPreferences("UfoSharePreference", 0).edit();
-      ((SharedPreferences.Editor)localObject1).putBoolean("UfoLocalFirstCall", false);
-      ((SharedPreferences.Editor)localObject1).commit();
-    }
-    if (neverFeedback) {
-      return null;
-    }
-    Object localObject1 = a.av;
-    try
-    {
-      Object localObject2 = new HashMap();
-      ((Map)localObject2).put("clientid", clientid);
-      ((Map)localObject2).put("appid", appid);
-      ((Map)localObject2).put("devid", devid);
-      ((Map)localObject2).put("uid", a.b);
-      ((Map)localObject2).put("interval", String.valueOf(a.ao));
-      localObject2 = m.a(com.baidu.ufosdk.c.a.a((Map)localObject2));
-      localObject1 = com.baidu.ufosdk.e.b.a((String)localObject1, "sdk_encrypt=" + URLEncoder.encode((String)localObject2, "UTF-8"));
-      if (!TextUtils.isEmpty((CharSequence)localObject1))
-      {
-        localObject1 = new JSONObject(m.b((String)localObject1));
-        if (((Integer)((JSONObject)localObject1).get("errno")).intValue() == 0)
-        {
-          localObject1 = String.valueOf(((JSONObject)localObject1).get("newmsg"));
-          return (String)localObject1;
+
+    public static void init(Context context) {
+        if (context == null) {
+            C5210c.m17736d("UfoSDK.init application is null.");
+        } else if (mApplication != null) {
+            C5210c.m17736d("UfoSDK#init called more than once.");
+        } else {
+            Context applicationContext = context.getApplicationContext();
+            mApplication = applicationContext;
+            C5226s.m17791a(applicationContext);
+            C5171d.m17559a(mApplication);
+            C5167a.ag = getChineseMap();
+            SharedPreferences sharedPreferences = mApplication.getSharedPreferences("UfoSharePreference", 0);
+            if (sharedPreferences == null) {
+                C5210c.m17736d("UfoSDK#sharepreference is null.");
+                return;
+            }
+            clientid = sharedPreferences.getString("UfoClientId", "");
+            appid = sharedPreferences.getString("UfoAppId", "");
+            devid = sharedPreferences.getString("UfoDevId", "");
+            productid = sharedPreferences.getString("UfoProductId", "");
+            lastSendTime = sharedPreferences.getLong("Ufolastsendtime", -1);
+            neverFeedback = sharedPreferences.getBoolean("UfoNeverFeedback", true);
+            localFirstCall = sharedPreferences.getBoolean("UfoLocalFirstCall", true);
+            if (clientid.length() == 0) {
+                new Thread(new C5173b(context)).start();
+            } else if (new C5211d(mApplication).m17747e()) {
+                new Thread(new C5175c()).start();
+            }
         }
-      }
     }
-    catch (Exception localException)
-    {
-      com.baidu.ufosdk.util.c.a("sendRecord fail.", localException);
+
+    public static void isShowFeedbackBtn(boolean z) {
+        isShowFeedbackBtn = z;
     }
-    return null;
-  }
-  
-  public static long getLastSendMessageTime()
-  {
-    return lastSendTime;
-  }
-  
-  private static String getMyFeekackNum()
-  {
-    Object localObject1 = a.aw;
-    try
-    {
-      Object localObject2 = new HashMap();
-      ((Map)localObject2).put("clientid", clientid);
-      ((Map)localObject2).put("appid", appid);
-      ((Map)localObject2).put("devid", devid);
-      ((Map)localObject2).put("uid", a.b);
-      ((Map)localObject2).put("interval", String.valueOf(a.ao));
-      localObject2 = m.a(com.baidu.ufosdk.c.a.a((Map)localObject2));
-      localObject1 = com.baidu.ufosdk.e.b.a((String)localObject1, "sdk_encrypt=" + URLEncoder.encode((String)localObject2, "UTF-8"));
-      if (!TextUtils.isEmpty((CharSequence)localObject1))
-      {
-        localObject1 = new JSONObject(m.b((String)localObject1));
-        if (((Integer)((JSONObject)localObject1).get("errno")).intValue() == 0)
-        {
-          localObject1 = String.valueOf(((JSONObject)localObject1).get("msgnum"));
-          return (String)localObject1;
+
+    public static void setNotSolvedReplyText(String str) {
+        notSolvedReplyText = str;
+    }
+
+    public static void setSolvedReplyText(String str) {
+        solvedReplyText = str;
+    }
+
+    public static void setFirstServerText(String str) {
+        firstServerText = str;
+    }
+
+    public static Intent getFeedbackListIntent(Context context) {
+        return new Intent(context, FeedbackListActivity.class);
+    }
+
+    public static Intent getFeedbackListIntent(Context context, int i) {
+        Intent feedbackListIntent = getFeedbackListIntent(context);
+        feedbackListIntent.putExtra("feedback_channel", i);
+        return feedbackListIntent;
+    }
+
+    public static Intent getFeedbackListIntent(Context context, HashMap hashMap, int i) {
+        setExtraData(hashMap);
+        return getFeedbackListIntent(context, i);
+    }
+
+    public static Intent getStartFaqIntent(Context context) {
+        return new Intent(context, FeedbackFacePageActivity.class);
+    }
+
+    public static Intent getStartFaqIntent(Context context, int i, int i2) {
+        Intent startFaqIntent = getStartFaqIntent(context);
+        startFaqIntent.putExtra("feedback_channel", i);
+        startFaqIntent.putExtra("faq_channel", i2);
+        return startFaqIntent;
+    }
+
+    public static Intent getStartFaqIntent(Context context, HashMap hashMap, int i, int i2) {
+        setExtraData(hashMap);
+        return getStartFaqIntent(context, i, i2);
+    }
+
+    public static Intent getFeedbackInputIntent(Context context) {
+        Intent intent = new Intent(context, FeedbackInputActivity.class);
+        intent.putExtra("currentview", 1);
+        return intent;
+    }
+
+    public static Intent getFeedbackInputIntent(Context context, int i) {
+        Intent feedbackInputIntent = getFeedbackInputIntent(context);
+        feedbackInputIntent.putExtra("feedback_channel", i);
+        return feedbackInputIntent;
+    }
+
+    public static Intent getFeedbackInputIntent(Context context, HashMap hashMap, int i) {
+        setExtraData(hashMap);
+        return getFeedbackInputIntent(context, i);
+    }
+
+    public static void captureScreenAndFeedback(Activity activity) {
+        if (activity != null) {
+            C5221n.m17776a((Context) activity).m17778a(activity, 0);
         }
-      }
     }
-    catch (Exception localException)
-    {
-      com.baidu.ufosdk.util.c.a("sendRecord fail.", localException);
-    }
-    return null;
-  }
-  
-  private static String getNoticeFlag()
-  {
-    Object localObject1;
-    if (clientid.length() == 0)
-    {
-      if (a.aj != null) {
-        a.aj.getNoticeFlagResult(null);
-      }
-      localObject1 = null;
-    }
-    for (;;)
-    {
-      return (String)localObject1;
-      if (localFirstCall)
-      {
-        localObject1 = getMyFeekackNum();
-        if ((localObject1 != null) && (((String)localObject1).length() != 0) && (Integer.parseInt((String)localObject1) != 0))
-        {
-          neverFeedback = false;
-          localObject1 = mApplication.getSharedPreferences("UfoSharePreference", 0).edit();
-          ((SharedPreferences.Editor)localObject1).putBoolean("UfoNeverFeedback", false);
-          ((SharedPreferences.Editor)localObject1).commit();
+
+    public static void captureScreenAndFeedback(Activity activity, int i) {
+        if (activity != null) {
+            C5221n.m17776a((Context) activity).m17778a(activity, i);
         }
-        localFirstCall = false;
-        localObject1 = mApplication.getSharedPreferences("UfoSharePreference", 0).edit();
-        ((SharedPreferences.Editor)localObject1).putBoolean("UfoLocalFirstCall", false);
-        ((SharedPreferences.Editor)localObject1).commit();
-      }
-      if (neverFeedback)
-      {
-        if (a.aj != null) {
-          a.aj.getNoticeFlagResult(null);
+    }
+
+    public static long getLastSendMessageTime() {
+        return lastSendTime;
+    }
+
+    public static void removeAllCache() {
+        C5213f.m17749a();
+        C5213f.m17751b();
+    }
+
+    public static void setCurrentUserName(String str) {
+        C5167a.f21356b = str;
+    }
+
+    public static void setInternationalizationValid(boolean z) {
+        C5167a.f21369o = z;
+    }
+
+    public static void setContactWayEnable(boolean z) {
+        C5167a.f21370p = z;
+    }
+
+    public static void setExtraData(Map map) {
+        C5167a.f21358d = C5174a.m17564a(map);
+    }
+
+    public static void setLogLevel(int i) {
+        C5167a.f21367m = i;
+    }
+
+    public static void setFeedBackUrl(String str) {
+        C5167a.ak = str;
+    }
+
+    public static void openRobotAnswer() {
+        robotAnswer = true;
+    }
+
+    public static void closeRobotAnswer() {
+        robotAnswer = false;
+    }
+
+    public static void openInputContactSwitch() {
+        contactDialogSwitch = true;
+    }
+
+    public static void closeInputContactSwitch() {
+        contactDialogSwitch = false;
+    }
+
+    public static void setFeedbackPrefix(String str) {
+        C5167a.f21364j = str;
+    }
+
+    public static void setFeedbackSubfix(String str) {
+        C5167a.f21365k = str;
+    }
+
+    public static void setReferer(String str) {
+        C5167a.f21368n = str;
+    }
+
+    public static void setBaiduCuid(String str) {
+        C5167a.f21357c = str;
+    }
+
+    public static void setCustomLocation(String str) {
+        C5167a.f21360f = str;
+    }
+
+    public static void setPlaceholder(String str) {
+        C5167a.f21366l = str;
+    }
+
+    public static void openLogcatSwitch() {
+        C5167a.f21355a = true;
+    }
+
+    public static void setRootBackgroundColor(int i) {
+        C5167a.f21379y = i;
+    }
+
+    public static void setTitleTextColor(int i) {
+        C5167a.f21373s = i;
+    }
+
+    public static void setTabDefultTextColor(int i) {
+        C5167a.f21375u = i;
+    }
+
+    public static void setTabBgTextColor(int i) {
+        C5167a.f21376v = i;
+    }
+
+    public static void setSentBtnTextColor(int i) {
+        C5167a.f21377w = i;
+    }
+
+    public static void setRightBtnTextColor(int i) {
+        C5167a.f21374t = i;
+    }
+
+    public static void setListBgColor(int i) {
+        C5167a.f21380z = i;
+    }
+
+    public static void setListTitleTextColor(int i) {
+        C5167a.f21329A = i;
+    }
+
+    public static void setListTimeTextColor(int i) {
+        C5167a.f21330B = i;
+    }
+
+    public static void setListDividerColor(int i) {
+        C5167a.f21331C = i;
+    }
+
+    public static void setBackbtnTextColor(int i) {
+        C5167a.f21332D = i;
+    }
+
+    public static void setToggleUpBgColor(int i) {
+        C5167a.f21335G = i;
+    }
+
+    public static void setToggleUpTextColor(int i) {
+        C5167a.f21337I = i;
+    }
+
+    public static void setInputBootomBackgroundColor(int i) {
+        C5167a.f21333E = i;
+    }
+
+    public static void setSearchProblemColor(int i) {
+        C5167a.f21338J = i;
+    }
+
+    public static void setCurrentUserIcon(Bitmap bitmap) {
+        C5167a.f21359e = bitmap;
+    }
+
+    public static void setChatThreadTime(int i) {
+        C5167a.an = i;
+    }
+
+    public static void setBackbtnText(String str) {
+        C5167a.f21361g = str;
+    }
+
+    public static void setBackTextSize(float f) {
+        C5167a.f21339K = f;
+    }
+
+    public static void setFeedbackDetailsTextSize(float f) {
+        C5167a.f21340L = f;
+    }
+
+    public static void setReloadTextSize(float f) {
+        C5167a.f21341M = f;
+    }
+
+    public static void setReloadBtnTextSize(float f) {
+        C5167a.f21342N = f;
+    }
+
+    public static void setTimeViewTextSize(float f) {
+        C5167a.f21343O = f;
+    }
+
+    public static void setChatViewTextSize(float f) {
+        C5167a.f21344P = f;
+    }
+
+    public static void setHotProblemTextSize(float f) {
+        C5167a.f21345Q = f;
+    }
+
+    public static void setTitleHelpAndFeedbackTextSize(float f) {
+        C5167a.f21346R = f;
+    }
+
+    public static void setMyFeedbackBtnTextSize(float f) {
+        C5167a.f21347S = f;
+    }
+
+    public static void setEnglishMyFeedbackOffsetSize(float f) {
+        C5167a.ae = f;
+    }
+
+    public static void setFeedbackInputHintTextSize(float f) {
+        C5167a.f21348T = f;
+    }
+
+    public static void setFeedbackInputWordCountTextSize(float f) {
+        C5167a.f21349U = f;
+    }
+
+    public static void setSendBtnTextSize(float f) {
+        C5167a.f21350V = f;
+    }
+
+    public static void setListTitleTextSize(float f) {
+        C5167a.f21351W = f;
+    }
+
+    public static void setNoHaveFeedbackTextSize(float f) {
+        C5167a.f21352X = f;
+    }
+
+    public static void setListTimeTextSize(float f) {
+        C5167a.f21353Y = f;
+    }
+
+    public static void setListItemTextSize(float f) {
+        C5167a.aa = f;
+    }
+
+    public static void setListDeleteTextSize(float f) {
+        C5167a.ab = f;
+    }
+
+    public static void setTabDefaultTextSize(float f) {
+        C5167a.ac = f;
+    }
+
+    public static void setSearchProblemTextSize(float f) {
+        C5167a.ad = f;
+    }
+
+    public static void setToastShowTime(long j) {
+        C5167a.f21371q = j;
+    }
+
+    public static void setTabCheckedStyle(int i) {
+        C5167a.f21372r = i;
+    }
+
+    public static void setCustomText(HashMap hashMap) {
+        C5167a.ag = hashMap;
+    }
+
+    public static void setResumeCallBack(ResumeCallBack resumeCallBack) {
+        C5167a.ah = resumeCallBack;
+    }
+
+    public static void setSubmitMessageCallBack(SubmitMessageCallBack submitMessageCallBack) {
+        C5167a.ai = submitMessageCallBack;
+    }
+
+    public static void setGetNoticeFlagCallBack(GetNoticeFlagCallBack getNoticeFlagCallBack) {
+        C5167a.aj = getNoticeFlagCallBack;
+    }
+
+    public static void setUninstallFeedback(boolean z) {
+        isUninstallFeedback = z;
+    }
+
+    public static boolean regUninstalledFeedback() {
+        NativeClass nativeClass = new NativeClass(mApplication);
+        if (!nativeClass.loadUFONativeLib()) {
+            return false;
+        }
+        HashMap hashMap = new HashMap();
+        hashMap.put(Config.APP_VERSION_CODE, "commonuninstall");
+        hashMap.put("uid", C5167a.f21356b);
+        hashMap.put("channel", "appsearch");
+        hashMap.put(SpeechConstant.APP_ID, "210070");
+        hashMap.put("clientid", clientid);
+        hashMap.put("devid", devid);
+        nativeClass.init(C5171d.m17558a(), "http://ufosdk.baidu.com/?m=Client", hashMap);
+        return true;
+    }
+
+    public static String getFeedbackNoticeFlag() {
+        if (clientid.length() == 0) {
+            return null;
+        }
+        String myFeekackNum;
+        if (localFirstCall) {
+            Editor edit;
+            myFeekackNum = getMyFeekackNum();
+            if (!(myFeekackNum == null || myFeekackNum.length() == 0 || Integer.parseInt(myFeekackNum) == 0)) {
+                neverFeedback = false;
+                edit = mApplication.getSharedPreferences("UfoSharePreference", 0).edit();
+                edit.putBoolean("UfoNeverFeedback", false);
+                edit.commit();
+            }
+            localFirstCall = false;
+            edit = mApplication.getSharedPreferences("UfoSharePreference", 0).edit();
+            edit.putBoolean("UfoLocalFirstCall", false);
+            edit.commit();
+        }
+        if (neverFeedback) {
+            return null;
+        }
+        myFeekackNum = C5167a.av;
+        try {
+            Map hashMap = new HashMap();
+            hashMap.put("clientid", clientid);
+            hashMap.put(SpeechConstant.APP_ID, appid);
+            hashMap.put("devid", devid);
+            hashMap.put("uid", C5167a.f21356b);
+            hashMap.put(Key.INTERVAL, String.valueOf(C5167a.ao));
+            Object a = C5181b.m17578a(myFeekackNum, "sdk_encrypt=" + URLEncoder.encode(C5220m.m17770a(C5174a.m17564a(hashMap)), "UTF-8"));
+            if (!TextUtils.isEmpty(a)) {
+                JSONObject jSONObject = new JSONObject(C5220m.m17773b(a));
+                if (((Integer) jSONObject.get(C2125n.f6745M)).intValue() == 0) {
+                    return String.valueOf(jSONObject.get("newmsg"));
+                }
+            }
+        } catch (Throwable e) {
+            C5210c.m17733a("sendRecord fail.", e);
         }
         return null;
-      }
-      localObject1 = a.av;
-      try
-      {
-        Object localObject2 = new HashMap();
-        ((Map)localObject2).put("clientid", clientid);
-        ((Map)localObject2).put("appid", appid);
-        ((Map)localObject2).put("devid", devid);
-        ((Map)localObject2).put("uid", a.b);
-        ((Map)localObject2).put("interval", String.valueOf(a.ao));
-        localObject2 = m.a(com.baidu.ufosdk.c.a.a((Map)localObject2));
-        localObject1 = com.baidu.ufosdk.e.b.a((String)localObject1, "sdk_encrypt=" + URLEncoder.encode((String)localObject2, "UTF-8"));
-        if (!TextUtils.isEmpty((CharSequence)localObject1))
-        {
-          localObject1 = new JSONObject(m.b((String)localObject1));
-          if (((Integer)((JSONObject)localObject1).get("errno")).intValue() == 0)
-          {
-            localObject2 = String.valueOf(((JSONObject)localObject1).get("newmsg"));
-            localObject1 = localObject2;
-            if (a.aj == null) {
-              continue;
+    }
+
+    public static void getNoticeFlagInThread() {
+        new Thread(new C5179d()).start();
+    }
+
+    private static String getNoticeFlag() {
+        if (clientid.length() == 0) {
+            if (C5167a.aj != null) {
+                C5167a.aj.getNoticeFlagResult(null);
             }
-            a.aj.getNoticeFlagResult((String)localObject2);
-            return (String)localObject2;
-          }
+            return null;
         }
-      }
-      catch (Exception localException)
-      {
-        com.baidu.ufosdk.util.c.a("sendRecord fail.", localException);
-        if (a.aj != null) {
-          a.aj.getNoticeFlagResult(null);
+        String myFeekackNum;
+        if (localFirstCall) {
+            Editor edit;
+            myFeekackNum = getMyFeekackNum();
+            if (!(myFeekackNum == null || myFeekackNum.length() == 0 || Integer.parseInt(myFeekackNum) == 0)) {
+                neverFeedback = false;
+                edit = mApplication.getSharedPreferences("UfoSharePreference", 0).edit();
+                edit.putBoolean("UfoNeverFeedback", false);
+                edit.commit();
+            }
+            localFirstCall = false;
+            edit = mApplication.getSharedPreferences("UfoSharePreference", 0).edit();
+            edit.putBoolean("UfoLocalFirstCall", false);
+            edit.commit();
         }
-      }
+        if (neverFeedback) {
+            if (C5167a.aj != null) {
+                C5167a.aj.getNoticeFlagResult(null);
+            }
+            return null;
+        }
+        myFeekackNum = C5167a.av;
+        try {
+            Map hashMap = new HashMap();
+            hashMap.put("clientid", clientid);
+            hashMap.put(SpeechConstant.APP_ID, appid);
+            hashMap.put("devid", devid);
+            hashMap.put("uid", C5167a.f21356b);
+            hashMap.put(Key.INTERVAL, String.valueOf(C5167a.ao));
+            Object a = C5181b.m17578a(myFeekackNum, "sdk_encrypt=" + URLEncoder.encode(C5220m.m17770a(C5174a.m17564a(hashMap)), "UTF-8"));
+            if (!TextUtils.isEmpty(a)) {
+                JSONObject jSONObject = new JSONObject(C5220m.m17773b(a));
+                if (((Integer) jSONObject.get(C2125n.f6745M)).intValue() == 0) {
+                    myFeekackNum = String.valueOf(jSONObject.get("newmsg"));
+                    if (C5167a.aj == null) {
+                        return myFeekackNum;
+                    }
+                    C5167a.aj.getNoticeFlagResult(myFeekackNum);
+                    return myFeekackNum;
+                }
+            }
+        } catch (Throwable e) {
+            C5210c.m17733a("sendRecord fail.", e);
+        }
+        if (C5167a.aj != null) {
+            C5167a.aj.getNoticeFlagResult(null);
+        }
+        return null;
     }
-    return null;
-  }
-  
-  public static void getNoticeFlagInThread()
-  {
-    new Thread(new d()).start();
-  }
-  
-  public static Intent getStartFaqIntent(Context paramContext)
-  {
-    return new Intent(paramContext, FeedbackFacePageActivity.class);
-  }
-  
-  public static Intent getStartFaqIntent(Context paramContext, int paramInt1, int paramInt2)
-  {
-    paramContext = getStartFaqIntent(paramContext);
-    paramContext.putExtra("feedback_channel", paramInt1);
-    paramContext.putExtra("faq_channel", paramInt2);
-    return paramContext;
-  }
-  
-  public static Intent getStartFaqIntent(Context paramContext, HashMap paramHashMap, int paramInt1, int paramInt2)
-  {
-    setExtraData(paramHashMap);
-    return getStartFaqIntent(paramContext, paramInt1, paramInt2);
-  }
-  
-  public static void init(Context paramContext)
-  {
-    if (paramContext == null) {
-      com.baidu.ufosdk.util.c.d("UfoSDK.init application is null.");
+
+    private static String getMyFeekackNum() {
+        String str = C5167a.aw;
+        try {
+            Map hashMap = new HashMap();
+            hashMap.put("clientid", clientid);
+            hashMap.put(SpeechConstant.APP_ID, appid);
+            hashMap.put("devid", devid);
+            hashMap.put("uid", C5167a.f21356b);
+            hashMap.put(Key.INTERVAL, String.valueOf(C5167a.ao));
+            Object a = C5181b.m17578a(str, "sdk_encrypt=" + URLEncoder.encode(C5220m.m17770a(C5174a.m17564a(hashMap)), "UTF-8"));
+            if (!TextUtils.isEmpty(a)) {
+                JSONObject jSONObject = new JSONObject(C5220m.m17773b(a));
+                if (((Integer) jSONObject.get(C2125n.f6745M)).intValue() == 0) {
+                    return String.valueOf(jSONObject.get("msgnum"));
+                }
+            }
+        } catch (Throwable e) {
+            C5210c.m17733a("sendRecord fail.", e);
+        }
+        return null;
     }
-    do
-    {
-      return;
-      if (mApplication != null)
-      {
-        com.baidu.ufosdk.util.c.d("UfoSDK#init called more than once.");
-        return;
-      }
-      Object localObject = paramContext.getApplicationContext();
-      mApplication = (Context)localObject;
-      s.a((Context)localObject);
-      com.baidu.ufosdk.b.d.a(mApplication);
-      a.ag = getChineseMap();
-      localObject = mApplication.getSharedPreferences("UfoSharePreference", 0);
-      if (localObject == null)
-      {
-        com.baidu.ufosdk.util.c.d("UfoSDK#sharepreference is null.");
-        return;
-      }
-      clientid = ((SharedPreferences)localObject).getString("UfoClientId", "");
-      appid = ((SharedPreferences)localObject).getString("UfoAppId", "");
-      devid = ((SharedPreferences)localObject).getString("UfoDevId", "");
-      productid = ((SharedPreferences)localObject).getString("UfoProductId", "");
-      lastSendTime = ((SharedPreferences)localObject).getLong("Ufolastsendtime", -1L);
-      neverFeedback = ((SharedPreferences)localObject).getBoolean("UfoNeverFeedback", true);
-      localFirstCall = ((SharedPreferences)localObject).getBoolean("UfoLocalFirstCall", true);
-      if (clientid.length() == 0)
-      {
-        new Thread(new b(paramContext)).start();
-        return;
-      }
-    } while (!new com.baidu.ufosdk.util.d(mApplication).e());
-    new Thread(new c()).start();
-  }
-  
-  public static void isShowFeedbackBtn(boolean paramBoolean)
-  {
-    isShowFeedbackBtn = paramBoolean;
-  }
-  
-  public static void openInputContactSwitch()
-  {
-    contactDialogSwitch = true;
-  }
-  
-  public static void openLogcatSwitch()
-  {
-    a.a = true;
-  }
-  
-  public static void openRobotAnswer()
-  {
-    robotAnswer = true;
-  }
-  
-  public static boolean regUninstalledFeedback()
-  {
-    NativeClass localNativeClass = new NativeClass(mApplication);
-    if (localNativeClass.loadUFONativeLib())
-    {
-      HashMap localHashMap = new HashMap();
-      localHashMap.put("a", "commonuninstall");
-      localHashMap.put("uid", a.b);
-      localHashMap.put("channel", "appsearch");
-      localHashMap.put("appid", "210070");
-      localHashMap.put("clientid", clientid);
-      localHashMap.put("devid", devid);
-      localNativeClass.init(com.baidu.ufosdk.b.d.a(), "http://ufosdk.baidu.com/?m=Client", localHashMap);
-      return true;
-    }
-    return false;
-  }
-  
-  public static void removeAllCache()
-  {
-    f.a();
-    f.b();
-  }
-  
-  public static void setBackTextSize(float paramFloat)
-  {
-    a.K = paramFloat;
-  }
-  
-  public static void setBackbtnText(String paramString)
-  {
-    a.g = paramString;
-  }
-  
-  public static void setBackbtnTextColor(int paramInt)
-  {
-    a.D = paramInt;
-  }
-  
-  public static void setBaiduCuid(String paramString)
-  {
-    a.c = paramString;
-  }
-  
-  public static void setChatThreadTime(int paramInt)
-  {
-    a.an = paramInt;
-  }
-  
-  public static void setChatViewTextSize(float paramFloat)
-  {
-    a.P = paramFloat;
-  }
-  
-  public static void setContactWayEnable(boolean paramBoolean)
-  {
-    a.p = paramBoolean;
-  }
-  
-  public static void setCurrentUserIcon(Bitmap paramBitmap)
-  {
-    a.e = paramBitmap;
-  }
-  
-  public static void setCurrentUserName(String paramString)
-  {
-    a.b = paramString;
-  }
-  
-  public static void setCustomLocation(String paramString)
-  {
-    a.f = paramString;
-  }
-  
-  public static void setCustomText(HashMap paramHashMap)
-  {
-    a.ag = paramHashMap;
-  }
-  
-  public static void setEnglishMyFeedbackOffsetSize(float paramFloat)
-  {
-    a.ae = paramFloat;
-  }
-  
-  public static void setExtraData(Map paramMap)
-  {
-    a.d = com.baidu.ufosdk.c.a.a(paramMap);
-  }
-  
-  public static void setFeedBackUrl(String paramString)
-  {
-    a.ak = paramString;
-  }
-  
-  public static void setFeedbackDetailsTextSize(float paramFloat)
-  {
-    a.L = paramFloat;
-  }
-  
-  public static void setFeedbackInputHintTextSize(float paramFloat)
-  {
-    a.T = paramFloat;
-  }
-  
-  public static void setFeedbackInputWordCountTextSize(float paramFloat)
-  {
-    a.U = paramFloat;
-  }
-  
-  public static void setFeedbackPrefix(String paramString)
-  {
-    a.j = paramString;
-  }
-  
-  public static void setFeedbackSubfix(String paramString)
-  {
-    a.k = paramString;
-  }
-  
-  public static void setFirstServerText(String paramString)
-  {
-    firstServerText = paramString;
-  }
-  
-  public static void setGetNoticeFlagCallBack(GetNoticeFlagCallBack paramGetNoticeFlagCallBack)
-  {
-    a.aj = paramGetNoticeFlagCallBack;
-  }
-  
-  public static void setHotProblemTextSize(float paramFloat)
-  {
-    a.Q = paramFloat;
-  }
-  
-  public static void setInputBootomBackgroundColor(int paramInt)
-  {
-    a.E = paramInt;
-  }
-  
-  public static void setInternationalizationValid(boolean paramBoolean)
-  {
-    a.o = paramBoolean;
-  }
-  
-  public static void setListBgColor(int paramInt)
-  {
-    a.z = paramInt;
-  }
-  
-  public static void setListDeleteTextSize(float paramFloat)
-  {
-    a.ab = paramFloat;
-  }
-  
-  public static void setListDividerColor(int paramInt)
-  {
-    a.C = paramInt;
-  }
-  
-  public static void setListItemTextSize(float paramFloat)
-  {
-    a.aa = paramFloat;
-  }
-  
-  public static void setListTimeTextColor(int paramInt)
-  {
-    a.B = paramInt;
-  }
-  
-  public static void setListTimeTextSize(float paramFloat)
-  {
-    a.Y = paramFloat;
-  }
-  
-  public static void setListTitleTextColor(int paramInt)
-  {
-    a.A = paramInt;
-  }
-  
-  public static void setListTitleTextSize(float paramFloat)
-  {
-    a.W = paramFloat;
-  }
-  
-  public static void setLogLevel(int paramInt)
-  {
-    a.m = paramInt;
-  }
-  
-  public static void setMyFeedbackBtnTextSize(float paramFloat)
-  {
-    a.S = paramFloat;
-  }
-  
-  public static void setNoHaveFeedbackTextSize(float paramFloat)
-  {
-    a.X = paramFloat;
-  }
-  
-  public static void setNotSolvedReplyText(String paramString)
-  {
-    notSolvedReplyText = paramString;
-  }
-  
-  public static void setPlaceholder(String paramString)
-  {
-    a.l = paramString;
-  }
-  
-  public static void setReferer(String paramString)
-  {
-    a.n = paramString;
-  }
-  
-  public static void setReloadBtnTextSize(float paramFloat)
-  {
-    a.N = paramFloat;
-  }
-  
-  public static void setReloadTextSize(float paramFloat)
-  {
-    a.M = paramFloat;
-  }
-  
-  public static void setResumeCallBack(ResumeCallBack paramResumeCallBack)
-  {
-    a.ah = paramResumeCallBack;
-  }
-  
-  public static void setRightBtnTextColor(int paramInt)
-  {
-    a.t = paramInt;
-  }
-  
-  public static void setRootBackgroundColor(int paramInt)
-  {
-    a.y = paramInt;
-  }
-  
-  public static void setSearchProblemColor(int paramInt)
-  {
-    a.J = paramInt;
-  }
-  
-  public static void setSearchProblemTextSize(float paramFloat)
-  {
-    a.ad = paramFloat;
-  }
-  
-  public static void setSendBtnTextSize(float paramFloat)
-  {
-    a.V = paramFloat;
-  }
-  
-  public static void setSentBtnTextColor(int paramInt)
-  {
-    a.w = paramInt;
-  }
-  
-  public static void setSolvedReplyText(String paramString)
-  {
-    solvedReplyText = paramString;
-  }
-  
-  public static void setSubmitMessageCallBack(SubmitMessageCallBack paramSubmitMessageCallBack)
-  {
-    a.ai = paramSubmitMessageCallBack;
-  }
-  
-  public static void setTabBgTextColor(int paramInt)
-  {
-    a.v = paramInt;
-  }
-  
-  public static void setTabCheckedStyle(int paramInt)
-  {
-    a.r = paramInt;
-  }
-  
-  public static void setTabDefaultTextSize(float paramFloat)
-  {
-    a.ac = paramFloat;
-  }
-  
-  public static void setTabDefultTextColor(int paramInt)
-  {
-    a.u = paramInt;
-  }
-  
-  public static void setTimeViewTextSize(float paramFloat)
-  {
-    a.O = paramFloat;
-  }
-  
-  public static void setTitleHelpAndFeedbackTextSize(float paramFloat)
-  {
-    a.R = paramFloat;
-  }
-  
-  public static void setTitleTextColor(int paramInt)
-  {
-    a.s = paramInt;
-  }
-  
-  public static void setToastShowTime(long paramLong)
-  {
-    a.q = paramLong;
-  }
-  
-  public static void setToggleUpBgColor(int paramInt)
-  {
-    a.G = paramInt;
-  }
-  
-  public static void setToggleUpTextColor(int paramInt)
-  {
-    a.I = paramInt;
-  }
-  
-  public static void setUninstallFeedback(boolean paramBoolean)
-  {
-    isUninstallFeedback = paramBoolean;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/UfoSDK.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

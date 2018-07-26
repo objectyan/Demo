@@ -1,17 +1,8 @@
 package com.nineoldandroids.animation;
 
-public class FloatEvaluator
-  implements TypeEvaluator<Number>
-{
-  public Float evaluate(float paramFloat, Number paramNumber1, Number paramNumber2)
-  {
-    float f = paramNumber1.floatValue();
-    return Float.valueOf((paramNumber2.floatValue() - f) * paramFloat + f);
-  }
+public class FloatEvaluator implements TypeEvaluator<Number> {
+    public Float evaluate(float fraction, Number startValue, Number endValue) {
+        float startFloat = startValue.floatValue();
+        return Float.valueOf(((endValue.floatValue() - startFloat) * fraction) + startFloat);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/animation/FloatEvaluator.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

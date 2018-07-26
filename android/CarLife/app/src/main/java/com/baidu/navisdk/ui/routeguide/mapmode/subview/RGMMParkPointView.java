@@ -1,7 +1,6 @@
 package com.baidu.navisdk.ui.routeguide.mapmode.subview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +8,11 @@ import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.C4048R;
 import com.baidu.navisdk.comapi.mapcontrol.BNMapController;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.statistics.BNStatisticsManager;
+import com.baidu.navisdk.comapi.statistics.NaviStatConstants;
 import com.baidu.navisdk.model.datastruct.SearchParkPoi;
 import com.baidu.navisdk.model.datastruct.SearchParkPoi.SearchParkKindEnum;
 import com.baidu.navisdk.ui.routeguide.control.RGEngineControl;
@@ -33,228 +34,204 @@ import com.baidu.nplatform.comapi.map.ItemizedOverlayUtil.OnTapListener;
 import com.baidu.nplatform.comapi.map.MapController.AnimationType;
 import com.baidu.nplatform.comapi.map.OverlayItem;
 
-public class RGMMParkPointView
-  extends BNBaseView
-{
-  public static final int POINT_VIEW_OFFSET = 20;
-  private static final int POPUP_LEFT_AREA = 0;
-  private static final int POPUP_RIGHT_AREA = 1;
-  public static final int SCREEN_Y_OFFSET = 58;
-  private static String TAG = RGMMParkPointView.class.getName();
-  private LinearLayout mParkInfoLL = null;
-  private TextView mPickPointAddr = null;
-  private View mPickPointLayout = null;
-  private TextView mPickPointName = null;
-  private View mPickPointPanel = null;
-  private TextView mSetParkView = null;
-  
-  public RGMMParkPointView(Context paramContext, ViewGroup paramViewGroup, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext, paramViewGroup, paramOnRGSubViewListener);
-    initViews();
-    updateStyle(BNStyleManager.getDayStyle());
-  }
-  
-  private boolean getHasDetailInfo(SearchParkPoi paramSearchParkPoi)
-  {
-    if (paramSearchParkPoi == null) {}
-    do
-    {
-      return false;
-      if (paramSearchParkPoi.mLeftCnt > 0) {
-        return true;
-      }
-      if (paramSearchParkPoi.mParkKind != SearchParkPoi.SearchParkKindEnum.Search_ParkKind_Unknown) {
-        return true;
-      }
-    } while (StringUtils.isEmpty(paramSearchParkPoi.mOpenTime));
-    return true;
-  }
-  
-  private Bundle getLeftContentSizeBundle()
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("l", 0);
-    localBundle.putInt("r", getLeftWidth());
-    localBundle.putInt("t", getLeftHeight() + ScreenUtil.getInstance().dip2px(40));
-    localBundle.putInt("b", ScreenUtil.getInstance().dip2px(40));
-    return localBundle;
-  }
-  
-  private int getLeftHeight()
-  {
-    if (this.mParkInfoLL == null) {
-      return 0;
+public class RGMMParkPointView extends BNBaseView {
+    public static final int POINT_VIEW_OFFSET = 20;
+    private static final int POPUP_LEFT_AREA = 0;
+    private static final int POPUP_RIGHT_AREA = 1;
+    public static final int SCREEN_Y_OFFSET = 58;
+    private static String TAG = RGMMParkPointView.class.getName();
+    private LinearLayout mParkInfoLL = null;
+    private TextView mPickPointAddr = null;
+    private View mPickPointLayout = null;
+    private TextView mPickPointName = null;
+    private View mPickPointPanel = null;
+    private TextView mSetParkView = null;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMParkPointView$1 */
+    class C44121 implements OnTapListener {
+        C44121() {
+        }
+
+        public boolean onTap(int index) {
+            return false;
+        }
+
+        public boolean onTap(GeoPoint p) {
+            return false;
+        }
+
+        public boolean onTap(int index, int clickIndex, GeoPoint p) {
+            switch (clickIndex) {
+                case 1:
+                    BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), NaviStatConstants.NAVI_PARK_STOP, NaviStatConstants.NAVI_PARK_STOP);
+                    SearchParkPoi poi = RGParkPointModel.getInstance().getParkPoi();
+                    if (poi != null) {
+                        GeoPoint point = poi.mGuidePoint;
+                        BNRoutePlaner.getInstance().setGuideSceneType(4);
+                        RGSimpleGuideModel.getInstance();
+                        RGSimpleGuideModel.mCalcRouteType = 4;
+                        RGEngineControl.getInstance().setEndPtToCalcRoute(point);
+                        break;
+                    }
+                    break;
+            }
+            return false;
+        }
     }
-    return this.mParkInfoLL.getMeasuredHeight();
-  }
-  
-  private int getLeftWidth()
-  {
-    if (this.mParkInfoLL == null) {
-      return 0;
+
+    public RGMMParkPointView(Context c, ViewGroup p, OnRGSubViewListener lis) {
+        super(c, p, lis);
+        initViews();
+        updateStyle(BNStyleManager.getDayStyle());
     }
-    return this.mParkInfoLL.getMeasuredWidth();
-  }
-  
-  private Bundle getRightContentSizeBundle()
-  {
-    Bundle localBundle = new Bundle();
-    localBundle.putInt("l", getLeftWidth());
-    localBundle.putInt("r", getLeftWidth() + getRightWidth());
-    localBundle.putInt("t", getRightHeight() + ScreenUtil.getInstance().dip2px(40));
-    localBundle.putInt("b", ScreenUtil.getInstance().dip2px(40));
-    return localBundle;
-  }
-  
-  private int getRightHeight()
-  {
-    if (this.mSetParkView == null) {
-      return 0;
+
+    private void initViews() {
+        if (this.mRootViewGroup != null) {
+            ViewStub stub = (ViewStub) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_park_layout_stub);
+            if (stub != null) {
+                stub.inflate();
+            }
+            this.mPickPointLayout = this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_park_layout);
+            this.mPickPointPanel = this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_park_panel);
+            this.mParkInfoLL = (LinearLayout) this.mRootViewGroup.findViewById(C4048R.id.ll_park_info);
+            this.mPickPointName = (TextView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_park_name);
+            this.mPickPointAddr = (TextView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_park_addr);
+            this.mSetParkView = (TextView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_park_parkhere);
+        }
     }
-    return this.mSetParkView.getMeasuredHeight();
-  }
-  
-  private int getRightWidth()
-  {
-    if (this.mSetParkView == null) {
-      return 0;
+
+    public void orientationChanged(ViewGroup p, int orien) {
+        super.orientationChanged(p, orien);
+        initViews();
+        updateStyle(BNStyleManager.getDayStyle());
     }
-    return this.mSetParkView.getMeasuredWidth();
-  }
-  
-  private void initViews()
-  {
-    if (this.mRootViewGroup == null) {
-      return;
+
+    public void updateDataByLastest() {
+        updateData(null);
     }
-    ViewStub localViewStub = (ViewStub)this.mRootViewGroup.findViewById(1711866520);
-    if (localViewStub != null) {
-      localViewStub.inflate();
-    }
-    this.mPickPointLayout = this.mRootViewGroup.findViewById(1711866631);
-    this.mPickPointPanel = this.mRootViewGroup.findViewById(1711866632);
-    this.mParkInfoLL = ((LinearLayout)this.mRootViewGroup.findViewById(1711866633));
-    this.mPickPointName = ((TextView)this.mRootViewGroup.findViewById(1711866635));
-    this.mPickPointAddr = ((TextView)this.mRootViewGroup.findViewById(1711866636));
-    this.mSetParkView = ((TextView)this.mRootViewGroup.findViewById(1711866634));
-  }
-  
-  public void hide()
-  {
-    super.hide();
-    RGParkPointModel.getInstance().updateParkPoi(null);
-    ItemizedOverlayUtil.getInstance().removeAllItems();
-    ItemizedOverlayUtil.getInstance().hide();
-    ItemizedOverlayUtil.getInstance().setOnTapListener(null);
-  }
-  
-  public void orientationChanged(ViewGroup paramViewGroup, int paramInt)
-  {
-    super.orientationChanged(paramViewGroup, paramInt);
-    initViews();
-    updateStyle(BNStyleManager.getDayStyle());
-  }
-  
-  public void show()
-  {
-    super.show();
-  }
-  
-  public void updateData(Bundle paramBundle)
-  {
-    LogUtil.e(TAG, "updateData()");
-    Object localObject = RGParkPointModel.getInstance().getParkPoi();
-    if ((localObject != null) && (((SearchParkPoi)localObject).mName.length() > 0) && (this.mPickPointName != null) && (this.mPickPointAddr != null) && (this.mPickPointLayout != null))
-    {
-      this.mPickPointName.setText(((SearchParkPoi)localObject).mName);
-      TextView localTextView = this.mPickPointAddr;
-      if (((SearchParkPoi)localObject).mLeftCnt > 0) {}
-      for (paramBundle = JarUtils.getResources().getString(1711670053, new Object[] { Integer.valueOf(((SearchParkPoi)localObject).mLeftCnt), Integer.valueOf(((SearchParkPoi)localObject).mDistance) });; paramBundle = JarUtils.getResources().getString(1711670054, new Object[] { Integer.valueOf(((SearchParkPoi)localObject).mDistance) }))
-      {
-        localTextView.setText(paramBundle);
-        LogUtil.e("parkpoiinformation", "poi.mName = " + ((SearchParkPoi)localObject).mName + " || poi.mDistance = " + ((SearchParkPoi)localObject).mDistance + " || lat = " + ((SearchParkPoi)localObject).mViewPoint.getLatitudeE6() + "long = " + ((SearchParkPoi)localObject).mViewPoint.getLongitudeE6());
-        paramBundle = BNMapController.getInstance().getMapStatus();
-        localObject = CoordinateTransformUtil.LL2MC(((SearchParkPoi)localObject).mViewPoint.getLongitudeE6() / 100000.0D, ((SearchParkPoi)localObject).mViewPoint.getLatitudeE6() / 100000.0D);
-        paramBundle._CenterPtX = ((Bundle)localObject).getInt("MCx");
-        paramBundle._CenterPtY = ((Bundle)localObject).getInt("MCy");
-        localObject = new GeoPoint(paramBundle._CenterPtX, paramBundle._CenterPtY);
-        paramBundle._Level = 18.0F;
-        BNMapController.getInstance().setMapStatus(paramBundle, MapController.AnimationType.eAnimationAll);
+
+    public void updateData(Bundle b) {
+        LogUtil.m15791e(TAG, "updateData()");
+        SearchParkPoi poi = RGParkPointModel.getInstance().getParkPoi();
+        if (poi == null || poi.mName.length() <= 0 || this.mPickPointName == null || this.mPickPointAddr == null || this.mPickPointLayout == null) {
+            hide();
+            return;
+        }
+        CharSequence string;
+        this.mPickPointName.setText(poi.mName);
+        TextView textView = this.mPickPointAddr;
+        if (poi.mLeftCnt > 0) {
+            string = JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_park_navi_tips_style1, new Object[]{Integer.valueOf(poi.mLeftCnt), Integer.valueOf(poi.mDistance)});
+        } else {
+            string = JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_park_navi_tips_style2, new Object[]{Integer.valueOf(poi.mDistance)});
+        }
+        textView.setText(string);
+        LogUtil.m15791e("parkpoiinformation", "poi.mName = " + poi.mName + " || poi.mDistance = " + poi.mDistance + " || lat = " + poi.mViewPoint.getLatitudeE6() + "long = " + poi.mViewPoint.getLongitudeE6());
+        MapStatus mapstatus = BNMapController.getInstance().getMapStatus();
+        Bundle bLoc = CoordinateTransformUtil.LL2MC(((double) poi.mViewPoint.getLongitudeE6()) / 100000.0d, ((double) poi.mViewPoint.getLatitudeE6()) / 100000.0d);
+        mapstatus._CenterPtX = bLoc.getInt("MCx");
+        mapstatus._CenterPtY = bLoc.getInt("MCy");
+        GeoPoint pointMc = new GeoPoint(mapstatus._CenterPtX, mapstatus._CenterPtY);
+        mapstatus._Level = 18.0f;
+        BNMapController.getInstance().setMapStatus(mapstatus, AnimationType.eAnimationAll);
         ItemizedOverlayUtil.getInstance().removeAllItems();
-        paramBundle = DrawableUtils.getDrawableFromView(this.mPickPointLayout);
-        paramBundle = ItemizedOverlayUtil.getInstance().getOverlayItem((GeoPoint)localObject, paramBundle);
-        paramBundle.addClickRect(getLeftContentSizeBundle());
-        paramBundle.addClickRect(getRightContentSizeBundle());
-        ItemizedOverlayUtil.getInstance().addMapItem(paramBundle);
+        OverlayItem overlayItem = ItemizedOverlayUtil.getInstance().getOverlayItem(pointMc, DrawableUtils.getDrawableFromView(this.mPickPointLayout));
+        overlayItem.addClickRect(getLeftContentSizeBundle());
+        overlayItem.addClickRect(getRightContentSizeBundle());
+        ItemizedOverlayUtil.getInstance().addMapItem(overlayItem);
         ItemizedOverlayUtil.getInstance().show();
         ItemizedOverlayUtil.getInstance().refresh();
-        ItemizedOverlayUtil.getInstance().setOnTapListener(new ItemizedOverlayUtil.OnTapListener()
-        {
-          public boolean onTap(int paramAnonymousInt)
-          {
+        ItemizedOverlayUtil.getInstance().setOnTapListener(new C44121());
+    }
+
+    private boolean getHasDetailInfo(SearchParkPoi poi) {
+        if (poi == null) {
             return false;
-          }
-          
-          public boolean onTap(int paramAnonymousInt1, int paramAnonymousInt2, GeoPoint paramAnonymousGeoPoint)
-          {
-            switch (paramAnonymousInt2)
-            {
-            }
-            for (;;)
-            {
-              return false;
-              BNStatisticsManager.getInstance().onEvent(BNaviModuleManager.getContext(), "410298", "410298");
-              paramAnonymousGeoPoint = RGParkPointModel.getInstance().getParkPoi();
-              if (paramAnonymousGeoPoint != null)
-              {
-                paramAnonymousGeoPoint = paramAnonymousGeoPoint.mGuidePoint;
-                BNRoutePlaner.getInstance().setGuideSceneType(4);
-                RGSimpleGuideModel.getInstance();
-                RGSimpleGuideModel.mCalcRouteType = 4;
-                RGEngineControl.getInstance().setEndPtToCalcRoute(paramAnonymousGeoPoint);
-              }
-            }
-          }
-          
-          public boolean onTap(GeoPoint paramAnonymousGeoPoint)
-          {
+        }
+        if (poi.mLeftCnt > 0) {
+            return true;
+        }
+        if (poi.mParkKind != SearchParkKindEnum.Search_ParkKind_Unknown) {
+            return true;
+        }
+        if (StringUtils.isEmpty(poi.mOpenTime)) {
             return false;
-          }
-        });
-        return;
-      }
+        }
+        return true;
     }
-    hide();
-  }
-  
-  public void updateDataByLastest()
-  {
-    updateData(null);
-  }
-  
-  public void updateStyle(boolean paramBoolean)
-  {
-    super.updateStyle(paramBoolean);
-    if (this.mPickPointPanel != null) {
-      this.mPickPointPanel.setBackgroundDrawable(BNStyleManager.getDrawable(1711407766));
+
+    public void show() {
+        super.show();
     }
-    if (this.mPickPointName != null) {
-      this.mPickPointName.setTextColor(BNStyleManager.getColor(1711800674));
+
+    public void hide() {
+        super.hide();
+        RGParkPointModel.getInstance().updateParkPoi(null);
+        ItemizedOverlayUtil.getInstance().removeAllItems();
+        ItemizedOverlayUtil.getInstance().hide();
+        ItemizedOverlayUtil.getInstance().setOnTapListener(null);
     }
-    if (this.mPickPointAddr != null) {
-      this.mPickPointAddr.setTextColor(BNStyleManager.getColor(1711800698));
+
+    public void updateStyle(boolean day) {
+        super.updateStyle(day);
+        if (this.mPickPointPanel != null) {
+            this.mPickPointPanel.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_rg_pickpoint_bg));
+        }
+        if (this.mPickPointName != null) {
+            this.mPickPointName.setTextColor(BNStyleManager.getColor(C4048R.color.cl_text_a));
+        }
+        if (this.mPickPointAddr != null) {
+            this.mPickPointAddr.setTextColor(BNStyleManager.getColor(C4048R.color.cl_link_a));
+        }
+        if (this.mSetParkView != null) {
+            this.mSetParkView.setTextColor(BNStyleManager.getColor(C4048R.color.cl_text_e));
+            this.mSetParkView.setBackgroundDrawable(BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_rg_pickpoint_btn_right));
+        }
     }
-    if (this.mSetParkView != null)
-    {
-      this.mSetParkView.setTextColor(BNStyleManager.getColor(1711800682));
-      this.mSetParkView.setBackgroundDrawable(BNStyleManager.getDrawable(1711407768));
+
+    private int getLeftWidth() {
+        if (this.mParkInfoLL == null) {
+            return 0;
+        }
+        return this.mParkInfoLL.getMeasuredWidth();
     }
-  }
+
+    private int getLeftHeight() {
+        if (this.mParkInfoLL == null) {
+            return 0;
+        }
+        return this.mParkInfoLL.getMeasuredHeight();
+    }
+
+    private int getRightWidth() {
+        if (this.mSetParkView == null) {
+            return 0;
+        }
+        return this.mSetParkView.getMeasuredWidth();
+    }
+
+    private int getRightHeight() {
+        if (this.mSetParkView == null) {
+            return 0;
+        }
+        return this.mSetParkView.getMeasuredHeight();
+    }
+
+    private Bundle getLeftContentSizeBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("l", 0);
+        bundle.putInt("r", getLeftWidth());
+        bundle.putInt("t", getLeftHeight() + ScreenUtil.getInstance().dip2px(40));
+        bundle.putInt("b", ScreenUtil.getInstance().dip2px(40));
+        return bundle;
+    }
+
+    private Bundle getRightContentSizeBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("l", getLeftWidth());
+        bundle.putInt("r", getLeftWidth() + getRightWidth());
+        bundle.putInt("t", getRightHeight() + ScreenUtil.getInstance().dip2px(40));
+        bundle.putInt("b", ScreenUtil.getInstance().dip2px(40));
+        return bundle;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMParkPointView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

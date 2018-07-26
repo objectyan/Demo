@@ -1,5 +1,6 @@
 package com.baidu.entity.pb;
 
+import com.baidu.baidunavis.model.NavCarInfo;
 import com.google.protobuf.micro.ByteStringMicro;
 import com.google.protobuf.micro.CodedInputStreamMicro;
 import com.google.protobuf.micro.CodedOutputStreamMicro;
@@ -8,3487 +9,3116 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class TrafficPois
-  extends MessageMicro
-{
-  public static final int CONTENT_FIELD_NUMBER = 3;
-  public static final int CURRENT_CITY_FIELD_NUMBER = 2;
-  public static final int IMGE_SHOW_FIELD_NUMBER = 6;
-  public static final int OPTION_FIELD_NUMBER = 1;
-  public static final int SUGGEST_QUERY_FIELD_NUMBER = 4;
-  public static final int SUGGEST_QUERY_FLAG_FIELD_NUMBER = 5;
-  private boolean a;
-  private Option b = null;
-  private boolean c;
-  private CurrentCity d = null;
-  private boolean e;
-  private Content f = null;
-  private List<SuggestQuery> g = Collections.emptyList();
-  private boolean h;
-  private int i = 0;
-  private boolean j;
-  private ImageShow k = null;
-  private int l = -1;
-  
-  public static TrafficPois parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new TrafficPois().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static TrafficPois parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (TrafficPois)new TrafficPois().mergeFrom(paramArrayOfByte);
-  }
-  
-  public TrafficPois addSuggestQuery(SuggestQuery paramSuggestQuery)
-  {
-    if (paramSuggestQuery == null) {
-      return this;
-    }
-    if (this.g.isEmpty()) {
-      this.g = new ArrayList();
-    }
-    this.g.add(paramSuggestQuery);
-    return this;
-  }
-  
-  public final TrafficPois clear()
-  {
-    clearOption();
-    clearCurrentCity();
-    clearContent();
-    clearSuggestQuery();
-    clearSuggestQueryFlag();
-    clearImgeShow();
-    this.l = -1;
-    return this;
-  }
-  
-  public TrafficPois clearContent()
-  {
-    this.e = false;
-    this.f = null;
-    return this;
-  }
-  
-  public TrafficPois clearCurrentCity()
-  {
-    this.c = false;
-    this.d = null;
-    return this;
-  }
-  
-  public TrafficPois clearImgeShow()
-  {
-    this.j = false;
-    this.k = null;
-    return this;
-  }
-  
-  public TrafficPois clearOption()
-  {
-    this.a = false;
-    this.b = null;
-    return this;
-  }
-  
-  public TrafficPois clearSuggestQuery()
-  {
-    this.g = Collections.emptyList();
-    return this;
-  }
-  
-  public TrafficPois clearSuggestQueryFlag()
-  {
-    this.h = false;
-    this.i = 0;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.l < 0) {
-      getSerializedSize();
-    }
-    return this.l;
-  }
-  
-  public Content getContent()
-  {
-    return this.f;
-  }
-  
-  public CurrentCity getCurrentCity()
-  {
-    return this.d;
-  }
-  
-  public ImageShow getImgeShow()
-  {
-    return this.k;
-  }
-  
-  public Option getOption()
-  {
-    return this.b;
-  }
-  
-  public int getSerializedSize()
-  {
-    int n = 0;
-    if (hasOption()) {
-      n = 0 + CodedOutputStreamMicro.computeMessageSize(1, getOption());
-    }
-    int m = n;
-    if (hasCurrentCity()) {
-      m = n + CodedOutputStreamMicro.computeMessageSize(2, getCurrentCity());
-    }
-    n = m;
-    if (hasContent()) {
-      n = m + CodedOutputStreamMicro.computeMessageSize(3, getContent());
-    }
-    Iterator localIterator = getSuggestQueryList().iterator();
-    while (localIterator.hasNext()) {
-      n = CodedOutputStreamMicro.computeMessageSize(4, (SuggestQuery)localIterator.next()) + n;
-    }
-    m = n;
-    if (hasSuggestQueryFlag()) {
-      m = n + CodedOutputStreamMicro.computeInt32Size(5, getSuggestQueryFlag());
-    }
-    n = m;
-    if (hasImgeShow()) {
-      n = m + CodedOutputStreamMicro.computeMessageSize(6, getImgeShow());
-    }
-    this.l = n;
-    return n;
-  }
-  
-  public SuggestQuery getSuggestQuery(int paramInt)
-  {
-    return (SuggestQuery)this.g.get(paramInt);
-  }
-  
-  public int getSuggestQueryCount()
-  {
-    return this.g.size();
-  }
-  
-  public int getSuggestQueryFlag()
-  {
-    return this.i;
-  }
-  
-  public List<SuggestQuery> getSuggestQueryList()
-  {
-    return this.g;
-  }
-  
-  public boolean hasContent()
-  {
-    return this.e;
-  }
-  
-  public boolean hasCurrentCity()
-  {
-    return this.c;
-  }
-  
-  public boolean hasImgeShow()
-  {
-    return this.j;
-  }
-  
-  public boolean hasOption()
-  {
-    return this.a;
-  }
-  
-  public boolean hasSuggestQueryFlag()
-  {
-    return this.h;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public TrafficPois mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int m = paramCodedInputStreamMicro.readTag();
-      Object localObject;
-      switch (m)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, m)) {}
-        break;
-      case 0: 
-        return this;
-      case 10: 
-        localObject = new Option();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setOption((Option)localObject);
-        break;
-      case 18: 
-        localObject = new CurrentCity();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setCurrentCity((CurrentCity)localObject);
-        break;
-      case 26: 
-        localObject = new Content();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setContent((Content)localObject);
-        break;
-      case 34: 
-        localObject = new SuggestQuery();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        addSuggestQuery((SuggestQuery)localObject);
-        break;
-      case 40: 
-        setSuggestQueryFlag(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 50: 
-        localObject = new ImageShow();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setImgeShow((ImageShow)localObject);
-      }
-    }
-  }
-  
-  public TrafficPois setContent(Content paramContent)
-  {
-    if (paramContent == null) {
-      return clearContent();
-    }
-    this.e = true;
-    this.f = paramContent;
-    return this;
-  }
-  
-  public TrafficPois setCurrentCity(CurrentCity paramCurrentCity)
-  {
-    if (paramCurrentCity == null) {
-      return clearCurrentCity();
-    }
-    this.c = true;
-    this.d = paramCurrentCity;
-    return this;
-  }
-  
-  public TrafficPois setImgeShow(ImageShow paramImageShow)
-  {
-    if (paramImageShow == null) {
-      return clearImgeShow();
-    }
-    this.j = true;
-    this.k = paramImageShow;
-    return this;
-  }
-  
-  public TrafficPois setOption(Option paramOption)
-  {
-    if (paramOption == null) {
-      return clearOption();
-    }
-    this.a = true;
-    this.b = paramOption;
-    return this;
-  }
-  
-  public TrafficPois setSuggestQuery(int paramInt, SuggestQuery paramSuggestQuery)
-  {
-    if (paramSuggestQuery == null) {
-      return this;
-    }
-    this.g.set(paramInt, paramSuggestQuery);
-    return this;
-  }
-  
-  public TrafficPois setSuggestQueryFlag(int paramInt)
-  {
-    this.h = true;
-    this.i = paramInt;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasOption()) {
-      paramCodedOutputStreamMicro.writeMessage(1, getOption());
-    }
-    if (hasCurrentCity()) {
-      paramCodedOutputStreamMicro.writeMessage(2, getCurrentCity());
-    }
-    if (hasContent()) {
-      paramCodedOutputStreamMicro.writeMessage(3, getContent());
-    }
-    Iterator localIterator = getSuggestQueryList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(4, (SuggestQuery)localIterator.next());
-    }
-    if (hasSuggestQueryFlag()) {
-      paramCodedOutputStreamMicro.writeInt32(5, getSuggestQueryFlag());
-    }
-    if (hasImgeShow()) {
-      paramCodedOutputStreamMicro.writeMessage(6, getImgeShow());
-    }
-  }
-  
-  public static final class Content
-    extends MessageMicro
-  {
-    public static final int END_FIELD_NUMBER = 2;
-    public static final int MULTI_WAYPOINTS_FIELD_NUMBER = 4;
-    public static final int START_FIELD_NUMBER = 1;
-    public static final int WAY_POINTS_FIELD_NUMBER = 3;
-    private List<Start> a = Collections.emptyList();
-    private List<End> b = Collections.emptyList();
-    private List<WayPoints> c = Collections.emptyList();
-    private List<MultiWaypoints> d = Collections.emptyList();
-    private int e = -1;
-    
-    public static Content parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Content().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Content parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Content)new Content().mergeFrom(paramArrayOfByte);
-    }
-    
-    public Content addEnd(End paramEnd)
-    {
-      if (paramEnd == null) {
-        return this;
-      }
-      if (this.b.isEmpty()) {
-        this.b = new ArrayList();
-      }
-      this.b.add(paramEnd);
-      return this;
-    }
-    
-    public Content addMultiWaypoints(MultiWaypoints paramMultiWaypoints)
-    {
-      if (paramMultiWaypoints == null) {
-        return this;
-      }
-      if (this.d.isEmpty()) {
-        this.d = new ArrayList();
-      }
-      this.d.add(paramMultiWaypoints);
-      return this;
-    }
-    
-    public Content addStart(Start paramStart)
-    {
-      if (paramStart == null) {
-        return this;
-      }
-      if (this.a.isEmpty()) {
-        this.a = new ArrayList();
-      }
-      this.a.add(paramStart);
-      return this;
-    }
-    
-    public Content addWayPoints(WayPoints paramWayPoints)
-    {
-      if (paramWayPoints == null) {
-        return this;
-      }
-      if (this.c.isEmpty()) {
-        this.c = new ArrayList();
-      }
-      this.c.add(paramWayPoints);
-      return this;
-    }
-    
-    public final Content clear()
-    {
-      clearStart();
-      clearEnd();
-      clearWayPoints();
-      clearMultiWaypoints();
-      this.e = -1;
-      return this;
-    }
-    
-    public Content clearEnd()
-    {
-      this.b = Collections.emptyList();
-      return this;
-    }
-    
-    public Content clearMultiWaypoints()
-    {
-      this.d = Collections.emptyList();
-      return this;
-    }
-    
-    public Content clearStart()
-    {
-      this.a = Collections.emptyList();
-      return this;
-    }
-    
-    public Content clearWayPoints()
-    {
-      this.c = Collections.emptyList();
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public End getEnd(int paramInt)
-    {
-      return (End)this.b.get(paramInt);
-    }
-    
-    public int getEndCount()
-    {
-      return this.b.size();
-    }
-    
-    public List<End> getEndList()
-    {
-      return this.b;
-    }
-    
-    public MultiWaypoints getMultiWaypoints(int paramInt)
-    {
-      return (MultiWaypoints)this.d.get(paramInt);
-    }
-    
-    public int getMultiWaypointsCount()
-    {
-      return this.d.size();
-    }
-    
-    public List<MultiWaypoints> getMultiWaypointsList()
-    {
-      return this.d;
-    }
-    
-    public int getSerializedSize()
-    {
-      Iterator localIterator = getStartList().iterator();
-      for (int i = 0; localIterator.hasNext(); i = CodedOutputStreamMicro.computeMessageSize(1, (Start)localIterator.next()) + i) {}
-      localIterator = getEndList().iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStreamMicro.computeMessageSize(2, (End)localIterator.next());
-      }
-      localIterator = getWayPointsList().iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStreamMicro.computeMessageSize(3, (WayPoints)localIterator.next());
-      }
-      localIterator = getMultiWaypointsList().iterator();
-      while (localIterator.hasNext()) {
-        i += CodedOutputStreamMicro.computeMessageSize(4, (MultiWaypoints)localIterator.next());
-      }
-      this.e = i;
-      return i;
-    }
-    
-    public Start getStart(int paramInt)
-    {
-      return (Start)this.a.get(paramInt);
-    }
-    
-    public int getStartCount()
-    {
-      return this.a.size();
-    }
-    
-    public List<Start> getStartList()
-    {
-      return this.a;
-    }
-    
-    public WayPoints getWayPoints(int paramInt)
-    {
-      return (WayPoints)this.c.get(paramInt);
-    }
-    
-    public int getWayPointsCount()
-    {
-      return this.c.size();
-    }
-    
-    public List<WayPoints> getWayPointsList()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Content mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          localObject = new Start();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addStart((Start)localObject);
-          break;
-        case 18: 
-          localObject = new End();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addEnd((End)localObject);
-          break;
-        case 26: 
-          localObject = new WayPoints();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addWayPoints((WayPoints)localObject);
-          break;
-        case 34: 
-          localObject = new MultiWaypoints();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addMultiWaypoints((MultiWaypoints)localObject);
-        }
-      }
-    }
-    
-    public Content setEnd(int paramInt, End paramEnd)
-    {
-      if (paramEnd == null) {
-        return this;
-      }
-      this.b.set(paramInt, paramEnd);
-      return this;
-    }
-    
-    public Content setMultiWaypoints(int paramInt, MultiWaypoints paramMultiWaypoints)
-    {
-      if (paramMultiWaypoints == null) {
-        return this;
-      }
-      this.d.set(paramInt, paramMultiWaypoints);
-      return this;
-    }
-    
-    public Content setStart(int paramInt, Start paramStart)
-    {
-      if (paramStart == null) {
-        return this;
-      }
-      this.a.set(paramInt, paramStart);
-      return this;
-    }
-    
-    public Content setWayPoints(int paramInt, WayPoints paramWayPoints)
-    {
-      if (paramWayPoints == null) {
-        return this;
-      }
-      this.c.set(paramInt, paramWayPoints);
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      Iterator localIterator = getStartList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(1, (Start)localIterator.next());
-      }
-      localIterator = getEndList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(2, (End)localIterator.next());
-      }
-      localIterator = getWayPointsList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(3, (WayPoints)localIterator.next());
-      }
-      localIterator = getMultiWaypointsList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(4, (MultiWaypoints)localIterator.next());
-      }
-    }
-    
-    public static final class End
-      extends MessageMicro
-    {
-      public static final int ADDR_FIELD_NUMBER = 5;
-      public static final int CODE_FIELD_NUMBER = 1;
-      public static final int DESCRIBE_FIELD_NUMBER = 13;
-      public static final int DIRECTION_FIELD_NUMBER = 12;
-      public static final int DIST_FIELD_NUMBER = 11;
-      public static final int EXT_FIELD_NUMBER = 7;
-      public static final int GEO_FIELD_NUMBER = 6;
-      public static final int INDOOR_FLOOR_FIELD_NUMBER = 9;
-      public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 10;
-      public static final int NAME_FIELD_NUMBER = 2;
-      public static final int NUM_FIELD_NUMBER = 3;
-      public static final int POITYPE_FIELD_NUMBER = 8;
-      public static final int UID_FIELD_NUMBER = 4;
-      private int A = -1;
-      private boolean a;
-      private int b = 0;
-      private boolean c;
-      private String d = "";
-      private boolean e;
-      private int f = 0;
-      private boolean g;
-      private String h = "";
-      private boolean i;
-      private String j = "";
-      private boolean k;
-      private String l = "";
-      private boolean m;
-      private String n = "";
-      private boolean o;
-      private int p = 0;
-      private boolean q;
-      private String r = "";
-      private boolean s;
-      private String t = "";
-      private boolean u;
-      private int v = 0;
-      private boolean w;
-      private int x = 0;
-      private boolean y;
-      private String z = "";
-      
-      public static End parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new End().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static End parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (End)new End().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final End clear()
-      {
-        clearCode();
-        clearName();
-        clearNum();
-        clearUid();
-        clearAddr();
-        clearGeo();
-        clearExt();
-        clearPoiType();
-        clearIndoorFloor();
-        clearIndoorParentUid();
-        clearDist();
-        clearDirection();
-        clearDescribe();
-        this.A = -1;
-        return this;
-      }
-      
-      public End clearAddr()
-      {
-        this.i = false;
-        this.j = "";
-        return this;
-      }
-      
-      public End clearCode()
-      {
-        this.a = false;
-        this.b = 0;
-        return this;
-      }
-      
-      public End clearDescribe()
-      {
-        this.y = false;
-        this.z = "";
-        return this;
-      }
-      
-      public End clearDirection()
-      {
-        this.w = false;
-        this.x = 0;
-        return this;
-      }
-      
-      public End clearDist()
-      {
-        this.u = false;
-        this.v = 0;
-        return this;
-      }
-      
-      public End clearExt()
-      {
-        this.m = false;
-        this.n = "";
-        return this;
-      }
-      
-      public End clearGeo()
-      {
-        this.k = false;
-        this.l = "";
-        return this;
-      }
-      
-      public End clearIndoorFloor()
-      {
-        this.q = false;
-        this.r = "";
-        return this;
-      }
-      
-      public End clearIndoorParentUid()
-      {
-        this.s = false;
-        this.t = "";
-        return this;
-      }
-      
-      public End clearName()
-      {
-        this.c = false;
-        this.d = "";
-        return this;
-      }
-      
-      public End clearNum()
-      {
-        this.e = false;
-        this.f = 0;
-        return this;
-      }
-      
-      public End clearPoiType()
-      {
-        this.o = false;
-        this.p = 0;
-        return this;
-      }
-      
-      public End clearUid()
-      {
-        this.g = false;
-        this.h = "";
-        return this;
-      }
-      
-      public String getAddr()
-      {
-        return this.j;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.A < 0) {
-          getSerializedSize();
-        }
-        return this.A;
-      }
-      
-      public int getCode()
-      {
-        return this.b;
-      }
-      
-      public String getDescribe()
-      {
-        return this.z;
-      }
-      
-      public int getDirection()
-      {
-        return this.x;
-      }
-      
-      public int getDist()
-      {
-        return this.v;
-      }
-      
-      public String getExt()
-      {
-        return this.n;
-      }
-      
-      public String getGeo()
-      {
-        return this.l;
-      }
-      
-      public String getIndoorFloor()
-      {
-        return this.r;
-      }
-      
-      public String getIndoorParentUid()
-      {
-        return this.t;
-      }
-      
-      public String getName()
-      {
-        return this.d;
-      }
-      
-      public int getNum()
-      {
-        return this.f;
-      }
-      
-      public int getPoiType()
-      {
-        return this.p;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i2 = 0;
-        if (hasCode()) {
-          i2 = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
-        }
-        int i1 = i2;
-        if (hasName()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getName());
-        }
-        i2 = i1;
-        if (hasNum()) {
-          i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getNum());
-        }
-        i1 = i2;
-        if (hasUid()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getUid());
-        }
-        i2 = i1;
-        if (hasAddr()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getAddr());
-        }
-        i1 = i2;
-        if (hasGeo()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getGeo());
-        }
-        i2 = i1;
-        if (hasExt()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getExt());
-        }
-        i1 = i2;
-        if (hasPoiType()) {
-          i1 = i2 + CodedOutputStreamMicro.computeInt32Size(8, getPoiType());
-        }
-        i2 = i1;
-        if (hasIndoorFloor()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getIndoorFloor());
-        }
-        i1 = i2;
-        if (hasIndoorParentUid()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(10, getIndoorParentUid());
-        }
-        i2 = i1;
-        if (hasDist()) {
-          i2 = i1 + CodedOutputStreamMicro.computeInt32Size(11, getDist());
-        }
-        i1 = i2;
-        if (hasDirection()) {
-          i1 = i2 + CodedOutputStreamMicro.computeInt32Size(12, getDirection());
-        }
-        i2 = i1;
-        if (hasDescribe()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(13, getDescribe());
-        }
-        this.A = i2;
-        return i2;
-      }
-      
-      public String getUid()
-      {
-        return this.h;
-      }
-      
-      public boolean hasAddr()
-      {
-        return this.i;
-      }
-      
-      public boolean hasCode()
-      {
-        return this.a;
-      }
-      
-      public boolean hasDescribe()
-      {
-        return this.y;
-      }
-      
-      public boolean hasDirection()
-      {
-        return this.w;
-      }
-      
-      public boolean hasDist()
-      {
-        return this.u;
-      }
-      
-      public boolean hasExt()
-      {
-        return this.m;
-      }
-      
-      public boolean hasGeo()
-      {
-        return this.k;
-      }
-      
-      public boolean hasIndoorFloor()
-      {
-        return this.q;
-      }
-      
-      public boolean hasIndoorParentUid()
-      {
-        return this.s;
-      }
-      
-      public boolean hasName()
-      {
-        return this.c;
-      }
-      
-      public boolean hasNum()
-      {
-        return this.e;
-      }
-      
-      public boolean hasPoiType()
-      {
-        return this.o;
-      }
-      
-      public boolean hasUid()
-      {
-        return this.g;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public End mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i1 = paramCodedInputStreamMicro.readTag();
-          switch (i1)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-            break;
-          case 0: 
-            return this;
-          case 8: 
-            setCode(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 18: 
-            setName(paramCodedInputStreamMicro.readString());
-            break;
-          case 24: 
-            setNum(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 34: 
-            setUid(paramCodedInputStreamMicro.readString());
-            break;
-          case 42: 
-            setAddr(paramCodedInputStreamMicro.readString());
-            break;
-          case 50: 
-            setGeo(paramCodedInputStreamMicro.readString());
-            break;
-          case 58: 
-            setExt(paramCodedInputStreamMicro.readString());
-            break;
-          case 64: 
-            setPoiType(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 74: 
-            setIndoorFloor(paramCodedInputStreamMicro.readString());
-            break;
-          case 82: 
-            setIndoorParentUid(paramCodedInputStreamMicro.readString());
-            break;
-          case 88: 
-            setDist(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 96: 
-            setDirection(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 106: 
-            setDescribe(paramCodedInputStreamMicro.readString());
-          }
-        }
-      }
-      
-      public End setAddr(String paramString)
-      {
-        this.i = true;
-        this.j = paramString;
-        return this;
-      }
-      
-      public End setCode(int paramInt)
-      {
-        this.a = true;
-        this.b = paramInt;
-        return this;
-      }
-      
-      public End setDescribe(String paramString)
-      {
-        this.y = true;
-        this.z = paramString;
-        return this;
-      }
-      
-      public End setDirection(int paramInt)
-      {
-        this.w = true;
-        this.x = paramInt;
-        return this;
-      }
-      
-      public End setDist(int paramInt)
-      {
-        this.u = true;
-        this.v = paramInt;
-        return this;
-      }
-      
-      public End setExt(String paramString)
-      {
-        this.m = true;
-        this.n = paramString;
-        return this;
-      }
-      
-      public End setGeo(String paramString)
-      {
-        this.k = true;
-        this.l = paramString;
-        return this;
-      }
-      
-      public End setIndoorFloor(String paramString)
-      {
-        this.q = true;
-        this.r = paramString;
-        return this;
-      }
-      
-      public End setIndoorParentUid(String paramString)
-      {
-        this.s = true;
-        this.t = paramString;
-        return this;
-      }
-      
-      public End setName(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
-        return this;
-      }
-      
-      public End setNum(int paramInt)
-      {
-        this.e = true;
-        this.f = paramInt;
-        return this;
-      }
-      
-      public End setPoiType(int paramInt)
-      {
-        this.o = true;
-        this.p = paramInt;
-        return this;
-      }
-      
-      public End setUid(String paramString)
-      {
-        this.g = true;
-        this.h = paramString;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasCode()) {
-          paramCodedOutputStreamMicro.writeInt32(1, getCode());
-        }
-        if (hasName()) {
-          paramCodedOutputStreamMicro.writeString(2, getName());
-        }
-        if (hasNum()) {
-          paramCodedOutputStreamMicro.writeInt32(3, getNum());
-        }
-        if (hasUid()) {
-          paramCodedOutputStreamMicro.writeString(4, getUid());
-        }
-        if (hasAddr()) {
-          paramCodedOutputStreamMicro.writeString(5, getAddr());
-        }
-        if (hasGeo()) {
-          paramCodedOutputStreamMicro.writeString(6, getGeo());
-        }
-        if (hasExt()) {
-          paramCodedOutputStreamMicro.writeString(7, getExt());
-        }
-        if (hasPoiType()) {
-          paramCodedOutputStreamMicro.writeInt32(8, getPoiType());
-        }
-        if (hasIndoorFloor()) {
-          paramCodedOutputStreamMicro.writeString(9, getIndoorFloor());
-        }
-        if (hasIndoorParentUid()) {
-          paramCodedOutputStreamMicro.writeString(10, getIndoorParentUid());
-        }
-        if (hasDist()) {
-          paramCodedOutputStreamMicro.writeInt32(11, getDist());
-        }
-        if (hasDirection()) {
-          paramCodedOutputStreamMicro.writeInt32(12, getDirection());
-        }
-        if (hasDescribe()) {
-          paramCodedOutputStreamMicro.writeString(13, getDescribe());
-        }
-      }
-    }
-    
-    public static final class MultiWaypoints
-      extends MessageMicro
-    {
-      public static final int WAY_POINTS_FIELD_NUMBER = 1;
-      private List<WayPoints> a = Collections.emptyList();
-      private int b = -1;
-      
-      public static MultiWaypoints parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new MultiWaypoints().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static MultiWaypoints parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (MultiWaypoints)new MultiWaypoints().mergeFrom(paramArrayOfByte);
-      }
-      
-      public MultiWaypoints addWayPoints(WayPoints paramWayPoints)
-      {
-        if (paramWayPoints == null) {
-          return this;
-        }
-        if (this.a.isEmpty()) {
-          this.a = new ArrayList();
-        }
-        this.a.add(paramWayPoints);
-        return this;
-      }
-      
-      public final MultiWaypoints clear()
-      {
-        clearWayPoints();
-        this.b = -1;
-        return this;
-      }
-      
-      public MultiWaypoints clearWayPoints()
-      {
-        this.a = Collections.emptyList();
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.b < 0) {
-          getSerializedSize();
-        }
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        Iterator localIterator = getWayPointsList().iterator();
-        for (int i = 0; localIterator.hasNext(); i = CodedOutputStreamMicro.computeMessageSize(1, (WayPoints)localIterator.next()) + i) {}
-        this.b = i;
-        return i;
-      }
-      
-      public WayPoints getWayPoints(int paramInt)
-      {
-        return (WayPoints)this.a.get(paramInt);
-      }
-      
-      public int getWayPointsCount()
-      {
-        return this.a.size();
-      }
-      
-      public List<WayPoints> getWayPointsList()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public MultiWaypoints mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
-            return this;
-          case 10: 
-            WayPoints localWayPoints = new WayPoints();
-            paramCodedInputStreamMicro.readMessage(localWayPoints);
-            addWayPoints(localWayPoints);
-          }
-        }
-      }
-      
-      public MultiWaypoints setWayPoints(int paramInt, WayPoints paramWayPoints)
-      {
-        if (paramWayPoints == null) {
-          return this;
-        }
-        this.a.set(paramInt, paramWayPoints);
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        Iterator localIterator = getWayPointsList().iterator();
-        while (localIterator.hasNext()) {
-          paramCodedOutputStreamMicro.writeMessage(1, (WayPoints)localIterator.next());
-        }
-      }
-      
-      public static final class WayPoints
-        extends MessageMicro
-      {
-        public static final int ADDR_FIELD_NUMBER = 5;
-        public static final int CODE_FIELD_NUMBER = 1;
-        public static final int GEO_FIELD_NUMBER = 6;
-        public static final int NAME_FIELD_NUMBER = 2;
-        public static final int NUM_FIELD_NUMBER = 3;
-        public static final int UID_FIELD_NUMBER = 4;
-        private boolean a;
-        private int b = 0;
-        private boolean c;
-        private String d = "";
-        private boolean e;
-        private int f = 0;
-        private boolean g;
-        private String h = "";
-        private boolean i;
-        private String j = "";
-        private boolean k;
-        private String l = "";
-        private int m = -1;
-        
-        public static WayPoints parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-          throws IOException
-        {
-          return new WayPoints().mergeFrom(paramCodedInputStreamMicro);
-        }
-        
-        public static WayPoints parseFrom(byte[] paramArrayOfByte)
-          throws InvalidProtocolBufferMicroException
-        {
-          return (WayPoints)new WayPoints().mergeFrom(paramArrayOfByte);
-        }
-        
-        public final WayPoints clear()
-        {
-          clearCode();
-          clearName();
-          clearNum();
-          clearUid();
-          clearAddr();
-          clearGeo();
-          this.m = -1;
-          return this;
-        }
-        
-        public WayPoints clearAddr()
-        {
-          this.i = false;
-          this.j = "";
-          return this;
-        }
-        
-        public WayPoints clearCode()
-        {
-          this.a = false;
-          this.b = 0;
-          return this;
-        }
-        
-        public WayPoints clearGeo()
-        {
-          this.k = false;
-          this.l = "";
-          return this;
-        }
-        
-        public WayPoints clearName()
-        {
-          this.c = false;
-          this.d = "";
-          return this;
-        }
-        
-        public WayPoints clearNum()
-        {
-          this.e = false;
-          this.f = 0;
-          return this;
-        }
-        
-        public WayPoints clearUid()
-        {
-          this.g = false;
-          this.h = "";
-          return this;
-        }
-        
-        public String getAddr()
-        {
-          return this.j;
-        }
-        
-        public int getCachedSize()
-        {
-          if (this.m < 0) {
-            getSerializedSize();
-          }
-          return this.m;
-        }
-        
-        public int getCode()
-        {
-          return this.b;
-        }
-        
-        public String getGeo()
-        {
-          return this.l;
-        }
-        
-        public String getName()
-        {
-          return this.d;
-        }
-        
-        public int getNum()
-        {
-          return this.f;
-        }
-        
-        public int getSerializedSize()
-        {
-          int i1 = 0;
-          if (hasCode()) {
-            i1 = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
-          }
-          int n = i1;
-          if (hasName()) {
-            n = i1 + CodedOutputStreamMicro.computeStringSize(2, getName());
-          }
-          i1 = n;
-          if (hasNum()) {
-            i1 = n + CodedOutputStreamMicro.computeInt32Size(3, getNum());
-          }
-          n = i1;
-          if (hasUid()) {
-            n = i1 + CodedOutputStreamMicro.computeStringSize(4, getUid());
-          }
-          i1 = n;
-          if (hasAddr()) {
-            i1 = n + CodedOutputStreamMicro.computeStringSize(5, getAddr());
-          }
-          n = i1;
-          if (hasGeo()) {
-            n = i1 + CodedOutputStreamMicro.computeStringSize(6, getGeo());
-          }
-          this.m = n;
-          return n;
-        }
-        
-        public String getUid()
-        {
-          return this.h;
-        }
-        
-        public boolean hasAddr()
-        {
-          return this.i;
-        }
-        
-        public boolean hasCode()
-        {
-          return this.a;
-        }
-        
-        public boolean hasGeo()
-        {
-          return this.k;
-        }
-        
-        public boolean hasName()
-        {
-          return this.c;
-        }
-        
-        public boolean hasNum()
-        {
-          return this.e;
-        }
-        
-        public boolean hasUid()
-        {
-          return this.g;
-        }
-        
-        public final boolean isInitialized()
-        {
-          return true;
-        }
-        
-        public WayPoints mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-          throws IOException
-        {
-          for (;;)
-          {
-            int n = paramCodedInputStreamMicro.readTag();
-            switch (n)
-            {
-            default: 
-              if (parseUnknownField(paramCodedInputStreamMicro, n)) {}
-              break;
-            case 0: 
-              return this;
-            case 8: 
-              setCode(paramCodedInputStreamMicro.readInt32());
-              break;
-            case 18: 
-              setName(paramCodedInputStreamMicro.readString());
-              break;
-            case 24: 
-              setNum(paramCodedInputStreamMicro.readInt32());
-              break;
-            case 34: 
-              setUid(paramCodedInputStreamMicro.readString());
-              break;
-            case 42: 
-              setAddr(paramCodedInputStreamMicro.readString());
-              break;
-            case 50: 
-              setGeo(paramCodedInputStreamMicro.readString());
+public final class TrafficPois extends MessageMicro {
+    public static final int CONTENT_FIELD_NUMBER = 3;
+    public static final int CURRENT_CITY_FIELD_NUMBER = 2;
+    public static final int IMGE_SHOW_FIELD_NUMBER = 6;
+    public static final int OPTION_FIELD_NUMBER = 1;
+    public static final int SUGGEST_QUERY_FIELD_NUMBER = 4;
+    public static final int SUGGEST_QUERY_FLAG_FIELD_NUMBER = 5;
+    /* renamed from: a */
+    private boolean f16563a;
+    /* renamed from: b */
+    private Option f16564b = null;
+    /* renamed from: c */
+    private boolean f16565c;
+    /* renamed from: d */
+    private CurrentCity f16566d = null;
+    /* renamed from: e */
+    private boolean f16567e;
+    /* renamed from: f */
+    private Content f16568f = null;
+    /* renamed from: g */
+    private List<SuggestQuery> f16569g = Collections.emptyList();
+    /* renamed from: h */
+    private boolean f16570h;
+    /* renamed from: i */
+    private int f16571i = 0;
+    /* renamed from: j */
+    private boolean f16572j;
+    /* renamed from: k */
+    private ImageShow f16573k = null;
+    /* renamed from: l */
+    private int f16574l = -1;
+
+    public static final class Content extends MessageMicro {
+        public static final int END_FIELD_NUMBER = 2;
+        public static final int MULTI_WAYPOINTS_FIELD_NUMBER = 4;
+        public static final int START_FIELD_NUMBER = 1;
+        public static final int WAY_POINTS_FIELD_NUMBER = 3;
+        /* renamed from: a */
+        private List<Start> f16528a = Collections.emptyList();
+        /* renamed from: b */
+        private List<End> f16529b = Collections.emptyList();
+        /* renamed from: c */
+        private List<WayPoints> f16530c = Collections.emptyList();
+        /* renamed from: d */
+        private List<MultiWaypoints> f16531d = Collections.emptyList();
+        /* renamed from: e */
+        private int f16532e = -1;
+
+        public static final class End extends MessageMicro {
+            public static final int ADDR_FIELD_NUMBER = 5;
+            public static final int CODE_FIELD_NUMBER = 1;
+            public static final int DESCRIBE_FIELD_NUMBER = 13;
+            public static final int DIRECTION_FIELD_NUMBER = 12;
+            public static final int DIST_FIELD_NUMBER = 11;
+            public static final int EXT_FIELD_NUMBER = 7;
+            public static final int GEO_FIELD_NUMBER = 6;
+            public static final int INDOOR_FLOOR_FIELD_NUMBER = 9;
+            public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 10;
+            public static final int NAME_FIELD_NUMBER = 2;
+            public static final int NUM_FIELD_NUMBER = 3;
+            public static final int POITYPE_FIELD_NUMBER = 8;
+            public static final int UID_FIELD_NUMBER = 4;
+            /* renamed from: A */
+            private int f16444A = -1;
+            /* renamed from: a */
+            private boolean f16445a;
+            /* renamed from: b */
+            private int f16446b = 0;
+            /* renamed from: c */
+            private boolean f16447c;
+            /* renamed from: d */
+            private String f16448d = "";
+            /* renamed from: e */
+            private boolean f16449e;
+            /* renamed from: f */
+            private int f16450f = 0;
+            /* renamed from: g */
+            private boolean f16451g;
+            /* renamed from: h */
+            private String f16452h = "";
+            /* renamed from: i */
+            private boolean f16453i;
+            /* renamed from: j */
+            private String f16454j = "";
+            /* renamed from: k */
+            private boolean f16455k;
+            /* renamed from: l */
+            private String f16456l = "";
+            /* renamed from: m */
+            private boolean f16457m;
+            /* renamed from: n */
+            private String f16458n = "";
+            /* renamed from: o */
+            private boolean f16459o;
+            /* renamed from: p */
+            private int f16460p = 0;
+            /* renamed from: q */
+            private boolean f16461q;
+            /* renamed from: r */
+            private String f16462r = "";
+            /* renamed from: s */
+            private boolean f16463s;
+            /* renamed from: t */
+            private String f16464t = "";
+            /* renamed from: u */
+            private boolean f16465u;
+            /* renamed from: v */
+            private int f16466v = 0;
+            /* renamed from: w */
+            private boolean f16467w;
+            /* renamed from: x */
+            private int f16468x = 0;
+            /* renamed from: y */
+            private boolean f16469y;
+            /* renamed from: z */
+            private String f16470z = "";
+
+            public static End parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new End().mergeFrom(codedInputStreamMicro);
             }
-          }
+
+            public static End parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (End) new End().mergeFrom(bArr);
+            }
+
+            public final End clear() {
+                clearCode();
+                clearName();
+                clearNum();
+                clearUid();
+                clearAddr();
+                clearGeo();
+                clearExt();
+                clearPoiType();
+                clearIndoorFloor();
+                clearIndoorParentUid();
+                clearDist();
+                clearDirection();
+                clearDescribe();
+                this.f16444A = -1;
+                return this;
+            }
+
+            public End clearAddr() {
+                this.f16453i = false;
+                this.f16454j = "";
+                return this;
+            }
+
+            public End clearCode() {
+                this.f16445a = false;
+                this.f16446b = 0;
+                return this;
+            }
+
+            public End clearDescribe() {
+                this.f16469y = false;
+                this.f16470z = "";
+                return this;
+            }
+
+            public End clearDirection() {
+                this.f16467w = false;
+                this.f16468x = 0;
+                return this;
+            }
+
+            public End clearDist() {
+                this.f16465u = false;
+                this.f16466v = 0;
+                return this;
+            }
+
+            public End clearExt() {
+                this.f16457m = false;
+                this.f16458n = "";
+                return this;
+            }
+
+            public End clearGeo() {
+                this.f16455k = false;
+                this.f16456l = "";
+                return this;
+            }
+
+            public End clearIndoorFloor() {
+                this.f16461q = false;
+                this.f16462r = "";
+                return this;
+            }
+
+            public End clearIndoorParentUid() {
+                this.f16463s = false;
+                this.f16464t = "";
+                return this;
+            }
+
+            public End clearName() {
+                this.f16447c = false;
+                this.f16448d = "";
+                return this;
+            }
+
+            public End clearNum() {
+                this.f16449e = false;
+                this.f16450f = 0;
+                return this;
+            }
+
+            public End clearPoiType() {
+                this.f16459o = false;
+                this.f16460p = 0;
+                return this;
+            }
+
+            public End clearUid() {
+                this.f16451g = false;
+                this.f16452h = "";
+                return this;
+            }
+
+            public String getAddr() {
+                return this.f16454j;
+            }
+
+            public int getCachedSize() {
+                if (this.f16444A < 0) {
+                    getSerializedSize();
+                }
+                return this.f16444A;
+            }
+
+            public int getCode() {
+                return this.f16446b;
+            }
+
+            public String getDescribe() {
+                return this.f16470z;
+            }
+
+            public int getDirection() {
+                return this.f16468x;
+            }
+
+            public int getDist() {
+                return this.f16466v;
+            }
+
+            public String getExt() {
+                return this.f16458n;
+            }
+
+            public String getGeo() {
+                return this.f16456l;
+            }
+
+            public String getIndoorFloor() {
+                return this.f16462r;
+            }
+
+            public String getIndoorParentUid() {
+                return this.f16464t;
+            }
+
+            public String getName() {
+                return this.f16448d;
+            }
+
+            public int getNum() {
+                return this.f16450f;
+            }
+
+            public int getPoiType() {
+                return this.f16460p;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasCode()) {
+                    i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+                }
+                if (hasName()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getName());
+                }
+                if (hasNum()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(3, getNum());
+                }
+                if (hasUid()) {
+                    i += CodedOutputStreamMicro.computeStringSize(4, getUid());
+                }
+                if (hasAddr()) {
+                    i += CodedOutputStreamMicro.computeStringSize(5, getAddr());
+                }
+                if (hasGeo()) {
+                    i += CodedOutputStreamMicro.computeStringSize(6, getGeo());
+                }
+                if (hasExt()) {
+                    i += CodedOutputStreamMicro.computeStringSize(7, getExt());
+                }
+                if (hasPoiType()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(8, getPoiType());
+                }
+                if (hasIndoorFloor()) {
+                    i += CodedOutputStreamMicro.computeStringSize(9, getIndoorFloor());
+                }
+                if (hasIndoorParentUid()) {
+                    i += CodedOutputStreamMicro.computeStringSize(10, getIndoorParentUid());
+                }
+                if (hasDist()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(11, getDist());
+                }
+                if (hasDirection()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(12, getDirection());
+                }
+                if (hasDescribe()) {
+                    i += CodedOutputStreamMicro.computeStringSize(13, getDescribe());
+                }
+                this.f16444A = i;
+                return i;
+            }
+
+            public String getUid() {
+                return this.f16452h;
+            }
+
+            public boolean hasAddr() {
+                return this.f16453i;
+            }
+
+            public boolean hasCode() {
+                return this.f16445a;
+            }
+
+            public boolean hasDescribe() {
+                return this.f16469y;
+            }
+
+            public boolean hasDirection() {
+                return this.f16467w;
+            }
+
+            public boolean hasDist() {
+                return this.f16465u;
+            }
+
+            public boolean hasExt() {
+                return this.f16457m;
+            }
+
+            public boolean hasGeo() {
+                return this.f16455k;
+            }
+
+            public boolean hasIndoorFloor() {
+                return this.f16461q;
+            }
+
+            public boolean hasIndoorParentUid() {
+                return this.f16463s;
+            }
+
+            public boolean hasName() {
+                return this.f16447c;
+            }
+
+            public boolean hasNum() {
+                return this.f16449e;
+            }
+
+            public boolean hasPoiType() {
+                return this.f16459o;
+            }
+
+            public boolean hasUid() {
+                return this.f16451g;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public End mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 8:
+                            setCode(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 18:
+                            setName(codedInputStreamMicro.readString());
+                            continue;
+                        case 24:
+                            setNum(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 34:
+                            setUid(codedInputStreamMicro.readString());
+                            continue;
+                        case 42:
+                            setAddr(codedInputStreamMicro.readString());
+                            continue;
+                        case 50:
+                            setGeo(codedInputStreamMicro.readString());
+                            continue;
+                        case 58:
+                            setExt(codedInputStreamMicro.readString());
+                            continue;
+                        case 64:
+                            setPoiType(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 74:
+                            setIndoorFloor(codedInputStreamMicro.readString());
+                            continue;
+                        case 82:
+                            setIndoorParentUid(codedInputStreamMicro.readString());
+                            continue;
+                        case 88:
+                            setDist(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 96:
+                            setDirection(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 106:
+                            setDescribe(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public End setAddr(String str) {
+                this.f16453i = true;
+                this.f16454j = str;
+                return this;
+            }
+
+            public End setCode(int i) {
+                this.f16445a = true;
+                this.f16446b = i;
+                return this;
+            }
+
+            public End setDescribe(String str) {
+                this.f16469y = true;
+                this.f16470z = str;
+                return this;
+            }
+
+            public End setDirection(int i) {
+                this.f16467w = true;
+                this.f16468x = i;
+                return this;
+            }
+
+            public End setDist(int i) {
+                this.f16465u = true;
+                this.f16466v = i;
+                return this;
+            }
+
+            public End setExt(String str) {
+                this.f16457m = true;
+                this.f16458n = str;
+                return this;
+            }
+
+            public End setGeo(String str) {
+                this.f16455k = true;
+                this.f16456l = str;
+                return this;
+            }
+
+            public End setIndoorFloor(String str) {
+                this.f16461q = true;
+                this.f16462r = str;
+                return this;
+            }
+
+            public End setIndoorParentUid(String str) {
+                this.f16463s = true;
+                this.f16464t = str;
+                return this;
+            }
+
+            public End setName(String str) {
+                this.f16447c = true;
+                this.f16448d = str;
+                return this;
+            }
+
+            public End setNum(int i) {
+                this.f16449e = true;
+                this.f16450f = i;
+                return this;
+            }
+
+            public End setPoiType(int i) {
+                this.f16459o = true;
+                this.f16460p = i;
+                return this;
+            }
+
+            public End setUid(String str) {
+                this.f16451g = true;
+                this.f16452h = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasCode()) {
+                    codedOutputStreamMicro.writeInt32(1, getCode());
+                }
+                if (hasName()) {
+                    codedOutputStreamMicro.writeString(2, getName());
+                }
+                if (hasNum()) {
+                    codedOutputStreamMicro.writeInt32(3, getNum());
+                }
+                if (hasUid()) {
+                    codedOutputStreamMicro.writeString(4, getUid());
+                }
+                if (hasAddr()) {
+                    codedOutputStreamMicro.writeString(5, getAddr());
+                }
+                if (hasGeo()) {
+                    codedOutputStreamMicro.writeString(6, getGeo());
+                }
+                if (hasExt()) {
+                    codedOutputStreamMicro.writeString(7, getExt());
+                }
+                if (hasPoiType()) {
+                    codedOutputStreamMicro.writeInt32(8, getPoiType());
+                }
+                if (hasIndoorFloor()) {
+                    codedOutputStreamMicro.writeString(9, getIndoorFloor());
+                }
+                if (hasIndoorParentUid()) {
+                    codedOutputStreamMicro.writeString(10, getIndoorParentUid());
+                }
+                if (hasDist()) {
+                    codedOutputStreamMicro.writeInt32(11, getDist());
+                }
+                if (hasDirection()) {
+                    codedOutputStreamMicro.writeInt32(12, getDirection());
+                }
+                if (hasDescribe()) {
+                    codedOutputStreamMicro.writeString(13, getDescribe());
+                }
+            }
         }
-        
-        public WayPoints setAddr(String paramString)
-        {
-          this.i = true;
-          this.j = paramString;
-          return this;
+
+        public static final class MultiWaypoints extends MessageMicro {
+            public static final int WAY_POINTS_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private List<WayPoints> f16484a = Collections.emptyList();
+            /* renamed from: b */
+            private int f16485b = -1;
+
+            public static final class WayPoints extends MessageMicro {
+                public static final int ADDR_FIELD_NUMBER = 5;
+                public static final int CODE_FIELD_NUMBER = 1;
+                public static final int GEO_FIELD_NUMBER = 6;
+                public static final int NAME_FIELD_NUMBER = 2;
+                public static final int NUM_FIELD_NUMBER = 3;
+                public static final int UID_FIELD_NUMBER = 4;
+                /* renamed from: a */
+                private boolean f16471a;
+                /* renamed from: b */
+                private int f16472b = 0;
+                /* renamed from: c */
+                private boolean f16473c;
+                /* renamed from: d */
+                private String f16474d = "";
+                /* renamed from: e */
+                private boolean f16475e;
+                /* renamed from: f */
+                private int f16476f = 0;
+                /* renamed from: g */
+                private boolean f16477g;
+                /* renamed from: h */
+                private String f16478h = "";
+                /* renamed from: i */
+                private boolean f16479i;
+                /* renamed from: j */
+                private String f16480j = "";
+                /* renamed from: k */
+                private boolean f16481k;
+                /* renamed from: l */
+                private String f16482l = "";
+                /* renamed from: m */
+                private int f16483m = -1;
+
+                public static WayPoints parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                    return new WayPoints().mergeFrom(codedInputStreamMicro);
+                }
+
+                public static WayPoints parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                    return (WayPoints) new WayPoints().mergeFrom(bArr);
+                }
+
+                public final WayPoints clear() {
+                    clearCode();
+                    clearName();
+                    clearNum();
+                    clearUid();
+                    clearAddr();
+                    clearGeo();
+                    this.f16483m = -1;
+                    return this;
+                }
+
+                public WayPoints clearAddr() {
+                    this.f16479i = false;
+                    this.f16480j = "";
+                    return this;
+                }
+
+                public WayPoints clearCode() {
+                    this.f16471a = false;
+                    this.f16472b = 0;
+                    return this;
+                }
+
+                public WayPoints clearGeo() {
+                    this.f16481k = false;
+                    this.f16482l = "";
+                    return this;
+                }
+
+                public WayPoints clearName() {
+                    this.f16473c = false;
+                    this.f16474d = "";
+                    return this;
+                }
+
+                public WayPoints clearNum() {
+                    this.f16475e = false;
+                    this.f16476f = 0;
+                    return this;
+                }
+
+                public WayPoints clearUid() {
+                    this.f16477g = false;
+                    this.f16478h = "";
+                    return this;
+                }
+
+                public String getAddr() {
+                    return this.f16480j;
+                }
+
+                public int getCachedSize() {
+                    if (this.f16483m < 0) {
+                        getSerializedSize();
+                    }
+                    return this.f16483m;
+                }
+
+                public int getCode() {
+                    return this.f16472b;
+                }
+
+                public String getGeo() {
+                    return this.f16482l;
+                }
+
+                public String getName() {
+                    return this.f16474d;
+                }
+
+                public int getNum() {
+                    return this.f16476f;
+                }
+
+                public int getSerializedSize() {
+                    int i = 0;
+                    if (hasCode()) {
+                        i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+                    }
+                    if (hasName()) {
+                        i += CodedOutputStreamMicro.computeStringSize(2, getName());
+                    }
+                    if (hasNum()) {
+                        i += CodedOutputStreamMicro.computeInt32Size(3, getNum());
+                    }
+                    if (hasUid()) {
+                        i += CodedOutputStreamMicro.computeStringSize(4, getUid());
+                    }
+                    if (hasAddr()) {
+                        i += CodedOutputStreamMicro.computeStringSize(5, getAddr());
+                    }
+                    if (hasGeo()) {
+                        i += CodedOutputStreamMicro.computeStringSize(6, getGeo());
+                    }
+                    this.f16483m = i;
+                    return i;
+                }
+
+                public String getUid() {
+                    return this.f16478h;
+                }
+
+                public boolean hasAddr() {
+                    return this.f16479i;
+                }
+
+                public boolean hasCode() {
+                    return this.f16471a;
+                }
+
+                public boolean hasGeo() {
+                    return this.f16481k;
+                }
+
+                public boolean hasName() {
+                    return this.f16473c;
+                }
+
+                public boolean hasNum() {
+                    return this.f16475e;
+                }
+
+                public boolean hasUid() {
+                    return this.f16477g;
+                }
+
+                public final boolean isInitialized() {
+                    return true;
+                }
+
+                public WayPoints mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                    while (true) {
+                        int readTag = codedInputStreamMicro.readTag();
+                        switch (readTag) {
+                            case 0:
+                                break;
+                            case 8:
+                                setCode(codedInputStreamMicro.readInt32());
+                                continue;
+                            case 18:
+                                setName(codedInputStreamMicro.readString());
+                                continue;
+                            case 24:
+                                setNum(codedInputStreamMicro.readInt32());
+                                continue;
+                            case 34:
+                                setUid(codedInputStreamMicro.readString());
+                                continue;
+                            case 42:
+                                setAddr(codedInputStreamMicro.readString());
+                                continue;
+                            case 50:
+                                setGeo(codedInputStreamMicro.readString());
+                                continue;
+                            default:
+                                if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                    break;
+                                }
+                                continue;
+                        }
+                        return this;
+                    }
+                }
+
+                public WayPoints setAddr(String str) {
+                    this.f16479i = true;
+                    this.f16480j = str;
+                    return this;
+                }
+
+                public WayPoints setCode(int i) {
+                    this.f16471a = true;
+                    this.f16472b = i;
+                    return this;
+                }
+
+                public WayPoints setGeo(String str) {
+                    this.f16481k = true;
+                    this.f16482l = str;
+                    return this;
+                }
+
+                public WayPoints setName(String str) {
+                    this.f16473c = true;
+                    this.f16474d = str;
+                    return this;
+                }
+
+                public WayPoints setNum(int i) {
+                    this.f16475e = true;
+                    this.f16476f = i;
+                    return this;
+                }
+
+                public WayPoints setUid(String str) {
+                    this.f16477g = true;
+                    this.f16478h = str;
+                    return this;
+                }
+
+                public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                    if (hasCode()) {
+                        codedOutputStreamMicro.writeInt32(1, getCode());
+                    }
+                    if (hasName()) {
+                        codedOutputStreamMicro.writeString(2, getName());
+                    }
+                    if (hasNum()) {
+                        codedOutputStreamMicro.writeInt32(3, getNum());
+                    }
+                    if (hasUid()) {
+                        codedOutputStreamMicro.writeString(4, getUid());
+                    }
+                    if (hasAddr()) {
+                        codedOutputStreamMicro.writeString(5, getAddr());
+                    }
+                    if (hasGeo()) {
+                        codedOutputStreamMicro.writeString(6, getGeo());
+                    }
+                }
+            }
+
+            public static MultiWaypoints parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new MultiWaypoints().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static MultiWaypoints parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (MultiWaypoints) new MultiWaypoints().mergeFrom(bArr);
+            }
+
+            public MultiWaypoints addWayPoints(WayPoints wayPoints) {
+                if (wayPoints != null) {
+                    if (this.f16484a.isEmpty()) {
+                        this.f16484a = new ArrayList();
+                    }
+                    this.f16484a.add(wayPoints);
+                }
+                return this;
+            }
+
+            public final MultiWaypoints clear() {
+                clearWayPoints();
+                this.f16485b = -1;
+                return this;
+            }
+
+            public MultiWaypoints clearWayPoints() {
+                this.f16484a = Collections.emptyList();
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f16485b < 0) {
+                    getSerializedSize();
+                }
+                return this.f16485b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                for (WayPoints computeMessageSize : getWayPointsList()) {
+                    i = CodedOutputStreamMicro.computeMessageSize(1, computeMessageSize) + i;
+                }
+                this.f16485b = i;
+                return i;
+            }
+
+            public WayPoints getWayPoints(int i) {
+                return (WayPoints) this.f16484a.get(i);
+            }
+
+            public int getWayPointsCount() {
+                return this.f16484a.size();
+            }
+
+            public List<WayPoints> getWayPointsList() {
+                return this.f16484a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public MultiWaypoints mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 10:
+                            MessageMicro wayPoints = new WayPoints();
+                            codedInputStreamMicro.readMessage(wayPoints);
+                            addWayPoints(wayPoints);
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public MultiWaypoints setWayPoints(int i, WayPoints wayPoints) {
+                if (wayPoints != null) {
+                    this.f16484a.set(i, wayPoints);
+                }
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                for (WayPoints writeMessage : getWayPointsList()) {
+                    codedOutputStreamMicro.writeMessage(1, writeMessage);
+                }
+            }
         }
-        
-        public WayPoints setCode(int paramInt)
-        {
-          this.a = true;
-          this.b = paramInt;
-          return this;
+
+        public static final class Start extends MessageMicro {
+            public static final int ADDR_FIELD_NUMBER = 5;
+            public static final int CODE_FIELD_NUMBER = 1;
+            public static final int DESCRIBE_FIELD_NUMBER = 9;
+            public static final int GEO_FIELD_NUMBER = 6;
+            public static final int INDOOR_FLOOR_FIELD_NUMBER = 7;
+            public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 8;
+            public static final int NAME_FIELD_NUMBER = 2;
+            public static final int NUM_FIELD_NUMBER = 3;
+            public static final int UID_FIELD_NUMBER = 4;
+            /* renamed from: a */
+            private boolean f16486a;
+            /* renamed from: b */
+            private int f16487b = 0;
+            /* renamed from: c */
+            private boolean f16488c;
+            /* renamed from: d */
+            private String f16489d = "";
+            /* renamed from: e */
+            private boolean f16490e;
+            /* renamed from: f */
+            private int f16491f = 0;
+            /* renamed from: g */
+            private boolean f16492g;
+            /* renamed from: h */
+            private String f16493h = "";
+            /* renamed from: i */
+            private boolean f16494i;
+            /* renamed from: j */
+            private String f16495j = "";
+            /* renamed from: k */
+            private boolean f16496k;
+            /* renamed from: l */
+            private String f16497l = "";
+            /* renamed from: m */
+            private boolean f16498m;
+            /* renamed from: n */
+            private String f16499n = "";
+            /* renamed from: o */
+            private boolean f16500o;
+            /* renamed from: p */
+            private String f16501p = "";
+            /* renamed from: q */
+            private boolean f16502q;
+            /* renamed from: r */
+            private String f16503r = "";
+            /* renamed from: s */
+            private int f16504s = -1;
+
+            public static Start parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new Start().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static Start parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (Start) new Start().mergeFrom(bArr);
+            }
+
+            public final Start clear() {
+                clearCode();
+                clearName();
+                clearNum();
+                clearUid();
+                clearAddr();
+                clearGeo();
+                clearIndoorFloor();
+                clearIndoorParentUid();
+                clearDescribe();
+                this.f16504s = -1;
+                return this;
+            }
+
+            public Start clearAddr() {
+                this.f16494i = false;
+                this.f16495j = "";
+                return this;
+            }
+
+            public Start clearCode() {
+                this.f16486a = false;
+                this.f16487b = 0;
+                return this;
+            }
+
+            public Start clearDescribe() {
+                this.f16502q = false;
+                this.f16503r = "";
+                return this;
+            }
+
+            public Start clearGeo() {
+                this.f16496k = false;
+                this.f16497l = "";
+                return this;
+            }
+
+            public Start clearIndoorFloor() {
+                this.f16498m = false;
+                this.f16499n = "";
+                return this;
+            }
+
+            public Start clearIndoorParentUid() {
+                this.f16500o = false;
+                this.f16501p = "";
+                return this;
+            }
+
+            public Start clearName() {
+                this.f16488c = false;
+                this.f16489d = "";
+                return this;
+            }
+
+            public Start clearNum() {
+                this.f16490e = false;
+                this.f16491f = 0;
+                return this;
+            }
+
+            public Start clearUid() {
+                this.f16492g = false;
+                this.f16493h = "";
+                return this;
+            }
+
+            public String getAddr() {
+                return this.f16495j;
+            }
+
+            public int getCachedSize() {
+                if (this.f16504s < 0) {
+                    getSerializedSize();
+                }
+                return this.f16504s;
+            }
+
+            public int getCode() {
+                return this.f16487b;
+            }
+
+            public String getDescribe() {
+                return this.f16503r;
+            }
+
+            public String getGeo() {
+                return this.f16497l;
+            }
+
+            public String getIndoorFloor() {
+                return this.f16499n;
+            }
+
+            public String getIndoorParentUid() {
+                return this.f16501p;
+            }
+
+            public String getName() {
+                return this.f16489d;
+            }
+
+            public int getNum() {
+                return this.f16491f;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasCode()) {
+                    i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+                }
+                if (hasName()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getName());
+                }
+                if (hasNum()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(3, getNum());
+                }
+                if (hasUid()) {
+                    i += CodedOutputStreamMicro.computeStringSize(4, getUid());
+                }
+                if (hasAddr()) {
+                    i += CodedOutputStreamMicro.computeStringSize(5, getAddr());
+                }
+                if (hasGeo()) {
+                    i += CodedOutputStreamMicro.computeStringSize(6, getGeo());
+                }
+                if (hasIndoorFloor()) {
+                    i += CodedOutputStreamMicro.computeStringSize(7, getIndoorFloor());
+                }
+                if (hasIndoorParentUid()) {
+                    i += CodedOutputStreamMicro.computeStringSize(8, getIndoorParentUid());
+                }
+                if (hasDescribe()) {
+                    i += CodedOutputStreamMicro.computeStringSize(9, getDescribe());
+                }
+                this.f16504s = i;
+                return i;
+            }
+
+            public String getUid() {
+                return this.f16493h;
+            }
+
+            public boolean hasAddr() {
+                return this.f16494i;
+            }
+
+            public boolean hasCode() {
+                return this.f16486a;
+            }
+
+            public boolean hasDescribe() {
+                return this.f16502q;
+            }
+
+            public boolean hasGeo() {
+                return this.f16496k;
+            }
+
+            public boolean hasIndoorFloor() {
+                return this.f16498m;
+            }
+
+            public boolean hasIndoorParentUid() {
+                return this.f16500o;
+            }
+
+            public boolean hasName() {
+                return this.f16488c;
+            }
+
+            public boolean hasNum() {
+                return this.f16490e;
+            }
+
+            public boolean hasUid() {
+                return this.f16492g;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Start mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 8:
+                            setCode(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 18:
+                            setName(codedInputStreamMicro.readString());
+                            continue;
+                        case 24:
+                            setNum(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 34:
+                            setUid(codedInputStreamMicro.readString());
+                            continue;
+                        case 42:
+                            setAddr(codedInputStreamMicro.readString());
+                            continue;
+                        case 50:
+                            setGeo(codedInputStreamMicro.readString());
+                            continue;
+                        case 58:
+                            setIndoorFloor(codedInputStreamMicro.readString());
+                            continue;
+                        case 66:
+                            setIndoorParentUid(codedInputStreamMicro.readString());
+                            continue;
+                        case 74:
+                            setDescribe(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public Start setAddr(String str) {
+                this.f16494i = true;
+                this.f16495j = str;
+                return this;
+            }
+
+            public Start setCode(int i) {
+                this.f16486a = true;
+                this.f16487b = i;
+                return this;
+            }
+
+            public Start setDescribe(String str) {
+                this.f16502q = true;
+                this.f16503r = str;
+                return this;
+            }
+
+            public Start setGeo(String str) {
+                this.f16496k = true;
+                this.f16497l = str;
+                return this;
+            }
+
+            public Start setIndoorFloor(String str) {
+                this.f16498m = true;
+                this.f16499n = str;
+                return this;
+            }
+
+            public Start setIndoorParentUid(String str) {
+                this.f16500o = true;
+                this.f16501p = str;
+                return this;
+            }
+
+            public Start setName(String str) {
+                this.f16488c = true;
+                this.f16489d = str;
+                return this;
+            }
+
+            public Start setNum(int i) {
+                this.f16490e = true;
+                this.f16491f = i;
+                return this;
+            }
+
+            public Start setUid(String str) {
+                this.f16492g = true;
+                this.f16493h = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasCode()) {
+                    codedOutputStreamMicro.writeInt32(1, getCode());
+                }
+                if (hasName()) {
+                    codedOutputStreamMicro.writeString(2, getName());
+                }
+                if (hasNum()) {
+                    codedOutputStreamMicro.writeInt32(3, getNum());
+                }
+                if (hasUid()) {
+                    codedOutputStreamMicro.writeString(4, getUid());
+                }
+                if (hasAddr()) {
+                    codedOutputStreamMicro.writeString(5, getAddr());
+                }
+                if (hasGeo()) {
+                    codedOutputStreamMicro.writeString(6, getGeo());
+                }
+                if (hasIndoorFloor()) {
+                    codedOutputStreamMicro.writeString(7, getIndoorFloor());
+                }
+                if (hasIndoorParentUid()) {
+                    codedOutputStreamMicro.writeString(8, getIndoorParentUid());
+                }
+                if (hasDescribe()) {
+                    codedOutputStreamMicro.writeString(9, getDescribe());
+                }
+            }
         }
-        
-        public WayPoints setGeo(String paramString)
-        {
-          this.k = true;
-          this.l = paramString;
-          return this;
+
+        public static final class WayPoints extends MessageMicro {
+            public static final int ADDR_FIELD_NUMBER = 5;
+            public static final int CODE_FIELD_NUMBER = 1;
+            public static final int DESCRIBE_FIELD_NUMBER = 11;
+            public static final int DIRECTION_FIELD_NUMBER = 10;
+            public static final int DIST_FIELD_NUMBER = 9;
+            public static final int GEO_FIELD_NUMBER = 6;
+            public static final int INDOOR_FLOOR_FIELD_NUMBER = 7;
+            public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 8;
+            public static final int NAME_FIELD_NUMBER = 2;
+            public static final int NUM_FIELD_NUMBER = 3;
+            public static final int UID_FIELD_NUMBER = 4;
+            /* renamed from: a */
+            private boolean f16505a;
+            /* renamed from: b */
+            private int f16506b = 0;
+            /* renamed from: c */
+            private boolean f16507c;
+            /* renamed from: d */
+            private String f16508d = "";
+            /* renamed from: e */
+            private boolean f16509e;
+            /* renamed from: f */
+            private int f16510f = 0;
+            /* renamed from: g */
+            private boolean f16511g;
+            /* renamed from: h */
+            private String f16512h = "";
+            /* renamed from: i */
+            private boolean f16513i;
+            /* renamed from: j */
+            private String f16514j = "";
+            /* renamed from: k */
+            private boolean f16515k;
+            /* renamed from: l */
+            private String f16516l = "";
+            /* renamed from: m */
+            private boolean f16517m;
+            /* renamed from: n */
+            private String f16518n = "";
+            /* renamed from: o */
+            private boolean f16519o;
+            /* renamed from: p */
+            private String f16520p = "";
+            /* renamed from: q */
+            private boolean f16521q;
+            /* renamed from: r */
+            private int f16522r = 0;
+            /* renamed from: s */
+            private boolean f16523s;
+            /* renamed from: t */
+            private int f16524t = 0;
+            /* renamed from: u */
+            private boolean f16525u;
+            /* renamed from: v */
+            private String f16526v = "";
+            /* renamed from: w */
+            private int f16527w = -1;
+
+            public static WayPoints parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new WayPoints().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static WayPoints parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (WayPoints) new WayPoints().mergeFrom(bArr);
+            }
+
+            public final WayPoints clear() {
+                clearCode();
+                clearName();
+                clearNum();
+                clearUid();
+                clearAddr();
+                clearGeo();
+                clearIndoorFloor();
+                clearIndoorParentUid();
+                clearDist();
+                clearDirection();
+                clearDescribe();
+                this.f16527w = -1;
+                return this;
+            }
+
+            public WayPoints clearAddr() {
+                this.f16513i = false;
+                this.f16514j = "";
+                return this;
+            }
+
+            public WayPoints clearCode() {
+                this.f16505a = false;
+                this.f16506b = 0;
+                return this;
+            }
+
+            public WayPoints clearDescribe() {
+                this.f16525u = false;
+                this.f16526v = "";
+                return this;
+            }
+
+            public WayPoints clearDirection() {
+                this.f16523s = false;
+                this.f16524t = 0;
+                return this;
+            }
+
+            public WayPoints clearDist() {
+                this.f16521q = false;
+                this.f16522r = 0;
+                return this;
+            }
+
+            public WayPoints clearGeo() {
+                this.f16515k = false;
+                this.f16516l = "";
+                return this;
+            }
+
+            public WayPoints clearIndoorFloor() {
+                this.f16517m = false;
+                this.f16518n = "";
+                return this;
+            }
+
+            public WayPoints clearIndoorParentUid() {
+                this.f16519o = false;
+                this.f16520p = "";
+                return this;
+            }
+
+            public WayPoints clearName() {
+                this.f16507c = false;
+                this.f16508d = "";
+                return this;
+            }
+
+            public WayPoints clearNum() {
+                this.f16509e = false;
+                this.f16510f = 0;
+                return this;
+            }
+
+            public WayPoints clearUid() {
+                this.f16511g = false;
+                this.f16512h = "";
+                return this;
+            }
+
+            public String getAddr() {
+                return this.f16514j;
+            }
+
+            public int getCachedSize() {
+                if (this.f16527w < 0) {
+                    getSerializedSize();
+                }
+                return this.f16527w;
+            }
+
+            public int getCode() {
+                return this.f16506b;
+            }
+
+            public String getDescribe() {
+                return this.f16526v;
+            }
+
+            public int getDirection() {
+                return this.f16524t;
+            }
+
+            public int getDist() {
+                return this.f16522r;
+            }
+
+            public String getGeo() {
+                return this.f16516l;
+            }
+
+            public String getIndoorFloor() {
+                return this.f16518n;
+            }
+
+            public String getIndoorParentUid() {
+                return this.f16520p;
+            }
+
+            public String getName() {
+                return this.f16508d;
+            }
+
+            public int getNum() {
+                return this.f16510f;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasCode()) {
+                    i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+                }
+                if (hasName()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getName());
+                }
+                if (hasNum()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(3, getNum());
+                }
+                if (hasUid()) {
+                    i += CodedOutputStreamMicro.computeStringSize(4, getUid());
+                }
+                if (hasAddr()) {
+                    i += CodedOutputStreamMicro.computeStringSize(5, getAddr());
+                }
+                if (hasGeo()) {
+                    i += CodedOutputStreamMicro.computeStringSize(6, getGeo());
+                }
+                if (hasIndoorFloor()) {
+                    i += CodedOutputStreamMicro.computeStringSize(7, getIndoorFloor());
+                }
+                if (hasIndoorParentUid()) {
+                    i += CodedOutputStreamMicro.computeStringSize(8, getIndoorParentUid());
+                }
+                if (hasDist()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(9, getDist());
+                }
+                if (hasDirection()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(10, getDirection());
+                }
+                if (hasDescribe()) {
+                    i += CodedOutputStreamMicro.computeStringSize(11, getDescribe());
+                }
+                this.f16527w = i;
+                return i;
+            }
+
+            public String getUid() {
+                return this.f16512h;
+            }
+
+            public boolean hasAddr() {
+                return this.f16513i;
+            }
+
+            public boolean hasCode() {
+                return this.f16505a;
+            }
+
+            public boolean hasDescribe() {
+                return this.f16525u;
+            }
+
+            public boolean hasDirection() {
+                return this.f16523s;
+            }
+
+            public boolean hasDist() {
+                return this.f16521q;
+            }
+
+            public boolean hasGeo() {
+                return this.f16515k;
+            }
+
+            public boolean hasIndoorFloor() {
+                return this.f16517m;
+            }
+
+            public boolean hasIndoorParentUid() {
+                return this.f16519o;
+            }
+
+            public boolean hasName() {
+                return this.f16507c;
+            }
+
+            public boolean hasNum() {
+                return this.f16509e;
+            }
+
+            public boolean hasUid() {
+                return this.f16511g;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public WayPoints mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 8:
+                            setCode(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 18:
+                            setName(codedInputStreamMicro.readString());
+                            continue;
+                        case 24:
+                            setNum(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 34:
+                            setUid(codedInputStreamMicro.readString());
+                            continue;
+                        case 42:
+                            setAddr(codedInputStreamMicro.readString());
+                            continue;
+                        case 50:
+                            setGeo(codedInputStreamMicro.readString());
+                            continue;
+                        case 58:
+                            setIndoorFloor(codedInputStreamMicro.readString());
+                            continue;
+                        case 66:
+                            setIndoorParentUid(codedInputStreamMicro.readString());
+                            continue;
+                        case NavCarInfo.CarType_57L /*72*/:
+                            setDist(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 80:
+                            setDirection(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 90:
+                            setDescribe(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public WayPoints setAddr(String str) {
+                this.f16513i = true;
+                this.f16514j = str;
+                return this;
+            }
+
+            public WayPoints setCode(int i) {
+                this.f16505a = true;
+                this.f16506b = i;
+                return this;
+            }
+
+            public WayPoints setDescribe(String str) {
+                this.f16525u = true;
+                this.f16526v = str;
+                return this;
+            }
+
+            public WayPoints setDirection(int i) {
+                this.f16523s = true;
+                this.f16524t = i;
+                return this;
+            }
+
+            public WayPoints setDist(int i) {
+                this.f16521q = true;
+                this.f16522r = i;
+                return this;
+            }
+
+            public WayPoints setGeo(String str) {
+                this.f16515k = true;
+                this.f16516l = str;
+                return this;
+            }
+
+            public WayPoints setIndoorFloor(String str) {
+                this.f16517m = true;
+                this.f16518n = str;
+                return this;
+            }
+
+            public WayPoints setIndoorParentUid(String str) {
+                this.f16519o = true;
+                this.f16520p = str;
+                return this;
+            }
+
+            public WayPoints setName(String str) {
+                this.f16507c = true;
+                this.f16508d = str;
+                return this;
+            }
+
+            public WayPoints setNum(int i) {
+                this.f16509e = true;
+                this.f16510f = i;
+                return this;
+            }
+
+            public WayPoints setUid(String str) {
+                this.f16511g = true;
+                this.f16512h = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasCode()) {
+                    codedOutputStreamMicro.writeInt32(1, getCode());
+                }
+                if (hasName()) {
+                    codedOutputStreamMicro.writeString(2, getName());
+                }
+                if (hasNum()) {
+                    codedOutputStreamMicro.writeInt32(3, getNum());
+                }
+                if (hasUid()) {
+                    codedOutputStreamMicro.writeString(4, getUid());
+                }
+                if (hasAddr()) {
+                    codedOutputStreamMicro.writeString(5, getAddr());
+                }
+                if (hasGeo()) {
+                    codedOutputStreamMicro.writeString(6, getGeo());
+                }
+                if (hasIndoorFloor()) {
+                    codedOutputStreamMicro.writeString(7, getIndoorFloor());
+                }
+                if (hasIndoorParentUid()) {
+                    codedOutputStreamMicro.writeString(8, getIndoorParentUid());
+                }
+                if (hasDist()) {
+                    codedOutputStreamMicro.writeInt32(9, getDist());
+                }
+                if (hasDirection()) {
+                    codedOutputStreamMicro.writeInt32(10, getDirection());
+                }
+                if (hasDescribe()) {
+                    codedOutputStreamMicro.writeString(11, getDescribe());
+                }
+            }
         }
-        
-        public WayPoints setName(String paramString)
-        {
-          this.c = true;
-          this.d = paramString;
-          return this;
+
+        public static Content parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Content().mergeFrom(codedInputStreamMicro);
         }
-        
-        public WayPoints setNum(int paramInt)
-        {
-          this.e = true;
-          this.f = paramInt;
-          return this;
+
+        public static Content parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Content) new Content().mergeFrom(bArr);
         }
-        
-        public WayPoints setUid(String paramString)
-        {
-          this.g = true;
-          this.h = paramString;
-          return this;
-        }
-        
-        public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-          throws IOException
-        {
-          if (hasCode()) {
-            paramCodedOutputStreamMicro.writeInt32(1, getCode());
-          }
-          if (hasName()) {
-            paramCodedOutputStreamMicro.writeString(2, getName());
-          }
-          if (hasNum()) {
-            paramCodedOutputStreamMicro.writeInt32(3, getNum());
-          }
-          if (hasUid()) {
-            paramCodedOutputStreamMicro.writeString(4, getUid());
-          }
-          if (hasAddr()) {
-            paramCodedOutputStreamMicro.writeString(5, getAddr());
-          }
-          if (hasGeo()) {
-            paramCodedOutputStreamMicro.writeString(6, getGeo());
-          }
-        }
-      }
-    }
-    
-    public static final class Start
-      extends MessageMicro
-    {
-      public static final int ADDR_FIELD_NUMBER = 5;
-      public static final int CODE_FIELD_NUMBER = 1;
-      public static final int DESCRIBE_FIELD_NUMBER = 9;
-      public static final int GEO_FIELD_NUMBER = 6;
-      public static final int INDOOR_FLOOR_FIELD_NUMBER = 7;
-      public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 8;
-      public static final int NAME_FIELD_NUMBER = 2;
-      public static final int NUM_FIELD_NUMBER = 3;
-      public static final int UID_FIELD_NUMBER = 4;
-      private boolean a;
-      private int b = 0;
-      private boolean c;
-      private String d = "";
-      private boolean e;
-      private int f = 0;
-      private boolean g;
-      private String h = "";
-      private boolean i;
-      private String j = "";
-      private boolean k;
-      private String l = "";
-      private boolean m;
-      private String n = "";
-      private boolean o;
-      private String p = "";
-      private boolean q;
-      private String r = "";
-      private int s = -1;
-      
-      public static Start parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new Start().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static Start parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (Start)new Start().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final Start clear()
-      {
-        clearCode();
-        clearName();
-        clearNum();
-        clearUid();
-        clearAddr();
-        clearGeo();
-        clearIndoorFloor();
-        clearIndoorParentUid();
-        clearDescribe();
-        this.s = -1;
-        return this;
-      }
-      
-      public Start clearAddr()
-      {
-        this.i = false;
-        this.j = "";
-        return this;
-      }
-      
-      public Start clearCode()
-      {
-        this.a = false;
-        this.b = 0;
-        return this;
-      }
-      
-      public Start clearDescribe()
-      {
-        this.q = false;
-        this.r = "";
-        return this;
-      }
-      
-      public Start clearGeo()
-      {
-        this.k = false;
-        this.l = "";
-        return this;
-      }
-      
-      public Start clearIndoorFloor()
-      {
-        this.m = false;
-        this.n = "";
-        return this;
-      }
-      
-      public Start clearIndoorParentUid()
-      {
-        this.o = false;
-        this.p = "";
-        return this;
-      }
-      
-      public Start clearName()
-      {
-        this.c = false;
-        this.d = "";
-        return this;
-      }
-      
-      public Start clearNum()
-      {
-        this.e = false;
-        this.f = 0;
-        return this;
-      }
-      
-      public Start clearUid()
-      {
-        this.g = false;
-        this.h = "";
-        return this;
-      }
-      
-      public String getAddr()
-      {
-        return this.j;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.s < 0) {
-          getSerializedSize();
-        }
-        return this.s;
-      }
-      
-      public int getCode()
-      {
-        return this.b;
-      }
-      
-      public String getDescribe()
-      {
-        return this.r;
-      }
-      
-      public String getGeo()
-      {
-        return this.l;
-      }
-      
-      public String getIndoorFloor()
-      {
-        return this.n;
-      }
-      
-      public String getIndoorParentUid()
-      {
-        return this.p;
-      }
-      
-      public String getName()
-      {
-        return this.d;
-      }
-      
-      public int getNum()
-      {
-        return this.f;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i2 = 0;
-        if (hasCode()) {
-          i2 = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
-        }
-        int i1 = i2;
-        if (hasName()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getName());
-        }
-        i2 = i1;
-        if (hasNum()) {
-          i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getNum());
-        }
-        i1 = i2;
-        if (hasUid()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getUid());
-        }
-        i2 = i1;
-        if (hasAddr()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getAddr());
-        }
-        i1 = i2;
-        if (hasGeo()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getGeo());
-        }
-        i2 = i1;
-        if (hasIndoorFloor()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getIndoorFloor());
-        }
-        i1 = i2;
-        if (hasIndoorParentUid()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getIndoorParentUid());
-        }
-        i2 = i1;
-        if (hasDescribe()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getDescribe());
-        }
-        this.s = i2;
-        return i2;
-      }
-      
-      public String getUid()
-      {
-        return this.h;
-      }
-      
-      public boolean hasAddr()
-      {
-        return this.i;
-      }
-      
-      public boolean hasCode()
-      {
-        return this.a;
-      }
-      
-      public boolean hasDescribe()
-      {
-        return this.q;
-      }
-      
-      public boolean hasGeo()
-      {
-        return this.k;
-      }
-      
-      public boolean hasIndoorFloor()
-      {
-        return this.m;
-      }
-      
-      public boolean hasIndoorParentUid()
-      {
-        return this.o;
-      }
-      
-      public boolean hasName()
-      {
-        return this.c;
-      }
-      
-      public boolean hasNum()
-      {
-        return this.e;
-      }
-      
-      public boolean hasUid()
-      {
-        return this.g;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public Start mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i1 = paramCodedInputStreamMicro.readTag();
-          switch (i1)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-            break;
-          case 0: 
+
+        public Content addEnd(End end) {
+            if (end != null) {
+                if (this.f16529b.isEmpty()) {
+                    this.f16529b = new ArrayList();
+                }
+                this.f16529b.add(end);
+            }
             return this;
-          case 8: 
-            setCode(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 18: 
-            setName(paramCodedInputStreamMicro.readString());
-            break;
-          case 24: 
-            setNum(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 34: 
-            setUid(paramCodedInputStreamMicro.readString());
-            break;
-          case 42: 
-            setAddr(paramCodedInputStreamMicro.readString());
-            break;
-          case 50: 
-            setGeo(paramCodedInputStreamMicro.readString());
-            break;
-          case 58: 
-            setIndoorFloor(paramCodedInputStreamMicro.readString());
-            break;
-          case 66: 
-            setIndoorParentUid(paramCodedInputStreamMicro.readString());
-            break;
-          case 74: 
-            setDescribe(paramCodedInputStreamMicro.readString());
-          }
         }
-      }
-      
-      public Start setAddr(String paramString)
-      {
-        this.i = true;
-        this.j = paramString;
-        return this;
-      }
-      
-      public Start setCode(int paramInt)
-      {
-        this.a = true;
-        this.b = paramInt;
-        return this;
-      }
-      
-      public Start setDescribe(String paramString)
-      {
-        this.q = true;
-        this.r = paramString;
-        return this;
-      }
-      
-      public Start setGeo(String paramString)
-      {
-        this.k = true;
-        this.l = paramString;
-        return this;
-      }
-      
-      public Start setIndoorFloor(String paramString)
-      {
-        this.m = true;
-        this.n = paramString;
-        return this;
-      }
-      
-      public Start setIndoorParentUid(String paramString)
-      {
-        this.o = true;
-        this.p = paramString;
-        return this;
-      }
-      
-      public Start setName(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
-        return this;
-      }
-      
-      public Start setNum(int paramInt)
-      {
-        this.e = true;
-        this.f = paramInt;
-        return this;
-      }
-      
-      public Start setUid(String paramString)
-      {
-        this.g = true;
-        this.h = paramString;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasCode()) {
-          paramCodedOutputStreamMicro.writeInt32(1, getCode());
-        }
-        if (hasName()) {
-          paramCodedOutputStreamMicro.writeString(2, getName());
-        }
-        if (hasNum()) {
-          paramCodedOutputStreamMicro.writeInt32(3, getNum());
-        }
-        if (hasUid()) {
-          paramCodedOutputStreamMicro.writeString(4, getUid());
-        }
-        if (hasAddr()) {
-          paramCodedOutputStreamMicro.writeString(5, getAddr());
-        }
-        if (hasGeo()) {
-          paramCodedOutputStreamMicro.writeString(6, getGeo());
-        }
-        if (hasIndoorFloor()) {
-          paramCodedOutputStreamMicro.writeString(7, getIndoorFloor());
-        }
-        if (hasIndoorParentUid()) {
-          paramCodedOutputStreamMicro.writeString(8, getIndoorParentUid());
-        }
-        if (hasDescribe()) {
-          paramCodedOutputStreamMicro.writeString(9, getDescribe());
-        }
-      }
-    }
-    
-    public static final class WayPoints
-      extends MessageMicro
-    {
-      public static final int ADDR_FIELD_NUMBER = 5;
-      public static final int CODE_FIELD_NUMBER = 1;
-      public static final int DESCRIBE_FIELD_NUMBER = 11;
-      public static final int DIRECTION_FIELD_NUMBER = 10;
-      public static final int DIST_FIELD_NUMBER = 9;
-      public static final int GEO_FIELD_NUMBER = 6;
-      public static final int INDOOR_FLOOR_FIELD_NUMBER = 7;
-      public static final int INDOOR_PARENT_UID_FIELD_NUMBER = 8;
-      public static final int NAME_FIELD_NUMBER = 2;
-      public static final int NUM_FIELD_NUMBER = 3;
-      public static final int UID_FIELD_NUMBER = 4;
-      private boolean a;
-      private int b = 0;
-      private boolean c;
-      private String d = "";
-      private boolean e;
-      private int f = 0;
-      private boolean g;
-      private String h = "";
-      private boolean i;
-      private String j = "";
-      private boolean k;
-      private String l = "";
-      private boolean m;
-      private String n = "";
-      private boolean o;
-      private String p = "";
-      private boolean q;
-      private int r = 0;
-      private boolean s;
-      private int t = 0;
-      private boolean u;
-      private String v = "";
-      private int w = -1;
-      
-      public static WayPoints parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new WayPoints().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static WayPoints parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (WayPoints)new WayPoints().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final WayPoints clear()
-      {
-        clearCode();
-        clearName();
-        clearNum();
-        clearUid();
-        clearAddr();
-        clearGeo();
-        clearIndoorFloor();
-        clearIndoorParentUid();
-        clearDist();
-        clearDirection();
-        clearDescribe();
-        this.w = -1;
-        return this;
-      }
-      
-      public WayPoints clearAddr()
-      {
-        this.i = false;
-        this.j = "";
-        return this;
-      }
-      
-      public WayPoints clearCode()
-      {
-        this.a = false;
-        this.b = 0;
-        return this;
-      }
-      
-      public WayPoints clearDescribe()
-      {
-        this.u = false;
-        this.v = "";
-        return this;
-      }
-      
-      public WayPoints clearDirection()
-      {
-        this.s = false;
-        this.t = 0;
-        return this;
-      }
-      
-      public WayPoints clearDist()
-      {
-        this.q = false;
-        this.r = 0;
-        return this;
-      }
-      
-      public WayPoints clearGeo()
-      {
-        this.k = false;
-        this.l = "";
-        return this;
-      }
-      
-      public WayPoints clearIndoorFloor()
-      {
-        this.m = false;
-        this.n = "";
-        return this;
-      }
-      
-      public WayPoints clearIndoorParentUid()
-      {
-        this.o = false;
-        this.p = "";
-        return this;
-      }
-      
-      public WayPoints clearName()
-      {
-        this.c = false;
-        this.d = "";
-        return this;
-      }
-      
-      public WayPoints clearNum()
-      {
-        this.e = false;
-        this.f = 0;
-        return this;
-      }
-      
-      public WayPoints clearUid()
-      {
-        this.g = false;
-        this.h = "";
-        return this;
-      }
-      
-      public String getAddr()
-      {
-        return this.j;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.w < 0) {
-          getSerializedSize();
-        }
-        return this.w;
-      }
-      
-      public int getCode()
-      {
-        return this.b;
-      }
-      
-      public String getDescribe()
-      {
-        return this.v;
-      }
-      
-      public int getDirection()
-      {
-        return this.t;
-      }
-      
-      public int getDist()
-      {
-        return this.r;
-      }
-      
-      public String getGeo()
-      {
-        return this.l;
-      }
-      
-      public String getIndoorFloor()
-      {
-        return this.n;
-      }
-      
-      public String getIndoorParentUid()
-      {
-        return this.p;
-      }
-      
-      public String getName()
-      {
-        return this.d;
-      }
-      
-      public int getNum()
-      {
-        return this.f;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i2 = 0;
-        if (hasCode()) {
-          i2 = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
-        }
-        int i1 = i2;
-        if (hasName()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getName());
-        }
-        i2 = i1;
-        if (hasNum()) {
-          i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getNum());
-        }
-        i1 = i2;
-        if (hasUid()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getUid());
-        }
-        i2 = i1;
-        if (hasAddr()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getAddr());
-        }
-        i1 = i2;
-        if (hasGeo()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getGeo());
-        }
-        i2 = i1;
-        if (hasIndoorFloor()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getIndoorFloor());
-        }
-        i1 = i2;
-        if (hasIndoorParentUid()) {
-          i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getIndoorParentUid());
-        }
-        i2 = i1;
-        if (hasDist()) {
-          i2 = i1 + CodedOutputStreamMicro.computeInt32Size(9, getDist());
-        }
-        i1 = i2;
-        if (hasDirection()) {
-          i1 = i2 + CodedOutputStreamMicro.computeInt32Size(10, getDirection());
-        }
-        i2 = i1;
-        if (hasDescribe()) {
-          i2 = i1 + CodedOutputStreamMicro.computeStringSize(11, getDescribe());
-        }
-        this.w = i2;
-        return i2;
-      }
-      
-      public String getUid()
-      {
-        return this.h;
-      }
-      
-      public boolean hasAddr()
-      {
-        return this.i;
-      }
-      
-      public boolean hasCode()
-      {
-        return this.a;
-      }
-      
-      public boolean hasDescribe()
-      {
-        return this.u;
-      }
-      
-      public boolean hasDirection()
-      {
-        return this.s;
-      }
-      
-      public boolean hasDist()
-      {
-        return this.q;
-      }
-      
-      public boolean hasGeo()
-      {
-        return this.k;
-      }
-      
-      public boolean hasIndoorFloor()
-      {
-        return this.m;
-      }
-      
-      public boolean hasIndoorParentUid()
-      {
-        return this.o;
-      }
-      
-      public boolean hasName()
-      {
-        return this.c;
-      }
-      
-      public boolean hasNum()
-      {
-        return this.e;
-      }
-      
-      public boolean hasUid()
-      {
-        return this.g;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public WayPoints mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i1 = paramCodedInputStreamMicro.readTag();
-          switch (i1)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-            break;
-          case 0: 
+
+        public Content addMultiWaypoints(MultiWaypoints multiWaypoints) {
+            if (multiWaypoints != null) {
+                if (this.f16531d.isEmpty()) {
+                    this.f16531d = new ArrayList();
+                }
+                this.f16531d.add(multiWaypoints);
+            }
             return this;
-          case 8: 
-            setCode(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 18: 
-            setName(paramCodedInputStreamMicro.readString());
-            break;
-          case 24: 
-            setNum(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 34: 
-            setUid(paramCodedInputStreamMicro.readString());
-            break;
-          case 42: 
-            setAddr(paramCodedInputStreamMicro.readString());
-            break;
-          case 50: 
-            setGeo(paramCodedInputStreamMicro.readString());
-            break;
-          case 58: 
-            setIndoorFloor(paramCodedInputStreamMicro.readString());
-            break;
-          case 66: 
-            setIndoorParentUid(paramCodedInputStreamMicro.readString());
-            break;
-          case 72: 
-            setDist(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 80: 
-            setDirection(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 90: 
-            setDescribe(paramCodedInputStreamMicro.readString());
-          }
         }
-      }
-      
-      public WayPoints setAddr(String paramString)
-      {
-        this.i = true;
-        this.j = paramString;
+
+        public Content addStart(Start start) {
+            if (start != null) {
+                if (this.f16528a.isEmpty()) {
+                    this.f16528a = new ArrayList();
+                }
+                this.f16528a.add(start);
+            }
+            return this;
+        }
+
+        public Content addWayPoints(WayPoints wayPoints) {
+            if (wayPoints != null) {
+                if (this.f16530c.isEmpty()) {
+                    this.f16530c = new ArrayList();
+                }
+                this.f16530c.add(wayPoints);
+            }
+            return this;
+        }
+
+        public final Content clear() {
+            clearStart();
+            clearEnd();
+            clearWayPoints();
+            clearMultiWaypoints();
+            this.f16532e = -1;
+            return this;
+        }
+
+        public Content clearEnd() {
+            this.f16529b = Collections.emptyList();
+            return this;
+        }
+
+        public Content clearMultiWaypoints() {
+            this.f16531d = Collections.emptyList();
+            return this;
+        }
+
+        public Content clearStart() {
+            this.f16528a = Collections.emptyList();
+            return this;
+        }
+
+        public Content clearWayPoints() {
+            this.f16530c = Collections.emptyList();
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16532e < 0) {
+                getSerializedSize();
+            }
+            return this.f16532e;
+        }
+
+        public End getEnd(int i) {
+            return (End) this.f16529b.get(i);
+        }
+
+        public int getEndCount() {
+            return this.f16529b.size();
+        }
+
+        public List<End> getEndList() {
+            return this.f16529b;
+        }
+
+        public MultiWaypoints getMultiWaypoints(int i) {
+            return (MultiWaypoints) this.f16531d.get(i);
+        }
+
+        public int getMultiWaypointsCount() {
+            return this.f16531d.size();
+        }
+
+        public List<MultiWaypoints> getMultiWaypointsList() {
+            return this.f16531d;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            for (Start computeMessageSize : getStartList()) {
+                i = CodedOutputStreamMicro.computeMessageSize(1, computeMessageSize) + i;
+            }
+            for (End computeMessageSize2 : getEndList()) {
+                i += CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize2);
+            }
+            for (WayPoints computeMessageSize3 : getWayPointsList()) {
+                i += CodedOutputStreamMicro.computeMessageSize(3, computeMessageSize3);
+            }
+            for (MultiWaypoints computeMessageSize4 : getMultiWaypointsList()) {
+                i += CodedOutputStreamMicro.computeMessageSize(4, computeMessageSize4);
+            }
+            this.f16532e = i;
+            return i;
+        }
+
+        public Start getStart(int i) {
+            return (Start) this.f16528a.get(i);
+        }
+
+        public int getStartCount() {
+            return this.f16528a.size();
+        }
+
+        public List<Start> getStartList() {
+            return this.f16528a;
+        }
+
+        public WayPoints getWayPoints(int i) {
+            return (WayPoints) this.f16530c.get(i);
+        }
+
+        public int getWayPointsCount() {
+            return this.f16530c.size();
+        }
+
+        public List<WayPoints> getWayPointsList() {
+            return this.f16530c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Content mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro start;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        start = new Start();
+                        codedInputStreamMicro.readMessage(start);
+                        addStart(start);
+                        continue;
+                    case 18:
+                        start = new End();
+                        codedInputStreamMicro.readMessage(start);
+                        addEnd(start);
+                        continue;
+                    case 26:
+                        start = new WayPoints();
+                        codedInputStreamMicro.readMessage(start);
+                        addWayPoints(start);
+                        continue;
+                    case 34:
+                        start = new MultiWaypoints();
+                        codedInputStreamMicro.readMessage(start);
+                        addMultiWaypoints(start);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Content setEnd(int i, End end) {
+            if (end != null) {
+                this.f16529b.set(i, end);
+            }
+            return this;
+        }
+
+        public Content setMultiWaypoints(int i, MultiWaypoints multiWaypoints) {
+            if (multiWaypoints != null) {
+                this.f16531d.set(i, multiWaypoints);
+            }
+            return this;
+        }
+
+        public Content setStart(int i, Start start) {
+            if (start != null) {
+                this.f16528a.set(i, start);
+            }
+            return this;
+        }
+
+        public Content setWayPoints(int i, WayPoints wayPoints) {
+            if (wayPoints != null) {
+                this.f16530c.set(i, wayPoints);
+            }
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            for (Start writeMessage : getStartList()) {
+                codedOutputStreamMicro.writeMessage(1, writeMessage);
+            }
+            for (End writeMessage2 : getEndList()) {
+                codedOutputStreamMicro.writeMessage(2, writeMessage2);
+            }
+            for (WayPoints writeMessage3 : getWayPointsList()) {
+                codedOutputStreamMicro.writeMessage(3, writeMessage3);
+            }
+            for (MultiWaypoints writeMessage4 : getMultiWaypointsList()) {
+                codedOutputStreamMicro.writeMessage(4, writeMessage4);
+            }
+        }
+    }
+
+    public static final class ImageShow extends MessageMicro {
+        public static final int IMAGE_EXT_FIELD_NUMBER = 1;
+        public static final int RES_BOUND_FIELD_NUMBER = 2;
+        /* renamed from: a */
+        private boolean f16533a;
+        /* renamed from: b */
+        private ByteStringMicro f16534b = ByteStringMicro.EMPTY;
+        /* renamed from: c */
+        private boolean f16535c;
+        /* renamed from: d */
+        private String f16536d = "";
+        /* renamed from: e */
+        private int f16537e = -1;
+
+        public static ImageShow parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new ImageShow().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static ImageShow parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (ImageShow) new ImageShow().mergeFrom(bArr);
+        }
+
+        public final ImageShow clear() {
+            clearImageExt();
+            clearResBound();
+            this.f16537e = -1;
+            return this;
+        }
+
+        public ImageShow clearImageExt() {
+            this.f16533a = false;
+            this.f16534b = ByteStringMicro.EMPTY;
+            return this;
+        }
+
+        public ImageShow clearResBound() {
+            this.f16535c = false;
+            this.f16536d = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16537e < 0) {
+                getSerializedSize();
+            }
+            return this.f16537e;
+        }
+
+        public ByteStringMicro getImageExt() {
+            return this.f16534b;
+        }
+
+        public String getResBound() {
+            return this.f16536d;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasImageExt()) {
+                i = 0 + CodedOutputStreamMicro.computeBytesSize(1, getImageExt());
+            }
+            if (hasResBound()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getResBound());
+            }
+            this.f16537e = i;
+            return i;
+        }
+
+        public boolean hasImageExt() {
+            return this.f16533a;
+        }
+
+        public boolean hasResBound() {
+            return this.f16535c;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public ImageShow mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setImageExt(codedInputStreamMicro.readBytes());
+                        continue;
+                    case 18:
+                        setResBound(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public ImageShow setImageExt(ByteStringMicro byteStringMicro) {
+            this.f16533a = true;
+            this.f16534b = byteStringMicro;
+            return this;
+        }
+
+        public ImageShow setResBound(String str) {
+            this.f16535c = true;
+            this.f16536d = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasImageExt()) {
+                codedOutputStreamMicro.writeBytes(1, getImageExt());
+            }
+            if (hasResBound()) {
+                codedOutputStreamMicro.writeString(2, getResBound());
+            }
+        }
+    }
+
+    public static final class Option extends MessageMicro {
+        public static final int CITY_LIST_FIELD_NUMBER = 1;
+        public static final int END_CITY_FIELD_NUMBER = 8;
+        public static final int E_WD_FIELD_NUMBER = 5;
+        public static final int IF_NAV_FIELD_NUMBER = 6;
+        public static final int PRIO_FLAG_FIELD_NUMBER = 2;
+        public static final int START_CITY_FIELD_NUMBER = 7;
+        public static final int S_WD_FIELD_NUMBER = 4;
+        public static final int WP_WD_FIELD_NUMBER = 3;
+        /* renamed from: a */
+        private List<String> f16548a = Collections.emptyList();
+        /* renamed from: b */
+        private List<String> f16549b = Collections.emptyList();
+        /* renamed from: c */
+        private List<String> f16550c = Collections.emptyList();
+        /* renamed from: d */
+        private boolean f16551d;
+        /* renamed from: e */
+        private String f16552e = "";
+        /* renamed from: f */
+        private List<String> f16553f = Collections.emptyList();
+        /* renamed from: g */
+        private boolean f16554g;
+        /* renamed from: h */
+        private boolean f16555h = false;
+        /* renamed from: i */
+        private boolean f16556i;
+        /* renamed from: j */
+        private StartCity f16557j = null;
+        /* renamed from: k */
+        private List<EndCity> f16558k = Collections.emptyList();
+        /* renamed from: l */
+        private int f16559l = -1;
+
+        public static final class EndCity extends MessageMicro {
+            public static final int CNAME_FIELD_NUMBER = 2;
+            public static final int CODE_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private boolean f16538a;
+            /* renamed from: b */
+            private int f16539b = 0;
+            /* renamed from: c */
+            private boolean f16540c;
+            /* renamed from: d */
+            private String f16541d = "";
+            /* renamed from: e */
+            private int f16542e = -1;
+
+            public static EndCity parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new EndCity().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static EndCity parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (EndCity) new EndCity().mergeFrom(bArr);
+            }
+
+            public final EndCity clear() {
+                clearCode();
+                clearCname();
+                this.f16542e = -1;
+                return this;
+            }
+
+            public EndCity clearCname() {
+                this.f16540c = false;
+                this.f16541d = "";
+                return this;
+            }
+
+            public EndCity clearCode() {
+                this.f16538a = false;
+                this.f16539b = 0;
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f16542e < 0) {
+                    getSerializedSize();
+                }
+                return this.f16542e;
+            }
+
+            public String getCname() {
+                return this.f16541d;
+            }
+
+            public int getCode() {
+                return this.f16539b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasCode()) {
+                    i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+                }
+                if (hasCname()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getCname());
+                }
+                this.f16542e = i;
+                return i;
+            }
+
+            public boolean hasCname() {
+                return this.f16540c;
+            }
+
+            public boolean hasCode() {
+                return this.f16538a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public EndCity mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 8:
+                            setCode(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 18:
+                            setCname(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public EndCity setCname(String str) {
+                this.f16540c = true;
+                this.f16541d = str;
+                return this;
+            }
+
+            public EndCity setCode(int i) {
+                this.f16538a = true;
+                this.f16539b = i;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasCode()) {
+                    codedOutputStreamMicro.writeInt32(1, getCode());
+                }
+                if (hasCname()) {
+                    codedOutputStreamMicro.writeString(2, getCname());
+                }
+            }
+        }
+
+        public static final class StartCity extends MessageMicro {
+            public static final int CNAME_FIELD_NUMBER = 2;
+            public static final int CODE_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private boolean f16543a;
+            /* renamed from: b */
+            private int f16544b = 0;
+            /* renamed from: c */
+            private boolean f16545c;
+            /* renamed from: d */
+            private String f16546d = "";
+            /* renamed from: e */
+            private int f16547e = -1;
+
+            public static StartCity parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new StartCity().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static StartCity parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (StartCity) new StartCity().mergeFrom(bArr);
+            }
+
+            public final StartCity clear() {
+                clearCode();
+                clearCname();
+                this.f16547e = -1;
+                return this;
+            }
+
+            public StartCity clearCname() {
+                this.f16545c = false;
+                this.f16546d = "";
+                return this;
+            }
+
+            public StartCity clearCode() {
+                this.f16543a = false;
+                this.f16544b = 0;
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f16547e < 0) {
+                    getSerializedSize();
+                }
+                return this.f16547e;
+            }
+
+            public String getCname() {
+                return this.f16546d;
+            }
+
+            public int getCode() {
+                return this.f16544b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasCode()) {
+                    i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+                }
+                if (hasCname()) {
+                    i += CodedOutputStreamMicro.computeStringSize(2, getCname());
+                }
+                this.f16547e = i;
+                return i;
+            }
+
+            public boolean hasCname() {
+                return this.f16545c;
+            }
+
+            public boolean hasCode() {
+                return this.f16543a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public StartCity mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 8:
+                            setCode(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 18:
+                            setCname(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public StartCity setCname(String str) {
+                this.f16545c = true;
+                this.f16546d = str;
+                return this;
+            }
+
+            public StartCity setCode(int i) {
+                this.f16543a = true;
+                this.f16544b = i;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasCode()) {
+                    codedOutputStreamMicro.writeInt32(1, getCode());
+                }
+                if (hasCname()) {
+                    codedOutputStreamMicro.writeString(2, getCname());
+                }
+            }
+        }
+
+        public static Option parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Option().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Option parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Option) new Option().mergeFrom(bArr);
+        }
+
+        public Option addCityList(String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            if (this.f16548a.isEmpty()) {
+                this.f16548a = new ArrayList();
+            }
+            this.f16548a.add(str);
+            return this;
+        }
+
+        public Option addEWd(String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            if (this.f16553f.isEmpty()) {
+                this.f16553f = new ArrayList();
+            }
+            this.f16553f.add(str);
+            return this;
+        }
+
+        public Option addEndCity(EndCity endCity) {
+            if (endCity != null) {
+                if (this.f16558k.isEmpty()) {
+                    this.f16558k = new ArrayList();
+                }
+                this.f16558k.add(endCity);
+            }
+            return this;
+        }
+
+        public Option addPrioFlag(String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            if (this.f16549b.isEmpty()) {
+                this.f16549b = new ArrayList();
+            }
+            this.f16549b.add(str);
+            return this;
+        }
+
+        public Option addWpWd(String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            if (this.f16550c.isEmpty()) {
+                this.f16550c = new ArrayList();
+            }
+            this.f16550c.add(str);
+            return this;
+        }
+
+        public final Option clear() {
+            clearCityList();
+            clearPrioFlag();
+            clearWpWd();
+            clearSWd();
+            clearEWd();
+            clearIfNav();
+            clearStartCity();
+            clearEndCity();
+            this.f16559l = -1;
+            return this;
+        }
+
+        public Option clearCityList() {
+            this.f16548a = Collections.emptyList();
+            return this;
+        }
+
+        public Option clearEWd() {
+            this.f16553f = Collections.emptyList();
+            return this;
+        }
+
+        public Option clearEndCity() {
+            this.f16558k = Collections.emptyList();
+            return this;
+        }
+
+        public Option clearIfNav() {
+            this.f16554g = false;
+            this.f16555h = false;
+            return this;
+        }
+
+        public Option clearPrioFlag() {
+            this.f16549b = Collections.emptyList();
+            return this;
+        }
+
+        public Option clearSWd() {
+            this.f16551d = false;
+            this.f16552e = "";
+            return this;
+        }
+
+        public Option clearStartCity() {
+            this.f16556i = false;
+            this.f16557j = null;
+            return this;
+        }
+
+        public Option clearWpWd() {
+            this.f16550c = Collections.emptyList();
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16559l < 0) {
+                getSerializedSize();
+            }
+            return this.f16559l;
+        }
+
+        public String getCityList(int i) {
+            return (String) this.f16548a.get(i);
+        }
+
+        public int getCityListCount() {
+            return this.f16548a.size();
+        }
+
+        public List<String> getCityListList() {
+            return this.f16548a;
+        }
+
+        public String getEWd(int i) {
+            return (String) this.f16553f.get(i);
+        }
+
+        public int getEWdCount() {
+            return this.f16553f.size();
+        }
+
+        public List<String> getEWdList() {
+            return this.f16553f;
+        }
+
+        public EndCity getEndCity(int i) {
+            return (EndCity) this.f16558k.get(i);
+        }
+
+        public int getEndCityCount() {
+            return this.f16558k.size();
+        }
+
+        public List<EndCity> getEndCityList() {
+            return this.f16558k;
+        }
+
+        public boolean getIfNav() {
+            return this.f16555h;
+        }
+
+        public String getPrioFlag(int i) {
+            return (String) this.f16549b.get(i);
+        }
+
+        public int getPrioFlagCount() {
+            return this.f16549b.size();
+        }
+
+        public List<String> getPrioFlagList() {
+            return this.f16549b;
+        }
+
+        public String getSWd() {
+            return this.f16552e;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            int i2 = 0;
+            for (String computeStringSizeNoTag : getCityListList()) {
+                i2 = CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag) + i2;
+            }
+            int size = (0 + i2) + (getCityListList().size() * 1);
+            i2 = 0;
+            for (String computeStringSizeNoTag2 : getPrioFlagList()) {
+                i2 = CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag2) + i2;
+            }
+            size = (size + i2) + (getPrioFlagList().size() * 1);
+            i2 = 0;
+            for (String computeStringSizeNoTag22 : getWpWdList()) {
+                i2 = CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag22) + i2;
+            }
+            int size2 = (size + i2) + (getWpWdList().size() * 1);
+            i2 = hasSWd() ? size2 + CodedOutputStreamMicro.computeStringSize(4, getSWd()) : size2;
+            for (String computeStringSizeNoTag222 : getEWdList()) {
+                i += CodedOutputStreamMicro.computeStringSizeNoTag(computeStringSizeNoTag222);
+            }
+            size2 = (i2 + i) + (getEWdList().size() * 1);
+            if (hasIfNav()) {
+                size2 += CodedOutputStreamMicro.computeBoolSize(6, getIfNav());
+            }
+            if (hasStartCity()) {
+                size2 += CodedOutputStreamMicro.computeMessageSize(7, getStartCity());
+            }
+            i2 = size2;
+            for (EndCity computeMessageSize : getEndCityList()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(8, computeMessageSize) + i2;
+            }
+            this.f16559l = i2;
+            return i2;
+        }
+
+        public StartCity getStartCity() {
+            return this.f16557j;
+        }
+
+        public String getWpWd(int i) {
+            return (String) this.f16550c.get(i);
+        }
+
+        public int getWpWdCount() {
+            return this.f16550c.size();
+        }
+
+        public List<String> getWpWdList() {
+            return this.f16550c;
+        }
+
+        public boolean hasIfNav() {
+            return this.f16554g;
+        }
+
+        public boolean hasSWd() {
+            return this.f16551d;
+        }
+
+        public boolean hasStartCity() {
+            return this.f16556i;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Option mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                MessageMicro startCity;
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        addCityList(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        addPrioFlag(codedInputStreamMicro.readString());
+                        continue;
+                    case 26:
+                        addWpWd(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setSWd(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        addEWd(codedInputStreamMicro.readString());
+                        continue;
+                    case 48:
+                        setIfNav(codedInputStreamMicro.readBool());
+                        continue;
+                    case 58:
+                        startCity = new StartCity();
+                        codedInputStreamMicro.readMessage(startCity);
+                        setStartCity(startCity);
+                        continue;
+                    case 66:
+                        startCity = new EndCity();
+                        codedInputStreamMicro.readMessage(startCity);
+                        addEndCity(startCity);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Option setCityList(int i, String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            this.f16548a.set(i, str);
+            return this;
+        }
+
+        public Option setEWd(int i, String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            this.f16553f.set(i, str);
+            return this;
+        }
+
+        public Option setEndCity(int i, EndCity endCity) {
+            if (endCity != null) {
+                this.f16558k.set(i, endCity);
+            }
+            return this;
+        }
+
+        public Option setIfNav(boolean z) {
+            this.f16554g = true;
+            this.f16555h = z;
+            return this;
+        }
+
+        public Option setPrioFlag(int i, String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            this.f16549b.set(i, str);
+            return this;
+        }
+
+        public Option setSWd(String str) {
+            this.f16551d = true;
+            this.f16552e = str;
+            return this;
+        }
+
+        public Option setStartCity(StartCity startCity) {
+            if (startCity == null) {
+                return clearStartCity();
+            }
+            this.f16556i = true;
+            this.f16557j = startCity;
+            return this;
+        }
+
+        public Option setWpWd(int i, String str) {
+            if (str == null) {
+                throw new NullPointerException();
+            }
+            this.f16550c.set(i, str);
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            for (String writeString : getCityListList()) {
+                codedOutputStreamMicro.writeString(1, writeString);
+            }
+            for (String writeString2 : getPrioFlagList()) {
+                codedOutputStreamMicro.writeString(2, writeString2);
+            }
+            for (String writeString22 : getWpWdList()) {
+                codedOutputStreamMicro.writeString(3, writeString22);
+            }
+            if (hasSWd()) {
+                codedOutputStreamMicro.writeString(4, getSWd());
+            }
+            for (String writeString222 : getEWdList()) {
+                codedOutputStreamMicro.writeString(5, writeString222);
+            }
+            if (hasIfNav()) {
+                codedOutputStreamMicro.writeBool(6, getIfNav());
+            }
+            if (hasStartCity()) {
+                codedOutputStreamMicro.writeMessage(7, getStartCity());
+            }
+            for (EndCity writeMessage : getEndCityList()) {
+                codedOutputStreamMicro.writeMessage(8, writeMessage);
+            }
+        }
+    }
+
+    public static final class SuggestQuery extends MessageMicro {
+        public static final int QUERY_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f16560a;
+        /* renamed from: b */
+        private String f16561b = "";
+        /* renamed from: c */
+        private int f16562c = -1;
+
+        public static SuggestQuery parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new SuggestQuery().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static SuggestQuery parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (SuggestQuery) new SuggestQuery().mergeFrom(bArr);
+        }
+
+        public final SuggestQuery clear() {
+            clearQuery();
+            this.f16562c = -1;
+            return this;
+        }
+
+        public SuggestQuery clearQuery() {
+            this.f16560a = false;
+            this.f16561b = "";
+            return this;
+        }
+
+        public int getCachedSize() {
+            if (this.f16562c < 0) {
+                getSerializedSize();
+            }
+            return this.f16562c;
+        }
+
+        public String getQuery() {
+            return this.f16561b;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasQuery()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getQuery());
+            }
+            this.f16562c = i;
+            return i;
+        }
+
+        public boolean hasQuery() {
+            return this.f16560a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public SuggestQuery mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setQuery(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public SuggestQuery setQuery(String str) {
+            this.f16560a = true;
+            this.f16561b = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasQuery()) {
+                codedOutputStreamMicro.writeString(1, getQuery());
+            }
+        }
+    }
+
+    public static TrafficPois parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new TrafficPois().mergeFrom(codedInputStreamMicro);
+    }
+
+    public static TrafficPois parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (TrafficPois) new TrafficPois().mergeFrom(bArr);
+    }
+
+    public TrafficPois addSuggestQuery(SuggestQuery suggestQuery) {
+        if (suggestQuery != null) {
+            if (this.f16569g.isEmpty()) {
+                this.f16569g = new ArrayList();
+            }
+            this.f16569g.add(suggestQuery);
+        }
         return this;
-      }
-      
-      public WayPoints setCode(int paramInt)
-      {
-        this.a = true;
-        this.b = paramInt;
+    }
+
+    public final TrafficPois clear() {
+        clearOption();
+        clearCurrentCity();
+        clearContent();
+        clearSuggestQuery();
+        clearSuggestQueryFlag();
+        clearImgeShow();
+        this.f16574l = -1;
         return this;
-      }
-      
-      public WayPoints setDescribe(String paramString)
-      {
-        this.u = true;
-        this.v = paramString;
+    }
+
+    public TrafficPois clearContent() {
+        this.f16567e = false;
+        this.f16568f = null;
         return this;
-      }
-      
-      public WayPoints setDirection(int paramInt)
-      {
-        this.s = true;
-        this.t = paramInt;
+    }
+
+    public TrafficPois clearCurrentCity() {
+        this.f16565c = false;
+        this.f16566d = null;
         return this;
-      }
-      
-      public WayPoints setDist(int paramInt)
-      {
-        this.q = true;
-        this.r = paramInt;
+    }
+
+    public TrafficPois clearImgeShow() {
+        this.f16572j = false;
+        this.f16573k = null;
         return this;
-      }
-      
-      public WayPoints setGeo(String paramString)
-      {
-        this.k = true;
-        this.l = paramString;
+    }
+
+    public TrafficPois clearOption() {
+        this.f16563a = false;
+        this.f16564b = null;
         return this;
-      }
-      
-      public WayPoints setIndoorFloor(String paramString)
-      {
-        this.m = true;
-        this.n = paramString;
+    }
+
+    public TrafficPois clearSuggestQuery() {
+        this.f16569g = Collections.emptyList();
         return this;
-      }
-      
-      public WayPoints setIndoorParentUid(String paramString)
-      {
-        this.o = true;
-        this.p = paramString;
+    }
+
+    public TrafficPois clearSuggestQueryFlag() {
+        this.f16570h = false;
+        this.f16571i = 0;
         return this;
-      }
-      
-      public WayPoints setName(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
-        return this;
-      }
-      
-      public WayPoints setNum(int paramInt)
-      {
-        this.e = true;
-        this.f = paramInt;
-        return this;
-      }
-      
-      public WayPoints setUid(String paramString)
-      {
-        this.g = true;
-        this.h = paramString;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasCode()) {
-          paramCodedOutputStreamMicro.writeInt32(1, getCode());
+    }
+
+    public int getCachedSize() {
+        if (this.f16574l < 0) {
+            getSerializedSize();
         }
-        if (hasName()) {
-          paramCodedOutputStreamMicro.writeString(2, getName());
-        }
-        if (hasNum()) {
-          paramCodedOutputStreamMicro.writeInt32(3, getNum());
-        }
-        if (hasUid()) {
-          paramCodedOutputStreamMicro.writeString(4, getUid());
-        }
-        if (hasAddr()) {
-          paramCodedOutputStreamMicro.writeString(5, getAddr());
-        }
-        if (hasGeo()) {
-          paramCodedOutputStreamMicro.writeString(6, getGeo());
-        }
-        if (hasIndoorFloor()) {
-          paramCodedOutputStreamMicro.writeString(7, getIndoorFloor());
-        }
-        if (hasIndoorParentUid()) {
-          paramCodedOutputStreamMicro.writeString(8, getIndoorParentUid());
-        }
-        if (hasDist()) {
-          paramCodedOutputStreamMicro.writeInt32(9, getDist());
-        }
-        if (hasDirection()) {
-          paramCodedOutputStreamMicro.writeInt32(10, getDirection());
-        }
-        if (hasDescribe()) {
-          paramCodedOutputStreamMicro.writeString(11, getDescribe());
-        }
-      }
+        return this.f16574l;
     }
-  }
-  
-  public static final class ImageShow
-    extends MessageMicro
-  {
-    public static final int IMAGE_EXT_FIELD_NUMBER = 1;
-    public static final int RES_BOUND_FIELD_NUMBER = 2;
-    private boolean a;
-    private ByteStringMicro b = ByteStringMicro.EMPTY;
-    private boolean c;
-    private String d = "";
-    private int e = -1;
-    
-    public static ImageShow parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new ImageShow().mergeFrom(paramCodedInputStreamMicro);
+
+    public Content getContent() {
+        return this.f16568f;
     }
-    
-    public static ImageShow parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (ImageShow)new ImageShow().mergeFrom(paramArrayOfByte);
+
+    public CurrentCity getCurrentCity() {
+        return this.f16566d;
     }
-    
-    public final ImageShow clear()
-    {
-      clearImageExt();
-      clearResBound();
-      this.e = -1;
-      return this;
+
+    public ImageShow getImgeShow() {
+        return this.f16573k;
     }
-    
-    public ImageShow clearImageExt()
-    {
-      this.a = false;
-      this.b = ByteStringMicro.EMPTY;
-      return this;
+
+    public Option getOption() {
+        return this.f16564b;
     }
-    
-    public ImageShow clearResBound()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.e < 0) {
-        getSerializedSize();
-      }
-      return this.e;
-    }
-    
-    public ByteStringMicro getImageExt()
-    {
-      return this.b;
-    }
-    
-    public String getResBound()
-    {
-      return this.d;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasImageExt()) {
-        i = 0 + CodedOutputStreamMicro.computeBytesSize(1, getImageExt());
-      }
-      int j = i;
-      if (hasResBound()) {
-        j = i + CodedOutputStreamMicro.computeStringSize(2, getResBound());
-      }
-      this.e = j;
-      return j;
-    }
-    
-    public boolean hasImageExt()
-    {
-      return this.a;
-    }
-    
-    public boolean hasResBound()
-    {
-      return this.c;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public ImageShow mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setImageExt(paramCodedInputStreamMicro.readBytes());
-          break;
-        case 18: 
-          setResBound(paramCodedInputStreamMicro.readString());
-        }
-      }
-    }
-    
-    public ImageShow setImageExt(ByteStringMicro paramByteStringMicro)
-    {
-      this.a = true;
-      this.b = paramByteStringMicro;
-      return this;
-    }
-    
-    public ImageShow setResBound(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasImageExt()) {
-        paramCodedOutputStreamMicro.writeBytes(1, getImageExt());
-      }
-      if (hasResBound()) {
-        paramCodedOutputStreamMicro.writeString(2, getResBound());
-      }
-    }
-  }
-  
-  public static final class Option
-    extends MessageMicro
-  {
-    public static final int CITY_LIST_FIELD_NUMBER = 1;
-    public static final int END_CITY_FIELD_NUMBER = 8;
-    public static final int E_WD_FIELD_NUMBER = 5;
-    public static final int IF_NAV_FIELD_NUMBER = 6;
-    public static final int PRIO_FLAG_FIELD_NUMBER = 2;
-    public static final int START_CITY_FIELD_NUMBER = 7;
-    public static final int S_WD_FIELD_NUMBER = 4;
-    public static final int WP_WD_FIELD_NUMBER = 3;
-    private List<String> a = Collections.emptyList();
-    private List<String> b = Collections.emptyList();
-    private List<String> c = Collections.emptyList();
-    private boolean d;
-    private String e = "";
-    private List<String> f = Collections.emptyList();
-    private boolean g;
-    private boolean h = false;
-    private boolean i;
-    private StartCity j = null;
-    private List<EndCity> k = Collections.emptyList();
-    private int l = -1;
-    
-    public static Option parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Option().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Option parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Option)new Option().mergeFrom(paramArrayOfByte);
-    }
-    
-    public Option addCityList(String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      if (this.a.isEmpty()) {
-        this.a = new ArrayList();
-      }
-      this.a.add(paramString);
-      return this;
-    }
-    
-    public Option addEWd(String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      if (this.f.isEmpty()) {
-        this.f = new ArrayList();
-      }
-      this.f.add(paramString);
-      return this;
-    }
-    
-    public Option addEndCity(EndCity paramEndCity)
-    {
-      if (paramEndCity == null) {
-        return this;
-      }
-      if (this.k.isEmpty()) {
-        this.k = new ArrayList();
-      }
-      this.k.add(paramEndCity);
-      return this;
-    }
-    
-    public Option addPrioFlag(String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      if (this.b.isEmpty()) {
-        this.b = new ArrayList();
-      }
-      this.b.add(paramString);
-      return this;
-    }
-    
-    public Option addWpWd(String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      if (this.c.isEmpty()) {
-        this.c = new ArrayList();
-      }
-      this.c.add(paramString);
-      return this;
-    }
-    
-    public final Option clear()
-    {
-      clearCityList();
-      clearPrioFlag();
-      clearWpWd();
-      clearSWd();
-      clearEWd();
-      clearIfNav();
-      clearStartCity();
-      clearEndCity();
-      this.l = -1;
-      return this;
-    }
-    
-    public Option clearCityList()
-    {
-      this.a = Collections.emptyList();
-      return this;
-    }
-    
-    public Option clearEWd()
-    {
-      this.f = Collections.emptyList();
-      return this;
-    }
-    
-    public Option clearEndCity()
-    {
-      this.k = Collections.emptyList();
-      return this;
-    }
-    
-    public Option clearIfNav()
-    {
-      this.g = false;
-      this.h = false;
-      return this;
-    }
-    
-    public Option clearPrioFlag()
-    {
-      this.b = Collections.emptyList();
-      return this;
-    }
-    
-    public Option clearSWd()
-    {
-      this.d = false;
-      this.e = "";
-      return this;
-    }
-    
-    public Option clearStartCity()
-    {
-      this.i = false;
-      this.j = null;
-      return this;
-    }
-    
-    public Option clearWpWd()
-    {
-      this.c = Collections.emptyList();
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.l < 0) {
-        getSerializedSize();
-      }
-      return this.l;
-    }
-    
-    public String getCityList(int paramInt)
-    {
-      return (String)this.a.get(paramInt);
-    }
-    
-    public int getCityListCount()
-    {
-      return this.a.size();
-    }
-    
-    public List<String> getCityListList()
-    {
-      return this.a;
-    }
-    
-    public String getEWd(int paramInt)
-    {
-      return (String)this.f.get(paramInt);
-    }
-    
-    public int getEWdCount()
-    {
-      return this.f.size();
-    }
-    
-    public List<String> getEWdList()
-    {
-      return this.f;
-    }
-    
-    public EndCity getEndCity(int paramInt)
-    {
-      return (EndCity)this.k.get(paramInt);
-    }
-    
-    public int getEndCityCount()
-    {
-      return this.k.size();
-    }
-    
-    public List<EndCity> getEndCityList()
-    {
-      return this.k;
-    }
-    
-    public boolean getIfNav()
-    {
-      return this.h;
-    }
-    
-    public String getPrioFlag(int paramInt)
-    {
-      return (String)this.b.get(paramInt);
-    }
-    
-    public int getPrioFlagCount()
-    {
-      return this.b.size();
-    }
-    
-    public List<String> getPrioFlagList()
-    {
-      return this.b;
-    }
-    
-    public String getSWd()
-    {
-      return this.e;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      Iterator localIterator = getCityListList().iterator();
-      for (int m = 0; localIterator.hasNext(); m = CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next()) + m) {}
-      int i3 = getCityListList().size();
-      localIterator = getPrioFlagList().iterator();
-      for (int n = 0; localIterator.hasNext(); n = CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next()) + n) {}
-      int i4 = getPrioFlagList().size();
-      localIterator = getWpWdList().iterator();
-      for (int i1 = 0; localIterator.hasNext(); i1 = CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next()) + i1) {}
-      m = 0 + m + i3 * 1 + n + i4 * 1 + i1 + getWpWdList().size() * 1;
-      if (hasSWd()) {
-        m += CodedOutputStreamMicro.computeStringSize(4, getSWd());
-      }
-      for (;;)
-      {
-        localIterator = getEWdList().iterator();
-        n = i2;
-        while (localIterator.hasNext()) {
-          n += CodedOutputStreamMicro.computeStringSizeNoTag((String)localIterator.next());
-        }
-        n = m + n + getEWdList().size() * 1;
-        m = n;
-        if (hasIfNav()) {
-          m = n + CodedOutputStreamMicro.computeBoolSize(6, getIfNav());
-        }
-        n = m;
-        if (hasStartCity()) {
-          n = m + CodedOutputStreamMicro.computeMessageSize(7, getStartCity());
-        }
-        localIterator = getEndCityList().iterator();
-        while (localIterator.hasNext()) {
-          n = CodedOutputStreamMicro.computeMessageSize(8, (EndCity)localIterator.next()) + n;
-        }
-        this.l = n;
-        return n;
-      }
-    }
-    
-    public StartCity getStartCity()
-    {
-      return this.j;
-    }
-    
-    public String getWpWd(int paramInt)
-    {
-      return (String)this.c.get(paramInt);
-    }
-    
-    public int getWpWdCount()
-    {
-      return this.c.size();
-    }
-    
-    public List<String> getWpWdList()
-    {
-      return this.c;
-    }
-    
-    public boolean hasIfNav()
-    {
-      return this.g;
-    }
-    
-    public boolean hasSWd()
-    {
-      return this.d;
-    }
-    
-    public boolean hasStartCity()
-    {
-      return this.i;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Option mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int m = paramCodedInputStreamMicro.readTag();
-        Object localObject;
-        switch (m)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, m)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          addCityList(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          addPrioFlag(paramCodedInputStreamMicro.readString());
-          break;
-        case 26: 
-          addWpWd(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setSWd(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          addEWd(paramCodedInputStreamMicro.readString());
-          break;
-        case 48: 
-          setIfNav(paramCodedInputStreamMicro.readBool());
-          break;
-        case 58: 
-          localObject = new StartCity();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          setStartCity((StartCity)localObject);
-          break;
-        case 66: 
-          localObject = new EndCity();
-          paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-          addEndCity((EndCity)localObject);
-        }
-      }
-    }
-    
-    public Option setCityList(int paramInt, String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      this.a.set(paramInt, paramString);
-      return this;
-    }
-    
-    public Option setEWd(int paramInt, String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      this.f.set(paramInt, paramString);
-      return this;
-    }
-    
-    public Option setEndCity(int paramInt, EndCity paramEndCity)
-    {
-      if (paramEndCity == null) {
-        return this;
-      }
-      this.k.set(paramInt, paramEndCity);
-      return this;
-    }
-    
-    public Option setIfNav(boolean paramBoolean)
-    {
-      this.g = true;
-      this.h = paramBoolean;
-      return this;
-    }
-    
-    public Option setPrioFlag(int paramInt, String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      this.b.set(paramInt, paramString);
-      return this;
-    }
-    
-    public Option setSWd(String paramString)
-    {
-      this.d = true;
-      this.e = paramString;
-      return this;
-    }
-    
-    public Option setStartCity(StartCity paramStartCity)
-    {
-      if (paramStartCity == null) {
-        return clearStartCity();
-      }
-      this.i = true;
-      this.j = paramStartCity;
-      return this;
-    }
-    
-    public Option setWpWd(int paramInt, String paramString)
-    {
-      if (paramString == null) {
-        throw new NullPointerException();
-      }
-      this.c.set(paramInt, paramString);
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      Iterator localIterator = getCityListList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeString(1, (String)localIterator.next());
-      }
-      localIterator = getPrioFlagList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeString(2, (String)localIterator.next());
-      }
-      localIterator = getWpWdList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeString(3, (String)localIterator.next());
-      }
-      if (hasSWd()) {
-        paramCodedOutputStreamMicro.writeString(4, getSWd());
-      }
-      localIterator = getEWdList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeString(5, (String)localIterator.next());
-      }
-      if (hasIfNav()) {
-        paramCodedOutputStreamMicro.writeBool(6, getIfNav());
-      }
-      if (hasStartCity()) {
-        paramCodedOutputStreamMicro.writeMessage(7, getStartCity());
-      }
-      localIterator = getEndCityList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(8, (EndCity)localIterator.next());
-      }
-    }
-    
-    public static final class EndCity
-      extends MessageMicro
-    {
-      public static final int CNAME_FIELD_NUMBER = 2;
-      public static final int CODE_FIELD_NUMBER = 1;
-      private boolean a;
-      private int b = 0;
-      private boolean c;
-      private String d = "";
-      private int e = -1;
-      
-      public static EndCity parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new EndCity().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static EndCity parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (EndCity)new EndCity().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final EndCity clear()
-      {
-        clearCode();
-        clearCname();
-        this.e = -1;
-        return this;
-      }
-      
-      public EndCity clearCname()
-      {
-        this.c = false;
-        this.d = "";
-        return this;
-      }
-      
-      public EndCity clearCode()
-      {
-        this.a = false;
-        this.b = 0;
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.e < 0) {
-          getSerializedSize();
-        }
-        return this.e;
-      }
-      
-      public String getCname()
-      {
-        return this.d;
-      }
-      
-      public int getCode()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
+
+    public int getSerializedSize() {
         int i = 0;
-        if (hasCode()) {
-          i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
+        if (hasOption()) {
+            i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getOption());
         }
-        int j = i;
-        if (hasCname()) {
-          j = i + CodedOutputStreamMicro.computeStringSize(2, getCname());
+        if (hasCurrentCity()) {
+            i += CodedOutputStreamMicro.computeMessageSize(2, getCurrentCity());
         }
-        this.e = j;
-        return j;
-      }
-      
-      public boolean hasCname()
-      {
-        return this.c;
-      }
-      
-      public boolean hasCode()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
+        if (hasContent()) {
+            i += CodedOutputStreamMicro.computeMessageSize(3, getContent());
+        }
+        int i2 = i;
+        for (SuggestQuery computeMessageSize : getSuggestQueryList()) {
+            i2 = CodedOutputStreamMicro.computeMessageSize(4, computeMessageSize) + i2;
+        }
+        if (hasSuggestQueryFlag()) {
+            i2 += CodedOutputStreamMicro.computeInt32Size(5, getSuggestQueryFlag());
+        }
+        if (hasImgeShow()) {
+            i2 += CodedOutputStreamMicro.computeMessageSize(6, getImgeShow());
+        }
+        this.f16574l = i2;
+        return i2;
+    }
+
+    public SuggestQuery getSuggestQuery(int i) {
+        return (SuggestQuery) this.f16569g.get(i);
+    }
+
+    public int getSuggestQueryCount() {
+        return this.f16569g.size();
+    }
+
+    public int getSuggestQueryFlag() {
+        return this.f16571i;
+    }
+
+    public List<SuggestQuery> getSuggestQueryList() {
+        return this.f16569g;
+    }
+
+    public boolean hasContent() {
+        return this.f16567e;
+    }
+
+    public boolean hasCurrentCity() {
+        return this.f16565c;
+    }
+
+    public boolean hasImgeShow() {
+        return this.f16572j;
+    }
+
+    public boolean hasOption() {
+        return this.f16563a;
+    }
+
+    public boolean hasSuggestQueryFlag() {
+        return this.f16570h;
+    }
+
+    public final boolean isInitialized() {
         return true;
-      }
-      
-      public EndCity mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
+    }
+
+    public TrafficPois mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            MessageMicro option;
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    option = new Option();
+                    codedInputStreamMicro.readMessage(option);
+                    setOption(option);
+                    continue;
+                case 18:
+                    option = new CurrentCity();
+                    codedInputStreamMicro.readMessage(option);
+                    setCurrentCity(option);
+                    continue;
+                case 26:
+                    option = new Content();
+                    codedInputStreamMicro.readMessage(option);
+                    setContent(option);
+                    continue;
+                case 34:
+                    option = new SuggestQuery();
+                    codedInputStreamMicro.readMessage(option);
+                    addSuggestQuery(option);
+                    continue;
+                case 40:
+                    setSuggestQueryFlag(codedInputStreamMicro.readInt32());
+                    continue;
+                case 50:
+                    option = new ImageShow();
+                    codedInputStreamMicro.readMessage(option);
+                    setImgeShow(option);
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
             return this;
-          case 8: 
-            setCode(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 18: 
-            setCname(paramCodedInputStreamMicro.readString());
-          }
         }
-      }
-      
-      public EndCity setCname(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
+    }
+
+    public TrafficPois setContent(Content content) {
+        if (content == null) {
+            return clearContent();
+        }
+        this.f16567e = true;
+        this.f16568f = content;
         return this;
-      }
-      
-      public EndCity setCode(int paramInt)
-      {
-        this.a = true;
-        this.b = paramInt;
+    }
+
+    public TrafficPois setCurrentCity(CurrentCity currentCity) {
+        if (currentCity == null) {
+            return clearCurrentCity();
+        }
+        this.f16565c = true;
+        this.f16566d = currentCity;
         return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasCode()) {
-          paramCodedOutputStreamMicro.writeInt32(1, getCode());
-        }
-        if (hasCname()) {
-          paramCodedOutputStreamMicro.writeString(2, getCname());
-        }
-      }
     }
-    
-    public static final class StartCity
-      extends MessageMicro
-    {
-      public static final int CNAME_FIELD_NUMBER = 2;
-      public static final int CODE_FIELD_NUMBER = 1;
-      private boolean a;
-      private int b = 0;
-      private boolean c;
-      private String d = "";
-      private int e = -1;
-      
-      public static StartCity parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new StartCity().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static StartCity parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (StartCity)new StartCity().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final StartCity clear()
-      {
-        clearCode();
-        clearCname();
-        this.e = -1;
+
+    public TrafficPois setImgeShow(ImageShow imageShow) {
+        if (imageShow == null) {
+            return clearImgeShow();
+        }
+        this.f16572j = true;
+        this.f16573k = imageShow;
         return this;
-      }
-      
-      public StartCity clearCname()
-      {
-        this.c = false;
-        this.d = "";
+    }
+
+    public TrafficPois setOption(Option option) {
+        if (option == null) {
+            return clearOption();
+        }
+        this.f16563a = true;
+        this.f16564b = option;
         return this;
-      }
-      
-      public StartCity clearCode()
-      {
-        this.a = false;
-        this.b = 0;
+    }
+
+    public TrafficPois setSuggestQuery(int i, SuggestQuery suggestQuery) {
+        if (suggestQuery != null) {
+            this.f16569g.set(i, suggestQuery);
+        }
         return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.e < 0) {
-          getSerializedSize();
-        }
-        return this.e;
-      }
-      
-      public String getCname()
-      {
-        return this.d;
-      }
-      
-      public int getCode()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i = 0;
-        if (hasCode()) {
-          i = 0 + CodedOutputStreamMicro.computeInt32Size(1, getCode());
-        }
-        int j = i;
-        if (hasCname()) {
-          j = i + CodedOutputStreamMicro.computeStringSize(2, getCname());
-        }
-        this.e = j;
-        return j;
-      }
-      
-      public boolean hasCname()
-      {
-        return this.c;
-      }
-      
-      public boolean hasCode()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public StartCity mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
-            return this;
-          case 8: 
-            setCode(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 18: 
-            setCname(paramCodedInputStreamMicro.readString());
-          }
-        }
-      }
-      
-      public StartCity setCname(String paramString)
-      {
-        this.c = true;
-        this.d = paramString;
+    }
+
+    public TrafficPois setSuggestQueryFlag(int i) {
+        this.f16570h = true;
+        this.f16571i = i;
         return this;
-      }
-      
-      public StartCity setCode(int paramInt)
-      {
-        this.a = true;
-        this.b = paramInt;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasCode()) {
-          paramCodedOutputStreamMicro.writeInt32(1, getCode());
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasOption()) {
+            codedOutputStreamMicro.writeMessage(1, getOption());
         }
-        if (hasCname()) {
-          paramCodedOutputStreamMicro.writeString(2, getCname());
+        if (hasCurrentCity()) {
+            codedOutputStreamMicro.writeMessage(2, getCurrentCity());
         }
-      }
-    }
-  }
-  
-  public static final class SuggestQuery
-    extends MessageMicro
-  {
-    public static final int QUERY_FIELD_NUMBER = 1;
-    private boolean a;
-    private String b = "";
-    private int c = -1;
-    
-    public static SuggestQuery parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new SuggestQuery().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static SuggestQuery parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (SuggestQuery)new SuggestQuery().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final SuggestQuery clear()
-    {
-      clearQuery();
-      this.c = -1;
-      return this;
-    }
-    
-    public SuggestQuery clearQuery()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.c < 0) {
-        getSerializedSize();
-      }
-      return this.c;
-    }
-    
-    public String getQuery()
-    {
-      return this.b;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasQuery()) {
-        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getQuery());
-      }
-      this.c = i;
-      return i;
-    }
-    
-    public boolean hasQuery()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public SuggestQuery mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setQuery(paramCodedInputStreamMicro.readString());
+        if (hasContent()) {
+            codedOutputStreamMicro.writeMessage(3, getContent());
         }
-      }
+        for (SuggestQuery writeMessage : getSuggestQueryList()) {
+            codedOutputStreamMicro.writeMessage(4, writeMessage);
+        }
+        if (hasSuggestQueryFlag()) {
+            codedOutputStreamMicro.writeInt32(5, getSuggestQueryFlag());
+        }
+        if (hasImgeShow()) {
+            codedOutputStreamMicro.writeMessage(6, getImgeShow());
+        }
     }
-    
-    public SuggestQuery setQuery(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasQuery()) {
-        paramCodedOutputStreamMicro.writeString(1, getQuery());
-      }
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/TrafficPois.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

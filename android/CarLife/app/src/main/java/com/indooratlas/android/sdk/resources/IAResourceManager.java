@@ -6,23 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.indooratlas.android.sdk._internal.ba;
 
-public abstract class IAResourceManager
-{
-  public static IAResourceManager create(@NonNull Context paramContext)
-  {
-    return new ba(paramContext, null);
-  }
-  
-  public static IAResourceManager create(@NonNull Context paramContext, @Nullable Bundle paramBundle)
-  {
-    return new ba(paramContext, paramBundle);
-  }
-  
-  public abstract IATask<IAFloorPlan> fetchFloorPlanWithId(@NonNull String paramString);
+public abstract class IAResourceManager {
+    public abstract IATask<IAFloorPlan> fetchFloorPlanWithId(@NonNull String str);
+
+    public static IAResourceManager create(@NonNull Context context) {
+        return new ba(context, null);
+    }
+
+    public static IAResourceManager create(@NonNull Context context, @Nullable Bundle extras) {
+        return new ba(context, extras);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/resources/IAResourceManager.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

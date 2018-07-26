@@ -1,24 +1,10 @@
 package com.baidu.navisdk.ui.cruise.model;
 
-public class CruiseCacheStatus
-{
-  public static int sAssistRemainDist = -1;
-  public static int sInitLatitudeMC;
-  public static int sInitLongitudeMC;
-  public static int sLayerMode;
-  public static int sMapScaleLevelByUser = 18;
-  public static int sOrientation;
-  
-  static
-  {
-    sLayerMode = 7;
-    sInitLongitudeMC = -1;
-    sInitLatitudeMC = -1;
-  }
+public class CruiseCacheStatus {
+    public static int sAssistRemainDist = -1;
+    public static int sInitLatitudeMC = -1;
+    public static int sInitLongitudeMC = -1;
+    public static int sLayerMode = 7;
+    public static int sMapScaleLevelByUser = 18;
+    public static int sOrientation;
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/cruise/model/CruiseCacheStatus.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

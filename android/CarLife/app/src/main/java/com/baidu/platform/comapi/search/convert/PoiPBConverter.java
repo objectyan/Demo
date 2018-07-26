@@ -2,44 +2,25 @@ package com.baidu.platform.comapi.search.convert;
 
 import android.text.TextUtils;
 import com.baidu.entity.pb.CityResult;
-import com.baidu.entity.pb.CityResult.Content;
-import com.baidu.entity.pb.CityResult.PreviousCity;
-import com.baidu.entity.pb.CurrentCity;
 import com.baidu.entity.pb.Inf;
-import com.baidu.entity.pb.Inf.Content;
 import com.baidu.entity.pb.Inf.Content.Blinfo;
-import com.baidu.entity.pb.Inf.Content.Blinfo.RtInfo;
-import com.baidu.entity.pb.Inf.Content.Ext;
 import com.baidu.entity.pb.Inf.Content.Ext.DetailInfo;
-import com.baidu.entity.pb.Inf.Content.Ext.DetailInfo.Meishipaihao;
-import com.baidu.entity.pb.Inf.Content.Ext.DetailInfo.Meishipaihao.Main;
 import com.baidu.entity.pb.Inf.Content.Ext.LineInfo;
-import com.baidu.entity.pb.Inf.Content.HeadIcon;
-import com.baidu.entity.pb.Inf.Content.HeatMap;
-import com.baidu.entity.pb.Inf.Content.HeatMap.Points;
-import com.baidu.entity.pb.Inf.Content.HeatMap.Points.GeoElements;
 import com.baidu.entity.pb.Inf.Content.OtherStations;
-import com.baidu.entity.pb.Inf.Option;
 import com.baidu.entity.pb.SusvrResponse;
 import com.baidu.entity.pb.SusvrResponse.PoiElement;
 import com.baidu.entity.pb.TrafficCitys;
 import com.baidu.entity.pb.TrafficCitys.Contents;
-import com.baidu.entity.pb.TrafficCitys.Contents.Pois;
 import com.baidu.entity.pb.TrafficCitys.SuggestQuery;
 import com.baidu.entity.pb.TrafficPois;
-import com.baidu.entity.pb.TrafficPois.Content;
 import com.baidu.entity.pb.TrafficPois.Content.End;
 import com.baidu.entity.pb.TrafficPois.Content.Start;
 import com.baidu.entity.pb.TrafficPois.Content.WayPoints;
-import com.baidu.entity.pb.TrafficPois.ImageShow;
-import com.baidu.entity.pb.TrafficPois.Option;
-import com.baidu.entity.pb.TrafficPois.Option.EndCity;
-import com.baidu.entity.pb.TrafficPois.Option.StartCity;
-import com.baidu.entity.pb.TrafficPois.SuggestQuery;
+import com.baidu.navi.util.SearchParamKey;
+import com.baidu.navisdk.comapi.mapcontrol.MapParams.Const;
 import com.baidu.platform.comapi.basestruct.Point;
 import com.baidu.platform.comapi.location.CoordinateUtil;
 import com.baidu.platform.comapi.search.AddrListResult;
-import com.baidu.platform.comapi.search.AddrListResult.Citys;
 import com.baidu.platform.comapi.search.AddrListResult.Points;
 import com.baidu.platform.comapi.search.CityInfo;
 import com.baidu.platform.comapi.search.CityListResult;
@@ -54,646 +35,531 @@ import com.baidu.platform.comapi.search.PoiDetailInfo.HeatMap;
 import com.baidu.platform.comapi.search.PoiDetailInfo.Lines;
 import com.baidu.platform.comapi.search.SugResult;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class PoiPBConverter
-{
-  public static AddrListResult convertAddressListResult(TrafficPois paramTrafficPois)
-  {
-    AddrListResult localAddrListResult = new AddrListResult();
-    localAddrListResult.mResultType = 23;
-    if (paramTrafficPois.hasOption())
-    {
-      int i;
-      if (paramTrafficPois.getOption().getCityListCount() > 1)
-      {
-        localAddrListResult.mHaveStCitylist = PBConvertUtil.stringToBool(paramTrafficPois.getOption().getCityList(0));
-        localAddrListResult.mHaveEnCityList = PBConvertUtil.stringToBool(paramTrafficPois.getOption().getCityList(paramTrafficPois.getOption().getCityListCount() - 1));
-        if (paramTrafficPois.getOption().getCityListCount() > 2)
-        {
-          i = 1;
-          while (i < paramTrafficPois.getOption().getCityListCount() - 1)
-          {
-            if (PBConvertUtil.stringToBool(paramTrafficPois.getOption().getCityList(i))) {
-              localAddrListResult.mHaveThroughCityList = true;
+public class PoiPBConverter {
+    public static PoiDetailInfo convertPoiDetailInfo(int resultType, Inf pbResult) {
+        int i;
+        BusLine info;
+        PoiDetailInfo result = new PoiDetailInfo();
+        result.geo = new Point(0.0d, 0.0d);
+        Point pt = CoordinateUtil.geoStringToPoint(pbResult.getContent().getGeo());
+        result.geo.setTo(pt.getDoubleX(), pt.getDoubleY());
+        result.newCatelogId = pbResult.getContent().getNewCatalogId();
+        if (pbResult.getContent().hasServiceTag()) {
+            result.serviceTag = pbResult.getContent().getServiceTag();
+        }
+        result.name = pbResult.getContent().getName();
+        result.ismodified = pbResult.getContent().getIsmodified();
+        result.type = pbResult.getContent().getPoiType();
+        result.uid = pbResult.getContent().getUid();
+        result.addr = pbResult.getContent().getAddr();
+        result.tel = pbResult.getContent().getTel();
+        result.floorId = pbResult.getContent().getIndoorFloor();
+        result.buildingId = pbResult.getContent().getIndoorParentUid();
+        result.indoorOverLooking = pbResult.getContent().getIndoorOverLooking();
+        result.cityId = pbResult.getContent().getCityId();
+        result.pano = pbResult.getContent().getPano();
+        result.indoor_pano = pbResult.getContent().getIndoorPano();
+        result.rtbusUpdateTime = pbResult.getContent().getRtbusUpdateTime();
+        result.poi_type_text = pbResult.getContent().getPoiTypeText();
+        result.streetId = pbResult.getContent().getStreetId();
+        result.stationNum = pbResult.getContent().getStationNum();
+        result.iconId = pbResult.getContent().getIconId();
+        result.stdTag = pbResult.getContent().getStdTag();
+        if (pbResult.hasOption()) {
+            result.ldata = pbResult.getOption().getLdata();
+            result.regionType = pbResult.getOption().getRegionType();
+        }
+        result.offline = pbResult.getOffline();
+        if (pbResult.getContent().hasExt() && pbResult.getContent().getExt().hasDetailInfo()) {
+            result.isScopeRouteCommand = pbResult.getContent().getExt().getDetailInfo().getGuide();
+        }
+        if (pbResult.getContent().hasHeatMap()) {
+            result.getClass();
+            result.heatMap = new HeatMap();
+            result.heatMap.rankStr = pbResult.getContent().getHeatMap().getRankstr();
+            result.heatMap.type = pbResult.getContent().getHeatMap().getType();
+            if (pbResult.getContent().getHeatMap().hasPoints()) {
+                result.heatMap.pointDiffs = new ArrayList(pbResult.getContent().getHeatMap().getPoints().getGeoElements(0).getPointList());
             }
-            i += 1;
-          }
         }
-      }
-      if (paramTrafficPois.hasImgeShow())
-      {
-        if (paramTrafficPois.getImgeShow().hasImageExt()) {
-          localAddrListResult.mImgExt = paramTrafficPois.getImgeShow().getImageExt();
-        }
-        if (paramTrafficPois.getImgeShow().hasResBound()) {
-          localAddrListResult.mResBound = paramTrafficPois.getImgeShow().getResBound();
-        }
-      }
-      if (paramTrafficPois.getOption().getPrioFlagCount() > 1)
-      {
-        localAddrListResult.mHaveStPrio = PBConvertUtil.stringToBool(paramTrafficPois.getOption().getPrioFlag(0));
-        localAddrListResult.mHaveEnPrio = PBConvertUtil.stringToBool(paramTrafficPois.getOption().getPrioFlag(paramTrafficPois.getOption().getPrioFlagCount() - 1));
-        if (paramTrafficPois.getOption().getPrioFlagCount() > 2)
-        {
-          i = 1;
-          while (i < paramTrafficPois.getOption().getPrioFlagCount() - 1)
-          {
-            if (PBConvertUtil.stringToBool(paramTrafficPois.getOption().getPrioFlag(i))) {
-              localAddrListResult.mHaveThroughPrio = true;
+        if (pbResult.getContent().getBlinfoCount() > 0) {
+            ArrayList<BusLine> arrayBusLine = new ArrayList();
+            for (i = 0; i < pbResult.getContent().getBlinfoCount(); i++) {
+                Blinfo test = pbResult.getContent().getBlinfo(i);
+                result.getClass();
+                info = new BusLine();
+                info.addr = test.getAddr();
+                info.name = test.getName();
+                info.uid = test.getUid();
+                info.pairUid = test.getPairUid();
+                info.iconId = test.getIconId();
+                info.nextstation = test.getNextStation();
+                info.sonUid = test.getSonUid();
+                if (test.hasRtInfo() && test.getRtInfo().hasTipRtbus()) {
+                    info.rtbusInfo = test.getRtInfo().getTipRtbus();
+                }
+                arrayBusLine.add(info);
             }
-            i += 1;
-          }
+            result.setArrayBuslines(arrayBusLine);
         }
-      }
-      localAddrListResult.mStKeyword = paramTrafficPois.getOption().getSWd();
-      if (paramTrafficPois.getOption().getEWdCount() > 0) {
-        localAddrListResult.mEnKeyWord = paramTrafficPois.getOption().getEWd(paramTrafficPois.getOption().getEWdCount() - 1);
-      }
-      if (paramTrafficPois.getOption().getEWdCount() > 1) {
-        localAddrListResult.mThroughKeyword = paramTrafficPois.getOption().getEWd(0);
-      }
-      localAddrListResult.mIfNav = paramTrafficPois.getOption().getIfNav();
-      if (paramTrafficPois.getOption().hasStartCity())
-      {
-        localAddrListResult.mStCityname = paramTrafficPois.getOption().getStartCity().getCname();
-        localAddrListResult.mStCityCode = paramTrafficPois.getOption().getStartCity().getCode();
-      }
-      if (paramTrafficPois.getOption().getEndCityCount() > 0)
-      {
-        localAddrListResult.mEnCityname = paramTrafficPois.getOption().getEndCity(paramTrafficPois.getOption().getEndCityCount() - 1).getCname();
-        localAddrListResult.mEnCityCode = paramTrafficPois.getOption().getEndCity(paramTrafficPois.getOption().getEndCityCount() - 1).getCode();
-      }
-      if (paramTrafficPois.getOption().getEndCityCount() > 1)
-      {
-        localAddrListResult.mThroughCityName = paramTrafficPois.getOption().getEndCity(0).getCname();
-        localAddrListResult.mThroughCityCode = Integer.valueOf(paramTrafficPois.getOption().getEndCity(0).getCode());
-      }
-    }
-    ArrayList localArrayList1 = new ArrayList();
-    ArrayList localArrayList2 = new ArrayList();
-    ArrayList localArrayList3 = new ArrayList();
-    ArrayList localArrayList4 = new ArrayList();
-    ArrayList localArrayList5 = new ArrayList();
-    ArrayList localArrayList6 = new ArrayList();
-    ArrayList localArrayList7 = new ArrayList();
-    Iterator localIterator;
-    if (paramTrafficPois.hasContent())
-    {
-      localAddrListResult.mStCount = paramTrafficPois.getContent().getStartCount();
-      localAddrListResult.mEnCount = paramTrafficPois.getContent().getEndCount();
-      localAddrListResult.mThroughCount = paramTrafficPois.getContent().getWayPointsCount();
-      Object localObject1;
-      Object localObject2;
-      if (localAddrListResult.mHaveStCitylist)
-      {
-        localIterator = paramTrafficPois.getContent().getStartList().iterator();
-        while (localIterator.hasNext())
-        {
-          localObject1 = (TrafficPois.Content.Start)localIterator.next();
-          localAddrListResult.getClass();
-          localObject2 = new AddrListResult.Citys(localAddrListResult);
-          ((AddrListResult.Citys)localObject2).code = ((TrafficPois.Content.Start)localObject1).getCode();
-          ((AddrListResult.Citys)localObject2).name = ((TrafficPois.Content.Start)localObject1).getName();
-          ((AddrListResult.Citys)localObject2).num = ((TrafficPois.Content.Start)localObject1).getNum();
-          localArrayList1.add(localObject2);
-        }
-      }
-      localIterator = paramTrafficPois.getContent().getStartList().iterator();
-      while (localIterator.hasNext())
-      {
-        localObject1 = (TrafficPois.Content.Start)localIterator.next();
-        localAddrListResult.getClass();
-        localObject2 = new AddrListResult.Points(localAddrListResult);
-        ((AddrListResult.Points)localObject2).addr = ((TrafficPois.Content.Start)localObject1).getAddr();
-        ((AddrListResult.Points)localObject2).name = ((TrafficPois.Content.Start)localObject1).getName();
-        ((AddrListResult.Points)localObject2).pt = PBConvertUtil.decryptPoint(((TrafficPois.Content.Start)localObject1).getGeo());
-        ((AddrListResult.Points)localObject2).uid = ((TrafficPois.Content.Start)localObject1).getUid();
-        ((AddrListResult.Points)localObject2).floor = ((TrafficPois.Content.Start)localObject1).getIndoorFloor();
-        ((AddrListResult.Points)localObject2).buidingId = ((TrafficPois.Content.Start)localObject1).getIndoorParentUid();
-        ((AddrListResult.Points)localObject2).describe = ((TrafficPois.Content.Start)localObject1).getDescribe();
-        localArrayList4.add(localObject2);
-      }
-      if (localArrayList4.size() == 1) {
-        localAddrListResult.mHaveStCitylist = true;
-      }
-      if (localAddrListResult.mHaveThroughCityList)
-      {
-        localIterator = paramTrafficPois.getContent().getWayPointsList().iterator();
-        while (localIterator.hasNext())
-        {
-          localObject1 = (TrafficPois.Content.WayPoints)localIterator.next();
-          localAddrListResult.getClass();
-          localObject2 = new AddrListResult.Citys(localAddrListResult);
-          ((AddrListResult.Citys)localObject2).code = ((TrafficPois.Content.WayPoints)localObject1).getCode();
-          ((AddrListResult.Citys)localObject2).name = ((TrafficPois.Content.WayPoints)localObject1).getName();
-          ((AddrListResult.Citys)localObject2).num = ((TrafficPois.Content.WayPoints)localObject1).getNum();
-          localArrayList3.add(localObject2);
-        }
-      }
-      localIterator = paramTrafficPois.getContent().getWayPointsList().iterator();
-      while (localIterator.hasNext())
-      {
-        localObject1 = (TrafficPois.Content.WayPoints)localIterator.next();
-        localAddrListResult.getClass();
-        localObject2 = new AddrListResult.Points(localAddrListResult);
-        ((AddrListResult.Points)localObject2).addr = ((TrafficPois.Content.WayPoints)localObject1).getAddr();
-        ((AddrListResult.Points)localObject2).name = ((TrafficPois.Content.WayPoints)localObject1).getName();
-        ((AddrListResult.Points)localObject2).pt = PBConvertUtil.decryptPoint(((TrafficPois.Content.WayPoints)localObject1).getGeo());
-        ((AddrListResult.Points)localObject2).uid = ((TrafficPois.Content.WayPoints)localObject1).getUid();
-        ((AddrListResult.Points)localObject2).floor = ((TrafficPois.Content.WayPoints)localObject1).getIndoorFloor();
-        ((AddrListResult.Points)localObject2).buidingId = ((TrafficPois.Content.WayPoints)localObject1).getIndoorParentUid();
-        ((AddrListResult.Points)localObject2).dist = ((TrafficPois.Content.WayPoints)localObject1).getDist();
-        ((AddrListResult.Points)localObject2).direction = ((TrafficPois.Content.WayPoints)localObject1).getDirection();
-        ((AddrListResult.Points)localObject2).hasDist = ((TrafficPois.Content.WayPoints)localObject1).hasDist();
-        ((AddrListResult.Points)localObject2).hasDirect = ((TrafficPois.Content.WayPoints)localObject1).hasDirection();
-        ((AddrListResult.Points)localObject2).describe = ((TrafficPois.Content.WayPoints)localObject1).getDescribe();
-        localArrayList6.add(localObject2);
-      }
-      if (localArrayList6.size() == 1) {
-        localAddrListResult.mHaveThroughCityList = true;
-      }
-      if (localAddrListResult.mHaveEnCityList)
-      {
-        localIterator = paramTrafficPois.getContent().getEndList().iterator();
-        while (localIterator.hasNext())
-        {
-          localObject1 = (TrafficPois.Content.End)localIterator.next();
-          localAddrListResult.getClass();
-          localObject2 = new AddrListResult.Citys(localAddrListResult);
-          ((AddrListResult.Citys)localObject2).code = ((TrafficPois.Content.End)localObject1).getCode();
-          ((AddrListResult.Citys)localObject2).name = ((TrafficPois.Content.End)localObject1).getName();
-          ((AddrListResult.Citys)localObject2).num = ((TrafficPois.Content.End)localObject1).getNum();
-          localArrayList2.add(localObject2);
-        }
-      }
-      localIterator = paramTrafficPois.getContent().getEndList().iterator();
-      while (localIterator.hasNext())
-      {
-        localObject1 = (TrafficPois.Content.End)localIterator.next();
-        localAddrListResult.getClass();
-        localObject2 = new AddrListResult.Points(localAddrListResult);
-        ((AddrListResult.Points)localObject2).addr = ((TrafficPois.Content.End)localObject1).getAddr();
-        ((AddrListResult.Points)localObject2).name = ((TrafficPois.Content.End)localObject1).getName();
-        ((AddrListResult.Points)localObject2).pt = PBConvertUtil.decryptPoint(((TrafficPois.Content.End)localObject1).getGeo());
-        ((AddrListResult.Points)localObject2).uid = ((TrafficPois.Content.End)localObject1).getUid();
-        ((AddrListResult.Points)localObject2).ext = ((TrafficPois.Content.End)localObject1).getExt();
-        ((AddrListResult.Points)localObject2).poiType = ((TrafficPois.Content.End)localObject1).getPoiType();
-        ((AddrListResult.Points)localObject2).floor = ((TrafficPois.Content.End)localObject1).getIndoorFloor();
-        ((AddrListResult.Points)localObject2).buidingId = ((TrafficPois.Content.End)localObject1).getIndoorParentUid();
-        ((AddrListResult.Points)localObject2).dist = ((TrafficPois.Content.End)localObject1).getDist();
-        ((AddrListResult.Points)localObject2).direction = ((TrafficPois.Content.End)localObject1).getDirection();
-        ((AddrListResult.Points)localObject2).hasDist = ((TrafficPois.Content.End)localObject1).hasDist();
-        ((AddrListResult.Points)localObject2).hasDirect = ((TrafficPois.Content.End)localObject1).hasDirection();
-        ((AddrListResult.Points)localObject2).describe = ((TrafficPois.Content.End)localObject1).getDescribe();
-        localArrayList5.add(localObject2);
-      }
-      if (localArrayList5.size() == 1) {
-        localAddrListResult.mHaveEnCityList = true;
-      }
-    }
-    if (paramTrafficPois.getSuggestQueryCount() > 0)
-    {
-      localIterator = paramTrafficPois.getSuggestQueryList().iterator();
-      while (localIterator.hasNext()) {
-        localArrayList7.add((TrafficPois.SuggestQuery)localIterator.next());
-      }
-      if (!paramTrafficPois.getSuggestQueryList().isEmpty()) {
-        localAddrListResult.hasSuggestQuery = true;
-      }
-    }
-    if (paramTrafficPois.hasSuggestQueryFlag()) {
-      localAddrListResult.suggestQueryFlag = paramTrafficPois.getSuggestQueryFlag();
-    }
-    localAddrListResult.mStartCitys = localArrayList1;
-    localAddrListResult.mStartPoints = localArrayList4;
-    localAddrListResult.mEndCitys = localArrayList2;
-    localAddrListResult.mEndPoints = localArrayList5;
-    localAddrListResult.mThroughCitys = localArrayList3;
-    localAddrListResult.mThroughPoints = localArrayList6;
-    localAddrListResult.suggestQuery = localArrayList7;
-    return localAddrListResult;
-  }
-  
-  public static CityInfo convertCityInfo(CityResult paramCityResult)
-  {
-    CityInfo localCityInfo = new CityInfo();
-    localCityInfo.mResultType = 2;
-    if (paramCityResult.hasCurrentCity())
-    {
-      localCityInfo.mCityCode = paramCityResult.getCurrentCity().getCode();
-      localCityInfo.mCityName = paramCityResult.getCurrentCity().getName();
-    }
-    if (paramCityResult.hasPreviousCity())
-    {
-      localCityInfo.mPreCityCode = paramCityResult.getPreviousCity().getCode();
-      localCityInfo.mPreCityName = paramCityResult.getPreviousCity().getName();
-    }
-    if (paramCityResult.hasContent())
-    {
-      localCityInfo.mCityType = paramCityResult.getContent().getCityType();
-      localCityInfo.mcName = paramCityResult.getContent().getCname();
-      localCityInfo.mLevel = transformCityLevel(paramCityResult.getContent().getLevel(), paramCityResult.getContent().getCityType());
-      localCityInfo.mCityUid = paramCityResult.getContent().getUid();
-      localCityInfo.mSup_lukuang = paramCityResult.getContent().getSupLukuang();
-      localCityInfo.mCityGeo = PBConvertUtil.decryptPoint(paramCityResult.getContent().getGeo());
-      localCityInfo.mSgeo = paramCityResult.getContent().getSgeo();
-    }
-    return localCityInfo;
-  }
-  
-  public static CityListResult convertCityResult(TrafficCitys paramTrafficCitys)
-  {
-    CityListResult localCityListResult = new CityListResult();
-    localCityListResult.mResultType = 7;
-    localCityListResult.setCityCount(paramTrafficCitys.getContentsCount());
-    Object localObject1 = new CityInfo();
-    if (paramTrafficCitys.hasCurrentCity())
-    {
-      ((CityInfo)localObject1).mCityCode = paramTrafficCitys.getCurrentCity().getCode();
-      ((CityInfo)localObject1).mCityName = paramTrafficCitys.getCurrentCity().getName();
-      ((CityInfo)localObject1).mLevel = paramTrafficCitys.getCurrentCity().getLevel();
-      ((CityInfo)localObject1).mCityUid = paramTrafficCitys.getCurrentCity().getUid();
-      ((CityInfo)localObject1).mSup_subway = paramTrafficCitys.getCurrentCity().getSupSubway();
-      ((CityInfo)localObject1).mSup_lukuang = paramTrafficCitys.getCurrentCity().getSupLukuang();
-      ((CityInfo)localObject1).mCityGeo = PBConvertUtil.decryptPoint(paramTrafficCitys.getCurrentCity().getGeo());
-    }
-    localCityListResult.setCityinfo((CityInfo)localObject1);
-    localObject1 = new ArrayList();
-    Object localObject2 = paramTrafficCitys.getContentsList().iterator();
-    while (((Iterator)localObject2).hasNext())
-    {
-      Object localObject3 = (TrafficCitys.Contents)((Iterator)localObject2).next();
-      CityListResult.Citys localCitys;
-      if (((TrafficCitys.Contents)localObject3).hasType())
-      {
-        localCityListResult.getClass();
-        localCitys = new CityListResult.Citys(localCityListResult);
-        localCitys.mCode = ((TrafficCitys.Contents)localObject3).getCode();
-        localCitys.mName = ((TrafficCitys.Contents)localObject3).getName();
-        localCitys.mNum = ((TrafficCitys.Contents)localObject3).getNum();
-        localCitys.extinfo = ((TrafficCitys.Contents)localObject3).getExtInfo();
-        localCitys.searchquery = ((TrafficCitys.Contents)localObject3).getSearchQuery();
-        localCitys.type = ((TrafficCitys.Contents)localObject3).getType();
-        localCitys.viewName = ((TrafficCitys.Contents)localObject3).getViewName();
-        localCitys.poiNum = ((TrafficCitys.Contents)localObject3).getPoiNum();
-        if (localCitys.poiNum >= 1)
-        {
-          ArrayList localArrayList = new ArrayList();
-          localObject3 = ((TrafficCitys.Contents)localObject3).getPoisList().iterator();
-          while (((Iterator)localObject3).hasNext())
-          {
-            TrafficCitys.Contents.Pois localPois = (TrafficCitys.Contents.Pois)((Iterator)localObject3).next();
-            localCityListResult.getClass();
-            CityListResult.Pois localPois1 = new CityListResult.Pois(localCityListResult);
-            localPois1.addr = localPois.getAddr();
-            localPois1.bid = localPois.getBid();
-            localPois1.name = localPois.getName();
-            localPois1.stdtag = localPois.getStdtag();
-            localPois1.searchpoi = localPois.getPoiQuery();
-            localArrayList.add(localPois1);
-          }
-          localCitys.poiList = localArrayList;
-        }
-        ((ArrayList)localObject1).add(localCitys);
-      }
-      else
-      {
-        localCityListResult.getClass();
-        localCitys = new CityListResult.Citys(localCityListResult);
-        localCitys.mCode = ((TrafficCitys.Contents)localObject3).getCode();
-        localCitys.viewName = ((TrafficCitys.Contents)localObject3).getName();
-        localCitys.type = 1;
-        localCitys.extinfo = ("约" + ((TrafficCitys.Contents)localObject3).getNum() + "个");
-        localCitys.poiNum = 0;
-        ((ArrayList)localObject1).add(localCitys);
-      }
-    }
-    localCityListResult.setCitys((ArrayList)localObject1);
-    localObject1 = new ArrayList();
-    paramTrafficCitys = paramTrafficCitys.getSuggestQueryList().iterator();
-    while (paramTrafficCitys.hasNext())
-    {
-      localObject2 = ((TrafficCitys.SuggestQuery)paramTrafficCitys.next()).getQuery();
-      if (!TextUtils.isEmpty((CharSequence)localObject2)) {
-        ((ArrayList)localObject1).add(localObject2);
-      }
-    }
-    localCityListResult.setSuggestQueries((ArrayList)localObject1);
-    return localCityListResult;
-  }
-  
-  public static PoiDetailInfo convertPoiDetailInfo(int paramInt, Inf paramInf)
-  {
-    PoiDetailInfo localPoiDetailInfo = new PoiDetailInfo();
-    localPoiDetailInfo.geo = new Point(0.0D, 0.0D);
-    Object localObject1 = CoordinateUtil.geoStringToPoint(paramInf.getContent().getGeo());
-    localPoiDetailInfo.geo.setTo(((Point)localObject1).getDoubleX(), ((Point)localObject1).getDoubleY());
-    localPoiDetailInfo.newCatelogId = paramInf.getContent().getNewCatalogId();
-    if (paramInf.getContent().hasServiceTag()) {
-      localPoiDetailInfo.serviceTag = paramInf.getContent().getServiceTag();
-    }
-    localPoiDetailInfo.name = paramInf.getContent().getName();
-    localPoiDetailInfo.ismodified = paramInf.getContent().getIsmodified();
-    localPoiDetailInfo.type = paramInf.getContent().getPoiType();
-    localPoiDetailInfo.uid = paramInf.getContent().getUid();
-    localPoiDetailInfo.addr = paramInf.getContent().getAddr();
-    localPoiDetailInfo.tel = paramInf.getContent().getTel();
-    localPoiDetailInfo.floorId = paramInf.getContent().getIndoorFloor();
-    localPoiDetailInfo.buildingId = paramInf.getContent().getIndoorParentUid();
-    localPoiDetailInfo.indoorOverLooking = paramInf.getContent().getIndoorOverLooking();
-    localPoiDetailInfo.cityId = paramInf.getContent().getCityId();
-    localPoiDetailInfo.pano = paramInf.getContent().getPano();
-    localPoiDetailInfo.indoor_pano = paramInf.getContent().getIndoorPano();
-    localPoiDetailInfo.rtbusUpdateTime = paramInf.getContent().getRtbusUpdateTime();
-    localPoiDetailInfo.poi_type_text = paramInf.getContent().getPoiTypeText();
-    localPoiDetailInfo.streetId = paramInf.getContent().getStreetId();
-    localPoiDetailInfo.stationNum = paramInf.getContent().getStationNum();
-    localPoiDetailInfo.iconId = paramInf.getContent().getIconId();
-    localPoiDetailInfo.stdTag = paramInf.getContent().getStdTag();
-    if (paramInf.hasOption())
-    {
-      localPoiDetailInfo.ldata = paramInf.getOption().getLdata();
-      localPoiDetailInfo.regionType = paramInf.getOption().getRegionType();
-    }
-    localPoiDetailInfo.offline = paramInf.getOffline();
-    if ((paramInf.getContent().hasExt()) && (paramInf.getContent().getExt().hasDetailInfo())) {
-      localPoiDetailInfo.isScopeRouteCommand = paramInf.getContent().getExt().getDetailInfo().getGuide();
-    }
-    if (paramInf.getContent().hasHeatMap())
-    {
-      localPoiDetailInfo.getClass();
-      localPoiDetailInfo.heatMap = new PoiDetailInfo.HeatMap(localPoiDetailInfo);
-      localPoiDetailInfo.heatMap.rankStr = paramInf.getContent().getHeatMap().getRankstr();
-      localPoiDetailInfo.heatMap.type = paramInf.getContent().getHeatMap().getType();
-      if (paramInf.getContent().getHeatMap().hasPoints()) {
-        localPoiDetailInfo.heatMap.pointDiffs = new ArrayList(paramInf.getContent().getHeatMap().getPoints().getGeoElements(0).getPointList());
-      }
-    }
-    Object localObject2;
-    Object localObject3;
-    if (paramInf.getContent().getBlinfoCount() > 0)
-    {
-      localObject1 = new ArrayList();
-      paramInt = 0;
-      while (paramInt < paramInf.getContent().getBlinfoCount())
-      {
-        localObject2 = paramInf.getContent().getBlinfo(paramInt);
-        localPoiDetailInfo.getClass();
-        localObject3 = new PoiDetailInfo.BusLine(localPoiDetailInfo);
-        ((PoiDetailInfo.BusLine)localObject3).addr = ((Inf.Content.Blinfo)localObject2).getAddr();
-        ((PoiDetailInfo.BusLine)localObject3).name = ((Inf.Content.Blinfo)localObject2).getName();
-        ((PoiDetailInfo.BusLine)localObject3).uid = ((Inf.Content.Blinfo)localObject2).getUid();
-        ((PoiDetailInfo.BusLine)localObject3).pairUid = ((Inf.Content.Blinfo)localObject2).getPairUid();
-        ((PoiDetailInfo.BusLine)localObject3).iconId = ((Inf.Content.Blinfo)localObject2).getIconId();
-        ((PoiDetailInfo.BusLine)localObject3).nextstation = ((Inf.Content.Blinfo)localObject2).getNextStation();
-        ((PoiDetailInfo.BusLine)localObject3).sonUid = ((Inf.Content.Blinfo)localObject2).getSonUid();
-        if ((((Inf.Content.Blinfo)localObject2).hasRtInfo()) && (((Inf.Content.Blinfo)localObject2).getRtInfo().hasTipRtbus())) {
-          ((PoiDetailInfo.BusLine)localObject3).rtbusInfo = ((Inf.Content.Blinfo)localObject2).getRtInfo().getTipRtbus();
-        }
-        ((ArrayList)localObject1).add(localObject3);
-        paramInt += 1;
-      }
-      localPoiDetailInfo.setArrayBuslines((ArrayList)localObject1);
-    }
-    if (paramInf.getContent().getOtherStationsCount() > 0)
-    {
-      localObject1 = new ArrayList();
-      paramInt = 0;
-      while (paramInt < paramInf.getContent().getOtherStationsCount())
-      {
-        localObject2 = paramInf.getContent().getOtherStations(paramInt);
-        localPoiDetailInfo.getClass();
-        localObject3 = new PoiDetailInfo.BusLine(localPoiDetailInfo);
-        ((PoiDetailInfo.BusLine)localObject3).otherStationUid = ((Inf.Content.OtherStations)localObject2).getUid();
-        ((PoiDetailInfo.BusLine)localObject3).otherStationIconid = ((Inf.Content.OtherStations)localObject2).getIconId();
-        ((PoiDetailInfo.BusLine)localObject3).otherStationAddr = ((Inf.Content.OtherStations)localObject2).getAddr();
-        ((ArrayList)localObject1).add(localObject3);
-        paramInt += 1;
-      }
-      localPoiDetailInfo.setArrayOtherStations((ArrayList)localObject1);
-    }
-    if (paramInf.getContent().hasExt())
-    {
-      localPoiDetailInfo.getClass();
-      localObject1 = new PoiDetailInfo.DeepDetail(localPoiDetailInfo);
-      ((PoiDetailInfo.DeepDetail)localObject1).type = paramInf.getContent().getExtType();
-      if (paramInf.getContent().getExt().getLineInfoCount() > 0)
-      {
-        localObject2 = new ArrayList();
-        paramInt = 0;
-      }
-    }
-    for (;;)
-    {
-      Inf.Content.Ext.LineInfo localLineInfo;
-      if (paramInt < paramInf.getContent().getExt().getLineInfoCount())
-      {
-        localPoiDetailInfo.getClass();
-        localObject3 = new PoiDetailInfo.Lines(localPoiDetailInfo);
-        localLineInfo = paramInf.getContent().getExt().getLineInfo(paramInt);
-        ((PoiDetailInfo.Lines)localObject3).firstTime = localLineInfo.getFirstTime();
-        ((PoiDetailInfo.Lines)localObject3).lastTime = localLineInfo.getLastTime();
-        ((PoiDetailInfo.Lines)localObject3).terminal = localLineInfo.getTerminals();
-        ((PoiDetailInfo.Lines)localObject3).uid = localLineInfo.getUid();
-        ((PoiDetailInfo.Lines)localObject3).abb = localLineInfo.getAbb();
-      }
-      try
-      {
-        if (localLineInfo.hasClr()) {
-          ((PoiDetailInfo.Lines)localObject3).clr = localLineInfo.getClr().replace("0x", "#");
-        }
-        ((ArrayList)localObject2).add(localObject3);
-        paramInt += 1;
-        continue;
-        ((PoiDetailInfo.DeepDetail)localObject1).lines = ((ArrayList)localObject2);
-        ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("src_name", paramInf.getContent().getExt().getSrcName());
-        if (!TextUtils.isEmpty(paramInf.getContent().getNewCatalogId())) {
-          ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("new_catalog_id", paramInf.getContent().getNewCatalogId());
-        }
-        if (paramInf.getContent().hasServiceTag()) {
-          ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("service_tag", paramInf.getContent().getServiceTag());
-        }
-        if (paramInf.getContent().getExt().hasSrcName()) {
-          localPoiDetailInfo.fromSource = paramInf.getContent().getExt().getSrcName();
-        }
-        if (paramInf.getContent().getExt().hasDetailInfo())
-        {
-          localObject2 = paramInf.getContent().getExt().getDetailInfo();
-          ((PoiDetailInfo.DeepDetail)localObject1).price = ((Inf.Content.Ext.DetailInfo)localObject2).getPrice();
-          if (paramInf.getContent().hasPhotoList()) {
-            localPoiDetailInfo.mPhotoList = paramInf.getContent().getPhotoList();
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasOverallRating()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("overall_rating", ((Inf.Content.Ext.DetailInfo)localObject2).getOverallRating());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasImage()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("image", ((Inf.Content.Ext.DetailInfo)localObject2).getImage());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasPrice()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("price", ((Inf.Content.Ext.DetailInfo)localObject2).getPrice());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasPriceText()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("price_text", ((Inf.Content.Ext.DetailInfo)localObject2).getPriceText());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasTag()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("tag", ((Inf.Content.Ext.DetailInfo)localObject2).getTag());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasPremiumFlag()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("premium_flag", Integer.valueOf(((Inf.Content.Ext.DetailInfo)localObject2).getPremiumFlag()));
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasCommentNum()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("comment_num", ((Inf.Content.Ext.DetailInfo)localObject2).getCommentNum());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasGrouponFlag()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("groupon_flag", Integer.valueOf(((Inf.Content.Ext.DetailInfo)localObject2).getGrouponFlag()));
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasGrouponTotal()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("groupon_total", Integer.valueOf(((Inf.Content.Ext.DetailInfo)localObject2).getGrouponTotal()));
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasWiseRealtimePriceFlag()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("wise_realtime_price_flag", ((Inf.Content.Ext.DetailInfo)localObject2).getWiseRealtimePriceFlag());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasWiseRealtimePrice()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("wise_realtime_price", ((Inf.Content.Ext.DetailInfo)localObject2).getWiseRealtimePrice());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasWiseHotelType()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("wise_hotel_type", ((Inf.Content.Ext.DetailInfo)localObject2).getWiseHotelType());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasTonightSaleFlag()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("tonight_sale_flag", ((Inf.Content.Ext.DetailInfo)localObject2).getTonightSaleFlag());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasTonightPrice()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("tonight_price", ((Inf.Content.Ext.DetailInfo)localObject2).getTonightPrice());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasWapBookable()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("wap_bookable", ((Inf.Content.Ext.DetailInfo)localObject2).getWapBookable());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasWiseFullroom()) {
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("wise_fullroom", ((Inf.Content.Ext.DetailInfo)localObject2).getWiseFullroom());
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).getFlagCount() > 0)
-          {
-            localObject3 = new ArrayList();
-            paramInt = 0;
-            while (paramInt < ((Inf.Content.Ext.DetailInfo)localObject2).getFlagCount())
-            {
-              ((ArrayList)localObject3).add(((Inf.Content.Ext.DetailInfo)localObject2).getFlag(paramInt));
-              paramInt += 1;
+        if (pbResult.getContent().getOtherStationsCount() > 0) {
+            ArrayList<BusLine> arrayOtherStations = new ArrayList();
+            for (i = 0; i < pbResult.getContent().getOtherStationsCount(); i++) {
+                OtherStations test2 = pbResult.getContent().getOtherStations(i);
+                result.getClass();
+                info = new BusLine();
+                info.otherStationUid = test2.getUid();
+                info.otherStationIconid = test2.getIconId();
+                info.otherStationAddr = test2.getAddr();
+                arrayOtherStations.add(info);
             }
-            ((PoiDetailInfo.DeepDetail)localObject1).placeParam.put("flag", localObject3);
-          }
-          if (((Inf.Content.Ext.DetailInfo)localObject2).hasMeishipaihao())
-          {
-            localPoiDetailInfo.getClass();
-            localObject3 = new PoiDetailInfo.CaterQueueInfo(localPoiDetailInfo);
-            if ((!((Inf.Content.Ext.DetailInfo)localObject2).getMeishipaihao().hasIsOk()) || (((Inf.Content.Ext.DetailInfo)localObject2).getMeishipaihao().getIsOk() <= 0)) {
-              break label1825;
-            }
-          }
+            result.setArrayOtherStations(arrayOtherStations);
         }
-        label1825:
-        for (boolean bool = true;; bool = false)
-        {
-          ((PoiDetailInfo.CaterQueueInfo)localObject3).isOk = bool;
-          if (((Inf.Content.Ext.DetailInfo)localObject2).getMeishipaihao().hasMain())
-          {
-            if (((Inf.Content.Ext.DetailInfo)localObject2).getMeishipaihao().getMain().hasThirdFrom()) {
-              ((PoiDetailInfo.CaterQueueInfo)localObject3).thirdFrom = ((Inf.Content.Ext.DetailInfo)localObject2).getMeishipaihao().getMain().getThirdFrom();
+        if (pbResult.getContent().hasExt()) {
+            result.getClass();
+            DeepDetail mdetail = new DeepDetail();
+            mdetail.type = pbResult.getContent().getExtType();
+            if (pbResult.getContent().getExt().getLineInfoCount() > 0) {
+                ArrayList<Lines> arrayInfos1 = new ArrayList();
+                for (i = 0; i < pbResult.getContent().getExt().getLineInfoCount(); i++) {
+                    result.getClass();
+                    Lines mid1 = new Lines();
+                    LineInfo lineInfo = pbResult.getContent().getExt().getLineInfo(i);
+                    mid1.firstTime = lineInfo.getFirstTime();
+                    mid1.lastTime = lineInfo.getLastTime();
+                    mid1.terminal = lineInfo.getTerminals();
+                    mid1.uid = lineInfo.getUid();
+                    mid1.abb = lineInfo.getAbb();
+                    try {
+                        if (lineInfo.hasClr()) {
+                            mid1.clr = lineInfo.getClr().replace("0x", "#");
+                        }
+                    } catch (Exception e) {
+                    }
+                    arrayInfos1.add(mid1);
+                }
+                mdetail.lines = arrayInfos1;
             }
-            if (((Inf.Content.Ext.DetailInfo)localObject2).getMeishipaihao().getMain().hasThirdId()) {
-              ((PoiDetailInfo.CaterQueueInfo)localObject3).thirdId = ((Inf.Content.Ext.DetailInfo)localObject2).getMeishipaihao().getMain().getThirdId();
+            mdetail.placeParam.put(Const.SRC_NAME, pbResult.getContent().getExt().getSrcName());
+            if (!TextUtils.isEmpty(pbResult.getContent().getNewCatalogId())) {
+                mdetail.placeParam.put("new_catalog_id", pbResult.getContent().getNewCatalogId());
             }
-          }
-          localPoiDetailInfo.caterQueueInfo = ((PoiDetailInfo.CaterQueueInfo)localObject3);
-          localPoiDetailInfo.setDeepDetail((PoiDetailInfo.DeepDetail)localObject1);
-          if ((paramInf.getContent().hasHeadIcon()) && (paramInf.getContent().getHeadIcon() != null))
-          {
-            localPoiDetailInfo.headIcon = new PoiDetailInfo.HeadIcon();
-            localPoiDetailInfo.headIcon.url = paramInf.getContent().getHeadIcon().getUrl();
-            localPoiDetailInfo.headIcon.type = paramInf.getContent().getHeadIcon().getType();
-            localPoiDetailInfo.headIcon.pid = paramInf.getContent().getHeadIcon().getPid();
-            localPoiDetailInfo.headIcon.links = paramInf.getContent().getHeadIcon().getLinks();
-          }
-          return localPoiDetailInfo;
+            if (pbResult.getContent().hasServiceTag()) {
+                mdetail.placeParam.put("service_tag", pbResult.getContent().getServiceTag());
+            }
+            if (pbResult.getContent().getExt().hasSrcName()) {
+                result.fromSource = pbResult.getContent().getExt().getSrcName();
+            }
+            if (pbResult.getContent().getExt().hasDetailInfo()) {
+                DetailInfo info2 = pbResult.getContent().getExt().getDetailInfo();
+                mdetail.price = info2.getPrice();
+                if (pbResult.getContent().hasPhotoList()) {
+                    result.mPhotoList = pbResult.getContent().getPhotoList();
+                }
+                if (info2.hasOverallRating()) {
+                    mdetail.placeParam.put("overall_rating", info2.getOverallRating());
+                }
+                if (info2.hasImage()) {
+                    mdetail.placeParam.put("image", info2.getImage());
+                }
+                if (info2.hasPrice()) {
+                    mdetail.placeParam.put(SearchParamKey.PRICE, info2.getPrice());
+                }
+                if (info2.hasPriceText()) {
+                    mdetail.placeParam.put("price_text", info2.getPriceText());
+                }
+                if (info2.hasTag()) {
+                    mdetail.placeParam.put("tag", info2.getTag());
+                }
+                if (info2.hasPremiumFlag()) {
+                    mdetail.placeParam.put("premium_flag", Integer.valueOf(info2.getPremiumFlag()));
+                }
+                if (info2.hasCommentNum()) {
+                    mdetail.placeParam.put("comment_num", info2.getCommentNum());
+                }
+                if (info2.hasGrouponFlag()) {
+                    mdetail.placeParam.put("groupon_flag", Integer.valueOf(info2.getGrouponFlag()));
+                }
+                if (info2.hasGrouponTotal()) {
+                    mdetail.placeParam.put("groupon_total", Integer.valueOf(info2.getGrouponTotal()));
+                }
+                if (info2.hasWiseRealtimePriceFlag()) {
+                    mdetail.placeParam.put("wise_realtime_price_flag", info2.getWiseRealtimePriceFlag());
+                }
+                if (info2.hasWiseRealtimePrice()) {
+                    mdetail.placeParam.put("wise_realtime_price", info2.getWiseRealtimePrice());
+                }
+                if (info2.hasWiseHotelType()) {
+                    mdetail.placeParam.put("wise_hotel_type", info2.getWiseHotelType());
+                }
+                if (info2.hasTonightSaleFlag()) {
+                    mdetail.placeParam.put("tonight_sale_flag", info2.getTonightSaleFlag());
+                }
+                if (info2.hasTonightPrice()) {
+                    mdetail.placeParam.put("tonight_price", info2.getTonightPrice());
+                }
+                if (info2.hasWapBookable()) {
+                    mdetail.placeParam.put("wap_bookable", info2.getWapBookable());
+                }
+                if (info2.hasWiseFullroom()) {
+                    mdetail.placeParam.put("wise_fullroom", info2.getWiseFullroom());
+                }
+                if (info2.getFlagCount() > 0) {
+                    ArrayList<String> arrayList = new ArrayList();
+                    for (int index = 0; index < info2.getFlagCount(); index++) {
+                        arrayList.add(info2.getFlag(index));
+                    }
+                    mdetail.placeParam.put("flag", arrayList);
+                }
+                if (info2.hasMeishipaihao()) {
+                    result.getClass();
+                    CaterQueueInfo caterQueue = new CaterQueueInfo();
+                    boolean z = info2.getMeishipaihao().hasIsOk() && info2.getMeishipaihao().getIsOk() > 0;
+                    caterQueue.isOk = z;
+                    if (info2.getMeishipaihao().hasMain()) {
+                        if (info2.getMeishipaihao().getMain().hasThirdFrom()) {
+                            caterQueue.thirdFrom = info2.getMeishipaihao().getMain().getThirdFrom();
+                        }
+                        if (info2.getMeishipaihao().getMain().hasThirdId()) {
+                            caterQueue.thirdId = info2.getMeishipaihao().getMain().getThirdId();
+                        }
+                    }
+                    result.caterQueueInfo = caterQueue;
+                }
+            }
+            result.setDeepDetail(mdetail);
         }
-      }
-      catch (Exception localException)
-      {
-        for (;;) {}
-      }
+        if (pbResult.getContent().hasHeadIcon() && pbResult.getContent().getHeadIcon() != null) {
+            result.headIcon = new HeadIcon();
+            result.headIcon.url = pbResult.getContent().getHeadIcon().getUrl();
+            result.headIcon.type = pbResult.getContent().getHeadIcon().getType();
+            result.headIcon.pid = pbResult.getContent().getHeadIcon().getPid();
+            result.headIcon.links = pbResult.getContent().getHeadIcon().getLinks();
+        }
+        return result;
     }
-  }
-  
-  private static void convertStringMap(Map<String, Object> paramMap)
-  {
-    Iterator localIterator = paramMap.keySet().iterator();
-    while (localIterator.hasNext())
-    {
-      String str = (String)localIterator.next();
-      paramMap.put(str, String.valueOf(paramMap.get(str)));
+
+    private static void convertStringMap(Map<String, Object> map) {
+        for (String key : map.keySet()) {
+            map.put(key, String.valueOf(map.get(key)));
+        }
     }
-  }
-  
-  public static SugResult convertSuggestResult(SusvrResponse paramSusvrResponse)
-  {
-    SugResult localSugResult = new SugResult();
-    int j = paramSusvrResponse.getPoiArrayCount();
-    String[] arrayOfString1 = new String[j];
-    String[] arrayOfString2 = new String[j];
-    String[] arrayOfString3 = new String[j];
-    String[] arrayOfString4 = new String[j];
-    int i = 0;
-    while (i < j)
-    {
-      SusvrResponse.PoiElement localPoiElement = paramSusvrResponse.getPoiArray(i);
-      if (localPoiElement.hasPoiName()) {
-        arrayOfString1[i] = localPoiElement.getPoiName();
-      }
-      if (localPoiElement.hasSubTitle()) {
-        arrayOfString2[i] = localPoiElement.getDistance();
-      }
-      if (localPoiElement.hasCityid()) {
-        arrayOfString3[i] = Integer.toString(localPoiElement.getCityid());
-      }
-      if (localPoiElement.hasDistance()) {
-        arrayOfString4[i] = localPoiElement.getDistance();
-      }
-      i += 1;
+
+    public static CityListResult convertCityResult(TrafficCitys pbResult) {
+        CityListResult oldResult = new CityListResult();
+        oldResult.mResultType = 7;
+        oldResult.setCityCount(pbResult.getContentsCount());
+        CityInfo cityInfo = new CityInfo();
+        if (pbResult.hasCurrentCity()) {
+            cityInfo.mCityCode = pbResult.getCurrentCity().getCode();
+            cityInfo.mCityName = pbResult.getCurrentCity().getName();
+            cityInfo.mLevel = pbResult.getCurrentCity().getLevel();
+            cityInfo.mCityUid = pbResult.getCurrentCity().getUid();
+            cityInfo.mSup_subway = pbResult.getCurrentCity().getSupSubway();
+            cityInfo.mSup_lukuang = pbResult.getCurrentCity().getSupLukuang();
+            cityInfo.mCityGeo = PBConvertUtil.decryptPoint(pbResult.getCurrentCity().getGeo());
+        }
+        oldResult.setCityinfo(cityInfo);
+        ArrayList<Citys> cityList = new ArrayList();
+        for (Contents city : pbResult.getContentsList()) {
+            Citys c;
+            if (city.hasType()) {
+                oldResult.getClass();
+                c = new Citys();
+                c.mCode = city.getCode();
+                c.mName = city.getName();
+                c.mNum = city.getNum();
+                c.extinfo = city.getExtInfo();
+                c.searchquery = city.getSearchQuery();
+                c.type = city.getType();
+                c.viewName = city.getViewName();
+                c.poiNum = city.getPoiNum();
+                if (c.poiNum >= 1) {
+                    ArrayList<Pois> poiList = new ArrayList();
+                    for (Contents.Pois poi : city.getPoisList()) {
+                        oldResult.getClass();
+                        Pois po = new Pois();
+                        po.addr = poi.getAddr();
+                        po.bid = poi.getBid();
+                        po.name = poi.getName();
+                        po.stdtag = poi.getStdtag();
+                        po.searchpoi = poi.getPoiQuery();
+                        poiList.add(po);
+                    }
+                    c.poiList = poiList;
+                }
+                cityList.add(c);
+            } else {
+                oldResult.getClass();
+                c = new Citys();
+                c.mCode = city.getCode();
+                c.viewName = city.getName();
+                c.type = 1;
+                c.extinfo = "约" + city.getNum() + "个";
+                c.poiNum = 0;
+                cityList.add(c);
+            }
+        }
+        oldResult.setCitys(cityList);
+        ArrayList<String> sugs = new ArrayList();
+        for (SuggestQuery sug : pbResult.getSuggestQueryList()) {
+            String query = sug.getQuery();
+            if (!TextUtils.isEmpty(query)) {
+                sugs.add(query);
+            }
+        }
+        oldResult.setSuggestQueries(sugs);
+        return oldResult;
     }
-    localSugResult.setPoiname(arrayOfString1);
-    localSugResult.setSubtitle(arrayOfString2);
-    localSugResult.setCityid(arrayOfString3);
-    localSugResult.setDistance(arrayOfString4);
-    return localSugResult;
-  }
-  
-  private static int transformCityLevel(int paramInt1, int paramInt2)
-  {
-    int i = paramInt1;
-    if (paramInt1 == 0) {}
-    switch (paramInt2)
-    {
-    default: 
-      i = 0;
-      return i;
-    case 0: 
-      return 4;
-    case 1: 
-      return 11;
-    case 2: 
-      return 12;
+
+    public static CityInfo convertCityInfo(CityResult pbResult) {
+        CityInfo oldResult = new CityInfo();
+        oldResult.mResultType = 2;
+        if (pbResult.hasCurrentCity()) {
+            oldResult.mCityCode = pbResult.getCurrentCity().getCode();
+            oldResult.mCityName = pbResult.getCurrentCity().getName();
+        }
+        if (pbResult.hasPreviousCity()) {
+            oldResult.mPreCityCode = pbResult.getPreviousCity().getCode();
+            oldResult.mPreCityName = pbResult.getPreviousCity().getName();
+        }
+        if (pbResult.hasContent()) {
+            oldResult.mCityType = pbResult.getContent().getCityType();
+            oldResult.mcName = pbResult.getContent().getCname();
+            oldResult.mLevel = transformCityLevel(pbResult.getContent().getLevel(), pbResult.getContent().getCityType());
+            oldResult.mCityUid = pbResult.getContent().getUid();
+            oldResult.mSup_lukuang = pbResult.getContent().getSupLukuang();
+            oldResult.mCityGeo = PBConvertUtil.decryptPoint(pbResult.getContent().getGeo());
+            oldResult.mSgeo = pbResult.getContent().getSgeo();
+        }
+        return oldResult;
     }
-    return 13;
-  }
+
+    private static int transformCityLevel(int level, int cityType) {
+        if (level != 0) {
+            return level;
+        }
+        switch (cityType) {
+            case 0:
+                return 4;
+            case 1:
+                return 11;
+            case 2:
+                return 12;
+            case 3:
+                return 13;
+            default:
+                return 0;
+        }
+    }
+
+    public static AddrListResult convertAddressListResult(TrafficPois pbResult) {
+        AddrListResult oldResult = new AddrListResult();
+        oldResult.mResultType = 23;
+        if (pbResult.hasOption()) {
+            int i;
+            if (pbResult.getOption().getCityListCount() > 1) {
+                oldResult.mHaveStCitylist = PBConvertUtil.stringToBool(pbResult.getOption().getCityList(0));
+                oldResult.mHaveEnCityList = PBConvertUtil.stringToBool(pbResult.getOption().getCityList(pbResult.getOption().getCityListCount() - 1));
+                if (pbResult.getOption().getCityListCount() > 2) {
+                    for (i = 1; i < pbResult.getOption().getCityListCount() - 1; i++) {
+                        if (PBConvertUtil.stringToBool(pbResult.getOption().getCityList(i))) {
+                            oldResult.mHaveThroughCityList = true;
+                        }
+                    }
+                }
+            }
+            if (pbResult.hasImgeShow()) {
+                if (pbResult.getImgeShow().hasImageExt()) {
+                    oldResult.mImgExt = pbResult.getImgeShow().getImageExt();
+                }
+                if (pbResult.getImgeShow().hasResBound()) {
+                    oldResult.mResBound = pbResult.getImgeShow().getResBound();
+                }
+            }
+            if (pbResult.getOption().getPrioFlagCount() > 1) {
+                oldResult.mHaveStPrio = PBConvertUtil.stringToBool(pbResult.getOption().getPrioFlag(0));
+                oldResult.mHaveEnPrio = PBConvertUtil.stringToBool(pbResult.getOption().getPrioFlag(pbResult.getOption().getPrioFlagCount() - 1));
+                if (pbResult.getOption().getPrioFlagCount() > 2) {
+                    for (i = 1; i < pbResult.getOption().getPrioFlagCount() - 1; i++) {
+                        if (PBConvertUtil.stringToBool(pbResult.getOption().getPrioFlag(i))) {
+                            oldResult.mHaveThroughPrio = true;
+                        }
+                    }
+                }
+            }
+            oldResult.mStKeyword = pbResult.getOption().getSWd();
+            if (pbResult.getOption().getEWdCount() > 0) {
+                oldResult.mEnKeyWord = pbResult.getOption().getEWd(pbResult.getOption().getEWdCount() - 1);
+            }
+            if (pbResult.getOption().getEWdCount() > 1) {
+                oldResult.mThroughKeyword = pbResult.getOption().getEWd(0);
+            }
+            oldResult.mIfNav = pbResult.getOption().getIfNav();
+            if (pbResult.getOption().hasStartCity()) {
+                oldResult.mStCityname = pbResult.getOption().getStartCity().getCname();
+                oldResult.mStCityCode = pbResult.getOption().getStartCity().getCode();
+            }
+            if (pbResult.getOption().getEndCityCount() > 0) {
+                oldResult.mEnCityname = pbResult.getOption().getEndCity(pbResult.getOption().getEndCityCount() - 1).getCname();
+                oldResult.mEnCityCode = pbResult.getOption().getEndCity(pbResult.getOption().getEndCityCount() - 1).getCode();
+            }
+            if (pbResult.getOption().getEndCityCount() > 1) {
+                oldResult.mThroughCityName = pbResult.getOption().getEndCity(0).getCname();
+                oldResult.mThroughCityCode = Integer.valueOf(pbResult.getOption().getEndCity(0).getCode());
+            }
+        }
+        ArrayList<AddrListResult.Citys> startCityList = new ArrayList();
+        ArrayList<AddrListResult.Citys> endCityList = new ArrayList();
+        ArrayList<AddrListResult.Citys> throughCityList = new ArrayList();
+        ArrayList<Points> startCityPointList = new ArrayList();
+        ArrayList<Points> endCityPointList = new ArrayList();
+        ArrayList<Points> throughCityPointList = new ArrayList();
+        ArrayList<TrafficPois.SuggestQuery> suggestQueryList = new ArrayList();
+        if (pbResult.hasContent()) {
+            AddrListResult.Citys city;
+            Points point;
+            oldResult.mStCount = pbResult.getContent().getStartCount();
+            oldResult.mEnCount = pbResult.getContent().getEndCount();
+            oldResult.mThroughCount = pbResult.getContent().getWayPointsCount();
+            if (oldResult.mHaveStCitylist) {
+                for (Start item : pbResult.getContent().getStartList()) {
+                    oldResult.getClass();
+                    city = new AddrListResult.Citys();
+                    city.code = item.getCode();
+                    city.name = item.getName();
+                    city.num = item.getNum();
+                    startCityList.add(city);
+                }
+            } else {
+                for (Start item2 : pbResult.getContent().getStartList()) {
+                    oldResult.getClass();
+                    point = new Points();
+                    point.addr = item2.getAddr();
+                    point.name = item2.getName();
+                    point.pt = PBConvertUtil.decryptPoint(item2.getGeo());
+                    point.uid = item2.getUid();
+                    point.floor = item2.getIndoorFloor();
+                    point.buidingId = item2.getIndoorParentUid();
+                    point.describe = item2.getDescribe();
+                    startCityPointList.add(point);
+                }
+                if (startCityPointList.size() == 1) {
+                    oldResult.mHaveStCitylist = true;
+                }
+            }
+            if (oldResult.mHaveThroughCityList) {
+                for (WayPoints item3 : pbResult.getContent().getWayPointsList()) {
+                    oldResult.getClass();
+                    city = new AddrListResult.Citys();
+                    city.code = item3.getCode();
+                    city.name = item3.getName();
+                    city.num = item3.getNum();
+                    throughCityList.add(city);
+                }
+            } else {
+                for (WayPoints item32 : pbResult.getContent().getWayPointsList()) {
+                    oldResult.getClass();
+                    point = new Points();
+                    point.addr = item32.getAddr();
+                    point.name = item32.getName();
+                    point.pt = PBConvertUtil.decryptPoint(item32.getGeo());
+                    point.uid = item32.getUid();
+                    point.floor = item32.getIndoorFloor();
+                    point.buidingId = item32.getIndoorParentUid();
+                    point.dist = item32.getDist();
+                    point.direction = item32.getDirection();
+                    point.hasDist = item32.hasDist();
+                    point.hasDirect = item32.hasDirection();
+                    point.describe = item32.getDescribe();
+                    throughCityPointList.add(point);
+                }
+                if (throughCityPointList.size() == 1) {
+                    oldResult.mHaveThroughCityList = true;
+                }
+            }
+            if (oldResult.mHaveEnCityList) {
+                for (End item4 : pbResult.getContent().getEndList()) {
+                    oldResult.getClass();
+                    city = new AddrListResult.Citys();
+                    city.code = item4.getCode();
+                    city.name = item4.getName();
+                    city.num = item4.getNum();
+                    endCityList.add(city);
+                }
+            } else {
+                for (End item42 : pbResult.getContent().getEndList()) {
+                    oldResult.getClass();
+                    point = new Points();
+                    point.addr = item42.getAddr();
+                    point.name = item42.getName();
+                    point.pt = PBConvertUtil.decryptPoint(item42.getGeo());
+                    point.uid = item42.getUid();
+                    point.ext = item42.getExt();
+                    point.poiType = item42.getPoiType();
+                    point.floor = item42.getIndoorFloor();
+                    point.buidingId = item42.getIndoorParentUid();
+                    point.dist = item42.getDist();
+                    point.direction = item42.getDirection();
+                    point.hasDist = item42.hasDist();
+                    point.hasDirect = item42.hasDirection();
+                    point.describe = item42.getDescribe();
+                    endCityPointList.add(point);
+                }
+                if (endCityPointList.size() == 1) {
+                    oldResult.mHaveEnCityList = true;
+                }
+            }
+        }
+        if (pbResult.getSuggestQueryCount() > 0) {
+            for (TrafficPois.SuggestQuery item5 : pbResult.getSuggestQueryList()) {
+                suggestQueryList.add(item5);
+            }
+            if (!pbResult.getSuggestQueryList().isEmpty()) {
+                oldResult.hasSuggestQuery = true;
+            }
+        }
+        if (pbResult.hasSuggestQueryFlag()) {
+            oldResult.suggestQueryFlag = pbResult.getSuggestQueryFlag();
+        }
+        oldResult.mStartCitys = startCityList;
+        oldResult.mStartPoints = startCityPointList;
+        oldResult.mEndCitys = endCityList;
+        oldResult.mEndPoints = endCityPointList;
+        oldResult.mThroughCitys = throughCityList;
+        oldResult.mThroughPoints = throughCityPointList;
+        oldResult.suggestQuery = suggestQueryList;
+        return oldResult;
+    }
+
+    public static SugResult convertSuggestResult(SusvrResponse pbResult) {
+        SugResult sug = new SugResult();
+        int length = pbResult.getPoiArrayCount();
+        String[] strPoiname = new String[length];
+        String[] strSubtitle = new String[length];
+        String[] strCityid = new String[length];
+        String[] strDistance = new String[length];
+        for (int i = 0; i < length; i++) {
+            PoiElement item = pbResult.getPoiArray(i);
+            if (item.hasPoiName()) {
+                strPoiname[i] = item.getPoiName();
+            }
+            if (item.hasSubTitle()) {
+                strSubtitle[i] = item.getDistance();
+            }
+            if (item.hasCityid()) {
+                strCityid[i] = Integer.toString(item.getCityid());
+            }
+            if (item.hasDistance()) {
+                strDistance[i] = item.getDistance();
+            }
+        }
+        sug.setPoiname(strPoiname);
+        sug.setSubtitle(strSubtitle);
+        sug.setCityid(strCityid);
+        sug.setDistance(strDistance);
+        return sug;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/search/convert/PoiPBConverter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

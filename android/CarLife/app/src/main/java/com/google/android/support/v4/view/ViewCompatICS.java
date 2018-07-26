@@ -5,41 +5,31 @@ import android.view.View.AccessibilityDelegate;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-class ViewCompatICS
-{
-  public static boolean canScrollHorizontally(View paramView, int paramInt)
-  {
-    return paramView.canScrollHorizontally(paramInt);
-  }
-  
-  public static boolean canScrollVertically(View paramView, int paramInt)
-  {
-    return paramView.canScrollVertically(paramInt);
-  }
-  
-  public static void onInitializeAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    paramView.onInitializeAccessibilityEvent(paramAccessibilityEvent);
-  }
-  
-  public static void onInitializeAccessibilityNodeInfo(View paramView, Object paramObject)
-  {
-    paramView.onInitializeAccessibilityNodeInfo((AccessibilityNodeInfo)paramObject);
-  }
-  
-  public static void onPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    paramView.onPopulateAccessibilityEvent(paramAccessibilityEvent);
-  }
-  
-  public static void setAccessibilityDelegate(View paramView, Object paramObject)
-  {
-    paramView.setAccessibilityDelegate((View.AccessibilityDelegate)paramObject);
-  }
+class ViewCompatICS {
+    ViewCompatICS() {
+    }
+
+    public static boolean canScrollHorizontally(View v, int direction) {
+        return v.canScrollHorizontally(direction);
+    }
+
+    public static boolean canScrollVertically(View v, int direction) {
+        return v.canScrollVertically(direction);
+    }
+
+    public static void setAccessibilityDelegate(View v, Object delegate) {
+        v.setAccessibilityDelegate((AccessibilityDelegate) delegate);
+    }
+
+    public static void onPopulateAccessibilityEvent(View v, AccessibilityEvent event) {
+        v.onPopulateAccessibilityEvent(event);
+    }
+
+    public static void onInitializeAccessibilityEvent(View v, AccessibilityEvent event) {
+        v.onInitializeAccessibilityEvent(event);
+    }
+
+    public static void onInitializeAccessibilityNodeInfo(View v, Object info) {
+        v.onInitializeAccessibilityNodeInfo((AccessibilityNodeInfo) info);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/ViewCompatICS.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

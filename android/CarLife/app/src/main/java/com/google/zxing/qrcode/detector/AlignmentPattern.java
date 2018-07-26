@@ -2,49 +2,26 @@ package com.google.zxing.qrcode.detector;
 
 import com.google.zxing.ResultPoint;
 
-public final class AlignmentPattern
-  extends ResultPoint
-{
-  private final float estimatedModuleSize;
-  
-  AlignmentPattern(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    super(paramFloat1, paramFloat2);
-    this.estimatedModuleSize = paramFloat3;
-  }
-  
-  boolean aboutEquals(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (Math.abs(paramFloat2 - getY()) <= paramFloat1)
-    {
-      bool1 = bool2;
-      if (Math.abs(paramFloat3 - getX()) <= paramFloat1)
-      {
-        paramFloat1 = Math.abs(paramFloat1 - this.estimatedModuleSize);
-        if (paramFloat1 > 1.0F)
-        {
-          bool1 = bool2;
-          if (paramFloat1 > this.estimatedModuleSize) {}
-        }
-        else
-        {
-          bool1 = true;
-        }
-      }
+public final class AlignmentPattern extends ResultPoint {
+    private final float estimatedModuleSize;
+
+    AlignmentPattern(float posX, float posY, float estimatedModuleSize) {
+        super(posX, posY);
+        this.estimatedModuleSize = estimatedModuleSize;
     }
-    return bool1;
-  }
-  
-  AlignmentPattern combineEstimate(float paramFloat1, float paramFloat2, float paramFloat3)
-  {
-    return new AlignmentPattern((getX() + paramFloat2) / 2.0F, (getY() + paramFloat1) / 2.0F, (this.estimatedModuleSize + paramFloat3) / 2.0F);
-  }
+
+    boolean aboutEquals(float moduleSize, float i, float j) {
+        if (Math.abs(i - getY()) > moduleSize || Math.abs(j - getX()) > moduleSize) {
+            return false;
+        }
+        float moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
+        if (moduleSizeDiff <= 1.0f || moduleSizeDiff <= this.estimatedModuleSize) {
+            return true;
+        }
+        return false;
+    }
+
+    AlignmentPattern combineEstimate(float i, float j, float newModuleSize) {
+        return new AlignmentPattern((getX() + j) / 2.0f, (getY() + i) / 2.0f, (this.estimatedModuleSize + newModuleSize) / 2.0f);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/detector/AlignmentPattern.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

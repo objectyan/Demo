@@ -3,119 +3,95 @@ package com.baidu.android.pushservice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.text.TextUtils;
-import com.baidu.android.pushservice.b.b;
-import com.baidu.android.pushservice.b.f;
-import com.baidu.android.pushservice.b.h;
-import com.baidu.android.pushservice.i.c;
-import com.baidu.android.pushservice.i.d;
-import com.baidu.android.pushservice.j.o;
-import com.baidu.android.pushservice.j.p;
+import com.baidu.android.pushservice.p022i.C0420c;
+import com.baidu.android.pushservice.p022i.C0559d;
+import com.baidu.android.pushservice.p023b.C0432b;
+import com.baidu.android.pushservice.p023b.C0437f;
+import com.baidu.android.pushservice.p023b.C0439h;
+import com.baidu.android.pushservice.p031j.C0577o;
+import com.baidu.android.pushservice.p031j.C0578p;
 
-public class RegistrationReceiver
-  extends BroadcastReceiver
-{
-  static void a(Context paramContext, f paramf)
-  {
-    Intent localIntent = new Intent();
-    localIntent.setAction("com.baidu.android.pushservice.action.METHOD");
-    localIntent.putExtra("method", "com.baidu.android.pushservice.action.UNBINDAPP");
-    localIntent.putExtra("package_name", paramf.c());
-    localIntent.putExtra("app_id", paramf.a());
-    localIntent.putExtra("user_id", paramf.f);
-    o.a(paramContext, localIntent);
-  }
-  
-  private static void c(Context paramContext, Intent paramIntent)
-  {
-    String str = paramIntent.getStringExtra("r_sync_from");
-    if (paramContext.getPackageName().equals(str)) {}
-    do
-    {
-      return;
-      paramIntent = paramIntent.getStringExtra("r_sync_rdata_v2");
-    } while (TextUtils.isEmpty(paramIntent));
-    b.a(paramContext).a("r_v2", paramIntent);
-  }
-  
-  private static void d(Context paramContext, Intent paramIntent)
-  {
-    String str = paramIntent.getStringExtra("r_sync_sdk_from");
-    if (paramContext.getPackageName().equals(str)) {}
-    do
-    {
-      return;
-      paramIntent = paramIntent.getStringExtra("r_sync_rdata_v2");
-    } while (TextUtils.isEmpty(paramIntent));
-    h.a(paramContext).a("com.baidu.push.sdkr", paramIntent);
-  }
-  
-  public void onReceive(final Context paramContext, final Intent paramIntent)
-  {
-    String str = paramIntent.getAction();
-    try
-    {
-      paramIntent.getByteArrayExtra("baidu_message_secur_info");
-      if ("android.intent.action.PACKAGE_REMOVED".equals(str)) {
-        try
-        {
-          str = p.u(paramContext);
-          if ((!TextUtils.isEmpty(str)) && (!paramContext.getPackageName().equals(str))) {
-            return;
-          }
-          str = paramIntent.getData().getSchemeSpecificPart();
-          boolean bool = paramIntent.getBooleanExtra("android.intent.extra.REPLACING", false);
-          if (!bool) {
-            PushSettings.c(paramContext, str);
-          }
-          paramIntent = b.a(paramContext).c(str);
-          if ((bool) || (paramIntent == null) || (paramContext.getPackageName().equals(paramIntent.c()))) {
-            return;
-          }
-          a(paramContext, paramIntent);
-          return;
-        }
-        catch (Exception paramContext)
-        {
-          return;
-        }
-      }
-      if ("com.baidu.android.pushservice.action.BIND_SYNC".equals(str))
-      {
-        d.a().a(new c("register_sync", (short)99)
-        {
-          public void a()
-          {
-            if (paramIntent.hasExtra("r_sync_type"))
-            {
-              switch (paramIntent.getIntExtra("r_sync_type", 0))
-              {
-              case 1: 
-              case 2: 
-              default: 
-                return;
-              case 0: 
-                RegistrationReceiver.a(paramContext, paramIntent);
-                return;
-              }
-              RegistrationReceiver.b(paramContext, paramIntent);
-              return;
-            }
-            RegistrationReceiver.a(paramContext, paramIntent);
-          }
-        });
-        return;
-      }
-      o.b(paramContext, paramIntent);
-      return;
+public class RegistrationReceiver extends BroadcastReceiver {
+    /* renamed from: a */
+    static void m1843a(Context context, C0437f c0437f) {
+        Intent intent = new Intent();
+        intent.setAction(PushConstants.ACTION_METHOD);
+        intent.putExtra("method", "com.baidu.android.pushservice.action.UNBINDAPP");
+        intent.putExtra("package_name", c0437f.m1867c());
+        intent.putExtra("app_id", c0437f.m1861a());
+        intent.putExtra("user_id", c0437f.f1375f);
+        C0577o.m2484a(context, intent);
     }
-    catch (Exception paramContext) {}
-  }
+
+    /* renamed from: c */
+    private static void m1845c(Context context, Intent intent) {
+        if (!context.getPackageName().equals(intent.getStringExtra("r_sync_from"))) {
+            String stringExtra = intent.getStringExtra("r_sync_rdata_v2");
+            if (!TextUtils.isEmpty(stringExtra)) {
+                C0432b.m1870a(context).m1881a("r_v2", stringExtra);
+            }
+        }
+    }
+
+    /* renamed from: d */
+    private static void m1846d(Context context, Intent intent) {
+        if (!context.getPackageName().equals(intent.getStringExtra("r_sync_sdk_from"))) {
+            Object stringExtra = intent.getStringExtra("r_sync_rdata_v2");
+            if (!TextUtils.isEmpty(stringExtra)) {
+                C0439h.m1902a(context).m1897a("com.baidu.push.sdkr", (String) stringExtra);
+            }
+        }
+    }
+
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        try {
+            intent.getByteArrayExtra("baidu_message_secur_info");
+            if ("android.intent.action.PACKAGE_REMOVED".equals(action)) {
+                try {
+                    CharSequence u = C0578p.m2600u(context);
+                    if (TextUtils.isEmpty(u) || context.getPackageName().equals(u)) {
+                        action = intent.getData().getSchemeSpecificPart();
+                        boolean booleanExtra = intent.getBooleanExtra("android.intent.extra.REPLACING", false);
+                        if (!booleanExtra) {
+                            PushSettings.m1826c(context, action);
+                        }
+                        C0437f c = C0432b.m1870a(context).m1885c(action);
+                        if (!booleanExtra && c != null && !context.getPackageName().equals(c.m1867c())) {
+                            m1843a(context, c);
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            } else if ("com.baidu.android.pushservice.action.BIND_SYNC".equals(action)) {
+                final Intent intent2 = intent;
+                final Context context2 = context;
+                C0559d.m2387a().m2388a(new C0420c(this, "register_sync", (short) 99) {
+                    /* renamed from: c */
+                    final /* synthetic */ RegistrationReceiver f1350c;
+
+                    /* renamed from: a */
+                    public void mo1272a() {
+                        if (intent2.hasExtra("r_sync_type")) {
+                            switch (intent2.getIntExtra("r_sync_type", 0)) {
+                                case 0:
+                                    RegistrationReceiver.m1845c(context2, intent2);
+                                    return;
+                                case 3:
+                                    RegistrationReceiver.m1846d(context2, intent2);
+                                    return;
+                                default:
+                                    return;
+                            }
+                        }
+                        RegistrationReceiver.m1845c(context2, intent2);
+                    }
+                });
+            } else {
+                C0577o.m2488b(context, intent);
+            }
+        } catch (Exception e2) {
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/RegistrationReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

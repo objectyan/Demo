@@ -1,190 +1,198 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.baidu.mobstat.Config;
+import com.indooratlas.android.sdk._internal.jj.C5991b;
+import com.indooratlas.android.sdk._internal.kd.C5997a;
+import cz.msebera.android.httpclient.C6591q;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-public abstract class jo
-{
-  public static int a = 1000;
-  public static int b = 64;
-  public static final byte[] c = kp.a("<policy-file-request/>\000");
-  protected int d = 0;
-  protected kd.a e = null;
-  
-  public static int a(int paramInt)
-    throws jx, ju
-  {
-    if (paramInt < 0) {
-      throw new ju(1002, "Negative count");
-    }
-    return paramInt;
-  }
-  
-  public static kh a(ByteBuffer paramByteBuffer, int paramInt)
-    throws jw, jt
-  {
-    Object localObject1 = c(paramByteBuffer);
-    if (localObject1 == null) {
-      throw new jt(paramByteBuffer.capacity() + 128);
-    }
-    Object localObject2 = ((String)localObject1).split(" ", 3);
-    if (localObject2.length != 3) {
-      throw new jw();
-    }
-    if (paramInt == jj.b.a)
-    {
-      localObject1 = new kj();
-      kn localkn = (kn)localObject1;
-      localkn.a(Short.parseShort(localObject2[1]));
-      localkn.a(localObject2[2]);
-    }
-    for (;;)
-    {
-      localObject2 = c(paramByteBuffer);
-      if ((localObject2 == null) || (((String)localObject2).length() <= 0)) {
-        break;
-      }
-      localObject2 = ((String)localObject2).split(":", 2);
-      if (localObject2.length != 2)
-      {
-        throw new jw("not an http header");
-        localObject1 = new ki();
-        ((kg)localObject1).a(localObject2[1]);
-      }
-      else
-      {
-        ((kh)localObject1).a(localObject2[0], localObject2[1].replaceFirst("^ +", ""));
-      }
-    }
-    if (localObject2 == null) {
-      throw new jt();
-    }
-    return (kh)localObject1;
-  }
-  
-  protected static boolean a(kk paramkk)
-  {
-    return (paramkk.b("Upgrade").equalsIgnoreCase("websocket")) && (paramkk.b("Connection").toLowerCase(Locale.ENGLISH).contains("upgrade"));
-  }
-  
-  public static List<ByteBuffer> b(kk paramkk)
-  {
-    Object localObject1 = new StringBuilder(100);
-    if ((paramkk instanceof kf))
-    {
-      ((StringBuilder)localObject1).append("GET ");
-      ((StringBuilder)localObject1).append(((kf)paramkk).a());
-      ((StringBuilder)localObject1).append(" HTTP/1.1");
-    }
-    Object localObject2;
-    for (;;)
-    {
-      ((StringBuilder)localObject1).append("\r\n");
-      localObject2 = paramkk.b();
-      while (((Iterator)localObject2).hasNext())
-      {
-        String str1 = (String)((Iterator)localObject2).next();
-        String str2 = paramkk.b(str1);
-        ((StringBuilder)localObject1).append(str1);
-        ((StringBuilder)localObject1).append(": ");
-        ((StringBuilder)localObject1).append(str2);
-        ((StringBuilder)localObject1).append("\r\n");
-      }
-      if (!(paramkk instanceof km)) {
-        break;
-      }
-      ((StringBuilder)localObject1).append("HTTP/1.1 101 " + ((km)paramkk).a());
-    }
-    throw new RuntimeException("unknow role");
-    ((StringBuilder)localObject1).append("\r\n");
-    localObject1 = kp.b(((StringBuilder)localObject1).toString());
-    paramkk = paramkk.c();
-    if (paramkk == null) {}
-    for (int i = 0;; i = paramkk.length)
-    {
-      localObject2 = ByteBuffer.allocate(i + localObject1.length);
-      ((ByteBuffer)localObject2).put((byte[])localObject1);
-      if (paramkk != null) {
-        ((ByteBuffer)localObject2).put(paramkk);
-      }
-      ((ByteBuffer)localObject2).flip();
-      return Collections.singletonList(localObject2);
-    }
-  }
-  
-  private static String c(ByteBuffer paramByteBuffer)
-  {
-    ByteBuffer localByteBuffer = ByteBuffer.allocate(paramByteBuffer.remaining());
-    byte b1;
-    for (int i = 48;; i = b1) {
-      if (paramByteBuffer.hasRemaining())
-      {
-        b1 = paramByteBuffer.get();
-        localByteBuffer.put(b1);
-        if ((i == 13) && (b1 == 10))
-        {
-          localByteBuffer.limit(localByteBuffer.position() - 2);
-          localByteBuffer.position(0);
+public abstract class jo {
+    /* renamed from: a */
+    public static int f24518a = 1000;
+    /* renamed from: b */
+    public static int f24519b = 64;
+    /* renamed from: c */
+    public static final byte[] f24520c = kp.m21499a("<policy-file-request/>\u0000");
+    /* renamed from: d */
+    protected int f24521d = 0;
+    /* renamed from: e */
+    protected C5997a f24522e = null;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.jo$a */
+    public enum C5993a {
+        ;
+
+        static {
+            f24511a = 1;
+            f24512b = 2;
+            f24513c = 3;
+            f24514d = new int[]{f24511a, f24512b, f24513c};
         }
-      }
-      else
-      {
-        for (paramByteBuffer = localByteBuffer; paramByteBuffer == null; paramByteBuffer = null)
-        {
-          return null;
-          paramByteBuffer.position(paramByteBuffer.position() - localByteBuffer.position());
-        }
-        return kp.a(paramByteBuffer.array(), paramByteBuffer.limit());
-      }
     }
-  }
-  
-  public abstract int a(kf paramkf)
-    throws jw;
-  
-  public abstract int a(kf paramkf, km paramkm)
-    throws jw;
-  
-  public abstract kg a(kg paramkg)
-    throws jw;
-  
-  public abstract kh a(kf paramkf, kn paramkn)
-    throws jw;
-  
-  public abstract ByteBuffer a(kd paramkd);
-  
-  public abstract List<kd> a(ByteBuffer paramByteBuffer)
-    throws ju;
-  
-  public abstract List<kd> a(ByteBuffer paramByteBuffer, boolean paramBoolean);
-  
-  public abstract void a();
-  
-  public abstract int b();
-  
-  public kk b(ByteBuffer paramByteBuffer)
-    throws jw
-  {
-    return a(paramByteBuffer, this.d);
-  }
-  
-  public final void b(int paramInt)
-  {
-    this.d = paramInt;
-  }
-  
-  public abstract jo c();
-  
-  public static enum a {}
-  
-  public static enum b {}
+
+    /* renamed from: com.indooratlas.android.sdk._internal.jo$b */
+    public enum C5994b {
+        ;
+
+        static {
+            f24515a = 1;
+            f24516b = 2;
+            f24517c = new int[]{f24515a, f24516b};
+        }
+    }
+
+    /* renamed from: a */
+    public abstract int mo4796a(kf kfVar) throws jw;
+
+    /* renamed from: a */
+    public abstract int mo4797a(kf kfVar, km kmVar) throws jw;
+
+    /* renamed from: a */
+    public abstract kg mo4798a(kg kgVar) throws jw;
+
+    /* renamed from: a */
+    public abstract kh mo4799a(kf kfVar, kn knVar) throws jw;
+
+    /* renamed from: a */
+    public abstract ByteBuffer mo4800a(kd kdVar);
+
+    /* renamed from: a */
+    public abstract List<kd> mo4801a(ByteBuffer byteBuffer) throws ju;
+
+    /* renamed from: a */
+    public abstract List<kd> mo4802a(ByteBuffer byteBuffer, boolean z);
+
+    /* renamed from: a */
+    public abstract void mo4803a();
+
+    /* renamed from: b */
+    public abstract int mo4804b();
+
+    /* renamed from: c */
+    public abstract jo mo4805c();
+
+    /* renamed from: c */
+    private static String mo4806c(ByteBuffer byteBuffer) {
+        ByteBuffer byteBuffer2;
+        ByteBuffer allocate = ByteBuffer.allocate(byteBuffer.remaining());
+        byte b = (byte) 48;
+        while (byteBuffer.hasRemaining()) {
+            byte b2 = byteBuffer.get();
+            allocate.put(b2);
+            if (b == (byte) 13 && b2 == (byte) 10) {
+                allocate.limit(allocate.position() - 2);
+                allocate.position(0);
+                byteBuffer2 = allocate;
+                break;
+            }
+            b = b2;
+        }
+        byteBuffer.position(byteBuffer.position() - allocate.position());
+        byteBuffer2 = null;
+        if (byteBuffer2 == null) {
+            return null;
+        }
+        return kp.m21498a(byteBuffer2.array(), byteBuffer2.limit());
+    }
+
+    /* renamed from: a */
+    public static kh m21390a(ByteBuffer byteBuffer, int i) throws jw, jt {
+        String c = mo4806c(byteBuffer);
+        if (c == null) {
+            throw new jt(byteBuffer.capacity() + 128);
+        }
+        String[] split = c.split(" ", 3);
+        if (split.length != 3) {
+            throw new jw();
+        }
+        kh kjVar;
+        if (i == C5991b.f24473a) {
+            kjVar = new kj();
+            kn knVar = (kn) kjVar;
+            knVar.mo4829a(Short.parseShort(split[1]));
+            knVar.mo4828a(split[2]);
+        } else {
+            kjVar = new ki();
+            kjVar.mo4826a(split[1]);
+        }
+        while (true) {
+            c = mo4806c(byteBuffer);
+            if (c != null && c.length() > 0) {
+                String[] split2 = c.split(Config.TRACE_TODAY_VISIT_SPLIT, 2);
+                if (split2.length != 2) {
+                    throw new jw("not an http header");
+                }
+                kjVar.mo4819a(split2[0], split2[1].replaceFirst("^ +", ""));
+            } else if (c == null) {
+                return kjVar;
+            } else {
+                throw new jt();
+            }
+        }
+        if (c == null) {
+            return kjVar;
+        }
+        throw new jt();
+    }
+
+    /* renamed from: a */
+    protected static boolean m21391a(kk kkVar) {
+        return kkVar.mo4821b(C6591q.f26541X).equalsIgnoreCase("websocket") && kkVar.mo4821b("Connection").toLowerCase(Locale.ENGLISH).contains("upgrade");
+    }
+
+    /* renamed from: b */
+    public kk mo4807b(ByteBuffer byteBuffer) throws jw {
+        return m21390a(byteBuffer, this.f24521d);
+    }
+
+    /* renamed from: a */
+    public static int m21389a(int i) throws jx, ju {
+        if (i >= 0) {
+            return i;
+        }
+        throw new ju(1002, "Negative count");
+    }
+
+    /* renamed from: b */
+    public final void m21404b(int i) {
+        this.f24521d = i;
+    }
+
+    /* renamed from: b */
+    public static List<ByteBuffer> m21392b(kk kkVar) {
+        StringBuilder stringBuilder = new StringBuilder(100);
+        if (kkVar instanceof kf) {
+            stringBuilder.append("GET ");
+            stringBuilder.append(((kf) kkVar).mo4825a());
+            stringBuilder.append(" HTTP/1.1");
+        } else if (kkVar instanceof km) {
+            stringBuilder.append("HTTP/1.1 101 " + ((km) kkVar).mo4827a());
+        } else {
+            throw new RuntimeException("unknow role");
+        }
+        stringBuilder.append("\r\n");
+        Iterator b = kkVar.mo4822b();
+        while (b.hasNext()) {
+            String str = (String) b.next();
+            String b2 = kkVar.mo4821b(str);
+            stringBuilder.append(str);
+            stringBuilder.append(": ");
+            stringBuilder.append(b2);
+            stringBuilder.append("\r\n");
+        }
+        stringBuilder.append("\r\n");
+        byte[] b3 = kp.m21500b(stringBuilder.toString());
+        byte[] c = kkVar.mo4824c();
+        ByteBuffer allocate = ByteBuffer.allocate((c == null ? 0 : c.length) + b3.length);
+        allocate.put(b3);
+        if (c != null) {
+            allocate.put(c);
+        }
+        allocate.flip();
+        return Collections.singletonList(allocate);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/jo.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

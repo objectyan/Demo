@@ -1,12 +1,5 @@
 package com.google.gson.internal;
 
-public abstract interface ObjectConstructor<T>
-{
-  public abstract T construct();
+public interface ObjectConstructor<T> {
+    T construct();
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/internal/ObjectConstructor.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -7,48 +7,33 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 
-public class X509HostnameVerifierWrapper
-  implements X509HostnameVerifier
-{
-  private final X509HostnameVerifier a;
-  
-  public X509HostnameVerifierWrapper(X509HostnameVerifier paramX509HostnameVerifier)
-  {
-    this.a = paramX509HostnameVerifier;
-  }
-  
-  public void verify(String paramString, X509Certificate paramX509Certificate)
-    throws SSLException
-  {
-    if (this.a != null) {
-      this.a.verify(paramString, paramX509Certificate);
+public class X509HostnameVerifierWrapper implements X509HostnameVerifier {
+    /* renamed from: a */
+    private final X509HostnameVerifier f19046a;
+
+    public X509HostnameVerifierWrapper(X509HostnameVerifier verifier) {
+        this.f19046a = verifier;
     }
-  }
-  
-  public void verify(String paramString, SSLSocket paramSSLSocket)
-    throws IOException
-  {
-    if (this.a != null) {
-      this.a.verify(paramString, paramSSLSocket);
+
+    public boolean verify(String host, SSLSession session) {
+        return this.f19046a != null && this.f19046a.verify(host, session);
     }
-  }
-  
-  public void verify(String paramString, String[] paramArrayOfString1, String[] paramArrayOfString2)
-    throws SSLException
-  {
-    if (this.a != null) {
-      this.a.verify(paramString, paramArrayOfString1, paramArrayOfString2);
+
+    public void verify(String host, SSLSocket ssl) throws IOException {
+        if (this.f19046a != null) {
+            this.f19046a.verify(host, ssl);
+        }
     }
-  }
-  
-  public boolean verify(String paramString, SSLSession paramSSLSession)
-  {
-    return (this.a != null) && (this.a.verify(paramString, paramSSLSession));
-  }
+
+    public void verify(String host, X509Certificate cert) throws SSLException {
+        if (this.f19046a != null) {
+            this.f19046a.verify(host, cert);
+        }
+    }
+
+    public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
+        if (this.f19046a != null) {
+            this.f19046a.verify(host, cns, subjectAlts);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/http/X509HostnameVerifierWrapper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

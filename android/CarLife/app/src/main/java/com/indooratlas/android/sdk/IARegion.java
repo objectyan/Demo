@@ -6,146 +6,138 @@ import android.os.Parcelable.Creator;
 import com.indooratlas.android.sdk._internal.eh;
 import com.indooratlas.android.sdk._internal.ei;
 
-public class IARegion
-  implements Parcelable
-{
-  public static final Parcelable.Creator<IARegion> CREATOR = new Parcelable.Creator() {};
-  public static final int TYPE_FLOOR_PLAN = 1;
-  public static final int TYPE_UNKNOWN = -1;
-  public static final int TYPE_VENUE = 2;
-  private final int a;
-  private final String b;
-  private final long c;
-  private final String d;
-  
-  public IARegion(int paramInt, long paramLong, String paramString1, String paramString2)
-  {
-    if ((paramInt != 1) && (paramInt != 2) && (paramInt != -1)) {
-      throw new IllegalArgumentException("unsupported region type: " + paramInt);
+public class IARegion implements Parcelable {
+    public static final Creator<IARegion> CREATOR = new C57561();
+    public static final int TYPE_FLOOR_PLAN = 1;
+    public static final int TYPE_UNKNOWN = -1;
+    public static final int TYPE_VENUE = 2;
+    /* renamed from: a */
+    private final int f22905a;
+    /* renamed from: b */
+    private final String f22906b;
+    /* renamed from: c */
+    private final long f22907c;
+    /* renamed from: d */
+    private final String f22908d;
+
+    public interface Listener {
+        void onEnterRegion(IARegion iARegion);
+
+        void onExitRegion(IARegion iARegion);
     }
-    if ((paramInt != -1) && (ei.a(paramString1))) {
-      throw new IllegalArgumentException("regionId cannot be empty for region type: " + eh.a(IARegion.class, paramString1));
+
+    /* renamed from: com.indooratlas.android.sdk.IARegion$1 */
+    static class C57561 implements Creator<IARegion> {
+        C57561() {
+        }
+
+        public final /* bridge */ /* synthetic */ Object[] newArray(int i) {
+            return new IARegion[i];
+        }
+
+        public final /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return new IARegion(parcel);
+        }
     }
-    this.c = paramLong;
-    this.a = paramInt;
-    this.b = paramString1;
-    this.d = paramString2;
-  }
-  
-  protected IARegion(Parcel paramParcel)
-  {
-    this.a = paramParcel.readInt();
-    this.b = paramParcel.readString();
-    this.c = paramParcel.readLong();
-    this.d = paramParcel.readString();
-  }
-  
-  public static IARegion floorPlan(String paramString)
-  {
-    return new IARegion(1, System.currentTimeMillis(), paramString, null);
-  }
-  
-  public static IARegion unknown()
-  {
-    return new IARegion(-1, System.currentTimeMillis(), null, null);
-  }
-  
-  public static IARegion venue(String paramString)
-  {
-    return new IARegion(2, System.currentTimeMillis(), paramString, null);
-  }
-  
-  public int describeContents()
-  {
-    return 0;
-  }
-  
-  public boolean equals(Object paramObject)
-  {
-    if (this == paramObject) {}
-    do
-    {
-      do
-      {
-        return true;
-        if ((paramObject == null) || (getClass() != paramObject.getClass())) {
-          return false;
+
+    public IARegion(int regionType, long timestamp, String regionId, String regionName) {
+        if (regionType != 1 && regionType != 2 && regionType != -1) {
+            throw new IllegalArgumentException("unsupported region type: " + regionType);
+        } else if (regionType == -1 || !ei.m20418a(regionId)) {
+            this.f22907c = timestamp;
+            this.f22905a = regionType;
+            this.f22906b = regionId;
+            this.f22908d = regionName;
+        } else {
+            throw new IllegalArgumentException("regionId cannot be empty for region type: " + eh.m20416a(IARegion.class, regionId));
         }
-        paramObject = (IARegion)paramObject;
-        if (this.a != ((IARegion)paramObject).a) {
-          return false;
+    }
+
+    protected IARegion(Parcel in) {
+        this.f22905a = in.readInt();
+        this.f22906b = in.readString();
+        this.f22907c = in.readLong();
+        this.f22908d = in.readString();
+    }
+
+    public static IARegion unknown() {
+        return new IARegion(-1, System.currentTimeMillis(), null, null);
+    }
+
+    public static IARegion floorPlan(String floorPlanId) {
+        return new IARegion(1, System.currentTimeMillis(), floorPlanId, null);
+    }
+
+    public static IARegion venue(String venueId) {
+        return new IARegion(2, System.currentTimeMillis(), venueId, null);
+    }
+
+    public int getType() {
+        return this.f22905a;
+    }
+
+    public String getId() {
+        return this.f22906b;
+    }
+
+    public String getName() {
+        return this.f22908d;
+    }
+
+    public long getTimestamp() {
+        return this.f22907c;
+    }
+
+    public String toString() {
+        return "IARegion{mRegionType=" + this.f22905a + ", mTimestamp='" + this.f22907c + "', mRegionId='" + this.f22906b + '\'' + ", mRegionName='" + this.f22908d + "'}";
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-        if (this.b == null)
-        {
-          if (((IARegion)paramObject).b != null) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
-          }
         }
-        else if (!this.b.equals(((IARegion)paramObject).b)) {
-          return false;
+        IARegion iARegion = (IARegion) o;
+        if (this.f22905a != iARegion.f22905a) {
+            return false;
         }
-        if (this.d != null) {
-          break;
+        if (this.f22906b == null) {
+            if (iARegion.f22906b != null) {
+                return false;
+            }
+        } else if (!this.f22906b.equals(iARegion.f22906b)) {
+            return false;
         }
-      } while (((IARegion)paramObject).d == null);
-      return false;
-    } while (this.d.equals(((IARegion)paramObject).d));
-    return false;
-  }
-  
-  public String getId()
-  {
-    return this.b;
-  }
-  
-  public String getName()
-  {
-    return this.d;
-  }
-  
-  public long getTimestamp()
-  {
-    return this.c;
-  }
-  
-  public int getType()
-  {
-    return this.a;
-  }
-  
-  public int hashCode()
-  {
-    int j = this.a;
-    int i = j;
-    if (this.b != null) {
-      i = (j * 31 + this.b.hashCode()) * 31 + this.d.hashCode();
+        if (this.f22908d == null) {
+            if (iARegion.f22908d != null) {
+                return false;
+            }
+            return true;
+        } else if (this.f22908d.equals(iARegion.f22908d)) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    return i;
-  }
-  
-  public String toString()
-  {
-    return "IARegion{mRegionType=" + this.a + ", mTimestamp='" + this.c + "', mRegionId='" + this.b + '\'' + ", mRegionName='" + this.d + "'}";
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeInt(this.a);
-    paramParcel.writeString(this.b);
-    paramParcel.writeLong(this.c);
-    paramParcel.writeString(this.d);
-  }
-  
-  public static abstract interface Listener
-  {
-    public abstract void onEnterRegion(IARegion paramIARegion);
-    
-    public abstract void onExitRegion(IARegion paramIARegion);
-  }
+
+    public int hashCode() {
+        int i = this.f22905a;
+        if (this.f22906b != null) {
+            return (((i * 31) + this.f22906b.hashCode()) * 31) + this.f22908d.hashCode();
+        }
+        return i;
+    }
+
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeInt(this.f22905a);
+        dest.writeString(this.f22906b);
+        dest.writeLong(this.f22907c);
+        dest.writeString(this.f22908d);
+    }
+
+    public int describeContents() {
+        return 0;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/IARegion.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

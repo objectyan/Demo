@@ -1,34 +1,25 @@
 package com.baidu.tts.tools;
 
 import android.annotation.SuppressLint;
+import com.baidu.sapi2.utils.C4923f;
+import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public final class AESUtil
-{
-  public static byte[] decrypt(String paramString1, String paramString2, byte[] paramArrayOfByte)
-    throws Exception
-  {
-    paramString2 = new SecretKeySpec(paramString2.getBytes(), "AES");
-    Cipher localCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-    localCipher.init(2, paramString2, new IvParameterSpec(paramString1.getBytes()));
-    return localCipher.doFinal(paramArrayOfByte);
-  }
-  
-  @SuppressLint({"TrulyRandom"})
-  public static byte[] encrypt(String paramString1, String paramString2, byte[] paramArrayOfByte)
-    throws Exception
-  {
-    paramString2 = new SecretKeySpec(paramString2.getBytes(), "AES");
-    Cipher localCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-    localCipher.init(1, paramString2, new IvParameterSpec(paramString1.getBytes()));
-    return localCipher.doFinal(paramArrayOfByte);
-  }
+public final class AESUtil {
+    @SuppressLint({"TrulyRandom"})
+    public static byte[] encrypt(String paramString1, String paramString2, byte[] paramArrayOfByte) throws Exception {
+        Key secretKeySpec = new SecretKeySpec(paramString2.getBytes(), C4923f.f20618w);
+        Cipher instance = Cipher.getInstance(C4923f.f20617v);
+        instance.init(1, secretKeySpec, new IvParameterSpec(paramString1.getBytes()));
+        return instance.doFinal(paramArrayOfByte);
+    }
+
+    public static byte[] decrypt(String paramString1, String paramString2, byte[] paramArrayOfByte) throws Exception {
+        Key secretKeySpec = new SecretKeySpec(paramString2.getBytes(), C4923f.f20618w);
+        Cipher instance = Cipher.getInstance(C4923f.f20617v);
+        instance.init(2, secretKeySpec, new IvParameterSpec(paramString1.getBytes()));
+        return instance.doFinal(paramArrayOfByte);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/tools/AESUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

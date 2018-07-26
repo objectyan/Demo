@@ -1,323 +1,140 @@
 package com.google.zxing.qrcode.encoder;
 
-final class MaskUtil
-{
-  static int applyMaskPenaltyRule1(ByteMatrix paramByteMatrix)
-  {
-    return applyMaskPenaltyRule1Internal(paramByteMatrix, true) + applyMaskPenaltyRule1Internal(paramByteMatrix, false);
-  }
-  
-  private static int applyMaskPenaltyRule1Internal(ByteMatrix paramByteMatrix, boolean paramBoolean)
-  {
-    int i2 = 0;
-    int i1 = -1;
-    int k;
-    int m;
-    label26:
-    int n;
-    if (paramBoolean)
-    {
-      k = paramByteMatrix.getHeight();
-      if (!paramBoolean) {
-        break label124;
-      }
-      m = paramByteMatrix.getWidth();
-      paramByteMatrix = paramByteMatrix.getArray();
-      n = 0;
+final class MaskUtil {
+    private MaskUtil() {
     }
-    for (;;)
-    {
-      int i4 = 0;
-      if (n >= k) {
-        break label197;
-      }
-      int i3 = 0;
-      label47:
-      if (i3 < m)
-      {
-        int i;
-        label66:
-        int j;
-        int i5;
-        if (paramBoolean)
-        {
-          i = paramByteMatrix[n][i3];
-          if (i != i1) {
-            break label175;
-          }
-          i4 += 1;
-          if (i4 != 5) {
-            break label144;
-          }
-          j = i2 + 3;
-          i5 = i1;
-          i = i4;
-        }
-        for (;;)
-        {
-          i3 += 1;
-          i4 = i;
-          i2 = j;
-          i1 = i5;
-          break label47;
-          k = paramByteMatrix.getWidth();
-          break;
-          label124:
-          m = paramByteMatrix.getHeight();
-          break label26;
-          i = paramByteMatrix[i3][n];
-          break label66;
-          label144:
-          i = i4;
-          j = i2;
-          i5 = i1;
-          if (i4 > 5)
-          {
-            j = i2 + 1;
-            i = i4;
-            i5 = i1;
-            continue;
-            label175:
-            j = 1;
-            i5 = i;
-            i = j;
-            j = i2;
-          }
-        }
-      }
-      n += 1;
+
+    static int applyMaskPenaltyRule1(ByteMatrix matrix) {
+        return applyMaskPenaltyRule1Internal(matrix, true) + applyMaskPenaltyRule1Internal(matrix, false);
     }
-    label197:
-    return i2;
-  }
-  
-  static int applyMaskPenaltyRule2(ByteMatrix paramByteMatrix)
-  {
-    int j = 0;
-    byte[][] arrayOfByte = paramByteMatrix.getArray();
-    int n = paramByteMatrix.getWidth();
-    int i1 = paramByteMatrix.getHeight();
-    int i = 0;
-    while (i < i1 - 1)
-    {
-      int k = 0;
-      while (k < n - 1)
-      {
-        int i2 = arrayOfByte[i][k];
-        int m = j;
-        if (i2 == arrayOfByte[i][(k + 1)])
-        {
-          m = j;
-          if (i2 == arrayOfByte[(i + 1)][k])
-          {
-            m = j;
-            if (i2 == arrayOfByte[(i + 1)][(k + 1)]) {
-              m = j + 3;
-            }
-          }
-        }
-        k += 1;
-        j = m;
-      }
-      i += 1;
-    }
-    return j;
-  }
-  
-  static int applyMaskPenaltyRule3(ByteMatrix paramByteMatrix)
-  {
-    int i = 0;
-    byte[][] arrayOfByte = paramByteMatrix.getArray();
-    int n = paramByteMatrix.getWidth();
-    int i1 = paramByteMatrix.getHeight();
-    int k = 0;
-    while (k < i1)
-    {
-      int m = 0;
-      while (m < n)
-      {
-        int j = i;
-        if (m + 6 < n)
-        {
-          j = i;
-          if (arrayOfByte[k][m] == 1)
-          {
-            j = i;
-            if (arrayOfByte[k][(m + 1)] == 0)
-            {
-              j = i;
-              if (arrayOfByte[k][(m + 2)] == 1)
-              {
-                j = i;
-                if (arrayOfByte[k][(m + 3)] == 1)
-                {
-                  j = i;
-                  if (arrayOfByte[k][(m + 4)] == 1)
-                  {
-                    j = i;
-                    if (arrayOfByte[k][(m + 5)] == 0)
-                    {
-                      j = i;
-                      if (arrayOfByte[k][(m + 6)] == 1) {
-                        if ((m + 10 >= n) || (arrayOfByte[k][(m + 7)] != 0) || (arrayOfByte[k][(m + 8)] != 0) || (arrayOfByte[k][(m + 9)] != 0) || (arrayOfByte[k][(m + 10)] != 0))
-                        {
-                          j = i;
-                          if (m - 4 >= 0)
-                          {
-                            j = i;
-                            if (arrayOfByte[k][(m - 1)] == 0)
-                            {
-                              j = i;
-                              if (arrayOfByte[k][(m - 2)] == 0)
-                              {
-                                j = i;
-                                if (arrayOfByte[k][(m - 3)] == 0)
-                                {
-                                  j = i;
-                                  if (arrayOfByte[k][(m - 4)] != 0) {}
-                                }
-                              }
-                            }
-                          }
-                        }
-                        else
-                        {
-                          j = i + 40;
-                        }
-                      }
-                    }
-                  }
+
+    static int applyMaskPenaltyRule2(ByteMatrix matrix) {
+        int penalty = 0;
+        byte[][] array = matrix.getArray();
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        int y = 0;
+        while (y < height - 1) {
+            int x = 0;
+            while (x < width - 1) {
+                byte value = array[y][x];
+                if (value == array[y][x + 1] && value == array[y + 1][x] && value == array[y + 1][x + 1]) {
+                    penalty += 3;
                 }
-              }
+                x++;
             }
-          }
+            y++;
         }
-        i = j;
-        if (k + 6 < i1)
-        {
-          i = j;
-          if (arrayOfByte[k][m] == 1)
-          {
-            i = j;
-            if (arrayOfByte[(k + 1)][m] == 0)
-            {
-              i = j;
-              if (arrayOfByte[(k + 2)][m] == 1)
-              {
-                i = j;
-                if (arrayOfByte[(k + 3)][m] == 1)
-                {
-                  i = j;
-                  if (arrayOfByte[(k + 4)][m] == 1)
-                  {
-                    i = j;
-                    if (arrayOfByte[(k + 5)][m] == 0)
-                    {
-                      i = j;
-                      if (arrayOfByte[(k + 6)][m] == 1) {
-                        if ((k + 10 >= i1) || (arrayOfByte[(k + 7)][m] != 0) || (arrayOfByte[(k + 8)][m] != 0) || (arrayOfByte[(k + 9)][m] != 0) || (arrayOfByte[(k + 10)][m] != 0))
-                        {
-                          i = j;
-                          if (k - 4 >= 0)
-                          {
-                            i = j;
-                            if (arrayOfByte[(k - 1)][m] == 0)
-                            {
-                              i = j;
-                              if (arrayOfByte[(k - 2)][m] == 0)
-                              {
-                                i = j;
-                                if (arrayOfByte[(k - 3)][m] == 0)
-                                {
-                                  i = j;
-                                  if (arrayOfByte[(k - 4)][m] != 0) {}
-                                }
-                              }
-                            }
-                          }
-                        }
-                        else
-                        {
-                          i = j + 40;
-                        }
-                      }
-                    }
-                  }
+        return penalty;
+    }
+
+    static int applyMaskPenaltyRule3(ByteMatrix matrix) {
+        int penalty = 0;
+        byte[][] array = matrix.getArray();
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        int y = 0;
+        while (y < height) {
+            int x = 0;
+            while (x < width) {
+                if (x + 6 < width && array[y][x] == (byte) 1 && array[y][x + 1] == (byte) 0 && array[y][x + 2] == (byte) 1 && array[y][x + 3] == (byte) 1 && array[y][x + 4] == (byte) 1 && array[y][x + 5] == (byte) 0 && array[y][x + 6] == (byte) 1 && ((x + 10 < width && array[y][x + 7] == (byte) 0 && array[y][x + 8] == (byte) 0 && array[y][x + 9] == (byte) 0 && array[y][x + 10] == (byte) 0) || (x - 4 >= 0 && array[y][x - 1] == (byte) 0 && array[y][x - 2] == (byte) 0 && array[y][x - 3] == (byte) 0 && array[y][x - 4] == (byte) 0))) {
+                    penalty += 40;
                 }
-              }
+                if (y + 6 < height && array[y][x] == (byte) 1 && array[y + 1][x] == (byte) 0 && array[y + 2][x] == (byte) 1 && array[y + 3][x] == (byte) 1 && array[y + 4][x] == (byte) 1 && array[y + 5][x] == (byte) 0 && array[y + 6][x] == (byte) 1 && ((y + 10 < height && array[y + 7][x] == (byte) 0 && array[y + 8][x] == (byte) 0 && array[y + 9][x] == (byte) 0 && array[y + 10][x] == (byte) 0) || (y - 4 >= 0 && array[y - 1][x] == (byte) 0 && array[y - 2][x] == (byte) 0 && array[y - 3][x] == (byte) 0 && array[y - 4][x] == (byte) 0))) {
+                    penalty += 40;
+                }
+                x++;
             }
-          }
+            y++;
         }
-        m += 1;
-      }
-      k += 1;
+        return penalty;
     }
-    return i;
-  }
-  
-  static int applyMaskPenaltyRule4(ByteMatrix paramByteMatrix)
-  {
-    int j = 0;
-    byte[][] arrayOfByte = paramByteMatrix.getArray();
-    int n = paramByteMatrix.getWidth();
-    int i1 = paramByteMatrix.getHeight();
-    int i = 0;
-    while (i < i1)
-    {
-      k = 0;
-      while (k < n)
-      {
-        int m = j;
-        if (arrayOfByte[i][k] == 1) {
-          m = j + 1;
+
+    static int applyMaskPenaltyRule4(ByteMatrix matrix) {
+        int numDarkCells = 0;
+        byte[][] array = matrix.getArray();
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (array[y][x] == (byte) 1) {
+                    numDarkCells++;
+                }
+            }
         }
-        k += 1;
-        j = m;
-      }
-      i += 1;
+        return (Math.abs((int) ((100.0d * (((double) numDarkCells) / ((double) (matrix.getHeight() * matrix.getWidth())))) - 50.0d)) / 5) * 10;
     }
-    i = paramByteMatrix.getHeight();
-    int k = paramByteMatrix.getWidth();
-    return Math.abs((int)(100.0D * (j / (i * k)) - 50.0D)) / 5 * 10;
-  }
-  
-  static boolean getDataMaskBit(int paramInt1, int paramInt2, int paramInt3)
-  {
-    if (!QRCode.isValidMaskPattern(paramInt1)) {
-      throw new IllegalArgumentException("Invalid mask pattern");
+
+    static boolean getDataMaskBit(int maskPattern, int x, int y) {
+        if (QRCode.isValidMaskPattern(maskPattern)) {
+            int intermediate;
+            int temp;
+            switch (maskPattern) {
+                case 0:
+                    intermediate = (y + x) & 1;
+                    break;
+                case 1:
+                    intermediate = y & 1;
+                    break;
+                case 2:
+                    intermediate = x % 3;
+                    break;
+                case 3:
+                    intermediate = (y + x) % 3;
+                    break;
+                case 4:
+                    intermediate = ((y >>> 1) + (x / 3)) & 1;
+                    break;
+                case 5:
+                    temp = y * x;
+                    intermediate = (temp & 1) + (temp % 3);
+                    break;
+                case 6:
+                    temp = y * x;
+                    intermediate = ((temp & 1) + (temp % 3)) & 1;
+                    break;
+                case 7:
+                    intermediate = (((y * x) % 3) + ((y + x) & 1)) & 1;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid mask pattern: " + maskPattern);
+            }
+            if (intermediate == 0) {
+                return true;
+            }
+            return false;
+        }
+        throw new IllegalArgumentException("Invalid mask pattern");
     }
-    switch (paramInt1)
-    {
-    default: 
-      throw new IllegalArgumentException("Invalid mask pattern: " + paramInt1);
-    case 0: 
-      paramInt1 = paramInt3 + paramInt2 & 0x1;
+
+    private static int applyMaskPenaltyRule1Internal(ByteMatrix matrix, boolean isHorizontal) {
+        int penalty = 0;
+        int numSameBitCells = 0;
+        int prevBit = -1;
+        int iLimit = isHorizontal ? matrix.getHeight() : matrix.getWidth();
+        int jLimit = isHorizontal ? matrix.getWidth() : matrix.getHeight();
+        byte[][] array = matrix.getArray();
+        int i = 0;
+        while (i < iLimit) {
+            int j = 0;
+            while (j < jLimit) {
+                int bit = isHorizontal ? array[i][j] : array[j][i];
+                if (bit == prevBit) {
+                    numSameBitCells++;
+                    if (numSameBitCells == 5) {
+                        penalty += 3;
+                    } else if (numSameBitCells > 5) {
+                        penalty++;
+                    }
+                } else {
+                    numSameBitCells = 1;
+                    prevBit = bit;
+                }
+                j++;
+            }
+            numSameBitCells = 0;
+            i++;
+        }
+        return penalty;
     }
-    while (paramInt1 == 0)
-    {
-      return true;
-      paramInt1 = paramInt3 & 0x1;
-      continue;
-      paramInt1 = paramInt2 % 3;
-      continue;
-      paramInt1 = (paramInt3 + paramInt2) % 3;
-      continue;
-      paramInt1 = (paramInt3 >>> 1) + paramInt2 / 3 & 0x1;
-      continue;
-      paramInt1 = paramInt3 * paramInt2;
-      paramInt1 = (paramInt1 & 0x1) + paramInt1 % 3;
-      continue;
-      paramInt1 = paramInt3 * paramInt2;
-      paramInt1 = (paramInt1 & 0x1) + paramInt1 % 3 & 0x1;
-      continue;
-      paramInt1 = paramInt3 * paramInt2 % 3 + (paramInt3 + paramInt2 & 0x1) & 0x1;
-    }
-    return false;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/qrcode/encoder/MaskUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

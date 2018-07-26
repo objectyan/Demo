@@ -8,1236 +8,1071 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AccessibilityNodeInfoCompat
-{
-  public static final int ACTION_ACCESSIBILITY_FOCUS = 64;
-  public static final String ACTION_ARGUMENT_EXTEND_SELECTION_BOOLEAN = "ACTION_ARGUMENT_EXTEND_SELECTION_BOOLEAN";
-  public static final String ACTION_ARGUMENT_HTML_ELEMENT_STRING = "ACTION_ARGUMENT_HTML_ELEMENT_STRING";
-  public static final String ACTION_ARGUMENT_MOVEMENT_GRANULARITY_INT = "ACTION_ARGUMENT_MOVEMENT_GRANULARITY_INT";
-  public static final String ACTION_ARGUMENT_SELECTION_END_INT = "ACTION_ARGUMENT_SELECTION_END_INT";
-  public static final String ACTION_ARGUMENT_SELECTION_START_INT = "ACTION_ARGUMENT_SELECTION_START_INT";
-  public static final int ACTION_CLEAR_ACCESSIBILITY_FOCUS = 128;
-  public static final int ACTION_CLEAR_FOCUS = 2;
-  public static final int ACTION_CLEAR_SELECTION = 8;
-  public static final int ACTION_CLICK = 16;
-  public static final int ACTION_COPY = 16384;
-  public static final int ACTION_CUT = 65536;
-  public static final int ACTION_FOCUS = 1;
-  public static final int ACTION_LONG_CLICK = 32;
-  public static final int ACTION_NEXT_AT_MOVEMENT_GRANULARITY = 256;
-  public static final int ACTION_NEXT_HTML_ELEMENT = 1024;
-  public static final int ACTION_PASTE = 32768;
-  public static final int ACTION_PREVIOUS_AT_MOVEMENT_GRANULARITY = 512;
-  public static final int ACTION_PREVIOUS_HTML_ELEMENT = 2048;
-  public static final int ACTION_SCROLL_BACKWARD = 8192;
-  public static final int ACTION_SCROLL_FORWARD = 4096;
-  public static final int ACTION_SELECT = 4;
-  public static final int ACTION_SET_SELECTION = 131072;
-  public static final int FOCUS_ACCESSIBILITY = 2;
-  public static final int FOCUS_INPUT = 1;
-  private static final AccessibilityNodeInfoImpl IMPL = new AccessibilityNodeInfoStubImpl();
-  public static final int MOVEMENT_GRANULARITY_CHARACTER = 1;
-  public static final int MOVEMENT_GRANULARITY_LINE = 4;
-  public static final int MOVEMENT_GRANULARITY_PAGE = 16;
-  public static final int MOVEMENT_GRANULARITY_PARAGRAPH = 8;
-  public static final int MOVEMENT_GRANULARITY_WORD = 2;
-  private final Object mInfo;
-  
-  static
-  {
-    if (Build.VERSION.SDK_INT >= 19)
-    {
-      IMPL = new AccessibilityNodeInfoKitKatImpl();
-      return;
+public class AccessibilityNodeInfoCompat {
+    public static final int ACTION_ACCESSIBILITY_FOCUS = 64;
+    public static final String ACTION_ARGUMENT_EXTEND_SELECTION_BOOLEAN = "ACTION_ARGUMENT_EXTEND_SELECTION_BOOLEAN";
+    public static final String ACTION_ARGUMENT_HTML_ELEMENT_STRING = "ACTION_ARGUMENT_HTML_ELEMENT_STRING";
+    public static final String ACTION_ARGUMENT_MOVEMENT_GRANULARITY_INT = "ACTION_ARGUMENT_MOVEMENT_GRANULARITY_INT";
+    public static final String ACTION_ARGUMENT_SELECTION_END_INT = "ACTION_ARGUMENT_SELECTION_END_INT";
+    public static final String ACTION_ARGUMENT_SELECTION_START_INT = "ACTION_ARGUMENT_SELECTION_START_INT";
+    public static final int ACTION_CLEAR_ACCESSIBILITY_FOCUS = 128;
+    public static final int ACTION_CLEAR_FOCUS = 2;
+    public static final int ACTION_CLEAR_SELECTION = 8;
+    public static final int ACTION_CLICK = 16;
+    public static final int ACTION_COPY = 16384;
+    public static final int ACTION_CUT = 65536;
+    public static final int ACTION_FOCUS = 1;
+    public static final int ACTION_LONG_CLICK = 32;
+    public static final int ACTION_NEXT_AT_MOVEMENT_GRANULARITY = 256;
+    public static final int ACTION_NEXT_HTML_ELEMENT = 1024;
+    public static final int ACTION_PASTE = 32768;
+    public static final int ACTION_PREVIOUS_AT_MOVEMENT_GRANULARITY = 512;
+    public static final int ACTION_PREVIOUS_HTML_ELEMENT = 2048;
+    public static final int ACTION_SCROLL_BACKWARD = 8192;
+    public static final int ACTION_SCROLL_FORWARD = 4096;
+    public static final int ACTION_SELECT = 4;
+    public static final int ACTION_SET_SELECTION = 131072;
+    public static final int FOCUS_ACCESSIBILITY = 2;
+    public static final int FOCUS_INPUT = 1;
+    private static final AccessibilityNodeInfoImpl IMPL;
+    public static final int MOVEMENT_GRANULARITY_CHARACTER = 1;
+    public static final int MOVEMENT_GRANULARITY_LINE = 4;
+    public static final int MOVEMENT_GRANULARITY_PAGE = 16;
+    public static final int MOVEMENT_GRANULARITY_PARAGRAPH = 8;
+    public static final int MOVEMENT_GRANULARITY_WORD = 2;
+    private final Object mInfo;
+
+    interface AccessibilityNodeInfoImpl {
+        void addAction(Object obj, int i);
+
+        void addChild(Object obj, View view);
+
+        void addChild(Object obj, View view, int i);
+
+        List<Object> findAccessibilityNodeInfosByText(Object obj, String str);
+
+        Object findFocus(Object obj, int i);
+
+        Object focusSearch(Object obj, int i);
+
+        int getActions(Object obj);
+
+        void getBoundsInParent(Object obj, Rect rect);
+
+        void getBoundsInScreen(Object obj, Rect rect);
+
+        Object getChild(Object obj, int i);
+
+        int getChildCount(Object obj);
+
+        CharSequence getClassName(Object obj);
+
+        CharSequence getContentDescription(Object obj);
+
+        int getLiveRegion(Object obj);
+
+        int getMovementGranularities(Object obj);
+
+        CharSequence getPackageName(Object obj);
+
+        Object getParent(Object obj);
+
+        CharSequence getText(Object obj);
+
+        String getViewIdResourceName(Object obj);
+
+        int getWindowId(Object obj);
+
+        boolean isAccessibilityFocused(Object obj);
+
+        boolean isCheckable(Object obj);
+
+        boolean isChecked(Object obj);
+
+        boolean isClickable(Object obj);
+
+        boolean isEnabled(Object obj);
+
+        boolean isFocusable(Object obj);
+
+        boolean isFocused(Object obj);
+
+        boolean isLongClickable(Object obj);
+
+        boolean isPassword(Object obj);
+
+        boolean isScrollable(Object obj);
+
+        boolean isSelected(Object obj);
+
+        boolean isVisibleToUser(Object obj);
+
+        Object obtain();
+
+        Object obtain(View view);
+
+        Object obtain(View view, int i);
+
+        Object obtain(Object obj);
+
+        boolean performAction(Object obj, int i);
+
+        boolean performAction(Object obj, int i, Bundle bundle);
+
+        void recycle(Object obj);
+
+        void setAccessibilityFocused(Object obj, boolean z);
+
+        void setBoundsInParent(Object obj, Rect rect);
+
+        void setBoundsInScreen(Object obj, Rect rect);
+
+        void setCheckable(Object obj, boolean z);
+
+        void setChecked(Object obj, boolean z);
+
+        void setClassName(Object obj, CharSequence charSequence);
+
+        void setClickable(Object obj, boolean z);
+
+        void setContentDescription(Object obj, CharSequence charSequence);
+
+        void setEnabled(Object obj, boolean z);
+
+        void setFocusable(Object obj, boolean z);
+
+        void setFocused(Object obj, boolean z);
+
+        void setLiveRegion(Object obj, int i);
+
+        void setLongClickable(Object obj, boolean z);
+
+        void setMovementGranularities(Object obj, int i);
+
+        void setPackageName(Object obj, CharSequence charSequence);
+
+        void setParent(Object obj, View view);
+
+        void setParent(Object obj, View view, int i);
+
+        void setPassword(Object obj, boolean z);
+
+        void setScrollable(Object obj, boolean z);
+
+        void setSelected(Object obj, boolean z);
+
+        void setSource(Object obj, View view);
+
+        void setSource(Object obj, View view, int i);
+
+        void setText(Object obj, CharSequence charSequence);
+
+        void setViewIdResourceName(Object obj, String str);
+
+        void setVisibleToUser(Object obj, boolean z);
     }
-    if (Build.VERSION.SDK_INT >= 18)
-    {
-      IMPL = new AccessibilityNodeInfoJellybeanMr2Impl();
-      return;
-    }
-    if (Build.VERSION.SDK_INT >= 16)
-    {
-      IMPL = new AccessibilityNodeInfoJellybeanImpl();
-      return;
-    }
-    if (Build.VERSION.SDK_INT >= 14)
-    {
-      IMPL = new AccessibilityNodeInfoIcsImpl();
-      return;
-    }
-  }
-  
-  public AccessibilityNodeInfoCompat(Object paramObject)
-  {
-    this.mInfo = paramObject;
-  }
-  
-  private static String getActionSymbolicName(int paramInt)
-  {
-    switch (paramInt)
-    {
-    default: 
-      return "ACTION_UNKNOWN";
-    case 1: 
-      return "ACTION_FOCUS";
-    case 2: 
-      return "ACTION_CLEAR_FOCUS";
-    case 4: 
-      return "ACTION_SELECT";
-    case 8: 
-      return "ACTION_CLEAR_SELECTION";
-    case 16: 
-      return "ACTION_CLICK";
-    case 32: 
-      return "ACTION_LONG_CLICK";
-    case 64: 
-      return "ACTION_ACCESSIBILITY_FOCUS";
-    case 128: 
-      return "ACTION_CLEAR_ACCESSIBILITY_FOCUS";
-    case 256: 
-      return "ACTION_NEXT_AT_MOVEMENT_GRANULARITY";
-    case 512: 
-      return "ACTION_PREVIOUS_AT_MOVEMENT_GRANULARITY";
-    case 1024: 
-      return "ACTION_NEXT_HTML_ELEMENT";
-    case 2048: 
-      return "ACTION_PREVIOUS_HTML_ELEMENT";
-    case 4096: 
-      return "ACTION_SCROLL_FORWARD";
-    case 8192: 
-      return "ACTION_SCROLL_BACKWARD";
-    case 65536: 
-      return "ACTION_CUT";
-    case 16384: 
-      return "ACTION_COPY";
-    case 32768: 
-      return "ACTION_PASTE";
-    }
-    return "ACTION_SET_SELECTION";
-  }
-  
-  public static AccessibilityNodeInfoCompat obtain()
-  {
-    return wrapNonNullInstance(IMPL.obtain());
-  }
-  
-  public static AccessibilityNodeInfoCompat obtain(View paramView)
-  {
-    return wrapNonNullInstance(IMPL.obtain(paramView));
-  }
-  
-  public static AccessibilityNodeInfoCompat obtain(View paramView, int paramInt)
-  {
-    return wrapNonNullInstance(IMPL.obtain(paramView, paramInt));
-  }
-  
-  public static AccessibilityNodeInfoCompat obtain(AccessibilityNodeInfoCompat paramAccessibilityNodeInfoCompat)
-  {
-    return wrapNonNullInstance(IMPL.obtain(paramAccessibilityNodeInfoCompat.mInfo));
-  }
-  
-  static AccessibilityNodeInfoCompat wrapNonNullInstance(Object paramObject)
-  {
-    if (paramObject != null) {
-      return new AccessibilityNodeInfoCompat(paramObject);
-    }
-    return null;
-  }
-  
-  public void addAction(int paramInt)
-  {
-    IMPL.addAction(this.mInfo, paramInt);
-  }
-  
-  public void addChild(View paramView)
-  {
-    IMPL.addChild(this.mInfo, paramView);
-  }
-  
-  public void addChild(View paramView, int paramInt)
-  {
-    IMPL.addChild(this.mInfo, paramView, paramInt);
-  }
-  
-  public boolean equals(Object paramObject)
-  {
-    if (this == paramObject) {}
-    do
-    {
-      do
-      {
-        return true;
-        if (paramObject == null) {
-          return false;
+
+    static class AccessibilityNodeInfoStubImpl implements AccessibilityNodeInfoImpl {
+        AccessibilityNodeInfoStubImpl() {
         }
-        if (getClass() != paramObject.getClass()) {
-          return false;
+
+        public Object obtain() {
+            return null;
         }
-        paramObject = (AccessibilityNodeInfoCompat)paramObject;
-        if (this.mInfo != null) {
-          break;
+
+        public Object obtain(View source) {
+            return null;
         }
-      } while (((AccessibilityNodeInfoCompat)paramObject).mInfo == null);
-      return false;
-    } while (this.mInfo.equals(((AccessibilityNodeInfoCompat)paramObject).mInfo));
-    return false;
-  }
-  
-  public List<AccessibilityNodeInfoCompat> findAccessibilityNodeInfosByText(String paramString)
-  {
-    ArrayList localArrayList = new ArrayList();
-    paramString = IMPL.findAccessibilityNodeInfosByText(this.mInfo, paramString);
-    int j = paramString.size();
-    int i = 0;
-    for (;;)
-    {
-      if (i >= j) {
-        return localArrayList;
-      }
-      localArrayList.add(new AccessibilityNodeInfoCompat(paramString.get(i)));
-      i += 1;
-    }
-  }
-  
-  public AccessibilityNodeInfoCompat findFocus(int paramInt)
-  {
-    return wrapNonNullInstance(IMPL.findFocus(this.mInfo, paramInt));
-  }
-  
-  public AccessibilityNodeInfoCompat focusSearch(int paramInt)
-  {
-    return wrapNonNullInstance(IMPL.focusSearch(this.mInfo, paramInt));
-  }
-  
-  public int getActions()
-  {
-    return IMPL.getActions(this.mInfo);
-  }
-  
-  public void getBoundsInParent(Rect paramRect)
-  {
-    IMPL.getBoundsInParent(this.mInfo, paramRect);
-  }
-  
-  public void getBoundsInScreen(Rect paramRect)
-  {
-    IMPL.getBoundsInScreen(this.mInfo, paramRect);
-  }
-  
-  public AccessibilityNodeInfoCompat getChild(int paramInt)
-  {
-    return wrapNonNullInstance(IMPL.getChild(this.mInfo, paramInt));
-  }
-  
-  public int getChildCount()
-  {
-    return IMPL.getChildCount(this.mInfo);
-  }
-  
-  public CharSequence getClassName()
-  {
-    return IMPL.getClassName(this.mInfo);
-  }
-  
-  public CharSequence getContentDescription()
-  {
-    return IMPL.getContentDescription(this.mInfo);
-  }
-  
-  public Object getInfo()
-  {
-    return this.mInfo;
-  }
-  
-  public int getLiveRegion()
-  {
-    return IMPL.getLiveRegion(this.mInfo);
-  }
-  
-  public int getMovementGranularities()
-  {
-    return IMPL.getMovementGranularities(this.mInfo);
-  }
-  
-  public CharSequence getPackageName()
-  {
-    return IMPL.getPackageName(this.mInfo);
-  }
-  
-  public AccessibilityNodeInfoCompat getParent()
-  {
-    return wrapNonNullInstance(IMPL.getParent(this.mInfo));
-  }
-  
-  public CharSequence getText()
-  {
-    return IMPL.getText(this.mInfo);
-  }
-  
-  public String getViewIdResourceName()
-  {
-    return IMPL.getViewIdResourceName(this.mInfo);
-  }
-  
-  public int getWindowId()
-  {
-    return IMPL.getWindowId(this.mInfo);
-  }
-  
-  public int hashCode()
-  {
-    if (this.mInfo == null) {
-      return 0;
-    }
-    return this.mInfo.hashCode();
-  }
-  
-  public boolean isAccessibilityFocused()
-  {
-    return IMPL.isAccessibilityFocused(this.mInfo);
-  }
-  
-  public boolean isCheckable()
-  {
-    return IMPL.isCheckable(this.mInfo);
-  }
-  
-  public boolean isChecked()
-  {
-    return IMPL.isChecked(this.mInfo);
-  }
-  
-  public boolean isClickable()
-  {
-    return IMPL.isClickable(this.mInfo);
-  }
-  
-  public boolean isEnabled()
-  {
-    return IMPL.isEnabled(this.mInfo);
-  }
-  
-  public boolean isFocusable()
-  {
-    return IMPL.isFocusable(this.mInfo);
-  }
-  
-  public boolean isFocused()
-  {
-    return IMPL.isFocused(this.mInfo);
-  }
-  
-  public boolean isLongClickable()
-  {
-    return IMPL.isLongClickable(this.mInfo);
-  }
-  
-  public boolean isPassword()
-  {
-    return IMPL.isPassword(this.mInfo);
-  }
-  
-  public boolean isScrollable()
-  {
-    return IMPL.isScrollable(this.mInfo);
-  }
-  
-  public boolean isSelected()
-  {
-    return IMPL.isSelected(this.mInfo);
-  }
-  
-  public boolean isVisibleToUser()
-  {
-    return IMPL.isVisibleToUser(this.mInfo);
-  }
-  
-  public boolean performAction(int paramInt)
-  {
-    return IMPL.performAction(this.mInfo, paramInt);
-  }
-  
-  public boolean performAction(int paramInt, Bundle paramBundle)
-  {
-    return IMPL.performAction(this.mInfo, paramInt, paramBundle);
-  }
-  
-  public void recycle()
-  {
-    IMPL.recycle(this.mInfo);
-  }
-  
-  public void setAccessibilityFocused(boolean paramBoolean)
-  {
-    IMPL.setAccessibilityFocused(this.mInfo, paramBoolean);
-  }
-  
-  public void setBoundsInParent(Rect paramRect)
-  {
-    IMPL.setBoundsInParent(this.mInfo, paramRect);
-  }
-  
-  public void setBoundsInScreen(Rect paramRect)
-  {
-    IMPL.setBoundsInScreen(this.mInfo, paramRect);
-  }
-  
-  public void setCheckable(boolean paramBoolean)
-  {
-    IMPL.setCheckable(this.mInfo, paramBoolean);
-  }
-  
-  public void setChecked(boolean paramBoolean)
-  {
-    IMPL.setChecked(this.mInfo, paramBoolean);
-  }
-  
-  public void setClassName(CharSequence paramCharSequence)
-  {
-    IMPL.setClassName(this.mInfo, paramCharSequence);
-  }
-  
-  public void setClickable(boolean paramBoolean)
-  {
-    IMPL.setClickable(this.mInfo, paramBoolean);
-  }
-  
-  public void setContentDescription(CharSequence paramCharSequence)
-  {
-    IMPL.setContentDescription(this.mInfo, paramCharSequence);
-  }
-  
-  public void setEnabled(boolean paramBoolean)
-  {
-    IMPL.setEnabled(this.mInfo, paramBoolean);
-  }
-  
-  public void setFocusable(boolean paramBoolean)
-  {
-    IMPL.setFocusable(this.mInfo, paramBoolean);
-  }
-  
-  public void setFocused(boolean paramBoolean)
-  {
-    IMPL.setFocused(this.mInfo, paramBoolean);
-  }
-  
-  public void setLiveRegion(int paramInt)
-  {
-    IMPL.setLiveRegion(this.mInfo, paramInt);
-  }
-  
-  public void setLongClickable(boolean paramBoolean)
-  {
-    IMPL.setLongClickable(this.mInfo, paramBoolean);
-  }
-  
-  public void setMovementGranularities(int paramInt)
-  {
-    IMPL.setMovementGranularities(this.mInfo, paramInt);
-  }
-  
-  public void setPackageName(CharSequence paramCharSequence)
-  {
-    IMPL.setPackageName(this.mInfo, paramCharSequence);
-  }
-  
-  public void setParent(View paramView)
-  {
-    IMPL.setParent(this.mInfo, paramView);
-  }
-  
-  public void setParent(View paramView, int paramInt)
-  {
-    IMPL.setParent(this.mInfo, paramView, paramInt);
-  }
-  
-  public void setPassword(boolean paramBoolean)
-  {
-    IMPL.setPassword(this.mInfo, paramBoolean);
-  }
-  
-  public void setScrollable(boolean paramBoolean)
-  {
-    IMPL.setScrollable(this.mInfo, paramBoolean);
-  }
-  
-  public void setSelected(boolean paramBoolean)
-  {
-    IMPL.setSelected(this.mInfo, paramBoolean);
-  }
-  
-  public void setSource(View paramView)
-  {
-    IMPL.setSource(this.mInfo, paramView);
-  }
-  
-  public void setSource(View paramView, int paramInt)
-  {
-    IMPL.setSource(this.mInfo, paramView, paramInt);
-  }
-  
-  public void setText(CharSequence paramCharSequence)
-  {
-    IMPL.setText(this.mInfo, paramCharSequence);
-  }
-  
-  public void setViewIdResourceName(String paramString)
-  {
-    IMPL.setViewIdResourceName(this.mInfo, paramString);
-  }
-  
-  public void setVisibleToUser(boolean paramBoolean)
-  {
-    IMPL.setVisibleToUser(this.mInfo, paramBoolean);
-  }
-  
-  public String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    localStringBuilder.append(super.toString());
-    Rect localRect = new Rect();
-    getBoundsInParent(localRect);
-    localStringBuilder.append("; boundsInParent: " + localRect);
-    getBoundsInScreen(localRect);
-    localStringBuilder.append("; boundsInScreen: " + localRect);
-    localStringBuilder.append("; packageName: ").append(getPackageName());
-    localStringBuilder.append("; className: ").append(getClassName());
-    localStringBuilder.append("; text: ").append(getText());
-    localStringBuilder.append("; contentDescription: ").append(getContentDescription());
-    localStringBuilder.append("; viewId: ").append(getViewIdResourceName());
-    localStringBuilder.append("; checkable: ").append(isCheckable());
-    localStringBuilder.append("; checked: ").append(isChecked());
-    localStringBuilder.append("; focusable: ").append(isFocusable());
-    localStringBuilder.append("; focused: ").append(isFocused());
-    localStringBuilder.append("; selected: ").append(isSelected());
-    localStringBuilder.append("; clickable: ").append(isClickable());
-    localStringBuilder.append("; longClickable: ").append(isLongClickable());
-    localStringBuilder.append("; enabled: ").append(isEnabled());
-    localStringBuilder.append("; password: ").append(isPassword());
-    localStringBuilder.append("; scrollable: " + isScrollable());
-    localStringBuilder.append("; [");
-    int i = getActions();
-    for (;;)
-    {
-      if (i == 0)
-      {
-        localStringBuilder.append("]");
-        return localStringBuilder.toString();
-      }
-      int k = 1 << Integer.numberOfTrailingZeros(i);
-      int j = i & (k ^ 0xFFFFFFFF);
-      localStringBuilder.append(getActionSymbolicName(k));
-      i = j;
-      if (j != 0)
-      {
-        localStringBuilder.append(", ");
-        i = j;
-      }
-    }
-  }
-  
-  static class AccessibilityNodeInfoIcsImpl
-    extends AccessibilityNodeInfoCompat.AccessibilityNodeInfoStubImpl
-  {
-    public void addAction(Object paramObject, int paramInt)
-    {
-      AccessibilityNodeInfoCompatIcs.addAction(paramObject, paramInt);
-    }
-    
-    public void addChild(Object paramObject, View paramView)
-    {
-      AccessibilityNodeInfoCompatIcs.addChild(paramObject, paramView);
-    }
-    
-    public List<Object> findAccessibilityNodeInfosByText(Object paramObject, String paramString)
-    {
-      return AccessibilityNodeInfoCompatIcs.findAccessibilityNodeInfosByText(paramObject, paramString);
-    }
-    
-    public int getActions(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.getActions(paramObject);
-    }
-    
-    public void getBoundsInParent(Object paramObject, Rect paramRect)
-    {
-      AccessibilityNodeInfoCompatIcs.getBoundsInParent(paramObject, paramRect);
-    }
-    
-    public void getBoundsInScreen(Object paramObject, Rect paramRect)
-    {
-      AccessibilityNodeInfoCompatIcs.getBoundsInScreen(paramObject, paramRect);
-    }
-    
-    public Object getChild(Object paramObject, int paramInt)
-    {
-      return AccessibilityNodeInfoCompatIcs.getChild(paramObject, paramInt);
-    }
-    
-    public int getChildCount(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.getChildCount(paramObject);
-    }
-    
-    public CharSequence getClassName(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.getClassName(paramObject);
-    }
-    
-    public CharSequence getContentDescription(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.getContentDescription(paramObject);
-    }
-    
-    public CharSequence getPackageName(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.getPackageName(paramObject);
-    }
-    
-    public Object getParent(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.getParent(paramObject);
-    }
-    
-    public CharSequence getText(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.getText(paramObject);
-    }
-    
-    public int getWindowId(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.getWindowId(paramObject);
-    }
-    
-    public boolean isCheckable(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isCheckable(paramObject);
-    }
-    
-    public boolean isChecked(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isChecked(paramObject);
-    }
-    
-    public boolean isClickable(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isClickable(paramObject);
-    }
-    
-    public boolean isEnabled(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isEnabled(paramObject);
-    }
-    
-    public boolean isFocusable(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isFocusable(paramObject);
-    }
-    
-    public boolean isFocused(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isFocused(paramObject);
-    }
-    
-    public boolean isLongClickable(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isLongClickable(paramObject);
-    }
-    
-    public boolean isPassword(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isPassword(paramObject);
-    }
-    
-    public boolean isScrollable(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isScrollable(paramObject);
-    }
-    
-    public boolean isSelected(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.isSelected(paramObject);
-    }
-    
-    public Object obtain()
-    {
-      return AccessibilityNodeInfoCompatIcs.obtain();
-    }
-    
-    public Object obtain(View paramView)
-    {
-      return AccessibilityNodeInfoCompatIcs.obtain(paramView);
-    }
-    
-    public Object obtain(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatIcs.obtain(paramObject);
-    }
-    
-    public boolean performAction(Object paramObject, int paramInt)
-    {
-      return AccessibilityNodeInfoCompatIcs.performAction(paramObject, paramInt);
-    }
-    
-    public void recycle(Object paramObject)
-    {
-      AccessibilityNodeInfoCompatIcs.recycle(paramObject);
-    }
-    
-    public void setBoundsInParent(Object paramObject, Rect paramRect)
-    {
-      AccessibilityNodeInfoCompatIcs.setBoundsInParent(paramObject, paramRect);
-    }
-    
-    public void setBoundsInScreen(Object paramObject, Rect paramRect)
-    {
-      AccessibilityNodeInfoCompatIcs.setBoundsInScreen(paramObject, paramRect);
-    }
-    
-    public void setCheckable(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setCheckable(paramObject, paramBoolean);
-    }
-    
-    public void setChecked(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setChecked(paramObject, paramBoolean);
-    }
-    
-    public void setClassName(Object paramObject, CharSequence paramCharSequence)
-    {
-      AccessibilityNodeInfoCompatIcs.setClassName(paramObject, paramCharSequence);
-    }
-    
-    public void setClickable(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setClickable(paramObject, paramBoolean);
-    }
-    
-    public void setContentDescription(Object paramObject, CharSequence paramCharSequence)
-    {
-      AccessibilityNodeInfoCompatIcs.setContentDescription(paramObject, paramCharSequence);
-    }
-    
-    public void setEnabled(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setEnabled(paramObject, paramBoolean);
-    }
-    
-    public void setFocusable(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setFocusable(paramObject, paramBoolean);
-    }
-    
-    public void setFocused(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setFocused(paramObject, paramBoolean);
-    }
-    
-    public void setLongClickable(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setLongClickable(paramObject, paramBoolean);
-    }
-    
-    public void setPackageName(Object paramObject, CharSequence paramCharSequence)
-    {
-      AccessibilityNodeInfoCompatIcs.setPackageName(paramObject, paramCharSequence);
-    }
-    
-    public void setParent(Object paramObject, View paramView)
-    {
-      AccessibilityNodeInfoCompatIcs.setParent(paramObject, paramView);
-    }
-    
-    public void setPassword(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setPassword(paramObject, paramBoolean);
-    }
-    
-    public void setScrollable(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setScrollable(paramObject, paramBoolean);
-    }
-    
-    public void setSelected(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatIcs.setSelected(paramObject, paramBoolean);
-    }
-    
-    public void setSource(Object paramObject, View paramView)
-    {
-      AccessibilityNodeInfoCompatIcs.setSource(paramObject, paramView);
-    }
-    
-    public void setText(Object paramObject, CharSequence paramCharSequence)
-    {
-      AccessibilityNodeInfoCompatIcs.setText(paramObject, paramCharSequence);
-    }
-  }
-  
-  static abstract interface AccessibilityNodeInfoImpl
-  {
-    public abstract void addAction(Object paramObject, int paramInt);
-    
-    public abstract void addChild(Object paramObject, View paramView);
-    
-    public abstract void addChild(Object paramObject, View paramView, int paramInt);
-    
-    public abstract List<Object> findAccessibilityNodeInfosByText(Object paramObject, String paramString);
-    
-    public abstract Object findFocus(Object paramObject, int paramInt);
-    
-    public abstract Object focusSearch(Object paramObject, int paramInt);
-    
-    public abstract int getActions(Object paramObject);
-    
-    public abstract void getBoundsInParent(Object paramObject, Rect paramRect);
-    
-    public abstract void getBoundsInScreen(Object paramObject, Rect paramRect);
-    
-    public abstract Object getChild(Object paramObject, int paramInt);
-    
-    public abstract int getChildCount(Object paramObject);
-    
-    public abstract CharSequence getClassName(Object paramObject);
-    
-    public abstract CharSequence getContentDescription(Object paramObject);
-    
-    public abstract int getLiveRegion(Object paramObject);
-    
-    public abstract int getMovementGranularities(Object paramObject);
-    
-    public abstract CharSequence getPackageName(Object paramObject);
-    
-    public abstract Object getParent(Object paramObject);
-    
-    public abstract CharSequence getText(Object paramObject);
-    
-    public abstract String getViewIdResourceName(Object paramObject);
-    
-    public abstract int getWindowId(Object paramObject);
-    
-    public abstract boolean isAccessibilityFocused(Object paramObject);
-    
-    public abstract boolean isCheckable(Object paramObject);
-    
-    public abstract boolean isChecked(Object paramObject);
-    
-    public abstract boolean isClickable(Object paramObject);
-    
-    public abstract boolean isEnabled(Object paramObject);
-    
-    public abstract boolean isFocusable(Object paramObject);
-    
-    public abstract boolean isFocused(Object paramObject);
-    
-    public abstract boolean isLongClickable(Object paramObject);
-    
-    public abstract boolean isPassword(Object paramObject);
-    
-    public abstract boolean isScrollable(Object paramObject);
-    
-    public abstract boolean isSelected(Object paramObject);
-    
-    public abstract boolean isVisibleToUser(Object paramObject);
-    
-    public abstract Object obtain();
-    
-    public abstract Object obtain(View paramView);
-    
-    public abstract Object obtain(View paramView, int paramInt);
-    
-    public abstract Object obtain(Object paramObject);
-    
-    public abstract boolean performAction(Object paramObject, int paramInt);
-    
-    public abstract boolean performAction(Object paramObject, int paramInt, Bundle paramBundle);
-    
-    public abstract void recycle(Object paramObject);
-    
-    public abstract void setAccessibilityFocused(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setBoundsInParent(Object paramObject, Rect paramRect);
-    
-    public abstract void setBoundsInScreen(Object paramObject, Rect paramRect);
-    
-    public abstract void setCheckable(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setChecked(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setClassName(Object paramObject, CharSequence paramCharSequence);
-    
-    public abstract void setClickable(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setContentDescription(Object paramObject, CharSequence paramCharSequence);
-    
-    public abstract void setEnabled(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setFocusable(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setFocused(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setLiveRegion(Object paramObject, int paramInt);
-    
-    public abstract void setLongClickable(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setMovementGranularities(Object paramObject, int paramInt);
-    
-    public abstract void setPackageName(Object paramObject, CharSequence paramCharSequence);
-    
-    public abstract void setParent(Object paramObject, View paramView);
-    
-    public abstract void setParent(Object paramObject, View paramView, int paramInt);
-    
-    public abstract void setPassword(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setScrollable(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setSelected(Object paramObject, boolean paramBoolean);
-    
-    public abstract void setSource(Object paramObject, View paramView);
-    
-    public abstract void setSource(Object paramObject, View paramView, int paramInt);
-    
-    public abstract void setText(Object paramObject, CharSequence paramCharSequence);
-    
-    public abstract void setViewIdResourceName(Object paramObject, String paramString);
-    
-    public abstract void setVisibleToUser(Object paramObject, boolean paramBoolean);
-  }
-  
-  static class AccessibilityNodeInfoJellybeanImpl
-    extends AccessibilityNodeInfoCompat.AccessibilityNodeInfoIcsImpl
-  {
-    public void addChild(Object paramObject, View paramView, int paramInt)
-    {
-      AccessibilityNodeInfoCompatJellyBean.addChild(paramObject, paramView, paramInt);
-    }
-    
-    public Object findFocus(Object paramObject, int paramInt)
-    {
-      return AccessibilityNodeInfoCompatJellyBean.findFocus(paramObject, paramInt);
-    }
-    
-    public Object focusSearch(Object paramObject, int paramInt)
-    {
-      return AccessibilityNodeInfoCompatJellyBean.focusSearch(paramObject, paramInt);
-    }
-    
-    public int getMovementGranularities(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatJellyBean.getMovementGranularities(paramObject);
-    }
-    
-    public boolean isAccessibilityFocused(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatJellyBean.isAccessibilityFocused(paramObject);
-    }
-    
-    public boolean isVisibleToUser(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatJellyBean.isVisibleToUser(paramObject);
-    }
-    
-    public Object obtain(View paramView, int paramInt)
-    {
-      return AccessibilityNodeInfoCompatJellyBean.obtain(paramView, paramInt);
-    }
-    
-    public boolean performAction(Object paramObject, int paramInt, Bundle paramBundle)
-    {
-      return AccessibilityNodeInfoCompatJellyBean.performAction(paramObject, paramInt, paramBundle);
-    }
-    
-    public void setAccessibilityFocused(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatJellyBean.setAccesibilityFocused(paramObject, paramBoolean);
-    }
-    
-    public void setMovementGranularities(Object paramObject, int paramInt)
-    {
-      AccessibilityNodeInfoCompatJellyBean.setMovementGranularities(paramObject, paramInt);
-    }
-    
-    public void setParent(Object paramObject, View paramView, int paramInt)
-    {
-      AccessibilityNodeInfoCompatJellyBean.setParent(paramObject, paramView, paramInt);
-    }
-    
-    public void setSource(Object paramObject, View paramView, int paramInt)
-    {
-      AccessibilityNodeInfoCompatJellyBean.setSource(paramObject, paramView, paramInt);
-    }
-    
-    public void setVisibleToUser(Object paramObject, boolean paramBoolean)
-    {
-      AccessibilityNodeInfoCompatJellyBean.setVisibleToUser(paramObject, paramBoolean);
-    }
-  }
-  
-  static class AccessibilityNodeInfoJellybeanMr2Impl
-    extends AccessibilityNodeInfoCompat.AccessibilityNodeInfoJellybeanImpl
-  {
-    public String getViewIdResourceName(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatJellybeanMr2.getViewIdResourceName(paramObject);
-    }
-    
-    public void setViewIdResourceName(Object paramObject, String paramString)
-    {
-      AccessibilityNodeInfoCompatJellybeanMr2.setViewIdResourceName(paramObject, paramString);
-    }
-  }
-  
-  static class AccessibilityNodeInfoKitKatImpl
-    extends AccessibilityNodeInfoCompat.AccessibilityNodeInfoJellybeanMr2Impl
-  {
-    public int getLiveRegion(Object paramObject)
-    {
-      return AccessibilityNodeInfoCompatKitKat.getLiveRegion(paramObject);
-    }
-    
-    public void setLiveRegion(Object paramObject, int paramInt)
-    {
-      AccessibilityNodeInfoCompatKitKat.setLiveRegion(paramObject, paramInt);
-    }
-  }
-  
-  static class AccessibilityNodeInfoStubImpl
-    implements AccessibilityNodeInfoCompat.AccessibilityNodeInfoImpl
-  {
-    public void addAction(Object paramObject, int paramInt) {}
-    
-    public void addChild(Object paramObject, View paramView) {}
-    
-    public void addChild(Object paramObject, View paramView, int paramInt) {}
-    
-    public List<Object> findAccessibilityNodeInfosByText(Object paramObject, String paramString)
-    {
-      return Collections.emptyList();
-    }
-    
-    public Object findFocus(Object paramObject, int paramInt)
-    {
-      return null;
-    }
-    
-    public Object focusSearch(Object paramObject, int paramInt)
-    {
-      return null;
-    }
-    
-    public int getActions(Object paramObject)
-    {
-      return 0;
-    }
-    
-    public void getBoundsInParent(Object paramObject, Rect paramRect) {}
-    
-    public void getBoundsInScreen(Object paramObject, Rect paramRect) {}
-    
-    public Object getChild(Object paramObject, int paramInt)
-    {
-      return null;
-    }
-    
-    public int getChildCount(Object paramObject)
-    {
-      return 0;
-    }
-    
-    public CharSequence getClassName(Object paramObject)
-    {
-      return null;
-    }
-    
-    public CharSequence getContentDescription(Object paramObject)
-    {
-      return null;
-    }
-    
-    public int getLiveRegion(Object paramObject)
-    {
-      return 0;
-    }
-    
-    public int getMovementGranularities(Object paramObject)
-    {
-      return 0;
-    }
-    
-    public CharSequence getPackageName(Object paramObject)
-    {
-      return null;
-    }
-    
-    public Object getParent(Object paramObject)
-    {
-      return null;
-    }
-    
-    public CharSequence getText(Object paramObject)
-    {
-      return null;
-    }
-    
-    public String getViewIdResourceName(Object paramObject)
-    {
-      return null;
-    }
-    
-    public int getWindowId(Object paramObject)
-    {
-      return 0;
-    }
-    
-    public boolean isAccessibilityFocused(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isCheckable(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isChecked(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isClickable(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isEnabled(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isFocusable(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isFocused(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isLongClickable(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isPassword(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isScrollable(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isSelected(Object paramObject)
-    {
-      return false;
-    }
-    
-    public boolean isVisibleToUser(Object paramObject)
-    {
-      return false;
-    }
-    
-    public Object obtain()
-    {
-      return null;
-    }
-    
-    public Object obtain(View paramView)
-    {
-      return null;
-    }
-    
-    public Object obtain(View paramView, int paramInt)
-    {
-      return null;
-    }
-    
-    public Object obtain(Object paramObject)
-    {
-      return null;
-    }
-    
-    public boolean performAction(Object paramObject, int paramInt)
-    {
-      return false;
-    }
-    
-    public boolean performAction(Object paramObject, int paramInt, Bundle paramBundle)
-    {
-      return false;
-    }
-    
-    public void recycle(Object paramObject) {}
-    
-    public void setAccessibilityFocused(Object paramObject, boolean paramBoolean) {}
-    
-    public void setBoundsInParent(Object paramObject, Rect paramRect) {}
-    
-    public void setBoundsInScreen(Object paramObject, Rect paramRect) {}
-    
-    public void setCheckable(Object paramObject, boolean paramBoolean) {}
-    
-    public void setChecked(Object paramObject, boolean paramBoolean) {}
-    
-    public void setClassName(Object paramObject, CharSequence paramCharSequence) {}
-    
-    public void setClickable(Object paramObject, boolean paramBoolean) {}
-    
-    public void setContentDescription(Object paramObject, CharSequence paramCharSequence) {}
-    
-    public void setEnabled(Object paramObject, boolean paramBoolean) {}
-    
-    public void setFocusable(Object paramObject, boolean paramBoolean) {}
-    
-    public void setFocused(Object paramObject, boolean paramBoolean) {}
-    
-    public void setLiveRegion(Object paramObject, int paramInt) {}
-    
-    public void setLongClickable(Object paramObject, boolean paramBoolean) {}
-    
-    public void setMovementGranularities(Object paramObject, int paramInt) {}
-    
-    public void setPackageName(Object paramObject, CharSequence paramCharSequence) {}
-    
-    public void setParent(Object paramObject, View paramView) {}
-    
-    public void setParent(Object paramObject, View paramView, int paramInt) {}
-    
-    public void setPassword(Object paramObject, boolean paramBoolean) {}
-    
-    public void setScrollable(Object paramObject, boolean paramBoolean) {}
-    
-    public void setSelected(Object paramObject, boolean paramBoolean) {}
-    
-    public void setSource(Object paramObject, View paramView) {}
-    
-    public void setSource(Object paramObject, View paramView, int paramInt) {}
-    
-    public void setText(Object paramObject, CharSequence paramCharSequence) {}
-    
-    public void setViewIdResourceName(Object paramObject, String paramString) {}
-    
-    public void setVisibleToUser(Object paramObject, boolean paramBoolean) {}
-  }
+
+        public Object obtain(View root, int virtualDescendantId) {
+            return null;
+        }
+
+        public Object obtain(Object info) {
+            return null;
+        }
+
+        public void addAction(Object info, int action) {
+        }
+
+        public void addChild(Object info, View child) {
+        }
+
+        public void addChild(Object info, View child, int virtualDescendantId) {
+        }
+
+        public List<Object> findAccessibilityNodeInfosByText(Object info, String text) {
+            return Collections.emptyList();
+        }
+
+        public int getActions(Object info) {
+            return 0;
+        }
+
+        public void getBoundsInParent(Object info, Rect outBounds) {
+        }
+
+        public void getBoundsInScreen(Object info, Rect outBounds) {
+        }
+
+        public Object getChild(Object info, int index) {
+            return null;
+        }
+
+        public int getChildCount(Object info) {
+            return 0;
+        }
+
+        public CharSequence getClassName(Object info) {
+            return null;
+        }
+
+        public CharSequence getContentDescription(Object info) {
+            return null;
+        }
+
+        public CharSequence getPackageName(Object info) {
+            return null;
+        }
+
+        public Object getParent(Object info) {
+            return null;
+        }
+
+        public CharSequence getText(Object info) {
+            return null;
+        }
+
+        public int getWindowId(Object info) {
+            return 0;
+        }
+
+        public boolean isCheckable(Object info) {
+            return false;
+        }
+
+        public boolean isChecked(Object info) {
+            return false;
+        }
+
+        public boolean isClickable(Object info) {
+            return false;
+        }
+
+        public boolean isEnabled(Object info) {
+            return false;
+        }
+
+        public boolean isFocusable(Object info) {
+            return false;
+        }
+
+        public boolean isFocused(Object info) {
+            return false;
+        }
+
+        public boolean isVisibleToUser(Object info) {
+            return false;
+        }
+
+        public boolean isAccessibilityFocused(Object info) {
+            return false;
+        }
+
+        public boolean isLongClickable(Object info) {
+            return false;
+        }
+
+        public boolean isPassword(Object info) {
+            return false;
+        }
+
+        public boolean isScrollable(Object info) {
+            return false;
+        }
+
+        public boolean isSelected(Object info) {
+            return false;
+        }
+
+        public boolean performAction(Object info, int action) {
+            return false;
+        }
+
+        public boolean performAction(Object info, int action, Bundle arguments) {
+            return false;
+        }
+
+        public void setMovementGranularities(Object info, int granularities) {
+        }
+
+        public int getMovementGranularities(Object info) {
+            return 0;
+        }
+
+        public void setBoundsInParent(Object info, Rect bounds) {
+        }
+
+        public void setBoundsInScreen(Object info, Rect bounds) {
+        }
+
+        public void setCheckable(Object info, boolean checkable) {
+        }
+
+        public void setChecked(Object info, boolean checked) {
+        }
+
+        public void setClassName(Object info, CharSequence className) {
+        }
+
+        public void setClickable(Object info, boolean clickable) {
+        }
+
+        public void setContentDescription(Object info, CharSequence contentDescription) {
+        }
+
+        public void setEnabled(Object info, boolean enabled) {
+        }
+
+        public void setFocusable(Object info, boolean focusable) {
+        }
+
+        public void setFocused(Object info, boolean focused) {
+        }
+
+        public void setVisibleToUser(Object info, boolean visibleToUser) {
+        }
+
+        public void setAccessibilityFocused(Object info, boolean focused) {
+        }
+
+        public void setLongClickable(Object info, boolean longClickable) {
+        }
+
+        public void setPackageName(Object info, CharSequence packageName) {
+        }
+
+        public void setParent(Object info, View parent) {
+        }
+
+        public void setPassword(Object info, boolean password) {
+        }
+
+        public void setScrollable(Object info, boolean scrollable) {
+        }
+
+        public void setSelected(Object info, boolean selected) {
+        }
+
+        public void setSource(Object info, View source) {
+        }
+
+        public void setSource(Object info, View root, int virtualDescendantId) {
+        }
+
+        public Object findFocus(Object info, int focus) {
+            return null;
+        }
+
+        public Object focusSearch(Object info, int direction) {
+            return null;
+        }
+
+        public void setText(Object info, CharSequence text) {
+        }
+
+        public void recycle(Object info) {
+        }
+
+        public void setParent(Object info, View root, int virtualDescendantId) {
+        }
+
+        public String getViewIdResourceName(Object info) {
+            return null;
+        }
+
+        public void setViewIdResourceName(Object info, String viewId) {
+        }
+
+        public int getLiveRegion(Object info) {
+            return 0;
+        }
+
+        public void setLiveRegion(Object info, int mode) {
+        }
+    }
+
+    static class AccessibilityNodeInfoIcsImpl extends AccessibilityNodeInfoStubImpl {
+        AccessibilityNodeInfoIcsImpl() {
+        }
+
+        public Object obtain() {
+            return AccessibilityNodeInfoCompatIcs.obtain();
+        }
+
+        public Object obtain(View source) {
+            return AccessibilityNodeInfoCompatIcs.obtain(source);
+        }
+
+        public Object obtain(Object info) {
+            return AccessibilityNodeInfoCompatIcs.obtain(info);
+        }
+
+        public void addAction(Object info, int action) {
+            AccessibilityNodeInfoCompatIcs.addAction(info, action);
+        }
+
+        public void addChild(Object info, View child) {
+            AccessibilityNodeInfoCompatIcs.addChild(info, child);
+        }
+
+        public List<Object> findAccessibilityNodeInfosByText(Object info, String text) {
+            return AccessibilityNodeInfoCompatIcs.findAccessibilityNodeInfosByText(info, text);
+        }
+
+        public int getActions(Object info) {
+            return AccessibilityNodeInfoCompatIcs.getActions(info);
+        }
+
+        public void getBoundsInParent(Object info, Rect outBounds) {
+            AccessibilityNodeInfoCompatIcs.getBoundsInParent(info, outBounds);
+        }
+
+        public void getBoundsInScreen(Object info, Rect outBounds) {
+            AccessibilityNodeInfoCompatIcs.getBoundsInScreen(info, outBounds);
+        }
+
+        public Object getChild(Object info, int index) {
+            return AccessibilityNodeInfoCompatIcs.getChild(info, index);
+        }
+
+        public int getChildCount(Object info) {
+            return AccessibilityNodeInfoCompatIcs.getChildCount(info);
+        }
+
+        public CharSequence getClassName(Object info) {
+            return AccessibilityNodeInfoCompatIcs.getClassName(info);
+        }
+
+        public CharSequence getContentDescription(Object info) {
+            return AccessibilityNodeInfoCompatIcs.getContentDescription(info);
+        }
+
+        public CharSequence getPackageName(Object info) {
+            return AccessibilityNodeInfoCompatIcs.getPackageName(info);
+        }
+
+        public Object getParent(Object info) {
+            return AccessibilityNodeInfoCompatIcs.getParent(info);
+        }
+
+        public CharSequence getText(Object info) {
+            return AccessibilityNodeInfoCompatIcs.getText(info);
+        }
+
+        public int getWindowId(Object info) {
+            return AccessibilityNodeInfoCompatIcs.getWindowId(info);
+        }
+
+        public boolean isCheckable(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isCheckable(info);
+        }
+
+        public boolean isChecked(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isChecked(info);
+        }
+
+        public boolean isClickable(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isClickable(info);
+        }
+
+        public boolean isEnabled(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isEnabled(info);
+        }
+
+        public boolean isFocusable(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isFocusable(info);
+        }
+
+        public boolean isFocused(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isFocused(info);
+        }
+
+        public boolean isLongClickable(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isLongClickable(info);
+        }
+
+        public boolean isPassword(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isPassword(info);
+        }
+
+        public boolean isScrollable(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isScrollable(info);
+        }
+
+        public boolean isSelected(Object info) {
+            return AccessibilityNodeInfoCompatIcs.isSelected(info);
+        }
+
+        public boolean performAction(Object info, int action) {
+            return AccessibilityNodeInfoCompatIcs.performAction(info, action);
+        }
+
+        public void setBoundsInParent(Object info, Rect bounds) {
+            AccessibilityNodeInfoCompatIcs.setBoundsInParent(info, bounds);
+        }
+
+        public void setBoundsInScreen(Object info, Rect bounds) {
+            AccessibilityNodeInfoCompatIcs.setBoundsInScreen(info, bounds);
+        }
+
+        public void setCheckable(Object info, boolean checkable) {
+            AccessibilityNodeInfoCompatIcs.setCheckable(info, checkable);
+        }
+
+        public void setChecked(Object info, boolean checked) {
+            AccessibilityNodeInfoCompatIcs.setChecked(info, checked);
+        }
+
+        public void setClassName(Object info, CharSequence className) {
+            AccessibilityNodeInfoCompatIcs.setClassName(info, className);
+        }
+
+        public void setClickable(Object info, boolean clickable) {
+            AccessibilityNodeInfoCompatIcs.setClickable(info, clickable);
+        }
+
+        public void setContentDescription(Object info, CharSequence contentDescription) {
+            AccessibilityNodeInfoCompatIcs.setContentDescription(info, contentDescription);
+        }
+
+        public void setEnabled(Object info, boolean enabled) {
+            AccessibilityNodeInfoCompatIcs.setEnabled(info, enabled);
+        }
+
+        public void setFocusable(Object info, boolean focusable) {
+            AccessibilityNodeInfoCompatIcs.setFocusable(info, focusable);
+        }
+
+        public void setFocused(Object info, boolean focused) {
+            AccessibilityNodeInfoCompatIcs.setFocused(info, focused);
+        }
+
+        public void setLongClickable(Object info, boolean longClickable) {
+            AccessibilityNodeInfoCompatIcs.setLongClickable(info, longClickable);
+        }
+
+        public void setPackageName(Object info, CharSequence packageName) {
+            AccessibilityNodeInfoCompatIcs.setPackageName(info, packageName);
+        }
+
+        public void setParent(Object info, View parent) {
+            AccessibilityNodeInfoCompatIcs.setParent(info, parent);
+        }
+
+        public void setPassword(Object info, boolean password) {
+            AccessibilityNodeInfoCompatIcs.setPassword(info, password);
+        }
+
+        public void setScrollable(Object info, boolean scrollable) {
+            AccessibilityNodeInfoCompatIcs.setScrollable(info, scrollable);
+        }
+
+        public void setSelected(Object info, boolean selected) {
+            AccessibilityNodeInfoCompatIcs.setSelected(info, selected);
+        }
+
+        public void setSource(Object info, View source) {
+            AccessibilityNodeInfoCompatIcs.setSource(info, source);
+        }
+
+        public void setText(Object info, CharSequence text) {
+            AccessibilityNodeInfoCompatIcs.setText(info, text);
+        }
+
+        public void recycle(Object info) {
+            AccessibilityNodeInfoCompatIcs.recycle(info);
+        }
+    }
+
+    static class AccessibilityNodeInfoJellybeanImpl extends AccessibilityNodeInfoIcsImpl {
+        AccessibilityNodeInfoJellybeanImpl() {
+        }
+
+        public Object obtain(View root, int virtualDescendantId) {
+            return AccessibilityNodeInfoCompatJellyBean.obtain(root, virtualDescendantId);
+        }
+
+        public Object findFocus(Object info, int focus) {
+            return AccessibilityNodeInfoCompatJellyBean.findFocus(info, focus);
+        }
+
+        public Object focusSearch(Object info, int direction) {
+            return AccessibilityNodeInfoCompatJellyBean.focusSearch(info, direction);
+        }
+
+        public void addChild(Object info, View child, int virtualDescendantId) {
+            AccessibilityNodeInfoCompatJellyBean.addChild(info, child, virtualDescendantId);
+        }
+
+        public void setSource(Object info, View root, int virtualDescendantId) {
+            AccessibilityNodeInfoCompatJellyBean.setSource(info, root, virtualDescendantId);
+        }
+
+        public boolean isVisibleToUser(Object info) {
+            return AccessibilityNodeInfoCompatJellyBean.isVisibleToUser(info);
+        }
+
+        public void setVisibleToUser(Object info, boolean visibleToUser) {
+            AccessibilityNodeInfoCompatJellyBean.setVisibleToUser(info, visibleToUser);
+        }
+
+        public boolean isAccessibilityFocused(Object info) {
+            return AccessibilityNodeInfoCompatJellyBean.isAccessibilityFocused(info);
+        }
+
+        public void setAccessibilityFocused(Object info, boolean focused) {
+            AccessibilityNodeInfoCompatJellyBean.setAccesibilityFocused(info, focused);
+        }
+
+        public boolean performAction(Object info, int action, Bundle arguments) {
+            return AccessibilityNodeInfoCompatJellyBean.performAction(info, action, arguments);
+        }
+
+        public void setMovementGranularities(Object info, int granularities) {
+            AccessibilityNodeInfoCompatJellyBean.setMovementGranularities(info, granularities);
+        }
+
+        public int getMovementGranularities(Object info) {
+            return AccessibilityNodeInfoCompatJellyBean.getMovementGranularities(info);
+        }
+
+        public void setParent(Object info, View root, int virtualDescendantId) {
+            AccessibilityNodeInfoCompatJellyBean.setParent(info, root, virtualDescendantId);
+        }
+    }
+
+    static class AccessibilityNodeInfoJellybeanMr2Impl extends AccessibilityNodeInfoJellybeanImpl {
+        AccessibilityNodeInfoJellybeanMr2Impl() {
+        }
+
+        public String getViewIdResourceName(Object info) {
+            return AccessibilityNodeInfoCompatJellybeanMr2.getViewIdResourceName(info);
+        }
+
+        public void setViewIdResourceName(Object info, String viewId) {
+            AccessibilityNodeInfoCompatJellybeanMr2.setViewIdResourceName(info, viewId);
+        }
+    }
+
+    static class AccessibilityNodeInfoKitKatImpl extends AccessibilityNodeInfoJellybeanMr2Impl {
+        AccessibilityNodeInfoKitKatImpl() {
+        }
+
+        public int getLiveRegion(Object info) {
+            return AccessibilityNodeInfoCompatKitKat.getLiveRegion(info);
+        }
+
+        public void setLiveRegion(Object info, int mode) {
+            AccessibilityNodeInfoCompatKitKat.setLiveRegion(info, mode);
+        }
+    }
+
+    static {
+        if (VERSION.SDK_INT >= 19) {
+            IMPL = new AccessibilityNodeInfoKitKatImpl();
+        } else if (VERSION.SDK_INT >= 18) {
+            IMPL = new AccessibilityNodeInfoJellybeanMr2Impl();
+        } else if (VERSION.SDK_INT >= 16) {
+            IMPL = new AccessibilityNodeInfoJellybeanImpl();
+        } else if (VERSION.SDK_INT >= 14) {
+            IMPL = new AccessibilityNodeInfoIcsImpl();
+        } else {
+            IMPL = new AccessibilityNodeInfoStubImpl();
+        }
+    }
+
+    static AccessibilityNodeInfoCompat wrapNonNullInstance(Object object) {
+        if (object != null) {
+            return new AccessibilityNodeInfoCompat(object);
+        }
+        return null;
+    }
+
+    public AccessibilityNodeInfoCompat(Object info) {
+        this.mInfo = info;
+    }
+
+    public Object getInfo() {
+        return this.mInfo;
+    }
+
+    public static AccessibilityNodeInfoCompat obtain(View source) {
+        return wrapNonNullInstance(IMPL.obtain(source));
+    }
+
+    public static AccessibilityNodeInfoCompat obtain(View root, int virtualDescendantId) {
+        return wrapNonNullInstance(IMPL.obtain(root, virtualDescendantId));
+    }
+
+    public static AccessibilityNodeInfoCompat obtain() {
+        return wrapNonNullInstance(IMPL.obtain());
+    }
+
+    public static AccessibilityNodeInfoCompat obtain(AccessibilityNodeInfoCompat info) {
+        return wrapNonNullInstance(IMPL.obtain(info.mInfo));
+    }
+
+    public void setSource(View source) {
+        IMPL.setSource(this.mInfo, source);
+    }
+
+    public void setSource(View root, int virtualDescendantId) {
+        IMPL.setSource(this.mInfo, root, virtualDescendantId);
+    }
+
+    public AccessibilityNodeInfoCompat findFocus(int focus) {
+        return wrapNonNullInstance(IMPL.findFocus(this.mInfo, focus));
+    }
+
+    public AccessibilityNodeInfoCompat focusSearch(int direction) {
+        return wrapNonNullInstance(IMPL.focusSearch(this.mInfo, direction));
+    }
+
+    public int getWindowId() {
+        return IMPL.getWindowId(this.mInfo);
+    }
+
+    public int getChildCount() {
+        return IMPL.getChildCount(this.mInfo);
+    }
+
+    public AccessibilityNodeInfoCompat getChild(int index) {
+        return wrapNonNullInstance(IMPL.getChild(this.mInfo, index));
+    }
+
+    public void addChild(View child) {
+        IMPL.addChild(this.mInfo, child);
+    }
+
+    public void addChild(View root, int virtualDescendantId) {
+        IMPL.addChild(this.mInfo, root, virtualDescendantId);
+    }
+
+    public int getActions() {
+        return IMPL.getActions(this.mInfo);
+    }
+
+    public void addAction(int action) {
+        IMPL.addAction(this.mInfo, action);
+    }
+
+    public boolean performAction(int action) {
+        return IMPL.performAction(this.mInfo, action);
+    }
+
+    public boolean performAction(int action, Bundle arguments) {
+        return IMPL.performAction(this.mInfo, action, arguments);
+    }
+
+    public void setMovementGranularities(int granularities) {
+        IMPL.setMovementGranularities(this.mInfo, granularities);
+    }
+
+    public int getMovementGranularities() {
+        return IMPL.getMovementGranularities(this.mInfo);
+    }
+
+    public List<AccessibilityNodeInfoCompat> findAccessibilityNodeInfosByText(String text) {
+        List<AccessibilityNodeInfoCompat> result = new ArrayList();
+        List<Object> infos = IMPL.findAccessibilityNodeInfosByText(this.mInfo, text);
+        int infoCount = infos.size();
+        for (int i = 0; i < infoCount; i++) {
+            result.add(new AccessibilityNodeInfoCompat(infos.get(i)));
+        }
+        return result;
+    }
+
+    public AccessibilityNodeInfoCompat getParent() {
+        return wrapNonNullInstance(IMPL.getParent(this.mInfo));
+    }
+
+    public void setParent(View parent) {
+        IMPL.setParent(this.mInfo, parent);
+    }
+
+    public void setParent(View root, int virtualDescendantId) {
+        IMPL.setParent(this.mInfo, root, virtualDescendantId);
+    }
+
+    public void getBoundsInParent(Rect outBounds) {
+        IMPL.getBoundsInParent(this.mInfo, outBounds);
+    }
+
+    public void setBoundsInParent(Rect bounds) {
+        IMPL.setBoundsInParent(this.mInfo, bounds);
+    }
+
+    public void getBoundsInScreen(Rect outBounds) {
+        IMPL.getBoundsInScreen(this.mInfo, outBounds);
+    }
+
+    public void setBoundsInScreen(Rect bounds) {
+        IMPL.setBoundsInScreen(this.mInfo, bounds);
+    }
+
+    public boolean isCheckable() {
+        return IMPL.isCheckable(this.mInfo);
+    }
+
+    public void setCheckable(boolean checkable) {
+        IMPL.setCheckable(this.mInfo, checkable);
+    }
+
+    public boolean isChecked() {
+        return IMPL.isChecked(this.mInfo);
+    }
+
+    public void setChecked(boolean checked) {
+        IMPL.setChecked(this.mInfo, checked);
+    }
+
+    public boolean isFocusable() {
+        return IMPL.isFocusable(this.mInfo);
+    }
+
+    public void setFocusable(boolean focusable) {
+        IMPL.setFocusable(this.mInfo, focusable);
+    }
+
+    public boolean isFocused() {
+        return IMPL.isFocused(this.mInfo);
+    }
+
+    public void setFocused(boolean focused) {
+        IMPL.setFocused(this.mInfo, focused);
+    }
+
+    public boolean isVisibleToUser() {
+        return IMPL.isVisibleToUser(this.mInfo);
+    }
+
+    public void setVisibleToUser(boolean visibleToUser) {
+        IMPL.setVisibleToUser(this.mInfo, visibleToUser);
+    }
+
+    public boolean isAccessibilityFocused() {
+        return IMPL.isAccessibilityFocused(this.mInfo);
+    }
+
+    public void setAccessibilityFocused(boolean focused) {
+        IMPL.setAccessibilityFocused(this.mInfo, focused);
+    }
+
+    public boolean isSelected() {
+        return IMPL.isSelected(this.mInfo);
+    }
+
+    public void setSelected(boolean selected) {
+        IMPL.setSelected(this.mInfo, selected);
+    }
+
+    public boolean isClickable() {
+        return IMPL.isClickable(this.mInfo);
+    }
+
+    public void setClickable(boolean clickable) {
+        IMPL.setClickable(this.mInfo, clickable);
+    }
+
+    public boolean isLongClickable() {
+        return IMPL.isLongClickable(this.mInfo);
+    }
+
+    public void setLongClickable(boolean longClickable) {
+        IMPL.setLongClickable(this.mInfo, longClickable);
+    }
+
+    public boolean isEnabled() {
+        return IMPL.isEnabled(this.mInfo);
+    }
+
+    public void setEnabled(boolean enabled) {
+        IMPL.setEnabled(this.mInfo, enabled);
+    }
+
+    public boolean isPassword() {
+        return IMPL.isPassword(this.mInfo);
+    }
+
+    public void setPassword(boolean password) {
+        IMPL.setPassword(this.mInfo, password);
+    }
+
+    public boolean isScrollable() {
+        return IMPL.isScrollable(this.mInfo);
+    }
+
+    public void setScrollable(boolean scrollable) {
+        IMPL.setScrollable(this.mInfo, scrollable);
+    }
+
+    public CharSequence getPackageName() {
+        return IMPL.getPackageName(this.mInfo);
+    }
+
+    public void setPackageName(CharSequence packageName) {
+        IMPL.setPackageName(this.mInfo, packageName);
+    }
+
+    public CharSequence getClassName() {
+        return IMPL.getClassName(this.mInfo);
+    }
+
+    public void setClassName(CharSequence className) {
+        IMPL.setClassName(this.mInfo, className);
+    }
+
+    public CharSequence getText() {
+        return IMPL.getText(this.mInfo);
+    }
+
+    public void setText(CharSequence text) {
+        IMPL.setText(this.mInfo, text);
+    }
+
+    public CharSequence getContentDescription() {
+        return IMPL.getContentDescription(this.mInfo);
+    }
+
+    public void setContentDescription(CharSequence contentDescription) {
+        IMPL.setContentDescription(this.mInfo, contentDescription);
+    }
+
+    public void recycle() {
+        IMPL.recycle(this.mInfo);
+    }
+
+    public void setViewIdResourceName(String viewId) {
+        IMPL.setViewIdResourceName(this.mInfo, viewId);
+    }
+
+    public String getViewIdResourceName() {
+        return IMPL.getViewIdResourceName(this.mInfo);
+    }
+
+    public int getLiveRegion() {
+        return IMPL.getLiveRegion(this.mInfo);
+    }
+
+    public void setLiveRegion(int mode) {
+        IMPL.setLiveRegion(this.mInfo, mode);
+    }
+
+    public int hashCode() {
+        return this.mInfo == null ? 0 : this.mInfo.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        AccessibilityNodeInfoCompat other = (AccessibilityNodeInfoCompat) obj;
+        if (this.mInfo == null) {
+            if (other.mInfo != null) {
+                return false;
+            }
+            return true;
+        } else if (this.mInfo.equals(other.mInfo)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(super.toString());
+        Rect bounds = new Rect();
+        getBoundsInParent(bounds);
+        builder.append("; boundsInParent: " + bounds);
+        getBoundsInScreen(bounds);
+        builder.append("; boundsInScreen: " + bounds);
+        builder.append("; packageName: ").append(getPackageName());
+        builder.append("; className: ").append(getClassName());
+        builder.append("; text: ").append(getText());
+        builder.append("; contentDescription: ").append(getContentDescription());
+        builder.append("; viewId: ").append(getViewIdResourceName());
+        builder.append("; checkable: ").append(isCheckable());
+        builder.append("; checked: ").append(isChecked());
+        builder.append("; focusable: ").append(isFocusable());
+        builder.append("; focused: ").append(isFocused());
+        builder.append("; selected: ").append(isSelected());
+        builder.append("; clickable: ").append(isClickable());
+        builder.append("; longClickable: ").append(isLongClickable());
+        builder.append("; enabled: ").append(isEnabled());
+        builder.append("; password: ").append(isPassword());
+        builder.append("; scrollable: " + isScrollable());
+        builder.append("; [");
+        int actionBits = getActions();
+        while (actionBits != 0) {
+            int action = 1 << Integer.numberOfTrailingZeros(actionBits);
+            actionBits &= action ^ -1;
+            builder.append(getActionSymbolicName(action));
+            if (actionBits != 0) {
+                builder.append(", ");
+            }
+        }
+        builder.append("]");
+        return builder.toString();
+    }
+
+    private static String getActionSymbolicName(int action) {
+        switch (action) {
+            case 1:
+                return "ACTION_FOCUS";
+            case 2:
+                return "ACTION_CLEAR_FOCUS";
+            case 4:
+                return "ACTION_SELECT";
+            case 8:
+                return "ACTION_CLEAR_SELECTION";
+            case 16:
+                return "ACTION_CLICK";
+            case 32:
+                return "ACTION_LONG_CLICK";
+            case 64:
+                return "ACTION_ACCESSIBILITY_FOCUS";
+            case 128:
+                return "ACTION_CLEAR_ACCESSIBILITY_FOCUS";
+            case 256:
+                return "ACTION_NEXT_AT_MOVEMENT_GRANULARITY";
+            case 512:
+                return "ACTION_PREVIOUS_AT_MOVEMENT_GRANULARITY";
+            case 1024:
+                return "ACTION_NEXT_HTML_ELEMENT";
+            case 2048:
+                return "ACTION_PREVIOUS_HTML_ELEMENT";
+            case 4096:
+                return "ACTION_SCROLL_FORWARD";
+            case 8192:
+                return "ACTION_SCROLL_BACKWARD";
+            case 16384:
+                return "ACTION_COPY";
+            case 32768:
+                return "ACTION_PASTE";
+            case 65536:
+                return "ACTION_CUT";
+            case 131072:
+                return "ACTION_SET_SELECTION";
+            default:
+                return "ACTION_UNKNOWN";
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/accessibility/AccessibilityNodeInfoCompat.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

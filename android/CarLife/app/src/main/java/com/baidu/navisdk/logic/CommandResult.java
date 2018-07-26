@@ -2,133 +2,94 @@ package com.baidu.navisdk.logic;
 
 import android.content.res.Resources;
 
-public class CommandResult
-{
-  public int mErrCode;
-  public String mErrDebug;
-  public String mErrForUser;
-  public Object mUserObject;
-  
-  public CommandResult()
-  {
-    reset();
-  }
-  
-  public CommandResult(int paramInt)
-  {
-    this();
-    set(paramInt);
-  }
-  
-  public CommandResult(int paramInt, String paramString1, String paramString2)
-  {
-    this();
-    set(paramInt, paramString1, paramString2);
-  }
-  
-  public static boolean isNetworkErr(int paramInt)
-  {
-    boolean bool2 = false;
-    boolean bool1;
-    if ((paramInt < NaviErrCode.getAppError(0)) || (paramInt > NaviErrCode.getAppError(2)))
-    {
-      bool1 = bool2;
-      if (paramInt >= NaviErrCode.getSDKError(0))
-      {
-        bool1 = bool2;
-        if (paramInt > NaviErrCode.getSDKError(2)) {}
-      }
+public class CommandResult {
+    public int mErrCode;
+    public String mErrDebug;
+    public String mErrForUser;
+    public Object mUserObject;
+
+    public static void mapErrInfo(Resources resource, CommandResult result) {
+        if (result.mErrForUser != null && result.mErrForUser.length() <= 0) {
+        }
     }
-    else
-    {
-      bool1 = true;
+
+    public CommandResult() {
+        reset();
     }
-    return bool1;
-  }
-  
-  public static void mapErrInfo(Resources paramResources, CommandResult paramCommandResult)
-  {
-    if ((paramCommandResult.mErrForUser != null) && (paramCommandResult.mErrForUser.length() > 0)) {}
-  }
-  
-  public boolean isNetworkErr()
-  {
-    return false;
-  }
-  
-  public boolean isSuccess()
-  {
-    return this.mErrCode == 0;
-  }
-  
-  public void reset()
-  {
-    this.mErrCode = 55536;
-    this.mErrDebug = "";
-    this.mErrForUser = "";
-    this.mUserObject = null;
-  }
-  
-  public void set(int paramInt)
-  {
-    set(paramInt, null, null);
-  }
-  
-  public void set(int paramInt, String paramString)
-  {
-    set(paramInt, paramString, null);
-  }
-  
-  public void set(int paramInt, String paramString1, String paramString2)
-  {
-    this.mErrCode = paramInt;
-    if (paramString1 != null)
-    {
-      this.mErrDebug = paramString1;
-      if (paramString2 == null) {
-        break label30;
-      }
+
+    public CommandResult(int errCode) {
+        this();
+        set(errCode);
     }
-    for (;;)
-    {
-      this.mErrForUser = paramString2;
-      return;
-      paramString1 = "";
-      break;
-      label30:
-      paramString2 = "";
+
+    public CommandResult(int errCode, String errDebug, String errForUser) {
+        this();
+        set(errCode, errDebug, errForUser);
     }
-  }
-  
-  public void set(CommandResult paramCommandResult)
-  {
-    set(paramCommandResult.mErrCode, paramCommandResult.mErrDebug, paramCommandResult.mErrForUser);
-  }
-  
-  public void setAppError(int paramInt)
-  {
-    set(paramInt + 6000, null, null);
-  }
-  
-  public void setSDKError(int paramInt)
-  {
-    set(paramInt + 5000, null, null);
-  }
-  
-  public void setSuccess()
-  {
-    this.mErrCode = 0;
-  }
-  
-  public void setSuccess(String paramString)
-  {
-    setSuccess();
-    this.mErrForUser = paramString;
-  }
+
+    public void reset() {
+        this.mErrCode = NaviErrCode.RET_INIT;
+        this.mErrDebug = "";
+        this.mErrForUser = "";
+        this.mUserObject = null;
+    }
+
+    public boolean isNetworkErr() {
+        return false;
+    }
+
+    public static boolean isNetworkErr(int errCode) {
+        if ((errCode < NaviErrCode.getAppError(0) || errCode > NaviErrCode.getAppError(2)) && (errCode < NaviErrCode.getSDKError(0) || errCode > NaviErrCode.getSDKError(2))) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isSuccess() {
+        if (this.mErrCode == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public void set(int errCode, String errDebug, String errForUser) {
+        this.mErrCode = errCode;
+        if (errDebug == null) {
+            errDebug = "";
+        }
+        this.mErrDebug = errDebug;
+        if (errForUser == null) {
+            errForUser = "";
+        }
+        this.mErrForUser = errForUser;
+    }
+
+    public void setSuccess() {
+        this.mErrCode = 0;
+    }
+
+    public void setSuccess(String errForUser) {
+        setSuccess();
+        this.mErrForUser = errForUser;
+    }
+
+    public void set(int errCode, String errDebug) {
+        set(errCode, errDebug, null);
+    }
+
+    public void set(int errCode) {
+        set(errCode, null, null);
+    }
+
+    public void setSDKError(int errCode) {
+        set(errCode + 5000, null, null);
+    }
+
+    public void setAppError(int errCode) {
+        set(errCode + 6000, null, null);
+    }
+
+    public void set(CommandResult src) {
+        set(src.mErrCode, src.mErrDebug, src.mErrForUser);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/logic/CommandResult.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

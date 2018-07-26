@@ -1,189 +1,141 @@
 package com.baidu.che.codriver.platform;
 
+import com.baidu.che.codriver.platform.NaviCmdOriginalData.ExtInfo;
 import com.baidu.che.codriver.platform.navi.NaviAddressData;
+import com.baidu.che.codriver.util.C2725h;
 import com.baidu.che.codriver.util.INoProguard;
-import com.baidu.che.codriver.util.h;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NaviCmdData
-  implements INoProguard
-{
-  private static final String TAG = "NaviCmdData";
-  private String mFunc;
-  private String mParams;
-  
-  public NaviCmdData(String paramString1, String paramString2)
-  {
-    this.mFunc = paramString1;
-    this.mParams = paramString2;
-  }
-  
-  public static String createParams(String paramString, int paramInt)
-  {
-    JSONObject localJSONObject = new JSONObject();
-    try
-    {
-      localJSONObject.put(paramString, paramInt);
-      h.b("NaviCmdData", "params: " + localJSONObject.toString());
-      return localJSONObject.toString();
+public class NaviCmdData implements INoProguard {
+    private static final String TAG = "NaviCmdData";
+    private String mFunc;
+    private String mParams;
+
+    public NaviCmdData(String func, String params) {
+        this.mFunc = func;
+        this.mParams = params;
     }
-    catch (Exception paramString)
-    {
-      paramString.printStackTrace();
+
+    public void setFunc(String func) {
+        this.mFunc = func;
     }
-    return null;
-  }
-  
-  public static String createParams(String paramString1, String paramString2)
-  {
-    JSONObject localJSONObject = new JSONObject();
-    try
-    {
-      localJSONObject.put(paramString1, paramString2);
-      h.b("NaviCmdData", "params: " + localJSONObject.toString());
-      return localJSONObject.toString();
+
+    public void setParams(String params) {
+        this.mParams = params;
     }
-    catch (JSONException paramString1)
-    {
-      paramString1.printStackTrace();
+
+    public String getFunc() {
+        return this.mFunc;
     }
-    return null;
-  }
-  
-  public static String createParamsAddress(NaviAddressData paramNaviAddressData)
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONObject localJSONObject2 = new JSONObject();
-    try
-    {
-      if (paramNaviAddressData.getType().equals("office")) {
-        localJSONObject1.put("order", "type_company_address");
-      }
-      for (;;)
-      {
-        localJSONObject2.put("name", paramNaviAddressData.getName());
-        localJSONObject2.put("address", paramNaviAddressData.getAddress());
-        localJSONObject2.put("lat", paramNaviAddressData.getLat());
-        localJSONObject2.put("lng", paramNaviAddressData.getLng());
-        localJSONObject2.put("type", paramNaviAddressData.getType());
-        localJSONObject1.put("data", localJSONObject2);
-        h.b("NaviCmdData", "params: " + localJSONObject1.toString());
-        return localJSONObject1.toString();
-        if (!paramNaviAddressData.getType().equals("home")) {
-          break;
+
+    public String getParams() {
+        return this.mParams;
+    }
+
+    public String toString() {
+        return "CmdNaviData { func = " + this.mFunc + ", params = " + this.mParams + " }";
+    }
+
+    public static String createParams(String key, String order) {
+        JSONObject result = new JSONObject();
+        try {
+            result.put(key, order);
+            C2725h.m10207b(TAG, "params: " + result.toString());
+            return result.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
         }
-        localJSONObject1.put("order", "type_home_address");
-      }
-      h.b("NaviCmdData", "set address type error");
     }
-    catch (Exception paramNaviAddressData)
-    {
-      paramNaviAddressData.printStackTrace();
-      return null;
-    }
-    return null;
-  }
-  
-  public static String createParamsPoi(NaviCmdOriginalData.ExtInfo paramExtInfo)
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    try
-    {
-      if ((paramExtInfo.lat != null) && (paramExtInfo.lng != null))
-      {
-        JSONObject localJSONObject2 = new JSONObject();
-        localJSONObject2.put("lat", paramExtInfo.lat);
-        localJSONObject2.put("lng", paramExtInfo.lng);
-        localJSONObject1.put("dest", localJSONObject2);
-        if (paramExtInfo.poiName != null)
-        {
-          localJSONObject1.put("dest_name", paramExtInfo.poiName);
-          h.b("NaviCmdData", "params: " + localJSONObject1.toString());
-          return localJSONObject1.toString();
+
+    public static String createParams(String key, int order) {
+        JSONObject result = new JSONObject();
+        try {
+            result.put(key, order);
+            C2725h.m10207b(TAG, "params: " + result.toString());
+            return result.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-      }
-      else
-      {
-        h.b("NaviCmdData", "lng or lat is null");
-        return null;
-      }
     }
-    catch (Exception paramExtInfo)
-    {
-      paramExtInfo.printStackTrace();
-      return null;
-    }
-    h.b("NaviCmdData", "poiName is null");
-    return null;
-  }
-  
-  public static String createParamsPoi(NaviAddressData paramNaviAddressData)
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    try
-    {
-      if ((paramNaviAddressData.getLat() != null) && (paramNaviAddressData.getLng() != null))
-      {
-        JSONObject localJSONObject2 = new JSONObject();
-        localJSONObject2.put("lat", paramNaviAddressData.getLat());
-        localJSONObject2.put("lng", paramNaviAddressData.getLng());
-        localJSONObject1.put("dest", localJSONObject2);
-        if (paramNaviAddressData.getName() != null)
-        {
-          localJSONObject1.put("dest_name", paramNaviAddressData.getName());
-          h.b("NaviCmdData", "params: " + localJSONObject1.toString());
-          return localJSONObject1.toString();
+
+    public static String createParamsPoi(ExtInfo object) {
+        JSONObject result = new JSONObject();
+        try {
+            if (object.lat == null || object.lng == null) {
+                C2725h.m10207b(TAG, "lng or lat is null");
+                return null;
+            }
+            JSONObject pos = new JSONObject();
+            pos.put("lat", object.lat);
+            pos.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_LNG, object.lng);
+            result.put(NaviCmdConstants.KEY_NAVI_CMD_DEST, pos);
+            if (object.poiName != null) {
+                result.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_NAME, object.poiName);
+                C2725h.m10207b(TAG, "params: " + result.toString());
+                return result.toString();
+            }
+            C2725h.m10207b(TAG, "poiName is null");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-      }
-      else
-      {
-        h.b("NaviCmdData", "lng or lat is null");
-        return null;
-      }
     }
-    catch (Exception paramNaviAddressData)
-    {
-      paramNaviAddressData.printStackTrace();
-      return null;
+
+    public static String createParamsPoi(NaviAddressData address) {
+        JSONObject result = new JSONObject();
+        try {
+            if (address.getLat() == null || address.getLng() == null) {
+                C2725h.m10207b(TAG, "lng or lat is null");
+                return null;
+            }
+            JSONObject pos = new JSONObject();
+            pos.put("lat", address.getLat());
+            pos.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_LNG, address.getLng());
+            result.put(NaviCmdConstants.KEY_NAVI_CMD_DEST, pos);
+            if (address.getName() != null) {
+                result.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_NAME, address.getName());
+                C2725h.m10207b(TAG, "params: " + result.toString());
+                return result.toString();
+            }
+            C2725h.m10207b(TAG, "poiName is null");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-    h.b("NaviCmdData", "poiName is null");
-    return null;
-  }
-  
-  public static String createParamsResetNaviByPreference(String paramString)
-  {
-    return "{\"order\":\"type_reset_navi_bypreference\",\"data\":{\"navi_preference\":\"" + paramString + "\"}}";
-  }
-  
-  public String getFunc()
-  {
-    return this.mFunc;
-  }
-  
-  public String getParams()
-  {
-    return this.mParams;
-  }
-  
-  public void setFunc(String paramString)
-  {
-    this.mFunc = paramString;
-  }
-  
-  public void setParams(String paramString)
-  {
-    this.mParams = paramString;
-  }
-  
-  public String toString()
-  {
-    return "CmdNaviData { func = " + this.mFunc + ", params = " + this.mParams + " }";
-  }
+
+    public static String createParamsAddress(NaviAddressData address) {
+        JSONObject result = new JSONObject();
+        JSONObject dataObject = new JSONObject();
+        try {
+            if (address.getType().equals(NaviCmdConstants.KEY_NAVI_CMD_SET_ADDRESS_COMPANY)) {
+                result.put(NaviCmdConstants.KEY_NAVI_CMD_ORDER, NaviCmdConstants.ACTION_TYPE_NAVI_QUERY_COMPANY_ADDRESS);
+            } else if (address.getType().equals("home")) {
+                result.put(NaviCmdConstants.KEY_NAVI_CMD_ORDER, NaviCmdConstants.ACTION_TYPE_NAVI_QUERY_HOME_ADDRESS);
+            } else {
+                C2725h.m10207b(TAG, "set address type error");
+                return null;
+            }
+            dataObject.put("name", address.getName());
+            dataObject.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_ADDRESS, address.getAddress());
+            dataObject.put("lat", address.getLat());
+            dataObject.put(NaviCmdConstants.KEY_NAVI_CMD_DEST_LNG, address.getLng());
+            dataObject.put("type", address.getType());
+            result.put("data", dataObject);
+            C2725h.m10207b(TAG, "params: " + result.toString());
+            return result.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String createParamsResetNaviByPreference(String type) {
+        return "{\"order\":\"type_reset_navi_bypreference\",\"data\":{\"navi_preference\":\"" + type + "\"}}";
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/platform/NaviCmdData.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

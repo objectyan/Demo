@@ -13,12 +13,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.carlife.core.screen.e;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.screen.C1277e;
 import com.baidu.navi.controller.PoiController;
 import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.logic.model.UIModel;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navi.util.StatisticManager;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
+import com.baidu.navisdk.comapi.routeplan.RoutePlanParams.BundleKey;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
 import com.baidu.navisdk.model.datastruct.SearchPoi;
 import com.baidu.navisdk.model.datastruct.SearchPoiPager;
@@ -32,532 +35,410 @@ import com.baidu.navisdk.util.statistic.SearchStatItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchResultAdapter
-  extends BaseAdapter
-{
-  public static final int SEARCH_MODE_NORMAL = 1;
-  public static final int SEARCH_MODE_SETTING = 2;
-  private static int TYPE_BTN;
-  private static int TYPE_FOOT_ITEM_NOME;
-  private static int TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE = 3;
-  private static int TYPE_FOOT_ITEM_ONLINE_SEARCH;
-  private static int TYPE_ITEM = 1;
-  private boolean isNeedAddOnlineBtn = false;
-  private boolean isSetMode;
-  private int[] mChildCnt = new int['È'];
-  private int[] mChildIndex = new int['È'];
-  private View.OnClickListener mClickListener = new View.OnClickListener()
-  {
-    public void onClick(View paramAnonymousView)
-    {
-      if (ForbidDaulClickUtils.isFastDoubleClick()) {}
-      do
-      {
-        int i;
-        do
-        {
-          do
-          {
-            do
-            {
-              do
-              {
-                do
-                {
-                  return;
-                  i = paramAnonymousView.getId();
-                  if (i != 2131624193) {
-                    break;
-                  }
-                  paramAnonymousView = (Integer)paramAnonymousView.getTag();
-                  if (SearchResultAdapter.this.mPoiList != null)
-                  {
-                    localObject = (SearchPoi)SearchResultAdapter.this.mPoiList.get(paramAnonymousView.intValue());
-                    if (localObject != null) {
-                      StatisticManager.onEvent("410135", ((SearchPoi)localObject).mName);
+public class SearchResultAdapter extends BaseAdapter {
+    public static final int SEARCH_MODE_NORMAL = 1;
+    public static final int SEARCH_MODE_SETTING = 2;
+    private static int TYPE_BTN = 2;
+    private static int TYPE_FOOT_ITEM_NOME = 1;
+    private static int TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE = 3;
+    private static int TYPE_FOOT_ITEM_ONLINE_SEARCH = 2;
+    private static int TYPE_ITEM = 1;
+    private boolean isNeedAddOnlineBtn = false;
+    private boolean isSetMode;
+    private int[] mChildCnt = new int[200];
+    private int[] mChildIndex = new int[200];
+    private OnClickListener mClickListener = new C36651();
+    private Context mContext;
+    private int mFootItemType = TYPE_FOOT_ITEM_NOME;
+    private NaviFragmentManager mFragmentManager;
+    private LayoutInflater mLayoutInflater;
+    private C1277e mOnDialogListener;
+    private OnClickOnlineSearch mOnlineSearchListener;
+    private int[] mParentCnt = new int[200];
+    private ArrayList<SearchPoi> mPoiList;
+    private SearchPoiPager mSearchPoiPager;
+    private Bundle mShowBundle;
+
+    /* renamed from: com.baidu.navi.adapter.SearchResultAdapter$1 */
+    class C36651 implements OnClickListener {
+        C36651() {
+        }
+
+        public void onClick(View v) {
+            if (!ForbidDaulClickUtils.isFastDoubleClick()) {
+                int id = v.getId();
+                Bundle bundle;
+                if (id == C0965R.id.poi_name_addr_layout) {
+                    Integer index = (Integer) v.getTag();
+                    if (SearchResultAdapter.this.mPoiList != null) {
+                        SearchPoi poi = (SearchPoi) SearchResultAdapter.this.mPoiList.get(index.intValue());
+                        if (poi != null) {
+                            StatisticManager.onEvent("410135", poi.mName);
+                        }
                     }
-                  }
-                } while ((paramAnonymousView == null) || (paramAnonymousView.intValue() < 0) || (paramAnonymousView.intValue() >= SearchResultAdapter.this.mPoiList.size()));
-                SearchStatItem.getInstance().searchStatistics(paramAnonymousView.intValue());
-                if (SearchResultAdapter.this.isSetMode) {
-                  break;
+                    if (index != null && index.intValue() >= 0 && index.intValue() < SearchResultAdapter.this.mPoiList.size()) {
+                        SearchStatItem.getInstance().searchStatistics(index.intValue());
+                        if (!SearchResultAdapter.this.isSetMode) {
+                            ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).setPoiList(SearchResultAdapter.this.mSearchPoiPager.getPoiList());
+                            bundle = new Bundle();
+                            bundle.putInt("fc_type", 0);
+                            bundle.putInt("incoming_type", 83);
+                            bundle.putInt("search_result_mode", SearchResultAdapter.this.mSearchPoiPager.getNetMode());
+                            bundle.putInt("current_poi", index.intValue());
+                            bundle.putInt("current_child_count", SearchResultAdapter.this.mChildCnt[index.intValue()]);
+                            bundle.putInt("child_start_poi", SearchResultAdapter.this.mChildIndex[index.intValue()]);
+                            bundle.putInt("current_parent_position", SearchResultAdapter.this.mParentCnt[index.intValue()]);
+                            bundle.putIntArray("child_count_array", SearchResultAdapter.this.mChildCnt);
+                            bundle.putIntArray("parent_position_array", SearchResultAdapter.this.mParentCnt);
+                            bundle.putIntArray("child_start_array", SearchResultAdapter.this.mChildIndex);
+                            if (SearchResultAdapter.this.mFragmentManager != null) {
+                                SearchResultAdapter.this.mFragmentManager.showFragment(33, bundle);
+                            }
+                        } else if (index.intValue() >= 0 && index.intValue() < SearchResultAdapter.this.mPoiList.size()) {
+                            if (SearchResultAdapter.this.mChildCnt[index.intValue()] > 0) {
+                                ArrayList<SearchPoi> mParChildPoiList = new ArrayList(SearchResultAdapter.this.mChildCnt[index.intValue()] + 1);
+                                mParChildPoiList.add(SearchResultAdapter.this.mPoiList.get(index.intValue()));
+                                for (int i = 0; i < SearchResultAdapter.this.mChildCnt[index.intValue()]; i++) {
+                                    mParChildPoiList.add(SearchResultAdapter.this.mPoiList.get(SearchResultAdapter.this.mChildIndex[index.intValue()] + i));
+                                }
+                                PoiController.getInstance().focusPoi(mParChildPoiList, 0);
+                                PoiController.getInstance().animationTo((SearchPoi) SearchResultAdapter.this.mPoiList.get(index.intValue()));
+                                return;
+                            }
+                            PoiController.getInstance().focusPoi((SearchPoi) SearchResultAdapter.this.mPoiList.get(index.intValue()));
+                            PoiController.getInstance().animationTo((SearchPoi) SearchResultAdapter.this.mPoiList.get(index.intValue()));
+                        }
+                    }
+                } else if (id == C0965R.id.btn_poi_gonavi) {
+                    StatisticManager.onEvent("410137", "410137");
+                    SearchPoi searchPoi = (SearchPoi) v.getTag();
+                    if (searchPoi == null) {
+                        return;
+                    }
+                    if (!SearchResultAdapter.this.isSetMode) {
+                        PoiController.getInstance().startCalcRoute(searchPoi, SearchResultAdapter.this.mOnDialogListener);
+                    } else if (SearchResultAdapter.this.mShowBundle.getInt(BundleKey.SELECT_POINT_ACTION) == 1) {
+                        ((RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN)).setPointSelectNode(searchPoi);
+                        SearchResultAdapter.this.mFragmentManager.backTo(SearchResultAdapter.this.mShowBundle.getInt(BundleKey.FROM_FRAGMENT), null);
+                    } else {
+                        bundle = new Bundle();
+                        bundle.putInt(BundleKey.SELECT_POINT_ACTION, SearchResultAdapter.this.mShowBundle.getInt(BundleKey.SELECT_POINT_ACTION));
+                        UIModel.settingAddress(searchPoi, SearchResultAdapter.this.mContext, bundle);
+                        SearchResultAdapter.this.mFragmentManager.backTo(SearchResultAdapter.this.mShowBundle.getInt(BundleKey.FROM_FRAGMENT), null);
+                    }
+                } else if (id == C0965R.id.search_btn && SearchResultAdapter.this.mOnlineSearchListener != null) {
+                    if (SearchResultAdapter.this.mFootItemType == SearchResultAdapter.TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE) {
+                        SearchResultAdapter.this.mOnlineSearchListener.onCountrywideOnlineSearch();
+                    } else if (SearchResultAdapter.this.mFootItemType == SearchResultAdapter.TYPE_FOOT_ITEM_ONLINE_SEARCH) {
+                        SearchResultAdapter.this.mOnlineSearchListener.onNormalOnlineSearch();
+                    }
                 }
-                ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).setPoiList(SearchResultAdapter.this.mSearchPoiPager.getPoiList());
-                localObject = new Bundle();
-                ((Bundle)localObject).putInt("fc_type", 0);
-                ((Bundle)localObject).putInt("incoming_type", 83);
-                ((Bundle)localObject).putInt("search_result_mode", SearchResultAdapter.this.mSearchPoiPager.getNetMode());
-                ((Bundle)localObject).putInt("current_poi", paramAnonymousView.intValue());
-                ((Bundle)localObject).putInt("current_child_count", SearchResultAdapter.this.mChildCnt[paramAnonymousView.intValue()]);
-                ((Bundle)localObject).putInt("child_start_poi", SearchResultAdapter.this.mChildIndex[paramAnonymousView.intValue()]);
-                ((Bundle)localObject).putInt("current_parent_position", SearchResultAdapter.this.mParentCnt[paramAnonymousView.intValue()]);
-                ((Bundle)localObject).putIntArray("child_count_array", SearchResultAdapter.this.mChildCnt);
-                ((Bundle)localObject).putIntArray("parent_position_array", SearchResultAdapter.this.mParentCnt);
-                ((Bundle)localObject).putIntArray("child_start_array", SearchResultAdapter.this.mChildIndex);
-              } while (SearchResultAdapter.this.mFragmentManager == null);
-              SearchResultAdapter.this.mFragmentManager.showFragment(33, (Bundle)localObject);
-              return;
-            } while ((paramAnonymousView.intValue() < 0) || (paramAnonymousView.intValue() >= SearchResultAdapter.this.mPoiList.size()));
-            if (SearchResultAdapter.this.mChildCnt[paramAnonymousView.intValue()] > 0)
-            {
-              localObject = new ArrayList(SearchResultAdapter.this.mChildCnt[paramAnonymousView.intValue()] + 1);
-              ((ArrayList)localObject).add(SearchResultAdapter.this.mPoiList.get(paramAnonymousView.intValue()));
-              i = 0;
-              while (i < SearchResultAdapter.this.mChildCnt[paramAnonymousView.intValue()])
-              {
-                ((ArrayList)localObject).add(SearchResultAdapter.this.mPoiList.get(SearchResultAdapter.this.mChildIndex[paramAnonymousView.intValue()] + i));
-                i += 1;
-              }
-              PoiController.getInstance().focusPoi((ArrayList)localObject, 0);
-              PoiController.getInstance().animationTo((SearchPoi)SearchResultAdapter.this.mPoiList.get(paramAnonymousView.intValue()));
-              return;
             }
-            PoiController.getInstance().focusPoi((SearchPoi)SearchResultAdapter.this.mPoiList.get(paramAnonymousView.intValue()));
-            PoiController.getInstance().animationTo((SearchPoi)SearchResultAdapter.this.mPoiList.get(paramAnonymousView.intValue()));
-            return;
-            if (i != 2131624190) {
-              break;
+        }
+    }
+
+    protected class ChildGrideListAdapter extends BaseAdapter {
+        private OnClickListener mChildClickListener = new C36661();
+        int mChildCount = 0;
+        int mChildsum = 0;
+        Context mContext;
+        int mParentPosition = 0;
+
+        /* renamed from: com.baidu.navi.adapter.SearchResultAdapter$ChildGrideListAdapter$1 */
+        class C36661 implements OnClickListener {
+            C36661() {
             }
-            StatisticManager.onEvent("410137", "410137");
-            paramAnonymousView = (SearchPoi)paramAnonymousView.getTag();
-          } while (paramAnonymousView == null);
-          if (!SearchResultAdapter.this.isSetMode)
-          {
-            PoiController.getInstance().startCalcRoute(paramAnonymousView, SearchResultAdapter.this.mOnDialogListener);
-            return;
-          }
-          if (SearchResultAdapter.this.mShowBundle.getInt("select_point_action") == 1)
-          {
-            ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel")).setPointSelectNode(paramAnonymousView);
-            SearchResultAdapter.this.mFragmentManager.backTo(SearchResultAdapter.this.mShowBundle.getInt("from_Fragment"), null);
-            return;
-          }
-          Object localObject = new Bundle();
-          ((Bundle)localObject).putInt("select_point_action", SearchResultAdapter.this.mShowBundle.getInt("select_point_action"));
-          UIModel.settingAddress(paramAnonymousView, SearchResultAdapter.this.mContext, (Bundle)localObject);
-          SearchResultAdapter.this.mFragmentManager.backTo(SearchResultAdapter.this.mShowBundle.getInt("from_Fragment"), null);
-          return;
-        } while ((i != 2131624530) || (SearchResultAdapter.this.mOnlineSearchListener == null));
-        if (SearchResultAdapter.this.mFootItemType == SearchResultAdapter.TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE)
-        {
-          SearchResultAdapter.this.mOnlineSearchListener.onCountrywideOnlineSearch();
-          return;
+
+            public void onClick(View v) {
+                if (!ForbidDaulClickUtils.isFastDoubleClick()) {
+                    Integer poiIndex = (Integer) v.getTag();
+                    if (SearchResultAdapter.this.mPoiList != null) {
+                        SearchPoi poi = (SearchPoi) SearchResultAdapter.this.mPoiList.get(poiIndex.intValue());
+                        if (poi != null) {
+                            StatisticManager.onEvent("410135", poi.mName);
+                        }
+                    }
+                    if (poiIndex != null && poiIndex.intValue() >= 0 && poiIndex.intValue() < SearchResultAdapter.this.mPoiList.size()) {
+                        SearchStatItem.getInstance().searchStatistics(poiIndex.intValue());
+                        if (!SearchResultAdapter.this.isSetMode) {
+                            ((PoiSearchModel) NaviDataEngine.getInstance().getModel(ModelName.POI_SEARCH)).setPoiList(SearchResultAdapter.this.mSearchPoiPager.getPoiList());
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("fc_type", 1);
+                            bundle.putInt("incoming_type", 83);
+                            bundle.putInt("search_result_mode", SearchResultAdapter.this.mSearchPoiPager.getNetMode());
+                            bundle.putInt("current_poi", poiIndex.intValue());
+                            bundle.putInt("child_start_poi", ChildGrideListAdapter.this.mChildsum);
+                            bundle.putInt("current_child_count", ChildGrideListAdapter.this.mChildCount);
+                            bundle.putInt("current_parent_position", ChildGrideListAdapter.this.mParentPosition);
+                            bundle.putIntArray("child_count_array", SearchResultAdapter.this.mChildCnt);
+                            bundle.putIntArray("parent_position_array", SearchResultAdapter.this.mParentCnt);
+                            bundle.putIntArray("child_start_array", SearchResultAdapter.this.mChildIndex);
+                            if (SearchResultAdapter.this.mFragmentManager != null) {
+                                SearchResultAdapter.this.mFragmentManager.showFragment(33, bundle);
+                            }
+                        } else if (poiIndex.intValue() >= 0 && poiIndex.intValue() < SearchResultAdapter.this.mPoiList.size()) {
+                            ArrayList<SearchPoi> mParChildPoiList = null;
+                            if (ChildGrideListAdapter.this.mChildCount > 0) {
+                                mParChildPoiList = new ArrayList(ChildGrideListAdapter.this.mChildCount + 1);
+                                mParChildPoiList.add(SearchResultAdapter.this.mPoiList.get(ChildGrideListAdapter.this.mParentPosition));
+                                for (int i = 0; i < ChildGrideListAdapter.this.mChildCount; i++) {
+                                    mParChildPoiList.add(SearchResultAdapter.this.mPoiList.get(ChildGrideListAdapter.this.mChildsum + i));
+                                }
+                            }
+                            PoiController.getInstance().focusPoi(mParChildPoiList, (poiIndex.intValue() - ChildGrideListAdapter.this.mChildsum) + 1);
+                            PoiController.getInstance().animationTo((SearchPoi) SearchResultAdapter.this.mPoiList.get(poiIndex.intValue()));
+                        }
+                    }
+                }
+            }
         }
-      } while (SearchResultAdapter.this.mFootItemType != SearchResultAdapter.TYPE_FOOT_ITEM_ONLINE_SEARCH);
-      SearchResultAdapter.this.mOnlineSearchListener.onNormalOnlineSearch();
-    }
-  };
-  private Context mContext;
-  private int mFootItemType = TYPE_FOOT_ITEM_NOME;
-  private NaviFragmentManager mFragmentManager;
-  private LayoutInflater mLayoutInflater;
-  private e mOnDialogListener;
-  private OnClickOnlineSearch mOnlineSearchListener;
-  private int[] mParentCnt = new int['È'];
-  private ArrayList<SearchPoi> mPoiList;
-  private SearchPoiPager mSearchPoiPager;
-  private Bundle mShowBundle;
-  
-  static
-  {
-    TYPE_BTN = 2;
-    TYPE_FOOT_ITEM_NOME = 1;
-    TYPE_FOOT_ITEM_ONLINE_SEARCH = 2;
-  }
-  
-  public SearchResultAdapter(Context paramContext, SearchPoiPager paramSearchPoiPager, NaviFragmentManager paramNaviFragmentManager, boolean paramBoolean, e parame)
-  {
-    this.mPoiList = paramSearchPoiPager.getPoiList();
-    this.mContext = paramContext;
-    this.mLayoutInflater = LayoutInflater.from(this.mContext);
-    this.mSearchPoiPager = paramSearchPoiPager;
-    this.mFragmentManager = paramNaviFragmentManager;
-    this.isSetMode = paramBoolean;
-    setSearchPager(paramSearchPoiPager);
-    this.mChildIndex[0] = paramSearchPoiPager.getCountPerPager();
-    this.mOnDialogListener = parame;
-  }
-  
-  public int[] getChildCnt()
-  {
-    return this.mChildCnt;
-  }
-  
-  public int[] getChildIndex()
-  {
-    return this.mChildIndex;
-  }
-  
-  public int getCount()
-  {
-    if (this.mPoiList == null)
-    {
-      j = 0;
-      return j;
-    }
-    int j = 10;
-    int i = j;
-    if (this.mChildIndex != null)
-    {
-      i = j;
-      if (this.mChildIndex[0] > 0) {
-        if (this.mPoiList.size() < this.mChildIndex[0]) {
-          break label73;
+
+        protected class ViewHolder {
+            TextView mChildName;
+            ImageView mIcDot;
+
+            protected ViewHolder() {
+            }
         }
-      }
-    }
-    label73:
-    for (i = this.mChildIndex[0];; i = this.mPoiList.size())
-    {
-      j = i;
-      if (this.mFootItemType == TYPE_FOOT_ITEM_NOME) {
-        break;
-      }
-      return i + 1;
-    }
-  }
-  
-  public Object getItem(int paramInt)
-  {
-    return null;
-  }
-  
-  public long getItemId(int paramInt)
-  {
-    return 0L;
-  }
-  
-  public View.OnClickListener getNameSearchResultListener()
-  {
-    return this.mClickListener;
-  }
-  
-  public List<SearchPoi> getPoiList()
-  {
-    return this.mPoiList;
-  }
-  
-  public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    int j = 10;
-    int i = j;
-    if (this.mChildIndex != null)
-    {
-      i = j;
-      if (this.mChildIndex[0] > 0)
-      {
-        if (this.mPoiList.size() < this.mChildIndex[0]) {
-          break label160;
+
+        public ChildGrideListAdapter(Context mContext) {
+            this.mContext = mContext;
         }
-        i = this.mChildIndex[0];
-      }
-    }
-    if (paramInt == i)
-    {
-      paramView = this.mLayoutInflater.inflate(2130968884, null);
-      paramViewGroup = (TextView)paramView.findViewById(2131624530);
-      if (this.mFootItemType == TYPE_FOOT_ITEM_ONLINE_SEARCH) {
-        paramViewGroup.setText(StyleManager.getString(2131297133));
-      }
-      for (;;)
-      {
-        paramViewGroup.setTextColor(StyleManager.getColor(2131559135));
-        paramView.findViewById(2131624097).setBackgroundDrawable(StyleManager.getDrawable(2130838474));
-        paramViewGroup.setBackgroundDrawable(StyleManager.getDrawable(2130837694));
-        paramViewGroup.setOnClickListener(this.mClickListener);
-        paramView.setLayoutParams(new AbsListView.LayoutParams(-1, ScreenUtil.getInstance().dip2px(70)));
-        return paramView;
-        label160:
-        i = this.mPoiList.size();
-        break;
-        paramViewGroup.setText(StyleManager.getString(2131297132));
-      }
-    }
-    paramView = this.mLayoutInflater.inflate(2130969012, null);
-    paramViewGroup = new ViewHodler();
-    paramViewGroup.mVerDiverderA = paramView.findViewById(2131624189);
-    paramViewGroup.mBtnStartNavi = paramView.findViewById(2131624190);
-    paramViewGroup.mBtnNameAddr = paramView.findViewById(2131624193);
-    paramViewGroup.mTvName = ((TextView)paramView.findViewById(2131624196));
-    paramViewGroup.mTvAddr = ((TextView)paramView.findViewById(2131624197));
-    paramViewGroup.mTvStartNavi = ((TextView)paramView.findViewById(2131624191));
-    paramViewGroup.mTvDistance = ((TextView)paramView.findViewById(2131624192));
-    paramViewGroup.mTvNum = ((TextView)paramView.findViewById(2131624187));
-    paramViewGroup.mChildGrideList = ((GridView)paramView.findViewById(2131624608));
-    paramViewGroup.mDivider = paramView.findViewById(2131624322);
-    paramViewGroup.mIcResult = ((ImageView)paramView.findViewById(2131624605));
-    paramViewGroup.mLayoutChildBottom = ((LinearLayout)paramView.findViewById(2131624607));
-    paramViewGroup.mPoiParent = ((RelativeLayout)paramView.findViewById(2131624603));
-    ChildGrideListAdapter localChildGrideListAdapter = new ChildGrideListAdapter(this.mContext);
-    paramView.setBackgroundColor(StyleManager.getColor(2131558420));
-    paramViewGroup.mVerDiverderA.setBackgroundColor(StyleManager.getColor(2131559139));
-    paramViewGroup.mBtnStartNavi.setBackgroundDrawable(StyleManager.getDrawable(2130837694));
-    paramViewGroup.mBtnNameAddr.setBackgroundDrawable(StyleManager.getDrawable(2130837694));
-    paramViewGroup.mTvName.setTextColor(StyleManager.getColor(2131559141));
-    paramViewGroup.mTvAddr.setTextColor(StyleManager.getColor(2131559128));
-    paramViewGroup.mTvStartNavi.setTextColor(StyleManager.getColor(2131559135));
-    paramViewGroup.mTvDistance.setTextColor(StyleManager.getColor(2131559133));
-    paramViewGroup.mTvNum.setTextColor(StyleManager.getColor(2131559143));
-    paramViewGroup.mDivider.setBackgroundDrawable(StyleManager.getDrawable(2130838474));
-    paramViewGroup.mLayoutChildBottom.setBackgroundColor(StyleManager.getColor(2131558424));
-    paramViewGroup.mPoiParent.setBackgroundColor(StyleManager.getColor(2131558420));
-    paramViewGroup.mChildGrideList.setAdapter(localChildGrideListAdapter);
-    SearchPoi localSearchPoi = (SearchPoi)this.mPoiList.get(paramInt);
-    if (localSearchPoi != null)
-    {
-      paramViewGroup.mTvName.setText(localSearchPoi.mName);
-      paramViewGroup.mTvAddr.setText(localSearchPoi.mAddress);
-      paramViewGroup.mTvDistance.setText(PoiController.getInstance().getDistance2CurrentPoint(localSearchPoi));
-    }
-    paramViewGroup.mBtnStartNavi.setTag(localSearchPoi);
-    paramViewGroup.mBtnNameAddr.setTag(Integer.valueOf(paramInt));
-    paramViewGroup.mBtnNameAddr.setOnClickListener(this.mClickListener);
-    paramViewGroup.mBtnStartNavi.setOnClickListener(this.mClickListener);
-    paramViewGroup.mTvNum.setText(paramInt + 1 + ".");
-    if (this.isSetMode) {
-      paramViewGroup.mTvStartNavi.setText(StyleManager.getString(2131296426));
-    }
-    this.mChildCnt[paramInt] = localSearchPoi.mChildCnt;
-    if (paramInt >= 1) {
-      this.mChildIndex[paramInt] = (this.mChildIndex[(paramInt - 1)] + this.mChildCnt[(paramInt - 1)]);
-    }
-    this.mParentCnt[paramInt] = paramInt;
-    localChildGrideListAdapter.SetCount(this.mChildCnt[paramInt]);
-    localChildGrideListAdapter.SetCountSUM(this.mChildIndex[paramInt]);
-    localChildGrideListAdapter.SetParentPosition(this.mParentCnt[paramInt]);
-    localChildGrideListAdapter.notifyDataSetChanged();
-    if (this.mChildCnt[paramInt] <= 0)
-    {
-      paramViewGroup.mIcResult.setVisibility(8);
-      paramView.setLayoutParams(new AbsListView.LayoutParams(-1, ScreenUtil.getInstance().dip2px(70)));
-      return paramView;
-    }
-    paramViewGroup.mIcResult.setVisibility(8);
-    paramInt = (int)Math.ceil(this.mChildCnt[paramInt] / 3.0D);
-    paramView.setLayoutParams(new AbsListView.LayoutParams(-1, ScreenUtil.getInstance().dip2px(paramInt * 32 + 90)));
-    return paramView;
-  }
-  
-  public void setOnlineSearchListener(OnClickOnlineSearch paramOnClickOnlineSearch)
-  {
-    this.mOnlineSearchListener = paramOnClickOnlineSearch;
-  }
-  
-  public void setSearchPager(SearchPoiPager paramSearchPoiPager)
-  {
-    int i = 0;
-    this.mSearchPoiPager = paramSearchPoiPager;
-    this.mPoiList = paramSearchPoiPager.getPoiList();
-    this.mChildIndex[0] = paramSearchPoiPager.getCountPerPager();
-    int j = this.mSearchPoiPager.getNetMode();
-    int k = this.mSearchPoiPager.getSearchType();
-    if ((k == 1) || (k == 2))
-    {
-      paramSearchPoiPager = this.mSearchPoiPager.getDistrct();
-      if (paramSearchPoiPager == null)
-      {
-        if ((i != 0) && (NetworkUtils.getConnectStatus())) {
-          break label96;
+
+        public int getCount() {
+            return this.mChildCount;
         }
-        this.mFootItemType = TYPE_FOOT_ITEM_NOME;
-      }
+
+        public void SetCount(int ChildCount) {
+            this.mChildCount = ChildCount;
+        }
+
+        public void SetParentPosition(int ParentPosition) {
+            this.mParentPosition = ParentPosition;
+        }
+
+        public void SetCountSUM(int ChildSUM) {
+            this.mChildsum = ChildSUM;
+        }
+
+        public int GetCountSUM() {
+            return this.mChildsum;
+        }
+
+        public Object getItem(int position) {
+            return null;
+        }
+
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getItemView(convertView, position);
+        }
+
+        protected View getItemView(View convertView, int position) {
+            ViewHolder holder = new ViewHolder();
+            convertView = SearchResultAdapter.this.mLayoutInflater.inflate(C0965R.layout.search_result_list_child_item, null);
+            holder.mChildName = (TextView) convertView.findViewById(C0965R.id.tv_child_name);
+            holder.mIcDot = (ImageView) convertView.findViewById(C0965R.id.ic_child_dot);
+            convertView.setBackgroundColor(StyleManager.getColor(C0965R.color.bnav_common_child_bg));
+            holder.mChildName.setTextColor(StyleManager.getColor(C0965R.color.poi_name));
+            holder.mIcDot.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.ic_search_dot));
+            holder.mChildName.setText(((SearchPoi) SearchResultAdapter.this.mPoiList.get(this.mChildsum + position)).mAliasName);
+            convertView.setTag(Integer.valueOf(this.mChildsum + position));
+            convertView.setOnClickListener(this.mChildClickListener);
+            convertView.setLayoutParams(new LayoutParams(-1, ScreenUtil.getInstance().dip2px(32)));
+            return convertView;
+        }
     }
-    for (;;)
-    {
-      notifyDataSetChanged();
-      return;
-      i = paramSearchPoiPager.mId;
-      break;
-      label96:
-      if (j == 0)
-      {
-        this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_SEARCH;
-      }
-      else if (j == 1)
-      {
-        this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE;
-        continue;
-        if ((j == 0) && (NetworkUtils.getConnectStatus())) {
-          this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_SEARCH;
+
+    public interface OnClickOnlineSearch {
+        void onCountrywideOnlineSearch();
+
+        void onNormalOnlineSearch();
+    }
+
+    static class ViewHodler {
+        View mBtnNameAddr;
+        View mBtnStartNavi;
+        GridView mChildGrideList;
+        View mDivider;
+        ImageView mIcResult;
+        LinearLayout mLayoutChildBottom;
+        RelativeLayout mPoiParent;
+        TextView mTvAddr;
+        TextView mTvDistance;
+        TextView mTvName;
+        TextView mTvNum;
+        TextView mTvStartNavi;
+        View mVerDiverderA;
+
+        ViewHodler() {
+        }
+    }
+
+    public SearchResultAdapter(Context context, SearchPoiPager searchPoiPager, NaviFragmentManager fragmentManager, boolean isSetMode, C1277e listener) {
+        this.mPoiList = searchPoiPager.getPoiList();
+        this.mContext = context;
+        this.mLayoutInflater = LayoutInflater.from(this.mContext);
+        this.mSearchPoiPager = searchPoiPager;
+        this.mFragmentManager = fragmentManager;
+        this.isSetMode = isSetMode;
+        setSearchPager(searchPoiPager);
+        this.mChildIndex[0] = searchPoiPager.getCountPerPager();
+        this.mOnDialogListener = listener;
+    }
+
+    public void setSearchPager(SearchPoiPager searchPoiPager) {
+        int districtId = 0;
+        this.mSearchPoiPager = searchPoiPager;
+        this.mPoiList = searchPoiPager.getPoiList();
+        this.mChildIndex[0] = searchPoiPager.getCountPerPager();
+        int netMode = this.mSearchPoiPager.getNetMode();
+        int searchType = this.mSearchPoiPager.getSearchType();
+        if (searchType == 1 || searchType == 2) {
+            DistrictInfo districtInfo = this.mSearchPoiPager.getDistrct();
+            if (districtInfo != null) {
+                districtId = districtInfo.mId;
+            }
+            if (districtId == 0 || !NetworkUtils.getConnectStatus()) {
+                this.mFootItemType = TYPE_FOOT_ITEM_NOME;
+            } else if (netMode == 0) {
+                this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_SEARCH;
+            } else if (netMode == 1) {
+                this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_COUNTRYWIDE;
+            }
+        } else if (netMode == 0 && NetworkUtils.getConnectStatus()) {
+            this.mFootItemType = TYPE_FOOT_ITEM_ONLINE_SEARCH;
         } else {
-          this.mFootItemType = TYPE_FOOT_ITEM_NOME;
+            this.mFootItemType = TYPE_FOOT_ITEM_NOME;
         }
-      }
+        notifyDataSetChanged();
     }
-  }
-  
-  public void setShowBundle(Bundle paramBundle)
-  {
-    this.mShowBundle = paramBundle;
-  }
-  
-  protected class ChildGrideListAdapter
-    extends BaseAdapter
-  {
-    private View.OnClickListener mChildClickListener = new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        if (ForbidDaulClickUtils.isFastDoubleClick()) {}
-        Integer localInteger;
-        do
-        {
-          do
-          {
-            do
-            {
-              return;
-              localInteger = (Integer)paramAnonymousView.getTag();
-              if (SearchResultAdapter.this.mPoiList != null)
-              {
-                paramAnonymousView = (SearchPoi)SearchResultAdapter.this.mPoiList.get(localInteger.intValue());
-                if (paramAnonymousView != null) {
-                  StatisticManager.onEvent("410135", paramAnonymousView.mName);
-                }
-              }
-            } while ((localInteger == null) || (localInteger.intValue() < 0) || (localInteger.intValue() >= SearchResultAdapter.this.mPoiList.size()));
-            SearchStatItem.getInstance().searchStatistics(localInteger.intValue());
-            if (SearchResultAdapter.this.isSetMode) {
-              break;
-            }
-            ((PoiSearchModel)NaviDataEngine.getInstance().getModel("PoiSearchModel")).setPoiList(SearchResultAdapter.this.mSearchPoiPager.getPoiList());
-            paramAnonymousView = new Bundle();
-            paramAnonymousView.putInt("fc_type", 1);
-            paramAnonymousView.putInt("incoming_type", 83);
-            paramAnonymousView.putInt("search_result_mode", SearchResultAdapter.this.mSearchPoiPager.getNetMode());
-            paramAnonymousView.putInt("current_poi", localInteger.intValue());
-            paramAnonymousView.putInt("child_start_poi", SearchResultAdapter.ChildGrideListAdapter.this.mChildsum);
-            paramAnonymousView.putInt("current_child_count", SearchResultAdapter.ChildGrideListAdapter.this.mChildCount);
-            paramAnonymousView.putInt("current_parent_position", SearchResultAdapter.ChildGrideListAdapter.this.mParentPosition);
-            paramAnonymousView.putIntArray("child_count_array", SearchResultAdapter.this.mChildCnt);
-            paramAnonymousView.putIntArray("parent_position_array", SearchResultAdapter.this.mParentCnt);
-            paramAnonymousView.putIntArray("child_start_array", SearchResultAdapter.this.mChildIndex);
-          } while (SearchResultAdapter.this.mFragmentManager == null);
-          SearchResultAdapter.this.mFragmentManager.showFragment(33, paramAnonymousView);
-          return;
-        } while ((localInteger.intValue() < 0) || (localInteger.intValue() >= SearchResultAdapter.this.mPoiList.size()));
-        paramAnonymousView = null;
-        if (SearchResultAdapter.ChildGrideListAdapter.this.mChildCount > 0)
-        {
-          ArrayList localArrayList = new ArrayList(SearchResultAdapter.ChildGrideListAdapter.this.mChildCount + 1);
-          localArrayList.add(SearchResultAdapter.this.mPoiList.get(SearchResultAdapter.ChildGrideListAdapter.this.mParentPosition));
-          int i = 0;
-          for (;;)
-          {
-            paramAnonymousView = localArrayList;
-            if (i >= SearchResultAdapter.ChildGrideListAdapter.this.mChildCount) {
-              break;
-            }
-            localArrayList.add(SearchResultAdapter.this.mPoiList.get(SearchResultAdapter.ChildGrideListAdapter.this.mChildsum + i));
-            i += 1;
-          }
+
+    public int getCount() {
+        if (this.mPoiList == null) {
+            return 0;
         }
-        PoiController.getInstance().focusPoi(paramAnonymousView, localInteger.intValue() - SearchResultAdapter.ChildGrideListAdapter.this.mChildsum + 1);
-        PoiController.getInstance().animationTo((SearchPoi)SearchResultAdapter.this.mPoiList.get(localInteger.intValue()));
-      }
-    };
-    int mChildCount = 0;
-    int mChildsum = 0;
-    Context mContext;
-    int mParentPosition = 0;
-    
-    public ChildGrideListAdapter(Context paramContext)
-    {
-      this.mContext = paramContext;
+        int size = 10;
+        if (this.mChildIndex != null && this.mChildIndex[0] > 0) {
+            size = this.mPoiList.size() >= this.mChildIndex[0] ? this.mChildIndex[0] : this.mPoiList.size();
+        }
+        return this.mFootItemType != TYPE_FOOT_ITEM_NOME ? size + 1 : size;
     }
-    
-    public int GetCountSUM()
-    {
-      return this.mChildsum;
+
+    public Object getItem(int position) {
+        return null;
     }
-    
-    public void SetCount(int paramInt)
-    {
-      this.mChildCount = paramInt;
+
+    public long getItemId(int position) {
+        return 0;
     }
-    
-    public void SetCountSUM(int paramInt)
-    {
-      this.mChildsum = paramInt;
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        int size = 10;
+        if (this.mChildIndex != null && this.mChildIndex[0] > 0) {
+            size = this.mPoiList.size() >= this.mChildIndex[0] ? this.mChildIndex[0] : this.mPoiList.size();
+        }
+        if (position == size) {
+            convertView = this.mLayoutInflater.inflate(C0965R.layout.layout_search_item, null);
+            TextView onlineSearch = (TextView) convertView.findViewById(C0965R.id.search_btn);
+            if (this.mFootItemType == TYPE_FOOT_ITEM_ONLINE_SEARCH) {
+                onlineSearch.setText(StyleManager.getString(C0965R.string.search_online_normal));
+            } else {
+                onlineSearch.setText(StyleManager.getString(C0965R.string.search_online_country));
+            }
+            onlineSearch.setTextColor(StyleManager.getColor(C0965R.color.poi_gonavi));
+            convertView.findViewById(C0965R.id.line_poi_horizontal).setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.divide_list));
+            onlineSearch.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_common_bg_pressed_mask_selector));
+            onlineSearch.setOnClickListener(this.mClickListener);
+            convertView.setLayoutParams(new LayoutParams(-1, ScreenUtil.getInstance().dip2px(70)));
+        } else {
+            convertView = this.mLayoutInflater.inflate(C0965R.layout.search_result_list_item, null);
+            ViewHodler viewHodler = new ViewHodler();
+            viewHodler.mVerDiverderA = convertView.findViewById(C0965R.id.line_poi_vertical_a);
+            viewHodler.mBtnStartNavi = convertView.findViewById(C0965R.id.btn_poi_gonavi);
+            viewHodler.mBtnNameAddr = convertView.findViewById(C0965R.id.poi_name_addr_layout);
+            viewHodler.mTvName = (TextView) convertView.findViewById(C0965R.id.tv_poi_title);
+            viewHodler.mTvAddr = (TextView) convertView.findViewById(C0965R.id.tv_poi_addr);
+            viewHodler.mTvStartNavi = (TextView) convertView.findViewById(C0965R.id.tv_poi_gonavi);
+            viewHodler.mTvDistance = (TextView) convertView.findViewById(C0965R.id.tv_poi_distance);
+            viewHodler.mTvNum = (TextView) convertView.findViewById(C0965R.id.tv_num);
+            viewHodler.mChildGrideList = (GridView) convertView.findViewById(C0965R.id.grideview);
+            viewHodler.mDivider = convertView.findViewById(C0965R.id.ls_divider);
+            viewHodler.mIcResult = (ImageView) convertView.findViewById(C0965R.id.ic_result);
+            viewHodler.mLayoutChildBottom = (LinearLayout) convertView.findViewById(C0965R.id.layout_child_bottom);
+            viewHodler.mPoiParent = (RelativeLayout) convertView.findViewById(C0965R.id.btn_poi_parent);
+            ChildGrideListAdapter mChildGrideListAdapter = new ChildGrideListAdapter(this.mContext);
+            convertView.setBackgroundColor(StyleManager.getColor(C0965R.color.bnav_common_bg));
+            viewHodler.mVerDiverderA.setBackgroundColor(StyleManager.getColor(C0965R.color.poi_line));
+            viewHodler.mBtnStartNavi.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_common_bg_pressed_mask_selector));
+            viewHodler.mBtnNameAddr.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_common_bg_pressed_mask_selector));
+            viewHodler.mTvName.setTextColor(StyleManager.getColor(C0965R.color.poi_name));
+            viewHodler.mTvAddr.setTextColor(StyleManager.getColor(C0965R.color.poi_addr));
+            viewHodler.mTvStartNavi.setTextColor(StyleManager.getColor(C0965R.color.poi_gonavi));
+            viewHodler.mTvDistance.setTextColor(StyleManager.getColor(C0965R.color.poi_distance));
+            viewHodler.mTvNum.setTextColor(StyleManager.getColor(C0965R.color.poi_num));
+            viewHodler.mDivider.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.divide_list));
+            viewHodler.mLayoutChildBottom.setBackgroundColor(StyleManager.getColor(C0965R.color.bnav_common_child_bg));
+            viewHodler.mPoiParent.setBackgroundColor(StyleManager.getColor(C0965R.color.bnav_common_bg));
+            viewHodler.mChildGrideList.setAdapter(mChildGrideListAdapter);
+            SearchPoi searchPoi = (SearchPoi) this.mPoiList.get(position);
+            if (searchPoi != null) {
+                viewHodler.mTvName.setText(searchPoi.mName);
+                viewHodler.mTvAddr.setText(searchPoi.mAddress);
+                viewHodler.mTvDistance.setText(PoiController.getInstance().getDistance2CurrentPoint(searchPoi));
+            }
+            viewHodler.mBtnStartNavi.setTag(searchPoi);
+            viewHodler.mBtnNameAddr.setTag(Integer.valueOf(position));
+            viewHodler.mBtnNameAddr.setOnClickListener(this.mClickListener);
+            viewHodler.mBtnStartNavi.setOnClickListener(this.mClickListener);
+            viewHodler.mTvNum.setText((position + 1) + ".");
+            if (this.isSetMode) {
+                viewHodler.mTvStartNavi.setText(StyleManager.getString(C0965R.string.detail_ok));
+            }
+            this.mChildCnt[position] = searchPoi.mChildCnt;
+            if (position >= 1) {
+                this.mChildIndex[position] = this.mChildIndex[position - 1] + this.mChildCnt[position - 1];
+            }
+            this.mParentCnt[position] = position;
+            mChildGrideListAdapter.SetCount(this.mChildCnt[position]);
+            mChildGrideListAdapter.SetCountSUM(this.mChildIndex[position]);
+            mChildGrideListAdapter.SetParentPosition(this.mParentCnt[position]);
+            mChildGrideListAdapter.notifyDataSetChanged();
+            if (this.mChildCnt[position] <= 0) {
+                viewHodler.mIcResult.setVisibility(8);
+                convertView.setLayoutParams(new LayoutParams(-1, ScreenUtil.getInstance().dip2px(70)));
+            } else {
+                viewHodler.mIcResult.setVisibility(8);
+                convertView.setLayoutParams(new LayoutParams(-1, ScreenUtil.getInstance().dip2px((((int) Math.ceil(((double) this.mChildCnt[position]) / 3.0d)) * 32) + 90)));
+            }
+        }
+        return convertView;
     }
-    
-    public void SetParentPosition(int paramInt)
-    {
-      this.mParentPosition = paramInt;
+
+    public int[] getChildCnt() {
+        return this.mChildCnt;
     }
-    
-    public int getCount()
-    {
-      return this.mChildCount;
+
+    public int[] getChildIndex() {
+        return this.mChildIndex;
     }
-    
-    public Object getItem(int paramInt)
-    {
-      return null;
+
+    public void setOnlineSearchListener(OnClickOnlineSearch listener) {
+        this.mOnlineSearchListener = listener;
     }
-    
-    public long getItemId(int paramInt)
-    {
-      return 0L;
+
+    public OnClickListener getNameSearchResultListener() {
+        return this.mClickListener;
     }
-    
-    protected View getItemView(View paramView, int paramInt)
-    {
-      paramView = new ViewHolder();
-      View localView = SearchResultAdapter.this.mLayoutInflater.inflate(2130969011, null);
-      paramView.mChildName = ((TextView)localView.findViewById(2131624602));
-      paramView.mIcDot = ((ImageView)localView.findViewById(2131624601));
-      localView.setBackgroundColor(StyleManager.getColor(2131558424));
-      paramView.mChildName.setTextColor(StyleManager.getColor(2131559141));
-      paramView.mIcDot.setBackgroundDrawable(StyleManager.getDrawable(2130838713));
-      paramView.mChildName.setText(((SearchPoi)SearchResultAdapter.this.mPoiList.get(this.mChildsum + paramInt)).mAliasName);
-      localView.setTag(Integer.valueOf(this.mChildsum + paramInt));
-      localView.setOnClickListener(this.mChildClickListener);
-      localView.setLayoutParams(new AbsListView.LayoutParams(-1, ScreenUtil.getInstance().dip2px(32)));
-      return localView;
+
+    public List<SearchPoi> getPoiList() {
+        return this.mPoiList;
     }
-    
-    public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-    {
-      return getItemView(paramView, paramInt);
+
+    public void setShowBundle(Bundle bundle) {
+        this.mShowBundle = bundle;
     }
-    
-    protected class ViewHolder
-    {
-      TextView mChildName;
-      ImageView mIcDot;
-      
-      protected ViewHolder() {}
-    }
-  }
-  
-  public static abstract interface OnClickOnlineSearch
-  {
-    public abstract void onCountrywideOnlineSearch();
-    
-    public abstract void onNormalOnlineSearch();
-  }
-  
-  static class ViewHodler
-  {
-    View mBtnNameAddr;
-    View mBtnStartNavi;
-    GridView mChildGrideList;
-    View mDivider;
-    ImageView mIcResult;
-    LinearLayout mLayoutChildBottom;
-    RelativeLayout mPoiParent;
-    TextView mTvAddr;
-    TextView mTvDistance;
-    TextView mTvName;
-    TextView mTvNum;
-    TextView mTvStartNavi;
-    View mVerDiverderA;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/adapter/SearchResultAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

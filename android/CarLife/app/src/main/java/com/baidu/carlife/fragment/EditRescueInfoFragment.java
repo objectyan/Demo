@@ -1,6 +1,5 @@
 package com.baidu.carlife.fragment;
 
-import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -11,262 +10,286 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.k;
-import com.baidu.carlife.core.screen.b;
-import com.baidu.carlife.util.p;
-import com.baidu.carlife.util.r;
-import com.baidu.carlife.view.dialog.c;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.C1261k;
+import com.baidu.carlife.core.screen.C0672b;
+import com.baidu.carlife.util.C2186p;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.carlife.view.dialog.C1953c;
 import com.baidu.navi.fragment.ContentFragment;
+import com.baidu.navi.util.StatisticConstants;
 import com.baidu.navi.util.StatisticManager;
 
-public class EditRescueInfoFragment
-  extends ContentFragment
-  implements View.OnClickListener
-{
-  public static final String a = EditRescueInfoFragment.class.getSimpleName();
-  TextWatcher b = new TextWatcher()
-  {
-    public void afterTextChanged(Editable paramAnonymousEditable)
-    {
-      if ((!TextUtils.isEmpty(EditRescueInfoFragment.a(EditRescueInfoFragment.this).getText().toString())) || (!TextUtils.isEmpty(EditRescueInfoFragment.b(EditRescueInfoFragment.this).getText().toString())) || (!TextUtils.isEmpty(EditRescueInfoFragment.c(EditRescueInfoFragment.this).getText().toString())) || (!TextUtils.isEmpty(EditRescueInfoFragment.d(EditRescueInfoFragment.this).getText().toString())) || (!TextUtils.isEmpty(EditRescueInfoFragment.e(EditRescueInfoFragment.this).getText().toString())) || (!TextUtils.isEmpty(EditRescueInfoFragment.f(EditRescueInfoFragment.this).getText().toString())))
-      {
-        EditRescueInfoFragment.g(EditRescueInfoFragment.this).setSelected(true);
-        EditRescueInfoFragment.g(EditRescueInfoFragment.this).setClickable(true);
-        EditRescueInfoFragment.g(EditRescueInfoFragment.this).setAlpha(1.0F);
-        return;
-      }
-      EditRescueInfoFragment.g(EditRescueInfoFragment.this).setSelected(false);
-      EditRescueInfoFragment.g(EditRescueInfoFragment.this).setClickable(false);
-      EditRescueInfoFragment.g(EditRescueInfoFragment.this).setAlpha(0.2F);
-    }
-    
-    public void beforeTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3)
-    {
-      i.c(EditRescueInfoFragment.a, "beforeTextChanged");
-    }
-    
-    public void onTextChanged(CharSequence paramAnonymousCharSequence, int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3)
-    {
-      i.c(EditRescueInfoFragment.a, "onTextChanged");
-    }
-  };
-  private Button c;
-  private EditText d;
-  private EditText e;
-  private EditText f;
-  private EditText g;
-  private EditText h;
-  private EditText i;
-  private String j;
-  private String k;
-  private String l;
-  private String m;
-  private String n;
-  private String o;
-  private String p;
-  private c q;
-  
-  private void a()
-  {
-    if (this.q == null)
-    {
-      this.q = new c(getContext()).a(2131296883).g(17).c(2131296264).q().d(2131296259);
-      this.q.a(new b()
-      {
-        public void onClick()
-        {
-          EditRescueInfoFragment.h(EditRescueInfoFragment.this);
-          EditRescueInfoFragment.this.back();
-          k.b(3011);
+public class EditRescueInfoFragment extends ContentFragment implements OnClickListener {
+    /* renamed from: a */
+    public static final String f4270a = EditRescueInfoFragment.class.getSimpleName();
+    /* renamed from: b */
+    TextWatcher f4271b = new C14531(this);
+    /* renamed from: c */
+    private Button f4272c;
+    /* renamed from: d */
+    private EditText f4273d;
+    /* renamed from: e */
+    private EditText f4274e;
+    /* renamed from: f */
+    private EditText f4275f;
+    /* renamed from: g */
+    private EditText f4276g;
+    /* renamed from: h */
+    private EditText f4277h;
+    /* renamed from: i */
+    private EditText f4278i;
+    /* renamed from: j */
+    private String f4279j;
+    /* renamed from: k */
+    private String f4280k;
+    /* renamed from: l */
+    private String f4281l;
+    /* renamed from: m */
+    private String f4282m;
+    /* renamed from: n */
+    private String f4283n;
+    /* renamed from: o */
+    private String f4284o;
+    /* renamed from: p */
+    private String f4285p;
+    /* renamed from: q */
+    private C1953c f4286q;
+
+    /* renamed from: com.baidu.carlife.fragment.EditRescueInfoFragment$1 */
+    class C14531 implements TextWatcher {
+        /* renamed from: a */
+        final /* synthetic */ EditRescueInfoFragment f4267a;
+
+        C14531(EditRescueInfoFragment this$0) {
+            this.f4267a = this$0;
         }
-      });
-      this.q.b(new b()
-      {
-        public void onClick()
-        {
-          EditRescueInfoFragment.this.back();
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            C1260i.m4440c(EditRescueInfoFragment.f4270a, "onTextChanged");
         }
-      });
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            C1260i.m4440c(EditRescueInfoFragment.f4270a, "beforeTextChanged");
+        }
+
+        public void afterTextChanged(Editable s) {
+            if (TextUtils.isEmpty(this.f4267a.f4273d.getText().toString()) && TextUtils.isEmpty(this.f4267a.f4274e.getText().toString()) && TextUtils.isEmpty(this.f4267a.f4275f.getText().toString()) && TextUtils.isEmpty(this.f4267a.f4276g.getText().toString()) && TextUtils.isEmpty(this.f4267a.f4277h.getText().toString()) && TextUtils.isEmpty(this.f4267a.f4278i.getText().toString())) {
+                this.f4267a.f4272c.setSelected(false);
+                this.f4267a.f4272c.setClickable(false);
+                this.f4267a.f4272c.setAlpha(0.2f);
+                return;
+            }
+            this.f4267a.f4272c.setSelected(true);
+            this.f4267a.f4272c.setClickable(true);
+            this.f4267a.f4272c.setAlpha(1.0f);
+        }
     }
-    showDialog(this.q);
-  }
-  
-  private void b()
-  {
-    p.a().b("key_rescue_name", this.d.getText().toString());
-    p.a().b("key_rescue_phone", this.e.getText().toString());
-    p.a().b("key_rescue_car_num", this.f.getText().toString());
-    p.a().b("key_rescue_car_color", this.g.getText().toString());
-    p.a().b("key_rescue_contact_name", this.h.getText().toString());
-    p.a().b("key_rescue_contact_phone", this.i.getText().toString());
-    p.a().c("key_rescue_show_info", true);
-    StatisticManager.onEvent("1043", "1043");
-    StatisticManager.onEvent("DISCOVER_HJY_0004");
-  }
-  
-  private void c()
-  {
-    InputMethodManager localInputMethodManager = (InputMethodManager)mActivity.getSystemService("input_method");
-    View localView = mActivity.getCurrentFocus();
-    if (localView != null) {
-      localInputMethodManager.hideSoftInputFromWindow(localView.getWindowToken(), 2);
+
+    /* renamed from: com.baidu.carlife.fragment.EditRescueInfoFragment$2 */
+    class C14542 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ EditRescueInfoFragment f4268a;
+
+        C14542(EditRescueInfoFragment this$0) {
+            this.f4268a = this$0;
+        }
+
+        public void onClick() {
+            this.f4268a.m5317b();
+            this.f4268a.back();
+            C1261k.m4461b(3011);
+        }
     }
-  }
-  
-  public boolean onBackPressed()
-  {
-    String str1 = this.d.getText().toString();
-    String str2 = this.e.getText().toString();
-    String str3 = this.f.getText().toString();
-    String str4 = this.g.getText().toString();
-    String str5 = this.h.getText().toString();
-    String str6 = this.i.getText().toString();
-    str1 = str1 + str2 + str3 + str4 + str5 + str6;
-    this.j = p.a().a("key_rescue_name", null);
-    this.k = p.a().a("key_rescue_phone", null);
-    this.l = p.a().a("key_rescue_contact_name", null);
-    this.m = p.a().a("key_rescue_contact_phone", null);
-    this.n = p.a().a("key_rescue_car_num", null);
-    this.o = p.a().a("key_rescue_car_color", null);
-    this.p = (this.j + this.k + this.n + this.o + this.l + this.m);
-    if (TextUtils.isEmpty(str1)) {}
-    do
-    {
-      return false;
-      i.c(a, "mOriginalStr=" + this.p + "\n,modifyStr=" + str1);
-    } while ((!TextUtils.isEmpty(str1)) && (str1.equals(this.p)));
-    a();
-    return true;
-  }
-  
-  public void onClick(View paramView)
-  {
-    switch (paramView.getId())
-    {
-    default: 
-    case 2131624795: 
-      do
-      {
-        return;
-      } while ((TextUtils.isEmpty(this.d.getText().toString())) && (TextUtils.isEmpty(this.e.getText().toString())) && (TextUtils.isEmpty(this.f.getText().toString())) && (TextUtils.isEmpty(this.g.getText().toString())) && (TextUtils.isEmpty(this.h.getText().toString())) && (TextUtils.isEmpty(this.i.getText().toString())));
-      b();
-      back();
-      k.b(3011);
-      return;
+
+    /* renamed from: com.baidu.carlife.fragment.EditRescueInfoFragment$3 */
+    class C14553 implements C0672b {
+        /* renamed from: a */
+        final /* synthetic */ EditRescueInfoFragment f4269a;
+
+        C14553(EditRescueInfoFragment this$0) {
+            this.f4269a = this$0;
+        }
+
+        public void onClick() {
+            this.f4269a.back();
+        }
     }
-    c();
-    paramView = this.d.getText().toString();
-    String str1 = this.e.getText().toString();
-    String str2 = this.f.getText().toString();
-    String str3 = this.g.getText().toString();
-    String str4 = this.h.getText().toString();
-    String str5 = this.i.getText().toString();
-    paramView = paramView + str1 + str2 + str3 + str4 + str5;
-    this.j = p.a().a("key_rescue_name", null);
-    this.k = p.a().a("key_rescue_phone", null);
-    this.l = p.a().a("key_rescue_contact_name", null);
-    this.m = p.a().a("key_rescue_contact_phone", null);
-    this.n = p.a().a("key_rescue_car_num", null);
-    this.o = p.a().a("key_rescue_car_color", null);
-    this.p = (this.j + this.k + this.n + this.o + this.l + this.m);
-    if (TextUtils.isEmpty(paramView))
-    {
-      back();
-      return;
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        C1260i.m4440c(f4270a, "onCreateContentView");
+        View contentView = inflater.inflate(C0965R.layout.frag_edit_rescue_info, null);
+        setCommonTitleBar(contentView, getResources().getString(C0965R.string.rescue_contact_info));
+        this.f4272c = (Button) contentView.findViewById(C0965R.id.btn_save_info);
+        this.f4273d = (EditText) contentView.findViewById(C0965R.id.et_rescue_name);
+        this.f4274e = (EditText) contentView.findViewById(C0965R.id.et_rescue_phone);
+        this.f4275f = (EditText) contentView.findViewById(C0965R.id.et_rescue_car_num);
+        this.f4276g = (EditText) contentView.findViewById(C0965R.id.et_rescue_car_color);
+        this.f4277h = (EditText) contentView.findViewById(C0965R.id.et_rescue_contact_name);
+        this.f4278i = (EditText) contentView.findViewById(C0965R.id.et_rescue_contact_phone);
+        ImageButton btnBack = (ImageButton) contentView.findViewById(C0965R.id.ib_left);
+        this.f4272c.setOnClickListener(this);
+        this.f4272c.setSelected(false);
+        btnBack.setOnClickListener(this);
+        this.f4273d.addTextChangedListener(this.f4271b);
+        this.f4274e.addTextChangedListener(this.f4271b);
+        this.f4275f.addTextChangedListener(this.f4271b);
+        this.f4276g.addTextChangedListener(this.f4271b);
+        this.f4277h.addTextChangedListener(this.f4271b);
+        this.f4278i.addTextChangedListener(this.f4271b);
+        this.f4279j = C2186p.m8304a().m8309a(RoadRescueFragment.f4749b, null);
+        this.f4280k = C2186p.m8304a().m8309a(RoadRescueFragment.f4750c, null);
+        this.f4281l = C2186p.m8304a().m8309a(RoadRescueFragment.f4753f, null);
+        this.f4282m = C2186p.m8304a().m8309a(RoadRescueFragment.f4754g, null);
+        this.f4283n = C2186p.m8304a().m8309a(RoadRescueFragment.f4751d, null);
+        this.f4284o = C2186p.m8304a().m8309a(RoadRescueFragment.f4752e, null);
+        this.f4285p = this.f4279j + this.f4280k + this.f4281l + this.f4282m + this.f4283n + this.f4284o;
+        if (!TextUtils.isEmpty(this.f4279j)) {
+            this.f4273d.setText(this.f4279j);
+        }
+        if (!TextUtils.isEmpty(this.f4280k)) {
+            this.f4274e.setText(this.f4280k);
+        }
+        if (!TextUtils.isEmpty(this.f4281l)) {
+            this.f4277h.setText(this.f4281l);
+        }
+        if (!TextUtils.isEmpty(this.f4282m)) {
+            this.f4278i.setText(this.f4282m);
+        }
+        if (!TextUtils.isEmpty(this.f4283n)) {
+            this.f4275f.setText(this.f4283n);
+        }
+        if (!TextUtils.isEmpty(this.f4284o)) {
+            this.f4276g.setText(this.f4284o);
+        }
+        if (TextUtils.isEmpty(this.f4279j) && TextUtils.isEmpty(this.f4280k) && TextUtils.isEmpty(this.f4281l) && TextUtils.isEmpty(this.f4282m) && TextUtils.isEmpty(this.f4283n) && TextUtils.isEmpty(this.f4284o)) {
+            this.f4272c.setSelected(false);
+            this.f4272c.setClickable(false);
+            this.f4272c.setAlpha(0.2f);
+        } else {
+            this.f4272c.setSelected(true);
+            this.f4272c.setClickable(true);
+            this.f4272c.setAlpha(1.0f);
+        }
+        return contentView;
     }
-    if ((!TextUtils.isEmpty(paramView)) && (paramView.equals(this.p)))
-    {
-      back();
-      return;
+
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            setBottomBarStatus(false);
+        }
+        super.onHiddenChanged(hidden);
     }
-    a();
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    i.c(a, "onCreateContentView");
-    paramLayoutInflater = paramLayoutInflater.inflate(2130968752, null);
-    setCommonTitleBar(paramLayoutInflater, getResources().getString(2131296876));
-    this.c = ((Button)paramLayoutInflater.findViewById(2131624795));
-    this.d = ((EditText)paramLayoutInflater.findViewById(2131624784));
-    this.e = ((EditText)paramLayoutInflater.findViewById(2131624786));
-    this.f = ((EditText)paramLayoutInflater.findViewById(2131624788));
-    this.g = ((EditText)paramLayoutInflater.findViewById(2131624790));
-    this.h = ((EditText)paramLayoutInflater.findViewById(2131624792));
-    this.i = ((EditText)paramLayoutInflater.findViewById(2131624794));
-    ImageButton localImageButton = (ImageButton)paramLayoutInflater.findViewById(2131624258);
-    this.c.setOnClickListener(this);
-    this.c.setSelected(false);
-    localImageButton.setOnClickListener(this);
-    this.d.addTextChangedListener(this.b);
-    this.e.addTextChangedListener(this.b);
-    this.f.addTextChangedListener(this.b);
-    this.g.addTextChangedListener(this.b);
-    this.h.addTextChangedListener(this.b);
-    this.i.addTextChangedListener(this.b);
-    this.j = p.a().a("key_rescue_name", null);
-    this.k = p.a().a("key_rescue_phone", null);
-    this.l = p.a().a("key_rescue_contact_name", null);
-    this.m = p.a().a("key_rescue_contact_phone", null);
-    this.n = p.a().a("key_rescue_car_num", null);
-    this.o = p.a().a("key_rescue_car_color", null);
-    this.p = (this.j + this.k + this.l + this.m + this.n + this.o);
-    if (!TextUtils.isEmpty(this.j)) {
-      this.d.setText(this.j);
+
+    protected void onInitView() {
     }
-    if (!TextUtils.isEmpty(this.k)) {
-      this.e.setText(this.k);
+
+    protected void onUpdateOrientation(int orientation) {
     }
-    if (!TextUtils.isEmpty(this.l)) {
-      this.h.setText(this.l);
+
+    protected void onUpdateStyle(boolean dayStyle) {
     }
-    if (!TextUtils.isEmpty(this.m)) {
-      this.i.setText(this.m);
+
+    protected void onUpdateSkin() {
+        updateCommonSkin();
+        this.f4272c.setBackground(C2188r.m8331b(C0965R.drawable.com_bg_btn_a_selector));
     }
-    if (!TextUtils.isEmpty(this.n)) {
-      this.f.setText(this.n);
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case C0965R.id.ib_left:
+                m5319c();
+                String name = this.f4273d.getText().toString();
+                String phone = this.f4274e.getText().toString();
+                String carNum = this.f4275f.getText().toString();
+                String carColor = this.f4276g.getText().toString();
+                String contactName = this.f4277h.getText().toString();
+                String modifyStr = name + phone + carNum + carColor + contactName + this.f4278i.getText().toString();
+                this.f4279j = C2186p.m8304a().m8309a(RoadRescueFragment.f4749b, null);
+                this.f4280k = C2186p.m8304a().m8309a(RoadRescueFragment.f4750c, null);
+                this.f4281l = C2186p.m8304a().m8309a(RoadRescueFragment.f4753f, null);
+                this.f4282m = C2186p.m8304a().m8309a(RoadRescueFragment.f4754g, null);
+                this.f4283n = C2186p.m8304a().m8309a(RoadRescueFragment.f4751d, null);
+                this.f4284o = C2186p.m8304a().m8309a(RoadRescueFragment.f4752e, null);
+                this.f4285p = this.f4279j + this.f4280k + this.f4283n + this.f4284o + this.f4281l + this.f4282m;
+                if (TextUtils.isEmpty(modifyStr)) {
+                    back();
+                    return;
+                } else if (TextUtils.isEmpty(modifyStr) || !modifyStr.equals(this.f4285p)) {
+                    m5315a();
+                    return;
+                } else {
+                    back();
+                    return;
+                }
+            case C0965R.id.btn_save_info:
+                if (!TextUtils.isEmpty(this.f4273d.getText().toString()) || !TextUtils.isEmpty(this.f4274e.getText().toString()) || !TextUtils.isEmpty(this.f4275f.getText().toString()) || !TextUtils.isEmpty(this.f4276g.getText().toString()) || !TextUtils.isEmpty(this.f4277h.getText().toString()) || !TextUtils.isEmpty(this.f4278i.getText().toString())) {
+                    m5317b();
+                    back();
+                    C1261k.m4461b(3011);
+                    return;
+                }
+                return;
+            default:
+                return;
+        }
     }
-    if (!TextUtils.isEmpty(this.o)) {
-      this.g.setText(this.o);
+
+    /* renamed from: a */
+    private void m5315a() {
+        if (this.f4286q == null) {
+            this.f4286q = new C1953c(getContext()).m7435a((int) C0965R.string.rescue_save_contact_info).m7457g(17).m7447c((int) C0965R.string.alert_confirm).m7458q().m7450d((int) C0965R.string.alert_cancel);
+            this.f4286q.m7438a(new C14542(this));
+            this.f4286q.m7443b(new C14553(this));
+        }
+        showDialog(this.f4286q);
     }
-    if ((TextUtils.isEmpty(this.j)) && (TextUtils.isEmpty(this.k)) && (TextUtils.isEmpty(this.l)) && (TextUtils.isEmpty(this.m)) && (TextUtils.isEmpty(this.n)) && (TextUtils.isEmpty(this.o)))
-    {
-      this.c.setSelected(false);
-      this.c.setClickable(false);
-      this.c.setAlpha(0.2F);
-      return paramLayoutInflater;
+
+    public boolean onBackPressed() {
+        String name = this.f4273d.getText().toString();
+        String phone = this.f4274e.getText().toString();
+        String carNum = this.f4275f.getText().toString();
+        String carColor = this.f4276g.getText().toString();
+        String contactName = this.f4277h.getText().toString();
+        String modifyStr = name + phone + carNum + carColor + contactName + this.f4278i.getText().toString();
+        this.f4279j = C2186p.m8304a().m8309a(RoadRescueFragment.f4749b, null);
+        this.f4280k = C2186p.m8304a().m8309a(RoadRescueFragment.f4750c, null);
+        this.f4281l = C2186p.m8304a().m8309a(RoadRescueFragment.f4753f, null);
+        this.f4282m = C2186p.m8304a().m8309a(RoadRescueFragment.f4754g, null);
+        this.f4283n = C2186p.m8304a().m8309a(RoadRescueFragment.f4751d, null);
+        this.f4284o = C2186p.m8304a().m8309a(RoadRescueFragment.f4752e, null);
+        this.f4285p = this.f4279j + this.f4280k + this.f4283n + this.f4284o + this.f4281l + this.f4282m;
+        if (TextUtils.isEmpty(modifyStr)) {
+            return false;
+        }
+        C1260i.m4440c(f4270a, "mOriginalStr=" + this.f4285p + "\n,modifyStr=" + modifyStr);
+        if (!TextUtils.isEmpty(modifyStr) && modifyStr.equals(this.f4285p)) {
+            return false;
+        }
+        m5315a();
+        return true;
     }
-    this.c.setSelected(true);
-    this.c.setClickable(true);
-    this.c.setAlpha(1.0F);
-    return paramLayoutInflater;
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    if (!paramBoolean) {
-      setBottomBarStatus(false);
+
+    /* renamed from: b */
+    private void m5317b() {
+        C2186p.m8304a().m8319b(RoadRescueFragment.f4749b, this.f4273d.getText().toString());
+        C2186p.m8304a().m8319b(RoadRescueFragment.f4750c, this.f4274e.getText().toString());
+        C2186p.m8304a().m8319b(RoadRescueFragment.f4751d, this.f4275f.getText().toString());
+        C2186p.m8304a().m8319b(RoadRescueFragment.f4752e, this.f4276g.getText().toString());
+        C2186p.m8304a().m8319b(RoadRescueFragment.f4753f, this.f4277h.getText().toString());
+        C2186p.m8304a().m8319b(RoadRescueFragment.f4754g, this.f4278i.getText().toString());
+        C2186p.m8304a().m8323c(RoadRescueFragment.f4755h, true);
+        StatisticManager.onEvent(StatisticConstants.HOME_DISCOVERY_RESCUE_INFO, StatisticConstants.HOME_DISCOVERY_RESCUE_INFO);
+        StatisticManager.onEvent(StatisticConstants.DISCOVER_HJY_0004);
     }
-    super.onHiddenChanged(paramBoolean);
-  }
-  
-  protected void onInitView() {}
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    updateCommonSkin();
-    this.c.setBackground(r.b(2130838206));
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
+
+    /* renamed from: c */
+    private void m5319c() {
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService("input_method");
+        View view = mActivity.getCurrentFocus();
+        if (view != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 2);
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/EditRescueInfoFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

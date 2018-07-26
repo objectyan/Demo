@@ -1,129 +1,99 @@
 package com.baidu.navi.track.model;
 
 import android.text.TextUtils;
+import com.baidu.navi.track.database.DataBaseConstants;
+import com.baidu.navisdk.jni.nativeif.JNISearchConst;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class TrackSyncResponseModel
-{
-  private static final String TAG = TrackSyncResponseModel.class.getSimpleName();
-  public ArrayList<CarNaviModel> dataList = new ArrayList();
-  public ArrayList<String> guidList = new ArrayList();
-  public int isResponse = 0;
-  public String lastver;
-  public TrackAcmp trackAcmp = new TrackAcmp();
-  
-  public static TrackSyncResponseModel parseJson(JSONObject paramJSONObject)
-  {
-    TrackSyncResponseModel localTrackSyncResponseModel = new TrackSyncResponseModel();
-    if (paramJSONObject == null) {}
-    Object localObject1;
-    do
-    {
-      return localTrackSyncResponseModel;
-      localTrackSyncResponseModel.isResponse = 1;
-      localObject1 = paramJSONObject.optJSONArray("orbitTotal");
-      if ((localObject1 != null) && (((JSONArray)localObject1).length() > 0))
-      {
-        localObject1 = ((JSONArray)localObject1).optJSONObject(0);
-        if (localObject1 != null)
-        {
-          localTrackSyncResponseModel.trackAcmp.setCarMaxDuration(((JSONObject)localObject1).optInt("longest_conn_time"));
-          localTrackSyncResponseModel.trackAcmp.setCarWeekMileage(((JSONObject)localObject1).optInt("week_mileage"));
-          localTrackSyncResponseModel.trackAcmp.setCarNaviDistance(((JSONObject)localObject1).optInt("total_mileage"));
+public class TrackSyncResponseModel {
+    private static final String TAG = TrackSyncResponseModel.class.getSimpleName();
+    public ArrayList<CarNaviModel> dataList = new ArrayList();
+    public ArrayList<String> guidList = new ArrayList();
+    public int isResponse = 0;
+    public String lastver;
+    public TrackAcmp trackAcmp = new TrackAcmp();
+
+    public static TrackSyncResponseModel parseJson(JSONObject jsonObject) {
+        TrackSyncResponseModel model = new TrackSyncResponseModel();
+        if (jsonObject != null) {
+            model.isResponse = 1;
+            JSONArray oribitTotal = jsonObject.optJSONArray("orbitTotal");
+            if (oribitTotal != null && oribitTotal.length() > 0) {
+                JSONObject object = oribitTotal.optJSONObject(0);
+                if (object != null) {
+                    model.trackAcmp.setCarMaxDuration(object.optInt("longest_conn_time"));
+                    model.trackAcmp.setCarWeekMileage(object.optInt("week_mileage"));
+                    model.trackAcmp.setCarNaviDistance(object.optInt("total_mileage"));
+                }
+            }
+            JSONArray jsonArray = jsonObject.optJSONArray("allorbits");
+            if (jsonArray != null) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject item = jsonArray.optJSONObject(i);
+                    if (item != null) {
+                        String[] split;
+                        CarNaviModel carNaviModel = new CarNaviModel();
+                        carNaviModel.cleanCarInfo();
+                        carNaviModel.setUseId(item.optString("uid"));
+                        carNaviModel.getPBData().setSid("111");
+                        if (item.optInt("is_deleted") == 0) {
+                            carNaviModel.setSyncState(3);
+                        } else {
+                            carNaviModel.setSyncState(2);
+                        }
+                        carNaviModel.getPBData().setGuid(item.optString("guid"));
+                        carNaviModel.getPBData().setDuration(item.optInt("duration"));
+                        carNaviModel.getPBData().setDistance(item.optInt("distance"));
+                        carNaviModel.getPBData().setMaxSpeed(item.optDouble("max_speed"));
+                        carNaviModel.getPBData().setAvgSpeed(item.optDouble("speed"));
+                        carNaviModel.getPBData().setType(DataBaseConstants.TYPE_CAR);
+                        carNaviModel.getPBData().setCtime(item.optInt("start_time"));
+                        String name = item.optString("name");
+                        String startEndCoords = item.optString("start_end_coords");
+                        NaviPoint startPoint = new NaviPoint();
+                        NaviPoint endPoint = new NaviPoint();
+                        if (!TextUtils.isEmpty(name)) {
+                            split = name.split(JNISearchConst.LAYER_ID_DIVIDER, 2);
+                            if (split != null && split.length == 2) {
+                                startPoint.setAddr(split[0]);
+                                endPoint.setAddr(split[1]);
+                            }
+                        }
+                        if (!TextUtils.isEmpty(startEndCoords)) {
+                            split = startEndCoords.split(JNISearchConst.LAYER_ID_DIVIDER, 2);
+                            if (split != null && split.length == 2) {
+                                String start = split[0];
+                                String end = split[1];
+                                String[] startCoords = start.split(",", 2);
+                                String[] endCoords = end.split(",", 2);
+                                if (startCoords != null) {
+                                    try {
+                                        if (startCoords.length == 2) {
+                                            startPoint.setLng(Double.valueOf(startCoords[0]).doubleValue());
+                                            startPoint.setLat(Double.valueOf(startCoords[1]).doubleValue());
+                                        }
+                                    } catch (NumberFormatException e) {
+                                    }
+                                }
+                                if (endCoords != null && endCoords.length == 2) {
+                                    endPoint.setLng(Double.valueOf(endCoords[0]).doubleValue());
+                                    endPoint.setLat(Double.valueOf(endCoords[1]).doubleValue());
+                                }
+                            }
+                        }
+                        carNaviModel.getPBData().setStartPoint(startPoint);
+                        carNaviModel.getPBData().setEndPoint(endPoint);
+                        model.dataList.add(carNaviModel);
+                    }
+                }
+            }
         }
-      }
-      paramJSONObject = paramJSONObject.optJSONArray("allorbits");
-    } while (paramJSONObject == null);
-    int i = 0;
-    label102:
-    Object localObject2;
-    if (i < paramJSONObject.length())
-    {
-      localObject2 = paramJSONObject.optJSONObject(i);
-      if (localObject2 != null)
-      {
-        localObject1 = new CarNaviModel();
-        ((CarNaviModel)localObject1).cleanCarInfo();
-        ((CarNaviModel)localObject1).setUseId(((JSONObject)localObject2).optString("uid"));
-        ((CarNaviModel)localObject1).getPBData().setSid("111");
-        if (((JSONObject)localObject2).optInt("is_deleted") != 0) {
-          break label542;
-        }
-        ((CarNaviModel)localObject1).setSyncState(3);
-      }
+        return model;
     }
-    for (;;)
-    {
-      ((CarNaviModel)localObject1).getPBData().setGuid(((JSONObject)localObject2).optString("guid"));
-      ((CarNaviModel)localObject1).getPBData().setDuration(((JSONObject)localObject2).optInt("duration"));
-      ((CarNaviModel)localObject1).getPBData().setDistance(((JSONObject)localObject2).optInt("distance"));
-      ((CarNaviModel)localObject1).getPBData().setMaxSpeed(((JSONObject)localObject2).optDouble("max_speed"));
-      ((CarNaviModel)localObject1).getPBData().setAvgSpeed(((JSONObject)localObject2).optDouble("speed"));
-      ((CarNaviModel)localObject1).getPBData().setType("car_navi");
-      ((CarNaviModel)localObject1).getPBData().setCtime(((JSONObject)localObject2).optInt("start_time"));
-      Object localObject3 = ((JSONObject)localObject2).optString("name");
-      Object localObject4 = ((JSONObject)localObject2).optString("start_end_coords");
-      localObject2 = new NaviPoint();
-      NaviPoint localNaviPoint = new NaviPoint();
-      if (!TextUtils.isEmpty((CharSequence)localObject3))
-      {
-        localObject3 = ((String)localObject3).split("_", 2);
-        if ((localObject3 != null) && (localObject3.length == 2))
-        {
-          ((NaviPoint)localObject2).setAddr(localObject3[0]);
-          localNaviPoint.setAddr(localObject3[1]);
-        }
-      }
-      if (!TextUtils.isEmpty((CharSequence)localObject4))
-      {
-        localObject4 = ((String)localObject4).split("_", 2);
-        if ((localObject4 != null) && (localObject4.length == 2))
-        {
-          localObject3 = localObject4[0];
-          localObject4 = localObject4[1];
-          localObject3 = ((String)localObject3).split(",", 2);
-          localObject4 = ((String)localObject4).split(",", 2);
-          if (localObject3 == null) {}
-        }
-      }
-      try
-      {
-        if (localObject3.length == 2)
-        {
-          ((NaviPoint)localObject2).setLng(Double.valueOf(localObject3[0]).doubleValue());
-          ((NaviPoint)localObject2).setLat(Double.valueOf(localObject3[1]).doubleValue());
-        }
-        if ((localObject4 != null) && (localObject4.length == 2))
-        {
-          localNaviPoint.setLng(Double.valueOf(localObject4[0]).doubleValue());
-          localNaviPoint.setLat(Double.valueOf(localObject4[1]).doubleValue());
-        }
-      }
-      catch (NumberFormatException localNumberFormatException)
-      {
-        for (;;) {}
-      }
-      ((CarNaviModel)localObject1).getPBData().setStartPoint((NaviPoint)localObject2);
-      ((CarNaviModel)localObject1).getPBData().setEndPoint(localNaviPoint);
-      localTrackSyncResponseModel.dataList.add(localObject1);
-      i += 1;
-      break label102;
-      break;
-      label542:
-      ((CarNaviModel)localObject1).setSyncState(2);
+
+    public String toString() {
+        return "TrackSyncResponseModel[ lastver=" + this.lastver + ", trackAcmp=" + this.trackAcmp + ", isResponse=" + this.isResponse + ", dataList=" + this.dataList + ", guidList=" + this.guidList + " ]";
     }
-  }
-  
-  public String toString()
-  {
-    return "TrackSyncResponseModel[ lastver=" + this.lastver + ", trackAcmp=" + this.trackAcmp + ", isResponse=" + this.isResponse + ", dataList=" + this.dataList + ", guidList=" + this.guidList + " ]";
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/track/model/TrackSyncResponseModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

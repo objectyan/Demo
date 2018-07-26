@@ -2,53 +2,41 @@ package com.indooratlas.android.sdk._internal;
 
 import android.hardware.Sensor;
 
-final class dn
-  implements cw
-{
-  Sensor a;
-  
-  dn(Sensor paramSensor)
-  {
-    this.a = paramSensor;
-  }
-  
-  public static dn a(Sensor paramSensor)
-  {
-    return new dn(paramSensor);
-  }
-  
-  public final int a()
-  {
-    return dm.b(this.a.getType());
-  }
-  
-  public final Sensor b()
-  {
-    return this.a;
-  }
-  
-  public final boolean equals(Object paramObject)
-  {
-    if (!(paramObject instanceof dn)) {}
-    while (this.a.getType() != ((dn)paramObject).a.getType()) {
-      return false;
+final class dn implements cw {
+    /* renamed from: a */
+    Sensor f23422a;
+
+    dn(Sensor sensor) {
+        this.f23422a = sensor;
     }
-    return true;
-  }
-  
-  public final int hashCode()
-  {
-    return this.a.hashCode();
-  }
-  
-  public final String toString()
-  {
-    return this.a.toString();
-  }
+
+    /* renamed from: a */
+    public static dn m20344a(Sensor sensor) {
+        return new dn(sensor);
+    }
+
+    public final boolean equals(Object otherSensor) {
+        if ((otherSensor instanceof dn) && this.f23422a.getType() == ((dn) otherSensor).f23422a.getType()) {
+            return true;
+        }
+        return false;
+    }
+
+    public final int hashCode() {
+        return this.f23422a.hashCode();
+    }
+
+    /* renamed from: a */
+    public final int mo4658a() {
+        return dm.m20335b(this.f23422a.getType());
+    }
+
+    public final String toString() {
+        return this.f23422a.toString();
+    }
+
+    /* renamed from: b */
+    public final Sensor mo4659b() {
+        return this.f23422a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/dn.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -4,41 +4,31 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import com.baidu.carlife.C0965R;
 
-public class ImageSearchView
-  extends RelativeLayout
-{
-  ImageView a;
-  
-  public ImageSearchView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public ImageSearchView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public ImageSearchView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  private void a()
-  {
-    this.a = ((ImageView)findViewById(2131625364));
-  }
-  
-  protected void onFinishInflate()
-  {
-    super.onFinishInflate();
-    a();
-  }
+public class ImageSearchView extends RelativeLayout {
+    /* renamed from: a */
+    ImageView f9448a;
+
+    public ImageSearchView(Context context) {
+        super(context);
+    }
+
+    public ImageSearchView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public ImageSearchView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        m10887a();
+    }
+
+    /* renamed from: a */
+    private void m10887a() {
+        this.f9448a = (ImageView) findViewById(C0965R.id.imageView);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/widget/ImageSearchView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

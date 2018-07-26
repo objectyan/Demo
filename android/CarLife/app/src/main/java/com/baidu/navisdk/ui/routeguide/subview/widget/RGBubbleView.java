@@ -2,7 +2,6 @@ package com.baidu.navisdk.ui.routeguide.subview.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
@@ -10,10 +9,11 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
-import android.view.ViewParent;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.util.common.CommonHandlerThread;
 import com.baidu.navisdk.util.common.ScreenUtil;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.nplatform.comapi.basestruct.GeoPoint;
@@ -21,244 +21,194 @@ import com.baidu.nplatform.comapi.basestruct.Point;
 import com.baidu.nplatform.comapi.map.MapController;
 import java.nio.ByteBuffer;
 
-public class RGBubbleView
-  implements View.OnClickListener
-{
-  private static final int BTN_MARGIN = 70;
-  private static final int BTN_WIDTH = 80;
-  private static final int mIconWidth = 88;
-  private LinearLayout mBody;
-  private FrameLayout.LayoutParams mBubbleLp = null;
-  private GeoPoint mGeoPt = new GeoPoint();
-  boolean mIsShow = false;
-  private IBubbleClickListener mListener;
-  private MapController mMapController;
-  private View mRootView;
-  private Point mScrPt = new Point(0, 0);
-  private boolean mShowBtn = true;
-  private TextView mTitle;
-  
-  public RGBubbleView(Context paramContext)
-  {
-    this.mRootView = JarUtils.inflate((Activity)paramContext, 1711472697, null);
-    this.mBubbleLp = new FrameLayout.LayoutParams(-2, -2);
-    this.mBubbleLp.gravity = 51;
-    if (this.mRootView != null)
-    {
-      this.mBody = ((LinearLayout)this.mRootView.findViewById(1711866369));
-      this.mTitle = ((TextView)this.mRootView.findViewById(1711866370));
-      this.mBody.setOnClickListener(this);
-      this.mRootView.setOnClickListener(this);
-      this.mRootView.setVisibility(4);
+public class RGBubbleView implements OnClickListener {
+    private static final int BTN_MARGIN = 70;
+    private static final int BTN_WIDTH = 80;
+    private static final int mIconWidth = 88;
+    private LinearLayout mBody;
+    private LayoutParams mBubbleLp = null;
+    private GeoPoint mGeoPt = new GeoPoint();
+    boolean mIsShow = false;
+    private IBubbleClickListener mListener;
+    private MapController mMapController;
+    private View mRootView;
+    private Point mScrPt = new Point(0, 0);
+    private boolean mShowBtn = true;
+    private TextView mTitle;
+
+    public interface IBubbleClickListener {
+        void onClickBody(View view);
+
+        void onClickLeft(View view);
+
+        void onClickRight(View view);
     }
-  }
-  
-  private void setPlaceBundle(Bundle paramBundle) {}
-  
-  private void setScrPos(int paramInt1, int paramInt2)
-  {
-    paramInt2 = ((View)this.mRootView.getParent()).getWidth();
-    paramInt1 = paramInt2 - ScreenUtil.getInstance().dip2px(150);
-    if (!this.mShowBtn) {
-      paramInt1 = paramInt2 - ScreenUtil.getInstance().dip2px(70);
+
+    public GeoPoint getGeoPt() {
+        return this.mGeoPt;
     }
-    this.mTitle.setMaxWidth(paramInt1);
-    this.mRootView.measure(0, 0);
-  }
-  
-  public Bitmap getBubbleBmpCache(int paramInt)
-  {
-    if (paramInt == 1) {
-      this.mRootView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407770));
+
+    public Point getScrPt() {
+        return this.mScrPt;
     }
-    for (;;)
-    {
-      this.mRootView.setDrawingCacheEnabled(true);
-      this.mRootView.measure(View.MeasureSpec.makeMeasureSpec(0, 0), View.MeasureSpec.makeMeasureSpec(0, 0));
-      this.mRootView.layout(0, 0, this.mRootView.getMeasuredWidth(), this.mRootView.getMeasuredHeight());
-      this.mRootView.buildDrawingCache();
-      Bitmap localBitmap = this.mRootView.getDrawingCache();
-      this.mRootView.setDrawingCacheEnabled(false);
-      return localBitmap;
-      this.mRootView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407770));
+
+    public RGBubbleView(Context context) {
+        this.mRootView = JarUtils.inflate((Activity) context, C4048R.layout.nsdk_layout_rg_bubble_view, null);
+        this.mBubbleLp = new LayoutParams(-2, -2);
+        this.mBubbleLp.gravity = 51;
+        if (this.mRootView != null) {
+            this.mBody = (LinearLayout) this.mRootView.findViewById(C4048R.id.mainView);
+            this.mTitle = (TextView) this.mRootView.findViewById(C4048R.id.titleTV);
+            this.mBody.setOnClickListener(this);
+            this.mRootView.setOnClickListener(this);
+            this.mRootView.setVisibility(4);
+        }
     }
-  }
-  
-  public GeoPoint getGeoPt()
-  {
-    return this.mGeoPt;
-  }
-  
-  public FrameLayout.LayoutParams getLayoutParams()
-  {
-    return this.mBubbleLp;
-  }
-  
-  public byte[] getPopupBmpCacheData(int paramInt)
-  {
-    if (paramInt == 1) {
-      this.mRootView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407770));
+
+    public void setBtnShow(boolean bBtnShow) {
+        this.mShowBtn = bBtnShow;
     }
-    Bitmap localBitmap;
-    for (;;)
-    {
-      this.mRootView.setDrawingCacheEnabled(true);
-      this.mRootView.measure(View.MeasureSpec.makeMeasureSpec(0, 0), View.MeasureSpec.makeMeasureSpec(0, 0));
-      this.mRootView.layout(0, 0, this.mRootView.getMeasuredWidth(), this.mRootView.getMeasuredHeight());
-      this.mRootView.buildDrawingCache();
-      localBitmap = this.mRootView.getDrawingCache();
-      if (localBitmap != null) {
-        break;
-      }
-      this.mRootView.setDrawingCacheEnabled(false);
-      return null;
-      this.mRootView.setBackgroundDrawable(JarUtils.getResources().getDrawable(1711407770));
+
+    public void setMapController(MapController mapCtrl) {
+        this.mMapController = mapCtrl;
     }
-    if (localBitmap.getConfig() == Bitmap.Config.ARGB_8888)
-    {
-      ByteBuffer localByteBuffer = ByteBuffer.allocate(localBitmap.getWidth() * localBitmap.getHeight() * 4);
-      localBitmap.copyPixelsToBuffer(localByteBuffer);
-      this.mRootView.setDrawingCacheEnabled(false);
-      return localByteBuffer.array();
+
+    public void showBubble(GeoPoint geoPt, String title, String desc, int offSet, boolean bSingleLine, Bundle placeBundel) {
+        if (geoPt != null) {
+            setTitle(title, bSingleLine);
+            setGeoPos(geoPt, offSet);
+            setPlaceBundle(placeBundel);
+            this.mIsShow = true;
+            Bundle bundle = new Bundle();
+            Bitmap bmp = getBubbleBmpCache(0);
+            bundle.putInt("bshow", 1);
+            bundle.putInt("x", geoPt.getLongitudeE6());
+            bundle.putInt("y", geoPt.getLatitudeE6());
+            bundle.putInt("imgW", bmp.getWidth());
+            bundle.putInt("imgH", bmp.getHeight());
+            bundle.putInt("showLR", this.mShowBtn ? 1 : 0);
+            bundle.putInt("iconwidth", 88);
+            bundle.putInt("popname", (this.mTitle.getText().toString() + "0" + "place").hashCode());
+            int imgCnt = 4;
+            if (!this.mShowBtn) {
+                imgCnt = 2;
+            }
+            for (int i = 0; i < imgCnt; i++) {
+                bundle.putByteArray("imgdata" + i, getPopupBmpCacheData(i));
+            }
+            this.mMapController.addPopupData(bundle);
+            this.mMapController.showLayer(11, true);
+            this.mMapController.updateLayer(11);
+        }
     }
-    this.mRootView.setDrawingCacheEnabled(false);
-    return null;
-  }
-  
-  public Point getScrPt()
-  {
-    return this.mScrPt;
-  }
-  
-  public View getView()
-  {
-    return this.mRootView;
-  }
-  
-  public void hide()
-  {
-    this.mIsShow = false;
-    if (this.mMapController != null)
-    {
-      this.mMapController.clearLayer(11);
-      this.mMapController.showLayer(11, false);
+
+    private void setPlaceBundle(Bundle bundle) {
     }
-  }
-  
-  public boolean isShow()
-  {
-    return this.mIsShow;
-  }
-  
-  public void onClick(View paramView)
-  {
-    if (this.mListener == null) {}
-    do
-    {
-      return;
-      if (paramView == this.mBody)
-      {
-        this.mListener.onClickBody(paramView);
-        return;
-      }
-    } while (paramView != this.mRootView);
-    this.mListener.onClickBody(paramView);
-  }
-  
-  public void setBtnShow(boolean paramBoolean)
-  {
-    this.mShowBtn = paramBoolean;
-  }
-  
-  public void setClickListener(IBubbleClickListener paramIBubbleClickListener)
-  {
-    this.mListener = paramIBubbleClickListener;
-  }
-  
-  public void setGeoPos(GeoPoint paramGeoPoint, int paramInt)
-  {
-    this.mGeoPt = paramGeoPoint;
-    paramGeoPoint = this.mMapController.getScreenPosByGeoPos(this.mGeoPt);
-    if (paramGeoPoint != null)
-    {
-      this.mScrPt = paramGeoPoint;
-      setScrPos(this.mScrPt.x, this.mScrPt.y);
+
+    public void setGeoPos(GeoPoint pt, int offSet) {
+        this.mGeoPt = pt;
+        Point p = this.mMapController.getScreenPosByGeoPos(this.mGeoPt);
+        if (p != null) {
+            this.mScrPt = p;
+            setScrPos(this.mScrPt.f19727x, this.mScrPt.f19728y);
+        }
     }
-  }
-  
-  public void setMapController(MapController paramMapController)
-  {
-    this.mMapController = paramMapController;
-  }
-  
-  public void setTitle(String paramString, boolean paramBoolean)
-  {
-    this.mTitle.setSingleLine(paramBoolean);
-    this.mTitle.setText(Html.fromHtml(paramString));
-  }
-  
-  public void showBubble(GeoPoint paramGeoPoint, String paramString1, String paramString2, int paramInt, boolean paramBoolean, Bundle paramBundle)
-  {
-    if (paramGeoPoint == null) {
-      return;
+
+    private void setScrPos(int x, int y) {
+        int pw = ((View) this.mRootView.getParent()).getWidth();
+        int maxWidth = pw - ScreenUtil.getInstance().dip2px(CommonHandlerThread.MSG_START_RECORD_TRAJECTORY);
+        if (!this.mShowBtn) {
+            maxWidth = pw - ScreenUtil.getInstance().dip2px(70);
+        }
+        this.mTitle.setMaxWidth(maxWidth);
+        this.mRootView.measure(0, 0);
     }
-    setTitle(paramString1, paramBoolean);
-    setGeoPos(paramGeoPoint, paramInt);
-    setPlaceBundle(paramBundle);
-    this.mIsShow = true;
-    paramString1 = new Bundle();
-    paramString2 = getBubbleBmpCache(0);
-    paramString1.putInt("bshow", 1);
-    paramString1.putInt("x", paramGeoPoint.getLongitudeE6());
-    paramString1.putInt("y", paramGeoPoint.getLatitudeE6());
-    paramString1.putInt("imgW", paramString2.getWidth());
-    paramString1.putInt("imgH", paramString2.getHeight());
-    if (this.mShowBtn) {}
-    for (paramInt = 1;; paramInt = 0)
-    {
-      paramString1.putInt("showLR", paramInt);
-      paramString1.putInt("iconwidth", 88);
-      paramString1.putInt("popname", (this.mTitle.getText().toString() + "0" + "place").hashCode());
-      paramInt = 4;
-      if (!this.mShowBtn) {
-        paramInt = 2;
-      }
-      int i = 0;
-      while (i < paramInt)
-      {
-        paramGeoPoint = getPopupBmpCacheData(i);
-        paramString1.putByteArray("imgdata" + i, paramGeoPoint);
-        i += 1;
-      }
+
+    public void setClickListener(IBubbleClickListener listener) {
+        this.mListener = listener;
     }
-    this.mMapController.addPopupData(paramString1);
-    this.mMapController.showLayer(11, true);
-    this.mMapController.updateLayer(11);
-  }
-  
-  public void update()
-  {
-    Point localPoint = this.mMapController.getScreenPosByGeoPos(this.mGeoPt);
-    if (localPoint != null)
-    {
-      this.mScrPt = localPoint;
-      setScrPos(this.mScrPt.x, this.mScrPt.y);
-      this.mRootView.getParent().requestLayout();
+
+    public void setTitle(String title, boolean bSingleLine) {
+        this.mTitle.setSingleLine(bSingleLine);
+        this.mTitle.setText(Html.fromHtml(title));
     }
-  }
-  
-  public static abstract interface IBubbleClickListener
-  {
-    public abstract void onClickBody(View paramView);
-    
-    public abstract void onClickLeft(View paramView);
-    
-    public abstract void onClickRight(View paramView);
-  }
+
+    public boolean isShow() {
+        return this.mIsShow;
+    }
+
+    public void update() {
+        Point p = this.mMapController.getScreenPosByGeoPos(this.mGeoPt);
+        if (p != null) {
+            this.mScrPt = p;
+            setScrPos(this.mScrPt.f19727x, this.mScrPt.f19728y);
+            this.mRootView.getParent().requestLayout();
+        }
+    }
+
+    public void hide() {
+        this.mIsShow = false;
+        if (this.mMapController != null) {
+            this.mMapController.clearLayer(11);
+            this.mMapController.showLayer(11, false);
+        }
+    }
+
+    public View getView() {
+        return this.mRootView;
+    }
+
+    public LayoutParams getLayoutParams() {
+        return this.mBubbleLp;
+    }
+
+    public void onClick(View v) {
+        if (this.mListener != null) {
+            if (v == this.mBody) {
+                this.mListener.onClickBody(v);
+            } else if (v == this.mRootView) {
+                this.mListener.onClickBody(v);
+            }
+        }
+    }
+
+    public Bitmap getBubbleBmpCache(int popupStatus) {
+        if (popupStatus == 1) {
+            this.mRootView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_rg_popup_bg));
+        } else {
+            this.mRootView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_rg_popup_bg));
+        }
+        this.mRootView.setDrawingCacheEnabled(true);
+        this.mRootView.measure(MeasureSpec.makeMeasureSpec(0, 0), MeasureSpec.makeMeasureSpec(0, 0));
+        this.mRootView.layout(0, 0, this.mRootView.getMeasuredWidth(), this.mRootView.getMeasuredHeight());
+        this.mRootView.buildDrawingCache();
+        Bitmap bmpTemp = this.mRootView.getDrawingCache();
+        this.mRootView.setDrawingCacheEnabled(false);
+        return bmpTemp;
+    }
+
+    public byte[] getPopupBmpCacheData(int popupStatus) {
+        if (popupStatus == 1) {
+            this.mRootView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_rg_popup_bg));
+        } else {
+            this.mRootView.setBackgroundDrawable(JarUtils.getResources().getDrawable(C4048R.drawable.nsdk_drawable_rg_popup_bg));
+        }
+        this.mRootView.setDrawingCacheEnabled(true);
+        this.mRootView.measure(MeasureSpec.makeMeasureSpec(0, 0), MeasureSpec.makeMeasureSpec(0, 0));
+        this.mRootView.layout(0, 0, this.mRootView.getMeasuredWidth(), this.mRootView.getMeasuredHeight());
+        this.mRootView.buildDrawingCache();
+        Bitmap bmpTemp = this.mRootView.getDrawingCache();
+        if (bmpTemp == null) {
+            this.mRootView.setDrawingCacheEnabled(false);
+            return null;
+        } else if (bmpTemp.getConfig() == Config.ARGB_8888) {
+            ByteBuffer dstBuffer = ByteBuffer.allocate((bmpTemp.getWidth() * bmpTemp.getHeight()) * 4);
+            bmpTemp.copyPixelsToBuffer(dstBuffer);
+            this.mRootView.setDrawingCacheEnabled(false);
+            return dstBuffer.array();
+        } else {
+            this.mRootView.setDrawingCacheEnabled(false);
+            return null;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/subview/widget/RGBubbleView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

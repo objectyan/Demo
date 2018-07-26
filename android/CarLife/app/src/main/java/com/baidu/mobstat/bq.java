@@ -1,42 +1,50 @@
 package com.baidu.mobstat;
 
 import android.content.Context;
-import java.util.HashMap;
 import java.util.Map;
 
-class bq
-  implements Runnable
-{
-  bq(bm parambm, String paramString1, String paramString2, long paramLong, Context paramContext, ExtraInfo paramExtraInfo, Map paramMap) {}
-  
-  public void run()
-  {
-    bv.a().d();
-    String str = this.g.a(this.a, this.b);
-    bs localbs = (bs)this.g.a.get(str);
-    if (localbs == null)
-    {
-      db.b("EventStat: event_id[" + this.a + "] with label[" + this.b + "] is not started or alread done.");
-      return;
+class bq implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ String f19483a;
+    /* renamed from: b */
+    final /* synthetic */ String f19484b;
+    /* renamed from: c */
+    final /* synthetic */ long f19485c;
+    /* renamed from: d */
+    final /* synthetic */ Context f19486d;
+    /* renamed from: e */
+    final /* synthetic */ ExtraInfo f19487e;
+    /* renamed from: f */
+    final /* synthetic */ Map f19488f;
+    /* renamed from: g */
+    final /* synthetic */ bm f19489g;
+
+    bq(bm bmVar, String str, String str2, long j, Context context, ExtraInfo extraInfo, Map map) {
+        this.f19489g = bmVar;
+        this.f19483a = str;
+        this.f19484b = str2;
+        this.f19485c = j;
+        this.f19486d = context;
+        this.f19487e = extraInfo;
+        this.f19488f = map;
     }
-    if ((!this.a.equals(localbs.a)) || (!this.b.equals(localbs.b)))
-    {
-      db.a("EventStat: Wrong Case, eventId/label pair not match");
-      return;
+
+    public void run() {
+        bv.m15511a().m15521d();
+        String a = this.f19489g.m15496a(this.f19483a, this.f19484b);
+        bs bsVar = (bs) this.f19489g.f19460a.get(a);
+        if (bsVar == null) {
+            db.m15661b("EventStat: event_id[" + this.f19483a + "] with label[" + this.f19484b + "] is not started or alread done.");
+        } else if (this.f19483a.equals(bsVar.f19497a) && this.f19484b.equals(bsVar.f19498b)) {
+            this.f19489g.f19460a.remove(a);
+            long j = this.f19485c - bsVar.f19499c;
+            if (j <= 0) {
+                db.m15657a("EventStat: Wrong Case, Duration must be positive");
+            } else {
+                this.f19489g.m15497a(this.f19486d, this.f19483a, this.f19484b, 1, bsVar.f19499c, j, this.f19487e, this.f19488f);
+            }
+        } else {
+            db.m15657a("EventStat: Wrong Case, eventId/label pair not match");
+        }
     }
-    this.g.a.remove(str);
-    long l = this.c - localbs.c;
-    if (l <= 0L)
-    {
-      db.a("EventStat: Wrong Case, Duration must be positive");
-      return;
-    }
-    this.g.a(this.d, this.a, this.b, 1, localbs.c, l, this.e, this.f);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

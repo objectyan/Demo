@@ -4,51 +4,36 @@ import android.text.TextUtils;
 import com.baidu.tts.aop.AInterceptor;
 import com.baidu.tts.aop.AInterceptorHandler;
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy;
-import com.baidu.tts.m.h;
-import com.baidu.tts.m.i;
+import com.baidu.tts.p225m.C5145h;
 import java.lang.reflect.Method;
-import java.util.List;
 
-public class ProgressCorrectInterceptor
-  extends AInterceptor
-{
-  protected Object a(Object paramObject, Method paramMethod, Object[] paramArrayOfObject)
-  {
-    paramObject = (h)paramArrayOfObject[0];
-    int j;
-    int k;
-    if (paramObject != null)
-    {
-      paramMethod = ((h)paramObject).e().b();
-      if (!TextUtils.isEmpty(paramMethod))
-      {
-        j = paramMethod.length();
-        k = ((h)paramObject).c();
-        if (k <= j) {
-          break label109;
+public class ProgressCorrectInterceptor extends AInterceptor {
+    /* renamed from: a */
+    protected void mo3796a() {
+        this.a.add("onSynthesizeDataArrived");
+        this.a.add("onPlayProgressUpdate");
+    }
+
+    /* renamed from: a */
+    protected Object mo3795a(Object obj, Method method, Object[] objArr) {
+        C5145h c5145h = (C5145h) objArr[0];
+        if (c5145h != null) {
+            Object b = c5145h.m17431e().m17438b();
+            if (!TextUtils.isEmpty(b)) {
+                int i;
+                int length = b.length();
+                int c = c5145h.m17427c();
+                if (c > length) {
+                    i = c - length;
+                } else {
+                    i = 0;
+                }
+                LoggerProxy.m17001d("ProgressCorrectInterceptor", "prefixLength=" + length + "--progress=" + c);
+                c5145h = (C5145h) c5145h.m16770B();
+                c5145h.m17429d(i);
+                objArr[0] = c5145h;
+            }
         }
-      }
+        return AInterceptorHandler.DEFAULT;
     }
-    label109:
-    for (int i = k - j;; i = 0)
-    {
-      LoggerProxy.d("ProgressCorrectInterceptor", "prefixLength=" + j + "--progress=" + k);
-      paramObject = (h)((h)paramObject).B();
-      ((h)paramObject).d(i);
-      paramArrayOfObject[0] = paramObject;
-      return AInterceptorHandler.DEFAULT;
-    }
-  }
-  
-  protected void a()
-  {
-    this.a.add("onSynthesizeDataArrived");
-    this.a.add("onPlayProgressUpdate");
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/aop/ttslistener/ProgressCorrectInterceptor.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

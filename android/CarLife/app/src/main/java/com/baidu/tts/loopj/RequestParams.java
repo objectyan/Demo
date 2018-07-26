@@ -5,12 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -23,541 +21,409 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
-public class RequestParams
-  implements Serializable
-{
-  public static final String APPLICATION_JSON = "application/json";
-  public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
-  protected static final String LOG_TAG = "RequestParams";
-  protected boolean autoCloseInputStreams;
-  protected String contentEncoding = "UTF-8";
-  protected String elapsedFieldInJsonStreamer = "_elapsed";
-  protected final ConcurrentHashMap<String, List<FileWrapper>> fileArrayParams = new ConcurrentHashMap();
-  protected final ConcurrentHashMap<String, FileWrapper> fileParams = new ConcurrentHashMap();
-  protected boolean forceMultipartEntity = false;
-  protected boolean isRepeatable;
-  protected final ConcurrentHashMap<String, StreamWrapper> streamParams = new ConcurrentHashMap();
-  protected final ConcurrentHashMap<String, String> urlParams = new ConcurrentHashMap();
-  protected final ConcurrentHashMap<String, Object> urlParamsWithObjects = new ConcurrentHashMap();
-  protected boolean useJsonStreamer;
-  
-  public RequestParams()
-  {
-    this((Map)null);
-  }
-  
-  public RequestParams(String paramString1, final String paramString2)
-  {
-    this(new HashMap() {});
-  }
-  
-  public RequestParams(Map<String, String> paramMap)
-  {
-    if (paramMap != null)
-    {
-      paramMap = paramMap.entrySet().iterator();
-      while (paramMap.hasNext())
-      {
-        Map.Entry localEntry = (Map.Entry)paramMap.next();
-        put((String)localEntry.getKey(), (String)localEntry.getValue());
-      }
-    }
-  }
-  
-  public RequestParams(Object... paramVarArgs)
-  {
-    int j = paramVarArgs.length;
-    if (j % 2 != 0) {
-      throw new IllegalArgumentException("Supplied arguments must be even");
-    }
-    while (i < j)
-    {
-      put(String.valueOf(paramVarArgs[i]), String.valueOf(paramVarArgs[(i + 1)]));
-      i += 2;
-    }
-  }
-  
-  private HttpEntity createFormEntity()
-  {
-    try
-    {
-      UrlEncodedFormEntity localUrlEncodedFormEntity = new UrlEncodedFormEntity(getParamsList(), this.contentEncoding);
-      return localUrlEncodedFormEntity;
-    }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException)
-    {
-      AsyncHttpClient.log.e("RequestParams", "createFormEntity failed", localUnsupportedEncodingException);
-    }
-    return null;
-  }
-  
-  private HttpEntity createJsonStreamerEntity(ResponseHandlerInterface paramResponseHandlerInterface)
-    throws IOException
-  {
-    if ((!this.fileParams.isEmpty()) || (!this.streamParams.isEmpty())) {}
-    Map.Entry localEntry;
-    for (boolean bool = true;; bool = false)
-    {
-      paramResponseHandlerInterface = new JsonStreamerEntity(paramResponseHandlerInterface, bool, this.elapsedFieldInJsonStreamer);
-      localIterator = this.urlParams.entrySet().iterator();
-      while (localIterator.hasNext())
-      {
-        localEntry = (Map.Entry)localIterator.next();
-        paramResponseHandlerInterface.addPart((String)localEntry.getKey(), localEntry.getValue());
-      }
-    }
-    Iterator localIterator = this.urlParamsWithObjects.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localEntry = (Map.Entry)localIterator.next();
-      paramResponseHandlerInterface.addPart((String)localEntry.getKey(), localEntry.getValue());
-    }
-    localIterator = this.fileParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localEntry = (Map.Entry)localIterator.next();
-      paramResponseHandlerInterface.addPart((String)localEntry.getKey(), localEntry.getValue());
-    }
-    localIterator = this.streamParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localEntry = (Map.Entry)localIterator.next();
-      StreamWrapper localStreamWrapper = (StreamWrapper)localEntry.getValue();
-      if (localStreamWrapper.inputStream != null) {
-        paramResponseHandlerInterface.addPart((String)localEntry.getKey(), StreamWrapper.newInstance(localStreamWrapper.inputStream, localStreamWrapper.name, localStreamWrapper.contentType, localStreamWrapper.autoClose));
-      }
-    }
-    return paramResponseHandlerInterface;
-  }
-  
-  private HttpEntity createMultipartEntity(ResponseHandlerInterface paramResponseHandlerInterface)
-    throws IOException
-  {
-    paramResponseHandlerInterface = new SimpleMultipartEntity(paramResponseHandlerInterface);
-    paramResponseHandlerInterface.setIsRepeatable(this.isRepeatable);
-    Iterator localIterator = this.urlParams.entrySet().iterator();
-    Object localObject1;
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      paramResponseHandlerInterface.addPartWithCharset((String)((Map.Entry)localObject1).getKey(), (String)((Map.Entry)localObject1).getValue(), this.contentEncoding);
-    }
-    localIterator = getParamsList(null, this.urlParamsWithObjects).iterator();
-    while (localIterator.hasNext())
-    {
-      localObject1 = (BasicNameValuePair)localIterator.next();
-      paramResponseHandlerInterface.addPartWithCharset(((BasicNameValuePair)localObject1).getName(), ((BasicNameValuePair)localObject1).getValue(), this.contentEncoding);
-    }
-    localIterator = this.streamParams.entrySet().iterator();
-    Object localObject2;
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      localObject2 = (StreamWrapper)((Map.Entry)localObject1).getValue();
-      if (((StreamWrapper)localObject2).inputStream != null) {
-        paramResponseHandlerInterface.addPart((String)((Map.Entry)localObject1).getKey(), ((StreamWrapper)localObject2).name, ((StreamWrapper)localObject2).inputStream, ((StreamWrapper)localObject2).contentType);
-      }
-    }
-    localIterator = this.fileParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      localObject2 = (FileWrapper)((Map.Entry)localObject1).getValue();
-      paramResponseHandlerInterface.addPart((String)((Map.Entry)localObject1).getKey(), ((FileWrapper)localObject2).file, ((FileWrapper)localObject2).contentType, ((FileWrapper)localObject2).customFileName);
-    }
-    localIterator = this.fileArrayParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      localObject2 = ((List)((Map.Entry)localObject1).getValue()).iterator();
-      while (((Iterator)localObject2).hasNext())
-      {
-        FileWrapper localFileWrapper = (FileWrapper)((Iterator)localObject2).next();
-        paramResponseHandlerInterface.addPart((String)((Map.Entry)localObject1).getKey(), localFileWrapper.file, localFileWrapper.contentType, localFileWrapper.customFileName);
-      }
-    }
-    return paramResponseHandlerInterface;
-  }
-  
-  private List<BasicNameValuePair> getParamsList(String paramString, Object paramObject)
-  {
-    LinkedList localLinkedList = new LinkedList();
-    if ((paramObject instanceof Map))
-    {
-      Map localMap = (Map)paramObject;
-      paramObject = new ArrayList(localMap.keySet());
-      if ((((List)paramObject).size() > 0) && ((((List)paramObject).get(0) instanceof Comparable))) {
-        Collections.sort((List)paramObject);
-      }
-      Iterator localIterator = ((List)paramObject).iterator();
-      Object localObject;
-      do
-      {
-        do
-        {
-          if (!localIterator.hasNext()) {
-            break;
-          }
-          paramObject = localIterator.next();
-        } while (!(paramObject instanceof String));
-        localObject = localMap.get(paramObject);
-      } while (localObject == null);
-      if (paramString == null) {}
-      for (paramObject = (String)paramObject;; paramObject = String.format(Locale.US, "%s[%s]", new Object[] { paramString, paramObject }))
-      {
-        localLinkedList.addAll(getParamsList((String)paramObject, localObject));
-        break;
-      }
-    }
-    int j;
-    int i;
-    if ((paramObject instanceof List))
-    {
-      paramObject = (List)paramObject;
-      j = ((List)paramObject).size();
-      i = 0;
-      while (i < j)
-      {
-        localLinkedList.addAll(getParamsList(String.format(Locale.US, "%s[%d]", new Object[] { paramString, Integer.valueOf(i) }), ((List)paramObject).get(i)));
-        i += 1;
-      }
-    }
-    if ((paramObject instanceof Object[]))
-    {
-      paramObject = (Object[])paramObject;
-      j = paramObject.length;
-      i = 0;
-      while (i < j)
-      {
-        localLinkedList.addAll(getParamsList(String.format(Locale.US, "%s[%d]", new Object[] { paramString, Integer.valueOf(i) }), paramObject[i]));
-        i += 1;
-      }
-    }
-    if ((paramObject instanceof Set))
-    {
-      paramObject = ((Set)paramObject).iterator();
-      while (((Iterator)paramObject).hasNext()) {
-        localLinkedList.addAll(getParamsList(paramString, ((Iterator)paramObject).next()));
-      }
-    }
-    localLinkedList.add(new BasicNameValuePair(paramString, paramObject.toString()));
-    return localLinkedList;
-  }
-  
-  public void add(String paramString1, String paramString2)
-  {
-    Object localObject1;
-    if ((paramString1 != null) && (paramString2 != null))
-    {
-      Object localObject2 = this.urlParamsWithObjects.get(paramString1);
-      localObject1 = localObject2;
-      if (localObject2 == null)
-      {
-        localObject1 = new HashSet();
-        put(paramString1, localObject1);
-      }
-      if (!(localObject1 instanceof List)) {
-        break label59;
-      }
-      ((List)localObject1).add(paramString2);
-    }
-    label59:
-    while (!(localObject1 instanceof Set)) {
-      return;
-    }
-    ((Set)localObject1).add(paramString2);
-  }
-  
-  public HttpEntity getEntity(ResponseHandlerInterface paramResponseHandlerInterface)
-    throws IOException
-  {
-    if (this.useJsonStreamer) {
-      return createJsonStreamerEntity(paramResponseHandlerInterface);
-    }
-    if ((!this.forceMultipartEntity) && (this.streamParams.isEmpty()) && (this.fileParams.isEmpty()) && (this.fileArrayParams.isEmpty())) {
-      return createFormEntity();
-    }
-    return createMultipartEntity(paramResponseHandlerInterface);
-  }
-  
-  protected String getParamString()
-  {
-    return URLEncodedUtils.format(getParamsList(), this.contentEncoding);
-  }
-  
-  protected List<BasicNameValuePair> getParamsList()
-  {
-    LinkedList localLinkedList = new LinkedList();
-    Iterator localIterator = this.urlParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      localLinkedList.add(new BasicNameValuePair((String)localEntry.getKey(), (String)localEntry.getValue()));
-    }
-    localLinkedList.addAll(getParamsList(null, this.urlParamsWithObjects));
-    return localLinkedList;
-  }
-  
-  public boolean has(String paramString)
-  {
-    return (this.urlParams.get(paramString) != null) || (this.streamParams.get(paramString) != null) || (this.fileParams.get(paramString) != null) || (this.urlParamsWithObjects.get(paramString) != null) || (this.fileArrayParams.get(paramString) != null);
-  }
-  
-  public void put(String paramString, int paramInt)
-  {
-    if (paramString != null) {
-      this.urlParams.put(paramString, String.valueOf(paramInt));
-    }
-  }
-  
-  public void put(String paramString, long paramLong)
-  {
-    if (paramString != null) {
-      this.urlParams.put(paramString, String.valueOf(paramLong));
-    }
-  }
-  
-  public void put(String paramString, File paramFile)
-    throws FileNotFoundException
-  {
-    put(paramString, paramFile, null, null);
-  }
-  
-  public void put(String paramString1, File paramFile, String paramString2)
-    throws FileNotFoundException
-  {
-    put(paramString1, paramFile, paramString2, null);
-  }
-  
-  public void put(String paramString1, File paramFile, String paramString2, String paramString3)
-    throws FileNotFoundException
-  {
-    if ((paramFile == null) || (!paramFile.exists())) {
-      throw new FileNotFoundException();
-    }
-    if (paramString1 != null) {
-      this.fileParams.put(paramString1, new FileWrapper(paramFile, paramString2, paramString3));
-    }
-  }
-  
-  public void put(String paramString, InputStream paramInputStream)
-  {
-    put(paramString, paramInputStream, null);
-  }
-  
-  public void put(String paramString1, InputStream paramInputStream, String paramString2)
-  {
-    put(paramString1, paramInputStream, paramString2, null);
-  }
-  
-  public void put(String paramString1, InputStream paramInputStream, String paramString2, String paramString3)
-  {
-    put(paramString1, paramInputStream, paramString2, paramString3, this.autoCloseInputStreams);
-  }
-  
-  public void put(String paramString1, InputStream paramInputStream, String paramString2, String paramString3, boolean paramBoolean)
-  {
-    if ((paramString1 != null) && (paramInputStream != null)) {
-      this.streamParams.put(paramString1, StreamWrapper.newInstance(paramInputStream, paramString2, paramString3, paramBoolean));
-    }
-  }
-  
-  public void put(String paramString, Object paramObject)
-  {
-    if ((paramString != null) && (paramObject != null)) {
-      this.urlParamsWithObjects.put(paramString, paramObject);
-    }
-  }
-  
-  public void put(String paramString1, String paramString2)
-  {
-    if ((paramString1 != null) && (paramString2 != null)) {
-      this.urlParams.put(paramString1, paramString2);
-    }
-  }
-  
-  public void put(String paramString1, String paramString2, File paramFile)
-    throws FileNotFoundException
-  {
-    put(paramString1, paramFile, null, paramString2);
-  }
-  
-  public void put(String paramString, File[] paramArrayOfFile)
-    throws FileNotFoundException
-  {
-    put(paramString, paramArrayOfFile, null, null);
-  }
-  
-  public void put(String paramString1, File[] paramArrayOfFile, String paramString2, String paramString3)
-    throws FileNotFoundException
-  {
-    if (paramString1 != null)
-    {
-      ArrayList localArrayList = new ArrayList();
-      int j = paramArrayOfFile.length;
-      int i = 0;
-      while (i < j)
-      {
-        File localFile = paramArrayOfFile[i];
-        if ((localFile == null) || (!localFile.exists())) {
-          throw new FileNotFoundException();
+public class RequestParams implements Serializable {
+    public static final String APPLICATION_JSON = "application/json";
+    public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+    protected static final String LOG_TAG = "RequestParams";
+    protected boolean autoCloseInputStreams;
+    protected String contentEncoding;
+    protected String elapsedFieldInJsonStreamer;
+    protected final ConcurrentHashMap<String, List<FileWrapper>> fileArrayParams;
+    protected final ConcurrentHashMap<String, FileWrapper> fileParams;
+    protected boolean forceMultipartEntity;
+    protected boolean isRepeatable;
+    protected final ConcurrentHashMap<String, StreamWrapper> streamParams;
+    protected final ConcurrentHashMap<String, String> urlParams;
+    protected final ConcurrentHashMap<String, Object> urlParamsWithObjects;
+    protected boolean useJsonStreamer;
+
+    /* renamed from: com.baidu.tts.loopj.RequestParams$1 */
+    class C51391 extends HashMap<String, String> {
+        final /* synthetic */ String val$key;
+        final /* synthetic */ String val$value;
+
+        C51391(String str, String str2) {
+            this.val$key = str;
+            this.val$value = str2;
+            put(this.val$key, this.val$value);
         }
-        localArrayList.add(new FileWrapper(localFile, paramString2, paramString3));
-        i += 1;
-      }
-      this.fileArrayParams.put(paramString1, localArrayList);
     }
-  }
-  
-  public void remove(String paramString)
-  {
-    this.urlParams.remove(paramString);
-    this.streamParams.remove(paramString);
-    this.fileParams.remove(paramString);
-    this.urlParamsWithObjects.remove(paramString);
-    this.fileArrayParams.remove(paramString);
-  }
-  
-  public void setAutoCloseInputStreams(boolean paramBoolean)
-  {
-    this.autoCloseInputStreams = paramBoolean;
-  }
-  
-  public void setContentEncoding(String paramString)
-  {
-    if (paramString != null)
-    {
-      this.contentEncoding = paramString;
-      return;
+
+    public static class FileWrapper implements Serializable {
+        public final String contentType;
+        public final String customFileName;
+        public final File file;
+
+        public FileWrapper(File file, String contentType, String customFileName) {
+            this.file = file;
+            this.contentType = contentType;
+            this.customFileName = customFileName;
+        }
     }
-    AsyncHttpClient.log.d("RequestParams", "setContentEncoding called with null attribute");
-  }
-  
-  public void setElapsedFieldInJsonStreamer(String paramString)
-  {
-    this.elapsedFieldInJsonStreamer = paramString;
-  }
-  
-  public void setForceMultipartEntityContentType(boolean paramBoolean)
-  {
-    this.forceMultipartEntity = paramBoolean;
-  }
-  
-  public void setHttpEntityIsRepeatable(boolean paramBoolean)
-  {
-    this.isRepeatable = paramBoolean;
-  }
-  
-  public void setUseJsonStreamer(boolean paramBoolean)
-  {
-    this.useJsonStreamer = paramBoolean;
-  }
-  
-  public String toString()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    Iterator localIterator = this.urlParams.entrySet().iterator();
-    Object localObject;
-    while (localIterator.hasNext())
-    {
-      localObject = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject).getKey());
-      localStringBuilder.append("=");
-      localStringBuilder.append((String)((Map.Entry)localObject).getValue());
+
+    public static class StreamWrapper {
+        public final boolean autoClose;
+        public final String contentType;
+        public final InputStream inputStream;
+        public final String name;
+
+        public StreamWrapper(InputStream inputStream, String name, String contentType, boolean autoClose) {
+            this.inputStream = inputStream;
+            this.name = name;
+            this.contentType = contentType;
+            this.autoClose = autoClose;
+        }
+
+        static StreamWrapper newInstance(InputStream inputStream, String name, String contentType, boolean autoClose) {
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+            return new StreamWrapper(inputStream, name, contentType, autoClose);
+        }
     }
-    localIterator = this.streamParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject).getKey());
-      localStringBuilder.append("=");
-      localStringBuilder.append("STREAM");
+
+    public void setContentEncoding(String encoding) {
+        if (encoding != null) {
+            this.contentEncoding = encoding;
+        } else {
+            AsyncHttpClient.log.mo3894d(LOG_TAG, "setContentEncoding called with null attribute");
+        }
     }
-    localIterator = this.fileParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject).getKey());
-      localStringBuilder.append("=");
-      localStringBuilder.append("FILE");
+
+    public void setForceMultipartEntityContentType(boolean force) {
+        this.forceMultipartEntity = force;
     }
-    localIterator = this.fileArrayParams.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      localObject = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject).getKey());
-      localStringBuilder.append("=");
-      localStringBuilder.append("FILES(SIZE=").append(((List)((Map.Entry)localObject).getValue()).size()).append(")");
+
+    public RequestParams() {
+        this((Map) null);
     }
-    localIterator = getParamsList(null, this.urlParamsWithObjects).iterator();
-    while (localIterator.hasNext())
-    {
-      localObject = (BasicNameValuePair)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append(((BasicNameValuePair)localObject).getName());
-      localStringBuilder.append("=");
-      localStringBuilder.append(((BasicNameValuePair)localObject).getValue());
+
+    public RequestParams(Map<String, String> source) {
+        this.forceMultipartEntity = false;
+        this.elapsedFieldInJsonStreamer = "_elapsed";
+        this.urlParams = new ConcurrentHashMap();
+        this.streamParams = new ConcurrentHashMap();
+        this.fileParams = new ConcurrentHashMap();
+        this.fileArrayParams = new ConcurrentHashMap();
+        this.urlParamsWithObjects = new ConcurrentHashMap();
+        this.contentEncoding = "UTF-8";
+        if (source != null) {
+            for (Entry entry : source.entrySet()) {
+                put((String) entry.getKey(), (String) entry.getValue());
+            }
+        }
     }
-    return localStringBuilder.toString();
-  }
-  
-  public static class FileWrapper
-    implements Serializable
-  {
-    public final String contentType;
-    public final String customFileName;
-    public final File file;
-    
-    public FileWrapper(File paramFile, String paramString1, String paramString2)
-    {
-      this.file = paramFile;
-      this.contentType = paramString1;
-      this.customFileName = paramString2;
+
+    public RequestParams(String key, String value) {
+        this(new C51391(key, value));
     }
-  }
-  
-  public static class StreamWrapper
-  {
-    public final boolean autoClose;
-    public final String contentType;
-    public final InputStream inputStream;
-    public final String name;
-    
-    public StreamWrapper(InputStream paramInputStream, String paramString1, String paramString2, boolean paramBoolean)
-    {
-      this.inputStream = paramInputStream;
-      this.name = paramString1;
-      this.contentType = paramString2;
-      this.autoClose = paramBoolean;
+
+    public RequestParams(Object... keysAndValues) {
+        int i = 0;
+        this.forceMultipartEntity = false;
+        this.elapsedFieldInJsonStreamer = "_elapsed";
+        this.urlParams = new ConcurrentHashMap();
+        this.streamParams = new ConcurrentHashMap();
+        this.fileParams = new ConcurrentHashMap();
+        this.fileArrayParams = new ConcurrentHashMap();
+        this.urlParamsWithObjects = new ConcurrentHashMap();
+        this.contentEncoding = "UTF-8";
+        int length = keysAndValues.length;
+        if (length % 2 != 0) {
+            throw new IllegalArgumentException("Supplied arguments must be even");
+        }
+        while (i < length) {
+            put(String.valueOf(keysAndValues[i]), String.valueOf(keysAndValues[i + 1]));
+            i += 2;
+        }
     }
-    
-    static StreamWrapper newInstance(InputStream paramInputStream, String paramString1, String paramString2, boolean paramBoolean)
-    {
-      String str = paramString2;
-      if (paramString2 == null) {
-        str = "application/octet-stream";
-      }
-      return new StreamWrapper(paramInputStream, paramString1, str, paramBoolean);
+
+    public void put(String key, String value) {
+        if (key != null && value != null) {
+            this.urlParams.put(key, value);
+        }
     }
-  }
+
+    public void put(String key, File[] files) throws FileNotFoundException {
+        put(key, files, null, null);
+    }
+
+    public void put(String key, File[] files, String contentType, String customFileName) throws FileNotFoundException {
+        if (key != null) {
+            List arrayList = new ArrayList();
+            for (File file : files) {
+                if (file == null || !file.exists()) {
+                    throw new FileNotFoundException();
+                }
+                arrayList.add(new FileWrapper(file, contentType, customFileName));
+            }
+            this.fileArrayParams.put(key, arrayList);
+        }
+    }
+
+    public void put(String key, File file) throws FileNotFoundException {
+        put(key, file, null, null);
+    }
+
+    public void put(String key, String customFileName, File file) throws FileNotFoundException {
+        put(key, file, null, customFileName);
+    }
+
+    public void put(String key, File file, String contentType) throws FileNotFoundException {
+        put(key, file, contentType, null);
+    }
+
+    public void put(String key, File file, String contentType, String customFileName) throws FileNotFoundException {
+        if (file == null || !file.exists()) {
+            throw new FileNotFoundException();
+        } else if (key != null) {
+            this.fileParams.put(key, new FileWrapper(file, contentType, customFileName));
+        }
+    }
+
+    public void put(String key, InputStream stream) {
+        put(key, stream, null);
+    }
+
+    public void put(String key, InputStream stream, String name) {
+        put(key, stream, name, null);
+    }
+
+    public void put(String key, InputStream stream, String name, String contentType) {
+        put(key, stream, name, contentType, this.autoCloseInputStreams);
+    }
+
+    public void put(String key, InputStream stream, String name, String contentType, boolean autoClose) {
+        if (key != null && stream != null) {
+            this.streamParams.put(key, StreamWrapper.newInstance(stream, name, contentType, autoClose));
+        }
+    }
+
+    public void put(String key, Object value) {
+        if (key != null && value != null) {
+            this.urlParamsWithObjects.put(key, value);
+        }
+    }
+
+    public void put(String key, int value) {
+        if (key != null) {
+            this.urlParams.put(key, String.valueOf(value));
+        }
+    }
+
+    public void put(String key, long value) {
+        if (key != null) {
+            this.urlParams.put(key, String.valueOf(value));
+        }
+    }
+
+    public void add(String key, String value) {
+        if (key != null && value != null) {
+            Object obj = this.urlParamsWithObjects.get(key);
+            if (obj == null) {
+                obj = new HashSet();
+                put(key, obj);
+            }
+            if (obj instanceof List) {
+                ((List) obj).add(value);
+            } else if (obj instanceof Set) {
+                ((Set) obj).add(value);
+            }
+        }
+    }
+
+    public void remove(String key) {
+        this.urlParams.remove(key);
+        this.streamParams.remove(key);
+        this.fileParams.remove(key);
+        this.urlParamsWithObjects.remove(key);
+        this.fileArrayParams.remove(key);
+    }
+
+    public boolean has(String key) {
+        return (this.urlParams.get(key) == null && this.streamParams.get(key) == null && this.fileParams.get(key) == null && this.urlParamsWithObjects.get(key) == null && this.fileArrayParams.get(key) == null) ? false : true;
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Entry entry : this.urlParams.entrySet()) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append("&");
+            }
+            stringBuilder.append((String) entry.getKey());
+            stringBuilder.append("=");
+            stringBuilder.append((String) entry.getValue());
+        }
+        for (Entry entry2 : this.streamParams.entrySet()) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append("&");
+            }
+            stringBuilder.append((String) entry2.getKey());
+            stringBuilder.append("=");
+            stringBuilder.append("STREAM");
+        }
+        for (Entry entry22 : this.fileParams.entrySet()) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append("&");
+            }
+            stringBuilder.append((String) entry22.getKey());
+            stringBuilder.append("=");
+            stringBuilder.append("FILE");
+        }
+        for (Entry entry222 : this.fileArrayParams.entrySet()) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append("&");
+            }
+            stringBuilder.append((String) entry222.getKey());
+            stringBuilder.append("=");
+            stringBuilder.append("FILES(SIZE=").append(((List) entry222.getValue()).size()).append(")");
+        }
+        for (BasicNameValuePair basicNameValuePair : getParamsList(null, this.urlParamsWithObjects)) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append("&");
+            }
+            stringBuilder.append(basicNameValuePair.getName());
+            stringBuilder.append("=");
+            stringBuilder.append(basicNameValuePair.getValue());
+        }
+        return stringBuilder.toString();
+    }
+
+    public void setHttpEntityIsRepeatable(boolean flag) {
+        this.isRepeatable = flag;
+    }
+
+    public void setUseJsonStreamer(boolean flag) {
+        this.useJsonStreamer = flag;
+    }
+
+    public void setElapsedFieldInJsonStreamer(String value) {
+        this.elapsedFieldInJsonStreamer = value;
+    }
+
+    public void setAutoCloseInputStreams(boolean flag) {
+        this.autoCloseInputStreams = flag;
+    }
+
+    public HttpEntity getEntity(ResponseHandlerInterface progressHandler) throws IOException {
+        if (this.useJsonStreamer) {
+            return createJsonStreamerEntity(progressHandler);
+        }
+        if (!this.forceMultipartEntity && this.streamParams.isEmpty() && this.fileParams.isEmpty() && this.fileArrayParams.isEmpty()) {
+            return createFormEntity();
+        }
+        return createMultipartEntity(progressHandler);
+    }
+
+    private HttpEntity createJsonStreamerEntity(ResponseHandlerInterface progressHandler) throws IOException {
+        boolean z = (this.fileParams.isEmpty() && this.streamParams.isEmpty()) ? false : true;
+        HttpEntity jsonStreamerEntity = new JsonStreamerEntity(progressHandler, z, this.elapsedFieldInJsonStreamer);
+        for (Entry entry : this.urlParams.entrySet()) {
+            jsonStreamerEntity.addPart((String) entry.getKey(), entry.getValue());
+        }
+        for (Entry entry2 : this.urlParamsWithObjects.entrySet()) {
+            jsonStreamerEntity.addPart((String) entry2.getKey(), entry2.getValue());
+        }
+        for (Entry entry22 : this.fileParams.entrySet()) {
+            jsonStreamerEntity.addPart((String) entry22.getKey(), entry22.getValue());
+        }
+        for (Entry entry222 : this.streamParams.entrySet()) {
+            StreamWrapper streamWrapper = (StreamWrapper) entry222.getValue();
+            if (streamWrapper.inputStream != null) {
+                jsonStreamerEntity.addPart((String) entry222.getKey(), StreamWrapper.newInstance(streamWrapper.inputStream, streamWrapper.name, streamWrapper.contentType, streamWrapper.autoClose));
+            }
+        }
+        return jsonStreamerEntity;
+    }
+
+    private HttpEntity createFormEntity() {
+        try {
+            return new UrlEncodedFormEntity(getParamsList(), this.contentEncoding);
+        } catch (Throwable e) {
+            AsyncHttpClient.log.mo3897e(LOG_TAG, "createFormEntity failed", e);
+            return null;
+        }
+    }
+
+    private HttpEntity createMultipartEntity(ResponseHandlerInterface progressHandler) throws IOException {
+        HttpEntity simpleMultipartEntity = new SimpleMultipartEntity(progressHandler);
+        simpleMultipartEntity.setIsRepeatable(this.isRepeatable);
+        for (Entry entry : this.urlParams.entrySet()) {
+            simpleMultipartEntity.addPartWithCharset((String) entry.getKey(), (String) entry.getValue(), this.contentEncoding);
+        }
+        for (BasicNameValuePair basicNameValuePair : getParamsList(null, this.urlParamsWithObjects)) {
+            simpleMultipartEntity.addPartWithCharset(basicNameValuePair.getName(), basicNameValuePair.getValue(), this.contentEncoding);
+        }
+        for (Entry entry2 : this.streamParams.entrySet()) {
+            StreamWrapper streamWrapper = (StreamWrapper) entry2.getValue();
+            if (streamWrapper.inputStream != null) {
+                simpleMultipartEntity.addPart((String) entry2.getKey(), streamWrapper.name, streamWrapper.inputStream, streamWrapper.contentType);
+            }
+        }
+        for (Entry entry22 : this.fileParams.entrySet()) {
+            FileWrapper fileWrapper = (FileWrapper) entry22.getValue();
+            simpleMultipartEntity.addPart((String) entry22.getKey(), fileWrapper.file, fileWrapper.contentType, fileWrapper.customFileName);
+        }
+        for (Entry entry222 : this.fileArrayParams.entrySet()) {
+            for (FileWrapper fileWrapper2 : (List) entry222.getValue()) {
+                simpleMultipartEntity.addPart((String) entry222.getKey(), fileWrapper2.file, fileWrapper2.contentType, fileWrapper2.customFileName);
+            }
+        }
+        return simpleMultipartEntity;
+    }
+
+    protected List<BasicNameValuePair> getParamsList() {
+        List<BasicNameValuePair> linkedList = new LinkedList();
+        for (Entry entry : this.urlParams.entrySet()) {
+            linkedList.add(new BasicNameValuePair((String) entry.getKey(), (String) entry.getValue()));
+        }
+        linkedList.addAll(getParamsList(null, this.urlParamsWithObjects));
+        return linkedList;
+    }
+
+    private List<BasicNameValuePair> getParamsList(String key, Object value) {
+        List<BasicNameValuePair> linkedList = new LinkedList();
+        if (value instanceof Map) {
+            Map map = (Map) value;
+            List arrayList = new ArrayList(map.keySet());
+            if (arrayList.size() > 0 && (arrayList.get(0) instanceof Comparable)) {
+                Collections.sort(arrayList);
+            }
+            for (Object next : arrayList) {
+                if (next instanceof String) {
+                    Object obj = map.get(next);
+                    if (obj != null) {
+                        String str;
+                        if (key == null) {
+                            str = (String) next;
+                        } else {
+                            str = String.format(Locale.US, "%s[%s]", new Object[]{key, next});
+                        }
+                        linkedList.addAll(getParamsList(str, obj));
+                    }
+                }
+            }
+        } else if (value instanceof List) {
+            List list = (List) value;
+            r3 = list.size();
+            for (r0 = 0; r0 < r3; r0++) {
+                linkedList.addAll(getParamsList(String.format(Locale.US, "%s[%d]", new Object[]{key, Integer.valueOf(r0)}), list.get(r0)));
+            }
+        } else if (value instanceof Object[]) {
+            for (Object paramsList : (Object[]) value) {
+                linkedList.addAll(getParamsList(String.format(Locale.US, "%s[%d]", new Object[]{key, Integer.valueOf(r0)}), paramsList));
+            }
+        } else if (value instanceof Set) {
+            for (Object paramsList2 : (Set) value) {
+                linkedList.addAll(getParamsList(key, paramsList2));
+            }
+        } else {
+            linkedList.add(new BasicNameValuePair(key, value.toString()));
+        }
+        return linkedList;
+    }
+
+    protected String getParamString() {
+        return URLEncodedUtils.format(getParamsList(), this.contentEncoding);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/loopj/RequestParams.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

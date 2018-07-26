@@ -6,96 +6,76 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AInterceptorHandler
-  implements IInterceptorHandler
-{
-  public static final Object DEFAULT = Integer.valueOf(0);
-  public static final Object END = Integer.valueOf(1);
-  protected List<IInterceptor> a;
-  protected Object b;
-  protected List<String> c = new ArrayList();
-  
-  protected Object a(Object paramObject, Method paramMethod, Object[] paramArrayOfObject)
-  {
-    Object localObject = DEFAULT;
-    int j = this.a.size();
-    int i = 0;
-    for (;;)
-    {
-      if (i < j)
-      {
-        localObject = ((IInterceptor)this.a.get(i)).before(paramObject, paramMethod, paramArrayOfObject);
-        if (!localObject.equals(END)) {}
-      }
-      else
-      {
-        return localObject;
-      }
-      i += 1;
+public abstract class AInterceptorHandler implements IInterceptorHandler {
+    public static final Object DEFAULT = Integer.valueOf(0);
+    public static final Object END = Integer.valueOf(1);
+    /* renamed from: a */
+    protected List<IInterceptor> f20648a;
+    /* renamed from: b */
+    protected Object f20649b;
+    /* renamed from: c */
+    protected List<String> f20650c = new ArrayList();
+
+    public Object bind(Object proxied, List<IInterceptor> interceptors) {
+        this.f20649b = proxied;
+        this.f20648a = interceptors;
+        Class cls = this.f20649b.getClass();
+        Object newProxyInstance = Proxy.newProxyInstance(cls.getClassLoader(), cls.getInterfaces(), this);
+        LoggerProxy.m17001d("AInterceptorHandler", "proxy=" + newProxyInstance);
+        return newProxyInstance;
     }
-  }
-  
-  protected Object a(Object paramObject1, Method paramMethod, Object[] paramArrayOfObject, Object paramObject2)
-  {
-    Object localObject = DEFAULT;
-    int i = this.a.size();
-    i -= 1;
-    while (i >= 0)
-    {
-      localObject = ((IInterceptor)this.a.get(i)).after(paramObject1, paramMethod, paramArrayOfObject, paramObject2);
-      i -= 1;
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if (!canIntercept(method.getName())) {
+            return method.invoke(this.f20649b, args);
+        }
+        if (m16546a(this.f20649b, method, args).equals(END)) {
+            return null;
+        }
+        Object invoke = method.invoke(this.f20649b, args);
+        LoggerProxy.m17001d("AInterceptorHandler", "afterResult=" + m16547a(this.f20649b, method, args, invoke));
+        return invoke;
     }
-    return localObject;
-  }
-  
-  public Object bind(Object paramObject, List<IInterceptor> paramList)
-  {
-    this.b = paramObject;
-    this.a = paramList;
-    paramObject = this.b.getClass();
-    paramObject = Proxy.newProxyInstance(((Class)paramObject).getClassLoader(), ((Class)paramObject).getInterfaces(), this);
-    LoggerProxy.d("AInterceptorHandler", "proxy=" + paramObject);
-    return paramObject;
-  }
-  
-  public boolean canIntercept(String paramString)
-  {
-    return this.c.contains(paramString);
-  }
-  
-  public Object invoke(Object paramObject, Method paramMethod, Object[] paramArrayOfObject)
-    throws Throwable
-  {
-    if (canIntercept(paramMethod.getName()))
-    {
-      if (a(this.b, paramMethod, paramArrayOfObject).equals(END)) {
-        return null;
-      }
-      paramObject = paramMethod.invoke(this.b, paramArrayOfObject);
-      paramMethod = a(this.b, paramMethod, paramArrayOfObject, paramObject);
-      LoggerProxy.d("AInterceptorHandler", "afterResult=" + paramMethod);
-      return paramObject;
+
+    public void registerMethod(String methodName) {
+        if (methodName != null) {
+            this.f20650c.add(methodName);
+        }
     }
-    return paramMethod.invoke(this.b, paramArrayOfObject);
-  }
-  
-  public void registerMethod(String paramString)
-  {
-    if (paramString != null) {
-      this.c.add(paramString);
+
+    public void unregisterMethod(String methodName) {
+        if (methodName != null) {
+            this.f20650c.remove(methodName);
+        }
     }
-  }
-  
-  public void unregisterMethod(String paramString)
-  {
-    if (paramString != null) {
-      this.c.remove(paramString);
+
+    public boolean canIntercept(String methodName) {
+        return this.f20650c.contains(methodName);
     }
-  }
+
+    /* renamed from: a */
+    protected Object m16546a(Object obj, Method method, Object[] objArr) {
+        Object obj2 = DEFAULT;
+        int size = this.f20648a.size();
+        Object obj3 = obj2;
+        for (int i = 0; i < size; i++) {
+            obj3 = ((IInterceptor) this.f20648a.get(i)).before(obj, method, objArr);
+            if (obj3.equals(END)) {
+                break;
+            }
+        }
+        return obj3;
+    }
+
+    /* renamed from: a */
+    protected Object m16547a(Object obj, Method method, Object[] objArr, Object obj2) {
+        Object obj3 = DEFAULT;
+        int size = this.f20648a.size() - 1;
+        while (size >= 0) {
+            Object after = ((IInterceptor) this.f20648a.get(size)).after(obj, method, objArr, obj2);
+            size--;
+            obj3 = after;
+        }
+        return obj3;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/aop/AInterceptorHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

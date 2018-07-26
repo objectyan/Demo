@@ -3,142 +3,109 @@ package com.indooratlas.android.sdk._internal;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-final class gv<T>
-{
-  private final Class<?> a;
-  private final String b;
-  private final Class[] c;
-  
-  public gv(Class<?> paramClass, String paramString, Class... paramVarArgs)
-  {
-    this.a = paramClass;
-    this.b = paramString;
-    this.c = paramVarArgs;
-  }
-  
-  private Method a(Class<?> paramClass)
-  {
-    if (this.b != null)
-    {
-      paramClass = a(paramClass, this.b, this.c);
-      if ((paramClass == null) || (this.a == null) || (this.a.isAssignableFrom(paramClass.getReturnType()))) {}
+final class gv<T> {
+    /* renamed from: a */
+    private final Class<?> f24019a;
+    /* renamed from: b */
+    private final String f24020b;
+    /* renamed from: c */
+    private final Class[] f24021c;
+
+    public gv(Class<?> cls, String str, Class... clsArr) {
+        this.f24019a = cls;
+        this.f24020b = str;
+        this.f24021c = clsArr;
     }
-    else
-    {
-      return null;
+
+    /* renamed from: a */
+    public final boolean m20759a(T t) {
+        return m20754a(t.getClass()) != null;
     }
-    return paramClass;
-  }
-  
-  private static Method a(Class<?> paramClass, String paramString, Class[] paramArrayOfClass)
-  {
-    try
-    {
-      paramClass = paramClass.getMethod(paramString, paramArrayOfClass);
-      int i;
-      return paramClass;
+
+    /* renamed from: c */
+    private Object m20756c(T t, Object... objArr) throws InvocationTargetException {
+        Object obj = null;
+        Method a = m20754a(t.getClass());
+        if (a != null) {
+            try {
+                obj = a.invoke(t, objArr);
+            } catch (IllegalAccessException e) {
+            }
+        }
+        return obj;
     }
-    catch (NoSuchMethodException paramClass)
-    {
-      try
-      {
-        i = paramClass.getModifiers();
-        if ((i & 0x1) != 0) {
-          return paramClass;
+
+    /* renamed from: a */
+    public final Object m20758a(T t, Object... objArr) {
+        try {
+            return m20756c(t, objArr);
+        } catch (InvocationTargetException e) {
+            Throwable targetException = e.getTargetException();
+            if (targetException instanceof RuntimeException) {
+                throw ((RuntimeException) targetException);
+            }
+            AssertionError assertionError = new AssertionError("Unexpected exception");
+            assertionError.initCause(targetException);
+            throw assertionError;
+        }
+    }
+
+    /* renamed from: d */
+    private Object m20757d(T t, Object... objArr) throws InvocationTargetException {
+        Object a = m20754a(t.getClass());
+        if (a == null) {
+            throw new AssertionError("Method " + this.f24020b + " not supported for object " + t);
+        }
+        try {
+            return a.invoke(t, objArr);
+        } catch (Throwable e) {
+            AssertionError assertionError = new AssertionError("Unexpectedly could not call: " + a);
+            assertionError.initCause(e);
+            throw assertionError;
+        }
+    }
+
+    /* renamed from: b */
+    public final Object m20760b(T t, Object... objArr) {
+        try {
+            return m20757d(t, objArr);
+        } catch (InvocationTargetException e) {
+            Throwable targetException = e.getTargetException();
+            if (targetException instanceof RuntimeException) {
+                throw ((RuntimeException) targetException);
+            }
+            AssertionError assertionError = new AssertionError("Unexpected exception");
+            assertionError.initCause(targetException);
+            throw assertionError;
+        }
+    }
+
+    /* renamed from: a */
+    private Method m20754a(Class<?> cls) {
+        if (this.f24020b == null) {
+            return null;
+        }
+        Method a = m20755a(cls, this.f24020b, this.f24021c);
+        if (a == null || this.f24019a == null || this.f24019a.isAssignableFrom(a.getReturnType())) {
+            return a;
         }
         return null;
-      }
-      catch (NoSuchMethodException paramString)
-      {
-        return paramClass;
-      }
-      paramClass = paramClass;
-      return null;
     }
-  }
-  
-  private Object c(T paramT, Object... paramVarArgs)
-    throws InvocationTargetException
-  {
-    Method localMethod = a(paramT.getClass());
-    if (localMethod == null) {
-      return null;
+
+    /* renamed from: a */
+    private static Method m20755a(Class<?> cls, String str, Class[] clsArr) {
+        try {
+            Method method = cls.getMethod(str, clsArr);
+            try {
+                if ((method.getModifiers() & 1) == 0) {
+                    return null;
+                }
+                return method;
+            } catch (NoSuchMethodException e) {
+                return method;
+            }
+        } catch (NoSuchMethodException e2) {
+            return null;
+        }
     }
-    try
-    {
-      paramT = localMethod.invoke(paramT, paramVarArgs);
-      return paramT;
-    }
-    catch (IllegalAccessException paramT) {}
-    return null;
-  }
-  
-  private Object d(T paramT, Object... paramVarArgs)
-    throws InvocationTargetException
-  {
-    Method localMethod = a(paramT.getClass());
-    if (localMethod == null) {
-      throw new AssertionError("Method " + this.b + " not supported for object " + paramT);
-    }
-    try
-    {
-      paramT = localMethod.invoke(paramT, paramVarArgs);
-      return paramT;
-    }
-    catch (IllegalAccessException paramT)
-    {
-      paramVarArgs = new AssertionError("Unexpectedly could not call: " + localMethod);
-      paramVarArgs.initCause(paramT);
-      throw paramVarArgs;
-    }
-  }
-  
-  public final Object a(T paramT, Object... paramVarArgs)
-  {
-    try
-    {
-      paramT = c(paramT, paramVarArgs);
-      return paramT;
-    }
-    catch (InvocationTargetException paramT)
-    {
-      paramT = paramT.getTargetException();
-      if ((paramT instanceof RuntimeException)) {
-        throw ((RuntimeException)paramT);
-      }
-      paramVarArgs = new AssertionError("Unexpected exception");
-      paramVarArgs.initCause(paramT);
-      throw paramVarArgs;
-    }
-  }
-  
-  public final boolean a(T paramT)
-  {
-    return a(paramT.getClass()) != null;
-  }
-  
-  public final Object b(T paramT, Object... paramVarArgs)
-  {
-    try
-    {
-      paramT = d(paramT, paramVarArgs);
-      return paramT;
-    }
-    catch (InvocationTargetException paramT)
-    {
-      paramT = paramT.getTargetException();
-      if ((paramT instanceof RuntimeException)) {
-        throw ((RuntimeException)paramT);
-      }
-      paramVarArgs = new AssertionError("Unexpected exception");
-      paramVarArgs.initCause(paramT);
-      throw paramVarArgs;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gv.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -6,121 +6,93 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import java.util.Map;
 
-public class PreferenceHelper
-  implements PreferenceHelperConst
-{
-  private static PreferenceHelper mInstance;
-  private SharedPreferences.Editor mEditor;
-  private SharedPreferences mPreferences;
-  
-  private PreferenceHelper(Context paramContext)
-  {
-    this.mPreferences = paramContext.getSharedPreferences("navi", 0);
-    this.mEditor = this.mPreferences.edit();
-  }
-  
-  public static PreferenceHelper getInstance(Context paramContext)
-  {
-    try
-    {
-      if (mInstance == null) {
-        mInstance = new PreferenceHelper(paramContext);
-      }
-      paramContext = mInstance;
-      return paramContext;
+public class PreferenceHelper implements PreferenceHelperConst {
+    private static PreferenceHelper mInstance;
+    private Editor mEditor = this.mPreferences.edit();
+    private SharedPreferences mPreferences;
+
+    public static synchronized PreferenceHelper getInstance(Context context) {
+        PreferenceHelper preferenceHelper;
+        synchronized (PreferenceHelper.class) {
+            if (mInstance == null) {
+                mInstance = new PreferenceHelper(context);
+            }
+            preferenceHelper = mInstance;
+        }
+        return preferenceHelper;
     }
-    finally {}
-  }
-  
-  public boolean contains(String paramString)
-  {
-    return this.mPreferences.contains(paramString);
-  }
-  
-  public Map<String, ?> getAll()
-  {
-    return this.mPreferences.getAll();
-  }
-  
-  public boolean getBoolean(String paramString, boolean paramBoolean)
-  {
-    return this.mPreferences.getBoolean(paramString, paramBoolean);
-  }
-  
-  public float getFloat(String paramString, float paramFloat)
-  {
-    return this.mPreferences.getFloat(paramString, paramFloat);
-  }
-  
-  public int getInt(String paramString, int paramInt)
-  {
-    return this.mPreferences.getInt(paramString, paramInt);
-  }
-  
-  public long getLong(String paramString, long paramLong)
-  {
-    return this.mPreferences.getLong(paramString, paramLong);
-  }
-  
-  public SharedPreferences getPreferences()
-  {
-    return this.mPreferences;
-  }
-  
-  public String getString(String paramString1, String paramString2)
-  {
-    return this.mPreferences.getString(paramString1, paramString2);
-  }
-  
-  public boolean putBoolean(String paramString, boolean paramBoolean)
-  {
-    this.mEditor.putBoolean(paramString, paramBoolean);
-    return this.mEditor.commit();
-  }
-  
-  public boolean putFloat(String paramString, float paramFloat)
-  {
-    this.mEditor.putFloat(paramString, paramFloat);
-    return this.mEditor.commit();
-  }
-  
-  public boolean putInt(String paramString, int paramInt)
-  {
-    this.mEditor.putInt(paramString, paramInt);
-    return this.mEditor.commit();
-  }
-  
-  public boolean putLong(String paramString, long paramLong)
-  {
-    this.mEditor.putLong(paramString, paramLong);
-    return this.mEditor.commit();
-  }
-  
-  public boolean putString(String paramString1, String paramString2)
-  {
-    this.mEditor.putString(paramString1, paramString2);
-    return this.mEditor.commit();
-  }
-  
-  public void registerOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener paramOnSharedPreferenceChangeListener)
-  {
-    this.mPreferences.registerOnSharedPreferenceChangeListener(paramOnSharedPreferenceChangeListener);
-  }
-  
-  public boolean remove(String paramString)
-  {
-    this.mEditor.remove(paramString);
-    return this.mEditor.commit();
-  }
-  
-  public void unregisterOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener paramOnSharedPreferenceChangeListener)
-  {
-    this.mPreferences.unregisterOnSharedPreferenceChangeListener(paramOnSharedPreferenceChangeListener);
-  }
+
+    public SharedPreferences getPreferences() {
+        return this.mPreferences;
+    }
+
+    private PreferenceHelper(Context context) {
+        this.mPreferences = context.getSharedPreferences("navi", 0);
+    }
+
+    public Map<String, ?> getAll() {
+        return this.mPreferences.getAll();
+    }
+
+    public boolean contains(String key) {
+        return this.mPreferences.contains(key);
+    }
+
+    public boolean getBoolean(String key, boolean defValue) {
+        return this.mPreferences.getBoolean(key, defValue);
+    }
+
+    public float getFloat(String key, float defValue) {
+        return this.mPreferences.getFloat(key, defValue);
+    }
+
+    public int getInt(String key, int defValue) {
+        return this.mPreferences.getInt(key, defValue);
+    }
+
+    public long getLong(String key, long defValue) {
+        return this.mPreferences.getLong(key, defValue);
+    }
+
+    public String getString(String key, String defValue) {
+        return this.mPreferences.getString(key, defValue);
+    }
+
+    public void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
+        this.mPreferences.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
+        this.mPreferences.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    public boolean putBoolean(String key, boolean b) {
+        this.mEditor.putBoolean(key, b);
+        return this.mEditor.commit();
+    }
+
+    public boolean putInt(String key, int i) {
+        this.mEditor.putInt(key, i);
+        return this.mEditor.commit();
+    }
+
+    public boolean putFloat(String key, float f) {
+        this.mEditor.putFloat(key, f);
+        return this.mEditor.commit();
+    }
+
+    public boolean putLong(String key, long l) {
+        this.mEditor.putLong(key, l);
+        return this.mEditor.commit();
+    }
+
+    public boolean putString(String key, String s) {
+        this.mEditor.putString(key, s);
+        return this.mEditor.commit();
+    }
+
+    public boolean remove(String key) {
+        this.mEditor.remove(key);
+        return this.mEditor.commit();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/util/common/PreferenceHelper.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

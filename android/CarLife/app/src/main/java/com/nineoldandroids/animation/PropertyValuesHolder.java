@@ -1,698 +1,514 @@
 package com.nineoldandroids.animation;
 
 import android.util.Log;
+import com.baidu.che.codriver.vr.C2848p;
 import com.nineoldandroids.util.FloatProperty;
 import com.nineoldandroids.util.IntProperty;
 import com.nineoldandroids.util.Property;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
-public class PropertyValuesHolder
-  implements Cloneable
-{
-  private static Class[] DOUBLE_VARIANTS;
-  private static Class[] FLOAT_VARIANTS;
-  private static Class[] INTEGER_VARIANTS;
-  private static final TypeEvaluator sFloatEvaluator;
-  private static final HashMap<Class, HashMap<String, Method>> sGetterPropertyMap = new HashMap();
-  private static final TypeEvaluator sIntEvaluator = new IntEvaluator();
-  private static final HashMap<Class, HashMap<String, Method>> sSetterPropertyMap;
-  private Object mAnimatedValue;
-  private TypeEvaluator mEvaluator;
-  private Method mGetter = null;
-  KeyframeSet mKeyframeSet = null;
-  protected Property mProperty;
-  final ReentrantReadWriteLock mPropertyMapLock = new ReentrantReadWriteLock();
-  String mPropertyName;
-  Method mSetter = null;
-  final Object[] mTmpValueArray = new Object[1];
-  Class mValueType;
-  
-  static
-  {
-    sFloatEvaluator = new FloatEvaluator();
-    FLOAT_VARIANTS = new Class[] { Float.TYPE, Float.class, Double.TYPE, Integer.TYPE, Double.class, Integer.class };
-    INTEGER_VARIANTS = new Class[] { Integer.TYPE, Integer.class, Float.TYPE, Double.TYPE, Float.class, Double.class };
-    DOUBLE_VARIANTS = new Class[] { Double.TYPE, Double.class, Float.TYPE, Integer.TYPE, Float.class, Integer.class };
-    sSetterPropertyMap = new HashMap();
-  }
-  
-  private PropertyValuesHolder(Property paramProperty)
-  {
-    this.mProperty = paramProperty;
-    if (paramProperty != null) {
-      this.mPropertyName = paramProperty.getName();
-    }
-  }
-  
-  private PropertyValuesHolder(String paramString)
-  {
-    this.mPropertyName = paramString;
-  }
-  
-  static String getMethodName(String paramString1, String paramString2)
-  {
-    if ((paramString2 == null) || (paramString2.length() == 0)) {
-      return paramString1;
-    }
-    char c = Character.toUpperCase(paramString2.charAt(0));
-    paramString2 = paramString2.substring(1);
-    return paramString1 + c + paramString2;
-  }
-  
-  private Method getPropertyFunction(Class paramClass1, String paramString, Class paramClass2)
-  {
-    Method localMethod1 = null;
-    Class[] arrayOfClass = null;
-    String str = getMethodName(paramString, this.mPropertyName);
-    if (paramClass2 == null) {}
-    for (;;)
-    {
-      try
-      {
-        paramClass2 = paramClass1.getMethod(str, null);
-        return paramClass2;
-      }
-      catch (NoSuchMethodException paramString)
-      {
-        paramClass2 = arrayOfClass;
-        try
-        {
-          paramClass1 = paramClass1.getDeclaredMethod(str, null);
-          paramClass2 = paramClass1;
-          paramClass1.setAccessible(true);
-          paramClass2 = paramClass1;
+public class PropertyValuesHolder implements Cloneable {
+    private static Class[] DOUBLE_VARIANTS = new Class[]{Double.TYPE, Double.class, Float.TYPE, Integer.TYPE, Float.class, Integer.class};
+    private static Class[] FLOAT_VARIANTS = new Class[]{Float.TYPE, Float.class, Double.TYPE, Integer.TYPE, Double.class, Integer.class};
+    private static Class[] INTEGER_VARIANTS = new Class[]{Integer.TYPE, Integer.class, Float.TYPE, Double.TYPE, Float.class, Double.class};
+    private static final TypeEvaluator sFloatEvaluator = new FloatEvaluator();
+    private static final HashMap<Class, HashMap<String, Method>> sGetterPropertyMap = new HashMap();
+    private static final TypeEvaluator sIntEvaluator = new IntEvaluator();
+    private static final HashMap<Class, HashMap<String, Method>> sSetterPropertyMap = new HashMap();
+    private Object mAnimatedValue;
+    private TypeEvaluator mEvaluator;
+    private Method mGetter;
+    KeyframeSet mKeyframeSet;
+    protected Property mProperty;
+    final ReentrantReadWriteLock mPropertyMapLock;
+    String mPropertyName;
+    Method mSetter;
+    final Object[] mTmpValueArray;
+    Class mValueType;
+
+    static class FloatPropertyValuesHolder extends PropertyValuesHolder {
+        float mFloatAnimatedValue;
+        FloatKeyframeSet mFloatKeyframeSet;
+        private FloatProperty mFloatProperty;
+
+        public FloatPropertyValuesHolder(String propertyName, FloatKeyframeSet keyframeSet) {
+            super(propertyName);
+            this.mValueType = Float.TYPE;
+            this.mKeyframeSet = keyframeSet;
+            this.mFloatKeyframeSet = (FloatKeyframeSet) this.mKeyframeSet;
         }
-        catch (NoSuchMethodException paramClass1)
-        {
-          Log.e("PropertyValuesHolder", "Couldn't find no-arg method for property " + this.mPropertyName + ": " + paramString);
+
+        public FloatPropertyValuesHolder(Property property, FloatKeyframeSet keyframeSet) {
+            super(property);
+            this.mValueType = Float.TYPE;
+            this.mKeyframeSet = keyframeSet;
+            this.mFloatKeyframeSet = (FloatKeyframeSet) this.mKeyframeSet;
+            if (property instanceof FloatProperty) {
+                this.mFloatProperty = (FloatProperty) this.mProperty;
+            }
         }
-        continue;
-      }
-      arrayOfClass = new Class[1];
-      int j;
-      int i;
-      if (this.mValueType.equals(Float.class))
-      {
-        paramString = FLOAT_VARIANTS;
-        j = paramString.length;
-        i = 0;
-        paramClass2 = localMethod1;
-      }
-      Class localClass;
-      for (;;)
-      {
-        if (i >= j) {
-          break label265;
+
+        public FloatPropertyValuesHolder(String propertyName, float... values) {
+            super(propertyName);
+            setFloatValues(values);
         }
-        localClass = paramString[i];
-        arrayOfClass[0] = localClass;
-        try
-        {
-          localMethod1 = paramClass1.getMethod(str, arrayOfClass);
-          paramClass2 = localMethod1;
-          this.mValueType = localClass;
-          return localMethod1;
+
+        public FloatPropertyValuesHolder(Property property, float... values) {
+            super(property);
+            setFloatValues(values);
+            if (property instanceof FloatProperty) {
+                this.mFloatProperty = (FloatProperty) this.mProperty;
+            }
         }
-        catch (NoSuchMethodException localNoSuchMethodException1)
-        {
-          try
-          {
-            Method localMethod2 = paramClass1.getDeclaredMethod(str, arrayOfClass);
-            paramClass2 = localMethod2;
-            localMethod2.setAccessible(true);
-            paramClass2 = localMethod2;
-            this.mValueType = localClass;
-            return localMethod2;
-          }
-          catch (NoSuchMethodException localNoSuchMethodException2)
-          {
-            i += 1;
-          }
+
+        public void setFloatValues(float... values) {
+            super.setFloatValues(values);
+            this.mFloatKeyframeSet = (FloatKeyframeSet) this.mKeyframeSet;
         }
-        if (this.mValueType.equals(Integer.class))
-        {
-          paramString = INTEGER_VARIANTS;
-          break;
+
+        void calculateValue(float fraction) {
+            this.mFloatAnimatedValue = this.mFloatKeyframeSet.getFloatValue(fraction);
         }
-        if (this.mValueType.equals(Double.class))
-        {
-          paramString = DOUBLE_VARIANTS;
-          break;
+
+        Object getAnimatedValue() {
+            return Float.valueOf(this.mFloatAnimatedValue);
         }
-        paramString = new Class[1];
-        paramString[0] = this.mValueType;
-        break;
-      }
-      label265:
-      Log.e("PropertyValuesHolder", "Couldn't find setter/getter for property " + this.mPropertyName + " with value type " + this.mValueType);
-    }
-  }
-  
-  public static PropertyValuesHolder ofFloat(Property<?, Float> paramProperty, float... paramVarArgs)
-  {
-    return new FloatPropertyValuesHolder(paramProperty, paramVarArgs);
-  }
-  
-  public static PropertyValuesHolder ofFloat(String paramString, float... paramVarArgs)
-  {
-    return new FloatPropertyValuesHolder(paramString, paramVarArgs);
-  }
-  
-  public static PropertyValuesHolder ofInt(Property<?, Integer> paramProperty, int... paramVarArgs)
-  {
-    return new IntPropertyValuesHolder(paramProperty, paramVarArgs);
-  }
-  
-  public static PropertyValuesHolder ofInt(String paramString, int... paramVarArgs)
-  {
-    return new IntPropertyValuesHolder(paramString, paramVarArgs);
-  }
-  
-  public static PropertyValuesHolder ofKeyframe(Property paramProperty, Keyframe... paramVarArgs)
-  {
-    KeyframeSet localKeyframeSet = KeyframeSet.ofKeyframe(paramVarArgs);
-    if ((localKeyframeSet instanceof IntKeyframeSet)) {
-      return new IntPropertyValuesHolder(paramProperty, (IntKeyframeSet)localKeyframeSet);
-    }
-    if ((localKeyframeSet instanceof FloatKeyframeSet)) {
-      return new FloatPropertyValuesHolder(paramProperty, (FloatKeyframeSet)localKeyframeSet);
-    }
-    paramProperty = new PropertyValuesHolder(paramProperty);
-    paramProperty.mKeyframeSet = localKeyframeSet;
-    paramProperty.mValueType = paramVarArgs[0].getType();
-    return paramProperty;
-  }
-  
-  public static PropertyValuesHolder ofKeyframe(String paramString, Keyframe... paramVarArgs)
-  {
-    KeyframeSet localKeyframeSet = KeyframeSet.ofKeyframe(paramVarArgs);
-    if ((localKeyframeSet instanceof IntKeyframeSet)) {
-      return new IntPropertyValuesHolder(paramString, (IntKeyframeSet)localKeyframeSet);
-    }
-    if ((localKeyframeSet instanceof FloatKeyframeSet)) {
-      return new FloatPropertyValuesHolder(paramString, (FloatKeyframeSet)localKeyframeSet);
-    }
-    paramString = new PropertyValuesHolder(paramString);
-    paramString.mKeyframeSet = localKeyframeSet;
-    paramString.mValueType = paramVarArgs[0].getType();
-    return paramString;
-  }
-  
-  public static <V> PropertyValuesHolder ofObject(Property paramProperty, TypeEvaluator<V> paramTypeEvaluator, V... paramVarArgs)
-  {
-    paramProperty = new PropertyValuesHolder(paramProperty);
-    paramProperty.setObjectValues(paramVarArgs);
-    paramProperty.setEvaluator(paramTypeEvaluator);
-    return paramProperty;
-  }
-  
-  public static PropertyValuesHolder ofObject(String paramString, TypeEvaluator paramTypeEvaluator, Object... paramVarArgs)
-  {
-    paramString = new PropertyValuesHolder(paramString);
-    paramString.setObjectValues(paramVarArgs);
-    paramString.setEvaluator(paramTypeEvaluator);
-    return paramString;
-  }
-  
-  private void setupGetter(Class paramClass)
-  {
-    this.mGetter = setupSetterOrGetter(paramClass, sGetterPropertyMap, "get", null);
-  }
-  
-  private Method setupSetterOrGetter(Class paramClass1, HashMap<Class, HashMap<String, Method>> paramHashMap, String paramString, Class paramClass2)
-  {
-    Method localMethod1 = null;
-    try
-    {
-      this.mPropertyMapLock.writeLock().lock();
-      HashMap localHashMap = (HashMap)paramHashMap.get(paramClass1);
-      if (localHashMap != null) {
-        localMethod1 = (Method)localHashMap.get(this.mPropertyName);
-      }
-      Method localMethod2 = localMethod1;
-      if (localMethod1 == null)
-      {
-        localMethod2 = getPropertyFunction(paramClass1, paramString, paramClass2);
-        paramString = localHashMap;
-        if (localHashMap == null)
-        {
-          paramString = new HashMap();
-          paramHashMap.put(paramClass1, paramString);
+
+        public FloatPropertyValuesHolder clone() {
+            FloatPropertyValuesHolder newPVH = (FloatPropertyValuesHolder) super.clone();
+            newPVH.mFloatKeyframeSet = (FloatKeyframeSet) newPVH.mKeyframeSet;
+            return newPVH;
         }
-        paramString.put(this.mPropertyName, localMethod2);
-      }
-      return localMethod2;
-    }
-    finally
-    {
-      this.mPropertyMapLock.writeLock().unlock();
-    }
-  }
-  
-  private void setupValue(Object paramObject, Keyframe paramKeyframe)
-  {
-    if (this.mProperty != null) {
-      paramKeyframe.setValue(this.mProperty.get(paramObject));
-    }
-    try
-    {
-      if (this.mGetter == null) {
-        setupGetter(paramObject.getClass());
-      }
-      paramKeyframe.setValue(this.mGetter.invoke(paramObject, new Object[0]));
-      return;
-    }
-    catch (InvocationTargetException paramObject)
-    {
-      Log.e("PropertyValuesHolder", ((InvocationTargetException)paramObject).toString());
-      return;
-    }
-    catch (IllegalAccessException paramObject)
-    {
-      Log.e("PropertyValuesHolder", ((IllegalAccessException)paramObject).toString());
-    }
-  }
-  
-  void calculateValue(float paramFloat)
-  {
-    this.mAnimatedValue = this.mKeyframeSet.getValue(paramFloat);
-  }
-  
-  public PropertyValuesHolder clone()
-  {
-    try
-    {
-      PropertyValuesHolder localPropertyValuesHolder = (PropertyValuesHolder)super.clone();
-      localPropertyValuesHolder.mPropertyName = this.mPropertyName;
-      localPropertyValuesHolder.mProperty = this.mProperty;
-      localPropertyValuesHolder.mKeyframeSet = this.mKeyframeSet.clone();
-      localPropertyValuesHolder.mEvaluator = this.mEvaluator;
-      return localPropertyValuesHolder;
-    }
-    catch (CloneNotSupportedException localCloneNotSupportedException) {}
-    return null;
-  }
-  
-  Object getAnimatedValue()
-  {
-    return this.mAnimatedValue;
-  }
-  
-  public String getPropertyName()
-  {
-    return this.mPropertyName;
-  }
-  
-  void init()
-  {
-    TypeEvaluator localTypeEvaluator;
-    if (this.mEvaluator == null)
-    {
-      if (this.mValueType != Integer.class) {
-        break label44;
-      }
-      localTypeEvaluator = sIntEvaluator;
-    }
-    for (;;)
-    {
-      this.mEvaluator = localTypeEvaluator;
-      if (this.mEvaluator != null) {
-        this.mKeyframeSet.setEvaluator(this.mEvaluator);
-      }
-      return;
-      label44:
-      if (this.mValueType == Float.class) {
-        localTypeEvaluator = sFloatEvaluator;
-      } else {
-        localTypeEvaluator = null;
-      }
-    }
-  }
-  
-  void setAnimatedValue(Object paramObject)
-  {
-    if (this.mProperty != null) {
-      this.mProperty.set(paramObject, getAnimatedValue());
-    }
-    if (this.mSetter != null) {}
-    try
-    {
-      this.mTmpValueArray[0] = getAnimatedValue();
-      this.mSetter.invoke(paramObject, this.mTmpValueArray);
-      return;
-    }
-    catch (InvocationTargetException paramObject)
-    {
-      Log.e("PropertyValuesHolder", ((InvocationTargetException)paramObject).toString());
-      return;
-    }
-    catch (IllegalAccessException paramObject)
-    {
-      Log.e("PropertyValuesHolder", ((IllegalAccessException)paramObject).toString());
-    }
-  }
-  
-  public void setEvaluator(TypeEvaluator paramTypeEvaluator)
-  {
-    this.mEvaluator = paramTypeEvaluator;
-    this.mKeyframeSet.setEvaluator(paramTypeEvaluator);
-  }
-  
-  public void setFloatValues(float... paramVarArgs)
-  {
-    this.mValueType = Float.TYPE;
-    this.mKeyframeSet = KeyframeSet.ofFloat(paramVarArgs);
-  }
-  
-  public void setIntValues(int... paramVarArgs)
-  {
-    this.mValueType = Integer.TYPE;
-    this.mKeyframeSet = KeyframeSet.ofInt(paramVarArgs);
-  }
-  
-  public void setKeyframes(Keyframe... paramVarArgs)
-  {
-    int j = paramVarArgs.length;
-    Keyframe[] arrayOfKeyframe = new Keyframe[Math.max(j, 2)];
-    this.mValueType = paramVarArgs[0].getType();
-    int i = 0;
-    while (i < j)
-    {
-      arrayOfKeyframe[i] = paramVarArgs[i];
-      i += 1;
-    }
-    this.mKeyframeSet = new KeyframeSet(arrayOfKeyframe);
-  }
-  
-  public void setObjectValues(Object... paramVarArgs)
-  {
-    this.mValueType = paramVarArgs[0].getClass();
-    this.mKeyframeSet = KeyframeSet.ofObject(paramVarArgs);
-  }
-  
-  public void setProperty(Property paramProperty)
-  {
-    this.mProperty = paramProperty;
-  }
-  
-  public void setPropertyName(String paramString)
-  {
-    this.mPropertyName = paramString;
-  }
-  
-  void setupEndValue(Object paramObject)
-  {
-    setupValue(paramObject, (Keyframe)this.mKeyframeSet.mKeyframes.get(this.mKeyframeSet.mKeyframes.size() - 1));
-  }
-  
-  void setupSetter(Class paramClass)
-  {
-    this.mSetter = setupSetterOrGetter(paramClass, sSetterPropertyMap, "set", this.mValueType);
-  }
-  
-  void setupSetterAndGetter(Object paramObject)
-  {
-    Object localObject;
-    if (this.mProperty != null)
-    {
-      try
-      {
-        this.mProperty.get(paramObject);
-        Iterator localIterator = this.mKeyframeSet.mKeyframes.iterator();
-        while (localIterator.hasNext())
-        {
-          localObject = (Keyframe)localIterator.next();
-          if (!((Keyframe)localObject).hasValue()) {
-            ((Keyframe)localObject).setValue(this.mProperty.get(paramObject));
-          }
+
+        void setAnimatedValue(Object target) {
+            if (this.mFloatProperty != null) {
+                this.mFloatProperty.setValue(target, this.mFloatAnimatedValue);
+            } else if (this.mProperty != null) {
+                this.mProperty.set(target, Float.valueOf(this.mFloatAnimatedValue));
+            } else if (this.mSetter != null) {
+                try {
+                    this.mTmpValueArray[0] = Float.valueOf(this.mFloatAnimatedValue);
+                    this.mSetter.invoke(target, this.mTmpValueArray);
+                } catch (InvocationTargetException e) {
+                    Log.e("PropertyValuesHolder", e.toString());
+                } catch (IllegalAccessException e2) {
+                    Log.e("PropertyValuesHolder", e2.toString());
+                }
+            }
         }
-        localClass = paramObject.getClass();
-      }
-      catch (ClassCastException localClassCastException)
-      {
-        Log.e("PropertyValuesHolder", "No such property (" + this.mProperty.getName() + ") on target object " + paramObject + ". Trying reflection instead");
-        this.mProperty = null;
-      }
-    }
-    else
-    {
-      Class localClass;
-      if (this.mSetter == null) {
-        setupSetter(localClass);
-      }
-      localObject = this.mKeyframeSet.mKeyframes.iterator();
-      while (((Iterator)localObject).hasNext())
-      {
-        Keyframe localKeyframe = (Keyframe)((Iterator)localObject).next();
-        if (!localKeyframe.hasValue())
-        {
-          if (this.mGetter == null) {
-            setupGetter(localClass);
-          }
-          try
-          {
-            localKeyframe.setValue(this.mGetter.invoke(paramObject, new Object[0]));
-          }
-          catch (InvocationTargetException localInvocationTargetException)
-          {
-            Log.e("PropertyValuesHolder", localInvocationTargetException.toString());
-          }
-          catch (IllegalAccessException localIllegalAccessException)
-          {
-            Log.e("PropertyValuesHolder", localIllegalAccessException.toString());
-          }
+
+        void setupSetter(Class targetClass) {
+            if (this.mProperty == null) {
+                super.setupSetter(targetClass);
+            }
         }
-      }
     }
-  }
-  
-  void setupStartValue(Object paramObject)
-  {
-    setupValue(paramObject, (Keyframe)this.mKeyframeSet.mKeyframes.get(0));
-  }
-  
-  public String toString()
-  {
-    return this.mPropertyName + ": " + this.mKeyframeSet.toString();
-  }
-  
-  static class FloatPropertyValuesHolder
-    extends PropertyValuesHolder
-  {
-    float mFloatAnimatedValue;
-    FloatKeyframeSet mFloatKeyframeSet;
-    private FloatProperty mFloatProperty;
-    
-    public FloatPropertyValuesHolder(Property paramProperty, FloatKeyframeSet paramFloatKeyframeSet)
-    {
-      super(null);
-      this.mValueType = Float.TYPE;
-      this.mKeyframeSet = paramFloatKeyframeSet;
-      this.mFloatKeyframeSet = ((FloatKeyframeSet)this.mKeyframeSet);
-      if ((paramProperty instanceof FloatProperty)) {
-        this.mFloatProperty = ((FloatProperty)this.mProperty);
-      }
-    }
-    
-    public FloatPropertyValuesHolder(Property paramProperty, float... paramVarArgs)
-    {
-      super(null);
-      setFloatValues(paramVarArgs);
-      if ((paramProperty instanceof FloatProperty)) {
-        this.mFloatProperty = ((FloatProperty)this.mProperty);
-      }
-    }
-    
-    public FloatPropertyValuesHolder(String paramString, FloatKeyframeSet paramFloatKeyframeSet)
-    {
-      super(null);
-      this.mValueType = Float.TYPE;
-      this.mKeyframeSet = paramFloatKeyframeSet;
-      this.mFloatKeyframeSet = ((FloatKeyframeSet)this.mKeyframeSet);
-    }
-    
-    public FloatPropertyValuesHolder(String paramString, float... paramVarArgs)
-    {
-      super(null);
-      setFloatValues(paramVarArgs);
-    }
-    
-    void calculateValue(float paramFloat)
-    {
-      this.mFloatAnimatedValue = this.mFloatKeyframeSet.getFloatValue(paramFloat);
-    }
-    
-    public FloatPropertyValuesHolder clone()
-    {
-      FloatPropertyValuesHolder localFloatPropertyValuesHolder = (FloatPropertyValuesHolder)super.clone();
-      localFloatPropertyValuesHolder.mFloatKeyframeSet = ((FloatKeyframeSet)localFloatPropertyValuesHolder.mKeyframeSet);
-      return localFloatPropertyValuesHolder;
-    }
-    
-    Object getAnimatedValue()
-    {
-      return Float.valueOf(this.mFloatAnimatedValue);
-    }
-    
-    void setAnimatedValue(Object paramObject)
-    {
-      if (this.mFloatProperty != null) {
-        this.mFloatProperty.setValue(paramObject, this.mFloatAnimatedValue);
-      }
-      do
-      {
-        return;
-        if (this.mProperty != null)
-        {
-          this.mProperty.set(paramObject, Float.valueOf(this.mFloatAnimatedValue));
-          return;
+
+    static class IntPropertyValuesHolder extends PropertyValuesHolder {
+        int mIntAnimatedValue;
+        IntKeyframeSet mIntKeyframeSet;
+        private IntProperty mIntProperty;
+
+        public IntPropertyValuesHolder(String propertyName, IntKeyframeSet keyframeSet) {
+            super(propertyName);
+            this.mValueType = Integer.TYPE;
+            this.mKeyframeSet = keyframeSet;
+            this.mIntKeyframeSet = (IntKeyframeSet) this.mKeyframeSet;
         }
-      } while (this.mSetter == null);
-      try
-      {
-        this.mTmpValueArray[0] = Float.valueOf(this.mFloatAnimatedValue);
-        this.mSetter.invoke(paramObject, this.mTmpValueArray);
-        return;
-      }
-      catch (InvocationTargetException paramObject)
-      {
-        Log.e("PropertyValuesHolder", ((InvocationTargetException)paramObject).toString());
-        return;
-      }
-      catch (IllegalAccessException paramObject)
-      {
-        Log.e("PropertyValuesHolder", ((IllegalAccessException)paramObject).toString());
-      }
-    }
-    
-    public void setFloatValues(float... paramVarArgs)
-    {
-      super.setFloatValues(paramVarArgs);
-      this.mFloatKeyframeSet = ((FloatKeyframeSet)this.mKeyframeSet);
-    }
-    
-    void setupSetter(Class paramClass)
-    {
-      if (this.mProperty != null) {
-        return;
-      }
-      super.setupSetter(paramClass);
-    }
-  }
-  
-  static class IntPropertyValuesHolder
-    extends PropertyValuesHolder
-  {
-    int mIntAnimatedValue;
-    IntKeyframeSet mIntKeyframeSet;
-    private IntProperty mIntProperty;
-    
-    public IntPropertyValuesHolder(Property paramProperty, IntKeyframeSet paramIntKeyframeSet)
-    {
-      super(null);
-      this.mValueType = Integer.TYPE;
-      this.mKeyframeSet = paramIntKeyframeSet;
-      this.mIntKeyframeSet = ((IntKeyframeSet)this.mKeyframeSet);
-      if ((paramProperty instanceof IntProperty)) {
-        this.mIntProperty = ((IntProperty)this.mProperty);
-      }
-    }
-    
-    public IntPropertyValuesHolder(Property paramProperty, int... paramVarArgs)
-    {
-      super(null);
-      setIntValues(paramVarArgs);
-      if ((paramProperty instanceof IntProperty)) {
-        this.mIntProperty = ((IntProperty)this.mProperty);
-      }
-    }
-    
-    public IntPropertyValuesHolder(String paramString, IntKeyframeSet paramIntKeyframeSet)
-    {
-      super(null);
-      this.mValueType = Integer.TYPE;
-      this.mKeyframeSet = paramIntKeyframeSet;
-      this.mIntKeyframeSet = ((IntKeyframeSet)this.mKeyframeSet);
-    }
-    
-    public IntPropertyValuesHolder(String paramString, int... paramVarArgs)
-    {
-      super(null);
-      setIntValues(paramVarArgs);
-    }
-    
-    void calculateValue(float paramFloat)
-    {
-      this.mIntAnimatedValue = this.mIntKeyframeSet.getIntValue(paramFloat);
-    }
-    
-    public IntPropertyValuesHolder clone()
-    {
-      IntPropertyValuesHolder localIntPropertyValuesHolder = (IntPropertyValuesHolder)super.clone();
-      localIntPropertyValuesHolder.mIntKeyframeSet = ((IntKeyframeSet)localIntPropertyValuesHolder.mKeyframeSet);
-      return localIntPropertyValuesHolder;
-    }
-    
-    Object getAnimatedValue()
-    {
-      return Integer.valueOf(this.mIntAnimatedValue);
-    }
-    
-    void setAnimatedValue(Object paramObject)
-    {
-      if (this.mIntProperty != null) {
-        this.mIntProperty.setValue(paramObject, this.mIntAnimatedValue);
-      }
-      do
-      {
-        return;
-        if (this.mProperty != null)
-        {
-          this.mProperty.set(paramObject, Integer.valueOf(this.mIntAnimatedValue));
-          return;
+
+        public IntPropertyValuesHolder(Property property, IntKeyframeSet keyframeSet) {
+            super(property);
+            this.mValueType = Integer.TYPE;
+            this.mKeyframeSet = keyframeSet;
+            this.mIntKeyframeSet = (IntKeyframeSet) this.mKeyframeSet;
+            if (property instanceof IntProperty) {
+                this.mIntProperty = (IntProperty) this.mProperty;
+            }
         }
-      } while (this.mSetter == null);
-      try
-      {
-        this.mTmpValueArray[0] = Integer.valueOf(this.mIntAnimatedValue);
-        this.mSetter.invoke(paramObject, this.mTmpValueArray);
-        return;
-      }
-      catch (InvocationTargetException paramObject)
-      {
-        Log.e("PropertyValuesHolder", ((InvocationTargetException)paramObject).toString());
-        return;
-      }
-      catch (IllegalAccessException paramObject)
-      {
-        Log.e("PropertyValuesHolder", ((IllegalAccessException)paramObject).toString());
-      }
+
+        public IntPropertyValuesHolder(String propertyName, int... values) {
+            super(propertyName);
+            setIntValues(values);
+        }
+
+        public IntPropertyValuesHolder(Property property, int... values) {
+            super(property);
+            setIntValues(values);
+            if (property instanceof IntProperty) {
+                this.mIntProperty = (IntProperty) this.mProperty;
+            }
+        }
+
+        public void setIntValues(int... values) {
+            super.setIntValues(values);
+            this.mIntKeyframeSet = (IntKeyframeSet) this.mKeyframeSet;
+        }
+
+        void calculateValue(float fraction) {
+            this.mIntAnimatedValue = this.mIntKeyframeSet.getIntValue(fraction);
+        }
+
+        Object getAnimatedValue() {
+            return Integer.valueOf(this.mIntAnimatedValue);
+        }
+
+        public IntPropertyValuesHolder clone() {
+            IntPropertyValuesHolder newPVH = (IntPropertyValuesHolder) super.clone();
+            newPVH.mIntKeyframeSet = (IntKeyframeSet) newPVH.mKeyframeSet;
+            return newPVH;
+        }
+
+        void setAnimatedValue(Object target) {
+            if (this.mIntProperty != null) {
+                this.mIntProperty.setValue(target, this.mIntAnimatedValue);
+            } else if (this.mProperty != null) {
+                this.mProperty.set(target, Integer.valueOf(this.mIntAnimatedValue));
+            } else if (this.mSetter != null) {
+                try {
+                    this.mTmpValueArray[0] = Integer.valueOf(this.mIntAnimatedValue);
+                    this.mSetter.invoke(target, this.mTmpValueArray);
+                } catch (InvocationTargetException e) {
+                    Log.e("PropertyValuesHolder", e.toString());
+                } catch (IllegalAccessException e2) {
+                    Log.e("PropertyValuesHolder", e2.toString());
+                }
+            }
+        }
+
+        void setupSetter(Class targetClass) {
+            if (this.mProperty == null) {
+                super.setupSetter(targetClass);
+            }
+        }
     }
-    
-    public void setIntValues(int... paramVarArgs)
-    {
-      super.setIntValues(paramVarArgs);
-      this.mIntKeyframeSet = ((IntKeyframeSet)this.mKeyframeSet);
+
+    private PropertyValuesHolder(String propertyName) {
+        this.mSetter = null;
+        this.mGetter = null;
+        this.mKeyframeSet = null;
+        this.mPropertyMapLock = new ReentrantReadWriteLock();
+        this.mTmpValueArray = new Object[1];
+        this.mPropertyName = propertyName;
     }
-    
-    void setupSetter(Class paramClass)
-    {
-      if (this.mProperty != null) {
-        return;
-      }
-      super.setupSetter(paramClass);
+
+    private PropertyValuesHolder(Property property) {
+        this.mSetter = null;
+        this.mGetter = null;
+        this.mKeyframeSet = null;
+        this.mPropertyMapLock = new ReentrantReadWriteLock();
+        this.mTmpValueArray = new Object[1];
+        this.mProperty = property;
+        if (property != null) {
+            this.mPropertyName = property.getName();
+        }
     }
-  }
+
+    public static PropertyValuesHolder ofInt(String propertyName, int... values) {
+        return new IntPropertyValuesHolder(propertyName, values);
+    }
+
+    public static PropertyValuesHolder ofInt(Property<?, Integer> property, int... values) {
+        return new IntPropertyValuesHolder((Property) property, values);
+    }
+
+    public static PropertyValuesHolder ofFloat(String propertyName, float... values) {
+        return new FloatPropertyValuesHolder(propertyName, values);
+    }
+
+    public static PropertyValuesHolder ofFloat(Property<?, Float> property, float... values) {
+        return new FloatPropertyValuesHolder((Property) property, values);
+    }
+
+    public static PropertyValuesHolder ofObject(String propertyName, TypeEvaluator evaluator, Object... values) {
+        PropertyValuesHolder pvh = new PropertyValuesHolder(propertyName);
+        pvh.setObjectValues(values);
+        pvh.setEvaluator(evaluator);
+        return pvh;
+    }
+
+    public static <V> PropertyValuesHolder ofObject(Property property, TypeEvaluator<V> evaluator, V... values) {
+        PropertyValuesHolder pvh = new PropertyValuesHolder(property);
+        pvh.setObjectValues(values);
+        pvh.setEvaluator(evaluator);
+        return pvh;
+    }
+
+    public static PropertyValuesHolder ofKeyframe(String propertyName, Keyframe... values) {
+        KeyframeSet keyframeSet = KeyframeSet.ofKeyframe(values);
+        if (keyframeSet instanceof IntKeyframeSet) {
+            return new IntPropertyValuesHolder(propertyName, (IntKeyframeSet) keyframeSet);
+        }
+        if (keyframeSet instanceof FloatKeyframeSet) {
+            return new FloatPropertyValuesHolder(propertyName, (FloatKeyframeSet) keyframeSet);
+        }
+        PropertyValuesHolder pvh = new PropertyValuesHolder(propertyName);
+        pvh.mKeyframeSet = keyframeSet;
+        pvh.mValueType = values[0].getType();
+        return pvh;
+    }
+
+    public static PropertyValuesHolder ofKeyframe(Property property, Keyframe... values) {
+        KeyframeSet keyframeSet = KeyframeSet.ofKeyframe(values);
+        if (keyframeSet instanceof IntKeyframeSet) {
+            return new IntPropertyValuesHolder(property, (IntKeyframeSet) keyframeSet);
+        }
+        if (keyframeSet instanceof FloatKeyframeSet) {
+            return new FloatPropertyValuesHolder(property, (FloatKeyframeSet) keyframeSet);
+        }
+        PropertyValuesHolder pvh = new PropertyValuesHolder(property);
+        pvh.mKeyframeSet = keyframeSet;
+        pvh.mValueType = values[0].getType();
+        return pvh;
+    }
+
+    public void setIntValues(int... values) {
+        this.mValueType = Integer.TYPE;
+        this.mKeyframeSet = KeyframeSet.ofInt(values);
+    }
+
+    public void setFloatValues(float... values) {
+        this.mValueType = Float.TYPE;
+        this.mKeyframeSet = KeyframeSet.ofFloat(values);
+    }
+
+    public void setKeyframes(Keyframe... values) {
+        int numKeyframes = values.length;
+        Keyframe[] keyframes = new Keyframe[Math.max(numKeyframes, 2)];
+        this.mValueType = values[0].getType();
+        for (int i = 0; i < numKeyframes; i++) {
+            keyframes[i] = values[i];
+        }
+        this.mKeyframeSet = new KeyframeSet(keyframes);
+    }
+
+    public void setObjectValues(Object... values) {
+        this.mValueType = values[0].getClass();
+        this.mKeyframeSet = KeyframeSet.ofObject(values);
+    }
+
+    private Method getPropertyFunction(Class targetClass, String prefix, Class valueType) {
+        Method returnVal = null;
+        String methodName = getMethodName(prefix, this.mPropertyName);
+        if (valueType == null) {
+            try {
+                returnVal = targetClass.getMethod(methodName, null);
+            } catch (NoSuchMethodException e) {
+                try {
+                    returnVal = targetClass.getDeclaredMethod(methodName, null);
+                    returnVal.setAccessible(true);
+                } catch (NoSuchMethodException e2) {
+                    Log.e("PropertyValuesHolder", "Couldn't find no-arg method for property " + this.mPropertyName + ": " + e);
+                }
+            }
+        } else {
+            Class[] typeVariants;
+            Class[] args = new Class[1];
+            if (this.mValueType.equals(Float.class)) {
+                typeVariants = FLOAT_VARIANTS;
+            } else if (this.mValueType.equals(Integer.class)) {
+                typeVariants = INTEGER_VARIANTS;
+            } else {
+                typeVariants = this.mValueType.equals(Double.class) ? DOUBLE_VARIANTS : new Class[]{this.mValueType};
+            }
+            Class[] arr$ = typeVariants;
+            int len$ = arr$.length;
+            int i$ = 0;
+            while (i$ < len$) {
+                Class typeVariant = arr$[i$];
+                args[0] = typeVariant;
+                try {
+                    returnVal = targetClass.getMethod(methodName, args);
+                    this.mValueType = typeVariant;
+                    return returnVal;
+                } catch (NoSuchMethodException e3) {
+                    try {
+                        returnVal = targetClass.getDeclaredMethod(methodName, args);
+                        returnVal.setAccessible(true);
+                        this.mValueType = typeVariant;
+                        return returnVal;
+                    } catch (NoSuchMethodException e4) {
+                        i$++;
+                    }
+                }
+            }
+            Log.e("PropertyValuesHolder", "Couldn't find setter/getter for property " + this.mPropertyName + " with value type " + this.mValueType);
+        }
+        return returnVal;
+    }
+
+    private Method setupSetterOrGetter(Class targetClass, HashMap<Class, HashMap<String, Method>> propertyMapMap, String prefix, Class valueType) {
+        Method setterOrGetter = null;
+        try {
+            this.mPropertyMapLock.writeLock().lock();
+            HashMap<String, Method> propertyMap = (HashMap) propertyMapMap.get(targetClass);
+            if (propertyMap != null) {
+                setterOrGetter = (Method) propertyMap.get(this.mPropertyName);
+            }
+            if (setterOrGetter == null) {
+                setterOrGetter = getPropertyFunction(targetClass, prefix, valueType);
+                if (propertyMap == null) {
+                    propertyMap = new HashMap();
+                    propertyMapMap.put(targetClass, propertyMap);
+                }
+                propertyMap.put(this.mPropertyName, setterOrGetter);
+            }
+            this.mPropertyMapLock.writeLock().unlock();
+            return setterOrGetter;
+        } catch (Throwable th) {
+            this.mPropertyMapLock.writeLock().unlock();
+        }
+    }
+
+    void setupSetter(Class targetClass) {
+        this.mSetter = setupSetterOrGetter(targetClass, sSetterPropertyMap, C2848p.af, this.mValueType);
+    }
+
+    private void setupGetter(Class targetClass) {
+        this.mGetter = setupSetterOrGetter(targetClass, sGetterPropertyMap, "get", null);
+    }
+
+    void setupSetterAndGetter(Object target) {
+        Iterator i$;
+        Keyframe kf;
+        if (this.mProperty != null) {
+            try {
+                Object testValue = this.mProperty.get(target);
+                i$ = this.mKeyframeSet.mKeyframes.iterator();
+                while (i$.hasNext()) {
+                    kf = (Keyframe) i$.next();
+                    if (!kf.hasValue()) {
+                        kf.setValue(this.mProperty.get(target));
+                    }
+                }
+                return;
+            } catch (ClassCastException e) {
+                Log.e("PropertyValuesHolder", "No such property (" + this.mProperty.getName() + ") on target object " + target + ". Trying reflection instead");
+                this.mProperty = null;
+            }
+        }
+        Class targetClass = target.getClass();
+        if (this.mSetter == null) {
+            setupSetter(targetClass);
+        }
+        i$ = this.mKeyframeSet.mKeyframes.iterator();
+        while (i$.hasNext()) {
+            kf = (Keyframe) i$.next();
+            if (!kf.hasValue()) {
+                if (this.mGetter == null) {
+                    setupGetter(targetClass);
+                }
+                try {
+                    kf.setValue(this.mGetter.invoke(target, new Object[0]));
+                } catch (InvocationTargetException e2) {
+                    Log.e("PropertyValuesHolder", e2.toString());
+                } catch (IllegalAccessException e3) {
+                    Log.e("PropertyValuesHolder", e3.toString());
+                }
+            }
+        }
+    }
+
+    private void setupValue(Object target, Keyframe kf) {
+        if (this.mProperty != null) {
+            kf.setValue(this.mProperty.get(target));
+        }
+        try {
+            if (this.mGetter == null) {
+                setupGetter(target.getClass());
+            }
+            kf.setValue(this.mGetter.invoke(target, new Object[0]));
+        } catch (InvocationTargetException e) {
+            Log.e("PropertyValuesHolder", e.toString());
+        } catch (IllegalAccessException e2) {
+            Log.e("PropertyValuesHolder", e2.toString());
+        }
+    }
+
+    void setupStartValue(Object target) {
+        setupValue(target, (Keyframe) this.mKeyframeSet.mKeyframes.get(0));
+    }
+
+    void setupEndValue(Object target) {
+        setupValue(target, (Keyframe) this.mKeyframeSet.mKeyframes.get(this.mKeyframeSet.mKeyframes.size() - 1));
+    }
+
+    public PropertyValuesHolder clone() {
+        try {
+            PropertyValuesHolder newPVH = (PropertyValuesHolder) super.clone();
+            newPVH.mPropertyName = this.mPropertyName;
+            newPVH.mProperty = this.mProperty;
+            newPVH.mKeyframeSet = this.mKeyframeSet.clone();
+            newPVH.mEvaluator = this.mEvaluator;
+            return newPVH;
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+    }
+
+    void setAnimatedValue(Object target) {
+        if (this.mProperty != null) {
+            this.mProperty.set(target, getAnimatedValue());
+        }
+        if (this.mSetter != null) {
+            try {
+                this.mTmpValueArray[0] = getAnimatedValue();
+                this.mSetter.invoke(target, this.mTmpValueArray);
+            } catch (InvocationTargetException e) {
+                Log.e("PropertyValuesHolder", e.toString());
+            } catch (IllegalAccessException e2) {
+                Log.e("PropertyValuesHolder", e2.toString());
+            }
+        }
+    }
+
+    void init() {
+        if (this.mEvaluator == null) {
+            TypeEvaluator typeEvaluator = this.mValueType == Integer.class ? sIntEvaluator : this.mValueType == Float.class ? sFloatEvaluator : null;
+            this.mEvaluator = typeEvaluator;
+        }
+        if (this.mEvaluator != null) {
+            this.mKeyframeSet.setEvaluator(this.mEvaluator);
+        }
+    }
+
+    public void setEvaluator(TypeEvaluator evaluator) {
+        this.mEvaluator = evaluator;
+        this.mKeyframeSet.setEvaluator(evaluator);
+    }
+
+    void calculateValue(float fraction) {
+        this.mAnimatedValue = this.mKeyframeSet.getValue(fraction);
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.mPropertyName = propertyName;
+    }
+
+    public void setProperty(Property property) {
+        this.mProperty = property;
+    }
+
+    public String getPropertyName() {
+        return this.mPropertyName;
+    }
+
+    Object getAnimatedValue() {
+        return this.mAnimatedValue;
+    }
+
+    public String toString() {
+        return this.mPropertyName + ": " + this.mKeyframeSet.toString();
+    }
+
+    static String getMethodName(String prefix, String propertyName) {
+        if (propertyName == null || propertyName.length() == 0) {
+            return prefix;
+        }
+        char firstLetter = Character.toUpperCase(propertyName.charAt(0));
+        return prefix + firstLetter + propertyName.substring(1);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/animation/PropertyValuesHolder.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,112 +3,94 @@ package com.nineoldandroids.animation;
 import android.view.animation.Interpolator;
 import java.util.ArrayList;
 
-public abstract class Animator
-  implements Cloneable
-{
-  ArrayList<AnimatorListener> mListeners = null;
-  
-  public void addListener(AnimatorListener paramAnimatorListener)
-  {
-    if (this.mListeners == null) {
-      this.mListeners = new ArrayList();
+public abstract class Animator implements Cloneable {
+    ArrayList<AnimatorListener> mListeners = null;
+
+    public interface AnimatorListener {
+        void onAnimationCancel(Animator animator);
+
+        void onAnimationEnd(Animator animator);
+
+        void onAnimationRepeat(Animator animator);
+
+        void onAnimationStart(Animator animator);
     }
-    this.mListeners.add(paramAnimatorListener);
-  }
-  
-  public void cancel() {}
-  
-  public Animator clone()
-  {
-    try
-    {
-      Animator localAnimator = (Animator)super.clone();
-      if (this.mListeners != null)
-      {
-        ArrayList localArrayList = this.mListeners;
-        localAnimator.mListeners = new ArrayList();
-        int j = localArrayList.size();
-        int i = 0;
-        while (i < j)
-        {
-          localAnimator.mListeners.add(localArrayList.get(i));
-          i += 1;
+
+    public abstract long getDuration();
+
+    public abstract long getStartDelay();
+
+    public abstract boolean isRunning();
+
+    public abstract Animator setDuration(long j);
+
+    public abstract void setInterpolator(Interpolator interpolator);
+
+    public abstract void setStartDelay(long j);
+
+    public void start() {
+    }
+
+    public void cancel() {
+    }
+
+    public void end() {
+    }
+
+    public boolean isStarted() {
+        return isRunning();
+    }
+
+    public void addListener(AnimatorListener listener) {
+        if (this.mListeners == null) {
+            this.mListeners = new ArrayList();
         }
-      }
-      return localCloneNotSupportedException;
+        this.mListeners.add(listener);
     }
-    catch (CloneNotSupportedException localCloneNotSupportedException)
-    {
-      throw new AssertionError();
+
+    public void removeListener(AnimatorListener listener) {
+        if (this.mListeners != null) {
+            this.mListeners.remove(listener);
+            if (this.mListeners.size() == 0) {
+                this.mListeners = null;
+            }
+        }
     }
-  }
-  
-  public void end() {}
-  
-  public abstract long getDuration();
-  
-  public ArrayList<AnimatorListener> getListeners()
-  {
-    return this.mListeners;
-  }
-  
-  public abstract long getStartDelay();
-  
-  public abstract boolean isRunning();
-  
-  public boolean isStarted()
-  {
-    return isRunning();
-  }
-  
-  public void removeAllListeners()
-  {
-    if (this.mListeners != null)
-    {
-      this.mListeners.clear();
-      this.mListeners = null;
+
+    public ArrayList<AnimatorListener> getListeners() {
+        return this.mListeners;
     }
-  }
-  
-  public void removeListener(AnimatorListener paramAnimatorListener)
-  {
-    if (this.mListeners == null) {}
-    do
-    {
-      return;
-      this.mListeners.remove(paramAnimatorListener);
-    } while (this.mListeners.size() != 0);
-    this.mListeners = null;
-  }
-  
-  public abstract Animator setDuration(long paramLong);
-  
-  public abstract void setInterpolator(Interpolator paramInterpolator);
-  
-  public abstract void setStartDelay(long paramLong);
-  
-  public void setTarget(Object paramObject) {}
-  
-  public void setupEndValues() {}
-  
-  public void setupStartValues() {}
-  
-  public void start() {}
-  
-  public static abstract interface AnimatorListener
-  {
-    public abstract void onAnimationCancel(Animator paramAnimator);
-    
-    public abstract void onAnimationEnd(Animator paramAnimator);
-    
-    public abstract void onAnimationRepeat(Animator paramAnimator);
-    
-    public abstract void onAnimationStart(Animator paramAnimator);
-  }
+
+    public void removeAllListeners() {
+        if (this.mListeners != null) {
+            this.mListeners.clear();
+            this.mListeners = null;
+        }
+    }
+
+    public Animator clone() {
+        try {
+            Animator anim = (Animator) super.clone();
+            if (this.mListeners != null) {
+                ArrayList<AnimatorListener> oldListeners = this.mListeners;
+                anim.mListeners = new ArrayList();
+                int numListeners = oldListeners.size();
+                for (int i = 0; i < numListeners; i++) {
+                    anim.mListeners.add(oldListeners.get(i));
+                }
+            }
+            return anim;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    public void setupStartValues() {
+    }
+
+    public void setupEndValues() {
+    }
+
+    public void setTarget(Object target) {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/animation/Animator.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

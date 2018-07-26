@@ -6,119 +6,104 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.Window;
-import com.baidu.platform.comapi.util.f;
+import com.baidu.carlife.C0965R;
+import com.baidu.platform.comapi.util.C2911f;
 
-public class BMProgressDialog
-  extends DialogFragment
-{
-  private static final String a = "title";
-  private static final String b = "message";
-  private static final String c = "layout_resid";
-  private static DialogInterface.OnCancelListener d;
-  private boolean e = false;
-  
-  public static BMProgressDialog a(int paramInt, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    return a(null, null, paramInt, paramOnCancelListener);
-  }
-  
-  public static BMProgressDialog a(String paramString1, String paramString2)
-  {
-    return a(paramString1, paramString2, 0, null);
-  }
-  
-  private static BMProgressDialog a(String paramString1, String paramString2, int paramInt, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    d = paramOnCancelListener;
-    paramOnCancelListener = new BMProgressDialog();
-    Bundle localBundle = new Bundle();
-    if (paramString1 != null) {
-      localBundle.putString("title", paramString1);
-    }
-    if (paramString2 != null) {
-      localBundle.putString("message", paramString2);
-    }
-    localBundle.putInt("layout_resid", paramInt);
-    paramOnCancelListener.setArguments(localBundle);
-    return paramOnCancelListener;
-  }
-  
-  public static BMProgressDialog a(String paramString1, String paramString2, DialogInterface.OnCancelListener paramOnCancelListener)
-  {
-    return a(paramString1, paramString2, 0, paramOnCancelListener);
-  }
-  
-  public void dismiss()
-  {
-    this.e = true;
-    if (getActivity() != null) {}
-    try
-    {
-      dismissAllowingStateLoss();
-      d = null;
-      return;
-    }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        f.a(BMProgressDialog.class.getSimpleName(), "exception", localException);
-      }
-    }
-  }
-  
-  public void onCancel(DialogInterface paramDialogInterface)
-  {
-    if (d != null) {
-      d.onCancel(paramDialogInterface);
-    }
-    d = null;
-  }
-  
-  public Dialog onCreateDialog(Bundle paramBundle)
-  {
-    return new a(getActivity(), getArguments().getInt("layout_resid"));
-  }
-  
-  public class a
-    extends Dialog
-  {
-    private final int b = 2130968714;
-    private int c = 2130968714;
-    
-    public a(Context paramContext, int paramInt)
-    {
-      super(2131427455);
-      if (paramInt != 0) {
-        this.c = paramInt;
-      }
-      setContentView(this.c);
-      getWindow().getAttributes().gravity = 17;
-    }
-    
-    public void show()
-    {
-      try
-      {
-        if (!BMProgressDialog.a(BMProgressDialog.this))
-        {
-          super.show();
-          return;
+public class BMProgressDialog extends DialogFragment {
+    /* renamed from: a */
+    private static final String f19331a = "title";
+    /* renamed from: b */
+    private static final String f19332b = "message";
+    /* renamed from: c */
+    private static final String f19333c = "layout_resid";
+    /* renamed from: d */
+    private static OnCancelListener f19334d;
+    /* renamed from: e */
+    private boolean f19335e = false;
+
+    /* renamed from: com.baidu.mapframework.widget.BMProgressDialog$a */
+    public class C3579a extends Dialog {
+        /* renamed from: a */
+        final /* synthetic */ BMProgressDialog f19328a;
+        /* renamed from: b */
+        private final int f19329b = C0965R.layout.common_progress_dialog_animation;
+        /* renamed from: c */
+        private int f19330c = C0965R.layout.common_progress_dialog_animation;
+
+        public C3579a(BMProgressDialog this$0, Context context, int layoutResId) {
+            this.f19328a = this$0;
+            super(context, C0965R.style.theme_comm_progressdlg);
+            if (layoutResId != 0) {
+                this.f19330c = layoutResId;
+            }
+            setContentView(this.f19330c);
+            getWindow().getAttributes().gravity = 17;
         }
-        BMProgressDialog.this.dismissAllowingStateLoss();
-        return;
-      }
-      catch (Exception localException)
-      {
-        f.a(BMProgressDialog.class.getSimpleName(), "exception", localException);
-      }
+
+        public void show() {
+            try {
+                if (this.f19328a.f19335e) {
+                    this.f19328a.dismissAllowingStateLoss();
+                } else {
+                    super.show();
+                }
+            } catch (Exception ex) {
+                C2911f.a(BMProgressDialog.class.getSimpleName(), "exception", ex);
+            }
+        }
     }
-  }
+
+    /* renamed from: a */
+    public static BMProgressDialog m15257a(String title, String message) {
+        return m15258a(title, message, 0, null);
+    }
+
+    /* renamed from: a */
+    public static BMProgressDialog m15259a(String title, String message, OnCancelListener cancelListener) {
+        return m15258a(title, message, 0, cancelListener);
+    }
+
+    /* renamed from: a */
+    public static BMProgressDialog m15256a(int layoutResId, OnCancelListener cancelListener) {
+        return m15258a(null, null, layoutResId, cancelListener);
+    }
+
+    /* renamed from: a */
+    private static BMProgressDialog m15258a(String title, String message, int layoutResId, OnCancelListener cancelListener) {
+        f19334d = cancelListener;
+        BMProgressDialog frag = new BMProgressDialog();
+        Bundle bundle = new Bundle();
+        if (title != null) {
+            bundle.putString("title", title);
+        }
+        if (message != null) {
+            bundle.putString("message", message);
+        }
+        bundle.putInt(f19333c, layoutResId);
+        frag.setArguments(bundle);
+        return frag;
+    }
+
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new C3579a(this, getActivity(), getArguments().getInt(f19333c));
+    }
+
+    public void onCancel(DialogInterface dialog) {
+        if (f19334d != null) {
+            f19334d.onCancel(dialog);
+        }
+        f19334d = null;
+    }
+
+    public void dismiss() {
+        this.f19335e = true;
+        if (getActivity() != null) {
+            try {
+                dismissAllowingStateLoss();
+            } catch (Exception ex) {
+                C2911f.a(BMProgressDialog.class.getSimpleName(), "exception", ex);
+            }
+        }
+        f19334d = null;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/widget/BMProgressDialog.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

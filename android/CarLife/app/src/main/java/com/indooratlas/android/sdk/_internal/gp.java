@@ -1,56 +1,58 @@
 package com.indooratlas.android.sdk._internal;
 
-public enum gp
-{
-  final String e;
-  
-  private gp(String paramString)
-  {
-    this.e = paramString;
-  }
-  
-  public static gp a(String paramString)
-  {
-    int i = -1;
-    switch (paramString.hashCode())
-    {
+public enum gp {
+    TLS_1_2("TLSv1.2"),
+    TLS_1_1("TLSv1.1"),
+    TLS_1_0("TLSv1"),
+    SSL_3_0("SSLv3");
+    
+    /* renamed from: e */
+    final String f23991e;
+
+    private gp(String str) {
+        this.f23991e = str;
     }
-    for (;;)
-    {
-      switch (i)
-      {
-      default: 
-        throw new IllegalArgumentException("Unexpected TLS version: " + paramString);
-        if (paramString.equals("TLSv1.2"))
-        {
-          i = 0;
-          continue;
-          if (paramString.equals("TLSv1.1"))
-          {
-            i = 1;
-            continue;
-            if (paramString.equals("TLSv1"))
-            {
-              i = 2;
-              continue;
-              if (paramString.equals("SSLv3")) {
-                i = 3;
-              }
-            }
-          }
+
+    /* renamed from: a */
+    public static gp m20742a(String str) {
+        Object obj = -1;
+        switch (str.hashCode()) {
+            case -503070503:
+                if (str.equals("TLSv1.1")) {
+                    obj = 1;
+                    break;
+                }
+                break;
+            case -503070502:
+                if (str.equals("TLSv1.2")) {
+                    obj = null;
+                    break;
+                }
+                break;
+            case 79201641:
+                if (str.equals("SSLv3")) {
+                    obj = 3;
+                    break;
+                }
+                break;
+            case 79923350:
+                if (str.equals("TLSv1")) {
+                    obj = 2;
+                    break;
+                }
+                break;
         }
-        break;
-      }
+        switch (obj) {
+            case null:
+                return TLS_1_2;
+            case 1:
+                return TLS_1_1;
+            case 2:
+                return TLS_1_0;
+            case 3:
+                return SSL_3_0;
+            default:
+                throw new IllegalArgumentException("Unexpected TLS version: " + str);
+        }
     }
-    return a;
-    return b;
-    return c;
-    return d;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gp.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,116 +5,91 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.util.AttributeSet;
-import com.facebook.common.internal.k;
-import com.facebook.common.internal.m;
-import com.facebook.drawee.b.c;
-import com.facebook.drawee.e.a;
-import com.facebook.drawee.g.d;
+import com.facebook.common.internal.C5273m;
+import com.facebook.common.internal.C5350k;
+import com.facebook.drawee.C5395b.C5388c;
+import com.facebook.drawee.p142g.C5424d;
+import com.facebook.drawee.p147e.C2934a;
 import javax.annotation.Nullable;
 
-public class SimpleDraweeView
-  extends GenericDraweeView
-{
-  private static m<? extends d> a;
-  private d b;
-  
-  public SimpleDraweeView(Context paramContext)
-  {
-    super(paramContext);
-    b(paramContext, null);
-  }
-  
-  public SimpleDraweeView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    b(paramContext, paramAttributeSet);
-  }
-  
-  public SimpleDraweeView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    b(paramContext, paramAttributeSet);
-  }
-  
-  @TargetApi(21)
-  public SimpleDraweeView(Context paramContext, AttributeSet paramAttributeSet, int paramInt1, int paramInt2)
-  {
-    super(paramContext, paramAttributeSet, paramInt1, paramInt2);
-    b(paramContext, paramAttributeSet);
-  }
-  
-  public SimpleDraweeView(Context paramContext, a parama)
-  {
-    super(paramContext, parama);
-    b(paramContext, null);
-  }
-  
-  public static void a(m<? extends d> paramm)
-  {
-    a = paramm;
-  }
-  
-  private void b(Context paramContext, @Nullable AttributeSet paramAttributeSet)
-  {
-    if (isInEditMode()) {}
-    do
-    {
-      return;
-      k.a(a, "SimpleDraweeView was not initialized!");
-      this.b = ((d)a.b());
-    } while (paramAttributeSet == null);
-    paramContext = paramContext.obtainStyledAttributes(paramAttributeSet, b.c.SimpleDraweeView);
-    try
-    {
-      if (paramContext.hasValue(b.c.SimpleDraweeView_actualImageUri)) {
-        setImageURI(Uri.parse(paramContext.getString(b.c.SimpleDraweeView_actualImageUri)), null);
-      }
-      return;
+public class SimpleDraweeView extends GenericDraweeView {
+    /* renamed from: a */
+    private static C5273m<? extends C5424d> f22162a;
+    /* renamed from: b */
+    private C5424d f22163b;
+
+    /* renamed from: a */
+    public static void m18650a(C5273m<? extends C5424d> draweeControllerBuilderSupplier) {
+        f22162a = draweeControllerBuilderSupplier;
     }
-    finally
-    {
-      paramContext.recycle();
+
+    /* renamed from: g */
+    public static void m18652g() {
+        f22162a = null;
     }
-  }
-  
-  public static void g()
-  {
-    a = null;
-  }
-  
-  protected d getControllerBuilder()
-  {
-    return this.b;
-  }
-  
-  public void setImageURI(Uri paramUri)
-  {
-    setImageURI(paramUri, null);
-  }
-  
-  public void setImageURI(Uri paramUri, @Nullable Object paramObject)
-  {
-    setController(this.b.e(paramObject).b(paramUri).b(getController()).w());
-  }
-  
-  public void setImageURI(@Nullable String paramString)
-  {
-    setImageURI(paramString, null);
-  }
-  
-  public void setImageURI(@Nullable String paramString, @Nullable Object paramObject)
-  {
-    if (paramString != null) {}
-    for (paramString = Uri.parse(paramString);; paramString = null)
-    {
-      setImageURI(paramString, paramObject);
-      return;
+
+    public SimpleDraweeView(Context context, C2934a hierarchy) {
+        super(context, hierarchy);
+        m18651b(context, null);
     }
-  }
+
+    public SimpleDraweeView(Context context) {
+        super(context);
+        m18651b(context, null);
+    }
+
+    public SimpleDraweeView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        m18651b(context, attrs);
+    }
+
+    public SimpleDraweeView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        m18651b(context, attrs);
+    }
+
+    @TargetApi(21)
+    public SimpleDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        m18651b(context, attrs);
+    }
+
+    /* renamed from: b */
+    private void m18651b(Context context, @Nullable AttributeSet attrs) {
+        if (!isInEditMode()) {
+            C5350k.m18311a(f22162a, (Object) "SimpleDraweeView was not initialized!");
+            this.f22163b = (C5424d) f22162a.mo3969b();
+            if (attrs != null) {
+                TypedArray gdhAttrs = context.obtainStyledAttributes(attrs, C5388c.SimpleDraweeView);
+                try {
+                    if (gdhAttrs.hasValue(C5388c.SimpleDraweeView_actualImageUri)) {
+                        setImageURI(Uri.parse(gdhAttrs.getString(C5388c.SimpleDraweeView_actualImageUri)), null);
+                    }
+                    gdhAttrs.recycle();
+                } catch (Throwable th) {
+                    gdhAttrs.recycle();
+                }
+            }
+        }
+    }
+
+    protected C5424d getControllerBuilder() {
+        return this.f22163b;
+    }
+
+    public void setImageURI(Uri uri) {
+        setImageURI(uri, null);
+    }
+
+    public void setImageURI(@Nullable String uriString) {
+        setImageURI(uriString, null);
+    }
+
+    public void setImageURI(Uri uri, @Nullable Object callerContext) {
+        setController(this.f22163b.m18647e(callerContext).m18644b(uri).m18645b(getController()).m18648w());
+    }
+
+    public void setImageURI(@Nullable String uriString, @Nullable Object callerContext) {
+        setImageURI(uriString != null ? Uri.parse(uriString) : null, callerContext);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/facebook/drawee/view/SimpleDraweeView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,52 +1,45 @@
 package com.indooratlas.android.sdk._internal;
 
-final class jb
-{
-  static ja a;
-  static long b;
-  
-  static ja a()
-  {
-    try
-    {
-      if (a != null)
-      {
-        ja localja = a;
-        a = localja.f;
-        localja.f = null;
-        b -= 2048L;
-        return localja;
-      }
-      return new ja();
+import android.support.v4.media.session.PlaybackStateCompat;
+
+final class jb {
+    /* renamed from: a */
+    static ja f24436a;
+    /* renamed from: b */
+    static long f24437b;
+
+    private jb() {
     }
-    finally {}
-  }
-  
-  static void a(ja paramja)
-  {
-    if ((paramja.f != null) || (paramja.g != null)) {
-      throw new IllegalArgumentException();
+
+    /* renamed from: a */
+    static ja m21307a() {
+        synchronized (jb.class) {
+            if (f24436a != null) {
+                ja jaVar = f24436a;
+                f24436a = jaVar.f24434f;
+                jaVar.f24434f = null;
+                f24437b -= PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH;
+                return jaVar;
+            }
+            return new ja();
+        }
     }
-    if (paramja.d) {
-      return;
+
+    /* renamed from: a */
+    static void m21308a(ja jaVar) {
+        if (jaVar.f24434f != null || jaVar.f24435g != null) {
+            throw new IllegalArgumentException();
+        } else if (!jaVar.f24432d) {
+            synchronized (jb.class) {
+                if (f24437b + PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH > 65536) {
+                    return;
+                }
+                f24437b += PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH;
+                jaVar.f24434f = f24436a;
+                jaVar.f24431c = 0;
+                jaVar.f24430b = 0;
+                f24436a = jaVar;
+            }
+        }
     }
-    try
-    {
-      if (b + 2048L > 65536L) {
-        return;
-      }
-    }
-    finally {}
-    b += 2048L;
-    paramja.f = a;
-    paramja.c = 0;
-    paramja.b = 0;
-    a = paramja;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/jb.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

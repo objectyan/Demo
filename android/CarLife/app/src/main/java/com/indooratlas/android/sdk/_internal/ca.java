@@ -8,93 +8,80 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public final class ca
-{
-  public ConcurrentLinkedQueue<bz> a;
-  LinkedBlockingQueue<bz> b;
-  cb c;
-  public HashMap<String, bz> d;
-  public a e;
-  public volatile boolean f;
-  public CountDownLatch g;
-  
-  public ca(cb paramcb)
-  {
-    this.c = paramcb;
-    this.a = new ConcurrentLinkedQueue();
-    this.b = new LinkedBlockingQueue();
-    this.d = new HashMap(30);
-    this.e = new a();
-    this.e.start();
-  }
-  
-  public final boolean a(String paramString)
-  {
-    bz localbz = new bz(paramString, SystemClock.elapsedRealtime());
-    return this.d.put(paramString, localbz) != null;
-  }
-  
-  public final boolean b(String paramString)
-  {
-    paramString = (bz)this.d.remove(paramString);
-    if (paramString != null)
-    {
-      long l1 = SystemClock.elapsedRealtime();
-      long l2 = paramString.b;
-      paramString.b = System.currentTimeMillis();
-      paramString.h = new long[] { l1 - l2 };
-      if (this.f) {}
-      for (;;)
-      {
-        return true;
-        this.b.offer(paramString);
-      }
-    }
-    return false;
-  }
-  
-  public final class a
-    extends Thread
-  {
-    a() {}
-    
-    public final void run()
-    {
-      for (;;)
-      {
-        if (!ca.this.f) {}
-        try
-        {
-          bz localbz = (bz)ca.this.b.take();
-          ca.this.c.a(new bz[] { localbz });
+public final class ca {
+    /* renamed from: a */
+    public ConcurrentLinkedQueue<bz> f23284a = new ConcurrentLinkedQueue();
+    /* renamed from: b */
+    LinkedBlockingQueue<bz> f23285b = new LinkedBlockingQueue();
+    /* renamed from: c */
+    cb f23286c;
+    /* renamed from: d */
+    public HashMap<String, bz> f23287d = new HashMap(30);
+    /* renamed from: e */
+    public C5833a f23288e = new C5833a(this);
+    /* renamed from: f */
+    public volatile boolean f23289f;
+    /* renamed from: g */
+    public CountDownLatch f23290g;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ca$a */
+    public class C5833a extends Thread {
+        /* renamed from: a */
+        final /* synthetic */ ca f23283a;
+
+        C5833a(ca caVar) {
+            this.f23283a = caVar;
         }
-        catch (IOException localIOException1)
-        {
-          ee.a("IACore", localIOException1, "saving event failed, skipped", new Object[0]);
-          continue;
-          if (ca.this.g != null) {
-            ca.this.g.countDown();
-          }
-          cb localcb = ca.this.c;
-          if (localcb != null) {}
-          try
-          {
-            localcb.close();
-            return;
-          }
-          catch (IOException localIOException2)
-          {
-            return;
-          }
+
+        public final void run() {
+            while (!this.f23283a.f23289f) {
+                try {
+                    bz bzVar = (bz) this.f23283a.f23285b.take();
+                    this.f23283a.f23286c.mo4646a(bzVar);
+                } catch (Throwable e) {
+                    ee.m20410a("IACore", e, "saving event failed, skipped", new Object[0]);
+                } catch (InterruptedException e2) {
+                }
+            }
+            if (this.f23283a.f23290g != null) {
+                this.f23283a.f23290g.countDown();
+            }
+            Closeable closeable = this.f23283a.f23286c;
+            if (closeable != null) {
+                try {
+                    closeable.close();
+                } catch (IOException e3) {
+                }
+            }
         }
-        catch (InterruptedException localInterruptedException) {}
-      }
     }
-  }
+
+    public ca(cb cbVar) {
+        this.f23286c = cbVar;
+        this.f23288e.start();
+    }
+
+    /* renamed from: a */
+    public final boolean m20200a(String str) {
+        return this.f23287d.put(str, new bz(str, SystemClock.elapsedRealtime())) != null;
+    }
+
+    /* renamed from: b */
+    public final boolean m20201b(String str) {
+        bz bzVar = (bz) this.f23287d.remove(str);
+        if (bzVar != null) {
+            long elapsedRealtime = SystemClock.elapsedRealtime() - bzVar.f23275b;
+            bzVar.f23275b = System.currentTimeMillis();
+            bzVar.f23281h = new long[]{elapsedRealtime};
+            if (this.f23289f) {
+                new Object[1][0] = bzVar;
+            } else {
+                new Object[1][0] = bzVar;
+                this.f23285b.offer(bzVar);
+            }
+            return true;
+        }
+        new Object[1][0] = str;
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ca.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

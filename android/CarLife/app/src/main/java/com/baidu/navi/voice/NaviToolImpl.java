@@ -1,12 +1,12 @@
 package com.baidu.navi.voice;
 
-import android.os.Bundle;
 import android.text.TextUtils;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.core.screen.presentation.h;
-import com.baidu.carlife.m.a;
-import com.baidu.carlife.util.w;
-import com.baidu.che.codriver.sdk.a.m;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.core.screen.presentation.C1328h;
+import com.baidu.carlife.p052m.C1915a;
+import com.baidu.carlife.util.C2201w;
+import com.baidu.che.codriver.platform.NaviCmdConstants;
+import com.baidu.che.codriver.sdk.p081a.C2607m;
 import com.baidu.navisdk.model.GeoLocateModel;
 import com.baidu.navisdk.model.datastruct.LocData;
 import com.baidu.navisdk.model.datastruct.RoutePlanNode;
@@ -19,331 +19,249 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NaviToolImpl
-  implements m
-{
-  private static final String TAG = NaviToolImpl.class.getSimpleName();
-  
-  private void handleError()
-  {
-    a.a().b("当前页面不支持", 0);
-    w.a("当前页面不支持");
-  }
-  
-  private boolean naviAppControl(JSONObject paramJSONObject)
-  {
-    if (paramJSONObject == null) {}
-    do
-    {
-      return true;
-      MapVoiceCommandController.getInstance().openNavi();
-      paramJSONObject = paramJSONObject.optString("order");
-    } while ((paramJSONObject.equals("")) || ((!paramJSONObject.equals("end_navi")) && (!paramJSONObject.equals("end_app"))));
-    if (BNavigator.getInstance().isNaviBegin())
-    {
-      MapVoiceCommandController.getInstance().exitNavi();
-      return true;
+public class NaviToolImpl implements C2607m {
+    private static final String TAG = NaviToolImpl.class.getSimpleName();
+
+    public void onNaviCommand(String func, String params) {
+        C1260i.b(TAG, "func:" + func + " parsms:" + params);
+        if (TextUtils.isEmpty(func)) {
+            C1260i.b(TAG, "func is null");
+        } else if (TextUtils.isEmpty(params) && NaviCmdConstants.FUN_NAVI_START_TASK.equals(func)) {
+            MapVoiceCommandController.getInstance().openNavi();
+            if (!naviStartTask(null)) {
+                handleError();
+            }
+        } else {
+            try {
+                JSONObject jsonObject = new JSONObject(params);
+                boolean hasAnswer = false;
+                if (NaviCmdConstants.FUN_NAVI_MAP_CONTROL.equals(func)) {
+                    hasAnswer = naviMapControl(jsonObject);
+                } else if (NaviCmdConstants.FUN_NAVI_START_TASK.equals(func)) {
+                    naviStartTask(jsonObject);
+                    hasAnswer = true;
+                } else if (NaviCmdConstants.FUN_NAVI_NAVI_SET.equals(func)) {
+                    naviNaviSet(jsonObject);
+                    hasAnswer = true;
+                } else if (NaviCmdConstants.FUN_NAVI_APP_CONTROL.equals(func)) {
+                    hasAnswer = naviAppControl(jsonObject);
+                }
+                if (!hasAnswer) {
+                    handleError();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                C1260i.b(TAG, "create JSONObject fail!");
+                C1260i.e(TAG, e.toString());
+            }
+        }
     }
-    return false;
-  }
-  
-  private boolean naviMapControl(JSONObject paramJSONObject)
-  {
-    if (paramJSONObject == null) {
-      return true;
+
+    private boolean naviStartTask(JSONObject jsonObject) {
+        C1260i.b(TAG, "naviStartTask");
+        if (jsonObject != null) {
+            JSONObject destObject = jsonObject.optJSONObject(NaviCmdConstants.KEY_NAVI_CMD_DEST);
+            if (destObject == null) {
+                return false;
+            }
+            int lng = destObject.optInt(NaviCmdConstants.KEY_NAVI_CMD_DEST_LNG);
+            int lat = destObject.optInt("lat");
+            String destName = destObject.optString(NaviCmdConstants.KEY_NAVI_CMD_DEST_NAME);
+            C1260i.b(TAG, "destName:" + destName + ", lng:" + lng + ", lat:" + lat + ", preference:" + destObject.optInt(NaviCmdConstants.KEY_NAVI_CMD_DEST_PREFERENCE));
+            JSONArray passPointArray = destObject.optJSONArray(NaviCmdConstants.KEY_NAVI_CMD_DEST_PASS_POINT);
+            if (passPointArray != null) {
+                ArrayList<GeoPoint> passPointList = new ArrayList();
+                for (int i = 0; i < passPointArray.length(); i++) {
+                    JSONObject pointObject = passPointArray.optJSONObject(i);
+                    if (pointObject != null) {
+                        GeoPoint geoPoint = new GeoPoint();
+                        geoPoint.setLatitudeE6(pointObject.optInt("lat"));
+                        geoPoint.setLongitudeE6(pointObject.optInt(NaviCmdConstants.KEY_NAVI_CMD_DEST_LNG));
+                        passPointList.add(geoPoint);
+                        C1260i.b(TAG, "passPoint:lng:" + lng + ", lat:" + lat);
+                    }
+                }
+            }
+            MapVoiceCommandController.getInstance().startCalcRoute(((double) lng) / 100000.0d, ((double) lat) / 100000.0d);
+            return true;
+        } else if (!MapVoiceCommandController.getInstance().isRouteDetailFragment()) {
+            return false;
+        } else {
+            MapVoiceCommandController.getInstance().startNavi();
+            return true;
+        }
     }
-    MapVoiceCommandController.getInstance().openNavi();
-    int i = paramJSONObject.optInt("order");
-    if ((!MapVoiceCommandController.getInstance().isMapContentFragment()) && (i != 216) && (i != 217)) {
-      h.a().backTo(17, null);
+
+    private boolean naviMapControl(JSONObject jsonObject) {
+        if (jsonObject == null) {
+            return true;
+        }
+        MapVoiceCommandController.getInstance().openNavi();
+        int order = jsonObject.optInt(NaviCmdConstants.KEY_NAVI_CMD_ORDER);
+        if (!(MapVoiceCommandController.getInstance().isMapContentFragment() || order == 216 || order == 217)) {
+            C1328h.a().backTo(17, null);
+        }
+        switch (order) {
+            case 202:
+                MapVoiceCommandController.getInstance().mapZoomOut();
+                return true;
+            case 203:
+                MapVoiceCommandController.getInstance().mapZoomIn();
+                return true;
+            case 207:
+                MapVoiceCommandController.getInstance().switchRoadCondition(true);
+                return true;
+            case 208:
+                MapVoiceCommandController.getInstance().switchRoadCondition(false);
+                return true;
+            case 216:
+                MapVoiceCommandController.getInstance().naviFullView();
+                return true;
+            case 217:
+                MapVoiceCommandController.getInstance().naviContinue();
+                return true;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_MOVE_RIGHT /*220*/:
+                MapVoiceCommandController.getInstance().mapMoveRight();
+                return true;
+            case 221:
+                MapVoiceCommandController.getInstance().mapMoveLeft();
+                return true;
+            case 222:
+                MapVoiceCommandController.getInstance().mapMoveUp();
+                return true;
+            case 223:
+                MapVoiceCommandController.getInstance().mapMoveDown();
+                return true;
+            case 229:
+                MapVoiceCommandController.getInstance().mapNorthForward();
+                return true;
+            case 230:
+                MapVoiceCommandController.getInstance().mapCarForward();
+                return true;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_MODE_NIGHT /*231*/:
+                MapVoiceCommandController.getInstance().switchDayNightMode(false);
+                return true;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_MODE_DAY /*232*/:
+                MapVoiceCommandController.getInstance().switchDayNightMode(true);
+                return true;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_TTS_MODE_NEWER /*233*/:
+                MapVoiceCommandController.getInstance().switchNaviVoiceMode(true);
+                return true;
+            case NaviCmdConstants.ACTION_TYPE_NAVI_TTS_MODE_EXPERT /*234*/:
+                MapVoiceCommandController.getInstance().switchNaviVoiceMode(false);
+                return true;
+            default:
+                return false;
+        }
     }
-    switch (i)
-    {
-    case 204: 
-    case 205: 
-    case 206: 
-    case 209: 
-    case 210: 
-    case 211: 
-    case 212: 
-    case 213: 
-    case 214: 
-    case 215: 
-    case 218: 
-    case 219: 
-    case 224: 
-    case 225: 
-    case 226: 
-    case 227: 
-    case 228: 
-    default: 
-      return false;
-    case 202: 
-      MapVoiceCommandController.getInstance().mapZoomOut();
-      return true;
-    case 203: 
-      MapVoiceCommandController.getInstance().mapZoomIn();
-      return true;
-    case 207: 
-      MapVoiceCommandController.getInstance().switchRoadCondition(true);
-      return true;
-    case 208: 
-      MapVoiceCommandController.getInstance().switchRoadCondition(false);
-      return true;
-    case 216: 
-      MapVoiceCommandController.getInstance().naviFullView();
-      return true;
-    case 217: 
-      MapVoiceCommandController.getInstance().naviContinue();
-      return true;
-    case 220: 
-      MapVoiceCommandController.getInstance().mapMoveRight();
-      return true;
-    case 221: 
-      MapVoiceCommandController.getInstance().mapMoveLeft();
-      return true;
-    case 222: 
-      MapVoiceCommandController.getInstance().mapMoveUp();
-      return true;
-    case 223: 
-      MapVoiceCommandController.getInstance().mapMoveDown();
-      return true;
-    case 229: 
-      MapVoiceCommandController.getInstance().mapNorthForward();
-      return true;
-    case 230: 
-      MapVoiceCommandController.getInstance().mapCarForward();
-      return true;
-    case 231: 
-      MapVoiceCommandController.getInstance().switchDayNightMode(false);
-      return true;
-    case 232: 
-      MapVoiceCommandController.getInstance().switchDayNightMode(true);
-      return true;
-    case 233: 
-      MapVoiceCommandController.getInstance().switchNaviVoiceMode(true);
-      return true;
+
+    private void naviNaviSet(JSONObject jsonObject) {
+        if (jsonObject != null) {
+            String order = jsonObject.optString(NaviCmdConstants.KEY_NAVI_CMD_ORDER);
+            if (!order.equals("")) {
+                JSONObject data = jsonObject.optJSONObject("data");
+                if (data != null) {
+                    String type = data.optString("type");
+                    String name = data.optString("name");
+                    String address = data.optString(NaviCmdConstants.KEY_NAVI_CMD_DEST_ADDRESS);
+                    int lng = data.optInt(NaviCmdConstants.KEY_NAVI_CMD_DEST_LNG);
+                    int lat = data.optInt("lat");
+                    if (!type.equals("") && !name.equals("") && lng > 0 && lat > 0) {
+                        GeoPoint geoPoint = new GeoPoint(lng, lat);
+                        if (!geoPoint.isValid()) {
+                            return;
+                        }
+                        if (NaviCmdConstants.ACTION_TYPE_NAVI_QUERY_COMPANY_ADDRESS.equals(order) && type.equals(NaviCmdConstants.KEY_NAVI_CMD_SET_ADDRESS_COMPANY)) {
+                            MapVoiceCommandController.getInstance().setCompanyAddress(new RoutePlanNode(geoPoint, 5, name, address));
+                        } else if (NaviCmdConstants.ACTION_TYPE_NAVI_QUERY_HOME_ADDRESS.equals(order) && type.equals("home")) {
+                            MapVoiceCommandController.getInstance().setHomeAddress(new RoutePlanNode(geoPoint, 4, name, address));
+                        }
+                    }
+                }
+            }
+        }
     }
-    MapVoiceCommandController.getInstance().switchNaviVoiceMode(false);
-    return true;
-  }
-  
-  private void naviNaviSet(JSONObject paramJSONObject)
-  {
-    if (paramJSONObject == null) {}
-    String str1;
-    Object localObject;
-    String str2;
-    String str3;
-    do
-    {
-      do
-      {
-        int i;
-        int j;
-        do
-        {
-          do
-          {
-            do
-            {
-              return;
-              str1 = paramJSONObject.optString("order");
-            } while (str1.equals(""));
-            localObject = paramJSONObject.optJSONObject("data");
-          } while (localObject == null);
-          paramJSONObject = ((JSONObject)localObject).optString("type");
-          str2 = ((JSONObject)localObject).optString("name");
-          str3 = ((JSONObject)localObject).optString("address");
-          i = ((JSONObject)localObject).optInt("lng");
-          j = ((JSONObject)localObject).optInt("lat");
-        } while ((paramJSONObject.equals("")) || (str2.equals("")) || (i <= 0) || (j <= 0));
-        localObject = new GeoPoint(i, j);
-      } while (!((GeoPoint)localObject).isValid());
-      if (("type_company_address".equals(str1)) && (paramJSONObject.equals("office")))
-      {
-        paramJSONObject = new RoutePlanNode((GeoPoint)localObject, 5, str2, str3);
-        MapVoiceCommandController.getInstance().setCompanyAddress(paramJSONObject);
-        return;
-      }
-    } while ((!"type_home_address".equals(str1)) || (!paramJSONObject.equals("home")));
-    paramJSONObject = new RoutePlanNode((GeoPoint)localObject, 4, str2, str3);
-    MapVoiceCommandController.getInstance().setHomeAddress(paramJSONObject);
-  }
-  
-  private boolean naviStartTask(JSONObject paramJSONObject)
-  {
-    i.b(TAG, "naviStartTask");
-    if (paramJSONObject == null)
-    {
-      if (MapVoiceCommandController.getInstance().isRouteDetailFragment())
-      {
-        MapVoiceCommandController.getInstance().startNavi();
+
+    private boolean naviAppControl(JSONObject jsonObject) {
+        if (jsonObject == null) {
+            return true;
+        }
+        MapVoiceCommandController.getInstance().openNavi();
+        String order = jsonObject.optString(NaviCmdConstants.KEY_NAVI_CMD_ORDER);
+        if (order.equals("")) {
+            return true;
+        }
+        if (!order.equals(NaviCmdConstants.ACTION_TYPE_NAVI_EXIT_NAVI) && !order.equals(NaviCmdConstants.ACTION_TYPE_NAVI_EXIT_APP)) {
+            return true;
+        }
+        if (!BNavigator.getInstance().isNaviBegin()) {
+            return false;
+        }
+        MapVoiceCommandController.getInstance().exitNavi();
         return true;
-      }
-      return false;
     }
-    paramJSONObject = paramJSONObject.optJSONObject("dest");
-    if (paramJSONObject == null) {
-      return false;
+
+    private void handleError() {
+        C1915a.a().b("当前页面不支持", 0);
+        C2201w.a("当前页面不支持");
     }
-    int j = paramJSONObject.optInt("lng");
-    int k = paramJSONObject.optInt("lat");
-    Object localObject = paramJSONObject.optString("dest_name");
-    int i = paramJSONObject.optInt("preference");
-    i.b(TAG, "destName:" + (String)localObject + ", lng:" + j + ", lat:" + k + ", preference:" + i);
-    paramJSONObject = paramJSONObject.optJSONArray("pass_point");
-    if (paramJSONObject != null)
-    {
-      localObject = new ArrayList();
-      i = 0;
-      while (i < paramJSONObject.length())
-      {
-        JSONObject localJSONObject = paramJSONObject.optJSONObject(i);
-        if (localJSONObject != null)
-        {
-          GeoPoint localGeoPoint = new GeoPoint();
-          localGeoPoint.setLatitudeE6(localJSONObject.optInt("lat"));
-          localGeoPoint.setLongitudeE6(localJSONObject.optInt("lng"));
-          ((ArrayList)localObject).add(localGeoPoint);
-          i.b(TAG, "passPoint:lng:" + j + ", lat:" + k);
+
+    public boolean isLocationReady() {
+        return BNLocationManagerProxy.getInstance().isLocationValid();
+    }
+
+    public String getCity() {
+        return GeoLocateModel.getInstance().getCurCityName();
+    }
+
+    public double getLatitude() {
+        if (BNLocationManagerProxy.getInstance().getCurLocation() != null) {
+            return BNLocationManagerProxy.getInstance().getCurLocation().latitude;
         }
-        i += 1;
-      }
+        return 39.912733d;
     }
-    MapVoiceCommandController.getInstance().startCalcRoute(j / 100000.0D, k / 100000.0D);
-    return true;
-  }
-  
-  public double calculateDistance(double paramDouble1, double paramDouble2)
-  {
-    return getDistance2CurrentPoint(CoordinateTransformUtil.transferBD09ToGCJ02(paramDouble2, paramDouble1));
-  }
-  
-  public String getCity()
-  {
-    return GeoLocateModel.getInstance().getCurCityName();
-  }
-  
-  public double getDistance2CurrentPoint(GeoPoint paramGeoPoint)
-  {
-    if ((paramGeoPoint == null) || (!paramGeoPoint.isValid())) {}
-    GeoPoint localGeoPoint;
-    do
-    {
-      return 0.0D;
-      localGeoPoint = BNLocationManagerProxy.getInstance().getLastValidLocation();
-    } while ((localGeoPoint == null) || (!localGeoPoint.isValid()));
-    double d1 = paramGeoPoint.getLongitudeE6() - localGeoPoint.getLongitudeE6();
-    double d2 = paramGeoPoint.getLatitudeE6() - localGeoPoint.getLatitudeE6();
-    return Math.sqrt(d1 * d1 + d2 * d2);
-  }
-  
-  public double getLatitude()
-  {
-    if (BNLocationManagerProxy.getInstance().getCurLocation() != null) {
-      return BNLocationManagerProxy.getInstance().getCurLocation().latitude;
-    }
-    return 39.912733D;
-  }
-  
-  public double getLatitudeBd09ll()
-  {
-    LocData localLocData = BNLocationManagerProxy.getInstance().getCurLocation();
-    return CoordinateTransformUtil.transferGCJ02ToBD09(localLocData.longitude, localLocData.latitude).getLatitudeE6() / 100000.0D;
-  }
-  
-  public double getLatitudeBd09mc()
-  {
-    LocData localLocData = BNLocationManagerProxy.getInstance().getCurLocation();
-    return CoordinateTransformUtil.LL2MC(localLocData.longitude, localLocData.latitude).getInt("MCy") * 1.0D;
-  }
-  
-  public double getLongitude()
-  {
-    if (BNLocationManagerProxy.getInstance().getCurLocation() != null) {
-      return BNLocationManagerProxy.getInstance().getCurLocation().longitude;
-    }
-    return 116.403963D;
-  }
-  
-  public double getLongitudeBd09ll()
-  {
-    LocData localLocData = BNLocationManagerProxy.getInstance().getCurLocation();
-    return CoordinateTransformUtil.transferGCJ02ToBD09(localLocData.longitude, localLocData.latitude).getLongitudeE6() / 100000.0D;
-  }
-  
-  public double getLongitudeBd09mc()
-  {
-    LocData localLocData = BNLocationManagerProxy.getInstance().getCurLocation();
-    return CoordinateTransformUtil.LL2MC(localLocData.longitude, localLocData.latitude).getInt("MCx") * 1.0D;
-  }
-  
-  public boolean isLocationReady()
-  {
-    return BNLocationManagerProxy.getInstance().isLocationValid();
-  }
-  
-  public void onNaviCommand(String paramString1, String paramString2)
-  {
-    i.b(TAG, "func:" + paramString1 + " parsms:" + paramString2);
-    if (TextUtils.isEmpty(paramString1)) {
-      i.b(TAG, "func is null");
-    }
-    do
-    {
-      return;
-      if ((!TextUtils.isEmpty(paramString2)) || (!"fun_navi_start_task".equals(paramString1))) {
-        break;
-      }
-      MapVoiceCommandController.getInstance().openNavi();
-    } while (naviStartTask(null));
-    handleError();
-    return;
-    for (;;)
-    {
-      boolean bool;
-      try
-      {
-        paramString2 = new JSONObject(paramString2);
-        bool = false;
-        if ("fun_navi_map_control".equals(paramString1))
-        {
-          bool = naviMapControl(paramString2);
-          if (bool) {
-            break;
-          }
-          handleError();
-          return;
+
+    public double getLongitude() {
+        if (BNLocationManagerProxy.getInstance().getCurLocation() != null) {
+            return BNLocationManagerProxy.getInstance().getCurLocation().longitude;
         }
-      }
-      catch (JSONException paramString1)
-      {
-        paramString1.printStackTrace();
-        i.b(TAG, "create JSONObject fail!");
-        i.e(TAG, paramString1.toString());
-        return;
-      }
-      if ("fun_navi_start_task".equals(paramString1))
-      {
-        naviStartTask(paramString2);
-        bool = true;
-      }
-      else if ("fun_navi_navi_set".equals(paramString1))
-      {
-        naviNaviSet(paramString2);
-        bool = true;
-      }
-      else if ("fun_navi_app_control".equals(paramString1))
-      {
-        bool = naviAppControl(paramString2);
-      }
+        return 116.403963d;
     }
-  }
+
+    public double calculateDistance(double lat, double lng) {
+        return getDistance2CurrentPoint(CoordinateTransformUtil.transferBD09ToGCJ02(lng, lat));
+    }
+
+    public double getLatitudeBd09ll() {
+        LocData locData = BNLocationManagerProxy.getInstance().getCurLocation();
+        return ((double) CoordinateTransformUtil.transferGCJ02ToBD09(locData.longitude, locData.latitude).getLatitudeE6()) / 100000.0d;
+    }
+
+    public double getLongitudeBd09ll() {
+        LocData locData = BNLocationManagerProxy.getInstance().getCurLocation();
+        return ((double) CoordinateTransformUtil.transferGCJ02ToBD09(locData.longitude, locData.latitude).getLongitudeE6()) / 100000.0d;
+    }
+
+    public double getLatitudeBd09mc() {
+        LocData locData = BNLocationManagerProxy.getInstance().getCurLocation();
+        return ((double) CoordinateTransformUtil.LL2MC(locData.longitude, locData.latitude).getInt("MCy")) * 1.0d;
+    }
+
+    public double getLongitudeBd09mc() {
+        LocData locData = BNLocationManagerProxy.getInstance().getCurLocation();
+        return ((double) CoordinateTransformUtil.LL2MC(locData.longitude, locData.latitude).getInt("MCx")) * 1.0d;
+    }
+
+    public double getDistance2CurrentPoint(GeoPoint point) {
+        if (point == null || !point.isValid()) {
+            return 0.0d;
+        }
+        GeoPoint center = BNLocationManagerProxy.getInstance().getLastValidLocation();
+        if (center == null || !center.isValid()) {
+            return 0.0d;
+        }
+        double dx = (double) (point.getLongitudeE6() - center.getLongitudeE6());
+        double dy = (double) (point.getLatitudeE6() - center.getLatitudeE6());
+        return Math.sqrt((dx * dx) + (dy * dy));
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/voice/NaviToolImpl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

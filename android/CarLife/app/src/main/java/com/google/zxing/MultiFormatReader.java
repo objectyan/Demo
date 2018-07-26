@@ -10,142 +10,101 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-public final class MultiFormatReader
-  implements Reader
-{
-  private Map<DecodeHintType, ?> hints;
-  private Reader[] readers;
-  
-  private Result decodeInternal(BinaryBitmap paramBinaryBitmap)
-    throws NotFoundException
-  {
-    if (this.readers != null)
-    {
-      Reader[] arrayOfReader = this.readers;
-      int j = arrayOfReader.length;
-      int i = 0;
-      while (i < j)
-      {
-        Object localObject = arrayOfReader[i];
-        try
-        {
-          localObject = ((Reader)localObject).decode(paramBinaryBitmap, this.hints);
-          return (Result)localObject;
-        }
-        catch (ReaderException localReaderException)
-        {
-          i += 1;
-        }
-      }
+public final class MultiFormatReader implements Reader {
+    private Map<DecodeHintType, ?> hints;
+    private Reader[] readers;
+
+    public Result decode(BinaryBitmap image) throws NotFoundException {
+        setHints(null);
+        return decodeInternal(image);
     }
-    throw NotFoundException.getNotFoundInstance();
-  }
-  
-  public Result decode(BinaryBitmap paramBinaryBitmap)
-    throws NotFoundException
-  {
-    setHints(null);
-    return decodeInternal(paramBinaryBitmap);
-  }
-  
-  public Result decode(BinaryBitmap paramBinaryBitmap, Map<DecodeHintType, ?> paramMap)
-    throws NotFoundException
-  {
-    setHints(paramMap);
-    return decodeInternal(paramBinaryBitmap);
-  }
-  
-  public Result decodeWithState(BinaryBitmap paramBinaryBitmap)
-    throws NotFoundException
-  {
-    if (this.readers == null) {
-      setHints(null);
+
+    public Result decode(BinaryBitmap image, Map<DecodeHintType, ?> hints) throws NotFoundException {
+        setHints(hints);
+        return decodeInternal(image);
     }
-    return decodeInternal(paramBinaryBitmap);
-  }
-  
-  public void reset()
-  {
-    if (this.readers != null)
-    {
-      Reader[] arrayOfReader = this.readers;
-      int j = arrayOfReader.length;
-      int i = 0;
-      while (i < j)
-      {
-        arrayOfReader[i].reset();
-        i += 1;
-      }
+
+    public Result decodeWithState(BinaryBitmap image) throws NotFoundException {
+        if (this.readers == null) {
+            setHints(null);
+        }
+        return decodeInternal(image);
     }
-  }
-  
-  public void setHints(Map<DecodeHintType, ?> paramMap)
-  {
-    int j = 0;
-    this.hints = paramMap;
-    int i;
-    if ((paramMap != null) && (paramMap.containsKey(DecodeHintType.TRY_HARDER)))
-    {
-      i = 1;
-      if (paramMap != null) {
-        break label521;
-      }
+
+    public void setHints(Map<DecodeHintType, ?> hints) {
+        boolean tryHarder;
+        boolean addOneDReader = false;
+        this.hints = hints;
+        if (hints == null || !hints.containsKey(DecodeHintType.TRY_HARDER)) {
+            tryHarder = false;
+        } else {
+            tryHarder = true;
+        }
+        Collection<BarcodeFormat> formats = hints == null ? null : (Collection) hints.get(DecodeHintType.POSSIBLE_FORMATS);
+        Collection<Reader> readers = new ArrayList();
+        if (formats != null) {
+            if (formats.contains(BarcodeFormat.UPC_A) || formats.contains(BarcodeFormat.UPC_E) || formats.contains(BarcodeFormat.EAN_13) || formats.contains(BarcodeFormat.EAN_8) || formats.contains(BarcodeFormat.CODE_39) || formats.contains(BarcodeFormat.CODE_93) || formats.contains(BarcodeFormat.CODE_128) || formats.contains(BarcodeFormat.ITF) || formats.contains(BarcodeFormat.RSS_14) || formats.contains(BarcodeFormat.RSS_EXPANDED)) {
+                addOneDReader = true;
+            }
+            if (addOneDReader && !tryHarder) {
+                readers.add(new MultiFormatOneDReader(hints));
+            }
+            if (formats.contains(BarcodeFormat.QR_CODE)) {
+                readers.add(new QRCodeReader());
+            }
+            if (formats.contains(BarcodeFormat.DATA_MATRIX)) {
+                readers.add(new DataMatrixReader());
+            }
+            if (formats.contains(BarcodeFormat.AZTEC)) {
+                readers.add(new AztecReader());
+            }
+            if (formats.contains(BarcodeFormat.PDF_417)) {
+                readers.add(new PDF417Reader());
+            }
+            if (formats.contains(BarcodeFormat.MAXICODE)) {
+                readers.add(new MaxiCodeReader());
+            }
+            if (addOneDReader && tryHarder) {
+                readers.add(new MultiFormatOneDReader(hints));
+            }
+        }
+        if (readers.isEmpty()) {
+            if (!tryHarder) {
+                readers.add(new MultiFormatOneDReader(hints));
+            }
+            readers.add(new QRCodeReader());
+            readers.add(new DataMatrixReader());
+            readers.add(new AztecReader());
+            readers.add(new PDF417Reader());
+            readers.add(new MaxiCodeReader());
+            if (tryHarder) {
+                readers.add(new MultiFormatOneDReader(hints));
+            }
+        }
+        this.readers = (Reader[]) readers.toArray(new Reader[readers.size()]);
     }
-    label521:
-    for (Collection localCollection = null;; localCollection = (Collection)paramMap.get(DecodeHintType.POSSIBLE_FORMATS))
-    {
-      ArrayList localArrayList = new ArrayList();
-      if (localCollection != null)
-      {
-        if ((localCollection.contains(BarcodeFormat.UPC_A)) || (localCollection.contains(BarcodeFormat.UPC_E)) || (localCollection.contains(BarcodeFormat.EAN_13)) || (localCollection.contains(BarcodeFormat.EAN_8)) || (localCollection.contains(BarcodeFormat.CODE_39)) || (localCollection.contains(BarcodeFormat.CODE_93)) || (localCollection.contains(BarcodeFormat.CODE_128)) || (localCollection.contains(BarcodeFormat.ITF)) || (localCollection.contains(BarcodeFormat.RSS_14)) || (localCollection.contains(BarcodeFormat.RSS_EXPANDED))) {
-          j = 1;
+
+    public void reset() {
+        if (this.readers != null) {
+            for (Reader reader : this.readers) {
+                reader.reset();
+            }
         }
-        if ((j != 0) && (i == 0)) {
-          localArrayList.add(new MultiFormatOneDReader(paramMap));
-        }
-        if (localCollection.contains(BarcodeFormat.QR_CODE)) {
-          localArrayList.add(new QRCodeReader());
-        }
-        if (localCollection.contains(BarcodeFormat.DATA_MATRIX)) {
-          localArrayList.add(new DataMatrixReader());
-        }
-        if (localCollection.contains(BarcodeFormat.AZTEC)) {
-          localArrayList.add(new AztecReader());
-        }
-        if (localCollection.contains(BarcodeFormat.PDF_417)) {
-          localArrayList.add(new PDF417Reader());
-        }
-        if (localCollection.contains(BarcodeFormat.MAXICODE)) {
-          localArrayList.add(new MaxiCodeReader());
-        }
-        if ((j != 0) && (i != 0)) {
-          localArrayList.add(new MultiFormatOneDReader(paramMap));
-        }
-      }
-      if (localArrayList.isEmpty())
-      {
-        if (i == 0) {
-          localArrayList.add(new MultiFormatOneDReader(paramMap));
-        }
-        localArrayList.add(new QRCodeReader());
-        localArrayList.add(new DataMatrixReader());
-        localArrayList.add(new AztecReader());
-        localArrayList.add(new PDF417Reader());
-        localArrayList.add(new MaxiCodeReader());
-        if (i != 0) {
-          localArrayList.add(new MultiFormatOneDReader(paramMap));
-        }
-      }
-      this.readers = ((Reader[])localArrayList.toArray(new Reader[localArrayList.size()]));
-      return;
-      i = 0;
-      break;
     }
-  }
+
+    private Result decodeInternal(BinaryBitmap image) throws NotFoundException {
+        if (this.readers != null) {
+            Reader[] arr$ = this.readers;
+            int len$ = arr$.length;
+            int i$ = 0;
+            while (i$ < len$) {
+                try {
+                    return arr$[i$].decode(image, this.hints);
+                } catch (ReaderException e) {
+                    i$++;
+                }
+            }
+        }
+        throw NotFoundException.getNotFoundInstance();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/zxing/MultiFormatReader.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

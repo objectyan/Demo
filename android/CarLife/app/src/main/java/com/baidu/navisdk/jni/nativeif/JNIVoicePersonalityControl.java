@@ -8,70 +8,61 @@ import com.baidu.navisdk.util.common.LogUtil;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class JNIVoicePersonalityControl
-{
-  public static JNIVoicePersonalityControl sInstance = new JNIVoicePersonalityControl();
-  
-  public native boolean CopyMaiDouPath(String paramString);
-  
-  public native boolean appendTaskToTaskArray(String paramString, boolean paramBoolean);
-  
-  public native boolean getDownloadVoiceTask(ArrayList<Bundle> paramArrayList);
-  
-  public native boolean getRecommendVoiceTask(ArrayList<Bundle> paramArrayList);
-  
-  public native boolean getRecordVoiceItems(String paramString, ArrayList<Bundle> paramArrayList);
-  
-  public native String getTaskFilePath(String paramString, boolean paramBoolean);
-  
-  public native String getTaskFilePathWithWord(String paramString1, String paramString2);
-  
-  public native boolean getVoiceInfo(String paramString, Bundle paramBundle);
-  
-  public native boolean isTaskDowned(String paramString, VoiceDataStatus paramVoiceDataStatus);
-  
-  public ArrayList<VoiceInfo> parseVoiceInfoListBundle(ArrayList<Bundle> paramArrayList)
-  {
-    LogUtil.e("JNIVoicePersonalityControl", "parseVoiceInfoListBundle size = " + paramArrayList.size());
-    ArrayList localArrayList = new ArrayList();
-    if ((paramArrayList != null) && (!paramArrayList.isEmpty()))
-    {
-      paramArrayList = paramArrayList.iterator();
-      while (paramArrayList.hasNext())
-      {
-        VoiceInfo localVoiceInfo = VoiceInfo.getVoiceInfo((Bundle)paramArrayList.next());
-        LogUtil.e("JNIVoicePersonalityControl", "parse info:" + localVoiceInfo.toString());
-        localArrayList.add(localVoiceInfo);
-      }
+public class JNIVoicePersonalityControl {
+    public static JNIVoicePersonalityControl sInstance = new JNIVoicePersonalityControl();
+
+    public native boolean CopyMaiDouPath(String str);
+
+    public native boolean appendTaskToTaskArray(String str, boolean z);
+
+    public native boolean getDownloadVoiceTask(ArrayList<Bundle> arrayList);
+
+    public native boolean getRecommendVoiceTask(ArrayList<Bundle> arrayList);
+
+    public native boolean getRecordVoiceItems(String str, ArrayList<Bundle> arrayList);
+
+    public native String getTaskFilePath(String str, boolean z);
+
+    public native String getTaskFilePathWithWord(String str, String str2);
+
+    public native boolean getVoiceInfo(String str, Bundle bundle);
+
+    public native boolean isTaskDowned(String str, VoiceDataStatus voiceDataStatus);
+
+    public native boolean pauseTask(String str);
+
+    public native boolean recordVoiceData(ArrayList<OrgVoiceItem> arrayList, int i, String str);
+
+    public native boolean removeTask(String str, int i);
+
+    public native boolean resumeTask(String str);
+
+    public native boolean saveRecordVoiceData(boolean z, Bundle bundle);
+
+    public native boolean updateTaskToServer(String str, String str2);
+
+    private JNIVoicePersonalityControl() {
     }
-    return localArrayList;
-  }
-  
-  public native boolean pauseTask(String paramString);
-  
-  public native boolean recordVoiceData(ArrayList<OrgVoiceItem> paramArrayList, int paramInt, String paramString);
-  
-  public boolean removeTask(String paramString)
-  {
-    return removeTask(paramString, 0);
-  }
-  
-  public native boolean removeTask(String paramString, int paramInt);
-  
-  public boolean removeUpdateTask(String paramString)
-  {
-    return removeTask(paramString, 1);
-  }
-  
-  public native boolean resumeTask(String paramString);
-  
-  public native boolean saveRecordVoiceData(boolean paramBoolean, Bundle paramBundle);
-  
-  public native boolean updateTaskToServer(String paramString1, String paramString2);
+
+    public boolean removeTask(String taskId) {
+        return removeTask(taskId, 0);
+    }
+
+    public boolean removeUpdateTask(String taskId) {
+        return removeTask(taskId, 1);
+    }
+
+    public ArrayList<VoiceInfo> parseVoiceInfoListBundle(ArrayList<Bundle> bundleList) {
+        LogUtil.m15791e("JNIVoicePersonalityControl", "parseVoiceInfoListBundle size = " + bundleList.size());
+        ArrayList<VoiceInfo> voiceInfoList = new ArrayList();
+        if (!(bundleList == null || bundleList.isEmpty())) {
+            Iterator it = bundleList.iterator();
+            while (it.hasNext()) {
+                VoiceInfo voiceInfo = VoiceInfo.getVoiceInfo((Bundle) it.next());
+                LogUtil.m15791e("JNIVoicePersonalityControl", "parse info:" + voiceInfo.toString());
+                voiceInfoList.add(voiceInfo);
+            }
+        }
+        return voiceInfoList;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/jni/nativeif/JNIVoicePersonalityControl.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

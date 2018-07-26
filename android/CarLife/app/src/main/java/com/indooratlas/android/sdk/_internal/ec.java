@@ -3,43 +3,37 @@ package com.indooratlas.android.sdk._internal;
 import android.support.annotation.Nullable;
 import java.util.Arrays;
 
-public final class ec
-{
-  public static int[] a(@Nullable int[] paramArrayOfInt, int paramInt)
-  {
-    if (paramArrayOfInt == null) {
-      return new int[] { paramInt };
+public final class ec {
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ec$b */
+    public interface C5864b<T> {
+        /* renamed from: a */
+        boolean mo4670a(T t);
     }
-    int i = paramArrayOfInt.length;
-    paramArrayOfInt = Arrays.copyOf(paramArrayOfInt, i + 1);
-    paramArrayOfInt[i] = paramInt;
-    return paramArrayOfInt;
-  }
-  
-  public static final class a
-    implements ec.b
-  {
-    private final Object a;
-    
-    public a(Object paramObject)
-    {
-      this.a = paramObject;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.ec$a */
+    public static class C5865a implements C5864b {
+        /* renamed from: a */
+        private final Object f23512a;
+
+        public C5865a(Object obj) {
+            this.f23512a = obj;
+        }
+
+        /* renamed from: a */
+        public final boolean mo4670a(Object obj) {
+            return this.f23512a.equals(obj);
+        }
     }
-    
-    public final boolean a(Object paramObject)
-    {
-      return this.a.equals(paramObject);
+
+    /* renamed from: a */
+    public static int[] m20398a(@Nullable int[] iArr, int i) {
+        if (iArr == null) {
+            return new int[]{i};
+        }
+        int length = iArr.length;
+        int[] copyOf = Arrays.copyOf(iArr, length + 1);
+        copyOf[length] = i;
+        return copyOf;
     }
-  }
-  
-  public static abstract interface b<T>
-  {
-    public abstract boolean a(T paramT);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/ec.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

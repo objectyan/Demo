@@ -3,666 +3,507 @@ package com.baidu.android.pushservice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import com.baidu.android.pushservice.b.b;
-import com.baidu.android.pushservice.c.d;
-import com.baidu.android.pushservice.d.c;
-import com.baidu.android.pushservice.j.m;
-import com.baidu.android.pushservice.j.p;
+import com.baidu.android.pushservice.message.C0623i;
 import com.baidu.android.pushservice.message.PublicMsg;
-import com.baidu.android.pushservice.message.a.h;
-import com.baidu.android.pushservice.message.i;
+import com.baidu.android.pushservice.message.p033a.C0607h;
+import com.baidu.android.pushservice.message.p033a.C0609j;
+import com.baidu.android.pushservice.message.p033a.C0612l;
+import com.baidu.android.pushservice.p023b.C0432b;
+import com.baidu.android.pushservice.p024c.C0448d;
+import com.baidu.android.pushservice.p025d.C0463a;
+import com.baidu.android.pushservice.p025d.C0472c;
+import com.baidu.android.pushservice.p029h.C0544j;
+import com.baidu.android.pushservice.p029h.C0546l;
+import com.baidu.android.pushservice.p029h.C0553q;
+import com.baidu.android.pushservice.p031j.C0574m;
+import com.baidu.android.pushservice.p031j.C0578p;
+import com.baidu.android.pushservice.p031j.C0579q;
+import com.baidu.baidunavis.BaiduNaviParams.RoutePlanFailedSubType;
+import com.baidu.speech.asr.SpeechConstant;
+import com.meizu.cloud.pushsdk.PushManager;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class PushMessageReceiver
-  extends BroadcastReceiver
-{
-  public static final String TAG = "PushMessageReceiver";
-  
-  private void handleMeizuMessageCallBack(Context paramContext, Intent paramIntent)
-  {
-    i locali = new i();
-    int i = paramIntent.getIntExtra("mz_push_msg_type", 0);
-    String str = locali.c(paramContext, paramIntent.getStringExtra("mz_notification_self_define_content"));
-    if (!p.y(paramContext)) {}
-    while ((p.y(paramContext, locali.l)) || (!PushManager.hwMessageVerify(paramContext, locali.o, (locali.l + str).replaceAll("\\\\", ""))) || (i != b.a(b.c))) {
-      return;
-    }
-    onNotificationClicked(paramContext, paramIntent.getStringExtra("mz_notification_title"), paramIntent.getStringExtra("mz_notification_content"), str);
-    com.baidu.android.pushservice.h.q.a(paramContext, locali.l, "010206");
-  }
-  
-  private void handleOppoMessageCallBack(Context paramContext, Intent paramIntent)
-  {
-    Object localObject1 = paramIntent.getStringExtra("op_notification_sign");
-    String str1 = paramIntent.getStringExtra("op_notification_msg_id");
-    Object localObject2 = paramIntent.getStringExtra("op_notification_pkg_content");
-    paramIntent = paramIntent.getStringExtra("extra_extra_custom_content");
-    if ((TextUtils.isEmpty((CharSequence)localObject1)) || (TextUtils.isEmpty(str1))) {}
-    while ((!p.y(paramContext)) || (p.y(paramContext, str1)) || (!f.b(paramContext, (String)localObject1, str1 + paramIntent))) {
-      return;
-    }
-    if (!TextUtils.isEmpty((CharSequence)localObject2)) {}
-    try
-    {
-      localObject1 = Intent.parseUri((String)localObject2, 0);
-      ((Intent)localObject1).setPackage(paramContext.getPackageName());
-      ((Intent)localObject1).addFlags(268435456);
-      localObject2 = new JSONObject(paramIntent);
-      Iterator localIterator = ((JSONObject)localObject2).keys();
-      while (localIterator.hasNext())
-      {
-        String str2 = (String)localIterator.next();
-        ((Intent)localObject1).putExtra(str2, ((JSONObject)localObject2).optString(str2));
-      }
-      if (paramContext.getPackageManager().queryIntentActivities((Intent)localObject1, 0).size() > 0) {
-        paramContext.startActivity((Intent)localObject1);
-      }
-      try
-      {
-        onNotificationClicked(paramContext, null, null, new JSONObject("{\"extras\":" + paramIntent + "}").getString("extras"));
-        com.baidu.android.pushservice.h.q.a(paramContext, str1, "010207");
-        return;
-      }
-      catch (Exception paramContext) {}
-      return;
-    }
-    catch (Exception paramContext) {}
-  }
-  
-  private void handleXiaomiMessageCallBack(Context paramContext, MiPushMessage paramMiPushMessage, int paramInt)
-  {
-    try
-    {
-      String str = paramMiPushMessage.getContent();
-      i locali = new i();
-      boolean bool = msgFromXMConsole(str);
-      if (bool)
-      {
-        locali.m = com.baidu.android.pushservice.message.a.l.b.a();
-        if (p.y(paramContext)) {
-          break label85;
+public abstract class PushMessageReceiver extends BroadcastReceiver {
+    public static final String TAG = "PushMessageReceiver";
+
+    /* renamed from: com.baidu.android.pushservice.PushMessageReceiver$a */
+    private static class C0412a extends Handler {
+        /* renamed from: d */
+        protected final WeakReference<Context> f1294d;
+
+        public C0412a(Context context) {
+            this.f1294d = new WeakReference(context);
         }
-      }
-      for (;;)
-      {
-        if ((bool) || (paramInt != b.a(b.c))) {
-          break label310;
+    }
+
+    /* renamed from: com.baidu.android.pushservice.PushMessageReceiver$b */
+    private enum C0415b {
+        MSG_PASS(1),
+        MSG_ARRIVED(2),
+        MSG_CLICKED(3);
+        
+        /* renamed from: d */
+        private int f1311d;
+
+        private C0415b(int i) {
+            this.f1311d = i;
         }
-        com.baidu.android.pushservice.h.q.a(paramContext, locali.l, "010205");
-        return;
-        str = locali.b(paramContext, str);
-        break;
-        label85:
-        if ((paramInt == b.a(b.c)) || (!p.y(paramContext, locali.l))) {
-          if (locali.m == com.baidu.android.pushservice.message.a.l.p.a()) {
-            p.A(paramContext);
-          } else if (locali.m == com.baidu.android.pushservice.message.a.l.o.a()) {
-            p.B(paramContext);
-          } else if ((locali.m == com.baidu.android.pushservice.message.a.l.g.a()) || (locali.m == com.baidu.android.pushservice.message.a.l.c.a()) || (locali.m == com.baidu.android.pushservice.message.a.l.b.a()) || (locali.m == com.baidu.android.pushservice.message.a.l.f.a()) || (locali.m == com.baidu.android.pushservice.message.a.l.d.a()) || (locali.m == com.baidu.android.pushservice.message.a.l.e.a())) {
-            if (paramInt == b.a(b.a)) {
-              onMessage(paramContext, str, null);
-            } else if (paramInt == b.a(b.b)) {
-              onNotificationArrived(paramContext, paramMiPushMessage.getTitle(), paramMiPushMessage.getDescription(), str);
-            } else if (paramInt == b.a(b.c)) {
-              onNotificationClicked(paramContext, paramMiPushMessage.getTitle(), paramMiPushMessage.getDescription(), str);
-            }
-          }
+
+        /* renamed from: a */
+        private int m1742a() {
+            return this.f1311d;
         }
-      }
-      label310:
-      return;
     }
-    catch (Throwable paramContext) {}
-  }
-  
-  private static boolean msgFromXMConsole(String paramString)
-  {
-    try
-    {
-      new JSONObject(paramString);
-      return false;
-    }
-    catch (Exception paramString) {}
-    return true;
-  }
-  
-  private void sendCallback(Context paramContext, Intent paramIntent, int paramInt)
-  {
-    try
-    {
-      if (paramIntent.getBooleanExtra("bdpush_deliver_NO_CALLBACK", false)) {
-        return;
-      }
-      paramIntent.putExtra("bd.cross.request.RESULT_CODE", paramInt);
-      paramIntent.setClass(paramContext, CommandService.class);
-      paramIntent.putExtra("bd.cross.request.COMMAND_TYPE", "bd.cross.command.MESSAGE_ACK");
-      paramContext.startService(paramIntent);
-      return;
-    }
-    catch (Exception paramContext) {}
-  }
-  
-  public abstract void onBind(Context paramContext, int paramInt, String paramString1, String paramString2, String paramString3, String paramString4);
-  
-  public abstract void onDelTags(Context paramContext, int paramInt, List<String> paramList1, List<String> paramList2, String paramString);
-  
-  public abstract void onListTags(Context paramContext, int paramInt, List<String> paramList, String paramString);
-  
-  public abstract void onMessage(Context paramContext, String paramString1, String paramString2);
-  
-  public abstract void onNotificationArrived(Context paramContext, String paramString1, String paramString2, String paramString3);
-  
-  public abstract void onNotificationClicked(Context paramContext, String paramString1, String paramString2, String paramString3);
-  
-  public final void onReceive(final Context paramContext, final Intent paramIntent)
-  {
-    if ((paramIntent == null) || (paramIntent.getAction() == null)) {
-      return;
-    }
-    for (;;)
-    {
-      int j;
-      try
-      {
-        paramIntent.getByteArrayExtra("baidu_message_secur_info");
-        final Object localObject1 = paramIntent.getAction();
-        final Object localObject3;
-        final Object localObject4;
-        final Object localObject5;
-        if (((String)localObject1).equals("com.baidu.android.pushservice.action.MESSAGE"))
-        {
-          if (d.g(paramContext)) {
-            break;
-          }
-          if (!p.y(paramContext))
-          {
-            f.g(paramContext);
-            return;
-          }
-          if (paramIntent.getExtras() == null) {
-            break;
-          }
-          localObject1 = paramIntent.getByteArrayExtra("baidu_message_secur_info");
-          localObject3 = paramIntent.getByteArrayExtra("baidu_message_body");
-          localObject4 = paramIntent.getStringExtra("message_id");
-          i = paramIntent.getIntExtra("baidu_message_type", -1);
-          localObject5 = paramIntent.getStringExtra("app_id");
-          if ((localObject1 == null) || (localObject3 == null) || (TextUtils.isEmpty((CharSequence)localObject4)) || (TextUtils.isEmpty((CharSequence)localObject5)) || (i == -1))
-          {
-            sendCallback(paramContext, paramIntent, 2);
-            return;
-          }
-          if ((p.t(paramContext, (String)localObject4)) || (!com.baidu.android.pushservice.d.a.e(paramContext, (String)localObject4)))
-          {
-            sendCallback(paramContext, paramIntent, 4);
-            return;
-          }
-          new Thread()
-          {
-            public void handleMessage(Message paramAnonymousMessage)
-            {
-              if (this.d.get() != null)
-              {
-                PushMessageReceiver.this.onMessage((Context)this.d.get(), paramAnonymousMessage.getData().getString("message"), paramAnonymousMessage.getData().getString("custom_content"));
-                PushMessageReceiver.this.sendCallback(paramContext, paramIntent, 10);
-              }
-            }
-          }
-          {
-            public void run()
-            {
-              String[] arrayOfString = h.a(paramContext, i, localObject5, localObject4, localObject1, localObject3);
-              if ((arrayOfString == null) || (arrayOfString.length != 2)) {
-                PushMessageReceiver.this.sendCallback(paramContext, paramIntent, 9);
-              }
-              do
-              {
-                return;
-                Message localMessage = new Message();
-                Bundle localBundle = new Bundle();
-                localBundle.putString("message", arrayOfString[0]);
-                localBundle.putString("custom_content", arrayOfString[1]);
-                localMessage.setData(localBundle);
-                this.h.sendMessage(localMessage);
-                p.b("message " + arrayOfString[0] + " at time of " + System.currentTimeMillis(), paramContext);
-              } while (a.b() <= 0);
-              com.baidu.android.pushservice.h.l.b(paramContext, localObject5, localObject4, i, arrayOfString[0].getBytes(), 0, com.baidu.android.pushservice.h.j.a);
-            }
-          }.start();
-          return;
+
+    private void handleMeizuMessageCallBack(Context context, Intent intent) {
+        C0623i c0623i = new C0623i();
+        int intExtra = intent.getIntExtra("mz_push_msg_type", 0);
+        String c = c0623i.m2749c(context, intent.getStringExtra("mz_notification_self_define_content"));
+        if (C0578p.m2608y(context) && !C0578p.m2609y(context, c0623i.f1963l) && PushManager.hwMessageVerify(context, c0623i.f1966o, (c0623i.f1963l + c).replaceAll("\\\\", "")) && intExtra == C0415b.MSG_CLICKED.m1742a()) {
+            onNotificationClicked(context, intent.getStringExtra("mz_notification_title"), intent.getStringExtra("mz_notification_content"), c);
+            C0553q.m2361a(context, c0623i.f1963l, "010206");
         }
-        String str;
-        Object localObject6;
-        if (((String)localObject1).equals("com.baidu.android.pushservice.action.RECEIVE"))
-        {
-          localObject3 = paramIntent.getStringExtra("method");
-          if (TextUtils.isEmpty((CharSequence)localObject3)) {
-            break;
-          }
-          j = paramIntent.getIntExtra("error_msg", 0);
-          if (paramIntent.getByteArrayExtra("content") == null) {
-            break label2403;
-          }
-          localObject1 = new String(paramIntent.getByteArrayExtra("content"));
-          if (((String)localObject3).equals("com.baidu.android.pushservice.action.notification.ARRIVED"))
-          {
-            localObject1 = paramIntent.getStringExtra("msgid");
-            localObject3 = paramIntent.getStringExtra("notification_title");
-            localObject4 = paramIntent.getStringExtra("notification_content");
-            localObject5 = paramIntent.getStringExtra("extra_extra_custom_content");
-            str = paramIntent.getStringExtra("com.baidu.pushservice.app_id");
-            if (!p.a(paramContext, paramIntent.getByteArrayExtra("baidu_message_secur_info"), str, (String)localObject1, paramIntent.getByteArrayExtra("baidu_message_body"))) {
-              break;
-            }
-            onNotificationArrived(paramContext, (String)localObject3, (String)localObject4, (String)localObject5);
-            return;
-          }
-          if ((((String)localObject3).equals("method_bind")) || (((String)localObject3).equals("method_deal_lapp_bind_intent")))
-          {
-            if ((j == 0) && (!TextUtils.isEmpty((CharSequence)localObject1))) {
-              try
-              {
-                localObject1 = new JSONObject((String)localObject1);
-                localObject4 = ((JSONObject)localObject1).getString("request_id");
-                localObject1 = ((JSONObject)localObject1).getJSONObject("response_params");
-                localObject5 = ((JSONObject)localObject1).getString("appid");
-                PushSettings.b(paramContext, (String)localObject5);
-                str = ((JSONObject)localObject1).getString("channel_id");
-                localObject6 = ((JSONObject)localObject1).getString("user_id");
-                long l = 0L;
-                localObject1 = null;
-                localObject3 = null;
-                if (paramIntent.hasExtra("real_bind"))
-                {
-                  l = System.currentTimeMillis();
-                  localObject1 = paramIntent.getStringExtra("access_token");
-                  localObject3 = paramIntent.getStringExtra("secret_key");
+    }
+
+    private void handleOppoMessageCallBack(Context context, Intent intent) {
+        String stringExtra = intent.getStringExtra("op_notification_sign");
+        String stringExtra2 = intent.getStringExtra("op_notification_msg_id");
+        Object stringExtra3 = intent.getStringExtra("op_notification_pkg_content");
+        String stringExtra4 = intent.getStringExtra("extra_extra_custom_content");
+        if (!TextUtils.isEmpty(stringExtra) && !TextUtils.isEmpty(stringExtra2) && C0578p.m2608y(context) && !C0578p.m2609y(context, stringExtra2) && C0522f.m2191b(context, stringExtra, stringExtra2 + stringExtra4)) {
+            if (!TextUtils.isEmpty(stringExtra3)) {
+                try {
+                    Intent parseUri = Intent.parseUri(stringExtra3, 0);
+                    parseUri.setPackage(context.getPackageName());
+                    parseUri.addFlags(RoutePlanFailedSubType.ROUTEPLAN_RESULT_FAIL_PARSE_FAIL);
+                    JSONObject jSONObject = new JSONObject(stringExtra4);
+                    Iterator keys = jSONObject.keys();
+                    while (keys.hasNext()) {
+                        stringExtra = (String) keys.next();
+                        parseUri.putExtra(stringExtra, jSONObject.optString(stringExtra));
+                    }
+                    if (context.getPackageManager().queryIntentActivities(parseUri, 0).size() > 0) {
+                        context.startActivity(parseUri);
+                    }
+                } catch (Exception e) {
+                    return;
                 }
-                m.a(paramContext, (String)localObject5, str, (String)localObject4, (String)localObject6, true, p.d(paramContext, paramContext.getPackageName()), l, (String)localObject1, (String)localObject3);
-                onBind(paramContext, j, (String)localObject5, (String)localObject6, str, (String)localObject4);
-                p.b("PushMessageReceiver#onBind from " + paramContext.getPackageName() + ", errorCode= " + j + ", appid=  " + (String)localObject5 + ", userId=" + (String)localObject6 + ", channelId=" + str + ", requestId=" + (String)localObject4 + ", at time of " + System.currentTimeMillis(), paramContext);
-                paramIntent = new StringBuilder();
-                paramIntent.append(paramContext.getPackageName());
-                paramIntent.append(",");
-                paramIntent.append((String)localObject5);
-                paramIntent.append(",");
-                paramIntent.append((String)localObject6);
-                paramIntent.append(",");
-                paramIntent.append("false");
-                paramIntent.append(",");
-                paramIntent.append(a.a());
-                paramIntent = b.a(paramContext).b(paramIntent.toString());
-                c.e(paramContext, paramIntent);
-                if (!p.E(paramContext)) {
-                  break;
+            }
+            try {
+                onNotificationClicked(context, null, null, new JSONObject("{\"extras\":" + stringExtra4 + "}").getString("extras"));
+                C0553q.m2361a(context, stringExtra2, "010207");
+            } catch (Exception e2) {
+            }
+        }
+    }
+
+    private void handleXiaomiMessageCallBack(Context context, MiPushMessage miPushMessage, int i) {
+        try {
+            String content = miPushMessage.getContent();
+            C0623i c0623i = new C0623i();
+            String str = "";
+            boolean msgFromXMConsole = msgFromXMConsole(content);
+            if (msgFromXMConsole) {
+                c0623i.f1964m = C0612l.MSG_TYPE_SINGLE_PRIVATE.m2706a();
+            } else {
+                content = c0623i.m2748b(context, content);
+            }
+            if (C0578p.m2608y(context) && (i == C0415b.MSG_CLICKED.m1742a() || !C0578p.m2609y(context, c0623i.f1963l))) {
+                if (c0623i.f1964m == C0612l.MSG_TYPE_APPSTAT_COMMAND.m2706a()) {
+                    C0578p.m2493A(context);
+                } else if (c0623i.f1964m == C0612l.MSG_TYPE_LBS_APPLIST_COMMAND.m2706a()) {
+                    C0578p.m2495B(context);
+                } else if (c0623i.f1964m == C0612l.MSG_TYPE_PRIVATE_MESSAGE.m2706a() || c0623i.f1964m == C0612l.MSG_TYPE_MULTI_PRIVATE.m2706a() || c0623i.f1964m == C0612l.MSG_TYPE_SINGLE_PRIVATE.m2706a() || c0623i.f1964m == C0612l.MSG_TYPE_MULTI_PRIVATE_NOTIFICATION.m2706a() || c0623i.f1964m == C0612l.MSG_TYPE_SINGLE_PUBLIC.m2706a() || c0623i.f1964m == C0612l.MSG_TYPE_MULTI_PUBLIC.m2706a()) {
+                    if (i == C0415b.MSG_PASS.m1742a()) {
+                        onMessage(context, content, null);
+                    } else if (i == C0415b.MSG_ARRIVED.m1742a()) {
+                        onNotificationArrived(context, miPushMessage.getTitle(), miPushMessage.getDescription(), content);
+                    } else if (i == C0415b.MSG_CLICKED.m1742a()) {
+                        onNotificationClicked(context, miPushMessage.getTitle(), miPushMessage.getDescription(), content);
+                    }
                 }
-                com.baidu.android.pushservice.j.q.a(paramContext, paramContext.getPackageName() + ".self_push_sync", "bindinfo", paramIntent);
-                return;
-              }
-              catch (Exception paramIntent)
-              {
-                onBind(paramContext, j, null, null, null, null);
-                com.baidu.android.pushservice.h.q.a(paramContext, "020102", paramContext.getPackageName(), j, paramIntent.getMessage());
-                p.b("onBind from " + paramContext.getPackageName() + " errorCode " + j + " exception " + paramIntent.getMessage() + " at time of " + System.currentTimeMillis(), paramContext);
-                return;
-              }
             }
-            onBind(paramContext, j, null, null, null, null);
-            com.baidu.android.pushservice.h.q.a(paramContext, "020102", paramContext.getPackageName(), j, (String)localObject1);
-            p.b("onBind from " + paramContext.getPackageName() + " errorCode " + j + " errorMsg = " + (String)localObject1 + " at time of " + System.currentTimeMillis(), paramContext);
-            return;
-          }
-          if ((((String)localObject3).equals("method_unbind")) || (((String)localObject3).equals("method_lapp_unbind")))
-          {
-            paramIntent = paramContext.getSharedPreferences("bindcache", 0).edit();
-            if (d.g(paramContext)) {
-              break label2397;
+            if (!msgFromXMConsole && i == C0415b.MSG_CLICKED.m1742a()) {
+                C0553q.m2361a(context, c0623i.f1963l, "010205");
             }
-            i = 0;
-            try
-            {
-              onUnbind(paramContext, i, new JSONObject((String)localObject1).getString("request_id"));
-              paramIntent.putBoolean("bind_status", false);
-              paramIntent.commit();
-              if (d.c(paramContext)) {
-                MiPushClient.unregisterPush(paramContext);
-              }
-              if (d.b(paramContext))
-              {
-                paramIntent = m.a(paramContext, "BD_MEIZU_PROXY_APPID_KEY");
-                localObject1 = m.a(paramContext, "BD_MEIZU_PROXY_APPKEY_KEY");
-                if ((!TextUtils.isEmpty(paramIntent)) && (!TextUtils.isEmpty((CharSequence)localObject1))) {
-                  com.meizu.cloud.pushsdk.PushManager.unRegister(paramContext, paramIntent, (String)localObject1);
+        } catch (Throwable th) {
+        }
+    }
+
+    private static boolean msgFromXMConsole(String str) {
+        try {
+            JSONObject jSONObject = new JSONObject(str);
+            return false;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    private void sendCallback(Context context, Intent intent, int i) {
+        try {
+            if (!intent.getBooleanExtra("bdpush_deliver_NO_CALLBACK", false)) {
+                intent.putExtra("bd.cross.request.RESULT_CODE", i);
+                intent.setClass(context, CommandService.class);
+                intent.putExtra("bd.cross.request.COMMAND_TYPE", "bd.cross.command.MESSAGE_ACK");
+                context.startService(intent);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public abstract void onBind(Context context, int i, String str, String str2, String str3, String str4);
+
+    public abstract void onDelTags(Context context, int i, List<String> list, List<String> list2, String str);
+
+    public abstract void onListTags(Context context, int i, List<String> list, String str);
+
+    public abstract void onMessage(Context context, String str, String str2);
+
+    public abstract void onNotificationArrived(Context context, String str, String str2, String str3);
+
+    public abstract void onNotificationClicked(Context context, String str, String str2, String str3);
+
+    public final void onReceive(Context context, Intent intent) {
+        if (intent != null && intent.getAction() != null) {
+            try {
+                intent.getByteArrayExtra("baidu_message_secur_info");
+                String action = intent.getAction();
+                final byte[] byteArrayExtra;
+                final byte[] byteArrayExtra2;
+                final String stringExtra;
+                if (action.equals(PushConstants.ACTION_MESSAGE)) {
+                    if (!C0448d.m1945g(context)) {
+                        if (!C0578p.m2608y(context)) {
+                            C0522f.m2200g(context);
+                        } else if (intent.getExtras() != null) {
+                            byteArrayExtra = intent.getByteArrayExtra("baidu_message_secur_info");
+                            byteArrayExtra2 = intent.getByteArrayExtra("baidu_message_body");
+                            stringExtra = intent.getStringExtra("message_id");
+                            final int intExtra = intent.getIntExtra("baidu_message_type", -1);
+                            final Object stringExtra2 = intent.getStringExtra("app_id");
+                            if (byteArrayExtra == null || byteArrayExtra2 == null || TextUtils.isEmpty(stringExtra) || TextUtils.isEmpty(stringExtra2) || intExtra == -1) {
+                                sendCallback(context, intent, 2);
+                            } else if (C0578p.m2599t(context, stringExtra) || !C0463a.m2013e(context, stringExtra)) {
+                                sendCallback(context, intent, 4);
+                            } else {
+                                final Context context2 = context;
+                                final Intent intent2 = intent;
+                                final C0412a c04131 = new C0412a(this, context) {
+                                    /* renamed from: c */
+                                    final /* synthetic */ PushMessageReceiver f1297c;
+
+                                    public void handleMessage(Message message) {
+                                        if (this.d.get() != null) {
+                                            this.f1297c.onMessage((Context) this.d.get(), message.getData().getString(PushConstants.EXTRA_PUSH_MESSAGE), message.getData().getString("custom_content"));
+                                            this.f1297c.sendCallback(context2, intent2, 10);
+                                        }
+                                    }
+                                };
+                                final Context context3 = context;
+                                final Intent intent3 = intent;
+                                new Thread(this) {
+                                    /* renamed from: i */
+                                    final /* synthetic */ PushMessageReceiver f1306i;
+
+                                    public void run() {
+                                        String[] a = C0607h.m2699a(context3, intExtra, stringExtra2, stringExtra, byteArrayExtra, byteArrayExtra2);
+                                        if (a == null || a.length != 2) {
+                                            this.f1306i.sendCallback(context3, intent3, 9);
+                                            return;
+                                        }
+                                        Message message = new Message();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(PushConstants.EXTRA_PUSH_MESSAGE, a[0]);
+                                        bundle.putString("custom_content", a[1]);
+                                        message.setData(bundle);
+                                        c04131.sendMessage(message);
+                                        C0578p.m2546b("message " + a[0] + " at time of " + System.currentTimeMillis(), context3);
+                                        if (C0430a.m1857b() > 0) {
+                                            C0546l.m2334b(context3, stringExtra2, stringExtra, intExtra, a[0].getBytes(), 0, C0544j.f1797a);
+                                        }
+                                    }
+                                }.start();
+                            }
+                        }
+                    }
+                } else if (action.equals(PushConstants.ACTION_RECEIVE)) {
+                    r5 = intent.getStringExtra("method");
+                    if (!TextUtils.isEmpty(r5)) {
+                        int intExtra2 = intent.getIntExtra(PushConstants.EXTRA_ERROR_CODE, 0);
+                        String str = intent.getByteArrayExtra("content") != null ? new String(intent.getByteArrayExtra("content")) : "";
+                        if (r5.equals("com.baidu.android.pushservice.action.notification.ARRIVED")) {
+                            action = intent.getStringExtra("msgid");
+                            r5 = intent.getStringExtra("notification_title");
+                            r6 = intent.getStringExtra("notification_content");
+                            r7 = intent.getStringExtra("extra_extra_custom_content");
+                            if (C0578p.m2538a(context, intent.getByteArrayExtra("baidu_message_secur_info"), intent.getStringExtra("com.baidu.pushservice.app_id"), action, intent.getByteArrayExtra("baidu_message_body"))) {
+                                onNotificationArrived(context, r5, r6, r7);
+                            }
+                        } else if (r5.equals(PushConstants.METHOD_BIND) || r5.equals("method_deal_lapp_bind_intent")) {
+                            if (intExtra2 != 0 || TextUtils.isEmpty(str)) {
+                                onBind(context, intExtra2, null, null, null, null);
+                                C0553q.m2358a(context, "020102", context.getPackageName(), intExtra2, str);
+                                C0578p.m2546b("onBind from " + context.getPackageName() + " errorCode " + intExtra2 + " errorMsg = " + str + " at time of " + System.currentTimeMillis(), context);
+                                return;
+                            }
+                            try {
+                                r4 = new JSONObject(str);
+                                r8 = r4.getString("request_id");
+                                r4 = r4.getJSONObject("response_params");
+                                r6 = r4.getString(SpeechConstant.APP_ID);
+                                PushSettings.m1824b(context, r6);
+                                r7 = r4.getString("channel_id");
+                                stringExtra = r4.getString("user_id");
+                                long j = 0;
+                                String str2 = null;
+                                String str3 = null;
+                                if (intent.hasExtra("real_bind")) {
+                                    j = System.currentTimeMillis();
+                                    str2 = intent.getStringExtra("access_token");
+                                    str3 = intent.getStringExtra("secret_key");
+                                }
+                                C0574m.m2468a(context, r6, r7, r8, stringExtra, true, C0578p.m2559d(context, context.getPackageName()), j, str2, str3);
+                                onBind(context, intExtra2, r6, stringExtra, r7, r8);
+                                C0578p.m2546b("PushMessageReceiver#onBind from " + context.getPackageName() + ", errorCode= " + intExtra2 + ", appid=  " + r6 + ", userId=" + stringExtra + ", channelId=" + r7 + ", requestId=" + r8 + ", at time of " + System.currentTimeMillis(), context);
+                                StringBuilder stringBuilder = new StringBuilder();
+                                stringBuilder.append(context.getPackageName());
+                                stringBuilder.append(",");
+                                stringBuilder.append(r6);
+                                stringBuilder.append(",");
+                                stringBuilder.append(stringExtra);
+                                stringBuilder.append(",");
+                                stringBuilder.append("false");
+                                stringBuilder.append(",");
+                                stringBuilder.append(C0430a.m1854a());
+                                action = C0432b.m1870a(context).m1882b(stringBuilder.toString());
+                                C0472c.m2038e(context, action);
+                                if (C0578p.m2501E(context)) {
+                                    C0579q.m2613a(context, context.getPackageName() + ".self_push_sync", "bindinfo", action);
+                                }
+                            } catch (Exception e) {
+                                Exception exception = e;
+                                onBind(context, intExtra2, null, null, null, null);
+                                C0553q.m2358a(context, "020102", context.getPackageName(), intExtra2, exception.getMessage());
+                                C0578p.m2546b("onBind from " + context.getPackageName() + " errorCode " + intExtra2 + " exception " + exception.getMessage() + " at time of " + System.currentTimeMillis(), context);
+                            }
+                        } else if (r5.equals("method_unbind") || r5.equals("method_lapp_unbind")) {
+                            Editor edit = context.getSharedPreferences("bindcache", 0).edit();
+                            r4 = !C0448d.m1945g(context) ? 0 : intExtra2;
+                            try {
+                                onUnbind(context, r4, new JSONObject(str).getString("request_id"));
+                                edit.putBoolean("bind_status", false);
+                                edit.commit();
+                            } catch (JSONException e2) {
+                                onUnbind(context, r4, null);
+                                edit.putBoolean("bind_status", false);
+                                edit.commit();
+                            }
+                            if (C0448d.m1940c(context)) {
+                                MiPushClient.unregisterPush(context);
+                            }
+                            if (C0448d.m1939b(context)) {
+                                Object a = C0574m.m2465a(context, "BD_MEIZU_PROXY_APPID_KEY");
+                                Object a2 = C0574m.m2465a(context, "BD_MEIZU_PROXY_APPKEY_KEY");
+                                if (!(TextUtils.isEmpty(a) || TextUtils.isEmpty(a2))) {
+                                    PushManager.unRegister(context, a, a2);
+                                }
+                            }
+                            C0578p.m2546b("unbind from" + context.getPackageName() + " errorCode " + r4 + " at time of " + System.currentTimeMillis(), context);
+                        } else if (r5.equals("method_set_tags") || r5.equals("method_set_lapp_tags")) {
+                            try {
+                                r4 = new JSONObject(str);
+                                stringExtra = r4.getString("request_id");
+                                if (TextUtils.isEmpty(r4.optString(PushConstants.EXTRA_ERROR_CODE))) {
+                                    r4 = r4.optJSONObject("response_params");
+                                    if (r4 != null) {
+                                        r5 = r4.getJSONArray("details");
+                                        if (r5 != null) {
+                                            r7 = new ArrayList();
+                                            r8 = new ArrayList();
+                                            for (r4 = 0; r4 < r5.length(); r4++) {
+                                                r6 = r5.getJSONObject(r4);
+                                                r10 = r6.getString("tag");
+                                                if (r6.getInt("result") == 0) {
+                                                    r7.add(r10);
+                                                } else {
+                                                    r8.add(r10);
+                                                }
+                                            }
+                                            onSetTags(context, intExtra2, r7, r8, stringExtra);
+                                            return;
+                                        }
+                                        return;
+                                    }
+                                    return;
+                                }
+                                onSetTags(context, intExtra2, new ArrayList(), new ArrayList(), stringExtra);
+                            } catch (JSONException e3) {
+                                onSetTags(context, intExtra2, null, null, null);
+                            }
+                        } else if (r5.equals("method_del_tags") || r5.equals("method_del_lapp_tags")) {
+                            try {
+                                r4 = new JSONObject(str);
+                                stringExtra = r4.getString("request_id");
+                                r4 = r4.getJSONObject("response_params");
+                                if (r4 != null) {
+                                    r5 = r4.getJSONArray("details");
+                                    if (r5 != null) {
+                                        r7 = new ArrayList();
+                                        r8 = new ArrayList();
+                                        for (r4 = 0; r4 < r5.length(); r4++) {
+                                            r6 = r5.getJSONObject(r4);
+                                            r10 = r6.getString("tag");
+                                            if (r6.getInt("result") == 0) {
+                                                r7.add(r10);
+                                            } else {
+                                                r8.add(r10);
+                                            }
+                                        }
+                                        onDelTags(context, intExtra2, r7, r8, stringExtra);
+                                    }
+                                }
+                            } catch (JSONException e4) {
+                                onDelTags(context, intExtra2, null, null, null);
+                            }
+                        } else if (r5.equals("method_listtags") || r5.equals("method_list_lapp_tags")) {
+                            try {
+                                onListTags(context, intExtra2, intent.getStringArrayListExtra("tags_list"), new JSONObject(str).getString("request_id"));
+                            } catch (JSONException e5) {
+                                onListTags(context, intExtra2, null, null);
+                            }
+                        }
+                    }
+                } else if (action.equals("com.baidu.android.pushservice.action.notification.CLICK")) {
+                    r5 = intent.getStringExtra("msgid");
+                    r7 = intent.getStringExtra("notification_title");
+                    r8 = intent.getStringExtra("notification_content");
+                    stringExtra = intent.getStringExtra("extra_extra_custom_content");
+                    r6 = intent.getStringExtra("com.baidu.pushservice.app_id");
+                    byteArrayExtra = intent.getByteArrayExtra("baidu_message_secur_info");
+                    byteArrayExtra2 = intent.getByteArrayExtra("baidu_message_body");
+                    if (C0578p.m2551b(context, r5, r6, r7, r8, stringExtra) || C0578p.m2538a(context, byteArrayExtra, r6, r5, byteArrayExtra2)) {
+                        onNotificationClicked(context, r7, r8, stringExtra);
+                    }
+                } else if (action.equals("com.huawei.android.push.intent.REGISTRATION")) {
+                    if (C0448d.m1941d(context)) {
+                        try {
+                            action = new String(intent.getByteArrayExtra("device_token"), "UTF-8");
+                            if (!TextUtils.isEmpty(action)) {
+                                C0522f.m2179a(context, action);
+                            }
+                        } catch (Exception e6) {
+                        }
+                    }
+                } else if (action.equals("com.huawei.intent.action.PUSH")) {
+                    if (C0448d.m1941d(context)) {
+                        try {
+                            Object str4 = new String(intent.getByteArrayExtra("selfshow_info"), "UTF-8");
+                            if (!TextUtils.isEmpty(str4) && context != null) {
+                                r4 = C0609j.m2703a(context, str4);
+                                PublicMsg a3 = r4.m2745a(context);
+                                if (a3 != null && C0578p.m2608y(context)) {
+                                    if (!C0578p.m2609y(context, r4.f1963l)) {
+                                        PushServiceReceiver.m1810a(context, context.getPackageName(), "com.baidu.android.pushservice.CommandService", a3);
+                                    }
+                                }
+                            }
+                        } catch (Exception e7) {
+                        }
+                    }
+                } else if (action.equals("com.huawei.android.push.intent.RECEIVE")) {
+                    if (C0448d.m1941d(context)) {
+                        byte[] byteArrayExtra3 = intent.getByteArrayExtra("msg_data");
+                        byte[] byteArrayExtra4 = intent.getByteArrayExtra("device_token");
+                        try {
+                            r6 = new String(byteArrayExtra3, "utf-8");
+                            action = new String(byteArrayExtra4, "utf-8");
+                            r4 = new C0623i();
+                            r5 = r4.m2746a(context, r6);
+                            if (C0578p.m2608y(context)) {
+                                if (!C0578p.m2609y(context, r4.f1963l)) {
+                                    if (!PushManager.hwMessageVerify(context, r4.f1966o, r4.f1963l + r5)) {
+                                        return;
+                                    }
+                                    if (r4.f1964m == C0612l.MSG_TYPE_APPSTAT_COMMAND.m2706a()) {
+                                        C0578p.m2493A(context);
+                                    } else if (r4.f1964m == C0612l.MSG_TYPE_LBS_APPLIST_COMMAND.m2706a()) {
+                                        C0578p.m2495B(context);
+                                    } else if (r4.f1964m == C0612l.MSG_TYPE_PRIVATE_MESSAGE.m2706a() || r4.f1964m == C0612l.MSG_TYPE_SINGLE_PRIVATE.m2706a()) {
+                                        onMessage(context, r5, null);
+                                    }
+                                }
+                            }
+                        } catch (Exception e8) {
+                        }
+                    }
+                } else if (action.equals(PushPatchMessageReceiver.XIAOMI_REGISTER)) {
+                    if (C0448d.m1940c(context)) {
+                        if (intent.hasExtra(PushPatchMessageReceiver.REGISTER_ERRORCODE)) {
+                            if (intent.getLongExtra(PushPatchMessageReceiver.REGISTER_ERRORCODE, 0) != 0) {
+                                C0522f.m2202i(context);
+                                return;
+                            }
+                            if (intent.hasExtra(PushPatchMessageReceiver.REGID)) {
+                                action = intent.getStringExtra(PushPatchMessageReceiver.REGID);
+                                if (!TextUtils.isEmpty(action)) {
+                                    C0522f.m2179a(context, action);
+                                }
+                            }
+                        }
+                    }
+                } else if (action.equals(PushPatchMessageReceiver.XIAOMI_PUSH_MSG)) {
+                    if (C0448d.m1940c(context)) {
+                        if (intent.hasExtra(PushPatchMessageReceiver.PUSH_MSG)) {
+                            MiPushMessage miPushMessage = (MiPushMessage) intent.getSerializableExtra(PushPatchMessageReceiver.PUSH_MSG);
+                            if (intent.hasExtra(PushPatchMessageReceiver.PUSH_MSG_TYPE)) {
+                                handleXiaomiMessageCallBack(context, miPushMessage, intent.getIntExtra(PushPatchMessageReceiver.PUSH_MSG_TYPE, 0));
+                            }
+                        }
+                    }
+                } else if (action.equals("com.meizu.mzpush.REGISTER")) {
+                    if (C0448d.m1939b(context)) {
+                        if (intent.hasExtra("mz_register_errorcode")) {
+                            if (intent.getStringExtra("mz_register_errorcode").equals("200")) {
+                                if (intent.hasExtra("mz_pushid")) {
+                                    action = intent.getStringExtra("mz_pushid");
+                                    if (!TextUtils.isEmpty(action)) {
+                                        C0522f.m2179a(context, action);
+                                        return;
+                                    }
+                                    return;
+                                }
+                                return;
+                            }
+                            C0522f.m2203j(context);
+                        }
+                    }
+                } else if (action.equals("com.meizu.mzpush.PUSH_MSG")) {
+                    if (C0448d.m1939b(context)) {
+                        if (intent.hasExtra("mz_push_msg_type")) {
+                            handleMeizuMessageCallBack(context, intent);
+                        }
+                    }
+                } else if (action.equals("com.baidu.android.pushservice.action.OPPO_CLICK") && C0448d.m1942e(context)) {
+                    handleOppoMessageCallBack(context, intent);
                 }
-              }
-              p.b("unbind from" + paramContext.getPackageName() + " errorCode " + i + " at time of " + System.currentTimeMillis(), paramContext);
-              return;
+            } catch (Exception e9) {
             }
-            catch (JSONException localJSONException)
-            {
-              onUnbind(paramContext, i, null);
-              paramIntent.putBoolean("bind_status", false);
-              paramIntent.commit();
-              continue;
-            }
-          }
-          if ((((String)localObject3).equals("method_set_tags")) || (((String)localObject3).equals("method_set_lapp_tags")))
-          {
-            try
-            {
-              localObject2 = new JSONObject(localJSONException);
-              paramIntent = ((JSONObject)localObject2).getString("request_id");
-              if (!TextUtils.isEmpty(((JSONObject)localObject2).optString("error_msg")))
-              {
-                onSetTags(paramContext, j, new ArrayList(), new ArrayList(), paramIntent);
-                return;
-              }
-            }
-            catch (JSONException paramIntent)
-            {
-              onSetTags(paramContext, j, null, null, null);
-              return;
-            }
-            localObject2 = ((JSONObject)localObject2).optJSONObject("response_params");
-            if (localObject2 == null) {
-              break;
-            }
-            localObject2 = ((JSONObject)localObject2).getJSONArray("details");
-            if (localObject2 == null) {
-              break;
-            }
-            localObject3 = new ArrayList();
-            localObject4 = new ArrayList();
-            i = 0;
-            if (i < ((JSONArray)localObject2).length())
-            {
-              localObject5 = ((JSONArray)localObject2).getJSONObject(i);
-              str = ((JSONObject)localObject5).getString("tag");
-              if (((JSONObject)localObject5).getInt("result") == 0)
-              {
-                ((List)localObject3).add(str);
-                break label2410;
-              }
-              ((List)localObject4).add(str);
-              break label2410;
-            }
-            onSetTags(paramContext, j, (List)localObject3, (List)localObject4, paramIntent);
-            return;
-          }
-          if ((((String)localObject3).equals("method_del_tags")) || (((String)localObject3).equals("method_del_lapp_tags")))
-          {
-            try
-            {
-              localObject2 = new JSONObject((String)localObject2);
-              paramIntent = ((JSONObject)localObject2).getString("request_id");
-              localObject2 = ((JSONObject)localObject2).getJSONObject("response_params");
-              if (localObject2 == null) {
-                break;
-              }
-              localObject2 = ((JSONObject)localObject2).getJSONArray("details");
-              if (localObject2 == null) {
-                break;
-              }
-              localObject3 = new ArrayList();
-              localObject4 = new ArrayList();
-              i = 0;
-              if (i < ((JSONArray)localObject2).length())
-              {
-                localObject5 = ((JSONArray)localObject2).getJSONObject(i);
-                str = ((JSONObject)localObject5).getString("tag");
-                if (((JSONObject)localObject5).getInt("result") == 0) {
-                  ((List)localObject3).add(str);
-                } else {
-                  ((List)localObject4).add(str);
-                }
-              }
-            }
-            catch (JSONException paramIntent)
-            {
-              onDelTags(paramContext, j, null, null, null);
-              return;
-            }
-            onDelTags(paramContext, j, (List)localObject3, (List)localObject4, paramIntent);
-            return;
-          }
-          if ((!((String)localObject3).equals("method_listtags")) && (!((String)localObject3).equals("method_list_lapp_tags"))) {
-            break;
-          }
-          try
-          {
-            localObject2 = new JSONObject((String)localObject2).getString("request_id");
-            onListTags(paramContext, j, paramIntent.getStringArrayListExtra("tags_list"), (String)localObject2);
-            return;
-          }
-          catch (JSONException paramIntent)
-          {
-            onListTags(paramContext, j, null, null);
-            return;
-          }
         }
-        if (((String)localObject2).equals("com.baidu.android.pushservice.action.notification.CLICK"))
-        {
-          localObject2 = paramIntent.getStringExtra("msgid");
-          localObject3 = paramIntent.getStringExtra("notification_title");
-          localObject4 = paramIntent.getStringExtra("notification_content");
-          localObject5 = paramIntent.getStringExtra("extra_extra_custom_content");
-          str = paramIntent.getStringExtra("com.baidu.pushservice.app_id");
-          localObject6 = paramIntent.getByteArrayExtra("baidu_message_secur_info");
-          paramIntent = paramIntent.getByteArrayExtra("baidu_message_body");
-          if ((!p.b(paramContext, (String)localObject2, str, (String)localObject3, (String)localObject4, (String)localObject5)) && (!p.a(paramContext, (byte[])localObject6, str, (String)localObject2, paramIntent))) {
-            break;
-          }
-          onNotificationClicked(paramContext, (String)localObject3, (String)localObject4, (String)localObject5);
-          return;
-        }
-        if (((String)localObject2).equals("com.huawei.android.push.intent.REGISTRATION"))
-        {
-          if (!d.d(paramContext)) {
-            break;
-          }
-          try
-          {
-            paramIntent = new String(paramIntent.getByteArrayExtra("device_token"), "UTF-8");
-            if (TextUtils.isEmpty(paramIntent)) {
-              break;
-            }
-            f.a(paramContext, paramIntent);
-            return;
-          }
-          catch (Exception paramContext)
-          {
-            return;
-          }
-        }
-        if (((String)localObject2).equals("com.huawei.intent.action.PUSH"))
-        {
-          if (!d.d(paramContext)) {
-            break;
-          }
-          try
-          {
-            paramIntent = new String(paramIntent.getByteArrayExtra("selfshow_info"), "UTF-8");
-            if ((TextUtils.isEmpty(paramIntent)) || (paramContext == null)) {
-              break;
-            }
-            paramIntent = com.baidu.android.pushservice.message.a.j.a(paramContext, paramIntent);
-            localObject2 = paramIntent.a(paramContext);
-            if ((localObject2 == null) || (!p.y(paramContext)) || (p.y(paramContext, paramIntent.l))) {
-              break;
-            }
-            PushServiceReceiver.a(paramContext, paramContext.getPackageName(), "com.baidu.android.pushservice.CommandService", (PublicMsg)localObject2);
-            return;
-          }
-          catch (Exception paramContext)
-          {
-            return;
-          }
-        }
-        if (((String)localObject2).equals("com.huawei.android.push.intent.RECEIVE"))
-        {
-          if (!d.d(paramContext)) {
-            break;
-          }
-          localObject2 = paramIntent.getByteArrayExtra("msg_data");
-          paramIntent = paramIntent.getByteArrayExtra("device_token");
-        }
-      }
-      catch (Exception paramContext)
-      {
-        return;
-      }
-      try
-      {
-        localObject2 = new String((byte[])localObject2, "utf-8");
-        new String(paramIntent, "utf-8");
-        paramIntent = new i();
-        localObject2 = paramIntent.a(paramContext, (String)localObject2);
-        if ((!p.y(paramContext)) || (p.y(paramContext, paramIntent.l)) || (!PushManager.hwMessageVerify(paramContext, paramIntent.o, paramIntent.l + (String)localObject2))) {
-          break;
-        }
-        if (paramIntent.m == com.baidu.android.pushservice.message.a.l.p.a())
-        {
-          p.A(paramContext);
-          return;
-        }
-        if (paramIntent.m == com.baidu.android.pushservice.message.a.l.o.a())
-        {
-          p.B(paramContext);
-          return;
-        }
-        if ((paramIntent.m != com.baidu.android.pushservice.message.a.l.g.a()) && (paramIntent.m != com.baidu.android.pushservice.message.a.l.b.a())) {
-          break;
-        }
-        onMessage(paramContext, (String)localObject2, null);
-        return;
-      }
-      catch (Exception paramContext) {}
-      if (((String)localObject2).equals("com.xiaomi.mipush.REGISTER"))
-      {
-        if ((!d.c(paramContext)) || (!paramIntent.hasExtra("xm_register_errorcode"))) {
-          break;
-        }
-        if (paramIntent.getLongExtra("xm_register_errorcode", 0L) != 0L)
-        {
-          f.i(paramContext);
-          return;
-        }
-        if (!paramIntent.hasExtra("xm_regid")) {
-          break;
-        }
-        paramIntent = paramIntent.getStringExtra("xm_regid");
-        if (TextUtils.isEmpty(paramIntent)) {
-          break;
-        }
-        f.a(paramContext, paramIntent);
-        return;
-      }
-      if (((String)localObject2).equals("com.xiaomi.mipush.PUSH_MSG"))
-      {
-        if ((!d.c(paramContext)) || (!paramIntent.hasExtra("xm_push_msg"))) {
-          break;
-        }
-        localObject2 = (MiPushMessage)paramIntent.getSerializableExtra("xm_push_msg");
-        if (!paramIntent.hasExtra("xm_push_msg_type")) {
-          break;
-        }
-        handleXiaomiMessageCallBack(paramContext, (MiPushMessage)localObject2, paramIntent.getIntExtra("xm_push_msg_type", 0));
-        return;
-      }
-      if (((String)localObject2).equals("com.meizu.mzpush.REGISTER"))
-      {
-        if ((!d.b(paramContext)) || (!paramIntent.hasExtra("mz_register_errorcode"))) {
-          break;
-        }
-        if (paramIntent.getStringExtra("mz_register_errorcode").equals("200"))
-        {
-          if (!paramIntent.hasExtra("mz_pushid")) {
-            break;
-          }
-          paramIntent = paramIntent.getStringExtra("mz_pushid");
-          if (TextUtils.isEmpty(paramIntent)) {
-            break;
-          }
-          f.a(paramContext, paramIntent);
-          return;
-        }
-        f.j(paramContext);
-        return;
-      }
-      if (((String)localObject2).equals("com.meizu.mzpush.PUSH_MSG"))
-      {
-        if ((!d.b(paramContext)) || (!paramIntent.hasExtra("mz_push_msg_type"))) {
-          break;
-        }
-        handleMeizuMessageCallBack(paramContext, paramIntent);
-        return;
-      }
-      if ((!((String)localObject2).equals("com.baidu.android.pushservice.action.OPPO_CLICK")) || (!d.e(paramContext))) {
-        break;
-      }
-      handleOppoMessageCallBack(paramContext, paramIntent);
-      return;
-      label2397:
-      final int i = j;
-      continue;
-      label2403:
-      Object localObject2 = "";
-      continue;
-      label2410:
-      i += 1;
-      continue;
-      i += 1;
     }
-  }
-  
-  public abstract void onSetTags(Context paramContext, int paramInt, List<String> paramList1, List<String> paramList2, String paramString);
-  
-  public abstract void onUnbind(Context paramContext, int paramInt, String paramString);
-  
-  private static class a
-    extends Handler
-  {
-    protected final WeakReference<Context> d;
-    
-    public a(Context paramContext)
-    {
-      this.d = new WeakReference(paramContext);
-    }
-  }
-  
-  private static enum b
-  {
-    private int d;
-    
-    private b(int paramInt)
-    {
-      this.d = paramInt;
-    }
-    
-    private int a()
-    {
-      return this.d;
-    }
-  }
+
+    public abstract void onSetTags(Context context, int i, List<String> list, List<String> list2, String str);
+
+    public abstract void onUnbind(Context context, int i, String str);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/pushservice/PushMessageReceiver.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

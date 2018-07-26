@@ -1,129 +1,103 @@
 package com.baidu.platform.comapi.map;
 
 import com.baidu.platform.comapi.basestruct.Point;
+import com.baidu.platform.comapi.map.MapBundleKey.OfflineMapKey;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class LocalMapResource
-{
-  public Point center;
-  public List<LocalMapResource> children;
-  public int downloadProgress;
-  public int downloadStatus;
-  public int formatVersion;
-  public int frc;
-  public int id;
-  public int level;
-  public long mapoldsize;
-  public long mappatchsize;
-  public long mapsize;
-  public String name;
-  public boolean needUpdate;
-  public String pinyin;
-  public long remainSize;
-  public long searcholdsize;
-  public long searchpatchsize;
-  public long searchsize;
-  public int type;
-  public int updateStatus;
-  public int version;
-  
-  public static LocalMapResource fromJson(String paramString)
-  {
-    if ((paramString == null) || (paramString.length() == 0)) {
-      return null;
+public class LocalMapResource {
+    public Point center;
+    public List<LocalMapResource> children;
+    public int downloadProgress;
+    public int downloadStatus;
+    public int formatVersion;
+    public int frc;
+    public int id;
+    public int level;
+    public long mapoldsize;
+    public long mappatchsize;
+    public long mapsize;
+    public String name;
+    public boolean needUpdate;
+    public String pinyin;
+    public long remainSize;
+    public long searcholdsize;
+    public long searchpatchsize;
+    public long searchsize;
+    public int type;
+    public int updateStatus;
+    public int version;
+
+    public static LocalMapResource fromJson(String raw) {
+        LocalMapResource localMapResource = null;
+        if (!(raw == null || raw.length() == 0)) {
+            try {
+                localMapResource = fromJson(new JSONObject(raw));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return localMapResource;
     }
-    try
-    {
-      paramString = fromJson(new JSONObject(paramString));
-      return paramString;
+
+    public static LocalMapResource fromJson(JSONObject json) {
+        boolean z = true;
+        LocalMapResource resource = new LocalMapResource();
+        resource.id = json.optInt("id");
+        resource.name = json.optString("name");
+        resource.pinyin = json.optString("pinyin");
+        resource.frc = json.optInt("frc");
+        resource.type = json.optInt(OfflineMapKey.OFFLINE_CITY_TYPE);
+        resource.center = new Point((double) json.optInt("x"), (double) json.optInt("y"));
+        resource.level = json.optInt(OfflineMapKey.OFFLINE_LEVEL);
+        resource.mapsize = json.optLong("mapsize");
+        resource.mappatchsize = json.optLong("mappatchsize");
+        resource.searchsize = json.optLong("searchsize");
+        resource.searchpatchsize = json.optLong("searchpatchsize");
+        resource.mapoldsize = json.optLong("mapoldsize");
+        resource.searcholdsize = json.optLong("searcholdsize");
+        resource.downloadProgress = json.optInt(OfflineMapKey.OFFLINE_RATION);
+        resource.version = json.optInt("ver");
+        resource.formatVersion = json.optInt("fm");
+        resource.downloadStatus = json.optInt("status");
+        if (json.optInt(OfflineMapKey.OFFLINE_UPDATE) != 1) {
+            z = false;
+        }
+        resource.needUpdate = z;
+        resource.updateStatus = json.optInt("note");
+        if (json.has(OfflineMapKey.OFFLINE_CHILD)) {
+            JSONArray array = json.optJSONArray(OfflineMapKey.OFFLINE_CHILD);
+            resource.children = new ArrayList(array.length() + 1);
+            for (int i = 0; i < array.length(); i++) {
+                resource.children.add(fromJson(array.optJSONObject(i)));
+            }
+        }
+        if (resource.children != null && resource.children.size() > 0) {
+            LocalMapResource provincePack = new LocalMapResource();
+            provincePack.id = resource.id;
+            provincePack.name = "所有城市";
+            provincePack.pinyin = resource.pinyin;
+            provincePack.version = resource.version;
+            provincePack.formatVersion = json.optInt("fm");
+            provincePack.type = resource.type;
+            provincePack.center = new Point((double) resource.center.getIntX(), (double) resource.center.getIntY());
+            provincePack.level = resource.level;
+            provincePack.mapsize = 0;
+            provincePack.searchsize = 0;
+            provincePack.downloadProgress = 0;
+            provincePack.needUpdate = resource.needUpdate;
+            provincePack.updateStatus = resource.updateStatus;
+            provincePack.downloadStatus = resource.downloadStatus;
+            for (LocalMapResource child : resource.children) {
+                provincePack.mapsize += child.mapsize;
+                provincePack.searchsize += child.searchsize;
+            }
+            resource.mapsize = provincePack.mapsize;
+            resource.searchsize = provincePack.searchsize;
+            resource.children.add(0, provincePack);
+        }
+        return resource;
     }
-    catch (Exception paramString)
-    {
-      paramString.printStackTrace();
-    }
-    return null;
-  }
-  
-  public static LocalMapResource fromJson(JSONObject paramJSONObject)
-  {
-    boolean bool = true;
-    LocalMapResource localLocalMapResource1 = new LocalMapResource();
-    localLocalMapResource1.id = paramJSONObject.optInt("id");
-    localLocalMapResource1.name = paramJSONObject.optString("name");
-    localLocalMapResource1.pinyin = paramJSONObject.optString("pinyin");
-    localLocalMapResource1.frc = paramJSONObject.optInt("frc");
-    localLocalMapResource1.type = paramJSONObject.optInt("cty");
-    localLocalMapResource1.center = new Point(paramJSONObject.optInt("x"), paramJSONObject.optInt("y"));
-    localLocalMapResource1.level = paramJSONObject.optInt("lev");
-    localLocalMapResource1.mapsize = paramJSONObject.optLong("mapsize");
-    localLocalMapResource1.mappatchsize = paramJSONObject.optLong("mappatchsize");
-    localLocalMapResource1.searchsize = paramJSONObject.optLong("searchsize");
-    localLocalMapResource1.searchpatchsize = paramJSONObject.optLong("searchpatchsize");
-    localLocalMapResource1.mapoldsize = paramJSONObject.optLong("mapoldsize");
-    localLocalMapResource1.searcholdsize = paramJSONObject.optLong("searcholdsize");
-    localLocalMapResource1.downloadProgress = paramJSONObject.optInt("ratio");
-    localLocalMapResource1.version = paramJSONObject.optInt("ver");
-    localLocalMapResource1.formatVersion = paramJSONObject.optInt("fm");
-    localLocalMapResource1.downloadStatus = paramJSONObject.optInt("status");
-    if (paramJSONObject.optInt("up") == 1) {}
-    Object localObject;
-    LocalMapResource localLocalMapResource2;
-    for (;;)
-    {
-      localLocalMapResource1.needUpdate = bool;
-      localLocalMapResource1.updateStatus = paramJSONObject.optInt("note");
-      if (!paramJSONObject.has("child")) {
-        break;
-      }
-      localObject = paramJSONObject.optJSONArray("child");
-      localLocalMapResource1.children = new ArrayList(((JSONArray)localObject).length() + 1);
-      int i = 0;
-      while (i < ((JSONArray)localObject).length())
-      {
-        localLocalMapResource2 = fromJson(((JSONArray)localObject).optJSONObject(i));
-        localLocalMapResource1.children.add(localLocalMapResource2);
-        i += 1;
-      }
-      bool = false;
-    }
-    if ((localLocalMapResource1.children != null) && (localLocalMapResource1.children.size() > 0))
-    {
-      localObject = new LocalMapResource();
-      ((LocalMapResource)localObject).id = localLocalMapResource1.id;
-      ((LocalMapResource)localObject).name = "所有城市";
-      ((LocalMapResource)localObject).pinyin = localLocalMapResource1.pinyin;
-      ((LocalMapResource)localObject).version = localLocalMapResource1.version;
-      ((LocalMapResource)localObject).formatVersion = paramJSONObject.optInt("fm");
-      ((LocalMapResource)localObject).type = localLocalMapResource1.type;
-      ((LocalMapResource)localObject).center = new Point(localLocalMapResource1.center.getIntX(), localLocalMapResource1.center.getIntY());
-      ((LocalMapResource)localObject).level = localLocalMapResource1.level;
-      ((LocalMapResource)localObject).mapsize = 0L;
-      ((LocalMapResource)localObject).searchsize = 0L;
-      ((LocalMapResource)localObject).downloadProgress = 0;
-      ((LocalMapResource)localObject).needUpdate = localLocalMapResource1.needUpdate;
-      ((LocalMapResource)localObject).updateStatus = localLocalMapResource1.updateStatus;
-      ((LocalMapResource)localObject).downloadStatus = localLocalMapResource1.downloadStatus;
-      paramJSONObject = localLocalMapResource1.children.iterator();
-      while (paramJSONObject.hasNext())
-      {
-        localLocalMapResource2 = (LocalMapResource)paramJSONObject.next();
-        ((LocalMapResource)localObject).mapsize += localLocalMapResource2.mapsize;
-        ((LocalMapResource)localObject).searchsize += localLocalMapResource2.searchsize;
-      }
-      localLocalMapResource1.mapsize = ((LocalMapResource)localObject).mapsize;
-      localLocalMapResource1.searchsize = ((LocalMapResource)localObject).searchsize;
-      localLocalMapResource1.children.add(0, localObject);
-    }
-    return localLocalMapResource1;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/LocalMapResource.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

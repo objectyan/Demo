@@ -5,641 +5,422 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import com.baidu.navisdk.util.common.HttpsClient;
 import java.util.Map;
 
-public class StatService
-{
-  public static final int EXCEPTION_LOG = 1;
-  public static final int JAVA_EXCEPTION_LOG = 16;
-  private static boolean a = false;
-  private static long b;
-  
-  private static String a(boolean paramBoolean)
-  {
-    StackTraceElement[] arrayOfStackTraceElement = Thread.currentThread().getStackTrace();
-    int i = 0;
-    if (i < arrayOfStackTraceElement.length)
-    {
-      Object localObject2 = arrayOfStackTraceElement[i].getClassName();
-      if (TextUtils.isEmpty((CharSequence)localObject2)) {}
-      do
-      {
-        i += 1;
-        break;
-        Object localObject1 = null;
-        try
-        {
-          localObject2 = Class.forName((String)localObject2);
-          localObject1 = localObject2;
+public class StatService {
+    public static final int EXCEPTION_LOG = 1;
+    public static final int JAVA_EXCEPTION_LOG = 16;
+    /* renamed from: a */
+    private static boolean f12687a = false;
+    /* renamed from: b */
+    private static long f12688b;
+
+    /* renamed from: a */
+    private static boolean m10954a(Class<?> cls, String str) {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        boolean z = false;
+        for (int i = 2; i < stackTrace.length; i++) {
+            StackTraceElement stackTraceElement = stackTrace[i];
+            if (stackTraceElement.getMethodName().equals(str)) {
+                try {
+                    Class cls2 = Class.forName(stackTraceElement.getClassName());
+                    while (cls2.getSuperclass() != null && cls2.getSuperclass() != cls) {
+                        cls2 = cls2.getSuperclass();
+                    }
+                    z = true;
+                } catch (Throwable e) {
+                    db.a(e);
+                }
+            }
         }
-        catch (Throwable localThrowable)
-        {
-          for (;;) {}
+        return z;
+    }
+
+    /* renamed from: a */
+    private static String m10944a(boolean z) {
+        String str = "";
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (StackTraceElement className : stackTrace) {
+            Object className2 = className.getClassName();
+            if (!TextUtils.isEmpty(className2)) {
+                Class cls = null;
+                try {
+                    cls = Class.forName(className2);
+                } catch (Throwable th) {
+                }
+                if (cls != null && Activity.class.isAssignableFrom(cls)) {
+                    if (z) {
+                        return cls.getName();
+                    }
+                    return cls.getSimpleName();
+                }
+            }
         }
-      } while ((localObject1 == null) || (!Activity.class.isAssignableFrom((Class)localObject1)));
-      if (paramBoolean) {
-        return ((Class)localObject1).getName();
-      }
-      return ((Class)localObject1).getSimpleName();
+        return str;
     }
-    return "";
-  }
-  
-  private static void a(Context paramContext)
-  {
-    bf.a().a(paramContext);
-  }
-  
-  private static void a(Context paramContext, ExtraInfo paramExtraInfo)
-  {
-    for (;;)
-    {
-      try
-      {
-        boolean bool = a(paramContext, "onPause(...)");
-        if (!bool) {
-          return;
+
+    public static void enableDeviceMac(Context context, boolean z) {
+        CooperService.a().enableDeviceMac(context, z);
+        m10945a(context);
+    }
+
+    public static synchronized void onResume(Context context) {
+        synchronized (StatService.class) {
+            if (m10953a(context, "onResume(...)")) {
+                if (m10954a(Activity.class, "onResume")) {
+                    m10945a(context);
+                    bv.a().a(context);
+                    ch.a().a(context, System.currentTimeMillis(), false);
+                } else {
+                    throw new SecurityException("onResume(Context context)不在Activity.onResume()中被调用||onResume(Context context)is not called in Activity.onResume().");
+                }
+            }
         }
-        if (!a(Activity.class, "onPause")) {
-          throw new SecurityException("onPause(Context context)不在Activity.onPause()中被调用||onPause(Context context)is not called in Activity.onPause().");
+    }
+
+    @Deprecated
+    public static synchronized void onResume(Fragment fragment) {
+        synchronized (StatService.class) {
+            if (fragment == null) {
+                db.c("onResume :parame=null");
+            } else if (m10954a(Fragment.class, "onResume")) {
+                Context activity = fragment.getActivity();
+                if (activity == null) {
+                    db.c("can not get correct fragmentActivity, fragment may not attached to activity");
+                } else {
+                    m10945a(activity);
+                    bv.a().a(activity);
+                    ch.a().a(fragment, System.currentTimeMillis());
+                }
+            } else {
+                throw new SecurityException("onResume(Context context)不在Fragment.onResume()中被调用||onResume(Context context)is not called in Fragment.onResume().");
+            }
         }
-      }
-      finally {}
-      ch.a().a(paramContext, System.currentTimeMillis(), false, paramExtraInfo);
     }
-  }
-  
-  /* Error */
-  private static void a(Context paramContext, String paramString, ExtraInfo paramExtraInfo)
-  {
-    // Byte code:
-    //   0: ldc 2
-    //   2: monitorenter
-    //   3: aload_0
-    //   4: ifnull +16 -> 20
-    //   7: aload_1
-    //   8: ifnull +12 -> 20
-    //   11: aload_1
-    //   12: ldc 66
-    //   14: invokevirtual 113	java/lang/String:equals	(Ljava/lang/Object;)Z
-    //   17: ifeq +12 -> 29
-    //   20: ldc 115
-    //   22: invokestatic 120	com/baidu/mobstat/db:c	(Ljava/lang/String;)V
-    //   25: ldc 2
-    //   27: monitorexit
-    //   28: return
-    //   29: iconst_0
-    //   30: invokestatic 122	com/baidu/mobstat/StatService:a	(Z)Ljava/lang/String;
-    //   33: astore_3
-    //   34: new 124	java/lang/StringBuilder
-    //   37: dup
-    //   38: invokespecial 125	java/lang/StringBuilder:<init>	()V
-    //   41: ldc 127
-    //   43: invokevirtual 131	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   46: aload_1
-    //   47: invokevirtual 131	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   50: ldc -123
-    //   52: invokevirtual 131	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   55: aload_3
-    //   56: invokevirtual 131	java/lang/StringBuilder:append	(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    //   59: invokevirtual 136	java/lang/StringBuilder:toString	()Ljava/lang/String;
-    //   62: invokestatic 138	com/baidu/mobstat/db:a	(Ljava/lang/String;)V
-    //   65: invokestatic 97	com/baidu/mobstat/ch:a	()Lcom/baidu/mobstat/ch;
-    //   68: aload_0
-    //   69: invokestatic 103	java/lang/System:currentTimeMillis	()J
-    //   72: aload_3
-    //   73: aload_1
-    //   74: aload_2
-    //   75: invokevirtual 141	com/baidu/mobstat/ch:a	(Landroid/content/Context;JLjava/lang/String;Ljava/lang/String;Lcom/baidu/mobstat/ExtraInfo;)V
-    //   78: goto -53 -> 25
-    //   81: astore_0
-    //   82: ldc 2
-    //   84: monitorexit
-    //   85: aload_0
-    //   86: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	87	0	paramContext	Context
-    //   0	87	1	paramString	String
-    //   0	87	2	paramExtraInfo	ExtraInfo
-    //   33	40	3	str	String
-    // Exception table:
-    //   from	to	target	type
-    //   11	20	81	finally
-    //   20	25	81	finally
-    //   29	78	81	finally
-  }
-  
-  private static void a(Context paramContext, String paramString1, String paramString2, int paramInt, ExtraInfo paramExtraInfo, Map<String, String> paramMap)
-  {
-    if (!a(paramContext, "onEvent(...)")) {}
-    while ((paramString1 == null) || (paramString1.equals(""))) {
-      return;
-    }
-    boolean bool = dg.a(Application.class, "onCreate");
-    if (bool) {
-      db.c("method:onEvent() 被 Application.onCreate()调用，not a good practice; 可能由于多进程反复重启等原因造成Application.onCreate() 方法多次被执行，导致启动次数高；建议埋点在统计路径触发的第一个页面中，比如APP主页面中");
-    }
-    a(paramContext);
-    bv.a().a(paramContext, bool);
-    bm.a().a(paramContext.getApplicationContext(), paramString1, paramString2, paramInt, System.currentTimeMillis(), paramExtraInfo, dg.a(paramMap));
-  }
-  
-  private static void a(Context paramContext, String paramString1, String paramString2, long paramLong, ExtraInfo paramExtraInfo, Map<String, String> paramMap)
-  {
-    if (!a(paramContext, "onEventDuration(...)")) {}
-    while ((paramString1 == null) || (paramString1.equals(""))) {
-      return;
-    }
-    if (paramLong <= 0L)
-    {
-      db.b("onEventDuration: duration must be greater than zero");
-      return;
-    }
-    a(paramContext);
-    bv.a().a(paramContext);
-    bm.a().b(paramContext.getApplicationContext(), paramString1, paramString2, paramLong, paramExtraInfo, dg.a(paramMap));
-  }
-  
-  private static void a(Context paramContext, String paramString1, String paramString2, ExtraInfo paramExtraInfo)
-  {
-    a(paramContext, paramString1, paramString2, 1, paramExtraInfo, null);
-  }
-  
-  private static void a(Context paramContext, String paramString1, String paramString2, ExtraInfo paramExtraInfo, Map<String, String> paramMap)
-  {
-    if (!a(paramContext, "onEventEnd(...)")) {}
-    while ((paramString1 == null) || (paramString1.equals(""))) {
-      return;
-    }
-    bm.a().a(paramContext.getApplicationContext(), paramString1, paramString2, System.currentTimeMillis(), paramExtraInfo, dg.a(paramMap));
-  }
-  
-  private static void a(Context paramContext, boolean paramBoolean)
-  {
-    if (!a(paramContext, "onError(...)")) {
-      return;
-    }
-    bt.a().a(paramContext.getApplicationContext(), paramBoolean);
-  }
-  
-  private static boolean a(Context paramContext, String paramString)
-  {
-    if (paramContext == null)
-    {
-      db.b(paramString + ":context=null");
-      return false;
-    }
-    return true;
-  }
-  
-  private static boolean a(Class<?> paramClass, String paramString)
-  {
-    StackTraceElement[] arrayOfStackTraceElement = Thread.currentThread().getStackTrace();
-    boolean bool1 = false;
-    int i = 2;
-    boolean bool2;
-    while (i < arrayOfStackTraceElement.length)
-    {
-      Object localObject = arrayOfStackTraceElement[i];
-      bool2 = bool1;
-      if (((StackTraceElement)localObject).getMethodName().equals(paramString)) {}
-      try
-      {
-        for (localObject = Class.forName(((StackTraceElement)localObject).getClassName()); (((Class)localObject).getSuperclass() != null) && (((Class)localObject).getSuperclass() != paramClass); localObject = ((Class)localObject).getSuperclass()) {}
-        bool2 = true;
-      }
-      catch (Exception localException)
-      {
-        for (;;)
-        {
-          db.a(localException);
-          bool2 = bool1;
+
+    @TargetApi(11)
+    @Deprecated
+    public static synchronized void onResume(android.app.Fragment fragment) {
+        synchronized (StatService.class) {
+            if (fragment == null) {
+                db.c("onResume :parame=null");
+            } else if (m10954a(fragment.getClass(), "onResume")) {
+                Context a = ch.a(fragment);
+                if (a == null) {
+                    db.c("can not get correct context, fragment may not attached to activity");
+                } else {
+                    m10945a(a);
+                    bv.a().a(a);
+                    ch.a().a(fragment, System.currentTimeMillis());
+                }
+            } else {
+                throw new SecurityException("onResume(Context context)不在Fragment.onResume()中被调用||onResume(Context context)is not called in Fragment.onResume().");
+            }
         }
-      }
-      i += 1;
-      bool1 = bool2;
     }
-    return bool1;
-  }
-  
-  public static void bindJSInterface(Context paramContext, WebView paramWebView)
-  {
-    bindJSInterface(paramContext, paramWebView, null);
-  }
-  
-  @SuppressLint({"SetJavaScriptEnabled"})
-  public static void bindJSInterface(Context paramContext, WebView paramWebView, WebViewClient paramWebViewClient)
-  {
-    if (paramContext == null) {
-      throw new IllegalArgumentException("context can't be null.");
-    }
-    if (paramWebView == null) {
-      throw new IllegalArgumentException("webview can't be null.");
-    }
-    WebSettings localWebSettings = paramWebView.getSettings();
-    localWebSettings.setJavaScriptEnabled(true);
-    localWebSettings.setDefaultTextEncodingName("UTF-8");
-    localWebSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-    paramWebView.setWebViewClient(new bi(paramContext, paramWebViewClient));
-    a(paramContext);
-  }
-  
-  public static void enableDeviceMac(Context paramContext, boolean paramBoolean)
-  {
-    CooperService.a().enableDeviceMac(paramContext, paramBoolean);
-    a(paramContext);
-  }
-  
-  public static String getAppKey(Context paramContext)
-  {
-    return PrefOperate.getAppKey(paramContext);
-  }
-  
-  public static String getSdkVersion()
-  {
-    return CooperService.a().getMTJSDKVersion();
-  }
-  
-  public static void onErised(Context paramContext, String paramString1, String paramString2, String paramString3)
-  {
-    if (bv.a().b()) {}
-    long l;
-    do
-    {
-      do
-      {
-        return;
-      } while (!a(paramContext, "onErised(...)"));
-      if ((paramString1 == null) || ("".equals(paramString1)))
-      {
-        db.c("AppKey is invalid");
-        return;
-      }
-      bv.a().a(paramContext, false, false);
-      l = System.currentTimeMillis();
-      bm.a().a(paramContext, paramString2, paramString3, 1, l, 0L, null, null);
-      DataCore.instance().saveLogDataToSend(paramContext, true, false);
-    } while ((l - b <= 30000L) || (!de.n(paramContext)));
-    by.a().a(paramContext);
-    b = l;
-  }
-  
-  public static void onEvent(Context paramContext, String paramString1, String paramString2)
-  {
-    a(paramContext, paramString1, paramString2, null);
-  }
-  
-  public static void onEvent(Context paramContext, String paramString1, String paramString2, int paramInt)
-  {
-    a(paramContext, paramString1, paramString2, paramInt, null, null);
-  }
-  
-  public static void onEvent(Context paramContext, String paramString1, String paramString2, int paramInt, Map<String, String> paramMap)
-  {
-    a(paramContext, paramString1, paramString2, paramInt, null, paramMap);
-  }
-  
-  public static void onEventDuration(Context paramContext, String paramString1, String paramString2, long paramLong)
-  {
-    a(paramContext, paramString1, paramString2, paramLong, null, null);
-  }
-  
-  public static void onEventDuration(Context paramContext, String paramString1, String paramString2, long paramLong, Map<String, String> paramMap)
-  {
-    a(paramContext, paramString1, paramString2, paramLong, null, paramMap);
-  }
-  
-  public static void onEventEnd(Context paramContext, String paramString1, String paramString2)
-  {
-    a(paramContext, paramString1, paramString2, null, null);
-  }
-  
-  public static void onEventEnd(Context paramContext, String paramString1, String paramString2, Map<String, String> paramMap)
-  {
-    a(paramContext.getApplicationContext(), paramString1, paramString2, null, paramMap);
-  }
-  
-  public static void onEventStart(Context paramContext, String paramString1, String paramString2)
-  {
-    if (!a(paramContext, "onEventStart(...)")) {}
-    while ((paramString1 == null) || (paramString1.equals(""))) {
-      return;
-    }
-    a(paramContext);
-    bv.a().a(paramContext);
-    bm.a().a(paramContext.getApplicationContext(), paramString1, paramString2, System.currentTimeMillis());
-  }
-  
-  public static void onPageEnd(Context paramContext, String paramString)
-  {
-    try
-    {
-      a(paramContext, paramString, null);
-      return;
-    }
-    finally
-    {
-      paramContext = finally;
-      throw paramContext;
-    }
-  }
-  
-  /* Error */
-  public static void onPageStart(Context paramContext, String paramString)
-  {
-    // Byte code:
-    //   0: ldc 2
-    //   2: monitorenter
-    //   3: aload_0
-    //   4: ifnull +16 -> 20
-    //   7: aload_1
-    //   8: ifnull +12 -> 20
-    //   11: aload_1
-    //   12: ldc 66
-    //   14: invokevirtual 113	java/lang/String:equals	(Ljava/lang/Object;)Z
-    //   17: ifeq +13 -> 30
-    //   20: ldc_w 356
-    //   23: invokestatic 120	com/baidu/mobstat/db:c	(Ljava/lang/String;)V
-    //   26: ldc 2
-    //   28: monitorexit
-    //   29: return
-    //   30: aload_0
-    //   31: invokestatic 154	com/baidu/mobstat/StatService:a	(Landroid/content/Context;)V
-    //   34: invokestatic 159	com/baidu/mobstat/bv:a	()Lcom/baidu/mobstat/bv;
-    //   37: aload_0
-    //   38: invokevirtual 189	com/baidu/mobstat/bv:a	(Landroid/content/Context;)V
-    //   41: invokestatic 97	com/baidu/mobstat/ch:a	()Lcom/baidu/mobstat/ch;
-    //   44: aload_0
-    //   45: invokestatic 103	java/lang/System:currentTimeMillis	()J
-    //   48: aload_1
-    //   49: invokevirtual 359	com/baidu/mobstat/ch:a	(Landroid/content/Context;JLjava/lang/String;)V
-    //   52: goto -26 -> 26
-    //   55: astore_0
-    //   56: ldc 2
-    //   58: monitorexit
-    //   59: aload_0
-    //   60: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	61	0	paramContext	Context
-    //   0	61	1	paramString	String
-    // Exception table:
-    //   from	to	target	type
-    //   11	20	55	finally
-    //   20	26	55	finally
-    //   30	52	55	finally
-  }
-  
-  @Deprecated
-  @TargetApi(11)
-  public static void onPause(android.app.Fragment paramFragment)
-  {
-    if (paramFragment == null) {}
-    for (;;)
-    {
-      try
-      {
-        db.c("android.app.Fragment onResume :parame=null");
-        return;
-      }
-      finally {}
-      if (!a(paramFragment.getClass(), "onPause")) {
-        throw new SecurityException("android.app.Fragment onPause(Context context)不在android.app.Fragment.onPause()中被调用||onPause(Context context)is not called in android.app.Fragment.onPause().");
-      }
-      ch.a().b(paramFragment, System.currentTimeMillis());
-    }
-  }
-  
-  public static void onPause(Context paramContext)
-  {
-    try
-    {
-      a(paramContext, null);
-      return;
-    }
-    finally
-    {
-      paramContext = finally;
-      throw paramContext;
-    }
-  }
-  
-  @Deprecated
-  public static void onPause(android.support.v4.app.Fragment paramFragment)
-  {
-    if (paramFragment == null) {}
-    for (;;)
-    {
-      try
-      {
-        db.c("onResume :parame=null");
-        return;
-      }
-      finally {}
-      if (!a(android.support.v4.app.Fragment.class, "onPause")) {
-        throw new SecurityException("Fragment onPause(Context context)不在Fragment.onPause()中被调用||onPause(Context context)is not called in Fragment.onPause().");
-      }
-      ch.a().b(paramFragment, System.currentTimeMillis());
-    }
-  }
-  
-  @Deprecated
-  @TargetApi(11)
-  public static void onResume(android.app.Fragment paramFragment)
-  {
-    if (paramFragment == null) {}
-    for (;;)
-    {
-      try
-      {
-        db.c("onResume :parame=null");
-        return;
-      }
-      finally {}
-      if (!a(paramFragment.getClass(), "onResume")) {
-        throw new SecurityException("onResume(Context context)不在Fragment.onResume()中被调用||onResume(Context context)is not called in Fragment.onResume().");
-      }
-      Context localContext = ch.a(paramFragment);
-      if (localContext == null)
-      {
-        db.c("can not get correct context, fragment may not attached to activity");
-      }
-      else
-      {
-        a(localContext);
-        bv.a().a(localContext);
-        ch.a().a(paramFragment, System.currentTimeMillis());
-      }
-    }
-  }
-  
-  public static void onResume(Context paramContext)
-  {
-    for (;;)
-    {
-      try
-      {
-        boolean bool = a(paramContext, "onResume(...)");
-        if (!bool) {
-          return;
+
+    public static synchronized void onPageStart(Context context, String str) {
+        synchronized (StatService.class) {
+            if (!(context == null || str == null)) {
+                if (!str.equals("")) {
+                    m10945a(context);
+                    bv.a().a(context);
+                    ch.a().a(context, System.currentTimeMillis(), str);
+                }
+            }
+            db.c("onPageStart :parame=null || empty");
         }
-        if (!a(Activity.class, "onResume")) {
-          throw new SecurityException("onResume(Context context)不在Activity.onResume()中被调用||onResume(Context context)is not called in Activity.onResume().");
+    }
+
+    /* renamed from: a */
+    private static synchronized void m10947a(Context context, String str, ExtraInfo extraInfo) {
+        synchronized (StatService.class) {
+            if (!(context == null || str == null)) {
+                if (!str.equals("")) {
+                    String a = m10944a(false);
+                    db.a("pageName is:" + str + "; activityName is:" + a);
+                    ch.a().a(context, System.currentTimeMillis(), a, str, extraInfo);
+                }
+            }
+            db.c("onPageEnd :parame=null || empty");
         }
-      }
-      finally {}
-      a(paramContext);
-      bv.a().a(paramContext);
-      ch.a().a(paramContext, System.currentTimeMillis(), false);
     }
-  }
-  
-  @Deprecated
-  public static void onResume(android.support.v4.app.Fragment paramFragment)
-  {
-    if (paramFragment == null) {}
-    for (;;)
-    {
-      try
-      {
-        db.c("onResume :parame=null");
-        return;
-      }
-      finally {}
-      if (!a(android.support.v4.app.Fragment.class, "onResume")) {
-        throw new SecurityException("onResume(Context context)不在Fragment.onResume()中被调用||onResume(Context context)is not called in Fragment.onResume().");
-      }
-      FragmentActivity localFragmentActivity = paramFragment.getActivity();
-      if (localFragmentActivity == null)
-      {
-        db.c("can not get correct fragmentActivity, fragment may not attached to activity");
-      }
-      else
-      {
-        a(localFragmentActivity);
-        bv.a().a(localFragmentActivity);
-        ch.a().a(paramFragment, System.currentTimeMillis());
-      }
+
+    public static synchronized void onPageEnd(Context context, String str) {
+        synchronized (StatService.class) {
+            m10947a(context, str, null);
+        }
     }
-  }
-  
-  public static void setAppChannel(Context paramContext, String paramString, boolean paramBoolean)
-  {
-    PrefOperate.setAppChannel(paramContext, paramString, paramBoolean);
-    a(paramContext);
-  }
-  
-  @Deprecated
-  public static void setAppChannel(String paramString)
-  {
-    PrefOperate.setAppChannel(paramString);
-  }
-  
-  public static void setAppKey(String paramString)
-  {
-    PrefOperate.setAppKey(paramString);
-  }
-  
-  public static void setDebugOn(boolean paramBoolean)
-  {
-    if (paramBoolean) {}
-    for (int i = 2;; i = 7)
-    {
-      db.a = i;
-      return;
+
+    /* renamed from: a */
+    private static synchronized void m10946a(Context context, ExtraInfo extraInfo) {
+        synchronized (StatService.class) {
+            if (m10953a(context, "onPause(...)")) {
+                if (m10954a(Activity.class, "onPause")) {
+                    ch.a().a(context, System.currentTimeMillis(), false, extraInfo);
+                } else {
+                    throw new SecurityException("onPause(Context context)不在Activity.onPause()中被调用||onPause(Context context)is not called in Activity.onPause().");
+                }
+            }
+        }
     }
-  }
-  
-  public static void setForTv(Context paramContext, boolean paramBoolean)
-  {
-    bj.a().c(paramContext, paramBoolean);
-    a(paramContext);
-  }
-  
-  public static void setLogSenderDelayed(int paramInt)
-  {
-    by.a().a(paramInt);
-  }
-  
-  public static void setOn(Context paramContext, int paramInt)
-  {
-    if (!a(paramContext, "setOn(...)")) {}
-    while (a) {
-      return;
+
+    public static synchronized void onPause(Context context) {
+        synchronized (StatService.class) {
+            m10946a(context, null);
+        }
     }
-    a = true;
-    if ((paramInt & 0x1) != 0) {
-      a(paramContext, false);
+
+    @Deprecated
+    public static synchronized void onPause(Fragment fragment) {
+        synchronized (StatService.class) {
+            if (fragment == null) {
+                db.c("onResume :parame=null");
+            } else if (m10954a(Fragment.class, "onPause")) {
+                ch.a().b(fragment, System.currentTimeMillis());
+            } else {
+                throw new SecurityException("Fragment onPause(Context context)不在Fragment.onPause()中被调用||onPause(Context context)is not called in Fragment.onPause().");
+            }
+        }
     }
-    for (;;)
-    {
-      a(paramContext);
-      return;
-      if ((paramInt & 0x10) != 0) {
-        a(paramContext, true);
-      }
+
+    @TargetApi(11)
+    @Deprecated
+    public static synchronized void onPause(android.app.Fragment fragment) {
+        synchronized (StatService.class) {
+            if (fragment == null) {
+                db.c("android.app.Fragment onResume :parame=null");
+            } else if (m10954a(fragment.getClass(), "onPause")) {
+                ch.a().b(fragment, System.currentTimeMillis());
+            } else {
+                throw new SecurityException("android.app.Fragment onPause(Context context)不在android.app.Fragment.onPause()中被调用||onPause(Context context)is not called in android.app.Fragment.onPause().");
+            }
+        }
     }
-  }
-  
-  @Deprecated
-  public static void setSendLogStrategy(Context paramContext, SendStrategyEnum paramSendStrategyEnum, int paramInt)
-  {
-    setSendLogStrategy(paramContext, paramSendStrategyEnum, paramInt, false);
-  }
-  
-  @Deprecated
-  public static void setSendLogStrategy(Context paramContext, SendStrategyEnum paramSendStrategyEnum, int paramInt, boolean paramBoolean)
-  {
-    if (!a(paramContext, "setSendLogStrategy(...)")) {
-      return;
+
+    public static void setOn(Context context, int i) {
+        if (m10953a(context, "setOn(...)") && !f12687a) {
+            f12687a = true;
+            if ((i & 1) != 0) {
+                m10952a(context, false);
+            } else if ((i & 16) != 0) {
+                m10952a(context, true);
+            }
+            m10945a(context);
+        }
     }
-    boolean bool = dg.a(Application.class, "onCreate");
-    if (bool) {
-      db.c("method:start() 被 Application.onCreate()调用，not a good practice; 可能由于多进程反复重启等原因造成Application.onCreate() 方法多次被执行，导致启动次数高；建议埋点在统计路径触发的第一个页面中，比如APP主页面中");
+
+    public static void start(Context context) {
+        if (m10953a(context, "start(...)")) {
+            boolean a = dg.a(Application.class, "onCreate");
+            if (a) {
+                db.c("method:start() 被 Application.onCreate()调用，not a good practice; 可能由于多进程反复重启等原因造成Application.onCreate() 方法多次被执行，导致启动次数高；建议埋点在统计路径触发的第一个页面中，比如APP主页面中");
+            }
+            m10945a(context);
+            bv.a().a(context, a);
+        }
     }
-    a(paramContext);
-    bv.a().a(paramContext, bool);
-    by.a().a(paramContext.getApplicationContext(), paramSendStrategyEnum, paramInt, paramBoolean);
-  }
-  
-  public static void setSessionTimeOut(int paramInt)
-  {
-    if (paramInt <= 0)
-    {
-      db.b("SessionTimeOut is between 1 and 600. Default value[30] is used");
-      return;
+
+    @Deprecated
+    public static void setSendLogStrategy(Context context, SendStrategyEnum sendStrategyEnum, int i, boolean z) {
+        if (m10953a(context, "setSendLogStrategy(...)")) {
+            boolean a = dg.a(Application.class, "onCreate");
+            if (a) {
+                db.c("method:start() 被 Application.onCreate()调用，not a good practice; 可能由于多进程反复重启等原因造成Application.onCreate() 方法多次被执行，导致启动次数高；建议埋点在统计路径触发的第一个页面中，比如APP主页面中");
+            }
+            m10945a(context);
+            bv.a().a(context, a);
+            by.a().a(context.getApplicationContext(), sendStrategyEnum, i, z);
+        }
     }
-    if (paramInt <= 600)
-    {
-      ch.a().a(paramInt);
-      return;
+
+    @Deprecated
+    public static void setSendLogStrategy(Context context, SendStrategyEnum sendStrategyEnum, int i) {
+        setSendLogStrategy(context, sendStrategyEnum, i, false);
     }
-    db.b("SessionTimeOut is between 1 and 600. Value[600] is used");
-    ch.a().a(600);
-  }
-  
-  public static void start(Context paramContext)
-  {
-    if (!a(paramContext, "start(...)")) {
-      return;
+
+    /* renamed from: a */
+    private static void m10952a(Context context, boolean z) {
+        if (m10953a(context, "onError(...)")) {
+            bt.a().a(context.getApplicationContext(), z);
+        }
     }
-    boolean bool = dg.a(Application.class, "onCreate");
-    if (bool) {
-      db.c("method:start() 被 Application.onCreate()调用，not a good practice; 可能由于多进程反复重启等原因造成Application.onCreate() 方法多次被执行，导致启动次数高；建议埋点在统计路径触发的第一个页面中，比如APP主页面中");
+
+    /* renamed from: a */
+    private static void m10948a(Context context, String str, String str2, int i, ExtraInfo extraInfo, Map<String, String> map) {
+        if (m10953a(context, "onEvent(...)") && str != null && !str.equals("")) {
+            boolean a = dg.a(Application.class, "onCreate");
+            if (a) {
+                db.c("method:onEvent() 被 Application.onCreate()调用，not a good practice; 可能由于多进程反复重启等原因造成Application.onCreate() 方法多次被执行，导致启动次数高；建议埋点在统计路径触发的第一个页面中，比如APP主页面中");
+            }
+            m10945a(context);
+            bv.a().a(context, a);
+            bm.a().a(context.getApplicationContext(), str, str2, i, System.currentTimeMillis(), extraInfo, dg.a(map));
+        }
     }
-    a(paramContext);
-    bv.a().a(paramContext, bool);
-  }
+
+    public static void onEvent(Context context, String str, String str2, int i, Map<String, String> map) {
+        m10948a(context, str, str2, i, null, (Map) map);
+    }
+
+    public static void onEvent(Context context, String str, String str2, int i) {
+        m10948a(context, str, str2, i, null, null);
+    }
+
+    /* renamed from: a */
+    private static void m10950a(Context context, String str, String str2, ExtraInfo extraInfo) {
+        m10948a(context, str, str2, 1, extraInfo, null);
+    }
+
+    public static void onEvent(Context context, String str, String str2) {
+        m10950a(context, str, str2, null);
+    }
+
+    public static void onEventStart(Context context, String str, String str2) {
+        if (m10953a(context, "onEventStart(...)") && str != null && !str.equals("")) {
+            m10945a(context);
+            bv.a().a(context);
+            bm.a().a(context.getApplicationContext(), str, str2, System.currentTimeMillis());
+        }
+    }
+
+    /* renamed from: a */
+    private static void m10951a(Context context, String str, String str2, ExtraInfo extraInfo, Map<String, String> map) {
+        if (m10953a(context, "onEventEnd(...)") && str != null && !str.equals("")) {
+            bm.a().a(context.getApplicationContext(), str, str2, System.currentTimeMillis(), extraInfo, dg.a(map));
+        }
+    }
+
+    public static void onEventEnd(Context context, String str, String str2, Map<String, String> map) {
+        m10951a(context.getApplicationContext(), str, str2, null, map);
+    }
+
+    public static void onEventEnd(Context context, String str, String str2) {
+        m10951a(context, str, str2, null, null);
+    }
+
+    /* renamed from: a */
+    private static void m10949a(Context context, String str, String str2, long j, ExtraInfo extraInfo, Map<String, String> map) {
+        if (m10953a(context, "onEventDuration(...)") && str != null && !str.equals("")) {
+            if (j <= 0) {
+                db.b("onEventDuration: duration must be greater than zero");
+                return;
+            }
+            m10945a(context);
+            bv.a().a(context);
+            bm.a().b(context.getApplicationContext(), str, str2, j, extraInfo, dg.a(map));
+        }
+    }
+
+    public static void onEventDuration(Context context, String str, String str2, long j, Map<String, String> map) {
+        m10949a(context, str, str2, j, null, (Map) map);
+    }
+
+    public static void onEventDuration(Context context, String str, String str2, long j) {
+        m10949a(context, str, str2, j, null, null);
+    }
+
+    /* renamed from: a */
+    private static boolean m10953a(Context context, String str) {
+        if (context != null) {
+            return true;
+        }
+        db.b(str + ":context=null");
+        return false;
+    }
+
+    public static void setAppKey(String str) {
+        PrefOperate.setAppKey(str);
+    }
+
+    public static String getAppKey(Context context) {
+        return PrefOperate.getAppKey(context);
+    }
+
+    @Deprecated
+    public static void setAppChannel(String str) {
+        PrefOperate.setAppChannel(str);
+    }
+
+    public static void setAppChannel(Context context, String str, boolean z) {
+        PrefOperate.setAppChannel(context, str, z);
+        m10945a(context);
+    }
+
+    public static void setLogSenderDelayed(int i) {
+        by.a().a(i);
+    }
+
+    public static void setSessionTimeOut(int i) {
+        if (i <= 0) {
+            db.b("SessionTimeOut is between 1 and 600. Default value[30] is used");
+        } else if (i <= 600) {
+            ch.a().a(i);
+        } else {
+            db.b("SessionTimeOut is between 1 and 600. Value[600] is used");
+            ch.a().a(600);
+        }
+    }
+
+    public static void setDebugOn(boolean z) {
+        db.f19628a = z ? 2 : 7;
+    }
+
+    public static void setForTv(Context context, boolean z) {
+        bj.a().c(context, z);
+        m10945a(context);
+    }
+
+    public static void bindJSInterface(Context context, WebView webView) {
+        bindJSInterface(context, webView, null);
+    }
+
+    @SuppressLint({"SetJavaScriptEnabled"})
+    public static void bindJSInterface(Context context, WebView webView, WebViewClient webViewClient) {
+        if (context == null) {
+            throw new IllegalArgumentException("context can't be null.");
+        } else if (webView == null) {
+            throw new IllegalArgumentException("webview can't be null.");
+        } else {
+            WebSettings settings = webView.getSettings();
+            settings.setJavaScriptEnabled(true);
+            settings.setDefaultTextEncodingName("UTF-8");
+            settings.setJavaScriptCanOpenWindowsAutomatically(true);
+            webView.setWebViewClient(new bi(context, webViewClient));
+            m10945a(context);
+        }
+    }
+
+    public static String getSdkVersion() {
+        return CooperService.a().getMTJSDKVersion();
+    }
+
+    /* renamed from: a */
+    private static void m10945a(Context context) {
+        bf.a().a(context);
+    }
+
+    public static void onErised(Context context, String str, String str2, String str3) {
+        if (bv.a().b() || !m10953a(context, "onErised(...)")) {
+            return;
+        }
+        if (str == null || "".equals(str)) {
+            db.c("AppKey is invalid");
+            return;
+        }
+        bv.a().a(context, false, false);
+        long currentTimeMillis = System.currentTimeMillis();
+        bm.a().a(context, str2, str3, 1, currentTimeMillis, 0, null, null);
+        DataCore.instance().saveLogDataToSend(context, true, false);
+        if (currentTimeMillis - f12688b > HttpsClient.CONN_MGR_TIMEOUT && de.n(context)) {
+            by.a().a(context);
+            f12688b = currentTimeMillis;
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/mobstat/StatService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

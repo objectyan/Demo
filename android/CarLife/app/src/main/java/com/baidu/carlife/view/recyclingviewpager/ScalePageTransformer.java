@@ -3,84 +3,58 @@ package com.baidu.carlife.view.recyclingviewpager;
 import android.os.Build.VERSION;
 import android.support.v4.view.ViewPager.PageTransformer;
 import android.view.View;
-import android.view.ViewParent;
+import com.baidu.carlife.C0965R;
 
-public class ScalePageTransformer
-  implements ViewPager.PageTransformer
-{
-  public static final float a = 1.6F;
-  public static final float b = 1.0F;
-  private static final float c = 0.0F;
-  private static final float d = 0.4F;
-  private static final float e = 0.7F;
-  
-  public void a(View paramView, float paramFloat)
-  {
-    View localView = paramView.findViewById(2131626002);
-    float f;
-    if (paramFloat < -2.0F)
-    {
-      f = -2.0F;
-      paramFloat = 1.0F + (2.0F - Math.abs(f)) * 0.3F;
-      paramView.setScaleX(paramFloat);
-      paramView.setScaleY(paramFloat);
-      if ((f < -1.0F) || (f > 1.0F)) {
-        break label101;
-      }
-      localView.setAlpha(0.4F + (1.0F - Math.abs(f)) * -0.4F);
+public class ScalePageTransformer implements PageTransformer {
+    /* renamed from: a */
+    public static final float f7777a = 1.6f;
+    /* renamed from: b */
+    public static final float f7778b = 1.0f;
+    /* renamed from: c */
+    private static final float f7779c = 0.0f;
+    /* renamed from: d */
+    private static final float f7780d = 0.4f;
+    /* renamed from: e */
+    private static final float f7781e = 0.7f;
+
+    public void transformPage(View page, float position) {
+        View view = page.findViewById(C0965R.id.radio_channel_item_cover);
+        if (position < -3.0f) {
+            position = -3.0f;
+        } else if (position > 3.0f) {
+            position = 3.0f;
+        }
+        float scaleValue = 1.0f + ((3.0f - Math.abs(position)) * 0.2f);
+        page.setScaleX(scaleValue);
+        page.setScaleY(scaleValue);
+        if (position < -1.0f || position > 1.0f) {
+            view.setAlpha(f7781e + ((3.0f - Math.abs(position)) * -0.29999998f));
+        } else {
+            view.setAlpha(f7780d + ((1.0f - Math.abs(position)) * -0.4f));
+        }
+        if (VERSION.SDK_INT < 19) {
+            page.getParent().requestLayout();
+        }
     }
-    for (;;)
-    {
-      if (Build.VERSION.SDK_INT < 19) {
-        paramView.getParent().requestLayout();
-      }
-      return;
-      f = paramFloat;
-      if (paramFloat <= 2.0F) {
-        break;
-      }
-      f = 2.0F;
-      break;
-      label101:
-      localView.setAlpha(0.7F + (2.0F - Math.abs(f)) * -0.29999998F);
+
+    /* renamed from: a */
+    public void m8944a(View page, float position) {
+        View view = page.findViewById(C0965R.id.radio_channel_item_cover);
+        if (position < -2.0f) {
+            position = -2.0f;
+        } else if (position > 2.0f) {
+            position = 2.0f;
+        }
+        float scaleValue = 1.0f + ((2.0f - Math.abs(position)) * 0.3f);
+        page.setScaleX(scaleValue);
+        page.setScaleY(scaleValue);
+        if (position < -1.0f || position > 1.0f) {
+            view.setAlpha(f7781e + ((2.0f - Math.abs(position)) * -0.29999998f));
+        } else {
+            view.setAlpha(f7780d + ((1.0f - Math.abs(position)) * -0.4f));
+        }
+        if (VERSION.SDK_INT < 19) {
+            page.getParent().requestLayout();
+        }
     }
-  }
-  
-  public void transformPage(View paramView, float paramFloat)
-  {
-    View localView = paramView.findViewById(2131626002);
-    float f;
-    if (paramFloat < -3.0F)
-    {
-      f = -3.0F;
-      paramFloat = 1.0F + (3.0F - Math.abs(f)) * 0.2F;
-      paramView.setScaleX(paramFloat);
-      paramView.setScaleY(paramFloat);
-      if ((f < -1.0F) || (f > 1.0F)) {
-        break label104;
-      }
-      localView.setAlpha(0.4F + (1.0F - Math.abs(f)) * -0.4F);
-    }
-    for (;;)
-    {
-      if (Build.VERSION.SDK_INT < 19) {
-        paramView.getParent().requestLayout();
-      }
-      return;
-      f = paramFloat;
-      if (paramFloat <= 3.0F) {
-        break;
-      }
-      f = 3.0F;
-      break;
-      label104:
-      localView.setAlpha(0.7F + (3.0F - Math.abs(f)) * -0.29999998F);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/view/recyclingviewpager/ScalePageTransformer.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

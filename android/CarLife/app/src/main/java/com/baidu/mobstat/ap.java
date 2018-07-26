@@ -3,34 +3,21 @@ package com.baidu.mobstat;
 import android.content.Context;
 import android.content.Intent;
 
- enum ap
-{
-  ap(int paramInt1)
-  {
-    super(paramString, paramInt, paramInt1, null);
-  }
-  
-  public void a(Context paramContext)
-  {
-    if (!au.a(paramContext).b(paramContext)) {
-      return;
+enum ap extends ao {
+    ap(String str, int i, int i2) {
+        super(str, i, i2);
     }
-    try
-    {
-      Intent localIntent = new Intent(paramContext, Class.forName("com.baidu.bottom.service.BottomService"));
-      localIntent.putExtra("SDK_PRODUCT_LY", "MS");
-      paramContext.startService(localIntent);
-      return;
+
+    /* renamed from: a */
+    public void mo2725a(Context context) {
+        if (au.m15354a(context).mo2731b(context)) {
+            try {
+                Intent intent = new Intent(context, Class.forName("com.baidu.bottom.service.BottomService"));
+                intent.putExtra("SDK_PRODUCT_LY", "MS");
+                context.startService(intent);
+            } catch (Throwable th) {
+                db.m15662b(th);
+            }
+        }
     }
-    catch (Throwable paramContext)
-    {
-      db.b(paramContext);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/ap.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

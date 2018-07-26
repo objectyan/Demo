@@ -7,380 +7,326 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class Carddetail
-  extends MessageMicro
-{
-  public static final int MEISHI_FIELD_NUMBER = 1;
-  private boolean a;
-  private Meishi b = null;
-  private int c = -1;
-  
-  public static Carddetail parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new Carddetail().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static Carddetail parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (Carddetail)new Carddetail().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final Carddetail clear()
-  {
-    clearMeishi();
-    this.c = -1;
-    return this;
-  }
-  
-  public Carddetail clearMeishi()
-  {
-    this.a = false;
-    this.b = null;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.c < 0) {
-      getSerializedSize();
-    }
-    return this.c;
-  }
-  
-  public Meishi getMeishi()
-  {
-    return this.b;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    if (hasMeishi()) {
-      i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getMeishi());
-    }
-    this.c = i;
-    return i;
-  }
-  
-  public boolean hasMeishi()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Carddetail mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i = paramCodedInputStreamMicro.readTag();
-      switch (i)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-        break;
-      case 0: 
-        return this;
-      case 10: 
-        Meishi localMeishi = new Meishi();
-        paramCodedInputStreamMicro.readMessage(localMeishi);
-        setMeishi(localMeishi);
-      }
-    }
-  }
-  
-  public Carddetail setMeishi(Meishi paramMeishi)
-  {
-    if (paramMeishi == null) {
-      return clearMeishi();
-    }
-    this.a = true;
-    this.b = paramMeishi;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasMeishi()) {
-      paramCodedOutputStreamMicro.writeMessage(1, getMeishi());
-    }
-  }
-  
-  public static final class Meishi
-    extends MessageMicro
-  {
-    public static final int BUSINESS_SCOPE_FIELD_NUMBER = 2;
-    public static final int BUSINESS_SCOPE_TYPE_FIELD_NUMBER = 1;
-    private List<BusinessScope> a = Collections.emptyList();
-    private boolean b;
-    private String c = "";
-    private int d = -1;
-    
-    public static Meishi parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Meishi().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Meishi parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Meishi)new Meishi().mergeFrom(paramArrayOfByte);
-    }
-    
-    public Meishi addBusinessScope(BusinessScope paramBusinessScope)
-    {
-      if (paramBusinessScope == null) {
-        return this;
-      }
-      if (this.a.isEmpty()) {
-        this.a = new ArrayList();
-      }
-      this.a.add(paramBusinessScope);
-      return this;
-    }
-    
-    public final Meishi clear()
-    {
-      clearBusinessScope();
-      clearBusinessScopeType();
-      this.d = -1;
-      return this;
-    }
-    
-    public Meishi clearBusinessScope()
-    {
-      this.a = Collections.emptyList();
-      return this;
-    }
-    
-    public Meishi clearBusinessScopeType()
-    {
-      this.b = false;
-      this.c = "";
-      return this;
-    }
-    
-    public BusinessScope getBusinessScope(int paramInt)
-    {
-      return (BusinessScope)this.a.get(paramInt);
-    }
-    
-    public int getBusinessScopeCount()
-    {
-      return this.a.size();
-    }
-    
-    public List<BusinessScope> getBusinessScopeList()
-    {
-      return this.a;
-    }
-    
-    public String getBusinessScopeType()
-    {
-      return this.c;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.d < 0) {
-        getSerializedSize();
-      }
-      return this.d;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = 0;
-      if (hasBusinessScopeType()) {
-        i = 0 + CodedOutputStreamMicro.computeStringSize(1, getBusinessScopeType());
-      }
-      Iterator localIterator = getBusinessScopeList().iterator();
-      while (localIterator.hasNext()) {
-        i = CodedOutputStreamMicro.computeMessageSize(2, (BusinessScope)localIterator.next()) + i;
-      }
-      this.d = i;
-      return i;
-    }
-    
-    public boolean hasBusinessScopeType()
-    {
-      return this.b;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Meishi mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i = paramCodedInputStreamMicro.readTag();
-        switch (i)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setBusinessScopeType(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          BusinessScope localBusinessScope = new BusinessScope();
-          paramCodedInputStreamMicro.readMessage(localBusinessScope);
-          addBusinessScope(localBusinessScope);
+public final class Carddetail extends MessageMicro {
+    public static final int MEISHI_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private boolean f10633a;
+    /* renamed from: b */
+    private Meishi f10634b = null;
+    /* renamed from: c */
+    private int f10635c = -1;
+
+    public static final class Meishi extends MessageMicro {
+        public static final int BUSINESS_SCOPE_FIELD_NUMBER = 2;
+        public static final int BUSINESS_SCOPE_TYPE_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private List<BusinessScope> f10629a = Collections.emptyList();
+        /* renamed from: b */
+        private boolean f10630b;
+        /* renamed from: c */
+        private String f10631c = "";
+        /* renamed from: d */
+        private int f10632d = -1;
+
+        public static final class BusinessScope extends MessageMicro {
+            public static final int NAME_FIELD_NUMBER = 1;
+            /* renamed from: a */
+            private boolean f10626a;
+            /* renamed from: b */
+            private String f10627b = "";
+            /* renamed from: c */
+            private int f10628c = -1;
+
+            public static BusinessScope parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new BusinessScope().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static BusinessScope parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (BusinessScope) new BusinessScope().mergeFrom(bArr);
+            }
+
+            public final BusinessScope clear() {
+                clearName();
+                this.f10628c = -1;
+                return this;
+            }
+
+            public BusinessScope clearName() {
+                this.f10626a = false;
+                this.f10627b = "";
+                return this;
+            }
+
+            public int getCachedSize() {
+                if (this.f10628c < 0) {
+                    getSerializedSize();
+                }
+                return this.f10628c;
+            }
+
+            public String getName() {
+                return this.f10627b;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasName()) {
+                    i = 0 + CodedOutputStreamMicro.computeStringSize(1, getName());
+                }
+                this.f10628c = i;
+                return i;
+            }
+
+            public boolean hasName() {
+                return this.f10626a;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public BusinessScope mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 10:
+                            setName(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public BusinessScope setName(String str) {
+                this.f10626a = true;
+                this.f10627b = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasName()) {
+                    codedOutputStreamMicro.writeString(1, getName());
+                }
+            }
         }
-      }
-    }
-    
-    public Meishi setBusinessScope(int paramInt, BusinessScope paramBusinessScope)
-    {
-      if (paramBusinessScope == null) {
-        return this;
-      }
-      this.a.set(paramInt, paramBusinessScope);
-      return this;
-    }
-    
-    public Meishi setBusinessScopeType(String paramString)
-    {
-      this.b = true;
-      this.c = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasBusinessScopeType()) {
-        paramCodedOutputStreamMicro.writeString(1, getBusinessScopeType());
-      }
-      Iterator localIterator = getBusinessScopeList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(2, (BusinessScope)localIterator.next());
-      }
-    }
-    
-    public static final class BusinessScope
-      extends MessageMicro
-    {
-      public static final int NAME_FIELD_NUMBER = 1;
-      private boolean a;
-      private String b = "";
-      private int c = -1;
-      
-      public static BusinessScope parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new BusinessScope().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static BusinessScope parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (BusinessScope)new BusinessScope().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final BusinessScope clear()
-      {
-        clearName();
-        this.c = -1;
-        return this;
-      }
-      
-      public BusinessScope clearName()
-      {
-        this.a = false;
-        this.b = "";
-        return this;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.c < 0) {
-          getSerializedSize();
+
+        public static Meishi parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Meishi().mergeFrom(codedInputStreamMicro);
         }
-        return this.c;
-      }
-      
-      public String getName()
-      {
-        return this.b;
-      }
-      
-      public int getSerializedSize()
-      {
-        int i = 0;
-        if (hasName()) {
-          i = 0 + CodedOutputStreamMicro.computeStringSize(1, getName());
+
+        public static Meishi parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Meishi) new Meishi().mergeFrom(bArr);
         }
-        this.c = i;
-        return i;
-      }
-      
-      public boolean hasName()
-      {
-        return this.a;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public BusinessScope mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int i = paramCodedInputStreamMicro.readTag();
-          switch (i)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, i)) {}
-            break;
-          case 0: 
+
+        public Meishi addBusinessScope(BusinessScope businessScope) {
+            if (businessScope != null) {
+                if (this.f10629a.isEmpty()) {
+                    this.f10629a = new ArrayList();
+                }
+                this.f10629a.add(businessScope);
+            }
             return this;
-          case 10: 
-            setName(paramCodedInputStreamMicro.readString());
-          }
         }
-      }
-      
-      public BusinessScope setName(String paramString)
-      {
-        this.a = true;
-        this.b = paramString;
-        return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasName()) {
-          paramCodedOutputStreamMicro.writeString(1, getName());
+
+        public final Meishi clear() {
+            clearBusinessScope();
+            clearBusinessScopeType();
+            this.f10632d = -1;
+            return this;
         }
-      }
+
+        public Meishi clearBusinessScope() {
+            this.f10629a = Collections.emptyList();
+            return this;
+        }
+
+        public Meishi clearBusinessScopeType() {
+            this.f10630b = false;
+            this.f10631c = "";
+            return this;
+        }
+
+        public BusinessScope getBusinessScope(int i) {
+            return (BusinessScope) this.f10629a.get(i);
+        }
+
+        public int getBusinessScopeCount() {
+            return this.f10629a.size();
+        }
+
+        public List<BusinessScope> getBusinessScopeList() {
+            return this.f10629a;
+        }
+
+        public String getBusinessScopeType() {
+            return this.f10631c;
+        }
+
+        public int getCachedSize() {
+            if (this.f10632d < 0) {
+                getSerializedSize();
+            }
+            return this.f10632d;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasBusinessScopeType()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getBusinessScopeType());
+            }
+            int i2 = i;
+            for (BusinessScope computeMessageSize : getBusinessScopeList()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(2, computeMessageSize) + i2;
+            }
+            this.f10632d = i2;
+            return i2;
+        }
+
+        public boolean hasBusinessScopeType() {
+            return this.f10630b;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Meishi mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setBusinessScopeType(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        MessageMicro businessScope = new BusinessScope();
+                        codedInputStreamMicro.readMessage(businessScope);
+                        addBusinessScope(businessScope);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Meishi setBusinessScope(int i, BusinessScope businessScope) {
+            if (businessScope != null) {
+                this.f10629a.set(i, businessScope);
+            }
+            return this;
+        }
+
+        public Meishi setBusinessScopeType(String str) {
+            this.f10630b = true;
+            this.f10631c = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasBusinessScopeType()) {
+                codedOutputStreamMicro.writeString(1, getBusinessScopeType());
+            }
+            for (BusinessScope writeMessage : getBusinessScopeList()) {
+                codedOutputStreamMicro.writeMessage(2, writeMessage);
+            }
+        }
     }
-  }
+
+    public static Carddetail parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new Carddetail().mergeFrom(codedInputStreamMicro);
+    }
+
+    public static Carddetail parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (Carddetail) new Carddetail().mergeFrom(bArr);
+    }
+
+    public final Carddetail clear() {
+        clearMeishi();
+        this.f10635c = -1;
+        return this;
+    }
+
+    public Carddetail clearMeishi() {
+        this.f10633a = false;
+        this.f10634b = null;
+        return this;
+    }
+
+    public int getCachedSize() {
+        if (this.f10635c < 0) {
+            getSerializedSize();
+        }
+        return this.f10635c;
+    }
+
+    public Meishi getMeishi() {
+        return this.f10634b;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasMeishi()) {
+            i = 0 + CodedOutputStreamMicro.computeMessageSize(1, getMeishi());
+        }
+        this.f10635c = i;
+        return i;
+    }
+
+    public boolean hasMeishi() {
+        return this.f10633a;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public Carddetail mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    MessageMicro meishi = new Meishi();
+                    codedInputStreamMicro.readMessage(meishi);
+                    setMeishi(meishi);
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public Carddetail setMeishi(Meishi meishi) {
+        if (meishi == null) {
+            return clearMeishi();
+        }
+        this.f10633a = true;
+        this.f10634b = meishi;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasMeishi()) {
+            codedOutputStreamMicro.writeMessage(1, getMeishi());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/Carddetail.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

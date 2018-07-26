@@ -7,269 +7,233 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-final class ToStringUtil
-{
-  private static final String a = "getClass";
-  private static final String b = "clone";
-  private static final String c = "hashCode";
-  private static final String d = "toString";
-  private static final String e = "get";
-  private static final Object[] f = new Object[0];
-  private static final Class[] g = new Class[0];
-  private static final String h = "";
-  private static final String i = "[circular reference]";
-  private static final Logger j = Util.a(ToStringUtil.class);
-  private static final String k = System.getProperty("line.separator");
-  private static Pattern l = Pattern.compile("password", 2);
-  private static String m = "****";
-  
-  private static Object a(Object paramObject, Method paramMethod)
-  {
-    localObject1 = null;
-    try
-    {
-      Object localObject2 = paramMethod.invoke(paramObject, f);
-      paramObject = localObject2;
-    }
-    catch (IllegalAccessException localIllegalAccessException)
-    {
-      for (;;)
-      {
-        b(paramObject, paramMethod);
-        paramObject = localObject1;
-      }
-    }
-    catch (InvocationTargetException localInvocationTargetException)
-    {
-      for (;;)
-      {
-        b(paramObject, paramMethod);
-        paramObject = localObject1;
-      }
-    }
-    return c(paramObject, paramMethod);
-  }
-  
-  static String a(Object paramObject)
-  {
-    return a(paramObject, null, null);
-  }
-  
-  static String a(Object paramObject, Class paramClass, String paramString)
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    a(paramObject, localStringBuilder);
-    Method[] arrayOfMethod = paramObject.getClass().getDeclaredMethods();
-    int i1 = arrayOfMethod.length;
-    int n = 0;
-    while (n < i1)
-    {
-      Method localMethod = arrayOfMethod[n];
-      if (a(localMethod, paramObject.getClass())) {
-        a(paramObject, localMethod, localStringBuilder, paramClass, paramString);
-      }
-      n += 1;
-    }
-    a(localStringBuilder);
-    return localStringBuilder.toString();
-  }
-  
-  private static String a(Method paramMethod)
-  {
-    String str = paramMethod.getName();
-    paramMethod = str;
-    if (str.startsWith("get")) {
-      paramMethod = str.substring("get".length());
-    }
-    return paramMethod;
-  }
-  
-  private static Method a(Class paramClass, String paramString)
-  {
-    try
-    {
-      Method localMethod = paramClass.getMethod(paramString, g);
-      return localMethod;
-    }
-    catch (NoSuchMethodException localNoSuchMethodException)
-    {
-      b(paramClass, paramString);
-    }
-    return null;
-  }
-  
-  private static void a(Object paramObject, StringBuilder paramStringBuilder)
-  {
-    paramStringBuilder.append(paramObject.getClass().getName());
-    paramStringBuilder.append(" {");
-    paramStringBuilder.append(k);
-  }
-  
-  private static void a(Object paramObject, Method paramMethod, StringBuilder paramStringBuilder, Class paramClass, String paramString)
-  {
-    paramStringBuilder.append("");
-    paramStringBuilder.append(a(paramMethod));
-    paramStringBuilder.append(": ");
-    paramObject = a(paramObject, paramMethod);
-    if ((paramObject != null) && (paramObject.getClass().isArray())) {
-      paramStringBuilder.append(Util.b(paramObject));
-    }
-    for (;;)
-    {
-      paramStringBuilder.append(k);
-      return;
-      if (paramClass == null)
-      {
-        paramStringBuilder.append(paramObject);
-      }
-      else if (paramClass == paramObject.getClass())
-      {
-        paramMethod = a(paramClass, paramString);
-        if (a(paramMethod, paramClass)) {
-          paramStringBuilder.append(a(paramObject, paramMethod));
-        } else {
-          paramStringBuilder.append("[circular reference]");
+final class ToStringUtil {
+    /* renamed from: a */
+    private static final String f19032a = "getClass";
+    /* renamed from: b */
+    private static final String f19033b = "clone";
+    /* renamed from: c */
+    private static final String f19034c = "hashCode";
+    /* renamed from: d */
+    private static final String f19035d = "toString";
+    /* renamed from: e */
+    private static final String f19036e = "get";
+    /* renamed from: f */
+    private static final Object[] f19037f = new Object[0];
+    /* renamed from: g */
+    private static final Class[] f19038g = new Class[0];
+    /* renamed from: h */
+    private static final String f19039h = "";
+    /* renamed from: i */
+    private static final String f19040i = "[circular reference]";
+    /* renamed from: j */
+    private static final Logger f19041j = Util.m15094a(ToStringUtil.class);
+    /* renamed from: k */
+    private static final String f19042k = System.getProperty("line.separator");
+    /* renamed from: l */
+    private static Pattern f19043l = Pattern.compile("password", 2);
+    /* renamed from: m */
+    private static String f19044m = "****";
+
+    private static final class Ping {
+        /* renamed from: a */
+        private Pong f19030a;
+
+        private Ping() {
         }
-      }
+
+        public Pong getPong() {
+            return this.f19030a;
+        }
+
+        public void setPong(Pong aPong) {
+            this.f19030a = aPong;
+        }
+
+        public Integer getId() {
+            return new Integer(123);
+        }
+
+        public String getUserPassword() {
+            return "blah";
+        }
+
+        public String toString() {
+            return ToStringUtil.m15082a((Object) this);
+        }
     }
-  }
-  
-  private static void a(StringBuilder paramStringBuilder)
-  {
-    paramStringBuilder.append("}");
-    paramStringBuilder.append(k);
-  }
-  
-  private static boolean a(Method paramMethod, Class paramClass)
-  {
-    boolean bool = Modifier.isPublic(paramMethod.getModifiers());
-    int n;
-    int i1;
-    label31:
-    int i2;
-    if (paramMethod.getParameterTypes().length == 0)
-    {
-      n = 1;
-      if (paramMethod.getReturnType() == Void.TYPE) {
-        break label123;
-      }
-      i1 = 1;
-      if (paramMethod.getReturnType() != paramClass) {
-        break label128;
-      }
-      i2 = 1;
-      label42:
-      if ((!paramMethod.getName().equals("clone")) && (!paramMethod.getName().equals("getClass")) && (!paramMethod.getName().equals("hashCode")) && (!paramMethod.getName().equals("toString"))) {
-        break label134;
-      }
+
+    private static final class Pong {
+        /* renamed from: a */
+        private Ping f19031a;
+
+        private Pong() {
+        }
+
+        public Ping getPing() {
+            return this.f19031a;
+        }
+
+        public void setPing(Ping aPing) {
+            this.f19031a = aPing;
+        }
+
+        public String toString() {
+            return ToStringUtil.m15083a(this, Ping.class, "getId");
+        }
     }
-    label123:
-    label128:
-    label134:
-    for (int i3 = 1;; i3 = 0)
-    {
-      if ((!bool) || (n == 0) || (i1 == 0) || (i3 != 0) || (i2 != 0)) {
-        break label140;
-      }
-      return true;
-      n = 0;
-      break;
-      i1 = 0;
-      break label31;
-      i2 = 0;
-      break label42;
+
+    private ToStringUtil() {
     }
-    label140:
-    return false;
-  }
-  
-  private static void b(Class paramClass, String paramString)
-  {
-    j.severe("Reflection fails to get no-arg method named: " + Util.a(paramString) + " for class: " + paramClass.getName());
-  }
-  
-  private static void b(Object paramObject, Method paramMethod)
-  {
-    j.severe("Cannot get return value using reflection. Class: " + paramObject.getClass().getName() + " Method: " + paramMethod.getName());
-  }
-  
-  private static Object c(Object paramObject, Method paramMethod)
-  {
-    if (l.matcher(paramMethod.getName()).find()) {
-      paramObject = m;
+
+    /* renamed from: a */
+    static String m15082a(Object aObject) {
+        return m15083a(aObject, null, null);
     }
-    return paramObject;
-  }
-  
-  public static void main(String... paramVarArgs)
-  {
-    paramVarArgs = new ArrayList();
-    paramVarArgs.add("blah");
-    paramVarArgs.add("blah");
-    paramVarArgs.add("blah");
-    new StringTokenizer("This is the end.");
-    paramVarArgs = new Ping(null);
-    Pong localPong = new Pong(null);
-    paramVarArgs.setPong(localPong);
-    localPong.setPing(paramVarArgs);
-  }
-  
-  private static final class Ping
-  {
-    private ToStringUtil.Pong a;
-    
-    public Integer getId()
-    {
-      return new Integer(123);
+
+    /* renamed from: a */
+    static String m15083a(Object aObject, Class aSpecialClass, String aMethodName) {
+        StringBuilder result = new StringBuilder();
+        m15086a(aObject, result);
+        for (Method method : aObject.getClass().getDeclaredMethods()) {
+            if (m15089a(method, aObject.getClass())) {
+                m15087a(aObject, method, result, aSpecialClass, aMethodName);
+            }
+        }
+        m15088a(result);
+        return result.toString();
     }
-    
-    public ToStringUtil.Pong getPong()
-    {
-      return this.a;
+
+    /* renamed from: a */
+    private static void m15086a(Object aObject, StringBuilder aResult) {
+        aResult.append(aObject.getClass().getName());
+        aResult.append(" {");
+        aResult.append(f19042k);
     }
-    
-    public String getUserPassword()
-    {
-      return "blah";
+
+    /* renamed from: a */
+    private static void m15088a(StringBuilder aResult) {
+        aResult.append("}");
+        aResult.append(f19042k);
     }
-    
-    public void setPong(ToStringUtil.Pong paramPong)
-    {
-      this.a = paramPong;
+
+    /* renamed from: a */
+    private static boolean m15089a(Method aMethod, Class aNativeClass) {
+        boolean isPublic = Modifier.isPublic(aMethod.getModifiers());
+        boolean hasNoArguments;
+        if (aMethod.getParameterTypes().length == 0) {
+            hasNoArguments = true;
+        } else {
+            hasNoArguments = false;
+        }
+        boolean hasReturnValue;
+        if (aMethod.getReturnType() != Void.TYPE) {
+            hasReturnValue = true;
+        } else {
+            hasReturnValue = false;
+        }
+        boolean returnsNativeObject;
+        if (aMethod.getReturnType() == aNativeClass) {
+            returnsNativeObject = true;
+        } else {
+            returnsNativeObject = false;
+        }
+        boolean isMethodOfObjectClass;
+        if (aMethod.getName().equals(f19033b) || aMethod.getName().equals(f19032a) || aMethod.getName().equals(f19034c) || aMethod.getName().equals(f19035d)) {
+            isMethodOfObjectClass = true;
+        } else {
+            isMethodOfObjectClass = false;
+        }
+        if (isPublic && hasNoArguments && hasReturnValue && !isMethodOfObjectClass && !returnsNativeObject) {
+            return true;
+        }
+        return false;
     }
-    
-    public String toString()
-    {
-      return ToStringUtil.a(this);
+
+    /* renamed from: a */
+    private static void m15087a(Object aObject, Method aMethod, StringBuilder aResult, Class aCircularRefClass, String aCircularRefMethodName) {
+        aResult.append("");
+        aResult.append(m15084a(aMethod));
+        aResult.append(": ");
+        Object returnValue = m15081a(aObject, aMethod);
+        if (returnValue != null && returnValue.getClass().isArray()) {
+            aResult.append(Util.m15097b(returnValue));
+        } else if (aCircularRefClass == null) {
+            aResult.append(returnValue);
+        } else if (aCircularRefClass == returnValue.getClass()) {
+            Method method = m15085a(aCircularRefClass, aCircularRefMethodName);
+            if (m15089a(method, aCircularRefClass)) {
+                aResult.append(m15081a(returnValue, method));
+            } else {
+                aResult.append(f19040i);
+            }
+        }
+        aResult.append(f19042k);
     }
-  }
-  
-  private static final class Pong
-  {
-    private ToStringUtil.Ping a;
-    
-    public ToStringUtil.Ping getPing()
-    {
-      return this.a;
+
+    /* renamed from: a */
+    private static String m15084a(Method aMethod) {
+        String result = aMethod.getName();
+        if (result.startsWith(f19036e)) {
+            return result.substring(f19036e.length());
+        }
+        return result;
     }
-    
-    public void setPing(ToStringUtil.Ping paramPing)
-    {
-      this.a = paramPing;
+
+    /* renamed from: a */
+    private static Object m15081a(Object aObject, Method aMethod) {
+        Object result = null;
+        try {
+            result = aMethod.invoke(aObject, f19037f);
+        } catch (IllegalAccessException e) {
+            m15091b(aObject, aMethod);
+        } catch (InvocationTargetException e2) {
+            m15091b(aObject, aMethod);
+        }
+        return m15092c(result, aMethod);
     }
-    
-    public String toString()
-    {
-      return ToStringUtil.a(this, ToStringUtil.Ping.class, "getId");
+
+    /* renamed from: a */
+    private static Method m15085a(Class aSpecialClass, String aMethodName) {
+        Method result = null;
+        try {
+            result = aSpecialClass.getMethod(aMethodName, f19038g);
+        } catch (NoSuchMethodException e) {
+            m15090b(aSpecialClass, aMethodName);
+        }
+        return result;
     }
-  }
+
+    /* renamed from: b */
+    private static void m15091b(Object aObject, Method aMethod) {
+        f19041j.severe("Cannot get return value using reflection. Class: " + aObject.getClass().getName() + " Method: " + aMethod.getName());
+    }
+
+    /* renamed from: b */
+    private static void m15090b(Class aSpecialClass, String aMethodName) {
+        f19041j.severe("Reflection fails to get no-arg method named: " + Util.m15093a((Object) aMethodName) + " for class: " + aSpecialClass.getName());
+    }
+
+    /* renamed from: c */
+    private static Object m15092c(Object aReturnValue, Method aMethod) {
+        Object result = aReturnValue;
+        if (f19043l.matcher(aMethod.getName()).find()) {
+            return f19044m;
+        }
+        return result;
+    }
+
+    public static void main(String... args) {
+        List<String> list = new ArrayList();
+        list.add("blah");
+        list.add("blah");
+        list.add("blah");
+        StringTokenizer parser = new StringTokenizer("This is the end.");
+        Ping ping = new Ping();
+        Pong pong = new Pong();
+        ping.setPong(pong);
+        pong.setPing(ping);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/date/ToStringUtil.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

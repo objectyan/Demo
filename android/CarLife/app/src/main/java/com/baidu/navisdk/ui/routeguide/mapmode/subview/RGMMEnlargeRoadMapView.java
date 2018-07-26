@@ -1,7 +1,6 @@
 package com.baidu.navisdk.ui.routeguide.mapmode.subview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -19,14 +18,19 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.widget.AbsoluteLayout.LayoutParams;
+import android.widget.AbsoluteLayout;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.baidu.navisdk.C4048R;
+import com.baidu.navisdk.comapi.routeguide.RouteGuideParams.RGKey.ExpandMap;
+import com.baidu.navisdk.comapi.routeguide.RouteGuideParams.RasterType;
 import com.baidu.navisdk.ui.routeguide.control.RGLaneLineController;
 import com.baidu.navisdk.ui.routeguide.control.RGViewController;
+import com.baidu.navisdk.ui.routeguide.fsm.RGFSMTable.FsmEvent;
+import com.baidu.navisdk.ui.routeguide.fsm.RGFSMTable.FsmState;
 import com.baidu.navisdk.ui.routeguide.fsm.RouteGuideFSM;
 import com.baidu.navisdk.ui.routeguide.mapmode.RGMapModeViewController;
 import com.baidu.navisdk.ui.routeguide.model.RGEnlargeRoadMapModel;
@@ -43,935 +47,715 @@ import com.baidu.navisdk.util.common.StringUtils.UnitLangEnum;
 import com.baidu.navisdk.util.drivertool.BNScreentShotManager;
 import com.baidu.navisdk.util.jar.JarUtils;
 import com.baidu.navisdk.util.statistic.userop.UserOPController;
+import com.baidu.navisdk.util.statistic.userop.UserOPParams;
 import com.baidu.navisdk.util.worker.BNWorkerCenter;
 import com.baidu.navisdk.util.worker.BNWorkerConfig;
 import com.baidu.navisdk.util.worker.BNWorkerNormalTask;
-import com.baidu.navisdk.util.worker.IBNWorkerCenter;
 import com.baidu.nplatform.comapi.map.ColladaGLSurfaceView;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RGMMEnlargeRoadMapView
-  extends BNBaseView
-{
-  public static final String TAG = RGMMEnlargeRoadMapView.class.getSimpleName();
-  private Animation.AnimationListener animationListener = new Animation.AnimationListener()
-  {
-    public void onAnimationEnd(Animation paramAnonymousAnimation)
-    {
-      if (RGMMEnlargeRoadMapView.this.mEnlargeRoadMapView != null) {
-        RGMMEnlargeRoadMapView.this.mEnlargeRoadMapView.setVisibility(8);
-      }
-      RGMapModeViewController.getInstance().setIsShowEnlargeRoadMap(false);
-    }
-    
-    public void onAnimationRepeat(Animation paramAnonymousAnimation) {}
-    
-    public void onAnimationStart(Animation paramAnonymousAnimation) {}
-  };
-  private View bnav_rg_enlarge_image_mask;
-  private Animation.AnimationListener colladaAnimationListener = new Animation.AnimationListener()
-  {
-    public void onAnimationEnd(Animation paramAnonymousAnimation)
-    {
-      RGMMEnlargeRoadMapView.this.showColladaWithoutAnimation(false);
-    }
-    
-    public void onAnimationRepeat(Animation paramAnonymousAnimation) {}
-    
-    public void onAnimationStart(Animation paramAnonymousAnimation) {}
-  };
-  private ImageView mCarPosImgView;
-  private View mCarPosLayout;
-  private int mCarPosX = 0;
-  private int mCarPosY = 0;
-  private int mCarRotate;
-  private View mColladaCloseImage = null;
-  private ColladaGLSurfaceView mColladaGLSurfaceView;
-  private LinearLayout mColladaLayout = null;
-  private View mColladaRl = null;
-  private View mEnlargeGuideInfoBackground = null;
-  private ImageView mEnlargeImageView = null;
-  private View mEnlargeRoadMapView = null;
-  private TextView mEnterNextRoadTV = null;
-  private boolean mForceRefreshImage = false;
-  private Handler mHandler = new Handler(Looper.getMainLooper());
-  Animation mInAnimation = null;
-  private Animation.AnimationListener mInListener = new Animation.AnimationListener()
-  {
-    public void onAnimationEnd(Animation paramAnonymousAnimation)
-    {
-      if (RGLaneLineController.getInstance().isNormalEnlargeShow)
-      {
-        LogUtil.e(RGLaneInfoModel.TAG, "enlagre onAnimationEnd");
-        RGMapModeViewController.getInstance().handleLaneEnlargeShow(true);
-      }
-      BNScreentShotManager.getInstance().rootScreenByMsg();
-    }
-    
-    public void onAnimationRepeat(Animation paramAnonymousAnimation) {}
-    
-    public void onAnimationStart(Animation paramAnonymousAnimation) {}
-  };
-  private TextView mNextRoadTV = null;
-  Animation mOutAnimation = null;
-  private int mProgress;
-  private ProgressBar mProgressBar = null;
-  private int mRemDist;
-  private TextView mRemainDistTV = null;
-  private TextView mRemainDistUnitTV = null;
-  private String mRoadName;
-  private Matrix mRotateMatrix;
-  private FrameLayout mStreetLayout;
-  private ImageView mSwitchView = null;
-  private int mTotalDist;
-  private ImageView mTurnIcon = null;
-  private int mTurnIconId = 0;
-  private boolean mbUpdateRasterInfo;
-  private String rasterType;
-  
-  public RGMMEnlargeRoadMapView(Context paramContext, ViewGroup paramViewGroup, OnRGSubViewListener paramOnRGSubViewListener)
-  {
-    super(paramContext, paramViewGroup, paramOnRGSubViewListener);
-    initViews();
-  }
-  
-  private void initViews()
-  {
-    if (this.mRootViewGroup == null) {
-      return;
-    }
-    Object localObject = (ViewStub)this.mRootViewGroup.findViewById(1711866542);
-    if (localObject != null) {
-      this.mEnlargeRoadMapView = ((ViewStub)localObject).inflate();
-    }
-    this.mEnlargeGuideInfoBackground = this.mRootViewGroup.findViewById(1711866598);
-    this.mEnlargeImageView = ((ImageView)this.mRootViewGroup.findViewById(1711866599));
-    this.mRemainDistTV = ((TextView)this.mRootViewGroup.findViewById(1711866602));
-    this.mRemainDistUnitTV = ((TextView)this.mRootViewGroup.findViewById(1711866603));
-    this.mNextRoadTV = ((TextView)this.mRootViewGroup.findViewById(1711866606));
-    this.mEnterNextRoadTV = ((TextView)this.mRootViewGroup.findViewById(1711866605));
-    this.mTurnIcon = ((ImageView)this.mRootViewGroup.findViewById(1711866604));
-    this.mProgressBar = ((ProgressBar)this.mRootViewGroup.findViewById(1711866607));
-    this.mSwitchView = ((ImageView)this.mRootViewGroup.findViewById(1711866608));
-    this.mRotateMatrix = new Matrix();
-    this.mCarPosLayout = this.mRootViewGroup.findViewById(1711866609);
-    this.mCarPosImgView = ((ImageView)this.mRootViewGroup.findViewById(1711866610));
-    this.mStreetLayout = ((FrameLayout)this.mRootViewGroup.findViewById(1711866611));
-    this.bnav_rg_enlarge_image_mask = this.mRootViewGroup.findViewById(1711866600);
-    this.mColladaCloseImage = this.mRootViewGroup.findViewById(1711866545);
-    this.mColladaRl = this.mRootViewGroup.findViewById(1711866543);
-    this.mColladaLayout = ((LinearLayout)this.mRootViewGroup.findViewById(1711866544));
-    if (this.mColladaLayout != null) {
-      this.mColladaLayout.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          UserOPController.getInstance().add("3.q", null, "99", null);
-          RGMapModeViewController.getInstance().setmIsShowColladaView(false);
-          RouteGuideFSM.getInstance().run("收到collada隐藏消息");
-          RGMMEnlargeRoadMapView.this.resetColladaView();
+public class RGMMEnlargeRoadMapView extends BNBaseView {
+    public static final String TAG = RGMMEnlargeRoadMapView.class.getSimpleName();
+    private AnimationListener animationListener = new C43767();
+    private View bnav_rg_enlarge_image_mask;
+    private AnimationListener colladaAnimationListener = new C43778();
+    private ImageView mCarPosImgView;
+    private View mCarPosLayout;
+    private int mCarPosX = 0;
+    private int mCarPosY = 0;
+    private int mCarRotate;
+    private View mColladaCloseImage = null;
+    private ColladaGLSurfaceView mColladaGLSurfaceView;
+    private LinearLayout mColladaLayout = null;
+    private View mColladaRl = null;
+    private View mEnlargeGuideInfoBackground = null;
+    private ImageView mEnlargeImageView = null;
+    private View mEnlargeRoadMapView = null;
+    private TextView mEnterNextRoadTV = null;
+    private boolean mForceRefreshImage = false;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    Animation mInAnimation = null;
+    private AnimationListener mInListener = new C43756();
+    private TextView mNextRoadTV = null;
+    Animation mOutAnimation = null;
+    private int mProgress;
+    private ProgressBar mProgressBar = null;
+    private int mRemDist;
+    private TextView mRemainDistTV = null;
+    private TextView mRemainDistUnitTV = null;
+    private String mRoadName;
+    private Matrix mRotateMatrix;
+    private FrameLayout mStreetLayout;
+    private ImageView mSwitchView = null;
+    private int mTotalDist;
+    private ImageView mTurnIcon = null;
+    private int mTurnIconId = 0;
+    private boolean mbUpdateRasterInfo;
+    private String rasterType;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMEnlargeRoadMapView$1 */
+    class C43701 implements OnClickListener {
+        C43701() {
         }
-      });
+
+        public void onClick(View v) {
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_q, null, "99", null);
+            RGMapModeViewController.getInstance().setmIsShowColladaView(false);
+            RouteGuideFSM.getInstance().run(FsmEvent.MSG_COLLADA_HIDE);
+            RGMMEnlargeRoadMapView.this.resetColladaView();
+        }
     }
-    this.mColladaCloseImage.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        UserOPController.getInstance().add("3.q", null, "99", null);
-        RGMapModeViewController.getInstance().setmIsShowColladaView(false);
-        RouteGuideFSM.getInstance().run("收到collada隐藏消息");
-        RGMMEnlargeRoadMapView.this.resetColladaView();
-      }
-    });
-    this.mSwitchView.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        UserOPController.getInstance().add("3.q", null, String.valueOf(RGEnlargeRoadMapModel.getInstance().getEnlargeMapTypeForStatisitcs()), null);
-        RGEnlargeRoadMapModel.getInstance().setEnlargeMapTypeForStatisitcs(0);
-        RGEnlargeRoadMapModel.getInstance().setAnyEnlargeRoadMapShowing(false);
-        RouteGuideFSM.getInstance().run("收到放大图隐藏消息");
-      }
-    });
-    this.mEnlargeRoadMapView.setOnClickListener(new View.OnClickListener()
-    {
-      public void onClick(View paramAnonymousView)
-      {
-        UserOPController.getInstance().add("3.q", null, String.valueOf(RGEnlargeRoadMapModel.getInstance().getEnlargeMapTypeForStatisitcs()), null);
-        RGEnlargeRoadMapModel.getInstance().setEnlargeMapTypeForStatisitcs(0);
-        RGEnlargeRoadMapModel.getInstance().setAnyEnlargeRoadMapShowing(false);
-        RouteGuideFSM.getInstance().run("收到放大图隐藏消息");
-      }
-    });
-    if (RGViewController.getInstance().getOrientation() == 2)
-    {
-      this.mInAnimation = JarUtils.loadAnimation(this.mContext, 1711538187);
-      this.mOutAnimation = JarUtils.loadAnimation(this.mContext, 1711538190);
-      localObject = this.mEnlargeRoadMapView.getLayoutParams();
-      ((ViewGroup.LayoutParams)localObject).width = (ScreenUtil.getInstance().getHeightPixels() / 2);
-      ((ViewGroup.LayoutParams)localObject).height = ScreenUtil.getInstance().getWidthPixels();
-      this.mEnlargeRoadMapView.requestLayout();
-      localObject = this.mColladaRl.getLayoutParams();
-      ((ViewGroup.LayoutParams)localObject).width = (ScreenUtil.getInstance().getHeightPixels() / 2);
-      ((ViewGroup.LayoutParams)localObject).height = ScreenUtil.getInstance().getWidthPixels();
-      this.mColladaRl.requestLayout();
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMEnlargeRoadMapView$2 */
+    class C43712 implements OnClickListener {
+        C43712() {
+        }
+
+        public void onClick(View v) {
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_q, null, "99", null);
+            RGMapModeViewController.getInstance().setmIsShowColladaView(false);
+            RouteGuideFSM.getInstance().run(FsmEvent.MSG_COLLADA_HIDE);
+            RGMMEnlargeRoadMapView.this.resetColladaView();
+        }
     }
-    for (;;)
-    {
-      resetColladaView();
-      updateDataByLastest();
-      return;
-      this.mInAnimation = JarUtils.loadAnimation(this.mContext, 1711538188);
-      this.mOutAnimation = JarUtils.loadAnimation(this.mContext, 1711538191);
-      localObject = this.mEnlargeRoadMapView.getLayoutParams();
-      ((ViewGroup.LayoutParams)localObject).width = ScreenUtil.getInstance().getWidthPixels();
-      ((ViewGroup.LayoutParams)localObject).height = (ScreenUtil.getInstance().getHeightPixels() / 2);
-      this.mEnlargeRoadMapView.requestLayout();
-      localObject = this.mColladaRl.getLayoutParams();
-      ((ViewGroup.LayoutParams)localObject).width = ScreenUtil.getInstance().getWidthPixels();
-      ((ViewGroup.LayoutParams)localObject).height = (ScreenUtil.getInstance().getHeightPixels() / 2);
-      this.mColladaRl.requestLayout();
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMEnlargeRoadMapView$3 */
+    class C43723 implements OnClickListener {
+        C43723() {
+        }
+
+        public void onClick(View arg0) {
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_q, null, String.valueOf(RGEnlargeRoadMapModel.getInstance().getEnlargeMapTypeForStatisitcs()), null);
+            RGEnlargeRoadMapModel.getInstance().setEnlargeMapTypeForStatisitcs(0);
+            RGEnlargeRoadMapModel.getInstance().setAnyEnlargeRoadMapShowing(false);
+            RouteGuideFSM.getInstance().run(FsmEvent.MSG_ENLARGE_ROADMAP_HIDE);
+        }
     }
-  }
-  
-  private void progressRun()
-  {
-    LogUtil.e(TAG, "update raster, raster type=" + this.rasterType + "," + this.mbUpdateRasterInfo + "," + this.mForceRefreshImage);
-    if ((this.mbUpdateRasterInfo) || (this.mForceRefreshImage))
-    {
-      this.mForceRefreshImage = false;
-      if (!"raster_direct_board".equals(this.rasterType)) {
-        break label104;
-      }
-      updateDirectBoardView();
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMEnlargeRoadMapView$4 */
+    class C43734 implements OnClickListener {
+        C43734() {
+        }
+
+        public void onClick(View arg0) {
+            UserOPController.getInstance().add(UserOPParams.GUIDE_3_q, null, String.valueOf(RGEnlargeRoadMapModel.getInstance().getEnlargeMapTypeForStatisitcs()), null);
+            RGEnlargeRoadMapModel.getInstance().setEnlargeMapTypeForStatisitcs(0);
+            RGEnlargeRoadMapModel.getInstance().setAnyEnlargeRoadMapShowing(false);
+            RouteGuideFSM.getInstance().run(FsmEvent.MSG_ENLARGE_ROADMAP_HIDE);
+        }
     }
-    for (;;)
-    {
-      updateProgress();
-      updateRoadInfo();
-      updateTurnIcon();
-      return;
-      label104:
-      if ("raster_grid".equals(this.rasterType)) {
-        updateSimpleModelView();
-      } else if ("raster_vector".equals(this.rasterType)) {
-        updateVectorMapView();
-      } else if ("raster_street".equals(this.rasterType)) {
-        updateStreetView();
-      }
-    }
-  }
-  
-  private void progressRun(boolean paramBoolean)
-  {
-    LogUtil.e(TAG, "update raster, raster type=" + this.rasterType + "show," + paramBoolean + "," + this.mForceRefreshImage);
-    if ((paramBoolean) || (this.mForceRefreshImage))
-    {
-      this.mForceRefreshImage = false;
-      if (!"raster_direct_board".equals(this.rasterType)) {
-        break label98;
-      }
-      updateDirectBoardView();
-    }
-    for (;;)
-    {
-      updateProgress();
-      updateRoadInfo();
-      updateTurnIcon();
-      return;
-      label98:
-      if ("raster_grid".equals(this.rasterType)) {
-        updateSimpleModelView();
-      } else if ("raster_vector".equals(this.rasterType)) {
-        updateVectorMapView();
-      } else if ("raster_street".equals(this.rasterType)) {
-        updateStreetView();
-      }
-    }
-  }
-  
-  private void showColladaWithoutAnimation(boolean paramBoolean)
-  {
-    if (this.mColladaRl != null)
-    {
-      LogUtil.e(RGLaneInfoModel.TAG, "showColladaWithoutAnimation " + paramBoolean);
-      RGMapModeViewController.getInstance().handleLaneEnlargeShow(paramBoolean);
-      if (!paramBoolean) {
-        break label126;
-      }
-      this.mColladaGLSurfaceView = new ColladaGLSurfaceView(this.mContext);
-      ViewGroup.LayoutParams localLayoutParams = new ViewGroup.LayoutParams(-1, -1);
-      if (this.mColladaLayout != null)
-      {
-        this.mColladaLayout.removeAllViews();
-        this.mColladaLayout.addView(this.mColladaGLSurfaceView, localLayoutParams);
-        this.mColladaLayout.requestLayout();
-      }
-      RGMapModeViewController.getInstance().handleAssistHighwayShow(false);
-      this.mColladaRl.setVisibility(0);
-      this.mColladaGLSurfaceView.setVisibility(0);
-    }
-    label126:
-    do
-    {
-      return;
-      RGMapModeViewController.getInstance().handleAssistHighwayShow(true);
-      this.mColladaRl.setVisibility(8);
-    } while (this.mColladaGLSurfaceView == null);
-    this.mColladaGLSurfaceView.setVisibility(8);
-  }
-  
-  /* Error */
-  private void updateDirectBoardView()
-  {
-    // Byte code:
-    //   0: aload_0
-    //   1: monitorenter
-    //   2: aload_0
-    //   3: getfield 98	com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMEnlargeRoadMapView:mEnlargeImageView	Landroid/widget/ImageView;
-    //   6: ifnull +12 -> 18
-    //   9: aload_0
-    //   10: getfield 90	com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMEnlargeRoadMapView:mEnlargeGuideInfoBackground	Landroid/view/View;
-    //   13: astore_1
-    //   14: aload_1
-    //   15: ifnonnull +6 -> 21
-    //   18: aload_0
-    //   19: monitorexit
-    //   20: return
-    //   21: aload_0
-    //   22: getfield 98	com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMEnlargeRoadMapView:mEnlargeImageView	Landroid/widget/ImageView;
-    //   25: invokestatic 398	com/baidu/navisdk/ui/util/UIUtils:releaseImageView	(Landroid/widget/ImageView;)V
-    //   28: invokestatic 403	com/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel:getInstance	()Lcom/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel;
-    //   31: invokevirtual 407	com/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel:getArrowBitmap	()Landroid/graphics/Bitmap;
-    //   34: ifnull +45 -> 79
-    //   37: invokestatic 403	com/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel:getInstance	()Lcom/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel;
-    //   40: invokevirtual 410	com/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel:getBGBitmap	()Landroid/graphics/Bitmap;
-    //   43: ifnull +36 -> 79
-    //   46: aload_0
-    //   47: getfield 98	com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMEnlargeRoadMapView:mEnlargeImageView	Landroid/widget/ImageView;
-    //   50: invokestatic 403	com/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel:getInstance	()Lcom/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel;
-    //   53: invokevirtual 407	com/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel:getArrowBitmap	()Landroid/graphics/Bitmap;
-    //   56: invokevirtual 414	android/widget/ImageView:setImageBitmap	(Landroid/graphics/Bitmap;)V
-    //   59: aload_0
-    //   60: getfield 98	com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMEnlargeRoadMapView:mEnlargeImageView	Landroid/widget/ImageView;
-    //   63: new 416	android/graphics/drawable/BitmapDrawable
-    //   66: dup
-    //   67: invokestatic 403	com/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel:getInstance	()Lcom/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel;
-    //   70: invokevirtual 410	com/baidu/navisdk/ui/routeguide/model/RGEnlargeRoadMapModel:getBGBitmap	()Landroid/graphics/Bitmap;
-    //   73: invokespecial 418	android/graphics/drawable/BitmapDrawable:<init>	(Landroid/graphics/Bitmap;)V
-    //   76: invokevirtual 422	android/widget/ImageView:setBackgroundDrawable	(Landroid/graphics/drawable/Drawable;)V
-    //   79: aload_0
-    //   80: getfield 90	com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMEnlargeRoadMapView:mEnlargeGuideInfoBackground	Landroid/view/View;
-    //   83: iconst_0
-    //   84: invokevirtual 391	android/view/View:setVisibility	(I)V
-    //   87: aload_0
-    //   88: getfield 98	com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMEnlargeRoadMapView:mEnlargeImageView	Landroid/widget/ImageView;
-    //   91: iconst_0
-    //   92: invokevirtual 423	android/widget/ImageView:setVisibility	(I)V
-    //   95: goto -77 -> 18
-    //   98: astore_1
-    //   99: aload_0
-    //   100: monitorexit
-    //   101: aload_1
-    //   102: athrow
-    // Local variable table:
-    //   start	length	slot	name	signature
-    //   0	103	0	this	RGMMEnlargeRoadMapView
-    //   13	2	1	localView	View
-    //   98	4	1	localObject	Object
-    // Exception table:
-    //   from	to	target	type
-    //   2	14	98	finally
-    //   21	79	98	finally
-    //   79	95	98	finally
-  }
-  
-  private void updateProgress()
-  {
-    if ((this.mRemainDistTV == null) || (this.mProgressBar == null) || (this.mStreetLayout == null) || (this.mRemainDistUnitTV == null)) {
-      LogUtil.e(TAG, "updateProgress fail has null view");
-    }
-    label567:
-    do
-    {
-      return;
-      StringBuffer localStringBuffer = new StringBuffer();
-      StringUtils.formatDistance(this.mRemDist, StringUtils.UnitLangEnum.ZH, localStringBuffer);
-      String str2 = "";
-      str4 = "";
-      localObject1 = str2;
-      try
-      {
-        Matcher localMatcher = Pattern.compile("\\d+").matcher(localStringBuffer);
-        str3 = str4;
-        str1 = str2;
-        localObject1 = str2;
-        if (localMatcher.find())
-        {
-          localObject1 = str2;
-          int i = localMatcher.end();
-          str3 = str4;
-          str1 = str2;
-          if (i >= 0)
-          {
-            str3 = str4;
-            str1 = str2;
-            localObject1 = str2;
-            if (i < localStringBuffer.length())
-            {
-              localObject1 = str2;
-              str1 = localStringBuffer.substring(0, i);
-              localObject1 = str1;
-              str3 = localStringBuffer.substring(i);
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMEnlargeRoadMapView$6 */
+    class C43756 implements AnimationListener {
+        C43756() {
+        }
+
+        public void onAnimationStart(Animation animation) {
+        }
+
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        public void onAnimationEnd(Animation animation) {
+            if (RGLaneLineController.getInstance().isNormalEnlargeShow) {
+                LogUtil.m15791e(RGLaneInfoModel.TAG, "enlagre onAnimationEnd");
+                RGMapModeViewController.getInstance().handleLaneEnlargeShow(true);
             }
-          }
+            BNScreentShotManager.getInstance().rootScreenByMsg();
         }
-      }
-      catch (Exception localException)
-      {
-        for (;;)
-        {
-          String str1;
-          String str3 = str4;
-          Object localObject2 = localObject1;
-        }
-      }
-      LogUtil.e(TAG, "updateProgress distance = " + localStringBuffer + ", distanceValue = " + str1 + ", distanceUnit = " + str3);
-      if (("raster_vector".equals(this.rasterType)) || ("raster_street".equals(this.rasterType)) || ("raster_direct_board".equals(this.rasterType)) || ("raster_grid".equals(this.rasterType))) {
-        if ((!TextUtils.isEmpty(str1)) && (!TextUtils.isEmpty(str3)))
-        {
-          this.mRemainDistTV.setVisibility(0);
-          this.mRemainDistUnitTV.setVisibility(0);
-          if (this.mRemDist < 10)
-          {
-            this.mRemainDistTV.setText("现在");
-            this.mRemainDistUnitTV.setText("");
-          }
-        }
-      }
-      for (;;)
-      {
-        this.mProgressBar.setProgress(this.mProgress);
-        if ("raster_vector".equals(this.rasterType)) {
-          break;
-        }
-        if (!"raster_street".equals(this.rasterType)) {
-          break label567;
-        }
-        this.mStreetLayout.setVisibility(0);
-        if (this.mCarPosImgView == null) {
-          break;
-        }
-        this.mCarPosImgView.setVisibility(4);
-        return;
-        this.mRemainDistTV.setText(str1);
-        this.mRemainDistUnitTV.setText(str3 + "后");
-        continue;
-        this.mRemainDistTV.setVisibility(8);
-        this.mRemainDistUnitTV.setVisibility(8);
-        continue;
-        if ((!TextUtils.isEmpty(str1)) && (!TextUtils.isEmpty(str3)))
-        {
-          this.mRemainDistTV.setVisibility(0);
-          this.mRemainDistUnitTV.setVisibility(0);
-          if (this.mRemDist < 10)
-          {
-            this.mRemainDistTV.setText("现在");
-            this.mRemainDistUnitTV.setText("");
-          }
-          else
-          {
-            this.mRemainDistTV.setText(str1);
-            this.mRemainDistUnitTV.setText(str3 + "后");
-          }
-        }
-        else
-        {
-          this.mRemainDistTV.setVisibility(8);
-          this.mRemainDistUnitTV.setVisibility(8);
-        }
-      }
-    } while (this.mCarPosImgView == null);
-    this.mCarPosImgView.setVisibility(4);
-  }
-  
-  private void updateRoadInfo()
-  {
-    if ((this.mNextRoadTV == null) || (this.mEnterNextRoadTV == null))
-    {
-      LogUtil.e(TAG, "updateRoadInfo fail view is null");
-      return;
     }
-    LogUtil.e(TAG, "updateRoadInfo, roadName=" + this.mRoadName);
-    if (("raster_vector".equals(this.rasterType)) || ("raster_direct_board".equals(this.rasterType)) || ("raster_grid".equals(this.rasterType)))
-    {
-      this.mNextRoadTV.setVisibility(0);
-      this.mEnterNextRoadTV.setVisibility(0);
-      this.mEnterNextRoadTV.setText(JarUtils.getResources().getString(1711669862));
-      if (!TextUtils.isEmpty(this.mRoadName))
-      {
-        this.mNextRoadTV.setText(this.mRoadName);
-        return;
-      }
-      this.mNextRoadTV.setText(JarUtils.getResources().getString(1711669364));
-      return;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMEnlargeRoadMapView$7 */
+    class C43767 implements AnimationListener {
+        C43767() {
+        }
+
+        public void onAnimationStart(Animation animation) {
+        }
+
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        public void onAnimationEnd(Animation animation) {
+            if (RGMMEnlargeRoadMapView.this.mEnlargeRoadMapView != null) {
+                RGMMEnlargeRoadMapView.this.mEnlargeRoadMapView.setVisibility(8);
+            }
+            RGMapModeViewController.getInstance().setIsShowEnlargeRoadMap(false);
+        }
     }
-    if ("raster_street".equals(this.rasterType))
-    {
-      this.mEnterNextRoadTV.setVisibility(0);
-      this.mEnterNextRoadTV.setText(JarUtils.getResources().getString(1711669863));
-      if (!TextUtils.isEmpty(this.mRoadName))
-      {
-        this.mNextRoadTV.setVisibility(0);
-        this.mNextRoadTV.setText(this.mRoadName);
-        return;
-      }
-      this.mNextRoadTV.setVisibility(8);
-      return;
+
+    /* renamed from: com.baidu.navisdk.ui.routeguide.mapmode.subview.RGMMEnlargeRoadMapView$8 */
+    class C43778 implements AnimationListener {
+        C43778() {
+        }
+
+        public void onAnimationStart(Animation animation) {
+        }
+
+        public void onAnimationRepeat(Animation animation) {
+        }
+
+        public void onAnimationEnd(Animation animation) {
+            RGMMEnlargeRoadMapView.this.showColladaWithoutAnimation(false);
+        }
     }
-    this.mNextRoadTV.setVisibility(8);
-    this.mEnterNextRoadTV.setVisibility(8);
-  }
-  
-  private void updateSimpleModelView()
-  {
-    if ((this.mEnlargeImageView == null) || (this.mEnlargeGuideInfoBackground == null)) {
-      return;
+
+    public RGMMEnlargeRoadMapView(Context c, ViewGroup p, OnRGSubViewListener lis) {
+        super(c, p, lis);
+        initViews();
     }
-    UIUtils.releaseImageView(this.mEnlargeImageView);
-    if ((RGEnlargeRoadMapModel.getInstance().getArrowBitmap() != null) && (RGEnlargeRoadMapModel.getInstance().getBGBitmap() != null))
-    {
-      this.mEnlargeImageView.setImageBitmap(RGEnlargeRoadMapModel.getInstance().getArrowBitmap());
-      this.mEnlargeImageView.setBackgroundDrawable(new BitmapDrawable(RGEnlargeRoadMapModel.getInstance().getBGBitmap()));
+
+    public void orientationChanged(ViewGroup p, int orien) {
+        super.orientationChanged(p, orien);
     }
-    this.mEnlargeGuideInfoBackground.setVisibility(0);
-    this.mEnlargeImageView.setVisibility(0);
-  }
-  
-  private void updateStreetView()
-  {
-    if ((this.mEnlargeImageView == null) || (this.mEnlargeGuideInfoBackground == null)) {}
-    do
-    {
-      return;
-      LogUtil.e(TAG, "updateStreetView, roadName=" + this.mRoadName);
-      UIUtils.releaseImageView(this.mEnlargeImageView);
-      if (RGEnlargeRoadMapModel.getInstance().getBGBitmap() != null)
-      {
-        LogUtil.e(TAG, "!# updateVectorMapView: set bitmap");
-        this.mEnlargeImageView.setImageBitmap(RGEnlargeRoadMapModel.getInstance().getBGBitmap());
-        this.mEnlargeImageView.setBackgroundResource(17170445);
-      }
-      this.mEnlargeGuideInfoBackground.setVisibility(0);
-      this.mEnlargeImageView.setVisibility(0);
-    } while ((this.bnav_rg_enlarge_image_mask == null) || (BNStyleManager.getDayStyle()));
-    this.bnav_rg_enlarge_image_mask.setVisibility(0);
-  }
-  
-  private void updateTurnIcon()
-  {
-    if (this.mTurnIcon == null) {
-      return;
+
+    private void initViews() {
+        if (this.mRootViewGroup != null) {
+            ViewStub stub = (ViewStub) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_road_map_stub);
+            if (stub != null) {
+                this.mEnlargeRoadMapView = stub.inflate();
+            }
+            this.mEnlargeGuideInfoBackground = this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_vector_enlarge_guide_info_background);
+            this.mEnlargeImageView = (ImageView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_image);
+            this.mRemainDistTV = (TextView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_remain_dist);
+            this.mRemainDistUnitTV = (TextView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_remain_dist_unit);
+            this.mNextRoadTV = (TextView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_next_road);
+            this.mEnterNextRoadTV = (TextView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enter_enlarge_next_road);
+            this.mTurnIcon = (ImageView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_turn_icon);
+            this.mProgressBar = (ProgressBar) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_progress);
+            this.mSwitchView = (ImageView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_open_close);
+            this.mRotateMatrix = new Matrix();
+            this.mCarPosLayout = this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_carpos_layout);
+            this.mCarPosImgView = (ImageView) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_carpos_image);
+            this.mStreetLayout = (FrameLayout) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_street_layout);
+            this.bnav_rg_enlarge_image_mask = this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_enlarge_image_mask);
+            this.mColladaCloseImage = this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_collada_open_close);
+            this.mColladaRl = this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_collada_view_rl);
+            this.mColladaLayout = (LinearLayout) this.mRootViewGroup.findViewById(C4048R.id.bnav_rg_collada_view);
+            if (this.mColladaLayout != null) {
+                this.mColladaLayout.setOnClickListener(new C43701());
+            }
+            this.mColladaCloseImage.setOnClickListener(new C43712());
+            this.mSwitchView.setOnClickListener(new C43723());
+            this.mEnlargeRoadMapView.setOnClickListener(new C43734());
+            LayoutParams p;
+            LayoutParams pp;
+            if (RGViewController.getInstance().getOrientation() == 2) {
+                this.mInAnimation = JarUtils.loadAnimation(this.mContext, C4048R.anim.nsdk_anim_rg_slide_in_left);
+                this.mOutAnimation = JarUtils.loadAnimation(this.mContext, C4048R.anim.nsdk_anim_rg_slide_out_left);
+                p = this.mEnlargeRoadMapView.getLayoutParams();
+                p.width = ScreenUtil.getInstance().getHeightPixels() / 2;
+                p.height = ScreenUtil.getInstance().getWidthPixels();
+                this.mEnlargeRoadMapView.requestLayout();
+                pp = this.mColladaRl.getLayoutParams();
+                pp.width = ScreenUtil.getInstance().getHeightPixels() / 2;
+                pp.height = ScreenUtil.getInstance().getWidthPixels();
+                this.mColladaRl.requestLayout();
+            } else {
+                this.mInAnimation = JarUtils.loadAnimation(this.mContext, C4048R.anim.nsdk_anim_rg_slide_in_top);
+                this.mOutAnimation = JarUtils.loadAnimation(this.mContext, C4048R.anim.nsdk_anim_rg_slide_out_top);
+                p = this.mEnlargeRoadMapView.getLayoutParams();
+                p.width = ScreenUtil.getInstance().getWidthPixels();
+                p.height = ScreenUtil.getInstance().getHeightPixels() / 2;
+                this.mEnlargeRoadMapView.requestLayout();
+                pp = this.mColladaRl.getLayoutParams();
+                pp.width = ScreenUtil.getInstance().getWidthPixels();
+                pp.height = ScreenUtil.getInstance().getHeightPixels() / 2;
+                this.mColladaRl.requestLayout();
+            }
+            resetColladaView();
+            updateDataByLastest();
+        }
     }
-    if (("raster_vector".equals(this.rasterType)) || ("raster_direct_board".equals(this.rasterType)) || ("raster_grid".equals(this.rasterType)))
-    {
-      if ((this.mTurnIconId != 0) && (this.mTurnIconId != 1711407751))
-      {
-        this.mTurnIcon.setVisibility(0);
-        try
-        {
-          if (RightHandResourcesProvider.getEnNaviType() == 0) {
-            this.mTurnIcon.setImageDrawable(JarUtils.getResources().getDrawable(this.mTurnIconId));
-          }
-          for (;;)
-          {
-            this.mTurnIconId = 0;
+
+    public void resetColladaView() {
+        if (this.mColladaLayout != null) {
+            this.mColladaLayout.removeAllViews();
+        }
+        this.mColladaGLSurfaceView = null;
+    }
+
+    public void updateDataByLastest() {
+        if (FsmState.EnlargeRoadmap.equals(RouteGuideFSM.getInstance().getCurrentState())) {
+            this.mForceRefreshImage = true;
+            updateData(RGEnlargeRoadMapModel.getInstance().getLastestData());
+        }
+    }
+
+    public void updateData(Bundle b) {
+        if (b == null) {
+            LogUtil.m15791e(TAG, "b == null");
+        } else if (this.mEnlargeRoadMapView != null) {
+            updateRasterMapInfo(b.getBoolean(ExpandMap.UpdateProgress), b, null);
+        } else {
+            LogUtil.m15791e(TAG, "mEnlargeRoadMapView == null");
+        }
+    }
+
+    public void updateData(Bundle b, boolean isShowMsg) {
+        if (b != null && this.mEnlargeRoadMapView != null) {
+            boolean isUpdateProgress = b.getBoolean(ExpandMap.UpdateProgress);
+            if (isShowMsg) {
+                updateRasterMapInfo(!isShowMsg, b, new Object());
+            } else {
+                updateRasterMapInfo(isUpdateProgress, b, null);
+            }
+        }
+    }
+
+    public void updateRasterMapInfo(boolean updateProgress, Bundle b, Object obj) {
+        int nPos;
+        String roadName = b.getString("road_name");
+        int totalDist = b.getInt(ExpandMap.TotalDist);
+        int remDist = b.getInt(ExpandMap.RemainDist);
+        String type = b.getString(ExpandMap.RasterType);
+        if (!TextUtils.isEmpty(roadName)) {
+            this.mRoadName = roadName;
+        }
+        this.rasterType = type;
+        this.mTotalDist = totalDist;
+        this.mRemDist = remDist;
+        this.mbUpdateRasterInfo = !updateProgress;
+        if (remDist <= 0 || totalDist <= 0) {
+            nPos = 100;
+        } else {
+            nPos = ((totalDist - remDist) * 100) / totalDist;
+        }
+        LogUtil.m15791e(TAG, "!# mRoadName=" + this.mRoadName + ", " + this.rasterType + ", updateRaster=" + this.mbUpdateRasterInfo);
+        LogUtil.m15791e(TAG, "!# Raster Pos = " + nPos + " Total = " + this.mTotalDist + " Rem = " + this.mRemDist);
+        this.mProgress = nPos;
+        if (RasterType.VECTOR.equals(this.rasterType) || RasterType.DIRECT_BOARD.equals(this.rasterType) || RasterType.GRID.equals(this.rasterType)) {
+            this.mTurnIconId = b.getInt("resid", 0);
+        }
+        if (RasterType.VECTOR.equals(this.rasterType)) {
+            this.mCarPosX = b.getInt(ExpandMap.CarPosX, 0);
+            this.mCarPosY = b.getInt(ExpandMap.CarPosY, 0);
+            this.mCarRotate = b.getInt(ExpandMap.CarRotate, 0);
+            this.mCarRotate = -this.mCarRotate;
+        } else if (this.mCarPosImgView != null) {
+            this.mCarPosImgView.setVisibility(4);
+        }
+        if (!RasterType.STREET.equals(this.rasterType)) {
+            if (this.mStreetLayout != null) {
+                this.mStreetLayout.setVisibility(4);
+            }
+            if (this.bnav_rg_enlarge_image_mask != null) {
+                this.bnav_rg_enlarge_image_mask.setVisibility(4);
+            }
+        }
+        final Object obj2 = obj;
+        final boolean z = updateProgress;
+        BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask<String, String>("UpdateRasterMapInfo-" + getClass().getSimpleName(), null) {
+            protected String execute() {
+                if (obj2 == null) {
+                    RGMMEnlargeRoadMapView.this.progressRun();
+                } else {
+                    RGMMEnlargeRoadMapView.this.progressRun(!z);
+                }
+                return null;
+            }
+        }, new BNWorkerConfig(100, 0));
+    }
+
+    private void progressRun(boolean isShow) {
+        LogUtil.m15791e(TAG, "update raster, raster type=" + this.rasterType + "show," + isShow + "," + this.mForceRefreshImage);
+        if (isShow || this.mForceRefreshImage) {
+            this.mForceRefreshImage = false;
+            if (RasterType.DIRECT_BOARD.equals(this.rasterType)) {
+                updateDirectBoardView();
+            } else if (RasterType.GRID.equals(this.rasterType)) {
+                updateSimpleModelView();
+            } else if (RasterType.VECTOR.equals(this.rasterType)) {
+                updateVectorMapView();
+            } else if (RasterType.STREET.equals(this.rasterType)) {
+                updateStreetView();
+            }
+        }
+        updateProgress();
+        updateRoadInfo();
+        updateTurnIcon();
+    }
+
+    private void progressRun() {
+        LogUtil.m15791e(TAG, "update raster, raster type=" + this.rasterType + "," + this.mbUpdateRasterInfo + "," + this.mForceRefreshImage);
+        if (this.mbUpdateRasterInfo || this.mForceRefreshImage) {
+            this.mForceRefreshImage = false;
+            if (RasterType.DIRECT_BOARD.equals(this.rasterType)) {
+                updateDirectBoardView();
+            } else if (RasterType.GRID.equals(this.rasterType)) {
+                updateSimpleModelView();
+            } else if (RasterType.VECTOR.equals(this.rasterType)) {
+                updateVectorMapView();
+            } else if (RasterType.STREET.equals(this.rasterType)) {
+                updateStreetView();
+            }
+        }
+        updateProgress();
+        updateRoadInfo();
+        updateTurnIcon();
+    }
+
+    private synchronized void updateDirectBoardView() {
+        if (!(this.mEnlargeImageView == null || this.mEnlargeGuideInfoBackground == null)) {
+            UIUtils.releaseImageView(this.mEnlargeImageView);
+            if (!(RGEnlargeRoadMapModel.getInstance().getArrowBitmap() == null || RGEnlargeRoadMapModel.getInstance().getBGBitmap() == null)) {
+                this.mEnlargeImageView.setImageBitmap(RGEnlargeRoadMapModel.getInstance().getArrowBitmap());
+                this.mEnlargeImageView.setBackgroundDrawable(new BitmapDrawable(RGEnlargeRoadMapModel.getInstance().getBGBitmap()));
+            }
+            this.mEnlargeGuideInfoBackground.setVisibility(0);
+            this.mEnlargeImageView.setVisibility(0);
+        }
+    }
+
+    private void updateSimpleModelView() {
+        if (this.mEnlargeImageView != null && this.mEnlargeGuideInfoBackground != null) {
+            UIUtils.releaseImageView(this.mEnlargeImageView);
+            if (!(RGEnlargeRoadMapModel.getInstance().getArrowBitmap() == null || RGEnlargeRoadMapModel.getInstance().getBGBitmap() == null)) {
+                this.mEnlargeImageView.setImageBitmap(RGEnlargeRoadMapModel.getInstance().getArrowBitmap());
+                this.mEnlargeImageView.setBackgroundDrawable(new BitmapDrawable(RGEnlargeRoadMapModel.getInstance().getBGBitmap()));
+            }
+            this.mEnlargeGuideInfoBackground.setVisibility(0);
+            this.mEnlargeImageView.setVisibility(0);
+        }
+    }
+
+    private void updateVectorMapView() {
+        if (this.mEnlargeImageView != null && this.mEnlargeGuideInfoBackground != null) {
+            UIUtils.releaseImageView(this.mEnlargeImageView);
+            LogUtil.m15791e(TAG, "!# updateVectorMapView:");
+            if (RGEnlargeRoadMapModel.getInstance().getBGBitmap() != null) {
+                LogUtil.m15791e(TAG, "!# updateVectorMapView: set bitmap");
+                this.mEnlargeImageView.setImageBitmap(RGEnlargeRoadMapModel.getInstance().getBGBitmap());
+                this.mEnlargeImageView.setBackgroundResource(17170445);
+            }
+            this.mEnlargeGuideInfoBackground.setVisibility(0);
+            this.mEnlargeImageView.setVisibility(0);
+        }
+    }
+
+    private void updateStreetView() {
+        if (this.mEnlargeImageView != null && this.mEnlargeGuideInfoBackground != null) {
+            LogUtil.m15791e(TAG, "updateStreetView, roadName=" + this.mRoadName);
+            UIUtils.releaseImageView(this.mEnlargeImageView);
+            if (RGEnlargeRoadMapModel.getInstance().getBGBitmap() != null) {
+                LogUtil.m15791e(TAG, "!# updateVectorMapView: set bitmap");
+                this.mEnlargeImageView.setImageBitmap(RGEnlargeRoadMapModel.getInstance().getBGBitmap());
+                this.mEnlargeImageView.setBackgroundResource(17170445);
+            }
+            this.mEnlargeGuideInfoBackground.setVisibility(0);
+            this.mEnlargeImageView.setVisibility(0);
+            if (this.bnav_rg_enlarge_image_mask != null && !BNStyleManager.getDayStyle()) {
+                this.bnav_rg_enlarge_image_mask.setVisibility(0);
+            }
+        }
+    }
+
+    private void updateRoadInfo() {
+        if (this.mNextRoadTV == null || this.mEnterNextRoadTV == null) {
+            LogUtil.m15791e(TAG, "updateRoadInfo fail view is null");
             return;
-            this.mTurnIcon.setImageDrawable(RightHandResourcesProvider.getDrawableIncludeRightHandIcon(this.mTurnIconId));
-          }
         }
-        catch (Throwable localThrowable)
-        {
-          for (;;)
-          {
-            LogUtil.e(TAG, "updateTurnIcon setImageDrawable throwable");
-          }
+        LogUtil.m15791e(TAG, "updateRoadInfo, roadName=" + this.mRoadName);
+        if (RasterType.VECTOR.equals(this.rasterType) || RasterType.DIRECT_BOARD.equals(this.rasterType) || RasterType.GRID.equals(this.rasterType)) {
+            this.mNextRoadTV.setVisibility(0);
+            this.mEnterNextRoadTV.setVisibility(0);
+            this.mEnterNextRoadTV.setText(JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_enter));
+            if (TextUtils.isEmpty(this.mRoadName)) {
+                this.mNextRoadTV.setText(JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_no_name_road));
+            } else {
+                this.mNextRoadTV.setText(this.mRoadName);
+            }
+        } else if (RasterType.STREET.equals(this.rasterType)) {
+            this.mEnterNextRoadTV.setVisibility(0);
+            this.mEnterNextRoadTV.setText(JarUtils.getResources().getString(C4048R.string.nsdk_string_rg_arrive));
+            if (TextUtils.isEmpty(this.mRoadName)) {
+                this.mNextRoadTV.setVisibility(8);
+                return;
+            }
+            this.mNextRoadTV.setVisibility(0);
+            this.mNextRoadTV.setText(this.mRoadName);
+        } else {
+            this.mNextRoadTV.setVisibility(8);
+            this.mEnterNextRoadTV.setVisibility(8);
         }
-      }
-      this.mTurnIcon.setVisibility(8);
-      return;
     }
-    this.mTurnIcon.setVisibility(8);
-  }
-  
-  private void updateVectorMapCarPos()
-  {
-    if (RGEnlargeRoadMapModel.getInstance().getBGBitmap() == null) {
-      LogUtil.e(TAG, "!# %%%%%%%%% No vector expand map!! %%%%%%%%%");
-    }
-    do
-    {
-      return;
-      if ((RGEnlargeRoadMapModel.getInstance().getVectorImgWidth() == 0) || (RGEnlargeRoadMapModel.getInstance().getVectorImgHeight() == 0))
-      {
-        LogUtil.e(TAG, "!# %%%%%%%%% Unkown vector map width or height!!");
-        return;
-      }
-      double d1 = this.mCarPosLayout.getWidth() / RGEnlargeRoadMapModel.getInstance().getVectorImgWidth();
-      double d2 = this.mCarPosLayout.getHeight() / RGEnlargeRoadMapModel.getInstance().getVectorImgHeight();
-      this.mCarPosX -= ScreenUtil.getInstance().dip2px(42) / 2;
-      this.mCarPosY -= ScreenUtil.getInstance().dip2px(46) / 2;
-      LogUtil.e(TAG, "!# adjust car pos X=" + this.mCarPosX + ", Y=" + this.mCarPosY + String.format(", xScale=%1$.2f, yScale=%2$.2f", new Object[] { Double.valueOf(d1), Double.valueOf(d2) }) + ", layout W=" + this.mCarPosLayout.getWidth() + ", H=" + this.mCarPosLayout.getHeight());
-      if ((this.mCarPosX <= this.mCarPosLayout.getWidth()) && (this.mCarPosY <= this.mCarPosLayout.getHeight())) {
-        break;
-      }
-      LogUtil.e(TAG, "!# out of vector map, W=" + this.mCarPosLayout.getWidth() + ", H=" + this.mCarPosLayout.getHeight());
-    } while (this.mCarPosImgView == null);
-    this.mCarPosImgView.setVisibility(8);
-    this.mCarPosImgView.setImageBitmap(null);
-    this.mCarPosImgView.setBackgroundResource(17170445);
-    this.mCarPosImgView.setBackgroundDrawable(null);
-    return;
-    Object localObject = ((BitmapDrawable)BNStyleManager.getDrawable(1711407812)).getBitmap();
-    this.mRotateMatrix.setRotate(this.mCarRotate);
-    localObject = Bitmap.createBitmap((Bitmap)localObject, 0, 0, ((Bitmap)localObject).getWidth(), ((Bitmap)localObject).getHeight(), this.mRotateMatrix, true);
-    this.mCarPosImgView.setImageBitmap((Bitmap)localObject);
-    localObject = new AbsoluteLayout.LayoutParams(ScreenUtil.getInstance().dip2px(42), ScreenUtil.getInstance().dip2px(46), this.mCarPosX, this.mCarPosY);
-    this.mCarPosImgView.setLayoutParams((ViewGroup.LayoutParams)localObject);
-    this.mCarPosImgView.setVisibility(0);
-    this.mCarPosImgView.invalidate();
-    RGEnlargeRoadMapModel.getInstance().updateLastCarPos(this.mCarPosX, this.mCarPosY, this.mCarRotate);
-  }
-  
-  private void updateVectorMapView()
-  {
-    if ((this.mEnlargeImageView == null) || (this.mEnlargeGuideInfoBackground == null)) {
-      return;
-    }
-    UIUtils.releaseImageView(this.mEnlargeImageView);
-    LogUtil.e(TAG, "!# updateVectorMapView:");
-    if (RGEnlargeRoadMapModel.getInstance().getBGBitmap() != null)
-    {
-      LogUtil.e(TAG, "!# updateVectorMapView: set bitmap");
-      this.mEnlargeImageView.setImageBitmap(RGEnlargeRoadMapModel.getInstance().getBGBitmap());
-      this.mEnlargeImageView.setBackgroundResource(17170445);
-    }
-    this.mEnlargeGuideInfoBackground.setVisibility(0);
-    this.mEnlargeImageView.setVisibility(0);
-  }
-  
-  public void dispose()
-  {
-    super.dispose();
-    LogUtil.e(TAG, "onDispose start.");
-    UIUtils.releaseImageView(this.mEnlargeImageView);
-    UIUtils.releaseImageView(this.mCarPosImgView);
-    LogUtil.e(TAG, "onDispose end.");
-  }
-  
-  public Bitmap getEnlargeBitmap()
-  {
-    Object localObject = null;
-    try
-    {
-      if (RGEnlargeRoadMapModel.getInstance().getBGBitmap() != null)
-      {
-        Bitmap localBitmap = Bitmap.createBitmap(RGEnlargeRoadMapModel.getInstance().getBGBitmap().getWidth(), RGEnlargeRoadMapModel.getInstance().getBGBitmap().getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas localCanvas = new Canvas(localBitmap);
-        Paint localPaint = new Paint();
-        Matrix localMatrix = new Matrix();
-        localCanvas.drawBitmap(RGEnlargeRoadMapModel.getInstance().getBGBitmap(), localMatrix, localPaint);
-        if (!"raster_direct_board".equals(this.rasterType))
-        {
-          localObject = localBitmap;
-          if (!"raster_grid".equals(this.rasterType)) {}
+
+    private void updateTurnIcon() {
+        if (this.mTurnIcon != null) {
+            if (!RasterType.VECTOR.equals(this.rasterType) && !RasterType.DIRECT_BOARD.equals(this.rasterType) && !RasterType.GRID.equals(this.rasterType)) {
+                this.mTurnIcon.setVisibility(8);
+            } else if (this.mTurnIconId == 0 || this.mTurnIconId == C4048R.drawable.nsdk_drawable_rg_ic_turn_via_1) {
+                this.mTurnIcon.setVisibility(8);
+            } else {
+                this.mTurnIcon.setVisibility(0);
+                try {
+                    if (RightHandResourcesProvider.getEnNaviType() == 0) {
+                        this.mTurnIcon.setImageDrawable(JarUtils.getResources().getDrawable(this.mTurnIconId));
+                    } else {
+                        this.mTurnIcon.setImageDrawable(RightHandResourcesProvider.getDrawableIncludeRightHandIcon(this.mTurnIconId));
+                    }
+                } catch (Throwable th) {
+                    LogUtil.m15791e(TAG, "updateTurnIcon setImageDrawable throwable");
+                }
+                this.mTurnIconId = 0;
+            }
         }
-        else
-        {
-          localObject = localBitmap;
-          if (RGEnlargeRoadMapModel.getInstance().getArrowBitmap() != null)
-          {
-            localCanvas.drawBitmap(RGEnlargeRoadMapModel.getInstance().getArrowBitmap(), localMatrix, localPaint);
-            localObject = localBitmap;
-          }
+    }
+
+    private void updateProgress() {
+        if (this.mRemainDistTV == null || this.mProgressBar == null || this.mStreetLayout == null || this.mRemainDistUnitTV == null) {
+            LogUtil.m15791e(TAG, "updateProgress fail has null view");
+            return;
         }
-      }
-      return (Bitmap)localObject;
-    }
-    catch (Exception localException)
-    {
-      localException.printStackTrace();
-    }
-    return null;
-  }
-  
-  public Bitmap getEnlargeViewBitmap()
-  {
-    this.mEnlargeRoadMapView.setDrawingCacheEnabled(true);
-    return this.mEnlargeRoadMapView.getDrawingCache();
-  }
-  
-  public void hide()
-  {
-    if (!RGEnlargeRoadMapModel.getInstance().canEnlargeViewHide()) {}
-    do
-    {
-      return;
-      super.hide();
-      if (this.mEnlargeRoadMapView != null)
-      {
-        RGLaneLineController.getInstance().isNormalEnlargeShow = false;
-        this.mInAnimation.setAnimationListener(null);
-        this.mOutAnimation.setAnimationListener(this.animationListener);
-        this.mEnlargeRoadMapView.startAnimation(this.mOutAnimation);
-      }
-      if (this.mSwitchView != null) {
-        this.mSwitchView.setVisibility(4);
-      }
-      if (this.mCarPosLayout != null) {
-        this.mCarPosLayout.setVisibility(8);
-      }
-      if (this.mCarPosImgView != null) {
-        this.mCarPosImgView.setVisibility(4);
-      }
-      if (this.mStreetLayout != null) {
-        this.mStreetLayout.setVisibility(4);
-      }
-    } while (this.bnav_rg_enlarge_image_mask == null);
-    this.bnav_rg_enlarge_image_mask.setVisibility(4);
-  }
-  
-  public void hideWithoutAnimation()
-  {
-    if (this.mEnlargeRoadMapView != null)
-    {
-      RGLaneLineController.getInstance().isNormalEnlargeShow = false;
-      this.mEnlargeRoadMapView.setVisibility(8);
-    }
-    if (this.mCarPosLayout != null) {
-      this.mCarPosLayout.setVisibility(8);
-    }
-    if (this.mCarPosImgView != null) {
-      this.mCarPosImgView.setVisibility(4);
-    }
-    if (this.mStreetLayout != null) {
-      this.mStreetLayout.setVisibility(4);
-    }
-    if (this.bnav_rg_enlarge_image_mask != null) {
-      this.bnav_rg_enlarge_image_mask.setVisibility(4);
-    }
-    RGMapModeViewController.getInstance().setIsShowEnlargeRoadMap(false);
-  }
-  
-  public boolean isEnlargeOrColladaShow()
-  {
-    boolean bool2 = false;
-    boolean bool1;
-    if (this.mEnlargeRoadMapView != null)
-    {
-      if (this.mEnlargeRoadMapView.getVisibility() == 0) {}
-      for (bool1 = true;; bool1 = false)
-      {
-        bool2 = bool1;
-        if (!bool1) {
-          break;
+        StringBuffer distance = new StringBuffer();
+        StringUtils.formatDistance(this.mRemDist, UnitLangEnum.ZH, distance);
+        String distanceValue = "";
+        String distanceUnit = "";
+        try {
+            Matcher matcher = Pattern.compile("\\d+").matcher(distance);
+            if (matcher.find()) {
+                int index = matcher.end();
+                if (index >= 0 && index < distance.length()) {
+                    distanceValue = distance.substring(0, index);
+                    distanceUnit = distance.substring(index);
+                }
+            }
+        } catch (Exception e) {
         }
-        return bool1;
-      }
-    }
-    if (this.mColladaRl != null)
-    {
-      if (this.mColladaRl.getVisibility() == 0) {}
-      for (bool1 = true;; bool1 = false)
-      {
-        bool2 = bool1;
-        if (!bool1) {
-          break;
+        LogUtil.m15791e(TAG, "updateProgress distance = " + distance + ", distanceValue = " + distanceValue + ", distanceUnit = " + distanceUnit);
+        if (RasterType.VECTOR.equals(this.rasterType) || RasterType.STREET.equals(this.rasterType) || RasterType.DIRECT_BOARD.equals(this.rasterType) || RasterType.GRID.equals(this.rasterType)) {
+            if (TextUtils.isEmpty(distanceValue) || TextUtils.isEmpty(distanceUnit)) {
+                this.mRemainDistTV.setVisibility(8);
+                this.mRemainDistUnitTV.setVisibility(8);
+            } else {
+                this.mRemainDistTV.setVisibility(0);
+                this.mRemainDistUnitTV.setVisibility(0);
+                if (this.mRemDist < 10) {
+                    this.mRemainDistTV.setText("现在");
+                    this.mRemainDistUnitTV.setText("");
+                } else {
+                    this.mRemainDistTV.setText(distanceValue);
+                    this.mRemainDistUnitTV.setText(distanceUnit + "后");
+                }
+            }
+        } else if (TextUtils.isEmpty(distanceValue) || TextUtils.isEmpty(distanceUnit)) {
+            this.mRemainDistTV.setVisibility(8);
+            this.mRemainDistUnitTV.setVisibility(8);
+        } else {
+            this.mRemainDistTV.setVisibility(0);
+            this.mRemainDistUnitTV.setVisibility(0);
+            if (this.mRemDist < 10) {
+                this.mRemainDistTV.setText("现在");
+                this.mRemainDistUnitTV.setText("");
+            } else {
+                this.mRemainDistTV.setText(distanceValue);
+                this.mRemainDistUnitTV.setText(distanceUnit + "后");
+            }
         }
-        return bool1;
-      }
+        this.mProgressBar.setProgress(this.mProgress);
+        if (!RasterType.VECTOR.equals(this.rasterType)) {
+            if (RasterType.STREET.equals(this.rasterType)) {
+                this.mStreetLayout.setVisibility(0);
+                if (this.mCarPosImgView != null) {
+                    this.mCarPosImgView.setVisibility(4);
+                }
+            } else if (this.mCarPosImgView != null) {
+                this.mCarPosImgView.setVisibility(4);
+            }
+        }
     }
-    return bool2;
-  }
-  
-  public void orientationChanged(ViewGroup paramViewGroup, int paramInt)
-  {
-    super.orientationChanged(paramViewGroup, paramInt);
-  }
-  
-  public void reset()
-  {
-    UIUtils.releaseImageViewWithoutNull(this.mEnlargeImageView);
-    UIUtils.releaseImageViewWithoutNull(this.mCarPosImgView);
-  }
-  
-  public void resetColladaView()
-  {
-    if (this.mColladaLayout != null) {
-      this.mColladaLayout.removeAllViews();
+
+    private void updateVectorMapCarPos() {
+        if (RGEnlargeRoadMapModel.getInstance().getBGBitmap() == null) {
+            LogUtil.m15791e(TAG, "!# %%%%%%%%% No vector expand map!! %%%%%%%%%");
+        } else if (RGEnlargeRoadMapModel.getInstance().getVectorImgWidth() == 0 || RGEnlargeRoadMapModel.getInstance().getVectorImgHeight() == 0) {
+            LogUtil.m15791e(TAG, "!# %%%%%%%%% Unkown vector map width or height!!");
+        } else {
+            double xScale = ((double) this.mCarPosLayout.getWidth()) / ((double) RGEnlargeRoadMapModel.getInstance().getVectorImgWidth());
+            double yScale = ((double) this.mCarPosLayout.getHeight()) / ((double) RGEnlargeRoadMapModel.getInstance().getVectorImgHeight());
+            this.mCarPosX -= ScreenUtil.getInstance().dip2px(42) / 2;
+            this.mCarPosY -= ScreenUtil.getInstance().dip2px(46) / 2;
+            LogUtil.m15791e(TAG, "!# adjust car pos X=" + this.mCarPosX + ", Y=" + this.mCarPosY + String.format(", xScale=%1$.2f, yScale=%2$.2f", new Object[]{Double.valueOf(xScale), Double.valueOf(yScale)}) + ", layout W=" + this.mCarPosLayout.getWidth() + ", H=" + this.mCarPosLayout.getHeight());
+            if (this.mCarPosX > this.mCarPosLayout.getWidth() || this.mCarPosY > this.mCarPosLayout.getHeight()) {
+                LogUtil.m15791e(TAG, "!# out of vector map, W=" + this.mCarPosLayout.getWidth() + ", H=" + this.mCarPosLayout.getHeight());
+                if (this.mCarPosImgView != null) {
+                    this.mCarPosImgView.setVisibility(8);
+                    this.mCarPosImgView.setImageBitmap(null);
+                    this.mCarPosImgView.setBackgroundResource(17170445);
+                    this.mCarPosImgView.setBackgroundDrawable(null);
+                    return;
+                }
+                return;
+            }
+            Bitmap bitmap = ((BitmapDrawable) BNStyleManager.getDrawable(C4048R.drawable.nsdk_drawable_rg_vector_map_car)).getBitmap();
+            this.mRotateMatrix.setRotate((float) this.mCarRotate);
+            this.mCarPosImgView.setImageBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), this.mRotateMatrix, true));
+            this.mCarPosImgView.setLayoutParams(new AbsoluteLayout.LayoutParams(ScreenUtil.getInstance().dip2px(42), ScreenUtil.getInstance().dip2px(46), this.mCarPosX, this.mCarPosY));
+            this.mCarPosImgView.setVisibility(0);
+            this.mCarPosImgView.invalidate();
+            RGEnlargeRoadMapModel.getInstance().updateLastCarPos(this.mCarPosX, this.mCarPosY, this.mCarRotate);
+        }
     }
-    this.mColladaGLSurfaceView = null;
-  }
-  
-  public void show()
-  {
-    super.show();
-    if (this.mEnlargeRoadMapView != null)
-    {
-      RGLaneLineController.getInstance().isNormalEnlargeShow = true;
-      this.mInAnimation.setAnimationListener(this.mInListener);
-      this.mEnlargeRoadMapView.startAnimation(this.mInAnimation);
-      this.mEnlargeRoadMapView.setVisibility(0);
+
+    public void show() {
+        super.show();
+        if (this.mEnlargeRoadMapView != null) {
+            RGLaneLineController.getInstance().isNormalEnlargeShow = true;
+            this.mInAnimation.setAnimationListener(this.mInListener);
+            this.mEnlargeRoadMapView.startAnimation(this.mInAnimation);
+            this.mEnlargeRoadMapView.setVisibility(0);
+        }
+        if (this.mSwitchView != null) {
+            this.mSwitchView.setVisibility(0);
+        }
+        if (!RasterType.VECTOR.equals(this.rasterType) && RasterType.STREET.equals(this.rasterType)) {
+            this.mStreetLayout.setVisibility(0);
+        }
+        RGMapModeViewController.getInstance().setIsShowEnlargeRoadMap(true);
     }
-    if (this.mSwitchView != null) {
-      this.mSwitchView.setVisibility(0);
+
+    public void hide() {
+        if (RGEnlargeRoadMapModel.getInstance().canEnlargeViewHide()) {
+            super.hide();
+            if (this.mEnlargeRoadMapView != null) {
+                RGLaneLineController.getInstance().isNormalEnlargeShow = false;
+                this.mInAnimation.setAnimationListener(null);
+                this.mOutAnimation.setAnimationListener(this.animationListener);
+                this.mEnlargeRoadMapView.startAnimation(this.mOutAnimation);
+            }
+            if (this.mSwitchView != null) {
+                this.mSwitchView.setVisibility(4);
+            }
+            if (this.mCarPosLayout != null) {
+                this.mCarPosLayout.setVisibility(8);
+            }
+            if (this.mCarPosImgView != null) {
+                this.mCarPosImgView.setVisibility(4);
+            }
+            if (this.mStreetLayout != null) {
+                this.mStreetLayout.setVisibility(4);
+            }
+            if (this.bnav_rg_enlarge_image_mask != null) {
+                this.bnav_rg_enlarge_image_mask.setVisibility(4);
+            }
+        }
     }
-    if ("raster_vector".equals(this.rasterType)) {}
-    for (;;)
-    {
-      RGMapModeViewController.getInstance().setIsShowEnlargeRoadMap(true);
-      return;
-      if ("raster_street".equals(this.rasterType)) {
-        this.mStreetLayout.setVisibility(0);
-      }
+
+    public void showColladaView(boolean show) {
+        if (show) {
+            showColladaWithoutAnimation(true);
+        } else {
+            showColladaWithoutAnimation(false);
+        }
     }
-  }
-  
-  public void showColladaView(boolean paramBoolean)
-  {
-    if (paramBoolean)
-    {
-      showColladaWithoutAnimation(true);
-      return;
+
+    private void showColladaWithoutAnimation(boolean show) {
+        if (this.mColladaRl != null) {
+            LogUtil.m15791e(RGLaneInfoModel.TAG, "showColladaWithoutAnimation " + show);
+            RGMapModeViewController.getInstance().handleLaneEnlargeShow(show);
+            if (show) {
+                this.mColladaGLSurfaceView = new ColladaGLSurfaceView(this.mContext);
+                LayoutParams lp = new LayoutParams(-1, -1);
+                if (this.mColladaLayout != null) {
+                    this.mColladaLayout.removeAllViews();
+                    this.mColladaLayout.addView(this.mColladaGLSurfaceView, lp);
+                    this.mColladaLayout.requestLayout();
+                }
+                RGMapModeViewController.getInstance().handleAssistHighwayShow(false);
+                this.mColladaRl.setVisibility(0);
+                this.mColladaGLSurfaceView.setVisibility(0);
+                return;
+            }
+            RGMapModeViewController.getInstance().handleAssistHighwayShow(true);
+            this.mColladaRl.setVisibility(8);
+            if (this.mColladaGLSurfaceView != null) {
+                this.mColladaGLSurfaceView.setVisibility(8);
+            }
+        }
     }
-    showColladaWithoutAnimation(false);
-  }
-  
-  public void updateData(Bundle paramBundle)
-  {
-    if (paramBundle == null)
-    {
-      LogUtil.e(TAG, "b == null");
-      return;
-    }
-    if (this.mEnlargeRoadMapView != null)
-    {
-      updateRasterMapInfo(paramBundle.getBoolean("updateprogress"), paramBundle, null);
-      return;
-    }
-    LogUtil.e(TAG, "mEnlargeRoadMapView == null");
-  }
-  
-  public void updateData(Bundle paramBundle, boolean paramBoolean)
-  {
-    if (paramBundle == null) {}
-    while (this.mEnlargeRoadMapView == null) {
-      return;
-    }
-    boolean bool = paramBundle.getBoolean("updateprogress");
-    if (paramBoolean)
-    {
-      if (!paramBoolean) {}
-      for (paramBoolean = true;; paramBoolean = false)
-      {
-        updateRasterMapInfo(paramBoolean, paramBundle, new Object());
-        return;
-      }
-    }
-    updateRasterMapInfo(bool, paramBundle, null);
-  }
-  
-  public void updateDataByLastest()
-  {
-    if (!"EnlargeRoadmap".equals(RouteGuideFSM.getInstance().getCurrentState())) {
-      return;
-    }
-    this.mForceRefreshImage = true;
-    updateData(RGEnlargeRoadMapModel.getInstance().getLastestData());
-  }
-  
-  public void updateRasterMapInfo(final boolean paramBoolean, Bundle paramBundle, final Object paramObject)
-  {
-    String str1 = paramBundle.getString("road_name");
-    int i = paramBundle.getInt("total_dist");
-    int j = paramBundle.getInt("rem_dist");
-    String str2 = paramBundle.getString("raster_type");
-    if (!TextUtils.isEmpty(str1)) {
-      this.mRoadName = str1;
-    }
-    this.rasterType = str2;
-    this.mTotalDist = i;
-    this.mRemDist = j;
-    boolean bool;
-    if (!paramBoolean)
-    {
-      bool = true;
-      this.mbUpdateRasterInfo = bool;
-      if ((j > 0) && (i > 0)) {
-        break label423;
-      }
-      i = 100;
-      label95:
-      LogUtil.e(TAG, "!# mRoadName=" + this.mRoadName + ", " + this.rasterType + ", updateRaster=" + this.mbUpdateRasterInfo);
-      LogUtil.e(TAG, "!# Raster Pos = " + i + " Total = " + this.mTotalDist + " Rem = " + this.mRemDist);
-      this.mProgress = i;
-      if (("raster_vector".equals(this.rasterType)) || ("raster_direct_board".equals(this.rasterType)) || ("raster_grid".equals(this.rasterType))) {
-        this.mTurnIconId = paramBundle.getInt("resid", 0);
-      }
-      if (!"raster_vector".equals(this.rasterType)) {
-        break label439;
-      }
-      this.mCarPosX = paramBundle.getInt("car_pos_x", 0);
-      this.mCarPosY = paramBundle.getInt("car_pos_y", 0);
-      this.mCarRotate = paramBundle.getInt("car_rotate", 0);
-      this.mCarRotate = (-this.mCarRotate);
-    }
-    for (;;)
-    {
-      if (!"raster_street".equals(this.rasterType))
-      {
+
+    public void hideWithoutAnimation() {
+        if (this.mEnlargeRoadMapView != null) {
+            RGLaneLineController.getInstance().isNormalEnlargeShow = false;
+            this.mEnlargeRoadMapView.setVisibility(8);
+        }
+        if (this.mCarPosLayout != null) {
+            this.mCarPosLayout.setVisibility(8);
+        }
+        if (this.mCarPosImgView != null) {
+            this.mCarPosImgView.setVisibility(4);
+        }
         if (this.mStreetLayout != null) {
-          this.mStreetLayout.setVisibility(4);
+            this.mStreetLayout.setVisibility(4);
         }
         if (this.bnav_rg_enlarge_image_mask != null) {
-          this.bnav_rg_enlarge_image_mask.setVisibility(4);
+            this.bnav_rg_enlarge_image_mask.setVisibility(4);
         }
-      }
-      BNWorkerCenter.getInstance().submitMainThreadTask(new BNWorkerNormalTask("UpdateRasterMapInfo-" + getClass().getSimpleName(), null)new BNWorkerConfig
-      {
-        protected String execute()
-        {
-          if (paramObject == null)
-          {
-            RGMMEnlargeRoadMapView.this.progressRun();
-            return null;
-          }
-          RGMMEnlargeRoadMapView localRGMMEnlargeRoadMapView = RGMMEnlargeRoadMapView.this;
-          if (!paramBoolean) {}
-          for (boolean bool = true;; bool = false)
-          {
-            localRGMMEnlargeRoadMapView.progressRun(bool);
-            break;
-          }
-        }
-      }, new BNWorkerConfig(100, 0));
-      return;
-      bool = false;
-      break;
-      label423:
-      i = (i - j) * 100 / i;
-      break label95;
-      label439:
-      if (this.mCarPosImgView != null) {
-        this.mCarPosImgView.setVisibility(4);
-      }
+        RGMapModeViewController.getInstance().setIsShowEnlargeRoadMap(false);
     }
-  }
+
+    public void dispose() {
+        super.dispose();
+        LogUtil.m15791e(TAG, "onDispose start.");
+        UIUtils.releaseImageView(this.mEnlargeImageView);
+        UIUtils.releaseImageView(this.mCarPosImgView);
+        LogUtil.m15791e(TAG, "onDispose end.");
+    }
+
+    public void reset() {
+        UIUtils.releaseImageViewWithoutNull(this.mEnlargeImageView);
+        UIUtils.releaseImageViewWithoutNull(this.mCarPosImgView);
+    }
+
+    public Bitmap getEnlargeViewBitmap() {
+        this.mEnlargeRoadMapView.setDrawingCacheEnabled(true);
+        return this.mEnlargeRoadMapView.getDrawingCache();
+    }
+
+    public Bitmap getEnlargeBitmap() {
+        try {
+            if (RGEnlargeRoadMapModel.getInstance().getBGBitmap() == null) {
+                return null;
+            }
+            Bitmap result = Bitmap.createBitmap(RGEnlargeRoadMapModel.getInstance().getBGBitmap().getWidth(), RGEnlargeRoadMapModel.getInstance().getBGBitmap().getHeight(), Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+            Paint paint = new Paint();
+            Matrix matrix = new Matrix();
+            canvas.drawBitmap(RGEnlargeRoadMapModel.getInstance().getBGBitmap(), matrix, paint);
+            if ((!RasterType.DIRECT_BOARD.equals(this.rasterType) && !RasterType.GRID.equals(this.rasterType)) || RGEnlargeRoadMapModel.getInstance().getArrowBitmap() == null) {
+                return result;
+            }
+            canvas.drawBitmap(RGEnlargeRoadMapModel.getInstance().getArrowBitmap(), matrix, paint);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean isEnlargeOrColladaShow() {
+        boolean z = false;
+        if (this.mEnlargeRoadMapView != null) {
+            if (this.mEnlargeRoadMapView.getVisibility() == 0) {
+                z = true;
+            } else {
+                z = false;
+            }
+            if (z) {
+                return z;
+            }
+        }
+        if (this.mColladaRl != null) {
+            if (this.mColladaRl.getVisibility() == 0) {
+                z = true;
+            } else {
+                z = false;
+            }
+            if (z) {
+                return z;
+            }
+        }
+        return z;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/routeguide/mapmode/subview/RGMMEnlargeRoadMapView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

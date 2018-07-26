@@ -5,391 +5,270 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.l.a;
-import com.baidu.carlife.logic.a.j;
-import com.baidu.carlife.logic.music.c;
-import com.baidu.carlife.logic.music.h;
-import com.baidu.carlife.logic.music.m;
-import com.baidu.carlife.logic.music.n;
-import com.baidu.carlife.logic.music.o;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.logic.music.C1795c;
+import com.baidu.carlife.logic.music.C1802m;
+import com.baidu.carlife.logic.music.C1818h;
+import com.baidu.carlife.logic.music.C1829n;
+import com.baidu.carlife.logic.music.C1830o;
+import com.baidu.carlife.logic.p088a.C1702j;
 import com.baidu.carlife.model.MusicSongModel;
+import com.baidu.carlife.p087l.C1663a;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MusicPlayService
-  extends Service
-{
-  private static final String b = "MusicPlayService";
-  public o a = new o()
-  {
-    public void a()
-    {
-      MusicPlayService.e(MusicPlayService.this).b();
-    }
-    
-    public void a(int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3)
-    {
-      MusicPlayService.g(MusicPlayService.this).a(paramAnonymousInt1, paramAnonymousInt2, paramAnonymousInt3);
-    }
-    
-    public void a(int paramAnonymousInt1, int paramAnonymousInt2, int paramAnonymousInt3, Object paramAnonymousObject)
-    {
-      MusicPlayService.e(MusicPlayService.this).a(paramAnonymousInt1, paramAnonymousInt2, paramAnonymousInt3, paramAnonymousObject);
-    }
-    
-    public void a(String paramAnonymousString)
-    {
-      MusicPlayService.f(MusicPlayService.this).i = paramAnonymousString;
-      MusicPlayService.e(MusicPlayService.this).a();
-    }
-    
-    public void a(boolean paramAnonymousBoolean)
-    {
-      MusicPlayService.e(MusicPlayService.this).a(paramAnonymousBoolean);
-    }
-    
-    public void a(byte[] paramAnonymousArrayOfByte, int paramAnonymousInt)
-    {
-      MusicPlayService.g(MusicPlayService.this).a(paramAnonymousArrayOfByte, paramAnonymousInt);
-    }
-    
-    public void b()
-    {
-      MusicPlayService.g(MusicPlayService.this).z();
-    }
-    
-    public void c()
-    {
-      MusicPlayService.g(MusicPlayService.this).A();
-    }
-    
-    public void d()
-    {
-      MusicPlayService.g(MusicPlayService.this).y();
-    }
-  };
-  private a c;
-  private int d = -1;
-  private MusicSongModel e;
-  private m f;
-  private n g;
-  
-  private void a()
-  {
-    if (this.d == 1)
-    {
-      if (this.e.m != null)
-      {
-        this.c.u();
-        return;
-      }
-      this.g.c();
-      return;
-    }
-    this.c.u();
-  }
-  
-  private void a(int paramInt)
-  {
-    if ((paramInt == 0) || (paramInt == 2) || (paramInt >= 3)) {
-      this.c.v();
-    }
-    while (paramInt != 1) {
-      return;
-    }
-    if (this.e.m != null)
-    {
-      this.c.v();
-      return;
-    }
-    this.g.d();
-  }
-  
-  private void a(int paramInt, MusicSongModel paramMusicSongModel, ArrayList<String> paramArrayList)
-  {
-    if ((paramMusicSongModel == null) || (!h.i(paramInt))) {}
-    label320:
-    label563:
-    for (;;)
-    {
-      return;
-      this.d = paramInt;
-      this.e = paramMusicSongModel;
-      if ((paramInt == 1) && (this.e.m == null))
-      {
-        this.g.a(this.e.a);
-        return;
-      }
-      paramMusicSongModel = this.e.m;
-      int n;
-      int i1;
-      int i2;
-      int i;
-      int j;
-      int k;
-      int m;
-      if (paramArrayList != null)
-      {
-        paramMusicSongModel = (String)paramArrayList.get(0);
-        this.c.a(paramMusicSongModel, paramArrayList);
-        i.b("MusicPlayService", "---startPlay----path:" + paramMusicSongModel);
-        if (this.d != 0) {
-          break label320;
+public class MusicPlayService extends Service {
+    /* renamed from: b */
+    private static final String f6897b = "MusicPlayService";
+    /* renamed from: a */
+    public C1830o f6898a = new C21631(this);
+    /* renamed from: c */
+    private C1663a f6899c;
+    /* renamed from: d */
+    private int f6900d = -1;
+    /* renamed from: e */
+    private MusicSongModel f6901e;
+    /* renamed from: f */
+    private C1802m f6902f;
+    /* renamed from: g */
+    private C1829n f6903g;
+
+    /* renamed from: com.baidu.carlife.service.MusicPlayService$1 */
+    class C21631 implements C1830o {
+        /* renamed from: a */
+        final /* synthetic */ MusicPlayService f6895a;
+
+        C21631(MusicPlayService this$0) {
+            this.f6895a = this$0;
         }
-        if (this.e.i == null)
-        {
-          paramArrayList = new MediaPlayer();
-          n = 0;
-          i1 = 0;
-          i2 = 0;
-          paramInt = 0;
-          i = paramInt;
-          j = n;
-          k = i1;
-          m = i2;
+
+        /* renamed from: a */
+        public void mo1789a(boolean isManual) {
+            this.f6895a.f6902f.mo1669a(isManual);
         }
-      }
-      try
-      {
-        paramArrayList.setDataSource(paramMusicSongModel);
-        i = paramInt;
-        j = n;
-        k = i1;
-        m = i2;
-        paramArrayList.setAudioStreamType(3);
-        i = paramInt;
-        j = n;
-        k = i1;
-        m = i2;
-        paramArrayList.prepare();
-        i = paramInt;
-        j = n;
-        k = i1;
-        m = i2;
-        paramInt = paramArrayList.getDuration();
-        i = paramInt;
-        j = paramInt;
-        k = paramInt;
-        m = paramInt;
-        paramArrayList.release();
-      }
-      catch (IllegalArgumentException paramMusicSongModel)
-      {
-        for (;;)
-        {
-          paramMusicSongModel.printStackTrace();
-          paramInt = i;
+
+        /* renamed from: a */
+        public void mo1785a() {
+            this.f6895a.f6902f.mo1670b();
         }
-      }
-      catch (SecurityException paramMusicSongModel)
-      {
-        for (;;)
-        {
-          paramMusicSongModel.printStackTrace();
-          paramInt = j;
+
+        /* renamed from: a */
+        public void mo1788a(String duration) {
+            this.f6895a.f6901e.f5917i = duration;
+            this.f6895a.f6902f.mo1667a();
         }
-      }
-      catch (IllegalStateException paramMusicSongModel)
-      {
-        for (;;)
-        {
-          paramMusicSongModel.printStackTrace();
-          paramInt = k;
+
+        /* renamed from: a */
+        public void mo1786a(int sampleRate, int channels, int bitsPerSample) {
+            this.f6895a.f6899c.m6005a(sampleRate, channels, bitsPerSample);
         }
-      }
-      catch (IOException paramMusicSongModel)
-      {
-        for (;;)
-        {
-          paramMusicSongModel.printStackTrace();
-          paramInt = m;
+
+        /* renamed from: a */
+        public void mo1790a(byte[] buffer, int size) {
+            this.f6895a.f6899c.m6016a(buffer, size);
         }
-      }
-      this.e.i = String.valueOf(paramInt);
-      for (;;)
-      {
-        if (this.f == null) {
-          break label563;
+
+        /* renamed from: b */
+        public void mo1791b() {
+            this.f6895a.f6899c.m6059z();
         }
-        this.f.a();
-        return;
-        this.c.a(paramMusicSongModel);
-        break;
-        if (this.d == 101)
-        {
-          c.a().a(1, j.a().c());
-          if (j.a().g())
-          {
-            this.e.h("7200000");
-          }
-          else
-          {
-            if (this.e.n >= this.e.o)
-            {
-              paramArrayList = new MediaPlayer();
-              n = 0;
-              i1 = 0;
-              i2 = 0;
-              paramInt = 0;
-              i = paramInt;
-              j = n;
-              k = i1;
-              m = i2;
-              try
-              {
-                paramArrayList.setDataSource(paramMusicSongModel);
-                i = paramInt;
-                j = n;
-                k = i1;
-                m = i2;
-                paramArrayList.setAudioStreamType(3);
-                i = paramInt;
-                j = n;
-                k = i1;
-                m = i2;
-                paramArrayList.prepare();
-                i = paramInt;
-                j = n;
-                k = i1;
-                m = i2;
-                paramInt = paramArrayList.getDuration();
-                i = paramInt;
-                j = paramInt;
-                k = paramInt;
-                m = paramInt;
-                paramArrayList.release();
-              }
-              catch (IllegalArgumentException paramMusicSongModel)
-              {
-                for (;;)
-                {
-                  paramMusicSongModel.printStackTrace();
-                  paramInt = i;
-                }
-              }
-              catch (SecurityException paramMusicSongModel)
-              {
-                for (;;)
-                {
-                  paramMusicSongModel.printStackTrace();
-                  paramInt = j;
-                }
-              }
-              catch (IllegalStateException paramMusicSongModel)
-              {
-                for (;;)
-                {
-                  paramMusicSongModel.printStackTrace();
-                  paramInt = k;
-                }
-              }
-              catch (IOException paramMusicSongModel)
-              {
-                for (;;)
-                {
-                  paramMusicSongModel.printStackTrace();
-                  paramInt = m;
-                }
-              }
-              this.e.i = String.valueOf(paramInt);
-              continue;
+
+        /* renamed from: c */
+        public void mo1792c() {
+            this.f6895a.f6899c.m5980A();
+        }
+
+        /* renamed from: d */
+        public void mo1793d() {
+            this.f6895a.f6899c.m6058y();
+        }
+
+        /* renamed from: a */
+        public void mo1787a(int errorType, int errorCode1, int errorCode2, Object errorObj) {
+            this.f6895a.f6902f.mo1668a(errorType, errorCode1, errorCode2, errorObj);
+        }
+    }
+
+    /* renamed from: com.baidu.carlife.service.MusicPlayService$a */
+    public class C2164a extends Binder {
+        /* renamed from: a */
+        final /* synthetic */ MusicPlayService f6896a;
+
+        public C2164a(MusicPlayService this$0) {
+            this.f6896a = this$0;
+        }
+
+        /* renamed from: a */
+        public void m8188a(C1802m listener) {
+            this.f6896a.f6902f = listener;
+        }
+
+        /* renamed from: a */
+        public void m8184a() {
+            this.f6896a.m8193a();
+        }
+
+        /* renamed from: a */
+        public void m8185a(int type) {
+            this.f6896a.m8194a(type);
+        }
+
+        /* renamed from: a */
+        public void m8186a(int type, MusicSongModel song) {
+            m8187a(type, song, null);
+        }
+
+        /* renamed from: a */
+        public void m8187a(int type, MusicSongModel song, ArrayList<String> fileList) {
+            this.f6896a.m8195a(type, song, fileList);
+        }
+
+        /* renamed from: b */
+        public void m8189b() {
+            this.f6896a.m8201c();
+        }
+
+        /* renamed from: c */
+        public void m8190c() {
+            this.f6896a.m8203d();
+        }
+
+        /* renamed from: d */
+        public void m8191d() {
+            this.f6896a.m8199b();
+        }
+    }
+
+    public void onCreate() {
+        super.onCreate();
+        this.f6899c = C1663a.m5979a();
+        this.f6903g = new C1829n(this.f6898a);
+    }
+
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return 2;
+    }
+
+    public IBinder onBind(Intent arg0) {
+        return new C2164a(this);
+    }
+
+    public void onDestroy() {
+        C1260i.m4435b(f6897b, "-----MusicPlayService--onDestroy----");
+        this.f6899c.m6056w();
+        super.onDestroy();
+    }
+
+    /* renamed from: a */
+    private void m8193a() {
+        if (this.f6900d != 1) {
+            this.f6899c.m6054u();
+        } else if (this.f6901e.f5921m != null) {
+            this.f6899c.m6054u();
+        } else {
+            this.f6903g.m6908c();
+        }
+    }
+
+    /* renamed from: a */
+    private void m8194a(int type) {
+        if (type == 0 || type == 2 || type >= 3) {
+            this.f6899c.m6055v();
+        } else if (type != 1) {
+        } else {
+            if (this.f6901e.f5921m != null) {
+                this.f6899c.m6055v();
+            } else {
+                this.f6903g.m6909d();
             }
-            this.e.i = "600000";
-          }
         }
-      }
     }
-  }
-  
-  private void b()
-  {
-    this.c.x();
-  }
-  
-  private void c()
-  {
-    this.c.G();
-  }
-  
-  private void d()
-  {
-    this.c.H();
-  }
-  
-  public IBinder onBind(Intent paramIntent)
-  {
-    return new a();
-  }
-  
-  public void onCreate()
-  {
-    super.onCreate();
-    this.c = a.a();
-    this.g = new n(this.a);
-  }
-  
-  public void onDestroy()
-  {
-    i.b("MusicPlayService", "-----MusicPlayService--onDestroy----");
-    this.c.w();
-    super.onDestroy();
-  }
-  
-  public int onStartCommand(Intent paramIntent, int paramInt1, int paramInt2)
-  {
-    return 2;
-  }
-  
-  public class a
-    extends Binder
-  {
-    public a() {}
-    
-    public void a()
-    {
-      MusicPlayService.a(MusicPlayService.this);
+
+    /* renamed from: a */
+    private void m8195a(int type, MusicSongModel song, ArrayList<String> fileList) {
+        if (song != null && C1818h.m6745i(type)) {
+            this.f6900d = type;
+            this.f6901e = song;
+            if (type == 1 && this.f6901e.f5921m == null) {
+                this.f6903g.m6906a(this.f6901e.f5909a);
+                return;
+            }
+            String path = this.f6901e.f5921m;
+            if (fileList != null) {
+                path = (String) fileList.get(0);
+                this.f6899c.m6014a(path, (ArrayList) fileList);
+            } else {
+                this.f6899c.m6013a(path);
+            }
+            C1260i.m4435b(f6897b, "---startPlay----path:" + path);
+            MediaPlayer mediaPlayer;
+            int i;
+            if (this.f6900d == 0) {
+                if (this.f6901e.f5917i == null) {
+                    mediaPlayer = new MediaPlayer();
+                    i = 0;
+                    try {
+                        mediaPlayer.setDataSource(path);
+                        mediaPlayer.setAudioStreamType(3);
+                        mediaPlayer.prepare();
+                        i = mediaPlayer.getDuration();
+                        mediaPlayer.release();
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (SecurityException e2) {
+                        e2.printStackTrace();
+                    } catch (IllegalStateException e3) {
+                        e3.printStackTrace();
+                    } catch (IOException e4) {
+                        e4.printStackTrace();
+                    }
+                    this.f6901e.f5917i = String.valueOf(i);
+                }
+            } else if (this.f6900d == 101) {
+                C1795c.m6660a().m6666a(1, C1702j.m6181a().m6188c());
+                if (C1702j.m6181a().m6192g()) {
+                    this.f6901e.m7365h("7200000");
+                } else if (this.f6901e.f5922n >= this.f6901e.f5923o) {
+                    mediaPlayer = new MediaPlayer();
+                    i = 0;
+                    try {
+                        mediaPlayer.setDataSource(path);
+                        mediaPlayer.setAudioStreamType(3);
+                        mediaPlayer.prepare();
+                        i = mediaPlayer.getDuration();
+                        mediaPlayer.release();
+                    } catch (IllegalArgumentException e5) {
+                        e5.printStackTrace();
+                    } catch (SecurityException e22) {
+                        e22.printStackTrace();
+                    } catch (IllegalStateException e32) {
+                        e32.printStackTrace();
+                    } catch (IOException e42) {
+                        e42.printStackTrace();
+                    }
+                    this.f6901e.f5917i = String.valueOf(i);
+                } else {
+                    this.f6901e.f5917i = "600000";
+                }
+            }
+            if (this.f6902f != null) {
+                this.f6902f.mo1667a();
+            }
+        }
     }
-    
-    public void a(int paramInt)
-    {
-      MusicPlayService.a(MusicPlayService.this, paramInt);
+
+    /* renamed from: b */
+    private void m8199b() {
+        this.f6899c.m6057x();
     }
-    
-    public void a(int paramInt, MusicSongModel paramMusicSongModel)
-    {
-      a(paramInt, paramMusicSongModel, null);
+
+    /* renamed from: c */
+    private void m8201c() {
+        this.f6899c.m5986G();
     }
-    
-    public void a(int paramInt, MusicSongModel paramMusicSongModel, ArrayList<String> paramArrayList)
-    {
-      MusicPlayService.a(MusicPlayService.this, paramInt, paramMusicSongModel, paramArrayList);
+
+    /* renamed from: d */
+    private void m8203d() {
+        this.f6899c.m5987H();
     }
-    
-    public void a(m paramm)
-    {
-      MusicPlayService.a(MusicPlayService.this, paramm);
-    }
-    
-    public void b()
-    {
-      MusicPlayService.b(MusicPlayService.this);
-    }
-    
-    public void c()
-    {
-      MusicPlayService.c(MusicPlayService.this);
-    }
-    
-    public void d()
-    {
-      MusicPlayService.d(MusicPlayService.this);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/service/MusicPlayService.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

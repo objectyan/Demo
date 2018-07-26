@@ -2,23 +2,15 @@ package com.baidu.vi;
 
 import android.content.Context;
 
-public class VIContext
-{
-  static Context a;
-  
-  public static Context getContext()
-  {
-    return a;
-  }
-  
-  public static void init(Context paramContext)
-  {
-    a = paramContext;
-  }
+public class VIContext {
+    /* renamed from: a */
+    static Context f12842a;
+
+    public static void init(Context context) {
+        f12842a = context;
+    }
+
+    public static Context getContext() {
+        return f12842a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/vi/VIContext.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

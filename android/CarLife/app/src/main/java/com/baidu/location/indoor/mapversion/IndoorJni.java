@@ -1,40 +1,30 @@
 package com.baidu.location.indoor.mapversion;
 
-import java.io.PrintStream;
+import com.baidu.platform.comapi.map.provider.EngineConst.OVERLAY_KEY;
 
-public class IndoorJni
-{
-  public static boolean a = false;
-  
-  static
-  {
-    try
-    {
-      System.loadLibrary("indoor");
-      initPf();
-      a = true;
-      return;
+public class IndoorJni {
+    /* renamed from: a */
+    public static boolean f18699a;
+
+    static {
+        f18699a = false;
+        try {
+            System.loadLibrary(OVERLAY_KEY.INDOOR);
+            initPf();
+            f18699a = true;
+        } catch (Exception e) {
+            System.err.println("Cannot load indoor lib");
+            e.printStackTrace();
+        }
     }
-    catch (Exception localException)
-    {
-      System.err.println("Cannot load indoor lib");
-      localException.printStackTrace();
-    }
-  }
-  
-  public static native double[] getPfFr(double paramDouble1, double paramDouble2);
-  
-  public static native void initPf();
-  
-  public static native void resetPf();
-  
-  public static native double[] setPfWf(double paramDouble1, double paramDouble2);
-  
-  public static native void setRdnt(String paramString, short[][] paramArrayOfShort, double paramDouble1, double paramDouble2, int paramInt1, int paramInt2);
+
+    public static native double[] getPfFr(double d, double d2);
+
+    public static native void initPf();
+
+    public static native void resetPf();
+
+    public static native double[] setPfWf(double d, double d2);
+
+    public static native void setRdnt(String str, short[][] sArr, double d, double d2, int i, int i2);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/location/indoor/mapversion/IndoorJni.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

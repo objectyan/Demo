@@ -1,639 +1,490 @@
 package com.google.protobuf;
 
+import android.support.v4.media.TransportMediator;
+import com.google.protobuf.MessageLite.Builder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public final class CodedInputStream
-{
-  private static final int BUFFER_SIZE = 4096;
-  private static final int DEFAULT_RECURSION_LIMIT = 64;
-  private static final int DEFAULT_SIZE_LIMIT = 67108864;
-  private final byte[] buffer;
-  private int bufferPos;
-  private int bufferSize;
-  private int bufferSizeAfterLimit;
-  private int currentLimit = Integer.MAX_VALUE;
-  private final InputStream input;
-  private int lastTag;
-  private int recursionDepth;
-  private int recursionLimit = 64;
-  private int sizeLimit = 67108864;
-  private int totalBytesRetired;
-  
-  private CodedInputStream(InputStream paramInputStream)
-  {
-    this.buffer = new byte['က'];
-    this.bufferSize = 0;
-    this.bufferPos = 0;
-    this.input = paramInputStream;
-  }
-  
-  private CodedInputStream(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    this.buffer = paramArrayOfByte;
-    this.bufferSize = (paramInt1 + paramInt2);
-    this.bufferPos = paramInt1;
-    this.input = null;
-  }
-  
-  public static int decodeZigZag32(int paramInt)
-  {
-    return paramInt >>> 1 ^ -(paramInt & 0x1);
-  }
-  
-  public static long decodeZigZag64(long paramLong)
-  {
-    return paramLong >>> 1 ^ -(1L & paramLong);
-  }
-  
-  public static CodedInputStream newInstance(InputStream paramInputStream)
-  {
-    return new CodedInputStream(paramInputStream);
-  }
-  
-  public static CodedInputStream newInstance(byte[] paramArrayOfByte)
-  {
-    return newInstance(paramArrayOfByte, 0, paramArrayOfByte.length);
-  }
-  
-  public static CodedInputStream newInstance(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-  {
-    return new CodedInputStream(paramArrayOfByte, paramInt1, paramInt2);
-  }
-  
-  static int readRawVarint32(InputStream paramInputStream)
-    throws IOException
-  {
-    int j = 0;
-    int i = 0;
-    int k;
-    for (;;)
-    {
-      k = i;
-      if (i >= 32) {
-        break;
-      }
-      k = paramInputStream.read();
-      if (k == -1) {
-        throw InvalidProtocolBufferException.truncatedMessage();
-      }
-      j |= (k & 0x7F) << i;
-      if ((k & 0x80) == 0) {
-        return j;
-      }
-      i += 7;
+public final class CodedInputStream {
+    private static final int BUFFER_SIZE = 4096;
+    private static final int DEFAULT_RECURSION_LIMIT = 64;
+    private static final int DEFAULT_SIZE_LIMIT = 67108864;
+    private final byte[] buffer;
+    private int bufferPos;
+    private int bufferSize;
+    private int bufferSizeAfterLimit;
+    private int currentLimit;
+    private final InputStream input;
+    private int lastTag;
+    private int recursionDepth;
+    private int recursionLimit;
+    private int sizeLimit;
+    private int totalBytesRetired;
+
+    public static CodedInputStream newInstance(InputStream input) {
+        return new CodedInputStream(input);
     }
-    do
-    {
-      k += 7;
-      if (k >= 64) {
-        break;
-      }
-      i = paramInputStream.read();
-      if (i == -1) {
-        throw InvalidProtocolBufferException.truncatedMessage();
-      }
-    } while ((i & 0x80) != 0);
-    return j;
-    throw InvalidProtocolBufferException.malformedVarint();
-  }
-  
-  private void recomputeBufferSizeAfterLimit()
-  {
-    this.bufferSize += this.bufferSizeAfterLimit;
-    int i = this.totalBytesRetired + this.bufferSize;
-    if (i > this.currentLimit)
-    {
-      this.bufferSizeAfterLimit = (i - this.currentLimit);
-      this.bufferSize -= this.bufferSizeAfterLimit;
-      return;
+
+    public static CodedInputStream newInstance(byte[] buf) {
+        return newInstance(buf, 0, buf.length);
     }
-    this.bufferSizeAfterLimit = 0;
-  }
-  
-  private boolean refillBuffer(boolean paramBoolean)
-    throws IOException
-  {
-    if (this.bufferPos < this.bufferSize) {
-      throw new IllegalStateException("refillBuffer() called when buffer wasn't empty.");
+
+    public static CodedInputStream newInstance(byte[] buf, int off, int len) {
+        return new CodedInputStream(buf, off, len);
     }
-    if (this.totalBytesRetired + this.bufferSize == this.currentLimit)
-    {
-      if (paramBoolean) {
-        throw InvalidProtocolBufferException.truncatedMessage();
-      }
-      return false;
-    }
-    this.totalBytesRetired += this.bufferSize;
-    this.bufferPos = 0;
-    if (this.input == null) {}
-    for (int i = -1;; i = this.input.read(this.buffer))
-    {
-      this.bufferSize = i;
-      if ((this.bufferSize != 0) && (this.bufferSize >= -1)) {
-        break;
-      }
-      throw new IllegalStateException("InputStream#read(byte[]) returned invalid result: " + this.bufferSize + "\nThe InputStream implementation is buggy.");
-    }
-    if (this.bufferSize == -1)
-    {
-      this.bufferSize = 0;
-      if (paramBoolean) {
-        throw InvalidProtocolBufferException.truncatedMessage();
-      }
-      return false;
-    }
-    recomputeBufferSizeAfterLimit();
-    i = this.totalBytesRetired + this.bufferSize + this.bufferSizeAfterLimit;
-    if ((i > this.sizeLimit) || (i < 0)) {
-      throw InvalidProtocolBufferException.sizeLimitExceeded();
-    }
-    return true;
-  }
-  
-  public void checkLastTagWas(int paramInt)
-    throws InvalidProtocolBufferException
-  {
-    if (this.lastTag != paramInt) {
-      throw InvalidProtocolBufferException.invalidEndTag();
-    }
-  }
-  
-  public int getBytesUntilLimit()
-  {
-    if (this.currentLimit == Integer.MAX_VALUE) {
-      return -1;
-    }
-    int i = this.totalBytesRetired;
-    int j = this.bufferPos;
-    return this.currentLimit - (i + j);
-  }
-  
-  public boolean isAtEnd()
-    throws IOException
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if (this.bufferPos == this.bufferSize)
-    {
-      bool1 = bool2;
-      if (!refillBuffer(false)) {
-        bool1 = true;
-      }
-    }
-    return bool1;
-  }
-  
-  public void popLimit(int paramInt)
-  {
-    this.currentLimit = paramInt;
-    recomputeBufferSizeAfterLimit();
-  }
-  
-  public int pushLimit(int paramInt)
-    throws InvalidProtocolBufferException
-  {
-    if (paramInt < 0) {
-      throw InvalidProtocolBufferException.negativeSize();
-    }
-    paramInt += this.totalBytesRetired + this.bufferPos;
-    int i = this.currentLimit;
-    if (paramInt > i) {
-      throw InvalidProtocolBufferException.truncatedMessage();
-    }
-    this.currentLimit = paramInt;
-    recomputeBufferSizeAfterLimit();
-    return i;
-  }
-  
-  public boolean readBool()
-    throws IOException
-  {
-    return readRawVarint32() != 0;
-  }
-  
-  public ByteString readBytes()
-    throws IOException
-  {
-    int i = readRawVarint32();
-    if ((i <= this.bufferSize - this.bufferPos) && (i > 0))
-    {
-      ByteString localByteString = ByteString.copyFrom(this.buffer, this.bufferPos, i);
-      this.bufferPos += i;
-      return localByteString;
-    }
-    return ByteString.copyFrom(readRawBytes(i));
-  }
-  
-  public double readDouble()
-    throws IOException
-  {
-    return Double.longBitsToDouble(readRawLittleEndian64());
-  }
-  
-  public int readEnum()
-    throws IOException
-  {
-    return readRawVarint32();
-  }
-  
-  public int readFixed32()
-    throws IOException
-  {
-    return readRawLittleEndian32();
-  }
-  
-  public long readFixed64()
-    throws IOException
-  {
-    return readRawLittleEndian64();
-  }
-  
-  public float readFloat()
-    throws IOException
-  {
-    return Float.intBitsToFloat(readRawLittleEndian32());
-  }
-  
-  public void readGroup(int paramInt, MessageLite.Builder paramBuilder, ExtensionRegistryLite paramExtensionRegistryLite)
-    throws IOException
-  {
-    if (this.recursionDepth >= this.recursionLimit) {
-      throw InvalidProtocolBufferException.recursionLimitExceeded();
-    }
-    this.recursionDepth += 1;
-    paramBuilder.mergeFrom(this, paramExtensionRegistryLite);
-    checkLastTagWas(WireFormat.makeTag(paramInt, 4));
-    this.recursionDepth -= 1;
-  }
-  
-  public int readInt32()
-    throws IOException
-  {
-    return readRawVarint32();
-  }
-  
-  public long readInt64()
-    throws IOException
-  {
-    return readRawVarint64();
-  }
-  
-  public void readMessage(MessageLite.Builder paramBuilder, ExtensionRegistryLite paramExtensionRegistryLite)
-    throws IOException
-  {
-    int i = readRawVarint32();
-    if (this.recursionDepth >= this.recursionLimit) {
-      throw InvalidProtocolBufferException.recursionLimitExceeded();
-    }
-    i = pushLimit(i);
-    this.recursionDepth += 1;
-    paramBuilder.mergeFrom(this, paramExtensionRegistryLite);
-    checkLastTagWas(0);
-    this.recursionDepth -= 1;
-    popLimit(i);
-  }
-  
-  public byte readRawByte()
-    throws IOException
-  {
-    if (this.bufferPos == this.bufferSize) {
-      refillBuffer(true);
-    }
-    byte[] arrayOfByte = this.buffer;
-    int i = this.bufferPos;
-    this.bufferPos = (i + 1);
-    return arrayOfByte[i];
-  }
-  
-  public byte[] readRawBytes(int paramInt)
-    throws IOException
-  {
-    if (paramInt < 0) {
-      throw InvalidProtocolBufferException.negativeSize();
-    }
-    if (this.totalBytesRetired + this.bufferPos + paramInt > this.currentLimit)
-    {
-      skipRawBytes(this.currentLimit - this.totalBytesRetired - this.bufferPos);
-      throw InvalidProtocolBufferException.truncatedMessage();
-    }
-    if (paramInt <= this.bufferSize - this.bufferPos)
-    {
-      localObject = new byte[paramInt];
-      System.arraycopy(this.buffer, this.bufferPos, localObject, 0, paramInt);
-      this.bufferPos += paramInt;
-      return (byte[])localObject;
-    }
-    if (paramInt < 4096)
-    {
-      localObject = new byte[paramInt];
-      i = this.bufferSize - this.bufferPos;
-      System.arraycopy(this.buffer, this.bufferPos, localObject, 0, i);
-      this.bufferPos = this.bufferSize;
-      refillBuffer(true);
-      while (paramInt - i > this.bufferSize)
-      {
-        System.arraycopy(this.buffer, 0, localObject, i, this.bufferSize);
-        i += this.bufferSize;
-        this.bufferPos = this.bufferSize;
-        refillBuffer(true);
-      }
-      System.arraycopy(this.buffer, 0, localObject, i, paramInt - i);
-      this.bufferPos = (paramInt - i);
-      return (byte[])localObject;
-    }
-    int m = this.bufferPos;
-    int n = this.bufferSize;
-    this.totalBytesRetired += this.bufferSize;
-    this.bufferPos = 0;
-    this.bufferSize = 0;
-    int i = paramInt - (n - m);
-    Object localObject = new ArrayList();
-    while (i > 0)
-    {
-      arrayOfByte = new byte[Math.min(i, 4096)];
-      int j = 0;
-      while (j < arrayOfByte.length)
-      {
-        if (this.input == null) {}
-        for (int k = -1; k == -1; k = this.input.read(arrayOfByte, j, arrayOfByte.length - j)) {
-          throw InvalidProtocolBufferException.truncatedMessage();
+
+    public int readTag() throws IOException {
+        if (isAtEnd()) {
+            this.lastTag = 0;
+            return 0;
         }
-        this.totalBytesRetired += k;
-        j += k;
-      }
-      i -= arrayOfByte.length;
-      ((List)localObject).add(arrayOfByte);
-    }
-    byte[] arrayOfByte = new byte[paramInt];
-    paramInt = n - m;
-    System.arraycopy(this.buffer, m, arrayOfByte, 0, paramInt);
-    Iterator localIterator = ((List)localObject).iterator();
-    for (;;)
-    {
-      localObject = arrayOfByte;
-      if (!localIterator.hasNext()) {
-        break;
-      }
-      localObject = (byte[])localIterator.next();
-      System.arraycopy(localObject, 0, arrayOfByte, paramInt, localObject.length);
-      paramInt += localObject.length;
-    }
-  }
-  
-  public int readRawLittleEndian32()
-    throws IOException
-  {
-    return readRawByte() & 0xFF | (readRawByte() & 0xFF) << 8 | (readRawByte() & 0xFF) << 16 | (readRawByte() & 0xFF) << 24;
-  }
-  
-  public long readRawLittleEndian64()
-    throws IOException
-  {
-    int i = readRawByte();
-    int j = readRawByte();
-    int k = readRawByte();
-    int m = readRawByte();
-    int n = readRawByte();
-    int i1 = readRawByte();
-    int i2 = readRawByte();
-    int i3 = readRawByte();
-    return i & 0xFF | (j & 0xFF) << 8 | (k & 0xFF) << 16 | (m & 0xFF) << 24 | (n & 0xFF) << 32 | (i1 & 0xFF) << 40 | (i2 & 0xFF) << 48 | (i3 & 0xFF) << 56;
-  }
-  
-  public int readRawVarint32()
-    throws IOException
-  {
-    int i = readRawByte();
-    if (i >= 0) {}
-    int k;
-    do
-    {
-      return i;
-      i &= 0x7F;
-      j = readRawByte();
-      if (j >= 0) {
-        return i | j << 7;
-      }
-      i |= (j & 0x7F) << 7;
-      j = readRawByte();
-      if (j >= 0) {
-        return i | j << 14;
-      }
-      i |= (j & 0x7F) << 14;
-      k = readRawByte();
-      if (k >= 0) {
-        return i | k << 21;
-      }
-      j = readRawByte();
-      k = i | (k & 0x7F) << 21 | j << 28;
-      i = k;
-    } while (j >= 0);
-    int j = 0;
-    for (;;)
-    {
-      if (j >= 5) {
-        break label133;
-      }
-      i = k;
-      if (readRawByte() >= 0) {
-        break;
-      }
-      j += 1;
-    }
-    label133:
-    throw InvalidProtocolBufferException.malformedVarint();
-  }
-  
-  public long readRawVarint64()
-    throws IOException
-  {
-    int i = 0;
-    long l = 0L;
-    while (i < 64)
-    {
-      int j = readRawByte();
-      l |= (j & 0x7F) << i;
-      if ((j & 0x80) == 0) {
-        return l;
-      }
-      i += 7;
-    }
-    throw InvalidProtocolBufferException.malformedVarint();
-  }
-  
-  public int readSFixed32()
-    throws IOException
-  {
-    return readRawLittleEndian32();
-  }
-  
-  public long readSFixed64()
-    throws IOException
-  {
-    return readRawLittleEndian64();
-  }
-  
-  public int readSInt32()
-    throws IOException
-  {
-    return decodeZigZag32(readRawVarint32());
-  }
-  
-  public long readSInt64()
-    throws IOException
-  {
-    return decodeZigZag64(readRawVarint64());
-  }
-  
-  public String readString()
-    throws IOException
-  {
-    int i = readRawVarint32();
-    if ((i <= this.bufferSize - this.bufferPos) && (i > 0))
-    {
-      String str = new String(this.buffer, this.bufferPos, i, "UTF-8");
-      this.bufferPos += i;
-      return str;
-    }
-    return new String(readRawBytes(i), "UTF-8");
-  }
-  
-  public int readTag()
-    throws IOException
-  {
-    if (isAtEnd())
-    {
-      this.lastTag = 0;
-      return 0;
-    }
-    this.lastTag = readRawVarint32();
-    if (this.lastTag == 0) {
-      throw InvalidProtocolBufferException.invalidTag();
-    }
-    return this.lastTag;
-  }
-  
-  public int readUInt32()
-    throws IOException
-  {
-    return readRawVarint32();
-  }
-  
-  public long readUInt64()
-    throws IOException
-  {
-    return readRawVarint64();
-  }
-  
-  @Deprecated
-  public void readUnknownGroup(int paramInt, MessageLite.Builder paramBuilder)
-    throws IOException
-  {
-    readGroup(paramInt, paramBuilder, null);
-  }
-  
-  public void resetSizeCounter()
-  {
-    this.totalBytesRetired = 0;
-  }
-  
-  public int setRecursionLimit(int paramInt)
-  {
-    if (paramInt < 0) {
-      throw new IllegalArgumentException("Recursion limit cannot be negative: " + paramInt);
-    }
-    int i = this.recursionLimit;
-    this.recursionLimit = paramInt;
-    return i;
-  }
-  
-  public int setSizeLimit(int paramInt)
-  {
-    if (paramInt < 0) {
-      throw new IllegalArgumentException("Size limit cannot be negative: " + paramInt);
-    }
-    int i = this.sizeLimit;
-    this.sizeLimit = paramInt;
-    return i;
-  }
-  
-  public boolean skipField(int paramInt)
-    throws IOException
-  {
-    switch (WireFormat.getTagWireType(paramInt))
-    {
-    default: 
-      throw InvalidProtocolBufferException.invalidWireType();
-    case 0: 
-      readInt32();
-      return true;
-    case 1: 
-      readRawLittleEndian64();
-      return true;
-    case 2: 
-      skipRawBytes(readRawVarint32());
-      return true;
-    case 3: 
-      skipMessage();
-      checkLastTagWas(WireFormat.makeTag(WireFormat.getTagFieldNumber(paramInt), 4));
-      return true;
-    case 4: 
-      return false;
-    }
-    readRawLittleEndian32();
-    return true;
-  }
-  
-  public void skipMessage()
-    throws IOException
-  {
-    int i;
-    do
-    {
-      i = readTag();
-    } while ((i != 0) && (skipField(i)));
-  }
-  
-  public void skipRawBytes(int paramInt)
-    throws IOException
-  {
-    if (paramInt < 0) {
-      throw InvalidProtocolBufferException.negativeSize();
-    }
-    if (this.totalBytesRetired + this.bufferPos + paramInt > this.currentLimit)
-    {
-      skipRawBytes(this.currentLimit - this.totalBytesRetired - this.bufferPos);
-      throw InvalidProtocolBufferException.truncatedMessage();
-    }
-    if (paramInt <= this.bufferSize - this.bufferPos) {
-      this.bufferPos += paramInt;
-    }
-    for (;;)
-    {
-      return;
-      int i = this.bufferSize - this.bufferPos;
-      this.totalBytesRetired += i;
-      this.bufferPos = 0;
-      this.bufferSize = 0;
-      while (i < paramInt)
-      {
-        if (this.input == null) {}
-        for (int j = -1; j <= 0; j = (int)this.input.skip(paramInt - i)) {
-          throw InvalidProtocolBufferException.truncatedMessage();
+        this.lastTag = readRawVarint32();
+        if (this.lastTag != 0) {
+            return this.lastTag;
         }
-        i += j;
-        this.totalBytesRetired += j;
-      }
+        throw InvalidProtocolBufferException.invalidTag();
     }
-  }
+
+    public void checkLastTagWas(int value) throws InvalidProtocolBufferException {
+        if (this.lastTag != value) {
+            throw InvalidProtocolBufferException.invalidEndTag();
+        }
+    }
+
+    public boolean skipField(int tag) throws IOException {
+        switch (WireFormat.getTagWireType(tag)) {
+            case 0:
+                readInt32();
+                return true;
+            case 1:
+                readRawLittleEndian64();
+                return true;
+            case 2:
+                skipRawBytes(readRawVarint32());
+                return true;
+            case 3:
+                skipMessage();
+                checkLastTagWas(WireFormat.makeTag(WireFormat.getTagFieldNumber(tag), 4));
+                return true;
+            case 4:
+                return false;
+            case 5:
+                readRawLittleEndian32();
+                return true;
+            default:
+                throw InvalidProtocolBufferException.invalidWireType();
+        }
+    }
+
+    public void skipMessage() throws IOException {
+        int tag;
+        do {
+            tag = readTag();
+            if (tag == 0) {
+                return;
+            }
+        } while (skipField(tag));
+    }
+
+    public double readDouble() throws IOException {
+        return Double.longBitsToDouble(readRawLittleEndian64());
+    }
+
+    public float readFloat() throws IOException {
+        return Float.intBitsToFloat(readRawLittleEndian32());
+    }
+
+    public long readUInt64() throws IOException {
+        return readRawVarint64();
+    }
+
+    public long readInt64() throws IOException {
+        return readRawVarint64();
+    }
+
+    public int readInt32() throws IOException {
+        return readRawVarint32();
+    }
+
+    public long readFixed64() throws IOException {
+        return readRawLittleEndian64();
+    }
+
+    public int readFixed32() throws IOException {
+        return readRawLittleEndian32();
+    }
+
+    public boolean readBool() throws IOException {
+        return readRawVarint32() != 0;
+    }
+
+    public String readString() throws IOException {
+        int size = readRawVarint32();
+        if (size > this.bufferSize - this.bufferPos || size <= 0) {
+            return new String(readRawBytes(size), "UTF-8");
+        }
+        String result = new String(this.buffer, this.bufferPos, size, "UTF-8");
+        this.bufferPos += size;
+        return result;
+    }
+
+    public void readGroup(int fieldNumber, Builder builder, ExtensionRegistryLite extensionRegistry) throws IOException {
+        if (this.recursionDepth >= this.recursionLimit) {
+            throw InvalidProtocolBufferException.recursionLimitExceeded();
+        }
+        this.recursionDepth++;
+        builder.mergeFrom(this, extensionRegistry);
+        checkLastTagWas(WireFormat.makeTag(fieldNumber, 4));
+        this.recursionDepth--;
+    }
+
+    @Deprecated
+    public void readUnknownGroup(int fieldNumber, Builder builder) throws IOException {
+        readGroup(fieldNumber, builder, null);
+    }
+
+    public void readMessage(Builder builder, ExtensionRegistryLite extensionRegistry) throws IOException {
+        int length = readRawVarint32();
+        if (this.recursionDepth >= this.recursionLimit) {
+            throw InvalidProtocolBufferException.recursionLimitExceeded();
+        }
+        int oldLimit = pushLimit(length);
+        this.recursionDepth++;
+        builder.mergeFrom(this, extensionRegistry);
+        checkLastTagWas(0);
+        this.recursionDepth--;
+        popLimit(oldLimit);
+    }
+
+    public ByteString readBytes() throws IOException {
+        int size = readRawVarint32();
+        if (size > this.bufferSize - this.bufferPos || size <= 0) {
+            return ByteString.copyFrom(readRawBytes(size));
+        }
+        ByteString result = ByteString.copyFrom(this.buffer, this.bufferPos, size);
+        this.bufferPos += size;
+        return result;
+    }
+
+    public int readUInt32() throws IOException {
+        return readRawVarint32();
+    }
+
+    public int readEnum() throws IOException {
+        return readRawVarint32();
+    }
+
+    public int readSFixed32() throws IOException {
+        return readRawLittleEndian32();
+    }
+
+    public long readSFixed64() throws IOException {
+        return readRawLittleEndian64();
+    }
+
+    public int readSInt32() throws IOException {
+        return decodeZigZag32(readRawVarint32());
+    }
+
+    public long readSInt64() throws IOException {
+        return decodeZigZag64(readRawVarint64());
+    }
+
+    public int readRawVarint32() throws IOException {
+        byte tmp = readRawByte();
+        if (tmp >= (byte) 0) {
+            return tmp;
+        }
+        int result = tmp & TransportMediator.KEYCODE_MEDIA_PAUSE;
+        tmp = readRawByte();
+        if (tmp >= (byte) 0) {
+            return result | (tmp << 7);
+        }
+        result |= (tmp & TransportMediator.KEYCODE_MEDIA_PAUSE) << 7;
+        tmp = readRawByte();
+        if (tmp >= (byte) 0) {
+            return result | (tmp << 14);
+        }
+        result |= (tmp & TransportMediator.KEYCODE_MEDIA_PAUSE) << 14;
+        tmp = readRawByte();
+        if (tmp >= (byte) 0) {
+            return result | (tmp << 21);
+        }
+        result |= (tmp & TransportMediator.KEYCODE_MEDIA_PAUSE) << 21;
+        tmp = readRawByte();
+        result |= tmp << 28;
+        if (tmp >= (byte) 0) {
+            return result;
+        }
+        for (int i = 0; i < 5; i++) {
+            if (readRawByte() >= (byte) 0) {
+                return result;
+            }
+        }
+        throw InvalidProtocolBufferException.malformedVarint();
+    }
+
+    static int readRawVarint32(InputStream input) throws IOException {
+        int result = 0;
+        int offset = 0;
+        while (offset < 32) {
+            int b = input.read();
+            if (b == -1) {
+                throw InvalidProtocolBufferException.truncatedMessage();
+            }
+            result |= (b & TransportMediator.KEYCODE_MEDIA_PAUSE) << offset;
+            if ((b & 128) == 0) {
+                return result;
+            }
+            offset += 7;
+        }
+        while (offset < 64) {
+            b = input.read();
+            if (b == -1) {
+                throw InvalidProtocolBufferException.truncatedMessage();
+            } else if ((b & 128) == 0) {
+                return result;
+            } else {
+                offset += 7;
+            }
+        }
+        throw InvalidProtocolBufferException.malformedVarint();
+    }
+
+    public long readRawVarint64() throws IOException {
+        long result = 0;
+        for (int shift = 0; shift < 64; shift += 7) {
+            byte b = readRawByte();
+            result |= ((long) (b & TransportMediator.KEYCODE_MEDIA_PAUSE)) << shift;
+            if ((b & 128) == 0) {
+                return result;
+            }
+        }
+        throw InvalidProtocolBufferException.malformedVarint();
+    }
+
+    public int readRawLittleEndian32() throws IOException {
+        return (((readRawByte() & 255) | ((readRawByte() & 255) << 8)) | ((readRawByte() & 255) << 16)) | ((readRawByte() & 255) << 24);
+    }
+
+    public long readRawLittleEndian64() throws IOException {
+        return (((((((((long) readRawByte()) & 255) | ((((long) readRawByte()) & 255) << 8)) | ((((long) readRawByte()) & 255) << 16)) | ((((long) readRawByte()) & 255) << 24)) | ((((long) readRawByte()) & 255) << 32)) | ((((long) readRawByte()) & 255) << 40)) | ((((long) readRawByte()) & 255) << 48)) | ((((long) readRawByte()) & 255) << 56);
+    }
+
+    public static int decodeZigZag32(int n) {
+        return (n >>> 1) ^ (-(n & 1));
+    }
+
+    public static long decodeZigZag64(long n) {
+        return (n >>> 1) ^ (-(1 & n));
+    }
+
+    private CodedInputStream(byte[] buffer, int off, int len) {
+        this.currentLimit = Integer.MAX_VALUE;
+        this.recursionLimit = 64;
+        this.sizeLimit = DEFAULT_SIZE_LIMIT;
+        this.buffer = buffer;
+        this.bufferSize = off + len;
+        this.bufferPos = off;
+        this.input = null;
+    }
+
+    private CodedInputStream(InputStream input) {
+        this.currentLimit = Integer.MAX_VALUE;
+        this.recursionLimit = 64;
+        this.sizeLimit = DEFAULT_SIZE_LIMIT;
+        this.buffer = new byte[4096];
+        this.bufferSize = 0;
+        this.bufferPos = 0;
+        this.input = input;
+    }
+
+    public int setRecursionLimit(int limit) {
+        if (limit < 0) {
+            throw new IllegalArgumentException("Recursion limit cannot be negative: " + limit);
+        }
+        int oldLimit = this.recursionLimit;
+        this.recursionLimit = limit;
+        return oldLimit;
+    }
+
+    public int setSizeLimit(int limit) {
+        if (limit < 0) {
+            throw new IllegalArgumentException("Size limit cannot be negative: " + limit);
+        }
+        int oldLimit = this.sizeLimit;
+        this.sizeLimit = limit;
+        return oldLimit;
+    }
+
+    public void resetSizeCounter() {
+        this.totalBytesRetired = 0;
+    }
+
+    public int pushLimit(int byteLimit) throws InvalidProtocolBufferException {
+        if (byteLimit < 0) {
+            throw InvalidProtocolBufferException.negativeSize();
+        }
+        byteLimit += this.totalBytesRetired + this.bufferPos;
+        int oldLimit = this.currentLimit;
+        if (byteLimit > oldLimit) {
+            throw InvalidProtocolBufferException.truncatedMessage();
+        }
+        this.currentLimit = byteLimit;
+        recomputeBufferSizeAfterLimit();
+        return oldLimit;
+    }
+
+    private void recomputeBufferSizeAfterLimit() {
+        this.bufferSize += this.bufferSizeAfterLimit;
+        int bufferEnd = this.totalBytesRetired + this.bufferSize;
+        if (bufferEnd > this.currentLimit) {
+            this.bufferSizeAfterLimit = bufferEnd - this.currentLimit;
+            this.bufferSize -= this.bufferSizeAfterLimit;
+            return;
+        }
+        this.bufferSizeAfterLimit = 0;
+    }
+
+    public void popLimit(int oldLimit) {
+        this.currentLimit = oldLimit;
+        recomputeBufferSizeAfterLimit();
+    }
+
+    public int getBytesUntilLimit() {
+        if (this.currentLimit == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return this.currentLimit - (this.totalBytesRetired + this.bufferPos);
+    }
+
+    public boolean isAtEnd() throws IOException {
+        return this.bufferPos == this.bufferSize && !refillBuffer(false);
+    }
+
+    private boolean refillBuffer(boolean mustSucceed) throws IOException {
+        if (this.bufferPos < this.bufferSize) {
+            throw new IllegalStateException("refillBuffer() called when buffer wasn't empty.");
+        } else if (this.totalBytesRetired + this.bufferSize != this.currentLimit) {
+            this.totalBytesRetired += this.bufferSize;
+            this.bufferPos = 0;
+            this.bufferSize = this.input == null ? -1 : this.input.read(this.buffer);
+            if (this.bufferSize == 0 || this.bufferSize < -1) {
+                throw new IllegalStateException("InputStream#read(byte[]) returned invalid result: " + this.bufferSize + "\nThe InputStream implementation is buggy.");
+            } else if (this.bufferSize == -1) {
+                this.bufferSize = 0;
+                if (!mustSucceed) {
+                    return false;
+                }
+                throw InvalidProtocolBufferException.truncatedMessage();
+            } else {
+                recomputeBufferSizeAfterLimit();
+                int totalBytesRead = (this.totalBytesRetired + this.bufferSize) + this.bufferSizeAfterLimit;
+                if (totalBytesRead <= this.sizeLimit && totalBytesRead >= 0) {
+                    return true;
+                }
+                throw InvalidProtocolBufferException.sizeLimitExceeded();
+            }
+        } else if (!mustSucceed) {
+            return false;
+        } else {
+            throw InvalidProtocolBufferException.truncatedMessage();
+        }
+    }
+
+    public byte readRawByte() throws IOException {
+        if (this.bufferPos == this.bufferSize) {
+            refillBuffer(true);
+        }
+        byte[] bArr = this.buffer;
+        int i = this.bufferPos;
+        this.bufferPos = i + 1;
+        return bArr[i];
+    }
+
+    public byte[] readRawBytes(int size) throws IOException {
+        if (size < 0) {
+            throw InvalidProtocolBufferException.negativeSize();
+        } else if ((this.totalBytesRetired + this.bufferPos) + size > this.currentLimit) {
+            skipRawBytes((this.currentLimit - this.totalBytesRetired) - this.bufferPos);
+            throw InvalidProtocolBufferException.truncatedMessage();
+        } else if (size <= this.bufferSize - this.bufferPos) {
+            bytes = new byte[size];
+            System.arraycopy(this.buffer, this.bufferPos, bytes, 0, size);
+            this.bufferPos += size;
+            return bytes;
+        } else if (size < 4096) {
+            bytes = new byte[size];
+            pos = this.bufferSize - this.bufferPos;
+            System.arraycopy(this.buffer, this.bufferPos, bytes, 0, pos);
+            this.bufferPos = this.bufferSize;
+            refillBuffer(true);
+            while (size - pos > this.bufferSize) {
+                System.arraycopy(this.buffer, 0, bytes, pos, this.bufferSize);
+                pos += this.bufferSize;
+                this.bufferPos = this.bufferSize;
+                refillBuffer(true);
+            }
+            System.arraycopy(this.buffer, 0, bytes, pos, size - pos);
+            this.bufferPos = size - pos;
+            return bytes;
+        } else {
+            byte[] chunk;
+            int originalBufferPos = this.bufferPos;
+            int originalBufferSize = this.bufferSize;
+            this.totalBytesRetired += this.bufferSize;
+            this.bufferPos = 0;
+            this.bufferSize = 0;
+            int sizeLeft = size - (originalBufferSize - originalBufferPos);
+            List<byte[]> chunks = new ArrayList();
+            while (sizeLeft > 0) {
+                chunk = new byte[Math.min(sizeLeft, 4096)];
+                pos = 0;
+                while (pos < chunk.length) {
+                    int n = this.input == null ? -1 : this.input.read(chunk, pos, chunk.length - pos);
+                    if (n == -1) {
+                        throw InvalidProtocolBufferException.truncatedMessage();
+                    }
+                    this.totalBytesRetired += n;
+                    pos += n;
+                }
+                sizeLeft -= chunk.length;
+                chunks.add(chunk);
+            }
+            bytes = new byte[size];
+            pos = originalBufferSize - originalBufferPos;
+            System.arraycopy(this.buffer, originalBufferPos, bytes, 0, pos);
+            for (byte[] chunk2 : chunks) {
+                System.arraycopy(chunk2, 0, bytes, pos, chunk2.length);
+                pos += chunk2.length;
+            }
+            return bytes;
+        }
+    }
+
+    public void skipRawBytes(int size) throws IOException {
+        if (size < 0) {
+            throw InvalidProtocolBufferException.negativeSize();
+        } else if ((this.totalBytesRetired + this.bufferPos) + size > this.currentLimit) {
+            skipRawBytes((this.currentLimit - this.totalBytesRetired) - this.bufferPos);
+            throw InvalidProtocolBufferException.truncatedMessage();
+        } else if (size <= this.bufferSize - this.bufferPos) {
+            this.bufferPos += size;
+        } else {
+            int pos = this.bufferSize - this.bufferPos;
+            this.totalBytesRetired += pos;
+            this.bufferPos = 0;
+            this.bufferSize = 0;
+            while (pos < size) {
+                int n = this.input == null ? -1 : (int) this.input.skip((long) (size - pos));
+                if (n <= 0) {
+                    throw InvalidProtocolBufferException.truncatedMessage();
+                }
+                pos += n;
+                this.totalBytesRetired += n;
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/google/protobuf/CodedInputStream.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

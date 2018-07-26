@@ -9,7 +9,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.comapi.setting.BNSettingManager;
 import com.baidu.navisdk.model.modelfactory.NaviDataEngine;
@@ -18,119 +20,97 @@ import com.baidu.navisdk.ui.routeguide.control.RGRouteSortController;
 import com.baidu.navisdk.ui.routeguide.model.RGRouteSortModel;
 import java.util.ArrayList;
 
-public class RoutePlanPreferenceDialogAdapter
-  extends BaseAdapter
-{
-  private static final String TAG = "RoutePlanPreferenceDialogAdapter";
-  private Context mContext;
-  private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener()
-  {
-    public void onItemClick(AdapterView<?> paramAnonymousAdapterView, View paramAnonymousView, int paramAnonymousInt, long paramAnonymousLong)
-    {
-      if ((RoutePlanPreferenceDialogAdapter.this.routeSortList == null) || (RoutePlanPreferenceDialogAdapter.this.routeSortList.size() <= paramAnonymousInt) || (RoutePlanPreferenceDialogAdapter.this.routeSortList.size() < 0)) {}
-      do
-      {
-        return;
-        paramAnonymousAdapterView = (RGRouteSortModel)RoutePlanPreferenceDialogAdapter.this.routeSortList.get(paramAnonymousInt);
-      } while (paramAnonymousAdapterView == null);
-      if ((RGRouteSortController.getInstance().getPreferValue() & 0x20) != 0)
-      {
-        paramAnonymousInt = paramAnonymousAdapterView.mPreferValue | 0x20;
-        label77:
-        if (paramAnonymousInt == RGRouteSortController.getInstance().getPreferValue()) {
-          break label153;
+public class RoutePlanPreferenceDialogAdapter extends BaseAdapter {
+    private static final String TAG = "RoutePlanPreferenceDialogAdapter";
+    private Context mContext;
+    private OnItemClickListener mOnItemClickListener = new C39541();
+    private RoutePlanModel mRoutePlanModel = null;
+    private ArrayList<RGRouteSortModel> routeSortList;
+
+    /* renamed from: com.baidu.navi.routedetails.RoutePlanPreferenceDialogAdapter$1 */
+    class C39541 implements OnItemClickListener {
+        C39541() {
         }
-      }
-      label153:
-      for (int i = 1;; i = 0)
-      {
-        BNaviModuleManager.setLastPreferValue(paramAnonymousInt);
-        BNSettingManager.setDefaultRouteSort(paramAnonymousInt);
-        RGRouteSortController.getInstance().setPreferValue(paramAnonymousInt);
-        BNRoutePlaner.getInstance().setCalcPrference(paramAnonymousInt);
-        if ((i == 0) || (RoutePlanPreferenceDialogAdapter.this.mRoutePlanModel == null)) {
-          break;
+
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            if (RoutePlanPreferenceDialogAdapter.this.routeSortList != null && RoutePlanPreferenceDialogAdapter.this.routeSortList.size() > position && RoutePlanPreferenceDialogAdapter.this.routeSortList.size() >= 0) {
+                RGRouteSortModel model = (RGRouteSortModel) RoutePlanPreferenceDialogAdapter.this.routeSortList.get(position);
+                if (model != null) {
+                    int preferValue;
+                    boolean isPreferChange;
+                    if ((RGRouteSortController.getInstance().getPreferValue() & 32) != 0) {
+                        preferValue = model.mPreferValue | 32;
+                    } else {
+                        preferValue = model.mPreferValue;
+                    }
+                    if (preferValue != RGRouteSortController.getInstance().getPreferValue()) {
+                        isPreferChange = true;
+                    } else {
+                        isPreferChange = false;
+                    }
+                    BNaviModuleManager.setLastPreferValue(preferValue);
+                    BNSettingManager.setDefaultRouteSort(preferValue);
+                    RGRouteSortController.getInstance().setPreferValue(preferValue);
+                    BNRoutePlaner.getInstance().setCalcPrference(preferValue);
+                    if (isPreferChange && RoutePlanPreferenceDialogAdapter.this.mRoutePlanModel != null) {
+                        BNRoutePlaner.getInstance().setPointsToCalcRoute(RoutePlanPreferenceDialogAdapter.this.mRoutePlanModel.getRouteInput(), 0);
+                    }
+                }
+            }
         }
-        BNRoutePlaner.getInstance().setPointsToCalcRoute(RoutePlanPreferenceDialogAdapter.this.mRoutePlanModel.getRouteInput(), 0);
-        return;
-        paramAnonymousInt = paramAnonymousAdapterView.mPreferValue;
-        break label77;
-      }
     }
-  };
-  private RoutePlanModel mRoutePlanModel = null;
-  private ArrayList<RGRouteSortModel> routeSortList;
-  
-  public RoutePlanPreferenceDialogAdapter(Context paramContext)
-  {
-    this.mContext = paramContext;
-    this.routeSortList = RGRouteSortController.getInstance().getRouteSortList();
-    this.mRoutePlanModel = ((RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel"));
-  }
-  
-  public int getCount()
-  {
-    this.routeSortList = RGRouteSortController.getInstance().getRouteSortList();
-    if (this.routeSortList == null) {
-      return 0;
+
+    private static class ViewHolder {
+        ImageView ivItemCheck;
+        View line;
+        TextView tvItemName;
+
+        private ViewHolder() {
+        }
     }
-    return this.routeSortList.size();
-  }
-  
-  public Object getItem(int paramInt)
-  {
-    if ((this.routeSortList != null) && (this.routeSortList.size() > paramInt)) {
-      return this.routeSortList.get(paramInt);
+
+    public RoutePlanPreferenceDialogAdapter(Context context) {
+        this.mContext = context;
+        this.routeSortList = RGRouteSortController.getInstance().getRouteSortList();
+        this.mRoutePlanModel = (RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN);
     }
-    return null;
-  }
-  
-  public long getItemId(int paramInt)
-  {
-    return 0L;
-  }
-  
-  public AdapterView.OnItemClickListener getOnItemClickListener()
-  {
-    return this.mOnItemClickListener;
-  }
-  
-  public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    paramView = new ViewHolder(null);
-    paramViewGroup = LayoutInflater.from(this.mContext).inflate(2130969003, null);
-    paramView.tvItemName = ((TextView)paramViewGroup.findViewById(2131624662));
-    paramView.line = paramViewGroup.findViewById(2131624067);
-    paramView.ivItemCheck = ((ImageView)paramViewGroup.findViewById(2131626030));
-    if (this.routeSortList == null) {}
-    RGRouteSortModel localRGRouteSortModel;
-    do
-    {
-      do
-      {
-        return paramViewGroup;
-      } while ((paramInt < 0) || (paramInt >= this.routeSortList.size()));
-      localRGRouteSortModel = (RGRouteSortModel)this.routeSortList.get(paramInt);
-    } while (localRGRouteSortModel == null);
-    paramView.tvItemName.setText(localRGRouteSortModel.mItemName);
-    if ((localRGRouteSortModel.mPreferValue & RGRouteSortController.getInstance().getPreferValue()) != 0) {}
-    for (paramInt = 0;; paramInt = 8)
-    {
-      paramView.ivItemCheck.setVisibility(paramInt);
-      return paramViewGroup;
+
+    public int getCount() {
+        this.routeSortList = RGRouteSortController.getInstance().getRouteSortList();
+        if (this.routeSortList == null) {
+            return 0;
+        }
+        return this.routeSortList.size();
     }
-  }
-  
-  private static class ViewHolder
-  {
-    ImageView ivItemCheck;
-    View line;
-    TextView tvItemName;
-  }
+
+    public Object getItem(int position) {
+        if (this.routeSortList == null || this.routeSortList.size() <= position) {
+            return null;
+        }
+        return this.routeSortList.get(position);
+    }
+
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder cache = new ViewHolder();
+        convertView = LayoutInflater.from(this.mContext).inflate(C0965R.layout.routeplan_preference_list_item, null);
+        cache.tvItemName = (TextView) convertView.findViewById(C0965R.id.tv_item_name);
+        cache.line = convertView.findViewById(C0965R.id.cl_line);
+        cache.ivItemCheck = (ImageView) convertView.findViewById(C0965R.id.iv_item_check);
+        if (this.routeSortList != null && position >= 0 && position < this.routeSortList.size()) {
+            RGRouteSortModel model = (RGRouteSortModel) this.routeSortList.get(position);
+            if (model != null) {
+                cache.tvItemName.setText(model.mItemName);
+                cache.ivItemCheck.setVisibility((model.mPreferValue & RGRouteSortController.getInstance().getPreferValue()) != 0 ? 0 : 8);
+            }
+        }
+        return convertView;
+    }
+
+    public OnItemClickListener getOnItemClickListener() {
+        return this.mOnItemClickListener;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/routedetails/RoutePlanPreferenceDialogAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

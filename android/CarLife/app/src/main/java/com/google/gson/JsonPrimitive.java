@@ -1,289 +1,189 @@
 package com.google.gson;
 
-import com.google.gson.internal..Gson.Preconditions;
+import com.google.gson.internal.C$Gson$Preconditions;
 import com.google.gson.internal.LazilyParsedNumber;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public final class JsonPrimitive
-  extends JsonElement
-{
-  private static final Class<?>[] PRIMITIVE_TYPES = { Integer.TYPE, Long.TYPE, Short.TYPE, Float.TYPE, Double.TYPE, Byte.TYPE, Boolean.TYPE, Character.TYPE, Integer.class, Long.class, Short.class, Float.class, Double.class, Byte.class, Boolean.class, Character.class };
-  private Object value;
-  
-  public JsonPrimitive(Boolean paramBoolean)
-  {
-    setValue(paramBoolean);
-  }
-  
-  public JsonPrimitive(Character paramCharacter)
-  {
-    setValue(paramCharacter);
-  }
-  
-  public JsonPrimitive(Number paramNumber)
-  {
-    setValue(paramNumber);
-  }
-  
-  JsonPrimitive(Object paramObject)
-  {
-    setValue(paramObject);
-  }
-  
-  public JsonPrimitive(String paramString)
-  {
-    setValue(paramString);
-  }
-  
-  private static boolean isIntegral(JsonPrimitive paramJsonPrimitive)
-  {
-    boolean bool2 = false;
-    boolean bool1 = bool2;
-    if ((paramJsonPrimitive.value instanceof Number))
-    {
-      paramJsonPrimitive = (Number)paramJsonPrimitive.value;
-      if ((!(paramJsonPrimitive instanceof BigInteger)) && (!(paramJsonPrimitive instanceof Long)) && (!(paramJsonPrimitive instanceof Integer)) && (!(paramJsonPrimitive instanceof Short)))
-      {
-        bool1 = bool2;
-        if (!(paramJsonPrimitive instanceof Byte)) {}
-      }
-      else
-      {
-        bool1 = true;
-      }
+public final class JsonPrimitive extends JsonElement {
+    private static final Class<?>[] PRIMITIVE_TYPES = new Class[]{Integer.TYPE, Long.TYPE, Short.TYPE, Float.TYPE, Double.TYPE, Byte.TYPE, Boolean.TYPE, Character.TYPE, Integer.class, Long.class, Short.class, Float.class, Double.class, Byte.class, Boolean.class, Character.class};
+    private Object value;
+
+    public JsonPrimitive(Boolean bool) {
+        setValue(bool);
     }
-    return bool1;
-  }
-  
-  private static boolean isPrimitiveOrString(Object paramObject)
-  {
-    if ((paramObject instanceof String)) {
-      return true;
+
+    public JsonPrimitive(Number number) {
+        setValue(number);
     }
-    paramObject = paramObject.getClass();
-    Class[] arrayOfClass = PRIMITIVE_TYPES;
-    int j = arrayOfClass.length;
-    int i = 0;
-    for (;;)
-    {
-      if (i >= j) {
-        break label45;
-      }
-      if (arrayOfClass[i].isAssignableFrom((Class)paramObject)) {
-        break;
-      }
-      i += 1;
+
+    public JsonPrimitive(String string) {
+        setValue(string);
     }
-    label45:
-    return false;
-  }
-  
-  JsonPrimitive deepCopy()
-  {
-    return this;
-  }
-  
-  public boolean equals(Object paramObject)
-  {
-    boolean bool2 = false;
-    if (this == paramObject) {}
-    do
-    {
-      do
-      {
-        return true;
-        if ((paramObject == null) || (getClass() != paramObject.getClass())) {
-          return false;
+
+    public JsonPrimitive(Character c) {
+        setValue(c);
+    }
+
+    JsonPrimitive(Object primitive) {
+        setValue(primitive);
+    }
+
+    JsonPrimitive deepCopy() {
+        return this;
+    }
+
+    void setValue(Object primitive) {
+        if (primitive instanceof Character) {
+            this.value = String.valueOf(((Character) primitive).charValue());
+            return;
         }
-        paramObject = (JsonPrimitive)paramObject;
-        if (this.value != null) {
-          break;
+        boolean z = (primitive instanceof Number) || isPrimitiveOrString(primitive);
+        C$Gson$Preconditions.checkArgument(z);
+        this.value = primitive;
+    }
+
+    public boolean isBoolean() {
+        return this.value instanceof Boolean;
+    }
+
+    Boolean getAsBooleanWrapper() {
+        return (Boolean) this.value;
+    }
+
+    public boolean getAsBoolean() {
+        if (isBoolean()) {
+            return getAsBooleanWrapper().booleanValue();
         }
-      } while (((JsonPrimitive)paramObject).value == null);
-      return false;
-      if ((!isIntegral(this)) || (!isIntegral((JsonPrimitive)paramObject))) {
-        break;
-      }
-    } while (getAsNumber().longValue() == ((JsonPrimitive)paramObject).getAsNumber().longValue());
-    return false;
-    if (((this.value instanceof Number)) && ((((JsonPrimitive)paramObject).value instanceof Number)))
-    {
-      double d1 = getAsNumber().doubleValue();
-      double d2 = ((JsonPrimitive)paramObject).getAsNumber().doubleValue();
-      boolean bool1;
-      if (d1 != d2)
-      {
-        bool1 = bool2;
-        if (Double.isNaN(d1))
-        {
-          bool1 = bool2;
-          if (!Double.isNaN(d2)) {}
+        return Boolean.parseBoolean(getAsString());
+    }
+
+    public boolean isNumber() {
+        return this.value instanceof Number;
+    }
+
+    public Number getAsNumber() {
+        return this.value instanceof String ? new LazilyParsedNumber((String) this.value) : (Number) this.value;
+    }
+
+    public boolean isString() {
+        return this.value instanceof String;
+    }
+
+    public String getAsString() {
+        if (isNumber()) {
+            return getAsNumber().toString();
         }
-      }
-      else
-      {
-        bool1 = true;
-      }
-      return bool1;
+        if (isBoolean()) {
+            return getAsBooleanWrapper().toString();
+        }
+        return (String) this.value;
     }
-    return this.value.equals(((JsonPrimitive)paramObject).value);
-  }
-  
-  public BigDecimal getAsBigDecimal()
-  {
-    if ((this.value instanceof BigDecimal)) {
-      return (BigDecimal)this.value;
+
+    public double getAsDouble() {
+        return isNumber() ? getAsNumber().doubleValue() : Double.parseDouble(getAsString());
     }
-    return new BigDecimal(this.value.toString());
-  }
-  
-  public BigInteger getAsBigInteger()
-  {
-    if ((this.value instanceof BigInteger)) {
-      return (BigInteger)this.value;
+
+    public BigDecimal getAsBigDecimal() {
+        return this.value instanceof BigDecimal ? (BigDecimal) this.value : new BigDecimal(this.value.toString());
     }
-    return new BigInteger(this.value.toString());
-  }
-  
-  public boolean getAsBoolean()
-  {
-    if (isBoolean()) {
-      return getAsBooleanWrapper().booleanValue();
+
+    public BigInteger getAsBigInteger() {
+        return this.value instanceof BigInteger ? (BigInteger) this.value : new BigInteger(this.value.toString());
     }
-    return Boolean.parseBoolean(getAsString());
-  }
-  
-  Boolean getAsBooleanWrapper()
-  {
-    return (Boolean)this.value;
-  }
-  
-  public byte getAsByte()
-  {
-    if (isNumber()) {
-      return getAsNumber().byteValue();
+
+    public float getAsFloat() {
+        return isNumber() ? getAsNumber().floatValue() : Float.parseFloat(getAsString());
     }
-    return Byte.parseByte(getAsString());
-  }
-  
-  public char getAsCharacter()
-  {
-    return getAsString().charAt(0);
-  }
-  
-  public double getAsDouble()
-  {
-    if (isNumber()) {
-      return getAsNumber().doubleValue();
+
+    public long getAsLong() {
+        return isNumber() ? getAsNumber().longValue() : Long.parseLong(getAsString());
     }
-    return Double.parseDouble(getAsString());
-  }
-  
-  public float getAsFloat()
-  {
-    if (isNumber()) {
-      return getAsNumber().floatValue();
+
+    public short getAsShort() {
+        return isNumber() ? getAsNumber().shortValue() : Short.parseShort(getAsString());
     }
-    return Float.parseFloat(getAsString());
-  }
-  
-  public int getAsInt()
-  {
-    if (isNumber()) {
-      return getAsNumber().intValue();
+
+    public int getAsInt() {
+        return isNumber() ? getAsNumber().intValue() : Integer.parseInt(getAsString());
     }
-    return Integer.parseInt(getAsString());
-  }
-  
-  public long getAsLong()
-  {
-    if (isNumber()) {
-      return getAsNumber().longValue();
+
+    public byte getAsByte() {
+        return isNumber() ? getAsNumber().byteValue() : Byte.parseByte(getAsString());
     }
-    return Long.parseLong(getAsString());
-  }
-  
-  public Number getAsNumber()
-  {
-    if ((this.value instanceof String)) {
-      return new LazilyParsedNumber((String)this.value);
+
+    public char getAsCharacter() {
+        return getAsString().charAt(0);
     }
-    return (Number)this.value;
-  }
-  
-  public short getAsShort()
-  {
-    if (isNumber()) {
-      return getAsNumber().shortValue();
+
+    private static boolean isPrimitiveOrString(Object target) {
+        if (target instanceof String) {
+            return true;
+        }
+        Class<?> classOfPrimitive = target.getClass();
+        for (Class<?> standardPrimitive : PRIMITIVE_TYPES) {
+            if (standardPrimitive.isAssignableFrom(classOfPrimitive)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return Short.parseShort(getAsString());
-  }
-  
-  public String getAsString()
-  {
-    if (isNumber()) {
-      return getAsNumber().toString();
+
+    public int hashCode() {
+        if (this.value == null) {
+            return 31;
+        }
+        long value;
+        if (isIntegral(this)) {
+            value = getAsNumber().longValue();
+            return (int) ((value >>> 32) ^ value);
+        } else if (!(this.value instanceof Number)) {
+            return this.value.hashCode();
+        } else {
+            value = Double.doubleToLongBits(getAsNumber().doubleValue());
+            return (int) ((value >>> 32) ^ value);
+        }
     }
-    if (isBoolean()) {
-      return getAsBooleanWrapper().toString();
+
+    public boolean equals(Object obj) {
+        boolean z = false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        JsonPrimitive other = (JsonPrimitive) obj;
+        if (this.value == null) {
+            if (other.value != null) {
+                return false;
+            }
+            return true;
+        } else if (isIntegral(this) && isIntegral(other)) {
+            if (getAsNumber().longValue() != other.getAsNumber().longValue()) {
+                return false;
+            }
+            return true;
+        } else if (!(this.value instanceof Number) || !(other.value instanceof Number)) {
+            return this.value.equals(other.value);
+        } else {
+            double a = getAsNumber().doubleValue();
+            double b = other.getAsNumber().doubleValue();
+            if (a == b || (Double.isNaN(a) && Double.isNaN(b))) {
+                z = true;
+            }
+            return z;
+        }
     }
-    return (String)this.value;
-  }
-  
-  public int hashCode()
-  {
-    if (this.value == null) {
-      return 31;
+
+    private static boolean isIntegral(JsonPrimitive primitive) {
+        if (!(primitive.value instanceof Number)) {
+            return false;
+        }
+        Number number = primitive.value;
+        if ((number instanceof BigInteger) || (number instanceof Long) || (number instanceof Integer) || (number instanceof Short) || (number instanceof Byte)) {
+            return true;
+        }
+        return false;
     }
-    long l;
-    if (isIntegral(this))
-    {
-      l = getAsNumber().longValue();
-      return (int)(l >>> 32 ^ l);
-    }
-    if ((this.value instanceof Number))
-    {
-      l = Double.doubleToLongBits(getAsNumber().doubleValue());
-      return (int)(l >>> 32 ^ l);
-    }
-    return this.value.hashCode();
-  }
-  
-  public boolean isBoolean()
-  {
-    return this.value instanceof Boolean;
-  }
-  
-  public boolean isNumber()
-  {
-    return this.value instanceof Number;
-  }
-  
-  public boolean isString()
-  {
-    return this.value instanceof String;
-  }
-  
-  void setValue(Object paramObject)
-  {
-    if ((paramObject instanceof Character))
-    {
-      this.value = String.valueOf(((Character)paramObject).charValue());
-      return;
-    }
-    if (((paramObject instanceof Number)) || (isPrimitiveOrString(paramObject))) {}
-    for (boolean bool = true;; bool = false)
-    {
-      .Gson.Preconditions.checkArgument(bool);
-      this.value = paramObject;
-      return;
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/JsonPrimitive.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

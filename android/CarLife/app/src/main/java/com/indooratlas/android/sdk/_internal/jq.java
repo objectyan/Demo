@@ -1,32 +1,25 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class jq
-  extends jp
-{
-  public final int a(kf paramkf)
-    throws jw
-  {
-    if (c(paramkf) == 13) {
-      return jo.b.a;
+import com.indooratlas.android.sdk._internal.jo.C5994b;
+
+public final class jq extends jp {
+    /* renamed from: a */
+    public final int mo4796a(kf kfVar) throws jw {
+        if (jp.m21408c((kk) kfVar) == 13) {
+            return C5994b.f24515a;
+        }
+        return C5994b.f24516b;
     }
-    return jo.b.b;
-  }
-  
-  public final kg a(kg paramkg)
-  {
-    super.a(paramkg);
-    paramkg.a("Sec-WebSocket-Version", "13");
-    return paramkg;
-  }
-  
-  public final jo c()
-  {
-    return new jq();
-  }
+
+    /* renamed from: a */
+    public final kg mo4798a(kg kgVar) {
+        super.mo4798a(kgVar);
+        kgVar.mo4819a("Sec-WebSocket-Version", "13");
+        return kgVar;
+    }
+
+    /* renamed from: c */
+    public final jo mo4805c() {
+        return new jq();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/jq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

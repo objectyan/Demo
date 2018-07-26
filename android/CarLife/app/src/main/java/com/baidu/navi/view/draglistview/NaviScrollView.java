@@ -5,42 +5,31 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import com.baidu.carlife.C0965R;
 
-public class NaviScrollView
-  extends ScrollView
-{
-  private ImageView mDragImage;
-  
-  public NaviScrollView(Context paramContext)
-  {
-    super(paramContext);
-  }
-  
-  public NaviScrollView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-  }
-  
-  public NaviScrollView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-  }
-  
-  public boolean onInterceptTouchEvent(MotionEvent paramMotionEvent)
-  {
-    int i = (int)paramMotionEvent.getRawX();
-    this.mDragImage = ((ImageView)findViewById(2131624592));
-    int[] arrayOfInt = new int[2];
-    this.mDragImage.getLocationOnScreen(arrayOfInt);
-    if ((i > arrayOfInt[0] - 20) && (i < arrayOfInt[0] + this.mDragImage.getWidth() + 20)) {
-      return false;
+public class NaviScrollView extends ScrollView {
+    private ImageView mDragImage;
+
+    public NaviScrollView(Context context) {
+        super(context);
     }
-    return super.onInterceptTouchEvent(paramMotionEvent);
-  }
+
+    public NaviScrollView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public NaviScrollView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
+
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int viewRawX = (int) ev.getRawX();
+        this.mDragImage = (ImageView) findViewById(C0965R.id.iv_drag);
+        int[] location = new int[2];
+        this.mDragImage.getLocationOnScreen(location);
+        if (viewRawX <= location[0] - 20 || viewRawX >= (location[0] + this.mDragImage.getWidth()) + 20) {
+            return super.onInterceptTouchEvent(ev);
+        }
+        return false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/draglistview/NaviScrollView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

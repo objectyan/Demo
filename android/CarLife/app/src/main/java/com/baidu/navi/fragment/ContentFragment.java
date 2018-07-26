@@ -11,421 +11,361 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.baidu.carlife.core.c;
-import com.baidu.carlife.core.i;
-import com.baidu.carlife.h.a;
-import com.baidu.carlife.logic.t;
-import com.baidu.carlife.util.r;
-import com.baidu.carlife.view.a.b;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1192c;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.logic.C1872t;
+import com.baidu.carlife.p084h.C1606a;
+import com.baidu.carlife.util.C2188r;
+import com.baidu.carlife.view.p104a.C2251b;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navi.util.StatisticManager;
 import com.baidu.navisdk.comapi.voicecommand.BNVoiceCommandController;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
-public abstract class ContentFragment
-  extends BaseFragment
-  implements a
-{
-  public static final String TAG = "Framework";
-  protected boolean isAddFt = false;
-  public boolean isDisplayed = false;
-  protected boolean isResumed = false;
-  public Bundle mBackBundle;
-  protected View mContentView;
-  protected int mModuleFrom;
-  protected boolean mNeedInitView = false;
-  protected boolean mNeedRetoreView = false;
-  public Bundle mShowBundle;
-  protected String mSkinName;
-  
-  public void driving() {}
-  
-  protected long getAnimationTotalDuration(Collection<Animation> paramCollection)
-  {
-    long l1 = 0L;
-    long l2 = l1;
-    if (paramCollection != null)
-    {
-      paramCollection = paramCollection.iterator();
-      for (;;)
-      {
-        l2 = l1;
-        if (!paramCollection.hasNext()) {
-          break;
+public abstract class ContentFragment extends BaseFragment implements C1606a {
+    public static final String TAG = "Framework";
+    protected boolean isAddFt;
+    public boolean isDisplayed;
+    protected boolean isResumed;
+    public Bundle mBackBundle;
+    protected View mContentView;
+    protected int mModuleFrom;
+    protected boolean mNeedInitView;
+    protected boolean mNeedRetoreView;
+    public Bundle mShowBundle;
+    protected String mSkinName;
+
+    /* renamed from: com.baidu.navi.fragment.ContentFragment$1 */
+    class C37871 implements OnClickListener {
+        C37871() {
         }
-        Animation localAnimation = (Animation)paramCollection.next();
-        l1 = Math.max(localAnimation.getStartOffset() + localAnimation.getDuration(), l1);
-      }
+
+        public void onClick(View v) {
+            ContentFragment.this.back();
+        }
     }
-    return l2;
-  }
-  
-  public boolean isAddFt()
-  {
-    return this.isAddFt;
-  }
-  
-  protected boolean isGausianFragment()
-  {
-    return getCurrentFragmentType() == 737;
-  }
-  
-  public boolean isMapPage()
-  {
-    return false;
-  }
-  
-  public void loge(String paramString) {}
-  
-  public void onAttach(Context paramContext)
-  {
-    super.onAttach(paramContext);
-  }
-  
-  public boolean onBackPressed()
-  {
-    return false;
-  }
-  
-  protected abstract View onCreateContentView(LayoutInflater paramLayoutInflater);
-  
-  public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup, Bundle paramBundle)
-  {
-    super.onCreateView(paramLayoutInflater, paramViewGroup, paramBundle);
-    this.isAddFt = false;
-    paramViewGroup = getArguments();
-    if (paramViewGroup != null)
-    {
-      if (paramViewGroup.containsKey("back_bundle")) {
-        this.mBackBundle = paramViewGroup.getBundle("back_bundle");
-      }
-      if (paramViewGroup.containsKey("key_fragment_type")) {
-        this.fragmentType = paramViewGroup.getInt("key_fragment_type");
-      }
-      this.mShowBundle = paramViewGroup.getBundle("show_bundle");
-      if ((this.mShowBundle != null) && (this.mShowBundle.containsKey("module_from"))) {
-        this.mModuleFrom = this.mShowBundle.getInt("module_from");
-      }
+
+    /* renamed from: com.baidu.navi.fragment.ContentFragment$2 */
+    class C37882 implements OnClickListener {
+        C37882() {
+        }
+
+        public void onClick(View v) {
+            ContentFragment.this.back();
+        }
     }
-    int i;
-    boolean bool;
-    if (isMapPage())
-    {
-      showMapFragment();
-      i = c.a().g();
-      bool = StyleManager.getRealDayStyle();
-      paramViewGroup = t.a().c();
-      if (this.mContentView == null) {
-        break label278;
-      }
-      paramLayoutInflater = (ViewGroup)this.mContentView.getParent();
-      if (paramLayoutInflater != null) {
-        paramLayoutInflater.removeView(this.mContentView);
-      }
-      this.mViewCreated = true;
-      if (this.mOrientation != i) {
-        updateOrientation(i);
-      }
-      if (this.mDayStyle != bool) {
-        updateStyle(bool);
-      }
-      if (!paramViewGroup.equals(this.mSkinName))
-      {
-        i.b("Framework", "onCreateView skin");
-        onUpdateSkin();
-        this.mSkinName = paramViewGroup;
-      }
-    }
-    for (;;)
-    {
-      if ((!isMapPage()) && (this.mContentView != null)) {
-        this.mContentView.setClickable(true);
-      }
-      if (this.fragmentType == getCurrentFragmentType()) {
-        onInitFocusAreas();
-      }
-      onInit();
-      return this.mContentView;
-      hideMapFragment();
-      break;
-      label278:
-      this.mContentView = onCreateContentView(paramLayoutInflater);
-      this.mViewCreated = true;
-      updateOrientation(i);
-      updateStyle(bool);
-      this.mSkinName = t.a().c();
-      onUpdateSkin();
-    }
-  }
-  
-  public void onDestroy()
-  {
-    super.onDestroy();
-    if (!isNaviMapFragment()) {
-      hideMapFragment();
-    }
-  }
-  
-  public void onDestroyView()
-  {
-    this.mViewCreated = false;
-    this.mNeedInitView = false;
-    this.mNeedRetoreView = false;
-    this.isDisplayed = false;
-    super.onDestroyView();
-  }
-  
-  public void onHiddenChanged(boolean paramBoolean)
-  {
-    if (!paramBoolean)
-    {
-      if (!isMapPage()) {
-        break label67;
-      }
-      showMapFragment();
-    }
-    for (;;)
-    {
-      super.onHiddenChanged(paramBoolean);
-      String str = t.a().c();
-      if ((!paramBoolean) && (!str.equals(this.mSkinName)))
-      {
-        i.b("Framework", "onHiddenChanged Skin");
-        onUpdateSkin();
-        this.mSkinName = str;
-      }
-      if (!paramBoolean) {
-        onInitFocusAreas();
-      }
-      return;
-      label67:
-      hideMapFragment();
-    }
-  }
-  
-  protected void onInit()
-  {
-    if (this.mNeedInitView)
-    {
-      onInitView();
-      this.mNeedInitView = false;
-    }
-    if (this.mNeedRetoreView)
-    {
-      onRestoreView();
-      this.mNeedRetoreView = false;
-    }
-  }
-  
-  public void onInitFocusAreas() {}
-  
-  protected abstract void onInitView();
-  
-  public void onPause()
-  {
-    try
-    {
-      if (this.isResumed)
-      {
+
+    protected abstract View onCreateContentView(LayoutInflater layoutInflater);
+
+    protected abstract void onInitView();
+
+    public ContentFragment() {
+        this.isDisplayed = false;
+        this.mNeedInitView = false;
+        this.mNeedRetoreView = false;
         this.isResumed = false;
-        StatisticManager.onPageEnd(mActivity, getClass().getSimpleName());
-      }
-      super.onPause();
-      return;
+        this.isAddFt = false;
+        this.isDisplayed = false;
+        this.isResumed = false;
     }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        i.a("", localException.toString());
-      }
+
+    public boolean isAddFt() {
+        return this.isAddFt;
     }
-  }
-  
-  protected void onRestoreView() {}
-  
-  public void onResume()
-  {
-    this.isDisplayed = true;
-    try
-    {
-      if (!this.isResumed)
-      {
-        this.isResumed = true;
-        StatisticManager.onPageStart(mActivity, getClass().getSimpleName());
-      }
-      super.onResume();
-      return;
+
+    public void setAddFt(boolean isAddFt) {
+        this.isAddFt = isAddFt;
     }
-    catch (Exception localException)
-    {
-      for (;;)
-      {
-        i.a("", localException.toString());
-      }
+
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
     }
-  }
-  
-  public boolean onTouchEvent(MotionEvent paramMotionEvent)
-  {
-    return false;
-  }
-  
-  protected void onUpdateSkin() {}
-  
-  public boolean onVoiceCommand(int paramInt)
-  {
-    return false;
-  }
-  
-  public boolean onVoiceCommand(int paramInt1, int paramInt2, int paramInt3, Object paramObject, boolean paramBoolean)
-  {
-    if (2 == paramInt1) {}
-    switch (paramInt2)
-    {
-    default: 
-      return false;
-    }
-    return true;
-  }
-  
-  public boolean onVoiceCommand(String paramString1, String paramString2)
-  {
-    return false;
-  }
-  
-  public void pageBack(int paramInt)
-  {
-    if ((paramInt == 1) || (paramInt == 4) || (paramInt == 2))
-    {
-      if (getCurrentFragmentType() == 35) {
-        backTo(34, null);
-      }
-      back();
-      if (paramInt == 1) {
-        performOpenHome();
-      }
-      do
-      {
-        return;
-        if (paramInt == 4)
-        {
-          showLatestMusicFragment();
-          return;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        this.isAddFt = false;
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            if (bundle.containsKey(ContentFragmentManager.KEY_BACK_BUNDLE)) {
+                this.mBackBundle = bundle.getBundle(ContentFragmentManager.KEY_BACK_BUNDLE);
+            }
+            if (bundle.containsKey(ContentFragmentManager.KEY_FRAGMENT_TYPE)) {
+                this.fragmentType = bundle.getInt(ContentFragmentManager.KEY_FRAGMENT_TYPE);
+            }
+            this.mShowBundle = bundle.getBundle(ContentFragmentManager.KEY_SHOW_BUNDLE);
+            if (this.mShowBundle != null && this.mShowBundle.containsKey(ContentFragmentManager.MODULE_FROM)) {
+                this.mModuleFrom = this.mShowBundle.getInt(ContentFragmentManager.MODULE_FROM);
+            }
         }
-      } while (paramInt != 2);
-      showLatestPhoneFragment();
-      return;
-    }
-    back();
-  }
-  
-  public void replyVoiceCommand(int paramInt1, int paramInt2, boolean paramBoolean)
-  {
-    if (paramBoolean) {
-      BNVoiceCommandController.getInstance().commonVoiceCommandResponse(paramInt1, paramInt2);
-    }
-  }
-  
-  public void requestInitView()
-  {
-    if (this.mViewCreated)
-    {
-      onInitView();
-      return;
-    }
-    this.mNeedInitView = true;
-  }
-  
-  public void requestRestoreView()
-  {
-    if (this.mViewCreated)
-    {
-      onRestoreView();
-      return;
-    }
-    this.mNeedRetoreView = true;
-  }
-  
-  public void setAddFt(boolean paramBoolean)
-  {
-    this.isAddFt = paramBoolean;
-  }
-  
-  protected void setCommonTitleBar(View paramView, String paramString)
-  {
-    Object localObject = (ImageButton)paramView.findViewById(2131624258);
-    if (localObject != null)
-    {
-      ((ImageButton)localObject).setBackground(b.a(mActivity));
-      ((ImageButton)localObject).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          ContentFragment.this.back();
+        if (isMapPage()) {
+            showMapFragment();
+        } else {
+            hideMapFragment();
         }
-      });
-    }
-    localObject = paramView.findViewById(2131624261);
-    if (localObject != null) {
-      ((View)localObject).setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          ContentFragment.this.back();
+        int orientation = C1192c.a().g();
+        boolean dayStyle = StyleManager.getRealDayStyle();
+        String currentSkinName = C1872t.a().c();
+        if (this.mContentView != null) {
+            ViewGroup parent = (ViewGroup) this.mContentView.getParent();
+            if (parent != null) {
+                parent.removeView(this.mContentView);
+            }
+            this.mViewCreated = true;
+            if (this.mOrientation != orientation) {
+                updateOrientation(orientation);
+            }
+            if (this.mDayStyle != dayStyle) {
+                updateStyle(dayStyle);
+            }
+            if (!currentSkinName.equals(this.mSkinName)) {
+                C1260i.b("Framework", "onCreateView skin");
+                onUpdateSkin();
+                this.mSkinName = currentSkinName;
+            }
+        } else {
+            this.mContentView = onCreateContentView(inflater);
+            this.mViewCreated = true;
+            updateOrientation(orientation);
+            updateStyle(dayStyle);
+            this.mSkinName = C1872t.a().c();
+            onUpdateSkin();
         }
-      });
-    }
-    paramView = (TextView)paramView.findViewById(2131624059);
-    if ((paramView != null) && (!TextUtils.isEmpty(paramString))) {
-      paramView.setText(paramString);
-    }
-  }
-  
-  protected void startAnimation(Map<View, Animation> paramMap)
-  {
-    if (paramMap == null) {}
-    for (;;)
-    {
-      return;
-      Iterator localIterator = paramMap.keySet().iterator();
-      while (localIterator.hasNext())
-      {
-        View localView = (View)localIterator.next();
-        Animation localAnimation = (Animation)paramMap.get(localView);
-        if ((localAnimation != null) && (localView != null)) {
-          localView.startAnimation(localAnimation);
+        if (!(isMapPage() || this.mContentView == null)) {
+            this.mContentView.setClickable(true);
         }
-      }
+        if (this.fragmentType == getCurrentFragmentType()) {
+            onInitFocusAreas();
+        }
+        onInit();
+        return this.mContentView;
     }
-  }
-  
-  public void stopDriving() {}
-  
-  protected void updateCommonSkin()
-  {
-    if (this.mContentView == null) {}
-    Object localObject;
-    do
-    {
-      return;
-      localObject = (ImageButton)this.mContentView.findViewById(2131624258);
-      if (localObject != null)
-      {
-        ((ImageButton)localObject).setImageDrawable(r.b(2130838256));
-        ((ImageButton)localObject).setBackground(b.a(mActivity));
-      }
-      localObject = (TextView)this.mContentView.findViewById(2131624059);
-    } while (localObject == null);
-    ((TextView)localObject).setTextColor(r.a(2131558699));
-  }
+
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            if (isMapPage()) {
+                showMapFragment();
+            } else {
+                hideMapFragment();
+            }
+        }
+        super.onHiddenChanged(hidden);
+        String currentSkinName = C1872t.a().c();
+        if (!(hidden || currentSkinName.equals(this.mSkinName))) {
+            C1260i.b("Framework", "onHiddenChanged Skin");
+            onUpdateSkin();
+            this.mSkinName = currentSkinName;
+        }
+        if (!hidden) {
+            onInitFocusAreas();
+        }
+    }
+
+    protected void onUpdateSkin() {
+    }
+
+    public void onInitFocusAreas() {
+    }
+
+    protected void updateCommonSkin() {
+        if (this.mContentView != null) {
+            ImageButton btnBack = (ImageButton) this.mContentView.findViewById(C0965R.id.ib_left);
+            if (btnBack != null) {
+                btnBack.setImageDrawable(C2188r.b(C0965R.drawable.com_ic_back));
+                btnBack.setBackground(C2251b.a(mActivity));
+            }
+            TextView titleTV = (TextView) this.mContentView.findViewById(C0965R.id.tv_title);
+            if (titleTV != null) {
+                titleTV.setTextColor(C2188r.a(C0965R.color.cl_text_a4_title));
+            }
+        }
+    }
+
+    protected void setCommonTitleBar(View root, String title) {
+        ImageButton btnBack = (ImageButton) root.findViewById(C0965R.id.ib_left);
+        if (btnBack != null) {
+            btnBack.setBackground(C2251b.a(mActivity));
+            btnBack.setOnClickListener(new C37871());
+        }
+        View hide = root.findViewById(C0965R.id.view_hide);
+        if (hide != null) {
+            hide.setOnClickListener(new C37882());
+        }
+        TextView titleTV = (TextView) root.findViewById(C0965R.id.tv_title);
+        if (titleTV != null && !TextUtils.isEmpty(title)) {
+            titleTV.setText(title);
+        }
+    }
+
+    public void onDestroyView() {
+        this.mViewCreated = false;
+        this.mNeedInitView = false;
+        this.mNeedRetoreView = false;
+        this.isDisplayed = false;
+        super.onDestroyView();
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        if (!isNaviMapFragment()) {
+            hideMapFragment();
+        }
+    }
+
+    public void requestInitView() {
+        if (this.mViewCreated) {
+            onInitView();
+        } else {
+            this.mNeedInitView = true;
+        }
+    }
+
+    public void requestRestoreView() {
+        if (this.mViewCreated) {
+            onRestoreView();
+        } else {
+            this.mNeedRetoreView = true;
+        }
+    }
+
+    protected void onRestoreView() {
+    }
+
+    public boolean onBackPressed() {
+        return false;
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        return false;
+    }
+
+    protected void onInit() {
+        if (this.mNeedInitView) {
+            onInitView();
+            this.mNeedInitView = false;
+        }
+        if (this.mNeedRetoreView) {
+            onRestoreView();
+            this.mNeedRetoreView = false;
+        }
+    }
+
+    protected long getAnimationTotalDuration(Collection<Animation> animList) {
+        long duration = 0;
+        if (animList != null) {
+            for (Animation anim : animList) {
+                duration = Math.max(anim.getStartOffset() + anim.getDuration(), duration);
+            }
+        }
+        return duration;
+    }
+
+    protected void startAnimation(Map<View, Animation> animMap) {
+        if (animMap != null) {
+            for (View view : animMap.keySet()) {
+                Animation anim = (Animation) animMap.get(view);
+                if (!(anim == null || view == null)) {
+                    view.startAnimation(anim);
+                }
+            }
+        }
+    }
+
+    public void onResume() {
+        this.isDisplayed = true;
+        try {
+            if (!this.isResumed) {
+                this.isResumed = true;
+                StatisticManager.onPageStart(mActivity, getClass().getSimpleName());
+            }
+        } catch (Exception e) {
+            C1260i.a("", e.toString());
+        }
+        super.onResume();
+    }
+
+    public void onPause() {
+        try {
+            if (this.isResumed) {
+                this.isResumed = false;
+                StatisticManager.onPageEnd(mActivity, getClass().getSimpleName());
+            }
+        } catch (Exception e) {
+            C1260i.a("", e.toString());
+        }
+        super.onPause();
+    }
+
+    public boolean onVoiceCommand(int type, int subType, int arg1, Object arg2, boolean needResponse) {
+        if (2 == type) {
+            switch (subType) {
+                case 2:
+                case 3:
+                case 16:
+                case 18:
+                case 20:
+                case 21:
+                case 22:
+                case 23:
+                case 29:
+                case 30:
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isGausianFragment() {
+        return getCurrentFragmentType() == NaviFragmentManager.TYPE_MUSIC_PLAYER;
+    }
+
+    public boolean onVoiceCommand(String strCommand, String strIntent) {
+        return false;
+    }
+
+    public boolean onVoiceCommand(int selectIndex) {
+        return false;
+    }
+
+    public void replyVoiceCommand(int type, int result, boolean needResponse) {
+        if (needResponse) {
+            BNVoiceCommandController.getInstance().commonVoiceCommandResponse(type, result);
+        }
+    }
+
+    public void loge(String msg) {
+    }
+
+    public void pageBack(int moduleFrom) {
+        if (moduleFrom == 1 || moduleFrom == 4 || moduleFrom == 2) {
+            if (getCurrentFragmentType() == 35) {
+                backTo(34, null);
+            }
+            back();
+            if (moduleFrom == 1) {
+                performOpenHome();
+                return;
+            } else if (moduleFrom == 4) {
+                showLatestMusicFragment();
+                return;
+            } else if (moduleFrom == 2) {
+                showLatestPhoneFragment();
+                return;
+            } else {
+                return;
+            }
+        }
+        back();
+    }
+
+    public boolean isMapPage() {
+        return false;
+    }
+
+    public void driving() {
+    }
+
+    public void stopDriving() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/fragment/ContentFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

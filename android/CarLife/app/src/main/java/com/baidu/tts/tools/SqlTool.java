@@ -7,165 +7,120 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class SqlTool
-{
-  private static String a(Method paramMethod, Object paramObject)
-  {
-    try
-    {
-      paramMethod = (String)paramMethod.invoke(paramObject, (Object[])null);
-      return paramMethod;
+public class SqlTool {
+    public static String sqlDropTable(String tableName) {
+        return "drop table if exists " + tableName;
     }
-    catch (IllegalAccessException paramMethod)
-    {
-      paramMethod.printStackTrace();
-      return null;
-    }
-    catch (IllegalArgumentException paramMethod)
-    {
-      paramMethod.printStackTrace();
-      return null;
-    }
-    catch (InvocationTargetException paramMethod)
-    {
-      paramMethod.printStackTrace();
-    }
-    return null;
-  }
-  
-  private static String a(Method paramMethod1, Method paramMethod2, Object paramObject)
-  {
-    paramMethod1 = a(paramMethod1, paramObject);
-    if (paramMethod1 != null)
-    {
-      paramMethod2 = a(paramMethod2, paramObject);
-      if (paramMethod2 != null) {
-        return paramMethod1 + " " + paramMethod2;
-      }
-    }
-    return null;
-  }
-  
-  public static String addPlaceholders(int paramInt)
-  {
-    int i = 1;
-    if (paramInt < 1) {
-      return null;
-    }
-    StringBuilder localStringBuilder = new StringBuilder();
-    localStringBuilder.append("?");
-    while (i < paramInt)
-    {
-      localStringBuilder.append(",?");
-      i += 1;
-    }
-    return localStringBuilder.toString();
-  }
-  
-  public static String buildConditions(String paramString, String... paramVarArgs)
-  {
-    if ((TextUtils.isEmpty(paramString)) || (paramVarArgs == null) || (paramVarArgs.length == 0)) {
-      return null;
-    }
-    Object localObject = new ArrayList();
-    int i = 0;
-    String str;
-    while (i < paramVarArgs.length)
-    {
-      str = paramVarArgs[i];
-      if (!StringTool.isEmpty(str)) {
-        ((List)localObject).add(str);
-      }
-      i += 1;
-    }
-    paramVarArgs = new StringBuilder();
-    localObject = ((List)localObject).iterator();
-    if (((Iterator)localObject).hasNext()) {
-      paramVarArgs.append((String)((Iterator)localObject).next());
-    }
-    while (((Iterator)localObject).hasNext())
-    {
-      str = (String)((Iterator)localObject).next();
-      paramVarArgs.append(" " + paramString + " ");
-      paramVarArgs.append(str);
-    }
-    return paramVarArgs.toString();
-  }
-  
-  public static String buildInCondition(String paramString, String[] paramArrayOfString)
-  {
-    if ((paramArrayOfString == null) || (paramArrayOfString.length == 0) || (TextUtils.isEmpty(paramString))) {
-      return null;
-    }
-    paramString = new StringBuilder(paramString);
-    paramString.append(" in (");
-    paramString.append(addPlaceholders(paramArrayOfString.length));
-    paramString.append(")");
-    return paramString.toString();
-  }
-  
-  public static String[] getSQLformat(String paramString, String[] paramArrayOfString1, String[] paramArrayOfString2, String[] paramArrayOfString3)
-  {
-    String[] arrayOfString = new String[paramArrayOfString1.length + 1 + paramArrayOfString2.length + paramArrayOfString3.length];
-    arrayOfString[0] = paramString;
-    System.arraycopy(paramArrayOfString1, 0, arrayOfString, 1, paramArrayOfString1.length);
-    System.arraycopy(paramArrayOfString2, 0, arrayOfString, paramArrayOfString1.length + 1, paramArrayOfString2.length);
-    System.arraycopy(paramArrayOfString3, 0, arrayOfString, paramArrayOfString1.length + 1 + paramArrayOfString2.length, paramArrayOfString3.length);
-    return arrayOfString;
-  }
-  
-  public static String sqlCreateTable(String paramString, Object[] paramArrayOfObject)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    Object localObject3;
-    if (paramString != null)
-    {
-      localObject1 = localObject2;
-      if (paramArrayOfObject != null)
-      {
-        localObject1 = paramArrayOfObject[0];
-        localObject3 = localObject1.getClass();
-      }
-    }
-    try
-    {
-      Method localMethod = ReflectTool.getSupportedMethod((Class)localObject3, "getColumnName", null);
-      localObject3 = ReflectTool.getSupportedMethod((Class)localObject3, "getDataType", null);
-      paramString = new StringBuilder("create Table " + paramString);
-      String str = a(localMethod, (Method)localObject3, localObject1);
-      localObject1 = localObject2;
-      if (str != null)
-      {
-        paramString.append(" (" + str);
-        int j = paramArrayOfObject.length;
-        int i = 1;
-        while (i < j)
-        {
-          paramString.append(",");
-          paramString.append(a(localMethod, (Method)localObject3, paramArrayOfObject[i]));
-          i += 1;
+
+    public static String sqlCreateTable(String tableName, Object[] fields) {
+        String str = null;
+        if (!(tableName == null || fields == null)) {
+            Object obj = fields[0];
+            Class cls = obj.getClass();
+            try {
+                Method supportedMethod = ReflectTool.getSupportedMethod(cls, "getColumnName", null);
+                Method supportedMethod2 = ReflectTool.getSupportedMethod(cls, "getDataType", null);
+                StringBuilder stringBuilder = new StringBuilder("create Table " + tableName);
+                String a = m17548a(supportedMethod, supportedMethod2, obj);
+                if (a != null) {
+                    stringBuilder.append(" (" + a);
+                    int length = fields.length;
+                    for (int i = 1; i < length; i++) {
+                        stringBuilder.append(",");
+                        stringBuilder.append(m17548a(supportedMethod, supportedMethod2, fields[i]));
+                    }
+                    stringBuilder.append(")");
+                    str = stringBuilder.toString();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        paramString.append(")");
-        localObject1 = paramString.toString();
-      }
-      return (String)localObject1;
+        return str;
     }
-    catch (Exception paramString)
-    {
-      paramString.printStackTrace();
+
+    /* renamed from: a */
+    private static String m17548a(Method method, Method method2, Object obj) {
+        String a = m17547a(method, obj);
+        if (a != null) {
+            String a2 = m17547a(method2, obj);
+            if (a2 != null) {
+                return a + " " + a2;
+            }
+        }
+        return null;
     }
-    return null;
-  }
-  
-  public static String sqlDropTable(String paramString)
-  {
-    return "drop table if exists " + paramString;
-  }
+
+    /* renamed from: a */
+    private static String m17547a(Method method, Object obj) {
+        try {
+            return (String) method.invoke(obj, (Object[]) null);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IllegalArgumentException e2) {
+            e2.printStackTrace();
+            return null;
+        } catch (InvocationTargetException e3) {
+            e3.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String buildConditions(String connector, String... conditions) {
+        if (TextUtils.isEmpty(connector) || conditions == null || conditions.length == 0) {
+            return null;
+        }
+        List arrayList = new ArrayList();
+        for (String str : conditions) {
+            if (!StringTool.isEmpty(str)) {
+                arrayList.add(str);
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        Iterator it = arrayList.iterator();
+        if (it.hasNext()) {
+            stringBuilder.append((String) it.next());
+        }
+        while (it.hasNext()) {
+            String str2 = (String) it.next();
+            stringBuilder.append(" " + connector + " ");
+            stringBuilder.append(str2);
+        }
+        return stringBuilder.toString();
+    }
+
+    public static String buildInCondition(String field, String[] data) {
+        if (data == null || data.length == 0 || TextUtils.isEmpty(field)) {
+            return null;
+        }
+        StringBuilder stringBuilder = new StringBuilder(field);
+        stringBuilder.append(" in (");
+        stringBuilder.append(addPlaceholders(data.length));
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
+
+    public static String addPlaceholders(int length) {
+        int i = 1;
+        if (length < 1) {
+            return null;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("?");
+        while (i < length) {
+            stringBuilder.append(",?");
+            i++;
+        }
+        return stringBuilder.toString();
+    }
+
+    public static String[] getSQLformat(String version, String[] domains, String[] languages, String[] qualities) {
+        Object obj = new String[(((domains.length + 1) + languages.length) + qualities.length)];
+        obj[0] = version;
+        System.arraycopy(domains, 0, obj, 1, domains.length);
+        System.arraycopy(languages, 0, obj, domains.length + 1, languages.length);
+        System.arraycopy(qualities, 0, obj, (domains.length + 1) + languages.length, qualities.length);
+        return obj;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/tools/SqlTool.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

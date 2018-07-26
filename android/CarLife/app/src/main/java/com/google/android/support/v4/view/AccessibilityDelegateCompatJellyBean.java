@@ -8,93 +8,85 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityNodeProvider;
 
-class AccessibilityDelegateCompatJellyBean
-{
-  public static Object getAccessibilityNodeProvider(Object paramObject, View paramView)
-  {
-    return ((View.AccessibilityDelegate)paramObject).getAccessibilityNodeProvider(paramView);
-  }
-  
-  public static Object newAccessibilityDelegateBridge(AccessibilityDelegateBridgeJellyBean paramAccessibilityDelegateBridgeJellyBean)
-  {
-    new View.AccessibilityDelegate()
-    {
-      public boolean dispatchPopulateAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        return AccessibilityDelegateCompatJellyBean.this.dispatchPopulateAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-      
-      public AccessibilityNodeProvider getAccessibilityNodeProvider(View paramAnonymousView)
-      {
-        return (AccessibilityNodeProvider)AccessibilityDelegateCompatJellyBean.this.getAccessibilityNodeProvider(paramAnonymousView);
-      }
-      
-      public void onInitializeAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        AccessibilityDelegateCompatJellyBean.this.onInitializeAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-      
-      public void onInitializeAccessibilityNodeInfo(View paramAnonymousView, AccessibilityNodeInfo paramAnonymousAccessibilityNodeInfo)
-      {
-        AccessibilityDelegateCompatJellyBean.this.onInitializeAccessibilityNodeInfo(paramAnonymousView, paramAnonymousAccessibilityNodeInfo);
-      }
-      
-      public void onPopulateAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        AccessibilityDelegateCompatJellyBean.this.onPopulateAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-      
-      public boolean onRequestSendAccessibilityEvent(ViewGroup paramAnonymousViewGroup, View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        return AccessibilityDelegateCompatJellyBean.this.onRequestSendAccessibilityEvent(paramAnonymousViewGroup, paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-      
-      public boolean performAccessibilityAction(View paramAnonymousView, int paramAnonymousInt, Bundle paramAnonymousBundle)
-      {
-        return AccessibilityDelegateCompatJellyBean.this.performAccessibilityAction(paramAnonymousView, paramAnonymousInt, paramAnonymousBundle);
-      }
-      
-      public void sendAccessibilityEvent(View paramAnonymousView, int paramAnonymousInt)
-      {
-        AccessibilityDelegateCompatJellyBean.this.sendAccessibilityEvent(paramAnonymousView, paramAnonymousInt);
-      }
-      
-      public void sendAccessibilityEventUnchecked(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        AccessibilityDelegateCompatJellyBean.this.sendAccessibilityEventUnchecked(paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-    };
-  }
-  
-  public static boolean performAccessibilityAction(Object paramObject, View paramView, int paramInt, Bundle paramBundle)
-  {
-    return ((View.AccessibilityDelegate)paramObject).performAccessibilityAction(paramView, paramInt, paramBundle);
-  }
-  
-  public static abstract interface AccessibilityDelegateBridgeJellyBean
-  {
-    public abstract boolean dispatchPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract Object getAccessibilityNodeProvider(View paramView);
-    
-    public abstract void onInitializeAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract void onInitializeAccessibilityNodeInfo(View paramView, Object paramObject);
-    
-    public abstract void onPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract boolean onRequestSendAccessibilityEvent(ViewGroup paramViewGroup, View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract boolean performAccessibilityAction(View paramView, int paramInt, Bundle paramBundle);
-    
-    public abstract void sendAccessibilityEvent(View paramView, int paramInt);
-    
-    public abstract void sendAccessibilityEventUnchecked(View paramView, AccessibilityEvent paramAccessibilityEvent);
-  }
+class AccessibilityDelegateCompatJellyBean {
+
+    public interface AccessibilityDelegateBridgeJellyBean {
+        boolean dispatchPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent);
+
+        Object getAccessibilityNodeProvider(View view);
+
+        void onInitializeAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent);
+
+        void onInitializeAccessibilityNodeInfo(View view, Object obj);
+
+        void onPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent);
+
+        boolean onRequestSendAccessibilityEvent(ViewGroup viewGroup, View view, AccessibilityEvent accessibilityEvent);
+
+        boolean performAccessibilityAction(View view, int i, Bundle bundle);
+
+        void sendAccessibilityEvent(View view, int i);
+
+        void sendAccessibilityEventUnchecked(View view, AccessibilityEvent accessibilityEvent);
+    }
+
+    /* renamed from: com.google.android.support.v4.view.AccessibilityDelegateCompatJellyBean$1 */
+    class C56621 extends AccessibilityDelegate {
+        private final /* synthetic */ AccessibilityDelegateBridgeJellyBean val$bridge;
+
+        C56621(AccessibilityDelegateBridgeJellyBean accessibilityDelegateBridgeJellyBean) {
+            this.val$bridge = accessibilityDelegateBridgeJellyBean;
+        }
+
+        public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+            return this.val$bridge.dispatchPopulateAccessibilityEvent(host, event);
+        }
+
+        public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event) {
+            this.val$bridge.onInitializeAccessibilityEvent(host, event);
+        }
+
+        public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfo info) {
+            this.val$bridge.onInitializeAccessibilityNodeInfo(host, info);
+        }
+
+        public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+            this.val$bridge.onPopulateAccessibilityEvent(host, event);
+        }
+
+        public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child, AccessibilityEvent event) {
+            return this.val$bridge.onRequestSendAccessibilityEvent(host, child, event);
+        }
+
+        public void sendAccessibilityEvent(View host, int eventType) {
+            this.val$bridge.sendAccessibilityEvent(host, eventType);
+        }
+
+        public void sendAccessibilityEventUnchecked(View host, AccessibilityEvent event) {
+            this.val$bridge.sendAccessibilityEventUnchecked(host, event);
+        }
+
+        public AccessibilityNodeProvider getAccessibilityNodeProvider(View host) {
+            return (AccessibilityNodeProvider) this.val$bridge.getAccessibilityNodeProvider(host);
+        }
+
+        public boolean performAccessibilityAction(View host, int action, Bundle args) {
+            return this.val$bridge.performAccessibilityAction(host, action, args);
+        }
+    }
+
+    AccessibilityDelegateCompatJellyBean() {
+    }
+
+    public static Object newAccessibilityDelegateBridge(AccessibilityDelegateBridgeJellyBean bridge) {
+        return new C56621(bridge);
+    }
+
+    public static Object getAccessibilityNodeProvider(Object delegate, View host) {
+        return ((AccessibilityDelegate) delegate).getAccessibilityNodeProvider(host);
+    }
+
+    public static boolean performAccessibilityAction(Object delegate, View host, int action, Bundle args) {
+        return ((AccessibilityDelegate) delegate).performAccessibilityAction(host, action, args);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/AccessibilityDelegateCompatJellyBean.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

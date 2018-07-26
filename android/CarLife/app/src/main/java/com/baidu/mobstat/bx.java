@@ -1,24 +1,18 @@
 package com.baidu.mobstat;
 
-class bx
-  extends Thread
-{
-  private boolean b;
-  
-  public bx(bv parambv, boolean paramBoolean)
-  {
-    this.b = paramBoolean;
-  }
-  
-  public void run()
-  {
-    this.a.a(bv.a(this.a), true, this.b);
-    by.a().a(bv.a(this.a));
-  }
+class bx extends Thread {
+    /* renamed from: a */
+    final /* synthetic */ bv f19537a;
+    /* renamed from: b */
+    private boolean f19538b;
+
+    public bx(bv bvVar, boolean z) {
+        this.f19537a = bvVar;
+        this.f19538b = z;
+    }
+
+    public void run() {
+        this.f19537a.m15517a(this.f19537a.f19529b, true, this.f19538b);
+        by.m15524a().m15541a(this.f19537a.f19529b);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/bx.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

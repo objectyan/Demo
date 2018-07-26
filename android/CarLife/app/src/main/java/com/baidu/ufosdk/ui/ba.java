@@ -1,26 +1,25 @@
 package com.baidu.ufosdk.ui;
 
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import com.baidu.ufosdk.util.m;
+import com.baidu.ufosdk.util.C5220m;
 
-final class ba
-  implements Runnable
-{
-  ba(az paramaz, String paramString) {}
-  
-  public final void run()
-  {
-    SharedPreferences.Editor localEditor = this.a.a.getSharedPreferences("UfoSharePreference", 0).edit();
-    localEditor.putString("contact", m.a(this.b));
-    localEditor.commit();
-    FeedbackInputActivity.c(this.a.a, this.b);
-    FeedbackInputActivity.P(this.a.a);
-  }
+/* compiled from: FeedbackInputActivity */
+final class ba implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ az f21566a;
+    /* renamed from: b */
+    private final /* synthetic */ String f21567b;
+
+    ba(az azVar, String str) {
+        this.f21566a = azVar;
+        this.f21567b = str;
+    }
+
+    public final void run() {
+        Editor edit = this.f21566a.f21563a.getSharedPreferences("UfoSharePreference", 0).edit();
+        edit.putString("contact", C5220m.m17770a(this.f21567b));
+        edit.commit();
+        this.f21566a.f21563a.aw = this.f21567b;
+        FeedbackInputActivity.m17636P(this.f21566a.f21563a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ba.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

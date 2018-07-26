@@ -1,16 +1,16 @@
 package com.google.gson;
 
-public enum LongSerializationPolicy
-{
-  DEFAULT,  STRING;
-  
-  private LongSerializationPolicy() {}
-  
-  public abstract JsonElement serialize(Long paramLong);
+public enum LongSerializationPolicy {
+    DEFAULT {
+        public JsonElement serialize(Long value) {
+            return new JsonPrimitive((Number) value);
+        }
+    },
+    STRING {
+        public JsonElement serialize(Long value) {
+            return new JsonPrimitive(String.valueOf(value));
+        }
+    };
+
+    public abstract JsonElement serialize(Long l);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/gson/LongSerializationPolicy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

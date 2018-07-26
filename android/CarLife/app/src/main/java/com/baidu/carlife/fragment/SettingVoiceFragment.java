@@ -4,66 +4,57 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.baidu.carlife.core.f;
-import com.baidu.carlife.f.a;
-import com.baidu.carlife.f.d;
-import com.baidu.carlife.f.g;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.p078f.C1440d;
+import com.baidu.carlife.p078f.C1443g;
 import com.baidu.navi.fragment.ContentFragment;
 
-public class SettingVoiceFragment
-  extends ContentFragment
-{
-  private g a;
-  
-  private void a()
-  {
-    TextView localTextView = (TextView)this.mContentView.findViewById(2131623980);
-    if (f.jr)
-    {
-      localTextView.setText(2131297209);
-      this.mContentView.findViewById(2131624643).setVisibility(0);
-      this.mContentView.findViewById(2131626184).setVisibility(0);
-      return;
+public class SettingVoiceFragment extends ContentFragment {
+    /* renamed from: a */
+    private C1443g f4826a;
+
+    protected View onCreateContentView(LayoutInflater inflater) {
+        this.mContentView = (ViewGroup) LayoutInflater.from(mActivity).inflate(C0965R.layout.frag_setting_voice, null);
+        setCommonTitleBar(this.mContentView, getString(C0965R.string.module_voice));
+        m5812a();
+        return this.mContentView;
     }
-    localTextView.setText(2131297210);
-    this.mContentView.findViewById(2131624643).setVisibility(8);
-    this.mContentView.findViewById(2131626184).setVisibility(8);
-  }
-  
-  protected View onCreateContentView(LayoutInflater paramLayoutInflater)
-  {
-    this.mContentView = ((ViewGroup)LayoutInflater.from(mActivity).inflate(2130968813, null));
-    setCommonTitleBar(this.mContentView, getString(2131296644));
-    a();
-    return this.mContentView;
-  }
-  
-  public void onInitFocusAreas()
-  {
-    if (this.a == null)
-    {
-      this.a = new g(this.mContentView.findViewById(2131624146), 2);
-      this.a.d(this.mContentView.findViewById(2131624258));
+
+    /* renamed from: a */
+    private void m5812a() {
+        TextView temp = (TextView) this.mContentView.findViewById(C0965R.id.temp);
+        if (C1253f.jr) {
+            temp.setText(C0965R.string.voice_domain_common_detail);
+            this.mContentView.findViewById(C0965R.id.temp1).setVisibility(0);
+            this.mContentView.findViewById(C0965R.id.temp2).setVisibility(0);
+            return;
+        }
+        temp.setText(C0965R.string.voice_domain_common_detail_closenavi);
+        this.mContentView.findViewById(C0965R.id.temp1).setVisibility(8);
+        this.mContentView.findViewById(C0965R.id.temp2).setVisibility(8);
     }
-    d.a().b(new a[] { this.a });
-    d.a().h(this.a);
-  }
-  
-  protected void onInitView() {}
-  
-  protected void onUpdateOrientation(int paramInt) {}
-  
-  protected void onUpdateSkin()
-  {
-    super.onUpdateSkin();
-    updateCommonSkin();
-  }
-  
-  protected void onUpdateStyle(boolean paramBoolean) {}
+
+    protected void onUpdateSkin() {
+        super.onUpdateSkin();
+        updateCommonSkin();
+    }
+
+    protected void onInitView() {
+    }
+
+    protected void onUpdateOrientation(int orientation) {
+    }
+
+    protected void onUpdateStyle(boolean dayStyle) {
+    }
+
+    public void onInitFocusAreas() {
+        if (this.f4826a == null) {
+            this.f4826a = new C1443g(this.mContentView.findViewById(C0965R.id.title_bar), 2);
+            this.f4826a.m5300d(this.mContentView.findViewById(C0965R.id.ib_left));
+        }
+        C1440d.m5251a().m5256b(this.f4826a);
+        C1440d.m5251a().m5268h(this.f4826a);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/SettingVoiceFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

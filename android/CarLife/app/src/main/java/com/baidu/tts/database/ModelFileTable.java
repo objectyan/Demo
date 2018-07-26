@@ -4,87 +4,77 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import com.baidu.tts.client.model.ModelFileBags;
 import com.baidu.tts.client.model.ModelFileInfo;
+import com.baidu.tts.database.C5073f.C5065a;
 import com.baidu.tts.tools.SqlTool;
-import java.util.Iterator;
-import java.util.List;
 
-public class ModelFileTable
-{
-  public static int a(SQLiteDatabase paramSQLiteDatabase, String paramString)
-  {
-    return paramSQLiteDatabase.delete("modelFile", "id=?", new String[] { paramString });
-  }
-  
-  public static String a()
-  {
-    return SqlTool.sqlCreateTable("modelFile", Field.values());
-  }
-  
-  public static void a(SQLiteDatabase paramSQLiteDatabase, ModelFileBags paramModelFileBags)
-  {
-    new f(paramSQLiteDatabase, new f.a()
-    {
-      public boolean a(SQLiteDatabase paramAnonymousSQLiteDatabase)
-      {
-        try
-        {
-          paramAnonymousSQLiteDatabase = paramAnonymousSQLiteDatabase.compileStatement("insert into modelFile (id, length, md5, name, absPath) values (?, ?, ?, ?, ?)");
-          Iterator localIterator = this.a.getModelFileInfos().iterator();
-          while (localIterator.hasNext())
-          {
-            Object localObject = (ModelFileInfo)localIterator.next();
-            String str1 = ((ModelFileInfo)localObject).getServerid();
-            String str2 = ((ModelFileInfo)localObject).getLength();
-            String str3 = ((ModelFileInfo)localObject).getMd5();
-            String str4 = ((ModelFileInfo)localObject).getName();
-            localObject = ((ModelFileInfo)localObject).getAbsPath();
-            paramAnonymousSQLiteDatabase.bindString(1, str1);
-            paramAnonymousSQLiteDatabase.bindString(2, str2);
-            paramAnonymousSQLiteDatabase.bindString(3, str3);
-            paramAnonymousSQLiteDatabase.bindString(4, str4);
-            paramAnonymousSQLiteDatabase.bindString(5, (String)localObject);
-            paramAnonymousSQLiteDatabase.executeInsert();
-          }
-          return true;
+public class ModelFileTable {
+
+    public enum Field {
+        ID("id", "integer primary key"),
+        LENGTH("length", "bigint"),
+        MD5("md5", "varchar(32)"),
+        NAME("name", "varchar(256) not null default unnamed"),
+        ABS_PATH("absPath", "varchar");
+        
+        /* renamed from: f */
+        private final String f20958f;
+        /* renamed from: g */
+        private final String f20959g;
+
+        private Field(String columnName, String dataType) {
+            this.f20958f = columnName;
+            this.f20959g = dataType;
         }
-        catch (Exception paramAnonymousSQLiteDatabase)
-        {
-          return false;
+
+        public String getColumnName() {
+            return this.f20958f;
         }
-      }
-    }).a();
-  }
-  
-  public static String b()
-  {
-    return SqlTool.sqlDropTable("modelFile");
-  }
-  
-  public static enum Field
-  {
-    private final String f;
-    private final String g;
-    
-    private Field(String paramString1, String paramString2)
-    {
-      this.f = paramString1;
-      this.g = paramString2;
+
+        public String getDataType() {
+            return this.f20959g;
+        }
     }
-    
-    public String getColumnName()
-    {
-      return this.f;
+
+    /* renamed from: a */
+    public static String m17195a() {
+        return SqlTool.sqlCreateTable("modelFile", Field.values());
     }
-    
-    public String getDataType()
-    {
-      return this.g;
+
+    /* renamed from: b */
+    public static String m17197b() {
+        return SqlTool.sqlDropTable("modelFile");
     }
-  }
+
+    /* renamed from: a */
+    public static int m17194a(SQLiteDatabase sQLiteDatabase, String str) {
+        return sQLiteDatabase.delete("modelFile", "id=?", new String[]{str});
+    }
+
+    /* renamed from: a */
+    public static void m17196a(SQLiteDatabase sQLiteDatabase, final ModelFileBags modelFileBags) {
+        new C5073f(sQLiteDatabase, new C5065a() {
+            /* renamed from: a */
+            public boolean mo3879a(SQLiteDatabase sQLiteDatabase) {
+                try {
+                    SQLiteStatement compileStatement = sQLiteDatabase.compileStatement("insert into modelFile (id, length, md5, name, absPath) values (?, ?, ?, ?, ?)");
+                    for (ModelFileInfo modelFileInfo : modelFileBags.getModelFileInfos()) {
+                        String serverid = modelFileInfo.getServerid();
+                        String length = modelFileInfo.getLength();
+                        String md5 = modelFileInfo.getMd5();
+                        String name = modelFileInfo.getName();
+                        String absPath = modelFileInfo.getAbsPath();
+                        compileStatement.bindString(1, serverid);
+                        compileStatement.bindString(2, length);
+                        compileStatement.bindString(3, md5);
+                        compileStatement.bindString(4, name);
+                        compileStatement.bindString(5, absPath);
+                        compileStatement.executeInsert();
+                    }
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        }).m17226a();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/database/ModelFileTable.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

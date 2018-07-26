@@ -1,41 +1,26 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.gf.C5920a;
 import java.io.IOException;
 
-public final class al
-  implements gf
-{
-  public final gm a(gf.a parama)
-    throws IOException
-  {
-    Object localObject = parama.a();
-    long l2 = System.nanoTime();
-    String str = an.d;
-    ((gk)localObject).b();
-    ((gk)localObject).a();
-    if (((gk)localObject).d() != null) {}
-    for (long l1 = ((gk)localObject).d().b();; l1 = -1L)
-    {
-      parama.b();
-      ((gk)localObject).c();
-      parama = parama.a((gk)localObject);
-      if (parama != null)
-      {
-        l1 = System.nanoTime();
-        localObject = an.d;
-        parama.a().b();
-        parama.a().a();
-        parama.b();
-        double d = (l1 - l2) / 1000000.0D;
-        parama.e();
-      }
-      return parama;
+public final class al implements gf {
+    /* renamed from: a */
+    public final gm mo4589a(C5920a c5920a) throws IOException {
+        gk a = c5920a.mo4689a();
+        long nanoTime = System.nanoTime();
+        String str = an.f22962d;
+        Object[] objArr = new Object[5];
+        objArr[0] = a.m20711b();
+        objArr[1] = a.m20709a();
+        objArr[2] = Long.valueOf(a.m20713d() != null ? a.m20713d().mo4588b() : -1);
+        objArr[3] = c5920a.mo4691b();
+        objArr[4] = a.m20712c();
+        gm a2 = c5920a.mo4690a(a);
+        if (a2 != null) {
+            long nanoTime2 = System.nanoTime();
+            String str2 = an.f22962d;
+            Object[] objArr2 = new Object[]{a2.m20728a().m20711b(), a2.m20728a().m20709a(), Integer.valueOf(a2.m20730b()), Double.valueOf(((double) (nanoTime2 - nanoTime)) / 1000000.0d), a2.m20733e()};
+        }
+        return a2;
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/al.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

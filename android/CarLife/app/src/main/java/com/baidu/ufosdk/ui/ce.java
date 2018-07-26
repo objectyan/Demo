@@ -4,16 +4,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-final class ce
-{
-  public TextView a;
-  public ImageView b;
-  public ImageView c;
-  public RelativeLayout d;
+/* compiled from: FeedbackInputActivity */
+final class ce {
+    /* renamed from: a */
+    public TextView f21607a;
+    /* renamed from: b */
+    public ImageView f21608b;
+    /* renamed from: c */
+    public ImageView f21609c;
+    /* renamed from: d */
+    public RelativeLayout f21610d;
+
+    ce() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/ce.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

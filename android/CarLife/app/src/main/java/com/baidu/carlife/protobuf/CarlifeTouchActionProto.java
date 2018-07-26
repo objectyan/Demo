@@ -1,5 +1,6 @@
 package com.baidu.carlife.protobuf;
 
+import com.baidu.navi.protocol.model.RoutePlanDataStruct;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -9,453 +10,385 @@ import com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessage.Builder;
 import com.google.protobuf.GeneratedMessage.FieldAccessorTable;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
-import com.google.protobuf.UninitializedMessageException;
 import com.google.protobuf.UnknownFieldSet;
-import com.google.protobuf.UnknownFieldSet.Builder;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-public final class CarlifeTouchActionProto
-{
-  private static Descriptors.FileDescriptor descriptor;
-  private static Descriptors.Descriptor internal_static_com_baidu_carlife_protobuf_CarlifeTouchAction_descriptor;
-  private static GeneratedMessage.FieldAccessorTable internal_static_com_baidu_carlife_protobuf_CarlifeTouchAction_fieldAccessorTable;
-  
-  static
-  {
-    Descriptors.FileDescriptor.InternalDescriptorAssigner local1 = new Descriptors.FileDescriptor.InternalDescriptorAssigner()
-    {
-      public ExtensionRegistry assignDescriptors(Descriptors.FileDescriptor paramAnonymousFileDescriptor)
-      {
-        CarlifeTouchActionProto.access$1102(paramAnonymousFileDescriptor);
-        CarlifeTouchActionProto.access$002((Descriptors.Descriptor)CarlifeTouchActionProto.getDescriptor().getMessageTypes().get(0));
-        CarlifeTouchActionProto.access$102(new GeneratedMessage.FieldAccessorTable(CarlifeTouchActionProto.internal_static_com_baidu_carlife_protobuf_CarlifeTouchAction_descriptor, new String[] { "Action", "X", "Y" }, CarlifeTouchActionProto.CarlifeTouchAction.class, CarlifeTouchActionProto.CarlifeTouchAction.Builder.class));
-        return null;
-      }
-    };
-    Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(new String[] { "\n\035CarlifeTouchActionProto.proto\022\032com.baidu.carlife.protobuf\":\n\022CarlifeTouchAction\022\016\n\006action\030\001 \002(\005\022\t\n\001x\030\002 \002(\005\022\t\n\001y\030\003 \002(\005" }, new Descriptors.FileDescriptor[0], local1);
-  }
-  
-  public static Descriptors.FileDescriptor getDescriptor()
-  {
-    return descriptor;
-  }
-  
-  public static void internalForceInit() {}
-  
-  public static void registerAllExtensions(ExtensionRegistry paramExtensionRegistry) {}
-  
-  public static final class CarlifeTouchAction
-    extends GeneratedMessage
-  {
-    public static final int ACTION_FIELD_NUMBER = 1;
-    public static final int X_FIELD_NUMBER = 2;
-    public static final int Y_FIELD_NUMBER = 3;
-    private static final CarlifeTouchAction defaultInstance = new CarlifeTouchAction();
-    private int action_ = 0;
-    private boolean hasAction;
-    private boolean hasX;
-    private boolean hasY;
-    private int memoizedSerializedSize = -1;
-    private int x_ = 0;
-    private int y_ = 0;
-    
-    static
-    {
-      CarlifeTouchActionProto.getDescriptor();
-      CarlifeTouchActionProto.internalForceInit();
-    }
-    
-    public static CarlifeTouchAction getDefaultInstance()
-    {
-      return defaultInstance;
-    }
-    
-    public static final Descriptors.Descriptor getDescriptor()
-    {
-      return CarlifeTouchActionProto.internal_static_com_baidu_carlife_protobuf_CarlifeTouchAction_descriptor;
-    }
-    
-    public static Builder newBuilder()
-    {
-      return Builder.access$300();
-    }
-    
-    public static Builder newBuilder(CarlifeTouchAction paramCarlifeTouchAction)
-    {
-      return newBuilder().mergeFrom(paramCarlifeTouchAction);
-    }
-    
-    public static CarlifeTouchAction parseDelimitedFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseDelimitedFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeDelimitedFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseFrom(ByteString paramByteString)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString)).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseFrom(ByteString paramByteString, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramByteString, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseFrom(CodedInputStream paramCodedInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramCodedInputStream)).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return newBuilder().mergeFrom(paramCodedInputStream, paramExtensionRegistryLite).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseFrom(InputStream paramInputStream)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream)).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseFrom(InputStream paramInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws IOException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramInputStream, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte)).buildParsed();
-    }
-    
-    public static CarlifeTouchAction parseFrom(byte[] paramArrayOfByte, ExtensionRegistryLite paramExtensionRegistryLite)
-      throws InvalidProtocolBufferException
-    {
-      return ((Builder)newBuilder().mergeFrom(paramArrayOfByte, paramExtensionRegistryLite)).buildParsed();
-    }
-    
-    public int getAction()
-    {
-      return this.action_;
-    }
-    
-    public CarlifeTouchAction getDefaultInstanceForType()
-    {
-      return defaultInstance;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i = this.memoizedSerializedSize;
-      if (i != -1) {
-        return i;
-      }
-      int j = 0;
-      if (hasAction()) {
-        j = 0 + CodedOutputStream.computeInt32Size(1, getAction());
-      }
-      i = j;
-      if (hasX()) {
-        i = j + CodedOutputStream.computeInt32Size(2, getX());
-      }
-      j = i;
-      if (hasY()) {
-        j = i + CodedOutputStream.computeInt32Size(3, getY());
-      }
-      i = j + getUnknownFields().getSerializedSize();
-      this.memoizedSerializedSize = i;
-      return i;
-    }
-    
-    public int getX()
-    {
-      return this.x_;
-    }
-    
-    public int getY()
-    {
-      return this.y_;
-    }
-    
-    public boolean hasAction()
-    {
-      return this.hasAction;
-    }
-    
-    public boolean hasX()
-    {
-      return this.hasX;
-    }
-    
-    public boolean hasY()
-    {
-      return this.hasY;
-    }
-    
-    protected GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable()
-    {
-      return CarlifeTouchActionProto.internal_static_com_baidu_carlife_protobuf_CarlifeTouchAction_fieldAccessorTable;
-    }
-    
-    public final boolean isInitialized()
-    {
-      if (!this.hasAction) {}
-      while ((!this.hasX) || (!this.hasY)) {
-        return false;
-      }
-      return true;
-    }
-    
-    public Builder newBuilderForType()
-    {
-      return newBuilder();
-    }
-    
-    public Builder toBuilder()
-    {
-      return newBuilder(this);
-    }
-    
-    public void writeTo(CodedOutputStream paramCodedOutputStream)
-      throws IOException
-    {
-      if (hasAction()) {
-        paramCodedOutputStream.writeInt32(1, getAction());
-      }
-      if (hasX()) {
-        paramCodedOutputStream.writeInt32(2, getX());
-      }
-      if (hasY()) {
-        paramCodedOutputStream.writeInt32(3, getY());
-      }
-      getUnknownFields().writeTo(paramCodedOutputStream);
-    }
-    
-    public static final class Builder
-      extends GeneratedMessage.Builder<Builder>
-    {
-      private CarlifeTouchActionProto.CarlifeTouchAction result;
-      
-      private CarlifeTouchActionProto.CarlifeTouchAction buildParsed()
-        throws InvalidProtocolBufferException
-      {
-        if (!isInitialized()) {
-          throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+public final class CarlifeTouchActionProto {
+    private static FileDescriptor descriptor;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeTouchAction_descriptor */
+    private static Descriptor f6656x31aad5;
+    /* renamed from: internal_static_com_baidu_carlife_protobuf_CarlifeTouchAction_fieldAccessorTable */
+    private static FieldAccessorTable f6657x31472c53;
+
+    /* renamed from: com.baidu.carlife.protobuf.CarlifeTouchActionProto$1 */
+    static class C20851 implements InternalDescriptorAssigner {
+        C20851() {
         }
-        return buildPartial();
-      }
-      
-      private static Builder create()
-      {
-        Builder localBuilder = new Builder();
-        localBuilder.result = new CarlifeTouchActionProto.CarlifeTouchAction(null);
-        return localBuilder;
-      }
-      
-      public CarlifeTouchActionProto.CarlifeTouchAction build()
-      {
-        if ((this.result != null) && (!isInitialized())) {
-          throw newUninitializedMessageException(this.result);
+
+        public ExtensionRegistry assignDescriptors(FileDescriptor root) {
+            CarlifeTouchActionProto.descriptor = root;
+            CarlifeTouchActionProto.f6656x31aad5 = (Descriptor) CarlifeTouchActionProto.getDescriptor().getMessageTypes().get(0);
+            CarlifeTouchActionProto.f6657x31472c53 = new FieldAccessorTable(CarlifeTouchActionProto.f6656x31aad5, new String[]{"Action", RoutePlanDataStruct.KEY_X, RoutePlanDataStruct.KEY_Y}, CarlifeTouchAction.class, Builder.class);
+            return null;
         }
-        return buildPartial();
-      }
-      
-      public CarlifeTouchActionProto.CarlifeTouchAction buildPartial()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("build() has already been called on this Builder.");
-        }
-        CarlifeTouchActionProto.CarlifeTouchAction localCarlifeTouchAction = this.result;
-        this.result = null;
-        return localCarlifeTouchAction;
-      }
-      
-      public Builder clear()
-      {
-        if (this.result == null) {
-          throw new IllegalStateException("Cannot call clear() after build().");
-        }
-        this.result = new CarlifeTouchActionProto.CarlifeTouchAction(null);
-        return this;
-      }
-      
-      public Builder clearAction()
-      {
-        CarlifeTouchActionProto.CarlifeTouchAction.access$502(this.result, false);
-        CarlifeTouchActionProto.CarlifeTouchAction.access$602(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearX()
-      {
-        CarlifeTouchActionProto.CarlifeTouchAction.access$702(this.result, false);
-        CarlifeTouchActionProto.CarlifeTouchAction.access$802(this.result, 0);
-        return this;
-      }
-      
-      public Builder clearY()
-      {
-        CarlifeTouchActionProto.CarlifeTouchAction.access$902(this.result, false);
-        CarlifeTouchActionProto.CarlifeTouchAction.access$1002(this.result, 0);
-        return this;
-      }
-      
-      public Builder clone()
-      {
-        return create().mergeFrom(this.result);
-      }
-      
-      public int getAction()
-      {
-        return this.result.getAction();
-      }
-      
-      public CarlifeTouchActionProto.CarlifeTouchAction getDefaultInstanceForType()
-      {
-        return CarlifeTouchActionProto.CarlifeTouchAction.getDefaultInstance();
-      }
-      
-      public Descriptors.Descriptor getDescriptorForType()
-      {
-        return CarlifeTouchActionProto.CarlifeTouchAction.getDescriptor();
-      }
-      
-      public int getX()
-      {
-        return this.result.getX();
-      }
-      
-      public int getY()
-      {
-        return this.result.getY();
-      }
-      
-      public boolean hasAction()
-      {
-        return this.result.hasAction();
-      }
-      
-      public boolean hasX()
-      {
-        return this.result.hasX();
-      }
-      
-      public boolean hasY()
-      {
-        return this.result.hasY();
-      }
-      
-      protected CarlifeTouchActionProto.CarlifeTouchAction internalGetResult()
-      {
-        return this.result;
-      }
-      
-      public boolean isInitialized()
-      {
-        return this.result.isInitialized();
-      }
-      
-      public Builder mergeFrom(CarlifeTouchActionProto.CarlifeTouchAction paramCarlifeTouchAction)
-      {
-        if (paramCarlifeTouchAction == CarlifeTouchActionProto.CarlifeTouchAction.getDefaultInstance()) {
-          return this;
-        }
-        if (paramCarlifeTouchAction.hasAction()) {
-          setAction(paramCarlifeTouchAction.getAction());
-        }
-        if (paramCarlifeTouchAction.hasX()) {
-          setX(paramCarlifeTouchAction.getX());
-        }
-        if (paramCarlifeTouchAction.hasY()) {
-          setY(paramCarlifeTouchAction.getY());
-        }
-        mergeUnknownFields(paramCarlifeTouchAction.getUnknownFields());
-        return this;
-      }
-      
-      public Builder mergeFrom(CodedInputStream paramCodedInputStream, ExtensionRegistryLite paramExtensionRegistryLite)
-        throws IOException
-      {
-        UnknownFieldSet.Builder localBuilder = UnknownFieldSet.newBuilder(getUnknownFields());
-        for (;;)
-        {
-          int i = paramCodedInputStream.readTag();
-          switch (i)
-          {
-          default: 
-            if (!parseUnknownField(paramCodedInputStream, localBuilder, paramExtensionRegistryLite, i))
-            {
-              setUnknownFields(localBuilder.build());
-              return this;
+    }
+
+    public static final class CarlifeTouchAction extends GeneratedMessage {
+        public static final int ACTION_FIELD_NUMBER = 1;
+        public static final int X_FIELD_NUMBER = 2;
+        public static final int Y_FIELD_NUMBER = 3;
+        private static final CarlifeTouchAction defaultInstance = new CarlifeTouchAction();
+        private int action_;
+        private boolean hasAction;
+        private boolean hasX;
+        private boolean hasY;
+        private int memoizedSerializedSize;
+        private int x_;
+        private int y_;
+
+        public static final class Builder extends com.google.protobuf.GeneratedMessage.Builder<Builder> {
+            private CarlifeTouchAction result;
+
+            private Builder() {
             }
-            break;
-          case 0: 
-            setUnknownFields(localBuilder.build());
-            return this;
-          case 8: 
-            setAction(paramCodedInputStream.readInt32());
-            break;
-          case 16: 
-            setX(paramCodedInputStream.readInt32());
-            break;
-          case 24: 
-            setY(paramCodedInputStream.readInt32());
-          }
+
+            private static Builder create() {
+                Builder builder = new Builder();
+                builder.result = new CarlifeTouchAction();
+                return builder;
+            }
+
+            protected CarlifeTouchAction internalGetResult() {
+                return this.result;
+            }
+
+            public Builder clear() {
+                if (this.result == null) {
+                    throw new IllegalStateException("Cannot call clear() after build().");
+                }
+                this.result = new CarlifeTouchAction();
+                return this;
+            }
+
+            public Builder clone() {
+                return create().mergeFrom(this.result);
+            }
+
+            public Descriptor getDescriptorForType() {
+                return CarlifeTouchAction.getDescriptor();
+            }
+
+            public CarlifeTouchAction getDefaultInstanceForType() {
+                return CarlifeTouchAction.getDefaultInstance();
+            }
+
+            public boolean isInitialized() {
+                return this.result.isInitialized();
+            }
+
+            public CarlifeTouchAction build() {
+                if (this.result == null || isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result);
+            }
+
+            private CarlifeTouchAction buildParsed() throws InvalidProtocolBufferException {
+                if (isInitialized()) {
+                    return buildPartial();
+                }
+                throw newUninitializedMessageException(this.result).asInvalidProtocolBufferException();
+            }
+
+            public CarlifeTouchAction buildPartial() {
+                if (this.result == null) {
+                    throw new IllegalStateException("build() has already been called on this Builder.");
+                }
+                CarlifeTouchAction returnMe = this.result;
+                this.result = null;
+                return returnMe;
+            }
+
+            public Builder mergeFrom(Message other) {
+                if (other instanceof CarlifeTouchAction) {
+                    return mergeFrom((CarlifeTouchAction) other);
+                }
+                super.mergeFrom(other);
+                return this;
+            }
+
+            public Builder mergeFrom(CarlifeTouchAction other) {
+                if (other != CarlifeTouchAction.getDefaultInstance()) {
+                    if (other.hasAction()) {
+                        setAction(other.getAction());
+                    }
+                    if (other.hasX()) {
+                        setX(other.getX());
+                    }
+                    if (other.hasY()) {
+                        setY(other.getY());
+                    }
+                    mergeUnknownFields(other.getUnknownFields());
+                }
+                return this;
+            }
+
+            public Builder mergeFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+                com.google.protobuf.UnknownFieldSet.Builder unknownFields = UnknownFieldSet.newBuilder(getUnknownFields());
+                while (true) {
+                    int tag = input.readTag();
+                    switch (tag) {
+                        case 0:
+                            setUnknownFields(unknownFields.build());
+                            break;
+                        case 8:
+                            setAction(input.readInt32());
+                            continue;
+                        case 16:
+                            setX(input.readInt32());
+                            continue;
+                        case 24:
+                            setY(input.readInt32());
+                            continue;
+                        default:
+                            if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                                setUnknownFields(unknownFields.build());
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public boolean hasAction() {
+                return this.result.hasAction();
+            }
+
+            public int getAction() {
+                return this.result.getAction();
+            }
+
+            public Builder setAction(int value) {
+                this.result.hasAction = true;
+                this.result.action_ = value;
+                return this;
+            }
+
+            public Builder clearAction() {
+                this.result.hasAction = false;
+                this.result.action_ = 0;
+                return this;
+            }
+
+            public boolean hasX() {
+                return this.result.hasX();
+            }
+
+            public int getX() {
+                return this.result.getX();
+            }
+
+            public Builder setX(int value) {
+                this.result.hasX = true;
+                this.result.x_ = value;
+                return this;
+            }
+
+            public Builder clearX() {
+                this.result.hasX = false;
+                this.result.x_ = 0;
+                return this;
+            }
+
+            public boolean hasY() {
+                return this.result.hasY();
+            }
+
+            public int getY() {
+                return this.result.getY();
+            }
+
+            public Builder setY(int value) {
+                this.result.hasY = true;
+                this.result.y_ = value;
+                return this;
+            }
+
+            public Builder clearY() {
+                this.result.hasY = false;
+                this.result.y_ = 0;
+                return this;
+            }
         }
-      }
-      
-      public Builder mergeFrom(Message paramMessage)
-      {
-        if ((paramMessage instanceof CarlifeTouchActionProto.CarlifeTouchAction)) {
-          return mergeFrom((CarlifeTouchActionProto.CarlifeTouchAction)paramMessage);
+
+        private CarlifeTouchAction() {
+            this.action_ = 0;
+            this.x_ = 0;
+            this.y_ = 0;
+            this.memoizedSerializedSize = -1;
         }
-        super.mergeFrom(paramMessage);
-        return this;
-      }
-      
-      public Builder setAction(int paramInt)
-      {
-        CarlifeTouchActionProto.CarlifeTouchAction.access$502(this.result, true);
-        CarlifeTouchActionProto.CarlifeTouchAction.access$602(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setX(int paramInt)
-      {
-        CarlifeTouchActionProto.CarlifeTouchAction.access$702(this.result, true);
-        CarlifeTouchActionProto.CarlifeTouchAction.access$802(this.result, paramInt);
-        return this;
-      }
-      
-      public Builder setY(int paramInt)
-      {
-        CarlifeTouchActionProto.CarlifeTouchAction.access$902(this.result, true);
-        CarlifeTouchActionProto.CarlifeTouchAction.access$1002(this.result, paramInt);
-        return this;
-      }
+
+        static {
+            CarlifeTouchActionProto.getDescriptor();
+            CarlifeTouchActionProto.internalForceInit();
+        }
+
+        public static CarlifeTouchAction getDefaultInstance() {
+            return defaultInstance;
+        }
+
+        public CarlifeTouchAction getDefaultInstanceForType() {
+            return defaultInstance;
+        }
+
+        public static final Descriptor getDescriptor() {
+            return CarlifeTouchActionProto.f6656x31aad5;
+        }
+
+        protected FieldAccessorTable internalGetFieldAccessorTable() {
+            return CarlifeTouchActionProto.f6657x31472c53;
+        }
+
+        public boolean hasAction() {
+            return this.hasAction;
+        }
+
+        public int getAction() {
+            return this.action_;
+        }
+
+        public boolean hasX() {
+            return this.hasX;
+        }
+
+        public int getX() {
+            return this.x_;
+        }
+
+        public boolean hasY() {
+            return this.hasY;
+        }
+
+        public int getY() {
+            return this.y_;
+        }
+
+        public final boolean isInitialized() {
+            if (this.hasAction && this.hasX && this.hasY) {
+                return true;
+            }
+            return false;
+        }
+
+        public void writeTo(CodedOutputStream output) throws IOException {
+            if (hasAction()) {
+                output.writeInt32(1, getAction());
+            }
+            if (hasX()) {
+                output.writeInt32(2, getX());
+            }
+            if (hasY()) {
+                output.writeInt32(3, getY());
+            }
+            getUnknownFields().writeTo(output);
+        }
+
+        public int getSerializedSize() {
+            int size = this.memoizedSerializedSize;
+            if (size != -1) {
+                return size;
+            }
+            size = 0;
+            if (hasAction()) {
+                size = 0 + CodedOutputStream.computeInt32Size(1, getAction());
+            }
+            if (hasX()) {
+                size += CodedOutputStream.computeInt32Size(2, getX());
+            }
+            if (hasY()) {
+                size += CodedOutputStream.computeInt32Size(3, getY());
+            }
+            size += getUnknownFields().getSerializedSize();
+            this.memoizedSerializedSize = size;
+            return size;
+        }
+
+        public static CarlifeTouchAction parseFrom(ByteString data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseFrom(ByteString data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseFrom(byte[] data) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseFrom(byte[] data, ExtensionRegistryLite extensionRegistry) throws InvalidProtocolBufferException {
+            return ((Builder) newBuilder().mergeFrom(data, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseDelimitedFrom(InputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseDelimitedFrom(InputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return ((Builder) newBuilder().mergeDelimitedFrom(input, extensionRegistry)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseFrom(CodedInputStream input) throws IOException {
+            return ((Builder) newBuilder().mergeFrom(input)).buildParsed();
+        }
+
+        public static CarlifeTouchAction parseFrom(CodedInputStream input, ExtensionRegistryLite extensionRegistry) throws IOException {
+            return newBuilder().mergeFrom(input, extensionRegistry).buildParsed();
+        }
+
+        public static Builder newBuilder() {
+            return Builder.create();
+        }
+
+        public Builder newBuilderForType() {
+            return newBuilder();
+        }
+
+        public static Builder newBuilder(CarlifeTouchAction prototype) {
+            return newBuilder().mergeFrom(prototype);
+        }
+
+        public Builder toBuilder() {
+            return newBuilder(this);
+        }
     }
-  }
+
+    private CarlifeTouchActionProto() {
+    }
+
+    public static void registerAllExtensions(ExtensionRegistry registry) {
+    }
+
+    public static FileDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    static {
+        FileDescriptor.internalBuildGeneratedFileFrom(new String[]{"\n\u001dCarlifeTouchActionProto.proto\u0012\u001acom.baidu.carlife.protobuf\":\n\u0012CarlifeTouchAction\u0012\u000e\n\u0006action\u0018\u0001 \u0002(\u0005\u0012\t\n\u0001x\u0018\u0002 \u0002(\u0005\u0012\t\n\u0001y\u0018\u0003 \u0002(\u0005"}, new FileDescriptor[0], new C20851());
+    }
+
+    public static void internalForceInit() {
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/protobuf/CarlifeTouchActionProto.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

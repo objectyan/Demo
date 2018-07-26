@@ -5,47 +5,35 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.core.k;
+import com.baidu.carlife.core.C1253f;
+import com.baidu.carlife.core.C1261k;
 
-public class QPlayCallbackActivity
-  extends Activity
-{
-  private void a()
-  {
-    Uri localUri = getIntent().getData();
-    if (localUri != null)
-    {
-      if (localUri.getQueryParameter("qmlogin").equalsIgnoreCase("1"))
-      {
-        q.Y = true;
-        k.a(3013, 1000);
-      }
+public class QPlayCallbackActivity extends Activity {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        m6516a();
+        startActivity(new Intent(this, CarlifeActivity.class));
+        finish();
     }
-    else {
-      return;
+
+    protected void onResume() {
+        super.onResume();
+        m6516a();
+        startActivity(new Intent(this, CarlifeActivity.class));
+        finish();
     }
-    q.Y = false;
-  }
-  
-  protected void onCreate(Bundle paramBundle)
-  {
-    super.onCreate(paramBundle);
-    a();
-    startActivity(new Intent(this, CarlifeActivity.class));
-    finish();
-  }
-  
-  protected void onResume()
-  {
-    super.onResume();
-    a();
-    startActivity(new Intent(this, CarlifeActivity.class));
-    finish();
-  }
+
+    /* renamed from: a */
+    private void m6516a() {
+        Uri uri = getIntent().getData();
+        if (uri == null) {
+            return;
+        }
+        if (uri.getQueryParameter("qmlogin").equalsIgnoreCase("1")) {
+            C1838q.f5704Y = true;
+            C1261k.m4453a((int) C1253f.gj, 1000);
+            return;
+        }
+        C1838q.f5704Y = false;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/logic/music/QPlayCallbackActivity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -8,88 +8,83 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
-import com.baidu.che.codriver.util.a;
+import com.baidu.carlife.C0965R;
+import com.baidu.che.codriver.util.C2714a;
 
-public class CinemaBillView
-  extends LinearLayout
-{
-  View a;
-  a b;
-  
-  public CinemaBillView(Context paramContext)
-  {
-    this(paramContext, null);
-  }
-  
-  public CinemaBillView(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    this(paramContext, paramAttributeSet, 0);
-  }
-  
-  public CinemaBillView(Context paramContext, AttributeSet paramAttributeSet, int paramInt)
-  {
-    super(paramContext, paramAttributeSet, paramInt);
-    a();
-  }
-  
-  private void a()
-  {
-    removeAllViews();
-    this.a = inflate(getContext(), 2130968931, this);
-    if (this.b == null) {
-      this.b = new a();
+public class CinemaBillView extends LinearLayout {
+    /* renamed from: a */
+    View f9401a;
+    /* renamed from: b */
+    C2866a f9402b;
+
+    /* renamed from: com.baidu.che.codriver.widget.CinemaBillView$a */
+    public static class C2866a {
+        /* renamed from: a */
+        public NetworkImageView f9397a;
+        /* renamed from: b */
+        public TextView f9398b;
+        /* renamed from: c */
+        public RatingBar f9399c;
+        /* renamed from: d */
+        public TextView f9400d;
+
+        /* renamed from: a */
+        public void m10847a() {
+            this.f9397a.setVisibility(4);
+            this.f9399c.setVisibility(4);
+            this.f9398b.setText("");
+            this.f9400d.setText("");
+        }
+
+        /* renamed from: a */
+        public void m10848a(String name) {
+            this.f9398b.setVisibility(0);
+            this.f9398b.setText(name);
+        }
+
+        /* renamed from: b */
+        public void m10849b(String score) {
+            this.f9399c.setVisibility(8);
+            TextView textView = this.f9400d;
+            if (TextUtils.isEmpty(score)) {
+                score = "暂无评分";
+            }
+            textView.setText(score);
+        }
+
+        /* renamed from: c */
+        public void m10850c(String url) {
+            this.f9397a.setImageUrl(url, C2714a.m10135a());
+            if (this.f9397a.getVisibility() != 0) {
+                this.f9397a.setVisibility(0);
+            }
+        }
     }
-    this.b.a = ((NetworkImageView)this.a.findViewById(2131625647));
-    this.b.b = ((TextView)this.a.findViewById(2131625648));
-    this.b.c = ((RatingBar)this.a.findViewById(2131625649));
-    this.b.d = ((TextView)this.a.findViewById(2131625650));
-    setTag(2131296544, this.b);
-  }
-  
-  public static class a
-  {
-    public NetworkImageView a;
-    public TextView b;
-    public RatingBar c;
-    public TextView d;
-    
-    public void a()
-    {
-      this.a.setVisibility(4);
-      this.c.setVisibility(4);
-      this.b.setText("");
-      this.d.setText("");
+
+    public CinemaBillView(Context context) {
+        this(context, null);
     }
-    
-    public void a(String paramString)
-    {
-      this.b.setVisibility(0);
-      this.b.setText(paramString);
+
+    public CinemaBillView(Context context, AttributeSet attr) {
+        this(context, attr, 0);
     }
-    
-    public void b(String paramString)
-    {
-      this.c.setVisibility(8);
-      TextView localTextView = this.d;
-      String str = paramString;
-      if (TextUtils.isEmpty(paramString)) {
-        str = "暂无评分";
-      }
-      localTextView.setText(str);
+
+    public CinemaBillView(Context context, AttributeSet attr, int defValue) {
+        super(context, attr, defValue);
+        m10851a();
     }
-    
-    public void c(String paramString)
-    {
-      this.a.setImageUrl(paramString, a.a());
-      if (this.a.getVisibility() != 0) {
-        this.a.setVisibility(0);
-      }
+
+    /* renamed from: a */
+    private void m10851a() {
+        removeAllViews();
+        this.f9401a = inflate(getContext(), C0965R.layout.multi_movie_card, this);
+        if (this.f9402b == null) {
+            this.f9402b = new C2866a();
+        }
+        this.f9402b.f9397a = (NetworkImageView) this.f9401a.findViewById(C0965R.id.multi_movie_image);
+        this.f9402b.f9398b = (TextView) this.f9401a.findViewById(C0965R.id.multi_movie_name);
+        this.f9402b.f9399c = (RatingBar) this.f9401a.findViewById(C0965R.id.multi_movie_ratingbar);
+        this.f9402b.f9400d = (TextView) this.f9401a.findViewById(C0965R.id.multi_movie_score);
+        setTag(C0965R.string.key_cinema_holder, this.f9402b);
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/che/codriver/widget/CinemaBillView.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

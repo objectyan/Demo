@@ -15,596 +15,418 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.baidu.carlife.R.p;
+import com.baidu.carlife.C0965R;
 import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navisdk.util.common.ScreenUtil;
 
-public class CommonTitleBar
-  extends FrameLayout
-{
-  protected static final int DEFAULT_TITLE_HEIGHT = 48;
-  protected static final int DEFAULT_TITLE_TEXT_COLOR = 16777215;
-  protected static final int DEFAULT_TITLE_TEXT_SIZE = 20;
-  protected static final int MIDDLE_TITLE_TEXT_SIZE = 12;
-  private boolean hasSetLeftContentFromOutSide;
-  private boolean hasSetMiddleContentFromOutSide;
-  private boolean hasSetRightContentFromOutSide;
-  private boolean isMapMode = NaviFragmentManager.isUsingMapMode();
-  protected RelativeLayout mLayout;
-  protected Button mLeftButton;
-  protected FrameLayout mLeftContent;
-  protected ImageView mLeftImageView;
-  private View.OnClickListener mLeftListener;
-  protected FrameLayout mMiddleContent;
-  private View.OnClickListener mMiddleListern;
-  protected TextView mMiddleTextView;
-  protected TextView mRightButton;
-  protected FrameLayout mRightContent;
-  protected ImageView mRightImageView;
-  private View.OnClickListener mRightListner;
-  
-  public CommonTitleBar(Context paramContext)
-  {
-    super(paramContext);
-    initView(paramContext);
-  }
-  
-  public CommonTitleBar(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    super(paramContext, paramAttributeSet);
-    initView(paramContext);
-    initAttr(paramContext, paramAttributeSet);
-  }
-  
-  public Drawable getBackground()
-  {
-    return this.mLayout.getBackground();
-  }
-  
-  public View getLeftContent()
-  {
-    return this.mLeftImageView;
-  }
-  
-  public View getMiddleContent()
-  {
-    return this.mMiddleContent;
-  }
-  
-  public View getRightContent()
-  {
-    return this.mRightContent;
-  }
-  
-  protected void initAttr(Context paramContext, AttributeSet paramAttributeSet)
-  {
-    if (paramAttributeSet == null) {
-      return;
+public class CommonTitleBar extends FrameLayout {
+    protected static final int DEFAULT_TITLE_HEIGHT = 48;
+    protected static final int DEFAULT_TITLE_TEXT_COLOR = 16777215;
+    protected static final int DEFAULT_TITLE_TEXT_SIZE = 20;
+    protected static final int MIDDLE_TITLE_TEXT_SIZE = 12;
+    private boolean hasSetLeftContentFromOutSide;
+    private boolean hasSetMiddleContentFromOutSide;
+    private boolean hasSetRightContentFromOutSide;
+    private boolean isMapMode = NaviFragmentManager.isUsingMapMode();
+    protected RelativeLayout mLayout;
+    protected Button mLeftButton;
+    protected FrameLayout mLeftContent;
+    protected ImageView mLeftImageView;
+    private OnClickListener mLeftListener;
+    protected FrameLayout mMiddleContent;
+    private OnClickListener mMiddleListern;
+    protected TextView mMiddleTextView;
+    protected TextView mRightButton;
+    protected FrameLayout mRightContent;
+    protected ImageView mRightImageView;
+    private OnClickListener mRightListner;
+
+    public CommonTitleBar(Context context) {
+        super(context);
+        initView(context);
     }
-    paramContext = paramContext.obtainStyledAttributes(paramAttributeSet, R.p.CommonTitleBar);
-    paramAttributeSet = paramContext.getDrawable(0);
-    if (paramAttributeSet != null)
-    {
-      if (Build.VERSION.SDK_INT >= 16) {
-        this.mLayout.setBackground(paramAttributeSet);
-      }
+
+    public CommonTitleBar(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initView(context);
+        initAttr(context, attrs);
     }
-    else
-    {
-      boolean bool = true;
-      if (paramContext.peekValue(6) != null) {
-        bool = paramContext.getBoolean(6, true);
-      }
-      if (!bool) {
-        break label220;
-      }
-      this.mRightContent.setVisibility(0);
-      label71:
-      paramAttributeSet = paramContext.getString(5);
-      this.mMiddleTextView.setText(paramAttributeSet);
-      paramAttributeSet = paramContext.getDrawable(1);
-      if (paramAttributeSet == null) {
-        break label231;
-      }
-      this.mRightImageView.setImageDrawable(paramAttributeSet);
-      this.mRightImageView.setVisibility(0);
-      label111:
-      paramAttributeSet = paramContext.getString(2);
-      if (TextUtils.isEmpty(paramAttributeSet)) {
-        break label243;
-      }
-      this.mRightButton.setText(paramAttributeSet);
-      this.mRightButton.setVisibility(0);
-      label140:
-      paramAttributeSet = paramContext.getDrawable(4);
-      if (paramAttributeSet != null)
-      {
-        this.mLeftImageView.setImageDrawable(paramAttributeSet);
-        this.mLeftImageView.setVisibility(0);
-      }
-      paramAttributeSet = paramContext.getString(3);
-      if (TextUtils.isEmpty(paramAttributeSet)) {
-        break label276;
-      }
-      this.mLeftButton.setText(paramAttributeSet);
-      this.mLeftButton.setVisibility(0);
-      this.mLeftImageView.setVisibility(8);
+
+    protected void initView(Context context) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        if (this.isMapMode) {
+            this.mLayout = (RelativeLayout) inflater.inflate(C0965R.layout.com_title_bar, null);
+        } else {
+            this.mLayout = (RelativeLayout) inflater.inflate(C0965R.layout.carmode_com_title_bar, null);
+        }
+        addView(this.mLayout, new LayoutParams(-2, ScreenUtil.getInstance().dip2px(48)));
+        this.mLeftImageView = (ImageView) this.mLayout.findViewById(C0965R.id.left_imageview);
+        this.mLeftButton = (Button) this.mLayout.findViewById(C0965R.id.left_button);
+        this.mRightImageView = (ImageView) this.mLayout.findViewById(C0965R.id.right_imageview);
+        this.mRightButton = (TextView) this.mLayout.findViewById(C0965R.id.right_button);
+        this.mMiddleContent = (FrameLayout) this.mLayout.findViewById(C0965R.id.middle_content);
+        this.mRightContent = (FrameLayout) this.mLayout.findViewById(C0965R.id.right_content);
+        this.mLeftContent = (FrameLayout) this.mLayout.findViewById(C0965R.id.left_content);
+        this.mLeftButton.setVisibility(8);
+        this.mMiddleTextView = (TextView) this.mLayout.findViewById(C0965R.id.middle_text);
+        this.mMiddleTextView.setTextColor(StyleManager.getColor(this.isMapMode ? C0965R.color.bnav_titlebar_middle_text : C0965R.color.carmode_titlebar_text_bg));
     }
-    for (;;)
-    {
-      paramContext.recycle();
-      return;
-      this.mLayout.setBackgroundDrawable(paramAttributeSet);
-      break;
-      label220:
-      this.mRightContent.setVisibility(4);
-      break label71;
-      label231:
-      this.mRightImageView.setVisibility(8);
-      break label111;
-      label243:
-      if (this.mRightImageView.getVisibility() == 0)
-      {
-        this.mRightButton.setVisibility(8);
-        break label140;
-      }
-      this.mRightButton.setVisibility(4);
-      break label140;
-      label276:
-      this.mLeftButton.setVisibility(8);
+
+    protected void initAttr(Context context, AttributeSet attrs) {
+        if (attrs != null) {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, C0965R.C0963p.CommonTitleBar);
+            Drawable d = typedArray.getDrawable(0);
+            if (d != null) {
+                if (VERSION.SDK_INT >= 16) {
+                    this.mLayout.setBackground(d);
+                } else {
+                    this.mLayout.setBackgroundDrawable(d);
+                }
+            }
+            boolean rightContentVisible = true;
+            if (typedArray.peekValue(6) != null) {
+                rightContentVisible = typedArray.getBoolean(6, true);
+            }
+            if (rightContentVisible) {
+                this.mRightContent.setVisibility(0);
+            } else {
+                this.mRightContent.setVisibility(4);
+            }
+            this.mMiddleTextView.setText(typedArray.getString(5));
+            d = typedArray.getDrawable(1);
+            if (d != null) {
+                this.mRightImageView.setImageDrawable(d);
+                this.mRightImageView.setVisibility(0);
+            } else {
+                this.mRightImageView.setVisibility(8);
+            }
+            String rightText = typedArray.getString(2);
+            if (!TextUtils.isEmpty(rightText)) {
+                this.mRightButton.setText(rightText);
+                this.mRightButton.setVisibility(0);
+            } else if (this.mRightImageView.getVisibility() == 0) {
+                this.mRightButton.setVisibility(8);
+            } else {
+                this.mRightButton.setVisibility(4);
+            }
+            d = typedArray.getDrawable(4);
+            if (d != null) {
+                this.mLeftImageView.setImageDrawable(d);
+                this.mLeftImageView.setVisibility(0);
+            }
+            String leftText = typedArray.getString(3);
+            if (TextUtils.isEmpty(leftText)) {
+                this.mLeftButton.setVisibility(8);
+            } else {
+                this.mLeftButton.setText(leftText);
+                this.mLeftButton.setVisibility(0);
+                this.mLeftImageView.setVisibility(8);
+            }
+            typedArray.recycle();
+        }
     }
-  }
-  
-  protected void initView(Context paramContext)
-  {
-    paramContext = (LayoutInflater)paramContext.getSystemService("layout_inflater");
-    if (this.isMapMode)
-    {
-      this.mLayout = ((RelativeLayout)paramContext.inflate(2130968703, null));
-      paramContext = new FrameLayout.LayoutParams(-2, ScreenUtil.getInstance().dip2px(48));
-      addView(this.mLayout, paramContext);
-      this.mLeftImageView = ((ImageView)this.mLayout.findViewById(2131624137));
-      this.mLeftButton = ((Button)this.mLayout.findViewById(2131624284));
-      this.mRightImageView = ((ImageView)this.mLayout.findViewById(2131624286));
-      this.mRightButton = ((TextView)this.mLayout.findViewById(2131624287));
-      this.mMiddleContent = ((FrameLayout)this.mLayout.findViewById(2131624288));
-      this.mRightContent = ((FrameLayout)this.mLayout.findViewById(2131624188));
-      this.mLeftContent = ((FrameLayout)this.mLayout.findViewById(2131624283));
-      this.mLeftButton.setVisibility(8);
-      this.mMiddleTextView = ((TextView)this.mLayout.findViewById(2131624285));
-      paramContext = this.mMiddleTextView;
-      if (!this.isMapMode) {
-        break label236;
-      }
+
+    public Drawable getBackground() {
+        return this.mLayout.getBackground();
     }
-    label236:
-    for (int i = 2131558507;; i = 2131558581)
-    {
-      paramContext.setTextColor(StyleManager.getColor(i));
-      return;
-      this.mLayout = ((RelativeLayout)paramContext.inflate(2130968636, null));
-      break;
+
+    public void setLeftOnClickedListener(OnClickListener listener) {
+        this.mLeftListener = listener;
+        if (this.hasSetLeftContentFromOutSide) {
+            this.mLeftContent.setClickable(true);
+            this.mLeftContent.setOnClickListener(listener);
+            return;
+        }
+        this.mLeftContent.setClickable(false);
+        if (this.mLeftImageView != null) {
+            this.mLeftImageView.setOnClickListener(listener);
+        }
+        if (this.mLeftButton != null) {
+            this.mLeftButton.setOnClickListener(listener);
+        }
     }
-  }
-  
-  public void setLeftContenVisible(boolean paramBoolean)
-  {
-    FrameLayout localFrameLayout = this.mLeftContent;
-    if (paramBoolean == true) {}
-    for (int i = 0;; i = 4)
-    {
-      localFrameLayout.setVisibility(i);
-      return;
+
+    public void setRightOnClickedListener(OnClickListener listener) {
+        this.mRightListner = listener;
+        if (this.hasSetRightContentFromOutSide) {
+            this.mRightContent.setClickable(true);
+            this.mRightContent.setOnClickListener(listener);
+            return;
+        }
+        this.mRightContent.setClickable(false);
+        if (this.mRightImageView != null) {
+            this.mRightImageView.setOnClickListener(listener);
+        }
+        if (this.mRightButton != null) {
+            this.mRightButton.setOnClickListener(listener);
+        }
     }
-  }
-  
-  public void setLeftContent(View paramView)
-  {
-    this.mLeftContent.removeAllViews();
-    this.mLeftContent.addView(paramView, new FrameLayout.LayoutParams(-1, -1));
-    this.mLeftContent.setOnClickListener(this.mLeftListener);
-    this.mLeftContent.setClickable(true);
-    this.hasSetRightContentFromOutSide = true;
-  }
-  
-  public void setLeftContentBackgroud(Drawable paramDrawable)
-  {
-    this.mLeftContent.setBackgroundDrawable(paramDrawable);
-  }
-  
-  public void setLeftContentClickable(boolean paramBoolean)
-  {
-    this.mLeftContent.setClickable(paramBoolean);
-  }
-  
-  public void setLeftEnabled(boolean paramBoolean)
-  {
-    if (this.mLeftButton != null) {
-      this.mLeftButton.setEnabled(paramBoolean);
+
+    public void setMiddleOnClickedListener(OnClickListener listener) {
+        this.mMiddleContent.setOnClickListener(listener);
+        this.mMiddleContent.setClickable(true);
     }
-    if (this.mLeftImageView != null) {
-      this.mLeftImageView.setEnabled(paramBoolean);
+
+    public void setLeftTextBackground(Drawable d) {
+        if (this.mLeftButton != null) {
+            this.mLeftButton.setBackgroundDrawable(d);
+            this.mLeftButton.setVisibility(0);
+        }
+        if (this.mLeftImageView != null) {
+            this.mLeftImageView.setVisibility(8);
+        }
     }
-  }
-  
-  public void setLeftIcon(Drawable paramDrawable)
-  {
-    if (this.mLeftImageView != null)
-    {
-      this.mLeftImageView.setImageDrawable(paramDrawable);
-      this.mLeftImageView.setVisibility(0);
+
+    public void setLeftText(String text) {
+        int padding = ScreenUtil.getInstance().dip2px(8);
+        if (this.mLeftButton != null) {
+            this.mLeftButton.setText(text);
+            this.mLeftButton.setPadding(padding, 0, padding, 0);
+            this.mLeftButton.setVisibility(0);
+            this.mLeftContent.setVisibility(0);
+        }
+        if (this.mLeftImageView != null) {
+            this.mLeftImageView.setVisibility(8);
+        }
     }
-    if (this.mLeftButton != null) {
-      this.mLeftButton.setVisibility(4);
+
+    public void setLeftText(int resId) {
+        setLeftText(StyleManager.getString(resId));
     }
-  }
-  
-  public void setLeftIconBackGround(Drawable paramDrawable)
-  {
-    if (this.mLeftImageView != null)
-    {
-      this.mLeftImageView.setBackgroundDrawable(paramDrawable);
-      this.mLeftImageView.setVisibility(0);
+
+    public void setLeftTextColor(int color) {
+        this.mLeftButton.setTextColor(color);
     }
-    if (this.mLeftButton != null) {
-      this.mLeftButton.setVisibility(8);
+
+    public void setLeftTextColorById(int resId) {
+        this.mLeftButton.setTextColor(StyleManager.getColor(resId));
     }
-  }
-  
-  public void setLeftIconVisible(boolean paramBoolean)
-  {
-    ImageView localImageView;
-    if (this.mLeftImageView != null)
-    {
-      localImageView = this.mLeftImageView;
-      if (!paramBoolean) {
-        break label24;
-      }
+
+    public void setLeftIconBackGround(Drawable d) {
+        if (this.mLeftImageView != null) {
+            this.mLeftImageView.setBackgroundDrawable(d);
+            this.mLeftImageView.setVisibility(0);
+        }
+        if (this.mLeftButton != null) {
+            this.mLeftButton.setVisibility(8);
+        }
     }
-    label24:
-    for (int i = 0;; i = 4)
-    {
-      localImageView.setVisibility(i);
-      return;
+
+    public void setLeftTextVisible(boolean visible) {
+        if (this.mLeftButton != null) {
+            this.mLeftButton.setVisibility(visible ? 0 : 4);
+        }
     }
-  }
-  
-  public void setLeftOnClickedListener(View.OnClickListener paramOnClickListener)
-  {
-    this.mLeftListener = paramOnClickListener;
-    if (this.hasSetLeftContentFromOutSide)
-    {
-      this.mLeftContent.setClickable(true);
-      this.mLeftContent.setOnClickListener(paramOnClickListener);
+
+    public void setLeftIconVisible(boolean visible) {
+        if (this.mLeftImageView != null) {
+            this.mLeftImageView.setVisibility(visible ? 0 : 4);
+        }
     }
-    do
-    {
-      return;
-      this.mLeftContent.setClickable(false);
-      if (this.mLeftImageView != null) {
-        this.mLeftImageView.setOnClickListener(paramOnClickListener);
-      }
-    } while (this.mLeftButton == null);
-    this.mLeftButton.setOnClickListener(paramOnClickListener);
-  }
-  
-  public void setLeftText(int paramInt)
-  {
-    setLeftText(StyleManager.getString(paramInt));
-  }
-  
-  public void setLeftText(String paramString)
-  {
-    int i = ScreenUtil.getInstance().dip2px(8);
-    if (this.mLeftButton != null)
-    {
-      this.mLeftButton.setText(paramString);
-      this.mLeftButton.setPadding(i, 0, i, 0);
-      this.mLeftButton.setVisibility(0);
-      this.mLeftContent.setVisibility(0);
+
+    public void setRightTextVisible(boolean visible) {
+        if (this.mRightButton != null) {
+            this.mRightButton.setVisibility(visible ? 0 : 4);
+        }
     }
-    if (this.mLeftImageView != null) {
-      this.mLeftImageView.setVisibility(8);
+
+    public void setRightIconVisible(boolean visible) {
+        if (this.mRightImageView != null) {
+            this.mRightImageView.setVisibility(visible ? 0 : 4);
+        }
     }
-  }
-  
-  public void setLeftTextBackground(Drawable paramDrawable)
-  {
-    if (this.mLeftButton != null)
-    {
-      this.mLeftButton.setBackgroundDrawable(paramDrawable);
-      this.mLeftButton.setVisibility(0);
+
+    public void setLeftIcon(Drawable d) {
+        if (this.mLeftImageView != null) {
+            this.mLeftImageView.setImageDrawable(d);
+            this.mLeftImageView.setVisibility(0);
+        }
+        if (this.mLeftButton != null) {
+            this.mLeftButton.setVisibility(4);
+        }
     }
-    if (this.mLeftImageView != null) {
-      this.mLeftImageView.setVisibility(8);
+
+    public void setRightTextBackground(Drawable d) {
+        if (this.mRightButton != null) {
+            this.mRightButton.setBackgroundDrawable(d);
+            this.mRightButton.setVisibility(0);
+        }
+        if (this.mRightImageView != null) {
+            this.mRightImageView.setVisibility(4);
+        }
     }
-  }
-  
-  public void setLeftTextColor(int paramInt)
-  {
-    this.mLeftButton.setTextColor(paramInt);
-  }
-  
-  public void setLeftTextColorById(int paramInt)
-  {
-    this.mLeftButton.setTextColor(StyleManager.getColor(paramInt));
-  }
-  
-  public void setLeftTextVisible(boolean paramBoolean)
-  {
-    Button localButton;
-    if (this.mLeftButton != null)
-    {
-      localButton = this.mLeftButton;
-      if (!paramBoolean) {
-        break label24;
-      }
+
+    public void setRightText(String text) {
+        if (this.mRightButton != null) {
+            this.mRightButton.setText(text);
+            this.mRightButton.setVisibility(0);
+        }
+        if (this.mRightImageView != null) {
+            this.mRightImageView.setVisibility(4);
+        }
     }
-    label24:
-    for (int i = 0;; i = 4)
-    {
-      localButton.setVisibility(i);
-      return;
+
+    public void setRightText(int resId) {
+        setRightText(StyleManager.getString(resId));
     }
-  }
-  
-  public void setMiddleContenVisible(boolean paramBoolean)
-  {
-    FrameLayout localFrameLayout = this.mMiddleContent;
-    if (paramBoolean == true) {}
-    for (int i = 0;; i = 4)
-    {
-      localFrameLayout.setVisibility(i);
-      return;
+
+    public void setRightTextColor(int color) {
+        if (this.mRightButton != null) {
+            this.mRightButton.setTextColor(color);
+        }
     }
-  }
-  
-  public void setMiddleContent(View paramView)
-  {
-    this.mMiddleContent.setVisibility(0);
-    this.mMiddleContent.removeAllViews();
-    this.mMiddleContent.addView(paramView, new FrameLayout.LayoutParams(-1, -1));
-    this.hasSetMiddleContentFromOutSide = true;
-    this.mMiddleTextView.setVisibility(4);
-  }
-  
-  public void setMiddleContentBackgroud(Drawable paramDrawable)
-  {
-    this.mMiddleContent.setBackgroundDrawable(paramDrawable);
-  }
-  
-  public void setMiddleContentClickable(boolean paramBoolean)
-  {
-    this.mMiddleContent.setClickable(paramBoolean);
-  }
-  
-  public void setMiddleOnClickedListener(View.OnClickListener paramOnClickListener)
-  {
-    this.mMiddleContent.setOnClickListener(paramOnClickListener);
-    this.mMiddleContent.setClickable(true);
-  }
-  
-  public void setMiddleText(int paramInt)
-  {
-    if (this.mMiddleTextView != null)
-    {
-      this.mMiddleTextView.setText(paramInt);
-      this.mMiddleTextView.setVisibility(0);
-      this.mMiddleContent.setVisibility(8);
+
+    public void setRightIconBackGround(Drawable d) {
+        if (this.mRightImageView != null) {
+            this.mRightImageView.setVisibility(0);
+        }
+        if (this.mRightButton != null) {
+            this.mRightButton.setVisibility(4);
+        }
     }
-  }
-  
-  public void setMiddleText(CharSequence paramCharSequence)
-  {
-    if (this.mMiddleTextView != null)
-    {
-      this.mMiddleTextView.setText(paramCharSequence);
-      this.mMiddleTextView.setVisibility(0);
-      this.mMiddleContent.setVisibility(8);
+
+    public void setRightIcon(Drawable d) {
+        if (this.mRightImageView != null) {
+            this.mRightImageView.setImageDrawable(d);
+            this.mRightImageView.setVisibility(0);
+        }
+        if (this.mRightButton != null) {
+            this.mRightButton.setVisibility(4);
+        }
     }
-  }
-  
-  public void setMiddleTextColor(int paramInt)
-  {
-    if (this.mMiddleTextView != null) {
-      this.mMiddleTextView.setTextColor(paramInt);
+
+    public void setRightEnabled(boolean enabled) {
+        if (this.mRightButton != null) {
+            this.mRightButton.setEnabled(enabled);
+        }
+        if (this.mRightImageView != null) {
+            this.mRightImageView.setEnabled(enabled);
+        }
     }
-  }
-  
-  public void setMiddleTextVisible(boolean paramBoolean)
-  {
-    TextView localTextView;
-    if (this.mMiddleTextView != null)
-    {
-      localTextView = this.mMiddleTextView;
-      if (!paramBoolean) {
-        break label24;
-      }
+
+    public void setLeftEnabled(boolean enabled) {
+        if (this.mLeftButton != null) {
+            this.mLeftButton.setEnabled(enabled);
+        }
+        if (this.mLeftImageView != null) {
+            this.mLeftImageView.setEnabled(enabled);
+        }
     }
-    label24:
-    for (int i = 0;; i = 8)
-    {
-      localTextView.setVisibility(i);
-      return;
+
+    public void setRightContent(View view) {
+        this.mRightContent.removeAllViews();
+        this.mRightContent.addView(view, new LayoutParams(-1, -1));
+        this.mRightContent.setOnClickListener(this.mRightListner);
+        this.mRightContent.setClickable(true);
+        this.hasSetRightContentFromOutSide = true;
     }
-  }
-  
-  public void setRightContenVisible(boolean paramBoolean)
-  {
-    FrameLayout localFrameLayout = this.mRightContent;
-    if (paramBoolean == true) {}
-    for (int i = 0;; i = 4)
-    {
-      localFrameLayout.setVisibility(i);
-      return;
+
+    public void setLeftContent(View view) {
+        this.mLeftContent.removeAllViews();
+        this.mLeftContent.addView(view, new LayoutParams(-1, -1));
+        this.mLeftContent.setOnClickListener(this.mLeftListener);
+        this.mLeftContent.setClickable(true);
+        this.hasSetRightContentFromOutSide = true;
     }
-  }
-  
-  public void setRightContent(View paramView)
-  {
-    this.mRightContent.removeAllViews();
-    this.mRightContent.addView(paramView, new FrameLayout.LayoutParams(-1, -1));
-    this.mRightContent.setOnClickListener(this.mRightListner);
-    this.mRightContent.setClickable(true);
-    this.hasSetRightContentFromOutSide = true;
-  }
-  
-  public void setRightContentBackgroud(Drawable paramDrawable)
-  {
-    this.mRightContent.setBackgroundDrawable(paramDrawable);
-  }
-  
-  public void setRightContentClickable(boolean paramBoolean)
-  {
-    this.mRightContent.setClickable(paramBoolean);
-  }
-  
-  public void setRightEnabled(boolean paramBoolean)
-  {
-    if (this.mRightButton != null) {
-      this.mRightButton.setEnabled(paramBoolean);
+
+    public void setMiddleContent(View view) {
+        this.mMiddleContent.setVisibility(0);
+        this.mMiddleContent.removeAllViews();
+        this.mMiddleContent.addView(view, new LayoutParams(-1, -1));
+        this.hasSetMiddleContentFromOutSide = true;
+        this.mMiddleTextView.setVisibility(4);
     }
-    if (this.mRightImageView != null) {
-      this.mRightImageView.setEnabled(paramBoolean);
+
+    public void setMiddleText(int resId) {
+        if (this.mMiddleTextView != null) {
+            this.mMiddleTextView.setText(resId);
+            this.mMiddleTextView.setVisibility(0);
+            this.mMiddleContent.setVisibility(8);
+        }
     }
-  }
-  
-  public void setRightIcon(Drawable paramDrawable)
-  {
-    if (this.mRightImageView != null)
-    {
-      this.mRightImageView.setImageDrawable(paramDrawable);
-      this.mRightImageView.setVisibility(0);
+
+    public void setMiddleText(CharSequence text) {
+        if (this.mMiddleTextView != null) {
+            this.mMiddleTextView.setText(text);
+            this.mMiddleTextView.setVisibility(0);
+            this.mMiddleContent.setVisibility(8);
+        }
     }
-    if (this.mRightButton != null) {
-      this.mRightButton.setVisibility(4);
+
+    public void setMiddleContenVisible(boolean isVisible) {
+        this.mMiddleContent.setVisibility(isVisible ? 0 : 4);
     }
-  }
-  
-  public void setRightIconBackGround(Drawable paramDrawable)
-  {
-    if (this.mRightImageView != null) {
-      this.mRightImageView.setVisibility(0);
+
+    public void setRightContenVisible(boolean isVisible) {
+        this.mRightContent.setVisibility(isVisible ? 0 : 4);
     }
-    if (this.mRightButton != null) {
-      this.mRightButton.setVisibility(4);
+
+    public void setLeftContenVisible(boolean isVisible) {
+        this.mLeftContent.setVisibility(isVisible ? 0 : 4);
     }
-  }
-  
-  public void setRightIconVisible(boolean paramBoolean)
-  {
-    ImageView localImageView;
-    if (this.mRightImageView != null)
-    {
-      localImageView = this.mRightImageView;
-      if (!paramBoolean) {
-        break label24;
-      }
+
+    public View getLeftContent() {
+        return this.mLeftImageView;
     }
-    label24:
-    for (int i = 0;; i = 4)
-    {
-      localImageView.setVisibility(i);
-      return;
+
+    public View getMiddleContent() {
+        return this.mMiddleContent;
     }
-  }
-  
-  public void setRightOnClickedListener(View.OnClickListener paramOnClickListener)
-  {
-    this.mRightListner = paramOnClickListener;
-    if (this.hasSetRightContentFromOutSide)
-    {
-      this.mRightContent.setClickable(true);
-      this.mRightContent.setOnClickListener(paramOnClickListener);
+
+    public View getRightContent() {
+        return this.mRightContent;
     }
-    do
-    {
-      return;
-      this.mRightContent.setClickable(false);
-      if (this.mRightImageView != null) {
-        this.mRightImageView.setOnClickListener(paramOnClickListener);
-      }
-    } while (this.mRightButton == null);
-    this.mRightButton.setOnClickListener(paramOnClickListener);
-  }
-  
-  public void setRightText(int paramInt)
-  {
-    setRightText(StyleManager.getString(paramInt));
-  }
-  
-  public void setRightText(String paramString)
-  {
-    if (this.mRightButton != null)
-    {
-      this.mRightButton.setText(paramString);
-      this.mRightButton.setVisibility(0);
+
+    public void setLeftContentBackgroud(Drawable d) {
+        this.mLeftContent.setBackgroundDrawable(d);
     }
-    if (this.mRightImageView != null) {
-      this.mRightImageView.setVisibility(4);
+
+    public void setRightContentBackgroud(Drawable d) {
+        this.mRightContent.setBackgroundDrawable(d);
     }
-  }
-  
-  public void setRightTextBackground(Drawable paramDrawable)
-  {
-    if (this.mRightButton != null)
-    {
-      this.mRightButton.setBackgroundDrawable(paramDrawable);
-      this.mRightButton.setVisibility(0);
+
+    public void setMiddleContentBackgroud(Drawable d) {
+        this.mMiddleContent.setBackgroundDrawable(d);
     }
-    if (this.mRightImageView != null) {
-      this.mRightImageView.setVisibility(4);
+
+    public void setLeftContentClickable(boolean clickable) {
+        this.mLeftContent.setClickable(clickable);
     }
-  }
-  
-  public void setRightTextColor(int paramInt)
-  {
-    if (this.mRightButton != null) {
-      this.mRightButton.setTextColor(paramInt);
+
+    public void setRightContentClickable(boolean clickable) {
+        this.mRightContent.setClickable(clickable);
     }
-  }
-  
-  public void setRightTextVisible(boolean paramBoolean)
-  {
-    TextView localTextView;
-    if (this.mRightButton != null)
-    {
-      localTextView = this.mRightButton;
-      if (!paramBoolean) {
-        break label24;
-      }
+
+    public void setMiddleContentClickable(boolean clickable) {
+        this.mMiddleContent.setClickable(clickable);
     }
-    label24:
-    for (int i = 0;; i = 4)
-    {
-      localTextView.setVisibility(i);
-      return;
+
+    public void setMiddleTextColor(int color) {
+        if (this.mMiddleTextView != null) {
+            this.mMiddleTextView.setTextColor(color);
+        }
     }
-  }
-  
-  public void updateStyle()
-  {
-    if (!this.isMapMode) {}
-    do
-    {
-      return;
-      if (this.mLeftImageView != null)
-      {
-        this.mLeftImageView.setBackgroundDrawable(StyleManager.getDrawable(2130838020));
-        this.mLeftImageView.setImageDrawable(StyleManager.getDrawable(2130838022));
-      }
-      if (this.mLeftButton != null) {
-        this.mLeftButton.setBackgroundDrawable(StyleManager.getDrawable(2130838018));
-      }
-      this.mLayout.setBackgroundColor(StyleManager.getColor(2131558505));
-    } while ((!NaviFragmentManager.isUsingMapMode()) || (this.mMiddleTextView == null));
-    this.mMiddleTextView.setTextColor(StyleManager.getColor(2131558507));
-  }
+
+    public void setMiddleTextVisible(boolean visible) {
+        if (this.mMiddleTextView != null) {
+            this.mMiddleTextView.setVisibility(visible ? 0 : 8);
+        }
+    }
+
+    public void updateStyle() {
+        if (this.isMapMode) {
+            if (this.mLeftImageView != null) {
+                this.mLeftImageView.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_titlebar_btn_transparent_bg_selector));
+                this.mLeftImageView.setImageDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_titlebar_ic_back_normal));
+            }
+            if (this.mLeftButton != null) {
+                this.mLeftButton.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_titlebar_btn_bg_selector));
+            }
+            this.mLayout.setBackgroundColor(StyleManager.getColor(C0965R.color.bnav_titlebar_bg));
+            if (NaviFragmentManager.isUsingMapMode() && this.mMiddleTextView != null) {
+                this.mMiddleTextView.setTextColor(StyleManager.getColor(C0965R.color.bnav_titlebar_middle_text));
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/view/CommonTitleBar.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

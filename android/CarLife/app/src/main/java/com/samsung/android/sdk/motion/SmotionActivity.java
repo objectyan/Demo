@@ -1,6 +1,5 @@
 package com.samsung.android.sdk.motion;
 
-import android.content.Context;
 import android.hardware.scontext.SContextListener;
 import android.hardware.scontext.SContextManager;
 import android.os.Build.VERSION;
@@ -12,376 +11,324 @@ import android.view.WindowManager;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SmotionActivity
-{
-  private static boolean i;
-  private static Smotion o = null;
-  private static final Object q = new Object();
-  private Info a;
-  private int b;
-  private long c;
-  private ChangeListener d = null;
-  private a e = null;
-  private SContextListener f = null;
-  private PowerManager g;
-  private Display h;
-  private boolean j = false;
-  private boolean k = false;
-  private boolean l = false;
-  private Timer m = null;
-  private long n = 3000L;
-  private boolean p = false;
-  
-  public SmotionActivity(Looper arg1, Smotion paramSmotion)
-  {
-    if (??? == null) {
-      throw new NullPointerException("SmotionActivity : Looper is null. ");
+public class SmotionActivity {
+    /* renamed from: i */
+    private static boolean f24666i;
+    /* renamed from: o */
+    private static Smotion f24667o = null;
+    /* renamed from: q */
+    private static final Object f24668q = new Object();
+    /* renamed from: a */
+    private Info f24669a;
+    /* renamed from: b */
+    private int f24670b;
+    /* renamed from: c */
+    private long f24671c;
+    /* renamed from: d */
+    private ChangeListener f24672d = null;
+    /* renamed from: e */
+    private C6068a f24673e = null;
+    /* renamed from: f */
+    private SContextListener f24674f = null;
+    /* renamed from: g */
+    private PowerManager f24675g;
+    /* renamed from: h */
+    private Display f24676h;
+    /* renamed from: j */
+    private boolean f24677j = false;
+    /* renamed from: k */
+    private boolean f24678k = false;
+    /* renamed from: l */
+    private boolean f24679l = false;
+    /* renamed from: m */
+    private Timer f24680m = null;
+    /* renamed from: n */
+    private long f24681n = 3000;
+    /* renamed from: p */
+    private boolean f24682p = false;
+
+    public interface ChangeListener {
+        void onChanged(int i, Info[] infoArr);
     }
-    if (paramSmotion == null) {
-      throw new NullPointerException("SmotionActivity : Smotion is null. ");
-    }
-    if (paramSmotion.d == null) {
-      throw new IllegalArgumentException("SmotionActivity : Smotion.initialize() is not called. ");
-    }
-    if (!paramSmotion.a) {
-      throw new IllegalStateException("SmotionActivity : Smotion.initialize() is not successful. ");
-    }
-    this.e = new a(???);
-    boolean bool;
-    synchronized (q)
-    {
-      o = paramSmotion;
-      bool = o.isFeatureEnabled(3);
-    }
-    synchronized (q)
-    {
-      i = bool;
-      this.g = ((PowerManager)paramSmotion.d.getSystemService("power"));
-      this.h = ((WindowManager)paramSmotion.d.getSystemService("window")).getDefaultDisplay();
-      if (!i)
-      {
-        throw new IllegalStateException("SmotionActivity : This device is not supported. ");
-        paramSmotion = finally;
-        throw paramSmotion;
-      }
-    }
-  }
-  
-  private void c()
-  {
-    this.l = false;
-    if (this.m != null)
-    {
-      this.m.cancel();
-      this.m = null;
-    }
-  }
-  
-  private boolean d()
-  {
-    if (Build.VERSION.SDK_INT > 19)
-    {
-      if (this.h.getState() == 2) {
-        return true;
-      }
-      if (this.h.getState() == 1) {
-        return false;
-      }
-    }
-    else
-    {
-      return this.g.isScreenOn();
-    }
-    return false;
-  }
-  
-  public Info getInfo()
-  {
-    if (this.d == null) {
-      throw new IllegalStateException("SmotionActivity : start() is not called. ");
-    }
-    if ((this.b == 2) || (!this.j)) {
-      return null;
-    }
-    if (!d())
-    {
-      this.k = false;
-      updateInfo();
-      if (this.m == null)
-      {
-        this.m = new Timer();
-        this.m.schedule(new b((byte)0), this.n);
-      }
-      if (!this.k) {
-        break label109;
-      }
-    }
-    for (;;)
-    {
-      this.k = false;
-      c();
-      return this.a;
-      label109:
-      if (!this.l) {
-        break;
-      }
-      Log.d("SmotionActivity", "SmotionActivity : getInfo() Time out !!");
-    }
-  }
-  
-  public boolean isActivitySupported(int paramInt)
-  {
-    if ((paramInt < 0) || (paramInt > 4)) {
-      throw new IllegalArgumentException("SmotionActivity : activity value is wrong!!");
-    }
-    switch (paramInt)
-    {
-    default: 
-      return false;
-    }
-    return Smotion.c;
-  }
-  
-  public boolean isUpdateInfoBatchModeSupport()
-  {
-    return Smotion.b;
-  }
-  
-  public void start(int paramInt, ChangeListener paramChangeListener)
-  {
-    if ((paramInt < 0) || (paramInt > 2)) {
-      throw new IllegalArgumentException("SmotionActivity : Mode value is wrong. ");
-    }
-    this.b = paramInt;
-    if (paramChangeListener == null) {
-      throw new IllegalArgumentException("SmotionActivity : ChangeListener is null. ");
-    }
-    if (!i) {
-      throw new IllegalStateException("SmotionActivity : This device is not supported. ");
-    }
-    if (this.d == null)
-    {
-      this.d = paramChangeListener;
-      this.a = new Info();
-      if (paramChangeListener != null) {
-        break label144;
-      }
-      paramChangeListener = null;
-      this.f = paramChangeListener;
-      if (this.b != 1) {
-        break label157;
-      }
-      this.e.registerListener(this.f, 25);
-      this.p = true;
-      updateInfo();
-    }
-    for (;;)
-    {
-      try
-      {
-        o.a(o.d, "SmotionActivity.start()");
-        return;
-      }
-      catch (SecurityException paramChangeListener)
-      {
-        label144:
-        label157:
-        throw new SecurityException("com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY permission is required.");
-      }
-      throw new IllegalStateException("SmotionActivity : ChangeListener is already registered. ");
-      paramChangeListener = new a(this, paramChangeListener);
-      break;
-      if (this.b == 2)
-      {
-        this.e.registerListener(this.f, 26);
-        this.c = System.currentTimeMillis();
-      }
-      else if (this.b == 0)
-      {
-        this.e.registerListener(this.f, 25);
-        this.p = true;
-        updateInfo();
-        this.e.registerListener(this.f, 26);
-      }
-    }
-  }
-  
-  public void stop()
-  {
-    if (this.d == null) {
-      throw new IllegalStateException("SmotionActivity : start() is not called. ");
-    }
-    if (this.e != null)
-    {
-      if (this.b != 1) {
-        break label75;
-      }
-      this.e.unregisterListener(this.f, 25);
-    }
-    for (;;)
-    {
-      c();
-      this.b = -1;
-      this.d = null;
-      this.a = null;
-      this.f = null;
-      this.p = false;
-      return;
-      label75:
-      if (this.b == 2)
-      {
-        this.e.unregisterListener(this.f, 26);
-      }
-      else if (this.b == 0)
-      {
-        this.e.unregisterListener(this.f, 25);
-        this.e.unregisterListener(this.f, 26);
-      }
-    }
-  }
-  
-  public void updateInfo()
-  {
-    if (this.f == null) {
-      throw new IllegalStateException("SmotionActivity : start() is not called. ");
-    }
-    if (this.b == 1) {
-      if (d()) {
-        if (this.p)
-        {
-          this.e.requestToUpdate(this.f, 25);
-          this.p = false;
-          break label57;
+
+    public static class Info {
+        public static final int ACCURACY_HIGH = 2;
+        public static final int ACCURACY_LOW = 0;
+        public static final int ACCURACY_MID = 1;
+        public static final int MODE_ALL = 0;
+        public static final int MODE_BATCH = 2;
+        public static final int MODE_REALTIME = 1;
+        public static final int STATUS_RUN = 3;
+        public static final int STATUS_STATIONARY = 1;
+        public static final int STATUS_UNKNOWN = 0;
+        public static final int STATUS_VEHICLE = 4;
+        public static final int STATUS_WALK = 2;
+        /* renamed from: a */
+        private int f24662a;
+        /* renamed from: b */
+        private int f24663b;
+        /* renamed from: c */
+        private long f24664c;
+
+        public Info() {
+            if (SmotionActivity.f24667o == null) {
+                throw new IllegalStateException("SmotionActivity.Info : SmotionActivity is not created. ");
+            } else if (!SmotionActivity.f24666i) {
+                throw new IllegalStateException("SmotionActivity.Info : This device is not supported. ");
+            }
         }
-      }
-    }
-    for (;;)
-    {
-      label57:
-      return;
-      if (this.a != null)
-      {
-        Info localInfo = this.a;
-        this.d.onChanged(this.b, new Info[] { localInfo });
-        return;
-        this.e.requestToUpdate(this.f, 25);
-        return;
-        if (this.b == 2)
-        {
-          if (!isUpdateInfoBatchModeSupport()) {
-            break;
-          }
-          this.e.requestToUpdate(this.f, 26);
-          return;
+
+        public int getAccuracy() {
+            return this.f24663b;
         }
-        if (this.b != 0) {
-          break;
+
+        public int getStatus() {
+            return this.f24662a;
         }
-        if (d())
-        {
-          if (this.p)
-          {
-            this.e.requestToUpdate(this.f, 25);
-            this.p = false;
-            return;
-          }
-          if (this.a != null)
-          {
-            localInfo = this.a;
-            this.d.onChanged(1, new Info[] { localInfo });
-          }
+
+        public long getTimeStamp() {
+            return this.f24664c;
         }
-        while (isUpdateInfoBatchModeSupport())
-        {
-          this.e.requestToUpdate(this.f, 26);
-          return;
-          this.e.requestToUpdate(this.f, 25);
+    }
+
+    /* renamed from: com.samsung.android.sdk.motion.SmotionActivity$a */
+    private static class C6068a extends SContextManager {
+        public C6068a(Looper looper) {
+            super(looper);
         }
-      }
+
+        public final boolean registerListener(SContextListener sContextListener, int i) {
+            return super.registerListener(sContextListener, i);
+        }
+
+        public final void unregisterListener(SContextListener sContextListener, int i) {
+            super.unregisterListener(sContextListener, i);
+        }
     }
-  }
-  
-  public static abstract interface ChangeListener
-  {
-    public abstract void onChanged(int paramInt, SmotionActivity.Info[] paramArrayOfInfo);
-  }
-  
-  public static class Info
-  {
-    public static final int ACCURACY_HIGH = 2;
-    public static final int ACCURACY_LOW = 0;
-    public static final int ACCURACY_MID = 1;
-    public static final int MODE_ALL = 0;
-    public static final int MODE_BATCH = 2;
-    public static final int MODE_REALTIME = 1;
-    public static final int STATUS_RUN = 3;
-    public static final int STATUS_STATIONARY = 1;
-    public static final int STATUS_UNKNOWN = 0;
-    public static final int STATUS_VEHICLE = 4;
-    public static final int STATUS_WALK = 2;
-    private int a;
-    private int b;
-    private long c;
-    
-    public Info()
-    {
-      if (SmotionActivity.a() == null) {
-        throw new IllegalStateException("SmotionActivity.Info : SmotionActivity is not created. ");
-      }
-      if (!SmotionActivity.b()) {
-        throw new IllegalStateException("SmotionActivity.Info : This device is not supported. ");
-      }
+
+    /* renamed from: com.samsung.android.sdk.motion.SmotionActivity$b */
+    private class C6069b extends TimerTask {
+        /* renamed from: a */
+        private /* synthetic */ SmotionActivity f24665a;
+
+        private C6069b(SmotionActivity smotionActivity) {
+            this.f24665a = smotionActivity;
+        }
+
+        public final void run() {
+            this.f24665a.f24679l = true;
+        }
     }
-    
-    public int getAccuracy()
-    {
-      return this.b;
+
+    public SmotionActivity(Looper looper, Smotion smotion) {
+        if (looper == null) {
+            throw new NullPointerException("SmotionActivity : Looper is null. ");
+        } else if (smotion == null) {
+            throw new NullPointerException("SmotionActivity : Smotion is null. ");
+        } else if (smotion.f24655d == null) {
+            throw new IllegalArgumentException("SmotionActivity : Smotion.initialize() is not called. ");
+        } else if (smotion.f24654a) {
+            this.f24673e = new C6068a(looper);
+            synchronized (f24668q) {
+                f24667o = smotion;
+            }
+            boolean isFeatureEnabled = f24667o.isFeatureEnabled(3);
+            synchronized (f24668q) {
+                f24666i = isFeatureEnabled;
+            }
+            this.f24675g = (PowerManager) smotion.f24655d.getSystemService("power");
+            this.f24676h = ((WindowManager) smotion.f24655d.getSystemService("window")).getDefaultDisplay();
+            if (!f24666i) {
+                throw new IllegalStateException("SmotionActivity : This device is not supported. ");
+            }
+        } else {
+            throw new IllegalStateException("SmotionActivity : Smotion.initialize() is not successful. ");
+        }
     }
-    
-    public int getStatus()
-    {
-      return this.a;
+
+    /* renamed from: a */
+    static /* synthetic */ Info m21604a(SmotionActivity smotionActivity, long j, int i, int i2) {
+        Info info = new Info();
+        info.f24664c = j;
+        switch (i) {
+            case 1:
+                info.f24662a = 1;
+                break;
+            case 2:
+                info.f24662a = 2;
+                break;
+            case 3:
+                info.f24662a = 3;
+                break;
+            case 4:
+            case 5:
+                info.f24662a = 4;
+                break;
+            default:
+                info.f24662a = 0;
+                break;
+        }
+        switch (i2) {
+            case 0:
+                info.f24663b = 0;
+                break;
+            case 1:
+                info.f24663b = 1;
+                break;
+            case 2:
+                info.f24663b = 2;
+                break;
+        }
+        return info;
     }
-    
-    public long getTimeStamp()
-    {
-      return this.c;
+
+    /* renamed from: c */
+    private void m21611c() {
+        this.f24679l = false;
+        if (this.f24680m != null) {
+            this.f24680m.cancel();
+            this.f24680m = null;
+        }
     }
-  }
-  
-  private static final class a
-    extends SContextManager
-  {
-    public a(Looper paramLooper)
-    {
-      super();
+
+    /* renamed from: d */
+    private boolean m21613d() {
+        return VERSION.SDK_INT > 19 ? this.f24676h.getState() == 2 ? true : this.f24676h.getState() == 1 ? false : false : this.f24675g.isScreenOn();
     }
-    
-    public final boolean registerListener(SContextListener paramSContextListener, int paramInt)
-    {
-      return super.registerListener(paramSContextListener, paramInt);
+
+    public Info getInfo() {
+        if (this.f24672d == null) {
+            throw new IllegalStateException("SmotionActivity : start() is not called. ");
+        } else if (this.f24670b == 2 || !this.f24677j) {
+            return null;
+        } else {
+            if (!m21613d()) {
+                this.f24678k = false;
+                updateInfo();
+                if (this.f24680m == null) {
+                    this.f24680m = new Timer();
+                    this.f24680m.schedule(new C6069b(), this.f24681n);
+                }
+                while (!this.f24678k) {
+                    if (this.f24679l) {
+                        Log.d("SmotionActivity", "SmotionActivity : getInfo() Time out !!");
+                        break;
+                    }
+                }
+                this.f24678k = false;
+                m21611c();
+            }
+            return this.f24669a;
+        }
     }
-    
-    public final void unregisterListener(SContextListener paramSContextListener, int paramInt)
-    {
-      super.unregisterListener(paramSContextListener, paramInt);
+
+    public boolean isActivitySupported(int i) {
+        if (i < 0 || i > 4) {
+            throw new IllegalArgumentException("SmotionActivity : activity value is wrong!!");
+        }
+        switch (i) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                return Smotion.f24653c;
+            default:
+                return false;
+        }
     }
-  }
-  
-  private final class b
-    extends TimerTask
-  {
-    private b() {}
-    
-    public final void run()
-    {
-      SmotionActivity.a(SmotionActivity.this, true);
+
+    public boolean isUpdateInfoBatchModeSupport() {
+        return Smotion.f24652b;
     }
-  }
+
+    public void start(int i, ChangeListener changeListener) {
+        if (i < 0 || i > 2) {
+            throw new IllegalArgumentException("SmotionActivity : Mode value is wrong. ");
+        }
+        this.f24670b = i;
+        if (changeListener == null) {
+            throw new IllegalArgumentException("SmotionActivity : ChangeListener is null. ");
+        } else if (!f24666i) {
+            throw new IllegalStateException("SmotionActivity : This device is not supported. ");
+        } else if (this.f24672d == null) {
+            this.f24672d = changeListener;
+            this.f24669a = new Info();
+            this.f24674f = changeListener == null ? null : new C6074a(this, changeListener);
+            if (this.f24670b == 1) {
+                this.f24673e.registerListener(this.f24674f, 25);
+                this.f24682p = true;
+                updateInfo();
+            } else if (this.f24670b == 2) {
+                this.f24673e.registerListener(this.f24674f, 26);
+                this.f24671c = System.currentTimeMillis();
+            } else if (this.f24670b == 0) {
+                this.f24673e.registerListener(this.f24674f, 25);
+                this.f24682p = true;
+                updateInfo();
+                this.f24673e.registerListener(this.f24674f, 26);
+            }
+            try {
+                f24667o.m21598a(f24667o.f24655d, "SmotionActivity.start()");
+            } catch (SecurityException e) {
+                throw new SecurityException("com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY permission is required.");
+            }
+        } else {
+            throw new IllegalStateException("SmotionActivity : ChangeListener is already registered. ");
+        }
+    }
+
+    public void stop() {
+        if (this.f24672d == null) {
+            throw new IllegalStateException("SmotionActivity : start() is not called. ");
+        }
+        if (this.f24673e != null) {
+            if (this.f24670b == 1) {
+                this.f24673e.unregisterListener(this.f24674f, 25);
+            } else if (this.f24670b == 2) {
+                this.f24673e.unregisterListener(this.f24674f, 26);
+            } else if (this.f24670b == 0) {
+                this.f24673e.unregisterListener(this.f24674f, 25);
+                this.f24673e.unregisterListener(this.f24674f, 26);
+            }
+        }
+        m21611c();
+        this.f24670b = -1;
+        this.f24672d = null;
+        this.f24669a = null;
+        this.f24674f = null;
+        this.f24682p = false;
+    }
+
+    public void updateInfo() {
+        if (this.f24674f == null) {
+            throw new IllegalStateException("SmotionActivity : start() is not called. ");
+        } else if (this.f24670b == 1) {
+            if (!m21613d()) {
+                this.f24673e.requestToUpdate(this.f24674f, 25);
+            } else if (this.f24682p) {
+                this.f24673e.requestToUpdate(this.f24674f, 25);
+                this.f24682p = false;
+            } else if (this.f24669a != null) {
+                this.f24672d.onChanged(this.f24670b, new Info[]{this.f24669a});
+            }
+        } else if (this.f24670b == 2) {
+            if (isUpdateInfoBatchModeSupport()) {
+                this.f24673e.requestToUpdate(this.f24674f, 26);
+            }
+        } else if (this.f24670b == 0) {
+            if (!m21613d()) {
+                this.f24673e.requestToUpdate(this.f24674f, 25);
+            } else if (this.f24682p) {
+                this.f24673e.requestToUpdate(this.f24674f, 25);
+                this.f24682p = false;
+                return;
+            } else if (this.f24669a != null) {
+                this.f24672d.onChanged(1, new Info[]{this.f24669a});
+            }
+            if (isUpdateInfoBatchModeSupport()) {
+                this.f24673e.requestToUpdate(this.f24674f, 26);
+            }
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/samsung/android/sdk/motion/SmotionActivity.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -1,46 +1,42 @@
 package com.baidu.carlife.fragment;
 
 import android.annotation.SuppressLint;
-import com.baidu.carlife.core.i;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.core.C1260i;
+import com.baidu.carlife.custom.C1343b;
+import com.baidu.carlife.logic.p082b.p089a.C1713a;
+import com.baidu.carlife.logic.p082b.p090b.C1717a;
+import com.baidu.carlife.logic.p082b.p091c.p093b.C1734a;
+import com.baidu.carlife.p059c.p062b.C1100a;
+import com.baidu.carlife.p059c.p066e.C1135b;
 
 @SuppressLint({"ValidFragment"})
-public class HomeHelpFragment
-  extends BaseSettingFragment<com.baidu.carlife.logic.b.b.a>
-{
-  protected String a()
-  {
-    return getString(2131296356);
-  }
-  
-  protected com.baidu.carlife.c.b.a<com.baidu.carlife.logic.b.b.a> b()
-  {
-    return new com.baidu.carlife.logic.b.a.a();
-  }
-  
-  protected com.baidu.carlife.c.e.b<com.baidu.carlife.logic.b.b.a> c()
-  {
-    return new com.baidu.carlife.logic.b.c.b.a(this);
-  }
-  
-  public void driving()
-  {
-    i.b("yftech", "HomeHelpFragment driving");
-    if (com.baidu.carlife.custom.b.a().b())
-    {
-      dismissDialog();
-      back();
+public class HomeHelpFragment extends BaseSettingFragment<C1717a> {
+    /* renamed from: a */
+    protected String mo1568a() {
+        return getString(C0965R.string.carlife_person_ctrl_help);
     }
-  }
-  
-  public void onResume()
-  {
-    super.onResume();
-    setBottomBarStatus(true);
-  }
+
+    /* renamed from: b */
+    protected C1100a<C1717a> mo1569b() {
+        return new C1713a();
+    }
+
+    /* renamed from: c */
+    protected C1135b<C1717a> mo1570c() {
+        return new C1734a(this);
+    }
+
+    public void onResume() {
+        super.onResume();
+        setBottomBarStatus(true);
+    }
+
+    public void driving() {
+        C1260i.m4435b("yftech", "HomeHelpFragment driving");
+        if (C1343b.m4932a().m4935b()) {
+            dismissDialog();
+            back();
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/fragment/HomeHelpFragment.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

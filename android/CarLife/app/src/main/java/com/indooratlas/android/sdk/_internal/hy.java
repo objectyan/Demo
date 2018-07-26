@@ -1,55 +1,52 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class hy
-{
-  static final String a = gw.b();
-  public static final String b = a + "-Sent-Millis";
-  public static final String c = a + "-Received-Millis";
-  public static final String d = a + "-Selected-Protocol";
-  public static final String e = a + "-Response-Source";
-  
-  static
-  {
-    gw.a();
-  }
-  
-  public static long a(gd paramgd)
-  {
-    return b(paramgd.a("Content-Length"));
-  }
-  
-  public static long a(gk paramgk)
-  {
-    return a(paramgk.c);
-  }
-  
-  public static long a(gm paramgm)
-  {
-    return a(paramgm.f);
-  }
-  
-  static boolean a(String paramString)
-  {
-    return (!"Connection".equalsIgnoreCase(paramString)) && (!"Keep-Alive".equalsIgnoreCase(paramString)) && (!"Proxy-Authenticate".equalsIgnoreCase(paramString)) && (!"Proxy-Authorization".equalsIgnoreCase(paramString)) && (!"TE".equalsIgnoreCase(paramString)) && (!"Trailers".equalsIgnoreCase(paramString)) && (!"Transfer-Encoding".equalsIgnoreCase(paramString)) && (!"Upgrade".equalsIgnoreCase(paramString));
-  }
-  
-  private static long b(String paramString)
-  {
-    if (paramString == null) {
-      return -1L;
+import cz.msebera.android.httpclient.C6591q;
+
+public final class hy {
+    /* renamed from: a */
+    static final String f24320a = gw.b();
+    /* renamed from: b */
+    public static final String f24321b = (f24320a + "-Sent-Millis");
+    /* renamed from: c */
+    public static final String f24322c = (f24320a + "-Received-Millis");
+    /* renamed from: d */
+    public static final String f24323d = (f24320a + "-Selected-Protocol");
+    /* renamed from: e */
+    public static final String f24324e = (f24320a + "-Response-Source");
+
+    static {
+        gw.a();
     }
-    try
-    {
-      long l = Long.parseLong(paramString);
-      return l;
+
+    /* renamed from: a */
+    public static long m21078a(gd gdVar) {
+        return m21082b(gdVar.a("Content-Length"));
     }
-    catch (NumberFormatException paramString) {}
-    return -1L;
-  }
+
+    /* renamed from: b */
+    private static long m21082b(String str) {
+        long j = -1;
+        if (str != null) {
+            try {
+                j = Long.parseLong(str);
+            } catch (NumberFormatException e) {
+            }
+        }
+        return j;
+    }
+
+    /* renamed from: a */
+    static boolean m21081a(String str) {
+        return ("Connection".equalsIgnoreCase(str) || "Keep-Alive".equalsIgnoreCase(str) || "Proxy-Authenticate".equalsIgnoreCase(str) || "Proxy-Authorization".equalsIgnoreCase(str) || C6591q.f26537T.equalsIgnoreCase(str) || "Trailers".equalsIgnoreCase(str) || "Transfer-Encoding".equalsIgnoreCase(str) || C6591q.f26541X.equalsIgnoreCase(str)) ? false : true;
+    }
+
+    /* renamed from: a */
+    public static long m21079a(gk gkVar) {
+        return m21078a(gkVar.f23954c);
+    }
+
+    /* renamed from: a */
+    public static long m21080a(gm gmVar) {
+        return m21078a(gmVar.f23977f);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/hy.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

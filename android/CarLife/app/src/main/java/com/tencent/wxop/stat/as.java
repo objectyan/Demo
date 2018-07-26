@@ -1,27 +1,22 @@
 package com.tencent.wxop.stat;
 
-import com.tencent.wxop.stat.b.b;
-import com.tencent.wxop.stat.b.m;
+import com.tencent.wxop.stat.p291b.C6144m;
 import java.util.TimerTask;
 
-class as
-  extends TimerTask
-{
-  as(ar paramar) {}
-  
-  public void run()
-  {
-    if (f.b()) {
-      m.b().b("TimerTask run");
+class as extends TimerTask {
+    /* renamed from: a */
+    final /* synthetic */ ar f24856a;
+
+    as(ar arVar) {
+        this.f24856a = arVar;
     }
-    j.j(ar.a(this.a));
-    cancel();
-    this.a.a();
-  }
+
+    public void run() {
+        if (C6156f.m21997b()) {
+            C6144m.m21872b().m21825b((Object) "TimerTask run");
+        }
+        C6160j.m22145j(this.f24856a.f24855c);
+        cancel();
+        this.f24856a.m21802a();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/as.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

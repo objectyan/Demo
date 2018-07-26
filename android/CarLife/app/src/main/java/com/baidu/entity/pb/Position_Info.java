@@ -7,338 +7,301 @@ import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
 import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 
-public final class Position_Info
-  extends MessageMicro
-{
-  public static final int CITYID_FIELD_NUMBER = 4;
-  public static final int CNAME_FIELD_NUMBER = 5;
-  public static final int EXT_FIELD_NUMBER = 3;
-  public static final int NAME_FIELD_NUMBER = 7;
-  public static final int SHOWYX_FIELD_NUMBER = 6;
-  public static final int UID_FIELD_NUMBER = 2;
-  public static final int YX_FIELD_NUMBER = 1;
-  private boolean a;
-  private ByteStringMicro b = ByteStringMicro.EMPTY;
-  private boolean c;
-  private ByteStringMicro d = ByteStringMicro.EMPTY;
-  private boolean e;
-  private String f = "";
-  private boolean g;
-  private int h = 0;
-  private boolean i;
-  private String j = "";
-  private boolean k;
-  private ByteStringMicro l = ByteStringMicro.EMPTY;
-  private boolean m;
-  private ByteStringMicro n = ByteStringMicro.EMPTY;
-  private int o = -1;
-  
-  public static Position_Info parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new Position_Info().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static Position_Info parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (Position_Info)new Position_Info().mergeFrom(paramArrayOfByte);
-  }
-  
-  public final Position_Info clear()
-  {
-    clearYx();
-    clearUid();
-    clearExt();
-    clearCityid();
-    clearCname();
-    clearShowyx();
-    clearName();
-    this.o = -1;
-    return this;
-  }
-  
-  public Position_Info clearCityid()
-  {
-    this.g = false;
-    this.h = 0;
-    return this;
-  }
-  
-  public Position_Info clearCname()
-  {
-    this.i = false;
-    this.j = "";
-    return this;
-  }
-  
-  public Position_Info clearExt()
-  {
-    this.e = false;
-    this.f = "";
-    return this;
-  }
-  
-  public Position_Info clearName()
-  {
-    this.m = false;
-    this.n = ByteStringMicro.EMPTY;
-    return this;
-  }
-  
-  public Position_Info clearShowyx()
-  {
-    this.k = false;
-    this.l = ByteStringMicro.EMPTY;
-    return this;
-  }
-  
-  public Position_Info clearUid()
-  {
-    this.c = false;
-    this.d = ByteStringMicro.EMPTY;
-    return this;
-  }
-  
-  public Position_Info clearYx()
-  {
-    this.a = false;
-    this.b = ByteStringMicro.EMPTY;
-    return this;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.o < 0) {
-      getSerializedSize();
+public final class Position_Info extends MessageMicro {
+    public static final int CITYID_FIELD_NUMBER = 4;
+    public static final int CNAME_FIELD_NUMBER = 5;
+    public static final int EXT_FIELD_NUMBER = 3;
+    public static final int NAME_FIELD_NUMBER = 7;
+    public static final int SHOWYX_FIELD_NUMBER = 6;
+    public static final int UID_FIELD_NUMBER = 2;
+    public static final int YX_FIELD_NUMBER = 1;
+    /* renamed from: a */
+    private boolean f14176a;
+    /* renamed from: b */
+    private ByteStringMicro f14177b = ByteStringMicro.EMPTY;
+    /* renamed from: c */
+    private boolean f14178c;
+    /* renamed from: d */
+    private ByteStringMicro f14179d = ByteStringMicro.EMPTY;
+    /* renamed from: e */
+    private boolean f14180e;
+    /* renamed from: f */
+    private String f14181f = "";
+    /* renamed from: g */
+    private boolean f14182g;
+    /* renamed from: h */
+    private int f14183h = 0;
+    /* renamed from: i */
+    private boolean f14184i;
+    /* renamed from: j */
+    private String f14185j = "";
+    /* renamed from: k */
+    private boolean f14186k;
+    /* renamed from: l */
+    private ByteStringMicro f14187l = ByteStringMicro.EMPTY;
+    /* renamed from: m */
+    private boolean f14188m;
+    /* renamed from: n */
+    private ByteStringMicro f14189n = ByteStringMicro.EMPTY;
+    /* renamed from: o */
+    private int f14190o = -1;
+
+    public static Position_Info parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new Position_Info().mergeFrom(codedInputStreamMicro);
     }
-    return this.o;
-  }
-  
-  public int getCityid()
-  {
-    return this.h;
-  }
-  
-  public String getCname()
-  {
-    return this.j;
-  }
-  
-  public String getExt()
-  {
-    return this.f;
-  }
-  
-  public ByteStringMicro getName()
-  {
-    return this.n;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i2 = 0;
-    if (hasYx()) {
-      i2 = 0 + CodedOutputStreamMicro.computeBytesSize(1, getYx());
+
+    public static Position_Info parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (Position_Info) new Position_Info().mergeFrom(bArr);
     }
-    int i1 = i2;
-    if (hasUid()) {
-      i1 = i2 + CodedOutputStreamMicro.computeBytesSize(2, getUid());
-    }
-    i2 = i1;
-    if (hasExt()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getExt());
-    }
-    i1 = i2;
-    if (hasCityid()) {
-      i1 = i2 + CodedOutputStreamMicro.computeInt32Size(4, getCityid());
-    }
-    i2 = i1;
-    if (hasCname()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getCname());
-    }
-    i1 = i2;
-    if (hasShowyx()) {
-      i1 = i2 + CodedOutputStreamMicro.computeBytesSize(6, getShowyx());
-    }
-    i2 = i1;
-    if (hasName()) {
-      i2 = i1 + CodedOutputStreamMicro.computeBytesSize(7, getName());
-    }
-    this.o = i2;
-    return i2;
-  }
-  
-  public ByteStringMicro getShowyx()
-  {
-    return this.l;
-  }
-  
-  public ByteStringMicro getUid()
-  {
-    return this.d;
-  }
-  
-  public ByteStringMicro getYx()
-  {
-    return this.b;
-  }
-  
-  public boolean hasCityid()
-  {
-    return this.g;
-  }
-  
-  public boolean hasCname()
-  {
-    return this.i;
-  }
-  
-  public boolean hasExt()
-  {
-    return this.e;
-  }
-  
-  public boolean hasName()
-  {
-    return this.m;
-  }
-  
-  public boolean hasShowyx()
-  {
-    return this.k;
-  }
-  
-  public boolean hasUid()
-  {
-    return this.c;
-  }
-  
-  public boolean hasYx()
-  {
-    return this.a;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Position_Info mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
+
+    public final Position_Info clear() {
+        clearYx();
+        clearUid();
+        clearExt();
+        clearCityid();
+        clearCname();
+        clearShowyx();
+        clearName();
+        this.f14190o = -1;
         return this;
-      case 10: 
-        setYx(paramCodedInputStreamMicro.readBytes());
-        break;
-      case 18: 
-        setUid(paramCodedInputStreamMicro.readBytes());
-        break;
-      case 26: 
-        setExt(paramCodedInputStreamMicro.readString());
-        break;
-      case 32: 
-        setCityid(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 42: 
-        setCname(paramCodedInputStreamMicro.readString());
-        break;
-      case 50: 
-        setShowyx(paramCodedInputStreamMicro.readBytes());
-        break;
-      case 58: 
-        setName(paramCodedInputStreamMicro.readBytes());
-      }
     }
-  }
-  
-  public Position_Info setCityid(int paramInt)
-  {
-    this.g = true;
-    this.h = paramInt;
-    return this;
-  }
-  
-  public Position_Info setCname(String paramString)
-  {
-    this.i = true;
-    this.j = paramString;
-    return this;
-  }
-  
-  public Position_Info setExt(String paramString)
-  {
-    this.e = true;
-    this.f = paramString;
-    return this;
-  }
-  
-  public Position_Info setName(ByteStringMicro paramByteStringMicro)
-  {
-    this.m = true;
-    this.n = paramByteStringMicro;
-    return this;
-  }
-  
-  public Position_Info setShowyx(ByteStringMicro paramByteStringMicro)
-  {
-    this.k = true;
-    this.l = paramByteStringMicro;
-    return this;
-  }
-  
-  public Position_Info setUid(ByteStringMicro paramByteStringMicro)
-  {
-    this.c = true;
-    this.d = paramByteStringMicro;
-    return this;
-  }
-  
-  public Position_Info setYx(ByteStringMicro paramByteStringMicro)
-  {
-    this.a = true;
-    this.b = paramByteStringMicro;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasYx()) {
-      paramCodedOutputStreamMicro.writeBytes(1, getYx());
+
+    public Position_Info clearCityid() {
+        this.f14182g = false;
+        this.f14183h = 0;
+        return this;
     }
-    if (hasUid()) {
-      paramCodedOutputStreamMicro.writeBytes(2, getUid());
+
+    public Position_Info clearCname() {
+        this.f14184i = false;
+        this.f14185j = "";
+        return this;
     }
-    if (hasExt()) {
-      paramCodedOutputStreamMicro.writeString(3, getExt());
+
+    public Position_Info clearExt() {
+        this.f14180e = false;
+        this.f14181f = "";
+        return this;
     }
-    if (hasCityid()) {
-      paramCodedOutputStreamMicro.writeInt32(4, getCityid());
+
+    public Position_Info clearName() {
+        this.f14188m = false;
+        this.f14189n = ByteStringMicro.EMPTY;
+        return this;
     }
-    if (hasCname()) {
-      paramCodedOutputStreamMicro.writeString(5, getCname());
+
+    public Position_Info clearShowyx() {
+        this.f14186k = false;
+        this.f14187l = ByteStringMicro.EMPTY;
+        return this;
     }
-    if (hasShowyx()) {
-      paramCodedOutputStreamMicro.writeBytes(6, getShowyx());
+
+    public Position_Info clearUid() {
+        this.f14178c = false;
+        this.f14179d = ByteStringMicro.EMPTY;
+        return this;
     }
-    if (hasName()) {
-      paramCodedOutputStreamMicro.writeBytes(7, getName());
+
+    public Position_Info clearYx() {
+        this.f14176a = false;
+        this.f14177b = ByteStringMicro.EMPTY;
+        return this;
     }
-  }
+
+    public int getCachedSize() {
+        if (this.f14190o < 0) {
+            getSerializedSize();
+        }
+        return this.f14190o;
+    }
+
+    public int getCityid() {
+        return this.f14183h;
+    }
+
+    public String getCname() {
+        return this.f14185j;
+    }
+
+    public String getExt() {
+        return this.f14181f;
+    }
+
+    public ByteStringMicro getName() {
+        return this.f14189n;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasYx()) {
+            i = 0 + CodedOutputStreamMicro.computeBytesSize(1, getYx());
+        }
+        if (hasUid()) {
+            i += CodedOutputStreamMicro.computeBytesSize(2, getUid());
+        }
+        if (hasExt()) {
+            i += CodedOutputStreamMicro.computeStringSize(3, getExt());
+        }
+        if (hasCityid()) {
+            i += CodedOutputStreamMicro.computeInt32Size(4, getCityid());
+        }
+        if (hasCname()) {
+            i += CodedOutputStreamMicro.computeStringSize(5, getCname());
+        }
+        if (hasShowyx()) {
+            i += CodedOutputStreamMicro.computeBytesSize(6, getShowyx());
+        }
+        if (hasName()) {
+            i += CodedOutputStreamMicro.computeBytesSize(7, getName());
+        }
+        this.f14190o = i;
+        return i;
+    }
+
+    public ByteStringMicro getShowyx() {
+        return this.f14187l;
+    }
+
+    public ByteStringMicro getUid() {
+        return this.f14179d;
+    }
+
+    public ByteStringMicro getYx() {
+        return this.f14177b;
+    }
+
+    public boolean hasCityid() {
+        return this.f14182g;
+    }
+
+    public boolean hasCname() {
+        return this.f14184i;
+    }
+
+    public boolean hasExt() {
+        return this.f14180e;
+    }
+
+    public boolean hasName() {
+        return this.f14188m;
+    }
+
+    public boolean hasShowyx() {
+        return this.f14186k;
+    }
+
+    public boolean hasUid() {
+        return this.f14178c;
+    }
+
+    public boolean hasYx() {
+        return this.f14176a;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public Position_Info mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    setYx(codedInputStreamMicro.readBytes());
+                    continue;
+                case 18:
+                    setUid(codedInputStreamMicro.readBytes());
+                    continue;
+                case 26:
+                    setExt(codedInputStreamMicro.readString());
+                    continue;
+                case 32:
+                    setCityid(codedInputStreamMicro.readInt32());
+                    continue;
+                case 42:
+                    setCname(codedInputStreamMicro.readString());
+                    continue;
+                case 50:
+                    setShowyx(codedInputStreamMicro.readBytes());
+                    continue;
+                case 58:
+                    setName(codedInputStreamMicro.readBytes());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public Position_Info setCityid(int i) {
+        this.f14182g = true;
+        this.f14183h = i;
+        return this;
+    }
+
+    public Position_Info setCname(String str) {
+        this.f14184i = true;
+        this.f14185j = str;
+        return this;
+    }
+
+    public Position_Info setExt(String str) {
+        this.f14180e = true;
+        this.f14181f = str;
+        return this;
+    }
+
+    public Position_Info setName(ByteStringMicro byteStringMicro) {
+        this.f14188m = true;
+        this.f14189n = byteStringMicro;
+        return this;
+    }
+
+    public Position_Info setShowyx(ByteStringMicro byteStringMicro) {
+        this.f14186k = true;
+        this.f14187l = byteStringMicro;
+        return this;
+    }
+
+    public Position_Info setUid(ByteStringMicro byteStringMicro) {
+        this.f14178c = true;
+        this.f14179d = byteStringMicro;
+        return this;
+    }
+
+    public Position_Info setYx(ByteStringMicro byteStringMicro) {
+        this.f14176a = true;
+        this.f14177b = byteStringMicro;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasYx()) {
+            codedOutputStreamMicro.writeBytes(1, getYx());
+        }
+        if (hasUid()) {
+            codedOutputStreamMicro.writeBytes(2, getUid());
+        }
+        if (hasExt()) {
+            codedOutputStreamMicro.writeString(3, getExt());
+        }
+        if (hasCityid()) {
+            codedOutputStreamMicro.writeInt32(4, getCityid());
+        }
+        if (hasCname()) {
+            codedOutputStreamMicro.writeString(5, getCname());
+        }
+        if (hasShowyx()) {
+            codedOutputStreamMicro.writeBytes(6, getShowyx());
+        }
+        if (hasName()) {
+            codedOutputStreamMicro.writeBytes(7, getName());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/entity/pb/Position_Info.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

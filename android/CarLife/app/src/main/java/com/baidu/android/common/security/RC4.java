@@ -1,90 +1,73 @@
 package com.baidu.android.common.security;
 
-public class RC4
-{
-  private static final int STATE_LENGTH = 256;
-  private byte[] engineState = null;
-  private byte[] workingKey = null;
-  private int x = 0;
-  private int y = 0;
-  
-  public RC4(String paramString)
-  {
-    this.workingKey = paramString.getBytes();
-  }
-  
-  private void processBytes(byte[] paramArrayOfByte1, int paramInt1, int paramInt2, byte[] paramArrayOfByte2, int paramInt3)
-  {
-    if (paramInt1 + paramInt2 > paramArrayOfByte1.length) {
-      throw new RuntimeException("input buffer too short");
+public class RC4 {
+    private static final int STATE_LENGTH = 256;
+    private byte[] engineState = null;
+    private byte[] workingKey = null;
+    /* renamed from: x */
+    private int f1289x = 0;
+    /* renamed from: y */
+    private int f1290y = 0;
+
+    public RC4(String str) {
+        this.workingKey = str.getBytes();
     }
-    if (paramInt3 + paramInt2 > paramArrayOfByte2.length) {
-      throw new RuntimeException("output buffer too short");
+
+    private void processBytes(byte[] bArr, int i, int i2, byte[] bArr2, int i3) {
+        if (i + i2 > bArr.length) {
+            throw new RuntimeException("input buffer too short");
+        } else if (i3 + i2 > bArr2.length) {
+            throw new RuntimeException("output buffer too short");
+        } else {
+            for (int i4 = 0; i4 < i2; i4++) {
+                this.f1289x = (this.f1289x + 1) & 255;
+                this.f1290y = (this.engineState[this.f1289x] + this.f1290y) & 255;
+                byte b = this.engineState[this.f1289x];
+                this.engineState[this.f1289x] = this.engineState[this.f1290y];
+                this.engineState[this.f1290y] = b;
+                bArr2[i4 + i3] = (byte) (bArr[i4 + i] ^ this.engineState[(this.engineState[this.f1289x] + this.engineState[this.f1290y]) & 255]);
+            }
+        }
     }
-    int j = 0;
-    while (j < paramInt2)
-    {
-      this.x = (this.x + 1 & 0xFF);
-      this.y = (this.engineState[this.x] + this.y & 0xFF);
-      int i = this.engineState[this.x];
-      this.engineState[this.x] = this.engineState[this.y];
-      this.engineState[this.y] = i;
-      paramArrayOfByte2[(j + paramInt3)] = ((byte)(paramArrayOfByte1[(j + paramInt1)] ^ this.engineState[(this.engineState[this.x] + this.engineState[this.y] & 0xFF)]));
-      j += 1;
+
+    private void reset() {
+        setKey(this.workingKey);
     }
-  }
-  
-  private void reset()
-  {
-    setKey(this.workingKey);
-  }
-  
-  private void setKey(byte[] paramArrayOfByte)
-  {
-    int k = 0;
-    this.x = 0;
-    this.y = 0;
-    if (this.engineState == null) {
-      this.engineState = new byte['Ā'];
+
+    private void setKey(byte[] bArr) {
+        int i;
+        int i2 = 0;
+        this.f1289x = 0;
+        this.f1290y = 0;
+        if (this.engineState == null) {
+            this.engineState = new byte[256];
+        }
+        for (i = 0; i < 256; i++) {
+            this.engineState[i] = (byte) i;
+        }
+        i = 0;
+        int i3 = 0;
+        while (i2 < 256) {
+            i = (i + ((bArr[i3] & 255) + this.engineState[i2])) & 255;
+            byte b = this.engineState[i2];
+            this.engineState[i2] = this.engineState[i];
+            this.engineState[i] = b;
+            i3 = (i3 + 1) % bArr.length;
+            i2++;
+        }
     }
-    int j = 0;
-    while (j < 256)
-    {
-      this.engineState[j] = ((byte)j);
-      j += 1;
+
+    public byte[] decrypt(byte[] bArr) {
+        reset();
+        byte[] bArr2 = new byte[bArr.length];
+        processBytes(bArr, 0, bArr.length, bArr2, 0);
+        return bArr2;
     }
-    int m = 0;
-    j = 0;
-    while (k < 256)
-    {
-      m = m + ((paramArrayOfByte[j] & 0xFF) + this.engineState[k]) & 0xFF;
-      int i = this.engineState[k];
-      this.engineState[k] = this.engineState[m];
-      this.engineState[m] = i;
-      j = (j + 1) % paramArrayOfByte.length;
-      k += 1;
+
+    public byte[] encrypt(byte[] bArr) {
+        reset();
+        byte[] bArr2 = new byte[bArr.length];
+        processBytes(bArr, 0, bArr.length, bArr2, 0);
+        return bArr2;
     }
-  }
-  
-  public byte[] decrypt(byte[] paramArrayOfByte)
-  {
-    reset();
-    byte[] arrayOfByte = new byte[paramArrayOfByte.length];
-    processBytes(paramArrayOfByte, 0, paramArrayOfByte.length, arrayOfByte, 0);
-    return arrayOfByte;
-  }
-  
-  public byte[] encrypt(byte[] paramArrayOfByte)
-  {
-    reset();
-    byte[] arrayOfByte = new byte[paramArrayOfByte.length];
-    processBytes(paramArrayOfByte, 0, paramArrayOfByte.length, arrayOfByte, 0);
-    return arrayOfByte;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/android/common/security/RC4.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

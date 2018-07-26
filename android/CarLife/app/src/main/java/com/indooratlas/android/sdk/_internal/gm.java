@@ -1,204 +1,211 @@
 package com.indooratlas.android.sdk._internal;
 
-public final class gm
-{
-  public final gk a;
-  final gi b;
-  public final int c;
-  final String d;
-  public final gc e;
-  public final gd f;
-  public final gn g;
-  gm h;
-  gm i;
-  final gm j;
-  private volatile fq k;
-  
-  private gm(a parama)
-  {
-    this.a = parama.a;
-    this.b = parama.b;
-    this.c = parama.c;
-    this.d = parama.d;
-    this.e = parama.e;
-    this.f = parama.f.a();
-    this.g = parama.g;
-    this.h = parama.h;
-    this.i = parama.i;
-    this.j = parama.j;
-  }
-  
-  public final gk a()
-  {
-    return this.a;
-  }
-  
-  public final String a(String paramString)
-  {
-    paramString = this.f.a(paramString);
-    if (paramString != null) {
-      return paramString;
+import com.indooratlas.android.sdk._internal.gd.C5917a;
+
+public final class gm {
+    /* renamed from: a */
+    public final gk f23972a;
+    /* renamed from: b */
+    final gi f23973b;
+    /* renamed from: c */
+    public final int f23974c;
+    /* renamed from: d */
+    final String f23975d;
+    /* renamed from: e */
+    public final gc f23976e;
+    /* renamed from: f */
+    public final gd f23977f;
+    /* renamed from: g */
+    public final gn f23978g;
+    /* renamed from: h */
+    gm f23979h;
+    /* renamed from: i */
+    gm f23980i;
+    /* renamed from: j */
+    final gm f23981j;
+    /* renamed from: k */
+    private volatile fq f23982k;
+
+    /* renamed from: com.indooratlas.android.sdk._internal.gm$a */
+    public static class C5927a {
+        /* renamed from: a */
+        public gk f23962a;
+        /* renamed from: b */
+        public gi f23963b;
+        /* renamed from: c */
+        public int f23964c;
+        /* renamed from: d */
+        public String f23965d;
+        /* renamed from: e */
+        public gc f23966e;
+        /* renamed from: f */
+        C5917a f23967f;
+        /* renamed from: g */
+        public gn f23968g;
+        /* renamed from: h */
+        gm f23969h;
+        /* renamed from: i */
+        gm f23970i;
+        /* renamed from: j */
+        gm f23971j;
+
+        public C5927a() {
+            this.f23964c = -1;
+            this.f23967f = new C5917a();
+        }
+
+        private C5927a(gm gmVar) {
+            this.f23964c = -1;
+            this.f23962a = gmVar.f23972a;
+            this.f23963b = gmVar.f23973b;
+            this.f23964c = gmVar.f23974c;
+            this.f23965d = gmVar.f23975d;
+            this.f23966e = gmVar.f23976e;
+            this.f23967f = gmVar.f23977f.m20616a();
+            this.f23968g = gmVar.f23978g;
+            this.f23969h = gmVar.f23979h;
+            this.f23970i = gmVar.f23980i;
+            this.f23971j = gmVar.f23981j;
+        }
+
+        /* renamed from: a */
+        public final C5927a m20723a(String str, String str2) {
+            this.f23967f.m20615c(str, str2);
+            return this;
+        }
+
+        /* renamed from: b */
+        public final C5927a m20726b(String str, String str2) {
+            this.f23967f.m20612a(str, str2);
+            return this;
+        }
+
+        /* renamed from: a */
+        public final C5927a m20721a(gd gdVar) {
+            this.f23967f = gdVar.m20616a();
+            return this;
+        }
+
+        /* renamed from: a */
+        public final C5927a m20722a(gm gmVar) {
+            if (gmVar != null) {
+                C5927a.m20720a("networkResponse", gmVar);
+            }
+            this.f23969h = gmVar;
+            return this;
+        }
+
+        /* renamed from: b */
+        public final C5927a m20725b(gm gmVar) {
+            if (gmVar != null) {
+                C5927a.m20720a("cacheResponse", gmVar);
+            }
+            this.f23970i = gmVar;
+            return this;
+        }
+
+        /* renamed from: c */
+        public final C5927a m20727c(gm gmVar) {
+            if (gmVar == null || gmVar.f23978g == null) {
+                this.f23971j = gmVar;
+                return this;
+            }
+            throw new IllegalArgumentException("priorResponse.body != null");
+        }
+
+        /* renamed from: a */
+        public final gm m20724a() {
+            if (this.f23962a == null) {
+                throw new IllegalStateException("request == null");
+            } else if (this.f23963b == null) {
+                throw new IllegalStateException("protocol == null");
+            } else if (this.f23964c >= 0) {
+                return new gm();
+            } else {
+                throw new IllegalStateException("code < 0: " + this.f23964c);
+            }
+        }
+
+        /* renamed from: a */
+        private static void m20720a(String str, gm gmVar) {
+            if (gmVar.f23978g != null) {
+                throw new IllegalArgumentException(str + ".body != null");
+            } else if (gmVar.f23979h != null) {
+                throw new IllegalArgumentException(str + ".networkResponse != null");
+            } else if (gmVar.f23980i != null) {
+                throw new IllegalArgumentException(str + ".cacheResponse != null");
+            } else if (gmVar.f23981j != null) {
+                throw new IllegalArgumentException(str + ".priorResponse != null");
+            }
+        }
     }
-    return null;
-  }
-  
-  public final int b()
-  {
-    return this.c;
-  }
-  
-  public final boolean c()
-  {
-    return (this.c >= 200) && (this.c < 300);
-  }
-  
-  public final String d()
-  {
-    return this.d;
-  }
-  
-  public final gd e()
-  {
-    return this.f;
-  }
-  
-  public final gn f()
-  {
-    return this.g;
-  }
-  
-  public final a g()
-  {
-    return new a(this, (byte)0);
-  }
-  
-  public final fq h()
-  {
-    fq localfq = this.k;
-    if (localfq != null) {
-      return localfq;
+
+    private gm(C5927a c5927a) {
+        this.f23972a = c5927a.f23962a;
+        this.f23973b = c5927a.f23963b;
+        this.f23974c = c5927a.f23964c;
+        this.f23975d = c5927a.f23965d;
+        this.f23976e = c5927a.f23966e;
+        this.f23977f = c5927a.f23967f.m20613a();
+        this.f23978g = c5927a.f23968g;
+        this.f23979h = c5927a.f23969h;
+        this.f23980i = c5927a.f23970i;
+        this.f23981j = c5927a.f23971j;
     }
-    localfq = fq.a(this.f);
-    this.k = localfq;
-    return localfq;
-  }
-  
-  public final String toString()
-  {
-    return "Response{protocol=" + this.b + ", code=" + this.c + ", message=" + this.d + ", url=" + this.a.a + '}';
-  }
-  
-  public static final class a
-  {
-    public gk a;
-    public gi b;
-    public int c = -1;
-    public String d;
-    public gc e;
-    gd.a f;
-    public gn g;
-    gm h;
-    gm i;
-    gm j;
-    
-    public a()
-    {
-      this.f = new gd.a();
+
+    /* renamed from: a */
+    public final gk m20728a() {
+        return this.f23972a;
     }
-    
-    private a(gm paramgm)
-    {
-      this.a = paramgm.a;
-      this.b = paramgm.b;
-      this.c = paramgm.c;
-      this.d = paramgm.d;
-      this.e = paramgm.e;
-      this.f = paramgm.f.a();
-      this.g = paramgm.g;
-      this.h = paramgm.h;
-      this.i = paramgm.i;
-      this.j = paramgm.j;
+
+    /* renamed from: b */
+    public final int m20730b() {
+        return this.f23974c;
     }
-    
-    private static void a(String paramString, gm paramgm)
-    {
-      if (paramgm.g != null) {
-        throw new IllegalArgumentException(paramString + ".body != null");
-      }
-      if (paramgm.h != null) {
-        throw new IllegalArgumentException(paramString + ".networkResponse != null");
-      }
-      if (paramgm.i != null) {
-        throw new IllegalArgumentException(paramString + ".cacheResponse != null");
-      }
-      if (paramgm.j != null) {
-        throw new IllegalArgumentException(paramString + ".priorResponse != null");
-      }
+
+    /* renamed from: c */
+    public final boolean m20731c() {
+        return this.f23974c >= 200 && this.f23974c < 300;
     }
-    
-    public final a a(gd paramgd)
-    {
-      this.f = paramgd.a();
-      return this;
+
+    /* renamed from: d */
+    public final String m20732d() {
+        return this.f23975d;
     }
-    
-    public final a a(gm paramgm)
-    {
-      if (paramgm != null) {
-        a("networkResponse", paramgm);
-      }
-      this.h = paramgm;
-      return this;
+
+    /* renamed from: e */
+    public final gd m20733e() {
+        return this.f23977f;
     }
-    
-    public final a a(String paramString1, String paramString2)
-    {
-      this.f.c(paramString1, paramString2);
-      return this;
+
+    /* renamed from: f */
+    public final gn m20734f() {
+        return this.f23978g;
     }
-    
-    public final gm a()
-    {
-      if (this.a == null) {
-        throw new IllegalStateException("request == null");
-      }
-      if (this.b == null) {
-        throw new IllegalStateException("protocol == null");
-      }
-      if (this.c < 0) {
-        throw new IllegalStateException("code < 0: " + this.c);
-      }
-      return new gm(this, (byte)0);
+
+    /* renamed from: g */
+    public final C5927a m20735g() {
+        return new C5927a();
     }
-    
-    public final a b(gm paramgm)
-    {
-      if (paramgm != null) {
-        a("cacheResponse", paramgm);
-      }
-      this.i = paramgm;
-      return this;
+
+    /* renamed from: h */
+    public final fq m20736h() {
+        fq fqVar = this.f23982k;
+        if (fqVar != null) {
+            return fqVar;
+        }
+        fqVar = fq.m20565a(this.f23977f);
+        this.f23982k = fqVar;
+        return fqVar;
     }
-    
-    public final a b(String paramString1, String paramString2)
-    {
-      this.f.a(paramString1, paramString2);
-      return this;
+
+    public final String toString() {
+        return "Response{protocol=" + this.f23973b + ", code=" + this.f23974c + ", message=" + this.f23975d + ", url=" + this.f23972a.f23952a + '}';
     }
-    
-    public final a c(gm paramgm)
-    {
-      if ((paramgm != null) && (paramgm.g != null)) {
-        throw new IllegalArgumentException("priorResponse.body != null");
-      }
-      this.j = paramgm;
-      return this;
+
+    /* renamed from: a */
+    public final String m20729a(String str) {
+        String a = this.f23977f.m20618a(str);
+        return a != null ? a : null;
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/indooratlas/android/sdk/_internal/gm.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

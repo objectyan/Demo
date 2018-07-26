@@ -1,37 +1,28 @@
 package com.loopj.android.http;
 
-import cz.msebera.android.httpclient.a.h;
-import cz.msebera.android.httpclient.i.a.b;
-import cz.msebera.android.httpclient.n.g;
-import cz.msebera.android.httpclient.p;
-import cz.msebera.android.httpclient.r;
-import cz.msebera.android.httpclient.u;
-import cz.msebera.android.httpclient.w;
+import cz.msebera.android.httpclient.C6020w;
+import cz.msebera.android.httpclient.C6033u;
+import cz.msebera.android.httpclient.C6183p;
+import cz.msebera.android.httpclient.C6592r;
+import cz.msebera.android.httpclient.p155a.C2969i;
+import cz.msebera.android.httpclient.p155a.C6182h;
+import cz.msebera.android.httpclient.p155a.C6188n;
+import cz.msebera.android.httpclient.p158b.C6265i;
+import cz.msebera.android.httpclient.p173i.p174a.C3051b;
+import cz.msebera.android.httpclient.p185n.C6198g;
 import java.io.IOException;
 
-public class PreemptiveAuthorizationHttpRequestInterceptor
-  implements w
-{
-  public void process(u paramu, g paramg)
-    throws p, IOException
-  {
-    paramu = (cz.msebera.android.httpclient.a.i)paramg.a("http.auth.target-scope");
-    cz.msebera.android.httpclient.b.i locali = (cz.msebera.android.httpclient.b.i)paramg.a("http.auth.credentials-provider");
-    paramg = (r)paramg.a("http.target_host");
-    if (paramu.c() == null)
-    {
-      paramg = locali.a(new h(paramg.a(), paramg.b()));
-      if (paramg != null)
-      {
-        paramu.a(new b());
-        paramu.a(paramg);
-      }
+public class PreemptiveAuthorizationHttpRequestInterceptor implements C6020w {
+    public void process(C6033u request, C6198g context) throws C6183p, IOException {
+        C2969i authState = (C2969i) context.mo5023a("http.auth.target-scope");
+        C6265i credsProvider = (C6265i) context.mo5023a("http.auth.credentials-provider");
+        C6592r targetHost = (C6592r) context.mo5023a("http.target_host");
+        if (authState.c() == null) {
+            C6188n creds = credsProvider.mo5111a(new C6182h(targetHost.m24203a(), targetHost.m24204b()));
+            if (creds != null) {
+                authState.a(new C3051b());
+                authState.a(creds);
+            }
+        }
     }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/loopj/android/http/PreemptiveAuthorizationHttpRequestInterceptor.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

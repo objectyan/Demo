@@ -1,263 +1,192 @@
 package com.indooratlas.android.sdk._internal;
 
+import com.indooratlas.android.sdk._internal.jj.C5991b;
+import com.indooratlas.android.sdk._internal.jo.C5993a;
+import com.indooratlas.android.sdk._internal.jo.C5994b;
+import com.indooratlas.android.sdk._internal.kd.C5997a;
+import cz.msebera.android.httpclient.C6591q;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public final class js
-  extends jr
-{
-  private static final byte[] j = { -1, 0 };
-  private boolean i = false;
-  private final Random k = new Random();
-  
-  private static byte[] a(String paramString)
-    throws jw
-  {
-    long l2;
-    try
-    {
-      l1 = Long.parseLong(paramString.replaceAll("[^0-9]", ""));
-      l2 = paramString.split(" ").length - 1;
-      if (l2 == 0L) {
-        throw new jw("invalid Sec-WebSocket-Key (/key2/)");
-      }
-    }
-    catch (NumberFormatException paramString)
-    {
-      throw new jw("invalid Sec-WebSocket-Key (/key1/ or /key2/)");
-    }
-    long l1 = new Long(l1 / l2).longValue();
-    int m = (byte)(int)(l1 >> 24);
-    int n = (byte)(int)(l1 << 8 >> 24);
-    int i1 = (byte)(int)(l1 << 16 >> 24);
-    int i2 = (byte)(int)(l1 << 24 >> 24);
-    return new byte[] { m, n, i1, i2 };
-  }
-  
-  private static byte[] a(String paramString1, String paramString2, byte[] paramArrayOfByte)
-    throws jw
-  {
-    paramString1 = a(paramString1);
-    paramString2 = a(paramString2);
-    int m = paramString1[0];
-    int n = paramString1[1];
-    int i1 = paramString1[2];
-    int i2 = paramString1[3];
-    int i3 = paramString2[0];
-    int i4 = paramString2[1];
-    int i5 = paramString2[2];
-    int i6 = paramString2[3];
-    int i7 = paramArrayOfByte[0];
-    int i8 = paramArrayOfByte[1];
-    int i9 = paramArrayOfByte[2];
-    int i10 = paramArrayOfByte[3];
-    int i11 = paramArrayOfByte[4];
-    int i12 = paramArrayOfByte[5];
-    int i13 = paramArrayOfByte[6];
-    int i14 = paramArrayOfByte[7];
-    try
-    {
-      paramString1 = MessageDigest.getInstance("MD5");
-      return paramString1.digest(new byte[] { m, n, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11, i12, i13, i14 });
-    }
-    catch (NoSuchAlgorithmException paramString1)
-    {
-      throw new RuntimeException(paramString1);
-    }
-  }
-  
-  private static String d()
-  {
-    Random localRandom = new Random();
-    long l = localRandom.nextInt(12) + 1;
-    String str = Long.toString((localRandom.nextInt(Math.abs(new Long(4294967295L / l).intValue())) + 1) * l);
-    int n = localRandom.nextInt(12);
-    int m = 0;
-    while (m < n + 1)
-    {
-      int i1 = Math.abs(localRandom.nextInt(str.length()));
-      char c2 = (char)(localRandom.nextInt(95) + 33);
-      char c1 = c2;
-      if (c2 >= '0')
-      {
-        c1 = c2;
-        if (c2 <= '9') {
-          c1 = (char)(c2 - '\017');
+public final class js extends jr {
+    /* renamed from: j */
+    private static final byte[] f24533j = new byte[]{(byte) -1, (byte) 0};
+    /* renamed from: i */
+    private boolean f24534i = false;
+    /* renamed from: k */
+    private final Random f24535k = new Random();
+
+    /* renamed from: a */
+    private static byte[] m21435a(String str, String str2, byte[] bArr) throws jw {
+        byte[] a = m21434a(str);
+        byte[] a2 = m21434a(str2);
+        try {
+            return MessageDigest.getInstance("MD5").digest(new byte[]{a[0], a[1], a[2], a[3], a2[0], a2[1], a2[2], a2[3], bArr[0], bArr[1], bArr[2], bArr[3], bArr[4], bArr[5], bArr[6], bArr[7]});
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
         }
-      }
-      str = new StringBuilder(str).insert(i1, c1).toString();
-      m += 1;
     }
-    m = 0;
-    while (m < l)
-    {
-      n = Math.abs(localRandom.nextInt(str.length() - 1) + 1);
-      str = new StringBuilder(str).insert(n, " ").toString();
-      m += 1;
-    }
-    return str;
-  }
-  
-  public final int a(kf paramkf)
-  {
-    if ((paramkf.b("Upgrade").equals("WebSocket")) && (paramkf.b("Connection").contains("Upgrade")) && (paramkf.b("Sec-WebSocket-Key1").length() > 0) && (!paramkf.b("Sec-WebSocket-Key2").isEmpty()) && (paramkf.c("Origin"))) {
-      return jo.b.a;
-    }
-    return jo.b.b;
-  }
-  
-  public final int a(kf paramkf, km paramkm)
-  {
-    if (this.i) {
-      return jo.b.b;
-    }
-    try
-    {
-      if ((!paramkm.b("Sec-WebSocket-Origin").equals(paramkf.b("Origin"))) || (!a(paramkm))) {
-        return jo.b.b;
-      }
-      paramkm = paramkm.c();
-      if ((paramkm == null) || (paramkm.length == 0)) {
-        throw new jt();
-      }
-    }
-    catch (jw paramkf)
-    {
-      throw new RuntimeException("bad handshakerequest", paramkf);
-    }
-    if (Arrays.equals(paramkm, a(paramkf.b("Sec-WebSocket-Key1"), paramkf.b("Sec-WebSocket-Key2"), paramkf.c()))) {
-      return jo.b.a;
-    }
-    int m = jo.b.b;
-    return m;
-  }
-  
-  public final kg a(kg paramkg)
-  {
-    paramkg.a("Upgrade", "WebSocket");
-    paramkg.a("Connection", "Upgrade");
-    paramkg.a("Sec-WebSocket-Key1", d());
-    paramkg.a("Sec-WebSocket-Key2", d());
-    if (!paramkg.c("Origin")) {
-      paramkg.a("Origin", "random" + this.k.nextInt());
-    }
-    byte[] arrayOfByte = new byte[8];
-    this.k.nextBytes(arrayOfByte);
-    paramkg.a(arrayOfByte);
-    return paramkg;
-  }
-  
-  public final kh a(kf paramkf, kn paramkn)
-    throws jw
-  {
-    paramkn.a("WebSocket Protocol Handshake");
-    paramkn.a("Upgrade", "WebSocket");
-    paramkn.a("Connection", paramkf.b("Connection"));
-    paramkn.a("Sec-WebSocket-Origin", paramkf.b("Origin"));
-    paramkn.a("Sec-WebSocket-Location", "ws://" + paramkf.b("Host") + paramkf.a());
-    String str1 = paramkf.b("Sec-WebSocket-Key1");
-    String str2 = paramkf.b("Sec-WebSocket-Key2");
-    paramkf = paramkf.c();
-    if ((str1 == null) || (str2 == null) || (paramkf == null) || (paramkf.length != 8)) {
-      throw new jw("Bad keys");
-    }
-    paramkn.a(a(str1, str2, paramkf));
-    return paramkn;
-  }
-  
-  public final ByteBuffer a(kd paramkd)
-  {
-    if (paramkd.f() == kd.a.f) {
-      return ByteBuffer.wrap(j);
-    }
-    return super.a(paramkd);
-  }
-  
-  public final List<kd> a(ByteBuffer paramByteBuffer)
-    throws ju
-  {
-    paramByteBuffer.mark();
-    List localList2 = super.c(paramByteBuffer);
-    List localList1 = localList2;
-    if (localList2 == null)
-    {
-      paramByteBuffer.reset();
-      localList1 = this.g;
-      this.f = true;
-      if (this.h == null)
-      {
-        this.h = ByteBuffer.allocate(2);
-        if (paramByteBuffer.remaining() > this.h.remaining()) {
-          throw new jv();
+
+    /* renamed from: d */
+    private static String m21436d() {
+        Random random = new Random();
+        long nextInt = (long) (random.nextInt(12) + 1);
+        String l = Long.toString(((long) (random.nextInt(Math.abs(new Long(4294967295L / nextInt).intValue())) + 1)) * nextInt);
+        int nextInt2 = random.nextInt(12) + 1;
+        for (int i = 0; i < nextInt2; i++) {
+            int abs = Math.abs(random.nextInt(l.length()));
+            char nextInt3 = (char) (random.nextInt(95) + 33);
+            if (nextInt3 >= '0' && nextInt3 <= '9') {
+                nextInt3 = (char) (nextInt3 - 15);
+            }
+            l = abs;
         }
-      }
-      else
-      {
-        throw new jv();
-      }
-      this.h.put(paramByteBuffer);
-      if (this.h.hasRemaining()) {
-        break label137;
-      }
-      if (Arrays.equals(this.h.array(), j)) {
-        localList1.add(new kb((byte)0));
-      }
+        String str = l;
+        for (int i2 = 0; ((long) i2) < nextInt; i2++) {
+            str = Math.abs(random.nextInt(str.length() - 1) + 1);
+        }
+        return str;
     }
-    else
-    {
-      return localList1;
+
+    /* renamed from: a */
+    private static byte[] m21434a(String str) throws jw {
+        try {
+            long parseLong = Long.parseLong(str.replaceAll("[^0-9]", ""));
+            long length = (long) (str.split(" ").length - 1);
+            if (length == 0) {
+                throw new jw("invalid Sec-WebSocket-Key (/key2/)");
+            }
+            parseLong = new Long(parseLong / length).longValue();
+            return new byte[]{(byte) ((int) (parseLong >> 24)), (byte) ((int) ((parseLong << 8) >> 24)), (byte) ((int) ((parseLong << 16) >> 24)), (byte) ((int) ((parseLong << 24) >> 24))};
+        } catch (NumberFormatException e) {
+            throw new jw("invalid Sec-WebSocket-Key (/key1/ or /key2/)");
+        }
     }
-    throw new jv();
-    label137:
-    this.g = new LinkedList();
-    return localList1;
-  }
-  
-  public final int b()
-  {
-    return jo.a.b;
-  }
-  
-  public final kk b(ByteBuffer paramByteBuffer)
-    throws jw
-  {
-    kh localkh = a(paramByteBuffer, this.d);
-    if (((localkh.c("Sec-WebSocket-Key1")) || (this.d == jj.b.a)) && (!localkh.c("Sec-WebSocket-Version"))) {
-      if (this.d != jj.b.b) {
-        break label77;
-      }
+
+    /* renamed from: a */
+    public final int mo4797a(kf kfVar, km kmVar) {
+        if (this.f24534i) {
+            return C5994b.f24516b;
+        }
+        try {
+            if (!kmVar.mo4821b("Sec-WebSocket-Origin").equals(kfVar.mo4821b("Origin")) || !jo.m21391a((kk) kmVar)) {
+                return C5994b.f24516b;
+            }
+            byte[] c = kmVar.mo4824c();
+            if (c == null || c.length == 0) {
+                throw new jt();
+            } else if (Arrays.equals(c, m21435a(kfVar.mo4821b("Sec-WebSocket-Key1"), kfVar.mo4821b("Sec-WebSocket-Key2"), kfVar.mo4824c()))) {
+                return C5994b.f24515a;
+            } else {
+                return C5994b.f24516b;
+            }
+        } catch (Throwable e) {
+            throw new RuntimeException("bad handshakerequest", e);
+        }
     }
-    for (int m = 8;; m = 16)
-    {
-      byte[] arrayOfByte = new byte[m];
-      try
-      {
-        paramByteBuffer.get(arrayOfByte);
-        localkh.a(arrayOfByte);
-        return localkh;
-      }
-      catch (BufferUnderflowException localBufferUnderflowException)
-      {
-        label77:
-        throw new jt(paramByteBuffer.capacity() + 16);
-      }
+
+    /* renamed from: a */
+    public final int mo4796a(kf kfVar) {
+        if (kfVar.mo4821b(C6591q.f26541X).equals("WebSocket") && kfVar.mo4821b("Connection").contains(C6591q.f26541X) && kfVar.mo4821b("Sec-WebSocket-Key1").length() > 0 && !kfVar.mo4821b("Sec-WebSocket-Key2").isEmpty() && kfVar.mo4823c("Origin")) {
+            return C5994b.f24515a;
+        }
+        return C5994b.f24516b;
     }
-  }
-  
-  public final jo c()
-  {
-    return new js();
-  }
+
+    /* renamed from: a */
+    public final kg mo4798a(kg kgVar) {
+        kgVar.mo4819a(C6591q.f26541X, "WebSocket");
+        kgVar.mo4819a("Connection", C6591q.f26541X);
+        kgVar.mo4819a("Sec-WebSocket-Key1", m21436d());
+        kgVar.mo4819a("Sec-WebSocket-Key2", m21436d());
+        if (!kgVar.mo4823c("Origin")) {
+            kgVar.mo4819a("Origin", "random" + this.f24535k.nextInt());
+        }
+        byte[] bArr = new byte[8];
+        this.f24535k.nextBytes(bArr);
+        kgVar.mo4820a(bArr);
+        return kgVar;
+    }
+
+    /* renamed from: a */
+    public final kh mo4799a(kf kfVar, kn knVar) throws jw {
+        knVar.mo4828a("WebSocket Protocol Handshake");
+        knVar.mo4819a(C6591q.f26541X, "WebSocket");
+        knVar.mo4819a("Connection", kfVar.mo4821b("Connection"));
+        knVar.mo4819a("Sec-WebSocket-Origin", kfVar.mo4821b("Origin"));
+        knVar.mo4819a("Sec-WebSocket-Location", "ws://" + kfVar.mo4821b("Host") + kfVar.mo4825a());
+        String b = kfVar.mo4821b("Sec-WebSocket-Key1");
+        String b2 = kfVar.mo4821b("Sec-WebSocket-Key2");
+        byte[] c = kfVar.mo4824c();
+        if (b == null || b2 == null || c == null || c.length != 8) {
+            throw new jw("Bad keys");
+        }
+        knVar.mo4820a(m21435a(b, b2, c));
+        return knVar;
+    }
+
+    /* renamed from: b */
+    public final kk mo4807b(ByteBuffer byteBuffer) throws jw {
+        kk a = jo.m21390a(byteBuffer, this.d);
+        if ((a.mo4823c("Sec-WebSocket-Key1") || this.d == C5991b.f24473a) && !a.mo4823c("Sec-WebSocket-Version")) {
+            byte[] bArr = new byte[(this.d == C5991b.f24474b ? 8 : 16)];
+            try {
+                byteBuffer.get(bArr);
+                a.mo4820a(bArr);
+            } catch (BufferUnderflowException e) {
+                throw new jt(byteBuffer.capacity() + 16);
+            }
+        }
+        return a;
+    }
+
+    /* renamed from: a */
+    public final List<kd> mo4801a(ByteBuffer byteBuffer) throws ju {
+        byteBuffer.mark();
+        List<kd> c = super.mo4806c(byteBuffer);
+        if (c == null) {
+            byteBuffer.reset();
+            c = this.g;
+            this.f = true;
+            if (this.h == null) {
+                this.h = ByteBuffer.allocate(2);
+                if (byteBuffer.remaining() > this.h.remaining()) {
+                    throw new jv();
+                }
+                this.h.put(byteBuffer);
+                if (this.h.hasRemaining()) {
+                    this.g = new LinkedList();
+                } else if (Arrays.equals(this.h.array(), f24533j)) {
+                    c.add(new kb((byte) 0));
+                } else {
+                    throw new jv();
+                }
+            }
+            throw new jv();
+        }
+        return c;
+    }
+
+    /* renamed from: a */
+    public final ByteBuffer mo4800a(kd kdVar) {
+        if (kdVar.mo4815f() == C5997a.CLOSING) {
+            return ByteBuffer.wrap(f24533j);
+        }
+        return super.mo4800a(kdVar);
+    }
+
+    /* renamed from: b */
+    public final int mo4804b() {
+        return C5993a.f24512b;
+    }
+
+    /* renamed from: c */
+    public final jo mo4805c() {
+        return new js();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/indooratlas/android/sdk/_internal/js.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

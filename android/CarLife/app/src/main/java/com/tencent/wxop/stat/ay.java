@@ -2,19 +2,21 @@ package com.tencent.wxop.stat;
 
 import java.util.List;
 
-class ay
-  implements Runnable
-{
-  ay(aw paramaw, List paramList, av paramav) {}
-  
-  public void run()
-  {
-    this.c.a(this.a, this.b);
-  }
+class ay implements Runnable {
+    /* renamed from: a */
+    final /* synthetic */ List f24869a;
+    /* renamed from: b */
+    final /* synthetic */ av f24870b;
+    /* renamed from: c */
+    final /* synthetic */ aw f24871c;
+
+    ay(aw awVar, List list, av avVar) {
+        this.f24871c = awVar;
+        this.f24869a = list;
+        this.f24870b = avVar;
+    }
+
+    public void run() {
+        this.f24871c.m21815a(this.f24869a, this.f24870b);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/tencent/wxop/stat/ay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

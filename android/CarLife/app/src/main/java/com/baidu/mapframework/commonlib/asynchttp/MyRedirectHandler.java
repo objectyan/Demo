@@ -7,8 +7,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolException;
-import org.apache.http.RequestLine;
-import org.apache.http.StatusLine;
 import org.apache.http.client.CircularRedirectException;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.impl.client.DefaultRedirectHandler;
@@ -16,112 +14,83 @@ import org.apache.http.impl.client.RedirectLocations;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 
-class MyRedirectHandler
-  extends DefaultRedirectHandler
-{
-  private static final String a = "http.protocol.redirect-locations";
-  private final boolean b;
-  
-  public MyRedirectHandler(boolean paramBoolean)
-  {
-    this.b = paramBoolean;
-  }
-  
-  public URI getLocationURI(HttpResponse paramHttpResponse, HttpContext paramHttpContext)
-    throws ProtocolException
-  {
-    if (paramHttpResponse == null) {
-      throw new IllegalArgumentException("HTTP response may not be null");
+class MyRedirectHandler extends DefaultRedirectHandler {
+    /* renamed from: a */
+    private static final String f18887a = "http.protocol.redirect-locations";
+    /* renamed from: b */
+    private final boolean f18888b;
+
+    public MyRedirectHandler(boolean allowRedirects) {
+        this.f18888b = allowRedirects;
     }
-    Object localObject1 = paramHttpResponse.getFirstHeader("location");
-    if (localObject1 == null) {
-      throw new ProtocolException("Received redirect response " + paramHttpResponse.getStatusLine() + " but no location header");
-    }
-    Object localObject2 = ((Header)localObject1).getValue().replaceAll(" ", "%20");
-    try
-    {
-      localObject1 = new URI((String)localObject2);
-      localObject2 = paramHttpResponse.getParams();
-      paramHttpResponse = (HttpResponse)localObject1;
-      if (((URI)localObject1).isAbsolute()) {
-        break label248;
-      }
-      if (((HttpParams)localObject2).isParameterTrue("http.protocol.reject-relative-redirect")) {
-        throw new ProtocolException("Relative redirect location '" + localObject1 + "' not allowed");
-      }
-    }
-    catch (URISyntaxException paramHttpResponse)
-    {
-      throw new ProtocolException("Invalid redirect URI: " + (String)localObject2, paramHttpResponse);
-    }
-    paramHttpResponse = (HttpHost)paramHttpContext.getAttribute("http.target_host");
-    if (paramHttpResponse == null) {
-      throw new IllegalStateException("Target host not available in the HTTP context");
-    }
-    HttpRequest localHttpRequest = (HttpRequest)paramHttpContext.getAttribute("http.request");
-    for (;;)
-    {
-      try
-      {
-        paramHttpResponse = URIUtils.resolve(URIUtils.rewriteURI(new URI(localHttpRequest.getRequestLine().getUri()), paramHttpResponse, true), (URI)localObject1);
-        label248:
-        if (!((HttpParams)localObject2).isParameterFalse("http.protocol.allow-circular-redirects")) {
-          return paramHttpResponse;
+
+    public boolean isRedirectRequested(HttpResponse response, HttpContext context) {
+        if (!this.f18888b) {
+            return false;
         }
-        localObject2 = (RedirectLocations)paramHttpContext.getAttribute("http.protocol.redirect-locations");
-        localObject1 = localObject2;
-        if (localObject2 == null)
-        {
-          localObject1 = new RedirectLocations();
-          paramHttpContext.setAttribute("http.protocol.redirect-locations", localObject1);
+        if (response == null) {
+            throw new IllegalArgumentException("HTTP response may not be null");
         }
-        if (paramHttpResponse.getFragment() != null) {}
-        paramHttpContext = paramHttpResponse;
-      }
-      catch (URISyntaxException paramHttpResponse)
-      {
-        try
-        {
-          paramHttpContext = URIUtils.rewriteURI(paramHttpResponse, new HttpHost(paramHttpResponse.getHost(), paramHttpResponse.getPort(), paramHttpResponse.getScheme()), true);
-          if (!((RedirectLocations)localObject1).contains(paramHttpContext)) {
-            break;
-          }
-          throw new CircularRedirectException("Circular redirect to '" + paramHttpContext + "'");
+        switch (response.getStatusLine().getStatusCode()) {
+            case 301:
+            case 302:
+            case 303:
+            case 307:
+                return true;
+            default:
+                return false;
         }
-        catch (URISyntaxException paramHttpResponse)
-        {
-          throw new ProtocolException(paramHttpResponse.getMessage(), paramHttpResponse);
+    }
+
+    public URI getLocationURI(HttpResponse response, HttpContext context) throws ProtocolException {
+        if (response == null) {
+            throw new IllegalArgumentException("HTTP response may not be null");
         }
-        paramHttpResponse = paramHttpResponse;
-        throw new ProtocolException(paramHttpResponse.getMessage(), paramHttpResponse);
-      }
+        Header locationHeader = response.getFirstHeader("location");
+        if (locationHeader == null) {
+            throw new ProtocolException("Received redirect response " + response.getStatusLine() + " but no location header");
+        }
+        String location = locationHeader.getValue().replaceAll(" ", "%20");
+        try {
+            URI uri = new URI(location);
+            HttpParams params = response.getParams();
+            if (!uri.isAbsolute()) {
+                if (params.isParameterTrue("http.protocol.reject-relative-redirect")) {
+                    throw new ProtocolException("Relative redirect location '" + uri + "' not allowed");
+                }
+                HttpHost target = (HttpHost) context.getAttribute("http.target_host");
+                if (target == null) {
+                    throw new IllegalStateException("Target host not available in the HTTP context");
+                }
+                try {
+                    uri = URIUtils.resolve(URIUtils.rewriteURI(new URI(((HttpRequest) context.getAttribute("http.request")).getRequestLine().getUri()), target, true), uri);
+                } catch (URISyntaxException ex) {
+                    throw new ProtocolException(ex.getMessage(), ex);
+                }
+            }
+            if (params.isParameterFalse("http.protocol.allow-circular-redirects")) {
+                URI redirectURI;
+                RedirectLocations redirectLocations = (RedirectLocations) context.getAttribute("http.protocol.redirect-locations");
+                if (redirectLocations == null) {
+                    redirectLocations = new RedirectLocations();
+                    context.setAttribute("http.protocol.redirect-locations", redirectLocations);
+                }
+                if (uri.getFragment() != null) {
+                    try {
+                        redirectURI = URIUtils.rewriteURI(uri, new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()), true);
+                    } catch (URISyntaxException ex2) {
+                        throw new ProtocolException(ex2.getMessage(), ex2);
+                    }
+                }
+                redirectURI = uri;
+                if (redirectLocations.contains(redirectURI)) {
+                    throw new CircularRedirectException("Circular redirect to '" + redirectURI + "'");
+                }
+                redirectLocations.add(redirectURI);
+            }
+            return uri;
+        } catch (URISyntaxException ex22) {
+            throw new ProtocolException("Invalid redirect URI: " + location, ex22);
+        }
     }
-    ((RedirectLocations)localObject1).add(paramHttpContext);
-    return paramHttpResponse;
-  }
-  
-  public boolean isRedirectRequested(HttpResponse paramHttpResponse, HttpContext paramHttpContext)
-  {
-    if (!this.b) {
-      return false;
-    }
-    if (paramHttpResponse == null) {
-      throw new IllegalArgumentException("HTTP response may not be null");
-    }
-    switch (paramHttpResponse.getStatusLine().getStatusCode())
-    {
-    case 304: 
-    case 305: 
-    case 306: 
-    default: 
-      return false;
-    }
-    return true;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mapframework/commonlib/asynchttp/MyRedirectHandler.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

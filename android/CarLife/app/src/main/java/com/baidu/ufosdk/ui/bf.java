@@ -2,29 +2,25 @@ package com.baidu.ufosdk.ui;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import com.baidu.ufosdk.util.c;
-import com.baidu.ufosdk.util.i;
+import com.baidu.ufosdk.util.C5210c;
+import com.baidu.ufosdk.util.C5216i;
 
-final class bf
-  implements View.OnClickListener
-{
-  bf(FeedbackInputActivity paramFeedbackInputActivity) {}
-  
-  public final void onClick(View paramView)
-  {
-    if (FeedbackInputActivity.M(this.a)) {
-      return;
+/* compiled from: FeedbackInputActivity */
+final class bf implements OnClickListener {
+    /* renamed from: a */
+    final /* synthetic */ FeedbackInputActivity f21572a;
+
+    bf(FeedbackInputActivity feedbackInputActivity) {
+        this.f21572a = feedbackInputActivity;
     }
-    FeedbackInputActivity.b(this.a, ((Integer)paramView.getTag()).intValue());
-    if (i.a() >= 23) {
-      c.d(" CommonUtil.getAPILevel() >= 23 ");
+
+    public final void onClick(View view) {
+        if (!this.f21572a.ao) {
+            this.f21572a.f21482Z = ((Integer) view.getTag()).intValue();
+            if (C5216i.m17756a() >= 23) {
+                C5210c.m17736d(" CommonUtil.getAPILevel() >= 23 ");
+            }
+            FeedbackInputActivity.m17639S(this.f21572a);
+        }
     }
-    FeedbackInputActivity.S(this.a);
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/ufosdk/ui/bf.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

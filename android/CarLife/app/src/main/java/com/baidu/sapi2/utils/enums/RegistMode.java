@@ -2,55 +2,35 @@ package com.baidu.sapi2.utils.enums;
 
 import android.text.TextUtils;
 
-public enum RegistMode
-{
-  private String a;
-  
-  private RegistMode(String paramString)
-  {
-    this.a = paramString;
-  }
-  
-  public static RegistMode getDefault()
-  {
-    return NORMAL;
-  }
-  
-  public static RegistMode mapStrToValue(String paramString)
-  {
-    Object localObject;
-    if (TextUtils.isEmpty(paramString))
-    {
-      localObject = getDefault();
-      return (RegistMode)localObject;
+public enum RegistMode {
+    NORMAL("normal"),
+    FAST("fast"),
+    QUICK_USER("quick_user");
+    
+    /* renamed from: a */
+    private String f20571a;
+
+    public static RegistMode mapStrToValue(String v) {
+        if (TextUtils.isEmpty(v)) {
+            return getDefault();
+        }
+        for (RegistMode value : values()) {
+            if (v.equals(value.getStrValue())) {
+                return value;
+            }
+        }
+        return getDefault();
     }
-    RegistMode[] arrayOfRegistMode = values();
-    int j = arrayOfRegistMode.length;
-    int i = 0;
-    for (;;)
-    {
-      if (i >= j) {
-        break label57;
-      }
-      RegistMode localRegistMode = arrayOfRegistMode[i];
-      localObject = localRegistMode;
-      if (paramString.equals(localRegistMode.getStrValue())) {
-        break;
-      }
-      i += 1;
+
+    public static RegistMode getDefault() {
+        return NORMAL;
     }
-    label57:
-    return getDefault();
-  }
-  
-  public String getStrValue()
-  {
-    return this.a;
-  }
+
+    private RegistMode(String strValue) {
+        this.f20571a = strValue;
+    }
+
+    public String getStrValue() {
+        return this.f20571a;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/sapi2/utils/enums/RegistMode.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

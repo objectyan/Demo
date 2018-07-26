@@ -16,264 +16,189 @@ import java.util.Arrays;
 import java.util.zip.GZIPOutputStream;
 import org.json.JSONObject;
 
-public class al
-{
-  private static String a;
-  private static al b;
-  private Handler c;
-  
-  static
-  {
-    if (Build.VERSION.SDK_INT < 9) {}
-    for (String str = "http://openrcv.baidu.com/1010/bplus.gif";; str = "https://openrcv.baidu.com/1010/bplus.gif")
-    {
-      a = str;
-      return;
+public class al {
+    /* renamed from: a */
+    private static String f19385a = (VERSION.SDK_INT < 9 ? "http://openrcv.baidu.com/1010/bplus.gif" : "https://openrcv.baidu.com/1010/bplus.gif");
+    /* renamed from: b */
+    private static al f19386b;
+    /* renamed from: c */
+    private Handler f19387c;
+
+    private al() {
+        HandlerThread handlerThread = new HandlerThread("LogSender");
+        handlerThread.start();
+        this.f19387c = new Handler(handlerThread.getLooper());
     }
-  }
-  
-  private al()
-  {
-    HandlerThread localHandlerThread = new HandlerThread("LogSender");
-    localHandlerThread.start();
-    this.c = new Handler(localHandlerThread.getLooper());
-  }
-  
-  public static al a()
-  {
-    if (b == null) {}
-    try
-    {
-      if (b == null) {
-        b = new al();
-      }
-      return b;
-    }
-    finally {}
-  }
-  
-  private String a(Context paramContext, String paramString1, String paramString2)
-  {
-    if (!paramString1.startsWith("https:")) {}
-    for (int i = 1;; i = 0)
-    {
-      paramString1 = cu.d(paramContext, paramString1);
-      paramString1.setDoOutput(true);
-      paramString1.setInstanceFollowRedirects(false);
-      paramString1.setUseCaches(false);
-      paramString1.setRequestProperty("Content-Encoding", "gzip");
-      paramString1.connect();
-      Object localObject;
-      try
-      {
-        localObject = paramString1.getOutputStream();
-        localGZIPOutputStream = new GZIPOutputStream((OutputStream)localObject);
-        localGZIPOutputStream.write(new byte[] { 72, 77, 48, 49 });
-        localGZIPOutputStream.write(new byte[] { 0, 0, 0, 1 });
-        localGZIPOutputStream.write(new byte[] { 0, 0, 3, -14 });
-        localGZIPOutputStream.write(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
-        localGZIPOutputStream.write(new byte[] { 0, 2 });
-        if (i == 0) {
-          break label540;
-        }
-        localGZIPOutputStream.write(new byte[] { 0, 1 });
-      }
-      catch (Exception paramContext)
-      {
-        for (;;)
-        {
-          GZIPOutputStream localGZIPOutputStream;
-          byte[] arrayOfByte;
-          bd.b(paramContext);
-          return "";
-          localGZIPOutputStream.write(new byte[] { 0, 0 });
-        }
-      }
-      finally
-      {
-        paramString1.disconnect();
-      }
-      localGZIPOutputStream.write(new byte[] { 72, 77, 48, 49 });
-      if (i != 0)
-      {
-        paramContext = cs.a();
-        arrayOfByte = dc.a(false, cw.a(), paramContext);
-        localGZIPOutputStream.write(a(arrayOfByte.length, 4));
-        localGZIPOutputStream.write(arrayOfByte);
-        paramString2 = paramString2.getBytes("utf-8");
-        paramContext = cs.a(paramContext, new byte[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, paramString2);
-        localGZIPOutputStream.write(a(paramContext.length, 2));
-      }
-      for (;;)
-      {
-        localGZIPOutputStream.write(paramContext);
-        localGZIPOutputStream.close();
-        ((OutputStream)localObject).close();
-        i = paramString1.getResponseCode();
-        int j = paramString1.getContentLength();
-        bd.c("code: " + i + "; len: " + j);
-        if ((i == 200) && (j == 0)) {
-          break;
-        }
-        throw new IOException("Response code = " + paramString1.getResponseCode());
-        label540:
-        paramContext = paramString2.getBytes("utf-8");
-      }
-      paramContext = new BufferedReader(new InputStreamReader(paramString1.getInputStream()));
-      paramString2 = new StringBuilder();
-      for (;;)
-      {
-        localObject = paramContext.readLine();
-        if (localObject == null)
-        {
-          paramContext = paramString2.toString();
-          paramString1.disconnect();
-          return paramContext;
-        }
-        paramString2.append((String)localObject);
-      }
-    }
-  }
-  
-  private void a(Context paramContext)
-  {
-    if (!"mounted".equals(cu.a())) {}
-    for (;;)
-    {
-      return;
-      Object localObject1 = new File(Environment.getExternalStorageDirectory(), "backups/system");
-      if (((File)localObject1).exists())
-      {
-        localObject1 = ((File)localObject1).listFiles();
-        if ((localObject1 != null) && (localObject1.length != 0)) {
-          try
-          {
-            Arrays.sort((Object[])localObject1, new an(this));
-            int m = localObject1.length;
-            int j = 0;
-            for (k = 0; j < m; k = i)
-            {
-              Object localObject2 = localObject1[j];
-              if (((File)localObject2).isFile()) {
-                break label118;
-              }
-              i = k;
-              j += 1;
-            }
-          }
-          catch (Exception localException)
-          {
-            int k;
-            label118:
-            do
-            {
-              String str1;
-              String str2;
-              for (;;)
-              {
-                bd.b(localException);
-                continue;
-                str1 = localException.getName();
-                i = k;
-                if (!TextUtils.isEmpty(str1))
-                {
-                  i = k;
-                  if (str1.startsWith("__send_log_data_"))
-                  {
-                    str1 = "backups/system" + File.separator + str1;
-                    str2 = cu.b(str1);
-                    if (!b(paramContext, str2)) {
-                      break;
-                    }
-                    cu.c(str1);
-                    i = 0;
-                  }
+
+    /* renamed from: a */
+    public static al m15336a() {
+        if (f19386b == null) {
+            synchronized (al.class) {
+                if (f19386b == null) {
+                    f19386b = new al();
                 }
-              }
-              a(str2, str1);
-              k += 1;
-              int i = k;
-            } while (k < 5);
-          }
+            }
         }
-      }
+        return f19386b;
     }
-  }
-  
-  private void a(String paramString)
-  {
-    cu.a("backups/system" + File.separator + "__send_log_data_" + System.currentTimeMillis(), paramString, false);
-  }
-  
-  private void a(String paramString1, String paramString2)
-  {
-    if ((TextUtils.isEmpty(paramString1)) || (TextUtils.isEmpty(paramString2))) {}
-    for (;;)
-    {
-      return;
-      try
-      {
-        paramString1 = new JSONObject(paramString1);
-        JSONObject localJSONObject = v.a(paramString1);
-        if (localJSONObject == null) {
-          continue;
+
+    /* renamed from: a */
+    public void m15345a(Context context, String str) {
+        bd.m15428a("data = " + str);
+        if (str != null && !"".equals(str)) {
+            this.f19387c.post(new am(this, str, context));
         }
-        v.b(localJSONObject);
-        cu.a(paramString2, paramString1.toString(), false);
-        return;
-      }
-      catch (Exception paramString1)
-      {
-        for (;;)
-        {
-          paramString1 = null;
+    }
+
+    /* renamed from: a */
+    private void m15341a(String str) {
+        cu.m15631a("backups/system" + File.separator + "__send_log_data_" + System.currentTimeMillis(), str, false);
+    }
+
+    /* renamed from: a */
+    private void m15338a(Context context) {
+        if ("mounted".equals(cu.m15627a())) {
+            File file = new File(Environment.getExternalStorageDirectory(), "backups/system");
+            if (file.exists()) {
+                File[] listFiles = file.listFiles();
+                if (listFiles != null && listFiles.length != 0) {
+                    try {
+                        Arrays.sort(listFiles, new an(this));
+                    } catch (Throwable e) {
+                        bd.m15432b(e);
+                    }
+                    int i = 0;
+                    for (File file2 : listFiles) {
+                        if (file2.isFile()) {
+                            String name = file2.getName();
+                            if (!TextUtils.isEmpty(name) && name.startsWith("__send_log_data_")) {
+                                name = "backups/system" + File.separator + name;
+                                String b = cu.m15633b(name);
+                                if (m15344b(context, b)) {
+                                    cu.m15636c(name);
+                                    i = 0;
+                                } else {
+                                    m15342a(b, name);
+                                    i++;
+                                    if (i >= 5) {
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
     }
-  }
-  
-  private static byte[] a(long paramLong, int paramInt)
-  {
-    byte[] arrayOfByte = new byte[paramInt];
-    int i = 0;
-    while (i < paramInt)
-    {
-      arrayOfByte[(paramInt - i - 1)] = ((byte)(int)(0xFF & paramLong));
-      paramLong >>= 8;
-      i += 1;
+
+    /* renamed from: a */
+    private void m15342a(String str, String str2) {
+        if (!TextUtils.isEmpty(str) && !TextUtils.isEmpty(str2)) {
+            JSONObject jSONObject;
+            try {
+                jSONObject = new JSONObject(str);
+            } catch (Exception e) {
+                jSONObject = null;
+            }
+            JSONObject a = C3607v.m15781a(jSONObject);
+            if (a != null) {
+                C3607v.m15782b(a);
+                cu.m15631a(str2, jSONObject.toString(), false);
+            }
+        }
     }
-    return arrayOfByte;
-  }
-  
-  private boolean b(Context paramContext, String paramString)
-  {
-    if ((paramContext == null) || (TextUtils.isEmpty(paramString))) {
-      return false;
+
+    /* renamed from: b */
+    private boolean m15344b(Context context, String str) {
+        if (context == null || TextUtils.isEmpty(str)) {
+            return false;
+        }
+        try {
+            m15337a(context, f19385a, str);
+            return true;
+        } catch (Throwable e) {
+            bd.m15434c(e);
+            return false;
+        }
     }
-    try
-    {
-      a(paramContext, a, paramString);
-      return true;
+
+    /* renamed from: a */
+    private String m15337a(Context context, String str, String str2) {
+        boolean z;
+        if (str.startsWith("https:")) {
+            z = false;
+        } else {
+            z = true;
+        }
+        HttpURLConnection d = cu.m15637d(context, str);
+        d.setDoOutput(true);
+        d.setInstanceFollowRedirects(false);
+        d.setUseCaches(false);
+        d.setRequestProperty("Content-Encoding", "gzip");
+        d.connect();
+        String stringBuilder;
+        try {
+            byte[] a;
+            OutputStream outputStream = d.getOutputStream();
+            GZIPOutputStream gZIPOutputStream = new GZIPOutputStream(outputStream);
+            gZIPOutputStream.write(new byte[]{(byte) 72, (byte) 77, (byte) 48, (byte) 49});
+            gZIPOutputStream.write(new byte[]{(byte) 0, (byte) 0, (byte) 0, (byte) 1});
+            gZIPOutputStream.write(new byte[]{(byte) 0, (byte) 0, (byte) 3, (byte) -14});
+            gZIPOutputStream.write(new byte[]{(byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0});
+            gZIPOutputStream.write(new byte[]{(byte) 0, (byte) 2});
+            if (z) {
+                gZIPOutputStream.write(new byte[]{(byte) 0, (byte) 1});
+            } else {
+                gZIPOutputStream.write(new byte[]{(byte) 0, (byte) 0});
+            }
+            gZIPOutputStream.write(new byte[]{(byte) 72, (byte) 77, (byte) 48, (byte) 49});
+            if (z) {
+                a = cs.m15618a();
+                byte[] a2 = dc.m15669a(false, cw.m15643a(), a);
+                gZIPOutputStream.write(m15343a((long) a2.length, 4));
+                gZIPOutputStream.write(a2);
+                a = cs.m15619a(a, new byte[]{(byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 1}, str2.getBytes("utf-8"));
+                gZIPOutputStream.write(m15343a((long) a.length, 2));
+            } else {
+                a = str2.getBytes("utf-8");
+            }
+            gZIPOutputStream.write(a);
+            gZIPOutputStream.close();
+            outputStream.close();
+            int responseCode = d.getResponseCode();
+            int contentLength = d.getContentLength();
+            bd.m15433c("code: " + responseCode + "; len: " + contentLength);
+            if (responseCode == 200 && contentLength == 0) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(d.getInputStream()));
+                StringBuilder stringBuilder2 = new StringBuilder();
+                while (true) {
+                    String readLine = bufferedReader.readLine();
+                    if (readLine == null) {
+                        break;
+                    }
+                    stringBuilder2.append(readLine);
+                }
+                stringBuilder = stringBuilder2.toString();
+                return stringBuilder;
+            }
+            throw new IOException("Response code = " + d.getResponseCode());
+        } catch (Exception e) {
+            stringBuilder = e;
+            bd.m15432b((Throwable) stringBuilder);
+            return "";
+        } finally {
+            d.disconnect();
+        }
     }
-    catch (Exception paramContext)
-    {
-      bd.c(paramContext);
+
+    /* renamed from: a */
+    private static byte[] m15343a(long j, int i) {
+        byte[] bArr = new byte[i];
+        for (int i2 = 0; i2 < i; i2++) {
+            bArr[(i - i2) - 1] = (byte) ((int) (255 & j));
+            j >>= 8;
+        }
+        return bArr;
     }
-    return false;
-  }
-  
-  public void a(Context paramContext, String paramString)
-  {
-    bd.a("data = " + paramString);
-    if ((paramString == null) || ("".equals(paramString))) {
-      return;
-    }
-    this.c.post(new am(this, paramString, paramContext));
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/al.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

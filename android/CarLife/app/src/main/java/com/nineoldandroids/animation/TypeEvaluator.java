@@ -1,12 +1,5 @@
 package com.nineoldandroids.animation;
 
-public abstract interface TypeEvaluator<T>
-{
-  public abstract T evaluate(float paramFloat, T paramT1, T paramT2);
+public interface TypeEvaluator<T> {
+    T evaluate(float f, T t, T t2);
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes3-dex2jar.jar!/com/nineoldandroids/animation/TypeEvaluator.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

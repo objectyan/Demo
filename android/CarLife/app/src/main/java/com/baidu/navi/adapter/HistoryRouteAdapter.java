@@ -2,7 +2,6 @@ package com.baidu.navi.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -14,9 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
 import com.baidu.carlife.CarlifeActivity;
-import com.baidu.carlife.view.dialog.m.a;
-import com.baidu.carlife.view.dialog.o;
+import com.baidu.carlife.view.dialog.C2286m.C2302a;
+import com.baidu.carlife.view.dialog.C2304o;
 import com.baidu.navi.controller.RouteCustomController;
 import com.baidu.navi.fragment.RoutePlanFragment;
 import com.baidu.navi.style.StyleManager;
@@ -25,7 +25,7 @@ import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.util.common.LogUtil;
 import com.baidu.navisdk.util.common.StringUtils;
 import com.baidu.navisdk.util.db.DBManager;
-import com.baidu.navisdk.util.db.DBManager.DBOperateResultCallback;
+import com.baidu.navisdk.util.db.DBManager$DBOperateResultCallback;
 import com.baidu.navisdk.util.db.model.NaviRouteHistoryModel;
 import com.baidu.navisdk.util.db.model.RouteCustomModel;
 import com.baidu.navisdk.util.db.object.NaviRouteDBObject;
@@ -35,353 +35,305 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HistoryRouteAdapter
-  extends BaseAdapter
-{
-  private static final String TAG = "HistoryRouteAdapter";
-  private DBManager.DBOperateResultCallback callback = new DBManager.DBOperateResultCallback()
-  {
-    public void onAddOrDeleteSuccess()
-    {
-      new Handler(Looper.getMainLooper()).post(new Runnable()
-      {
-        public void run()
-        {
-          HistoryRouteAdapter.this.notifyHistoryDataSetChanged();
+public class HistoryRouteAdapter extends BaseAdapter {
+    private static final String TAG = "HistoryRouteAdapter";
+    private DBManager$DBOperateResultCallback callback = new C36403();
+    ViewHolder holder;
+    private View mCleanHistoryLayout;
+    private Context mContext;
+    RoutePlanFragment mFragment;
+    private ArrayList<NaviRouteDBObject> mHistoryList;
+    private LayoutInflater mInflater;
+    private ListView mListView;
+    private NaviRouteHistoryModel mNaviRouteHistory;
+    private int mOrientation;
+    private NaviRouteDBObject mRoutePlanNode;
+
+    /* renamed from: com.baidu.navi.adapter.HistoryRouteAdapter$1 */
+    class C36361 implements OnClickListener {
+        C36361() {
         }
-      });
-    }
-    
-    public void onQuerySuccess()
-    {
-      new Handler(Looper.getMainLooper()).post(new Runnable()
-      {
-        public void run()
-        {
-          HistoryRouteAdapter.this.notifyHistoryDataSetChanged();
+
+        public void onClick(View arg0) {
+            int pos = ((Integer) arg0.getTag()).intValue();
+            if (HistoryRouteAdapter.this.mHistoryList != null && HistoryRouteAdapter.this.mHistoryList.size() != 0 && pos < HistoryRouteAdapter.this.mHistoryList.size() && pos >= 0) {
+                RouteCustomController.getInstance().setCurRouteInfoByRouteSubcribeResult(((NaviRouteDBObject) HistoryRouteAdapter.this.mHistoryList.get(pos)).getRoutePlanNodes(), 3, ((NaviRouteDBObject) HistoryRouteAdapter.this.mHistoryList.get(pos)).getId());
+                HistoryRouteAdapter.this.mFragment.jumpRouteCustomDetail(pos);
+            }
         }
-      });
     }
-  };
-  ViewHolder holder;
-  private View mCleanHistoryLayout;
-  private Context mContext;
-  RoutePlanFragment mFragment;
-  private ArrayList<NaviRouteDBObject> mHistoryList;
-  private LayoutInflater mInflater;
-  private ListView mListView;
-  private NaviRouteHistoryModel mNaviRouteHistory;
-  private int mOrientation;
-  private NaviRouteDBObject mRoutePlanNode;
-  
-  public HistoryRouteAdapter(CarlifeActivity paramCarlifeActivity, RoutePlanFragment paramRoutePlanFragment)
-  {
-    this.mContext = paramCarlifeActivity;
-    this.mFragment = paramRoutePlanFragment;
-    this.mInflater = ((LayoutInflater)this.mContext.getSystemService("layout_inflater"));
-    this.mNaviRouteHistory = NaviRouteHistoryModel.getInstance();
-    this.mHistoryList = new ArrayList();
-    if (this.mNaviRouteHistory.getNaviRouteList() == null) {
-      DBManager.getAllHistoryRoutes(this.callback);
+
+    /* renamed from: com.baidu.navi.adapter.HistoryRouteAdapter$3 */
+    class C36403 implements DBManager$DBOperateResultCallback {
+
+        /* renamed from: com.baidu.navi.adapter.HistoryRouteAdapter$3$1 */
+        class C36381 implements Runnable {
+            C36381() {
+            }
+
+            public void run() {
+                HistoryRouteAdapter.this.notifyHistoryDataSetChanged();
+            }
+        }
+
+        /* renamed from: com.baidu.navi.adapter.HistoryRouteAdapter$3$2 */
+        class C36392 implements Runnable {
+            C36392() {
+            }
+
+            public void run() {
+                HistoryRouteAdapter.this.notifyHistoryDataSetChanged();
+            }
+        }
+
+        C36403() {
+        }
+
+        public void onAddOrDeleteSuccess() {
+            new Handler(Looper.getMainLooper()).post(new C36381());
+        }
+
+        public void onQuerySuccess() {
+            new Handler(Looper.getMainLooper()).post(new C36392());
+        }
     }
-  }
-  
-  private View getItemView(View paramView, int paramInt)
-  {
-    if (paramView == null)
-    {
-      this.holder = new ViewHolder();
-      paramView = this.mInflater.inflate(2130968957, null);
-      this.holder.infoLayout = ((LinearLayout)paramView.findViewById(2131624558));
-      this.holder.routeInfo = ((TextView)paramView.findViewById(2131624561));
-      this.holder.routeTimeInfo = ((TextView)paramView.findViewById(2131624562));
-      this.holder.routeTimeIcon = ((ImageView)paramView.findViewById(2131625843));
-      this.holder.routeCustomEnterLayout = ((LinearLayout)paramView.findViewById(2131624559));
-      this.holder.routeCustomEnterIcon = ((ImageView)paramView.findViewById(2131624560));
-      paramView.setTag(this.holder);
+
+    /* renamed from: com.baidu.navi.adapter.HistoryRouteAdapter$4 */
+    class C36414 implements C2302a {
+        C36414() {
+        }
+
+        public void onClick() {
+            HistoryRouteAdapter.this.clearHistoryRouteAndNotifyChanged();
+        }
     }
-    for (;;)
-    {
-      this.holder.routeCustomEnterLayout.setTag(Integer.valueOf(paramInt));
-      this.holder.routeCustomEnterLayout.setOnClickListener(new View.OnClickListener()
-      {
-        public void onClick(View paramAnonymousView)
-        {
-          int i = ((Integer)paramAnonymousView.getTag()).intValue();
-          if ((HistoryRouteAdapter.this.mHistoryList == null) || (HistoryRouteAdapter.this.mHistoryList.size() == 0)) {}
-          while ((i >= HistoryRouteAdapter.this.mHistoryList.size()) || (i < 0)) {
+
+    public static class ViewHolder {
+        public LinearLayout infoLayout;
+        public ImageView routeCustomEnterIcon;
+        public LinearLayout routeCustomEnterLayout;
+        public TextView routeInfo;
+        public ImageView routeTimeIcon;
+        public TextView routeTimeInfo;
+    }
+
+    public HistoryRouteAdapter(CarlifeActivity activity, RoutePlanFragment fragment) {
+        this.mContext = activity;
+        this.mFragment = fragment;
+        this.mInflater = (LayoutInflater) this.mContext.getSystemService("layout_inflater");
+        this.mNaviRouteHistory = NaviRouteHistoryModel.getInstance();
+        this.mHistoryList = new ArrayList();
+        if (this.mNaviRouteHistory.getNaviRouteList() == null) {
+            DBManager.getAllHistoryRoutes(this.callback);
+        }
+    }
+
+    public int getCount() {
+        if (this.mHistoryList == null) {
+            return 0;
+        }
+        return this.mHistoryList.size();
+    }
+
+    public Object getItem(int arg0) {
+        return null;
+    }
+
+    public long getItemId(int arg0) {
+        return 0;
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        convertView = getItemView(convertView, position);
+        setItemContent(position);
+        return convertView;
+    }
+
+    private void setItemContent(int position) {
+        if (this.mHistoryList == null || position >= this.mHistoryList.size()) {
+            LogUtil.m15791e(TAG, "setItemContent()..................mHistoryList is null");
             return;
-          }
-          RouteCustomController.getInstance().setCurRouteInfoByRouteSubcribeResult(((NaviRouteDBObject)HistoryRouteAdapter.this.mHistoryList.get(i)).getRoutePlanNodes(), 3, ((NaviRouteDBObject)HistoryRouteAdapter.this.mHistoryList.get(i)).getId());
-          HistoryRouteAdapter.this.mFragment.jumpRouteCustomDetail(i);
         }
-      });
-      updateStyle();
-      return paramView;
-      this.holder = ((ViewHolder)paramView.getTag());
+        this.mRoutePlanNode = (NaviRouteDBObject) this.mHistoryList.get(position);
+        if (this.mRoutePlanNode != null) {
+            List<RoutePlanNode> poiInfoList = this.mRoutePlanNode.getRoutePlanNodes();
+            long time = this.mRoutePlanNode.getTime();
+            String name = getHistoryRouteDetailInfo(poiInfoList);
+            String timeText = getHistoryRouteTimeStr(time);
+            if (StringUtils.isEmpty(name)) {
+                name = this.mContext.getString(C0965R.string.default_poi_name);
+            }
+            if (this.holder.routeInfo != null) {
+                this.holder.routeInfo.setText(name);
+            }
+            if (this.holder.routeTimeInfo != null) {
+                if (timeText == null || timeText.length() <= 0) {
+                    this.holder.routeTimeInfo.setText(null);
+                    this.holder.routeTimeInfo.setVisibility(8);
+                } else {
+                    this.holder.routeTimeInfo.setText(timeText);
+                    this.holder.routeTimeInfo.setVisibility(0);
+                }
+            }
+            int index = RouteCustomModel.getInstance().getExistRouteIndexByHisRouteDBId(this.mRoutePlanNode.getId());
+            if (index >= 0) {
+                int isOpen = 0;
+                RouteCustomDBObject rcDBObj = RouteCustomModel.getInstance().getRouteCustomInfoByPos(index);
+                if (rcDBObj != null) {
+                    isOpen = rcDBObj.getOpen();
+                }
+                if (isOpen == 1) {
+                    this.holder.routeCustomEnterIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_ic_travelref_alarm_active));
+                    return;
+                } else {
+                    this.holder.routeCustomEnterIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_rc_travelref_alarm_selector));
+                    return;
+                }
+            }
+            this.holder.routeCustomEnterIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_rc_travelref_alarm_selector));
+        }
     }
-  }
-  
-  private String getRoutePlanNodeName(RoutePlanNode paramRoutePlanNode)
-  {
-    String str = "";
-    if (paramRoutePlanNode == null) {
-      str = StyleManager.getString(2131296709);
+
+    private View getItemView(View convertView, int position) {
+        if (convertView == null) {
+            this.holder = new ViewHolder();
+            convertView = this.mInflater.inflate(C0965R.layout.navi_history_item, null);
+            this.holder.infoLayout = (LinearLayout) convertView.findViewById(C0965R.id.nav_route_history_item_layout);
+            this.holder.routeInfo = (TextView) convertView.findViewById(C0965R.id.route_info_text);
+            this.holder.routeTimeInfo = (TextView) convertView.findViewById(C0965R.id.route_time_text);
+            this.holder.routeTimeIcon = (ImageView) convertView.findViewById(C0965R.id.time_icon_view);
+            this.holder.routeCustomEnterLayout = (LinearLayout) convertView.findViewById(C0965R.id.route_custom_enter_layout);
+            this.holder.routeCustomEnterIcon = (ImageView) convertView.findViewById(C0965R.id.route_custom_enter_icon);
+            convertView.setTag(this.holder);
+        } else {
+            this.holder = (ViewHolder) convertView.getTag();
+        }
+        this.holder.routeCustomEnterLayout.setTag(Integer.valueOf(position));
+        this.holder.routeCustomEnterLayout.setOnClickListener(new C36361());
+        updateStyle();
+        return convertView;
     }
-    if (paramRoutePlanNode.isNodeSettedData())
-    {
-      if (StringUtils.isEmpty(paramRoutePlanNode.mName)) {
-        str = StyleManager.getString(2131296709);
-      }
+
+    private void updateStyle() {
+        if (this.holder.infoLayout != null) {
+            this.holder.infoLayout.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.history_list_item_bg_selector));
+        }
+        if (this.holder.routeInfo != null) {
+            this.holder.routeInfo.setTextColor(StyleManager.getColor(C0965R.color.bnav_rp_point_text_color));
+        }
+        if (this.holder.routeTimeInfo != null) {
+            this.holder.routeTimeInfo.setTextColor(StyleManager.getColor(C0965R.color.bnav_rp_point_secondText_color));
+        }
+        if (this.holder.routeTimeIcon != null) {
+            this.holder.routeTimeIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.history_common_sug_icon));
+        }
+        if (this.holder.routeCustomEnterIcon != null) {
+            this.holder.routeCustomEnterIcon.setBackgroundDrawable(StyleManager.getDrawable(C0965R.drawable.bnav_rc_travelref_alarm_selector));
+        }
     }
-    else {
-      return str;
+
+    public NaviRouteDBObject getDate(int position) {
+        LogUtil.m15791e("navi_history", position + " position:  " + position);
+        if (position < 0 || position >= this.mHistoryList.size()) {
+            return null;
+        }
+        return (NaviRouteDBObject) this.mHistoryList.get(position);
     }
-    return paramRoutePlanNode.mName;
-  }
-  
-  private void setItemContent(int paramInt)
-  {
-    if ((this.mHistoryList == null) || (paramInt >= this.mHistoryList.size())) {
-      LogUtil.e("HistoryRouteAdapter", "setItemContent()..................mHistoryList is null");
+
+    public ArrayList<RoutePlanNode> getRoutePoiInfo(int position) {
+        NaviRouteDBObject dbObject = getDate(position);
+        if (dbObject == null) {
+            return null;
+        }
+        return dbObject.getRoutePlanNodes();
     }
-    do
-    {
-      return;
-      this.mRoutePlanNode = ((NaviRouteDBObject)this.mHistoryList.get(paramInt));
-    } while (this.mRoutePlanNode == null);
-    Object localObject = this.mRoutePlanNode.getRoutePlanNodes();
-    long l = this.mRoutePlanNode.getTime();
-    String str1 = getHistoryRouteDetailInfo((List)localObject);
-    String str2 = getHistoryRouteTimeStr(l);
-    localObject = str1;
-    if (StringUtils.isEmpty(str1)) {
-      localObject = this.mContext.getString(2131296411);
+
+    public void showDelHistoryItemDialog(final int position) {
+        this.mFragment.showDialog(new C2304o((Activity) this.mContext).f(C0965R.string.alert_delete).j(C0965R.string.alert_cancel).k(C0965R.string.alert_confirm).d(new C2302a() {
+            public void onClick() {
+                HistoryRouteAdapter.this.removeRoutePoiInfoPosition(position);
+            }
+        }));
     }
-    if (this.holder.routeInfo != null) {
-      this.holder.routeInfo.setText((CharSequence)localObject);
+
+    public void removeRoutePoiInfoPosition(int position) {
+        DBManager.deleteHistoryRouteFromDB(position, this.callback);
     }
-    if (this.holder.routeTimeInfo != null)
-    {
-      if ((str2 == null) || (str2.length() <= 0)) {
-        break label235;
-      }
-      this.holder.routeTimeInfo.setText(str2);
-      this.holder.routeTimeInfo.setVisibility(0);
+
+    public void showCleanAllHistoryDialog() {
+        this.mFragment.showDialog(new C2304o((Activity) this.mContext).f(C0965R.string.alert_delete).j(C0965R.string.alert_cancel).k(C0965R.string.alert_confirm).d(new C36414()));
     }
-    for (;;)
-    {
-      paramInt = this.mRoutePlanNode.getId();
-      int i = RouteCustomModel.getInstance().getExistRouteIndexByHisRouteDBId(paramInt);
-      if (i < 0) {
-        break label278;
-      }
-      paramInt = 0;
-      localObject = RouteCustomModel.getInstance().getRouteCustomInfoByPos(i);
-      if (localObject != null) {
-        paramInt = ((RouteCustomDBObject)localObject).getOpen();
-      }
-      if (paramInt != 1) {
-        break;
-      }
-      this.holder.routeCustomEnterIcon.setBackgroundDrawable(StyleManager.getDrawable(2130837873));
-      return;
-      label235:
-      this.holder.routeTimeInfo.setText(null);
-      this.holder.routeTimeInfo.setVisibility(8);
+
+    public void clearHistoryRouteAndNotifyChanged() {
+        DBManager.clearAllHistoryRoutesFromDB(this.callback);
     }
-    this.holder.routeCustomEnterIcon.setBackgroundDrawable(StyleManager.getDrawable(2130837934));
-    return;
-    label278:
-    this.holder.routeCustomEnterIcon.setBackgroundDrawable(StyleManager.getDrawable(2130837934));
-  }
-  
-  private void updateStyle()
-  {
-    if (this.holder.infoLayout != null) {
-      this.holder.infoLayout.setBackgroundDrawable(StyleManager.getDrawable(2130838558));
+
+    public void notifyHistoryDataSetChanged() {
+        this.mHistoryList = this.mNaviRouteHistory.getNaviRouteList();
+        refreshListViewData();
     }
-    if (this.holder.routeInfo != null) {
-      this.holder.routeInfo.setTextColor(StyleManager.getColor(2131558501));
+
+    public void refreshListViewData() {
+        if (this.mCleanHistoryLayout != null) {
+            int count = getCount();
+            LogUtil.m15791e(TAG, "refreshListViewData()..........count = " + count);
+            if (count == 0) {
+                this.mCleanHistoryLayout.setVisibility(8);
+            } else {
+                this.mCleanHistoryLayout.setVisibility(0);
+            }
+        }
+        notifyDataSetChanged();
+        if (this.mListView != null) {
+            ListViewUtils.setListViewHeightBasedOnChildren(this.mListView);
+        }
     }
-    if (this.holder.routeTimeInfo != null) {
-      this.holder.routeTimeInfo.setTextColor(StyleManager.getColor(2131558499));
+
+    public void setOrientation(int orientation) {
+        this.mOrientation = orientation;
     }
-    Drawable localDrawable;
-    if (this.holder.routeTimeIcon != null)
-    {
-      localDrawable = StyleManager.getDrawable(2130838556);
-      this.holder.routeTimeIcon.setBackgroundDrawable(localDrawable);
+
+    public String getHistoryRouteDetailInfo(List<RoutePlanNode> list) {
+        String routeDetailInfo = "";
+        if (list == null || list.size() == 0) {
+            return routeDetailInfo;
+        }
+        int size = list.size();
+        for (int i = 0; i < size - 1; i++) {
+            routeDetailInfo = routeDetailInfo + getRoutePlanNodeName((RoutePlanNode) list.get(i)) + " - ";
+        }
+        return routeDetailInfo + getRoutePlanNodeName((RoutePlanNode) list.get(size - 1));
     }
-    if (this.holder.routeCustomEnterIcon != null)
-    {
-      localDrawable = StyleManager.getDrawable(2130837934);
-      this.holder.routeCustomEnterIcon.setBackgroundDrawable(localDrawable);
+
+    private String getRoutePlanNodeName(RoutePlanNode node) {
+        String reStr = "";
+        if (node == null) {
+            reStr = StyleManager.getString(C0965R.string.navi_unknown_road);
+        }
+        if (node.isNodeSettedData()) {
+            return StringUtils.isEmpty(node.mName) ? StyleManager.getString(C0965R.string.navi_unknown_road) : node.mName;
+        } else {
+            return reStr;
+        }
     }
-  }
-  
-  public void clearHistoryRouteAndNotifyChanged()
-  {
-    DBManager.clearAllHistoryRoutesFromDB(this.callback);
-  }
-  
-  public int getCount()
-  {
-    if (this.mHistoryList == null) {
-      return 0;
+
+    public String getHistoryRouteTimeStr(long time) {
+        String routeTimeStr = "";
+        long curTime = System.currentTimeMillis();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        if (format.format(new Date(curTime)).equalsIgnoreCase(format.format(new Date(time)))) {
+            format = new SimpleDateFormat("HH:mm");
+        } else {
+            format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        }
+        return format.format(new Date(time));
     }
-    return this.mHistoryList.size();
-  }
-  
-  public NaviRouteDBObject getDate(int paramInt)
-  {
-    LogUtil.e("navi_history", paramInt + " position:  " + paramInt);
-    if ((paramInt < 0) || (paramInt >= this.mHistoryList.size())) {
-      return null;
+
+    public void setListView(ListView list) {
+        this.mListView = list;
     }
-    return (NaviRouteDBObject)this.mHistoryList.get(paramInt);
-  }
-  
-  public String getHistoryRouteDetailInfo(List<RoutePlanNode> paramList)
-  {
-    String str = "";
-    if ((paramList == null) || (paramList.size() == 0)) {
-      return "";
+
+    public void setCleanHistoryLayout(View layout) {
+        this.mCleanHistoryLayout = layout;
     }
-    int j = paramList.size();
-    int i = 0;
-    while (i < j - 1)
-    {
-      str = str + getRoutePlanNodeName((RoutePlanNode)paramList.get(i)) + " - ";
-      i += 1;
-    }
-    return str + getRoutePlanNodeName((RoutePlanNode)paramList.get(j - 1));
-  }
-  
-  public String getHistoryRouteTimeStr(long paramLong)
-  {
-    long l = System.currentTimeMillis();
-    SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    Date localDate1 = new Date(l);
-    Date localDate2 = new Date(paramLong);
-    if (localSimpleDateFormat.format(localDate1).equalsIgnoreCase(localSimpleDateFormat.format(localDate2))) {}
-    for (localSimpleDateFormat = new SimpleDateFormat("HH:mm");; localSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")) {
-      return localSimpleDateFormat.format(new Date(paramLong));
-    }
-  }
-  
-  public Object getItem(int paramInt)
-  {
-    return null;
-  }
-  
-  public long getItemId(int paramInt)
-  {
-    return 0L;
-  }
-  
-  public ArrayList<RoutePlanNode> getRoutePoiInfo(int paramInt)
-  {
-    NaviRouteDBObject localNaviRouteDBObject = getDate(paramInt);
-    if (localNaviRouteDBObject == null) {
-      return null;
-    }
-    return localNaviRouteDBObject.getRoutePlanNodes();
-  }
-  
-  public View getView(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    paramView = getItemView(paramView, paramInt);
-    setItemContent(paramInt);
-    return paramView;
-  }
-  
-  public void notifyHistoryDataSetChanged()
-  {
-    this.mHistoryList = this.mNaviRouteHistory.getNaviRouteList();
-    refreshListViewData();
-  }
-  
-  public void refreshListViewData()
-  {
-    if (this.mCleanHistoryLayout != null)
-    {
-      int i = getCount();
-      LogUtil.e("HistoryRouteAdapter", "refreshListViewData()..........count = " + i);
-      if (i != 0) {
-        break label69;
-      }
-      this.mCleanHistoryLayout.setVisibility(8);
-    }
-    for (;;)
-    {
-      notifyDataSetChanged();
-      if (this.mListView != null) {
-        ListViewUtils.setListViewHeightBasedOnChildren(this.mListView);
-      }
-      return;
-      label69:
-      this.mCleanHistoryLayout.setVisibility(0);
-    }
-  }
-  
-  public void removeRoutePoiInfoPosition(int paramInt)
-  {
-    DBManager.deleteHistoryRouteFromDB(paramInt, this.callback);
-  }
-  
-  public void setCleanHistoryLayout(View paramView)
-  {
-    this.mCleanHistoryLayout = paramView;
-  }
-  
-  public void setListView(ListView paramListView)
-  {
-    this.mListView = paramListView;
-  }
-  
-  public void setOrientation(int paramInt)
-  {
-    this.mOrientation = paramInt;
-  }
-  
-  public void showCleanAllHistoryDialog()
-  {
-    o localo = new o((Activity)this.mContext).f(2131296267).j(2131296259).k(2131296264).d(new m.a()
-    {
-      public void onClick()
-      {
-        HistoryRouteAdapter.this.clearHistoryRouteAndNotifyChanged();
-      }
-    });
-    this.mFragment.showDialog(localo);
-  }
-  
-  public void showDelHistoryItemDialog(final int paramInt)
-  {
-    o localo = new o((Activity)this.mContext).f(2131296267).j(2131296259).k(2131296264).d(new m.a()
-    {
-      public void onClick()
-      {
-        HistoryRouteAdapter.this.removeRoutePoiInfoPosition(paramInt);
-      }
-    });
-    this.mFragment.showDialog(localo);
-  }
-  
-  public static class ViewHolder
-  {
-    public LinearLayout infoLayout;
-    public ImageView routeCustomEnterIcon;
-    public LinearLayout routeCustomEnterLayout;
-    public TextView routeInfo;
-    public ImageView routeTimeIcon;
-    public TextView routeTimeInfo;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/adapter/HistoryRouteAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

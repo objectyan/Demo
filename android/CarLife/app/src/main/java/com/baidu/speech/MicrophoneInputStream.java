@@ -6,131 +6,97 @@ import android.net.LocalSocketAddress;
 import com.baidu.speech.audio.MicrophoneServer;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-public final class MicrophoneInputStream
-  extends InputStream
-{
-  private static final String TAG = "MicrophoneInputStream";
-  private final LocalSocket socket;
-  private final InputStream source;
-  
-  public MicrophoneInputStream()
-    throws IOException
-  {
-    this(1, 16000);
-  }
-  
-  public MicrophoneInputStream(int paramInt)
-    throws IOException
-  {
-    this(1, paramInt);
-  }
-  
-  public MicrophoneInputStream(int paramInt1, int paramInt2)
-    throws IOException
-  {
-    this(paramInt1, paramInt2, null);
-  }
-  
-  public MicrophoneInputStream(int paramInt1, int paramInt2, InputStream paramInputStream)
-    throws IOException
-  {
-    this(paramInt1, paramInt2, paramInputStream, null);
-  }
-  
-  public MicrophoneInputStream(int paramInt1, int paramInt2, InputStream paramInputStream, AudioRecord paramAudioRecord)
-    throws IOException
-  {
-    MicrophoneServer.create("", paramInt1);
-    paramInputStream = Executors.newSingleThreadExecutor().submit(new Callable()
-    {
-      public LocalSocket call()
-        throws Exception
-      {
-        LocalSocket localLocalSocket = new LocalSocket();
-        localLocalSocket.connect(new LocalSocketAddress(MicrophoneServer.SOCKET_ADDRESS));
-        return localLocalSocket;
-      }
-    });
-    try
-    {
-      this.socket = ((LocalSocket)paramInputStream.get());
-      this.source = this.socket.getInputStream();
-      new Thread()
-      {
-        public void run()
-        {
-          byte[] arrayOfByte = new byte['ʀ'];
-          try
-          {
-            MicrophoneInputStream.this.socket.getOutputStream().write(0);
-            for (;;)
-            {
-              MicrophoneInputStream.this.socket.getInputStream().read(arrayOfByte);
-            }
-            return;
-          }
-          catch (Exception localException)
-          {
-            localException.printStackTrace();
-          }
+public final class MicrophoneInputStream extends InputStream {
+    private static final String TAG = "MicrophoneInputStream";
+    private final LocalSocket socket;
+    private final InputStream source;
+
+    /* renamed from: com.baidu.speech.MicrophoneInputStream$1 */
+    class C49301 implements Callable<LocalSocket> {
+        C49301() {
         }
-      }.start();
-      return;
+
+        public LocalSocket call() throws Exception {
+            LocalSocket localSocket = new LocalSocket();
+            localSocket.connect(new LocalSocketAddress(MicrophoneServer.SOCKET_ADDRESS));
+            return localSocket;
+        }
     }
-    catch (Exception paramInputStream)
-    {
-      throw new IOException(paramInputStream);
+
+    /* renamed from: com.baidu.speech.MicrophoneInputStream$2 */
+    class C49312 extends Thread {
+        C49312() {
+        }
+
+        public void run() {
+            byte[] bArr = new byte[640];
+            try {
+                MicrophoneInputStream.this.socket.getOutputStream().write(0);
+                while (true) {
+                    MicrophoneInputStream.this.socket.getInputStream().read(bArr);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
-  }
-  
-  public MicrophoneInputStream(int paramInt, InputStream paramInputStream)
-    throws IOException
-  {
-    this(1, paramInt, paramInputStream);
-  }
-  
-  public MicrophoneInputStream(AudioRecord paramAudioRecord)
-    throws IOException
-  {
-    this(1, 16000, null, paramAudioRecord);
-  }
-  
-  public void close()
-    throws IOException
-  {
-    super.close();
-    this.source.close();
-    this.socket.close();
-  }
-  
-  public long mills()
-  {
-    return 0L;
-  }
-  
-  public void mills(long paramLong) {}
-  
-  public int read()
-    throws IOException
-  {
-    return 0;
-  }
-  
-  public int read(byte[] paramArrayOfByte, int paramInt1, int paramInt2)
-    throws IOException
-  {
-    return this.source.read(paramArrayOfByte, paramInt1, paramInt2);
-  }
+
+    public MicrophoneInputStream() throws IOException {
+        this(1, 16000);
+    }
+
+    public MicrophoneInputStream(int i) throws IOException {
+        this(1, i);
+    }
+
+    public MicrophoneInputStream(int i, int i2) throws IOException {
+        this(i, i2, null);
+    }
+
+    public MicrophoneInputStream(int i, int i2, InputStream inputStream) throws IOException {
+        this(i, i2, inputStream, null);
+    }
+
+    public MicrophoneInputStream(int i, int i2, InputStream inputStream, AudioRecord audioRecord) throws IOException {
+        MicrophoneServer.create("", i);
+        try {
+            this.socket = (LocalSocket) Executors.newSingleThreadExecutor().submit(new C49301()).get();
+            this.source = this.socket.getInputStream();
+            new C49312().start();
+        } catch (Throwable e) {
+            throw new IOException(e);
+        }
+    }
+
+    public MicrophoneInputStream(int i, InputStream inputStream) throws IOException {
+        this(1, i, inputStream);
+    }
+
+    public MicrophoneInputStream(AudioRecord audioRecord) throws IOException {
+        this(1, 16000, null, audioRecord);
+    }
+
+    public void close() throws IOException {
+        super.close();
+        this.source.close();
+        this.socket.close();
+    }
+
+    public long mills() {
+        return 0;
+    }
+
+    public void mills(long j) {
+    }
+
+    public int read() throws IOException {
+        return 0;
+    }
+
+    public int read(byte[] bArr, int i, int i2) throws IOException {
+        return this.source.read(bArr, i, i2);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/speech/MicrophoneInputStream.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

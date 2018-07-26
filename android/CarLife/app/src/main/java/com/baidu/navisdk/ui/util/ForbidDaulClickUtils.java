@@ -1,51 +1,40 @@
 package com.baidu.navisdk.ui.util;
 
-public class ForbidDaulClickUtils
-{
-  private static long DAUL_CLICK_INTERVAL = 800L;
-  private static long mLastClickTime;
-  
-  public static boolean isFastDoubleClick()
-  {
-    long l1 = System.currentTimeMillis();
-    long l2 = l1 - mLastClickTime;
-    if ((0L < l2) && (l2 < DAUL_CLICK_INTERVAL)) {
-      return true;
+public class ForbidDaulClickUtils {
+    private static long DAUL_CLICK_INTERVAL = 800;
+    private static long mLastClickTime;
+
+    public static boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        long timeD = time - mLastClickTime;
+        if (0 < timeD && timeD < DAUL_CLICK_INTERVAL) {
+            return true;
+        }
+        mLastClickTime = time;
+        return false;
     }
-    mLastClickTime = l1;
-    return false;
-  }
-  
-  public static boolean isFastDoubleClick(long paramLong)
-  {
-    long l1 = System.currentTimeMillis();
-    long l2 = l1 - mLastClickTime;
-    if ((0L < l2) && (l2 < paramLong)) {
-      return true;
+
+    public boolean isFastDoubleClickNonStatic() {
+        long time = System.currentTimeMillis();
+        long timeD = time - mLastClickTime;
+        if (0 < timeD && timeD < DAUL_CLICK_INTERVAL) {
+            return true;
+        }
+        mLastClickTime = time;
+        return false;
     }
-    mLastClickTime = l1;
-    return false;
-  }
-  
-  public static void resetLastDoubleClickTime()
-  {
-    mLastClickTime = -1L;
-  }
-  
-  public boolean isFastDoubleClickNonStatic()
-  {
-    long l1 = System.currentTimeMillis();
-    long l2 = l1 - mLastClickTime;
-    if ((0L < l2) && (l2 < DAUL_CLICK_INTERVAL)) {
-      return true;
+
+    public static boolean isFastDoubleClick(long clickInterval) {
+        long time = System.currentTimeMillis();
+        long timeD = time - mLastClickTime;
+        if (0 < timeD && timeD < clickInterval) {
+            return true;
+        }
+        mLastClickTime = time;
+        return false;
     }
-    mLastClickTime = l1;
-    return false;
-  }
+
+    public static void resetLastDoubleClickTime() {
+        mLastClickTime = -1;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/ui/util/ForbidDaulClickUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

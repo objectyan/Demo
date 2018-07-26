@@ -1,104 +1,91 @@
 package com.baidu.navi.protocol.pack;
 
 import android.text.TextUtils;
+import com.baidu.navi.protocol.util.BNaviProtocolDef;
 
-public class PackerFactory
-{
-  public static BasePacker getPacker(String paramString)
-  {
-    Object localObject2 = null;
-    Object localObject1 = localObject2;
-    if (!TextUtils.isEmpty(paramString))
-    {
-      if (!"route".equals(paramString)) {
-        break label30;
-      }
-      localObject1 = new RoutePlanPacker();
+public class PackerFactory {
+    public static BasePacker getPacker(String cmd) {
+        if (TextUtils.isEmpty(cmd)) {
+            return null;
+        }
+        if ("route".equals(cmd)) {
+            return new RoutePlanPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_STOP_NAVI.equals(cmd)) {
+            return new StopNaviPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_REROUTE.equals(cmd)) {
+            return new ReroutePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_NOTIFY_GUIDE_INFO.equals(cmd)) {
+            return new HUDPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_NOTIFY_MAP_UPDATE.equals(cmd)) {
+            return new MapImagePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_START_NAVI.equals(cmd)) {
+            return new StartNaviPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_GET_HOME_AND_COMPANY.equals(cmd)) {
+            return new GetAddressPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_GET_FAVORITE.equals(cmd)) {
+            return new GetFavoritePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_SET_IMAGE_SIZE.equals(cmd)) {
+            return new SetImageSizePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_GET_MAP_IMAGE.equals(cmd)) {
+            return new GetMapImagePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_KEYWORD_SUGGEST.equals(cmd)) {
+            return new KeywordSuggestPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_SEARCH_BY_KEYWORD.equals(cmd)) {
+            return new SearchByKeywordPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_SEARCH_BY_TYPE.equals(cmd)) {
+            return new SearchByTypePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_VOICE_RECOGNISE.equals(cmd)) {
+            return new VoiceRecognisePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_GET_MAP_SCALE.equals(cmd)) {
+            return new GetMapScalePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_MAP_ZOOM_IN.equals(cmd)) {
+            return new MapZoomInPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_MAP_ZOOM_OUT.equals(cmd)) {
+            return new MapZoomOutpacker();
+        }
+        if (BNaviProtocolDef.COMMAND_ROUTE_GUIDE_FINIS_NOTIFY.equals(cmd)) {
+            return new MapZoomOutpacker();
+        }
+        if (BNaviProtocolDef.COMMAND_GET_STATUS.equals(cmd)) {
+            return new GetStatusPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_GET_PLUGIN_INFO.equals(cmd)) {
+            return new GetPluginInfoPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_ROUTE_GUIDE_BACKGROUND_NOTIFY.equals(cmd)) {
+            return new BackgroundNotifyPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_ROUTE_GUIDE_FOREGROUND_NOTIFY.equals(cmd)) {
+            return new ForegroundNotifyPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_UPDATE_DEVICE_STATUS.equals(cmd)) {
+            return new UpdateDeviceStatusPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_UPDATE_LOCATION.equals(cmd)) {
+            return new UpdateLocationPacker();
+        }
+        if (BNaviProtocolDef.COMMAND_GET_FAVORITE_AS_FILE.equals(cmd)) {
+            return new GetFavoriteAsFilePacker();
+        }
+        if (BNaviProtocolDef.COMMAND_ADD_FAVORITE_BY_FILE.equals(cmd)) {
+            return new AddFavoriteByFilePacker();
+        }
+        return null;
     }
-    label30:
-    do
-    {
-      return (BasePacker)localObject1;
-      if ("stopNavi".equals(paramString)) {
-        return new StopNaviPacker();
-      }
-      if ("reRoute".equals(paramString)) {
-        return new ReroutePacker();
-      }
-      if ("notifyGuideNodeInfo".equals(paramString)) {
-        return new HUDPacker();
-      }
-      if ("notifyMapImageUpdate".equals(paramString)) {
-        return new MapImagePacker();
-      }
-      if ("startNavi".equals(paramString)) {
-        return new StartNaviPacker();
-      }
-      if ("getHomeAndCompany".equals(paramString)) {
-        return new GetAddressPacker();
-      }
-      if ("getFavorite".equals(paramString)) {
-        return new GetFavoritePacker();
-      }
-      if ("setImageSize".equals(paramString)) {
-        return new SetImageSizePacker();
-      }
-      if ("getMapImage".equals(paramString)) {
-        return new GetMapImagePacker();
-      }
-      if ("keywordSuggest".equals(paramString)) {
-        return new KeywordSuggestPacker();
-      }
-      if ("searchByKeyword".equals(paramString)) {
-        return new SearchByKeywordPacker();
-      }
-      if ("searchByType".equals(paramString)) {
-        return new SearchByTypePacker();
-      }
-      if ("voiceRecognise".equals(paramString)) {
-        return new VoiceRecognisePacker();
-      }
-      if ("getMapScale".equals(paramString)) {
-        return new GetMapScalePacker();
-      }
-      if ("mapZoomIn".equals(paramString)) {
-        return new MapZoomInPacker();
-      }
-      if ("mapZoomOut".equals(paramString)) {
-        return new MapZoomOutpacker();
-      }
-      if ("routeGuideFinishNotify".equals(paramString)) {
-        return new MapZoomOutpacker();
-      }
-      if ("getStatus".equals(paramString)) {
-        return new GetStatusPacker();
-      }
-      if ("getPluginInfo".equals(paramString)) {
-        return new GetPluginInfoPacker();
-      }
-      if ("routeGuideBackgroundNotify".equals(paramString)) {
-        return new BackgroundNotifyPacker();
-      }
-      if ("routeGuideForegroundNotify".equals(paramString)) {
-        return new ForegroundNotifyPacker();
-      }
-      if ("updateDeviceStatus".equals(paramString)) {
-        return new UpdateDeviceStatusPacker();
-      }
-      if ("updateLocation".equals(paramString)) {
-        return new UpdateLocationPacker();
-      }
-      if ("getFavoriteAsFile".equals(paramString)) {
-        return new GetFavoriteAsFilePacker();
-      }
-      localObject1 = localObject2;
-    } while (!"addFavoriteByFile".equals(paramString));
-    return new AddFavoriteByFilePacker();
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navi/protocol/pack/PackerFactory.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

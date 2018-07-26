@@ -1,5 +1,10 @@
 package com.google.protobuf;
 
+import com.google.protobuf.Internal.EnumLite;
+import com.google.protobuf.Internal.EnumLiteMap;
+import com.google.protobuf.MessageLite.Builder;
+import com.google.protobuf.WireFormat.FieldType;
+import com.google.protobuf.WireFormat.JavaType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,579 +12,483 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
-final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescriptorType>>
-{
-  private static final FieldSet DEFAULT_INSTANCE = new FieldSet(true);
-  private Map<FieldDescriptorType, Object> fields;
-  
-  private FieldSet()
-  {
-    this.fields = new TreeMap();
-  }
-  
-  private FieldSet(boolean paramBoolean)
-  {
-    this.fields = Collections.emptyMap();
-  }
-  
-  private static int computeElementSize(WireFormat.FieldType paramFieldType, int paramInt, Object paramObject)
-  {
-    int i = CodedOutputStream.computeTagSize(paramInt);
-    paramInt = i;
-    if (paramFieldType == WireFormat.FieldType.GROUP) {
-      paramInt = i * 2;
+final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescriptorType>> {
+    private static final FieldSet DEFAULT_INSTANCE = new FieldSet(true);
+    private Map<FieldDescriptorType, Object> fields;
+
+    public interface FieldDescriptorLite<T extends FieldDescriptorLite<T>> extends Comparable<T> {
+        EnumLiteMap<?> getEnumType();
+
+        JavaType getLiteJavaType();
+
+        FieldType getLiteType();
+
+        int getNumber();
+
+        Builder internalMergeFrom(Builder builder, MessageLite messageLite);
+
+        boolean isPacked();
+
+        boolean isRepeated();
     }
-    return computeElementSizeNoTag(paramFieldType, paramObject) + paramInt;
-  }
-  
-  private static int computeElementSizeNoTag(WireFormat.FieldType paramFieldType, Object paramObject)
-  {
-    switch (paramFieldType)
-    {
-    default: 
-      throw new RuntimeException("There is no way to get here, but the compiler thinks otherwise.");
-    case ???: 
-      return CodedOutputStream.computeDoubleSizeNoTag(((Double)paramObject).doubleValue());
-    case ???: 
-      return CodedOutputStream.computeFloatSizeNoTag(((Float)paramObject).floatValue());
-    case ???: 
-      return CodedOutputStream.computeInt64SizeNoTag(((Long)paramObject).longValue());
-    case ???: 
-      return CodedOutputStream.computeUInt64SizeNoTag(((Long)paramObject).longValue());
-    case ???: 
-      return CodedOutputStream.computeInt32SizeNoTag(((Integer)paramObject).intValue());
-    case ???: 
-      return CodedOutputStream.computeFixed64SizeNoTag(((Long)paramObject).longValue());
-    case ???: 
-      return CodedOutputStream.computeFixed32SizeNoTag(((Integer)paramObject).intValue());
-    case ???: 
-      return CodedOutputStream.computeBoolSizeNoTag(((Boolean)paramObject).booleanValue());
-    case ???: 
-      return CodedOutputStream.computeStringSizeNoTag((String)paramObject);
-    case ???: 
-      return CodedOutputStream.computeGroupSizeNoTag((MessageLite)paramObject);
-    case ???: 
-      return CodedOutputStream.computeMessageSizeNoTag((MessageLite)paramObject);
-    case ???: 
-      return CodedOutputStream.computeBytesSizeNoTag((ByteString)paramObject);
-    case ???: 
-      return CodedOutputStream.computeUInt32SizeNoTag(((Integer)paramObject).intValue());
-    case ???: 
-      return CodedOutputStream.computeSFixed32SizeNoTag(((Integer)paramObject).intValue());
-    case ???: 
-      return CodedOutputStream.computeSFixed64SizeNoTag(((Long)paramObject).longValue());
-    case ???: 
-      return CodedOutputStream.computeSInt32SizeNoTag(((Integer)paramObject).intValue());
-    case ???: 
-      return CodedOutputStream.computeSInt64SizeNoTag(((Long)paramObject).longValue());
+
+    private FieldSet() {
+        this.fields = new TreeMap();
     }
-    return CodedOutputStream.computeEnumSizeNoTag(((Internal.EnumLite)paramObject).getNumber());
-  }
-  
-  public static int computeFieldSize(FieldDescriptorLite<?> paramFieldDescriptorLite, Object paramObject)
-  {
-    WireFormat.FieldType localFieldType = paramFieldDescriptorLite.getLiteType();
-    int k = paramFieldDescriptorLite.getNumber();
-    if (paramFieldDescriptorLite.isRepeated())
-    {
-      int j;
-      if (paramFieldDescriptorLite.isPacked())
-      {
-        i = 0;
-        paramFieldDescriptorLite = ((List)paramObject).iterator();
-        while (paramFieldDescriptorLite.hasNext()) {
-          i += computeElementSizeNoTag(localFieldType, paramFieldDescriptorLite.next());
-        }
-        j = CodedOutputStream.computeTagSize(k) + i + CodedOutputStream.computeRawVarint32Size(i);
-        return j;
-      }
-      int i = 0;
-      paramFieldDescriptorLite = ((List)paramObject).iterator();
-      for (;;)
-      {
-        j = i;
-        if (!paramFieldDescriptorLite.hasNext()) {
-          break;
-        }
-        i += computeElementSize(localFieldType, k, paramFieldDescriptorLite.next());
-      }
+
+    private FieldSet(boolean dummy) {
+        this.fields = Collections.emptyMap();
     }
-    return computeElementSize(localFieldType, k, paramObject);
-  }
-  
-  public static <T extends FieldDescriptorLite<T>> FieldSet<T> emptySet()
-  {
-    return DEFAULT_INSTANCE;
-  }
-  
-  static int getWireFormatForFieldType(WireFormat.FieldType paramFieldType, boolean paramBoolean)
-  {
-    if (paramBoolean) {
-      return 2;
+
+    public static <T extends FieldDescriptorLite<T>> FieldSet<T> newFieldSet() {
+        return new FieldSet();
     }
-    return paramFieldType.getWireType();
-  }
-  
-  public static <T extends FieldDescriptorLite<T>> FieldSet<T> newFieldSet()
-  {
-    return new FieldSet();
-  }
-  
-  public static Object readPrimitiveField(CodedInputStream paramCodedInputStream, WireFormat.FieldType paramFieldType)
-    throws IOException
-  {
-    switch (paramFieldType)
-    {
-    default: 
-      throw new RuntimeException("There is no way to get here, but the compiler thinks otherwise.");
-    case ???: 
-      return Double.valueOf(paramCodedInputStream.readDouble());
-    case ???: 
-      return Float.valueOf(paramCodedInputStream.readFloat());
-    case ???: 
-      return Long.valueOf(paramCodedInputStream.readInt64());
-    case ???: 
-      return Long.valueOf(paramCodedInputStream.readUInt64());
-    case ???: 
-      return Integer.valueOf(paramCodedInputStream.readInt32());
-    case ???: 
-      return Long.valueOf(paramCodedInputStream.readFixed64());
-    case ???: 
-      return Integer.valueOf(paramCodedInputStream.readFixed32());
-    case ???: 
-      return Boolean.valueOf(paramCodedInputStream.readBool());
-    case ???: 
-      return paramCodedInputStream.readString();
-    case ???: 
-      return paramCodedInputStream.readBytes();
-    case ???: 
-      return Integer.valueOf(paramCodedInputStream.readUInt32());
-    case ???: 
-      return Integer.valueOf(paramCodedInputStream.readSFixed32());
-    case ???: 
-      return Long.valueOf(paramCodedInputStream.readSFixed64());
-    case ???: 
-      return Integer.valueOf(paramCodedInputStream.readSInt32());
-    case ???: 
-      return Long.valueOf(paramCodedInputStream.readSInt64());
-    case ???: 
-      throw new IllegalArgumentException("readPrimitiveField() cannot handle nested groups.");
-    case ???: 
-      throw new IllegalArgumentException("readPrimitiveField() cannot handle embedded messages.");
+
+    public static <T extends FieldDescriptorLite<T>> FieldSet<T> emptySet() {
+        return DEFAULT_INSTANCE;
     }
-    throw new IllegalArgumentException("readPrimitiveField() cannot handle enums.");
-  }
-  
-  private static void verifyType(WireFormat.FieldType paramFieldType, Object paramObject)
-  {
-    if (paramObject == null) {
-      throw new NullPointerException();
-    }
-    boolean bool = false;
-    switch (1.$SwitchMap$com$google$protobuf$WireFormat$JavaType[paramFieldType.getJavaType().ordinal()])
-    {
-    }
-    while (!bool)
-    {
-      throw new IllegalArgumentException("Wrong object type used with protocol message reflection.");
-      bool = paramObject instanceof Integer;
-      continue;
-      bool = paramObject instanceof Long;
-      continue;
-      bool = paramObject instanceof Float;
-      continue;
-      bool = paramObject instanceof Double;
-      continue;
-      bool = paramObject instanceof Boolean;
-      continue;
-      bool = paramObject instanceof String;
-      continue;
-      bool = paramObject instanceof ByteString;
-      continue;
-      bool = paramObject instanceof Internal.EnumLite;
-      continue;
-      bool = paramObject instanceof MessageLite;
-    }
-  }
-  
-  private static void writeElement(CodedOutputStream paramCodedOutputStream, WireFormat.FieldType paramFieldType, int paramInt, Object paramObject)
-    throws IOException
-  {
-    if (paramFieldType == WireFormat.FieldType.GROUP)
-    {
-      paramCodedOutputStream.writeGroup(paramInt, (MessageLite)paramObject);
-      return;
-    }
-    paramCodedOutputStream.writeTag(paramInt, getWireFormatForFieldType(paramFieldType, false));
-    writeElementNoTag(paramCodedOutputStream, paramFieldType, paramObject);
-  }
-  
-  private static void writeElementNoTag(CodedOutputStream paramCodedOutputStream, WireFormat.FieldType paramFieldType, Object paramObject)
-    throws IOException
-  {
-    switch (paramFieldType)
-    {
-    default: 
-      return;
-    case ???: 
-      paramCodedOutputStream.writeDoubleNoTag(((Double)paramObject).doubleValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeFloatNoTag(((Float)paramObject).floatValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeInt64NoTag(((Long)paramObject).longValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeUInt64NoTag(((Long)paramObject).longValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeInt32NoTag(((Integer)paramObject).intValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeFixed64NoTag(((Long)paramObject).longValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeFixed32NoTag(((Integer)paramObject).intValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeBoolNoTag(((Boolean)paramObject).booleanValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeStringNoTag((String)paramObject);
-      return;
-    case ???: 
-      paramCodedOutputStream.writeGroupNoTag((MessageLite)paramObject);
-      return;
-    case ???: 
-      paramCodedOutputStream.writeMessageNoTag((MessageLite)paramObject);
-      return;
-    case ???: 
-      paramCodedOutputStream.writeBytesNoTag((ByteString)paramObject);
-      return;
-    case ???: 
-      paramCodedOutputStream.writeUInt32NoTag(((Integer)paramObject).intValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeSFixed32NoTag(((Integer)paramObject).intValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeSFixed64NoTag(((Long)paramObject).longValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeSInt32NoTag(((Integer)paramObject).intValue());
-      return;
-    case ???: 
-      paramCodedOutputStream.writeSInt64NoTag(((Long)paramObject).longValue());
-      return;
-    }
-    paramCodedOutputStream.writeEnumNoTag(((Internal.EnumLite)paramObject).getNumber());
-  }
-  
-  public static void writeField(FieldDescriptorLite<?> paramFieldDescriptorLite, Object paramObject, CodedOutputStream paramCodedOutputStream)
-    throws IOException
-  {
-    WireFormat.FieldType localFieldType = paramFieldDescriptorLite.getLiteType();
-    int i = paramFieldDescriptorLite.getNumber();
-    if (paramFieldDescriptorLite.isRepeated())
-    {
-      paramObject = (List)paramObject;
-      if (paramFieldDescriptorLite.isPacked())
-      {
-        paramCodedOutputStream.writeTag(i, 2);
-        i = 0;
-        paramFieldDescriptorLite = ((List)paramObject).iterator();
-        while (paramFieldDescriptorLite.hasNext()) {
-          i += computeElementSizeNoTag(localFieldType, paramFieldDescriptorLite.next());
-        }
-        paramCodedOutputStream.writeRawVarint32(i);
-        paramFieldDescriptorLite = ((List)paramObject).iterator();
-        while (paramFieldDescriptorLite.hasNext()) {
-          writeElementNoTag(paramCodedOutputStream, localFieldType, paramFieldDescriptorLite.next());
-        }
-      }
-      paramFieldDescriptorLite = ((List)paramObject).iterator();
-      while (paramFieldDescriptorLite.hasNext()) {
-        writeElement(paramCodedOutputStream, localFieldType, i, paramFieldDescriptorLite.next());
-      }
-    }
-    writeElement(paramCodedOutputStream, localFieldType, i, paramObject);
-  }
-  
-  public void addRepeatedField(FieldDescriptorType paramFieldDescriptorType, Object paramObject)
-  {
-    if (!paramFieldDescriptorType.isRepeated()) {
-      throw new IllegalArgumentException("addRepeatedField() can only be called on repeated fields.");
-    }
-    verifyType(paramFieldDescriptorType.getLiteType(), paramObject);
-    Object localObject = this.fields.get(paramFieldDescriptorType);
-    if (localObject == null)
-    {
-      localObject = new ArrayList();
-      this.fields.put(paramFieldDescriptorType, localObject);
-    }
-    for (paramFieldDescriptorType = (FieldDescriptorType)localObject;; paramFieldDescriptorType = (List)localObject)
-    {
-      paramFieldDescriptorType.add(paramObject);
-      return;
-    }
-  }
-  
-  public void clear()
-  {
-    this.fields.clear();
-  }
-  
-  public void clearField(FieldDescriptorType paramFieldDescriptorType)
-  {
-    this.fields.remove(paramFieldDescriptorType);
-  }
-  
-  public Map<FieldDescriptorType, Object> getAllFields()
-  {
-    return Collections.unmodifiableMap(this.fields);
-  }
-  
-  public Object getField(FieldDescriptorType paramFieldDescriptorType)
-  {
-    return this.fields.get(paramFieldDescriptorType);
-  }
-  
-  public int getMessageSetSerializedSize()
-  {
-    int i = 0;
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      FieldDescriptorLite localFieldDescriptorLite = (FieldDescriptorLite)localEntry.getKey();
-      if ((localFieldDescriptorLite.getLiteJavaType() == WireFormat.JavaType.MESSAGE) && (!localFieldDescriptorLite.isRepeated()) && (!localFieldDescriptorLite.isPacked())) {
-        i += CodedOutputStream.computeMessageSetExtensionSize(((FieldDescriptorLite)localEntry.getKey()).getNumber(), (MessageLite)localEntry.getValue());
-      } else {
-        i += computeFieldSize(localFieldDescriptorLite, localEntry.getValue());
-      }
-    }
-    return i;
-  }
-  
-  public Object getRepeatedField(FieldDescriptorType paramFieldDescriptorType, int paramInt)
-  {
-    if (!paramFieldDescriptorType.isRepeated()) {
-      throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
-    }
-    paramFieldDescriptorType = this.fields.get(paramFieldDescriptorType);
-    if (paramFieldDescriptorType == null) {
-      throw new IndexOutOfBoundsException();
-    }
-    return ((List)paramFieldDescriptorType).get(paramInt);
-  }
-  
-  public int getRepeatedFieldCount(FieldDescriptorType paramFieldDescriptorType)
-  {
-    if (!paramFieldDescriptorType.isRepeated()) {
-      throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
-    }
-    paramFieldDescriptorType = this.fields.get(paramFieldDescriptorType);
-    if (paramFieldDescriptorType == null) {
-      return 0;
-    }
-    return ((List)paramFieldDescriptorType).size();
-  }
-  
-  public int getSerializedSize()
-  {
-    int i = 0;
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      i += computeFieldSize((FieldDescriptorLite)localEntry.getKey(), localEntry.getValue());
-    }
-    return i;
-  }
-  
-  public boolean hasField(FieldDescriptorType paramFieldDescriptorType)
-  {
-    if (paramFieldDescriptorType.isRepeated()) {
-      throw new IllegalArgumentException("hasField() can only be called on non-repeated fields.");
-    }
-    return this.fields.get(paramFieldDescriptorType) != null;
-  }
-  
-  public boolean isInitialized()
-  {
-    Iterator localIterator = this.fields.entrySet().iterator();
-    for (;;)
-    {
-      if (localIterator.hasNext())
-      {
-        Object localObject = (Map.Entry)localIterator.next();
-        FieldDescriptorLite localFieldDescriptorLite = (FieldDescriptorLite)((Map.Entry)localObject).getKey();
-        if (localFieldDescriptorLite.getLiteJavaType() == WireFormat.JavaType.MESSAGE)
-        {
-          if (localFieldDescriptorLite.isRepeated())
-          {
-            localObject = ((List)((Map.Entry)localObject).getValue()).iterator();
-            if (!((Iterator)localObject).hasNext()) {
-              continue;
+
+    public void makeImmutable() {
+        for (Entry<FieldDescriptorType, Object> entry : this.fields.entrySet()) {
+            if (((FieldDescriptorLite) entry.getKey()).isRepeated()) {
+                this.fields.put(entry.getKey(), Collections.unmodifiableList((List) entry.getValue()));
             }
-            if (((MessageLite)((Iterator)localObject).next()).isInitialized()) {
-              break;
+        }
+        this.fields = Collections.unmodifiableMap(this.fields);
+    }
+
+    public void clear() {
+        this.fields.clear();
+    }
+
+    public Map<FieldDescriptorType, Object> getAllFields() {
+        return Collections.unmodifiableMap(this.fields);
+    }
+
+    public Iterator<Entry<FieldDescriptorType, Object>> iterator() {
+        return this.fields.entrySet().iterator();
+    }
+
+    public boolean hasField(FieldDescriptorType descriptor) {
+        if (!descriptor.isRepeated()) {
+            return this.fields.get(descriptor) != null;
+        } else {
+            throw new IllegalArgumentException("hasField() can only be called on non-repeated fields.");
+        }
+    }
+
+    public Object getField(FieldDescriptorType descriptor) {
+        return this.fields.get(descriptor);
+    }
+
+    public void setField(FieldDescriptorType descriptor, Object value) {
+        if (!descriptor.isRepeated()) {
+            verifyType(descriptor.getLiteType(), value);
+        } else if (value instanceof List) {
+            List<Object> newList = new ArrayList();
+            newList.addAll((List) value);
+            for (Object element : newList) {
+                verifyType(descriptor.getLiteType(), element);
             }
-            return false;
-          }
-          if (!((MessageLite)((Map.Entry)localObject).getValue()).isInitialized()) {
-            return false;
-          }
-        }
-      }
-    }
-    return true;
-  }
-  
-  public Iterator<Map.Entry<FieldDescriptorType, Object>> iterator()
-  {
-    return this.fields.entrySet().iterator();
-  }
-  
-  public void makeImmutable()
-  {
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      if (((FieldDescriptorLite)localEntry.getKey()).isRepeated())
-      {
-        List localList = (List)localEntry.getValue();
-        this.fields.put(localEntry.getKey(), Collections.unmodifiableList(localList));
-      }
-    }
-    this.fields = Collections.unmodifiableMap(this.fields);
-  }
-  
-  public void mergeFrom(FieldSet<FieldDescriptorType> paramFieldSet)
-  {
-    paramFieldSet = paramFieldSet.fields.entrySet().iterator();
-    while (paramFieldSet.hasNext())
-    {
-      Object localObject1 = (Map.Entry)paramFieldSet.next();
-      FieldDescriptorLite localFieldDescriptorLite = (FieldDescriptorLite)((Map.Entry)localObject1).getKey();
-      localObject1 = ((Map.Entry)localObject1).getValue();
-      Object localObject2;
-      if (localFieldDescriptorLite.isRepeated())
-      {
-        localObject2 = this.fields.get(localFieldDescriptorLite);
-        if (localObject2 == null) {
-          this.fields.put(localFieldDescriptorLite, new ArrayList((List)localObject1));
+            value = newList;
         } else {
-          ((List)localObject2).addAll((List)localObject1);
+            throw new IllegalArgumentException("Wrong object type used with protocol message reflection.");
         }
-      }
-      else if (localFieldDescriptorLite.getLiteJavaType() == WireFormat.JavaType.MESSAGE)
-      {
-        localObject2 = this.fields.get(localFieldDescriptorLite);
-        if (localObject2 == null) {
-          this.fields.put(localFieldDescriptorLite, localObject1);
-        } else {
-          this.fields.put(localFieldDescriptorLite, localFieldDescriptorLite.internalMergeFrom(((MessageLite)localObject2).toBuilder(), (MessageLite)localObject1).build());
+        this.fields.put(descriptor, value);
+    }
+
+    public void clearField(FieldDescriptorType descriptor) {
+        this.fields.remove(descriptor);
+    }
+
+    public int getRepeatedFieldCount(FieldDescriptorType descriptor) {
+        if (descriptor.isRepeated()) {
+            Object value = this.fields.get(descriptor);
+            if (value == null) {
+                return 0;
+            }
+            return ((List) value).size();
         }
-      }
-      else
-      {
-        this.fields.put(localFieldDescriptorLite, localObject1);
-      }
+        throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
     }
-  }
-  
-  public void setField(FieldDescriptorType paramFieldDescriptorType, Object paramObject)
-  {
-    if (paramFieldDescriptorType.isRepeated())
-    {
-      if (!(paramObject instanceof List)) {
-        throw new IllegalArgumentException("Wrong object type used with protocol message reflection.");
-      }
-      ArrayList localArrayList = new ArrayList();
-      localArrayList.addAll((List)paramObject);
-      paramObject = localArrayList.iterator();
-      while (((Iterator)paramObject).hasNext())
-      {
-        Object localObject = ((Iterator)paramObject).next();
-        verifyType(paramFieldDescriptorType.getLiteType(), localObject);
-      }
-      paramObject = localArrayList;
+
+    public Object getRepeatedField(FieldDescriptorType descriptor, int index) {
+        if (descriptor.isRepeated()) {
+            Object value = this.fields.get(descriptor);
+            if (value != null) {
+                return ((List) value).get(index);
+            }
+            throw new IndexOutOfBoundsException();
+        }
+        throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
     }
-    for (;;)
-    {
-      this.fields.put(paramFieldDescriptorType, paramObject);
-      return;
-      verifyType(paramFieldDescriptorType.getLiteType(), paramObject);
+
+    public void setRepeatedField(FieldDescriptorType descriptor, int index, Object value) {
+        if (descriptor.isRepeated()) {
+            Object list = this.fields.get(descriptor);
+            if (list == null) {
+                throw new IndexOutOfBoundsException();
+            }
+            verifyType(descriptor.getLiteType(), value);
+            ((List) list).set(index, value);
+            return;
+        }
+        throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
     }
-  }
-  
-  public void setRepeatedField(FieldDescriptorType paramFieldDescriptorType, int paramInt, Object paramObject)
-  {
-    if (!paramFieldDescriptorType.isRepeated()) {
-      throw new IllegalArgumentException("getRepeatedField() can only be called on repeated fields.");
+
+    public void addRepeatedField(FieldDescriptorType descriptor, Object value) {
+        if (descriptor.isRepeated()) {
+            List list;
+            verifyType(descriptor.getLiteType(), value);
+            Object existingValue = this.fields.get(descriptor);
+            if (existingValue == null) {
+                list = new ArrayList();
+                this.fields.put(descriptor, list);
+            } else {
+                list = (List) existingValue;
+            }
+            list.add(value);
+            return;
+        }
+        throw new IllegalArgumentException("addRepeatedField() can only be called on repeated fields.");
     }
-    Object localObject = this.fields.get(paramFieldDescriptorType);
-    if (localObject == null) {
-      throw new IndexOutOfBoundsException();
+
+    private static void verifyType(FieldType type, Object value) {
+        if (value == null) {
+            throw new NullPointerException();
+        }
+        boolean isValid = false;
+        switch (type.getJavaType()) {
+            case INT:
+                isValid = value instanceof Integer;
+                break;
+            case LONG:
+                isValid = value instanceof Long;
+                break;
+            case FLOAT:
+                isValid = value instanceof Float;
+                break;
+            case DOUBLE:
+                isValid = value instanceof Double;
+                break;
+            case BOOLEAN:
+                isValid = value instanceof Boolean;
+                break;
+            case STRING:
+                isValid = value instanceof String;
+                break;
+            case BYTE_STRING:
+                isValid = value instanceof ByteString;
+                break;
+            case ENUM:
+                isValid = value instanceof EnumLite;
+                break;
+            case MESSAGE:
+                isValid = value instanceof MessageLite;
+                break;
+        }
+        if (!isValid) {
+            throw new IllegalArgumentException("Wrong object type used with protocol message reflection.");
+        }
     }
-    verifyType(paramFieldDescriptorType.getLiteType(), paramObject);
-    ((List)localObject).set(paramInt, paramObject);
-  }
-  
-  public void writeMessageSetTo(CodedOutputStream paramCodedOutputStream)
-    throws IOException
-  {
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      FieldDescriptorLite localFieldDescriptorLite = (FieldDescriptorLite)localEntry.getKey();
-      if ((localFieldDescriptorLite.getLiteJavaType() == WireFormat.JavaType.MESSAGE) && (!localFieldDescriptorLite.isRepeated()) && (!localFieldDescriptorLite.isPacked())) {
-        paramCodedOutputStream.writeMessageSetExtension(((FieldDescriptorLite)localEntry.getKey()).getNumber(), (MessageLite)localEntry.getValue());
-      } else {
-        writeField(localFieldDescriptorLite, localEntry.getValue(), paramCodedOutputStream);
-      }
+
+    public boolean isInitialized() {
+        for (Entry<FieldDescriptorType, Object> entry : this.fields.entrySet()) {
+            FieldDescriptorLite descriptor = (FieldDescriptorLite) entry.getKey();
+            if (descriptor.getLiteJavaType() == JavaType.MESSAGE) {
+                if (descriptor.isRepeated()) {
+                    for (MessageLite element : (List) entry.getValue()) {
+                        if (!element.isInitialized()) {
+                            return false;
+                        }
+                    }
+                    continue;
+                } else if (!((MessageLite) entry.getValue()).isInitialized()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
-  }
-  
-  public void writeTo(CodedOutputStream paramCodedOutputStream)
-    throws IOException
-  {
-    Iterator localIterator = this.fields.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Map.Entry localEntry = (Map.Entry)localIterator.next();
-      writeField((FieldDescriptorLite)localEntry.getKey(), localEntry.getValue(), paramCodedOutputStream);
+
+    static int getWireFormatForFieldType(FieldType type, boolean isPacked) {
+        if (isPacked) {
+            return 2;
+        }
+        return type.getWireType();
     }
-  }
-  
-  public static abstract interface FieldDescriptorLite<T extends FieldDescriptorLite<T>>
-    extends Comparable<T>
-  {
-    public abstract Internal.EnumLiteMap<?> getEnumType();
-    
-    public abstract WireFormat.JavaType getLiteJavaType();
-    
-    public abstract WireFormat.FieldType getLiteType();
-    
-    public abstract int getNumber();
-    
-    public abstract MessageLite.Builder internalMergeFrom(MessageLite.Builder paramBuilder, MessageLite paramMessageLite);
-    
-    public abstract boolean isPacked();
-    
-    public abstract boolean isRepeated();
-  }
+
+    public void mergeFrom(FieldSet<FieldDescriptorType> other) {
+        for (Entry<FieldDescriptorType, Object> entry : other.fields.entrySet()) {
+            FieldDescriptorLite descriptor = (FieldDescriptorLite) entry.getKey();
+            Object otherValue = entry.getValue();
+            Object value;
+            if (descriptor.isRepeated()) {
+                value = this.fields.get(descriptor);
+                if (value == null) {
+                    this.fields.put(descriptor, new ArrayList((List) otherValue));
+                } else {
+                    ((List) value).addAll((List) otherValue);
+                }
+            } else if (descriptor.getLiteJavaType() == JavaType.MESSAGE) {
+                value = this.fields.get(descriptor);
+                if (value == null) {
+                    this.fields.put(descriptor, otherValue);
+                } else {
+                    this.fields.put(descriptor, descriptor.internalMergeFrom(((MessageLite) value).toBuilder(), (MessageLite) otherValue).build());
+                }
+            } else {
+                this.fields.put(descriptor, otherValue);
+            }
+        }
+    }
+
+    public static Object readPrimitiveField(CodedInputStream input, FieldType type) throws IOException {
+        switch (type) {
+            case DOUBLE:
+                return Double.valueOf(input.readDouble());
+            case FLOAT:
+                return Float.valueOf(input.readFloat());
+            case INT64:
+                return Long.valueOf(input.readInt64());
+            case UINT64:
+                return Long.valueOf(input.readUInt64());
+            case INT32:
+                return Integer.valueOf(input.readInt32());
+            case FIXED64:
+                return Long.valueOf(input.readFixed64());
+            case FIXED32:
+                return Integer.valueOf(input.readFixed32());
+            case BOOL:
+                return Boolean.valueOf(input.readBool());
+            case STRING:
+                return input.readString();
+            case BYTES:
+                return input.readBytes();
+            case UINT32:
+                return Integer.valueOf(input.readUInt32());
+            case SFIXED32:
+                return Integer.valueOf(input.readSFixed32());
+            case SFIXED64:
+                return Long.valueOf(input.readSFixed64());
+            case SINT32:
+                return Integer.valueOf(input.readSInt32());
+            case SINT64:
+                return Long.valueOf(input.readSInt64());
+            case GROUP:
+                throw new IllegalArgumentException("readPrimitiveField() cannot handle nested groups.");
+            case MESSAGE:
+                throw new IllegalArgumentException("readPrimitiveField() cannot handle embedded messages.");
+            case ENUM:
+                throw new IllegalArgumentException("readPrimitiveField() cannot handle enums.");
+            default:
+                throw new RuntimeException("There is no way to get here, but the compiler thinks otherwise.");
+        }
+    }
+
+    public void writeTo(CodedOutputStream output) throws IOException {
+        for (Entry<FieldDescriptorType, Object> entry : this.fields.entrySet()) {
+            writeField((FieldDescriptorLite) entry.getKey(), entry.getValue(), output);
+        }
+    }
+
+    public void writeMessageSetTo(CodedOutputStream output) throws IOException {
+        for (Entry<FieldDescriptorType, Object> entry : this.fields.entrySet()) {
+            FieldDescriptorLite descriptor = (FieldDescriptorLite) entry.getKey();
+            if (descriptor.getLiteJavaType() != JavaType.MESSAGE || descriptor.isRepeated() || descriptor.isPacked()) {
+                writeField(descriptor, entry.getValue(), output);
+            } else {
+                output.writeMessageSetExtension(((FieldDescriptorLite) entry.getKey()).getNumber(), (MessageLite) entry.getValue());
+            }
+        }
+    }
+
+    private static void writeElement(CodedOutputStream output, FieldType type, int number, Object value) throws IOException {
+        if (type == FieldType.GROUP) {
+            output.writeGroup(number, (MessageLite) value);
+            return;
+        }
+        output.writeTag(number, getWireFormatForFieldType(type, false));
+        writeElementNoTag(output, type, value);
+    }
+
+    private static void writeElementNoTag(CodedOutputStream output, FieldType type, Object value) throws IOException {
+        switch (type) {
+            case DOUBLE:
+                output.writeDoubleNoTag(((Double) value).doubleValue());
+                return;
+            case FLOAT:
+                output.writeFloatNoTag(((Float) value).floatValue());
+                return;
+            case INT64:
+                output.writeInt64NoTag(((Long) value).longValue());
+                return;
+            case UINT64:
+                output.writeUInt64NoTag(((Long) value).longValue());
+                return;
+            case INT32:
+                output.writeInt32NoTag(((Integer) value).intValue());
+                return;
+            case FIXED64:
+                output.writeFixed64NoTag(((Long) value).longValue());
+                return;
+            case FIXED32:
+                output.writeFixed32NoTag(((Integer) value).intValue());
+                return;
+            case BOOL:
+                output.writeBoolNoTag(((Boolean) value).booleanValue());
+                return;
+            case STRING:
+                output.writeStringNoTag((String) value);
+                return;
+            case BYTES:
+                output.writeBytesNoTag((ByteString) value);
+                return;
+            case UINT32:
+                output.writeUInt32NoTag(((Integer) value).intValue());
+                return;
+            case SFIXED32:
+                output.writeSFixed32NoTag(((Integer) value).intValue());
+                return;
+            case SFIXED64:
+                output.writeSFixed64NoTag(((Long) value).longValue());
+                return;
+            case SINT32:
+                output.writeSInt32NoTag(((Integer) value).intValue());
+                return;
+            case SINT64:
+                output.writeSInt64NoTag(((Long) value).longValue());
+                return;
+            case GROUP:
+                output.writeGroupNoTag((MessageLite) value);
+                return;
+            case MESSAGE:
+                output.writeMessageNoTag((MessageLite) value);
+                return;
+            case ENUM:
+                output.writeEnumNoTag(((EnumLite) value).getNumber());
+                return;
+            default:
+                return;
+        }
+    }
+
+    public static void writeField(FieldDescriptorLite<?> descriptor, Object value, CodedOutputStream output) throws IOException {
+        FieldType type = descriptor.getLiteType();
+        int number = descriptor.getNumber();
+        if (descriptor.isRepeated()) {
+            List<Object> valueList = (List) value;
+            if (descriptor.isPacked()) {
+                output.writeTag(number, 2);
+                int dataSize = 0;
+                for (Object element : valueList) {
+                    dataSize += computeElementSizeNoTag(type, element);
+                }
+                output.writeRawVarint32(dataSize);
+                for (Object element2 : valueList) {
+                    writeElementNoTag(output, type, element2);
+                }
+                return;
+            }
+            for (Object element22 : valueList) {
+                writeElement(output, type, number, element22);
+            }
+            return;
+        }
+        writeElement(output, type, number, value);
+    }
+
+    public int getSerializedSize() {
+        int size = 0;
+        for (Entry<FieldDescriptorType, Object> entry : this.fields.entrySet()) {
+            size += computeFieldSize((FieldDescriptorLite) entry.getKey(), entry.getValue());
+        }
+        return size;
+    }
+
+    public int getMessageSetSerializedSize() {
+        int size = 0;
+        for (Entry<FieldDescriptorType, Object> entry : this.fields.entrySet()) {
+            FieldDescriptorLite descriptor = (FieldDescriptorLite) entry.getKey();
+            if (descriptor.getLiteJavaType() != JavaType.MESSAGE || descriptor.isRepeated() || descriptor.isPacked()) {
+                size += computeFieldSize(descriptor, entry.getValue());
+            } else {
+                size += CodedOutputStream.computeMessageSetExtensionSize(((FieldDescriptorLite) entry.getKey()).getNumber(), (MessageLite) entry.getValue());
+            }
+        }
+        return size;
+    }
+
+    private static int computeElementSize(FieldType type, int number, Object value) {
+        int tagSize = CodedOutputStream.computeTagSize(number);
+        if (type == FieldType.GROUP) {
+            tagSize *= 2;
+        }
+        return computeElementSizeNoTag(type, value) + tagSize;
+    }
+
+    private static int computeElementSizeNoTag(FieldType type, Object value) {
+        switch (type) {
+            case DOUBLE:
+                return CodedOutputStream.computeDoubleSizeNoTag(((Double) value).doubleValue());
+            case FLOAT:
+                return CodedOutputStream.computeFloatSizeNoTag(((Float) value).floatValue());
+            case INT64:
+                return CodedOutputStream.computeInt64SizeNoTag(((Long) value).longValue());
+            case UINT64:
+                return CodedOutputStream.computeUInt64SizeNoTag(((Long) value).longValue());
+            case INT32:
+                return CodedOutputStream.computeInt32SizeNoTag(((Integer) value).intValue());
+            case FIXED64:
+                return CodedOutputStream.computeFixed64SizeNoTag(((Long) value).longValue());
+            case FIXED32:
+                return CodedOutputStream.computeFixed32SizeNoTag(((Integer) value).intValue());
+            case BOOL:
+                return CodedOutputStream.computeBoolSizeNoTag(((Boolean) value).booleanValue());
+            case STRING:
+                return CodedOutputStream.computeStringSizeNoTag((String) value);
+            case BYTES:
+                return CodedOutputStream.computeBytesSizeNoTag((ByteString) value);
+            case UINT32:
+                return CodedOutputStream.computeUInt32SizeNoTag(((Integer) value).intValue());
+            case SFIXED32:
+                return CodedOutputStream.computeSFixed32SizeNoTag(((Integer) value).intValue());
+            case SFIXED64:
+                return CodedOutputStream.computeSFixed64SizeNoTag(((Long) value).longValue());
+            case SINT32:
+                return CodedOutputStream.computeSInt32SizeNoTag(((Integer) value).intValue());
+            case SINT64:
+                return CodedOutputStream.computeSInt64SizeNoTag(((Long) value).longValue());
+            case GROUP:
+                return CodedOutputStream.computeGroupSizeNoTag((MessageLite) value);
+            case MESSAGE:
+                return CodedOutputStream.computeMessageSizeNoTag((MessageLite) value);
+            case ENUM:
+                return CodedOutputStream.computeEnumSizeNoTag(((EnumLite) value).getNumber());
+            default:
+                throw new RuntimeException("There is no way to get here, but the compiler thinks otherwise.");
+        }
+    }
+
+    public static int computeFieldSize(FieldDescriptorLite<?> descriptor, Object value) {
+        FieldType type = descriptor.getLiteType();
+        int number = descriptor.getNumber();
+        if (!descriptor.isRepeated()) {
+            return computeElementSize(type, number, value);
+        }
+        if (descriptor.isPacked()) {
+            int dataSize = 0;
+            for (Object element : (List) value) {
+                dataSize += computeElementSizeNoTag(type, element);
+            }
+            return (CodedOutputStream.computeTagSize(number) + dataSize) + CodedOutputStream.computeRawVarint32Size(dataSize);
+        }
+        int size = 0;
+        for (Object element2 : (List) value) {
+            size += computeElementSize(type, number, element2);
+        }
+        return size;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/protobuf/FieldSet.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

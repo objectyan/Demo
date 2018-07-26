@@ -1,197 +1,146 @@
 package com.baidu.platform.comapi.map;
 
 import com.baidu.entity.pb.PoiResult;
+import com.baidu.entity.pb.PoiResult$Contents$Sgeo.GeoElements;
 import com.baidu.entity.pb.PoiResult.Contents;
-import com.baidu.entity.pb.PoiResult.Contents.Sgeo;
-import com.baidu.entity.pb.PoiResult.Contents.Sgeo.GeoElements;
+import com.baidu.platform.comapi.map.provider.EngineConst.OVERLAY_KEY;
 import com.baidu.platform.comapi.search.convert.ResultCache;
-import com.baidu.platform.comapi.search.convert.ResultCache.Item;
-import com.baidu.platform.comapi.util.f;
+import com.baidu.platform.comapi.search.convert.ResultCache$Item;
+import com.baidu.platform.comapi.util.C2911f;
 import com.baidu.platform.comjni.map.basemap.AppBaseMap;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PoiChildItemOverlay
-  extends InnerOverlay
-{
-  private static final int AREA_STYLE = 60;
-  private static final int GEO_TYPE_AREA = 4;
-  private static final int GEO_TYPE_LINE = 2;
-  private static final int LINE_STYLE = 128;
-  private static final int NORMAL_OFFSET = 15;
-  private int poiIndex = 0;
-  private boolean showSpecialChild;
-  
-  public PoiChildItemOverlay()
-  {
-    super(33);
-  }
-  
-  public PoiChildItemOverlay(AppBaseMap paramAppBaseMap)
-  {
-    super(33, paramAppBaseMap);
-  }
-  
-  private void addChildGeoArray(PoiResult.Contents paramContents, JSONArray paramJSONArray)
-    throws JSONException
-  {
-    if (paramContents.hasSgeo()) {}
-    switch (paramContents.getSgeo().getType())
-    {
-    case 3: 
-    default: 
-      return;
-    case 2: 
-      paramJSONArray.put(buildChildLineJson(paramContents, 0));
-      return;
+public class PoiChildItemOverlay extends InnerOverlay {
+    private static final int AREA_STYLE = 60;
+    private static final int GEO_TYPE_AREA = 4;
+    private static final int GEO_TYPE_LINE = 2;
+    private static final int LINE_STYLE = 128;
+    private static final int NORMAL_OFFSET = 15;
+    private int poiIndex = 0;
+    private boolean showSpecialChild;
+
+    public boolean isShowSpecialChild() {
+        return this.showSpecialChild;
     }
-    paramJSONArray.put(buildChildAreaJson(paramContents, 0));
-  }
-  
-  private JSONObject buildChildAreaJson(PoiResult.Contents paramContents, int paramInt)
-    throws JSONException
-  {
-    JSONObject localJSONObject = new JSONObject();
-    localJSONObject.put("ud", paramContents.getUid());
-    localJSONObject.put("ty", 33);
-    localJSONObject.put("nst", 60);
-    localJSONObject.put("fst", 0);
-    localJSONObject.put("of", 15);
-    localJSONObject.put("in", paramInt);
-    localJSONObject.put("tx", paramContents.getName());
-    localJSONObject.put("sgeo", buildSgeoJson(paramContents));
-    return localJSONObject;
-  }
-  
-  private JSONObject buildChildLineJson(PoiResult.Contents paramContents, int paramInt)
-    throws JSONException
-  {
-    JSONObject localJSONObject = new JSONObject();
-    localJSONObject.put("ud", paramContents.getUid());
-    localJSONObject.put("ty", 32);
-    localJSONObject.put("nst", 128);
-    localJSONObject.put("fst", 0);
-    localJSONObject.put("of", 15);
-    localJSONObject.put("in", paramInt);
-    localJSONObject.put("tx", paramContents.getName());
-    localJSONObject.put("sgeo", buildSgeoJson(paramContents));
-    return localJSONObject;
-  }
-  
-  private JSONObject buildSgeoJson(PoiResult.Contents paramContents)
-    throws JSONException
-  {
-    JSONObject localJSONObject1 = new JSONObject();
-    JSONArray localJSONArray1;
-    int i;
-    if (paramContents.getSgeo().getBoundList() != null)
-    {
-      localJSONArray1 = new JSONArray();
-      i = 0;
-      while (i < paramContents.getSgeo().getBoundList().size())
-      {
-        localJSONArray1.put(paramContents.getSgeo().getBound(i));
-        i += 1;
-      }
-      localJSONObject1.put("bound", localJSONArray1);
+
+    public void setShowSpecialChild(boolean showSpecialChild) {
+        this.showSpecialChild = showSpecialChild;
     }
-    if (paramContents.getSgeo().getType() == 4)
-    {
-      localJSONObject1.put("type", 3);
-      if (paramContents.getSgeo().getGeoElementsList() != null)
-      {
-        localJSONArray1 = new JSONArray();
-        paramContents = paramContents.getSgeo().getGeoElementsList();
-        i = 0;
-      }
+
+    public PoiChildItemOverlay() {
+        super(33);
     }
-    else
-    {
-      for (;;)
-      {
-        if (i >= paramContents.size()) {
-          break label259;
+
+    public PoiChildItemOverlay(AppBaseMap baseMap) {
+        super(33, baseMap);
+    }
+
+    public void setPoiIndex(int index) {
+        this.poiIndex = index;
+    }
+
+    public String getLayerTag() {
+        return MapController.POISON_LAYER_TAG;
+    }
+
+    public String getData() {
+        ResultCache$Item item = ResultCache.getInstance().get(this.strJsonData);
+        if (item == null || !(item.messageLite instanceof PoiResult)) {
+            return "";
         }
-        if (((PoiResult.Contents.Sgeo.GeoElements)paramContents.get(i)).getPointList() != null)
-        {
-          JSONArray localJSONArray2 = new JSONArray();
-          int j = 0;
-          for (;;)
-          {
-            if (j < ((PoiResult.Contents.Sgeo.GeoElements)paramContents.get(i)).getPointCount())
-            {
-              localJSONArray2.put(((PoiResult.Contents.Sgeo.GeoElements)paramContents.get(i)).getPoint(j));
-              j += 1;
-              continue;
-              localJSONObject1.put("type", paramContents.getSgeo().getType());
-              break;
+        return generateChildJson((PoiResult) item.messageLite);
+    }
+
+    private String generateChildJson(PoiResult poiResult) {
+        JSONObject result = new JSONObject();
+        JSONArray childArray = new JSONArray();
+        try {
+            if (this.poiIndex >= 0 && this.poiIndex < poiResult.getContentsList().size()) {
+                addChildGeoArray(poiResult.getContents(this.poiIndex), childArray);
             }
-          }
-          JSONObject localJSONObject2 = new JSONObject();
-          localJSONObject2.put("points", localJSONArray2);
-          localJSONArray1.put(localJSONObject2);
+            result.put("dataset", childArray);
+            return result.toString();
+        } catch (Exception e) {
+            C2911f.a("Cary", "getRenderData error", e);
+            return "";
         }
-        i += 1;
-      }
-      label259:
-      localJSONObject1.put("elements", localJSONArray1);
     }
-    return localJSONObject1;
-  }
-  
-  private String generateChildJson(PoiResult paramPoiResult)
-  {
-    JSONObject localJSONObject = new JSONObject();
-    JSONArray localJSONArray = new JSONArray();
-    try
-    {
-      if ((this.poiIndex >= 0) && (this.poiIndex < paramPoiResult.getContentsList().size())) {
-        addChildGeoArray(paramPoiResult.getContents(this.poiIndex), localJSONArray);
-      }
-      localJSONObject.put("dataset", localJSONArray);
-      return localJSONObject.toString();
+
+    private void addChildGeoArray(Contents content, JSONArray childArray) throws JSONException {
+        if (content.hasSgeo()) {
+            switch (content.getSgeo().getType()) {
+                case 2:
+                    childArray.put(buildChildLineJson(content, 0));
+                    return;
+                case 4:
+                    childArray.put(buildChildAreaJson(content, 0));
+                    return;
+                default:
+                    return;
+            }
+        }
     }
-    catch (Exception paramPoiResult)
-    {
-      f.a("Cary", "getRenderData error", paramPoiResult);
+
+    private JSONObject buildChildLineJson(Contents poiContent, int id) throws JSONException {
+        JSONObject poiJson = new JSONObject();
+        poiJson.put("ud", poiContent.getUid());
+        poiJson.put("ty", 32);
+        poiJson.put("nst", 128);
+        poiJson.put("fst", 0);
+        poiJson.put("of", 15);
+        poiJson.put("in", id);
+        poiJson.put("tx", poiContent.getName());
+        poiJson.put(OVERLAY_KEY.SGEO, buildSgeoJson(poiContent));
+        return poiJson;
     }
-    return "";
-  }
-  
-  public String getData()
-  {
-    ResultCache.Item localItem = ResultCache.getInstance().get(this.strJsonData);
-    if ((localItem != null) && ((localItem.messageLite instanceof PoiResult))) {
-      return generateChildJson((PoiResult)localItem.messageLite);
+
+    private JSONObject buildChildAreaJson(Contents poiContent, int id) throws JSONException {
+        JSONObject poiJson = new JSONObject();
+        poiJson.put("ud", poiContent.getUid());
+        poiJson.put("ty", 33);
+        poiJson.put("nst", 60);
+        poiJson.put("fst", 0);
+        poiJson.put("of", 15);
+        poiJson.put("in", id);
+        poiJson.put("tx", poiContent.getName());
+        poiJson.put(OVERLAY_KEY.SGEO, buildSgeoJson(poiContent));
+        return poiJson;
     }
-    return "";
-  }
-  
-  public String getLayerTag()
-  {
-    return "poison";
-  }
-  
-  public boolean isShowSpecialChild()
-  {
-    return this.showSpecialChild;
-  }
-  
-  public void setPoiIndex(int paramInt)
-  {
-    this.poiIndex = paramInt;
-  }
-  
-  public void setShowSpecialChild(boolean paramBoolean)
-  {
-    this.showSpecialChild = paramBoolean;
-  }
+
+    private JSONObject buildSgeoJson(Contents poiContent) throws JSONException {
+        int i;
+        JSONObject sgeo = new JSONObject();
+        if (poiContent.getSgeo().getBoundList() != null) {
+            JSONArray bound = new JSONArray();
+            for (i = 0; i < poiContent.getSgeo().getBoundList().size(); i++) {
+                bound.put(poiContent.getSgeo().getBound(i));
+            }
+            sgeo.put(OVERLAY_KEY.SGEO_BOUND, bound);
+        }
+        if (poiContent.getSgeo().getType() == 4) {
+            sgeo.put("type", 3);
+        } else {
+            sgeo.put("type", poiContent.getSgeo().getType());
+        }
+        if (poiContent.getSgeo().getGeoElementsList() != null) {
+            JSONArray geoElements = new JSONArray();
+            List<GeoElements> geos = poiContent.getSgeo().getGeoElementsList();
+            for (i = 0; i < geos.size(); i++) {
+                if (((GeoElements) geos.get(i)).getPointList() != null) {
+                    JSONArray points = new JSONArray();
+                    for (int j = 0; j < ((GeoElements) geos.get(i)).getPointCount(); j++) {
+                        points.put(((GeoElements) geos.get(i)).getPoint(j));
+                    }
+                    JSONObject pointObj = new JSONObject();
+                    pointObj.put(OVERLAY_KEY.SGEO_ELEMENTS_POINTS, points);
+                    geoElements.put(pointObj);
+                }
+            }
+            sgeo.put(OVERLAY_KEY.SGEO_ELEMENTS, geoElements);
+        }
+        return sgeo;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/platform/comapi/map/PoiChildItemOverlay.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

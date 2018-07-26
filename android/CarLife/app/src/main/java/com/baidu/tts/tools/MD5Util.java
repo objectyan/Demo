@@ -2,51 +2,32 @@ package com.baidu.tts.tools;
 
 import android.annotation.SuppressLint;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @SuppressLint({"DefaultLocale"})
-public class MD5Util
-{
-  public static String toHexString(byte[] paramArrayOfByte, String paramString, boolean paramBoolean)
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    int j = paramArrayOfByte.length;
-    int i = 0;
-    while (i < j)
-    {
-      String str2 = Integer.toHexString(paramArrayOfByte[i] & 0xFF);
-      String str1 = str2;
-      if (paramBoolean) {
-        str1 = str2.toUpperCase();
-      }
-      if (str1.length() == 1) {
-        localStringBuilder.append("0");
-      }
-      localStringBuilder.append(str1).append(paramString);
-      i += 1;
+public class MD5Util {
+    public static String toMd5(byte[] paramArrayOfByte, boolean paramBoolean) {
+        try {
+            MessageDigest instance = MessageDigest.getInstance("MD5");
+            instance.reset();
+            instance.update(paramArrayOfByte);
+            return toHexString(instance.digest(), "", paramBoolean);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
-    return localStringBuilder.toString();
-  }
-  
-  public static String toMd5(byte[] paramArrayOfByte, boolean paramBoolean)
-  {
-    try
-    {
-      MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
-      localMessageDigest.reset();
-      localMessageDigest.update(paramArrayOfByte);
-      paramArrayOfByte = toHexString(localMessageDigest.digest(), "", paramBoolean);
-      return paramArrayOfByte;
+
+    public static String toHexString(byte[] paramArrayOfByte, String paramString, boolean paramBoolean) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (byte b : paramArrayOfByte) {
+            String toHexString = Integer.toHexString(b & 255);
+            if (paramBoolean) {
+                toHexString = toHexString.toUpperCase();
+            }
+            if (toHexString.length() == 1) {
+                stringBuilder.append("0");
+            }
+            stringBuilder.append(toHexString).append(paramString);
+        }
+        return stringBuilder.toString();
     }
-    catch (NoSuchAlgorithmException paramArrayOfByte)
-    {
-      throw new RuntimeException(paramArrayOfByte);
-    }
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/tts/tools/MD5Util.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

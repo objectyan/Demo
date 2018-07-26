@@ -1,5 +1,6 @@
 package com.baidu.entity.pb;
 
+import com.baidu.carlife.core.C1253f;
 import com.google.protobuf.micro.CodedInputStreamMicro;
 import com.google.protobuf.micro.CodedOutputStreamMicro;
 import com.google.protobuf.micro.InvalidProtocolBufferMicroException;
@@ -7,2059 +8,1866 @@ import com.google.protobuf.micro.MessageMicro;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public final class Opnlayer
-  extends MessageMicro
-{
-  public static final int BORDERLB_FIELD_NUMBER = 10;
-  public static final int BORDERRT_FIELD_NUMBER = 11;
-  public static final int BOTTOMICON_FIELD_NUMBER = 15;
-  public static final int CENTER_FIELD_NUMBER = 4;
-  public static final int EVENTTITLE_FIELD_NUMBER = 1;
-  public static final int EVENTTYPE_FIELD_NUMBER = 2;
-  public static final int FIRSTSHOW_FIELD_NUMBER = 18;
-  public static final int ICON_FIELD_NUMBER = 6;
-  public static final int IMAGEBOTTOM_FIELD_NUMBER = 7;
-  public static final int IMAGEBUTTON_FIELD_NUMBER = 12;
-  public static final int IMAGETOP_FIELD_NUMBER = 8;
-  public static final int JUMPTO_FIELD_NUMBER = 16;
-  public static final int LEVEL_FIELD_NUMBER = 3;
-  public static final int NEEDLOGIN_FIELD_NUMBER = 19;
-  public static final int NOTICE_FIELD_NUMBER = 17;
-  public static final int POINTINFO_FIELD_NUMBER = 9;
-  public static final int REFERSHMETERS_FIELD_NUMBER = 14;
-  public static final int REFRESHSEC_FIELD_NUMBER = 13;
-  public static final int SHARE_FIELD_NUMBER = 5;
-  private int A = 0;
-  private boolean B;
-  private String C = "";
-  private boolean D;
-  private String E = "";
-  private boolean F;
-  private String G = "";
-  private boolean H;
-  private String I = "";
-  private boolean J;
-  private String K = "";
-  private int L = -1;
-  private boolean a;
-  private String b = "";
-  private boolean c;
-  private int d = 0;
-  private boolean e;
-  private int f = 0;
-  private boolean g;
-  private String h = "";
-  private boolean i;
-  private Share j = null;
-  private boolean k;
-  private String l = "";
-  private boolean m;
-  private String n = "";
-  private boolean o;
-  private String p = "";
-  private List<Poi> q = Collections.emptyList();
-  private boolean r;
-  private String s = "";
-  private boolean t;
-  private String u = "";
-  private boolean v;
-  private String w = "";
-  private boolean x;
-  private int y = 0;
-  private boolean z;
-  
-  public static Opnlayer parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    return new Opnlayer().mergeFrom(paramCodedInputStreamMicro);
-  }
-  
-  public static Opnlayer parseFrom(byte[] paramArrayOfByte)
-    throws InvalidProtocolBufferMicroException
-  {
-    return (Opnlayer)new Opnlayer().mergeFrom(paramArrayOfByte);
-  }
-  
-  public Opnlayer addPointinfo(Poi paramPoi)
-  {
-    if (paramPoi == null) {
-      return this;
-    }
-    if (this.q.isEmpty()) {
-      this.q = new ArrayList();
-    }
-    this.q.add(paramPoi);
-    return this;
-  }
-  
-  public final Opnlayer clear()
-  {
-    clearEventtitle();
-    clearEventtype();
-    clearLevel();
-    clearCenter();
-    clearShare();
-    clearIcon();
-    clearImagebottom();
-    clearImagetop();
-    clearPointinfo();
-    clearBorderlb();
-    clearBorderrt();
-    clearImagebutton();
-    clearRefreshsec();
-    clearRefershmeters();
-    clearBottomicon();
-    clearJumpto();
-    clearNotice();
-    clearFirstshow();
-    clearNeedlogin();
-    this.L = -1;
-    return this;
-  }
-  
-  public Opnlayer clearBorderlb()
-  {
-    this.r = false;
-    this.s = "";
-    return this;
-  }
-  
-  public Opnlayer clearBorderrt()
-  {
-    this.t = false;
-    this.u = "";
-    return this;
-  }
-  
-  public Opnlayer clearBottomicon()
-  {
-    this.B = false;
-    this.C = "";
-    return this;
-  }
-  
-  public Opnlayer clearCenter()
-  {
-    this.g = false;
-    this.h = "";
-    return this;
-  }
-  
-  public Opnlayer clearEventtitle()
-  {
-    this.a = false;
-    this.b = "";
-    return this;
-  }
-  
-  public Opnlayer clearEventtype()
-  {
-    this.c = false;
-    this.d = 0;
-    return this;
-  }
-  
-  public Opnlayer clearFirstshow()
-  {
-    this.H = false;
-    this.I = "";
-    return this;
-  }
-  
-  public Opnlayer clearIcon()
-  {
-    this.k = false;
-    this.l = "";
-    return this;
-  }
-  
-  public Opnlayer clearImagebottom()
-  {
-    this.m = false;
-    this.n = "";
-    return this;
-  }
-  
-  public Opnlayer clearImagebutton()
-  {
-    this.v = false;
-    this.w = "";
-    return this;
-  }
-  
-  public Opnlayer clearImagetop()
-  {
-    this.o = false;
-    this.p = "";
-    return this;
-  }
-  
-  public Opnlayer clearJumpto()
-  {
-    this.D = false;
-    this.E = "";
-    return this;
-  }
-  
-  public Opnlayer clearLevel()
-  {
-    this.e = false;
-    this.f = 0;
-    return this;
-  }
-  
-  public Opnlayer clearNeedlogin()
-  {
-    this.J = false;
-    this.K = "";
-    return this;
-  }
-  
-  public Opnlayer clearNotice()
-  {
-    this.F = false;
-    this.G = "";
-    return this;
-  }
-  
-  public Opnlayer clearPointinfo()
-  {
-    this.q = Collections.emptyList();
-    return this;
-  }
-  
-  public Opnlayer clearRefershmeters()
-  {
-    this.z = false;
-    this.A = 0;
-    return this;
-  }
-  
-  public Opnlayer clearRefreshsec()
-  {
-    this.x = false;
-    this.y = 0;
-    return this;
-  }
-  
-  public Opnlayer clearShare()
-  {
-    this.i = false;
-    this.j = null;
-    return this;
-  }
-  
-  public String getBorderlb()
-  {
-    return this.s;
-  }
-  
-  public String getBorderrt()
-  {
-    return this.u;
-  }
-  
-  public String getBottomicon()
-  {
-    return this.C;
-  }
-  
-  public int getCachedSize()
-  {
-    if (this.L < 0) {
-      getSerializedSize();
-    }
-    return this.L;
-  }
-  
-  public String getCenter()
-  {
-    return this.h;
-  }
-  
-  public String getEventtitle()
-  {
-    return this.b;
-  }
-  
-  public int getEventtype()
-  {
-    return this.d;
-  }
-  
-  public String getFirstshow()
-  {
-    return this.I;
-  }
-  
-  public String getIcon()
-  {
-    return this.l;
-  }
-  
-  public String getImagebottom()
-  {
-    return this.n;
-  }
-  
-  public String getImagebutton()
-  {
-    return this.w;
-  }
-  
-  public String getImagetop()
-  {
-    return this.p;
-  }
-  
-  public String getJumpto()
-  {
-    return this.E;
-  }
-  
-  public int getLevel()
-  {
-    return this.f;
-  }
-  
-  public String getNeedlogin()
-  {
-    return this.K;
-  }
-  
-  public String getNotice()
-  {
-    return this.G;
-  }
-  
-  public Poi getPointinfo(int paramInt)
-  {
-    return (Poi)this.q.get(paramInt);
-  }
-  
-  public int getPointinfoCount()
-  {
-    return this.q.size();
-  }
-  
-  public List<Poi> getPointinfoList()
-  {
-    return this.q;
-  }
-  
-  public int getRefershmeters()
-  {
-    return this.A;
-  }
-  
-  public int getRefreshsec()
-  {
-    return this.y;
-  }
-  
-  public int getSerializedSize()
-  {
-    int i2 = 0;
-    if (hasEventtitle()) {
-      i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getEventtitle());
-    }
-    int i1 = i2;
-    if (hasEventtype()) {
-      i1 = i2 + CodedOutputStreamMicro.computeInt32Size(2, getEventtype());
-    }
-    i2 = i1;
-    if (hasLevel()) {
-      i2 = i1 + CodedOutputStreamMicro.computeInt32Size(3, getLevel());
-    }
-    i1 = i2;
-    if (hasCenter()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getCenter());
-    }
-    i2 = i1;
-    if (hasShare()) {
-      i2 = i1 + CodedOutputStreamMicro.computeMessageSize(5, getShare());
-    }
-    i1 = i2;
-    if (hasIcon()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(6, getIcon());
-    }
-    i2 = i1;
-    if (hasImagebottom()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getImagebottom());
-    }
-    i1 = i2;
-    if (hasImagetop()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getImagetop());
-    }
-    Iterator localIterator = getPointinfoList().iterator();
-    for (i2 = i1; localIterator.hasNext(); i2 = CodedOutputStreamMicro.computeMessageSize(9, (Poi)localIterator.next()) + i2) {}
-    i1 = i2;
-    if (hasBorderlb()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(10, getBorderlb());
-    }
-    i2 = i1;
-    if (hasBorderrt()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(11, getBorderrt());
-    }
-    i1 = i2;
-    if (hasImagebutton()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(12, getImagebutton());
-    }
-    i2 = i1;
-    if (hasRefreshsec()) {
-      i2 = i1 + CodedOutputStreamMicro.computeInt32Size(13, getRefreshsec());
-    }
-    i1 = i2;
-    if (hasRefershmeters()) {
-      i1 = i2 + CodedOutputStreamMicro.computeInt32Size(14, getRefershmeters());
-    }
-    i2 = i1;
-    if (hasBottomicon()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(15, getBottomicon());
-    }
-    i1 = i2;
-    if (hasJumpto()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(16, getJumpto());
-    }
-    i2 = i1;
-    if (hasNotice()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(17, getNotice());
-    }
-    i1 = i2;
-    if (hasFirstshow()) {
-      i1 = i2 + CodedOutputStreamMicro.computeStringSize(18, getFirstshow());
-    }
-    i2 = i1;
-    if (hasNeedlogin()) {
-      i2 = i1 + CodedOutputStreamMicro.computeStringSize(19, getNeedlogin());
-    }
-    this.L = i2;
-    return i2;
-  }
-  
-  public Share getShare()
-  {
-    return this.j;
-  }
-  
-  public boolean hasBorderlb()
-  {
-    return this.r;
-  }
-  
-  public boolean hasBorderrt()
-  {
-    return this.t;
-  }
-  
-  public boolean hasBottomicon()
-  {
-    return this.B;
-  }
-  
-  public boolean hasCenter()
-  {
-    return this.g;
-  }
-  
-  public boolean hasEventtitle()
-  {
-    return this.a;
-  }
-  
-  public boolean hasEventtype()
-  {
-    return this.c;
-  }
-  
-  public boolean hasFirstshow()
-  {
-    return this.H;
-  }
-  
-  public boolean hasIcon()
-  {
-    return this.k;
-  }
-  
-  public boolean hasImagebottom()
-  {
-    return this.m;
-  }
-  
-  public boolean hasImagebutton()
-  {
-    return this.v;
-  }
-  
-  public boolean hasImagetop()
-  {
-    return this.o;
-  }
-  
-  public boolean hasJumpto()
-  {
-    return this.D;
-  }
-  
-  public boolean hasLevel()
-  {
-    return this.e;
-  }
-  
-  public boolean hasNeedlogin()
-  {
-    return this.J;
-  }
-  
-  public boolean hasNotice()
-  {
-    return this.F;
-  }
-  
-  public boolean hasRefershmeters()
-  {
-    return this.z;
-  }
-  
-  public boolean hasRefreshsec()
-  {
-    return this.x;
-  }
-  
-  public boolean hasShare()
-  {
-    return this.i;
-  }
-  
-  public final boolean isInitialized()
-  {
-    return true;
-  }
-  
-  public Opnlayer mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-    throws IOException
-  {
-    for (;;)
-    {
-      int i1 = paramCodedInputStreamMicro.readTag();
-      Object localObject;
-      switch (i1)
-      {
-      default: 
-        if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-        break;
-      case 0: 
-        return this;
-      case 10: 
-        setEventtitle(paramCodedInputStreamMicro.readString());
-        break;
-      case 16: 
-        setEventtype(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 24: 
-        setLevel(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 34: 
-        setCenter(paramCodedInputStreamMicro.readString());
-        break;
-      case 42: 
-        localObject = new Share();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        setShare((Share)localObject);
-        break;
-      case 50: 
-        setIcon(paramCodedInputStreamMicro.readString());
-        break;
-      case 58: 
-        setImagebottom(paramCodedInputStreamMicro.readString());
-        break;
-      case 66: 
-        setImagetop(paramCodedInputStreamMicro.readString());
-        break;
-      case 74: 
-        localObject = new Poi();
-        paramCodedInputStreamMicro.readMessage((MessageMicro)localObject);
-        addPointinfo((Poi)localObject);
-        break;
-      case 82: 
-        setBorderlb(paramCodedInputStreamMicro.readString());
-        break;
-      case 90: 
-        setBorderrt(paramCodedInputStreamMicro.readString());
-        break;
-      case 98: 
-        setImagebutton(paramCodedInputStreamMicro.readString());
-        break;
-      case 104: 
-        setRefreshsec(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 112: 
-        setRefershmeters(paramCodedInputStreamMicro.readInt32());
-        break;
-      case 122: 
-        setBottomicon(paramCodedInputStreamMicro.readString());
-        break;
-      case 130: 
-        setJumpto(paramCodedInputStreamMicro.readString());
-        break;
-      case 138: 
-        setNotice(paramCodedInputStreamMicro.readString());
-        break;
-      case 146: 
-        setFirstshow(paramCodedInputStreamMicro.readString());
-        break;
-      case 154: 
-        setNeedlogin(paramCodedInputStreamMicro.readString());
-      }
-    }
-  }
-  
-  public Opnlayer setBorderlb(String paramString)
-  {
-    this.r = true;
-    this.s = paramString;
-    return this;
-  }
-  
-  public Opnlayer setBorderrt(String paramString)
-  {
-    this.t = true;
-    this.u = paramString;
-    return this;
-  }
-  
-  public Opnlayer setBottomicon(String paramString)
-  {
-    this.B = true;
-    this.C = paramString;
-    return this;
-  }
-  
-  public Opnlayer setCenter(String paramString)
-  {
-    this.g = true;
-    this.h = paramString;
-    return this;
-  }
-  
-  public Opnlayer setEventtitle(String paramString)
-  {
-    this.a = true;
-    this.b = paramString;
-    return this;
-  }
-  
-  public Opnlayer setEventtype(int paramInt)
-  {
-    this.c = true;
-    this.d = paramInt;
-    return this;
-  }
-  
-  public Opnlayer setFirstshow(String paramString)
-  {
-    this.H = true;
-    this.I = paramString;
-    return this;
-  }
-  
-  public Opnlayer setIcon(String paramString)
-  {
-    this.k = true;
-    this.l = paramString;
-    return this;
-  }
-  
-  public Opnlayer setImagebottom(String paramString)
-  {
-    this.m = true;
-    this.n = paramString;
-    return this;
-  }
-  
-  public Opnlayer setImagebutton(String paramString)
-  {
-    this.v = true;
-    this.w = paramString;
-    return this;
-  }
-  
-  public Opnlayer setImagetop(String paramString)
-  {
-    this.o = true;
-    this.p = paramString;
-    return this;
-  }
-  
-  public Opnlayer setJumpto(String paramString)
-  {
-    this.D = true;
-    this.E = paramString;
-    return this;
-  }
-  
-  public Opnlayer setLevel(int paramInt)
-  {
-    this.e = true;
-    this.f = paramInt;
-    return this;
-  }
-  
-  public Opnlayer setNeedlogin(String paramString)
-  {
-    this.J = true;
-    this.K = paramString;
-    return this;
-  }
-  
-  public Opnlayer setNotice(String paramString)
-  {
-    this.F = true;
-    this.G = paramString;
-    return this;
-  }
-  
-  public Opnlayer setPointinfo(int paramInt, Poi paramPoi)
-  {
-    if (paramPoi == null) {
-      return this;
-    }
-    this.q.set(paramInt, paramPoi);
-    return this;
-  }
-  
-  public Opnlayer setRefershmeters(int paramInt)
-  {
-    this.z = true;
-    this.A = paramInt;
-    return this;
-  }
-  
-  public Opnlayer setRefreshsec(int paramInt)
-  {
-    this.x = true;
-    this.y = paramInt;
-    return this;
-  }
-  
-  public Opnlayer setShare(Share paramShare)
-  {
-    if (paramShare == null) {
-      return clearShare();
-    }
-    this.i = true;
-    this.j = paramShare;
-    return this;
-  }
-  
-  public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-    throws IOException
-  {
-    if (hasEventtitle()) {
-      paramCodedOutputStreamMicro.writeString(1, getEventtitle());
-    }
-    if (hasEventtype()) {
-      paramCodedOutputStreamMicro.writeInt32(2, getEventtype());
-    }
-    if (hasLevel()) {
-      paramCodedOutputStreamMicro.writeInt32(3, getLevel());
-    }
-    if (hasCenter()) {
-      paramCodedOutputStreamMicro.writeString(4, getCenter());
-    }
-    if (hasShare()) {
-      paramCodedOutputStreamMicro.writeMessage(5, getShare());
-    }
-    if (hasIcon()) {
-      paramCodedOutputStreamMicro.writeString(6, getIcon());
-    }
-    if (hasImagebottom()) {
-      paramCodedOutputStreamMicro.writeString(7, getImagebottom());
-    }
-    if (hasImagetop()) {
-      paramCodedOutputStreamMicro.writeString(8, getImagetop());
-    }
-    Iterator localIterator = getPointinfoList().iterator();
-    while (localIterator.hasNext()) {
-      paramCodedOutputStreamMicro.writeMessage(9, (Poi)localIterator.next());
-    }
-    if (hasBorderlb()) {
-      paramCodedOutputStreamMicro.writeString(10, getBorderlb());
-    }
-    if (hasBorderrt()) {
-      paramCodedOutputStreamMicro.writeString(11, getBorderrt());
-    }
-    if (hasImagebutton()) {
-      paramCodedOutputStreamMicro.writeString(12, getImagebutton());
-    }
-    if (hasRefreshsec()) {
-      paramCodedOutputStreamMicro.writeInt32(13, getRefreshsec());
-    }
-    if (hasRefershmeters()) {
-      paramCodedOutputStreamMicro.writeInt32(14, getRefershmeters());
-    }
-    if (hasBottomicon()) {
-      paramCodedOutputStreamMicro.writeString(15, getBottomicon());
-    }
-    if (hasJumpto()) {
-      paramCodedOutputStreamMicro.writeString(16, getJumpto());
-    }
-    if (hasNotice()) {
-      paramCodedOutputStreamMicro.writeString(17, getNotice());
-    }
-    if (hasFirstshow()) {
-      paramCodedOutputStreamMicro.writeString(18, getFirstshow());
-    }
-    if (hasNeedlogin()) {
-      paramCodedOutputStreamMicro.writeString(19, getNeedlogin());
-    }
-  }
-  
-  public static final class Poi
-    extends MessageMicro
-  {
-    public static final int ADDRESSCOLOR_FIELD_NUMBER = 15;
-    public static final int ADDRESS_FIELD_NUMBER = 8;
-    public static final int BUTTONS_FIELD_NUMBER = 17;
-    public static final int DESBRIEF_FIELD_NUMBER = 10;
-    public static final int DESTITLE_FIELD_NUMBER = 9;
-    public static final int ICON_FIELD_NUMBER = 2;
-    public static final int IMAGEBOTTOM_FIELD_NUMBER = 4;
-    public static final int IMAGETOP_FIELD_NUMBER = 3;
-    public static final int LINECOLOR_FIELD_NUMBER = 16;
-    public static final int LOCATION_FIELD_NUMBER = 5;
-    public static final int SHOWTYPE_FIELD_NUMBER = 6;
-    public static final int TITLECOLOR_FIELD_NUMBER = 14;
-    public static final int TITLE_FIELD_NUMBER = 7;
-    public static final int TOPCOLOR_FIELD_NUMBER = 12;
-    public static final int TOPICONTYPE_FIELD_NUMBER = 13;
-    public static final int UID_FIELD_NUMBER = 1;
-    public static final int URL_FIELD_NUMBER = 11;
-    private boolean A;
-    private String B = "";
-    private boolean C;
-    private String D = "";
-    private boolean E;
-    private String F = "";
-    private List<Button> G = Collections.emptyList();
-    private int H = -1;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private String d = "";
-    private boolean e;
-    private String f = "";
-    private boolean g;
-    private String h = "";
-    private boolean i;
-    private String j = "";
-    private boolean k;
-    private int l = 0;
-    private boolean m;
-    private String n = "";
-    private boolean o;
-    private String p = "";
-    private boolean q;
-    private String r = "";
-    private boolean s;
-    private String t = "";
-    private boolean u;
-    private String v = "";
-    private boolean w;
-    private String x = "";
-    private boolean y;
-    private int z = 0;
-    
-    public static Poi parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Poi().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Poi parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Poi)new Poi().mergeFrom(paramArrayOfByte);
-    }
-    
-    public Poi addButtons(Button paramButton)
-    {
-      if (paramButton == null) {
-        return this;
-      }
-      if (this.G.isEmpty()) {
-        this.G = new ArrayList();
-      }
-      this.G.add(paramButton);
-      return this;
-    }
-    
-    public final Poi clear()
-    {
-      clearUid();
-      clearIcon();
-      clearImagetop();
-      clearImagebottom();
-      clearLocation();
-      clearShowtype();
-      clearTitle();
-      clearAddress();
-      clearDestitle();
-      clearDesbrief();
-      clearUrl();
-      clearTopcolor();
-      clearTopicontype();
-      clearTitlecolor();
-      clearAddresscolor();
-      clearLinecolor();
-      clearButtons();
-      this.H = -1;
-      return this;
-    }
-    
-    public Poi clearAddress()
-    {
-      this.o = false;
-      this.p = "";
-      return this;
-    }
-    
-    public Poi clearAddresscolor()
-    {
-      this.C = false;
-      this.D = "";
-      return this;
-    }
-    
-    public Poi clearButtons()
-    {
-      this.G = Collections.emptyList();
-      return this;
-    }
-    
-    public Poi clearDesbrief()
-    {
-      this.s = false;
-      this.t = "";
-      return this;
-    }
-    
-    public Poi clearDestitle()
-    {
-      this.q = false;
-      this.r = "";
-      return this;
-    }
-    
-    public Poi clearIcon()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public Poi clearImagebottom()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public Poi clearImagetop()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public Poi clearLinecolor()
-    {
-      this.E = false;
-      this.F = "";
-      return this;
-    }
-    
-    public Poi clearLocation()
-    {
-      this.i = false;
-      this.j = "";
-      return this;
-    }
-    
-    public Poi clearShowtype()
-    {
-      this.k = false;
-      this.l = 0;
-      return this;
-    }
-    
-    public Poi clearTitle()
-    {
-      this.m = false;
-      this.n = "";
-      return this;
-    }
-    
-    public Poi clearTitlecolor()
-    {
-      this.A = false;
-      this.B = "";
-      return this;
-    }
-    
-    public Poi clearTopcolor()
-    {
-      this.w = false;
-      this.x = "";
-      return this;
-    }
-    
-    public Poi clearTopicontype()
-    {
-      this.y = false;
-      this.z = 0;
-      return this;
-    }
-    
-    public Poi clearUid()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public Poi clearUrl()
-    {
-      this.u = false;
-      this.v = "";
-      return this;
-    }
-    
-    public String getAddress()
-    {
-      return this.p;
-    }
-    
-    public String getAddresscolor()
-    {
-      return this.D;
-    }
-    
-    public Button getButtons(int paramInt)
-    {
-      return (Button)this.G.get(paramInt);
-    }
-    
-    public int getButtonsCount()
-    {
-      return this.G.size();
-    }
-    
-    public List<Button> getButtonsList()
-    {
-      return this.G;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.H < 0) {
-        getSerializedSize();
-      }
-      return this.H;
-    }
-    
-    public String getDesbrief()
-    {
-      return this.t;
-    }
-    
-    public String getDestitle()
-    {
-      return this.r;
-    }
-    
-    public String getIcon()
-    {
-      return this.d;
-    }
-    
-    public String getImagebottom()
-    {
-      return this.h;
-    }
-    
-    public String getImagetop()
-    {
-      return this.f;
-    }
-    
-    public String getLinecolor()
-    {
-      return this.F;
-    }
-    
-    public String getLocation()
-    {
-      return this.j;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i2 = 0;
-      if (hasUid()) {
-        i2 = 0 + CodedOutputStreamMicro.computeStringSize(1, getUid());
-      }
-      int i1 = i2;
-      if (hasIcon()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(2, getIcon());
-      }
-      i2 = i1;
-      if (hasImagetop()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(3, getImagetop());
-      }
-      i1 = i2;
-      if (hasImagebottom()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(4, getImagebottom());
-      }
-      i2 = i1;
-      if (hasLocation()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(5, getLocation());
-      }
-      i1 = i2;
-      if (hasShowtype()) {
-        i1 = i2 + CodedOutputStreamMicro.computeInt32Size(6, getShowtype());
-      }
-      i2 = i1;
-      if (hasTitle()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(7, getTitle());
-      }
-      i1 = i2;
-      if (hasAddress()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(8, getAddress());
-      }
-      i2 = i1;
-      if (hasDestitle()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(9, getDestitle());
-      }
-      i1 = i2;
-      if (hasDesbrief()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(10, getDesbrief());
-      }
-      i2 = i1;
-      if (hasUrl()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(11, getUrl());
-      }
-      i1 = i2;
-      if (hasTopcolor()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(12, getTopcolor());
-      }
-      i2 = i1;
-      if (hasTopicontype()) {
-        i2 = i1 + CodedOutputStreamMicro.computeInt32Size(13, getTopicontype());
-      }
-      i1 = i2;
-      if (hasTitlecolor()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(14, getTitlecolor());
-      }
-      i2 = i1;
-      if (hasAddresscolor()) {
-        i2 = i1 + CodedOutputStreamMicro.computeStringSize(15, getAddresscolor());
-      }
-      i1 = i2;
-      if (hasLinecolor()) {
-        i1 = i2 + CodedOutputStreamMicro.computeStringSize(16, getLinecolor());
-      }
-      Iterator localIterator = getButtonsList().iterator();
-      while (localIterator.hasNext()) {
-        i1 = CodedOutputStreamMicro.computeMessageSize(17, (Button)localIterator.next()) + i1;
-      }
-      this.H = i1;
-      return i1;
-    }
-    
-    public int getShowtype()
-    {
-      return this.l;
-    }
-    
-    public String getTitle()
-    {
-      return this.n;
-    }
-    
-    public String getTitlecolor()
-    {
-      return this.B;
-    }
-    
-    public String getTopcolor()
-    {
-      return this.x;
-    }
-    
-    public int getTopicontype()
-    {
-      return this.z;
-    }
-    
-    public String getUid()
-    {
-      return this.b;
-    }
-    
-    public String getUrl()
-    {
-      return this.v;
-    }
-    
-    public boolean hasAddress()
-    {
-      return this.o;
-    }
-    
-    public boolean hasAddresscolor()
-    {
-      return this.C;
-    }
-    
-    public boolean hasDesbrief()
-    {
-      return this.s;
-    }
-    
-    public boolean hasDestitle()
-    {
-      return this.q;
-    }
-    
-    public boolean hasIcon()
-    {
-      return this.c;
-    }
-    
-    public boolean hasImagebottom()
-    {
-      return this.g;
-    }
-    
-    public boolean hasImagetop()
-    {
-      return this.e;
-    }
-    
-    public boolean hasLinecolor()
-    {
-      return this.E;
-    }
-    
-    public boolean hasLocation()
-    {
-      return this.i;
-    }
-    
-    public boolean hasShowtype()
-    {
-      return this.k;
-    }
-    
-    public boolean hasTitle()
-    {
-      return this.m;
-    }
-    
-    public boolean hasTitlecolor()
-    {
-      return this.A;
-    }
-    
-    public boolean hasTopcolor()
-    {
-      return this.w;
-    }
-    
-    public boolean hasTopicontype()
-    {
-      return this.y;
-    }
-    
-    public boolean hasUid()
-    {
-      return this.a;
-    }
-    
-    public boolean hasUrl()
-    {
-      return this.u;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Poi mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int i1 = paramCodedInputStreamMicro.readTag();
-        switch (i1)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, i1)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setUid(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          setIcon(paramCodedInputStreamMicro.readString());
-          break;
-        case 26: 
-          setImagetop(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setImagebottom(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          setLocation(paramCodedInputStreamMicro.readString());
-          break;
-        case 48: 
-          setShowtype(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 58: 
-          setTitle(paramCodedInputStreamMicro.readString());
-          break;
-        case 66: 
-          setAddress(paramCodedInputStreamMicro.readString());
-          break;
-        case 74: 
-          setDestitle(paramCodedInputStreamMicro.readString());
-          break;
-        case 82: 
-          setDesbrief(paramCodedInputStreamMicro.readString());
-          break;
-        case 90: 
-          setUrl(paramCodedInputStreamMicro.readString());
-          break;
-        case 98: 
-          setTopcolor(paramCodedInputStreamMicro.readString());
-          break;
-        case 104: 
-          setTopicontype(paramCodedInputStreamMicro.readInt32());
-          break;
-        case 114: 
-          setTitlecolor(paramCodedInputStreamMicro.readString());
-          break;
-        case 122: 
-          setAddresscolor(paramCodedInputStreamMicro.readString());
-          break;
-        case 130: 
-          setLinecolor(paramCodedInputStreamMicro.readString());
-          break;
-        case 138: 
-          Button localButton = new Button();
-          paramCodedInputStreamMicro.readMessage(localButton);
-          addButtons(localButton);
+public final class Opnlayer extends MessageMicro {
+    public static final int BORDERLB_FIELD_NUMBER = 10;
+    public static final int BORDERRT_FIELD_NUMBER = 11;
+    public static final int BOTTOMICON_FIELD_NUMBER = 15;
+    public static final int CENTER_FIELD_NUMBER = 4;
+    public static final int EVENTTITLE_FIELD_NUMBER = 1;
+    public static final int EVENTTYPE_FIELD_NUMBER = 2;
+    public static final int FIRSTSHOW_FIELD_NUMBER = 18;
+    public static final int ICON_FIELD_NUMBER = 6;
+    public static final int IMAGEBOTTOM_FIELD_NUMBER = 7;
+    public static final int IMAGEBUTTON_FIELD_NUMBER = 12;
+    public static final int IMAGETOP_FIELD_NUMBER = 8;
+    public static final int JUMPTO_FIELD_NUMBER = 16;
+    public static final int LEVEL_FIELD_NUMBER = 3;
+    public static final int NEEDLOGIN_FIELD_NUMBER = 19;
+    public static final int NOTICE_FIELD_NUMBER = 17;
+    public static final int POINTINFO_FIELD_NUMBER = 9;
+    public static final int REFERSHMETERS_FIELD_NUMBER = 14;
+    public static final int REFRESHSEC_FIELD_NUMBER = 13;
+    public static final int SHARE_FIELD_NUMBER = 5;
+    /* renamed from: A */
+    private int f12326A = 0;
+    /* renamed from: B */
+    private boolean f12327B;
+    /* renamed from: C */
+    private String f12328C = "";
+    /* renamed from: D */
+    private boolean f12329D;
+    /* renamed from: E */
+    private String f12330E = "";
+    /* renamed from: F */
+    private boolean f12331F;
+    /* renamed from: G */
+    private String f12332G = "";
+    /* renamed from: H */
+    private boolean f12333H;
+    /* renamed from: I */
+    private String f12334I = "";
+    /* renamed from: J */
+    private boolean f12335J;
+    /* renamed from: K */
+    private String f12336K = "";
+    /* renamed from: L */
+    private int f12337L = -1;
+    /* renamed from: a */
+    private boolean f12338a;
+    /* renamed from: b */
+    private String f12339b = "";
+    /* renamed from: c */
+    private boolean f12340c;
+    /* renamed from: d */
+    private int f12341d = 0;
+    /* renamed from: e */
+    private boolean f12342e;
+    /* renamed from: f */
+    private int f12343f = 0;
+    /* renamed from: g */
+    private boolean f12344g;
+    /* renamed from: h */
+    private String f12345h = "";
+    /* renamed from: i */
+    private boolean f12346i;
+    /* renamed from: j */
+    private Share f12347j = null;
+    /* renamed from: k */
+    private boolean f12348k;
+    /* renamed from: l */
+    private String f12349l = "";
+    /* renamed from: m */
+    private boolean f12350m;
+    /* renamed from: n */
+    private String f12351n = "";
+    /* renamed from: o */
+    private boolean f12352o;
+    /* renamed from: p */
+    private String f12353p = "";
+    /* renamed from: q */
+    private List<Poi> f12354q = Collections.emptyList();
+    /* renamed from: r */
+    private boolean f12355r;
+    /* renamed from: s */
+    private String f12356s = "";
+    /* renamed from: t */
+    private boolean f12357t;
+    /* renamed from: u */
+    private String f12358u = "";
+    /* renamed from: v */
+    private boolean f12359v;
+    /* renamed from: w */
+    private String f12360w = "";
+    /* renamed from: x */
+    private boolean f12361x;
+    /* renamed from: y */
+    private int f12362y = 0;
+    /* renamed from: z */
+    private boolean f12363z;
+
+    public static final class Poi extends MessageMicro {
+        public static final int ADDRESSCOLOR_FIELD_NUMBER = 15;
+        public static final int ADDRESS_FIELD_NUMBER = 8;
+        public static final int BUTTONS_FIELD_NUMBER = 17;
+        public static final int DESBRIEF_FIELD_NUMBER = 10;
+        public static final int DESTITLE_FIELD_NUMBER = 9;
+        public static final int ICON_FIELD_NUMBER = 2;
+        public static final int IMAGEBOTTOM_FIELD_NUMBER = 4;
+        public static final int IMAGETOP_FIELD_NUMBER = 3;
+        public static final int LINECOLOR_FIELD_NUMBER = 16;
+        public static final int LOCATION_FIELD_NUMBER = 5;
+        public static final int SHOWTYPE_FIELD_NUMBER = 6;
+        public static final int TITLECOLOR_FIELD_NUMBER = 14;
+        public static final int TITLE_FIELD_NUMBER = 7;
+        public static final int TOPCOLOR_FIELD_NUMBER = 12;
+        public static final int TOPICONTYPE_FIELD_NUMBER = 13;
+        public static final int UID_FIELD_NUMBER = 1;
+        public static final int URL_FIELD_NUMBER = 11;
+        /* renamed from: A */
+        private boolean f12279A;
+        /* renamed from: B */
+        private String f12280B = "";
+        /* renamed from: C */
+        private boolean f12281C;
+        /* renamed from: D */
+        private String f12282D = "";
+        /* renamed from: E */
+        private boolean f12283E;
+        /* renamed from: F */
+        private String f12284F = "";
+        /* renamed from: G */
+        private List<Button> f12285G = Collections.emptyList();
+        /* renamed from: H */
+        private int f12286H = -1;
+        /* renamed from: a */
+        private boolean f12287a;
+        /* renamed from: b */
+        private String f12288b = "";
+        /* renamed from: c */
+        private boolean f12289c;
+        /* renamed from: d */
+        private String f12290d = "";
+        /* renamed from: e */
+        private boolean f12291e;
+        /* renamed from: f */
+        private String f12292f = "";
+        /* renamed from: g */
+        private boolean f12293g;
+        /* renamed from: h */
+        private String f12294h = "";
+        /* renamed from: i */
+        private boolean f12295i;
+        /* renamed from: j */
+        private String f12296j = "";
+        /* renamed from: k */
+        private boolean f12297k;
+        /* renamed from: l */
+        private int f12298l = 0;
+        /* renamed from: m */
+        private boolean f12299m;
+        /* renamed from: n */
+        private String f12300n = "";
+        /* renamed from: o */
+        private boolean f12301o;
+        /* renamed from: p */
+        private String f12302p = "";
+        /* renamed from: q */
+        private boolean f12303q;
+        /* renamed from: r */
+        private String f12304r = "";
+        /* renamed from: s */
+        private boolean f12305s;
+        /* renamed from: t */
+        private String f12306t = "";
+        /* renamed from: u */
+        private boolean f12307u;
+        /* renamed from: v */
+        private String f12308v = "";
+        /* renamed from: w */
+        private boolean f12309w;
+        /* renamed from: x */
+        private String f12310x = "";
+        /* renamed from: y */
+        private boolean f12311y;
+        /* renamed from: z */
+        private int f12312z = 0;
+
+        public static final class Button extends MessageMicro {
+            public static final int BUTTONICON_FIELD_NUMBER = 4;
+            public static final int TITLE_FIELD_NUMBER = 1;
+            public static final int TYPE_FIELD_NUMBER = 2;
+            public static final int URL_FIELD_NUMBER = 3;
+            /* renamed from: a */
+            private boolean f12270a;
+            /* renamed from: b */
+            private String f12271b = "";
+            /* renamed from: c */
+            private boolean f12272c;
+            /* renamed from: d */
+            private int f12273d = 0;
+            /* renamed from: e */
+            private boolean f12274e;
+            /* renamed from: f */
+            private String f12275f = "";
+            /* renamed from: g */
+            private boolean f12276g;
+            /* renamed from: h */
+            private String f12277h = "";
+            /* renamed from: i */
+            private int f12278i = -1;
+
+            public static Button parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                return new Button().mergeFrom(codedInputStreamMicro);
+            }
+
+            public static Button parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+                return (Button) new Button().mergeFrom(bArr);
+            }
+
+            public final Button clear() {
+                clearTitle();
+                clearType();
+                clearUrl();
+                clearButtonicon();
+                this.f12278i = -1;
+                return this;
+            }
+
+            public Button clearButtonicon() {
+                this.f12276g = false;
+                this.f12277h = "";
+                return this;
+            }
+
+            public Button clearTitle() {
+                this.f12270a = false;
+                this.f12271b = "";
+                return this;
+            }
+
+            public Button clearType() {
+                this.f12272c = false;
+                this.f12273d = 0;
+                return this;
+            }
+
+            public Button clearUrl() {
+                this.f12274e = false;
+                this.f12275f = "";
+                return this;
+            }
+
+            public String getButtonicon() {
+                return this.f12277h;
+            }
+
+            public int getCachedSize() {
+                if (this.f12278i < 0) {
+                    getSerializedSize();
+                }
+                return this.f12278i;
+            }
+
+            public int getSerializedSize() {
+                int i = 0;
+                if (hasTitle()) {
+                    i = 0 + CodedOutputStreamMicro.computeStringSize(1, getTitle());
+                }
+                if (hasType()) {
+                    i += CodedOutputStreamMicro.computeInt32Size(2, getType());
+                }
+                if (hasUrl()) {
+                    i += CodedOutputStreamMicro.computeStringSize(3, getUrl());
+                }
+                if (hasButtonicon()) {
+                    i += CodedOutputStreamMicro.computeStringSize(4, getButtonicon());
+                }
+                this.f12278i = i;
+                return i;
+            }
+
+            public String getTitle() {
+                return this.f12271b;
+            }
+
+            public int getType() {
+                return this.f12273d;
+            }
+
+            public String getUrl() {
+                return this.f12275f;
+            }
+
+            public boolean hasButtonicon() {
+                return this.f12276g;
+            }
+
+            public boolean hasTitle() {
+                return this.f12270a;
+            }
+
+            public boolean hasType() {
+                return this.f12272c;
+            }
+
+            public boolean hasUrl() {
+                return this.f12274e;
+            }
+
+            public final boolean isInitialized() {
+                return true;
+            }
+
+            public Button mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+                while (true) {
+                    int readTag = codedInputStreamMicro.readTag();
+                    switch (readTag) {
+                        case 0:
+                            break;
+                        case 10:
+                            setTitle(codedInputStreamMicro.readString());
+                            continue;
+                        case 16:
+                            setType(codedInputStreamMicro.readInt32());
+                            continue;
+                        case 26:
+                            setUrl(codedInputStreamMicro.readString());
+                            continue;
+                        case 34:
+                            setButtonicon(codedInputStreamMicro.readString());
+                            continue;
+                        default:
+                            if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                                break;
+                            }
+                            continue;
+                    }
+                    return this;
+                }
+            }
+
+            public Button setButtonicon(String str) {
+                this.f12276g = true;
+                this.f12277h = str;
+                return this;
+            }
+
+            public Button setTitle(String str) {
+                this.f12270a = true;
+                this.f12271b = str;
+                return this;
+            }
+
+            public Button setType(int i) {
+                this.f12272c = true;
+                this.f12273d = i;
+                return this;
+            }
+
+            public Button setUrl(String str) {
+                this.f12274e = true;
+                this.f12275f = str;
+                return this;
+            }
+
+            public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+                if (hasTitle()) {
+                    codedOutputStreamMicro.writeString(1, getTitle());
+                }
+                if (hasType()) {
+                    codedOutputStreamMicro.writeInt32(2, getType());
+                }
+                if (hasUrl()) {
+                    codedOutputStreamMicro.writeString(3, getUrl());
+                }
+                if (hasButtonicon()) {
+                    codedOutputStreamMicro.writeString(4, getButtonicon());
+                }
+            }
         }
-      }
-    }
-    
-    public Poi setAddress(String paramString)
-    {
-      this.o = true;
-      this.p = paramString;
-      return this;
-    }
-    
-    public Poi setAddresscolor(String paramString)
-    {
-      this.C = true;
-      this.D = paramString;
-      return this;
-    }
-    
-    public Poi setButtons(int paramInt, Button paramButton)
-    {
-      if (paramButton == null) {
-        return this;
-      }
-      this.G.set(paramInt, paramButton);
-      return this;
-    }
-    
-    public Poi setDesbrief(String paramString)
-    {
-      this.s = true;
-      this.t = paramString;
-      return this;
-    }
-    
-    public Poi setDestitle(String paramString)
-    {
-      this.q = true;
-      this.r = paramString;
-      return this;
-    }
-    
-    public Poi setIcon(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
-    }
-    
-    public Poi setImagebottom(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
-    }
-    
-    public Poi setImagetop(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
-    }
-    
-    public Poi setLinecolor(String paramString)
-    {
-      this.E = true;
-      this.F = paramString;
-      return this;
-    }
-    
-    public Poi setLocation(String paramString)
-    {
-      this.i = true;
-      this.j = paramString;
-      return this;
-    }
-    
-    public Poi setShowtype(int paramInt)
-    {
-      this.k = true;
-      this.l = paramInt;
-      return this;
-    }
-    
-    public Poi setTitle(String paramString)
-    {
-      this.m = true;
-      this.n = paramString;
-      return this;
-    }
-    
-    public Poi setTitlecolor(String paramString)
-    {
-      this.A = true;
-      this.B = paramString;
-      return this;
-    }
-    
-    public Poi setTopcolor(String paramString)
-    {
-      this.w = true;
-      this.x = paramString;
-      return this;
-    }
-    
-    public Poi setTopicontype(int paramInt)
-    {
-      this.y = true;
-      this.z = paramInt;
-      return this;
-    }
-    
-    public Poi setUid(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
-    }
-    
-    public Poi setUrl(String paramString)
-    {
-      this.u = true;
-      this.v = paramString;
-      return this;
-    }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasUid()) {
-        paramCodedOutputStreamMicro.writeString(1, getUid());
-      }
-      if (hasIcon()) {
-        paramCodedOutputStreamMicro.writeString(2, getIcon());
-      }
-      if (hasImagetop()) {
-        paramCodedOutputStreamMicro.writeString(3, getImagetop());
-      }
-      if (hasImagebottom()) {
-        paramCodedOutputStreamMicro.writeString(4, getImagebottom());
-      }
-      if (hasLocation()) {
-        paramCodedOutputStreamMicro.writeString(5, getLocation());
-      }
-      if (hasShowtype()) {
-        paramCodedOutputStreamMicro.writeInt32(6, getShowtype());
-      }
-      if (hasTitle()) {
-        paramCodedOutputStreamMicro.writeString(7, getTitle());
-      }
-      if (hasAddress()) {
-        paramCodedOutputStreamMicro.writeString(8, getAddress());
-      }
-      if (hasDestitle()) {
-        paramCodedOutputStreamMicro.writeString(9, getDestitle());
-      }
-      if (hasDesbrief()) {
-        paramCodedOutputStreamMicro.writeString(10, getDesbrief());
-      }
-      if (hasUrl()) {
-        paramCodedOutputStreamMicro.writeString(11, getUrl());
-      }
-      if (hasTopcolor()) {
-        paramCodedOutputStreamMicro.writeString(12, getTopcolor());
-      }
-      if (hasTopicontype()) {
-        paramCodedOutputStreamMicro.writeInt32(13, getTopicontype());
-      }
-      if (hasTitlecolor()) {
-        paramCodedOutputStreamMicro.writeString(14, getTitlecolor());
-      }
-      if (hasAddresscolor()) {
-        paramCodedOutputStreamMicro.writeString(15, getAddresscolor());
-      }
-      if (hasLinecolor()) {
-        paramCodedOutputStreamMicro.writeString(16, getLinecolor());
-      }
-      Iterator localIterator = getButtonsList().iterator();
-      while (localIterator.hasNext()) {
-        paramCodedOutputStreamMicro.writeMessage(17, (Button)localIterator.next());
-      }
-    }
-    
-    public static final class Button
-      extends MessageMicro
-    {
-      public static final int BUTTONICON_FIELD_NUMBER = 4;
-      public static final int TITLE_FIELD_NUMBER = 1;
-      public static final int TYPE_FIELD_NUMBER = 2;
-      public static final int URL_FIELD_NUMBER = 3;
-      private boolean a;
-      private String b = "";
-      private boolean c;
-      private int d = 0;
-      private boolean e;
-      private String f = "";
-      private boolean g;
-      private String h = "";
-      private int i = -1;
-      
-      public static Button parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        return new Button().mergeFrom(paramCodedInputStreamMicro);
-      }
-      
-      public static Button parseFrom(byte[] paramArrayOfByte)
-        throws InvalidProtocolBufferMicroException
-      {
-        return (Button)new Button().mergeFrom(paramArrayOfByte);
-      }
-      
-      public final Button clear()
-      {
-        clearTitle();
-        clearType();
-        clearUrl();
-        clearButtonicon();
-        this.i = -1;
-        return this;
-      }
-      
-      public Button clearButtonicon()
-      {
-        this.g = false;
-        this.h = "";
-        return this;
-      }
-      
-      public Button clearTitle()
-      {
-        this.a = false;
-        this.b = "";
-        return this;
-      }
-      
-      public Button clearType()
-      {
-        this.c = false;
-        this.d = 0;
-        return this;
-      }
-      
-      public Button clearUrl()
-      {
-        this.e = false;
-        this.f = "";
-        return this;
-      }
-      
-      public String getButtonicon()
-      {
-        return this.h;
-      }
-      
-      public int getCachedSize()
-      {
-        if (this.i < 0) {
-          getSerializedSize();
+
+        public static Poi parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Poi().mergeFrom(codedInputStreamMicro);
         }
-        return this.i;
-      }
-      
-      public int getSerializedSize()
-      {
-        int k = 0;
-        if (hasTitle()) {
-          k = 0 + CodedOutputStreamMicro.computeStringSize(1, getTitle());
+
+        public static Poi parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Poi) new Poi().mergeFrom(bArr);
         }
-        int j = k;
-        if (hasType()) {
-          j = k + CodedOutputStreamMicro.computeInt32Size(2, getType());
-        }
-        k = j;
-        if (hasUrl()) {
-          k = j + CodedOutputStreamMicro.computeStringSize(3, getUrl());
-        }
-        j = k;
-        if (hasButtonicon()) {
-          j = k + CodedOutputStreamMicro.computeStringSize(4, getButtonicon());
-        }
-        this.i = j;
-        return j;
-      }
-      
-      public String getTitle()
-      {
-        return this.b;
-      }
-      
-      public int getType()
-      {
-        return this.d;
-      }
-      
-      public String getUrl()
-      {
-        return this.f;
-      }
-      
-      public boolean hasButtonicon()
-      {
-        return this.g;
-      }
-      
-      public boolean hasTitle()
-      {
-        return this.a;
-      }
-      
-      public boolean hasType()
-      {
-        return this.c;
-      }
-      
-      public boolean hasUrl()
-      {
-        return this.e;
-      }
-      
-      public final boolean isInitialized()
-      {
-        return true;
-      }
-      
-      public Button mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-        throws IOException
-      {
-        for (;;)
-        {
-          int j = paramCodedInputStreamMicro.readTag();
-          switch (j)
-          {
-          default: 
-            if (parseUnknownField(paramCodedInputStreamMicro, j)) {}
-            break;
-          case 0: 
+
+        public Poi addButtons(Button button) {
+            if (button != null) {
+                if (this.f12285G.isEmpty()) {
+                    this.f12285G = new ArrayList();
+                }
+                this.f12285G.add(button);
+            }
             return this;
-          case 10: 
-            setTitle(paramCodedInputStreamMicro.readString());
-            break;
-          case 16: 
-            setType(paramCodedInputStreamMicro.readInt32());
-            break;
-          case 26: 
-            setUrl(paramCodedInputStreamMicro.readString());
-            break;
-          case 34: 
-            setButtonicon(paramCodedInputStreamMicro.readString());
-          }
         }
-      }
-      
-      public Button setButtonicon(String paramString)
-      {
-        this.g = true;
-        this.h = paramString;
+
+        public final Poi clear() {
+            clearUid();
+            clearIcon();
+            clearImagetop();
+            clearImagebottom();
+            clearLocation();
+            clearShowtype();
+            clearTitle();
+            clearAddress();
+            clearDestitle();
+            clearDesbrief();
+            clearUrl();
+            clearTopcolor();
+            clearTopicontype();
+            clearTitlecolor();
+            clearAddresscolor();
+            clearLinecolor();
+            clearButtons();
+            this.f12286H = -1;
+            return this;
+        }
+
+        public Poi clearAddress() {
+            this.f12301o = false;
+            this.f12302p = "";
+            return this;
+        }
+
+        public Poi clearAddresscolor() {
+            this.f12281C = false;
+            this.f12282D = "";
+            return this;
+        }
+
+        public Poi clearButtons() {
+            this.f12285G = Collections.emptyList();
+            return this;
+        }
+
+        public Poi clearDesbrief() {
+            this.f12305s = false;
+            this.f12306t = "";
+            return this;
+        }
+
+        public Poi clearDestitle() {
+            this.f12303q = false;
+            this.f12304r = "";
+            return this;
+        }
+
+        public Poi clearIcon() {
+            this.f12289c = false;
+            this.f12290d = "";
+            return this;
+        }
+
+        public Poi clearImagebottom() {
+            this.f12293g = false;
+            this.f12294h = "";
+            return this;
+        }
+
+        public Poi clearImagetop() {
+            this.f12291e = false;
+            this.f12292f = "";
+            return this;
+        }
+
+        public Poi clearLinecolor() {
+            this.f12283E = false;
+            this.f12284F = "";
+            return this;
+        }
+
+        public Poi clearLocation() {
+            this.f12295i = false;
+            this.f12296j = "";
+            return this;
+        }
+
+        public Poi clearShowtype() {
+            this.f12297k = false;
+            this.f12298l = 0;
+            return this;
+        }
+
+        public Poi clearTitle() {
+            this.f12299m = false;
+            this.f12300n = "";
+            return this;
+        }
+
+        public Poi clearTitlecolor() {
+            this.f12279A = false;
+            this.f12280B = "";
+            return this;
+        }
+
+        public Poi clearTopcolor() {
+            this.f12309w = false;
+            this.f12310x = "";
+            return this;
+        }
+
+        public Poi clearTopicontype() {
+            this.f12311y = false;
+            this.f12312z = 0;
+            return this;
+        }
+
+        public Poi clearUid() {
+            this.f12287a = false;
+            this.f12288b = "";
+            return this;
+        }
+
+        public Poi clearUrl() {
+            this.f12307u = false;
+            this.f12308v = "";
+            return this;
+        }
+
+        public String getAddress() {
+            return this.f12302p;
+        }
+
+        public String getAddresscolor() {
+            return this.f12282D;
+        }
+
+        public Button getButtons(int i) {
+            return (Button) this.f12285G.get(i);
+        }
+
+        public int getButtonsCount() {
+            return this.f12285G.size();
+        }
+
+        public List<Button> getButtonsList() {
+            return this.f12285G;
+        }
+
+        public int getCachedSize() {
+            if (this.f12286H < 0) {
+                getSerializedSize();
+            }
+            return this.f12286H;
+        }
+
+        public String getDesbrief() {
+            return this.f12306t;
+        }
+
+        public String getDestitle() {
+            return this.f12304r;
+        }
+
+        public String getIcon() {
+            return this.f12290d;
+        }
+
+        public String getImagebottom() {
+            return this.f12294h;
+        }
+
+        public String getImagetop() {
+            return this.f12292f;
+        }
+
+        public String getLinecolor() {
+            return this.f12284F;
+        }
+
+        public String getLocation() {
+            return this.f12296j;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasUid()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getUid());
+            }
+            if (hasIcon()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getIcon());
+            }
+            if (hasImagetop()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getImagetop());
+            }
+            if (hasImagebottom()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getImagebottom());
+            }
+            if (hasLocation()) {
+                i += CodedOutputStreamMicro.computeStringSize(5, getLocation());
+            }
+            if (hasShowtype()) {
+                i += CodedOutputStreamMicro.computeInt32Size(6, getShowtype());
+            }
+            if (hasTitle()) {
+                i += CodedOutputStreamMicro.computeStringSize(7, getTitle());
+            }
+            if (hasAddress()) {
+                i += CodedOutputStreamMicro.computeStringSize(8, getAddress());
+            }
+            if (hasDestitle()) {
+                i += CodedOutputStreamMicro.computeStringSize(9, getDestitle());
+            }
+            if (hasDesbrief()) {
+                i += CodedOutputStreamMicro.computeStringSize(10, getDesbrief());
+            }
+            if (hasUrl()) {
+                i += CodedOutputStreamMicro.computeStringSize(11, getUrl());
+            }
+            if (hasTopcolor()) {
+                i += CodedOutputStreamMicro.computeStringSize(12, getTopcolor());
+            }
+            if (hasTopicontype()) {
+                i += CodedOutputStreamMicro.computeInt32Size(13, getTopicontype());
+            }
+            if (hasTitlecolor()) {
+                i += CodedOutputStreamMicro.computeStringSize(14, getTitlecolor());
+            }
+            if (hasAddresscolor()) {
+                i += CodedOutputStreamMicro.computeStringSize(15, getAddresscolor());
+            }
+            if (hasLinecolor()) {
+                i += CodedOutputStreamMicro.computeStringSize(16, getLinecolor());
+            }
+            int i2 = i;
+            for (Button computeMessageSize : getButtonsList()) {
+                i2 = CodedOutputStreamMicro.computeMessageSize(17, computeMessageSize) + i2;
+            }
+            this.f12286H = i2;
+            return i2;
+        }
+
+        public int getShowtype() {
+            return this.f12298l;
+        }
+
+        public String getTitle() {
+            return this.f12300n;
+        }
+
+        public String getTitlecolor() {
+            return this.f12280B;
+        }
+
+        public String getTopcolor() {
+            return this.f12310x;
+        }
+
+        public int getTopicontype() {
+            return this.f12312z;
+        }
+
+        public String getUid() {
+            return this.f12288b;
+        }
+
+        public String getUrl() {
+            return this.f12308v;
+        }
+
+        public boolean hasAddress() {
+            return this.f12301o;
+        }
+
+        public boolean hasAddresscolor() {
+            return this.f12281C;
+        }
+
+        public boolean hasDesbrief() {
+            return this.f12305s;
+        }
+
+        public boolean hasDestitle() {
+            return this.f12303q;
+        }
+
+        public boolean hasIcon() {
+            return this.f12289c;
+        }
+
+        public boolean hasImagebottom() {
+            return this.f12293g;
+        }
+
+        public boolean hasImagetop() {
+            return this.f12291e;
+        }
+
+        public boolean hasLinecolor() {
+            return this.f12283E;
+        }
+
+        public boolean hasLocation() {
+            return this.f12295i;
+        }
+
+        public boolean hasShowtype() {
+            return this.f12297k;
+        }
+
+        public boolean hasTitle() {
+            return this.f12299m;
+        }
+
+        public boolean hasTitlecolor() {
+            return this.f12279A;
+        }
+
+        public boolean hasTopcolor() {
+            return this.f12309w;
+        }
+
+        public boolean hasTopicontype() {
+            return this.f12311y;
+        }
+
+        public boolean hasUid() {
+            return this.f12287a;
+        }
+
+        public boolean hasUrl() {
+            return this.f12307u;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Poi mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setUid(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        setIcon(codedInputStreamMicro.readString());
+                        continue;
+                    case 26:
+                        setImagetop(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setImagebottom(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        setLocation(codedInputStreamMicro.readString());
+                        continue;
+                    case 48:
+                        setShowtype(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 58:
+                        setTitle(codedInputStreamMicro.readString());
+                        continue;
+                    case 66:
+                        setAddress(codedInputStreamMicro.readString());
+                        continue;
+                    case 74:
+                        setDestitle(codedInputStreamMicro.readString());
+                        continue;
+                    case 82:
+                        setDesbrief(codedInputStreamMicro.readString());
+                        continue;
+                    case 90:
+                        setUrl(codedInputStreamMicro.readString());
+                        continue;
+                    case 98:
+                        setTopcolor(codedInputStreamMicro.readString());
+                        continue;
+                    case 104:
+                        setTopicontype(codedInputStreamMicro.readInt32());
+                        continue;
+                    case 114:
+                        setTitlecolor(codedInputStreamMicro.readString());
+                        continue;
+                    case C1253f.df /*122*/:
+                        setAddresscolor(codedInputStreamMicro.readString());
+                        continue;
+                    case 130:
+                        setLinecolor(codedInputStreamMicro.readString());
+                        continue;
+                    case 138:
+                        MessageMicro button = new Button();
+                        codedInputStreamMicro.readMessage(button);
+                        addButtons(button);
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Poi setAddress(String str) {
+            this.f12301o = true;
+            this.f12302p = str;
+            return this;
+        }
+
+        public Poi setAddresscolor(String str) {
+            this.f12281C = true;
+            this.f12282D = str;
+            return this;
+        }
+
+        public Poi setButtons(int i, Button button) {
+            if (button != null) {
+                this.f12285G.set(i, button);
+            }
+            return this;
+        }
+
+        public Poi setDesbrief(String str) {
+            this.f12305s = true;
+            this.f12306t = str;
+            return this;
+        }
+
+        public Poi setDestitle(String str) {
+            this.f12303q = true;
+            this.f12304r = str;
+            return this;
+        }
+
+        public Poi setIcon(String str) {
+            this.f12289c = true;
+            this.f12290d = str;
+            return this;
+        }
+
+        public Poi setImagebottom(String str) {
+            this.f12293g = true;
+            this.f12294h = str;
+            return this;
+        }
+
+        public Poi setImagetop(String str) {
+            this.f12291e = true;
+            this.f12292f = str;
+            return this;
+        }
+
+        public Poi setLinecolor(String str) {
+            this.f12283E = true;
+            this.f12284F = str;
+            return this;
+        }
+
+        public Poi setLocation(String str) {
+            this.f12295i = true;
+            this.f12296j = str;
+            return this;
+        }
+
+        public Poi setShowtype(int i) {
+            this.f12297k = true;
+            this.f12298l = i;
+            return this;
+        }
+
+        public Poi setTitle(String str) {
+            this.f12299m = true;
+            this.f12300n = str;
+            return this;
+        }
+
+        public Poi setTitlecolor(String str) {
+            this.f12279A = true;
+            this.f12280B = str;
+            return this;
+        }
+
+        public Poi setTopcolor(String str) {
+            this.f12309w = true;
+            this.f12310x = str;
+            return this;
+        }
+
+        public Poi setTopicontype(int i) {
+            this.f12311y = true;
+            this.f12312z = i;
+            return this;
+        }
+
+        public Poi setUid(String str) {
+            this.f12287a = true;
+            this.f12288b = str;
+            return this;
+        }
+
+        public Poi setUrl(String str) {
+            this.f12307u = true;
+            this.f12308v = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasUid()) {
+                codedOutputStreamMicro.writeString(1, getUid());
+            }
+            if (hasIcon()) {
+                codedOutputStreamMicro.writeString(2, getIcon());
+            }
+            if (hasImagetop()) {
+                codedOutputStreamMicro.writeString(3, getImagetop());
+            }
+            if (hasImagebottom()) {
+                codedOutputStreamMicro.writeString(4, getImagebottom());
+            }
+            if (hasLocation()) {
+                codedOutputStreamMicro.writeString(5, getLocation());
+            }
+            if (hasShowtype()) {
+                codedOutputStreamMicro.writeInt32(6, getShowtype());
+            }
+            if (hasTitle()) {
+                codedOutputStreamMicro.writeString(7, getTitle());
+            }
+            if (hasAddress()) {
+                codedOutputStreamMicro.writeString(8, getAddress());
+            }
+            if (hasDestitle()) {
+                codedOutputStreamMicro.writeString(9, getDestitle());
+            }
+            if (hasDesbrief()) {
+                codedOutputStreamMicro.writeString(10, getDesbrief());
+            }
+            if (hasUrl()) {
+                codedOutputStreamMicro.writeString(11, getUrl());
+            }
+            if (hasTopcolor()) {
+                codedOutputStreamMicro.writeString(12, getTopcolor());
+            }
+            if (hasTopicontype()) {
+                codedOutputStreamMicro.writeInt32(13, getTopicontype());
+            }
+            if (hasTitlecolor()) {
+                codedOutputStreamMicro.writeString(14, getTitlecolor());
+            }
+            if (hasAddresscolor()) {
+                codedOutputStreamMicro.writeString(15, getAddresscolor());
+            }
+            if (hasLinecolor()) {
+                codedOutputStreamMicro.writeString(16, getLinecolor());
+            }
+            for (Button writeMessage : getButtonsList()) {
+                codedOutputStreamMicro.writeMessage(17, writeMessage);
+            }
+        }
+    }
+
+    public static final class Share extends MessageMicro {
+        public static final int BIGICON_FIELD_NUMBER = 6;
+        public static final int LONGCONTENT_FIELD_NUMBER = 4;
+        public static final int SHORTCONTENT_FIELD_NUMBER = 3;
+        public static final int SMALLICON_FIELD_NUMBER = 5;
+        public static final int TITLE_FIELD_NUMBER = 2;
+        public static final int URL_FIELD_NUMBER = 1;
+        /* renamed from: a */
+        private boolean f12313a;
+        /* renamed from: b */
+        private String f12314b = "";
+        /* renamed from: c */
+        private boolean f12315c;
+        /* renamed from: d */
+        private String f12316d = "";
+        /* renamed from: e */
+        private boolean f12317e;
+        /* renamed from: f */
+        private String f12318f = "";
+        /* renamed from: g */
+        private boolean f12319g;
+        /* renamed from: h */
+        private String f12320h = "";
+        /* renamed from: i */
+        private boolean f12321i;
+        /* renamed from: j */
+        private String f12322j = "";
+        /* renamed from: k */
+        private boolean f12323k;
+        /* renamed from: l */
+        private String f12324l = "";
+        /* renamed from: m */
+        private int f12325m = -1;
+
+        public static Share parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            return new Share().mergeFrom(codedInputStreamMicro);
+        }
+
+        public static Share parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+            return (Share) new Share().mergeFrom(bArr);
+        }
+
+        public final Share clear() {
+            clearUrl();
+            clearTitle();
+            clearShortcontent();
+            clearLongcontent();
+            clearSmallicon();
+            clearBigicon();
+            this.f12325m = -1;
+            return this;
+        }
+
+        public Share clearBigicon() {
+            this.f12323k = false;
+            this.f12324l = "";
+            return this;
+        }
+
+        public Share clearLongcontent() {
+            this.f12319g = false;
+            this.f12320h = "";
+            return this;
+        }
+
+        public Share clearShortcontent() {
+            this.f12317e = false;
+            this.f12318f = "";
+            return this;
+        }
+
+        public Share clearSmallicon() {
+            this.f12321i = false;
+            this.f12322j = "";
+            return this;
+        }
+
+        public Share clearTitle() {
+            this.f12315c = false;
+            this.f12316d = "";
+            return this;
+        }
+
+        public Share clearUrl() {
+            this.f12313a = false;
+            this.f12314b = "";
+            return this;
+        }
+
+        public String getBigicon() {
+            return this.f12324l;
+        }
+
+        public int getCachedSize() {
+            if (this.f12325m < 0) {
+                getSerializedSize();
+            }
+            return this.f12325m;
+        }
+
+        public String getLongcontent() {
+            return this.f12320h;
+        }
+
+        public int getSerializedSize() {
+            int i = 0;
+            if (hasUrl()) {
+                i = 0 + CodedOutputStreamMicro.computeStringSize(1, getUrl());
+            }
+            if (hasTitle()) {
+                i += CodedOutputStreamMicro.computeStringSize(2, getTitle());
+            }
+            if (hasShortcontent()) {
+                i += CodedOutputStreamMicro.computeStringSize(3, getShortcontent());
+            }
+            if (hasLongcontent()) {
+                i += CodedOutputStreamMicro.computeStringSize(4, getLongcontent());
+            }
+            if (hasSmallicon()) {
+                i += CodedOutputStreamMicro.computeStringSize(5, getSmallicon());
+            }
+            if (hasBigicon()) {
+                i += CodedOutputStreamMicro.computeStringSize(6, getBigicon());
+            }
+            this.f12325m = i;
+            return i;
+        }
+
+        public String getShortcontent() {
+            return this.f12318f;
+        }
+
+        public String getSmallicon() {
+            return this.f12322j;
+        }
+
+        public String getTitle() {
+            return this.f12316d;
+        }
+
+        public String getUrl() {
+            return this.f12314b;
+        }
+
+        public boolean hasBigicon() {
+            return this.f12323k;
+        }
+
+        public boolean hasLongcontent() {
+            return this.f12319g;
+        }
+
+        public boolean hasShortcontent() {
+            return this.f12317e;
+        }
+
+        public boolean hasSmallicon() {
+            return this.f12321i;
+        }
+
+        public boolean hasTitle() {
+            return this.f12315c;
+        }
+
+        public boolean hasUrl() {
+            return this.f12313a;
+        }
+
+        public final boolean isInitialized() {
+            return true;
+        }
+
+        public Share mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+            while (true) {
+                int readTag = codedInputStreamMicro.readTag();
+                switch (readTag) {
+                    case 0:
+                        break;
+                    case 10:
+                        setUrl(codedInputStreamMicro.readString());
+                        continue;
+                    case 18:
+                        setTitle(codedInputStreamMicro.readString());
+                        continue;
+                    case 26:
+                        setShortcontent(codedInputStreamMicro.readString());
+                        continue;
+                    case 34:
+                        setLongcontent(codedInputStreamMicro.readString());
+                        continue;
+                    case 42:
+                        setSmallicon(codedInputStreamMicro.readString());
+                        continue;
+                    case 50:
+                        setBigicon(codedInputStreamMicro.readString());
+                        continue;
+                    default:
+                        if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                            break;
+                        }
+                        continue;
+                }
+                return this;
+            }
+        }
+
+        public Share setBigicon(String str) {
+            this.f12323k = true;
+            this.f12324l = str;
+            return this;
+        }
+
+        public Share setLongcontent(String str) {
+            this.f12319g = true;
+            this.f12320h = str;
+            return this;
+        }
+
+        public Share setShortcontent(String str) {
+            this.f12317e = true;
+            this.f12318f = str;
+            return this;
+        }
+
+        public Share setSmallicon(String str) {
+            this.f12321i = true;
+            this.f12322j = str;
+            return this;
+        }
+
+        public Share setTitle(String str) {
+            this.f12315c = true;
+            this.f12316d = str;
+            return this;
+        }
+
+        public Share setUrl(String str) {
+            this.f12313a = true;
+            this.f12314b = str;
+            return this;
+        }
+
+        public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+            if (hasUrl()) {
+                codedOutputStreamMicro.writeString(1, getUrl());
+            }
+            if (hasTitle()) {
+                codedOutputStreamMicro.writeString(2, getTitle());
+            }
+            if (hasShortcontent()) {
+                codedOutputStreamMicro.writeString(3, getShortcontent());
+            }
+            if (hasLongcontent()) {
+                codedOutputStreamMicro.writeString(4, getLongcontent());
+            }
+            if (hasSmallicon()) {
+                codedOutputStreamMicro.writeString(5, getSmallicon());
+            }
+            if (hasBigicon()) {
+                codedOutputStreamMicro.writeString(6, getBigicon());
+            }
+        }
+    }
+
+    public static Opnlayer parseFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        return new Opnlayer().mergeFrom(codedInputStreamMicro);
+    }
+
+    public static Opnlayer parseFrom(byte[] bArr) throws InvalidProtocolBufferMicroException {
+        return (Opnlayer) new Opnlayer().mergeFrom(bArr);
+    }
+
+    public Opnlayer addPointinfo(Poi poi) {
+        if (poi != null) {
+            if (this.f12354q.isEmpty()) {
+                this.f12354q = new ArrayList();
+            }
+            this.f12354q.add(poi);
+        }
         return this;
-      }
-      
-      public Button setTitle(String paramString)
-      {
-        this.a = true;
-        this.b = paramString;
+    }
+
+    public final Opnlayer clear() {
+        clearEventtitle();
+        clearEventtype();
+        clearLevel();
+        clearCenter();
+        clearShare();
+        clearIcon();
+        clearImagebottom();
+        clearImagetop();
+        clearPointinfo();
+        clearBorderlb();
+        clearBorderrt();
+        clearImagebutton();
+        clearRefreshsec();
+        clearRefershmeters();
+        clearBottomicon();
+        clearJumpto();
+        clearNotice();
+        clearFirstshow();
+        clearNeedlogin();
+        this.f12337L = -1;
         return this;
-      }
-      
-      public Button setType(int paramInt)
-      {
-        this.c = true;
-        this.d = paramInt;
+    }
+
+    public Opnlayer clearBorderlb() {
+        this.f12355r = false;
+        this.f12356s = "";
         return this;
-      }
-      
-      public Button setUrl(String paramString)
-      {
-        this.e = true;
-        this.f = paramString;
+    }
+
+    public Opnlayer clearBorderrt() {
+        this.f12357t = false;
+        this.f12358u = "";
         return this;
-      }
-      
-      public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-        throws IOException
-      {
-        if (hasTitle()) {
-          paramCodedOutputStreamMicro.writeString(1, getTitle());
+    }
+
+    public Opnlayer clearBottomicon() {
+        this.f12327B = false;
+        this.f12328C = "";
+        return this;
+    }
+
+    public Opnlayer clearCenter() {
+        this.f12344g = false;
+        this.f12345h = "";
+        return this;
+    }
+
+    public Opnlayer clearEventtitle() {
+        this.f12338a = false;
+        this.f12339b = "";
+        return this;
+    }
+
+    public Opnlayer clearEventtype() {
+        this.f12340c = false;
+        this.f12341d = 0;
+        return this;
+    }
+
+    public Opnlayer clearFirstshow() {
+        this.f12333H = false;
+        this.f12334I = "";
+        return this;
+    }
+
+    public Opnlayer clearIcon() {
+        this.f12348k = false;
+        this.f12349l = "";
+        return this;
+    }
+
+    public Opnlayer clearImagebottom() {
+        this.f12350m = false;
+        this.f12351n = "";
+        return this;
+    }
+
+    public Opnlayer clearImagebutton() {
+        this.f12359v = false;
+        this.f12360w = "";
+        return this;
+    }
+
+    public Opnlayer clearImagetop() {
+        this.f12352o = false;
+        this.f12353p = "";
+        return this;
+    }
+
+    public Opnlayer clearJumpto() {
+        this.f12329D = false;
+        this.f12330E = "";
+        return this;
+    }
+
+    public Opnlayer clearLevel() {
+        this.f12342e = false;
+        this.f12343f = 0;
+        return this;
+    }
+
+    public Opnlayer clearNeedlogin() {
+        this.f12335J = false;
+        this.f12336K = "";
+        return this;
+    }
+
+    public Opnlayer clearNotice() {
+        this.f12331F = false;
+        this.f12332G = "";
+        return this;
+    }
+
+    public Opnlayer clearPointinfo() {
+        this.f12354q = Collections.emptyList();
+        return this;
+    }
+
+    public Opnlayer clearRefershmeters() {
+        this.f12363z = false;
+        this.f12326A = 0;
+        return this;
+    }
+
+    public Opnlayer clearRefreshsec() {
+        this.f12361x = false;
+        this.f12362y = 0;
+        return this;
+    }
+
+    public Opnlayer clearShare() {
+        this.f12346i = false;
+        this.f12347j = null;
+        return this;
+    }
+
+    public String getBorderlb() {
+        return this.f12356s;
+    }
+
+    public String getBorderrt() {
+        return this.f12358u;
+    }
+
+    public String getBottomicon() {
+        return this.f12328C;
+    }
+
+    public int getCachedSize() {
+        if (this.f12337L < 0) {
+            getSerializedSize();
         }
-        if (hasType()) {
-          paramCodedOutputStreamMicro.writeInt32(2, getType());
+        return this.f12337L;
+    }
+
+    public String getCenter() {
+        return this.f12345h;
+    }
+
+    public String getEventtitle() {
+        return this.f12339b;
+    }
+
+    public int getEventtype() {
+        return this.f12341d;
+    }
+
+    public String getFirstshow() {
+        return this.f12334I;
+    }
+
+    public String getIcon() {
+        return this.f12349l;
+    }
+
+    public String getImagebottom() {
+        return this.f12351n;
+    }
+
+    public String getImagebutton() {
+        return this.f12360w;
+    }
+
+    public String getImagetop() {
+        return this.f12353p;
+    }
+
+    public String getJumpto() {
+        return this.f12330E;
+    }
+
+    public int getLevel() {
+        return this.f12343f;
+    }
+
+    public String getNeedlogin() {
+        return this.f12336K;
+    }
+
+    public String getNotice() {
+        return this.f12332G;
+    }
+
+    public Poi getPointinfo(int i) {
+        return (Poi) this.f12354q.get(i);
+    }
+
+    public int getPointinfoCount() {
+        return this.f12354q.size();
+    }
+
+    public List<Poi> getPointinfoList() {
+        return this.f12354q;
+    }
+
+    public int getRefershmeters() {
+        return this.f12326A;
+    }
+
+    public int getRefreshsec() {
+        return this.f12362y;
+    }
+
+    public int getSerializedSize() {
+        int i = 0;
+        if (hasEventtitle()) {
+            i = 0 + CodedOutputStreamMicro.computeStringSize(1, getEventtitle());
         }
-        if (hasUrl()) {
-          paramCodedOutputStreamMicro.writeString(3, getUrl());
+        if (hasEventtype()) {
+            i += CodedOutputStreamMicro.computeInt32Size(2, getEventtype());
         }
-        if (hasButtonicon()) {
-          paramCodedOutputStreamMicro.writeString(4, getButtonicon());
+        if (hasLevel()) {
+            i += CodedOutputStreamMicro.computeInt32Size(3, getLevel());
         }
-      }
-    }
-  }
-  
-  public static final class Share
-    extends MessageMicro
-  {
-    public static final int BIGICON_FIELD_NUMBER = 6;
-    public static final int LONGCONTENT_FIELD_NUMBER = 4;
-    public static final int SHORTCONTENT_FIELD_NUMBER = 3;
-    public static final int SMALLICON_FIELD_NUMBER = 5;
-    public static final int TITLE_FIELD_NUMBER = 2;
-    public static final int URL_FIELD_NUMBER = 1;
-    private boolean a;
-    private String b = "";
-    private boolean c;
-    private String d = "";
-    private boolean e;
-    private String f = "";
-    private boolean g;
-    private String h = "";
-    private boolean i;
-    private String j = "";
-    private boolean k;
-    private String l = "";
-    private int m = -1;
-    
-    public static Share parseFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      return new Share().mergeFrom(paramCodedInputStreamMicro);
-    }
-    
-    public static Share parseFrom(byte[] paramArrayOfByte)
-      throws InvalidProtocolBufferMicroException
-    {
-      return (Share)new Share().mergeFrom(paramArrayOfByte);
-    }
-    
-    public final Share clear()
-    {
-      clearUrl();
-      clearTitle();
-      clearShortcontent();
-      clearLongcontent();
-      clearSmallicon();
-      clearBigicon();
-      this.m = -1;
-      return this;
-    }
-    
-    public Share clearBigicon()
-    {
-      this.k = false;
-      this.l = "";
-      return this;
-    }
-    
-    public Share clearLongcontent()
-    {
-      this.g = false;
-      this.h = "";
-      return this;
-    }
-    
-    public Share clearShortcontent()
-    {
-      this.e = false;
-      this.f = "";
-      return this;
-    }
-    
-    public Share clearSmallicon()
-    {
-      this.i = false;
-      this.j = "";
-      return this;
-    }
-    
-    public Share clearTitle()
-    {
-      this.c = false;
-      this.d = "";
-      return this;
-    }
-    
-    public Share clearUrl()
-    {
-      this.a = false;
-      this.b = "";
-      return this;
-    }
-    
-    public String getBigicon()
-    {
-      return this.l;
-    }
-    
-    public int getCachedSize()
-    {
-      if (this.m < 0) {
-        getSerializedSize();
-      }
-      return this.m;
-    }
-    
-    public String getLongcontent()
-    {
-      return this.h;
-    }
-    
-    public int getSerializedSize()
-    {
-      int i1 = 0;
-      if (hasUrl()) {
-        i1 = 0 + CodedOutputStreamMicro.computeStringSize(1, getUrl());
-      }
-      int n = i1;
-      if (hasTitle()) {
-        n = i1 + CodedOutputStreamMicro.computeStringSize(2, getTitle());
-      }
-      i1 = n;
-      if (hasShortcontent()) {
-        i1 = n + CodedOutputStreamMicro.computeStringSize(3, getShortcontent());
-      }
-      n = i1;
-      if (hasLongcontent()) {
-        n = i1 + CodedOutputStreamMicro.computeStringSize(4, getLongcontent());
-      }
-      i1 = n;
-      if (hasSmallicon()) {
-        i1 = n + CodedOutputStreamMicro.computeStringSize(5, getSmallicon());
-      }
-      n = i1;
-      if (hasBigicon()) {
-        n = i1 + CodedOutputStreamMicro.computeStringSize(6, getBigicon());
-      }
-      this.m = n;
-      return n;
-    }
-    
-    public String getShortcontent()
-    {
-      return this.f;
-    }
-    
-    public String getSmallicon()
-    {
-      return this.j;
-    }
-    
-    public String getTitle()
-    {
-      return this.d;
-    }
-    
-    public String getUrl()
-    {
-      return this.b;
-    }
-    
-    public boolean hasBigicon()
-    {
-      return this.k;
-    }
-    
-    public boolean hasLongcontent()
-    {
-      return this.g;
-    }
-    
-    public boolean hasShortcontent()
-    {
-      return this.e;
-    }
-    
-    public boolean hasSmallicon()
-    {
-      return this.i;
-    }
-    
-    public boolean hasTitle()
-    {
-      return this.c;
-    }
-    
-    public boolean hasUrl()
-    {
-      return this.a;
-    }
-    
-    public final boolean isInitialized()
-    {
-      return true;
-    }
-    
-    public Share mergeFrom(CodedInputStreamMicro paramCodedInputStreamMicro)
-      throws IOException
-    {
-      for (;;)
-      {
-        int n = paramCodedInputStreamMicro.readTag();
-        switch (n)
-        {
-        default: 
-          if (parseUnknownField(paramCodedInputStreamMicro, n)) {}
-          break;
-        case 0: 
-          return this;
-        case 10: 
-          setUrl(paramCodedInputStreamMicro.readString());
-          break;
-        case 18: 
-          setTitle(paramCodedInputStreamMicro.readString());
-          break;
-        case 26: 
-          setShortcontent(paramCodedInputStreamMicro.readString());
-          break;
-        case 34: 
-          setLongcontent(paramCodedInputStreamMicro.readString());
-          break;
-        case 42: 
-          setSmallicon(paramCodedInputStreamMicro.readString());
-          break;
-        case 50: 
-          setBigicon(paramCodedInputStreamMicro.readString());
+        if (hasCenter()) {
+            i += CodedOutputStreamMicro.computeStringSize(4, getCenter());
         }
-      }
+        if (hasShare()) {
+            i += CodedOutputStreamMicro.computeMessageSize(5, getShare());
+        }
+        if (hasIcon()) {
+            i += CodedOutputStreamMicro.computeStringSize(6, getIcon());
+        }
+        if (hasImagebottom()) {
+            i += CodedOutputStreamMicro.computeStringSize(7, getImagebottom());
+        }
+        if (hasImagetop()) {
+            i += CodedOutputStreamMicro.computeStringSize(8, getImagetop());
+        }
+        int i2 = i;
+        for (Poi computeMessageSize : getPointinfoList()) {
+            i2 = CodedOutputStreamMicro.computeMessageSize(9, computeMessageSize) + i2;
+        }
+        if (hasBorderlb()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(10, getBorderlb());
+        }
+        if (hasBorderrt()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(11, getBorderrt());
+        }
+        if (hasImagebutton()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(12, getImagebutton());
+        }
+        if (hasRefreshsec()) {
+            i2 += CodedOutputStreamMicro.computeInt32Size(13, getRefreshsec());
+        }
+        if (hasRefershmeters()) {
+            i2 += CodedOutputStreamMicro.computeInt32Size(14, getRefershmeters());
+        }
+        if (hasBottomicon()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(15, getBottomicon());
+        }
+        if (hasJumpto()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(16, getJumpto());
+        }
+        if (hasNotice()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(17, getNotice());
+        }
+        if (hasFirstshow()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(18, getFirstshow());
+        }
+        if (hasNeedlogin()) {
+            i2 += CodedOutputStreamMicro.computeStringSize(19, getNeedlogin());
+        }
+        this.f12337L = i2;
+        return i2;
     }
-    
-    public Share setBigicon(String paramString)
-    {
-      this.k = true;
-      this.l = paramString;
-      return this;
+
+    public Share getShare() {
+        return this.f12347j;
     }
-    
-    public Share setLongcontent(String paramString)
-    {
-      this.g = true;
-      this.h = paramString;
-      return this;
+
+    public boolean hasBorderlb() {
+        return this.f12355r;
     }
-    
-    public Share setShortcontent(String paramString)
-    {
-      this.e = true;
-      this.f = paramString;
-      return this;
+
+    public boolean hasBorderrt() {
+        return this.f12357t;
     }
-    
-    public Share setSmallicon(String paramString)
-    {
-      this.i = true;
-      this.j = paramString;
-      return this;
+
+    public boolean hasBottomicon() {
+        return this.f12327B;
     }
-    
-    public Share setTitle(String paramString)
-    {
-      this.c = true;
-      this.d = paramString;
-      return this;
+
+    public boolean hasCenter() {
+        return this.f12344g;
     }
-    
-    public Share setUrl(String paramString)
-    {
-      this.a = true;
-      this.b = paramString;
-      return this;
+
+    public boolean hasEventtitle() {
+        return this.f12338a;
     }
-    
-    public void writeTo(CodedOutputStreamMicro paramCodedOutputStreamMicro)
-      throws IOException
-    {
-      if (hasUrl()) {
-        paramCodedOutputStreamMicro.writeString(1, getUrl());
-      }
-      if (hasTitle()) {
-        paramCodedOutputStreamMicro.writeString(2, getTitle());
-      }
-      if (hasShortcontent()) {
-        paramCodedOutputStreamMicro.writeString(3, getShortcontent());
-      }
-      if (hasLongcontent()) {
-        paramCodedOutputStreamMicro.writeString(4, getLongcontent());
-      }
-      if (hasSmallicon()) {
-        paramCodedOutputStreamMicro.writeString(5, getSmallicon());
-      }
-      if (hasBigicon()) {
-        paramCodedOutputStreamMicro.writeString(6, getBigicon());
-      }
+
+    public boolean hasEventtype() {
+        return this.f12340c;
     }
-  }
+
+    public boolean hasFirstshow() {
+        return this.f12333H;
+    }
+
+    public boolean hasIcon() {
+        return this.f12348k;
+    }
+
+    public boolean hasImagebottom() {
+        return this.f12350m;
+    }
+
+    public boolean hasImagebutton() {
+        return this.f12359v;
+    }
+
+    public boolean hasImagetop() {
+        return this.f12352o;
+    }
+
+    public boolean hasJumpto() {
+        return this.f12329D;
+    }
+
+    public boolean hasLevel() {
+        return this.f12342e;
+    }
+
+    public boolean hasNeedlogin() {
+        return this.f12335J;
+    }
+
+    public boolean hasNotice() {
+        return this.f12331F;
+    }
+
+    public boolean hasRefershmeters() {
+        return this.f12363z;
+    }
+
+    public boolean hasRefreshsec() {
+        return this.f12361x;
+    }
+
+    public boolean hasShare() {
+        return this.f12346i;
+    }
+
+    public final boolean isInitialized() {
+        return true;
+    }
+
+    public Opnlayer mergeFrom(CodedInputStreamMicro codedInputStreamMicro) throws IOException {
+        while (true) {
+            int readTag = codedInputStreamMicro.readTag();
+            MessageMicro share;
+            switch (readTag) {
+                case 0:
+                    break;
+                case 10:
+                    setEventtitle(codedInputStreamMicro.readString());
+                    continue;
+                case 16:
+                    setEventtype(codedInputStreamMicro.readInt32());
+                    continue;
+                case 24:
+                    setLevel(codedInputStreamMicro.readInt32());
+                    continue;
+                case 34:
+                    setCenter(codedInputStreamMicro.readString());
+                    continue;
+                case 42:
+                    share = new Share();
+                    codedInputStreamMicro.readMessage(share);
+                    setShare(share);
+                    continue;
+                case 50:
+                    setIcon(codedInputStreamMicro.readString());
+                    continue;
+                case 58:
+                    setImagebottom(codedInputStreamMicro.readString());
+                    continue;
+                case 66:
+                    setImagetop(codedInputStreamMicro.readString());
+                    continue;
+                case 74:
+                    share = new Poi();
+                    codedInputStreamMicro.readMessage(share);
+                    addPointinfo(share);
+                    continue;
+                case 82:
+                    setBorderlb(codedInputStreamMicro.readString());
+                    continue;
+                case 90:
+                    setBorderrt(codedInputStreamMicro.readString());
+                    continue;
+                case 98:
+                    setImagebutton(codedInputStreamMicro.readString());
+                    continue;
+                case 104:
+                    setRefreshsec(codedInputStreamMicro.readInt32());
+                    continue;
+                case 112:
+                    setRefershmeters(codedInputStreamMicro.readInt32());
+                    continue;
+                case C1253f.df /*122*/:
+                    setBottomicon(codedInputStreamMicro.readString());
+                    continue;
+                case 130:
+                    setJumpto(codedInputStreamMicro.readString());
+                    continue;
+                case 138:
+                    setNotice(codedInputStreamMicro.readString());
+                    continue;
+                case 146:
+                    setFirstshow(codedInputStreamMicro.readString());
+                    continue;
+                case 154:
+                    setNeedlogin(codedInputStreamMicro.readString());
+                    continue;
+                default:
+                    if (!parseUnknownField(codedInputStreamMicro, readTag)) {
+                        break;
+                    }
+                    continue;
+            }
+            return this;
+        }
+    }
+
+    public Opnlayer setBorderlb(String str) {
+        this.f12355r = true;
+        this.f12356s = str;
+        return this;
+    }
+
+    public Opnlayer setBorderrt(String str) {
+        this.f12357t = true;
+        this.f12358u = str;
+        return this;
+    }
+
+    public Opnlayer setBottomicon(String str) {
+        this.f12327B = true;
+        this.f12328C = str;
+        return this;
+    }
+
+    public Opnlayer setCenter(String str) {
+        this.f12344g = true;
+        this.f12345h = str;
+        return this;
+    }
+
+    public Opnlayer setEventtitle(String str) {
+        this.f12338a = true;
+        this.f12339b = str;
+        return this;
+    }
+
+    public Opnlayer setEventtype(int i) {
+        this.f12340c = true;
+        this.f12341d = i;
+        return this;
+    }
+
+    public Opnlayer setFirstshow(String str) {
+        this.f12333H = true;
+        this.f12334I = str;
+        return this;
+    }
+
+    public Opnlayer setIcon(String str) {
+        this.f12348k = true;
+        this.f12349l = str;
+        return this;
+    }
+
+    public Opnlayer setImagebottom(String str) {
+        this.f12350m = true;
+        this.f12351n = str;
+        return this;
+    }
+
+    public Opnlayer setImagebutton(String str) {
+        this.f12359v = true;
+        this.f12360w = str;
+        return this;
+    }
+
+    public Opnlayer setImagetop(String str) {
+        this.f12352o = true;
+        this.f12353p = str;
+        return this;
+    }
+
+    public Opnlayer setJumpto(String str) {
+        this.f12329D = true;
+        this.f12330E = str;
+        return this;
+    }
+
+    public Opnlayer setLevel(int i) {
+        this.f12342e = true;
+        this.f12343f = i;
+        return this;
+    }
+
+    public Opnlayer setNeedlogin(String str) {
+        this.f12335J = true;
+        this.f12336K = str;
+        return this;
+    }
+
+    public Opnlayer setNotice(String str) {
+        this.f12331F = true;
+        this.f12332G = str;
+        return this;
+    }
+
+    public Opnlayer setPointinfo(int i, Poi poi) {
+        if (poi != null) {
+            this.f12354q.set(i, poi);
+        }
+        return this;
+    }
+
+    public Opnlayer setRefershmeters(int i) {
+        this.f12363z = true;
+        this.f12326A = i;
+        return this;
+    }
+
+    public Opnlayer setRefreshsec(int i) {
+        this.f12361x = true;
+        this.f12362y = i;
+        return this;
+    }
+
+    public Opnlayer setShare(Share share) {
+        if (share == null) {
+            return clearShare();
+        }
+        this.f12346i = true;
+        this.f12347j = share;
+        return this;
+    }
+
+    public void writeTo(CodedOutputStreamMicro codedOutputStreamMicro) throws IOException {
+        if (hasEventtitle()) {
+            codedOutputStreamMicro.writeString(1, getEventtitle());
+        }
+        if (hasEventtype()) {
+            codedOutputStreamMicro.writeInt32(2, getEventtype());
+        }
+        if (hasLevel()) {
+            codedOutputStreamMicro.writeInt32(3, getLevel());
+        }
+        if (hasCenter()) {
+            codedOutputStreamMicro.writeString(4, getCenter());
+        }
+        if (hasShare()) {
+            codedOutputStreamMicro.writeMessage(5, getShare());
+        }
+        if (hasIcon()) {
+            codedOutputStreamMicro.writeString(6, getIcon());
+        }
+        if (hasImagebottom()) {
+            codedOutputStreamMicro.writeString(7, getImagebottom());
+        }
+        if (hasImagetop()) {
+            codedOutputStreamMicro.writeString(8, getImagetop());
+        }
+        for (Poi writeMessage : getPointinfoList()) {
+            codedOutputStreamMicro.writeMessage(9, writeMessage);
+        }
+        if (hasBorderlb()) {
+            codedOutputStreamMicro.writeString(10, getBorderlb());
+        }
+        if (hasBorderrt()) {
+            codedOutputStreamMicro.writeString(11, getBorderrt());
+        }
+        if (hasImagebutton()) {
+            codedOutputStreamMicro.writeString(12, getImagebutton());
+        }
+        if (hasRefreshsec()) {
+            codedOutputStreamMicro.writeInt32(13, getRefreshsec());
+        }
+        if (hasRefershmeters()) {
+            codedOutputStreamMicro.writeInt32(14, getRefershmeters());
+        }
+        if (hasBottomicon()) {
+            codedOutputStreamMicro.writeString(15, getBottomicon());
+        }
+        if (hasJumpto()) {
+            codedOutputStreamMicro.writeString(16, getJumpto());
+        }
+        if (hasNotice()) {
+            codedOutputStreamMicro.writeString(17, getNotice());
+        }
+        if (hasFirstshow()) {
+            codedOutputStreamMicro.writeString(18, getFirstshow());
+        }
+        if (hasNeedlogin()) {
+            codedOutputStreamMicro.writeString(19, getNeedlogin());
+        }
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/entity/pb/Opnlayer.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

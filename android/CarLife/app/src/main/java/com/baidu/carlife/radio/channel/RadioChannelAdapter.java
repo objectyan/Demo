@@ -7,179 +7,152 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.baidu.carlife.C0965R;
+import com.baidu.carlife.model.C1942q;
+import com.baidu.carlife.p083g.C1605a;
+import com.baidu.carlife.radio.p102a.C2105a;
+import com.baidu.carlife.util.C2170a;
 import com.baidu.carlife.view.recyclingviewpager.RecyclingPagerAdapter;
 import com.baidu.carlife.view.recyclingviewpager.RecyclingViewPager;
 import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RadioChannelAdapter
-  extends RecyclingPagerAdapter
-{
-  private static final int b = Integer.MAX_VALUE;
-  private List<com.baidu.carlife.radio.a.a> c = new ArrayList();
-  private String d = "";
-  private Context e;
-  private RecyclingViewPager f;
-  
-  public RadioChannelAdapter(Context paramContext, RecyclingViewPager paramRecyclingViewPager)
-  {
-    this.e = paramContext;
-    this.f = paramRecyclingViewPager;
-  }
-  
-  private String a(com.baidu.carlife.radio.a.a parama)
-  {
-    if (parama == null) {
-      parama = "";
+public class RadioChannelAdapter extends RecyclingPagerAdapter {
+    /* renamed from: b */
+    private static final int f6832b = Integer.MAX_VALUE;
+    /* renamed from: c */
+    private List<C2105a> f6833c = new ArrayList();
+    /* renamed from: d */
+    private String f6834d = "";
+    /* renamed from: e */
+    private Context f6835e;
+    /* renamed from: f */
+    private RecyclingViewPager f6836f;
+
+    /* renamed from: com.baidu.carlife.radio.channel.RadioChannelAdapter$a */
+    public static class C2144a {
+        /* renamed from: a */
+        SimpleDraweeView f6827a;
+        /* renamed from: b */
+        TextView f6828b;
+        /* renamed from: c */
+        ImageView f6829c;
     }
-    String str;
-    do
-    {
-      do
-      {
-        return parama;
-        str = parama.b();
-        parama = str;
-      } while (com.baidu.carlife.util.a.a());
-      if ("每日随心".equals(str)) {
-        return "Daily Audio";
-      }
-      if ("音乐".equals(str)) {
-        return "Music";
-      }
-      if ("儿童".equals(str)) {
-        return "Children";
-      }
-      if ("听书".equals(str)) {
-        return "Audio Book";
-      }
-      if ("电台".equals(str)) {
-        return "Radio";
-      }
-      if ("语音点播".equals(str)) {
-        return "VOD";
-      }
-      if ("情感".equals(str)) {
-        return "Emotion";
-      }
-      if ("学习".equals(str)) {
-        return "Study";
-      }
-      if ("新闻".equals(str)) {
-        return "News";
-      }
-      parama = str;
-    } while (!"娱乐".equals(str));
-    return "Recreation";
-  }
-  
-  public int a()
-  {
-    if (this.c == null) {
-      return 0;
+
+    public RadioChannelAdapter(Context context, RecyclingViewPager recyclingViewPager) {
+        this.f6835e = context;
+        this.f6836f = recyclingViewPager;
     }
-    return this.c.size();
-  }
-  
-  public int a(String paramString)
-  {
-    String str = paramString;
-    if (TextUtils.isEmpty(paramString)) {
-      str = this.d;
+
+    /* renamed from: a */
+    public void m8093a(List<C2105a> list) {
+        this.f6833c.clear();
+        int len = list.size();
+        for (int i = 0; i < len; i++) {
+            if (i == 0) {
+                this.f6834d = ((C2105a) list.get(i)).m7893a();
+            }
+            if (i % 2 == 0) {
+                this.f6833c.add(list.get(i));
+            } else {
+                this.f6833c.add(0, list.get(i));
+            }
+        }
     }
-    int i = 0;
-    int j = a();
-    while (i < j)
-    {
-      if (TextUtils.equals(str, ((com.baidu.carlife.radio.a.a)this.c.get(i)).a())) {
-        return i;
-      }
-      i += 1;
+
+    /* renamed from: a */
+    public int m8089a() {
+        return this.f6833c == null ? 0 : this.f6833c.size();
     }
-    return 0;
-  }
-  
-  public View a(int paramInt, View paramView, ViewGroup paramViewGroup)
-  {
-    com.baidu.carlife.radio.a.a locala;
-    if (paramView == null)
-    {
-      localObject = new a();
-      paramView = LayoutInflater.from(this.e).inflate(2130968995, paramViewGroup, false);
-      ((a)localObject).a = ((SimpleDraweeView)paramView.findViewById(2131625999));
-      ((a)localObject).b = ((TextView)paramView.findViewById(2131626000));
-      ((a)localObject).c = ((ImageView)paramView.findViewById(2131626001));
-      paramView.setTag(localObject);
-      paramViewGroup = (ViewGroup)localObject;
-      locala = a(paramInt);
-      if (locala != null) {
-        break label165;
-      }
+
+    /* renamed from: a */
+    public int m8090a(String channelId) {
+        if (TextUtils.isEmpty(channelId)) {
+            channelId = this.f6834d;
+        }
+        int len = m8089a();
+        for (int i = 0; i < len; i++) {
+            if (TextUtils.equals(channelId, ((C2105a) this.f6833c.get(i)).m7893a())) {
+                return i;
+            }
+        }
+        return 0;
     }
-    label165:
-    for (Object localObject = "";; localObject = locala.c())
-    {
-      localObject = com.baidu.carlife.g.a.a(paramViewGroup.a, (String)localObject, 280, 280);
-      paramViewGroup.a.setController((com.facebook.drawee.g.a)localObject);
-      paramViewGroup.b.setText(a(locala));
-      paramViewGroup.c.setVisibility(8);
-      this.f.setChildrenView(paramInt, paramView);
-      return paramView;
-      paramViewGroup = (a)paramView.getTag();
-      break;
+
+    /* renamed from: a */
+    public C2105a m8092a(int position) {
+        int index = 0;
+        if (this.f6833c.size() > 0) {
+            index = position % this.f6833c.size();
+        }
+        return (this.f6833c == null || this.f6833c.size() == 0) ? null : (C2105a) this.f6833c.get(index);
     }
-  }
-  
-  public com.baidu.carlife.radio.a.a a(int paramInt)
-  {
-    int i = 0;
-    if (this.c.size() > 0) {
-      i = paramInt % this.c.size();
+
+    /* renamed from: a */
+    public View mo1782a(int position, View convertView, ViewGroup container) {
+        C2144a viewHolder;
+        if (convertView == null) {
+            viewHolder = new C2144a();
+            convertView = LayoutInflater.from(this.f6835e).inflate(C0965R.layout.radio_channel_item, container, false);
+            viewHolder.f6827a = (SimpleDraweeView) convertView.findViewById(C0965R.id.radio_channel_item_img);
+            viewHolder.f6828b = (TextView) convertView.findViewById(C0965R.id.radio_channel_item_txt);
+            viewHolder.f6829c = (ImageView) convertView.findViewById(C0965R.id.radio_channel_item_flag_play);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (C2144a) convertView.getTag();
+        }
+        C2105a item = m8092a(position);
+        viewHolder.f6827a.setController(C1605a.m5867a(viewHolder.f6827a, item == null ? "" : item.m7897c(), 280, 280));
+        viewHolder.f6828b.setText(m8088a(item));
+        viewHolder.f6829c.setVisibility(8);
+        this.f6836f.setChildrenView(position, convertView);
+        return convertView;
     }
-    if ((this.c == null) || (this.c.size() == 0)) {
-      return null;
+
+    /* renamed from: a */
+    private String m8088a(C2105a model) {
+        if (model == null) {
+            return "";
+        }
+        String channelName = model.m7895b();
+        if (C2170a.m8217a()) {
+            return channelName;
+        }
+        if ("每日随心".equals(channelName)) {
+            return "Daily Audio";
+        }
+        if (C1942q.f6153u.equals(channelName)) {
+            return "Music";
+        }
+        if ("儿童".equals(channelName)) {
+            return "Children";
+        }
+        if ("听书".equals(channelName)) {
+            return "Audio Book";
+        }
+        if ("电台".equals(channelName)) {
+            return "Radio";
+        }
+        if ("语音点播".equals(channelName)) {
+            return "VOD";
+        }
+        if ("情感".equals(channelName)) {
+            return "Emotion";
+        }
+        if ("学习".equals(channelName)) {
+            return "Study";
+        }
+        if ("新闻".equals(channelName)) {
+            return "News";
+        }
+        if ("娱乐".equals(channelName)) {
+            return "Recreation";
+        }
+        return channelName;
     }
-    return (com.baidu.carlife.radio.a.a)this.c.get(i);
-  }
-  
-  public void a(List<com.baidu.carlife.radio.a.a> paramList)
-  {
-    this.c.clear();
-    int i = 0;
-    int j = paramList.size();
-    if (i < j)
-    {
-      if (i == 0) {
-        this.d = ((com.baidu.carlife.radio.a.a)paramList.get(i)).a();
-      }
-      if (i % 2 == 0) {
-        this.c.add(paramList.get(i));
-      }
-      for (;;)
-      {
-        i += 1;
-        break;
-        this.c.add(0, paramList.get(i));
-      }
+
+    public int getCount() {
+        return Integer.MAX_VALUE;
     }
-  }
-  
-  public int getCount()
-  {
-    return Integer.MAX_VALUE;
-  }
-  
-  public static class a
-  {
-    SimpleDraweeView a;
-    TextView b;
-    ImageView c;
-  }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/radio/channel/RadioChannelAdapter.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

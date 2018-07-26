@@ -6,109 +6,97 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-class AccessibilityDelegateCompatIcs
-{
-  public static boolean dispatchPopulateAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    return ((View.AccessibilityDelegate)paramObject).dispatchPopulateAccessibilityEvent(paramView, paramAccessibilityEvent);
-  }
-  
-  public static Object newAccessibilityDelegateBridge(AccessibilityDelegateBridge paramAccessibilityDelegateBridge)
-  {
-    new View.AccessibilityDelegate()
-    {
-      public boolean dispatchPopulateAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        return AccessibilityDelegateCompatIcs.this.dispatchPopulateAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-      
-      public void onInitializeAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        AccessibilityDelegateCompatIcs.this.onInitializeAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-      
-      public void onInitializeAccessibilityNodeInfo(View paramAnonymousView, AccessibilityNodeInfo paramAnonymousAccessibilityNodeInfo)
-      {
-        AccessibilityDelegateCompatIcs.this.onInitializeAccessibilityNodeInfo(paramAnonymousView, paramAnonymousAccessibilityNodeInfo);
-      }
-      
-      public void onPopulateAccessibilityEvent(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        AccessibilityDelegateCompatIcs.this.onPopulateAccessibilityEvent(paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-      
-      public boolean onRequestSendAccessibilityEvent(ViewGroup paramAnonymousViewGroup, View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        return AccessibilityDelegateCompatIcs.this.onRequestSendAccessibilityEvent(paramAnonymousViewGroup, paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-      
-      public void sendAccessibilityEvent(View paramAnonymousView, int paramAnonymousInt)
-      {
-        AccessibilityDelegateCompatIcs.this.sendAccessibilityEvent(paramAnonymousView, paramAnonymousInt);
-      }
-      
-      public void sendAccessibilityEventUnchecked(View paramAnonymousView, AccessibilityEvent paramAnonymousAccessibilityEvent)
-      {
-        AccessibilityDelegateCompatIcs.this.sendAccessibilityEventUnchecked(paramAnonymousView, paramAnonymousAccessibilityEvent);
-      }
-    };
-  }
-  
-  public static Object newAccessibilityDelegateDefaultImpl()
-  {
-    return new View.AccessibilityDelegate();
-  }
-  
-  public static void onInitializeAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    ((View.AccessibilityDelegate)paramObject).onInitializeAccessibilityEvent(paramView, paramAccessibilityEvent);
-  }
-  
-  public static void onInitializeAccessibilityNodeInfo(Object paramObject1, View paramView, Object paramObject2)
-  {
-    ((View.AccessibilityDelegate)paramObject1).onInitializeAccessibilityNodeInfo(paramView, (AccessibilityNodeInfo)paramObject2);
-  }
-  
-  public static void onPopulateAccessibilityEvent(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    ((View.AccessibilityDelegate)paramObject).onPopulateAccessibilityEvent(paramView, paramAccessibilityEvent);
-  }
-  
-  public static boolean onRequestSendAccessibilityEvent(Object paramObject, ViewGroup paramViewGroup, View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    return ((View.AccessibilityDelegate)paramObject).onRequestSendAccessibilityEvent(paramViewGroup, paramView, paramAccessibilityEvent);
-  }
-  
-  public static void sendAccessibilityEvent(Object paramObject, View paramView, int paramInt)
-  {
-    ((View.AccessibilityDelegate)paramObject).sendAccessibilityEvent(paramView, paramInt);
-  }
-  
-  public static void sendAccessibilityEventUnchecked(Object paramObject, View paramView, AccessibilityEvent paramAccessibilityEvent)
-  {
-    ((View.AccessibilityDelegate)paramObject).sendAccessibilityEventUnchecked(paramView, paramAccessibilityEvent);
-  }
-  
-  public static abstract interface AccessibilityDelegateBridge
-  {
-    public abstract boolean dispatchPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract void onInitializeAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract void onInitializeAccessibilityNodeInfo(View paramView, Object paramObject);
-    
-    public abstract void onPopulateAccessibilityEvent(View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract boolean onRequestSendAccessibilityEvent(ViewGroup paramViewGroup, View paramView, AccessibilityEvent paramAccessibilityEvent);
-    
-    public abstract void sendAccessibilityEvent(View paramView, int paramInt);
-    
-    public abstract void sendAccessibilityEventUnchecked(View paramView, AccessibilityEvent paramAccessibilityEvent);
-  }
+class AccessibilityDelegateCompatIcs {
+
+    public interface AccessibilityDelegateBridge {
+        boolean dispatchPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent);
+
+        void onInitializeAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent);
+
+        void onInitializeAccessibilityNodeInfo(View view, Object obj);
+
+        void onPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent);
+
+        boolean onRequestSendAccessibilityEvent(ViewGroup viewGroup, View view, AccessibilityEvent accessibilityEvent);
+
+        void sendAccessibilityEvent(View view, int i);
+
+        void sendAccessibilityEventUnchecked(View view, AccessibilityEvent accessibilityEvent);
+    }
+
+    /* renamed from: com.google.android.support.v4.view.AccessibilityDelegateCompatIcs$1 */
+    class C56611 extends AccessibilityDelegate {
+        private final /* synthetic */ AccessibilityDelegateBridge val$bridge;
+
+        C56611(AccessibilityDelegateBridge accessibilityDelegateBridge) {
+            this.val$bridge = accessibilityDelegateBridge;
+        }
+
+        public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+            return this.val$bridge.dispatchPopulateAccessibilityEvent(host, event);
+        }
+
+        public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event) {
+            this.val$bridge.onInitializeAccessibilityEvent(host, event);
+        }
+
+        public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfo info) {
+            this.val$bridge.onInitializeAccessibilityNodeInfo(host, info);
+        }
+
+        public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
+            this.val$bridge.onPopulateAccessibilityEvent(host, event);
+        }
+
+        public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child, AccessibilityEvent event) {
+            return this.val$bridge.onRequestSendAccessibilityEvent(host, child, event);
+        }
+
+        public void sendAccessibilityEvent(View host, int eventType) {
+            this.val$bridge.sendAccessibilityEvent(host, eventType);
+        }
+
+        public void sendAccessibilityEventUnchecked(View host, AccessibilityEvent event) {
+            this.val$bridge.sendAccessibilityEventUnchecked(host, event);
+        }
+    }
+
+    AccessibilityDelegateCompatIcs() {
+    }
+
+    public static Object newAccessibilityDelegateDefaultImpl() {
+        return new AccessibilityDelegate();
+    }
+
+    public static Object newAccessibilityDelegateBridge(AccessibilityDelegateBridge bridge) {
+        return new C56611(bridge);
+    }
+
+    public static boolean dispatchPopulateAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
+        return ((AccessibilityDelegate) delegate).dispatchPopulateAccessibilityEvent(host, event);
+    }
+
+    public static void onInitializeAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
+        ((AccessibilityDelegate) delegate).onInitializeAccessibilityEvent(host, event);
+    }
+
+    public static void onInitializeAccessibilityNodeInfo(Object delegate, View host, Object info) {
+        ((AccessibilityDelegate) delegate).onInitializeAccessibilityNodeInfo(host, (AccessibilityNodeInfo) info);
+    }
+
+    public static void onPopulateAccessibilityEvent(Object delegate, View host, AccessibilityEvent event) {
+        ((AccessibilityDelegate) delegate).onPopulateAccessibilityEvent(host, event);
+    }
+
+    public static boolean onRequestSendAccessibilityEvent(Object delegate, ViewGroup host, View child, AccessibilityEvent event) {
+        return ((AccessibilityDelegate) delegate).onRequestSendAccessibilityEvent(host, child, event);
+    }
+
+    public static void sendAccessibilityEvent(Object delegate, View host, int eventType) {
+        ((AccessibilityDelegate) delegate).sendAccessibilityEvent(host, eventType);
+    }
+
+    public static void sendAccessibilityEventUnchecked(Object delegate, View host, AccessibilityEvent event) {
+        ((AccessibilityDelegate) delegate).sendAccessibilityEventUnchecked(host, event);
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/google/android/support/v4/view/AccessibilityDelegateCompatIcs.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

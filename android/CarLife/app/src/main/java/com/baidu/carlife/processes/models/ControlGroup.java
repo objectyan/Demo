@@ -3,62 +3,65 @@ package com.baidu.carlife.processes.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.baidu.mobstat.Config;
 
-public class ControlGroup
-  implements Parcelable
-{
-  public static final Parcelable.Creator<ControlGroup> CREATOR = new Parcelable.Creator()
-  {
-    public ControlGroup a(Parcel paramAnonymousParcel)
-    {
-      return new ControlGroup(paramAnonymousParcel);
+public class ControlGroup implements Parcelable {
+    public static final Creator<ControlGroup> CREATOR = new C20331();
+    /* renamed from: a */
+    public final int f6569a;
+    /* renamed from: b */
+    public final String f6570b;
+    /* renamed from: c */
+    public final String f6571c;
+
+    /* renamed from: com.baidu.carlife.processes.models.ControlGroup$1 */
+    static class C20331 implements Creator<ControlGroup> {
+        C20331() {
+        }
+
+        public /* synthetic */ Object createFromParcel(Parcel parcel) {
+            return m7810a(parcel);
+        }
+
+        public /* synthetic */ Object[] newArray(int i) {
+            return m7811a(i);
+        }
+
+        /* renamed from: a */
+        public ControlGroup m7810a(Parcel source) {
+            return new ControlGroup(source);
+        }
+
+        /* renamed from: a */
+        public ControlGroup[] m7811a(int size) {
+            return new ControlGroup[size];
+        }
     }
-    
-    public ControlGroup[] a(int paramAnonymousInt)
-    {
-      return new ControlGroup[paramAnonymousInt];
+
+    protected ControlGroup(String line) throws NumberFormatException, IndexOutOfBoundsException {
+        String[] fields = line.split(Config.TRACE_TODAY_VISIT_SPLIT);
+        this.f6569a = Integer.parseInt(fields[0]);
+        this.f6570b = fields[1];
+        this.f6571c = fields[2];
     }
-  };
-  public final int a;
-  public final String b;
-  public final String c;
-  
-  protected ControlGroup(Parcel paramParcel)
-  {
-    this.a = paramParcel.readInt();
-    this.b = paramParcel.readString();
-    this.c = paramParcel.readString();
-  }
-  
-  protected ControlGroup(String paramString)
-    throws NumberFormatException, IndexOutOfBoundsException
-  {
-    paramString = paramString.split(":");
-    this.a = Integer.parseInt(paramString[0]);
-    this.b = paramString[1];
-    this.c = paramString[2];
-  }
-  
-  public int describeContents()
-  {
-    return 0;
-  }
-  
-  public String toString()
-  {
-    return String.format("%d:%s:%s", new Object[] { Integer.valueOf(this.a), this.b, this.c });
-  }
-  
-  public void writeToParcel(Parcel paramParcel, int paramInt)
-  {
-    paramParcel.writeInt(this.a);
-    paramParcel.writeString(this.b);
-    paramParcel.writeString(this.c);
-  }
+
+    protected ControlGroup(Parcel in) {
+        this.f6569a = in.readInt();
+        this.f6570b = in.readString();
+        this.f6571c = in.readString();
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.f6569a);
+        dest.writeString(this.f6570b);
+        dest.writeString(this.f6571c);
+    }
+
+    public String toString() {
+        return String.format("%d:%s:%s", new Object[]{Integer.valueOf(this.f6569a), this.f6570b, this.f6571c});
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/carlife/processes/models/ControlGroup.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

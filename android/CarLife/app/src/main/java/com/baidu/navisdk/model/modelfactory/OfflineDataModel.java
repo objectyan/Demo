@@ -3,173 +3,96 @@ package com.baidu.navisdk.model.modelfactory;
 import com.baidu.navisdk.model.datastruct.OfflineDataInfo;
 import java.util.ArrayList;
 
-public class OfflineDataModel
-  extends BaseModel
-{
-  private ArrayList<OfflineDataInfo> mDownloadedList = new ArrayList();
-  private ArrayList<OfflineDataInfo> mUnDownloadList = new ArrayList();
-  
-  public void addDataInDownloaded(OfflineDataInfo paramOfflineDataInfo)
-  {
-    try
-    {
-      this.mDownloadedList.add(paramOfflineDataInfo);
-      return;
-    }
-    finally
-    {
-      paramOfflineDataInfo = finally;
-      throw paramOfflineDataInfo;
-    }
-  }
-  
-  public void addDataInUnDownload(OfflineDataInfo paramOfflineDataInfo)
-  {
-    try
-    {
-      this.mUnDownloadList.add(paramOfflineDataInfo);
-      return;
-    }
-    finally
-    {
-      paramOfflineDataInfo = finally;
-      throw paramOfflineDataInfo;
-    }
-  }
-  
-  public OfflineDataInfo getDowloadedInfo(int paramInt)
-  {
-    int i = 0;
-    while ((this.mDownloadedList != null) && (i < this.mDownloadedList.size()))
-    {
-      OfflineDataInfo localOfflineDataInfo = (OfflineDataInfo)this.mDownloadedList.get(i);
-      if ((localOfflineDataInfo != null) && (localOfflineDataInfo.mProvinceId == paramInt)) {
-        return localOfflineDataInfo;
-      }
-      i += 1;
-    }
-    return null;
-  }
-  
-  public ArrayList<OfflineDataInfo> getDowloadedInfo()
-  {
-    return this.mDownloadedList;
-  }
-  
-  public int getMergeStartID()
-  {
-    int i = 0;
-    while ((this.mDownloadedList != null) && (i < this.mDownloadedList.size()))
-    {
-      if (((OfflineDataInfo)this.mDownloadedList.get(i)).mTaskStatus == 16) {
-        return ((OfflineDataInfo)this.mDownloadedList.get(i)).mProvinceId;
-      }
-      i += 1;
-    }
-    return -1;
-  }
-  
-  public OfflineDataInfo getUndowloadInfo(int paramInt)
-  {
-    int i = 0;
-    try
-    {
-      while ((this.mUnDownloadList != null) && (i < this.mUnDownloadList.size()))
-      {
-        OfflineDataInfo localOfflineDataInfo = (OfflineDataInfo)this.mUnDownloadList.get(i);
-        if (localOfflineDataInfo != null)
-        {
-          int j = localOfflineDataInfo.mProvinceId;
-          if (j == paramInt) {
-            return localOfflineDataInfo;
-          }
+public class OfflineDataModel extends BaseModel {
+    private ArrayList<OfflineDataInfo> mDownloadedList = new ArrayList();
+    private ArrayList<OfflineDataInfo> mUnDownloadList = new ArrayList();
+
+    public synchronized void initUnDownloadInfo(ArrayList<OfflineDataInfo> unDownloadMap) {
+        this.mUnDownloadList.clear();
+        if (unDownloadMap != null) {
+            this.mUnDownloadList.addAll(unDownloadMap);
         }
-        i += 1;
-      }
-      return null;
     }
-    catch (IndexOutOfBoundsException localIndexOutOfBoundsException)
-    {
-      return null;
-    }
-  }
-  
-  public ArrayList<OfflineDataInfo> getUndowloadInfo()
-  {
-    return this.mUnDownloadList;
-  }
-  
-  public void initDownloadedInfo(ArrayList<OfflineDataInfo> paramArrayList)
-  {
-    try
-    {
-      this.mDownloadedList.clear();
-      if (paramArrayList != null) {
-        this.mDownloadedList.addAll(paramArrayList);
-      }
-      return;
-    }
-    finally {}
-  }
-  
-  public void initUnDownloadInfo(ArrayList<OfflineDataInfo> paramArrayList)
-  {
-    try
-    {
-      this.mUnDownloadList.clear();
-      if (paramArrayList != null) {
-        this.mUnDownloadList.addAll(paramArrayList);
-      }
-      return;
-    }
-    finally {}
-  }
-  
-  public void removeDataInDownloaded(int paramInt)
-  {
-    int i = 0;
-    try
-    {
-      while ((this.mDownloadedList != null) && (i < this.mDownloadedList.size()))
-      {
-        if (((OfflineDataInfo)this.mDownloadedList.get(i)).mProvinceId == paramInt) {
-          this.mDownloadedList.remove(i);
+
+    public synchronized void initDownloadedInfo(ArrayList<OfflineDataInfo> downloadedMap) {
+        this.mDownloadedList.clear();
+        if (downloadedMap != null) {
+            this.mDownloadedList.addAll(downloadedMap);
         }
-        i += 1;
-      }
-      return;
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public ArrayList<OfflineDataInfo> getUndowloadInfo() {
+        return this.mUnDownloadList;
     }
-  }
-  
-  public void removeDataInUndownload(int paramInt)
-  {
-    int i = 0;
-    try
-    {
-      while ((this.mUnDownloadList != null) && (i < this.mUnDownloadList.size()))
-      {
-        if (((OfflineDataInfo)this.mUnDownloadList.get(i)).mProvinceId == paramInt) {
-          this.mUnDownloadList.remove(i);
+
+    public OfflineDataInfo getDowloadedInfo(int provinceId) {
+        int index = 0;
+        while (this.mDownloadedList != null && index < this.mDownloadedList.size()) {
+            OfflineDataInfo model = (OfflineDataInfo) this.mDownloadedList.get(index);
+            if (model != null && model.mProvinceId == provinceId) {
+                return model;
+            }
+            index++;
         }
-        i += 1;
-      }
-      return;
+        return null;
     }
-    finally
-    {
-      localObject = finally;
-      throw ((Throwable)localObject);
+
+    public OfflineDataInfo getUndowloadInfo(int provinceId) {
+        int index = 0;
+        while (this.mUnDownloadList != null && index < this.mUnDownloadList.size()) {
+            try {
+                OfflineDataInfo model = (OfflineDataInfo) this.mUnDownloadList.get(index);
+                if (model != null && model.mProvinceId == provinceId) {
+                    return model;
+                }
+                index++;
+            } catch (IndexOutOfBoundsException e) {
+                return null;
+            }
+        }
+        return null;
     }
-  }
+
+    public ArrayList<OfflineDataInfo> getDowloadedInfo() {
+        return this.mDownloadedList;
+    }
+
+    public synchronized void addDataInUnDownload(OfflineDataInfo data) {
+        this.mUnDownloadList.add(data);
+    }
+
+    public synchronized void removeDataInUndownload(int provinceId) {
+        int index = 0;
+        while (this.mUnDownloadList != null && index < this.mUnDownloadList.size()) {
+            if (((OfflineDataInfo) this.mUnDownloadList.get(index)).mProvinceId == provinceId) {
+                this.mUnDownloadList.remove(index);
+            }
+            index++;
+        }
+    }
+
+    public synchronized void addDataInDownloaded(OfflineDataInfo data) {
+        this.mDownloadedList.add(data);
+    }
+
+    public synchronized void removeDataInDownloaded(int provinceId) {
+        int index = 0;
+        while (this.mDownloadedList != null && index < this.mDownloadedList.size()) {
+            if (((OfflineDataInfo) this.mDownloadedList.get(index)).mProvinceId == provinceId) {
+                this.mDownloadedList.remove(index);
+            }
+            index++;
+        }
+    }
+
+    public int getMergeStartID() {
+        int index = 0;
+        while (this.mDownloadedList != null && index < this.mDownloadedList.size()) {
+            if (((OfflineDataInfo) this.mDownloadedList.get(index)).mTaskStatus == 16) {
+                return ((OfflineDataInfo) this.mDownloadedList.get(index)).mProvinceId;
+            }
+            index++;
+        }
+        return -1;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/model/modelfactory/OfflineDataModel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

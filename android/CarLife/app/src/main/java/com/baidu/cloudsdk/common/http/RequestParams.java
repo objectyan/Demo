@@ -9,173 +9,129 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
-public class RequestParams
-{
-  protected static final String ENCODING = "UTF-8";
-  protected HashMap<String, String> mParams = new HashMap();
-  protected HashMap<String, ArrayList<String>> mParamsWithArray = new HashMap();
-  
-  public RequestParams() {}
-  
-  public RequestParams(String paramString1, String paramString2)
-  {
-    this();
-    put(paramString1, paramString2);
-  }
-  
-  public RequestParams(Map<String, String> paramMap)
-  {
-    this();
-    if (paramMap != null)
-    {
-      paramMap = paramMap.entrySet().iterator();
-      while (paramMap.hasNext())
-      {
-        Map.Entry localEntry = (Map.Entry)paramMap.next();
-        put((String)localEntry.getKey(), (String)localEntry.getValue());
-      }
+public class RequestParams {
+    protected static final String ENCODING = "UTF-8";
+    protected HashMap<String, String> mParams;
+    protected HashMap<String, ArrayList<String>> mParamsWithArray;
+
+    public RequestParams() {
+        this.mParams = new HashMap();
+        this.mParamsWithArray = new HashMap();
     }
-  }
-  
-  public RequestParams(Object... paramVarArgs)
-  {
-    this();
-    int j = paramVarArgs.length;
-    if (j % 2 != 0) {
-      throw new IllegalArgumentException("Supplied arguments must be even");
+
+    public RequestParams(String key, String value) {
+        this();
+        put(key, value);
     }
-    int i = 0;
-    if (i < j)
-    {
-      if ((paramVarArgs[i] == null) || (paramVarArgs[(i + 1)] == null)) {}
-      for (;;)
-      {
-        i += 2;
-        break;
-        put(String.valueOf(paramVarArgs[i]), String.valueOf(paramVarArgs[(i + 1)]));
-      }
-    }
-  }
-  
-  private List<BasicNameValuePair> getParamsList()
-  {
-    LinkedList localLinkedList = new LinkedList();
-    Iterator localIterator = this.mParams.entrySet().iterator();
-    Object localObject1;
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      localLinkedList.add(new BasicNameValuePair((String)((Map.Entry)localObject1).getKey(), (String)((Map.Entry)localObject1).getValue()));
-    }
-    localIterator = this.mParamsWithArray.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Object localObject2 = (Map.Entry)localIterator.next();
-      localObject1 = (String)((Map.Entry)localObject2).getKey();
-      localObject2 = ((ArrayList)((Map.Entry)localObject2).getValue()).iterator();
-      while (((Iterator)localObject2).hasNext())
-      {
-        String str = (String)((Iterator)localObject2).next();
-        if (!TextUtils.isEmpty(str)) {
-          localLinkedList.add(new BasicNameValuePair((String)localObject1, str));
+
+    public RequestParams(Map<String, String> params) {
+        this();
+        if (params != null) {
+            for (Entry<String, String> entry : params.entrySet()) {
+                put((String) entry.getKey(), (String) entry.getValue());
+            }
         }
-      }
     }
-    return localLinkedList;
-  }
-  
-  public HttpEntity getHttpEntity()
-  {
-    try
-    {
-      UrlEncodedFormEntity localUrlEncodedFormEntity = new UrlEncodedFormEntity(getParamsList(), "UTF-8");
-      return localUrlEncodedFormEntity;
-    }
-    catch (UnsupportedEncodingException localUnsupportedEncodingException) {}
-    return null;
-  }
-  
-  public final String getQueryString()
-  {
-    return URLEncodedUtils.format(getParamsList(), "UTF-8");
-  }
-  
-  protected StringBuilder getStringBuilder()
-  {
-    StringBuilder localStringBuilder = new StringBuilder();
-    Iterator localIterator = this.mParams.entrySet().iterator();
-    Object localObject1;
-    while (localIterator.hasNext())
-    {
-      localObject1 = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      localStringBuilder.append((String)((Map.Entry)localObject1).getKey()).append("=").append((String)((Map.Entry)localObject1).getValue());
-    }
-    localIterator = this.mParamsWithArray.entrySet().iterator();
-    while (localIterator.hasNext())
-    {
-      Object localObject2 = (Map.Entry)localIterator.next();
-      if (localStringBuilder.length() > 0) {
-        localStringBuilder.append("&");
-      }
-      int i = 1;
-      localObject1 = (String)((Map.Entry)localObject2).getKey();
-      localObject2 = ((ArrayList)((Map.Entry)localObject2).getValue()).iterator();
-      while (((Iterator)localObject2).hasNext())
-      {
-        String str = (String)((Iterator)localObject2).next();
-        if (!TextUtils.isEmpty(str))
-        {
-          if (i == 0) {
-            localStringBuilder.append("&");
-          }
-          i = 0;
-          localStringBuilder.append((String)localObject1).append("=").append(str);
+
+    public RequestParams(Object... keysAndValues) {
+        this();
+        int len = keysAndValues.length;
+        if (len % 2 != 0) {
+            throw new IllegalArgumentException("Supplied arguments must be even");
         }
-      }
+        int i = 0;
+        while (i < len) {
+            if (!(keysAndValues[i] == null || keysAndValues[i + 1] == null)) {
+                put(String.valueOf(keysAndValues[i]), String.valueOf(keysAndValues[i + 1]));
+            }
+            i += 2;
+        }
     }
-    return localStringBuilder;
-  }
-  
-  public void put(String paramString1, String paramString2)
-  {
-    if ((!TextUtils.isEmpty(paramString1)) && (!TextUtils.isEmpty(paramString2))) {
-      this.mParams.put(paramString1, paramString2);
+
+    public void put(String key, String value) {
+        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
+            this.mParams.put(key, value);
+        }
     }
-  }
-  
-  public void put(String paramString, ArrayList<String> paramArrayList)
-  {
-    if ((!TextUtils.isEmpty(paramString)) && (paramArrayList != null) && (paramArrayList.size() > 0)) {
-      this.mParamsWithArray.put(paramString, paramArrayList);
+
+    public void put(String key, ArrayList<String> values) {
+        if (!TextUtils.isEmpty(key) && values != null && values.size() > 0) {
+            this.mParamsWithArray.put(key, values);
+        }
     }
-  }
-  
-  public void remove(String paramString)
-  {
-    if (paramString != null)
-    {
-      this.mParams.remove(paramString);
-      this.mParamsWithArray.remove(paramString);
+
+    public void remove(String key) {
+        if (key != null) {
+            this.mParams.remove(key);
+            this.mParamsWithArray.remove(key);
+        }
     }
-  }
-  
-  public final String toString()
-  {
-    return getStringBuilder().toString();
-  }
+
+    public HttpEntity getHttpEntity() {
+        try {
+            return new UrlEncodedFormEntity(getParamsList(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+    }
+
+    public final String getQueryString() {
+        return URLEncodedUtils.format(getParamsList(), "UTF-8");
+    }
+
+    public final String toString() {
+        return getStringBuilder().toString();
+    }
+
+    protected StringBuilder getStringBuilder() {
+        StringBuilder builder = new StringBuilder();
+        for (Entry<String, String> entry : this.mParams.entrySet()) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
+            builder.append((String) entry.getKey()).append("=").append((String) entry.getValue());
+        }
+        for (Entry<String, ArrayList<String>> entry2 : this.mParamsWithArray.entrySet()) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
+            boolean isFirst = true;
+            String key = (String) entry2.getKey();
+            Iterator i$ = ((ArrayList) entry2.getValue()).iterator();
+            while (i$.hasNext()) {
+                String value = (String) i$.next();
+                if (!TextUtils.isEmpty(value)) {
+                    if (!isFirst) {
+                        builder.append("&");
+                    }
+                    isFirst = false;
+                    builder.append(key).append("=").append(value);
+                }
+            }
+        }
+        return builder;
+    }
+
+    private List<BasicNameValuePair> getParamsList() {
+        List<BasicNameValuePair> params = new LinkedList();
+        for (Entry<String, String> entry : this.mParams.entrySet()) {
+            params.add(new BasicNameValuePair((String) entry.getKey(), (String) entry.getValue()));
+        }
+        for (Entry<String, ArrayList<String>> entry2 : this.mParamsWithArray.entrySet()) {
+            String key = (String) entry2.getKey();
+            Iterator i$ = ((ArrayList) entry2.getValue()).iterator();
+            while (i$.hasNext()) {
+                String value = (String) i$.next();
+                if (!TextUtils.isEmpty(value)) {
+                    params.add(new BasicNameValuePair(key, value));
+                }
+            }
+        }
+        return params;
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes-dex2jar.jar!/com/baidu/cloudsdk/common/http/RequestParams.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

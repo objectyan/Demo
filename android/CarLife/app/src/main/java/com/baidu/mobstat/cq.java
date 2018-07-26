@@ -4,77 +4,73 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build.VERSION;
 
-class cq
-  extends bk
-{
-  static cq a = new cq();
-  
-  public static cq a()
-  {
-    return a;
-  }
-  
-  public SharedPreferences a(Context paramContext)
-  {
-    if (Build.VERSION.SDK_INT >= 11) {
-      return paramContext.getSharedPreferences("baidu_mtj_sdk_record", 4);
+class cq extends bk {
+    /* renamed from: a */
+    static cq f19623a = new cq();
+
+    private cq() {
     }
-    return paramContext.getSharedPreferences("baidu_mtj_sdk_record", 0);
-  }
-  
-  protected void a(Context paramContext, long paramLong)
-  {
-    b(paramContext, "session_first_visit_time", paramLong);
-  }
-  
-  protected void a(Context paramContext, String paramString)
-  {
-    b(paramContext, "session_today_visit_count", paramString);
-  }
-  
-  protected Long b(Context paramContext)
-  {
-    return Long.valueOf(a(paramContext, "session_first_visit_time", 0L));
-  }
-  
-  protected void b(Context paramContext, long paramLong)
-  {
-    b(paramContext, "session_last_visit_time", paramLong);
-  }
-  
-  protected void b(Context paramContext, String paramString)
-  {
-    b(paramContext, "session_recent_visit", paramString);
-  }
-  
-  protected Long c(Context paramContext)
-  {
-    return Long.valueOf(a(paramContext, "session_last_visit_time", 0L));
-  }
-  
-  protected void c(Context paramContext, long paramLong)
-  {
-    b(paramContext, "session_visit_interval", paramLong);
-  }
-  
-  protected Long d(Context paramContext)
-  {
-    return Long.valueOf(a(paramContext, "session_visit_interval", 0L));
-  }
-  
-  protected String e(Context paramContext)
-  {
-    return a(paramContext, "session_today_visit_count", "");
-  }
-  
-  protected String f(Context paramContext)
-  {
-    return a(paramContext, "session_recent_visit", "");
-  }
+
+    /* renamed from: a */
+    public static cq m15605a() {
+        return f19623a;
+    }
+
+    /* renamed from: a */
+    public SharedPreferences mo2732a(Context context) {
+        if (VERSION.SDK_INT >= 11) {
+            return context.getSharedPreferences("baidu_mtj_sdk_record", 4);
+        }
+        return context.getSharedPreferences("baidu_mtj_sdk_record", 0);
+    }
+
+    /* renamed from: a */
+    protected void m15607a(Context context, long j) {
+        m15460b(context, "session_first_visit_time", j);
+    }
+
+    /* renamed from: b */
+    protected Long m15609b(Context context) {
+        return Long.valueOf(m15455a(context, "session_first_visit_time", 0));
+    }
+
+    /* renamed from: b */
+    protected void m15610b(Context context, long j) {
+        m15460b(context, "session_last_visit_time", j);
+    }
+
+    /* renamed from: c */
+    protected Long m15612c(Context context) {
+        return Long.valueOf(m15455a(context, "session_last_visit_time", 0));
+    }
+
+    /* renamed from: c */
+    protected void m15613c(Context context, long j) {
+        m15460b(context, "session_visit_interval", j);
+    }
+
+    /* renamed from: d */
+    protected Long m15614d(Context context) {
+        return Long.valueOf(m15455a(context, "session_visit_interval", 0));
+    }
+
+    /* renamed from: a */
+    protected void m15608a(Context context, String str) {
+        m15461b(context, "session_today_visit_count", str);
+    }
+
+    /* renamed from: e */
+    protected String m15615e(Context context) {
+        return m15457a(context, "session_today_visit_count", "");
+    }
+
+    /* renamed from: b */
+    protected void m15611b(Context context, String str) {
+        m15461b(context, "session_recent_visit", str);
+    }
+
+    /* renamed from: f */
+    protected String m15616f(Context context) {
+        return m15457a(context, "session_recent_visit", "");
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/mobstat/cq.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

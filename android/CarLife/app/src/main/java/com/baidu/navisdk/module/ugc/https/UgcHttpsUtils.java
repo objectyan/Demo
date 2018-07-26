@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import com.baidu.navisdk.BNaviModuleManager;
+import com.baidu.navisdk.CommonParams.Const.ModelName;
 import com.baidu.navisdk.comapi.base.MsgHandler;
 import com.baidu.navisdk.comapi.routeplan.BNRoutePlaner;
 import com.baidu.navisdk.jni.nativeif.JNIBaseMap;
@@ -14,9 +15,9 @@ import com.baidu.navisdk.jni.nativeif.JNITrajectoryControl;
 import com.baidu.navisdk.model.GeoLocateModel;
 import com.baidu.navisdk.model.datastruct.DistrictInfo;
 import com.baidu.navisdk.model.datastruct.LocData;
-import com.baidu.navisdk.model.datastruct.RoutePlanNode;
 import com.baidu.navisdk.model.modelfactory.NaviDataEngine;
 import com.baidu.navisdk.model.modelfactory.RoutePlanModel;
+import com.baidu.navisdk.model.params.MsgDefine;
 import com.baidu.navisdk.module.ugc.data.datastatus.UgcReportInfoUploadPackage;
 import com.baidu.navisdk.module.ugc.utils.PhotoProcessUtils;
 import com.baidu.navisdk.util.common.CoordinateTransformUtil;
@@ -29,235 +30,183 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
-public class UgcHttpsUtils
-{
-  private ScreenShotCallBack callBack = null;
-  private JNIBaseMap mJniBaseMap = null;
-  private MsgHandler mMsgHandler = new MsgHandler(Looper.getMainLooper())
-  {
-    public void careAbout()
-    {
-      observe(4616);
-    }
-    
-    public void handleMessage(Message paramAnonymousMessage)
-    {
-      if (paramAnonymousMessage.what == 4616) {}
-      try
-      {
-        if (UgcHttpsUtils.this.mJniBaseMap != null)
-        {
-          paramAnonymousMessage = new Bundle();
-          UgcHttpsUtils.this.mJniBaseMap.getScreenShotImage(paramAnonymousMessage);
-          int i = paramAnonymousMessage.getInt("unImageWidth");
-          int j = paramAnonymousMessage.getInt("unImageHeight");
-          Bitmap localBitmap = Bitmap.createBitmap(paramAnonymousMessage.getIntArray("pbtImageData"), i, j, Bitmap.Config.ARGB_8888);
-          paramAnonymousMessage = new PhotoProcessUtils();
-          if (localBitmap != null)
-          {
-            localBitmap = paramAnonymousMessage.compress(localBitmap, 600, 800);
-            if (localBitmap != null)
-            {
-              paramAnonymousMessage = paramAnonymousMessage.setBitmapToFile(localBitmap);
-              if ((UgcHttpsUtils.this.callBack != null) && (UgcHttpsUtils.this.mJniBaseMap != null))
-              {
-                VMsgDispatcher.unregisterMsgHandler(UgcHttpsUtils.this.mMsgHandler);
-                UgcHttpsUtils.access$002(UgcHttpsUtils.this, null);
-                UgcHttpsUtils.this.callBack.onScreenShotCompleted(paramAnonymousMessage);
-                return;
-              }
+public class UgcHttpsUtils {
+    private ScreenShotCallBack callBack = null;
+    private JNIBaseMap mJniBaseMap = null;
+    private MsgHandler mMsgHandler = new MsgHandler(Looper.getMainLooper()) {
+        public void handleMessage(Message msg) {
+            if (msg.what == MsgDefine.MSG_NAVI_TYPE_UGC_SCREENSHOT) {
+                try {
+                    if (UgcHttpsUtils.this.mJniBaseMap != null) {
+                        Bundle bundle = new Bundle();
+                        UgcHttpsUtils.this.mJniBaseMap.getScreenShotImage(bundle);
+                        Bitmap mLockBitmap = Bitmap.createBitmap(bundle.getIntArray("pbtImageData"), bundle.getInt("unImageWidth"), bundle.getInt("unImageHeight"), Config.ARGB_8888);
+                        PhotoProcessUtils mPhotoProcessUtils = new PhotoProcessUtils();
+                        if (mLockBitmap != null) {
+                            Bitmap mCompressBitmap = mPhotoProcessUtils.compress(mLockBitmap, 600, 800);
+                            if (mCompressBitmap != null) {
+                                String filePath = mPhotoProcessUtils.setBitmapToFile(mCompressBitmap);
+                                if (!(UgcHttpsUtils.this.callBack == null || UgcHttpsUtils.this.mJniBaseMap == null)) {
+                                    VMsgDispatcher.unregisterMsgHandler(UgcHttpsUtils.this.mMsgHandler);
+                                    UgcHttpsUtils.this.mJniBaseMap = null;
+                                    UgcHttpsUtils.this.callBack.onScreenShotCompleted(filePath);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (UgcHttpsUtils.this.callBack != null && UgcHttpsUtils.this.mJniBaseMap != null) {
+                    VMsgDispatcher.unregisterMsgHandler(UgcHttpsUtils.this.mMsgHandler);
+                    UgcHttpsUtils.this.mJniBaseMap = null;
+                    UgcHttpsUtils.this.callBack.onScreenShotCompleted(null);
+                }
             }
-          }
         }
-      }
-      catch (Exception paramAnonymousMessage)
-      {
-        do
-        {
-          paramAnonymousMessage.printStackTrace();
-        } while ((UgcHttpsUtils.this.callBack == null) || (UgcHttpsUtils.this.mJniBaseMap == null));
-        VMsgDispatcher.unregisterMsgHandler(UgcHttpsUtils.this.mMsgHandler);
-        UgcHttpsUtils.access$002(UgcHttpsUtils.this, null);
-        UgcHttpsUtils.this.callBack.onScreenShotCompleted(null);
-      }
-    }
-  };
-  
-  private void addCommonInfoToPackage(UgcReportInfoUploadPackage paramUgcReportInfoUploadPackage)
-  {
-    paramUgcReportInfoUploadPackage.cuid = PackageUtil.getCuid();
-    paramUgcReportInfoUploadPackage.os = 0;
-    paramUgcReportInfoUploadPackage.osv = PackageUtil.strOSVersion;
-    paramUgcReportInfoUploadPackage.sv = PackageUtil.strSoftWareVer;
-    paramUgcReportInfoUploadPackage.cityId = getCurrentCityId();
-    paramUgcReportInfoUploadPackage.cityName = GeoLocateModel.getInstance().getCurCityName();
-  }
-  
-  static CookieStore getCookieStore()
-  {
-    if (BNaviModuleManager.getBduss() == null) {
-      return null;
-    }
-    BasicClientCookie localBasicClientCookie = new BasicClientCookie("BDUSS", BNaviModuleManager.getBduss());
-    BasicCookieStore localBasicCookieStore = new BasicCookieStore();
-    localBasicClientCookie.setDomain(".baidu.com");
-    localBasicClientCookie.setPath("/");
-    localBasicClientCookie.setVersion(0);
-    localBasicCookieStore.addCookie(localBasicClientCookie);
-    return localBasicCookieStore;
-  }
-  
-  static int getCurrentCityId()
-  {
-    int i = -1;
-    DistrictInfo localDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
-    if (localDistrictInfo != null) {
-      i = localDistrictInfo.mId;
-    }
-    return i;
-  }
-  
-  static String transferUploadIntToString(int paramInt)
-  {
-    if (paramInt == -1) {
-      return "";
-    }
-    return paramInt + "";
-  }
-  
-  public void addMapInfoTopackage(UgcReportInfoUploadPackage paramUgcReportInfoUploadPackage)
-  {
-    addCommonInfoToPackage(paramUgcReportInfoUploadPackage);
-    paramUgcReportInfoUploadPackage.businessTrigger = 8;
-  }
-  
-  public void addNaviInfoToPackage(UgcReportInfoUploadPackage paramUgcReportInfoUploadPackage, boolean paramBoolean)
-  {
-    if (paramUgcReportInfoUploadPackage == null) {}
-    RoutePlanModel localRoutePlanModel;
-    do
-    {
-      return;
-      addCommonInfoToPackage(paramUgcReportInfoUploadPackage);
-      localObject = new Bundle();
-      BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl((Bundle)localObject);
-      paramUgcReportInfoUploadPackage.sessionId = ((Bundle)localObject).getString("session");
-      paramUgcReportInfoUploadPackage.mrsl = ((Bundle)localObject).getString("mrsl");
-      paramUgcReportInfoUploadPackage.guid = JNITrajectoryControl.sInstance.getCurrentUUID();
-      paramUgcReportInfoUploadPackage.businessTrigger = 1;
-      localRoutePlanModel = (RoutePlanModel)NaviDataEngine.getInstance().getModel("RoutePlanModel");
-    } while (localRoutePlanModel == null);
-    Object localObject = localRoutePlanModel.getStartNode().getGeoPoint();
-    if (localObject != null)
-    {
-      localObject = CoordinateTransformUtil.LLE62MC(((GeoPoint)localObject).getLongitudeE6(), ((GeoPoint)localObject).getLatitudeE6());
-      paramUgcReportInfoUploadPackage.fromPoint = (((Bundle)localObject).getInt("MCx") + "," + ((Bundle)localObject).getInt("MCy"));
-    }
-    paramUgcReportInfoUploadPackage.fromUid = (localRoutePlanModel.getStartNode().getUID() + "");
-    String str = localRoutePlanModel.getStartNode().getDescription();
-    if (str != null)
-    {
-      localObject = str;
-      if (!str.trim().equals("")) {}
-    }
-    else
-    {
-      localObject = localRoutePlanModel.getStartNode().getName() + "";
-    }
-    paramUgcReportInfoUploadPackage.fromName = ((String)localObject);
-    localObject = localRoutePlanModel.getEndNode().getGeoPoint();
-    if (localObject != null)
-    {
-      localObject = CoordinateTransformUtil.LLE62MC(((GeoPoint)localObject).getLongitudeE6(), ((GeoPoint)localObject).getLatitudeE6());
-      paramUgcReportInfoUploadPackage.toPoint = (((Bundle)localObject).getInt("MCx") + "," + ((Bundle)localObject).getInt("MCy"));
-    }
-    str = localRoutePlanModel.getEndNode().getUID();
-    if (str != null)
-    {
-      localObject = str;
-      if (!str.trim().equals("null")) {}
-    }
-    else
-    {
-      localObject = "";
-    }
-    paramUgcReportInfoUploadPackage.toUid = ((String)localObject);
-    str = localRoutePlanModel.getEndNode().getDescription();
-    if (str != null)
-    {
-      localObject = str;
-      if (!str.trim().equals("")) {}
-    }
-    else
-    {
-      localObject = localRoutePlanModel.getEndNode().getName() + "";
-    }
-    paramUgcReportInfoUploadPackage.toName = ((String)localObject);
-  }
-  
-  public void addNaviResultInfoToPackge(UgcReportInfoUploadPackage paramUgcReportInfoUploadPackage)
-  {
-    addCommonInfoToPackage(paramUgcReportInfoUploadPackage);
-    paramUgcReportInfoUploadPackage.businessTrigger = 11;
-    paramUgcReportInfoUploadPackage.supply = 1;
-  }
-  
-  public String getCurrentLocationPoint()
-  {
-    Object localObject = BNSysLocationManager.getInstance().getCurLocation();
-    String str2 = "";
-    String str1 = str2;
-    if (localObject != null)
-    {
-      ((LocData)localObject).toGeoPoint();
-      localObject = CoordinateTransformUtil.LL2MC(((LocData)localObject).longitude, ((LocData)localObject).latitude);
-      str1 = str2;
-      if (localObject != null) {
-        str1 = ((Bundle)localObject).getInt("MCx") + "," + ((Bundle)localObject).getInt("MCy");
-      }
-    }
-    return str1;
-  }
-  
-  public void setScreenShotParam(int paramInt, final ScreenShotCallBack paramScreenShotCallBack)
-  {
-    if (this.mJniBaseMap == null) {
-      this.mJniBaseMap = new JNIBaseMap();
-    }
-    VMsgDispatcher.registerMsgHandler(this.mMsgHandler);
-    this.callBack = paramScreenShotCallBack;
-    ScreenUtil localScreenUtil = ScreenUtil.getInstance();
-    if (paramInt == 1) {
-      paramInt = localScreenUtil.getWidthPixels();
-    }
-    for (int i = localScreenUtil.getHeightPixels() - ScreenUtil.getInstance().dip2px(120); (!new JNIBaseMap().setScreenShotParam(4, paramInt, i, 0L, 0L, 0)) && (paramScreenShotCallBack != null); i = localScreenUtil.getHeightPixels())
-    {
-      paramScreenShotCallBack.onScreenShotCompleted(null);
-      return;
-      paramInt = localScreenUtil.getWidthPixels() * 2 / 3;
-    }
-    new Handler(Looper.getMainLooper())
-    {
-      public void handleMessage(Message paramAnonymousMessage)
-      {
-        if ((paramScreenShotCallBack != null) && (UgcHttpsUtils.this.mJniBaseMap != null))
-        {
-          UgcHttpsUtils.access$002(UgcHttpsUtils.this, null);
-          paramScreenShotCallBack.onScreenShotCompleted(null);
-          VMsgDispatcher.unregisterMsgHandler(UgcHttpsUtils.this.mMsgHandler);
+
+        public void careAbout() {
+            observe((int) MsgDefine.MSG_NAVI_TYPE_UGC_SCREENSHOT);
         }
-      }
-    }.sendEmptyMessageDelayed(16, 1500L);
-  }
-  
-  public static abstract interface ScreenShotCallBack
-  {
-    public abstract void onScreenShotCompleted(String paramString);
-  }
+    };
+
+    public interface ScreenShotCallBack {
+        void onScreenShotCompleted(String str);
+    }
+
+    static CookieStore getCookieStore() {
+        if (BNaviModuleManager.getBduss() == null) {
+            return null;
+        }
+        BasicClientCookie cookie = new BasicClientCookie("BDUSS", BNaviModuleManager.getBduss());
+        CookieStore cookieStore = new BasicCookieStore();
+        cookie.setDomain(".baidu.com");
+        cookie.setPath("/");
+        cookie.setVersion(0);
+        cookieStore.addCookie(cookie);
+        return cookieStore;
+    }
+
+    static int getCurrentCityId() {
+        DistrictInfo district = GeoLocateModel.getInstance().getCurrentDistrict();
+        if (district != null) {
+            return district.mId;
+        }
+        return -1;
+    }
+
+    public String getCurrentLocationPoint() {
+        LocData curLoaction = BNSysLocationManager.getInstance().getCurLocation();
+        String retStr = "";
+        if (curLoaction == null) {
+            return retStr;
+        }
+        GeoPoint mGeoPoint = curLoaction.toGeoPoint();
+        Bundle mBundle = CoordinateTransformUtil.LL2MC(curLoaction.longitude, curLoaction.latitude);
+        if (mBundle != null) {
+            return mBundle.getInt("MCx") + "," + mBundle.getInt("MCy");
+        }
+        return retStr;
+    }
+
+    public void setScreenShotParam(int mOrientation, final ScreenShotCallBack mCallBack) {
+        int width;
+        int height;
+        if (this.mJniBaseMap == null) {
+            this.mJniBaseMap = new JNIBaseMap();
+        }
+        VMsgDispatcher.registerMsgHandler(this.mMsgHandler);
+        this.callBack = mCallBack;
+        ScreenUtil mScreen = ScreenUtil.getInstance();
+        if (mOrientation == 1) {
+            width = mScreen.getWidthPixels();
+            height = mScreen.getHeightPixels() - ScreenUtil.getInstance().dip2px(120);
+        } else {
+            width = (mScreen.getWidthPixels() * 2) / 3;
+            height = mScreen.getHeightPixels();
+        }
+        if (new JNIBaseMap().setScreenShotParam(4, width, height, 0, 0, 0) || mCallBack == null) {
+            new Handler(Looper.getMainLooper()) {
+                public void handleMessage(Message msg) {
+                    if (mCallBack != null && UgcHttpsUtils.this.mJniBaseMap != null) {
+                        UgcHttpsUtils.this.mJniBaseMap = null;
+                        mCallBack.onScreenShotCompleted(null);
+                        VMsgDispatcher.unregisterMsgHandler(UgcHttpsUtils.this.mMsgHandler);
+                    }
+                }
+            }.sendEmptyMessageDelayed(16, 1500);
+        } else {
+            mCallBack.onScreenShotCompleted(null);
+        }
+    }
+
+    static String transferUploadIntToString(int num) {
+        if (num == -1) {
+            return "";
+        }
+        return num + "";
+    }
+
+    public void addNaviInfoToPackage(UgcReportInfoUploadPackage mPackage, boolean isDynamic) {
+        if (mPackage != null) {
+            addCommonInfoToPackage(mPackage);
+            Bundle bundle = new Bundle();
+            BNRoutePlaner.getInstance().getRoutePlanSessionIDAndMrsl(bundle);
+            mPackage.sessionId = bundle.getString("session");
+            mPackage.mrsl = bundle.getString(UgcPostHttpConstans.UGC_POST_HTTP_PARAM_MRSL);
+            mPackage.guid = JNITrajectoryControl.sInstance.getCurrentUUID();
+            mPackage.businessTrigger = 1;
+            RoutePlanModel rpm = (RoutePlanModel) NaviDataEngine.getInstance().getModel(ModelName.ROUTE_PLAN);
+            if (rpm != null) {
+                Bundle mBundle;
+                GeoPoint mGeoPoint = rpm.getStartNode().getGeoPoint();
+                if (mGeoPoint != null) {
+                    mBundle = CoordinateTransformUtil.LLE62MC(mGeoPoint.getLongitudeE6(), mGeoPoint.getLatitudeE6());
+                    mPackage.fromPoint = mBundle.getInt("MCx") + "," + mBundle.getInt("MCy");
+                }
+                mPackage.fromUid = rpm.getStartNode().getUID() + "";
+                String fromName = rpm.getStartNode().getDescription();
+                if (fromName == null || fromName.trim().equals("")) {
+                    fromName = rpm.getStartNode().getName() + "";
+                }
+                mPackage.fromName = fromName;
+                mGeoPoint = rpm.getEndNode().getGeoPoint();
+                if (mGeoPoint != null) {
+                    mBundle = CoordinateTransformUtil.LLE62MC(mGeoPoint.getLongitudeE6(), mGeoPoint.getLatitudeE6());
+                    mPackage.toPoint = mBundle.getInt("MCx") + "," + mBundle.getInt("MCy");
+                }
+                String toUid = rpm.getEndNode().getUID();
+                if (toUid == null || toUid.trim().equals("null")) {
+                    toUid = "";
+                }
+                mPackage.toUid = toUid;
+                String toName = rpm.getEndNode().getDescription();
+                if (toName == null || toName.trim().equals("")) {
+                    toName = rpm.getEndNode().getName() + "";
+                }
+                mPackage.toName = toName;
+            }
+        }
+    }
+
+    public void addMapInfoTopackage(UgcReportInfoUploadPackage mPackage) {
+        addCommonInfoToPackage(mPackage);
+        mPackage.businessTrigger = 8;
+    }
+
+    public void addNaviResultInfoToPackge(UgcReportInfoUploadPackage mPackage) {
+        addCommonInfoToPackage(mPackage);
+        mPackage.businessTrigger = 11;
+        mPackage.supply = 1;
+    }
+
+    private void addCommonInfoToPackage(UgcReportInfoUploadPackage mPackage) {
+        mPackage.cuid = PackageUtil.getCuid();
+        mPackage.os = 0;
+        mPackage.osv = PackageUtil.strOSVersion;
+        mPackage.sv = PackageUtil.strSoftWareVer;
+        mPackage.cityId = getCurrentCityId();
+        mPackage.cityName = GeoLocateModel.getInstance().getCurCityName();
+    }
 }
-
-
-/* Location:              /Users/objectyan/Documents/OY/baiduCarLife_40/dist/classes2-dex2jar.jar!/com/baidu/navisdk/module/ugc/https/UgcHttpsUtils.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */
